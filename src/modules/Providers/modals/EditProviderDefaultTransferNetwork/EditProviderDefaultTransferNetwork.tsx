@@ -167,8 +167,8 @@ const EditProviderDefaultTransferNetworkInternal: FC<EditProviderDefaultTransfer
     <EditModal
       {...props}
       jsonPath={['metadata', 'annotations', 'forklift.konveyor.io/defaultTransferNetwork']}
-      title={props?.title ?? t('Edit Default Transfer Network')}
-      label={props?.label ?? t('Default Transfer Network')}
+      title={props?.title ?? t('Edit default transfer network')}
+      label={props?.label ?? t('Default transfer network')}
       helperText={t('Please choose a NetworkAttachmentDefinition for default data transfer.')}
       model={ProviderModel}
       onConfirmHook={onConfirm}

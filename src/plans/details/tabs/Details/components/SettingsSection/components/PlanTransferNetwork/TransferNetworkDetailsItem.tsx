@@ -20,7 +20,7 @@ const TransferNetworkDetailItem: FC<EditableDetailsItemProps> = ({ canPatch, pla
 
   return (
     <DetailsItem
-      title={t('Transfer Network')}
+      title={t('Transfer network')}
       content={
         networkName === PROVIDER_DEFAULTS ? (
           <span className="text-muted">{PROVIDER_DEFAULTS}</span>

@@ -58,6 +58,7 @@ const DiskPassPhraseFieldTable = () => {
               </Stack>
             </HelpIconPopover>
           ),
+          width: 90,
         },
       ]}
       fieldRows={diskPassPhrases.map((fieldRow, index) => ({

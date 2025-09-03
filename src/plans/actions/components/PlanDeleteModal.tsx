@@ -40,7 +40,7 @@ const PlanDeleteModal: FC<PlanDeleteModalProps> = ({ plan }) => {
       confirmVariant={ButtonVariant.danger}
       confirmLabel={t('Delete')}
       onConfirm={onDelete}
-      title={t('Delete {{model.label}}', { model: PlanModel })}
+      title={t('Delete plan')}
     >
       <Stack hasGutter>
         <StackItem>
@@ -49,7 +49,7 @@ const PlanDeleteModal: FC<PlanDeleteModalProps> = ({ plan }) => {
             {namespace && (
               <>
                 {' '}
-                namespace <strong>{namespace}</strong>
+                project <strong>{namespace}</strong>
               </>
             )}
             ?
@@ -58,7 +58,6 @@ const PlanDeleteModal: FC<PlanDeleteModalProps> = ({ plan }) => {
         <StackItem>
           {status === PlanStatuses.Executing && (
             <Alert
-              isInline
               variant="danger"
               title={t('Plan is currently running')}
               className="forklift-delete-modal__alert"
@@ -68,7 +67,6 @@ const PlanDeleteModal: FC<PlanDeleteModalProps> = ({ plan }) => {
         <StackItem>
           {status !== PlanStatuses.Archived && (
             <Alert
-              isInline
               variant="info"
               title={t('Plan is not archived')}
               className="forklift-delete-modal__alert"

@@ -73,8 +73,9 @@ export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource,
     } catch (err) {
       toggleIsLoading();
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      setAlertMessage(<AlertMessageForModals title={t('Error')} message={err.toString()} />);
+      if (err instanceof Error) {
+        setAlertMessage(<AlertMessageForModals title={t('Error')} message={err.toString()} />);
+      }
     }
   }, [resource, model, name, namespace, navigate, redirectTo, t, toggleIsLoading, toggleModal]);
 

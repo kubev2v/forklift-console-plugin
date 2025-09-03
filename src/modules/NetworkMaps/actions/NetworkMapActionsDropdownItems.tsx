@@ -30,7 +30,7 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
       value={0}
       itemKey="EditNetworkMapping"
       href={networkMapURL}
-      description={t('Edit NetworkMap')}
+      description={t('Edit network map')}
     />,
 
     <DropdownItem
@@ -39,7 +39,7 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
       isDisabled={!data?.permissions?.canDelete}
       onClick={onClick}
     >
-      {t('Delete NetworkMap')}
+      {t('Delete network map')}
     </DropdownItem>,
   ];
 };

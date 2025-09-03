@@ -119,10 +119,11 @@ export const EditModal: FC<EditModalProps> = ({
     } catch (err) {
       toggleIsLoading();
 
-      setAlertMessage(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        <AlertMessageForModals title={t('Error')} message={err.message ?? err.toString()} />,
-      );
+      if (err instanceof Error) {
+        setAlertMessage(
+          <AlertMessageForModals title={t('Error')} message={err.message ?? err.toString()} />,
+        );
+      }
     }
   }, [
     resource,

@@ -50,6 +50,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
 
   const submit = (event: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setInProgress(true);
 
     const project = {
       metadata: {
@@ -90,7 +91,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
         <Button
           type="submit"
           variant={ButtonVariant.primary}
-          disabled={inProgress}
+          isLoading={inProgress}
           onClick={submit}
           id="confirm-action"
           data-testid="create-project-modal-create-button"
@@ -105,7 +106,6 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
         >
           {t('Cancel')}
         </Button>,
-        ...(inProgress ? [<LoadingInline />] : []),
       ]}
     >
       <Form onSubmit={submit} name="form">
