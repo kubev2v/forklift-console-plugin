@@ -174,7 +174,7 @@ export const ManageColumnsModal = ({
         >
           {saveLabel}
         </Button>,
-        <Button key="cancel" variant={ButtonVariant.link} onClick={onClose}>
+        <Button key="cancel" variant={ButtonVariant.secondary} onClick={onClose}>
           {cancelLabel}
         </Button>,
         <Button key="restore" variant={ButtonVariant.link} onClick={restoreDefaults}>

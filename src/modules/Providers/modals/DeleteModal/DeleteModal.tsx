@@ -102,7 +102,7 @@ export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource,
       {namespace ? (
         <ForkliftTrans>
           Are you sure you want to delete <strong className="co-break-word">{name}</strong> in
-          namespace <strong>{namespace}</strong>?
+          project <strong>{namespace}</strong>?
         </ForkliftTrans>
       ) : (
         <ForkliftTrans>

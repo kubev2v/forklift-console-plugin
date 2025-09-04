@@ -123,7 +123,7 @@
   "Archived": "Archived",
   "Archived plans cannot be edited": "Archived plans cannot be edited",
   "Archived plans cannot be started": "Archived plans cannot be started",
-  "Are you sure you want to delete <1>{name}</1> in namespace <3>{namespace}</3>?": "Are you sure you want to delete <1>{name}</1> in namespace <3>{namespace}</3>?",
+  "Are you sure you want to delete <1>{name}</1> in project <3>{namespace}</3>?": "Are you sure you want to delete <1>{name}</1> in project <3>{namespace}</3>?",
   "Are you sure you want to delete <1>{name}</1> in{namespace && (\n              <>\n                {' '}\n                project <strong>{namespace}</strong>\n              </>\n            )}?": "Are you sure you want to delete <1>{name}</1> in{namespace && (\n              <>\n                {' '}\n                project <strong>{namespace}</strong>\n              </>\n            )}?",
   "Are you sure you want to delete <1>{name}</1>?": "Are you sure you want to delete <1>{name}</1>?",
   "Area chart with VM migration history": "Area chart with VM migration history",
