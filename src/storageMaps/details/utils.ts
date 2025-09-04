@@ -10,7 +10,6 @@ import {
 } from '../constants';
 
 import type { UpdateMappingsFormData } from './constants';
-import type { V1beta1StorageMapSpecMapWithOffload } from './types';
 
 /**
  * Transforms form values into the format expected by the k8s StorageMap spec
@@ -25,7 +24,7 @@ export const transformFormValuesToK8sSpec = (
   }
 
   // Filter incomplete mappings and transform to k8s format
-  const transformedMappings = formValues.storageMap.reduce<V1beta1StorageMapSpecMapWithOffload[]>(
+  const transformedMappings = formValues.storageMap.reduce<V1beta1StorageMapSpecMap[]>(
     (acc, mapping) => {
       // Skip incomplete mappings
       if (!mapping.sourceStorage?.name || !mapping.targetStorage?.name) {
@@ -51,7 +50,7 @@ export const transformFormValuesToK8sSpec = (
           offloadPlugin: {
             vsphereXcopyConfig: {
               secretRef: mapping.storageSecret,
-              storageVendorProduct: mapping.storageProduct,
+              storageVendorProduct: mapping.storageProduct as 'vantara' | 'ontap' | 'primera3par',
             },
           },
         });
@@ -84,20 +83,26 @@ export const transformStorageMapToFormValues = (
     };
   }
 
-  const transformedStorageMap = storageMap.spec.map.map(
-    (mapping: V1beta1StorageMapSpecMapWithOffload) => ({
+  const transformedStorageMap = storageMap.spec.map.map((mapping: V1beta1StorageMapSpecMap) => {
+    const sourceId = mapping.source?.id ?? '';
+    const sourceName = mapping.source?.name ?? '';
+    const displayName = sourceId
+      ? (storageMap.status?.references?.find((ref) => ref.id === sourceId)?.name ?? sourceName)
+      : sourceName;
+
+    return {
       offloadPlugin: mapping.offloadPlugin ? OffloadPlugin.VSphereXcopyConfig : '',
       sourceStorage: {
-        id: mapping.source?.id ?? '',
-        name: mapping.source?.name ?? '',
+        id: sourceId,
+        name: displayName,
       },
       storageProduct: mapping.offloadPlugin?.vsphereXcopyConfig?.storageVendorProduct ?? '',
       storageSecret: mapping.offloadPlugin?.vsphereXcopyConfig?.secretRef ?? '',
       targetStorage: {
-        name: mapping.destination?.storageClass || '',
+        name: mapping.destination?.storageClass ?? '',
       },
-    }),
-  );
+    };
+  });
 
   return {
     storageMap: transformedStorageMap,
