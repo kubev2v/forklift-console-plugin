@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
-import { Base64 } from 'js-base64';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import VersionedCodeEditor from '@components/VersionedCodeEditor/VersionedCodeEditor';
@@ -119,9 +118,9 @@ const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
                 render={({ field: { onChange, value } }) => (
                   <VersionedCodeEditor
                     isDarkTheme={isDarkTheme}
-                    value={Base64.decode(value)}
+                    value={value || ''}
                     onChange={(code) => {
-                      onChange(Base64.encode(code));
+                      onChange(code);
                     }}
                     isReadOnly={!planEditable}
                   />
