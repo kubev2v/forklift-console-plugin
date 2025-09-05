@@ -123,6 +123,8 @@ export const EditModal: FC<EditModalProps> = ({
         setAlertMessage(
           <AlertMessageForModals title={t('Error')} message={err.message ?? err.toString()} />,
         );
+      } else {
+        setAlertMessage(<AlertMessageForModals title={t('Error')} message={t('Unknown error')} />);
       }
     }
   }, [

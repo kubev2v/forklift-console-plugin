@@ -75,6 +75,8 @@ export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource,
 
       if (err instanceof Error) {
         setAlertMessage(<AlertMessageForModals title={t('Error')} message={err.toString()} />);
+      } else {
+        setAlertMessage(<AlertMessageForModals title={t('Error')} message={t('Unknown error')} />);
       }
     }
   }, [resource, model, name, namespace, navigate, redirectTo, t, toggleIsLoading, toggleModal]);
