@@ -41,7 +41,7 @@ const PlanMappingsViewMode: FC<PlanMappingsViewModeProps> = ({
   return (
     <>
       <DescriptionList columnModifier={{ default: '1Col' }}>
-        <DescriptionListGroup>
+        <DescriptionListGroup data-testid="network-mappings-section">
           <DescriptionListTerm>
             <Split hasGutter>
               <SplitItem>{t('Network map:')}</SplitItem>
@@ -61,10 +61,11 @@ const PlanMappingsViewMode: FC<PlanMappingsViewModeProps> = ({
               generalSourcesLabel={t('Other networks present on the source provider ')}
               noSourcesLabel={t('No networks in this category')}
               isEditable={false}
+              testId="network-mappings-list"
             />
           </DescriptionListDescription>
         </DescriptionListGroup>
-        <DescriptionListGroup>
+        <DescriptionListGroup data-testid="storage-mappings-section">
           <DescriptionListTerm>
             <Split hasGutter>
               <SplitItem>{t('Storage map:')}</SplitItem>
@@ -84,6 +85,7 @@ const PlanMappingsViewMode: FC<PlanMappingsViewModeProps> = ({
               generalSourcesLabel={t('Other storages present on the source provider ')}
               noSourcesLabel={t('No storages in this category')}
               isEditable={false}
+              testId="storage-mappings-list"
             />
           </DescriptionListDescription>
         </DescriptionListGroup>

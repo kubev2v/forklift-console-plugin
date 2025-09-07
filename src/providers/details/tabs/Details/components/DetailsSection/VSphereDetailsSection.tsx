@@ -33,6 +33,7 @@ const VSphereDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
       >
         <TypeDetailsItem resource={provider} />
         <DetailsItem
+          testId="product-detail-item"
           title={t('Product')}
           content={
             (inventory as VSphereProvider)?.product || (

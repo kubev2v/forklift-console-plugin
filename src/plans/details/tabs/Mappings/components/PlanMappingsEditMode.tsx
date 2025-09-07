@@ -73,7 +73,7 @@ const PlanMappingsEditMode: FC<PlanMappingsEditModeProps> = ({
   return (
     <Drawer>
       <DescriptionList columnModifier={{ default: '1Col' }}>
-        <DescriptionListGroup>
+        <DescriptionListGroup data-testid="network-mappings-section">
           <DescriptionListTerm>
             <Split hasGutter>
               <SplitItem>{t('Network map:')}</SplitItem>
@@ -99,11 +99,12 @@ const PlanMappingsEditMode: FC<PlanMappingsEditModeProps> = ({
               generalSourcesLabel={t('Other networks present on the source provider ')}
               noSourcesLabel={t('No networks in this category')}
               isDisabled={disableAddNetwork}
+              testId="network-mappings-list"
             />
           </DescriptionListDescription>
         </DescriptionListGroup>
 
-        <DescriptionListGroup>
+        <DescriptionListGroup data-testid="storage-mappings-section">
           <DescriptionListTerm>
             <Split hasGutter>
               <SplitItem>{t('Storage map:')}</SplitItem>
@@ -128,6 +129,7 @@ const PlanMappingsEditMode: FC<PlanMappingsEditModeProps> = ({
               generalSourcesLabel={t('Other storages present on the source provider ')}
               noSourcesLabel={t('No storages in this category')}
               isDisabled={disableAddStorage}
+              testId="storage-mappings-list"
             />
           </DescriptionListDescription>
         </DescriptionListGroup>

@@ -32,6 +32,7 @@ const PlanMappingEditButton: FC<PlanMappingEditButtonProps> = ({ onEdit, plan })
         onClick={onEdit}
         isDisabled={disableEditMappings}
         className="forklift-plan-mapping-edit-button"
+        data-testid="edit-mappings-button"
       >
         {t('Edit mappings')}
       </Button>
