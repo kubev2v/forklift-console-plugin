@@ -79,7 +79,9 @@ export const EnumFilter = ({
     <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullWidth>
       <>{placeholderLabel}</>
       {!isEmpty(selectedUniqueEnumLabels) && (
-        <Badge isRead>{selectedUniqueEnumLabels.length}</Badge>
+        <Badge isRead className="pf-v5-u-ml-sm">
+          {selectedUniqueEnumLabels.length}
+        </Badge>
       )}
     </MenuToggle>
   );

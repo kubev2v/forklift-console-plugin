@@ -138,7 +138,7 @@ const VirtualMachinesStepFooter: FC = () => {
             <Button key="deselect" variant={ButtonVariant.secondary} onClick={deselectCriticalVms}>
               {t('Deselect critical issue VMs')}
             </Button>,
-            <Button key="cancel" variant={ButtonVariant.link} onClick={closeModal}>
+            <Button key="cancel" variant={ButtonVariant.secondary} onClick={closeModal}>
               {t('Cancel')}
             </Button>,
           ]}

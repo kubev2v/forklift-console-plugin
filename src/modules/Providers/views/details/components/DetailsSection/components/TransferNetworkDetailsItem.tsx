@@ -29,7 +29,7 @@ export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
   return (
     <DetailsItem
       testId="transfer-network-detail-item"
-      title={t('Default Transfer Network')}
+      title={t('Default transfer network')}
       content={
         provider?.metadata?.annotations?.['forklift.konveyor.io/defaultTransferNetwork'] ?? (
           <span className="text-muted">{DEFAULT_NETWORK}</span>

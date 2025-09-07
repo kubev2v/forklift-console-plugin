@@ -71,7 +71,7 @@ type ManagedColumnsProps = {
 };
 
 const filterActionsAndHidden = (resourceFields: ResourceField[]) =>
-  resourceFields.filter((col) => !col.isAction && !col.isHidden);
+  resourceFields.filter((col) => !col.isAction && !col.isHidden && col.resourceFieldId !== null);
 
 /**
  * Modal dialog for managing resourceFields.
@@ -94,24 +94,31 @@ export const ManageColumnsModal = ({
   restoreLabel = 'Restore default columns',
   saveLabel = 'Save',
   showModal,
-  title = 'Manage Columns',
+  title = 'Manage columns',
 }: ManagedColumnsProps) => {
   const [editedColumns, setEditedColumns] = useState(filterActionsAndHidden(resourceFields));
   const restoreDefaults = () => {
     setEditedColumns([...filterActionsAndHidden(defaultColumns)]);
   };
   const onDrop: (source: DraggableItemPosition, dest?: DraggableItemPosition) => boolean = (
-    source: { index: number },
-    dest: { index: number },
+    source,
+    dest,
   ) => {
-    const draggedItem = editedColumns[source?.index];
-    const itemCurrentlyAtDestination = editedColumns[dest?.index];
+    if (!dest) {
+      return false;
+    }
+
+    const draggedItem = editedColumns[source.index];
+    const itemCurrentlyAtDestination = editedColumns[dest.index];
+
     if (!draggedItem || !itemCurrentlyAtDestination) {
       return false;
     }
+
     const base = editedColumns.filter(
       ({ resourceFieldId: id }) => id !== draggedItem?.resourceFieldId,
     );
+
     setEditedColumns([
       ...base.slice(0, dest.index),
       draggedItem,
@@ -119,6 +126,7 @@ export const ManageColumnsModal = ({
     ]);
     return true;
   };
+
   const onSelect = (updatedId: string, updatedValue: boolean): void => {
     setEditedColumns(
       editedColumns.map(({ isVisible, resourceFieldId, ...rest }) => ({
@@ -128,6 +136,7 @@ export const ManageColumnsModal = ({
       })),
     );
   };
+
   const onSave = () => {
     // assume that action resourceFields are always at the end
     onChange([
@@ -176,44 +185,48 @@ export const ManageColumnsModal = ({
       <DragDrop onDrop={onDrop}>
         <Droppable hasNoWrapper>
           <DataList aria-label={title} id="table-column-management" isCompact>
-            {editedColumns.map(({ isIdentity, isVisible, label, resourceFieldId: id }) => (
-              <Draggable key={id} hasNoWrapper>
-                <DataListItem aria-labelledby={`draggable-${id}`} ref={createRef()}>
-                  <DataListItemRow>
-                    <DataListControl>
-                      <DataListDragButton
-                        aria-label={reorderLabel}
-                        aria-labelledby={`draggable-${id}`}
+            {editedColumns.map(({ isIdentity, isVisible, label, resourceFieldId: id }) => {
+              const fieldId = id!;
+
+              return (
+                <Draggable key={fieldId} hasNoWrapper>
+                  <DataListItem aria-labelledby={`draggable-${fieldId}`} ref={createRef()}>
+                    <DataListItemRow>
+                      <DataListControl>
+                        <DataListDragButton
+                          aria-label={reorderLabel}
+                          aria-labelledby={`draggable-${fieldId}`}
+                        />
+                        <DataListCheck
+                          aria-labelledby={`draggable-${fieldId}`}
+                          name={fieldId}
+                          checked={
+                            // visibility for identity resourceFields (namespace) is governed by parent component
+                            isIdentity
+                              ? resourceFields.find(
+                                  (resourceField) => resourceField.resourceFieldId === fieldId,
+                                )?.isVisible
+                              : isVisible
+                          }
+                          isDisabled={isIdentity}
+                          onChange={(e, value) => {
+                            onChangeFactory(fieldId)(value, e);
+                          }}
+                          otherControls
+                        />
+                      </DataListControl>
+                      <DataListItemCells
+                        dataListCells={[
+                          <DataListCell key={fieldId}>
+                            <span id={`draggable-${fieldId}`}>{label}</span>
+                          </DataListCell>,
+                        ]}
                       />
-                      <DataListCheck
-                        aria-labelledby={`draggable-${id}`}
-                        name={id}
-                        checked={
-                          // visibility for identity resourceFields (namespace) is governed by parent component
-                          isIdentity
-                            ? resourceFields.find(
-                                (resourceField) => resourceField.resourceFieldId === id,
-                              )?.isVisible
-                            : isVisible
-                        }
-                        isDisabled={isIdentity}
-                        onChange={(e, value) => {
-                          onChangeFactory(id)(value, e);
-                        }}
-                        otherControls
-                      />
-                    </DataListControl>
-                    <DataListItemCells
-                      dataListCells={[
-                        <DataListCell key={id}>
-                          <span id={`draggable-${id}`}>{label}</span>
-                        </DataListCell>,
-                      ]}
-                    />
-                  </DataListItemRow>
-                </DataListItem>
-              </Draggable>
-            ))}
+                    </DataListItemRow>
+                  </DataListItem>
+                </Draggable>
+              );
+            })}
           </DataList>
         </Droppable>
       </DragDrop>

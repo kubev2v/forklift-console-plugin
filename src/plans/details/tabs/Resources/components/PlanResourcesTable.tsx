@@ -18,8 +18,8 @@ const PlanResourcesTable: FC<PlanResourcesTableProps> = ({
   const { t } = useForkliftTranslation();
   return (
     <PageSection variant="light">
-      <SectionHeading text={t('Calculated resources')} />
-      <Table variant="compact">
+      <SectionHeading text={t('Resources')} />
+      <Table variant="compact" isStriped>
         <Thead>
           <Th></Th>
           <Th>{t('Total virtual machines')}</Th>
@@ -27,9 +27,7 @@ const PlanResourcesTable: FC<PlanResourcesTableProps> = ({
         </Thead>
         <Tbody>
           <Tr>
-            <Td width={10}>
-              <strong>{t('Virtual machines:')}</strong>
-            </Td>
+            <Th width={10}>{t('Virtual machines')}</Th>
             <Td width={10}>
               <AlignedDecimal value={planInventorySize} fractionalPrecision={0} />
             </Td>
@@ -38,9 +36,7 @@ const PlanResourcesTable: FC<PlanResourcesTableProps> = ({
             </Td>
           </Tr>
           <Tr>
-            <Th width={10}>
-              <strong>{t('Total CPU count:')}</strong>
-            </Th>
+            <Th width={10}>{t('Total CPU count')}</Th>
             <Td width={10}>
               <AlignedDecimal value={totalResources.cpuCount} unit={t('Cores')} />
             </Td>
@@ -49,9 +45,7 @@ const PlanResourcesTable: FC<PlanResourcesTableProps> = ({
             </Td>
           </Tr>
           <Tr>
-            <Th width={10}>
-              <strong>{t('Total memory:')}</strong>
-            </Th>
+            <Th width={10}>{t('Total memory')}</Th>
             <Td width={10}>
               <AlignedDecimal value={totalResources.memoryMB} unit={'MB'} />
             </Td>

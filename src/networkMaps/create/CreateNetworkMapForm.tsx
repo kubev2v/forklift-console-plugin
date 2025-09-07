@@ -137,7 +137,7 @@ const CreateNetworkMapForm: React.FC = () => {
               </Button>
 
               <Button
-                variant={ButtonVariant.link}
+                variant={ButtonVariant.secondary}
                 onClick={() => {
                   navigate(networkMapsListUrl);
                 }}

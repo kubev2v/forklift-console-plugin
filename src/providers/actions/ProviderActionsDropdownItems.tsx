@@ -40,7 +40,7 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
           navigate(providerURL);
         }}
       >
-        {t('Edit Provider')}
+        {t('Edit provider')}
       </DropdownItem>
       {provider?.spec?.type !== PROVIDER_TYPES.ova && (
         <DropdownItem
@@ -51,7 +51,7 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
             navigate(`${providerURL}/credentials`);
           }}
         >
-          {t('Edit Provider Credentials')}
+          {t('Edit provider credentials')}
         </DropdownItem>
       )}
       <DropdownItem
@@ -60,7 +60,7 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
         isDisabled={!data?.permissions?.canDelete}
         onClick={onProviderDelete}
       >
-        {t('Delete Provider')}
+        {t('Delete provider')}
       </DropdownItem>
     </DropdownList>
   );

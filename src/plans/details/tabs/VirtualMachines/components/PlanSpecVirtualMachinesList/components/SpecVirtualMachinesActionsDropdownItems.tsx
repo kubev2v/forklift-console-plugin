@@ -81,7 +81,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
               );
             }}
           >
-            {t('Edit Volume name template')}
+            {t('Edit volume name template')}
           </DropdownItem>
           <DropdownItem
             key="edit-network-name-template"
@@ -95,7 +95,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
               );
             }}
           >
-            {t('Edit Network name template')}
+            {t('Edit network name template')}
           </DropdownItem>
         </>
       )}
