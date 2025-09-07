@@ -64,6 +64,13 @@ export const specVirtualMachineFields: ResourceField[] = [
     sortable: true,
   },
   {
+    isVisible: false,
+    jsonPath: '$.specVM.targetPowerState',
+    label: t('Target power state'),
+    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.TargetPowerState,
+    sortable: true,
+  },
+  {
     isAction: true,
     isVisible: true,
     label: '',
