@@ -19,7 +19,7 @@ import CreatePlanStorageMapFieldTable from './CreatePlanStorageMapFieldTable';
 
 const NewStorageMapFields: FC = () => {
   const { t } = useForkliftTranslation();
-  const { control, getFieldState } = useCreatePlanFormContext();
+  const { control, getFieldState, setValue } = useCreatePlanFormContext();
   const { storage, vmsWithDisks: vmsWithDisksResult } = useCreatePlanWizardContext();
   const { error } = getFieldState(CreatePlanStorageMapFieldId.StorageMap);
   const [sourceProvider, storageMap] = useWatch({
@@ -39,6 +39,8 @@ const NewStorageMapFields: FC = () => {
     vmsWithDisks as ProviderVirtualMachine[],
   );
   const defaultTargetStorageName = availableTargetStorages?.[0]?.name;
+
+  const isStorageMapEmpty = isEmpty(storageMap);
 
   // When the storage mappings are empty, default to source storage values used by VMs,
   // otherwise set empty inputs for the field array to force an empty field table row.
