@@ -94,10 +94,9 @@ const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
                 render={({ field: { onChange, value } }) => (
                   <VersionedCodeEditor
                     isDarkTheme={isDarkTheme}
-                    value={value || ''}
-                    onChange={(code) => {
-                      onChange(code);
-                    }}
+                    value={value ?? ''}
+                    onChange={onChange}
+                    isReadOnly={!planEditable}
                   />
                 )}
               />
