@@ -154,6 +154,7 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
         {...getStepProps(PlanWizardStepId.ReviewAndCreate)}
       >
         <ReviewStep
+          isLiveMigrationEnabled={isLiveMigrationEnabled}
           error={createPlanError}
           onBackToReviewClick={() => {
             setCreatePlanError(undefined);
