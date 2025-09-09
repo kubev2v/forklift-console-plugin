@@ -31,7 +31,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
   return (
     <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
       <PageSection variant="light" className="forklift-page-section--details">
-        <SectionHeading text={t('StorageMap details')} />
+        <SectionHeading text={t('Storage map details')} />
         <DetailsSection obj={obj} />
       </PageSection>
 

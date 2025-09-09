@@ -14,8 +14,6 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import TableBulkSelect from '@components/TableBulkSelect';
 import {
-  Button,
-  ButtonVariant,
   Flex,
   FlexItem,
   Icon,
@@ -350,25 +348,23 @@ const StandardPageInner = <T,>({
         <PageSection variant="light" className="forklift-page__main-title">
           <Level>
             <LevelItem>
-              <Title headingLevel="h1">
-                <Flex
-                  alignItems={{ default: 'alignItemsCenter' }}
-                  spaceItems={{ default: 'spaceItemsSm' }}
-                >
-                  <FlexItem>{title}</FlexItem>
-                  {titleHelpContent && (
-                    <FlexItem>
-                      <Tooltip content={titleHelpContent}>
-                        <Button variant={ButtonVariant.plain} className="pf-v5-u-p-0">
-                          <Icon size="md">
-                            <HelpIcon />
-                          </Icon>
-                        </Button>
-                      </Tooltip>
-                    </FlexItem>
-                  )}
-                </Flex>
-              </Title>
+              <Flex
+                alignItems={{ default: 'alignItemsCenter' }}
+                spaceItems={{ default: 'spaceItemsSm' }}
+              >
+                <FlexItem>
+                  <Title headingLevel="h1">{title}</Title>
+                </FlexItem>
+                {titleHelpContent && (
+                  <FlexItem>
+                    <Tooltip content={titleHelpContent}>
+                      <Icon size="md">
+                        <HelpIcon />
+                      </Icon>
+                    </Tooltip>
+                  </FlexItem>
+                )}
+              </Flex>
             </LevelItem>
             {addButton && <LevelItem>{addButton}</LevelItem>}
           </Level>

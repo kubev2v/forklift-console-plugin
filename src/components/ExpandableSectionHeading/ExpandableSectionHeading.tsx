@@ -2,44 +2,59 @@ import type { FC, ReactNode } from 'react';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
 
 import SectionHeading from '@components/headers/SectionHeading';
-import { Button, ButtonVariant, Flex } from '@patternfly/react-core';
-import { AngleDownIcon, AngleRightIcon } from '@patternfly/react-icons';
+import { Button, ButtonVariant, Flex, FlexItem, Icon, Tooltip } from '@patternfly/react-core';
+import { AngleDownIcon, AngleRightIcon, HelpIcon } from '@patternfly/react-icons';
 
 import './ExpandableSectionHeading.scss';
 
 type ExpandableSectionHeadingProps = {
   section: ReactNode;
   sectionTitle: ReactNode;
+  sectionHelpTip?: ReactNode;
   initialExpanded?: boolean;
 };
 
 const ExpandableSectionHeading: FC<ExpandableSectionHeadingProps> = ({
   initialExpanded = false,
   section,
+  sectionHelpTip,
   sectionTitle,
 }) => {
   const [showSection, setShowSection] = useToggle(initialExpanded);
   return (
     <>
-      <Button
-        className="expandable-section-heading"
-        isInline
-        variant={ButtonVariant.plain}
-        onClick={setShowSection}
-      >
-        <SectionHeading
-          text={
-            <Flex
-              className="expandable-section-heading__title"
-              alignItems={{ default: 'alignItemsCenter' }}
-              gap={{ default: 'gapSm' }}
-            >
-              {showSection ? <AngleDownIcon /> : <AngleRightIcon />}
-              <>{sectionTitle}</>
-            </Flex>
-          }
-        />
-      </Button>
+      <Flex alignItems={{ default: 'alignItemsCenter' }} gap={{ default: 'gapSm' }}>
+        <FlexItem>
+          <Button
+            className="expandable-section-heading"
+            isInline
+            variant={ButtonVariant.plain}
+            onClick={setShowSection}
+          >
+            <SectionHeading
+              text={
+                <Flex
+                  className="expandable-section-heading__title"
+                  alignItems={{ default: 'alignItemsCenter' }}
+                  gap={{ default: 'gapSm' }}
+                >
+                  <FlexItem>{showSection ? <AngleDownIcon /> : <AngleRightIcon />}</FlexItem>
+                  <FlexItem>{sectionTitle}</FlexItem>
+                </Flex>
+              }
+            />
+          </Button>
+        </FlexItem>
+        {sectionHelpTip ? (
+          <FlexItem>
+            <Tooltip content={sectionHelpTip}>
+              <Icon size="md">
+                <HelpIcon />
+              </Icon>
+            </Tooltip>
+          </FlexItem>
+        ) : null}
+      </Flex>
       {showSection && section}
     </>
   );

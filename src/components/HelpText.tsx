@@ -1,14 +1,10 @@
-import type { FC, ReactNode } from 'react';
+import type { FC } from 'react';
 
-import { HelperText, HelperTextItem } from '@patternfly/react-core';
+import { HelperText, HelperTextItem, type HelperTextProps } from '@patternfly/react-core';
 
-type HelpTextProps = {
-  children: ReactNode;
-};
-
-const HelpText: FC<HelpTextProps> = ({ children }) => {
+const HelpText: FC<HelperTextProps> = ({ children, ...props }) => {
   return (
-    <HelperText>
+    <HelperText {...props}>
       <HelperTextItem>{children}</HelperTextItem>
     </HelperText>
   );

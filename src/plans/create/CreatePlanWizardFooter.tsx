@@ -110,7 +110,11 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
           {t('Skip to review')}
         </Button>
       )}
-      <Button data-testid="wizard-cancel-button" variant={ButtonVariant.link} onClick={onCancel}>
+      <Button
+        data-testid="wizard-cancel-button"
+        variant={ButtonVariant.secondary}
+        onClick={onCancel}
+      >
         {t('Cancel')}
       </Button>
     </WizardFooterWrapper>

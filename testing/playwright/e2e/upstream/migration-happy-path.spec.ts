@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 
-import { setupCreatePlanIntercepts } from '../../intercepts';
+import { setupForkliftIntercepts } from '../../intercepts';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { PlansListPage } from '../../page-objects/PlansListPage';
@@ -13,7 +13,7 @@ test.describe(
   },
   () => {
     test.beforeEach(async ({ page }) => {
-      await setupCreatePlanIntercepts(page);
+      await setupForkliftIntercepts(page);
     });
 
     test('should run plan creation wizard', async ({ page }) => {

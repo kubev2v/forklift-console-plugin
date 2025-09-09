@@ -138,7 +138,7 @@ export const setupProvidersIntercepts = async (page: Page) => {
 
   // Target provider network attachment definitions
   await page.route(
-    `**/forklift-inventory/providers/openshift/${TEST_DATA.providers.target.uid}/networkattachmentdefinitions`,
+    `**/forklift-inventory/providers/openshift/${TEST_DATA.providers.target.uid}/networkattachmentdefinitions**`,
     async (route) => {
       await route.fulfill({
         status: 200,

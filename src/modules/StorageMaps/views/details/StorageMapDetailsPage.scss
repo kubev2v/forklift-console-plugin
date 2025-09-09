@@ -4,6 +4,12 @@
   border-top: 1px solid var(--pf-global--BorderColor--100);
 }
 
+.forklift-page-headings-alerts {
+  border-top: none;
+  padding-bottom: var(--pf-global--spacer--lg);
+  padding-top: var(--pf-global--spacer--lg);
+}
+
 .forklift-network-map__details-tab--update-button {
   margin-bottom: var(--pf-global--spacer--md);
 }

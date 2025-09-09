@@ -1,4 +1,4 @@
-import { PodNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
+import { DefaultNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
 
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
 
@@ -13,16 +13,17 @@ export const hasMultiplePodNetworkMappings = (
 ) => {
   const netIdsMappedToPodNet = new Set(
     networkMap
-      ?.filter(({ targetNetwork }) => targetNetwork?.name === PodNetworkLabel.Source)
+      ?.filter(({ targetNetwork }) => targetNetwork?.name === DefaultNetworkLabel.Source)
       ?.map(({ sourceNetwork }) => sourceNetwork?.id) ?? [],
   );
 
-  return Object.values(vms)
-    .map((vm) => getVMNetworksOrProfiles(vm, oVirtNicProfiles))
-    ?.some(
-      (networks) =>
-        networks
-          .filter((value, index, array) => array.indexOf(value) === index)
-          .filter((id) => netIdsMappedToPodNet.has(id as string)).length >= 2,
-    );
+  return Object.values(vms).some((vm) => {
+    const networks = getVMNetworksOrProfiles(vm, oVirtNicProfiles);
+    if (!networks || !Array.isArray(networks)) return false;
+
+    const uniqueNetworks = networks.filter((value, index, array) => array.indexOf(value) === index);
+    const mappedNetworks = uniqueNetworks.filter((id) => netIdsMappedToPodNet.has(id as string));
+
+    return mappedNetworks.length >= 2;
+  });
 };

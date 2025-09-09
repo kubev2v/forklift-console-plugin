@@ -148,7 +148,7 @@ export const validateNetworkMap = (validateNetworkMapParams: ValidateNetworkMapP
   const hasMultiplePodNetwork = hasMultiplePodNetworkMappings(values, vms, oVirtNicProfiles);
   if (hasMultiplePodNetwork)
     return t(
-      'At least one VM is detected with more than one interface mapped to Pod Network. This is not allowed.',
+      'At least one VM is detected with more than one interface mapped to Default Network. This is not allowed.',
     );
 
   return undefined;

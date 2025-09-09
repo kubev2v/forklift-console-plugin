@@ -5,6 +5,7 @@ import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
+import { validateMapName } from '@utils/validation/mapNameValidation';
 
 import { StorageMapFieldId, storageMapFieldLabels } from '../../constants';
 import type { CreateStorageMapFormData } from '../types';
@@ -34,7 +35,9 @@ const MapNameField: FC = () => {
             validated={getInputValidated(Boolean(error))}
           />
         )}
-        rules={{ required: t('Map name is required.') }}
+        rules={{
+          validate: (value) => validateMapName(value, t('Storage map')),
+        }}
       />
     </FormGroupWithErrorText>
   );

@@ -3,7 +3,7 @@ import { TargetPowerStates, type TargetPowerStateValue } from 'src/plans/constan
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
-import { Stack } from '@patternfly/react-core';
+import { Form, Stack } from '@patternfly/react-core';
 import { getPlanTargetPowerState } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -21,15 +21,17 @@ const EditTargetPowerState: FC<EditPlanProps> = ({ resource }) => {
   return (
     <ModalForm
       title={t('Edit target power state')}
+      confirmLabel={t('Save target power state')}
+      isDisabled={value === getPlanTargetPowerState(resource)}
       onConfirm={async () => onConfirmTargetPowerState({ newValue: value, resource })}
     >
       <Stack hasGutter>
-        {t(
-          `Choose what state you'd like the VMs in your plan to be powered to after migration. By default, the target power state is set to auto.`,
-        )}
-        <FormGroupWithHelpText label={t('VM target power state')} isRequired>
-          <TargetPowerStateDropdown value={value} onChange={setValue} />
-        </FormGroupWithHelpText>
+        {t(`Choose what state you'd like the VMs in your plan to be powered to after migration.`)}
+        <Form>
+          <FormGroupWithHelpText label={t('VM target power state')} isRequired>
+            <TargetPowerStateDropdown value={value} onChange={setValue} />
+          </FormGroupWithHelpText>
+        </Form>
       </Stack>
     </ModalForm>
   );

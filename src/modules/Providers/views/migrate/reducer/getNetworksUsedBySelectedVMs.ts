@@ -1,4 +1,4 @@
-import { PodNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
+import { DefaultNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
 
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
 import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
@@ -19,7 +19,7 @@ const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
         const networkName = network?.multus?.networkName;
 
         if (network?.pod) {
-          acc.push(PodNetworkLabel.Target);
+          acc.push(DefaultNetworkLabel.Target);
         } else if (networkName) {
           acc.push(networkName);
         }

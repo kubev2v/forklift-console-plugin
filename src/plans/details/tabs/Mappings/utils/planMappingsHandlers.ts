@@ -13,7 +13,7 @@ import type {
   V1beta1StorageMapSpecMapSource,
 } from '@kubev2v/types';
 
-import { PodNetworkLabel } from './constants';
+import { DefaultNetworkLabel } from './constants';
 
 export const createReplacedNetworkMap = (
   source: InventoryNetwork,
@@ -27,7 +27,7 @@ export const createReplacedNetworkMap = (
   const targetEntry: V1beta1NetworkMapSpecMapDestination =
     typeof target === 'object'
       ? { name: target.name, namespace: target.namespace, type: MULTUS }
-      : { type: target === PodNetworkLabel.Source ? POD : IGNORED };
+      : { type: target === DefaultNetworkLabel.Source ? POD : IGNORED };
 
   return { destination: { ...targetEntry }, source: sourceEntry };
 };

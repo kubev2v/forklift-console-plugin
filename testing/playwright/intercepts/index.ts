@@ -28,7 +28,7 @@ import { setupTargetProviderNamespacesIntercepts } from './targetProviderNamespa
 import { setupVirtualMachinesIntercepts } from './virtualMachines';
 
 // Comprehensive setup function for existing tests to work in GitHub Actions
-export const setupCreatePlanIntercepts = async (page: Page): Promise<void> => {
+export const setupForkliftIntercepts = async (page: Page): Promise<void> => {
   // Core Kubernetes API intercepts for console bootstrap
   await setupCoreKubernetesIntercepts(page);
 

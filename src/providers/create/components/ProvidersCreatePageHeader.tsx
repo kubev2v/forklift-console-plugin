@@ -13,12 +13,12 @@ const ProvidersCreatePageHeader: FC<ProvidersCreatePageHeaderProps> = ({ apiErro
 
   return (
     <>
-      <SectionHeading text={t('Create Provider')} />
+      <SectionHeading text={t('Create provider')} />
 
       <HelperText>
         <HelperTextItem variant="default">
           {t(
-            'Create Providers by using the form below. Providers CRs store attributes that enable MTV to connect to and interact with the source and target providers.',
+            'Create providers by using the form below. Providers CRs store attributes that enable MTV to connect to and interact with the source and target providers.',
           )}
         </HelperTextItem>
       </HelperText>

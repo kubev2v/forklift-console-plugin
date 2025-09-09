@@ -31,7 +31,7 @@ export const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, name
   return (
     <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
       <PageSection variant="light" className="forklift-page-section--details">
-        <SectionHeading text={t('NetworkMap details')} />
+        <SectionHeading text={t('Network map details')} />
         <DetailsSection obj={obj} />
       </PageSection>
 
