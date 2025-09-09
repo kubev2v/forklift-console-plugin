@@ -329,10 +329,11 @@ export const createEslintConfig = (ideMode = false) =>
         'require-unicode-regexp': 'off',
       },
     },
-    // Testing directory specific rules - disable no-console
+    // Testing directory specific rules - disable no-console and max-lines
     {
       files: ['testing/**/*.ts'],
       rules: {
+        'max-lines': 'off',
         'no-console': 'off',
       },
     },
