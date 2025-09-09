@@ -1,8 +1,9 @@
 import { expect, sharedProviderFixtures as test } from '../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 
-test.describe('Plan Details Navigation', { tag: '@migration' }, () => {
+test.describe('Plan Details Navigation', { tag: '@downstream' }, () => {
   test('should navigate to plan details and verify page content', async ({
     page,
     testPlan,
@@ -23,7 +24,7 @@ test.describe('Plan Details Navigation', { tag: '@migration' }, () => {
   });
 });
 
-test.describe('Plan Details - VM Rename Validation', { tag: '@migrationn' }, () => {
+test.describe('Plan Details - VM Rename Validation', { tag: '@downstream' }, () => {
   test('should handle VM rename validation - success and failure scenarios', async ({
     page,
     testPlan,
@@ -41,10 +42,10 @@ test.describe('Plan Details - VM Rename Validation', { tag: '@migrationn' }, () 
     await planDetailsPage.verifyPlanTitle(planName);
 
     await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
-    const { testData } = testPlan as any;
+    const testData = (testPlan as any).testData as PlanTestData;
     await planDetailsPage.virtualMachinesTab.verifyVirtualMachinesTab(testData);
 
-    const originalVmName = testData.virtualMachines[0].sourceName as string;
+    const originalVmName = testData.virtualMachines?.[0]?.sourceName;
 
     const invalidNamesWithErrors = ['VM-With-Capitals', 'invalid@symbol'];
 

@@ -7,7 +7,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
   test(
     'should create plan with new target project and verify namespace creation',
     {
-      tag: '@wiz',
+      tag: '@downstream',
     },
     async ({ page, resourceManager, testProvider }) => {
       if (!testProvider) {
@@ -93,7 +93,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
   test(
     'should validate target project name requirements',
     {
-      tag: '@wiz',
+      tag: '@downstream',
     },
     async ({ page, testProvider }) => {
       if (!testProvider) {

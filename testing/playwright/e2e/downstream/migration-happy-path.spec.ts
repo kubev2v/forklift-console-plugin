@@ -62,8 +62,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   test(
     'should create a new vsphere provider',
     {
-      tag: '@downstream',
-      timeout: 60000,
+      tag: ['@downstream'],
     },
     async ({ page }) => {
       const providersPage = new ProvidersListPage(page);
@@ -97,9 +96,9 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
     'should create a new cold migration plan',
     {
       tag: ['@downstream'],
-      timeout: 60000,
     },
     async ({ page }) => {
+      test.setTimeout(60000);
       const plansPage = new PlansListPage(page);
       const createWizard = new CreatePlanWizardPage(page, resourceManager);
       const planDetailsPage = new PlanDetailsPage(page);
@@ -117,10 +116,10 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   test(
     'should run cold migration',
     {
-      tag: ['@downstream', '@start'],
-      timeout: 15 * 60000,
+      tag: ['@downstream', '@slow'],
     },
     async ({ page }) => {
+      test.setTimeout(15 * 60000);
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
 

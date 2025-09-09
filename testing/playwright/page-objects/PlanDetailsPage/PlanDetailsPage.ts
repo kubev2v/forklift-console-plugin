@@ -99,7 +99,7 @@ export class PlanDetailsPage {
 
     let percentage = '';
     try {
-      const percentageElement = this.page.locator('.pf-v5-u-font-size-sm').filter({ hasText: /%/ });
+      const percentageElement = this.page.locator('.pf-v5-u-font-size-sm').filter({ hasText: '%' });
 
       const isPercentageVisible = await percentageElement.isVisible({ timeout: 1000 });
       if (isPercentageVisible) {
@@ -119,7 +119,11 @@ export class PlanDetailsPage {
 
   async getMigrationStatus(): Promise<{ status: string; isTerminal: boolean; isSuccess: boolean }> {
     const progress = await this.getMigrationProgress();
-    const statusText = progress.replace(/\s*\(\d+%\)/, '').trim();
+    const percentageIndex = progress.lastIndexOf('(');
+    const statusText =
+      percentageIndex !== -1 && progress.includes('%)', percentageIndex)
+        ? progress.substring(0, percentageIndex).trim()
+        : progress.trim();
 
     const percentageRegex = /\((?<percentage>\d+)%\)/;
     const percentageMatch = percentageRegex.exec(progress);

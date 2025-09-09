@@ -1,7 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 
+import type { PlanTestData } from '../../../types/test-data';
 import { Table } from '../../common/Table';
-import type { PlanTestData } from '../../types/test-data';
 
 export class VirtualMachinesTab {
   private readonly table: Table;
@@ -30,7 +30,7 @@ export class VirtualMachinesTab {
       '[data-test-id="horizontal-link-Virtual machines"]',
     );
     await virtualMachinesTab.click();
-    await this.page.waitForURL(/.*\/vms$/);
+    await this.page.waitForURL((url) => url.toString().endsWith('/vms'));
   }
 
   async openRenameDialog(vmName: string): Promise<void> {

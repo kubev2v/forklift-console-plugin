@@ -35,7 +35,6 @@ test.describe.serial('Provider Creation Tests', () => {
     'should create a new vsphere provider with VDDK AIO optimization enabled',
     {
       tag: '@downstream',
-      timeout: 60000,
     },
     async ({ page }) => {
       const providersPage = new ProvidersListPage(page);
@@ -74,7 +73,6 @@ test.describe.serial('Provider Creation Tests', () => {
     'should create a new vsphere provider with VDDK AIO optimization disabled',
     {
       tag: '@downstream',
-      timeout: 60000,
     },
     async ({ page }) => {
       const providersPage = new ProvidersListPage(page);

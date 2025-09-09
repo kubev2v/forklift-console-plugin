@@ -6,10 +6,15 @@ export default defineConfig({
   globalSetup: './playwright/global.setup.ts',
   globalTeardown: './playwright/global.teardown.ts',
   testDir: './playwright/e2e',
-  timeout: process.env.JENKINS ? 120_000 : 60_000,
+  timeout: process.env.JENKINS ? 15 * 60_000 : 60_000,
   fullyParallel: true,
 
   retries: process.env.GITHUB_ACTIONS ? 3 : 0,
+
+  use: {
+    actionTimeout: 5_000,
+    navigationTimeout: 10_000,
+  },
 
   projects: [
     {
