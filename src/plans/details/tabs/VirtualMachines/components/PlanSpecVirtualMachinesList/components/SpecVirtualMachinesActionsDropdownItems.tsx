@@ -49,6 +49,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
         onClick={() => {
           showModal(<EditVirtualMachineTargetName plan={plan} vmIndex={vmIndex} />);
         }}
+        data-testid="edit-vm-target-name-menu-item"
       >
         {t('Edit target name')}
       </DropdownItem>

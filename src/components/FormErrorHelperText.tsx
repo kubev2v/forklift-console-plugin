@@ -18,7 +18,11 @@ export const FormErrorHelperText: FC<FormErrorHelperTextProps> = ({ error, showI
   return (
     <FormHelperText>
       <HelperText>
-        <HelperTextItem icon={showIcon ? <ExclamationCircleIcon /> : null} variant="error">
+        <HelperTextItem
+          icon={showIcon ? <ExclamationCircleIcon /> : null}
+          variant="error"
+          data-testid="form-validation-error"
+        >
           {error?.message?.toString()}
         </HelperTextItem>
       </HelperText>

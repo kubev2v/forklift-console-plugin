@@ -102,6 +102,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
           variant={ButtonVariant.secondary}
           disabled={inProgress}
           onClick={toggleModal}
+          data-testid="create-project-modal-cancel-button"
         >
           {t('Cancel')}
         </Button>,
@@ -163,7 +164,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
             isInline
             variant={AlertVariant.danger}
             title={t('An error occurred')}
-            data-test="alert-error"
+            data-testid="create-project-modal-error-alert"
           >
             <div className="create-project-modal__alert-text">{errorMessage}</div>
           </Alert>
