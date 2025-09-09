@@ -903,7 +903,6 @@
   "Virtual Machines": "Virtual Machines",
   "Virtual machines:": "Virtual machines:",
   "VM target name": "VM target name",
-  "VM target name is required.": "VM target name is required.",
   "VM target name must be unique within a plan.": "VM target name must be unique within a plan.",
   "VM target name must contain only lowercase alphanumeric characters or '-', and must start or end with lowercase alphanumeric character.": "VM target name must contain only lowercase alphanumeric characters or '-', and must start or end with lowercase alphanumeric character.",
   "VM target power state": "VM target power state",

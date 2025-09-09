@@ -18,12 +18,15 @@ const globalTeardown = async (config: FullConfig) => {
 
   const browser = await chromium.launch();
   const context = await browser.newContext({
-    storageState: storageState as string,
+    ...(storageState && { storageState: storageState as string }),
+    baseURL,
     ignoreHTTPSErrors: true,
   });
   const page = await context.newPage();
 
-  await page.goto(baseURL);
+  console.log(`🧹 Global cleanup of ${resourceManager.getResourceCount()} resources...`);
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
 
   try {
     await resourceManager.cleanupAll(page);

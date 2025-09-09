@@ -33,6 +33,11 @@ export class ReviewStep {
     await section.getByRole('button', { name: 'Edit step' }).click();
   }
 
+  async fillAndComplete(planData: PlanTestData): Promise<void> {
+    await this.verifyStepVisible();
+    await this.verifyAllSections(planData);
+  }
+
   async verifyAllSections(planData: PlanTestData): Promise<void> {
     await this.verifyGeneralSection(planData);
     await this.verifyVirtualMachinesSection();
@@ -68,7 +73,6 @@ export class ReviewStep {
 
   async verifyMigrationTypeSection(): Promise<void> {
     await expect(this.page.getByTestId('review-migration-type-section')).toBeVisible();
-    // Migration type field exists but may be empty
     await expect(this.page.getByTestId('review-migration-type')).toBeVisible();
   }
 

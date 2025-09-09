@@ -11,106 +11,157 @@ if (!existsSync(providersPath)) {
 import * as providers from '../../../.providers.json';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
-import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage';
+import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { PlansListPage } from '../../page-objects/PlansListPage';
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage';
 import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
 import { createPlanTestData, type ProviderConfig, type ProviderData } from '../../types/test-data';
 import { ResourceManager } from '../../utils/ResourceManager';
 
-test.describe.serial(
-  'Plans - Downstream Happy Path Migration',
-  {
-    tag: '@downstream',
-  },
-  () => {
-    const resourceManager = new ResourceManager();
+test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => {
+  const resourceManager = new ResourceManager();
 
-    let testProviderData: ProviderData = {
-      name: '',
-      type: 'vsphere',
-      endpointType: 'vcenter',
-      hostname: '',
-      username: '',
-      password: '',
-      vddkInitImage: '',
-    };
+  let testProviderData: ProviderData = {
+    name: '',
+    type: 'vsphere',
+    endpointType: 'vcenter',
+    hostname: '',
+    username: '',
+    password: '',
+    vddkInitImage: '',
+    useVddkAioOptimization: false,
+  };
 
-    test(
-      'should create a new vsphere provider',
-      {
-        tag: '@downstream',
-      },
-      async ({ page }) => {
-        const providersPage = new ProvidersListPage(page);
-        const createProvider = new CreateProviderPage(page, resourceManager);
-        const providerDetailsPage = new ProviderDetailsPage(page);
+  const providerName = `test-vsphere-provider-${Date.now()}`;
+  const planName = `${providerName}-plan`;
+  const targetProjectName = `test-project-${Date.now()}`;
 
-        const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
-        const providerName = `test-vsphere-provider-${Date.now()}`;
-        const providerConfig = (providers as Record<string, ProviderConfig>)[providerKey];
+  const testPlanData = createPlanTestData({
+    planName,
+    planProject: 'openshift-mtv',
+    sourceProvider: providerName,
+    targetProvider: 'host',
+    targetProject: {
+      name: targetProjectName,
+      isPreexisting: false,
+    },
+    networkMap: {
+      name: `${planName}-network-map`,
+      isPreExisting: false,
+    },
+    storageMap: {
+      name: `${planName}-storage-map`,
+      isPreExisting: false,
+      targetStorage: 'ocs-storagecluster-ceph-rbd-virtualization',
+    },
+    virtualMachines: [
+      { sourceName: 'mtv-func-rhel9', targetName: `mtv-func-rhel9-renamed-${Date.now()}` },
+    ],
+  });
 
-        testProviderData = {
-          name: providerName,
-          type: providerConfig.type,
-          endpointType: providerConfig.endpoint_type ?? 'vcenter',
-          hostname: providerConfig.api_url,
-          username: providerConfig.username,
-          password: providerConfig.password,
-          vddkInitImage: providerConfig.vddk_init_image,
+  test(
+    'should create a new vsphere provider',
+    {
+      tag: '@downstream',
+      timeout: 60000,
+    },
+    async ({ page }) => {
+      const providersPage = new ProvidersListPage(page);
+      const createProvider = new CreateProviderPage(page, resourceManager);
+      const providerDetailsPage = new ProviderDetailsPage(page);
+
+      const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
+      const providerConfig = (providers as Record<string, ProviderConfig>)[providerKey];
+
+      testProviderData = {
+        name: providerName,
+        type: providerConfig.type,
+        endpointType: providerConfig.endpoint_type ?? 'vcenter',
+        hostname: providerConfig.api_url,
+        username: providerConfig.username,
+        password: providerConfig.password,
+        vddkInitImage: providerConfig.vddk_init_image,
+        useVddkAioOptimization: false,
+      };
+
+      await providersPage.navigateFromMainMenu();
+      await providersPage.clickCreateProviderButton();
+      await createProvider.waitForWizardLoad();
+      await createProvider.fillAndSubmit(testProviderData);
+      await providerDetailsPage.waitForPageLoad();
+      await providerDetailsPage.verifyProviderDetails(testProviderData);
+    },
+  );
+
+  test(
+    'should create a new cold migration plan',
+    {
+      tag: ['@downstream'],
+      timeout: 60000,
+    },
+    async ({ page }) => {
+      const plansPage = new PlansListPage(page);
+      const createWizard = new CreatePlanWizardPage(page, resourceManager);
+      const planDetailsPage = new PlanDetailsPage(page);
+
+      await plansPage.navigateFromMainMenu();
+      await plansPage.clickCreatePlanButton();
+      await createWizard.waitForWizardLoad();
+      await createWizard.fillAndSubmit(testPlanData);
+
+      await planDetailsPage.verifyBasicPlanDetailsPage(testPlanData);
+      await planDetailsPage.renameVMs(testPlanData);
+    },
+  );
+
+  test(
+    'should run cold migration',
+    {
+      tag: ['@downstream', '@start'],
+      timeout: 15 * 60000,
+    },
+    async ({ page }) => {
+      const plansPage = new PlansListPage(page);
+      const planDetailsPage = new PlanDetailsPage(page);
+
+      await plansPage.navigateFromMainMenu();
+      await plansPage.waitForPageLoad();
+      await plansPage.navigateToPlan(planName);
+      await planDetailsPage.verifyPlanTitle(planName);
+
+      await planDetailsPage.verifyPlanStatus('Ready for migration');
+
+      console.log('Starting migration via actions menu...');
+      await planDetailsPage.clickActionsMenuAndStart();
+
+      await planDetailsPage.verifyMigrationInProgress();
+      console.log('Migration started successfully');
+
+      console.log('⏳ Waiting for migration to complete...');
+      await planDetailsPage.waitForMigrationCompletion(900000, true);
+      console.log(`[${new Date().toLocaleString()}] ✅ Migration completed successfully!`);
+
+      for (const vm of testPlanData.virtualMachines ?? []) {
+        const migratedVMName = vm.targetName ?? vm.sourceName;
+
+        const migratedVM = {
+          apiVersion: 'kubevirt.io/v1',
+          kind: 'VirtualMachine',
+          metadata: {
+            name: migratedVMName,
+            namespace: targetProjectName,
+          },
         };
 
-        await providersPage.navigateFromMainMenu();
-        await providersPage.clickCreateProviderButton();
-        await createProvider.waitForWizardLoad();
-        await createProvider.fillAndSubmit(testProviderData);
-        await providerDetailsPage.waitForPageLoad();
-        await providerDetailsPage.verifyProviderDetails(testProviderData);
-      },
-    );
+        resourceManager.addResource(migratedVM);
+        console.log(
+          `✅ Added migrated VM "${migratedVMName}" in namespace "${targetProjectName}" to cleanup queue`,
+        );
+      }
+    },
+  );
 
-    test(
-      'should run plan creation wizard',
-      {
-        tag: ['@downstream'],
-      },
-      async ({ page }) => {
-        const plansPage = new PlansListPage(page);
-        const createWizard = new CreatePlanWizardPage(page, resourceManager);
-        const planDetailsPage = new PlanDetailsPage(page);
-
-        const planName = `${testProviderData.name}-plan`;
-        const targetProjectName = `test-project-${Date.now()}`;
-
-        const testPlanData = createPlanTestData({
-          planName,
-          planProject: 'openshift-mtv',
-          sourceProvider: testProviderData.name,
-          targetProvider: 'host',
-          targetProject: {
-            name: targetProjectName,
-            isPreexisting: false,
-          },
-          networkMap: {
-            name: `${planName}-network-map`,
-            isPreExisting: false,
-          },
-          storageMap: {
-            name: `${planName}-storage-map`,
-            isPreExisting: false,
-          },
-        });
-
-        await plansPage.navigateFromMainMenu();
-        await plansPage.clickCreatePlanButton();
-        await createWizard.waitForWizardLoad();
-        await createWizard.fillAndSubmit(testPlanData);
-        await planDetailsPage.verifyBasicPlanDetailsPage(testPlanData);
-      },
-    );
-
-    test.afterAll(() => {
-      resourceManager.saveResourcesToFile();
-    });
-  },
-);
+  test.afterAll(async () => {
+    await resourceManager.instantCleanup();
+  });
+});
