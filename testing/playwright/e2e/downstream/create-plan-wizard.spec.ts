@@ -14,10 +14,8 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
         throw new Error('Test provider is required for this test');
       }
 
-      // Simplified list to reduce test flakiness
       const validNames = ['valid-name-123', 'test123'];
       for (const validName of validNames) {
-        // Generate unique names for this test iteration
         const uniqueId = `${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
         const planName = `project-creation-${validName}-${uniqueId}`;
         const targetProjectName = `${validName}-${uniqueId}`;
@@ -29,7 +27,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
           targetProvider: 'host',
           targetProject: {
             name: targetProjectName,
-            isPreexisting: false, // This tests the project creation feature
+            isPreexisting: false,
           },
           networkMap: {
             name: `${planName}-network-map`,
@@ -50,16 +48,14 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
         const createWizard = new CreatePlanWizardPage(page, resourceManager);
         const planDetailsPage = new PlanDetailsPage(page);
 
-        // Navigate directly to the create plan wizard
         await createWizard.navigateToWizardAndWaitForLoad();
 
-        // Use modular approach to focus on the project creation feature
         await createWizard.generalInformation.fillAndComplete({
           planName: testPlanData.planName,
           planProject: testPlanData.planProject,
           sourceProvider: testPlanData.sourceProvider,
           targetProvider: testPlanData.targetProvider,
-          targetProject: testPlanData.targetProject, // This tests the new project creation
+          targetProject: testPlanData.targetProject,
         });
         await createWizard.clickNext();
 
@@ -77,12 +73,10 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
         await createWizard.clickNext();
         await createWizard.waitForPlanCreation();
 
-        // Verify the plan details using POM methods
         await planDetailsPage.verifyPlanTitle(testPlanData.planName);
         await planDetailsPage.detailsTab.navigateToDetailsTab();
         await planDetailsPage.detailsTab.verifyPlanDetails(testPlanData);
 
-        // Add the created plan to cleanup
         const plan = {
           apiVersion: 'forklift.konveyor.io/v1beta1',
           kind: 'Plan',
@@ -106,13 +100,11 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
         throw new Error('Test provider is required for this test');
       }
 
-      // Simplified list to reduce test flakiness
       const invalidNames = ['', 'VM-With-Capitals', 'invalid@symbol'];
 
       const createWizard = new CreatePlanWizardPage(page);
       await createWizard.navigateToWizardAndWaitForLoad();
 
-      // Fill in basic plan information first
       const planName = `validation-test-${Date.now()}`;
       await createWizard.generalInformation.fillPlanName(planName);
       await createWizard.generalInformation.selectProject('openshift-mtv', 'plan-project-select');
@@ -149,7 +141,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
         sourceProvider: testProvider.metadata!.name!,
         targetProvider: 'host',
         targetProject: {
-          name: 'default', // Use existing project
+          name: 'default',
           isPreexisting: true,
         },
         networkMap: {
@@ -171,16 +163,13 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
       const createWizard = new CreatePlanWizardPage(page, resourceManager);
       const planDetailsPage = new PlanDetailsPage(page);
 
-      // Navigate directly to wizard and create plan with existing target project
       await createWizard.navigateToWizardAndWaitForLoad();
       await createWizard.fillAndSubmit(testPlanData);
 
-      // Verify plan details using POM methods
       await planDetailsPage.verifyPlanTitle(testPlanData.planName);
       await planDetailsPage.detailsTab.navigateToDetailsTab();
       await planDetailsPage.detailsTab.verifyPlanDetails(testPlanData);
 
-      // Add cleanup
       const plan = {
         apiVersion: 'forklift.konveyor.io/v1beta1',
         kind: 'Plan',
