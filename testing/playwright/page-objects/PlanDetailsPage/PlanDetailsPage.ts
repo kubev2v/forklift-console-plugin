@@ -216,7 +216,7 @@ export class PlanDetailsPage {
     await expect(
       this.page
         .locator('.pf-v5-c-spinner')
-        .or(this.page.locator('.forklift-page-headings__status').filter({ hasText: /\d+%/ })),
+        .or(this.page.locator('.forklift-page-headings__status').filter({ hasText: /^\d{1,3}%$/ })),
     ).toBeVisible({ timeout: 30000 });
   }
 
