@@ -10,6 +10,7 @@ import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
+import { DOC_MAIN_HELP_LINK } from '@utils/links';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
 
@@ -48,6 +49,7 @@ const TargetLabelsDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan 
       content={<LabelsViewDetailsItemContent labels={plan?.spec?.targetLabels} />}
       helpContent={TARGET_LABELS_DETAILS_ITEM_DESCRIPTION}
       crumbs={['spec', 'targetLabels']}
+      moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
         showModal(
           <LabelsModal
