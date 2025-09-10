@@ -160,6 +160,91 @@ export class ResourceManager {
   }
 
   /**
+   * Fetch a resource by its type, name, and namespace
+   */
+  private async fetchResource<T extends SupportedResource>(
+    page: Page,
+    {
+      resourceType,
+      resourceKind,
+      resourceName,
+      namespace,
+    }: {
+      resourceType: string;
+      resourceKind: string;
+      resourceName: string;
+      namespace: string;
+    },
+  ): Promise<T | null> {
+    try {
+      const result = await page.evaluate(
+        async ({ resType, kind, name, ns }) => {
+          try {
+            // Get CSRF token from cookie
+            const getCsrfTokenFromCookie = () => {
+              const cookies = document.cookie.split('; ');
+              const csrfCookie = cookies.find((cookie) => cookie.startsWith('csrf-token='));
+              return csrfCookie ? csrfCookie.split('=')[1] : '';
+            };
+            const csrfToken = getCsrfTokenFromCookie();
+
+            let apiPath = '';
+            if (resType === 'virtualmachines') {
+              // VirtualMachines use kubevirt.io API
+              apiPath = `/api/kubernetes/apis/kubevirt.io/v1/namespaces/${ns}/${resType}/${name}`;
+            } else {
+              // Other resources use forklift.konveyor.io API
+              apiPath = `/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/${ns}/${resType}/${name}`;
+            }
+
+            const response = await fetch(apiPath, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+              },
+              credentials: 'include',
+            });
+
+            if (response.ok) {
+              return { success: true, data: await response.json() };
+            }
+
+            if (response.status === 404) {
+              return { success: false, error: `${kind} not found` };
+            }
+
+            const errorText = await response.text().catch(() => response.statusText);
+            return { success: false, error: errorText };
+          } catch (error: unknown) {
+            const err = error as any;
+            return {
+              success: false,
+              error: err?.message ?? String(error),
+            };
+          }
+        },
+        {
+          resType: resourceType,
+          kind: resourceKind,
+          name: resourceName,
+          ns: namespace,
+        },
+      );
+
+      if (result.success) {
+        return result.data as T;
+      }
+
+      console.warn(`Failed to fetch ${resourceKind} ${resourceName}:`, result.error);
+      return null;
+    } catch (error) {
+      console.error(`Error fetching ${resourceKind} ${resourceName}:`, error);
+      return null;
+    }
+  }
+
+  /**
    * Determine resource type from typed resource
    */
   private getResourceType(resource: SupportedResource): string {
@@ -298,62 +383,12 @@ export class ResourceManager {
     providerName: string,
     namespace = 'openshift-mtv',
   ): Promise<V1beta1Provider | null> {
-    try {
-      const result = await page.evaluate(
-        async ({ name, ns }) => {
-          try {
-            // Get CSRF token from cookie
-            const getCsrfTokenFromCookie = () => {
-              const cookies = document.cookie.split('; ');
-              const csrfCookie = cookies.find((cookie) => cookie.startsWith('csrf-token='));
-              return csrfCookie ? csrfCookie.split('=')[1] : '';
-            };
-            const csrfToken = getCsrfTokenFromCookie();
-            const apiPath = `/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/${ns}/providers/${name}`;
-
-            const response = await fetch(apiPath, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-              },
-              credentials: 'include',
-            });
-
-            if (response.ok) {
-              return { success: true, data: await response.json() };
-            }
-
-            if (response.status === 404) {
-              return { success: false, error: 'Provider not found' };
-            }
-
-            const errorText = await response.text().catch(() => response.statusText);
-            return { success: false, error: errorText };
-          } catch (error: unknown) {
-            const err = error as any;
-            return {
-              success: false,
-              error: err?.message ?? String(error),
-            };
-          }
-        },
-        {
-          name: providerName,
-          ns: namespace,
-        },
-      );
-
-      if (result.success) {
-        return result.data as V1beta1Provider;
-      }
-
-      console.warn(`Failed to fetch provider ${providerName}:`, result.error);
-      return null;
-    } catch (error) {
-      console.error(`Error fetching provider ${providerName}:`, error);
-      return null;
-    }
+    return this.fetchResource<V1beta1Provider>(page, {
+      resourceType: 'providers',
+      resourceKind: 'Provider',
+      resourceName: providerName,
+      namespace,
+    });
   }
 
   async fetchVirtualMachine(
@@ -361,62 +396,12 @@ export class ResourceManager {
     vmName: string,
     namespace: string,
   ): Promise<V1VirtualMachine | null> {
-    try {
-      const result = await page.evaluate(
-        async ({ name, ns }) => {
-          try {
-            // Get CSRF token from cookie
-            const getCsrfTokenFromCookie = () => {
-              const cookies = document.cookie.split('; ');
-              const csrfCookie = cookies.find((cookie) => cookie.startsWith('csrf-token='));
-              return csrfCookie ? csrfCookie.split('=')[1] : '';
-            };
-            const csrfToken = getCsrfTokenFromCookie();
-            const apiPath = `/api/kubernetes/apis/kubevirt.io/v1/namespaces/${ns}/virtualmachines/${name}`;
-
-            const response = await fetch(apiPath, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-              },
-              credentials: 'include',
-            });
-
-            if (response.ok) {
-              return { success: true, data: await response.json() };
-            }
-
-            if (response.status === 404) {
-              return { success: false, error: 'VirtualMachine not found' };
-            }
-
-            const errorText = await response.text().catch(() => response.statusText);
-            return { success: false, error: errorText };
-          } catch (error: unknown) {
-            const err = error as any;
-            return {
-              success: false,
-              error: err?.message ?? String(error),
-            };
-          }
-        },
-        {
-          name: vmName,
-          ns: namespace,
-        },
-      );
-
-      if (result.success) {
-        return result.data as V1VirtualMachine;
-      }
-
-      console.warn(`Failed to fetch VirtualMachine ${vmName}:`, result.error);
-      return null;
-    } catch (error) {
-      console.error(`Error fetching VirtualMachine ${vmName}:`, error);
-      return null;
-    }
+    return this.fetchResource<V1VirtualMachine>(page, {
+      resourceType: 'virtualmachines',
+      resourceKind: 'VirtualMachine',
+      resourceName: vmName,
+      namespace,
+    });
   }
 
   getResourceCount(): number {
