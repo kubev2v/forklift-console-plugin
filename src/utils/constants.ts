@@ -49,6 +49,13 @@ export const CATEGORY_TYPES = {
   VALIDATION_FAILED: 'ValidationFailed',
 };
 
+export const MODEL_KIND = {
+  NETWORK_MAP: 'NetworkMap',
+  PLAN: 'Plan',
+  PROVIDER: 'Provider',
+  STORAGE_MAP: 'StorageMap',
+};
+
 export const FEATURE_NAMES = {
   COPY_OFFLOAD: 'feature_copy_offload',
   OCP_LIVE_MIGRATION: 'feature_ocp_live_migration',

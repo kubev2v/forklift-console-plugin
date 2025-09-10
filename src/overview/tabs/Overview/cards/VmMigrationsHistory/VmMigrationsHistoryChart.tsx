@@ -12,6 +12,8 @@ import {
   ChartVoronoiContainer,
 } from '@patternfly/react-charts';
 import { Button, ButtonVariant } from '@patternfly/react-core';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import useMigrationCounts from '../../hooks/useMigrationCounts';
@@ -33,6 +35,7 @@ const VmMigrationsHistoryChart = ({
   };
 }) => {
   const { t } = useForkliftTranslation();
+  const { trackEvent } = useForkliftAnalytics();
   const { count } = useMigrationCounts();
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartDimensions = useResizeObserver(chartContainerRef);
@@ -112,6 +115,7 @@ const VmMigrationsHistoryChart = ({
           <Button
             variant={ButtonVariant.primary}
             onClick={() => {
+              trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_FROM_OVERVIEW_CLICKED);
               navigate(`${plansListURL}/~new`);
             }}
           >
