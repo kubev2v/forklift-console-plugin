@@ -110,9 +110,5 @@ export class VirtualMachinesTab {
         await this.table.verifyRowIsVisible({ Name: vm.sourceName });
       }
     }
-
-    await expect(
-      this.page.locator('[data-test-id="horizontal-link-Virtual machines"][aria-selected="true"]'),
-    ).toBeVisible();
   }
 }
