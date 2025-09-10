@@ -1,7 +1,7 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
 
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 const providersPath = join(__dirname, '../../../.providers.json');
 if (!existsSync(providersPath)) {
@@ -140,10 +140,12 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       await planDetailsPage.waitForMigrationCompletion(900000, true);
       console.log(`[${new Date().toLocaleString()}] ✅ Migration completed successfully!`);
 
+      // Verify each migrated VM exists and add to cleanup
       for (const vm of testPlanData.virtualMachines ?? []) {
         const migratedVMName = vm.targetName ?? vm.sourceName;
 
-        const migratedVM = {
+        // Create VM stub for cleanup (added first to ensure cleanup even if verification fails)
+        const vmStub = {
           apiVersion: 'kubevirt.io/v1',
           kind: 'VirtualMachine',
           metadata: {
@@ -151,11 +153,17 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
             namespace: targetProjectName,
           },
         };
+        resourceManager.addResource(vmStub);
 
-        resourceManager.addResource(migratedVM);
-        console.log(
-          `✅ Added migrated VM "${migratedVMName}" in namespace "${targetProjectName}" to cleanup queue`,
+        // Fetch the migrated VM to verify it exists
+        const vmResource = await resourceManager.fetchVirtualMachine(
+          page,
+          migratedVMName,
+          targetProjectName,
         );
+        expect(vmResource).not.toBeNull();
+        expect(vmResource?.metadata?.name).toBe(migratedVMName);
+        expect(vmResource?.metadata?.namespace).toBe(targetProjectName);
       }
     },
   );
