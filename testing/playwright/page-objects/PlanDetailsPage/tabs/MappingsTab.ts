@@ -92,11 +92,13 @@ export class MappingsTab {
     await expect(targetButton).toContainText(newTargetStorage);
   }
 
-  async getNetworkMappingCount(): Promise<number> {
+  // eslint-disable-next-line @typescript-eslint/promise-function-async
+  getNetworkMappingCount(): Promise<number> {
     return this.page.locator('[data-testid^="network-mapping-row-"]').count();
   }
 
-  async getStorageMappingCount(): Promise<number> {
+  // eslint-disable-next-line @typescript-eslint/promise-function-async
+  getStorageMappingCount(): Promise<number> {
     return this.page.locator('[data-testid^="storage-mapping-row-"]').count();
   }
 

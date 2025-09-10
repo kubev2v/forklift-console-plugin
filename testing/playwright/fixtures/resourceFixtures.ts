@@ -11,7 +11,7 @@ import { PlansListPage } from '../page-objects/PlansListPage';
 import { ProviderDetailsPage } from '../page-objects/ProviderDetailsPage';
 import { ProvidersListPage } from '../page-objects/ProvidersListPage';
 import { createPlanTestData, type ProviderConfig, type ProviderData } from '../types/test-data';
-import { ResourceManager } from '../utils';
+import { generateUniqueId, ResourceManager } from '../utils';
 
 // Load real provider configurations
 const providersPath = join(__dirname, '../../.providers.json');
