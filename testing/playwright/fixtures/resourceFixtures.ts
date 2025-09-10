@@ -26,7 +26,7 @@ const createProvider = async (
   resourceManager: ResourceManager,
   namePrefix = 'test-provider',
 ): Promise<V1beta1Provider> => {
-  const uniqueId = `${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+  const uniqueId = generateUniqueId();
   const providerName = `${namePrefix}-${uniqueId}`;
 
   const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
@@ -77,7 +77,7 @@ const createPlanWithCustomData = async (
   },
 ): Promise<V1beta1Plan> => {
   const namePrefix = 'test-plan';
-  const uniqueId = `${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+  const uniqueId = generateUniqueId();
   const planName = `${namePrefix}-${uniqueId}`;
   const targetProjectName = `test-project-${uniqueId}`;
   const { sourceProvider, customPlanData } = options;

@@ -1,7 +1,7 @@
 export { NavigationHelper } from './NavigationHelper';
 export type { SupportedResource } from './ResourceManager';
 export { ResourceManager } from './ResourceManager';
-export { disableGuidedTour, waitForLoader } from './utils';
+export { disableGuidedTour, generateUniqueId, waitForLoader } from './utils';
 export type {
   V1beta1Migration,
   V1beta1Plan,

@@ -2,6 +2,7 @@ import { providerOnlyFixtures as test } from '../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { createPlanTestData } from '../../types/test-data';
+import { generateUniqueId } from '../../utils';
 
 test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
   test(
@@ -16,7 +17,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
 
       const validNames = ['valid-name-123', 'test123'];
       for (const validName of validNames) {
-        const uniqueId = `${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+        const uniqueId = generateUniqueId();
         const planName = `project-creation-${validName}-${uniqueId}`;
         const targetProjectName = `${validName}-${uniqueId}`;
 
@@ -132,7 +133,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
         throw new Error('Test provider is required for this test');
       }
 
-      const uniqueId = `${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+      const uniqueId = generateUniqueId();
       const planName = `existing-project-test-${uniqueId}`;
 
       const testPlanData = createPlanTestData({
