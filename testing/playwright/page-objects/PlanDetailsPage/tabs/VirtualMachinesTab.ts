@@ -34,12 +34,11 @@ export class VirtualMachinesTab {
   }
 
   async openRenameDialog(vmName: string): Promise<void> {
-    try {
-      await this.page.getByTestId('modal-cancel-button').click({ timeout: 1000 });
-      await this.page.waitForTimeout(500);
-    } catch (_e) {
-      // No modal was open, continue
-    }
+    const modalCancelButton = this.page.getByTestId('modal-cancel-button');
+    await modalCancelButton.click({ timeout: 1000 }).catch(() => {
+      // Modal doesn't exist or isn't clickable
+    });
+    await this.page.waitForTimeout(500);
 
     await this.getVMActionsMenu(vmName).click();
 

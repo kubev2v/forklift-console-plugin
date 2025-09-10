@@ -253,15 +253,11 @@ export class PlanDetailsPage {
 
     if (logProgress) {
       const checkProgress = async () => {
-        try {
-          const progress = await this.getMigrationProgress();
-          const elapsed = Math.round((Date.now() - startTime) / 1000);
-          console.log(
-            `[${new Date().toLocaleString()}] Migration progress: ${progress} (${elapsed}s elapsed)`,
-          );
-        } catch (_error) {
-          // No-op
-        }
+        const progress = await this.getMigrationProgress();
+        const elapsed = Math.round((Date.now() - startTime) / 1000);
+        console.log(
+          `[${new Date().toLocaleString()}] Migration progress: ${progress} (${elapsed}s elapsed)`,
+        );
       };
 
       progressInterval = setInterval(checkProgress, 30000);
