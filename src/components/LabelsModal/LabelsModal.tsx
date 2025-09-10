@@ -3,6 +3,7 @@ import {
   type DetailedHTMLProps,
   type FC,
   type HTMLAttributes,
+  type ReactNode,
   useState,
 } from 'react';
 import TagsInput from 'react-tagsinput';
@@ -34,7 +35,7 @@ declare global {
 
 type LabelsModalProps = {
   initialLabels?: Record<string, string>;
-  description?: string;
+  description?: ReactNode;
   title?: string;
   onConfirm: (labels: Record<string, string | null>) => Promise<K8sResourceCommon>;
 };
