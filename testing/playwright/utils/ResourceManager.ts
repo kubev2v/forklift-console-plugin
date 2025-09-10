@@ -301,9 +301,9 @@ export class ResourceManager {
           try {
             // Get CSRF token from cookie
             const getCsrfTokenFromCookie = () => {
-              const csrfRegex = /csrf-token=(?<token>[^;]+)/;
-              const match = csrfRegex.exec(document.cookie);
-              return match?.groups?.token ?? '';
+              const cookies = document.cookie.split('; ');
+              const csrfCookie = cookies.find((cookie) => cookie.startsWith('csrf-token='));
+              return csrfCookie ? csrfCookie.split('=')[1] : '';
             };
 
             const csrfToken = getCsrfTokenFromCookie();
