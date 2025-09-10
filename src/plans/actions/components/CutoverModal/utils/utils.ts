@@ -33,7 +33,7 @@ export const patchMigrationCutover = async (
     cutoverTime: cutover,
     hasCutover: Boolean(cutover),
     migrationName: migration?.metadata?.name,
-    namespace: migration?.metadata?.namespace,
+    planNamespace: migration?.metadata?.namespace,
   });
 
   return result;

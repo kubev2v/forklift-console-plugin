@@ -10,6 +10,7 @@ import { t } from '@utils/i18n';
 export const startPlanMigration = async (
   plan: V1beta1Plan,
   trackEvent?: (event: string, data: Record<string, unknown>) => void,
+  sourceProviderType?: string,
 ) => {
   const name = getName(plan);
   const namespace = getNamespace(plan);
@@ -40,8 +41,9 @@ export const startPlanMigration = async (
 
   trackEvent?.(TELEMETRY_EVENTS.MIGRATION_STARTED, {
     migrationType: getPlanMigrationType(plan),
-    namespace,
     planName: name,
+    planNamespace: namespace,
+    providerType: sourceProviderType,
     vmCount: plan?.spec?.vms?.length ?? 0,
   });
 

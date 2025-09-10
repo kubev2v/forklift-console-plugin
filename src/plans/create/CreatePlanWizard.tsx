@@ -53,8 +53,9 @@ const CreatePlanWizard: FC = () => {
 
     trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_STARTED, {
       creationMethod: CreationMethod.PlanWizard,
-      namespace: formData.planProject,
+      planNamespace: formData.planProject,
       sourceProviderType: formData.sourceProvider?.spec?.type,
+      targetNamespace: formData.targetProject,
       targetProviderType: formData.targetProvider?.spec?.type,
     });
 
@@ -70,8 +71,9 @@ const CreatePlanWizard: FC = () => {
       trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_FAILED, {
         creationMethod: CreationMethod.PlanWizard,
         error: error instanceof Error ? error.message : 'Unknown error',
-        namespace: formData.planProject,
+        planNamespace: formData.planProject,
         sourceProviderType: formData.sourceProvider?.spec?.type,
+        targetNamespace: formData.targetProject,
       });
 
       throw error;

@@ -27,6 +27,7 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
 
   const handleCreatePlan = () => {
     trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_FROM_PROVIDER_CLICKED, {
+      planNamespace: namespace,
       providerId: provider?.metadata?.name,
       providerNamespace: getNamespace(provider),
       providerType: provider?.spec?.type,

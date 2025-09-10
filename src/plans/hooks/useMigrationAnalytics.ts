@@ -48,8 +48,8 @@ export const useMigrationAnalytics = (plan: V1beta1Plan, lastMigration?: V1beta1
       const baseTrackingData = {
         failedVms,
         migrationType: getPlanMigrationType(plan),
-        namespace: getNamespace(plan),
         planName: plan?.metadata?.name,
+        planNamespace: getNamespace(plan),
         succeededVms,
         vmCount,
       };

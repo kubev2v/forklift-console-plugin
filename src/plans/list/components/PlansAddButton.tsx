@@ -27,7 +27,7 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, namespace, testId 
 
     trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_BUTTON_CLICKED, {
       hasSufficientProviders,
-      namespace,
+      planNamespace: namespace,
     });
 
     const planResourceUrl = getResourceUrl({
