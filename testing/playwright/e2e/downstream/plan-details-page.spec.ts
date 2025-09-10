@@ -42,7 +42,7 @@ test.describe('Plan Details - VM Rename Validation', { tag: '@downstream' }, () 
     await planDetailsPage.verifyPlanTitle(planName);
 
     await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
-    const testData = (testPlan as any).testData as PlanTestData;
+    const testData = testPlan.testData as PlanTestData;
     await planDetailsPage.virtualMachinesTab.verifyVirtualMachinesTab(testData);
 
     const originalVmName = testData.virtualMachines?.[0]?.sourceName;
