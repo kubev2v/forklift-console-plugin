@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-import { disableGuidedTour, waitForLoader } from './utils';
+import { disableGuidedTour } from './utils';
 
 export class NavigationHelper {
   private readonly defaultNamespace = 'openshift-mtv';
@@ -45,7 +45,7 @@ export class NavigationHelper {
   async navigateToConsole(): Promise<void> {
     await disableGuidedTour(this.page);
     await this.page.goto('/');
-    await waitForLoader(this.page);
+    await this.page.waitForLoadState('networkidle');
   }
 
   async navigateToCreatePlanWizard(): Promise<void> {

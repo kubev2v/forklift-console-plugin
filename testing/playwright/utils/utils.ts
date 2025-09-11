@@ -12,12 +12,6 @@ export const disableGuidedTour = async (page: Page) => {
   });
 };
 
-export const waitForLoader = async (page: Page) => {
-  const loader = page.locator('[data-test="loading-indicator"]');
-  await loader.waitFor({ state: 'visible', timeout: 1000 });
-  await loader.waitFor({ state: 'hidden', timeout: 30000 });
-};
-
 let uniqueCounter = 0;
 
 /**
