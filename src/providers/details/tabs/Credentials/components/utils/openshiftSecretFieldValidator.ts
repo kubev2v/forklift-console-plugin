@@ -13,7 +13,7 @@ const validateToken = (value: string): ValidationMsg => {
   if (value === undefined || value === '') {
     return {
       msg: t(
-        `A service account token used for authenticating the the connection to the API server.`,
+        `A service account token used for authenticating the connection to the API server.`,
       ),
       type: ValidationState.Default,
     };
@@ -22,7 +22,7 @@ const validateToken = (value: string): ValidationMsg => {
   if (valid) {
     return {
       msg: t(
-        `A service account token used for authenticating the the connection to the API server.`,
+        `A service account token used for authenticating the connection to the API server.`,
       ),
       type: ValidationState.Success,
     };
