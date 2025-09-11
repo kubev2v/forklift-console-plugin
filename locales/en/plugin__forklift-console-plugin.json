@@ -83,7 +83,7 @@
   "A Project name must consist of lower case alphanumeric characters or '-', and must start\n            and end with an alphanumeric character (e.g. 'my-name' or '123-abc').": "A Project name must consist of lower case alphanumeric characters or '-', and must start\n            and end with an alphanumeric character (e.g. 'my-name' or '123-abc').",
   "A project, also known as a namespace, separates resources within clusters. It is an alternative representation of a Kubernetes namespace.": "A project, also known as a namespace, separates resources within clusters. It is an alternative representation of a Kubernetes namespace.",
   "A Secret containing credentials and other confidential information.": "A Secret containing credentials and other confidential information.",
-  "A service account token used for authenticating the the connection to the API server.": "A service account token used for authenticating the the connection to the API server.",
+  "A service account token used for authenticating the connection to the API server.": "A service account token used for authenticating the connection to the API server.",
   "A service account token with cluster admin privileges, required for authenticating the connection to the API server.": "A service account token with cluster admin privileges, required for authenticating the connection to the API server.",
   "A user ID for connecting to the OpenStack Identity (Keystone) endpoint.": "A user ID for connecting to the OpenStack Identity (Keystone) endpoint.",
   "A user ID for connecting to the OpenStack Identity (Keystone) endpoint. [required]": "A user ID for connecting to the OpenStack Identity (Keystone) endpoint. [required]",
