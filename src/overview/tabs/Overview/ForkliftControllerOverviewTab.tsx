@@ -1,5 +1,4 @@
-import { type FC, useContext } from 'react';
-import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext';
+import type { FC } from 'react';
 import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchProviderNames';
 
 import { Flex, FlexItem } from '@patternfly/react-core';
@@ -15,21 +14,13 @@ import '@patternfly/patternfly/patternfly-charts-theme-dark.css';
 
 const ForkliftControllerOverviewTab: FC = () => {
   const [forkliftController] = useK8sWatchForkliftController();
-  const { data: { hideWelcomeCardByContext } = {}, setData } = useContext(CreateOverviewContext);
 
   return (
     <div className="co-dashboard-body">
       <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsMd' }}>
-        {hideWelcomeCardByContext ? null : (
-          <FlexItem>
-            <WelcomeCard
-              onHide={() => {
-                setData({ hideWelcomeCardByContext: true });
-              }}
-            />
-          </FlexItem>
-        )}
-
+        <FlexItem>
+          <WelcomeCard />
+        </FlexItem>
         <FlexItem>
           <Flex
             direction={{ default: 'row' }}
