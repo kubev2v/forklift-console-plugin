@@ -34,7 +34,13 @@ const SpecVirtualMachinesActionsDropdown: FC<SpecVirtualMachinesActionsDropdownP
       onOpenChange={setIsOpen}
       onSelect={onSelect}
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
-        <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} variant="plain">
+        <MenuToggle
+          ref={toggleRef}
+          onClick={onToggleClick}
+          isExpanded={isOpen}
+          variant="plain"
+          data-testid="vm-actions-menu-toggle"
+        >
           <EllipsisVIcon />
         </MenuToggle>
       )}

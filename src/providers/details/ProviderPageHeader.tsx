@@ -30,6 +30,7 @@ const ProviderPageHeader: FC<ProviderDetailsPageProps> = ({ name, namespace }) =
       model={ProviderModel}
       obj={provider}
       namespace={namespace}
+      testId="resource-details-title"
       actions={
         <Split hasGutter>
           <SplitItem>

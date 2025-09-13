@@ -82,7 +82,12 @@ const ModalForm: FC<ModalFormProps> = ({
               </Button>,
             ]
           : []),
-        <Button key="cancel" variant={ButtonVariant.secondary} onClick={toggleModal}>
+        <Button
+          key="cancel"
+          variant={ButtonVariant.secondary}
+          onClick={toggleModal}
+          data-testid="modal-cancel-button"
+        >
           {cancelLabel ?? t('Cancel')}
         </Button>,
       ]}

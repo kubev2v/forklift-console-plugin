@@ -62,6 +62,7 @@ const EditVirtualMachineTargetName: FC<EditVirtualMachineTargetNameProps> = ({ p
                 setErrorMessage(null);
               }}
               validated={validated}
+              data-testid="vm-target-name-input"
             />
           </FormGroupWithHelpText>
         </StackItem>

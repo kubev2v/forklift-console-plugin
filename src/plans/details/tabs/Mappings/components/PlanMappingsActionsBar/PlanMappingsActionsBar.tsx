@@ -35,12 +35,17 @@ const PlanMappingsActionsBar: FC<PlanMappingsActionsBarProps> = ({
             onClick={onUpdate}
             isDisabled={!dataChanged}
             isLoading={isLoading}
+            data-testid="update-mappings-button"
           >
             {t('Update mappings')}
           </Button>
         </FlexItem>
         <FlexItem>
-          <Button variant={ButtonVariant.secondary} onClick={reset}>
+          <Button
+            variant={ButtonVariant.secondary}
+            onClick={reset}
+            data-testid="cancel-mappings-button"
+          >
             {t('Cancel')}
           </Button>
         </FlexItem>

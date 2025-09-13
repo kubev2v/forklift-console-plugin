@@ -24,6 +24,7 @@ const PlanPageHeader: FC<PlanPageHeaderProps> = ({ name, namespace }) => {
       model={PlanModel}
       obj={plan}
       namespace={namespace}
+      testId="resource-details-title"
       status={<PlanStatusLabel plan={plan} />}
       actions={
         <Level hasGutter>
