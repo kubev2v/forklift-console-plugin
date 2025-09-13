@@ -8,25 +8,6 @@ import type {
 
 export type PowerState = 'on' | 'off' | 'unknown';
 
-export const getVmPowerState = (vm?: ProviderVirtualMachine): PowerState => {
-  if (!vm) return 'unknown';
-
-  switch (vm?.providerType) {
-    case 'ovirt':
-      return getOVirtVmPowerState(vm);
-    case 'vsphere':
-      return getVSphereVmPowerState(vm);
-    case 'openstack':
-      return getOpenStackVmPowerState(vm);
-    case 'openshift':
-      return getOpenShiftVmPowerState(vm);
-    case 'ova':
-      return 'off';
-    default:
-      return 'unknown';
-  }
-};
-
 const getOVirtVmPowerState = (vm: OVirtVM): PowerState => {
   switch (vm?.status) {
     case 'up':
@@ -62,3 +43,22 @@ const getOpenStackVmPowerState = (vm: OpenstackVM): PowerState => {
 
 const getOpenShiftVmPowerState = (vm: OpenshiftVM): PowerState =>
   vm?.object?.status?.printableStatus === 'Running' ? 'on' : 'off';
+
+export const getVmPowerState = (vm: ProviderVirtualMachine | undefined): PowerState => {
+  if (!vm) return 'unknown';
+
+  switch (vm?.providerType) {
+    case 'ovirt':
+      return getOVirtVmPowerState(vm);
+    case 'vsphere':
+      return getVSphereVmPowerState(vm);
+    case 'openstack':
+      return getOpenStackVmPowerState(vm);
+    case 'openshift':
+      return getOpenShiftVmPowerState(vm);
+    case 'ova':
+      return 'off';
+    default:
+      return 'unknown';
+  }
+};

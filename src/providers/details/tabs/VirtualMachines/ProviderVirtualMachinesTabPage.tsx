@@ -32,7 +32,9 @@ const ProviderVirtualMachinesTabPage: FC<ProviderDetailsPageProps> = ({ name, na
       <Controller
         name={PROVIDER_DETAILS_VMS_TAB_FIELDS.vms}
         control={control}
-        render={() => <VirtualMachinesListSection providerData={{ provider, vmData }} />}
+        render={() => (
+          <VirtualMachinesListSection providerData={{ provider, vmData, vmDataLoading }} />
+        )}
       />
     </ModalHOC>
   );
