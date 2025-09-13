@@ -47,6 +47,7 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
   useEffect(() => {
     if (defaultProject && hasProjects && !hasSetInitialDefault.current && isEmpty(planProject)) {
       setValue(GeneralFormFieldId.PlanProject, defaultProject);
+      setValue(GeneralFormFieldId.TargetProject, defaultProject);
       setShowDefaultProjects((prev) => prev || isSystemNamespace(defaultProject));
       hasSetInitialDefault.current = true;
     }
@@ -85,6 +86,7 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
             projectNames={projectNames}
             value={field.value}
             onChange={(value) => {
+              const prevValue = field.value;
               field.onChange(value);
 
               if (sourceProvider) {
@@ -97,8 +99,8 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
                   shouldValidate: true,
                 });
               }
-              if (targetProject) {
-                setValue(GeneralFormFieldId.TargetProject, '', { shouldValidate: true });
+              if (targetProject === prevValue) {
+                setValue(GeneralFormFieldId.TargetProject, value, { shouldValidate: true });
               }
             }}
             toggleProps={{
