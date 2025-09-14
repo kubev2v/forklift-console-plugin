@@ -1,5 +1,6 @@
 import { type FC, useCallback } from 'react';
 import { canPlanStart } from 'src/plans/details/components/PlanStatus/utils/utils';
+import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -22,10 +23,11 @@ const PlanStartMigrationModal: FC<PlanStartMigrationModalProps> = ({ plan, title
 
   const name = getName(plan);
   const migrationType = getPlanMigrationType(plan);
+  const { sourceProvider } = usePlanSourceProvider(plan);
 
   const onStart = useCallback(async () => {
-    return startPlanMigration(plan, trackEvent);
-  }, [plan, trackEvent]);
+    return startPlanMigration(plan, trackEvent, sourceProvider?.spec?.type);
+  }, [plan, trackEvent, sourceProvider?.spec?.type]);
 
   const migrationMessage = migrationModalMessage(migrationType);
 

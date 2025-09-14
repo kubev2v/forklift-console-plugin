@@ -20,6 +20,8 @@ import {
   Text,
   Tile,
 } from '@patternfly/react-core';
+import { type ProviderType, TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { Namespace } from '@utils/constants';
 
 import HeaderActions from './HeaderActions';
@@ -31,6 +33,7 @@ type WelcomeCardProps = {
 
 const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
   const { t } = useForkliftTranslation();
+  const { trackEvent } = useForkliftAnalytics();
   const navigate = useNavigate();
   const isDarkTheme = useIsDarkTheme();
   const providerItems = providerTypes(isDarkTheme);
@@ -45,7 +48,10 @@ const WelcomeCard: FC<WelcomeCardProps> = ({ onHide }) => {
   const providersCreateUrl = `${providersListUrl}/~new`;
   const actionDropdownItems = [<HideFromViewDropdownOption key="hide" onHide={onHide} />];
 
-  const navigateToProvider = (type: string) => {
+  const navigateToProvider = (type: ProviderType) => {
+    trackEvent(TELEMETRY_EVENTS.OVERVIEW_WELCOME_PROVIDER_CLICKED, {
+      providerType: type,
+    });
     navigate(`${providersCreateUrl}?providerType=${type}`, {
       state: { providerType: type as keyof typeof providerItems },
     });

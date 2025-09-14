@@ -1,3 +1,7 @@
+import type { ProviderType } from '@kubev2v/types';
+
+export { type ProviderType };
+
 export const ConfigMapModel = {
   abbr: 'CM',
   apiGroup: '',
@@ -64,6 +68,14 @@ export enum ProviderCreateSource {
   PlanWizard = 'plan-wizard',
 }
 
+export enum OverviewTab {
+  Overview = 'Overview',
+  YAML = 'YAML',
+  Health = 'Health',
+  History = 'History',
+  Settings = 'Settings',
+}
+
 // Add new events here following the pattern:
 // EVENT_NAME: 'Event name' (MTV prefix is automatically added)
 export const TELEMETRY_EVENTS = {
@@ -74,11 +86,15 @@ export const TELEMETRY_EVENTS = {
   NETWORK_MAP_CREATE_COMPLETED: 'Network map created',
   NETWORK_MAP_CREATE_FAILED: 'Network map create failed',
   NETWORK_MAP_CREATE_STARTED: 'Network map create started',
+  OVERVIEW_TAB_CLICKED: 'Overview tab clicked',
+  OVERVIEW_WELCOME_PROVIDER_CLICKED: 'Overview welcome provider clicked',
   PLAN_CREATE_BUTTON_CLICKED: 'Plan create button clicked',
   PLAN_CREATE_COMPLETED: 'Plan created',
   PLAN_CREATE_FAILED: 'Plan create failed',
+  PLAN_CREATE_FROM_OVERVIEW_CLICKED: 'Plan create from overview clicked',
   PLAN_CREATE_FROM_PROVIDER_CLICKED: 'Plan create from provider clicked',
   PLAN_CREATE_STARTED: 'Plan create started',
+  PLAN_WIZARD_STEP_VISITED: 'Plan wizard step visited',
   PROVIDER_CREATE_CLICKED: 'Provider create clicked',
   PROVIDER_CREATE_COMPLETED: 'Provider created',
   PROVIDER_CREATE_FAILED: 'Provider create failed',
