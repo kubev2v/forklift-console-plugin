@@ -49,25 +49,26 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
     dispatch({ payload: obj, type: 'INIT' });
   }, [obj]);
 
-  const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
-    groupVersionKind: ProviderModelGroupVersionKind,
-    isList: true,
-    namespace: obj.metadata?.namespace,
-    namespaced: true,
-  });
+  const [sourceProvider, sourceProviderLoaded, sourceProviderLoadError] =
+    useK8sWatchResource<V1beta1Provider>({
+      groupVersionKind: ProviderModelGroupVersionKind,
+      isList: false,
+      name: obj?.spec?.provider?.source?.name,
+      namespace: obj?.spec?.provider?.source?.namespace,
+      namespaced: true,
+    });
 
-  const sourceProvider = providers.find(
-    (provider) =>
-      provider?.metadata?.uid === obj?.spec?.provider?.source?.uid ||
-      provider?.metadata?.name === obj?.spec?.provider?.source?.name,
-  );
   const [sourceNetworks] = useSourceNetworks(sourceProvider);
 
-  const destinationProvider = providers.find(
-    (provider) =>
-      provider?.metadata?.uid === obj?.spec?.provider?.destination?.uid ||
-      provider?.metadata?.name === obj?.spec?.provider?.destination?.name,
-  );
+  const [destinationProvider, destinationProviderLoaded, destinationProviderLoadError] =
+    useK8sWatchResource<V1beta1Provider>({
+      groupVersionKind: ProviderModelGroupVersionKind,
+      isList: false,
+      name: obj?.spec?.provider?.destination?.name,
+      namespace: obj?.spec?.provider?.destination?.namespace,
+      namespaced: true,
+    });
+
   const [destinationNetworks] = useOpenShiftNetworks(destinationProvider);
 
   const onUpdate = async () => {
@@ -166,7 +167,11 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   };
 
   return (
-    <LoadingSuspend obj={providers} loaded={providersLoaded} loadError={providersLoadError}>
+    <LoadingSuspend
+      obj={[sourceProvider, destinationProvider]}
+      loaded={sourceProviderLoaded && destinationProviderLoaded}
+      loadError={sourceProviderLoadError ?? destinationProviderLoadError}
+    >
       <MapsButtonArea
         hasChanges={state.hasChanges}
         updating={state.updating}
