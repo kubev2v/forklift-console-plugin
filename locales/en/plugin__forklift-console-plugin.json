@@ -299,7 +299,7 @@
   "Enter the limit for memory usage by the controller in Mi. If empty, the default value will be used.": "Enter the limit for memory usage by the controller in Mi. If empty, the default value will be used.",
   "Enter the limit for memory usage by the inventory container in Mi. If empty, the default value will be used.": "Enter the limit for memory usage by the inventory container in Mi. If empty, the default value will be used.",
   "Enter the maximum number of concurrent VM migrations. If empty, the default value will be used.": "Enter the maximum number of concurrent VM migrations. If empty, the default value will be used.",
-  "Enter the name you would like the <1>{vms?.[vmIndex]?.name}</1> VM to have after migration.": "Enter the name you would like the <1>{vms?.[vmIndex]?.name}</1> VM to have after migration.",
+  "Enter the name you would like the <1>{vm.name}</1> VM to have after migration.": "Enter the name you would like the <1>{vm.name}</1> VM to have after migration.",
   "Error": "Error",
   "Error creating network map": "Error creating network map",
   "Error creating storage map": "Error creating storage map",
