@@ -18,10 +18,12 @@ export const isEmpty = (value: object | unknown[] | string | undefined | null): 
   }
 
   if (Array.isArray(value) || typeof value === 'string') {
+    // eslint-disable-next-line no-restricted-syntax
     return value.length === 0;
   }
 
   if (typeof value === 'object') {
+    // eslint-disable-next-line no-restricted-syntax
     return Object.keys(value).length === 0;
   }
 
