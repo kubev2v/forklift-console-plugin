@@ -86,6 +86,7 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
           <TargetStorageField
             fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
             targetStorages={targetStorages}
+            testId="target-storage-select"
           />,
         ],
       }))}

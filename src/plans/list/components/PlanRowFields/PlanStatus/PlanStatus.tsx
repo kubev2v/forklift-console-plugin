@@ -42,6 +42,7 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
             showModal(<PlanStartMigrationModal plan={plan} title={t('Start')} />);
           }}
           isInline
+          data-testid="plan-start-button-status"
         >
           {t('Start')}
         </Button>
@@ -70,8 +71,8 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
         <FlexItem className="plan-status-cell-label-section">
           {isPlanRunning && PlanStatuses.Paused !== planStatus ? (
             <Split hasGutter>
-              <Spinner size="md" />
-              <span className="pf-v5-u-font-size-sm">
+              <Spinner size="md" data-testid="plan-progress-spinner" />
+              <span className="pf-v5-u-font-size-sm" data-testid="plan-progress-percentage">
                 {Math.trunc(pipelinesProgressPercentage)}%
               </span>
             </Split>

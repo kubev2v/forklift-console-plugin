@@ -10,9 +10,10 @@ import { useForkliftTranslation } from '@utils/i18n';
 type TargetStorageFieldProps = {
   fieldId: string;
   targetStorages: TargetStorage[];
+  testId?: string;
 };
 
-const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorages }) => {
+const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorages, testId }) => {
   const {
     control,
     formState: { isSubmitting },
@@ -27,6 +28,7 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorag
         <Select
           ref={field.ref}
           id={fieldId}
+          testId={testId}
           onSelect={(_, value) => {
             field.onChange(value);
           }}

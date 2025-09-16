@@ -5,13 +5,30 @@ export interface TargetProject {
 
 export interface NetworkMap {
   name: string;
-  isPreExisting: boolean;
+  isPreexisting: boolean;
 }
 
 export interface StorageMap {
   name: string;
-  isPreExisting: boolean;
+  isPreexisting: boolean;
+  targetStorage?: string; // Target storage class (e.g., 'ocs-storagecluster-ceph-rbd-virtualization')
 }
+
+export interface VirtualMachine {
+  sourceName: string;
+  targetName?: string; // If null or different from sourceName, will be used for renaming
+}
+
+/**
+ * Common storage classes available in the cluster
+ */
+export const StorageClasses = {
+  OCS_RBD_VIRTUALIZATION: 'ocs-storagecluster-ceph-rbd-virtualization',
+  OCS_RBD: 'ocs-storagecluster-ceph-rbd',
+  OCS_CEPHFS: 'ocs-storagecluster-cephfs',
+  HOSTPATH_BASIC: 'hostpath-csi-basic',
+  STANDARD_CSI: 'standard-csi',
+} as const;
 
 export interface PlanTestData {
   planName: string;
@@ -21,6 +38,7 @@ export interface PlanTestData {
   targetProject: TargetProject;
   networkMap: NetworkMap;
   storageMap: StorageMap;
+  virtualMachines?: VirtualMachine[];
 }
 
 /**
@@ -36,7 +54,6 @@ export interface ProviderConfig {
   password: string;
   vddk_init_image?: string;
 }
-
 export interface ProviderData {
   name: string;
   type: 'vsphere' | 'ovirt' | 'ova' | 'openstack';
@@ -46,4 +63,5 @@ export interface ProviderData {
   password?: string;
   fingerprint?: string;
   vddkInitImage?: string;
+  useVddkAioOptimization?: boolean;
 }

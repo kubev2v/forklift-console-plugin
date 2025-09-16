@@ -108,6 +108,7 @@ export type StandardPageProps<T> = {
   title?: string;
   titleHelpContent?: ReactNode;
   noPadding?: boolean;
+  testId?: string;
 };
 
 type StandardPageInnerProps<T> = Omit<StandardPageProps<T>, 'pageRef'> &
@@ -141,6 +142,7 @@ const StandardPageInner = <T,>({
   selectedIds,
   setActiveSort,
   showManageColumns = true,
+  testId,
   title,
   titleHelpContent,
   toId,
@@ -341,7 +343,7 @@ const StandardPageInner = <T,>({
   );
 
   return (
-    <span className={className}>
+    <span className={className} data-testid={testId}>
       {title && (
         <PageSection variant="light" className="forklift-page__main-title">
           <Level>

@@ -323,16 +323,11 @@ export const createEslintConfig = (ideMode = false) =>
         '@typescript-eslint/no-unsafe-call': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
         'max-lines-per-function': 'off',
+        'no-await-in-loop': 'off',
+        'no-console': 'off',
         'perfectionist/sort-objects': 'off',
         'react-refresh/only-export-components': 'off',
         'require-unicode-regexp': 'off',
-      },
-    },
-    // Testing directory specific rules - disable no-console
-    {
-      files: ['testing/**/*.ts'],
-      rules: {
-        'no-console': 'off',
       },
     },
     prettier,
