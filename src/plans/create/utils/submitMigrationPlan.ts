@@ -139,8 +139,9 @@ export const submitMigrationPlan = async (
     hasEncryption: Boolean(createdSecret),
     hasHooks: hasEnabledHooks,
     migrationType,
-    namespace: planProject,
+    planNamespace: planProject,
     sourceProviderType: sourceProvider?.spec?.type,
+    targetNamespace: targetProject,
     targetProviderType: targetProvider?.spec?.type,
     vmCount: Object.keys(vms).length,
   });

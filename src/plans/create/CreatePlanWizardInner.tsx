@@ -1,7 +1,9 @@
-import { type FC, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { Wizard, type WizardProps, WizardStep, type WizardStepType } from '@patternfly/react-core';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useStepValidation } from './hooks/useStepValidation';
@@ -34,11 +36,19 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
   sourceProvider,
 }) => {
   const { t } = useForkliftTranslation();
+  const { trackEvent } = useForkliftAnalytics();
   const [currentStep, setCurrentStep] = useState<WizardStepType>(firstStep);
   const [createPlanError, setCreatePlanError] = useState<Error | undefined>();
   const { hasStepErrors, validateStep } = useStepValidation();
 
   const hasCreatePlanError = Boolean(createPlanError?.message);
+
+  // Track initial step visit when wizard loads
+  useEffect(() => {
+    trackEvent(TELEMETRY_EVENTS.PLAN_WIZARD_STEP_VISITED, {
+      stepId: firstStep.id,
+    });
+  }, [trackEvent]);
 
   const handleStepChange: WizardProps['onStepChange'] = async (_event, newStep) => {
     const currentStepId = currentStep.id as PlanWizardStepId;
@@ -49,6 +59,9 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
     // Allow backward navigation without validation
     if (newStepOrder <= currentStepOrder) {
       setCurrentStep(newStep);
+      trackEvent(TELEMETRY_EVENTS.PLAN_WIZARD_STEP_VISITED, {
+        stepId: newStepId,
+      });
       return;
     }
 
@@ -56,6 +69,9 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
       const isCurrentStepValid = await validateStep(currentStepId);
       if (isCurrentStepValid) {
         setCurrentStep(newStep);
+        trackEvent(TELEMETRY_EVENTS.PLAN_WIZARD_STEP_VISITED, {
+          stepId: newStepId,
+        });
       }
     } catch {
       // Stay on current step if validation throws

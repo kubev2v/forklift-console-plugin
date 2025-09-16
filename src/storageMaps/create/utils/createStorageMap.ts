@@ -2,6 +2,7 @@ import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helper
 
 import { StorageMapModel, type V1beta1Provider, type V1beta1StorageMap } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 
 import type { StorageMapping } from '../../constants';
 
@@ -38,7 +39,7 @@ export const createStorageMap = async ({
 }: CreateStorageMapParams) => {
   const sourceProviderName = sourceProvider?.metadata?.name;
 
-  trackEvent?.('Storage map create started', {
+  trackEvent?.(TELEMETRY_EVENTS.STORAGE_MAP_CREATE_STARTED, {
     hasOffloadPlugin: mappings?.some((mapping) => Boolean(mapping.offloadPlugin)),
     mappingCount: mappings?.length,
     namespace: project,
@@ -69,7 +70,7 @@ export const createStorageMap = async ({
       model: StorageMapModel,
     });
 
-    trackEvent?.('Storage map created', {
+    trackEvent?.(TELEMETRY_EVENTS.STORAGE_MAP_CREATE_COMPLETED, {
       hasOffloadPlugin: mappings?.some((mapping) => Boolean(mapping.offloadPlugin)),
       mappingCount: mappings?.length,
       namespace: project,
@@ -80,7 +81,7 @@ export const createStorageMap = async ({
 
     return createdStorageMap;
   } catch (error) {
-    trackEvent?.('Storage map create failed', {
+    trackEvent?.(TELEMETRY_EVENTS.STORAGE_MAP_CREATE_FAILED, {
       error: error instanceof Error ? error.message : 'Unknown error',
       hasOffloadPlugin: mappings?.some((mapping) => Boolean(mapping.offloadPlugin)),
       mappingCount: mappings?.length,
