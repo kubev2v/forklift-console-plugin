@@ -119,7 +119,7 @@ export const validateVMTargetName = (value: string, vms: V1beta1PlanSpecVms[]): 
     );
   }
 
-  if (vms.some((vm) => (vm as EnhancedPlanSpecVms)?.targetName === value)) {
+  if (vms.some((vm) => vm?.targetName === value)) {
     return t('VM target name must be unique within a plan.');
   }
 
