@@ -1,3 +1,4 @@
+import HelpTitledContent from 'src/onlineHelp/learningExperience/HelpTitledContent.tsx';
 import {
   type LearningExperienceSubTopic,
   type LearningExperienceTopic,
@@ -7,7 +8,8 @@ import {
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import { CodeBlock, CodeBlockCode } from '@patternfly/react-core';
 import { WrenchIcon } from '@patternfly/react-icons';
-import { t } from '@utils/i18n';
+import { TipsTopic } from '@utils/analytics/constants.ts';
+import { ForkliftTrans, t } from '@utils/i18n';
 
 const supportUrl = 'https://access.redhat.com/support/';
 const customerSupport =
@@ -15,6 +17,9 @@ const customerSupport =
 const mustGatherUrl =
   'https://docs.openshift.com/container-platform/4.10/support/gathering-cluster-data.html';
 const guestOperatingSystemsUrl = 'https://access.redhat.com/articles/4234591';
+
+const mustGatherExample =
+  'oc adm must-gather --image=registry.redhat.io/migration-toolkit-virtualization/mtv-must-gather-rhel8';
 
 const troubleShootingHelpTopics: LearningExperienceSubTopic[] = [
   {
@@ -29,13 +34,11 @@ const troubleShootingHelpTopics: LearningExperienceSubTopic[] = [
           {
             id: 'migration-check-progress',
             title: (
-              <>
-                {t(
-                  'Check the migration progress for a high-level overview of your virtual machine (VM) migration. To view the migration progress, go to the',
-                )}{' '}
-                <strong>{t('VirtualMachines')}</strong>{' '}
-                {t("tab on your migration plan's details page.")}
-              </>
+              <ForkliftTrans>
+                Check the migration progress for a high-level overview of your virtual machine (VM)
+                migration. To view the migration progress, go to the{' '}
+                <strong>VirtualMachines</strong> tab on your migration plan's details page.
+              </ForkliftTrans>
             ),
           },
           {
@@ -49,21 +52,19 @@ const troubleShootingHelpTopics: LearningExperienceSubTopic[] = [
               {
                 id: 'migration-migrated-warm',
                 title: (
-                  <>
-                    <strong>{t('Warm')}</strong>{' '}
-                    {t('migration: VMs included in warm migrations migrate with minimal downtime.')}
-                  </>
+                  <HelpTitledContent
+                    title={t('Warm migration:')}
+                    content={t('VMs included in warm migrations migrate with minimal downtime.')}
+                  />
                 ),
               },
               {
                 id: 'migration-migrated-cold',
                 title: (
-                  <>
-                    <strong>{t('Cold')}</strong>{' '}
-                    {t(
-                      'migration: VMs included in cold migrations are shut down during migration.',
-                    )}
-                  </>
+                  <HelpTitledContent
+                    title={t('Cold migration:')}
+                    content={t('VMs included in cold migrations are shut down during migration.')}
+                  />
                 ),
               },
             ],
@@ -131,18 +132,13 @@ const troubleShootingHelpTopics: LearningExperienceSubTopic[] = [
               {
                 id: 'cli-logs-must-gather-tool-run',
                 title: (
-                  <>
-                    {t('Run the command:')}
+                  <ForkliftTrans>
+                    Run the command:
                     <CodeBlock className="pf-v5-u-my-sm">
-                      <CodeBlockCode>
-                        oc adm must-gather
-                        --image=registry.redhat.io/migration-toolkit-virtualization/mtv-must-gather-rhel8
-                      </CodeBlockCode>
+                      <CodeBlockCode>{mustGatherExample}</CodeBlockCode>
                     </CodeBlock>
-                    {t(
-                      "(But this won't be static; the UI should populate it as the image can change)",
-                    )}
-                  </>
+                    (But this won't be static; the UI should populate it as the image can change),
+                  </ForkliftTrans>
                 ),
               },
               {
@@ -158,12 +154,12 @@ const troubleShootingHelpTopics: LearningExperienceSubTopic[] = [
                   {
                     id: 'cli-logs-must-gather-tool-open-case',
                     title: (
-                      <>
+                      <ForkliftTrans>
                         <ExternalLink href={customerSupport} isInline>
-                          {t('Open a support case')}
+                          Open a support case
                         </ExternalLink>{' '}
-                        {t('on your Red Hat Customer Portal and attach the compressed file.')}
-                      </>
+                        on your Red Hat Customer Portal and attach the compressed file.
+                      </ForkliftTrans>
                     ),
                   },
                 ],
@@ -190,13 +186,13 @@ const troubleShootingHelpTopics: LearningExperienceSubTopic[] = [
           {
             id: 'troubleshooting-support-link',
             title: (
-              <>
-                {t('If none of these steps helped, you can reach out to')}{' '}
+              <ForkliftTrans>
+                If none of these steps helped, you can reach out to{' '}
                 <ExternalLink href={supportUrl} isInline>
-                  {t('support')}
+                  support
                 </ExternalLink>{' '}
-                {t('to get answers any time.')}
-              </>
+                to get answers any time.
+              </ForkliftTrans>
             ),
           },
         ],
@@ -218,15 +214,15 @@ const troubleShootingHelpTopics: LearningExperienceSubTopic[] = [
           {
             id: 'faq-os-supported-answer',
             title: (
-              <>
-                {t('Check the official list of')}{' '}
+              <ForkliftTrans>
+                Check the official list of{' '}
                 <ExternalLink href={guestOperatingSystemsUrl} isInline>
-                  {t('certified guest operating systems')}
+                  certified guest operating systems
                 </ExternalLink>{' '}
-                {t(
-                  'for your version of OpenShift Virtualization. If the operating system is not on the list, it may cause migration failures or unexpected behavior after the migration is complete.',
-                )}
-              </>
+                for your version of OpenShift Virtualization. If the operating system is not on the
+                list, it may cause migration failures or unexpected behavior after the migration is
+                complete.
+              </ForkliftTrans>
             ),
           },
         ],
@@ -292,10 +288,11 @@ const troubleShootingHelpTopics: LearningExperienceSubTopic[] = [
 ];
 
 export const troubleShootingHelpTopic: LearningExperienceTopic = {
-  description: 'Get quick answers to common problems.',
+  description: t('Get quick answers to common problems.'),
   icon: <WrenchIcon />,
   id: 'troubleshooting',
   subListStyleType: ListStyleType.DESCRIPTIONS,
   subTopics: troubleShootingHelpTopics,
-  title: 'Troubleshooting',
+  title: t('Troubleshooting'),
+  trackingEventTopic: TipsTopic.Troubleshooting,
 };

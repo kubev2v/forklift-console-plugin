@@ -1,3 +1,4 @@
+import HelpTitledContent from 'src/onlineHelp/learningExperience/HelpTitledContent.tsx';
 import {
   type LearningExperienceSubTopic,
   type LearningExperienceTopic,
@@ -7,7 +8,8 @@ import {
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import { Text, TextContent } from '@patternfly/react-core';
 import { CatalogIcon } from '@patternfly/react-icons';
-import { t } from '@utils/i18n';
+import { TipsTopic } from '@utils/analytics/constants.ts';
+import { ForkliftTrans, t } from '@utils/i18n';
 
 const openshiftVirtualizationGuideUrl =
   'https://cloud.redhat.com/learn/high-level-guide-red-hat-openshift-virtualization-vmware-admin#page-title';
@@ -167,25 +169,23 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
               {
                 id: 'project-definition-plan-project',
                 title: (
-                  <>
-                    <strong>{t('Plan project')}</strong>
-                    <br />
-                    {t(
+                  <HelpTitledContent
+                    title={t('Plan project')}
+                    content={t(
                       'The project, within your selected target provider, in which your virtual machines will be migrated.',
                     )}
-                  </>
+                  />
                 ),
               },
               {
                 id: 'project-definition-target-project',
                 title: (
-                  <>
-                    <strong>{t('Target project')}</strong>
-                    <br />
-                    {t(
+                  <HelpTitledContent
+                    title={t('Target project')}
+                    content={t(
                       'The project, within your selected target provider, in which your virtual machines will be migrated.',
                     )}
-                  </>
+                  />
                 ),
               },
             ],
@@ -204,16 +204,17 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
             id: 'provider-definitions',
             title: (
               <>
-                <strong>{t('Source provider')}</strong>
+                <HelpTitledContent
+                  title={t('Source provider')}
+                  content={t(
+                    'The repository or virtualization platform you want to migrate your virtual machines from into the OpenShift cluster.',
+                  )}
+                />
                 <br />
-                {t(
-                  'The repository or virtualization platform you want to migrate your virtual machines from into the OpenShift cluster.',
-                )}
-                <br />
-                <br />
-                <strong>{t('Target provider')}</strong>
-                <br />
-                {t('The cluster to which you want to migrate your virtual machines to.')}
+                <HelpTitledContent
+                  title={t('Target provider')}
+                  content={t('The cluster to which you want to migrate your virtual machines to.')}
+                />
               </>
             ),
           },
@@ -248,24 +249,27 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       },
     ],
     title: (
-      <TextContent>
-        <Text component="p">
-          {t('Coming from VMware and confused by all of these new terms? Check out')}{' '}
-          <ExternalLink href={openshiftVirtualizationGuideUrl} isInline>
-            {t('the high-level guide to Red Hat OpenShift Virtualization as a VMware admin')}
-          </ExternalLink>
-          .
-        </Text>
-      </TextContent>
+      <ForkliftTrans>
+        <TextContent>
+          <Text component="p">
+            Coming from VMware and confused by all of these new terms? Check out{' '}
+            <ExternalLink href={openshiftVirtualizationGuideUrl} isInline>
+              the high-level guide to Red Hat OpenShift Virtualization as a VMware admin
+            </ExternalLink>
+            .
+          </Text>
+        </TextContent>
+      </ForkliftTrans>
     ),
   },
 ];
 
 export const keyTerminologyHelpTopic: LearningExperienceTopic = {
-  description: 'Understand OpenShift more with definitions to essential vocabulary.',
+  description: t('Understand OpenShift more with definitions to essential vocabulary.'),
   icon: <CatalogIcon />,
   id: 'key-terminology',
   subListStyleType: ListStyleType.DESCRIPTIONS,
   subTopics: keyTerminologyHelpTopics,
-  title: 'Key terminology',
+  title: t('Key terminology'),
+  trackingEventTopic: TipsTopic.KeyTerminology,
 };

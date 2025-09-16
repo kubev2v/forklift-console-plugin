@@ -10,6 +10,8 @@ import {
   SelectOption,
 } from '@patternfly/react-core';
 import { BarsIcon } from '@patternfly/react-icons';
+import { TELEMETRY_EVENTS, TipsTopicSourceComponent } from '@utils/analytics/constants.ts';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics.ts';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { LearningExperienceTopic } from './types';
@@ -28,6 +30,7 @@ const LearningExperienceSelect: FC<LearningExperienceSelectProps> = ({
   topics,
 }) => {
   const { t } = useForkliftTranslation();
+  const { trackEvent } = useForkliftAnalytics();
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => {
@@ -60,7 +63,14 @@ const LearningExperienceSelect: FC<LearningExperienceSelectProps> = ({
         setIsSelectOpen(isOpen);
       }}
       onSelect={(_ev, value) => {
-        setSelectedTopic(topics.find((topic) => topic.id === value));
+        const newSelection = topics.find((topic) => topic.id === value);
+        if (newSelection) {
+          trackEvent(TELEMETRY_EVENTS.TIPS_AND_TRICKS_VISITED, {
+            componentType: TipsTopicSourceComponent.TipsTopicSelect,
+            helpTopic: newSelection.trackingEventTopic,
+          });
+          setSelectedTopic(newSelection);
+        }
         setIsSelectOpen(false);
       }}
     >

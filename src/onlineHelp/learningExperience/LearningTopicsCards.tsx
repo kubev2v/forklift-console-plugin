@@ -1,6 +1,8 @@
 import type { FC } from 'react';
 
 import { Card, CardBody, CardHeader, CardTitle, Flex, FlexItem } from '@patternfly/react-core';
+import { TELEMETRY_EVENTS, TipsTopicSourceComponent } from '@utils/analytics/constants.ts';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics.ts';
 
 import type { LearningExperienceTopic } from './types';
 
@@ -10,6 +12,8 @@ type LearningTopicsCardsProps = {
 };
 
 const LearningTopicsCards: FC<LearningTopicsCardsProps> = ({ onSelect, topics }) => {
+  const { trackEvent } = useForkliftAnalytics();
+
   return (
     <Flex direction={{ default: 'column' }} spacer={{ default: 'spacerMd' }}>
       {topics.map((learningExperienceTopic) => (
@@ -19,6 +23,10 @@ const LearningTopicsCards: FC<LearningTopicsCardsProps> = ({ onSelect, topics })
             isClickable
             isRounded
             onClick={() => {
+              trackEvent(TELEMETRY_EVENTS.TIPS_AND_TRICKS_VISITED, {
+                componentType: TipsTopicSourceComponent.TipsTopicCard,
+                helpTopic: learningExperienceTopic.trackingEventTopic,
+              });
               onSelect(learningExperienceTopic);
             }}
           >

@@ -11,6 +11,8 @@ import {
   SplitItem,
   Title,
 } from '@patternfly/react-core';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants.ts';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics.ts';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type HeaderTitleProps = {
@@ -21,6 +23,7 @@ type HeaderTitleProps = {
 const HeaderTitle: FC<HeaderTitleProps> = ({ isDrawerOpen, setIsDrawerOpen }) => {
   const { loadError: inventoryLivelinessError } = useProvidersInventoryIsLive({});
   const { t } = useForkliftTranslation();
+  const { trackEvent } = useForkliftAnalytics();
 
   return (
     <>
@@ -34,6 +37,7 @@ const HeaderTitle: FC<HeaderTitleProps> = ({ isDrawerOpen, setIsDrawerOpen }) =>
               variant={ButtonVariant.link}
               isInline
               onClick={() => {
+                trackEvent(TELEMETRY_EVENTS.TIPS_AND_TRICKS_CLICKED);
                 setIsDrawerOpen(true);
               }}
             >

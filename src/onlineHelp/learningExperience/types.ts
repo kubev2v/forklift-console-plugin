@@ -27,4 +27,5 @@ export type LearningExperienceTopic = {
   subListStyleType?: ListStyleType;
   subTopics: LearningExperienceSubTopic[];
   subTopicsIndexed?: boolean;
+  trackingEventTopic: string;
 };

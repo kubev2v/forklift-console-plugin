@@ -44,6 +44,12 @@
           cursor: default;
         }
       }
+
+      li {
+        &:not(:last-child) {
+          margin-bottom: var(--pf-v5-global--spacer--md);
+        }
+      }
     }
 
     &__help-description {
@@ -93,12 +99,6 @@
             color: transparent;
           }
         }
-      }
-    }
-
-    li {
-      &:not(:last-child) {
-        margin-bottom: var(--pf-v5-global--spacer--md);
       }
     }
   }
