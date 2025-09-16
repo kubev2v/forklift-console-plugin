@@ -15,7 +15,28 @@ import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
 import type { ProviderConfig, ProviderData } from '../../types/test-data';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
-test.describe.serial('Provider Creation Tests', () => {
+const createProviderData = ({
+  useVddkAioOptimization,
+}: {
+  useVddkAioOptimization: boolean;
+}): ProviderData => {
+  const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
+  const providerConfig = (providers as Record<string, ProviderConfig>)[providerKey];
+  const suffix = useVddkAioOptimization ? 'enabled' : 'disabled';
+
+  return {
+    name: `test-vsphere-provider-${suffix}-${crypto.randomUUID().slice(0, 8)}`,
+    type: providerConfig.type,
+    endpointType: providerConfig.endpoint_type ?? 'vcenter',
+    hostname: providerConfig.api_url,
+    username: providerConfig.username,
+    password: providerConfig.password,
+    vddkInitImage: providerConfig.vddk_init_image,
+    useVddkAioOptimization,
+  };
+};
+
+test.describe('Provider Creation Tests', () => {
   const resourceManager = new ResourceManager();
 
   test(
@@ -28,20 +49,7 @@ test.describe.serial('Provider Creation Tests', () => {
       const createProvider = new CreateProviderPage(page, resourceManager);
       const providerDetailsPage = new ProviderDetailsPage(page);
 
-      const providerName = `test-vsphere-provider-${Date.now()}`;
-      const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
-      const providerConfig = (providers as Record<string, ProviderConfig>)[providerKey];
-
-      const testProviderData: ProviderData = {
-        name: providerName,
-        type: providerConfig.type,
-        endpointType: providerConfig.endpoint_type ?? 'vcenter',
-        hostname: providerConfig.api_url,
-        username: providerConfig.username,
-        password: providerConfig.password,
-        vddkInitImage: providerConfig.vddk_init_image,
-        useVddkAioOptimization: true, // Test with optimization enabled
-      };
+      const testProviderData = createProviderData({ useVddkAioOptimization: true });
 
       await providersPage.navigateFromMainMenu();
       await providersPage.clickCreateProviderButton();
@@ -51,7 +59,7 @@ test.describe.serial('Provider Creation Tests', () => {
       await providerDetailsPage.verifyProviderDetails(testProviderData);
 
       // Verify the useVddkAioOptimization value is persisted in the provider spec
-      const providerResource = await resourceManager.fetchProvider(page, providerName);
+      const providerResource = await resourceManager.fetchProvider(page, testProviderData.name);
       expect(providerResource).not.toBeNull();
       expect(providerResource?.spec?.settings?.useVddkAioOptimization).toBe('true');
     },
@@ -67,30 +75,17 @@ test.describe.serial('Provider Creation Tests', () => {
       const createProvider = new CreateProviderPage(page, resourceManager);
       const providerDetailsPage = new ProviderDetailsPage(page);
 
-      const providerNameDisabled = `test-vsphere-provider-disabled-${Date.now()}`;
-      const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
-      const providerConfig = (providers as Record<string, ProviderConfig>)[providerKey];
-
-      const testProviderDataDisabled: ProviderData = {
-        name: providerNameDisabled,
-        type: providerConfig.type,
-        endpointType: providerConfig.endpoint_type ?? 'vcenter',
-        hostname: providerConfig.api_url,
-        username: providerConfig.username,
-        password: providerConfig.password,
-        vddkInitImage: providerConfig.vddk_init_image,
-        useVddkAioOptimization: false, // Test with optimization disabled
-      };
+      const testProviderData = createProviderData({ useVddkAioOptimization: false });
 
       await providersPage.navigateFromMainMenu();
       await providersPage.clickCreateProviderButton();
       await createProvider.waitForWizardLoad();
-      await createProvider.fillAndSubmit(testProviderDataDisabled);
+      await createProvider.fillAndSubmit(testProviderData);
       await providerDetailsPage.waitForPageLoad();
-      await providerDetailsPage.verifyProviderDetails(testProviderDataDisabled);
+      await providerDetailsPage.verifyProviderDetails(testProviderData);
 
       // Verify the useVddkAioOptimization value is persisted in the provider spec
-      const providerResource = await resourceManager.fetchProvider(page, providerNameDisabled);
+      const providerResource = await resourceManager.fetchProvider(page, testProviderData.name);
       expect(providerResource).not.toBeNull();
       // When disabled, the field might be undefined, 'false', or not present
       const aioOptimization = providerResource?.spec?.settings?.useVddkAioOptimization;

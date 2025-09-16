@@ -119,7 +119,8 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream', '@slow'],
     },
     async ({ page }) => {
-      test.setTimeout(15 * 60000);
+      const timeout = 15 * 60000;
+      test.setTimeout(timeout);
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
 
@@ -137,7 +138,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       console.log('Migration started successfully');
 
       console.log('⏳ Waiting for migration to complete...');
-      await planDetailsPage.waitForMigrationCompletion(900000, true);
+      await planDetailsPage.waitForMigrationCompletion(timeout, true);
       console.log(`[${new Date().toLocaleString()}] ✅ Migration completed successfully!`);
 
       // Verify each migrated VM exists and add to cleanup
