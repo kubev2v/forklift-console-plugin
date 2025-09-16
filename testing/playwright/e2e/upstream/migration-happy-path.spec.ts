@@ -27,8 +27,8 @@ test.describe(
         sourceProvider: 'test-source-provider',
         targetProvider: 'test-target-provider',
         targetProject: { name: 'test-target-project', isPreexisting: true },
-        networkMap: { name: 'test-network-map-1', isPreExisting: true },
-        storageMap: { name: 'test-storage-map-1', isPreExisting: true },
+        networkMap: { name: 'test-network-map-1', isPreexisting: true },
+        storageMap: { name: 'test-storage-map-1', isPreexisting: true },
         virtualMachines: [{ sourceName: 'test-virtual-machine-1' }],
       });
 

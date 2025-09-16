@@ -1,8 +1,8 @@
+import type { V1beta1Provider } from '@kubev2v/types';
 import { expect, type Page } from '@playwright/test';
 
 import type { ProviderData } from '../types/test-data';
-import type { V1beta1Provider } from '../utils';
-import type { ResourceManager } from '../utils/ResourceManager';
+import type { ResourceManager } from '../utils/resource-manager/ResourceManager';
 
 export class CreateProviderPage {
   private readonly resourceManager?: ResourceManager;
@@ -48,20 +48,16 @@ export class CreateProviderPage {
     await this.page.getByTestId('create-provider-button').click();
 
     if (this.resourceManager && testData.name) {
-      try {
-        const provider: V1beta1Provider = {
-          apiVersion: 'forklift.konveyor.io/v1beta1',
-          kind: 'Provider',
-          metadata: {
-            name: testData.name,
-            namespace: 'openshift-mtv',
-          },
-        };
+      const provider: V1beta1Provider = {
+        apiVersion: 'forklift.konveyor.io/v1beta1',
+        kind: 'Provider',
+        metadata: {
+          name: testData.name,
+          namespace: 'openshift-mtv',
+        },
+      };
 
-        this.resourceManager.addResource(provider);
-      } catch (error) {
-        console.warn(`⚠️ Could not add provider "${testData.name}" to cleanup queue:`, error);
-      }
+      this.resourceManager.addResource(provider);
     }
   }
 

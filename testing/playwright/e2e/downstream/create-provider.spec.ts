@@ -13,23 +13,10 @@ import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage';
 import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
 import type { ProviderConfig, ProviderData } from '../../types/test-data';
-import { ResourceManager } from '../../utils/ResourceManager';
+import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
 test.describe.serial('Provider Creation Tests', () => {
   const resourceManager = new ResourceManager();
-
-  let testProviderData: ProviderData = {
-    name: '',
-    type: 'vsphere',
-    endpointType: 'vcenter',
-    hostname: '',
-    username: '',
-    password: '',
-    vddkInitImage: '',
-    useVddkAioOptimization: false,
-  };
-
-  const providerName = `test-vsphere-provider-${Date.now()}`;
 
   test(
     'should create a new vsphere provider with VDDK AIO optimization enabled',
@@ -41,10 +28,11 @@ test.describe.serial('Provider Creation Tests', () => {
       const createProvider = new CreateProviderPage(page, resourceManager);
       const providerDetailsPage = new ProviderDetailsPage(page);
 
+      const providerName = `test-vsphere-provider-${Date.now()}`;
       const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
       const providerConfig = (providers as Record<string, ProviderConfig>)[providerKey];
 
-      testProviderData = {
+      const testProviderData: ProviderData = {
         name: providerName,
         type: providerConfig.type,
         endpointType: providerConfig.endpoint_type ?? 'vcenter',
@@ -79,10 +67,9 @@ test.describe.serial('Provider Creation Tests', () => {
       const createProvider = new CreateProviderPage(page, resourceManager);
       const providerDetailsPage = new ProviderDetailsPage(page);
 
+      const providerNameDisabled = `test-vsphere-provider-disabled-${Date.now()}`;
       const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
       const providerConfig = (providers as Record<string, ProviderConfig>)[providerKey];
-
-      const providerNameDisabled = `test-vsphere-provider-disabled-${Date.now()}`;
 
       const testProviderDataDisabled: ProviderData = {
         name: providerNameDisabled,

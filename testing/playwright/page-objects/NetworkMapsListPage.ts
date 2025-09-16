@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
-import { disableGuidedTour, waitForLoader } from '../utils/utils';
+import { disableGuidedTour } from '../utils/utils';
 
 export class NetworkMapsListPage {
   private readonly page: Page;
@@ -18,7 +18,7 @@ export class NetworkMapsListPage {
     await disableGuidedTour(this.page);
     await this.page.goto('/');
 
-    await waitForLoader(this.page);
+    await this.page.waitForLoadState('networkidle');
     await this.page.getByTestId('migration-nav-item').click();
     await this.page.getByTestId('network-mappings-nav-item').click();
 

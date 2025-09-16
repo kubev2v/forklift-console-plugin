@@ -14,6 +14,7 @@ const StatusDetailsItem: FC<StatusDetailsItemProps> = ({ plan }) => {
 
   return (
     <DetailsItem
+      testId="status-detail-item"
       title={t('Status')}
       helpContent={t('Migration plan state information and progress')}
       content={<PlanStatus plan={plan} />}

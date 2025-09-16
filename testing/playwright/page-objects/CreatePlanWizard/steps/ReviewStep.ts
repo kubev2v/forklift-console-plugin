@@ -81,7 +81,7 @@ export class ReviewStep {
     await expect(section).toBeVisible();
 
     if (expectedNetworkMap) {
-      if (expectedNetworkMap.isPreExisting) {
+      if (expectedNetworkMap.isPreexisting) {
         await expect(section.getByTestId('review-network-map')).toContainText(
           expectedNetworkMap.name,
         );
@@ -107,7 +107,7 @@ export class ReviewStep {
     const section = this.page.getByTestId('review-storage-map-section');
     await expect(section).toBeVisible();
     if (expectedStorageMap) {
-      if (expectedStorageMap.isPreExisting) {
+      if (expectedStorageMap.isPreexisting) {
         await expect(section.getByTestId('review-storage-map')).toContainText(
           expectedStorageMap.name,
         );

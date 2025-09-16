@@ -2,7 +2,6 @@ import { providerOnlyFixtures as test } from '../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { createPlanTestData } from '../../types/test-data';
-import { generateUniqueId } from '../../utils';
 
 test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
   test(
@@ -17,7 +16,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
 
       const validNames = ['valid-name-123', 'test123'];
       for (const validName of validNames) {
-        const uniqueId = generateUniqueId();
+        const uniqueId = crypto.randomUUID();
         const planName = `project-creation-${validName}-${uniqueId}`;
         const targetProjectName = `${validName}-${uniqueId}`;
 
@@ -32,11 +31,11 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
           },
           networkMap: {
             name: `${planName}-network-map`,
-            isPreExisting: false,
+            isPreexisting: false,
           },
           storageMap: {
             name: `${planName}-storage-map`,
-            isPreExisting: false,
+            isPreexisting: false,
             targetStorage: 'ocs-storagecluster-ceph-rbd-virtualization',
           },
           virtualMachines: [
@@ -51,13 +50,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
 
         await createWizard.navigateToWizardAndWaitForLoad();
 
-        await createWizard.generalInformation.fillAndComplete({
-          planName: testPlanData.planName,
-          planProject: testPlanData.planProject,
-          sourceProvider: testPlanData.sourceProvider,
-          targetProvider: testPlanData.targetProvider,
-          targetProject: testPlanData.targetProject,
-        });
+        await createWizard.generalInformation.fillAndComplete(testPlanData);
         await createWizard.clickNext();
 
         await createWizard.virtualMachines.fillAndComplete(testPlanData.virtualMachines);
@@ -133,7 +126,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
         throw new Error('Test provider is required for this test');
       }
 
-      const uniqueId = generateUniqueId();
+      const uniqueId = crypto.randomUUID();
       const planName = `existing-project-test-${uniqueId}`;
 
       const testPlanData = createPlanTestData({
@@ -147,11 +140,11 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
         },
         networkMap: {
           name: `${planName}-network-map`,
-          isPreExisting: false,
+          isPreexisting: false,
         },
         storageMap: {
           name: `${planName}-storage-map`,
-          isPreExisting: false,
+          isPreexisting: false,
           targetStorage: 'ocs-storagecluster-ceph-rbd-virtualization',
         },
         virtualMachines: [

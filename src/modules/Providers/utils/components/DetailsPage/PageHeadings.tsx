@@ -59,7 +59,12 @@ export const PageHeadings: FC<PageHeadingsProps> = ({
               )}
             </SplitItem>
             {status && typeof status !== 'string' && (
-              <SplitItem className="forklift-page-headings__status hidden-xs">{status}</SplitItem>
+              <SplitItem
+                className="forklift-page-headings__status hidden-xs"
+                data-testid="plan-status-container"
+              >
+                {status}
+              </SplitItem>
             )}
           </Split>
         </h1>

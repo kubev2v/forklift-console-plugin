@@ -12,15 +12,18 @@ export const disableGuidedTour = async (page: Page) => {
   });
 };
 
-let uniqueCounter = 0;
+export const isEmpty = (value: object | unknown[] | string | undefined | null): boolean => {
+  if (value === null || value === undefined) {
+    return true;
+  }
 
-/**
- * Generates a unique ID without using Math.random() to avoid linting issues.
- * Uses timestamp and an incrementing counter for uniqueness.
- */
-export const generateUniqueId = (): string => {
-  uniqueCounter += 1;
-  const timestamp = Date.now();
-  const counter = uniqueCounter.toString(36).padStart(3, '0');
-  return `${timestamp}-${counter}`;
+  if (Array.isArray(value) || typeof value === 'string') {
+    return value.length === 0;
+  }
+
+  if (typeof value === 'object') {
+    return Object.keys(value).length === 0;
+  }
+
+  return false;
 };

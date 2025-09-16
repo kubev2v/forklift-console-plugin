@@ -72,11 +72,7 @@ export const FormGroupWithHelpText: FC<FormGroupWithHelpTextProps> = ({
         <HelperText>
           <HelperTextItem
             variant={variant}
-            data-testid={
-              validated === 'error' || String(validated).includes('error')
-                ? 'form-helper-text-error'
-                : 'form-helper-text'
-            }
+            data-testid={validated === 'error' ? 'form-helper-text-error' : 'form-helper-text'}
           >
             {helperTextMsg}
           </HelperTextItem>

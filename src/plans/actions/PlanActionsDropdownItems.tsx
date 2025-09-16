@@ -95,6 +95,7 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
         isDisabled={!canStart && !canReStart}
         onClick={onClickPlanStart}
         description={startDescription[planStatus]}
+        data-testid="plan-actions-start-menuitem"
       >
         {buttonStartLabel}
       </DropdownItem>

@@ -11,7 +11,7 @@ import { PlansListPage } from '../page-objects/PlansListPage';
 import { ProviderDetailsPage } from '../page-objects/ProviderDetailsPage';
 import { ProvidersListPage } from '../page-objects/ProvidersListPage';
 import { createPlanTestData, type ProviderConfig, type ProviderData } from '../types/test-data';
-import { generateUniqueId, ResourceManager } from '../utils';
+import { ResourceManager } from '../utils/resource-manager/ResourceManager';
 
 // Load real provider configurations
 const providersPath = join(__dirname, '../../.providers.json');
@@ -26,7 +26,7 @@ const createProvider = async (
   resourceManager: ResourceManager,
   namePrefix = 'test-provider',
 ): Promise<V1beta1Provider> => {
-  const uniqueId = generateUniqueId();
+  const uniqueId = crypto.randomUUID();
   const providerName = `${namePrefix}-${uniqueId}`;
 
   const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
@@ -77,7 +77,7 @@ const createPlanWithCustomData = async (
   },
 ): Promise<V1beta1Plan> => {
   const namePrefix = 'test-plan';
-  const uniqueId = generateUniqueId();
+  const uniqueId = crypto.randomUUID();
   const planName = `${namePrefix}-${uniqueId}`;
   const targetProjectName = `test-project-${uniqueId}`;
   const { sourceProvider, customPlanData } = options;
@@ -92,11 +92,11 @@ const createPlanWithCustomData = async (
     },
     networkMap: {
       name: `${planName}-network-map`,
-      isPreExisting: false,
+      isPreexisting: false,
     },
     storageMap: {
       name: `${planName}-storage-map`,
-      isPreExisting: false,
+      isPreexisting: false,
       targetStorage: 'ocs-storagecluster-ceph-rbd-virtualization',
     },
     virtualMachines: [{ sourceName: 'mtv-func-rhel9' }],
@@ -166,28 +166,32 @@ export const createResourceFixtures = (config: FixtureConfig = {}) => {
               const page = await context.newPage();
               const tempResourceManager = new ResourceManager();
 
-              // eslint-disable-next-line @typescript-eslint/init-declarations
-              let provider: V1beta1Provider | undefined;
               try {
-                provider = await createProvider(page as Page, tempResourceManager, providerPrefix);
+                const provider = await createProvider(
+                  page as Page,
+                  tempResourceManager,
+                  providerPrefix,
+                );
+
+                if (!provider) {
+                  throw new Error('Failed to create provider');
+                }
+
+                await use(provider);
+
+                const cleanupContext = await browser.newContext();
+                const cleanupManager = new ResourceManager();
+
+                try {
+                  cleanupManager.addResource(provider);
+                  await cleanupManager.instantCleanup();
+                } finally {
+                  await cleanupContext.close();
+                }
+              } catch (error) {
+                throw new Error(`Failed to create or use provider: ${String(error)}`);
               } finally {
                 await context.close();
-              }
-
-              if (!provider) {
-                throw new Error('Failed to create provider');
-              }
-
-              await use(provider);
-
-              const cleanupContext = await browser.newContext();
-              const cleanupManager = new ResourceManager();
-
-              try {
-                cleanupManager.addResource(provider);
-                await cleanupManager.instantCleanup();
-              } finally {
-                await cleanupContext.close();
               }
             },
             { scope: 'worker' },
@@ -255,5 +259,3 @@ export const providerOnlyFixtures = createResourceFixtures({
   planScope: 'none',
   providerPrefix: 'test-provider-only',
 });
-
-export { expect } from '@playwright/test';

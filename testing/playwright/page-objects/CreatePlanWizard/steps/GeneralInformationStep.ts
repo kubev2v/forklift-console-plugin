@@ -1,7 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 
-import type { TargetProject } from '../../../types/test-data';
-import type { ResourceManager } from '../../../utils/ResourceManager';
+import type { PlanTestData, TargetProject } from '../../../types/test-data';
+import type { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
 
 export class GeneralInformationStep {
   private readonly page: Page;
@@ -26,19 +26,13 @@ export class GeneralInformationStep {
     await expect(this.page.getByTestId('project-name-input')).toBeVisible();
   }
 
-  async fillAndComplete(data: {
-    planName: string;
-    planProject: string;
-    sourceProvider: string;
-    targetProvider: string;
-    targetProject: TargetProject;
-  }): Promise<void> {
-    await this.fillPlanName(data.planName);
-    await this.selectProject(data.planProject, 'plan-project-select');
-    await this.selectSourceProvider(data.sourceProvider);
-    await this.selectTargetProvider(data.targetProvider);
+  async fillAndComplete(testData: PlanTestData): Promise<void> {
+    await this.fillPlanName(testData.planName);
+    await this.selectProject(testData.planProject, 'plan-project-select');
+    await this.selectSourceProvider(testData.sourceProvider);
+    await this.selectTargetProvider(testData.targetProvider);
     await this.waitForTargetProviderNamespaces();
-    await this.selectTargetProject(data.targetProject);
+    await this.selectTargetProject(testData.targetProject);
   }
 
   async fillPlanName(name: string) {

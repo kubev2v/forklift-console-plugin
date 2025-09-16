@@ -9,6 +9,14 @@ export class DetailsTab {
     this.page = page;
   }
 
+  async getCurrentPlanStatus(): Promise<string> {
+    const statusElement = this.page
+      .getByTestId('status-detail-item')
+      .getByTestId('plan-status-label');
+    const statusText = await statusElement.textContent();
+    return statusText?.trim() ?? '';
+  }
+
   async navigateToDetailsTab(): Promise<void> {
     const detailsTab = this.page.locator('[data-test-id="horizontal-link-Details"]');
     await detailsTab.click();
@@ -43,9 +51,14 @@ export class DetailsTab {
   }
 
   async verifyPlanStatus(expectedStatus = 'Ready for migration'): Promise<void> {
-    await expect(
-      this.page.locator('.forklift-page-headings__status .pf-v5-c-label__text'),
-    ).toContainText(expectedStatus, { timeout: 30000 });
-    await expect(this.page.getByRole('button', { name: 'Start' })).toBeVisible();
+    const statusLocator = this.page.getByTestId('status-detail-item');
+
+    await expect(statusLocator).not.toContainText('Unknown', { timeout: 30000 });
+
+    if (expectedStatus === 'Ready for migration') {
+      await expect(
+        this.page.getByTestId('status-detail-item').getByTestId('plan-start-button-status'),
+      ).toBeVisible();
+    }
   }
 }

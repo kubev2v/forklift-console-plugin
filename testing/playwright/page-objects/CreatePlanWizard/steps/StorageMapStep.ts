@@ -9,7 +9,7 @@ export class StorageMapStep {
 
   async fillAndComplete(storageMap: {
     name: string;
-    isPreExisting: boolean;
+    isPreexisting: boolean;
     targetStorage?: string;
   }): Promise<void> {
     await this.verifyStepVisible();
@@ -19,11 +19,11 @@ export class StorageMapStep {
 
   async selectStorageMap(storageMap: {
     name: string;
-    isPreExisting: boolean;
+    isPreexisting: boolean;
     targetStorage?: string;
   }): Promise<void> {
     const selectElement = this.page.getByTestId('storage-map-select');
-    if (storageMap.isPreExisting) {
+    if (storageMap.isPreexisting) {
       await selectElement.click();
       await this.page.getByRole('option', { name: storageMap.name }).click();
     } else {

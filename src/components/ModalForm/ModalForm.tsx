@@ -72,6 +72,7 @@ const ModalForm: FC<ModalFormProps> = ({
           onClick={handleConfirm}
           isLoading={isLoading}
           isDisabled={isLoading || Boolean(error) || isDisabled}
+          data-testid="modal-confirm-button"
         >
           {confirmLabel ?? t('Save')}
         </Button>,

@@ -16,7 +16,7 @@ import { PlansListPage } from '../../page-objects/PlansListPage';
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage';
 import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
 import { createPlanTestData, type ProviderConfig, type ProviderData } from '../../types/test-data';
-import { ResourceManager } from '../../utils/ResourceManager';
+import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
 test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => {
   const resourceManager = new ResourceManager();
@@ -47,11 +47,11 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
     },
     networkMap: {
       name: `${planName}-network-map`,
-      isPreExisting: false,
+      isPreexisting: false,
     },
     storageMap: {
       name: `${planName}-storage-map`,
-      isPreExisting: false,
+      isPreexisting: false,
       targetStorage: 'ocs-storagecluster-ceph-rbd-virtualization',
     },
     virtualMachines: [

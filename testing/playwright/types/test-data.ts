@@ -5,12 +5,12 @@ export interface TargetProject {
 
 export interface NetworkMap {
   name: string;
-  isPreExisting: boolean;
+  isPreexisting: boolean;
 }
 
 export interface StorageMap {
   name: string;
-  isPreExisting: boolean;
+  isPreexisting: boolean;
   targetStorage?: string; // Target storage class (e.g., 'ocs-storagecluster-ceph-rbd-virtualization')
 }
 

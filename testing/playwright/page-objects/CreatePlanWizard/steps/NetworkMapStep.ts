@@ -7,15 +7,15 @@ export class NetworkMapStep {
     this.page = page;
   }
 
-  async fillAndComplete(networkMap: { name: string; isPreExisting: boolean }): Promise<void> {
+  async fillAndComplete(networkMap: { name: string; isPreexisting: boolean }): Promise<void> {
     await this.verifyStepVisible();
     await this.waitForData();
     await this.selectNetworkMap(networkMap);
   }
 
-  async selectNetworkMap(networkMap: { name: string; isPreExisting: boolean }): Promise<void> {
+  async selectNetworkMap(networkMap: { name: string; isPreexisting: boolean }): Promise<void> {
     const selectElement = this.page.getByTestId('network-map-select');
-    if (networkMap.isPreExisting) {
+    if (networkMap.isPreexisting) {
       await selectElement.click();
       await this.page.getByRole('option', { name: networkMap.name }).click();
     } else {

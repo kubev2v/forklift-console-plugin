@@ -1,9 +1,9 @@
+import type { V1beta1Plan } from '@kubev2v/types';
 import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../types/test-data';
-import type { V1beta1Plan } from '../../utils';
 import { NavigationHelper } from '../../utils/NavigationHelper';
-import type { ResourceManager } from '../../utils/ResourceManager';
+import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
 import { GeneralInformationStep } from './steps/GeneralInformationStep';
 import { NetworkMapStep } from './steps/NetworkMapStep';
@@ -78,13 +78,7 @@ export class CreatePlanWizardPage {
 
   async fillAndSubmit(testData: PlanTestData, { skipToReview = true } = {}): Promise<void> {
     // STEP 1: General Information
-    await this.generalInformation.fillAndComplete({
-      planName: testData.planName,
-      planProject: testData.planProject,
-      sourceProvider: testData.sourceProvider,
-      targetProvider: testData.targetProvider,
-      targetProject: testData.targetProject,
-    });
+    await this.generalInformation.fillAndComplete(testData);
     await this.clickNext();
 
     // STEP 2: Virtual Machines
