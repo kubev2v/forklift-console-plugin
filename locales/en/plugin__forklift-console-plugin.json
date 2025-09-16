@@ -1150,7 +1150,7 @@
   "You must select a source and target storage": "You must select a source and target storage",
   "You need to ensure a clean state.": "You need to ensure a clean state.",
   "You need to stage the migration over a period of time.": "You need to stage the migration over a period of time.",
-  "Your migration plan preserves the static IPs of VMs and uses Default Networking target network mapping. This combination isn't supported, because VM IPs aren't preserved in Default Networking migrations.": "Your migration plan preserves the static IPs of VMs and uses Default Networking target network mapping. This combination isn't supported, because VM IPs aren't preserved in Default Networking migrations.",
+  "Your migration plan preserves the static IPs of VMs and uses Pod Networking target network mapping. This combination isn't supported, because VM IPs aren't preserved in Pod Networking migrations.": "Your migration plan preserves the static IPs of VMs and uses Pod Networking target network mapping. This combination isn't supported, because VM IPs aren't preserved in Pod Networking migrations.",
   "Your selected network mappings will automatically save as a network map when your plan is created.": "Your selected network mappings will automatically save as a network map when your plan is created.",
   "Your selected storage mappings will automatically save as a storage map when your plan is created.": "Your selected storage mappings will automatically save as a storage map when your plan is created.",
   "Your VMs can be migrated in 2 different ways:": "Your VMs can be migrated in 2 different ways:"
