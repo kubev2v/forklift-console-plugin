@@ -1,9 +1,9 @@
 import type { FC, ReactElement } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import SectionHeading from '@components/headers/SectionHeading';
 import type { K8sResourceCondition } from '@kubev2v/types';
-import { HelperText, HelperTextItem } from '@patternfly/react-core';
+import { HelperText, HelperTextItem, PageSection } from '@patternfly/react-core';
 
 import ConditionsTableItem from './ConditionsTableItem';
 
@@ -15,7 +15,9 @@ const ConditionsSection: FC<ConditionsSectionProps> = ({ conditions }): ReactEle
   const { t } = useForkliftTranslation();
 
   return (
-    <ModalHOC>
+    <PageSection variant="light" className="forklift-page-section">
+      <SectionHeading text={t('Conditions')} />
+
       {conditions ? (
         <ConditionsTableItem conditions={conditions} />
       ) : (
@@ -23,7 +25,7 @@ const ConditionsSection: FC<ConditionsSectionProps> = ({ conditions }): ReactEle
           <HelperTextItem>{t('Conditions not found')}</HelperTextItem>
         </HelperText>
       )}
-    </ModalHOC>
+    </PageSection>
   );
 };
 
