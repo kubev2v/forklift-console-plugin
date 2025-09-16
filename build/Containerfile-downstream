@@ -50,6 +50,7 @@ ARG REVISION
 
 LABEL \
         com.redhat.component="mtv-console-plugin-container" \
+        cpe="cpe:/a:redhat:migration_toolkit_virtualization:2.8::el9" \
         version="$RVERSION" \
         name="${REGISTRY}/mtv-console-plugin-rhel9" \
         license="Apache License 2.0" \
