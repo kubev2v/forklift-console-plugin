@@ -1,6 +1,8 @@
 import type { FC } from 'react';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
+import SectionHeading from '@components/headers/SectionHeading';
+import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { DetailsSectionProps } from './utils/types';
@@ -15,24 +17,39 @@ const DetailsSection: FC<DetailsSectionProps> = ({ data }) => {
 
   const { permissions, provider } = data;
 
+  const getDetailsSectionByType = (
+    type: string | undefined,
+  ): FC<DetailsSectionProps> | undefined => {
+    switch (type) {
+      case PROVIDER_TYPES.ovirt:
+        return OvirtDetailsSection;
+      case PROVIDER_TYPES.openshift:
+        return OpenshiftDetailsSection;
+      case PROVIDER_TYPES.openstack:
+        return OpenstackDetailsSection;
+      case PROVIDER_TYPES.vsphere:
+        return VSphereDetailsSection;
+      case PROVIDER_TYPES.ova:
+        return OVADetailsSection;
+      case undefined:
+      default:
+        return undefined;
+    }
+  };
+
   if (!provider || !permissions)
     return <span className="text-muted">{t('No provider data available.')}</span>;
 
-  switch (provider?.spec?.type) {
-    case PROVIDER_TYPES.ovirt:
-      return <OvirtDetailsSection data={data} />;
-    case PROVIDER_TYPES.openshift:
-      return <OpenshiftDetailsSection data={data} />;
-    case PROVIDER_TYPES.openstack:
-      return <OpenstackDetailsSection data={data} />;
-    case PROVIDER_TYPES.vsphere:
-      return <VSphereDetailsSection data={data} />;
-    case PROVIDER_TYPES.ova:
-      return <OVADetailsSection data={data} />;
-    case undefined:
-    default:
-      return <></>;
-  }
+  const DetailsSectionByType = getDetailsSectionByType(provider?.spec?.type);
+
+  return (
+    DetailsSectionByType && (
+      <PageSection variant={PageSectionVariants.light} className="forklift-page-section--details">
+        <SectionHeading text={t('Provider details')} />
+        {DetailsSectionByType && <DetailsSectionByType data={data} />}
+      </PageSection>
+    )
+  );
 };
 
 export default DetailsSection;
