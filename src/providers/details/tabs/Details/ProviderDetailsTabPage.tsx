@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import SectionHeading from 'src/components/headers/SectionHeading';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
@@ -7,18 +6,18 @@ import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderDat
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { type ProviderInventory, ProviderModel } from '@kubev2v/types';
-import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 
 import { useProvider } from '../../hooks/useProvider';
 import type { ProviderDetailsPageProps } from '../../utils/types';
 
 import ConditionsSection from './components/ConditionsSection/ConditionsSection';
 import DetailsSection from './components/DetailsSection/DetailsSection';
+import UploadFilesSection from './components/DetailsSection/UploadFilesSection';
 import InventorySection from './components/InventorySection/InventorySection';
 import SecretsSection from './components/SecretsSection/SecretsSection';
 
 const ProviderDetailsTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
-  const { t } = useForkliftTranslation();
+  useForkliftTranslation();
   const { provider } = useProvider(name, namespace);
 
   const { inventory } = useProviderInventory<ProviderInventory>({ provider });
@@ -28,25 +27,15 @@ const ProviderDetailsTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace 
   return (
     <ModalHOC>
       <div>
-        <PageSection variant={PageSectionVariants.light} className="forklift-page-section--details">
-          <SectionHeading text={t('Provider details')} />
-          <DetailsSection data={data} />
-        </PageSection>
+        <DetailsSection data={data} />
 
-        <PageSection variant={PageSectionVariants.light} className="forklift-page-section">
-          <SectionHeading text={t('Secrets')} />
-          <SecretsSection data={data} />
-        </PageSection>
+        <UploadFilesSection data={data} />
 
-        <PageSection variant={PageSectionVariants.light} className="forklift-page-section">
-          <SectionHeading text={t('Provider inventory')} />
-          <InventorySection data={data} />
-        </PageSection>
+        <SecretsSection data={data} />
 
-        <PageSection variant="light" className="forklift-page-section">
-          <SectionHeading text={t('Conditions')} />
-          <ConditionsSection conditions={provider?.status?.conditions} />
-        </PageSection>
+        <InventorySection data={data} />
+
+        <ConditionsSection conditions={provider?.status?.conditions} />
       </div>
     </ModalHOC>
   );

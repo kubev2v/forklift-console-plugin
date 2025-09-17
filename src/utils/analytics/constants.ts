@@ -76,6 +76,18 @@ export enum OverviewTab {
   Settings = 'Settings',
 }
 
+export enum TipsTopicSourceComponent {
+  TipsTopicSelect = 'selectDropdownOption',
+  TipsTopicCard = 'selectCard',
+}
+
+export enum TipsTopic {
+  MigratingVMs = 'Migrating your virtual machines',
+  MigrationTypes = 'Choosing the right migration type',
+  Troubleshooting = 'Troubleshooting',
+  KeyTerminology = 'Key terminology',
+}
+
 // Add new events here following the pattern:
 // EVENT_NAME: 'Event name' (MTV prefix is automatically added)
 export const TELEMETRY_EVENTS = {
@@ -102,4 +114,6 @@ export const TELEMETRY_EVENTS = {
   STORAGE_MAP_CREATE_COMPLETED: 'Storage map created',
   STORAGE_MAP_CREATE_FAILED: 'Storage map create failed',
   STORAGE_MAP_CREATE_STARTED: 'Storage map create started',
+  TIPS_AND_TRICKS_CLICKED: 'Tips and tricks clicked',
+  TIPS_AND_TRICKS_VISITED: 'Tips and tricks visited',
 } as const;
