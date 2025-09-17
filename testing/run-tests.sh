@@ -2,12 +2,14 @@
 set -e
 
 # ==============================================================================
-# Optimized Script for running Playwright tests in a containerized environment.
+# Script for running Playwright tests in a containerized environment.
 #
-# This script assumes the test repository and dependencies are already installed
-# at build time. It only handles runtime configuration and test execution.
+# This script clones a specified test repository, installs dependencies, and 
+# executes Playwright tests based on environment variables.
 #
 # Required Environment Variables:
+#   - TEST_REPO: Git repository URL for the Playwright tests.
+#   - TEST_BRANCH: Git branch to check out.
 #   - CLUSTER_NAME: Name of the OpenShift cluster to target.
 #   - VSPHERE_PROVIDER: vSphere provider to use for testing.
 #   - TEST_ARGS: (Optional) Arbitrary arguments for the playwright command.
@@ -22,6 +24,9 @@ set -e
 # --- Configuration and Defaults ---
 # Use /results if WORKSPACE is not set (for container environment)
 RESULTS_DIR="${WORKSPACE:-/results}"
+TEST_DIR="/tmp/playwright-tests"
+TEST_REPO=${TEST_REPO:-"https://github.com/kubev2v/forklift-console-plugin.git"}
+TEST_BRANCH=${TEST_BRANCH:-"main"}
 TEST_ARGS=${TEST_ARGS:-"--grep=@downstream"}
 
 log() {
@@ -45,9 +50,13 @@ if [ -z "$CLUSTER_PASSWORD" ]; then
     exit 1
 fi
 
-log "Validation complete. Setting up runtime configuration..."
-# Navigate to the test directory where dependencies are installed at build time
-cd /test-repo/testing
+log "Validation complete. Credentials will be set up in the test directory."
+log "Cloning Playwright tests from ${TEST_REPO} on branch ${TEST_BRANCH}"
+git clone -b "${TEST_BRANCH}" "${TEST_REPO}" "${TEST_DIR}"
+cd "${TEST_DIR}/testing"
+
+log "Installing dependencies..."
+yarn install --frozen-lockfile
 
 log "Creating .providers.json from environment variable..."
 echo "$PROVIDERS_JSON" > .providers.json

@@ -107,16 +107,7 @@ yarn test:downstream:remote:docker
 ## Update The Docker Image
 
 ```bash
-# Build with default repo/branch (main)
-podman build -f testing/Dockerfile -t quay.io/rh-openshift-mtv/mtv-ui-tests:latest testing/
+podman build --platform linux/amd64 -f Dockerfile -t mtv-ui-tests .
 podman login quay.io
 podman push quay.io/rh-openshift-mtv/mtv-ui-tests:latest
-
-# Build with custom repo/branch (development)
-podman build -f testing/Dockerfile \
-  --build-arg TEST_REPO="https://github.com/your-fork/repo.git" \
-  --build-arg TEST_BRANCH="feature-branch" \
-  -t quay.io/rh-openshift-mtv/mtv-ui-tests:qe-dev testing/
-podman login quay.io
-podman push quay.io/rh-openshift-mtv/mtv-ui-tests:qe-dev
 ```
