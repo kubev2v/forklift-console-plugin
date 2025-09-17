@@ -73,11 +73,7 @@ export const rowsDataToAffinity = (affinityRows: AffinityRowData[]) => {
     return null;
   }
 
-  const pickRows = <T>(
-    rowType: AffinityType,
-    rowCondition: AffinityCondition,
-    mapper: (rowData: AffinityRowData) => T,
-  ): T[] =>
+  const pickRows = (rowType, rowCondition, mapper) =>
     affinityRows
       .filter(({ condition, type }) => type === rowType && condition === rowCondition)
       .map((rowData) => mapper(rowData));
