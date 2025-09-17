@@ -82,10 +82,10 @@ export enum TipsTopicSourceComponent {
 }
 
 export enum TipsTopic {
-  MigratingVMs = 'Migrating your virtual machines',
-  MigrationTypes = 'Choosing the right migration type',
-  Troubleshooting = 'Troubleshooting',
-  KeyTerminology = 'Key terminology',
+  MigratingVMs = 'migratingVirtualMachines',
+  MigrationTypes = 'choosingMigrationType',
+  Troubleshooting = 'troubleshooting',
+  KeyTerminology = 'terminology',
 }
 
 // Add new events here following the pattern:
