@@ -3,7 +3,6 @@ import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetD
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
-import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { type ProviderInventory, ProviderModel } from '@kubev2v/types';
 
@@ -17,7 +16,6 @@ import InventorySection from './components/InventorySection/InventorySection';
 import SecretsSection from './components/SecretsSection/SecretsSection';
 
 const ProviderDetailsTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
-  useForkliftTranslation();
   const { provider } = useProvider(name, namespace);
 
   const { inventory } = useProviderInventory<ProviderInventory>({ provider });
@@ -26,17 +24,15 @@ const ProviderDetailsTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace 
 
   return (
     <ModalHOC>
-      <div>
-        <DetailsSection data={data} />
+      <DetailsSection data={data} />
 
-        <UploadFilesSection data={data} />
+      <UploadFilesSection data={data} />
 
-        <SecretsSection data={data} />
+      <SecretsSection data={data} />
 
-        <InventorySection data={data} />
+      <InventorySection data={data} />
 
-        <ConditionsSection conditions={provider?.status?.conditions} />
-      </div>
+      <ConditionsSection conditions={provider?.status?.conditions} />
     </ModalHOC>
   );
 };

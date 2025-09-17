@@ -14,13 +14,10 @@ export const uploadOva = async (
   const formData = new FormData();
   formData.append('file', file, file.name);
 
-  const response = await consoleFetch(
-    getInventoryApiUrl(`providers/${provider.metadata?.uid}ova/fetch`),
-    {
-      body: formData,
-      method: 'POST',
-    },
-  );
+  const response = await consoleFetch(getInventoryApiUrl(`appliances`), {
+    body: formData,
+    method: 'POST',
+  });
 
   return response.json() as Promise<UploadOvaResponse>;
 };
