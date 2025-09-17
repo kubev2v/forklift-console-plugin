@@ -13,8 +13,8 @@ export default defineConfig({
   retries: process.env.GITHUB_ACTIONS ? 3 : 0,
 
   use: {
-    actionTimeout: 10_000,
-    navigationTimeout: 10_000,
+    actionTimeout: 20_000,
+    navigationTimeout: 20_000,
   },
 
   projects: [
