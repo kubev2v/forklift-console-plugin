@@ -2,15 +2,12 @@
 set -e
 
 # ==============================================================================
-# Script for running Playwright tests in a containerized environment.
+# Optimized Script for running Playwright tests in a containerized environment.
 #
-# This script is designed to be the entrypoint for a Docker container. It
-# clones a specified test repository, installs dependencies, and executes
-# Playwright tests based on environment variables.
+# This script assumes the test repository and dependencies are already installed
+# at build time. It only handles runtime configuration and test execution.
 #
 # Required Environment Variables:
-#   - TEST_REPO: Git repository URL for the Playwright tests.
-#   - TEST_BRANCH: Git branch to check out.
 #   - CLUSTER_NAME: Name of the OpenShift cluster to target.
 #   - VSPHERE_PROVIDER: vSphere provider to use for testing.
 #   - TEST_ARGS: (Optional) Arbitrary arguments for the playwright command.
@@ -49,7 +46,8 @@ if [ -z "$CLUSTER_PASSWORD" ]; then
 fi
 
 log "Validation complete. Setting up runtime configuration..."
-# We're already in the correct directory with dependencies installed at build time
+# Navigate to the test directory where dependencies are installed at build time
+cd /test-repo/testing
 
 log "Creating .providers.json from environment variable..."
 echo "$PROVIDERS_JSON" > .providers.json
@@ -68,6 +66,7 @@ log "Running Playwright tests..."
 echo "  Cluster: ${CLUSTER_NAME}"
 echo "  Base Address: ${BASE_ADDRESS}"
 echo "  Playwright Args: ${TEST_ARGS}"
+
 
 set +e
 echo "Starting Playwright test execution..."

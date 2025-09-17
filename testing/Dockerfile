@@ -31,6 +31,9 @@ RUN chmod +x run-tests.sh
 # Create symlink for Jenkins compatibility
 RUN mkdir -p /test-runner && ln -s /test-repo/testing/run-tests.sh /test-runner/run-tests.sh
 
+# Fix permissions for any user (Jenkins uses different UIDs)
+RUN chmod -R 777 /test-repo
+
 USER 1001
 
 CMD ["./run-tests.sh"]

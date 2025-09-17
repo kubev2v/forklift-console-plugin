@@ -58,7 +58,7 @@ export class NavigationHelper {
 
   async navigateToMigrationMenu(): Promise<void> {
     await this.navigateToConsole();
-    await this.page.getByTestId('migration-nav-item').click({ timeout: 60000 });
+    await this.page.getByTestId('migration-nav-item').click({ timeout: 20000 });
   }
 
   async navigateToPlanDetails(planName: string, namespace?: string): Promise<void> {
