@@ -103,3 +103,11 @@ From the `testing` directory, run:
 ```bash
 yarn test:downstream:remote:docker
 ```
+
+## Update The Docker Image
+
+```bash
+podman build --platform linux/amd64 -f Dockerfile -t quay.io/rh-openshift-mtv/mtv-ui-tests:latest .
+podman login quay.io
+podman push quay.io/rh-openshift-mtv/mtv-ui-tests:latest
+```
