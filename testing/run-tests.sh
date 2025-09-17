@@ -25,9 +25,6 @@ set -e
 # --- Configuration and Defaults ---
 # Use /results if WORKSPACE is not set (for container environment)
 RESULTS_DIR="${WORKSPACE:-/results}"
-TEST_DIR="/tmp/playwright-tests"
-TEST_REPO=${TEST_REPO:-"https://github.com/kubev2v/forklift-console-plugin.git"}
-TEST_BRANCH=${TEST_BRANCH:-"main"}
 TEST_ARGS=${TEST_ARGS:-"--grep=@downstream"}
 
 log() {
@@ -51,13 +48,8 @@ if [ -z "$CLUSTER_PASSWORD" ]; then
     exit 1
 fi
 
-log "Validation complete. Credentials will be set up in the test directory."
-log "Cloning Playwright tests from ${TEST_REPO} on branch ${TEST_BRANCH}"
-git clone -b "${TEST_BRANCH}" "${TEST_REPO}" "${TEST_DIR}"
-cd "${TEST_DIR}/testing"
-
-log "Installing dependencies..."
-yarn install --frozen-lockfile
+log "Validation complete. Setting up runtime configuration..."
+# We're already in the correct directory with dependencies installed at build time
 
 log "Creating .providers.json from environment variable..."
 echo "$PROVIDERS_JSON" > .providers.json
