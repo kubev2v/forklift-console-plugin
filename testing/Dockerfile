@@ -1,5 +1,9 @@
 FROM mcr.microsoft.com/playwright:v1.54.2-noble
 
+# Cache busting argument - pass different value each build
+ARG BUILD_DATE
+ENV BUILD_DATE=${BUILD_DATE}
+
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
@@ -12,15 +16,13 @@ RUN apt-get update && \
 WORKDIR /test-runner
 
 COPY package.json yarn.lock ./
-RUN corepack enable && yarn install --frozen-lockfile --ignore-scripts
-
-RUN npx playwright install --with-deps
+RUN corepack enable && \
+    yarn install --frozen-lockfile --ignore-scripts && \
+    npx playwright install --with-deps
 
 COPY run-tests.sh .
-RUN chmod +x run-tests.sh
-
-# Fix permissions for any user (Jenkins uses different UIDs)
-RUN chmod -R 755 /test-runner
+RUN chmod +x run-tests.sh && \
+    chmod -R 755 /test-runner
 
 USER 1001
 
