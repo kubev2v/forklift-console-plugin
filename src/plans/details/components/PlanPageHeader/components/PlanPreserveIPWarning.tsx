@@ -18,7 +18,7 @@ const PlanPreserveIPWarning: FC = () => {
         <Text component={TextVariants.p}>
           <Linkify>
             {t(
-              "Your migration plan preserves the static IPs of VMs and uses Default Networking target network mapping. This combination isn't supported, because VM IPs aren't preserved in Default Networking migrations.",
+              "Your migration plan preserves the static IPs of VMs and uses Pod Networking target network mapping. This combination isn't supported, because VM IPs aren't preserved in Pod Networking migrations.",
             )}
           </Linkify>
         </Text>
