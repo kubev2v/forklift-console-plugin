@@ -56,7 +56,7 @@ git clone -b "${TEST_BRANCH}" "${TEST_REPO}" "${TEST_DIR}"
 cd "${TEST_DIR}/testing"
 
 log "Installing dependencies..."
-yarn install --frozen-lockfile
+yarn install --frozen-lockfile --ignore-scripts
 
 log "Creating .providers.json from environment variable..."
 echo "$PROVIDERS_JSON" > .providers.json
@@ -81,8 +81,7 @@ set +e
 echo "Starting Playwright test execution..."
 npx playwright test \
     ${TEST_ARGS} \
-    --reporter=list,junit,html \
-    --quiet
+    --reporter=list,junit,html
 TEST_EXIT_CODE=$?
 set -e
 

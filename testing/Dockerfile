@@ -5,14 +5,14 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 RUN apt-get update && \
-    apt-get install -y git locales tree && \
+    apt-get install -y --no-install-recommends git locales && \
     rm -rf /var/lib/apt/lists/* && \
     locale-gen en_US.UTF-8
 
 WORKDIR /test-runner
 
 COPY package.json yarn.lock ./
-RUN corepack enable && yarn install --frozen-lockfile
+RUN corepack enable && yarn install --frozen-lockfile --ignore-scripts
 
 RUN npx playwright install --with-deps
 
