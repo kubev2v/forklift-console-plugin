@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
-import { Base64 } from 'js-base64';
 
 import VersionedCodeEditor from '@components/VersionedCodeEditor/VersionedCodeEditor';
 import { FormGroup, FormHelperText } from '@patternfly/react-core';
@@ -30,10 +29,9 @@ const AnsiblePlaybookField: FC<AnsiblePlaybookFieldProps> = ({ fieldId }) => {
         control={control}
         render={({ field }) => (
           <VersionedCodeEditor
-            value={Base64.decode(field.value ?? '')}
-            onChange={(value) => {
-              field.onChange(Base64.encode(String(value)));
-            }}
+            isDarkTheme={isDarkTheme}
+            value={field.value ?? ''}
+            onChange={field.onChange}
           />
         )}
       />
