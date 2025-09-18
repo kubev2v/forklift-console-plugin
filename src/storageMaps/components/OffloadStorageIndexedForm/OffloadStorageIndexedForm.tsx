@@ -1,8 +1,9 @@
 import { type FC, useState } from 'react';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 
+import DevPreviewLabel from '@components/PreviewLabels/DevPreviewLabel';
 import type { V1beta1Provider } from '@kubev2v/types';
-import { ExpandableSection, Form } from '@patternfly/react-core';
+import { ExpandableSection, Form, Split, SplitItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { StorageMapFieldId } from '../../constants';
@@ -27,7 +28,14 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
 
   return (
     <ExpandableSection
-      toggleText={t('Offload options (optional)')}
+      toggleContent={
+        <Split hasGutter>
+          <SplitItem>{t('Offload options (optional)')}</SplitItem>
+          <SplitItem>
+            <DevPreviewLabel />
+          </SplitItem>
+        </Split>
+      }
       onToggle={(_e, expanded) => {
         setIsExpanded(expanded);
       }}
