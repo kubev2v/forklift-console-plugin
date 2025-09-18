@@ -1,16 +1,14 @@
-import { type FC, useState } from 'react';
+import type { FC } from 'react';
 
+import Select from '@components/common/Select';
+import MultiTypeaheadSelect from '@components/common/TypeaheadSelect/MultiTypeaheadSelect/MultiTypeaheadSelect';
+import type { TypeaheadSelectOption } from '@components/common/TypeaheadSelect/utils/types';
 import { Operator } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, GridItem, TextInput } from '@patternfly/react-core';
-import {
-  Select,
-  SelectOption,
-  type SelectOptionObject,
-  SelectVariant,
-} from '@patternfly/react-core/deprecated';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { operatorSelectOptions } from './utils/constants';
 import type { AffinityLabel } from './utils/types';
 
 import './AffinityEditRow.scss';
@@ -27,28 +25,11 @@ const AffinityEditRow: FC<AffinityEditRowProps> = ({ expression, onChange, onDel
   const { id, key, operator, values = [] } = expression;
   const enableValueField =
     operator !== Operator.Exists.valueOf() && operator !== Operator.DoesNotExist.valueOf();
-  const [isOperatorExpended, setIsOperatorExpended] = useState(false);
-  const [isValuesExpanded, setIsValuesExpanded] = useState(false);
 
-  const onSelectOperator = (
-    _event: React.MouseEvent | React.ChangeEvent,
-    value: string | SelectOptionObject,
-  ) => {
-    onChange({ ...expression, operator: value as string });
-    setIsOperatorExpended(false);
-  };
-
-  const onSelectValues = (
-    _event: React.MouseEvent | React.ChangeEvent,
-    value: string | SelectOptionObject,
-  ) => {
-    const isValueExist = values.some((item) => item === value);
-    if (isValueExist) {
-      onChange({ ...expression, values: values.filter((item) => item !== value) });
-    } else {
-      onChange({ ...expression, values: [...values, value as string] });
-    }
-  };
+  const valueOptions: TypeaheadSelectOption[] = (values ?? []).map((value) => ({
+    content: value,
+    value,
+  }));
 
   return (
     <>
@@ -65,43 +46,39 @@ const AffinityEditRow: FC<AffinityEditRowProps> = ({ expression, onChange, onDel
       </GridItem>
       <GridItem span={2}>
         <Select
-          isOpen={isOperatorExpended}
-          menuAppendTo="parent"
-          onSelect={onSelectOperator}
-          onToggle={(_, isExpanded) => {
-            setIsOperatorExpended(isExpanded);
-          }}
-          selections={operator}
+          id={`affinity-operator-${id}`}
           value={operator}
-        >
-          {[Operator.Exists, Operator.DoesNotExist, Operator.In, Operator.NotIn].map(
-            (operatorOption) => (
-              <SelectOption key={operatorOption} value={operatorOption} />
-            ),
-          )}
-        </Select>
+          options={operatorSelectOptions}
+          onSelect={(_ev, selected) => {
+            const nextOp = String(selected);
+            // Optional: clear values if switching to unary op to avoid stale state
+            const nextValues: string[] =
+              nextOp === Operator.Exists.valueOf() || nextOp === Operator.DoesNotExist.valueOf()
+                ? []
+                : values;
+            onChange({ ...expression, operator: nextOp, values: nextValues });
+          }}
+        />
       </GridItem>
       <GridItem span={5}>
-        <Select
+        <MultiTypeaheadSelect
           className="affinity-edit-row__values-chips"
+          options={valueOptions}
+          values={enableValueField ? values : []}
           isCreatable
           isDisabled={!enableValueField}
-          isOpen={isValuesExpanded}
-          menuAppendTo="parent"
-          onClear={() => {
-            onChange({ ...expression, values: [] });
+          placeholder={enableValueField ? t('Enter value') : ''}
+          // Toggle membership on select
+          onChange={(nextValues) => {
+            onChange({ ...expression, values: nextValues as string[] });
           }}
-          onSelect={onSelectValues}
-          onToggle={(_, isExpanded) => {
-            setIsValuesExpanded(isExpanded);
+          // Persist a newly created free-typed value
+          onCreateOption={(created) => {
+            if (!values.includes(created)) {
+              onChange({ ...expression, values: [...values, created] });
+            }
           }}
-          placeholderText={enableValueField ? t('Enter value') : ''}
-          selections={enableValueField ? values : []}
-          typeAheadAriaLabel={t('Enter value')}
-          variant={SelectVariant.typeaheadMulti}
-        >
-          {values?.map((option) => <SelectOption isDisabled={false} key={option} value={option} />)}
-        </Select>
+        />
       </GridItem>
       <GridItem span={1}>
         <Button

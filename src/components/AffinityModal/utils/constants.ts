@@ -1,4 +1,4 @@
-import type { TableColumn } from '@openshift-console/dynamic-plugin-sdk';
+import { Operator, type TableColumn } from '@openshift-console/dynamic-plugin-sdk';
 import { sortable } from '@patternfly/react-table';
 import { t } from '@utils/i18n';
 
@@ -65,3 +65,10 @@ export const affinityColumns = () => {
   ];
   return columns;
 };
+
+export const operatorSelectOptions = [
+  { label: t('Exists'), value: Operator.Exists.valueOf() },
+  { label: t('Does not exist'), value: Operator.DoesNotExist.valueOf() },
+  { label: t('In'), value: Operator.In.valueOf() },
+  { label: t('Not in'), value: Operator.NotIn.valueOf() },
+];

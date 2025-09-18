@@ -18,16 +18,16 @@ import {
 } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
-import { DEFAULT_NO_OPTIONS, DEFAULT_PLACEHOLDER, PLACEHOLDER_VALUES } from './constants';
-import TypeaheadMenuToggle from './TypeaheadMenuToggle';
-import type { TypeaheadSelectOption } from './types';
+import { DEFAULT_NO_OPTIONS, DEFAULT_PLACEHOLDER, PLACEHOLDER_VALUES } from './utils/constants';
+import type { TypeaheadSelectOption } from './utils/types';
 import {
   defaultFilterFunction,
   generateFilteredOptions,
   getDefaultCreateMessage,
   getDefaultNoResults,
   isPlaceholderValue,
-} from './utils';
+} from './utils/utils';
+import TypeaheadMenuToggle from './TypeaheadMenuToggle';
 
 type TypeaheadSelectProps = {
   options: TypeaheadSelectOption[];
