@@ -16,6 +16,7 @@ type PlanSpecVmsParams = {
   postHook?: V1beta1Hook;
   luks?: V1beta1PlanSpecVmsLuks;
   rootDevice?: string;
+  nbdeClevis?: boolean;
 };
 
 /**
@@ -24,6 +25,7 @@ type PlanSpecVmsParams = {
  */
 export const buildPlanSpecVms = ({
   luks,
+  nbdeClevis,
   postHook,
   preHook,
   rootDevice,
@@ -63,6 +65,7 @@ export const buildPlanSpecVms = ({
       ...(vm.providerType === PROVIDER_TYPES.openshift && { namespace: vm.namespace }),
       ...(rootDevice && { rootDisk: rootDevice }),
       ...(luks && { luks }),
+      ...(nbdeClevis && { nbdeClevis }),
       ...(!isEmpty(hooks) && { hooks }),
     };
   });

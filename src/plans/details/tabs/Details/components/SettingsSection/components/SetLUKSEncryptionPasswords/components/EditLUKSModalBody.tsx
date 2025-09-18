@@ -10,13 +10,14 @@ const EditLUKSModalBody: FC = () => (
     <ForkliftTrans>
       <Stack hasGutter>
         <StackItem>
-          Specify a list of passphrases for the Linux Unified Key Setup (LUKS)-encrypted devices for
-          the VMs that you want to migrate.
+          Configure disk decryption for LUKS-encrypted devices. You can use network-bound decryption
+          (NBDE/Clevis) for automatic unlocking via Tang servers, or provide manual passphrases.
+          These settings apply to all VMs in the migration plan.
         </StackItem>
 
         <StackItem>
-          For each LUKS-encrypted device, Migration Toolkit for Virtualization (MTV) tries each
-          passphrase until one unlocks the device.{' '}
+          For manual passphrases, Migration Toolkit for Virtualization (MTV) tries each passphrase
+          until one unlocks the device.{' '}
           <ExternalLink isInline href={VIRT_V2V_HELP_LINK}>
             Learn more
           </ExternalLink>

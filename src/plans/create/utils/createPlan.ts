@@ -17,6 +17,7 @@ export const createPlan = async ({
   luks,
   migrateSharedDisks,
   migrationType,
+  nbdeClevis,
   networkMap,
   planName,
   planProject,
@@ -54,7 +55,7 @@ export const createPlan = async ({
       ...(transferNetwork && { transferNetwork }),
       targetPowerState,
       type: migrationType,
-      vms: buildPlanSpecVms({ luks, postHook, preHook, rootDevice, vms }),
+      vms: buildPlanSpecVms({ luks, nbdeClevis, postHook, preHook, rootDevice, vms }),
       warm: migrationType === MigrationTypeValue.Warm,
     },
   };

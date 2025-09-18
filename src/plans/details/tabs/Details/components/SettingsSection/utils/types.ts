@@ -1,3 +1,5 @@
+import type { TargetPowerStateValue } from 'src/plans/constants';
+
 import type { V1beta1Plan, V1beta1PlanSpec, V1beta1PlanSpecVms } from '@kubev2v/types';
 
 export type EditPlanProps = {
@@ -11,7 +13,10 @@ type PlanNameTemplates = {
   targetName?: string;
 };
 
-export type EnhancedPlanSpecVms = V1beta1PlanSpecVms & PlanNameTemplates;
+export type EnhancedPlanSpecVms = V1beta1PlanSpecVms &
+  PlanNameTemplates & {
+    nbdeClevis?: boolean;
+  };
 
 export type EnhancedPlan = V1beta1Plan & {
   spec: V1beta1PlanSpec &
@@ -20,5 +25,6 @@ export type EnhancedPlan = V1beta1Plan & {
       vms: EnhancedPlanSpecVms[];
       skipGuestConversion?: boolean;
       useCompatibilityMode?: boolean;
+      targetPowerState: TargetPowerStateValue;
     };
 };

@@ -100,3 +100,4 @@ apiextensions
 customresourcedefinitions
 clusterversion
 clusterversions
+nbde
