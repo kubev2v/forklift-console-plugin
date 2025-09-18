@@ -20,7 +20,7 @@ COPY run-tests.sh .
 RUN chmod +x run-tests.sh
 
 # Fix permissions for any user (Jenkins uses different UIDs)
-RUN chmod -R 777 /test-runner
+RUN chmod -R 755 /test-runner
 
 USER 1001
 
