@@ -1,4 +1,4 @@
-import { type FC, useEffect, useRef, useState } from 'react';
+import { type FC, useEffect, useRef } from 'react';
 import { Controller, type FieldPath, type FieldValues, useWatch } from 'react-hook-form';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
@@ -32,7 +32,8 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
   const hasProjects = !isEmpty(projectNames);
   const defaultProject = useDefaultProject(projectNames);
   const hasSetInitialDefault = useRef(false);
-  const [showDefaultProjects, setShowDefaultProjects] = useState<boolean>(false);
+  const showDefaultProjects =
+    useWatch({ control, name: GeneralFormFieldId.ShowDefaultProjects }) ?? false;
 
   const [planProject, sourceProvider, targetProvider, targetProject] = useWatch({
     control,
@@ -47,7 +48,8 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
   useEffect(() => {
     if (defaultProject && hasProjects && !hasSetInitialDefault.current && isEmpty(planProject)) {
       setValue(GeneralFormFieldId.PlanProject, defaultProject);
-      setShowDefaultProjects((prev) => prev || isSystemNamespace(defaultProject));
+      setValue(GeneralFormFieldId.ShowDefaultProjects, isSystemNamespace(defaultProject));
+
       hasSetInitialDefault.current = true;
     }
   }, [defaultProject, setValue, planProject, hasProjects]);
@@ -79,7 +81,9 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
           <ProjectSelect
             testId={testId}
             showDefaultProjects={showDefaultProjects}
-            setShowDefaultProjects={setShowDefaultProjects}
+            setShowDefaultProjects={(value) => {
+              setValue(GeneralFormFieldId.ShowDefaultProjects, value);
+            }}
             placeholder={t('Select plan project')}
             id={GeneralFormFieldId.PlanProject}
             projectNames={projectNames}
