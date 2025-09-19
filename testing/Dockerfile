@@ -1,9 +1,5 @@
 FROM mcr.microsoft.com/playwright:v1.54.2-noble
 
-# Cache busting argument - pass different value each build
-ARG BUILD_DATE
-ENV BUILD_DATE=${BUILD_DATE}
-
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
