@@ -6,7 +6,7 @@ import { hasWarmMigrationProviderType } from 'src/plans/create/utils/hasWarmMigr
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import type { ProviderVirtualMachine, V1beta1Provider } from '@kubev2v/types';
-import { Alert, FlexItem, Radio, Stack, StackItem } from '@patternfly/react-core';
+import { Alert, FlexItem, Radio, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import { CBT_HELP_LINK } from '@utils/links';
@@ -37,7 +37,7 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
 
   if (!canRender) return null;
 
-  const { description, helpBody, helpLink } = getMigrationTypeConfig(migrationType);
+  const { description, helpBody, helpLink, PreviewLabel } = getMigrationTypeConfig(migrationType);
 
   return (
     <>
@@ -47,16 +47,25 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
           name={migrationType}
           label={
             helpBody ? (
-              <HelpIconWithLabel label={migrationTypeLabels[migrationType]}>
-                <Stack hasGutter>
-                  <StackItem>{helpBody}</StackItem>
-                  <StackItem>
-                    <ExternalLink isInline href={helpLink!}>
-                      {t('Learn more')}
-                    </ExternalLink>
-                  </StackItem>
-                </Stack>
-              </HelpIconWithLabel>
+              <Split hasGutter>
+                <SplitItem>
+                  <HelpIconWithLabel label={migrationTypeLabels[migrationType]}>
+                    <Stack hasGutter>
+                      <StackItem>{helpBody}</StackItem>
+                      <StackItem>
+                        <ExternalLink isInline href={helpLink!}>
+                          {t('Learn more')}
+                        </ExternalLink>
+                      </StackItem>
+                    </Stack>
+                  </HelpIconWithLabel>
+                </SplitItem>
+                {PreviewLabel && (
+                  <SplitItem>
+                    <PreviewLabel />
+                  </SplitItem>
+                )}
+              </Split>
             ) : (
               migrationTypeLabels[migrationType]
             )
