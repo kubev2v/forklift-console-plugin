@@ -97,10 +97,12 @@ const ProjectSelectTypeAhead: FC<ProjectSelectProps> = ({
       noOptionsMessage={noOptionsMessage}
       toggleProps={toggleProps}
       emptyState={
-        <ProjectSelectEmptyState
-          emptyStateMessage={emptyStateMessage}
-          onCreate={createAllowed ? onNewProject : undefined}
-        />
+        emptyStateMessage ? (
+          <ProjectSelectEmptyState
+            emptyStateMessage={emptyStateMessage}
+            onCreate={createAllowed ? onNewProject : undefined}
+          />
+        ) : null
       }
       filterControls={
         <>
