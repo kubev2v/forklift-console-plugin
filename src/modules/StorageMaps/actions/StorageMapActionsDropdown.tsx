@@ -18,20 +18,18 @@ import { StorageMapActionsDropdownItems } from './StorageMapActionsDropdownItems
 
 import './StorageMapActionsDropdown.style.css';
 
-const StorageMapActionsKebabDropdown_: FC<StorageMapActionsDropdownProps> = ({ data, isKebab }) => {
+const StorageMapActionsKebabDropdown: FC<StorageMapActionsDropdownProps> = ({ data, isKebab }) => {
   const { t } = useForkliftTranslation();
-
   const [isOpen, setIsOpen] = useState(false);
 
   const onToggleClick = () => {
-    setIsOpen((isOpen) => !isOpen);
+    setIsOpen((value) => !value);
   };
 
   const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
     setIsOpen(false);
   };
 
-  // Returning the Dropdown component from PatternFly library
   return (
     <Dropdown
       className={isKebab ? undefined : 'forklift-dropdown pf-c-menu-toggle'}
@@ -65,7 +63,7 @@ export const StorageMapActionsDropdown: FC<StorageMapActionsDropdownProps> = (pr
     <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
       <FlexItem grow={{ default: 'grow' }} />
       <FlexItem align={{ default: 'alignRight' }}>
-        <StorageMapActionsKebabDropdown_ {...props} />
+        <StorageMapActionsKebabDropdown {...props} />
       </FlexItem>
     </Flex>
   </ModalHOC>

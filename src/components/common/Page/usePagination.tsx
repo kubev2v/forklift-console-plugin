@@ -38,7 +38,7 @@ export const usePagination = ({
         savePerPage(perPageArg);
       }
     },
-    [setPerPage, savePerPage, clearSavedPerPage],
+    [clearSavedPerPage, savePerPage],
   );
 
   return {

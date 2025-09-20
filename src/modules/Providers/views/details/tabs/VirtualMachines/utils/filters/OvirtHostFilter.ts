@@ -4,7 +4,7 @@ import { t } from '@utils/i18n';
 import { CustomFilterType } from '../../constants';
 
 const labelToFilterItem = (label: string): EnumValue =>
-  label !== '' ? { id: label, label } : { id: label, label: 'Undefined' };
+  label ? { id: label, label } : { id: label, label: 'Undefined' };
 
 /**
  * This component enables filtering the oVirt virtual machines

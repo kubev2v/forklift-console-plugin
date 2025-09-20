@@ -18,7 +18,7 @@
     "build:analyze": "ANALYZE_BUNDLE=true NODE_ENV=production webpack",
     "start": "NODE_ENV=development webpack serve --progress",
     "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" ./plugin-extensions.ts [-oc] -c ./i18next-parser.config.ts",
-    "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
+    "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}' plugin-extensions.ts plugin-metadata.ts environment-defaults.ts --cache --cache-location .eslintcache && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "lint:ia": "rm -rf node_modules/.cache/eslint-interactive && npx eslint-interactive .",
     "test:i18n": "bash ./ci/test-i18n.sh",

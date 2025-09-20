@@ -6,6 +6,14 @@ import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/ty
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Form, FormSelect, FormSelectOption } from '@patternfly/react-core';
 
+type FindProviderFunction = (args: {
+  providers: V1beta1Provider[];
+  name: string;
+}) => V1beta1Provider | undefined;
+
+const findProvider: FindProviderFunction = ({ name, providers }) =>
+  providers.find((provider) => provider.metadata?.name === name);
+
 export const ProvidersEdit: FC<ProvidersEditProps> = ({
   helpContent,
   invalidLabel,
@@ -17,17 +25,17 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
   selectedProviderName,
   setMode,
 }) => {
-  const ProviderOption = (provider, index) => (
+  const ProviderOption = (provider: V1beta1Provider, index: number) => (
     <FormSelectOption
       key={provider?.metadata?.name ?? index}
       value={provider?.metadata?.name}
-      label={provider?.metadata?.name}
+      label={provider?.metadata?.name ?? ''}
     />
   );
 
-  const targetProvider = fineProvider({ name: selectedProviderName, providers });
+  const targetProvider = findProvider({ name: selectedProviderName, providers });
 
-  const validated = targetProvider !== undefined ? 'success' : 'error';
+  const validated = targetProvider ? 'success' : 'error';
   const hasProviders = providers?.length > 0;
 
   if (mode === 'edit') {
@@ -73,7 +81,7 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
           name={selectedProviderName}
           namespace={targetProvider?.metadata?.namespace}
           groupVersionKind={ProviderModelGroupVersionKind}
-          linkTo={targetProvider !== undefined}
+          linkTo={Boolean(targetProvider)}
         />
       }
       onEdit={
@@ -100,11 +108,3 @@ type ProvidersEditProps = {
   mode: 'edit' | 'view';
   setMode: (mode: 'edit' | 'view') => void;
 };
-
-type FindProviderFunction = (args: {
-  providers: V1beta1Provider[];
-  name: string;
-}) => V1beta1Provider;
-
-const fineProvider: FindProviderFunction = ({ name, providers }) =>
-  providers.find((provider) => provider.metadata.name === name);

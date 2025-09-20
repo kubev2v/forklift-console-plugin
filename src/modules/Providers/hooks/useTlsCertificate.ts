@@ -25,7 +25,7 @@ export const toColonSeparatedHex = (hexString: string) =>
     // [a,b,c,d] => [[c,d][a,b]]
     .reduce(
       ([last = [], ...rest]: string[][], char: string) =>
-        last.length !== 2 ? [[...last, char], ...rest] : [[char], last, ...rest],
+        last.length < 2 ? [[...last, char], ...rest] : [[char], last, ...rest],
       [],
     )
     // [[c,d][a,b]] => [[a,b], [c,d]]
@@ -38,15 +38,11 @@ export const toColonSeparatedHex = (hexString: string) =>
  * @returns SHA1 thumbprint
  */
 export const calculateThumbprint = (pemEncodedCert: string) => {
-  let thumbprint: string;
-
   try {
-    thumbprint = toColonSeparatedHex(KJUR.crypto.Util.hashHex(pemtohex(pemEncodedCert), 'sha1'));
+    return toColonSeparatedHex(KJUR.crypto.Util.hashHex(pemtohex(pemEncodedCert), 'sha1'));
   } catch {
-    thumbprint = '';
+    return '';
   }
-
-  return thumbprint;
 };
 
 /**
@@ -55,7 +51,7 @@ export const calculateThumbprint = (pemEncodedCert: string) => {
  */
 export const useTlsCertificate = (url: string) => {
   const [certificate, setCertificate] = useState('');
-  const [fetchError, setFetchError] = useState(false);
+  const [fetchError, setFetchError] = useState<Error>();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -67,7 +63,7 @@ export const useTlsCertificate = (url: string) => {
         const certificateText = await response.text();
         setCertificate(certificateText);
       } catch (e) {
-        setFetchError(e);
+        setFetchError(e as Error);
       } finally {
         setLoading(false);
       }
@@ -78,7 +74,7 @@ export const useTlsCertificate = (url: string) => {
     })();
   }, [url]);
 
-  const x509Cert: X509 = parseToX509(certificate);
+  const x509Cert: X509 | undefined = parseToX509(certificate);
   const certError = !x509Cert && !loading && !fetchError;
   const {
     issuer = '',

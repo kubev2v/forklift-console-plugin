@@ -22,8 +22,6 @@ const disabledRules: CustomExtends = {
     'max-lines': 'off',
     'max-lines-per-function': 'off',
     'no-console': 'off',
-    'no-negated-condition': 'off',
-    'no-underscore-dangle': 'off',
     'react-hooks/exhaustive-deps': 'off',
     'react-refresh/only-export-components': 'off',
     'require-atomic-updates': 'off',
