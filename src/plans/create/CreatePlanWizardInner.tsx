@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useRef, useState } from 'react';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { Wizard, type WizardProps, WizardStep, type WizardStepType } from '@patternfly/react-core';
@@ -40,14 +40,18 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
   const [currentStep, setCurrentStep] = useState<WizardStepType>(firstStep);
   const [createPlanError, setCreatePlanError] = useState<Error | undefined>();
   const { hasStepErrors, validateStep } = useStepValidation();
+  const initialStepTracked = useRef(false);
 
   const hasCreatePlanError = Boolean(createPlanError?.message);
 
   // Track initial step visit when wizard loads
   useEffect(() => {
-    trackEvent(TELEMETRY_EVENTS.PLAN_WIZARD_STEP_VISITED, {
-      stepId: firstStep.id,
-    });
+    if (!initialStepTracked.current) {
+      initialStepTracked.current = true;
+      trackEvent(TELEMETRY_EVENTS.PLAN_WIZARD_STEP_VISITED, {
+        stepId: firstStep.id,
+      });
+    }
   }, [trackEvent]);
 
   const handleStepChange: WizardProps['onStepChange'] = async (_event, newStep) => {
@@ -55,6 +59,10 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
     const newStepId = newStep.id as PlanWizardStepId;
     const newStepOrder = planStepOrder[newStepId];
     const currentStepOrder = planStepOrder[currentStepId];
+
+    if (currentStepId === newStepId) {
+      return;
+    }
 
     // Allow backward navigation without validation
     if (newStepOrder <= currentStepOrder) {

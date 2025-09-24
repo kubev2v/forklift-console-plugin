@@ -2,8 +2,14 @@ import { type FC, useState } from 'react';
 import ForkliftLearningExperience from 'src/onlineHelp/forkliftHelp/ForkliftLearningExperience';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { HorizontalNav } from '@openshift-console/dynamic-plugin-sdk';
-import { Drawer, DrawerContent, DrawerContentBody } from '@patternfly/react-core';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerContentBody,
+  Tab,
+  Tabs,
+  TabTitleText,
+} from '@patternfly/react-core';
 import { OverviewTab, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 
@@ -20,55 +26,37 @@ const OverviewPage: FC = () => {
   const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [activeTabName, setActiveTabName] = useState<OverviewTab>(OverviewTab.Overview);
 
-  const handleTabClick = (tabName: OverviewTab) => {
-    trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, {
-      tabName,
-    });
+  const isOverviewTab = (value: string): value is OverviewTab => {
+    return Object.values(OverviewTab).includes(value as OverviewTab);
   };
 
-  const pages = [
-    {
-      component: ForkliftControllerOverviewTab,
-      href: '',
-      name: t('Overview'),
-      onClick: () => {
-        handleTabClick(OverviewTab.Overview);
-      },
-    },
-    {
-      component: ForkliftControllerYAMLTab,
-      href: 'yaml',
-      name: t('YAML'),
-      onClick: () => {
-        handleTabClick(OverviewTab.YAML);
-      },
-    },
-    {
-      component: ForkliftControllerHealthTab,
-      href: 'health',
-      name: t('Health'),
-      onClick: () => {
-        handleTabClick(OverviewTab.Health);
-      },
-    },
-    {
-      component: ForkliftControllerHistoryTab,
-      href: 'history',
-      name: t('History'),
-      onClick: () => {
-        handleTabClick(OverviewTab.History);
-      },
-    },
-    {
-      component: ForkliftControllerSettingsTab,
-      href: 'settings',
-      name: t('Settings'),
-      onClick: () => {
-        handleTabClick(OverviewTab.Settings);
-      },
-    },
-  ];
+  const handleTabSelect = (tabName: string) => {
+    if (isOverviewTab(tabName)) {
+      setActiveTabName(tabName);
+      trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, {
+        tabName,
+      });
+    }
+  };
+
+  const renderActiveTabContent = () => {
+    switch (activeTabName) {
+      case OverviewTab.Overview:
+        return <ForkliftControllerOverviewTab />;
+      case OverviewTab.YAML:
+        return <ForkliftControllerYAMLTab />;
+      case OverviewTab.Health:
+        return <ForkliftControllerHealthTab />;
+      case OverviewTab.History:
+        return <ForkliftControllerHistoryTab />;
+      case OverviewTab.Settings:
+        return <ForkliftControllerSettingsTab />;
+      default:
+        return <ForkliftControllerOverviewTab />;
+    }
+  };
 
   return (
     <Drawer isInline isExpanded={isDrawerOpen} position="right">
@@ -78,7 +66,31 @@ const OverviewPage: FC = () => {
         <DrawerContentBody>
           <HeaderTitle isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
           <div className="pf-v5-u-h-100 pf-v5-u-display-flex pf-v5-u-flex-direction-column pf-v5-u-min-width-0 pf-v5-u-min-height-0">
-            <HorizontalNav pages={pages.filter(Boolean)} />
+            <Tabs
+              activeKey={activeTabName}
+              onSelect={(_, tabIndex) => {
+                handleTabSelect(tabIndex as string);
+              }}
+            >
+              <Tab
+                eventKey={OverviewTab.Overview}
+                title={<TabTitleText>{t('Overview')}</TabTitleText>}
+              />
+              <Tab eventKey={OverviewTab.YAML} title={<TabTitleText>{t('YAML')}</TabTitleText>} />
+              <Tab
+                eventKey={OverviewTab.Health}
+                title={<TabTitleText>{t('Health')}</TabTitleText>}
+              />
+              <Tab
+                eventKey={OverviewTab.History}
+                title={<TabTitleText>{t('History')}</TabTitleText>}
+              />
+              <Tab
+                eventKey={OverviewTab.Settings}
+                title={<TabTitleText>{t('Settings')}</TabTitleText>}
+              />
+            </Tabs>
+            {renderActiveTabContent()}
           </div>
         </DrawerContentBody>
       </DrawerContent>
