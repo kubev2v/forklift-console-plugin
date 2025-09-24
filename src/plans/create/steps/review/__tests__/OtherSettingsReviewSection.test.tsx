@@ -34,7 +34,7 @@ const TestWrapper = ({
       [OtherSettingsFormFieldId.NBDEClevis]: nbdeClevis,
       [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: diskPassPhrases,
       [OtherSettingsFormFieldId.TransferNetwork]: null,
-      [OtherSettingsFormFieldId.PreserveStaticIps]: false,
+      [OtherSettingsFormFieldId.PreserveStaticIps]: true,
       [OtherSettingsFormFieldId.RootDevice]: '',
       [OtherSettingsFormFieldId.MigrateSharedDisks]: false,
       [OtherSettingsFormFieldId.TargetPowerState]: { label: 'Running' },
