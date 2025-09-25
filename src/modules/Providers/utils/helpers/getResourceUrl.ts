@@ -2,6 +2,14 @@ import { Namespace } from 'src/utils/constants';
 
 import type { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
+type GetResourceUrlProps = {
+  reference?: string;
+  groupVersionKind?: K8sGroupVersionKind;
+  namespaced?: boolean;
+  namespace?: string;
+  name?: string;
+};
+
 /**
  * Provides resource url.
  *
@@ -18,17 +26,14 @@ export const getResourceUrl = ({
   const ns =
     namespace && namespace !== Namespace.AllProjects ? `ns/${namespace}` : 'all-namespaces';
   const resourcePath = namespaced ? ns : 'cluster';
-  const reference_ =
-    reference || `${groupVersionKind.group}~${groupVersionKind.version}~${groupVersionKind.kind}`;
-  const name_ = name ? `/${encodeURIComponent(name)}` : '';
+  if (!reference && !groupVersionKind) {
+    return '';
+  }
 
-  return `/k8s/${resourcePath}/${reference_}${name_}`;
-};
+  const resourceReference =
+    reference ??
+    `${groupVersionKind?.group}~${groupVersionKind?.version}~${groupVersionKind?.kind}`;
+  const nameSegment = name ? `/${encodeURIComponent(name)}` : '';
 
-type GetResourceUrlProps = {
-  reference?: string;
-  groupVersionKind?: K8sGroupVersionKind;
-  namespaced?: boolean;
-  namespace?: string;
-  name?: string;
+  return `/k8s/${resourcePath}/${resourceReference}${nameSegment}`;
 };
