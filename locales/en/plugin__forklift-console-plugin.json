@@ -160,6 +160,7 @@
   "Area chart with VM migration history": "Area chart with VM migration history",
   "Assessment": "Assessment",
   "At least one network mapping is required.": "At least one network mapping is required.",
+  "At least one network mapping must be provided.": "At least one network mapping must be provided.",
   "At least one row must have both source and target storages": "At least one row must have both source and target storages",
   "At least one source and one target provider in the {{name}} project must be available.": "At least one source and one target provider in the {{name}} project must be available.",
   "At least one source and one target provider must be available.": "At least one source and one target provider must be available.",
