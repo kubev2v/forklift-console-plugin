@@ -75,7 +75,8 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
             emptyStateMessage={
               targetProviderName ? (
                 <ForkliftTrans>
-                  There are no projects in provider <strong>{targetProviderName}</strong>.
+                  Target provider <strong>{targetProviderName}</strong> does not have network
+                  mappings available in any existing projects.
                   <br />
                   Create a project or select a different target provider.
                 </ForkliftTrans>
