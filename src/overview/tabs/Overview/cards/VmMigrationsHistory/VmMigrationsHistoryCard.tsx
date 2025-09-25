@@ -48,6 +48,7 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
       <CardBody className="forklift-overview__status-migration-chart">
         <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
           <VmMigrationsHistoryChart
+            selectedRange={selectedRange}
             vmMigrationsDataPoints={{
               failed,
               running,

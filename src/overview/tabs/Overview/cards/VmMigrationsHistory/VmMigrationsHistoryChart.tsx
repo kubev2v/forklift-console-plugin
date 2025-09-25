@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import type { Interval } from 'luxon';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
+import { TimeRangeOptions } from 'src/overview/tabs/Overview/utils/timeRangeOptions.ts';
 
 import { PlanModelRef } from '@kubev2v/types';
 import {
@@ -11,6 +12,7 @@ import {
   ChartStack,
   ChartVoronoiContainer,
 } from '@patternfly/react-charts';
+import type { ChartAreaProps } from '@patternfly/react-charts/src/components/ChartArea/ChartArea.tsx';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
@@ -26,8 +28,10 @@ import { useResizeObserver } from './useResizeObserver';
 const MAX_DOMAIN_Y = 5;
 
 const VmMigrationsHistoryChart = ({
+  selectedRange,
   vmMigrationsDataPoints,
 }: {
+  selectedRange: TimeRangeOptions;
   vmMigrationsDataPoints: {
     running: MigrationDataPoint[];
     failed: MigrationDataPoint[];
@@ -80,9 +84,13 @@ const VmMigrationsHistoryChart = ({
       y: value,
     }));
 
-  const getAreaProps = (dataPoints: MigrationDataPoint[], areaName: string, color: string) => ({
+  const getAreaProps = (
+    dataPoints: MigrationDataPoint[],
+    areaName: string,
+    color: string,
+  ): ChartAreaProps => ({
     colorScale: [color],
-    data: mapDataPoints(dataPoints, areaName).slice(-12),
+    data: mapDataPoints(dataPoints, areaName),
     events: [
       {
         eventHandlers: {
@@ -148,16 +156,20 @@ const VmMigrationsHistoryChart = ({
         legendData={legendData}
         legendPosition="bottom"
         maxDomain={{ y: maxVmMigrationValue ? undefined : MAX_DOMAIN_Y }}
-        padding={{
-          bottom: 55,
-          left: 50,
-          right: 50,
-          top: 20,
-        }}
+        padding={{ bottom: 55, left: 50, right: 50, top: 20 }}
         width={chartDimensions.width}
         height={chartDimensions.height}
       >
-        <ChartAxis />
+        <ChartAxis
+          tickCount={6}
+          tickFormat={(tick: string) => {
+            if (selectedRange === TimeRangeOptions.Last24H) {
+              const splits = tick.split(' ');
+              return splits[splits.length - 1];
+            }
+            return tick;
+          }}
+        />
         <ChartAxis dependentAxis tickValues={tickValues} />
         <ChartStack>
           <ChartArea {...getAreaProps(failed, t('Failed'), ChartColors.Failure)} />
