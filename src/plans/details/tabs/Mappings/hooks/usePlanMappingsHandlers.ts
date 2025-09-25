@@ -12,7 +12,7 @@ import type {
 } from '@kubev2v/types';
 import { CONDITION_STATUS } from '@utils/constants';
 
-import { DefaultNetworkLabel, IgnoreNetwork } from '../utils/constants';
+import { DefaultNetworkLabel, IgnoreNetwork, STANDARD } from '../utils/constants';
 import {
   mapSourceNetworksIdsToLabels,
   mapSourceStoragesIdsToLabels,
@@ -138,11 +138,19 @@ export const usePlanMappingsHandlers: UsePlanMappingsHandlers = ({
   };
 
   const onReplaceStorage = ({ current, next }: { current: Mapping; next: Mapping }) => {
-    const source = sourceStorages.find((sourceStorage) => sourceStorage.name === next.source);
+    const sourceLabelsToIds = mapSourceStoragesIdsToLabels(sourceStorages);
+    const source = sourceStorages.find(
+      (sourceStorage) => sourceLabelsToIds[sourceStorage.id] === next.source,
+    );
     const target = targetStorages.find((targetStorage) => targetStorage.name === next.destination);
 
-    if (source && target) {
-      const newMap = createReplacedStorageMap(source, target);
+    if (source && (target || next.destination === STANDARD)) {
+      const newMap = target
+        ? createReplacedStorageMap(source, target)
+        : {
+            destination: { storageClass: STANDARD },
+            source: { id: source.id, name: source.name, type: source.providerType },
+          };
       const newState = createOnReplaceMapping(
         updatedStorage,
         (item) =>
