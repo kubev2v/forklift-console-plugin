@@ -81,8 +81,16 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
           Boolean(loadError),
         label: t('Add mapping'),
         onClick: () => {
+          const missingNetwork = usedSourceNetworks.find(
+            (sourceNetwork) =>
+              !netMappingFields.find(
+                (netMapping) => netMapping.sourceNetwork.id === sourceNetwork.id,
+              ),
+          );
+
           append({
-            [NetworkMapFieldId.SourceNetwork]: defaultNetMapping[NetworkMapFieldId.SourceNetwork],
+            [NetworkMapFieldId.SourceNetwork]:
+              missingNetwork ?? defaultNetMapping[NetworkMapFieldId.SourceNetwork],
             [NetworkMapFieldId.TargetNetwork]: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
           });
         },
@@ -99,7 +107,12 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
           );
         },
         onClick: (index) => {
-          if (netMappingFields.length > 1) {
+          if (
+            netMappingFields.length > 1 &&
+            !usedSourceNetworks.find(
+              (network) => network.id === netMappingFields[index].sourceNetwork.id,
+            )
+          ) {
             remove(index);
           }
         },
