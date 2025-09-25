@@ -62,14 +62,6 @@ export enum ProviderCreateSource {
   PlanWizard = 'plan-wizard',
 }
 
-export enum OverviewTab {
-  Overview = 'Overview',
-  YAML = 'YAML',
-  Health = 'Health',
-  History = 'History',
-  Settings = 'Settings',
-}
-
 export enum TipsTopicSourceComponent {
   TipsTopicSelect = 'selectDropdownOption',
   TipsTopicCard = 'selectCard',
