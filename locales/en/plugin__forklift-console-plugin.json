@@ -173,7 +173,7 @@
   "Browse or search for the virtual machines you want to include in this migration plan from the selected source provider.": "Browse or search for the virtual machines you want to include in this migration plan from the selected source provider.",
   "Building image": "Building image",
   "Building image...": "Building image...",
-  "By default, vNICs change during migration causing VMs to lose their static IPs. Enable to preserve static IP configurations.": "By default, vNICs change during migration causing VMs to lose their static IPs. Enable to preserve static IP configurations.",
+  "By default, vNICs change during migration and static IPs linked to interface names are lost. Enable to preserve static IP configurations.": "By default, vNICs change during migration and static IPs linked to interface names are lost. Enable to preserve static IP configurations.",
   "CA certificate": "CA certificate",
   "Can not update plan hooks when the plan is not editable.": "Can not update plan hooks when the plan is not editable.",
   "Cancel": "Cancel",
