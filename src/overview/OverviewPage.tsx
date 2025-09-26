@@ -1,11 +1,12 @@
 import { type FC, useState } from 'react';
+import { Route, Routes } from 'react-router-dom-v5-compat';
 import ForkliftLearningExperience from 'src/onlineHelp/forkliftHelp/ForkliftLearningExperience';
-import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { HorizontalNav } from '@openshift-console/dynamic-plugin-sdk';
+import RoutedTabs from '@components/common/RoutedTabs/RoutedTabs';
 import { Drawer, DrawerContent, DrawerContentBody } from '@patternfly/react-core';
-import { OverviewTab, TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
+import { getOverviewPath } from '@utils/helpers/getOverviewPath';
 
 import HeaderTitle from './components/HeaderTitle';
 import ForkliftControllerHealthTab from './tabs/Health/ForkliftControllerHealthTab';
@@ -13,60 +14,49 @@ import ForkliftControllerHistoryTab from './tabs/History/ForkliftControllerHisto
 import ForkliftControllerOverviewTab from './tabs/Overview/ForkliftControllerOverviewTab';
 import ForkliftControllerSettingsTab from './tabs/Settings/ForkliftControllerSettingsTab';
 import ForkliftControllerYAMLTab from './tabs/YAML/ForkliftControllerYAMLTab';
+import { OverviewTabHref, OverviewTabName } from './constants';
 
 import './OverviewPage.scss';
 
 const OverviewPage: FC = () => {
-  const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const handleTabClick = (tabName: OverviewTab) => {
-    trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, {
-      tabName,
-    });
-  };
-
-  const pages = [
+  const tabs = [
     {
-      component: ForkliftControllerOverviewTab,
-      href: '',
-      name: t('Overview'),
+      name: OverviewTabName.Overview,
       onClick: () => {
-        handleTabClick(OverviewTab.Overview);
+        trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, { tabName: OverviewTabName.Overview });
       },
+      to: getOverviewPath(),
     },
     {
-      component: ForkliftControllerYAMLTab,
-      href: 'yaml',
-      name: t('YAML'),
+      name: OverviewTabName.YAML,
       onClick: () => {
-        handleTabClick(OverviewTab.YAML);
+        trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, { tabName: OverviewTabName.YAML });
       },
+      to: getOverviewPath(OverviewTabHref.YAML),
     },
     {
-      component: ForkliftControllerHealthTab,
-      href: 'health',
-      name: t('Health'),
+      name: OverviewTabName.Health,
       onClick: () => {
-        handleTabClick(OverviewTab.Health);
+        trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, { tabName: OverviewTabName.Health });
       },
+      to: getOverviewPath(OverviewTabHref.Health),
     },
     {
-      component: ForkliftControllerHistoryTab,
-      href: 'history',
-      name: t('History'),
+      name: OverviewTabName.History,
       onClick: () => {
-        handleTabClick(OverviewTab.History);
+        trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, { tabName: OverviewTabName.History });
       },
+      to: getOverviewPath(OverviewTabHref.History),
     },
     {
-      component: ForkliftControllerSettingsTab,
-      href: 'settings',
-      name: t('Settings'),
+      name: OverviewTabName.Settings,
       onClick: () => {
-        handleTabClick(OverviewTab.Settings);
+        trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, { tabName: OverviewTabName.Settings });
       },
+      to: getOverviewPath(OverviewTabHref.Settings),
     },
   ];
 
@@ -78,7 +68,15 @@ const OverviewPage: FC = () => {
         <DrawerContentBody>
           <HeaderTitle isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
           <div className="pf-v5-u-h-100 pf-v5-u-display-flex pf-v5-u-flex-direction-column pf-v5-u-min-width-0 pf-v5-u-min-height-0">
-            <HorizontalNav pages={pages.filter(Boolean)} />
+            <RoutedTabs tabs={tabs} />
+
+            <Routes>
+              <Route index element={<ForkliftControllerOverviewTab />} />
+              <Route path={OverviewTabHref.YAML} element={<ForkliftControllerYAMLTab />} />
+              <Route path={OverviewTabHref.Health} element={<ForkliftControllerHealthTab />} />
+              <Route path={OverviewTabHref.History} element={<ForkliftControllerHistoryTab />} />
+              <Route path={OverviewTabHref.Settings} element={<ForkliftControllerSettingsTab />} />
+            </Routes>
           </div>
         </DrawerContentBody>
       </DrawerContent>

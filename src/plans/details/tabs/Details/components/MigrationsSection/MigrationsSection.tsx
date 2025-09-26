@@ -1,5 +1,4 @@
 import { type FC, useMemo } from 'react';
-import { useMigrationAnalytics } from 'src/plans/hooks/useMigrationAnalytics';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import {
@@ -31,9 +30,6 @@ const MigrationsSection: FC<MigrationsSectionProps> = ({ plan }) => {
     );
     return sortMigrationsByStartedAtDate(filtered);
   }, [migrations, plan]);
-
-  const [lastMigration] = planMigrations;
-  useMigrationAnalytics(plan, lastMigration);
 
   return (
     <LoadingSuspend obj={planMigrations} loaded={loaded} loadError={loadError}>
