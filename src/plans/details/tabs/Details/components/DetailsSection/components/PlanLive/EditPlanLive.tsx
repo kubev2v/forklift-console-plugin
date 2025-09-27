@@ -1,7 +1,8 @@
 import { type FC, useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import { FormGroup, Stack } from '@patternfly/react-core';
+import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
+import { Flex, FlexItem, FormGroup, Stack } from '@patternfly/react-core';
 import { getPlanIsLive } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -16,7 +17,14 @@ const EditPlanLive: FC<EditPlanProps> = ({ resource }) => {
 
   return (
     <ModalForm
-      title={t('Set live migration')}
+      title={
+        <Flex alignItems={{ default: 'alignItemsCenter' }}>
+          <FlexItem spacer={{ default: 'spacerSm' }}>{t('Set live migration')}</FlexItem>
+          <FlexItem className="pf-v5-u-mb-sm">
+            <TechPreviewLabel />
+          </FlexItem>
+        </Flex>
+      }
       onConfirm={async () => onConfirmLive({ newValue: value, resource })}
     >
       <Stack hasGutter>

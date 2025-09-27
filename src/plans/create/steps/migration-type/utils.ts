@@ -1,3 +1,6 @@
+import type { FC } from 'react';
+
+import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
 import { t } from '@utils/i18n';
 import { LIVE_MIGRATION_HELP_LINK, WARM_MIGRATION_HELP_LINK } from '@utils/links';
 
@@ -7,6 +10,7 @@ type MigrationTypeConfig = {
   description: string;
   helpBody?: string;
   helpLink?: string;
+  PreviewLabel?: FC;
 };
 
 export const getMigrationTypeConfig = (migrationType: MigrationTypeValue): MigrationTypeConfig => {
@@ -31,6 +35,7 @@ export const getMigrationTypeConfig = (migrationType: MigrationTypeValue): Migra
         description: liveDesc,
         helpBody: liveDesc,
         helpLink: LIVE_MIGRATION_HELP_LINK,
+        PreviewLabel: TechPreviewLabel,
       };
     }
     default:
