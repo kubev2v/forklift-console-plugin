@@ -84,6 +84,12 @@ export type CreatePlanFormData = FieldValues & {
 
 export type MappingValue = { id?: string; name: string };
 
+export type MappingFieldIds = {
+  sourceField: string;
+  targetField: string;
+  mapField: string;
+};
+
 export type CategorizedSourceMappings = {
   used: MappingValue[];
   other: MappingValue[];

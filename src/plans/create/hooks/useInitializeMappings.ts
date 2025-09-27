@@ -3,13 +3,8 @@ import { useFormContext } from 'react-hook-form';
 
 import { isEmpty } from '@utils/helpers';
 
-import type { MappingValue } from '../types';
-
-type MappingFieldIds = {
-  sourceField: string;
-  targetField: string;
-  mapField: string;
-};
+import type { MappingFieldIds, MappingValue } from '../types';
+import { fillUnmappedSources } from '../utils/fillUnmappedSources';
 
 type UseInitializeMappingsParams<T extends Record<string, unknown>> = {
   isLoading: boolean;
@@ -31,7 +26,7 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
   isLoading,
   usedSources,
 }: UseInitializeMappingsParams<T>): void => {
-  const { setValue } = useFormContext();
+  const { clearErrors, setValue, trigger } = useFormContext();
   const hasInitializedRef = useRef(false);
   const autoMappedSourcesRef = useRef(new Set<string>());
 
@@ -90,15 +85,22 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
     }
 
     if (!isEmpty(unmappedSources)) {
-      const newMappings = unmappedSources.map(
-        (source): T =>
-          ({
-            [fieldIds.sourceField]: source,
-            [fieldIds.targetField]: targetValue,
-          }) as T,
-      );
+      clearErrors(fieldIds.mapField);
 
-      setValue(fieldIds.mapField, [...(currentMap ?? []), ...newMappings]);
+      const existingMappings = [...(currentMap ?? [])];
+      const updatedMappings = fillUnmappedSources({
+        existingMappings,
+        fieldIds,
+        targetValue,
+        unmappedSources,
+      });
+
+      setValue(fieldIds.mapField, updatedMappings);
+
+      // Trigger validation to ensure form state is correct
+      setTimeout(async () => {
+        await trigger(fieldIds.mapField);
+      }, 0);
 
       unmappedSources.forEach((source) => {
         if (source.name) {
@@ -110,10 +112,10 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
     isLoading,
     unmappedSources,
     targetValue,
-    fieldIds.mapField,
-    fieldIds.sourceField,
-    fieldIds.targetField,
+    fieldIds,
     setValue,
+    trigger,
+    clearErrors,
     currentMap,
     usedSources?.length,
   ]);
