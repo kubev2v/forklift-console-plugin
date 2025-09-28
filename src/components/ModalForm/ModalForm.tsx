@@ -14,7 +14,7 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 
 type ModalFormProps = {
-  title: string;
+  title: ReactNode;
   children: ReactNode;
   onConfirm: () => Promise<K8sResourceCommon>;
   variant?: ModalVariant;
