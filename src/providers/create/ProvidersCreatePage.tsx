@@ -11,6 +11,7 @@ import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 import { Divider, Form, PageSection } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
+import { getSdkEndpoint } from '@utils/crds/common/selectors';
 
 import { getProviderDetailsPageUrl } from '../utils/getProviderDetailsPageUrl';
 import { type ValidationMsg, ValidationState } from '../utils/types';
@@ -81,9 +82,14 @@ const ProvidersCreatePage: FC<{
   const onUpdate = async () => {
     toggleIsLoading();
 
+    const vsphereEndpointData = newProvider.spec?.type === 'vsphere' && {
+      vsphereEndpointType: getSdkEndpoint(newProvider),
+    };
+
     trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_STARTED, {
       namespace: projectName,
       providerType: newProvider.spec?.type,
+      ...vsphereEndpointData,
     });
 
     try {
@@ -112,6 +118,9 @@ const ProvidersCreatePage: FC<{
         hasVddk: Boolean(newSecret.data?.vddkImage),
         namespace: projectName,
         providerType: provider?.spec?.type,
+        ...(provider?.spec?.type === 'vsphere' && {
+          vsphereEndpointType: getSdkEndpoint(provider),
+        }),
       });
 
       // navigate to providers derails page
@@ -123,6 +132,7 @@ const ProvidersCreatePage: FC<{
         error: err instanceof Error ? err.message : 'Unknown error',
         namespace: projectName,
         providerType: newProvider.spec?.type,
+        ...vsphereEndpointData,
       });
 
       setApiError(err as Error | null);
