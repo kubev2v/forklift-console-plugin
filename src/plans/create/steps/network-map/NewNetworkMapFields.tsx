@@ -10,7 +10,6 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { useCreatePlanWizardContext } from '../../hooks/useCreatePlanWizardContext';
 import { useInitializeMappings } from '../../hooks/useInitializeMappings';
-import { GeneralFormFieldId } from '../general-information/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
 import {
@@ -20,15 +19,15 @@ import {
   type NetworkMapping,
 } from './constants';
 import NetworkMapFieldTable from './NetworkMapFieldTable';
-import { filterTargetNetworksByProject, getSourceNetworkValues } from './utils';
+import { getSourceNetworkValues, getTargetNetworksMappingValue } from './utils';
 
 const NewNetworkMapFields: FC = () => {
   const { t } = useForkliftTranslation();
   const { control, getFieldState } = useCreatePlanFormContext();
   const { network } = useCreatePlanWizardContext();
-  const [targetProject, vms, networkMap] = useWatch({
+  const [vms, networkMap] = useWatch({
     control,
-    name: [GeneralFormFieldId.TargetProject, VmFormFieldId.Vms, NetworkMapFieldId.NetworkMap],
+    name: [VmFormFieldId.Vms, NetworkMapFieldId.NetworkMap],
   });
 
   const [availableSourceNetworks, sourceNetworksLoading, sourceNetworksError] = network.sources;
@@ -45,8 +44,8 @@ const NewNetworkMapFields: FC = () => {
   );
 
   const targetNetworkMap = useMemo(
-    () => filterTargetNetworksByProject(availableTargetNetworks, targetProject),
-    [availableTargetNetworks, targetProject],
+    () => getTargetNetworksMappingValue(availableTargetNetworks),
+    [availableTargetNetworks],
   );
 
   useInitializeMappings<NetworkMapping>({
