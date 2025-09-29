@@ -88,11 +88,33 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
         },
       }}
       removeButton={{
-        isDisabled: netMappingFields.length <= 1,
+        isDisabled: (index) => {
+          if (netMappingFields.length <= 1) {
+            return true;
+          }
+          return Boolean(
+            usedSourceNetworks.find(
+              (network) => network.id === netMappingFields[index].sourceNetwork.id,
+            ),
+          );
+        },
         onClick: (index) => {
           if (netMappingFields.length > 1) {
             remove(index);
           }
+        },
+        tooltip: (index) => {
+          if (netMappingFields.length <= 1) {
+            return t('At least one network mapping must be provided.');
+          }
+          if (
+            usedSourceNetworks.find(
+              (network) => network.id === netMappingFields[index].sourceNetwork.id,
+            )
+          ) {
+            return t('All networks detected on the selected VMs require a mapping.');
+          }
+          return undefined;
         },
       }}
     />
