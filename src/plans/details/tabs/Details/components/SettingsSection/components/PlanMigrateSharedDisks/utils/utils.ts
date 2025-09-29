@@ -2,10 +2,8 @@ import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
-import type { EnhancedPlan } from '../../../utils/types';
-
 const getMigrateSharedDisks = (resource: V1beta1Plan): boolean | undefined =>
-  (resource as EnhancedPlan)?.spec?.migrateSharedDisks;
+  resource?.spec?.migrateSharedDisks;
 
 export const getMigrateSharedDisksValue = (resource: V1beta1Plan): boolean => {
   const migrateSharedDisks = getMigrateSharedDisks(resource);
