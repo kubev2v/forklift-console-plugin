@@ -5,7 +5,6 @@ import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/ut
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
-import type { EnhancedPlan } from '../../utils/types';
 
 import { onConfirmPlanNetworkNameTemplate } from './utils/utils';
 import EditNetworkNameTemplate from './EditNetworkNameTemplate';
@@ -20,7 +19,7 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
 
   if (!shouldRender) return null;
 
-  const content = (plan as EnhancedPlan)?.spec?.networkNameTemplate ? (
+  const content = plan?.spec?.networkNameTemplate ? (
     t('Use custom')
   ) : (
     <span className="text-muted">{t('Use default')}</span>
@@ -34,8 +33,10 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
       onEdit={() => {
         showModal(
           <EditNetworkNameTemplate
+            allowInherit={false}
             resource={plan}
             onConfirmNetworkNameTemplate={onConfirmPlanNetworkNameTemplate}
+            value={plan?.spec?.networkNameTemplate}
           />,
         );
       }}
