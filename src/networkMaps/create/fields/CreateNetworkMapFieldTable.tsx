@@ -91,7 +91,7 @@ const CreateNetworkMapFieldTable: FC = () => {
         },
       }}
       removeButton={{
-        isDisabled: isSubmitting,
+        isDisabled: () => isSubmitting,
         onClick: (index) => {
           if (networkMappingFields.length >= 1) {
             remove(index);

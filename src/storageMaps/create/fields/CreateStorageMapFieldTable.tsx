@@ -103,7 +103,7 @@ const CreateStorageMapFieldTable: FC = () => {
         },
       }}
       removeButton={{
-        isDisabled: isSubmitting,
+        isDisabled: () => isSubmitting,
         onClick: (index) => {
           if (storageMappingFields.length > 1) {
             remove(index);
