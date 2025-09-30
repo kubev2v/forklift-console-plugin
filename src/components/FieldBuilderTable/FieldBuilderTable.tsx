@@ -57,7 +57,7 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
         <Tbody>
           {fieldRows.reduce<ReactNode[]>((acc, fieldRow, rowIndex) => {
             // Main row containing field inputs and remove button
-            const removeButtonTip = removeButton.tooltip(rowIndex);
+            const removeButtonTip = removeButton.tooltip?.(rowIndex);
             const button = (
               <Button
                 icon={
@@ -67,7 +67,7 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
                 }
                 isInline
                 variant={ButtonVariant.plain}
-                isDisabled={removeButton.isDisabled(rowIndex)}
+                isDisabled={removeButton.isDisabled?.(rowIndex)}
                 onClick={() => {
                   removeButton.onClick(rowIndex);
                 }}
