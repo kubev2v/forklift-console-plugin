@@ -109,7 +109,7 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
         },
       }}
       removeButton={{
-        isDisabled: storageMappingFields.length <= 1,
+        isDisabled: () => storageMappingFields.length <= 1,
         onClick: (index) => {
           if (storageMappingFields.length > 1) {
             remove(index);
