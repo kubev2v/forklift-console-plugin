@@ -47,10 +47,11 @@ CMD nginx -g "daemon off;"
 ARG RVERSION
 ARG REGISTRY
 ARG REVISION
+ARG CPE
 
 LABEL \
         com.redhat.component="mtv-console-plugin-container" \
-        cpe="cpe:/a:redhat:migration_toolkit_virtualization:2.9::el9" \
+        cpe="cpe:/a:redhat:migration_toolkit_virtualization:${CPE}::el9" \
         version="$RVERSION" \
         name="${REGISTRY}/mtv-console-plugin-rhel9" \
         license="Apache License 2.0" \
