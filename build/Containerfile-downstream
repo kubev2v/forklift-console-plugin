@@ -59,4 +59,5 @@ LABEL \
         summary="Migration Toolkit for Virtualization - User Console Plugin Interface" \
         maintainer="Migration Toolkit for Virtualization Team <migtoolkit-virt@redhat.com>" \
         description="Migration Toolkit for Virtualization - User Console Plugin Interface" \
+        cpe="cpe:/a:redhat:migration_toolkit_virtualization:2.9::el9" \
         revision="$REVISION"
