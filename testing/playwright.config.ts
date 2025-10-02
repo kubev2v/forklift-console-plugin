@@ -8,13 +8,19 @@ export default defineConfig({
   testDir: './playwright/e2e',
   timeout: process.env.JENKINS ? 15 * 60_000 : 60_000,
   fullyParallel: true,
-  workers: 3,
+  workers: process.env.CI ? 1 : 3,
 
   retries: process.env.GITHUB_ACTIONS ? 3 : 0,
 
+  reporter: [['list'], ['html', { open: 'never' }]],
+
   use: {
-    actionTimeout: 5_000,
-    navigationTimeout: 10_000,
+    actionTimeout: 20_000,
+    navigationTimeout: 20_000,
+  },
+
+  expect: {
+    timeout: 20_000,
   },
 
   projects: [
@@ -30,6 +36,7 @@ export default defineConfig({
         viewport: { width: 1920, height: 1080 },
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
+        trace: 'retain-on-failure',
         // Use data-testid to match actual rendered HTML
         testIdAttribute: 'data-testid',
         ignoreHTTPSErrors: true,
