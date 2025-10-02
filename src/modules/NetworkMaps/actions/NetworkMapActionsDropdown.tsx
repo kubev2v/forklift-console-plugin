@@ -18,26 +18,25 @@ import { NetworkMapActionsDropdownItems } from './NetworkMapActionsDropdownItems
 
 import './NetworkMapActionsDropdown.style.css';
 
-const NetworkMapActionsKebabDropdown_: FC<NetworkMapActionsDropdownProps> = ({ data, isKebab }) => {
+const NetworkMapActionsKebabDropdown: FC<NetworkMapActionsDropdownProps> = ({ data, isKebab }) => {
   const { t } = useForkliftTranslation();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const onToggleClick = () => {
-    setIsOpen((isOpen) => !isOpen);
+    setIsOpen((value) => !value);
   };
 
   const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
     setIsOpen(false);
   };
 
-  // Returning the Dropdown component from PatternFly library
   return (
     <Dropdown
       className={isKebab ? undefined : 'forklift-dropdown pf-c-menu-toggle'}
       isOpen={isOpen}
-      onOpenChange={(isOpen: boolean) => {
-        setIsOpen(isOpen);
+      onOpenChange={(value: boolean) => {
+        setIsOpen(value);
       }}
       onSelect={onSelect}
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
@@ -67,7 +66,7 @@ export const NetworkMapActionsDropdown: FC<NetworkMapActionsDropdownProps> = (pr
     <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
       <FlexItem grow={{ default: 'grow' }} />
       <FlexItem align={{ default: 'alignRight' }}>
-        <NetworkMapActionsKebabDropdown_ {...props} />
+        <NetworkMapActionsKebabDropdown {...props} />
       </FlexItem>
     </Flex>
   </ModalHOC>

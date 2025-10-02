@@ -2,8 +2,8 @@ import { type FC, useEffect, useReducer } from 'react';
 import { updateNetworkMapDestination } from 'src/modules/NetworkMaps/utils/helpers/updateNetworkMapDestination';
 import MapsButtonArea from 'src/modules/NetworkMaps/views/details/components/MapsSection/MapsButtonArea.tsx';
 import {
-  convertInventoryNetworkToV1beta1NetworkMapSpecMapSource,
-  convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDestination,
+  convertInventoryNetworkToSource,
+  convertNetworkToDestination,
   getDestinationNetName,
   getSourceNetName,
   isNetMapped,
@@ -12,7 +12,7 @@ import {
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { MappingList } from 'src/modules/Providers/views/migrate/components/MappingList';
 import type { Mapping } from 'src/modules/Providers/views/migrate/types';
-import { POD } from 'src/plans/details/utils/constants.ts';
+import { MULTUS, POD } from 'src/plans/details/utils/constants.ts';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
@@ -25,7 +25,7 @@ import {
 } from '@kubev2v/types';
 import { k8sUpdate, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionListDescription } from '@patternfly/react-core';
-import { POD_NETWORK } from '@utils/constants';
+import { DEFAULT_NETWORK } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
 import { mapsSectionReducer, type MapsSectionState } from './state/reducer';
@@ -49,25 +49,26 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
     dispatch({ payload: obj, type: 'INIT' });
   }, [obj]);
 
-  const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
-    groupVersionKind: ProviderModelGroupVersionKind,
-    isList: true,
-    namespace: obj.metadata?.namespace,
-    namespaced: true,
-  });
+  const [sourceProvider, sourceProviderLoaded, sourceProviderLoadError] =
+    useK8sWatchResource<V1beta1Provider>({
+      groupVersionKind: ProviderModelGroupVersionKind,
+      isList: false,
+      name: obj?.spec?.provider?.source?.name,
+      namespace: obj?.spec?.provider?.source?.namespace,
+      namespaced: true,
+    });
 
-  const sourceProvider = providers.find(
-    (provider) =>
-      provider?.metadata?.uid === obj?.spec?.provider?.source?.uid ||
-      provider?.metadata?.name === obj?.spec?.provider?.source?.name,
-  );
   const [sourceNetworks] = useSourceNetworks(sourceProvider);
 
-  const destinationProvider = providers.find(
-    (provider) =>
-      provider?.metadata?.uid === obj?.spec?.provider?.destination?.uid ||
-      provider?.metadata?.name === obj?.spec?.provider?.destination?.name,
-  );
+  const [destinationProvider, destinationProviderLoaded, destinationProviderLoadError] =
+    useK8sWatchResource<V1beta1Provider>({
+      groupVersionKind: ProviderModelGroupVersionKind,
+      isList: false,
+      name: obj?.spec?.provider?.destination?.name,
+      namespace: obj?.spec?.provider?.destination?.namespace,
+      namespaced: true,
+    });
+
   const [destinationNetworks] = useOpenShiftNetworks(destinationProvider);
 
   const onUpdate = async () => {
@@ -91,8 +92,8 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
         payload: [
           ...(state.networkMap?.spec?.map ?? []),
           {
-            destination: { type: 'pod' },
-            source: convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(availableSources[0]),
+            destination: { type: POD },
+            source: convertInventoryNetworkToSource(availableSources[0]),
           },
         ],
         type: 'SET_MAP',
@@ -103,9 +104,9 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   const onReplace = ({ current, next }: { current: Mapping; next: Mapping }) => {
     const currentDestinationNet = destinationNetworks.find(
       (network) => openShiftNetworkAttachmentDefinitionToName(network) === current.destination,
-    );
+    ) ?? { name: DEFAULT_NETWORK, type: POD };
     const currentSourceNet = sourceNetworks.find((network) => network?.name === current.source) ?? {
-      id: 'pod',
+      id: POD,
     };
 
     const nextDestinationNet = destinationNetworks.find(
@@ -119,18 +120,14 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
     }
 
     const nextMap: V1beta1NetworkMapSpecMap = {
-      destination:
-        convertOpenShiftNetworkAttachmentDefinitionToV1beta1NetworkMapSpecMapDestination(
-          nextDestinationNet,
-        ),
-      source: convertInventoryNetworkToV1beta1NetworkMapSpecMapSource(nextSourceNet),
+      destination: convertNetworkToDestination(nextDestinationNet),
+      source: convertInventoryNetworkToSource(nextSourceNet),
     };
 
     const payload = state?.networkMap?.spec?.map?.map((map) => {
       return (map?.source?.id === currentSourceNet?.id ||
         map.source?.type === currentSourceNet?.id) &&
-        (map.destination?.name === currentDestinationNet?.name ||
-          map.destination?.type === currentDestinationNet?.type)
+        (map.destination?.name === currentDestinationNet?.name || map.destination?.type === MULTUS)
         ? nextMap
         : map;
     });
@@ -144,9 +141,9 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   const onDelete = (current: Mapping) => {
     const currentDestinationNet = destinationNetworks.find(
       (network) => openShiftNetworkAttachmentDefinitionToName(network) === current.destination,
-    ) ?? { type: POD };
+    ) ?? { name: DEFAULT_NETWORK, type: POD };
     const currentSourceNet = sourceNetworks.find((network) => network?.name === current.source) ?? {
-      id: 'pod',
+      id: POD,
     };
 
     dispatch({
@@ -156,8 +153,8 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
             !(
               (map?.source?.id === currentSourceNet?.id ||
                 map.source?.type === currentSourceNet?.id) &&
-              (map.destination?.name === currentDestinationNet.name ||
-                map.destination?.type === currentDestinationNet.type)
+              (map.destination?.name === currentDestinationNet?.name ||
+                map.destination?.type === MULTUS)
             ),
         ) ?? []),
       ],
@@ -170,21 +167,25 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   };
 
   return (
-    <LoadingSuspend obj={providers} loaded={providersLoaded} loadError={providersLoadError}>
+    <LoadingSuspend
+      obj={[sourceProvider, destinationProvider]}
+      loaded={sourceProviderLoaded && destinationProviderLoaded}
+      loadError={sourceProviderLoadError ?? destinationProviderLoadError}
+    >
       <MapsButtonArea
         hasChanges={state.hasChanges}
         updating={state.updating}
         onUpdate={onUpdate}
         onCancel={onCancel}
       />
-      <DescriptionListDescription className="forklift-page-mapping-list">
+      <DescriptionListDescription className="forklift-page-mapping-list pf-v5-u-mt-md">
         <MappingList
           addMapping={onAdd}
           replaceMapping={onReplace}
           deleteMapping={onDelete}
           availableDestinations={[
             ...destinationNetworks.map((net) => `${net?.namespace}/${net?.name}`),
-            'Pod',
+            DEFAULT_NETWORK,
           ]}
           sources={sourceNetworks.map((network) => ({
             isMapped: isNetMapped(network?.id, state.networkMap),
@@ -195,8 +196,8 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
             state?.networkMap?.spec?.map.map((networkMapSpec) => ({
               destination: getDestinationNetName(destinationNetworks, networkMapSpec.destination),
               source:
-                networkMapSpec.source?.type === 'pod'
-                  ? POD_NETWORK
+                networkMapSpec.source?.type === POD
+                  ? DEFAULT_NETWORK
                   : (getSourceNetName(sourceNetworks, networkMapSpec.source) ?? ''),
             })) ?? []
           }

@@ -15,7 +15,7 @@ import {
   MenuToggle,
   type MenuToggleElement,
 } from '@patternfly/react-core';
-import { POD_NETWORK } from '@utils/constants';
+import { DEFAULT_NETWORK } from '@utils/constants';
 
 import useProviderInventory from '../../hooks/useProviderInventory';
 import { EditModal } from '../EditModal/EditModal';
@@ -39,7 +39,7 @@ const onConfirm: OnConfirmHookType = async ({ model, newValue: value, resource }
   const currentAnnotations = resource?.metadata?.annotations;
   const newAnnotations = {
     ...currentAnnotations,
-    'forklift.konveyor.io/defaultTransferNetwork': value || undefined,
+    'forklift.konveyor.io/defaultTransferNetwork': value ?? undefined,
   };
 
   const op = resource?.metadata?.annotations ? 'replace' : 'add';
@@ -52,7 +52,7 @@ const onConfirm: OnConfirmHookType = async ({ model, newValue: value, resource }
         value: newAnnotations,
       },
     ],
-    model,
+    model: model!,
     resource,
   });
 
@@ -61,18 +61,36 @@ const onConfirm: OnConfirmHookType = async ({ model, newValue: value, resource }
 
 type DropdownRendererProps = {
   value: string | number;
-  onChange: (string) => void;
+  onChange: (value: string | number) => void;
 };
 
-const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType = ({
-  resource: provider,
-}) => {
+/**
+ * Extracts the network name from a string. The input string can be of the form 'name' or 'namespace/name'.
+ *
+ * @param {string} value - The input string from which the network name is to be extracted.
+ * @returns {string} The network name extracted from the input string.
+ */
+const getNetworkName = (value: string | number): string => {
+  if (!value || typeof value !== 'string') {
+    return DEFAULT_NETWORK;
+  }
+
+  const parts = value.split('/');
+
+  return parts[parts.length - 1];
+};
+
+const OpenshiftNetworksInputFactory: ({
+  resource,
+}: {
+  resource: V1beta1Provider;
+}) => ModalInputComponentType = ({ resource: provider }) => {
   const DropdownRenderer: FC<DropdownRendererProps> = ({ onChange, value }) => {
     // Hook for managing the open/close state of the dropdown
     const [isOpen, setIsOpen] = useState(false);
 
     const onToggleClick = () => {
-      setIsOpen((isOpen) => !isOpen);
+      setIsOpen((isDropdownOpen) => !isDropdownOpen);
     };
 
     const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
@@ -89,15 +107,15 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
     const dropdownItems = [
       <DropdownItem
         value={0}
-        key={POD_NETWORK}
-        description={'Default pod network'}
+        key={DEFAULT_NETWORK}
+        description={DEFAULT_NETWORK}
         onClick={() => {
           onChange('');
         }}
       >
-        {POD_NETWORK}
+        {DEFAULT_NETWORK}
       </DropdownItem>,
-      ...(networks || []).map((network) => (
+      ...(networks ?? []).map((network) => (
         <DropdownItem
           value={1}
           key={network.name}
@@ -140,7 +158,7 @@ const OpenshiftNetworksInputFactory: ({ resource }) => ModalInputComponentType =
   return DropdownRenderer;
 };
 
-const EditProviderDefaultTransferNetwork_: FC<EditProviderDefaultTransferNetworkProps> = (
+const EditProviderDefaultTransferNetworkInternal: FC<EditProviderDefaultTransferNetworkProps> = (
   props,
 ) => {
   const { t } = useForkliftTranslation();
@@ -149,8 +167,8 @@ const EditProviderDefaultTransferNetwork_: FC<EditProviderDefaultTransferNetwork
     <EditModal
       {...props}
       jsonPath={['metadata', 'annotations', 'forklift.konveyor.io/defaultTransferNetwork']}
-      title={props?.title || t('Edit Default Transfer Network')}
-      label={props?.label || t('Default Transfer Network')}
+      title={props?.title ?? t('Edit default transfer network')}
+      label={props?.label ?? t('Default transfer network')}
       helperText={t('Please choose a NetworkAttachmentDefinition for default data transfer.')}
       model={ProviderModel}
       onConfirmHook={onConfirm}
@@ -162,22 +180,6 @@ const EditProviderDefaultTransferNetwork_: FC<EditProviderDefaultTransferNetwork
       InputComponent={OpenshiftNetworksInputFactory({ resource: props.resource })}
     />
   );
-};
-
-/**
- * Extracts the network name from a string. The input string can be of the form 'name' or 'namespace/name'.
- *
- * @param {string} value - The input string from which the network name is to be extracted.
- * @returns {string} The network name extracted from the input string.
- */
-const getNetworkName = (value: string | number): string => {
-  if (!value || typeof value !== 'string') {
-    return 'Pod network';
-  }
-
-  const parts = value.split('/');
-
-  return parts[parts.length - 1];
 };
 
 type EditProviderDefaultTransferNetworkProps = Modify<
@@ -198,5 +200,5 @@ export const EditProviderDefaultTransferNetwork: FC<EditProviderDefaultTransferN
     return <></>;
   }
 
-  return <EditProviderDefaultTransferNetwork_ {...props} />;
+  return <EditProviderDefaultTransferNetworkInternal {...props} />;
 };

@@ -1,7 +1,9 @@
+import type { V1beta1Plan } from '@kubev2v/types';
 import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../types/test-data';
-import type { ResourceManager } from '../../utils/ResourceManager';
+import { NavigationHelper } from '../../utils/NavigationHelper';
+import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
 import { GeneralInformationStep } from './steps/GeneralInformationStep';
 import { NetworkMapStep } from './steps/NetworkMapStep';
@@ -12,6 +14,7 @@ import { VirtualMachinesStep } from './steps/VirtualMachinesStep';
 export class CreatePlanWizardPage {
   private readonly resourceManager?: ResourceManager;
   public readonly generalInformation: GeneralInformationStep;
+  public readonly navigationHelper: NavigationHelper;
   public readonly networkMap: NetworkMapStep;
   protected readonly page: Page;
   public readonly review: ReviewStep;
@@ -21,11 +24,28 @@ export class CreatePlanWizardPage {
   constructor(page: Page, resourceManager?: ResourceManager) {
     this.page = page;
     this.resourceManager = resourceManager;
-    this.generalInformation = new GeneralInformationStep(page);
+    this.navigationHelper = new NavigationHelper(page);
+    this.generalInformation = new GeneralInformationStep(page, resourceManager);
     this.virtualMachines = new VirtualMachinesStep(page);
     this.networkMap = new NetworkMapStep(page);
     this.storageMap = new StorageMapStep(page);
     this.review = new ReviewStep(page);
+  }
+
+  private addPlanToResourceManager(testData: PlanTestData): void {
+    if (!this.resourceManager || !testData.planName) {
+      return;
+    }
+    const plan: V1beta1Plan = {
+      apiVersion: 'forklift.konveyor.io/v1beta1',
+      kind: 'Plan',
+      metadata: {
+        name: testData.planName,
+        namespace: testData.planProject ?? 'openshift-mtv',
+      },
+    };
+
+    this.resourceManager.addResource(plan);
   }
 
   async clickBack() {
@@ -44,83 +64,57 @@ export class CreatePlanWizardPage {
     await this.page.getByTestId('wizard-review-button').click();
   }
 
+  async expectPlanNameValidationError() {
+    await expect(
+      this.page
+        .getByRole('group', { name: 'Plan information' })
+        .getByTestId('form-validation-error'),
+    ).toBeVisible();
+  }
+
+  async expectVirtualMachinesStepVisible() {
+    await expect(this.page.locator('[data-testid="virtual-machines-step"]')).toBeVisible();
+  }
+
   async fillAndSubmit(testData: PlanTestData, { skipToReview = true } = {}): Promise<void> {
     // STEP 1: General Information
-    await this.generalInformation.fillPlanName(testData.planName);
-    await this.generalInformation.selectProject(testData.planProject, 'plan-project-select');
-    await this.generalInformation.selectSourceProvider(testData.sourceProvider);
-    await this.generalInformation.selectTargetProvider(testData.targetProvider);
-    await this.generalInformation.waitForTargetProviderNamespaces();
-    await this.generalInformation.selectTargetProject(testData.targetProject);
+    await this.generalInformation.fillAndComplete(testData);
     await this.clickNext();
 
     // STEP 2: Virtual Machines
-    await this.virtualMachines.verifyStepVisible();
-    await this.virtualMachines.verifyTableLoaded();
-    await this.virtualMachines.selectFirstVirtualMachine();
+    await this.virtualMachines.fillAndComplete(testData.virtualMachines);
     await this.clickNext();
 
     // STEP 3: Network Map
-    await this.networkMap.verifyStepVisible();
-    await this.networkMap.waitForData();
-    await this.networkMap.selectNetworkMap(testData.networkMap);
+    await this.networkMap.fillAndComplete(testData.networkMap);
     await this.clickNext();
 
     // STEP 4: Storage Map
-    await this.storageMap.verifyStepVisible();
-    await this.storageMap.waitForData();
-    await this.storageMap.selectStorageMap(testData.storageMap);
+    await this.storageMap.fillAndComplete(testData.storageMap);
     await this.clickNext();
 
-    // Skip to review or go through all steps
     if (skipToReview) {
       await this.clickSkipToReview();
     }
 
     // STEP 5: Review
-    await this.review.verifyStepVisible();
-    await this.review.verifyAllSections(testData);
-
-    if (this.resourceManager && testData.planName) {
-      this.resourceManager.addResource({
-        namespace: 'openshift-mtv',
-        resourceType: 'plans',
-        resourceName: testData.planName,
-      });
-
-      if (testData.networkMap && !testData.networkMap.isPreExisting) {
-        this.resourceManager.addResource({
-          namespace: 'openshift-mtv',
-          resourceType: 'networkmaps',
-          resourceName: `${testData.planName}-network-map`,
-        });
-      }
-
-      if (testData.storageMap && !testData.storageMap.isPreExisting) {
-        this.resourceManager.addResource({
-          namespace: 'openshift-mtv',
-          resourceType: 'storagemaps',
-          resourceName: `${testData.planName}-storage-map`,
-        });
-      }
-
-      if (testData.targetProject && !testData.targetProject.isPreexisting) {
-        this.resourceManager.addResource({
-          namespace: '',
-          resourceType: 'projects',
-          resourceName: testData.targetProject.name,
-        });
-      }
-    }
+    await this.review.fillAndComplete(testData);
 
     // STEP 6: Create the plan
     await this.clickNext();
     await this.waitForPlanCreation();
+
+    if (this.resourceManager && testData.planName) {
+      this.addPlanToResourceManager(testData);
+    }
+  }
+
+  async navigateToWizardAndWaitForLoad(): Promise<void> {
+    await this.navigationHelper.navigateToCreatePlanWizard();
+    await this.waitForWizardLoad();
   }
 
   async waitForPlanCreation() {
-    // Wait for the plan creation to complete and navigate away from wizard
-    // Use string contains check instead of regex to avoid ReDoS vulnerability
     await this.page.waitForURL(
       (url) => url.toString().includes('forklift.konveyor.io~v1beta1~Plan/'),
       {

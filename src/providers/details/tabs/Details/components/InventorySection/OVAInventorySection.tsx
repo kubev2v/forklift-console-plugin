@@ -1,10 +1,10 @@
 import type { FC } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import type { InventorySectionProps } from 'src/providers/details/tabs/Details/components/InventorySection/InventorySection';
 
 import { DescriptionList } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import type { InventorySectionProps } from './utils/types';
 import StorageCountDetailsItem from './StorageCountDetailsItem';
 import VmCountDetailsItem from './VmCountDetailsItem';
 

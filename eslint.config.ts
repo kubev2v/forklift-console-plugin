@@ -1,7 +1,3 @@
-/* eslint-disable max-lines */
-/* eslint-disable max-lines-per-function */
-/* eslint-disable @cspell/spellchecker */
-
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -40,6 +36,7 @@ export const createEslintConfig = (ideMode = false) =>
         'yarn.lock',
         'package-lock.json',
         '**/generated/**',
+        'eslint.config.ts',
       ],
     },
     eslint.configs.all,
@@ -100,7 +97,7 @@ export const createEslintConfig = (ideMode = false) =>
         '@typescript-eslint/naming-convention': 'off',
         '@typescript-eslint/no-deprecated': 'off',
         '@typescript-eslint/no-dynamic-delete': 'off',
-        // '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
         '@typescript-eslint/no-magic-numbers': 'off',
         '@typescript-eslint/no-misused-promises': [
@@ -124,14 +121,6 @@ export const createEslintConfig = (ideMode = false) =>
             enforceForJSX: true,
           },
         ],
-        '@typescript-eslint/no-unused-vars': [
-          'error',
-          {
-            argsIgnorePattern: '^_',
-            caughtErrorsIgnorePattern: '^_',
-            varsIgnorePattern: '^_',
-          },
-        ],
         '@typescript-eslint/prefer-readonly-parameter-types': 'off',
         '@typescript-eslint/strict-boolean-expressions': 'off',
         '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
@@ -140,8 +129,6 @@ export const createEslintConfig = (ideMode = false) =>
         'capitalized-comments': 'off',
         complexity: 'off',
         'id-length': ['error', { exceptions: ['t', 'e', 'x', 'y', 'a', 'b', '_', 'i'] }],
-        'import/named': 'error',
-        'import/no-duplicates': ['error', { 'prefer-inline': true }],
         'import/no-named-as-default-member': 'off',
         'import/no-unresolved': 'off',
         'import/order': 'off',
@@ -219,7 +206,6 @@ export const createEslintConfig = (ideMode = false) =>
         ],
         'no-ternary': 'off',
         'no-undefined': 'off',
-        'no-unused-vars': 'off',
         'no-warning-comments': 'off',
         'one-var': 'off',
         'perfectionist/sort-classes': [
@@ -279,6 +265,15 @@ export const createEslintConfig = (ideMode = false) =>
         'sort-imports': 'off',
         'sort-keys': 'off',
         'sort-vars': ['error'],
+
+        // Rules redundant with TypeScript compiler + IDE
+        '@typescript-eslint/no-redeclare': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
+        'import/default': 'off',
+        'import/named': 'off',
+        'import/namespace': 'off',
+        'import/no-duplicates': 'off',
+        'no-unused-vars': 'off',
       },
       settings: {
         react: {
@@ -320,19 +315,17 @@ export const createEslintConfig = (ideMode = false) =>
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-magic-numbers': 'off',
         '@typescript-eslint/no-namespace': 'off',
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-return': 'off',
         'max-lines-per-function': 'off',
+        'no-await-in-loop': 'off',
+        'no-console': 'off',
         'perfectionist/sort-objects': 'off',
         'react-refresh/only-export-components': 'off',
         'require-unicode-regexp': 'off',
-      },
-    },
-    // Testing directory specific rules - disable no-console
-    {
-      files: ['testing/**/*.ts'],
-      rules: {
-        'no-console': 'off',
       },
     },
     prettier,

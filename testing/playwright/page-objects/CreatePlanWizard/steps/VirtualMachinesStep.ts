@@ -1,16 +1,43 @@
 import { expect, type Page } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../../../fixtures/test-data';
+import { Table } from '../../common/Table';
 
 export class VirtualMachinesStep {
   private readonly page: Page;
+  private readonly table: Table;
 
   constructor(page: Page) {
     this.page = page;
+    this.table = new Table(this.page, this.page.getByTestId('create-plan-vm-step'));
+  }
+
+  async fillAndComplete(
+    virtualMachines?: { sourceName: string; targetName?: string }[],
+  ): Promise<void> {
+    await this.verifyStepVisible();
+    await this.verifyTableLoaded();
+
+    if (virtualMachines === undefined) {
+      await this.selectFirstVirtualMachine();
+    } else {
+      for (const vm of virtualMachines) {
+        await this.searchAndSelectVirtualMachine(vm.sourceName);
+      }
+    }
+  }
+
+  async search(value: string) {
+    await this.table.search(value);
+  }
+
+  async searchAndSelectVirtualMachine(vmName: string) {
+    await this.table.search(vmName);
+    await this.table.selectRow({ Name: vmName });
   }
 
   async selectFirstVirtualMachine() {
-    const grid = this.page.getByRole('grid');
+    const grid = this.page.getByRole('treegrid');
     const firstRow = grid.locator('tbody tr').first();
     const checkbox = firstRow.locator('input[type="checkbox"]');
     await expect(checkbox).toBeVisible();
@@ -18,7 +45,7 @@ export class VirtualMachinesStep {
   }
 
   async selectVirtualMachine(vmName: string) {
-    await this.page.getByTestId(`vm-checkbox-${vmName}`).check();
+    await this.table.selectRow({ Name: vmName });
   }
 
   async verifyStepVisible() {
@@ -26,7 +53,7 @@ export class VirtualMachinesStep {
   }
 
   async verifyTableLoaded() {
-    await expect(this.page.getByRole('grid')).toBeVisible();
+    await expect(this.page.getByRole('treegrid')).toBeVisible();
   }
 
   async waitForData(): Promise<void> {

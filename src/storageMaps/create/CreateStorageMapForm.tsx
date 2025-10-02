@@ -136,7 +136,7 @@ const CreateStorageMapForm: React.FC = () => {
               </Button>
 
               <Button
-                variant={ButtonVariant.link}
+                variant={ButtonVariant.secondary}
                 onClick={() => {
                   navigate(storageMapsListUrl);
                 }}

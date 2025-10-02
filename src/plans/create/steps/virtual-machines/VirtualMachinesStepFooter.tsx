@@ -12,8 +12,10 @@ import {
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { PlanWizardStepId } from '../../constants';
 import CreatePlanWizardFooter from '../../CreatePlanWizardFooter';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
+import { useStepValidation } from '../../hooks/useStepValidation';
 import type { ProviderVirtualMachine } from '../../types';
 import { GeneralFormFieldId } from '../general-information/constants';
 
@@ -27,6 +29,7 @@ const VirtualMachinesStepFooter: FC = () => {
   const [pendingVmIds, setPendingVmIds] = useState<string[]>();
   const { goToNextStep } = useWizardContext();
   const { control, setValue, trigger } = useCreatePlanFormContext();
+  const { validateStep } = useStepValidation();
   const [sourceProvider, selectedVms] = useWatch({
     control,
     name: [GeneralFormFieldId.SourceProvider, VmFormFieldId.Vms],
@@ -50,7 +53,7 @@ const VirtualMachinesStepFooter: FC = () => {
 
   // Validate form and handle next step or show warning modal
   const handleNextStep = useCallback(async () => {
-    const isValid = await trigger(undefined, { shouldFocus: true });
+    const isValid = await validateStep(PlanWizardStepId.VirtualMachines);
 
     if (isValid) {
       // Skip modal if no critical issues found
@@ -62,7 +65,7 @@ const VirtualMachinesStepFooter: FC = () => {
       // Show warning modal for VMs with critical issues
       setIsModalOpen(true);
     }
-  }, [trigger, vmsWithCriticalIssues, goToNextStep]);
+  }, [validateStep, vmsWithCriticalIssues, goToNextStep]);
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
@@ -138,7 +141,7 @@ const VirtualMachinesStepFooter: FC = () => {
             <Button key="deselect" variant={ButtonVariant.secondary} onClick={deselectCriticalVms}>
               {t('Deselect critical issue VMs')}
             </Button>,
-            <Button key="cancel" variant={ButtonVariant.link} onClick={closeModal}>
+            <Button key="cancel" variant={ButtonVariant.secondary} onClick={closeModal}>
               {t('Cancel')}
             </Button>,
           ]}

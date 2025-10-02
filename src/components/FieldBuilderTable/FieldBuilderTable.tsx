@@ -8,6 +8,7 @@ import {
   FormGroup,
   type FormGroupProps,
   Icon,
+  Tooltip,
 } from '@patternfly/react-core';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { Table, Tbody, Td, Th, Thead, type ThProps, Tr } from '@patternfly/react-table';
@@ -56,6 +57,23 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
         <Tbody>
           {fieldRows.reduce<ReactNode[]>((acc, fieldRow, rowIndex) => {
             // Main row containing field inputs and remove button
+            const removeButtonTip = removeButton.tooltip?.(rowIndex);
+            const button = (
+              <Button
+                icon={
+                  <Icon size="md">
+                    <MinusCircleIcon />
+                  </Icon>
+                }
+                isInline
+                variant={ButtonVariant.plain}
+                isDisabled={removeButton.isDisabled?.(rowIndex)}
+                onClick={() => {
+                  removeButton.onClick(rowIndex);
+                }}
+              />
+            );
+
             acc.push(
               <Tr key={fieldRow.id}>
                 {fieldRow.inputs.map((fieldInput) => (
@@ -64,19 +82,13 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
 
                 {/* Remove button cell */}
                 <Td isActionCell>
-                  <Button
-                    icon={
-                      <Icon size="md">
-                        <MinusCircleIcon />
-                      </Icon>
-                    }
-                    isInline
-                    variant={ButtonVariant.plain}
-                    isDisabled={removeButton.isDisabled}
-                    onClick={() => {
-                      removeButton.onClick(rowIndex);
-                    }}
-                  />
+                  {removeButtonTip ? (
+                    <Tooltip content={removeButtonTip}>
+                      <span>{button}</span>
+                    </Tooltip>
+                  ) : (
+                    button
+                  )}
                 </Td>
               </Tr>,
             );

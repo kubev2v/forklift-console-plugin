@@ -31,7 +31,7 @@ const EditPlanTransferNetwork: FC<EditPlanProps> = ({ resource }) => {
             the default migration network is set to the providers default transfer network.`,
         )}
         <FormGroupWithHelpText
-          label={t('Transfer Network')}
+          label={t('Transfer network')}
           helperText={t('Please choose a NetworkAttachmentDefinition for data transfer.')}
         >
           <TransferNetworkDropdown

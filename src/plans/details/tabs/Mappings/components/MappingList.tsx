@@ -20,6 +20,7 @@ type MappingListProps = {
   noSourcesLabel: string;
   isDisabled?: boolean;
   isEditable?: boolean;
+  testId?: string;
 };
 
 const MappingList: FC<MappingListProps> = ({
@@ -34,12 +35,13 @@ const MappingList: FC<MappingListProps> = ({
   mappings,
   noSourcesLabel,
   replaceMapping,
+  testId,
 }) => {
   const { t } = useForkliftTranslation();
 
   return (
     <>
-      <DataList isCompact aria-label="">
+      <DataList isCompact aria-label="" data-testid={testId}>
         {mappings?.map(({ destination, source }, index) => (
           <MappingListItem
             source={source}
@@ -54,6 +56,7 @@ const MappingList: FC<MappingListProps> = ({
             generalSourcesLabel={generalSourcesLabel}
             noSourcesLabel={noSourcesLabel}
             isEditable={isEditable}
+            testId={testId}
           />
         ))}
       </DataList>
@@ -64,6 +67,9 @@ const MappingList: FC<MappingListProps> = ({
           variant={ButtonVariant.link}
           isDisabled={isDisabled}
           icon={<PlusCircleIcon />}
+          data-testid={
+            testId ? `add-${testId.replace('-mappings-list', '')}-mapping-button` : undefined
+          }
         >
           {t('Add mapping')}
         </Button>

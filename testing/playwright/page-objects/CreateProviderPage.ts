@@ -1,7 +1,8 @@
+import type { V1beta1Provider } from '@kubev2v/types';
 import { expect, type Page } from '@playwright/test';
 
 import type { ProviderData } from '../types/test-data';
-import type { ResourceManager } from '../utils/ResourceManager';
+import type { ResourceManager } from '../utils/resource-manager/ResourceManager';
 
 export class CreateProviderPage {
   private readonly resourceManager?: ResourceManager;
@@ -16,7 +17,6 @@ export class CreateProviderPage {
     await this.page.getByTestId(`${testData.type}-provider-card`).locator('label').click();
     await this.page.getByTestId('provider-name-input').fill(testData.name);
 
-    // Select SDK endpoint based on endpointType
     if (testData.endpointType) {
       await this.page
         .locator(`input[name="sdkEndpoint"][id="sdkEndpoint-${testData.endpointType}"]`)
@@ -29,6 +29,15 @@ export class CreateProviderPage {
       await this.page.getByTestId('provider-vddk-input').fill(testData.vddkInitImage);
     }
 
+    if (testData.useVddkAioOptimization !== undefined) {
+      const checkbox = this.page.locator('#useVddkAioOptimization');
+      const isChecked = await checkbox.isChecked();
+
+      if (isChecked !== testData.useVddkAioOptimization) {
+        await checkbox.click();
+      }
+    }
+
     await this.page.getByTestId('provider-username-input').fill(testData.username ?? '');
 
     if (testData.password) {
@@ -36,16 +45,20 @@ export class CreateProviderPage {
     }
     await this.page.locator('#insecureSkipVerify-off').click();
 
-    // Track the provider for cleanup before creation
-    if (this.resourceManager && testData.name) {
-      this.resourceManager.addResource({
-        namespace: 'openshift-mtv',
-        resourceType: 'providers',
-        resourceName: testData.name,
-      });
-    }
-
     await this.page.getByTestId('create-provider-button').click();
+
+    if (this.resourceManager && testData.name) {
+      const provider: V1beta1Provider = {
+        apiVersion: 'forklift.konveyor.io/v1beta1',
+        kind: 'Provider',
+        metadata: {
+          name: testData.name,
+          namespace: 'openshift-mtv',
+        },
+      };
+
+      this.resourceManager.addResource(provider);
+    }
   }
 
   async waitForWizardLoad() {

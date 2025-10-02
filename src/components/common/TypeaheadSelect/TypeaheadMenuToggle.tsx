@@ -12,7 +12,7 @@ import {
 } from '@patternfly/react-core';
 import { TimesIcon } from '@patternfly/react-icons';
 
-import type { TypeaheadSelectOption } from './types';
+import type { TypeaheadSelectOption } from './utils/types';
 
 type TypeaheadMenuToggleProps = {
   toggleRef: Ref<MenuToggleElement>;

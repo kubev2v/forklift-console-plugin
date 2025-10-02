@@ -14,4 +14,5 @@ export type MigrationDataPoint = {
   dateLabel: string;
   value: number;
   interval: Interval<true> | Interval<false>;
+  migrations: string[];
 };

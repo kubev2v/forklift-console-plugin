@@ -4,11 +4,12 @@ import { EMPTY_MSG } from '@utils/constants';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 
 import SpecVirtualMachinesActions from '../components/SpecVirtualMachinesActions';
+import { VMTargetPowerStateCellRenderer } from '../components/VMTargetPowerStateCellRenderer';
 
 import { PlanSpecVirtualMachinesTableResourceId, type SpecVirtualMachinePageData } from './types';
 
 export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePageData) => {
-  const { inventoryVmData, plan, vmIndex } = fieldsData;
+  const { inventoryVmData, plan, specVM, vmIndex } = fieldsData;
 
   const vm = getPlanVirtualMachines(plan)[vmIndex];
 
@@ -23,8 +24,9 @@ export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePa
     [PlanSpecVirtualMachinesTableResourceId.Concerns]: (
       <VMConcernsCellRenderer data={inventoryVmData} fieldId="" fields={[]} />
     ),
-    [PlanSpecVirtualMachinesTableResourceId.Name]: (
-      <>{fieldsData?.specVM?.name ?? inventoryVmData?.vm?.name}</>
+    [PlanSpecVirtualMachinesTableResourceId.Name]: <>{specVM?.name ?? inventoryVmData?.vm?.name}</>,
+    [PlanSpecVirtualMachinesTableResourceId.TargetPowerState]: (
+      <VMTargetPowerStateCellRenderer plan={plan} targetPowerState={specVM?.targetPowerState} />
     ),
     [PlanSpecVirtualMachinesTableResourceId.VMTargetName]: <>{vm?.targetName ?? EMPTY_MSG}</>,
   };

@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import TypeaheadSelect from '../TypeaheadSelect';
-import type { TypeaheadSelectOption } from '../types';
+import type { TypeaheadSelectOption } from '../utils/types';
 
 const mockOnChange = jest.fn();
 const mockOnInputChange = jest.fn();

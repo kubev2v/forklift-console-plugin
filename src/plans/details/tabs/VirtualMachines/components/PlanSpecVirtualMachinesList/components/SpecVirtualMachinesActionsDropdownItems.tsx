@@ -4,6 +4,7 @@ import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import EditNetworkNameTemplate from 'src/plans/details/tabs/Details/components/SettingsSection/components/NetworkNameTemplate/EditNetworkNameTemplate';
 import EditPVCNameTemplate from 'src/plans/details/tabs/Details/components/SettingsSection/components/PVCNameTemplate/EditPVCNameTemplate';
+import EditVmTargetPowerState from 'src/plans/details/tabs/Details/components/SettingsSection/components/TargetPowerState/EditVmTargetPowerState';
 import EditVolumeNameTemplate from 'src/plans/details/tabs/Details/components/SettingsSection/components/VolumeNameTemplate/EditVolumeNameTemplate';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -49,6 +50,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
         onClick={() => {
           showModal(<EditVirtualMachineTargetName plan={plan} vmIndex={vmIndex} />);
         }}
+        data-testid="edit-vm-target-name-menu-item"
       >
         {t('Edit target name')}
       </DropdownItem>
@@ -80,7 +82,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
               );
             }}
           >
-            {t('Edit Volume name template')}
+            {t('Edit volume name template')}
           </DropdownItem>
           <DropdownItem
             key="edit-network-name-template"
@@ -94,10 +96,20 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
               );
             }}
           >
-            {t('Edit Network name template')}
+            {t('Edit network name template')}
           </DropdownItem>
         </>
       )}
+      <DropdownItem
+        value={4}
+        key="edit-target-power-state"
+        isDisabled={!canEdit}
+        onClick={() => {
+          showModal(<EditVmTargetPowerState resource={plan} index={vmIndex} />);
+        }}
+      >
+        {t('Edit target power state')}
+      </DropdownItem>
     </DropdownList>
   );
 };

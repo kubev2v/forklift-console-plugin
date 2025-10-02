@@ -34,7 +34,7 @@ const PreserveStaticIpsField: FC = () => {
       labelIcon={
         <HelpIconPopover header={label}>
           {t(
-            'By default, vNICs change during migration causing VMs to lose their static IPs. Enable to preserve static IP configurations.',
+            'By default, vNICs change during migration and static IPs linked to interface names are lost. Enable to preserve static IP configurations.',
           )}
         </HelpIconPopover>
       }
@@ -48,7 +48,7 @@ const PreserveStaticIpsField: FC = () => {
         <Controller
           name={OtherSettingsFormFieldId.PreserveStaticIps}
           control={control}
-          defaultValue={false}
+          defaultValue={true}
           render={({ field }) => (
             <Checkbox
               id={OtherSettingsFormFieldId.PreserveStaticIps}
@@ -72,8 +72,8 @@ const PreserveStaticIpsField: FC = () => {
               <Stack hasGutter>
                 <StackItem>
                   Your migration plan is set to <strong>preserve static IPs </strong> of VMs and to
-                  use <strong>Pod Network</strong> for target network mapping. This combination
-                  isn't supported, because VM IPs aren't preserved in Pod Network migrations.
+                  use <strong>Default Network</strong> for target network mapping. This combination
+                  isn't supported, because VM IPs aren't preserved in Default Network migrations.
                 </StackItem>
                 <StackItem>
                   If your VMs use static IPs, go back to <strong>Network map</strong> step, and

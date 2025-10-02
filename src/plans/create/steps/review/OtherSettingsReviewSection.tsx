@@ -25,6 +25,7 @@ const OtherSettingsReviewSection: FC = () => {
   const [
     sourceProvider,
     diskPassPhrases,
+    nbdeClevis,
     transferNetwork,
     preserveStaticIps,
     rootDevice,
@@ -35,6 +36,7 @@ const OtherSettingsReviewSection: FC = () => {
     name: [
       GeneralFormFieldId.SourceProvider,
       OtherSettingsFormFieldId.DiskDecryptionPassPhrases,
+      OtherSettingsFormFieldId.NBDEClevis,
       OtherSettingsFormFieldId.TransferNetwork,
       OtherSettingsFormFieldId.PreserveStaticIps,
       OtherSettingsFormFieldId.RootDevice,
@@ -56,26 +58,38 @@ const OtherSettingsReviewSection: FC = () => {
     >
       <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
         {isVsphere && (
-          <DescriptionListGroup>
-            <DescriptionListTerm>
-              {otherFormFieldLabels[OtherSettingsFormFieldId.DiskDecryptionPassPhrases]}
-            </DescriptionListTerm>
+          <>
+            <DescriptionListGroup>
+              <DescriptionListTerm>{t('Use NBDE/Clevis')}</DescriptionListTerm>
 
-            {hasNoDiskPassPhrases ? (
-              <DescriptionListDescription data-testid="review-disk-decryption-passphrases">
-                {t('None')}
+              <DescriptionListDescription data-testid="review-nbde-clevis">
+                {nbdeClevis ? t('Enabled') : t('Disabled')}
               </DescriptionListDescription>
-            ) : (
-              diskPassPhrases.map((diskPassPhrase) => (
-                <DescriptionListDescription
-                  key={diskPassPhrase.value}
-                  data-testid="review-disk-decryption-passphrases"
-                >
-                  {diskPassPhrase.value}
-                </DescriptionListDescription>
-              ))
+            </DescriptionListGroup>
+
+            {!nbdeClevis && (
+              <DescriptionListGroup>
+                <DescriptionListTerm>
+                  {otherFormFieldLabels[OtherSettingsFormFieldId.DiskDecryptionPassPhrases]}
+                </DescriptionListTerm>
+
+                {hasNoDiskPassPhrases ? (
+                  <DescriptionListDescription data-testid="review-disk-decryption-passphrases">
+                    {t('None')}
+                  </DescriptionListDescription>
+                ) : (
+                  diskPassPhrases.map((diskPassPhrase) => (
+                    <DescriptionListDescription
+                      key={diskPassPhrase.value}
+                      data-testid="review-disk-decryption-passphrases"
+                    >
+                      {diskPassPhrase.value}
+                    </DescriptionListDescription>
+                  ))
+                )}
+              </DescriptionListGroup>
             )}
-          </DescriptionListGroup>
+          </>
         )}
 
         <DescriptionListGroup>

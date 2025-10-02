@@ -1,38 +1,30 @@
 import type { FC } from 'react';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
+import SectionHeading from '@components/headers/SectionHeading';
+import { PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { DetailsSectionProps } from './utils/types';
-import OpenshiftDetailsSection from './OpenshiftDetailsSection';
-import OpenstackDetailsSection from './OpenstackDetailsSection';
-import OVADetailsSection from './OVADetailsSection';
-import OvirtDetailsSection from './OvirtDetailsSection';
-import VSphereDetailsSection from './VSphereDetailsSection';
+import { getDetailsSectionByType } from './utils/utils';
 
 const DetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
 
   const { permissions, provider } = data;
 
-  if (!provider || !permissions)
+  if (isEmpty(provider) || isEmpty(permissions))
     return <span className="text-muted">{t('No provider data available.')}</span>;
 
-  switch (provider?.spec?.type) {
-    case PROVIDER_TYPES.ovirt:
-      return <OvirtDetailsSection data={data} />;
-    case PROVIDER_TYPES.openshift:
-      return <OpenshiftDetailsSection data={data} />;
-    case PROVIDER_TYPES.openstack:
-      return <OpenstackDetailsSection data={data} />;
-    case PROVIDER_TYPES.vsphere:
-      return <VSphereDetailsSection data={data} />;
-    case PROVIDER_TYPES.ova:
-      return <OVADetailsSection data={data} />;
-    case undefined:
-    default:
-      return <></>;
-  }
+  const DetailsSectionByType = getDetailsSectionByType(provider?.spec?.type);
+  if (!DetailsSectionByType) return null;
+
+  return (
+    <PageSection variant={PageSectionVariants.light} className="forklift-page-section--details">
+      <SectionHeading text={t('Provider details')} />
+      <DetailsSectionByType data={data} />
+    </PageSection>
+  );
 };
 
 export default DetailsSection;

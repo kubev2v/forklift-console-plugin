@@ -50,6 +50,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
 
   const submit = (event: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setInProgress(true);
 
     const project = {
       metadata: {
@@ -90,7 +91,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
         <Button
           type="submit"
           variant={ButtonVariant.primary}
-          disabled={inProgress}
+          isLoading={inProgress}
           onClick={submit}
           id="confirm-action"
           data-testid="create-project-modal-create-button"
@@ -102,10 +103,10 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
           variant={ButtonVariant.secondary}
           disabled={inProgress}
           onClick={toggleModal}
+          data-testid="create-project-modal-cancel-button"
         >
           {t('Cancel')}
         </Button>,
-        ...(inProgress ? [<LoadingInline />] : []),
       ]}
     >
       <Form onSubmit={submit} name="form">
@@ -163,7 +164,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
             isInline
             variant={AlertVariant.danger}
             title={t('An error occurred')}
-            data-test="alert-error"
+            data-testid="create-project-modal-error-alert"
           >
             <div className="create-project-modal__alert-text">{errorMessage}</div>
           </Alert>

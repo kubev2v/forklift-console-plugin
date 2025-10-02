@@ -39,6 +39,7 @@ const PlanActionsDropdown: FC<PlanActionsDropdownProps> = ({ isKebab, plan }) =>
           onClick={onToggleClick}
           isExpanded={isOpen}
           variant={isKebab ? 'plain' : 'default'}
+          data-testid={isKebab ? 'plan-kebab-actions-button' : 'plan-actions-dropdown-button'}
         >
           {isKebab ? <EllipsisVIcon /> : t('Actions')}
         </MenuToggle>

@@ -6,29 +6,24 @@
 }
 
 .forklift-overview__welcome-left {
+  padding: var(--pf-v5-global--spacer--3xl);
   align-self: center;
-  width: 280px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  img {
+    width: 161px;
+    height: 161px;
+  }
 }
 
 .forklift-overview__welcome-left--img {
-  padding: var(--pf-global--spacer--lg);
-  width: 11rem;
+  width: 161px;
+  height: 161px;
 }
 
 .forklift-overview__welcome-text {
   max-width: 900px;
 }
 
-.forklift-overview__welcome-body {
-  padding-bottom: 16px;
-}
-
 .forklift-overview__welcome-tiles {
-  padding-top: 12px;
-
   .pf-v5-c-tile {
     transform: scale(0.8);
     transform-origin: left;

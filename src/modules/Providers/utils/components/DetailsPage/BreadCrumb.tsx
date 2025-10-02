@@ -21,7 +21,7 @@ const BreadCrumbs: FC<BreadCrumbsProps> = ({ model, namespace }) => {
 
         if (isLast) {
           return (
-            <BreadcrumbItem key={crumb.name} isActive>
+            <BreadcrumbItem key={crumb.name} isActive data-testid={`breadcrumb-item-${index}`}>
               {crumb.name}
             </BreadcrumbItem>
           );

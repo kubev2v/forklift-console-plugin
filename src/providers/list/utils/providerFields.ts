@@ -67,8 +67,8 @@ export const providerFields = (): ResourceField[] => {
     {
       filter: {
         groups: [
-          { groupId: 'target', label: t('Target and Source') },
-          { groupId: 'source', label: t('Source Only') },
+          { groupId: 'target', label: t('Target and source') },
+          { groupId: 'source', label: t('Source only') },
         ],
         placeholderLabel: t('Type'),
         primary: true,

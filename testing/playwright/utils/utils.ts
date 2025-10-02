@@ -12,8 +12,20 @@ export const disableGuidedTour = async (page: Page) => {
   });
 };
 
-export const waitForLoader = async (page: Page) => {
-  const loader = page.locator('[data-test="loading-indicator"]');
-  await loader.waitFor({ state: 'visible', timeout: 1000 });
-  await loader.waitFor({ state: 'hidden', timeout: 30000 });
+export const isEmpty = (value: object | unknown[] | string | undefined | null): boolean => {
+  if (value === null || value === undefined) {
+    return true;
+  }
+
+  if (Array.isArray(value) || typeof value === 'string') {
+    // eslint-disable-next-line no-restricted-syntax
+    return value.length === 0;
+  }
+
+  if (typeof value === 'object') {
+    // eslint-disable-next-line no-restricted-syntax
+    return Object.keys(value).length === 0;
+  }
+
+  return false;
 };

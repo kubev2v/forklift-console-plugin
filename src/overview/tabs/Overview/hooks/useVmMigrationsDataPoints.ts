@@ -13,12 +13,13 @@ import { getName } from '@utils/crds/common/selectors';
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
 import type { MigrationDataPoint } from '../utils/types';
 
-const toHourLabel = (date: DateTime | null) => (date ? date.toLocal().toFormat('HH:mm') : '');
+const toHourLabel = (date: DateTime | null) =>
+  date ? date.toLocal().toFormat('LLL dd HH:mm') : '';
 const toDayLabel = (date: DateTime | null) => (date ? date.toLocal().toFormat('LLL dd') : '');
 
 const createTimeBuckets = (selectedTimeRange: TimeRangeOptions, singleBucket = false) => {
   const { bucket, span, unit } = TimeRangeOptionsDictionary[selectedTimeRange];
-  const now = DateTime.now().toUTC();
+  const now = DateTime.now().endOf(unit).toUTC();
   const start = now.minus(span).startOf(unit);
   let end = now;
 
@@ -42,7 +43,7 @@ const createTimeBuckets = (selectedTimeRange: TimeRangeOptions, singleBucket = f
     intervals.push(Interval.fromDateTimes(cursor, next));
     cursor = next;
   }
-  return intervals.slice(-12);
+  return intervals;
 };
 
 const createBuckets = (intervals: Interval[], migrations: V1beta1Migration[]) => {

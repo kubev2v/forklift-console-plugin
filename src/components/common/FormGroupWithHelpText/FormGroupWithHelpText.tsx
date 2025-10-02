@@ -30,7 +30,7 @@ type FormGroupWithHelpTextProps = {
  * If validated mode was not set or if it's the 'default', set the  variant styling to 'indeterminate'
  * for being consistent with PF4 behavior
  */
-const validatedToVariant = (validated) =>
+const validatedToVariant = (validated: 'success' | 'warning' | 'error' | 'default' | undefined) =>
   !validated || validated === 'default' ? 'indeterminate' : validated;
 
 /**
@@ -70,7 +70,12 @@ export const FormGroupWithHelpText: FC<FormGroupWithHelpTextProps> = ({
       {children}
       <FormHelperText hidden={false}>
         <HelperText>
-          <HelperTextItem variant={variant}>{helperTextMsg}</HelperTextItem>
+          <HelperTextItem
+            variant={variant}
+            data-testid={validated === 'error' ? 'form-helper-text-error' : 'form-helper-text'}
+          >
+            {helperTextMsg}
+          </HelperTextItem>
         </HelperText>
       </FormHelperText>
     </FormGroup>

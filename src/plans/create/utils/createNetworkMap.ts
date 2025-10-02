@@ -1,5 +1,8 @@
 import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
-import { IgnoreNetwork, PodNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
+import {
+  DefaultNetworkLabel,
+  IgnoreNetwork,
+} from 'src/plans/details/tabs/Mappings/utils/constants';
 import { IGNORED, MULTUS, POD } from 'src/plans/details/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
@@ -26,7 +29,7 @@ type CreateNetworkMapParams = {
 };
 
 const getNetworkType = (targetName: string) => {
-  if (targetName === PodNetworkLabel.Source || targetName === '') {
+  if (targetName === DefaultNetworkLabel.Source || targetName === '') {
     return POD;
   }
 
@@ -57,7 +60,7 @@ const getDestination = (
     ? targetNetwork.name.split('/')
     : [targetNamespace, targetNetwork.name];
 
-  if (targetNetwork.name === PodNetworkLabel.Source || targetNetwork.name === '') {
+  if (targetNetwork.name === DefaultNetworkLabel.Source || targetNetwork.name === '') {
     return { type: POD };
   }
   if (targetNetwork.name === IgnoreNetwork.Label) {

@@ -18,7 +18,7 @@
     "build:analyze": "ANALYZE_BUNDLE=true NODE_ENV=production webpack",
     "start": "NODE_ENV=development webpack serve --progress",
     "i18n": "i18next \"./src/**/*.{js,jsx,ts,tsx}\" ./plugin-extensions.ts [-oc] -c ./i18next-parser.config.ts",
-    "lint": "eslint . && stylelint \"src/**/*.css\" --allow-empty-input",
+    "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}' plugin-extensions.ts plugin-metadata.ts environment-defaults.ts --cache --cache-location .eslintcache && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "lint:ia": "rm -rf node_modules/.cache/eslint-interactive && npx eslint-interactive .",
     "test:i18n": "bash ./ci/test-i18n.sh",
@@ -36,12 +36,15 @@
     "e2e:console": "bash ./ci/deploy-console.sh",
     "e2e:pre-test": "yarn run e2e:cluster && yarn run e2e:build && yarn run e2e:deployCrds && yarn run e2e:console",
     "knip": "knip",
+    "validate-commits": "bash ./scripts/validate-commits.sh --verbose",
+    "validate-commits-range": "bash ./scripts/validate-commits.sh --range",
     "postinstall": "husky"
   },
   "dependencies": {
     "@kubev2v/types": "0.0.22",
     "@openshift-console/dynamic-plugin-sdk": "1.8.0",
     "@patternfly/patternfly": "5.4.2",
+    "@patternfly/quickstarts": "^5.4.5",
     "@patternfly/react-charts": "7.4.9",
     "@patternfly/react-code-editor": "^6.2.2",
     "@patternfly/react-component-groups": "^5.5.8",
@@ -49,6 +52,7 @@
     "@patternfly/react-icons": "^5.4.2",
     "@patternfly/react-table": "^5.4.16",
     "@patternfly/react-tokens": "^5.4.1",
+    "@patternfly/react-styles": "^5.4.1",
     "classnames": "^2.5.1",
     "i18next": "^25.3.2",
     "immer": "^10.1.1",
@@ -64,7 +68,8 @@
     "react-linkify": "^1.0.0-alpha",
     "react-router": "5.3.x",
     "react-router-dom": "5.3.x",
-    "react-router-dom-v5-compat": "^6.22.0"
+    "react-router-dom-v5-compat": "^6.22.0",
+    "react-tagsinput": "^3.19.0"
   },
   "devDependencies": {
     "@cspell/eslint-plugin": "^8.17.5",

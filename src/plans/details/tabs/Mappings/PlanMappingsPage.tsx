@@ -45,7 +45,7 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
   }
 
   return (
-    <PageSection variant="light">
+    <PageSection variant="light" data-testid="plan-mappings-section">
       <MappingAlerts
         alerts={[
           ...getMappingAlerts({

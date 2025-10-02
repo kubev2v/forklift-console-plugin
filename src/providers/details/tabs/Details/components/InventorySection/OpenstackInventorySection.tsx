@@ -1,9 +1,9 @@
 import type { FC } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import type { InventorySectionProps } from 'src/providers/details/tabs/Details/components/InventorySection/InventorySection';
 
 import { DescriptionList } from '@patternfly/react-core';
 
+import type { InventorySectionProps } from './utils/types';
 import NetworkCountDetailsItem from './NetworkCountDetailsItem';
 import ProjectCountDetailsItem from './ProjectCountDetailsItem';
 import RegionCountDetailsItem from './RegionCountDetailsItem';

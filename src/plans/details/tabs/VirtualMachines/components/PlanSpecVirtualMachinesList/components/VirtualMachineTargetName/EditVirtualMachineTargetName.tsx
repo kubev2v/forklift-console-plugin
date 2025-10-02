@@ -26,17 +26,22 @@ const EditVirtualMachineTargetName: FC<EditVirtualMachineTargetNameProps> = ({ p
 
   const validated = isEmpty(errorMessage) ? ValidatedOptions.default : ValidatedOptions.error;
 
+  const vm = getPlanVirtualMachines(plan)[vmIndex];
+
   return (
     <ModalForm
       title={t('Edit target name')}
       onConfirm={async () => patchVMTargetName({ newValue: inputValue, resource: plan, vmIndex })}
-      isDisabled={Boolean(validateVMTargetName(inputValue, vms ?? []))}
+      isDisabled={
+        Boolean(validateVMTargetName(inputValue, vms ?? [])) ||
+        (isEmpty(vm.targetName) && isEmpty(inputValue)) ||
+        vm.targetName === inputValue
+      }
     >
       <Stack hasGutter>
         <StackItem>
           <ForkliftTrans>
-            Enter the name you would like the <b>{vms?.[vmIndex]?.name}</b> VM to have after
-            migration.
+            Enter the name you would like the <b>{vm.name}</b> VM to have after migration.
           </ForkliftTrans>
         </StackItem>
         <StackItem>
@@ -62,6 +67,7 @@ const EditVirtualMachineTargetName: FC<EditVirtualMachineTargetNameProps> = ({ p
                 setErrorMessage(null);
               }}
               validated={validated}
+              data-testid="vm-target-name-input"
             />
           </FormGroupWithHelpText>
         </StackItem>

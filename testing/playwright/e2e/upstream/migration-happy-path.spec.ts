@@ -1,8 +1,8 @@
 import { test } from '@playwright/test';
 
-import { setupCreatePlanIntercepts } from '../../intercepts';
+import { setupForkliftIntercepts } from '../../intercepts';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
-import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage';
+import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { PlansListPage } from '../../page-objects/PlansListPage';
 import { createPlanTestData } from '../../types/test-data';
 
@@ -13,7 +13,7 @@ test.describe(
   },
   () => {
     test.beforeEach(async ({ page }) => {
-      await setupCreatePlanIntercepts(page);
+      await setupForkliftIntercepts(page);
     });
 
     test('should run plan creation wizard', async ({ page }) => {
@@ -27,8 +27,9 @@ test.describe(
         sourceProvider: 'test-source-provider',
         targetProvider: 'test-target-provider',
         targetProject: { name: 'test-target-project', isPreexisting: true },
-        networkMap: { name: 'test-network-map-1', isPreExisting: true },
-        storageMap: { name: 'test-storage-map-1', isPreExisting: true },
+        networkMap: { name: 'test-network-map-1', isPreexisting: true },
+        storageMap: { name: 'test-storage-map-1', isPreexisting: true },
+        virtualMachines: [{ sourceName: 'test-virtual-machine-1' }],
       });
 
       await plansPage.navigateFromMainMenu();

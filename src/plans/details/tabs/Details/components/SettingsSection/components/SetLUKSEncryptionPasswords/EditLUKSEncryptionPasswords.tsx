@@ -6,16 +6,17 @@ import {
   getGroupVersionKindForModel,
   useK8sWatchResource,
 } from '@openshift-console/dynamic-plugin-sdk';
-import { FormGroup, Stack } from '@patternfly/react-core';
+import { Checkbox, FormGroup, Stack } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getLUKSSecretName, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type { EditPlanProps } from '../../utils/types';
+import type { EditPlanProps, EnhancedPlanSpecVms } from '../../utils/types';
 
 import EditLUKSModalAlert from './components/EditLUKSModalAlert';
 import EditLUKSModalBody from './components/EditLUKSModalBody';
-import { onLUKSEncryptionPasswordsConfirm } from './utils/utils';
+import { onDiskDecryptionConfirm } from './utils/utils';
 import LUKSPassphraseInputList from './LUKSPassphraseInputList';
 
 const EditLUKSEncryptionPasswords: FC<EditPlanProps> = ({ resource }) => {
@@ -34,9 +35,18 @@ const EditLUKSEncryptionPasswords: FC<EditPlanProps> = ({ resource }) => {
   });
 
   const [value, setValue] = useState<string[]>([]);
+  const [nbdeClevis, setNbdeClevis] = useState<boolean>(false);
+
+  // Get current NBDE setting from the first VM (all VMs have the same setting)
+  useEffect(() => {
+    const vms = getPlanVirtualMachines(resource) as EnhancedPlanSpecVms[];
+    if (!isEmpty(vms)) {
+      setNbdeClevis(Boolean(vms[0]?.nbdeClevis ?? false));
+    }
+  }, [resource]);
 
   useEffect(() => {
-    if (secret?.data) {
+    if (secret?.data && !nbdeClevis) {
       const decoded = Object.values(secret.data)
         .map((secretData) => {
           try {
@@ -49,15 +59,23 @@ const EditLUKSEncryptionPasswords: FC<EditPlanProps> = ({ resource }) => {
 
       setValue(decoded);
     }
-  }, [secret?.data]);
+  }, [secret?.data, nbdeClevis]);
+
+  // Clear passphrases when NBDE is enabled
+  useEffect(() => {
+    if (nbdeClevis) {
+      setValue([]);
+    }
+  }, [nbdeClevis]);
 
   if (secretName && !secret?.data) return null;
 
   return (
     <ModalForm
-      title={t('Disk decryption passphrases')}
+      title={t('Disk decryption')}
       onConfirm={async () =>
-        onLUKSEncryptionPasswordsConfirm({
+        onDiskDecryptionConfirm({
+          nbdeClevis,
           newValue: JSON.stringify(value),
           resource,
         })
@@ -65,9 +83,20 @@ const EditLUKSEncryptionPasswords: FC<EditPlanProps> = ({ resource }) => {
     >
       <Stack hasGutter>
         <EditLUKSModalBody />
-        <FormGroup label={t('Passphrases for LUKS encrypted devices')} />
+
+        <Checkbox
+          id="nbde-clevis-checkbox-modal"
+          isChecked={nbdeClevis}
+          onChange={(_event, checked) => {
+            setNbdeClevis(checked);
+          }}
+          label={t('Use network-bound disk encryption (NBDE/Clevis)')}
+          className="pf-v5-u-mt-lg"
+        />
+
+        {!nbdeClevis && <FormGroup label={t('Passphrases for LUKS encrypted devices')} />}
       </Stack>
-      <LUKSPassphraseInputList value={value} onChange={setValue} />
+      {!nbdeClevis && <LUKSPassphraseInputList value={value} onChange={setValue} />}
       <EditLUKSModalAlert shouldRender={!allVMsHasMatchingLuks} />
     </ModalForm>
   );

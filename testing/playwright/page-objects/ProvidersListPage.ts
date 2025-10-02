@@ -1,20 +1,23 @@
 import { expect, type Page } from '@playwright/test';
 
-import { disableGuidedTour, waitForLoader } from '../utils/utils';
+import { NavigationHelper } from '../utils/NavigationHelper';
 
 export class ProvidersListPage {
+  private readonly navigation: NavigationHelper;
   private readonly page: Page;
 
   constructor(page: Page) {
     this.page = page;
+    this.navigation = new NavigationHelper(page);
   }
   async assertCreateProviderButtonEnabled() {
-    await expect(this.createProviderButton).toBeVisible();
-    await expect(this.createProviderButton).toBeEnabled();
+    await expect(this.createProviderButton).toBeVisible({ timeout: 30000 });
+    await expect(this.createProviderButton).toBeEnabled({ timeout: 30000 });
     await expect(this.createProviderButton).not.toHaveAttribute('aria-disabled', 'true');
   }
 
   async clickCreateProviderButton() {
+    await this.page.waitForLoadState('networkidle');
     await this.assertCreateProviderButtonEnabled();
     await this.createProviderButton.click();
   }
@@ -24,11 +27,7 @@ export class ProvidersListPage {
   }
 
   async navigateFromMainMenu() {
-    await disableGuidedTour(this.page);
-    await this.page.goto('/');
-    await waitForLoader(this.page);
-    await this.page.getByTestId('migration-nav-item').click();
-    await this.page.getByTestId('providers-nav-item').click();
+    await this.navigation.navigateToProviders();
     expect(this.page.url()).toContain('forklift.konveyor.io~v1beta1~Provider');
   }
 

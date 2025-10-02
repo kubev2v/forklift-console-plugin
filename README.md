@@ -92,6 +92,73 @@ yarn cluster:up -- --with-ovirt-provider
 yarn cluster:delete
 ```
 
+## Development
+
+### Commit Message Format
+
+All commits must include one of these formats in the **commit description** (the body of the commit message):
+
+**Primary format**: `Resolves: MTV-<number>`
+
+Example commit:
+```
+Subject: Fix bug in data processing
+Description: Resolves: MTV-123
+```
+
+**Exclusion format**: `Resolves: None`
+
+Example commit:
+```
+Subject: Update documentation
+Description: Resolves: None
+```
+
+**Chore commits**: Any commit containing "chore" in the message (case insensitive) is automatically skipped.
+
+Example chore commits:
+```
+chore: update dependencies
+CHORE: clean up build files
+Update dependencies and chore tasks
+```
+
+**Note**: The commit description validation is enforced via a GitHub Action that runs on all branches for push and pull request events. The validation automatically skips:
+- Bot users (dependabot, renovate, ci, github-actions, etc.)
+- Commits containing "chore" in the message (case insensitive)
+
+### Local Validation
+
+You can validate commit messages locally using the provided script or yarn commands:
+
+**Using yarn commands:**
+```bash
+# Validate the latest commit
+yarn validate-commits
+
+# Validate a range of commits
+yarn validate-commits-range "HEAD~5..HEAD"
+```
+
+**Using the script directly:**
+```bash
+# Validate the latest commit
+./scripts/validate-commits.sh
+
+# Validate a range of commits
+./scripts/validate-commits.sh --range HEAD~5..HEAD
+
+# Validate with verbose output
+./scripts/validate-commits.sh --verbose
+
+# Get help
+./scripts/validate-commits.sh --help
+```
+
+### Detailed Commit Message Guide
+
+For comprehensive information about commit message formatting, supported issue tracking systems, and troubleshooting, see [COMMIT_MESSAGE_GUIDE.md](./COMMIT_MESSAGE_GUIDE.md).
+
 ## Learn more
 
 More documentation is available in the [docs](./docs) directory.

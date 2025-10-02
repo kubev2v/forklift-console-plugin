@@ -1,21 +1,28 @@
 import { type FC, useCallback } from 'react';
 
 import { BulkSelect, BulkSelectValue } from '@patternfly/react-component-groups';
+import { Popover } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
+import { useForkliftTranslation } from '@utils/i18n';
 
 type TableBulkSelectProps = {
   selectedIds: string[];
   onSelect: (selectedIds: string[]) => void;
   pageDataIds: string[];
   dataIds: string[];
+  canPageSelect?: boolean;
 };
 
+const TOGGLE_CHECKBOX_ID = 'bulk-select-toggle-checkbox';
+
 const TableBulkSelect: FC<TableBulkSelectProps> = ({
+  canPageSelect = true,
   dataIds = [],
   onSelect,
   pageDataIds = [],
   selectedIds = [],
 }) => {
+  const { t } = useForkliftTranslation();
   const pageSelected = pageDataIds.every((item) => selectedIds.includes(item));
   const pagePartiallySelected =
     pageDataIds.some((item) => selectedIds.includes(item)) && !pageSelected;
@@ -40,7 +47,7 @@ const TableBulkSelect: FC<TableBulkSelectProps> = ({
     [selectedIds, pageDataIds, dataIds, onSelect],
   );
 
-  return (
+  const bulkSelect = (
     <div className="pf-v5-u-text-nowrap">
       <BulkSelect
         canSelectAll
@@ -52,8 +59,25 @@ const TableBulkSelect: FC<TableBulkSelectProps> = ({
           pagePartiallySelected,
           pageSelected,
         })}
+        isDataPaginated={canPageSelect}
+        menuToggleCheckboxProps={{
+          id: TOGGLE_CHECKBOX_ID,
+          isDisabled: !canPageSelect,
+        }}
       />
     </div>
+  );
+
+  if (canPageSelect) return bulkSelect;
+
+  return (
+    <Popover
+      triggerAction="hover"
+      enableFlip
+      bodyContent={t('Expand folders to show VMs on the current page, then you can select them.')}
+    >
+      {bulkSelect}
+    </Popover>
   );
 };
 

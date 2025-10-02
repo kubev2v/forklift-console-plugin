@@ -76,18 +76,20 @@ const getLUKSSecret = async ({
   return undefined;
 };
 
-export const onLUKSEncryptionPasswordsConfirm = async ({
+export const onDiskDecryptionConfirm = async ({
+  nbdeClevis,
   newValue,
   resource,
 }: {
   resource: V1beta1Plan;
   newValue: string;
+  nbdeClevis: boolean;
 }) => {
   const secretName = getLUKSSecretName(resource);
   const secretNamespace = getNamespace(resource);
   const planName = getName(resource);
   const planVirtualMachines = getPlanVirtualMachines(resource);
-  const newData = createIndexedBase64Object(newValue);
+  const newData = nbdeClevis ? undefined : createIndexedBase64Object(newValue);
 
   const secret = await getLUKSSecret({
     newData,
@@ -100,6 +102,7 @@ export const onLUKSEncryptionPasswordsConfirm = async ({
   const updatedVMs = planVirtualMachines.map((vm) => ({
     ...vm,
     luks: secret ? { name: getName(secret) } : undefined,
+    nbdeClevis,
   }));
 
   return k8sPatch({

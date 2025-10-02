@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { POD } from 'src/plans/details/utils/constants';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,
@@ -10,18 +11,18 @@ import type {
   V1NetworkAttachmentDefinition,
   VSphereNetwork,
 } from '@kubev2v/types';
-import { POD_NETWORK } from '@utils/constants';
+import { DEFAULT_NETWORK } from '@utils/constants';
 
 import useProviderInventory from './useProviderInventory';
 
 const podNetwork: InventoryNetwork = {
-  id: 'pod',
-  name: POD_NETWORK,
+  id: POD,
+  name: DEFAULT_NETWORK,
   namespace: '',
   object: undefined,
   providerType: 'openshift',
   selfLink: '',
-  uid: 'pod',
+  uid: POD,
   version: '',
 };
 

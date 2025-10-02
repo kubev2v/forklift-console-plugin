@@ -30,7 +30,7 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
       value={0}
       itemKey="EditStorageMapping"
       href={StorageMapURL}
-      description={t('Edit StorageMap')}
+      description={t('Edit storage map')}
     />,
 
     <DropdownItem
@@ -39,7 +39,7 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
       isDisabled={!data?.permissions?.canDelete}
       onClick={onClick}
     >
-      {t('Delete StorageMap')}
+      {t('Delete storage map')}
     </DropdownItem>,
   ];
 };

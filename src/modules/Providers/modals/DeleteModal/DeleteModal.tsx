@@ -73,8 +73,11 @@ export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource,
     } catch (err) {
       toggleIsLoading();
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      setAlertMessage(<AlertMessageForModals title={t('Error')} message={err.toString()} />);
+      if (err instanceof Error) {
+        setAlertMessage(<AlertMessageForModals title={t('Error')} message={err.toString()} />);
+      } else {
+        setAlertMessage(<AlertMessageForModals title={t('Error')} message={t('Unknown error')} />);
+      }
     }
   }, [resource, model, name, namespace, navigate, redirectTo, t, toggleIsLoading, toggleModal]);
 
@@ -101,7 +104,7 @@ export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource,
       {namespace ? (
         <ForkliftTrans>
           Are you sure you want to delete <strong className="co-break-word">{name}</strong> in
-          namespace <strong>{namespace}</strong>?
+          project <strong>{namespace}</strong>?
         </ForkliftTrans>
       ) : (
         <ForkliftTrans>

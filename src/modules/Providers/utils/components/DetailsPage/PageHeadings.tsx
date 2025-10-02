@@ -23,6 +23,7 @@ type PageHeadingsProps = {
   actions?: ReactNode;
   status?: string | ReactNode;
   children?: ReactNode;
+  testId?: string;
 };
 
 export const PageHeadings: FC<PageHeadingsProps> = ({
@@ -32,6 +33,7 @@ export const PageHeadings: FC<PageHeadingsProps> = ({
   namespace,
   obj: data,
   status,
+  testId,
 }) => {
   const dataStatus = status ?? data?.status?.phase;
   const groupVersionKind = data?.kind && getGroupVersionKindForResource(data);
@@ -40,7 +42,7 @@ export const PageHeadings: FC<PageHeadingsProps> = ({
     <div className="pf-v6-c-page__main-section">
       <BreadCrumbs model={model} namespace={namespace} />
       <span className="co-m-pane__heading co-resource-item">
-        <h1 className="pf-v6-c-content--h1" data-testid="resource-details-title">
+        <h1 className="pf-v6-c-content--h1" data-testid={testId}>
           <Split hasGutter>
             <SplitItem>
               <ResourceIcon
@@ -49,13 +51,20 @@ export const PageHeadings: FC<PageHeadingsProps> = ({
               />{' '}
               {data?.metadata?.name}
               {typeof dataStatus === 'string' && (
-                <ResourceStatus additionalClassNames="hidden-xs">
-                  <Status status={dataStatus} />
-                </ResourceStatus>
+                <span data-testid="resource-status">
+                  <ResourceStatus additionalClassNames="hidden-xs">
+                    <Status status={dataStatus} />
+                  </ResourceStatus>
+                </span>
               )}
             </SplitItem>
             {status && typeof status !== 'string' && (
-              <SplitItem className="forklift-page-headings__status hidden-xs">{status}</SplitItem>
+              <SplitItem
+                className="forklift-page-headings__status hidden-xs"
+                data-testid="plan-status-container"
+              >
+                {status}
+              </SplitItem>
             )}
           </Split>
         </h1>

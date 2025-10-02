@@ -11,6 +11,7 @@ import type {
 } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
+  NetworkMapCreatePage: './networkMaps/create/NetworkMapCreatePage',
   NetworkMapDetailsPage: './modules/NetworkMaps/views/details/NetworkMapDetailsPage',
   NetworkMapsListPage: './modules/NetworkMaps/views/list/NetworkMapsListPage',
   yamlTemplate: './modules/NetworkMaps/yamlTemplates/defaultYamlTemplate.ts',
@@ -53,6 +54,15 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.page/resource/details',
   } as EncodedExtension<ResourceDetailsPage>,
+
+  {
+    properties: {
+      component: { $codeRef: 'NetworkMapCreatePage' },
+      exact: true,
+      path: `/k8s/networkMaps/create/form`,
+    },
+    type: 'console.page/route',
+  },
 
   {
     properties: {

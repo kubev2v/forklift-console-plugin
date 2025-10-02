@@ -95,7 +95,9 @@ Primera
 VAAI
 operatorhub
 powerflex
+powermax
 apiextensions
 customresourcedefinitions
 clusterversion
 clusterversions
+nbde

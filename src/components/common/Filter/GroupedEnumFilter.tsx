@@ -157,7 +157,11 @@ export const GroupedEnumFilter = ({
       {...(showFilterIcon && { icon: <FilterIcon /> })}
     >
       {placeholderLabel}
-      {!isEmpty(selectedEnumIds) && <Badge isRead>{selectedEnumIds.length}</Badge>}
+      {!isEmpty(selectedEnumIds) && (
+        <Badge isRead className="pf-v5-u-ml-sm">
+          {selectedEnumIds.length}
+        </Badge>
+      )}
     </MenuToggle>
   );
 

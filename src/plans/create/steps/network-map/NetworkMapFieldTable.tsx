@@ -81,18 +81,53 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
           Boolean(loadError),
         label: t('Add mapping'),
         onClick: () => {
+          const missingNetwork = usedSourceNetworks.find(
+            (sourceNetwork) =>
+              !netMappingFields.find(
+                (netMapping) => netMapping.sourceNetwork.id === sourceNetwork.id,
+              ),
+          );
+
           append({
-            [NetworkMapFieldId.SourceNetwork]: defaultNetMapping[NetworkMapFieldId.SourceNetwork],
+            [NetworkMapFieldId.SourceNetwork]:
+              missingNetwork ?? defaultNetMapping[NetworkMapFieldId.SourceNetwork],
             [NetworkMapFieldId.TargetNetwork]: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
           });
         },
       }}
       removeButton={{
-        isDisabled: netMappingFields.length <= 1,
+        isDisabled: (index) => {
+          if (netMappingFields.length <= 1) {
+            return true;
+          }
+          return Boolean(
+            usedSourceNetworks.find(
+              (network) => network.id === netMappingFields[index].sourceNetwork.id,
+            ),
+          );
+        },
         onClick: (index) => {
-          if (netMappingFields.length > 1) {
+          if (
+            netMappingFields.length > 1 &&
+            !usedSourceNetworks.find(
+              (network) => network.id === netMappingFields[index].sourceNetwork.id,
+            )
+          ) {
             remove(index);
           }
+        },
+        tooltip: (index) => {
+          if (netMappingFields.length <= 1) {
+            return t('At least one network mapping must be provided.');
+          }
+          if (
+            usedSourceNetworks.find(
+              (network) => network.id === netMappingFields[index].sourceNetwork.id,
+            )
+          ) {
+            return t('All networks detected on the selected VMs require a mapping.');
+          }
+          return undefined;
         },
       }}
     />

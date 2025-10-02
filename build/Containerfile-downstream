@@ -9,8 +9,8 @@ FROM registry.redhat.io/rhel9/nodejs-22:9.6-1747320144 AS build
 #      --build-arg VERSION=1.2.3 .
 
 # Need this as ARG from konflux does not propagate
-ARG VERSION
-ENV VERSION=${VERSION}
+ARG RVERSION
+ENV VERSION=${RVERSION}
 
 # Copy app source
 COPY . /opt/app-root/src/app
@@ -44,13 +44,15 @@ COPY --from=build /opt/app-root/src/app/dist /opt/app-root/src
 # Run the server
 CMD nginx -g "daemon off;"
 
-ARG VERSION
+ARG RVERSION
 ARG REGISTRY
 ARG REVISION
+ARG CPE
 
 LABEL \
         com.redhat.component="mtv-console-plugin-container" \
-        version="$VERSION" \
+        cpe="cpe:/a:redhat:migration_toolkit_virtualization:${CPE}::el9" \
+        version="$RVERSION" \
         name="${REGISTRY}/mtv-console-plugin-rhel9" \
         license="Apache License 2.0" \
         io.k8s.display-name="Migration Toolkit for Virtualization" \

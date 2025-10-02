@@ -35,6 +35,7 @@ type MappingListItemProps = {
   replaceMapping?: (val: { current: Mapping; next: Mapping }) => void;
   deleteMapping?: (mapping: Mapping) => void;
   isEditable: boolean;
+  testId?: string;
 };
 
 export const MappingListItem: FC<MappingListItemProps> = ({
@@ -49,6 +50,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   replaceMapping,
   source,
   sources,
+  testId,
 }) => {
   const { t } = useForkliftTranslation();
   const [isSrcOpen, setIsSrcOpen] = useState(false);
@@ -104,8 +106,11 @@ export const MappingListItem: FC<MappingListItemProps> = ({
     setIsTrgOpen(false);
   };
 
+  // Extract mapping type from testId (e.g., "storage-mappings-list" -> "storage")
+  const mappingType = testId?.replace('-mappings-list', '') ?? 'mapping';
+
   return (
-    <DataListItem aria-labelledby="">
+    <DataListItem aria-labelledby="" data-testid={`${mappingType}-mapping-row-${index}`}>
       <DataListItemRow>
         <DataListItemCells
           dataListCells={[
@@ -122,6 +127,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                 toggle={toggle(srcSelected, isSrcOpen, onSrcToggleClick)}
                 isScrollable
                 shouldFocusFirstItemOnOpen={false}
+                data-testid={`${mappingType}-source-button-${index}`}
               >
                 <SelectList>
                   <SelectGroup label={generalSourcesLabel} key="generalSources">
@@ -147,6 +153,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                 toggle={toggle(trgSelected, isTrgOpen, onTrgToggleClick)}
                 shouldFocusFirstItemOnOpen={false}
                 isScrollable
+                data-testid={`${mappingType}-target-button-${index}`}
               >
                 <SelectList>
                   <SelectedOptions options={destinations} />
@@ -167,7 +174,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
         />
         {isEditable && (
           <DataListAction
-            id={`mapping_list_item_${index}`}
+            id={`${mappingType}_mapping_list_item_${index}`}
             aria-label={t('Actions')}
             aria-labelledby=""
           >
@@ -179,6 +186,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
               aria-label={t('Delete mapping')}
               key="delete-action"
               icon={<MinusCircleIcon />}
+              data-testid={`delete-${mappingType}-mapping-button-${index}`}
             />
           </DataListAction>
         )}

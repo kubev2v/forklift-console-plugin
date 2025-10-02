@@ -1,0 +1,105 @@
+.forklift--learning {
+  .forklift--learning {
+    &__header {
+      .pf-v5-c-menu-toggle {
+        --pf-v5-c-menu-toggle--BackgroundColor: var(--pf-v5-global--BackgroundColor--light-100);
+
+        .pf-v5-theme-dark & {
+          --pf-v5-c-menu-toggle--BackgroundColor: var(--pf-v5-global--BackgroundColor--dark-100);
+
+        }
+      }
+    }
+
+    &__help-section {
+      .pf-v5-c-expandable-section__toggle-text {
+        --pf-v5-c-expandable-section__toggle-text--MarginLeft: var(--pf-v5-global--spacer--xs);
+        text-align: left;
+      }
+
+      &.m-has-descriptions {
+        .pf-v5-c-expandable-section__content {
+          --pf-v5-c-expandable-section__content--MarginTop: 0;
+        }
+      }
+
+      .pf-v5-c-expandable-section__toggle {
+        align-items: baseline;
+      }
+
+      .pf-v5-c-content {
+        color: inherit;
+      }
+
+      &.m-non-expandable {
+        .pf-v5-c-expandable-section__toggle-text {
+          color: var(--pf-t--global--text--color--regular);
+        }
+
+        .pf-v5-c-expandable-section__toggle-icon {
+          color: transparent;
+        }
+
+        .pf-v5-c-expandable-section__toggle {
+          cursor: default;
+        }
+      }
+
+      li {
+        &:not(:last-child) {
+          margin-bottom: var(--pf-v5-global--spacer--md);
+        }
+      }
+    }
+
+    &__help-description {
+      &:not(:last-of-type) {
+        border-bottom: 1px solid var(--pf-v5-global--BorderColor--100);
+      }
+
+      &:not(:first-of-type) {
+        margin-top: var(--pf-v5-global--spacer--md);
+      }
+    }
+
+    &__list-type {
+      &--circle {
+        > ul, > ol {
+          list-style: circle;
+        }
+      }
+
+      &--disc {
+        > ul, > ol {
+          list-style: disc;
+        }
+      }
+
+      &--square {
+        > ul, > ol {
+          list-style-type: square;
+        }
+      }
+
+      &--lower-alpha {
+        > ul, > ol {
+          list-style: lower-alpha;
+        }
+      }
+
+      &--decimal {
+        > ul, > ol {
+          list-style: decimal;
+        }
+      }
+
+      &--none {
+        > ul, > ol {
+          > li::marker {
+            color: transparent;
+          }
+        }
+      }
+    }
+  }
+}

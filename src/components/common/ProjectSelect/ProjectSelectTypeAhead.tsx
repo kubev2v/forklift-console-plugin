@@ -1,6 +1,5 @@
 import { type FC, useMemo, useRef } from 'react';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import { isSystemNamespace } from 'src/utils/namespaces';
 
 import ProjectSelectEmptyState from '@components/common/ProjectSelect/ProjectSelectEmptyState';
 import type { ProjectSelectProps } from '@components/common/ProjectSelect/types.ts';
@@ -13,6 +12,7 @@ import { PlusCircleIcon } from '@patternfly/react-icons';
 import { getName } from '@utils/crds/common/selectors.ts';
 import { isEmpty } from '@utils/helpers.ts';
 import { useForkliftTranslation } from '@utils/i18n';
+import { isSystemNamespace } from '@utils/namespaces';
 
 const showDefaultTargetsSwitchTestId = 'show-default-projects-switch';
 
@@ -45,14 +45,17 @@ const ProjectSelectTypeAhead: FC<ProjectSelectProps> = ({
   const projectOptions = useMemo(() => {
     if (!isEmpty(projectNames)) {
       return projectNames
-        .filter((projectName) => showDefaultProjects || !isSystemNamespace(projectName))
+        .filter(
+          (projectName) =>
+            showDefaultProjects || !isSystemNamespace(projectName) || projectName === value,
+        )
         .map((projectName) => ({
           content: projectName,
           value: projectName,
         }));
     }
     return defaultProject ? [{ content: defaultProject, value: defaultProject }] : [];
-  }, [projectNames, defaultProject, showDefaultProjects]);
+  }, [projectNames, defaultProject, showDefaultProjects, value]);
 
   const onProjectCreated = (newProject: K8sResourceCommon) => {
     const projectName = getName(newProject);
@@ -94,10 +97,12 @@ const ProjectSelectTypeAhead: FC<ProjectSelectProps> = ({
       noOptionsMessage={noOptionsMessage}
       toggleProps={toggleProps}
       emptyState={
-        <ProjectSelectEmptyState
-          emptyStateMessage={emptyStateMessage}
-          onCreate={createAllowed ? onNewProject : undefined}
-        />
+        emptyStateMessage ? (
+          <ProjectSelectEmptyState
+            emptyStateMessage={emptyStateMessage}
+            onCreate={createAllowed ? onNewProject : undefined}
+          />
+        ) : null
       }
       filterControls={
         <>

@@ -53,6 +53,7 @@ export enum StorageVendorProduct {
   Ontap = 'ontap',
   Primera3Par = 'primera3par',
   PowerFlex = 'powerflex',
+  PowerMax = 'powermax',
   PureFlashArray = 'pureFlashArray',
 }
 
@@ -63,6 +64,7 @@ export const offloadPluginLabels: Record<OffloadPlugin, ReturnType<typeof t>> = 
 export const storageVendorProductLabels: Record<StorageVendorProduct, ReturnType<typeof t>> = {
   [StorageVendorProduct.Ontap]: t('NetApp ONTAP'),
   [StorageVendorProduct.PowerFlex]: t('Dell PowerFlex'),
+  [StorageVendorProduct.PowerMax]: t('Dell PowerMax'),
   [StorageVendorProduct.Primera3Par]: t('HPE Primera/3PAR'),
   [StorageVendorProduct.PureFlashArray]: t('Pure Storage FlashArray'),
   [StorageVendorProduct.Vantara]: t('Hitachi Vantara'),
