@@ -12,7 +12,11 @@ export default defineConfig({
 
   retries: process.env.GITHUB_ACTIONS ? 3 : 0,
 
-  reporter: [['list'], ['html', { open: 'never' }]],
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }],
+    ['junit', { outputFile: 'test-results/junit.xml' }],
+  ],
 
   use: {
     actionTimeout: 20_000,
