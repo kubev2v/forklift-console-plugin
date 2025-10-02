@@ -25,11 +25,11 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import {
   getPlanDestinationProviderName,
-  getPlanNetworkMapName,
   getPlanSourceProviderName,
-  getPlanStorageMapName,
 } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
+
+import { usePlanMappingData } from '../../../hooks/usePlanMappingData';
 
 type MappingResources = {
   loadingResources: boolean;
@@ -70,16 +70,6 @@ export const useMappingResources = (plan: V1beta1Plan): MappingResources => {
     namespaced: true,
   });
 
-  const planNetworkMaps = useMemo(
-    () => (networkMaps ?? []).find((net) => getName(net) === getPlanNetworkMapName(plan)),
-    [networkMaps, plan],
-  );
-
-  const planStorageMaps = useMemo(
-    () => (storageMaps ?? []).find((storage) => getName(storage) === getPlanStorageMapName(plan)),
-    [storageMaps, plan],
-  );
-
   const sourceProvider = useMemo(
     () =>
       (providers ?? []).find((provider) => getName(provider) === getPlanSourceProviderName(plan)),
@@ -94,14 +84,23 @@ export const useMappingResources = (plan: V1beta1Plan): MappingResources => {
     [providers, plan],
   );
 
-  const [sourceNetworks, sourceNetworksLoading, sourceNetworksError] =
+  const [providerNetworks, sourceNetworksLoading, sourceNetworksError] =
     useSourceNetworks(sourceProvider);
   const [targetNetworks, targetNetworksLoading, targetNetworksError] =
     useOpenShiftNetworks(targetProvider);
-  const [sourceStorages, sourceStoragesLoading, sourceStoragesError] =
+  const [providerStorages, sourceStoragesLoading, sourceStoragesError] =
     useSourceStorages(sourceProvider);
   const [targetStorages, targetStoragesLoading, targetStoragesError] =
     useOpenShiftStorages(targetProvider);
+
+  const { planNetworkMap, planStorageMap, sourceNetworks, sourceStorages } = usePlanMappingData({
+    networkMaps,
+    plan,
+    providerNetworks,
+    providerStorages,
+    sourceProvider,
+    storageMaps,
+  });
 
   const resourcesError = () => {
     if (!isEmpty(providersLoadError as Error)) return providersLoadError as Error;
@@ -130,8 +129,8 @@ export const useMappingResources = (plan: V1beta1Plan): MappingResources => {
       targetNetworksLoading ||
       sourceStoragesLoading ||
       targetStoragesLoading,
-    planNetworkMap: planNetworkMaps ?? null,
-    planStorageMap: planStorageMaps ?? null,
+    planNetworkMap: planNetworkMap ?? null,
+    planStorageMap: planStorageMap ?? null,
     resourcesError: resourcesError(),
     sourceNetworks: sourceNetworks ?? [],
     sourceStorages: sourceStorages ?? [],

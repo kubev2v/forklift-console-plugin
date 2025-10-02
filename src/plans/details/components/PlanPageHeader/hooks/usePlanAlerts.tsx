@@ -15,6 +15,7 @@ import { CATEGORY_TYPES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 
+import { usePlanMappingData } from '../../../hooks/usePlanMappingData';
 import { getPlanStatus } from '../../PlanStatus/utils/utils';
 
 const usePlanAlerts = (plan: V1beta1Plan) => {
@@ -38,8 +39,17 @@ const usePlanAlerts = (plan: V1beta1Plan) => {
   });
 
   const [sourceProvider] = usePlanProviders(plan, namespace!);
-  const [sourceStorages] = useSourceStorages(sourceProvider);
-  const [sourceNetworks] = useSourceNetworks(sourceProvider);
+  const [providerStorages] = useSourceStorages(sourceProvider);
+  const [providerNetworks] = useSourceNetworks(sourceProvider);
+
+  const { sourceNetworks, sourceStorages } = usePlanMappingData({
+    networkMaps,
+    plan,
+    providerNetworks,
+    providerStorages,
+    sourceProvider,
+    storageMaps,
+  });
 
   const criticalCondition = plan?.status?.conditions?.find(
     (condition) => condition?.category === CATEGORY_TYPES.CRITICAL,
