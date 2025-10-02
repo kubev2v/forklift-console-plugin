@@ -10,17 +10,10 @@ LABEL org.opencontainers.image.created="${BUILD_DATE}" \
       org.opencontainers.image.revision="${GIT_COMMIT}" \
       org.opencontainers.image.title="MTV UI Tests" 
 
-ENV LANG=en_US.UTF-8 \
-    LANGUAGE=en_US:en \
-    LC_ALL=en_US.UTF-8 \
+ENV LC_ALL=en_US \
     IMAGE_VERSION="${VERSION}" \
     IMAGE_GIT_COMMIT="${GIT_COMMIT}" \
     IMAGE_BUILD_DATE="${BUILD_DATE}"
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends locales && \
-    rm -rf /var/lib/apt/lists/* && \
-    locale-gen en_US.UTF-8
 
 WORKDIR /test-runner
 
