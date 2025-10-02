@@ -1,10 +1,39 @@
-FROM mcr.microsoft.com/playwright:latest
+FROM mcr.microsoft.com/playwright:v1.55.0-noble
 
-WORKDIR /e2e
+ARG GIT_COMMIT=unknown
+ARG BUILD_DATE=unknown
+ARG VERSION=dev
+
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.source="https://github.com/kubev2v/forklift-console-plugin" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.revision="${GIT_COMMIT}" \
+      org.opencontainers.image.title="MTV UI Tests" 
+
+ENV LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en \
+    LC_ALL=en_US.UTF-8 \
+    IMAGE_VERSION="${VERSION}" \
+    IMAGE_GIT_COMMIT="${GIT_COMMIT}" \
+    IMAGE_BUILD_DATE="${BUILD_DATE}"
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends locales && \
+    rm -rf /var/lib/apt/lists/* && \
+    locale-gen en_US.UTF-8
+
+WORKDIR /test-runner
+
+COPY package.json yarn.lock ./
+RUN corepack enable && \
+    yarn install --frozen-lockfile --ignore-scripts
 
 COPY . .
 
-ENV BASE_ADDRESS="http://host.docker.internal:9000"
+RUN chmod +x run-tests.sh && \
+    chown -R 1001:0 /test-runner && \
+    chmod -R g+w /test-runner
 
-RUN yarn
-RUN npx playwright install
+USER 1001
+
+CMD ["./run-tests.sh"]

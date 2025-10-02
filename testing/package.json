@@ -2,7 +2,6 @@
   "name": "e2e-tests",
   "version": "1.0.0",
   "scripts": {
-
     "test:e2e": "npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",
     "test:downstream": "npx playwright test --grep @downstream",
@@ -14,10 +13,12 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "playwright": "1.54.2",
-    "@playwright/test": "1.54.2",
+    "playwright": "1.55.0",
+    "@playwright/test": "1.55.0",
     "@types/node": "^20.0.0",
     "typescript": "^5.8.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@kubev2v/types": "0.0.22"
+  }
 }
