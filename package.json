@@ -36,6 +36,8 @@
     "e2e:console": "bash ./ci/deploy-console.sh",
     "e2e:pre-test": "yarn run e2e:cluster && yarn run e2e:build && yarn run e2e:deployCrds && yarn run e2e:console",
     "knip": "knip",
+    "validate-commits": "bash ./scripts/validate-commits.sh --verbose",
+    "validate-commits-range": "bash ./scripts/validate-commits.sh --range",
     "postinstall": "husky"
   },
   "dependencies": {
