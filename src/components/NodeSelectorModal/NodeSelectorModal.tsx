@@ -55,6 +55,7 @@ const NodeSelectorModal: React.FC<NodeSelectorModalProps> = ({
 
   return (
     <ModalForm
+      testId="node-selector-modal"
       title={title ?? t('Edit node selectors')}
       onConfirm={async () => onConfirm(labelsArrayToObject(labels)) ?? {}}
     >

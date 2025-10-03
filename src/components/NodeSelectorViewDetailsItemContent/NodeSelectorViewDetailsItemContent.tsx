@@ -22,7 +22,7 @@ const NodeSelectorViewDetailsItemContent: FC<NodeSelectorViewDetailsItemContentP
           const labelText = labels?.[key] ? `${key}=${labels[key]}` : key;
 
           return (
-            <span className="co-text-node">
+            <span key={key} className="co-text-node">
               <StackItem>{labelText},</StackItem>
             </span>
           );

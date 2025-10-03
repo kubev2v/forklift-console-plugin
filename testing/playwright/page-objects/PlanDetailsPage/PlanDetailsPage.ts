@@ -1,6 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../types/test-data';
+import { NavigationHelper } from '../../utils/NavigationHelper';
 import { isEmpty } from '../../utils/utils';
 
 import { DetailsTab } from './tabs/DetailsTab';
@@ -8,6 +9,7 @@ import { MappingsTab } from './tabs/MappingsTab';
 import { VirtualMachinesTab } from './tabs/VirtualMachinesTab';
 
 export class PlanDetailsPage {
+  private readonly navigation: NavigationHelper;
   public readonly detailsTab: DetailsTab;
   public readonly mappingsTab: MappingsTab;
   protected readonly page: Page;
@@ -17,6 +19,7 @@ export class PlanDetailsPage {
     this.page = page;
     this.detailsTab = new DetailsTab(page);
     this.mappingsTab = new MappingsTab(page);
+    this.navigation = new NavigationHelper(page);
     this.virtualMachinesTab = new VirtualMachinesTab(page);
   }
 
@@ -97,6 +100,14 @@ export class PlanDetailsPage {
       isTerminal: statusInfo.isTerminal,
       isSuccess: statusInfo.isSuccess,
     };
+  }
+
+  async navigate(planName: string, namespace: string): Promise<void> {
+    await this.navigation.navigateToK8sResource({
+      resource: 'Plan',
+      name: planName,
+      namespace,
+    });
   }
 
   async renameVMs(planData: PlanTestData): Promise<void> {

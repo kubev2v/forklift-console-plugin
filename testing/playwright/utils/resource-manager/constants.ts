@@ -3,6 +3,7 @@ export const DEFAULT_NAMESPACE = 'openshift-mtv';
 
 export const RESOURCE_KINDS = {
   MIGRATION: 'Migration',
+  NETWORK_MAP: 'NetworkMap',
   PLAN: 'Plan',
   PROVIDER: 'Provider',
   VIRTUAL_MACHINE: 'VirtualMachine',
@@ -12,6 +13,7 @@ export const RESOURCE_KINDS = {
 
 export const RESOURCE_TYPES = {
   MIGRATIONS: 'migrations',
+  NETWORK_MAPS: 'networkmaps',
   PLANS: 'plans',
   PROVIDERS: 'providers',
   VIRTUAL_MACHINES: 'virtualmachines',
@@ -23,6 +25,9 @@ export const OPENSHIFT_PROJECT_KIND = 'Project';
 export const OPENSHIFT_PROJECT_API_VERSION = 'project.openshift.io/v1';
 export const NAMESPACE_KIND = 'Namespace';
 export const NAMESPACE_API_VERSION = 'v1';
+
+export const FORKLIFT_API_VERSION = 'forklift.konveyor.io/v1beta1';
+export const KUBEVIRT_API_VERSION = 'kubevirt.io/v1';
 
 export const RESOURCES_FILE = 'playwright/.resources.json';
 

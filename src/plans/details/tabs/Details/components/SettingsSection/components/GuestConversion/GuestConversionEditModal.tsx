@@ -32,6 +32,7 @@ const GuestConversionEditModal: FC<EditPlanProps> = ({ resource }) => {
   return (
     <ModalForm
       title={t('Guest conversion mode')}
+      testId="guest-conversion-mode-modal"
       onConfirm={async () =>
         patchGuestConversion({ newValue: skipGuestConversion, resource, useCompatibilityMode })
       }
@@ -49,6 +50,7 @@ const GuestConversionEditModal: FC<EditPlanProps> = ({ resource }) => {
           <FormGroup fieldId="skip-guest-conversion" className="checkbox-form-group">
             <Checkbox
               id="skip-guest-conversion-checkbox"
+              data-testid="skip-guest-conversion-checkbox"
               label={t('Skip guest conversion')}
               isChecked={skipGuestConversion}
               onChange={(_, checked) => {
@@ -79,6 +81,7 @@ const GuestConversionEditModal: FC<EditPlanProps> = ({ resource }) => {
               >
                 <Checkbox
                   id="use-compatibility-mode-checkbox"
+                  data-testid="use-compatibility-mode-checkbox"
                   label={t('Use compatibility mode')}
                   isChecked={useCompatibilityMode}
                   onChange={(_, checked) => {

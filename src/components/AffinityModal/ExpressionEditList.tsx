@@ -44,6 +44,7 @@ const ExpressionEditList: FC<ExpressionEditListProps> = ({
         }}
         onChange={onExpressionChange}
         onDelete={onExpressionDelete}
+        testId="add-affinity-expression-button"
       />
       {isTermsInvalid(affinityExpressions) && affinityExpressionsChanged && (
         <ErrorHelperText>{errorHelperText}</ErrorHelperText>

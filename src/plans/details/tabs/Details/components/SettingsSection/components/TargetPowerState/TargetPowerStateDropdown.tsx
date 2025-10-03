@@ -30,6 +30,7 @@ const TargetPowerStateDropdown: FC<TargetPowerStateDropdownProps> = ({
   return (
     <Select
       id="targetPowerState"
+      testId="target-power-state-select"
       value={allowInherit && !value ? inheritValue : getTargetPowerStateLabel(value)}
       onSelect={(_event, val) => {
         onChange(val === inheritValue ? undefined : (val as unknown as TargetPowerState)?.value);
@@ -43,6 +44,7 @@ const TargetPowerStateDropdown: FC<TargetPowerStateDropdownProps> = ({
             value={inheritValue}
             description={`${t('Set to:')} ${getTargetPowerStateLabel(planState)}`}
             isSelected={!value}
+            data-testid="power-state-option-inherit"
           >
             {inheritValue}
           </SelectOption>
@@ -53,6 +55,7 @@ const TargetPowerStateDropdown: FC<TargetPowerStateDropdownProps> = ({
             value={option}
             description={option.description}
             isSelected={value === option.value}
+            data-testid={`power-state-option-${option.value}`}
           >
             {option.label}
           </SelectOption>

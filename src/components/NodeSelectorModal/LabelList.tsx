@@ -10,6 +10,7 @@ type LabelsListProps = {
   emptyStateAddRowText?: string;
   isEmpty: boolean;
   onLabelAdd: () => void;
+  testId?: string;
 };
 
 const LabelsList: FC<LabelsListProps> = ({
@@ -18,6 +19,7 @@ const LabelsList: FC<LabelsListProps> = ({
   emptyStateAddRowText = null,
   isEmpty,
   onLabelAdd,
+  testId,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -30,6 +32,7 @@ const LabelsList: FC<LabelsListProps> = ({
         <SplitItem>
           <Button
             className="pf-m-link--align-left"
+            data-testid={testId}
             icon={<PlusCircleIcon />}
             onClick={() => {
               onLabelAdd();

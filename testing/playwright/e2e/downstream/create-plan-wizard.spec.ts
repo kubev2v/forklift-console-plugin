@@ -22,33 +22,14 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
 
         const testPlanData = createPlanTestData({
           planName,
-          planProject: 'openshift-mtv',
-          sourceProvider: testProvider.metadata!.name!,
-          targetProvider: 'host',
-          targetProject: {
-            name: targetProjectName,
-            isPreexisting: false,
-          },
-          networkMap: {
-            name: `${planName}-network-map`,
-            isPreexisting: false,
-          },
-          storageMap: {
-            name: `${planName}-storage-map`,
-            isPreexisting: false,
-            targetStorage: 'ocs-storagecluster-ceph-rbd-virtualization',
-          },
-          virtualMachines: [
-            {
-              sourceName: 'mtv-func-rhel9',
-            },
-          ],
+          sourceProvider: testProvider.metadata.name,
+          targetProject: { name: targetProjectName, isPreexisting: false },
         });
 
         const createWizard = new CreatePlanWizardPage(page, resourceManager);
         const planDetailsPage = new PlanDetailsPage(page);
 
-        await createWizard.navigateToWizardAndWaitForLoad();
+        await createWizard.navigate();
 
         await createWizard.generalInformation.fillAndComplete(testPlanData);
         await createWizard.clickNext();
@@ -63,7 +44,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
         await createWizard.clickNext();
 
         await createWizard.clickSkipToReview();
-        await createWizard.review.fillAndComplete(testPlanData);
+        await createWizard.review.verifyReviewStep(testPlanData);
         await createWizard.clickNext();
         await createWizard.waitForPlanCreation();
 
@@ -71,15 +52,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
         await planDetailsPage.detailsTab.navigateToDetailsTab();
         await planDetailsPage.detailsTab.verifyPlanDetails(testPlanData);
 
-        const plan = {
-          apiVersion: 'forklift.konveyor.io/v1beta1',
-          kind: 'Plan',
-          metadata: {
-            name: testPlanData.planName,
-            namespace: 'openshift-mtv',
-          },
-        };
-        resourceManager.addResource(plan);
+        resourceManager.addPlan(testPlanData.planName, 'openshift-mtv');
       }
     },
   );
@@ -97,7 +70,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
       const invalidNames = ['', 'VM-With-Capitals', 'invalid@symbol'];
 
       const createWizard = new CreatePlanWizardPage(page);
-      await createWizard.navigateToWizardAndWaitForLoad();
+      await createWizard.navigate();
 
       const planName = `validation-test-${Date.now()}`;
       await createWizard.generalInformation.fillPlanName(planName);
@@ -131,48 +104,21 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
 
       const testPlanData = createPlanTestData({
         planName,
-        planProject: 'openshift-mtv',
-        sourceProvider: testProvider.metadata!.name!,
-        targetProvider: 'host',
-        targetProject: {
-          name: 'default',
-          isPreexisting: true,
-        },
-        networkMap: {
-          name: `${planName}-network-map`,
-          isPreexisting: false,
-        },
-        storageMap: {
-          name: `${planName}-storage-map`,
-          isPreexisting: false,
-          targetStorage: 'ocs-storagecluster-ceph-rbd-virtualization',
-        },
-        virtualMachines: [
-          {
-            sourceName: 'mtv-func-rhel9',
-          },
-        ],
+        sourceProvider: testProvider.metadata.name,
+        targetProject: { name: 'default', isPreexisting: true },
       });
 
       const createWizard = new CreatePlanWizardPage(page, resourceManager);
       const planDetailsPage = new PlanDetailsPage(page);
 
-      await createWizard.navigateToWizardAndWaitForLoad();
+      await createWizard.navigate();
       await createWizard.fillAndSubmit(testPlanData);
 
       await planDetailsPage.verifyPlanTitle(testPlanData.planName);
       await planDetailsPage.detailsTab.navigateToDetailsTab();
       await planDetailsPage.detailsTab.verifyPlanDetails(testPlanData);
 
-      const plan = {
-        apiVersion: 'forklift.konveyor.io/v1beta1',
-        kind: 'Plan',
-        metadata: {
-          name: testPlanData.planName,
-          namespace: 'openshift-mtv',
-        },
-      };
-      resourceManager.addResource(plan);
+      resourceManager.addPlan(testPlanData.planName, 'openshift-mtv');
     },
   );
 });
