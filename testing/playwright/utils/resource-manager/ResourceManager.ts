@@ -1,6 +1,7 @@
 import type {
   IoK8sApiCoreV1Namespace,
   V1beta1Migration,
+  V1beta1NetworkMap,
   V1beta1Plan,
   V1beta1Provider,
   V1VirtualMachine,
@@ -9,10 +10,13 @@ import type { Page } from '@playwright/test';
 
 import {
   DEFAULT_NAMESPACE,
+  FORKLIFT_API_VERSION,
+  KUBEVIRT_API_VERSION,
   NAMESPACE_API_VERSION,
   NAMESPACE_KIND,
   OPENSHIFT_PROJECT_API_VERSION,
   OPENSHIFT_PROJECT_KIND,
+  RESOURCE_KINDS,
 } from './constants';
 import { ResourceCleaner } from './ResourceCleaner';
 import { ResourceFetcher } from './ResourceFetcher';
@@ -24,6 +28,7 @@ export type OpenshiftProject = IoK8sApiCoreV1Namespace & {
 
 export type SupportedResource =
   | V1beta1Migration
+  | V1beta1NetworkMap
   | V1beta1Plan
   | V1beta1Provider
   | V1VirtualMachine
@@ -35,6 +40,30 @@ export type SupportedResource =
  */
 export class ResourceManager {
   private resources: SupportedResource[] = [];
+
+  addNetworkMap(name: string, namespace: string): void {
+    const networkMap: V1beta1NetworkMap = {
+      apiVersion: FORKLIFT_API_VERSION,
+      kind: RESOURCE_KINDS.NETWORK_MAP,
+      metadata: {
+        name,
+        namespace,
+      },
+    };
+    this.addResource(networkMap);
+  }
+
+  addPlan(name: string, namespace: string): void {
+    const plan: V1beta1Plan = {
+      apiVersion: FORKLIFT_API_VERSION,
+      kind: RESOURCE_KINDS.PLAN,
+      metadata: {
+        name,
+        namespace,
+      },
+    };
+    this.addResource(plan);
+  }
 
   addProject(projectName: string, isOpenShift = true): void {
     const project: OpenshiftProject | IoK8sApiCoreV1Namespace = isOpenShift
@@ -56,8 +85,35 @@ export class ResourceManager {
     this.addResource(project);
   }
 
+  addProvider(name: string, namespace: string): void {
+    const provider: V1beta1Provider = {
+      apiVersion: FORKLIFT_API_VERSION,
+      kind: RESOURCE_KINDS.PROVIDER,
+      metadata: {
+        name,
+        namespace,
+      },
+    };
+    this.addResource(provider);
+  }
+
   addResource(resource: SupportedResource): void {
     this.resources.push(resource);
+  }
+
+  addVm(name: string, namespace: string): void {
+    const vm: V1VirtualMachine = {
+      apiVersion: KUBEVIRT_API_VERSION,
+      kind: RESOURCE_KINDS.VIRTUAL_MACHINE,
+      metadata: {
+        name,
+        namespace,
+      },
+      spec: {
+        template: {},
+      },
+    };
+    this.addResource(vm);
   }
 
   async cleanupAll(page: Page): Promise<void> {

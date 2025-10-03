@@ -144,17 +144,21 @@ const MultiTypeaheadSelect = (
         <>
           {filterControls}
           <SelectList id={listboxIdResolved} isAriaMultiselectable>
-            {displayOptions.map((option, index) => (
-              <SelectOption
-                key={String(option.value)}
-                id={String(option.value)} // optional: createItemId if you want stable IDs
-                isFocused={focusedItemIndex === index}
-                value={option.value}
-                {...option.optionProps}
-              >
-                {option.content}
-              </SelectOption>
-            ))}
+            {displayOptions.map((option, index) => {
+              const { 'data-testid': dataTestId, ...restOptionProps } = option.optionProps ?? {};
+              return (
+                <SelectOption
+                  key={String(option.value)}
+                  id={String(option.value)} // optional: createItemId if you want stable IDs
+                  isFocused={focusedItemIndex === index}
+                  value={option.value}
+                  data-testid={dataTestId}
+                  {...restOptionProps}
+                >
+                  {option.content}
+                </SelectOption>
+              );
+            })}
           </SelectList>
           {footer && (
             <MenuFooter

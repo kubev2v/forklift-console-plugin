@@ -182,6 +182,8 @@ export class ResourceCleaner {
     switch (kind) {
       case RESOURCE_KINDS.MIGRATION:
         return RESOURCE_TYPES.MIGRATIONS;
+      case RESOURCE_KINDS.NETWORK_MAP:
+        return RESOURCE_TYPES.NETWORK_MAPS;
       case RESOURCE_KINDS.PLAN:
         return RESOURCE_TYPES.PLANS;
       case RESOURCE_KINDS.PROVIDER:

@@ -43,6 +43,7 @@ const AffinityConditionSelect: FC<AffinityConditionSelectProps> = ({
           isExpanded: isOpen,
           onClick: onToggle,
           selected: AFFINITY_CONDITION_LABELS[focusedAffinity?.condition],
+          testId: 'affinity-condition-select',
         })}
         isOpen={isOpen}
         onSelect={handleChange}

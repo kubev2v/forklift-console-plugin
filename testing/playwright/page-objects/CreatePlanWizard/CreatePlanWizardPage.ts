@@ -1,10 +1,10 @@
-import type { V1beta1Plan } from '@kubev2v/types';
 import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
+import { AdditionalSettingsStep } from './steps/AdditionalSettingsSteps';
 import { GeneralInformationStep } from './steps/GeneralInformationStep';
 import { NetworkMapStep } from './steps/NetworkMapStep';
 import { ReviewStep } from './steps/ReviewStep';
@@ -13,6 +13,7 @@ import { VirtualMachinesStep } from './steps/VirtualMachinesStep';
 
 export class CreatePlanWizardPage {
   private readonly resourceManager?: ResourceManager;
+  public readonly additionalSettings: AdditionalSettingsStep;
   public readonly generalInformation: GeneralInformationStep;
   public readonly navigationHelper: NavigationHelper;
   public readonly networkMap: NetworkMapStep;
@@ -30,22 +31,14 @@ export class CreatePlanWizardPage {
     this.networkMap = new NetworkMapStep(page);
     this.storageMap = new StorageMapStep(page);
     this.review = new ReviewStep(page);
+    this.additionalSettings = new AdditionalSettingsStep(page);
   }
 
   private addPlanToResourceManager(testData: PlanTestData): void {
     if (!this.resourceManager || !testData.planName) {
       return;
     }
-    const plan: V1beta1Plan = {
-      apiVersion: 'forklift.konveyor.io/v1beta1',
-      kind: 'Plan',
-      metadata: {
-        name: testData.planName,
-        namespace: testData.planProject ?? 'openshift-mtv',
-      },
-    };
-
-    this.resourceManager.addResource(plan);
+    this.resourceManager.addPlan(testData.planName, testData.planProject ?? 'openshift-mtv');
   }
 
   async clickBack() {
@@ -76,7 +69,7 @@ export class CreatePlanWizardPage {
     await expect(this.page.locator('[data-testid="virtual-machines-step"]')).toBeVisible();
   }
 
-  async fillAndSubmit(testData: PlanTestData, { skipToReview = true } = {}): Promise<void> {
+  async fillAndSubmit(testData: PlanTestData): Promise<void> {
     // STEP 1: General Information
     await this.generalInformation.fillAndComplete(testData);
     await this.clickNext();
@@ -93,14 +86,21 @@ export class CreatePlanWizardPage {
     await this.storageMap.fillAndComplete(testData.storageMap);
     await this.clickNext();
 
-    if (skipToReview) {
+    // STEP 5: Migration Type
+    await this.clickNext();
+
+    // STEP 6: Other settings
+    if (testData.additionalPlanSettings) {
+      await this.additionalSettings.fillAndComplete(testData.additionalPlanSettings);
+      await this.clickNext();
+    } else {
       await this.clickSkipToReview();
     }
 
-    // STEP 5: Review
-    await this.review.fillAndComplete(testData);
+    // STEP 7: Review
+    await this.review.verifyReviewStep(testData);
 
-    // STEP 6: Create the plan
+    // STEP 8: Create the plan
     await this.clickNext();
     await this.waitForPlanCreation();
 
@@ -109,9 +109,12 @@ export class CreatePlanWizardPage {
     }
   }
 
-  async navigateToWizardAndWaitForLoad(): Promise<void> {
-    await this.navigationHelper.navigateToCreatePlanWizard();
-    await this.waitForWizardLoad();
+  async navigate(): Promise<void> {
+    await this.navigationHelper.navigateToK8sResource({
+      resource: 'Plan',
+      action: 'new',
+      allNamespaces: true,
+    });
   }
 
   async waitForPlanCreation() {

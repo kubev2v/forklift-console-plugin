@@ -45,6 +45,7 @@ const TargetLabelsDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan 
 
   return (
     <DetailsItem
+      testId="vm-target-labels-detail-item"
       title={t('VM target labels')}
       content={<LabelsViewDetailsItemContent labels={plan?.spec?.targetLabels} />}
       helpContent={TARGET_LABELS_DETAILS_ITEM_DESCRIPTION}

@@ -33,18 +33,13 @@ export class ReviewStep {
     await section.getByRole('button', { name: 'Edit step' }).click();
   }
 
-  async fillAndComplete(planData: PlanTestData): Promise<void> {
-    await this.verifyStepVisible();
-    await this.verifyAllSections(planData);
-  }
-
   async verifyAllSections(planData: PlanTestData): Promise<void> {
     await this.verifyGeneralSection(planData);
     await this.verifyVirtualMachinesSection();
     await this.verifyNetworkMapSection(planData.networkMap);
     await this.verifyStorageMapSection(planData.storageMap);
     await this.verifyMigrationTypeSection();
-    await this.verifyOtherSettingsSection();
+    await this.verifyOtherSettingsSection(planData.additionalPlanSettings);
     await this.verifyHooksSection();
   }
 
@@ -93,9 +88,23 @@ export class ReviewStep {
     }
   }
 
-  async verifyOtherSettingsSection(): Promise<void> {
+  async verifyOtherSettingsSection(
+    additionalPlanSettings: PlanTestData['additionalPlanSettings'],
+  ): Promise<void> {
     await expect(this.page.getByTestId('review-other-settings-section')).toBeVisible();
     await expect(this.page.getByTestId('review-transfer-network')).toBeVisible();
+
+    if (additionalPlanSettings?.targetPowerState) {
+      await expect(this.page.getByTestId('review-target-power-state')).toHaveAttribute(
+        'data-value',
+        additionalPlanSettings.targetPowerState,
+      );
+    }
+  }
+
+  async verifyReviewStep(planData: PlanTestData): Promise<void> {
+    await this.verifyStepVisible();
+    await this.verifyAllSections(planData);
   }
 
   async verifyStepVisible(): Promise<void> {

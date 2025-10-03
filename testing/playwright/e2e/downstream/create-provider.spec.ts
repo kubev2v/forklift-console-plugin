@@ -8,11 +8,11 @@ if (!existsSync(providersPath)) {
   throw new Error(`.providers.json file not found at: ${providersPath}`);
 }
 
-import * as providers from '../../../.providers.json';
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage';
 import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
-import type { ProviderConfig, ProviderData } from '../../types/test-data';
+import type { ProviderData } from '../../types/test-data';
+import { getProviderConfig } from '../../utils/providers';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
 const createProviderData = ({
@@ -21,11 +21,12 @@ const createProviderData = ({
   useVddkAioOptimization: boolean;
 }): ProviderData => {
   const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
-  const providerConfig = (providers as Record<string, ProviderConfig>)[providerKey];
+  const providerConfig = getProviderConfig(providerKey);
   const suffix = useVddkAioOptimization ? 'enabled' : 'disabled';
 
   return {
     name: `test-vsphere-provider-${suffix}-${crypto.randomUUID().slice(0, 8)}`,
+    projectName: 'openshift-mtv',
     type: providerConfig.type,
     endpointType: providerConfig.endpoint_type ?? 'vcenter',
     hostname: providerConfig.api_url,

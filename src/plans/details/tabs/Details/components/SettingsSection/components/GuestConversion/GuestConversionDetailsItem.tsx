@@ -26,6 +26,7 @@ const GuestConversionDetailsItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
+      testId="guest-conversion-mode-detail-item"
       title={t('Guest conversion mode')}
       content={
         <Stack>
