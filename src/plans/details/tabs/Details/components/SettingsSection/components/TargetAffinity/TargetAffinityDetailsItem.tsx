@@ -45,6 +45,7 @@ const TargetAffinityDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, pla
 
   return (
     <DetailsItem
+      testId="vm-target-affinity-rules-detail-item"
       title={t('VM target affinity rules')}
       content={<AffinityViewDetailsItemContent affinity={plan?.spec?.targetAffinity} />}
       helpContent={TARGET_AFFINITY_DETAILS_ITEM_DESCRIPTION}

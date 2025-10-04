@@ -34,6 +34,7 @@ const TargetPowerStateField: FC = () => {
               ref={field.ref}
               id={field.name}
               value={field.value?.label}
+              testId="target-power-state-select"
               onSelect={(_event, value) => {
                 field.onChange(value);
               }}
@@ -41,7 +42,12 @@ const TargetPowerStateField: FC = () => {
             >
               <SelectList>
                 {targetPowerStateOptions.map((option) => (
-                  <SelectOption key={option.value} value={option} description={option.description}>
+                  <SelectOption
+                    key={option.value}
+                    value={option}
+                    description={option.description}
+                    data-testid={`power-state-option-${option.value}`}
+                  >
                     {option.label}
                   </SelectOption>
                 ))}

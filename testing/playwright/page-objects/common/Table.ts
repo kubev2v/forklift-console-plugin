@@ -36,8 +36,66 @@ export class Table {
     await row.click();
   }
 
+  async enableColumn(columnName: string): Promise<void> {
+    const currentColumns = await this.getColumns();
+    if (currentColumns.includes(columnName)) {
+      return;
+    }
+
+    const manageColumnsButton = this.rootLocator.getByRole('button', { name: 'Manage columns' });
+    await manageColumnsButton.click();
+
+    const modal = this.page.getByRole('dialog', { name: 'Manage columns' });
+    await expect(modal).toBeVisible();
+
+    const columnList = modal.getByRole('list', { name: 'Manage columns' });
+    const targetListItem = columnList
+      .getByRole('listitem')
+      .filter({ hasText: new RegExp(`^${columnName}$`) });
+
+    if ((await targetListItem.count()) === 0) {
+      const cancelButton = modal.getByRole('button', { name: 'Cancel' });
+      await cancelButton.click();
+      await expect(modal).not.toBeVisible();
+      throw new Error(`Column "${columnName}" not found in available columns`);
+    }
+
+    const checkbox = targetListItem.getByRole('checkbox');
+    if ((await checkbox.count()) > 0) {
+      const isChecked = await checkbox.isChecked();
+      const isDisabled = await checkbox.isDisabled();
+
+      if (!isDisabled && !isChecked) {
+        await checkbox.check();
+      }
+    }
+
+    const saveButton = modal.getByRole('button', { name: 'Save' });
+    await saveButton.click();
+
+    await expect(modal).not.toBeVisible();
+  }
+
+  async getColumns(): Promise<string[]> {
+    const tableContainer = this.rootLocator
+      .getByTestId('table-grid')
+      .or(this.rootLocator.getByRole('table'))
+      .or(this.rootLocator.getByRole('grid'));
+
+    const headers = tableContainer.locator('thead th, thead columnheader');
+    const count = await headers.count();
+
+    const headerTexts = await Promise.all(
+      Array.from({ length: count }, async (_, i) => headers.nth(i).textContent()),
+    );
+
+    return headerTexts
+      .filter((text) => text?.trim() && !text.includes('Row select') && !text.includes('Details'))
+      .map((text) => text!.replaceAll(/\s+/g, ' ').trim())
+      .filter((cleanText) => cleanText && cleanText !== 'More information on concerns');
+  }
+
   getRow(options: Record<string, string>): Locator {
-    // Try table/grid/treegrid roles to support different table implementations
     const tableContainer = this.rootLocator
       .getByTestId('table-grid')
       .or(this.rootLocator.getByRole('table'))
@@ -55,6 +113,11 @@ export class Table {
 
   getRowByTestId(testId: string): Locator {
     return this.rootLocator.getByTestId(testId);
+  }
+
+  async isColumnVisible(columnName: string): Promise<boolean> {
+    const currentColumns = await this.getColumns();
+    return currentColumns.includes(columnName);
   }
 
   async search(value: string): Promise<void> {
@@ -82,14 +145,12 @@ export class Table {
   }
 
   async waitForTableLoad(): Promise<void> {
-    // Wait for table to be visible and not show loading state - support both table and grid
     const tableContainer = this.rootLocator
       .getByTestId('table-grid')
       .or(this.rootLocator.getByRole('table'))
       .or(this.rootLocator.getByRole('grid'));
     await expect(tableContainer).toBeVisible();
 
-    // Wait for at least one row or empty state - support tbody tr structure
     await expect(
       tableContainer
         .locator('tbody tr')

@@ -18,6 +18,7 @@ const TargetPowerStateDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, p
 
   return (
     <DetailsItem
+      testId="target-vm-power-state-detail-item"
       title={t('VM target power state')}
       content={
         <Label isCompact color="grey">

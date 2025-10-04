@@ -14,6 +14,7 @@ type AffinityEditListProps = {
   onAdd: () => void;
   onChange: (aff: AffinityLabel) => void;
   onDelete: (id: number) => void;
+  testId?: string;
 };
 
 const AffinityEditList: FC<AffinityEditListProps> = ({
@@ -22,6 +23,7 @@ const AffinityEditList: FC<AffinityEditListProps> = ({
   onAdd,
   onChange,
   onDelete,
+  testId,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -31,6 +33,7 @@ const AffinityEditList: FC<AffinityEditListProps> = ({
       emptyStateAddRowText={addRowText}
       isEmpty={isEmpty(expressions)}
       onLabelAdd={onAdd}
+      testId={testId}
     >
       {!isEmpty(expressions) && (
         <>

@@ -107,6 +107,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
         onClick={() => {
           showModal(<EditVmTargetPowerState resource={plan} index={vmIndex} />);
         }}
+        data-testid="edit-vm-target-power-state-menu-item"
       >
         {t('Edit target power state')}
       </DropdownItem>

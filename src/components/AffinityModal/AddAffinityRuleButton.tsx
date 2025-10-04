@@ -18,6 +18,7 @@ const AddAffinityRuleButton: FC<AddAffinityRuleButtonProps> = ({
   return (
     <Button
       className={isLinkButton ? 'pf-m-link--align-left' : ''}
+      data-testid="add-affinity-rule-button"
       icon={isLinkButton && <PlusCircleIcon />}
       onClick={onAffinityClickAdd}
       variant={isLinkButton ? ButtonVariant.link : ButtonVariant.secondary}

@@ -1,42 +1,46 @@
-import { existsSync } from 'fs';
-import { join } from 'path';
-
 import type { V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
 import { type Page, test as base } from '@playwright/test';
 
 import { CreatePlanWizardPage } from '../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { CreateProviderPage } from '../page-objects/CreateProviderPage';
 import { PlanDetailsPage } from '../page-objects/PlanDetailsPage/PlanDetailsPage';
-import { PlansListPage } from '../page-objects/PlansListPage';
 import { ProviderDetailsPage } from '../page-objects/ProviderDetailsPage';
-import { ProvidersListPage } from '../page-objects/ProvidersListPage';
-import { createPlanTestData, type ProviderConfig, type ProviderData } from '../types/test-data';
+import { createPlanTestData, type ProviderData } from '../types/test-data';
+import { getProviderConfig } from '../utils/providers';
 import { ResourceManager } from '../utils/resource-manager/ResourceManager';
 
-// Load real provider configurations
-const providersPath = join(__dirname, '../../.providers.json');
-if (!existsSync(providersPath)) {
-  throw new Error(`.providers.json file not found at: ${providersPath}`);
-}
+type TestProvider = V1beta1Provider & {
+  metadata: {
+    name: string;
+    namespace: string;
+  };
+};
 
-import * as providers from '../../.providers.json';
+type TestPlan = V1beta1Plan & {
+  metadata: {
+    name: string;
+    namespace: string;
+  };
+  testData: ReturnType<typeof createPlanTestData>;
+};
 
 const createProvider = async (
   page: Page,
   resourceManager: ResourceManager,
   namePrefix = 'test-provider',
-): Promise<V1beta1Provider> => {
+): Promise<TestProvider> => {
   const uniqueId = crypto.randomUUID();
   const providerName = `${namePrefix}-${uniqueId}`;
 
   const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
-  const providerConfig = (providers as Record<string, ProviderConfig>)[providerKey];
+  const providerConfig = getProviderConfig(providerKey);
 
   if (!providerConfig) {
     throw new Error(`Provider configuration not found for key: ${providerKey}`);
   }
   const testProviderData: ProviderData = {
     name: providerName,
+    projectName: 'openshift-mtv',
     type: providerConfig.type,
     endpointType: providerConfig.endpoint_type ?? 'vcenter',
     hostname: providerConfig.api_url,
@@ -45,24 +49,22 @@ const createProvider = async (
     vddkInitImage: providerConfig.vddk_init_image,
   };
 
-  const providersPage = new ProvidersListPage(page);
   const createProviderPage = new CreateProviderPage(page, resourceManager);
   const providerDetailsPage = new ProviderDetailsPage(page);
 
-  await providersPage.navigateFromMainMenu();
-  await providersPage.clickCreateProviderButton();
+  await createProviderPage.navigate();
   await createProviderPage.waitForWizardLoad();
   await createProviderPage.fillAndSubmit(testProviderData);
   await providerDetailsPage.waitForPageLoad();
   await providerDetailsPage.verifyProviderDetails(testProviderData);
-  const provider = {
+  const provider: TestProvider = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Provider',
     metadata: {
       name: providerName,
       namespace: 'openshift-mtv',
     },
-  } as V1beta1Provider;
+  };
 
   (provider as any).testData = testProviderData;
   return provider;
@@ -75,54 +77,31 @@ const createPlanWithCustomData = async (
     sourceProvider: V1beta1Provider;
     customPlanData?: Partial<ReturnType<typeof createPlanTestData>>;
   },
-): Promise<V1beta1Plan> => {
-  const namePrefix = 'test-plan';
-  const uniqueId = crypto.randomUUID();
-  const planName = `${namePrefix}-${uniqueId}`;
-  const targetProjectName = `test-project-${uniqueId}`;
+): Promise<TestPlan> => {
   const { sourceProvider, customPlanData } = options;
   const defaultPlanData = createPlanTestData({
-    planName,
-    planProject: 'openshift-mtv',
     sourceProvider: sourceProvider.metadata!.name!,
-    targetProvider: 'host',
-    targetProject: {
-      name: targetProjectName,
-      isPreexisting: false,
-    },
-    networkMap: {
-      name: `${planName}-network-map`,
-      isPreexisting: false,
-    },
-    storageMap: {
-      name: `${planName}-storage-map`,
-      isPreexisting: false,
-      targetStorage: 'ocs-storagecluster-ceph-rbd-virtualization',
-    },
-    virtualMachines: [{ sourceName: 'mtv-func-rhel9' }],
   });
 
   const testPlanData = customPlanData ? { ...defaultPlanData, ...customPlanData } : defaultPlanData;
 
-  const plansPage = new PlansListPage(page);
   const createWizard = new CreatePlanWizardPage(page, resourceManager);
   const planDetailsPage = new PlanDetailsPage(page);
 
-  await plansPage.navigateFromMainMenu();
-  await plansPage.clickCreatePlanButton();
+  await createWizard.navigate();
   await createWizard.waitForWizardLoad();
   await createWizard.fillAndSubmit(testPlanData);
   await planDetailsPage.verifyPlanTitle(testPlanData.planName);
-  const plan = {
+  const plan: TestPlan = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Plan',
     metadata: {
       name: testPlanData.planName,
       namespace: 'openshift-mtv',
     },
-  } as V1beta1Plan;
+    testData: testPlanData,
+  };
 
-  (plan as any).testData = testPlanData;
   return plan;
 };
 
@@ -130,7 +109,7 @@ const createPlan = async (
   page: Page,
   resourceManager: ResourceManager,
   sourceProvider: V1beta1Provider,
-): Promise<V1beta1Plan> => {
+): Promise<TestPlan> => {
   return createPlanWithCustomData(page, resourceManager, { sourceProvider });
 };
 
@@ -143,11 +122,11 @@ export interface FixtureConfig {
 
 export interface ConfigurableResourceFixtures {
   resourceManager: ResourceManager;
-  testProvider: V1beta1Provider | undefined;
-  testPlan: V1beta1Plan | undefined;
+  testProvider: TestProvider | undefined;
+  testPlan: TestPlan | undefined;
   createCustomPlan: (
     customPlanData?: Partial<ReturnType<typeof createPlanTestData>>,
-  ) => Promise<V1beta1Plan>;
+  ) => Promise<TestPlan>;
 }
 export const createResourceFixtures = (config: FixtureConfig = {}) => {
   const { providerScope = 'test', planScope = 'test', providerPrefix = 'test-provider' } = config;
@@ -162,7 +141,7 @@ export const createResourceFixtures = (config: FixtureConfig = {}) => {
       providerScope === 'worker'
         ? ([
             async ({ browser }: { browser: any }, use: any) => {
-              const context = await browser.newContext();
+              const context = await browser.newContext({ ignoreHTTPSErrors: true });
               const page = await context.newPage();
               const tempResourceManager = new ResourceManager();
 
@@ -177,9 +156,11 @@ export const createResourceFixtures = (config: FixtureConfig = {}) => {
                   throw new Error('Failed to create provider');
                 }
 
+                await context.close();
+
                 await use(provider);
 
-                const cleanupContext = await browser.newContext();
+                const cleanupContext = await browser.newContext({ ignoreHTTPSErrors: true });
                 const cleanupManager = new ResourceManager();
 
                 try {
@@ -190,8 +171,6 @@ export const createResourceFixtures = (config: FixtureConfig = {}) => {
                 }
               } catch (error) {
                 throw new Error(`Failed to create or use provider: ${String(error)}`);
-              } finally {
-                await context.close();
               }
             },
             { scope: 'worker' },

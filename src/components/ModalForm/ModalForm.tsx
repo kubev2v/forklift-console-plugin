@@ -24,6 +24,7 @@ type ModalFormProps = {
   confirmVariant?: ButtonVariant;
   isDisabled?: boolean;
   additionalAction?: ButtonProps;
+  testId?: string;
 };
 
 const ModalForm: FC<ModalFormProps> = ({
@@ -35,6 +36,7 @@ const ModalForm: FC<ModalFormProps> = ({
   confirmVariant,
   isDisabled,
   onConfirm,
+  testId,
   title,
   variant = ModalVariant.small,
 }) => {
@@ -65,6 +67,7 @@ const ModalForm: FC<ModalFormProps> = ({
       showClose={false}
       position="top"
       onClose={toggleModal}
+      data-testid={testId}
       actions={[
         <Button
           key="confirm"

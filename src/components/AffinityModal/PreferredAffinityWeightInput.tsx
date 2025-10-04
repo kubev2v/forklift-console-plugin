@@ -46,6 +46,7 @@ const PreferredAffinityWeightInput: FC<PreferredAffinityWeightInputProps> = ({
   return (
     <FormGroup fieldId="weight" isRequired label={t('Weight')}>
       <TextInput
+        data-testid="affinity-weight-input"
         onChange={(_event, value: string) => {
           onChange(_event, value);
         }}
