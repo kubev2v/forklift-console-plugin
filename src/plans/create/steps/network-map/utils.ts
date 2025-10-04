@@ -7,7 +7,6 @@ import type {
   OVirtVM,
   ProviderVirtualMachine,
 } from '@kubev2v/types';
-import { Namespace } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
@@ -154,28 +153,19 @@ export const validateNetworkMap = (validateNetworkMapParams: ValidateNetworkMapP
   return undefined;
 };
 
-/**
- * Filters target networks by project/namespace and transforms to mapping object
- */
-export const filterTargetNetworksByProject = (
+export const getTargetNetworksMappingValue = (
   availableTargetNetworks: OpenShiftNetworkAttachmentDefinition[],
-  targetProject: string,
 ) => {
-  if (isEmpty(availableTargetNetworks) || !targetProject) {
+  if (isEmpty(availableTargetNetworks)) {
     return { podNetwork: defaultNetMapping[NetworkMapFieldId.TargetNetwork] };
   }
 
   return availableTargetNetworks.reduce(
     (networkMap: Record<string, MappingValue>, network) => {
-      const isValidNamespace =
-        network.namespace === targetProject || network.namespace === Namespace.Default;
-
-      if (isValidNamespace) {
-        networkMap[network.uid] = {
-          id: network.id,
-          name: `${network.namespace}/${network.name}`,
-        };
-      }
+      networkMap[network.uid] = {
+        id: network.id,
+        name: `${network.namespace}/${network.name}`,
+      };
 
       return networkMap;
     },

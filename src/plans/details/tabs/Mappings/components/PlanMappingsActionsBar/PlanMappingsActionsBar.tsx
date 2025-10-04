@@ -43,7 +43,9 @@ const PlanMappingsActionsBar: FC<PlanMappingsActionsBarProps> = ({
         <FlexItem>
           <Button
             variant={ButtonVariant.secondary}
-            onClick={reset}
+            onClick={() => {
+              reset();
+            }}
             data-testid="cancel-mappings-button"
           >
             {t('Cancel')}

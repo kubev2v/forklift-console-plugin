@@ -8,7 +8,6 @@ import type {
   OpenShiftStorageClass,
   V1beta1Plan,
 } from '@kubev2v/types';
-import { Namespace } from '@utils/constants';
 import { getPlanTargetNamespace } from '@utils/crds/plans/selectors';
 
 import { DefaultNetworkLabel, IgnoreNetwork, STANDARD } from './constants';
@@ -101,14 +100,11 @@ export const mapSourceStoragesIdsToLabels = (
 
 export const mapTargetNetworksIdsToLabels = (
   targets: OpenShiftNetworkAttachmentDefinition[],
-  plan: V1beta1Plan,
 ): Record<string, string> => {
-  const tuples: [string, string][] = targets
-    .filter(
-      ({ namespace }) =>
-        namespace === getPlanTargetNamespace(plan) || namespace === Namespace.Default,
-    )
-    .map((net) => [net.uid, `${net.namespace}/${net.name}`]);
+  const tuples: [string, string][] = targets.map((net) => [
+    net.uid,
+    `${net.namespace}/${net.name}`,
+  ]);
 
   tuples.push([POD, DefaultNetworkLabel.Source], [IgnoreNetwork.Type, IgnoreNetwork.Label]);
   const labelToId = resolveCollisions(tuples);

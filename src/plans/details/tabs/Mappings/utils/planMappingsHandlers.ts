@@ -55,7 +55,7 @@ export const createOnAddNetworkMapping = (
     newState.push(createReplacedNetworkMap(unused));
   }
 
-  return { canAddMore: Boolean(unused), newState };
+  return { canAddMore: newState.length < sources.length, newState };
 };
 
 export const createOnAddStorageMapping = (
@@ -72,7 +72,7 @@ export const createOnAddStorageMapping = (
     newState.push(createReplacedStorageMap(unused, target));
   }
 
-  return { canAddMore: Boolean(unused), newState };
+  return { canAddMore: newState.length < sources.length, newState };
 };
 
 export const createOnDeleteMapping = <
