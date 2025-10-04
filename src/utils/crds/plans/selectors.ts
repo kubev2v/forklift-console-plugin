@@ -1,8 +1,5 @@
 import type { TargetPowerStateValue } from 'src/plans/constants';
-import type {
-  EnhancedPlan,
-  EnhancedPlanSpecVms,
-} from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
+import type { EnhancedPlanSpecVms } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 
 import type { V1beta1Plan } from '@kubev2v/types';
 
@@ -55,11 +52,10 @@ export const getPlanPreserveClusterCpuModel = (plan: V1beta1Plan) =>
 
 export const getLUKSSecretName = (plan: V1beta1Plan) => plan?.spec?.vms?.[0]?.luks?.name;
 
-export const getPlanHasNBDEClevis = (plan: EnhancedPlan | V1beta1Plan): boolean =>
-  (plan as EnhancedPlan)?.spec?.vms?.some((vm: EnhancedPlanSpecVms) => vm.nbdeClevis === true) ??
-  false;
+export const getPlanHasNBDEClevis = (plan: V1beta1Plan): boolean =>
+  plan?.spec?.vms?.some((vm: EnhancedPlanSpecVms) => vm.nbdeClevis === true) ?? false;
 
 export const getRootDisk = (plan: V1beta1Plan) => plan?.spec?.vms?.[0]?.rootDisk;
 
-export const getPlanTargetPowerState = (plan: EnhancedPlan | V1beta1Plan): TargetPowerStateValue =>
-  (plan as EnhancedPlan)?.spec?.targetPowerState;
+export const getPlanTargetPowerState = (plan: V1beta1Plan): TargetPowerStateValue =>
+  plan?.spec?.targetPowerState;

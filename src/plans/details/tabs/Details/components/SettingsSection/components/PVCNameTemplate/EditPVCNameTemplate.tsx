@@ -3,7 +3,6 @@ import type { FC } from 'react';
 import type { V1beta1Plan } from '@kubev2v/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type { EnhancedPlan } from '../../utils/types';
 import NameTemplateBody from '../EditNameTemplate/components/NameTemplateBody';
 import NameTemplateHelper from '../EditNameTemplate/components/NameTemplateHelper';
 import EditNameTemplate from '../EditNameTemplate/EditNameTemplate';
@@ -16,18 +15,24 @@ type EditPVCNameTemplateProps = {
     resource: V1beta1Plan;
     newValue: string | undefined;
   }) => Promise<V1beta1Plan>;
+  value?: string;
+  allowInherit?: boolean;
 };
 
 const EditPVCNameTemplate: FC<EditPVCNameTemplateProps> = ({
+  allowInherit = true,
   onConfirmPVCNameTemplate,
   resource,
+  value,
 }) => {
   const { t } = useForkliftTranslation();
 
   return (
     <EditNameTemplate
+      allowInherit={allowInherit}
+      fieldName={allowInherit ? t('VM PVC name template') : t('Plan PVC name template')}
       title={t('Edit PVC name template')}
-      value={(resource as EnhancedPlan)?.spec?.pvcNameTemplate}
+      value={value}
       onConfirm={async (newValue) => onConfirmPVCNameTemplate({ newValue, resource })}
       body={
         <NameTemplateBody
@@ -38,6 +43,7 @@ const EditPVCNameTemplate: FC<EditPVCNameTemplateProps> = ({
         />
       }
       helperText={<NameTemplateHelper examples={pvcNameTemplateHelperExamples} />}
+      inheritValue={resource?.spec?.pvcNameTemplate}
     />
   );
 };

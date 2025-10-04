@@ -3,7 +3,6 @@ import type { FC } from 'react';
 import type { V1beta1Plan } from '@kubev2v/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type { EnhancedPlan } from '../../utils/types';
 import NameTemplateBody from '../EditNameTemplate/components/NameTemplateBody';
 import NameTemplateHelper from '../EditNameTemplate/components/NameTemplateHelper';
 import EditNameTemplate from '../EditNameTemplate/EditNameTemplate';
@@ -19,18 +18,24 @@ type EditNetworkNameTemplateProps = {
     resource: V1beta1Plan;
     newValue: string | undefined;
   }) => Promise<V1beta1Plan>;
+  value?: string;
+  allowInherit?: boolean;
 };
 
 const EditNetworkNameTemplate: FC<EditNetworkNameTemplateProps> = ({
+  allowInherit = true,
   onConfirmNetworkNameTemplate,
   resource,
+  value,
 }) => {
   const { t } = useForkliftTranslation();
 
   return (
     <EditNameTemplate
+      allowInherit={allowInherit}
+      fieldName={allowInherit ? t('VM network name template') : t('Plan network name template')}
       title={t('Edit network name template')}
-      value={(resource as EnhancedPlan)?.spec?.networkNameTemplate}
+      value={value}
       onConfirm={async (newValue) => onConfirmNetworkNameTemplate({ newValue, resource })}
       body={
         <NameTemplateBody
@@ -41,6 +46,7 @@ const EditNetworkNameTemplate: FC<EditNetworkNameTemplateProps> = ({
         />
       }
       helperText={<NameTemplateHelper examples={networkNameTemplateHelperExamples} />}
+      inheritValue={resource?.spec?.networkNameTemplate}
     />
   );
 };
