@@ -38,11 +38,11 @@ export const getLabeledAndAvailableMappings = ({
   updatedNetwork,
   updatedStorage,
 }: GetMappingsParams) => {
+  const labeledTargetNetworkMap = mapTargetNetworksIdsToLabels(targetNetworks, plan);
   const labeledNetworkMappings: Mapping[] = updatedNetwork.map((obj) => ({
     destination:
-      mapTargetNetworksIdsToLabels(targetNetworks, plan)[obj.destination.type] ??
-      obj.destination?.name ??
-      t('Not available'),
+      labeledTargetNetworkMap[obj.destination?.type] ??
+      `${obj.destination?.namespace}/${obj.destination?.name}`,
     source: mapSourceNetworksIdsToLabels(sourceNetworks)[obj.source.id ?? obj.source.type!],
   }));
 
@@ -64,9 +64,9 @@ export const getLabeledAndAvailableMappings = ({
     ),
   ).sort((netA, netB) => universalComparator(netA, netB, 'en'));
 
-  const availableNetworkTargets = Object.values(
-    mapTargetNetworksIdsToLabels(targetNetworks, plan),
-  ).sort((netA, netB) => universalComparator(netA, netB, 'en'));
+  const availableNetworkTargets = Object.values(labeledTargetNetworkMap).sort((netA, netB) =>
+    universalComparator(netA, netB, 'en'),
+  );
 
   const availableStorageSources = Object.values(
     mapSourceStoragesIdsToLabels(

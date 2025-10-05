@@ -15,7 +15,7 @@ import './PlanMappingsActionsBar.scss';
 type PlanMappingsActionsBarProps = {
   isLoading: boolean;
   dataChanged: boolean;
-  reset: () => void;
+  reset: (preserveUpdated?: boolean) => void;
   onUpdate: () => void;
 };
 
@@ -43,7 +43,9 @@ const PlanMappingsActionsBar: FC<PlanMappingsActionsBarProps> = ({
         <FlexItem>
           <Button
             variant={ButtonVariant.secondary}
-            onClick={reset}
+            onClick={() => {
+              reset();
+            }}
             data-testid="cancel-mappings-button"
           >
             {t('Cancel')}
