@@ -1,30 +1,41 @@
 import { type FC, type ReactNode, useState } from 'react';
 
+import Select from '@components/common/Select';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Plan } from '@kubev2v/types';
-import { Radio, TextInput } from '@patternfly/react-core';
+import { Form, FormGroup, SelectList, SelectOption, TextInput } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
-import { NameTemplateRadioOptions } from './utils/constants';
+import { NameTemplateOptions, type NameTemplateOptionType } from './utils/types';
+import {
+  getNameTemplateOptions,
+  getNameTemplateStateLabel,
+  getSelectedOption,
+} from './utils/utils';
 
 type EditNameTemplateProps = {
+  allowInherit?: boolean;
+  inheritValue?: string;
   title: string;
   value: string | undefined;
   onConfirm: (value: string | undefined) => Promise<V1beta1Plan>;
   body?: ReactNode;
   helperText?: ReactNode;
+  fieldName: string;
 };
 
 const EditNameTemplate: FC<EditNameTemplateProps> = ({
+  allowInherit = true,
   body,
+  fieldName,
   helperText,
+  inheritValue,
   onConfirm,
   title,
   value,
 }) => {
-  const [selected, setSelected] = useState<NameTemplateRadioOptions>(
-    value
-      ? NameTemplateRadioOptions.customNameTemplate
-      : NameTemplateRadioOptions.defaultNameTemplate,
+  const [selected, setSelected] = useState<NameTemplateOptions>(
+    getSelectedOption(value, allowInherit),
   );
   const [inputValue, setInputValue] = useState(value ?? '');
 
@@ -32,38 +43,54 @@ const EditNameTemplate: FC<EditNameTemplateProps> = ({
     <ModalForm
       title={title}
       onConfirm={async () => {
-        return selected === NameTemplateRadioOptions.customNameTemplate
+        if (selected === NameTemplateOptions.customNameTemplate && isEmpty(inputValue.trim())) {
+          throw new Error('Name template cannot be empty');
+        }
+        return selected === NameTemplateOptions.customNameTemplate
           ? onConfirm(inputValue)
           : onConfirm(undefined);
       }}
+      isDisabled={
+        selected === NameTemplateOptions.customNameTemplate &&
+        (inputValue === value || isEmpty(inputValue.trim()))
+      }
     >
       {body}
-      <Radio
-        isChecked={selected === NameTemplateRadioOptions.defaultNameTemplate}
-        name="name-template"
-        onChange={() => {
-          setSelected(NameTemplateRadioOptions.defaultNameTemplate);
-        }}
-        label="Use default naming template"
-        id="default-naming-template"
-      />
-      <Radio
-        isChecked={selected === NameTemplateRadioOptions.customNameTemplate}
-        name="name-template"
-        onChange={() => {
-          setSelected(NameTemplateRadioOptions.customNameTemplate);
-        }}
-        label="Enter custom naming template"
-        id="custom-naming-template"
-      />
-      <TextInput
-        isDisabled={selected === NameTemplateRadioOptions.defaultNameTemplate}
-        value={inputValue}
-        onChange={(_, val) => {
-          setInputValue(val);
-        }}
-      />
-      {helperText}
+      <Form>
+        <FormGroup label={fieldName} fieldId="nameTemplate" isRequired>
+          <Select
+            id="nameTemplate"
+            value={getNameTemplateStateLabel(selected, allowInherit)}
+            onSelect={(_event, val) => {
+              setSelected((val as unknown as NameTemplateOptionType)?.value);
+            }}
+          >
+            <SelectList>
+              {getNameTemplateOptions(allowInherit).map((option) => (
+                <SelectOption
+                  key={option.value}
+                  value={option}
+                  isSelected={selected === option.value}
+                  description={option.getInheritToDescription?.(inheritValue)}
+                >
+                  {option?.label}
+                </SelectOption>
+              ))}
+            </SelectList>
+          </Select>
+        </FormGroup>
+        {selected === NameTemplateOptions.customNameTemplate && (
+          <FormGroup>
+            <TextInput
+              value={inputValue}
+              onChange={(_, val) => {
+                setInputValue(val);
+              }}
+            />
+            {helperText}
+          </FormGroup>
+        )}
+      </Form>
     </ModalForm>
   );
 };

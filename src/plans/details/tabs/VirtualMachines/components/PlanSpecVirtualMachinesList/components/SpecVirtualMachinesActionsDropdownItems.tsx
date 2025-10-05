@@ -12,6 +12,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModel, type ProviderType, type V1beta1Plan } from '@kubev2v/types';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
+import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 
 import {
   onConfirmVirtualMachineNetworkNameTemplate,
@@ -42,6 +43,8 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
 
   const isVsphere = providerType === PROVIDER_TYPES.vsphere;
 
+  const vm = getPlanVirtualMachines(plan)?.[vmIndex];
+
   return (
     <DropdownList>
       <DropdownItem
@@ -64,6 +67,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
                 <EditPVCNameTemplate
                   resource={plan}
                   onConfirmPVCNameTemplate={onConfirmVirtualMachinePVCNameTemplate(vmIndex)}
+                  value={vm?.pvcNameTemplate}
                 />,
               );
             }}
@@ -78,6 +82,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
                 <EditVolumeNameTemplate
                   resource={plan}
                   onConfirmVolumeNameTemplate={onConfirmVirtualMachineVolumeNameTemplate(vmIndex)}
+                  value={vm?.volumeNameTemplate}
                 />,
               );
             }}
@@ -92,6 +97,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
                 <EditNetworkNameTemplate
                   resource={plan}
                   onConfirmNetworkNameTemplate={onConfirmVirtualMachineNetworkNameTemplate(vmIndex)}
+                  value={vm?.networkNameTemplate}
                 />,
               );
             }}

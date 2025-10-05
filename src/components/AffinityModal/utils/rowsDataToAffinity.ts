@@ -1,20 +1,26 @@
-import {
-  type K8sIoApiCoreV1Affinity,
-  type K8sIoApiCoreV1NodeSelectorRequirement,
-  K8sIoApiCoreV1NodeSelectorRequirementOperatorEnum,
-  type K8sIoApiCoreV1NodeSelectorTerm,
-  type K8sIoApiCoreV1PodAffinityTerm,
-  type K8sIoApiCoreV1PreferredSchedulingTerm,
-  type K8sIoApiCoreV1WeightedPodAffinityTerm,
+import type {
+  K8sIoApiCoreV1Affinity,
+  K8sIoApiCoreV1NodeSelectorRequirement,
+  K8sIoApiCoreV1NodeSelectorTerm,
+  K8sIoApiCoreV1PodAffinityTerm,
+  K8sIoApiCoreV1PreferredSchedulingTerm,
+  K8sIoApiCoreV1WeightedPodAffinityTerm,
 } from '@kubev2v/types';
 import { isEmpty } from '@utils/helpers';
 
+import { K8sIoApiCoreV1NodeSelectorRequirementOperatorEnum } from './constants';
 import { AffinityCondition, type AffinityLabel, type AffinityRowData, AffinityType } from './types';
 
+type PickRowsMapper<T> = (rowData: AffinityRowData) => T;
+
 const flattenExpressions = (
-  affinityLabels: AffinityLabel[],
-): K8sIoApiCoreV1NodeSelectorRequirement[] =>
-  affinityLabels?.map((aff) => {
+  affinityLabels: AffinityLabel[] | undefined,
+): K8sIoApiCoreV1NodeSelectorRequirement[] => {
+  if (!affinityLabels) {
+    return [];
+  }
+
+  return affinityLabels?.map((aff) => {
     const { id: _id, ...affinityWithoutID } = aff;
 
     const affinityRequirement = { ...affinityWithoutID } as K8sIoApiCoreV1NodeSelectorRequirement;
@@ -23,6 +29,7 @@ const flattenExpressions = (
       ? { ...affinityRequirement, values: [] }
       : affinityRequirement;
   });
+};
 
 const getRequiredNodeTermFromRowData = ({
   expressions,
@@ -41,7 +48,7 @@ const getPreferredNodeTermFromRowData = ({
     matchExpressions: flattenExpressions(expressions),
     matchFields: flattenExpressions(fields),
   },
-  weight,
+  weight: weight!,
 });
 
 const getRequiredPodTermFromRowData = ({
@@ -51,7 +58,7 @@ const getRequiredPodTermFromRowData = ({
   labelSelector: {
     matchExpressions: flattenExpressions(expressions),
   },
-  topologyKey,
+  topologyKey: topologyKey!,
 });
 
 const getPreferredPodTermFromRowData = ({
@@ -63,9 +70,9 @@ const getPreferredPodTermFromRowData = ({
     labelSelector: {
       matchExpressions: flattenExpressions(expressions),
     },
-    topologyKey,
+    topologyKey: topologyKey!,
   },
-  weight,
+  weight: weight!,
 });
 
 export const rowsDataToAffinity = (affinityRows: AffinityRowData[]) => {
@@ -73,10 +80,14 @@ export const rowsDataToAffinity = (affinityRows: AffinityRowData[]) => {
     return null;
   }
 
-  const pickRows = (rowType, rowCondition, mapper) =>
+  const pickRows = <T>(
+    affinityType: AffinityType,
+    condition: AffinityCondition,
+    mapper: PickRowsMapper<T>,
+  ): T[] =>
     affinityRows
-      .filter(({ condition, type }) => type === rowType && condition === rowCondition)
-      .map((rowData) => mapper(rowData));
+      .filter((row) => row.type === affinityType && row.condition === condition)
+      .map(mapper);
 
   const affinity = {} as K8sIoApiCoreV1Affinity;
 
