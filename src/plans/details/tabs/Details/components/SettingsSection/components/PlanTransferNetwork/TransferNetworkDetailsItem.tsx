@@ -12,9 +12,15 @@ import { PROVIDER_DEFAULTS } from './utils/constants';
 import { getNetworkName } from './utils/utils';
 import EditPlanTransferNetwork from './EditPlanTransferNetwork';
 
-const TransferNetworkDetailItem: FC<EditableDetailsItemProps> = ({ canPatch, plan }) => {
+const TransferNetworkDetailItem: FC<EditableDetailsItemProps> = ({
+  canPatch,
+  plan,
+  shouldRender,
+}) => {
   const { t } = useForkliftTranslation();
   const { showModal } = useModal();
+
+  if (!shouldRender) return null;
 
   const networkName = getNetworkName(getPlanTransferNetwork(plan)!);
 

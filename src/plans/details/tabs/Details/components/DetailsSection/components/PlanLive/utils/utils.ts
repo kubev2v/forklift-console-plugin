@@ -18,7 +18,7 @@ export const onConfirmLive: OnConfirmLive = async ({ newValue, resource }) => {
       {
         op,
         path: '/spec/type',
-        value: newValue ? 'live' : '',
+        value: newValue ? 'live' : 'cold',
       },
     ],
     model: PlanModel,
