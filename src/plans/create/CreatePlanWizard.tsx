@@ -24,7 +24,7 @@ const CreatePlanWizard: FC = () => {
   const { isFeatureEnabled } = useFeatureFlags();
   const { trackEvent } = useForkliftAnalytics();
 
-  const isLiveMigrationEnabled = isFeatureEnabled(FEATURE_NAMES.OCP_LIVE_MIGRATION);
+  const isLiveMigrationFeatureEnabled = isFeatureEnabled(FEATURE_NAMES.OCP_LIVE_MIGRATION);
   const defaultValues = getDefaultFormValues(location.state);
 
   const form = useCreatePlanForm({
@@ -85,7 +85,7 @@ const CreatePlanWizard: FC = () => {
       <CreatePlanWizardContextProvider>
         <CreatePlanWizardInner
           onSubmit={handleSubmit(onSubmit)}
-          isLiveMigrationEnabled={isLiveMigrationEnabled}
+          isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled}
           sourceProvider={sourceProvider}
           isSubmitting={isSubmitting}
         />

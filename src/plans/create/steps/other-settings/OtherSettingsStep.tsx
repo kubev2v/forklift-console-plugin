@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import { useWatch } from 'react-hook-form';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
@@ -6,7 +7,9 @@ import { Form } from '@patternfly/react-core';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
+import { hasLiveMigrationProviderType } from '../../utils/hasLiveMigrationProviderType';
 import { GeneralFormFieldId } from '../general-information/constants';
+import { MigrationTypeFieldId, MigrationTypeValue } from '../migration-type/constants';
 
 import { OtherSettingsFormFieldId } from './constants';
 import DiskPassPhraseFieldTable from './DiskPassPhraseFieldTable';
@@ -17,13 +20,24 @@ import SharedDisksField from './SharedDisksField';
 import TargetPowerStateField from './TargetPowerStateField';
 import TransferNetworkField from './TransferNetworkField';
 
-const OtherSettingsStep = () => {
+const OtherSettingsStep: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
+  isLiveMigrationFeatureEnabled,
+}) => {
   const { control } = useCreatePlanFormContext();
-  const [sourceProvider, nbdeClevis] = useWatch({
+  const [sourceProvider, nbdeClevis, migrationType] = useWatch({
     control,
-    name: [GeneralFormFieldId.SourceProvider, OtherSettingsFormFieldId.NBDEClevis],
+    name: [
+      GeneralFormFieldId.SourceProvider,
+      OtherSettingsFormFieldId.NBDEClevis,
+      MigrationTypeFieldId.MigrationType,
+    ],
   });
   const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
+
+  const isTransferNetworkVisible =
+    !hasLiveMigrationProviderType(sourceProvider) ||
+    !isLiveMigrationFeatureEnabled ||
+    migrationType !== MigrationTypeValue.Live;
 
   return (
     <WizardStepContainer title={planStepNames[PlanWizardStepId.OtherSettings]}>
@@ -35,7 +49,7 @@ const OtherSettingsStep = () => {
           </>
         )}
 
-        <TransferNetworkField />
+        {isTransferNetworkVisible && <TransferNetworkField />}
 
         {isVsphere && (
           <>
