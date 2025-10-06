@@ -140,10 +140,8 @@ const OtherSettingsReviewSection: FC = () => {
           <DescriptionListTerm>
             {otherFormFieldLabels[OtherSettingsFormFieldId.TargetPowerState]}
           </DescriptionListTerm>
-          <DescriptionListDescription
-            data-testid="review-target-power-state"
-            data-value={targetPowerState.value}
-          >
+
+          <DescriptionListDescription data-testid="review-target-power-state">
             {targetPowerState.label}
           </DescriptionListDescription>
         </DescriptionListGroup>
