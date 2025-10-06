@@ -19,12 +19,12 @@ import VirtualMachinesReviewSection from './VirtualMachinesReviewSection';
 type ReviewStepProps = {
   error: Error | undefined;
   onBackToReviewClick: () => void;
-  isLiveMigrationEnabled: boolean;
+  isLiveMigrationFeatureEnabled: boolean;
 };
 
 const ReviewStep: FC<ReviewStepProps> = ({
   error,
-  isLiveMigrationEnabled,
+  isLiveMigrationFeatureEnabled,
   onBackToReviewClick,
 }) => {
   const { t } = useForkliftTranslation();
@@ -60,8 +60,8 @@ const ReviewStep: FC<ReviewStepProps> = ({
       <VirtualMachinesReviewSection />
       <NetworkMapReviewSection />
       <StorageMapReviewSection />
-      <MigrationTypeReviewSection isLiveMigrationEnabled={isLiveMigrationEnabled} />
-      <OtherSettingsReviewSection />
+      <MigrationTypeReviewSection isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled} />
+      <OtherSettingsReviewSection isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled} />
       <HooksReviewSection />
     </WizardStepContainer>
   );

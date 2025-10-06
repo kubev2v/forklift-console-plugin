@@ -18,8 +18,8 @@ import { hasWarmMigrationProviderType } from '../../utils/hasWarmMigrationProvid
 import { GeneralFormFieldId } from '../general-information/constants';
 import { MigrationTypeFieldId, migrationTypeLabels } from '../migration-type/constants';
 
-const MigrationTypeReviewSection: FC<{ isLiveMigrationEnabled: boolean }> = ({
-  isLiveMigrationEnabled,
+const MigrationTypeReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
+  isLiveMigrationFeatureEnabled,
 }) => {
   const { t } = useForkliftTranslation();
   const { goToStepById } = useWizardContext();
@@ -31,7 +31,7 @@ const MigrationTypeReviewSection: FC<{ isLiveMigrationEnabled: boolean }> = ({
 
   const planSupportMigrationTypes =
     hasWarmMigrationProviderType(sourceProvider) ||
-    (hasLiveMigrationProviderType(sourceProvider) && isLiveMigrationEnabled);
+    (hasLiveMigrationProviderType(sourceProvider) && isLiveMigrationFeatureEnabled);
 
   if (!planSupportMigrationTypes) return null;
 
