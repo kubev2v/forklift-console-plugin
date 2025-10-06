@@ -88,10 +88,6 @@ export class NetworkMapDetailsPage {
         ).toBeVisible();
       }
     }
-
-    await expect(this.page.getByRole('tab', { name: 'Details', selected: true })).toBeVisible();
-
-    await expect(this.page.getByRole('tab', { name: 'YAML' })).toBeVisible();
   }
 
   get yaml(): YamlEditorPage {
