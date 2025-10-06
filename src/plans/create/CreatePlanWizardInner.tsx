@@ -24,13 +24,13 @@ import CreatePlanWizardFooter from './CreatePlanWizardFooter';
 
 type CreatePlanWizardInnerProps = {
   onSubmit: () => Promise<void>;
-  isLiveMigrationEnabled: boolean;
+  isLiveMigrationFeatureEnabled: boolean;
   sourceProvider: V1beta1Provider | undefined;
   isSubmitting: boolean;
 };
 
 const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
-  isLiveMigrationEnabled,
+  isLiveMigrationFeatureEnabled,
   isSubmitting,
   onSubmit,
   sourceProvider,
@@ -144,7 +144,7 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
             {...getStepProps(PlanWizardStepId.MigrationType)}
             isHidden={
               !hasWarmMigrationProviderType(sourceProvider) &&
-              (!hasLiveMigrationProviderType(sourceProvider) || !isLiveMigrationEnabled)
+              (!hasLiveMigrationProviderType(sourceProvider) || !isLiveMigrationFeatureEnabled)
             }
           >
             <MigrationTypeStep />
@@ -159,7 +159,7 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
             key={PlanWizardStepId.OtherSettings}
             {...getStepProps(PlanWizardStepId.OtherSettings)}
           >
-            <OtherSettingsStep />
+            <OtherSettingsStep isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled} />
           </WizardStep>,
           <WizardStep key={PlanWizardStepId.Hooks} {...getStepProps(PlanWizardStepId.Hooks)}>
             <HooksStep />
@@ -178,7 +178,7 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
         {...getStepProps(PlanWizardStepId.ReviewAndCreate)}
       >
         <ReviewStep
-          isLiveMigrationEnabled={isLiveMigrationEnabled}
+          isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled}
           error={createPlanError}
           onBackToReviewClick={() => {
             setCreatePlanError(undefined);
