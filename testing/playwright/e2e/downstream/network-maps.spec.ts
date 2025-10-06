@@ -21,41 +21,41 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
     await networkMapCreatePage.fillRequiredFields({
       mapName,
       project: 'openshift-mtv',
-      sourceProvider: testProvider.metadata!.name!,
+      sourceProvider: testProvider.metadata.name,
       targetProvider: 'host',
       sourceNetwork: 'VM Network',
       targetNetwork: 'Default network',
     });
     await expect(networkMapCreatePage.createButton).toBeEnabled();
 
-    //add mapping
+    // Add mapping
     await networkMapCreatePage.addMapping();
     await expect(networkMapCreatePage.createButton).toBeDisabled();
     await networkMapCreatePage.populateMapping(1, 'Mgmt Network', 'Default network');
 
-    //remove mappings
+    // Remove mappings
     await networkMapCreatePage.removeMapping(1);
     await expect(networkMapCreatePage.createButton).toBeEnabled();
     await networkMapCreatePage.removeMapping(0);
     await expect(networkMapCreatePage.createButton).toBeDisabled();
 
-    // readd mappings
+    // Re-add mappings
     await networkMapCreatePage.addMapping();
     await expect(networkMapCreatePage.createButton).toBeDisabled();
     await networkMapCreatePage.populateMapping(0, 'VM Network', 'Default network');
     await networkMapCreatePage.addMapping();
     await networkMapCreatePage.populateMapping(1, 'Mgmt Network', 'Default network');
 
-    //submit form
+    // Submit form
     await networkMapCreatePage.submitForm(mapName);
 
     // Add network map to cleanup
     resourceManager.addNetworkMap(mapName, 'openshift-mtv');
 
-    //verifyNetworkMapDetailsPage
+    // Verify Network details page
     await networkMapDetailsPage.verifyNetworkMapDetailsPage({
       networkMapName: mapName,
-      sourceProvider: testProvider.metadata!.name!,
+      sourceProvider: testProvider.metadata.name,
       targetProvider: 'host',
       mappings: [
         { sourceNetwork: 'VM Network', targetNetwork: 'Default network' },
@@ -82,10 +82,10 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
     // Add the new network map to resource manager for cleanup
     resourceManager.addNetworkMap(newMapName, 'openshift-mtv');
 
-    //verifyNetworkMapDetailsPage
+    // Verify Network details pagePage
     await networkMapDetailsPage.verifyNetworkMapDetailsPage({
       networkMapName: newMapName,
-      sourceProvider: testProvider.metadata!.name!,
+      sourceProvider: testProvider.metadata.name,
       targetProvider: 'host',
       mappings: [
         { sourceNetwork: 'VM Network', targetNetwork: 'Default network' },
