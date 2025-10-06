@@ -95,10 +95,15 @@ export class ReviewStep {
     await expect(this.page.getByTestId('review-transfer-network')).toBeVisible();
 
     if (additionalPlanSettings?.targetPowerState) {
-      await expect(this.page.getByTestId('review-target-power-state')).toHaveAttribute(
-        'data-value',
-        additionalPlanSettings.targetPowerState,
-      );
+      // Map power state values to their user-visible labels
+      const powerStateLabels: Record<string, string> = {
+        auto: 'Auto (Power on after migration)',
+        on: 'Powered on',
+        off: 'Powered off',
+      };
+      const expectedLabel = powerStateLabels[additionalPlanSettings.targetPowerState];
+
+      await expect(this.page.getByTestId('review-target-power-state')).toHaveText(expectedLabel);
     }
   }
 
