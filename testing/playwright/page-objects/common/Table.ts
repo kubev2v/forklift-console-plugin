@@ -9,6 +9,14 @@ export class Table {
     this.rootLocator = rootLocator;
   }
 
+  private getTableContainer(): Locator {
+    return this.rootLocator
+      .getByTestId('table-grid')
+      .or(this.rootLocator.getByRole('table'))
+      .or(this.rootLocator.getByRole('grid'))
+      .or(this.rootLocator.getByRole('treegrid'));
+  }
+
   async changeFilter(filterName: string): Promise<void> {
     const filterSelect = this.rootLocator
       .getByTestId('table-filter-select')
@@ -77,10 +85,7 @@ export class Table {
   }
 
   async getColumns(): Promise<string[]> {
-    const tableContainer = this.rootLocator
-      .getByTestId('table-grid')
-      .or(this.rootLocator.getByRole('table'))
-      .or(this.rootLocator.getByRole('grid'));
+    const tableContainer = this.getTableContainer();
 
     const headers = tableContainer.locator('thead th, thead columnheader');
     const count = await headers.count();
@@ -96,11 +101,7 @@ export class Table {
   }
 
   getRow(options: Record<string, string>): Locator {
-    const tableContainer = this.rootLocator
-      .getByTestId('table-grid')
-      .or(this.rootLocator.getByRole('table'))
-      .or(this.rootLocator.getByRole('grid'))
-      .or(this.rootLocator.getByRole('treegrid'));
+    const tableContainer = this.getTableContainer();
 
     let rows = tableContainer.locator('tbody tr');
 
@@ -145,10 +146,7 @@ export class Table {
   }
 
   async waitForTableLoad(): Promise<void> {
-    const tableContainer = this.rootLocator
-      .getByTestId('table-grid')
-      .or(this.rootLocator.getByRole('table'))
-      .or(this.rootLocator.getByRole('grid'));
+    const tableContainer = this.getTableContainer();
     await expect(tableContainer).toBeVisible();
 
     await expect(
