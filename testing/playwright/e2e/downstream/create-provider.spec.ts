@@ -13,6 +13,7 @@ import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage';
 import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
 import type { ProviderData } from '../../types/test-data';
 import { getProviderConfig } from '../../utils/providers';
+import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
 const createProviderData = ({
@@ -26,7 +27,7 @@ const createProviderData = ({
 
   return {
     name: `test-vsphere-provider-${suffix}-${crypto.randomUUID().slice(0, 8)}`,
-    projectName: 'openshift-mtv',
+    projectName: MTV_NAMESPACE,
     type: providerConfig.type,
     endpointType: providerConfig.endpoint_type ?? 'vcenter',
     hostname: providerConfig.api_url,

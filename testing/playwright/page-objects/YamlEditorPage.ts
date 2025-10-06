@@ -1,5 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 import { isEmpty } from '../utils/utils';
 
 export class YamlEditorPage {
@@ -45,7 +46,7 @@ export class YamlEditorPage {
     await this.page.locator('[data-test="save-changes"]').click();
     await expect(this.page).toHaveURL(
       new RegExp(
-        `/k8s/ns/openshift-mtv/forklift\\.konveyor\\.io~v1beta1~${resourceType}/${expectedName}`,
+        `/k8s/ns/${MTV_NAMESPACE}/forklift\\.konveyor\\.io~v1beta1~${resourceType}/${expectedName}`,
       ),
     );
   }

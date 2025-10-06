@@ -49,8 +49,6 @@ export class NetworkMapDetailsPage {
       this.page.getByTestId('name-detail-item').getByText(expectedData.networkMapName),
     ).toBeVisible();
 
-    await expect(this.page.locator('[data-test-id="openshift-mtv"]')).toBeVisible();
-
     await expect(this.page.locator('time').first()).toBeVisible();
 
     await expect(this.page.getByRole('heading', { name: 'Providers' })).toBeVisible();

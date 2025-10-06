@@ -1,5 +1,5 @@
 // Shared constants for resource management
-export const DEFAULT_NAMESPACE = 'openshift-mtv';
+export const MTV_NAMESPACE = 'openshift-mtv';
 
 export const RESOURCE_KINDS = {
   MIGRATION: 'Migration',

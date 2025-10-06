@@ -14,7 +14,7 @@ const createNewOption = (
   content: typeof createMessage === 'function' ? createMessage(inputValue) : createMessage,
   optionProps: {
     className: 'pf-m-action',
-    'data-testid': 'multi-typeahead-select-create-option',
+    testId: 'multi-typeahead-select-create-option',
   },
   value: inputValue,
 });

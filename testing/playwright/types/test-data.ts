@@ -1,3 +1,5 @@
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
+
 export interface TargetProject {
   name: string;
   isPreexisting: boolean;
@@ -55,7 +57,7 @@ export const createPlanTestData = (
 
   const defaults: PlanTestData = {
     planName,
-    planProject: 'openshift-mtv',
+    planProject: MTV_NAMESPACE,
     sourceProvider: 'test-provider',
     targetProvider: 'host',
     targetProject: {

@@ -16,6 +16,7 @@ import { PlansListPage } from '../../page-objects/PlansListPage';
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage';
 import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
 import { createPlanTestData, type ProviderConfig, type ProviderData } from '../../types/test-data';
+import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
 const targetProjectName = `test-project-${Date.now()}`;
@@ -25,7 +26,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
   let testProviderData: ProviderData = {
     name: '',
-    projectName: 'openshift-mtv',
+    projectName: MTV_NAMESPACE,
     type: 'vsphere',
     endpointType: 'vcenter',
     hostname: '',
@@ -65,7 +66,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
       testProviderData = {
         name: providerName,
-        projectName: 'openshift-mtv',
+        projectName: MTV_NAMESPACE,
         type: providerConfig.type,
         endpointType: providerConfig.endpoint_type ?? 'vcenter',
         hostname: providerConfig.api_url,

@@ -5,6 +5,7 @@ import { setupForkliftIntercepts } from '../../intercepts';
 import { NetworkMapCreatePage } from '../../page-objects/NetworkMapCreatePage';
 import { NetworkMapDetailsPage } from '../../page-objects/NetworkMapDetailsPage';
 import { NetworkMapsListPage } from '../../page-objects/NetworkMapsListPage';
+import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
 test.describe(
   'Network Maps',
@@ -29,7 +30,7 @@ test.describe(
       // Fill required fields
       await networkMapCreatePage.fillRequiredFields({
         mapName,
-        project: 'openshift-mtv',
+        project: MTV_NAMESPACE,
         sourceProvider: TEST_DATA.providers.source.name,
         targetProvider: TEST_DATA.providers.target.name,
         sourceNetwork: TEST_DATA.networks[0].name,

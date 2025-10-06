@@ -145,14 +145,14 @@ const MultiTypeaheadSelect = (
           {filterControls}
           <SelectList id={listboxIdResolved} isAriaMultiselectable>
             {displayOptions.map((option, index) => {
-              const { 'data-testid': dataTestId, ...restOptionProps } = option.optionProps ?? {};
+              const { testId: optionTestId, ...restOptionProps } = option.optionProps ?? {};
               return (
                 <SelectOption
                   key={String(option.value)}
                   id={String(option.value)} // optional: createItemId if you want stable IDs
                   isFocused={focusedItemIndex === index}
                   value={option.value}
-                  data-testid={dataTestId}
+                  data-testid={optionTestId}
                   {...restOptionProps}
                 >
                   {option.content}

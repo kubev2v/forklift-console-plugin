@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 
 export const setupNetworkMapsIntercepts = async (page: Page) => {
   const networkMapData1 = {
@@ -8,7 +9,7 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     kind: 'NetworkMap',
     metadata: {
       name: 'test-network-map-1',
-      namespace: 'openshift-mtv',
+      namespace: MTV_NAMESPACE,
       uid: 'test-netmap-uid-1',
       creationTimestamp: '2024-01-15T10:30:00Z',
       ownerReferences: [],
@@ -29,11 +30,11 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
       provider: {
         destination: {
           name: 'test-target-provider',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
         source: {
           name: 'test-source-provider',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
       },
     },
@@ -53,7 +54,7 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     kind: 'NetworkMap',
     metadata: {
       name: 'test-network-map-2',
-      namespace: 'openshift-mtv',
+      namespace: MTV_NAMESPACE,
       uid: 'test-netmap-uid-2',
       creationTimestamp: '2024-01-15T10:35:00Z',
       ownerReferences: [
@@ -81,11 +82,11 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
       provider: {
         destination: {
           name: 'test-target-provider',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
         source: {
           name: 'test-source-provider',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
       },
     },

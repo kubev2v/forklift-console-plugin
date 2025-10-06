@@ -2,6 +2,7 @@ import { providerOnlyFixtures as test } from '../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { createPlanTestData } from '../../types/test-data';
+import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
 test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
   test(
@@ -52,7 +53,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
         await planDetailsPage.detailsTab.navigateToDetailsTab();
         await planDetailsPage.detailsTab.verifyPlanDetails(testPlanData);
 
-        resourceManager.addPlan(testPlanData.planName, 'openshift-mtv');
+        resourceManager.addPlan(testPlanData.planName, MTV_NAMESPACE);
       }
     },
   );
@@ -74,7 +75,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
 
       const planName = `validation-test-${Date.now()}`;
       await createWizard.generalInformation.fillPlanName(planName);
-      await createWizard.generalInformation.selectProject('openshift-mtv', 'plan-project-select');
+      await createWizard.generalInformation.selectProject(MTV_NAMESPACE, 'plan-project-select');
       await createWizard.generalInformation.selectSourceProvider(testProvider.metadata.name);
       await createWizard.generalInformation.selectTargetProvider('host');
       await createWizard.generalInformation.waitForTargetProviderNamespaces();
@@ -118,7 +119,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
       await planDetailsPage.detailsTab.navigateToDetailsTab();
       await planDetailsPage.detailsTab.verifyPlanDetails(testPlanData);
 
-      resourceManager.addPlan(testPlanData.planName, 'openshift-mtv');
+      resourceManager.addPlan(testPlanData.planName, MTV_NAMESPACE);
     },
   );
 });

@@ -4,7 +4,7 @@ export type TypeaheadSelectOption = {
   content: string | number;
   value: string | number;
   optionProps?: Omit<SelectOptionProps, 'content' | 'value'> & {
-    'data-testid'?: string;
+    testId?: string;
   };
 };
 

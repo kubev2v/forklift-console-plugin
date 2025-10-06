@@ -4,6 +4,7 @@ import { sharedProviderFixtures as test } from '../../fixtures/resourceFixtures'
 import { NetworkMapCreatePage } from '../../page-objects/NetworkMapCreatePage';
 import { NetworkMapDetailsPage } from '../../page-objects/NetworkMapDetailsPage';
 import { NetworkMapsListPage } from '../../page-objects/NetworkMapsListPage';
+import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
 test.describe('Network Maps', { tag: '@downstream' }, () => {
   test('should create network map via form and YAML', async ({
@@ -20,7 +21,7 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
     const mapName = `test-network-map${crypto.randomUUID().substring(0, 5)}`;
     await networkMapCreatePage.fillRequiredFields({
       mapName,
-      project: 'openshift-mtv',
+      project: MTV_NAMESPACE,
       sourceProvider: testProvider.metadata.name,
       targetProvider: 'host',
       sourceNetwork: 'VM Network',
@@ -50,7 +51,7 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
     await networkMapCreatePage.submitForm(mapName);
 
     // Add network map to cleanup
-    resourceManager.addNetworkMap(mapName, 'openshift-mtv');
+    resourceManager.addNetworkMap(mapName, MTV_NAMESPACE);
 
     // Verify Network details page
     await networkMapDetailsPage.verifyNetworkMapDetailsPage({
@@ -80,7 +81,7 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
     await networkMapDetailsPage.yaml.submitYamlForm(newMapName, 'NetworkMap');
 
     // Add the new network map to resource manager for cleanup
-    resourceManager.addNetworkMap(newMapName, 'openshift-mtv');
+    resourceManager.addNetworkMap(newMapName, MTV_NAMESPACE);
 
     // Verify Network details pagePage
     await networkMapDetailsPage.verifyNetworkMapDetailsPage({

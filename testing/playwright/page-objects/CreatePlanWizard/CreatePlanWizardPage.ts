@@ -2,6 +2,7 @@ import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
+import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
 import { AdditionalSettingsStep } from './steps/AdditionalSettingsSteps';
@@ -38,7 +39,7 @@ export class CreatePlanWizardPage {
     if (!this.resourceManager || !testData.planName) {
       return;
     }
-    this.resourceManager.addPlan(testData.planName, testData.planProject ?? 'openshift-mtv');
+    this.resourceManager.addPlan(testData.planName, testData.planProject ?? MTV_NAMESPACE);
   }
 
   async clickBack() {

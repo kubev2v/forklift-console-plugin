@@ -4,7 +4,7 @@ import type { BrowserContextOptions, Page } from '@playwright/test';
 
 import { isEmpty } from '../utils';
 
-import { DEFAULT_NAMESPACE, RESOURCE_KINDS, RESOURCE_TYPES, RESOURCES_FILE } from './constants';
+import { MTV_NAMESPACE, RESOURCE_KINDS, RESOURCE_TYPES, RESOURCES_FILE } from './constants';
 import type { SupportedResource } from './ResourceManager';
 
 /**
@@ -54,7 +54,7 @@ export class ResourceCleaner {
     resource: SupportedResource,
   ): Promise<{ success: boolean; skipped: boolean; reason?: string }> {
     const resourceName = resource.metadata?.name;
-    const namespace = resource.metadata?.namespace ?? DEFAULT_NAMESPACE;
+    const namespace = resource.metadata?.namespace ?? MTV_NAMESPACE;
 
     if (!resourceName) {
       throw new Error('Resource missing required metadata (name)');

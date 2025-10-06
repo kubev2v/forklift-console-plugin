@@ -1,9 +1,10 @@
 import type { Page } from '@playwright/test';
 
+import { MTV_NAMESPACE } from './resource-manager/constants';
 import { disableGuidedTour } from './utils';
 
 export class NavigationHelper {
-  private readonly defaultNamespace = 'openshift-mtv';
+  private readonly defaultNamespace = MTV_NAMESPACE;
   private readonly page: Page;
 
   constructor(page: Page) {

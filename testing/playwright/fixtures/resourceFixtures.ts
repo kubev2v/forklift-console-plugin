@@ -7,6 +7,7 @@ import { PlanDetailsPage } from '../page-objects/PlanDetailsPage/PlanDetailsPage
 import { ProviderDetailsPage } from '../page-objects/ProviderDetailsPage';
 import { createPlanTestData, type ProviderData } from '../types/test-data';
 import { getProviderConfig } from '../utils/providers';
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 import { ResourceManager } from '../utils/resource-manager/ResourceManager';
 
 type TestProvider = V1beta1Provider & {
@@ -40,7 +41,7 @@ const createProvider = async (
   }
   const testProviderData: ProviderData = {
     name: providerName,
-    projectName: 'openshift-mtv',
+    projectName: MTV_NAMESPACE,
     type: providerConfig.type,
     endpointType: providerConfig.endpoint_type ?? 'vcenter',
     hostname: providerConfig.api_url,
@@ -62,7 +63,7 @@ const createProvider = async (
     kind: 'Provider',
     metadata: {
       name: providerName,
-      namespace: 'openshift-mtv',
+      namespace: MTV_NAMESPACE,
     },
   };
 
@@ -97,7 +98,7 @@ const createPlanWithCustomData = async (
     kind: 'Plan',
     metadata: {
       name: testPlanData.planName,
-      namespace: 'openshift-mtv',
+      namespace: MTV_NAMESPACE,
     },
     testData: testPlanData,
   };

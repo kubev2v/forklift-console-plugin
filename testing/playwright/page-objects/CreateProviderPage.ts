@@ -2,6 +2,7 @@ import { expect, type Page } from '@playwright/test';
 
 import type { ProviderData } from '../types/test-data';
 import { NavigationHelper } from '../utils/NavigationHelper';
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 import type { ResourceManager } from '../utils/resource-manager/ResourceManager';
 
 export class CreateProviderPage {
@@ -58,7 +59,7 @@ export class CreateProviderPage {
   async navigate(namespace?: string): Promise<void> {
     await this.navigationHelper.navigateToK8sResource({
       resource: 'Provider',
-      namespace: namespace ?? 'openshift-mtv',
+      namespace: namespace ?? MTV_NAMESPACE,
       action: 'new',
     });
   }

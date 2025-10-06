@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 
 export const setupPlansIntercepts = async (page: Page) => {
   // CRITICAL: Return a mock plan instead of empty list to avoid PlansEmptyState path
@@ -14,14 +15,14 @@ export const setupPlansIntercepts = async (page: Page) => {
         kind: 'Plan',
         metadata: {
           name: 'existing-test-plan',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
           uid: 'existing-plan-uid',
           creationTimestamp: '2023-01-01T00:00:00Z',
         },
         spec: {
           provider: {
-            source: { name: TEST_DATA.providers.source.name, namespace: 'openshift-mtv' },
-            destination: { name: TEST_DATA.providers.target.name, namespace: 'openshift-mtv' },
+            source: { name: TEST_DATA.providers.source.name, namespace: MTV_NAMESPACE },
+            destination: { name: TEST_DATA.providers.target.name, namespace: MTV_NAMESPACE },
           },
         },
         status: {
@@ -44,7 +45,7 @@ export const setupPlansIntercepts = async (page: Page) => {
     kind: 'Plan',
     metadata: {
       name: TEST_DATA.planName,
-      namespace: 'openshift-mtv',
+      namespace: MTV_NAMESPACE,
       uid: 'test-plan-uid-1',
       creationTimestamp: new Date().toISOString(),
       resourceVersion: '123456',
@@ -55,14 +56,14 @@ export const setupPlansIntercepts = async (page: Page) => {
           apiVersion: 'forklift.konveyor.io/v1beta1',
           kind: 'NetworkMap',
           name: `${TEST_DATA.planName}-networkmap`,
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
           uid: 'test-networkmap-uid-1',
         },
         storage: {
           apiVersion: 'forklift.konveyor.io/v1beta1',
           kind: 'StorageMap',
           name: `${TEST_DATA.planName}-storagemap`,
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
           uid: 'test-storagemap-uid-1',
         },
       },
@@ -72,14 +73,14 @@ export const setupPlansIntercepts = async (page: Page) => {
           apiVersion: 'forklift.konveyor.io/v1beta1',
           kind: 'Provider',
           name: TEST_DATA.providers.source.name,
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
           uid: TEST_DATA.providers.source.uid,
         },
         destination: {
           apiVersion: 'forklift.konveyor.io/v1beta1',
           kind: 'Provider',
           name: TEST_DATA.providers.target.name,
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
           uid: TEST_DATA.providers.target.uid,
         },
       },
@@ -226,13 +227,13 @@ export const setupPlansIntercepts = async (page: Page) => {
             kind: 'NetworkMap',
             metadata: {
               name: `${TEST_DATA.planName}-networkmap`,
-              namespace: 'openshift-mtv',
+              namespace: MTV_NAMESPACE,
               uid: 'test-networkmap-uid-1',
             },
             spec: {
               provider: {
-                destination: { name: TEST_DATA.providers.target.name, namespace: 'openshift-mtv' },
-                source: { name: TEST_DATA.providers.source.name, namespace: 'openshift-mtv' },
+                destination: { name: TEST_DATA.providers.target.name, namespace: MTV_NAMESPACE },
+                source: { name: TEST_DATA.providers.source.name, namespace: MTV_NAMESPACE },
               },
             },
           }),
@@ -254,14 +255,14 @@ export const setupPlansIntercepts = async (page: Page) => {
             kind: 'StorageMap',
             metadata: {
               name: `${TEST_DATA.planName}-storagemap`,
-              namespace: 'openshift-mtv',
+              namespace: MTV_NAMESPACE,
               uid: 'test-storagemap-uid-1',
             },
             spec: {
               map: [],
               provider: {
-                destination: { name: TEST_DATA.providers.target.name, namespace: 'openshift-mtv' },
-                source: { name: TEST_DATA.providers.source.name, namespace: 'openshift-mtv' },
+                destination: { name: TEST_DATA.providers.target.name, namespace: MTV_NAMESPACE },
+                source: { name: TEST_DATA.providers.source.name, namespace: MTV_NAMESPACE },
               },
             },
           }),
@@ -280,14 +281,14 @@ export const setupPlansIntercepts = async (page: Page) => {
           kind: 'Plan',
           metadata: {
             name: TEST_DATA.planName,
-            namespace: 'openshift-mtv',
+            namespace: MTV_NAMESPACE,
             uid: 'test-plan-uid-1',
             creationTimestamp: new Date().toISOString(),
           },
           spec: {
             provider: {
-              destination: { name: TEST_DATA.providers.target.name, namespace: 'openshift-mtv' },
-              source: { name: TEST_DATA.providers.source.name, namespace: 'openshift-mtv' },
+              destination: { name: TEST_DATA.providers.target.name, namespace: MTV_NAMESPACE },
+              source: { name: TEST_DATA.providers.source.name, namespace: MTV_NAMESPACE },
             },
           },
         };

@@ -9,9 +9,9 @@ import type {
 import type { Page } from '@playwright/test';
 
 import {
-  DEFAULT_NAMESPACE,
   FORKLIFT_API_VERSION,
   KUBEVIRT_API_VERSION,
+  MTV_NAMESPACE,
   NAMESPACE_API_VERSION,
   NAMESPACE_KIND,
   OPENSHIFT_PROJECT_API_VERSION,
@@ -124,7 +124,7 @@ export class ResourceManager {
   async fetchProvider(
     page: Page,
     providerName: string,
-    namespace = DEFAULT_NAMESPACE,
+    namespace = MTV_NAMESPACE,
   ): Promise<V1beta1Provider | null> {
     return ResourceFetcher.fetchProvider(page, providerName, namespace);
   }
