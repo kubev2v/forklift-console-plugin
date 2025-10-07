@@ -5,6 +5,7 @@ import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/
 import SectionHeading from '@components/headers/SectionHeading';
 import VersionedCodeEditor from '@components/VersionedCodeEditor/VersionedCodeEditor';
 import { Form, HelperText, HelperTextItem, Switch, TextInput } from '@patternfly/react-core';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { HOOK_FORM_FIELD_NAMES } from '../state/constants';
@@ -24,6 +25,7 @@ type HooksCodeEditorProps = {
 const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
   const { t } = useForkliftTranslation();
   const { control, register } = useFormContext<HookFormValues>();
+  const isDarkTheme = useIsDarkTheme();
   const hookTypeLowercase = HookTypeLabelLowercase[type];
   const fieldIdPrefix = `${hookTypeLowercase}-hook`;
   const isPreHook = type === hookTypes.PreHook;
@@ -96,7 +98,6 @@ const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
                     isDarkTheme={isDarkTheme}
                     value={value ?? ''}
                     onChange={onChange}
-                    isReadOnly={!planEditable}
                   />
                 )}
               />
