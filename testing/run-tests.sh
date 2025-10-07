@@ -83,8 +83,8 @@ log "Tests finished with exit code: $TEST_EXIT_CODE"
 
 log "Copying test results to ${RESULTS_DIR}..."
 mkdir -p "${RESULTS_DIR}"
-[ -d "playwright-report" ] && cp -r "playwright-report" "${RESULTS_DIR}/" && echo "  ✓ playwright-report copied"
-[ -d "test-results" ] && cp -r "test-results" "${RESULTS_DIR}/" && echo "  ✓ test-results copied"
+[ -d "playwright-report" ] && cp -r "playwright-report" "${RESULTS_DIR}/"
+[ -d "test-results" ] && cp -r "test-results" "${RESULTS_DIR}/"
 echo "  Results location: ${RESULTS_DIR}"
 
 exit $TEST_EXIT_CODE
