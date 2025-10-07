@@ -13,15 +13,15 @@ set -e
 #   - TEST_ARGS: (Optional) Arbitrary arguments for the playwright command.
 #   - CLUSTER_PASSWORD: The password for the OCP cluster.
 #   - PROVIDERS_JSON: The content of the .providers.json file.
+#   - WORKSPACE: (Optional) Jenkins workspace path. If set, artifacts are saved there.
 #
-# Mounted Volumes:
-#   - /results: Directory to store test artifacts (reports, results).
+# Output:
+#   - Test artifacts are saved to ${WORKSPACE}/results (Jenkins) or /results (standalone).
 #
 # ==============================================================================
 
 # --- Configuration and Defaults ---
-# Use /results if WORKSPACE is not set (for container environment)
-RESULTS_DIR="${WORKSPACE:-/results}"
+RESULTS_DIR="${WORKSPACE}/results"
 TEST_ARGS=${TEST_ARGS:-"--grep=@downstream"}
 
 log() {
@@ -81,8 +81,10 @@ set -e
 
 log "Tests finished with exit code: $TEST_EXIT_CODE"
 
+log "Copying test results to ${RESULTS_DIR}..."
 mkdir -p "${RESULTS_DIR}"
-[ -d "playwright-report" ] && cp -r "playwright-report" "${RESULTS_DIR}/"
-[ -d "test-results" ] && cp -r "test-results" "${RESULTS_DIR}/"
+[ -d "playwright-report" ] && cp -r "playwright-report" "${RESULTS_DIR}/" && echo "  ✓ playwright-report copied"
+[ -d "test-results" ] && cp -r "test-results" "${RESULTS_DIR}/" && echo "  ✓ test-results copied"
+echo "  Results location: ${RESULTS_DIR}"
 
 exit $TEST_EXIT_CODE
