@@ -4,8 +4,8 @@ import type { Page } from '@playwright/test';
 import {
   API_PATHS,
   COOKIE_NAMES,
-  DEFAULT_NAMESPACE,
   HTTP_HEADERS,
+  MTV_NAMESPACE,
   RESOURCE_KINDS,
   RESOURCE_TYPES,
 } from './constants';
@@ -19,7 +19,7 @@ export class ResourceFetcher {
   static async fetchProvider(
     page: Page,
     providerName: string,
-    namespace = DEFAULT_NAMESPACE,
+    namespace = MTV_NAMESPACE,
   ): Promise<V1beta1Provider | null> {
     return ResourceFetcher.fetchResource<V1beta1Provider>(page, {
       kind: RESOURCE_KINDS.PROVIDER,

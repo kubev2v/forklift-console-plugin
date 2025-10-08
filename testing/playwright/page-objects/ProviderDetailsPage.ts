@@ -1,6 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 
 import type { ProviderData } from '../types/test-data';
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 
 export class ProviderDetailsPage {
   protected readonly page: Page;
@@ -16,7 +17,7 @@ export class ProviderDetailsPage {
       providerData.type === 'vsphere' ? 'VMware' : providerData.type,
     );
     await expect(this.page.getByTestId('url-detail-item')).toContainText(providerData.hostname);
-    await expect(this.page.getByTestId('project-detail-item')).toContainText('openshift-mtv');
+    await expect(this.page.getByTestId('project-detail-item')).toContainText(MTV_NAMESPACE);
     await expect(this.page.getByTestId('product-detail-item')).toContainText('');
     await expect(this.page.getByTestId('credentials-detail-item')).toContainText('');
     await expect(this.page.getByTestId('vddk-detail-item')).toContainText(

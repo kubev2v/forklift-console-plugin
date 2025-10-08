@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 
 import { API_ENDPOINTS } from '../fixtures/test-data';
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 
 export const setupTargetProviderNamespacesIntercepts = async (
   page: Page,
@@ -42,13 +43,13 @@ export const setupTargetProviderNamespacesIntercepts = async (
     },
     {
       uid: 'openshift-mtv-uid',
-      name: 'openshift-mtv',
+      name: MTV_NAMESPACE,
       selfLink: `providers/openshift/${targetProviderUid}/namespaces/openshift-mtv`,
       object: {
         metadata: {
-          name: 'openshift-mtv',
+          name: MTV_NAMESPACE,
           uid: 'openshift-mtv-uid',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
         spec: {},
         status: {
@@ -72,7 +73,7 @@ export const setupTargetProviderNamespacesIntercepts = async (
     },
     {
       uid: 'openshift-mtv-uid',
-      name: 'openshift-mtv',
+      name: MTV_NAMESPACE,
       selfLink: `providers/openshift/${targetProviderUid}/namespaces/openshift-mtv`,
     },
   ];

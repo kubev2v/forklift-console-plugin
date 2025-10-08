@@ -5,6 +5,7 @@ import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/Create
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { PlansListPage } from '../../page-objects/PlansListPage';
 import { createPlanTestData } from '../../types/test-data';
+import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
 test.describe(
   'Plans - Upstream Happy Path Migration',
@@ -23,7 +24,7 @@ test.describe(
 
       const testData = createPlanTestData({
         planName: 'test-create-plan',
-        planProject: 'openshift-mtv',
+        planProject: MTV_NAMESPACE,
         sourceProvider: 'test-source-provider',
         targetProvider: 'test-target-provider',
         targetProject: { name: 'test-target-project', isPreexisting: true },

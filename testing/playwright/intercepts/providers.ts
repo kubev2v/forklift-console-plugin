@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 
 export const setupProvidersIntercepts = async (page: Page) => {
   const providersResponse = {
@@ -17,7 +18,7 @@ export const setupProvidersIntercepts = async (page: Page) => {
         kind: 'Provider',
         metadata: {
           name: TEST_DATA.providers.source.name,
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
           uid: TEST_DATA.providers.source.uid,
         },
         spec: {
@@ -40,7 +41,7 @@ export const setupProvidersIntercepts = async (page: Page) => {
         kind: 'Provider',
         metadata: {
           name: TEST_DATA.providers.target.name,
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
           uid: TEST_DATA.providers.target.uid,
         },
         spec: {

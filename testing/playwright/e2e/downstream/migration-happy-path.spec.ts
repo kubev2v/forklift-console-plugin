@@ -16,13 +16,17 @@ import { PlansListPage } from '../../page-objects/PlansListPage';
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage';
 import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
 import { createPlanTestData, type ProviderConfig, type ProviderData } from '../../types/test-data';
+import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
+
+const targetProjectName = `test-project-${Date.now()}`;
 
 test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => {
   const resourceManager = new ResourceManager();
 
   let testProviderData: ProviderData = {
     name: '',
+    projectName: MTV_NAMESPACE,
     type: 'vsphere',
     endpointType: 'vcenter',
     hostname: '',
@@ -34,29 +38,17 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
   const providerName = `test-vsphere-provider-${Date.now()}`;
   const planName = `${providerName}-plan`;
-  const targetProjectName = `test-project-${Date.now()}`;
 
   const testPlanData = createPlanTestData({
     planName,
-    planProject: 'openshift-mtv',
     sourceProvider: providerName,
-    targetProvider: 'host',
+    virtualMachines: [
+      { sourceName: 'mtv-func-rhel9', targetName: `mtv-func-rhel9-renamed-${Date.now()}` },
+    ],
     targetProject: {
       name: targetProjectName,
       isPreexisting: false,
     },
-    networkMap: {
-      name: `${planName}-network-map`,
-      isPreexisting: false,
-    },
-    storageMap: {
-      name: `${planName}-storage-map`,
-      isPreexisting: false,
-      targetStorage: 'ocs-storagecluster-ceph-rbd-virtualization',
-    },
-    virtualMachines: [
-      { sourceName: 'mtv-func-rhel9', targetName: `mtv-func-rhel9-renamed-${Date.now()}` },
-    ],
   });
 
   test(
@@ -74,6 +66,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
       testProviderData = {
         name: providerName,
+        projectName: MTV_NAMESPACE,
         type: providerConfig.type,
         endpointType: providerConfig.endpoint_type ?? 'vcenter',
         hostname: providerConfig.api_url,
@@ -131,40 +124,28 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
       await planDetailsPage.verifyPlanStatus('Ready for migration');
 
-      console.log('Starting migration via actions menu...');
       await planDetailsPage.clickActionsMenuAndStart();
 
       await planDetailsPage.verifyMigrationInProgress();
-      console.log('Migration started successfully');
 
       console.log('⏳ Waiting for migration to complete...');
       await planDetailsPage.waitForMigrationCompletion(timeout, true);
-      console.log(`[${new Date().toLocaleString()}] ✅ Migration completed successfully!`);
 
       // Verify each migrated VM exists and add to cleanup
       for (const vm of testPlanData.virtualMachines ?? []) {
         const migratedVMName = vm.targetName ?? vm.sourceName;
 
-        // Create VM stub for cleanup (added first to ensure cleanup even if verification fails)
-        const vmStub = {
-          apiVersion: 'kubevirt.io/v1',
-          kind: 'VirtualMachine',
-          metadata: {
-            name: migratedVMName,
-            namespace: targetProjectName,
-          },
-        };
-        resourceManager.addResource(vmStub);
+        resourceManager.addVm(migratedVMName, testPlanData.targetProject.name);
 
         // Fetch the migrated VM to verify it exists
         const vmResource = await resourceManager.fetchVirtualMachine(
           page,
           migratedVMName,
-          targetProjectName,
+          testPlanData.targetProject.name,
         );
         expect(vmResource).not.toBeNull();
         expect(vmResource?.metadata?.name).toBe(migratedVMName);
-        expect(vmResource?.metadata?.namespace).toBe(targetProjectName);
+        expect(vmResource?.metadata?.namespace).toBe(testPlanData.targetProject.name);
       }
     },
   );

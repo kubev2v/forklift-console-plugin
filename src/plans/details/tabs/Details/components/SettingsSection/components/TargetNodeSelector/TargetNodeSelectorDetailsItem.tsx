@@ -44,6 +44,7 @@ const TargetNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch,
 
   return (
     <DetailsItem
+      testId="vm-target-node-selector-detail-item"
       title={t('VM target node selector')}
       content={<NodeSelectorViewDetailsItemContent labels={plan?.spec?.targetNodeSelector} />}
       helpContent={TARGET_NODE_SELECTOR_DETAILS_ITEM_DESCRIPTION}

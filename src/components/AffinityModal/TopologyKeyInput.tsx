@@ -40,6 +40,7 @@ const TopologyKeyInput: FC<TopologyKeyInputProps> = ({
   return (
     <FormGroup fieldId="topology-key" isRequired label={t('Topology key')}>
       <TextInput
+        data-testid="affinity-topology-key-input"
         onChange={(_event, value: string) => {
           onChange(value);
         }}

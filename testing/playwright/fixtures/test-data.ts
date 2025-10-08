@@ -1,8 +1,10 @@
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
+
 // Test Data Constants
 export const TEST_DATA = {
   // Plan Creation Data
   planName: 'test-create-plan',
-  planProject: 'openshift-mtv',
+  planProject: MTV_NAMESPACE,
   sourceProvider: 'test-source-provider',
   targetProvider: 'test-target-provider',
   targetProject: 'test-target-project',
@@ -84,8 +86,8 @@ export const TEST_DATA = {
   // Projects/Namespaces
   projects: [
     {
-      name: 'openshift-mtv',
-      uid: 'openshift-mtv-uid',
+      name: MTV_NAMESPACE,
+      uid: `${MTV_NAMESPACE}-uid`,
       phase: 'Active',
     },
     {
@@ -131,15 +133,12 @@ export const TEST_DATA = {
 export const API_ENDPOINTS = {
   plans: '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/*/plans?limit=250',
   allPlans: '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/plans?limit=250',
-  providers:
-    '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/providers?limit=250',
+  providers: `/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/${MTV_NAMESPACE}/providers?limit=250`,
   allProviders: '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/providers?limit=250',
   projects: '/api/kubernetes/apis/project.openshift.io/v1/projects?limit=250',
   namespaces: '/api/kubernetes/api/v1/namespaces?limit=250',
-  networkMaps:
-    '**/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/networkmaps?limit=250',
-  storageMaps:
-    '**/apis/forklift.konveyor.io/v1beta1/namespaces/openshift-mtv/storagemaps?limit=250',
+  networkMaps: `**/apis/forklift.konveyor.io/v1beta1/namespaces/${MTV_NAMESPACE}/networkmaps?limit=250`,
+  storageMaps: `**/apis/forklift.konveyor.io/v1beta1/namespaces/${MTV_NAMESPACE}/storagemaps?limit=250`,
   virtualMachines: (providerType: string, uid: string) =>
     `**/forklift-inventory/providers/${providerType}/${uid}/vms?detail=4`,
   networks: (providerType: string, uid: string) =>

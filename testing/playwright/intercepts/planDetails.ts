@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 
 import { TEST_DATA } from '../fixtures/test-data';
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 
 export const setupPlanDetailsIntercepts = async (page: Page) => {
   await page.route(
@@ -50,7 +51,7 @@ export const setupPlanDetailsIntercepts = async (page: Page) => {
                 },
               ],
               name: TEST_DATA.planName,
-              namespace: 'openshift-mtv',
+              namespace: MTV_NAMESPACE,
               resourceVersion: '5204230',
               uid: 'test-plan-uid-1',
             },
@@ -60,14 +61,14 @@ export const setupPlanDetailsIntercepts = async (page: Page) => {
                   apiVersion: 'forklift.konveyor.io/v1beta1',
                   kind: 'NetworkMap',
                   name: `${TEST_DATA.planName}-networkmap`,
-                  namespace: 'openshift-mtv',
+                  namespace: MTV_NAMESPACE,
                   uid: 'test-networkmap-uid-1',
                 },
                 storage: {
                   apiVersion: 'forklift.konveyor.io/v1beta1',
                   kind: 'StorageMap',
                   name: `${TEST_DATA.planName}-storagemap`,
-                  namespace: 'openshift-mtv',
+                  namespace: MTV_NAMESPACE,
                   uid: 'test-storagemap-uid-1',
                 },
               },
@@ -77,14 +78,14 @@ export const setupPlanDetailsIntercepts = async (page: Page) => {
                   apiVersion: 'forklift.konveyor.io/v1beta1',
                   kind: 'Provider',
                   name: TEST_DATA.providers.target.name,
-                  namespace: 'openshift-mtv',
+                  namespace: MTV_NAMESPACE,
                   uid: TEST_DATA.providers.target.uid,
                 },
                 source: {
                   apiVersion: 'forklift.konveyor.io/v1beta1',
                   kind: 'Provider',
                   name: TEST_DATA.providers.source.name,
-                  namespace: 'openshift-mtv',
+                  namespace: MTV_NAMESPACE,
                   uid: TEST_DATA.providers.source.uid,
                 },
               },

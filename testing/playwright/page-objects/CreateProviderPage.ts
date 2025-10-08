@@ -1,19 +1,23 @@
-import type { V1beta1Provider } from '@kubev2v/types';
 import { expect, type Page } from '@playwright/test';
 
 import type { ProviderData } from '../types/test-data';
+import { NavigationHelper } from '../utils/NavigationHelper';
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 import type { ResourceManager } from '../utils/resource-manager/ResourceManager';
 
 export class CreateProviderPage {
   private readonly resourceManager?: ResourceManager;
+  public readonly navigationHelper: NavigationHelper;
   protected readonly page: Page;
 
   constructor(page: Page, resourceManager?: ResourceManager) {
     this.page = page;
     this.resourceManager = resourceManager;
+    this.navigationHelper = new NavigationHelper(page);
   }
 
   async fillAndSubmit(testData: ProviderData) {
+    await this.selectProject(testData.projectName);
     await this.page.getByTestId(`${testData.type}-provider-card`).locator('label').click();
     await this.page.getByTestId('provider-name-input').fill(testData.name);
 
@@ -48,17 +52,33 @@ export class CreateProviderPage {
     await this.page.getByTestId('create-provider-button').click();
 
     if (this.resourceManager && testData.name) {
-      const provider: V1beta1Provider = {
-        apiVersion: 'forklift.konveyor.io/v1beta1',
-        kind: 'Provider',
-        metadata: {
-          name: testData.name,
-          namespace: 'openshift-mtv',
-        },
-      };
-
-      this.resourceManager.addResource(provider);
+      this.resourceManager.addProvider(testData.name, testData.projectName);
     }
+  }
+
+  async navigate(namespace?: string): Promise<void> {
+    await this.navigationHelper.navigateToK8sResource({
+      resource: 'Provider',
+      namespace: namespace ?? MTV_NAMESPACE,
+      action: 'new',
+    });
+  }
+
+  async selectProject(projectName: string, showDefaultProjects = false) {
+    const projectSelect = this.page.getByTestId('target-project-select');
+    await projectSelect.waitFor({ state: 'visible', timeout: 10000 });
+    await projectSelect.getByRole('button').click();
+
+    if (showDefaultProjects) {
+      await this.page.locator('label[for="show-default-projects-switch"]').click();
+    }
+
+    const searchBox = projectSelect.getByRole('combobox');
+    await searchBox.fill(projectName);
+
+    const option = this.page.getByRole('option', { name: projectName });
+    await option.waitFor({ state: 'visible', timeout: 15000 });
+    await option.click();
   }
 
   async waitForWizardLoad() {

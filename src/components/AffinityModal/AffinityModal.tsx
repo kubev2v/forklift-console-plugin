@@ -89,6 +89,7 @@ const AffinityModal: FC<AffinityModalProps> = ({ initialAffinity, onConfirm, tit
     />
   ) : (
     <ModalForm
+      testId="affinity-modal"
       title={title ?? t('Affinity rules')}
       onConfirm={async () => onConfirm(rowsDataToAffinity(affinities) ?? {}) ?? {}}
       confirmLabel={t('Apply rules')}

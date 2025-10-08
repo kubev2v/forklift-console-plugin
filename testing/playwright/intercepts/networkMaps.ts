@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 
 export const setupNetworkMapsIntercepts = async (page: Page) => {
   const networkMapData1 = {
@@ -8,8 +9,9 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     kind: 'NetworkMap',
     metadata: {
       name: 'test-network-map-1',
-      namespace: 'openshift-mtv',
+      namespace: MTV_NAMESPACE,
       uid: 'test-netmap-uid-1',
+      creationTimestamp: '2024-01-15T10:30:00Z',
       ownerReferences: [],
     },
     spec: {
@@ -17,20 +19,22 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
         {
           destination: {
             type: 'pod',
+            name: 'Default network',
           },
           source: {
-            type: 'pod',
+            id: 'test-network-1-uid',
+            name: TEST_DATA.networks[0].name,
           },
         },
       ],
       provider: {
         destination: {
           name: 'test-target-provider',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
         source: {
           name: 'test-source-provider',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
       },
     },
@@ -50,8 +54,9 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     kind: 'NetworkMap',
     metadata: {
       name: 'test-network-map-2',
-      namespace: 'openshift-mtv',
+      namespace: MTV_NAMESPACE,
       uid: 'test-netmap-uid-2',
+      creationTimestamp: '2024-01-15T10:35:00Z',
       ownerReferences: [
         {
           apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -77,11 +82,11 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
       provider: {
         destination: {
           name: 'test-target-provider',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
         source: {
           name: 'test-source-provider',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
       },
     },
@@ -134,6 +139,7 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
               name: newName,
               namespace,
               uid: `test-networkmap-uid-${Date.now()}`,
+              creationTimestamp: new Date().toISOString(),
             },
             spec: requestBody.spec ?? networkMapData1.spec,
           }),
@@ -169,6 +175,7 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
               name,
               namespace,
               uid: `test-networkmap-uid-${name}`,
+              creationTimestamp: new Date().toISOString(),
             },
           }),
         });
@@ -184,6 +191,7 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
               ...networkMapData1.metadata,
               name,
               namespace,
+              creationTimestamp: new Date().toISOString(),
               ownerReferences: [
                 {
                   apiVersion: 'forklift.konveyor.io/v1beta1',
