@@ -141,7 +141,8 @@ export class VirtualMachinesTab {
     const saveButton = this.page.getByRole('button', { name: /save|confirm|rename/iu });
     await saveButton.click();
 
-    await this.page.waitForTimeout(1000);
+    //wait network idle
+    await this.page.waitForLoadState('networkidle');
 
     await this.table.search(sourceName);
     await this.table.verifyRowIsVisible({ Name: sourceName });
@@ -182,5 +183,10 @@ export class VirtualMachinesTab {
         await this.table.verifyRowIsVisible({ Name: vm.sourceName });
       }
     }
+  }
+
+  async waitForVMPowerState(vmName: string, expectedPowerState: string): Promise<void> {
+    const powerStateCell = await this.getTableCell('Name', vmName, 'Target power state');
+    await expect(powerStateCell).toHaveText(expectedPowerState);
   }
 }

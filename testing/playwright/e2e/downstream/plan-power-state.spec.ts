@@ -123,11 +123,7 @@ test.describe('Plan power state', { tag: '@downstream' }, () => {
 
     // Wait for modal to close and table to refresh
     await expect(virtualMachinesTab.editTargetPowerStateModal).not.toBeVisible();
-    await page.waitForTimeout(1000); // Give time for the table to update
-
     // Verify the VM now shows the overridden power state
-    const vmNewPowerState = await planDetailsPage.virtualMachinesTab.getVMPowerState(vmName);
-    console.log('Actual VM power state after change:', vmNewPowerState);
-    expect(vmNewPowerState).toBe('Powered on');
+    await planDetailsPage.virtualMachinesTab.waitForVMPowerState(vmName, 'Powered on');
   });
 });
