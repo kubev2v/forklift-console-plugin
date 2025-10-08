@@ -14,12 +14,12 @@ export class NetworkMapsListPage {
 
   async clickCreateWithFormButton() {
     await this.page.getByRole('button', { name: 'Create network map' }).first().click();
-    await this.page.getByTestId('create-network-map-form').click();
+    await this.page.getByTestId('create-network-map-dropdown-item-form').click();
   }
 
   async clickCreateWithYamlButton() {
     await this.page.getByRole('button', { name: 'Create network map' }).first().click();
-    await this.page.getByTestId('create-network-map-yaml').click();
+    await this.page.getByTestId('create-network-map-dropdown-item-yaml').click();
     // Wait for YAML editor to load
     await expect(this.page.locator('.monaco-editor')).toBeVisible();
   }
