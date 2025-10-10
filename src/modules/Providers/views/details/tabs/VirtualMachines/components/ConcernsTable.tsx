@@ -33,11 +33,9 @@ export const ConcernsTable: FC<ConcernsTableProps> = ({ resourceData }) => {
 
   if ((!concerns || isEmpty(concerns)) && vm.providerType !== PROVIDER_TYPES.openshift) {
     return (
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <HelperText>
-          <HelperTextItem variant="indeterminate">
-            {t('No concerns found for this virtual machine.')}
-          </HelperTextItem>
+          <HelperTextItem>{t('No concerns found for this virtual machine.')}</HelperTextItem>
         </HelperText>
       </PageSection>
     );
@@ -46,7 +44,7 @@ export const ConcernsTable: FC<ConcernsTableProps> = ({ resourceData }) => {
   const groupedConcerns = groupConcernsByCategory(concerns);
 
   return (
-    <PageSection>
+    <PageSection hasBodyWrapper={false}>
       <Table aria-label="Expandable table" variant="compact">
         <Thead>
           <Tr>

@@ -4,6 +4,8 @@ import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { Label } from '@patternfly/react-core';
+
 import type { EditableDetailsItemProps } from '../../../utils/types';
 
 import { onConfirmPlanNetworkNameTemplate } from './utils/utils';
@@ -20,9 +22,13 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
   if (!shouldRender) return null;
 
   const content = plan?.spec?.networkNameTemplate ? (
-    t('Use custom')
+    <Label isCompact color="grey">
+      {t('Use custom')}
+    </Label>
   ) : (
-    <span className="text-muted">{t('Use default')}</span>
+    <Label isCompact color="grey">
+      {t('Use default')}
+    </Label>
   );
 
   return (

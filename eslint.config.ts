@@ -144,7 +144,7 @@ export const createEslintConfig = (ideMode = false) =>
           'error',
           {
             IIFEs: true,
-            max: 150,
+            max: 200,
             skipBlankLines: true,
             skipComments: true,
           },

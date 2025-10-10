@@ -21,11 +21,16 @@ const PlanMigrationTypeLabel: FC<PlanMigrationTypeLabelProps> = ({ migrationType
       bodyContent={bodyContent(migrationType)}
       triggerAction="hover"
     >
-      <Button className="forklift-plan-migration-type-label" variant={ButtonVariant.plain} isInline>
-        <Label isCompact color={migrationType === MigrationTypeValue.Cold ? 'blue' : 'orange'}>
-          {t('{{label}}', { label: typeLabel(migrationType) })}
-        </Label>
-      </Button>
+      <Button
+        icon={
+          <Label isCompact color={migrationType === MigrationTypeValue.Cold ? 'blue' : 'orange'}>
+            {t('{{label}}', { label: typeLabel(migrationType) })}
+          </Label>
+        }
+        className="forklift-plan-migration-type-label"
+        variant={ButtonVariant.plain}
+        isInline
+      />
     </Popover>
   );
 };

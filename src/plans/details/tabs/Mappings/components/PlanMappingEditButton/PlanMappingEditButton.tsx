@@ -38,7 +38,7 @@ const PlanMappingEditButton: FC<PlanMappingEditButtonProps> = ({ onEdit, plan })
       </Button>
       {disableEditMappings && (
         <HelperText className="forklift-plan-mapping-edit-button__helper-text">
-          <HelperTextItem variant="indeterminate">
+          <HelperTextItem>
             {t(
               'The edit mappings button is disabled if the plan started running and at least one virtual machine was migrated successfully or when the plan status does not enable editing.',
             )}

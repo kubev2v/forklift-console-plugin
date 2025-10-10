@@ -7,8 +7,6 @@ import {
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
-  EmptyStateHeader,
-  EmptyStateIcon,
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { useForkliftTranslation } from '@utils/i18n.tsx';
@@ -29,8 +27,7 @@ const ProjectSelectEmptyState: FC<ProjectSelectEmptyStateProps> = ({
   }
 
   return (
-    <EmptyState>
-      <EmptyStateHeader headingLevel="h6" icon={<EmptyStateIcon icon={PlusCircleIcon} />} />
+    <EmptyState headingLevel="h6" icon={PlusCircleIcon}>
       <EmptyStateBody>{emptyStateMessage}</EmptyStateBody>
       {onCreate ? (
         <EmptyStateFooter>

@@ -8,15 +8,13 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModelRef } from '@kubev2v/types';
 import {
   Bullseye,
+  Content,
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
-  EmptyStateHeader,
-  EmptyStateIcon,
   Level,
   LevelItem,
-  TextContent,
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { FORKLIFT_DOCS_URL } from '@utils/links';
@@ -36,20 +34,19 @@ const StorageMapsEmptyState: FC<StorageMapsEmptyStateProps> = ({ namespace }) =>
   });
 
   return (
-    <EmptyState>
-      <EmptyStateHeader
-        titleText={
-          namespace ? (
-            <ForkliftTrans>
-              No storage maps found in project <strong>{namespace}</strong>.
-            </ForkliftTrans>
-          ) : (
-            t('No storage maps found')
-          )
-        }
-        headingLevel="h4"
-        icon={<EmptyStateIcon icon={PlusCircleIcon} />}
-      />
+    <EmptyState
+      headingLevel="h4"
+      icon={PlusCircleIcon}
+      titleText={
+        namespace ? (
+          <ForkliftTrans>
+            No storage maps found in project <strong>{namespace}</strong>.
+          </ForkliftTrans>
+        ) : (
+          t('No storage maps found')
+        )
+      }
+    >
       <EmptyStateBody>
         {hasSufficientProviders ? (
           t('Migration storage maps are used to map storages between source and target providers.')
@@ -57,7 +54,7 @@ const StorageMapsEmptyState: FC<StorageMapsEmptyStateProps> = ({ namespace }) =>
           <Level hasGutter>
             <LevelItem>
               <Bullseye>
-                <TextContent>
+                <Content>
                   <ForkliftTrans>
                     Migration storage maps are used to map source storages to OpenShift
                     Virtualization storage classes. At least one source and one target provider must
@@ -67,7 +64,7 @@ const StorageMapsEmptyState: FC<StorageMapsEmptyStateProps> = ({ namespace }) =>
                     </ExternalLink>
                     .
                   </ForkliftTrans>
-                </TextContent>
+                </Content>
               </Bullseye>
             </LevelItem>
           </Level>
@@ -78,11 +75,11 @@ const StorageMapsEmptyState: FC<StorageMapsEmptyStateProps> = ({ namespace }) =>
           {hasSufficientProviders ? (
             <StorageMapsAddButton namespace={namespace} />
           ) : (
-            <TextContent>
+            <Content>
               <ExternalLink href={providersListURL} isInline>
                 {t('Go to the providers list page')}
               </ExternalLink>
-            </TextContent>
+            </Content>
           )}
         </EmptyStateActions>
       </EmptyStateFooter>

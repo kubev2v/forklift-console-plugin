@@ -32,7 +32,7 @@ const MigrationsTable: FC<MigrationTableProps> = ({ migrations, plan }) => {
 
   if (isEmpty(migrations)) {
     return (
-      <HelpText className="pf-v5-u-mt-md">
+      <HelpText className="pf-v6-u-mt-md">
         {t('The plan has not been executed for migration.')}
       </HelpText>
     );

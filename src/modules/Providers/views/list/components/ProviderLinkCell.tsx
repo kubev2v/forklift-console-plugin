@@ -25,7 +25,7 @@ export const ProviderLinkCell: FC<CellProps> = ({ data }) => {
   const localCluster = isProviderLocalOpenshift(provider);
 
   return (
-    <TableLabelCell hasLabel={localCluster} label={t('Host cluster')} labelColor="grey" isWrap>
+    <TableLabelCell hasLabel={localCluster} label={t('Host cluster')} labelColor="grey">
       <ProviderIconLink
         href={getResourceUrl({
           groupVersionKind: ProviderModelGroupVersionKind,

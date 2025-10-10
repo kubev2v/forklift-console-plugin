@@ -22,7 +22,7 @@ const ExistingStorageMapField: FC = () => {
       isRequired
       fieldId={CreatePlanStorageMapFieldId.ExistingStorageMap}
       label={createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.ExistingStorageMap]}
-      className="pf-v5-u-ml-lg"
+      className="pf-v6-u-ml-lg"
     >
       <Controller
         name={CreatePlanStorageMapFieldId.ExistingStorageMap}

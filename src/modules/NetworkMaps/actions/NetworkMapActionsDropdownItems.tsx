@@ -26,12 +26,9 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
   };
 
   return [
-    <DropdownItemLink
-      value={0}
-      itemKey="EditNetworkMapping"
-      href={networkMapURL}
-      description={t('Edit network map')}
-    />,
+    <DropdownItemLink value={0} itemKey="EditNetworkMapping" href={networkMapURL}>
+      {t('Edit network map')}
+    </DropdownItemLink>,
 
     <DropdownItem
       value={1}

@@ -1,7 +1,8 @@
 import { type Dispatch, type FC, type SetStateAction, useState } from 'react';
 import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
-import { ActionGroup, Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
+import { Button, ButtonVariant } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useIDEntities } from './hooks/useIDEntities';
@@ -33,26 +34,25 @@ const AffinityEditModal: FC<AffinityEditModalProps> = ({
 
   return (
     <Modal
-      footer={
-        <ActionGroup>
-          <Button
-            onClick={() => {
-              onSubmit({
-                ...focusedAffinity,
-                expressions: expressions?.entities,
-                fields: fields?.entities,
-              });
-            }}
-            isDisabled={isDisabled}
-            variant={ButtonVariant.primary}
-          >
-            {t('Save affinity rule')}
-          </Button>
-          <Button onClick={onCancel} size="sm" variant={ButtonVariant.link}>
-            {t('Cancel')}
-          </Button>
-        </ActionGroup>
-      }
+      actions={[
+        <Button
+          key="confirm"
+          onClick={() => {
+            onSubmit({
+              ...focusedAffinity,
+              expressions: expressions?.entities,
+              fields: fields?.entities,
+            });
+          }}
+          isDisabled={isDisabled}
+          variant={ButtonVariant.primary}
+        >
+          {t('Save affinity rule')}
+        </Button>,
+        <Button key="cancel" onClick={onCancel} variant={ButtonVariant.link}>
+          {t('Cancel')}
+        </Button>,
+      ]}
       className="ocs-modal co-catalog-page__overlay"
       isOpen
       onClose={toggleModal}

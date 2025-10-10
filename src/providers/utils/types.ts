@@ -1,14 +1,16 @@
 import type { ReactNode } from 'react';
 
-export enum ValidationState {
-  Success = 'success',
-  Warning = 'warning',
-  Error = 'error',
-  Default = 'default',
-}
+export const ValidationState = {
+  Default: 'default',
+  Error: 'error',
+  Success: 'success',
+  Warning: 'warning',
+} as const;
+
+export type ValidationStateType = (typeof ValidationState)[keyof typeof ValidationState];
 
 export type ValidationMsg = {
-  type: ValidationState;
+  type: ValidationStateType;
   msg?: string | ReactNode;
   description?: string | ReactNode;
 };

@@ -6,7 +6,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import LoadingSuspend from '@components/LoadingSuspend';
 import { StorageMapModelGroupVersionKind, type V1beta1StorageMap } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Flex, PageSection } from '@patternfly/react-core';
+import { Flex, FlexItem, PageSection } from '@patternfly/react-core';
 
 import { ConditionsSection } from '../../components/ConditionsSection/ConditionsSection';
 import DetailsSection from '../../components/DetailsSection/DetailsSection';
@@ -30,24 +30,28 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
 
   return (
     <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
-      <PageSection variant="light" className="forklift-page-section--details">
+      <PageSection hasBodyWrapper={false} className="forklift-page-section--details">
         <SectionHeading text={t('Storage map details')} />
         <DetailsSection obj={obj} />
       </PageSection>
 
-      <PageSection variant="light" className="forklift-page-section">
+      <PageSection hasBodyWrapper={false} className="forklift-page-section">
         <SectionHeading text={t('Providers')} />
         <ProvidersSection obj={obj} />
       </PageSection>
 
-      <PageSection variant="light" className="forklift-page-section">
+      <PageSection hasBodyWrapper={false} className="forklift-page-section">
         <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
-          <SectionHeading text={t('Map')} />
-          <MapsSection storageMap={obj} />
+          <FlexItem>
+            <SectionHeading text={t('Map')} />
+          </FlexItem>
+          <FlexItem>
+            <MapsSection storageMap={obj} />
+          </FlexItem>
         </Flex>
       </PageSection>
 
-      <PageSection variant="light" className="forklift-page-section">
+      <PageSection hasBodyWrapper={false} className="forklift-page-section">
         <SectionHeading text={t('Conditions')} />
         <ConditionsSection conditions={obj?.status?.conditions ?? []} />
       </PageSection>

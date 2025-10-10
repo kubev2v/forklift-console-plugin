@@ -2,13 +2,8 @@ import { type FC, useCallback, useMemo, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 
-import {
-  Button,
-  ButtonVariant,
-  Modal,
-  ModalVariant,
-  useWizardContext,
-} from '@patternfly/react-core';
+import { Button, ButtonVariant, useWizardContext } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 

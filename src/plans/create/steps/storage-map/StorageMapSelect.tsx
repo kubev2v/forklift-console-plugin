@@ -68,10 +68,14 @@ const StorageMapSelect = (
   }, [allStorageMaps, includeOwnerReferenced]);
 
   const emptyState = (
-    <EmptyState variant={EmptyStateVariant.xs}>
-      <Title headingLevel="h4" size="md">
-        {t('You do not have any storage maps without owner references.')}
-      </Title>
+    <EmptyState
+      titleText={
+        <Title headingLevel="h4" size="md">
+          {t('You do not have any storage maps without owner references.')}
+        </Title>
+      }
+      variant={EmptyStateVariant.xs}
+    >
       <EmptyStateBody>
         <ExternalLink href={`${storageMapsListUrl}/~new`} isInline>
           {t('Create a storage map without an owner')}

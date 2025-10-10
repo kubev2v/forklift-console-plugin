@@ -6,7 +6,7 @@ import {
 } from 'src/onlineHelp/learningExperience/types';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
-import { Text, TextContent } from '@patternfly/react-core';
+import { Content } from '@patternfly/react-core';
 import { CatalogIcon } from '@patternfly/react-icons';
 import { TipsTopic } from '@utils/analytics/constants.ts';
 import { ForkliftTrans, t } from '@utils/i18n';
@@ -250,15 +250,15 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
     ],
     title: (
       <ForkliftTrans>
-        <TextContent>
-          <Text component="p">
+        <Content>
+          <Content component="p">
             Coming from VMware and confused by all of these new terms? Check out{' '}
             <ExternalLink href={openshiftVirtualizationGuideUrl} isInline>
               the high-level guide to Red Hat OpenShift Virtualization as a VMware admin
             </ExternalLink>
             .
-          </Text>
-        </TextContent>
+          </Content>
+        </Content>
       </ForkliftTrans>
     ),
   },

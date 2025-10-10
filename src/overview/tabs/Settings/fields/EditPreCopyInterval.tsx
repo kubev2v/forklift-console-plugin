@@ -4,7 +4,7 @@ import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditM
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
-import { Text } from '@patternfly/react-core';
+import { Content } from '@patternfly/react-core';
 import { MTV_SETTINGS } from '@utils/links';
 
 import { EditField } from '../cards/EditField';
@@ -36,11 +36,11 @@ const EditPreCopyInterval: FC<EditSettingsProps> = (props) => {
           showHelpIconNextToTitle
           moreInfoLink={MTV_SETTINGS}
           helpContent={
-            <Text>
+            <Content component="p">
               {t(
                 'Controls the interval at which a new snapshot is requested prior to initiating a warm migration. The default value is 60 minutes.',
               )}
-            </Text>
+            </Content>
           }
           crumbs={['spec', 'controller_precopy_interval']}
         />

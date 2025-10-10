@@ -4,7 +4,7 @@ import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditM
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
-import { Text } from '@patternfly/react-core';
+import { Content } from '@patternfly/react-core';
 import { MTV_SETTINGS } from '@utils/links';
 
 import { EditField } from '../cards/EditField';
@@ -36,11 +36,11 @@ const EditSnapshotPoolingInterval: FC<EditSettingsProps> = (props) => {
           showHelpIconNextToTitle
           moreInfoLink={MTV_SETTINGS}
           helpContent={
-            <Text>
+            <Content component="p">
               {t(
                 'Determines the frequency with which the system checks the status of snapshot creation or removal during oVirt warm migration. The default value is 10 seconds.',
               )}
-            </Text>
+            </Content>
           }
           crumbs={['spec', 'controller_snapshot_status_check_rate_seconds']}
         />

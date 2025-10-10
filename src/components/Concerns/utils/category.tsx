@@ -18,9 +18,9 @@ export const CATEGORY_TITLES: Record<ConcernCategory, string> = {
 };
 
 const CATEGORY_ICONS: Record<ConcernCategory, ReactNode> = {
-  [ConcernCategoryOptions.Critical]: <ExclamationCircleIcon color="#C9190B" />,
-  [ConcernCategoryOptions.Information]: <InfoCircleIcon color="#2B9AF3" />,
-  [ConcernCategoryOptions.Warning]: <ExclamationTriangleIcon color="#F0AB00" />,
+  [ConcernCategoryOptions.Critical]: <ExclamationCircleIcon />,
+  [ConcernCategoryOptions.Information]: <InfoCircleIcon />,
+  [ConcernCategoryOptions.Warning]: <ExclamationTriangleIcon />,
 };
 
 const CATEGORY_COLORS: Record<ConcernCategory, LabelProps['color']> = {

@@ -33,7 +33,7 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
     <FormGroup
       fieldId={fieldId}
       label={storageMapFieldLabels[StorageMapFieldId.OffloadPlugin]}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover>
           <Stack hasGutter>
             <StackItem>

@@ -205,7 +205,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
           id={`mapping_list_item_${index}`}
           aria-label={t('Actions')}
           aria-labelledby=""
-          className="pf-v5-u-align-items-center"
+          className="pf-v6-u-align-items-center"
         >
           <Button
             onClick={onClick}

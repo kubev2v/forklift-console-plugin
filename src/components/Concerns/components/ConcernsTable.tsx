@@ -2,13 +2,7 @@ import type { FC } from 'react';
 import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  HelperText,
-  HelperTextItem,
-  Label,
-  PageSection,
-  PageSectionVariants,
-} from '@patternfly/react-core';
+import { HelperText, HelperTextItem, Label, PageSection } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
@@ -32,11 +26,9 @@ export const ConcernsTable: FC<{ vmData: VmData }> = ({ vmData }) => {
 
   if (isEmpty(concerns)) {
     return (
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection hasBodyWrapper={false}>
         <HelperText>
-          <HelperTextItem variant="indeterminate">
-            {t('No concerns found for this virtual machine.')}
-          </HelperTextItem>
+          <HelperTextItem>{t('No concerns found for this virtual machine.')}</HelperTextItem>
         </HelperText>
       </PageSection>
     );
@@ -45,7 +37,7 @@ export const ConcernsTable: FC<{ vmData: VmData }> = ({ vmData }) => {
   const groupedConcerns = groupConcernsByCategory(concerns);
 
   return (
-    <PageSection variant={PageSectionVariants.light} className="concerns-table">
+    <PageSection hasBodyWrapper={false} className="concerns-table">
       <Table aria-label="Expandable table" variant="compact">
         <Thead>
           <Tr>

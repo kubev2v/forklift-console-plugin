@@ -5,14 +5,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import SmartLinkify from '@components/common/SmartLinkify.tsx';
 import { ProviderModelRef } from '@kubev2v/types';
-import {
-  Button,
-  ButtonVariant,
-  Popover,
-  Text,
-  TextContent,
-  TextVariants,
-} from '@patternfly/react-core';
+import { Button, ButtonVariant, Content, ContentVariants, Popover } from '@patternfly/react-core';
 
 import type { CellProps } from './CellProps.tsx';
 
@@ -36,18 +29,18 @@ export const ErrorStatusCell: FC<CellProps & { children: ReactNode; phaseLabel: 
 
   // Set the footer content
   const footerContent = (
-    <TextContent>
-      <Text component={TextVariants.p}>{t(`The provider is not ready.`)}</Text>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>{t(`The provider is not ready.`)}</Content>
+      <Content component={ContentVariants.p}>
         {t(
           `To troubleshoot, view the provider status available in the provider details page
           and check the Forklift controller pod logs.`,
         )}
-      </Text>
-      <Text component={TextVariants.p}>
+      </Content>
+      <Content component={ContentVariants.p}>
         <Link to={providerURL}>{t('View provider details')}</Link>
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 
   return (

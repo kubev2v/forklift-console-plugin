@@ -142,7 +142,7 @@ const ProvidersCreatePage: FC<{
 
   return (
     <Form>
-      <PageSection variant="light">
+      <PageSection hasBodyWrapper={false}>
         <ProvidersCreatePageHeader apiError={apiError} />
 
         <ProvidersCreateFormsSection

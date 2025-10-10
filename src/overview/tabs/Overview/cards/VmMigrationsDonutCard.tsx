@@ -56,7 +56,7 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
       : ChartColors.Success;
 
   return (
-    <Card>
+    <Card className="pf-m-full-height">
       <CardHeader
         actions={{
           actions: (
@@ -70,7 +70,7 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
       >
         <CardTitle className="forklift-title">{t('Virtual machines')}</CardTitle>
       </CardHeader>
-      <CardBody className="forklift-overview__status-migration pf-v5-u-display-flex pf-v5-u-align-items-center pf-v5-u-flex-direction-column">
+      <CardBody className="forklift-overview__status-migration pf-v6-u-display-flex pf-v6-u-align-items-center pf-v6-u-flex-direction-column">
         <div className="forklift-overview__status-migration-donut">
           <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
             <ChartDonut
