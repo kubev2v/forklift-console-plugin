@@ -40,7 +40,7 @@ const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
 
   return (
     <>
-      <Title headingLevel="h3" className="pf-v5-u-mt-lg pf-v5-u-mb-md">
+      <Title headingLevel="h3" className="pf-v6-u-mt-lg pf-v6-u-mb-md">
         {t('{{hookType}} migration hook', { hookType: HookTypeLabel[type] })}
       </Title>
       <Form>

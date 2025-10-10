@@ -4,7 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ExpandableSectionHeading from '@components/ExpandableSectionHeading/ExpandableSectionHeading';
 import StatusIcon from '@components/status/StatusIcon';
-import { Divider, PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { Divider, PageSection } from '@patternfly/react-core';
 import { CATEGORY_TYPES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
@@ -27,22 +27,22 @@ const PlanDetailsPage: FC<PlanPageProps> = ({ name, namespace }) => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection hasBodyWrapper={false}>
         <SectionHeading text={t('Plan details')} />
         <DetailsSection plan={plan} />
       </PageSection>
       <Divider />
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection hasBodyWrapper={false}>
         <SectionHeading text={t('Providers')} />
         <ProvidersSection plan={plan} />
       </PageSection>
       <Divider />
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection hasBodyWrapper={false}>
         <SectionHeading text={t('Plan settings')} />
         <SettingsSection plan={plan} />
       </PageSection>
       <Divider />
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection hasBodyWrapper={false}>
         <ExpandableSectionHeading
           section={<MigrationsSection plan={plan} />}
           sectionTitle={t('Migration history')}
@@ -52,7 +52,7 @@ const PlanDetailsPage: FC<PlanPageProps> = ({ name, namespace }) => {
         />
       </PageSection>
       <Divider />
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection hasBodyWrapper={false}>
         <ExpandableSectionHeading
           section={<ConditionsSection conditions={plan?.status?.conditions} />}
           sectionTitle={

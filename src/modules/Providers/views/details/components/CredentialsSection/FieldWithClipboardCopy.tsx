@@ -53,7 +53,6 @@ export const FieldWithClipboardCopy: FC<ShowFieldWithClipboardCopyProps> = ({ fi
           <Switch
             aria-label={`Switch for ${field.label}`}
             label={`${field.label} is set`}
-            labelOff={`${field.label} is not set`}
             isChecked={value.toLocaleLowerCase() === 'true'}
             hasCheckIcon
             isDisabled

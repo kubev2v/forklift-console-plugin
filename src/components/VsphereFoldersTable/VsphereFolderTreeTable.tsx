@@ -6,7 +6,6 @@ import SectionHeading from '@components/headers/SectionHeading';
 import type { ProviderHost, VSphereResource } from '@kubev2v/types';
 import {
   PageSection,
-  PageSectionVariants,
   Pagination,
   Toolbar,
   ToolbarContent,
@@ -110,7 +109,7 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
   );
 
   return (
-    <PageSection variant={PageSectionVariants.light}>
+    <PageSection hasBodyWrapper={false}>
       {!canSelect && <SectionHeading text={t('Virtual machines')} />}
       <TreeToolbar
         attributes={attributes}

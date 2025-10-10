@@ -8,8 +8,8 @@ import {
   Select,
   SelectList,
   SelectOption,
-  type ToolbarChip,
   ToolbarFilter,
+  type ToolbarLabel,
 } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
@@ -50,7 +50,7 @@ export const EnumFilter = ({
     supportedEnumValues,
   });
 
-  const deleteFilter = (label: string | ToolbarChip): void => {
+  const deleteFilter = (label: string | ToolbarLabel): void => {
     onUniqueFilterUpdate(selectedUniqueEnumLabels.filter((filterLabel) => filterLabel !== label));
   };
 
@@ -79,7 +79,7 @@ export const EnumFilter = ({
     <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullWidth>
       <>{placeholderLabel}</>
       {!isEmpty(selectedUniqueEnumLabels) && (
-        <Badge isRead className="pf-v5-u-ml-sm">
+        <Badge isRead className="pf-v6-u-ml-sm">
           {selectedUniqueEnumLabels.length}
         </Badge>
       )}
@@ -102,11 +102,11 @@ export const EnumFilter = ({
   return (
     <ToolbarFilter
       key={filterId}
-      chips={selectedUniqueEnumLabels}
-      deleteChip={(category, option) => {
+      labels={selectedUniqueEnumLabels}
+      deleteLabel={(category, option) => {
         deleteFilter(option);
       }}
-      deleteChipGroup={() => {
+      deleteLabelGroup={() => {
         onUniqueFilterUpdate([]);
       }}
       categoryName={title}

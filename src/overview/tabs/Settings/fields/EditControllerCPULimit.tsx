@@ -3,7 +3,7 @@ import { DisplayTitle } from 'src/components/DetailItems/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
-import { Text } from '@patternfly/react-core';
+import { Content } from '@patternfly/react-core';
 import { MTV_SETTINGS } from '@utils/links';
 
 import { EditField } from '../cards/EditField';
@@ -36,11 +36,11 @@ const EditControllerCPULimit: FC<EditSettingsProps> = (props) => {
           showHelpIconNextToTitle
           moreInfoLink={MTV_SETTINGS}
           helpContent={
-            <Text>
+            <Content component="p">
               {t(
                 'Defines the CPU limits allocated to the main container in the controller pod. The default value is 500 milliCPU.',
               )}
-            </Text>
+            </Content>
           }
           crumbs={['spec', 'controller_container_limits_cpu']}
         />

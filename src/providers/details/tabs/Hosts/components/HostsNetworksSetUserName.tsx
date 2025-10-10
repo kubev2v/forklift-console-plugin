@@ -1,6 +1,6 @@
 import { type Dispatch, type FC, type FormEvent, type SetStateAction, useState } from 'react';
 import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
-import { ValidationState } from 'src/providers/utils/types';
+import { ValidationState, type ValidationStateType } from 'src/providers/utils/types';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { TextInput } from '@patternfly/react-core';
@@ -14,7 +14,7 @@ type HostsNetworksSetUserNameProps = {
 const HostsNetworksSetUserName: FC<HostsNetworksSetUserNameProps> = ({ setUsername, username }) => {
   const { t } = useForkliftTranslation();
 
-  const [usernameValidation, setUsernameValidation] = useState<ValidationState>(
+  const [usernameValidation, setUsernameValidation] = useState<ValidationStateType>(
     ValidationState.Default,
   );
 

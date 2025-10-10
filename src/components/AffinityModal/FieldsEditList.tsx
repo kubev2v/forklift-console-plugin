@@ -39,7 +39,9 @@ const FieldsEditList: FC<FieldsEditListProps> = ({
       <AffinityEditList
         addRowText={t('Add field')}
         expressions={affinityFields}
-        onAdd={() => onFieldAdd({ id: null, key: '', operator: Operator.In.valueOf(), values: [] })}
+        onAdd={() => {
+          onFieldAdd({ id: 0, key: '', operator: Operator.In.valueOf(), values: [] });
+        }}
         onChange={onFieldChange}
         onDelete={onFieldDelete}
       />

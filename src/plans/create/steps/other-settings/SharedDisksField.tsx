@@ -19,7 +19,7 @@ const SharedDisksField: FC = () => {
     <FormGroup
       fieldId={fieldId}
       label={label}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover header={label}>
           {t(
             'MTV behavior is based on the Shared disks setting in the plan. If checked, the shared disks will be migrated, otherwise the shared disks will not be migrated.',

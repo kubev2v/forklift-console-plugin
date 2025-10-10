@@ -5,7 +5,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
-import { Form, ModalVariant, Stack } from '@patternfly/react-core';
+import { Form, Stack } from '@patternfly/react-core';
+import { ModalVariant } from '@patternfly/react-core/deprecated';
 
 import { getSelectedInventoryHostNetworkTriples } from './utils/getSelectedInventoryHostNetworkTriples';
 import { onSaveHost } from './utils/onSaveHost';

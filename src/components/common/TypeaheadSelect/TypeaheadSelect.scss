@@ -1,0 +1,8 @@
+// Override disabled text input color to match PatternFly's disabled MenuToggle text color
+// PatternFly hasn't properly handled this for typeahead variant inputs
+.pf-v6-c-menu-toggle.pf-m-typeahead.pf-m-disabled {
+  .pf-v6-c-text-input-group__text-input {
+    color: var(--pf-v6-c-menu-toggle--disabled--Color);
+    -webkit-text-fill-color: var(--pf-v6-c-menu-toggle--disabled--Color);
+  }
+}

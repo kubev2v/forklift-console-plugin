@@ -3,6 +3,8 @@ dist/
 distlib/
 coverage/
 test-results/
+testing/.providers.json
+testing/playwright/.resources.json
 tmp/
 yarn-error.log
 openapitools.json

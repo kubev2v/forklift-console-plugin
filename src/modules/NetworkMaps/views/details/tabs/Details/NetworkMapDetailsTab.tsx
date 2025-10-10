@@ -30,22 +30,22 @@ export const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, name
 
   return (
     <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
-      <PageSection variant="light" className="forklift-page-section--details">
+      <PageSection hasBodyWrapper={false} className="forklift-page-section--details">
         <SectionHeading text={t('Network map details')} />
         <DetailsSection obj={obj} />
       </PageSection>
 
-      <PageSection variant="light" className="forklift-page-section">
+      <PageSection hasBodyWrapper={false} className="forklift-page-section">
         <SectionHeading text={t('Providers')} />
         <ProvidersSection obj={obj} />
       </PageSection>
 
-      <PageSection variant="light" className="forklift-page-section">
+      <PageSection hasBodyWrapper={false} className="forklift-page-section">
         <SectionHeading text={t('Map')} />
         <MapsSection obj={obj} />
       </PageSection>
 
-      <PageSection variant="light" className="forklift-page-section">
+      <PageSection hasBodyWrapper={false} className="forklift-page-section">
         <SectionHeading text={t('Conditions')} />
         <ConditionsSection conditions={obj?.status?.conditions ?? []} />
       </PageSection>

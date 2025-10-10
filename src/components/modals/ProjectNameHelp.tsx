@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { Button, ButtonVariant, Popover, Text, TextContent } from '@patternfly/react-core';
+import { Button, ButtonVariant, Content, Popover } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useForkliftTranslation } from '@utils/i18n.tsx';
 
@@ -11,21 +11,23 @@ const ProjectNameHelp: FC = () => {
     <Popover
       aria-label={t('Naming information')}
       bodyContent={
-        <TextContent>
-          <Text component="p">
+        <Content>
+          <Content component="p">
             {t(`A Project name must consist of lower case alphanumeric characters or '-', and must start
             and end with an alphanumeric character (e.g. 'my-name' or '123-abc').`)}
-          </Text>
-          <Text component="p">
+          </Content>
+          <Content component="p">
             {t(`You must create a Namespace to be able to create projects that begin with 'openshift-',
             'kubernetes-', or 'kube-'.`)}
-          </Text>
-        </TextContent>
+          </Content>
+        </Content>
       }
     >
-      <Button variant={ButtonVariant.plain} aria-label="View naming information">
-        <OutlinedQuestionCircleIcon />
-      </Button>
+      <Button
+        icon={<OutlinedQuestionCircleIcon />}
+        variant={ButtonVariant.plain}
+        aria-label="View naming information"
+      />
     </Popover>
   );
 };

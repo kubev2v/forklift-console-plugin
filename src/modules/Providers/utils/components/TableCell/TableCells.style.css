@@ -1,8 +1,9 @@
 .forklift-table__flex-cell {
   display: flex;
   flex-wrap: wrap;
+  white-space: nowrap;
 }
 
 .forklift-table__flex-cell-label {
-  margin-left: var(--pf-global--spacer--sm);
+  margin-left: var(--pf-t--global--spacer--xs);
 }

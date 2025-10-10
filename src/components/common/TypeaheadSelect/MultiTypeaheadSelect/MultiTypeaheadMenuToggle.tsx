@@ -3,8 +3,8 @@ import { type FC, type FormEvent, type Ref, type RefObject, useMemo, useState } 
 import {
   Button,
   ButtonVariant,
-  Chip,
-  ChipGroup,
+  Label,
+  LabelGroup,
   MenuToggle,
   type MenuToggleElement,
   type MenuToggleProps,
@@ -140,19 +140,20 @@ const MultiTypeaheadMenuToggle: FC<MultiTypeaheadMenuToggleProps> = ({
             setIsFocused(false);
           }}
         >
-          <ChipGroup aria-label="Current selections">
+          <LabelGroup aria-label="Current selections">
             {selectedOptions.map((opt) => (
-              <Chip
+              <Label
+                variant="outline"
                 key={String(opt.value)}
-                onClick={(ev) => {
+                onClose={(ev) => {
                   ev.stopPropagation();
                   onChipRemove(opt.value);
                 }}
               >
                 {opt.content}
-              </Chip>
+              </Label>
             ))}
-          </ChipGroup>
+          </LabelGroup>
         </TextInputGroupMain>
 
         <TextInputGroupUtilities

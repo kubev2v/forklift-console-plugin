@@ -19,9 +19,12 @@ export const TableCell: FC<TableCellProps> = ({ children, isWrap = false }) => {
         spaceItems={{ default: 'spaceItemsXs' }}
         display={{ default: 'inlineFlex' }}
         flexWrap={isWrap ? {} : { default: 'nowrap' }}
+        alignItems={{ default: 'alignItemsCenter' }}
       >
-        {Children.map(arrayChildren, (child) => (
-          <FlexItem>{child}</FlexItem>
+        {Children.map(arrayChildren, (child, index) => (
+          <FlexItem key={index} flex={{ default: 'flexNone' }}>
+            {child}
+          </FlexItem>
         ))}
       </Flex>
     </span>
