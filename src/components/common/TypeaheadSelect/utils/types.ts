@@ -3,7 +3,9 @@ import type { SelectOptionProps } from '@patternfly/react-core';
 export type TypeaheadSelectOption = {
   content: string | number;
   value: string | number;
-  optionProps?: Omit<SelectOptionProps, 'content' | 'value'>;
+  optionProps?: Omit<SelectOptionProps, 'content' | 'value'> & {
+    testId?: string;
+  };
 };
 
 export type FilterOptionsConfig = {

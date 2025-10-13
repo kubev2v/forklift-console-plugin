@@ -28,7 +28,7 @@ const AffinityList: FC<AffinityListProps> = ({
       <StackItem>
         <AffinityDescriptionText />
       </StackItem>
-      <StackItem>
+      <StackItem data-testid="affinity-rules-list">
         <VirtualizedTable<AffinityRowData>
           columns={columns}
           data={affinities ?? []}

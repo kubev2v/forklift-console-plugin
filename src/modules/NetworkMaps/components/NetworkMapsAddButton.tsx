@@ -57,7 +57,7 @@ const NetworkMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
       <DropdownList>
         <DropdownItem
           key="form"
-          data-testid="create-network-map-form"
+          data-testid="create-network-map-dropdown-item-form"
           onClick={() => {
             trackEvent(TELEMETRY_EVENTS.NETWORK_MAP_CREATE_STARTED, {
               creationMethod: CreationMethod.Form,
@@ -71,7 +71,7 @@ const NetworkMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
 
         <DropdownItem
           key="yaml"
-          data-testid="create-network-map-yaml"
+          data-testid="create-network-map-dropdown-item-yaml"
           onClick={() => {
             trackEvent(TELEMETRY_EVENTS.NETWORK_MAP_CREATE_STARTED, {
               creationMethod: CreationMethod.YamlEditor,

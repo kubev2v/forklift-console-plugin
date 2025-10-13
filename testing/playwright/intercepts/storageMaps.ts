@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 
 export const setupStorageMapsIntercepts = async (page: Page) => {
   const storageMapData1 = {
@@ -8,7 +9,7 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
     kind: 'StorageMap',
     metadata: {
       name: 'test-storage-map-1',
-      namespace: 'openshift-mtv',
+      namespace: MTV_NAMESPACE,
       uid: 'test-storagemap-uid-1',
       ownerReferences: [],
     },
@@ -27,11 +28,11 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
       provider: {
         destination: {
           name: 'test-target-provider',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
         source: {
           name: 'test-source-provider',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
       },
     },
@@ -51,7 +52,7 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
     kind: 'StorageMap',
     metadata: {
       name: 'test-storage-map-2',
-      namespace: 'openshift-mtv',
+      namespace: MTV_NAMESPACE,
       uid: 'test-storagemap-uid-2',
       ownerReferences: [
         {
@@ -79,11 +80,11 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
       provider: {
         destination: {
           name: 'test-target-provider',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
         source: {
           name: 'test-source-provider',
-          namespace: 'openshift-mtv',
+          namespace: MTV_NAMESPACE,
         },
       },
     },

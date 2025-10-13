@@ -33,6 +33,18 @@ export class VirtualMachinesStep {
 
   async searchAndSelectVirtualMachine(vmName: string) {
     await this.table.search(vmName);
+
+    // Expand the VM folder if it exists
+    const folderRow = this.page.getByTestId('folder-vm');
+    const expandButton = folderRow.getByRole('button', { name: /Expand row/ });
+
+    if (await expandButton.isVisible()) {
+      const isExpanded = await expandButton.getAttribute('aria-expanded');
+      if (isExpanded === 'false') {
+        await expandButton.click();
+      }
+    }
+
     await this.table.selectRow({ Name: vmName });
   }
 

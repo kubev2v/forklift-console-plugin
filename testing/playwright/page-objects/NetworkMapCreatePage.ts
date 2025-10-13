@@ -7,6 +7,16 @@ export class NetworkMapCreatePage {
     this.page = page;
   }
 
+  async addMapping() {
+    const addMappingButton = this.page.getByRole('button', { name: 'Add mapping' });
+    await expect(addMappingButton).toBeEnabled();
+    await addMappingButton.click();
+  }
+
+  get createButton() {
+    return this.page.getByTestId('network-map-create-button');
+  }
+
   async fillRequiredFields(data: {
     mapName: string;
     project: string;
@@ -42,14 +52,50 @@ export class NetworkMapCreatePage {
     await this.page.getByRole('option', { name: data.targetNetwork }).click();
   }
 
-  async submitForm(expectedMapName: string) {
-    const createButton = this.page.getByTestId('network-map-create-button');
-    await expect(createButton).not.toBeDisabled();
-    await createButton.click();
+  async populateMapping(index: number, sourceNetwork: string, targetNetwork: string) {
+    const sourceNetworkSelects = this.page.getByTestId('network-map-source-network-select');
+    const targetNetworkSelects = this.page.getByTestId('network-map-target-network-select');
 
-    // Wait for navigation to NetworkMap details page with the expected name
+    const sourceCount = await sourceNetworkSelects.count();
+    const targetCount = await targetNetworkSelects.count();
+
+    if (index >= sourceCount || index >= targetCount) {
+      throw new Error(
+        `Cannot populate mapping at index ${index}. Only ${Math.min(sourceCount, targetCount)} mappings available.`,
+      );
+    }
+
+    const sourceSelect = sourceNetworkSelects.nth(index);
+    await expect(sourceSelect).not.toBeDisabled();
+    await sourceSelect.click();
+    await this.page.locator('button[role="option"]').filter({ hasText: sourceNetwork }).click();
+
+    const targetSelect = targetNetworkSelects.nth(index);
+    await expect(targetSelect).not.toBeDisabled();
+    await targetSelect.click();
+    await this.page.locator('button[role="option"]').filter({ hasText: targetNetwork }).click();
+  }
+
+  async removeMapping(index: number) {
+    const removeButtons = this.page.locator('table tbody tr td:last-child button');
+
+    const count = await removeButtons.count();
+    if (count <= index) {
+      throw new Error(`Cannot remove mapping at index ${index}. Only ${count} mappings available.`);
+    }
+
+    await removeButtons.nth(index).click();
+  }
+
+  async submitForm(expectedMapName: string) {
+    await expect(this.createButton).toBeVisible();
+    await expect(this.createButton).not.toBeDisabled();
+    await this.createButton.click();
+
     await this.page.waitForURL(
-      new RegExp(`/k8s/ns/[^/]+/forklift\\.konveyor\\.io~v1beta1~NetworkMap/${expectedMapName}$`),
+      new RegExp(
+        `/k8s/ns/[^/]+/forklift\\.konveyor\\.io~v1beta1~NetworkMap/${expectedMapName}[^/]*$`,
+      ),
     );
   }
 

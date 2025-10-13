@@ -104,6 +104,7 @@ const LabelsModal: FC<LabelsModalProps> = ({ description, initialLabels, onConfi
 
   return (
     <ModalForm
+      testId="labels-modal"
       title={title ?? t('Edit labels')}
       onConfirm={async () => onConfirm(labelsArrayToObject(labels)) ?? {}}
     >

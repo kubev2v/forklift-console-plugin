@@ -58,8 +58,14 @@ export class GeneralInformationStep {
   async selectProject(projectName: string, testId: string, showDefaultProjects = false) {
     await this.page.getByTestId(testId).waitFor({ state: 'visible', timeout: 10000 });
     await this.page.getByTestId(testId).getByRole('button').click();
+
     if (showDefaultProjects) {
-      await this.page.locator('label[for="show-default-projects-switch"]').click();
+      const switchElement = this.page.locator('#show-default-projects-switch');
+      const isChecked = await switchElement.isChecked();
+
+      if (!isChecked) {
+        await this.page.locator('label[for="show-default-projects-switch"]').click();
+      }
     }
 
     const searchBox = this.page.getByTestId(testId).getByRole('combobox');

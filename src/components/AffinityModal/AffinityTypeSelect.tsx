@@ -42,6 +42,7 @@ const AffinityTypeSelect: FC<AffinityTypeSelectProps> = ({
           isExpanded: isOpen,
           onClick: onToggle,
           selected: AFFINITY_TYPE_LABELS[focusedAffinity?.type],
+          testId: 'affinity-type-select',
         })}
         isOpen={isOpen}
         onSelect={handleChange}

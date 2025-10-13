@@ -43,6 +43,7 @@ const LabelRow: FC<LabelRowProps> = ({ isLabelsVisible, label, onChange, onDelet
         <FormGroup label={isLabelsVisible && t('Key')}>
           <TextInput
             aria-label={t('selector key')}
+            data-testid="node-selector-key-input"
             isRequired
             onChange={(_event, newKey) => {
               onChange({ ...label, key: newKey });
@@ -58,6 +59,7 @@ const LabelRow: FC<LabelRowProps> = ({ isLabelsVisible, label, onChange, onDelet
         <FormGroup label={isLabelsVisible && t('Value')}>
           <TextInput
             aria-label={t('selector value')}
+            data-testid="node-selector-value-input"
             isRequired
             onChange={(_event, newValue) => {
               onChange({ ...label, value: newValue });
