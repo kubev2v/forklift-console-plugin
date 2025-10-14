@@ -12,6 +12,16 @@ export const disableGuidedTour = async (page: Page) => {
   });
 };
 
+export const dismissGuidedTourModal = async (page: Page): Promise<void> => {
+  const tourDialog = page.getByRole('dialog');
+
+  if (await tourDialog.isVisible({ timeout: 10000 })) {
+    const skipButton = tourDialog.getByRole('button', { name: 'Skip tour' });
+    await skipButton.click();
+    await tourDialog.waitFor({ state: 'hidden' });
+  }
+};
+
 export const isEmpty = (value: object | unknown[] | string | undefined | null): boolean => {
   if (value === null || value === undefined) {
     return true;
