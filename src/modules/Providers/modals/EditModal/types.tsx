@@ -1,9 +1,17 @@
 import type { FC, JSX, ReactNode } from 'react';
-import type { ValidationMsg } from 'src/providers/utils/types';
 
 import type { K8sModel, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import type { ValidationMsg } from '@utils/validation/Validation';
 
 import './EditModal.style.css';
+
+/**
+ * ValidationHookType defines the structure of a hook function that performs validation.
+ * It accepts a value, which can be a string or a number, and returns an object containing
+ * 'msg' which is a string giving details about the result of the validation,
+ * and 'type' which indicates the status of the validation and is of type ValidationResults.
+ */
+type ValidationHookType = (value: string | number) => ValidationMsg;
 
 export type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => unknown);
 export type EditModalProps = {
@@ -63,14 +71,6 @@ export type ModalInputComponentType = FC<{
   value: string | number;
   onChange: (value: string | number) => void;
 }>;
-
-/**
- * ValidationHookType defines the structure of a hook function that performs validation.
- * It accepts a value, which can be a string or a number, and returns an object containing
- * 'msg' which is a string giving details about the result of the validation,
- * and 'type' which indicates the status of the validation and is of type ValidationResults.
- */
-export type ValidationHookType = (value: string | number) => ValidationMsg;
 
 /**
  * OnConfirmHookType defines the structure of a hook function that is called when the confirmation action takes place.

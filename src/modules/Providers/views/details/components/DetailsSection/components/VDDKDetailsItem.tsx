@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import EditProviderVDDKImage from 'src/providers/details/tabs/Details/components/DetailsSection/EditProviderVDDKImage';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 

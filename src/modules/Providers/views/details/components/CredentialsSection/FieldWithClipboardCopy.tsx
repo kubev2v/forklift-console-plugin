@@ -25,7 +25,9 @@ export const FieldWithClipboardCopy: FC<ShowFieldWithClipboardCopyProps> = ({ fi
     return (
       <Tooltip
         content={
-          <div>{t('{{label}} field is missing from the secret data.', { label: field.label })}</div>
+          <div>
+            {t('{{label}} field is missing from the secret data.', { label: field?.label ?? '' })}
+          </div>
         }
       >
         <TextInput spellCheck="false" value="No value" type="text" isDisabled />
@@ -35,7 +37,7 @@ export const FieldWithClipboardCopy: FC<ShowFieldWithClipboardCopyProps> = ({ fi
 
   // Determine how to display the field based on its type
   const renderFieldByType = () => {
-    switch (field.displayType) {
+    switch (field?.displayType) {
       case 'textArea':
         return (
           <ClipboardCopy
@@ -59,6 +61,8 @@ export const FieldWithClipboardCopy: FC<ShowFieldWithClipboardCopyProps> = ({ fi
             isDisabled
           />
         );
+      case 'text':
+      case undefined:
       default:
         return (
           <ClipboardCopy isReadOnly hoverTip={t('Copy')} clickTip={t('Copied')} isCode>

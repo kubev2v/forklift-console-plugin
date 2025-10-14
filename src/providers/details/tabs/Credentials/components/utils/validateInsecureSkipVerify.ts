@@ -1,6 +1,5 @@
-import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
-
 import { t } from '@utils/i18n';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 export const validateInsecureSkipVerify = (value: string): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.

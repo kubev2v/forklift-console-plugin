@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
 
 import { ProviderModelRef, type V1beta1Provider } from '@kubev2v/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
@@ -15,6 +14,7 @@ import {
 } from '@patternfly/react-core';
 import { getType } from '@utils/crds/common/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 type ProviderCreateActionsSectionProps = {
   newProvider: V1beta1Provider;

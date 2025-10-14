@@ -1,22 +1,22 @@
-import type { ValidationMsg } from '../validators/common';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 /**
  * Function to ensure that the input url, token fields are both set or both empty.
  */
-export const validateUrlAndTokenExistence = (url: string, token: string): ValidationMsg => {
+export const validateUrlAndTokenExistence = (url: string, token: string): ValidationMsg | null => {
   // Empty URL + token is valid as host providers
   if (url === '' && token === '') {
-    return { type: 'default' };
+    return { type: ValidationState.Default };
   }
 
   // If we have url, token is required
   if (url !== '' && token === '') {
-    return { msg: `Missing required fields [token]`, type: 'error' };
+    return { msg: `Missing required fields [token]`, type: ValidationState.Error };
   }
 
   // If we have token, url is required
   if (url === '' && token !== '') {
-    return { msg: `Missing required fields [url]`, type: 'error' };
+    return { msg: `Missing required fields [url]`, type: ValidationState.Error };
   }
 
   return null;

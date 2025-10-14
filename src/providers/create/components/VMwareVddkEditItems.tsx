@@ -5,13 +5,13 @@ import {
   VDDKHelperTextShort,
 } from 'src/modules/Providers/utils/components/VDDKHelperText/VDDKHelperText';
 import { ProviderFieldsId } from 'src/providers/utils/constants';
-import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import VddkUploader from '@components/VddkUploader/VddkUploader';
 import { Alert, Checkbox, Stack, TextInput } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import { TRUE_VALUE, YES_VALUE } from '../utils/constants';
 

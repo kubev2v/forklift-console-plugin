@@ -1,5 +1,5 @@
 import { type FC, type FormEvent, type MouseEvent, useState } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC.tsx';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import ProjectNameHelp from '@components/modals/ProjectNameHelp.tsx';
@@ -79,7 +79,8 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
 
   const projectsURL = isUpstream()
     ? `${UPSTREAM_LATEST}${workingWithProjectsURLs.upstream}`
-    : `${window.SERVER_FLAGS.documentationBaseURL}${workingWithProjectsURLs.downstream}`;
+    : // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      `${window.SERVER_FLAGS.documentationBaseURL}${workingWithProjectsURLs.downstream}`;
 
   return (
     <Modal

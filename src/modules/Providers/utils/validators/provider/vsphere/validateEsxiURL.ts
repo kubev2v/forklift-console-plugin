@@ -1,4 +1,4 @@
-import type { ValidationMsg } from 'src/providers/utils/types';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import { validateURL } from '../../common';
 
@@ -7,13 +7,13 @@ export const validateEsxiURL = (url: string | number | undefined): ValidationMsg
   if (url === undefined) {
     return {
       msg: 'The URL is required, URL of the ESXi API endpoint for example: https://host-example.com/sdk .',
-      type: 'default',
+      type: ValidationState.Default,
     };
   }
 
   // Sanity check
   if (typeof url !== 'string') {
-    return { msg: 'URL is not a string', type: 'error' };
+    return { msg: 'URL is not a string', type: ValidationState.Error };
   }
 
   const trimmedUrl: string = url.trim();
@@ -22,25 +22,25 @@ export const validateEsxiURL = (url: string | number | undefined): ValidationMsg
   if (trimmedUrl === '') {
     return {
       msg: 'The URL is required, URL of the ESXi API endpoint for example: https://host-example.com/sdk .',
-      type: 'error',
+      type: ValidationState.Error,
     };
   }
 
   if (!isValidURL) {
     return {
       msg: 'The URL is invalid. URL should include the schema and path, for example: https://host-example.com/sdk .',
-      type: 'error',
+      type: ValidationState.Error,
     };
   }
 
   if (!trimmedUrl.endsWith('sdk'))
     return {
       msg: 'The URL does not end with a /sdk path, for example a URL with sdk path: https://host-example.com/sdk .',
-      type: 'warning',
+      type: ValidationState.Warning,
     };
 
   return {
     msg: 'The URL of the ESXi API endpoint for example: https://host-example.com/sdk .',
-    type: 'success',
+    type: ValidationState.Success,
   };
 };

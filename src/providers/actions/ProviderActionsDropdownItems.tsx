@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { DeleteModal } from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

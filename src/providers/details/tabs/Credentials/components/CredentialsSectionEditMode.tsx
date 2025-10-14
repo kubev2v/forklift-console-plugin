@@ -1,7 +1,5 @@
 import { type FC, type ReactNode, useState } from 'react';
 import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
-import type { ValidationMsg } from 'src/modules/Providers/utils/validators/common';
-import { ValidationState } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
@@ -14,6 +12,7 @@ import {
   HelperText,
   HelperTextItem,
 } from '@patternfly/react-core';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import { getCredentialsEditModeByType } from './utils/getCredentialsEditModeByType';
 import { getCredentialsValidatorByType } from './utils/getCredentialsValidatorByType';
@@ -85,7 +84,7 @@ const CredentialsSectionEditMode: FC<CredentialsSectionEditModeProps> = ({
           <Button
             variant={ButtonVariant.primary}
             onClick={onUpdate}
-            isDisabled={!dataChanged || dataError.type === 'error'}
+            isDisabled={!dataChanged || dataError.type === ValidationState.Error}
             isLoading={isLoading}
           >
             {t('Update credentials')}
@@ -99,7 +98,7 @@ const CredentialsSectionEditMode: FC<CredentialsSectionEditModeProps> = ({
       </Flex>
 
       <HelperText className="forklift-section-secret-edit">
-        {dataError.type === 'error' ? (
+        {dataError.type === ValidationState.Error ? (
           <HelperTextItem variant="error">{dataError.msg}</HelperTextItem>
         ) : (
           <HelperTextItem variant="indeterminate">

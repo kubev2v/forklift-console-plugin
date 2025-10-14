@@ -2,9 +2,9 @@ import { type FC, type FormEvent, useCallback, useState } from 'react';
 import { encode } from 'js-base64';
 import type { CredentialsEditModeByTypeProps } from 'src/providers/details/tabs/Credentials/components/utils/types';
 import { OpenstackAuthType, OpenstackSecretFieldsId } from 'src/providers/utils/constants';
-import type { ValidationMsg } from 'src/providers/utils/types';
 
 import { Divider, Form } from '@patternfly/react-core';
+import type { ValidationMsg } from '@utils/validation/Validation';
 
 import { getAuthType } from './utils/getAuthType';
 import { getDecodedValue } from './utils/getDecodedValue';

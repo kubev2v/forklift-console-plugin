@@ -1,7 +1,7 @@
 import type { FC, JSX, ReactNode } from 'react';
-import type { ValidationMsg } from 'src/modules/Providers/utils/validators/common';
 
 import type { K8sModel, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import type { ValidationMsg } from '@utils/validation/Validation';
 
 type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => unknown);
 export type EditFieldProps = {

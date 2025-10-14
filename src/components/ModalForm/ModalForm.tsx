@@ -1,5 +1,5 @@
 import { type FC, type ReactNode, useCallback, useState } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 import {

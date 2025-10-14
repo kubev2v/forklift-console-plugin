@@ -32,6 +32,7 @@ export const EditProviderUIModal: FC<EditProviderUIModalProps> = (props) => {
       return <OpenshiftEditUIModal {...props} />;
     case 'openstack':
       return <OpenstackEditUIModal {...props} />;
+    case undefined:
     default:
       return <></>;
   }

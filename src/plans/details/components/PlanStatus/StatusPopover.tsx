@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
 

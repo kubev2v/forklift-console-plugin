@@ -4,8 +4,8 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 export const patchSecret = async (
   secretData: IoK8sApiCoreV1Secret,
   encodedIpAddress: string,
-  encodedUser: string,
-  encodedPassword: string,
+  encodedUser?: string,
+  encodedPassword?: string,
 ) => {
   await k8sPatch({
     data: [

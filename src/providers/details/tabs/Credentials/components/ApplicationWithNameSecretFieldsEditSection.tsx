@@ -2,11 +2,11 @@ import { type FC, useCallback, useState } from 'react';
 import { encode } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { OpenstackSecretFieldsId } from 'src/providers/utils/constants';
-import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, ButtonVariant, InputGroup, TextInput } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
+import type { ValidationMsg } from '@utils/validation/Validation';
 
 import { getDecodedValue } from './utils/getDecodedValue';
 import { openstackSecretFieldValidator } from './utils/openstackSecretFieldValidator';
