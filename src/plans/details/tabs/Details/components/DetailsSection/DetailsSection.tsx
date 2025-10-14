@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType.ts';
+import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType';
 
 import CreatedAtDetailsItem from '@components/DetailItems/CreatedAtDetailItem';
 import NameDetailsItem from '@components/DetailItems/NameDetailItem';

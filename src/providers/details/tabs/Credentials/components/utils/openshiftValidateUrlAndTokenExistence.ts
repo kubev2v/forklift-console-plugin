@@ -1,6 +1,5 @@
-import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
-
 import { t } from '@utils/i18n';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 /**
  * Function to ensure that the input url, token fields are both set or both empty.
  */

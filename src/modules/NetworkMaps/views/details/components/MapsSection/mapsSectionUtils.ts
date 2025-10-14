@@ -1,5 +1,5 @@
-import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks.ts';
-import { MULTUS, POD } from 'src/plans/details/utils/constants.ts';
+import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
+import { MULTUS, POD } from 'src/plans/details/utils/constants';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,

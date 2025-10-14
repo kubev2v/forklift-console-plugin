@@ -1,10 +1,10 @@
 import { type Dispatch, type FC, type FormEvent, type SetStateAction, useState } from 'react';
 import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
-import { ValidationState } from 'src/providers/utils/types';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { TextInput } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { ValidationState } from '@utils/validation/Validation';
 
 type HostsNetworksSetUserNameProps = {
   username: string;

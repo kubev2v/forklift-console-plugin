@@ -1,16 +1,16 @@
 import { type FC, useMemo, useRef } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 
 import ProjectSelectEmptyState from '@components/common/ProjectSelect/ProjectSelectEmptyState';
-import type { ProjectSelectProps } from '@components/common/ProjectSelect/types.ts';
+import type { ProjectSelectProps } from '@components/common/ProjectSelect/types';
 import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import CreateProjectModal from '@components/modals/CreateProjectModal';
 import { type K8sResourceCommon, useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
 import { ProjectModel } from '@openshift-console/dynamic-plugin-sdk/lib/models';
 import { Button, ButtonVariant, Divider, Switch } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
-import { getName } from '@utils/crds/common/selectors.ts';
-import { isEmpty } from '@utils/helpers.ts';
+import { getName } from '@utils/crds/common/selectors';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import { isSystemNamespace } from '@utils/namespaces';
 

@@ -1,7 +1,6 @@
 import { type FC, type MouseEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
@@ -14,12 +13,13 @@ import {
   Stack,
   TextInput,
 } from '@patternfly/react-core';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import useToggle from '../../hooks/useToggle';
 import { getValueByJsonPath } from '../../utils/helpers/getValueByJsonPath';
 import { AlertMessageForModals } from '../components/AlertMessageForModals';
 import { ItemIsOwnedAlert } from '../components/ItemIsOwnedAlert';
-import { useModal } from '../ModalHOC/ModalHOC';
+import { useModal } from '../ModalHOC/useModal';
 
 import { defaultOnConfirm } from './utils/defaultOnConfirm';
 import type { EditModalProps } from './types';

@@ -1,6 +1,7 @@
-import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import type { ValidationMsg } from '../common';
+import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import { openshiftProviderValidator } from './openshift/openshiftProviderValidator';
 import { openstackProviderValidator } from './openstack/openstackProviderValidator';
@@ -14,27 +15,19 @@ export const providerValidator = (
   subType: SecretSubType,
   secret: IoK8sApiCoreV1Secret,
 ): ValidationMsg => {
-  let validationError: ValidationMsg;
-
-  switch (provider.spec.type) {
-    case 'openshift':
-      validationError = openshiftProviderValidator(provider, secret);
-      break;
-    case 'openstack':
-      validationError = openstackProviderValidator(provider);
-      break;
-    case 'ovirt':
-      validationError = ovirtProviderValidator(provider);
-      break;
-    case 'vsphere':
-      validationError = vsphereProviderValidator(provider, subType, secret);
-      break;
-    case 'ova':
-      validationError = ovaProviderValidator(provider);
-      break;
+  switch (provider.spec?.type) {
+    case PROVIDER_TYPES.openshift:
+      return openshiftProviderValidator(provider, secret);
+    case PROVIDER_TYPES.openstack:
+      return openstackProviderValidator(provider);
+    case PROVIDER_TYPES.ovirt:
+      return ovirtProviderValidator(provider);
+    case PROVIDER_TYPES.vsphere:
+      return vsphereProviderValidator(provider, subType, secret);
+    case PROVIDER_TYPES.ova:
+      return ovaProviderValidator(provider);
+    case undefined:
     default:
-      validationError = { msg: 'unknown provider type', type: 'error' };
+      return { msg: 'unknown provider type', type: ValidationState.Error };
   }
-
-  return validationError;
 };

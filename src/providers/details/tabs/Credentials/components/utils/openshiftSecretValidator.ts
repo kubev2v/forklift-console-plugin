@@ -1,6 +1,7 @@
-import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
+import { SecretFieldsId } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import { getDecodedValue } from './getDecodedValue';
 import { openshiftSecretFieldValidator } from './openshiftSecretFieldValidator';
@@ -17,10 +18,14 @@ export const openshiftSecretValidator = (
   if (validation) return validation;
 
   // Validate fields
-  const validateFields = ['user', 'token', 'insecureSkipVerify'];
+  const validateFields = [
+    SecretFieldsId.User,
+    SecretFieldsId.Token,
+    SecretFieldsId.InsecureSkipVerify,
+  ];
   const insecureSkipVerify = getDecodedValue(secret?.data?.insecureSkipVerify);
   if (insecureSkipVerify !== 'true') {
-    validateFields.push('cacert');
+    validateFields.push(SecretFieldsId.CaCert);
   }
 
   for (const id of validateFields) {

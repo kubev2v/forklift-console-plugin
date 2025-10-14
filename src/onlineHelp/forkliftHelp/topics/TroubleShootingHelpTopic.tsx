@@ -1,4 +1,4 @@
-import HelpTitledContent from 'src/onlineHelp/learningExperience/HelpTitledContent.tsx';
+import HelpTitledContent from 'src/onlineHelp/learningExperience/HelpTitledContent';
 import {
   type LearningExperienceSubTopic,
   type LearningExperienceTopic,
@@ -8,7 +8,7 @@ import {
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import { CodeBlock, CodeBlockCode } from '@patternfly/react-core';
 import { WrenchIcon } from '@patternfly/react-icons';
-import { TipsTopic } from '@utils/analytics/constants.ts';
+import { TipsTopic } from '@utils/analytics/constants';
 import { ForkliftTrans, t } from '@utils/i18n';
 
 const supportUrl = 'https://access.redhat.com/support/';

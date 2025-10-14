@@ -17,15 +17,18 @@ export const mapsSectionReducer = (
   state: MapsSectionState,
   action: MapsAction,
 ): MapsSectionState => {
-  let newState: MapsSectionState;
+  const newState: MapsSectionState = { ...state };
 
   switch (action.type) {
     case 'SET_MAP':
-      newState = { ...state, hasChanges: true };
-      newState.networkMap.spec.map = action.payload;
+      if (newState.networkMap?.spec) {
+        newState.hasChanges = true;
+        newState.networkMap.spec.map = action.payload;
+      }
       return newState;
     case 'SET_UPDATING':
-      return { ...state, updating: action.payload };
+      newState.updating = action.payload;
+      return newState;
     case 'INIT':
       return {
         hasChanges: false,

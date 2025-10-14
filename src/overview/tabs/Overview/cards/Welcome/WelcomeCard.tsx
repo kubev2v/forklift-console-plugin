@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom-v5-compat';
 import migrationIcon from 'src/components/images/resources/migration.svg';
 import providerTypes from 'src/modules/Plans/views/create/constanats/providerTypes';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext.ts';
+import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext';
 import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 

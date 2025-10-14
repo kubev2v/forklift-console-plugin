@@ -3,7 +3,6 @@ import { encode } from 'js-base64';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import type { CredentialsEditModeByTypeProps } from 'src/providers/details/tabs/Credentials/components/utils/types';
 import { SecretFieldsId } from 'src/providers/utils/constants';
-import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -15,6 +14,7 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
+import type { ValidationMsg } from '@utils/validation/Validation';
 
 import { getDecodedValue } from './utils/getDecodedValue';
 import { vcenterSecretFieldValidator } from './utils/vcenterSecretFieldValidator';

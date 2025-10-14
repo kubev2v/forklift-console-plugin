@@ -1,8 +1,8 @@
 import { OpenstackSecretFieldsId, SecretFieldsId } from 'src/providers/utils/constants';
-import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
 
 import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 import { isEmpty } from '@utils/helpers';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import { getAuthTypeRequiredFields } from './getAuthTypeRequiredFields';
 import { getAuthTypeValidateFields } from './getAuthTypeValidateFields';

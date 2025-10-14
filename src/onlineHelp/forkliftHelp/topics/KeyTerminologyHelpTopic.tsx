@@ -1,4 +1,4 @@
-import HelpTitledContent from 'src/onlineHelp/learningExperience/HelpTitledContent.tsx';
+import HelpTitledContent from 'src/onlineHelp/learningExperience/HelpTitledContent';
 import {
   type LearningExperienceSubTopic,
   type LearningExperienceTopic,
@@ -8,7 +8,7 @@ import {
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import { Text, TextContent } from '@patternfly/react-core';
 import { CatalogIcon } from '@patternfly/react-icons';
-import { TipsTopic } from '@utils/analytics/constants.ts';
+import { TipsTopic } from '@utils/analytics/constants';
 import { ForkliftTrans, t } from '@utils/i18n';
 
 const openshiftVirtualizationGuideUrl =

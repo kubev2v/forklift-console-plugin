@@ -22,36 +22,42 @@ export const providersSectionReducer = (
   state: ProvidersSectionState,
   action: ProvidersAction,
 ): ProvidersSectionState => {
-  let newState: ProvidersSectionState;
+  const newState = { ...state };
 
   switch (action.type) {
     case 'SET_SOURCE_PROVIDER':
-      newState = { ...state, hasChanges: true };
-      newState.networkMap.spec.provider.source = {
-        apiVersion: action.payload?.apiVersion,
-        kind: action.payload?.kind,
-        name: action.payload?.metadata?.name,
-        namespace: action.payload?.metadata?.namespace,
-        uid: action.payload?.metadata?.uid,
-      };
+      if (newState.networkMap?.spec) {
+        newState.hasChanges = true;
+        newState.networkMap.spec.provider.source = {
+          apiVersion: action.payload?.apiVersion,
+          kind: action.payload?.kind,
+          name: action.payload?.metadata?.name,
+          namespace: action.payload?.metadata?.namespace,
+          uid: action.payload?.metadata?.uid,
+        };
+      }
       return newState;
     case 'SET_TARGET_PROVIDER':
-      newState = { ...state, hasChanges: true };
-      newState.networkMap.spec.provider.destination = {
-        apiVersion: action.payload?.apiVersion,
-        kind: action.payload?.kind,
-        name: action.payload?.metadata?.name,
-        namespace: action.payload?.metadata?.namespace,
-        uid: action.payload?.metadata?.uid,
-      };
+      if (newState.networkMap?.spec) {
+        newState.hasChanges = true;
+        newState.networkMap.spec.provider.destination = {
+          apiVersion: action.payload?.apiVersion,
+          kind: action.payload?.kind,
+          name: action.payload?.metadata?.name,
+          namespace: action.payload?.metadata?.namespace,
+          uid: action.payload?.metadata?.uid,
+        };
+      }
       return newState;
     case 'SET_SOURCE_PROVIDER_MODE':
-      return { ...state, sourceProviderMode: action.payload };
+      newState.sourceProviderMode = action.payload;
+      return newState;
     case 'SET_TARGET_PROVIDER_MODE':
-      return { ...state, targetProviderMode: action.payload };
-
+      newState.targetProviderMode = action.payload;
+      return newState;
     case 'SET_UPDATING':
-      return { ...state, updating: action.payload };
+      newState.updating = action.payload;
+      return newState;
     case 'INIT':
       return {
         hasChanges: false,

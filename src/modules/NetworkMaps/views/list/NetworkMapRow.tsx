@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
-import { createStatusCell } from 'src/modules/utils/createStatusCell.tsx';
+import { createStatusCell } from 'src/modules/utils/createStatusCell';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';

@@ -1,14 +1,12 @@
-import {
-  createContext,
-  type FC,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import { type FC, type ReactNode, useCallback, useMemo, useState } from 'react';
 
 import useToggle from '../../hooks/useToggle';
+
+import { ModalContext } from './ModalContext';
+
+type ModalHOCProps = {
+  children: ReactNode;
+};
 
 /**
  * A provider component that wraps its children with the modal context.
@@ -33,7 +31,7 @@ export const ModalHOC: FC<ModalHOCProps> = ({ children }) => {
   const [isModalOpen, toggleModal] = useToggle();
 
   const showModal = useCallback(
-    (modal) => {
+    (modal: ReactNode) => {
       setModalComponent(modal);
       toggleModal();
     },
@@ -55,29 +53,3 @@ export const ModalHOC: FC<ModalHOCProps> = ({ children }) => {
     </ModalContext.Provider>
   );
 };
-
-/**
- * A custom hook that provides access to the Forklift modal context.
- *
- * @returns {ModalContextType} The modal context object.
- * @throws {Error} If used outside of the ModalProvider.
- */
-export const useModal = (): ModalContextType => {
-  const context = useContext(ModalContext);
-  if (!context) {
-    throw new Error('useModal must be used within a ModalProvider');
-  }
-  return context;
-};
-
-type ModalContextType = {
-  showModal: (modal: ReactNode) => void;
-  toggleModal: () => void;
-};
-
-type ModalHOCProps = {
-  children: ReactNode;
-};
-
-// Creating the context.
-const ModalContext = createContext<ModalContextType | undefined>(undefined);

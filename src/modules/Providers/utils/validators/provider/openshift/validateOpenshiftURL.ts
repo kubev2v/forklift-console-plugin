@@ -1,4 +1,4 @@
-import type { ValidationMsg } from 'src/providers/utils/types';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import { validateURL } from '../../common';
 
@@ -7,13 +7,13 @@ export const validateOpenshiftURL = (url: string | number | undefined): Validati
   if (url === undefined) {
     return {
       msg: 'The URL of the Openshift Virtualization API endpoint, for example: https://example.com:6443 .',
-      type: 'default',
+      type: ValidationState.Default,
     };
   }
 
   // Sanity check
   if (typeof url !== 'string') {
-    return { msg: 'URL is not a string', type: 'error' };
+    return { msg: 'URL is not a string', type: ValidationState.Error };
   }
 
   const trimmedUrl: string = url.trim();
@@ -22,19 +22,19 @@ export const validateOpenshiftURL = (url: string | number | undefined): Validati
   if (trimmedUrl === '') {
     return {
       msg: 'The URL of the Openshift Virtualization API endpoint, for example: https://example.com:6443 .',
-      type: 'default',
+      type: ValidationState.Default,
     };
   }
 
   if (!isValidURL) {
     return {
       msg: 'The URL is invalid. URL should include the schema, for example: https://example.com:6443 .',
-      type: 'error',
+      type: ValidationState.Error,
     };
   }
 
   return {
     msg: 'The URL of the Openshift Virtualization API endpoint, for example: https://example.com:6443 .',
-    type: 'success',
+    type: ValidationState.Success,
   };
 };

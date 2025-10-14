@@ -4,7 +4,7 @@ import { getTargetPowerStateLabel, type TargetPowerStateValue } from 'src/plans/
 
 import type { V1beta1Plan } from '@kubev2v/types';
 import { getPlanTargetPowerState } from '@utils/crds/plans/selectors';
-import { isEmpty } from '@utils/helpers.ts';
+import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
 type VMTargetPowerStateCellRendererProps = {

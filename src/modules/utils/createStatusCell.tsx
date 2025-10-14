@@ -1,10 +1,10 @@
 import type { FC, ReactNode } from 'react';
-import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell.tsx';
-import { useStatusPhaseValues } from 'src/modules/utils/useStatusPhaseValues.tsx';
+import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
+import { useStatusPhaseValues } from 'src/modules/utils/useStatusPhaseValues';
 
-import { getResourceFieldValue } from '@components/common/FilterGroup/matchers.ts';
-import type { ResourceField } from '@components/common/utils/types.ts';
-import { CATEGORY_TYPES } from '@utils/constants.ts';
+import { getResourceFieldValue } from '@components/common/FilterGroup/matchers';
+import type { ResourceField } from '@components/common/utils/types';
+import { CATEGORY_TYPES } from '@utils/constants';
 
 export const createStatusCell = <
   T extends Record<string, object | string | ((resourceData: unknown) => unknown)>,

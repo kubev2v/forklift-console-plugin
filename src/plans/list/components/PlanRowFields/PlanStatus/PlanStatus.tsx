@@ -1,5 +1,6 @@
 import type { FC } from 'react';
-import { ModalHOC, useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import PlanStartMigrationModal from 'src/plans/actions/components/StartPlanModal/PlanStartMigrationModal';
 import PlanStatusLabel from 'src/plans/details/components/PlanStatus/PlanStatusLabel';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';

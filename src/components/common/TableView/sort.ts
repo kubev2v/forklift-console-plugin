@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import type { ThProps } from '@patternfly/react-table';
+import { SortByDirection, type ThProps } from '@patternfly/react-table';
 
 import { getResourceFieldValue } from '../FilterGroup/matchers';
 import { localeCompare } from '../utils/localCompare';
@@ -12,6 +12,8 @@ import type { SortType } from './types';
  * Compares all types by converting them to string.
  * Nullish entities are converted to empty string.
  * @see localeCompare
+ * @param a
+ * @param b
  * @param locale to be used by string compareFn
  */
 export const universalComparator = (a: any, b: any, locale: string) => {
@@ -26,6 +28,7 @@ export const universalComparator = (a: any, b: any, locale: string) => {
  * @param currentSort
  * @param locale defaults to "en"
  * @param fieldComparator (optional) custom field compareFn. Defaults to universal string based compareFn.
+ * @param fields
  * @returns compareFn function
  */
 export const compareWith = (
@@ -54,6 +57,8 @@ export const compareWith = (
  * 2) build compareFn based on the current active sort definition
  *
  * @param fields (read only) field metadata
+ * @param resolvedLanguage
+ * @param defaultSort
  * @returns [activeSort, setActiveSort, compareFn]
  */
 export const useSort = (
@@ -90,7 +95,7 @@ export const useSort = (
         fields.find((field) => field.resourceFieldId === activeSort.resourceFieldId)?.compareFn,
         fields,
       ),
-    [fields, activeSort],
+    [activeSort, resolvedLanguage, fields],
   );
 
   return [activeSort, setActiveSort, compareFn];
@@ -112,11 +117,15 @@ export const buildSort = ({
 }): ThProps['sort'] => ({
   columnIndex,
   onSort: (_event, index, direction) => {
-    resourceFields[index]?.resourceFieldId &&
+    const { label, resourceFieldId } = resourceFields[index] ?? {};
+    if (resourceFieldId) {
       setActiveSort({
-        isAsc: direction === 'asc',
+        isAsc: direction === SortByDirection.asc,
         ...resourceFields[index],
+        label: label ?? '',
+        resourceFieldId,
       });
+    }
   },
   sortBy: {
     direction: activeSort.isAsc ? 'asc' : 'desc',

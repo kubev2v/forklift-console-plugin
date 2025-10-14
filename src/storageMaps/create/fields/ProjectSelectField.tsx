@@ -9,12 +9,12 @@ import {
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect.tsx';
+import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect';
 import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
 import { useDefaultProject } from '@utils/hooks/useDefaultProject';
-import useWatchProjectNames from '@utils/hooks/useWatchProjectNames.ts';
+import useWatchProjectNames from '@utils/hooks/useWatchProjectNames';
 import { useForkliftTranslation } from '@utils/i18n';
-import { isSystemNamespace } from '@utils/namespaces.ts';
+import { isSystemNamespace } from '@utils/namespaces';
 
 import { StorageMapFieldId, storageMapFieldLabels } from '../../constants';
 import type { CreateStorageMapFormData } from '../types';

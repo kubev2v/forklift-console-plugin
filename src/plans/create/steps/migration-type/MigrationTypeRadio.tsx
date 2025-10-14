@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import HelpIconWithLabel from 'src/plans/components/HelpIconWithLabel';
 import { getMigrationTypeConfig } from 'src/plans/create/steps/migration-type/utils';
-import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType.ts';
-import { hasWarmMigrationProviderType } from 'src/plans/create/utils/hasWarmMigrationProviderType.ts';
+import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType';
+import { hasWarmMigrationProviderType } from 'src/plans/create/utils/hasWarmMigrationProviderType';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import type { ProviderVirtualMachine, V1beta1Provider } from '@kubev2v/types';

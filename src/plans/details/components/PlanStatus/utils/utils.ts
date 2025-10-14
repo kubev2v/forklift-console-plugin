@@ -1,4 +1,4 @@
-import type { TargetPowerStateValue } from 'src/plans/constants.ts';
+import type { TargetPowerStateValue } from 'src/plans/constants';
 import { isMigrationVirtualMachinePaused } from 'src/plans/details/utils/utils';
 
 import type {

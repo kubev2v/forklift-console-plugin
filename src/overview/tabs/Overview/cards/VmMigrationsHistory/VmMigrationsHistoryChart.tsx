@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import type { Interval } from 'luxon';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-import { TimeRangeOptions } from 'src/overview/tabs/Overview/utils/timeRangeOptions.ts';
+import { TimeRangeOptions } from 'src/overview/tabs/Overview/utils/timeRangeOptions';
 
 import { PlanModelRef } from '@kubev2v/types';
 import {
@@ -12,7 +12,7 @@ import {
   ChartStack,
   ChartVoronoiContainer,
 } from '@patternfly/react-charts';
-import type { ChartAreaProps } from '@patternfly/react-charts/src/components/ChartArea/ChartArea.tsx';
+import type { ChartAreaProps } from '@patternfly/react-charts/src/components/ChartArea/ChartArea';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';

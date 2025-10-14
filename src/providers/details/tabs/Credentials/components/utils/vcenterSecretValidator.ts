@@ -1,9 +1,9 @@
 import { SecretFieldsId } from 'src/providers/utils/constants';
-import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
 
 import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import { getDecodedValue } from './getDecodedValue';
 import { missingKeysInSecretData } from './missingKeysInSecretData';

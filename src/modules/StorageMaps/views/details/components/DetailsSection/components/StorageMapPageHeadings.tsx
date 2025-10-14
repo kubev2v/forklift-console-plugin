@@ -11,7 +11,7 @@ import {
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
-import { CATEGORY_TYPES } from '@utils/constants.ts';
+import { CATEGORY_TYPES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
 export const StorageMapPageHeadings: FC<{ name: string; namespace: string }> = ({

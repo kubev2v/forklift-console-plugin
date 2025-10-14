@@ -1,8 +1,8 @@
 import { type FC, type FormEvent, type MouseEvent, useState } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC.tsx';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
-import ProjectNameHelp from '@components/modals/ProjectNameHelp.tsx';
+import ProjectNameHelp from '@components/modals/ProjectNameHelp';
 import { k8sCreate, type K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 import { ProjectModel } from '@openshift-console/dynamic-plugin-sdk/lib/models';
 import {
@@ -20,7 +20,7 @@ import {
   TextInput,
   TextVariants,
 } from '@patternfly/react-core';
-import { isUpstream } from '@utils/env.ts';
+import { isUpstream } from '@utils/env';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import './CreateProjectModal.scss';
@@ -79,7 +79,8 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
 
   const projectsURL = isUpstream()
     ? `${UPSTREAM_LATEST}${workingWithProjectsURLs.upstream}`
-    : `${window.SERVER_FLAGS.documentationBaseURL}${workingWithProjectsURLs.downstream}`;
+    : // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      `${window.SERVER_FLAGS.documentationBaseURL}${workingWithProjectsURLs.downstream}`;
 
   return (
     <Modal

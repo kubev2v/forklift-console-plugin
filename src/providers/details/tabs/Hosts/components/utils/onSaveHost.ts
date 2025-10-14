@@ -6,6 +6,7 @@ import {
   SecretModel,
   type V1beta1Host,
   type V1beta1Provider,
+  type VSphereHostInventory,
 } from '@kubev2v/types';
 import { k8sGet } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
@@ -29,12 +30,14 @@ const processHostSecretPair = async (
   provider: V1beta1Provider,
   hostPair: InventoryHostNetworkTriple,
   ipAddress: string,
-  encodedUser: string | undefined,
-  encodedPassword: string | undefined,
-  encodedProvider: string,
-  encodedIpAddress: string,
+  encodedUser?: string,
+  encodedPassword?: string,
 ) => {
-  const { host, inventory } = hostPair;
+  const { host } = hostPair;
+  const inventory: VSphereHostInventory = hostPair.inventory;
+
+  const encodedProvider = encode(getName(provider) ?? '');
+  const encodedIpAddress = encode(ipAddress);
 
   if (host && getName(host)) {
     // Host already set, update network in the host and secret
@@ -128,19 +131,16 @@ export const onSaveHost = async ({
 }: OnSaveHostParams) => {
   const encodedUser = user && encode(user);
   const encodedPassword = passwd && encode(passwd);
-  const encodedProvider = encode(getName(provider) ?? '');
 
   const promises = hostPairs.map(async (hostPair) => {
+    const inventory: VSphereHostInventory = hostPair.inventory;
+
     // Look for the same network name in each host
-    const hostNetwork = hostPair?.inventory?.networkAdapters?.find(
-      ({ name }) => name === network.name,
-    );
+    const hostNetwork = inventory?.networkAdapters?.find(({ name }) => name === network.name);
 
     if (!hostNetwork) {
       throw new Error(`can't find network ${network.name} on host ${getName(hostPair?.host)}`);
     }
-
-    const encodedIpAddress = encode(hostNetwork?.ipAddress);
 
     return processHostSecretPair(
       provider,
@@ -148,8 +148,6 @@ export const onSaveHost = async ({
       hostNetwork?.ipAddress,
       encodedUser,
       encodedPassword,
-      encodedProvider,
-      encodedIpAddress,
     );
   });
   await Promise.all(promises);

@@ -10,6 +10,12 @@ import type { VMCellProps, VmData } from './components/VMCellProps';
 import { VMConcernsCellRenderer } from './components/VMConcernsCellRenderer';
 import { VMNameCellRenderer } from './components/VMNameCellRenderer';
 
+const cellRenderers: Record<string, FC<VMCellProps>> = {
+  concerns: VMConcernsCellRenderer,
+  name: VMNameCellRenderer,
+  ovaPath: ({ data }) => <TableCell>{(data?.vm as OvaVM)?.OvaPath}</TableCell>,
+};
+
 const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
   const fieldId = resourceFieldId;
 
@@ -25,11 +31,6 @@ type RenderTdProps = {
   resourceData: VmData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-};
-const cellRenderers: Record<string, FC<VMCellProps>> = {
-  concerns: VMConcernsCellRenderer,
-  name: VMNameCellRenderer,
-  ovaPath: ({ data }) => <TableCell>{(data?.vm as OvaVM)?.OvaPath}</TableCell>,
 };
 
 export const OvaVirtualMachinesCells: FC<RowProps<VmData>> = ({ resourceData, resourceFields }) => {

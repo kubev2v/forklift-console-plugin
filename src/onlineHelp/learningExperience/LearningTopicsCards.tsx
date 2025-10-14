@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 
 import { Card, CardBody, CardHeader, CardTitle, Flex, FlexItem } from '@patternfly/react-core';
-import { TELEMETRY_EVENTS, TipsTopicSourceComponent } from '@utils/analytics/constants.ts';
-import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics.ts';
+import { TELEMETRY_EVENTS, TipsTopicSourceComponent } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 
 import type { LearningExperienceTopic } from './types';
 

@@ -10,8 +10,8 @@ import {
   SelectOption,
 } from '@patternfly/react-core';
 import { BarsIcon } from '@patternfly/react-icons';
-import { TELEMETRY_EVENTS, TipsTopicSourceComponent } from '@utils/analytics/constants.ts';
-import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics.ts';
+import { TELEMETRY_EVENTS, TipsTopicSourceComponent } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { LearningExperienceTopic } from './types';

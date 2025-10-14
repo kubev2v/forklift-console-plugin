@@ -2,7 +2,8 @@ import { type FC, useMemo } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
-import { ModalHOC, useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {

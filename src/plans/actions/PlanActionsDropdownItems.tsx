@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';

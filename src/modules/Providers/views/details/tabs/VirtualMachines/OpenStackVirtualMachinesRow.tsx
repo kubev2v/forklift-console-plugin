@@ -10,6 +10,17 @@ import type { VMCellProps, VmData } from './components/VMCellProps';
 import { VMConcernsCellRenderer } from './components/VMConcernsCellRenderer';
 import { VMNameCellRenderer } from './components/VMNameCellRenderer';
 
+const cellRenderers: Record<string, FC<VMCellProps>> = {
+  concerns: VMConcernsCellRenderer,
+  flavorID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.flavorID}</TableCell>,
+  hostID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.hostID}</TableCell>,
+  imageID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.imageID}</TableCell>,
+  name: VMNameCellRenderer,
+  path: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.path}</TableCell>,
+  status: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.status}</TableCell>,
+  tenantID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.tenantID}</TableCell>,
+};
+
 const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
   const fieldId = resourceFieldId;
 
@@ -25,17 +36,6 @@ type RenderTdProps = {
   resourceData: VmData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-};
-
-const cellRenderers: Record<string, FC<VMCellProps>> = {
-  concerns: VMConcernsCellRenderer,
-  flavorID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.flavorID}</TableCell>,
-  hostID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.hostID}</TableCell>,
-  imageID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.imageID}</TableCell>,
-  name: VMNameCellRenderer,
-  path: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.path}</TableCell>,
-  status: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.status}</TableCell>,
-  tenantID: ({ data }) => <TableCell>{(data?.vm as OpenstackVM)?.tenantID}</TableCell>,
 };
 
 export const OpenStackVirtualMachinesCells: FC<RowProps<VmData>> = ({

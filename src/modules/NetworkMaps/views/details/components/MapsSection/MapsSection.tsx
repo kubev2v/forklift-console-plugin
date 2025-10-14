@@ -1,6 +1,6 @@
 import { type FC, useEffect, useReducer } from 'react';
 import { updateNetworkMapDestination } from 'src/modules/NetworkMaps/utils/helpers/updateNetworkMapDestination';
-import MapsButtonArea from 'src/modules/NetworkMaps/views/details/components/MapsSection/MapsButtonArea.tsx';
+import MapsButtonArea from 'src/modules/NetworkMaps/views/details/components/MapsSection/MapsButtonArea';
 import {
   convertInventoryNetworkToSource,
   convertNetworkToDestination,
@@ -8,11 +8,11 @@ import {
   getSourceNetName,
   isNetMapped,
   openShiftNetworkAttachmentDefinitionToName,
-} from 'src/modules/NetworkMaps/views/details/components/MapsSection/mapsSectionUtils.ts';
+} from 'src/modules/NetworkMaps/views/details/components/MapsSection/mapsSectionUtils';
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { MappingList } from 'src/modules/Providers/views/migrate/components/MappingList';
 import type { Mapping } from 'src/modules/Providers/views/migrate/types';
-import { POD } from 'src/plans/details/utils/constants.ts';
+import { POD } from 'src/plans/details/utils/constants';
 import { isMapDestinationTypeSupported } from 'src/plans/details/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
