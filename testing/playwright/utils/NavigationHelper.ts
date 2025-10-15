@@ -60,10 +60,26 @@ export class NavigationHelper {
 
     await disableGuidedTour(this.page);
     await this.page.goto(url);
+    await this.page.waitForLoadState('networkidle');
+
+    const tourDialog = this.page.getByRole('dialog');
+    if (await tourDialog.isVisible({ timeout: 10000 })) {
+      const skipButton = tourDialog.getByRole('button', { name: 'Skip tour' });
+      await skipButton.click();
+      await tourDialog.waitFor({ state: 'hidden' });
+    }
   }
 
   async navigateToMigrationMenu(): Promise<void> {
     await this.navigateToConsole();
+
+    const tourDialog = this.page.getByRole('dialog');
+    if (await tourDialog.isVisible({ timeout: 10000 })) {
+      const skipButton = tourDialog.getByRole('button', { name: 'Skip tour' });
+      await skipButton.click();
+      await tourDialog.waitFor({ state: 'hidden' });
+    }
+
     await this.page.getByTestId('migration-nav-item').click({ timeout: 20000 });
   }
 
