@@ -46,12 +46,12 @@ export const createPlan = async ({
         storage: getObjectRef(storageMap),
       },
       migrateSharedDisks,
+      preserveStaticIPs: preserveStaticIps,
       provider: {
         destination: getObjectRef(targetProvider),
         source: getObjectRef(sourceProvider),
       },
       targetNamespace: targetProject,
-      ...(preserveStaticIps && { preserveStaticIPs: preserveStaticIps }),
       ...(transferNetwork && { transferNetwork }),
       targetPowerState,
       type: migrationType,
