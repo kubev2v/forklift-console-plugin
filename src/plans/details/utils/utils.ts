@@ -9,13 +9,15 @@ export const isMigrationVirtualMachinePaused = (vm: V1beta1PlanStatusMigrationVm
 
 export const getPlanMigrationType = (plan: V1beta1Plan): MigrationTypeValue => {
   // check the new type field first then fall back to the warm bool
-  switch (plan.spec?.type) {
+  switch (plan?.spec?.type) {
     case 'warm':
       return MigrationTypeValue.Warm;
     case 'live':
       return MigrationTypeValue.Live;
+    case undefined:
+    case 'cold':
     default:
-      if (plan.spec?.warm) {
+      if (plan?.spec?.warm) {
         return MigrationTypeValue.Warm;
       }
       return MigrationTypeValue.Cold;
