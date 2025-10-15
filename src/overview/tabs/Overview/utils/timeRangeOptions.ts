@@ -36,25 +36,25 @@ export const TimeRangeOptionsDictionary: {
   All: {
     bucket: { day: 1 },
     filter: () => true,
-    span: { days: 365 * 10 - 1 },
+    span: { days: 365 * 10 },
     unit: 'day',
   },
   Last10Days: {
     bucket: { day: 1 },
     filter: isLast10Days,
-    span: { days: 9 },
+    span: { days: 10 },
     unit: 'day',
   },
   Last24H: {
     bucket: { hour: 1 },
     filter: isLast24H,
-    span: { hours: 23 },
+    span: { hours: 24 },
     unit: 'hour',
   },
   Last31Days: {
     bucket: { day: 1 },
     filter: isLast31Days,
-    span: { days: 30 },
+    span: { days: 31 },
     unit: 'day',
   },
 };
