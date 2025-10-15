@@ -3,6 +3,7 @@ import { Controller } from 'react-hook-form';
 
 import VersionedCodeEditor from '@components/VersionedCodeEditor/VersionedCodeEditor';
 import { FormGroup, FormHelperText } from '@patternfly/react-core';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -17,6 +18,7 @@ type AnsiblePlaybookFieldProps = {
 const AnsiblePlaybookField: FC<AnsiblePlaybookFieldProps> = ({ fieldId }) => {
   const { t } = useForkliftTranslation();
   const { control } = useCreatePlanFormContext();
+  const isDarkTheme = useIsDarkTheme();
   const subFieldId = getHooksSubFieldId(fieldId, MigrationHookFieldId.AnsiblePlaybook);
 
   return (
