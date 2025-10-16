@@ -12,6 +12,7 @@ import selectToggle from '@utils/selectToggle';
 
 import { AFFINITY_TYPE_LABELS } from './utils/constants';
 import type { AffinityRowData } from './utils/types';
+import type { AffinityType } from './utils/types';
 
 type AffinityTypeSelectProps = {
   focusedAffinity: AffinityRowData;
@@ -28,7 +29,7 @@ const AffinityTypeSelect: FC<AffinityTypeSelectProps> = ({
 
   const handleChange = (event: ReactMouseEvent | undefined, value: string | number | undefined) => {
     event?.preventDefault();
-    setFocusedAffinity({ ...focusedAffinity, type: value });
+    setFocusedAffinity({ ...focusedAffinity, type: value as AffinityType });
     setIsOpen(false);
   };
 

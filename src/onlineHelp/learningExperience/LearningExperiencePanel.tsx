@@ -36,7 +36,7 @@ const LearningExperiencePanel: FC<LearningExperiencePanelProps> = ({ setIsDrawer
               headingLevel="h2"
               size="xl"
               className="pfext-quick-start-panel-content__name"
-              style={{ marginRight: 'var(--pf-v5-global--spacer--md)' }}
+              style={{ marginRight: 'var(--pf-t--global--spacer--md)' }}
             >
               {t('Tips and tricks')}
             </Title>

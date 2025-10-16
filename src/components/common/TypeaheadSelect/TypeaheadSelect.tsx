@@ -29,6 +29,8 @@ import {
 } from './utils/utils';
 import TypeaheadMenuToggle from './TypeaheadMenuToggle';
 
+import './TypeaheadSelect.scss';
+
 type TypeaheadSelectProps = {
   options: TypeaheadSelectOption[];
   value?: string | number;
@@ -51,7 +53,7 @@ type TypeaheadSelectProps = {
   toggleProps?: Omit<MenuToggleProps, 'ref' | 'onClick' | 'isExpanded'>;
   filterControls?: ReactNode;
   testId?: string;
-} & Omit<SelectProps, 'toggle' | 'onSelect' | 'selected'>;
+} & Omit<SelectProps, 'toggle' | 'onSelect' | 'selected' | 'onChange'>;
 
 const TypeaheadSelect = (
   {
@@ -202,6 +204,7 @@ const TypeaheadSelect = (
           </SelectList>
           {footer && (
             <MenuFooter
+              className="pf-v6-u-pt-sm"
               onClick={() => {
                 setIsOpen(false);
               }}

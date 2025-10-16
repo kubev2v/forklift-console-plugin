@@ -6,13 +6,10 @@ import {
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
-  EmptyStateHeader,
-  EmptyStateIcon,
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
-import * as PatternflyTokens from '@patternfly/react-tokens';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type ReviewStepErrorStateProps = {
@@ -24,17 +21,12 @@ const ReviewStepErrorState: FC<ReviewStepErrorStateProps> = ({ error, onBackToRe
   const { t } = useForkliftTranslation();
 
   return (
-    <EmptyState className="pf-v5-u-h-100">
-      <EmptyStateHeader
-        titleText={t('Failed to create plan')}
-        headingLevel="h4"
-        icon={
-          <EmptyStateIcon
-            icon={ExclamationCircleIcon}
-            color={PatternflyTokens.global_danger_color_100.var}
-          />
-        }
-      />
+    <EmptyState
+      titleText={t('Failed to create plan')}
+      headingLevel="h4"
+      icon={ExclamationCircleIcon}
+      className="pf-v6-u-h-100"
+    >
       <EmptyStateBody>
         <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
           <FlexItem>{error}</FlexItem>

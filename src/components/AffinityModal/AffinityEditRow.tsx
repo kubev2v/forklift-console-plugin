@@ -82,13 +82,12 @@ const AffinityEditRow: FC<AffinityEditRowProps> = ({ expression, onChange, onDel
       </GridItem>
       <GridItem span={1}>
         <Button
+          icon={<MinusCircleIcon />}
           onClick={() => {
             onDelete(id);
           }}
           variant={ButtonVariant.plain}
-        >
-          <MinusCircleIcon />
-        </Button>
+        />
       </GridItem>
     </>
   );

@@ -1,10 +1,10 @@
-import type { FC, FormEvent, ReactNode } from 'react';
+import { type FC, type FormEvent, type ReactNode, useState } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { Form, FormSelect, FormSelectOption } from '@patternfly/react-core';
+import { Form, MenuToggle, Select, SelectList, SelectOption } from '@patternfly/react-core';
 
 type FindProviderFunction = (args: {
   providers: V1beta1Provider[];
@@ -33,6 +33,7 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
     />
   );
 
+  const [isOpen, setIsOpen] = useState(false);
   const targetProvider = findProvider({ name: selectedProviderName, providers });
 
   const validated = targetProvider ? 'success' : 'error';
@@ -42,32 +43,50 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
     return (
       <Form isWidthLimited>
         <FormGroupWithHelpText
+          labelHelp={helpContent}
           label={label}
           isRequired
           fieldId="targetProvider"
           validated={validated}
           helperTextInvalid={invalidLabel}
         >
-          <FormSelect
-            value={selectedProviderName}
-            onChange={(event, value) => {
-              onChange(value, event);
+          <Select
+            isOpen={isOpen}
+            selected={selectedProviderName}
+            onSelect={(_event, value) => {
+              onChange(value as string, _event as FormEvent<HTMLSelectElement>);
+              setIsOpen(false);
             }}
-            id="targetProvider"
-            isDisabled={!hasProviders}
-            validated={validated}
+            onOpenChange={(nextOpen) => {
+              setIsOpen(nextOpen);
+            }}
+            toggle={(toggleRef: React.Ref<HTMLButtonElement>) => (
+              <MenuToggle
+                ref={toggleRef}
+                onClick={() => {
+                  setIsOpen(!isOpen);
+                }}
+                isExpanded={isOpen}
+                isDisabled={!hasProviders}
+              >
+                {selectedProviderName || placeHolderLabel}
+              </MenuToggle>
+            )}
           >
-            {[
-              <FormSelectOption
-                key="placeholder"
-                value={''}
-                label={placeHolderLabel}
-                isPlaceholder
-                isDisabled
-              />,
-              ...providers.map(ProviderOption),
-            ]}
-          </FormSelect>
+            <SelectList>
+              <SelectOption key="placeholder" value="" isDisabled>
+                {placeHolderLabel}
+              </SelectOption>
+              {providers.map((provider, index) => (
+                <SelectOption
+                  key={provider?.metadata?.name || index}
+                  value={provider?.metadata?.name || ''}
+                >
+                  {provider?.metadata?.name}
+                </SelectOption>
+              ))}
+            </SelectList>
+          </Select>
         </FormGroupWithHelpText>
       </Form>
     );

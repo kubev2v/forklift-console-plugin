@@ -5,15 +5,8 @@ import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import {
-  Button,
-  ButtonVariant,
-  Form,
-  Modal,
-  ModalVariant,
-  Stack,
-  TextInput,
-} from '@patternfly/react-core';
+import { Button, ButtonVariant, Form, Stack, TextInput } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 
 import useToggle from '../../hooks/useToggle';
 import { getValueByJsonPath } from '../../utils/helpers/getValueByJsonPath';
@@ -199,7 +192,7 @@ export const EditModal: FC<EditModalProps> = ({
           <Form id="modal-with-form-form">
             <FormGroupWithHelpText
               label={label}
-              labelIcon={
+              labelHelp={
                 bodyContent || headerContent ? (
                   <HelpIconPopover header={headerContent} onClick={onClick}>
                     {bodyContent}

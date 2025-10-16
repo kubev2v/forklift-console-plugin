@@ -2,7 +2,7 @@ import { type FC, useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { K8sIoApiCoreV1Affinity, K8sResourceCommon } from '@kubev2v/types';
-import { ModalVariant } from '@patternfly/react-core';
+import { ModalVariant } from '@patternfly/react-core/deprecated';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 

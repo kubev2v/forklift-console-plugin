@@ -345,7 +345,7 @@ const StandardPageInner = <T,>({
   return (
     <span className={className} data-testid={testId}>
       {title && (
-        <PageSection variant="light" className="forklift-page__main-title">
+        <PageSection hasBodyWrapper={false} className="forklift-page__main-title">
           <Level>
             <LevelItem>
               <Flex
@@ -370,8 +370,11 @@ const StandardPageInner = <T,>({
           </Level>
         </PageSection>
       )}
-      {alerts && <PageSection variant="light">{alerts}</PageSection>}
-      <PageSection variant="light" padding={{ default: noPadding ? 'noPadding' : 'padding' }}>
+      {alerts && <PageSection hasBodyWrapper={false}>{alerts}</PageSection>}
+      <PageSection
+        hasBodyWrapper={false}
+        padding={{ default: noPadding ? 'noPadding' : 'padding' }}
+      >
         <Toolbar clearAllFilters={clearAllFilters} clearFiltersButtonText={t('Clear all filters')}>
           <ToolbarContent>
             <Split hasGutter>

@@ -15,7 +15,7 @@ const NBDEClevisField = () => {
   return (
     <FormGroup
       label={otherFormFieldLabels[OtherSettingsFormFieldId.NBDEClevis]}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover>
           <Stack hasGutter>
             <StackItem>

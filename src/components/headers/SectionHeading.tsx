@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 
-import { Text, type TextProps } from '@patternfly/react-core';
+import { Content, type ContentProps } from '@patternfly/react-core';
 
 type SectionHeadingProps = {
   text: ReactNode;
@@ -8,7 +8,7 @@ type SectionHeadingProps = {
   id?: string;
   testId?: string;
   children?: ReactNode;
-  textComponent?: TextProps['component'];
+  textComponent?: ContentProps['component'];
 };
 
 /**
@@ -25,7 +25,7 @@ const SectionHeading: FC<SectionHeadingProps> = ({
   text,
   textComponent = 'h2',
 }) => (
-  <Text
+  <Content
     component={textComponent}
     className={`pf-v6-c-content--${textComponent} ${className ?? ''}`}
     data-testid={testId}
@@ -33,7 +33,7 @@ const SectionHeading: FC<SectionHeadingProps> = ({
   >
     <span>{text}</span>
     {children}
-  </Text>
+  </Content>
 );
 
 export default SectionHeading;

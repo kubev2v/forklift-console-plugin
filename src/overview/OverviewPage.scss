@@ -1,22 +1,20 @@
 @use '../styles/common';
 
 .forklift-overview__welcome-right {
-  align-self: normal;
-  width: 100%;
+  padding-top: 0;
 }
 
 .forklift-overview__welcome-left {
-  padding: var(--pf-v5-global--spacer--3xl);
-  align-self: center;
-  img {
-    width: 161px;
-    height: 161px;
-  }
-}
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--pf-t--global--spacer--md) var(--pf-t--global--spacer--xl)
+    var(--pf-t--global--spacer--md) var(--pf-t--global--spacer--sm);
 
-.forklift-overview__welcome-left--img {
-  width: 161px;
-  height: 161px;
+  img {
+    width: 132px;
+    height: 132px;
+  }
 }
 
 .forklift-overview__welcome-text {
@@ -24,31 +22,30 @@
 }
 
 .forklift-overview__welcome-tiles {
-  .pf-v5-c-tile {
-    transform: scale(0.8);
-    transform-origin: left;
-    margin-right: -31px;
-    width: 231px;
-    padding-top: 32px;
-    padding-bottom: 32px;
-    margin-bottom: -14px;
+  .pf-v6-c-tile {
+    width: 240px;
+    min-width: 240px;
 
-    .pf-v5-theme-dark & {
+    .pf-v6-theme-dark & {
       background-color: #151515;
       &::before {
         border: none;
       }
     }
 
-    img {
-      vertical-align: sub;
-      height: 24px;
+    .pf-v6-c-tile__header {
+      justify-content: center;
     }
 
-    &.vmware-tile {
-      img {
-        padding: 3px;
-      }
+    .pf-v6-c-tile__icon {
+      display: flex;
+      align-items: center;
+    }
+
+    img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
     }
   }
 }
@@ -65,15 +62,26 @@
 .forklift-overview__status-migration-donut {
   height: 270px;
   width: 270px;
+
+  --pf-v5-chart-donut--label--title--Fill: var(--pf-t--global--text--color--regular);
+  --pf-v5-chart-donut--label--subtitle--Fill: var(--pf-t--global--text--color--regular);
 }
 
 .forklift-overview__status-migration-chart {
   overflow: hidden;
   padding-bottom: 16px;
+  height: 100%;
+
+  --pf-v5-chart-global--label--Fill: var(--pf-t--global--text--color--regular);
 }
 
 .forklift-overview__vms {
   height: 358px;
+
+  .pf-v6-c-card__body {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .forklift-overview__pods {
@@ -104,7 +112,7 @@
   overflow-x: auto;
 }
 
-.pf-v5-c-alert-group.pf-m-toast.forklift-overview__settings-alert {
+.pf-v6-c-alert-group.pf-m-toast.forklift-overview__settings-alert {
   max-width: 280px;
 }
 

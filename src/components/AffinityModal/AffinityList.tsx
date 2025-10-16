@@ -28,8 +28,14 @@ const AffinityList: FC<AffinityListProps> = ({
       <StackItem>
         <AffinityDescriptionText />
       </StackItem>
-      <StackItem data-testid="affinity-rules-list">
-        <VirtualizedTable<AffinityRowData>
+      <StackItem ata-testid="affinity-rules-list">
+        <VirtualizedTable<
+          AffinityRowData,
+          {
+            onDelete: (affinity: AffinityRowData) => void;
+            onEdit: (affinity: AffinityRowData) => void;
+          }
+        >
           columns={columns}
           data={affinities ?? []}
           loaded

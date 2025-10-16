@@ -19,9 +19,6 @@ const PreserveCpuModelSwitch: FC<PreserveCpuModelSwitchProps> = ({ onChange, val
     <Switch
       id="preserve-cluster-cpu-switch"
       label={t('Preserve the CPU model and flags the VM runs with in its oVirt cluster.')}
-      labelOff={t(
-        'Do not try to preserve the CPU model and flags the VM runs with in its oVirt cluster.',
-      )}
       isChecked={value}
       onChange={handleChange}
     />

@@ -10,7 +10,7 @@ import VmMigrationsDonutCard from './cards/VmMigrationsDonutCard';
 import VmMigrationsHistoryCard from './cards/VmMigrationsHistory/VmMigrationsHistoryCard';
 import WelcomeCard from './cards/Welcome/WelcomeCard';
 
-import '@patternfly/patternfly/patternfly-charts-theme-dark.css';
+import '@patternfly/patternfly/patternfly-charts.css';
 
 const ForkliftControllerOverviewTab: FC = () => {
   const [forkliftController] = useK8sWatchForkliftController();

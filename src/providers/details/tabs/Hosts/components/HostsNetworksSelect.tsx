@@ -5,7 +5,7 @@ import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/
 import type { SelectValueType } from '@components/common/utils/types';
 import { FilterableSelect } from '@components/FilterableSelect/FilterableSelect';
 import type { NetworkAdapters } from '@kubev2v/types';
-import { HelperText, HelperTextItem, Text } from '@patternfly/react-core';
+import { Content, HelperText, HelperTextItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { getSelectedInventoryHostNetworkTriples } from './utils/getSelectedInventoryHostNetworkTriples';
@@ -71,10 +71,10 @@ const HostsNetworksSelect: FC<HostsNetworksSelectProps> = ({
           networkOptions?.map((option) => ({
             children: (
               <>
-                <Text>{option.label}</Text>
+                <Content component="p">{option.label}</Content>
                 {option.description && (
                   <HelperText>
-                    <HelperTextItem variant="indeterminate">{option.description}</HelperTextItem>
+                    <HelperTextItem>{option.description}</HelperTextItem>
                   </HelperText>
                 )}
               </>

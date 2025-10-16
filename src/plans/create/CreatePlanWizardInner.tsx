@@ -103,7 +103,6 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
       (planStepOrder[id] > planStepOrder[currentStep.id as PlanWizardStepId] &&
         hasPreviousStepErrors(id, hasStepErrors)),
     name: planStepNames[id],
-    ...((isSubmitting || hasCreatePlanError) && { body: null }),
   });
 
   return (

@@ -10,7 +10,7 @@ import {
   getTextListComponentForListStyle,
 } from 'src/onlineHelp/learningExperience/utils';
 
-import { Text, TextContent, TextList } from '@patternfly/react-core';
+import { Content } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
 
 type HelpTopicProps = {
@@ -19,20 +19,20 @@ type HelpTopicProps = {
 
 const HelpTopic: FC<HelpTopicProps> = ({ topic }) => (
   <>
-    <TextContent>
-      <Text component="h3">
-        <span className="pf-v5-u-mr-sm">{topic.icon}</span>
+    <Content>
+      <Content component="h3">
+        <span className="pf-v6-u-mr-sm">{topic.icon}</span>
         {topic.title}
-      </Text>
-    </TextContent>
-    <div className="pf-v5-u-mt-lg">
+      </Content>
+    </Content>
+    <div className="pf-v6-u-mt-lg">
       {topic.subTopics.map((subTopic, index) => {
         if (topic.subListStyleType === ListStyleType.DESCRIPTIONS) {
           return (
             <div key={subTopic.id} className="forklift--learning__help-description">
               {subTopic.title}
               {subTopic.subTopics ? (
-                <div className={css('pf-v5-u-mb-md', Boolean(subTopic.title) && 'pf-v5-u-mt-md')}>
+                <div className={css('pf-v6-u-mb-md', Boolean(subTopic.title) && 'pf-v6-u-mt-md')}>
                   {subTopic.expandable ? (
                     subTopic.subTopics.map((nextSubTopic, subIndex) => (
                       <HelpTopicSection
@@ -44,13 +44,13 @@ const HelpTopic: FC<HelpTopicProps> = ({ topic }) => (
                     ))
                   ) : (
                     <div className={getClassForListStyle(subTopic.subListStyleType)}>
-                      <TextList
+                      <Content
                         component={getTextListComponentForListStyle(subTopic.subListStyleType)}
                       >
                         {subTopic.subTopics.map((nextSubTopic) => (
                           <HelpSubTopic key={nextSubTopic.id} topic={nextSubTopic} />
                         ))}
-                      </TextList>
+                      </Content>
                     </div>
                   )}
                 </div>

@@ -126,7 +126,7 @@ export const EditField: FC<EditFieldProps> = ({
       <Form id="modal-with-form-form">
         <FormGroupWithHelpText
           label={label}
-          labelIcon={
+          labelHelp={
             headerContent && bodyContent ? (
               <HelpIconPopover header={headerContent} onClick={onClick}>
                 {bodyContent}

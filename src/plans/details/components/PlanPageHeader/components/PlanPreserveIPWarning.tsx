@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import Linkify from 'react-linkify';
 
-import { Alert, AlertVariant, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Alert, AlertVariant, Content, ContentVariants } from '@patternfly/react-core';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
 const PlanPreserveIPWarning: FC = () => {
@@ -14,15 +14,15 @@ const PlanPreserveIPWarning: FC = () => {
       )}
       variant={AlertVariant.warning}
     >
-      <TextContent className="forklift-providers-list-header__alert">
-        <Text component={TextVariants.p}>
+      <Content className="forklift-providers-list-header__alert">
+        <Content component={ContentVariants.p}>
           <Linkify>
             {t(
               "Your migration plan preserves the static IPs of VMs and uses Pod Networking target network mapping. This combination isn't supported, because VM IPs aren't preserved in Pod Networking migrations.",
             )}
           </Linkify>
-        </Text>
-        <Text component={TextVariants.p}>
+        </Content>
+        <Content component={ContentVariants.p}>
           <Linkify>
             <ForkliftTrans>
               If your VMs use static IPs, click the Mappings tab of your plan, and choose a
@@ -31,8 +31,8 @@ const PlanPreserveIPWarning: FC = () => {
               If your VMs do not use static IPs, you can ignore this message.
             </ForkliftTrans>
           </Linkify>
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     </Alert>
   );
 };

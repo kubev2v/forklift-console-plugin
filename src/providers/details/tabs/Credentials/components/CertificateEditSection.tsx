@@ -4,7 +4,7 @@ import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import { Switch } from '@patternfly/react-core';
+import { type FileUploadProps, Switch } from '@patternfly/react-core';
 
 import CertificateUpload from './CertificateUpload/CertificateUpload';
 import { CacertHelperTextPopover, InsecureSkipVerifyHelperTextPopover } from './utils/constants';
@@ -34,7 +34,7 @@ const CertificateEditSection: FC<CertificateEditSectionProps> = ({
     <>
       <FormGroupWithHelpText
         label={t('Skip certificate validation')}
-        labelIcon={
+        labelHelp={
           <HelpIconPopover
             header={t('Skip certificate validation')}
             popoverProps={{ alertSeverityVariant: 'info' }}
@@ -43,8 +43,6 @@ const CertificateEditSection: FC<CertificateEditSectionProps> = ({
           </HelpIconPopover>
         }
         fieldId="insecureSkipVerify"
-        validated={insecureSkipVerifyValidation.type}
-        helperTextInvalid={insecureSkipVerifyValidation.msg}
       >
         <Switch
           className="forklift-section-secret-edit-switch"
@@ -59,7 +57,7 @@ const CertificateEditSection: FC<CertificateEditSectionProps> = ({
 
       <FormGroupWithHelpText
         label={t('CA certificate')}
-        labelIcon={
+        labelHelp={
           <HelpIconPopover
             header={t('CA certificate')}
             popoverProps={{ alertSeverityVariant: 'info' }}
@@ -77,7 +75,7 @@ const CertificateEditSection: FC<CertificateEditSectionProps> = ({
           type="text"
           filenamePlaceholder={t('Drag and drop a file or upload one')}
           value={cacert}
-          validated={cacertValidation.type}
+          validated={cacertValidation.type as FileUploadProps['validated']}
           onDataChange={(_e, value) => {
             onDataChange(value);
           }}
