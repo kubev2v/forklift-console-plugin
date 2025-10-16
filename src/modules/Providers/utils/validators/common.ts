@@ -59,7 +59,7 @@ const DNS_SUBDOMAINS_NAME_REGEXP =
   /^(?=.{1,253}$)[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\.[a-z0-9](?:[-a-z0-9]*[a-z0-9])?)*$/u;
 
 // validate bearer tokens, used in K8s
-const JWT_TOKEN_REGEX = /^(?:[a-zA-Z0-9_=]+)\.(?:[a-zA-Z0-9_=]+)\.(?:[a-zA-Z0-9_\-+/=]*)/gmu;
+const JWT_TOKEN_REGEX = /^(?:[a-zA-Z0-9_=]+)\.(?:[a-zA-Z0-9_=]+)\.(?:[a-zA-Z0-9_\-+/=]*)$/u;
 const K8S_TOKEN_REGEX = /^[a-z0-9]{6}.[a-z0-9]{16}$/u;
 const TMP_TOKEN_REGEX = /^sha256~[A-Za-z0-9+/=_-]{43}$/u;
 
