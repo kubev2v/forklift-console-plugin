@@ -12,7 +12,8 @@ import {
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { MappingList } from 'src/modules/Providers/views/migrate/components/MappingList';
 import type { Mapping } from 'src/modules/Providers/views/migrate/types';
-import { MULTUS, POD } from 'src/plans/details/utils/constants.ts';
+import { POD } from 'src/plans/details/utils/constants.ts';
+import { isMapDestinationTypeSupported } from 'src/plans/details/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
@@ -57,9 +58,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
       namespace: obj?.spec?.provider?.source?.namespace,
       namespaced: true,
     });
-
   const [sourceNetworks] = useSourceNetworks(sourceProvider);
-
   const [destinationProvider, destinationProviderLoaded, destinationProviderLoadError] =
     useK8sWatchResource<V1beta1Provider>({
       groupVersionKind: ProviderModelGroupVersionKind,
@@ -68,8 +67,18 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
       namespace: obj?.spec?.provider?.destination?.namespace,
       namespaced: true,
     });
-
   const [destinationNetworks] = useOpenShiftNetworks(destinationProvider);
+  const availableSources = sourceNetworks?.filter(
+    (network) => !isNetMapped(network?.id, state.networkMap),
+  );
+
+  const getCurrentDestinationNet = (current: Mapping) =>
+    destinationNetworks.find(
+      (network) => openShiftNetworkAttachmentDefinitionToName(network) === current.destination,
+    ) ?? { name: DEFAULT_NETWORK, type: POD };
+
+  const getCurrentSourceNet = (current: Mapping) =>
+    sourceNetworks.find((network) => network?.name === current.source) ?? { id: POD };
 
   const onUpdate = async () => {
     if (state.networkMap) {
@@ -81,10 +90,6 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
       dispatch({ payload: false, type: 'SET_UPDATING' });
     }
   };
-
-  const availableSources = sourceNetworks?.filter(
-    (network) => !isNetMapped(network?.id, state.networkMap),
-  );
 
   const onAdd = () => {
     if (!isEmpty(availableSources)) {
@@ -102,13 +107,8 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   };
 
   const onReplace = ({ current, next }: { current: Mapping; next: Mapping }) => {
-    const currentDestinationNet = destinationNetworks.find(
-      (network) => openShiftNetworkAttachmentDefinitionToName(network) === current.destination,
-    ) ?? { name: DEFAULT_NETWORK, type: POD };
-    const currentSourceNet = sourceNetworks.find((network) => network?.name === current.source) ?? {
-      id: POD,
-    };
-
+    const currentDestinationNet = getCurrentDestinationNet(current);
+    const currentSourceNet = getCurrentSourceNet(current);
     const nextDestinationNet = destinationNetworks.find(
       (network) => openShiftNetworkAttachmentDefinitionToName(network) === next.destination,
     );
@@ -127,7 +127,8 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
     const payload = state?.networkMap?.spec?.map?.map((map) => {
       return (map?.source?.id === currentSourceNet?.id ||
         map.source?.type === currentSourceNet?.id) &&
-        (map.destination?.name === currentDestinationNet?.name || map.destination?.type === MULTUS)
+        (map.destination?.name === currentDestinationNet?.name ||
+          isMapDestinationTypeSupported(map.destination?.type))
         ? nextMap
         : map;
     });
@@ -139,12 +140,8 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   };
 
   const onDelete = (current: Mapping) => {
-    const currentDestinationNet = destinationNetworks.find(
-      (network) => openShiftNetworkAttachmentDefinitionToName(network) === current.destination,
-    ) ?? { name: DEFAULT_NETWORK, type: POD };
-    const currentSourceNet = sourceNetworks.find((network) => network?.name === current.source) ?? {
-      id: POD,
-    };
+    const currentDestinationNet = getCurrentDestinationNet(current);
+    const currentSourceNet = getCurrentSourceNet(current);
 
     dispatch({
       payload: [
@@ -152,9 +149,9 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
           (map) =>
             !(
               (map?.source?.id === currentSourceNet?.id ||
-                map.source?.type === currentSourceNet?.id) &&
-              (map.destination?.name === currentDestinationNet?.name ||
-                map.destination?.type === MULTUS)
+                map?.source?.type === currentSourceNet?.id) &&
+              (map?.destination?.name === currentDestinationNet?.name ||
+                isMapDestinationTypeSupported(map?.destination?.type))
             ),
         ) ?? []),
       ],
