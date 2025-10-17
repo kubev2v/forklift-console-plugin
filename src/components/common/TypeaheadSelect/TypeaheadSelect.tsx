@@ -113,7 +113,6 @@ const TypeaheadSelect = (
     ],
   );
 
-  // Show filtered options when filtering, all options when not, or no options message
   const displayOptions = useMemo(() => {
     if (isEmpty(options)) {
       return [
@@ -128,13 +127,9 @@ const TypeaheadSelect = (
   }, [options, filteredOptions, noOptionsMessage]);
 
   const handleSelect = (selectedValue: string | number | undefined): void => {
-    if (isPlaceholderValue(selectedValue)) {
-      return;
-    }
+    if (isPlaceholderValue(selectedValue)) return;
 
-    // Check if this is a create action or existing option
     const existingOption = options.find((option) => option.value === selectedValue);
-
     if (existingOption || isCreatable) {
       onChange(selectedValue);
       setIsOpen(false);
@@ -143,17 +138,39 @@ const TypeaheadSelect = (
     }
   };
 
+  const handleSelectionClear = (): void => {
+    setInputValue('');
+    onChange('');
+  };
+
+  const handleToggleClick = (): void => {
+    if (isOpen) {
+      setIsFiltering(false);
+      setInputValue(selectedOption?.content?.toString() ?? '');
+    }
+    setIsOpen((prev) => !prev);
+  };
+
+  const handleInputValueChange = (newInputValue: string, newIsFiltering: boolean): void => {
+    setInputValue(newInputValue);
+    setIsFiltering(newIsFiltering);
+  };
+
+  const handleOpenChange = (open: boolean): void => {
+    if (!open) setIsOpen(false);
+  };
+
+  const handleFooterClick = (): void => {
+    setIsOpen(false);
+  };
+
   return (
     <Select
       isOpen={isOpen}
       onSelect={(_, selectedValue) => {
         handleSelect(selectedValue);
       }}
-      onOpenChange={(open) => {
-        if (!open) {
-          setIsOpen(false);
-        }
-      }}
+      onOpenChange={handleOpenChange}
       toggle={(toggleRef) => (
         <TypeaheadMenuToggle
           toggleRef={toggleRef}
@@ -167,22 +184,9 @@ const TypeaheadSelect = (
           isFiltering={isFiltering}
           inputValue={inputValue}
           onInputChange={onInputChange}
-          onSelectionClear={() => {
-            setInputValue('');
-            onChange('');
-          }}
-          onToggleClick={() => {
-            if (isOpen) {
-              // Reset filtering state when closing
-              setIsFiltering(false);
-              setInputValue(selectedOption?.content?.toString() ?? '');
-            }
-            setIsOpen((prev) => !prev);
-          }}
-          onInputValueChange={(newInputValue: string, newIsFiltering: boolean): void => {
-            setInputValue(newInputValue);
-            setIsFiltering(newIsFiltering);
-          }}
+          onSelectionClear={handleSelectionClear}
+          onToggleClick={handleToggleClick}
+          onInputValueChange={handleInputValueChange}
           toggleProps={toggleProps}
           testId={testId}
         />
@@ -203,12 +207,7 @@ const TypeaheadSelect = (
             ))}
           </SelectList>
           {footer && (
-            <MenuFooter
-              className="pf-v6-u-pt-sm"
-              onClick={() => {
-                setIsOpen(false);
-              }}
-            >
+            <MenuFooter className="pf-v6-u-pt-sm" onClick={handleFooterClick}>
               {footer}
             </MenuFooter>
           )}

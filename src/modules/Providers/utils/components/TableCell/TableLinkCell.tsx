@@ -19,7 +19,7 @@ export const TableLinkCell: FC<TableLinkCellProps> = ({
   namespace,
 }) => {
   return (
-    <TableLabelCell hasLabel={hasLabel} label={label} labelColor={labelColor} isWrap={true}>
+    <TableLabelCell hasLabel={hasLabel} label={label} labelColor={labelColor}>
       <ResourceLink groupVersionKind={groupVersionKind} name={name} namespace={namespace} />
     </TableLabelCell>
   );

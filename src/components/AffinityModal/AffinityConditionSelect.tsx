@@ -11,8 +11,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import selectToggle from '@utils/selectToggle';
 
 import { AFFINITY_CONDITION_LABELS } from './utils/constants';
-import type { AffinityRowData } from './utils/types';
-import type { AffinityCondition } from './utils/types';
+import type { AffinityCondition, AffinityRowData } from './utils/types';
 
 type AffinityConditionSelectProps = {
   focusedAffinity: AffinityRowData;

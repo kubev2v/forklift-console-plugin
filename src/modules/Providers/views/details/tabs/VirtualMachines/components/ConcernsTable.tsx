@@ -4,16 +4,13 @@ import type { SpecVirtualMachinePageData } from 'src/plans/details/tabs/VirtualM
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { getCategoryStatus } from '@components/Concerns/utils/category';
 import type { Concern, OpenstackVM, OvaVM, OVirtVM, VSphereVM } from '@kubev2v/types';
 import { HelperText, HelperTextItem, Label, PageSection } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { isEmpty } from '@utils/helpers';
 
-import {
-  getCategoryColor,
-  getCategoryIcon,
-  getCategoryTitle,
-} from '../utils/helpers/getCategoryTitle';
+import { getCategoryTitle } from '../utils/helpers/getCategoryTitle';
 import { groupConcernsByCategory } from '../utils/helpers/groupConcernsByCategory';
 
 import type { VmData } from './VMCellProps';
@@ -59,10 +56,7 @@ export const ConcernsTable: FC<ConcernsTableProps> = ({ resourceData }) => {
               <Tr key={concern.label}>
                 <Td modifier="truncate">{concern.label}</Td>
                 <Td>
-                  <Label
-                    color={getCategoryColor(concern.category)}
-                    icon={getCategoryIcon(concern.category)}
-                  >
+                  <Label status={getCategoryStatus(concern.category)}>
                     {getCategoryTitle(concern.category)}
                   </Label>
                 </Td>

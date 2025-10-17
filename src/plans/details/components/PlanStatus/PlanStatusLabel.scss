@@ -1,20 +1,22 @@
 .forklift-plan-status {
   &__grey-label {
-    background: rgba(60, 63, 66, 1);
+    background: var(--pf-t--global--background--color--secondary--default);
     .pf-v6-c-label__content {
-      color: white;
+      color: var(--pf-t--global--text--color--regular);
     }
   }
 
   &__dark-label {
-    background: var(--pf-t--color--black);
+    background: var(--pf-t--global--background--color--primary--default);
     .pf-v6-c-label__content {
-      color: white;
+      color: var(--pf-t--global--text--color--on-primary--default);
     }
   }
 
   &__gold-label {
     background: var(--pf-t--global--color--status--warning--default);
-    color: black;
+    .pf-v6-c-label__content {
+      color: var(--pf-t--global--text--color--regular);
+    }
   }
 }

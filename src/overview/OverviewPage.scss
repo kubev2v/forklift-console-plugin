@@ -27,7 +27,7 @@
     min-width: 240px;
 
     .pf-v6-theme-dark & {
-      background-color: #151515;
+      background-color: var(--pf-t--global--background--color--secondary--default);
       &::before {
         border: none;
       }
@@ -118,8 +118,4 @@
 
 .forklift-overview__settings-select {
   width: 142.95px;
-}
-
-.forklift-overview__settings-description-list {
-  gap: 2rem;
 }

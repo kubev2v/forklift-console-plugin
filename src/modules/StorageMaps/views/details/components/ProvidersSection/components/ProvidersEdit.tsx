@@ -1,10 +1,18 @@
-import { type FC, type FormEvent, type ReactNode, useState } from 'react';
+import { type FC, type MouseEvent, useState } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
+import { getName } from 'src/utils/crds/common/selectors';
 
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { Form, MenuToggle, Select, SelectList, SelectOption } from '@patternfly/react-core';
+import {
+  Form,
+  type FormGroupProps,
+  MenuToggle,
+  Select as PfSelect,
+  SelectList,
+  SelectOption,
+} from '@patternfly/react-core';
 
 type FindProviderFunction = (args: {
   providers: V1beta1Provider[];
@@ -12,7 +20,7 @@ type FindProviderFunction = (args: {
 }) => V1beta1Provider | undefined;
 
 const findProvider: FindProviderFunction = ({ name, providers }) =>
-  providers.find((provider) => provider.metadata?.name === name);
+  providers.find((provider) => getName(provider) === name);
 
 export const ProvidersEdit: FC<ProvidersEditProps> = ({
   helpContent,
@@ -25,14 +33,6 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
   selectedProviderName,
   setMode,
 }) => {
-  const ProviderOption = (provider: V1beta1Provider, index: number) => (
-    <FormSelectOption
-      key={provider?.metadata?.name ?? index}
-      value={provider?.metadata?.name}
-      label={provider?.metadata?.name ?? ''}
-    />
-  );
-
   const [isOpen, setIsOpen] = useState(false);
   const targetProvider = findProvider({ name: selectedProviderName, providers });
 
@@ -50,11 +50,11 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
           validated={validated}
           helperTextInvalid={invalidLabel}
         >
-          <Select
+          <PfSelect
             isOpen={isOpen}
             selected={selectedProviderName}
-            onSelect={(_event, value) => {
-              onChange(value as string, _event as FormEvent<HTMLSelectElement>);
+            onSelect={(event, value) => {
+              onChange(value, event);
               setIsOpen(false);
             }}
             onOpenChange={(nextOpen) => {
@@ -78,15 +78,12 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
                 {placeHolderLabel}
               </SelectOption>
               {providers.map((provider, index) => (
-                <SelectOption
-                  key={provider?.metadata?.name || index}
-                  value={provider?.metadata?.name || ''}
-                >
-                  {provider?.metadata?.name}
+                <SelectOption key={getName(provider) ?? index} value={getName(provider) ?? ''}>
+                  {getName(provider)}
                 </SelectOption>
               ))}
             </SelectList>
-          </Select>
+          </PfSelect>
         </FormGroupWithHelpText>
       </Form>
     );
@@ -119,11 +116,11 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
 type ProvidersEditProps = {
   providers: V1beta1Provider[];
   selectedProviderName: string;
-  onChange: (value: string, event: FormEvent<HTMLSelectElement>) => void;
+  onChange: (value: string | number | undefined, event?: MouseEvent) => void;
   label: string;
   placeHolderLabel: string;
   invalidLabel: string;
-  helpContent: ReactNode;
+  helpContent: FormGroupProps['labelHelp'];
   mode: 'edit' | 'view';
   setMode: (mode: 'edit' | 'view') => void;
 };

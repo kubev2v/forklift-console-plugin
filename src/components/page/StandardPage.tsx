@@ -447,8 +447,8 @@ const StandardPageInner = <T,>({
           toId={toId}
           expandedIds={expandedIds}
         >
-          {!loaded && !error && <Loading key="loading" title={t('Loading')} />}
-          {Boolean(errorFetchingData) && (
+          {!loaded && <Loading key="loading" title={t('Loading')} />}
+          {loaded && Boolean(errorFetchingData) && (
             <ErrorState key="error" title={t('Unable to retrieve data')} />
           )}
           {noResults &&

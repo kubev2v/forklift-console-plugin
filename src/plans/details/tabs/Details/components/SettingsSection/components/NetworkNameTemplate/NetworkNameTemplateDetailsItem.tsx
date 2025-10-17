@@ -21,13 +21,9 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
 
   if (!shouldRender) return null;
 
-  const content = plan?.spec?.networkNameTemplate ? (
+  const content = (
     <Label isCompact color="grey">
-      {t('Use custom')}
-    </Label>
-  ) : (
-    <Label isCompact color="grey">
-      {t('Use default')}
+      {plan?.spec?.networkNameTemplate ? t('Use custom') : t('Use default')}
     </Label>
   );
 

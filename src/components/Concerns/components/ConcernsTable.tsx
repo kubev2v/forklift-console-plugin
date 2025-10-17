@@ -7,12 +7,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
-import {
-  getCategoryColor,
-  getCategoryIcon,
-  getCategoryTitle,
-  groupConcernsByCategory,
-} from '../utils/category';
+import { getCategoryStatus, getCategoryTitle, groupConcernsByCategory } from '../utils/category';
 import { orderedConcernCategories, type VirtualMachineWithConcerns } from '../utils/constants';
 
 import './ConcernsTable.scss';
@@ -52,10 +47,7 @@ export const ConcernsTable: FC<{ vmData: VmData }> = ({ vmData }) => {
               <Tr key={concern.label}>
                 <Td modifier="truncate">{concern.label}</Td>
                 <Td>
-                  <Label
-                    color={getCategoryColor(concern.category)}
-                    icon={getCategoryIcon(concern.category)}
-                  >
+                  <Label status={getCategoryStatus(concern.category)}>
                     {getCategoryTitle(concern.category)}
                   </Label>
                 </Td>

@@ -36,9 +36,10 @@ const ExpandableReviewSection: FC<ExpandableReviewSectionProps> = ({
         onToggle={(_, isSectionExpanded) => {
           setIsExpanded(isSectionExpanded);
         }}
+        isIndented
         allowFullScreen
       >
-        <div className="pf-v6-u-p-lg pf-v6-u-pt-0">{children}</div>
+        <div className="pf-v6-u-pb-lg pf-v6-u-pt-md">{children}</div>
       </ExpandableSection>
       {onEditClick && (
         <Button

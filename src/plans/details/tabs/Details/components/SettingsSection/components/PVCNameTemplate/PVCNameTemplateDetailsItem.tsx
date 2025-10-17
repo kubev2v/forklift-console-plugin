@@ -21,13 +21,9 @@ const PVCNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
 
   if (!shouldRender) return null;
 
-  const content = plan?.spec?.pvcNameTemplate ? (
+  const content = (
     <Label isCompact color="grey">
-      {t('Use custom')}
-    </Label>
-  ) : (
-    <Label isCompact color="grey">
-      {t('Use default')}
+      {plan?.spec?.pvcNameTemplate ? t('Use custom') : t('Use default')}
     </Label>
   );
 

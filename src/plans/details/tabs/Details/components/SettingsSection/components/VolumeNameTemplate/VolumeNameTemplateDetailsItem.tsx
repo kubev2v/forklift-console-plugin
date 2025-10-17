@@ -21,13 +21,9 @@ const VolumeNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
 
   if (!shouldRender) return null;
 
-  const content = plan?.spec?.volumeNameTemplate ? (
+  const content = (
     <Label isCompact color="grey">
-      {t('Use custom')}
-    </Label>
-  ) : (
-    <Label isCompact color="grey">
-      {t('Use default')}
+      {plan?.spec?.volumeNameTemplate ? t('Use custom') : t('Use default')}
     </Label>
   );
 

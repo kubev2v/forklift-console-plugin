@@ -109,12 +109,14 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
     <Wizard
       data-testid="create-plan-wizard"
       isVisitRequired
+      nav={{ isExpanded: true }}
       footer={<CreatePlanWizardFooter />}
       onStepChange={handleStepChange}
       className="create-plan-wizard"
     >
       <WizardStep
         {...getStepProps(PlanWizardStepId.BasicSetup)}
+        isExpandable
         steps={[
           <WizardStep key={PlanWizardStepId.General} {...getStepProps(PlanWizardStepId.General)}>
             <GeneralInformationStep />
@@ -153,6 +155,7 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
 
       <WizardStep
         {...getStepProps(PlanWizardStepId.AdditionalSetup)}
+        isExpandable
         steps={[
           <WizardStep
             key={PlanWizardStepId.OtherSettings}
