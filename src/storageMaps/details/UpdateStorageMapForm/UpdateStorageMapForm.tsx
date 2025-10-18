@@ -70,7 +70,6 @@ const UpdateStorageMapForm: FC<UpdateStorageMapFormProps> = ({
   };
 
   const handleUpdateMappings = handleSubmit(async () => {
-    // Filter out storageMap entries that are missing both source and target
     const filteredStorageMap = formValues.storageMap?.filter((mapping) => {
       const hasSource = Boolean(mapping[StorageMapFieldId.SourceStorage]?.name);
       const hasTarget = Boolean(mapping[StorageMapFieldId.TargetStorage]?.name);
