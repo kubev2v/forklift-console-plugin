@@ -17,7 +17,7 @@ export type PaginationSettings = {
 };
 
 type FiltersSettings = {
-  data: Record<string, undefined>;
-  save: (filters: Record<string, undefined>) => void;
+  data: Record<string, any>;
+  save: (filters: Record<string, any>) => void;
   clear: () => void;
 };

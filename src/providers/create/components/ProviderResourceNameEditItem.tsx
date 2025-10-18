@@ -1,13 +1,13 @@
 import { type FC, type FormEvent, useCallback, useState } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { ProviderFieldsId } from 'src/providers/utils/constants';
-import type { ValidationMsg } from 'src/providers/utils/types';
 import { validateProviderResourceName } from 'src/providers/utils/validators/validateProviderResourceName';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { Form, TextInput } from '@patternfly/react-core';
 import { getName, getType } from '@utils/crds/common/selectors';
+import type { ValidationMsg } from '@utils/validation/Validation';
 
 type ProviderResourceNameEditItemProps = {
   onNewProviderChange: (provider: V1beta1Provider) => void;

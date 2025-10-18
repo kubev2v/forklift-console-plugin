@@ -11,6 +11,16 @@ import type { VMCellProps, VmData } from './components/VMCellProps';
 import { VMConcernsCellRenderer } from './components/VMConcernsCellRenderer';
 import { VMNameCellRenderer } from './components/VMNameCellRenderer';
 
+const cellRenderers: Record<string, FC<VMCellProps>> = {
+  cluster: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.cluster}</TableCell>,
+  concerns: VMConcernsCellRenderer,
+  description: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.description}</TableCell>,
+  host: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.host}</TableCell>,
+  name: VMNameCellRenderer,
+  path: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.path}</TableCell>,
+  status: PowerStateCellRenderer,
+};
+
 const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
   const fieldId = resourceFieldId;
 
@@ -26,16 +36,6 @@ type RenderTdProps = {
   resourceData: VmData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
-};
-
-const cellRenderers: Record<string, FC<VMCellProps>> = {
-  cluster: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.cluster}</TableCell>,
-  concerns: VMConcernsCellRenderer,
-  description: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.description}</TableCell>,
-  host: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.host}</TableCell>,
-  name: VMNameCellRenderer,
-  path: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.path}</TableCell>,
-  status: PowerStateCellRenderer,
 };
 
 export const OVirtVirtualMachinesCells: FC<RowProps<VmData>> = ({

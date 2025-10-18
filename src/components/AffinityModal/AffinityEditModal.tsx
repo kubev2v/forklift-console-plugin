@@ -1,5 +1,5 @@
 import { type Dispatch, type FC, type SetStateAction, useState } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 
 import { ActionGroup, Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';

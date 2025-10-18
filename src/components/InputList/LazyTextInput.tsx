@@ -51,8 +51,8 @@ export const LazyTextInput: FunctionComponent<LazyTextInputProps> = ({
     }
   };
 
-  const onChangeText: (value: string, event: FormEvent<HTMLInputElement>) => void = (value) => {
-    setValue(value);
+  const onChangeText: (value: string, event: FormEvent<HTMLInputElement>) => void = (newValue) => {
+    setValue(newValue);
   };
 
   return (

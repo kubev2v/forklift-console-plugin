@@ -1,5 +1,5 @@
 import { type FC, useMemo, useRef } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 
 import ProjectSelectEmptyState from '@components/common/ProjectSelect/ProjectSelectEmptyState';
 import type { ProjectSelectProps } from '@components/common/ProjectSelect/types.ts';

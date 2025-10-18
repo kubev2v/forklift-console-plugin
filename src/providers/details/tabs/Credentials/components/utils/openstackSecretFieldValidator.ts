@@ -1,8 +1,8 @@
 import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
 import { OpenstackSecretFieldsId } from 'src/providers/utils/constants';
-import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
 
 import { t } from '@utils/i18n';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import { validateCacert } from './validateCacert';
 import { validateInsecureSkipVerify } from './validateInsecureSkipVerify';
@@ -85,11 +85,9 @@ const validateRegionName = (value: string): ValidationMsg => {
     };
   }
 
-  if (valid) {
-    return { msg: t(`OpenStack region name.`), type: ValidationState.Success };
-  }
-
-  return { msg: t(`Invalid region, spaces are not allowed`), type: ValidationState.Error };
+  return valid
+    ? { msg: t(`OpenStack region name.`), type: ValidationState.Success }
+    : { msg: t(`Invalid region, spaces are not allowed`), type: ValidationState.Error };
 };
 
 const validateProjectName = (value: string): ValidationMsg => {

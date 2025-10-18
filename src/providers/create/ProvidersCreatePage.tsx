@@ -12,9 +12,9 @@ import { Divider, Form, PageSection } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getSdkEndpoint } from '@utils/crds/common/selectors';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import { getProviderDetailsPageUrl } from '../utils/getProviderDetailsPageUrl';
-import { type ValidationMsg, ValidationState } from '../utils/types';
 import { validateProviderAndSecret } from '../utils/validators/validateProviderAndSecret';
 
 import ProviderCreateActionsSection from './components/ProviderCreateActionsSection';

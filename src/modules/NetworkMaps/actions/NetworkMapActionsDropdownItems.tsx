@@ -1,6 +1,6 @@
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import { DeleteModal } from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

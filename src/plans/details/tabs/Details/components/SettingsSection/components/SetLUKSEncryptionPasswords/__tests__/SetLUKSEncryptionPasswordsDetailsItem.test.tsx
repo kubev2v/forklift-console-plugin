@@ -11,7 +11,7 @@ jest.mock('src/plans/details/components/PlanStatus/utils/utils', () => ({
 }));
 
 const mockShowModal = jest.fn();
-jest.mock('src/modules/Providers/modals/ModalHOC/ModalHOC', () => ({
+jest.mock('src/modules/Providers/modals/ModalHOC/useModal', () => ({
   useModal: () => ({ showModal: mockShowModal }),
 }));
 

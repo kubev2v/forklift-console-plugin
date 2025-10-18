@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { EditProviderUIModal } from 'src/modules/Providers/modals/EditProviderUI/EditProviderUIModal';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { DescriptionListDescription } from '@patternfly/react-core';

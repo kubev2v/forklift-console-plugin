@@ -1,11 +1,13 @@
-import { validateURL, type ValidationMsg } from '../../common';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
+
+import { validateURL } from '../../common';
 
 export const validateVSphereUILink = (uiLink: string | number): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
   if (uiLink === undefined) {
     return {
       msg: 'The link of the VMware vSphere UI. For example, https://vSphere-host-example.com/ui.',
-      type: 'default',
+      type: ValidationState.Default,
     };
   }
 
@@ -13,7 +15,7 @@ export const validateVSphereUILink = (uiLink: string | number): ValidationMsg =>
   if (typeof uiLink !== 'string') {
     return {
       msg: 'The link for the VMware vSphere UI is not a string',
-      type: 'error',
+      type: ValidationState.Error,
     };
   }
 
@@ -23,25 +25,25 @@ export const validateVSphereUILink = (uiLink: string | number): ValidationMsg =>
   if (trimmedUrl === '') {
     return {
       msg: 'The link for the VMware vSphere UI is empty. A default or an empty value will be used.',
-      type: 'warning',
+      type: ValidationState.Warning,
     };
   }
 
   if (!isValidURL) {
     return {
       msg: 'The link for the VMware vSphere UI is invalid. It should include the schema and path, for example: https://vSphere-host-example.com/ui.',
-      type: 'error',
+      type: ValidationState.Error,
     };
   }
 
   if (!trimmedUrl.endsWith('ui') && !trimmedUrl.endsWith('ui/'))
     return {
       msg: 'The link for the VMware vSphere UI does not end with a /ui path, for example: https://vSphere-host-example.com/ui.',
-      type: 'warning',
+      type: ValidationState.Warning,
     };
 
   return {
     msg: 'The link of the VMware vSphere UI. For example, https://vSphere-host-example.com/ui.',
-    type: 'success',
+    type: ValidationState.Success,
   };
 };
