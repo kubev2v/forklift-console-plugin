@@ -103,3 +103,24 @@ From the `testing` directory, run:
 ```bash
 yarn test:downstream:remote:docker
 ```
+
+## Updating the Container Image
+
+To build and push the test container image manually:
+
+```bash
+cd testing
+
+podman build \
+  --no-cache \
+  --platform linux/amd64 \
+  --build-arg VERSION=main \
+  --build-arg GIT_COMMIT=$(git rev-parse HEAD) \
+  --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+  -f PlaywrightContainerFile \
+  -t quay.io/kubev2v/forklift-ui-tests:latest \
+  .
+
+podman login quay.io
+podman quay.io/kubev2v/forklift-ui-tests:latest
+```

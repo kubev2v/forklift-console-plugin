@@ -8,11 +8,15 @@ export default defineConfig({
   testDir: './playwright/e2e',
   timeout: process.env.JENKINS ? 15 * 60_000 : 60_000,
   fullyParallel: true,
-  workers: 3,
+  workers: process.env.CI ? 1 : 3,
 
   retries: process.env.GITHUB_ACTIONS ? 3 : 0,
 
-  reporter: [['list'], ['html', { open: 'never' }]],
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }],
+    ['junit', { outputFile: 'test-results/junit.xml' }],
+  ],
 
   use: {
     actionTimeout: 20_000,
