@@ -79,7 +79,7 @@ const FilterValueMultiSelect = <T,>({
             isSelected={selected.has(option.id)}
           >
             <Split>
-              {option.icon ? <SplitItem className="pf-v5-u-mr-sm">{option.icon}</SplitItem> : null}
+              {option.icon ? <SplitItem className="pf-v6-u-mr-sm">{option.icon}</SplitItem> : null}
               <SplitItem>{option.label ?? option.id}</SplitItem>
             </Split>
           </SelectOption>

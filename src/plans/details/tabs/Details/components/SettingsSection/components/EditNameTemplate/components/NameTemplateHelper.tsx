@@ -12,7 +12,7 @@ const NameTemplateHelper: FC<NameTemplateHelperProps> = ({ examples }) => {
   return (
     <Stack>
       <HelperText>
-        <HelperTextItem variant="indeterminate">
+        <HelperTextItem>
           <StackItem>{t('Examples:')}</StackItem>
           {examples.map((example) => (
             <StackItem key={example}>{example}</StackItem>

@@ -62,7 +62,7 @@ const NewNetworkMapFields: FC = () => {
   });
 
   return (
-    <Stack hasGutter className="pf-v5-u-ml-lg">
+    <Stack hasGutter className="pf-v6-u-ml-lg">
       {error?.root && <Alert variant={AlertVariant.danger} isInline title={error.root.message} />}
 
       {isEmpty(usedSourceNetworks) && !sourceNetworksLoading && (
@@ -87,7 +87,7 @@ const NewNetworkMapFields: FC = () => {
       <FormGroupWithHelpText
         label={netMapFieldLabels[NetworkMapFieldId.NetworkMapName]}
         helperText={t("Provide a name now, or we'll generate one when the map is created.")}
-        labelIcon={
+        labelHelp={
           <HelpIconPopover>
             <Stack hasGutter>
               <StackItem>

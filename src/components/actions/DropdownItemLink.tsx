@@ -21,11 +21,8 @@ export const DropdownItemLink = ({
   value,
 }: DropdownItemLinkProps) => {
   return (
-    <DropdownItem key={itemKey} value={value}>
-      <Link to={href} className="pf-c-dropdown__menu-item pf-m-description">
-        <div className="pf-c-menu__list-item--Displays">{children}</div>
-        {description && <div className="pf-c-dropdown__menu-item-description">{description}</div>}
-      </Link>
+    <DropdownItem key={itemKey} value={value} to={href} component={Link} description={description}>
+      {children}
     </DropdownItem>
   );
 };

@@ -53,7 +53,7 @@ const PlanMappingsActionsBar: FC<PlanMappingsActionsBarProps> = ({
         </FlexItem>
       </Flex>
       <HelperText className="forklift-plan-mappings-actions-bar__helper-text">
-        <HelperTextItem variant="indeterminate">
+        <HelperTextItem>
           {t(
             'Click the update mappings button to save your changes, button is disabled until a change is detected.',
           )}

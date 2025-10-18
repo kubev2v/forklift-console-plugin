@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 
-import { Text, type TextProps } from '@patternfly/react-core';
+import { Title, type TitleProps } from '@patternfly/react-core';
 
 type SectionHeadingProps = {
   text: ReactNode;
@@ -8,32 +8,27 @@ type SectionHeadingProps = {
   id?: string;
   testId?: string;
   children?: ReactNode;
-  textComponent?: TextProps['component'];
+  headingLevel?: TitleProps['headingLevel'];
 };
 
 /**
  * SectionHeading Component
  *
  * @param {SectionHeadingProps} props - Props for the component.
- * @returns {ReactNode} - The rendered h2 element.
+ * @returns {ReactNode} - The rendered Title element.
  */
 const SectionHeading: FC<SectionHeadingProps> = ({
   children,
   className,
+  headingLevel = 'h2',
   id,
   testId,
   text,
-  textComponent = 'h2',
 }) => (
-  <Text
-    component={textComponent}
-    className={`pf-v6-c-content--${textComponent} ${className ?? ''}`}
-    data-testid={testId}
-    id={id}
-  >
-    <span>{text}</span>
+  <Title headingLevel={headingLevel} className={className} data-testid={testId} id={id}>
+    {text}
     {children}
-  </Text>
+  </Title>
 );
 
 export default SectionHeading;

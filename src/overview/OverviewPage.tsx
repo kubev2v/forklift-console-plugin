@@ -67,9 +67,8 @@ const OverviewPage: FC = () => {
       >
         <DrawerContentBody>
           <HeaderTitle isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
-          <div className="pf-v5-u-h-100 pf-v5-u-display-flex pf-v5-u-flex-direction-column pf-v5-u-min-width-0 pf-v5-u-min-height-0">
-            <RoutedTabs tabs={tabs} />
-
+          <RoutedTabs tabs={tabs} />
+          <div className="pf-v6-u-h-100 pf-v6-u-display-flex pf-v6-u-flex-direction-column pf-v6-u-p-md">
             <Routes>
               <Route index element={<ForkliftControllerOverviewTab />} />
               <Route path={OverviewTabHref.YAML} element={<ForkliftControllerYAMLTab />} />

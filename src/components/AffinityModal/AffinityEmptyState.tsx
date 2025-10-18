@@ -5,7 +5,6 @@ import {
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
-  EmptyStateHeader,
   EmptyStateVariant,
 } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -21,8 +20,11 @@ const AffinityEmptyState: FC<AffinityEmptyStateProps> = ({ onAffinityClickAdd })
   const { t } = useForkliftTranslation();
 
   return (
-    <EmptyState variant={EmptyStateVariant.full}>
-      <EmptyStateHeader headingLevel="h5" titleText={<>{t('No affinity rules found')}</>} />
+    <EmptyState
+      headingLevel="h5"
+      titleText={<>{t('No affinity rules found')}</>}
+      variant={EmptyStateVariant.full}
+    >
       <EmptyStateBody>
         <AffinityDescriptionText />
       </EmptyStateBody>

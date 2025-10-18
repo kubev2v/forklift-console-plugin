@@ -26,24 +26,25 @@ const ExpandableSectionHeading: FC<ExpandableSectionHeadingProps> = ({
       <Flex alignItems={{ default: 'alignItemsCenter' }} gap={{ default: 'gapSm' }}>
         <FlexItem>
           <Button
+            icon={
+              <SectionHeading
+                text={
+                  <Flex
+                    className="expandable-section-heading__title"
+                    alignItems={{ default: 'alignItemsCenter' }}
+                    gap={{ default: 'gapSm' }}
+                  >
+                    <FlexItem>{showSection ? <AngleDownIcon /> : <AngleRightIcon />}</FlexItem>
+                    <FlexItem>{sectionTitle}</FlexItem>
+                  </Flex>
+                }
+              />
+            }
             className="expandable-section-heading"
             isInline
             variant={ButtonVariant.plain}
             onClick={setShowSection}
-          >
-            <SectionHeading
-              text={
-                <Flex
-                  className="expandable-section-heading__title"
-                  alignItems={{ default: 'alignItemsCenter' }}
-                  gap={{ default: 'gapSm' }}
-                >
-                  <FlexItem>{showSection ? <AngleDownIcon /> : <AngleRightIcon />}</FlexItem>
-                  <FlexItem>{sectionTitle}</FlexItem>
-                </Flex>
-              }
-            />
-          </Button>
+          />
         </FlexItem>
         {sectionHelpTip ? (
           <FlexItem>

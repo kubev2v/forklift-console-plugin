@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 
-import { Label } from '@patternfly/react-core';
+import { Label, type LabelProps } from '@patternfly/react-core';
 
 import { TableCell, type TableCellProps } from './TableCell';
 
@@ -17,8 +17,8 @@ export const TableLabelCell: FC<TableLabelCellProps> = ({
   label,
   labelColor = 'grey',
 }) => {
-  let labels: ReactNode[];
-  let labelColors: Colors[];
+  let labels: ReactNode[] = [];
+  let labelColors: Colors[] = [];
 
   if (Array.isArray(label)) {
     labels = label;
@@ -40,7 +40,7 @@ export const TableLabelCell: FC<TableLabelCellProps> = ({
           <Label
             key={i}
             isCompact
-            color={labelColors[i]}
+            color={labelColors[i] as LabelProps['color']}
             className="forklift-table__flex-cell-label"
           >
             {labels[i]}

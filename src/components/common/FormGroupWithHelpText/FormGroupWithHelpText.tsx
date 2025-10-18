@@ -27,11 +27,11 @@ type FormGroupWithHelpTextProps = {
 
 /**
  * Convert the formGroup validated mode into the variant styling of the helper text item
- * If validated mode was not set or if it's the 'default', set the  variant styling to 'indeterminate'
- * for being consistent with PF4 behavior
+ * If validated mode was not set or if it's the 'default', use 'default' variant which shows
+ * plain text without icons for informational helper text
  */
 const validatedToVariant = (validated: 'success' | 'warning' | 'error' | 'default' | undefined) =>
-  !validated || validated === 'default' ? 'indeterminate' : validated;
+  !validated || validated === 'default' ? 'default' : validated;
 
 /**
  *  A FormGroup component that supports helperTexts
@@ -52,7 +52,7 @@ export const FormGroupWithHelpText: FC<FormGroupWithHelpTextProps> = ({
   helperTextInvalid,
   isRequired,
   label,
-  labelIcon,
+  labelHelp,
   role,
   validated,
 }) => {
@@ -64,7 +64,7 @@ export const FormGroupWithHelpText: FC<FormGroupWithHelpTextProps> = ({
       label={label}
       isRequired={isRequired}
       fieldId={fieldId}
-      labelIcon={labelIcon}
+      labelHelp={labelHelp}
       role={role}
     >
       {children}

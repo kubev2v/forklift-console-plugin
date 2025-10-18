@@ -4,18 +4,13 @@ import { DOC_MAIN_HELP_LINK } from 'src/utils/links';
 
 import {
   Bullseye,
+  Content,
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
-  EmptyStateHeader,
-  EmptyStateIcon,
   Level,
   LevelItem,
-  Text,
-  TextContent,
-  TextList,
-  TextListItem,
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 
@@ -32,26 +27,25 @@ const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ canCreate, namespac
   const { t } = useForkliftTranslation();
 
   return (
-    <EmptyState>
-      <EmptyStateHeader
-        titleText={
-          namespace ? (
-            <ForkliftTrans>
-              No providers found in project <strong>{namespace}</strong>
-            </ForkliftTrans>
-          ) : (
-            t('No providers found')
-          )
-        }
-        headingLevel="h4"
-        icon={<EmptyStateIcon icon={PlusCircleIcon} />}
-      />
+    <EmptyState
+      titleText={
+        namespace ? (
+          <ForkliftTrans>
+            No providers found in project <strong>{namespace}</strong>
+          </ForkliftTrans>
+        ) : (
+          t('No providers found')
+        )
+      }
+      headingLevel="h4"
+      icon={PlusCircleIcon}
+    >
       <EmptyStateBody>
         <Level hasGutter>
           <LevelItem>
             <Bullseye>
-              <TextContent>
-                <Text>
+              <Content>
+                <Content component="p">
                   <ForkliftTrans>
                     Migrating virtualization workloads is a multi-step process.{' '}
                     <ExternalLink href={DOC_MAIN_HELP_LINK} isInline>
@@ -59,24 +53,24 @@ const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ canCreate, namespac
                     </ExternalLink>
                     .
                   </ForkliftTrans>
-                </Text>
-                <TextList isPlain>
-                  <TextListItem>
+                </Content>
+                <Content component="ul" isPlainList>
+                  <Content component="li">
                     {t('1. Add source and target providers for the migration.')}
-                  </TextListItem>
-                  <TextListItem>
+                  </Content>
+                  <Content component="li">
                     {t(
                       '2. Map source datastores, storage domains, volume types, storage classes and networks to their respective target storage classes and networks.',
                     )}
-                  </TextListItem>
-                  <TextListItem>
+                  </Content>
+                  <Content component="li">
                     {t(
                       '3. Create a migration plan and select VMs from the source provider for migration.',
                     )}
-                  </TextListItem>
-                  <TextListItem>{t('4. Run the migration plan.')}</TextListItem>
-                </TextList>
-              </TextContent>
+                  </Content>
+                  <Content component="li">{t('4. Run the migration plan.')}</Content>
+                </Content>
+              </Content>
             </Bullseye>
           </LevelItem>
         </Level>

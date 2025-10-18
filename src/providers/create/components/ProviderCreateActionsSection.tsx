@@ -5,14 +5,7 @@ import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
 
 import { ProviderModelRef, type V1beta1Provider } from '@kubev2v/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
-import {
-  Button,
-  ButtonVariant,
-  Flex,
-  FlexItem,
-  HelperText,
-  HelperTextItem,
-} from '@patternfly/react-core';
+import { Alert, Button, ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';
 import { getType } from '@utils/crds/common/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -48,6 +41,9 @@ const ProviderCreateActionsSection: FC<ProviderCreateActionsSectionProps> = ({
 
   return (
     <>
+      {validationError?.type === ValidationState.Error && getType(newProvider) && (
+        <Alert variant="danger" isInline title={validationError?.msg} />
+      )}
       <Flex>
         <FlexItem>
           <Button
@@ -69,13 +65,6 @@ const ProviderCreateActionsSection: FC<ProviderCreateActionsSectionProps> = ({
           </Button>
         </FlexItem>
       </Flex>
-      <HelperText className="forklift-create-subtitle-errors">
-        {validationError?.type === ValidationState.Error && getType(newProvider) ? (
-          <HelperTextItem variant="error">{validationError?.msg}</HelperTextItem>
-        ) : (
-          <HelperTextItem variant="indeterminate">{t('Create new provider')}</HelperTextItem>
-        )}
-      </HelperText>
     </>
   );
 };

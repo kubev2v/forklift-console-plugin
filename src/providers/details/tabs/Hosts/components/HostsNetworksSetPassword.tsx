@@ -1,6 +1,6 @@
 import { type Dispatch, type FC, type FormEvent, type SetStateAction, useState } from 'react';
 import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
-import { ValidationState } from 'src/providers/utils/types';
+import { ValidationState, type ValidationStateType } from 'src/providers/utils/types';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { Button, ButtonVariant, InputGroup, TextInput } from '@patternfly/react-core';
@@ -15,7 +15,7 @@ type HostsNetworksSetPasswordProps = {
 const HostsNetworksSetPassword: FC<HostsNetworksSetPasswordProps> = ({ password, setPassword }) => {
   const { t } = useForkliftTranslation();
 
-  const [passwordValidation, setPasswordValidation] = useState<ValidationState>(
+  const [passwordValidation, setPasswordValidation] = useState<ValidationStateType>(
     ValidationState.Default,
   );
   const [passwordHidden, setPasswordHidden] = useState<boolean>(true);

@@ -47,7 +47,7 @@ const DescriptionTitleWithHelp: FC<{
   };
 
   return (
-    <DescriptionListTermHelpText className="pf-v5-u-align-items-center">
+    <DescriptionListTermHelpText className="pf-v6-u-align-items-center">
       {showHelpIconNextToTitle ? <div>{title} &nbsp;</div> : null}
       <Popover
         headerContent={<div>{title}</div>}
@@ -67,9 +67,7 @@ const DescriptionTitleWithHelp: FC<{
             {!isEmpty(crumbs) && (
               <FlexItem>
                 <Breadcrumb>
-                  {crumbs.map((crumb) => (
-                    <BreadcrumbItem key={crumb}>{crumb}</BreadcrumbItem>
-                  ))}
+                  {crumbs?.map((crumb) => <BreadcrumbItem key={crumb}>{crumb}</BreadcrumbItem>)}
                 </Breadcrumb>
               </FlexItem>
             )}
@@ -77,11 +75,16 @@ const DescriptionTitleWithHelp: FC<{
         }
       >
         {showHelpIconNextToTitle ? (
-          <Button variant={ButtonVariant.plain} className="pf-v5-u-p-0" onClick={onClick}>
-            <Icon size="sm">
-              <HelpIcon />
-            </Icon>
-          </Button>
+          <Button
+            icon={
+              <Icon size="sm">
+                <HelpIcon />
+              </Icon>
+            }
+            variant={ButtonVariant.plain}
+            className="pf-v6-u-p-0"
+            onClick={onClick}
+          />
         ) : (
           <DescriptionListTermHelpTextButton> {title} </DescriptionListTermHelpTextButton>
         )}
@@ -149,9 +152,9 @@ const ContentField: FC<{
 }> = ({ canEdit = true, content, onEdit }) =>
   canEdit && onEdit ? (
     <DescriptionListDescription>
-      <Flex alignItems={{ default: 'alignItemsCenter' }}>
-        <FlexItem spacer={{ default: 'spacerNone' }}>{content}</FlexItem>
-        <FlexItem spacer={{ default: 'spacerNone' }}>
+      <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsSm' }}>
+        <FlexItem>{content}</FlexItem>
+        <FlexItem>
           <Button
             variant={ButtonVariant.link}
             isInline

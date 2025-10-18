@@ -31,7 +31,7 @@ const PreserveStaticIpsField: FC = () => {
     <FormGroup
       fieldId={OtherSettingsFormFieldId.PreserveStaticIps}
       label={label}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover header={label}>
           {t(
             'By default, vNICs change during migration and static IPs linked to interface names are lost. Enable to preserve static IP configurations.',
@@ -66,7 +66,7 @@ const PreserveStaticIpsField: FC = () => {
             title={t(
               'Preserving the static IPs might not work as expected - go back and choose a different mapping for your migration plan',
             )}
-            className="pf-v5-u-ml-lg"
+            className="pf-v6-u-ml-lg"
           >
             <ForkliftTrans>
               <Stack hasGutter>

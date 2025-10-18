@@ -72,7 +72,7 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
           {isPlanRunning && PlanStatuses.Paused !== planStatus ? (
             <Split hasGutter>
               <Spinner size="md" data-testid="plan-progress-spinner" />
-              <span className="pf-v5-u-font-size-sm" data-testid="plan-progress-percentage">
+              <span className="pf-v6-u-font-size-sm" data-testid="plan-progress-percentage">
                 {Math.trunc(pipelinesProgressPercentage)}%
               </span>
             </Split>

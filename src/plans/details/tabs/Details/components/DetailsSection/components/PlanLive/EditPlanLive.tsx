@@ -20,7 +20,7 @@ const EditPlanLive: FC<EditPlanProps> = ({ resource }) => {
       title={
         <Flex alignItems={{ default: 'alignItemsCenter' }}>
           <FlexItem spacer={{ default: 'spacerSm' }}>{t('Set live migration')}</FlexItem>
-          <FlexItem className="pf-v5-u-mb-sm">
+          <FlexItem className="pf-v6-u-mb-sm">
             <TechPreviewLabel />
           </FlexItem>
         </Flex>

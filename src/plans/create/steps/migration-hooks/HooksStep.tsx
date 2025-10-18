@@ -28,7 +28,7 @@ const HooksStep: FC = () => {
         'Hooks are contained in Ansible playbooks that can be run before or after the migration.',
       )}
     >
-      <Form className="pf-v5-u-mt-md">
+      <Form className="pf-v6-u-mt-md">
         <FormSection title={t('Pre migration hook')}>
           <EnableHookCheckbox fieldId={HooksFormFieldId.PreMigration} />
 
@@ -40,7 +40,7 @@ const HooksStep: FC = () => {
           )}
         </FormSection>
 
-        <FormSection title={t('Post migration hook')} className="pf-v5-u-mt-md">
+        <FormSection title={t('Post migration hook')} className="pf-v6-u-mt-md">
           <EnableHookCheckbox fieldId={HooksFormFieldId.PostMigration} />
 
           {postMigrationHook?.enableHook && (

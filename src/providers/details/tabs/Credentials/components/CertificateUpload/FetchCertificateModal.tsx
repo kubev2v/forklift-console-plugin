@@ -7,7 +7,8 @@ import {
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import { Alert, ModalVariant } from '@patternfly/react-core';
+import { Alert } from '@patternfly/react-core';
+import { ModalVariant } from '@patternfly/react-core/deprecated';
 
 import VerifyCertificate from './VerifyCertificate';
 
