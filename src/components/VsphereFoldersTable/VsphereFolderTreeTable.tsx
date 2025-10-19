@@ -82,7 +82,7 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
   const attributes = useTreeFilterAttributes(rows);
   const filters = useAttributeFilters<VmRow>(attributes);
 
-  const filteredRows = useTreeFilters({ filters, rows, showAll });
+  const { filteredGroupVMCountByFolder, filteredRows } = useTreeFilters({ filters, rows, showAll });
 
   const { handleOnSort, sortBy, sortedBlocks, visibleCols } = useTreeSortBlocks({
     columns,
@@ -144,7 +144,9 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
         <TreeTableBody
           clearAllFilters={filters.clearAll}
           columns={columns}
-          groupVMCountByFolder={groupVMCountByFolder}
+          groupVMCountByFolder={
+            filters.hasAttrFilters ? filteredGroupVMCountByFolder : groupVMCountByFolder
+          }
           hasFiltersApplied={filters.hasAttrFilters}
           pagedRows={pagedRows}
           showAll={showAll}

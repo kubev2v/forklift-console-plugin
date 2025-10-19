@@ -18,3 +18,5 @@ export const powerFilterOptions = [
 ];
 
 export const NO_FOLDER = 'no-folder';
+
+export const FOLDER_PREFIX = 'folder-';
