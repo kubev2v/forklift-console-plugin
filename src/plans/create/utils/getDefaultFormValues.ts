@@ -1,4 +1,5 @@
 import { defaultTargetPowerStateOption } from 'src/plans/constants';
+import { QUAY_FORKLIFT_HOOK_RUNNER_IMAGE } from 'src/plans/details/tabs/Hooks/utils/constants';
 import { defaultStorageMapping, StorageMapFieldId } from 'src/storageMaps/constants';
 
 import { GeneralFormFieldId } from '../steps/general-information/constants';
@@ -27,9 +28,11 @@ export const getDefaultFormValues = (
     [GeneralFormFieldId.SourceProvider]: initialValues?.sourceProvider,
     [HooksFormFieldId.PostMigration]: {
       [MigrationHookFieldId.EnableHook]: false,
+      [MigrationHookFieldId.HookRunnerImage]: QUAY_FORKLIFT_HOOK_RUNNER_IMAGE,
     },
     [HooksFormFieldId.PreMigration]: {
       [MigrationHookFieldId.EnableHook]: false,
+      [MigrationHookFieldId.HookRunnerImage]: QUAY_FORKLIFT_HOOK_RUNNER_IMAGE,
     },
     [NetworkMapFieldId.NetworkMap]: [defaultNetMapping],
     [NetworkMapFieldId.NetworkMapType]: NetworkMapType.Existing,
