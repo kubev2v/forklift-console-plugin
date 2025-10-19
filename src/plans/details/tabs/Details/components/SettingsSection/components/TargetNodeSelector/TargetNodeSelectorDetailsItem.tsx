@@ -10,6 +10,7 @@ import NodeSelectorViewDetailsItemContent from '@components/NodeSelectorViewDeta
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
 
@@ -26,13 +27,14 @@ const TargetNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch,
   ) => {
     const currentValue = plan?.spec?.targetNodeSelector;
     const op = currentValue ? REPLACE : ADD;
+    const value = isEmpty(newLabels) ? undefined : newLabels;
 
     const result = await k8sPatch({
       data: [
         {
           op,
           path: '/spec/targetNodeSelector',
-          value: newLabels,
+          value,
         },
       ],
       model: PlanModel,
