@@ -3,7 +3,7 @@ import { getVmPowerState } from 'src/modules/Providers/views/details/tabs/Virtua
 
 import type { ProviderHost, VSphereResource, VSphereVM } from '@kubev2v/types';
 
-import { NO_FOLDER } from './constants';
+import { FOLDER_PREFIX, NO_FOLDER } from './constants';
 import type { FolderKey, Indexes, VmKey, VmLookups } from './types';
 
 export const buildIndexes = (
@@ -80,3 +80,6 @@ export const isFolderChecked = (
   }
   return selected > 0 ? null : false;
 };
+
+export const getFolderNameFromKey = (key: string): string =>
+  key.startsWith(FOLDER_PREFIX) ? key.slice(FOLDER_PREFIX.length) : key;
