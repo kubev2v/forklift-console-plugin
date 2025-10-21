@@ -9,6 +9,7 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { DetailsSectionProps } from './utils/types';
+import { isApplianceManagementEnabled } from './utils/utils';
 
 const UploadFilesSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
@@ -19,6 +20,7 @@ const UploadFilesSection: FC<DetailsSectionProps> = ({ data }) => {
     return <span className="text-muted">{t('No provider data available.')}</span>;
 
   if (provider?.spec?.type !== PROVIDER_TYPES.ova) return null;
+  if (!isApplianceManagementEnabled(provider)) return null;
 
   return (
     <ModalHOC>
