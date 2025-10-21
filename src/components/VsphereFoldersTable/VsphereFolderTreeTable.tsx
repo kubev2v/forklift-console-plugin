@@ -1,4 +1,4 @@
-import { type FC, useCallback, useEffect, useState } from 'react';
+import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 
 import type { ResourceField } from '@components/common/utils/types';
@@ -46,6 +46,7 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const [columns, setColumns] = useState<ResourceField[]>(defaultColumns);
+  const visibleVmIdsRef = useRef<Set<string> | undefined>(undefined);
 
   const setSelectedVmKeysControlled = useCallback(
     (ids: string[]) => {
@@ -70,6 +71,7 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
       canSelect,
       foldersDict,
       hostsDict,
+      visibleVmIdsRef,
       vmDataArr: vmData,
     });
 
@@ -82,7 +84,13 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
   const attributes = useTreeFilterAttributes(rows);
   const filters = useAttributeFilters<VmRow>(attributes);
 
-  const { filteredGroupVMCountByFolder, filteredRows } = useTreeFilters({ filters, rows, showAll });
+  const { filteredGroupVMCountByFolder, filteredRows, visibleVmIds } = useTreeFilters({
+    filters,
+    rows,
+    showAll,
+  });
+
+  visibleVmIdsRef.current = filters.hasAttrFilters || !showAll ? visibleVmIds : undefined;
 
   const { handleOnSort, sortBy, sortedBlocks, visibleCols } = useTreeSortBlocks({
     columns,
