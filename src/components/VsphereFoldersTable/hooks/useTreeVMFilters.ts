@@ -1,7 +1,15 @@
 import { useMemo } from 'react';
 
 import type { AttributeFilters } from '@components/VsphereFoldersTable/components/AttributeFilter/hooks/useAttributeFilters';
-import { ROW_TYPE, type RowNode, type VmRow } from '@components/VsphereFoldersTable/utils/types';
+import {
+  type ConcernsRow,
+  type FolderRow,
+  ROW_TYPE,
+  type RowNode,
+  type VmRow,
+} from '@components/VsphereFoldersTable/utils/types';
+
+import { getFolderNameFromKey } from './utils/utils';
 
 type UseTreeFilters = {
   filters: AttributeFilters<VmRow>;
@@ -9,7 +17,15 @@ type UseTreeFilters = {
   showAll: boolean;
 };
 
-const useTreeFilters = ({ filters, rows, showAll }: UseTreeFilters): RowNode[] => {
+const useTreeFilters = ({
+  filters,
+  rows,
+  showAll,
+}: UseTreeFilters): {
+  filteredRows: RowNode[];
+  filteredGroupVMCountByFolder: Map<string, number>;
+} => {
+  const filteredGroupVMCountByFolder = useMemo(() => new Map<string, number>(), []);
   const { visibleFolderKeySet, visibleVmKeySet } = useMemo(() => {
     if (!filters.hasAttrFilters && showAll) {
       return {
@@ -37,45 +53,63 @@ const useTreeFilters = ({ filters, rows, showAll }: UseTreeFilters): RowNode[] =
   const filteredRows: RowNode[] = useMemo(() => {
     if (!filters.hasAttrFilters && showAll) return rows;
 
+    const isVisibleFolder = (row: FolderRow) => visibleFolderKeySet.has(row.key);
+
+    const isVisibleVm = (row: VmRow) => visibleVmKeySet.has(row.key);
+
+    const shouldAttachConcerns = (vm: VmRow, next: RowNode | undefined): next is ConcernsRow =>
+      Boolean(next) &&
+      next.type === ROW_TYPE.Concerns &&
+      !next.isHidden &&
+      next.parentFolderKey === vm.parentFolderKey;
+
     const out: RowNode[] = [];
-    let idx = 0;
+    for (let i = 0; i < rows.length; i += 1) {
+      const row = rows[i];
 
-    while (idx < rows.length) {
-      const row = rows[idx];
-
-      if (row.type === ROW_TYPE.Folder) {
-        if (visibleFolderKeySet.has(row.key)) {
-          out.push(row);
-        }
-        idx += 1;
-      } else if (row.type === ROW_TYPE.Vm) {
-        if (visibleVmKeySet.has(row.key)) {
-          out.push(row);
-          // Attach concerns row if it immediately follows and is visible
-          const next = rows[idx + 1];
-          if (
-            next &&
-            next.type === ROW_TYPE.Concerns &&
-            !next.isHidden &&
-            next.parentFolderKey === row.parentFolderKey
-          ) {
-            out.push(next);
-            idx += 2; // skip the concerns we consumed
-          } else {
-            idx += 1;
+      switch (row.type) {
+        case ROW_TYPE.Folder: {
+          if (isVisibleFolder(row)) {
+            out.push(row);
+            filteredGroupVMCountByFolder.set(row.folderName, 0);
           }
-        } else {
-          idx += 1;
+          break;
         }
-      } else {
-        idx += 1;
+
+        case ROW_TYPE.Vm: {
+          if (!isVisibleVm(row)) break;
+          out.push(row);
+
+          const folderName = getFolderNameFromKey(row.parentFolderKey);
+          const previousCount = filteredGroupVMCountByFolder.get(folderName) ?? 0;
+          filteredGroupVMCountByFolder.set(folderName, previousCount + 1);
+
+          const next = rows[i + 1];
+          if (shouldAttachConcerns(row, next)) {
+            out.push(next);
+            i += 1; // skip the concerns we consumed
+          }
+          break;
+        }
+
+        // Concerns rows are only added when attached to a visible VM above
+        case ROW_TYPE.Concerns:
+        default:
+          break;
       }
     }
 
     return out;
-  }, [filters.hasAttrFilters, showAll, rows, visibleFolderKeySet, visibleVmKeySet]);
+  }, [
+    filters.hasAttrFilters,
+    showAll,
+    rows,
+    visibleFolderKeySet,
+    visibleVmKeySet,
+    filteredGroupVMCountByFolder,
+  ]);
 
-  return filteredRows;
+  return { filteredGroupVMCountByFolder, filteredRows };
 };
 
 export default useTreeFilters;
