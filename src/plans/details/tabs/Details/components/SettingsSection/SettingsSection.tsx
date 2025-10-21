@@ -1,10 +1,15 @@
 import type { FC } from 'react';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
+import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType';
+import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
+import { FEATURE_NAMES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
+import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 
 import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
 
@@ -29,6 +34,7 @@ type SettingsSectionProps = {
 
 const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
   const { sourceProvider } = usePlanSourceProvider(plan);
+  const { isFeatureEnabled } = useFeatureFlags();
 
   const { canPatch } = useGetDeleteAndEditAccessReview({
     model: PlanModel,
@@ -37,6 +43,13 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
 
   const isVsphere = sourceProvider?.spec?.type === 'vsphere';
   const isOvirt = sourceProvider?.spec?.type === 'ovirt';
+  const migrationType = getPlanMigrationType(plan);
+
+  const isTransferNetworkVisible =
+    !hasLiveMigrationProviderType(sourceProvider) ||
+    !isFeatureEnabled(FEATURE_NAMES.OCP_LIVE_MIGRATION) ||
+    migrationType !== MigrationTypeValue.Live;
+
   return (
     <ModalHOC>
       <DescriptionList
@@ -52,7 +65,11 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
         <RootDiskDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
         <SharedDisksDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
         <PVCNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-        <TransferNetworkDetailsItem plan={plan} canPatch={canPatch} />
+        <TransferNetworkDetailsItem
+          plan={plan}
+          canPatch={canPatch}
+          shouldRender={isTransferNetworkVisible}
+        />
         <VolumeNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
         <PreserveStaticIPsDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
         <NetworkNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />

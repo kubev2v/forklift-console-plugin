@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
@@ -28,6 +28,7 @@ const NodeSelectorModal: React.FC<NodeSelectorModalProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const [labels, setLabels] = useState<LabelFields[]>(labelsObjectToArray(initialLabels));
+  const isNotValid = useMemo(() => labels.some(({ key }) => isEmpty(key)), [labels]);
 
   const onLabelChange = (changedLabel: LabelFields): void => {
     setLabels(
@@ -58,6 +59,7 @@ const NodeSelectorModal: React.FC<NodeSelectorModalProps> = ({
       testId="node-selector-modal"
       title={title ?? t('Edit node selectors')}
       onConfirm={async () => onConfirm(labelsArrayToObject(labels)) ?? {}}
+      isDisabled={isNotValid}
     >
       <Form>
         <Stack hasGutter>

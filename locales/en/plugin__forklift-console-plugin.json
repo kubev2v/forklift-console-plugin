@@ -450,7 +450,7 @@
   "Hosts": "Hosts",
   "HPE Primera/3PAR": "HPE Primera/3PAR",
   "I trust the authenticity of this certificate": "I trust the authenticity of this certificate",
-  "if both 'URL' and 'Service account bearer token' fields are left empty, the local OpenShift cluster is used.": "if both 'URL' and 'Service account bearer token' fields are left empty, the local OpenShift cluster is used.",
+  "If both 'URL' and 'Service account bearer token' fields are left empty, the local OpenShift cluster is used.": "If both 'URL' and 'Service account bearer token' fields are left empty, the local OpenShift cluster is used.",
   "If everything looks correct, click \"Create\" to finalize the migration plan. This will only create the plan, not run it. The plan will be saved in the migration plan list.": "If everything looks correct, click \"Create\" to finalize the migration plan. This will only create the plan, not run it. The plan will be saved in the migration plan list.",
   "If none of these steps helped, you can reach out to <2>support</2> to get answers any time.": "If none of these steps helped, you can reach out to <2>support</2> to get answers any time.",
   "If skipped, the VMs' disk data will be duplicated byte-for-byte, allowing for faster conversions. However, there is a risk that the VMs might not function properly and it is not recommended.": "If skipped, the VMs' disk data will be duplicated byte-for-byte, allowing for faster conversions. However, there is a risk that the VMs might not function properly and it is not recommended.",

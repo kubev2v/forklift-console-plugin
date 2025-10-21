@@ -15,10 +15,14 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
+import { hasLiveMigrationProviderType } from '../../utils/hasLiveMigrationProviderType';
 import { GeneralFormFieldId } from '../general-information/constants';
+import { MigrationTypeFieldId, MigrationTypeValue } from '../migration-type/constants';
 import { otherFormFieldLabels, OtherSettingsFormFieldId } from '../other-settings/constants';
 
-const OtherSettingsReviewSection: FC = () => {
+const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
+  isLiveMigrationFeatureEnabled,
+}) => {
   const { t } = useForkliftTranslation();
   const { goToStepById } = useWizardContext();
   const { control } = useCreatePlanFormContext();
@@ -31,6 +35,7 @@ const OtherSettingsReviewSection: FC = () => {
     rootDevice,
     sharedDisks,
     targetPowerState,
+    migrationType,
   ] = useWatch({
     control,
     name: [
@@ -42,11 +47,17 @@ const OtherSettingsReviewSection: FC = () => {
       OtherSettingsFormFieldId.RootDevice,
       OtherSettingsFormFieldId.MigrateSharedDisks,
       OtherSettingsFormFieldId.TargetPowerState,
+      MigrationTypeFieldId.MigrationType,
     ],
   });
   const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
   const hasNoDiskPassPhrases =
     isEmpty(diskPassPhrases) || (diskPassPhrases.length === 1 && !diskPassPhrases[0].value);
+
+  const isTransferNetworkVisible =
+    !hasLiveMigrationProviderType(sourceProvider) ||
+    !isLiveMigrationFeatureEnabled ||
+    migrationType !== MigrationTypeValue.Live;
 
   return (
     <ExpandableReviewSection
@@ -92,15 +103,17 @@ const OtherSettingsReviewSection: FC = () => {
           </>
         )}
 
-        <DescriptionListGroup>
-          <DescriptionListTerm>
-            {otherFormFieldLabels[OtherSettingsFormFieldId.TransferNetwork]}
-          </DescriptionListTerm>
+        {isTransferNetworkVisible && (
+          <DescriptionListGroup>
+            <DescriptionListTerm>
+              {otherFormFieldLabels[OtherSettingsFormFieldId.TransferNetwork]}
+            </DescriptionListTerm>
 
-          <DescriptionListDescription data-testid="review-transfer-network">
-            {transferNetwork?.name ?? t('Target provider default')}
-          </DescriptionListDescription>
-        </DescriptionListGroup>
+            <DescriptionListDescription data-testid="review-transfer-network">
+              {transferNetwork?.name ?? t('Target provider default')}
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+        )}
 
         {isVsphere && (
           <>

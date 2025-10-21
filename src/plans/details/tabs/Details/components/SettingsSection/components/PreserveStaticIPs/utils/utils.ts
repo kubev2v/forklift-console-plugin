@@ -17,7 +17,7 @@ export const onConfirmPreserveStaticIPs = async ({
       {
         op,
         path: '/spec/preserveStaticIPs',
-        value: newValue || undefined,
+        value: newValue,
       },
     ],
     model: PlanModel,
