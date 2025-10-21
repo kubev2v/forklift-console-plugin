@@ -6,6 +6,7 @@ export enum ProviderStatus {
   Ready = 'Ready',
   Staging = 'Staging',
   Unknown = 'Unknown',
+  ApplianceManagementEnabled = 'ApplianceManagementEnabled',
 }
 
 export type VmFeatures = {

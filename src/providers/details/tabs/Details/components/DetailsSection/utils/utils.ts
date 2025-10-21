@@ -1,6 +1,10 @@
 import type { FC } from 'react';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
+import type { V1beta1Provider } from '@kubev2v/types';
+import { CONDITION_STATUS } from '@utils/constants';
+import { ProviderStatus } from '@utils/types';
+
 import OpenshiftDetailsSection from '../OpenshiftDetailsSection';
 import OpenstackDetailsSection from '../OpenstackDetailsSection';
 import OVADetailsSection from '../OVADetailsSection';
@@ -27,4 +31,15 @@ export const getDetailsSectionByType = (
     default:
       return undefined;
   }
+};
+
+const getConditions = (provider: V1beta1Provider) =>
+  (provider?.status?.conditions ?? [])
+    ?.filter((condition) => condition.status === CONDITION_STATUS.TRUE)
+    .map((condition) => condition.type);
+
+export const isApplianceManagementEnabled = (provider: V1beta1Provider) => {
+  const conditions = getConditions(provider);
+
+  return conditions?.includes(ProviderStatus.ApplianceManagementEnabled);
 };
