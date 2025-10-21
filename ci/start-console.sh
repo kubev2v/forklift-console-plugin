@@ -29,11 +29,13 @@ if oc_available_loggedin && { [ -z "${INVENTORY_SERVER_HOST+x}" ] && [ -z "${SER
     routes=$(oc get routes -A -o template --template='{{range .items}}{{.spec.host}}{{"\n"}}{{end}}' 2>/dev/null || true)
     INVENTORY_SERVER_HOST="https://$(echo "$routes" | grep forklift-inventory)"
     SERVICES_API_SERVER_HOST="https://$(echo "$routes" | grep forklift-services)"
+    OVA_PROXY_SERVER_HOST="https://$(echo "$routes" | grep forklift-ova-proxy)"
 fi
 
 # Default API server hosts
 INVENTORY_SERVER_HOST="${INVENTORY_SERVER_HOST:-${BASE_HOST_URL}:30444}"
 SERVICES_API_SERVER_HOST="${SERVICES_API_SERVER_HOST:-${BASE_HOST_URL}:30446}"
+OVA_PROXY_SERVER_HOST="${OVA_PROXY_SERVER_HOST:-${BASE_HOST_URL}:30448}"
 
 if [[ ${CONSOLE_IMAGE} =~ ^localhost/ ]]; then
     PULL_POLICY="never"
@@ -66,6 +68,11 @@ BRIDGE_PLUGIN_PROXY=$(
         "consoleAPIPath":"/api/proxy/plugin/${PLUGIN_NAME}/forklift-services/",
         "endpoint":"${SERVICES_API_SERVER_HOST}",
         "authorize":true
+    },
+    {
+        "consoleAPIPath":"/api/proxy/plugin/${PLUGIN_NAME}/forklift-ova-proxy/",
+        "endpoint":"${OVA_PROXY_SERVER_HOST}",
+        "authorize":true
     }
 ]}
 END
@@ -92,6 +99,7 @@ Container pull policy: ${PULL_POLICY}
 Plugins: ${BRIDGE_PLUGINS}
 Inventory server URL: ${INVENTORY_SERVER_HOST}
 Services server URL: ${SERVICES_API_SERVER_HOST}
+OVA proxy server URL :${OVA_PROXY_SERVER_HOST}
 Plugin proxy:
 $(echo ${BRIDGE_PLUGIN_PROXY} | jq .)
 "
