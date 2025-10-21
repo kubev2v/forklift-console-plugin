@@ -119,7 +119,7 @@ const OpenshiftCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
         isInline
         title={
           <ForkliftTrans>
-            if both 'URL' and 'Service account bearer token' fields are left empty, the local
+            If both 'URL' and 'Service account bearer token' fields are left empty, the local
             OpenShift cluster is used.
           </ForkliftTrans>
         }
