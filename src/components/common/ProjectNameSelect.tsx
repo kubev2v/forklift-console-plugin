@@ -2,8 +2,8 @@ import { type FC, useState } from 'react';
 import { PROJECT_NAME_SELECT_POPOVER_HELP_CONTENT } from 'src/providers/create/utils/constants';
 import { ProviderFieldsId } from 'src/providers/utils/constants';
 
-import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect.tsx';
-import useWatchProjectNames from '@utils/hooks/useWatchProjectNames.ts';
+import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect';
+import useWatchProjectNames from '@utils/hooks/useWatchProjectNames';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { FormGroupWithHelpText } from './FormGroupWithHelpText/FormGroupWithHelpText';

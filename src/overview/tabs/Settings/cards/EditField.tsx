@@ -4,11 +4,11 @@ import { AlertMessageForModals } from 'src/modules/Providers/modals/components/A
 import { ItemIsOwnedAlert } from 'src/modules/Providers/modals/components/ItemIsOwnedAlert';
 import { defaultOnConfirm } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { getValueByJsonPath } from 'src/modules/Providers/utils/helpers/getValueByJsonPath';
-import type { ValidationMsg } from 'src/modules/Providers/utils/validators/common';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { debounce, Form, TextInput } from '@patternfly/react-core';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import type { EditFieldProps } from './EditFieldTypes';
 
@@ -37,7 +37,7 @@ export const EditField: FC<EditFieldProps> = ({
   const latestValueRef = useRef(value);
   const [validation, setValidation] = useState<ValidationMsg>({
     msg: null,
-    type: 'default',
+    type: ValidationState.Default,
   });
 
   const { namespace } = resource?.metadata ?? {};

@@ -1,10 +1,10 @@
 import type { FC, FormEvent } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { ProviderFieldsId, VSphereEndpointType } from 'src/providers/utils/constants';
-import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Radio, TextInput } from '@patternfly/react-core';
+import type { ValidationMsg } from '@utils/validation/Validation';
 
 type VMwareURLEditItemsProps = {
   sdkEndpoint: string | undefined;

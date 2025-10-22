@@ -3,9 +3,9 @@ import {
   validateUsernameAndDomain,
 } from 'src/modules/Providers/utils/validators/common';
 import { SecretFieldsId } from 'src/providers/utils/constants';
-import { type ValidationMsg, ValidationState } from 'src/providers/utils/types';
 
 import { t } from '@utils/i18n';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import { validateCacert } from './validateCacert';
 import { validateInsecureSkipVerify } from './validateInsecureSkipVerify';

@@ -1,7 +1,7 @@
 import { type FC, Suspense } from 'react';
 import Loading from 'src/overview/components/Loading';
 import TabTitle from 'src/overview/components/TabTitle';
-import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchProviderNames';
+import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchForkliftController';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';

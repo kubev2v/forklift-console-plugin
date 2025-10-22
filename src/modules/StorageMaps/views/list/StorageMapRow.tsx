@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
-import { createStatusCell } from 'src/modules/utils/createStatusCell.tsx';
+import { createStatusCell } from 'src/modules/utils/createStatusCell';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
@@ -9,7 +9,7 @@ import { StorageMapActionsDropdown } from '../../actions/StorageMapActionsDropdo
 import type { StorageMapData } from '../../utils/types/StorageMapData';
 
 import type { CellProps } from './components/CellProps';
-import { ErrorStatusCell } from './components/ErrorStatusCell.tsx';
+import { ErrorStatusCell } from './components/ErrorStatusCell';
 import { NamespaceCell } from './components/NamespaceCell';
 import { PlanCell } from './components/PlanCell';
 import { ProviderLinkCell } from './components/ProviderLinkCell';

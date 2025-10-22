@@ -32,6 +32,7 @@ export const EditProviderURLModal: FC<EditProviderURLModalProps> = (props) => {
       return <OpenstackEditURLModal {...props} />;
     case 'vsphere':
       return <VSphereEditURLModal {...props} />;
+    case undefined:
     default:
       return <></>;
   }

@@ -9,7 +9,7 @@ import {
 
 import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
-import { useForkliftTranslation } from '@utils/i18n.tsx';
+import { useForkliftTranslation } from '@utils/i18n';
 
 type TargetPowerStateDropdownProps = {
   value: TargetPowerStateValue;

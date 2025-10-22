@@ -1,6 +1,6 @@
 import { type FC, useState } from 'react';
 import type { TargetPowerStateValue } from 'src/plans/constants';
-import { getVmTargetPowerState } from 'src/plans/details/components/PlanStatus/utils/utils.ts';
+import { getVmTargetPowerState } from 'src/plans/details/components/PlanStatus/utils/utils';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';

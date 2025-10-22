@@ -1,10 +1,10 @@
 import type { FC, FormEvent } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import type { ValidationMsg } from 'src/providers/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { Switch } from '@patternfly/react-core';
+import type { ValidationMsg } from '@utils/validation/Validation';
 
 import CertificateUpload from './CertificateUpload/CertificateUpload';
 import { CacertHelperTextPopover, InsecureSkipVerifyHelperTextPopover } from './utils/constants';

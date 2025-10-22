@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchProviderNames';
+import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchForkliftController';
 
 import { Flex, FlexItem } from '@patternfly/react-core';
 

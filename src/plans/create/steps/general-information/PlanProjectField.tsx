@@ -3,13 +3,13 @@ import { Controller, type FieldPath, type FieldValues, useWatch } from 'react-ho
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect.tsx';
+import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect';
 import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useDefaultProject } from '@utils/hooks/useDefaultProject';
-import useWatchProjectNames from '@utils/hooks/useWatchProjectNames.ts';
+import useWatchProjectNames from '@utils/hooks/useWatchProjectNames';
 import { useForkliftTranslation } from '@utils/i18n';
-import { isSystemNamespace } from '@utils/namespaces.ts';
+import { isSystemNamespace } from '@utils/namespaces';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 

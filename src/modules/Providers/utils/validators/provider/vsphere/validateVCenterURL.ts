@@ -1,7 +1,17 @@
-import type { ValidationMsg } from 'src/providers/utils/types';
+import { MTVConsole } from '@utils/console';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import { safeBase64Decode } from '../../../helpers/safeBase64Decode';
 import { validateIpv4, validateURL } from '../../common';
+
+const getUrlObject = (url: string) => {
+  try {
+    return new URL(url);
+  } catch {
+    MTVConsole.error('Unable to parse URL.');
+  }
+  return undefined;
+};
 
 export const validateVCenterURL = (
   url: string | number | undefined,
@@ -11,13 +21,13 @@ export const validateVCenterURL = (
   if (url === undefined) {
     return {
       msg: 'The URL is required, URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
-      type: 'default',
+      type: ValidationState.Default,
     };
   }
 
   // Sanity check
   if (typeof url !== 'string') {
-    return { msg: 'URL is not a string', type: 'error' };
+    return { msg: 'URL is not a string', type: ValidationState.Error };
   }
 
   const trimmedUrl: string = url.trim();
@@ -29,24 +39,24 @@ export const validateVCenterURL = (
   if (trimmedUrl === '') {
     return {
       msg: 'The URL is required, URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
-      type: 'error',
+      type: ValidationState.Error,
     };
   }
 
   if (!isValidURL) {
     return {
       msg: 'The URL is invalid. URL should include the schema and path, for example: https://host-example.com/sdk .',
-      type: 'error',
+      type: ValidationState.Error,
     };
   }
 
   if (isSecure) {
-    const isValidIpAddress = validateIpv4(urlHostname);
+    const isValidIpAddress = urlHostname && validateIpv4(urlHostname);
 
     if (isValidIpAddress) {
       return {
         msg: 'The URL is not a fully qualified domain name (FQDN). If the certificate is not skipped and does not match the URL, the connection might fail.',
-        type: 'warning',
+        type: ValidationState.Warning,
       };
     }
   }
@@ -54,19 +64,11 @@ export const validateVCenterURL = (
   if (!trimmedUrl.endsWith('sdk'))
     return {
       msg: 'The URL does not end with a /sdk path, for example a URL with sdk path: https://host-example.com/sdk .',
-      type: 'warning',
+      type: ValidationState.Warning,
     };
 
   return {
     msg: 'The URL of the vCenter API endpoint for example: https://host-example.com/sdk .',
-    type: 'success',
+    type: ValidationState.Success,
   };
-};
-
-const getUrlObject = (url: string) => {
-  try {
-    return new URL(url);
-  } catch {
-    console.error('Unable to parse URL.');
-  }
 };

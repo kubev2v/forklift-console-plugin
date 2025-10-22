@@ -2,8 +2,8 @@ import { type ReactNode, useMemo } from 'react';
 
 import { Spinner } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
-import { CATEGORY_TYPES } from '@utils/constants.ts';
-import { useForkliftTranslation } from '@utils/i18n.tsx';
+import { CATEGORY_TYPES } from '@utils/constants';
+import { useForkliftTranslation } from '@utils/i18n';
 
 const errorIcon = () => <ExclamationCircleIcon color="#C9190B" />;
 const progressIcon = () => <Spinner size="sm" />;

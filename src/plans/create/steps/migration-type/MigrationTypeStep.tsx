@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
-import { GeneralFormFieldId } from 'src/plans/create/steps/general-information/constants.ts';
+import { GeneralFormFieldId } from 'src/plans/create/steps/general-information/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';

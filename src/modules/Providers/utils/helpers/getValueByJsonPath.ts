@@ -15,13 +15,14 @@ export const getValueByJsonPath = <T>(
 
   const pathParts = typeof pathOrFunction === 'string' ? pathOrFunction.split('.') : pathOrFunction;
 
-  return pathParts.reduce((path, key) => path?.[key], obj);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-member-access
+  return pathParts.reduce((path: any, key: string) => path?.[key], obj);
 };
 
 export const jsonPathToPatch = (path: string | string[]) => {
   let pathParts = typeof path === 'string' ? path.split('.') : path;
 
-  pathParts = pathParts.map((path) => path.replaceAll('/', '~1'));
+  pathParts = pathParts.map((pathPart) => pathPart.replaceAll('/', '~1'));
 
   return `/${pathParts.join('/')}`;
 };

@@ -1,6 +1,6 @@
 import { type FC, Suspense } from 'react';
 import Loading from 'src/overview/components/Loading';
-import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchProviderNames';
+import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchForkliftController';
 
 import { Bullseye } from '@patternfly/react-core';
 

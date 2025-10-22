@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 
 import type { K8sResourceCommon } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { getName } from '@utils/crds/common/selectors.ts';
-import { isUpstream } from '@utils/env.ts';
+import { getName } from '@utils/crds/common/selectors';
+import { isUpstream } from '@utils/env';
 
 const useWatchProjectNames = (): [string[], boolean, boolean] => {
   const [projects, projectsLoaded, projectsLoadError] = useK8sWatchResource<K8sResourceCommon[]>({

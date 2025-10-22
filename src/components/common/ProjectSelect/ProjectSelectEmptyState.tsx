@@ -11,7 +11,7 @@ import {
   EmptyStateIcon,
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
-import { useForkliftTranslation } from '@utils/i18n.tsx';
+import { useForkliftTranslation } from '@utils/i18n';
 
 type ProjectSelectEmptyStateProps = {
   emptyStateMessage?: ReactNode;

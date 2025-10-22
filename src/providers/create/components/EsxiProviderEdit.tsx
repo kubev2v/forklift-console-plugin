@@ -3,7 +3,6 @@ import { produce } from 'immer';
 import { validateEsxiURL } from 'src/modules/Providers/utils/validators/provider/vsphere/validateEsxiURL';
 import { validateVDDKImage } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVDDKImage';
 import { EMPTY_VDDK_INIT_IMAGE_ANNOTATION, ProviderFieldsId } from 'src/providers/utils/constants';
-import type { ValidationMsg } from 'src/providers/utils/types';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { Form } from '@patternfly/react-core';
@@ -14,6 +13,7 @@ import {
   getUseVddkAioOptimization,
   getVddkInitImage,
 } from '@utils/crds/common/selectors';
+import type { ValidationMsg } from '@utils/validation/Validation';
 
 import VMwareURLEditItems from './VMwareURLEditItems';
 import VMwareVddkEditItems from './VMwareVddkEditItems';

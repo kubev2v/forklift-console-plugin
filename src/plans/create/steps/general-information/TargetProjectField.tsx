@@ -4,9 +4,9 @@ import { useNamespaces as useProviderNamespaces } from 'src/modules/Providers/ho
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect.tsx';
+import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect';
 import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
-import { getName } from '@utils/crds/common/selectors.ts';
+import { getName } from '@utils/crds/common/selectors';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';

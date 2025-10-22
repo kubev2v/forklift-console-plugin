@@ -7,7 +7,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 /**
- * Type for the return value of the useK8sWatchProviderNames hook.
+ * Type for the return value of the useK8sWatchForkliftController hook.
  */
 type K8sForkliftControllerWatchResult = [
   V1beta1ForkliftController | undefined,

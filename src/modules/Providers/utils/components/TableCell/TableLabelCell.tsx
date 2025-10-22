@@ -17,20 +17,8 @@ export const TableLabelCell: FC<TableLabelCellProps> = ({
   label,
   labelColor = 'grey',
 }) => {
-  let labels: ReactNode[];
-  let labelColors: Colors[];
-
-  if (Array.isArray(label)) {
-    labels = label;
-  } else {
-    labels = [label];
-  }
-
-  if (Array.isArray(labelColor)) {
-    labelColors = labelColor;
-  } else {
-    labelColors = labels.map(() => labelColor);
-  }
+  const labels = Array.isArray(label) ? label : [label];
+  const labelColors = Array.isArray(labelColor) ? labelColor : labels.map(() => labelColor);
 
   return (
     <TableCell isWrap={isWrap}>

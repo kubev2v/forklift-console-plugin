@@ -1,6 +1,6 @@
 import { type FC, useRef } from 'react';
 import { DateTime } from 'luxon';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
+import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 

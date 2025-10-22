@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom-v5-compat';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import SmartLinkify from '@components/common/SmartLinkify.tsx';
+import SmartLinkify from '@components/common/SmartLinkify';
 import { ProviderModelRef } from '@kubev2v/types';
 import {
   Button,
@@ -14,7 +14,7 @@ import {
   TextVariants,
 } from '@patternfly/react-core';
 
-import type { CellProps } from './CellProps.tsx';
+import type { CellProps } from './CellProps';
 
 export const ErrorStatusCell: FC<CellProps & { children: ReactNode; phaseLabel: string }> = ({
   children,

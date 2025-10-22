@@ -88,6 +88,7 @@ export const createEslintConfig = (ideMode = false) =>
         ],
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
+        '@typescript-eslint/max-params': ['error', { max: 5 }],
         '@typescript-eslint/member-ordering': [
           'error',
           {

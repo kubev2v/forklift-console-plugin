@@ -43,7 +43,7 @@ export const useFields = (
     clear: clearSettings = () => undefined,
     data: fieldsFromSettings = [],
     save: saveFieldsInSettings = () => undefined,
-  } = userSettings || {};
+  } = userSettings ?? {};
 
   const [fields, setFields] = useState<ResourceField[]>(() => {
     const supportedIds: Record<string, ResourceField> = defaultFields.reduce(
@@ -64,7 +64,7 @@ export const useFields = (
         .map(({ isVisible, resourceFieldId }) => ({
           ...supportedIds[resourceFieldId],
           // keep the invariant that identity resourceFields are always visible
-          isVisible: isVisible || supportedIds[resourceFieldId].isIdentity,
+          isVisible: Boolean(isVisible) || supportedIds[resourceFieldId].isIdentity,
         })),
       // put all remaining fields (all fields if there are no settings)
       ...defaultFields
@@ -86,18 +86,18 @@ export const useFields = (
   );
 
   const setInternalStateAndSaveUserSettings = useMemo(
-    () => (fields: ResourceField[]) => {
-      setFields(fields);
-      if (sameOrderAndVisibility(fields, defaultFields)) {
+    () => (newFields: ResourceField[]) => {
+      setFields(newFields);
+      if (sameOrderAndVisibility(newFields, defaultFields)) {
         // don't store settings if equal to default settings
         clearSettings();
       } else {
         saveFieldsInSettings(
-          fields.map(({ isVisible, resourceFieldId }) => ({ isVisible, resourceFieldId })),
+          newFields.map(({ isVisible, resourceFieldId }) => ({ isVisible, resourceFieldId })),
         );
       }
     },
-    [setFields, saveFieldsInSettings],
+    [defaultFields, clearSettings, saveFieldsInSettings],
   );
 
   return [namespaceAwareFields, setInternalStateAndSaveUserSettings];

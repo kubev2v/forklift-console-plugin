@@ -1,4 +1,4 @@
-import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants.ts';
+import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
 
 import type { V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
 

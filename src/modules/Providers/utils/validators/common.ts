@@ -1,7 +1,3 @@
-import type { ReactNode } from 'react';
-
-import type { Validation } from '../types/Validation';
-
 // regex
 
 // validate container images
@@ -63,14 +59,6 @@ const JWT_TOKEN_REGEX = /^(?:[a-zA-Z0-9_=]+)\.(?:[a-zA-Z0-9_=]+)\.(?:[a-zA-Z0-9_
 const K8S_TOKEN_REGEX = /^[a-z0-9]{6}.[a-z0-9]{16}$/u;
 const TMP_TOKEN_REGEX = /^sha256~[A-Za-z0-9+/=_-]{43}$/u;
 
-// ValidationMsg type
-
-export type ValidationMsg = {
-  type: Validation;
-  msg?: string | ReactNode;
-  description?: string | ReactNode;
-};
-
 // helper methods
 
 export const validateContainerImage = (image: string) => {
@@ -97,8 +85,8 @@ export const validateFingerprint = (fingerprint: string) => {
   return FINGERPRINT_REGEX.test(fingerprint);
 };
 
-export const validateK8sName = (k8sName: string) => {
-  return DNS_SUBDOMAINS_NAME_REGEXP.test(k8sName);
+export const validateK8sName = (k8sName?: string) => {
+  return k8sName && DNS_SUBDOMAINS_NAME_REGEXP.test(k8sName);
 };
 
 export const validateK8sToken = (token: string) => {

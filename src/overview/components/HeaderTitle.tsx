@@ -11,8 +11,8 @@ import {
   SplitItem,
   Title,
 } from '@patternfly/react-core';
-import { TELEMETRY_EVENTS } from '@utils/analytics/constants.ts';
-import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics.ts';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type HeaderTitleProps = {
