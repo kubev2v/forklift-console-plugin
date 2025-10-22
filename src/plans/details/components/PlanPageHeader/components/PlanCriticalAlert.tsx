@@ -31,7 +31,7 @@ import { PlanConditionType } from '../utils/constants';
 
 import TroubleshootMessage from './TroubleshootMessage';
 
-type PlanCriticalConditionProps = PropsWithChildren & {
+type PlanCriticalAlertProps = PropsWithChildren & {
   plan: V1beta1Plan;
   condition: V1beta1PlanStatusConditions | undefined;
   storageMaps: V1beta1StorageMap[];
@@ -40,7 +40,7 @@ type PlanCriticalConditionProps = PropsWithChildren & {
   sourceNetworks: InventoryNetwork[];
 };
 
-const PlanCriticalCondition: FC<PlanCriticalConditionProps> = ({
+const PlanCriticalAlert: FC<PlanCriticalAlertProps> = ({
   condition,
   networkMaps,
   plan,
@@ -115,4 +115,4 @@ const PlanCriticalCondition: FC<PlanCriticalConditionProps> = ({
   );
 };
 
-export default PlanCriticalCondition;
+export default PlanCriticalAlert;
