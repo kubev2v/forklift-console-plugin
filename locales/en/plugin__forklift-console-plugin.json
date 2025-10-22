@@ -295,8 +295,6 @@
   "destination provider": "destination provider",
   "Details": "Details",
   "Determines the frequency with which the system checks the status of snapshot creation or removal during oVirt warm migration. The default value is 10 seconds.": "Determines the frequency with which the system checks the status of snapshot creation or removal during oVirt warm migration. The default value is 10 seconds.",
-  "Developer Preview": "Developer Preview",
-  "Developer Preview features are not intended to be used in production environments. The clusters deployed with the Developer Preview features are considered to be development clusters and are not supported through the Red Hat Customer Portal case management system.": "Developer Preview features are not intended to be used in production environments. The clusters deployed with the Developer Preview features are considered to be development clusters and are not supported through the Red Hat Customer Portal case management system.",
   "Disabled": "Disabled",
   "Disk counter": "Disk counter",
   "Disk decryption": "Disk decryption",
