@@ -5,14 +5,7 @@ import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceU
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModelRef } from '@kubev2v/types';
-import {
-  Button,
-  ButtonVariant,
-  Popover,
-  Text,
-  TextContent,
-  TextVariants,
-} from '@patternfly/react-core';
+import { Button, ButtonVariant, Content, ContentVariants, Popover } from '@patternfly/react-core';
 
 import type { CellProps } from './CellProps';
 
@@ -36,17 +29,17 @@ export const ErrorStatusCell: FC<CellProps & { children: ReactNode; phaseLabel: 
 
   // Set the footer content
   const footerContent = (
-    <TextContent>
-      <Text component={TextVariants.p}>
+    <Content>
+      <Content component={ContentVariants.p}>
         {t(
           `To troubleshoot, view the storage map details page
           and check the Forklift controller pod logs.`,
         )}
-      </Text>
-      <Text component={TextVariants.p}>
+      </Content>
+      <Content component={ContentVariants.p}>
         <Link to={StorageMapURL}>{t('View storage map details')}</Link>
-      </Text>
-    </TextContent>
+      </Content>
+    </Content>
   );
 
   return (

@@ -25,12 +25,7 @@ export const HelpIconPopover: FC<HelpIconPopoverProps> = ({
       variant={ButtonVariant.plain}
       icon={<HelpIcon />}
       onClick={onClick}
-      className={classNames(
-        'pf-v5-u-align-items-center',
-        'pf-v5-u-p-0',
-        'pf-v5-u-ml-sm',
-        className,
-      )}
+      className={classNames('pf-v6-u-align-items-center', 'pf-v6-u-p-0', className)}
     />
   </Popover>
 );

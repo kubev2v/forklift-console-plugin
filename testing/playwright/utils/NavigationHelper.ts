@@ -44,9 +44,9 @@ export class NavigationHelper {
   }
 
   async navigateToConsole(): Promise<void> {
-    await disableGuidedTour(this.page);
     await this.page.goto('/');
     await this.page.waitForLoadState('networkidle');
+    await disableGuidedTour(this.page);
   }
 
   async navigateToK8sResource(options: {
@@ -58,28 +58,12 @@ export class NavigationHelper {
   }): Promise<void> {
     const url = this.buildK8sUrl(options);
 
-    await disableGuidedTour(this.page);
     await this.page.goto(url);
-    await this.page.waitForLoadState('networkidle');
-
-    const tourDialog = this.page.getByRole('dialog');
-    if (await tourDialog.isVisible({ timeout: 10000 })) {
-      const skipButton = tourDialog.getByRole('button', { name: 'Skip tour' });
-      await skipButton.click();
-      await tourDialog.waitFor({ state: 'hidden' });
-    }
+    await disableGuidedTour(this.page);
   }
 
   async navigateToMigrationMenu(): Promise<void> {
     await this.navigateToConsole();
-
-    const tourDialog = this.page.getByRole('dialog');
-    if (await tourDialog.isVisible({ timeout: 10000 })) {
-      const skipButton = tourDialog.getByRole('button', { name: 'Skip tour' });
-      await skipButton.click();
-      await tourDialog.waitFor({ state: 'hidden' });
-    }
-
     await this.page.getByTestId('migration-nav-item').click({ timeout: 20000 });
   }
 

@@ -6,7 +6,7 @@ import { FieldWithClipboardCopy } from 'src/modules/Providers/views/details/comp
 import { MaskedField } from 'src/modules/Providers/views/details/components/CredentialsSection/MaskedField';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { DescriptionList, Text } from '@patternfly/react-core';
+import { Content, DescriptionList } from '@patternfly/react-core';
 
 import { CacertHelperTextPopover, InsecureSkipVerifyHelperTextPopover } from './utils/constants';
 import { getDecodedValue } from './utils/getDecodedValue';
@@ -55,7 +55,7 @@ const OvirtCredentialsViewMode: FC<CredentialsViewModeByTypeProps> = ({ reveal, 
         <DescriptionList className="forklift-page-secret-title">
           <DisplayTitle title={fields.user.label} />
         </DescriptionList>
-        <Text>{fields.user.description}</Text>
+        <Content component="p">{fields.user.description}</Content>
       </div>
       <div className="forklift-page-secret-content-div">
         {reveal ? (
@@ -68,7 +68,7 @@ const OvirtCredentialsViewMode: FC<CredentialsViewModeByTypeProps> = ({ reveal, 
         <DescriptionList className="forklift-page-secret-title">
           <DisplayTitle title={fields.password.label} />
         </DescriptionList>
-        <Text>{fields.password.description}</Text>
+        <Content component="p">{fields.password.description}</Content>
       </div>
       <div className="forklift-page-secret-content-div">
         {reveal ? (
@@ -82,10 +82,12 @@ const OvirtCredentialsViewMode: FC<CredentialsViewModeByTypeProps> = ({ reveal, 
           <DisplayTitle
             title={fields.insecureSkipVerify.label}
             showHelpIconNextToTitle={true}
-            helpContent={<Text>{fields.insecureSkipVerify.helperTextPopover}</Text>}
+            helpContent={
+              <Content component="p">{fields.insecureSkipVerify.helperTextPopover}</Content>
+            }
           />
         </DescriptionList>
-        <Text>{fields.insecureSkipVerify.description}</Text>
+        <Content component="p">{fields.insecureSkipVerify.description}</Content>
       </div>
       <div className="forklift-page-secret-content-div">
         {reveal ? (
@@ -102,10 +104,10 @@ const OvirtCredentialsViewMode: FC<CredentialsViewModeByTypeProps> = ({ reveal, 
           <DisplayTitle
             title={fields.cacert.label}
             showHelpIconNextToTitle={true}
-            helpContent={<Text>{fields.cacert.helperTextPopover}</Text>}
+            helpContent={<Content component="p">{fields.cacert.helperTextPopover}</Content>}
           />
         </DescriptionList>
-        <Text>{fields.cacert.description}</Text>
+        <Content component="p">{fields.cacert.description}</Content>
       </div>
       <div className="forklift-page-secret-content-div">
         {reveal ? (

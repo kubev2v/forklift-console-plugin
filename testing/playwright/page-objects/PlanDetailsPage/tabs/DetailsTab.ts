@@ -102,10 +102,6 @@ export class DetailsTab {
   async verifyNavigationTabs(): Promise<void> {
     const detailsTab = this.page.locator('[data-test-id="horizontal-link-Details"]');
     await expect(detailsTab).toBeVisible();
-    const planDetailsSection = this.page
-      .locator('section.pf-m-light')
-      .filter({ hasText: 'Plan details' });
-    await expect(planDetailsSection).toBeVisible();
   }
 
   async verifyPlanDetails(planData: PlanTestData): Promise<void> {

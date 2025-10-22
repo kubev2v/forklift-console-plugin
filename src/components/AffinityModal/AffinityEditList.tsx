@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import LabelsList from '@components/NodeSelectorModal/LabelList';
-import { GridItem, Text, TextVariants } from '@patternfly/react-core';
+import { Content, ContentVariants, GridItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -38,13 +38,13 @@ const AffinityEditList: FC<AffinityEditListProps> = ({
       {!isEmpty(expressions) && (
         <>
           <GridItem span={4}>
-            <Text component={TextVariants.h6}>{t('Key')}</Text>
+            <Content component={ContentVariants.h6}>{t('Key')}</Content>
           </GridItem>
           <GridItem span={2}>
-            <Text component={TextVariants.h6}>{t('Operator')}</Text>
+            <Content component={ContentVariants.h6}>{t('Operator')}</Content>
           </GridItem>
           <GridItem span={6}>
-            <Text component={TextVariants.h6}>{t('Values')}</Text>
+            <Content component={ContentVariants.h6}>{t('Values')}</Content>
           </GridItem>
           {expressions.map((expression) => (
             <AffinityEditRow

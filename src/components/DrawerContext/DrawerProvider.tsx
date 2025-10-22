@@ -32,7 +32,7 @@ export const DrawerProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const panelContent = (
     <DrawerPanelContent>
-      <DrawerPanelBody className="pf-v5-c-drawer__head drawer-head">
+      <DrawerPanelBody className="pf-v6-c-drawer__head drawer-head">
         <span ref={focusRef} tabIndex={isOpen ? 0 : -1}>
           {drawerTitle}
         </span>

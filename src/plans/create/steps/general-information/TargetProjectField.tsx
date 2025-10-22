@@ -43,7 +43,7 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
       isRequired
       fieldId={GeneralFormFieldId.TargetProject}
       label={generalFormFieldLabels[GeneralFormFieldId.TargetProject]}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover>
           <Stack hasGutter>
             <StackItem>

@@ -1,10 +1,10 @@
 import { COLUMN_IDS } from '@components/VsphereFoldersTable/utils/types';
 import {
   SearchInput,
-  type ToolbarChip,
   ToolbarFilter,
   ToolbarGroup,
   ToolbarItem,
+  type ToolbarLabel,
   ToolbarToggleGroup,
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
@@ -53,15 +53,15 @@ export const AttributeFiltersToolbar = <T,>({
       <ToolbarFilter
         key={attr.id}
         categoryName={attr.label}
-        chips={chips}
-        deleteChip={(_c: unknown, chip: string | ToolbarChip) => {
+        labels={chips}
+        deleteLabel={(_c: unknown, chip: string | ToolbarLabel) => {
           if (typeof chip === 'string') {
             deleteChip(attr.id, chip);
           } else if (typeof chip.node === 'string') {
             deleteChip(attr.id, chip.node);
           }
         }}
-        deleteChipGroup={() => {
+        deleteLabelGroup={() => {
           deleteChipGroup(attr.id);
         }}
         showToolbarItem={activeId === attr.id}

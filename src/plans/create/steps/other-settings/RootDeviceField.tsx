@@ -21,7 +21,7 @@ const RootDeviceField: FC = () => {
     <FormGroupWithHelpText
       fieldId={fieldId}
       label={otherFormFieldLabels[fieldId]}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover header={otherFormFieldLabels[fieldId]}>
           <ForkliftTrans>
             <Stack hasGutter>

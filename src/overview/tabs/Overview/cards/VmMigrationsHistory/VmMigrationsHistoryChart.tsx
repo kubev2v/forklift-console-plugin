@@ -117,7 +117,7 @@ const VmMigrationsHistoryChart = ({
   });
 
   return (
-    <div ref={chartContainerRef} className="pf-v5-u-h-100 pf-v5-u-w-100">
+    <div ref={chartContainerRef} className="pf-v6-u-h-100 pf-v6-u-w-100">
       {count.Total === 0 && (
         <div className="forklift-overview__create-plan-btn">
           <Button

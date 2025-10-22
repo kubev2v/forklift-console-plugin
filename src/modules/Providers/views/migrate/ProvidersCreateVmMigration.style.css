@@ -19,7 +19,7 @@
 }
 
 /* stylelint-disable-next-line selector-disallowed-list */
-.forklift-page-mapping-list--header .pf-v5-c-data-list__item {
+.forklift-page-mapping-list--header .pf-v6-c-data-list__item {
   border: 0;
 }
 
@@ -53,7 +53,7 @@
 
 @media screen and (width >= 768px) {
   /* stylelint-disable-next-line selector-disallowed-list */
-  .forklift-page-mapping-list .pf-v5-c-form__group-label {
+  .forklift-page-mapping-list .pf-v6-c-form__group-label {
     display: none !important;
   }
 }

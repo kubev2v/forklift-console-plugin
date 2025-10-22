@@ -91,7 +91,7 @@ const EditLUKSEncryptionPasswords: FC<EditPlanProps> = ({ resource }) => {
             setNbdeClevis(checked);
           }}
           label={t('Use network-bound disk encryption (NBDE/Clevis)')}
-          className="pf-v5-u-mt-lg"
+          className="pf-v6-u-mt-lg"
         />
 
         {!nbdeClevis && <FormGroup label={t('Passphrases for LUKS encrypted devices')} />}

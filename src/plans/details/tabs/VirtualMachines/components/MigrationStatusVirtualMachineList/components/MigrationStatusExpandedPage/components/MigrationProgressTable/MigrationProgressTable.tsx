@@ -138,7 +138,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                   </Stack>
                 )}
                 {pipe?.error?.reasons && !isEmpty(pipe?.error?.reasons) && (
-                  <div className="pf-v5-u-mt-sm">
+                  <div className="pf-v6-u-mt-sm">
                     <Alert variant="danger" title={t('Error details')} isInline isPlain>
                       <ul>
                         {pipe.error.reasons.map((reason: string, idx: number) => (

@@ -46,7 +46,7 @@ With a user logged in to existing Kubernetes or Openshift environment with Forkl
 #       set this variables if you use a different cluster.
 export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.<your cluster address>
 export SERVICES_API_SERVER_HOST=https://virt-konveyor-forklift.apps.<your cluster address>
-export CONSOLE_IMAGE=quay.io/openshift/origin-console:4.18
+export CONSOLE_IMAGE=quay.io/openshift/origin-console:latest
 
 # Run the web console locally (uses the environment variables we defined above)
 yarn console
