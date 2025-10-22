@@ -1,7 +1,7 @@
 import { type FC, useState } from 'react';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 
-import DevPreviewLabel from '@components/PreviewLabels/DevPreviewLabel';
+import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
 import type { V1beta1Provider } from '@kubev2v/types';
 import { ExpandableSection, Form, Split, SplitItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -32,7 +32,7 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
         <Split hasGutter>
           <SplitItem>{t('Offload options (optional)')}</SplitItem>
           <SplitItem>
-            <DevPreviewLabel />
+            <TechPreviewLabel />
           </SplitItem>
         </Split>
       }
