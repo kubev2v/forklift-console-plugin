@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@kubev2v/types@0.0.22":
-  version "0.0.22"
-  resolved "https://registry.npmjs.org/@kubev2v/types/-/types-0.0.22.tgz"
-  integrity sha512-1s2RhE9zPf2esJzcy0KCbcso4SJE2Mp9ObV3We0c8KCGvp8i42xCxBIV9vMDiM14ZRlCUMo7gGB9GdZvexDURg==
+"@kubev2v/types@0.0.24":
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/@kubev2v/types/-/types-0.0.24.tgz#12f72a153d5a5c18b3edadd8c24577d09d4dd5b1"
+  integrity sha512-F7DPS/GmVOqB8hZRPe8eU0dNXzjqbFe0vwBOUSWDa1brPRzbVAr/UHKEpREmyYYbzi63XNYGxSgBzEPUhI6VPQ==
 
 "@playwright/test@1.55.0":
   version "1.55.0"
