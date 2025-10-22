@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import { defaultStorageMapping, type StorageMapping } from 'src/storageMaps/constants';
-import { getSourceStorageValues } from 'src/storageMaps/utils/getSourceStorageValues';
+import { getSourceStorageValuesForSelectedVms } from 'src/storageMaps/utils/getSourceStorageValues';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
@@ -34,11 +34,12 @@ const NewStorageMapFields: FC = () => {
 
   const isLoading = sourceStoragesLoading || vmsWithDisksLoading;
 
-  const { other: otherSourceStorages, used: usedSourceStorages } = getSourceStorageValues(
-    sourceProvider,
-    availableSourceStorages,
-    vmsWithDisks as ProviderVirtualMachine[],
-  );
+  const { other: otherSourceStorages, used: usedSourceStorages } =
+    getSourceStorageValuesForSelectedVms(
+      sourceProvider,
+      availableSourceStorages,
+      vmsWithDisks as ProviderVirtualMachine[],
+    );
   const defaultTargetStorageName = availableTargetStorages?.[0]?.name;
 
   useInitializeMappings<StorageMapping>({

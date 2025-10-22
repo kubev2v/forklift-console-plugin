@@ -106,25 +106,18 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
 };
 
 /**
- * Categorizes available source storages into 'used' and 'other' based on VM usage
- * This helps prioritize storages that need mapping in the UI
+ * Categorizes available source storages into 'used' and 'other' based on VM usage.
+ * This helps prioritize storages that need mapping in the UI.
  */
 export const getSourceStorageValues = (
-  sourceProvider: V1beta1Provider | undefined,
   availableSourceStorages: InventoryStorage[],
   vms: ProviderVirtualMachine[] | null,
 ): CategorizedSourceMappings => {
-  const sourceProviderType = sourceProvider?.spec?.type;
   const storageIdsUsedByVms = getStoragesUsedBySelectedVms(vms);
   const usedStorageIds = new Set(storageIdsUsedByVms);
-  // For OVA providers, filter storages to only those used by selected VMs
-  const relevantStorages =
-    sourceProviderType === PROVIDER_TYPES.ova
-      ? availableSourceStorages.filter((storage) => usedStorageIds.has(storage.id))
-      : availableSourceStorages;
 
   // Partition storages into used and other categories
-  return relevantStorages.reduce<CategorizedSourceMappings>(
+  return availableSourceStorages.reduce<CategorizedSourceMappings>(
     (acc, storage) => {
       const storageEntry = {
         id: storage.id,
@@ -141,4 +134,29 @@ export const getSourceStorageValues = (
     },
     { other: [], used: [] },
   );
+};
+
+/**
+ * Categorizes source storages with OVA provider filtering.
+ * For OVA: only shows storages used by the provided VMs.
+ * For other providers: shows all storages categorized by usage.
+ */
+export const getSourceStorageValuesForSelectedVms = (
+  sourceProvider: V1beta1Provider | undefined,
+  availableSourceStorages: InventoryStorage[],
+  vms: ProviderVirtualMachine[] | null,
+): CategorizedSourceMappings => {
+  const sourceProviderType = sourceProvider?.spec?.type;
+
+  // For OVA providers, filter storages to only those used by the provided VMs
+  const relevantStorages =
+    sourceProviderType === PROVIDER_TYPES.ova
+      ? (() => {
+          const storageIdsUsedByVms = getStoragesUsedBySelectedVms(vms);
+          const usedStorageIds = new Set(storageIdsUsedByVms);
+          return availableSourceStorages.filter((storage) => usedStorageIds.has(storage.id));
+        })()
+      : availableSourceStorages;
+
+  return getSourceStorageValues(relevantStorages, vms);
 };
