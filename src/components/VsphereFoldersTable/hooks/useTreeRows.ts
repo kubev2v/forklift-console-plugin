@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction, useMemo } from 'react';
+import { type Dispatch, type MutableRefObject, type SetStateAction, useMemo } from 'react';
 import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 
 import type { ProviderHost, VSphereResource } from '@kubev2v/types';
@@ -16,7 +16,6 @@ import { buildIndexes, isFolderChecked } from './utils/utils';
 import useSelectedTreeRows from './useSelectedTreeRows';
 import { useSlug } from './useSlug';
 import useToggleTreeRows from './useToggleTreeRows';
-
 type UseTreeRowsReturnValue = {
   rows: RowNode[];
   groupVMCountByFolder: Map<string, number>;
@@ -24,6 +23,7 @@ type UseTreeRowsReturnValue = {
   setSelectedVmKeys: Dispatch<SetStateAction<string[]>>;
   showAll: boolean;
   setShowAll: Dispatch<SetStateAction<boolean>>;
+  folderToVmKeys: Map<string, string[]>;
 };
 
 type UseTreeRows = (args: {
@@ -32,6 +32,7 @@ type UseTreeRows = (args: {
   foldersDict: Record<string, VSphereResource>;
   hostsDict: Record<string, ProviderHost>;
   vmDataArr: VmData[] | undefined;
+  visibleVmIdsRef?: MutableRefObject<Set<string> | undefined>;
 }) => UseTreeRowsReturnValue;
 
 export const useTreeRows: UseTreeRows = ({
@@ -39,6 +40,7 @@ export const useTreeRows: UseTreeRows = ({
   controls,
   foldersDict,
   hostsDict,
+  visibleVmIdsRef,
   vmDataArr,
 }) => {
   const { expandedFolders, expandedVMs, setExpandedFolders, setExpandedVMs, toggleSet } =
@@ -69,7 +71,18 @@ export const useTreeRows: UseTreeRows = ({
 
     realFolderEntries.forEach(([folderName, vmIdsInFolder], folderIdx) => {
       const isExpanded = expandedFolders.has(folderName);
-      const folderChecked = isFolderChecked(vmIdsInFolder, selectedSet);
+
+      const getVisibleVmsInFolder = () => {
+        const visibleSet = visibleVmIdsRef?.current;
+        if (!visibleSet || visibleSet.size === 0) {
+          return vmIdsInFolder;
+        }
+
+        return vmIdsInFolder.filter((id) => visibleSet.has(id));
+      };
+
+      const visibleVmIdsInFolder = getVisibleVmsInFolder();
+      const folderChecked = isFolderChecked(visibleVmIdsInFolder, selectedSet);
 
       const { folderKey, row: folderRow } = makeFolderRow({
         canSelect,
@@ -79,7 +92,12 @@ export const useTreeRows: UseTreeRows = ({
         folderName,
         isExpanded,
         level1SetSize,
-        onCheckChange: canSelect ? onCheckChange(vmIdsInFolder) : undefined,
+        onCheckChange: canSelect
+          ? (_event, isChecked) => {
+              const currentlyVisibleVms = getVisibleVmsInFolder();
+              onCheckChange(currentlyVisibleVms)(_event, isChecked);
+            }
+          : undefined,
         onToggle: () => {
           toggleSet(setExpandedFolders, folderName);
         },
@@ -91,7 +109,9 @@ export const useTreeRows: UseTreeRows = ({
       vmIdsInFolder.forEach((vmKey, vmIdx) => {
         const vmChecked = isVmSelected(vmKey);
         const isVmExpanded = expandedVMs.has(vmKey);
-        const vmData = vmByKey.get(vmKey)!;
+        const vmData = vmByKey.get(vmKey);
+
+        if (!vmData) return;
 
         const { concernsRow, vmRow } = makeVmAndConcernsRows({
           canSelect,
@@ -119,7 +139,9 @@ export const useTreeRows: UseTreeRows = ({
     rootVmKeys.forEach((vmKey, idx) => {
       const vmChecked = isVmSelected(vmKey);
       const isVmExpanded = expandedVMs.has(vmKey);
-      const vmData = vmByKey.get(vmKey)!;
+      const vmData = vmByKey.get(vmKey);
+
+      if (!vmData) return;
 
       const { concernsRow, vmRow } = makeVmAndConcernsRows({
         canSelect,
@@ -158,9 +180,11 @@ export const useTreeRows: UseTreeRows = ({
     expandedVMs,
     vmByKey,
     setExpandedVMs,
+    visibleVmIdsRef,
   ]);
 
   return {
+    folderToVmKeys,
     groupVMCountByFolder,
     rows,
     selectedVmKeys,
