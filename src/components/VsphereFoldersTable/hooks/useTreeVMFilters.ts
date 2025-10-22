@@ -17,37 +17,43 @@ type UseTreeFilters = {
   showAll: boolean;
 };
 
-const useTreeFilters = ({
-  filters,
-  rows,
-  showAll,
-}: UseTreeFilters): {
+type UseTreeFiltersReturn = {
   filteredRows: RowNode[];
+  visibleVmIds: Set<string>;
   filteredGroupVMCountByFolder: Map<string, number>;
-} => {
+};
+
+const useTreeFilters = ({ filters, rows, showAll }: UseTreeFilters): UseTreeFiltersReturn => {
   const filteredGroupVMCountByFolder = useMemo(() => new Map<string, number>(), []);
-  const { visibleFolderKeySet, visibleVmKeySet } = useMemo(() => {
+  const { visibleFolderKeySet, visibleVmIdSet, visibleVmKeySet } = useMemo(() => {
     if (!filters.hasAttrFilters && showAll) {
       return {
         visibleFolderKeySet: new Set<string>(),
+        visibleVmIdSet: new Set<string>(),
         visibleVmKeySet: new Set<string>(),
       };
     }
 
-    const vmSet = new Set<string>();
+    const vmKeySet = new Set<string>();
+    const vmIdSet = new Set<string>();
     const folderSet = new Set<string>();
 
     for (const row of rows) {
       if (row.type === ROW_TYPE.Vm) {
         const isCandidate = (showAll || row.isSelected) && filters.predicate(row);
         if (isCandidate) {
-          vmSet.add(row.key);
+          vmKeySet.add(row.key);
+          vmIdSet.add(row.vmData.vm.id);
           folderSet.add(row.parentFolderKey);
         }
       }
     }
 
-    return { visibleFolderKeySet: folderSet, visibleVmKeySet: vmSet };
+    return {
+      visibleFolderKeySet: folderSet,
+      visibleVmIdSet: vmIdSet,
+      visibleVmKeySet: vmKeySet,
+    };
   }, [rows, filters, showAll]);
 
   const filteredRows: RowNode[] = useMemo(() => {
@@ -57,8 +63,7 @@ const useTreeFilters = ({
 
     const isVisibleVm = (row: VmRow) => visibleVmKeySet.has(row.key);
 
-    const shouldAttachConcerns = (vm: VmRow, next: RowNode | undefined): next is ConcernsRow =>
-      Boolean(next) &&
+    const shouldAttachConcerns = (vm: VmRow, next: RowNode): next is ConcernsRow =>
       next.type === ROW_TYPE.Concerns &&
       !next.isHidden &&
       next.parentFolderKey === vm.parentFolderKey;
@@ -109,7 +114,11 @@ const useTreeFilters = ({
     filteredGroupVMCountByFolder,
   ]);
 
-  return { filteredGroupVMCountByFolder, filteredRows };
+  return {
+    filteredGroupVMCountByFolder,
+    filteredRows,
+    visibleVmIds: visibleVmIdSet,
+  };
 };
 
 export default useTreeFilters;
