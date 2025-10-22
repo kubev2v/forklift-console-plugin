@@ -44,8 +44,8 @@ const MapsSection: FC<MapsSectionProps> = ({ storageMap }) => {
   } = useProviderInventoryVms(sourceProvider, providersLoaded && !providersLoadError);
 
   const { other: otherSourceStorages, used: usedSourceStorages } = useMemo(
-    () => getSourceStorageValues(sourceProvider, sourceStorages, inventoryVms),
-    [sourceProvider, sourceStorages, inventoryVms],
+    () => getSourceStorageValues(sourceStorages, inventoryVms),
+    [sourceStorages, inventoryVms],
   );
 
   const handleUpdate = async (formValues: UpdateMappingsFormData) => {
