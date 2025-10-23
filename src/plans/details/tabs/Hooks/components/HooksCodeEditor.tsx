@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { validateHookRunnerImage } from 'src/plans/create/steps/migration-hooks/utils';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import VersionedCodeEditor from '@components/VersionedCodeEditor/VersionedCodeEditor';
@@ -75,7 +76,9 @@ const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
                     ? HOOK_FORM_FIELD_NAMES.preHookImage
                     : HOOK_FORM_FIELD_NAMES.postHookImage
                 }
-                rules={{ required: t('Hook runner image is required.') }}
+                rules={{
+                  validate: (value: string) => validateHookRunnerImage(value, t),
+                }}
                 render={({ field }) => (
                   <TextInput
                     {...field}
