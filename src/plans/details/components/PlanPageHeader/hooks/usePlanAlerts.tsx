@@ -55,23 +55,26 @@ const usePlanAlerts = (plan: V1beta1Plan) => {
     (condition) => condition?.category === CATEGORY_TYPES.CRITICAL,
   );
 
-  const showPreserveIPWarning = useMemo(() => {
-    const preserveStaticIpWarning = plan?.status?.conditions?.find(
-      (condition) => condition?.type === 'NetMapPreservingIPsOnPodNetwork',
-    );
-
-    return !isEmpty(preserveStaticIpWarning);
-  }, [plan]);
-
   const showCriticalCondition = !isEmpty(criticalCondition);
+
+  const preserveIPWarningsConditions = plan?.status?.conditions?.filter(
+    (condition) =>
+      condition?.category === CATEGORY_TYPES.WARNING &&
+      (condition?.type === 'NetMapPreservingIPsOnPodNetwork' ||
+        condition?.type === 'VMMissingGuestIPs' ||
+        condition?.type === 'VMIpNotMatchingUdnSubnet'),
+  );
+
+  const showPreserveIPWarningsConditions = !isEmpty(preserveIPWarningsConditions);
 
   return {
     criticalCondition,
     networkMaps,
     networkMapsError,
     networkMapsLoaded,
+    preserveIPWarningsConditions,
     showCriticalCondition,
-    showPreserveIPWarning,
+    showPreserveIPWarningsConditions,
     sourceNetworks,
     sourceStorages,
     status,

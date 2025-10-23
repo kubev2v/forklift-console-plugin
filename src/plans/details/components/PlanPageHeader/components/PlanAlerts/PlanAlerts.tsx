@@ -5,8 +5,8 @@ import { PageSection, PageSectionVariants } from '@patternfly/react-core';
 
 import { PlanStatuses } from '../../../PlanStatus/utils/types';
 import usePlanAlerts from '../../hooks/usePlanAlerts';
-import PlanCriticalCondition from '../PlanCriticalCondition';
-import PlanPreserveIPWarning from '../PlanPreserveIPWarning';
+import PlanCriticalAlert from '../PlanCriticalAlert';
+import PlanPreserveIPWarningsAlerts from '../PlanPreserveIPWarningsAlerts';
 
 import './PlanAlerts.scss';
 
@@ -20,8 +20,9 @@ const PlanAlerts: FC<Props> = ({ plan }) => {
     networkMaps,
     networkMapsError,
     networkMapsLoaded,
+    preserveIPWarningsConditions,
     showCriticalCondition,
-    showPreserveIPWarning,
+    showPreserveIPWarningsConditions,
     sourceNetworks,
     sourceStorages,
     status,
@@ -34,14 +35,14 @@ const PlanAlerts: FC<Props> = ({ plan }) => {
     return null;
   }
 
-  if (!showCriticalCondition && !showPreserveIPWarning) {
+  if (!showCriticalCondition && !showPreserveIPWarningsConditions) {
     return null;
   }
 
   return (
     <PageSection variant={PageSectionVariants.light} className="plan-header-alerts">
       {showCriticalCondition && (
-        <PlanCriticalCondition
+        <PlanCriticalAlert
           plan={plan}
           condition={criticalCondition}
           storageMaps={storageMaps}
@@ -50,7 +51,9 @@ const PlanAlerts: FC<Props> = ({ plan }) => {
           sourceNetworks={sourceNetworks}
         />
       )}
-      {showPreserveIPWarning && <PlanPreserveIPWarning />}
+      {showPreserveIPWarningsConditions && (
+        <PlanPreserveIPWarningsAlerts plan={plan} conditions={preserveIPWarningsConditions} />
+      )}
     </PageSection>
   );
 };

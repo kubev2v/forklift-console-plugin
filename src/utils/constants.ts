@@ -47,6 +47,7 @@ export const CATEGORY_TYPES = {
   STAGING: 'Staging',
   SUCCEEDED: 'Succeeded',
   VALIDATION_FAILED: 'ValidationFailed',
+  WARNING: 'Warn',
 };
 
 export const MODEL_KIND = {
