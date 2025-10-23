@@ -3,7 +3,6 @@ import type { FC } from 'react';
 import type { V1beta1Plan } from '@kubev2v/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type { EnhancedPlan } from '../../utils/types';
 import NameTemplateBody from '../EditNameTemplate/components/NameTemplateBody';
 import NameTemplateHelper from '../EditNameTemplate/components/NameTemplateHelper';
 import EditNameTemplate from '../EditNameTemplate/EditNameTemplate';
@@ -19,18 +18,24 @@ type EditVolumeNameTemplateProps = {
     resource: V1beta1Plan;
     newValue: string | undefined;
   }) => Promise<V1beta1Plan>;
+  value?: string;
+  allowInherit?: boolean;
 };
 
 const EditVolumeNameTemplate: FC<EditVolumeNameTemplateProps> = ({
+  allowInherit = true,
   onConfirmVolumeNameTemplate,
   resource,
+  value,
 }) => {
   const { t } = useForkliftTranslation();
 
   return (
     <EditNameTemplate
+      allowInherit={allowInherit}
+      fieldName={allowInherit ? t('VM volume name template') : t('Plan volume name template')}
       title={t('Edit volume name template')}
-      value={(resource as EnhancedPlan)?.spec?.volumeNameTemplate}
+      value={value}
       onConfirm={async (newValue) => onConfirmVolumeNameTemplate({ newValue, resource })}
       body={
         <NameTemplateBody
@@ -41,6 +46,7 @@ const EditVolumeNameTemplate: FC<EditVolumeNameTemplateProps> = ({
         />
       }
       helperText={<NameTemplateHelper examples={volumeNameTemplateHelperExamples} />}
+      inheritValue={resource?.spec?.volumeNameTemplate}
     />
   );
 };

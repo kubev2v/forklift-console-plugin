@@ -5,7 +5,6 @@ import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/ut
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
-import type { EnhancedPlan } from '../../utils/types';
 
 import { onConfirmPVCNameTemplate } from './utils/utils';
 import EditPVCNameTemplate from './EditPVCNameTemplate';
@@ -20,7 +19,7 @@ const PVCNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
 
   if (!shouldRender) return null;
 
-  const content = (plan as EnhancedPlan)?.spec?.pvcNameTemplate ? (
+  const content = plan?.spec?.pvcNameTemplate ? (
     t('Use custom')
   ) : (
     <span className="text-muted">{t('Use default')}</span>
@@ -34,8 +33,10 @@ const PVCNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
       onEdit={() => {
         showModal(
           <EditPVCNameTemplate
+            allowInherit={false}
             resource={plan}
             onConfirmPVCNameTemplate={onConfirmPVCNameTemplate}
+            value={plan?.spec?.pvcNameTemplate}
           />,
         );
       }}

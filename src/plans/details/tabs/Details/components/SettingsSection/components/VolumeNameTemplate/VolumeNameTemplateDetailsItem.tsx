@@ -5,7 +5,6 @@ import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/ut
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
-import type { EnhancedPlan } from '../../utils/types';
 
 import { onConfirmVolumeNameTemplate } from './utils/utils';
 import EditVolumeNameTemplate from './EditVolumeNameTemplate';
@@ -20,7 +19,7 @@ const VolumeNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
 
   if (!shouldRender) return null;
 
-  const content = (plan as EnhancedPlan)?.spec?.volumeNameTemplate ? (
+  const content = plan?.spec?.volumeNameTemplate ? (
     t('Use custom')
   ) : (
     <span className="text-muted">{t('Use default')}</span>
@@ -34,8 +33,10 @@ const VolumeNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
       onEdit={() => {
         showModal(
           <EditVolumeNameTemplate
+            allowInherit={false}
             onConfirmVolumeNameTemplate={onConfirmVolumeNameTemplate}
             resource={plan}
+            value={plan?.spec?.volumeNameTemplate}
           />,
         );
       }}

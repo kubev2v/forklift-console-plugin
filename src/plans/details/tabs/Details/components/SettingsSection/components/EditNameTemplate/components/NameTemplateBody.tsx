@@ -9,7 +9,7 @@ import {
 } from '@patternfly/react-core';
 
 type NameTemplateBodyProps = {
-  bodyText: string[];
+  bodyText: string;
   allowedVariables: string[];
 };
 
