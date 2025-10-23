@@ -10,7 +10,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { type HooksFormFieldId, MigrationHookFieldId } from './constants';
-import { getHooksSubFieldId, hooksFormFieldLabels } from './utils';
+import { getHooksSubFieldId, hooksFormFieldLabels, validateHookRunnerImage } from './utils';
 
 type HookRunnerImageFieldProps = {
   fieldId: HooksFormFieldId;
@@ -42,7 +42,9 @@ const HookRunnerImageField: FC<HookRunnerImageFieldProps> = ({ fieldId }) => {
       <Controller
         control={control}
         name={hookRunnerImageFieldId}
-        rules={{ required: t('Hook runner image is required.') }}
+        rules={{
+          validate: (value: string) => validateHookRunnerImage(value, t),
+        }}
         render={({ field }) => (
           <>
             <TextInput
