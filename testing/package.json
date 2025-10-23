@@ -19,6 +19,6 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@kubev2v/types": "0.0.22"
+    "@kubev2v/types": "0.0.24"
   }
 }
