@@ -11,24 +11,28 @@ type LabelsViewDetailsItemContentProps = {
 };
 
 const LabelsViewDetailsItemContent: FC<LabelsViewDetailsItemContentProps> = ({ labels }) => {
+  if (isEmpty(labels)) {
+    return (
+      <Label isCompact color="grey">
+        {t('No labels defined')}
+      </Label>
+    );
+  }
+
   return (
     <LabelGroup
       className={`labels-view-details-item${isEmpty(labels) ? '--empty' : ''}`}
       numLabels={4}
     >
-      {isEmpty(labels) ? (
-        <span className="text-muted">{t('No labels defined')}</span>
-      ) : (
-        Object.keys(labels ?? {})?.map((key) => {
-          const labelText = labels?.[key] ? `${key}=${labels[key]}` : key;
+      {Object.keys(labels ?? {})?.map((key) => {
+        const labelText = labels?.[key] ? `${key}=${labels[key]}` : key;
 
-          return (
-            <Label className="co-label" key={key} textMaxWidth={'25em'}>
-              {labelText}
-            </Label>
-          );
-        })
-      )}
+        return (
+          <Label className="co-label" key={key} textMaxWidth={'25em'}>
+            {labelText}
+          </Label>
+        );
+      })}
     </LabelGroup>
   );
 };

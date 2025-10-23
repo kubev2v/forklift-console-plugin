@@ -8,7 +8,8 @@ import {
   type K8sModel,
   type K8sResourceCommon,
 } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
+import { Button, ButtonVariant, Stack, StackItem } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 
 import useToggle from '../../hooks/useToggle';
 import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
@@ -101,18 +102,26 @@ export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource,
       onClose={toggleModal}
       actions={actions}
     >
-      {namespace ? (
-        <ForkliftTrans>
-          Are you sure you want to delete <strong className="co-break-word">{name}</strong> in
-          project <strong>{namespace}</strong>?
-        </ForkliftTrans>
-      ) : (
-        <ForkliftTrans>
-          Are you sure you want to delete <strong className="co-break-word">{name}</strong>?
-        </ForkliftTrans>
-      )}
-      {typeof owner === 'object' && <ItemIsOwnedAlert owner={owner} namespace={namespace} />}
-      {alertMessage}
+      <Stack hasGutter>
+        <StackItem>
+          {namespace ? (
+            <ForkliftTrans>
+              Are you sure you want to delete <strong className="co-break-word">{name}</strong> in
+              project <strong>{namespace}</strong>?
+            </ForkliftTrans>
+          ) : (
+            <ForkliftTrans>
+              Are you sure you want to delete <strong className="co-break-word">{name}</strong>?
+            </ForkliftTrans>
+          )}
+        </StackItem>
+        {typeof owner === 'object' && (
+          <StackItem>
+            <ItemIsOwnedAlert owner={owner} namespace={namespace} />
+          </StackItem>
+        )}
+        {alertMessage && <StackItem>{alertMessage}</StackItem>}
+      </Stack>
     </Modal>
   );
 };

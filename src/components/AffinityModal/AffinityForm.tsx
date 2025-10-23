@@ -1,6 +1,6 @@
 import { type Dispatch, type FC, type SetStateAction, useEffect } from 'react';
 
-import { Divider, Form, Text, TextVariants } from '@patternfly/react-core';
+import { Content, ContentVariants, Divider, Form } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -50,11 +50,11 @@ const AffinityForm: FC<AffinityFormProps> = ({
 
   return (
     <Form>
-      <Text className="text-muted" component={TextVariants.p}>
+      <Content className="text-muted" component={ContentVariants.p}>
         {t(
           'Define an affinity rule. This rule will be added to the list of affinity rules applied to this workload.',
         )}
-      </Text>
+      </Content>
       <AffinityTypeSelect
         focusedAffinity={focusedAffinity}
         setFocusedAffinity={setFocusedAffinity}

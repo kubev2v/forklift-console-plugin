@@ -14,13 +14,12 @@ import type {
 import {
   Alert,
   AlertVariant,
+  Content,
+  ContentVariants,
   List,
   ListItem,
   Stack,
   StackItem,
-  Text,
-  TextContent,
-  TextVariants,
 } from '@patternfly/react-core';
 import { getName } from '@utils/crds/common/selectors';
 import { getPlanNetworkMapName, getPlanStorageMapName } from '@utils/crds/plans/selectors';
@@ -89,13 +88,13 @@ const PlanCriticalCondition: FC<PlanCriticalConditionProps> = ({
   return (
     <Alert title={t('The plan is not ready')} variant={AlertVariant.danger} isExpandable={showList}>
       <Stack hasGutter>
-        <TextContent className="forklift-providers-list-header__alert">
-          <Text component={TextVariants.p}>
+        <Content className="forklift-providers-list-header__alert">
+          <Content component={ContentVariants.p}>
             <SmartLinkify>{condition?.message ?? EMPTY_MSG}</SmartLinkify>
             {condition?.message?.endsWith('.') ? ' ' : '. '}
             <TroubleshootMessage planURL={getPlanURL(plan)} type={type} />
-          </Text>
-        </TextContent>
+          </Content>
+        </Content>
         {showList && (
           <StackItem>
             <List>

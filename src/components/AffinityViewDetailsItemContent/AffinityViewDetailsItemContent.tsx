@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 
 import type { K8sIoApiCoreV1Affinity } from '@kubev2v/types';
+import { Label } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { getAffinityRules } from './utils/getAffinityRules';
@@ -12,7 +13,16 @@ type AffinityViewDetailsItemContentProps = {
 const AffinityViewDetailsItemContent: FC<AffinityViewDetailsItemContentProps> = ({ affinity }) => {
   const { t } = useForkliftTranslation();
 
-  return <>{t('{{rules}} affinity rules', { rules: getAffinityRules(affinity)?.length ?? 0 })}</>;
+  const rulesCount = getAffinityRules(affinity)?.length ?? 0;
+  const content = t('{{rules}} affinity rules', { rules: rulesCount });
+
+  return rulesCount === 0 ? (
+    <Label isCompact color="grey">
+      {content}
+    </Label>
+  ) : (
+    <>{content}</>
+  );
 };
 
 export default AffinityViewDetailsItemContent;

@@ -7,10 +7,7 @@ import {
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
-  EmptyStateHeader,
-  EmptyStateIcon,
   Spinner,
-  Title,
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
 
@@ -20,28 +17,12 @@ import { ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
  * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Page/PageStates.tsx)
  */
-const BaseState = ({
-  color,
-  icon,
-  title,
-}: {
-  title?: string;
-  icon?: ComponentType<unknown>;
-  color?: string;
-}) => {
-  return (
-    <EmptyState>
-      <EmptyStateHeader
-        titleText={title}
-        headingLevel="h4"
-        icon={icon && <EmptyStateIcon icon={icon} color={color} />}
-      />
-    </EmptyState>
-  );
+const BaseState = ({ icon, title }: { title?: string; icon?: ComponentType<any> }) => {
+  return <EmptyState titleText={title} icon={icon} headingLevel="h4"></EmptyState>;
 };
 
 export const ErrorState = ({ title }: { title: string }) => (
-  <BaseState icon={ExclamationCircleIcon} color="#C9190B" title={title} />
+  <BaseState icon={ExclamationCircleIcon} title={title} />
 );
 
 export const Loading = ({ title }: { title: string }) => <BaseState icon={Spinner} title={title} />;
@@ -68,11 +49,7 @@ export const NoResultsMatchFilter = ({
   clearAllLabel?: string;
 }) => {
   return (
-    <EmptyState>
-      <EmptyStateIcon icon={SearchIcon} />
-      <Title size="lg" headingLevel="h4">
-        {title}
-      </Title>
+    <EmptyState titleText={title} icon={SearchIcon} headingLevel="h4">
       <EmptyStateBody>{description}</EmptyStateBody>
       <EmptyStateFooter>
         <EmptyStateActions>

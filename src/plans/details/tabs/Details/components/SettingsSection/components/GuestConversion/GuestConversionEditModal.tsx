@@ -6,12 +6,12 @@ import {
   Alert,
   AlertVariant,
   Checkbox,
+  Content,
+  ContentVariants,
   Flex,
   FormGroup,
   Stack,
   StackItem,
-  Text,
-  TextVariants,
 } from '@patternfly/react-core';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
@@ -39,11 +39,11 @@ const GuestConversionEditModal: FC<EditPlanProps> = ({ resource }) => {
     >
       <Stack hasGutter>
         <StackItem>
-          <Text component={TextVariants.p} className="pf-v5-u-color-200">
+          <Content component={ContentVariants.p} className="pf-v6-u-color-200">
             {t(
               'Guest conversion uses the virt-v2v tool to modify all of the internal configurations of the VMs in the plan to make them compatible with Red Hat OpenShift Virtualization.',
             )}
-          </Text>
+          </Content>
         </StackItem>
 
         <StackItem>
@@ -64,7 +64,7 @@ const GuestConversionEditModal: FC<EditPlanProps> = ({ resource }) => {
               isPlain
               isInline
               variant={AlertVariant.info}
-              className="pf-v5-u-mt-xs pf-v5-u-ml-lg"
+              className="pf-v6-u-mt-xs pf-v6-u-ml-lg"
               title={t(
                 "If skipped, the VMs' disk data will be duplicated byte-for-byte, allowing for faster conversions. However, there is a risk that the VMs might not function properly and it is not recommended.",
               )}
@@ -112,7 +112,7 @@ const GuestConversionEditModal: FC<EditPlanProps> = ({ resource }) => {
                 isPlain
                 isInline
                 variant={AlertVariant.warning}
-                className="pf-v5-u-mt-xs pf-v5-u-ml-lg"
+                className="pf-v6-u-mt-xs pf-v6-u-ml-lg"
                 title={t(
                   "If you don't use compatibility mode, you must have VirtIO drivers already installed in the source VM.",
                 )}

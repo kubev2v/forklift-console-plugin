@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import type { V1beta1Plan } from '@kubev2v/types';
-import { PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { PageSection } from '@patternfly/react-core';
 
 import { PlanStatuses } from '../../../PlanStatus/utils/types';
 import usePlanAlerts from '../../hooks/usePlanAlerts';
@@ -39,7 +39,7 @@ const PlanAlerts: FC<Props> = ({ plan }) => {
   }
 
   return (
-    <PageSection variant={PageSectionVariants.light} className="plan-header-alerts">
+    <PageSection hasBodyWrapper={false} className="plan-header-alerts">
       {showCriticalCondition && (
         <PlanCriticalCondition
           plan={plan}

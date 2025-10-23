@@ -4,6 +4,8 @@ import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { Label } from '@patternfly/react-core';
+
 import type { EditableDetailsItemProps } from '../../../utils/types';
 
 import { onConfirmVolumeNameTemplate } from './utils/utils';
@@ -19,10 +21,10 @@ const VolumeNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
 
   if (!shouldRender) return null;
 
-  const content = plan?.spec?.volumeNameTemplate ? (
-    t('Use custom')
-  ) : (
-    <span className="text-muted">{t('Use default')}</span>
+  const content = (
+    <Label isCompact color="grey">
+      {plan?.spec?.volumeNameTemplate ? t('Use custom') : t('Use default')}
+    </Label>
   );
 
   return (

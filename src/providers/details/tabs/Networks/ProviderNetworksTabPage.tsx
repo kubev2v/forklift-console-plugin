@@ -11,7 +11,7 @@ import {
   type OpenShiftNetworkAttachmentDefinition,
   ProviderModel,
 } from '@kubev2v/types';
-import { Button, ButtonVariant, PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { Button, ButtonVariant, PageSection } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { DEFAULT_NETWORK, EMPTY_MSG } from '@utils/constants';
 
@@ -71,7 +71,7 @@ const ProviderNetworksTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace
   return (
     <ModalHOC>
       <div>
-        <PageSection variant={PageSectionVariants.light}>
+        <PageSection hasBodyWrapper={false}>
           <SectionHeading text={t('NetworkAttachmentDefinitions')} />
           {permissions.canPatch && (
             <div>

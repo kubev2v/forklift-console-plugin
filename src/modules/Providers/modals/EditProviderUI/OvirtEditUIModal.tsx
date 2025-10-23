@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
-import { ModalVariant } from '@patternfly/react-core';
+import { ModalVariant } from '@patternfly/react-core/deprecated';
 
 import { validateOvirtUILink } from '../../utils/validators/provider/ovirt/validateOvirtUILink';
 import { EditModal } from '../EditModal/EditModal';

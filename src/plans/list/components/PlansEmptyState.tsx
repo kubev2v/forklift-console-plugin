@@ -8,15 +8,13 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModel, ProviderModelRef } from '@kubev2v/types';
 import {
   Bullseye,
+  Content,
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
-  EmptyStateHeader,
-  EmptyStateIcon,
   Level,
   LevelItem,
-  TextContent,
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { ALL_PROJECTS_KEY } from '@utils/constants';
@@ -45,20 +43,19 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
   });
 
   return (
-    <EmptyState>
-      <EmptyStateHeader
-        titleText={
-          namespace ? (
-            <ForkliftTrans>
-              No plans found in project <strong>{namespace}</strong>.
-            </ForkliftTrans>
-          ) : (
-            t('No plans found')
-          )
-        }
-        headingLevel="h4"
-        icon={<EmptyStateIcon icon={PlusCircleIcon} />}
-      />
+    <EmptyState
+      titleText={
+        namespace ? (
+          <ForkliftTrans>
+            No plans found in project <strong>{namespace}</strong>.
+          </ForkliftTrans>
+        ) : (
+          t('No plans found')
+        )
+      }
+      headingLevel="h4"
+      icon={PlusCircleIcon}
+    >
       <EmptyStateBody>
         {hasSufficientProviders ? (
           t(
@@ -68,7 +65,7 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
           <Level hasGutter>
             <LevelItem>
               <Bullseye>
-                <TextContent>
+                <Content>
                   <ForkliftTrans>
                     Migration plans are used to document the moving of virtualization workloads from
                     source providers to target providers. At least one source and one target
@@ -78,7 +75,7 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
                     </ExternalLink>
                     .
                   </ForkliftTrans>
-                </TextContent>
+                </Content>
               </Bullseye>
             </LevelItem>
           </Level>
@@ -90,11 +87,11 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
           {hasSufficientProviders ? (
             <PlansAddButton namespace={namespace} canCreate={canCreate} />
           ) : (
-            <TextContent>
+            <Content>
               <ExternalLink href={providersListURL} isInline>
                 {t('Go to the providers list page')}
               </ExternalLink>
-            </TextContent>
+            </Content>
           )}
         </EmptyStateActions>
       </EmptyStateFooter>

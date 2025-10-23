@@ -15,12 +15,9 @@ import FetchCertificateModal from './FetchCertificateModal';
 
 import './CertificateUpload.style.scss';
 
-type CertificateUploadBaseProps = Omit<FileUploadProps, 'validated'>;
-
-type CertificateUploadProps = {
+type CertificateUploadProps = FileUploadProps & {
   url?: string;
-  validated?: 'success' | 'error' | 'default' | 'warning';
-} & CertificateUploadBaseProps;
+};
 
 /**
  * Provide the certificate using following paths:
@@ -72,6 +69,7 @@ const CertificateUpload: FC<CertificateUploadProps> = ({
       onClearClick={onClearClick}
       browseButtonText={browseButtonText ?? t('Upload')}
       isDisabled={isDisabled}
+      className="pf-v6-u-p-0"
     >
       {url && isText && (
         <Flex>

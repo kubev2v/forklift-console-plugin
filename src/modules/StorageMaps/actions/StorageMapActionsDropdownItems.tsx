@@ -26,12 +26,9 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
   };
 
   return [
-    <DropdownItemLink
-      value={0}
-      itemKey="EditStorageMapping"
-      href={StorageMapURL}
-      description={t('Edit storage map')}
-    />,
+    <DropdownItemLink value={0} itemKey="EditStorageMapping" href={StorageMapURL}>
+      {t('Edit storage map')}
+    </DropdownItemLink>,
 
     <DropdownItem
       value={1}

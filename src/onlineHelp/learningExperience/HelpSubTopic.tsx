@@ -6,7 +6,7 @@ import {
   getTextListComponentForListStyle,
 } from 'src/onlineHelp/learningExperience/utils';
 
-import { TextList, TextListItem } from '@patternfly/react-core';
+import { Content } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
 
 type HelpSubTopicProps = {
@@ -19,18 +19,18 @@ const HelpSubTopic: FC<HelpSubTopicProps> = ({ noListItem, topic }) => {
     <>
       {topic.title}
       {topic.subTopics ? (
-        <div className="pf-v5-u-ml-lg">
+        <div className="pf-v6-u-ml-lg">
           {topic.expandable ? (
             topic.subTopics?.map((subTopic, subIndex) => (
               <HelpTopicSection key={subTopic.id} topic={subTopic} index={subIndex} />
             ))
           ) : (
-            <div className={css('pf-v5-u-mt-sm', getClassForListStyle(topic.subListStyleType))}>
-              <TextList component={getTextListComponentForListStyle(topic.subListStyleType)}>
+            <div className={css('pf-v6-u-mt-sm', getClassForListStyle(topic.subListStyleType))}>
+              <Content component={getTextListComponentForListStyle(topic.subListStyleType)}>
                 {topic.subTopics?.map((subTopic) => (
                   <HelpSubTopic topic={subTopic} key={subTopic.id} />
                 ))}
-              </TextList>
+              </Content>
             </div>
           )}
         </div>
@@ -38,7 +38,7 @@ const HelpSubTopic: FC<HelpSubTopicProps> = ({ noListItem, topic }) => {
     </>
   );
 
-  return noListItem ? topicElement : <TextListItem>{topicElement}</TextListItem>;
+  return noListItem ? topicElement : <Content component="li">{topicElement}</Content>;
 };
 
 export default HelpSubTopic;
