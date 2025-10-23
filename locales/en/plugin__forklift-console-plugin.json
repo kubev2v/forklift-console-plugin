@@ -474,6 +474,7 @@
   "Invalid application name, spaces are not allowed": "Invalid application name, spaces are not allowed",
   "Invalid application secret, spaces are not allowed": "Invalid application secret, spaces are not allowed",
   "Invalid CA certificate, certificate must be in a valid PEM encoded X.509 format.": "Invalid CA certificate, certificate must be in a valid PEM encoded X.509 format.",
+  "Invalid container image format. Expected format: <registry_route_or_server_path>/image:<tag>": "Invalid container image format. Expected format: <registry_route_or_server_path>/image:<tag>",
   "Invalid domain name, spaces are not allowed": "Invalid domain name, spaces are not allowed",
   "Invalid mappings": "Invalid mappings",
   "Invalid password": "Invalid password",
