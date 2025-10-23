@@ -1,17 +1,20 @@
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
-import { DeleteModal } from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
+import {
+  DeleteModal,
+  type DeleteModalProps,
+} from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModel, NetworkMapModelRef } from '@kubev2v/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem } from '@patternfly/react-core';
 
 import type { NetworkMapData } from '../utils/types/NetworkMapData';
 
 export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   const { obj: networkMap } = data;
 
@@ -22,7 +25,7 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
   });
 
   const onClick = () => {
-    showModal(<DeleteModal resource={networkMap!} model={NetworkMapModel} />);
+    launcher<DeleteModalProps>(DeleteModal, { model: NetworkMapModel, resource: networkMap! });
   };
 
   return [

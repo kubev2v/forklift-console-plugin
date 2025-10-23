@@ -1,6 +1,5 @@
 import { type FC, type MouseEvent, type Ref, useState } from 'react';
 import classNames from 'classnames';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -35,31 +34,29 @@ const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = ({ data, isKeb
   };
 
   return (
-    <ModalHOC>
-      <Dropdown
-        className={classNames({ 'forklift-dropdown': !isKebab })}
-        isOpen={isOpen}
-        onOpenChange={setIsOpen}
-        onSelect={onSelect}
-        toggle={(toggleRef: Ref<MenuToggleElement>) => (
-          <MenuToggle
-            ref={toggleRef}
-            onClick={onToggleClick}
-            isExpanded={isOpen}
-            variant={isKebab ? 'plain' : 'default'}
-          >
-            {isKebab ? <EllipsisVIcon /> : t('Actions')}
-          </MenuToggle>
-        )}
-        shouldFocusToggleOnSelect
-        popperProps={{
-          position: 'right',
-          width: '200px',
-        }}
-      >
-        <ProviderActionsDropdownItems data={data} />
-      </Dropdown>
-    </ModalHOC>
+    <Dropdown
+      className={classNames({ 'forklift-dropdown': !isKebab })}
+      isOpen={isOpen}
+      onOpenChange={setIsOpen}
+      onSelect={onSelect}
+      toggle={(toggleRef: Ref<MenuToggleElement>) => (
+        <MenuToggle
+          ref={toggleRef}
+          onClick={onToggleClick}
+          isExpanded={isOpen}
+          variant={isKebab ? 'plain' : 'default'}
+        >
+          {isKebab ? <EllipsisVIcon /> : t('Actions')}
+        </MenuToggle>
+      )}
+      shouldFocusToggleOnSelect
+      popperProps={{
+        position: 'right',
+        width: '200px',
+      }}
+    >
+      <ProviderActionsDropdownItems data={data} />
+    </Dropdown>
   );
 };
 

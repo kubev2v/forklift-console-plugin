@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
 import { DescriptionList } from '@patternfly/react-core';
 
@@ -19,20 +18,18 @@ const OvirtInventorySection: FC<InventorySectionProps> = ({ data }) => {
   }
 
   return (
-    <ModalHOC>
-      <DescriptionList
-        isHorizontal
-        horizontalTermWidthModifier={{ default: '15ch' }}
-        columnModifier={{ default: '2Col' }}
-      >
-        <NetworkCountDetailsItem resource={provider} inventory={inventory} />
-        <StorageDomainCountDetailsItem resource={provider} inventory={inventory} />
-        <VmCountDetailsItem resource={provider} inventory={inventory} />
-        <HostCountDetailsItem resource={provider} inventory={inventory} />
-        <ClusterCountDetailsItem resource={provider} inventory={inventory} />
-        <DatacenterCountDetailsItem resource={provider} inventory={inventory} />
-      </DescriptionList>
-    </ModalHOC>
+    <DescriptionList
+      isHorizontal
+      horizontalTermWidthModifier={{ default: '15ch' }}
+      columnModifier={{ default: '2Col' }}
+    >
+      <NetworkCountDetailsItem resource={provider} inventory={inventory} />
+      <StorageDomainCountDetailsItem resource={provider} inventory={inventory} />
+      <VmCountDetailsItem resource={provider} inventory={inventory} />
+      <HostCountDetailsItem resource={provider} inventory={inventory} />
+      <ClusterCountDetailsItem resource={provider} inventory={inventory} />
+      <DatacenterCountDetailsItem resource={provider} inventory={inventory} />
+    </DescriptionList>
   );
 };
 

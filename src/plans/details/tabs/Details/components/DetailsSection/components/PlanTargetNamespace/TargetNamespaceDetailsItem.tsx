@@ -1,9 +1,10 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanTargetNamespace } from '@utils/crds/plans/selectors';
 
 import { PROVIDER_DEFAULTS } from '../../../SettingsSection/components/PlanTransferNetwork/utils/constants';
@@ -13,7 +14,7 @@ import EditPlanTargetNamespace from './EditPlanTargetNamespace';
 
 const TargetNamespaceDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   return (
     <DetailsItem
@@ -27,7 +28,7 @@ const TargetNamespaceDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, pl
       )}
       crumbs={['spec', 'targetNamespace']}
       onEdit={() => {
-        showModal(<EditPlanTargetNamespace resource={plan} />);
+        launcher<EditPlanProps>(EditPlanTargetNamespace, { resource: plan });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
     />

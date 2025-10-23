@@ -1,9 +1,10 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
@@ -13,7 +14,7 @@ import EditMigrateSharedDisks from './EditMigrateSharedDisks';
 
 const SharedDisksDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldRender }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   if (!shouldRender) return null;
 
@@ -29,7 +30,7 @@ const SharedDisksDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, 
       }
       crumbs={['spec', 'migrateSharedDisks']}
       onEdit={() => {
-        showModal(<EditMigrateSharedDisks resource={plan} />);
+        launcher<EditPlanProps>(EditMigrateSharedDisks, { resource: plan });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
     />

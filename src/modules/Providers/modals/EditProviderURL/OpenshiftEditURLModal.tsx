@@ -1,7 +1,7 @@
-import type { FC } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { ModalVariant } from '@patternfly/react-core';
 
 import { validateOpenshiftURL } from '../../utils/validators/provider/openshift/validateOpenshiftURL';
@@ -10,7 +10,11 @@ import { EditModal } from '../EditModal/EditModal';
 import { patchProviderURL } from './utils/patchProviderURL';
 import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
-export const OpenshiftEditURLModal: FC<EditProviderURLModalProps> = (props) => {
+export const OpenshiftEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
+  label = '',
+  title = '',
+  ...props
+}) => {
   const { t } = useForkliftTranslation();
 
   const ModalBody = (
@@ -29,8 +33,8 @@ export const OpenshiftEditURLModal: FC<EditProviderURLModalProps> = (props) => {
     <EditModal
       {...props}
       jsonPath={'spec.url'}
-      title={props?.title || t('Edit URL')}
-      label={props?.label || t('URL')}
+      title={title || t('Edit URL')}
+      label={label || t('URL')}
       model={ProviderModel}
       variant={ModalVariant.large}
       body={ModalBody}

@@ -1,7 +1,7 @@
-import type { FC } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { ModalVariant } from '@patternfly/react-core';
 
 import { validateOvirtUILink } from '../../utils/validators/provider/ovirt/validateOvirtUILink';
@@ -10,7 +10,11 @@ import { EditModal } from '../EditModal/EditModal';
 import { patchProviderUI } from './utils/patchProviderUI';
 import type { EditProviderUIModalProps } from './EditProviderUIModal';
 
-export const OvirtEditUIModal: FC<EditProviderUIModalProps> = (props) => {
+export const OvirtEditUIModal: ModalComponent<EditProviderUIModalProps> = ({
+  label = '',
+  title = '',
+  ...props
+}) => {
   const { t } = useForkliftTranslation();
 
   const ModalBody = (
@@ -28,8 +32,8 @@ export const OvirtEditUIModal: FC<EditProviderUIModalProps> = (props) => {
     <EditModal
       {...props}
       jsonPath={['metadata', 'annotations', 'forklift.konveyor.io/providerUI']}
-      title={props?.title || t('Edit provider web UI link')}
-      label={props?.label || t('Provider web UI link')}
+      title={title || t('Edit provider web UI link')}
+      label={label || t('Provider web UI link')}
       model={ProviderModel}
       variant={ModalVariant.large}
       body={ModalBody}

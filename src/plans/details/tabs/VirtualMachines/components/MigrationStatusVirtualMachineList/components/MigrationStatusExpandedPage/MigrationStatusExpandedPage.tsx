@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import PlanMigrationTypeLabel from 'src/plans/details/components/PlanMigrationTypeLabel/PlanMigrationTypeLabel';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -29,7 +28,7 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
   const vmCreated = isVirtualMachineCreationCompleted(statusVM);
 
   return (
-    <ModalHOC>
+    <>
       <PageSection>
         <ExpandableSectionHeading
           section={
@@ -68,7 +67,7 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
           sectionTitle={t('Migration resources')}
         />
       </PageSection>
-    </ModalHOC>
+    </>
   );
 };
 

@@ -1,7 +1,8 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Stack, TextInput } from '@patternfly/react-core';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -12,7 +13,7 @@ import EditRootDiskModalAlert from './components/EditRootDiskModalAlert';
 import EditRootDiskModalBody from './components/EditRootDiskModalBody';
 import { onConfirmRootDisk } from './utils/utils';
 
-const EditRootDisk: FC<EditPlanProps> = ({ resource }) => {
+const EditRootDisk: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
   const { t } = useForkliftTranslation();
 
   const vms = getPlanVirtualMachines(resource);
@@ -24,6 +25,7 @@ const EditRootDisk: FC<EditPlanProps> = ({ resource }) => {
     <ModalForm
       title={t('Edit root device')}
       onConfirm={async () => onConfirmRootDisk(resource, value)}
+      {...rest}
     >
       <Stack hasGutter>
         <EditRootDiskModalBody />

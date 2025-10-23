@@ -1,10 +1,13 @@
 import type { FC } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { EditProviderUIModal } from 'src/modules/Providers/modals/EditProviderUI/EditProviderUIModal';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
+import {
+  EditProviderUIModal,
+  type EditProviderUIModalProps,
+} from 'src/modules/Providers/modals/EditProviderUI/EditProviderUIModal';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionListDescription } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
@@ -36,7 +39,7 @@ export const ExternalManagementLinkDetailsItem: FC<ExternalManagementLinkDetails
   webUILinkText,
 }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   const canEdit = !isEmpty(provider?.metadata) && canPatch;
   const defaultHelpContent = (
@@ -67,7 +70,10 @@ export const ExternalManagementLinkDetailsItem: FC<ExternalManagementLinkDetails
         crumbs={['metadata', 'annotations', 'forklift.konveyor.io/providerUI']}
         content={webUILinkContent}
         onEdit={() => {
-          showModal(<EditProviderUIModal resource={provider} content={webUILink} />);
+          launcher<EditProviderUIModalProps>(EditProviderUIModal, {
+            content: webUILink,
+            resource: provider,
+          });
         }}
         canEdit={canEdit}
       />

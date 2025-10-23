@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType';
 
 import CreatedAtDetailsItem from '@components/DetailItems/CreatedAtDetailItem';
@@ -39,26 +38,24 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
     isFeatureEnabled(FEATURE_NAMES.OCP_LIVE_MIGRATION) &&
     hasLiveMigrationProviderType(sourceProvider);
   return (
-    <ModalHOC>
+    <>
       <DescriptionList>
-        <DescriptionList>
-          <StatusDetailsItem plan={plan} />
-        </DescriptionList>
-        <DescriptionList
-          columnModifier={{
-            default: '2Col',
-          }}
-        >
-          <NameDetailsItem resource={plan} />
-          <WarmDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt || isVsphere} />
-          <LiveDetailsItem plan={plan} canPatch={canPatch} shouldRender={isLiveMigrationEnabled} />
-          <NamespaceDetailsItem resource={plan} />
-          <TargetNamespaceDetailsItem plan={plan} canPatch={canPatch} />
-          <CreatedAtDetailsItem resource={plan} />
-          <OwnerDetailsItem resource={plan} />
-        </DescriptionList>
+        <StatusDetailsItem plan={plan} />
       </DescriptionList>
-    </ModalHOC>
+      <DescriptionList
+        columnModifier={{
+          default: '2Col',
+        }}
+      >
+        <NameDetailsItem resource={plan} />
+        <WarmDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt || isVsphere} />
+        <LiveDetailsItem plan={plan} canPatch={canPatch} shouldRender={isLiveMigrationEnabled} />
+        <NamespaceDetailsItem resource={plan} />
+        <TargetNamespaceDetailsItem plan={plan} canPatch={canPatch} />
+        <CreatedAtDetailsItem resource={plan} />
+        <OwnerDetailsItem resource={plan} />
+      </DescriptionList>
+    </>
   );
 };
 

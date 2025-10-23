@@ -1,9 +1,10 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 import type { EnhancedPlanSpecVms } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Plan } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Stack, StackItem, TextInput, ValidatedOptions } from '@patternfly/react-core';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
@@ -11,12 +12,16 @@ import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
 import { patchVMTargetName, validateVMTargetName } from '../utils/utils';
 
-type EditVirtualMachineTargetNameProps = {
+export type EditVirtualMachineTargetNameProps = {
   plan: V1beta1Plan;
   vmIndex: number;
 };
 
-const EditVirtualMachineTargetName: FC<EditVirtualMachineTargetNameProps> = ({ plan, vmIndex }) => {
+const EditVirtualMachineTargetName: ModalComponent<EditVirtualMachineTargetNameProps> = ({
+  plan,
+  vmIndex,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const vms = getPlanVirtualMachines(plan);
   const [inputValue, setInputValue] = useState(
@@ -37,6 +42,7 @@ const EditVirtualMachineTargetName: FC<EditVirtualMachineTargetNameProps> = ({ p
         (isEmpty(vm.targetName) && isEmpty(inputValue)) ||
         vm.targetName === inputValue
       }
+      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

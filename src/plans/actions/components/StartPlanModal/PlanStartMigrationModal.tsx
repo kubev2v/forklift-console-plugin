@@ -1,4 +1,4 @@
-import { type FC, useCallback } from 'react';
+import { useCallback } from 'react';
 import { canPlanStart } from 'src/plans/details/components/PlanStatus/utils/utils';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
@@ -6,18 +6,23 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Plan } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getName } from '@utils/crds/common/selectors';
 
 import { migrationModalMessage, startPlanMigration } from './utils/utils';
 
-type PlanStartMigrationModalProps = {
+export type PlanStartMigrationModalProps = {
   plan: V1beta1Plan;
   title: string;
 };
 
-const PlanStartMigrationModal: FC<PlanStartMigrationModalProps> = ({ plan, title }) => {
+const PlanStartMigrationModal: ModalComponent<PlanStartMigrationModalProps> = ({
+  plan,
+  title,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
 
@@ -37,6 +42,7 @@ const PlanStartMigrationModal: FC<PlanStartMigrationModalProps> = ({ plan, title
       onConfirm={onStart}
       confirmLabel={t('{{title}}', { title })}
       isDisabled={!canPlanStart(plan)}
+      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

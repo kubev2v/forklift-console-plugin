@@ -1,13 +1,13 @@
 import { type FC, useCallback } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Provider } from '@kubev2v/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, ToolbarItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
 import type { InventoryHostNetworkTriple } from './utils/types';
-import VSphereNetworkModal from './VSphereNetworkModal';
+import VSphereNetworkModal, { type VSphereNetworkModalProps } from './VSphereNetworkModal';
 
 const SelectNetworkForHostButton: FC<{
   selectedIds: string[];
@@ -15,13 +15,15 @@ const SelectNetworkForHostButton: FC<{
   hostsData: InventoryHostNetworkTriple[];
 }> = ({ hostsData, provider, selectedIds }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   const onClick = useCallback(() => {
-    showModal(
-      <VSphereNetworkModal provider={provider} data={hostsData} selectedIds={selectedIds} />,
-    );
-  }, [hostsData, provider, selectedIds, showModal]);
+    launcher<VSphereNetworkModalProps>(VSphereNetworkModal, {
+      data: hostsData,
+      provider,
+      selectedIds,
+    });
+  }, [hostsData, provider, selectedIds, launcher]);
 
   return (
     <ToolbarItem>

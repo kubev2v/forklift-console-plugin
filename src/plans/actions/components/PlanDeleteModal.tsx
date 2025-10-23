@@ -1,4 +1,4 @@
-import { type FC, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { ItemIsOwnedAlert } from 'src/modules/Providers/modals/components/ItemIsOwnedAlert';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
@@ -7,16 +7,15 @@ import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/uti
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { PlanModel } from '@kubev2v/types';
 import { getGroupVersionKindForModel, k8sDelete } from '@openshift-console/dynamic-plugin-sdk';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Alert, ButtonVariant, Stack, StackItem } from '@patternfly/react-core';
 import { getName, getNamespace, getOwnerReference } from '@utils/crds/common/selectors';
 
-type PlanDeleteModalProps = {
-  plan: V1beta1Plan;
-};
+import type { PlanModalProps } from './types';
 
-const PlanDeleteModal: FC<PlanDeleteModalProps> = ({ plan }) => {
+const PlanDeleteModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
 
@@ -41,6 +40,7 @@ const PlanDeleteModal: FC<PlanDeleteModalProps> = ({ plan }) => {
       confirmLabel={t('Delete')}
       onConfirm={onDelete}
       title={t('Delete plan')}
+      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

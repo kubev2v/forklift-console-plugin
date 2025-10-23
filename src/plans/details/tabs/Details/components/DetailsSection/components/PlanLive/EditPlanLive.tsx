@@ -1,7 +1,8 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Flex, FlexItem, FormGroup, Stack } from '@patternfly/react-core';
 import { getPlanIsLive } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -11,7 +12,7 @@ import type { EditPlanProps } from '../../../SettingsSection/utils/types';
 import { onConfirmLive } from './utils/utils';
 import LiveSwitch from './LiveSwitch';
 
-const EditPlanLive: FC<EditPlanProps> = ({ resource }) => {
+const EditPlanLive: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<boolean>(Boolean(getPlanIsLive(resource)));
 
@@ -26,6 +27,7 @@ const EditPlanLive: FC<EditPlanProps> = ({ resource }) => {
         </Flex>
       }
       onConfirm={async () => onConfirmLive({ newValue: value, resource })}
+      {...rest}
     >
       <Stack hasGutter>
         {t(

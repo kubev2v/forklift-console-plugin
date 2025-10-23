@@ -16,7 +16,7 @@ import HostsNetworksSetUserName from './HostsNetworksSetUserName';
 
 import './VSphereNetworkModal.style.css';
 
-type VSphereNetworkModalProps = {
+export type VSphereNetworkModalProps = {
   provider: V1beta1Provider;
   data: InventoryHostNetworkTriple[];
   selectedIds: string[];

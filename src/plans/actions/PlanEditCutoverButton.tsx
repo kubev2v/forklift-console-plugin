@@ -1,16 +1,18 @@
 import { type FC, useRef } from 'react';
 import { DateTime } from 'luxon';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 
 import type { V1beta1Plan } from '@kubev2v/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, type ButtonVariant, Tooltip } from '@patternfly/react-core';
 import { CalendarAltIcon } from '@patternfly/react-icons';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { isPlanArchived, isPlanExecuting } from '../details/components/PlanStatus/utils/utils';
+
+import type { PlanModalProps } from './components/types';
 
 type PlanEditCutoverButtonProps = {
   plan: V1beta1Plan;
@@ -19,7 +21,7 @@ type PlanEditCutoverButtonProps = {
 
 const PlanEditCutoverButton: FC<PlanEditCutoverButtonProps> = ({ plan, variant }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
   const cutoverButtonRef = useRef<HTMLButtonElement>(null);
   const [migration] = usePlanMigration(plan);
 
@@ -38,7 +40,7 @@ const PlanEditCutoverButton: FC<PlanEditCutoverButtonProps> = ({ plan, variant }
         isInline
         variant={variant}
         onClick={() => {
-          showModal(<PlanCutoverMigrationModal plan={plan} />);
+          launcher<PlanModalProps>(PlanCutoverMigrationModal, { plan });
         }}
         icon={<CalendarAltIcon />}
         iconPosition="left"

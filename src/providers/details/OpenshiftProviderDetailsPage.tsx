@@ -1,5 +1,4 @@
 import { type FC, memo } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav, type NavPage } from '@openshift-console/dynamic-plugin-sdk';
@@ -44,10 +43,10 @@ const OpenshiftProviderDetailsPage: FC<ProviderDetailsPageProps> = memo(({ name,
   ];
 
   return (
-    <ModalHOC>
+    <>
       <ProviderPageHeader name={name} namespace={namespace} />
       <HorizontalNav pages={tabPages} />
-    </ModalHOC>
+    </>
   );
 });
 

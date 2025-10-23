@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
 import { HorizontalNav } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -12,9 +11,7 @@ const PlanDetailsNav: FC<PlanPageProps> = ({ name, namespace }) => {
 
   return (
     <>
-      <ModalHOC>
-        <PlanPageHeader name={name} namespace={namespace} />
-      </ModalHOC>
+      <PlanPageHeader name={name} namespace={namespace} />
       <HorizontalNav pages={pages} />
     </>
   );

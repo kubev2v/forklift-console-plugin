@@ -1,7 +1,6 @@
 import {
   type ChangeEvent,
   type DetailedHTMLProps,
-  type FC,
   type HTMLAttributes,
   type ReactNode,
   useState,
@@ -10,6 +9,7 @@ import TagsInput from 'react-tagsinput';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -33,14 +33,20 @@ declare global {
   }
 }
 
-type LabelsModalProps = {
+export type LabelsModalProps = {
   initialLabels?: Record<string, string>;
   description?: ReactNode;
   title?: string;
   onConfirm: (labels: Record<string, string | null>) => Promise<K8sResourceCommon>;
 };
 
-const LabelsModal: FC<LabelsModalProps> = ({ description, initialLabels, onConfirm, title }) => {
+const LabelsModal: ModalComponent<LabelsModalProps> = ({
+  description,
+  initialLabels,
+  onConfirm,
+  title,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const [inputValue, setInputValue] = useState('');
   const [isInputValid, setIsInputValid] = useState(true);
@@ -107,6 +113,7 @@ const LabelsModal: FC<LabelsModalProps> = ({ description, initialLabels, onConfi
       testId="labels-modal"
       title={title ?? t('Edit labels')}
       onConfirm={async () => onConfirm(labelsArrayToObject(labels)) ?? {}}
+      {...rest}
     >
       <Stack hasGutter>
         <StackItem>{description ?? LABELS_MODAL_DESCRIPTION}</StackItem>

@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
 import { DrawerProvider } from '@components/DrawerContext/DrawerProvider';
 
@@ -19,18 +18,12 @@ const PlanVirtualMachinesPage: FC<PlanPageProps> = ({ name, namespace }) => {
   if (isPlanExecuting(plan) || isPlanSucceeded(plan) || canPlanReStart(plan)) {
     return (
       <DrawerProvider>
-        <ModalHOC>
-          <MigrationStatusVirtualMachinesList plan={plan} />
-        </ModalHOC>
+        <MigrationStatusVirtualMachinesList plan={plan} />
       </DrawerProvider>
     );
   }
 
-  return (
-    <ModalHOC>
-      <PlanSpecVirtualMachinesList plan={plan} />
-    </ModalHOC>
-  );
+  return <PlanSpecVirtualMachinesList plan={plan} />;
 };
 
 export default PlanVirtualMachinesPage;

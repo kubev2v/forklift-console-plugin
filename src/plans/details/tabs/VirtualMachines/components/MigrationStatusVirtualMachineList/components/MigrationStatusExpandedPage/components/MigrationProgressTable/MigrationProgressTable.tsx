@@ -1,13 +1,14 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
+import type { PlanModalProps } from 'src/plans/actions/components/types';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import { useDrawer } from '@components/DrawerContext/useDrawer';
 import HelpText from '@components/HelpText';
 import type { V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Alert,
   Button,
@@ -47,7 +48,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { openDrawer } = useDrawer();
-  const { showModal } = useModal();
+  const launcher = useModal();
   const navigate = useNavigate();
   const pipeline = statusVM?.pipeline ?? [];
 
@@ -127,7 +128,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                     <StackItem>
                       <Button
                         onClick={() => {
-                          showModal(<PlanCutoverMigrationModal plan={plan} />);
+                          launcher<PlanModalProps>(PlanCutoverMigrationModal, { plan });
                         }}
                         variant={ButtonVariant.link}
                         className="forklift-progress-table__schedule-cutover"

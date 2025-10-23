@@ -1,24 +1,24 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Provider } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Stack } from '@patternfly/react-core';
 
 import { onConfirmProviderDefaultTransferNetwork } from './utils/onConfirmProviderDefaultTransferNetwork';
 import ProviderDefaultTransferNetworkDropdown from './ProviderDefaultTransferNetworkDropdown';
 
-type EditProviderDefaultTransferNetworkProps = {
+export type EditProviderDefaultTransferNetworkProps = {
   resource: V1beta1Provider;
   defaultNetworkName: string | undefined;
 };
 
-const EditProviderDefaultTransferNetwork: FC<EditProviderDefaultTransferNetworkProps> = ({
-  defaultNetworkName,
-  resource,
-}) => {
+const EditProviderDefaultTransferNetwork: ModalComponent<
+  EditProviderDefaultTransferNetworkProps
+> = ({ defaultNetworkName, resource, ...rest }) => {
   const { t } = useForkliftTranslation();
 
   const [value, setValue] = useState<string | number>(defaultNetworkName ?? 0);
@@ -31,6 +31,7 @@ const EditProviderDefaultTransferNetwork: FC<EditProviderDefaultTransferNetworkP
     <ModalForm
       title={t('Set default Transfer Network')}
       onConfirm={async () => onConfirmProviderDefaultTransferNetwork({ resource, value })}
+      {...rest}
     >
       <Stack hasGutter>
         {t(

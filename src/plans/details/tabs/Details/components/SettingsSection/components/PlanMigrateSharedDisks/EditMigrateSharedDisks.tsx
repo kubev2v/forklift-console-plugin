@@ -1,6 +1,7 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { EditPlanProps } from '../../utils/types';
@@ -9,7 +10,7 @@ import { getMigrateSharedDisksValue, onConfirmMigrateSharedDisks } from './utils
 import EditMigrateSharedDisksBody from './EditMigrateSharedDisksBody';
 import MigrateSharedDisksSwitch from './MigrateSharedDisksSwitch';
 
-const EditMigrateSharedDisks: FC<EditPlanProps> = ({ resource }) => {
+const EditMigrateSharedDisks: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<boolean>(getMigrateSharedDisksValue(resource));
 
@@ -17,6 +18,7 @@ const EditMigrateSharedDisks: FC<EditPlanProps> = ({ resource }) => {
     <ModalForm
       title={t('Migrate shared disks')}
       onConfirm={async () => onConfirmMigrateSharedDisks({ newValue: value, resource })}
+      {...rest}
     >
       <EditMigrateSharedDisksBody />
       <MigrateSharedDisksSwitch value={value} onChange={setValue} />

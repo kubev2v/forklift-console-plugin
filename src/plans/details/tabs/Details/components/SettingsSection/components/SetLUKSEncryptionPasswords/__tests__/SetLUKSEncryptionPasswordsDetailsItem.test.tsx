@@ -11,15 +11,13 @@ jest.mock('src/plans/details/components/PlanStatus/utils/utils', () => ({
 }));
 
 const mockShowModal = jest.fn();
-jest.mock('src/modules/Providers/modals/ModalHOC/useModal', () => ({
-  useModal: () => ({ showModal: mockShowModal }),
-}));
 
 // LUKSSecretLink is not mocked to test the real badge functionality
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   getGroupVersionKindForModel: jest.fn(),
   ResourceLink: ({ name }: { name: string }) => <span data-testid="resource-link">{name}</span>,
+  useModal: jest.fn(() => mockShowModal),
 }));
 
 jest.mock('../EditLUKSEncryptionPasswords', () => ({ resource }: { resource: V1beta1Plan }) => (

@@ -2,7 +2,6 @@ import { type FC, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom-v5-compat';
 import { encode } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -57,7 +56,7 @@ const ProvidersCreateFormsSection: FC<ProvidersCreateFormsSectionProps> = ({
   };
 
   return (
-    <ModalHOC>
+    <>
       <SectionHeading text={t('Provider details')} />
 
       <Form isWidthLimited className="forklift-create-form-details-section">
@@ -81,7 +80,7 @@ const ProvidersCreateFormsSection: FC<ProvidersCreateFormsSectionProps> = ({
           onNewSecretChange={onNewSecretChange}
         />
       </Form>
-    </ModalHOC>
+    </>
   );
 };
 

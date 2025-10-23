@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { CredentialsDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/CredentialsDetailsItem';
 import { ExternalManagementLinkDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/ExternalManagementLinkDetailsItem';
 import { TypeDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/TypeDetailsItem';
@@ -22,36 +21,34 @@ const OpenstackDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   if (!provider || !permissions) return null;
 
   return (
-    <ModalHOC>
-      <DescriptionList
-        columnModifier={{
-          default: '2Col',
-        }}
-      >
-        <TypeDetailsItem resource={provider} />
-        <ExternalManagementLinkDetailsItem
-          resource={provider}
-          canPatch={permissions.canPatch}
-          webUILinkText={t(`OpenStack dashboard UI`)}
-          webUILink={getOpenstackProviderWebUILink(provider)}
-        />
-        <NameDetailsItem resource={provider} />
-        <NamespaceDetailsItem resource={provider} />
-        <URLDetailsItem
-          resource={provider}
-          canPatch={permissions.canPatch}
-          helpContent={
-            <ForkliftTrans>
-              URL of the OpenStack Identity (Keystone) endpoint. For example:{' '}
-              <strong>https://identity_service.com:5000/v3</strong>.
-            </ForkliftTrans>
-          }
-        />
-        <CredentialsDetailsItem resource={provider} />
-        <CreatedAtDetailsItem resource={provider} />
-        <OwnerDetailsItem resource={provider} />
-      </DescriptionList>
-    </ModalHOC>
+    <DescriptionList
+      columnModifier={{
+        default: '2Col',
+      }}
+    >
+      <TypeDetailsItem resource={provider} />
+      <ExternalManagementLinkDetailsItem
+        resource={provider}
+        canPatch={permissions.canPatch}
+        webUILinkText={t(`OpenStack dashboard UI`)}
+        webUILink={getOpenstackProviderWebUILink(provider)}
+      />
+      <NameDetailsItem resource={provider} />
+      <NamespaceDetailsItem resource={provider} />
+      <URLDetailsItem
+        resource={provider}
+        canPatch={permissions.canPatch}
+        helpContent={
+          <ForkliftTrans>
+            URL of the OpenStack Identity (Keystone) endpoint. For example:{' '}
+            <strong>https://identity_service.com:5000/v3</strong>.
+          </ForkliftTrans>
+        }
+      />
+      <CredentialsDetailsItem resource={provider} />
+      <CreatedAtDetailsItem resource={provider} />
+      <OwnerDetailsItem resource={provider} />
+    </DescriptionList>
   );
 };
 

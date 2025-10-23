@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
 import SectionHeading from '@components/headers/SectionHeading';
@@ -17,14 +16,12 @@ const SecretsSection: FC<SecretsSectionProps> = ({ data }) => {
   const { provider } = data;
 
   return (
-    <ModalHOC>
-      <PageSection variant={PageSectionVariants.light} className="forklift-page-section">
-        <SectionHeading text={t('Secrets')} />
-        <DescriptionList>
-          <SecretDetailsItem resource={provider} />
-        </DescriptionList>
-      </PageSection>
-    </ModalHOC>
+    <PageSection variant={PageSectionVariants.light} className="forklift-page-section">
+      <SectionHeading text={t('Secrets')} />
+      <DescriptionList>
+        <SecretDetailsItem resource={provider} />
+      </DescriptionList>
+    </PageSection>
   );
 };
 

@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
 import CreatedAtDetailsItem from '@components/DetailItems/CreatedAtDetailItem';
 import NameDetailsItem from '@components/DetailItems/NameDetailItem';
@@ -14,21 +13,19 @@ type DetailsSectionProps = {
 
 const DetailsSection: FC<DetailsSectionProps> = ({ obj }) => {
   return (
-    <ModalHOC>
-      <DescriptionList
-        columnModifier={{
-          default: '1Col',
-        }}
-      >
-        <NameDetailsItem resource={obj} />
+    <DescriptionList
+      columnModifier={{
+        default: '1Col',
+      }}
+    >
+      <NameDetailsItem resource={obj} />
 
-        <NamespaceDetailsItem resource={obj} />
+      <NamespaceDetailsItem resource={obj} />
 
-        <CreatedAtDetailsItem resource={obj} />
+      <CreatedAtDetailsItem resource={obj} />
 
-        <OwnerDetailsItem resource={obj} />
-      </DescriptionList>
-    </ModalHOC>
+      <OwnerDetailsItem resource={obj} />
+    </DescriptionList>
   );
 };
 

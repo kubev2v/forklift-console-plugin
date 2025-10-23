@@ -1,6 +1,7 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { FormGroup, Stack } from '@patternfly/react-core';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -10,7 +11,7 @@ import type { EditPlanProps } from '../../../SettingsSection/utils/types';
 import { onConfirmWarm } from './utils/utils';
 import WarmSwitch from './WarmSwitch';
 
-const EditPlanWarm: FC<EditPlanProps> = ({ resource }) => {
+const EditPlanWarm: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<boolean>(Boolean(getPlanIsWarm(resource)));
 
@@ -18,6 +19,7 @@ const EditPlanWarm: FC<EditPlanProps> = ({ resource }) => {
     <ModalForm
       title={t('Set warm migration')}
       onConfirm={async () => onConfirmWarm({ newValue: value, resource })}
+      {...rest}
     >
       <Stack hasGutter>
         {t(

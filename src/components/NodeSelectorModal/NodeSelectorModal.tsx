@@ -2,6 +2,7 @@ import { type ReactNode, useMemo, useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -13,18 +14,19 @@ import type { LabelFields } from './utils/types';
 import LabelsList from './LabelList';
 import LabelRow from './LabelRow';
 
-type NodeSelectorModalProps = {
+export type NodeSelectorModalProps = {
   onConfirm: (labels: Record<string, string | null>) => Promise<K8sResourceCommon>;
   title?: string;
   description?: ReactNode;
   initialLabels?: Record<string, string>;
 };
 
-const NodeSelectorModal: React.FC<NodeSelectorModalProps> = ({
+const NodeSelectorModal: ModalComponent<NodeSelectorModalProps> = ({
   description,
   initialLabels,
   onConfirm,
   title,
+  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [labels, setLabels] = useState<LabelFields[]>(labelsObjectToArray(initialLabels));
@@ -60,6 +62,7 @@ const NodeSelectorModal: React.FC<NodeSelectorModalProps> = ({
       title={title ?? t('Edit node selectors')}
       onConfirm={async () => onConfirm(labelsArrayToObject(labels)) ?? {}}
       isDisabled={isNotValid}
+      {...rest}
     >
       <Form>
         <Stack hasGutter>

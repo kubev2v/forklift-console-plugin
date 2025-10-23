@@ -1,9 +1,11 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
-import EditProviderVDDKImage from 'src/providers/details/tabs/Details/components/DetailsSection/EditProviderVDDKImage';
+import EditProviderVDDKImage, {
+  type EditProviderVDDKImageProps,
+} from 'src/providers/details/tabs/Details/components/DetailsSection/EditProviderVDDKImage';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 
@@ -16,7 +18,7 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
   resource: provider,
 }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   const defaultMoreInfoLink =
     'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html-single/installing_and_using_the_migration_toolkit_for_virtualization/index#creating-vddk-image_mtv';
@@ -47,7 +49,7 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'spec', 'settings', 'vddkInitImage']}
       onEdit={() => {
-        showModal(<EditProviderVDDKImage resource={provider} />);
+        launcher<EditProviderVDDKImageProps>(EditProviderVDDKImage, { resource: provider });
       }}
       canEdit={canPatch}
     />

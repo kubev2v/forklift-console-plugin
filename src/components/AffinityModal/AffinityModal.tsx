@@ -1,7 +1,8 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { K8sIoApiCoreV1Affinity, K8sResourceCommon } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { ModalVariant } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -15,13 +16,18 @@ import AffinityEditModal from './AffinityEditModal';
 import AffinityEmptyState from './AffinityEmptyState';
 import AffinityList from './AffinityList';
 
-type AffinityModalProps = {
+export type AffinityModalProps = {
   title?: string;
   onConfirm: (updatedAffinity: K8sIoApiCoreV1Affinity) => Promise<K8sResourceCommon>;
   initialAffinity: K8sIoApiCoreV1Affinity | undefined;
 };
 
-const AffinityModal: FC<AffinityModalProps> = ({ initialAffinity, onConfirm, title }) => {
+const AffinityModal: ModalComponent<AffinityModalProps> = ({
+  initialAffinity,
+  onConfirm,
+  title,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
 
   const [affinities, setAffinities] = useState<AffinityRowData[]>(
@@ -86,6 +92,7 @@ const AffinityModal: FC<AffinityModalProps> = ({ initialAffinity, onConfirm, tit
       onSubmit={onSaveAffinity}
       setFocusedAffinity={setFocusedAffinity}
       title={isCreating ? t('Add affinity rule') : t('Edit affinity rule')}
+      {...rest}
     />
   ) : (
     <ModalForm
@@ -94,6 +101,7 @@ const AffinityModal: FC<AffinityModalProps> = ({ initialAffinity, onConfirm, tit
       onConfirm={async () => onConfirm(rowsDataToAffinity(affinities) ?? {}) ?? {}}
       confirmLabel={t('Apply rules')}
       variant={ModalVariant.medium}
+      {...rest}
     >
       {list}
     </ModalForm>

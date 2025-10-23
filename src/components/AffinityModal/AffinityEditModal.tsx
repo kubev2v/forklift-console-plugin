@@ -1,6 +1,6 @@
-import { type Dispatch, type FC, type SetStateAction, useState } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
+import { type Dispatch, type SetStateAction, useState } from 'react';
 
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { ActionGroup, Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -16,7 +16,8 @@ type AffinityEditModalProps = {
   title: string;
 };
 
-const AffinityEditModal: FC<AffinityEditModalProps> = ({
+const AffinityEditModal: ModalComponent<AffinityEditModalProps> = ({
+  closeModal,
   focusedAffinity,
   onCancel,
   onSubmit,
@@ -24,9 +25,6 @@ const AffinityEditModal: FC<AffinityEditModalProps> = ({
   title,
 }) => {
   const { t } = useForkliftTranslation();
-
-  const { toggleModal } = useModal();
-
   const [isDisabled, setIsDisabled] = useState(false);
   const expressions = useIDEntities<AffinityLabel>(focusedAffinity?.expressions ?? []);
   const fields = useIDEntities<AffinityLabel>(focusedAffinity?.fields ?? []);
@@ -62,7 +60,7 @@ const AffinityEditModal: FC<AffinityEditModalProps> = ({
       }
       className="ocs-modal co-catalog-page__overlay"
       isOpen
-      onClose={toggleModal}
+      onClose={closeModal}
       position="top"
       title={title}
       variant={ModalVariant.medium}

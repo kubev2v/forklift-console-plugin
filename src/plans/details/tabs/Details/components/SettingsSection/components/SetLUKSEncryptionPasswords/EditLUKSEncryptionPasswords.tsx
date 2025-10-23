@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
@@ -6,6 +6,7 @@ import {
   getGroupVersionKindForModel,
   useK8sWatchResource,
 } from '@openshift-console/dynamic-plugin-sdk';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Checkbox, FormGroup, Stack } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getLUKSSecretName, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
@@ -19,7 +20,7 @@ import EditLUKSModalBody from './components/EditLUKSModalBody';
 import { onDiskDecryptionConfirm } from './utils/utils';
 import LUKSPassphraseInputList from './LUKSPassphraseInputList';
 
-const EditLUKSEncryptionPasswords: FC<EditPlanProps> = ({ resource }) => {
+const EditLUKSEncryptionPasswords: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
   const { t } = useForkliftTranslation();
 
   const secretName = getLUKSSecretName(resource);
@@ -80,6 +81,7 @@ const EditLUKSEncryptionPasswords: FC<EditPlanProps> = ({ resource }) => {
           resource,
         })
       }
+      {...rest}
     >
       <Stack hasGutter>
         <EditLUKSModalBody />

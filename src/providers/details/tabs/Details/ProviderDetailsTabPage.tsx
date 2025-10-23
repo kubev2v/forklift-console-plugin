@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 
 import { type ProviderInventory, ProviderModel } from '@kubev2v/types';
@@ -23,7 +22,7 @@ const ProviderDetailsTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace 
   const data: ProviderData = { inventory: inventory ?? undefined, permissions, provider };
 
   return (
-    <ModalHOC>
+    <>
       <DetailsSection data={data} />
 
       <UploadFilesSection data={data} />
@@ -33,7 +32,7 @@ const ProviderDetailsTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace 
       <InventorySection data={data} />
 
       <ConditionsSection conditions={provider?.status?.conditions} />
-    </ModalHOC>
+    </>
   );
 };
 

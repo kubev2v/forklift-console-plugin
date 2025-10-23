@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
-import PlanStartMigrationModal from 'src/plans/actions/components/StartPlanModal/PlanStartMigrationModal';
+import PlanStartMigrationModal, {
+  type PlanStartMigrationModalProps,
+} from 'src/plans/actions/components/StartPlanModal/PlanStartMigrationModal';
 import PlanStatusLabel from 'src/plans/details/components/PlanStatus/PlanStatusLabel';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import {
@@ -14,6 +14,7 @@ import {
 import VMStatusIconsRow from 'src/plans/details/components/PlanStatus/VMStatusIconsRow';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, Flex, FlexItem, Spinner, Split } from '@patternfly/react-core';
 import { PlayIcon as StartIcon } from '@patternfly/react-icons';
 import {
@@ -29,7 +30,7 @@ import './PlanStatus.style.scss';
 
 const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
   const pipelinesProgressPercentage = usePipelineTaskProgress(plan);
   const planStatus = getPlanStatus(plan);
 
@@ -40,7 +41,10 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
           variant={ButtonVariant.secondary}
           icon={<StartIcon />}
           onClick={() => {
-            showModal(<PlanStartMigrationModal plan={plan} title={t('Start')} />);
+            launcher<PlanStartMigrationModalProps>(PlanStartMigrationModal, {
+              plan,
+              title: t('Start'),
+            });
           }}
           isInline
           data-testid="plan-start-button-status"
@@ -82,9 +86,7 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
           )}
         </FlexItem>
         <FlexItem>
-          <ModalHOC>
-            <VMStatusIconsRow plan={plan} statuses={vmStatuses} />
-          </ModalHOC>
+          <VMStatusIconsRow plan={plan} statuses={vmStatuses} />
         </FlexItem>
       </Flex>
     </>

@@ -1,17 +1,20 @@
 import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
-import { DeleteModal } from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
+import {
+  DeleteModal,
+  type DeleteModalProps,
+} from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModel, StorageMapModelRef } from '@kubev2v/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem } from '@patternfly/react-core';
 
 import type { StorageMapData } from '../utils/types/StorageMapData';
 
 export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   const { obj: StorageMap } = data;
 
@@ -22,7 +25,7 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
   });
 
   const onClick = () => {
-    showModal(<DeleteModal resource={StorageMap!} model={StorageMapModel} />);
+    launcher<DeleteModalProps>(DeleteModal, { model: StorageMapModel, resource: StorageMap! });
   };
 
   return [

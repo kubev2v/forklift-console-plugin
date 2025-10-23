@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import SectionHeading from '@components/headers/SectionHeading';
@@ -23,12 +22,10 @@ const UploadFilesSection: FC<DetailsSectionProps> = ({ data }) => {
   if (!isApplianceManagementEnabled(provider)) return null;
 
   return (
-    <ModalHOC>
-      <PageSection variant={PageSectionVariants.light} className="forklift-page-section--details">
-        <SectionHeading text={t('Upload local OVA files')} />
-        <OvaFileUploader provider={provider} />
-      </PageSection>
-    </ModalHOC>
+    <PageSection variant={PageSectionVariants.light} className="forklift-page-section--details">
+      <SectionHeading text={t('Upload local OVA files')} />
+      <OvaFileUploader provider={provider} />
+    </PageSection>
   );
 };
 

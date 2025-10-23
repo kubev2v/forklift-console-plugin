@@ -1,8 +1,9 @@
-import { type FC, type ReactNode, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import Select from '@components/common/Select';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Plan } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, FormGroup, SelectList, SelectOption, TextInput } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
@@ -24,7 +25,7 @@ type EditNameTemplateProps = {
   fieldName: string;
 };
 
-const EditNameTemplate: FC<EditNameTemplateProps> = ({
+const EditNameTemplate: ModalComponent<EditNameTemplateProps> = ({
   allowInherit = true,
   body,
   fieldName,
@@ -33,6 +34,7 @@ const EditNameTemplate: FC<EditNameTemplateProps> = ({
   onConfirm,
   title,
   value,
+  ...rest
 }) => {
   const [selected, setSelected] = useState<NameTemplateOptions>(
     getSelectedOption(value, allowInherit),
@@ -54,6 +56,7 @@ const EditNameTemplate: FC<EditNameTemplateProps> = ({
         selected === NameTemplateOptions.customNameTemplate &&
         (inputValue === value || isEmpty(inputValue.trim()))
       }
+      {...rest}
     >
       {body}
       <Form>

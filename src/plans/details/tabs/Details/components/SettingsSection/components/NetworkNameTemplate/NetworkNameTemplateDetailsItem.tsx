@@ -1,13 +1,16 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
+
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
 
 import { onConfirmPlanNetworkNameTemplate } from './utils/utils';
-import EditNetworkNameTemplate from './EditNetworkNameTemplate';
+import EditNetworkNameTemplate, {
+  type EditNetworkNameTemplateProps,
+} from './EditNetworkNameTemplate';
 
 const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
   canPatch,
@@ -15,7 +18,7 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   if (!shouldRender) return null;
 
@@ -31,14 +34,12 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
       content={content}
       crumbs={['spec', 'networkNameTemplate']}
       onEdit={() => {
-        showModal(
-          <EditNetworkNameTemplate
-            allowInherit={false}
-            resource={plan}
-            onConfirmNetworkNameTemplate={onConfirmPlanNetworkNameTemplate}
-            value={plan?.spec?.networkNameTemplate}
-          />,
-        );
+        launcher<EditNetworkNameTemplateProps>(EditNetworkNameTemplate, {
+          allowInherit: false,
+          onConfirmNetworkNameTemplate: onConfirmPlanNetworkNameTemplate,
+          resource: plan,
+          value: plan?.spec?.networkNameTemplate,
+        });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
     />

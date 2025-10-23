@@ -1,9 +1,10 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 import { getPlanPreserveIP } from '@utils/crds/plans/selectors';
 
@@ -17,7 +18,7 @@ const PreserveStaticIPsDetailsItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   if (!shouldRender) return null;
 
@@ -34,7 +35,7 @@ const PreserveStaticIPsDetailsItem: FC<EditableDetailsItemProps> = ({
       helpContent={t(`Preserve the static IPs of virtual machines migrated from vSphere.`)}
       crumbs={['spec', 'preserveStaticIPs']}
       onEdit={() => {
-        showModal(<EditPlanPreserveStaticIPs resource={plan} />);
+        launcher<EditPlanProps>(EditPlanPreserveStaticIPs, { resource: plan });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
     />

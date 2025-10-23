@@ -1,7 +1,7 @@
 import type { ChangeEvent, FC } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
   ButtonVariant,
@@ -11,7 +11,7 @@ import {
   FlexItem,
 } from '@patternfly/react-core';
 
-import FetchCertificateModal from './FetchCertificateModal';
+import FetchCertificateModal, { type FetchCertificateModalProps } from './FetchCertificateModal';
 
 import './CertificateUpload.style.scss';
 
@@ -41,7 +41,7 @@ const CertificateUpload: FC<CertificateUploadProps> = ({
   validated,
   value,
 }) => {
-  const { showModal } = useModal();
+  const launcher = useModal();
   const { t } = useForkliftTranslation();
   const isText = !type || type === 'text';
   const onClick = () => {
@@ -49,15 +49,13 @@ const CertificateUpload: FC<CertificateUploadProps> = ({
       target: { value },
     } as ChangeEvent<HTMLTextAreaElement>;
 
-    showModal(
-      <FetchCertificateModal
-        url={url ?? ''}
-        handleSave={(saved) => {
-          onTextChange?.(syntheticEvent, saved);
-        }}
-        existingCert={(value as string) ?? ''}
-      />,
-    );
+    launcher<FetchCertificateModalProps>(FetchCertificateModal, {
+      existingCert: (value as string) ?? '',
+      handleSave: (saved) => {
+        onTextChange?.(syntheticEvent, saved);
+      },
+      url: url ?? '',
+    });
   };
 
   return (

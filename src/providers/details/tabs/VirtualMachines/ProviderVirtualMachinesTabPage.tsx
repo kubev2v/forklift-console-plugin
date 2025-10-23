@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -28,15 +27,13 @@ const ProviderVirtualMachinesTabPage: FC<ProviderDetailsPageProps> = ({ name, na
   }
 
   return (
-    <ModalHOC>
-      <Controller
-        name={PROVIDER_DETAILS_VMS_TAB_FIELDS.vms}
-        control={control}
-        render={() => (
-          <VirtualMachinesListSection providerData={{ provider, vmData, vmDataLoading }} />
-        )}
-      />
-    </ModalHOC>
+    <Controller
+      name={PROVIDER_DETAILS_VMS_TAB_FIELDS.vms}
+      control={control}
+      render={() => (
+        <VirtualMachinesListSection providerData={{ provider, vmData, vmDataLoading }} />
+      )}
+    />
   );
 };
 

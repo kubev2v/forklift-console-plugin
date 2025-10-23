@@ -1,20 +1,19 @@
-import { type FC, useCallback } from 'react';
+import { useCallback } from 'react';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { PlanModel } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { ButtonVariant, Stack, StackItem } from '@patternfly/react-core';
 import { getName } from '@utils/crds/common/selectors';
 import { getPlanArchived } from '@utils/crds/plans/selectors';
 
-type ArchiveModalProps = {
-  plan: V1beta1Plan;
-};
+import type { PlanModalProps } from './types';
 
-const ArchiveModal: FC<ArchiveModalProps> = ({ plan }) => {
+const ArchiveModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
   const { t } = useForkliftTranslation();
 
   const onArchive = useCallback(async () => {
@@ -36,6 +35,7 @@ const ArchiveModal: FC<ArchiveModalProps> = ({ plan }) => {
       confirmVariant={isPlanRunning ? ButtonVariant.danger : ButtonVariant.primary}
       title={t('Archive migration plan')}
       onConfirm={onArchive}
+      {...rest}
     >
       <ForkliftTrans>
         <Stack hasGutter>

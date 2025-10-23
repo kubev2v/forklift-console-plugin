@@ -1,6 +1,5 @@
-import type { FC } from 'react';
-
 import type { V1beta1Plan } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import NameTemplateBody from '../EditNameTemplate/components/NameTemplateBody';
@@ -9,7 +8,7 @@ import EditNameTemplate from '../EditNameTemplate/EditNameTemplate';
 
 import { pvcNameTemplateAllowedVariables, pvcNameTemplateHelperExamples } from './utils/constants';
 
-type EditPVCNameTemplateProps = {
+export type EditPVCNameTemplateProps = {
   resource: V1beta1Plan;
   onConfirmPVCNameTemplate: (options: {
     resource: V1beta1Plan;
@@ -19,11 +18,12 @@ type EditPVCNameTemplateProps = {
   allowInherit?: boolean;
 };
 
-const EditPVCNameTemplate: FC<EditPVCNameTemplateProps> = ({
+const EditPVCNameTemplate: ModalComponent<EditPVCNameTemplateProps> = ({
   allowInherit = true,
   onConfirmPVCNameTemplate,
   resource,
   value,
+  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -44,6 +44,7 @@ const EditPVCNameTemplate: FC<EditPVCNameTemplateProps> = ({
       }
       helperText={<NameTemplateHelper examples={pvcNameTemplateHelperExamples} />}
       inheritValue={resource?.spec?.pvcNameTemplate}
+      {...rest}
     />
   );
 };

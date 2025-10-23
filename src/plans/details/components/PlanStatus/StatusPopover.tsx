@@ -1,10 +1,11 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
+import type { PlanModalProps } from 'src/plans/actions/components/types';
 
 import { PlanModelRef, type V1beta1Plan } from '@kubev2v/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
   ButtonVariant,
@@ -35,13 +36,13 @@ type StatusPopoverProps = {
 };
 
 const StatusPopover: FC<StatusPopoverProps> = ({ count, plan, status, vms }) => {
-  const { showModal } = useModal();
+  const launcher = useModal();
   const navigate = useNavigate();
 
   const { actionLabel, body, header } = getPopoverMessageByStatus(status, count);
 
   const openScheduleCutoverModal = () => {
-    showModal(<PlanCutoverMigrationModal plan={plan} />);
+    launcher<PlanModalProps>(PlanCutoverMigrationModal, { plan });
   };
 
   const navigateToVMsTab = () => {
