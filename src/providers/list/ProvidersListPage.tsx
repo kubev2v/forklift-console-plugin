@@ -66,7 +66,7 @@ const ProvidersListPage: FC<{
       }
       dataSource={[data || [], providersLoaded, providersLoadError]}
       RowMapper={ProviderRow}
-      fieldsMetadata={providerFields}
+      fieldsMetadata={providerFields()}
       namespace={namespace}
       title={t('Providers')}
       titleHelpContent={t(
