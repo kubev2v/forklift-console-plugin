@@ -1,4 +1,4 @@
-import { type FC, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -6,10 +6,10 @@ import {
   NetworkMapModelGroupVersionKind,
   StorageMapModelGroupVersionKind,
   type V1beta1NetworkMap,
-  type V1beta1Plan,
   type V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { getName } from '@utils/crds/common/selectors';
 import {
@@ -20,13 +20,11 @@ import {
 } from '@utils/crds/plans/selectors';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
+import type { PlanModalProps } from '../types';
+
 import { createDuplicatePlanAndMapResources } from './utils/utils';
 
-type DuplicateModalProps = {
-  plan: V1beta1Plan;
-};
-
-const DuplicateModal: FC<DuplicateModalProps> = ({ plan }) => {
+const DuplicateModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
   const { t } = useForkliftTranslation();
   const name = getName(plan);
   const [newName, setNewName] = useState<string>(`copy-of-${name}`);
@@ -62,6 +60,7 @@ const DuplicateModal: FC<DuplicateModalProps> = ({ plan }) => {
       confirmLabel={t('Duplicate')}
       title={t('Duplicate migration plan')}
       onConfirm={onDuplicate}
+      {...rest}
     >
       <ForkliftTrans>
         <Stack hasGutter>

@@ -1,9 +1,10 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { getRootDisk } from '@utils/crds/plans/selectors';
 import { VIRT_V2V_HELP_LINK } from '@utils/links';
 
@@ -14,7 +15,7 @@ import EditRootDisk from './EditRootDisk';
 
 const RootDiskDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldRender }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   if (!shouldRender) return null;
 
@@ -28,7 +29,7 @@ const RootDiskDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, sho
       moreInfoLink={VIRT_V2V_HELP_LINK}
       crumbs={['spec', 'vms', 'rootDisk']}
       onEdit={() => {
-        showModal(<EditRootDisk resource={plan} />);
+        launcher<EditPlanProps>(EditRootDisk, { resource: plan });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
     />

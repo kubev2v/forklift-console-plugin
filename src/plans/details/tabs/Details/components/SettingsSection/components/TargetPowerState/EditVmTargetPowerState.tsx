@@ -1,9 +1,10 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 import type { TargetPowerStateValue } from 'src/plans/constants';
 import { getVmTargetPowerState } from 'src/plans/details/components/PlanStatus/utils/utils';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, Stack } from '@patternfly/react-core';
 import { getPlanTargetPowerState, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -13,11 +14,15 @@ import type { EditPlanProps } from '../../utils/types';
 import { onConfirmVmTargetPowerState } from './utils/utils';
 import TargetPowerStateDropdown from './TargetPowerStateDropdown';
 
-type EditVmTargetPowerStateProps = EditPlanProps & {
+export type EditVmTargetPowerStateProps = EditPlanProps & {
   index: number;
 };
 
-const EditVmTargetPowerState: FC<EditVmTargetPowerStateProps> = ({ index, resource }) => {
+const EditVmTargetPowerState: ModalComponent<EditVmTargetPowerStateProps> = ({
+  index,
+  resource,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const vm = getPlanVirtualMachines(resource)[index];
   const [value, setValue] = useState<TargetPowerStateValue>(getVmTargetPowerState(vm));
@@ -29,6 +34,7 @@ const EditVmTargetPowerState: FC<EditVmTargetPowerStateProps> = ({ index, resour
       confirmLabel={t('Save target power state')}
       onConfirm={async () => onConfirmVmTargetPowerState(index)({ newValue: value, resource })}
       isDisabled={value === getVmTargetPowerState(vm)}
+      {...rest}
     >
       <Stack hasGutter>
         {t(

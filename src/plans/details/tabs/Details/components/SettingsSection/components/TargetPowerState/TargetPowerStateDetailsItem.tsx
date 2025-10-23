@@ -1,20 +1,21 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { getTargetPowerStateLabel } from 'src/plans/constants';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 import { getPlanTargetPowerState } from '@utils/crds/plans/selectors';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
+import type { EditPlanProps } from '../../utils/types';
 
 import EditTargetPowerState from './EditTargetPowerState';
 
 const TargetPowerStateDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   return (
     <DetailsItem
@@ -30,7 +31,7 @@ const TargetPowerStateDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, p
       )}
       crumbs={['spec', 'targetPowerState']}
       onEdit={() => {
-        showModal(<EditTargetPowerState resource={plan} />);
+        launcher<EditPlanProps>(EditTargetPowerState, { resource: plan });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
     />

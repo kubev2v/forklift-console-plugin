@@ -1,9 +1,10 @@
-import { type FC, type MouseEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
+import { type MouseEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import {
   Button,
   ButtonVariant,
@@ -19,7 +20,6 @@ import useToggle from '../../hooks/useToggle';
 import { getValueByJsonPath } from '../../utils/helpers/getValueByJsonPath';
 import { AlertMessageForModals } from '../components/AlertMessageForModals';
 import { ItemIsOwnedAlert } from '../components/ItemIsOwnedAlert';
-import { useModal } from '../ModalHOC/useModal';
 
 import { defaultOnConfirm } from './utils/defaultOnConfirm';
 import type { EditModalProps } from './types';
@@ -48,9 +48,10 @@ import './EditModal.style.css';
  *
  * @returns {ReactElement} Returns a `Modal` React Element that renders the modal.
  */
-export const EditModal: FC<EditModalProps> = ({
+export const EditModal: ModalComponent<EditModalProps> = ({
   body,
   bodyContent,
+  closeModal,
   headerContent,
   helperText,
   InputComponent,
@@ -66,7 +67,6 @@ export const EditModal: FC<EditModalProps> = ({
   variant,
 }) => {
   const { t } = useForkliftTranslation();
-  const { toggleModal } = useModal();
 
   const [isLoading, toggleIsLoading] = useToggle();
   const navigate = useNavigate();
@@ -115,7 +115,7 @@ export const EditModal: FC<EditModalProps> = ({
         navigate(redirectTo);
       }
 
-      toggleModal();
+      closeModal();
     } catch (err) {
       toggleIsLoading();
 
@@ -137,7 +137,7 @@ export const EditModal: FC<EditModalProps> = ({
     redirectTo,
     t,
     toggleIsLoading,
-    toggleModal,
+    closeModal,
   ]);
 
   const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
@@ -177,7 +177,7 @@ export const EditModal: FC<EditModalProps> = ({
     >
       {t('Save')}
     </Button>,
-    <Button key="cancel" variant={ButtonVariant.secondary} onClick={toggleModal} autoFocus>
+    <Button key="cancel" variant={ButtonVariant.secondary} onClick={closeModal} autoFocus>
       {t('Cancel')}
     </Button>,
   ];
@@ -189,7 +189,7 @@ export const EditModal: FC<EditModalProps> = ({
       showClose={false}
       variant={variant ?? ModalVariant.small}
       isOpen={true}
-      onClose={toggleModal}
+      onClose={closeModal}
       actions={actions}
     >
       <Stack hasGutter>

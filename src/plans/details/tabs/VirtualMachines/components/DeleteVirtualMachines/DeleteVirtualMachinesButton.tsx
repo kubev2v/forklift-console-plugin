@@ -1,8 +1,8 @@
 import { type FC, useMemo } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { isPlanArchived } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { ToolbarItem } from '@patternfly/react-core';
 
 import VMsActionButton from '../VMsActionButton';
@@ -12,10 +12,10 @@ import DeleteVirtualMachinesModal from './DeleteVirtualMachinesModal';
 
 const DeleteVirtualMachinesButton: FC<DeleteVirtualMachineProps> = ({ plan, selectedIds }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   const onClick = () => {
-    showModal(<DeleteVirtualMachinesModal plan={plan} selectedIds={selectedIds} />);
+    launcher<DeleteVirtualMachineProps>(DeleteVirtualMachinesModal, { plan, selectedIds });
   };
 
   const reason = useMemo(() => {

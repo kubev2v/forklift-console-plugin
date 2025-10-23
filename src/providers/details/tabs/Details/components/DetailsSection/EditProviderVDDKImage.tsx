@@ -1,4 +1,4 @@
-import { type FC, type FormEvent, useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
 import type {
   EditModalProps,
@@ -12,12 +12,13 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { type Modify, ProviderModel, type V1beta1Provider } from '@kubev2v/types';
 import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Alert, AlertVariant, Checkbox, Stack, StackItem } from '@patternfly/react-core';
 import { getAnnotations, getUseVddkAioOptimization } from '@utils/crds/common/selectors';
 
 import onUpdateVddkImageSettings from './onUpdateVddkImageSettings';
 
-type EditProviderVDDKImageProps = Modify<
+export type EditProviderVDDKImageProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Provider;
@@ -26,7 +27,7 @@ type EditProviderVDDKImageProps = Modify<
     jsonPath?: string | string[];
   }
 >;
-const EditProviderVDDKImage: FC<EditProviderVDDKImageProps> = (props) => {
+const EditProviderVDDKImage: ModalComponent<EditProviderVDDKImageProps> = (props) => {
   const { t } = useForkliftTranslation();
 
   const provider = props.resource;

@@ -1,7 +1,7 @@
-import type { FC } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { ModalVariant } from '@patternfly/react-core';
 
 import { validateEsxiURL } from '../../utils/validators/provider/vsphere/validateEsxiURL';
@@ -11,7 +11,7 @@ import { EditModal } from '../EditModal/EditModal';
 import { patchProviderURL } from './utils/patchProviderURL';
 import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
-export const VSphereEditURLModal: FC<EditProviderURLModalProps> = ({
+export const VSphereEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
   insecureSkipVerify,
   label = '',
   resource: provider,

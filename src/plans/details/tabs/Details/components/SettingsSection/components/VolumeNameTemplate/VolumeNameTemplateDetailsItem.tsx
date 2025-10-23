@@ -1,13 +1,14 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
+
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
 
 import { onConfirmVolumeNameTemplate } from './utils/utils';
-import EditVolumeNameTemplate from './EditVolumeNameTemplate';
+import EditVolumeNameTemplate, { type EditVolumeNameTemplateProps } from './EditVolumeNameTemplate';
 
 const VolumeNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
   canPatch,
@@ -15,7 +16,7 @@ const VolumeNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   if (!shouldRender) return null;
 
@@ -31,14 +32,12 @@ const VolumeNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
       content={content}
       crumbs={['spec', 'volumeNameTemplate']}
       onEdit={() => {
-        showModal(
-          <EditVolumeNameTemplate
-            allowInherit={false}
-            onConfirmVolumeNameTemplate={onConfirmVolumeNameTemplate}
-            resource={plan}
-            value={plan?.spec?.volumeNameTemplate}
-          />,
-        );
+        launcher<EditVolumeNameTemplateProps>(EditVolumeNameTemplate, {
+          allowInherit: false,
+          onConfirmVolumeNameTemplate,
+          resource: plan,
+          value: plan?.spec?.volumeNameTemplate,
+        });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
     />

@@ -1,5 +1,4 @@
 import { type FC, type MouseEvent, type Ref, useState } from 'react';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -62,14 +61,12 @@ const NetworkMapActionsKebabDropdown: FC<NetworkMapActionsDropdownProps> = ({ da
 };
 
 export const NetworkMapActionsDropdown: FC<NetworkMapActionsDropdownProps> = (props) => (
-  <ModalHOC>
-    <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
-      <FlexItem grow={{ default: 'grow' }} />
-      <FlexItem align={{ default: 'alignRight' }}>
-        <NetworkMapActionsKebabDropdown {...props} />
-      </FlexItem>
-    </Flex>
-  </ModalHOC>
+  <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
+    <FlexItem grow={{ default: 'grow' }} />
+    <FlexItem align={{ default: 'alignRight' }}>
+      <NetworkMapActionsKebabDropdown {...props} />
+    </FlexItem>
+  </Flex>
 );
 
 type NetworkMapActionsDropdownProps = {
