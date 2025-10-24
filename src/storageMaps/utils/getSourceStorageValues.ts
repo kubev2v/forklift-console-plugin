@@ -109,7 +109,7 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
  * Categorizes available source storages into 'used' and 'other' based on VM usage.
  * This helps prioritize storages that need mapping in the UI.
  */
-export const getSourceStorageValues = (
+const getSourceStorageValues = (
   availableSourceStorages: InventoryStorage[],
   vms: ProviderVirtualMachine[] | null,
 ): CategorizedSourceMappings => {

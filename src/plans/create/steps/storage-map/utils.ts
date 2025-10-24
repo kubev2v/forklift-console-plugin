@@ -21,7 +21,7 @@ export const validatePlanStorageMaps = (
   if (
     !usedSourceStorages.every((usedStorage) =>
       values.find(
-        (value) => value[CreatePlanStorageMapFieldId.SourceStorage].name === usedStorage.name,
+        (value) => value[CreatePlanStorageMapFieldId.SourceStorage].id === usedStorage.id,
       ),
     )
   ) {

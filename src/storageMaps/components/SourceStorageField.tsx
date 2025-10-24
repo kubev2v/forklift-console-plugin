@@ -3,7 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
-import { isEmpty } from '@utils/helpers';
+import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { StorageMapFieldId, type StorageMapping } from '../constants';
@@ -31,6 +31,8 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({
   } = useFormContext();
   const { t } = useForkliftTranslation();
 
+  const duplicateNames = getDuplicateValues(sourceStorages, (storage) => storage.name);
+
   return (
     <Controller
       name={fieldId}
@@ -57,9 +59,10 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({
                 <SelectOption
                   key={storage.name}
                   value={storage}
+                  description={duplicateNames.has(storage.name) ? storage.id : undefined}
                   isDisabled={storageMappings?.some(
                     (mapping: StorageMapping) =>
-                      mapping[StorageMapFieldId.SourceStorage].name === storage.name,
+                      mapping[StorageMapFieldId.SourceStorage].id === storage.id,
                   )}
                 >
                   {storage.name}
