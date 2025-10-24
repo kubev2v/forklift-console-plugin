@@ -1,5 +1,6 @@
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
-import { MULTUS, POD } from 'src/plans/details/utils/constants';
+import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
+import { IGNORED, MULTUS, POD } from 'src/plans/details/utils/constants';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,
@@ -48,7 +49,15 @@ export const getDestinationNetName = (
       network?.name === destination?.name && network?.namespace === destination?.namespace,
   );
 
-  return net ? openShiftNetworkAttachmentDefinitionToName(net) : DEFAULT_NETWORK;
+  if (net) {
+    return openShiftNetworkAttachmentDefinitionToName(net);
+  }
+
+  if (destination?.type === IGNORED) {
+    return IgnoreNetwork.Label;
+  }
+
+  return DEFAULT_NETWORK;
 };
 
 export const convertNetworkToDestination = (

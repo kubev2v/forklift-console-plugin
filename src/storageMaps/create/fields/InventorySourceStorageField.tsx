@@ -7,7 +7,7 @@ import type { StorageMappingValue } from 'src/storageMaps/types';
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
-import { isEmpty } from '@utils/helpers';
+import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { StorageMapFieldId, type StorageMapping } from '../../constants';
@@ -29,6 +29,10 @@ const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
   } = useFormContext<CreateStorageMapFormData>();
   const { t } = useForkliftTranslation();
   const storageMappings = useWatch({ control, name: StorageMapFieldId.StorageMap });
+
+  const duplicateLabels = getDuplicateValues(sourceStorages, (storage) =>
+    getMapResourceLabel(storage),
+  );
 
   return (
     <FormGroupWithErrorText isRequired fieldId={fieldId}>
@@ -64,9 +68,10 @@ const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
                     <SelectOption
                       key={storage.id}
                       value={storageValue}
+                      description={duplicateLabels.has(storageLabel) ? storage.id : undefined}
                       isDisabled={storageMappings?.some(
                         (mapping: StorageMapping) =>
-                          mapping[StorageMapFieldId.SourceStorage].name === storageLabel,
+                          mapping[StorageMapFieldId.SourceStorage].id === storage.id,
                       )}
                     >
                       {storageLabel}

@@ -4,7 +4,7 @@ import EmptyCategorySelectOption from 'src/plans/components/EmptyCategorySelectO
 
 import Select from '@components/common/Select';
 import { SelectGroup, SelectList, SelectOption } from '@patternfly/react-core';
-import { isEmpty } from '@utils/helpers';
+import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -26,6 +26,9 @@ const SourceNetworkField: FC<SourceNetworkFieldProps> = ({
   const { t } = useForkliftTranslation();
   const { control, trigger } = useCreatePlanFormContext();
   const networkMappings = useWatch({ control, name: NetworkMapFieldId.NetworkMap });
+
+  const allNetworks = [...usedSourceNetworks, ...otherSourceNetworks];
+  const duplicateNames = getDuplicateValues(allNetworks, (network) => network.name);
 
   return (
     <Controller
@@ -51,9 +54,10 @@ const SourceNetworkField: FC<SourceNetworkFieldProps> = ({
                   <SelectOption
                     key={usedNetwork.name}
                     value={usedNetwork}
+                    description={duplicateNames.has(usedNetwork.name) ? usedNetwork.id : undefined}
                     isDisabled={networkMappings.some(
                       (mapping: NetworkMapping) =>
-                        mapping[NetworkMapFieldId.SourceNetwork].name === usedNetwork.name,
+                        mapping[NetworkMapFieldId.SourceNetwork].id === usedNetwork.id,
                     )}
                   >
                     {usedNetwork.name}
@@ -72,9 +76,12 @@ const SourceNetworkField: FC<SourceNetworkFieldProps> = ({
                   <SelectOption
                     key={otherNetwork.name}
                     value={otherNetwork}
+                    description={
+                      duplicateNames.has(otherNetwork.name) ? otherNetwork.id : undefined
+                    }
                     isDisabled={networkMappings.some(
                       (mapping: NetworkMapping) =>
-                        mapping[NetworkMapFieldId.SourceNetwork].name === otherNetwork.name,
+                        mapping[NetworkMapFieldId.SourceNetwork].id === otherNetwork.id,
                     )}
                   >
                     {otherNetwork.name}

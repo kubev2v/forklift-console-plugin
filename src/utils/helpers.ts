@@ -17,3 +17,21 @@ export const isEmpty = (value: object | unknown[] | string | undefined | null): 
 
   return false;
 };
+
+/**
+ * Returns a Set of values that appear more than once in an array.
+ */
+export const getDuplicateValues = <T>(items: T[], getValue: (item: T) => string): Set<string> => {
+  const counts = new Map<string, number>();
+
+  items.forEach((item) => {
+    const value = getValue(item);
+    counts.set(value, (counts.get(value) ?? 0) + 1);
+  });
+
+  return new Set(
+    Array.from(counts.entries())
+      .filter(([_, count]) => count > 1)
+      .map(([value]) => value),
+  );
+};

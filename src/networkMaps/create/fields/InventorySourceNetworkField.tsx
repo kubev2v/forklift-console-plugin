@@ -7,7 +7,7 @@ import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
-import { isEmpty } from '@utils/helpers';
+import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { NetworkMapFieldId, type NetworkMapping } from '../../constants';
@@ -29,6 +29,10 @@ const InventorySourceNetworkField: FC<InventorySourceNetworkFieldProps> = ({
   } = useFormContext<CreateNetworkMapFormData>();
   const { t } = useForkliftTranslation();
   const networkMappings = useWatch({ control, name: NetworkMapFieldId.NetworkMap });
+
+  const duplicateLabels = getDuplicateValues(sourceNetworks, (network) =>
+    getMapResourceLabel(network),
+  );
 
   return (
     <FormGroupWithErrorText isRequired fieldId={fieldId}>
@@ -65,9 +69,10 @@ const InventorySourceNetworkField: FC<InventorySourceNetworkFieldProps> = ({
                     <SelectOption
                       key={network.id}
                       value={networkValue}
+                      description={duplicateLabels.has(networkLabel) ? network.id : undefined}
                       isDisabled={networkMappings?.some(
                         (mapping: NetworkMapping) =>
-                          mapping[NetworkMapFieldId.SourceNetwork].name === networkLabel,
+                          mapping[NetworkMapFieldId.SourceNetwork].id === network.id,
                       )}
                     >
                       {networkLabel}

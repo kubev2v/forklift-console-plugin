@@ -17,8 +17,7 @@ import './UpdateStorageMapForm.style.scss';
 type UpdateStorageMapFormProps = {
   storageMap: V1beta1StorageMap;
   targetStorages: TargetStorage[];
-  usedSourceStorages: StorageMappingValue[];
-  otherSourceStorages: StorageMappingValue[];
+  sourceStorages: StorageMappingValue[];
   isLoading: boolean;
   loadError: Error | null;
   isVsphere: boolean;
@@ -33,11 +32,10 @@ const UpdateStorageMapForm: FC<UpdateStorageMapFormProps> = ({
   loadError,
   onCancel,
   onUpdate,
-  otherSourceStorages,
   sourceProvider,
+  sourceStorages,
   storageMap,
   targetStorages,
-  usedSourceStorages,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -112,8 +110,7 @@ const UpdateStorageMapForm: FC<UpdateStorageMapFormProps> = ({
         <Form>
           <UpdateStorageMapFieldTable
             targetStorages={targetStorages}
-            usedSourceStorages={usedSourceStorages}
-            otherSourceStorages={otherSourceStorages}
+            sourceStorages={sourceStorages}
             isLoading={isLoading}
             loadError={loadError}
             isVsphere={isVsphere}
