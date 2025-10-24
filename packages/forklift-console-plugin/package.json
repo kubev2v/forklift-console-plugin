@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@kubev2v/common": "*",
-    "@kubev2v/types": "0.0.20",
+    "@kubev2v/types": "0.0.24",
     "@openshift-console/dynamic-plugin-sdk": "1.8.0",
     "@patternfly/react-charts": "7.4.1",
     "@patternfly/react-core": "^5.1.1",
