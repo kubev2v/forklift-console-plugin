@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent, type Ref, useState } from 'react';
+import { type FC, type MouseEvent, type Ref, useEffect, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -73,6 +73,14 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   const [srcSelected, setSrcSelected] = useState<string>(source);
   const [trgSelected, setTrgSelected] = useState<string>(destination);
 
+  useEffect(() => {
+    setSrcSelected(source);
+  }, [source]);
+
+  useEffect(() => {
+    setTrgSelected(destination);
+  }, [destination]);
+
   const onClick = () => {
     deleteMapping({ destination, source });
   };
@@ -97,14 +105,12 @@ export const MappingListItem: FC<MappingListItemProps> = ({
     </MenuToggle>
   );
 
-  // Callback functions to handle selection in the dropdown menus
   const onSelectSource = (_event: MouseEvent | undefined, value: string | number | undefined) => {
     replaceMapping({
       current: { destination, source },
       next: { destination, source: value as string },
     });
 
-    // Toggle the dropdown menu open state
     setSrcSelected(value as string);
     setIsSrcOpen(false);
   };
@@ -118,7 +124,6 @@ export const MappingListItem: FC<MappingListItemProps> = ({
       next: { destination: value as string, source },
     });
 
-    // Toggle the dropdown menu open state
     setTrgSelected(value as string);
     setIsTrgOpen(false);
   };
