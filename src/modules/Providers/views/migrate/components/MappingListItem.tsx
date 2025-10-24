@@ -153,9 +153,11 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                     }}
                   >
                     <SelectList>
-                      <SelectGroup label={usedSourcesLabel} key="usedSources">
-                        {toGroup(usedSources, noSourcesLabel, source)}
-                      </SelectGroup>
+                      {!isEmpty(usedSources) && (
+                        <SelectGroup label={usedSourcesLabel} key="usedSources">
+                          {toGroup(usedSources, noSourcesLabel, source)}
+                        </SelectGroup>
+                      )}
                       <SelectGroup label={generalSourcesLabel} key="generalSources">
                         {toGroup(generalSources, noSourcesLabel, source)}
                       </SelectGroup>

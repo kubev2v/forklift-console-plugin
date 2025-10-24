@@ -1,5 +1,6 @@
 import { type FC, useMemo, useState } from 'react';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
+import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { StorageMapModel, type V1beta1StorageMap } from '@kubev2v/types';
@@ -9,9 +10,6 @@ import { getNamespace } from '@utils/crds/common/selectors';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { getSourceStorageValues } from '../utils/getSourceStorageValues';
-
-import { useProviderInventoryVms } from './hooks/useProviderInventoryVms';
 import { useStorageMapProviders } from './hooks/useStorageMapProviders';
 import UpdateStorageMapForm from './UpdateStorageMapForm/UpdateStorageMapForm';
 import type { UpdateMappingsFormData } from './constants';
@@ -37,15 +35,13 @@ const MapsSection: FC<MapsSectionProps> = ({ storageMap }) => {
     storageMapNamespace,
   );
 
-  const {
-    error: inventoryLoadError,
-    inventory: inventoryVms,
-    loading: inventoryLoading,
-  } = useProviderInventoryVms(sourceProvider, providersLoaded && !providersLoadError);
-
-  const { other: otherSourceStorages, used: usedSourceStorages } = useMemo(
-    () => getSourceStorageValues(sourceStorages, inventoryVms),
-    [sourceStorages, inventoryVms],
+  const allSourceStorages = useMemo(
+    () =>
+      sourceStorages?.map((storage) => ({
+        id: storage.id,
+        name: getMapResourceLabel(storage),
+      })) ?? [],
+    [sourceStorages],
   );
 
   const handleUpdate = async (formValues: UpdateMappingsFormData) => {
@@ -74,10 +70,8 @@ const MapsSection: FC<MapsSectionProps> = ({ storageMap }) => {
     setUpdateError(undefined);
   };
 
-  const isLoading =
-    !providersLoaded || sourceStoragesLoading || targetStoragesLoading || inventoryLoading;
-  const loadError =
-    providersLoadError ?? sourceStoragesLoadError ?? targetStoragesLoadError ?? inventoryLoadError;
+  const isLoading = !providersLoaded || sourceStoragesLoading || targetStoragesLoading;
+  const loadError = providersLoadError ?? sourceStoragesLoadError ?? targetStoragesLoadError;
 
   return (
     <Stack hasGutter>
@@ -100,8 +94,7 @@ const MapsSection: FC<MapsSectionProps> = ({ storageMap }) => {
       <UpdateStorageMapForm
         storageMap={storageMap}
         targetStorages={targetStorages}
-        usedSourceStorages={usedSourceStorages}
-        otherSourceStorages={otherSourceStorages}
+        sourceStorages={allSourceStorages}
         isLoading={isLoading}
         loadError={loadError}
         isVsphere={sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere}

@@ -7,8 +7,8 @@ import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import GroupedSourceStorageField from '../../components/GroupedSourceStorageField';
 import OffloadStorageIndexedForm from '../../components/OffloadStorageIndexedForm/OffloadStorageIndexedForm';
+import SourceStorageField from '../../components/SourceStorageField';
 import TargetStorageField from '../../components/TargetStorageField';
 import { defaultStorageMapping, StorageMapFieldId, storageMapFieldLabels } from '../../constants';
 import type { StorageMappingValue, TargetStorage } from '../../types';
@@ -18,8 +18,7 @@ import { validateUpdatedStorageMaps } from '../utils';
 
 type UpdateStorageMapFieldTableProps = {
   targetStorages: TargetStorage[];
-  usedSourceStorages: StorageMappingValue[];
-  otherSourceStorages: StorageMappingValue[];
+  sourceStorages: StorageMappingValue[];
   isLoading: boolean;
   loadError: Error | null;
   isVsphere: boolean;
@@ -30,10 +29,9 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
   isLoading,
   isVsphere,
   loadError,
-  otherSourceStorages,
   sourceProvider,
+  sourceStorages,
   targetStorages,
-  usedSourceStorages,
 }) => {
   const { t } = useForkliftTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
@@ -79,11 +77,10 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
             ),
           }),
         inputs: [
-          <GroupedSourceStorageField
+          <SourceStorageField
             fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
             storageMappings={storageMap}
-            usedSourceStorages={usedSourceStorages}
-            otherSourceStorages={otherSourceStorages}
+            sourceStorages={sourceStorages}
           />,
           <TargetStorageField
             fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
@@ -93,7 +90,7 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
       }))}
       addButton={{
         isDisabled:
-          [...usedSourceStorages, ...otherSourceStorages].length === storageMappingFields.length ||
+          sourceStorages.length === storageMappingFields.length ||
           isLoading ||
           isSubmitting ||
           Boolean(loadError),

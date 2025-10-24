@@ -198,9 +198,9 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
                   : (getSourceNetName(sourceNetworks, networkMapSpec.source) ?? ''),
             })) ?? []
           }
-          generalSourcesLabel={t('Other networks present on the source provider ')}
-          usedSourcesLabel={t('Networks used by the selected VMs')}
-          noSourcesLabel={t('No networks in this category')}
+          generalSourcesLabel={t('Networks')}
+          usedSourcesLabel={t('Used networks')}
+          noSourcesLabel={t('No networks available')}
           isDisabled={false}
         />
       </DescriptionListDescription>

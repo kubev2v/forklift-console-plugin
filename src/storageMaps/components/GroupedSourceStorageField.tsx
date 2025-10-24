@@ -17,6 +17,11 @@ type GroupedSourceStorageFieldProps = {
   otherSourceStorages: StorageMappingValue[];
 };
 
+/**
+ * Grouped source storage selector with "used by selected VMs" and "other" categories.
+ * Used in plan creation wizard where VM selection determines categorization.
+ * For storage map details without VM selection context, use SourceStorageField instead.
+ */
 const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
   fieldId,
   otherSourceStorages,
