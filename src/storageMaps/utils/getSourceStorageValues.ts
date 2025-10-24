@@ -116,7 +116,6 @@ export const getSourceStorageValues = (
   const storageIdsUsedByVms = getStoragesUsedBySelectedVms(vms);
   const usedStorageIds = new Set(storageIdsUsedByVms);
 
-  // Partition storages into used and other categories
   return availableSourceStorages.reduce<CategorizedSourceMappings>(
     (acc, storage) => {
       const storageEntry = {
@@ -137,6 +136,19 @@ export const getSourceStorageValues = (
 };
 
 /**
+ * Filters storages to only those used by the provided VMs.
+ * Used for OVA providers where we only want to show relevant storages.
+ */
+const filterStoragesByVmUsage = (
+  availableStorages: InventoryStorage[],
+  vms: ProviderVirtualMachine[] | null,
+): InventoryStorage[] => {
+  const storageIdsUsedByVms = getStoragesUsedBySelectedVms(vms);
+  const usedStorageIds = new Set(storageIdsUsedByVms);
+  return availableStorages.filter((storage) => usedStorageIds.has(storage.id));
+};
+
+/**
  * Categorizes source storages with OVA provider filtering.
  * For OVA: only shows storages used by the provided VMs.
  * For other providers: shows all storages categorized by usage.
@@ -151,11 +163,7 @@ export const getSourceStorageValuesForSelectedVms = (
   // For OVA providers, filter storages to only those used by the provided VMs
   const relevantStorages =
     sourceProviderType === PROVIDER_TYPES.ova
-      ? (() => {
-          const storageIdsUsedByVms = getStoragesUsedBySelectedVms(vms);
-          const usedStorageIds = new Set(storageIdsUsedByVms);
-          return availableSourceStorages.filter((storage) => usedStorageIds.has(storage.id));
-        })()
+      ? filterStoragesByVmUsage(availableSourceStorages, vms)
       : availableSourceStorages;
 
   return getSourceStorageValues(relevantStorages, vms);
