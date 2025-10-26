@@ -96,6 +96,8 @@ VAAI
 operatorhub
 powerflex
 powermax
+infinibox
+infinidat
 apiextensions
 customresourcedefinitions
 clusterversion
@@ -103,3 +105,4 @@ clusterversions
 nbde
 IBM
 FlashSystem
+powerstore
