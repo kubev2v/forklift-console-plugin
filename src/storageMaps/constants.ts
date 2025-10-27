@@ -49,6 +49,7 @@ export enum OffloadPlugin {
 
 // Reference: https://github.com/kubev2v/forklift/blob/29b60e21c388420e6e0e79a55802c2c0a201ab45/pkg/apis/forklift/v1beta1/mapping.go
 export enum StorageVendorProduct {
+  FlashSystem = 'flashSystem',
   Vantara = 'vantara',
   Ontap = 'ontap',
   Primera3Par = 'primera3par',
@@ -62,6 +63,7 @@ export const offloadPluginLabels: Record<OffloadPlugin, ReturnType<typeof t>> = 
 };
 
 export const storageVendorProductLabels: Record<StorageVendorProduct, ReturnType<typeof t>> = {
+  [StorageVendorProduct.FlashSystem]: t('IBM FlashSystem'),
   [StorageVendorProduct.Ontap]: t('NetApp ONTAP'),
   [StorageVendorProduct.PowerFlex]: t('Dell PowerFlex'),
   [StorageVendorProduct.PowerMax]: t('Dell PowerMax'),
