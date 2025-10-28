@@ -19,26 +19,17 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     });
     resourceManager.addPlan(testData.planName, testData.planProject);
 
+    // Step 1: Navigate to Additional Settings
     const wizard = new CreatePlanWizardPage(page, resourceManager);
     await wizard.navigate();
     await wizard.waitForWizardLoad();
+    await wizard.navigateToAdditionalSettings(testData);
 
-    // Step 1: Complete plan wizard (General Info, VMs, Network Map, Storage Map, Migration Type)
-    await wizard.generalInformation.fillAndComplete(testData);
-    await wizard.clickNext();
-    await wizard.virtualMachines.fillAndComplete(testData.virtualMachines);
-    await wizard.clickNext();
-    await wizard.networkMap.fillAndComplete(testData.networkMap);
-    await wizard.clickNext();
-    await wizard.storageMap.fillAndComplete(testData.storageMap);
-    await wizard.clickNext();
-    await wizard.clickNext(); // Skip Migration Type Step
-
-    // Step 2: Other settings
+    // Step 2: Configure power state in Additional Settings
     const { additionalSettings } = wizard;
     await additionalSettings.verifyStepVisible();
 
-    // Review options on power state pick list
+    // Review and verify power state options
     await additionalSettings.targetPowerStateSelect.click();
     await expect(additionalSettings.powerStateOptionAuto).toHaveText(
       'Retain source VM power state',
@@ -46,7 +37,7 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await expect(additionalSettings.powerStateOptionOn).toHaveText('Powered on');
     await expect(additionalSettings.powerStateOptionOff).toHaveText('Powered off');
 
-    // Select the one on testplan data
+    // Select the target power state from test data
     await additionalSettings
       .powerStateOption(testData.additionalPlanSettings?.targetPowerState ?? 'on')
       .click();
@@ -140,21 +131,11 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     });
     resourceManager.addPlan(testData.planName, testData.planProject);
 
+    // Step 1: Navigate to Additional Settings
     const wizard = new CreatePlanWizardPage(page, resourceManager);
     await wizard.navigate();
     await wizard.waitForWizardLoad();
-
-    // Step 1: Create plan with NBDE/Clevis configuration
-    // Complete wizard steps: General Info, VMs, Network Map, Storage Map, Migration Type
-    await wizard.generalInformation.fillAndComplete(testData);
-    await wizard.clickNext();
-    await wizard.virtualMachines.fillAndComplete(testData.virtualMachines);
-    await wizard.clickNext();
-    await wizard.networkMap.fillAndComplete(testData.networkMap);
-    await wizard.clickNext();
-    await wizard.storageMap.fillAndComplete(testData.storageMap);
-    await wizard.clickNext();
-    await wizard.clickNext(); // Skip Migration Type
+    await wizard.navigateToAdditionalSettings(testData);
 
     // Step 2: Enable NBDE/Clevis during plan creation
     const { additionalSettings } = wizard;

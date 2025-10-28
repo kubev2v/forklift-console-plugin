@@ -118,6 +118,18 @@ export class CreatePlanWizardPage {
     });
   }
 
+  async navigateToAdditionalSettings(testData: PlanTestData): Promise<void> {
+    await this.generalInformation.fillAndComplete(testData);
+    await this.clickNext();
+    await this.virtualMachines.fillAndComplete(testData.virtualMachines);
+    await this.clickNext();
+    await this.networkMap.fillAndComplete(testData.networkMap);
+    await this.clickNext();
+    await this.storageMap.fillAndComplete(testData.storageMap);
+    await this.clickNext();
+    await this.clickNext(); // Skip Migration Type Step
+  }
+
   async waitForPlanCreation() {
     await this.page.waitForURL(
       (url) => url.toString().includes('forklift.konveyor.io~v1beta1~Plan/'),
