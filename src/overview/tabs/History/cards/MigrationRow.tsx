@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
 import VisibleTableData from 'src/modules/Providers/utils/components/TableCell/VisibleTableData';
 import { getMigrationVMsStatusCounts } from 'src/plans/details/components/PlanStatus/utils/utils';
@@ -56,26 +55,22 @@ const MigrationRow: FC<MigrationRowProps> = ({
     vms: (
       <Split hasGutter>
         {getMigrationStatusLabel(vmStatuses, migrationVMs?.length)}
-        <ModalHOC>
-          <VMStatusIconsRow statuses={vmStatuses} plan={plan} />
-        </ModalHOC>
+        <VMStatusIconsRow statuses={vmStatuses} plan={plan} />
       </Split>
     ),
   };
   return (
-    <ModalHOC>
-      <Tr>
-        {resourceFields.map(({ resourceFieldId }) => (
-          <VisibleTableData
-            key={resourceFieldId}
-            fieldId={resourceFieldId!}
-            resourceFields={resourceFields}
-          >
-            {rowFields[resourceFieldId as keyof typeof rowFields]}
-          </VisibleTableData>
-        ))}
-      </Tr>
-    </ModalHOC>
+    <Tr>
+      {resourceFields.map(({ resourceFieldId }) => (
+        <VisibleTableData
+          key={resourceFieldId}
+          fieldId={resourceFieldId!}
+          resourceFields={resourceFields}
+        >
+          {rowFields[resourceFieldId as keyof typeof rowFields]}
+        </VisibleTableData>
+      ))}
+    </Tr>
   );
 };
 

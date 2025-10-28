@@ -1,11 +1,14 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { DeleteModal } from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
+import {
+  DeleteModal,
+  type DeleteModalProps,
+} from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 
@@ -18,7 +21,7 @@ type ProviderActionsDropdownItemsProps = {
 
 const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
   const navigate = useNavigate();
 
   const { provider } = data;
@@ -28,7 +31,7 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
   const providerURL = getProviderDetailsPageUrl(provider);
 
   const onProviderDelete = () => {
-    showModal(<DeleteModal resource={provider} model={ProviderModel} />);
+    launcher<DeleteModalProps>(DeleteModal, { model: ProviderModel, resource: provider });
   };
 
   return (

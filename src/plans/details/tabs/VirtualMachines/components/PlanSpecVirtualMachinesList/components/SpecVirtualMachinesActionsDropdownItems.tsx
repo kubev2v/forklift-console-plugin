@@ -1,15 +1,23 @@
 import type { FC } from 'react';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
-import EditNetworkNameTemplate from 'src/plans/details/tabs/Details/components/SettingsSection/components/NetworkNameTemplate/EditNetworkNameTemplate';
-import EditPVCNameTemplate from 'src/plans/details/tabs/Details/components/SettingsSection/components/PVCNameTemplate/EditPVCNameTemplate';
-import EditVmTargetPowerState from 'src/plans/details/tabs/Details/components/SettingsSection/components/TargetPowerState/EditVmTargetPowerState';
-import EditVolumeNameTemplate from 'src/plans/details/tabs/Details/components/SettingsSection/components/VolumeNameTemplate/EditVolumeNameTemplate';
+import EditNetworkNameTemplate, {
+  type EditNetworkNameTemplateProps,
+} from 'src/plans/details/tabs/Details/components/SettingsSection/components/NetworkNameTemplate/EditNetworkNameTemplate';
+import EditPVCNameTemplate, {
+  type EditPVCNameTemplateProps,
+} from 'src/plans/details/tabs/Details/components/SettingsSection/components/PVCNameTemplate/EditPVCNameTemplate';
+import EditVmTargetPowerState, {
+  type EditVmTargetPowerStateProps,
+} from 'src/plans/details/tabs/Details/components/SettingsSection/components/TargetPowerState/EditVmTargetPowerState';
+import EditVolumeNameTemplate, {
+  type EditVolumeNameTemplateProps,
+} from 'src/plans/details/tabs/Details/components/SettingsSection/components/VolumeNameTemplate/EditVolumeNameTemplate';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, type ProviderType, type V1beta1Plan } from '@kubev2v/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
@@ -19,7 +27,9 @@ import {
   onConfirmVirtualMachinePVCNameTemplate,
   onConfirmVirtualMachineVolumeNameTemplate,
 } from './utils/utils';
-import EditVirtualMachineTargetName from './VirtualMachineTargetName/EditVirtualMachineTargetName';
+import EditVirtualMachineTargetName, {
+  type EditVirtualMachineTargetNameProps,
+} from './VirtualMachineTargetName/EditVirtualMachineTargetName';
 
 type SpecVirtualMachinesActionsDropdownItemsProps = {
   plan: V1beta1Plan;
@@ -33,7 +43,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
   vmIndex,
 }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   const { canPatch } = useGetDeleteAndEditAccessReview({
     model: PlanModel,
@@ -51,7 +61,10 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
         key="edit-vm-target-name"
         isDisabled={!canEdit}
         onClick={() => {
-          showModal(<EditVirtualMachineTargetName plan={plan} vmIndex={vmIndex} />);
+          launcher<EditVirtualMachineTargetNameProps>(EditVirtualMachineTargetName, {
+            plan,
+            vmIndex,
+          });
         }}
         data-testid="edit-vm-target-name-menu-item"
       >
@@ -63,13 +76,11 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
             key="edit-pvc-name-template"
             isDisabled={!canEdit}
             onClick={() => {
-              showModal(
-                <EditPVCNameTemplate
-                  resource={plan}
-                  onConfirmPVCNameTemplate={onConfirmVirtualMachinePVCNameTemplate(vmIndex)}
-                  value={vm?.pvcNameTemplate}
-                />,
-              );
+              launcher<EditPVCNameTemplateProps>(EditPVCNameTemplate, {
+                onConfirmPVCNameTemplate: onConfirmVirtualMachinePVCNameTemplate(vmIndex),
+                resource: plan,
+                value: vm?.pvcNameTemplate,
+              });
             }}
           >
             {t('Edit PVC name template')}
@@ -78,13 +89,11 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
             key="edit-volume-name-template"
             isDisabled={!canEdit}
             onClick={() => {
-              showModal(
-                <EditVolumeNameTemplate
-                  resource={plan}
-                  onConfirmVolumeNameTemplate={onConfirmVirtualMachineVolumeNameTemplate(vmIndex)}
-                  value={vm?.volumeNameTemplate}
-                />,
-              );
+              launcher<EditVolumeNameTemplateProps>(EditVolumeNameTemplate, {
+                onConfirmVolumeNameTemplate: onConfirmVirtualMachineVolumeNameTemplate(vmIndex),
+                resource: plan,
+                value: vm?.volumeNameTemplate,
+              });
             }}
           >
             {t('Edit volume name template')}
@@ -93,13 +102,11 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
             key="edit-network-name-template"
             isDisabled={!canEdit}
             onClick={() => {
-              showModal(
-                <EditNetworkNameTemplate
-                  resource={plan}
-                  onConfirmNetworkNameTemplate={onConfirmVirtualMachineNetworkNameTemplate(vmIndex)}
-                  value={vm?.networkNameTemplate}
-                />,
-              );
+              launcher<EditNetworkNameTemplateProps>(EditNetworkNameTemplate, {
+                onConfirmNetworkNameTemplate: onConfirmVirtualMachineNetworkNameTemplate(vmIndex),
+                resource: plan,
+                value: vm?.networkNameTemplate,
+              });
             }}
           >
             {t('Edit network name template')}
@@ -111,7 +118,10 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
         key="edit-target-power-state"
         isDisabled={!canEdit}
         onClick={() => {
-          showModal(<EditVmTargetPowerState resource={plan} index={vmIndex} />);
+          launcher<EditVmTargetPowerStateProps>(EditVmTargetPowerState, {
+            index: vmIndex,
+            resource: plan,
+          });
         }}
         data-testid="edit-vm-target-power-state-menu-item"
       >

@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import {
   getMigrationVMsStatusCounts,
   getPlanStatus,
@@ -70,9 +69,7 @@ const MigrationsTable: FC<MigrationTableProps> = ({ migrations, plan }) => {
               <Td>
                 <Split hasGutter>
                   {getMigrationStatusLabel(vmStatuses, migrationVMs?.length)}
-                  <ModalHOC>
-                    <VMStatusIconsRow statuses={vmStatuses} plan={plan} />
-                  </ModalHOC>
+                  <VMStatusIconsRow statuses={vmStatuses} plan={plan} />
                 </Split>
               </Td>
               <Td>

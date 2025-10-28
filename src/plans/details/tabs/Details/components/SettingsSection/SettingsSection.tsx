@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
 import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
@@ -51,40 +50,34 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
     migrationType !== MigrationTypeValue.Live;
 
   return (
-    <ModalHOC>
-      <DescriptionList
-        columnModifier={{
-          default: '2Col',
-        }}
-      >
-        <SetLUKSEncryptionPasswordsDetailsItem
-          plan={plan}
-          canPatch={canPatch}
-          shouldRender={isVsphere}
-        />
-        <RootDiskDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-        <SharedDisksDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-        <PVCNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-        <TransferNetworkDetailsItem
-          plan={plan}
-          canPatch={canPatch}
-          shouldRender={isTransferNetworkVisible}
-        />
-        <VolumeNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-        <PreserveStaticIPsDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-        <NetworkNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-        <PreserveClusterCpuModelDetailsItem
-          plan={plan}
-          canPatch={canPatch}
-          shouldRender={isOvirt}
-        />
-        <GuestConversionDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-        <TargetPowerStateDetailsItem plan={plan} canPatch={canPatch} />
-        <TargetLabelsDetailsItem plan={plan} canPatch={canPatch} />
-        <TargetNodeSelectorDetailsItem plan={plan} canPatch={canPatch} />
-        <TargetAffinityDetailsItem plan={plan} canPatch={canPatch} />
-      </DescriptionList>
-    </ModalHOC>
+    <DescriptionList
+      columnModifier={{
+        default: '2Col',
+      }}
+    >
+      <SetLUKSEncryptionPasswordsDetailsItem
+        plan={plan}
+        canPatch={canPatch}
+        shouldRender={isVsphere}
+      />
+      <RootDiskDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+      <SharedDisksDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+      <PVCNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+      <TransferNetworkDetailsItem
+        plan={plan}
+        canPatch={canPatch}
+        shouldRender={isTransferNetworkVisible}
+      />
+      <VolumeNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+      <PreserveStaticIPsDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+      <NetworkNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+      <PreserveClusterCpuModelDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt} />
+      <GuestConversionDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+      <TargetPowerStateDetailsItem plan={plan} canPatch={canPatch} />
+      <TargetLabelsDetailsItem plan={plan} canPatch={canPatch} />
+      <TargetNodeSelectorDetailsItem plan={plan} canPatch={canPatch} />
+      <TargetAffinityDetailsItem plan={plan} canPatch={canPatch} />
+    </DescriptionList>
   );
 };
 

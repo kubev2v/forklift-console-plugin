@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 import { Loading } from 'src/components/common/Page/PageStates';
 import {
   calculateThumbprint,
@@ -7,15 +7,23 @@ import {
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Alert, ModalVariant } from '@patternfly/react-core';
 
 import VerifyCertificate from './VerifyCertificate';
 
-const FetchCertificateModal: FC<{
+export type FetchCertificateModalProps = {
   url: string;
   existingCert: string;
   handleSave: (cert: string) => void;
-}> = ({ existingCert, handleSave, url }) => {
+};
+
+const FetchCertificateModal: ModalComponent<FetchCertificateModalProps> = ({
+  existingCert,
+  handleSave,
+  url,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const [isTrusted, setIsTrusted] = useState(false);
   const { certError, certificate, fetchError, issuer, loading, thumbprint, validTo } =
@@ -34,6 +42,7 @@ const FetchCertificateModal: FC<{
       variant={ModalVariant.small}
       onConfirm={onConfirm}
       isDisabled={!isTrusted}
+      {...rest}
     >
       {loading && <Loading title={t('Loading...')} />}
 

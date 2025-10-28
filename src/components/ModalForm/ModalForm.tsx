@@ -1,7 +1,7 @@
-import { type FC, type ReactNode, useCallback, useState } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
+import { type ReactNode, useCallback, useState } from 'react';
 
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import {
   Alert,
   AlertVariant,
@@ -27,11 +27,12 @@ type ModalFormProps = {
   testId?: string;
 };
 
-const ModalForm: FC<ModalFormProps> = ({
+const ModalForm: ModalComponent<ModalFormProps> = ({
   additionalAction,
   cancelLabel,
   children,
   className,
+  closeModal,
   confirmLabel,
   confirmVariant,
   isDisabled,
@@ -41,7 +42,6 @@ const ModalForm: FC<ModalFormProps> = ({
   variant = ModalVariant.small,
 }) => {
   const { t } = useForkliftTranslation();
-  const { toggleModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,13 +51,13 @@ const ModalForm: FC<ModalFormProps> = ({
 
     try {
       await onConfirm();
-      toggleModal();
+      closeModal();
     } catch (e) {
       setError((e as Error)?.message ?? e?.toString());
     } finally {
       setIsLoading(false);
     }
-  }, [onConfirm, toggleModal]);
+  }, [onConfirm, closeModal]);
 
   return (
     <Modal
@@ -66,7 +66,7 @@ const ModalForm: FC<ModalFormProps> = ({
       isOpen
       showClose={false}
       position="top"
-      onClose={toggleModal}
+      onClose={closeModal}
       data-testid={testId}
       actions={[
         <Button
@@ -89,7 +89,7 @@ const ModalForm: FC<ModalFormProps> = ({
         <Button
           key="cancel"
           variant={ButtonVariant.secondary}
-          onClick={toggleModal}
+          onClick={closeModal}
           data-testid="modal-cancel-button"
         >
           {cancelLabel ?? t('Cancel')}

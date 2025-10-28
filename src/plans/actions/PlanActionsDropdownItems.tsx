@@ -1,10 +1,10 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
@@ -24,7 +24,10 @@ import ArchiveModal from './components/ArchiveModal';
 import PlanCutoverMigrationModal from './components/CutoverModal/PlanCutoverMigrationModal';
 import DuplicateModal from './components/DuplicateModal/DuplicateModal';
 import PlanDeleteModal from './components/PlanDeleteModal';
-import PlanStartMigrationModal from './components/StartPlanModal/PlanStartMigrationModal';
+import PlanStartMigrationModal, {
+  type PlanStartMigrationModalProps,
+} from './components/StartPlanModal/PlanStartMigrationModal';
+import type { PlanModalProps } from './components/types';
 import { getDuplicateDescription, getEditDescription, startDescription } from './utils/utils';
 
 type PlanActionsDropdownItemsProps = {
@@ -33,7 +36,7 @@ type PlanActionsDropdownItemsProps = {
 
 const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
   const navigate = useNavigate();
 
   const { canDelete } = useGetDeleteAndEditAccessReview({
@@ -55,23 +58,26 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
   const hasCutover = canScheduleCutover && Boolean(lastMigration?.spec?.cutover);
 
   const onClickPlanStart = () => {
-    showModal(<PlanStartMigrationModal plan={plan} title={buttonStartLabel} />);
+    launcher<PlanStartMigrationModalProps>(PlanStartMigrationModal, {
+      plan,
+      title: buttonStartLabel,
+    });
   };
 
   const onClickPlanCutover = () => {
-    showModal(<PlanCutoverMigrationModal plan={plan} />);
+    launcher<PlanModalProps>(PlanCutoverMigrationModal, { plan });
   };
 
   const onClickDuplicate = () => {
-    showModal(<DuplicateModal plan={plan} />);
+    launcher<PlanModalProps>(DuplicateModal, { plan });
   };
 
   const onClickArchive = () => {
-    showModal(<ArchiveModal plan={plan} />);
+    launcher<PlanModalProps>(ArchiveModal, { plan });
   };
 
   const onClickPlanDelete = () => {
-    showModal(<PlanDeleteModal plan={plan} />);
+    launcher<PlanModalProps>(PlanDeleteModal, { plan });
   };
 
   return (

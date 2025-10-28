@@ -8,6 +8,7 @@ import {
   type V1beta1Provider,
 } from '@kubev2v/types';
 import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import {
   Dropdown,
   DropdownItem,
@@ -158,9 +159,9 @@ const OpenshiftNetworksInputFactory: ({
   return DropdownRenderer;
 };
 
-const EditProviderDefaultTransferNetworkInternal: FC<EditProviderDefaultTransferNetworkProps> = (
-  props,
-) => {
+const EditProviderDefaultTransferNetworkInternal: ModalComponent<
+  EditProviderDefaultTransferNetworkProps
+> = (props) => {
   const { t } = useForkliftTranslation();
 
   return (
@@ -182,7 +183,7 @@ const EditProviderDefaultTransferNetworkInternal: FC<EditProviderDefaultTransfer
   );
 };
 
-type EditProviderDefaultTransferNetworkProps = Modify<
+export type EditProviderDefaultTransferNetworkProps = Modify<
   EditModalProps,
   {
     resource: V1beta1Provider;
@@ -193,9 +194,9 @@ type EditProviderDefaultTransferNetworkProps = Modify<
   }
 >;
 
-export const EditProviderDefaultTransferNetwork: FC<EditProviderDefaultTransferNetworkProps> = (
-  props,
-) => {
+export const EditProviderDefaultTransferNetwork: ModalComponent<
+  EditProviderDefaultTransferNetworkProps
+> = (props) => {
   if (props.resource?.spec?.type !== 'openshift') {
     return <></>;
   }

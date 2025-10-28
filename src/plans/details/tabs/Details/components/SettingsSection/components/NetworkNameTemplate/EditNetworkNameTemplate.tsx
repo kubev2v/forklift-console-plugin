@@ -1,6 +1,5 @@
-import type { FC } from 'react';
-
 import type { V1beta1Plan } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import NameTemplateBody from '../EditNameTemplate/components/NameTemplateBody';
@@ -12,7 +11,7 @@ import {
   networkNameTemplateHelperExamples,
 } from './utils/constants';
 
-type EditNetworkNameTemplateProps = {
+export type EditNetworkNameTemplateProps = {
   resource: V1beta1Plan;
   onConfirmNetworkNameTemplate: (options: {
     resource: V1beta1Plan;
@@ -22,11 +21,12 @@ type EditNetworkNameTemplateProps = {
   allowInherit?: boolean;
 };
 
-const EditNetworkNameTemplate: FC<EditNetworkNameTemplateProps> = ({
+const EditNetworkNameTemplate: ModalComponent<EditNetworkNameTemplateProps> = ({
   allowInherit = true,
   onConfirmNetworkNameTemplate,
   resource,
   value,
+  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -47,6 +47,7 @@ const EditNetworkNameTemplate: FC<EditNetworkNameTemplateProps> = ({
       }
       helperText={<NameTemplateHelper examples={networkNameTemplateHelperExamples} />}
       inheritValue={resource?.spec?.networkNameTemplate}
+      {...rest}
     />
   );
 };
