@@ -1,4 +1,4 @@
-import { getOVAProxyUrl } from 'src/modules/Providers/utils/helpers/getApiUrl.ts';
+import { getOVAProxyUrl } from 'src/modules/Providers/utils/helpers/getApiUrl';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';
@@ -20,6 +20,7 @@ export const uploadOva = async (
       body: formData,
       method: 'POST',
     },
+    0, // 0 timeout to allow large file uploads
   );
 
   return response.json() as Promise<UploadOvaResponse>;
