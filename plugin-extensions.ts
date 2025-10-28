@@ -18,6 +18,21 @@ const extensions: EncodedExtension[] = [
       insertAfter: ['virtualization', 'workloads'],
       // t('plugin__forklift-console-plugin~Migration for Virtualization')
       name: '%plugin__forklift-console-plugin~Migration for Virtualization%',
+      perspective: 'admin',
+    },
+    type: 'console.navigation/section',
+  } as EncodedExtension<NavSection>,
+  {
+    properties: {
+      dataAttributes: {
+        'data-quickstart-id': 'qs-nav-sec-migration-virt-perspective',
+        'data-testid': 'migration-virt-perspective-nav-item',
+      },
+      id: 'migration-virt-perspective',
+      insertAfter: 'cluster-virt-perspective',
+      // t('plugin__forklift-console-plugin~Migration for Virtualization')
+      name: '%plugin__forklift-console-plugin~Migration for Virtualization%',
+      perspective: 'virtualization-perspective',
     },
     type: 'console.navigation/section',
   } as EncodedExtension<NavSection>,

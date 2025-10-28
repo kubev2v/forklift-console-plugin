@@ -33,6 +33,21 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.navigation/resource-ns',
   } as EncodedExtension<ResourceNSNavItem>,
+  {
+    properties: {
+      dataAttributes: {
+        'data-quickstart-id': 'qs-nav-providers-virt-perspective',
+        'data-testid': 'providers-virt-perspective-nav-item',
+      },
+      id: 'providers-virt-perspective',
+      insertAfter: 'forkliftSettings-virt-perspective',
+      model: ProviderModelGroupVersionKind,
+      name: '%plugin__forklift-console-plugin~Providers%',
+      perspective: 'virtualization-perspective',
+      section: 'migration-virt-perspective',
+    },
+    type: 'console.navigation/resource-ns',
+  } as EncodedExtension<ResourceNSNavItem>,
 
   {
     properties: {
