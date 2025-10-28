@@ -1,8 +1,8 @@
 import type { FC } from 'react';
-import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 
 import { FilterableSelect } from '@components/FilterableSelect/FilterableSelect';
-import type { OpenShiftNamespace, V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@kubev2v/types';
+import useWatchProjectNames from '@utils/hooks/useWatchProjectNames';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type TargetNamespaceSelectProps = {
@@ -11,15 +11,10 @@ type TargetNamespaceSelectProps = {
   onChange: (val: string) => void;
 };
 
-const TargetNamespaceSelect: FC<TargetNamespaceSelectProps> = ({ onChange, provider, value }) => {
+const TargetNamespaceSelect: FC<TargetNamespaceSelectProps> = ({ onChange, value }) => {
   const { t } = useForkliftTranslation();
 
-  const { inventory: namespaces } = useProviderInventory<OpenShiftNamespace[]>({
-    provider,
-    subPath: 'namespaces?detail=4',
-  });
-
-  const options = (namespaces ?? []).map((ns) => ns?.object?.metadata?.name);
+  const [options] = useWatchProjectNames();
 
   const dropdownItems = options.map((name) => ({
     children: <>{name}</>,
@@ -33,7 +28,8 @@ const TargetNamespaceSelect: FC<TargetNamespaceSelectProps> = ({ onChange, provi
       onSelect={(selected) => {
         onChange(selected.toString());
       }}
-      canCreate
+      canCreate={false}
+      isScrollable
       placeholder={t('No namespace selected')}
     />
   );
