@@ -1,8 +1,7 @@
 {
     "packageRules": [
       {
-        "matchBaseBranches": ["/^release.*/"],
-        "matchManagers": ["dockerfile", "rpm", "gomod"],
+        "matchManagers": ["dockerfile", "yarn", "npm"],
         "enabled": false
       }
     ],
