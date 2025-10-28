@@ -141,7 +141,8 @@ export class VirtualMachinesTab {
     const saveButton = this.page.getByRole('button', { name: /save|confirm|rename/iu });
     await saveButton.click();
 
-    //wait network idle
+    // Wait before trying to open rename dialog again
+    await this.page.waitForTimeout(300);
     await this.page.waitForLoadState('networkidle');
 
     await this.table.search(sourceName);

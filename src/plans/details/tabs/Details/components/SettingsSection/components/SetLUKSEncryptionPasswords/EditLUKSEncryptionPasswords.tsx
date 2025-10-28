@@ -73,6 +73,7 @@ const EditLUKSEncryptionPasswords: FC<EditPlanProps> = ({ resource }) => {
   return (
     <ModalForm
       title={t('Disk decryption')}
+      testId="edit-disk-decryption-modal"
       onConfirm={async () =>
         onDiskDecryptionConfirm({
           nbdeClevis,
@@ -86,6 +87,7 @@ const EditLUKSEncryptionPasswords: FC<EditPlanProps> = ({ resource }) => {
 
         <Checkbox
           id="nbde-clevis-checkbox-modal"
+          data-testid="use-nbde-clevis-checkbox"
           isChecked={nbdeClevis}
           onChange={(_event, checked) => {
             setNbdeClevis(checked);

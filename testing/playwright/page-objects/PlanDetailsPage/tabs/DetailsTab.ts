@@ -7,17 +7,20 @@ import { TargetLabelsModal } from '../modals/TargetLabelsModal';
 import { TargetNodeSelectorModal } from '../modals/TargetNodeSelectorModal';
 
 export class DetailsTab {
+  readonly editDiskDecryptionModal: Locator;
   readonly editPowerStateModal: Locator;
   readonly guestConversionModal: GuestConversionModal;
   protected readonly page: Page;
   readonly powerStateOptionAuto: Locator;
   readonly powerStateOptionOff: Locator;
   readonly powerStateOptionOn: Locator;
+  readonly saveDiskDecryptionButton: Locator;
   readonly savePowerStateButton: Locator;
   readonly targetAffinityModal: TargetAffinityModal;
   readonly targetLabelsModal: TargetLabelsModal;
   readonly targetNodeSelectorModal: TargetNodeSelectorModal;
   readonly targetPowerStateSelect: Locator;
+  readonly useNbdeClevisCheckbox: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -27,10 +30,17 @@ export class DetailsTab {
     this.powerStateOptionAuto = this.editPowerStateModal.getByTestId('power-state-option-auto');
     this.powerStateOptionOn = this.editPowerStateModal.getByTestId('power-state-option-on');
     this.powerStateOptionOff = this.editPowerStateModal.getByTestId('power-state-option-off');
+    this.editDiskDecryptionModal = this.page.getByRole('dialog', { name: 'Disk decryption' });
+    this.useNbdeClevisCheckbox = this.page.getByTestId('use-nbde-clevis-checkbox');
+    this.saveDiskDecryptionButton = this.page.getByTestId('modal-confirm-button');
     this.guestConversionModal = new GuestConversionModal(page);
     this.targetLabelsModal = new TargetLabelsModal(page);
     this.targetNodeSelectorModal = new TargetNodeSelectorModal(page);
     this.targetAffinityModal = new TargetAffinityModal(page);
+  }
+
+  async clickEditDiskDecryption(): Promise<void> {
+    await this.page.getByTestId('disk-decryption-detail-item').locator('button').click();
   }
 
   async clickEditGuestConversionMode(): Promise<void> {
@@ -55,6 +65,10 @@ export class DetailsTab {
 
   async clickEditTargetVMPowerState(): Promise<void> {
     await this.page.getByTestId('target-vm-power-state-detail-item').locator('button').click();
+  }
+
+  diskDecryptionDetailItem(): Locator {
+    return this.page.getByTestId('disk-decryption-detail-item');
   }
 
   async getCurrentPlanStatus(): Promise<string> {

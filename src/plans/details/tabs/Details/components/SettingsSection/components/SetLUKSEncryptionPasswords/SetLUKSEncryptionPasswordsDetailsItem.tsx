@@ -23,6 +23,7 @@ const SetLUKSEncryptionPasswordsDetailsItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
+      testId="disk-decryption-detail-item"
       title={t('Disk decryption')}
       content={<LUKSSecretLink plan={plan} />}
       helpContent={t(

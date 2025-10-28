@@ -8,6 +8,7 @@ export class AdditionalSettingsStep {
   readonly powerStateOptionOff: Locator;
   readonly powerStateOptionOn: Locator;
   readonly targetPowerStateSelect: Locator;
+  readonly useNbdeClevisCheckbox: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -15,6 +16,7 @@ export class AdditionalSettingsStep {
     this.powerStateOptionAuto = page.getByTestId('power-state-option-auto');
     this.powerStateOptionOn = page.getByTestId('power-state-option-on');
     this.powerStateOptionOff = page.getByTestId('power-state-option-off');
+    this.useNbdeClevisCheckbox = page.getByTestId('use-nbde-clevis-checkbox');
   }
 
   async fillAndComplete(
@@ -23,6 +25,9 @@ export class AdditionalSettingsStep {
     if (additionalPlanSettings?.targetPowerState) {
       await this.targetPowerStateSelect.click();
       await this.powerStateOption(additionalPlanSettings.targetPowerState).click();
+    }
+    if (additionalPlanSettings?.useNbdeClevis) {
+      await this.useNbdeClevisCheckbox.check();
     }
   }
 
