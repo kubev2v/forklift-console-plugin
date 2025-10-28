@@ -1,12 +1,12 @@
-import { type FC, useMemo } from 'react';
+import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
-import { useNamespaces as useProviderNamespaces } from 'src/modules/Providers/hooks/useNamespaces';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect.tsx';
 import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
-import { getName } from '@utils/crds/common/selectors.ts';
+import { getName } from '@utils/crds/common/selectors';
+import useWatchProjectNames from '@utils/hooks/useWatchProjectNames';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -29,14 +29,11 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
     name: GeneralFormFieldId.TargetProvider,
   });
   const targetProviderName = getName(targetProvider);
-  const [targetProviderProjects, , , forceRefresh] = useProviderNamespaces(targetProvider);
+
   const showDefaultProjects =
     useWatch({ control, name: GeneralFormFieldId.ShowDefaultProjects }) ?? false;
 
-  const targetProjectNames = useMemo(
-    () => targetProviderProjects.map((project) => project.name),
-    [targetProviderProjects],
-  );
+  const [targetProjectNames] = useWatchProjectNames();
 
   return (
     <FormGroupWithErrorText
@@ -85,8 +82,7 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
             value={field.value}
             onChange={field.onChange}
             onNewValue={(newProjectName) => {
-              forceRefresh();
-              setValue(GeneralFormFieldId.TargetProject, newProjectName);
+              field.onChange(newProjectName);
             }}
             showDefaultProjects={Boolean(showDefaultProjects)}
             setShowDefaultProjects={(value) => {
