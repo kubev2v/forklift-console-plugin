@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
-import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 import VisibleTableData from 'src/modules/Providers/utils/components/TableCell/VisibleTableData';
 
 import { getMigrationStatusVirtualMachinesRowFields } from './utils/fields';
@@ -16,7 +15,7 @@ const MigrationStatusVirtualMachinesRow: FC<RowProps<MigrationStatusVirtualMachi
   const rowFields = getMigrationStatusVirtualMachinesRowFields(resourceData);
 
   return (
-    <ModalHOC>
+    <>
       {resourceFields.map(({ resourceFieldId }) => (
         <VisibleTableData
           key={resourceFieldId}
@@ -26,7 +25,7 @@ const MigrationStatusVirtualMachinesRow: FC<RowProps<MigrationStatusVirtualMachi
           {rowFields[resourceFieldId as MigrationStatusVirtualMachinesTableResourceId]}
         </VisibleTableData>
       ))}
-    </ModalHOC>
+    </>
   );
 };
 

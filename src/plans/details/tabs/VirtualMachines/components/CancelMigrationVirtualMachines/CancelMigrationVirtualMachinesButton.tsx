@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { ToolbarItem } from '@patternfly/react-core';
 
 import VMsActionButton from '../VMsActionButton';
@@ -14,11 +14,12 @@ const CancelMigrationVirtualMachinesButton: FC<CancelMigrationVirtualMachinesPro
   selectedIds,
 }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
   const onClick = () => {
-    showModal(
-      <CancelMigrationVirtualMachinesModal migration={migration} selectedIds={selectedIds} />,
-    );
+    launcher<CancelMigrationVirtualMachinesProps>(CancelMigrationVirtualMachinesModal, {
+      migration,
+      selectedIds,
+    });
   };
 
   const reason = selectedIds?.length < 1 ? t('Select at least one virtual machine.') : null;

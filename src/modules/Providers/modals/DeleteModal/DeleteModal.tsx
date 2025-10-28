@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useCallback, useState } from 'react';
+import { type ReactNode, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -8,13 +8,13 @@ import {
   type K8sModel,
   type K8sResourceCommon,
 } from '@openshift-console/dynamic-plugin-sdk';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
 
 import useToggle from '../../hooks/useToggle';
 import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
 import { AlertMessageForModals } from '../components/AlertMessageForModals';
 import { ItemIsOwnedAlert } from '../components/ItemIsOwnedAlert';
-import { useModal } from '../ModalHOC/useModal';
 
 /**
  * Props for the DeleteModal component
@@ -24,7 +24,7 @@ import { useModal } from '../ModalHOC/useModal';
  * @property {K8sModel} model - The model used for deletion
  * @property {string} [redirectTo] - Optional redirect URL after deletion
  */
-type DeleteModalProps = {
+export type DeleteModalProps = {
   resource: K8sResourceCommon;
   model: K8sModel;
   title?: string;
@@ -37,9 +37,14 @@ type DeleteModalProps = {
  * @param {DeleteModalProps} props - Props for DeleteModal
  * @returns {Element} The DeleteModal component
  */
-export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource, title }) => {
+export const DeleteModal: ModalComponent<DeleteModalProps> = ({
+  closeModal,
+  model,
+  redirectTo,
+  resource,
+  title,
+}) => {
   const { t } = useForkliftTranslation();
-  const { toggleModal } = useModal();
   const [isLoading, toggleIsLoading] = useToggle();
   const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
@@ -69,7 +74,7 @@ export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource,
         navigate(getResourceUrl({ groupVersionKind, namespace }));
       }
 
-      toggleModal();
+      closeModal();
     } catch (err) {
       toggleIsLoading();
 
@@ -79,13 +84,13 @@ export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource,
         setAlertMessage(<AlertMessageForModals title={t('Error')} message={t('Unknown error')} />);
       }
     }
-  }, [resource, model, name, namespace, navigate, redirectTo, t, toggleIsLoading, toggleModal]);
+  }, [resource, model, name, namespace, navigate, redirectTo, t, toggleIsLoading, closeModal]);
 
   const actions = [
     <Button key="confirm" variant={ButtonVariant.danger} onClick={onDelete} isLoading={isLoading}>
       {t('Delete')}
     </Button>,
-    <Button key="cancel" variant={ButtonVariant.secondary} onClick={toggleModal}>
+    <Button key="cancel" variant={ButtonVariant.secondary} onClick={closeModal}>
       {t('Cancel')}
     </Button>,
   ];
@@ -98,7 +103,7 @@ export const DeleteModal: FC<DeleteModalProps> = ({ model, redirectTo, resource,
       showClose={false}
       variant={ModalVariant.small}
       isOpen={true}
-      onClose={toggleModal}
+      onClose={closeModal}
       actions={actions}
     >
       {namespace ? (

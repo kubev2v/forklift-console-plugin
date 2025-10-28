@@ -1,10 +1,10 @@
 // Ignoring above eslint rule as onTimeChange signature from PF has 6 params
-import { type FC, type FormEvent, useCallback, useEffect, useState } from 'react';
+import { type FormEvent, useCallback, useEffect, useState } from 'react';
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import {
   ButtonVariant,
   DatePicker,
@@ -17,15 +17,13 @@ import {
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getName } from '@utils/crds/common/selectors';
 
+import type { PlanModalProps } from '../types';
+
 import { formatDateTo12Hours, patchMigrationCutover } from './utils/utils';
 
 import './PlanCutoverMigrationModal.scss';
 
-type PlanCutoverMigrationModalProps = {
-  plan: V1beta1Plan;
-};
-
-const PlanCutoverMigrationModal: FC<PlanCutoverMigrationModalProps> = ({ plan }) => {
+const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
   const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
   const [cutoverDate, setCutoverDate] = useState<string>();
@@ -105,6 +103,7 @@ const PlanCutoverMigrationModal: FC<PlanCutoverMigrationModalProps> = ({ plan })
         variant: ButtonVariant.secondary,
       }}
       isDisabled={!isTimeValid || !isDateValid}
+      {...rest}
     >
       <ForkliftTrans>
         <Stack hasGutter>

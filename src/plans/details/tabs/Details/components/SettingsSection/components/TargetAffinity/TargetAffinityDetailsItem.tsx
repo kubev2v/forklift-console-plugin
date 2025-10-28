@@ -1,21 +1,20 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import AffinityModal from '@components/AffinityModal/AffinityModal';
+import AffinityModal, { type AffinityModalProps } from '@components/AffinityModal/AffinityModal';
 import AffinityViewDetailsItemContent from '@components/AffinityViewDetailsItemContent/AffinityViewDetailsItemContent';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { type K8sIoApiCoreV1Affinity, PlanModel, type V1beta1Plan } from '@kubev2v/types';
-import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { k8sPatch, useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DOC_MAIN_HELP_LINK } from '@utils/links';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
 
 const TargetAffinityDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   const TARGET_AFFINITY_DETAILS_ITEM_DESCRIPTION = t(
     `Specify affinity rules that will be applied after migration to all target virtual machines of the migration plan.
@@ -52,13 +51,11 @@ const TargetAffinityDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, pla
       crumbs={['spec', 'targetAffinity']}
       moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
-        showModal(
-          <AffinityModal
-            initialAffinity={plan?.spec?.targetAffinity}
-            title={t('Edit VM target affinity rules')}
-            onConfirm={onConfirm}
-          />,
-        );
+        launcher<AffinityModalProps>(AffinityModal, {
+          initialAffinity: plan?.spec?.targetAffinity,
+          onConfirm,
+          title: t('Edit VM target affinity rules'),
+        });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
     />

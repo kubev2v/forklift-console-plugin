@@ -1,12 +1,13 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanTransferNetwork } from '@utils/crds/plans/selectors';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
+import type { EditPlanProps } from '../../utils/types';
 
 import { PROVIDER_DEFAULTS } from './utils/constants';
 import { getNetworkName } from './utils/utils';
@@ -18,7 +19,7 @@ const TransferNetworkDetailItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const { showModal } = useModal();
+  const launcher = useModal();
 
   if (!shouldRender) return null;
 
@@ -42,7 +43,7 @@ const TransferNetworkDetailItem: FC<EditableDetailsItemProps> = ({
       )}
       crumbs={['spec', 'transferNetwork']}
       onEdit={() => {
-        showModal(<EditPlanTransferNetwork resource={plan} />);
+        launcher<EditPlanProps>(EditPlanTransferNetwork, { resource: plan });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
     />

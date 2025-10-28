@@ -1,6 +1,5 @@
-import type { FC } from 'react';
-
 import type { V1beta1Plan } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import NameTemplateBody from '../EditNameTemplate/components/NameTemplateBody';
@@ -12,7 +11,7 @@ import {
   volumeNameTemplateHelperExamples,
 } from './utils/constants';
 
-type EditVolumeNameTemplateProps = {
+export type EditVolumeNameTemplateProps = {
   resource: V1beta1Plan;
   onConfirmVolumeNameTemplate: (options: {
     resource: V1beta1Plan;
@@ -22,11 +21,12 @@ type EditVolumeNameTemplateProps = {
   allowInherit?: boolean;
 };
 
-const EditVolumeNameTemplate: FC<EditVolumeNameTemplateProps> = ({
+const EditVolumeNameTemplate: ModalComponent<EditVolumeNameTemplateProps> = ({
   allowInherit = true,
   onConfirmVolumeNameTemplate,
   resource,
   value,
+  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -47,6 +47,7 @@ const EditVolumeNameTemplate: FC<EditVolumeNameTemplateProps> = ({
       }
       helperText={<NameTemplateHelper examples={volumeNameTemplateHelperExamples} />}
       inheritValue={resource?.spec?.volumeNameTemplate}
+      {...rest}
     />
   );
 };

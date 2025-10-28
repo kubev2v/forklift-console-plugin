@@ -1,8 +1,9 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1PlanSpecTransferNetwork } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Stack } from '@patternfly/react-core';
 import { getPlanTransferNetwork } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -13,7 +14,7 @@ import type { EditPlanProps } from '../../utils/types';
 import { onConfirmTransferNetwork } from './utils/utils';
 import TransferNetworkDropdown from './TransferNetworkDropdown';
 
-const EditPlanTransferNetwork: FC<EditPlanProps> = ({ resource }) => {
+const EditPlanTransferNetwork: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
   const { t } = useForkliftTranslation();
   const { destinationProvider } = usePlanDestinationProvider(resource);
   const [value, setValue] = useState<V1beta1PlanSpecTransferNetwork | null>(
@@ -24,6 +25,7 @@ const EditPlanTransferNetwork: FC<EditPlanProps> = ({ resource }) => {
     <ModalForm
       title={t('Edit migration plan transfer network')}
       onConfirm={async () => onConfirmTransferNetwork({ newValue: value, resource })}
+      {...rest}
     >
       <Stack hasGutter>
         {t(

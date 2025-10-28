@@ -1,9 +1,9 @@
-import { type FC, type FormEvent, type MouseEvent, useState } from 'react';
-import { useModal } from 'src/modules/Providers/modals/ModalHOC/useModal';
+import { type FormEvent, type MouseEvent, useState } from 'react';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import ProjectNameHelp from '@components/modals/ProjectNameHelp';
 import { k8sCreate, type K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { ProjectModel } from '@openshift-console/dynamic-plugin-sdk/lib/models';
 import {
   Alert,
@@ -35,12 +35,11 @@ const workingWithProjectsURLs = {
 const projectDescriptionAnnotation = 'openshift.io/description';
 const projectDisplayNameAnnotation = 'openshift.io/display-name';
 
-type CreateProjectModalProps = {
+export type CreateProjectModalProps = {
   onCreated: (project: K8sResourceCommon) => void;
 };
 
-const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
-  const { toggleModal } = useModal();
+const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModal, onCreated }) => {
   const [inProgress, setInProgress] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [name, setName] = useState('');
@@ -66,7 +65,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
       .then((obj) => {
         setErrorMessage('');
         onCreated(obj);
-        toggleModal();
+        closeModal();
       })
       .catch((error: Error) => {
         const err = error.message || t('An error occurred. Please try again.');
@@ -87,7 +86,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
       variant={ModalVariant.small}
       title={t('Create project')}
       isOpen
-      onClose={toggleModal}
+      onClose={closeModal}
       actions={[
         <Button
           type="submit"
@@ -103,7 +102,7 @@ const CreateProjectModal: FC<CreateProjectModalProps> = ({ onCreated }) => {
           type="button"
           variant={ButtonVariant.secondary}
           disabled={inProgress}
-          onClick={toggleModal}
+          onClick={closeModal}
           data-testid="create-project-modal-cancel-button"
         >
           {t('Cancel')}
