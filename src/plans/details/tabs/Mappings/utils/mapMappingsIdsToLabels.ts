@@ -11,7 +11,7 @@ import type {
 import { Namespace } from '@utils/constants';
 import { getPlanTargetNamespace } from '@utils/crds/plans/selectors';
 
-import { DefaultNetworkLabel, IgnoreNetwork, STANDARD } from './constants';
+import { DefaultNetworkLabel, IgnoreNetwork } from './constants';
 
 const resolveCollisions = (tuples: [string, string][]): Record<string, string> =>
   tuples.reduce<Record<string, string>>((acc, [label, id]) => {
@@ -122,7 +122,7 @@ export const mapTargetStoragesLabelsToIds = (
   const tuples: [string, string][] = targets
     .filter(({ namespace }) => namespace === getPlanTargetNamespace(plan) || !namespace)
     .map((storage): [string, string] => [storage.name, storage.uid]);
-  tuples.push([STANDARD, STANDARD]);
+
   const labelToId = resolveCollisions(tuples);
   return labelToId;
 };
