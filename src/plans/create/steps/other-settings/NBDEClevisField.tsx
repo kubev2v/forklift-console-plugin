@@ -38,6 +38,7 @@ const NBDEClevisField = () => {
         render={({ field }) => (
           <Checkbox
             id="nbde-clevis-checkbox"
+            data-testid="use-nbde-clevis-checkbox"
             isChecked={field.value || false}
             onChange={(_event, checked) => {
               field.onChange(checked);

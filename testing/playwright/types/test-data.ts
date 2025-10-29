@@ -42,7 +42,8 @@ export interface PlanTestData {
   storageMap: StorageMap;
   virtualMachines?: VirtualMachine[];
   additionalPlanSettings?: {
-    targetPowerState: 'on' | 'off' | 'auto';
+    targetPowerState?: 'on' | 'off' | 'auto';
+    useNbdeClevis?: boolean;
   };
 }
 

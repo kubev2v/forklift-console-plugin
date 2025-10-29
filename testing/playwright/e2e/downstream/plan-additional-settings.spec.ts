@@ -5,7 +5,7 @@ import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/Create
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { createPlanTestData, type PlanTestData } from '../../types/test-data';
 
-test.describe('Plan power state', { tag: '@downstream' }, () => {
+test.describe('Plan additional settings', { tag: '@downstream' }, () => {
   test('should set power state on plan creation, plan details tab, and VMs tab', async ({
     page,
     testProvider,
@@ -19,26 +19,17 @@ test.describe('Plan power state', { tag: '@downstream' }, () => {
     });
     resourceManager.addPlan(testData.planName, testData.planProject);
 
+    // Step 1: Navigate to Additional Settings
     const wizard = new CreatePlanWizardPage(page, resourceManager);
     await wizard.navigate();
     await wizard.waitForWizardLoad();
+    await wizard.navigateToAdditionalSettings(testData);
 
-    // Step 1: Complete plan wizard (General Info, VMs, Network Map, Storage Map, Migration Type)
-    await wizard.generalInformation.fillAndComplete(testData);
-    await wizard.clickNext();
-    await wizard.virtualMachines.fillAndComplete(testData.virtualMachines);
-    await wizard.clickNext();
-    await wizard.networkMap.fillAndComplete(testData.networkMap);
-    await wizard.clickNext();
-    await wizard.storageMap.fillAndComplete(testData.storageMap);
-    await wizard.clickNext();
-    await wizard.clickNext(); // Skip Migration Type Step
-
-    // Step 2: Other settings
+    // Step 2: Configure power state in Additional Settings
     const { additionalSettings } = wizard;
     await additionalSettings.verifyStepVisible();
 
-    // Review options on power state pick list
+    // Review and verify power state options
     await additionalSettings.targetPowerStateSelect.click();
     await expect(additionalSettings.powerStateOptionAuto).toHaveText(
       'Retain source VM power state',
@@ -46,7 +37,7 @@ test.describe('Plan power state', { tag: '@downstream' }, () => {
     await expect(additionalSettings.powerStateOptionOn).toHaveText('Powered on');
     await expect(additionalSettings.powerStateOptionOff).toHaveText('Powered off');
 
-    // Select the one on testplan data
+    // Select the target power state from test data
     await additionalSettings
       .powerStateOption(testData.additionalPlanSettings?.targetPowerState ?? 'on')
       .click();
@@ -125,5 +116,61 @@ test.describe('Plan power state', { tag: '@downstream' }, () => {
     await expect(virtualMachinesTab.editTargetPowerStateModal).not.toBeVisible();
     // Verify the VM now shows the overridden power state
     await planDetailsPage.virtualMachinesTab.waitForVMPowerState(vmName, 'Powered on');
+  });
+
+  test('should set NBDE/Clevis on plan creation and edit from details page', async ({
+    page,
+    testProvider,
+    resourceManager,
+  }) => {
+    const testData: PlanTestData = createPlanTestData({
+      sourceProvider: testProvider?.metadata?.name ?? '',
+      additionalPlanSettings: {
+        useNbdeClevis: true,
+      },
+    });
+    resourceManager.addPlan(testData.planName, testData.planProject);
+
+    // Step 1: Navigate to Additional Settings
+    const wizard = new CreatePlanWizardPage(page, resourceManager);
+    await wizard.navigate();
+    await wizard.waitForWizardLoad();
+    await wizard.navigateToAdditionalSettings(testData);
+
+    // Step 2: Enable NBDE/Clevis during plan creation
+    const { additionalSettings } = wizard;
+    await additionalSettings.verifyStepVisible();
+    await expect(additionalSettings.useNbdeClevisCheckbox).toBeVisible();
+    await additionalSettings.useNbdeClevisCheckbox.check();
+    await expect(additionalSettings.useNbdeClevisCheckbox).toBeChecked();
+
+    await wizard.clickSkipToReview();
+
+    // Step 3: Create plan and navigate to Details tab
+    await wizard.review.verifyReviewStep(testData);
+    await wizard.clickNext();
+    await wizard.waitForPlanCreation();
+
+    const planDetailsPage = new PlanDetailsPage(page);
+    await planDetailsPage.detailsTab.navigateToDetailsTab();
+    await expect(planDetailsPage.detailsTab.diskDecryptionDetailItem()).toBeVisible();
+
+    // Step 4: Edit disk decryption from Details tab
+    await planDetailsPage.detailsTab.clickEditDiskDecryption();
+    await expect(planDetailsPage.detailsTab.editDiskDecryptionModal).toBeVisible();
+    await expect(planDetailsPage.detailsTab.useNbdeClevisCheckbox).toBeVisible();
+
+    // Step 5: Test checkbox toggle functionality
+    await planDetailsPage.detailsTab.useNbdeClevisCheckbox.check();
+    await expect(planDetailsPage.detailsTab.useNbdeClevisCheckbox).toBeChecked();
+    await planDetailsPage.detailsTab.useNbdeClevisCheckbox.uncheck();
+    await expect(planDetailsPage.detailsTab.useNbdeClevisCheckbox).not.toBeChecked();
+    await planDetailsPage.detailsTab.useNbdeClevisCheckbox.check();
+    await expect(planDetailsPage.detailsTab.useNbdeClevisCheckbox).toBeChecked();
+
+    // Step 6: Save disk decryption changes
+    await expect(planDetailsPage.detailsTab.saveDiskDecryptionButton).toBeEnabled();
+    await planDetailsPage.detailsTab.saveDiskDecryptionButton.click();
+    await expect(planDetailsPage.detailsTab.editDiskDecryptionModal).not.toBeVisible();
   });
 });
