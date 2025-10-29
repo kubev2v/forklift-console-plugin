@@ -36,6 +36,7 @@ const PlanPreserveIPWarningsAlerts: FC<PlanPreserveIPWarningsAlertsProps> = ({
         <Alert
           title={t('The plan migration might not work as expected')}
           variant={AlertVariant.warning}
+          key={condition?.lastTransitionTime}
         >
           <Stack hasGutter>
             <TextContent className="forklift-providers-list-header__alert">
