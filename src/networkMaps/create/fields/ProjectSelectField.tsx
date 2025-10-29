@@ -48,7 +48,7 @@ const ProjectSelectField: FC = () => {
       isRequired
       fieldId={NetworkMapFieldId.Project}
       label={networkMapFieldLabels[NetworkMapFieldId.Project]}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover>
           <Stack hasGutter>
             <StackItem>{t('The project that your network map will be created in.')}</StackItem>

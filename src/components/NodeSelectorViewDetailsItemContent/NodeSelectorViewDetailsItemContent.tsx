@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { StackItem } from '@patternfly/react-core';
+import { Label, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
@@ -16,7 +16,9 @@ const NodeSelectorViewDetailsItemContent: FC<NodeSelectorViewDetailsItemContentP
   return (
     <div className="node-selector-view-details-item">
       {isEmpty(labels) ? (
-        <span className="text-muted">{t('No node selectors defined')}</span>
+        <Label isCompact color="grey">
+          {t('No node selectors defined')}
+        </Label>
       ) : (
         Object.entries(labels ?? {})?.map(([key]) => {
           const labelText = labels?.[key] ? `${key}=${labels[key]}` : key;

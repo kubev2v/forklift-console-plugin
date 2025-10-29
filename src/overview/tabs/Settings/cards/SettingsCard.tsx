@@ -10,7 +10,7 @@ import {
   Card,
   CardBody,
   CardTitle,
-  DescriptionList,
+  Form,
 } from '@patternfly/react-core';
 
 import EditControllerCPULimit from '../fields/EditControllerCPULimit';
@@ -64,12 +64,7 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
           />
         </CardTitle>
         <CardBody>
-          <DescriptionList
-            className="forklift-overview__settings-description-list"
-            columnModifier={{
-              default: '1Col',
-            }}
-          >
+          <Form>
             <EditMaxVMInFlight resource={obj} onSave={handleShowSaved} />
 
             <EditControllerCPULimit resource={obj} onSave={handleShowSaved} />
@@ -81,7 +76,7 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
             <EditPreCopyInterval resource={obj} onSave={handleShowSaved} />
 
             <EditSnapshotPoolingInterval resource={obj} onSave={handleShowSaved} />
-          </DescriptionList>
+          </Form>
         </CardBody>
       </Card>
     </>

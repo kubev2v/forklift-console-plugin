@@ -1,19 +1,19 @@
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Alert, Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Alert, Content, ContentVariants } from '@patternfly/react-core';
 
 const InventoryNotReachable: FC = () => {
   const { t } = useTranslation();
   return (
     <Alert title={t('Inventory')} variant="warning">
-      <TextContent>
-        <Text component={TextVariants.p}>
+      <Content>
+        <Content component={ContentVariants.p}>
           {t(
             'Inventory server is not reachable. To troubleshoot, check the Forklift controller pod logs.',
           )}
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     </Alert>
   );
 };

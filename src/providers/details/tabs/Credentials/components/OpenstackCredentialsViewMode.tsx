@@ -4,7 +4,7 @@ import type { Fields } from 'src/modules/Providers/views/details/components/Cred
 import { FieldWithClipboardCopy } from 'src/modules/Providers/views/details/components/CredentialsSection/FieldWithClipboardCopy';
 import { MaskedField } from 'src/modules/Providers/views/details/components/CredentialsSection/MaskedField';
 
-import { DescriptionList, Text, TextVariants } from '@patternfly/react-core';
+import { Content, ContentVariants, DescriptionList } from '@patternfly/react-core';
 
 import { getAuthTypeSecretFields } from './utils/getAuthTypeSecretFields';
 import { getDecodedValue } from './utils/getDecodedValue';
@@ -37,13 +37,13 @@ const OpenstackCredentialsViewMode: FC<CredentialsViewModeByTypeProps> = ({ reve
           <DescriptionList className="forklift-page-secret-title">
             <DisplayTitle
               title={field.label}
-              helpContent={<Text>{field?.helperTextPopover}</Text>}
+              helpContent={<Content component="p">{field?.helperTextPopover}</Content>}
               showHelpIconNextToTitle={true}
             />
           </DescriptionList>
-          <Text component={TextVariants.small} className="forklift-page-secret-subtitle">
+          <Content component={ContentVariants.small} className="forklift-page-secret-subtitle">
             {field.description}
-          </Text>
+          </Content>
         </div>
         <div className="forklift-page-secret-content-div">
           {reveal ? <FieldWithClipboardCopy field={field} value={value ?? ''} /> : <MaskedField />}
@@ -58,9 +58,9 @@ const OpenstackCredentialsViewMode: FC<CredentialsViewModeByTypeProps> = ({ reve
         <DescriptionList className="forklift-page-secret-title">
           <DisplayTitle title={authTypeField.label} />
         </DescriptionList>
-        <Text component={TextVariants.small} className="forklift-page-secret-subtitle">
+        <Content component={ContentVariants.small} className="forklift-page-secret-subtitle">
           {authTypeField.description}
-        </Text>
+        </Content>
       </div>
       <div className="forklift-page-secret-content-div">
         {reveal ? (
@@ -76,13 +76,15 @@ const OpenstackCredentialsViewMode: FC<CredentialsViewModeByTypeProps> = ({ reve
         <DescriptionList className="forklift-page-secret-title">
           <DisplayTitle
             title={insecureSkipVerifyField.label}
-            helpContent={<Text>{insecureSkipVerifyField.helperTextPopover}</Text>}
+            helpContent={
+              <Content component="p">{insecureSkipVerifyField.helperTextPopover}</Content>
+            }
             showHelpIconNextToTitle={true}
           />
         </DescriptionList>
-        <Text component={TextVariants.small} className="forklift-page-secret-subtitle">
+        <Content component={ContentVariants.small} className="forklift-page-secret-subtitle">
           {insecureSkipVerifyField.description}
-        </Text>
+        </Content>
       </div>
       <div className="forklift-page-secret-content-div">
         {reveal ? (
@@ -98,13 +100,13 @@ const OpenstackCredentialsViewMode: FC<CredentialsViewModeByTypeProps> = ({ reve
         <DescriptionList className="forklift-page-secret-title">
           <DisplayTitle
             title={cacertField.label}
-            helpContent={<Text>{cacertField.helperTextPopover}</Text>}
+            helpContent={<Content component="p">{cacertField.helperTextPopover}</Content>}
             showHelpIconNextToTitle={true}
           />
         </DescriptionList>
-        <Text component={TextVariants.small} className="forklift-page-secret-subtitle">
+        <Content component={ContentVariants.small} className="forklift-page-secret-subtitle">
           {cacertField.description}
-        </Text>
+        </Content>
       </div>
       <div className="forklift-page-secret-content-div">
         {reveal ? (

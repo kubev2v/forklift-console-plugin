@@ -82,7 +82,7 @@ export class ReviewStep {
         );
       } else {
         await expect(
-          section.locator('.pf-v5-c-description-list__group', { hasText: 'Network map name' }),
+          section.locator('.pf-v6-c-description-list__group', { hasText: 'Network map name' }),
         ).toContainText(expectedNetworkMap.name);
       }
     }
@@ -127,7 +127,7 @@ export class ReviewStep {
         );
       } else {
         await expect(
-          section.locator('.pf-v5-c-description-list__group', { hasText: 'Storage map name' }),
+          section.locator('.pf-v6-c-description-list__group', { hasText: 'Storage map name' }),
         ).toContainText(expectedStorageMap.name);
       }
     }

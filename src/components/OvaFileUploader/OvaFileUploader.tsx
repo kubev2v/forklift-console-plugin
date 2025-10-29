@@ -71,6 +71,7 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
             setResponse(null);
             setError(null);
           }}
+          className="pf-v6-u-p-0"
         />
         <HelperText>
           <HelperTextItem variant={validation}>

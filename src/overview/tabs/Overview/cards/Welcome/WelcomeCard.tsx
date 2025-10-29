@@ -13,16 +13,13 @@ import { useActiveNamespace, useFlag } from '@openshift-console/dynamic-plugin-s
 import {
   Card,
   CardBody,
+  Content,
+  ContentVariants,
   ExpandableSection,
   Flex,
   FlexItem,
-  Split,
-  SplitItem,
-  Text,
-  TextContent,
-  TextVariants,
-  Tile,
 } from '@patternfly/react-core';
+import { Tile } from '@patternfly/react-core/deprecated';
 import { type ProviderType, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { Namespace } from '@utils/constants';
@@ -63,24 +60,24 @@ const WelcomeCard: FC = () => {
     <Card>
       <CardBody>
         <ExpandableSection
-          toggleContent={
-            <TextContent>
-              <Text component={TextVariants.h3}>{t('Welcome')}</Text>
-            </TextContent>
-          }
+          toggleContent={<Content component={ContentVariants.h3}>{t('Welcome')}</Content>}
           isExpanded={!hideWelcomeCardByContext}
           onToggle={(_ev, isExpanded) => {
             setData({ hideWelcomeCardByContext: !isExpanded });
           }}
         >
-          <Split>
-            <SplitItem className="forklift-overview__welcome-left">
+          <Flex
+            direction={{ default: 'row' }}
+            spaceItems={{ default: 'spaceItemsNone' }}
+            alignItems={{ default: 'alignItemsCenter' }}
+          >
+            <FlexItem className="forklift-overview__welcome-left">
               <img alt="" src={migrationIcon} />
-            </SplitItem>
-            <SplitItem className="forklift-overview__welcome-right">
-              <Flex direction={{ default: 'column' }} spacer={{ default: 'spacerMd' }}>
+            </FlexItem>
+            <FlexItem flex={{ default: 'flex_1' }} className="forklift-overview__welcome-right">
+              <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsMd' }}>
                 <FlexItem>
-                  <Text className="forklift-overview__welcome-text">
+                  <Content component="p" className="forklift-overview__welcome-text">
                     <ForkliftTrans>
                       Migration Toolkit for Virtualization (MTV) migrates virtual machines at scale
                       to{' '}
@@ -90,56 +87,72 @@ const WelcomeCard: FC = () => {
                       . This allows organizations to more easily access workloads running on virtual
                       machines while developing new cloud-native applications.
                     </ForkliftTrans>
-                  </Text>
+                  </Content>
                 </FlexItem>
                 <FlexItem>
-                  <Text className="forklift-overview__welcome-text">
+                  <Content component="p" className="forklift-overview__welcome-text">
                     <ForkliftTrans>You can migrate virtual machines from:</ForkliftTrans>
-                  </Text>
+                  </Content>
                 </FlexItem>
                 <FlexItem>
-                  <div className="forklift-overview__welcome-tiles">
-                    <Tile
-                      className="vmware-tile"
-                      title={providerItems.vsphere.title}
-                      icon={<img alt="" src={images.vmwareImg} />}
-                      onClick={() => {
-                        navigateToProvider(providerItems.vsphere.key);
-                      }}
-                    />
-                    <Tile
-                      title={providerItems.ova.title}
-                      icon={<img alt="" src={images.ovaImg} />}
-                      onClick={() => {
-                        navigateToProvider(providerItems.ova.key);
-                      }}
-                    />
-                    <Tile
-                      title={providerItems.openstack.title}
-                      icon={<img alt="" src={images.openstackImg} />}
-                      onClick={() => {
-                        navigateToProvider(providerItems.openstack.key);
-                      }}
-                    />
-                    <Tile
-                      title={providerItems.ovirt.title}
-                      icon={<img alt="" src={images.redhatImg} />}
-                      onClick={() => {
-                        navigateToProvider(providerItems.ovirt.key);
-                      }}
-                    />
-                    <Tile
-                      title={providerItems.openshift.title}
-                      icon={<img alt="" src={images.openshiftImg} />}
-                      onClick={() => {
-                        navigateToProvider(providerItems.openshift.key);
-                      }}
-                    />
-                  </div>
+                  <Flex
+                    className="forklift-overview__welcome-tiles"
+                    spaceItems={{ default: 'spaceItemsSm' }}
+                  >
+                    <FlexItem>
+                      <Tile
+                        title={providerItems.vsphere.title}
+                        icon={<img alt="" src={images.vmwareImg} />}
+                        onClick={() => {
+                          navigateToProvider(providerItems.vsphere.key);
+                        }}
+                      />
+                    </FlexItem>
+
+                    <FlexItem>
+                      <Tile
+                        title={providerItems.ova.title}
+                        icon={<img alt="" src={images.ovaImg} />}
+                        onClick={() => {
+                          navigateToProvider(providerItems.ova.key);
+                        }}
+                      />
+                    </FlexItem>
+
+                    <FlexItem>
+                      <Tile
+                        title={providerItems.openstack.title}
+                        icon={<img alt="" src={images.openstackImg} />}
+                        onClick={() => {
+                          navigateToProvider(providerItems.openstack.key);
+                        }}
+                      />
+                    </FlexItem>
+
+                    <FlexItem>
+                      <Tile
+                        title={providerItems.ovirt.title}
+                        icon={<img alt="" src={images.redhatImg} />}
+                        onClick={() => {
+                          navigateToProvider(providerItems.ovirt.key);
+                        }}
+                      />
+                    </FlexItem>
+
+                    <FlexItem>
+                      <Tile
+                        title={providerItems.openshift.title}
+                        icon={<img alt="" src={images.openshiftImg} />}
+                        onClick={() => {
+                          navigateToProvider(providerItems.openshift.key);
+                        }}
+                      />
+                    </FlexItem>
+                  </Flex>
                 </FlexItem>
               </Flex>
-            </SplitItem>
-          </Split>
+            </FlexItem>
+          </Flex>
         </ExpandableSection>
       </CardBody>
     </Card>

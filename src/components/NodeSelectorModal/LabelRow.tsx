@@ -74,13 +74,12 @@ const LabelRow: FC<LabelRowProps> = ({ isLabelsVisible, label, onChange, onDelet
       <GridItem span={1}>
         <FormGroup label={isLabelsVisible && ' '}>
           <Button
+            icon={<MinusCircleIcon />}
             onClick={() => {
               onDelete(id);
             }}
             variant={ButtonVariant.plain}
-          >
-            {<MinusCircleIcon />}
-          </Button>
+          />
         </FormGroup>
       </GridItem>
     </Grid>

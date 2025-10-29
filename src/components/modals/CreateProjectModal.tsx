@@ -10,16 +10,15 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+  Content,
+  ContentVariants,
   Form,
   FormGroup,
-  Modal,
   ModalVariant,
-  Text,
   TextArea,
-  TextContent,
   TextInput,
-  TextVariants,
 } from '@patternfly/react-core';
+import { Modal } from '@patternfly/react-core/deprecated';
 import { isUpstream } from '@utils/env';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -89,6 +88,7 @@ const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModa
       onClose={closeModal}
       actions={[
         <Button
+          key="create"
           type="submit"
           variant={ButtonVariant.primary}
           isLoading={inProgress}
@@ -99,9 +99,10 @@ const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModa
           {t('Create project')}
         </Button>,
         <Button
+          key="cancel"
           type="button"
           variant={ButtonVariant.secondary}
-          disabled={inProgress}
+          isDisabled={inProgress}
           onClick={closeModal}
           data-testid="create-project-modal-cancel-button"
         >
@@ -110,21 +111,21 @@ const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModa
       ]}
     >
       <Form onSubmit={submit} name="form">
-        <TextContent>
-          <Text component={TextVariants.p}>
+        <Content>
+          <Content component={ContentVariants.p}>
             {t(
               'A project, also known as a namespace, separates resources within clusters. It is an alternative representation of a Kubernetes namespace.',
             )}{' '}
             <ExternalLink href={projectsURL} isInline hideIcon>
               {t('Learn more about projects.')}
             </ExternalLink>
-          </Text>
-        </TextContent>
+          </Content>
+        </Content>
         <FormGroup
           fieldId="input-name"
           label={t('Name')}
           isRequired
-          labelIcon={<ProjectNameHelp />}
+          labelHelp={<ProjectNameHelp />}
         >
           <TextInput
             id="input-name"

@@ -8,9 +8,9 @@ import {
   Button,
   type ButtonProps,
   ButtonVariant,
-  Modal,
   ModalVariant,
 } from '@patternfly/react-core';
+import { Modal } from '@patternfly/react-core/deprecated';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type ModalFormProps = {

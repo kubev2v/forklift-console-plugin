@@ -1,9 +1,9 @@
 import type { FC } from 'react';
-import { DisplayTitle } from 'src/components/DetailItems/DetailItem';
+import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
-import { Text } from '@patternfly/react-core';
+import { Stack, StackItem } from '@patternfly/react-core';
 import { MTV_SETTINGS } from '@utils/links';
 
 import { EditField } from '../cards/EditField';
@@ -29,20 +29,22 @@ const EditControllerMemoryLimit: FC<EditSettingsProps> = (props) => {
       {...props}
       resource={props.resource as K8sResourceCommon}
       jsonPath={'spec.controller_container_limits_memory'}
-      label={
-        <DisplayTitle
-          title={t('Controller main container memory limit')}
-          showHelpIconNextToTitle
-          moreInfoLink={MTV_SETTINGS}
-          helpContent={
-            <Text>
+      label={t('Controller main container memory limit')}
+      labelHelp={
+        <HelpIconPopover header={t('Controller main container memory limit')}>
+          <Stack hasGutter>
+            <StackItem>
               {t(
                 'Sets the memory limits allocated to the main container in the controller pod. The default value is 800Mi.',
               )}
-            </Text>
-          }
-          crumbs={['spec', 'controller_container_limits_memory']}
-        />
+            </StackItem>
+            <StackItem>
+              <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
+                Learn more
+              </a>
+            </StackItem>
+          </Stack>
+        </HelpIconPopover>
       }
       model={ForkliftControllerModel}
       helperText={t(

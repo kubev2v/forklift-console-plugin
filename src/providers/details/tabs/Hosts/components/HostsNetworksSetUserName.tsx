@@ -4,7 +4,7 @@ import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common'
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { TextInput } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
-import { ValidationState } from '@utils/validation/Validation';
+import { ValidationState, type ValidationStateType } from '@utils/validation/Validation';
 
 type HostsNetworksSetUserNameProps = {
   username: string;
@@ -14,7 +14,7 @@ type HostsNetworksSetUserNameProps = {
 const HostsNetworksSetUserName: FC<HostsNetworksSetUserNameProps> = ({ setUsername, username }) => {
   const { t } = useForkliftTranslation();
 
-  const [usernameValidation, setUsernameValidation] = useState<ValidationState>(
+  const [usernameValidation, setUsernameValidation] = useState<ValidationStateType>(
     ValidationState.Default,
   );
 

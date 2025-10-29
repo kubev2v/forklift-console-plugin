@@ -103,19 +103,20 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
       (planStepOrder[id] > planStepOrder[currentStep.id as PlanWizardStepId] &&
         hasPreviousStepErrors(id, hasStepErrors)),
     name: planStepNames[id],
-    ...((isSubmitting || hasCreatePlanError) && { body: null }),
   });
 
   return (
     <Wizard
       data-testid="create-plan-wizard"
       isVisitRequired
+      nav={{ isExpanded: true }}
       footer={<CreatePlanWizardFooter />}
       onStepChange={handleStepChange}
       className="create-plan-wizard"
     >
       <WizardStep
         {...getStepProps(PlanWizardStepId.BasicSetup)}
+        isExpandable
         steps={[
           <WizardStep key={PlanWizardStepId.General} {...getStepProps(PlanWizardStepId.General)}>
             <GeneralInformationStep />
@@ -154,6 +155,7 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
 
       <WizardStep
         {...getStepProps(PlanWizardStepId.AdditionalSetup)}
+        isExpandable
         steps={[
           <WizardStep
             key={PlanWizardStepId.OtherSettings}

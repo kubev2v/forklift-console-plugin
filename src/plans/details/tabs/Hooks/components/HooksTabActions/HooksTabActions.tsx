@@ -47,7 +47,7 @@ const HooksTabActions: FC<HooksTabActionsProps> = ({ onCancel, onUpdate, planEdi
       </Flex>
       {!planEditable && (
         <HelperText className="forklift-plan-hooks-page__helper-text">
-          <HelperTextItem variant="indeterminate">
+          <HelperTextItem>
             {t('Can not update plan hooks when the plan is not editable.')}
           </HelperTextItem>
         </HelperText>

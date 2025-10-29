@@ -14,17 +14,19 @@ export const TableCell: FC<TableCellProps> = ({ children, isWrap = false }) => {
   const arrayChildren = Children.toArray(children);
 
   return (
-    <span className="forklift-table__flex-cell" data-testid="table-cell">
-      <Flex
-        spaceItems={{ default: 'spaceItemsXs' }}
-        display={{ default: 'inlineFlex' }}
-        flexWrap={isWrap ? {} : { default: 'nowrap' }}
-      >
-        {Children.map(arrayChildren, (child) => (
-          <FlexItem>{child}</FlexItem>
-        ))}
-      </Flex>
-    </span>
+    <Flex
+      spaceItems={{ default: 'spaceItemsXs' }}
+      display={{ default: 'inlineFlex' }}
+      flexWrap={isWrap ? {} : { default: 'nowrap' }}
+      alignItems={{ default: 'alignItemsCenter' }}
+      className={isWrap ? undefined : 'forklift-table__cell'}
+    >
+      {Children.map(arrayChildren, (child, index) => (
+        <FlexItem key={index} flex={{ default: 'flexNone' }}>
+          {child}
+        </FlexItem>
+      ))}
+    </Flex>
   );
 };
 

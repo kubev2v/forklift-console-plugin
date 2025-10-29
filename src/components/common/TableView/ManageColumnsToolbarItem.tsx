@@ -39,17 +39,18 @@ export const ManageColumnsToolbarItem = ({
     <ToolbarItem>
       <Tooltip content={tooltip ?? manageColumnsText}>
         <Button
+          icon={
+            <Split hasGutter>
+              <SplitItem>
+                <ColumnsIcon />
+              </SplitItem>
+              <SplitItem>{manageColumnsText}</SplitItem>
+            </Split>
+          }
           variant={ButtonVariant.plain}
           onClick={showDialog}
           aria-label={ariaLabel ?? manageColumnsText}
-        >
-          <Split hasGutter>
-            <SplitItem>
-              <ColumnsIcon />
-            </SplitItem>
-            <SplitItem>{manageColumnsText}</SplitItem>
-          </Split>
-        </Button>
+        />
       </Tooltip>
       {children}
     </ToolbarItem>
