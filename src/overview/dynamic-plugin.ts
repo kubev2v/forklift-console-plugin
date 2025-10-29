@@ -49,6 +49,26 @@ export const extensions: EncodedExtension[] = [
     type: 'console.navigation/href',
   } as EncodedExtension<HrefNavItem>,
   {
+    flags: {
+      required: ['CAN_LIST_NS'],
+    },
+    properties: {
+      dataAttributes: {
+        'data-quickstart-id': 'qs-nav-forklift-overview-virt-perspective',
+        'data-testid': 'forklift-overview-virt-perspective-nav-item',
+      },
+      href: '/mtv/overview',
+      id: 'forkliftSettings-virt-perspective',
+      // t('plugin__forklift-console-plugin~Overview')
+      name: '%plugin__forklift-console-plugin~Overview%',
+      namespaced: false,
+      perspective: 'virtualization-perspective',
+      section: 'migration-virt-perspective',
+    },
+    type: 'console.navigation/href',
+  } as EncodedExtension<HrefNavItem>,
+
+  {
     properties: {
       provider: { $codeRef: 'OverviewContext.CreateOverviewContextProvider' },
       useValueHook: {

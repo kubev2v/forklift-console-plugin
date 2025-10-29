@@ -34,6 +34,22 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.navigation/resource-ns',
   } as EncodedExtension<ResourceNSNavItem>,
+  {
+    properties: {
+      dataAttributes: {
+        'data-quickstart-id': 'qs-nav-storage-mappings-virt-perspective',
+        'data-testid': 'storage-mappings-virt-perspective-nav-item',
+      },
+      id: 'StorageMappings-virt-perspective',
+      insertAfter: 'plans-virt-perspective',
+      model: StorageMapModelGroupVersionKind,
+      // t('plugin__forklift-console-plugin~Storage maps')
+      name: '%plugin__forklift-console-plugin~Storage maps%',
+      perspective: 'virtualization-perspective',
+      section: 'migration-virt-perspective',
+    },
+    type: 'console.navigation/resource-ns',
+  } as EncodedExtension<ResourceNSNavItem>,
 
   {
     properties: {

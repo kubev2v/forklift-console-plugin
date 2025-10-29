@@ -34,6 +34,22 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.navigation/resource-ns',
   } as EncodedExtension<ResourceNSNavItem>,
+  {
+    properties: {
+      dataAttributes: {
+        'data-quickstart-id': 'qs-nav-network-mappings-virt-perspective',
+        'data-testid': 'network-mappings-virt-perspective-nav-item',
+      },
+      id: 'networkMappings-virt-perspective',
+      insertAfter: 'plans-virt-perspective',
+      model: NetworkMapModelGroupVersionKind,
+      // t('plugin__forklift-console-plugin~Network maps')
+      name: '%plugin__forklift-console-plugin~Network maps%',
+      perspective: 'virtualization-perspective',
+      section: 'migration-virt-perspective',
+    },
+    type: 'console.navigation/resource-ns',
+  } as EncodedExtension<ResourceNSNavItem>,
 
   {
     properties: {
