@@ -11,6 +11,8 @@ import {
   type WizardFooterProps,
   WizardFooterWrapper,
 } from '@patternfly/react-core';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from './hooks/useCreatePlanFormContext';
@@ -36,6 +38,7 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
   } = useCreatePlanFormContext();
   const { validateStep } = useStepValidation();
   const { activeStep, goToNextStep, goToPrevStep, goToStepById } = useWizardContext();
+  const { trackEvent } = useForkliftAnalytics();
 
   const canSkipToReview = useMemo(
     () =>
@@ -65,8 +68,11 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
     const isValid = await validateStep(activeStep.id as PlanWizardStepId);
     if (isValid) {
       goToStepById(PlanWizardStepId.ReviewAndCreate);
+      trackEvent(TELEMETRY_EVENTS.PLAN_WIZARD_STEP_VISITED, {
+        stepId: PlanWizardStepId.ReviewAndCreate,
+      });
     }
-  }, [validateStep, activeStep.id, goToStepById]);
+  }, [validateStep, activeStep.id, goToStepById, trackEvent]);
 
   const onCancel = useCallback(() => {
     if (location.state?.sourceProvider) {
