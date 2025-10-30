@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { ResourceYAMLEditorWrapper } from '@components/ResourceYAMLEditorWrapper/ResourceYAMLEditorWrapper';
 import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
 
 import { usePlan } from '../../hooks/usePlan';
@@ -10,7 +11,11 @@ const PlanYAMLPage: FC<PlanPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
   const { plan } = usePlan(name, namespace);
 
-  return <ResourceYAMLEditor header={t('Plan YAML')} initialResource={plan} />;
+  return (
+    <ResourceYAMLEditorWrapper>
+      <ResourceYAMLEditor header={t('Plan YAML')} initialResource={plan} />
+    </ResourceYAMLEditorWrapper>
+  );
 };
 
 export default PlanYAMLPage;
