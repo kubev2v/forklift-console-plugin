@@ -29,7 +29,7 @@ if oc_available_loggedin && { [ -z "${INVENTORY_SERVER_HOST+x}" ] && [ -z "${SER
     routes=$(oc get routes -A -o template --template='{{range .items}}{{.spec.host}}{{"\n"}}{{end}}' 2>/dev/null || true)
     INVENTORY_SERVER_HOST="https://$(echo "$routes" | grep forklift-inventory)"
     SERVICES_API_SERVER_HOST="https://$(echo "$routes" | grep forklift-services)"
-    OVA_PROXY_SERVER_HOST="https://$(echo "$routes" | grep forklift-ova-proxy)"
+    OVA_PROXY_SERVER_HOST="https://$(echo "$routes" | grep forklift-ova-proxy || true)"
 fi
 
 # Default API server hosts
