@@ -11,7 +11,7 @@ import './StorageMapDetailsPage.scss';
 
 const StorageMapDetailsPageInternal: FC<{
   name: string;
-  namespace: string;
+  namespace?: string;
 }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 

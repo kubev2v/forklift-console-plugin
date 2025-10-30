@@ -1,19 +1,18 @@
-import { type FC, useEffect, useReducer } from 'react';
+import { type FC, useEffect, useMemo, useReducer } from 'react';
 import { updateNetworkMapDestination } from 'src/modules/NetworkMaps/utils/helpers/updateNetworkMapDestination';
 import MapsButtonArea from 'src/modules/NetworkMaps/views/details/components/MapsSection/MapsButtonArea';
 import {
   convertInventoryNetworkToSource,
-  convertNetworkToDestination,
-  getDestinationNetName,
-  getSourceNetName,
+  getCurrentDestinationNet,
+  getCurrentSourceNet,
+  getMappings,
+  getReplacePayload,
   isNetMapped,
-  openShiftNetworkAttachmentDefinitionToName,
 } from 'src/modules/NetworkMaps/views/details/components/MapsSection/mapsSectionUtils';
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { MappingList } from 'src/modules/Providers/views/migrate/components/MappingList';
 import type { Mapping } from 'src/modules/Providers/views/migrate/types';
-import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
-import { IGNORED, POD } from 'src/plans/details/utils/constants';
+import { POD } from 'src/plans/details/utils/constants';
 import { isMapDestinationTypeSupported } from 'src/plans/details/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -22,7 +21,6 @@ import {
   NetworkMapModel,
   ProviderModelGroupVersionKind,
   type V1beta1NetworkMap,
-  type V1beta1NetworkMapSpecMap,
   type V1beta1Provider,
 } from '@kubev2v/types';
 import { k8sUpdate, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
@@ -32,14 +30,14 @@ import { getDuplicateValues, isEmpty } from '@utils/helpers';
 
 import { mapsSectionReducer, type MapsSectionState } from './state/reducer';
 
-type MapsSectionProps = {
-  obj: V1beta1NetworkMap;
-};
-
 const initialState: MapsSectionState = {
   hasChanges: false,
   networkMap: null,
   updating: false,
+};
+
+type MapsSectionProps = {
+  obj: V1beta1NetworkMap;
 };
 
 export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
@@ -73,33 +71,32 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
     (network) => !isNetMapped(network?.id, state.networkMap),
   );
 
-  const duplicateNetworkNames = getDuplicateValues(sourceNetworks, (network) => network.name);
+  const duplicateNetworkNames = useMemo(
+    () => getDuplicateValues(sourceNetworks, (network) => network.name),
+    [sourceNetworks],
+  );
 
-  const getCurrentDestinationNet = (current: Mapping) => {
-    const net = destinationNetworks.find(
-      (network) => openShiftNetworkAttachmentDefinitionToName(network) === current.destination,
-    );
+  const sources = useMemo(
+    () =>
+      sourceNetworks.map((network) => ({
+        isMapped: isNetMapped(network?.id, state.networkMap),
+        label: duplicateNetworkNames.has(network.name)
+          ? `${network.name} (${network.id})`
+          : network.name,
+        usedBySelectedVms: false,
+      })),
+    [duplicateNetworkNames, sourceNetworks, state.networkMap],
+  );
 
-    if (net) {
-      return net;
-    }
+  const availableDestinations = useMemo(
+    () => [...destinationNetworks.map((net) => `${net?.namespace}/${net?.name}`), DEFAULT_NETWORK],
+    [destinationNetworks],
+  );
 
-    if (current.destination === IgnoreNetwork.Label) {
-      return { type: IGNORED };
-    }
-
-    return { name: DEFAULT_NETWORK, type: POD };
-  };
-
-  const getCurrentSourceNet = (current: Mapping) => {
-    const sourceName = current.source.replace(/ \([^)]+\)$/u, '');
-
-    if (sourceName === DEFAULT_NETWORK) {
-      return { id: POD };
-    }
-
-    return sourceNetworks.find((network) => network?.name === sourceName) ?? { id: POD };
-  };
+  const mappings = useMemo(
+    () => getMappings(state, sourceNetworks, destinationNetworks, duplicateNetworkNames),
+    [destinationNetworks, duplicateNetworkNames, sourceNetworks, state],
+  );
 
   const onUpdate = async () => {
     if (state.networkMap) {
@@ -128,57 +125,7 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   };
 
   const onReplace = ({ current, next }: { current: Mapping; next: Mapping }) => {
-    const currentDestinationNet = getCurrentDestinationNet(current);
-    const currentSourceNet = getCurrentSourceNet(current);
-
-    const nextDestinationNet =
-      next.destination === DEFAULT_NETWORK || next.destination === IgnoreNetwork.Label
-        ? undefined
-        : destinationNetworks.find(
-            (network) => openShiftNetworkAttachmentDefinitionToName(network) === next.destination,
-          );
-
-    // Strip " (id)" suffix from source names with duplicates
-    const nextSourceName = next.source.replace(/ \([^)]+\)$/u, '');
-
-    const nextSourceNet =
-      nextSourceName === DEFAULT_NETWORK
-        ? { id: POD }
-        : sourceNetworks.find((network) => network?.name === nextSourceName);
-
-    if (!nextSourceNet) {
-      return;
-    }
-
-    const getDestination = (): V1beta1NetworkMapSpecMapDestination => {
-      if (next.destination === IgnoreNetwork.Label) {
-        return { type: IGNORED };
-      }
-
-      if (next.destination === DEFAULT_NETWORK) {
-        return { type: POD };
-      }
-
-      return convertNetworkToDestination(nextDestinationNet);
-    };
-
-    const nextMap: V1beta1NetworkMapSpecMap = {
-      destination: getDestination(),
-      source: convertInventoryNetworkToSource(nextSourceNet),
-    };
-
-    const payload = state?.networkMap?.spec?.map?.map((map) => {
-      const sourceMatches =
-        map?.source?.id === currentSourceNet?.id || map.source?.type === currentSourceNet?.id;
-
-      const destinationMatches =
-        map.destination?.name === currentDestinationNet?.name ||
-        (map.destination?.type === currentDestinationNet?.type &&
-          isMapDestinationTypeSupported(map.destination?.type));
-
-      return sourceMatches && destinationMatches ? nextMap : map;
-    });
-
+    const payload = getReplacePayload(state, current, next, sourceNetworks, destinationNetworks);
     dispatch({
       payload: payload ?? [],
       type: 'SET_MAP',
@@ -186,8 +133,8 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   };
 
   const onDelete = (current: Mapping) => {
-    const currentDestinationNet = getCurrentDestinationNet(current);
-    const currentSourceNet = getCurrentSourceNet(current);
+    const currentDestinationNet = getCurrentDestinationNet(current, destinationNetworks);
+    const currentSourceNet = getCurrentSourceNet(current, sourceNetworks);
 
     dispatch({
       payload: [
@@ -226,36 +173,9 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
           addMapping={onAdd}
           replaceMapping={onReplace}
           deleteMapping={onDelete}
-          availableDestinations={[
-            ...destinationNetworks.map((net) => `${net?.namespace}/${net?.name}`),
-            DEFAULT_NETWORK,
-          ]}
-          sources={sourceNetworks.map((network) => ({
-            isMapped: isNetMapped(network?.id, state.networkMap),
-            label: duplicateNetworkNames.has(network.name)
-              ? `${network.name} (${network.id})`
-              : network.name,
-            usedBySelectedVms: false,
-          }))}
-          mappings={
-            state?.networkMap?.spec?.map.map((networkMapSpec) => {
-              const sourceName =
-                networkMapSpec.source?.type === POD
-                  ? DEFAULT_NETWORK
-                  : (getSourceNetName(sourceNetworks, networkMapSpec.source) ?? '');
-
-              // Add ID to source name if it's a duplicate, to match the sources labels
-              const sourceWithId =
-                sourceName !== DEFAULT_NETWORK && duplicateNetworkNames.has(sourceName)
-                  ? `${sourceName} (${networkMapSpec.source?.id ?? ''})`
-                  : sourceName;
-
-              return {
-                destination: getDestinationNetName(destinationNetworks, networkMapSpec.destination),
-                source: sourceWithId,
-              };
-            }) ?? []
-          }
+          availableDestinations={availableDestinations}
+          sources={sources}
+          mappings={mappings}
           generalSourcesLabel={t('Networks')}
           usedSourcesLabel={t('Used networks')}
           noSourcesLabel={t('No networks available')}

@@ -61,7 +61,7 @@ export const providersSectionReducer = (
     case 'INIT':
       return {
         hasChanges: false,
-        networkMap: deepCopy(action.payload),
+        networkMap: deepCopy(action.payload)!,
         sourceProviderMode: 'view',
         targetProviderMode: 'view',
         updating: false,

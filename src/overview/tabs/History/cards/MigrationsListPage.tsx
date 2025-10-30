@@ -99,10 +99,13 @@ const MigrationsListPage: FC = () => {
         type: FilterDefType.DateRange,
       },
       isVisible: false,
-      jsonPath: (migration: V1beta1Migration) => ({
-        completed: migration?.status?.completed,
-        started: migration?.status?.started,
-      }),
+      jsonPath: (resourceData: unknown) => {
+        const migration = resourceData as V1beta1Migration;
+        return {
+          completed: migration?.status?.completed,
+          started: migration?.status?.started,
+        };
+      },
       label: t('Date range'),
       resourceFieldId: 'range',
     },
@@ -113,7 +116,9 @@ const MigrationsListPage: FC = () => {
         type: FilterDefType.Slider,
       },
       isVisible: false,
-      jsonPath: (migration: V1beta1Migration) => migration,
+      jsonPath: (
+        migration: Record<string, string | boolean | object | ((resourceData: unknown) => unknown)>,
+      ) => migration,
       label: t('Group by plan'),
       resourceFieldId: 'recent',
     },

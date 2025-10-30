@@ -26,7 +26,7 @@ const BaseState = ({
   title,
 }: {
   title?: string;
-  icon?: ComponentType<unknown>;
+  icon?: ComponentType;
   color?: string;
 }) => {
   return (

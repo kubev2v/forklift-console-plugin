@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon';
 import { getMigrationStarted, getPlanKey } from 'src/overview/utils/utils';
 
+import type { ValueMatcher } from '@components/common/FilterGroup/types';
 import { FilterDefType } from '@components/common/utils/types';
 import type { V1beta1Migration } from '@kubev2v/types';
 
-export const dateRangeObjectMatcher = {
+export const dateRangeObjectMatcher: ValueMatcher<{ started?: string; completed?: string }> = {
   filterType: FilterDefType.DateRange,
   matchValue: (value: { started?: string; completed?: string }) => (filter: string) => {
     if (!value) return false;

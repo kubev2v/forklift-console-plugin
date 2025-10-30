@@ -1,12 +1,12 @@
 import type { VmFeatures } from 'src/utils/types';
 
-import type { ProviderVirtualMachine, V1DomainSpec } from '@kubev2v/types';
+import type { ProviderVirtualMachine } from '@kubev2v/types';
 
 export const getOpenShiftFeatureMap = (vm: ProviderVirtualMachine): VmFeatures => {
   if (vm.providerType !== 'openshift') {
     return {};
   }
-  const domain: V1DomainSpec = vm.object?.spec?.template?.spec?.domain;
+  const domain = vm.object?.spec?.template?.spec?.domain;
   if (!domain) {
     return {};
   }

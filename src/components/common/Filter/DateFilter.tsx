@@ -28,7 +28,7 @@ export const DateFilter = ({
   const validFilters = selectedFilters?.map(changeFormatToISODate)?.filter(isString) ?? [];
 
   // internal state - stored as ISO date string (no time)
-  const [date, setDate] = useState();
+  const [date, setDate] = useState<string | undefined>();
 
   const clearSingleDate = (option: string) => {
     onFilterUpdate([...validFilters.filter((filter) => filter !== option)]);
@@ -64,8 +64,8 @@ export const DateFilter = ({
       <InputGroup>
         <DatePicker
           value={date}
-          dateFormat={toISODate}
-          dateParse={parseISOtoJSDate}
+          dateFormat={(dateToFormat) => toISODate(dateToFormat) ?? ''}
+          dateParse={(dateToParse) => parseISOtoJSDate(dateToParse) ?? new Date()}
           onChange={onDateChange}
           aria-label={title}
           placeholder={placeholderLabel}

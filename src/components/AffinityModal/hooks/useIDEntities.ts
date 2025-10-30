@@ -14,7 +14,7 @@ type UseIDEntitiesProps = <T extends IDEntity = IDEntity>(
 };
 
 export const useIDEntities: UseIDEntitiesProps = <T extends IDEntity = IDEntity>(
-  initialEntities = [],
+  initialEntities: T[] = [],
 ) => {
   const [entities, setEntities] = useState<T[]>(initialEntities);
   const [initialEntitiesChanged, setInitialEntitiesChanged] = useState<boolean>(false);

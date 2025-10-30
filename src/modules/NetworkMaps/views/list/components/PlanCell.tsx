@@ -13,7 +13,7 @@ export const PlanCell: FC<CellProps> = ({ data }) => {
   }
 
   const { obj: networkMap } = data;
-  const { namespace } = networkMap?.metadata || {};
+  const { namespace } = networkMap?.metadata ?? {};
   const { name } = plan || {};
 
   return (

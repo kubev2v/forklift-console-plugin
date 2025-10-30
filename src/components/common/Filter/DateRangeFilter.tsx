@@ -84,7 +84,7 @@ export const DateRangeFilter = ({
     if (value?.length === 10 && isValidDate(value)) {
       const newTo = parseISOtoJSDate(value);
       setTo(newTo);
-      const target = toISODateInterval(from, newTo);
+      const target = from && newTo ? toISODateInterval(from, newTo) : undefined;
       if (target) {
         onFilterUpdate([...validFilters.filter((range) => range !== target), target]);
       }
@@ -104,8 +104,8 @@ export const DateRangeFilter = ({
     >
       <InputGroup>
         <DatePicker
-          value={toISODate(from)}
-          dateFormat={(date) => DateTime.fromJSDate(date).toISODate()}
+          value={from ? toISODate(from) : undefined}
+          dateFormat={(date) => DateTime.fromJSDate(date).toISODate() ?? ''}
           dateParse={(str) => DateTime.fromISO(str).toJSDate()}
           onChange={onFromDateChange}
           aria-label="Interval start"
@@ -119,7 +119,7 @@ export const DateRangeFilter = ({
           }}
         />
         <DatePicker
-          value={toISODate(to)}
+          value={to ? toISODate(to) : undefined}
           onChange={onToDateChange}
           isDisabled={!isValidJSDate(from)}
           // disable error text (no space in toolbar scenario)

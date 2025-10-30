@@ -51,7 +51,7 @@ type TypeaheadSelectProps = {
   toggleProps?: Omit<MenuToggleProps, 'ref' | 'onClick' | 'isExpanded'>;
   filterControls?: ReactNode;
   testId?: string;
-} & Omit<SelectProps, 'toggle' | 'onSelect' | 'selected'>;
+} & Omit<SelectProps, 'toggle' | 'onSelect' | 'selected' | 'onChange'>;
 
 const TypeaheadSelect = (
   {

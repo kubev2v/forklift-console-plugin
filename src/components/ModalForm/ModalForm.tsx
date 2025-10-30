@@ -16,7 +16,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 type ModalFormProps = {
   title: ReactNode;
   children: ReactNode;
-  onConfirm: () => Promise<K8sResourceCommon>;
+  onConfirm: () => Promise<K8sResourceCommon | undefined>;
   variant?: ModalVariant;
   confirmLabel?: string;
   cancelLabel?: string;

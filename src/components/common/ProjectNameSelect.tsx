@@ -11,7 +11,7 @@ import { HelpIconPopover } from './HelpIconPopover/HelpIconPopover';
 
 type ProjectNameSelectProps = {
   projectName: string | undefined;
-  onSelect?: (value: string) => void;
+  onSelect: (value: string | undefined) => void;
 };
 
 export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({ onSelect, projectName }) => {
@@ -34,7 +34,9 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({ onSelect, projec
         id="project-name-select"
         projectNames={projectNames}
         value={projectName}
-        onChange={onSelect}
+        onChange={(value) => {
+          onSelect(String(value));
+        }}
         defaultProject={projectName}
         onNewValue={onSelect}
         showDefaultProjects={showDefaultProjects}

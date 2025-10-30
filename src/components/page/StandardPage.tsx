@@ -59,12 +59,9 @@ import { TableView } from '../common/TableView/TableView';
 import type { RowProps, TableViewHeaderProps } from '../common/TableView/types';
 import { withTr } from '../common/TableView/withTr';
 import type { GlobalActionToolbarProps, ResourceField } from '../common/utils/types';
-import {
-  TableSortContext,
-  type TableSortContextProps,
-  TableSortContextProvider,
-  useTableSortContext,
-} from '../TableSortContext';
+import { TableSortContext, type TableSortContextProps } from '../TableSortContext';
+import { TableSortContextProvider } from '../TableSortContextProvider';
+import { useTableSortContext } from '../useTableSortContext';
 
 import { INITIAL_PAGE } from './utils/constants';
 import { reduceValueFilters } from './utils/reduceValueFilters';
@@ -84,7 +81,7 @@ export type StandardPageProps<T> = {
   ExpandedComponent?: FC<RowProps<T>>;
   HeaderMapper?: FC<TableViewHeaderProps<T>>;
   extraSupportedFilters?: Record<string, FilterRenderer>;
-  extraSupportedMatchers?: ValueMatcher[];
+  extraSupportedMatchers?: ValueMatcher<any>[];
   postFilterData?: (
     data: T[],
     selectedFilters: Record<string, string[]>,
@@ -176,7 +173,7 @@ const StandardPageInner = <T,>({
 
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
 
-  const supportedMatchers = useMemo(
+  const supportedMatchers: ValueMatcher<any>[] = useMemo(
     () =>
       extraSupportedMatchers
         ? reduceValueFilters(extraSupportedMatchers, defaultValueMatchers)
@@ -205,7 +202,7 @@ const StandardPageInner = <T,>({
 
   useEffect(() => {
     if (sortedData && loaded && !error) {
-      setFilteredData(sortedData.filter(metaMatcher));
+      setFilteredData(sortedData.filter(metaMatcher as (item: T) => boolean));
     }
   }, [sortedData, metaMatcher, loaded, error]);
 

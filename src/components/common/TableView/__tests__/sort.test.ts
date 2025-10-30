@@ -37,12 +37,12 @@ describe('compareWith compareFn factory', () => {
 
   it('treats all values equal if sortType is not defined', () => {
     expect(
-      compareWith({ isAsc: false, label: undefined, resourceFieldId: undefined }, 'en', undefined, [
+      compareWith({ isAsc: false, label: '', resourceFieldId: '' }, 'en', undefined, [
         {
           label: NAME,
           resourceFieldId: NAME,
         },
-      ])('a', 'b'),
+      ])({ a: 'a' }, { a: 'b' }),
     ).toBe(0);
   });
 
@@ -79,19 +79,20 @@ describe('buildSort factory', () => {
   const NamespaceColumn = { label: NAMESPACE, resourceFieldId: NAMESPACE };
   it('sorts ascending', () => {
     const setActiveSort = jest.fn();
-    const { columnIndex, onSort, sortBy } = buildSort({
-      activeSort: {
-        isAsc: true,
-        label: NAME,
-        resourceFieldId: NAME,
-      },
-      columnIndex: 0,
-      resourceFields: [NameColumn, NamespaceColumn],
-      setActiveSort,
-    });
+    const { columnIndex, onSort, sortBy } =
+      buildSort({
+        activeSort: {
+          isAsc: true,
+          label: NAME,
+          resourceFieldId: NAME,
+        },
+        columnIndex: 0,
+        resourceFields: [NameColumn, NamespaceColumn],
+        setActiveSort,
+      }) ?? {};
     expect(columnIndex).toBe(0);
     expect(sortBy).toStrictEqual({ direction: 'asc', index: 0 });
-    onSort(undefined, 1, SortByDirection.asc, undefined);
+    onSort?.({} as React.MouseEvent, 1, SortByDirection.asc, {});
     expect(setActiveSort).toBeCalledWith({
       isAsc: true,
       label: NamespaceColumn.label,
@@ -101,19 +102,20 @@ describe('buildSort factory', () => {
 
   it('sorts descending', () => {
     const setActiveSort = jest.fn();
-    const { columnIndex, onSort, sortBy } = buildSort({
-      activeSort: {
-        isAsc: false,
-        label: NAME,
-        resourceFieldId: NAME,
-      },
-      columnIndex: 1,
-      resourceFields: [NameColumn, NamespaceColumn],
-      setActiveSort,
-    });
+    const { columnIndex, onSort, sortBy } =
+      buildSort({
+        activeSort: {
+          isAsc: false,
+          label: NAME,
+          resourceFieldId: NAME,
+        },
+        columnIndex: 1,
+        resourceFields: [NameColumn, NamespaceColumn],
+        setActiveSort,
+      }) ?? {};
     expect(columnIndex).toBe(1);
     expect(sortBy).toStrictEqual({ direction: 'desc', index: 0 });
-    onSort(undefined, 1, SortByDirection.desc, undefined);
+    onSort?.({} as React.MouseEvent, 1, SortByDirection.desc, {});
     expect(setActiveSort).toBeCalledWith({
       isAsc: false,
       label: NamespaceColumn.label,
@@ -123,32 +125,34 @@ describe('buildSort factory', () => {
 
   it('shows no sorting if activeSort column cannot be found', () => {
     const setActiveSort = jest.fn();
-    const { sortBy } = buildSort({
-      activeSort: {
-        isAsc: undefined,
-        label: undefined,
-        resourceFieldId: undefined,
-      },
-      columnIndex: 1,
-      resourceFields: [NameColumn, NamespaceColumn],
-      setActiveSort,
-    });
-    expect(sortBy).toStrictEqual({ direction: 'desc', index: undefined });
+    const { sortBy } =
+      buildSort({
+        activeSort: {
+          isAsc: true,
+          label: '',
+          resourceFieldId: '',
+        },
+        columnIndex: 1,
+        resourceFields: [NameColumn, NamespaceColumn],
+        setActiveSort,
+      }) ?? {};
+    expect(sortBy).toStrictEqual({ direction: 'asc', index: undefined });
   });
 
   it('skips sort callback if column cannot be found', () => {
     const setActiveSort = jest.fn();
-    const { onSort } = buildSort({
-      activeSort: {
-        isAsc: false,
-        label: NAME,
-        resourceFieldId: NAME,
-      },
-      columnIndex: 1,
-      resourceFields: [NameColumn, NamespaceColumn],
-      setActiveSort,
-    });
-    onSort(undefined, 100, SortByDirection.desc, undefined);
+    const { onSort } =
+      buildSort({
+        activeSort: {
+          isAsc: false,
+          label: NAME,
+          resourceFieldId: NAME,
+        },
+        columnIndex: 1,
+        resourceFields: [NameColumn, NamespaceColumn],
+        setActiveSort,
+      }) ?? {};
+    onSort?.({} as React.MouseEvent, 100, SortByDirection.desc, {});
     expect(setActiveSort).toBeCalledTimes(0);
   });
 });

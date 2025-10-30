@@ -9,6 +9,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Alert, ModalVariant } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
 import VerifyCertificate from './VerifyCertificate';
 
@@ -30,10 +31,11 @@ const FetchCertificateModal: ModalComponent<FetchCertificateModalProps> = ({
     useTlsCertificate(url);
   const success = !loading && !fetchError && !certError;
   const hasThumbprintChanged =
-    existingCert && success && thumbprint !== calculateThumbprint(existingCert);
+    !isEmpty(existingCert) && success && thumbprint !== calculateThumbprint(existingCert);
 
-  const onConfirm = () => {
+  const onConfirm = async () => {
     handleSave(certificate);
+    return Promise.resolve(undefined);
   };
 
   return (

@@ -13,11 +13,13 @@ import type { OnConfirmHookType } from '../../EditModal/types';
  * @returns {Promise<Object>} - The modified resource.
  */
 export const patchProviderUI: OnConfirmHookType = async ({ model, newValue: value, resource }) => {
-  const currentAnnotations = resource?.metadata?.annotations;
-  const newAnnotations = {
-    ...currentAnnotations,
-    'forklift.konveyor.io/providerUI': value || undefined,
-  };
+  const currentAnnotations: Record<string, any> = resource?.metadata?.annotations ?? {};
+  const newAnnotations = { ...currentAnnotations };
+  if (value) {
+    newAnnotations['forklift.konveyor.io/providerUI'] = value;
+  } else {
+    delete newAnnotations['forklift.konveyor.io/providerUI'];
+  }
 
   const op = resource?.metadata?.annotations ? 'replace' : 'add';
 
@@ -29,7 +31,7 @@ export const patchProviderUI: OnConfirmHookType = async ({ model, newValue: valu
         value: newAnnotations,
       },
     ],
-    model,
+    model: model!,
     resource,
   });
 

@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { createStatusCell } from 'src/modules/utils/createStatusCell';
+import { renderResourceRowCells } from 'src/modules/utils/renderResourceRowCells';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
@@ -42,14 +43,8 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-const ProviderRow: FC<RowProps<StorageMapData>> = ({ resourceData, resourceFields }) => {
-  return (
-    <Tr>
-      {resourceFields.map(({ resourceFieldId }) =>
-        renderTd({ resourceData, resourceFieldId, resourceFields }),
-      )}
-    </Tr>
-  );
-};
+const ProviderRow: FC<RowProps<StorageMapData>> = ({ resourceData, resourceFields }) => (
+  <Tr>{renderResourceRowCells(resourceFields, resourceData, renderTd)}</Tr>
+);
 
 export default ProviderRow;

@@ -1,5 +1,16 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
-import type { ProvidersInventoryList, V1beta1Provider } from '@kubev2v/types';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+
+import type {
+  OpenshiftProvider,
+  OpenstackProvider,
+  OvaProvider,
+  OVirtProvider,
+  ProviderInventory,
+  ProvidersInventoryList,
+  V1beta1Provider,
+  VSphereProvider,
+} from '@kubev2v/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 import { getInventoryApiUrl } from '../../../modules/Providers/utils/helpers/getApiUrl';
@@ -7,14 +18,6 @@ import { k8sGetProvidersByNamespace } from '../utils/k8sGetProvidersByNamespace'
 export const getProvidersInventoryByNamespace = async (
   currNamespace: string | undefined,
 ): Promise<ProvidersInventoryList | null> => {
-  const newInventory: ProvidersInventoryList = {
-    openshift: [],
-    openstack: [],
-    ova: [],
-    ovirt: [],
-    vsphere: [],
-  };
-
   const providers = await k8sGetProvidersByNamespace(currNamespace);
 
   const readyProviders = providers?.filter(
@@ -27,15 +30,52 @@ export const getProvidersInventoryByNamespace = async (
   const inventoryReadyProviders = () => {
     return Promise.all(
       readyProviders.map((provider) => {
-        return consoleFetchJSON(
-          getInventoryApiUrl(inventoryProviderURL(provider)),
-        ) as Promise<ProvidersInventoryList | null>;
+        return consoleFetchJSON(getInventoryApiUrl(inventoryProviderURL(provider))) as Promise<
+          (ProviderInventory & { type: string }) | null
+        >;
       }),
     )
       .then((newInventoryProviders) => {
-        newInventoryProviders.map((newInventoryProvider) =>
-          newInventory[newInventoryProvider?.type].push(newInventoryProvider),
-        );
+        const newInventory: ProvidersInventoryList = {};
+
+        newInventoryProviders.forEach((newInventoryProvider) => {
+          if (newInventoryProvider?.type) {
+            switch (newInventoryProvider.type) {
+              case PROVIDER_TYPES.openshift:
+                newInventory.openshift = [
+                  ...(newInventory.openshift ?? []),
+                  newInventoryProvider as OpenshiftProvider,
+                ];
+                break;
+              case PROVIDER_TYPES.openstack:
+                newInventory.openstack = [
+                  ...(newInventory.openstack ?? []),
+                  newInventoryProvider as OpenstackProvider,
+                ];
+                break;
+              case PROVIDER_TYPES.ovirt:
+                newInventory.ovirt = [
+                  ...(newInventory.ovirt ?? []),
+                  newInventoryProvider as OVirtProvider,
+                ];
+                break;
+              case PROVIDER_TYPES.vsphere:
+                newInventory.vsphere = [
+                  ...(newInventory.vsphere ?? []),
+                  newInventoryProvider as VSphereProvider,
+                ];
+                break;
+              case PROVIDER_TYPES.ova:
+                newInventory.ova = [
+                  ...(newInventory.ova ?? []),
+                  newInventoryProvider as OvaProvider,
+                ];
+                break;
+              default:
+                break;
+            }
+          }
+        });
 
         return newInventory;
       })

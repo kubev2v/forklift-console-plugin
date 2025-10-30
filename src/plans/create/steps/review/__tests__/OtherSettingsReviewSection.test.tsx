@@ -45,7 +45,7 @@ const TestWrapper = ({
 
   return (
     <FormProvider {...methods}>
-      <OtherSettingsReviewSection />
+      <OtherSettingsReviewSection isLiveMigrationFeatureEnabled={false} />
     </FormProvider>
   );
 };

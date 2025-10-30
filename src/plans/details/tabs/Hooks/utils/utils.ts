@@ -158,7 +158,7 @@ export const onUpdatePlanHooks = async (props: onUpdatePlanHooksProps) => {
     hookImage: preHookImage,
     hookPlaybook: preHookPlaybook,
     hookSet: preHookSet,
-    plan: deepCopy(plan),
+    plan: deepCopy(plan)!,
     step: hookTypes.PreHook,
   });
 

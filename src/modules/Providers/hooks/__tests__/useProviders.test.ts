@@ -42,7 +42,10 @@ describe('Provider Utils', () => {
         kind: '',
         metadata: {},
         spec: {
-          secret: undefined,
+          secret: {
+            name: undefined,
+            namespace: undefined,
+          },
           type: 'openshift',
         },
       };
@@ -56,7 +59,10 @@ describe('Provider Utils', () => {
         kind: '',
         metadata: {},
         spec: {
-          secret: undefined,
+          secret: {
+            name: undefined,
+            namespace: undefined,
+          },
           type: 'nonTargetType',
         },
       };
@@ -72,7 +78,10 @@ describe('Provider Utils', () => {
         kind: '',
         metadata: {},
         spec: {
-          secret: undefined,
+          secret: {
+            name: undefined,
+            namespace: undefined,
+          },
           type: 'vsphere',
         },
       };
@@ -86,7 +95,10 @@ describe('Provider Utils', () => {
         kind: '',
         metadata: {},
         spec: {
-          secret: undefined,
+          secret: {
+            name: undefined,
+            namespace: undefined,
+          },
           type: 'nonSourceType',
         },
       };

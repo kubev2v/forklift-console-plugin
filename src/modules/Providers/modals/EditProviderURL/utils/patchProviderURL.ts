@@ -18,6 +18,7 @@ import type { OnConfirmHookType } from '../../EditModal/types';
 export const patchProviderURL: OnConfirmHookType = async ({ model, newValue: value, resource }) => {
   const provider: V1beta1Provider = resource as V1beta1Provider;
   const providerOp = provider?.spec?.url ? 'replace' : 'add';
+  const urlValue = (value as string).toString().trim();
 
   // Get providers secret stub
   const secret: IoK8sApiCoreV1Secret = {
@@ -35,7 +36,7 @@ export const patchProviderURL: OnConfirmHookType = async ({ model, newValue: val
       {
         op: providerOp, // assume secret and provider has the same url
         path: '/data/url',
-        value: Base64.encode(value.toString().trim()),
+        value: Base64.encode(urlValue),
       },
     ],
     model: SecretModel,
@@ -48,10 +49,10 @@ export const patchProviderURL: OnConfirmHookType = async ({ model, newValue: val
       {
         op: providerOp,
         path: '/spec/url',
-        value: value.toString().trim(),
+        value: urlValue,
       },
     ],
-    model,
+    model: model!,
     resource: provider,
   });
 

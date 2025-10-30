@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
+import { renderResourceRowCells } from 'src/modules/utils/renderResourceRowCells';
 
 import type { ResourceField } from '@components/common/utils/types';
 import type { OpenstackVM } from '@kubev2v/types';
@@ -41,12 +42,4 @@ type RenderTdProps = {
 export const OpenStackVirtualMachinesCells: FC<RowProps<VmData>> = ({
   resourceData,
   resourceFields,
-}) => {
-  return (
-    <>
-      {resourceFields?.map(({ resourceFieldId }) =>
-        renderTd({ resourceData, resourceFieldId, resourceFields }),
-      )}
-    </>
-  );
-};
+}) => renderResourceRowCells(resourceFields, resourceData, renderTd);

@@ -31,20 +31,22 @@ export const universalComparator = (a: any, b: any, locale: string) => {
  * @param fields
  * @returns compareFn function
  */
-export const compareWith = (
+export const compareWith = <
+  T extends Record<string, object | string | boolean | ((resourceData: T) => unknown)>,
+>(
   currentSort: SortType,
-  locale: string,
-  fieldComparator: (a, b, locale: string) => number,
+  locale: string | undefined,
+  fieldComparator: ((a: any, b: any, locale: string) => number) | undefined,
   fields: ResourceField[],
-): ((a, b) => number) => {
+): ((a?: T | null, b?: T | null) => number) => {
   return (a, b) => {
     if (!currentSort?.resourceFieldId) {
       return 0;
     }
     const compareFn = fieldComparator ?? universalComparator;
     const compareValue = compareFn(
-      getResourceFieldValue(a, currentSort.resourceFieldId, fields),
-      getResourceFieldValue(b, currentSort.resourceFieldId, fields),
+      getResourceFieldValue<T>(a, currentSort.resourceFieldId, fields),
+      getResourceFieldValue<T>(b, currentSort.resourceFieldId, fields),
       locale ?? 'en',
     );
     return currentSort.isAsc ? compareValue : -compareValue;
@@ -65,7 +67,7 @@ export const useSort = (
   fields: ResourceField[],
   resolvedLanguage = 'en',
   defaultSort?: { resourceFieldId: string; direction: SortDirection },
-): [SortType, (sort: SortType) => void, (a, b) => number] => {
+): [SortType, (sort: SortType) => void, (a: any, b: any) => number] => {
   // by default sort by the first identity column (if any)
   const [firstField] = [...fields].sort(
     (a, b) => Number(Boolean(b.isIdentity)) - Number(Boolean(a.isIdentity)),
@@ -76,14 +78,14 @@ export const useSort = (
       const field = fields.find((fld) => fld.resourceFieldId === defaultSort.resourceFieldId);
       return {
         isAsc: defaultSort.direction === 'asc',
-        label: field?.label,
-        resourceFieldId: defaultSort.resourceFieldId,
+        label: field?.label ?? undefined,
+        resourceFieldId: defaultSort.resourceFieldId ?? '',
       };
     }
     return {
       isAsc: true,
-      label: firstField?.label,
-      resourceFieldId: firstField?.resourceFieldId,
+      label: firstField?.label ?? undefined,
+      resourceFieldId: firstField?.resourceFieldId ?? '',
     };
   });
 

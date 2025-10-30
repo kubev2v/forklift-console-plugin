@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
-import { TableSortContextProvider } from '@components/TableSortContext';
+import { TableSortContextProvider } from '@components/TableSortContextProvider';
 import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';

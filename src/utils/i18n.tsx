@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import type { FC, ReactNode } from 'react';
 import { getI18n, Trans, useTranslation } from 'react-i18next';
 import type { TOptions } from 'i18next';

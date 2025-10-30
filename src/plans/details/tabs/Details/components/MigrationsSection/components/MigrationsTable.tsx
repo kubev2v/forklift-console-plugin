@@ -53,8 +53,8 @@ const MigrationsTable: FC<MigrationTableProps> = ({ migrations, plan }) => {
           const migrationVMs = migration?.status?.vms;
           const vmStatuses = getMigrationVMsStatusCounts(
             migrationVMs ?? [],
-            planStatus,
             migrationVMs?.length ?? 0,
+            planStatus,
           );
 
           return (

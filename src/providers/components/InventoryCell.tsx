@@ -11,17 +11,18 @@ import VSphereHostCell from './VSphereHostCell';
 
 type InventoryCellProps = {
   icon?: JSX.Element;
-  inventoryValue?: number;
+  inventoryValue?: number | string;
 } & CellProps;
 
 const InventoryCell: FC<InventoryCellProps> = ({ data, fieldId, fields, icon, inventoryValue }) => {
   const { inventory, provider } = data;
   const type = provider?.spec?.type as keyof typeof PROVIDER_TYPES;
-  const value = fields?.length
-    ? getResourceFieldValue({ ...provider, inventory }, fieldId, fields)
-    : inventoryValue;
+  const value =
+    fields?.length && inventory
+      ? getResourceFieldValue({ ...provider, inventory }, fieldId, fields)
+      : inventoryValue;
 
-  if (value === undefined) {
+  if (value === undefined || typeof value === 'object') {
     return <TableEmptyCell />;
   }
 
@@ -38,10 +39,17 @@ const InventoryCell: FC<InventoryCellProps> = ({ data, fieldId, fields, icon, in
     type === PROVIDER_TYPES.vsphere &&
     (fieldId as ProvidersResourceFieldId) === ProvidersResourceFieldId.HostCount
   ) {
-    return <VSphereHostCell data={data} fieldId={fieldId} fields={fields} inventoryValue={value} />;
+    return (
+      <VSphereHostCell
+        data={data}
+        fieldId={fieldId}
+        fields={fields}
+        inventoryValue={value as number}
+      />
+    );
   }
 
-  return <TableIconCell icon={icon}>{value}</TableIconCell>;
+  return <TableIconCell icon={icon}>{value as string | boolean}</TableIconCell>;
 };
 
 export default InventoryCell;

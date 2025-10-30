@@ -1,12 +1,12 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useCallback, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom-v5-compat';
 import { encode } from 'js-base64';
 import SectionHeading from 'src/components/headers/SectionHeading';
+import { providerSpecTemplate } from 'src/providers/create/utils/providerTemplates';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProjectNameSelect } from '@components/common/ProjectNameSelect';
-import type { ProviderType } from '@kubev2v/types';
 import { Form } from '@patternfly/react-core';
 import { getType } from '@utils/crds/common/selectors';
 
@@ -31,17 +31,36 @@ const ProvidersCreateFormsSection: FC<ProvidersCreateFormsSectionProps> = ({
   const navigate = useNavigate();
   const providerType = searchParams.get('providerType');
 
-  useEffect(() => {
-    if (!providerNamesLoaded) return;
-    if (providerType && providerType !== getType(newProvider)) {
-      onNewProviderChange({
+  const updateProviderType = useCallback(
+    (type: string | null) => {
+      const updatedProvider = {
         ...newProvider,
-        spec: { ...newProvider?.spec, type: providerType as ProviderType },
-      });
+        spec: { ...(newProvider?.spec ?? providerSpecTemplate), type: type ?? '' },
+      };
+      onNewProviderChange(updatedProvider);
+    },
+    [newProvider, onNewProviderChange],
+  );
+
+  useEffect(() => {
+    if (!providerNamesLoaded) {
+      return;
+    }
+
+    if (providerType && providerType !== getType(newProvider)) {
+      updateProviderType(providerType);
       searchParams.delete('providerType');
       navigate({ search: searchParams.toString() }, { replace: true });
     }
-  }, [providerType, newProvider, providerNamesLoaded, onNewProviderChange, searchParams, navigate]);
+  }, [
+    providerType,
+    newProvider,
+    providerNamesLoaded,
+    onNewProviderChange,
+    searchParams,
+    navigate,
+    updateProviderType,
+  ]);
 
   const handleProviderTypeChange = (type: string | null) => {
     // default auth type for openstack (if not defined)
@@ -52,7 +71,7 @@ const ProvidersCreateFormsSection: FC<ProvidersCreateFormsSectionProps> = ({
       });
     }
 
-    onNewProviderChange({ ...newProvider, spec: { ...newProvider?.spec, type } });
+    updateProviderType(type);
   };
 
   return (
