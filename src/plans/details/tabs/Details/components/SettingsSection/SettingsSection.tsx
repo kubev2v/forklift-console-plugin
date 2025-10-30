@@ -65,7 +65,11 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
         <RootDiskDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
         <SharedDisksDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
         <PVCNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-        <TransferNetworkDetailsItem plan={plan} canPatch={canPatch} />
+        <TransferNetworkDetailsItem
+          plan={plan}
+          canPatch={canPatch}
+          shouldRender={isTransferNetworkVisible}
+        />
         <VolumeNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
         <PreserveStaticIPsDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
         <NetworkNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
