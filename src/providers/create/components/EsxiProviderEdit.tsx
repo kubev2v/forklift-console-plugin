@@ -2,6 +2,7 @@ import { type FC, useCallback, useState } from 'react';
 import { produce } from 'immer';
 import { validateEsxiURL } from 'src/modules/Providers/utils/validators/provider/vsphere/validateEsxiURL';
 import { validateVDDKImage } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVDDKImage';
+import { providerSpecTemplate } from 'src/providers/create/utils/providerTemplates';
 import { EMPTY_VDDK_INIT_IMAGE_ANNOTATION, ProviderFieldsId } from 'src/providers/utils/constants';
 
 import type { V1beta1Provider } from '@kubev2v/types';
@@ -43,7 +44,7 @@ const EsxiProviderEdit: FC<EsxiProviderEditProps> = ({ onChange, provider }) => 
 
         onChange(
           produce(provider, (draft) => {
-            draft.spec ??= {};
+            draft.spec ??= providerSpecTemplate;
             draft.spec.url = trimmedValue;
           }),
         );
@@ -53,9 +54,13 @@ const EsxiProviderEdit: FC<EsxiProviderEditProps> = ({ onChange, provider }) => 
 
         onChange(
           produce(provider, (draft) => {
-            draft.spec ??= {};
+            draft.spec ??= providerSpecTemplate;
             draft.spec.settings ??= {};
-            draft.spec.settings.vddkInitImage = trimmedValue;
+            if (trimmedValue) {
+              draft.spec.settings.vddkInitImage = trimmedValue;
+            } else {
+              delete draft.spec.settings.vddkInitImage;
+            }
           }),
         );
       }
@@ -64,9 +69,13 @@ const EsxiProviderEdit: FC<EsxiProviderEditProps> = ({ onChange, provider }) => 
 
         onChange(
           produce(provider, (draft) => {
-            draft.spec ??= {};
+            draft.spec ??= providerSpecTemplate;
             draft.spec.settings ??= {};
-            draft.spec.settings.useVddkAioOptimization = trimmedValue ?? undefined;
+            if (trimmedValue) {
+              draft.spec.settings.useVddkAioOptimization = trimmedValue;
+            } else {
+              delete draft.spec.settings.useVddkAioOptimization;
+            }
           }),
         );
       }
@@ -75,22 +84,29 @@ const EsxiProviderEdit: FC<EsxiProviderEditProps> = ({ onChange, provider }) => 
 
         onChange(
           produce(provider, (draft) => {
-            draft.spec ??= {};
+            draft.spec ??= providerSpecTemplate;
             draft.spec.settings ??= {};
-            draft.spec.settings.vddkInitImage = undefined;
+            delete draft.spec.settings.vddkInitImage;
             draft.metadata ??= {};
             draft.metadata.annotations ??= {};
-            draft.metadata.annotations[EMPTY_VDDK_INIT_IMAGE_ANNOTATION] =
-              trimmedValue ?? undefined;
+            if (trimmedValue) {
+              draft.metadata.annotations[EMPTY_VDDK_INIT_IMAGE_ANNOTATION] = trimmedValue;
+            } else {
+              delete draft.metadata.annotations[EMPTY_VDDK_INIT_IMAGE_ANNOTATION];
+            }
           }),
         );
       }
       if (id === ProviderFieldsId.SdkEndpoint) {
         onChange(
           produce(provider, (draft) => {
-            draft.spec ??= {};
+            draft.spec ??= providerSpecTemplate;
             draft.spec.settings ??= {};
-            draft.spec.settings.sdkEndpoint = trimmedValue;
+            if (trimmedValue) {
+              draft.spec.settings.sdkEndpoint = trimmedValue;
+            } else {
+              delete draft.spec.settings.sdkEndpoint;
+            }
           }),
         );
       }

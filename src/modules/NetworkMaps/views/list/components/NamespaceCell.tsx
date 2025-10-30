@@ -10,7 +10,7 @@ import type { CellProps } from './CellProps';
  */
 export const NamespaceCell: FC<CellProps> = ({ data }) => {
   const { obj: networkMap } = data;
-  const { namespace } = networkMap?.metadata || {};
+  const { namespace } = networkMap?.metadata ?? {};
 
   return (
     <TableLinkCell

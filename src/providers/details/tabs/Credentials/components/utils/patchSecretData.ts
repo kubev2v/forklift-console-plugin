@@ -4,8 +4,8 @@ import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
-const cleanObject = (obj) => {
-  const result = {};
+const cleanObject = (obj: Record<string, string> | undefined) => {
+  const result: Record<string, string> = {};
   for (const key in obj) {
     if (obj[key] !== null && obj[key] !== '') {
       result[key] = obj[key];

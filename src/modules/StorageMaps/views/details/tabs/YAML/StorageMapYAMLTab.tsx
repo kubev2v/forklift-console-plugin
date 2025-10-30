@@ -8,7 +8,7 @@ import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dyna
 
 type StorageMapYAMLTabProps = {
   name: string;
-  namespace: string;
+  namespace?: string;
 };
 
 export const StorageMapYAMLTab: FC<StorageMapYAMLTabProps> = ({ name, namespace }) => {

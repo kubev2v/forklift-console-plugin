@@ -11,16 +11,16 @@ import { t } from '@utils/i18n';
 
 import { type ConcernCategory, ConcernCategoryOptions } from './constants';
 
-export const CATEGORY_TITLES: Record<ConcernCategory, string> = {
+const CATEGORY_TITLES: Record<ConcernCategory, string> = {
   [ConcernCategoryOptions.Critical]: t('Critical concerns'),
   [ConcernCategoryOptions.Information]: t('Information concerns'),
   [ConcernCategoryOptions.Warning]: t('Warning concerns'),
 };
 
 const CATEGORY_ICONS: Record<ConcernCategory, ReactNode> = {
-  [ConcernCategoryOptions.Critical]: <ExclamationCircleIcon />,
-  [ConcernCategoryOptions.Information]: <InfoCircleIcon />,
-  [ConcernCategoryOptions.Warning]: <ExclamationTriangleIcon />,
+  [ConcernCategoryOptions.Critical]: <ExclamationCircleIcon color="#C9190B" />,
+  [ConcernCategoryOptions.Information]: <InfoCircleIcon color="#2B9AF3" />,
+  [ConcernCategoryOptions.Warning]: <ExclamationTriangleIcon color="#F0AB00" />,
 };
 
 const CATEGORY_STATUS: Record<ConcernCategory, LabelProps['status'] | undefined> = {

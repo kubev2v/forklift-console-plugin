@@ -112,7 +112,7 @@ const LabelsModal: ModalComponent<LabelsModalProps> = ({
     <ModalForm
       testId="labels-modal"
       title={title ?? t('Edit labels')}
-      onConfirm={async () => onConfirm(labelsArrayToObject(labels)) ?? {}}
+      onConfirm={async () => onConfirm(labelsArrayToObject(labels))}
       {...rest}
     >
       <Stack hasGutter>

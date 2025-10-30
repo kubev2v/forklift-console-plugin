@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import type { NetworkMapData } from 'src/modules/NetworkMaps/utils/types/NetworkMapData';
 import type { CellProps } from 'src/modules/NetworkMaps/views/list/components/CellProps';
 import { ErrorStatusCell } from 'src/modules/Providers/views/list/components/ErrorStatusCell';
 import { NamespaceCell } from 'src/modules/Providers/views/list/components/NamespaceCell';
@@ -22,18 +23,25 @@ export enum ProvidersInventoryFields {
   ClusterCount = 'clusterCount',
 }
 
+const nullRenderer = () => null;
+
 export const ProviderDataCellRenderers: Record<ProvidersResourceFieldId, FC<CellProps>> = {
   actions: (props) => <ProviderActionsDropdown isKebab {...props} />,
   clusterCount: (props) => <InventoryCell icon={<></>} {...props} />,
+  datacenterCount: nullRenderer,
   hostCount: (props) => <InventoryCell icon={<OutlinedHddIcon />} {...props} />,
   name: ProviderLinkCell,
   namespace: NamespaceCell,
   networkCount: (props) => <InventoryCell icon={<NetworkIcon />} {...props} />,
-  phase: createStatusCell(ErrorStatusCell),
+  phase: createStatusCell<NetworkMapData>(ErrorStatusCell),
+  product: nullRenderer,
+  projectCount: nullRenderer,
+  regionCount: nullRenderer,
   storageCount: (props) => <InventoryCell icon={<DatabaseIcon />} {...props} />,
   type: TypeCell,
   url: URLCell,
   vmCount: VirtualMachinesCell,
+  volumeTypeCount: nullRenderer,
 };
 
 export const SOURCE_LABEL_COLOR = 'green';

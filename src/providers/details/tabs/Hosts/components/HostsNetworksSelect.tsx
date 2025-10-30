@@ -12,7 +12,7 @@ import { getSelectedInventoryHostNetworkTriples } from './utils/getSelectedInven
 import type { InventoryHostNetworkTriple } from './utils/types';
 
 type HostsNetworksSelectProps = {
-  value: NetworkAdapters;
+  value?: NetworkAdapters;
   onChange: Dispatch<SetStateAction<NetworkAdapters | undefined>>;
   data: InventoryHostNetworkTriple[];
   selectedIds: string[];
@@ -22,7 +22,6 @@ const HostsNetworksSelect: FC<HostsNetworksSelectProps> = ({
   data,
   onChange,
   selectedIds,
-
   value,
 }) => {
   const { t } = useForkliftTranslation();
@@ -37,7 +36,7 @@ const HostsNetworksSelect: FC<HostsNetworksSelectProps> = ({
     return selectedAdapter;
   };
   const selectedInventoryHostPairs = getSelectedInventoryHostNetworkTriples(data, selectedIds);
-  const [firstInventoryHostPair] = selectedInventoryHostPairs;
+  const firstInventoryHostPair: InventoryHostNetworkTriple = selectedInventoryHostPairs?.[0];
   const networkOptions = firstInventoryHostPair?.inventory?.networkAdapters?.map((adapter) => {
     const cidr = calculateCidrNotation(adapter?.ipAddress, adapter?.subnetMask);
 

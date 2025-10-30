@@ -19,7 +19,7 @@ import {
 type VerifyCertificateProps = {
   thumbprint: string;
   issuer: string;
-  validTo: Date;
+  validTo?: Date;
   hasThumbprintChanged: boolean;
   isTrusted: boolean;
   setIsTrusted: (flag: boolean) => void;

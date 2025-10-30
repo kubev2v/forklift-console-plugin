@@ -5,6 +5,7 @@ import { TableCell } from 'src/modules/Providers/utils/components/TableCell/Tabl
 import type { ResourceField } from '@components/common/utils/types';
 import type { OVirtVM } from '@kubev2v/types';
 import { Td } from '@patternfly/react-table';
+import { renderResourceRowCells } from '@utils/renderResourceRowCells';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
 import type { VMCellProps, VmData } from './components/VMCellProps';
@@ -38,15 +39,5 @@ type RenderTdProps = {
   resourceFields: ResourceField[];
 };
 
-export const OVirtVirtualMachinesCells: FC<RowProps<VmData>> = ({
-  resourceData,
-  resourceFields,
-}) => {
-  return (
-    <>
-      {resourceFields?.map(({ resourceFieldId }) =>
-        renderTd({ resourceData, resourceFieldId, resourceFields }),
-      )}
-    </>
-  );
-};
+export const OVirtVirtualMachinesCells: FC<RowProps<VmData>> = ({ resourceData, resourceFields }) =>
+  renderResourceRowCells(resourceFields, resourceData, renderTd);

@@ -5,15 +5,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import {
-  Button,
-  ButtonVariant,
-  Form,
-  Modal,
-  ModalVariant,
-  Stack,
-  TextInput,
-} from '@patternfly/react-core';
+import { Button, ButtonVariant, Form, Stack, TextInput } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 import useToggle from '../../hooks/useToggle';
@@ -71,7 +64,7 @@ export const EditModal: ModalComponent<EditModalProps> = ({
   const [isLoading, toggleIsLoading] = useToggle();
   const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
-  const [value, setValue] = useState(getValueByJsonPath(resource, jsonPath) as string);
+  const [value, setValue] = useState(getValueByJsonPath(resource, jsonPath));
   const [validation, setValidation] = useState<ValidationMsg>({
     msg: '',
     type: ValidationState.Default,

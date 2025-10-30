@@ -106,7 +106,7 @@ const MultiTypeaheadSelect = (
       id="multi-create-typeahead-select"
       isOpen={isOpen}
       selected={values}
-      onSelect={(_event, selection) => {
+      onSelect={(_event, selection: string | number | undefined) => {
         handleSelect(selection);
       }}
       onOpenChange={onOpenChange}

@@ -7,6 +7,6 @@ export type ProvidersCreateFormsSectionProps = {
   onNewSecretChange: (secret: IoK8sApiCoreV1Secret) => void;
   providerNames?: string[];
   projectName?: string;
-  onProjectNameChange?: (value: string) => void;
+  onProjectNameChange: (value: string | undefined) => void;
   providerNamesLoaded?: boolean;
 };

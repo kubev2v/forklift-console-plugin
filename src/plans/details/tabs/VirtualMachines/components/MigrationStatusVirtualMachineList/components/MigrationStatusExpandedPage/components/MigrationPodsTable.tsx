@@ -35,7 +35,7 @@ const MigrationPodsTable: FC<MigrationPodsTableProps> = ({ pods }) => {
     <>
       <SectionHeading
         text={t('Pods')}
-        textComponent="h3"
+        headingLevel="h3"
         className="migration-status-expanded-page__resource-list-header"
       />
       <Table>

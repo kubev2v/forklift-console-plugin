@@ -4,6 +4,7 @@ import {
 } from 'src/modules/Providers/views/details/tabs/VirtualMachines/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
+import type { FilterDef } from '@components/common/utils/types';
 import type { Concern, ProviderVirtualMachine as KubeProviderVirtualMachine } from '@kubev2v/types';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
@@ -14,8 +15,11 @@ export const hasCriticalConcern = (vm: ProviderVirtualMachine | KubeProviderVirt
   vm.providerType !== PROVIDER_TYPES.openshift &&
   vm.concerns?.some((concern) => concern.category === ConcernCategory.Critical);
 
-export const criticalConcernFilter = () => ({
-  dynamicFilter: (items: { vm: { concerns: Concern[] } }[]) => {
+type VmConcernsFilterItems = { vm: { concerns: Concern[] } };
+
+export const criticalConcernFilter = (): FilterDef => ({
+  dynamicFilter: (unknownItems: unknown[]) => {
+    const items = unknownItems as VmConcernsFilterItems[];
     const uniqueLabels = new Set<string>();
 
     for (const item of items) {

@@ -58,15 +58,15 @@ export const TableView = <T,>({
           </Tr>
         )}
         {!hasChildren &&
-          entities.map((resourceData, index) => (
+          entities.map((resourceData: T, index) => (
             <Row
-              key={`${columnSignature}_${resourceData?.[uidFieldId] ?? index}`}
+              key={`${columnSignature}_${String(resourceData?.[uidFieldId as keyof T] ?? index)}`}
               resourceData={resourceData}
               resourceFields={visibleColumns}
               namespace={currentNamespace}
               resourceIndex={index}
               length={visibleColumns.length}
-              isExpanded={expandedIds?.includes(toId(resourceData))}
+              isExpanded={expandedIds?.includes(toId ? toId(resourceData) : '')}
             />
           ))}
       </Tbody>

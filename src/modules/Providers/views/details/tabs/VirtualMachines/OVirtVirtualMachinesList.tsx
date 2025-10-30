@@ -2,7 +2,8 @@ import type { FC } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
-import { TableSortContextProvider } from '@components/TableSortContext';
+import type { ResourceField } from '@components/common/utils/types';
+import { TableSortContextProvider } from '@components/TableSortContextProvider';
 import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
@@ -14,7 +15,7 @@ import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFiel
 import { CustomFilterType } from './constants';
 import { OVirtVirtualMachinesCells } from './OVirtVirtualMachinesRow';
 
-const oVirtVmFieldsMetadataFactory = [
+const oVirtVmFieldsMetadataFactory: ResourceField[] = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -69,7 +70,7 @@ const oVirtVmFieldsMetadataFactory = [
     },
     isIdentity: false,
     isVisible: true,
-    jsonPath: (data: VmData) => getVmPowerState(data?.vm),
+    jsonPath: (data: unknown) => getVmPowerState((data as VmData)?.vm),
     label: t('Status'),
     resourceFieldId: 'status',
     sortable: true,

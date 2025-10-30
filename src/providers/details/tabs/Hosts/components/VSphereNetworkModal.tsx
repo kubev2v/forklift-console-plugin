@@ -1,10 +1,11 @@
-import { type FC, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
 import { VSphereEndpointType } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
+import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, ModalVariant, Stack } from '@patternfly/react-core';
 
 import { getSelectedInventoryHostNetworkTriples } from './utils/getSelectedInventoryHostNetworkTriples';
@@ -22,11 +23,16 @@ export type VSphereNetworkModalProps = {
   selectedIds: string[];
 };
 
-const VSphereNetworkModal: FC<VSphereNetworkModalProps> = ({ data, provider, selectedIds }) => {
+const VSphereNetworkModal: ModalComponent<VSphereNetworkModalProps> = ({
+  data,
+  provider,
+  selectedIds,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const [network, setNetwork] = useState<NetworkAdapters | undefined>();
-  const [username, setUsername] = useState<string | undefined>();
-  const [password, setPassword] = useState<string | undefined>();
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   const selectedLength = selectedIds.length;
   const endpointType = provider?.spec?.settings?.sdkEndpoint ?? '';
@@ -48,13 +54,16 @@ const VSphereNetworkModal: FC<VSphereNetworkModalProps> = ({ data, provider, sel
   const selectedInventoryHostPairs = getSelectedInventoryHostNetworkTriples(data, selectedIds);
 
   const handleSave = useCallback(async () => {
-    await onSaveHost({
-      hostPairs: selectedInventoryHostPairs,
-      network,
-      passwd: endpointType === VSphereEndpointType.ESXi.valueOf() ? undefined : password,
-      provider,
-      user: endpointType === VSphereEndpointType.ESXi.valueOf() ? undefined : username,
-    });
+    if (network) {
+      await onSaveHost({
+        hostPairs: selectedInventoryHostPairs,
+        network,
+        passwd: endpointType === VSphereEndpointType.ESXi.valueOf() ? undefined : password,
+        provider,
+        user: endpointType === VSphereEndpointType.ESXi.valueOf() ? undefined : username,
+      });
+    }
+    return undefined;
   }, [selectedInventoryHostPairs, network, endpointType, password, provider, username]);
 
   return (
@@ -63,6 +72,7 @@ const VSphereNetworkModal: FC<VSphereNetworkModalProps> = ({ data, provider, sel
       variant={ModalVariant.small}
       onConfirm={handleSave}
       isDisabled={shouldDisableSave}
+      {...rest}
     >
       <Stack hasGutter>
         <div className="forklift-edit-modal-body">

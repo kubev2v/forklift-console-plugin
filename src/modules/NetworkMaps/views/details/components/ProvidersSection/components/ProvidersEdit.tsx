@@ -56,7 +56,7 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
             options={providerOptions}
             placeholder={placeHolderLabel}
             isDisabled={!hasProviders}
-            onSelect={(event, value) => {
+            onSelect={(event, value: string | number | undefined) => {
               onChange(value, event);
             }}
           />

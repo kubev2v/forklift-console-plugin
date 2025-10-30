@@ -1,10 +1,10 @@
 import type { FC, JSX, ReactNode } from 'react';
 
+import type { OpenApiJsonPath } from '@components/common/utils/types';
 import type { K8sModel, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 import type { FormGroupProps } from '@patternfly/react-core';
 import type { ValidationMsg } from '@utils/validation/Validation';
 
-type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => unknown);
 export type EditFieldProps = {
   /** The Kubernetes resource being edited. This object contains all the information about the Kubernetes resource including its metadata, status, and spec. */
   resource: K8sResourceCommon;
@@ -76,6 +76,6 @@ type OnConfirmHookType = ({
 }: {
   resource: K8sResourceCommon;
   newValue: unknown;
-  jsonPath?: OpenApiJsonPath;
-  model?: K8sModel;
+  jsonPath: OpenApiJsonPath;
+  model: K8sModel;
 }) => Promise<K8sResourceCommon>;

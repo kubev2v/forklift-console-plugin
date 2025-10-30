@@ -25,7 +25,7 @@ const MigrationPVCsTable: FC<MigrationPVCsTableProps> = ({ pvcs }) => {
     <>
       <SectionHeading
         text={t('PersistentVolumeClaims')}
-        textComponent="h3"
+        headingLevel="h3"
         className="migration-status-expanded-page__resource-list-header"
       />
       <Table>

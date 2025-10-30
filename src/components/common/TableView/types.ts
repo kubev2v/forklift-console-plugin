@@ -3,7 +3,7 @@ import type { ResourceField } from '../utils/types';
 export type SortType = {
   isAsc: boolean;
   resourceFieldId: string;
-  label: string;
+  label: string | undefined;
 };
 
 export type RowProps<T> = {

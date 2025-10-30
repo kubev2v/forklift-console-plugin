@@ -17,7 +17,7 @@ import {
  */
 export const OwnerReferencesItem: FC<OwnerReferencesProps> = ({ resource }) => {
   const { t } = useForkliftTranslation();
-  const owners = (resource?.metadata?.ownerReferences || []).map(
+  const owners = (resource?.metadata?.ownerReferences ?? []).map(
     (ownerReference: OwnerReference) => (
       <ResourceLink
         key={ownerReference.uid}
@@ -27,7 +27,7 @@ export const OwnerReferencesItem: FC<OwnerReferencesProps> = ({ resource }) => {
           version: ownerReference.apiVersion.split('/')[1],
         }}
         name={ownerReference.name}
-        namespace={resource.metadata.namespace}
+        namespace={resource.metadata?.namespace}
       />
     ),
   );

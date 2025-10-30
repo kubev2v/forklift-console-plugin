@@ -5,6 +5,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import type { K8sResourceCondition } from '@kubev2v/types';
 import { HelperText, HelperTextItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { isEmpty } from '@utils/helpers';
 
 /**
  * React Component to display a table of conditions.
@@ -53,10 +54,10 @@ export const ConditionsSection: FC<ConditionsSectionProps> = ({ conditions }) =>
             <Td>{condition.type}</Td>
             <Td>{getStatusLabel(condition.status)}</Td>
             <Td>
-              <ConsoleTimestamp timestamp={condition.lastTransitionTime} />
+              <ConsoleTimestamp timestamp={condition.lastTransitionTime ?? null} />
             </Td>
             <Td>{condition.reason}</Td>
-            <Td modifier="truncate">{condition?.message || '-'}</Td>
+            <Td modifier="truncate">{isEmpty(condition.message) ? '-' : condition.message}</Td>
           </Tr>
         ))}
       </Tbody>

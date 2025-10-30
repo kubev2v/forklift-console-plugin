@@ -4,6 +4,7 @@ import { createStatusCell } from 'src/modules/utils/createStatusCell';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
+import { renderResourceRowCells } from '@utils/renderResourceRowCells';
 
 import { StorageMapActionsDropdown } from '../../actions/StorageMapActionsDropdown';
 import type { StorageMapData } from '../../utils/types/StorageMapData';
@@ -42,14 +43,8 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
   );
 };
 
-const ProviderRow: FC<RowProps<StorageMapData>> = ({ resourceData, resourceFields }) => {
-  return (
-    <Tr>
-      {resourceFields.map(({ resourceFieldId }) =>
-        renderTd({ resourceData, resourceFieldId, resourceFields }),
-      )}
-    </Tr>
-  );
-};
+const ProviderRow: FC<RowProps<StorageMapData>> = ({ resourceData, resourceFields }) => (
+  <Tr>{renderResourceRowCells(resourceFields, resourceData, renderTd)}</Tr>
+);
 
 export default ProviderRow;

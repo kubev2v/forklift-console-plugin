@@ -5,6 +5,7 @@ import {
   EditProviderUIModal,
   type EditProviderUIModalProps,
 } from 'src/modules/Providers/modals/EditProviderUI/EditProviderUIModal';
+import { providerUiAnnotation } from 'src/providers/utils/constants';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
@@ -16,7 +17,7 @@ import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 /**
  * @typedef {Object} ExternalManagementLinkDetailsItemProps - extends ProviderDetailsItemProps
  *
- * @property {string} [webUILinkText - A label text to be displayed as a content.
+ * @property {string} [webUILinkText] - A label text to be displayed as a content.
  * @property {string} [webUILink] - provider's management system external link.
  */
 type ExternalManagementLinkDetailsItemProps = {
@@ -67,7 +68,7 @@ export const ExternalManagementLinkDetailsItem: FC<ExternalManagementLinkDetails
         title={t('External web UI link')}
         moreInfoLink={moreInfoLink}
         helpContent={helpContent ?? defaultHelpContent}
-        crumbs={['metadata', 'annotations', 'forklift.konveyor.io/providerUI']}
+        crumbs={['metadata', 'annotations', providerUiAnnotation]}
         content={webUILinkContent}
         onEdit={() => {
           launcher<EditProviderUIModalProps>(EditProviderUIModal, {

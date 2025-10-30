@@ -11,7 +11,7 @@ import './NetworkMapDetailsPage.scss';
 
 const NetworkMapDetailsPageInternal: FC<{
   name: string;
-  namespace: string;
+  namespace?: string;
 }> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 

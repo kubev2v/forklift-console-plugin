@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent, type Ref, useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -11,9 +11,6 @@ import {
   DataListItemRow,
   Form,
   FormGroup,
-  MenuToggle,
-  type MenuToggleElement,
-  Select,
   SelectGroup,
   SelectList,
   SelectOption,
@@ -22,6 +19,8 @@ import { MinusCircleIcon } from '@patternfly/react-icons';
 import { isEmpty } from '@utils/helpers';
 
 import type { Mapping, MappingSource } from '../types';
+
+import MappingSelect from './MappingSelect';
 
 import '../ProvidersCreateVmMigration.style.css';
 
@@ -68,8 +67,6 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   usedSourcesLabel,
 }) => {
   const { t } = useForkliftTranslation();
-  const [isSrcOpen, setIsSrcOpen] = useState(false);
-  const [isTrgOpen, setIsTrgOpen] = useState(false);
   const [srcSelected, setSrcSelected] = useState<string>(source);
   const [trgSelected, setTrgSelected] = useState<string>(destination);
 
@@ -85,47 +82,22 @@ export const MappingListItem: FC<MappingListItemProps> = ({
     deleteMapping({ destination, source });
   };
 
-  const onSrcToggleClick = () => {
-    setIsSrcOpen(!isSrcOpen);
-  };
-
-  const onTrgToggleClick = () => {
-    setIsTrgOpen(!isTrgOpen);
-  };
-
-  const srcToggle = (toggleRef: Ref<MenuToggleElement>) => (
-    <MenuToggle ref={toggleRef} onClick={onSrcToggleClick} isExpanded={isSrcOpen} isFullWidth>
-      {srcSelected}
-    </MenuToggle>
-  );
-
-  const trgToggle = (toggleRef: Ref<MenuToggleElement>) => (
-    <MenuToggle ref={toggleRef} onClick={onTrgToggleClick} isExpanded={isTrgOpen} isFullWidth>
-      {trgSelected}
-    </MenuToggle>
-  );
-
-  const onSelectSource = (_event: MouseEvent | undefined, value: string | number | undefined) => {
+  const onSelectSource = (value: string) => {
     replaceMapping({
       current: { destination, source },
-      next: { destination, source: value as string },
+      next: { destination, source: value },
     });
 
-    setSrcSelected(value as string);
-    setIsSrcOpen(false);
+    setSrcSelected(value);
   };
 
-  const onSelectDestination = (
-    _event: MouseEvent | undefined,
-    value: string | number | undefined,
-  ) => {
+  const onSelectDestination = (value: string) => {
     replaceMapping({
       current: { destination, source },
-      next: { destination: value as string, source },
+      next: { destination: value, source },
     });
 
-    setTrgSelected(value as string);
-    setIsTrgOpen(false);
+    setTrgSelected(value);
   };
 
   return (
@@ -136,27 +108,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
             <DataListCell key="source">
               <Form>
                 <FormGroup label={t('Source')}>
-                  {/* Custom select does not support the complex toggle being used here */}
-                  {/* eslint-disable-next-line no-restricted-syntax */}
-                  <Select
-                    role="menu"
-                    aria-label=""
-                    aria-labelledby=""
-                    isOpen={isSrcOpen}
-                    selected={srcSelected}
-                    onSelect={onSelectSource}
-                    onOpenChange={(nextOpen: boolean) => {
-                      setIsSrcOpen(nextOpen);
-                    }}
-                    toggle={srcToggle}
-                    shouldFocusToggleOnSelect
-                    shouldFocusFirstItemOnOpen={false}
-                    isScrollable
-                    popperProps={{
-                      direction: 'down',
-                      enableFlip: true,
-                    }}
-                  >
+                  <MappingSelect selected={srcSelected} setSelected={onSelectSource}>
                     <SelectList>
                       {!isEmpty(usedSources) && (
                         <SelectGroup label={usedSourcesLabel} key="usedSources">
@@ -167,34 +119,14 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                         {toGroup(generalSources, noSourcesLabel, source)}
                       </SelectGroup>
                     </SelectList>
-                  </Select>
+                  </MappingSelect>
                 </FormGroup>
               </Form>
             </DataListCell>,
             <DataListCell key="destination">
               <Form>
                 <FormGroup label={t('Target')}>
-                  {/* Custom select does not support the complex toggle being used here */}
-                  {/* eslint-disable-next-line no-restricted-syntax */}
-                  <Select
-                    role="menu"
-                    aria-label=""
-                    aria-labelledby=""
-                    isOpen={isTrgOpen}
-                    selected={trgSelected}
-                    onSelect={onSelectDestination}
-                    onOpenChange={(nextOpen: boolean) => {
-                      setIsTrgOpen(nextOpen);
-                    }}
-                    toggle={trgToggle}
-                    shouldFocusToggleOnSelect
-                    shouldFocusFirstItemOnOpen={false}
-                    isScrollable
-                    popperProps={{
-                      direction: 'down',
-                      enableFlip: true,
-                    }}
-                  >
+                  <MappingSelect selected={trgSelected} setSelected={onSelectDestination}>
                     <SelectList>
                       {destinations.map((label) => (
                         <SelectOption value={label} key={label}>
@@ -202,7 +134,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
                         </SelectOption>
                       ))}
                     </SelectList>
-                  </Select>
+                  </MappingSelect>
                 </FormGroup>
               </Form>
             </DataListCell>,

@@ -2,7 +2,8 @@ import type { FC } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
-import { TableSortContextProvider } from '@components/TableSortContext';
+import type { ResourceField } from '@components/common/utils/types';
+import { TableSortContextProvider } from '@components/TableSortContextProvider';
 import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
@@ -13,7 +14,7 @@ import { toVmFeatureEnum } from './utils/helpers/toVmFeatureEnum';
 import { CustomFilterType } from './constants';
 import { OpenShiftVirtualMachinesCells } from './OpenShiftVirtualMachinesRow';
 
-const openShiftVmFieldsMetadataFactory = [
+const openShiftVmFieldsMetadataFactory: ResourceField[] = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -46,7 +47,7 @@ const openShiftVmFieldsMetadataFactory = [
     },
     isIdentity: false,
     isVisible: true,
-    jsonPath: (data: VmData) => getVmPowerState(data?.vm),
+    jsonPath: (data: unknown) => getVmPowerState((data as VmData)?.vm),
     label: t('Status'),
     resourceFieldId: 'status',
     sortable: true,
@@ -59,7 +60,7 @@ const openShiftVmFieldsMetadataFactory = [
     },
     isIdentity: false,
     isVisible: true,
-    jsonPath: (data: VmData) => getOpenShiftFeatureMap(data?.vm),
+    jsonPath: (data: unknown) => getOpenShiftFeatureMap((data as VmData)?.vm),
     label: t('Features'),
     resourceFieldId: CustomFilterType.Features,
     sortable: true,

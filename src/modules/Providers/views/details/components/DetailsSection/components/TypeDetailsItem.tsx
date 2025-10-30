@@ -4,6 +4,7 @@ import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { isProviderLocalOpenshift } from 'src/utils/resources';
 
+import type { ProviderType } from '@kubev2v/types';
 import { Label } from '@patternfly/react-core';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
@@ -14,8 +15,8 @@ export const TypeDetailsItem: FC<ProviderDetailsItemProps> = ({
   resource: provider,
 }) => {
   const { t } = useForkliftTranslation();
-
-  const type = PROVIDERS[provider?.spec?.type] ?? provider?.spec?.type;
+  const providerType = provider?.spec?.type as ProviderType;
+  const type = PROVIDERS[providerType];
 
   const defaultMoreInfoLink =
     'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.9/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-virt_cnv#adding-source-provider_cnv';

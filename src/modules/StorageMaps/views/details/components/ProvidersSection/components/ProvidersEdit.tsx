@@ -53,7 +53,7 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
           <PfSelect
             isOpen={isOpen}
             selected={selectedProviderName}
-            onSelect={(event, value) => {
+            onSelect={(event, value: string | number | undefined) => {
               onChange(value, event);
               setIsOpen(false);
             }}

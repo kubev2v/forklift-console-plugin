@@ -28,7 +28,7 @@ const MigrationVirtualMachineTable: FC<MigrationVirtualMachineTableProps> = ({
     <>
       <SectionHeading
         text={t('Virtual machine')}
-        textComponent="h3"
+        headingLevel="h3"
         className="migration-status-expanded-page__resource-list-header"
       />
       <Table>

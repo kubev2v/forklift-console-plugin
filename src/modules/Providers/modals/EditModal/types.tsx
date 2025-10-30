@@ -1,5 +1,6 @@
 import type { FC, JSX, ReactNode } from 'react';
 
+import type { OpenApiJsonPath } from '@components/common/utils/types';
 import type { K8sModel, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 import type { ValidationMsg } from '@utils/validation/Validation';
 
@@ -13,7 +14,6 @@ import './EditModal.style.css';
  */
 type ValidationHookType = (value: string | number) => ValidationMsg;
 
-export type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => unknown);
 export type EditModalProps = {
   /** The Kubernetes resource being edited. This object contains all the information about the Kubernetes resource including its metadata, status, and spec. */
   resource: K8sResourceCommon;

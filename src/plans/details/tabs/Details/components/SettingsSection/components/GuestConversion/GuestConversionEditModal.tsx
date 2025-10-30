@@ -35,7 +35,11 @@ const GuestConversionEditModal: ModalComponent<EditPlanProps> = ({ resource, ...
       title={t('Guest conversion mode')}
       testId="guest-conversion-mode-modal"
       onConfirm={async () =>
-        patchGuestConversion({ newValue: skipGuestConversion, resource, useCompatibilityMode })
+        patchGuestConversion({
+          newValue: skipGuestConversion,
+          resource,
+          useCompatibilityMode,
+        })
       }
       {...rest}
     >

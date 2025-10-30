@@ -1,14 +1,14 @@
 import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 
+import { enumToTuple } from '@components/common/FilterGroup/helpers';
+import type { ResourceField } from '@components/common/utils/types';
 import type { ProviderType } from '@kubev2v/types';
+import { PROVIDERS } from '@utils/enums';
 import { t } from '@utils/i18n';
+import { ProviderStatus } from '@utils/types';
 
-import { enumToTuple } from '../../../components/common/FilterGroup/helpers';
-import type { ResourceField } from '../../../components/common/utils/types';
 import { SOURCE_ONLY_PROVIDER_TYPES } from '../../../modules/Providers/utils/helpers/getIsTarget';
 import type { ProviderData } from '../../../modules/Providers/utils/types/ProviderData';
-import { PROVIDERS } from '../../../utils/enums';
-import { ProviderStatus } from '../../../utils/types';
 
 import { getProviderStorageCount } from './getProviderStorageCount';
 
@@ -112,7 +112,7 @@ export const providerFields: ResourceField[] = [
   },
   {
     isVisible: false,
-    jsonPath: (provider) => getProviderStorageCount(provider as ProviderData),
+    jsonPath: (provider: ProviderData) => getProviderStorageCount(provider),
     label: t('Storage'),
     resourceFieldId: ProvidersResourceFieldId.StorageCount,
     sortable: true,

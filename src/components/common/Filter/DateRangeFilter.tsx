@@ -105,7 +105,7 @@ export const DateRangeFilter = ({
       <InputGroup>
         <DatePicker
           value={from ? toISODate(from) : undefined}
-          dateFormat={(date: Date) => DateTime.fromJSDate(date).toISODate() || ''}
+          dateFormat={(date: Date) => DateTime.fromJSDate(date).toISODate() ?? ''}
           dateParse={(str: string) => DateTime.fromISO(str).toJSDate()}
           onChange={onFromDateChange}
           aria-label="Interval start"
@@ -120,7 +120,7 @@ export const DateRangeFilter = ({
         />
         <DatePicker
           value={to ? toISODate(to) : undefined}
-          dateFormat={(date: Date) => DateTime.fromJSDate(date).toISODate() || ''}
+          dateFormat={(date: Date) => DateTime.fromJSDate(date).toISODate() ?? ''}
           dateParse={(str: string) => DateTime.fromISO(str).toJSDate()}
           onChange={onToDateChange}
           isDisabled={!isValidJSDate(from)}
