@@ -3,8 +3,6 @@ import { updateNetworkMapDestination } from 'src/modules/NetworkMaps/utils/helpe
 import MapsButtonArea from 'src/modules/NetworkMaps/views/details/components/MapsSection/MapsButtonArea';
 import {
   convertInventoryNetworkToSource,
-  getCurrentDestinationNet,
-  getCurrentSourceNet,
   getMappings,
   getReplacePayload,
   isNetMapped,
@@ -13,7 +11,6 @@ import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/h
 import { MappingList } from 'src/modules/Providers/views/migrate/components/MappingList';
 import type { Mapping } from 'src/modules/Providers/views/migrate/types';
 import { POD } from 'src/plans/details/utils/constants';
-import { isMapDestinationTypeSupported } from 'src/plans/details/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
@@ -124,30 +121,31 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
     }
   };
 
-  const onReplace = ({ current, next }: { current: Mapping; next: Mapping }) => {
-    const payload = getReplacePayload(state, current, next, sourceNetworks, destinationNetworks);
+  const onReplace = (index: number, updatedMapping: Mapping) => {
+    const payload = getReplacePayload(
+      state,
+      index,
+      updatedMapping,
+      sourceNetworks,
+      destinationNetworks,
+    );
+
     dispatch({
       payload: payload ?? [],
       type: 'SET_MAP',
     });
   };
 
-  const onDelete = (current: Mapping) => {
-    const currentDestinationNet = getCurrentDestinationNet(current, destinationNetworks);
-    const currentSourceNet = getCurrentSourceNet(current, sourceNetworks);
+  const onDelete = (deleteIndex: number) => {
+    if (!state?.networkMap?.spec?.map.length) {
+      return;
+    }
+
+    const updatedMaps = [...state.networkMap.spec.map];
+    updatedMaps.splice(deleteIndex, 1);
 
     dispatch({
-      payload: [
-        ...(state?.networkMap?.spec?.map.filter(
-          (map) =>
-            !(
-              (map?.source?.id === currentSourceNet?.id ||
-                map?.source?.type === currentSourceNet?.id) &&
-              (map?.destination?.name === currentDestinationNet?.name ||
-                isMapDestinationTypeSupported(map?.destination?.type))
-            ),
-        ) ?? []),
-      ],
+      payload: updatedMaps,
       type: 'SET_MAP',
     });
   };
