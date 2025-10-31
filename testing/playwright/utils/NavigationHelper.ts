@@ -67,6 +67,19 @@ export class NavigationHelper {
     await this.page.getByTestId('migration-nav-item').click({ timeout: 20000 });
   }
 
+  async navigateToOverview(): Promise<void> {
+    await disableGuidedTour(this.page);
+    await this.page.goto('/mtv/overview');
+    await this.page.waitForLoadState('networkidle');
+
+    const tourDialog = this.page.getByRole('dialog');
+    if (await tourDialog.isVisible({ timeout: 10000 })) {
+      const skipButton = tourDialog.getByRole('button', { name: 'Skip tour' });
+      await skipButton.click();
+      await tourDialog.waitFor({ state: 'hidden' });
+    }
+  }
+
   async navigateToPlans(): Promise<void> {
     await this.navigateToMigrationMenu();
     await this.page.getByTestId('plans-nav-item').click();
