@@ -14,7 +14,6 @@ import { MappingList } from 'src/modules/Providers/views/migrate/components/Mapp
 import type { Mapping } from 'src/modules/Providers/views/migrate/types';
 import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
 import { IGNORED, POD } from 'src/plans/details/utils/constants';
-import { isMapDestinationTypeSupported } from 'src/plans/details/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
@@ -23,6 +22,7 @@ import {
   ProviderModelGroupVersionKind,
   type V1beta1NetworkMap,
   type V1beta1NetworkMapSpecMap,
+  type V1beta1NetworkMapSpecMapDestination,
   type V1beta1Provider,
 } from '@kubev2v/types';
 import { k8sUpdate, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
@@ -42,6 +42,7 @@ const initialState: MapsSectionState = {
   updating: false,
 };
 
+// eslint-disable-next-line max-lines-per-function
 export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
   const [state, dispatch] = useReducer(mapsSectionReducer, initialState);
@@ -75,32 +76,6 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
 
   const duplicateNetworkNames = getDuplicateValues(sourceNetworks, (network) => network.name);
 
-  const getCurrentDestinationNet = (current: Mapping) => {
-    const net = destinationNetworks.find(
-      (network) => openShiftNetworkAttachmentDefinitionToName(network) === current.destination,
-    );
-
-    if (net) {
-      return net;
-    }
-
-    if (current.destination === IgnoreNetwork.Label) {
-      return { type: IGNORED };
-    }
-
-    return { name: DEFAULT_NETWORK, type: POD };
-  };
-
-  const getCurrentSourceNet = (current: Mapping) => {
-    const sourceName = current.source.replace(/ \([^)]+\)$/u, '');
-
-    if (sourceName === DEFAULT_NETWORK) {
-      return { id: POD };
-    }
-
-    return sourceNetworks.find((network) => network?.name === sourceName) ?? { id: POD };
-  };
-
   const onUpdate = async () => {
     if (state.networkMap) {
       dispatch({ payload: true, type: 'SET_UPDATING' });
@@ -127,35 +102,34 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
     }
   };
 
-  const onReplace = ({ current, next }: { current: Mapping; next: Mapping }) => {
-    const currentDestinationNet = getCurrentDestinationNet(current);
-    const currentSourceNet = getCurrentSourceNet(current);
-
+  const onReplace = (index: number, updatedMapping: Mapping) => {
     const nextDestinationNet =
-      next.destination === DEFAULT_NETWORK || next.destination === IgnoreNetwork.Label
+      updatedMapping.destination === DEFAULT_NETWORK ||
+      updatedMapping.destination === IgnoreNetwork.Label
         ? undefined
         : destinationNetworks.find(
-            (network) => openShiftNetworkAttachmentDefinitionToName(network) === next.destination,
+            (network) =>
+              openShiftNetworkAttachmentDefinitionToName(network) === updatedMapping.destination,
           );
 
     // Strip " (id)" suffix from source names with duplicates
-    const nextSourceName = next.source.replace(/ \([^)]+\)$/u, '');
+    const nextSourceName = updatedMapping.source.replace(/ \([^)]+\)$/u, '');
 
     const nextSourceNet =
       nextSourceName === DEFAULT_NETWORK
         ? { id: POD }
         : sourceNetworks.find((network) => network?.name === nextSourceName);
 
-    if (!nextSourceNet) {
+    if (!state?.networkMap?.spec?.map || !nextSourceNet) {
       return;
     }
 
     const getDestination = (): V1beta1NetworkMapSpecMapDestination => {
-      if (next.destination === IgnoreNetwork.Label) {
+      if (updatedMapping.destination === IgnoreNetwork.Label) {
         return { type: IGNORED };
       }
 
-      if (next.destination === DEFAULT_NETWORK) {
+      if (updatedMapping.destination === DEFAULT_NETWORK) {
         return { type: POD };
       }
 
@@ -167,17 +141,8 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
       source: convertInventoryNetworkToSource(nextSourceNet),
     };
 
-    const payload = state?.networkMap?.spec?.map?.map((map) => {
-      const sourceMatches =
-        map?.source?.id === currentSourceNet?.id || map.source?.type === currentSourceNet?.id;
-
-      const destinationMatches =
-        map.destination?.name === currentDestinationNet?.name ||
-        (map.destination?.type === currentDestinationNet?.type &&
-          isMapDestinationTypeSupported(map.destination?.type));
-
-      return sourceMatches && destinationMatches ? nextMap : map;
-    });
+    const payload = [...state.networkMap.spec.map];
+    payload[index] = nextMap;
 
     dispatch({
       payload: payload ?? [],
@@ -185,22 +150,16 @@ export const MapsSection: FC<MapsSectionProps> = ({ obj }) => {
     });
   };
 
-  const onDelete = (current: Mapping) => {
-    const currentDestinationNet = getCurrentDestinationNet(current);
-    const currentSourceNet = getCurrentSourceNet(current);
+  const onDelete = (deleteIndex: number) => {
+    if (!state?.networkMap?.spec?.map.length) {
+      return;
+    }
+
+    const updatedMaps = [...state.networkMap.spec.map];
+    updatedMaps.splice(deleteIndex, 1);
 
     dispatch({
-      payload: [
-        ...(state?.networkMap?.spec?.map.filter(
-          (map) =>
-            !(
-              (map?.source?.id === currentSourceNet?.id ||
-                map?.source?.type === currentSourceNet?.id) &&
-              (map?.destination?.name === currentDestinationNet?.name ||
-                isMapDestinationTypeSupported(map?.destination?.type))
-            ),
-        ) ?? []),
-      ],
+      payload: updatedMaps,
       type: 'SET_MAP',
     });
   };

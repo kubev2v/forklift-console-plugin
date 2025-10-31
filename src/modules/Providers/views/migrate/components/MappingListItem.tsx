@@ -48,11 +48,12 @@ type MappingListItemProps = {
   generalSourcesLabel: string;
   noSourcesLabel: string;
   index: number;
-  replaceMapping: (val: { current: Mapping; next: Mapping }) => void;
-  deleteMapping: (mapping: Mapping) => void;
+  replaceMapping: (index: number, updatedMapping: Mapping) => void;
+  deleteMapping: (index: number) => void;
   isDisabled: boolean;
 };
 
+// eslint-disable-next-line max-lines-per-function
 export const MappingListItem: FC<MappingListItemProps> = ({
   deleteMapping,
   destination,
@@ -82,7 +83,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   }, [destination]);
 
   const onClick = () => {
-    deleteMapping({ destination, source });
+    deleteMapping(index);
   };
 
   const onSrcToggleClick = () => {
@@ -106,10 +107,7 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   );
 
   const onSelectSource = (_event: MouseEvent | undefined, value: string | number | undefined) => {
-    replaceMapping({
-      current: { destination, source },
-      next: { destination, source: value as string },
-    });
+    replaceMapping(index, { destination, source: value as string });
 
     setSrcSelected(value as string);
     setIsSrcOpen(false);

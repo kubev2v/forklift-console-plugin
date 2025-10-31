@@ -14,8 +14,8 @@ type MappingListProps = {
   mappings?: Mapping[];
   sources: MappingSource[];
   availableDestinations: string[];
-  replaceMapping: (val: { current: Mapping; next: Mapping }) => void;
-  deleteMapping: (mapping: Mapping) => void;
+  replaceMapping: (index: number, updatedMapping: Mapping) => void;
+  deleteMapping: (index: number) => void;
   addMapping: () => void;
   usedSourcesLabel: string;
   generalSourcesLabel: string;
@@ -52,7 +52,7 @@ export const MappingList: FC<MappingListProps> = ({
             replaceMapping={replaceMapping}
             deleteMapping={deleteMapping}
             index={index}
-            key={`${source}-${destination}`}
+            key={`${source}-${destination}-${index}`}
             generalSourcesLabel={generalSourcesLabel}
             usedSourcesLabel={usedSourcesLabel}
             noSourcesLabel={noSourcesLabel}
