@@ -33,7 +33,7 @@ export const useProvidersInventoryIsLive = ({
 }: UseInventoryParams): UseInventoryIsLiveResult => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [loadError, setLoadError] = useState<Error | null>(null);
-  const oldErrorRef = useRef(null);
+  const oldErrorRef = useRef<{ error?: string }>({ error: '' });
 
   useEffect(() => {
     const fetchData = async () => {

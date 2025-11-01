@@ -7,7 +7,7 @@ import { affinityColumns } from './utils/constants';
 import type { AffinityRowData } from './utils/types';
 import AddAffinityRuleButton from './AddAffinityRuleButton';
 import AffinityDescriptionText from './AffinityDescriptionText';
-import AffinityRow from './AffinityRow';
+import AffinityRow, { type AffinityRowDataProps } from './AffinityRow';
 
 type AffinityListProps = {
   affinities: AffinityRowData[];
@@ -29,7 +29,7 @@ const AffinityList: FC<AffinityListProps> = ({
         <AffinityDescriptionText />
       </StackItem>
       <StackItem data-testid="affinity-rules-list">
-        <VirtualizedTable<AffinityRowData>
+        <VirtualizedTable<AffinityRowData, AffinityRowDataProps>
           columns={columns}
           data={affinities ?? []}
           loaded

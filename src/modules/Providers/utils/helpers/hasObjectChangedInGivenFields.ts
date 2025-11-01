@@ -1,12 +1,17 @@
 const isEqual = (obj1: unknown, obj2: unknown, fieldsToAvoidComparing: string[]): boolean => {
-  const isFieldToCompare = (key: string) => !fieldsToAvoidComparing.includes(key);
-  const isFieldChanged = (key: string, keys2: string[], avoidedFields: string[]) =>
-    !keys2.includes(key) || !isEqual(obj1[key], obj2[key], avoidedFields);
-
   // Check the object types
   if (typeof obj1 !== 'object' || typeof obj2 !== 'object' || !obj1 || !obj2) {
     return obj1 === obj2;
   }
+
+  const isFieldToCompare = (key: string) => !fieldsToAvoidComparing.includes(key);
+  const isFieldChanged = (key: string, keys2: string[], avoidedFields: string[]) =>
+    !keys2.includes(key) ||
+    !isEqual(
+      (obj1 as Record<string, unknown>)[key],
+      (obj2 as Record<string, unknown>)[key],
+      avoidedFields,
+    );
 
   // If they are the same object, return true
   if (obj1 === obj2) {

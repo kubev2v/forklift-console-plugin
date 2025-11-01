@@ -10,7 +10,7 @@ import { NetworkIcon } from '@patternfly/react-icons';
 import { getProviderDetailsPageUrl } from '../utils/getProviderDetailsPageUrl';
 
 type OpenshiftNetworkCellProps = {
-  inventoryValue?: number;
+  inventoryValue?: number | string;
 } & CellProps;
 
 const OpenshiftNetworkCell: FC<OpenshiftNetworkCellProps> = ({
@@ -20,12 +20,13 @@ const OpenshiftNetworkCell: FC<OpenshiftNetworkCellProps> = ({
   inventoryValue,
 }: OpenshiftNetworkCellProps) => {
   const { inventory, provider } = providerData;
-  const value = fields?.length
-    ? getResourceFieldValue({ ...provider, inventory }, fieldId, fields)
-    : inventoryValue;
+  const value =
+    fields?.length && inventory
+      ? getResourceFieldValue({ ...provider, inventory }, fieldId, fields)
+      : inventoryValue;
   const providerURL = getProviderDetailsPageUrl(provider);
 
-  if (value === undefined) {
+  if (value === undefined || typeof value === 'object') {
     return <TableEmptyCell />;
   }
 

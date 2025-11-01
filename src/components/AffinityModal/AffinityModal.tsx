@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { K8sIoApiCoreV1Affinity, K8sResourceCommon } from '@kubev2v/types';
+import type { V1beta1PlanSpecTargetAffinity } from '@kubev2v/types/dist/generated/forklift/models/V1beta1PlanSpecTargetAffinity';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { ModalVariant } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
@@ -19,7 +20,7 @@ import AffinityList from './AffinityList';
 export type AffinityModalProps = {
   title?: string;
   onConfirm: (updatedAffinity: K8sIoApiCoreV1Affinity) => Promise<K8sResourceCommon>;
-  initialAffinity: K8sIoApiCoreV1Affinity | undefined;
+  initialAffinity: V1beta1PlanSpecTargetAffinity | undefined;
 };
 
 const AffinityModal: ModalComponent<AffinityModalProps> = ({
@@ -98,7 +99,7 @@ const AffinityModal: ModalComponent<AffinityModalProps> = ({
     <ModalForm
       testId="affinity-modal"
       title={title ?? t('Affinity rules')}
-      onConfirm={async () => onConfirm(rowsDataToAffinity(affinities) ?? {}) ?? {}}
+      onConfirm={async () => onConfirm(rowsDataToAffinity(affinities) ?? {})}
       confirmLabel={t('Apply rules')}
       variant={ModalVariant.medium}
       {...rest}

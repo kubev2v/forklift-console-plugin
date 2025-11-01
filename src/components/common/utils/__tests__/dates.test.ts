@@ -34,9 +34,6 @@ describe('toISODate', () => {
   test('unix epoch', () => {
     expect(toISODate(new Date(0))).toBe('1970-01-01');
   });
-  test('missing date', () => {
-    expect(toISODate(undefined)).toBe(undefined);
-  });
   test('invalid date', () => {
     expect(toISODate(new Date('foo'))).toBe(undefined);
   });
@@ -57,7 +54,7 @@ describe('isValidDate', () => {
 describe('parseISOtoJSDate', () => {
   test('2023-10-31T01:30:00.000+02:00', () => {
     const date = parseISOtoJSDate('2023-10-31T01:30:00.000+02:00');
-    expect(date.toUTCString()).toBe('Mon, 30 Oct 2023 23:30:00 GMT');
+    expect(date?.toUTCString()).toBe('Mon, 30 Oct 2023 23:30:00 GMT');
   });
   test('invalid input', () => {
     expect(parseISOtoJSDate('2023-broken-10-31T01:30:00.000+02:00')).toBe(undefined);
@@ -75,7 +72,7 @@ describe('areSameDayInUTCZero', () => {
     expect(areSameDayInUTCZero('2023-10-31T10:00:00.000+02:00', '2023-foo')).toBeFalsy();
   });
   test('one date missing, one invalid', () => {
-    expect(areSameDayInUTCZero(undefined, '2023-foo')).toBeFalsy();
+    expect(areSameDayInUTCZero('', '2023-foo')).toBeFalsy();
   });
 });
 

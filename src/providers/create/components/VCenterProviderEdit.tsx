@@ -2,6 +2,7 @@ import { type FC, useCallback, useEffect, useState } from 'react';
 import { produce } from 'immer';
 import { validateVCenterURL } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVCenterURL';
 import { validateVDDKImage } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVDDKImage';
+import { providerSpecTemplate } from 'src/providers/create/utils/providerTemplates';
 import { EMPTY_VDDK_INIT_IMAGE_ANNOTATION, ProviderFieldsId } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
@@ -44,15 +45,18 @@ const VCenterProviderEdit: FC<VCenterProviderEditProps> = ({ onChange, provider,
 
   const handleChange = useCallback(
     (id: ProviderFieldsId, value: string | undefined) => {
-      const trimmedValue = value?.trim();
+      const trimmedValue = value?.trim() ?? '';
 
       if (id === ProviderFieldsId.Url) {
         setUrlValidation(validateVCenterURL(trimmedValue, secret?.data?.insecureSkipVerify));
 
         onChange(
           produce(provider, (draft) => {
-            draft.spec ??= {};
-            draft.spec.url = trimmedValue;
+            draft.spec = {
+              ...providerSpecTemplate,
+              ...(draft.spec ?? {}),
+              url: trimmedValue,
+            };
           }),
         );
       }
@@ -61,9 +65,14 @@ const VCenterProviderEdit: FC<VCenterProviderEditProps> = ({ onChange, provider,
 
         onChange(
           produce(provider, (draft) => {
-            draft.spec ??= {};
-            draft.spec.settings ??= {};
-            draft.spec.settings.vddkInitImage = trimmedValue ?? undefined;
+            draft.spec = {
+              ...providerSpecTemplate,
+              ...(draft.spec ?? {}),
+              settings: {
+                ...(draft.spec?.settings ?? {}),
+                vddkInitImage: trimmedValue ?? undefined,
+              },
+            };
           }),
         );
       }
@@ -72,9 +81,14 @@ const VCenterProviderEdit: FC<VCenterProviderEditProps> = ({ onChange, provider,
 
         onChange(
           produce(provider, (draft) => {
-            draft.spec ??= {};
-            draft.spec.settings ??= {};
-            draft.spec.settings.useVddkAioOptimization = trimmedValue ?? undefined;
+            draft.spec = {
+              ...providerSpecTemplate,
+              ...(draft.spec ?? {}),
+              settings: {
+                ...(draft.spec?.settings ?? {}),
+                useVddkAioOptimization: trimmedValue ?? undefined,
+              },
+            };
           }),
         );
       }
@@ -83,9 +97,16 @@ const VCenterProviderEdit: FC<VCenterProviderEditProps> = ({ onChange, provider,
 
         onChange(
           produce(provider, (draft) => {
-            draft.spec ??= {};
-            draft.spec.settings ??= {};
-            draft.spec.settings.vddkInitImage = undefined;
+            if (draft.spec?.settings?.vddkInitImage) {
+              delete draft.spec.settings.vddkInitImage;
+            }
+            draft.spec = {
+              ...providerSpecTemplate,
+              ...(draft.spec ?? {}),
+              settings: {
+                ...(draft.spec?.settings ?? {}),
+              },
+            };
             draft.metadata ??= {};
             draft.metadata.annotations ??= {};
             draft.metadata.annotations[EMPTY_VDDK_INIT_IMAGE_ANNOTATION] =
@@ -96,9 +117,14 @@ const VCenterProviderEdit: FC<VCenterProviderEditProps> = ({ onChange, provider,
       if (id === ProviderFieldsId.SdkEndpoint) {
         onChange(
           produce(provider, (draft) => {
-            draft.spec ??= {};
-            draft.spec.settings ??= {};
-            draft.spec.settings.sdkEndpoint = trimmedValue;
+            draft.spec = {
+              ...providerSpecTemplate,
+              ...(draft.spec ?? {}),
+              settings: {
+                ...(draft.spec?.settings ?? {}),
+                sdkEndpoint: trimmedValue,
+              },
+            };
           }),
         );
       }

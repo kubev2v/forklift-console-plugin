@@ -4,6 +4,8 @@ import InventoryCell from 'src/providers/components/InventoryCell';
 import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import type { OpenstackProvider } from '@kubev2v/types';
+
 import type { InventoryDetailsItemProps } from './utils/types';
 
 const ProjectCountDetailsItem: FC<InventoryDetailsItemProps> = ({
@@ -29,7 +31,7 @@ const ProjectCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           }}
           fieldId={ProvidersResourceFieldId.ProjectCount}
           fields={[]}
-          inventoryValue={inventory.projectCount}
+          inventoryValue={(inventory as OpenstackProvider).projectCount}
         />
       }
     />

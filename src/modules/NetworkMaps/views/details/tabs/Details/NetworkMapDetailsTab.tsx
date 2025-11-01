@@ -14,7 +14,7 @@ import { ProvidersSection } from '../../components/ProvidersSection/ProvidersSec
 
 type NetworkMapDetailsTabProps = {
   name: string;
-  namespace: string;
+  namespace?: string;
 };
 
 export const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }) => {

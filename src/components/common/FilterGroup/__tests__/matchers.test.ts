@@ -1,10 +1,11 @@
 import { NAME, NAMESPACE } from '@components/common/utils/constants';
+import type { FilterDef } from '@components/common/utils/types';
 
 import { createMatcher, createMetaMatcher, freetextMatcher } from '../matchers';
 
 const matchFreetext = (
   selectedFilters: { name?: string[] },
-  filter = {
+  filter: FilterDef | null = {
     placeholderLabel: NAME,
     type: 'freetext',
   },

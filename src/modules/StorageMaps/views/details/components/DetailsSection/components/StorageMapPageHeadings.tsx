@@ -14,7 +14,7 @@ import { PageSection } from '@patternfly/react-core';
 import { CATEGORY_TYPES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
-export const StorageMapPageHeadings: FC<{ name: string; namespace: string }> = ({
+export const StorageMapPageHeadings: FC<{ name: string; namespace?: string }> = ({
   name,
   namespace,
 }) => {

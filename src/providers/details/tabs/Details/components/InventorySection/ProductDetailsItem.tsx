@@ -4,6 +4,8 @@ import InventoryCell from 'src/providers/components/InventoryCell';
 import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import type { VSphereProvider } from '@kubev2v/types';
+
 import type { InventoryDetailsItemProps } from './utils/types';
 
 const ProductDetailsItem: FC<InventoryDetailsItemProps> = ({
@@ -30,7 +32,7 @@ const ProductDetailsItem: FC<InventoryDetailsItemProps> = ({
           }}
           fieldId={ProvidersResourceFieldId.Product}
           fields={[]}
-          inventoryValue={inventory.product}
+          inventoryValue={(inventory as VSphereProvider).product}
         />
       }
     />

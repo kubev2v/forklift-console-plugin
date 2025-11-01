@@ -13,7 +13,7 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
-export const NetworkMapPageHeadings: FC<{ name: string; namespace: string }> = ({
+export const NetworkMapPageHeadings: FC<{ name: string; namespace?: string }> = ({
   name,
   namespace,
 }) => {

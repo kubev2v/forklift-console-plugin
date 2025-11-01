@@ -29,14 +29,14 @@ export const determineHostStatus = (host: V1beta1Host | undefined): StatusResult
 
   for (const condition of host.status.conditions) {
     if (condition.type === 'Ready' && condition.status === 'True') {
-      return { message: condition.message, status: 'Ready' };
+      return { message: condition.message ?? '', status: 'Ready' };
     }
   }
 
   for (const condition of host.status.conditions) {
     if (condition.status === 'True') {
       if (errorTypes.includes(condition.type)) {
-        return { message: condition.message, status: 'Error' };
+        return { message: condition.message ?? '', status: 'Error' };
       }
     }
   }
@@ -44,7 +44,7 @@ export const determineHostStatus = (host: V1beta1Host | undefined): StatusResult
   for (const condition of host.status.conditions) {
     if (condition.status === 'True') {
       if (runningTypes.includes(condition.type)) {
-        return { message: condition.message, status: 'Running' };
+        return { message: condition.message ?? '', status: 'Running' };
       }
     }
   }

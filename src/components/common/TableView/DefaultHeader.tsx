@@ -20,13 +20,14 @@ export const DefaultHeader = <T,>({
         <Th
           key={resourceFieldId}
           sort={
-            sortable &&
-            buildSort({
-              activeSort,
-              columnIndex,
-              resourceFields: visibleColumns,
-              setActiveSort,
-            })
+            sortable
+              ? buildSort({
+                  activeSort,
+                  columnIndex,
+                  resourceFields: visibleColumns,
+                  setActiveSort,
+                })
+              : undefined
           }
           info={info}
         >

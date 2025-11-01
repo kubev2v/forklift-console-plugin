@@ -11,7 +11,7 @@ import { t } from '@utils/i18n';
 
 import { type ConcernCategory, ConcernCategoryOptions } from './constants';
 
-export const CATEGORY_TITLES: Record<ConcernCategory, string> = {
+const CATEGORY_TITLES: Record<ConcernCategory, string> = {
   [ConcernCategoryOptions.Critical]: t('Critical concerns'),
   [ConcernCategoryOptions.Information]: t('Information concerns'),
   [ConcernCategoryOptions.Warning]: t('Warning concerns'),

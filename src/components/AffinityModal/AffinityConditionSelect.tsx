@@ -11,7 +11,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import selectToggle from '@utils/selectToggle';
 
 import { AFFINITY_CONDITION_LABELS } from './utils/constants';
-import type { AffinityRowData } from './utils/types';
+import type { AffinityCondition, AffinityRowData } from './utils/types';
 
 type AffinityConditionSelectProps = {
   focusedAffinity: AffinityRowData;
@@ -28,7 +28,7 @@ const AffinityConditionSelect: FC<AffinityConditionSelectProps> = ({
 
   const handleChange = (event: ReactMouseEvent | undefined, value: string | number | undefined) => {
     event?.preventDefault();
-    setFocusedAffinity({ ...focusedAffinity, condition: value });
+    setFocusedAffinity({ ...focusedAffinity, condition: value as AffinityCondition });
     setIsOpen(false);
   };
 

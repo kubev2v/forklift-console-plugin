@@ -67,9 +67,7 @@ const DescriptionTitleWithHelp: FC<{
             {!isEmpty(crumbs) && (
               <FlexItem>
                 <Breadcrumb>
-                  {crumbs.map((crumb) => (
-                    <BreadcrumbItem key={crumb}>{crumb}</BreadcrumbItem>
-                  ))}
+                  {crumbs?.map((crumb) => <BreadcrumbItem key={crumb}>{crumb}</BreadcrumbItem>)}
                 </Breadcrumb>
               </FlexItem>
             )}

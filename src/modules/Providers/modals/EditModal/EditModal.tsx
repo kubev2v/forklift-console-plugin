@@ -71,7 +71,7 @@ export const EditModal: ModalComponent<EditModalProps> = ({
   const [isLoading, toggleIsLoading] = useToggle();
   const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
-  const [value, setValue] = useState(getValueByJsonPath(resource, jsonPath) as string);
+  const [value, setValue] = useState(getValueByJsonPath(resource, jsonPath));
   const [validation, setValidation] = useState<ValidationMsg>({
     msg: '',
     type: ValidationState.Default,

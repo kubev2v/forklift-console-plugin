@@ -4,6 +4,12 @@ import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import {
+  getCategoryColor,
+  getCategoryIcon,
+  getCategoryTitle,
+} from '@components/Concerns/utils/category';
+import type { ConcernCategory } from '@components/Concerns/utils/constants';
 import type { Concern } from '@kubev2v/types';
 import {
   Button,
@@ -18,11 +24,6 @@ import {
 import { isEmpty } from '@utils/helpers';
 
 import { orderedConcernCategories } from '../constants';
-import {
-  getCategoryColor,
-  getCategoryIcon,
-  getCategoryTitle,
-} from '../utils/helpers/getCategoryTitle';
 import { groupConcernsByCategory } from '../utils/helpers/groupConcernsByCategory';
 
 import type { VMCellProps } from './VMCellProps';
@@ -63,7 +64,7 @@ const ConcernPopover: FC<{
   return (
     <Popover
       aria-label={`${category} popover`}
-      headerContent={<div>{getCategoryTitle(category)}</div>}
+      headerContent={<div>{getCategoryTitle(category as ConcernCategory)}</div>}
       bodyContent={<ConcernList concerns={concerns} />}
       footerContent={t('Total: {{length}}', { length: concerns.length })}
     >

@@ -12,12 +12,15 @@ const labelToFilterItem = (label: string): EnumValue =>
  */
 export const ovirtHostFilter = () => {
   return {
-    dynamicFilter: (items: { vm: { host: string } }[]) => ({
-      values: [
-        ...Array.from(new Set(items.map((item) => item.vm.host))) // at this point the list contains unique strings that can be used as ID
-          .map(labelToFilterItem),
-      ],
-    }),
+    dynamicFilter: (filterItems: unknown[]) => {
+      const items = filterItems as { vm: { host: string } }[];
+      return {
+        values: [
+          ...Array.from(new Set(items.map((item) => item.vm.host))) // at this point the list contains unique strings that can be used as ID
+            .map(labelToFilterItem),
+        ],
+      };
+    },
     placeholderLabel: t('Host'),
     primary: true,
     type: CustomFilterType.Host,

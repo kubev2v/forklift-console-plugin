@@ -8,11 +8,11 @@ import { PlanModelRef } from '@kubev2v/types';
 import {
   Chart,
   ChartArea,
+  type ChartAreaProps,
   ChartAxis,
   ChartStack,
   ChartVoronoiContainer,
 } from '@patternfly/react-charts';
-import type { ChartAreaProps } from '@patternfly/react-charts/src/components/ChartArea/ChartArea';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';

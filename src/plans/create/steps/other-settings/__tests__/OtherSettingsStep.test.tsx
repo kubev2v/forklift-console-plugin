@@ -40,7 +40,7 @@ const TestWrapper = ({
 
   return (
     <FormProvider {...methods}>
-      <OtherSettingsStep />
+      <OtherSettingsStep isLiveMigrationFeatureEnabled={false} />
     </FormProvider>
   );
 };
@@ -97,7 +97,7 @@ describe('OtherSettingsStep', () => {
           >
             Toggle
           </button>
-          <OtherSettingsStep />
+          <OtherSettingsStep isLiveMigrationFeatureEnabled={false} />
         </FormProvider>
       );
     };

@@ -43,7 +43,7 @@ const HookRunnerImageField: FC<HookRunnerImageFieldProps> = ({ fieldId }) => {
         control={control}
         name={hookRunnerImageFieldId}
         rules={{
-          validate: (value: string) => validateHookRunnerImage(value, t),
+          validate: (value: string) => validateHookRunnerImage(value),
         }}
         render={({ field }) => (
           <>

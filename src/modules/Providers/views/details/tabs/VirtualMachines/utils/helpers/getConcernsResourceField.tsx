@@ -1,10 +1,11 @@
+import type { ResourceField } from '@components/common/utils/types';
 import { t } from '@utils/i18n';
 
 import ConcernsColumnPopover from '../../components/ConcernsColumnPopover';
 import { CustomFilterType } from '../../constants';
 import { concernFilter } from '../filters/concernFilter';
 
-export const getConcernsResourceField = () => ({
+export const getConcernsResourceField = (): ResourceField => ({
   filter: concernFilter(),
   info: {
     ariaLabel: 'More information on concerns',

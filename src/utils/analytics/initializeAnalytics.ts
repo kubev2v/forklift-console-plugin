@@ -69,7 +69,7 @@ export const initializeAnalytics = (segmentKey: string) => {
         script.setAttribute('data-global-segment-analytics-key', analyticsKey);
         // Use configurable Segment JS URL for CSP compliance
         const jsUrl =
-          window.SERVER_FLAGS?.telemetry?.SEGMENT_JS_URL ||
+          window.SERVER_FLAGS?.telemetry?.SEGMENT_JS_URL ??
           `https://cdn.segment.com/analytics.js/v1/${encodeURIComponent(key)}/analytics.min.js`;
         script.src = jsUrl;
 

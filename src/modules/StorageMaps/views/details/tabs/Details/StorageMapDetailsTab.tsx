@@ -14,7 +14,7 @@ import { ProvidersSection } from '../../components/ProvidersSection/ProvidersSec
 
 type StorageMapDetailsTabProps = {
   name: string;
-  namespace: string;
+  namespace?: string;
 };
 
 export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, namespace }) => {

@@ -77,7 +77,7 @@ const HooksCodeEditor: FC<HooksCodeEditorProps> = ({ planEditable, type }) => {
                     : HOOK_FORM_FIELD_NAMES.postHookImage
                 }
                 rules={{
-                  validate: (value: string) => validateHookRunnerImage(value, t),
+                  validate: (value: string) => validateHookRunnerImage(value),
                 }}
                 render={({ field }) => (
                   <TextInput

@@ -24,7 +24,8 @@ export const buildIndexes = (
     const key: VmKey = vm?.id;
     const folder = foldersDict[vm.parent?.id];
     const folderName = folder?.name ?? NO_FOLDER;
-    const hostName = hostsDict[vm.host]?.name ?? '';
+    const host = hostsDict[vm.host] as { name: string } | undefined;
+    const hostName = host?.name ?? '';
     const enhancedVmData: VmData = {
       ...vmData,
       folderName,

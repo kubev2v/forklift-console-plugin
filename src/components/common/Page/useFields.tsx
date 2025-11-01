@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { NAMESPACE } from '../utils/constants';
 import type { ResourceField } from '../utils/types';
@@ -38,7 +38,7 @@ export const useFields = (
   currentNamespace: string,
   defaultFields: ResourceField[],
   userSettings?: FieldSettings,
-): [ResourceField[], Dispatch<SetStateAction<ResourceField[]>>] => {
+): [ResourceField[], (newFields: ResourceField[]) => void] => {
   const {
     clear: clearSettings = () => undefined,
     data: fieldsFromSettings = [],
@@ -46,10 +46,12 @@ export const useFields = (
   } = userSettings ?? {};
 
   const [fields, setFields] = useState<ResourceField[]>(() => {
-    const supportedIds: Record<string, ResourceField> = defaultFields.reduce(
-      (acc, it) => ({ ...acc, [it.resourceFieldId]: it }),
-      {},
-    );
+    const supportedIds = defaultFields.reduce<Record<string, ResourceField>>((acc, it) => {
+      if (it.resourceFieldId) {
+        acc[it.resourceFieldId] = it;
+      }
+      return acc;
+    }, {});
     const savedIds = new Set(fieldsFromSettings.map(({ resourceFieldId }) => resourceFieldId));
     // used to detect duplicates
     const idsToBeVisited = new Set(savedIds);
@@ -68,7 +70,7 @@ export const useFields = (
         })),
       // put all remaining fields (all fields if there are no settings)
       ...defaultFields
-        .filter(({ resourceFieldId }) => !savedIds.has(resourceFieldId))
+        .filter(({ resourceFieldId }) => resourceFieldId && !savedIds.has(resourceFieldId))
         .map((it) => ({ ...it })),
     ];
 
@@ -93,7 +95,15 @@ export const useFields = (
         clearSettings();
       } else {
         saveFieldsInSettings(
-          newFields.map(({ isVisible, resourceFieldId }) => ({ isVisible, resourceFieldId })),
+          newFields.reduce<{ isVisible: boolean | undefined; resourceFieldId: string }[]>(
+            (acc, { isVisible, resourceFieldId }) => {
+              if (resourceFieldId) {
+                acc.push({ isVisible, resourceFieldId });
+              }
+              return acc;
+            },
+            [],
+          ),
         );
       }
     },

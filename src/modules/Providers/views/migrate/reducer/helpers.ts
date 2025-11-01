@@ -20,8 +20,8 @@ export const getObjectRef = (
     kind: string;
     metadata?: IoK8sApimachineryPkgApisMetaV1ObjectMeta;
   } = {
-    apiVersion: undefined,
-    kind: undefined,
+    apiVersion: '',
+    kind: '',
   },
 ): ObjectRef => ({
   apiVersion,

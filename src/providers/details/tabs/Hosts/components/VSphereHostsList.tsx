@@ -6,7 +6,11 @@ import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderDat
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { INITIAL_PAGE } from '@components/page/utils/constants';
-import { HostModelGroupVersionKind, type V1beta1Host, type VSphereHost } from '@kubev2v/types';
+import {
+  HostModelGroupVersionKind,
+  type V1beta1Host,
+  type VSphereHostInventory,
+} from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
@@ -28,7 +32,7 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
 
   const userSettings = useMemo(() => loadUserSettings({ pageId: 'ProviderHosts' }), []);
 
-  const { inventory: inventoryHosts } = useProviderInventory<VSphereHost[]>({
+  const { inventory: inventoryHosts } = useProviderInventory<VSphereHostInventory[]>({
     provider,
     subPath: 'hosts?detail=4',
   });

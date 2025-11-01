@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
+import { renderResourceRowCells } from 'src/modules/utils/renderResourceRowCells';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
@@ -12,7 +13,7 @@ import { withResourceLink } from './components/VmResourceLinkRenderer';
 import { getVmTemplate } from './utils/helpers/vmProps';
 
 const toNamespace = ({ data }: VMCellProps) =>
-  (data.vm.providerType === 'openshift' && data.vm.object?.metadata?.namespace) || '';
+  data.vm.providerType === 'openshift' ? (data.vm.object?.metadata?.namespace ?? '') : '';
 
 const cellRenderers: Record<string, FC<VMCellProps>> = {
   features: VmFeaturesCell,
@@ -50,12 +51,4 @@ type RenderTdProps = {
 export const OpenShiftVirtualMachinesCells: FC<RowProps<VmData>> = ({
   resourceData,
   resourceFields,
-}) => {
-  return (
-    <>
-      {resourceFields?.map(({ resourceFieldId }) =>
-        renderTd({ resourceData, resourceFieldId, resourceFields }),
-      )}
-    </>
-  );
-};
+}) => renderResourceRowCells(resourceFields, resourceData, renderTd);

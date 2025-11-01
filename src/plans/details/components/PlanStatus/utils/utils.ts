@@ -101,7 +101,7 @@ export const getMigrationVMsStatusCounts = (
     };
   }
 
-  const counts: MigrationVirtualMachinesStatusesCounts = vms.reduce((acc, vm) => {
+  const counts = vms.reduce<MigrationVirtualMachinesStatusesCounts>((acc, vm) => {
     const status = getMigrationVMStatus(vm);
     if (status) {
       acc[status].count += 1;
@@ -114,7 +114,7 @@ export const getMigrationVMsStatusCounts = (
       acc[status].vms.push(vmObj);
     }
     return acc;
-  }, deepCopy(emptyCount));
+  }, deepCopy<MigrationVirtualMachinesStatusesCounts>(emptyCount)!);
 
   return counts;
 };

@@ -13,7 +13,7 @@ import './EditModal.style.css';
  */
 type ValidationHookType = (value: string | number) => ValidationMsg;
 
-export type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => unknown);
+type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => string);
 export type EditModalProps = {
   /** The Kubernetes resource being edited. This object contains all the information about the Kubernetes resource including its metadata, status, and spec. */
   resource: K8sResourceCommon;

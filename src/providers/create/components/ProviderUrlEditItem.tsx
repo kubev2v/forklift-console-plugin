@@ -1,5 +1,6 @@
 import { type FC, type FormEvent, useCallback, useState } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
+import { providerSpecTemplate } from 'src/providers/create/utils/providerTemplates';
 import { ProviderFieldsId } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -33,7 +34,10 @@ const ProviderUrlEditItem: FC<ProviderUrlEditItemProps> = ({
       const trimmedValue = value?.trim();
       setUrlValidation(urlValidator(trimmedValue));
 
-      onChange({ ...provider, spec: { ...provider?.spec, url: trimmedValue } });
+      onChange({
+        ...provider,
+        spec: { ...(provider?.spec ?? providerSpecTemplate), url: trimmedValue },
+      });
     },
     [onChange, provider, urlValidator],
   );

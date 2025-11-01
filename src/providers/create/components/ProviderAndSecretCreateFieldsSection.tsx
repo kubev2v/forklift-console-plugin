@@ -20,12 +20,12 @@ import EsxiProviderEdit from './EsxiProviderEdit';
 import ProviderUrlEditItem from './ProviderUrlEditItem';
 import VCenterProviderEdit from './VCenterProviderEdit';
 
-const ProviderAndSecretCreateFieldsSection: FC<ProvidersCreateFormsSectionProps> = ({
-  newProvider,
-  newSecret,
-  onNewProviderChange,
-  onNewSecretChange,
-}) => {
+const ProviderAndSecretCreateFieldsSection: FC<
+  Pick<
+    ProvidersCreateFormsSectionProps,
+    'newProvider' | 'newSecret' | 'onNewProviderChange' | 'onNewSecretChange'
+  >
+> = ({ newProvider, newSecret, onNewProviderChange, onNewSecretChange }) => {
   switch (getType(newProvider)) {
     case PROVIDER_TYPES.openstack:
       return (

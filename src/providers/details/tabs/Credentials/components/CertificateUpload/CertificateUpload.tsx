@@ -58,13 +58,16 @@ const CertificateUpload: FC<CertificateUploadProps> = ({
     });
   };
 
+  // FileUpload doesn't accept warnings, change to error if it is
+  const uploadValidated = validated === 'warning' ? 'error' : validated;
+
   return (
     <FileUpload
       id={id}
       type={type ?? 'text'}
       filenamePlaceholder={filenamePlaceholder ?? t('Drag and drop a file or upload one')}
       value={value}
-      validated={validated}
+      validated={uploadValidated}
       onDataChange={onDataChange}
       onTextChange={onTextChange}
       onClearClick={onClearClick}

@@ -7,8 +7,8 @@
  */
 export const getValueByJsonPath = <T>(
   obj: T,
-  pathOrFunction: string | string[] | ((obj: T) => unknown),
-): unknown => {
+  pathOrFunction: string | string[] | ((obj: T) => string),
+): string => {
   if (typeof pathOrFunction === 'function') {
     return pathOrFunction(obj);
   }

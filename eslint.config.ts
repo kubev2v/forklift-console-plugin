@@ -14,14 +14,12 @@ import tseslint from 'typescript-eslint';
 import cspellConfigs from '@cspell/eslint-plugin/configs';
 import eslint from '@eslint/js';
 
-import disabledRules from './eslint-rules-disabled';
-
 const fileName = fileURLToPath(import.meta.url);
 const dirName = dirname(fileName);
 const CSPELL_WORD_LIST = join(dirName, 'cspell.wordlist.txt');
 import type { Linter } from 'eslint';
 
-export const createEslintConfig = (ideMode = false) =>
+export const createEslintConfig = () =>
   [
     {
       ignores: [
@@ -303,6 +301,11 @@ export const createEslintConfig = (ideMode = false) =>
         '@cspell/spellchecker': 'off',
         'no-console': 'off',
         'no-underscore-dangle': 'off',
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-return': 'off',
       },
     },
     // Testing directory specific rules
@@ -330,7 +333,6 @@ export const createEslintConfig = (ideMode = false) =>
       },
     },
     prettier,
-    ...(process.env.HUSKY_LINT_STAGED || ideMode ? [] : [disabledRules]),
   ] as Linter.Config[];
 
 export default createEslintConfig();

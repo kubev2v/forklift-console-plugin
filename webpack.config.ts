@@ -110,8 +110,8 @@ const config: Configuration = {
       typescript: {
         configFile: path.resolve(__dirname, 'tsconfig.json'),
         diagnosticOptions: {
-          semantic: false,
-          syntactic: false,
+          semantic: true,
+          syntactic: true,
         },
       },
     }),

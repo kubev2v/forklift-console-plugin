@@ -12,7 +12,7 @@ describe('manage fields', () => {
       result: {
         current: [fields],
       },
-    } = renderHook(() => useFields(undefined, [{ label: '', resourceFieldId: NAME }]));
+    } = renderHook(() => useFields('', [{ label: '', resourceFieldId: NAME }]));
     expect(fields).toMatchObject([{ isVisible: false, resourceFieldId: NAME }]);
   });
   it('enables namespace column visibility if no namespace is chosen', () => {
@@ -21,7 +21,7 @@ describe('manage fields', () => {
         current: [fields],
       },
     } = renderHook(() =>
-      useFields(undefined, [
+      useFields('', [
         { isVisible: true, label: '', resourceFieldId: NAME },
         { isVisible: false, label: '', resourceFieldId: NAMESPACE },
       ]),
@@ -57,7 +57,7 @@ describe('initialize fields from user settings', () => {
       },
     } = renderHook(() =>
       useFields(
-        undefined,
+        '',
         [
           { isVisible: true, label: '', resourceFieldId: NAME },
           { isVisible: true, label: '', resourceFieldId: NAMESPACE },
@@ -112,7 +112,7 @@ describe('initialize fields from user settings', () => {
       },
     } = renderHook(() =>
       useFields(
-        undefined,
+        '',
         [
           { isVisible: true, label: '', resourceFieldId: NAME },
           { isVisible: true, label: '', resourceFieldId: NAMESPACE },
@@ -144,7 +144,7 @@ describe('saves fields to user settings', () => {
       },
     } = renderHook(() =>
       useFields(
-        undefined,
+        '',
         [
           { isVisible: true, label: '', resourceFieldId: NAME },
           { isVisible: true, label: '', resourceFieldId: NAMESPACE },
@@ -171,7 +171,7 @@ describe('saves fields to user settings', () => {
       },
     } = renderHook(() =>
       useFields(
-        undefined,
+        '',
         [
           { isVisible: true, label: '', resourceFieldId: NAME },
           { isVisible: true, label: '', resourceFieldId: NAMESPACE },

@@ -8,11 +8,11 @@ import type { ValueMatcher } from '@components/common/FilterGroup/types';
  * @returns a list containing the default filters plus the extra ones, if an extra filter
  *          already exist in the default list, the extra filter will override the default one.
  */
-export const reduceValueFilters = (
-  extraFilters: ValueMatcher[],
-  defaultFilters: ValueMatcher[],
-): ValueMatcher[] => {
-  const filters = [...extraFilters, ...defaultFilters].reduce<ValueMatcher[]>((acc, filter) => {
+export const reduceValueFilters = <T>(
+  extraFilters: ValueMatcher<T>[],
+  defaultFilters: ValueMatcher<T>[],
+): ValueMatcher<T>[] => {
+  const filters = [...extraFilters, ...defaultFilters].reduce<ValueMatcher<T>[]>((acc, filter) => {
     const accFilterTypes = acc.map((matcher) => matcher.filterType);
     const filterTypeFound = accFilterTypes.includes(filter.filterType);
 

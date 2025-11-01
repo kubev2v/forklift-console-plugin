@@ -79,7 +79,7 @@ const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModa
   const projectsURL = isUpstream()
     ? `${UPSTREAM_LATEST}${workingWithProjectsURLs.upstream}`
     : // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      `${window.SERVER_FLAGS.documentationBaseURL}${workingWithProjectsURLs.downstream}`;
+      `${window.SERVER_FLAGS?.documentationBaseURL ?? ''}${workingWithProjectsURLs.downstream}`;
 
   return (
     <Modal

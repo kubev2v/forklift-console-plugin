@@ -21,6 +21,6 @@ export type OffloadPluginConfig = {
   vsphereXcopyConfig: VSphereXcopyConfig;
 };
 
-export type CustomStorageMapSpecMap = V1beta1StorageMapSpecMap & {
+export type CustomStorageMapSpecMap = Omit<V1beta1StorageMapSpecMap, 'offloadPlugin'> & {
   offloadPlugin?: OffloadPluginConfig;
 };
