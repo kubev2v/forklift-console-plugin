@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
+import { ResourceYAMLEditorWrapper } from '@components/ResourceYAMLEditorWrapper/ResourceYAMLEditorWrapper';
 import { StorageMapModelGroupVersionKind, type V1beta1StorageMap } from '@kubev2v/types';
 import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -23,7 +24,9 @@ export const StorageMapYAMLTab: FC<StorageMapYAMLTabProps> = ({ name, namespace 
 
   return (
     <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
-      <ResourceYAMLEditor header={t('StorageMap YAML')} initialResource={obj} />
+      <ResourceYAMLEditorWrapper>
+        <ResourceYAMLEditor header={t('StorageMap YAML')} initialResource={obj} />
+      </ResourceYAMLEditorWrapper>
     </LoadingSuspend>
   );
 };
