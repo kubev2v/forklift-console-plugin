@@ -101,7 +101,7 @@ const CredentialsSectionEditMode: FC<CredentialsSectionEditModeProps> = ({
         {dataError.type === ValidationState.Error ? (
           <HelperTextItem variant="error">{dataError.msg}</HelperTextItem>
         ) : (
-          <HelperTextItem variant="indeterminate">
+          <HelperTextItem>
             {t(
               'Click the update credentials button to save your changes, button is disabled until a change is detected.',
             )}

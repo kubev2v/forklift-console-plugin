@@ -111,7 +111,7 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
       }
       filterControls={
         <>
-          <div className="pf-v5-u-px-md pf-v5-u-py-md">
+          <div className="pf-v6-u-px-md pf-v6-u-py-md">
             <Switch
               id={showDefaultTargetsSwitchTestId}
               data-testid={showDefaultTargetsSwitchTestId}

@@ -33,7 +33,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId }) => {
     <FormGroup
       fieldId={fieldId}
       label={storageMapFieldLabels[StorageMapFieldId.StorageProduct]}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover>
           {t(
             'The commercial product name or model of the storage system being used. This helps ensure the correct features and APIs will be used.',

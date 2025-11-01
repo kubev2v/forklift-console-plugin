@@ -8,10 +8,9 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+  Content,
+  ContentVariants,
   Stack,
-  Text,
-  TextContent,
-  TextVariants,
 } from '@patternfly/react-core';
 import { getPlanURL } from '@utils/crds/plans/utils';
 import { isEmpty } from '@utils/helpers';
@@ -39,8 +38,8 @@ const PlanPreserveIPWarningsAlerts: FC<PlanPreserveIPWarningsAlertsProps> = ({
           variant={AlertVariant.warning}
         >
           <Stack hasGutter>
-            <TextContent className="forklift-providers-list-header__alert">
-              <Text component={TextVariants.p}>
+            <Content className="forklift-providers-list-header__alert">
+              <Content component={ContentVariants.p}>
                 <SmartLinkify>{condition?.message ?? ''}</SmartLinkify>
                 {isEmpty(condition?.items) ? (
                   ' '
@@ -60,8 +59,8 @@ const PlanPreserveIPWarningsAlerts: FC<PlanPreserveIPWarningsAlertsProps> = ({
                     .
                   </ForkliftTrans>
                 )}
-              </Text>
-            </TextContent>
+              </Content>
+            </Content>
           </Stack>
         </Alert>
       ))}

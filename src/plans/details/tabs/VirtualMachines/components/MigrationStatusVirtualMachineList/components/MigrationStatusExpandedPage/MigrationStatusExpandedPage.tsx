@@ -29,7 +29,7 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
 
   return (
     <>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <ExpandableSectionHeading
           section={
             <MigrationProgressTable
@@ -49,7 +49,7 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
           initialExpanded
         />
       </PageSection>
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <ExpandableSectionHeading
           section={
             <Stack hasGutter>

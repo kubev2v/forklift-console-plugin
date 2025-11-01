@@ -46,7 +46,7 @@ With a user logged in to existing Kubernetes or Openshift environment with Forkl
 #       set this variables if you use a different cluster.
 export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.<your cluster address>
 export SERVICES_API_SERVER_HOST=https://virt-konveyor-forklift.apps.<your cluster address>
-export CONSOLE_IMAGE=quay.io/openshift/origin-console:4.18
+export CONSOLE_IMAGE=quay.io/openshift/origin-console:4.19
 
 # Run the web console locally (uses the environment variables we defined above)
 yarn console
@@ -101,6 +101,7 @@ All commits must include one of these formats in the **commit description** (the
 **Primary format**: `Resolves: MTV-<number>`
 
 Example commit:
+
 ```
 Subject: Fix bug in data processing
 Description: Resolves: MTV-123
@@ -109,6 +110,7 @@ Description: Resolves: MTV-123
 **Exclusion format**: `Resolves: None`
 
 Example commit:
+
 ```
 Subject: Update documentation
 Description: Resolves: None
@@ -117,6 +119,7 @@ Description: Resolves: None
 **Chore commits**: Any commit containing "chore" in the message (case insensitive) is automatically skipped.
 
 Example chore commits:
+
 ```
 chore: update dependencies
 CHORE: clean up build files
@@ -124,6 +127,7 @@ Update dependencies and chore tasks
 ```
 
 **Note**: The commit description validation is enforced via a GitHub Action that runs on all branches for push and pull request events. The validation automatically skips:
+
 - Bot users (dependabot, renovate, ci, github-actions, etc.)
 - Commits containing "chore" in the message (case insensitive)
 
@@ -132,6 +136,7 @@ Update dependencies and chore tasks
 You can validate commit messages locally using the provided script or yarn commands:
 
 **Using yarn commands:**
+
 ```bash
 # Validate the latest commit
 yarn validate-commits
@@ -141,6 +146,7 @@ yarn validate-commits-range "HEAD~5..HEAD"
 ```
 
 **Using the script directly:**
+
 ```bash
 # Validate the latest commit
 ./scripts/validate-commits.sh

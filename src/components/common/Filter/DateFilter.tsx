@@ -28,7 +28,7 @@ export const DateFilter = ({
   const validFilters = selectedFilters?.map(changeFormatToISODate)?.filter(isString) ?? [];
 
   // internal state - stored as ISO date string (no time)
-  const [date, setDate] = useState();
+  const [date, setDate] = useState<string | undefined>();
 
   const clearSingleDate = (option: string) => {
     onFilterUpdate([...validFilters.filter((filter) => filter !== option)]);
@@ -53,19 +53,19 @@ export const DateFilter = ({
   return (
     <ToolbarFilter
       key={filterId}
-      chips={validFilters}
-      deleteChip={(_category, option) => {
+      labels={validFilters}
+      deleteLabel={(_category, option) => {
         clearSingleDate(option as string);
       }}
-      deleteChipGroup={() => onFilterUpdate([])}
+      deleteLabelGroup={() => onFilterUpdate([])}
       categoryName={title ?? ''}
       showToolbarItem={showFilter}
     >
       <InputGroup>
         <DatePicker
           value={date}
-          dateFormat={toISODate}
-          dateParse={parseISOtoJSDate}
+          dateFormat={(newDate: Date) => toISODate(newDate) ?? ''}
+          dateParse={(value: string) => parseISOtoJSDate(value) ?? new Date()}
           onChange={onDateChange}
           aria-label={title}
           placeholder={placeholderLabel}

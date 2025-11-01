@@ -5,7 +5,7 @@ import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/type
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef, type V1beta1ForkliftController } from '@kubev2v/types';
-import { ChartDonut } from '@patternfly/react-charts';
+import { ChartDonut } from '@patternfly/react-charts/victory';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
 import usePlanStatusCounts from '../hooks/usePlanStatusCounts';
@@ -67,9 +67,9 @@ const MigrationPlansDonutCard: FC<MigrationPlansDonutCardProps> = () => {
       : ChartColors.Success;
 
   return (
-    <Card>
+    <Card className="pf-m-full-height">
       <CardTitle className="forklift-title">{t('Migration plans')}</CardTitle>
-      <CardBody className="forklift-overview__status-migration pf-v5-u-display-flex pf-v5-u-align-items-center pf-v5-u-flex-direction-column">
+      <CardBody className="forklift-overview__status-migration pf-v6-u-display-flex pf-v6-u-align-items-center pf-v6-u-flex-direction-column">
         <div className="forklift-overview__status-migration-donut">
           <ChartDonut
             ariaDesc={t('Donut chart with migration plans statistics')}

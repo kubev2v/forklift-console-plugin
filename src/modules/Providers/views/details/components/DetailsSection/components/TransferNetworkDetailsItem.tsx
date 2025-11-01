@@ -7,6 +7,7 @@ import {
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { Label } from '@patternfly/react-core';
 import { DEFAULT_NETWORK } from '@utils/constants';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
@@ -35,7 +36,9 @@ export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
       title={t('Default transfer network')}
       content={
         provider?.metadata?.annotations?.['forklift.konveyor.io/defaultTransferNetwork'] ?? (
-          <span className="text-muted">{DEFAULT_NETWORK}</span>
+          <Label isCompact color="grey">
+            {DEFAULT_NETWORK}
+          </Label>
         )
       }
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
