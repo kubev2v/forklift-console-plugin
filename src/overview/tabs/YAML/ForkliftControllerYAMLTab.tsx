@@ -4,6 +4,7 @@ import TabTitle from 'src/overview/components/TabTitle';
 import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchForkliftController';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { ResourceYAMLEditorWrapper } from '@components/ResourceYAMLEditorWrapper/ResourceYAMLEditorWrapper';
 import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye, CardTitle } from '@patternfly/react-core';
 
@@ -28,7 +29,9 @@ const ForkliftControllerYAMLTab: FC = () => {
       </CardTitle>
 
       {forkliftController && loaded && !loadError && (
-        <ResourceYAMLEditor header={t('Provider YAML')} initialResource={forkliftController} />
+        <ResourceYAMLEditorWrapper>
+          <ResourceYAMLEditor header={t('Provider YAML')} initialResource={forkliftController} />
+        </ResourceYAMLEditorWrapper>
       )}
     </Suspense>
   );
