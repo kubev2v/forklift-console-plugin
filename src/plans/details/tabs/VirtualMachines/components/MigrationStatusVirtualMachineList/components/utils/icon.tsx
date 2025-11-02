@@ -10,11 +10,17 @@ export const getPipelineProgressIcon = (pipeline: V1beta1PlanStatusMigrationVmsP
         <TimesIcon />
       </Icon>
     );
-  if (pipeline?.phase === taskStatuses.completed)
+
+  const isCompleted =
+    pipeline?.phase === taskStatuses.completed ||
+    (pipeline?.progress !== undefined && pipeline.progress.completed === pipeline.progress.total);
+
+  if (isCompleted)
     return (
       <Icon status="success">
         <CheckIcon />
       </Icon>
     );
+
   return <ResourcesEmptyIcon />;
 };
