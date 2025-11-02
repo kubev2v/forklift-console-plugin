@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import type { V1beta1Plan } from '@kubev2v/types';
-import { PageSection } from '@patternfly/react-core';
+import { AlertGroup, PageSection } from '@patternfly/react-core';
 
 import { PlanStatuses } from '../../../PlanStatus/utils/types';
 import usePlanAlerts from '../../hooks/usePlanAlerts';
@@ -41,19 +41,21 @@ const PlanAlerts: FC<Props> = ({ plan }) => {
 
   return (
     <PageSection hasBodyWrapper={false} className="plan-header-alerts">
-      {showCriticalCondition && (
-        <PlanCriticalAlert
-          plan={plan}
-          condition={criticalCondition}
-          storageMaps={storageMaps}
-          networkMaps={networkMaps}
-          sourceStorages={sourceStorages}
-          sourceNetworks={sourceNetworks}
-        />
-      )}
-      {showPreserveIPWarningsConditions && (
-        <PlanPreserveIPWarningsAlerts plan={plan} conditions={preserveIPWarningsConditions} />
-      )}
+      <AlertGroup>
+        {showCriticalCondition && (
+          <PlanCriticalAlert
+            plan={plan}
+            condition={criticalCondition}
+            storageMaps={storageMaps}
+            networkMaps={networkMaps}
+            sourceStorages={sourceStorages}
+            sourceNetworks={sourceNetworks}
+          />
+        )}
+        {showPreserveIPWarningsConditions && (
+          <PlanPreserveIPWarningsAlerts plan={plan} conditions={preserveIPWarningsConditions} />
+        )}
+      </AlertGroup>
     </PageSection>
   );
 };
