@@ -155,8 +155,6 @@ export class OverviewPage {
       }
 
       await accordionButton.click();
-
-      //await this.page.waitForTimeout(300);
     }
   }
 
