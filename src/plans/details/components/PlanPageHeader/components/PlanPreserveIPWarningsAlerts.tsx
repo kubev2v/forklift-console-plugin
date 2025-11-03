@@ -33,7 +33,7 @@ const PlanPreserveIPWarningsAlerts: FC<PlanPreserveIPWarningsAlertsProps> = ({
     <>
       {conditions?.map((condition, index) => (
         <Alert
-          key={`${condition.type}-${condition.message}`}
+          key={`${condition?.type}-${condition?.message}`}
           title={t('The plan migration might not work as expected')}
           variant={AlertVariant.warning}
         >
