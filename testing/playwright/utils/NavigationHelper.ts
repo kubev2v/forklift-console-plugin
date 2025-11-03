@@ -57,18 +57,13 @@ export class NavigationHelper {
     allNamespaces?: boolean;
   }): Promise<void> {
     const url = this.buildK8sUrl(options);
-
     await this.page.goto(url);
     await this.page.waitForLoadState('networkidle');
-
     await dismissGuidedTourModal(this.page);
   }
 
   async navigateToMigrationMenu(): Promise<void> {
     await this.navigateToConsole();
-
-    await dismissGuidedTourModal(this.page);
-
     await this.page.getByTestId('migration-nav-item').click({ timeout: 20000 });
   }
 
