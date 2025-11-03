@@ -307,11 +307,7 @@ export const createEslintConfig = (ideMode = false) =>
     },
     // Testing directory specific rules
     {
-      files: [
-        'testing/**/*.{js,ts,jsx,tsx}',
-        '**/__tests__/**/*.{js,ts,jsx,tsx}',
-        '**/__mocks__/**/*.{js,ts,jsx,tsx}',
-      ],
+      files: ['testing/**/*.{js,ts,jsx,tsx}', '**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}'],
       rules: {
         '@cspell/spellchecker': 'off',
         '@typescript-eslint/class-methods-use-this': 'off',
