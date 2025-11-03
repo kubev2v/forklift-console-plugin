@@ -44,6 +44,7 @@ const CertificateEditSection: FC<CertificateEditSectionProps> = ({
         fieldId="insecureSkipVerify"
       >
         <Switch
+          data-testid="skip-certificate-validation-switch"
           className="forklift-section-secret-edit-switch"
           id="insecureSkipVerify"
           name="insecureSkipVerify"

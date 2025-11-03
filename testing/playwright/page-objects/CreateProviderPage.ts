@@ -47,7 +47,8 @@ export class CreateProviderPage {
     if (testData.password) {
       await this.page.getByTestId('provider-password-input').fill(testData.password);
     }
-    await this.page.locator('#insecureSkipVerify-off').click();
+
+    await this.page.getByTestId('skip-certificate-validation-switch').check({ force: true });
 
     await this.page.getByTestId('create-provider-button').click();
 
@@ -82,6 +83,6 @@ export class CreateProviderPage {
   }
 
   async waitForWizardLoad() {
-    await expect(this.page.getByText('Create new provider')).toBeVisible();
+    await expect(this.page.getByTestId('create-provider-heading')).toBeVisible();
   }
 }

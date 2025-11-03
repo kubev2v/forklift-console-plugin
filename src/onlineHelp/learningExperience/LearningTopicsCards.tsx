@@ -20,6 +20,7 @@ const LearningTopicsCards: FC<LearningTopicsCardsProps> = ({ onSelect, topics })
         <FlexItem key={learningExperienceTopic.id}>
           <Card
             id={learningExperienceTopic.id}
+            data-testid="topic-card"
             isClickable
             onClick={() => {
               trackEvent(TELEMETRY_EVENTS.TIPS_AND_TRICKS_VISITED, {

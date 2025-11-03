@@ -14,6 +14,7 @@ const ProvidersCreatePageHeader: FC<ProvidersCreatePageHeaderProps> = ({ apiErro
   return (
     <>
       <SectionHeading
+        testId="create-provider-heading"
         text={
           <>
             {t('Create provider')}

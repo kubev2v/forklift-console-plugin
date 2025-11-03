@@ -57,14 +57,22 @@ export class NavigationHelper {
     allNamespaces?: boolean;
   }): Promise<void> {
     const url = this.buildK8sUrl(options);
-
     await this.page.goto(url);
+    await this.page.waitForLoadState('networkidle');
     await disableGuidedTour(this.page);
   }
 
   async navigateToMigrationMenu(): Promise<void> {
     await this.navigateToConsole();
     await this.page.getByTestId('migration-nav-item').click({ timeout: 20000 });
+  }
+
+  async navigateToOverview(): Promise<void> {
+    await disableGuidedTour(this.page);
+    await this.page.goto('/mtv/overview');
+    await this.page.waitForLoadState('networkidle');
+
+    await disableGuidedTour(this.page);
   }
 
   async navigateToPlans(): Promise<void> {
