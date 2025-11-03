@@ -36,7 +36,7 @@ const LearningExperienceSelect: FC<LearningExperienceSelectProps> = ({
   const toggle = (toggleRef: Ref<MenuToggleElement>) => {
     return (
       <MenuToggle
-        className="pf-v5-u-mt-md"
+        className="pf-v6-u-mt-md"
         ref={toggleRef}
         onClick={() => {
           setIsSelectOpen((prev) => !prev);

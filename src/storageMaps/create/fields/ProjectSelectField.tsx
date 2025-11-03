@@ -48,7 +48,7 @@ const ProjectSelectField: FC = () => {
       isRequired
       fieldId={StorageMapFieldId.Project}
       label={storageMapFieldLabels[StorageMapFieldId.Project]}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover>
           <Stack hasGutter>
             <StackItem>{t('The project that your storage map will be created in.')}</StackItem>

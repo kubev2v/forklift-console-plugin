@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { PageSection, PageSectionTypes, PageSectionVariants, Title } from '@patternfly/react-core';
+import { PageSection, PageSectionTypes, Title } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import CreateStorageMapForm from './CreateStorageMapForm';
@@ -10,14 +10,15 @@ const StorageMapCreatePage: FC = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection hasBodyWrapper={false}>
         <Title headingLevel="h2">{t('Create storage map')}</Title>
       </PageSection>
 
       <PageSection
+        hasBodyWrapper={false}
         hasOverflowScroll
-        variant={PageSectionVariants.light}
         type={PageSectionTypes.default}
+        className="pf-v6-u-flex-grow-1"
       >
         <CreateStorageMapForm />
       </PageSection>

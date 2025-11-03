@@ -5,7 +5,7 @@ import { FieldWithClipboardCopy } from 'src/modules/Providers/views/details/comp
 import { MaskedField } from 'src/modules/Providers/views/details/components/CredentialsSection/MaskedField';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { DescriptionList, Text } from '@patternfly/react-core';
+import { Content, DescriptionList } from '@patternfly/react-core';
 
 import { CacertHelperTextPopover, InsecureSkipVerifyHelperTextPopover } from './utils/constants';
 import { getDecodedValue } from './utils/getDecodedValue';
@@ -52,7 +52,7 @@ const OpenshiftCredentialsViewMode: FC<CredentialsViewModeByTypeProps> = ({ reve
         <DescriptionList className="forklift-page-secret-title">
           <DisplayTitle title={fields.token.label} />
         </DescriptionList>
-        <Text>{fields.token.description}</Text>
+        <Content component="p">{fields.token.description}</Content>
       </div>
 
       <div className="forklift-page-secret-content-div">
@@ -68,10 +68,12 @@ const OpenshiftCredentialsViewMode: FC<CredentialsViewModeByTypeProps> = ({ reve
           <DisplayTitle
             title={fields.insecureSkipVerify.label}
             showHelpIconNextToTitle={true}
-            helpContent={<Text>{fields.insecureSkipVerify.helperTextPopover}</Text>}
+            helpContent={
+              <Content component="p">{fields.insecureSkipVerify.helperTextPopover}</Content>
+            }
           />
         </DescriptionList>
-        <Text>{fields.insecureSkipVerify.description}</Text>
+        <Content component="p">{fields.insecureSkipVerify.description}</Content>
       </div>
       <div className="forklift-page-secret-content-div">
         {reveal ? (
@@ -89,10 +91,10 @@ const OpenshiftCredentialsViewMode: FC<CredentialsViewModeByTypeProps> = ({ reve
           <DisplayTitle
             title={fields.cacert.label}
             showHelpIconNextToTitle={true}
-            helpContent={<Text>{fields.cacert.helperTextPopover}</Text>}
+            helpContent={<Content component="p">{fields.cacert.helperTextPopover}</Content>}
           />
         </DescriptionList>
-        <Text>{fields.cacert.description}</Text>
+        <Content component="p">{fields.cacert.description}</Content>
       </div>
       <div className="forklift-page-secret-content-div">
         {reveal ? (

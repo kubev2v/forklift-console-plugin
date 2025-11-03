@@ -15,9 +15,6 @@ const LiveSwitch: FC<LiveSwitchProps> = ({ onChange, value }) => {
       label={t(
         'Live migration, the source virtual machines continue running while their state is synchronized with the destination.',
       )}
-      labelOff={t(
-        'Cold migration, the source virtual machines are shut down while the data is copied.',
-      )}
       isChecked={value}
       onChange={(_, checked) => {
         onChange(checked);

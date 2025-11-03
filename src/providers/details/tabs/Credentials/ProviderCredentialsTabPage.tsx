@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PageSection, PageSectionVariants, Stack } from '@patternfly/react-core';
+import { PageSection, Stack } from '@patternfly/react-core';
 
 import { useProvider } from '../../hooks/useProvider';
 import type { ProviderDetailsPageProps } from '../../utils/types';
@@ -14,7 +14,7 @@ const ProviderCredentialsTabPage: FC<ProviderDetailsPageProps> = ({ name, namesp
   const { provider } = useProvider(name, namespace);
 
   return (
-    <PageSection variant={PageSectionVariants.light}>
+    <PageSection hasBodyWrapper={false}>
       <Stack hasGutter>
         <SectionHeading text={t('Credentials')} />
         <CredentialsSection provider={provider} />

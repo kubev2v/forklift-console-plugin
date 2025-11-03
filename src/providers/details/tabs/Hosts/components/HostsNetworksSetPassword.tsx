@@ -5,7 +5,7 @@ import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/
 import { Button, ButtonVariant, InputGroup, TextInput } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 import { useForkliftTranslation } from '@utils/i18n';
-import { ValidationState } from '@utils/validation/Validation';
+import { ValidationState, type ValidationStateType } from '@utils/validation/Validation';
 
 type HostsNetworksSetPasswordProps = {
   password: string;
@@ -15,7 +15,7 @@ type HostsNetworksSetPasswordProps = {
 const HostsNetworksSetPassword: FC<HostsNetworksSetPasswordProps> = ({ password, setPassword }) => {
   const { t } = useForkliftTranslation();
 
-  const [passwordValidation, setPasswordValidation] = useState<ValidationState>(
+  const [passwordValidation, setPasswordValidation] = useState<ValidationStateType>(
     ValidationState.Default,
   );
   const [passwordHidden, setPasswordHidden] = useState<boolean>(true);

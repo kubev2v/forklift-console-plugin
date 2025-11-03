@@ -8,15 +8,13 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import { ProviderModelRef } from '@kubev2v/types';
 import {
   Bullseye,
+  Content,
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
-  EmptyStateHeader,
-  EmptyStateIcon,
   Level,
   LevelItem,
-  TextContent,
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { FORKLIFT_DOCS_URL } from '@utils/links';
@@ -36,20 +34,19 @@ const NetworkMapsEmptyState: FC<NetworkMapsEmptyStateProps> = ({ namespace }) =>
   });
 
   return (
-    <EmptyState>
-      <EmptyStateHeader
-        titleText={
-          namespace ? (
-            <ForkliftTrans>
-              No network maps found in project <strong>{namespace}</strong>.
-            </ForkliftTrans>
-          ) : (
-            t('No network maps found')
-          )
-        }
-        headingLevel="h4"
-        icon={<EmptyStateIcon icon={PlusCircleIcon} />}
-      />
+    <EmptyState
+      titleText={
+        namespace ? (
+          <ForkliftTrans>
+            No network maps found in project <strong>{namespace}</strong>.
+          </ForkliftTrans>
+        ) : (
+          t('No network maps found')
+        )
+      }
+      headingLevel="h4"
+      icon={PlusCircleIcon}
+    >
       <EmptyStateBody>
         {hasSufficientProviders ? (
           t('Migration network maps are used to map networks between source and target providers.')
@@ -57,7 +54,7 @@ const NetworkMapsEmptyState: FC<NetworkMapsEmptyStateProps> = ({ namespace }) =>
           <Level hasGutter>
             <LevelItem>
               <Bullseye>
-                <TextContent>
+                <Content>
                   <ForkliftTrans>
                     Migration network maps are used to map network interfaces between source and
                     target virtualization providers. At least one source and one target provider
@@ -67,7 +64,7 @@ const NetworkMapsEmptyState: FC<NetworkMapsEmptyStateProps> = ({ namespace }) =>
                     </ExternalLink>
                     .
                   </ForkliftTrans>
-                </TextContent>
+                </Content>
               </Bullseye>
             </LevelItem>
           </Level>
@@ -78,11 +75,11 @@ const NetworkMapsEmptyState: FC<NetworkMapsEmptyStateProps> = ({ namespace }) =>
           {hasSufficientProviders ? (
             <NetworkMapsAddButton namespace={namespace} />
           ) : (
-            <TextContent>
+            <Content>
               <ExternalLink href={providersListURL} isInline>
                 {t('Go to the providers list page')}
               </ExternalLink>
-            </TextContent>
+            </Content>
           )}
         </EmptyStateActions>
       </EmptyStateFooter>

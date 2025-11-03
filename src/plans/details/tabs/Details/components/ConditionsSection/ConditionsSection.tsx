@@ -40,7 +40,7 @@ const ConditionsSection: FC<ConditionsSectionProps> = ({ conditions }) => {
             <Td>
               <Split>
                 {category === CATEGORY_TYPES.CRITICAL && (
-                  <SplitItem className="pf-v5-u-pr-sm">
+                  <SplitItem className="pf-v6-u-pr-sm">
                     <Icon size="md">
                       <StatusIcon phase={category} />
                     </Icon>

@@ -48,7 +48,7 @@ const TableBulkSelect: FC<TableBulkSelectProps> = ({
   );
 
   const bulkSelect = (
-    <div className="pf-v5-u-text-nowrap">
+    <div className="pf-v6-u-text-nowrap">
       <BulkSelect
         canSelectAll
         selectedCount={selectedIds.length}

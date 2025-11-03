@@ -67,7 +67,7 @@ const VMwareVddkEditItems: FC<VMwareVddkEditItemsProps> = ({
         validated={
           emptyVddkInitImage === YES_VALUE ? ValidationState.Default : vddkInitImageValidation.type
         }
-        labelIcon={
+        labelHelp={
           <HelpIconPopover
             header={t('VDDK init image')}
             onClick={onClick}

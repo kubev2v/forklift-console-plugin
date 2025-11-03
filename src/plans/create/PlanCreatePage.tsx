@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { PageSection, PageSectionTypes, PageSectionVariants, Title } from '@patternfly/react-core';
+import { PageSection, PageSectionTypes, Title } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import CreatePlanWizard from './CreatePlanWizard';
@@ -10,15 +10,11 @@ const PlanCreatePage: FC = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection hasBodyWrapper={false}>
         <Title headingLevel="h2">{t('Create migration plan')}</Title>
       </PageSection>
 
-      <PageSection
-        hasOverflowScroll
-        variant={PageSectionVariants.light}
-        type={PageSectionTypes.wizard}
-      >
+      <PageSection hasBodyWrapper={false} hasOverflowScroll type={PageSectionTypes.wizard}>
         <CreatePlanWizard />
       </PageSection>
     </>

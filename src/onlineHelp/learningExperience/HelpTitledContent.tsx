@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 
-import { Text, TextContent, TextVariants } from '@patternfly/react-core';
+import { Content, ContentVariants } from '@patternfly/react-core';
 
 type HelpTitledContentProps = {
   title: ReactNode;
@@ -8,10 +8,10 @@ type HelpTitledContentProps = {
 };
 
 const HelpTitledContent: FC<HelpTitledContentProps> = ({ content, title }) => (
-  <TextContent>
-    <Text component={TextVariants.h4}>{title}</Text>
-    <Text component={TextVariants.p}>{content}</Text>
-  </TextContent>
+  <Content>
+    <Content component={ContentVariants.h4}>{title}</Content>
+    <Content component={ContentVariants.p}>{content}</Content>
+  </Content>
 );
 
 export default HelpTitledContent;

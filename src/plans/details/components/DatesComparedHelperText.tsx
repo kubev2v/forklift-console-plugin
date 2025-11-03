@@ -7,7 +7,7 @@ const DatesComparedHelperText: FC = () => {
   const { t } = useForkliftTranslation();
   return (
     <HelperText>
-      <HelperTextItem variant="indeterminate">
+      <HelperTextItem>
         {t('Dates are compared in UTC. End of the interval is included.')}
       </HelperTextItem>
     </HelperText>

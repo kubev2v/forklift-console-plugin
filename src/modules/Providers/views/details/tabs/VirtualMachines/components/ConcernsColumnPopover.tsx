@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { Flex, FlexItem } from '@patternfly/react-core';
+import { Flex, FlexItem, Icon } from '@patternfly/react-core';
 import {
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
@@ -20,9 +20,11 @@ const ConcernsColumnPopover: FC = () => {
       </p>
 
       {/* Informational */}
-      <Flex flexWrap={{ default: 'nowrap' }} spaceItems={{ default: 'spaceItemsSm' }}>
-        <FlexItem>
-          <InfoCircleIcon color="var(--pf-v5-global--info-color--100)" />
+      <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>
+        <FlexItem className="pf-v6-u-mr-sm">
+          <Icon size="md">
+            <InfoCircleIcon color="var(--pf-t--global--color--status--info--default)" />
+          </Icon>
         </FlexItem>
 
         <FlexItem>
@@ -33,9 +35,11 @@ const ConcernsColumnPopover: FC = () => {
       </Flex>
 
       {/* Warning */}
-      <Flex flexWrap={{ default: 'nowrap' }} spaceItems={{ default: 'spaceItemsSm' }}>
-        <FlexItem>
-          <ExclamationTriangleIcon color="var(--pf-v5-global--warning-color--100)" />
+      <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>
+        <FlexItem className="pf-v6-u-mr-sm">
+          <Icon size="md">
+            <ExclamationTriangleIcon color="var(--pf-t--global--color--status--warning--default)" />
+          </Icon>
         </FlexItem>
 
         <FlexItem>
@@ -47,9 +51,11 @@ const ConcernsColumnPopover: FC = () => {
       </Flex>
 
       {/* Critical */}
-      <Flex flexWrap={{ default: 'nowrap' }} spaceItems={{ default: 'spaceItemsSm' }}>
-        <FlexItem>
-          <ExclamationCircleIcon color="var(--pf-v5-global--danger-color--100)" />
+      <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>
+        <FlexItem className="pf-v6-u-mr-sm">
+          <Icon size="md">
+            <ExclamationCircleIcon color="var(--pf-t--global--color--status--danger--default)" />
+          </Icon>
         </FlexItem>
 
         <FlexItem>

@@ -15,9 +15,6 @@ const WarmSwitch: FC<WarmSwitchProps> = ({ onChange, value }) => {
       label={t(
         'Warm migration, most of the data is copied during the precopy stage while the source virtual machines (VMs) are running.',
       )}
-      labelOff={t(
-        'Cold migration, the source virtual machines are shut down while the data is copied.',
-      )}
       isChecked={value}
       onChange={(_, checked) => {
         onChange(checked);

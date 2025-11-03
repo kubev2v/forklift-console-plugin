@@ -1,7 +1,7 @@
 import { type Dispatch, type SetStateAction, useState } from 'react';
 
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { ActionGroup, Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
+import { Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useIDEntities } from './hooks/useIDEntities';
@@ -32,32 +32,31 @@ const AffinityEditModal: ModalComponent<AffinityEditModalProps> = ({
   return (
     <Modal
       data-testid="affinity-edit-modal"
-      footer={
-        <ActionGroup>
-          <Button
-            data-testid="save-affinity-rule-button"
-            onClick={() => {
-              onSubmit({
-                ...focusedAffinity,
-                expressions: expressions?.entities,
-                fields: fields?.entities,
-              });
-            }}
-            isDisabled={isDisabled}
-            variant={ButtonVariant.primary}
-          >
-            {t('Save affinity rule')}
-          </Button>
-          <Button
-            data-testid="cancel-affinity-rule-button"
-            onClick={onCancel}
-            size="sm"
-            variant={ButtonVariant.link}
-          >
-            {t('Cancel')}
-          </Button>
-        </ActionGroup>
-      }
+      actions={[
+        <Button
+          key="confirm"
+          data-testid="save-affinity-rule-button"
+          onClick={() => {
+            onSubmit({
+              ...focusedAffinity,
+              expressions: expressions?.entities,
+              fields: fields?.entities,
+            });
+          }}
+          isDisabled={isDisabled}
+          variant={ButtonVariant.primary}
+        >
+          {t('Save affinity rule')}
+        </Button>,
+        <Button
+          key="cancel"
+          data-testid="cancel-affinity-rule-button"
+          onClick={onCancel}
+          variant={ButtonVariant.link}
+        >
+          {t('Cancel')}
+        </Button>,
+      ]}
       className="ocs-modal co-catalog-page__overlay"
       isOpen
       onClose={closeModal}

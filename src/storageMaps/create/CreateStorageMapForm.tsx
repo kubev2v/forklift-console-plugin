@@ -98,7 +98,7 @@ const CreateStorageMapForm: React.FC = () => {
         alignItems={{ default: 'alignItemsStretch' }}
         flexWrap={{ default: 'nowrap' }}
         spaceItems={{ default: 'spaceItemsLg' }}
-        className="pf-v5-u-h-100"
+        className="pf-v6-u-h-100"
       >
         <Form className="create-storage-map-form">
           <MapNameField />

@@ -22,7 +22,7 @@ const ExistingNetworkMapField: FC = () => {
       isRequired
       fieldId={NetworkMapFieldId.ExistingNetworkMap}
       label={netMapFieldLabels[NetworkMapFieldId.ExistingNetworkMap]}
-      className="pf-v5-u-ml-lg"
+      className="pf-v6-u-ml-lg"
     >
       <Controller
         name={NetworkMapFieldId.ExistingNetworkMap}

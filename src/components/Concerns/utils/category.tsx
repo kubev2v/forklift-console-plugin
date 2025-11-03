@@ -18,15 +18,15 @@ export const CATEGORY_TITLES: Record<ConcernCategory, string> = {
 };
 
 const CATEGORY_ICONS: Record<ConcernCategory, ReactNode> = {
-  [ConcernCategoryOptions.Critical]: <ExclamationCircleIcon color="#C9190B" />,
-  [ConcernCategoryOptions.Information]: <InfoCircleIcon color="#2B9AF3" />,
-  [ConcernCategoryOptions.Warning]: <ExclamationTriangleIcon color="#F0AB00" />,
+  [ConcernCategoryOptions.Critical]: <ExclamationCircleIcon />,
+  [ConcernCategoryOptions.Information]: <InfoCircleIcon />,
+  [ConcernCategoryOptions.Warning]: <ExclamationTriangleIcon />,
 };
 
-const CATEGORY_COLORS: Record<ConcernCategory, LabelProps['color']> = {
-  [ConcernCategoryOptions.Critical]: 'red',
-  [ConcernCategoryOptions.Information]: 'blue',
-  [ConcernCategoryOptions.Warning]: 'orange',
+const CATEGORY_STATUS: Record<ConcernCategory, LabelProps['status'] | undefined> = {
+  [ConcernCategoryOptions.Critical]: 'danger',
+  [ConcernCategoryOptions.Information]: 'info',
+  [ConcernCategoryOptions.Warning]: 'warning',
 };
 
 const isConcernCategory = (value: string): value is ConcernCategory =>
@@ -40,8 +40,8 @@ export const getCategoryIcon = (category: string): ReactNode => {
   return isConcernCategory(category) ? CATEGORY_ICONS[category] : <></>;
 };
 
-export const getCategoryColor = (category: string): LabelProps['color'] => {
-  return isConcernCategory(category) ? CATEGORY_COLORS[category] : 'grey';
+export const getCategoryStatus = (category: string): LabelProps['status'] | undefined => {
+  return isConcernCategory(category) ? CATEGORY_STATUS[category] : undefined;
 };
 
 export const groupConcernsByCategory = (

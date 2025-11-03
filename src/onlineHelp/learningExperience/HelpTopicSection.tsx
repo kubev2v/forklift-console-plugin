@@ -9,13 +9,7 @@ import {
   getTextListComponentForListStyle,
 } from 'src/onlineHelp/learningExperience/utils';
 
-import {
-  ExpandableSection,
-  Text,
-  TextContent,
-  TextList,
-  TextListItem,
-} from '@patternfly/react-core';
+import { Content, ExpandableSection } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
 import { isEmpty } from '@utils/helpers';
 
@@ -31,8 +25,8 @@ const HelpTopicSection: FC<HelpTopicSectionProps> = ({ index, listStyleType, top
 
   const renderTopicTitle = () => {
     const title = (
-      <TextContent>
-        <Text component="p">
+      <Content>
+        <Content component="p">
           {listStyleType === ListStyleType.DECIMAL ? (
             <>
               {prefix} {topic.title}
@@ -40,8 +34,8 @@ const HelpTopicSection: FC<HelpTopicSectionProps> = ({ index, listStyleType, top
           ) : (
             topic.title
           )}
-        </Text>
-      </TextContent>
+        </Content>
+      </Content>
     );
 
     if (isEmpty(listStyleType) || listStyleType === ListStyleType.DECIMAL) {
@@ -50,9 +44,9 @@ const HelpTopicSection: FC<HelpTopicSectionProps> = ({ index, listStyleType, top
 
     return (
       <div className={getClassForListStyle(listStyleType)}>
-        <TextList component={listStyleType === ListStyleType.LOWER_ALPHA ? 'ol' : 'ul'}>
-          <TextListItem>{title}</TextListItem>
-        </TextList>
+        <Content component={listStyleType === ListStyleType.LOWER_ALPHA ? 'ol' : 'ul'}>
+          <Content component="li">{title}</Content>
+        </Content>
       </div>
     );
   };
@@ -64,7 +58,7 @@ const HelpTopicSection: FC<HelpTopicSectionProps> = ({ index, listStyleType, top
         isEmpty(topic.subTopics) && 'm-non-expandable',
         topic.subListStyleType === ListStyleType.DESCRIPTIONS && 'm-has-descriptions',
       )}
-      toggleContent={<div className="pf-v5-u-ml-sm">{renderTopicTitle()}</div>}
+      toggleContent={<div className="pf-v6-u-ml-sm">{renderTopicTitle()}</div>}
       isExpanded={isExpanded}
       onToggle={(_ev, expanded) => {
         if (topic.subTopics) {
@@ -73,7 +67,7 @@ const HelpTopicSection: FC<HelpTopicSectionProps> = ({ index, listStyleType, top
       }}
     >
       {topic.subTopics ? (
-        <div className="pf-v5-u-ml-lg pf-v5-u-mb-md">
+        <div className="pf-v6-u-ml-lg pf-v6-u-mb-md">
           <div
             id={`${topic.id}: ${topic.subListStyleType}`}
             className={getClassForListStyle(topic.subListStyleType)}
@@ -83,11 +77,11 @@ const HelpTopicSection: FC<HelpTopicSectionProps> = ({ index, listStyleType, top
                 <HelpSubTopic key={subTopic.id} topic={subTopic} noListItem />
               ))
             ) : (
-              <TextList component={getTextListComponentForListStyle(topic.subListStyleType)}>
+              <Content component={getTextListComponentForListStyle(topic.subListStyleType)}>
                 {topic.subTopics.map((subTopic) => (
                   <HelpSubTopic key={subTopic.id} topic={subTopic} />
                 ))}
-              </TextList>
+              </Content>
             )}
           </div>
         </div>

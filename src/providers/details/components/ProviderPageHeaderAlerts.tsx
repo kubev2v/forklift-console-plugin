@@ -35,12 +35,12 @@ const ProviderPageHeaderAlerts: FC<ProviderPageHeaderAlertsProps> = ({
   return (
     <>
       {isInventoryNotReachable && (
-        <PageSection variant="light" className="forklift-page-header-alerts">
+        <PageSection hasBodyWrapper={false} className="forklift-page-header-alerts">
           <InventoryNotReachable key={'inventoryNotReachable'} />
         </PageSection>
       )}
       {criticalCondition && (
-        <PageSection variant="light" className="forklift-page-header-alerts">
+        <PageSection hasBodyWrapper={false} className="forklift-page-header-alerts">
           <ProviderCriticalCondition
             type={criticalCondition?.type}
             message={criticalCondition?.message ?? ''}

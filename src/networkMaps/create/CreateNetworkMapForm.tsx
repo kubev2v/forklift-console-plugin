@@ -104,7 +104,7 @@ const CreateNetworkMapForm: React.FC = () => {
         alignItems={{ default: 'alignItemsStretch' }}
         flexWrap={{ default: 'nowrap' }}
         spaceItems={{ default: 'spaceItemsLg' }}
-        className="pf-v5-u-h-100"
+        className="pf-v6-u-h-100"
       >
         <Form className="create-network-map-form">
           <MapNameField />

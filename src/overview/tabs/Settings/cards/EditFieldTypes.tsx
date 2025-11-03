@@ -1,6 +1,7 @@
 import type { FC, JSX, ReactNode } from 'react';
 
 import type { K8sModel, K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import type { FormGroupProps } from '@patternfly/react-core';
 import type { ValidationMsg } from '@utils/validation/Validation';
 
 type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => unknown);
@@ -17,11 +18,8 @@ export type EditFieldProps = {
   /** The label of the form input field. */
   label?: ReactNode;
 
-  /** Optional. The header of the field help popup. */
-  headerContent?: ReactNode;
-
-  /** Optional. The content of the field help popup. */
-  bodyContent?: ReactNode;
+  /** Optional. The label help icon content for the form input field. */
+  labelHelp?: FormGroupProps['labelHelp'];
 
   /** Optional. The custom input component to be used in the form. If not provided, a default TextInput will be used. */
   InputComponent?: InputComponentType;

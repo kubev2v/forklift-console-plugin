@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 
-import { type RowProps, TableData } from '@openshift-console/dynamic-plugin-sdk';
+import type { RowProps } from '@openshift-console/dynamic-plugin-sdk';
 import { pluralize } from '@patternfly/react-core';
+import { Td } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
@@ -14,28 +15,22 @@ const AffinityRow: FC<
     AffinityRowData,
     { onDelete: (affinity: AffinityRowData) => void; onEdit: (affinity: AffinityRowData) => void }
   >
-> = ({ activeColumnIDs, obj: affinity, rowData: { onDelete, onEdit } }) => {
+> = ({ obj: affinity, rowData: { onDelete, onEdit } }) => {
   const expressionsLabel =
     !isEmpty(affinity?.expressions) && pluralize(affinity?.expressions?.length ?? 0, 'Expression');
   const fieldsLabel =
     !isEmpty(affinity?.fields) && pluralize(affinity?.fields?.length ?? 0, 'Node Field');
   return (
     <>
-      <TableData activeColumnIDs={activeColumnIDs} id="type">
-        {AFFINITY_TYPE_LABELS[affinity?.type]}
-      </TableData>
-      <TableData activeColumnIDs={activeColumnIDs} id="condition">
-        {AFFINITY_CONDITION_LABELS[affinity?.condition]}
-      </TableData>
-      <TableData activeColumnIDs={activeColumnIDs} id="weight">
-        {affinity?.weight ?? EMPTY_MSG}
-      </TableData>
-      <TableData activeColumnIDs={activeColumnIDs} id="terms">
+      <Td dataLabel="type">{AFFINITY_TYPE_LABELS[affinity?.type]}</Td>
+      <Td dataLabel="condition">{AFFINITY_CONDITION_LABELS[affinity?.condition]}</Td>
+      <Td dataLabel="weight">{affinity?.weight ?? EMPTY_MSG}</Td>
+      <Td dataLabel="terms">
         <div>{expressionsLabel}</div> <div>{fieldsLabel}</div>
-      </TableData>
-      <TableData activeColumnIDs={activeColumnIDs} className="pf-v5-c-table__action" id="">
+      </Td>
+      <Td className="pf-v6-c-table__action">
         <AffinityRowActionsDropdown affinity={affinity} onDelete={onDelete} onEdit={onEdit} />
-      </TableData>
+      </Td>
     </>
   );
 };

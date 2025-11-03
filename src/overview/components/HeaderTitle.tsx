@@ -6,7 +6,6 @@ import {
   Button,
   ButtonVariant,
   PageSection,
-  PageSectionVariants,
   Split,
   SplitItem,
   Title,
@@ -27,7 +26,7 @@ const HeaderTitle: FC<HeaderTitleProps> = ({ isDrawerOpen, setIsDrawerOpen }) =>
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
+      <PageSection hasBodyWrapper={false}>
         <Split hasGutter style={{ alignItems: 'baseline' }}>
           <SplitItem isFilled>
             <Title headingLevel="h1">{t('Migration Toolkit for Virtualization')}</Title>
@@ -47,7 +46,7 @@ const HeaderTitle: FC<HeaderTitleProps> = ({ isDrawerOpen, setIsDrawerOpen }) =>
         </Split>
       </PageSection>
       {inventoryLivelinessError && (
-        <PageSection variant="light">
+        <PageSection hasBodyWrapper={false}>
           {[<InventoryNotReachable key="inventoryNotReachable" />]}
         </PageSection>
       )}

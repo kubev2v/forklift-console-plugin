@@ -345,7 +345,7 @@ const StandardPageInner = <T,>({
   return (
     <span className={className} data-testid={testId}>
       {title && (
-        <PageSection variant="light" className="forklift-page__main-title">
+        <PageSection hasBodyWrapper={false} className="forklift-page__main-title">
           <Level>
             <LevelItem>
               <Flex
@@ -370,8 +370,11 @@ const StandardPageInner = <T,>({
           </Level>
         </PageSection>
       )}
-      {alerts && <PageSection variant="light">{alerts}</PageSection>}
-      <PageSection variant="light" padding={{ default: noPadding ? 'noPadding' : 'padding' }}>
+      {alerts && <PageSection hasBodyWrapper={false}>{alerts}</PageSection>}
+      <PageSection
+        hasBodyWrapper={false}
+        padding={{ default: noPadding ? 'noPadding' : 'padding' }}
+      >
         <Toolbar clearAllFilters={clearAllFilters} clearFiltersButtonText={t('Clear all filters')}>
           <ToolbarContent>
             <Split hasGutter>
@@ -444,8 +447,8 @@ const StandardPageInner = <T,>({
           toId={toId}
           expandedIds={expandedIds}
         >
-          {!loaded && !error && <Loading key="loading" title={t('Loading')} />}
-          {Boolean(errorFetchingData) && (
+          {!loaded && <Loading key="loading" title={t('Loading')} />}
+          {loaded && Boolean(errorFetchingData) && (
             <ErrorState key="error" title={t('Unable to retrieve data')} />
           )}
           {noResults &&

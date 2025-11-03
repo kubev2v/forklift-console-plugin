@@ -4,6 +4,7 @@ import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { getCategoryStatus } from '@components/Concerns/utils/category';
 import type { Concern } from '@kubev2v/types';
 import {
   Button,
@@ -18,11 +19,7 @@ import {
 import { isEmpty } from '@utils/helpers';
 
 import { orderedConcernCategories } from '../constants';
-import {
-  getCategoryColor,
-  getCategoryIcon,
-  getCategoryTitle,
-} from '../utils/helpers/getCategoryTitle';
+import { getCategoryIcon, getCategoryTitle } from '../utils/helpers/getCategoryTitle';
 import { groupConcernsByCategory } from '../utils/helpers/groupConcernsByCategory';
 
 import type { VMCellProps } from './VMCellProps';
@@ -68,9 +65,7 @@ const ConcernPopover: FC<{
       footerContent={t('Total: {{length}}', { length: concerns.length })}
     >
       <Button isInline variant={ButtonVariant.link}>
-        <Label color={getCategoryColor(category)} icon={getCategoryIcon(category)}>
-          {concerns.length}
-        </Label>
+        <Label status={getCategoryStatus(category)}>{concerns.length}</Label>
       </Button>
     </Popover>
   );

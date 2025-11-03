@@ -158,7 +158,7 @@ export const GroupedEnumFilter = ({
     >
       {placeholderLabel}
       {!isEmpty(selectedEnumIds) && (
-        <Badge isRead className="pf-v5-u-ml-sm">
+        <Badge isRead className="pf-v6-u-ml-sm">
           {selectedEnumIds.length}
         </Badge>
       )}
@@ -175,17 +175,17 @@ export const GroupedEnumFilter = ({
       {supportedGroups.reduce(
         (acc, { groupId, label }) => (
           <ToolbarFilter
-            chips={selectedEnumIds
+            labels={selectedEnumIds
               .filter((id) => id2enum[id])
               .map((id) => id2enum[id])
               .filter((enumVal) => enumVal.groupId === groupId)
               .map(({ id, label: enumLabel }) => ({ key: id, node: enumLabel }))}
-            deleteChip={(category, option) => {
+            deleteLabel={(category, option) => {
               // values are one enum so id is enough to identify (category is not needed)
               const id = typeof option === 'string' ? option : option.key;
               deleteFilter(id);
             }}
-            deleteChipGroup={(category) => {
+            deleteLabelGroup={(category) => {
               const categoryId = typeof category === 'string' ? category : category.key;
               deleteGroup(categoryId);
             }}

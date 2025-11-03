@@ -11,7 +11,7 @@ const ForkliftControllerHealthTab: FC = () => {
       <div>
         <ControllerCard obj={forkliftController} />
       </div>
-      <div className="pf-v5-u-mt-md">
+      <div className="pf-v6-u-mt-md">
         <ConditionsCard obj={forkliftController} />
       </div>
     </div>

@@ -199,7 +199,7 @@ export const EditModal: ModalComponent<EditModalProps> = ({
           <Form id="modal-with-form-form">
             <FormGroupWithHelpText
               label={label}
-              labelIcon={
+              labelHelp={
                 bodyContent || headerContent ? (
                   <HelpIconPopover header={headerContent} onClick={onClick}>
                     {bodyContent}

@@ -5,7 +5,7 @@ import type { MenuToggleProps } from '@patternfly/react-core';
 export type ProjectSelectProps = {
   id?: string;
   value?: string;
-  onChange?: (value: string) => void;
+  onChange: (value: string | number | undefined) => void;
   defaultProject?: string;
   projectNames: string[];
   onNewValue?: (value: string) => void;

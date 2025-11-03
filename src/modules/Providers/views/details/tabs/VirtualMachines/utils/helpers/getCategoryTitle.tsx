@@ -36,19 +36,3 @@ export const getCategoryIcon = (category: string) => {
 
   return icons[category] || <></>;
 };
-
-/**
- * Retrieves the color for a given concern category.
- *
- * @param {string} category - The category of the concern.
- * @returns {string} The color for the given category.
- */
-export const getCategoryColor = (category: string) => {
-  const colors = {
-    Critical: 'red',
-    Information: 'blue',
-    Warning: 'orange',
-  };
-
-  return colors[category] || 'grey';
-};

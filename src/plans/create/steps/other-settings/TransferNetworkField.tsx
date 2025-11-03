@@ -46,7 +46,7 @@ const TransferNetworkField: FC = () => {
     <FormGroup
       fieldId={OtherSettingsFormFieldId.TransferNetwork}
       label={otherFormFieldLabels[OtherSettingsFormFieldId.TransferNetwork]}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover header={otherFormFieldLabels[OtherSettingsFormFieldId.TransferNetwork]}>
           {t(
             'You can select a migration network. If you do not select a migration network, the default migration network is set to the providers default transfer network.',

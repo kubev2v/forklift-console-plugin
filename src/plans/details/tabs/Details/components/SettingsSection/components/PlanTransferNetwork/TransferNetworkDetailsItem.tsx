@@ -4,6 +4,7 @@ import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/ut
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { Label } from '@patternfly/react-core';
 import { getPlanTransferNetwork } from '@utils/crds/plans/selectors';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
@@ -30,7 +31,9 @@ const TransferNetworkDetailItem: FC<EditableDetailsItemProps> = ({
       title={t('Transfer network')}
       content={
         networkName === PROVIDER_DEFAULTS ? (
-          <span className="text-muted">{PROVIDER_DEFAULTS}</span>
+          <Label isCompact color="grey">
+            {PROVIDER_DEFAULTS}
+          </Label>
         ) : (
           networkName
         )

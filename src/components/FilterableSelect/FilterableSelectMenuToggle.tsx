@@ -154,6 +154,7 @@ const FilterableSelectMenuToggle: FunctionComponent<FilterableSelectMenuTogglePr
         <TextInputGroupUtilities>
           {Boolean(inputValue) && (
             <Button
+              icon={<TimesIcon aria-hidden />}
               variant={ButtonVariant.plain}
               onClick={() => {
                 setSelectedValue('');
@@ -161,9 +162,7 @@ const FilterableSelectMenuToggle: FunctionComponent<FilterableSelectMenuTogglePr
                 setFilterValue('');
               }}
               aria-label="Clear input value"
-            >
-              <TimesIcon aria-hidden />
-            </Button>
+            />
           )}
         </TextInputGroupUtilities>
       </TextInputGroup>

@@ -5,8 +5,8 @@ import {
   DatePicker,
   InputGroup,
   isValidDate as isValidJSDate,
-  type ToolbarChip,
   ToolbarFilter,
+  type ToolbarLabel,
   Tooltip,
 } from '@patternfly/react-core';
 
@@ -57,9 +57,9 @@ export const DateRangeFilter = ({
       ),
     };
   };
-  const optionToRange = (option: ToolbarChip): string => option?.key;
+  const optionToRange = (option: ToolbarLabel): string => option?.key;
 
-  const clearSingleRange = (option: ToolbarChip) => {
+  const clearSingleRange = (option: ToolbarLabel) => {
     const target = optionToRange(option);
     onFilterUpdate([...validFilters.filter((range) => range !== target)]);
   };
@@ -84,7 +84,7 @@ export const DateRangeFilter = ({
     if (value?.length === 10 && isValidDate(value)) {
       const newTo = parseISOtoJSDate(value);
       setTo(newTo);
-      const target = toISODateInterval(from, newTo);
+      const target = from && newTo ? toISODateInterval(from, newTo) : undefined;
       if (target) {
         onFilterUpdate([...validFilters.filter((range) => range !== target), target]);
       }
@@ -94,19 +94,19 @@ export const DateRangeFilter = ({
   return (
     <ToolbarFilter
       key={filterId}
-      chips={validFilters.map(rangeToOption)}
-      deleteChip={(category, option) => {
-        clearSingleRange(option as ToolbarChip);
+      labels={validFilters.map(rangeToOption)}
+      deleteLabel={(category, option) => {
+        clearSingleRange(option as ToolbarLabel);
       }}
-      deleteChipGroup={() => onFilterUpdate([])}
+      deleteLabelGroup={() => onFilterUpdate([])}
       categoryName={title as unknown as string}
       showToolbarItem={showFilter}
     >
       <InputGroup>
         <DatePicker
-          value={toISODate(from)}
-          dateFormat={(date) => DateTime.fromJSDate(date).toISODate()}
-          dateParse={(str) => DateTime.fromISO(str).toJSDate()}
+          value={from ? toISODate(from) : undefined}
+          dateFormat={(date: Date) => DateTime.fromJSDate(date).toISODate() || ''}
+          dateParse={(str: string) => DateTime.fromISO(str).toJSDate()}
           onChange={onFromDateChange}
           aria-label="Interval start"
           placeholder={placeholderLabel}
@@ -119,7 +119,9 @@ export const DateRangeFilter = ({
           }}
         />
         <DatePicker
-          value={toISODate(to)}
+          value={to ? toISODate(to) : undefined}
+          dateFormat={(date: Date) => DateTime.fromJSDate(date).toISODate() || ''}
+          dateParse={(str: string) => DateTime.fromISO(str).toJSDate()}
           onChange={onToDateChange}
           isDisabled={!isValidJSDate(from)}
           // disable error text (no space in toolbar scenario)

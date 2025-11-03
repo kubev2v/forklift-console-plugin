@@ -38,7 +38,7 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
     <FormGroup
       fieldId={fieldId}
       label={storageMapFieldLabels[StorageMapFieldId.StorageSecret]}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover>
           <Stack hasGutter>
             <StackItem>

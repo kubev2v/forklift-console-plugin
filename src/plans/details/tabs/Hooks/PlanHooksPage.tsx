@@ -59,11 +59,11 @@ const PlanHooksPage: FC<PlanPageProps> = ({ name, namespace }) => {
   return (
     <FormProvider {...methods}>
       <LoadingSuspend obj={plan} loaded={loaded} loadError={error}>
-        <PageSection variant="light" className="pf-v5-u-h-100">
+        <PageSection hasBodyWrapper={false} className="pf-v6-u-h-100">
           <Flex
             direction={{ default: 'column' }}
             justifyContent={{ default: 'justifyContentSpaceBetween' }}
-            className="pf-v5-u-h-100"
+            className="pf-v6-u-h-100"
           >
             <FlexItem>
               <SectionHeading

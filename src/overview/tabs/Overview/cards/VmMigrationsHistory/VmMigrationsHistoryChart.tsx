@@ -8,11 +8,11 @@ import { PlanModelRef } from '@kubev2v/types';
 import {
   Chart,
   ChartArea,
+  type ChartAreaProps,
   ChartAxis,
   ChartStack,
   ChartVoronoiContainer,
-} from '@patternfly/react-charts';
-import type { ChartAreaProps } from '@patternfly/react-charts/src/components/ChartArea/ChartArea';
+} from '@patternfly/react-charts/victory';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
@@ -117,7 +117,7 @@ const VmMigrationsHistoryChart = ({
   });
 
   return (
-    <div ref={chartContainerRef} className="pf-v5-u-h-100 pf-v5-u-w-100">
+    <div ref={chartContainerRef} className="pf-v6-u-h-100 pf-v6-u-w-100">
       {count.Total === 0 && (
         <div className="forklift-overview__create-plan-btn">
           <Button

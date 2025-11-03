@@ -3,6 +3,8 @@ import { createRef, type FormEvent, useState } from 'react';
 import {
   Button,
   ButtonVariant,
+  Content,
+  ContentVariants,
   DataList,
   DataListCell,
   DataListCheck,
@@ -11,15 +13,14 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
+} from '@patternfly/react-core';
+import {
   DragDrop,
   Draggable,
   type DraggableItemPosition,
   Droppable,
   Modal,
-  Text,
-  TextContent,
-  TextVariants,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 
 import type { ResourceField } from '../utils/types';
 
@@ -160,9 +161,9 @@ export const ManageColumnsModal = ({
       isOpen={showModal}
       variant="small"
       description={
-        <TextContent>
-          <Text component={TextVariants.p}>{description}</Text>
-        </TextContent>
+        <Content>
+          <Content component={ContentVariants.p}>{description}</Content>
+        </Content>
       }
       onClose={onClose}
       actions={[
@@ -200,7 +201,7 @@ export const ManageColumnsModal = ({
                         <DataListCheck
                           aria-labelledby={`draggable-${fieldId}`}
                           name={fieldId}
-                          checked={
+                          isChecked={
                             // visibility for identity resourceFields (namespace) is governed by parent component
                             isIdentity
                               ? resourceFields.find(
@@ -209,8 +210,8 @@ export const ManageColumnsModal = ({
                               : isVisible
                           }
                           isDisabled={isIdentity}
-                          onChange={(e, value) => {
-                            onChangeFactory(fieldId)(value, e);
+                          onChange={(event, checked) => {
+                            onChangeFactory(fieldId)(checked, event);
                           }}
                           otherControls
                         />

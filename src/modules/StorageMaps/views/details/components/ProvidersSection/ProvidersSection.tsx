@@ -99,7 +99,7 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
       </Flex>
 
       <DescriptionList
-        className="pf-v5-u-mt-md"
+        className="pf-v6-u-mt-md"
         columnModifier={{
           default: '1Col',
         }}

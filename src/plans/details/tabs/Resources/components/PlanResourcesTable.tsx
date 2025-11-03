@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import SectionHeading from '@components/headers/SectionHeading';
-import { PageSection } from '@patternfly/react-core';
+import { Card, PageSection } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -17,44 +17,49 @@ const PlanResourcesTable: FC<PlanResourcesTableProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   return (
-    <PageSection variant="light">
+    <PageSection hasBodyWrapper={false}>
       <SectionHeading text={t('Resources')} />
-      <Table variant="compact" isStriped>
-        <Thead>
-          <Th></Th>
-          <Th>{t('Total virtual machines')}</Th>
-          <Th>{t('Running virtual machines')}</Th>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Th width={10}>{t('Virtual machines')}</Th>
-            <Td width={10}>
-              <AlignedDecimal value={planInventorySize} fractionalPrecision={0} />
-            </Td>
-            <Td width={10}>
-              <AlignedDecimal value={planInventoryRunningSize} fractionalPrecision={0} />
-            </Td>
-          </Tr>
-          <Tr>
-            <Th width={10}>{t('Total CPU count')}</Th>
-            <Td width={10}>
-              <AlignedDecimal value={totalResources.cpuCount} unit={t('Cores')} />
-            </Td>
-            <Td width={10}>
-              <AlignedDecimal value={totalResourcesRunning.cpuCount} unit={t('Cores')} />
-            </Td>
-          </Tr>
-          <Tr>
-            <Th width={10}>{t('Total memory')}</Th>
-            <Td width={10}>
-              <AlignedDecimal value={totalResources.memoryMB} unit={'MB'} />
-            </Td>
-            <Td width={10}>
-              <AlignedDecimal value={totalResourcesRunning.memoryMB} unit={'MB'} />
-            </Td>
-          </Tr>
-        </Tbody>
-      </Table>
+
+      <Card>
+        <Table variant="compact" borders>
+          <Thead>
+            <Tr>
+              <Th>{t('Resource')}</Th>
+              <Th>{t('Total virtual machines')}</Th>
+              <Th>{t('Running virtual machines')}</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td>{t('Virtual machines')}</Td>
+              <Td>
+                <AlignedDecimal value={planInventorySize} fractionalPrecision={0} />
+              </Td>
+              <Td>
+                <AlignedDecimal value={planInventoryRunningSize} fractionalPrecision={0} />
+              </Td>
+            </Tr>
+            <Tr>
+              <Td>{t('Total CPU count')}</Td>
+              <Td>
+                <AlignedDecimal value={totalResources.cpuCount} unit={t('Cores')} />
+              </Td>
+              <Td>
+                <AlignedDecimal value={totalResourcesRunning.cpuCount} unit={t('Cores')} />
+              </Td>
+            </Tr>
+            <Tr>
+              <Td>{t('Total memory')}</Td>
+              <Td>
+                <AlignedDecimal value={totalResources.memoryMB} unit={'MB'} />
+              </Td>
+              <Td>
+                <AlignedDecimal value={totalResourcesRunning.memoryMB} unit={'MB'} />
+              </Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </Card>
     </PageSection>
   );
 };

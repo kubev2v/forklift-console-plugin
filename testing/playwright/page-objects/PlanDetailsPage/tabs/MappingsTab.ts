@@ -142,7 +142,7 @@ export class MappingsTab {
     }
 
     const row = this.page.getByTestId(`network-mapping-row-${index}`);
-    const buttons = row.locator('button.pf-v5-c-menu-toggle');
+    const buttons = row.locator('button.pf-v6-c-menu-toggle');
 
     await expect(buttons.nth(0)).toContainText(expectedSource);
     await expect(buttons.nth(1)).toContainText(expectedTarget);
@@ -166,7 +166,7 @@ export class MappingsTab {
     }
 
     const row = this.page.getByTestId(`storage-mapping-row-${index}`);
-    const buttons = row.locator('button.pf-v5-c-menu-toggle');
+    const buttons = row.locator('button.pf-v6-c-menu-toggle');
 
     await expect(buttons.nth(0)).toContainText(expectedSource);
     await expect(buttons.nth(1)).toContainText(expectedTarget);
