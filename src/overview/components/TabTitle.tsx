@@ -5,11 +5,15 @@ const TabTitle = ({ helpContent, title }: { helpContent: string; title: string }
   <>
     {title}{' '}
     <Tooltip content={helpContent}>
-      <Button variant={ButtonVariant.plain} className="pf-v5-u-px-xs">
-        <Icon size="md">
-          <HelpIcon />
-        </Icon>
-      </Button>
+      <Button
+        icon={
+          <Icon size="md">
+            <HelpIcon />
+          </Icon>
+        }
+        variant={ButtonVariant.plain}
+        className="pf-v6-u-px-xs"
+      />
     </Tooltip>
   </>
 );

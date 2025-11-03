@@ -85,7 +85,7 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
             isInline
             variant="warning"
             title={t('Must enable Changed Block Tracking (CBT) for warm migration')}
-            className="pf-v5-u-ml-lg"
+            className="pf-v6-u-ml-lg"
           >
             <Stack hasGutter>
               <p>

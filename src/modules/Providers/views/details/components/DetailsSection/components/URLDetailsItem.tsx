@@ -33,11 +33,14 @@ export const URLDetailsItem: FC<ProviderDetailsItemProps> = ({
     t(`URL of the providers API endpoint. The URL must be a valid endpoint for the provider type, see
       the documentation for each provider type to learn more about the URL format.`);
 
+  const url = provider?.spec?.url;
+  const isEmpty = url === undefined || url === '';
+
   return (
     <DetailsItem
       testId="url-detail-item"
       title={t('URL')}
-      content={provider?.spec?.url ?? <span className="text-muted">{t('Empty')}</span>}
+      content={isEmpty ? <span className="text-muted">{t('Empty')}</span> : url}
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'spec', 'url']}

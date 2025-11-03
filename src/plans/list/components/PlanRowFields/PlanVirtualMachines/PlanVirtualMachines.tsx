@@ -19,7 +19,7 @@ const PlanVirtualMachines: FC<PlanFieldProps> = ({ plan }) => {
     <Flex alignItems={{ default: 'alignItemsCenter' }}>
       <Link to={`${planURL}/vms`}>
         <Split>
-          <SplitItem className="pf-v5-u-pr-sm">
+          <SplitItem className="pf-v6-u-pr-sm">
             <VirtualMachineIcon />
           </SplitItem>
           <SplitItem>

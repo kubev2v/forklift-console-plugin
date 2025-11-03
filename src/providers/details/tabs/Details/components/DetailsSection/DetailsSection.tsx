@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import SectionHeading from '@components/headers/SectionHeading';
-import { PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -20,7 +20,7 @@ const DetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   if (!DetailsSectionByType) return null;
 
   return (
-    <PageSection variant={PageSectionVariants.light} className="forklift-page-section--details">
+    <PageSection hasBodyWrapper={false} className="forklift-page-section--details">
       <SectionHeading text={t('Provider details')} />
       <DetailsSectionByType data={data} />
     </PageSection>

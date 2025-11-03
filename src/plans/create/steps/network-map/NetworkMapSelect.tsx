@@ -69,10 +69,14 @@ const NetworkMapSelect = (
   }, [allNetworkMaps, includeOwnerReferenced]);
 
   const emptyState = (
-    <EmptyState variant={EmptyStateVariant.xs}>
-      <Title headingLevel="h4" size="md">
-        {t('You do not have any network maps without owner references.')}
-      </Title>
+    <EmptyState
+      titleText={
+        <Title headingLevel="h4" size="md">
+          {t('You do not have any network maps without owner references.')}
+        </Title>
+      }
+      variant={EmptyStateVariant.xs}
+    >
       <EmptyStateBody>
         <ExternalLink href={`${networkMapsListUrl}/~new`} isInline>
           {t('Create a network map without an owner')}

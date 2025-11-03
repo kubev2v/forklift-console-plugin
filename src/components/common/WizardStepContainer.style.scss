@@ -1,13 +1,13 @@
 .wizard-step-container {
   display: flex;
   flex-direction: column;
-  gap: var(--pf-v5-global--spacer--lg);
+  gap: var(--pf-t--global--spacer--lg);
 
   > * {
     width: 100%;
   }
 
-  .pf-v5-c-page__main-section {
+  .pf-v6-c-page__main-section {
     padding: 0;
   }
 

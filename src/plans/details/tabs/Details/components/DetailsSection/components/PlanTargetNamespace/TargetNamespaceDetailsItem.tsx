@@ -5,6 +5,7 @@ import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/Se
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { Label } from '@patternfly/react-core';
 import { getPlanTargetNamespace } from '@utils/crds/plans/selectors';
 
 import { PROVIDER_DEFAULTS } from '../../../SettingsSection/components/PlanTransferNetwork/utils/constants';
@@ -21,7 +22,11 @@ const TargetNamespaceDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, pl
       testId="target-project-detail-item"
       title={t('Target project')}
       content={
-        getPlanTargetNamespace(plan) ?? <span className="text-muted">{PROVIDER_DEFAULTS}</span>
+        getPlanTargetNamespace(plan) ?? (
+          <Label isCompact color="grey">
+            {PROVIDER_DEFAULTS}
+          </Label>
+        )
       }
       helpContent={t(
         'Projects, also known as namespaces, separate resources within clusters. The target project is the project, within your selected target provider, that your virtual machines will be migrated to. This is different from the project that your migration plan will be created in and where your provider was created.',

@@ -5,6 +5,9 @@ import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceU
 import { PlanModelRef } from '@kubev2v/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import {
+  ActionList,
+  ActionListGroup,
+  ActionListItem,
   Button,
   ButtonVariant,
   useWizardContext,
@@ -84,39 +87,56 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
 
   return (
     <WizardFooterWrapper>
-      <Button
-        data-testid="wizard-back-button"
-        variant={ButtonVariant.secondary}
-        onClick={goToPrevStep}
-        isDisabled={isBackDisabled}
-      >
-        {t('Back')}
-      </Button>
-      <Button
-        data-testid="wizard-next-button"
-        variant={ButtonVariant.primary}
-        onClick={onNextClick}
-        isDisabled={isNextDisabled}
-        isLoading={isSubmitting}
-      >
-        {nextButtonText ?? t('Next')}
-      </Button>
-      {canSkipToReview && (
-        <Button
-          data-testid="wizard-review-button"
-          variant={ButtonVariant.tertiary}
-          onClick={onSkipToReviewClick}
-        >
-          {t('Skip to review')}
-        </Button>
-      )}
-      <Button
-        data-testid="wizard-cancel-button"
-        variant={ButtonVariant.secondary}
-        onClick={onCancel}
-      >
-        {t('Cancel')}
-      </Button>
+      <ActionList>
+        <ActionListGroup>
+          <ActionListItem>
+            <Button
+              data-testid="wizard-back-button"
+              variant={ButtonVariant.secondary}
+              onClick={goToPrevStep}
+              isDisabled={isBackDisabled}
+            >
+              {t('Back')}
+            </Button>
+          </ActionListItem>
+
+          <ActionListItem>
+            <Button
+              data-testid="wizard-next-button"
+              variant={ButtonVariant.primary}
+              onClick={onNextClick}
+              isDisabled={isNextDisabled}
+              isLoading={isSubmitting}
+            >
+              {nextButtonText ?? t('Next')}
+            </Button>
+          </ActionListItem>
+
+          {canSkipToReview && (
+            <ActionListItem>
+              <Button
+                data-testid="wizard-review-button"
+                variant={ButtonVariant.tertiary}
+                onClick={onSkipToReviewClick}
+              >
+                {t('Skip to review')}
+              </Button>
+            </ActionListItem>
+          )}
+        </ActionListGroup>
+
+        <ActionListGroup>
+          <ActionListItem>
+            <Button
+              data-testid="wizard-cancel-button"
+              variant={ButtonVariant.link}
+              onClick={onCancel}
+            >
+              {t('Cancel')}
+            </Button>
+          </ActionListItem>
+        </ActionListGroup>
+      </ActionList>
     </WizardFooterWrapper>
   );
 };

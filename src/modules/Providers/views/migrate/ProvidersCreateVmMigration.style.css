@@ -19,7 +19,7 @@
 }
 
 /* stylelint-disable-next-line selector-disallowed-list */
-.forklift-page-mapping-list--header .pf-v5-c-data-list__item {
+.forklift-page-mapping-list--header .pf-v6-c-data-list__item {
   border: 0;
 }
 
@@ -38,7 +38,7 @@
 }
 
 .forklift--create-vm-migration-plan--alert {
-  margin-bottom: var(--pf-global--spacer--md);
+  margin-bottom: var(--pf-t--global--spacer--md);
 }
 
 .forklift--create-vm-migration-plan--section-header {
@@ -48,12 +48,12 @@
 }
 
 .forklift--create-vm-migration-plan--form-actions {
-  margin-top: var(--pf-global--spacer--md);
+  margin-top: var(--pf-t--global--spacer--md);
 }
 
 @media screen and (width >= 768px) {
   /* stylelint-disable-next-line selector-disallowed-list */
-  .forklift-page-mapping-list .pf-v5-c-form__group-label {
+  .forklift-page-mapping-list .pf-v6-c-form__group-label {
     display: none !important;
   }
 }

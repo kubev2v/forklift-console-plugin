@@ -134,7 +134,7 @@ const troubleShootingHelpTopics: LearningExperienceSubTopic[] = [
                 title: (
                   <ForkliftTrans>
                     Run the command:
-                    <CodeBlock className="pf-v5-u-my-sm">
+                    <CodeBlock className="pf-v6-u-my-sm">
                       <CodeBlockCode>{mustGatherExample}</CodeBlockCode>
                     </CodeBlock>
                     (But this won't be static; the UI should populate it as the image can change),

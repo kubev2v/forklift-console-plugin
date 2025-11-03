@@ -35,7 +35,7 @@ const DiskPassPhraseFieldTable = () => {
       headers={[
         {
           label: otherFormFieldLabels[OtherSettingsFormFieldId.DiskDecryptionPassPhrases],
-          labelIcon: (
+          labelHelp: (
             <HelpIconPopover>
               <Stack hasGutter>
                 <StackItem>

@@ -70,9 +70,10 @@ const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
             setFile(undefined);
             setFilename('');
           }}
+          className="pf-v6-u-p-0"
         />
         <HelperText>
-          <HelperTextItem variant="indeterminate">
+          <HelperTextItem>
             {t('Upload a VDDK archive and build a VDDK init image from it.')}
           </HelperTextItem>
         </HelperText>

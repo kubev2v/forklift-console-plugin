@@ -43,9 +43,7 @@ const ProviderCardsSelect: FC<ProviderCardsSelectProps> = ({
                   content={<div>{t('Click to select a different provider from the list.')}</div>}
                 >
                   <HelperText>
-                    <HelperTextItem variant="indeterminate">
-                      {t('Click to unselect.')}
-                    </HelperTextItem>
+                    <HelperTextItem variant="default">{t('Click to unselect')}</HelperTextItem>
                   </HelperText>
                 </Tooltip>
               }

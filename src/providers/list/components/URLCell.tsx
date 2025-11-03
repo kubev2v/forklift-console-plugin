@@ -17,7 +17,7 @@ export const URLCell: FC<CellProps> = ({ data, fieldId, fields }) => {
 
   return (
     <TableCell>
-      <Truncate content={url?.toString() ?? EMPTY_MSG} position={'middle'} />
+      <Truncate content={url?.toString()?.trim() || EMPTY_MSG} position={'middle'} />
     </TableCell>
   );
 };

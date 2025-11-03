@@ -9,6 +9,7 @@ import type {
   V1beta1Plan,
   V1beta1StorageMap,
 } from '@kubev2v/types';
+import { Flex, FlexItem } from '@patternfly/react-core';
 
 import { usePlanMappingsHandlers } from '../hooks/usePlanMappingsHandlers';
 import { getLabeledAndAvailableMappings } from '../utils/getLabeledAndAvailableMappings';
@@ -118,12 +119,16 @@ const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
     </>
   ) : (
     <>
-      <PlanMappingEditButton
-        onEdit={() => {
-          setEditMode(true);
-        }}
-        plan={plan}
-      />
+      <Flex>
+        <FlexItem>
+          <PlanMappingEditButton
+            onEdit={() => {
+              setEditMode(true);
+            }}
+            plan={plan}
+          />
+        </FlexItem>
+      </Flex>
       <PlanMappingsViewMode
         plan={plan}
         labeledNetworkMappings={labeledNetworkMappings}

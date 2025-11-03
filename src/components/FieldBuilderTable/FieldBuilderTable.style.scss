@@ -2,28 +2,28 @@
   table-layout: fixed;
 
   // Remove extra padding from headers and form groups
-  .pf-v5-c-table__thead {
-    tr:not(.pf-v5-c-table__expandable-row) {
+  .pf-v6-c-table__thead {
+    tr:not(.pf-v6-c-table__expandable-row) {
       border-block-end: 0;
     }
 
-    .pf-v5-c-table__th,
-    .pf-v5-c-form__group-label {
+    .pf-v6-c-table__th,
+    .pf-v6-c-form__group-label {
       padding-top: 0;
       padding-bottom: 0;
     }
 
-    .pf-v5-c-table__th:first-of-type {
+    .pf-v6-c-table__th:first-of-type {
       padding-left: 0;
     }
 
-    .pf-v5-c-table__th .pf-v5-c-form__group {
+    .pf-v6-c-table__th .pf-v6-c-form__group {
       padding-bottom: 0;
     }
   }
 
   // Align first column cells
-  .pf-v5-c-table__tbody .pf-v5-c-table__td:first-of-type {
+  .pf-v6-c-table__tbody .pf-v6-c-table__td:first-of-type {
     padding-left: 0;
   }
 }

@@ -18,7 +18,7 @@ const ForkliftControllerYAMLTab: FC = () => {
         </Bullseye>
       }
     >
-      <CardTitle className="forklift-title pf-v5-u-p-lg pf-v5-u-pb-0">
+      <CardTitle className="forklift-title pf-v6-u-p-lg pf-v6-u-pb-0">
         <TabTitle
           title={t('YAML')}
           helpContent={t(

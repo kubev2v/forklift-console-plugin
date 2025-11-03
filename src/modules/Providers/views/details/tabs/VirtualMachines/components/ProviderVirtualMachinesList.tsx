@@ -57,11 +57,15 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   // Render the spinner while data is loading
   if (vmDataLoading) {
     return (
-      <EmptyState variant={EmptyStateVariant.sm}>
+      <EmptyState
+        titleText={
+          <Title headingLevel="h4" size="lg">
+            {t('Loading virtual machines...')}
+          </Title>
+        }
+        variant={EmptyStateVariant.sm}
+      >
         <Spinner size="xl" />
-        <Title headingLevel="h4" size="lg">
-          {t('Loading virtual machines...')}
-        </Title>
       </EmptyState>
     );
   }

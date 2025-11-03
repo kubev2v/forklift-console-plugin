@@ -17,7 +17,7 @@ const NameTemplateBody: FC<NameTemplateBodyProps> = ({ allowedVariables, bodyTex
   const { t } = useForkliftTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <Stack className="pf-v5-u-mb-sm">
+    <Stack className="pf-v6-u-mb-sm">
       <StackItem>{bodyText}</StackItem>
       <StackItem>
         {t('The VM specific template will override the template set in the plan.')}

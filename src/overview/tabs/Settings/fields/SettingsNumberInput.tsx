@@ -3,8 +3,8 @@ import type { FC, FormEvent, MouseEvent } from 'react';
 import { NumberInput } from '@patternfly/react-core';
 
 type SettingsNumberInputProps = {
-  value: number | '';
-  onChange: (value: number | string) => void;
+  value: string | number;
+  onChange: (value: string | number) => void;
   defaultValue: number;
 };
 
@@ -33,7 +33,7 @@ const SettingsNumberInput: FC<SettingsNumberInputProps> = ({ defaultValue, onCha
 
   return (
     <NumberInput
-      value={value}
+      value={Number(value)}
       onMinus={onUserMinus}
       onChange={onUserChange}
       onPlus={onUserPlus}

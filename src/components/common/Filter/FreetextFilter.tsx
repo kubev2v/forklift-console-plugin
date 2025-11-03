@@ -31,10 +31,10 @@ export const FreetextFilter = ({
     attrValueMap: Record<string, string>,
   ) => void = () => {
     const lowerCaseInputValue = inputValue?.toLowerCase();
-    if (!lowerCaseInputValue || selectedFilters.includes(lowerCaseInputValue)) {
+    if (!lowerCaseInputValue || selectedFilters?.includes(lowerCaseInputValue)) {
       return;
     }
-    onFilterUpdate([...selectedFilters, lowerCaseInputValue]);
+    onFilterUpdate([...(selectedFilters ?? []), lowerCaseInputValue]);
     setInputValue('');
   };
 
@@ -49,12 +49,12 @@ export const FreetextFilter = ({
   return (
     <ToolbarFilter
       key={filterId}
-      chips={selectedFilters ?? []}
-      deleteChip={(category, option) =>
+      labels={selectedFilters ?? []}
+      deleteLabel={(category, option) =>
         onFilterUpdate(selectedFilters?.filter((value) => value !== option) ?? [])
       }
-      deleteChipGroup={() => onFilterUpdate([])}
-      categoryName={title}
+      deleteLabelGroup={() => onFilterUpdate([])}
+      categoryName={title ?? ''}
       showToolbarItem={showFilter}
     >
       <InputGroup>

@@ -1,24 +1,15 @@
 import type { Page } from '@playwright/test';
 
 export const disableGuidedTour = async (page: Page) => {
-  await page.addInitScript(() => {
-    const existingSettings = window.localStorage.getItem('console-user-settings');
-    const settings = existingSettings ? JSON.parse(existingSettings) : {};
+  const skipButton = page.getByRole('button', { name: /skip tour/i });
 
-    window.localStorage.setItem(
-      'console-user-settings',
-      JSON.stringify({ ...settings, 'console.guidedTour': { admin: { completed: true } } }),
-    );
-  });
-};
-
-export const dismissGuidedTourModal = async (page: Page): Promise<void> => {
-  const tourDialog = page.getByRole('dialog');
-
-  if (await tourDialog.isVisible({ timeout: 10000 })) {
-    const skipButton = tourDialog.getByRole('button', { name: 'Skip tour' });
+  try {
+    // Wait for button to appear, click it, then wait for modal to close
+    await skipButton.waitFor({ state: 'visible', timeout: 5000 });
     await skipButton.click();
-    await tourDialog.waitFor({ state: 'hidden' });
+    await skipButton.waitFor({ state: 'hidden' });
+  } catch {
+    // Modal not showing
   }
 };
 
@@ -28,12 +19,10 @@ export const isEmpty = (value: object | unknown[] | string | undefined | null): 
   }
 
   if (Array.isArray(value) || typeof value === 'string') {
-    // eslint-disable-next-line no-restricted-syntax
     return value.length === 0;
   }
 
   if (typeof value === 'object') {
-    // eslint-disable-next-line no-restricted-syntax
     return Object.keys(value).length === 0;
   }
 

@@ -18,7 +18,7 @@ const PreserveStaticIpsField: FC = () => {
     <FormGroup
       fieldId={OtherSettingsFormFieldId.PreserveStaticIps}
       label={label}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover header={label}>
           {t(
             'By default, vNICs change during migration and static IPs linked to interface names are lost. Enable to preserve static IP configurations.',

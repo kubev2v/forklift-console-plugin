@@ -3,7 +3,7 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import SectionHeading from '@components/headers/SectionHeading';
 import OvaFileUploader from '@components/OvaFileUploader/OvaFileUploader';
-import { PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -22,7 +22,7 @@ const UploadFilesSection: FC<DetailsSectionProps> = ({ data }) => {
   if (!isApplianceManagementEnabled(provider)) return null;
 
   return (
-    <PageSection variant={PageSectionVariants.light} className="forklift-page-section--details">
+    <PageSection hasBodyWrapper={false} className="forklift-page-section--details">
       <SectionHeading text={t('Upload local OVA files')} />
       <OvaFileUploader provider={provider} />
     </PageSection>

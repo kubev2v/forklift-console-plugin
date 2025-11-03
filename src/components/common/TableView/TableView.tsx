@@ -9,6 +9,8 @@ import type { ResourceField } from '../utils/types';
 
 import type { RowProps, SortType, TableViewHeaderProps } from './types';
 
+import './TableView.scss';
+
 /**
  * Displays provided list of entities as table.
  *
@@ -41,7 +43,7 @@ export const TableView = <T,>({
   const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
 
   return (
-    <Table aria-label={ariaLabel} variant="compact" isStickyHeader>
+    <Table aria-label={ariaLabel} variant="compact" isStickyHeader className="table-view">
       <Thead>
         <Tr>
           <Header {...{ activeSort, dataOnScreen: entities, setActiveSort, visibleColumns }} />

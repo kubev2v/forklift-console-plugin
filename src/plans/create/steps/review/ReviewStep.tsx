@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
-import { EmptyState, EmptyStateHeader, EmptyStateIcon, Spinner } from '@patternfly/react-core';
+import { EmptyState, Spinner } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
@@ -34,13 +34,12 @@ const ReviewStep: FC<ReviewStepProps> = ({
 
   if (isSubmitting) {
     return (
-      <EmptyState className="pf-v5-u-h-100">
-        <EmptyStateHeader
-          titleText={t('Creating plan')}
-          headingLevel="h4"
-          icon={<EmptyStateIcon icon={Spinner} />}
-        />
-      </EmptyState>
+      <EmptyState
+        titleText={t('Creating plan')}
+        headingLevel="h4"
+        icon={Spinner}
+        className="pf-v6-u-h-100"
+      />
     );
   }
 

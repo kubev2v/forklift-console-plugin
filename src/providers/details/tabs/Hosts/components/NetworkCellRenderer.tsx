@@ -35,7 +35,7 @@ const NetworkCellRenderer: FC<HostCellProps> = (props) => {
 
   const defaultNetworkLabel = (
     <HelperText>
-      <HelperTextItem variant="indeterminate">{t('Default network')}</HelperTextItem>
+      <HelperTextItem>{t('Default network')}</HelperTextItem>
     </HelperText>
   );
 

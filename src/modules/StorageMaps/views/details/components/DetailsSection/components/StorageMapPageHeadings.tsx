@@ -56,7 +56,7 @@ export const StorageMapPageHeadings: FC<{ name: string; namespace: string }> = (
         actions={<StorageMapActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />}
       >
         {!isEmpty(alerts) && (
-          <PageSection variant="light" className="forklift-page-headings-alerts">
+          <PageSection hasBodyWrapper={false} className="forklift-page-headings-alerts">
             {alerts}
           </PageSection>
         )}

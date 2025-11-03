@@ -1,10 +1,11 @@
-import type { FC, FormEvent, ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
+import Select from 'src/components/common/Select';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { Form, FormSelect, FormSelectOption } from '@patternfly/react-core';
+import { Form } from '@patternfly/react-core';
 
 type FindProviderFunction = (args: {
   providers: V1beta1Provider[];
@@ -13,14 +14,6 @@ type FindProviderFunction = (args: {
 
 const findProvider: FindProviderFunction = ({ name, providers }) =>
   providers.find((provider) => provider.metadata?.name === name);
-
-const ProviderOption = (provider: V1beta1Provider, index: number) => (
-  <FormSelectOption
-    key={provider?.metadata?.name ?? index}
-    value={provider?.metadata?.name}
-    label={provider?.metadata?.name ?? ''}
-  />
-);
 
 export const ProvidersEdit: FC<ProvidersEditProps> = ({
   helpContent,
@@ -38,36 +31,35 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
   const validated = targetProvider ? 'success' : 'error';
   const hasProviders = providers?.length > 0;
 
+  const providerOptions = [
+    { disabled: true, label: placeHolderLabel, value: '' },
+    ...providers.map((provider) => ({
+      label: provider?.metadata?.name ?? '',
+      value: provider?.metadata?.name ?? '',
+    })),
+  ];
+
   if (mode === 'edit') {
     return (
       <Form isWidthLimited>
         <FormGroupWithHelpText
+          helperText={helpContent}
           label={label}
           isRequired
           fieldId="targetProvider"
           validated={validated}
           helperTextInvalid={invalidLabel}
         >
-          <FormSelect
-            value={selectedProviderName}
-            onChange={(e, value) => {
-              onChange(value, e);
-            }}
+          <Select
             id="targetProvider"
+            value={selectedProviderName}
+            options={providerOptions}
+            placeholder={placeHolderLabel}
             isDisabled={!hasProviders}
-            validated={validated}
-          >
-            {[
-              <FormSelectOption
-                key="placeholder"
-                value={''}
-                label={placeHolderLabel}
-                isPlaceholder
-                isDisabled
-              />,
-              ...providers.map(ProviderOption),
-            ]}
-          </FormSelect>
+            onSelect={(event, value) => {
+              onChange(value, event);
+            }}
+          />
         </FormGroupWithHelpText>
       </Form>
     );
@@ -98,13 +90,13 @@ export const ProvidersEdit: FC<ProvidersEditProps> = ({
 };
 
 type ProvidersEditProps = {
+  helpContent: ReactNode;
+  invalidLabel: string;
+  label: string;
+  mode: 'edit' | 'view';
+  onChange: (value: string | number | undefined, event: React.MouseEvent | undefined) => void;
+  placeHolderLabel: string;
   providers: V1beta1Provider[];
   selectedProviderName: string;
-  onChange: (value: string, event: FormEvent<HTMLSelectElement>) => void;
-  label: string;
-  placeHolderLabel: string;
-  invalidLabel: string;
-  helpContent: ReactNode;
-  mode: 'edit' | 'view';
   setMode: (mode: 'edit' | 'view') => void;
 };

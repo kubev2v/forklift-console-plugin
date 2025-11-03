@@ -1,10 +1,10 @@
 import type { FC } from 'react';
-import { DisplayTitle } from 'src/components/DetailItems/DetailItem';
+import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
 import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
-import { Text } from '@patternfly/react-core';
+import { Stack, StackItem } from '@patternfly/react-core';
 import { MTV_SETTINGS } from '@utils/links';
 
 import { EditField } from '../cards/EditField';
@@ -30,20 +30,22 @@ const EditSnapshotPoolingInterval: FC<EditSettingsProps> = (props) => {
       {...props}
       resource={props.resource as K8sResourceCommon}
       jsonPath={'spec.controller_snapshot_status_check_rate_seconds'}
-      label={
-        <DisplayTitle
-          title={t('Snapshot polling interval')}
-          showHelpIconNextToTitle
-          moreInfoLink={MTV_SETTINGS}
-          helpContent={
-            <Text>
+      label={t('Snapshot polling interval')}
+      labelHelp={
+        <HelpIconPopover header={t('Snapshot polling interval')}>
+          <Stack hasGutter>
+            <StackItem>
               {t(
                 'Determines the frequency with which the system checks the status of snapshot creation or removal during oVirt warm migration. The default value is 10 seconds.',
               )}
-            </Text>
-          }
-          crumbs={['spec', 'controller_snapshot_status_check_rate_seconds']}
-        />
+            </StackItem>
+            <StackItem>
+              <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
+                Learn more
+              </a>
+            </StackItem>
+          </Stack>
+        </HelpIconPopover>
       }
       model={ForkliftControllerModel}
       helperText={t(

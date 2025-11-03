@@ -4,6 +4,7 @@ import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/ut
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { Label } from '@patternfly/react-core';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
 
@@ -22,10 +23,10 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
 
   if (!shouldRender) return null;
 
-  const content = plan?.spec?.networkNameTemplate ? (
-    t('Use custom')
-  ) : (
-    <span className="text-muted">{t('Use default')}</span>
+  const content = (
+    <Label isCompact color="grey">
+      {plan?.spec?.networkNameTemplate ? t('Use custom') : t('Use default')}
+    </Label>
   );
 
   return (

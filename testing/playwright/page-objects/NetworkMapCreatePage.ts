@@ -31,25 +31,45 @@ export class NetworkMapCreatePage {
 
     const projectSelect = this.page.getByTestId('network-map-project-select');
     await projectSelect.click();
+
+    const switchElement = this.page.locator('#show-default-projects-switch');
+    if (!(await switchElement.isChecked())) {
+      await this.page.locator('label[for="show-default-projects-switch"]').click();
+    }
+
+    const projectCombobox = projectSelect.getByRole('combobox');
+    await projectCombobox.fill(data.project);
     await this.page.getByRole('option', { name: data.project }).click();
 
     const sourceProviderSelect = this.page.getByTestId('network-map-source-provider-select');
     await sourceProviderSelect.click();
-    await this.page.getByRole('option', { name: data.sourceProvider }).click();
+    await this.page
+      .locator('button[role="option"]')
+      .filter({ hasText: data.sourceProvider })
+      .click();
 
     const targetProviderSelect = this.page.getByTestId('network-map-target-provider-select');
     await targetProviderSelect.click();
-    await this.page.getByRole('option', { name: data.targetProvider }).click();
+    await this.page
+      .locator('button[role="option"]')
+      .filter({ hasText: data.targetProvider })
+      .click();
 
     const sourceNetworkSelect = this.page.getByTestId('network-map-source-network-select').first();
     await expect(sourceNetworkSelect).not.toBeDisabled();
     await sourceNetworkSelect.click();
-    await this.page.getByRole('option', { name: data.sourceNetwork }).click();
+    await this.page
+      .locator('button[role="option"]')
+      .filter({ hasText: data.sourceNetwork })
+      .click();
 
     const targetNetworkSelect = this.page.getByTestId('network-map-target-network-select').first();
     await expect(targetNetworkSelect).not.toBeDisabled();
     await targetNetworkSelect.click();
-    await this.page.getByRole('option', { name: data.targetNetwork }).click();
+    await this.page
+      .locator('button[role="option"]')
+      .filter({ hasText: data.targetNetwork })
+      .click();
   }
 
   async populateMapping(index: number, sourceNetwork: string, targetNetwork: string) {

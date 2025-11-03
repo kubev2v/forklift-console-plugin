@@ -37,6 +37,7 @@ test.describe(
       await plansPage.clickCreatePlanButton();
       await createWizard.waitForWizardLoad();
       await createWizard.fillAndSubmit(testData);
+      await planDetailsPage.verifyPlanTitle(testData.planName);
       await planDetailsPage.verifyBasicPlanDetailsPage(testData);
     });
   },

@@ -10,13 +10,13 @@ import {
 
 import FilterableSelectMenuToggle from '@components/FilterableSelect/FilterableSelectMenuToggle';
 import {
+  Content,
   Divider,
   type MenuToggleElement,
   Select,
   SelectList,
   SelectOption,
   type SelectOptionProps,
-  Text,
 } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
@@ -193,8 +193,8 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
               ref={null}
             >
               <>
-                <Text>{createNewOptionLabel}</Text>
-                <Text>{`"${filterValue}"`}</Text>
+                <Content component="p">{createNewOptionLabel}</Content>
+                <Content component="p">{`"${filterValue}"`}</Content>
               </>
             </SelectOption>
           </>

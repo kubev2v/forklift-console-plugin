@@ -5,7 +5,7 @@ import { Button, ButtonVariant, Label, Popover } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { getCategoryColor, getCategoryIcon, getCategoryTitle } from '../utils/category';
+import { getCategoryStatus, getCategoryTitle } from '../utils/category';
 
 import ConcernList from './ConcernsList';
 
@@ -25,9 +25,7 @@ const ConcernPopover: FC<{
       footerContent={t('Total: {{length}}', { length: concerns.length })}
     >
       <Button isInline variant={ButtonVariant.link}>
-        <Label color={getCategoryColor(category)} icon={getCategoryIcon(category)}>
-          {concerns.length}
-        </Label>
+        <Label status={getCategoryStatus(category)}>{concerns.length}</Label>
       </Button>
     </Popover>
   );

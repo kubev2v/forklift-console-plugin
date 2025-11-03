@@ -21,7 +21,6 @@ const LearningTopicsCards: FC<LearningTopicsCardsProps> = ({ onSelect, topics })
           <Card
             id={learningExperienceTopic.id}
             isClickable
-            isRounded
             onClick={() => {
               trackEvent(TELEMETRY_EVENTS.TIPS_AND_TRICKS_VISITED, {
                 componentType: TipsTopicSourceComponent.TipsTopicCard,
@@ -31,20 +30,16 @@ const LearningTopicsCards: FC<LearningTopicsCardsProps> = ({ onSelect, topics })
             }}
           >
             <CardHeader
-              selectableActions={{
-                name: learningExperienceTopic.id,
-                selectableActionAriaLabelledby: learningExperienceTopic.id,
-                selectableActionId: learningExperienceTopic.id,
-              }}
+              selectableActions={{ selectableActionAriaLabelledby: learningExperienceTopic.id }}
             >
               <CardTitle>
                 <Flex>
-                  <FlexItem className="pf-v5-u-mr-sm">{learningExperienceTopic.icon}</FlexItem>
+                  <FlexItem className="pf-v6-u-mr-sm">{learningExperienceTopic.icon}</FlexItem>
                   <FlexItem>{learningExperienceTopic.title}</FlexItem>
                 </Flex>
               </CardTitle>
             </CardHeader>
-            <CardBody className="pf-v5-u-ml-lg">{learningExperienceTopic.description}</CardBody>
+            <CardBody className="pf-v6-u-ml-lg">{learningExperienceTopic.description}</CardBody>
           </Card>
         </FlexItem>
       ))}

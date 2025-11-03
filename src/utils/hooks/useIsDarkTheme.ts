@@ -5,7 +5,7 @@ export const useIsDarkTheme = (): boolean => {
 
   useEffect(() => {
     const checkDarkTheme = () => {
-      const hasDarkTheme = document.documentElement.classList.contains('pf-v5-theme-dark');
+      const hasDarkTheme = document.documentElement.classList.contains('pf-v6-theme-dark');
       setIsDarkTheme(hasDarkTheme);
     };
 

@@ -13,18 +13,7 @@ type SelectedToggleProps = {
 const SelectedToggle: FC<SelectedToggleProps> = ({ selectedVmKeys, setShowAll, showAll }) => {
   const { t } = useForkliftTranslation();
 
-  const selectedToggle = (
-    <ToggleGroupItem
-      text={t('Selected')}
-      isSelected={!showAll}
-      onChange={() => {
-        setShowAll(false);
-      }}
-      isDisabled={isEmpty(selectedVmKeys)}
-    />
-  );
-
-  return (
+  const toggleGroup = (
     <ToggleGroup>
       <ToggleGroupItem
         text={t('All')}
@@ -33,14 +22,23 @@ const SelectedToggle: FC<SelectedToggleProps> = ({ selectedVmKeys, setShowAll, s
           setShowAll(true);
         }}
       />
-      {isEmpty(selectedVmKeys) ? (
-        <Popover triggerAction="hover" bodyContent={t('No VMs have been selected')}>
-          {selectedToggle}
-        </Popover>
-      ) : (
-        selectedToggle
-      )}
+      <ToggleGroupItem
+        text={t('Selected')}
+        isSelected={!showAll}
+        onChange={() => {
+          setShowAll(false);
+        }}
+        isDisabled={isEmpty(selectedVmKeys)}
+      />
     </ToggleGroup>
+  );
+
+  return isEmpty(selectedVmKeys) ? (
+    <Popover triggerAction="hover" bodyContent={t('No VMs have been selected')}>
+      <div>{toggleGroup}</div>
+    </Popover>
+  ) : (
+    toggleGroup
   );
 };
 

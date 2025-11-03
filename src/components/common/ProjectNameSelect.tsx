@@ -24,7 +24,7 @@ export const ProjectNameSelect: FC<ProjectNameSelectProps> = ({ onSelect, projec
       label={t('Project')}
       isRequired
       fieldId={ProviderFieldsId.Project}
-      labelIcon={
+      labelHelp={
         <HelpIconPopover popoverProps={{ alertSeverityVariant: 'info' }}>
           {PROJECT_NAME_SELECT_POPOVER_HELP_CONTENT}
         </HelpIconPopover>

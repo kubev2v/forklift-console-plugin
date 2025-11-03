@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import SectionHeading from '@components/headers/SectionHeading';
-import { PageSection, PageSectionVariants } from '@patternfly/react-core';
+import { PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -13,18 +13,15 @@ const InventorySection: FC<InventorySectionProps> = ({ data }) => {
 
   const { inventory, provider } = data;
 
-  if (isEmpty(provider) || isEmpty(inventory)) {
-    return <span className="text-muted">{t('No inventory data available.')}</span>;
-  }
-
   const InventorySectionByType = getInventorySectionByType(provider?.spec?.type);
 
-  if (!InventorySectionByType) return null;
+  const hasInventory = !isEmpty(provider) && !isEmpty(inventory);
 
   return (
-    <PageSection variant={PageSectionVariants.light} className="forklift-page-section--details">
+    <PageSection hasBodyWrapper={false} className="forklift-page-section">
       <SectionHeading text={t('Provider inventory')} />
-      <InventorySectionByType data={data} />
+      {!hasInventory && <span className="text-muted">{t('No inventory data available.')}</span>}
+      {hasInventory && InventorySectionByType && <InventorySectionByType data={data} />}
     </PageSection>
   );
 };

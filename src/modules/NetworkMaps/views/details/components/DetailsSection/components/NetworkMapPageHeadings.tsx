@@ -54,7 +54,7 @@ export const NetworkMapPageHeadings: FC<{ name: string; namespace: string }> = (
       actions={<NetworkMapActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />}
     >
       {!isEmpty(alerts) && (
-        <PageSection variant="light" className="forklift-page-headings-alerts">
+        <PageSection hasBodyWrapper={false} className="forklift-page-headings-alerts">
           {alerts}
         </PageSection>
       )}

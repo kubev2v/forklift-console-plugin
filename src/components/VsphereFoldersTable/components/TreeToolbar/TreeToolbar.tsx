@@ -43,7 +43,7 @@ const TreeToolbar: FC<TreeToolbarProps> = ({
   showAll,
 }) => {
   return (
-    <Toolbar clearAllFilters={filters.clearAll} id="vm-list-toolbar">
+    <Toolbar clearAllFilters={filters.clearAll} id="vm-list-toolbar" className="pf-v6-u-pb-0">
       <ToolbarContent>
         {canSelect && (
           <ToolbarItem>
