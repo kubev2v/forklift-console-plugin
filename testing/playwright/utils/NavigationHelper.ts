@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 
 import { MTV_NAMESPACE } from './resource-manager/constants';
-import { disableGuidedTour, dismissGuidedTourModal } from './utils';
+import { disableGuidedTour } from './utils';
 
 export class NavigationHelper {
   private readonly defaultNamespace = MTV_NAMESPACE;
@@ -59,7 +59,7 @@ export class NavigationHelper {
     const url = this.buildK8sUrl(options);
     await this.page.goto(url);
     await this.page.waitForLoadState('networkidle');
-    await dismissGuidedTourModal(this.page);
+    await disableGuidedTour(this.page);
   }
 
   async navigateToMigrationMenu(): Promise<void> {
@@ -72,7 +72,7 @@ export class NavigationHelper {
     await this.page.goto('/mtv/overview');
     await this.page.waitForLoadState('networkidle');
 
-    await dismissGuidedTourModal(this.page);
+    await disableGuidedTour(this.page);
   }
 
   async navigateToPlans(): Promise<void> {
