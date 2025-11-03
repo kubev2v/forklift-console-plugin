@@ -66,16 +66,7 @@ export class OverviewPage {
     await this.page.goto('/mtv/overview');
     await this.page.waitForLoadState('networkidle');
 
-    // Dismiss tour dialog if present
-    const tourDialog = this.page.getByRole('dialog');
-    const tourVisible = await tourDialog.isVisible().catch(() => false);
-    if (tourVisible) {
-      const skipButton = tourDialog.getByRole('button', { name: 'Skip tour' });
-      if (await skipButton.isVisible().catch(() => false)) {
-        await skipButton.click();
-        await tourDialog.waitFor({ state: 'hidden', timeout: 5000 });
-      }
-    }
+    await this.dismissTourDialog();
 
     await this.waitForPageLoad();
   }
@@ -142,7 +133,7 @@ export class OverviewPage {
 
   /** Selects a topic by clicking its card and verifies heading */
   async selectTopicByCard(topicConfig: TopicConfig): Promise<void> {
-    await this.page.getByText(topicConfig.cardText).click();
+    await this.page.getByTestId('topic-card').filter({ hasText: topicConfig.cardText }).click();
     await expect(
       this.page.getByRole('heading', { name: topicConfig.name, level: 3 }),
     ).toBeVisible();
@@ -167,7 +158,7 @@ export class OverviewPage {
 
       await accordionButton.click();
 
-      await this.page.waitForTimeout(300);
+      //await this.page.waitForTimeout(300);
     }
   }
 

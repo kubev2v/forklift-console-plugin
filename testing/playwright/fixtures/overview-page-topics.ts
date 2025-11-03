@@ -104,7 +104,7 @@ export const TIPS_AND_TRICKS_TOPICS: TopicConfig[] = [
         sampleContent: 'This often happens when change block tracking',
       },
       {
-        buttonName: 'Why don\u2019t my VMs function correctly after a successful migration?',
+        buttonName: `Why don’t my VMs function correctly after a successful migration?`,
         sampleContent: 'A common reason VMs do not function properly',
       },
     ],
