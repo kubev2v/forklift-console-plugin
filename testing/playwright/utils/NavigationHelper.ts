@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 
 import { MTV_NAMESPACE } from './resource-manager/constants';
-import { disableGuidedTour } from './utils';
+import { disableGuidedTour, dismissGuidedTourModal } from './utils';
 
 export class NavigationHelper {
   private readonly defaultNamespace = MTV_NAMESPACE;
@@ -59,11 +59,16 @@ export class NavigationHelper {
     const url = this.buildK8sUrl(options);
 
     await this.page.goto(url);
-    await disableGuidedTour(this.page);
+    await this.page.waitForLoadState('networkidle');
+
+    await dismissGuidedTourModal(this.page);
   }
 
   async navigateToMigrationMenu(): Promise<void> {
     await this.navigateToConsole();
+
+    await dismissGuidedTourModal(this.page);
+
     await this.page.getByTestId('migration-nav-item').click({ timeout: 20000 });
   }
 
@@ -72,12 +77,7 @@ export class NavigationHelper {
     await this.page.goto('/mtv/overview');
     await this.page.waitForLoadState('networkidle');
 
-    const tourDialog = this.page.getByRole('dialog');
-    if (await tourDialog.isVisible({ timeout: 10000 })) {
-      const skipButton = tourDialog.getByRole('button', { name: 'Skip tour' });
-      await skipButton.click();
-      await tourDialog.waitFor({ state: 'hidden' });
-    }
+    await dismissGuidedTourModal(this.page);
   }
 
   async navigateToPlans(): Promise<void> {
