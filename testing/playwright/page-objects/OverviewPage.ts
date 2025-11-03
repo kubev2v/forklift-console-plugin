@@ -94,10 +94,8 @@ export class OverviewPage {
     selectTopicButton: Locator;
     closeDrawerButton: Locator;
   }> {
-    await expect(this.tipsAndTricksButton).toBeVisible();
-    await this.tipsAndTricksButton.click();
+    await this.openTipsAndTricks();
 
-    await expect(this.tipsAndTricksDrawerTitle).toBeVisible();
     await expect(this.selectTopicButton).toBeVisible();
     await expect(this.closeDrawerButton).toBeVisible();
 
