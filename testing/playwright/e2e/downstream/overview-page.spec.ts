@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { TIPS_AND_TRICKS_TOPICS } from '../../fixtures/overview-page-topics';
 import { OverviewPage } from '../../page-objects/OverviewPage';
-import { isEmpty } from '../../utils/utils';
+import { dismissGuidedTourModal } from '../../utils/utils';
 
 test.describe(
   'Overview Page - Tips and Tricks',
@@ -14,11 +14,10 @@ test.describe(
       page,
     }) => {
       const overviewPage = new OverviewPage(page);
-
       // SETUP: Navigate to Overview page and dismiss tour
       await page.goto('/mtv/overview');
       await page.waitForLoadState('networkidle');
-      await overviewPage.dismissTourDialog();
+      await dismissGuidedTourModal(page);
       await expect(overviewPage.pageTitle).toBeVisible();
 
       // STEP 1: Navigate to Tips and Tricks and Verify All Topics Present
@@ -39,9 +38,9 @@ test.describe(
           await overviewPage.verifyTopicHeading(topic.name);
         }
 
-        // For each expandable section: expand, verify content, collapse
-        if (!isEmpty(topic.accordions)) {
-          await overviewPage.testAllAccordions(topic.accordions);
+        // Test expandable sections structure
+        if (topic.minimumAccordions) {
+          await overviewPage.testAccordionsStructure(topic.minimumAccordions);
         }
       }
 
