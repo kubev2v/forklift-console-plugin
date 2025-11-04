@@ -37,7 +37,7 @@ export const SelectableGallery: FC<SelectableGalleryProps> = ({
   sortFunction,
 }) => {
   // State to manage the selected card's id
-  const [selectedCardId, setSelectedCardId] = useState<string | null>(selectedID);
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(selectedID ?? null);
 
   // Callback function for when a card is selected
   const handleCardChange = (isSelected: boolean, id: string) => {

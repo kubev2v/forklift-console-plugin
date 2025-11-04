@@ -2,9 +2,9 @@ import { getOVAProxyUrl } from 'src/modules/Providers/utils/helpers/getApiUrl';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';
+import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
-import { isEmpty } from './../../../utils/helpers';
 import { OvaValidationVariant, type UploadOvaResponse } from './types';
 
 export const uploadOva = async (

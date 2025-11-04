@@ -52,7 +52,7 @@ const processHostSecretPair = async (
     await patchHost(host, ipAddress);
     await patchSecret(secretData, encodedIpAddress, encodedUser, encodedPassword);
 
-    return;
+    return host;
   }
 
   // Create a new host and secret pair
@@ -115,6 +115,7 @@ const processHostSecretPair = async (
     uid: getUID(createdHost),
   };
   await patchHostSecretOwner(createdSecret, ownerRef);
+  return createdHost;
 };
 
 /**
@@ -150,5 +151,7 @@ export const onSaveHost = async ({
       encodedPassword,
     );
   });
-  await Promise.all(promises);
+
+  const hosts = await Promise.all(promises);
+  return hosts[0];
 };

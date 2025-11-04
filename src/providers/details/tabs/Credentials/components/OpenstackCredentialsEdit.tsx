@@ -58,30 +58,32 @@ const OpenstackCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
   const handleAuthTypeChange = useCallback(
     (type: OpenstackAuthType) => {
       setAuthenticationType(type);
+      const newData = { ...secret.data };
 
       switch (type) {
         case OpenstackAuthType.TokenWithUserIDSecretFields:
         case OpenstackAuthType.TokenWithUsernameSecretFields:
           // on change also clean userID and username
+          delete newData.userID;
+          delete newData.username;
+
           onNewSecretChange({
             ...secret,
             data: {
-              ...secret.data,
+              ...newData,
               authType: encode('token'),
-              userID: undefined,
-              username: undefined,
             },
           });
           break;
         case OpenstackAuthType.ApplicationCredentialIdSecretFields:
         case OpenstackAuthType.ApplicationCredentialNameSecretFields:
+          delete newData.applicationCredentialID;
+          delete newData.username;
           onNewSecretChange({
             ...secret,
             data: {
-              ...secret.data,
-              applicationCredentialID: undefined,
+              ...newData,
               authType: encode('applicationcredential'),
-              username: undefined,
             },
           });
           break;
@@ -89,7 +91,7 @@ const OpenstackCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
         default:
           onNewSecretChange({
             ...secret,
-            data: { ...secret.data, authType: encode('password') },
+            data: { ...newData, authType: encode('password') },
           });
           break;
       }

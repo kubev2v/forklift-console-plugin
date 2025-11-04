@@ -32,7 +32,7 @@ export const mapsSectionReducer = (
     case 'INIT':
       return {
         hasChanges: false,
-        networkMap: deepCopy(action.payload),
+        networkMap: deepCopy(action.payload)!,
         updating: false,
       };
     default:

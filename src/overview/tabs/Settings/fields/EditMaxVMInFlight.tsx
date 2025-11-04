@@ -19,8 +19,9 @@ const DEFAULT = 20;
  * MaxVMInFlightNumberInput component.
  * Wraps the SettingsNumberInput component with pre-defined default value.
  */
-const MaxVMInFlightNumberInput: InputComponentType = (props) => {
-  return <SettingsNumberInput {...props} defaultValue={DEFAULT} />;
+const MaxVMInFlightNumberInput: InputComponentType = ({ value, ...props }) => {
+  const numberValue = Number(value);
+  return <SettingsNumberInput {...props} value={numberValue} defaultValue={DEFAULT} />;
 };
 
 const EditMaxVMInFlight: FC<EditSettingsProps> = (props) => {

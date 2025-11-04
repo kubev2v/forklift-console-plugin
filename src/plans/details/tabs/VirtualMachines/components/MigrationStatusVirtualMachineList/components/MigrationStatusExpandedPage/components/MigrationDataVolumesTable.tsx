@@ -25,7 +25,7 @@ const MigrationDataVolumesTable: FC<MigrationDataVolumesTableProps> = ({ dvs }) 
     <>
       <SectionHeading
         className="migration-status-expanded-page__resource-list-header"
-        textComponent="h3"
+        headingLevel="h3"
         text={t('DataVolumes')}
       />
       <Table>

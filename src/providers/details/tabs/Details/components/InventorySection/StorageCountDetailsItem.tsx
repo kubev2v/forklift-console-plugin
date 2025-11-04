@@ -4,6 +4,7 @@ import InventoryCell from 'src/providers/components/InventoryCell';
 import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import type { OvaProvider } from '@kubev2v/types';
 import { DatabaseIcon } from '@patternfly/react-icons';
 
 import type { InventoryDetailsItemProps } from './utils/types';
@@ -32,7 +33,7 @@ const StorageCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           }}
           fieldId={ProvidersResourceFieldId.StorageCount}
           fields={[]}
-          inventoryValue={inventory.storageCount}
+          inventoryValue={(inventory as OvaProvider).storageCount}
         />
       }
     />

@@ -74,9 +74,11 @@ const ProvidersCreatePage: FC<{
     setNewSecret(updatedSecret);
   };
 
-  const onProjectNameChange = (newValue: string) => {
-    setApiError(null);
-    setProjectName(newValue);
+  const onProjectNameChange = (newValue: string | undefined) => {
+    if (newValue) {
+      setApiError(null);
+      setProjectName(newValue);
+    }
   };
 
   const onUpdate = async () => {

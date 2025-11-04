@@ -27,7 +27,7 @@ const MigrationJobsTable: FC<MigrationJobsTableProps> = ({ jobs }) => {
     <>
       <SectionHeading
         className="migration-status-expanded-page__resource-list-header"
-        textComponent="h3"
+        headingLevel="h3"
         text={t('Jobs')}
       />
       <Table>

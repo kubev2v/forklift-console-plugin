@@ -38,7 +38,10 @@ export const buildStorageMappings = (
   mappings: StorageMapping[],
   sourceProvider: V1beta1Provider | undefined,
 ): CustomStorageMapSpecMap[] => {
-  return mappings?.reduce((acc: CustomStorageMapSpecMap[], mapping) => {
+  if (!mappings) {
+    return [];
+  }
+  return mappings.reduce((acc: CustomStorageMapSpecMap[], mapping) => {
     const { sourceStorage, targetStorage } = mapping;
 
     // Skip mappings without valid source and target storage

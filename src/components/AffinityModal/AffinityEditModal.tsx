@@ -1,7 +1,8 @@
 import { type Dispatch, type SetStateAction, useState } from 'react';
 
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { Button, ButtonVariant, Modal, ModalVariant } from '@patternfly/react-core';
+import { Button, ButtonVariant } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useIDEntities } from './hooks/useIDEntities';

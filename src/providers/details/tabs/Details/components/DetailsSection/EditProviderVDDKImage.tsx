@@ -73,7 +73,7 @@ const EditProviderVDDKImage: ModalComponent<EditProviderVDDKImageProps> = (props
     onUpdateVddkImageSettings(model ?? ProviderModel, resource, {
       isEmptyImage,
       isUseVddkAio,
-      newValue,
+      newValue: newValue as string,
     });
 
   const body = (

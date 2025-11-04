@@ -1,6 +1,11 @@
 import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
 
-import { StorageMapModel, type V1beta1Provider, type V1beta1StorageMap } from '@kubev2v/types';
+import {
+  StorageMapModel,
+  type V1beta1Provider,
+  type V1beta1StorageMap,
+  type V1beta1StorageMapSpecMap,
+} from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 
@@ -57,7 +62,7 @@ export const createStorageMap = async ({
         namespace: project,
       },
       spec: {
-        map: buildStorageMappings(mappings, sourceProvider),
+        map: buildStorageMappings(mappings, sourceProvider) as V1beta1StorageMapSpecMap[],
         provider: {
           destination: getObjectRef(targetProvider),
           source: getObjectRef(sourceProvider),

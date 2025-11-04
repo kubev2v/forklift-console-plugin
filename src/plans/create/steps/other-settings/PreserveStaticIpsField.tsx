@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import { Checkbox, FormGroup, FormHelperText, Stack, StackItem } from '@patternfly/react-core';
+import { Checkbox, FormGroup, FormHelperText, Stack } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';

@@ -109,10 +109,12 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
           selectedProviderName={state.StorageMap?.spec?.provider?.source?.name ?? ''}
           label={t('Source provider')}
           placeHolderLabel={t('Select a provider')}
-          onChange={onChangeSource}
+          onChange={(value) => {
+            onChangeSource(value as string);
+          }}
           invalidLabel={t('The chosen provider is no longer available.')}
           mode={state.sourceProviderMode ?? 'view'}
-          helpContent="source provider"
+          helpContent={<>{t('Source provider')}</>}
           setMode={() => {
             dispatch({ payload: 'edit', type: 'SET_SOURCE_PROVIDER_MODE' });
           }}
@@ -123,10 +125,12 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
           selectedProviderName={state.StorageMap?.spec?.provider?.destination?.name ?? ''}
           label={t('Target provider')}
           placeHolderLabel={t('Select a provider')}
-          onChange={onChangeTarget}
+          onChange={(value) => {
+            onChangeTarget(value as string);
+          }}
           invalidLabel={t('The chosen provider is no longer available.')}
           mode={state.targetProviderMode ?? 'view'}
-          helpContent="Target provider"
+          helpContent={<>{t('Target provider')}</>}
           setMode={() => {
             dispatch({ payload: 'edit', type: 'SET_TARGET_PROVIDER_MODE' });
           }}

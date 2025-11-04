@@ -10,7 +10,7 @@ import { deepCopy } from '@utils/deepCopy';
  * @returns {NetworkMap} The updated network map object.
  */
 export const updateNetworkMapDestination = (networkMap: V1beta1NetworkMap): V1beta1NetworkMap => {
-  const networkMapCopy = deepCopy(networkMap);
+  const networkMapCopy = deepCopy(networkMap)!;
 
   networkMapCopy?.spec?.map?.forEach((entry) => {
     const [namespace, name] = entry?.destination?.name?.split('/') ?? [];

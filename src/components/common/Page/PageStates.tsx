@@ -17,7 +17,7 @@ import { ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
  * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Page/PageStates.tsx)
  */
-const BaseState = ({ icon, title }: { title?: string; icon?: ComponentType<any> }) => {
+const BaseState = ({ icon, title }: { title?: string; icon?: ComponentType }) => {
   return <EmptyState titleText={title} icon={icon} headingLevel="h4"></EmptyState>;
 };
 

@@ -27,7 +27,7 @@ describe('useSort hook', () => {
       result: {
         current: [activeSort],
       },
-    } = renderHook(() => useSort([{ label: undefined, resourceFieldId: 'Foo' }]));
+    } = renderHook(() => useSort([{ label: null, resourceFieldId: 'Foo' }]));
 
     expect(activeSort).toMatchObject({
       isAsc: true,
@@ -46,7 +46,7 @@ describe('useSort hook', () => {
     expect(activeSort).toMatchObject({
       isAsc: true,
       label: undefined,
-      resourceFieldId: undefined,
+      resourceFieldId: '',
     });
 
     expect(setActiveSort).toBeDefined();

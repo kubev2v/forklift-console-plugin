@@ -21,9 +21,9 @@ import type { FilterRenderer, ValueMatcher } from './types';
  * @returns the value of the fields based on the field jsonPath
  */
 export const getResourceFieldValue = <
-  T extends Record<string, object | string | ((resourceData: unknown) => unknown)>,
+  T extends Record<string, object | string | boolean | ((resourceData: unknown) => unknown)>,
 >(
-  resourceData: T,
+  resourceData: T | null | undefined,
   resourceFieldId: keyof T | string,
   resourceFields: ResourceField[],
 ): T[keyof T] | string | undefined => {
@@ -67,10 +67,15 @@ export const createMatcher =
   }: {
     selectedFilters: Record<string, string[]>;
     filterType: string;
-    matchValue: (value: unknown) => (filterValue: string) => boolean;
+    matchValue: (value: string) => (filterValue: string) => boolean;
     resourceFields: ResourceField[];
   }) =>
-  (resourceData: unknown): boolean =>
+  (
+    resourceData?: Record<
+      string,
+      object | string | boolean | ((resourceData: unknown) => unknown)
+    > | null,
+  ): boolean =>
     resourceFields
       .filter(({ filter }) => filter?.type === filterType)
       .filter(
@@ -82,9 +87,9 @@ export const createMatcher =
           resourceFieldId && selectedFilters[resourceFieldId]?.length
             ? selectedFilters[resourceFieldId]
             : filter?.defaultValues,
-        value: getResourceFieldValue(resourceData, resourceFieldId, resourceFields),
+        value: getResourceFieldValue(resourceData, resourceFieldId ?? '', resourceFields),
       }))
-      .map(({ filters, value }) => filters.some(matchValue(value)))
+      .map(({ filters, value }) => !filters || filters.some(matchValue(value as string)))
       .every(Boolean);
 
 /**
@@ -134,7 +139,7 @@ const sliderMatcher = {
   matchValue: (value: string) => (filter: string) => Boolean(value).toString() === filter || !value,
 };
 
-export const defaultValueMatchers: ValueMatcher[] = [
+export const defaultValueMatchers: ValueMatcher<string>[] = [
   freetextMatcher,
   enumMatcher,
   searchableEnumMatcher,
@@ -165,9 +170,11 @@ export const createMetaMatcher =
   (
     selectedFilters: Record<string, string[]>,
     resourceFields: ResourceField[],
-    valueMatchers: ValueMatcher[] = defaultValueMatchers,
+    valueMatchers: ValueMatcher<string>[] = defaultValueMatchers,
   ) =>
-  (resourceData: unknown): boolean =>
+  (
+    resourceData: Record<string, object | string | boolean | ((resourceData: unknown) => unknown)>,
+  ): boolean =>
     valueMatchers
       .map(({ filterType, matchValue }) =>
         createMatcher({ filterType, matchValue, resourceFields, selectedFilters }),

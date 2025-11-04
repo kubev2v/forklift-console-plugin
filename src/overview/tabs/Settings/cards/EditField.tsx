@@ -29,9 +29,7 @@ export const EditField: FC<EditFieldProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
-  const [value, setValue] = useState(
-    (getValueByJsonPath(resource, jsonPath) as string) ?? defaultValue,
-  );
+  const [value, setValue] = useState(getValueByJsonPath(resource, jsonPath) ?? defaultValue);
   const latestValueRef = useRef(value);
   const [validation, setValidation] = useState<ValidationMsg>({
     msg: null,

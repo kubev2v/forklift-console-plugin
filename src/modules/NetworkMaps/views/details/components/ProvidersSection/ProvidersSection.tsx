@@ -1,4 +1,4 @@
-import { type FC, type FormEvent, useEffect, useReducer } from 'react';
+import { type FC, useEffect, useReducer } from 'react';
 import { updateNetworkMapDestination } from 'src/modules/NetworkMaps/utils/helpers/updateNetworkMapDestination';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -64,14 +64,14 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
     dispatch({ payload: obj, type: 'INIT' });
   };
 
-  const onChangeSource: (value: string, event: FormEvent<HTMLSelectElement>) => void = (value) => {
+  const onChangeSource: (value: string) => void = (value) => {
     const payload = providers.find((provider) => provider?.metadata?.name === value);
     if (payload) {
       dispatch({ payload, type: 'SET_SOURCE_PROVIDER' });
     }
   };
 
-  const onChangeTarget: (value: string, event: FormEvent<HTMLSelectElement>) => void = (value) => {
+  const onChangeTarget: (value: string) => void = (value) => {
     const payload = providers.find((provider) => provider?.metadata?.name === value);
     if (payload) {
       dispatch({ payload, type: 'SET_TARGET_PROVIDER' });
@@ -114,10 +114,12 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
           selectedProviderName={state.networkMap?.spec?.provider?.source?.name ?? ''}
           label={t('Source provider')}
           placeHolderLabel={t('Select a provider')}
-          onChange={onChangeSource}
+          onChange={(value) => {
+            onChangeSource(value as string);
+          }}
           invalidLabel={t('The chosen provider is no longer available.')}
           mode={state.sourceProviderMode}
-          helpContent="source provider"
+          helpContent={t('Source provider')}
           setMode={() => {
             dispatch({ payload: 'edit', type: 'SET_SOURCE_PROVIDER_MODE' });
           }}
@@ -128,10 +130,12 @@ export const ProvidersSection: FC<ProvidersSectionProps> = ({ obj }) => {
           selectedProviderName={state.networkMap?.spec?.provider?.destination?.name ?? ''}
           label={t('Target provider')}
           placeHolderLabel={t('Select a provider')}
-          onChange={onChangeTarget}
+          onChange={(value) => {
+            onChangeTarget(value as string);
+          }}
           invalidLabel={t('The chosen provider is no longer available.')}
           mode={state.targetProviderMode}
-          helpContent="Target provider"
+          helpContent={t('Target provider')}
           setMode={() => {
             dispatch({ payload: 'edit', type: 'SET_TARGET_PROVIDER_MODE' });
           }}

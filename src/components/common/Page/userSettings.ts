@@ -1,3 +1,4 @@
+import { DEFAULT_PER_PAGE } from '@components/common/Page/usePagination';
 import { isEmpty } from '@utils/helpers';
 
 import {
@@ -8,10 +9,13 @@ import {
 
 import type { UserSettings } from './types';
 
-const parseOrClean = (key) => {
+const parseOrClean = (key: string): Record<string, any> => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return JSON.parse(loadFromLocalStorage(key)) ?? {};
+    const storedData = loadFromLocalStorage(key);
+    if (!storedData) {
+      return {};
+    }
+    return (JSON.parse(storedData) ?? {}) as object;
   } catch (_e) {
     removeFromLocalStorage(key);
     // eslint-disable-next-line no-console
@@ -28,7 +32,13 @@ const saveRestOrRemoveKey = (key: string, { rest }: Record<string, Record<string
   }
 };
 
-const toField = ({ isVisible, resourceFieldId }) => ({ isVisible, resourceFieldId });
+const toField = ({
+  isVisible,
+  resourceFieldId,
+}: {
+  isVisible?: boolean;
+  resourceFieldId: string;
+}) => ({ isVisible, resourceFieldId });
 
 const sanitizeFields = (fields: unknown): { resourceFieldId: string; isVisible?: boolean }[] =>
   Array.isArray(fields)
@@ -49,7 +59,7 @@ const sanitizeFields = (fields: unknown): { resourceFieldId: string; isVisible?:
  *
  * @param pageId key suffix - together with PLUGIN_NAME used to load/save data.
  */
-export const loadUserSettings = ({ pageId }): UserSettings => {
+export const loadUserSettings = ({ pageId }: { pageId: string }): UserSettings => {
   const key = `${process.env.PLUGIN_NAME}/${pageId}`;
   const { fields, filters, perPage } = parseOrClean(key);
 
@@ -82,7 +92,7 @@ export const loadUserSettings = ({ pageId }): UserSettings => {
         const { perPage: keyPerPage, ...rest } = parseOrClean(key);
         saveRestOrRemoveKey(key, { perPage: keyPerPage, rest });
       },
-      perPage: typeof perPage === 'number' ? perPage : undefined,
+      perPage: typeof perPage === 'number' ? perPage : DEFAULT_PER_PAGE,
       save: (newPerPage) => {
         saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), perPage: newPerPage }));
       },

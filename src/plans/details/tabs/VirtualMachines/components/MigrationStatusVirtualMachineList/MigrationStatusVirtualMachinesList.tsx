@@ -1,7 +1,7 @@
 import { type FC, useCallback, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
-import { TableSortContextProvider } from 'src/components/TableSortContext';
+import { TableSortContextProvider } from 'src/components/TableSortContextProvider';
 import { isPlanExecuting } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

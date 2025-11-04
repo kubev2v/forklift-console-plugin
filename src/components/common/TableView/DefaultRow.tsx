@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import { Td, Tr } from '@patternfly/react-table';
 
 import { getResourceFieldValue } from '../FilterGroup/matchers';
@@ -10,12 +12,20 @@ import type { RowProps } from './types';
 export const DefaultRow = <T,>({ resourceData, resourceFields }: RowProps<T>) => {
   return (
     <Tr>
-      {resourceFields?.map(({ label, resourceFieldId }) => (
-        <Td key={resourceFieldId} dataLabel={label ?? undefined}>
-          {(getResourceFieldValue(resourceData, resourceFieldId ?? '', resourceFields) as string) ??
-            ''}
-        </Td>
-      ))}
+      {resourceFields?.reduce<ReactNode[]>((acc, { label, resourceFieldId }) => {
+        if (resourceFieldId) {
+          acc.push(
+            <Td key={resourceFieldId} dataLabel={label ?? undefined}>
+              {(getResourceFieldValue(
+                resourceData as any,
+                resourceFieldId ?? '',
+                resourceFields,
+              ) as string) ?? ''}
+            </Td>,
+          );
+        }
+        return acc;
+      }, [])}
     </Tr>
   );
 };

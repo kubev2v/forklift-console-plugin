@@ -36,16 +36,25 @@ export type FilterDef = {
   // by default missing/empty filters result in positive match (vacuous truth)
   defaultValues?: string[];
   helperText?: string | ReactNode;
-  dynamicFilter?: (items: never[]) => Partial<FilterDef>;
+  dynamicFilter?: (items: unknown[]) => Partial<FilterDef>;
   isHidden?: boolean;
   showFilterIcon?: boolean;
 };
 
-type OpenApiJsonPath = string | ((resourceData: never) => unknown);
+export type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => string);
+
+type OpenApiJsonResourcePath =
+  | OpenApiJsonPath
+  | ((
+      resourceData: Record<
+        string,
+        object | string | boolean | ((resourceData: unknown) => unknown)
+      >,
+    ) => unknown);
 
 export type ResourceField = {
   resourceFieldId: string | null;
-  jsonPath?: OpenApiJsonPath;
+  jsonPath?: OpenApiJsonResourcePath;
   label: string | null;
   // visibility status, can change in time
   isVisible?: boolean;
@@ -54,7 +63,7 @@ export type ResourceField = {
   // if true then the field should be never visible in the UI
   isHidden?: boolean;
   sortable?: boolean;
-  filter?: FilterDef;
+  filter?: FilterDef | null;
   // if true then the field filters state should persist between sessions
   isPersistent?: boolean;
   info?: ThProps['info'];

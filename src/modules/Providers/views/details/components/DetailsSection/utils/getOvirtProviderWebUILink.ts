@@ -17,7 +17,7 @@ export const getOvirtProviderWebUILink = (provider: V1beta1Provider): string => 
 
   // Calculate link using API URL
   const uiLinkRegexp = /(?<=ovirt-engine)\/api$/gu;
-  const regexpResult = uiLinkRegexp.exec(provider?.spec?.url);
+  const regexpResult = uiLinkRegexp.exec(provider?.spec?.url ?? '');
 
   return provider?.spec?.url && regexpResult
     ? provider?.spec?.url.slice(0, uiLinkRegexp.lastIndex - regexpResult[0].length)

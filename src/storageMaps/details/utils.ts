@@ -1,4 +1,4 @@
-import type { V1beta1StorageMap } from '@kubev2v/types';
+import type { V1beta1StorageMap, V1beta1StorageMapSpecMap } from '@kubev2v/types';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
@@ -67,7 +67,7 @@ export const transformFormValuesToK8sSpec = (
     ...existingStorageMap,
     spec: {
       ...existingStorageMap.spec,
-      map: transformedMappings,
+      map: transformedMappings as V1beta1StorageMapSpecMap[],
     },
   };
 };

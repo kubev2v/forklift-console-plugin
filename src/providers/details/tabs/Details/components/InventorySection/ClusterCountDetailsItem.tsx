@@ -4,6 +4,8 @@ import InventoryCell from 'src/providers/components/InventoryCell';
 import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import type { VSphereProvider } from '@kubev2v/types';
+
 import type { InventoryDetailsItemProps } from './utils/types';
 
 const ClusterCountDetailsItem: FC<InventoryDetailsItemProps> = ({
@@ -29,7 +31,7 @@ const ClusterCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           }}
           fieldId={ProvidersResourceFieldId.ClusterCount}
           fields={[]}
-          inventoryValue={inventory.clusterCount}
+          inventoryValue={(inventory as VSphereProvider).clusterCount}
         />
       }
     />

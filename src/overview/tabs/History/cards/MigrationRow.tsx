@@ -55,7 +55,7 @@ const MigrationRow: FC<MigrationRowProps> = ({
     vms: (
       <Split hasGutter>
         {getMigrationStatusLabel(vmStatuses, migrationVMs?.length)}
-        <VMStatusIconsRow statuses={vmStatuses} plan={plan} />
+        {plan ? <VMStatusIconsRow statuses={vmStatuses} plan={plan} /> : null}
       </Split>
     ),
   };

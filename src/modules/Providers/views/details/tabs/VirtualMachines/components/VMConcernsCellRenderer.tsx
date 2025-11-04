@@ -4,7 +4,11 @@ import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { getCategoryStatus } from '@components/Concerns/utils/category';
+import {
+  getCategoryIcon,
+  getCategoryStatus,
+  getCategoryTitle,
+} from '@components/Concerns/utils/category';
 import type { Concern } from '@kubev2v/types';
 import {
   Button,
@@ -19,7 +23,6 @@ import {
 import { isEmpty } from '@utils/helpers';
 
 import { orderedConcernCategories } from '../constants';
-import { getCategoryIcon, getCategoryTitle } from '../utils/helpers/getCategoryTitle';
 import { groupConcernsByCategory } from '../utils/helpers/groupConcernsByCategory';
 
 import type { VMCellProps } from './VMCellProps';

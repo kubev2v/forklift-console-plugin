@@ -8,7 +8,7 @@ import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dyna
 
 type NetworkMapYAMLTabProps = {
   name: string;
-  namespace: string;
+  namespace?: string;
 };
 
 const NetworkMapYAMLTab: FC<NetworkMapYAMLTabProps> = ({ name, namespace }) => {

@@ -20,12 +20,13 @@ const VSphereHostCell: FC<VSphereHostCellProps> = ({
   inventoryValue,
 }: VSphereHostCellProps) => {
   const { inventory, provider } = providerData;
-  const value = fields?.length
-    ? getResourceFieldValue({ ...provider, inventory }, fieldId, fields)
-    : inventoryValue;
+  const value =
+    fields?.length && inventory
+      ? getResourceFieldValue({ ...provider, inventory }, fieldId, fields)
+      : inventoryValue;
   const providerURL = getProviderDetailsPageUrl(provider);
 
-  if (value === undefined) {
+  if (value === undefined || typeof value === 'object') {
     return <TableEmptyCell />;
   }
 

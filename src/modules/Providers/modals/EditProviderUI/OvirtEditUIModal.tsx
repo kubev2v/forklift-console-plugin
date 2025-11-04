@@ -1,3 +1,4 @@
+import { providerUiAnnotation } from 'src/providers/utils/constants';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';
@@ -31,7 +32,7 @@ export const OvirtEditUIModal: ModalComponent<EditProviderUIModalProps> = ({
   return (
     <EditModal
       {...props}
-      jsonPath={['metadata', 'annotations', 'forklift.konveyor.io/providerUI']}
+      jsonPath={['metadata', 'annotations', providerUiAnnotation]}
       title={title || t('Edit provider web UI link')}
       label={label || t('Provider web UI link')}
       model={ProviderModel}

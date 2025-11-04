@@ -1,10 +1,10 @@
 import type {
-  K8sIoApiCoreV1Affinity,
-  K8sIoApiCoreV1NodeAffinity,
   K8sIoApiCoreV1PodAffinity,
   K8sIoApiCoreV1PodAntiAffinity,
   K8sIoApimachineryPkgApisMetaV1LabelSelectorRequirement,
 } from '@kubev2v/types';
+import type { V1beta1PlanSpecTargetAffinity } from '@kubev2v/types/dist/generated/forklift/models/V1beta1PlanSpecTargetAffinity';
+import type { V1beta1PlanSpecTargetAffinityNodeAffinity } from '@kubev2v/types/src/generated/forklift/models/V1beta1PlanSpecTargetAffinityNodeAffinity';
 
 import { AffinityCondition, type AffinityRowData, AffinityType } from './types';
 
@@ -13,7 +13,7 @@ const setIDsToEntity = (
 ) => entity?.map((elm, index) => ({ ...elm, id: index }));
 
 const getNodeAffinityRows = (
-  nodeAffinity: K8sIoApiCoreV1NodeAffinity | undefined,
+  nodeAffinity: V1beta1PlanSpecTargetAffinityNodeAffinity | undefined,
 ): AffinityRowData[] => {
   const requiredTerms =
     nodeAffinity?.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms ?? [];
@@ -68,7 +68,7 @@ const getPodLikeAffinityRows = (
   return [...required, ...preferred] as AffinityRowData[];
 };
 
-export const affinityToRowsData = (affinity: K8sIoApiCoreV1Affinity): AffinityRowData[] => [
+export const affinityToRowsData = (affinity: V1beta1PlanSpecTargetAffinity): AffinityRowData[] => [
   ...getNodeAffinityRows(affinity?.nodeAffinity),
   ...getPodLikeAffinityRows(affinity?.podAffinity),
   ...getPodLikeAffinityRows(affinity?.podAntiAffinity, true),

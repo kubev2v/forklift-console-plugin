@@ -10,6 +10,11 @@ import { AFFINITY_CONDITION_LABELS, AFFINITY_TYPE_LABELS } from './utils/constan
 import type { AffinityRowData } from './utils/types';
 import AffinityRowActionsDropdown from './AffinityRowActionsDropdown';
 
+export type AffinityRowDataProps = {
+  onDelete: (affinity: AffinityRowData) => void;
+  onEdit: (affinity: AffinityRowData) => void;
+};
+
 const AffinityRow: FC<
   RowProps<
     AffinityRowData,

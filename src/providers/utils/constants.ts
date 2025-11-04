@@ -19,6 +19,8 @@ export enum ProvidersResourceFieldId {
   RegionCount = 'regionCount',
 }
 
+export const providerUiAnnotation = 'forklift.konveyor.io/providerUI';
+
 export const PROVIDER_TYPES = {
   openshift: 'openshift',
   openstack: 'openstack',

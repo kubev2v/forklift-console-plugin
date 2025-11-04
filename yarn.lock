@@ -2108,6 +2108,13 @@
     "@types/history" "^4.7.11"
     "@types/react" "*"
 
+"@types/react-tagsinput@^3.20.6":
+  version "3.20.6"
+  resolved "https://registry.yarnpkg.com/@types/react-tagsinput/-/react-tagsinput-3.20.6.tgz#243aedb4cb28accfeb68277edf2c0b912b066879"
+  integrity sha512-Tx0jOqLSzlosxgKmGg7zNF6hwfeVSNbolWb0HgV2LsOE5nxJyfnlOTcbwQ9HKvfu2jOEKJ46OXszv1PUZHnCTw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@^18.3.8":
   version "18.3.20"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.20.tgz#b0dccda9d2f1bc24d2a04b1d0cb5d0b9a3576ad3"
@@ -4377,11 +4384,6 @@ eslint-config-prettier@^10.1.1:
   version "10.1.8"
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-10.1.8.tgz#15734ce4af8c2778cc32f0b01b37b0b5cd1ecb97"
   integrity sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==
-
-eslint-define-config@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/eslint-define-config/-/eslint-define-config-2.1.0.tgz#9708b3efd57637b6fb685d9c2fb6285b9acfbd71"
-  integrity sha512-QUp6pM9pjKEVannNAbSJNeRuYwW3LshejfyBBpjeMGaJjaDUpVps4C6KVR8R7dWZnD3i0synmrE36znjTkJvdQ==
 
 eslint-import-resolver-node@^0.3.9:
   version "0.3.9"

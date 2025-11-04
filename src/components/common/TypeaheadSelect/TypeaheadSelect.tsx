@@ -167,7 +167,7 @@ const TypeaheadSelect = (
   return (
     <Select
       isOpen={isOpen}
-      onSelect={(_, selectedValue) => {
+      onSelect={(_, selectedValue: string | number | undefined) => {
         handleSelect(selectedValue);
       }}
       onOpenChange={handleOpenChange}

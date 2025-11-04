@@ -4,6 +4,7 @@ import InventoryCell from 'src/providers/components/InventoryCell';
 import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import type { VSphereProvider } from '@kubev2v/types';
 import { OutlinedHddIcon } from '@patternfly/react-icons';
 
 import type { InventoryDetailsItemProps } from './utils/types';
@@ -32,7 +33,7 @@ const HostCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           }}
           fieldId={ProvidersResourceFieldId.HostCount}
           fields={[]}
-          inventoryValue={inventory.hostCount}
+          inventoryValue={(inventory as VSphereProvider).hostCount}
         />
       }
     />

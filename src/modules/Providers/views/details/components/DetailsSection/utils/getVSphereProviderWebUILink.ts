@@ -14,7 +14,7 @@ export const getVSphereProviderWebUILink = (provider: V1beta1Provider): string =
   }
 
   // Calculate link using API URL
-  const url = provider?.spec?.url || '';
+  const url = provider?.spec?.url ?? '';
   const suffix = '/sdk';
   const newSuffix = '/ui';
 
