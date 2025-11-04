@@ -9,10 +9,13 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
   ModalVariant,
   useWizardContext,
 } from '@patternfly/react-core';
-import { Modal } from '@patternfly/react-core/deprecated';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
@@ -61,21 +64,23 @@ const VirtualMachinesReviewSection: FC = () => {
         <Modal
           isOpen
           variant={ModalVariant.large}
-          title={t('Selected VMs')}
           onClose={() => {
             setIsModalOpen(false);
           }}
-          actions={[
+        >
+          <ModalHeader title={t('Selected VMs')} />
+          <ModalBody>
+            <VirtualMachinesTable value={vms} showSelectedOnly />
+          </ModalBody>
+          <ModalFooter>
             <Button
               onClick={() => {
                 setIsModalOpen(!isModalOpen);
               }}
             >
               {t('Close')}
-            </Button>,
-          ]}
-        >
-          <VirtualMachinesTable value={vms} showSelectedOnly />
+            </Button>
+          </ModalFooter>
         </Modal>
       )}
     </ExpandableReviewSection>

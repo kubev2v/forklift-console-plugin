@@ -19,10 +19,11 @@ import {
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
-import { Tile } from '@patternfly/react-core/deprecated';
 import { type ProviderType, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { Namespace } from '@utils/constants';
+
+import { ProviderCard } from './ProviderCard';
 
 const WelcomeCard: FC = () => {
   const { t } = useForkliftTranslation();
@@ -89,64 +90,72 @@ const WelcomeCard: FC = () => {
                     </ForkliftTrans>
                   </Content>
                 </FlexItem>
+
                 <FlexItem>
                   <Content component="p" className="forklift-overview__welcome-text">
                     <ForkliftTrans>You can migrate virtual machines from:</ForkliftTrans>
                   </Content>
                 </FlexItem>
+
                 <FlexItem>
                   <Flex
                     className="forklift-overview__welcome-tiles"
                     spaceItems={{ default: 'spaceItemsSm' }}
+                    alignItems={{ default: 'alignItemsCenter' }}
                   >
                     <FlexItem>
-                      <Tile
-                        title={providerItems.vsphere.title}
-                        icon={<img alt="" src={images.vmwareImg} />}
+                      <ProviderCard
+                        imageSrc={images.vmwareImg}
                         onClick={() => {
                           navigateToProvider(providerItems.vsphere.key);
                         }}
-                      />
+                      >
+                        {providerItems.vsphere.title}
+                      </ProviderCard>
                     </FlexItem>
 
                     <FlexItem>
-                      <Tile
-                        title={providerItems.ova.title}
-                        icon={<img alt="" src={images.ovaImg} />}
+                      <ProviderCard
+                        imageSrc={images.ovaImg}
                         onClick={() => {
                           navigateToProvider(providerItems.ova.key);
                         }}
-                      />
+                      >
+                        {providerItems.ova.title}
+                      </ProviderCard>
                     </FlexItem>
 
                     <FlexItem>
-                      <Tile
-                        title={providerItems.openstack.title}
-                        icon={<img alt="" src={images.openstackImg} />}
+                      <ProviderCard
+                        imageSrc={images.openstackImg}
                         onClick={() => {
                           navigateToProvider(providerItems.openstack.key);
                         }}
-                      />
+                      >
+                        {providerItems.openstack.title}
+                      </ProviderCard>
                     </FlexItem>
 
                     <FlexItem>
-                      <Tile
-                        title={providerItems.ovirt.title}
-                        icon={<img alt="" src={images.redhatImg} />}
+                      <ProviderCard
+                        imageSrc={images.redhatImg}
                         onClick={() => {
                           navigateToProvider(providerItems.ovirt.key);
                         }}
-                      />
+                      >
+                        {providerItems.ovirt.title}
+                      </ProviderCard>
                     </FlexItem>
 
                     <FlexItem>
-                      <Tile
-                        title={providerItems.openshift.title}
-                        icon={<img alt="" src={images.openshiftImg} />}
+                      <ProviderCard
+                        imageSrc={images.openshiftImg}
                         onClick={() => {
                           navigateToProvider(providerItems.openshift.key);
                         }}
-                      />
+                      >
+                        {providerItems.openshift.title}
+                      </ProviderCard>
                     </FlexItem>
                   </Flex>
                 </FlexItem>

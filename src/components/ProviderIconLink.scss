@@ -1,3 +1,9 @@
 .forklift-provider-icon-link {
   margin-right: var(--pf-t--global--spacer--sm);
+  width: var(--pf-t--global--icon--size--xl);
+  height: var(--pf-t--global--icon--size--xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }

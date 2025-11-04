@@ -12,8 +12,7 @@ const EditMigrateSharedDisksBody: FC = () => {
         </StackItem>
         <StackItem>
           If this is set to <strong>true</strong>, the shared disks will be migrated.
-        </StackItem>
-        <StackItem>
+          <br />
           If this is set to <strong>false</strong>, the shared disks will not be migrated.
         </StackItem>
       </Stack>

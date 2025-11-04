@@ -1,11 +1,10 @@
-import { createRef, type FormEvent, useState } from 'react';
+import { type FormEvent, useState } from 'react';
 
 import {
   Button,
   ButtonVariant,
   Content,
   ContentVariants,
-  DataList,
   DataListCell,
   DataListCheck,
   DataListControl,
@@ -14,13 +13,8 @@ import {
   DataListItemCells,
   DataListItemRow,
 } from '@patternfly/react-core';
-import {
-  DragDrop,
-  Draggable,
-  type DraggableItemPosition,
-  Droppable,
-  Modal,
-} from '@patternfly/react-core/deprecated';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '@patternfly/react-core';
+import { DragDropSort, type DraggableObject } from '@patternfly/react-drag-drop';
 
 import type { ResourceField } from '../utils/types';
 
@@ -98,34 +92,18 @@ export const ManageColumnsModal = ({
   title = 'Manage columns',
 }: ManagedColumnsProps) => {
   const [editedColumns, setEditedColumns] = useState(filterActionsAndHidden(resourceFields));
+
   const restoreDefaults = () => {
     setEditedColumns([...filterActionsAndHidden(defaultColumns)]);
   };
-  const onDrop: (source: DraggableItemPosition, dest?: DraggableItemPosition) => boolean = (
-    source,
-    dest,
-  ) => {
-    if (!dest) {
-      return false;
-    }
 
-    const draggedItem = editedColumns[source.index];
-    const itemCurrentlyAtDestination = editedColumns[dest.index];
-
-    if (!draggedItem || !itemCurrentlyAtDestination) {
-      return false;
-    }
-
-    const base = editedColumns.filter(
-      ({ resourceFieldId: id }) => id !== draggedItem?.resourceFieldId,
-    );
-
-    setEditedColumns([
-      ...base.slice(0, dest.index),
-      draggedItem,
-      ...base.slice(dest.index, base.length),
-    ]);
-    return true;
+  const onDrop = (_event: unknown, newItems: DraggableObject[]) => {
+    // Map DraggableObjects back to ResourceFields
+    const updatedColumns = newItems.map((item) => {
+      const originalColumn = editedColumns.find((col) => col.resourceFieldId === item.id);
+      return originalColumn!;
+    });
+    setEditedColumns(updatedColumns);
   };
 
   const onSelect = (updatedId: string, updatedValue: boolean): void => {
@@ -156,17 +134,65 @@ export const ManageColumnsModal = ({
   };
 
   return (
-    <Modal
-      title={title}
-      isOpen={showModal}
-      variant="small"
-      description={
-        <Content>
-          <Content component={ContentVariants.p}>{description}</Content>
-        </Content>
-      }
-      onClose={onClose}
-      actions={[
+    <Modal isOpen={showModal} variant="small" onClose={onClose}>
+      <ModalHeader
+        title={title}
+        description={
+          <Content>
+            <Content component={ContentVariants.p}>{description}</Content>
+          </Content>
+        }
+      />
+      <ModalBody>
+        <DragDropSort
+          variant="DataList"
+          items={editedColumns.map(({ isIdentity, isVisible, label, resourceFieldId: id }) => {
+            const fieldId = id!;
+
+            return {
+              content: (
+                <DataListItem aria-labelledby={`draggable-${fieldId}`}>
+                  <DataListItemRow>
+                    <DataListControl>
+                      <DataListDragButton
+                        aria-label={reorderLabel}
+                        aria-labelledby={`draggable-${fieldId}`}
+                      />
+                      <DataListCheck
+                        aria-labelledby={`draggable-${fieldId}`}
+                        name={fieldId}
+                        isChecked={
+                          // visibility for identity resourceFields (namespace) is governed by parent component
+                          isIdentity
+                            ? resourceFields.find(
+                                (resourceField) => resourceField.resourceFieldId === fieldId,
+                              )?.isVisible
+                            : isVisible
+                        }
+                        isDisabled={isIdentity}
+                        onChange={(event, checked) => {
+                          onChangeFactory(fieldId)(checked, event);
+                        }}
+                        otherControls
+                      />
+                    </DataListControl>
+                    <DataListItemCells
+                      dataListCells={[
+                        <DataListCell key={fieldId}>
+                          <span id={`draggable-${fieldId}`}>{label}</span>
+                        </DataListCell>,
+                      ]}
+                    />
+                  </DataListItemRow>
+                </DataListItem>
+              ),
+              id: fieldId,
+            };
+          })}
+          onDrop={onDrop}
+        />
+      </ModalBody>
+      <ModalFooter>
         <Button
           key="save"
           variant={ButtonVariant.primary}
@@ -174,63 +200,14 @@ export const ManageColumnsModal = ({
           onClick={onSave}
         >
           {saveLabel}
-        </Button>,
+        </Button>
         <Button key="cancel" variant={ButtonVariant.secondary} onClick={onClose}>
           {cancelLabel}
-        </Button>,
+        </Button>
         <Button key="restore" variant={ButtonVariant.link} onClick={restoreDefaults}>
           {restoreLabel}
-        </Button>,
-      ]}
-    >
-      <DragDrop onDrop={onDrop}>
-        <Droppable hasNoWrapper>
-          <DataList aria-label={title} id="table-column-management" isCompact>
-            {editedColumns.map(({ isIdentity, isVisible, label, resourceFieldId: id }) => {
-              const fieldId = id!;
-
-              return (
-                <Draggable key={fieldId} hasNoWrapper>
-                  <DataListItem aria-labelledby={`draggable-${fieldId}`} ref={createRef()}>
-                    <DataListItemRow>
-                      <DataListControl>
-                        <DataListDragButton
-                          aria-label={reorderLabel}
-                          aria-labelledby={`draggable-${fieldId}`}
-                        />
-                        <DataListCheck
-                          aria-labelledby={`draggable-${fieldId}`}
-                          name={fieldId}
-                          isChecked={
-                            // visibility for identity resourceFields (namespace) is governed by parent component
-                            isIdentity
-                              ? resourceFields.find(
-                                  (resourceField) => resourceField.resourceFieldId === fieldId,
-                                )?.isVisible
-                              : isVisible
-                          }
-                          isDisabled={isIdentity}
-                          onChange={(event, checked) => {
-                            onChangeFactory(fieldId)(checked, event);
-                          }}
-                          otherControls
-                        />
-                      </DataListControl>
-                      <DataListItemCells
-                        dataListCells={[
-                          <DataListCell key={fieldId}>
-                            <span id={`draggable-${fieldId}`}>{label}</span>
-                          </DataListCell>,
-                        ]}
-                      />
-                    </DataListItemRow>
-                  </DataListItem>
-                </Draggable>
-              );
-            })}
-          </DataList>
-        </Droppable>
-      </DragDrop>
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 };

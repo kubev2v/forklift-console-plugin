@@ -9,8 +9,17 @@ import {
   type K8sResourceCommon,
 } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { Button, ButtonVariant, ModalVariant, Stack, StackItem } from '@patternfly/react-core';
-import { Modal } from '@patternfly/react-core/deprecated';
+import {
+  Button,
+  ButtonVariant,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  ModalVariant,
+  Stack,
+  StackItem,
+} from '@patternfly/react-core';
 
 import useToggle from '../../hooks/useToggle';
 import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
@@ -87,46 +96,47 @@ export const DeleteModal: ModalComponent<DeleteModalProps> = ({
     }
   }, [resource, model, name, namespace, navigate, redirectTo, t, toggleIsLoading, closeModal]);
 
-  const actions = [
-    <Button key="confirm" variant={ButtonVariant.danger} onClick={onDelete} isLoading={isLoading}>
-      {t('Delete')}
-    </Button>,
-    <Button key="cancel" variant={ButtonVariant.secondary} onClick={closeModal}>
-      {t('Cancel')}
-    </Button>,
-  ];
-
   return (
-    <Modal
-      title={title ?? t('Delete {{model.label}}', { model })}
-      titleIconVariant="warning"
-      position="top"
-      showClose={false}
-      variant={ModalVariant.small}
-      isOpen={true}
-      onClose={closeModal}
-      actions={actions}
-    >
-      <Stack hasGutter>
-        <StackItem>
-          {namespace ? (
-            <ForkliftTrans>
-              Are you sure you want to delete <strong className="co-break-word">{name}</strong> in
-              project <strong>{namespace}</strong>?
-            </ForkliftTrans>
-          ) : (
-            <ForkliftTrans>
-              Are you sure you want to delete <strong className="co-break-word">{name}</strong>?
-            </ForkliftTrans>
-          )}
-        </StackItem>
-        {typeof owner === 'object' && (
+    <Modal position="top" variant={ModalVariant.small} isOpen={true} onClose={closeModal}>
+      <ModalHeader
+        title={title ?? t('Delete {{model.label}}', { model })}
+        titleIconVariant="warning"
+      />
+      <ModalBody>
+        <Stack hasGutter>
           <StackItem>
-            <ItemIsOwnedAlert owner={owner} namespace={namespace} />
+            {namespace ? (
+              <ForkliftTrans>
+                Are you sure you want to delete <strong className="co-break-word">{name}</strong> in
+                project <strong>{namespace}</strong>?
+              </ForkliftTrans>
+            ) : (
+              <ForkliftTrans>
+                Are you sure you want to delete <strong className="co-break-word">{name}</strong>?
+              </ForkliftTrans>
+            )}
           </StackItem>
-        )}
-        {alertMessage && <StackItem>{alertMessage}</StackItem>}
-      </Stack>
+          {typeof owner === 'object' && (
+            <StackItem>
+              <ItemIsOwnedAlert owner={owner} namespace={namespace} />
+            </StackItem>
+          )}
+          {alertMessage && <StackItem>{alertMessage}</StackItem>}
+        </Stack>
+      </ModalBody>
+      <ModalFooter>
+        <Button
+          key="confirm"
+          variant={ButtonVariant.danger}
+          onClick={onDelete}
+          isLoading={isLoading}
+        >
+          {t('Delete')}
+        </Button>
+        <Button key="cancel" variant={ButtonVariant.secondary} onClick={closeModal}>
+          {t('Cancel')}
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 };
