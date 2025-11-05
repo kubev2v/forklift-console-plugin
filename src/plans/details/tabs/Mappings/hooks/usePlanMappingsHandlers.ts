@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { POD } from 'src/plans/details/utils/constants';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { StorageClassAnnotation } from 'src/storageMaps/types';
 
 import type {
@@ -43,7 +44,7 @@ type PlanMappingsHandlers = {
 type PlanMappingsHandlersParams = {
   planNetworkMap: V1beta1NetworkMap;
   planStorageMap: V1beta1StorageMap;
-  sourceNetworks: InventoryNetwork[];
+  sourceNetworks: (InventoryNetwork | OpenShiftNetworkAttachmentDefinition)[];
   sourceStorages: InventoryStorage[];
   targetNetworks: OpenShiftNetworkAttachmentDefinition[];
   targetStorages: OpenShiftStorageClass[];
@@ -113,7 +114,12 @@ export const usePlanMappingsHandlers: UsePlanMappingsHandlers = ({
   };
 
   const onReplaceNetwork = ({ current, next }: { current: Mapping; next: Mapping }) => {
-    const source = sourceNetworks.find((sourceNetwork) => sourceNetwork.name === next.source);
+    const source = sourceNetworks.find(
+      (sourceNetwork) =>
+        (sourceNetwork.providerType === PROVIDER_TYPES.openshift
+          ? `${sourceNetwork.namespace}/${sourceNetwork.name}`
+          : sourceNetwork.name) === next.source,
+    );
     const target =
       targetNetworks.find(
         (targetNetwork) => `${targetNetwork.namespace}/${targetNetwork.name}` === next.destination,
