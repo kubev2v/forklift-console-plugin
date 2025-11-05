@@ -101,3 +101,8 @@ customresourcedefinitions
 clusterversion
 clusterversions
 nbde
+IBM
+FlashSystem
+powerstore
+infinidat
+infinibox
