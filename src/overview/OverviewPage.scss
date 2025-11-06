@@ -21,35 +21,6 @@
   max-width: 900px;
 }
 
-.forklift-overview__welcome-tiles {
-  .pf-v6-c-tile {
-    width: 240px;
-    min-width: 240px;
-
-    .pf-v6-theme-dark & {
-      background-color: var(--pf-t--global--background--color--secondary--default);
-      &::before {
-        border: none;
-      }
-    }
-
-    .pf-v6-c-tile__header {
-      justify-content: center;
-    }
-
-    .pf-v6-c-tile__icon {
-      display: flex;
-      align-items: center;
-    }
-
-    img {
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
-    }
-  }
-}
-
 .forklift-overview__welcome-badge {
   min-width: 768px;
   margin-left: var(--pf-t--global--spacer--sm);

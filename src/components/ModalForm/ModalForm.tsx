@@ -8,9 +8,14 @@ import {
   Button,
   type ButtonProps,
   ButtonVariant,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
   ModalVariant,
+  Stack,
+  StackItem,
 } from '@patternfly/react-core';
-import { Modal } from '@patternfly/react-core/deprecated';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type ModalFormProps = {
@@ -62,13 +67,26 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
   return (
     <Modal
       variant={variant}
-      title={title}
       isOpen
-      showClose={false}
       position="top"
       onClose={closeModal}
       data-testid={testId}
-      actions={[
+      className={className}
+    >
+      <ModalHeader title={title} />
+      <ModalBody>
+        <Stack hasGutter>
+          <StackItem>{children}</StackItem>
+          {error && (
+            <StackItem>
+              <Alert title={t('Error')} variant={AlertVariant.danger} isInline>
+                {t('{{errorMessage}}', { errorMessage: error })}
+              </Alert>
+            </StackItem>
+          )}
+        </Stack>
+      </ModalBody>
+      <ModalFooter>
         <Button
           key="confirm"
           variant={confirmVariant ?? ButtonVariant.primary}
@@ -78,14 +96,12 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
           data-testid="modal-confirm-button"
         >
           {confirmLabel ?? t('Save')}
-        </Button>,
-        ...(additionalAction
-          ? [
-              <Button key="secondary" {...additionalAction}>
-                {additionalAction?.children}
-              </Button>,
-            ]
-          : []),
+        </Button>
+        {additionalAction && (
+          <Button key="secondary" {...additionalAction}>
+            {additionalAction?.children}
+          </Button>
+        )}
         <Button
           key="cancel"
           variant={ButtonVariant.secondary}
@@ -93,17 +109,8 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
           data-testid="modal-cancel-button"
         >
           {cancelLabel ?? t('Cancel')}
-        </Button>,
-      ]}
-      className={className}
-    >
-      {children}
-
-      {error && (
-        <Alert title={t('Error')} variant={AlertVariant.danger} isInline>
-          {t('{{errorMessage}}', { errorMessage: error })}
-        </Alert>
-      )}
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 };

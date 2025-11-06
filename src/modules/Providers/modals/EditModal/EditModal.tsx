@@ -2,12 +2,23 @@ import { type MouseEvent, type ReactNode, useCallback, useEffect, useState } fro
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { useForkliftTranslation } from 'src/utils/i18n';
+import { type ValidationMsg, ValidationState } from 'src/utils/validation/Validation';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { Button, ButtonVariant, Form, Stack, TextInput } from '@patternfly/react-core';
-import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
-import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
+import {
+  Button,
+  ButtonVariant,
+  Form,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  ModalVariant,
+  Stack,
+  StackItem,
+  TextInput,
+} from '@patternfly/react-core';
 
 import useToggle from '../../hooks/useToggle';
 import { getValueByJsonPath } from '../../utils/helpers/getValueByJsonPath';
@@ -19,28 +30,6 @@ import type { EditModalProps } from './types';
 
 import './EditModal.style.css';
 
-/**
- * `EditModal` is a React Functional Component that allows editing a Kubernetes resource property inside a modal.
- *
- * @component
- * @param {object} props - The properties that define the behavior and display of the `EditModal`.
- * @param {K8sResourceCommon} props.resource - The Kubernetes resource that will be modified.
- * @param {K8sModel} props.model - The model for the Kubernetes resource.
- * @param {string | string[]} props.jsonPath - The JSON path to the property in the resource that will be modified.
- * @param {string} props.title - The title of the modal.
- * @param {string} props.label - The label of the field being edited.
- * @param {ReactNode} [props.body] - The body content of the modal.
- * @param {ReactNode} [props.headerContent] - The help popup header content of the input field.
- * @param {ReactNode} [props.bodyContent] - The help popup content in the body of the input field.
- * @param {'small' | 'default' | 'medium' | 'large'} [props.variant] - The size of the modal.
- * @param {OnConfirmHookType} [props.onConfirmHook] - A hook that gets called when the user confirms the edit.
- * @param {ModalInputComponentType} [props.InputComponent] - The component used for the input field.
- * @param {string} [props.helperText] - Helper text that will be displayed under the input field.
- * @param {string} [props.redirectTo] - The path to redirect to after the modal is closed.
- * @param {ValidationHookType} [props.validationHook] - A hook that is used to validate the new value.
- *
- * @returns {ReactElement} Returns a `Modal` React Element that renders the modal.
- */
 export const EditModal: ModalComponent<EditModalProps> = ({
   body,
   bodyContent,
@@ -60,7 +49,6 @@ export const EditModal: ModalComponent<EditModalProps> = ({
   variant,
 }) => {
   const { t } = useForkliftTranslation();
-
   const [isLoading, toggleIsLoading] = useToggle();
   const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null);
@@ -70,55 +58,33 @@ export const EditModal: ModalComponent<EditModalProps> = ({
     type: ValidationState.Default,
   });
 
-  const { namespace } = resource?.metadata ?? {};
-  const owner = resource?.metadata?.ownerReferences?.[0];
+  const { namespace, ownerReferences } = resource?.metadata ?? {};
+  const owner = ownerReferences?.[0];
 
-  /*
-   * Init validation
-   */
   useEffect(() => {
     if (validationHook) {
-      const validationResult = validationHook(value);
-      setValidation(validationResult);
+      setValidation(validationHook(value));
     }
   }, [validationHook, value]);
 
-  /**
-   * Handles value change.
-   */
   const handleValueChange = (newValue: string) => {
     setValue(newValue);
-
     if (validationHook) {
-      const validationResult = validationHook(newValue);
-      setValidation(validationResult);
+      setValidation(validationHook(newValue));
     }
   };
 
-  /**
-   * Handles save action.
-   */
   const handleSave = useCallback(async () => {
     toggleIsLoading();
 
     try {
       await onConfirmHook({ jsonPath, model, newValue: value, resource });
-
-      if (redirectTo) {
-        navigate(redirectTo);
-      }
-
+      if (redirectTo) navigate(redirectTo);
       closeModal();
     } catch (err) {
       toggleIsLoading();
-
-      if (err instanceof Error) {
-        setAlertMessage(
-          <AlertMessageForModals title={t('Error')} message={err.message ?? err.toString()} />,
-        );
-      } else {
-        setAlertMessage(<AlertMessageForModals title={t('Error')} message={t('Unknown error')} />);
-      }
+      const message = err instanceof Error ? (err.message ?? err.toString()) : t('Unknown error');
+      setAlertMessage(<AlertMessageForModals title={t('Error')} message={message} />);
     }
   }, [
     resource,
@@ -133,13 +99,10 @@ export const EditModal: ModalComponent<EditModalProps> = ({
     closeModal,
   ]);
 
-  const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
+  const onClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
-  /**
-   * InputComponent_ is a higher-order component that renders either the passed-in InputComponent, or a default TextInput,
-   */
   const Component = InputComponent ? (
     <InputComponent
       value={value}
@@ -160,57 +123,64 @@ export const EditModal: ModalComponent<EditModalProps> = ({
     />
   );
 
-  const actions = [
-    <Button
-      key="confirm"
-      variant={ButtonVariant.primary}
-      onClick={handleSave}
-      isDisabled={validation.type === ValidationState.Error}
-      isLoading={isLoading}
-    >
-      {t('Save')}
-    </Button>,
-    <Button key="cancel" variant={ButtonVariant.secondary} onClick={closeModal} autoFocus>
-      {t('Cancel')}
-    </Button>,
-  ];
-
   return (
     <Modal
-      title={title}
       position="top"
-      showClose={false}
       variant={variant ?? ModalVariant.small}
       isOpen={true}
       onClose={closeModal}
-      actions={actions}
     >
-      <Stack hasGutter>
-        <div>{body}</div>
+      <ModalHeader title={title} />
+      <ModalBody>
+        <Stack hasGutter>
+          <StackItem>{body}</StackItem>
 
-        {isVisible && (
-          <Form id="modal-with-form-form">
-            <FormGroupWithHelpText
-              label={label}
-              labelHelp={
-                bodyContent || headerContent ? (
-                  <HelpIconPopover header={headerContent} onClick={onClick}>
-                    {bodyContent}
-                  </HelpIconPopover>
-                ) : undefined
-              }
-              fieldId="modal-with-form-form-field"
-              helperText={validation.msg ?? helperText}
-              helperTextInvalid={validation.msg ?? helperText}
-              validated={validation.type}
-            >
-              {Component}
-            </FormGroupWithHelpText>
-          </Form>
-        )}
-      </Stack>
-      {typeof owner === 'object' && <ItemIsOwnedAlert owner={owner} namespace={namespace} />}
-      {alertMessage}
+          {isVisible && (
+            <StackItem>
+              <Form id="modal-with-form-form">
+                <FormGroupWithHelpText
+                  label={label}
+                  labelHelp={
+                    bodyContent || headerContent ? (
+                      <HelpIconPopover header={headerContent} onClick={onClick}>
+                        {bodyContent}
+                      </HelpIconPopover>
+                    ) : undefined
+                  }
+                  fieldId="modal-with-form-form-field"
+                  helperText={validation.msg ?? helperText}
+                  helperTextInvalid={validation.msg ?? helperText}
+                  validated={validation.type}
+                >
+                  {Component}
+                </FormGroupWithHelpText>
+              </Form>
+            </StackItem>
+          )}
+
+          {typeof owner === 'object' && (
+            <StackItem>
+              <ItemIsOwnedAlert owner={owner} namespace={namespace} />
+            </StackItem>
+          )}
+
+          {alertMessage && <StackItem>{alertMessage}</StackItem>}
+        </Stack>
+      </ModalBody>
+      <ModalFooter>
+        <Button
+          key="confirm"
+          variant={ButtonVariant.primary}
+          onClick={handleSave}
+          isDisabled={validation.type === ValidationState.Error}
+          isLoading={isLoading}
+        >
+          {t('Save')}
+        </Button>
+        <Button key="cancel" variant={ButtonVariant.secondary} onClick={closeModal} autoFocus>
+          {t('Cancel')}
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 };

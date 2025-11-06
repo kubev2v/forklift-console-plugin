@@ -2,8 +2,16 @@ import { type FC, useCallback, useMemo, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 
-import { Button, ButtonVariant, ModalVariant, useWizardContext } from '@patternfly/react-core';
-import { Modal } from '@patternfly/react-core/deprecated';
+import {
+  Button,
+  ButtonVariant,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  ModalVariant,
+  useWizardContext,
+} from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -120,35 +128,35 @@ const VirtualMachinesStepFooter: FC = () => {
       <CreatePlanWizardFooter onNext={handleNextStep} />
 
       {isModalOpen && (
-        <Modal
-          isOpen
-          variant={ModalVariant.large}
-          title={t('Confirm selections with critical issues')}
-          titleIconVariant="danger"
-          description={t(
-            'Critical issues detected in your selected VMs will cause the migration to fail. Resolve these issues or remove the VMs from the plan before starting the migration.',
-          )}
-          onClose={closeModal}
-          actions={[
+        <Modal isOpen variant={ModalVariant.large} onClose={closeModal}>
+          <ModalHeader
+            title={t('Confirm selections with critical issues')}
+            titleIconVariant="danger"
+            description={t(
+              'Critical issues detected in your selected VMs will cause the migration to fail. Resolve these issues or remove the VMs from the plan before starting the migration.',
+            )}
+          />
+          <ModalBody>
+            <VirtualMachinesTable
+              vmData={criticalVmData}
+              initialSelectedIds={Object.keys(vmsWithCriticalIssues)}
+              value={pendingVms}
+              isSelectable
+              onChange={handleVmSelectionChange}
+              hasCriticalConcernFilter
+            />
+          </ModalBody>
+          <ModalFooter>
             <Button key="confirm" onClick={confirmSelection}>
               {t('Confirm selections')}
-            </Button>,
+            </Button>
             <Button key="deselect" variant={ButtonVariant.secondary} onClick={deselectCriticalVms}>
               {t('Deselect critical issue VMs')}
-            </Button>,
+            </Button>
             <Button key="cancel" variant={ButtonVariant.secondary} onClick={closeModal}>
               {t('Cancel')}
-            </Button>,
-          ]}
-        >
-          <VirtualMachinesTable
-            vmData={criticalVmData}
-            initialSelectedIds={Object.keys(vmsWithCriticalIssues)}
-            value={pendingVms}
-            isSelectable
-            onChange={handleVmSelectionChange}
-            hasCriticalConcernFilter
-          />
+            </Button>
+          </ModalFooter>
         </Modal>
       )}
     </>
