@@ -3,7 +3,6 @@ import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { Mapping } from 'src/modules/Providers/views/migrate/types';
 import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
 import { IGNORED, MULTUS, POD } from 'src/plans/details/utils/constants';
-import { isMapDestinationTypeSupported } from 'src/plans/details/utils/utils';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,
@@ -108,70 +107,40 @@ export const getMappings = (
   );
 };
 
-export const getCurrentSourceNet = (current: Mapping, sourceNetworks: InventoryNetwork[]) => {
-  const sourceName = current.source.replace(/ \([^)]+\)$/u, '');
-
-  if (sourceName === DEFAULT_NETWORK) {
-    return { id: POD };
-  }
-
-  return sourceNetworks.find((network) => network?.name === sourceName) ?? { id: POD };
-};
-
-export const getCurrentDestinationNet = (
-  current: Mapping,
-  destinationNetworks: OpenShiftNetworkAttachmentDefinition[],
-) => {
-  const net = destinationNetworks.find(
-    (network) => openShiftNetworkAttachmentDefinitionToName(network) === current.destination,
-  );
-
-  if (net) {
-    return { ...net, type: '' };
-  }
-
-  if (current.destination === IgnoreNetwork.Label) {
-    return { type: IGNORED };
-  }
-
-  return { name: DEFAULT_NETWORK, type: POD };
-};
-
 export const getReplacePayload = (
   state: MapsSectionState,
-  current: Mapping,
-  next: Mapping,
+  index: number,
+  updatedMapping: Mapping,
   sourceNetworks: InventoryNetwork[],
   destinationNetworks: OpenShiftNetworkAttachmentDefinition[],
 ): V1beta1NetworkMapSpecMap[] => {
-  const currentDestinationNet = getCurrentDestinationNet(current, destinationNetworks);
-  const currentSourceNet = getCurrentSourceNet(current, sourceNetworks);
-
   const nextDestinationNet =
-    next.destination === DEFAULT_NETWORK || next.destination === IgnoreNetwork.Label
+    updatedMapping.destination === DEFAULT_NETWORK ||
+    updatedMapping.destination === IgnoreNetwork.Label
       ? undefined
       : destinationNetworks.find(
-          (network) => openShiftNetworkAttachmentDefinitionToName(network) === next.destination,
+          (network) =>
+            openShiftNetworkAttachmentDefinitionToName(network) === updatedMapping.destination,
         );
 
   // Strip " (id)" suffix from source names with duplicates
-  const nextSourceName = next.source.replace(/ \([^)]+\)$/u, '');
+  const nextSourceName = updatedMapping.source.replace(/ \([^)]+\)$/u, '');
 
   const nextSourceNet =
     nextSourceName === DEFAULT_NETWORK
       ? { id: POD }
       : sourceNetworks.find((network) => network?.name === nextSourceName);
 
-  if (!nextSourceNet) {
+  if (!state?.networkMap?.spec?.map || !nextSourceNet) {
     return [];
   }
 
   const getDestination = (): V1beta1NetworkMapSpecMapDestination => {
-    if (next.destination === IgnoreNetwork.Label) {
+    if (updatedMapping.destination === IgnoreNetwork.Label) {
       return { type: IGNORED };
     }
 
-    if (next.destination === DEFAULT_NETWORK) {
+    if (updatedMapping.destination === DEFAULT_NETWORK) {
       return { type: POD };
     }
 
@@ -183,17 +152,8 @@ export const getReplacePayload = (
     source: convertInventoryNetworkToSource(nextSourceNet),
   };
 
-  return (
-    state?.networkMap?.spec?.map?.map((map) => {
-      const sourceMatches =
-        map?.source?.id === currentSourceNet?.id || map.source?.type === currentSourceNet?.id;
+  const payload = [...state.networkMap.spec.map];
+  payload[index] = nextMap;
 
-      const destinationMatches =
-        map.destination?.name === currentDestinationNet?.name ||
-        (map.destination?.type === currentDestinationNet?.type &&
-          isMapDestinationTypeSupported(map.destination?.type));
-
-      return sourceMatches && destinationMatches ? nextMap : map;
-    }) ?? []
-  );
+  return payload;
 };

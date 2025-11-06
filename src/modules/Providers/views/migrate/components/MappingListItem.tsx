@@ -47,8 +47,8 @@ type MappingListItemProps = {
   generalSourcesLabel: string;
   noSourcesLabel: string;
   index: number;
-  replaceMapping: (val: { current: Mapping; next: Mapping }) => void;
-  deleteMapping: (mapping: Mapping) => void;
+  replaceMapping: (index: number, updatedMapping: Mapping) => void;
+  deleteMapping: (index: number) => void;
   isDisabled: boolean;
 };
 
@@ -79,23 +79,17 @@ export const MappingListItem: FC<MappingListItemProps> = ({
   }, [destination]);
 
   const onClick = () => {
-    deleteMapping({ destination, source });
+    deleteMapping(index);
   };
 
   const onSelectSource = (value: string) => {
-    replaceMapping({
-      current: { destination, source },
-      next: { destination, source: value },
-    });
+    replaceMapping(index, { destination, source: value });
 
     setSrcSelected(value);
   };
 
   const onSelectDestination = (value: string) => {
-    replaceMapping({
-      current: { destination, source },
-      next: { destination: value, source },
-    });
+    replaceMapping(index, { destination: value, source });
 
     setTrgSelected(value);
   };
