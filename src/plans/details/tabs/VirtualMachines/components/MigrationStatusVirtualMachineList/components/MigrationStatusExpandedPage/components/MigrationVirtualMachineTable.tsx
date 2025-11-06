@@ -44,7 +44,7 @@ const MigrationVirtualMachineTable: FC<MigrationVirtualMachineTableProps> = ({
             <Td width={40}>
               <ResourceLink
                 groupVersionKind={VirtualMachineModelGroupVersionKind}
-                name={statusVM?.name}
+                name={statusVM?.newName ?? statusVM?.name}
                 namespace={targetNamespace}
               />
             </Td>
