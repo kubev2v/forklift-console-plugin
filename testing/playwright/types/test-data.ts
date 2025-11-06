@@ -5,20 +5,27 @@ export interface TargetProject {
   isPreexisting: boolean;
 }
 
+export interface Mapping<T = string> {
+  source: string;
+  target: string;
+}
+
 export interface NetworkMap {
   name: string;
   isPreexisting: boolean;
+  mappings?: Mapping[];
 }
 
 export interface StorageMap {
   name: string;
   isPreexisting: boolean;
-  targetStorage?: string; // Target storage class (e.g., 'ocs-storagecluster-ceph-rbd-virtualization')
+  mappings?: Mapping[];
 }
 
 export interface VirtualMachine {
-  sourceName: string;
+  sourceName?: string;
   targetName?: string; // If null or different from sourceName, will be used for renaming
+  folder?: string; // VM folder path (e.g., 'vm', '/Datacenter/vm/folder1')
 }
 
 /**
@@ -41,6 +48,7 @@ export interface PlanTestData {
   networkMap: NetworkMap;
   storageMap: StorageMap;
   virtualMachines?: VirtualMachine[];
+  criticalIssuesAction?: 'confirm' | 'deselect';
   additionalPlanSettings?: {
     targetPowerState?: 'on' | 'off' | 'auto';
     useNbdeClevis?: boolean;
@@ -72,9 +80,14 @@ export const createPlanTestData = (
     storageMap: {
       name: `${planName}-storage-map`,
       isPreexisting: false,
-      targetStorage: 'ocs-storagecluster-ceph-rbd-virtualization',
+      mappings: [
+        {
+          source: 'mtv-nfs-rhos-v8',
+          target: 'ocs-storagecluster-ceph-rbd-virtualization',
+        },
+      ],
     },
-    virtualMachines: [{ sourceName: 'mtv-func-rhel9' }],
+    virtualMachines: [{ sourceName: 'mtv-func-rhel9', folder: 'vm' }],
   };
 
   return {

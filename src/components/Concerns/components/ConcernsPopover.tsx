@@ -23,6 +23,7 @@ const ConcernPopover: FC<{
       headerContent={getCategoryTitle(category)}
       bodyContent={<ConcernList concerns={concerns} />}
       footerContent={t('Total: {{length}}', { length: concerns.length })}
+      data-testid="concerns-popover"
     >
       <Button isInline variant={ButtonVariant.link}>
         <Label status={getCategoryStatus(category)}>{concerns.length}</Label>

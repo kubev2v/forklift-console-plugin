@@ -27,6 +27,7 @@ export class Table {
   }
 
   async clearAllFilters(): Promise<void> {
+    // Try to click the clear all filters button
     const clearButton = this.rootLocator
       .getByTestId('clear-all-filters')
       .or(this.page.getByRole('button', { name: 'Clear all filters' }));
@@ -44,27 +45,67 @@ export class Table {
     await row.click();
   }
 
+  async disableColumn(columnName: string): Promise<void> {
+    const currentColumns = await this.getColumns();
+    if (!currentColumns.includes(columnName)) {
+      return;
+    }
+
+    const manageColumnsButton = this.rootLocator.getByTestId('manage-columns-button');
+    await manageColumnsButton.click();
+
+    const modalBody = this.page.getByTestId('manage-columns-modal');
+    await expect(modalBody).toBeVisible();
+
+    const columnList = modalBody.getByTestId('manage-columns-list');
+    const targetListItem = columnList
+      .getByRole('listitem')
+      .filter({ hasText: new RegExp(`^${columnName}$`) });
+
+    if ((await targetListItem.count()) === 0) {
+      const cancelButton = this.page.getByTestId('manage-columns-cancel-button');
+      await cancelButton.click();
+      await expect(modalBody).not.toBeVisible();
+      throw new Error(`Column "${columnName}" not found in available columns`);
+    }
+
+    const checkbox = targetListItem.getByRole('checkbox');
+    if ((await checkbox.count()) > 0) {
+      const isChecked = await checkbox.isChecked();
+      const isDisabled = await checkbox.isDisabled();
+
+      if (!isDisabled && isChecked) {
+        await checkbox.uncheck();
+      }
+    }
+
+    const saveButton = this.page.getByTestId('manage-columns-save-button');
+    await saveButton.click();
+
+    await expect(modalBody).not.toBeVisible();
+  }
+
   async enableColumn(columnName: string): Promise<void> {
     const currentColumns = await this.getColumns();
     if (currentColumns.includes(columnName)) {
       return;
     }
 
-    const manageColumnsButton = this.rootLocator.getByRole('button', { name: 'Manage columns' });
+    const manageColumnsButton = this.rootLocator.getByTestId('manage-columns-button');
     await manageColumnsButton.click();
 
-    const modal = this.page.getByRole('dialog', { name: 'Manage columns' });
-    await expect(modal).toBeVisible();
+    const modalBody = this.page.getByTestId('manage-columns-modal');
+    await expect(modalBody).toBeVisible();
 
-    const columnList = modal.getByRole('list', { name: 'Manage columns' });
+    const columnList = modalBody.getByTestId('manage-columns-list');
     const targetListItem = columnList
       .getByRole('listitem')
       .filter({ hasText: new RegExp(`^${columnName}$`) });
 
     if ((await targetListItem.count()) === 0) {
-      const cancelButton = modal.getByRole('button', { name: 'Cancel' });
+      const cancelButton = this.page.getByTestId('manage-columns-cancel-button');
       await cancelButton.click();
-      await expect(modal).not.toBeVisible();
+      await expect(modalBody).not.toBeVisible();
       throw new Error(`Column "${columnName}" not found in available columns`);
     }
 
@@ -78,16 +119,16 @@ export class Table {
       }
     }
 
-    const saveButton = modal.getByRole('button', { name: 'Save' });
+    const saveButton = this.page.getByTestId('manage-columns-save-button');
     await saveButton.click();
 
-    await expect(modal).not.toBeVisible();
+    await expect(modalBody).not.toBeVisible();
   }
 
   async getColumns(): Promise<string[]> {
     const tableContainer = this.getTableContainer();
 
-    const headers = tableContainer.locator('thead th, thead columnheader');
+    const headers = tableContainer.getByRole('columnheader');
     const count = await headers.count();
 
     const headerTexts = await Promise.all(

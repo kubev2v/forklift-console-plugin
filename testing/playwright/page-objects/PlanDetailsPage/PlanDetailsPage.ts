@@ -124,7 +124,7 @@ export class PlanDetailsPage {
     await this.virtualMachinesTab.verifyVirtualMachinesTab(planData);
 
     for (const vm of vmsToRename) {
-      if (vm.targetName) {
+      if (vm.targetName && vm.sourceName) {
         await this.virtualMachinesTab.renameVM(vm.sourceName, vm.targetName);
       }
     }

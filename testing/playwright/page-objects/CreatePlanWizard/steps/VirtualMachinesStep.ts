@@ -1,20 +1,15 @@
 import { expect, type Page } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../../../fixtures/test-data';
-import { Table } from '../../common/Table';
+import type { VirtualMachine } from '../../../types/test-data';
+import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
 
-export class VirtualMachinesStep {
-  private readonly page: Page;
-  private readonly table: Table;
-
+export class VirtualMachinesStep extends VirtualMachinesTable {
   constructor(page: Page) {
-    this.page = page;
-    this.table = new Table(this.page, this.page.getByTestId('create-plan-vm-step'));
+    super(page, page.getByTestId('create-plan-vm-step'));
   }
 
-  async fillAndComplete(
-    virtualMachines?: { sourceName: string; targetName?: string }[],
-  ): Promise<void> {
+  async fillAndComplete(virtualMachines?: VirtualMachine[]): Promise<void> {
     await this.verifyStepVisible();
     await this.verifyTableLoaded();
 
@@ -22,27 +17,69 @@ export class VirtualMachinesStep {
       await this.selectFirstVirtualMachine();
     } else {
       for (const vm of virtualMachines) {
-        await this.searchAndSelectVirtualMachine(vm.sourceName);
+        // If VM name is empty but folder is specified, select the folder
+        if (!vm.sourceName && vm.folder) {
+          await this.selectFolder(vm.folder);
+        } else if (vm.sourceName) {
+          await this.searchAndSelectVirtualMachine(vm.sourceName, vm.folder);
+        }
       }
     }
   }
 
-  async search(value: string) {
-    await this.table.search(value);
+  /**
+   * Gets the names of all currently selected VMs
+   * @returns Array of selected VM names
+   */
+  async getSelectedVMNames(): Promise<string[]> {
+    const selectedVMNames: string[] = [];
+
+    // Find all VM rows (not folders) with checked checkboxes
+    const grid = this.page.getByRole('treegrid');
+
+    // Find all rows with level 2 (VM rows) that have checked checkboxes
+    const vmRows = grid.locator('tbody tr[aria-level="2"]');
+
+    const count = await vmRows.count();
+    for (let i = 0; i < count; i += 1) {
+      const row = vmRows.nth(i);
+
+      // Check if the checkbox is checked
+      const checkbox = row.locator('input[type="checkbox"]');
+      const isChecked = await checkbox.isChecked().catch(() => false);
+
+      if (isChecked) {
+        // Extract the VM name from the first gridcell (after checkbox column)
+        // The Name is in the second <td> (first is checkbox)
+        const nameCell = row.locator('td[role="gridcell"]').nth(1);
+        const vmNameText = await nameCell.textContent().catch(() => '');
+
+        if (vmNameText) {
+          selectedVMNames.push(vmNameText.trim());
+        }
+      }
+    }
+
+    return selectedVMNames;
   }
 
-  async searchAndSelectVirtualMachine(vmName: string) {
-    await this.table.search(vmName);
+  async handleCriticalIssuesModal(action: 'confirm' | 'deselect'): Promise<void> {
+    const buttonName = action === 'confirm' ? 'Confirm selections' : 'Deselect critical issue VMs';
+    const button = this.page.getByRole('button', { name: buttonName });
+
+    await expect(button).toBeVisible({ timeout: 10000 });
+    await button.click();
+
+    // Wait for modal to disappear
+    await expect(button).not.toBeVisible({ timeout: 10000 });
+  }
+
+  async searchAndSelectVirtualMachine(vmName: string, folder?: string) {
+    await this.search(vmName);
 
     // Expand the VM folder if it exists
-    const folderRow = this.page.getByTestId('folder-vm');
-    const expandButton = folderRow.getByRole('button', { name: /Expand row/ });
-
-    if (await expandButton.isVisible()) {
-      const isExpanded = await expandButton.getAttribute('aria-expanded');
-      if (isExpanded === 'false') {
-        await expandButton.click();
-      }
+    if (folder) {
+      await this.expandFolder(folder);
     }
 
     await this.table.selectRow({ Name: vmName });
@@ -56,16 +93,21 @@ export class VirtualMachinesStep {
     await checkbox.check();
   }
 
+  async selectFolder(folder: string): Promise<void> {
+    const folderRow = this.page.getByTestId(`folder-${folder}`);
+    await expect(folderRow).toBeVisible();
+
+    const checkbox = folderRow.locator('input[type="checkbox"]');
+    await expect(checkbox).toBeVisible();
+    await checkbox.check();
+  }
+
   async selectVirtualMachine(vmName: string) {
     await this.table.selectRow({ Name: vmName });
   }
 
   async verifyStepVisible() {
     await expect(this.page.getByTestId('create-plan-vm-step')).toBeVisible();
-  }
-
-  async verifyTableLoaded() {
-    await expect(this.page.getByRole('treegrid')).toBeVisible();
   }
 
   async waitForData(): Promise<void> {

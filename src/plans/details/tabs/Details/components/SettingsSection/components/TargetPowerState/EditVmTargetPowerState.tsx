@@ -34,6 +34,7 @@ const EditVmTargetPowerState: ModalComponent<EditVmTargetPowerStateProps> = ({
       confirmLabel={t('Save target power state')}
       onConfirm={async () => onConfirmVmTargetPowerState(index)({ newValue: value, resource })}
       isDisabled={value === getVmTargetPowerState(vm)}
+      testId="edit-target-power-state-modal"
       {...rest}
     >
       <Stack hasGutter>

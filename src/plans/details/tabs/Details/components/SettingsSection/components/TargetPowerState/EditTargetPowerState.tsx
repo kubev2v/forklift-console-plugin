@@ -25,6 +25,7 @@ const EditTargetPowerState: ModalComponent<EditPlanProps> = ({ resource, ...rest
       confirmLabel={t('Save target power state')}
       isDisabled={value === getPlanTargetPowerState(resource)}
       onConfirm={async () => onConfirmTargetPowerState({ newValue: value, resource })}
+      testId="edit-target-power-state-modal"
       {...rest}
     >
       <Stack hasGutter>

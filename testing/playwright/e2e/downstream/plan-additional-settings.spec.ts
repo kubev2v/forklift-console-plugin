@@ -57,7 +57,6 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     // Edit power state on Details tab
     await planDetailsPage.detailsTab.clickEditTargetVMPowerState();
     await expect(planDetailsPage.detailsTab.editPowerStateModal).toBeVisible();
-
     // Verify save is disabled and options are present
     await expect(planDetailsPage.detailsTab.savePowerStateButton).toBeDisabled();
     await planDetailsPage.detailsTab.targetPowerStateSelect.click();

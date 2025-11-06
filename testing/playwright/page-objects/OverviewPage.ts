@@ -113,7 +113,7 @@ export class OverviewPage {
   }
 
   async testAccordionsStructure(minimumCount: number): Promise<void> {
-    const accordions = this.page.locator('.pf-v5-c-expandable-section');
+    const accordions = this.page.getByTestId('help-topic-section');
     await expect(accordions.first()).toBeVisible({ timeout: 10000 });
 
     const count = await accordions.count();
