@@ -14,11 +14,10 @@ import {
   ContentVariants,
   Form,
   FormGroup,
-  ModalVariant,
   TextArea,
   TextInput,
 } from '@patternfly/react-core';
-import { Modal } from '@patternfly/react-core/deprecated';
+import { Modal, ModalBody, ModalFooter, ModalHeader, ModalVariant } from '@patternfly/react-core';
 import { isUpstream } from '@utils/env';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -81,14 +80,73 @@ const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModa
       `${window.SERVER_FLAGS?.documentationBaseURL ?? ''}${workingWithProjectsURLs.downstream}`;
 
   return (
-    <Modal
-      variant={ModalVariant.small}
-      title={t('Create project')}
-      isOpen
-      onClose={closeModal}
-      actions={[
+    <Modal variant={ModalVariant.small} isOpen onClose={closeModal}>
+      <ModalHeader title={t('Create project')} />
+      <ModalBody>
+        <Form onSubmit={submit} name="form">
+          <Content>
+            <Content component={ContentVariants.p}>
+              {t(
+                'A project, also known as a namespace, separates resources within clusters. It is an alternative representation of a Kubernetes namespace.',
+              )}{' '}
+              <ExternalLink href={projectsURL} isInline hideIcon>
+                {t('Learn more about projects.')}
+              </ExternalLink>
+            </Content>
+          </Content>
+          <FormGroup
+            fieldId="input-name"
+            label={t('Name')}
+            isRequired
+            labelHelp={<ProjectNameHelp />}
+          >
+            <TextInput
+              id="input-name"
+              name="name"
+              onChange={(_ev, value) => {
+                setName(value);
+              }}
+              value={name ?? ''}
+              required
+              data-testid="project-name-input"
+            />
+          </FormGroup>
+          <FormGroup fieldId="input-display-name" label={t('Display name')}>
+            <TextInput
+              id="input-display-name"
+              name="displayName"
+              onChange={(_ev, value) => {
+                setDisplayName(value);
+              }}
+              value={displayName ?? ''}
+              data-testid="project-display-name-input"
+            />
+          </FormGroup>
+          <FormGroup fieldId="input-description" label={t('Description')}>
+            <TextArea
+              id="input-description"
+              name="description"
+              resizeOrientation="vertical"
+              onChange={(_ev, value) => {
+                setDescription(value);
+              }}
+              value={description ?? ''}
+            />
+          </FormGroup>
+          {errorMessage && (
+            <Alert
+              isInline
+              variant={AlertVariant.danger}
+              title={t('An error occurred')}
+              data-testid="create-project-modal-error-alert"
+            >
+              <div className="create-project-modal__alert-text">{errorMessage}</div>
+            </Alert>
+          )}
+        </Form>
+      </ModalBody>
+      <ModalFooter>
         <Button
-          key="create"
           type="submit"
           variant={ButtonVariant.primary}
           isLoading={inProgress}
@@ -97,9 +155,8 @@ const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModa
           data-testid="create-project-modal-create-button"
         >
           {t('Create project')}
-        </Button>,
+        </Button>
         <Button
-          key="cancel"
           type="button"
           variant={ButtonVariant.secondary}
           isDisabled={inProgress}
@@ -107,70 +164,8 @@ const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModa
           data-testid="create-project-modal-cancel-button"
         >
           {t('Cancel')}
-        </Button>,
-      ]}
-    >
-      <Form onSubmit={submit} name="form">
-        <Content>
-          <Content component={ContentVariants.p}>
-            {t(
-              'A project, also known as a namespace, separates resources within clusters. It is an alternative representation of a Kubernetes namespace.',
-            )}{' '}
-            <ExternalLink href={projectsURL} isInline hideIcon>
-              {t('Learn more about projects.')}
-            </ExternalLink>
-          </Content>
-        </Content>
-        <FormGroup
-          fieldId="input-name"
-          label={t('Name')}
-          isRequired
-          labelHelp={<ProjectNameHelp />}
-        >
-          <TextInput
-            id="input-name"
-            name="name"
-            onChange={(_ev, value) => {
-              setName(value);
-            }}
-            value={name ?? ''}
-            required
-            data-testid="project-name-input"
-          />
-        </FormGroup>
-        <FormGroup fieldId="input-display-name" label={t('Display name')}>
-          <TextInput
-            id="input-display-name"
-            name="displayName"
-            onChange={(_ev, value) => {
-              setDisplayName(value);
-            }}
-            value={displayName ?? ''}
-            data-testid="project-display-name-input"
-          />
-        </FormGroup>
-        <FormGroup fieldId="input-description" label={t('Description')}>
-          <TextArea
-            id="input-description"
-            name="description"
-            resizeOrientation="vertical"
-            onChange={(_ev, value) => {
-              setDescription(value);
-            }}
-            value={description ?? ''}
-          />
-        </FormGroup>
-        {errorMessage && (
-          <Alert
-            isInline
-            variant={AlertVariant.danger}
-            title={t('An error occurred')}
-            data-testid="create-project-modal-error-alert"
-          >
-            <div className="create-project-modal__alert-text">{errorMessage}</div>
-          </Alert>
-        )}
-      </Form>
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 };

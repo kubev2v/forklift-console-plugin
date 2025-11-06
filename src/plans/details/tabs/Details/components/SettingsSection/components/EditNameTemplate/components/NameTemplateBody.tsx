@@ -1,12 +1,7 @@
 import { type FC, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import {
-  ExpandableSection,
-  ExpandableSectionVariant,
-  Stack,
-  StackItem,
-} from '@patternfly/react-core';
+import { ExpandableSection, List, ListItem, Stack, StackItem } from '@patternfly/react-core';
 
 type NameTemplateBodyProps = {
   bodyText: string;
@@ -17,25 +12,32 @@ const NameTemplateBody: FC<NameTemplateBodyProps> = ({ allowedVariables, bodyTex
   const { t } = useForkliftTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <Stack className="pf-v6-u-mb-sm">
-      <StackItem>{bodyText}</StackItem>
+    <Stack hasGutter className="pf-v6-u-mb-md">
       <StackItem>
-        {t('The VM specific template will override the template set in the plan.')}
+        <div>{bodyText}</div>
       </StackItem>
-      <ExpandableSection
-        variant={ExpandableSectionVariant.truncate}
-        toggleText={isExpanded ? t('Hide variables') : t('Show variables')}
-        isExpanded={isExpanded}
-        truncateMaxLines={1}
-        onToggle={(_, expand) => {
-          setIsExpanded(expand);
-        }}
-      >
-        <StackItem>{t('Variables that can be used for the template:')}</StackItem>
-        {allowedVariables.map((allowedVariable) => (
-          <StackItem key={allowedVariable}>{allowedVariable}</StackItem>
-        ))}
-      </ExpandableSection>
+      <StackItem>
+        <div className="pf-v6-u-color-200">
+          {t('The VM specific template will override the template set in the plan.')}
+        </div>
+      </StackItem>
+      <StackItem>
+        <ExpandableSection
+          toggleText={t('Show variables')}
+          toggleTextExpanded={t('Hide variables')}
+          isExpanded={isExpanded}
+          onToggle={(_, expand) => {
+            setIsExpanded(expand);
+          }}
+          isIndented
+        >
+          <List>
+            {allowedVariables.map((allowedVariable) => (
+              <ListItem key={allowedVariable}>{allowedVariable}</ListItem>
+            ))}
+          </List>
+        </ExpandableSection>
+      </StackItem>
     </Stack>
   );
 };

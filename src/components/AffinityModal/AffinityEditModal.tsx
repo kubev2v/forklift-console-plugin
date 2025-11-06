@@ -2,7 +2,7 @@ import { type Dispatch, type SetStateAction, useState } from 'react';
 
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Button, ButtonVariant } from '@patternfly/react-core';
-import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
+import { Modal, ModalBody, ModalFooter, ModalHeader, ModalVariant } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useIDEntities } from './hooks/useIDEntities';
@@ -33,7 +33,23 @@ const AffinityEditModal: ModalComponent<AffinityEditModalProps> = ({
   return (
     <Modal
       data-testid="affinity-edit-modal"
-      actions={[
+      className="ocs-modal co-catalog-page__overlay"
+      isOpen
+      onClose={closeModal}
+      position="top"
+      variant={ModalVariant.medium}
+    >
+      <ModalHeader title={title} />
+      <ModalBody>
+        <AffinityForm
+          expressions={expressions}
+          fields={fields}
+          focusedAffinity={focusedAffinity}
+          setFocusedAffinity={setFocusedAffinity}
+          setSubmitDisabled={setIsDisabled}
+        />
+      </ModalBody>
+      <ModalFooter>
         <Button
           key="confirm"
           data-testid="save-affinity-rule-button"
@@ -48,7 +64,7 @@ const AffinityEditModal: ModalComponent<AffinityEditModalProps> = ({
           variant={ButtonVariant.primary}
         >
           {t('Save affinity rule')}
-        </Button>,
+        </Button>
         <Button
           key="cancel"
           data-testid="cancel-affinity-rule-button"
@@ -56,22 +72,8 @@ const AffinityEditModal: ModalComponent<AffinityEditModalProps> = ({
           variant={ButtonVariant.link}
         >
           {t('Cancel')}
-        </Button>,
-      ]}
-      className="ocs-modal co-catalog-page__overlay"
-      isOpen
-      onClose={closeModal}
-      position="top"
-      title={title}
-      variant={ModalVariant.medium}
-    >
-      <AffinityForm
-        expressions={expressions}
-        fields={fields}
-        focusedAffinity={focusedAffinity}
-        setFocusedAffinity={setFocusedAffinity}
-        setSubmitDisabled={setIsDisabled}
-      />
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 };
