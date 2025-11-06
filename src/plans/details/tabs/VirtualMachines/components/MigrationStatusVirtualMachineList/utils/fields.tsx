@@ -33,7 +33,7 @@ export const getMigrationStatusVirtualMachinesRowFields = (
     [MigrationStatusVirtualMachinesTableResourceId.Name]: vmCreated ? (
       <TableLinkCell
         groupVersionKind={VirtualMachineModelGroupVersionKind}
-        name={specVM?.name ?? statusVM?.name}
+        name={statusVM?.newName ?? statusVM?.name}
         namespace={targetNamespace}
       />
     ) : (
