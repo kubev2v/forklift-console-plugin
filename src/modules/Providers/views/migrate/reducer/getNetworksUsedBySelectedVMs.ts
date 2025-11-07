@@ -16,14 +16,13 @@ const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
     }
     case 'openshift': {
       return (vm?.object?.spec?.template?.spec?.networks ?? []).reduce((acc: string[], network) => {
-        const networkName = network?.multus?.networkName;
+        const networkName = network?.multus?.networkName ?? network?.name;
 
         if (network?.pod) {
           acc.push(DefaultNetworkLabel.Target);
         } else if (networkName) {
           acc.push(networkName);
         }
-
         return acc;
       }, []);
     }
@@ -35,8 +34,11 @@ const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
   }
 };
 
-export const toNetworks = (vm: ProviderVirtualMachine, nicProfiles?: OVirtNicProfile[]): string[] =>
-  toNetworksOrProfiles(vm).reduce((acc: string[], network) => {
+export const toNetworks = (
+  vm: ProviderVirtualMachine,
+  nicProfiles?: OVirtNicProfile[],
+): string[] => {
+  return toNetworksOrProfiles(vm).reduce((acc: string[], network) => {
     const nicProfileNetwork = nicProfiles?.find(
       (nicProfile) => nicProfile?.id === network,
     )?.network;
@@ -48,3 +50,4 @@ export const toNetworks = (vm: ProviderVirtualMachine, nicProfiles?: OVirtNicPro
 
     return acc;
   }, []);
+};

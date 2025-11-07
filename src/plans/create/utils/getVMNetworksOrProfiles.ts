@@ -20,9 +20,8 @@ const getNetworksForVM = (vm: ProviderVirtualMachine) => {
       if (!networks) {
         return [];
       }
-
       return networks.map((network) =>
-        network?.pod ? DefaultNetworkLabel.Source : network?.multus?.networkName,
+        network?.pod ? DefaultNetworkLabel.Source : (network?.multus?.networkName ?? network?.name),
       );
     }
     case PROVIDER_TYPES.ova: {

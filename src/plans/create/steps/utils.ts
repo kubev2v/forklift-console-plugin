@@ -12,7 +12,7 @@ import type { ProviderNetwork } from '../types';
 export const getMapResourceLabel = (resource: ProviderNetwork | InventoryStorage): string => {
   switch (resource.providerType) {
     case 'openshift': {
-      return `${resource.namespace}/${resource.name}`;
+      return resource.namespace ? `${resource.namespace}/${resource.name}` : resource.name;
     }
     case 'ova':
     case 'vsphere':

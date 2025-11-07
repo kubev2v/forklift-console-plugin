@@ -44,6 +44,8 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
     name: [CreatePlanStorageMapFieldId.StorageMap, CreatePlanStorageMapFieldId.SourceProvider],
   });
 
+  const isOpenshift = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
+
   const {
     append,
     fields: storageMappingFields,
@@ -52,7 +54,7 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
     control,
     name: CreatePlanStorageMapFieldId.StorageMap,
     rules: {
-      validate: (values) => validatePlanStorageMaps(values, usedSourceStorages),
+      validate: (values) => validatePlanStorageMaps(values, usedSourceStorages, isOpenshift),
     },
   });
 

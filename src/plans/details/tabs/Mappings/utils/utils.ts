@@ -92,14 +92,14 @@ type UpdatePlanMappingsDataParams = {
   planNetworkMap: V1beta1NetworkMap;
   planStorageMap: V1beta1StorageMap;
   updatedNetwork: V1beta1NetworkMapSpecMap[];
-  updatedStorage: V1beta1StorageMapSpecMap[];
+  transformedUpdatedStorage: V1beta1StorageMapSpecMap[];
 };
 
 export const patchPlanMappingsData = async ({
   planNetworkMap,
   planStorageMap,
+  transformedUpdatedStorage,
   updatedNetwork,
-  updatedStorage,
 }: UpdatePlanMappingsDataParams) => {
   await k8sPatch({
     data: [
@@ -118,7 +118,7 @@ export const patchPlanMappingsData = async ({
       {
         op: 'replace',
         path: '/spec/map',
-        value: updatedStorage,
+        value: transformedUpdatedStorage,
       },
     ],
     model: StorageMapModel,

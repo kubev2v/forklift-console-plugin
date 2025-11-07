@@ -24,6 +24,7 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
     planStorageMap,
     resourcesError,
     sourceNetworks,
+    sourceProviderType,
     sourceStorages,
     targetNetworks,
     targetStorages,
@@ -61,6 +62,7 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
 
       <PlanMappingsSection
         plan={plan}
+        sourceProviderType={sourceProviderType}
         planNetworkMap={planNetworkMap!}
         planStorageMap={planStorageMap!}
         setAlertMessage={setAlert}

@@ -17,8 +17,11 @@ import { CreatePlanStorageMapFieldId } from './constants';
 export const validatePlanStorageMaps = (
   values: StorageMapping[],
   usedSourceStorages: MappingValue[],
+  isOpenshift = false,
 ) => {
   if (
+    // TODO: once backend will support fetching the used source storages by VMs for OCP, we will remove this check for ocp. For now, we add all source storages for ocp mappings, so validation is skipped
+    !isOpenshift &&
     !usedSourceStorages.every((usedStorage) =>
       values.find(
         (value) => value[CreatePlanStorageMapFieldId.SourceStorage].id === usedStorage.id,
