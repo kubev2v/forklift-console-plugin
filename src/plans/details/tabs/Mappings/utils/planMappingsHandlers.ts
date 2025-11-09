@@ -16,13 +16,11 @@ import type {
 import { DefaultNetworkLabel } from './constants';
 
 export const createReplacedNetworkMap = (
-  source: InventoryNetwork,
+  source?: InventoryNetwork,
   target?: OpenShiftNetworkAttachmentDefinition | string,
 ): V1beta1NetworkMapSpecMap => {
   const sourceEntry: V1beta1NetworkMapSpecMapSource =
-    source.id === POD
-      ? { type: POD }
-      : { id: source.id, name: source.name, type: source.providerType };
+    source?.id === POD ? { type: POD } : { id: source?.id, name: source?.name, type: MULTUS };
 
   const targetEntry: V1beta1NetworkMapSpecMapDestination =
     typeof target === 'object'

@@ -7,7 +7,7 @@ import type {
   OVirtVM,
   ProviderVirtualMachine,
 } from '@kubev2v/types';
-import { Namespace } from '@utils/constants';
+import { DEFAULT_NETWORK, Namespace } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
@@ -100,7 +100,7 @@ const getNetworksUsedByProviderVms = (
  * This helps prioritize networks that need mapping in the UI
  */
 export const getSourceNetworkValues = (
-  availableSourceNetworks: ProviderNetwork[],
+  availableSourceNetworks: (ProviderNetwork | OpenShiftNetworkAttachmentDefinition)[],
   vms: ProviderVirtualMachine[],
   nicProfiles: OVirtNicProfile[],
 ): CategorizedSourceMappings => {
@@ -114,10 +114,10 @@ export const getSourceNetworkValues = (
   for (const network of availableSourceNetworks) {
     const mappingValue = {
       id: network.id,
-      name: getMapResourceLabel(network),
+      name: network.name === DEFAULT_NETWORK ? DEFAULT_NETWORK : getMapResourceLabel(network),
     };
 
-    if (usedNetworkIds.has(network.id)) {
+    if (usedNetworkIds.has(mappingValue.id) || usedNetworkIds.has(mappingValue.name)) {
       used.push(mappingValue);
     } else {
       other.push(mappingValue);

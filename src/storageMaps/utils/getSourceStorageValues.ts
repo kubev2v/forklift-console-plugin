@@ -3,11 +3,36 @@ import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import type { CategorizedSourceMappings } from 'src/plans/create/types';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import type { ProviderVirtualMachine, V1beta1Provider, VSphereVM } from '@kubev2v/types';
+import type {
+  OpenshiftVM,
+  ProviderVirtualMachine,
+  V1beta1Provider,
+  V1Volume,
+  VSphereVM,
+} from '@kubev2v/types';
 import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 import { isEmpty } from '@utils/helpers';
 
 import type { OVirtVMWithDisks } from '../types';
+
+/**
+ * Extracts volume names from vSphere VMs (no option to extract storage classes data)
+ */
+// TODO: need backend to support fetching the used source storages by VMs for OCP.
+// For now, we fetch all volumes instead of storages for ocp mappings, so if no volume is used then no storage is needed for mapping.
+const getOpenshiftVolumeNames = (vm: ProviderVirtualMachine): string[] => {
+  const openshiftVM = vm as OpenshiftVM;
+
+  const volumes: V1Volume[] | undefined = openshiftVM?.object?.spec?.template?.spec?.volumes;
+  if (!volumes || !Array.isArray(volumes)) {
+    return [];
+  }
+
+  return volumes.reduce<string[]>(
+    (acc, volume) => (volume?.name ? [...acc, volume?.name] : acc),
+    [],
+  );
+};
 
 /**
  * Extracts storage IDs from vSphere VMs
@@ -92,8 +117,11 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
         storageIds = getOvirtStorageIds(vm as OVirtVMWithDisks);
         break;
 
-      case 'openstack':
       case 'openshift':
+        storageIds = getOpenshiftVolumeNames(vm);
+        break;
+
+      case 'openstack':
       default:
       // Use empty array
     }
@@ -123,7 +151,10 @@ const getSourceStorageValues = (
         name: getMapResourceLabel(storage),
       };
 
-      if (usedStorageIds.has(storage.id)) {
+      if (
+        usedStorageIds.has(storage.id) ||
+        (storage.providerType === PROVIDER_TYPES.openshift && !isEmpty(usedStorageIds))
+      ) {
         acc.used.push(storageEntry);
       } else {
         acc.other.push(storageEntry);

@@ -8,7 +8,7 @@ import type {
   OpenShiftStorageClass,
   V1beta1Plan,
 } from '@kubev2v/types';
-import { Namespace } from '@utils/constants';
+import { DEFAULT_NETWORK, Namespace } from '@utils/constants';
 import { getPlanTargetNamespace } from '@utils/crds/plans/selectors';
 
 import { DefaultNetworkLabel, IgnoreNetwork } from './constants';
@@ -42,7 +42,10 @@ export const mapSourceNetworksIdsToLabels = (
     .map((net): [string, string] => {
       switch (net.providerType) {
         case PROVIDER_TYPES.openshift: {
-          return [net.uid, `${net.namespace}/${net.name}`];
+          return [
+            net.uid,
+            net.name === DEFAULT_NETWORK ? net.name : `${net.namespace}/${net.name}`,
+          ];
         }
         case PROVIDER_TYPES.openstack: {
           return [net.id, net.name];
@@ -74,7 +77,10 @@ export const mapSourceStoragesIdsToLabels = (
     .map((storage): [string, string] => {
       switch (storage.providerType) {
         case PROVIDER_TYPES.openshift: {
-          return [storage.uid, `${storage.namespace}/${storage.name}`];
+          return [
+            storage.uid,
+            storage.namespace ? `${storage.namespace}/${storage.name}` : storage.name,
+          ];
         }
         case PROVIDER_TYPES.openstack: {
           return [storage.id, storage.name];

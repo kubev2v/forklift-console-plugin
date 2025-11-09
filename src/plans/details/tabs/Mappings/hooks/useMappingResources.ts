@@ -34,6 +34,7 @@ import { usePlanMappingData } from '../../../hooks/usePlanMappingData';
 type MappingResources = {
   loadingResources: boolean;
   resourcesError: Error | undefined;
+  sourceProviderType: string | undefined;
   planNetworkMap: V1beta1NetworkMap | null;
   planStorageMap: V1beta1StorageMap | null;
   sourceNetworks: InventoryNetwork[];
@@ -133,6 +134,7 @@ export const useMappingResources = (plan: V1beta1Plan): MappingResources => {
     planStorageMap: planStorageMap ?? null,
     resourcesError: resourcesError(),
     sourceNetworks: sourceNetworks ?? [],
+    sourceProviderType: sourceProvider?.spec?.type,
     sourceStorages: sourceStorages ?? [],
     targetNetworks: targetNetworks ?? [],
     targetStorages: targetStorages ?? [],

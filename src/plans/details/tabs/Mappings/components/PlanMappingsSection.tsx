@@ -1,6 +1,7 @@
 import { type FC, useState } from 'react';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,
@@ -13,6 +14,7 @@ import { Flex, FlexItem } from '@patternfly/react-core';
 
 import { usePlanMappingsHandlers } from '../hooks/usePlanMappingsHandlers';
 import { getLabeledAndAvailableMappings } from '../utils/getLabeledAndAvailableMappings';
+import { transformOCPStorageMapDataToK8sFormat } from '../utils/transformOCPStorageMapDataToK8sFormat';
 import { patchPlanMappingsData } from '../utils/utils';
 
 import PlanMappingEditButton from './PlanMappingEditButton/PlanMappingEditButton';
@@ -29,6 +31,7 @@ type PlanMappingsSectionProps = {
   sourceStorages: InventoryStorage[];
   targetNetworks: OpenShiftNetworkAttachmentDefinition[];
   targetStorages: OpenShiftStorageClass[];
+  sourceProviderType?: string;
 };
 
 const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
@@ -37,6 +40,7 @@ const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
   planStorageMap,
   setAlertMessage,
   sourceNetworks,
+  sourceProviderType,
   sourceStorages,
   targetNetworks,
   targetStorages,
@@ -60,6 +64,7 @@ const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
     planNetworkMap,
     planStorageMap,
     sourceNetworks,
+    sourceProviderType,
     sourceStorages,
     targetNetworks,
     targetStorages,
@@ -68,12 +73,18 @@ const PlanMappingsSection: FC<PlanMappingsSectionProps> = ({
 
   const onUpdate = async () => {
     setIsLoading(true);
+
+    const transformedUpdatedStorage =
+      sourceProviderType === PROVIDER_TYPES.openshift
+        ? transformOCPStorageMapDataToK8sFormat(updatedStorage)
+        : updatedStorage;
+
     try {
       await patchPlanMappingsData({
         planNetworkMap,
         planStorageMap,
+        transformedUpdatedStorage,
         updatedNetwork,
-        updatedStorage,
       });
 
       reset(true);
