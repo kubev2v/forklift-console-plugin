@@ -1,4 +1,5 @@
-import type { V1beta1Host, V1beta1Provider, VSphereHostInventory } from '@kubev2v/types';
+import type { V1beta1Host, V1beta1Provider } from '@kubev2v/types';
+import type { VSphereHostInventory } from '@kubev2v/types/dist/types/provider/vsphere/host/VSphereHostInventory';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 

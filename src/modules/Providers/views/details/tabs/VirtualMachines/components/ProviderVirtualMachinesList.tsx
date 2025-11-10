@@ -75,19 +75,26 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       className={className}
       data-testid="vm-list"
       dataSource={[vmData ?? [], !vmDataLoading, null]}
-      CellMapper={cellMapper}
+      cell={cellMapper}
       fieldsMetadata={fieldsMetadata}
       namespace={namespace}
       title={title ?? t('Virtual machines')}
       userSettings={userSettings}
       extraSupportedFilters={extraSupportedFilters}
       extraSupportedMatchers={extraSupportedMatchers}
-      toId={getVmId}
-      onSelect={handleSelectedIds}
-      selectedIds={initialSelectedIds}
-      page={1}
-      expandedIds={[]}
-      ExpandedComponent={(props) => <ConcernsTable {...props} />}
+      {...(handleSelectedIds
+        ? {
+            expandedIds: [],
+            onSelect: handleSelectedIds,
+            selectedIds: initialSelectedIds,
+            toId: getVmId,
+          }
+        : {
+            expandedIds: [],
+            onExpand: () => undefined,
+            toId: getVmId,
+          })}
+      expanded={(props) => <ConcernsTable {...props} />}
     />
   );
 };

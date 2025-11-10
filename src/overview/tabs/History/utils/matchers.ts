@@ -5,10 +5,11 @@ import type { ValueMatcher } from '@components/common/FilterGroup/types';
 import { FilterDefType } from '@components/common/utils/types';
 import type { V1beta1Migration } from '@kubev2v/types';
 
-export const dateRangeObjectMatcher: ValueMatcher<{ started?: string; completed?: string }> = {
+export const dateRangeObjectMatcher: ValueMatcher = {
   filterType: FilterDefType.DateRange,
-  matchValue: (value: { started?: string; completed?: string }) => (filter: string) => {
-    if (!value) return false;
+  matchValue: (value: unknown) => (filter: string) => {
+    if (!value || typeof value !== 'object') return false;
+    const obj = value as { started?: string; completed?: string };
     const [from, to] = filter.split('/');
     const fromDate = DateTime.fromISO(from);
     const toDate = DateTime.fromISO(to);
@@ -17,7 +18,7 @@ export const dateRangeObjectMatcher: ValueMatcher<{ started?: string; completed?
       const date = DateTime.fromISO(dateStr);
       return date >= fromDate && date <= toDate;
     };
-    return inRange(value.started);
+    return inRange(obj.started);
   },
 };
 

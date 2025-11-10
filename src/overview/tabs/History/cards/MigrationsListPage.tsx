@@ -5,7 +5,6 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { SwitchFilter } from '@components/common/Filter/SwitchFilter';
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import LoadingSuspend from '@components/LoadingSuspend';
-import { INITIAL_PAGE } from '@components/page/utils/constants';
 import {
   MigrationModelGroupVersionKind,
   PlanModelGroupVersionKind,
@@ -129,10 +128,9 @@ const MigrationsListPage: FC = () => {
       <StandardPage
         data-testid="migrations-list"
         dataSource={[migrations ?? [], migrationsLoaded, migrationsLoadError]}
-        RowMapper={(props) => <MigrationRow {...props} plans={plans} />}
+        row={(props) => <MigrationRow {...props} plans={plans} />}
         fieldsMetadata={migrationFields}
         namespace={Namespace.AllProjects}
-        page={INITIAL_PAGE}
         showManageColumns={false}
         noPadding
         extraSupportedMatchers={[dateRangeObjectMatcher]}

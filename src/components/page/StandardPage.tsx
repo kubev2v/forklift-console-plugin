@@ -1,87 +1,43 @@
-/* eslint-disable max-lines */
-/* eslint-disable max-lines-per-function */
-import {
-  type FC,
-  type MutableRefObject,
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { useForkliftTranslation } from 'src/utils/i18n';
+import type { FC, MutableRefObject, ReactNode } from 'react';
+import { useMemo, useRef } from 'react';
 
-import TableBulkSelect from '@components/TableBulkSelect';
-import {
-  Flex,
-  FlexItem,
-  Icon,
-  Level,
-  LevelItem,
-  type OnPerPageSelect,
-  type OnSetPage,
-  PageSection,
-  Pagination,
-  Split,
-  Title,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
-  ToolbarToggleGroup,
-  Tooltip,
-} from '@patternfly/react-core';
-import { FilterIcon, HelpIcon } from '@patternfly/react-icons';
-import { isEmpty } from '@utils/helpers';
+import type { FilterRenderer, ValueMatcher } from '@components/common/FilterGroup/types';
+import type { UserSettings } from '@components/common/Page/types';
+import { useFields } from '@components/common/Page/useFields';
+import { DefaultHeader } from '@components/common/TableView/DefaultHeader';
+import { DefaultRow } from '@components/common/TableView/DefaultRow';
+import type { RowProps, TableViewHeaderProps } from '@components/common/TableView/types';
+import { withTr } from '@components/common/TableView/withTr';
+import type { GlobalActionToolbarProps, ResourceField } from '@components/common/utils/types';
+import { TableSortContext, type TableSortContextProps } from '@components/TableSortContext';
+import { TableSortContextProvider } from '@components/TableSortContextProvider';
+import { useTableSortContext } from '@components/useTableSortContext';
+import { PageSection } from '@patternfly/react-core';
 
-import { AttributeValueFilter } from '../common/FilterGroup/AttributeValueFilter';
-import { FilterGroup } from '../common/FilterGroup/FilterGroup';
-import { toFieldFilter } from '../common/FilterGroup/helpers';
-import {
-  createMetaMatcher,
-  defaultSupportedFilters,
-  defaultValueMatchers,
-} from '../common/FilterGroup/matchers';
-import type { FilterRenderer, ValueMatcher } from '../common/FilterGroup/types';
-import { useUrlFilters } from '../common/FilterGroup/useUrlFilters';
-import {
-  ErrorState,
-  Loading,
-  NoResultsFound,
-  NoResultsMatchFilter,
-} from '../common/Page/PageStates';
-import type { UserSettings } from '../common/Page/types';
-import { useFields } from '../common/Page/useFields';
-import { DEFAULT_PER_PAGE, usePagination } from '../common/Page/usePagination';
-import { DefaultHeader } from '../common/TableView/DefaultHeader';
-import { DefaultRow } from '../common/TableView/DefaultRow';
-import { TableView } from '../common/TableView/TableView';
-import type { RowProps, TableViewHeaderProps } from '../common/TableView/types';
-import { withTr } from '../common/TableView/withTr';
-import type { GlobalActionToolbarProps, ResourceField } from '../common/utils/types';
-import { TableSortContext, type TableSortContextProps } from '../TableSortContext';
-import { TableSortContextProvider } from '../TableSortContextProvider';
-import { useTableSortContext } from '../useTableSortContext';
-
-import { INITIAL_PAGE } from './utils/constants';
-import { reduceValueFilters } from './utils/reduceValueFilters';
-import { ManageColumnsToolbar } from './ManageColumnsToolbar';
+import { PageContent } from './components/PageContent';
+import { PageHeader } from './components/PageHeader';
+import { PageTable } from './components/PageTable';
+import { PageToolbar } from './components/PageToolbar';
+import { usePageData } from './hooks/usePageData';
+import { usePageFilters } from './hooks/usePageFilters';
+import { usePagination } from './hooks/usePagination';
+import type { DataSource } from './types';
 
 import './StandardPage.style.css';
 
 export type StandardPageProps<T> = {
-  dataSource: [T[], boolean, unknown];
+  dataSource: DataSource<T>;
   fieldsMetadata: ResourceField[];
   namespace: string;
-  page: number;
+  page?: number;
 
   addButton?: JSX.Element;
-  RowMapper?: FC<RowProps<T>>;
-  CellMapper?: FC<RowProps<T>>;
-  ExpandedComponent?: FC<RowProps<T>>;
-  HeaderMapper?: FC<TableViewHeaderProps<T>>;
+  row?: FC<RowProps<T>>;
+  cell?: FC<RowProps<T>>;
+  expanded?: FC<RowProps<T>>;
+  header?: FC<TableViewHeaderProps<T>>;
   extraSupportedFilters?: Record<string, FilterRenderer>;
-  extraSupportedMatchers?: ValueMatcher<any>[];
+  extraSupportedMatchers?: ValueMatcher[];
   postFilterData?: (
     data: T[],
     selectedFilters: Record<string, string[]>,
@@ -116,26 +72,27 @@ const StandardPageInner = <T,>({
   activeSort,
   addButton,
   alerts,
-  CellMapper,
+  cell,
   className,
   compareFn,
   customNoResultsFound,
   customNoResultsMatchFilter,
   dataSource: [flatData, loaded, error],
+  expanded,
   expandedIds,
   extraSupportedFilters,
   extraSupportedMatchers,
   fieldsMetadata,
   GlobalActionToolbarItems = [],
-  HeaderMapper = DefaultHeader<T>,
+  header = DefaultHeader<T>,
   namespace,
   noPadding,
   onSelect,
-  page: initialPage,
+  page: initialPage = 1,
   pageRef,
-  pagination = DEFAULT_PER_PAGE,
+  pagination,
   postFilterData,
-  RowMapper = DefaultRow<T>,
+  row = DefaultRow<T>,
   selectedIds,
   setActiveSort,
   showManageColumns = true,
@@ -145,179 +102,44 @@ const StandardPageInner = <T,>({
   toId,
   userSettings,
 }: StandardPageInnerProps<T>) => {
-  const { t } = useForkliftTranslation();
-  const [sortedData, setSortedData] = useState<T[]>([]);
-  const [filteredData, setFilteredData] = useState<T[]>([]);
-  const [page, setPage] = useState(initialPage);
-  const [finalFilteredData, setFinalFilteredData] = useState<T[]>([]);
-
-  const onPageSet = useCallback(
-    (newPage: number) => {
-      pageRef.current = newPage;
-      setPage(newPage);
-    },
-    [pageRef],
-  );
-
-  // Initialize page from ref on mount to handle cases where initialPage might change
-  useEffect(() => {
-    if (pageRef.current !== initialPage) {
-      setPage(pageRef.current);
-    }
-  }, [initialPage, pageRef]);
-
-  const [selectedFilters, setSelectedFilters] = useUrlFilters({
-    fields: fieldsMetadata,
-    userSettings,
-  });
+  const { clearAllFilters, metaMatcher, selectedFilters, setSelectedFilters, supportedFilters } =
+    usePageFilters({
+      extraSupportedFilters,
+      extraSupportedMatchers,
+      fieldsMetadata,
+      userSettings,
+    });
 
   const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
 
-  const supportedMatchers: ValueMatcher<any>[] = useMemo(
-    () =>
-      extraSupportedMatchers
-        ? reduceValueFilters(extraSupportedMatchers, defaultValueMatchers)
-        : defaultValueMatchers,
-    [extraSupportedMatchers],
-  );
-
-  const supportedFilters = useMemo(
-    () =>
-      extraSupportedFilters
-        ? { ...defaultSupportedFilters, ...extraSupportedFilters }
-        : defaultSupportedFilters,
-    [extraSupportedFilters],
-  );
-
-  useEffect(() => {
-    if (flatData && loaded && !error) {
-      setSortedData([...flatData].sort(compareFn));
-    }
-  }, [flatData, compareFn, loaded, error]);
-
-  const metaMatcher = useMemo(
-    () => createMetaMatcher(selectedFilters, fields, supportedMatchers),
-    [selectedFilters, fields, supportedMatchers],
-  );
-
-  useEffect(() => {
-    if (sortedData && loaded && !error) {
-      setFilteredData(sortedData.filter(metaMatcher as (item: T) => boolean));
-    }
-  }, [sortedData, metaMatcher, loaded, error]);
-
-  useEffect(() => {
-    if (!loaded || error) {
-      return;
-    }
-
-    if (!filteredData || isEmpty(filteredData)) {
-      setFinalFilteredData([]);
-      return;
-    }
-
-    if (!postFilterData) {
-      setFinalFilteredData(filteredData);
-      return;
-    }
-
-    setFinalFilteredData(postFilterData(filteredData, selectedFilters, fields));
-  }, [filteredData, postFilterData, selectedFilters, fields, loaded, error]);
-
-  useEffect(() => {
-    if (Object.values(selectedFilters).some((filter) => !isEmpty(filter))) {
-      setPage(INITIAL_PAGE); // When filters are applied, reset to page 1 to show correct results
-    }
-  }, [selectedFilters]);
-
-  const showPagination = useMemo(
-    () => pagination === 'on' || (typeof pagination === 'number' && sortedData.length > pagination),
-    [pagination, sortedData.length],
-  );
-
-  const { itemsPerPage, setPerPage } = usePagination({
-    filteredDataLength: finalFilteredData.length,
-    userSettings: userSettings?.pagination,
+  const { finalFilteredData, sortedData } = usePageData({
+    compareFn,
+    error,
+    fields,
+    flatData,
+    loaded,
+    metaMatcher,
+    postFilterData,
+    selectedFilters,
   });
 
-  const pageData = useMemo(
-    () => finalFilteredData.slice((page - 1) * itemsPerPage, page * itemsPerPage),
-    [finalFilteredData, page, itemsPerPage],
-  );
-
-  // Memoize error/loading states
-  const errorFetchingData = useMemo(() => error, [error]);
-  const noResults = useMemo(
-    () => loaded && !error && isEmpty(sortedData),
-    [loaded, error, sortedData],
-  );
-  const noMatchingResults = useMemo(
-    () => loaded && !error && isEmpty(finalFilteredData) && !isEmpty(sortedData),
-    [loaded, error, finalFilteredData, sortedData],
-  );
-
-  const primaryFilters = useMemo(
-    () => fields.filter((field) => field.filter?.primary).map(toFieldFilter(sortedData)),
-    [fields, sortedData],
-  );
-
-  const secondaryFilters = useMemo(
-    () =>
-      fields
-        .filter(({ filter }) => filter && !filter.primary && !filter.standalone)
-        .map(toFieldFilter(flatData)),
-    [fields, flatData],
-  );
-
-  const standaloneFilters = useMemo(
-    () => fields.filter((field) => field.filter?.standalone).map(toFieldFilter(flatData)),
-    [fields, flatData],
-  );
-
-  const excludeFromClearFiltersIds = useMemo(
-    () =>
-      fields
-        .filter((field) => field.filter?.excludeFromClearFilters)
-        .map((field) => field.resourceFieldId),
-    [fields],
-  );
-
-  const selectedFiltersAfterClearAll = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(selectedFilters).filter(([key]) => excludeFromClearFiltersIds.includes(key)),
-      ),
-    [excludeFromClearFiltersIds, selectedFilters],
-  );
-
-  const clearAllFilters = useCallback(() => {
-    setSelectedFilters(selectedFiltersAfterClearAll);
-  }, [selectedFiltersAfterClearAll, setSelectedFilters]);
+  const { itemsPerPage, onPerPageSelect, onSetPage, page, pageData, showPagination } =
+    usePagination({
+      finalFilteredData,
+      initialPage,
+      pageRef,
+      pagination,
+      selectedFilters,
+      sortedDataLength: sortedData.length,
+      userSettings: userSettings?.pagination,
+    });
 
   const visibleColumns = useMemo(
     () => fields.filter(({ isHidden, isVisible }) => isVisible && !isHidden),
     [fields],
   );
 
-  const onSetPage = useCallback<OnSetPage>(
-    (_event, newPage) => {
-      onPageSet(newPage);
-    },
-    [onPageSet],
-  );
-
-  const onPerPageSelect = useCallback<OnPerPageSelect>(
-    (_event, perPage, newPage) => {
-      setPerPage(perPage);
-      onPageSet(newPage);
-    },
-    [setPerPage, onPageSet],
-  );
-
-  const RowComponent = useMemo(
-    () => (CellMapper ? withTr(CellMapper) : RowMapper),
-    [CellMapper, RowMapper],
-  );
+  const RowComponent = cell ? withTr(cell, expanded) : row;
 
   const dataOnScreen = useMemo(
     () => (showPagination ? pageData : finalFilteredData),
@@ -341,148 +163,72 @@ const StandardPageInner = <T,>({
 
   return (
     <span className={className} data-testid={testId}>
-      {title && (
-        <PageSection hasBodyWrapper={false} className="forklift-page__main-title">
-          <Level>
-            <LevelItem>
-              <Flex
-                alignItems={{ default: 'alignItemsCenter' }}
-                spaceItems={{ default: 'spaceItemsSm' }}
-              >
-                <FlexItem>
-                  <Title headingLevel="h1">{title}</Title>
-                </FlexItem>
-                {titleHelpContent && (
-                  <FlexItem>
-                    <Tooltip content={titleHelpContent}>
-                      <Icon size="md">
-                        <HelpIcon />
-                      </Icon>
-                    </Tooltip>
-                  </FlexItem>
-                )}
-              </Flex>
-            </LevelItem>
-            {addButton && <LevelItem>{addButton}</LevelItem>}
-          </Level>
-        </PageSection>
-      )}
+      <PageHeader title={title} titleHelpContent={titleHelpContent} actionButton={addButton} />
+
       {alerts && <PageSection hasBodyWrapper={false}>{alerts}</PageSection>}
-      <PageSection
-        hasBodyWrapper={false}
-        padding={{ default: noPadding ? 'noPadding' : 'padding' }}
-      >
-        <Toolbar clearAllFilters={clearAllFilters} clearFiltersButtonText={t('Clear all filters')}>
-          <ToolbarContent>
-            <Split hasGutter>
-              {selectedIds && onSelect && (
-                <TableBulkSelect
-                  selectedIds={selectedIds}
-                  dataIds={dataIds}
-                  pageDataIds={pageDataIds}
-                  onSelect={onSelect}
-                />
-              )}
 
-              <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
-                {!isEmpty(primaryFilters) && (
-                  <FilterGroup
-                    fieldFilters={primaryFilters}
-                    onFilterUpdate={setSelectedFilters}
-                    selectedFilters={selectedFilters}
-                    supportedFilterTypes={supportedFilters}
-                  />
-                )}
-                <AttributeValueFilter
-                  fieldFilters={secondaryFilters}
-                  onFilterUpdate={setSelectedFilters}
-                  selectedFilters={selectedFilters}
-                  supportedFilterTypes={supportedFilters}
-                />
-                {Boolean(fields.find((field) => field.filter?.standalone)) && (
-                  <FilterGroup
-                    fieldFilters={standaloneFilters}
-                    onFilterUpdate={setSelectedFilters}
-                    selectedFilters={selectedFilters}
-                    supportedFilterTypes={supportedFilters}
-                  />
-                )}
-                {showManageColumns && (
-                  <ManageColumnsToolbar
-                    resourceFields={fields}
-                    defaultColumns={fieldsMetadata}
-                    setColumns={setFields}
-                  />
-                )}
-                {!isEmpty(GlobalActionToolbarItems) && renderedGlobalActions}
-              </ToolbarToggleGroup>
-            </Split>
-
-            {showPagination && (
-              <ToolbarItem variant="pagination">
-                <Pagination
-                  variant="top"
-                  perPage={itemsPerPage}
-                  page={page}
-                  itemCount={finalFilteredData.length}
-                  onSetPage={onSetPage}
-                  onPerPageSelect={onPerPageSelect}
-                />
-              </ToolbarItem>
-            )}
-          </ToolbarContent>
-        </Toolbar>
-        <TableView<T>
-          entities={dataOnScreen}
-          visibleColumns={visibleColumns}
-          aria-label={title ?? t('Page table')}
-          Row={RowComponent}
-          Header={HeaderMapper}
-          activeSort={activeSort}
-          setActiveSort={setActiveSort}
-          currentNamespace={namespace}
-          toId={toId}
-          expandedIds={expandedIds}
-        >
-          {!loaded && <Loading key="loading" title={t('Loading')} />}
-          {loaded && Boolean(errorFetchingData) && (
-            <ErrorState key="error" title={t('Unable to retrieve data')} />
-          )}
-          {noResults &&
-            (customNoResultsFound ?? (
-              <NoResultsFound key="no_result" title={t('No results found')} />
-            ))}
-          {noMatchingResults &&
-            (customNoResultsMatchFilter ?? (
-              <NoResultsMatchFilter
-                key="no_match"
-                clearAllFilters={clearAllFilters}
-                title={t('No results found')}
-                description={t(
-                  'No results match the filter criteria. Clear all filters and try again.',
-                )}
-                clearAllLabel={t('Clear all filters')}
-              />
-            ))}
-        </TableView>
-        {showPagination && (
-          <Pagination
-            variant="bottom"
-            perPage={itemsPerPage}
+      <PageContent
+        toolbar={
+          <PageToolbar
+            fields={fields}
+            flatData={flatData}
+            sortedData={sortedData}
+            selectedFilters={selectedFilters}
+            setSelectedFilters={setSelectedFilters}
+            supportedFilters={supportedFilters}
+            clearAllFilters={clearAllFilters}
+            fieldsMetadata={fieldsMetadata}
+            setFields={setFields}
+            showManageColumns={showManageColumns}
+            showPagination={showPagination}
             page={page}
-            itemCount={finalFilteredData.length}
+            itemsPerPage={itemsPerPage}
+            totalItems={finalFilteredData.length}
             onSetPage={onSetPage}
             onPerPageSelect={onPerPageSelect}
+            selectedIds={selectedIds}
+            dataIds={dataIds}
+            pageDataIds={pageDataIds}
+            onSelect={onSelect}
+            renderedGlobalActions={renderedGlobalActions}
           />
-        )}
-      </PageSection>
+        }
+        showPagination={showPagination}
+        page={page}
+        itemsPerPage={itemsPerPage}
+        totalItems={finalFilteredData.length}
+        onSetPage={onSetPage}
+        onPerPageSelect={onPerPageSelect}
+        noPadding={noPadding}
+      >
+        <PageTable
+          dataOnScreen={dataOnScreen}
+          loaded={loaded}
+          error={error}
+          sortedData={sortedData}
+          finalFilteredData={finalFilteredData}
+          visibleColumns={visibleColumns}
+          namespace={namespace}
+          title={title}
+          RowComponent={RowComponent}
+          header={header}
+          toId={toId}
+          expandedIds={expandedIds}
+          customNoResultsFound={customNoResultsFound}
+          customNoResultsMatchFilter={customNoResultsMatchFilter}
+          clearAllFilters={clearAllFilters}
+          activeSort={activeSort}
+          setActiveSort={setActiveSort}
+          compareFn={compareFn}
+        />
+      </PageContent>
     </span>
   );
 };
 
 const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
-  const { activeSort, compareFn, setActiveSort } = useTableSortContext();
-  const internalPageRef = useRef(pageProps.page);
+  const sortContext = useTableSortContext();
+  const internalPageRef = useRef(pageProps.page ?? 1);
   const pageRef = pageProps.pageRef ?? internalPageRef;
 
   const defaultSort = useMemo(() => {
@@ -492,16 +238,10 @@ const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
       : undefined;
   }, [pageProps.fieldsMetadata]);
 
-  if (activeSort.resourceFieldId) {
-    return (
-      <StandardPageInner
-        {...pageProps}
-        activeSort={activeSort}
-        setActiveSort={setActiveSort}
-        compareFn={compareFn}
-        pageRef={pageRef}
-      />
-    );
+  const isInSortContext = Boolean(sortContext.activeSort.resourceFieldId);
+
+  if (isInSortContext) {
+    return <StandardPageInner {...pageProps} {...sortContext} pageRef={pageRef} />;
   }
 
   return (

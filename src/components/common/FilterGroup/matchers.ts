@@ -172,12 +172,17 @@ export const createMetaMatcher =
     resourceFields: ResourceField[],
     valueMatchers: ValueMatcher<string>[] = defaultValueMatchers,
   ) =>
-  (
-    resourceData: Record<string, object | string | boolean | ((resourceData: unknown) => unknown)>,
-  ): boolean =>
+  (resourceData: unknown): boolean =>
     valueMatchers
       .map(({ filterType, matchValue }) =>
         createMatcher({ filterType, matchValue, resourceFields, selectedFilters }),
       )
-      .map((match) => match(resourceData))
+      .map((match) =>
+        match(
+          resourceData as Record<
+            string,
+            object | string | boolean | ((resourceData: unknown) => unknown)
+          >,
+        ),
+      )
       .every(Boolean);

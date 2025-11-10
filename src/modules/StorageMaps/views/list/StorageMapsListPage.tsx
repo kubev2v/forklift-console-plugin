@@ -135,7 +135,7 @@ const StorageMapsListPage: FC<{
           addButton: <StorageMapsAddButton namespace={namespace} testId="add-storage-map-button" />,
         })}
         dataSource={[data || [], StorageMapsLoaded, StorageMapsLoadError]}
-        RowMapper={StorageMapRow}
+        row={StorageMapRow}
         fieldsMetadata={fieldsMetadata}
         namespace={namespace}
         title={t('Storage maps')}
@@ -144,7 +144,6 @@ const StorageMapsListPage: FC<{
         )}
         userSettings={userSettings}
         customNoResultsFound={<StorageMapsEmptyState namespace={namespace} />}
-        page={1}
       />
     </TipsAndTricksDrawer>
   );

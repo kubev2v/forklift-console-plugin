@@ -1,48 +1,29 @@
 import type { StandardPageProps } from './StandardPage';
 
+/** Data source tuple: [data, loaded, error]. */
+export type DataSource<T> = [data: T[], loaded: boolean, error: unknown];
+
 type WithSelectionProps<T> = Pick<StandardPageProps<T>, 'canSelect'> & {
   isExpanded?: ((item: T) => boolean | undefined) | undefined;
   isSelected?: ((item: T) => boolean | undefined) | undefined;
   toggleSelectFor: (data: T[]) => void;
 };
 
-export type WithRowSelectionProps<T> = WithSelectionProps<T> & {
-  CellMapper: StandardPageProps<T>['CellMapper'];
+type WithRowSelectionProps<T> = WithSelectionProps<T> & {
+  cell: StandardPageProps<T>['cell'];
   toggleExpandFor: (item: T[]) => void;
 };
 
-export type WithHeaderSelectionProps<T> = Pick<WithSelectionProps<T>, 'isExpanded'> & {
-  HeaderMapper: StandardPageProps<T>['HeaderMapper'];
+type WithHeaderSelectionProps<T> = Pick<WithSelectionProps<T>, 'isExpanded'> & {
+  header: StandardPageProps<T>['header'];
 };
 
-export type IdBasedSelectionProps<T> = {
-  /**
-   * @returns string that can be used as an unique identifier
-   */
+/** ID-based selection/expansion props. Requires toId for unique identifiers. */
+type IdBasedSelectionProps<T> = {
   toId?: (item: T) => string;
-
-  /**
-   * @returns true if items can be selected, false otherwise
-   */
   canSelect?: (item: T) => boolean;
-
-  /**
-   * onSelect is called when selection changes
-   */
   onSelect?: (selectedIds: string[]) => void;
-
-  /**
-   * Selected ids
-   */
   selectedIds?: string[];
-
-  /**
-   * onExpand is called when expand changes
-   */
   onExpand?: (expandedIds: string[]) => void;
-
-  /**
-   * Expanded ids
-   */
   expandedIds?: string[];
 };

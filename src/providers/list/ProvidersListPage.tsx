@@ -67,7 +67,7 @@ const ProvidersListPage: FC<{
           />
         }
         dataSource={[data || [], providersLoaded, providersLoadError]}
-        RowMapper={ProviderRow}
+        row={ProviderRow}
         fieldsMetadata={providerFields}
         namespace={namespace}
         title={t('Providers')}
@@ -83,7 +83,6 @@ const ProvidersListPage: FC<{
         customNoResultsFound={
           <ProvidersEmptyState namespace={namespace} canCreate={permissions.canCreate} />
         }
-        page={1}
       />
     </TipsAndTricksDrawer>
   );
