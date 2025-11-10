@@ -35,10 +35,9 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     const selectedVMNames: string[] = [];
 
     // Find all VM rows (not folders) with checked checkboxes
-    const grid = this.page.getByRole('treegrid');
-
-    // Find all rows with level 2 (VM rows) that have checked checkboxes
-    const vmRows = grid.locator('tbody tr[aria-level="2"]');
+    // VM rows have data-testid starting with "vm-"
+    const table = this.page.getByTestId('vsphere-tree-table');
+    const vmRows = table.locator('tbody tr[data-testid^="vm-"]');
 
     const count = await vmRows.count();
     for (let i = 0; i < count; i += 1) {
@@ -49,9 +48,9 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
       const isChecked = await checkbox.isChecked().catch(() => false);
 
       if (isChecked) {
-        // Extract the VM name from the first gridcell (after checkbox column)
-        // The Name is in the second <td> (first is checkbox)
-        const nameCell = row.locator('td[role="gridcell"]').nth(1);
+        // Get the VM name from the name cell using data-testid
+        const testId = await row.getAttribute('data-testid');
+        const nameCell = row.getByTestId(`${testId}-name-cell`);
         const vmNameText = await nameCell.textContent().catch(() => '');
 
         if (vmNameText) {
@@ -67,11 +66,11 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     const buttonName = action === 'confirm' ? 'Confirm selections' : 'Deselect critical issue VMs';
     const button = this.page.getByRole('button', { name: buttonName });
 
-    await expect(button).toBeVisible({ timeout: 10000 });
+    await expect(button).toBeVisible();
     await button.click();
 
     // Wait for modal to disappear
-    await expect(button).not.toBeVisible({ timeout: 10000 });
+    await expect(button).not.toBeVisible();
   }
 
   async searchAndSelectVirtualMachine(vmName: string, folder?: string) {
