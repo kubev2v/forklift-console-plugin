@@ -126,21 +126,21 @@ export class VirtualMachinesTable {
    * @returns Number of VMs in the folder, or 0 if not found
    */
   async getFolderVMCount(folderName: string): Promise<number> {
-    const folderRow = this.page.getByTestId(`folder-${folderName}`);
+    const vmCountLabel = this.page.getByTestId(`folder-${folderName}-vm-count`);
 
-    if (!(await folderRow.isVisible().catch(() => false))) {
+    if (!(await vmCountLabel.isVisible().catch(() => false))) {
       return 0;
     }
 
-    // Get the text content of the folder row (e.g., "vm 25 VMs")
-    const folderText = await folderRow.textContent();
-    if (!folderText) {
+    // Get the text content directly from the label (e.g., "25 VMs")
+    const labelText = await vmCountLabel.textContent();
+    if (!labelText) {
       return 0;
     }
 
-    // Extract the number from "X VMs" pattern
-    const match = /(?<count>\d+)\s+VMs?/.exec(folderText);
-    return match?.groups?.count ? parseInt(match.groups.count, 10) : 0;
+    // Extract just the number from the beginning of the text
+    const count = parseInt(labelText.trim(), 10);
+    return isNaN(count) ? 0 : count;
   }
 
   async isColumnVisible(columnName: string): Promise<boolean> {

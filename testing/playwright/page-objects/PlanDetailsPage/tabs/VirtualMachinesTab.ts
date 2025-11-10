@@ -163,6 +163,10 @@ export class VirtualMachinesTab {
     await this.search(sourceName);
     await this.verifyRowIsVisible({ Name: sourceName });
 
+    // Close any leftover modal before opening the menu again
+    const modalCancelButton = this.page.getByTestId('modal-cancel-button');
+    await modalCancelButton.click({ timeout: 1000 }).catch(() => undefined);
+
     const renamedVmRow = this.table.getRow({ Name: sourceName });
     const renamedActionsButton = renamedVmRow.getByTestId('vm-actions-menu-toggle');
     await renamedActionsButton.click();
