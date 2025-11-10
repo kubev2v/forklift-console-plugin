@@ -139,8 +139,8 @@ export class VirtualMachinesTable {
     }
 
     // Extract just the number from the beginning of the text
-    const count = parseInt(labelText.trim(), 10);
-    return isNaN(count) ? 0 : count;
+    const count = Number.parseInt(labelText.trim(), 10);
+    return Number.isNaN(count) ? 0 : count;
   }
 
   async isColumnVisible(columnName: string): Promise<boolean> {
