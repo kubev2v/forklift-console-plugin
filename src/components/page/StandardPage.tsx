@@ -21,9 +21,10 @@ import { PageToolbar } from './components/PageToolbar';
 import { usePageData } from './hooks/usePageData';
 import { usePageFilters } from './hooks/usePageFilters';
 import { usePagination } from './hooks/usePagination';
-import type { DataSource } from './types';
 
 import './StandardPage.style.css';
+
+type DataSource<T> = [data: T[], loaded: boolean, error: unknown];
 
 export type StandardPageProps<T> = {
   dataSource: DataSource<T>;
