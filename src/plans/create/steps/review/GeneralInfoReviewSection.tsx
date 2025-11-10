@@ -17,16 +17,18 @@ import { GeneralFormFieldId, generalFormFieldLabels } from '../general-informati
 const GeneralInfoReviewSection: FC = () => {
   const { goToStepById } = useWizardContext();
   const { control } = useCreatePlanFormContext();
-  const [planName, planProject, sourceProvider, targetProvider, targetProject] = useWatch({
-    control,
-    name: [
-      GeneralFormFieldId.PlanName,
-      GeneralFormFieldId.PlanProject,
-      GeneralFormFieldId.SourceProvider,
-      GeneralFormFieldId.TargetProvider,
-      GeneralFormFieldId.TargetProject,
-    ],
-  });
+  const [planName, planProject, planDescription, sourceProvider, targetProvider, targetProject] =
+    useWatch({
+      control,
+      name: [
+        GeneralFormFieldId.PlanName,
+        GeneralFormFieldId.PlanProject,
+        GeneralFormFieldId.PlanDescription,
+        GeneralFormFieldId.SourceProvider,
+        GeneralFormFieldId.TargetProvider,
+        GeneralFormFieldId.TargetProject,
+      ],
+    });
 
   return (
     <ExpandableReviewSection
@@ -54,6 +56,16 @@ const GeneralInfoReviewSection: FC = () => {
 
           <DescriptionListDescription data-testid="review-plan-project">
             {planProject}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>
+            {generalFormFieldLabels[GeneralFormFieldId.PlanDescription]}
+          </DescriptionListTerm>
+
+          <DescriptionListDescription data-testid="review-plan-description">
+            {planDescription}
           </DescriptionListDescription>
         </DescriptionListGroup>
 

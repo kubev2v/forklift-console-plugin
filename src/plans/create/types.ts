@@ -59,6 +59,7 @@ export type ProviderVirtualMachine =
 export type CreatePlanFormData = FieldValues & {
   [GeneralFormFieldId.PlanName]: string;
   [GeneralFormFieldId.PlanProject]: string;
+  [GeneralFormFieldId.PlanDescription]: string | undefined;
   [GeneralFormFieldId.SourceProvider]: V1beta1Provider | undefined;
   [GeneralFormFieldId.TargetProvider]: V1beta1Provider | undefined;
   [GeneralFormFieldId.TargetProject]: string;
@@ -105,6 +106,7 @@ export type CreatePlanParams = {
   storageMap: V1beta1StorageMap;
   vms: ProviderVirtualMachine[];
   migrationType: MigrationTypeValue;
+  planDescription?: string;
   preserveStaticIps?: boolean;
   rootDevice?: string;
   transferNetwork?: V1beta1PlanSpecTransferNetwork;

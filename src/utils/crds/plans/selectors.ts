@@ -59,3 +59,6 @@ export const getRootDisk = (plan: V1beta1Plan) => plan?.spec?.vms?.[0]?.rootDisk
 
 export const getPlanTargetPowerState = (plan: V1beta1Plan): TargetPowerStateValue =>
   plan?.spec?.targetPowerState;
+
+export const getPlanDescription = (plan: V1beta1Plan): string | undefined =>
+  plan?.spec?.description;

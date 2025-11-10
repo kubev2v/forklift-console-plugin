@@ -3,6 +3,7 @@ import { t } from '@utils/i18n';
 export enum GeneralFormFieldId {
   PlanName = 'planName',
   PlanProject = 'planProject',
+  PlanDescription = 'planDescription',
   SourceProvider = 'sourceProvider',
   TargetProvider = 'targetProvider',
   TargetProject = 'targetProject',
@@ -10,7 +11,8 @@ export enum GeneralFormFieldId {
 }
 
 export const generalFormFieldLabels: Record<GeneralFormFieldId, ReturnType<typeof t>> = {
-  [GeneralFormFieldId.PlanName]: t('Plan name'),
+  [GeneralFormFieldId.PlanDescription]: t('Description'),
+  [GeneralFormFieldId.PlanName]: t('Name'),
   [GeneralFormFieldId.PlanProject]: t('Plan project'),
   [GeneralFormFieldId.ShowDefaultProjects]: t('Show default projects'),
   [GeneralFormFieldId.SourceProvider]: t('Source provider'),

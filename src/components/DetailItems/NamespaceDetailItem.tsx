@@ -12,6 +12,7 @@ const NamespaceDetailsItem: FC<ResourceDetailsItemProps> = ({
   helpContent,
   moreInfoLink,
   resource,
+  title,
 }) => {
   const { t } = useForkliftTranslation();
   const namespace = getNamespace(resource);
@@ -26,7 +27,7 @@ const NamespaceDetailsItem: FC<ResourceDetailsItemProps> = ({
   return (
     <DetailsItem
       testId="project-detail-item"
-      title={t('Project')}
+      title={title ?? t('Project')}
       content={
         <ResourceLink
           groupVersionKind={{ kind: 'Project', version: 'v1' }}

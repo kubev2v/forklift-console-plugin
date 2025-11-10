@@ -148,10 +148,15 @@ export const planFields: ResourceField[] = [
     sortable: true,
   },
   {
+    filter: {
+      placeholderLabel: t('Filter by description'),
+      type: FilterDefType.FreeText,
+    },
     isVisible: false,
     jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Description],
     label: t('Description'),
     resourceFieldId: PlanTableResourceId.Description,
+    sortable: true,
   },
   {
     isAction: true,

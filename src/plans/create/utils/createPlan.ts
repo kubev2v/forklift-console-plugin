@@ -18,6 +18,7 @@ export const createPlan = async ({
   migrationType,
   nbdeClevis,
   networkMap,
+  planDescription,
   planName,
   planProject,
   postHook,
@@ -40,6 +41,7 @@ export const createPlan = async ({
       namespace: planProject,
     },
     spec: {
+      ...(planDescription ? { description: planDescription } : {}),
       map: {
         network: getObjectRef(networkMap),
         storage: getObjectRef(storageMap),
