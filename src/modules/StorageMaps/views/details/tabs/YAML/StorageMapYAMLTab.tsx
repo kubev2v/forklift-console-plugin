@@ -25,7 +25,7 @@ export const StorageMapYAMLTab: FC<StorageMapYAMLTabProps> = ({ name, namespace 
   return (
     <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
       <ResourceYAMLEditorWrapper>
-        <ResourceYAMLEditor header={t('StorageMap YAML')} initialResource={obj} />
+        <ResourceYAMLEditor header={t('Storage map YAML')} initialResource={obj} />
       </ResourceYAMLEditorWrapper>
     </LoadingSuspend>
   );

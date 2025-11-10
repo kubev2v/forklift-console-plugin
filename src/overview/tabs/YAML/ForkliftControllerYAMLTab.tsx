@@ -30,7 +30,10 @@ const ForkliftControllerYAMLTab: FC = () => {
 
       {forkliftController && loaded && !loadError && (
         <ResourceYAMLEditorWrapper>
-          <ResourceYAMLEditor header={t('Provider YAML')} initialResource={forkliftController} />
+          <ResourceYAMLEditor
+            header={t('Forklift controller YAML')}
+            initialResource={forkliftController}
+          />
         </ResourceYAMLEditorWrapper>
       )}
     </Suspense>
