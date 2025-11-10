@@ -131,7 +131,12 @@ export const ManageColumnsModal = ({
   return (
     <>
       <div id="root" />
-      <Modal isOpen={showModal} variant="small" onClose={onClose} data-testid="manage-columns-modal">
+      <Modal
+        isOpen={showModal}
+        variant="small"
+        onClose={onClose}
+        data-testid="manage-columns-modal"
+      >
         <ModalHeader
           title={title}
           description={
@@ -196,7 +201,12 @@ export const ManageColumnsModal = ({
           >
             {saveLabel}
           </Button>
-          <Button key="cancel" variant={ButtonVariant.secondary} onClick={onClose} data-testid="manage-columns-cancel-button">
+          <Button
+            key="cancel"
+            variant={ButtonVariant.secondary}
+            onClick={onClose}
+            data-testid="manage-columns-cancel-button"
+          >
             {cancelLabel}
           </Button>
           <Button key="restore" variant={ButtonVariant.link} onClick={restoreDefaults}>
