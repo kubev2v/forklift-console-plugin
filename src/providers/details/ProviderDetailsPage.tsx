@@ -1,18 +1,14 @@
 import type { FC } from 'react';
 import { ErrorState } from 'src/components/common/Page/PageStates';
+import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { type K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { PageSection } from '@patternfly/react-core';
 
-import { PROVIDER_TYPES } from '../utils/constants';
-
-import OpenshiftProviderDetailsPage from './OpenshiftProviderDetailsPage';
-import OpenStackProviderDetailsPage from './OpenStackProviderDetailsPage';
-import OvaProviderDetailsPage from './OvaProviderDetailsPage';
-import OVirtProviderDetailsPage from './OVirtProviderDetailsPage';
-import VSphereProviderDetailsPage from './VSphereProviderDetailsPage';
+import ProviderDetailsPageByType from './ProviderDetailsPageByType';
 
 import './ProviderDetailsPage.style.scss';
 
@@ -41,21 +37,13 @@ const ProviderDetailsPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) 
     return <LoadingSuspend />;
   }
 
-  switch (provider?.spec?.type) {
-    case PROVIDER_TYPES.openshift:
-      return <OpenshiftProviderDetailsPage name={name} namespace={namespace} />;
-    case PROVIDER_TYPES.openstack:
-      return <OpenStackProviderDetailsPage name={name} namespace={namespace} />;
-    case PROVIDER_TYPES.ovirt:
-      return <OVirtProviderDetailsPage name={name} namespace={namespace} />;
-    case PROVIDER_TYPES.vsphere:
-      return <VSphereProviderDetailsPage name={name} namespace={namespace} />;
-    case PROVIDER_TYPES.ova:
-      return <OvaProviderDetailsPage name={name} namespace={namespace} />;
-    case undefined:
-    default:
-      return <ErrorState title={t('Unsupported provider type')} />;
-  }
+  return (
+    <TipsAndTricksDrawer>
+      <PageSection hasBodyWrapper={false}>
+        <ProviderDetailsPageByType type={provider?.spec?.type} name={name} namespace={namespace} />
+      </PageSection>
+    </TipsAndTricksDrawer>
+  );
 };
 
 export default ProviderDetailsPage;

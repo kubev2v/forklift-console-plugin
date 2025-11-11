@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
 
 import { PageSection, PageSectionTypes, Title } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -9,7 +10,7 @@ const NetworkMapCreatePage: FC = () => {
   const { t } = useForkliftTranslation();
 
   return (
-    <>
+    <TipsAndTricksDrawer>
       <PageSection hasBodyWrapper={false}>
         <Title headingLevel="h2">{t('Create network map')}</Title>
       </PageSection>
@@ -22,7 +23,7 @@ const NetworkMapCreatePage: FC = () => {
       >
         <CreateNetworkMapForm />
       </PageSection>
-    </>
+    </TipsAndTricksDrawer>
   );
 };
 

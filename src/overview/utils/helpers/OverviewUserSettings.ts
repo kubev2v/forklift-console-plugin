@@ -1,12 +1,7 @@
 import type { TimeRangeOptions } from 'src/overview/tabs/Overview/utils/timeRangeOptions';
 
-import {
-  loadFromLocalStorage,
-  removeFromLocalStorage,
-  saveToLocalStorage,
-} from '@components/common/utils/localStorage';
-import { MTVConsole } from '@utils/console';
-import { isEmpty } from '@utils/helpers';
+import { saveToLocalStorage } from '@components/common/utils/localStorage';
+import { parseOrClean, saveRestOrRemoveKey } from '@utils/userSettingsHelpers';
 
 type OverviewUserSettings = {
   welcome?: WelcomeSettings;
@@ -18,18 +13,6 @@ type WelcomeSettings = {
   hideWelcome?: boolean;
   save: (showWelcome: boolean) => void;
   clear: () => void;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-const parseOrClean = <T>(key: string): T => {
-  try {
-    const storedValue = loadFromLocalStorage(key) ?? '';
-    return JSON.parse(storedValue) as T;
-  } catch (_e) {
-    removeFromLocalStorage(key);
-    MTVConsole.error(`Removed invalid key [${key}] from local storage`);
-  }
-  return {} as T;
 };
 
 const getOverviewKey = () => `${process.env.PLUGIN_NAME}/Overview`;
@@ -57,14 +40,6 @@ export const loadOverviewSelectedRanges = (): {
   const { vmMigrationsDonutSelectedRange, vmMigrationsHistorySelectedRange } =
     parseOrClean<OverviewUserSettings>(key);
   return { vmMigrationsDonutSelectedRange, vmMigrationsHistorySelectedRange };
-};
-
-const saveRestOrRemoveKey = (key: string, { rest }: Record<string, Record<string, unknown>>) => {
-  if (isEmpty(Object.keys(rest))) {
-    removeFromLocalStorage(key);
-    return;
-  }
-  saveToLocalStorage(key, JSON.stringify({ ...rest }));
 };
 
 /**

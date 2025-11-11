@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
 
 import { HorizontalNav } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -10,10 +11,10 @@ const PlanDetailsNav: FC<PlanPageProps> = ({ name, namespace }) => {
   const pages = usePlanPages(name, namespace);
 
   return (
-    <>
+    <TipsAndTricksDrawer>
       <PlanPageHeader name={name} namespace={namespace} />
       <HorizontalNav pages={pages} />
-    </>
+    </TipsAndTricksDrawer>
   );
 };
 

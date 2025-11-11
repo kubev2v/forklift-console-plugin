@@ -64,3 +64,5 @@ export const FEATURE_NAMES = {
 } as const;
 
 export const DEFAULT_NETWORK = t('Default network');
+
+export const TIPS_AND_TRICKS_LABEL = t('Tips and tricks');

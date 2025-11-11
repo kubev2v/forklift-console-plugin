@@ -9,8 +9,11 @@ import type {
 } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
+  LearningExperienceContext: './onlineHelp/tipsAndTricksDrawer/hooks/learningExperienceContext',
   OverviewContext: './overview/hooks/OverviewContext',
   OverviewPage: './overview/OverviewPage',
+  UseLearningExperienceContext:
+    './onlineHelp/tipsAndTricksDrawer/hooks/useLearningExperienceContext',
   useOverviewContext: './overview/hooks/useOverviewContext',
 };
 
@@ -73,6 +76,16 @@ export const extensions: EncodedExtension[] = [
       provider: { $codeRef: 'OverviewContext.CreateOverviewContextProvider' },
       useValueHook: {
         $codeRef: 'useOverviewContext.useOverviewContext',
+      },
+    },
+    type: 'console.context-provider',
+  } as EncodedExtension<ContextProvider>,
+
+  {
+    properties: {
+      provider: { $codeRef: 'LearningExperienceContext.createLearningExperienceContextProvider' },
+      useValueHook: {
+        $codeRef: 'UseLearningExperienceContext.useLearningExperienceContext',
       },
     },
     type: 'console.context-provider',
