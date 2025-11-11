@@ -1,6 +1,6 @@
-import { copyFileSync, readFileSync, writeFileSync } from 'fs';
-import { rm } from 'fs/promises';
-import { join } from 'path';
+import { copyFileSync, readFileSync, writeFileSync } from 'node:fs';
+import { rm } from 'node:fs/promises';
+import { join } from 'node:path';
 
 import { expect, type Page } from '@playwright/test';
 
