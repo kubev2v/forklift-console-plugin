@@ -259,8 +259,6 @@ export class VirtualMachinesTable {
       return false;
     }
 
-    const concernCount = await concernButton.textContent();
-
     // Click the concern button to open popover
     await concernButton.click();
     await this.page.waitForTimeout(500);
