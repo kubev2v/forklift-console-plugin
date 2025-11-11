@@ -17,14 +17,14 @@ export class ResourceCreator {
       const result = await page.evaluate(
         async ({ providerData, ns, constants }) => {
           try {
-            const getCsrfToken = () => {
+            const getCsrfTokenFromCookie = () => {
               const cookies = document.cookie.split('; ');
               const csrfCookie = cookies.find((cookie) =>
                 cookie.startsWith(`${constants.CSRF_TOKEN_NAME}=`),
               );
               return csrfCookie ? csrfCookie.split('=')[1] : '';
             };
-            const csrfToken = getCsrfToken();
+            const csrfToken = getCsrfTokenFromCookie();
 
             const apiPath = `${constants.FORKLIFT_PATH}/namespaces/${ns}/providers`;
 

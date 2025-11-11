@@ -1,7 +1,7 @@
-import { exec } from 'child_process';
-import { readdir, rm, rmdir } from 'fs/promises';
-import { join } from 'path';
-import { promisify } from 'util';
+import { exec } from 'node:child_process';
+import { readdir, rm, rmdir } from 'node:fs/promises';
+import { join } from 'node:path';
+import { promisify } from 'node:util';
 
 const execAsync = promisify(exec);
 
