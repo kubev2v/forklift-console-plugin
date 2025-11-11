@@ -15,6 +15,9 @@ ENV LC_ALL=en_US \
     IMAGE_GIT_COMMIT="${GIT_COMMIT}" \
     IMAGE_BUILD_DATE="${BUILD_DATE}"
 
+# NFS mount path for OVA file cleanup)
+ENV NFS_MOUNT_PATH=""
+
 WORKDIR /test-runner
 
 COPY package.json yarn.lock ./

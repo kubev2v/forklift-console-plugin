@@ -21,19 +21,22 @@ export class CreateProviderPage {
     await this.page.getByTestId(`${testData.type}-provider-card`).locator('label').click();
     await this.page.getByTestId('provider-name-input').fill(testData.name);
 
-    if (testData.endpointType) {
+    // VSphere-specific endpoint selection (vCenter vs ESXi)
+    if (testData.type === 'vsphere' && testData.endpointType) {
       await this.page
         .locator(`input[name="sdkEndpoint"][id="sdkEndpoint-${testData.endpointType}"]`)
         .click();
     }
 
+    // URL field
     await this.page.getByTestId('provider-url-input').fill(testData.hostname ?? '');
 
-    if (testData.vddkInitImage) {
+    // VSphere-specific VDDK fields
+    if (testData.type === 'vsphere' && testData.vddkInitImage) {
       await this.page.getByTestId('provider-vddk-input').fill(testData.vddkInitImage);
     }
 
-    if (testData.useVddkAioOptimization !== undefined) {
+    if (testData.type === 'vsphere' && testData.useVddkAioOptimization !== undefined) {
       const checkbox = this.page.locator('#useVddkAioOptimization');
       const isChecked = await checkbox.isChecked();
 
@@ -42,13 +45,20 @@ export class CreateProviderPage {
       }
     }
 
-    await this.page.getByTestId('provider-username-input').fill(testData.username ?? '');
+    // Credentials fields (not present for OVA providers)
+    if (testData.type !== 'ova') {
+      await this.page.getByTestId('provider-username-input').fill(testData.username ?? '');
 
-    if (testData.password) {
-      await this.page.getByTestId('provider-password-input').fill(testData.password);
+      if (testData.password) {
+        await this.page.getByTestId('provider-password-input').fill(testData.password);
+      }
+
+      // Certificate validation (not present for OVA providers)
+      const certSwitch = this.page.getByTestId('skip-certificate-validation-switch');
+      if (await certSwitch.isVisible()) {
+        await certSwitch.check({ force: true });
+      }
     }
-
-    await this.page.getByTestId('skip-certificate-validation-switch').check({ force: true });
 
     await this.page.getByTestId('create-provider-button').click();
 

@@ -91,9 +91,45 @@ test.describe('Provider Creation Tests', () => {
       expect(providerResource).not.toBeNull();
       // When disabled, the field might be undefined, 'false', or not present
       const aioOptimization = providerResource?.spec?.settings?.useVddkAioOptimization;
-      expect(
-        aioOptimization === undefined || aioOptimization === 'false' || aioOptimization === false,
-      ).toBe(true);
+      expect(aioOptimization === undefined || aioOptimization === 'false').toBe(true);
+    },
+  );
+
+  test(
+    'should create a new OVA provider',
+    {
+      tag: '@downstream',
+    },
+    async ({ page }) => {
+      const providersPage = new ProvidersListPage(page);
+      const createProvider = new CreateProviderPage(page, resourceManager);
+      const providerDetailsPage = new ProviderDetailsPage(page);
+
+      // Get OVA provider configuration
+      const ovaProviderKey = process.env.OVA_PROVIDER ?? 'ova-nfs';
+      const ovaProviderConfig = getProviderConfig(ovaProviderKey);
+
+      const testProviderData: ProviderData = {
+        name: `test-ova-provider-${crypto.randomUUID().slice(0, 8)}`,
+        projectName: MTV_NAMESPACE,
+        type: ovaProviderConfig.type,
+        hostname: ovaProviderConfig.api_url,
+        username: '',
+        password: '',
+      };
+
+      await providersPage.navigateFromMainMenu();
+      await providersPage.clickCreateProviderButton();
+      await createProvider.waitForWizardLoad();
+      await createProvider.fillAndSubmit(testProviderData);
+      await providerDetailsPage.waitForPageLoad();
+      await providerDetailsPage.verifyProviderDetails(testProviderData);
+
+      // Verify the provider resource was created
+      const providerResource = await resourceManager.fetchProvider(page, testProviderData.name);
+      expect(providerResource).not.toBeNull();
+      expect(providerResource?.spec?.type).toBe('ova');
+      expect(providerResource?.spec?.url).toBe(testProviderData.hostname);
     },
   );
 
