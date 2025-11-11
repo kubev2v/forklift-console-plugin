@@ -186,18 +186,14 @@ export class VirtualMachinesTable {
 
     const columnList = modalBody.getByTestId('manage-columns-list');
 
-    // Find list items and their draggable buttons
-    const sourceListItem = columnList
-      .getByRole('listitem')
-      .filter({ hasText: new RegExp(`^${sourceColumn}$`) });
-    const targetListItem = columnList
-      .getByRole('listitem')
-      .filter({ hasText: new RegExp(`^${targetColumn}$`) });
+    // Find column items by their id attribute (lowercase column names)
+    const sourceItem = columnList.locator(`#${sourceColumn.toLowerCase()}`);
+    const targetItem = columnList.locator(`#${targetColumn.toLowerCase()}`);
 
-    if ((await sourceListItem.count()) > 0 && (await targetListItem.count()) > 0) {
-      // Get draggable buttons (named with column name)
-      const sourceDragHandle = sourceListItem.getByRole('button', { name: sourceColumn });
-      const targetDragHandle = targetListItem.getByRole('button', { name: targetColumn });
+    if ((await sourceItem.count()) > 0 && (await targetItem.count()) > 0) {
+      // Get the drag handle button (first button in each item)
+      const sourceDragHandle = sourceItem.getByRole('button').first();
+      const targetDragHandle = targetItem.getByRole('button').first();
 
       // Use mouse API for proper drag and drop
       const sourceBox = await sourceDragHandle.boundingBox();
@@ -264,7 +260,6 @@ export class VirtualMachinesTable {
     }
 
     const concernCount = await concernButton.textContent();
-    console.log('Clicking concern button with count:', concernCount);
 
     // Click the concern button to open popover
     await concernButton.click();
