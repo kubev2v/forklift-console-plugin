@@ -162,7 +162,7 @@ export class DetailsTab {
 
   async verifyTargetAffinityRulesCount(count: number): Promise<void> {
     const targetAffinityElement = this.page.getByTestId('vm-target-affinity-rules-detail-item');
-    await expect(targetAffinityElement).toContainText(`${count} affinity rule`, { timeout: 15000 });
+    await expect(targetAffinityElement).toContainText(`${count} affinity rule`);
   }
 
   async verifyTargetAffinityText(expectedText: string): Promise<void> {
@@ -193,9 +193,7 @@ export class DetailsTab {
     if (count === 0) {
       await expect(targetNodeSelectorElement).toContainText('No node selectors defined');
     } else {
-      await expect(targetNodeSelectorElement).not.toContainText('No node selectors defined', {
-        timeout: 15000,
-      });
+      await expect(targetNodeSelectorElement).not.toContainText('No node selectors defined');
     }
   }
 

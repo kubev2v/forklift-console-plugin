@@ -177,7 +177,7 @@ export class PlanDetailsPage {
 
   async verifyPlanTitle(planName: string): Promise<void> {
     const titleLocator = this.page.getByTestId('resource-details-title');
-    await expect(titleLocator).toContainText(planName, { timeout: 15000 });
+    await expect(titleLocator).toContainText(planName);
   }
 
   async waitForMigrationCompletion(timeoutMs = 300000, logProgress = false): Promise<void> {
