@@ -58,29 +58,26 @@ export class NfsCleanupManager {
     await rm(filePath, { force: true });
 
     const applianceDir = join(filePath, '..');
-    try {
-      await rmdir(applianceDir);
-    } catch (error) {
+    await rmdir(applianceDir).catch(() => {
       // Directory not empty
-    }
+    });
   }
 
   private async findFile(dir: string, fileName: string): Promise<string | null> {
-    try {
-      const entries = await readdir(dir, { withFileTypes: true });
-
-      for (const entry of entries) {
-        const fullPath = join(dir, entry.name);
-
-        if (entry.isDirectory()) {
-          const found = await this.findFile(fullPath, fileName);
-          if (found) return found;
-        } else if (entry.name === fileName) {
-          return fullPath;
-        }
-      }
-    } catch (error) {
+    const entries = await readdir(dir, { withFileTypes: true }).catch(() => {
       // Skip directories with permission errors
+      return [];
+    });
+
+    for (const entry of entries) {
+      const fullPath = join(dir, entry.name);
+
+      if (entry.isDirectory()) {
+        const found = await this.findFile(fullPath, fileName);
+        if (found) return found;
+      } else if (entry.name === fileName) {
+        return fullPath;
+      }
     }
 
     return null;

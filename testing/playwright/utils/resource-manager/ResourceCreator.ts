@@ -86,14 +86,13 @@ export class ResourceCreator {
       const result = await page.evaluate(
         async ({ secretData, ns, constants }) => {
           try {
-            const getCsrfToken = () => {
+            const csrfToken = (() => {
               const cookies = document.cookie.split('; ');
               const csrfCookie = cookies.find((cookie) =>
                 cookie.startsWith(`${constants.CSRF_TOKEN_NAME}=`),
               );
               return csrfCookie ? csrfCookie.split('=')[1] : '';
-            };
-            const csrfToken = getCsrfToken();
+            })();
 
             const apiPath = `${constants.KUBERNETES_CORE}/namespaces/${ns}/secrets`;
 

@@ -54,8 +54,6 @@ const createProvider = async (
 
   // For OVA providers, create directly via API with applianceManagement setting
   if (providerConfig.type === 'ova') {
-    console.log(`Creating OVA provider ${providerName} via API with applianceManagement...`);
-
     // Navigate to console to establish session (needed for CSRF token)
     const createProviderPage = new CreateProviderPage(page, resourceManager);
     await createProviderPage.navigationHelper.navigateToConsole();
