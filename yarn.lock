@@ -1315,20 +1315,6 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.5.tgz#4fc56c15c580b9adb7dc3c333a134e540b44bfb1"
   integrity sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==
 
-"@monaco-editor/loader@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@monaco-editor/loader/-/loader-1.5.0.tgz#dcdbc7fe7e905690fb449bed1c251769f325c55d"
-  integrity sha512-hKoGSM+7aAc7eRTRjpqAZucPmoNOC4UUbknb/VNoTkEIkCPhqV8LfbsgM1webRM7S/z21eHEx9Fkwx8Z/C/+Xw==
-  dependencies:
-    state-local "^1.0.6"
-
-"@monaco-editor/react@^4.6.0":
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-4.7.0.tgz#35a1ec01bfe729f38bfc025df7b7bac145602a60"
-  integrity sha512-cyzXQCtO47ydzxpQtCGSQGOC8Gk3ZUeBXFAxD+CWXYFo5OqZyZUonFl0DwUlTyAfRHntBfw2p3w4s9R6oe1eCA==
-  dependencies:
-    "@monaco-editor/loader" "^1.5.0"
-
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
@@ -1527,18 +1513,6 @@
     "@patternfly/react-tokens" "^6.4.0"
     hoist-non-react-statics "^3.3.2"
     lodash "^4.17.21"
-    tslib "^2.8.1"
-
-"@patternfly/react-code-editor@6.4.0":
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-code-editor/-/react-code-editor-6.4.0.tgz#a1d8b4302d29107391bc5b3286445b1762c5bc0e"
-  integrity sha512-jZK4qzytcriZalug3KvwTD+h8lNjUfm79opAsLJwGfuq2DD5pzrDwF4GysZrR4hUMdN0jUJqh5yvAqwZtJI/UA==
-  dependencies:
-    "@monaco-editor/react" "^4.6.0"
-    "@patternfly/react-core" "^6.4.0"
-    "@patternfly/react-icons" "^6.4.0"
-    "@patternfly/react-styles" "^6.4.0"
-    react-dropzone "14.3.5"
     tslib "^2.8.1"
 
 "@patternfly/react-component-groups@6.4.0":
@@ -7944,15 +7918,6 @@ react-dom@17.0.2:
     object-assign "^4.1.1"
     scheduler "^0.20.2"
 
-react-dropzone@14.3.5:
-  version "14.3.5"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-14.3.5.tgz#1a8bd312c8a353ec78ef402842ccb3589c225add"
-  integrity sha512-9nDUaEEpqZLOz5v5SUcFA0CjM4vq8YbqO0WRls+EYT7+DvxUdzDPKNCPLqGfj3YL9MsniCLCD4RFA6M95V6KMQ==
-  dependencies:
-    attr-accept "^2.2.4"
-    file-selector "^2.1.0"
-    prop-types "^15.8.1"
-
 react-dropzone@^14.3.5:
   version "14.3.8"
   resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-14.3.8.tgz#a7eab118f8a452fe3f8b162d64454e81ba830582"
@@ -8807,11 +8772,6 @@ stack-utils@^2.0.3:
   integrity sha512-XlkWvfIm6RmsWtNJx+uqtKLS8eqFbxUg0ZzLXqY0caEy9l7hruX8IpiDnjsLavoBgqCCR71TqWO8MaXYheJ3RQ==
   dependencies:
     escape-string-regexp "^2.0.0"
-
-state-local@^1.0.6:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/state-local/-/state-local-1.0.7.tgz#da50211d07f05748d53009bee46307a37db386d5"
-  integrity sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==
 
 static-eval@2.0.2:
   version "2.0.2"
