@@ -20,7 +20,7 @@ import {
   RESOURCE_KINDS,
 } from './constants';
 import { ResourceCleaner } from './ResourceCleaner';
-import { ResourceCreator } from './ResourceCreator';
+import { createProvider, createSecret } from './ResourceCreator';
 import { ResourceFetcher } from './ResourceFetcher';
 import { ResourcePatcher } from './ResourcePatcher';
 
@@ -129,7 +129,7 @@ export class ResourceManager {
     provider: V1beta1Provider,
     namespace = MTV_NAMESPACE,
   ): Promise<V1beta1Provider | null> {
-    return ResourceCreator.createProvider(page, provider, namespace);
+    return createProvider(page, provider, namespace);
   }
 
   async createSecret(
@@ -137,7 +137,7 @@ export class ResourceManager {
     secret: IoK8sApiCoreV1Secret,
     namespace = MTV_NAMESPACE,
   ): Promise<IoK8sApiCoreV1Secret | null> {
-    return ResourceCreator.createSecret(page, secret, namespace);
+    return createSecret(page, secret, namespace);
   }
 
   async fetchProvider(
