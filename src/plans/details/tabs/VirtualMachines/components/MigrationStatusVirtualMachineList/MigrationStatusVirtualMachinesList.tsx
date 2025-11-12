@@ -73,7 +73,6 @@ const MigrationStatusVirtualMachinesList: FC<MigrationStatusVirtualMachinesListP
         expandedIds={expandedIds}
         fieldsMetadata={planMigrationVirtualMachinesFields}
         GlobalActionToolbarItems={actions}
-        namespace={''}
         onExpand={setExpandedIds}
         onSelect={onSelect}
         selectedIds={selectedIds}

@@ -116,10 +116,11 @@ describe('StandardPage', () => {
       // Click to sort
       await user.click(nameHeader);
 
-      // Verify data is still rendered (sorting doesn't break display)
-      expect(screen.getByText('Item 1')).toBeInTheDocument();
-      expect(screen.getByText('Item 2')).toBeInTheDocument();
-      expect(screen.getByText('Item 3')).toBeInTheDocument();
+      // Verify data is sorted in DESC order (Item 3, Item 2, Item 1)
+      const items = screen.getAllByText(/Item \d/);
+      expect(items[0]).toHaveTextContent('Item 3');
+      expect(items[1]).toHaveTextContent('Item 2');
+      expect(items[2]).toHaveTextContent('Item 1');
     });
   });
 

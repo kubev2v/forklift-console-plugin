@@ -3,89 +3,13 @@ import { useMemo, useRef } from 'react';
 
 import DefaultSelectHeader from '@components/common/TableView/DefaultSelectHeader';
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
-import { Td, Th } from '@patternfly/react-table';
 
-import type { RowProps, TableViewHeaderProps } from '../common/TableView/types';
 import { withTr } from '../common/TableView/withTr';
 
 import { usePageSelection } from './hooks/usePageSelection';
-import StandardPage, { type StandardPageProps } from './StandardPage';
-
-/** Injects expand/select <Td> elements before cell content. */
-const createRowWithSelection = <T,>({
-  canSelect,
-  cell: CellComponent,
-  expandedIds,
-  selectedIds,
-  toggleExpandFor,
-  toggleSelectFor,
-  toId,
-}: {
-  cell?: FC<RowProps<T>>;
-  expandedIds?: string[];
-  selectedIds?: string[];
-  toggleExpandFor: (items: T[]) => void;
-  toggleSelectFor: (items: T[]) => void;
-  toId?: (item: T) => string;
-  canSelect?: (item: T) => boolean;
-}) => {
-  const RowWithSelection = (props: RowProps<T>) => {
-    const itemId = toId?.(props.resourceData) ?? '';
-    const isExpanded = expandedIds?.includes(itemId) ?? false;
-    const isSelected = selectedIds?.includes(itemId) ?? false;
-
-    return (
-      <>
-        {expandedIds !== undefined && (
-          <Td
-            expand={{
-              isExpanded,
-              onToggle: () => {
-                toggleExpandFor([props.resourceData]);
-              },
-              rowIndex: props.resourceIndex,
-            }}
-          />
-        )}
-        {selectedIds !== undefined && (
-          <Td
-            select={{
-              isDisabled: !canSelect?.(props.resourceData),
-              isSelected,
-              onSelect: () => {
-                toggleSelectFor([props.resourceData]);
-              },
-              rowIndex: props.resourceIndex,
-            }}
-          />
-        )}
-        {CellComponent && <CellComponent {...props} />}
-      </>
-    );
-  };
-
-  return RowWithSelection;
-};
-
-/** Adds empty <Th> columns to align header with row expand/select checkboxes. */
-const createHeaderWithSelection = <T,>({
-  header: HeaderComponent,
-  isExpanded,
-}: {
-  header?: FC<TableViewHeaderProps<T>>;
-  isExpanded?: (item: T) => boolean;
-}) => {
-  const HeaderWithSelection = ({ dataOnScreen, ...other }: TableViewHeaderProps<T>) => {
-    return (
-      <>
-        {isExpanded && <Th />}
-        {HeaderComponent && <HeaderComponent {...{ ...other, dataOnScreen }} />}
-      </>
-    );
-  };
-
-  return HeaderWithSelection;
-};
+import { createHeaderWithSelection } from './utils/createHeaderWithSelection';
+import { createRowWithSelection } from './utils/createRowWithSelection';
+import StandardPage from './StandardPage';
 
 /**
  * Enforces prop combinations at compile-time via discriminated unions:
@@ -93,7 +17,7 @@ const createHeaderWithSelection = <T,>({
  * - Expansion only: requires onExpand + toId + expandedIds
  * - Neither: all optional
  */
-type StandardPageWithSelectionProps<T> = StandardPageProps<T> &
+type StandardPageWithSelectionProps<T> = ComponentProps<typeof StandardPage<T>> &
   (
     | {
         // Selection enabled - all selection props required

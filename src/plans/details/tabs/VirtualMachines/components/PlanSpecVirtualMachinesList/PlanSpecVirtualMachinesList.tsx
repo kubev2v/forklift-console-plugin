@@ -20,7 +20,6 @@ type PlanVirtualMachinesListProps = {
 
 const selectedIds: string[] = [];
 const expandedIds: string[] = [];
-const emptyNamespace = '';
 const onSelect = () => undefined;
 
 const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan }) => {
@@ -44,7 +43,6 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       cell={PlanSpecVirtualMachinesRow}
       fieldsMetadata={specVirtualMachineFields}
       userSettings={userSettings}
-      namespace={emptyNamespace}
       toId={vmDataToId}
       canSelect={canSelect}
       onSelect={onSelect}
