@@ -1,34 +1,24 @@
 import type { FC } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
+import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { MTV_SETTINGS } from '@utils/links';
 
-import { EditField } from '../cards/EditField';
-import type { InputComponentType } from '../cards/EditFieldTypes';
+import { controllerMemoryLimitOptions } from '../utils/constants';
+import { type ForkliftSettingsValues, SettingsFields } from '../utils/types';
 
-import type { EditSettingsProps } from './EditSettingsProps';
-import { controllerMemoryLimitOptions } from './options';
 import SettingsSelectInput from './SettingsSelectInput';
 
-/**
- * ControllerMemoryLimitSelect component.
- * Wraps the SettingsSelectInput component with pre-defined options.
- */
-const ControllerMemoryLimitSelect: InputComponentType = (props) => {
-  return <SettingsSelectInput {...props} options={controllerMemoryLimitOptions} />;
-};
-
-const EditControllerMemoryLimit: FC<EditSettingsProps> = (props) => {
+const EditControllerMemoryLimit: FC = () => {
   const { t } = useForkliftTranslation();
 
+  const { control } = useFormContext<ForkliftSettingsValues>();
+
   return (
-    <EditField
-      {...props}
-      resource={props.resource as K8sResourceCommon}
-      jsonPath={'spec.controller_container_limits_memory'}
+    <FormGroupWithHelpText
       label={t('Controller main container memory limit')}
       labelHelp={
         <HelpIconPopover header={t('Controller main container memory limit')}>
@@ -46,13 +36,22 @@ const EditControllerMemoryLimit: FC<EditSettingsProps> = (props) => {
           </Stack>
         </HelpIconPopover>
       }
-      model={ForkliftControllerModel}
       helperText={t(
         'Enter the limit for memory usage by the controller in Mi. If empty, the default value will be used.',
       )}
-      InputComponent={ControllerMemoryLimitSelect}
-      defaultValue="800Mi"
-    />
+    >
+      <Controller
+        control={control}
+        name={SettingsFields.ControllerMemoryLimit}
+        render={({ field: { onChange, value } }) => (
+          <SettingsSelectInput
+            onChange={onChange}
+            value={String(value)}
+            options={controllerMemoryLimitOptions}
+          />
+        )}
+      />
+    </FormGroupWithHelpText>
   );
 };
 

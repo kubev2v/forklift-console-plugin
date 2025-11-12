@@ -3,18 +3,10 @@ import { Base64 } from 'js-base64';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 
 import { DetailsItem } from '@components/DetailItems/DetailItem';
-import SectionHeading from '@components/headers/SectionHeading';
+import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
 import type { V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
-import {
-  Button,
-  ButtonVariant,
-  CodeBlock,
-  CodeBlockCode,
-  DescriptionList,
-  Flex,
-} from '@patternfly/react-core';
-import { PencilAltIcon } from '@patternfly/react-icons';
+import { CodeBlock, CodeBlockCode, DescriptionList } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -38,23 +30,12 @@ const HookSection: FC<HookSectionProps> = ({ hook, plan, step, title }) => {
 
   return (
     <>
-      <SectionHeading
-        headingLevel="h3"
-        text={
-          <Flex direction={{ default: 'row' }} gap={{ default: 'gapSm' }}>
-            {title}
-            <Button
-              icon={<PencilAltIcon />}
-              variant={ButtonVariant.link}
-              onClick={() => {
-                launcher<HookEditProps>(HookEdit, { hook, plan, step });
-              }}
-              isDisabled={!planEditable}
-            >
-              {t('Edit')}
-            </Button>
-          </Flex>
-        }
+      <SectionHeadingWithEdit
+        editable={planEditable}
+        title={title}
+        onClick={() => {
+          launcher<HookEditProps>(HookEdit, { hook, plan, step });
+        }}
       />
       <DescriptionList>
         <DetailsItem

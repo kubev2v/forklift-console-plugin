@@ -1,35 +1,23 @@
 import type { FC } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
+import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { MTV_SETTINGS } from '@utils/links';
 
-import { EditField } from '../cards/EditField';
-import type { InputComponentType } from '../cards/EditFieldTypes';
+import { controllerCpuLimitOptions } from '../utils/constants';
+import { type ForkliftSettingsValues, SettingsFields } from '../utils/types';
 
-import type { EditSettingsProps } from './EditSettingsProps';
-import { controllerCpuLimitOptions } from './options';
 import SettingsSelectInput from './SettingsSelectInput';
 
-/**
- * ControllerCPULimitSelect component.
- * Wraps the SettingsSelectInput component with pre-defined options.
- */
-const ControllerCPULimitSelect: InputComponentType = (props) => {
-  return <SettingsSelectInput {...props} options={controllerCpuLimitOptions} />;
-};
-
-const EditControllerCPULimit: FC<EditSettingsProps> = (props) => {
+const EditControllerCPULimit: FC = () => {
   const { t } = useForkliftTranslation();
-  const { resource } = props;
+  const { control } = useFormContext<ForkliftSettingsValues>();
 
   return (
-    <EditField
-      {...props}
-      resource={resource as K8sResourceCommon}
-      jsonPath={'spec.controller_container_limits_cpu'}
+    <FormGroupWithHelpText
       label={t('Controller main container CPU limit')}
       labelHelp={
         <HelpIconPopover header={t('Controller main container CPU limit')}>
@@ -47,13 +35,22 @@ const EditControllerCPULimit: FC<EditSettingsProps> = (props) => {
           </Stack>
         </HelpIconPopover>
       }
-      model={ForkliftControllerModel}
       helperText={t(
         'Enter the limit for CPU usage by the controller in milliCPU. If empty, the default value will be used.',
       )}
-      InputComponent={ControllerCPULimitSelect}
-      defaultValue="500m"
-    />
+    >
+      <Controller
+        control={control}
+        name={SettingsFields.ControllerCPULimit}
+        render={({ field: { onChange, value } }) => (
+          <SettingsSelectInput
+            onChange={onChange}
+            value={String(value)}
+            options={controllerCpuLimitOptions}
+          />
+        )}
+      />
+    </FormGroupWithHelpText>
   );
 };
 

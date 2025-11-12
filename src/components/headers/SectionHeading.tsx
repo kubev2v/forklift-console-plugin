@@ -2,7 +2,7 @@ import type { FC, ReactNode } from 'react';
 
 import { Title, type TitleProps } from '@patternfly/react-core';
 
-type SectionHeadingProps = {
+export type SectionHeadingProps = {
   text: ReactNode;
   className?: string;
   id?: string;
