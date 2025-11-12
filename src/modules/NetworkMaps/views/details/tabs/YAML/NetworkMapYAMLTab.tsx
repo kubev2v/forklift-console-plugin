@@ -25,7 +25,7 @@ const NetworkMapYAMLTab: FC<NetworkMapYAMLTabProps> = ({ name, namespace }) => {
   return (
     <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
       <ResourceYAMLEditorWrapper>
-        <ResourceYAMLEditor header={t('NetworkMap YAML')} initialResource={obj} />
+        <ResourceYAMLEditor header={t('Network map YAML')} initialResource={obj} />
       </ResourceYAMLEditorWrapper>
     </LoadingSuspend>
   );
