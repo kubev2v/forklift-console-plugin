@@ -27,7 +27,7 @@ export const ConcernsTable: FC<ConcernsTableProps> = ({ resourceData }) => {
 
   const concerns: Concern[] = (vm as VirtualMachineWithConcerns)?.concerns;
 
-  if ((!concerns || isEmpty(concerns)) && vm.providerType !== PROVIDER_TYPES.openshift) {
+  if ((!concerns || isEmpty(concerns)) && vm?.providerType !== PROVIDER_TYPES.openshift) {
     return (
       <PageSection hasBodyWrapper={false}>
         <HelperText>
