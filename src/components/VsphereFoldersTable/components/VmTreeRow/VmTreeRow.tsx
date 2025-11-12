@@ -24,14 +24,18 @@ const VmCells: Record<string, FC<{ row: VmRow }>> = {
 const VmTreeRow: FC<VmTreeRowProps> = ({ columns, row }) => {
   return (
     <TreeRowWrapper data-testid={row.key} key={row.key} row={{ props: row?.treeRow?.props }}>
-      <Td treeRow={row.treeRow} dataLabel={nameColumn.label}>
+      <Td treeRow={row.treeRow} dataLabel={nameColumn.label} data-testid={`${row.key}-name-cell`}>
         {row.vmData.name}
       </Td>
       {columns.map((col) => {
         if (!col.isVisible) return null;
         const Component = VmCells[col.resourceFieldId!];
         return (
-          <Td key={col.resourceFieldId} dataLabel={col.label ?? ''}>
+          <Td
+            key={col.resourceFieldId}
+            dataLabel={col.label ?? ''}
+            data-testid={`${row.key}-${col.resourceFieldId}-cell`}
+          >
             <Component row={row} />
           </Td>
         );

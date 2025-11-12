@@ -28,6 +28,7 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({ fieldId, targetNetwor
         <Select
           ref={field.ref}
           id={fieldId}
+          testId={`target-network-${fieldId}`}
           value={(field.value as MappingValue).name}
           onSelect={async (_event, value) => {
             field.onChange(value);

@@ -16,16 +16,28 @@ export class VirtualMachinesTab {
     return this.page.getByTestId('modal-cancel-button');
   }
 
+  async clearAllFilters(): Promise<void> {
+    await this.table.clearAllFilters();
+  }
+
+  async disableColumn(columnName: string): Promise<void> {
+    await this.table.disableColumn(columnName);
+  }
+
   get editTargetNameMenuItem() {
     return this.page.getByTestId('edit-vm-target-name-menu-item');
   }
 
   get editTargetPowerStateModal() {
-    return this.page.getByRole('dialog', { name: 'Edit target power state' });
+    return this.page.getByTestId('edit-target-power-state-modal');
   }
 
   async enableColumn(columnName: string): Promise<void> {
     await this.table.enableColumn(columnName);
+  }
+
+  async getColumns(): Promise<string[]> {
+    return this.table.getColumns();
   }
 
   async getTableCell(rowColumnName: string, rowValue: string, targetColumnName: string) {
@@ -69,7 +81,10 @@ export class VirtualMachinesTab {
   }
 
   async openPowerStateDialog(vmName: string): Promise<void> {
-    await this.getVMActionsMenu(vmName).waitFor({ state: 'visible' });
+    const modalCancelButton = this.page.getByTestId('modal-cancel-button');
+    // Intentionally ignore errors if modal is not present
+    await modalCancelButton.click({ timeout: 1000 }).catch(() => undefined);
+
     await this.getVMActionsMenu(vmName).click();
 
     const editPowerStateMenuItem = this.page.getByTestId('edit-vm-target-power-state-menu-item');
@@ -96,7 +111,7 @@ export class VirtualMachinesTab {
   }
 
   get powerStateModalSaveButton() {
-    return this.editTargetPowerStateModal.getByRole('button', { name: 'Save target power state' });
+    return this.page.getByTestId('modal-confirm-button');
   }
 
   get powerStateModalSelect() {
@@ -104,19 +119,19 @@ export class VirtualMachinesTab {
   }
 
   get powerStateOptionAuto() {
-    return this.editTargetPowerStateModal.getByTestId('power-state-option-auto');
+    return this.page.getByRole('option', { name: 'Retain source VM power state', exact: true });
   }
 
   get powerStateOptionInherit() {
-    return this.editTargetPowerStateModal.getByTestId('power-state-option-inherit');
+    return this.page.getByRole('option', { name: 'Inherit plan wide setting', exact: false });
   }
 
   get powerStateOptionOff() {
-    return this.editTargetPowerStateModal.getByTestId('power-state-option-off');
+    return this.page.getByRole('option', { name: 'Powered off', exact: true });
   }
 
   get powerStateOptionOn() {
-    return this.editTargetPowerStateModal.getByTestId('power-state-option-on');
+    return this.page.getByRole('option', { name: 'Powered on', exact: true });
   }
 
   get renameTargetNameInput() {
@@ -124,7 +139,7 @@ export class VirtualMachinesTab {
   }
 
   async renameVM(sourceName: string, targetName: string): Promise<void> {
-    await this.table.search(sourceName);
+    await this.search(sourceName);
 
     const vmRow = this.table.getRow({ Name: sourceName });
     await expect(vmRow).toBeVisible({ timeout: 2000 });
@@ -142,11 +157,15 @@ export class VirtualMachinesTab {
     await saveButton.click();
 
     // Wait before trying to open rename dialog again
-    await this.page.waitForTimeout(300);
+    await this.page.waitForTimeout(500);
     await this.page.waitForLoadState('networkidle');
 
-    await this.table.search(sourceName);
-    await this.table.verifyRowIsVisible({ Name: sourceName });
+    await this.search(sourceName);
+    await this.verifyRowIsVisible({ Name: sourceName });
+
+    // Close any leftover modal before opening the menu again
+    const modalCancelButton = this.page.getByTestId('modal-cancel-button');
+    await modalCancelButton.click({ timeout: 1000 }).catch(() => undefined);
 
     const renamedVmRow = this.table.getRow({ Name: sourceName });
     const renamedActionsButton = renamedVmRow.getByTestId('vm-actions-menu-toggle');
@@ -161,11 +180,19 @@ export class VirtualMachinesTab {
     const cancelButton = this.page.getByTestId('modal-cancel-button');
     await cancelButton.click();
 
-    await this.table.clearAllFilters();
+    await this.clearAllFilters();
   }
 
   get saveButton() {
     return this.page.getByRole('button', { name: /save|confirm/iu });
+  }
+
+  async search(value: string): Promise<void> {
+    await this.table.search(value);
+  }
+
+  async selectVirtualMachine(vmName: string): Promise<void> {
+    await this.table.selectRow({ Name: vmName });
   }
 
   get validationErrorMessage() {
@@ -181,8 +208,20 @@ export class VirtualMachinesTab {
 
     if (planData.virtualMachines?.length) {
       for (const vm of planData.virtualMachines) {
-        await this.table.verifyRowIsVisible({ Name: vm.sourceName });
+        if (vm.sourceName) {
+          await this.verifyRowIsVisible({ Name: vm.sourceName });
+        }
       }
+    }
+  }
+
+  async verifyVMExists(vmName: string): Promise<void> {
+    await this.verifyRowIsVisible({ Name: vmName });
+  }
+
+  async verifyVMsExist(vmNames: string[]): Promise<void> {
+    for (const vmName of vmNames) {
+      await this.verifyVMExists(vmName);
     }
   }
 

@@ -24,12 +24,15 @@ export class DetailsTab {
 
   constructor(page: Page) {
     this.page = page;
-    this.editPowerStateModal = this.page.getByRole('dialog', { name: 'Edit target power state' });
-    this.savePowerStateButton = this.editPowerStateModal.getByRole('button', { name: 'Save' });
+    this.editPowerStateModal = this.page.getByTestId('edit-target-power-state-modal');
+    this.savePowerStateButton = this.page.getByTestId('modal-confirm-button');
     this.targetPowerStateSelect = this.editPowerStateModal.getByTestId('target-power-state-select');
-    this.powerStateOptionAuto = this.editPowerStateModal.getByTestId('power-state-option-auto');
-    this.powerStateOptionOn = this.editPowerStateModal.getByTestId('power-state-option-on');
-    this.powerStateOptionOff = this.editPowerStateModal.getByTestId('power-state-option-off');
+    this.powerStateOptionAuto = this.page.getByRole('option', {
+      name: 'Retain source VM power state',
+      exact: true,
+    });
+    this.powerStateOptionOn = this.page.getByRole('option', { name: 'Powered on', exact: true });
+    this.powerStateOptionOff = this.page.getByRole('option', { name: 'Powered off', exact: true });
     this.editDiskDecryptionModal = this.page.getByRole('dialog', { name: 'Disk decryption' });
     this.useNbdeClevisCheckbox = this.page.getByTestId('use-nbde-clevis-checkbox');
     this.saveDiskDecryptionButton = this.page.getByTestId('modal-confirm-button');
@@ -85,7 +88,12 @@ export class DetailsTab {
   }
 
   powerStateOption(state: 'on' | 'off' | 'auto'): Locator {
-    return this.editPowerStateModal.getByTestId(`power-state-option-${state}`);
+    const optionNames = {
+      auto: 'Retain source VM power state',
+      on: 'Powered on',
+      off: 'Powered off',
+    };
+    return this.page.getByRole('option', { name: optionNames[state], exact: true });
   }
 
   targetVMPowerState(state: string): Locator {
@@ -154,7 +162,7 @@ export class DetailsTab {
 
   async verifyTargetAffinityRulesCount(count: number): Promise<void> {
     const targetAffinityElement = this.page.getByTestId('vm-target-affinity-rules-detail-item');
-    await expect(targetAffinityElement).toContainText(`${count} affinity rule`, { timeout: 15000 });
+    await expect(targetAffinityElement).toContainText(`${count} affinity rule`);
   }
 
   async verifyTargetAffinityText(expectedText: string): Promise<void> {
@@ -185,9 +193,7 @@ export class DetailsTab {
     if (count === 0) {
       await expect(targetNodeSelectorElement).toContainText('No node selectors defined');
     } else {
-      await expect(targetNodeSelectorElement).not.toContainText('No node selectors defined', {
-        timeout: 15000,
-      });
+      await expect(targetNodeSelectorElement).not.toContainText('No node selectors defined');
     }
   }
 

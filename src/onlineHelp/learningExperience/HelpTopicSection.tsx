@@ -53,6 +53,7 @@ const HelpTopicSection: FC<HelpTopicSectionProps> = ({ index, listStyleType, top
 
   return (
     <ExpandableSection
+      data-testid="help-topic-section"
       className={css(
         'forklift--learning__help-section',
         isEmpty(topic.subTopics) && 'm-non-expandable',

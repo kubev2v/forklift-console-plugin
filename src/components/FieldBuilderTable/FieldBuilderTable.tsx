@@ -75,7 +75,7 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
             );
 
             acc.push(
-              <Tr key={fieldRow.id}>
+              <Tr key={fieldRow.id} data-testid={`field-row-${rowIndex}`}>
                 {fieldRow.inputs.map((fieldInput) => (
                   <Td key={fieldInput.key}>{fieldInput}</Td>
                 ))}

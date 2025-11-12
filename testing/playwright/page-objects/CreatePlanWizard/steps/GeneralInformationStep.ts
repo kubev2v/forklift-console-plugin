@@ -72,19 +72,19 @@ export class GeneralInformationStep {
     await searchBox.fill(projectName);
 
     const option = this.page.getByRole('option', { name: projectName });
-    await option.waitFor({ state: 'visible', timeout: 15000 });
+    await option.waitFor({ state: 'visible' });
     await option.click();
   }
 
   async selectSourceProvider(providerName: string) {
     const selector = this.page.getByTestId('source-provider-select');
-    await selector.waitFor({ state: 'visible', timeout: 10000 });
+    await selector.waitFor({ state: 'visible' });
     await expect(selector).toBeVisible();
     await expect(selector).toBeEnabled();
     await selector.click();
 
     const option = this.page.getByRole('option', { name: providerName });
-    await expect(option).toBeVisible({ timeout: 30000 });
+    await expect(option).toBeVisible();
     await option.click();
   }
 
@@ -115,12 +115,12 @@ export class GeneralInformationStep {
     await selector.click();
 
     const option = this.page.getByRole('option', { name: providerName });
-    await expect(option).toBeVisible({ timeout: 30000 });
+    await expect(option).toBeVisible();
     await option.click();
   }
 
   async waitForTargetProviderNamespaces() {
     const targetProjectSelect = this.page.getByTestId('target-project-select');
-    await expect(targetProjectSelect).toBeEnabled({ timeout: 15000 });
+    await expect(targetProjectSelect).toBeEnabled();
   }
 }

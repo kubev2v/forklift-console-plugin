@@ -9,7 +9,7 @@ if (!existsSync(providersPath)) {
 }
 
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
-import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage';
+import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
 import type { ProviderData } from '../../types/test-data';
 import { getProviderConfig } from '../../utils/providers';

@@ -76,7 +76,10 @@ export class CreatePlanWizardPage {
     await this.clickNext();
 
     // STEP 2: Virtual Machines
-    await this.virtualMachines.fillAndComplete(testData.virtualMachines);
+    await this.virtualMachines.fillAndComplete(
+      testData.virtualMachines,
+      testData.criticalIssuesAction,
+    );
     await this.clickNext();
 
     // STEP 3: Network Map
@@ -121,7 +124,10 @@ export class CreatePlanWizardPage {
   async navigateToAdditionalSettings(testData: PlanTestData): Promise<void> {
     await this.generalInformation.fillAndComplete(testData);
     await this.clickNext();
-    await this.virtualMachines.fillAndComplete(testData.virtualMachines);
+    await this.virtualMachines.fillAndComplete(
+      testData.virtualMachines,
+      testData.criticalIssuesAction,
+    );
     await this.clickNext();
     await this.networkMap.fillAndComplete(testData.networkMap);
     await this.clickNext();

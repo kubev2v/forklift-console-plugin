@@ -4,7 +4,7 @@ import { type Page, test as base } from '@playwright/test';
 import { CreatePlanWizardPage } from '../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { CreateProviderPage } from '../page-objects/CreateProviderPage';
 import { PlanDetailsPage } from '../page-objects/PlanDetailsPage/PlanDetailsPage';
-import { ProviderDetailsPage } from '../page-objects/ProviderDetailsPage';
+import { ProviderDetailsPage } from '../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { createPlanTestData, type ProviderData } from '../types/test-data';
 import { getProviderConfig } from '../utils/providers';
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';

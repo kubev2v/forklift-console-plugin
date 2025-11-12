@@ -131,7 +131,12 @@ export const ManageColumnsModal = ({
   return (
     <>
       <div id="root" />
-      <Modal isOpen={showModal} variant="small" onClose={onClose}>
+      <Modal
+        isOpen={showModal}
+        variant="small"
+        onClose={onClose}
+        data-testid="manage-columns-modal"
+      >
         <ModalHeader
           title={title}
           description={
@@ -183,7 +188,7 @@ export const ManageColumnsModal = ({
             onDrop={onDrop}
             overlayProps={{ isCompact: true }}
           >
-            <DataList aria-label={title} isCompact />
+            <DataList aria-label={title} isCompact data-testid="manage-columns-list" />
           </DragDropSort>
         </ModalBody>
         <ModalFooter>
@@ -192,10 +197,16 @@ export const ManageColumnsModal = ({
             variant={ButtonVariant.primary}
             isDisabled={resourceFields === editedColumns}
             onClick={onSave}
+            data-testid="manage-columns-save-button"
           >
             {saveLabel}
           </Button>
-          <Button key="cancel" variant={ButtonVariant.secondary} onClick={onClose}>
+          <Button
+            key="cancel"
+            variant={ButtonVariant.secondary}
+            onClick={onClose}
+            data-testid="manage-columns-cancel-button"
+          >
             {cancelLabel}
           </Button>
           <Button key="restore" variant={ButtonVariant.link} onClick={restoreDefaults}>

@@ -13,7 +13,7 @@ import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/Create
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { PlansListPage } from '../../page-objects/PlansListPage';
-import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage';
+import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
 import { createPlanTestData, type ProviderConfig, type ProviderData } from '../../types/test-data';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
@@ -43,7 +43,11 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
     planName,
     sourceProvider: providerName,
     virtualMachines: [
-      { sourceName: 'mtv-func-rhel9', targetName: `mtv-func-rhel9-renamed-${Date.now()}` },
+      {
+        sourceName: 'mtv-func-rhel9',
+        targetName: `mtv-func-rhel9-renamed-${Date.now()}`,
+        folder: 'vm',
+      },
     ],
     targetProject: {
       name: targetProjectName,
@@ -81,6 +85,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       await createProvider.waitForWizardLoad();
       await createProvider.fillAndSubmit(testProviderData);
       await providerDetailsPage.waitForPageLoad();
+      await providerDetailsPage.waitForReadyStatus();
       await providerDetailsPage.verifyProviderDetails(testProviderData);
     },
   );

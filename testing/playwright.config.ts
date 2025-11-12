@@ -19,12 +19,12 @@ export default defineConfig({
   ],
 
   use: {
-    actionTimeout: 20_000,
-    navigationTimeout: 20_000,
+    actionTimeout: 15_000,
+    navigationTimeout: 15_000,
   },
 
   expect: {
-    timeout: 20_000,
+    timeout: 15_000,
   },
 
   projects: [

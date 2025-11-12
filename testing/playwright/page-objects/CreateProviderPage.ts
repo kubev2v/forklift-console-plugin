@@ -78,7 +78,7 @@ export class CreateProviderPage {
     await searchBox.fill(projectName);
 
     const option = this.page.getByRole('option', { name: projectName });
-    await option.waitFor({ state: 'visible', timeout: 15000 });
+    await option.waitFor({ state: 'visible' });
     await option.click();
   }
 

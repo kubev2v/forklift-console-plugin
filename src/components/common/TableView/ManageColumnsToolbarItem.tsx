@@ -50,6 +50,7 @@ export const ManageColumnsToolbarItem = ({
           variant={ButtonVariant.plain}
           onClick={showDialog}
           aria-label={ariaLabel ?? manageColumnsText}
+          data-testid="manage-columns-button"
         />
       </Tooltip>
       {children}
