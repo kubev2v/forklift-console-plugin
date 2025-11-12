@@ -78,6 +78,7 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
               render={({ field: { onChange, value } }) => (
                 <Checkbox
                   id="enabled-set"
+                  name="enabled-set"
                   label={t('Enable {{hookTypeLowercase}} migration hook', { hookTypeLowercase })}
                   isChecked={value}
                   onChange={(_, checked) => {

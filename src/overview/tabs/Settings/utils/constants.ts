@@ -1,5 +1,7 @@
 import { t } from '@utils/i18n';
 
+import { SettingsFields } from './types';
+
 export const controllerCpuLimitOptions = [
   { description: t('Low CPU limit'), key: '200m', name: '200m' },
   { description: t('Moderate CPU limit'), key: '500m', name: '500m' },
@@ -28,9 +30,26 @@ export const preCopyIntervalOptions = [
   { description: t('Extra large precopy interval'), key: 120, name: '120min' },
 ];
 
+export const preCopyIntervalMap = Object.fromEntries(
+  preCopyIntervalOptions.map((option) => [option.key, option.name]),
+);
+
 export const snapshotPoolingIntervalOptions = [
   { description: t('Extra short snapshot polling interval'), key: 1, name: '1s' },
   { description: t('Short snapshot polling interval'), key: 5, name: '5s' },
   { description: t('Long snapshot polling interval'), key: 10, name: '10s' },
   { description: t('Extra long snapshot polling interval'), key: 60, name: '60s' },
 ];
+
+export const snapshotPoolingIntervalMap = Object.fromEntries(
+  snapshotPoolingIntervalOptions.map((option) => [option.key, option.name]),
+);
+
+export const defaultValuesMap: Record<SettingsFields, string | number> = {
+  [SettingsFields.ControllerCPULimit]: '500m',
+  [SettingsFields.ControllerMemoryLimit]: '800Mi',
+  [SettingsFields.InventoryMemoryLimit]: '1000Mi',
+  [SettingsFields.MaxVMInFlight]: 20,
+  [SettingsFields.PrecopyInterval]: 60,
+  [SettingsFields.SnapshotStatusCheckRate]: 10,
+};
