@@ -2,6 +2,7 @@ import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { INITIAL_PAGE } from '@components/page/utils/constants';
@@ -38,28 +39,30 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
   });
 
   return (
-    <StandardPage
-      data-testid="plans-list"
-      addButton={
-        <PlansAddButton testId="create-plan-button" namespace={namespace} canCreate={canCreate} />
-      }
-      dataSource={[plans || [], plansLoaded, plansLoadError]}
-      RowMapper={PlanRow}
-      fieldsMetadata={planFields}
-      namespace={namespace}
-      title={t('Migration plans')}
-      titleHelpContent={t(
-        'A migration plan is a strategy for moving VMs from 1 environment to OpenShift Virtualization. It lets you group VMs to be migrated together or with the same migration configuration.',
-      )}
-      userSettings={userSettings}
-      customNoResultsFound={<PlansEmptyState namespace={namespace} />}
-      page={INITIAL_PAGE}
-      postFilterData={(data, selectedFilters) =>
-        selectedFilters[PlanTableResourceId.Archived]?.[0] === 'true'
-          ? data
-          : data.filter((plan) => !plan?.spec?.archived)
-      }
-    />
+    <TipsAndTricksDrawer>
+      <StandardPage
+        data-testid="plans-list"
+        addButton={
+          <PlansAddButton testId="create-plan-button" namespace={namespace} canCreate={canCreate} />
+        }
+        dataSource={[plans || [], plansLoaded, plansLoadError]}
+        RowMapper={PlanRow}
+        fieldsMetadata={planFields}
+        namespace={namespace}
+        title={t('Migration plans')}
+        titleHelpContent={t(
+          'A migration plan is a strategy for moving VMs from 1 environment to OpenShift Virtualization. It lets you group VMs to be migrated together or with the same migration configuration.',
+        )}
+        userSettings={userSettings}
+        customNoResultsFound={<PlansEmptyState namespace={namespace} />}
+        page={INITIAL_PAGE}
+        postFilterData={(data, selectedFilters) =>
+          selectedFilters[PlanTableResourceId.Archived]?.[0] === 'true'
+            ? data
+            : data.filter((plan) => !plan?.spec?.archived)
+        }
+      />
+    </TipsAndTricksDrawer>
   );
 };
 

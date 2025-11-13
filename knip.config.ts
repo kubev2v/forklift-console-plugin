@@ -5,6 +5,8 @@ export default {
     'src/overview/OverviewPage.tsx',
     'src/overview/hooks/OverviewContext.ts',
     'src/overview/hooks/useOverviewContext.ts',
+    'src/onlineHelp/tipsAndTricksDrawer/hooks/learningExperienceContext.ts',
+    'src/onlineHelp/tipsAndTricksDrawer/hooks/useLearningExperienceContext.ts',
 
     'src/providers/create/ProvidersCreatePage.tsx',
     'src/providers/list/ProvidersListPage.tsx',

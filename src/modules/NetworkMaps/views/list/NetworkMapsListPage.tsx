@@ -4,6 +4,7 @@ import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import NetworkMapsEmptyState from 'src/networkMaps/components/NetworkMapsEmptyState';
+import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
 
 import {
   NetworkMapModel,
@@ -127,23 +128,25 @@ const NetworkMapsListPage: FC<{
   }));
 
   return (
-    <StandardPage<NetworkMapData>
-      data-testid="network-maps-list"
-      {...(permissions.canCreate && {
-        addButton: <NetworkMapsAddButton namespace={namespace} testId="add-network-map-button" />,
-      })}
-      dataSource={[data || [], networkMapsLoaded, networkMapsLoadError]}
-      RowMapper={NetworkMapRow}
-      fieldsMetadata={fieldsMetadata}
-      namespace={namespace}
-      title={t('Network maps')}
-      titleHelpContent={t(
-        'Network maps ensure that the network configurations of your migrating virtual machines (VMs) are correctly translated and applied in the target environment.',
-      )}
-      userSettings={userSettings}
-      customNoResultsFound={<NetworkMapsEmptyState namespace={namespace} />}
-      page={1}
-    />
+    <TipsAndTricksDrawer>
+      <StandardPage<NetworkMapData>
+        data-testid="network-maps-list"
+        {...(permissions.canCreate && {
+          addButton: <NetworkMapsAddButton namespace={namespace} testId="add-network-map-button" />,
+        })}
+        dataSource={[data || [], networkMapsLoaded, networkMapsLoadError]}
+        RowMapper={NetworkMapRow}
+        fieldsMetadata={fieldsMetadata}
+        namespace={namespace}
+        title={t('Network maps')}
+        titleHelpContent={t(
+          'Network maps ensure that the network configurations of your migrating virtual machines (VMs) are correctly translated and applied in the target environment.',
+        )}
+        userSettings={userSettings}
+        customNoResultsFound={<NetworkMapsEmptyState namespace={namespace} />}
+        page={1}
+      />
+    </TipsAndTricksDrawer>
   );
 };
 

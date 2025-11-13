@@ -1,4 +1,5 @@
 import { type FC, memo } from 'react';
+import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
@@ -38,7 +39,11 @@ const NetworkMapDetailsPageInternal: FC<{
 const NetworkMapDetailsPageInternalMemo = memo(NetworkMapDetailsPageInternal);
 
 const NetworkMapDetailsPage: FC<NetworkMapDetailsPageProps> = ({ name, namespace }) => {
-  return <NetworkMapDetailsPageInternalMemo name={name} namespace={namespace} />;
+  return (
+    <TipsAndTricksDrawer>
+      <NetworkMapDetailsPageInternalMemo name={name} namespace={namespace} />;
+    </TipsAndTricksDrawer>
+  );
 };
 NetworkMapDetailsPage.displayName = 'NetworkMapDetailsPage';
 

@@ -1,5 +1,4 @@
-/* eslint-disable @cspell/spellchecker */
-import { type FC, useState } from 'react';
+import type { FC } from 'react';
 import HelpTopic from 'src/onlineHelp/learningExperience/HelpTopic';
 import LearningExperienceSelect from 'src/onlineHelp/learningExperience/LearningExperienceSelect';
 import LearningTopicsCards from 'src/onlineHelp/learningExperience/LearningTopicsCards';
@@ -13,7 +12,7 @@ import {
   DrawerPanelContent,
   Title,
 } from '@patternfly/react-core';
-import { useForkliftTranslation } from '@utils/i18n';
+import { TIPS_AND_TRICKS_LABEL } from '@utils/constants';
 
 import '@patternfly/quickstarts/dist/quickstarts.css';
 import './LearningExperiencePanel.scss';
@@ -21,12 +20,16 @@ import './LearningExperiencePanel.scss';
 type LearningExperiencePanelProps = {
   topics: LearningExperienceTopic[];
   setIsDrawerOpen: (isOpen: boolean) => void;
+  selectedTopic: LearningExperienceTopic | undefined;
+  setSelectedTopic: (selectedTopic?: LearningExperienceTopic) => void;
 };
 
-const LearningExperiencePanel: FC<LearningExperiencePanelProps> = ({ setIsDrawerOpen, topics }) => {
-  const { t } = useForkliftTranslation();
-  const [selectedTopic, setSelectedTopic] = useState<LearningExperienceTopic | undefined>();
-
+const LearningExperiencePanel: FC<LearningExperiencePanelProps> = ({
+  selectedTopic,
+  setIsDrawerOpen,
+  setSelectedTopic,
+  topics,
+}) => {
   return (
     <DrawerPanelContent isResizable className="pfext-quick-start__base forklift--learning">
       <div className="pfext-quick-start-panel-content__header pfext-quick-start-panel-content__header--blue-white forklift--learning__header">
@@ -38,7 +41,7 @@ const LearningExperiencePanel: FC<LearningExperiencePanelProps> = ({ setIsDrawer
               className="pfext-quick-start-panel-content__name"
               style={{ marginRight: 'var(--pf-t--global--spacer--md)' }}
             >
-              {t('Tips and tricks')}
+              {TIPS_AND_TRICKS_LABEL}
             </Title>
           </div>
           <DrawerActions>

@@ -12,14 +12,15 @@ import {
 } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
+import { TIPS_AND_TRICKS_LABEL } from '@utils/constants';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type HeaderTitleProps = {
-  isDrawerOpen: boolean;
+  isDrawerOpen?: boolean;
   setIsDrawerOpen: (isOpen: boolean) => void;
 };
 
-const HeaderTitle: FC<HeaderTitleProps> = ({ isDrawerOpen, setIsDrawerOpen }) => {
+const HeaderTitle: FC<HeaderTitleProps> = ({ isDrawerOpen = false, setIsDrawerOpen }) => {
   const { loadError: inventoryLivelinessError } = useProvidersInventoryIsLive({});
   const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
@@ -40,7 +41,7 @@ const HeaderTitle: FC<HeaderTitleProps> = ({ isDrawerOpen, setIsDrawerOpen }) =>
                 setIsDrawerOpen(true);
               }}
             >
-              {t('Tips and tricks')}
+              {TIPS_AND_TRICKS_LABEL}
             </Button>
           )}
         </Split>

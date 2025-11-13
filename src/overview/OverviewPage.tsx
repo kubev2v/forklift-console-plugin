@@ -1,6 +1,16 @@
-import { type FC, useState } from 'react';
+import { type FC, useContext, useState } from 'react';
 import { Route, Routes } from 'react-router-dom-v5-compat';
-import ForkliftLearningExperience from 'src/onlineHelp/forkliftHelp/ForkliftLearningExperience';
+import type { LearningExperienceTopic } from 'src/onlineHelp/learningExperience/types';
+import ForkliftLearningExperience from 'src/onlineHelp/tipsAndTricksDrawer/components/ForkliftLearningExperience';
+import { createLearningExperienceContext } from 'src/onlineHelp/tipsAndTricksDrawer/hooks/learningExperienceContext';
+import {
+  loadLearningExperienceContext,
+  saveLearningExperienceContext,
+} from 'src/onlineHelp/tipsAndTricksDrawer/utils/forkliftLearningExperienceUserSettings';
+import {
+  indexToTopic,
+  topicToIndex,
+} from 'src/onlineHelp/tipsAndTricksDrawer/utils/topicToIndexConvertors';
 
 import RoutedTabs from '@components/common/RoutedTabs/RoutedTabs';
 import { Drawer, DrawerContent, DrawerContentBody } from '@patternfly/react-core';
@@ -20,7 +30,22 @@ import './OverviewPage.scss';
 
 const OverviewPage: FC = () => {
   const { trackEvent } = useForkliftAnalytics();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { setUserData, userData: { showLearningPanelByContext } = {} } = useContext(
+    createLearningExperienceContext,
+  );
+
+  const [panelSelectedTopic, setPanelSelectedTopic] = useState<LearningExperienceTopic | undefined>(
+    indexToTopic(loadLearningExperienceContext()?.learningExperienceContext),
+  );
+
+  const setIsDrawerOpen = (isOpen: boolean) => {
+    setUserData({ showLearningPanelByContext: isOpen });
+  };
+
+  const setSelectedTopic = (topic?: LearningExperienceTopic) => {
+    saveLearningExperienceContext(topicToIndex(topic));
+    setPanelSelectedTopic(topic);
+  };
 
   const tabs = [
     {
@@ -61,12 +86,21 @@ const OverviewPage: FC = () => {
   ];
 
   return (
-    <Drawer isInline isExpanded={isDrawerOpen} position="right">
+    <Drawer isInline isExpanded={showLearningPanelByContext} position="right">
       <DrawerContent
-        panelContent={<ForkliftLearningExperience setIsDrawerOpen={setIsDrawerOpen} />}
+        panelContent={
+          <ForkliftLearningExperience
+            setIsDrawerOpen={setIsDrawerOpen}
+            setSelectedTopic={setSelectedTopic}
+            selectedTopic={panelSelectedTopic}
+          />
+        }
       >
         <DrawerContentBody>
-          <HeaderTitle isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
+          <HeaderTitle
+            isDrawerOpen={showLearningPanelByContext}
+            setIsDrawerOpen={setIsDrawerOpen}
+          />
           <RoutedTabs tabs={tabs} />
           <div className="pf-v6-u-h-100 pf-v6-u-display-flex pf-v6-u-flex-direction-column pf-v6-u-p-md">
             <Routes>

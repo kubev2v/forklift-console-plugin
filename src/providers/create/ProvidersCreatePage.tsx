@@ -4,11 +4,12 @@ import { produce } from 'immer';
 import { encode } from 'js-base64';
 import { useK8sWatchProviderNames } from 'src/modules/Providers/hooks/useK8sWatchProviderNames';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
+import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { getDefaultNamespace } from 'src/utils/namespaces';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
-import { Divider, Form, PageSection } from '@patternfly/react-core';
+import { Divider, PageSection } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getSdkEndpoint } from '@utils/crds/common/selectors';
@@ -143,7 +144,7 @@ const ProvidersCreatePage: FC<{
   };
 
   return (
-    <Form>
+    <TipsAndTricksDrawer>
       <PageSection hasBodyWrapper={false}>
         <ProvidersCreatePageHeader apiError={apiError} />
 
@@ -169,7 +170,7 @@ const ProvidersCreatePage: FC<{
           onUpdate={onUpdate}
         />
       </PageSection>
-    </Form>
+    </TipsAndTricksDrawer>
   );
 };
 
