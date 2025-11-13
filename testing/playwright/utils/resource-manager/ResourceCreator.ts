@@ -79,11 +79,11 @@ export const createSecret = async (
       async ({ secretData, ns, evalConstants }) => {
         try {
           const getCsrfTokenFromCookie = () => {
-            const cookies = document.cookie.split('; ');
-            const csrfCookie = cookies.find((cookie) =>
+            const cookieList = document.cookie.split('; ');
+            const tokenCookie = cookieList.find((cookie) =>
               cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
             );
-            return csrfCookie ? csrfCookie.split('=')[1] : '';
+            return tokenCookie ? tokenCookie.split('=')[1] : '';
           };
           const csrfToken = getCsrfTokenFromCookie();
 
