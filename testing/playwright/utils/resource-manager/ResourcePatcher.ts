@@ -1,40 +1,15 @@
 import type { V1beta1Provider } from '@kubev2v/types';
 import type { Page } from '@playwright/test';
 
-import {
-  API_PATHS,
-  COOKIE_NAMES,
-  HTTP_HEADERS,
-  MTV_NAMESPACE,
-  RESOURCE_KINDS,
-  RESOURCE_TYPES,
-} from './constants';
+import { BaseResourceManager } from './BaseResourceManager';
+import { MTV_NAMESPACE, RESOURCE_KINDS } from './constants';
 import type { SupportedResource } from './ResourceManager';
 
 /**
  * Handles patching resources in Kubernetes APIs
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class ResourcePatcher {
-  private static getResourceTypeFromKind(kind: string): string {
-    const kindToType: Record<string, string> = {
-      [RESOURCE_KINDS.MIGRATION]: RESOURCE_TYPES.MIGRATIONS,
-      [RESOURCE_KINDS.NETWORK_MAP]: RESOURCE_TYPES.NETWORK_MAPS,
-      [RESOURCE_KINDS.PLAN]: RESOURCE_TYPES.PLANS,
-      [RESOURCE_KINDS.PROVIDER]: RESOURCE_TYPES.PROVIDERS,
-      [RESOURCE_KINDS.VIRTUAL_MACHINE]: RESOURCE_TYPES.VIRTUAL_MACHINES,
-      [RESOURCE_KINDS.PROJECT]: RESOURCE_TYPES.PROJECTS,
-      [RESOURCE_KINDS.NAMESPACE]: RESOURCE_TYPES.NAMESPACES,
-    };
-
-    const resourceType = kindToType[kind];
-    if (!resourceType) {
-      throw new Error(`Unknown resource kind: ${kind}`);
-    }
-
-    return resourceType;
-  }
-
+export class ResourcePatcher extends BaseResourceManager {
   static async patchProvider(
     page: Page,
     providerName: string,
@@ -60,32 +35,33 @@ export class ResourcePatcher {
   ): Promise<T | null> {
     const { kind, resourceName, namespace, patch } = options;
     const resourceType = ResourcePatcher.getResourceTypeFromKind(kind);
+    const constants = ResourcePatcher.getEvaluateConstants();
 
     try {
       const result = await page.evaluate(
-        async ({ resType, resourceKind, name, ns, patchData, constants }) => {
+        async ({ resType, resourceKind, name, ns, patchData, evalConstants }) => {
           try {
             const getCsrfTokenFromCookie = () => {
               const cookies = document.cookie.split('; ');
               const csrfCookie = cookies.find((cookie) =>
-                cookie.startsWith(`${constants.CSRF_TOKEN_NAME}=`),
+                cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
               );
               return csrfCookie ? csrfCookie.split('=')[1] : '';
             };
             const csrfToken = getCsrfTokenFromCookie();
 
             let apiPath = '';
-            if (resType === constants.VIRTUAL_MACHINES_TYPE) {
-              apiPath = `${constants.KUBEVIRT_PATH}/namespaces/${ns}/${resType}/${name}`;
+            if (resType === evalConstants.VIRTUAL_MACHINES_TYPE) {
+              apiPath = `${evalConstants.KUBEVIRT_PATH}/namespaces/${ns}/${resType}/${name}`;
             } else {
-              apiPath = `${constants.FORKLIFT_PATH}/namespaces/${ns}/${resType}/${name}`;
+              apiPath = `${evalConstants.FORKLIFT_PATH}/namespaces/${ns}/${resType}/${name}`;
             }
 
             const response = await fetch(apiPath, {
               method: 'PATCH',
               headers: {
-                [constants.CONTENT_TYPE_HEADER]: 'application/merge-patch+json',
-                [constants.CSRF_TOKEN_HEADER]: csrfToken,
+                [evalConstants.CONTENT_TYPE_HEADER]: 'application/merge-patch+json',
+                [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
               },
               credentials: 'include',
               body: JSON.stringify(patchData),
@@ -115,15 +91,7 @@ export class ResourcePatcher {
           name: resourceName,
           ns: namespace,
           patchData: patch,
-          constants: {
-            CSRF_TOKEN_NAME: COOKIE_NAMES.CSRF_TOKEN,
-            CONTENT_TYPE_HEADER: HTTP_HEADERS.CONTENT_TYPE,
-            APPLICATION_JSON: HTTP_HEADERS.APPLICATION_JSON,
-            CSRF_TOKEN_HEADER: HTTP_HEADERS.CSRF_TOKEN,
-            KUBEVIRT_PATH: API_PATHS.KUBEVIRT,
-            FORKLIFT_PATH: API_PATHS.FORKLIFT,
-            VIRTUAL_MACHINES_TYPE: RESOURCE_TYPES.VIRTUAL_MACHINES,
-          },
+          evalConstants: constants,
         },
       );
 
