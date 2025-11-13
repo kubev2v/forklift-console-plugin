@@ -11,14 +11,18 @@ export abstract class BaseResourceManager {
     return csrfCookie ? csrfCookie.split('=')[1] : '';
   }
 
-  public static getCsrfTokenFunctionString(csrfTokenConstant: string): string {
-    return `
-      const getCsrfTokenFromCookie = () => {
-        const cookies = document.cookie.split('; ');
-        const csrfCookie = cookies.find((cookie) => cookie.startsWith(\`\${${csrfTokenConstant}}=\`));
-        return csrfCookie ? csrfCookie.split('=')[1] : '';
-      };
-    `;
+  /**
+   * Returns a function string for extracting CSRF token from cookies.
+   * This is used in page.evaluate() contexts where functions cannot be serialized.
+   *
+   * @returns A string that defines getCsrfTokenFromCookie function
+   */
+  public static getCsrfTokenFunctionString(): string {
+    return `const getCsrfTokenFromCookie = () => {
+      const cookies = document.cookie.split('; ');
+      const csrfCookie = cookies.find((cookie) => cookie.startsWith(evalConstants.CSRF_TOKEN_NAME + '='));
+      return csrfCookie ? csrfCookie.split('=')[1] : '';
+    };`;
   }
 
   public static getEvaluateConstants() {
