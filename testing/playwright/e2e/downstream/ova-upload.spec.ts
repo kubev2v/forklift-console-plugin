@@ -37,14 +37,14 @@ test.describe('OVA Provider Upload Tests', { tag: '@downstream' }, () => {
 
     // Generate unique VM name (must be same length as original '2nd-disk-vm' = 11 chars)
     const uniqueId = crypto.randomUUID().substring(0, 6);
-    const baseOvaFileName = '2nd_disk_v3.ova';
-    const uniqueOvaFileName = `test-${uniqueId}-${baseOvaFileName}`;
-    const vmName = `t-${uniqueId}-vm`;
+    const baseOvaFileName = '2nd_disk';
+    const uniqueOvaFileName = `test-${baseOvaFileName}-${uniqueId}.ova`;
+    const vmName = `t-vm-${uniqueId}`;
     const ORIGINAL_VM_NAME = '2nd-disk-vm';
 
     // Paths for original and modified OVA
     const testAssetsDir = join(__dirname, '../../test-assets/ova-files');
-    const originalOvaPath = join(testAssetsDir, baseOvaFileName);
+    const originalOvaPath = join(testAssetsDir, `${baseOvaFileName}.ova`);
     const uniqueOvaPath = join(testAssetsDir, uniqueOvaFileName);
 
     // Simple byte replacement: copy original, then replace VM name in-place
@@ -126,6 +126,7 @@ test.describe('OVA Provider Upload Tests', { tag: '@downstream' }, () => {
       await providerDetailsPage.navigateToVirtualMachinesTab();
       await providerDetailsPage.virtualMachinesTab.waitForTableLoad();
 
+      console.log('Verifying VM exists on NFS server:', vmName);
       // Verify the VM from the uploaded OVA file appears (can take up to 2 minutes)
       await expect(async () => {
         await providerDetailsPage.virtualMachinesTab.verifyVMExists(vmName);
