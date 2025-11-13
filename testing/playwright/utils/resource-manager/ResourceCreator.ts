@@ -2,7 +2,7 @@ import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
-import { API_PATHS, MTV_NAMESPACE } from './constants';
+import { MTV_NAMESPACE } from './constants';
 
 export const createProvider = async (
   page: Page,
@@ -14,14 +14,13 @@ export const createProvider = async (
     const result = await page.evaluate(
       async ({ providerData, ns, evalConstants }) => {
         try {
-          const getCsrfTokenFromCookie = () => {
+          // Define the function in browser context
+          const getCsrfTokenFromCookie = (csrfTokenName: string) => {
             const cookies = document.cookie.split('; ');
-            const csrfCookie = cookies.find((cookie) =>
-              cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
-            );
+            const csrfCookie = cookies.find((cookie) => cookie.startsWith(`${csrfTokenName}=`));
             return csrfCookie ? csrfCookie.split('=')[1] : '';
           };
-          const csrfToken = getCsrfTokenFromCookie();
+          const csrfToken = getCsrfTokenFromCookie(evalConstants.CSRF_TOKEN_NAME);
 
           const apiPath = `${evalConstants.FORKLIFT_PATH}/namespaces/${ns}/providers`;
 
@@ -78,14 +77,13 @@ export const createSecret = async (
     const result = await page.evaluate(
       async ({ secretData, ns, evalConstants }) => {
         try {
-          const getCsrfTokenFromCookie = () => {
+          // Define the function in browser context
+          const getCsrfTokenFromCookie = (csrfTokenName: string) => {
             const cookies = document.cookie.split('; ');
-            const csrfCookie = cookies.find((cookie) =>
-              cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
-            );
+            const csrfCookie = cookies.find((cookie) => cookie.startsWith(`${csrfTokenName}=`));
             return csrfCookie ? csrfCookie.split('=')[1] : '';
           };
-          const csrfToken = getCsrfTokenFromCookie();
+          const csrfToken = getCsrfTokenFromCookie(evalConstants.CSRF_TOKEN_NAME);
 
           const apiPath = `${evalConstants.KUBERNETES_CORE}/namespaces/${ns}/secrets`;
 

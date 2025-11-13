@@ -49,7 +49,7 @@ test.describe('Provider Creation Tests', () => {
       const testProviderData = createProviderData({ useVddkAioOptimization: true });
 
       await createProvider.navigate();
-      await createProvider.create(testProviderData, false);
+      await createProvider.create(testProviderData, true);
 
       // Verify the useVddkAioOptimization value is persisted in the provider spec
       const providerResource = await resourceManager.fetchProvider(page, testProviderData.name);
@@ -68,7 +68,7 @@ test.describe('Provider Creation Tests', () => {
       const testProviderData = createProviderData({ useVddkAioOptimization: false });
 
       await createProvider.navigate();
-      await createProvider.create(testProviderData, false);
+      await createProvider.create(testProviderData, true);
 
       // Verify the useVddkAioOptimization value is persisted in the provider spec
       const providerResource = await resourceManager.fetchProvider(page, testProviderData.name);
@@ -99,7 +99,7 @@ test.describe('Provider Creation Tests', () => {
       };
 
       await createProvider.navigate();
-      await createProvider.create(testProviderData, false);
+      await createProvider.create(testProviderData, true);
 
       // Verify the provider resource was created
       const providerResource = await resourceManager.fetchProvider(page, testProviderData.name);

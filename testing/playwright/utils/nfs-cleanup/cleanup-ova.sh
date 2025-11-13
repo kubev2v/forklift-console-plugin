@@ -5,9 +5,9 @@
 set -e
 
 # Required environment variables (must be provided by caller)
-if [ -z "$NFS_SERVER" ] || [ -z "$NFS_PATH" ] || [ -z "$OVA_FILE" ]; then
-    echo "Error: Required environment variables not set"
-    echo "Usage: NFS_SERVER=<server> NFS_PATH=<path> OVA_FILE=<file> $0"
+if [[ -z "$NFS_SERVER" || -z "$NFS_PATH" || -z "$OVA_FILE" ]]; then
+    echo "Error: Required environment variables not set" >&2
+    echo "Usage: NFS_SERVER=<server> NFS_PATH=<path> OVA_FILE=<file> $0" >&2
     exit 1
 fi
 
@@ -15,7 +15,7 @@ MOUNT_POINT="$HOME/nfsshare-test/ova"
 
 # Detect if we need sudo (not needed in Docker containers running as root)
 SUDO=""
-if [ "$(id -u)" -ne 0 ]; then
+if [[ "$(id -u)" -ne 0 ]]; then
     SUDO="sudo"
 fi
 
@@ -38,7 +38,7 @@ fi
 echo "🔍 Searching for $OVA_FILE..."
 OVA_PATH=$($SUDO find "$MOUNT_POINT" -name "$OVA_FILE" 2>/dev/null | head -n 1)
 
-if [ -n "$OVA_PATH" ]; then
+if [[ -n "$OVA_PATH" ]]; then
     APPLIANCE_DIR=$(dirname "$OVA_PATH")
     echo "🗑️  Deleting: $OVA_PATH"
     $SUDO rm -f "$OVA_PATH"
