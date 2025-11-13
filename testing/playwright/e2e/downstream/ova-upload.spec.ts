@@ -39,7 +39,7 @@ test.describe('OVA Provider Upload Tests', { tag: '@downstream' }, () => {
     const uniqueId = crypto.randomUUID().substring(0, 6);
     const baseOvaFileName = '2nd_disk';
     const uniqueOvaFileName = `test-${baseOvaFileName}-${uniqueId}.ova`;
-    const vmName = `t-vm-${uniqueId}`;
+    const vmName = `test-${uniqueId}`;
     const ORIGINAL_VM_NAME = '2nd-disk-vm';
 
     // Paths for original and modified OVA
