@@ -16,6 +16,7 @@ import { CreatePlanStorageMapFieldId } from '../storage-map/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
 import { GeneralFormFieldId, generalFormFieldLabels } from './constants';
+import PlanDescriptionField from './PlanDescriptionField';
 import PlanNameField from './PlanNameField';
 import PlanProjectField from './PlanProjectField';
 import TargetProjectField from './TargetProjectField';
@@ -64,6 +65,7 @@ const GeneralInformationStep: FC = () => {
 
           <PlanNameField />
           <PlanProjectField testId="plan-project-select" />
+          <PlanDescriptionField />
         </FormSection>
 
         <FormSection title={t('Source and target providers')}>

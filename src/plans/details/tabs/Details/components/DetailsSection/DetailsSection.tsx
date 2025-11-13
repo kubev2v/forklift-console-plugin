@@ -11,9 +11,11 @@ import { DescriptionList } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
 
+import DescriptionDetailItem from './components/Description/DescriptionDetailItem';
 import LiveDetailsItem from './components/PlanLive/LiveDetailsItem';
 import TargetNamespaceDetailsItem from './components/PlanTargetNamespace/TargetNamespaceDetailsItem';
 import WarmDetailsItem from './components/PlanWarm/WarmDetailsItem';
@@ -24,6 +26,7 @@ type DetailsSectionProps = {
 };
 
 const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
+  const { t } = useForkliftTranslation();
   const { sourceProvider } = usePlanSourceProvider(plan);
   const { isFeatureEnabled } = useFeatureFlags();
 
@@ -50,8 +53,9 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
         <NameDetailsItem resource={plan} />
         <WarmDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt || isVsphere} />
         <LiveDetailsItem plan={plan} canPatch={canPatch} shouldRender={isLiveMigrationEnabled} />
-        <NamespaceDetailsItem resource={plan} />
+        <NamespaceDetailsItem title={t('Plan project')} resource={plan} />
         <TargetNamespaceDetailsItem plan={plan} canPatch={canPatch} />
+        <DescriptionDetailItem plan={plan} canPatch={canPatch} />
         <CreatedAtDetailsItem resource={plan} />
         <OwnerDetailsItem resource={plan} />
       </DescriptionList>

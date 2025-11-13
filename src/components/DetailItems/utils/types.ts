@@ -6,4 +6,5 @@ export type ResourceDetailsItemProps = {
   resource: K8sResourceCommon;
   helpContent?: ReactNode;
   moreInfoLink?: string;
+  title?: string;
 };

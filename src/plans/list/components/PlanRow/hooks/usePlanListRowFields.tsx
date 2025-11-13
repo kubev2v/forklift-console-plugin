@@ -1,4 +1,5 @@
 import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
+import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
 import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
@@ -12,12 +13,15 @@ import {
   ProviderModelGroupVersionKind,
   type V1beta1Plan,
 } from '@kubev2v/types';
+import { Truncate } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import {
+  getPlanDescription,
   getPlanMigrationStarted,
   getPlanSourceProvider,
   getPlanTargetNamespace,
 } from '@utils/crds/plans/selectors';
+import { isEmpty } from '@utils/helpers';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 
 import PlanActions from '../../PlanRowFields/PlanActions/PlanActions';
@@ -30,13 +34,21 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
   const sourceProviderType = sourceProvider?.spec?.type;
   const planNamespace = getNamespace(plan);
   const planName = getName(plan);
+  const planDescription = getPlanDescription(plan);
   const { name: sourceProviderName, namespace: sourceProviderNamespace } =
     getPlanSourceProvider(plan);
   const isDarkTheme = useIsDarkTheme();
+
   return {
     [PlanTableResourceId.Actions]: <PlanActions plan={plan} />,
     [PlanTableResourceId.Archived]: null,
-    [PlanTableResourceId.Description]: <TableCell>{plan?.spec?.description}</TableCell>,
+    [PlanTableResourceId.Description]: isEmpty(planDescription) ? (
+      <TableEmptyCell />
+    ) : (
+      <TableCell>
+        <Truncate content={planDescription!} />
+      </TableCell>
+    ),
     [PlanTableResourceId.Destination]: (
       <TableLinkCell
         groupVersionKind={{ kind: 'Project', version: 'v1' }}
