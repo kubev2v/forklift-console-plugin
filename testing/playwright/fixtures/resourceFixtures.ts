@@ -4,7 +4,6 @@ import { type Page, test as base } from '@playwright/test';
 import { CreatePlanWizardPage } from '../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { CreateProviderPage } from '../page-objects/CreateProviderPage';
 import { PlanDetailsPage } from '../page-objects/PlanDetailsPage/PlanDetailsPage';
-import { ProviderDetailsPage } from '../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { createPlanTestData, type ProviderData } from '../types/test-data';
 import { getProviderConfig } from '../utils/providers';
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
@@ -69,7 +68,7 @@ const createProvider = async (
       },
       type: 'Opaque',
       stringData: {
-        url: testProviderData.hostname || '', // OVA only needs URL, no credentials
+        url: testProviderData.hostname,
       },
     };
 
@@ -109,13 +108,9 @@ const createProvider = async (
   } else {
     // For non-OVA providers, use the UI
     const createProviderPage = new CreateProviderPage(page, resourceManager);
-    const providerDetailsPage = new ProviderDetailsPage(page);
 
     await createProviderPage.navigate();
-    await createProviderPage.waitForWizardLoad();
-    await createProviderPage.fillAndSubmit(testProviderData);
-    await providerDetailsPage.waitForPageLoad();
-    await providerDetailsPage.verifyProviderDetails(testProviderData);
+    await createProviderPage.create(testProviderData);
   }
 
   const provider: TestProvider = {

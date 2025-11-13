@@ -58,8 +58,9 @@ export class NfsCleanupManager {
     await rm(filePath, { force: true });
 
     const applianceDir = join(filePath, '..');
-    await rmdir(applianceDir).catch(() => {
-      // Directory not empty
+    await rmdir(applianceDir).catch((error) => {
+      // Directory may not be empty, ignore cleanup failure
+      console.debug(`Could not remove appliance directory: ${error.message}`);
     });
   }
 

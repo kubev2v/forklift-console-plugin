@@ -5,6 +5,8 @@ import { NavigationHelper } from '../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 import type { ResourceManager } from '../utils/resource-manager/ResourceManager';
 
+import { ProviderDetailsPage } from './ProviderDetailsPage/ProviderDetailsPage';
+
 export class CreateProviderPage {
   private readonly resourceManager?: ResourceManager;
   public readonly navigationHelper: NavigationHelper;
@@ -14,6 +16,22 @@ export class CreateProviderPage {
     this.page = page;
     this.resourceManager = resourceManager;
     this.navigationHelper = new NavigationHelper(page);
+  }
+
+  async create(testData: ProviderData, waitForReady = true): Promise<ProviderDetailsPage> {
+    const providerDetailsPage = new ProviderDetailsPage(this.page);
+
+    await this.waitForWizardLoad();
+    await this.fillAndSubmit(testData);
+    await providerDetailsPage.waitForPageLoad();
+
+    if (waitForReady) {
+      await providerDetailsPage.waitForReadyStatus();
+    }
+
+    await providerDetailsPage.verifyProviderDetails(testData);
+
+    return providerDetailsPage;
   }
 
   async fillAndSubmit(testData: ProviderData) {

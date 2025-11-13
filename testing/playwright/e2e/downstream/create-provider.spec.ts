@@ -9,8 +9,6 @@ if (!existsSync(providersPath)) {
 }
 
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
-import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
-import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
 import type { ProviderData } from '../../types/test-data';
 import { getProviderConfig } from '../../utils/providers';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
@@ -47,18 +45,11 @@ test.describe('Provider Creation Tests', () => {
       tag: '@downstream',
     },
     async ({ page }) => {
-      const providersPage = new ProvidersListPage(page);
       const createProvider = new CreateProviderPage(page, resourceManager);
-      const providerDetailsPage = new ProviderDetailsPage(page);
-
       const testProviderData = createProviderData({ useVddkAioOptimization: true });
 
-      await providersPage.navigateFromMainMenu();
-      await providersPage.clickCreateProviderButton();
-      await createProvider.waitForWizardLoad();
-      await createProvider.fillAndSubmit(testProviderData);
-      await providerDetailsPage.waitForPageLoad();
-      await providerDetailsPage.verifyProviderDetails(testProviderData);
+      await createProvider.navigate();
+      await createProvider.create(testProviderData, false);
 
       // Verify the useVddkAioOptimization value is persisted in the provider spec
       const providerResource = await resourceManager.fetchProvider(page, testProviderData.name);
@@ -73,18 +64,11 @@ test.describe('Provider Creation Tests', () => {
       tag: '@downstream',
     },
     async ({ page }) => {
-      const providersPage = new ProvidersListPage(page);
       const createProvider = new CreateProviderPage(page, resourceManager);
-      const providerDetailsPage = new ProviderDetailsPage(page);
-
       const testProviderData = createProviderData({ useVddkAioOptimization: false });
 
-      await providersPage.navigateFromMainMenu();
-      await providersPage.clickCreateProviderButton();
-      await createProvider.waitForWizardLoad();
-      await createProvider.fillAndSubmit(testProviderData);
-      await providerDetailsPage.waitForPageLoad();
-      await providerDetailsPage.verifyProviderDetails(testProviderData);
+      await createProvider.navigate();
+      await createProvider.create(testProviderData, false);
 
       // Verify the useVddkAioOptimization value is persisted in the provider spec
       const providerResource = await resourceManager.fetchProvider(page, testProviderData.name);
@@ -101,9 +85,7 @@ test.describe('Provider Creation Tests', () => {
       tag: '@downstream',
     },
     async ({ page }) => {
-      const providersPage = new ProvidersListPage(page);
       const createProvider = new CreateProviderPage(page, resourceManager);
-      const providerDetailsPage = new ProviderDetailsPage(page);
 
       // Get OVA provider configuration
       const ovaProviderKey = process.env.OVA_PROVIDER ?? 'ova-nfs';
@@ -114,16 +96,10 @@ test.describe('Provider Creation Tests', () => {
         projectName: MTV_NAMESPACE,
         type: ovaProviderConfig.type,
         hostname: ovaProviderConfig.api_url,
-        username: '',
-        password: '',
       };
 
-      await providersPage.navigateFromMainMenu();
-      await providersPage.clickCreateProviderButton();
-      await createProvider.waitForWizardLoad();
-      await createProvider.fillAndSubmit(testProviderData);
-      await providerDetailsPage.waitForPageLoad();
-      await providerDetailsPage.verifyProviderDetails(testProviderData);
+      await createProvider.navigate();
+      await createProvider.create(testProviderData, false);
 
       // Verify the provider resource was created
       const providerResource = await resourceManager.fetchProvider(page, testProviderData.name);
