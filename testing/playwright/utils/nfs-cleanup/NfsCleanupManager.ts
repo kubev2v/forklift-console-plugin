@@ -37,7 +37,7 @@ export class NfsCleanupManager {
 
   private async mountCleanup(config: NfsCleanupConfig): Promise<void> {
     const { server, remotePath, fileName } = config;
-    const scriptPath = `${process.cwd()}/cleanup-ova.sh`;
+    const scriptPath = `${__dirname}/cleanup-ova.sh`;
 
     const env = {
       ...process.env,
@@ -46,7 +46,13 @@ export class NfsCleanupManager {
       OVA_FILE: fileName,
     };
 
-    await execAsync(`bash ${scriptPath}`, { env });
+    try {
+      await execAsync(`bash ${scriptPath}`, { env });
+      console.log(`✅ Successfully cleaned up ${fileName} from NFS server`);
+    } catch (error: any) {
+      console.error(`❌ Failed to cleanup ${fileName}:`, error.message);
+      throw error;
+    }
   }
 
   addOvaFileFromUrl(fileName: string, nfsUrl: string): void {
