@@ -1,11 +1,11 @@
 import { type FC, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
+import type { GlobalActionToolbarProps } from 'src/components/common/utils/types';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { INITIAL_PAGE } from '@components/page/utils/constants';
 import {
   HostModelGroupVersionKind,
   type V1beta1Host,
@@ -51,8 +51,14 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
 
   const hostsData = matchHostsToInventory(inventoryHosts, hosts, provider);
 
-  const actions: FC[] = [
-    () => <SelectNetworkForHostButton {...{ hostsData, provider, selectedIds }} />,
+  const actions: FC<GlobalActionToolbarProps<InventoryHostNetworkTriple>>[] = [
+    () => (
+      <SelectNetworkForHostButton
+        hostsData={hostsData}
+        provider={provider}
+        selectedIds={selectedIds}
+      />
+    ),
   ];
 
   const canPatchProps = permissions?.canPatch
@@ -71,10 +77,9 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
       dataSource={[hostsData || [], loaded, loadError]}
       fieldsMetadata={hostsFields}
       namespace={namespace}
-      page={INITIAL_PAGE}
       title={t('ESXi hosts')}
       userSettings={userSettings}
-      CellMapper={VSphereHostsCells}
+      cell={VSphereHostsCells}
     />
   );
 };

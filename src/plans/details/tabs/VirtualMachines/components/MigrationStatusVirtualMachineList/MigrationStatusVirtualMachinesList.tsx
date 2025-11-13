@@ -5,7 +5,6 @@ import { TableSortContextProvider } from 'src/components/TableSortContextProvide
 import { isPlanExecuting } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { INITIAL_PAGE } from '@components/page/utils/constants';
 import type { V1beta1Plan } from '@kubev2v/types';
 
 import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
@@ -68,16 +67,14 @@ const MigrationStatusVirtualMachinesList: FC<MigrationStatusVirtualMachinesListP
     <TableSortContextProvider fields={planMigrationVirtualMachinesFields}>
       <StandardPageWithSelection<MigrationStatusVirtualMachinePageData>
         canSelect={canSelect}
-        CellMapper={MigrationStatusVirtualMachinesRow}
+        cell={MigrationStatusVirtualMachinesRow}
         dataSource={dataSource}
-        ExpandedComponent={MigrationStatusExpandedPage}
+        expanded={MigrationStatusExpandedPage}
         expandedIds={expandedIds}
         fieldsMetadata={planMigrationVirtualMachinesFields}
         GlobalActionToolbarItems={actions}
-        namespace={''}
         onExpand={setExpandedIds}
         onSelect={onSelect}
-        page={INITIAL_PAGE}
         selectedIds={selectedIds}
         title={t('Virtual machines')}
         toId={toId}

@@ -135,7 +135,7 @@ const NetworkMapsListPage: FC<{
           addButton: <NetworkMapsAddButton namespace={namespace} testId="add-network-map-button" />,
         })}
         dataSource={[data || [], networkMapsLoaded, networkMapsLoadError]}
-        RowMapper={NetworkMapRow}
+        row={NetworkMapRow}
         fieldsMetadata={fieldsMetadata}
         namespace={namespace}
         title={t('Network maps')}
@@ -144,7 +144,6 @@ const NetworkMapsListPage: FC<{
         )}
         userSettings={userSettings}
         customNoResultsFound={<NetworkMapsEmptyState namespace={namespace} />}
-        page={1}
       />
     </TipsAndTricksDrawer>
   );

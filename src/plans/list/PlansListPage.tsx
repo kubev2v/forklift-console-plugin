@@ -5,7 +5,6 @@ import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetD
 import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { INITIAL_PAGE } from '@components/page/utils/constants';
 import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -46,7 +45,7 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
           <PlansAddButton testId="create-plan-button" namespace={namespace} canCreate={canCreate} />
         }
         dataSource={[plans || [], plansLoaded, plansLoadError]}
-        RowMapper={PlanRow}
+        row={PlanRow}
         fieldsMetadata={planFields}
         namespace={namespace}
         title={t('Migration plans')}
@@ -55,7 +54,6 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
         )}
         userSettings={userSettings}
         customNoResultsFound={<PlansEmptyState namespace={namespace} />}
-        page={INITIAL_PAGE}
         postFilterData={(data, selectedFilters) =>
           selectedFilters[PlanTableResourceId.Archived]?.[0] === 'true'
             ? data

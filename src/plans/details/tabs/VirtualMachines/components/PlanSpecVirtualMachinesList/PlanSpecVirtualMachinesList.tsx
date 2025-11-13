@@ -4,7 +4,6 @@ import { StandardPageWithSelection } from 'src/components/page/StandardPageWithS
 import { ConcernsTable } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/ConcernsTable';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { INITIAL_PAGE } from '@components/page/utils/constants';
 import type { V1beta1Plan } from '@kubev2v/types';
 
 import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
@@ -21,7 +20,6 @@ type PlanVirtualMachinesListProps = {
 
 const selectedIds: string[] = [];
 const expandedIds: string[] = [];
-const emptyNamespace = '';
 const onSelect = () => undefined;
 
 const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan }) => {
@@ -42,17 +40,15 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       title={t('Virtual machines')}
       data-testid="plan-spec-virtual-machines-list"
       dataSource={[specVirtualMachinesListData ?? [], !loading, inventoryError]}
-      CellMapper={PlanSpecVirtualMachinesRow}
+      cell={PlanSpecVirtualMachinesRow}
       fieldsMetadata={specVirtualMachineFields}
       userSettings={userSettings}
-      namespace={emptyNamespace}
-      page={INITIAL_PAGE}
       toId={vmDataToId}
       canSelect={canSelect}
       onSelect={onSelect}
       selectedIds={selectedIds}
       GlobalActionToolbarItems={actions}
-      ExpandedComponent={(props) => <ConcernsTable {...props} />}
+      expanded={(props) => <ConcernsTable {...props} />}
       expandedIds={expandedIds}
     />
   );
