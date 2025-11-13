@@ -77,11 +77,11 @@ export const createSecret = async (
     const result = await page.evaluate(
       async ({ secretData, ns, evalConstants }) => {
         try {
-          // Define the function in browser context
-          const getCsrfTokenFromCookie = (csrfTokenName: string) => {
-            const cookies = document.cookie.split('; ');
-            const csrfCookie = cookies.find((cookie) => cookie.startsWith(`${csrfTokenName}=`));
-            return csrfCookie ? csrfCookie.split('=')[1] : '';
+          // Extract CSRF token from cookie
+          const getCsrfTokenFromCookie = (tokenName: string) => {
+            const cookieArray = document.cookie.split('; ');
+            const token = cookieArray.find((cookie) => cookie.startsWith(`${tokenName}=`));
+            return token ? token.split('=')[1] : '';
           };
           const csrfToken = getCsrfTokenFromCookie(evalConstants.CSRF_TOKEN_NAME);
 
