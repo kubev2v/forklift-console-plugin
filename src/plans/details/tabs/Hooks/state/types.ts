@@ -1,8 +1,11 @@
-export type HookFormValues = {
-  preHookSet: boolean;
-  postHookSet: boolean;
-  preHookImage: string;
-  postHookImage: string;
-  preHookPlaybook: string;
-  postHookPlaybook: string;
+export type HookEditFormValues = {
+  enabled: boolean;
+  image: string;
+  playbook: string;
 };
+
+export enum HookField {
+  Enabled = 'enabled',
+  Image = 'image',
+  Playbook = 'playbook',
+}
