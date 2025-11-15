@@ -1,34 +1,24 @@
 import type { FC } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
+import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { MTV_SETTINGS } from '@utils/links';
 
-import { EditField } from '../cards/EditField';
-import type { InputComponentType } from '../cards/EditFieldTypes';
+import { inventoryMemoryLimitOptions } from '../utils/constants';
+import { type ForkliftSettingsValues, SettingsFields } from '../utils/types';
 
-import type { EditSettingsProps } from './EditSettingsProps';
-import { inventoryMemoryLimitOptions } from './options';
 import SettingsSelectInput from './SettingsSelectInput';
 
-/**
- * InventoryMemoryLimitSelect component.
- * Wraps the SettingsSelectInput component with pre-defined options.
- */
-const InventoryMemoryLimitSelect: InputComponentType = (props) => {
-  return <SettingsSelectInput {...props} options={inventoryMemoryLimitOptions} />;
-};
-
-const EditInventoryMemoryLimit: FC<EditSettingsProps> = (props) => {
+const EditInventoryMemoryLimit: FC = () => {
   const { t } = useForkliftTranslation();
 
+  const { control } = useFormContext<ForkliftSettingsValues>();
+
   return (
-    <EditField
-      {...props}
-      resource={props.resource as K8sResourceCommon}
-      jsonPath={'spec.inventory_container_limits_memory'}
+    <FormGroupWithHelpText
       label={t('Controller inventory container memory limit')}
       labelHelp={
         <HelpIconPopover header={t('Controller inventory container memory limit')}>
@@ -46,13 +36,22 @@ const EditInventoryMemoryLimit: FC<EditSettingsProps> = (props) => {
           </Stack>
         </HelpIconPopover>
       }
-      model={ForkliftControllerModel}
       helperText={t(
         'Enter the limit for memory usage by the inventory container in Mi. If empty, the default value will be used.',
       )}
-      InputComponent={InventoryMemoryLimitSelect}
-      defaultValue="1000Mi"
-    />
+    >
+      <Controller
+        control={control}
+        name={SettingsFields.InventoryMemoryLimit}
+        render={({ field: { onChange, value } }) => (
+          <SettingsSelectInput
+            onChange={onChange}
+            value={String(value)}
+            options={inventoryMemoryLimitOptions}
+          />
+        )}
+      />
+    </FormGroupWithHelpText>
   );
 };
 

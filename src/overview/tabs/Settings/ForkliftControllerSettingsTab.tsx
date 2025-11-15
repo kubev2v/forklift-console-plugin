@@ -4,7 +4,7 @@ import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchFor
 
 import { Bullseye } from '@patternfly/react-core';
 
-import SettingsCard from './cards/SettingsCard';
+import SettingsCard from './components/SettingsCard';
 
 const ForkliftControllerSettingsTab: FC = () => {
   const [forkliftController, controllerLoaded, controllerLoadError] =

@@ -1,39 +1,24 @@
 import type { FC } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
-import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
+import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { MAX_CONCURRENT_VIRTUAL_MACHINE_MIGRATIONS } from '@utils/links';
 
-import { EditField } from '../cards/EditField';
-import type { InputComponentType } from '../cards/EditFieldTypes';
+import { defaultValuesMap } from '../utils/constants';
+import { type ForkliftSettingsValues, SettingsFields } from '../utils/types';
 
-import type { EditSettingsProps } from './EditSettingsProps';
 import SettingsNumberInput from './SettingsNumberInput';
 
-const DEFAULT = 20;
-
-/**
- * MaxVMInFlightNumberInput component.
- * Wraps the SettingsNumberInput component with pre-defined default value.
- */
-const MaxVMInFlightNumberInput: InputComponentType = ({ value, ...props }) => {
-  const numberValue = Number(value);
-  return <SettingsNumberInput {...props} value={numberValue} defaultValue={DEFAULT} />;
-};
-
-const EditMaxVMInFlight: FC<EditSettingsProps> = (props) => {
+const EditMaxVMInFlight: FC = () => {
   const { t } = useForkliftTranslation();
 
-  const { resource } = props;
+  const { control } = useFormContext<ForkliftSettingsValues>();
 
   return (
-    <EditField
-      {...props}
-      resource={resource as K8sResourceCommon}
-      jsonPath={'spec.controller_max_vm_inflight'}
+    <FormGroupWithHelpText
       label={t('Maximum concurrent VM migrations')}
       labelHelp={
         <HelpIconPopover header={t('Maximum concurrent VM migrations')}>
@@ -58,14 +43,22 @@ const EditMaxVMInFlight: FC<EditSettingsProps> = (props) => {
           </ForkliftTrans>
         </HelpIconPopover>
       }
-      model={ForkliftControllerModel}
       helperText={t(
         'Enter the maximum number of concurrent VM migrations. If empty, the default value will be used.',
       )}
-      InputComponent={MaxVMInFlightNumberInput}
-      defaultValue={String(DEFAULT)}
-      onConfirmHook={defaultOnConfirmWithIntValue}
-    />
+    >
+      <Controller
+        control={control}
+        name={SettingsFields.MaxVMInFlight}
+        render={({ field: { onChange, value } }) => (
+          <SettingsNumberInput
+            onChange={onChange}
+            value={Number(value)}
+            defaultValue={defaultValuesMap[SettingsFields.MaxVMInFlight] as number}
+          />
+        )}
+      />
+    </FormGroupWithHelpText>
   );
 };
 

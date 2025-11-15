@@ -1,35 +1,24 @@
 import type { FC } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { HelpIconPopover } from 'src/components/common/HelpIconPopover/HelpIconPopover';
-import { defaultOnConfirmWithIntValue } from 'src/modules/Providers/modals/EditModal/utils/defaultOnConfirm';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ForkliftControllerModel, type K8sResourceCommon } from '@kubev2v/types';
+import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { MTV_SETTINGS } from '@utils/links';
 
-import { EditField } from '../cards/EditField';
-import type { InputComponentType } from '../cards/EditFieldTypes';
+import { snapshotPoolingIntervalOptions } from '../utils/constants';
+import { type ForkliftSettingsValues, SettingsFields } from '../utils/types';
 
-import type { EditSettingsProps } from './EditSettingsProps';
-import { snapshotPoolingIntervalOptions } from './options';
 import SettingsSelectInput from './SettingsSelectInput';
 
-/**
- * SnapshotPoolingIntervalSelect component.
- * Wraps the SettingsSelectInput component with pre-defined options.
- */
-const SnapshotPoolingIntervalSelect: InputComponentType = (props) => {
-  return <SettingsSelectInput {...props} options={snapshotPoolingIntervalOptions} />;
-};
-
-const EditSnapshotPoolingInterval: FC<EditSettingsProps> = (props) => {
+const EditSnapshotPoolingInterval: FC = () => {
   const { t } = useForkliftTranslation();
 
+  const { control } = useFormContext<ForkliftSettingsValues>();
+
   return (
-    <EditField
-      {...props}
-      resource={props.resource as K8sResourceCommon}
-      jsonPath={'spec.controller_snapshot_status_check_rate_seconds'}
+    <FormGroupWithHelpText
       label={t('Snapshot polling interval')}
       labelHelp={
         <HelpIconPopover header={t('Snapshot polling interval')}>
@@ -47,14 +36,22 @@ const EditSnapshotPoolingInterval: FC<EditSettingsProps> = (props) => {
           </Stack>
         </HelpIconPopover>
       }
-      model={ForkliftControllerModel}
       helperText={t(
         'Enter the interval in seconds for snapshot pooling. If empty, the default value will be used.',
       )}
-      InputComponent={SnapshotPoolingIntervalSelect}
-      onConfirmHook={defaultOnConfirmWithIntValue}
-      defaultValue="10"
-    />
+    >
+      <Controller
+        control={control}
+        name={SettingsFields.SnapshotStatusCheckRate}
+        render={({ field: { onChange, value } }) => (
+          <SettingsSelectInput
+            onChange={onChange}
+            value={String(value)}
+            options={snapshotPoolingIntervalOptions}
+          />
+        )}
+      />
+    </FormGroupWithHelpText>
   );
 };
 

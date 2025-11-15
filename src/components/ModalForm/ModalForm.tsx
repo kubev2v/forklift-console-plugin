@@ -1,6 +1,5 @@
 import { type ReactNode, useCallback, useState } from 'react';
 
-import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import {
   Alert,
@@ -21,7 +20,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 type ModalFormProps = {
   title: ReactNode;
   children: ReactNode;
-  onConfirm: () => Promise<K8sResourceCommon | undefined>;
+  onConfirm: () => Promise<unknown>;
   variant?: ModalVariant;
   confirmLabel?: string;
   cancelLabel?: string;
