@@ -1,10 +1,9 @@
-import type { V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
 import { type Page, test as base } from '@playwright/test';
 
 import { CreatePlanWizardPage } from '../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { CreateProviderPage } from '../page-objects/CreateProviderPage';
 import { PlanDetailsPage } from '../page-objects/PlanDetailsPage/PlanDetailsPage';
-import { ProviderDetailsPage } from '../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { createPlanTestData, type ProviderData } from '../types/test-data';
 import { getProviderConfig } from '../utils/providers';
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
@@ -29,16 +28,18 @@ const createProvider = async (
   page: Page,
   resourceManager: ResourceManager,
   namePrefix = 'test-provider',
+  providerKey?: string,
 ): Promise<TestProvider> => {
   const uniqueId = crypto.randomUUID();
   const providerName = `${namePrefix}-${uniqueId}`;
 
-  const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
-  const providerConfig = getProviderConfig(providerKey);
+  const key = providerKey ?? process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
+  const providerConfig = getProviderConfig(key);
 
   if (!providerConfig) {
     throw new Error(`Provider configuration not found for key: ${providerKey}`);
   }
+
   const testProviderData: ProviderData = {
     name: providerName,
     projectName: MTV_NAMESPACE,
@@ -50,14 +51,68 @@ const createProvider = async (
     vddkInitImage: providerConfig.vddk_init_image,
   };
 
-  const createProviderPage = new CreateProviderPage(page, resourceManager);
-  const providerDetailsPage = new ProviderDetailsPage(page);
+  // For OVA providers, create directly via API with applianceManagement setting
+  if (providerConfig.type === 'ova') {
+    // Navigate to console to establish session (needed for CSRF token)
+    const createProviderPage = new CreateProviderPage(page, resourceManager);
+    await createProviderPage.navigationHelper.navigateToConsole();
 
-  await createProviderPage.navigate();
-  await createProviderPage.waitForWizardLoad();
-  await createProviderPage.fillAndSubmit(testProviderData);
-  await providerDetailsPage.waitForPageLoad();
-  await providerDetailsPage.verifyProviderDetails(testProviderData);
+    // Create minimal secret (CRD requires spec.secret, OVA only needs URL, no credentials)
+    const secretName = `${providerName}-secret`;
+    const secret: IoK8sApiCoreV1Secret = {
+      apiVersion: 'v1',
+      kind: 'Secret',
+      metadata: {
+        name: secretName,
+        namespace: MTV_NAMESPACE,
+      },
+      type: 'Opaque',
+      stringData: {
+        url: testProviderData.hostname,
+      },
+    };
+
+    const createdSecret = await resourceManager.createSecret(page, secret);
+    if (!createdSecret) {
+      throw new Error(`Failed to create secret for OVA provider ${providerName}`);
+    }
+
+    // Create provider with applianceManagement setting
+    const provider: V1beta1Provider = {
+      apiVersion: 'forklift.konveyor.io/v1beta1',
+      kind: 'Provider',
+      metadata: {
+        name: providerName,
+        namespace: MTV_NAMESPACE,
+      },
+      spec: {
+        type: 'ova',
+        url: testProviderData.hostname,
+        secret: {
+          name: secretName,
+          namespace: MTV_NAMESPACE,
+        },
+        settings: {
+          applianceManagement: 'true',
+        },
+      },
+    };
+
+    const createdProvider = await resourceManager.createProvider(page, provider);
+    if (!createdProvider) {
+      throw new Error(`Failed to create OVA provider ${providerName}`);
+    }
+
+    // Register provider for cleanup
+    resourceManager.addProvider(providerName, MTV_NAMESPACE);
+  } else {
+    // For non-OVA providers, use the UI
+    const createProviderPage = new CreateProviderPage(page, resourceManager);
+
+    await createProviderPage.navigate();
+    await createProviderPage.create(testProviderData);
+  }
+
   const provider: TestProvider = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Provider',
@@ -128,8 +183,11 @@ export interface ConfigurableResourceFixtures {
   createCustomPlan: (
     customPlanData?: Partial<ReturnType<typeof createPlanTestData>>,
   ) => Promise<TestPlan>;
+  createProviderFromKey: (providerKey: string, namePrefix?: string) => Promise<TestProvider>;
 }
-export const createResourceFixtures = (config: FixtureConfig = {}) => {
+export const createResourceFixtures = (
+  config: FixtureConfig = {},
+): ReturnType<typeof base.extend<ConfigurableResourceFixtures>> => {
   const { providerScope = 'test', planScope = 'test', providerPrefix = 'test-provider' } = config;
 
   return base.extend<ConfigurableResourceFixtures>({
@@ -206,6 +264,13 @@ export const createResourceFixtures = (config: FixtureConfig = {}) => {
         });
       };
       await use(createPlanFn);
+    },
+
+    createProviderFromKey: async ({ page, resourceManager }, use) => {
+      const createProviderFn = async (providerKey: string, namePrefix?: string) => {
+        return createProvider(page, resourceManager, namePrefix ?? 'test-provider', providerKey);
+      };
+      await use(createProviderFn);
     },
   });
 };

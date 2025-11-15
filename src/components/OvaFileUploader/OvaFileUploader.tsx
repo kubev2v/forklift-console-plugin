@@ -54,6 +54,7 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
       <FormGroup label={t('Upload local OVA file')} isRequired={false}>
         <FileUpload
           id="ova-file"
+          data-testid="ova-file-upload-input"
           filename={filename}
           onFileInputChange={(_, newFile) => {
             if (newFile) {
@@ -87,6 +88,7 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
       <Stack hasGutter>
         <StackItem>
           <Button
+            data-testid="ova-upload-button"
             isLoading={uploading}
             onClick={handleUpload}
             isDisabled={!file || validation === OvaValidationVariant.Error || uploading}
@@ -97,7 +99,7 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
 
         {error && (
           <StackItem>
-            <Alert variant="danger" title={t('Error')}>
+            <Alert variant="danger" title={t('Error')} data-testid="ova-upload-error-alert">
               {error}
               {response?.message}
             </Alert>
@@ -106,7 +108,11 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
 
         {response && isEmpty(error) && (
           <StackItem>
-            <Alert variant="success" title={t('File uploaded')} />
+            <Alert
+              variant="success"
+              title={t('File uploaded')}
+              data-testid="ova-upload-success-alert"
+            />
           </StackItem>
         )}
       </Stack>

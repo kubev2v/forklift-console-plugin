@@ -8,7 +8,7 @@ const globalTeardown = async (config: FullConfig) => {
   resourceManager.loadResourcesFromFile();
 
   if (resourceManager.getResourceCount() === 0) {
-    console.log('No resources to cleanup.');
+    console.log('No k8s resources to cleanup in globalTeardown.');
     return;
   }
 

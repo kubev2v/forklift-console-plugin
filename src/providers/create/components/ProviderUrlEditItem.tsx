@@ -60,6 +60,7 @@ const ProviderUrlEditItem: FC<ProviderUrlEditItemProps> = ({
         helperTextInvalid={urlValidation.msg}
       >
         <TextInput
+          data-testid="provider-url-input"
           spellCheck="false"
           isRequired={isRequired}
           type="text"

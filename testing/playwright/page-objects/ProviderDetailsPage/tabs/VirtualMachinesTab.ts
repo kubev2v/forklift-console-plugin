@@ -35,4 +35,8 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   async selectVirtualMachine(vmName: string): Promise<void> {
     await this.table.selectRow({ Name: vmName });
   }
+
+  async waitForTableLoad(): Promise<void> {
+    await this.page.waitForLoadState('networkidle');
+  }
 }
