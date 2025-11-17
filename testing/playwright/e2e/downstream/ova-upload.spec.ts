@@ -30,7 +30,6 @@ test.describe('OVA Provider Upload Tests', { tag: '@downstream' }, () => {
   test('should create OVA provider with applianceManagement enabled and validate upload form', async ({
     page,
     createProviderFromKey,
-    resourceManager,
   }: ConfigurableResourceFixtures & { page: Page }) => {
     let ovaProvider: any = null;
     const providerDetailsPage = new ProviderDetailsPage(page);
