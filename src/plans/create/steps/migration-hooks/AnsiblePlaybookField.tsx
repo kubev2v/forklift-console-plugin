@@ -1,9 +1,8 @@
 import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
 
-import VersionedCodeEditor from '@components/VersionedCodeEditor/VersionedCodeEditor';
+import SdkYamlEditor from '@components/SdkYamlEditor/SdkYamlEditor';
 import { FormGroup, FormHelperText } from '@patternfly/react-core';
-import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -17,7 +16,6 @@ type AnsiblePlaybookFieldProps = {
 
 const AnsiblePlaybookField: FC<AnsiblePlaybookFieldProps> = ({ fieldId }) => {
   const { t } = useForkliftTranslation();
-  const isDarkTheme = useIsDarkTheme();
   const { control } = useCreatePlanFormContext();
   const subFieldId = getHooksSubFieldId(fieldId, MigrationHookFieldId.AnsiblePlaybook);
 
@@ -30,11 +28,7 @@ const AnsiblePlaybookField: FC<AnsiblePlaybookFieldProps> = ({ fieldId }) => {
         name={subFieldId}
         control={control}
         render={({ field }) => (
-          <VersionedCodeEditor
-            isDarkTheme={isDarkTheme}
-            value={field.value ?? ''}
-            onChange={field.onChange}
-          />
+          <SdkYamlEditor value={field.value ?? ''} onChange={field.onChange} />
         )}
       />
 

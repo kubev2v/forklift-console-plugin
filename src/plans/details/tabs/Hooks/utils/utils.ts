@@ -1,5 +1,4 @@
 import { produce } from 'immer';
-import { deepCopy } from 'src/utils/deepCopy';
 
 import { HookModel, PlanModel, type V1beta1Hook, type V1beta1Plan } from '@kubev2v/types';
 import { k8sCreate, k8sDelete, k8sPatch, k8sUpdate } from '@openshift-console/dynamic-plugin-sdk';
@@ -7,8 +6,6 @@ import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
-
-import type { HookFormValues } from '../state/types';
 
 import { type HookType, HookTypeLabelLowercase, hookTypes } from './constants';
 
@@ -100,7 +97,7 @@ type createUpdateOrDeleteHookParams = {
   step: HookType;
 };
 
-const createUpdateOrDeleteHook = async ({
+export const createUpdateOrDeleteHook = async ({
   hook,
   hookImage,
   hookPlaybook,
@@ -133,43 +130,6 @@ const createUpdateOrDeleteHook = async ({
   }
 
   return plan;
-};
-
-type onUpdatePlanHooksProps = {
-  plan: V1beta1Plan;
-  preHookResource: V1beta1Hook;
-  postHookResource: V1beta1Hook;
-  formData: HookFormValues;
-};
-
-export const onUpdatePlanHooks = async (props: onUpdatePlanHooksProps) => {
-  const { formData, plan, postHookResource, preHookResource } = props;
-  const {
-    postHookImage,
-    postHookPlaybook,
-    postHookSet,
-    preHookImage,
-    preHookPlaybook,
-    preHookSet,
-  } = formData;
-
-  const newPlan = await createUpdateOrDeleteHook({
-    hook: preHookResource,
-    hookImage: preHookImage,
-    hookPlaybook: preHookPlaybook,
-    hookSet: preHookSet,
-    plan: deepCopy(plan)!,
-    step: hookTypes.PreHook,
-  });
-
-  await createUpdateOrDeleteHook({
-    hook: postHookResource,
-    hookImage: postHookImage,
-    hookPlaybook: postHookPlaybook,
-    hookSet: postHookSet,
-    plan: newPlan,
-    step: hookTypes.PostHook,
-  });
 };
 
 /**

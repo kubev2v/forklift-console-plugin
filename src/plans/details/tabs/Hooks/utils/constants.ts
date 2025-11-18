@@ -5,11 +5,6 @@ export const hookTypes = {
 
 export type HookType = (typeof hookTypes)[keyof typeof hookTypes];
 
-export const HookTypeLabel = {
-  [hookTypes.PostHook]: 'Post',
-  [hookTypes.PreHook]: 'Pre',
-};
-
 export const HookTypeLabelLowercase = {
   [hookTypes.PostHook]: 'post',
   [hookTypes.PreHook]: 'pre',

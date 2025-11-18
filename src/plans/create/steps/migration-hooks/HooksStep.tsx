@@ -24,9 +24,16 @@ const HooksStep: FC = () => {
   return (
     <WizardStepContainer
       title={planStepNames[PlanWizardStepId.Hooks]}
-      description={t(
-        'Hooks are contained in Ansible playbooks that can be run before or after the migration.',
-      )}
+      description={
+        <>
+          <p>
+            {t(
+              'Hooks are contained in Ansible playbooks that can be run before or after the migration.',
+            )}
+          </p>
+          <p>{t('Hooks are applied to all virtual machines in the plan.')}</p>
+        </>
+      }
     >
       <Form className="pf-v6-u-mt-md">
         <FormSection title={t('Pre migration hook')}>
