@@ -1,17 +1,18 @@
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 import type { BrowserContextOptions, Page } from '@playwright/test';
 
 import { isEmpty } from '../utils';
 
-import { MTV_NAMESPACE, RESOURCE_KINDS, RESOURCE_TYPES, RESOURCES_FILE } from './constants';
+import { BaseResourceManager } from './BaseResourceManager';
+import { MTV_NAMESPACE, RESOURCES_FILE } from './constants';
 import type { SupportedResource } from './ResourceManager';
 
 /**
  * Handles cleanup and deletion of Kubernetes resources
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class ResourceCleaner {
+export class ResourceCleaner extends BaseResourceManager {
   static async cleanupAll(page: Page, resources: SupportedResource[]): Promise<void> {
     if (isEmpty(resources)) {
       console.log('No resources to cleanup');
@@ -62,34 +63,37 @@ export class ResourceCleaner {
 
     const resourceType = ResourceCleaner.getResourceType(resource);
 
+    const constants = ResourceCleaner.getEvaluateConstants();
+
     try {
       const result = await page.evaluate(
-        async ({ resType, resName, resNamespace }) => {
+        async ({ resType, resName, resNamespace, evalConstants }) => {
           try {
-            // Get CSRF token from cookie
             const getCsrfTokenFromCookie = () => {
               const cookies = document.cookie.split('; ');
-              const csrfCookie = cookies.find((cookie) => cookie.startsWith('csrf-token='));
+              const csrfCookie = cookies.find((cookie) =>
+                cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
+              );
               return csrfCookie ? csrfCookie.split('=')[1] : '';
             };
             const csrfToken = getCsrfTokenFromCookie();
 
             let apiPath = '';
-            if (resType === 'virtualmachines') {
-              apiPath = `/api/kubernetes/apis/kubevirt.io/v1/namespaces/${resNamespace}/${resType}/${resName}`;
-            } else if (resType === 'projects') {
-              apiPath = `/api/kubernetes/apis/project.openshift.io/v1/${resType}/${resName}`;
-            } else if (resType === 'namespaces') {
-              apiPath = `/api/kubernetes/api/v1/${resType}/${resName}`;
+            if (resType === evalConstants.VIRTUAL_MACHINES_TYPE) {
+              apiPath = `${evalConstants.KUBEVIRT_PATH}/namespaces/${resNamespace}/${resType}/${resName}`;
+            } else if (resType === evalConstants.PROJECTS_TYPE) {
+              apiPath = `${evalConstants.OPENSHIFT_PROJECT_PATH}/${resType}/${resName}`;
+            } else if (resType === evalConstants.NAMESPACES_TYPE) {
+              apiPath = `${evalConstants.KUBERNETES_CORE}/${resType}/${resName}`;
             } else {
-              apiPath = `/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/${resNamespace}/${resType}/${resName}`;
+              apiPath = `${evalConstants.FORKLIFT_PATH}/namespaces/${resNamespace}/${resType}/${resName}`;
             }
 
             const response = await fetch(apiPath, {
               method: 'DELETE',
               headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
+                [evalConstants.CONTENT_TYPE_HEADER]: evalConstants.APPLICATION_JSON,
+                [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
               },
               credentials: 'include',
             });
@@ -122,6 +126,7 @@ export class ResourceCleaner {
           resType: resourceType,
           resName: resourceName,
           resNamespace: namespace,
+          evalConstants: constants,
         },
       );
 
@@ -176,27 +181,6 @@ export class ResourceCleaner {
       return ResourceCleaner.getResourceTypeFromKind(resource.kind);
     }
     return 'unknown';
-  }
-
-  private static getResourceTypeFromKind(kind: string): string {
-    switch (kind) {
-      case RESOURCE_KINDS.MIGRATION:
-        return RESOURCE_TYPES.MIGRATIONS;
-      case RESOURCE_KINDS.NETWORK_MAP:
-        return RESOURCE_TYPES.NETWORK_MAPS;
-      case RESOURCE_KINDS.PLAN:
-        return RESOURCE_TYPES.PLANS;
-      case RESOURCE_KINDS.PROVIDER:
-        return RESOURCE_TYPES.PROVIDERS;
-      case RESOURCE_KINDS.VIRTUAL_MACHINE:
-        return RESOURCE_TYPES.VIRTUAL_MACHINES;
-      case RESOURCE_KINDS.PROJECT:
-        return RESOURCE_TYPES.PROJECTS;
-      case RESOURCE_KINDS.NAMESPACE:
-        return RESOURCE_TYPES.NAMESPACES;
-      default:
-        return `${kind.toLowerCase()}s`;
-    }
   }
 
   static async instantCleanup(

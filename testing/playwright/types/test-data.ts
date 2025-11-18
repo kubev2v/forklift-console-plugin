@@ -113,7 +113,7 @@ export interface ProviderData {
   type: 'vsphere' | 'ovirt' | 'ova' | 'openstack';
   endpointType?: 'vcenter' | 'esxi';
   hostname: string;
-  username: string;
+  username?: string;
   password?: string;
   fingerprint?: string;
   vddkInitImage?: string;

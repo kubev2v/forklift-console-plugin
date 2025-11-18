@@ -5,15 +5,18 @@ ARG BUILD_DATE=unknown
 ARG VERSION=dev
 
 LABEL org.opencontainers.image.created="${BUILD_DATE}" \
-      org.opencontainers.image.source="https://github.com/kubev2v/forklift-console-plugin" \
-      org.opencontainers.image.version="${VERSION}" \
-      org.opencontainers.image.revision="${GIT_COMMIT}" \
-      org.opencontainers.image.title="MTV UI Tests" 
+    org.opencontainers.image.source="https://github.com/kubev2v/forklift-console-plugin" \
+    org.opencontainers.image.version="${VERSION}" \
+    org.opencontainers.image.revision="${GIT_COMMIT}" \
+    org.opencontainers.image.title="MTV UI Tests" 
 
 ENV LC_ALL=en_US \
     IMAGE_VERSION="${VERSION}" \
     IMAGE_GIT_COMMIT="${GIT_COMMIT}" \
     IMAGE_BUILD_DATE="${BUILD_DATE}"
+
+# NFS mount path for OVA file cleanup
+ENV NFS_MOUNT_PATH=""
 
 WORKDIR /test-runner
 

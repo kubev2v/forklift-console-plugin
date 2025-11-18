@@ -1,5 +1,6 @@
 import type {
   IoK8sApiCoreV1Namespace,
+  IoK8sApiCoreV1Secret,
   V1beta1Migration,
   V1beta1NetworkMap,
   V1beta1Plan,
@@ -19,7 +20,9 @@ import {
   RESOURCE_KINDS,
 } from './constants';
 import { ResourceCleaner } from './ResourceCleaner';
+import { createProvider, createSecret } from './ResourceCreator';
 import { ResourceFetcher } from './ResourceFetcher';
+import { ResourcePatcher } from './ResourcePatcher';
 
 export type OpenshiftProject = IoK8sApiCoreV1Namespace & {
   kind: typeof OPENSHIFT_PROJECT_KIND;
@@ -121,6 +124,22 @@ export class ResourceManager {
     this.resources = [];
   }
 
+  async createProvider(
+    page: Page,
+    provider: V1beta1Provider,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1Provider | null> {
+    return createProvider(page, provider, namespace);
+  }
+
+  async createSecret(
+    page: Page,
+    secret: IoK8sApiCoreV1Secret,
+    namespace = MTV_NAMESPACE,
+  ): Promise<IoK8sApiCoreV1Secret | null> {
+    return createSecret(page, secret, namespace);
+  }
+
   async fetchProvider(
     page: Page,
     providerName: string,
@@ -153,6 +172,27 @@ export class ResourceManager {
 
   loadResourcesFromFile(): void {
     this.resources = ResourceCleaner.loadResourcesFromFile();
+  }
+
+  async patchProvider(
+    page: Page,
+    providerName: string,
+    patch: Record<string, any>,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1Provider | null> {
+    return ResourcePatcher.patchProvider(page, providerName, patch, namespace);
+  }
+
+  async patchResource<T extends SupportedResource>(
+    page: Page,
+    options: {
+      kind: string;
+      resourceName: string;
+      namespace: string;
+      patch: Record<string, any>;
+    },
+  ): Promise<T | null> {
+    return ResourcePatcher.patchResource<T>(page, options);
   }
 
   saveForLaterCleanup(): void {

@@ -13,8 +13,6 @@ import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/Create
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { PlansListPage } from '../../page-objects/PlansListPage';
-import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
-import { ProvidersListPage } from '../../page-objects/ProvidersListPage';
 import { createPlanTestData, type ProviderConfig, type ProviderData } from '../../types/test-data';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
@@ -61,9 +59,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream'],
     },
     async ({ page }) => {
-      const providersPage = new ProvidersListPage(page);
       const createProvider = new CreateProviderPage(page, resourceManager);
-      const providerDetailsPage = new ProviderDetailsPage(page);
 
       const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
       const providerConfig = (providers as Record<string, ProviderConfig>)[providerKey];
@@ -80,13 +76,8 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
         useVddkAioOptimization: false,
       };
 
-      await providersPage.navigateFromMainMenu();
-      await providersPage.clickCreateProviderButton();
-      await createProvider.waitForWizardLoad();
-      await createProvider.fillAndSubmit(testProviderData);
-      await providerDetailsPage.waitForPageLoad();
-      await providerDetailsPage.waitForReadyStatus();
-      await providerDetailsPage.verifyProviderDetails(testProviderData);
+      await createProvider.navigate();
+      await createProvider.create(testProviderData);
     },
   );
 
