@@ -18,8 +18,19 @@ export const getValueByJsonPath = (obj: unknown, pathOrFunction: OpenApiJsonPath
   return pathParts.reduce((path: any, key: string) => path?.[key], obj) as string;
 };
 
-export const jsonPathToPatch = (path: string | string[]) => {
-  let pathParts = typeof path === 'string' ? path.split('.') : path;
+/**
+ * Converts a JSON path in dot notation to a JSON Patch path.
+ *
+ * @param obj - The object (not used in this function but kept for consistency with getValueByJsonPath).
+ * @param pathOrFunction - The JSON path (dot notation) or a function that returns the desired path.
+ * @returns The JSON Patch path as a string.
+ */
+export const openApiJsonPathToPatch = (obj: unknown, pathOrFunction: OpenApiJsonPath) => {
+  if (typeof pathOrFunction === 'function') {
+    return pathOrFunction(obj);
+  }
+
+  let pathParts = typeof pathOrFunction === 'string' ? pathOrFunction.split('.') : pathOrFunction;
 
   pathParts = pathParts.map((pathPart) => pathPart.replaceAll('/', '~1'));
 
