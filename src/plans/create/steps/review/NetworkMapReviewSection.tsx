@@ -75,12 +75,12 @@ const NetworkMapReviewSectionInner: FC = () => {
           </DescriptionListGroup>
         </DescriptionList>
 
-        <NetworkMapReviewTable />
+        <NetworkMapReviewTable networkMap={networkMap} />
       </Stack>
     );
   }
 
-  return <NetworkMapReviewTable />;
+  return <NetworkMapReviewTable networkMap={networkMap} />;
 };
 
 const NetworkMapReviewSection: FC = () => {

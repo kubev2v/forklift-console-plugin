@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useOpenShiftNetworks } from 'src/modules/Providers/hooks/useNetworks';
+import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
 import { POD } from 'src/plans/details/utils/constants';
 
 import type { V1beta1Provider } from '@kubev2v/types';
@@ -19,13 +20,18 @@ const useTargetNetworks = (
     useOpenShiftNetworks(targetProvider);
 
   const targetNetworks = useMemo(() => {
-    const networksList: TargetNetwork[] = [];
-
-    networksList.push({
-      id: POD,
-      isPodNetwork: true,
-      name: DEFAULT_NETWORK,
-    });
+    const networksList: TargetNetwork[] = [
+      {
+        id: POD,
+        isPodNetwork: true,
+        name: DEFAULT_NETWORK,
+      },
+      {
+        id: IgnoreNetwork.Type,
+        isPodNetwork: false,
+        name: IgnoreNetwork.Label,
+      },
+    ];
 
     // Add other networks from the target provider that are in the target project
     availableTargetNetworks?.forEach((network) => {

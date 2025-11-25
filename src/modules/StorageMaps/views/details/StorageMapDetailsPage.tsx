@@ -10,10 +10,15 @@ import { StorageMapYAMLTab } from './tabs/YAML/StorageMapYAMLTab';
 
 import './StorageMapDetailsPage.scss';
 
-const StorageMapDetailsPageInternal: FC<{
+type StorageMapDetailsPageProps = {
+  kind: string;
+  kindObj: K8sModel;
+  match: { path: string; url: string; isExact: boolean; params: unknown };
   name: string;
-  namespace?: string;
-}> = ({ name, namespace }) => {
+  namespace: string;
+};
+
+const StorageMapDetailsPage: FC<StorageMapDetailsPageProps> = memo(({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
   const pages = [
@@ -28,31 +33,12 @@ const StorageMapDetailsPageInternal: FC<{
       name: t('YAML'),
     },
   ];
-
-  return (
-    <>
-      <StorageMapPageHeadings name={name} namespace={namespace} />
-      <HorizontalNav pages={pages} />
-    </>
-  );
-};
-const StorageMapDetailsPageInternalMemo = memo(StorageMapDetailsPageInternal);
-
-const StorageMapDetailsPage: FC<StorageMapDetailsPageProps> = ({ name, namespace }) => {
   return (
     <TipsAndTricksDrawer>
-      <StorageMapDetailsPageInternalMemo name={name} namespace={namespace} />
+      <StorageMapPageHeadings name={name} namespace={namespace} />
+      <HorizontalNav pages={pages} />
     </TipsAndTricksDrawer>
   );
-};
-StorageMapDetailsPage.displayName = 'StorageMapDetailsPage';
-
-type StorageMapDetailsPageProps = {
-  kind: string;
-  kindObj: K8sModel;
-  match: { path: string; url: string; isExact: boolean; params: unknown };
-  name: string;
-  namespace?: string;
-};
+});
 
 export default StorageMapDetailsPage;

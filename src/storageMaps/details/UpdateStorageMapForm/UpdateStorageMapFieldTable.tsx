@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
+import { CreatePlanStorageMapFieldId } from 'src/plans/create/steps/storage-map/constants';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import type { V1beta1Provider } from '@kubev2v/types';
@@ -96,7 +97,15 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
           Boolean(loadError),
         label: t('Add mapping'),
         onClick: () => {
-          append(defaultStorageMapping);
+          append({
+            [CreatePlanStorageMapFieldId.SourceStorage]:
+              defaultStorageMapping[CreatePlanStorageMapFieldId.SourceStorage],
+            [CreatePlanStorageMapFieldId.TargetStorage]: {
+              name:
+                targetStorages[0]?.name ??
+                defaultStorageMapping[CreatePlanStorageMapFieldId.TargetStorage].name,
+            },
+          });
         },
       }}
       removeButton={{

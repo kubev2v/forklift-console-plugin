@@ -1,59 +1,115 @@
 import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import MapsSection from 'src/storageMaps/details/MapsSection';
+import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
+import StorageMapReviewTable from 'src/plans/create/steps/review/StorageMapReviewTable';
+import { buildFormStorageMapping } from 'src/storageMaps/create/utils/buildStorageMappings';
+import StorageMapEdit, { type StorageMapEditProps } from 'src/storageMaps/details/StorageMapEdit';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
 import LoadingSuspend from '@components/LoadingSuspend';
-import { StorageMapModelGroupVersionKind, type V1beta1StorageMap } from '@kubev2v/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { Flex, FlexItem, PageSection } from '@patternfly/react-core';
+import MapProvidersDetails from '@components/MapProvidersDetails/MapProvidersDetails';
+import MapProvidersEdit from '@components/MapProvidersDetails/MapProvidersEdit';
+import type { MapProvidersEditProps } from '@components/MapProvidersDetails/utils/types';
+import {
+  ProviderModelGroupVersionKind,
+  StorageMapModel,
+  StorageMapModelGroupVersionKind,
+  type V1beta1Provider,
+  type V1beta1StorageMap,
+} from '@kubev2v/types';
+import { useK8sWatchResource, useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { PageSection } from '@patternfly/react-core';
+import {
+  getMapDestinationProviderName,
+  getMapDestinationProviderNamespace,
+  getMapSourceProviderName,
+} from '@utils/crds/maps/selectors';
 
 import { ConditionsSection } from '../../components/ConditionsSection/ConditionsSection';
 import DetailsSection from '../../components/DetailsSection/DetailsSection';
-import { ProvidersSection } from '../../components/ProvidersSection/ProvidersSection';
 
 type StorageMapDetailsTabProps = {
   name: string;
-  namespace?: string;
+  namespace: string;
 };
 
 export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
+  const launcher = useModal();
 
-  const [obj, loaded, loadError] = useK8sWatchResource<V1beta1StorageMap>({
-    groupVersionKind: StorageMapModelGroupVersionKind,
+  const [storageMap, storageMapLoaded, storageMapLoadError] =
+    useK8sWatchResource<V1beta1StorageMap>({
+      groupVersionKind: StorageMapModelGroupVersionKind,
+      isList: false,
+      name,
+      namespace,
+      namespaced: true,
+    });
+
+  const [sourceProvider] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
     isList: false,
-    name,
+    name: getMapSourceProviderName(storageMap),
     namespace,
     namespaced: true,
   });
+  const [sourceStorages] = useSourceStorages(sourceProvider);
+
+  const [destinationProvider] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    isList: false,
+    name: getMapDestinationProviderName(storageMap),
+    namespace: getMapDestinationProviderNamespace(storageMap),
+    namespaced: true,
+  });
+
+  const sourceStoragesMap = new Map(sourceStorages.map((storage) => [storage.id, storage]));
 
   return (
-    <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
+    <LoadingSuspend obj={storageMap} loaded={storageMapLoaded} loadError={storageMapLoadError}>
       <PageSection hasBodyWrapper={false} className="forklift-page-section--details">
         <SectionHeading text={t('Storage map details')} />
-        <DetailsSection obj={obj} />
+        <DetailsSection obj={storageMap} />
       </PageSection>
 
       <PageSection hasBodyWrapper={false} className="forklift-page-section">
-        <SectionHeading text={t('Providers')} />
-        <ProvidersSection obj={obj} />
+        <SectionHeadingWithEdit
+          title={t('Providers')}
+          onClick={() => {
+            launcher<MapProvidersEditProps>(MapProvidersEdit, {
+              destinationProvider,
+              model: StorageMapModel,
+              namespace,
+              obj: storageMap,
+              sourceProvider,
+            });
+          }}
+        />
+        <MapProvidersDetails obj={storageMap} />
       </PageSection>
 
       <PageSection hasBodyWrapper={false} className="forklift-page-section">
-        <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
-          <FlexItem>
-            <SectionHeading text={t('Map')} />
-          </FlexItem>
-          <FlexItem>
-            <MapsSection storageMap={obj} />
-          </FlexItem>
-        </Flex>
+        <SectionHeadingWithEdit
+          title={t('Map')}
+          onClick={() => {
+            launcher<StorageMapEditProps>(StorageMapEdit, {
+              destinationProvider,
+              sourceProvider,
+              storageMap,
+            });
+          }}
+        />
+        <StorageMapReviewTable
+          storageMap={
+            buildFormStorageMapping(storageMap?.spec?.map, sourceProvider, sourceStoragesMap) ?? []
+          }
+        />
       </PageSection>
 
       <PageSection hasBodyWrapper={false} className="forklift-page-section">
         <SectionHeading text={t('Conditions')} />
-        <ConditionsSection conditions={obj?.status?.conditions ?? []} />
+        <ConditionsSection conditions={storageMap?.status?.conditions ?? []} />
       </PageSection>
     </LoadingSuspend>
   );

@@ -1,5 +1,3 @@
-import type { ObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
-
 import {
   HookModel,
   type IoK8sApiCoreV1Secret,
@@ -10,6 +8,7 @@ import {
   type V1beta1NetworkMap,
   type V1beta1StorageMap,
 } from '@kubev2v/types';
+import type { ObjectRef } from '@utils/helpers/getObjectRef';
 
 import { addOwnerRefs } from './addOwnerRefs';
 

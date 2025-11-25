@@ -1,4 +1,3 @@
-import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
 import {
   DefaultNetworkLabel,
   IgnoreNetwork,
@@ -14,6 +13,7 @@ import {
   type V1beta1Provider,
 } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
+import { getObjectRef } from '@utils/helpers/getObjectRef';
 
 import type { NetworkMapping } from '../steps/network-map/constants';
 import type { MappingValue } from '../types';

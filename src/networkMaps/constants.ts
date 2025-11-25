@@ -23,7 +23,7 @@ export const defaultNetworkMapping: NetworkMapping = {
 };
 
 export const networkMapFieldLabels: Partial<Record<NetworkMapFieldId, ReturnType<typeof t>>> = {
-  [NetworkMapFieldId.MapName]: t('Map name'),
+  [NetworkMapFieldId.MapName]: t('Network map name'),
   [NetworkMapFieldId.Project]: t('Project'),
   [NetworkMapFieldId.SourceNetwork]: t('Source network'),
   [NetworkMapFieldId.SourceProvider]: t('Source provider'),

@@ -59,19 +59,23 @@ export class NetworkMapDetailsPage {
     await expect(this.page.getByText('Target provider')).toBeVisible();
     await expect(this.page.getByRole('link', { name: expectedData.targetProvider })).toBeVisible();
 
-    await expect(this.page.getByRole('heading', { name: 'Map', exact: true })).toBeVisible();
+    await expect(this.page.getByTestId('network-map-edit-button')).toBeVisible();
 
     if (expectedData.mappings && !isEmpty(expectedData.mappings)) {
       const mappingList = this.page
-        .locator('ul')
+        .locator('tbody')
         .filter({ hasText: expectedData.mappings[0].sourceNetwork });
 
       for (let i = 0; i < expectedData.mappings.length; i += 1) {
         const mapping = expectedData.mappings[i];
-        const mappingRow = mappingList.locator('li').nth(i);
+        const mappingRow = mappingList.locator('tr').nth(i);
 
-        await expect(mappingRow.getByRole('button', { name: mapping.sourceNetwork })).toBeVisible();
-        await expect(mappingRow.getByRole('button', { name: mapping.targetNetwork })).toBeVisible();
+        await expect(
+          mappingRow.getByRole('gridcell', { name: mapping.sourceNetwork }),
+        ).toBeVisible();
+        await expect(
+          mappingRow.getByRole('gridcell', { name: mapping.targetNetwork }),
+        ).toBeVisible();
       }
     }
 

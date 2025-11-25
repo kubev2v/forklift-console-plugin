@@ -2,7 +2,7 @@ import { getMapFieldId } from '@utils/mapForms/getMapFieldId';
 
 import { NetworkMapFieldId, type NetworkMapping } from '../constants';
 
-type NetworkMappingId = `${NetworkMapFieldId.NetworkMap}.${number}.${keyof NetworkMapping}`;
+export type NetworkMappingId = `${NetworkMapFieldId.NetworkMap}.${number}.${keyof NetworkMapping}`;
 
 /**
  * Creates a field ID for a network mapping at a specific index
