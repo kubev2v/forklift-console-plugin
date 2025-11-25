@@ -3,10 +3,10 @@ import { Controller, useWatch } from 'react-hook-form';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import WizardStepContainer from '@components/common/WizardStepContainer';
+import ProviderSelect from '@components/ProviderSelect/ProviderSelect';
 import { Form, FormSection, MenuToggleStatus } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import ProviderSelect from '../../../../components/ProviderSelect';
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { validateVmSelection } from '../../utils/vmValidation';

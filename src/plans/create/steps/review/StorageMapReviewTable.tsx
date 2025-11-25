@@ -1,6 +1,5 @@
 import { type FC, Fragment, useState } from 'react';
-import { useWatch } from 'react-hook-form';
-import { storageMapFieldLabels } from 'src/storageMaps/constants';
+import { storageMapFieldLabels, type StorageMapping } from 'src/storageMaps/constants';
 
 import {
   Card,
@@ -14,17 +13,14 @@ import {
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';
 
-import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { CreatePlanStorageMapFieldId } from '../storage-map/constants';
 
-const StorageMapReviewTable: FC = () => {
-  const { control } = useCreatePlanFormContext();
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+type StorageMapReviewTableProps = {
+  storageMap: StorageMapping[];
+};
 
-  const storageMap = useWatch({
-    control,
-    name: CreatePlanStorageMapFieldId.StorageMap,
-  });
+const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) => {
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   if (!storageMap) {
     return null;

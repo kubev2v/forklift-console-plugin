@@ -1,20 +1,17 @@
 import type { FC } from 'react';
-import { useWatch } from 'react-hook-form';
 
 import { Card } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { NetworkMapFieldId } from '../network-map/constants';
+import { NetworkMapFieldId, type NetworkMapping } from '../network-map/constants';
 
-const NetworkMapReviewTable: FC = () => {
+type NetworkMapReviewTableProps = {
+  networkMap: NetworkMapping[];
+};
+
+const NetworkMapReviewTable: FC<NetworkMapReviewTableProps> = ({ networkMap }) => {
   const { t } = useForkliftTranslation();
-  const { control } = useCreatePlanFormContext();
-  const networkMap = useWatch({
-    control,
-    name: NetworkMapFieldId.NetworkMap,
-  });
 
   if (!networkMap) {
     return null;

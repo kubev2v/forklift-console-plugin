@@ -1,7 +1,6 @@
-import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
-
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
+import { getObjectRef } from '@utils/helpers/getObjectRef';
 
 import { MigrationTypeValue } from '../steps/migration-type/constants';
 import type { CreatePlanParams } from '../types';
