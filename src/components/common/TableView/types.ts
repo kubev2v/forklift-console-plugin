@@ -35,4 +35,10 @@ export type TableViewHeaderProps<T> = {
    * currently visible items on the screen, for handling bulk selection ("select all" checkbox).
    */
   dataOnScreen?: T[];
+  /**
+   *
+   * @param selectedIds
+   * @returns
+   */
+  canSelect?: boolean;
 };

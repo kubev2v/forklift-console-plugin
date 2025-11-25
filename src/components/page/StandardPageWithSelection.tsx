@@ -102,14 +102,13 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
     canSelect,
   ]);
 
-  const finalHeader = useMemo(
-    () =>
-      createHeaderWithSelection({
-        header: header ?? DefaultSelectHeader,
-        isExpanded,
-      }),
-    [header, isExpanded],
-  );
+  const finalHeader = useMemo(() => {
+    return createHeaderWithSelection({
+      canSelect: Boolean(onSelect),
+      header: header ?? DefaultSelectHeader,
+      isExpanded,
+    });
+  }, [header, isExpanded, onSelect]);
 
   const EnhancedGlobalActionToolbarItems = useMemo(
     () =>
@@ -125,7 +124,16 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
 
   // When selection is disabled, render plain StandardPage (no checkboxes/selection logic)
   if (!onSelect) {
-    return <StandardPage {...rest} pageRef={pageRef} />;
+    const { cell: _cell, ...restWithoutCell } = props;
+    return (
+      <StandardPage
+        {...restWithoutCell}
+        expandedIds={internalExpandedIds}
+        header={finalHeader}
+        row={row}
+        pageRef={pageRef}
+      />
+    );
   }
 
   return (
