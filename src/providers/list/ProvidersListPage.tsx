@@ -1,4 +1,5 @@
 import { type FC, useMemo } from 'react';
+import ForkliftWrapper from 'src/forkliftWrapper/ForkliftWrapper';
 
 import { ProviderModel, ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
@@ -55,34 +56,36 @@ const ProvidersListPage: FC<{
   );
 
   return (
-    <StandardPage<ProviderData>
-      data-testid="providers-list"
-      addButton={
-        <ProvidersAddButton
-          testId="add-provider-button"
-          namespace={namespace}
-          canCreate={permissions.canCreate}
-        />
-      }
-      dataSource={[data || [], providersLoaded, providersLoadError]}
-      RowMapper={ProviderRow}
-      fieldsMetadata={providerFields}
-      namespace={namespace}
-      title={t('Providers')}
-      titleHelpContent={t(
-        'Providers refer to environments where the virtual machines originate from or are moved to during the migration process.',
-      )}
-      userSettings={userSettings}
-      alerts={
-        !inventoryLoading && inventoryError
-          ? [<InventoryNotReachable key={'inventoryNotReachable'} />]
-          : undefined
-      }
-      customNoResultsFound={
-        <ProvidersEmptyState namespace={namespace} canCreate={permissions.canCreate} />
-      }
-      page={1}
-    />
+    <ForkliftWrapper>
+      <StandardPage<ProviderData>
+        data-testid="providers-list"
+        addButton={
+          <ProvidersAddButton
+            testId="add-provider-button"
+            namespace={namespace}
+            canCreate={permissions.canCreate}
+          />
+        }
+        dataSource={[data || [], providersLoaded, providersLoadError]}
+        RowMapper={ProviderRow}
+        fieldsMetadata={providerFields}
+        namespace={namespace}
+        title={t('Providers')}
+        titleHelpContent={t(
+          'Providers refer to environments where the virtual machines originate from or are moved to during the migration process.',
+        )}
+        userSettings={userSettings}
+        alerts={
+          !inventoryLoading && inventoryError
+            ? [<InventoryNotReachable key={'inventoryNotReachable'} />]
+            : undefined
+        }
+        customNoResultsFound={
+          <ProvidersEmptyState namespace={namespace} canCreate={permissions.canCreate} />
+        }
+        page={1}
+      />
+    </ForkliftWrapper>
   );
 };
 

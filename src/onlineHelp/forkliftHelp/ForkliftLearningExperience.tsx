@@ -1,15 +1,19 @@
 import type { FC } from 'react';
-import { forkliftLearningExperienceTopics } from 'src/onlineHelp/forkliftHelp/topics/const';
 import LearningExperiencePanel from 'src/onlineHelp/learningExperience/LearningExperiencePanel';
 
-type ForkliftLearningExperienceProps = {
-  setIsDrawerOpen: (isOpen: boolean) => void;
-};
+import ForkliftReferences from './reference/ForkliftReferences';
+import { forkliftLearningExperienceTopics } from './topics/const';
+import ForkliftExternalLinks from './ForkliftExternalLinks';
 
-const ForkliftLearningExperience: FC<ForkliftLearningExperienceProps> = ({ setIsDrawerOpen }) => (
+const ForkliftLearningExperience: FC = () => (
   <LearningExperiencePanel
-    topics={forkliftLearningExperienceTopics}
-    setIsDrawerOpen={setIsDrawerOpen}
+    topics={forkliftLearningExperienceTopics()}
+    footer={
+      <>
+        <ForkliftReferences />
+        <ForkliftExternalLinks />
+      </>
+    }
   />
 );
 

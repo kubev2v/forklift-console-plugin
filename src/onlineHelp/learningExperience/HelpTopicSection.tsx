@@ -73,12 +73,12 @@ const HelpTopicSection: FC<HelpTopicSectionProps> = ({ index, listStyleType, top
             className={getClassForListStyle(topic.subListStyleType)}
           >
             {topic.subListStyleType === ListStyleType.DESCRIPTIONS ? (
-              topic.subTopics.map((subTopic) => (
-                <HelpSubTopic key={subTopic.id} topic={subTopic} noListItem />
-              ))
+              topic
+                .subTopics()
+                .map((subTopic) => <HelpSubTopic key={subTopic.id} topic={subTopic} noListItem />)
             ) : (
               <Content component={getTextListComponentForListStyle(topic.subListStyleType)}>
-                {topic.subTopics.map((subTopic) => (
+                {topic.subTopics().map((subTopic) => (
                   <HelpSubTopic key={subTopic.id} topic={subTopic} />
                 ))}
               </Content>

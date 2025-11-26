@@ -2,6 +2,7 @@ import { type FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { produce } from 'immer';
 import { encode } from 'js-base64';
+import ForkliftWrapper from 'src/forkliftWrapper/ForkliftWrapper';
 import { useK8sWatchProviderNames } from 'src/modules/Providers/hooks/useK8sWatchProviderNames';
 import useToggle from 'src/modules/Providers/hooks/useToggle';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -143,33 +144,35 @@ const ProvidersCreatePage: FC<{
   };
 
   return (
-    <Form>
-      <PageSection hasBodyWrapper={false}>
-        <ProvidersCreatePageHeader apiError={apiError} />
+    <ForkliftWrapper>
+      <Form>
+        <PageSection hasBodyWrapper={false}>
+          <ProvidersCreatePageHeader apiError={apiError} />
 
-        <ProvidersCreateFormsSection
-          newProvider={newProvider}
-          newSecret={newSecret}
-          projectName={projectName}
-          onNewProviderChange={onNewProviderChange}
-          onNewSecretChange={onNewSecretChange}
-          onProjectNameChange={onProjectNameChange}
-          providerNames={providerNames}
-          providerNamesLoaded={providerNamesLoaded}
-        />
+          <ProvidersCreateFormsSection
+            newProvider={newProvider}
+            newSecret={newSecret}
+            projectName={projectName}
+            onNewProviderChange={onNewProviderChange}
+            onNewSecretChange={onNewSecretChange}
+            onProjectNameChange={onProjectNameChange}
+            providerNames={providerNames}
+            providerNamesLoaded={providerNamesLoaded}
+          />
 
-        <Divider className="forklift-section-create-divider" />
+          <Divider className="forklift-section-create-divider" />
 
-        <ProviderCreateActionsSection
-          newProvider={newProvider}
-          projectName={projectName}
-          activeNamespace={activeNamespace}
-          validationError={validationError}
-          isLoading={isLoading}
-          onUpdate={onUpdate}
-        />
-      </PageSection>
-    </Form>
+          <ProviderCreateActionsSection
+            newProvider={newProvider}
+            projectName={projectName}
+            activeNamespace={activeNamespace}
+            validationError={validationError}
+            isLoading={isLoading}
+            onUpdate={onUpdate}
+          />
+        </PageSection>
+      </Form>
+    </ForkliftWrapper>
   );
 };
 

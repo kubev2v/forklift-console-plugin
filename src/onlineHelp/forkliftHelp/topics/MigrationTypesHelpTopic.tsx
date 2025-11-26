@@ -13,15 +13,15 @@ import { ForkliftTrans, t } from '@utils/i18n';
 const learnMoreUrl =
   'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html/installing_and_using_the_migration_toolkit_for_virtualization/mtv-cold-warm-migration_mtv';
 
-const migrationTypesHelpTopics: LearningExperienceSubTopic[] = [
+const migrationTypesHelpTopics = (): LearningExperienceSubTopic[] => [
   {
     expandable: true,
     id: 'migration-type-descriptions',
-    subTopics: [
+    subTopics: () => [
       {
         id: 'cold-migration-title',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'cold-migration-description',
             title: (
@@ -72,7 +72,7 @@ const migrationTypesHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'warm-migration-title',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'warm-migration-description',
             title: (

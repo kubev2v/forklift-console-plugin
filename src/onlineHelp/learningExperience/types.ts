@@ -6,6 +6,7 @@ export enum ListStyleType {
   DISC = 'disc',
   DECIMAL = 'decimal',
   LOWER_ALPHA = 'lower-alpha',
+  LOWER_ROMAN = 'lower-roman',
   DESCRIPTIONS = 'descriptions',
   NONE = 'none',
 }
@@ -15,7 +16,7 @@ export type LearningExperienceSubTopic = {
   title?: ReactNode;
   expandable?: boolean;
   subListStyleType?: ListStyleType;
-  subTopics?: LearningExperienceSubTopic[];
+  subTopics?: () => LearningExperienceSubTopic[];
 };
 
 export type LearningExperienceTopic = {
@@ -25,7 +26,7 @@ export type LearningExperienceTopic = {
   title: ReactNode;
   expandable?: boolean;
   subListStyleType?: ListStyleType;
-  subTopics: LearningExperienceSubTopic[];
+  subTopics: () => LearningExperienceSubTopic[];
   subTopicsIndexed?: boolean;
   trackingEventTopic: string;
 };

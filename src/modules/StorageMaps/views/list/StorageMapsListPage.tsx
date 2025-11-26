@@ -2,6 +2,7 @@ import { type FC, useMemo } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
+import ForkliftWrapper from 'src/forkliftWrapper/ForkliftWrapper';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import StorageMapsEmptyState from 'src/storageMaps/components/StorageMapsEmptyState';
 
@@ -127,23 +128,25 @@ const StorageMapsListPage: FC<{
   }));
 
   return (
-    <StandardPage<StorageMapData>
-      data-testid="network-maps-list"
-      {...(permissions.canCreate && {
-        addButton: <StorageMapsAddButton namespace={namespace} testId="add-storage-map-button" />,
-      })}
-      dataSource={[data || [], StorageMapsLoaded, StorageMapsLoadError]}
-      RowMapper={StorageMapRow}
-      fieldsMetadata={fieldsMetadata}
-      namespace={namespace}
-      title={t('Storage maps')}
-      titleHelpContent={t(
-        'Storage maps define how the storage of source VMs will be provisioned on the target cluster by linking source storage entities to target storage classes.',
-      )}
-      userSettings={userSettings}
-      customNoResultsFound={<StorageMapsEmptyState namespace={namespace} />}
-      page={1}
-    />
+    <ForkliftWrapper>
+      <StandardPage<StorageMapData>
+        data-testid="network-maps-list"
+        {...(permissions.canCreate && {
+          addButton: <StorageMapsAddButton namespace={namespace} testId="add-storage-map-button" />,
+        })}
+        dataSource={[data || [], StorageMapsLoaded, StorageMapsLoadError]}
+        RowMapper={StorageMapRow}
+        fieldsMetadata={fieldsMetadata}
+        namespace={namespace}
+        title={t('Storage maps')}
+        titleHelpContent={t(
+          'Storage maps define how the storage of source VMs will be provisioned on the target cluster by linking source storage entities to target storage classes.',
+        )}
+        userSettings={userSettings}
+        customNoResultsFound={<StorageMapsEmptyState namespace={namespace} />}
+        page={1}
+      />
+    </ForkliftWrapper>
   );
 };
 

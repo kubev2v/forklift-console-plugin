@@ -1,9 +1,8 @@
-import { type FC, useState } from 'react';
+import type { FC } from 'react';
 import { Route, Routes } from 'react-router-dom-v5-compat';
-import ForkliftLearningExperience from 'src/onlineHelp/forkliftHelp/ForkliftLearningExperience';
+import ForkliftWrapper from 'src/forkliftWrapper/ForkliftWrapper';
 
 import RoutedTabs from '@components/common/RoutedTabs/RoutedTabs';
-import { Drawer, DrawerContent, DrawerContentBody } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getOverviewPath } from '@utils/helpers/getOverviewPath';
@@ -20,7 +19,6 @@ import './OverviewPage.scss';
 
 const OverviewPage: FC = () => {
   const { trackEvent } = useForkliftAnalytics();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const tabs = [
     {
@@ -61,25 +59,19 @@ const OverviewPage: FC = () => {
   ];
 
   return (
-    <Drawer isInline isExpanded={isDrawerOpen} position="right">
-      <DrawerContent
-        panelContent={<ForkliftLearningExperience setIsDrawerOpen={setIsDrawerOpen} />}
-      >
-        <DrawerContentBody>
-          <HeaderTitle isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
-          <RoutedTabs tabs={tabs} />
-          <div className="pf-v6-u-h-100 pf-v6-u-display-flex pf-v6-u-flex-direction-column pf-v6-u-p-md">
-            <Routes>
-              <Route index element={<ForkliftControllerOverviewTab />} />
-              <Route path={OverviewTabHref.YAML} element={<ForkliftControllerYAMLTab />} />
-              <Route path={OverviewTabHref.Health} element={<ForkliftControllerHealthTab />} />
-              <Route path={OverviewTabHref.History} element={<ForkliftControllerHistoryTab />} />
-              <Route path={OverviewTabHref.Settings} element={<ForkliftControllerSettingsTab />} />
-            </Routes>
-          </div>
-        </DrawerContentBody>
-      </DrawerContent>
-    </Drawer>
+    <ForkliftWrapper>
+      <HeaderTitle />
+      <RoutedTabs tabs={tabs} />
+      <div className="pf-v6-u-h-100 pf-v6-u-display-flex pf-v6-u-flex-direction-column pf-v6-u-p-md">
+        <Routes>
+          <Route index element={<ForkliftControllerOverviewTab />} />
+          <Route path={OverviewTabHref.YAML} element={<ForkliftControllerYAMLTab />} />
+          <Route path={OverviewTabHref.Health} element={<ForkliftControllerHealthTab />} />
+          <Route path={OverviewTabHref.History} element={<ForkliftControllerHistoryTab />} />
+          <Route path={OverviewTabHref.Settings} element={<ForkliftControllerSettingsTab />} />
+        </Routes>
+      </div>
+    </ForkliftWrapper>
   );
 };
 

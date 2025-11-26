@@ -1,17 +1,11 @@
-import type {
-  ContextProvider,
-  HrefNavItem,
-  RoutePage,
-} from '@openshift-console/dynamic-plugin-sdk';
+import type { HrefNavItem, RoutePage } from '@openshift-console/dynamic-plugin-sdk';
 import type {
   ConsolePluginBuildMetadata,
   EncodedExtension,
 } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
-  OverviewContext: './overview/hooks/OverviewContext',
   OverviewPage: './overview/OverviewPage',
-  useOverviewContext: './overview/hooks/useOverviewContext',
 };
 
 export const extensions: EncodedExtension[] = [
@@ -67,14 +61,4 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.navigation/href',
   } as EncodedExtension<HrefNavItem>,
-
-  {
-    properties: {
-      provider: { $codeRef: 'OverviewContext.CreateOverviewContextProvider' },
-      useValueHook: {
-        $codeRef: 'useOverviewContext.useOverviewContext',
-      },
-    },
-    type: 'console.context-provider',
-  } as EncodedExtension<ContextProvider>,
 ];

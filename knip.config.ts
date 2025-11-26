@@ -4,7 +4,6 @@ export default {
   entry: [
     'src/overview/OverviewPage.tsx',
     'src/overview/hooks/OverviewContext.ts',
-    'src/overview/hooks/useOverviewContext.ts',
 
     'src/providers/create/ProvidersCreatePage.tsx',
     'src/providers/list/ProvidersListPage.tsx',

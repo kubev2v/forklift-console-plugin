@@ -1,6 +1,7 @@
 import type { NavSection } from '@openshift-console/dynamic-plugin-sdk';
 import type { EncodedExtension } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
+import { extensions as forkliftWrapperExtensions } from './src/forkliftWrapper/dynamic-plugin';
 import { extensions as networkMapExtensions } from './src/modules/NetworkMaps/dynamic-plugin';
 import { extensions as planExtensions } from './src/modules/Plans/dynamic-plugin';
 import { extensions as storageMapExtensions } from './src/modules/StorageMaps/dynamic-plugin';
@@ -36,7 +37,7 @@ const extensions: EncodedExtension[] = [
     },
     type: 'console.navigation/section',
   } as EncodedExtension<NavSection>,
-
+  ...forkliftWrapperExtensions,
   ...overviewExtensions,
   ...providerExtensions,
   ...planExtensions,

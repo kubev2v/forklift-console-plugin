@@ -9,7 +9,7 @@ type HelpTitledContentProps = {
 
 const HelpTitledContent: FC<HelpTitledContentProps> = ({ content, title }) => (
   <Content>
-    <Content component={ContentVariants.h4}>{title}</Content>
+    <strong>{title}</strong>
     <Content component={ContentVariants.p}>{content}</Content>
   </Content>
 );

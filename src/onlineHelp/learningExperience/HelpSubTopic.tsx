@@ -21,15 +21,17 @@ const HelpSubTopic: FC<HelpSubTopicProps> = ({ noListItem, topic }) => {
       {topic.subTopics ? (
         <div className="pf-v6-u-ml-lg">
           {topic.expandable ? (
-            topic.subTopics?.map((subTopic, subIndex) => (
-              <HelpTopicSection key={subTopic.id} topic={subTopic} index={subIndex} />
-            ))
+            topic
+              .subTopics?.()
+              .map((subTopic, subIndex) => (
+                <HelpTopicSection key={subTopic.id} topic={subTopic} index={subIndex} />
+              ))
           ) : (
             <div className={css('pf-v6-u-mt-sm', getClassForListStyle(topic.subListStyleType))}>
               <Content component={getTextListComponentForListStyle(topic.subListStyleType)}>
-                {topic.subTopics?.map((subTopic) => (
-                  <HelpSubTopic topic={subTopic} key={subTopic.id} />
-                ))}
+                {topic
+                  .subTopics?.()
+                  .map((subTopic) => <HelpSubTopic topic={subTopic} key={subTopic.id} />)}
               </Content>
             </div>
           )}

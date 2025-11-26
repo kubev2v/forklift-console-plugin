@@ -1,4 +1,5 @@
 import { type FC, memo } from 'react';
+import ForkliftWrapper from 'src/forkliftWrapper/ForkliftWrapper';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
@@ -38,7 +39,11 @@ const StorageMapDetailsPageInternal: FC<{
 const StorageMapDetailsPageInternalMemo = memo(StorageMapDetailsPageInternal);
 
 const StorageMapDetailsPage: FC<StorageMapDetailsPageProps> = ({ name, namespace }) => {
-  return <StorageMapDetailsPageInternalMemo name={name} namespace={namespace} />;
+  return (
+    <ForkliftWrapper>
+      {namespace ? <StorageMapDetailsPageInternalMemo name={name} namespace={namespace} /> : null}
+    </ForkliftWrapper>
+  );
 };
 StorageMapDetailsPage.displayName = 'StorageMapDetailsPage';
 

@@ -1,6 +1,6 @@
 import { type FC, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext';
+import { CreateForkliftContext } from 'src/forkliftWrapper/ForkliftContext';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
@@ -24,7 +24,7 @@ type VmMigrationsDonutCardProps = {
 
 const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
   const { t } = useForkliftTranslation();
-  const { data, setData } = useContext(CreateOverviewContext);
+  const { data, setData } = useContext(CreateForkliftContext).overviewContext;
   const selectedRange = data?.vmMigrationsDonutSelectedRange ?? TimeRangeOptions.All;
   const setSelectedRange = (range: TimeRangeOptions) => {
     setData({

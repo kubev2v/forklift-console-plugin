@@ -41,6 +41,7 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, namespace, testId 
   const button = (
     <Button
       data-testid={testId}
+      id="plans-add-button"
       variant={ButtonVariant.primary}
       isAriaDisabled={!hasSufficientProviders}
       onClick={onClick}

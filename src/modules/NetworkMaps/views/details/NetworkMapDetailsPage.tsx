@@ -1,4 +1,5 @@
 import { type FC, memo } from 'react';
+import ForkliftWrapper from 'src/forkliftWrapper/ForkliftWrapper';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
@@ -38,7 +39,11 @@ const NetworkMapDetailsPageInternal: FC<{
 const NetworkMapDetailsPageInternalMemo = memo(NetworkMapDetailsPageInternal);
 
 const NetworkMapDetailsPage: FC<NetworkMapDetailsPageProps> = ({ name, namespace }) => {
-  return <NetworkMapDetailsPageInternalMemo name={name} namespace={namespace} />;
+  return (
+    <ForkliftWrapper>
+      {namespace ? <NetworkMapDetailsPageInternalMemo name={name} namespace={namespace} /> : null}
+    </ForkliftWrapper>
+  );
 };
 NetworkMapDetailsPage.displayName = 'NetworkMapDetailsPage';
 

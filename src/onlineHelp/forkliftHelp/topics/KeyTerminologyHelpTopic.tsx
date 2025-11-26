@@ -14,15 +14,17 @@ import { ForkliftTrans, t } from '@utils/i18n';
 const openshiftVirtualizationGuideUrl =
   'https://cloud.redhat.com/learn/high-level-guide-red-hat-openshift-virtualization-vmware-admin#page-title';
 
-const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
+// eslint-disable-next-line max-lines-per-function
+const keyTerminologyHelpTopics = (): LearningExperienceSubTopic[] => [
   {
     expandable: true,
     id: 'key-terminology-description',
-    subTopics: [
+    // eslint-disable-next-line max-lines-per-function
+    subTopics: () => [
       {
         id: 'terminology-cluster',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'cluster-definition',
             title: t(
@@ -35,7 +37,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-container',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'container-definition',
             title: t(
@@ -48,7 +50,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-cutover',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'cutover-definition',
             title: t(
@@ -61,7 +63,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-disk-decryption-passphrases',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'disk-decryption-passphrases-definition',
             title: t(
@@ -74,7 +76,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-hook',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'hook-definition',
             title: t(
@@ -87,7 +89,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-kubernetes',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'kubernetes-definition',
             title: t(
@@ -100,7 +102,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-node',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'node-definition',
             title: t('A virtual or bare-metal machine in a Kubernetes cluster.'),
@@ -111,7 +113,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-migration-types',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'migration-types-definition',
             title: t('A cold migration moves a shut-down virtual machine between hosts.'),
@@ -122,7 +124,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-network-map',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'network-map-definition',
             title: t(
@@ -135,7 +137,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-persistent-volume',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'persistent-volume-definition',
             title: t(
@@ -148,7 +150,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-persistent-volume-claim',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'persistent-volume-claim-definition',
             title: t(
@@ -161,11 +163,11 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-project',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'project-definition',
             subListStyleType: ListStyleType.SQUARE,
-            subTopics: [
+            subTopics: () => [
               {
                 id: 'project-definition-plan-project',
                 title: (
@@ -199,7 +201,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-provider',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'provider-definitions',
             title: (
@@ -224,7 +226,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-root-device',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'root-device-definition',
             title: t(
@@ -237,7 +239,7 @@ const keyTerminologyHelpTopics: LearningExperienceSubTopic[] = [
       {
         id: 'terminology-storage-map',
         subListStyleType: ListStyleType.DESCRIPTIONS,
-        subTopics: [
+        subTopics: () => [
           {
             id: 'storage-map-definition',
             title: t(

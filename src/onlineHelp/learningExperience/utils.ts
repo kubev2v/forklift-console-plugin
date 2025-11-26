@@ -9,6 +9,8 @@ export const getClassForListStyle = (listStyleType?: ListStyleType): string | un
 export const getTextListComponentForListStyle = (
   listStyleType?: ListStyleType,
 ): 'ul' | 'ol' | undefined =>
-  listStyleType === ListStyleType.DECIMAL || listStyleType === ListStyleType.LOWER_ALPHA
+  listStyleType === ListStyleType.DECIMAL ||
+  listStyleType === ListStyleType.LOWER_ALPHA ||
+  listStyleType === ListStyleType.LOWER_ROMAN
     ? ContentVariants.ol
     : ContentVariants.ul;

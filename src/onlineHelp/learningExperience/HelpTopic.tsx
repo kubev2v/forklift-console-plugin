@@ -26,7 +26,7 @@ const HelpTopic: FC<HelpTopicProps> = ({ topic }) => (
       </Content>
     </Content>
     <div className="pf-v6-u-mt-lg">
-      {topic.subTopics.map((subTopic, index) => {
+      {topic.subTopics().map((subTopic, index) => {
         if (topic.subListStyleType === ListStyleType.DESCRIPTIONS) {
           return (
             <div key={subTopic.id} className="forklift--learning__help-description">
@@ -34,20 +34,22 @@ const HelpTopic: FC<HelpTopicProps> = ({ topic }) => (
               {subTopic.subTopics ? (
                 <div className={css('pf-v6-u-mb-md', Boolean(subTopic.title) && 'pf-v6-u-mt-md')}>
                   {subTopic.expandable ? (
-                    subTopic.subTopics.map((nextSubTopic, subIndex) => (
-                      <HelpTopicSection
-                        key={nextSubTopic.id}
-                        topic={nextSubTopic}
-                        index={subIndex}
-                        listStyleType={subTopic.subListStyleType}
-                      />
-                    ))
+                    subTopic
+                      .subTopics()
+                      .map((nextSubTopic, subIndex) => (
+                        <HelpTopicSection
+                          key={nextSubTopic.id}
+                          topic={nextSubTopic}
+                          index={subIndex}
+                          listStyleType={subTopic.subListStyleType}
+                        />
+                      ))
                   ) : (
                     <div className={getClassForListStyle(subTopic.subListStyleType)}>
                       <Content
                         component={getTextListComponentForListStyle(subTopic.subListStyleType)}
                       >
-                        {subTopic.subTopics.map((nextSubTopic) => (
+                        {subTopic.subTopics().map((nextSubTopic) => (
                           <HelpSubTopic key={nextSubTopic.id} topic={nextSubTopic} />
                         ))}
                       </Content>

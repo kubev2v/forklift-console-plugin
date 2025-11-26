@@ -10,7 +10,7 @@ type LoadingSuspendProps = {
 };
 
 /**
- * A wrapper component that imitates React Suspense to handle loading states.
+ * A forkliftWrapper component that imitates React Suspense to handle loading states.
  * Renders the children only when the data has been loaded successfully and there are no errors.
  *
  * @param {object} props - The properties passed to the component.
