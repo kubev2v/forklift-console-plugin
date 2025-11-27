@@ -5,12 +5,13 @@ import type { TableViewHeaderProps } from './types';
 
 const DefaultSelectHeader = <T,>({
   activeSort,
+  canSelect,
   setActiveSort,
   visibleColumns,
 }: TableViewHeaderProps<T>) => {
   return (
     <>
-      <Th screenReaderText="Row select" />
+      {canSelect && <Th screenReaderText="Row select" />}
       {visibleColumns.map(({ info, label, resourceFieldId, sortable }, columnIndex) => (
         <Th
           key={resourceFieldId}

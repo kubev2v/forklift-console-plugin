@@ -8,6 +8,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import type { ResourceField } from '@components/common/utils/types';
 import { EmptyState, EmptyStateVariant, Spinner, Title } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
+import { isProviderOpenshift } from '@utils/resources';
 
 import { getVmId } from '../utils/helpers/vmProps';
 
@@ -70,6 +71,27 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
     );
   }
 
+  const getStandardPageProps = () => {
+    if (handleSelectedIds) {
+      return {
+        expandedIds: [],
+        onSelect: handleSelectedIds,
+        selectedIds: initialSelectedIds,
+        toId: getVmId,
+      };
+    }
+
+    if (!isProviderOpenshift(provider)) {
+      return {
+        expandedIds: [],
+        onExpand: () => undefined,
+        toId: getVmId,
+      };
+    }
+
+    return {};
+  };
+
   return (
     <StandardPageWithSelection
       className={className}
@@ -82,19 +104,8 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       userSettings={userSettings}
       extraSupportedFilters={extraSupportedFilters}
       extraSupportedMatchers={extraSupportedMatchers}
-      {...(handleSelectedIds
-        ? {
-            expandedIds: [],
-            onSelect: handleSelectedIds,
-            selectedIds: initialSelectedIds,
-            toId: getVmId,
-          }
-        : {
-            expandedIds: [],
-            onExpand: () => undefined,
-            toId: getVmId,
-          })}
-      expanded={(props) => <ConcernsTable {...props} />}
+      {...getStandardPageProps()}
+      expanded={isProviderOpenshift(provider) ? undefined : (props) => <ConcernsTable {...props} />}
     />
   );
 };
