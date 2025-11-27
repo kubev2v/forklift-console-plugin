@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { type ComponentProps, useMemo } from 'react';
 
 import { useFields } from '@components/common/Page/useFields';
@@ -14,6 +15,7 @@ import { PageToolbar } from './components/PageToolbar';
 import { usePageData } from './hooks/usePageData';
 import { usePageFilters } from './hooks/usePageFilters';
 import { usePagination } from './hooks/usePagination';
+import { getVisibleColumns } from './utils/utils';
 import type StandardPage from './StandardPage';
 
 import './StandardPage.style.css';
@@ -64,7 +66,16 @@ const StandardPageInner = <T,>({
       userSettings,
     });
 
-  const [fields, setFields] = useFields(namespace, fieldsMetadata, userSettings?.fields);
+  const defaultFieldsWithoutFilters = useMemo(
+    () => fieldsMetadata.filter(({ isForFilterOnly }) => !isForFilterOnly),
+    [fieldsMetadata],
+  );
+
+  const [fields, setFields] = useFields(
+    namespace,
+    defaultFieldsWithoutFilters,
+    userSettings?.fields,
+  );
 
   const { finalFilteredData, sortedData } = usePageData({
     compareFn,
@@ -88,10 +99,7 @@ const StandardPageInner = <T,>({
       userSettings: userSettings?.pagination,
     });
 
-  const visibleColumns = useMemo(
-    () => fields.filter(({ isHidden, isVisible }) => isVisible && !isHidden),
-    [fields],
-  );
+  const visibleColumns = useMemo(() => getVisibleColumns(fields), [fields]);
 
   const RowComponent = cell ? withTr(cell, expanded) : row;
 
@@ -132,6 +140,7 @@ const StandardPageInner = <T,>({
             supportedFilters={supportedFilters}
             clearAllFilters={clearAllFilters}
             fieldsMetadata={fieldsMetadata}
+            defaultFieldsWithoutFilters={defaultFieldsWithoutFilters}
             setFields={setFields}
             showManageColumns={showManageColumns}
             showPagination={showPagination}

@@ -18,6 +18,7 @@ export const DefaultHeader = <T,>({
     <>
       {visibleColumns.map(({ info, label, resourceFieldId, sortable }, columnIndex) => (
         <Th
+          width={10}
           key={resourceFieldId}
           sort={
             sortable

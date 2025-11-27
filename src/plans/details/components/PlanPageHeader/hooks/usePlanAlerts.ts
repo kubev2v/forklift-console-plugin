@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import usePlanProviders from 'src/modules/Providers/hooks/usePlanSourceProvider';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
@@ -7,6 +8,7 @@ import {
   StorageMapModelGroupVersionKind,
   type V1beta1NetworkMap,
   type V1beta1Plan,
+  type V1beta1PlanStatusConditions,
   type V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
@@ -50,11 +52,12 @@ const usePlanAlerts = (plan: V1beta1Plan) => {
     storageMaps,
   });
 
-  const criticalCondition = plan?.status?.conditions?.find(
-    (condition) => condition?.category === CATEGORY_TYPES.CRITICAL,
-  );
+  const criticalConditions: V1beta1PlanStatusConditions[] | undefined =
+    plan?.status?.conditions?.filter(
+      (condition) => condition?.category === CATEGORY_TYPES.CRITICAL,
+    );
 
-  const showCriticalCondition = !isEmpty(criticalCondition);
+  const showCriticalConditions = useMemo(() => !isEmpty(criticalConditions), [criticalConditions]);
 
   const preserveIPWarningsConditions = plan?.status?.conditions?.filter(
     (condition) =>
@@ -64,15 +67,18 @@ const usePlanAlerts = (plan: V1beta1Plan) => {
         condition?.type === 'VMIpNotMatchingUdnSubnet'),
   );
 
-  const showPreserveIPWarningsConditions = !isEmpty(preserveIPWarningsConditions);
+  const showPreserveIPWarningsConditions = useMemo(
+    () => !isEmpty(preserveIPWarningsConditions),
+    [preserveIPWarningsConditions],
+  );
 
   return {
-    criticalCondition,
+    criticalConditions,
     networkMaps,
     networkMapsError,
     networkMapsLoaded,
     preserveIPWarningsConditions,
-    showCriticalCondition,
+    showCriticalConditions,
     showPreserveIPWarningsConditions,
     sourceNetworks,
     sourceStorages,

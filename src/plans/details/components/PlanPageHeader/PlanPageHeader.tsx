@@ -14,9 +14,10 @@ import PlanAlerts from './components/PlanAlerts/PlanAlerts';
 type PlanPageHeaderProps = {
   name: string;
   namespace: string;
+  setShowPlanConcernsPanel?: (isOpen: boolean) => void;
 };
 
-const PlanPageHeader: FC<PlanPageHeaderProps> = ({ name, namespace }) => {
+const PlanPageHeader: FC<PlanPageHeaderProps> = ({ name, namespace, setShowPlanConcernsPanel }) => {
   const { plan } = usePlan(name, namespace);
 
   return (
@@ -37,7 +38,7 @@ const PlanPageHeader: FC<PlanPageHeaderProps> = ({ name, namespace }) => {
         </Level>
       }
     >
-      <PlanAlerts plan={plan} />
+      <PlanAlerts plan={plan} setIsDrawerOpen={setShowPlanConcernsPanel} />
     </PageHeadings>
   );
 };

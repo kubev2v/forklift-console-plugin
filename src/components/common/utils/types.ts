@@ -13,6 +13,7 @@ export type EnumValue = {
   groupId?: string;
   label: string;
   resourceFieldId?: string;
+  icon?: ReactNode;
 };
 
 export enum FilterDefType {
@@ -59,6 +60,8 @@ export type ResourceField = {
   // visibility status, can change in time
   isVisible?: boolean;
   isIdentity?: boolean;
+  // if true,  it is used for adding another standalone filter to the same field.
+  isForFilterOnly?: boolean;
   isAction?: boolean;
   // if true then the field should be never visible in the UI
   isHidden?: boolean;
