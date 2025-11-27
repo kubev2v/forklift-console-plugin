@@ -6,13 +6,13 @@ import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderDat
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { ResourceField } from '@components/common/utils/types';
+import ConcernsAndConditionsTable from '@components/ConcernsAndConditionsTable/ConcernsAndConditionsTable';
 import { EmptyState, EmptyStateVariant, Spinner, Title } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { isProviderOpenshift } from '@utils/resources';
 
 import { getVmId } from '../utils/helpers/vmProps';
 
-import { ConcernsTable } from './ConcernsTable';
 import { extraSupportedFilters, extraSupportedMatchers } from './constants';
 import type { VmData } from './VMCellProps';
 
@@ -105,7 +105,11 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       extraSupportedFilters={extraSupportedFilters}
       extraSupportedMatchers={extraSupportedMatchers}
       {...getStandardPageProps()}
-      expanded={isProviderOpenshift(provider) ? undefined : (props) => <ConcernsTable {...props} />}
+      expanded={
+        isProviderOpenshift(provider)
+          ? undefined
+          : (props) => <ConcernsAndConditionsTable vmData={props.resourceData} />
+      }
     />
   );
 };

@@ -1,59 +1,43 @@
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
+import { useSpecVirtualMachinesListData } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/hooks/useSpecVirtualMachinesListData';
+import { getCriticalConcernsVmsMap } from 'src/plans/details/utils/utils';
 
 import type { V1beta1Plan } from '@kubev2v/types';
 import { PageSection } from '@patternfly/react-core';
 
 import { PlanStatuses } from '../../../PlanStatus/utils/types';
 import usePlanAlerts from '../../hooks/usePlanAlerts';
-import PlanCriticalAlert from '../PlanCriticalAlert';
-import PlanPreserveIPWarningsAlerts from '../PlanPreserveIPWarningsAlerts';
+import PlanCriticalAlerts from '../PlanCriticalAlerts';
 
 import './PlanAlerts.scss';
 
 type Props = {
   plan: V1beta1Plan;
+  setIsDrawerOpen?: (isOpen: boolean) => void;
 };
 
-const PlanAlerts: FC<Props> = ({ plan }) => {
-  const {
-    criticalCondition,
-    networkMaps,
-    networkMapsError,
-    networkMapsLoaded,
-    preserveIPWarningsConditions,
-    showCriticalCondition,
-    showPreserveIPWarningsConditions,
-    sourceNetworks,
-    sourceStorages,
-    status,
-    storageMaps,
-  } = usePlanAlerts(plan);
+const PlanAlerts: FC<Props> = ({ plan, setIsDrawerOpen }) => {
+  const { criticalConditions, showCriticalConditions, status } = usePlanAlerts(plan);
+  const [specVirtualMachinesListData] = useSpecVirtualMachinesListData(plan);
+  const criticalConcerns = useMemo(
+    () => getCriticalConcernsVmsMap(specVirtualMachinesListData),
+    [specVirtualMachinesListData],
+  );
+  const alertsNotRelevant = useMemo(
+    () => status === PlanStatuses.Completed || status === PlanStatuses.Archived,
+    [status],
+  );
 
-  const alertsNotRelevant = status === PlanStatuses.Completed || status === PlanStatuses.Archived;
-
-  if (alertsNotRelevant || !networkMapsLoaded || networkMapsError) {
-    return null;
-  }
-
-  if (!showCriticalCondition && !showPreserveIPWarningsConditions) {
-    return null;
-  }
+  // criticalConcerns alone won't fail the migration plan
+  if (alertsNotRelevant || !showCriticalConditions) return null;
 
   return (
     <PageSection hasBodyWrapper={false} className="plan-header-alerts">
-      {showCriticalCondition && (
-        <PlanCriticalAlert
-          plan={plan}
-          condition={criticalCondition}
-          storageMaps={storageMaps}
-          networkMaps={networkMaps}
-          sourceStorages={sourceStorages}
-          sourceNetworks={sourceNetworks}
-        />
-      )}
-      {showPreserveIPWarningsConditions && (
-        <PlanPreserveIPWarningsAlerts plan={plan} conditions={preserveIPWarningsConditions} />
-      )}
+      <PlanCriticalAlerts
+        conditions={criticalConditions}
+        concerns={criticalConcerns}
+        setIsDrawerOpen={setIsDrawerOpen}
+      />
     </PageSection>
   );
 };

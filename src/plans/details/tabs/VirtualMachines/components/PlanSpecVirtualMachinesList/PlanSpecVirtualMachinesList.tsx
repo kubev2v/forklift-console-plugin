@@ -1,9 +1,13 @@
 import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
-import { ConcernsTable } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/ConcernsTable';
+import {
+  extraSupportedFilters,
+  extraSupportedMatchers,
+} from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import ConcernsAndConditionsTable from '@components/ConcernsAndConditionsTable/ConcernsAndConditionsTable';
 import type { V1beta1Plan } from '@kubev2v/types';
 
 import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
@@ -48,8 +52,10 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       onSelect={onSelect}
       selectedIds={selectedIds}
       GlobalActionToolbarItems={actions}
-      expanded={(props) => <ConcernsTable {...props} />}
+      expanded={(props) => <ConcernsAndConditionsTable vmData={props.resourceData} />}
       expandedIds={expandedIds}
+      extraSupportedMatchers={extraSupportedMatchers}
+      extraSupportedFilters={extraSupportedFilters}
     />
   );
 };

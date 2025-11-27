@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import type { ResourceField } from '@components/common/utils/types';
-import { ConcernsTable } from '@components/Concerns/components/ConcernsTable';
+import ConcernsAndConditionsTable from '@components/ConcernsAndConditionsTable/ConcernsAndConditionsTable';
 import { ROW_TYPE, type RowNode } from '@components/VsphereFoldersTable/utils/types';
 import { Tbody, Td, Tr } from '@patternfly/react-table';
 import { isEmpty } from '@utils/helpers';
@@ -57,7 +57,7 @@ const TreeTableBody: FC<TreeTableBodyProps> = ({
             return (
               <Tr key={row.key} isHidden={row.isHidden}>
                 <Td colSpan={colSpan}>
-                  <ConcernsTable vmData={row.vmData} />
+                  <ConcernsAndConditionsTable vmData={row.vmData} />
                 </Td>
               </Tr>
             );

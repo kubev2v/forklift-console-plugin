@@ -33,7 +33,9 @@ export const AttributeValueFilter = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const selectOptionToFilter = (selectedValue: string) =>
-    fieldFilters.find(({ label }) => label === selectedValue) ?? currentFilter;
+    fieldFilters.find(
+      ({ filterDef, label }) => filterDef.fieldLabel === selectedValue || label === selectedValue,
+    ) ?? currentFilter;
 
   const onToggleClick = () => {
     setIsOpen((prev) => !prev);
@@ -41,7 +43,7 @@ export const AttributeValueFilter = ({
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
     <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullWidth>
-      {currentFilter.label}
+      {currentFilter?.filterDef?.fieldLabel ?? currentFilter?.label}
     </MenuToggle>
   );
 
@@ -53,9 +55,9 @@ export const AttributeValueFilter = ({
   };
 
   const renderOptions = () => {
-    return fieldFilters.map(({ label, resourceFieldId }) => (
-      <SelectOption key={resourceFieldId} value={label}>
-        {label}
+    return fieldFilters.map(({ filterDef, label, resourceFieldId }) => (
+      <SelectOption key={resourceFieldId} value={filterDef?.fieldLabel ?? label}>
+        {filterDef?.fieldLabel ?? label}
       </SelectOption>
     ));
   };
@@ -69,7 +71,7 @@ export const AttributeValueFilter = ({
           role="menu"
           aria-label={'Select Filter'}
           isOpen={isOpen}
-          selected={currentFilter?.label}
+          selected={currentFilter?.filterDef?.fieldLabel ?? currentFilter?.label}
           onSelect={(_ev, value) => {
             onSelect(String(value));
           }}
