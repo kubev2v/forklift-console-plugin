@@ -54,12 +54,16 @@ const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
   const internalPageRef = useRef(pageProps.page ?? 1);
   const pageRef = pageProps.pageRef ?? internalPageRef;
 
+  const defaultFieldsWithoutFilters = pageProps.fieldsMetadata.filter(
+    ({ isForFilterOnly }) => !isForFilterOnly,
+  );
+
   const defaultSort = useMemo(() => {
-    const field = pageProps.fieldsMetadata.find((fld) => fld.defaultSortDirection);
+    const field = defaultFieldsWithoutFilters.find((fld) => fld.defaultSortDirection);
     return field?.defaultSortDirection && field?.resourceFieldId
       ? { direction: field.defaultSortDirection, resourceFieldId: field.resourceFieldId }
       : undefined;
-  }, [pageProps.fieldsMetadata]);
+  }, [defaultFieldsWithoutFilters]);
 
   const isInSortContext = Boolean(sortContext.activeSort.resourceFieldId);
 
@@ -68,7 +72,7 @@ const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
   }
 
   return (
-    <TableSortContextProvider fields={pageProps.fieldsMetadata} defaultSort={defaultSort}>
+    <TableSortContextProvider fields={defaultFieldsWithoutFilters} defaultSort={defaultSort}>
       <TableSortContext.Consumer>
         {(sortProps) => <StandardPageInner {...pageProps} {...sortProps} pageRef={pageRef} />}
       </TableSortContext.Consumer>

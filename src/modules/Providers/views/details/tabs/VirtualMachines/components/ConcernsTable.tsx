@@ -1,17 +1,20 @@
-import type { FC } from 'react';
+import { type FC, Fragment } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import type { SpecVirtualMachinePageData } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/utils/types';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { getCategoryStatus, getCategoryTitle } from '@components/Concerns/utils/category';
 import type { Concern, OpenstackVM, OvaVM, OVirtVM, VSphereVM } from '@kubev2v/types';
-import { HelperText, HelperTextItem, Label, PageSection } from '@patternfly/react-core';
-import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { HelperText, HelperTextItem, PageSection } from '@patternfly/react-core';
+import { Table, Tbody, Th, Thead, Tr } from '@patternfly/react-table';
 import { isEmpty } from '@utils/helpers';
 
+import { orderedConcernCategories } from '../constants';
 import { groupConcernsByCategory } from '../utils/helpers/groupConcernsByCategory';
+import { groupConditionsByCategory } from '../utils/helpers/groupConditionsByCategory';
 
+import ConcernsTableRows from './ConcernsTableRows';
+import ConditionsTableRows from './ConditionsTableRows';
 import type { VmData } from './VMCellProps';
 
 type ConcernsTableProps = RowProps<VmData> | RowProps<SpecVirtualMachinePageData>;
@@ -26,8 +29,13 @@ export const ConcernsTable: FC<ConcernsTableProps> = ({ resourceData }) => {
     (resourceData as SpecVirtualMachinePageData)?.inventoryVmData?.vm;
 
   const concerns: Concern[] = (vm as VirtualMachineWithConcerns)?.concerns;
+  const conditions = (resourceData as SpecVirtualMachinePageData)?.conditions;
 
-  if ((!concerns || isEmpty(concerns)) && vm?.providerType !== PROVIDER_TYPES.openshift) {
+  if (
+    (!concerns || isEmpty(concerns)) &&
+    (!conditions || isEmpty(conditions)) &&
+    vm?.providerType !== PROVIDER_TYPES.openshift
+  ) {
     return (
       <PageSection hasBodyWrapper={false}>
         <HelperText>
@@ -38,6 +46,7 @@ export const ConcernsTable: FC<ConcernsTableProps> = ({ resourceData }) => {
   }
 
   const groupedConcerns = groupConcernsByCategory(concerns);
+  const groupedConditions = groupConditionsByCategory(conditions);
 
   return (
     <PageSection hasBodyWrapper={false}>
@@ -50,19 +59,22 @@ export const ConcernsTable: FC<ConcernsTableProps> = ({ resourceData }) => {
           </Tr>
         </Thead>
         <Tbody>
-          {['Critical', 'Warning', 'Information'].map((category) =>
-            groupedConcerns?.[category]?.map((concern) => (
-              <Tr key={concern.label}>
-                <Td modifier="truncate">{concern.label}</Td>
-                <Td>
-                  <Label status={getCategoryStatus(concern.category)}>
-                    {getCategoryTitle(concern.category)}
-                  </Label>
-                </Td>
-                <Td>{concern?.assessment || '-'}</Td>
-              </Tr>
-            )),
-          )}
+          {orderedConcernCategories.map((category, index) => {
+            return (
+              <Fragment key={index}>
+                <ConcernsTableRows
+                  category={category}
+                  groupedConcerns={groupedConcerns}
+                  key={index}
+                />
+                <ConditionsTableRows
+                  category={category}
+                  groupedConditions={groupedConditions}
+                  key={index}
+                />
+              </Fragment>
+            );
+          })}
         </Tbody>
       </Table>
     </PageSection>

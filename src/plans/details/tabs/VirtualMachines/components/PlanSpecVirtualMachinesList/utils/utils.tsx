@@ -1,11 +1,15 @@
 import ConcernsColumnPopover from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/ConcernsColumnPopover';
-import { concernFilter } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/filters/concernFilter';
+import { CustomFilterType } from 'src/modules/Providers/views/details/tabs/VirtualMachines/constants';
 
-import { FilterDefType, type ResourceField } from '@components/common/utils/types';
+import { enumToTuple } from '@components/common/FilterGroup/helpers';
+import { type EnumValue, FilterDefType, type ResourceField } from '@components/common/utils/types';
+import { getCategoryIcon } from '@components/Concerns/utils/category';
+import { ConcernCategoryOrderedOptions } from '@components/Concerns/utils/constants';
 import type { V1beta1Plan, V1beta1PlanStatusConditions } from '@kubev2v/types';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
+import { concernSeverityOrTypeFilter } from './concernSeverityOrTypeFilter';
 import { PlanSpecVirtualMachinesTableResourceId, type SpecVirtualMachinePageData } from './types';
 
 /**
@@ -45,22 +49,38 @@ export const specVirtualMachineFields: ResourceField[] = [
     sortable: true,
   },
   {
-    filter: concernFilter(),
+    filter: concernSeverityOrTypeFilter(),
+    isForFilterOnly: true,
+    isVisible: true,
+    jsonPath: '$',
+    label: t('Concerns'),
+    resourceFieldId: `${PlanSpecVirtualMachinesTableResourceId.Concerns}-type`,
+    sortable: true,
+  },
+  {
+    filter: {
+      fieldLabel: t('Concerns (severity)'),
+      placeholderLabel: t('Filter by concerns (severity)'),
+      primary: false,
+      type: CustomFilterType.ConcernsSeverityOrType,
+      values: [
+        ...enumToTuple(ConcernCategoryOrderedOptions).map(
+          ({ id, label }: EnumValue): EnumValue => ({
+            icon: getCategoryIcon(label),
+            id,
+            label,
+          }),
+        ),
+      ],
+    },
     info: {
       ariaLabel: 'More information on concerns',
       popover: <ConcernsColumnPopover />,
     },
     isVisible: true,
-    jsonPath: '$.inventoryVmData.vm.concerns',
+    jsonPath: '$',
     label: t('Concerns'),
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Concerns,
-    sortable: true,
-  },
-  {
-    isVisible: false,
-    jsonPath: '$.specVM.targetName',
-    label: t('Target name'),
-    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.VMTargetName,
     sortable: true,
   },
   {

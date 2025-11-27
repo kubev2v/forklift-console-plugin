@@ -31,6 +31,7 @@ type PageToolbarProps<T> = {
   supportedFilters: Record<string, FilterRenderer>;
   clearAllFilters: () => void;
   fieldsMetadata: ResourceField[];
+  defaultFieldsWithoutFilters: ResourceField[];
   setFields: (fields: ResourceField[]) => void;
   showManageColumns?: boolean;
   showPagination: boolean;
@@ -49,6 +50,7 @@ type PageToolbarProps<T> = {
 export const PageToolbar = <T,>({
   clearAllFilters,
   dataIds,
+  defaultFieldsWithoutFilters,
   fields,
   fieldsMetadata,
   flatData,
@@ -78,10 +80,10 @@ export const PageToolbar = <T,>({
 
   const secondaryFilters = useMemo(
     () =>
-      fields
+      fieldsMetadata
         .filter(({ filter }) => filter && !filter.primary && !filter.standalone)
         .map(toFieldFilter(flatData)),
-    [fields, flatData],
+    [fieldsMetadata, flatData],
   );
 
   const standaloneFilters = useMemo(
@@ -128,7 +130,7 @@ export const PageToolbar = <T,>({
             {showManageColumns && (
               <ManageColumnsToolbar
                 resourceFields={fields}
-                defaultColumns={fieldsMetadata}
+                defaultColumns={defaultFieldsWithoutFilters}
                 setColumns={setFields}
               />
             )}

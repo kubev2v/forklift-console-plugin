@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { Concern } from '@kubev2v/types';
+import type { Concern, V1beta1PlanStatusConditions } from '@kubev2v/types';
 import type { LabelProps } from '@patternfly/react-core';
 import {
   ExclamationCircleIcon,
@@ -9,23 +9,33 @@ import {
 } from '@patternfly/react-icons';
 import { t } from '@utils/i18n';
 
-import { type ConcernCategory, ConcernCategoryOptions } from './constants';
+import { type ConcernCategory, ConcernCategoryOptions, severityRank } from './constants';
+
+const CATEGORY_LABELS: Record<ConcernCategory, string> = {
+  [ConcernCategoryOptions.Critical]: 'Critical',
+  [ConcernCategoryOptions.Information]: 'Information',
+  [ConcernCategoryOptions.Warn]: 'Warning',
+  [ConcernCategoryOptions.Warning]: 'Warning',
+};
 
 const CATEGORY_TITLES: Record<ConcernCategory, string> = {
   [ConcernCategoryOptions.Critical]: t('Critical concerns'),
   [ConcernCategoryOptions.Information]: t('Information concerns'),
+  [ConcernCategoryOptions.Warn]: t('Warning concerns'),
   [ConcernCategoryOptions.Warning]: t('Warning concerns'),
 };
 
 const CATEGORY_ICONS: Record<ConcernCategory, ReactNode> = {
   [ConcernCategoryOptions.Critical]: <ExclamationCircleIcon color="#C9190B" />,
   [ConcernCategoryOptions.Information]: <InfoCircleIcon color="#2B9AF3" />,
+  [ConcernCategoryOptions.Warn]: <ExclamationTriangleIcon color="#F0AB00" />,
   [ConcernCategoryOptions.Warning]: <ExclamationTriangleIcon color="#F0AB00" />,
 };
 
 const CATEGORY_STATUS: Record<ConcernCategory, LabelProps['status'] | undefined> = {
   [ConcernCategoryOptions.Critical]: 'danger',
   [ConcernCategoryOptions.Information]: 'info',
+  [ConcernCategoryOptions.Warn]: 'warning',
   [ConcernCategoryOptions.Warning]: 'warning',
 };
 
@@ -44,6 +54,14 @@ export const getCategoryStatus = (category: string): LabelProps['status'] | unde
   return isConcernCategory(category) ? CATEGORY_STATUS[category] : undefined;
 };
 
+export const getCategoryLabel = (category: string): string => {
+  return CATEGORY_LABELS[category as ConcernCategory];
+};
+
+export const getCategorySeverityRank = (category: ConcernCategory): number => {
+  return severityRank[category];
+};
+
 export const groupConcernsByCategory = (
   concerns: Concern[] = [],
 ): Record<ConcernCategory, Concern[]> => {
@@ -53,6 +71,25 @@ export const groupConcernsByCategory = (
         acc[concern.category] = [];
       }
       acc[concern.category].push(concern);
+      return acc;
+    },
+    {
+      [ConcernCategoryOptions.Critical]: [],
+      [ConcernCategoryOptions.Information]: [],
+      [ConcernCategoryOptions.Warning]: [],
+    },
+  );
+};
+
+export const groupConditionsByCategory = (
+  conditions: V1beta1PlanStatusConditions[] = [],
+): Record<ConcernCategory, V1beta1PlanStatusConditions[]> => {
+  return conditions.reduce<Record<string, V1beta1PlanStatusConditions[]>>(
+    (acc, condition) => {
+      if (!acc[getCategoryLabel(condition.category)]) {
+        acc[condition.category] = [];
+      }
+      acc[getCategoryLabel(condition.category)].push(condition);
       return acc;
     },
     {
