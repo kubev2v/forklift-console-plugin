@@ -1,5 +1,3 @@
-import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
-
 import {
   StorageMapModel,
   type V1beta1Provider,
@@ -8,6 +6,7 @@ import {
 } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { getObjectRef } from '@utils/helpers/getObjectRef';
 
 import type { StorageMapping } from '../../constants';
 

@@ -75,12 +75,12 @@ const StorageMapReviewSectionInner: FC = () => {
           </DescriptionListGroup>
         </DescriptionList>
 
-        <StorageMapReviewTable />
+        <StorageMapReviewTable storageMap={storageMap} />
       </Stack>
     );
   }
 
-  return <StorageMapReviewTable />;
+  return <StorageMapReviewTable storageMap={storageMap} />;
 };
 
 const StorageMapReviewSection: FC = () => {

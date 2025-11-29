@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { NetworkMappingValue } from 'src/networkMaps/types';
+import type { NetworkMappingId } from 'src/networkMaps/utils/getNetworkMapFieldId';
 import type { TargetNetwork } from 'src/utils/hooks/useTargetNetworks';
 
 import Select from '@components/common/Select';
@@ -9,7 +10,7 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type TargetNetworkFieldProps = {
-  fieldId: string;
+  fieldId: NetworkMappingId;
   targetNetworks: TargetNetwork[];
 };
 
@@ -17,6 +18,7 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({ fieldId, targetNetwor
   const {
     control,
     formState: { isSubmitting },
+    trigger,
   } = useFormContext();
   const { t } = useForkliftTranslation();
 
@@ -29,8 +31,9 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({ fieldId, targetNetwor
           ref={field.ref}
           id={fieldId}
           testId="network-map-target-network-select"
-          onSelect={(_, value) => {
+          onSelect={async (_, value) => {
             field.onChange(value);
+            await trigger(fieldId);
           }}
           placeholder={t('Select target network')}
           isDisabled={isSubmitting}
