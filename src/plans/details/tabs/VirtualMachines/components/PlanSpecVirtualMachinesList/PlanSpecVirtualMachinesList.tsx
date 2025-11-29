@@ -2,6 +2,10 @@ import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import { ConcernsTable } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/ConcernsTable';
+import {
+  extraSupportedFilters,
+  extraSupportedMatchers,
+} from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Plan } from '@kubev2v/types';
@@ -50,6 +54,8 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       GlobalActionToolbarItems={actions}
       expanded={(props) => <ConcernsTable {...props} />}
       expandedIds={expandedIds}
+      extraSupportedMatchers={extraSupportedMatchers}
+      extraSupportedFilters={extraSupportedFilters}
     />
   );
 };

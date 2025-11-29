@@ -58,7 +58,7 @@ const ConcernPopover: FC<{
 }> = ({ category, concerns }) => {
   const { t } = useForkliftTranslation();
 
-  if (concerns.length < 1) return <></>;
+  if (isEmpty(concerns)) return <></>;
 
   return (
     <Popover
