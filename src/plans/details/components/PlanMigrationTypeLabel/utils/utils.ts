@@ -1,5 +1,6 @@
 import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
 
+import type { LabelProps } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
 
 export const typeLabel = (migrationType: MigrationTypeValue): string => {
@@ -11,6 +12,18 @@ export const typeLabel = (migrationType: MigrationTypeValue): string => {
     case MigrationTypeValue.Cold:
     default:
       return 'Cold';
+  }
+};
+
+export const getLabelColor = (migrationType: MigrationTypeValue): LabelProps['color'] => {
+  switch (migrationType) {
+    case MigrationTypeValue.Cold:
+      return 'blue';
+    case MigrationTypeValue.Warm:
+      return 'orange';
+    case MigrationTypeValue.Live:
+    default:
+      return 'teal';
   }
 };
 
