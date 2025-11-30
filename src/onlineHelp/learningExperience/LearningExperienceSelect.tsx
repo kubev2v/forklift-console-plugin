@@ -48,7 +48,7 @@ const LearningExperienceSelect: FC<LearningExperienceSelectProps> = ({
           <FlexItem>
             <BarsIcon />
           </FlexItem>
-          <FlexItem>{selectedTopic?.title ?? t('Select a topic')}</FlexItem>
+          <FlexItem>{t('Select a topic')}</FlexItem>
         </Flex>
       </MenuToggle>
     );
