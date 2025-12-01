@@ -5,6 +5,7 @@ import type {
   ResourceDetailsPage,
   ResourceListPage,
   ResourceNSNavItem,
+  RoutePage,
 } from '@openshift-console/dynamic-plugin-sdk';
 import type {
   ConsolePluginBuildMetadata,
@@ -13,6 +14,7 @@ import type {
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   ProviderDetailsPage: './providers/details/ProviderDetailsPage',
+  ProvidersCreateNewPage: './providers/create-new/ProvidersCreatePage',
   ProvidersCreatePage: './providers/create/ProvidersCreatePage',
   ProvidersListPage: './providers/list/ProvidersListPage',
 };
@@ -84,4 +86,15 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.resource/create',
   } as EncodedExtension<CreateResource>,
+
+  {
+    properties: {
+      component: {
+        $codeRef: 'ProvidersCreateNewPage',
+      },
+      exact: true,
+      path: '/k8s/providers/create',
+    },
+    type: 'console.page/route',
+  } as EncodedExtension<RoutePage>,
 ];
