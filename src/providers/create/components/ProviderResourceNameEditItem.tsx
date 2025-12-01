@@ -48,7 +48,7 @@ const ProviderResourceNameEditItem: FC<ProviderResourceNameEditItemProps> = ({
   return getType(newProvider) ? (
     <Form isWidthLimited>
       <FormGroupWithHelpText
-        label={t('Provider resource name')}
+        label={t('Provider name')}
         isRequired
         fieldId={ProviderFieldsId.Name}
         helperText={providerResourceNameValidation.msg}
