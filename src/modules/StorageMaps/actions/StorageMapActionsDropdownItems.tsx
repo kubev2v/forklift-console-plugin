@@ -1,4 +1,3 @@
-import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import {
   DeleteModal,
   type DeleteModalProps,
@@ -29,9 +28,9 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
   };
 
   return [
-    <DropdownItemLink value={0} itemKey="EditStorageMapping" href={StorageMapURL}>
+    <DropdownItem value={0} key="EditStorageMapping" to={StorageMapURL}>
       {t('Edit storage map')}
-    </DropdownItemLink>,
+    </DropdownItem>,
 
     <DropdownItem
       value={1}

@@ -1,4 +1,3 @@
-import { DropdownItemLink } from 'src/components/actions/DropdownItemLink';
 import {
   DeleteModal,
   type DeleteModalProps,
@@ -29,9 +28,9 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
   };
 
   return [
-    <DropdownItemLink value={0} itemKey="EditNetworkMapping" href={networkMapURL}>
+    <DropdownItem value={0} key="edit" to={networkMapURL}>
       {t('Edit network map')}
-    </DropdownItemLink>,
+    </DropdownItem>,
 
     <DropdownItem
       value={1}
