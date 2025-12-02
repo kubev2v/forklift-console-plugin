@@ -28,3 +28,6 @@ export const getProviderTypeIcon = (
 export const POD = 'pod';
 export const MULTUS = 'multus';
 export const IGNORED = 'ignored';
+
+export const CREATE_VDDK_HELP_LINK =
+  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.10/html-single/planning_your_migration_to_red_hat_openshift_virtualization/index#creating-vddk-image_mtv';

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PlanVddkForWarmWarningAlert from 'src/plans/components/PlanVddkForWarmWarningAlert';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
@@ -11,14 +12,18 @@ import type { EditPlanProps } from '../../../SettingsSection/utils/types';
 import { onConfirmWarm } from './utils/utils';
 import WarmSwitch from './WarmSwitch';
 
-const EditPlanWarm: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
+const EditPlanWarm: ModalComponent<EditPlanProps> = ({
+  isVddkInitImageNotSet,
+  resource,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
-  const [value, setValue] = useState<boolean>(Boolean(getPlanIsWarm(resource)));
+  const [isWarm, setIsWarm] = useState<boolean>(Boolean(getPlanIsWarm(resource)));
 
   return (
     <ModalForm
       title={t('Set warm migration')}
-      onConfirm={async () => onConfirmWarm({ newValue: value, resource })}
+      onConfirm={async () => onConfirmWarm({ newValue: isWarm, resource })}
       {...rest}
     >
       <Stack hasGutter>
@@ -28,7 +33,8 @@ const EditPlanWarm: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
           You can change the snapshot interval by updating the forklift-controller deployment.`,
         )}
         <FormGroup label={t('Whether this is a warm migration')} />
-        <WarmSwitch value={value} onChange={setValue} />
+        <WarmSwitch value={isWarm} onChange={setIsWarm} />
+        {isWarm && isVddkInitImageNotSet && <PlanVddkForWarmWarningAlert />}
       </Stack>
     </ModalForm>
   );

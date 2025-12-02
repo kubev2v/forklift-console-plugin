@@ -12,7 +12,12 @@ import type { EditableDetailsItemProps } from '../../../utils/types';
 
 import EditPlanWarm from './EditPlanWarm';
 
-const WarmDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldRender }) => {
+const WarmDetailsItem: FC<EditableDetailsItemProps> = ({
+  canPatch,
+  isVddkInitImageNotSet,
+  plan,
+  shouldRender,
+}) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
 
@@ -26,7 +31,7 @@ const WarmDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldR
       helpContent={t('Whether this is a warm migration.')}
       crumbs={['spec', 'warm']}
       onEdit={() => {
-        launcher<EditPlanProps>(EditPlanWarm, { resource: plan });
+        launcher<EditPlanProps>(EditPlanWarm, { isVddkInitImageNotSet, resource: plan });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
     />
