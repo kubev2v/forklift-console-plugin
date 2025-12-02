@@ -23,7 +23,7 @@ export const buildOvaProviderResources = (
     spec: {
       secret: {
         name: undefined,
-        namespace: undefined,
+        namespace,
       },
       type: 'ova',
       url: nfsDirectory,

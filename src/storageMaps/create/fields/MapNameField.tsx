@@ -29,11 +29,7 @@ const MapNameField: FC = () => {
         name={StorageMapFieldId.MapName}
         control={control}
         render={({ field }) => (
-          <TextInput
-            {...field}
-            isDisabled={isSubmitting}
-            validated={getInputValidated(Boolean(error))}
-          />
+          <TextInput {...field} isDisabled={isSubmitting} validated={getInputValidated(error)} />
         )}
         rules={{
           validate: (value) => validateMapName(value, t('Storage map')),

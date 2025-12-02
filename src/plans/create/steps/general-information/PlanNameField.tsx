@@ -35,7 +35,7 @@ const PlanNameField: FC = () => {
           <TextInput
             {...field}
             data-testid="plan-name-input"
-            validated={getInputValidated(Boolean(errors[GeneralFormFieldId.PlanName]))}
+            validated={getInputValidated(errors[GeneralFormFieldId.PlanName])}
           />
         )}
         rules={{ validate: (value) => validatePlanName(value, plans) }}

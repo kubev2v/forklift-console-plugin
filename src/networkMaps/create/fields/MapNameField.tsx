@@ -34,7 +34,7 @@ const MapNameField: FC = () => {
             id={NetworkMapFieldId.MapName}
             data-testid="network-map-name-input"
             isDisabled={isSubmitting}
-            validated={getInputValidated(Boolean(error))}
+            validated={getInputValidated(error)}
           />
         )}
         rules={{
