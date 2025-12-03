@@ -1,5 +1,3 @@
-import type { ObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
-
 import type {
   IoK8sApiCoreV1Secret,
   V1beta1Hook,
@@ -8,6 +6,7 @@ import type {
 } from '@kubev2v/types';
 import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { isEmpty } from '@utils/helpers';
+import type { ObjectRef } from '@utils/helpers/getObjectRef';
 
 /**
  * Adds owner references to a resource

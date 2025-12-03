@@ -32,7 +32,7 @@ export const defaultStorageMapping: StorageMapping = {
 };
 
 export const storageMapFieldLabels: Partial<Record<StorageMapFieldId, ReturnType<typeof t>>> = {
-  [StorageMapFieldId.MapName]: t('Map name'),
+  [StorageMapFieldId.MapName]: t('Storage map name'),
   [StorageMapFieldId.OffloadPlugin]: t('Offload plugin'),
   [StorageMapFieldId.Project]: t('Project'),
   [StorageMapFieldId.SourceProvider]: t('Source provider'),

@@ -26,6 +26,8 @@ import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { ForkliftTrans } from '@utils/i18n';
 import { ProviderStatus } from '@utils/types';
 
+import { extractProviders } from './utils/utils';
+
 type ProviderSelectProps = Pick<
   ComponentProps<typeof Select>,
   'onSelect' | 'status' | 'isDisabled'
@@ -56,24 +58,31 @@ const ProviderSelect = (
 ) => {
   const isDarkTheme = useIsDarkTheme();
   const { trackEvent } = useForkliftAnalytics();
-  const [providers] = useK8sWatchResource<V1beta1Provider[]>({
+  const [rawProviders, loaded] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: true,
     namespace,
-    namespaced: true,
   });
+
+  const providers = useMemo(
+    () => (loaded && !isEmpty(rawProviders) ? extractProviders(rawProviders) : []),
+    [loaded, rawProviders],
+  );
+
   const filteredProviders = useMemo(
     () =>
-      providers.filter((provider) => {
-        const isReady = provider.status?.phase === ProviderStatus.Ready;
+      loaded && !isEmpty(providers)
+        ? providers.filter((provider) => {
+            const isReady = provider.status?.phase === ProviderStatus.Ready;
 
-        if (isTarget) {
-          return isReady && provider.spec?.type === PROVIDER_TYPES.openshift;
-        }
+            if (isTarget) {
+              return isReady && provider.spec?.type === PROVIDER_TYPES.openshift;
+            }
 
-        return isReady;
-      }),
-    [isTarget, providers],
+            return isReady;
+          })
+        : [],
+    [isTarget, providers, loaded],
   );
 
   const providersListUrl = useMemo(

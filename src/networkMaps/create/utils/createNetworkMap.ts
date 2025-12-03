@@ -1,7 +1,6 @@
-import { getObjectRef } from 'src/modules/Providers/views/migrate/reducer/helpers';
-
 import { NetworkMapModel, type V1beta1NetworkMap, type V1beta1Provider } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
+import { getObjectRef } from '@utils/helpers/getObjectRef';
 
 import type { NetworkMapping } from '../../constants';
 
