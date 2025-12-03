@@ -1,12 +1,14 @@
 import type { FC } from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
+import { getInputValidated } from '@utils/form';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { useCreateProviderFormContext } from '../hooks/useCreateProviderFormContext';
 import { getProviderTypeOptions } from '../utils/getProviderTypeOptions';
 
 import { ProviderFormFieldId } from './constants';
@@ -16,7 +18,7 @@ import './ProviderTypeField.style.scss';
 const ProviderTypeField: FC = () => {
   const { t } = useForkliftTranslation();
   const isDarkTheme = useIsDarkTheme();
-  const { control } = useFormContext();
+  const { control } = useCreateProviderFormContext();
 
   const {
     field: { onChange, value },
@@ -42,7 +44,7 @@ const ProviderTypeField: FC = () => {
       label={t('Provider type')}
       isRequired
       fieldId={ProviderFormFieldId.ProviderType}
-      validated={error ? 'error' : 'default'}
+      validated={getInputValidated(error)}
       helperTextInvalid={error?.message}
     >
       <Select

@@ -1,5 +1,5 @@
 import { type FC, useCallback, useState } from 'react';
-import { FormProvider, useWatch } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { createProvider } from 'src/providers/create/utils/createProvider';
 import { createProviderSecret } from 'src/providers/create/utils/createProviderSecret';
@@ -26,7 +26,6 @@ import NfsDirectoryField from './fields/NfsDirectoryField';
 import ProviderNameField from './fields/ProviderNameField';
 import ProviderProjectField from './fields/ProviderProjectField';
 import ProviderTypeField from './fields/ProviderTypeField';
-import { useCreateProviderForm } from './hooks/useCreateProviderForm';
 import { buildOvaProviderResources } from './utils/buildProviderResources';
 import { getDefaultFormValues } from './utils/getDefaultFormValues';
 import CreateProviderFormContextProvider from './CreateProviderFormContextProvider';
@@ -40,7 +39,7 @@ const CreateProviderForm: FC = () => {
   const { trackEvent } = useForkliftAnalytics();
   const [apiError, setApiError] = useState<Error | null>(null);
 
-  const form = useCreateProviderForm({
+  const form = useForm<CreateProviderFormData>({
     defaultValues: getDefaultFormValues(''),
     mode: 'onChange',
   });
@@ -71,16 +70,19 @@ const CreateProviderForm: FC = () => {
       try {
         const { provider: newProvider, secret: newSecret } = buildOvaProviderResources(formData);
         const secret = await createProviderSecret(newProvider, newSecret);
-        const provider = await createProvider(newProvider, secret!);
-        await patchProviderSecretOwner(provider, secret);
 
-        trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_COMPLETED, {
-          namespace,
-          providerType: provider?.spec?.type,
-        });
+        if (secret) {
+          const provider = await createProvider(newProvider, secret);
+          await patchProviderSecretOwner(provider, secret);
 
-        const providerURL = getProviderDetailsPageUrl(provider);
-        navigate(providerURL);
+          trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_COMPLETED, {
+            namespace,
+            providerType: provider?.spec?.type,
+          });
+
+          const providerURL = getProviderDetailsPageUrl(provider);
+          navigate(providerURL);
+        }
       } catch (err) {
         trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_FAILED, {
           error: err instanceof Error ? err.message : 'Unknown error',
