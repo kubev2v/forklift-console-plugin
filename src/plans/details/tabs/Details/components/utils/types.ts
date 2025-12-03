@@ -4,4 +4,5 @@ export type EditableDetailsItemProps = {
   canPatch: boolean;
   plan: V1beta1Plan;
   shouldRender?: boolean;
+  isVddkInitImageNotSet?: boolean;
 };

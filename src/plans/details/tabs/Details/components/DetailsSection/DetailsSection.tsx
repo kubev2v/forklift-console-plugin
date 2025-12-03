@@ -10,6 +10,7 @@ import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
+import { isEmpty } from '@utils/helpers';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -40,6 +41,8 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
   const isLiveMigrationEnabled =
     isFeatureEnabled(FEATURE_NAMES.OCP_LIVE_MIGRATION) &&
     hasLiveMigrationProviderType(sourceProvider);
+  const isVddkInitImageNotSet = isEmpty(sourceProvider?.spec?.settings?.vddkInitImage);
+
   return (
     <>
       <DescriptionList>
@@ -51,7 +54,12 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
         }}
       >
         <NameDetailsItem resource={plan} />
-        <WarmDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt || isVsphere} />
+        <WarmDetailsItem
+          plan={plan}
+          isVddkInitImageNotSet={isVddkInitImageNotSet}
+          canPatch={canPatch}
+          shouldRender={isOvirt || isVsphere}
+        />
         <LiveDetailsItem plan={plan} canPatch={canPatch} shouldRender={isLiveMigrationEnabled} />
         <NamespaceDetailsItem title={t('Plan project')} resource={plan} />
         <TargetNamespaceDetailsItem plan={plan} canPatch={canPatch} />
