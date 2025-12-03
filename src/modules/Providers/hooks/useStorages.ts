@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { STORAGE_NAMES } from 'src/storageMaps/constants';
+import { STORAGE_NAMES } from 'src/storageMaps/utils/constants';
 
 import type {
   OpenShiftStorageClass,

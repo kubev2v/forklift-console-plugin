@@ -1,12 +1,13 @@
 import { type FC, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
+import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import Select from '@components/common/Select';
 import { FormGroup } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { StorageMapFieldId, storageMapFieldLabels } from '../../constants';
 import { useStorageVendorProducts } from '../../hooks/useStorageVendorProducts';
 import { getVendorProductLabel } from '../../utils/labelHelpers';
 

@@ -3,7 +3,9 @@ import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
+import { defaultStorageMapping, storageMapFieldLabels } from 'src/storageMaps/utils/constants';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
+import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import { FEATURE_NAMES } from '@utils/constants';
@@ -13,7 +15,6 @@ import useTargetStorages from '@utils/hooks/useTargetStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import OffloadStorageIndexedForm from '../../components/OffloadStorageIndexedForm/OffloadStorageIndexedForm';
-import { defaultStorageMapping, StorageMapFieldId, storageMapFieldLabels } from '../../constants';
 import type { CreateStorageMapFormData } from '../types';
 
 import InventorySourceStorageField from './InventorySourceStorageField';

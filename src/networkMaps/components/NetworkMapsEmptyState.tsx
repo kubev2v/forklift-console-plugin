@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
-import NetworkMapsAddButton from 'src/modules/NetworkMaps/components/NetworkMapsAddButton';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
@@ -18,6 +17,8 @@ import {
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { FORKLIFT_DOCS_URL } from '@utils/links';
+
+import NetworkMapsAddButton from './NetworkMapsAddButton';
 
 type NetworkMapsEmptyStateProps = {
   namespace?: string;

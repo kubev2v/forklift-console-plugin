@@ -4,9 +4,9 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import GroupedSourceStorageField from 'src/storageMaps/components/GroupedSourceStorageField';
 import OffloadStorageIndexedForm from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageIndexedForm';
 import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
-import { defaultStorageMapping } from 'src/storageMaps/constants';
-import type { TargetStorage } from 'src/storageMaps/types';
+import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
+import type { TargetStorage } from 'src/storageMaps/utils/types';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import { FEATURE_NAMES } from '@utils/constants';

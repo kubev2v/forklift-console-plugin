@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
-import type { NetworkMappingValue } from 'src/networkMaps/types';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
@@ -10,7 +9,11 @@ import { SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { NetworkMapFieldId, type NetworkMapping } from '../../constants';
+import {
+  NetworkMapFieldId,
+  type NetworkMapping,
+  type NetworkMappingValue,
+} from '../../utils/types';
 import type { CreateNetworkMapFormData } from '../types';
 
 type InventorySourceNetworkFieldProps = {
@@ -48,7 +51,7 @@ const InventorySourceNetworkField: FC<InventorySourceNetworkFieldProps> = ({
             value={(field.value as NetworkMappingValue).name}
             onSelect={async (_event, value) => {
               field.onChange(value);
-              await trigger(NetworkMapFieldId.NetworkMap);
+              await trigger();
             }}
             placeholder={t('Select source network')}
           >

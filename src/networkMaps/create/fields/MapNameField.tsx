@@ -7,7 +7,8 @@ import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 import { validateMapName } from '@utils/validation/mapNameValidation';
 
-import { NetworkMapFieldId, networkMapFieldLabels } from '../../constants';
+import { networkMapFieldLabels } from '../../utils/constants';
+import { NetworkMapFieldId } from '../../utils/types';
 import type { CreateNetworkMapFormData } from '../types';
 
 const MapNameField: FC = () => {

@@ -8,7 +8,8 @@ import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { defaultNetworkMapping, NetworkMapFieldId, networkMapFieldLabels } from '../../constants';
+import { defaultNetworkMapping, networkMapFieldLabels } from '../../utils/constants';
+import { NetworkMapFieldId } from '../../utils/types';
 import type { CreateNetworkMapFormData } from '../types';
 
 import InventorySourceNetworkField from './InventorySourceNetworkField';

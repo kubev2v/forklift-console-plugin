@@ -1,9 +1,5 @@
-import {
-  type OffloadPlugin,
-  offloadPluginLabels,
-  type StorageVendorProduct,
-  storageVendorProductLabels,
-} from '../constants';
+import { offloadPluginLabels, storageVendorProductLabels } from './constants';
+import type { OffloadPlugin, StorageVendorProduct } from './types';
 
 /**
  * Gets plugin label, falling back to the raw value if no mapping exists

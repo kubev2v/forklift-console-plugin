@@ -1,5 +1,5 @@
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
-import type { NetworkMappingValue } from 'src/networkMaps/types';
+import type { NetworkMapping, NetworkMappingValue } from 'src/networkMaps/utils/types';
 import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
 import { IGNORED, MULTUS, POD } from 'src/plans/details/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
@@ -12,8 +12,6 @@ import type {
   V1beta1Provider,
 } from '@kubev2v/types';
 import { DEFAULT_NETWORK } from '@utils/constants';
-
-import type { NetworkMapping } from '../../constants';
 
 /**
  * Converts network mappings to network map specification mappings

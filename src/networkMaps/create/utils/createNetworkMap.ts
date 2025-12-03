@@ -1,8 +1,8 @@
+import type { NetworkMapping } from 'src/networkMaps/utils/types';
+
 import { NetworkMapModel, type V1beta1NetworkMap, type V1beta1Provider } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { getObjectRef } from '@utils/helpers/getObjectRef';
-
-import type { NetworkMapping } from '../../constants';
 
 import { buildNetworkMappings } from './buildNetworkMappings';
 

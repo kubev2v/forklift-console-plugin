@@ -1,4 +1,5 @@
-import { OffloadPlugin, StorageMapFieldId, type StorageMapping } from '../../constants';
+import { OffloadPlugin, StorageMapFieldId, type StorageMapping } from 'src/storageMaps/utils/types';
+
 import type { OffloadPluginConfig } from '../types';
 
 /**

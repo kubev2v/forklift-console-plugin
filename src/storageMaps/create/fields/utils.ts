@@ -1,6 +1,6 @@
-import { t } from '@utils/i18n';
+import { StorageMapFieldId, type StorageMapping } from 'src/storageMaps/utils/types';
 
-import { StorageMapFieldId, type StorageMapping } from '../../constants';
+import { t } from '@utils/i18n';
 
 /**
  * Validates storage mapping configurations to ensure complete and valid mappings

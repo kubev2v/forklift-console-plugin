@@ -3,6 +3,7 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
+import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import { NetworkMapModelRef } from '@kubev2v/types';
 import {
   Alert,
@@ -20,7 +21,8 @@ import { CreationMethod } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { defaultNetworkMapping, NetworkMapFieldId } from '../constants';
+import { defaultNetworkMapping } from '../utils/constants';
+import { NetworkMapFieldId } from '../utils/types';
 
 import CreateNetworkMapFieldTable from './fields/CreateNetworkMapFieldTable';
 import MapNameField from './fields/MapNameField';
@@ -44,6 +46,7 @@ const CreateNetworkMapForm: React.FC = () => {
   const {
     control,
     formState: { isSubmitting, isValid },
+    getFieldState,
     getValues,
     handleSubmit,
   } = form;
@@ -52,6 +55,8 @@ const CreateNetworkMapForm: React.FC = () => {
     control,
     name: NetworkMapFieldId.Project,
   });
+
+  const { error } = getFieldState(NetworkMapFieldId.NetworkMap);
 
   const networkMapsListUrl = getResourceUrl({
     namespace: project,
@@ -91,8 +96,8 @@ const CreateNetworkMapForm: React.FC = () => {
       });
 
       navigate(createdNetworkMapUrl);
-    } catch (error) {
-      setCreateError(error as Error);
+    } catch (err) {
+      setCreateError(err as Error);
     }
   }, [getValues, project, trackNetworkMapEvent, navigate]);
 
@@ -112,6 +117,11 @@ const CreateNetworkMapForm: React.FC = () => {
           <SourceProviderField />
           <TargetProviderField />
           <CreateNetworkMapFieldTable />
+          {error?.root && (
+            <div className="pf-v6-u-mt-sm">
+              <FormErrorHelperText error={error.root} />
+            </div>
+          )}
         </Form>
 
         <FlexItem>

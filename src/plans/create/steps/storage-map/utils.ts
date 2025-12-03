@@ -1,4 +1,4 @@
-import type { StorageMapping } from 'src/storageMaps/constants';
+import type { StorageMapping } from 'src/storageMaps/utils/types';
 
 import { t } from '@utils/i18n';
 

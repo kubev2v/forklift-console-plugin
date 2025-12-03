@@ -6,7 +6,7 @@ import type { V1beta1Provider } from '@kubev2v/types';
 import { ExpandableSection, Form, Split, SplitItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { StorageMapFieldId } from '../../constants';
+import { StorageMapFieldId } from '../../utils/types';
 
 import OffloadPluginField from './OffloadPluginField';
 import StorageProductField from './StorageProductField';

@@ -1,5 +1,6 @@
 import { type FC, Fragment, useState } from 'react';
-import { storageMapFieldLabels, type StorageMapping } from 'src/storageMaps/constants';
+import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
+import type { StorageMapping } from 'src/storageMaps/utils/types';
 
 import {
   Card,

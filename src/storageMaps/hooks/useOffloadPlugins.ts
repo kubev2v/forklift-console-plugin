@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import type { IoK8sApiextensionsApiserverPkgApisApiextensionsV1CustomResourceDefinition as CustomResourceDefinition } from '@kubev2v/types';
 import { isEmpty } from '@utils/helpers';
 
-import { offloadPlugins } from '../constants';
+import { offloadPlugins } from '../utils/constants';
 import { getStorageMapSchema } from '../utils/getStorageMapSchema';
 
 import { useStorageMapCrd } from './useStorageMapCrd';

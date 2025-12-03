@@ -689,6 +689,7 @@
   "Offload options (optional)": "Offload options (optional)",
   "Offload plugin": "Offload plugin",
   "On": "On",
+  "Only one mapping can target the default network.": "Only one mapping can target the default network.",
   "Open Virtual Appliance": "Open Virtual Appliance",
   "OpenShift Virtualization": "OpenShift Virtualization",
   "OpenShift web console UI": "OpenShift web console UI",

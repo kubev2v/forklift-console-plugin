@@ -2,8 +2,7 @@ import type { FieldValues } from 'react-hook-form';
 import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import type { TargetPowerState, TargetPowerStateValue } from 'src/plans/constants';
-import type { StorageMapping } from 'src/storageMaps/constants';
-import type { TargetStorage } from 'src/storageMaps/types';
+import type { StorageMapping, TargetStorage } from 'src/storageMaps/utils/types';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,

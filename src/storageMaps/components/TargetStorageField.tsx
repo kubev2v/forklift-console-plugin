@@ -1,11 +1,12 @@
 import type { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import type { StorageMappingValue, TargetStorage } from 'src/storageMaps/types';
 
 import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+
+import type { StorageMappingValue, TargetStorage } from '../utils/types';
 
 type TargetStorageFieldProps = {
   fieldId: string;
@@ -17,6 +18,7 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorag
   const {
     control,
     formState: { isSubmitting },
+    trigger,
   } = useFormContext();
   const { t } = useForkliftTranslation();
 
@@ -29,8 +31,9 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorag
           ref={field.ref}
           id={fieldId}
           testId={testId}
-          onSelect={(_, value) => {
+          onSelect={async (_, value) => {
             field.onChange(value);
+            await trigger();
           }}
           placeholder={t('Select target storage')}
           isDisabled={isSubmitting}

@@ -16,7 +16,8 @@ import useWatchProjectNames from '@utils/hooks/useWatchProjectNames';
 import { useForkliftTranslation } from '@utils/i18n';
 import { isSystemNamespace } from '@utils/namespaces';
 
-import { NetworkMapFieldId, networkMapFieldLabels } from '../../constants';
+import { networkMapFieldLabels } from '../../utils/constants';
+import { NetworkMapFieldId } from '../../utils/types';
 import type { CreateNetworkMapFormData } from '../types';
 
 const ProjectSelectField: FC = () => {
