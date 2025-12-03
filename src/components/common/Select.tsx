@@ -28,7 +28,7 @@ type SelectOption = {
 
 type SelectProps = Pick<PfSelectProps, 'onSelect' | 'className' | 'children'> & {
   id: string;
-  value: string;
+  value: string | undefined;
   options?: SelectOption[];
   status?: MenuToggleStatus;
   placeholder?: string;

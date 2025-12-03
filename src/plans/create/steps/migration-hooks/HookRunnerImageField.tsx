@@ -52,7 +52,7 @@ const HookRunnerImageField: FC<HookRunnerImageFieldProps> = ({ fieldId }) => {
               id={hookRunnerImageFieldId}
               aria-describedby={`${hookRunnerImageFieldId}-helper`}
               name={hookRunnerImageFieldId}
-              validated={getInputValidated(Boolean(error))}
+              validated={getInputValidated(error)}
             />
             <FormGroupWithHelpText
               helperText={t(

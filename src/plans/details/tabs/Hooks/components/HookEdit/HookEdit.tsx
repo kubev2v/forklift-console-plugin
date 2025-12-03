@@ -115,7 +115,7 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
                       onChange={onChange}
                       value={value}
                       spellCheck="false"
-                      validated={getInputValidated(Boolean(error))}
+                      validated={getInputValidated(error)}
                       type="text"
                     />
                   </FormGroupWithErrorText>

@@ -9,6 +9,7 @@ export default {
     'src/onlineHelp/tipsAndTricksDrawer/hooks/useLearningExperienceContext.ts',
 
     'src/providers/create/ProvidersCreatePage.tsx',
+    'src/providers/create-new/ProvidersCreatePage.tsx',
     'src/providers/list/ProvidersListPage.tsx',
     'src/providers/details/ProviderDetailsPage.tsx',
     'src/utils/types.ts',
