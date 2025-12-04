@@ -58,9 +58,14 @@ export class NetworkMapStep {
     const rowCount = await rows.count();
 
     let targetRow = null;
+    const availableNetworks: string[] = [];
+
     for (let i = 0; i < rowCount; i += 1) {
       const row = rows.nth(i);
       const text = await row.textContent();
+      if (text) {
+        availableNetworks.push(text.trim());
+      }
       if (text?.includes(sourceNetwork)) {
         targetRow = row;
         break;
@@ -68,7 +73,10 @@ export class NetworkMapStep {
     }
 
     if (!targetRow) {
-      throw new Error(`Could not find row with source network: ${sourceNetwork}`);
+      throw new Error(
+        `Could not find row with source network: "${sourceNetwork}"\n` +
+          `Available source networks (${availableNetworks.length}):\n${availableNetworks.map((network, i) => `  ${i + 1}. ${network}`).join('\n')}`,
+      );
     }
 
     // Find the target network select button using testId pattern

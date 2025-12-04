@@ -67,9 +67,14 @@ export class StorageMapStep {
     const rowCount = await rows.count();
 
     let targetRow = null;
+    const availableStorages: string[] = [];
+
     for (let i = 0; i < rowCount; i += 1) {
       const row = rows.nth(i);
       const text = await row.textContent();
+      if (text) {
+        availableStorages.push(text.trim());
+      }
       if (text?.includes(sourceStorage)) {
         targetRow = row;
         break;
@@ -77,7 +82,10 @@ export class StorageMapStep {
     }
 
     if (!targetRow) {
-      throw new Error(`Could not find row with source storage: ${sourceStorage}`);
+      throw new Error(
+        `Could not find row with source storage: "${sourceStorage}"\n` +
+          `Available source storages (${availableStorages.length}):\n${availableStorages.map((storage, i) => `  ${i + 1}. ${storage}`).join('\n')}`,
+      );
     }
 
     // Find the target storage select using testId

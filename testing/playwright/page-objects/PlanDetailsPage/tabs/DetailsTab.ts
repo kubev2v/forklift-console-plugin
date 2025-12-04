@@ -7,6 +7,8 @@ import { TargetLabelsModal } from '../modals/TargetLabelsModal';
 import { TargetNodeSelectorModal } from '../modals/TargetNodeSelectorModal';
 
 export class DetailsTab {
+  readonly descriptionTextbox: Locator;
+  readonly editDescriptionModal: Locator;
   readonly editDiskDecryptionModal: Locator;
   readonly editPowerStateModal: Locator;
   readonly guestConversionModal: GuestConversionModal;
@@ -14,6 +16,7 @@ export class DetailsTab {
   readonly powerStateOptionAuto: Locator;
   readonly powerStateOptionOff: Locator;
   readonly powerStateOptionOn: Locator;
+  readonly saveDescriptionButton: Locator;
   readonly saveDiskDecryptionButton: Locator;
   readonly savePowerStateButton: Locator;
   readonly targetAffinityModal: TargetAffinityModal;
@@ -24,6 +27,9 @@ export class DetailsTab {
 
   constructor(page: Page) {
     this.page = page;
+    this.editDescriptionModal = this.page.getByRole('dialog', { name: 'Edit description' });
+    this.descriptionTextbox = this.editDescriptionModal.getByRole('textbox');
+    this.saveDescriptionButton = this.editDescriptionModal.getByTestId('modal-confirm-button');
     this.editPowerStateModal = this.page.getByTestId('edit-target-power-state-modal');
     this.savePowerStateButton = this.page.getByTestId('modal-confirm-button');
     this.targetPowerStateSelect = this.editPowerStateModal.getByTestId('target-power-state-select');
@@ -40,6 +46,11 @@ export class DetailsTab {
     this.targetLabelsModal = new TargetLabelsModal(page);
     this.targetNodeSelectorModal = new TargetNodeSelectorModal(page);
     this.targetAffinityModal = new TargetAffinityModal(page);
+  }
+
+  async clickEditDescription(): Promise<void> {
+    await this.page.getByTestId('description-detail-item').locator('button').click();
+    await expect(this.editDescriptionModal).toBeVisible();
   }
 
   async clickEditDiskDecryption(): Promise<void> {
@@ -74,6 +85,11 @@ export class DetailsTab {
     return this.page.getByTestId('disk-decryption-detail-item');
   }
 
+  async editDescription(newDescription: string): Promise<void> {
+    await this.descriptionTextbox.clear();
+    await this.descriptionTextbox.fill(newDescription);
+  }
+
   async getCurrentPlanStatus(): Promise<string> {
     const statusElement = this.page
       .getByTestId('status-detail-item')
@@ -96,10 +112,20 @@ export class DetailsTab {
     return this.page.getByRole('option', { name: optionNames[state], exact: true });
   }
 
+  async saveDescription(): Promise<void> {
+    await this.saveDescriptionButton.click();
+    await expect(this.editDescriptionModal).not.toBeVisible();
+  }
+
   targetVMPowerState(state: string): Locator {
     return this.page
       .getByTestId('target-vm-power-state-detail-item')
       .getByText(state, { exact: true });
+  }
+
+  async verifyDescriptionText(expectedText: string): Promise<void> {
+    const descriptionElement = this.page.getByTestId('description-detail-item');
+    await expect(descriptionElement).toContainText(expectedText);
   }
 
   async verifyDetailsTab(planData: PlanTestData): Promise<void> {
@@ -137,6 +163,13 @@ export class DetailsTab {
     await expect(this.page.getByTestId('created-at-detail-item')).toBeVisible();
     await expect(this.page.getByTestId('owner-detail-item')).toContainText('No owner');
 
+    // Verify description
+    if (planData.description) {
+      await this.verifyDescriptionText(planData.description);
+    } else {
+      await this.verifyDescriptionText('None');
+    }
+
     if (planData.additionalPlanSettings?.targetPowerState) {
       let powerState = 'Retain source VM power state';
       if (planData.additionalPlanSettings.targetPowerState === 'on') {
@@ -148,13 +181,14 @@ export class DetailsTab {
     }
   }
 
-  async verifyPlanStatus(expectedStatus = 'Ready for migration'): Promise<void> {
+  async verifyPlanStatus(expectedStatus = 'Ready for migration', soft = false): Promise<void> {
     const statusLocator = this.page.getByTestId('status-detail-item');
+    const expectFn = expect.configure({ soft });
 
-    await expect(statusLocator).not.toContainText('Unknown', { timeout: 30000 });
+    await expectFn(statusLocator).not.toContainText('Unknown', { timeout: 30000 });
 
     if (expectedStatus === 'Ready for migration') {
-      await expect(
+      await expectFn(
         this.page.getByTestId('status-detail-item').getByTestId('plan-start-button-status'),
       ).toBeVisible();
     }
