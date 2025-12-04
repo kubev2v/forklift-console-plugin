@@ -7,6 +7,7 @@ import { patchProviderSecretOwner } from 'src/providers/create/utils/patchProvid
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
 
+import SectionHeading from '@components/headers/SectionHeading';
 import {
   Alert,
   AlertVariant,
@@ -21,12 +22,15 @@ import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import CertificateValidationField from './fields/CertificateValidationField';
 import { ProviderFormFieldId } from './fields/constants';
 import NfsDirectoryField from './fields/NfsDirectoryField';
+import OpenShiftUrlField from './fields/OpenShiftUrlField';
 import ProviderNameField from './fields/ProviderNameField';
 import ProviderProjectField from './fields/ProviderProjectField';
 import ProviderTypeField from './fields/ProviderTypeField';
-import { buildOvaProviderResources } from './utils/buildProviderResources';
+import ServiceAccountTokenField from './fields/ServiceAccountTokenField';
+import { buildProviderResources } from './utils/buildProviderResources';
 import { getDefaultFormValues } from './utils/getDefaultFormValues';
 import CreateProviderFormContextProvider from './CreateProviderFormContextProvider';
 import type { CreateProviderFormData } from './types';
@@ -50,9 +54,13 @@ const CreateProviderForm: FC = () => {
     handleSubmit,
   } = form;
 
-  const [selectedProject, selectedProviderType] = useWatch({
+  const [selectedProject, selectedProviderType, openshiftUrl] = useWatch({
     control,
-    name: [ProviderFormFieldId.ProviderProject, ProviderFormFieldId.ProviderType],
+    name: [
+      ProviderFormFieldId.ProviderProject,
+      ProviderFormFieldId.ProviderType,
+      ProviderFormFieldId.OpenshiftUrl,
+    ],
   });
 
   const onSubmit = useCallback(
@@ -68,21 +76,19 @@ const CreateProviderForm: FC = () => {
       });
 
       try {
-        const { provider: newProvider, secret: newSecret } = buildOvaProviderResources(formData);
+        const { provider: newProvider, secret: newSecret } = buildProviderResources(formData);
+
         const secret = await createProviderSecret(newProvider, newSecret);
+        const provider = await createProvider(newProvider, secret);
+        await patchProviderSecretOwner(provider, secret);
 
-        if (secret) {
-          const provider = await createProvider(newProvider, secret);
-          await patchProviderSecretOwner(provider, secret);
+        trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_COMPLETED, {
+          namespace,
+          providerType: provider?.spec?.type,
+        });
 
-          trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_COMPLETED, {
-            namespace,
-            providerType: provider?.spec?.type,
-          });
-
-          const providerURL = getProviderDetailsPageUrl(provider);
-          navigate(providerURL);
-        }
+        const providerURL = getProviderDetailsPageUrl(provider);
+        navigate(providerURL);
       } catch (err) {
         trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_FAILED, {
           error: err instanceof Error ? err.message : 'Unknown error',
@@ -112,6 +118,14 @@ const CreateProviderForm: FC = () => {
             <ProviderTypeField />
             {selectedProviderType && <ProviderNameField />}
             {selectedProviderType === PROVIDER_TYPES.ova && <NfsDirectoryField />}
+            {selectedProviderType === PROVIDER_TYPES.openshift && (
+              <>
+                <OpenShiftUrlField />
+                <SectionHeading text={t('Provider credentials')} />
+                {openshiftUrl?.trim() && <ServiceAccountTokenField />}
+                <CertificateValidationField />
+              </>
+            )}
 
             {apiError && (
               <Alert

@@ -14,8 +14,10 @@ import {
 
 import { YES_VALUE } from './constants';
 
-export const createProvider = async (provider: V1beta1Provider, secret: IoK8sApiCoreV1Secret) => {
-  // Sanity check, don't try to create empty provider
+export const createProvider = async (
+  provider: V1beta1Provider,
+  secret: IoK8sApiCoreV1Secret | undefined,
+) => {
   if (!provider) {
     return undefined;
   }
