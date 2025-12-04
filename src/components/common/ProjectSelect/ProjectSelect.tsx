@@ -1,13 +1,142 @@
 import type { FC } from 'react';
 import { ModalHOC } from 'src/modules/Providers/modals/ModalHOC/ModalHOC';
 
-import ProjectSelectTypeAhead from '@components/common/ProjectSelect/ProjectSelectTypeAhead.tsx';
-import type { ProjectSelectProps } from '@components/common/ProjectSelect/types.ts';
+import ProjectSelectEmptyState from '@components/common/ProjectSelect/ProjectSelectEmptyState';
+import type { ProjectSelectProps } from '@components/common/ProjectSelect/types';
+import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
+import CreateProjectModal, {
+  type CreateProjectModalProps,
+} from '@components/modals/CreateProjectModal';
+import {
+  type K8sResourceCommon,
+  useAccessReview,
+  useModal,
+} from '@openshift-console/dynamic-plugin-sdk';
+import { ProjectModel } from '@openshift-console/dynamic-plugin-sdk/lib/models';
+import { Bullseye, Button, ButtonVariant, Divider, Spinner, Switch } from '@patternfly/react-core';
+import { PlusCircleIcon } from '@patternfly/react-icons';
+import { getName } from '@utils/crds/common/selectors';
+import { isEmpty } from '@utils/helpers';
+import { useForkliftTranslation } from '@utils/i18n';
+import { isSystemNamespace } from '@utils/namespaces';
 
-const ProjectSelect: FC<ProjectSelectProps> = ({ ...props }) => (
-  <ModalHOC>
-    <ProjectSelectTypeAhead {...props} />
-  </ModalHOC>
-);
+const showDefaultTargetsSwitchTestId = 'show-default-projects-switch';
+
+const ProjectSelect: FC<ProjectSelectProps> = ({
+  defaultProject,
+  emptyStateMessage,
+  errorLoading = null,
+  id,
+  isDisabled = false,
+  loading = false,
+  noOptionsMessage,
+  onChange,
+  onNewValue,
+  placeholder,
+  projectNames,
+  setShowDefaultProjects,
+  showDefaultProjects,
+  testId = 'target-project-select',
+  toggleProps,
+  value,
+}) => {
+  const { t } = useForkliftTranslation();
+  const launcher = useModal();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [canCreate, loadingCreate] = useAccessReview({
+    group: ProjectModel.apiGroup,
+    resource: ProjectModel.plural,
+    verb: 'create',
+  });
+  const createAllowed = !loadingCreate && canCreate && Boolean(onNewValue);
+
+  const projectOptions = useMemo(() => {
+    if (!isEmpty(projectNames)) {
+      return projectNames
+        .filter(
+          (projectName) =>
+            showDefaultProjects || !isSystemNamespace(projectName) || projectName === value,
+        )
+        .map((projectName) => ({
+          content: projectName,
+          value: projectName,
+        }));
+    }
+    return defaultProject ? [{ content: defaultProject, value: defaultProject }] : [];
+  }, [projectNames, defaultProject, showDefaultProjects, value]);
+
+  const onProjectCreated = (newProject: K8sResourceCommon) => {
+    const projectName = getName(newProject);
+    if (onNewValue && projectName) {
+      onNewValue(projectName);
+    }
+  };
+
+  const onNewProject = () => {
+    launcher<CreateProjectModalProps>(CreateProjectModal, { onCreated: onProjectCreated });
+  };
+
+  return (
+    <TypeaheadSelect
+      testId={testId}
+      ref={inputRef}
+      isScrollable
+      isDisabled={isDisabled}
+      allowClear
+      placeholder={placeholder ?? t('Select a project')}
+      id={id}
+      options={projectOptions}
+      defaultValue={defaultProject}
+      value={value ?? ''}
+      onChange={onChange}
+      footer={
+        createAllowed ? (
+          <Button
+            variant={ButtonVariant.link}
+            isInline
+            icon={<PlusCircleIcon />}
+            onClick={onNewProject}
+            data-testid="create-project-button"
+          >
+            {t('Create project')}
+          </Button>
+        ) : undefined
+      }
+      noOptionsMessage={noOptionsMessage}
+      toggleProps={toggleProps}
+      emptyState={
+        loading ? (
+          <Bullseye className="pf-v6-u-my-lg">
+            <Spinner />
+          </Bullseye>
+        ) : (
+          <ProjectSelectEmptyState
+            emptyStateMessage={emptyStateMessage}
+            onCreate={createAllowed ? onNewProject : undefined}
+            errorLoading={errorLoading}
+          />
+        )
+      }
+      filterControls={
+        <>
+          <div className="pf-v6-u-px-md pf-v6-u-py-md">
+            <Switch
+              id={showDefaultTargetsSwitchTestId}
+              data-testid={showDefaultTargetsSwitchTestId}
+              label={t('Show default projects')}
+              isChecked={showDefaultProjects}
+              onChange={(_event, checked) => {
+                setShowDefaultProjects(checked);
+                // Delay here so that the list is repopulated before attempting to re-focus
+                setTimeout(() => inputRef.current?.focus(), 500);
+              }}
+            />
+          </div>
+          <Divider />
+        </>
+      }
+    />
+  );
+};
 
 export default ProjectSelect;
