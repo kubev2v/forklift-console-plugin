@@ -73,9 +73,12 @@ export class NetworkMapStep {
     }
 
     if (!targetRow) {
+      const networksList = availableNetworks
+        .map((network, i) => `  ${i + 1}. ${network}`)
+        .join('\n');
       throw new Error(
         `Could not find row with source network: "${sourceNetwork}"\n` +
-          `Available source networks (${availableNetworks.length}):\n${availableNetworks.map((network, i) => `  ${i + 1}. ${network}`).join('\n')}`,
+          `Available source networks (${availableNetworks.length}):\n${networksList}`,
       );
     }
 

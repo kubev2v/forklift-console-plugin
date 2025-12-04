@@ -82,9 +82,12 @@ export class StorageMapStep {
     }
 
     if (!targetRow) {
+      const storagesList = availableStorages
+        .map((storage, i) => `  ${i + 1}. ${storage}`)
+        .join('\n');
       throw new Error(
         `Could not find row with source storage: "${sourceStorage}"\n` +
-          `Available source storages (${availableStorages.length}):\n${availableStorages.map((storage, i) => `  ${i + 1}. ${storage}`).join('\n')}`,
+          `Available source storages (${availableStorages.length}):\n${storagesList}`,
       );
     }
 
