@@ -21,6 +21,7 @@ export const HelpIconPopover: FC<HelpIconPopoverProps> = ({
 }) => (
   <Popover position="right" bodyContent={children} headerContent={header} {...popoverProps}>
     <Button
+      size="sm"
       isInline
       variant={ButtonVariant.plain}
       icon={<HelpIcon />}
