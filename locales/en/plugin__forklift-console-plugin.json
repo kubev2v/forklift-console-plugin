@@ -140,6 +140,7 @@
   "All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.": "All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.",
   "All VMs were migrated": "All VMs were migrated",
   "An error occurred": "An error occurred",
+  "An error occurred while fetching target projects for target provider <2>{targetProviderName}</2>.<4></4>{error.message}": "An error occurred while fetching target projects for target provider <2>{targetProviderName}</2>.<4></4>{error.message}",
   "An error occurred. Please try again.": "An error occurred. Please try again.",
   "An open-source container orchestration platform that automates many of the manual processes involved in deploying, managing, and scaling containerized applications.": "An open-source container orchestration platform that automates many of the manual processes involved in deploying, managing, and scaling containerized applications.",
   "Ansible playbook": "Ansible playbook",
