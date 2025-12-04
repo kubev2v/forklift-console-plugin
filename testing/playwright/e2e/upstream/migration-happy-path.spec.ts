@@ -25,6 +25,7 @@ test.describe(
       const testData = createPlanTestData({
         planName: 'test-create-plan',
         planProject: MTV_NAMESPACE,
+        description: 'Test plan for automated testing',
         sourceProvider: 'test-source-provider',
         targetProvider: 'test-target-provider',
         targetProject: { name: 'test-target-project', isPreexisting: true },
