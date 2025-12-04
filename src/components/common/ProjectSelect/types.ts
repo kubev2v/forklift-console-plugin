@@ -15,6 +15,8 @@ export type ProjectSelectProps = {
   isDisabled?: boolean;
   placeholder?: string;
   noOptionsMessage?: string;
-  emptyStateMessage?: ReactNode;
+  emptyStateMessage?: ReactNode | null;
   testId?: string;
+  loading?: boolean;
+  errorLoading?: Error | null;
 };

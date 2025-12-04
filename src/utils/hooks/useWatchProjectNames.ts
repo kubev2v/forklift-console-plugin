@@ -5,7 +5,7 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName } from '@utils/crds/common/selectors';
 import { isUpstream } from '@utils/env';
 
-const useWatchProjectNames = (): [string[], boolean, boolean] => {
+const useWatchProjectNames = (): [string[], boolean, Error | null] => {
   const [projects, projectsLoaded, projectsLoadError] = useK8sWatchResource<K8sResourceCommon[]>({
     isList: true,
     kind: isUpstream() ? 'Namespace' : 'Project',
@@ -27,7 +27,7 @@ const useWatchProjectNames = (): [string[], boolean, boolean] => {
     [projectsLoaded, projectsLoadError, projects],
   );
 
-  return [projectNames, projectsLoaded, Boolean(projectsLoadError)];
+  return [projectNames, projectsLoaded, projectsLoadError as Error | null];
 };
 
 export default useWatchProjectNames;
