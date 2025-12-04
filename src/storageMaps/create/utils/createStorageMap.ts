@@ -8,7 +8,7 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { getObjectRef } from '@utils/helpers/getObjectRef';
 
-import type { StorageMapping } from '../../constants';
+import type { StorageMapping } from '../../utils/types';
 
 import { buildStorageMappings } from './buildStorageMappings';
 

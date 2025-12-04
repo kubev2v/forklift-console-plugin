@@ -1,7 +1,6 @@
 import { type FC, useContext, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom-v5-compat';
 import migrationIcon from 'src/components/images/resources/migration.svg';
-import providerTypes from 'src/modules/Plans/views/create/constanats/providerTypes';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext';
 import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
@@ -23,6 +22,7 @@ import { type ProviderType, TELEMETRY_EVENTS } from '@utils/analytics/constants'
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { Namespace } from '@utils/constants';
 
+import { providerTypes } from './utils/providerTypes';
 import { ProviderCard } from './ProviderCard';
 
 const WelcomeCard: FC = () => {

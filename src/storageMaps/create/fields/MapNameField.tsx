@@ -1,5 +1,7 @@
 import type { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
+import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { TextInput } from '@patternfly/react-core';
@@ -7,7 +9,6 @@ import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 import { validateMapName } from '@utils/validation/mapNameValidation';
 
-import { StorageMapFieldId, storageMapFieldLabels } from '../../constants';
 import type { CreateStorageMapFormData } from '../types';
 
 const MapNameField: FC = () => {

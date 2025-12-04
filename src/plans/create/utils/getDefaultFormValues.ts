@@ -1,6 +1,7 @@
 import { defaultTargetPowerStateOption } from 'src/plans/constants';
 import { QUAY_FORKLIFT_HOOK_RUNNER_IMAGE } from 'src/plans/details/tabs/Hooks/utils/constants';
-import { defaultStorageMapping, StorageMapFieldId } from 'src/storageMaps/constants';
+import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
+import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import { GeneralFormFieldId } from '../steps/general-information/constants';
 import { HooksFormFieldId, MigrationHookFieldId } from '../steps/migration-hooks/constants';

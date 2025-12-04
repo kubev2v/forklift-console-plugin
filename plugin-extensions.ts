@@ -1,11 +1,11 @@
 import type { NavSection } from '@openshift-console/dynamic-plugin-sdk';
 import type { EncodedExtension } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
-import { extensions as networkMapExtensions } from './src/modules/NetworkMaps/dynamic-plugin';
-import { extensions as planExtensions } from './src/modules/Plans/dynamic-plugin';
-import { extensions as storageMapExtensions } from './src/modules/StorageMaps/dynamic-plugin';
+import { extensions as networkMapExtensions } from './src/networkMaps/dynamic-plugin';
 import { extensions as overviewExtensions } from './src/overview/dynamic-plugin';
+import { extensions as planExtensions } from './src/plans/dynamic-plugin';
 import { extensions as providerExtensions } from './src/providers/dynamic-plugin';
+import { extensions as storageMapExtensions } from './src/storageMaps/dynamic-plugin';
 
 const extensions: EncodedExtension[] = [
   {

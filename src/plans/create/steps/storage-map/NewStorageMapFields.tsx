@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
-import { defaultStorageMapping, type StorageMapping } from 'src/storageMaps/constants';
+import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 import { getSourceStorageValuesForSelectedVms } from 'src/storageMaps/utils/getSourceStorageValues';
+import type { StorageMapping } from 'src/storageMaps/utils/types';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';

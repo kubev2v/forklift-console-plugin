@@ -1,6 +1,6 @@
 import { getMapFieldId } from '@utils/mapForms/getMapFieldId';
 
-import { NetworkMapFieldId, type NetworkMapping } from '../constants';
+import { NetworkMapFieldId, type NetworkMapping } from './types';
 
 export type NetworkMappingId = `${NetworkMapFieldId.NetworkMap}.${number}.${keyof NetworkMapping}`;
 

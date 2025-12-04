@@ -1,8 +1,13 @@
 import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-import { OffloadPlugin, STORAGE_NAMES } from 'src/storageMaps/constants';
-import type { StorageMappingValue } from 'src/storageMaps/types';
+import { STORAGE_NAMES } from 'src/storageMaps/utils/constants';
+import {
+  OffloadPlugin,
+  StorageMapFieldId,
+  type StorageMapping,
+  type StorageMappingValue,
+} from 'src/storageMaps/utils/types';
 
 import type {
   V1beta1Provider,
@@ -10,7 +15,6 @@ import type {
   V1beta1StorageMapSpecMapSource,
 } from '@kubev2v/types';
 
-import { StorageMapFieldId, type StorageMapping } from '../../constants';
 import type { CustomStorageMapSpecMap, OffloadPluginConfig } from '../types';
 
 import { createOffloadPluginConfig } from './createOffloadPluginConfig';

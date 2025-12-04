@@ -3,6 +3,7 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
+import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import { StorageMapModelRef } from '@kubev2v/types';
 import {
   Alert,
@@ -20,7 +21,8 @@ import { CreationMethod } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { defaultStorageMapping, StorageMapFieldId } from '../constants';
+import { defaultStorageMapping } from '../utils/constants';
+import { StorageMapFieldId } from '../utils/types';
 
 import CreateStorageMapFieldTable from './fields/CreateStorageMapFieldTable';
 import MapNameField from './fields/MapNameField';
@@ -44,6 +46,7 @@ const CreateStorageMapForm: React.FC = () => {
   const {
     control,
     formState: { isSubmitting, isValid },
+    getFieldState,
     getValues,
     handleSubmit,
   } = form;
@@ -52,6 +55,8 @@ const CreateStorageMapForm: React.FC = () => {
     control,
     name: StorageMapFieldId.Project,
   });
+
+  const { error } = getFieldState(StorageMapFieldId.StorageMap);
 
   const storageMapsListUrl = getResourceUrl({
     namespace: project,
@@ -85,8 +90,8 @@ const CreateStorageMapForm: React.FC = () => {
 
       // Navigate to the created storage map
       navigate(createdStorageMapUrl);
-    } catch (error) {
-      setCreateError(error as Error);
+    } catch (err) {
+      setCreateError(err as Error);
     }
   };
 
@@ -106,6 +111,11 @@ const CreateStorageMapForm: React.FC = () => {
           <SourceProviderField />
           <TargetProviderField />
           <CreateStorageMapFieldTable />
+          {error?.root && (
+            <div className="pf-v6-u-mt-sm">
+              <FormErrorHelperText error={error.root} />
+            </div>
+          )}
         </Form>
 
         <FlexItem>

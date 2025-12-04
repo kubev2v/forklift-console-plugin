@@ -13,7 +13,7 @@ import type {
 import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 import { isEmpty } from '@utils/helpers';
 
-import type { OVirtVMWithDisks } from '../types';
+import type { OVirtVMWithDisks } from './types';
 
 /**
  * Extracts volume names from vSphere VMs (no option to extract storage classes data)

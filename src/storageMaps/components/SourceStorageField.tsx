@@ -6,8 +6,7 @@ import { SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { StorageMapFieldId, type StorageMapping } from '../constants';
-import type { StorageMappingValue } from '../types';
+import { StorageMapFieldId, type StorageMapping, type StorageMappingValue } from '../utils/types';
 
 type SourceStorageFieldProps = {
   fieldId: string;
@@ -45,7 +44,7 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({
           value={(field.value as StorageMappingValue).name}
           onSelect={async (_event, value) => {
             field.onChange(value);
-            await trigger(StorageMapFieldId.StorageMap);
+            await trigger();
           }}
           placeholder={t('Select source storage')}
         >

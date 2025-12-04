@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-import StorageMapsAddButton from 'src/modules/StorageMaps/components/StorageMapsAddButton';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -18,6 +17,8 @@ import {
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { FORKLIFT_DOCS_URL } from '@utils/links';
+
+import StorageMapsAddButton from './StorageMapsAddButton';
 
 type StorageMapsEmptyStateProps = {
   namespace?: string;

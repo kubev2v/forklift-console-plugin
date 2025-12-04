@@ -50,6 +50,12 @@ export const CATEGORY_TYPES = {
   WARNING: 'Warn',
 };
 
+export const MAP_STATUS: Record<string, string> = {
+  [CATEGORY_TYPES.CRITICAL]: CATEGORY_TYPES.CRITICAL,
+  [CATEGORY_TYPES.NOT_READY]: CATEGORY_TYPES.NOT_READY,
+  [CATEGORY_TYPES.READY]: CATEGORY_TYPES.READY,
+};
+
 export const MODEL_KIND = {
   NETWORK_MAP: 'NetworkMap',
   PLAN: 'Plan',

@@ -2,7 +2,7 @@ import type { FieldValues } from 'react-hook-form';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 
-import type { NetworkMapFieldId, NetworkMapping } from '../constants';
+import type { NetworkMapFieldId, NetworkMapping } from '../utils/types';
 
 export type CreateNetworkMapFormData = FieldValues & {
   [NetworkMapFieldId.MapName]: string;
