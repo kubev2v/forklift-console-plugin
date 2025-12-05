@@ -16,21 +16,23 @@ set -e
 # ==============================================================================
 
 log() {
-    echo "--- $1 ---"
+    local message="$1"
+    echo "--- $message ---"
+    return 0
 }
 
 log "Report Portal Upload Script"
 
 # Validate required environment variables
 for var in JUNIT_XML CLUSTER_NAME VSPHERE_PROVIDER TEST_TYPE KUBECONFIG_PATH KUBE_PASSWORD; do
-    if [ -z "${!var}" ]; then
-        echo "ERROR: $var environment variable is not set."
+    if [[ -z "${!var}" ]]; then
+        echo "ERROR: $var environment variable is not set." >&2
         exit 1
     fi
 done
 
-if [ ! -f "$JUNIT_XML" ]; then
-    echo "ERROR: junit.xml not found at $JUNIT_XML"
+if [[ ! -f "$JUNIT_XML" ]]; then
+    echo "ERROR: junit.xml not found at $JUNIT_XML" >&2
     exit 1
 fi
 
