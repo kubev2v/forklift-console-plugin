@@ -391,3 +391,48 @@ test.describe('Plan Details - Target Affinity Rules', { tag: '@downstream' }, ()
     await planDetailsPage.detailsTab.verifyTargetAffinityRulesCount(2);
   });
 });
+
+test.describe('Plan Details - Description', { tag: '@downstream' }, () => {
+  test('should edit plan description', async ({ page, testPlan, testProvider: _testProvider }) => {
+    if (!testPlan) throw new Error('testPlan is required');
+
+    const planDetailsPage = new PlanDetailsPage(page);
+
+    const { name: planName, namespace } = testPlan.metadata;
+    const { testData } = testPlan;
+
+    await test.step('Navigate to plan details page', async () => {
+      await planDetailsPage.navigate(planName, namespace);
+      await planDetailsPage.verifyPlanTitle(planName);
+      await planDetailsPage.detailsTab.navigateToDetailsTab();
+    });
+
+    await test.step('Verify initial description from testData', async () => {
+      const initialDescription = testData.description ?? 'Test plan for automated testing';
+      await planDetailsPage.detailsTab.verifyDescriptionText(initialDescription);
+    });
+
+    await test.step('Edit and update description', async () => {
+      await planDetailsPage.detailsTab.clickEditDescription();
+      const updatedDescription = 'Updated description for production migration plan';
+      await planDetailsPage.detailsTab.editDescription(updatedDescription);
+      await planDetailsPage.detailsTab.saveDescription();
+      await planDetailsPage.detailsTab.verifyDescriptionText(updatedDescription);
+    });
+
+    await test.step('Edit and change to another description', async () => {
+      await planDetailsPage.detailsTab.clickEditDescription();
+      const anotherDescription = 'Final description for testing purposes';
+      await planDetailsPage.detailsTab.editDescription(anotherDescription);
+      await planDetailsPage.detailsTab.saveDescription();
+      await planDetailsPage.detailsTab.verifyDescriptionText(anotherDescription);
+    });
+
+    await test.step('Clear description and verify empty state', async () => {
+      await planDetailsPage.detailsTab.clickEditDescription();
+      await planDetailsPage.detailsTab.editDescription('');
+      await planDetailsPage.detailsTab.saveDescription();
+      await planDetailsPage.detailsTab.verifyDescriptionText('None');
+    });
+  });
+});

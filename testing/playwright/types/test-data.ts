@@ -42,6 +42,7 @@ export const StorageClasses = {
 export interface PlanTestData {
   planName: string;
   planProject: string;
+  description?: string;
   sourceProvider: string;
   targetProvider: string;
   targetProject: TargetProject;
@@ -67,6 +68,7 @@ export const createPlanTestData = (
   const defaults: PlanTestData = {
     planName,
     planProject: MTV_NAMESPACE,
+    description: 'Test plan for automated testing',
     sourceProvider: 'test-provider',
     targetProvider: 'host',
     targetProject: {
