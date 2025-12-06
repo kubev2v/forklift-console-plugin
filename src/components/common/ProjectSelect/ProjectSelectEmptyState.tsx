@@ -8,16 +8,18 @@ import {
   EmptyStateBody,
   EmptyStateFooter,
 } from '@patternfly/react-core';
-import { PlusCircleIcon } from '@patternfly/react-icons';
+import { ExclamationTriangleIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type ProjectSelectEmptyStateProps = {
   emptyStateMessage?: ReactNode;
   onCreate?: () => void;
+  errorLoading?: Error | null;
 };
 
 const ProjectSelectEmptyState: FC<ProjectSelectEmptyStateProps> = ({
   emptyStateMessage,
+  errorLoading,
   onCreate,
 }) => {
   const { t } = useForkliftTranslation();
@@ -27,9 +29,9 @@ const ProjectSelectEmptyState: FC<ProjectSelectEmptyStateProps> = ({
   }
 
   return (
-    <EmptyState headingLevel="h6" icon={PlusCircleIcon}>
+    <EmptyState headingLevel="h6" icon={errorLoading ? ExclamationTriangleIcon : PlusCircleIcon}>
       <EmptyStateBody>{emptyStateMessage}</EmptyStateBody>
-      {onCreate ? (
+      {onCreate && !errorLoading ? (
         <EmptyStateFooter>
           <EmptyStateActions>
             <Button
