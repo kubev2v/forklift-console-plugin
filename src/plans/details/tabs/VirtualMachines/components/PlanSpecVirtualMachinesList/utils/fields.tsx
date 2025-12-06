@@ -7,8 +7,7 @@ import { VMTargetPowerStateCellRenderer } from '../components/VMTargetPowerState
 import { PlanSpecVirtualMachinesTableResourceId, type SpecVirtualMachinePageData } from './types';
 
 export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePageData) => {
-  const { inventoryVmData, plan, specVM, vmIndex } = fieldsData;
-
+  const { conditions, inventoryVmData, plan, specVM, vmIndex } = fieldsData;
   return {
     [PlanSpecVirtualMachinesTableResourceId.Actions]: (
       <SpecVirtualMachinesActions
@@ -18,7 +17,7 @@ export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePa
       />
     ),
     [PlanSpecVirtualMachinesTableResourceId.Concerns]: (
-      <VirtualMachineConcernsCell vmData={inventoryVmData} />
+      <VirtualMachineConcernsCell vmData={inventoryVmData} conditions={conditions} />
     ),
     [PlanSpecVirtualMachinesTableResourceId.Name]: <>{specVM?.name ?? inventoryVmData?.vm?.name}</>,
     [PlanSpecVirtualMachinesTableResourceId.TargetPowerState]: (

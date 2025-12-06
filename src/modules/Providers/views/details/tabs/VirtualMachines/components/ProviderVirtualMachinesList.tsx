@@ -12,7 +12,7 @@ import { isProviderOpenshift } from '@utils/resources';
 
 import { getVmId } from '../utils/helpers/vmProps';
 
-import { ConcernsTable } from './ConcernsTable';
+import ConcernsAndConditionsTable from './ConcernsAndConditionsTable';
 import { extraSupportedFilters, extraSupportedMatchers } from './constants';
 import type { VmData } from './VMCellProps';
 
@@ -105,7 +105,11 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       extraSupportedFilters={extraSupportedFilters}
       extraSupportedMatchers={extraSupportedMatchers}
       {...getStandardPageProps()}
-      expanded={isProviderOpenshift(provider) ? undefined : (props) => <ConcernsTable {...props} />}
+      expanded={
+        isProviderOpenshift(provider)
+          ? undefined
+          : (props) => <ConcernsAndConditionsTable vmData={props.resourceData} />
+      }
     />
   );
 };

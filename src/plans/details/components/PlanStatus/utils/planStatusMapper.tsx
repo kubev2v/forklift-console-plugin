@@ -28,6 +28,7 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
   ),
   [PlanStatuses.CannotStart]: (
     <Label
+      color="red"
       className="forklift-plan-status__grey-label"
       isCompact
       variant="filled"

@@ -7,6 +7,8 @@ import {
   redhatLogo,
 } from 'src/components/images/logos';
 
+import { t } from '@utils/i18n';
+
 const providerTypeIcons = (isDarkTheme: boolean): Record<string, ReactNode> => ({
   openshift: openshiftLogo,
   openstack: openstackLogo,
@@ -31,3 +33,8 @@ export const IGNORED = 'ignored';
 
 export const CREATE_VDDK_HELP_LINK =
   'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.10/html-single/planning_your_migration_to_red_hat_openshift_virtualization/index#creating-vddk-image_mtv';
+
+export const MIGRATION_PLAN_CONCERNS_TITLE_LABEL = t('Migration plan concerns');
+export const MIGRATION_PLAN_CONCERNS_DESC_LABEL = t(
+  'View critical concerns currently impacting your migration plan. All critical concerns must be addressed before the plan can be started.',
+);

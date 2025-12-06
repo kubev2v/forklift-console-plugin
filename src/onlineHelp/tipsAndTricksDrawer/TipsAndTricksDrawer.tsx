@@ -13,7 +13,7 @@ import {
 } from './utils/forkliftLearningExperienceUserSettings';
 import { indexToTopic, topicToIndex } from './utils/topicToIndexConvertors';
 
-const TipsAndTricksDrawer1: FC<PropsWithChildren> = ({ children }) => {
+const TipsAndTricksDrawer: FC<PropsWithChildren> = ({ children }) => {
   const { setUserData, userData: { showLearningPanelByContext } = {} } = useContext(
     createLearningExperienceContext,
   );
@@ -52,4 +52,4 @@ const TipsAndTricksDrawer1: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export default TipsAndTricksDrawer1;
+export default TipsAndTricksDrawer;

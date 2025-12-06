@@ -26,14 +26,14 @@ const renderOptions = (
       <SelectList>
         {supportedEnumValues
           .filter((item) => item.groupId === groupId)
-          .map(({ id, label: itemLabel }) => (
+          .map(({ icon, id, label: itemLabel }) => (
             <SelectOption
               hasCheckbox
               key={id}
               value={itemLabel}
               isSelected={selectedEnumIds.includes(id)}
             >
-              {itemLabel}
+              {icon} {itemLabel}
             </SelectOption>
           ))}
       </SelectList>
