@@ -138,7 +138,7 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
               ...networkMapData1.metadata,
               name: newName,
               namespace,
-              uid: `test-networkmap-uid-${Date.now()}`,
+              uid: `test-networkmap-uid-${crypto.randomUUID().slice(0, 8)}`,
               creationTimestamp: new Date().toISOString(),
             },
             spec: requestBody.spec ?? networkMapData1.spec,

@@ -73,7 +73,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
       const createWizard = new CreatePlanWizardPage(page);
       await createWizard.navigate();
 
-      const planName = `validation-test-${Date.now()}`;
+      const planName = `validation-test-${crypto.randomUUID().slice(0, 8)}`;
       await createWizard.generalInformation.fillPlanName(planName);
       await createWizard.generalInformation.selectProject(MTV_NAMESPACE, 'plan-project-select');
       await createWizard.generalInformation.selectSourceProvider(testProvider.metadata.name);

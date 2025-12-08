@@ -70,9 +70,12 @@ export class ProviderDetailsPage {
 
     // Only verify VDDK field for vSphere providers
     if (providerData.type === 'vsphere') {
-      await expect(this.page.getByTestId('vddk-detail-item')).toContainText(
-        providerData.vddkInitImage ?? '',
-      );
+      const vddkElement = this.page.getByTestId('vddk-detail-item');
+      if (providerData.vddkInitImage) {
+        await expect(vddkElement).toContainText(providerData.vddkInitImage);
+      } else {
+        await expect(vddkElement).toContainText('Empty');
+      }
     }
 
     await expect(this.page.getByTestId('created-at-detail-item')).toBeVisible();

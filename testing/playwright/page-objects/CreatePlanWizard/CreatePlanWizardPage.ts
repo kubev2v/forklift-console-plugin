@@ -7,6 +7,7 @@ import type { ResourceManager } from '../../utils/resource-manager/ResourceManag
 
 import { AdditionalSettingsStep } from './steps/AdditionalSettingsSteps';
 import { GeneralInformationStep } from './steps/GeneralInformationStep';
+import { MigrationTypeStep } from './steps/MigrationTypeStep';
 import { NetworkMapStep } from './steps/NetworkMapStep';
 import { ReviewStep } from './steps/ReviewStep';
 import { StorageMapStep } from './steps/StorageMapStep';
@@ -16,6 +17,7 @@ export class CreatePlanWizardPage {
   private readonly resourceManager?: ResourceManager;
   public readonly additionalSettings: AdditionalSettingsStep;
   public readonly generalInformation: GeneralInformationStep;
+  public readonly migrationType: MigrationTypeStep;
   public readonly navigationHelper: NavigationHelper;
   public readonly networkMap: NetworkMapStep;
   protected readonly page: Page;
@@ -31,6 +33,7 @@ export class CreatePlanWizardPage {
     this.virtualMachines = new VirtualMachinesStep(page);
     this.networkMap = new NetworkMapStep(page);
     this.storageMap = new StorageMapStep(page);
+    this.migrationType = new MigrationTypeStep(page);
     this.review = new ReviewStep(page);
     this.additionalSettings = new AdditionalSettingsStep(page);
   }
@@ -91,6 +94,9 @@ export class CreatePlanWizardPage {
     await this.clickNext();
 
     // STEP 5: Migration Type
+    if (testData.migrationType) {
+      await this.migrationType.selectMigrationType(testData.migrationType);
+    }
     await this.clickNext();
 
     // STEP 6: Other settings
@@ -122,6 +128,11 @@ export class CreatePlanWizardPage {
   }
 
   async navigateToAdditionalSettings(testData: PlanTestData): Promise<void> {
+    await this.navigateToMigrationTypeStep(testData);
+    await this.clickNext(); // Skip Migration Type Step
+  }
+
+  async navigateToMigrationTypeStep(testData: PlanTestData): Promise<void> {
     await this.generalInformation.fillAndComplete(testData);
     await this.clickNext();
     await this.virtualMachines.fillAndComplete(
@@ -133,7 +144,6 @@ export class CreatePlanWizardPage {
     await this.clickNext();
     await this.storageMap.fillAndComplete(testData.storageMap);
     await this.clickNext();
-    await this.clickNext(); // Skip Migration Type Step
   }
 
   async waitForPlanCreation() {

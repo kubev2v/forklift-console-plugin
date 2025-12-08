@@ -133,7 +133,7 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
             metadata: {
               ...storageMapData1.metadata,
               name: newName,
-              uid: `test-storagemap-uid-${Date.now()}`,
+              uid: `test-storagemap-uid-${crypto.randomUUID().slice(0, 8)}`,
             },
           }),
         });

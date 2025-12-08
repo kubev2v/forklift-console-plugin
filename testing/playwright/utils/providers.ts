@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
+import * as providers from '../../.providers.json';
 import type { ProviderConfig } from '../types/test-data';
 
 const providersPath = join(__dirname, '../../.providers.json');
@@ -8,8 +9,9 @@ if (!existsSync(providersPath)) {
   throw new Error(`.providers.json file not found at: ${providersPath}`);
 }
 
-import * as providers from '../../.providers.json';
-
+/**
+ * Get provider configuration from .providers.json
+ */
 export const getProviderConfig = (providerKey: string): ProviderConfig => {
   const providerConfig = (providers as Record<string, ProviderConfig>)[providerKey];
 
