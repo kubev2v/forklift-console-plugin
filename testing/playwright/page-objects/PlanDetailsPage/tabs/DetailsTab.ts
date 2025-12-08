@@ -86,7 +86,6 @@ export class DetailsTab {
   }
 
   async editDescription(newDescription: string): Promise<void> {
-    await this.descriptionTextbox.clear();
     await this.descriptionTextbox.fill(newDescription);
   }
 
