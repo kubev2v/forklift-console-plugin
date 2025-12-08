@@ -54,6 +54,15 @@ export class CreateProviderPage {
       await this.page.getByTestId('provider-vddk-input').fill(testData.vddkInitImage);
     }
 
+    if (testData.type === 'vsphere' && testData.skipVddk !== undefined) {
+      const checkbox = this.page.getByTestId('provider-empty-vddk-checkbox');
+      const isChecked = await checkbox.isChecked();
+
+      if (isChecked !== testData.skipVddk) {
+        await checkbox.click();
+      }
+    }
+
     if (testData.type === 'vsphere' && testData.useVddkAioOptimization !== undefined) {
       const checkbox = this.page.locator('#useVddkAioOptimization');
       const isChecked = await checkbox.isChecked();

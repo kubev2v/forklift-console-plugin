@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import type { MigrationType } from '../../../types/enums';
 import type { PlanTestData } from '../../../types/test-data';
 import { GuestConversionModal } from '../modals/GuestConversionModal';
 import { TargetAffinityModal } from '../modals/TargetAffinityModal';
@@ -10,6 +11,7 @@ export class DetailsTab {
   readonly descriptionTextbox: Locator;
   readonly editDescriptionModal: Locator;
   readonly editDiskDecryptionModal: Locator;
+  readonly editMigrationTypeModal: Locator;
   readonly editPowerStateModal: Locator;
   readonly guestConversionModal: GuestConversionModal;
   protected readonly page: Page;
@@ -18,18 +20,23 @@ export class DetailsTab {
   readonly powerStateOptionOn: Locator;
   readonly saveDescriptionButton: Locator;
   readonly saveDiskDecryptionButton: Locator;
+  readonly saveMigrationTypeButton: Locator;
   readonly savePowerStateButton: Locator;
   readonly targetAffinityModal: TargetAffinityModal;
   readonly targetLabelsModal: TargetLabelsModal;
   readonly targetNodeSelectorModal: TargetNodeSelectorModal;
   readonly targetPowerStateSelect: Locator;
   readonly useNbdeClevisCheckbox: Locator;
+  readonly warmMigrationSwitch: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.editDescriptionModal = this.page.getByRole('dialog', { name: 'Edit description' });
     this.descriptionTextbox = this.editDescriptionModal.getByRole('textbox');
     this.saveDescriptionButton = this.editDescriptionModal.getByTestId('modal-confirm-button');
+    this.editMigrationTypeModal = this.page.getByRole('dialog', { name: 'Set warm migration' });
+    this.warmMigrationSwitch = this.editMigrationTypeModal.getByRole('switch');
+    this.saveMigrationTypeButton = this.editMigrationTypeModal.getByTestId('modal-confirm-button');
     this.editPowerStateModal = this.page.getByTestId('edit-target-power-state-modal');
     this.savePowerStateButton = this.page.getByTestId('modal-confirm-button');
     this.targetPowerStateSelect = this.editPowerStateModal.getByTestId('target-power-state-select');
@@ -60,6 +67,10 @@ export class DetailsTab {
   async clickEditGuestConversionMode(): Promise<void> {
     await this.page.getByTestId('guest-conversion-mode-detail-item').locator('button').click();
     await this.guestConversionModal.waitForModalToOpen();
+  }
+
+  async clickEditMigrationType(): Promise<void> {
+    await this.page.getByTestId('migration-type-detail-item').locator('button').click();
   }
 
   async clickEditTargetAffinity(): Promise<void> {
@@ -116,6 +127,11 @@ export class DetailsTab {
     await expect(this.editDescriptionModal).not.toBeVisible();
   }
 
+  async saveMigrationType(): Promise<void> {
+    await this.saveMigrationTypeButton.click();
+    await expect(this.editMigrationTypeModal).not.toBeVisible();
+  }
+
   targetVMPowerState(state: string): Locator {
     return this.page
       .getByTestId('target-vm-power-state-detail-item')
@@ -125,6 +141,10 @@ export class DetailsTab {
   async verifyDescriptionText(expectedText: string): Promise<void> {
     const descriptionElement = this.page.getByTestId('description-detail-item');
     await expect(descriptionElement).toContainText(expectedText);
+  }
+
+  get vddkWarningAlert(): Locator {
+    return this.page.getByText('Must enable VMware Virtual Disk Development Kit');
   }
 
   async verifyDetailsTab(planData: PlanTestData): Promise<void> {
@@ -144,6 +164,12 @@ export class DetailsTab {
     for (const text of texts) {
       await this.verifyGuestConversionModeText(text);
     }
+  }
+
+  async verifyMigrationType(type: MigrationType): Promise<void> {
+    await expect(this.page.getByTestId('migration-type-detail-item')).toContainText(
+      new RegExp(type, 'i'),
+    );
   }
 
   async verifyNavigationTabs(): Promise<void> {

@@ -49,6 +49,7 @@ export interface PlanTestData {
   networkMap: NetworkMap;
   storageMap: StorageMap;
   virtualMachines?: VirtualMachine[];
+  migrationType?: 'cold' | 'warm';
   criticalIssuesAction?: 'confirm' | 'deselect';
   additionalPlanSettings?: {
     targetPowerState?: 'on' | 'off' | 'auto';
@@ -119,5 +120,6 @@ export interface ProviderData {
   password?: string;
   fingerprint?: string;
   vddkInitImage?: string;
+  skipVddk?: boolean;
   useVddkAioOptimization?: boolean;
 }
