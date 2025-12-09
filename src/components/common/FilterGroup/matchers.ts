@@ -1,4 +1,7 @@
 import jsonpath from 'jsonpath';
+import { CustomFilterType } from 'src/modules/Providers/views/details/tabs/VirtualMachines/constants';
+
+import { getOrderedConcernCategoriesSum } from '@components/Concerns/utils/getOrderedConcernCategoriesSum';
 
 import { DateFilter } from '../Filter/DateFilter';
 import { DateRangeFilter } from '../Filter/DateRangeFilter';
@@ -26,7 +29,8 @@ export const getResourceFieldValue = <
   resourceData: T | null | undefined,
   resourceFieldId: keyof T | string,
   resourceFields: ResourceField[],
-): T[keyof T] | string | undefined => {
+  forSorting?: boolean,
+): T[keyof T] | number[] | string | undefined => {
   const field = resourceFields.find(
     (fieldSearched) => fieldSearched.resourceFieldId === resourceFieldId,
   );
@@ -40,7 +44,11 @@ export const getResourceFieldValue = <
   }
 
   if (typeof field.jsonPath === 'string') {
-    return jsonpath.query(resourceData, field.jsonPath)?.[0] as T[keyof T];
+    const obj = jsonpath.query(resourceData, field.jsonPath)?.[0] as T[keyof T];
+
+    return forSorting && field?.filter?.type === CustomFilterType.ConcernsSeverityOrType
+      ? getOrderedConcernCategoriesSum(obj)
+      : obj;
   }
 
   if (typeof field.jsonPath === 'function') {

@@ -45,8 +45,8 @@ export const compareWith = <
     }
     const compareFn = fieldComparator ?? universalComparator;
     const compareValue = compareFn(
-      getResourceFieldValue<T>(a, currentSort.resourceFieldId, fields),
-      getResourceFieldValue<T>(b, currentSort.resourceFieldId, fields),
+      getResourceFieldValue<T>(a, currentSort.resourceFieldId, fields, true),
+      getResourceFieldValue<T>(b, currentSort.resourceFieldId, fields, true),
       locale ?? 'en',
     );
     return currentSort.isAsc ? compareValue : -compareValue;

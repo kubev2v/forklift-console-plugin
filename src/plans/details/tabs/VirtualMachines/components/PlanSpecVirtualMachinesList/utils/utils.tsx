@@ -1,11 +1,14 @@
 import ConcernsColumnPopover from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/ConcernsColumnPopover';
-import { concernFilter } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/filters/concernFilter';
+import { CustomFilterType } from 'src/modules/Providers/views/details/tabs/VirtualMachines/constants';
 
-import { FilterDefType, type ResourceField } from '@components/common/utils/types';
+import { type EnumValue, FilterDefType, type ResourceField } from '@components/common/utils/types';
+import { getCategoryIcon } from '@components/Concerns/utils/category';
+import { orderedConcernCategories } from '@components/Concerns/utils/constants';
 import type { V1beta1Plan, V1beta1PlanStatusConditions } from '@kubev2v/types';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
+import { concernSeverityOrTypeFilter } from './concernSeverityOrTypeFilter';
 import { PlanSpecVirtualMachinesTableResourceId, type SpecVirtualMachinePageData } from './types';
 
 /**
@@ -45,22 +48,36 @@ export const specVirtualMachineFields: ResourceField[] = [
     sortable: true,
   },
   {
-    filter: concernFilter(),
+    filter: concernSeverityOrTypeFilter(),
+    isForFilterOnly: true,
+    isVisible: true,
+    jsonPath: '$',
+    label: t('Concerns'),
+    resourceFieldId: `${PlanSpecVirtualMachinesTableResourceId.Concerns}-type`,
+    sortable: true,
+  },
+  {
+    filter: {
+      fieldLabel: t('Concerns (severity)'),
+      placeholderLabel: t('Filter by concerns (severity)'),
+      primary: false,
+      type: CustomFilterType.ConcernsSeverityOrType,
+      values: orderedConcernCategories.map(
+        (category): EnumValue => ({
+          icon: getCategoryIcon(category),
+          id: category,
+          label: category,
+        }),
+      ),
+    },
     info: {
       ariaLabel: 'More information on concerns',
       popover: <ConcernsColumnPopover />,
     },
     isVisible: true,
-    jsonPath: '$.inventoryVmData.vm.concerns',
+    jsonPath: '$',
     label: t('Concerns'),
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Concerns,
-    sortable: true,
-  },
-  {
-    isVisible: false,
-    jsonPath: '$.specVM.targetName',
-    label: t('Target name'),
-    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.VMTargetName,
     sortable: true,
   },
   {
@@ -85,7 +102,7 @@ export const getPlanConditionsDict = (
   const conditions = plan?.status?.conditions?.filter((condition) => !isEmpty(condition?.items));
   const conditionsDict = conditions?.reduce<Record<string, V1beta1PlanStatusConditions[]>>(
     (dict, condition) => {
-      condition.items?.forEach((item) => {
+      condition?.items?.forEach((item) => {
         const { id: vmID } = extractIdAndNameFromConditionItem(item);
         if (vmID) {
           if (!dict[vmID]) dict[vmID] = [];

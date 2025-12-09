@@ -3,6 +3,7 @@ import type { OpenstackVM, OvaVM, OVirtVM, VSphereVM } from '@kubev2v/types';
 export const ConcernCategoryOptions = {
   Critical: 'Critical',
   Information: 'Information',
+  Warn: 'Warn',
   Warning: 'Warning',
 } as const;
 
@@ -19,5 +20,6 @@ export type VirtualMachineWithConcerns = OVirtVM | VSphereVM | OpenstackVM | Ova
 export const severityRank: Record<ConcernCategory, number> = {
   [ConcernCategoryOptions.Critical]: 0,
   [ConcernCategoryOptions.Information]: 2,
+  [ConcernCategoryOptions.Warn]: 1,
   [ConcernCategoryOptions.Warning]: 1,
 };

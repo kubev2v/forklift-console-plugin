@@ -43,7 +43,7 @@ export const EnumFilter = ({
   title = '',
 }: FilterTypeProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { onUniqueFilterUpdate, selectedUniqueEnumLabels, uniqueEnumLabels } = useUniqueEnums({
+  const { onUniqueFilterUpdate, selectedUniqueEnumLabels } = useUniqueEnums({
     onSelectedEnumIdsChange,
     resolvedLanguage,
     selectedEnumIds,
@@ -87,14 +87,14 @@ export const EnumFilter = ({
   );
 
   const renderOptions = () => {
-    return uniqueEnumLabels.map((label) => (
+    return supportedEnumValues.map((label) => (
       <SelectOption
         hasCheckbox
-        key={label}
-        value={label}
-        isSelected={selectedUniqueEnumLabels.includes(label)}
+        key={label.id}
+        value={label.label}
+        isSelected={selectedUniqueEnumLabels.includes(label.label)}
       >
-        {label}
+        {label?.icon} {label.label}
       </SelectOption>
     ));
   };
