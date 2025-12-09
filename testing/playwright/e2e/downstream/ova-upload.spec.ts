@@ -64,7 +64,7 @@ test.describe('OVA Provider Upload Tests', { tag: '@downstream' }, () => {
     createdOvaPath = uniqueOvaPath; // Track for cleanup
 
     await test.step('Create OVA provider using provider key', async () => {
-      const ovaProviderKey = process.env.OVA_PROVIDER ?? 'ova-nfs';
+      const ovaProviderKey = process.env.OVA_PROVIDER ?? 'ova';
       ovaProvider = await createProviderFromKey(ovaProviderKey, 'test-ova-upload');
       expect(ovaProvider.metadata.name).toContain('test-ova-upload');
     });

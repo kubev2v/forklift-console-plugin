@@ -88,7 +88,7 @@ test.describe('Provider Creation Tests', () => {
       const createProvider = new CreateProviderPage(page, resourceManager);
 
       // Get OVA provider configuration
-      const ovaProviderKey = process.env.OVA_PROVIDER ?? 'ova-nfs';
+      const ovaProviderKey = process.env.OVA_PROVIDER ?? 'ova';
       const ovaProviderConfig = getProviderConfig(ovaProviderKey);
 
       const testProviderData: ProviderData = {
