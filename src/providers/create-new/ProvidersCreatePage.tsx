@@ -20,7 +20,7 @@ const ProvidersCreateFormPage: FC = () => {
 
           <p className="pf-v6-u-text-color-subtle">
             {t(
-              'Define the connection attributes the Migration Toolkit for Virtualization needs to interact with your source and target providers.',
+              'Define the connection attributes the migration toolkit for virtualization needs to interact with your source and target providers.',
             )}
           </p>
         </Stack>

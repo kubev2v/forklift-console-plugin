@@ -80,7 +80,7 @@ const WelcomeCard: FC = () => {
                 <FlexItem>
                   <Content component="p" className="forklift-overview__welcome-text">
                     <ForkliftTrans>
-                      Migration Toolkit for Virtualization (MTV) migrates virtual machines at scale
+                      migration toolkit for virtualization (MTV) migrates virtual machines at scale
                       to{' '}
                       <Link to={kubevirtInstalled ? virtualizationOverviewURL : operatorHubURL}>
                         Red Hat OpenShift Virtualization

@@ -16,7 +16,7 @@ const EditLUKSModalBody: FC = () => (
         </StackItem>
 
         <StackItem>
-          For manual passphrases, Migration Toolkit for Virtualization (MTV) tries each passphrase
+          For manual passphrases, migration toolkit for virtualization (MTV) tries each passphrase
           until one unlocks the device.{' '}
           <ExternalLink isInline href={VIRT_V2V_HELP_LINK}>
             Learn more

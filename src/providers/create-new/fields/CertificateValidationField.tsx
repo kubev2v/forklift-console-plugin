@@ -78,7 +78,7 @@ const CertificateValidationField: FC = () => {
                 <Stack hasGutter>
                   <StackItem>
                     {t(
-                      'Select Skip certificate validation to skip certificate verification, which proceeds with an insecure migration and then the certificate is not required.',
+                      'By skipping certificate validation, the migration will be insecure and a certificate is not required.',
                     )}
                   </StackItem>
                   <StackItem>

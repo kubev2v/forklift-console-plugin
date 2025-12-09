@@ -1,18 +1,20 @@
 import { encode } from 'js-base64';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 
 import { CertificateValidationMode, ProviderFormFieldId } from '../fields/constants';
-import type { CreateProviderFormData } from '../types';
+import type { OpenshiftFormData } from '../types';
+
+import { buildProviderObject } from './buildProviderObject';
+import { buildSecretObject } from './buildSecretObject';
 
 type ProviderResources = {
   provider: V1beta1Provider;
   secret: IoK8sApiCoreV1Secret;
 };
 
-export const buildOpenshiftProviderResources = (
-  formData: CreateProviderFormData,
-): ProviderResources => {
+export const buildOpenshiftProviderResources = (formData: OpenshiftFormData): ProviderResources => {
   const namespace = formData[ProviderFormFieldId.ProviderProject];
   const providerName = formData[ProviderFormFieldId.ProviderName];
   const openshiftUrl = formData[ProviderFormFieldId.OpenshiftUrl];
@@ -23,22 +25,12 @@ export const buildOpenshiftProviderResources = (
   const skipCertValidation = certificateValidation === CertificateValidationMode.Skip;
   const url = openshiftUrl?.trim() ?? '';
 
-  const provider: V1beta1Provider = {
-    apiVersion: 'forklift.konveyor.io/v1beta1',
-    kind: 'Provider',
-    metadata: {
-      name: providerName,
-      namespace,
-    },
-    spec: {
-      secret: {
-        name: undefined,
-        namespace,
-      },
-      type: 'openshift',
-      url,
-    },
-  };
+  const provider = buildProviderObject({
+    name: providerName,
+    namespace,
+    type: PROVIDER_TYPES.openshift,
+    url,
+  });
 
   const secretData: Record<string, string> = {
     insecureSkipVerify: encode(skipCertValidation ? 'true' : 'false'),
@@ -50,15 +42,10 @@ export const buildOpenshiftProviderResources = (
     secretData.cacert = encode(caCertificate.trim());
   }
 
-  const secret: IoK8sApiCoreV1Secret = {
-    apiVersion: 'v1',
+  const secret = buildSecretObject({
     data: secretData,
-    kind: 'Secret',
-    metadata: {
-      namespace,
-    },
-    type: 'Opaque',
-  };
+    namespace,
+  });
 
   return { provider, secret };
 };

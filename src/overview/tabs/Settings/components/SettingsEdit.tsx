@@ -69,7 +69,7 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
       >
         <Form>
           {t(
-            'Settings are applied across all projects on the Migration Toolkit for Virtualization operator.',
+            'Settings are applied across all projects on the migration toolkit for virtualization operator.',
           )}
           <EditMaxVMInFlight />
           <EditControllerCPULimit />

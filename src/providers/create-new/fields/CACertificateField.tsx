@@ -33,11 +33,11 @@ const CACertificateField: FC = () => {
             return true;
           }
 
-          if (!val || val.trim() === '') {
+          const trimmedValue = val?.trim() ?? '';
+          if (!trimmedValue) {
             return t('CA certificate is required when certificate validation is configured');
           }
 
-          const trimmedValue = val.trim();
           if (!validatePublicCert(trimmedValue)) {
             return t('The CA certificate is not valid.');
           }

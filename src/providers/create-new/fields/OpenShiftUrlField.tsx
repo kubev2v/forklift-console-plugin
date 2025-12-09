@@ -23,11 +23,12 @@ const OpenShiftUrlField: FC = () => {
     rules: {
       validate: {
         validUrl: async (val: string | undefined) => {
-          if (!val || val.trim() === '') {
+          const trimmedValue = val?.trim() ?? '';
+
+          if (!trimmedValue) {
             return true;
           }
 
-          const trimmedValue = val.trim();
           if (!validateURL(trimmedValue)) {
             return t(
               'The URL is invalid. URL should include the schema, for example: https://example.com:6443.',

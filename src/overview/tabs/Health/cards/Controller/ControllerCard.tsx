@@ -38,7 +38,7 @@ const ControllerCard: FC<ControllerCardProps> = ({ limit, obj }) => {
           <TabTitle
             title={t('Health')}
             helpContent={t(
-              'Health indicates the current status of the pods related to the Migration Toolkit for Virtualization, including whether any have failed. For more details, refer to the logs.',
+              'Health indicates the current status of the pods related to the migration toolkit for virtualization, including whether any have failed. For more details, refer to the logs.',
             )}
           />
         </CardTitle>

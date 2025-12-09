@@ -10,7 +10,7 @@ export const VDDKHelperText: FC = () => (
     <p>VMware Virtual Disk Development Kit (VDDK) image.</p>
     <br />
     <p>
-      The Migration Toolkit for Virtualization (MTV) uses the VMware Virtual Disk Development Kit
+      The migration toolkit for virtualization (MTV) uses the VMware Virtual Disk Development Kit
       (VDDK) SDK to accelerate transferring virtual disks from VMware vSphere. Therefore, creating a
       VDDK image, although optional, is highly recommended. Using MTV without VDDK is not
       recommended and could result in significantly lower migration speeds

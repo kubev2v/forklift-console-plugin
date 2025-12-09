@@ -25,11 +25,12 @@ const ServiceAccountTokenField: FC = () => {
       required: t('Service account bearer token is required when connecting to a remote cluster'),
       validate: {
         validToken: async (val: string | undefined) => {
-          if (!val || val.trim() === '') {
+          const trimmedValue = val?.trim() ?? '';
+
+          if (!trimmedValue) {
             return true;
           }
 
-          const trimmedValue = val.trim();
           if (!validateK8sToken(trimmedValue)) {
             return t('Invalid token, a valid Kubernetes service account token is required');
           }
