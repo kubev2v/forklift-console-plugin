@@ -9,6 +9,7 @@ if (!existsSync(providersPath)) {
 }
 
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
+import { EndpointType } from '../../types/enums';
 import type { ProviderData } from '../../types/test-data';
 import { getProviderConfig } from '../../utils/providers';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
@@ -27,7 +28,7 @@ const createProviderData = ({
     name: `test-vsphere-provider-${suffix}-${crypto.randomUUID().slice(0, 8)}`,
     projectName: MTV_NAMESPACE,
     type: providerConfig.type,
-    endpointType: providerConfig.endpoint_type ?? 'vcenter',
+    endpointType: providerConfig.endpoint_type ?? EndpointType.VCENTER,
     hostname: providerConfig.api_url,
     username: providerConfig.username,
     password: providerConfig.password,

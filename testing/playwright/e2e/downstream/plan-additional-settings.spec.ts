@@ -3,6 +3,7 @@ import { expect } from '@playwright/test';
 import { providerOnlyFixtures as test } from '../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import { MigrationType } from '../../types/enums';
 import { createPlanTestData, type PlanTestData } from '../../types/test-data';
 
 test.describe('Plan additional settings', { tag: '@downstream' }, () => {
@@ -208,14 +209,14 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
 
     await test.step('Select warm migration and verify VDDK warning appears', async () => {
       const wizard = new CreatePlanWizardPage(page, resourceManager);
-      await wizard.migrationType.selectMigrationType('warm');
+      await wizard.migrationType.selectMigrationType(MigrationType.WARM);
       await expect(wizard.migrationType.warmMigrationRadio).toBeChecked();
       await expect(wizard.migrationType.vddkWarningAlert).toBeVisible();
     });
 
     await test.step('Switch back to cold migration and verify warning disappears', async () => {
       const wizard = new CreatePlanWizardPage(page, resourceManager);
-      await wizard.migrationType.selectMigrationType('cold');
+      await wizard.migrationType.selectMigrationType(MigrationType.COLD);
       await expect(wizard.migrationType.coldMigrationRadio).toBeChecked();
       await expect(wizard.migrationType.vddkWarningAlert).not.toBeVisible();
     });
@@ -233,7 +234,7 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
 
     await test.step('Navigate to Details tab on plan details page', async () => {
       await planDetailsPage.detailsTab.navigateToDetailsTab();
-      await planDetailsPage.detailsTab.verifyMigrationType('cold');
+      await planDetailsPage.detailsTab.verifyMigrationType(MigrationType.COLD);
     });
 
     await test.step('Edit migration type to warm and verify VDDK warning appears', async () => {

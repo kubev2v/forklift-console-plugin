@@ -1,3 +1,4 @@
+import { ProviderType } from '../types/enums';
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 
 // Test Data Constants
@@ -16,7 +17,7 @@ export const TEST_DATA = {
     source: {
       name: 'test-source-provider',
       uid: 'test-source-uid-1',
-      type: 'vsphere',
+      type: ProviderType.VSPHERE,
       url: 'https://test-vcenter.example.com',
     },
     target: {

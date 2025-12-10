@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { MigrationType } from '../../../types/enums';
 import type { PlanTestData } from '../../../types/test-data';
 
 export class MigrationTypeStep {
@@ -24,9 +25,9 @@ export class MigrationTypeStep {
   }
 
   async selectMigrationType(migrationType: PlanTestData['migrationType']): Promise<void> {
-    if (migrationType === 'cold') {
+    if (migrationType === MigrationType.COLD) {
       await this.coldMigrationRadio.click();
-    } else if (migrationType === 'warm') {
+    } else if (migrationType === MigrationType.WARM) {
       await this.warmMigrationRadio.click();
     }
   }

@@ -3,6 +3,8 @@ import { join } from 'path';
 
 import { expect, test } from '@playwright/test';
 
+import { EndpointType, ProviderType } from '../../types/enums';
+
 const providersPath = join(__dirname, '../../../.providers.json');
 if (!existsSync(providersPath)) {
   throw new Error(`.providers.json file not found at: ${providersPath}`);
@@ -25,8 +27,8 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   let testProviderData: ProviderData = {
     name: '',
     projectName: MTV_NAMESPACE,
-    type: 'vsphere',
-    endpointType: 'vcenter',
+    type: ProviderType.VSPHERE,
+    endpointType: EndpointType.VCENTER,
     hostname: '',
     username: '',
     password: '',
@@ -68,7 +70,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
         name: providerName,
         projectName: MTV_NAMESPACE,
         type: providerConfig.type,
-        endpointType: providerConfig.endpoint_type ?? 'vcenter',
+        endpointType: providerConfig.endpoint_type ?? EndpointType.VCENTER,
         hostname: providerConfig.api_url,
         username: providerConfig.username,
         password: providerConfig.password,
@@ -130,6 +132,9 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       // Verify each migrated VM exists and add to cleanup
       for (const vm of testPlanData.virtualMachines ?? []) {
         const migratedVMName = vm.targetName ?? vm.sourceName;
+        if (!migratedVMName) {
+          throw new Error('VM name is required for verification');
+        }
 
         resourceManager.addVm(migratedVMName, testPlanData.targetProject.name);
 

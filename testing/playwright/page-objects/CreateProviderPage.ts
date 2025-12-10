@@ -1,5 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
+import { ProviderType } from '../types/enums';
 import type { ProviderData } from '../types/test-data';
 import { NavigationHelper } from '../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
@@ -19,7 +20,7 @@ export class CreateProviderPage {
   }
 
   private async fillCredentialsFields(testData: ProviderData) {
-    if (testData.type === 'ova') {
+    if (testData.type === ProviderType.OVA) {
       return;
     }
 
@@ -36,7 +37,7 @@ export class CreateProviderPage {
   }
 
   private async fillVSphereSpecificFields(testData: ProviderData) {
-    if (testData.type !== 'vsphere') {
+    if (testData.type !== ProviderType.VSPHERE) {
       return;
     }
 
