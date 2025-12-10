@@ -22,8 +22,8 @@ const NetworkMapReviewTable: FC<NetworkMapReviewTableProps> = ({ networkMap }) =
       <Table aria-label="Network map review table" variant={TableVariant.compact} borders>
         <Thead>
           <Tr>
-            <Th>{t('Source network')}</Th>
-            <Th>{t('Target network')}</Th>
+            <Th width={50}>{t('Source network')}</Th>
+            <Th width={50}>{t('Target network')}</Th>
           </Tr>
         </Thead>
 

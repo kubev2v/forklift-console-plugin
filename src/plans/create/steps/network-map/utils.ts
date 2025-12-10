@@ -16,7 +16,6 @@ import { hasMultiplePodNetworkMappings } from '../../utils/hasMultiplePodNetwork
 import { getMapResourceLabel } from '../utils';
 
 import { defaultNetMapping, NetworkMapFieldId, type NetworkMapping } from './constants';
-
 type NetworkMappingId = `${NetworkMapFieldId.NetworkMap}.${number}.${keyof NetworkMapping}`;
 
 type ValidateNetworkMapParams = {
@@ -140,6 +139,7 @@ export const validateNetworkMap = (validateNetworkMapParams: ValidateNetworkMapP
   const mappedNetworkNames = new Set(
     values.map((value) => value[NetworkMapFieldId.SourceNetwork].name),
   );
+
   const hasUnmappedNetwork = !usedSourceNetworks.every((sourceNetwork) =>
     mappedNetworkNames.has(sourceNetwork.name),
   );

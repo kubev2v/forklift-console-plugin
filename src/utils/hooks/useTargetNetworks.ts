@@ -6,7 +6,7 @@ import { POD } from 'src/plans/details/utils/constants';
 import type { V1beta1Provider } from '@kubev2v/types';
 import { DEFAULT_NETWORK } from '@utils/constants';
 
-export type TargetNetwork = {
+type TargetNetwork = {
   id: string;
   name: string;
   isPodNetwork: boolean;

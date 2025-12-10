@@ -17,6 +17,7 @@ type SectionHeadingWithEditProps = Omit<
 >;
 
 const SectionHeadingWithEdit: FC<SectionHeadingWithEditProps> = ({
+  children,
   'data-testid': dataTestId,
   editable = true,
   onClick,
@@ -41,7 +42,9 @@ const SectionHeadingWithEdit: FC<SectionHeadingWithEditProps> = ({
           </Button>
         </Flex>
       }
-    />
+    >
+      {children}
+    </SectionHeading>
   );
 };
 

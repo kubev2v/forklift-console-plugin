@@ -96,7 +96,7 @@ describe('buildNetworkMappings', () => {
       expect(result).toEqual([
         {
           destination: { type: 'pod' },
-          source: { id: 'source-network' },
+          source: { id: 'source-network', name: 'source-network' },
         },
       ]);
     });
@@ -113,7 +113,7 @@ describe('buildNetworkMappings', () => {
             namespace: 'target-ns',
             type: 'multus',
           },
-          source: { id: 'source-network' },
+          source: { id: 'source-network', name: 'source-network' },
         },
       ]);
     });
