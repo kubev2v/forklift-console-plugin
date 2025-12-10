@@ -5,6 +5,7 @@ import { getNetworkMapFieldId } from 'src/networkMaps/utils/getNetworkMapFieldId
 import useTargetNetworks from 'src/utils/hooks/useTargetNetworks';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
+import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -13,7 +14,6 @@ import { NetworkMapFieldId } from '../../utils/types';
 import type { CreateNetworkMapFormData } from '../types';
 
 import InventorySourceNetworkField from './InventorySourceNetworkField';
-import TargetNetworkField from './TargetNetworkField';
 import { validateNetworkMaps } from './utils';
 
 const CreateNetworkMapFieldTable: FC = () => {
@@ -76,6 +76,10 @@ const CreateNetworkMapFieldTable: FC = () => {
           <TargetNetworkField
             fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
             targetNetworks={targetNetworks}
+            emptyStateMessage={t(
+              'Select a target provider and project to list available target networks',
+            )}
+            isDisabled={isSubmitting}
           />,
         ],
       }))}

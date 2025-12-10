@@ -1,7 +1,7 @@
 import { type FC, useMemo } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
-import { buildFormNetworkMapping } from 'src/networkMaps/create/utils/buildNetworkMappings';
+import { getNetworkMappingValues } from 'src/networkMaps/create/utils/buildNetworkMappings';
 import NetworkMapReviewTable from 'src/plans/create/steps/review/NetworkMapReviewTable';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -69,7 +69,7 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
 
   const currentMappings = useMemo(
     () =>
-      buildFormNetworkMapping(
+      getNetworkMappingValues(
         networkMap?.spec?.map,
         sourceProvider,
         sourceNetworks,

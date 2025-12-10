@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import StorageMapReviewTable from 'src/plans/create/steps/review/StorageMapReviewTable';
-import { buildFormStorageMapping } from 'src/storageMaps/create/utils/buildStorageMappings';
+import { getStorageMappingValues } from 'src/storageMaps/create/utils/buildStorageMappings';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
@@ -103,7 +103,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
         />
         <StorageMapReviewTable
           storageMap={
-            buildFormStorageMapping(storageMap?.spec?.map, sourceProvider, sourceStoragesMap) ?? []
+            getStorageMappingValues(storageMap?.spec?.map, sourceProvider, sourceStoragesMap) ?? []
           }
         />
       </PageSection>

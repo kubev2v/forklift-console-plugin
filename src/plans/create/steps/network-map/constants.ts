@@ -1,8 +1,9 @@
+import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
+
 import { DEFAULT_NETWORK } from '@utils/constants';
 import { t } from '@utils/i18n';
 
 import type { MappingValue } from '../../types';
-
 export enum NetworkMapFieldId {
   NetworkMap = 'networkMap',
   ExistingNetworkMap = 'existingNetworkMap',
@@ -27,6 +28,11 @@ export type NetworkMapping = {
 export const defaultNetMapping: NetworkMapping = {
   [NetworkMapFieldId.SourceNetwork]: { name: '' },
   [NetworkMapFieldId.TargetNetwork]: { name: DEFAULT_NETWORK },
+};
+
+export const ignoreNetMapping: NetworkMapping = {
+  [NetworkMapFieldId.SourceNetwork]: { name: '' },
+  [NetworkMapFieldId.TargetNetwork]: { name: IgnoreNetwork.Label },
 };
 
 export enum NetworkMapType {

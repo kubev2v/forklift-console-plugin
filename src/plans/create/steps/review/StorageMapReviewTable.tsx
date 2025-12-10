@@ -16,6 +16,12 @@ import { EMPTY_MSG } from '@utils/constants';
 
 import { CreatePlanStorageMapFieldId } from '../storage-map/constants';
 
+import {
+  REVIEW_TABLE_EXPANDABLE_HEADER_WIDTH,
+  REVIEW_TABLE_HEADER_WIDTH,
+  STORAGE_REVIEW_TABLE_HEADER_KEYS,
+} from './utils/constants';
+
 type StorageMapReviewTableProps = {
   storageMap: StorageMapping[];
 };
@@ -38,6 +44,7 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
     } else {
       newExpandedRows.add(rowKey);
     }
+
     setExpandedRows(newExpandedRows);
   };
 
@@ -46,9 +53,19 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
       <Table aria-label="Storage map review table" variant={TableVariant.compact} borders>
         <Thead>
           <Tr>
-            {hasOffloadStorage && <Th />}
-            <Th>{storageMapFieldLabels[CreatePlanStorageMapFieldId.SourceStorage]}</Th>
-            <Th>{storageMapFieldLabels[CreatePlanStorageMapFieldId.TargetStorage]}</Th>
+            {hasOffloadStorage && <Th width={10} />}
+            {STORAGE_REVIEW_TABLE_HEADER_KEYS.map((header) => (
+              <Th
+                key={header}
+                width={
+                  hasOffloadStorage
+                    ? REVIEW_TABLE_EXPANDABLE_HEADER_WIDTH
+                    : REVIEW_TABLE_HEADER_WIDTH
+                }
+              >
+                {storageMapFieldLabels[header]}
+              </Th>
+            ))}
           </Tr>
         </Thead>
 

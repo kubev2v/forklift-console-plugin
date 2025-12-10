@@ -186,6 +186,7 @@ export const validateNetworkMap = (validateNetworkMapParams: ValidateNetworkMapP
   const mappedNetworkNames = new Set(
     values.map((value) => value[NetworkMapFieldId.SourceNetwork].name),
   );
+
   const hasUnmappedNetwork = !usedSourceNetworks.every((sourceNetwork) =>
     mappedNetworkNames.has(sourceNetwork.name),
   );
