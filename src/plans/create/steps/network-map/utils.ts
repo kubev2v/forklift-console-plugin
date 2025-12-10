@@ -16,7 +16,6 @@ import { hasMultiplePodNetworkMappings } from '../../utils/hasMultiplePodNetwork
 import { getMapResourceLabel } from '../utils';
 
 import { defaultNetMapping, NetworkMapFieldId, type NetworkMapping } from './constants';
-
 type NetworkMappingId = `${NetworkMapFieldId.NetworkMap}.${number}.${keyof NetworkMapping}`;
 
 type ValidateNetworkMapParams = {

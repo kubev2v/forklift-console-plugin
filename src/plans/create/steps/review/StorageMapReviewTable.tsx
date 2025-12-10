@@ -46,9 +46,13 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
       <Table aria-label="Storage map review table" variant={TableVariant.compact} borders>
         <Thead>
           <Tr>
-            {hasOffloadStorage && <Th />}
-            <Th>{storageMapFieldLabels[CreatePlanStorageMapFieldId.SourceStorage]}</Th>
-            <Th>{storageMapFieldLabels[CreatePlanStorageMapFieldId.TargetStorage]}</Th>
+            {hasOffloadStorage && <Th width={10} />}
+            <Th width={hasOffloadStorage ? 45 : 50}>
+              {storageMapFieldLabels[CreatePlanStorageMapFieldId.SourceStorage]}
+            </Th>
+            <Th width={hasOffloadStorage ? 45 : 50}>
+              {storageMapFieldLabels[CreatePlanStorageMapFieldId.TargetStorage]}
+            </Th>
           </Tr>
         </Thead>
 

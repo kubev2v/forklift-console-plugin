@@ -111,7 +111,7 @@ const getDestinationNetName = (
   return DEFAULT_NETWORK;
 };
 
-export const buildFormNetworkMapping = (
+export const getNetworkMappingValues = (
   specMapping: V1beta1NetworkMapSpecMap[] | undefined,
   sourceProvider: V1beta1Provider | undefined,
   sourceNetworks: InventoryNetwork[] = [],
