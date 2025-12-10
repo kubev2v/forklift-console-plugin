@@ -85,6 +85,7 @@ export const setupPlansIntercepts = async (page: Page) => {
         },
       },
       targetNamespace: TEST_DATA.targetProject,
+      description: 'Test plan for automated testing',
       pvcNameTemplateUseGenerateName: true,
       skipGuestConversion: false,
       warm: false,

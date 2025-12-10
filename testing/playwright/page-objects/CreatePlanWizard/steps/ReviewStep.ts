@@ -49,6 +49,11 @@ export class ReviewStep {
     await expect(this.page.getByTestId('review-plan-project')).toContainText(
       expectedData.planProject,
     );
+    if (expectedData.description) {
+      await expect(this.page.getByTestId('review-plan-description')).toContainText(
+        expectedData.description,
+      );
+    }
     await expect(this.page.getByTestId('review-source-provider')).toContainText(
       expectedData.sourceProvider,
     );

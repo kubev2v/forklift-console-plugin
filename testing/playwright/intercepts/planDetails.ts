@@ -92,6 +92,7 @@ export const setupPlanDetailsIntercepts = async (page: Page) => {
               pvcNameTemplateUseGenerateName: true,
               skipGuestConversion: false,
               targetNamespace: TEST_DATA.targetProject,
+              description: 'Test plan for automated testing',
               vms: [
                 {
                   id: 'test-vm-1',

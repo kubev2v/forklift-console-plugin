@@ -29,10 +29,19 @@ export class GeneralInformationStep {
   async fillAndComplete(testData: PlanTestData): Promise<void> {
     await this.fillPlanName(testData.planName);
     await this.selectProject(testData.planProject, 'plan-project-select');
+    if (testData.description) {
+      await this.fillDescription(testData.description);
+    }
     await this.selectSourceProvider(testData.sourceProvider);
     await this.selectTargetProvider(testData.targetProvider);
     await this.waitForTargetProviderNamespaces();
     await this.selectTargetProject(testData.targetProject);
+  }
+
+  async fillDescription(description: string) {
+    const descriptionInput = this.page.getByTestId('plan-description-input');
+    await expect(descriptionInput).toBeVisible();
+    await descriptionInput.fill(description);
   }
 
   async fillPlanName(name: string) {

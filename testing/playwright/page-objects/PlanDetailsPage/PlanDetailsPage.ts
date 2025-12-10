@@ -168,11 +168,8 @@ export class PlanDetailsPage {
     );
   }
 
-  async verifyPlanStatus(expectedStatus: string): Promise<void> {
-    // Check status in the header next to the title
-    await expect(this.page.getByTestId('plan-status-container')).toContainText(expectedStatus, {
-      timeout: 30000,
-    });
+  async verifyPlanStatus(expectedStatus: string, soft = false): Promise<void> {
+    await this.detailsTab.verifyPlanStatus(expectedStatus, soft);
   }
 
   async verifyPlanTitle(planName: string): Promise<void> {

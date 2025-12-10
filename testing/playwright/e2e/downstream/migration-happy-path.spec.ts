@@ -118,7 +118,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       await plansPage.navigateToPlan(planName);
       await planDetailsPage.verifyPlanTitle(planName);
 
-      await planDetailsPage.verifyPlanStatus('Ready for migration');
+      await planDetailsPage.verifyPlanStatus('Ready for migration', true);
 
       await planDetailsPage.clickActionsMenuAndStart();
 
