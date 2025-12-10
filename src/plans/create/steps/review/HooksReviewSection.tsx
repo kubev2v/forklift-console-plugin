@@ -61,6 +61,15 @@ const HooksReviewSection: FC = () => {
 
                 <DescriptionListGroup>
                   <DescriptionListTerm>
+                    {hooksFormFieldLabels[MigrationHookFieldId.ServiceAccount]}
+                  </DescriptionListTerm>
+                  <DescriptionListDescription>
+                    {preMigration[MigrationHookFieldId.ServiceAccount] ?? t('None')}
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+
+                <DescriptionListGroup>
+                  <DescriptionListTerm>
                     {hooksFormFieldLabels[MigrationHookFieldId.AnsiblePlaybook]}
                   </DescriptionListTerm>
                   <DescriptionListDescription>
@@ -98,6 +107,15 @@ const HooksReviewSection: FC = () => {
                   </DescriptionListTerm>
                   <DescriptionListDescription>
                     {postMigration[MigrationHookFieldId.HookRunnerImage]}
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+
+                <DescriptionListGroup>
+                  <DescriptionListTerm>
+                    {hooksFormFieldLabels[MigrationHookFieldId.ServiceAccount]}
+                  </DescriptionListTerm>
+                  <DescriptionListDescription>
+                    {postMigration[MigrationHookFieldId.ServiceAccount] ?? t('None')}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
 

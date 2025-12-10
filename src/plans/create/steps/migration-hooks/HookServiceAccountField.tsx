@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
+import { getServiceAccountHelperText } from 'src/plans/details/tabs/Hooks/utils/utils';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
@@ -9,15 +10,15 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
-import { type HooksFormFieldId, MigrationHookFieldId } from './constants';
-import { getHooksSubFieldId, hooksFormFieldLabels, validateHookRunnerImage } from './utils';
+import { HooksFormFieldId, MigrationHookFieldId } from './constants';
+import { getHooksSubFieldId, hooksFormFieldLabels, validateHookServiceAccount } from './utils';
 
-type HookRunnerImageFieldProps = {
+type HookServiceAccountFieldProps = {
   fieldId: HooksFormFieldId;
 };
 
-const HookRunnerImageField: FC<HookRunnerImageFieldProps> = ({ fieldId }) => {
-  const { t } = useForkliftTranslation();
+const HookServiceAccountField: FC<HookServiceAccountFieldProps> = ({ fieldId }) => {
+  useForkliftTranslation();
   const { control, getFieldState } = useCreatePlanFormContext();
 
   const enableHookFieldId = getHooksSubFieldId(fieldId, MigrationHookFieldId.EnableHook);
@@ -31,34 +32,34 @@ const HookRunnerImageField: FC<HookRunnerImageFieldProps> = ({ fieldId }) => {
     return null;
   }
 
-  const hookRunnerImageFieldId = getHooksSubFieldId(fieldId, MigrationHookFieldId.HookRunnerImage);
-  const { error } = getFieldState(hookRunnerImageFieldId);
+  const hookServiceAccountFieldId = getHooksSubFieldId(
+    fieldId,
+    MigrationHookFieldId.ServiceAccount,
+  );
+  const { error } = getFieldState(hookServiceAccountFieldId);
 
   return (
     <FormGroupWithErrorText
-      label={hooksFormFieldLabels[MigrationHookFieldId.HookRunnerImage]}
-      isRequired
-      fieldId={hookRunnerImageFieldId}
+      label={hooksFormFieldLabels[MigrationHookFieldId.ServiceAccount]}
+      fieldId={hookServiceAccountFieldId}
     >
       <Controller
         control={control}
-        name={hookRunnerImageFieldId}
+        name={hookServiceAccountFieldId}
         rules={{
-          validate: validateHookRunnerImage,
+          validate: validateHookServiceAccount,
         }}
         render={({ field }) => (
           <>
             <TextInput
               {...field}
-              id={hookRunnerImageFieldId}
-              aria-describedby={`${hookRunnerImageFieldId}-helper`}
-              name={hookRunnerImageFieldId}
+              id={hookServiceAccountFieldId}
+              aria-describedby={`${hookServiceAccountFieldId}-helper`}
+              name={hookServiceAccountFieldId}
               validated={getInputValidated(error)}
             />
             <FormGroupWithHelpText
-              helperText={t(
-                'You can use a custom hook-runner image or specify a custom image, for example quay.io/konveyor/hook-runner.',
-              )}
+              helperText={getServiceAccountHelperText(fieldId === HooksFormFieldId.PreMigration)}
             />
           </>
         )}
@@ -67,4 +68,4 @@ const HookRunnerImageField: FC<HookRunnerImageFieldProps> = ({ fieldId }) => {
   );
 };
 
-export default HookRunnerImageField;
+export default HookServiceAccountField;

@@ -8,4 +8,5 @@ export const getDefaultHookValues = (hook: V1beta1Hook | undefined): HookEditFor
   enabled: Boolean(hook),
   image: hook?.spec?.image ?? QUAY_FORKLIFT_HOOK_RUNNER_IMAGE,
   playbook: hook?.spec?.playbook ?? '',
+  serviceAccount: hook?.spec?.serviceAccount ?? '',
 });

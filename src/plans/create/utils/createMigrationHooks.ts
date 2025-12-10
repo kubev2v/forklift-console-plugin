@@ -38,6 +38,7 @@ const createHook = async (params: HookParams): Promise<V1beta1Hook> => {
     spec: {
       image: hookConfig[MigrationHookFieldId.HookRunnerImage] ?? '',
       playbook: hookConfig[MigrationHookFieldId.AnsiblePlaybook] ?? '',
+      serviceAccount: hookConfig[MigrationHookFieldId.ServiceAccount] ?? '',
     },
   };
 

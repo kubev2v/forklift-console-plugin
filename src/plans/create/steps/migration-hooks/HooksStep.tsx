@@ -12,6 +12,7 @@ import AnsiblePlaybookField from './AnsiblePlaybookField';
 import { HooksFormFieldId } from './constants';
 import EnableHookCheckbox from './EnableHookCheckbox';
 import HookRunnerImageField from './HookRunnerImageField';
+import HookServiceAccountField from './HookServiceAccountField';
 
 const HooksStep: FC = () => {
   const { t } = useForkliftTranslation();
@@ -42,6 +43,7 @@ const HooksStep: FC = () => {
           {preMigrationHook?.enableHook && (
             <>
               <HookRunnerImageField fieldId={HooksFormFieldId.PreMigration} />
+              <HookServiceAccountField fieldId={HooksFormFieldId.PreMigration} />
               <AnsiblePlaybookField fieldId={HooksFormFieldId.PreMigration} />
             </>
           )}
@@ -53,6 +55,7 @@ const HooksStep: FC = () => {
           {postMigrationHook?.enableHook && (
             <>
               <HookRunnerImageField fieldId={HooksFormFieldId.PostMigration} />
+              <HookServiceAccountField fieldId={HooksFormFieldId.PostMigration} />
               <AnsiblePlaybookField fieldId={HooksFormFieldId.PostMigration} />
             </>
           )}
