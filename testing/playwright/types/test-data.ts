@@ -1,5 +1,7 @@
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 
+import type { EndpointType, MigrationType, ProviderType } from './enums';
+
 export interface TargetProject {
   name: string;
   isPreexisting: boolean;
@@ -49,7 +51,7 @@ export interface PlanTestData {
   networkMap: NetworkMap;
   storageMap: StorageMap;
   virtualMachines?: VirtualMachine[];
-  migrationType?: 'cold' | 'warm';
+  migrationType?: MigrationType;
   criticalIssuesAction?: 'confirm' | 'deselect';
   additionalPlanSettings?: {
     targetPowerState?: 'on' | 'off' | 'auto';
@@ -103,8 +105,8 @@ export const createPlanTestData = (
 };
 
 export interface ProviderConfig {
-  type: 'vsphere' | 'ovirt' | 'ova' | 'openstack';
-  endpoint_type?: 'vcenter' | 'esxi';
+  type: ProviderType;
+  endpoint_type?: EndpointType;
   api_url: string;
   username: string;
   password: string;
@@ -113,8 +115,8 @@ export interface ProviderConfig {
 export interface ProviderData {
   name: string;
   projectName: string;
-  type: 'vsphere' | 'ovirt' | 'ova' | 'openstack';
-  endpointType?: 'vcenter' | 'esxi';
+  type: ProviderType;
+  endpointType?: EndpointType;
   hostname: string;
   username?: string;
   password?: string;

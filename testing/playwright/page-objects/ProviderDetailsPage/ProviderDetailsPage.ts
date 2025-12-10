@@ -1,5 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
+import { ProviderType } from '../../types/enums';
 import type { ProviderData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
@@ -52,9 +53,9 @@ export class ProviderDetailsPage {
 
     // Map provider types to their display names
     let displayType: string = providerData.type;
-    if (providerData.type === 'vsphere') {
+    if (providerData.type === ProviderType.VSPHERE) {
       displayType = 'VMware';
-    } else if (providerData.type === 'ova') {
+    } else if (providerData.type === ProviderType.OVA) {
       displayType = 'OVA';
     }
 
@@ -63,13 +64,13 @@ export class ProviderDetailsPage {
     await expect(this.page.getByTestId('project-detail-item')).toContainText(MTV_NAMESPACE);
 
     // Only verify these fields for non-OVA providers
-    if (providerData.type !== 'ova') {
+    if (providerData.type !== ProviderType.OVA) {
       await expect(this.page.getByTestId('product-detail-item')).toContainText('');
       await expect(this.page.getByTestId('credentials-detail-item')).toContainText('');
     }
 
     // Only verify VDDK field for vSphere providers
-    if (providerData.type === 'vsphere') {
+    if (providerData.type === ProviderType.VSPHERE) {
       const vddkElement = this.page.getByTestId('vddk-detail-item');
       if (providerData.vddkInitImage) {
         await expect(vddkElement).toContainText(providerData.vddkInitImage);
