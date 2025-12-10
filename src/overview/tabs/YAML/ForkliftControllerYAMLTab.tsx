@@ -23,7 +23,7 @@ const ForkliftControllerYAMLTab: FC = () => {
         <TabTitle
           title={t('YAML')}
           helpContent={t(
-            'You can write configuration files for the Migration Toolkit for Virtualization using YAML, a human-readable data serialization language.',
+            'You can write configuration files for the migration toolkit for virtualization using YAML, a human-readable data serialization language.',
           )}
         />
       </CardTitle>

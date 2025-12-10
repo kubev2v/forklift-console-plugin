@@ -105,7 +105,7 @@ const troubleShootingHelpTopics: LearningExperienceSubTopic[] = [
           {
             id: 'forklift-controller-logs-capture',
             title: t(
-              'Forklift controller logs capture Migration Toolkit for Virtualization (MTV) related events.',
+              'Forklift controller logs capture migration toolkit for virtualization (MTV) related events.',
             ),
           },
         ],

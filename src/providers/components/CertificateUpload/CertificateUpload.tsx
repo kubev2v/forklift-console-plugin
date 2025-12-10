@@ -13,8 +13,6 @@ import {
 
 import FetchCertificateModal, { type FetchCertificateModalProps } from './FetchCertificateModal';
 
-import './CertificateUpload.style.scss';
-
 type CertificateUploadProps = FileUploadProps & {
   url?: string;
 };
@@ -73,7 +71,7 @@ const CertificateUpload: FC<CertificateUploadProps> = ({
         <Flex>
           <FlexItem>
             <Button
-              className="forklift-certificate-upload-margin"
+              className="pf-v6-u-mt-sm"
               isDisabled={isDisabled ?? !url?.trim().startsWith('https://')}
               variant={ButtonVariant.secondary}
               onClick={onClick}

@@ -46,7 +46,7 @@ const DiskPassPhraseFieldTable = () => {
 
                 <StackItem>
                   {t(
-                    'For each LUKS-encrypted device, Migration Toolkit for Virtualization (MTV) tries each passphrase until one unlocks the device.',
+                    'For each LUKS-encrypted device, migration toolkit for virtualization (MTV) tries each passphrase until one unlocks the device.',
                   )}
                 </StackItem>
 

@@ -1,12 +1,12 @@
 import type { FC, FormEvent } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
+import CertificateUpload from 'src/providers/components/CertificateUpload/CertificateUpload';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { type FileUploadProps, Switch } from '@patternfly/react-core';
 import type { ValidationMsg } from '@utils/validation/Validation';
 
-import CertificateUpload from './CertificateUpload/CertificateUpload';
 import { CacertHelperTextPopover, InsecureSkipVerifyHelperTextPopover } from './utils/constants';
 
 type CertificateEditSectionProps = {

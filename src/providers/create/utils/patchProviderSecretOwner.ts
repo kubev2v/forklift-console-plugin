@@ -9,7 +9,6 @@ export const patchProviderSecretOwner = async (
   provider: V1beta1Provider | undefined,
   secret: IoK8sApiCoreV1Secret | undefined,
 ) => {
-  // Sanity check, don't try to patch empty secret
   if (!secret || !provider) {
     return;
   }

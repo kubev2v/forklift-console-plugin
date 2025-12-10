@@ -30,7 +30,7 @@ const HeaderTitle: FC<HeaderTitleProps> = ({ isDrawerOpen = false, setIsDrawerOp
       <PageSection hasBodyWrapper={false}>
         <Split hasGutter style={{ alignItems: 'baseline' }}>
           <SplitItem isFilled>
-            <Title headingLevel="h1">{t('Migration Toolkit for Virtualization')}</Title>
+            <Title headingLevel="h1">{t('migration toolkit for virtualization')}</Title>
           </SplitItem>
           {isDrawerOpen ? undefined : (
             <Button

@@ -111,7 +111,7 @@ const ProvidersCreatePage: FC<{
             if (draft?.metadata) draft.metadata.namespace = projectName;
           }
         }),
-        secret!,
+        secret,
       );
 
       // set secret ownership using provider uid
