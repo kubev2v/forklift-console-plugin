@@ -69,7 +69,7 @@ export const planFields: ResourceField[] = [
       placeholderLabel: t('Filter by target'),
       type: FilterDefType.FreeText,
     },
-    isVisible: false,
+    isVisible: true,
     jsonPath: planResourceApiJsonPaths[PlanTableResourceId.Destination],
     label: t('Target project'),
     resourceFieldId: PlanTableResourceId.Destination,
