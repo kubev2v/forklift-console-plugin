@@ -1,5 +1,8 @@
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { validateHookRunnerImage } from 'src/plans/create/steps/migration-hooks/utils';
+import {
+  validateHookRunnerImage,
+  validateHookServiceAccount,
+} from 'src/plans/create/steps/migration-hooks/utils';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
@@ -14,8 +17,8 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { getDefaultHookValues } from '../../state/initialState';
 import { type HookEditFormValues, HookField } from '../../state/types';
-import { type HookType, HookTypeLabelLowercase } from '../../utils/constants';
-import { createUpdateOrDeleteHook } from '../../utils/utils';
+import { type HookType, HookTypeLabelLowercase, hookTypes } from '../../utils/constants';
+import { createUpdateOrDeleteHook, getServiceAccountHelperText } from '../../utils/utils';
 
 export type HookEditProps = {
   hook: V1beta1Hook | undefined;
@@ -44,11 +47,12 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
   const title = t('Edit {{hookTypeLowercase}} migration hook', { hookTypeLowercase });
 
   const onSubmit = async (formData: HookEditFormValues) => {
-    const { enabled, image, playbook } = formData;
+    const { enabled, image, playbook, serviceAccount } = formData;
     await createUpdateOrDeleteHook({
       hook,
       hookImage: image,
       hookPlaybook: playbook,
+      hookServiceAccount: serviceAccount,
       hookSet: enabled,
       plan,
       step,
@@ -94,7 +98,7 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
                 control={control}
                 name={HookField.Image}
                 rules={{
-                  validate: (value: string) => validateHookRunnerImage(value),
+                  validate: validateHookRunnerImage,
                 }}
                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                   <FormGroupWithErrorText
@@ -121,11 +125,39 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
                   </FormGroupWithErrorText>
                 )}
               />
+              <Controller
+                control={control}
+                name={HookField.serviceAccount}
+                rules={{
+                  validate: validateHookServiceAccount,
+                }}
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                  <FormGroupWithErrorText
+                    label={t('Service account')}
+                    fieldId={HookField.serviceAccount}
+                    helperText={
+                      isEmpty(error) ? (
+                        getServiceAccountHelperText(step === hookTypes.PreHook, plan)
+                      ) : (
+                        <FormErrorHelperText error={error} showIcon />
+                      )
+                    }
+                  >
+                    <TextInput
+                      onChange={onChange}
+                      value={value}
+                      spellCheck="false"
+                      validated={getInputValidated(error)}
+                      type="text"
+                    />
+                  </FormGroupWithErrorText>
+                )}
+              />
               <FormGroupWithErrorText
                 label={t('Ansible playbook')}
                 fieldId={HookField.Playbook}
                 helperText={t(
-                  'Optional: Ansible playbook. If you specify a playbook, the image must be hook-runner.',
+                  'Ansible playbook. If you specify a playbook, the image must be hook-runner.',
                 )}
               >
                 <Controller

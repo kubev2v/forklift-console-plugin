@@ -12,11 +12,18 @@ import { type HookType, HookTypeLabelLowercase, hookTypes } from './constants';
 type HookTemplateParams = {
   image: string;
   playbook: string;
+  serviceAccount: string;
   plan: V1beta1Plan;
   step: HookType;
 };
 
-const getHookTemplate = ({ image, plan, playbook, step }: HookTemplateParams): V1beta1Hook => ({
+const getHookTemplate = ({
+  image,
+  plan,
+  playbook,
+  serviceAccount,
+  step,
+}: HookTemplateParams): V1beta1Hook => ({
   apiVersion: 'forklift.konveyor.io/v1beta1',
   kind: 'Hook',
   metadata: {
@@ -31,7 +38,7 @@ const getHookTemplate = ({ image, plan, playbook, step }: HookTemplateParams): V
       },
     ],
   },
-  spec: { image, playbook },
+  spec: { image, playbook, serviceAccount },
 });
 
 const createHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) => {
@@ -92,6 +99,7 @@ type createUpdateOrDeleteHookParams = {
   hook?: V1beta1Hook;
   hookImage?: string;
   hookPlaybook?: string;
+  hookServiceAccount?: string;
   hookSet: boolean;
   plan: V1beta1Plan;
   step: HookType;
@@ -101,15 +109,17 @@ export const createUpdateOrDeleteHook = async ({
   hook,
   hookImage,
   hookPlaybook,
+  hookServiceAccount,
   hookSet,
   plan,
   step,
 }: createUpdateOrDeleteHookParams): Promise<V1beta1Plan> => {
   const image = hookImage ?? '';
   const playbook = hookPlaybook ?? '';
+  const serviceAccount = hookServiceAccount ?? '';
 
   if (hookSet && !hook) {
-    const resourceHook = getHookTemplate({ image, plan, playbook, step });
+    const resourceHook = getHookTemplate({ image, plan, playbook, serviceAccount, step });
     const newPlan = await createHook(plan, resourceHook, step);
     return newPlan;
   }
@@ -121,9 +131,10 @@ export const createUpdateOrDeleteHook = async ({
 
   if (hookSet && hook) {
     const updatedHook = produce(hook, (draft) => {
-      draft.spec ??= { image: '', playbook: '' };
+      draft.spec ??= { image: '', playbook: '', serviceAccount: '' };
       draft.spec.image = image;
       draft.spec.playbook = playbook;
+      draft.spec.serviceAccount = serviceAccount;
     });
 
     await updateHook(updatedHook);
@@ -168,4 +179,13 @@ export const validateHooks = (plan: V1beta1Plan): string => {
   }
 
   return '';
+};
+
+export const getServiceAccountHelperText = (isPreHook: boolean, plan?: V1beta1Plan): string => {
+  const serviceAccountProject = isPreHook ? plan?.metadata?.namespace : plan?.spec?.targetNamespace;
+  const serviceAccountProjectLabel = isPreHook ? "plan's project." : "plan's target project.";
+
+  return t(
+    `Red Hat OpenShift service account. The service account is needed for manipulating any resources of the cluster. Note that the provided service account should be in the ${serviceAccountProject ?? ''} ${serviceAccountProjectLabel}`,
+  );
 };

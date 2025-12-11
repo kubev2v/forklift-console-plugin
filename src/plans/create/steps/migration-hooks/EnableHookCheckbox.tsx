@@ -31,6 +31,7 @@ const EnableHookCheckbox: FC<EnableHookCheckboxProps> = ({ fieldId }) => {
             if (!value) {
               unregister([
                 getHooksSubFieldId(fieldId, MigrationHookFieldId.HookRunnerImage),
+                getHooksSubFieldId(fieldId, MigrationHookFieldId.ServiceAccount),
                 getHooksSubFieldId(fieldId, MigrationHookFieldId.AnsiblePlaybook),
               ]);
             }

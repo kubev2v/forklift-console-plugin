@@ -28,6 +28,7 @@ const HookSection: FC<HookSectionProps> = ({ hook, plan, step, title }) => {
 
   const planEditable = isPlanEditable(plan);
   const hookExists = !isEmpty(hook);
+
   return (
     <>
       <SectionHeadingWithEdit
@@ -51,6 +52,11 @@ const HookSection: FC<HookSectionProps> = ({ hook, plan, step, title }) => {
               testId="hook-runner-image-detail-item"
               title={t('Hook runner image')}
               content={hook?.spec?.image ?? t('None')}
+            />
+            <DetailsItem
+              testId="service-account-detail-item"
+              title={t('Service account')}
+              content={isEmpty(hook?.spec?.serviceAccount) ? t('None') : hook?.spec?.serviceAccount}
             />
             <DetailsItem
               testId="playbook-detail-item"
