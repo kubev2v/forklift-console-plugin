@@ -17,11 +17,11 @@ import { getDefaultValues } from '../utils/utils';
 
 import EditControllerCPULimit from './ControllerCPULimit/EditControllerCPULimit';
 import EditControllerMemoryLimit from './ControllerMemoryLimit/EditControllerMemoryLimit';
+import EditControllerTransferNetwork from './ControllerTransferNetwork/EditControllerTransferNetwork';
 import EditInventoryMemoryLimit from './InventoryMemoryLimit/EditInventoryMemoryLimit';
 import EditMaxVMInFlight from './MaxVMInFlight/EditMaxVMInFlight';
 import EditPreCopyInterval from './PreCopyInterval/EditPreCopyInterval';
 import EditSnapshotPoolingInterval from './SnapshotPoolingInterval/EditSnapshotPoolingInterval';
-
 const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controller }) => {
   const { t } = useForkliftTranslation();
 
@@ -43,6 +43,12 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
     const patches = Object.keys(dirtyFields).map((key) => {
       const fieldKey = key as keyof ForkliftSettingsValues;
       const currentValue = (controller?.spec as Record<string, string | number>)?.[fieldKey];
+      if (!formData[fieldKey]) {
+        return {
+          op: 'remove',
+          path: `/spec/${fieldKey}`,
+        };
+      }
 
       return {
         op: currentValue ? REPLACE : ADD,
@@ -77,6 +83,7 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
           <EditInventoryMemoryLimit />
           <EditPreCopyInterval />
           <EditSnapshotPoolingInterval />
+          <EditControllerTransferNetwork />
         </Form>
       </ModalForm>
     </FormProvider>
