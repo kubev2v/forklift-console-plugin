@@ -3,6 +3,7 @@ import type { V1beta1ForkliftController } from '@kubev2v/types';
 export enum SettingsFields {
   ControllerCPULimit = 'controller_container_limits_cpu',
   ControllerMemoryLimit = 'controller_container_limits_memory',
+  ControllerTransferNetwork = 'controller_transfer_network',
   InventoryMemoryLimit = 'inventory_container_limits_memory',
   MaxVMInFlight = 'controller_max_vm_inflight',
   PrecopyInterval = 'controller_precopy_interval',
@@ -12,6 +13,7 @@ export enum SettingsFields {
 export type ForkliftSettingsValues = {
   [SettingsFields.ControllerCPULimit]?: string;
   [SettingsFields.ControllerMemoryLimit]?: string;
+  [SettingsFields.ControllerTransferNetwork]?: string;
   [SettingsFields.InventoryMemoryLimit]?: string;
   [SettingsFields.MaxVMInFlight]?: number;
   [SettingsFields.PrecopyInterval]?: number;
@@ -22,6 +24,7 @@ export type EnhancedForkliftController = V1beta1ForkliftController & {
   spec: {
     [SettingsFields.ControllerCPULimit]?: string;
     [SettingsFields.ControllerMemoryLimit]?: string;
+    [SettingsFields.ControllerTransferNetwork]?: string;
     [SettingsFields.InventoryMemoryLimit]?: string;
     [SettingsFields.MaxVMInFlight]?: number;
     [SettingsFields.PrecopyInterval]?: number;

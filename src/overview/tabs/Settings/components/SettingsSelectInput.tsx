@@ -3,10 +3,12 @@ import { type FC, type MouseEvent, type Ref, useCallback, useMemo, useState } fr
 import {
   MenuToggle,
   type MenuToggleElement,
-  Select,
+  Select as PfSelect,
   SelectList,
   SelectOption,
+  Truncate,
 } from '@patternfly/react-core';
+import { useForkliftTranslation } from '@utils/i18n';
 
 /**
  * @typedef Option
@@ -14,10 +16,20 @@ import {
  * @property {number | string} name
  * @property {string} description
  */
-type Option = {
+export type Option = {
   key: number | string;
   name: string;
-  description: string;
+  description?: string;
+};
+
+/**
+ * @typedef BlankOption
+ * @property {string} name - The display name for the blank option
+ * @property {string} [description] - Optional description for the blank option
+ */
+type BlankOption = {
+  name: string;
+  description?: string;
 };
 
 /**
@@ -25,38 +37,58 @@ type Option = {
  * @property {string} value - The current selected value
  * @property {(value: string) => void} onChange - Function to call when the value changes
  * @property {Option[]} options - The options to present to the user
+ * @property {BlankOption} [blankOption] - Optional blank option that passes an empty value when selected
  */
 type SettingsSelectInputProps = {
   value: number | string;
   onChange: (value: number | string) => void;
   options: Option[];
+  blankOption?: BlankOption;
+  showKeyAsSelected?: boolean; // a flag to show selected value that's based on option key and not name
 };
+
+const BLANK_OPTION_KEY = '__blank__';
 
 /**
  * SelectInput component. Provides a select input form element with predefined options.
  */
-const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, value }) => {
-  // State to keep track of the dropdown menu open/closed state
+const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
+  blankOption,
+  onChange,
+  options,
+  showKeyAsSelected = false,
+  value,
+}) => {
+  const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Build a dictionary mapping option names to keys for efficient lookup
-  // This dictionary is re-calculated every time the options prop changes
   const nameToKey = useMemo(() => {
-    return options?.reduce<Record<string, string | number>>((dict, option) => {
-      dict[option.name] = option.key;
-      return dict;
+    const dict = options?.reduce<Record<string, string | number>>((acc, option) => {
+      acc[option.name] = option.key;
+      return acc;
     }, {});
-  }, [options]);
+
+    if (blankOption) {
+      dict[blankOption.name] = BLANK_OPTION_KEY;
+    }
+
+    return dict;
+  }, [options, blankOption]);
 
   const keyToName = useMemo(() => {
-    return options?.reduce<Record<string, string | number>>((dict, option) => {
-      dict[option.key] = option.name;
-      return dict;
+    const dict = options?.reduce<Record<string, string | number>>((acc, option) => {
+      acc[option.key] = option.name;
+      return acc;
     }, {});
-  }, [options]);
 
-  const valueLabel = keyToName?.[value] ?? value;
-  const [selected, setSelected] = useState<string | number>(valueLabel);
+    if (blankOption) {
+      dict[BLANK_OPTION_KEY] = blankOption.name;
+    }
+
+    return dict;
+  }, [options, blankOption]);
+
+  const [selected, setSelected] = useState<string | number>(keyToName?.[value] ?? value);
 
   const onToggleClick = () => {
     setIsOpen((open) => !open);
@@ -69,19 +101,33 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
       isExpanded={isOpen}
       className="forklift-overview__settings-select"
     >
-      {selected || 'Select an option'}
+      <Truncate content={String(selected) || t('Select an option')} />
     </MenuToggle>
   );
 
   const renderOptions = () => {
-    return options?.map((option) => (
-      <SelectOption key={option.key} value={option.name} description={option.description}>
-        {option.name}
+    const optionElements = options?.map(({ description, key, name }) => (
+      <SelectOption key={key} value={showKeyAsSelected ? key : name} description={description}>
+        {name}
       </SelectOption>
     ));
+
+    if (blankOption) {
+      return [
+        <SelectOption
+          key={BLANK_OPTION_KEY}
+          value={blankOption.name}
+          description={blankOption.description}
+        >
+          {blankOption.name}
+        </SelectOption>,
+        ...optionElements,
+      ];
+    }
+
+    return optionElements;
   };
 
-  // Callback function to handle selection in the dropdown menu
   const onSelect = useCallback(
     (_event?: MouseEvent, selectedValue?: string | number) => {
       if (selectedValue === undefined) {
@@ -90,20 +136,17 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
       }
       // Use the dictionary to find the key corresponding to the selected name
       const key = nameToKey[selectedValue] || selectedValue;
-      onChange(key);
 
-      // Toggle the dropdown menu open state
-      setSelected(selectedValue as string);
+      onChange(key === BLANK_OPTION_KEY ? '' : key);
+
+      setSelected(showKeyAsSelected && key !== BLANK_OPTION_KEY ? key : (selectedValue as string));
       setIsOpen(false);
     },
-    [nameToKey, onChange],
+    [nameToKey, onChange, showKeyAsSelected],
   );
 
-  // Render the Select component with dynamically created SelectOption children
   return (
-    // Custom select does not support the complex toggle being used here
-    // eslint-disable-next-line no-restricted-syntax
-    <Select
+    <PfSelect
       role="menu"
       aria-label="Select Input with descriptions"
       aria-labelledby="exampleSelect"
@@ -122,7 +165,7 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
       }}
     >
       <SelectList>{renderOptions()}</SelectList>
-    </Select>
+    </PfSelect>
   );
 };
 
