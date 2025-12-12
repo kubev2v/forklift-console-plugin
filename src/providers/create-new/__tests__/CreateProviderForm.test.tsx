@@ -100,6 +100,11 @@ jest.mock('../fields/ProviderTypeField', () => {
           ),
           React.createElement(
             'option',
+            { value: 'openstack', 'data-testid': 'provider-type-option-openstack' },
+            'OpenStack',
+          ),
+          React.createElement(
+            'option',
             { value: 'ova', 'data-testid': 'provider-type-option-ova' },
             'OVA',
           ),
@@ -185,6 +190,57 @@ describe('CreateProviderForm', () => {
         expect(screen.getByRole('textbox', { name: /api endpoint url/i })).toBeInTheDocument();
       });
 
+      expect(screen.queryByLabelText(/nfs shared directory/i)).not.toBeInTheDocument();
+    });
+  });
+
+  describe('OpenStack provider', () => {
+    it('shows OpenStack-specific fields after selecting OpenStack type', async () => {
+      const user = userEvent.setup();
+      render(<CreateProviderForm />);
+
+      await user.selectOptions(screen.getByLabelText(/provider type/i), 'openstack');
+
+      await waitFor(() => {
+        expect(screen.getByRole('textbox', { name: /provider name/i })).toBeInTheDocument();
+        expect(screen.getByTestId('openstack-url-input')).toBeInTheDocument();
+        expect(
+          screen.getByRole('radiogroup', { name: /authentication type/i }),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('radio', { name: /skip certificate validation/i }),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('shows password authentication fields by default', async () => {
+      const user = userEvent.setup();
+      render(<CreateProviderForm />);
+
+      await user.selectOptions(screen.getByLabelText(/provider type/i), 'openstack');
+
+      await waitFor(() => {
+        expect(screen.getByTestId('openstack-username-input')).toBeInTheDocument();
+        expect(screen.getByTestId('openstack-password-input')).toBeInTheDocument();
+        expect(screen.getByTestId('openstack-region-input')).toBeInTheDocument();
+        expect(screen.getByTestId('openstack-project-input')).toBeInTheDocument();
+        expect(screen.getByTestId('openstack-domain-input')).toBeInTheDocument();
+      });
+    });
+
+    it('hides OpenShift and OVA fields when OpenStack provider is selected', async () => {
+      const user = userEvent.setup();
+      render(<CreateProviderForm />);
+
+      await user.selectOptions(screen.getByLabelText(/provider type/i), 'openstack');
+
+      await waitFor(() => {
+        expect(screen.getByRole('textbox', { name: /provider name/i })).toBeInTheDocument();
+      });
+
+      expect(
+        screen.queryByRole('textbox', { name: /service account bearer token/i }),
+      ).not.toBeInTheDocument();
       expect(screen.queryByLabelText(/nfs shared directory/i)).not.toBeInTheDocument();
     });
   });

@@ -4,10 +4,8 @@ import { useNavigate } from 'react-router-dom-v5-compat';
 import { createProvider } from 'src/providers/create/utils/createProvider';
 import { createProviderSecret } from 'src/providers/create/utils/createProviderSecret';
 import { patchProviderSecretOwner } from 'src/providers/create/utils/patchProviderSecretOwner';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
 
-import SectionHeading from '@components/headers/SectionHeading';
 import {
   Alert,
   AlertVariant,
@@ -22,17 +20,11 @@ import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import CertificateValidationField from './fields/CertificateValidationField';
 import { ProviderFormFieldId } from './fields/constants';
-import NfsDirectoryField from './fields/NfsDirectoryField';
-import OpenShiftUrlField from './fields/OpenShiftUrlField';
-import ProviderNameField from './fields/ProviderNameField';
-import ProviderProjectField from './fields/ProviderProjectField';
-import ProviderTypeField from './fields/ProviderTypeField';
-import ServiceAccountTokenField from './fields/ServiceAccountTokenField';
 import { buildProviderResources } from './utils/buildProviderResources';
 import { getDefaultFormValues } from './utils/getDefaultFormValues';
 import CreateProviderFormContextProvider from './CreateProviderFormContextProvider';
+import ProviderTypeFields from './ProviderTypeFields';
 import type { CreateProviderFormData } from './types';
 
 import './CreateProviderForm.style.scss';
@@ -54,13 +46,9 @@ const CreateProviderForm: FC = () => {
     handleSubmit,
   } = form;
 
-  const [selectedProject, selectedProviderType, openshiftUrl] = useWatch({
+  const selectedProject = useWatch({
     control,
-    name: [
-      ProviderFormFieldId.ProviderProject,
-      ProviderFormFieldId.ProviderType,
-      ProviderFormFieldId.OpenshiftUrl,
-    ],
+    name: ProviderFormFieldId.ProviderProject,
   });
 
   const onSubmit = useCallback(
@@ -114,18 +102,7 @@ const CreateProviderForm: FC = () => {
           className="pf-v6-u-h-100"
         >
           <Form className="create-provider-form">
-            <ProviderProjectField />
-            <ProviderTypeField />
-            {selectedProviderType && <ProviderNameField />}
-            {selectedProviderType === PROVIDER_TYPES.ova && <NfsDirectoryField />}
-            {selectedProviderType === PROVIDER_TYPES.openshift && (
-              <>
-                <OpenShiftUrlField />
-                <SectionHeading text={t('Provider credentials')} />
-                {openshiftUrl?.trim() && <ServiceAccountTokenField />}
-                <CertificateValidationField />
-              </>
-            )}
+            <ProviderTypeFields />
 
             {apiError && (
               <Alert

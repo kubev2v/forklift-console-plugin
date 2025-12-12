@@ -6,10 +6,9 @@ import { TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useCreateProviderFormContext } from '../hooks/useCreateProviderFormContext';
-import { NFS_PATH_REGEX } from '../utils/validationPatterns';
-
-import { ProviderFormFieldId } from './constants';
+import { useCreateProviderFormContext } from '../../hooks/useCreateProviderFormContext';
+import { NFS_PATH_REGEX } from '../../utils/validationPatterns';
+import { ProviderFormFieldId } from '../constants';
 
 const NfsDirectoryField: FC = () => {
   const { t } = useForkliftTranslation();

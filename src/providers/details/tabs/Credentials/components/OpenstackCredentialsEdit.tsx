@@ -61,8 +61,8 @@ const OpenstackCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
       const newData = { ...secret.data };
 
       switch (type) {
-        case OpenstackAuthType.TokenWithUserIDSecretFields:
-        case OpenstackAuthType.TokenWithUsernameSecretFields:
+        case OpenstackAuthType.TokenWithUserId:
+        case OpenstackAuthType.TokenWithUsername:
           // on change also clean userID and username
           delete newData.userID;
           delete newData.username;
@@ -75,8 +75,8 @@ const OpenstackCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
             },
           });
           break;
-        case OpenstackAuthType.ApplicationCredentialIdSecretFields:
-        case OpenstackAuthType.ApplicationCredentialNameSecretFields:
+        case OpenstackAuthType.ApplicationCredentialId:
+        case OpenstackAuthType.ApplicationCredentialName:
           delete newData.applicationCredentialID;
           delete newData.username;
           onNewSecretChange({
@@ -87,7 +87,7 @@ const OpenstackCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
             },
           });
           break;
-        case OpenstackAuthType.PasswordSecretFields:
+        case OpenstackAuthType.Password:
         default:
           onNewSecretChange({
             ...secret,
@@ -119,28 +119,28 @@ const OpenstackCredentialsEdit: FC<CredentialsEditModeByTypeProps> = ({
 
       <Divider />
 
-      {authenticationType === OpenstackAuthType.PasswordSecretFields && (
+      {authenticationType === OpenstackAuthType.Password && (
         <PasswordSecretFieldsEditSection secret={secret} onNewSecretChange={onNewSecretChange} />
       )}
-      {authenticationType === OpenstackAuthType.TokenWithUserIDSecretFields && (
+      {authenticationType === OpenstackAuthType.TokenWithUserId && (
         <TokenWithUserIDSecretFieldsEditSection
           secret={secret}
           onNewSecretChange={onNewSecretChange}
         />
       )}
-      {authenticationType === OpenstackAuthType.TokenWithUsernameSecretFields && (
+      {authenticationType === OpenstackAuthType.TokenWithUsername && (
         <TokenWithUsernameSecretFieldsEditSection
           secret={secret}
           onNewSecretChange={onNewSecretChange}
         />
       )}
-      {authenticationType === OpenstackAuthType.ApplicationCredentialIdSecretFields && (
+      {authenticationType === OpenstackAuthType.ApplicationCredentialId && (
         <ApplicationWithIDSecretFieldsEditSection
           secret={secret}
           onNewSecretChange={onNewSecretChange}
         />
       )}
-      {authenticationType === OpenstackAuthType.ApplicationCredentialNameSecretFields && (
+      {authenticationType === OpenstackAuthType.ApplicationCredentialName && (
         <ApplicationWithNameSecretFieldsEditSection
           secret={secret}
           onNewSecretChange={onNewSecretChange}
