@@ -8,6 +8,7 @@ import type { CreateProviderFormData } from '../types';
 import { buildOpenshiftProviderResources } from './buildOpenshiftProviderResources';
 import { buildOpenstackProviderResources } from './buildOpenstackProviderResources';
 import { buildOvaProviderResources } from './buildOvaProviderResources';
+import { buildOvirtProviderResources } from './buildOvirtProviderResources';
 
 type ProviderResources = {
   provider: V1beta1Provider;
@@ -25,6 +26,7 @@ export const buildProviderResources = (formData: CreateProviderFormData): Provid
     case PROVIDER_TYPES.openstack:
       return buildOpenstackProviderResources(formData);
     case PROVIDER_TYPES.ovirt:
+      return buildOvirtProviderResources(formData);
     case PROVIDER_TYPES.vsphere:
     case undefined:
     default:

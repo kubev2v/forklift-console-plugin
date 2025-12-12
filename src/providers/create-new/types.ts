@@ -39,15 +39,25 @@ type OpenstackFields = {
   [ProviderFormFieldId.OpenstackApplicationCredentialId]?: string;
 };
 
+type OvirtFields = {
+  [ProviderFormFieldId.CaCertificate]?: string;
+  [ProviderFormFieldId.CertificateValidation]?: CertificateValidationMode;
+  [ProviderFormFieldId.OvirtUrl]?: string;
+  [ProviderFormFieldId.OvirtUsername]?: string;
+  [ProviderFormFieldId.OvirtPassword]?: string;
+};
+
 export type OpenshiftFormData = BaseFormData & OpenshiftFields;
 export type OvaFormData = BaseFormData & OvaFields;
 export type OpenstackFormData = BaseFormData & OpenstackFields;
+export type OvirtFormData = BaseFormData & OvirtFields;
 
 export type CreateProviderFormData = FieldValues &
   BaseFormData &
   OpenshiftFields &
   OvaFields &
-  OpenstackFields;
+  OpenstackFields &
+  OvirtFields;
 
 export type CreateProviderFormContextProps = {
   providerNames: string[] | undefined;
