@@ -32,46 +32,46 @@ const AuthenticationTypeRadioGroup: FC<AuthenticationTypeRadioGroupProps> = ({
       <Radio
         name={OpenstackSecretFieldsId.AuthType}
         label={t(OpenstackAuthTypeLabels.ApplicationCredentialId)}
-        id="applicationCredentialIdSecretFields"
-        isChecked={authenticationType === OpenstackAuthType.ApplicationCredentialIdSecretFields}
+        id={OpenstackAuthType.ApplicationCredentialId}
+        isChecked={authenticationType === OpenstackAuthType.ApplicationCredentialId}
         onChange={() => {
-          handleAuthTypeChange(OpenstackAuthType.ApplicationCredentialIdSecretFields);
+          handleAuthTypeChange(OpenstackAuthType.ApplicationCredentialId);
         }}
       />
       <Radio
         name={OpenstackSecretFieldsId.AuthType}
         label={t(OpenstackAuthTypeLabels.ApplicationCredentialName)}
-        id="applicationCredentialNameSecretFields"
-        isChecked={authenticationType === OpenstackAuthType.ApplicationCredentialNameSecretFields}
+        id={OpenstackAuthType.ApplicationCredentialName}
+        isChecked={authenticationType === OpenstackAuthType.ApplicationCredentialName}
         onChange={() => {
-          handleAuthTypeChange(OpenstackAuthType.ApplicationCredentialNameSecretFields);
+          handleAuthTypeChange(OpenstackAuthType.ApplicationCredentialName);
         }}
       />
       <Radio
         name={OpenstackSecretFieldsId.AuthType}
         label={t(OpenstackAuthTypeLabels.TokenWithUserID)}
-        id="tokenWithUserIDSecretFields"
-        isChecked={authenticationType === OpenstackAuthType.TokenWithUserIDSecretFields}
+        id={OpenstackAuthType.TokenWithUserId}
+        isChecked={authenticationType === OpenstackAuthType.TokenWithUserId}
         onChange={() => {
-          handleAuthTypeChange(OpenstackAuthType.TokenWithUserIDSecretFields);
+          handleAuthTypeChange(OpenstackAuthType.TokenWithUserId);
         }}
       />
       <Radio
         name={OpenstackSecretFieldsId.AuthType}
         label={t(OpenstackAuthTypeLabels.TokenWithUsername)}
-        id="tokenWithUsernameSecretFields"
-        isChecked={authenticationType === OpenstackAuthType.TokenWithUsernameSecretFields}
+        id={OpenstackAuthType.TokenWithUsername}
+        isChecked={authenticationType === OpenstackAuthType.TokenWithUsername}
         onChange={() => {
-          handleAuthTypeChange(OpenstackAuthType.TokenWithUsernameSecretFields);
+          handleAuthTypeChange(OpenstackAuthType.TokenWithUsername);
         }}
       />
       <Radio
         name={OpenstackSecretFieldsId.AuthType}
         label={t(OpenstackAuthTypeLabels.Password)}
-        id="passwordSecretFields"
-        isChecked={authenticationType === OpenstackAuthType.PasswordSecretFields}
+        id={OpenstackAuthType.Password}
+        isChecked={authenticationType === OpenstackAuthType.Password}
         onChange={() => {
-          handleAuthTypeChange(OpenstackAuthType.PasswordSecretFields);
+          handleAuthTypeChange(OpenstackAuthType.Password);
         }}
       />
     </FormGroupWithHelpText>

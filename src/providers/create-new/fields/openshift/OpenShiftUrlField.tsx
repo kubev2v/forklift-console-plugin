@@ -8,7 +8,7 @@ import { TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { ProviderFormFieldId } from './constants';
+import { ProviderFormFieldId } from '../constants';
 
 const OpenShiftUrlField: FC = () => {
   const { t } = useForkliftTranslation();

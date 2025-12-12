@@ -5,17 +5,70 @@ export enum CertificateValidationMode {
   Skip = 'skip',
 }
 
-export enum ProviderFormFieldId {
-  CaCertificate = 'caCertificate',
-  CertificateValidation = 'certificateValidation',
-  NfsDirectory = 'nfsDirectory',
-  OpenshiftUrl = 'openshiftUrl',
+enum CommonProviderFormFieldId {
   ProviderName = 'providerName',
   ProviderProject = 'providerProject',
   ProviderType = 'providerType',
-  ServiceAccountToken = 'serviceAccountToken',
   ShowDefaultProjects = 'showDefaultProjects',
 }
+
+enum CertificateFormFieldId {
+  CertificateValidation = 'certificateValidation',
+  CaCertificate = 'caCertificate',
+}
+
+enum OpenshiftProviderFormFieldId {
+  Url = 'openshiftUrl',
+  ServiceAccountToken = 'serviceAccountToken',
+}
+
+enum OpenstackProviderFormFieldId {
+  Url = 'openstackUrl',
+  AuthType = 'openstackAuthType',
+  Username = 'openstackUsername',
+  Password = 'openstackPassword',
+  Token = 'openstackToken',
+  RegionName = 'openstackRegionName',
+  ProjectName = 'openstackProjectName',
+  DomainName = 'openstackDomainName',
+  UserId = 'openstackUserId',
+  ProjectId = 'openstackProjectId',
+  ApplicationCredentialName = 'openstackApplicationCredentialName',
+  ApplicationCredentialSecret = 'openstackApplicationCredentialSecret',
+  ApplicationCredentialId = 'openstackApplicationCredentialId',
+}
+
+enum OvaProviderFormFieldId {
+  NfsDirectory = 'nfsDirectory',
+}
+
+export const ProviderFormFieldId = {
+  ...CommonProviderFormFieldId,
+  ...CertificateFormFieldId,
+  NfsDirectory: OvaProviderFormFieldId.NfsDirectory,
+  OpenshiftUrl: OpenshiftProviderFormFieldId.Url,
+  OpenstackApplicationCredentialId: OpenstackProviderFormFieldId.ApplicationCredentialId,
+  OpenstackApplicationCredentialName: OpenstackProviderFormFieldId.ApplicationCredentialName,
+  OpenstackApplicationCredentialSecret: OpenstackProviderFormFieldId.ApplicationCredentialSecret,
+  OpenstackAuthType: OpenstackProviderFormFieldId.AuthType,
+  OpenstackDomainName: OpenstackProviderFormFieldId.DomainName,
+  OpenstackPassword: OpenstackProviderFormFieldId.Password,
+  OpenstackProjectId: OpenstackProviderFormFieldId.ProjectId,
+  OpenstackProjectName: OpenstackProviderFormFieldId.ProjectName,
+  OpenstackRegionName: OpenstackProviderFormFieldId.RegionName,
+  OpenstackToken: OpenstackProviderFormFieldId.Token,
+  OpenstackUrl: OpenstackProviderFormFieldId.Url,
+  OpenstackUserId: OpenstackProviderFormFieldId.UserId,
+  OpenstackUsername: OpenstackProviderFormFieldId.Username,
+  ServiceAccountToken: OpenshiftProviderFormFieldId.ServiceAccountToken,
+} as const;
+
+export type ProviderFormFieldIdType =
+  | CommonProviderFormFieldId
+  | CertificateFormFieldId
+  | OpenshiftProviderFormFieldId
+  | OpenstackProviderFormFieldId
+  | OvaProviderFormFieldId;
 
 export const providerFormFieldLabels = {
   [ProviderFormFieldId.CaCertificate]: t('CA certificate'),

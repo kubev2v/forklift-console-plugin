@@ -8,7 +8,7 @@ import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { ProviderFormFieldId } from './constants';
+import { ProviderFormFieldId } from '../constants';
 
 const ServiceAccountTokenField: FC = () => {
   const { t } = useForkliftTranslation();

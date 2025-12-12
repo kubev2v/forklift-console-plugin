@@ -7,17 +7,17 @@ export const getAuthType = (
   switch (authType) {
     case 'token':
       if (username) {
-        return OpenstackAuthType.TokenWithUsernameSecretFields;
+        return OpenstackAuthType.TokenWithUsername;
       }
-      return OpenstackAuthType.TokenWithUserIDSecretFields;
+      return OpenstackAuthType.TokenWithUserId;
     case 'applicationcredential':
       if (username) {
-        return OpenstackAuthType.ApplicationCredentialNameSecretFields;
+        return OpenstackAuthType.ApplicationCredentialName;
       }
-      return OpenstackAuthType.ApplicationCredentialIdSecretFields;
+      return OpenstackAuthType.ApplicationCredentialId;
     case 'password':
     case undefined:
     default:
-      return OpenstackAuthType.PasswordSecretFields;
+      return OpenstackAuthType.Password;
   }
 };

@@ -15,10 +15,16 @@ const CACertificateField: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useFormContext();
 
-  const [certificateValidation, url] = useWatch({
+  const [certificateValidation, openshiftUrl, openstackUrl] = useWatch({
     control,
-    name: [ProviderFormFieldId.CertificateValidation, ProviderFormFieldId.OpenshiftUrl],
+    name: [
+      ProviderFormFieldId.CertificateValidation,
+      ProviderFormFieldId.OpenshiftUrl,
+      ProviderFormFieldId.OpenstackUrl,
+    ],
   });
+
+  const url = openshiftUrl ?? openstackUrl;
 
   const {
     field: { onChange, value },

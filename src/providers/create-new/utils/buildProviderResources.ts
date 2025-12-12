@@ -6,6 +6,7 @@ import { ProviderFormFieldId } from '../fields/constants';
 import type { CreateProviderFormData } from '../types';
 
 import { buildOpenshiftProviderResources } from './buildOpenshiftProviderResources';
+import { buildOpenstackProviderResources } from './buildOpenstackProviderResources';
 import { buildOvaProviderResources } from './buildOvaProviderResources';
 
 type ProviderResources = {
@@ -21,9 +22,10 @@ export const buildProviderResources = (formData: CreateProviderFormData): Provid
       return buildOvaProviderResources(formData);
     case PROVIDER_TYPES.openshift:
       return buildOpenshiftProviderResources(formData);
+    case PROVIDER_TYPES.openstack:
+      return buildOpenstackProviderResources(formData);
     case PROVIDER_TYPES.ovirt:
     case PROVIDER_TYPES.vsphere:
-    case PROVIDER_TYPES.openstack:
     case undefined:
     default:
       // TODO (MTV-3737): Implement remaining provider types

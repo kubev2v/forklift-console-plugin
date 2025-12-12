@@ -35,11 +35,11 @@ export enum VSphereEndpointType {
 }
 
 export enum OpenstackAuthType {
-  PasswordSecretFields = 'passwordSecretFields',
-  TokenWithUsernameSecretFields = 'tokenWithUsernameSecretFields',
-  TokenWithUserIDSecretFields = 'tokenWithUserIDSecretFields',
-  ApplicationCredentialIdSecretFields = 'applicationCredentialIdSecretFields',
-  ApplicationCredentialNameSecretFields = 'applicationCredentialNameSecretFields',
+  Password = 'password',
+  TokenWithUsername = 'tokenWithUsername',
+  TokenWithUserId = 'tokenWithUserId',
+  ApplicationCredentialId = 'applicationCredentialId',
+  ApplicationCredentialName = 'applicationCredentialName',
 }
 
 export enum OpenstackSecretFieldsId {
