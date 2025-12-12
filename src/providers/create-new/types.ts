@@ -1,7 +1,11 @@
 import type { FieldValues } from 'react-hook-form';
-import type { OpenstackAuthType } from 'src/providers/utils/constants';
+import type { OpenstackAuthType, VSphereEndpointType } from 'src/providers/utils/constants';
 
-import type { CertificateValidationMode, ProviderFormFieldId } from './fields/constants';
+import type {
+  CertificateValidationMode,
+  ProviderFormFieldId,
+  VddkSetupMode,
+} from './fields/constants';
 
 type BaseFormData = {
   [ProviderFormFieldId.ProviderName]: string;
@@ -47,17 +51,32 @@ type OvirtFields = {
   [ProviderFormFieldId.OvirtPassword]?: string;
 };
 
+type VsphereFields = {
+  [ProviderFormFieldId.CaCertificate]?: string;
+  [ProviderFormFieldId.CertificateValidation]?: CertificateValidationMode;
+  [ProviderFormFieldId.VsphereEndpointType]?: VSphereEndpointType;
+  [ProviderFormFieldId.VsphereUrl]?: string;
+  [ProviderFormFieldId.VsphereUsername]?: string;
+  [ProviderFormFieldId.VspherePassword]?: string;
+  [ProviderFormFieldId.VsphereVddkInitImage]?: string;
+  [ProviderFormFieldId.VsphereVddkSetupMode]?: VddkSetupMode;
+  [ProviderFormFieldId.VsphereSkipVddk]?: boolean;
+  [ProviderFormFieldId.VsphereUseVddkAioOptimization]?: boolean;
+};
+
 export type OpenshiftFormData = BaseFormData & OpenshiftFields;
 export type OvaFormData = BaseFormData & OvaFields;
 export type OpenstackFormData = BaseFormData & OpenstackFields;
 export type OvirtFormData = BaseFormData & OvirtFields;
+export type VsphereFormData = BaseFormData & VsphereFields;
 
 export type CreateProviderFormData = FieldValues &
   BaseFormData &
   OpenshiftFields &
   OvaFields &
   OpenstackFields &
-  OvirtFields;
+  OvirtFields &
+  VsphereFields;
 
 export type CreateProviderFormContextProps = {
   providerNames: string[] | undefined;
