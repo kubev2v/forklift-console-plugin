@@ -9,6 +9,7 @@ import { buildOpenshiftProviderResources } from './buildOpenshiftProviderResourc
 import { buildOpenstackProviderResources } from './buildOpenstackProviderResources';
 import { buildOvaProviderResources } from './buildOvaProviderResources';
 import { buildOvirtProviderResources } from './buildOvirtProviderResources';
+import { buildVsphereProviderResources } from './buildVsphereProviderResources';
 
 type ProviderResources = {
   provider: V1beta1Provider;
@@ -28,9 +29,9 @@ export const buildProviderResources = (formData: CreateProviderFormData): Provid
     case PROVIDER_TYPES.ovirt:
       return buildOvirtProviderResources(formData);
     case PROVIDER_TYPES.vsphere:
+      return buildVsphereProviderResources(formData);
     case undefined:
     default:
-      // TODO (MTV-3737): Implement remaining provider types
       throw new Error(`Unsupported provider type: ${providerType}`);
   }
 };

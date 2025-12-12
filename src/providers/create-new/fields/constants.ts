@@ -5,6 +5,12 @@ export enum CertificateValidationMode {
   Skip = 'skip',
 }
 
+export enum VddkSetupMode {
+  Upload = 'upload',
+  Manual = 'manual',
+  Skip = 'skip',
+}
+
 enum CommonProviderFormFieldId {
   ProviderName = 'providerName',
   ProviderProject = 'providerProject',
@@ -48,6 +54,17 @@ enum OvirtProviderFormFieldId {
   OvirtUsername = 'ovirtUsername',
 }
 
+enum VsphereProviderFormFieldId {
+  VsphereEndpointType = 'vsphereEndpointType',
+  VsphereUrl = 'vsphereUrl',
+  VsphereUsername = 'vsphereUsername',
+  VspherePassword = 'vspherePassword',
+  VsphereVddkInitImage = 'vsphereVddkInitImage',
+  VsphereVddkSetupMode = 'vsphereVddkSetupMode',
+  VsphereSkipVddk = 'vsphereSkipVddk',
+  VsphereUseVddkAioOptimization = 'vsphereUseVddkAioOptimization',
+}
+
 export const ProviderFormFieldId = {
   ...CommonProviderFormFieldId,
   ...CertificateFormFieldId,
@@ -55,6 +72,7 @@ export const ProviderFormFieldId = {
   ...OpenshiftProviderFormFieldId,
   ...OpenstackProviderFormFieldId,
   ...OvirtProviderFormFieldId,
+  ...VsphereProviderFormFieldId,
 } as const;
 
 export type ProviderFormFieldIdType =
@@ -63,7 +81,8 @@ export type ProviderFormFieldIdType =
   | OpenshiftProviderFormFieldId
   | OpenstackProviderFormFieldId
   | OvaProviderFormFieldId
-  | OvirtProviderFormFieldId;
+  | OvirtProviderFormFieldId
+  | VsphereProviderFormFieldId;
 
 export const providerFormFieldLabels = {
   [ProviderFormFieldId.CaCertificate]: t('CA certificate'),
