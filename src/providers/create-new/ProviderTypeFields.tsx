@@ -12,6 +12,8 @@ import ServiceAccountTokenField from './fields/openshift/ServiceAccountTokenFiel
 import OpenStackAuthenticationTypeField from './fields/openstack/OpenStackAuthenticationTypeField';
 import OpenStackUrlField from './fields/openstack/OpenStackUrlField';
 import NfsDirectoryField from './fields/ova/NfsDirectoryField';
+import OvirtCredentialsFields from './fields/ovirt/OvirtCredentialsFields';
+import OvirtUrlField from './fields/ovirt/OvirtUrlField';
 import ProviderNameField from './fields/ProviderNameField';
 import ProviderProjectField from './fields/ProviderProjectField';
 import ProviderTypeField from './fields/ProviderTypeField';
@@ -21,9 +23,13 @@ const ProviderTypeFields: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useFormContext<CreateProviderFormData>();
 
-  const [selectedProviderType, openshiftUrl] = useWatch({
+  const [selectedProviderType, openshiftUrl, ovirtUrl] = useWatch({
     control,
-    name: [ProviderFormFieldId.ProviderType, ProviderFormFieldId.OpenshiftUrl],
+    name: [
+      ProviderFormFieldId.ProviderType,
+      ProviderFormFieldId.OpenshiftUrl,
+      ProviderFormFieldId.OvirtUrl,
+    ],
   });
 
   return (
@@ -45,6 +51,14 @@ const ProviderTypeFields: FC = () => {
           <OpenStackUrlField />
           <SectionHeading text={t('Provider credentials')} />
           <OpenStackAuthenticationTypeField />
+          <CertificateValidationField />
+        </>
+      )}
+      {selectedProviderType === PROVIDER_TYPES.ovirt && (
+        <>
+          <OvirtUrlField />
+          <SectionHeading text={t('Provider credentials')} />
+          {ovirtUrl?.trim() && <OvirtCredentialsFields />}
           <CertificateValidationField />
         </>
       )}

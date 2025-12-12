@@ -70,7 +70,6 @@ jest.mock('@utils/hooks/useDefaultProject', () => ({
 }));
 
 jest.mock('../fields/ProviderTypeField', () => {
-  const React = jest.requireActual('react');
   const { useController } = jest.requireActual('react-hook-form');
   const { useCreateProviderFormContext } = jest.requireActual(
     '../hooks/useCreateProviderFormContext',
@@ -85,30 +84,17 @@ jest.mock('../fields/ProviderTypeField', () => {
         name: 'providerType',
       });
 
-      return React.createElement(
-        'div',
-        null,
-        React.createElement('label', { htmlFor: 'provider-type-select' }, 'Provider type'),
-        React.createElement(
-          'select',
-          { id: 'provider-type-select', 'data-testid': 'provider-type-select', ...field },
-          React.createElement('option', { value: '' }, 'Select a provider type'),
-          React.createElement(
-            'option',
-            { value: 'openshift', 'data-testid': 'provider-type-option-openshift' },
-            'OpenShift Virtualization',
-          ),
-          React.createElement(
-            'option',
-            { value: 'openstack', 'data-testid': 'provider-type-option-openstack' },
-            'OpenStack',
-          ),
-          React.createElement(
-            'option',
-            { value: 'ova', 'data-testid': 'provider-type-option-ova' },
-            'OVA',
-          ),
-        ),
+      return (
+        <div>
+          <label htmlFor="provider-type-select">Provider type</label>
+          <select id="provider-type-select" data-testid="provider-type-select" {...field}>
+            <option value="">Select a provider type</option>
+            <option value="openshift">OpenShift Virtualization</option>
+            <option value="openstack">OpenStack</option>
+            <option value="ova">Open Virtual Appliance</option>
+            <option value="ovirt">Red Hat Virtualization</option>
+          </select>
+        </div>
       );
     },
   };
@@ -146,8 +132,7 @@ describe('CreateProviderForm', () => {
       const user = userEvent.setup();
       render(<CreateProviderForm />);
 
-      const typeSelect = screen.getByLabelText(/provider type/i);
-      await user.selectOptions(typeSelect, 'openshift');
+      await user.selectOptions(screen.getByLabelText(/provider type/i), 'openshift');
 
       await waitFor(() => {
         expect(screen.getByRole('textbox', { name: /provider name/i })).toBeInTheDocument();
@@ -275,6 +260,62 @@ describe('CreateProviderForm', () => {
       expect(
         screen.queryByRole('radio', { name: /skip certificate validation/i }),
       ).not.toBeInTheDocument();
+    });
+  });
+
+  describe('oVirt provider', () => {
+    it('shows oVirt-specific fields after selecting oVirt type', async () => {
+      const user = userEvent.setup();
+      render(<CreateProviderForm />);
+
+      await user.selectOptions(screen.getByLabelText(/provider type/i), 'ovirt');
+
+      await waitFor(() => {
+        expect(screen.getByRole('textbox', { name: /provider name/i })).toBeInTheDocument();
+        expect(screen.getByTestId('ovirt-url-input')).toBeInTheDocument();
+        expect(
+          screen.getByRole('radio', { name: /skip certificate validation/i }),
+        ).toBeInTheDocument();
+      });
+
+      expect(screen.queryByTestId('ovirt-username-input')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('ovirt-password-input')).not.toBeInTheDocument();
+    });
+
+    it('shows credentials fields when URL is provided', async () => {
+      const user = userEvent.setup();
+      render(<CreateProviderForm />);
+
+      await user.selectOptions(screen.getByLabelText(/provider type/i), 'ovirt');
+
+      await waitFor(() => {
+        expect(screen.getByTestId('ovirt-url-input')).toBeInTheDocument();
+      });
+
+      const urlInput = screen.getByTestId('ovirt-url-input');
+      await user.type(urlInput, 'https://rhv.example.com/ovirt-engine/api');
+
+      await waitFor(() => {
+        expect(screen.getByTestId('ovirt-username-input')).toBeInTheDocument();
+        expect(screen.getByTestId('ovirt-password-input')).toBeInTheDocument();
+      });
+    });
+
+    it('hides other provider fields when oVirt provider is selected', async () => {
+      const user = userEvent.setup();
+      render(<CreateProviderForm />);
+
+      await user.selectOptions(screen.getByLabelText(/provider type/i), 'ovirt');
+
+      await waitFor(() => {
+        expect(screen.getByRole('textbox', { name: /provider name/i })).toBeInTheDocument();
+      });
+
+      expect(
+        screen.queryByRole('textbox', { name: /service account bearer token/i }),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByLabelText(/nfs shared directory/i)).not.toBeInTheDocument();
+      expect(screen.queryByTestId('openstack-url-input')).not.toBeInTheDocument();
     });
   });
 });
