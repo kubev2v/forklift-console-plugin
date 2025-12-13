@@ -59,6 +59,7 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
         <Radio
           id={migrationType}
           name={migrationType}
+          data-testid={`migration-type-${migrationType}`}
           label={
             helpBody ? (
               <Split hasGutter>

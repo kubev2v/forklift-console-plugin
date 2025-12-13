@@ -39,13 +39,12 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
     await expect(networkMapCreatePage.createButton).toBeEnabled();
     await networkMapCreatePage.removeMapping(0);
     await expect(networkMapCreatePage.createButton).toBeDisabled();
-
     // Re-add mappings
     await networkMapCreatePage.addMapping();
     await expect(networkMapCreatePage.createButton).toBeDisabled();
     await networkMapCreatePage.populateMapping(0, 'VM Network', 'Default network');
     await networkMapCreatePage.addMapping();
-    await networkMapCreatePage.populateMapping(1, 'Mgmt Network', 'Default network');
+    await networkMapCreatePage.populateMapping(1, 'Mgmt Network', 'Ignore network');
 
     // Submit form
     await networkMapCreatePage.submitForm(mapName);
@@ -60,7 +59,7 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
       targetProvider: 'host',
       mappings: [
         { sourceNetwork: 'VM Network', targetNetwork: 'Default network' },
-        { sourceNetwork: 'Mgmt Network', targetNetwork: 'Default network' },
+        { sourceNetwork: 'Mgmt Network', targetNetwork: 'Ignore network' },
       ],
     });
 
@@ -90,7 +89,7 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
       targetProvider: 'host',
       mappings: [
         { sourceNetwork: 'VM Network', targetNetwork: 'Default network' },
-        { sourceNetwork: 'Mgmt Network', targetNetwork: 'Default network' },
+        { sourceNetwork: 'Mgmt Network', targetNetwork: 'Ignore network' },
       ],
     });
   });
