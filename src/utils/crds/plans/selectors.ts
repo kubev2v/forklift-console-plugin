@@ -9,9 +9,15 @@ export const getPlanDestinationProvider = (plan: V1beta1Plan) =>
 export const getPlanDestinationProviderName = (plan: V1beta1Plan) =>
   getPlanDestinationProvider(plan)?.name;
 
+export const getPlanDestinationProviderNamespace = (plan: V1beta1Plan) =>
+  getPlanDestinationProvider(plan)?.namespace;
+
 export const getPlanSourceProvider = (plan: V1beta1Plan) => plan?.spec?.provider?.source ?? {};
 
 export const getPlanSourceProviderName = (plan: V1beta1Plan) => getPlanSourceProvider(plan)?.name;
+
+export const getPlanSourceProviderNamespace = (plan: V1beta1Plan) =>
+  getPlanSourceProvider(plan)?.namespace;
 
 export const getPlanMigrationStarted = (plan: V1beta1Plan) =>
   plan?.status?.migration?.started ?? '';
