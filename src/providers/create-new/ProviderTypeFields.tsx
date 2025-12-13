@@ -17,18 +17,23 @@ import OvirtUrlField from './fields/ovirt/OvirtUrlField';
 import ProviderNameField from './fields/ProviderNameField';
 import ProviderProjectField from './fields/ProviderProjectField';
 import ProviderTypeField from './fields/ProviderTypeField';
+import VsphereCredentialsFields from './fields/vsphere/VsphereCredentialsFields';
+import VsphereEndpointTypeField from './fields/vsphere/VsphereEndpointTypeField';
+import VsphereUrlField from './fields/vsphere/VsphereUrlField';
+import VsphereVddkField from './fields/vsphere/VsphereVddkField';
 import type { CreateProviderFormData } from './types';
 
 const ProviderTypeFields: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useFormContext<CreateProviderFormData>();
 
-  const [selectedProviderType, openshiftUrl, ovirtUrl] = useWatch({
+  const [selectedProviderType, openshiftUrl, ovirtUrl, vsphereUrl] = useWatch({
     control,
     name: [
       ProviderFormFieldId.ProviderType,
       ProviderFormFieldId.OpenshiftUrl,
       ProviderFormFieldId.OvirtUrl,
+      ProviderFormFieldId.VsphereUrl,
     ],
   });
 
@@ -36,8 +41,11 @@ const ProviderTypeFields: FC = () => {
     <>
       <ProviderProjectField />
       <ProviderTypeField />
+
       {selectedProviderType && <ProviderNameField />}
+
       {selectedProviderType === PROVIDER_TYPES.ova && <NfsDirectoryField />}
+
       {selectedProviderType === PROVIDER_TYPES.openshift && (
         <>
           <OpenShiftUrlField />
@@ -46,6 +54,7 @@ const ProviderTypeFields: FC = () => {
           <CertificateValidationField />
         </>
       )}
+
       {selectedProviderType === PROVIDER_TYPES.openstack && (
         <>
           <OpenStackUrlField />
@@ -54,11 +63,23 @@ const ProviderTypeFields: FC = () => {
           <CertificateValidationField />
         </>
       )}
+
       {selectedProviderType === PROVIDER_TYPES.ovirt && (
         <>
           <OvirtUrlField />
           <SectionHeading text={t('Provider credentials')} />
           {ovirtUrl?.trim() && <OvirtCredentialsFields />}
+          <CertificateValidationField />
+        </>
+      )}
+
+      {selectedProviderType === PROVIDER_TYPES.vsphere && (
+        <>
+          <VsphereEndpointTypeField />
+          <VsphereUrlField />
+          <VsphereVddkField />
+          <SectionHeading text={t('Provider credentials')} />
+          {vsphereUrl?.trim() && <VsphereCredentialsFields />}
           <CertificateValidationField />
         </>
       )}
