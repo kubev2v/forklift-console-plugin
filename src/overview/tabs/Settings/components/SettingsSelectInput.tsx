@@ -14,10 +14,20 @@ import {
  * @property {number | string} name
  * @property {string} description
  */
-type Option = {
+export type Option = {
   key: number | string;
   name: string;
   description: string;
+};
+
+/**
+ * @typedef BlankOption
+ * @property {string} name - The display name for the blank option
+ * @property {string} [description] - Optional description for the blank option
+ */
+type BlankOption = {
+  name: string;
+  description?: string;
 };
 
 /**
@@ -25,35 +35,59 @@ type Option = {
  * @property {string} value - The current selected value
  * @property {(value: string) => void} onChange - Function to call when the value changes
  * @property {Option[]} options - The options to present to the user
+ * @property {BlankOption} [blankOption] - Optional blank option that passes an empty value when selected
  */
 type SettingsSelectInputProps = {
   value: number | string;
   onChange: (value: number | string) => void;
   options: Option[];
+  blankOption?: BlankOption;
 };
+
+// Special key used internally to identify the blank option
+const BLANK_OPTION_KEY = '__blank__';
 
 /**
  * SelectInput component. Provides a select input form element with predefined options.
  */
-const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, value }) => {
+const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
+  blankOption,
+  onChange,
+  options,
+  value,
+}) => {
   // State to keep track of the dropdown menu open/closed state
   const [isOpen, setIsOpen] = useState(false);
 
   // Build a dictionary mapping option names to keys for efficient lookup
   // This dictionary is re-calculated every time the options prop changes
   const nameToKey = useMemo(() => {
-    return options?.reduce<Record<string, string | number>>((dict, option) => {
-      dict[option.name] = option.key;
-      return dict;
+    const dict = options?.reduce<Record<string, string | number>>((acc, option) => {
+      acc[option.name] = option.key;
+      return acc;
     }, {});
-  }, [options]);
+
+    // Add blank option mapping if provided
+    if (blankOption) {
+      dict[blankOption.name] = BLANK_OPTION_KEY;
+    }
+
+    return dict;
+  }, [options, blankOption]);
 
   const keyToName = useMemo(() => {
-    return options?.reduce<Record<string, string | number>>((dict, option) => {
-      dict[option.key] = option.name;
-      return dict;
+    const dict = options?.reduce<Record<string, string | number>>((acc, option) => {
+      acc[option.key] = option.name;
+      return acc;
     }, {});
-  }, [options]);
+
+    // Add blank option mapping if provided (empty string key maps to blank option name)
+    if (blankOption) {
+      dict[''] = blankOption.name;
+    }
+
+    return dict;
+  }, [options, blankOption]);
 
   const valueLabel = keyToName?.[value] ?? value;
   const [selected, setSelected] = useState<string | number>(valueLabel);
@@ -74,11 +108,27 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
   );
 
   const renderOptions = () => {
-    return options?.map((option) => (
+    const optionElements = options?.map((option) => (
       <SelectOption key={option.key} value={option.name} description={option.description}>
         {option.name}
       </SelectOption>
     ));
+
+    // Prepend blank option if provided
+    if (blankOption) {
+      return [
+        <SelectOption
+          key={BLANK_OPTION_KEY}
+          value={blankOption.name}
+          description={blankOption.description}
+        >
+          {blankOption.name}
+        </SelectOption>,
+        ...optionElements,
+      ];
+    }
+
+    return optionElements;
   };
 
   // Callback function to handle selection in the dropdown menu
@@ -90,7 +140,13 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({ onChange, options, 
       }
       // Use the dictionary to find the key corresponding to the selected name
       const key = nameToKey[selectedValue] || selectedValue;
-      onChange(key);
+
+      // If blank option was selected, pass empty string to onChange
+      if (key === BLANK_OPTION_KEY) {
+        onChange('');
+      } else {
+        onChange(key);
+      }
 
       // Toggle the dropdown menu open state
       setSelected(selectedValue as string);
