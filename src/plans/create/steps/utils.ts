@@ -20,6 +20,9 @@ export const getMapResourceLabel = (
       return resource.namespace ? `${resource.namespace}/${resource.name}` : resource.name;
     }
     case 'ova':
+      return resource.name || '';
+    // @ts-expect-error - hyperv not yet in backend types
+    case 'hyperv':
     case 'vsphere':
     case 'openstack': {
       return resource.name || '';

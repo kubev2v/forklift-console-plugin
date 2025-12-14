@@ -59,6 +59,9 @@ export const getVmPowerState = (vm: ProviderVirtualMachine | undefined): PowerSt
     case 'ova':
     case 'hyperv':
       return 'off';
+    // @ts-expect-error - hyperv not yet in backend types
+    case 'hyperv':
+      return 'off';
     default:
       return 'unknown';
   }

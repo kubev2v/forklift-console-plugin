@@ -113,6 +113,10 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
         storageIds = getOvaStorageIds(vm as EnhancedOvaVM);
         break;
 
+      case PROVIDER_TYPES.hyperv:
+        storageIds = getOvaStorageIds(vm as EnhancedOvaVM);
+        break;
+
       case PROVIDER_TYPES.ovirt:
         storageIds = getOvirtStorageIds(vm as OVirtVMWithDisks);
         break;
@@ -122,7 +126,6 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
         break;
 
       case PROVIDER_TYPES.openstack:
-      case PROVIDER_TYPES.hyperv:
       default:
       // Use empty array
     }

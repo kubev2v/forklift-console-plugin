@@ -42,18 +42,19 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
       >
         {t('Edit provider')}
       </DropdownItem>
-      {provider?.spec?.type !== PROVIDER_TYPES.ova && (
-        <DropdownItem
-          value={1}
-          key="EditCredentials"
-          href={`${providerURL}/credentials`}
-          onClick={() => {
-            navigate(`${providerURL}/credentials`);
-          }}
-        >
-          {t('Edit provider credentials')}
-        </DropdownItem>
-      )}
+      {provider?.spec?.type !== PROVIDER_TYPES.ova &&
+        provider?.spec?.type !== PROVIDER_TYPES.hyperv && (
+          <DropdownItem
+            value={1}
+            key="EditCredentials"
+            href={`${providerURL}/credentials`}
+            onClick={() => {
+              navigate(`${providerURL}/credentials`);
+            }}
+          >
+            {t('Edit provider credentials')}
+          </DropdownItem>
+        )}
       <DropdownItem
         value={2}
         key="delete"

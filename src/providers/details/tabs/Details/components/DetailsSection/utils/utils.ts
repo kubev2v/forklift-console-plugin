@@ -5,6 +5,7 @@ import type { V1beta1Provider } from '@forklift-ui/types';
 import { CONDITION_STATUS } from '@utils/constants';
 import { ProviderStatus } from '@utils/types';
 
+import HyperVDetailsSection from '../HyperVDetailsSection';
 import OpenshiftDetailsSection from '../OpenshiftDetailsSection';
 import OpenstackDetailsSection from '../OpenstackDetailsSection';
 import OVADetailsSection from '../OVADetailsSection';
@@ -27,6 +28,8 @@ export const getDetailsSectionByType = (
       return VSphereDetailsSection;
     case PROVIDER_TYPES.ova:
       return OVADetailsSection;
+    case PROVIDER_TYPES.hyperv:
+      return HyperVDetailsSection;
     case undefined:
     default:
       return undefined;

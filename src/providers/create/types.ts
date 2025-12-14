@@ -23,6 +23,9 @@ type OpenshiftFields = {
 
 type OvaFields = {
   [ProviderFormFieldId.NfsDirectory]?: string;
+  [ProviderFormFieldId.SmbDirectory]?: string;
+  [ProviderFormFieldId.SmbUsername]?: string;
+  [ProviderFormFieldId.SmbPassword]?: string;
 };
 
 type OpenstackFields = {

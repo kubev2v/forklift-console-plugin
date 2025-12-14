@@ -59,6 +59,12 @@ enum VsphereProviderFormFieldId {
   VsphereUseVddkAioOptimization = 'vsphereUseVddkAioOptimization',
 }
 
+enum HypervProviderFormFieldId {
+  SmbDirectory = 'smbDirectory',
+  SmbUsername = 'smbUsername',
+  SmbPassword = 'smbPassword',
+}
+
 export const ProviderFormFieldId = {
   ...CommonProviderFormFieldId,
   ...CertificateFormFieldId,
@@ -67,6 +73,7 @@ export const ProviderFormFieldId = {
   ...OpenstackProviderFormFieldId,
   ...OvirtProviderFormFieldId,
   ...VsphereProviderFormFieldId,
+  ...HypervProviderFormFieldId,
 } as const;
 
 export type ProviderFormFieldIdType =
@@ -76,7 +83,8 @@ export type ProviderFormFieldIdType =
   | OpenstackProviderFormFieldId
   | OvaProviderFormFieldId
   | OvirtProviderFormFieldId
-  | VsphereProviderFormFieldId;
+  | VsphereProviderFormFieldId
+  | HypervProviderFormFieldId;
 
 export const providerFormFieldLabels = {
   [ProviderFormFieldId.CaCertificate]: t('CA certificate'),
@@ -88,4 +96,7 @@ export const providerFormFieldLabels = {
   [ProviderFormFieldId.ProviderType]: t('Provider type'),
   [ProviderFormFieldId.ServiceAccountToken]: t('Service account bearer token'),
   [ProviderFormFieldId.ShowDefaultProjects]: t('Show default projects'),
+  [ProviderFormFieldId.SmbDirectory]: t('SMB shared directory'),
+  [ProviderFormFieldId.SmbPassword]: t('Password'),
+  [ProviderFormFieldId.SmbUsername]: t('Username'),
 };

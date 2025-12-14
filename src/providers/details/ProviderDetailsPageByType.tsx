@@ -35,6 +35,7 @@ const ProviderDetailsPageByType: FC<ProviderDetailsPageByTypeProps> = ({
     case PROVIDER_TYPES.vsphere:
       return <VSphereProviderDetailsPage name={name} namespace={namespace} />;
     case PROVIDER_TYPES.ova:
+    case PROVIDER_TYPES.hyperv:
       return <OvaProviderDetailsPage name={name} namespace={namespace} />;
     case undefined:
     default:
