@@ -34,6 +34,7 @@ const VirtualMachinesListSection: FC<VirtualMachinesListSectionProps> = ({ provi
     case PROVIDER_TYPES.vsphere:
       return <VSphereVirtualMachinesList {...tableProps} />;
     case PROVIDER_TYPES.ova:
+    case PROVIDER_TYPES.hyperv:
       return <OvaVirtualMachinesList {...tableProps} />;
     case undefined:
     default:

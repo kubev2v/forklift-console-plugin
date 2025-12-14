@@ -9,7 +9,7 @@ import EditPVCNameTemplate, {
 import EditVmTargetPowerState, {
   type EditVmTargetPowerStateProps,
 } from 'src/plans/details/tabs/Details/components/SettingsSection/components/TargetPowerState/EditVmTargetPowerState';
-import EditVolumeNameTemplate, {
+import EditVolumeNameTemplate,{
   type EditVolumeNameTemplateProps,
 } from 'src/plans/details/tabs/Details/components/SettingsSection/components/VolumeNameTemplate/EditVolumeNameTemplate';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';

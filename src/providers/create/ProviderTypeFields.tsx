@@ -7,6 +7,8 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import CertificateValidationField from './fields/CertificateValidationField';
 import { ProviderFormFieldId } from './fields/constants';
+import HypervCredentialsFields from './fields/hyperv/HypervCredentialsFields';
+import SmbDirectoryField from './fields/hyperv/SmbDirectoryField';
 import OpenShiftUrlField from './fields/openshift/OpenShiftUrlField';
 import ServiceAccountTokenField from './fields/openshift/ServiceAccountTokenField';
 import OpenStackAuthenticationTypeField from './fields/openstack/OpenStackAuthenticationTypeField';
@@ -49,7 +51,6 @@ const ProviderTypeFields: FC = () => {
       {selectedProviderType === PROVIDER_TYPES.openshift && (
         <>
           <OpenShiftUrlField />
-          <SectionHeading text={t('Provider credentials')} />
           {openshiftUrl?.trim() && <ServiceAccountTokenField />}
           <CertificateValidationField />
         </>
@@ -58,7 +59,6 @@ const ProviderTypeFields: FC = () => {
       {selectedProviderType === PROVIDER_TYPES.openstack && (
         <>
           <OpenStackUrlField />
-          <SectionHeading text={t('Provider credentials')} />
           <OpenStackAuthenticationTypeField />
           <CertificateValidationField />
         </>
@@ -67,7 +67,6 @@ const ProviderTypeFields: FC = () => {
       {selectedProviderType === PROVIDER_TYPES.ovirt && (
         <>
           <OvirtUrlField />
-          <SectionHeading text={t('Provider credentials')} />
           {ovirtUrl?.trim() && <OvirtCredentialsFields />}
           <CertificateValidationField />
         </>
@@ -81,6 +80,14 @@ const ProviderTypeFields: FC = () => {
           <SectionHeading text={t('Provider credentials')} />
           {vsphereUrl?.trim() && <VsphereCredentialsFields />}
           <CertificateValidationField />
+        </>
+      )}
+
+      {selectedProviderType === PROVIDER_TYPES.hyperv && (
+        <>
+          <SmbDirectoryField />
+          <SectionHeading text={t('Provider credentials')} />
+          <HypervCredentialsFields />
         </>
       )}
     </>

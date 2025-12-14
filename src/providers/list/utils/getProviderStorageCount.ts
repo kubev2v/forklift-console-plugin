@@ -14,6 +14,7 @@ export const getProviderStorageCount = (provider: ProviderData) => {
 
   switch (inventory?.type) {
     case PROVIDER_TYPES.ova:
+    case PROVIDER_TYPES.hyperv:
       return (inventory as OvaProvider).storageCount;
     case PROVIDER_TYPES.openshift:
       return (inventory as OpenshiftProvider).storageClassCount;

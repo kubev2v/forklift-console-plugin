@@ -98,6 +98,7 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
     case PROVIDER_TYPES.ovirt:
       return <OVirtVirtualMachinesList {...tableProps} />;
     case PROVIDER_TYPES.ova:
+    case PROVIDER_TYPES.hyperv:
       return <OvaVirtualMachinesList {...tableProps} />;
     case PROVIDER_TYPES.vsphere:
       return <VSphereVirtualMachinesList {...tableProps} />;

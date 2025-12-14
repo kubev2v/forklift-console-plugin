@@ -1,5 +1,3 @@
-import type { PROVIDER_TYPES } from 'src/providers/utils/constants';
-
 import type { ProviderInventory, ProvidersInventoryList } from '@forklift-ui/types';
 
 /**
@@ -18,7 +16,7 @@ export const findInventoryByID = (
   }
 
   const providers = Object.keys(inventory).reduce<ProviderInventory[]>((flatInventory, key) => {
-    return flatInventory.concat(inventory[key as keyof typeof PROVIDER_TYPES] ?? []);
+    return flatInventory.concat(inventory[key as keyof ProvidersInventoryList] ?? []);
   }, []);
 
   return providers.find((provider) => provider.uid === uid);

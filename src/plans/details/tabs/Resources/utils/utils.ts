@@ -221,6 +221,7 @@ export const getPlanResourcesTableProps = (
     case PROVIDER_TYPES.vsphere:
       return getVSpherePlanResources(planInventory as EnhancedVSphereVM[]);
     case PROVIDER_TYPES.ova:
+    case PROVIDER_TYPES.hyperv:
       return getOVAPlanResources(planInventory as EnhancedOvaVM[]);
     case undefined:
     default:

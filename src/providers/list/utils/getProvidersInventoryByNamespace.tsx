@@ -15,9 +15,14 @@ import type {
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 import { k8sGetProvidersByNamespace } from '../utils/k8sGetProvidersByNamespace';
+
+// Extend ProvidersInventoryList to include hyperv (not yet in backend types)
+type ExtendedProvidersInventoryList = ProvidersInventoryList & {
+  hyperv?: OvaProvider[];
+};
 export const getProvidersInventoryByNamespace = async (
   currNamespace: string | undefined,
-): Promise<ProvidersInventoryList | null> => {
+): Promise<ExtendedProvidersInventoryList | null> => {
   const providers = await k8sGetProvidersByNamespace(currNamespace);
 
   const readyProviders = providers?.filter(
@@ -36,7 +41,7 @@ export const getProvidersInventoryByNamespace = async (
       }),
     )
       .then((newInventoryProviders) => {
-        const newInventory: ProvidersInventoryList = {};
+        const newInventory: ExtendedProvidersInventoryList = {};
 
         newInventoryProviders.forEach((newInventoryProvider) => {
           if (newInventoryProvider?.type) {
@@ -68,6 +73,12 @@ export const getProvidersInventoryByNamespace = async (
               case PROVIDER_TYPES.ova:
                 newInventory.ova = [
                   ...(newInventory.ova ?? []),
+                  newInventoryProvider as OvaProvider,
+                ];
+                break;
+              case PROVIDER_TYPES.hyperv:
+                newInventory.hyperv = [
+                  ...(newInventory.hyperv ?? []),
                   newInventoryProvider as OvaProvider,
                 ];
                 break;

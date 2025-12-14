@@ -12,7 +12,11 @@ export const inventoryHasChanged = (
 ): boolean => {
   const totalNumOfProviders = (inventoryList: ProvidersInventoryList | null): number =>
     Object.values(PROVIDER_TYPES).reduce(
-      (total, type) => total + (inventoryList ? (inventoryList[type]?.length ?? 0) : 0),
+      (total, type) =>
+        total +
+        (inventoryList
+          ? (inventoryList[type as keyof ProvidersInventoryList]?.length ?? 0)
+          : 0),
       0,
     );
 
