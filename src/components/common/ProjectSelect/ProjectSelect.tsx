@@ -12,7 +12,7 @@ import {
   useModal,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { ProjectModel } from '@openshift-console/dynamic-plugin-sdk/lib/models';
-import { Button, ButtonVariant, Divider, Switch } from '@patternfly/react-core';
+import { Bullseye, Button, ButtonVariant, Divider, Spinner, Switch } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
@@ -24,8 +24,10 @@ const showDefaultTargetsSwitchTestId = 'show-default-projects-switch';
 const ProjectSelect: FC<ProjectSelectProps> = ({
   defaultProject,
   emptyStateMessage,
+  errorLoading = null,
   id,
   isDisabled = false,
+  loading = false,
   noOptionsMessage,
   onChange,
   onNewValue,
@@ -102,12 +104,17 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
       noOptionsMessage={noOptionsMessage}
       toggleProps={toggleProps}
       emptyState={
-        emptyStateMessage ? (
+        loading ? (
+          <Bullseye className="pf-v6-u-my-lg">
+            <Spinner />
+          </Bullseye>
+        ) : (
           <ProjectSelectEmptyState
             emptyStateMessage={emptyStateMessage}
             onCreate={createAllowed ? onNewProject : undefined}
+            errorLoading={errorLoading}
           />
-        ) : null
+        )
       }
       filterControls={
         <>
