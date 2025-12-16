@@ -21,6 +21,7 @@ import {
 
 import ControllerCPULimitHelpContent from './ControllerCPULimit/ControllerCPULimitHelpContent';
 import ControllerMemoryLimitHelpContent from './ControllerMemoryLimit/ControllerMemoryLimitHelpContent';
+import ControllerTransferNetworkHelpContent from './ControllerTransferNetwork/ControllerTransferNetworkHelpContent';
 import InventoryMemoryLimitHelpContent from './InventoryMemoryLimit/InventoryMemoryLimitHelpContent';
 import MaxVMInFlightHelpContent from './MaxVMInFlight/MaxVMInFlightHelpContent';
 import PreCopyIntervalHelpContent from './PreCopyInterval/PreCopyIntervalHelpContent';
@@ -104,6 +105,14 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
           }
           title={t('Snapshot polling interval')}
           helpContent={<SnapshotPoolingIntervalHelpContent />}
+        />
+        <DetailsItem
+          content={
+            spec?.[SettingsFields.ControllerTransferNetwork] ??
+            defaultValuesMap[SettingsFields.ControllerTransferNetwork]
+          }
+          title={t('Controller transfer network')}
+          helpContent={<ControllerTransferNetworkHelpContent />}
         />
       </DescriptionList>
     </>

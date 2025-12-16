@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent, type Ref, useState } from 'react';
+import { type FC, type MouseEvent, type Ref, useMemo, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -17,6 +17,7 @@ import {
   type MenuToggleElement,
 } from '@patternfly/react-core';
 import { DEFAULT_NETWORK } from '@utils/constants';
+import { isEmpty } from '@utils/helpers';
 
 import useProviderInventory from '../../hooks/useProviderInventory';
 import { EditModal } from '../EditModal/EditModal';
@@ -76,9 +77,7 @@ const getNetworkName = (value: string | number): string => {
     return DEFAULT_NETWORK;
   }
 
-  const parts = value.split('/');
-
-  return parts[parts.length - 1];
+  return value;
 };
 
 const OpenshiftNetworksInputFactory: ({
@@ -105,30 +104,35 @@ const OpenshiftNetworksInputFactory: ({
 
     const name = getNetworkName(value);
 
-    const dropdownItems = [
-      <DropdownItem
-        value={0}
-        key={DEFAULT_NETWORK}
-        description={DEFAULT_NETWORK}
-        onClick={() => {
-          onChange('');
-        }}
-      >
-        {DEFAULT_NETWORK}
-      </DropdownItem>,
-      ...(networks ?? []).map((network) => (
+    const dropdownItems = useMemo(
+      () => [
         <DropdownItem
-          value={1}
-          key={network.name}
-          description={network.namespace}
+          value={0}
+          key={DEFAULT_NETWORK}
+          description={DEFAULT_NETWORK}
           onClick={() => {
-            onChange(`${network.namespace}/${network.name}`);
+            onChange('');
           }}
+          isSelected={isEmpty(String(value))}
         >
-          {network.name}
-        </DropdownItem>
-      )),
-    ];
+          {DEFAULT_NETWORK}
+        </DropdownItem>,
+        ...(networks ?? []).map((network, index) => (
+          <DropdownItem
+            value={index}
+            key={network.name}
+            description={network.namespace}
+            onClick={() => {
+              onChange(`${network.namespace}/${network.name}`);
+            }}
+            isSelected={value === `${network.namespace}/${network.name}`}
+          >
+            {network.name}
+          </DropdownItem>
+        )),
+      ],
+      [networks, onChange, value],
+    );
 
     return (
       <Dropdown
@@ -136,12 +140,7 @@ const OpenshiftNetworksInputFactory: ({
         onOpenChange={setIsOpen}
         onSelect={onSelect}
         toggle={(toggleRef: Ref<MenuToggleElement>) => (
-          <MenuToggle
-            ref={toggleRef}
-            onClick={onToggleClick}
-            isExpanded={isOpen}
-            variant={'default'}
-          >
+          <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} variant="default">
             {name}
           </MenuToggle>
         )}
@@ -149,7 +148,7 @@ const OpenshiftNetworksInputFactory: ({
         popperProps={{
           position: 'right',
         }}
-        isScrollable={true}
+        isScrollable
       >
         <DropdownList>{dropdownItems}</DropdownList>
       </Dropdown>
