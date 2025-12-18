@@ -1,3 +1,5 @@
+import { t } from '@utils/i18n';
+
 export const EMPTY_VDDK_INIT_IMAGE_ANNOTATION = 'forklift.konveyor.io/empty-vddk-init-image';
 
 export enum ProvidersResourceFieldId {
@@ -59,23 +61,13 @@ export enum OpenstackSecretFieldsId {
   AuthType = 'authType',
 }
 
-export enum OpenstackAuthTypeLabels {
-  ApplicationCredentialId = 'Application credential ID',
-  ApplicationCredentialName = 'Application credential name',
-  TokenWithUserID = 'Token with user ID',
-  TokenWithUsername = 'Token with user name',
-  Password = 'Password',
-}
-
-export enum ProviderFieldsId {
-  Name = 'k8sName',
-  Url = 'url',
-  SdkEndpoint = 'sdkEndpoint',
-  VddkInitImage = 'vddkInitImage',
-  EmptyVddkInitImage = 'emptyVddkInitImage',
-  Project = 'project',
-  UseVddkAioOptimization = 'useVddkAioOptimization',
-}
+export const openstackAuthTypeLabels = {
+  applicationCredentialId: t('Application credential ID'),
+  applicationCredentialName: t('Application credential name'),
+  password: t('Password'),
+  tokenWithUserID: t('Token with user ID'),
+  tokenWithUsername: t('Token with user name'),
+} as const;
 
 export enum SecretFieldsId {
   User = 'user',
@@ -84,3 +76,6 @@ export enum SecretFieldsId {
   InsecureSkipVerify = 'insecureSkipVerify',
   Token = 'token',
 }
+
+export const YES_VALUE = t('yes');
+export const TRUE_VALUE = t('true');

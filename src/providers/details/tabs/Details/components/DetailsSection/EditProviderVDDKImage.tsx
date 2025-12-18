@@ -4,10 +4,12 @@ import type {
   EditModalProps,
   OnConfirmHookType,
 } from 'src/modules/Providers/modals/EditModal/types';
-import { VDDKHelperTextShort } from 'src/modules/Providers/utils/components/VDDKHelperText/VDDKHelperText';
 import { validateVDDKImage } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVDDKImage';
-import { TRUE_VALUE, YES_VALUE } from 'src/providers/create/utils/constants';
-import { EMPTY_VDDK_INIT_IMAGE_ANNOTATION } from 'src/providers/utils/constants';
+import {
+  EMPTY_VDDK_INIT_IMAGE_ANNOTATION,
+  TRUE_VALUE,
+  YES_VALUE,
+} from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { type Modify, ProviderModel, type V1beta1Provider } from '@kubev2v/types';
@@ -17,6 +19,7 @@ import { Alert, AlertVariant, Checkbox, Stack, StackItem } from '@patternfly/rea
 import { getAnnotations, getUseVddkAioOptimization } from '@utils/crds/common/selectors';
 
 import onUpdateVddkImageSettings from './onUpdateVddkImageSettings';
+import VDDKHelperTextShort from './VDDKHelperTextShort';
 
 export type EditProviderVDDKImageProps = Modify<
   EditModalProps,

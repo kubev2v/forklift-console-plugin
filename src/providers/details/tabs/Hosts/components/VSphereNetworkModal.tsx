@@ -7,6 +7,7 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import type { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, ModalVariant, Stack } from '@patternfly/react-core';
+import { getSdkEndpoint } from '@utils/crds/common/selectors';
 
 import { getSelectedInventoryHostNetworkTriples } from './utils/getSelectedInventoryHostNetworkTriples';
 import { onSaveHost } from './utils/onSaveHost';
@@ -35,7 +36,7 @@ const VSphereNetworkModal: ModalComponent<VSphereNetworkModalProps> = ({
   const [password, setPassword] = useState<string>('');
 
   const selectedLength = selectedIds.length;
-  const endpointType = provider?.spec?.settings?.sdkEndpoint ?? '';
+  const endpointType = getSdkEndpoint(provider) ?? '';
 
   const shouldDisableSave = useMemo(() => {
     if (endpointType === VSphereEndpointType.ESXi.valueOf()) {
