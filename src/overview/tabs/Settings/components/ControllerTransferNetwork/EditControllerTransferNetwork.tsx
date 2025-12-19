@@ -70,6 +70,7 @@ const EditControllerTransferNetwork: FC = () => {
             blankOption={{
               name: t('None'),
             }}
+            testId="controller-transfer-network-select"
           />
         )}
       />

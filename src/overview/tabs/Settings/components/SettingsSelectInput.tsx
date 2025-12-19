@@ -38,6 +38,7 @@ type BlankOption = {
  * @property {(value: string) => void} onChange - Function to call when the value changes
  * @property {Option[]} options - The options to present to the user
  * @property {BlankOption} [blankOption] - Optional blank option that passes an empty value when selected
+ * @property {string} [testId] - Test ID for the select component
  */
 type SettingsSelectInputProps = {
   value: number | string;
@@ -45,6 +46,7 @@ type SettingsSelectInputProps = {
   options: Option[];
   blankOption?: BlankOption;
   showKeyAsSelected?: boolean; // a flag to show selected value that's based on option key and not name
+  testId?: string;
 };
 
 const BLANK_OPTION_KEY = '__blank__';
@@ -57,6 +59,7 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
   onChange,
   options,
   showKeyAsSelected = false,
+  testId,
   value,
 }) => {
   const { t } = useForkliftTranslation();
@@ -100,6 +103,7 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
       onClick={onToggleClick}
       isExpanded={isOpen}
       className="forklift-overview__settings-select"
+      data-testid={testId}
     >
       <Truncate content={String(selected) || t('Select an option')} />
     </MenuToggle>
@@ -107,7 +111,12 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
 
   const renderOptions = () => {
     const optionElements = options?.map(({ description, key, name }) => (
-      <SelectOption key={key} value={showKeyAsSelected ? key : name} description={description}>
+      <SelectOption
+        key={key}
+        value={showKeyAsSelected ? key : name}
+        description={description}
+        data-testid={testId ? `${testId}-option-${key}` : undefined}
+      >
         {name}
       </SelectOption>
     ));
@@ -118,6 +127,7 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
           key={BLANK_OPTION_KEY}
           value={blankOption.name}
           description={blankOption.description}
+          data-testid={testId ? `${testId}-option-none` : undefined}
         >
           {blankOption.name}
         </SelectOption>,

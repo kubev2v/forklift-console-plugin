@@ -13,6 +13,7 @@ import {
   FORKLIFT_API_VERSION,
   KUBEVIRT_API_VERSION,
   MTV_NAMESPACE,
+  NAD_API_VERSION,
   NAMESPACE_API_VERSION,
   NAMESPACE_KIND,
   OPENSHIFT_PROJECT_API_VERSION,
@@ -20,7 +21,7 @@ import {
   RESOURCE_KINDS,
 } from './constants';
 import { ResourceCleaner } from './ResourceCleaner';
-import { createProvider, createSecret } from './ResourceCreator';
+import { createNad, createNetworkMap, createProvider, createSecret } from './ResourceCreator';
 import { ResourceFetcher } from './ResourceFetcher';
 import { ResourcePatcher } from './ResourcePatcher';
 
@@ -29,12 +30,29 @@ export type OpenshiftProject = IoK8sApiCoreV1Namespace & {
   apiVersion: typeof OPENSHIFT_PROJECT_API_VERSION;
 };
 
+/**
+ * NetworkAttachmentDefinition type for CNI network configuration
+ */
+export type V1NetworkAttachmentDefinition = {
+  apiVersion: 'k8s.cni.cncf.io/v1';
+  kind: 'NetworkAttachmentDefinition';
+  metadata: {
+    name: string;
+    namespace: string;
+    annotations?: Record<string, string>;
+  };
+  spec: {
+    config: string;
+  };
+};
+
 export type SupportedResource =
   | V1beta1Migration
   | V1beta1NetworkMap
   | V1beta1Plan
   | V1beta1Provider
   | V1VirtualMachine
+  | V1NetworkAttachmentDefinition
   | IoK8sApiCoreV1Namespace
   | OpenshiftProject;
 
@@ -43,6 +61,21 @@ export type SupportedResource =
  */
 export class ResourceManager {
   private resources: SupportedResource[] = [];
+
+  addNad(name: string, namespace: string): void {
+    const nad: V1NetworkAttachmentDefinition = {
+      apiVersion: NAD_API_VERSION,
+      kind: RESOURCE_KINDS.NETWORK_ATTACHMENT_DEFINITION,
+      metadata: {
+        name,
+        namespace,
+      },
+      spec: {
+        config: '',
+      },
+    };
+    this.addResource(nad);
+  }
 
   addNetworkMap(name: string, namespace: string): void {
     const networkMap: V1beta1NetworkMap = {
@@ -122,6 +155,22 @@ export class ResourceManager {
   async cleanupAll(page: Page): Promise<void> {
     await ResourceCleaner.cleanupAll(page, this.resources);
     this.resources = [];
+  }
+
+  async createNad(
+    page: Page,
+    nad: V1NetworkAttachmentDefinition,
+    namespace: string,
+  ): Promise<V1NetworkAttachmentDefinition | null> {
+    return createNad(page, nad as Parameters<typeof createNad>[1], namespace);
+  }
+
+  async createNetworkMap(
+    page: Page,
+    networkMap: V1beta1NetworkMap,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1NetworkMap | null> {
+    return createNetworkMap(page, networkMap, namespace);
   }
 
   async createProvider(
