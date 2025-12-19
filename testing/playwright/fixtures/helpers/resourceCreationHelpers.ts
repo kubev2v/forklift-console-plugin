@@ -10,9 +10,6 @@ import { getProviderConfig } from '../../utils/providers';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
-/**
- * Creates a Kubernetes Secret object with standard defaults
- */
 export const createSecretObject = (
   name: string,
   namespace: string,
@@ -25,9 +22,6 @@ export const createSecretObject = (
   stringData,
 });
 
-/**
- * Creates a Provider CRD object
- */
 const createProviderObject = (
   name: string,
   namespace: string,
@@ -39,9 +33,6 @@ const createProviderObject = (
   spec,
 });
 
-/**
- * Builds the TestProvider result with attached test data
- */
 const buildTestProviderResult = (providerData: ProviderData): TestProvider => {
   const provider: TestProvider = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -76,9 +67,7 @@ export interface CreateProviderOptions {
   customProviderData?: Partial<ProviderData>;
 }
 
-/**
- * Creates an OVA provider via API (UI doesn't support all OVA settings)
- */
+// OVA providers created via API because UI doesn't support all OVA settings
 const createOvaProviderViaApi = async (
   page: Page,
   resourceManager: ResourceManager,
@@ -110,9 +99,6 @@ const createOvaProviderViaApi = async (
   resourceManager.addProvider(providerData.name, MTV_NAMESPACE);
 };
 
-/**
- * Creates a non-OVA provider via UI
- */
 const createProviderViaUi = async (
   page: Page,
   resourceManager: ResourceManager,
@@ -123,9 +109,6 @@ const createProviderViaUi = async (
   await createProviderPage.create(providerData);
 };
 
-/**
- * Builds provider data from config and optional customizations
- */
 const buildProviderData = (
   providerKey: string,
   providerName: string,
@@ -150,7 +133,6 @@ const buildProviderData = (
 
   const mergedData = customProviderData ? { ...baseData, ...customProviderData } : baseData;
 
-  // If skipVddk is true, remove vddkInitImage
   if (mergedData.skipVddk) {
     mergedData.vddkInitImage = undefined;
   }
@@ -158,36 +140,12 @@ const buildProviderData = (
   return mergedData;
 };
 
-/**
- * Generates a unique provider name from prefix
- */
 const generateProviderName = (namePrefix: string, customName?: string): string =>
   customName ?? `${namePrefix}-${crypto.randomUUID()}`;
 
-/**
- * Resolves the provider key from options or environment
- */
 const resolveProviderKey = (providerKey?: string): string =>
   providerKey ?? process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
 
-/**
- * Creates a test provider with optional customization.
- *
- * @example
- * // Simple usage - uses default provider from env
- * const provider = await createProvider(page, resourceManager);
- *
- * @example
- * // With specific provider key
- * const provider = await createProvider(page, resourceManager, { providerKey: 'vsphere-8.0.1' });
- *
- * @example
- * // With custom data (e.g., skip VDDK)
- * const provider = await createProvider(page, resourceManager, {
- *   providerKey: 'vsphere-8.0.1',
- *   customProviderData: { skipVddk: true },
- * });
- */
 export const createProvider = async (
   page: Page,
   resourceManager: ResourceManager,
@@ -213,9 +171,6 @@ export interface CreatePlanOptions {
   customPlanData?: Partial<ReturnType<typeof createPlanTestData>>;
 }
 
-/**
- * Builds plan test data with optional customizations
- */
 const buildPlanTestData = (
   sourceProviderName: string,
   customPlanData?: Partial<ReturnType<typeof createPlanTestData>>,
@@ -224,9 +179,6 @@ const buildPlanTestData = (
   return customPlanData ? { ...defaultPlanData, ...customPlanData } : defaultPlanData;
 };
 
-/**
- * Builds the TestPlan result object
- */
 const buildTestPlanResult = (testPlanData: ReturnType<typeof createPlanTestData>): TestPlan => ({
   apiVersion: 'forklift.konveyor.io/v1beta1',
   kind: 'Plan',
@@ -237,20 +189,6 @@ const buildTestPlanResult = (testPlanData: ReturnType<typeof createPlanTestData>
   testData: testPlanData,
 });
 
-/**
- * Creates a test plan with optional customization.
- *
- * @example
- * // Simple usage
- * const plan = await createPlan(page, resourceManager, { sourceProvider: myProvider });
- *
- * @example
- * // With custom plan data
- * const plan = await createPlan(page, resourceManager, {
- *   sourceProvider: myProvider,
- *   customPlanData: { planName: 'my-custom-plan' },
- * });
- */
 export const createPlan = async (
   page: Page,
   resourceManager: ResourceManager,
