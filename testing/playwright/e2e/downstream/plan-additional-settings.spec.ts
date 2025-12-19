@@ -258,11 +258,13 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
       await expect(planDetailsPage.detailsTab.vddkWarningAlert).toBeVisible();
     });
 
-    await test.step('Cancel the migration type edit modal', async () => {
-      await planDetailsPage.detailsTab.editMigrationTypeModal
-        .getByTestId('modal-cancel-button')
-        .click();
+    await test.step('Save the migration type change', async () => {
+      await planDetailsPage.detailsTab.saveMigrationTypeButton.click();
       await expect(planDetailsPage.detailsTab.editMigrationTypeModal).not.toBeVisible();
+    });
+
+    await test.step('Verify migration type is now warm', async () => {
+      await planDetailsPage.detailsTab.verifyMigrationType(MigrationType.WARM);
     });
   });
 });

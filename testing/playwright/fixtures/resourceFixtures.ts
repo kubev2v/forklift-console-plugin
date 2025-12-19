@@ -1,13 +1,12 @@
 import { type Page, test as base } from '@playwright/test';
 
-import type { createPlanTestData, ProviderData } from '../types/test-data';
+import type { createPlanTestData } from '../types/test-data';
 import { ResourceManager } from '../utils/resource-manager/ResourceManager';
 
 import {
   createPlan,
-  createPlanWithCustomData,
   createProvider,
-  createProviderWithCustomData,
+  type CreateProviderOptions,
   type TestPlan,
   type TestProvider,
 } from './helpers/resourceCreationHelpers';
@@ -26,12 +25,7 @@ export interface ConfigurableResourceFixtures {
   createCustomPlan: (
     customPlanData?: Partial<ReturnType<typeof createPlanTestData>>,
   ) => Promise<TestPlan>;
-  createProviderFromKey: (providerKey: string, namePrefix?: string) => Promise<TestProvider>;
-  createCustomProvider: (options?: {
-    providerKey?: string;
-    namePrefix?: string;
-    customProviderData?: Partial<ProviderData>;
-  }) => Promise<TestProvider>;
+  createCustomProvider: (options?: CreateProviderOptions) => Promise<TestProvider>;
 }
 export const createResourceFixtures = (
   config: FixtureConfig = {},
@@ -53,11 +47,9 @@ export const createResourceFixtures = (
               const tempResourceManager = new ResourceManager();
 
               try {
-                const provider = await createProvider(
-                  page as Page,
-                  tempResourceManager,
-                  providerPrefix,
-                );
+                const provider = await createProvider(page as Page, tempResourceManager, {
+                  namePrefix: providerPrefix,
+                });
 
                 if (!provider) {
                   throw new Error('Failed to create provider');
@@ -83,7 +75,9 @@ export const createResourceFixtures = (
             { scope: 'worker' },
           ] as any)
         : async ({ page, resourceManager }, use) => {
-            const provider = await createProvider(page, resourceManager, providerPrefix);
+            const provider = await createProvider(page, resourceManager, {
+              namePrefix: providerPrefix,
+            });
             await use(provider);
           },
 
@@ -95,7 +89,7 @@ export const createResourceFixtures = (
               throw new Error('testPlan fixture requires testProvider fixture to be enabled');
             }
 
-            const plan = await createPlan(page, resourceManager, testProvider);
+            const plan = await createPlan(page, resourceManager, { sourceProvider: testProvider });
             await use(plan);
           },
 
@@ -106,7 +100,7 @@ export const createResourceFixtures = (
         if (!testProvider) {
           throw new Error('createCustomPlan requires testProvider fixture to be enabled');
         }
-        return createPlanWithCustomData(page, resourceManager, {
+        return createPlan(page, resourceManager, {
           sourceProvider: testProvider,
           customPlanData,
         });
@@ -114,20 +108,9 @@ export const createResourceFixtures = (
       await use(createPlanFn);
     },
 
-    createProviderFromKey: async ({ page, resourceManager }, use) => {
-      const createProviderFn = async (providerKey: string, namePrefix?: string) => {
-        return createProvider(page, resourceManager, namePrefix ?? 'test-provider', providerKey);
-      };
-      await use(createProviderFn);
-    },
-
     createCustomProvider: async ({ page, resourceManager }, use) => {
-      const createCustomProviderFn = async (options?: {
-        providerKey?: string;
-        namePrefix?: string;
-        customProviderData?: Partial<ProviderData>;
-      }) => {
-        return createProviderWithCustomData(page, resourceManager, options);
+      const createCustomProviderFn = async (options?: CreateProviderOptions) => {
+        return createProvider(page, resourceManager, options);
       };
       await use(createCustomProviderFn);
     },
