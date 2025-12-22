@@ -67,7 +67,6 @@ export interface CreateProviderOptions {
   customProviderData?: Partial<ProviderData>;
 }
 
-// OVA providers created via API because UI doesn't support all OVA settings
 const createOvaProviderViaApi = async (
   page: Page,
   resourceManager: ResourceManager,
