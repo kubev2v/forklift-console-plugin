@@ -17,15 +17,14 @@ export const getKind = (resource: K8sResourceCommon) => resource?.kind;
 
 export const getApiVersion = (resource: K8sResourceCommon) => resource?.apiVersion;
 
-export const getVddkInitImage = (provider: V1beta1Provider) =>
-  provider?.spec?.settings?.vddkInitImage;
+const getSettings = (provider: V1beta1Provider) => provider?.spec?.settings;
+
+export const getVddkInitImage = (provider: V1beta1Provider) => getSettings(provider)?.vddkInitImage;
 
 export const getUseVddkAioOptimization = (provider: V1beta1Provider) =>
-  provider?.spec?.settings?.useVddkAioOptimization;
+  getSettings(provider)?.useVddkAioOptimization;
 
-export const getSdkEndpoint = (provider: V1beta1Provider) => provider?.spec?.settings?.sdkEndpoint;
-
-export const getSettings = (provider: V1beta1Provider) => provider?.spec?.settings;
+export const getSdkEndpoint = (provider: V1beta1Provider) => getSettings(provider)?.sdkEndpoint;
 
 export const getAnnotations = (provider: V1beta1Provider) => provider?.metadata?.annotations;
 

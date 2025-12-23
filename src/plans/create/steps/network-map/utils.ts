@@ -1,4 +1,3 @@
-import { toNetworks } from 'src/modules/Providers/views/migrate/reducer/getNetworksUsedBySelectedVMs';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type {
@@ -16,7 +15,6 @@ import { hasMultiplePodNetworkMappings } from '../../utils/hasMultiplePodNetwork
 import { getMapResourceLabel } from '../utils';
 
 import { defaultNetMapping, NetworkMapFieldId, type NetworkMapping } from './constants';
-
 type NetworkMappingId = `${NetworkMapFieldId.NetworkMap}.${number}.${keyof NetworkMapping}`;
 
 type ValidateNetworkMapParams = {
@@ -24,6 +22,54 @@ type ValidateNetworkMapParams = {
   usedSourceNetworks: MappingValue[];
   vms: Record<string, ProviderVirtualMachine>;
   oVirtNicProfiles: OVirtNicProfile[];
+};
+
+import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
+
+const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
+  switch (vm.providerType) {
+    case 'vsphere': {
+      return vm?.networks?.map((network) => network?.id) ?? [];
+    }
+    case 'openstack': {
+      return Object.keys(vm?.addresses ?? {});
+    }
+    case 'ovirt': {
+      return vm?.nics?.map((nic) => nic?.profile) ?? [];
+    }
+    case 'openshift': {
+      return (vm?.object?.spec?.template?.spec?.networks ?? []).reduce((acc: string[], network) => {
+        const networkName = network?.multus?.networkName ?? network?.name;
+
+        if (network?.pod) {
+          acc.push(DEFAULT_NETWORK);
+        } else if (networkName) {
+          acc.push(networkName);
+        }
+        return acc;
+      }, []);
+    }
+    case 'ova': {
+      return (vm as EnhancedOvaVM)?.networks?.map((network) => network.ID) ?? [];
+    }
+    default:
+      return [];
+  }
+};
+
+const toNetworks = (vm: ProviderVirtualMachine, nicProfiles?: OVirtNicProfile[]): string[] => {
+  return toNetworksOrProfiles(vm).reduce((acc: string[], network) => {
+    const nicProfileNetwork = nicProfiles?.find(
+      (nicProfile) => nicProfile?.id === network,
+    )?.network;
+    if (vm.providerType === 'ovirt' && nicProfileNetwork) {
+      acc.push(nicProfileNetwork);
+    } else {
+      acc.push(network);
+    }
+
+    return acc;
+  }, []);
 };
 
 /**

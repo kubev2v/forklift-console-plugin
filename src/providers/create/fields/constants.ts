@@ -5,12 +5,6 @@ export enum CertificateValidationMode {
   Skip = 'skip',
 }
 
-export enum VddkSetupMode {
-  Upload = 'upload',
-  Manual = 'manual',
-  Skip = 'skip',
-}
-
 enum CommonProviderFormFieldId {
   ProviderName = 'providerName',
   ProviderProject = 'providerProject',
