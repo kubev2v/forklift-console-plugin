@@ -1,0 +1,75 @@
+import type { FC } from 'react';
+import { OpenstackSecretFieldsId } from 'src/providers/utils/constants';
+
+import { Form } from '@patternfly/react-core';
+import { useForkliftTranslation } from '@utils/i18n';
+
+import { ProviderFormFieldId } from '../../constants';
+import ProviderFormPasswordInput from '../../ProviderFormPasswordInput';
+import ProviderFormTextInput from '../../ProviderFormTextInput';
+
+import { validateOpenstackField } from './useOpenstackFieldValidation';
+
+const ApplicationCredentialNameCredentialsFields: FC = () => {
+  const { t } = useForkliftTranslation();
+
+  return (
+    <Form>
+      <ProviderFormTextInput
+        fieldId={ProviderFormFieldId.OpenstackApplicationCredentialName}
+        fieldRules={{
+          validate: validateOpenstackField(OpenstackSecretFieldsId.ApplicationCredentialName),
+        }}
+        label={t('Application credential name')}
+        testId="openstack-app-cred-name-input"
+      />
+
+      <ProviderFormPasswordInput
+        fieldId={ProviderFormFieldId.OpenstackApplicationCredentialSecret}
+        fieldRules={{
+          validate: validateOpenstackField(OpenstackSecretFieldsId.ApplicationCredentialSecret),
+        }}
+        label={t('Application credential secret')}
+        testId="openstack-app-cred-secret-input"
+      />
+
+      <ProviderFormTextInput
+        fieldId={ProviderFormFieldId.OpenstackUsername}
+        fieldRules={{
+          validate: validateOpenstackField(OpenstackSecretFieldsId.Username),
+        }}
+        label={t('Username')}
+        testId="openstack-username-input"
+      />
+
+      <ProviderFormTextInput
+        fieldId={ProviderFormFieldId.OpenstackRegionName}
+        fieldRules={{
+          validate: validateOpenstackField(OpenstackSecretFieldsId.RegionName),
+        }}
+        label={t('Region')}
+        testId="openstack-region-input"
+      />
+
+      <ProviderFormTextInput
+        fieldId={ProviderFormFieldId.OpenstackProjectName}
+        fieldRules={{
+          validate: validateOpenstackField(OpenstackSecretFieldsId.ProjectName),
+        }}
+        label={t('Project')}
+        testId="openstack-project-input"
+      />
+
+      <ProviderFormTextInput
+        fieldId={ProviderFormFieldId.OpenstackDomainName}
+        fieldRules={{
+          validate: validateOpenstackField(OpenstackSecretFieldsId.DomainName),
+        }}
+        label={t('Domain')}
+        testId="openstack-domain-input"
+      />
+    </Form>
+  );
+};
+
+export default ApplicationCredentialNameCredentialsFields;

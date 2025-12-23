@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
+import { CREATE_VDDK_HELP_LINK } from 'src/plans/details/utils/constants';
 import EditProviderVDDKImage, {
   type EditProviderVDDKImageProps,
 } from 'src/providers/details/tabs/Details/components/DetailsSection/EditProviderVDDKImage';
@@ -20,8 +21,6 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
   const { t } = useForkliftTranslation();
   const launcher = useModal();
 
-  const defaultMoreInfoLink =
-    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.10/html-single/planning_your_migration_to_red_hat_openshift_virtualization/index#creating-vddk-image_mtv';
   const defaultHelpContent = (
     <ForkliftTrans>
       Virtual Disk Development Kit (VDDK) container init image path. The path must be empty or a
@@ -45,7 +44,7 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
           </Label>
         )
       }
-      moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
+      moreInfoLink={moreInfoLink ?? CREATE_VDDK_HELP_LINK}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'spec', 'settings', 'vddkInitImage']}
       onEdit={() => {

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import {
   OpenstackAuthType,
-  OpenstackAuthTypeLabels,
+  openstackAuthTypeLabels,
   OpenstackSecretFieldsId,
 } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -31,7 +31,7 @@ const AuthenticationTypeRadioGroup: FC<AuthenticationTypeRadioGroupProps> = ({
     >
       <Radio
         name={OpenstackSecretFieldsId.AuthType}
-        label={t(OpenstackAuthTypeLabels.ApplicationCredentialId)}
+        label={openstackAuthTypeLabels.applicationCredentialId}
         id={OpenstackAuthType.ApplicationCredentialId}
         isChecked={authenticationType === OpenstackAuthType.ApplicationCredentialId}
         onChange={() => {
@@ -40,7 +40,7 @@ const AuthenticationTypeRadioGroup: FC<AuthenticationTypeRadioGroupProps> = ({
       />
       <Radio
         name={OpenstackSecretFieldsId.AuthType}
-        label={t(OpenstackAuthTypeLabels.ApplicationCredentialName)}
+        label={openstackAuthTypeLabels.applicationCredentialName}
         id={OpenstackAuthType.ApplicationCredentialName}
         isChecked={authenticationType === OpenstackAuthType.ApplicationCredentialName}
         onChange={() => {
@@ -49,7 +49,7 @@ const AuthenticationTypeRadioGroup: FC<AuthenticationTypeRadioGroupProps> = ({
       />
       <Radio
         name={OpenstackSecretFieldsId.AuthType}
-        label={t(OpenstackAuthTypeLabels.TokenWithUserID)}
+        label={openstackAuthTypeLabels.tokenWithUserID}
         id={OpenstackAuthType.TokenWithUserId}
         isChecked={authenticationType === OpenstackAuthType.TokenWithUserId}
         onChange={() => {
@@ -58,7 +58,7 @@ const AuthenticationTypeRadioGroup: FC<AuthenticationTypeRadioGroupProps> = ({
       />
       <Radio
         name={OpenstackSecretFieldsId.AuthType}
-        label={t(OpenstackAuthTypeLabels.TokenWithUsername)}
+        label={openstackAuthTypeLabels.tokenWithUsername}
         id={OpenstackAuthType.TokenWithUsername}
         isChecked={authenticationType === OpenstackAuthType.TokenWithUsername}
         onChange={() => {
@@ -67,7 +67,7 @@ const AuthenticationTypeRadioGroup: FC<AuthenticationTypeRadioGroupProps> = ({
       />
       <Radio
         name={OpenstackSecretFieldsId.AuthType}
-        label={t(OpenstackAuthTypeLabels.Password)}
+        label={openstackAuthTypeLabels.password}
         id={OpenstackAuthType.Password}
         isChecked={authenticationType === OpenstackAuthType.Password}
         onChange={() => {

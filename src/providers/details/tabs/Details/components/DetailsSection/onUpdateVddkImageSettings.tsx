@@ -1,5 +1,8 @@
-import { TRUE_VALUE, YES_VALUE } from 'src/providers/create/utils/constants';
-import { EMPTY_VDDK_INIT_IMAGE_ANNOTATION } from 'src/providers/utils/constants';
+import {
+  EMPTY_VDDK_INIT_IMAGE_ANNOTATION,
+  TRUE_VALUE,
+  YES_VALUE,
+} from 'src/providers/utils/constants';
 
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import type { K8sResourceCommon, V1beta1Provider } from '@kubev2v/types';

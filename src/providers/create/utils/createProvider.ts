@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { EMPTY_VDDK_INIT_IMAGE_ANNOTATION } from 'src/providers/utils/constants';
+import { EMPTY_VDDK_INIT_IMAGE_ANNOTATION, YES_VALUE } from 'src/providers/utils/constants';
 
 import { type IoK8sApiCoreV1Secret, ProviderModel, type V1beta1Provider } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
@@ -11,8 +11,6 @@ import {
   getUseVddkAioOptimization,
   getVddkInitImage,
 } from '@utils/crds/common/selectors';
-
-import { YES_VALUE } from './constants';
 
 export const createProvider = async (
   provider: V1beta1Provider,
