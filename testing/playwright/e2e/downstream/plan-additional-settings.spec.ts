@@ -3,6 +3,7 @@ import { expect } from '@playwright/test';
 import { providerOnlyFixtures as test } from '../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import { MigrationType } from '../../types/enums';
 import { createPlanTestData, type PlanTestData } from '../../types/test-data';
 
 test.describe('Plan additional settings', { tag: '@downstream' }, () => {
@@ -171,5 +172,99 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await expect(planDetailsPage.detailsTab.saveDiskDecryptionButton).toBeEnabled();
     await planDetailsPage.detailsTab.saveDiskDecryptionButton.click();
     await expect(planDetailsPage.detailsTab.editDiskDecryptionModal).not.toBeVisible();
+  });
+
+  test('should show validation error when selecting warm migration with provider without VDDK', async ({
+    page,
+    createCustomProvider,
+    resourceManager,
+  }) => {
+    // Create a provider without VDDK image
+    const providerWithoutVddk = await createCustomProvider({
+      providerKey: 'vsphere-8.0.1',
+      namePrefix: 'vddk-validation-test',
+      customProviderData: {
+        skipVddk: true,
+      },
+    });
+
+    const testData: PlanTestData = createPlanTestData({
+      sourceProvider: providerWithoutVddk?.metadata?.name ?? '',
+    });
+    resourceManager.addPlan(testData.planName, testData.planProject);
+
+    await test.step('Navigate to Migration Type step in wizard', async () => {
+      const wizard = new CreatePlanWizardPage(page, resourceManager);
+      await wizard.navigate();
+      await wizard.waitForWizardLoad();
+      await wizard.navigateToMigrationTypeStep(testData);
+      await wizard.migrationType.verifyStepVisible();
+    });
+
+    await test.step('Verify cold migration is selected by default with no warning', async () => {
+      const wizard = new CreatePlanWizardPage(page, resourceManager);
+      await expect(wizard.migrationType.coldMigrationRadio).toBeChecked();
+      await expect(wizard.migrationType.vddkWarningAlert).not.toBeVisible();
+    });
+
+    await test.step('Select warm migration and verify VDDK warning appears', async () => {
+      const wizard = new CreatePlanWizardPage(page, resourceManager);
+      await wizard.migrationType.selectMigrationType(MigrationType.WARM);
+      await expect(wizard.migrationType.warmMigrationRadio).toBeChecked();
+      await expect(wizard.migrationType.vddkWarningAlert).toBeVisible();
+    });
+
+    await test.step('Switch back to cold migration and verify warning disappears', async () => {
+      const wizard = new CreatePlanWizardPage(page, resourceManager);
+      await wizard.migrationType.selectMigrationType(MigrationType.COLD);
+      await expect(wizard.migrationType.coldMigrationRadio).toBeChecked();
+      await expect(wizard.migrationType.vddkWarningAlert).not.toBeVisible();
+    });
+
+    await test.step('Create the plan', async () => {
+      const wizard = new CreatePlanWizardPage(page, resourceManager);
+      await wizard.clickNext();
+      await wizard.clickSkipToReview();
+      await wizard.review.verifyReviewStep(testData);
+      await wizard.clickNext();
+      await wizard.waitForPlanCreation();
+    });
+
+    const planDetailsPage = new PlanDetailsPage(page);
+
+    await test.step('Navigate to Details tab on plan details page', async () => {
+      await planDetailsPage.detailsTab.navigateToDetailsTab();
+      await planDetailsPage.detailsTab.verifyMigrationType(MigrationType.COLD);
+    });
+
+    await test.step('Edit migration type to warm and verify VDDK warning appears', async () => {
+      await planDetailsPage.detailsTab.clickEditMigrationType();
+      await expect(planDetailsPage.detailsTab.editMigrationTypeModal).toBeVisible();
+      await expect(planDetailsPage.detailsTab.warmMigrationSwitch).not.toBeChecked(); // Should be off for cold
+      await planDetailsPage.detailsTab.warmMigrationSwitch.check({ force: true }); // Turn on warm migration
+      await expect(planDetailsPage.detailsTab.warmMigrationSwitch).toBeChecked();
+      await expect(planDetailsPage.detailsTab.vddkWarningAlert).toBeVisible();
+    });
+
+    await test.step('Toggle back to cold migration and verify warning disappears', async () => {
+      await planDetailsPage.detailsTab.warmMigrationSwitch.uncheck({ force: true }); // Turn off warm migration
+      await expect(planDetailsPage.detailsTab.warmMigrationSwitch).not.toBeChecked();
+      await expect(planDetailsPage.detailsTab.vddkWarningAlert).not.toBeVisible();
+    });
+
+    await test.step('Toggle to warm migration again and verify warning reappears', async () => {
+      await planDetailsPage.detailsTab.warmMigrationSwitch.check({ force: true }); // Turn on warm migration
+      await expect(planDetailsPage.detailsTab.warmMigrationSwitch).toBeChecked();
+      await expect(planDetailsPage.detailsTab.vddkWarningAlert).toBeVisible();
+    });
+
+    await test.step('Save the migration type change', async () => {
+      await planDetailsPage.detailsTab.saveMigrationTypeButton.click();
+      await expect(planDetailsPage.detailsTab.editMigrationTypeModal).not.toBeVisible();
+    });
+
+    await test.step('Verify migration type is now warm', async () => {
+      await planDetailsPage.detailsTab.verifyMigrationType(MigrationType.WARM);
+    });
   });
 });

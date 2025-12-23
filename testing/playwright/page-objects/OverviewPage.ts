@@ -50,7 +50,7 @@ export class OverviewPage {
   }
 
   async navigateToNextTopic(currentTopicName: string, nextTopicName: string): Promise<void> {
-    await this.page.getByRole('button', { name: currentTopicName }).first().click();
+    await this.selectTopicButton.click();
     await this.page.getByRole('option', { name: nextTopicName }).click();
   }
 

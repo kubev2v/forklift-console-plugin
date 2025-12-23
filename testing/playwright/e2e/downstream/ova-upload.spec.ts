@@ -29,7 +29,7 @@ test.describe('OVA Provider Upload Tests', { tag: '@downstream' }, () => {
 
   test('should create OVA provider with applianceManagement enabled and validate upload form', async ({
     page,
-    createProviderFromKey,
+    createCustomProvider,
   }: ConfigurableResourceFixtures & { page: Page }) => {
     let ovaProvider: any = null;
     const providerDetailsPage = new ProviderDetailsPage(page);
@@ -64,8 +64,11 @@ test.describe('OVA Provider Upload Tests', { tag: '@downstream' }, () => {
     createdOvaPath = uniqueOvaPath; // Track for cleanup
 
     await test.step('Create OVA provider using provider key', async () => {
-      const ovaProviderKey = process.env.OVA_PROVIDER ?? 'ova-nfs';
-      ovaProvider = await createProviderFromKey(ovaProviderKey, 'test-ova-upload');
+      const ovaProviderKey = process.env.OVA_PROVIDER ?? 'ova';
+      ovaProvider = await createCustomProvider({
+        providerKey: ovaProviderKey,
+        namePrefix: 'test-ova-upload',
+      });
       expect(ovaProvider.metadata.name).toContain('test-ova-upload');
     });
 

@@ -1,5 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
+import { ProviderType } from '../types/enums';
 import type { ProviderData } from '../types/test-data';
 import { NavigationHelper } from '../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
@@ -16,6 +17,60 @@ export class CreateProviderPage {
     this.page = page;
     this.resourceManager = resourceManager;
     this.navigationHelper = new NavigationHelper(page);
+  }
+
+  private async fillCredentialsFields(testData: ProviderData) {
+    if (testData.type === ProviderType.OVA) {
+      return;
+    }
+
+    await this.page.getByTestId('provider-username-input').fill(testData.username ?? '');
+
+    if (testData.password) {
+      await this.page.getByTestId('provider-password-input').fill(testData.password);
+    }
+
+    const certSwitch = this.page.getByTestId('skip-certificate-validation-switch');
+    if (await certSwitch.isVisible()) {
+      await certSwitch.check({ force: true });
+    }
+  }
+
+  private async fillVSphereSpecificFields(testData: ProviderData) {
+    if (testData.type !== ProviderType.VSPHERE) {
+      return;
+    }
+
+    if (testData.endpointType) {
+      await this.page
+        .locator(`input[name="sdkEndpoint"][id="sdkEndpoint-${testData.endpointType}"]`)
+        .click();
+    }
+
+    if (testData.vddkInitImage) {
+      await this.page.getByTestId('provider-vddk-input').fill(testData.vddkInitImage);
+    }
+
+    await this.toggleCheckboxIfNeeded(
+      this.page.getByTestId('provider-empty-vddk-checkbox'),
+      testData.skipVddk,
+    );
+
+    await this.toggleCheckboxIfNeeded(
+      this.page.locator('#useVddkAioOptimization'),
+      testData.useVddkAioOptimization,
+    );
+  }
+
+  private async toggleCheckboxIfNeeded(checkbox: any, desiredState: boolean | undefined) {
+    if (desiredState === undefined) {
+      return;
+    }
+
+    const isChecked = await checkbox.isChecked();
+    if (isChecked !== desiredState) {
+      await checkbox.click();
+    }
   }
 
   async create(testData: ProviderData, waitForReady = true): Promise<ProviderDetailsPage> {
@@ -39,45 +94,9 @@ export class CreateProviderPage {
     await this.page.getByTestId(`${testData.type}-provider-card`).locator('label').click();
     await this.page.getByTestId('provider-name-input').fill(testData.name);
 
-    // VSphere-specific endpoint selection (vCenter vs ESXi)
-    if (testData.type === 'vsphere' && testData.endpointType) {
-      await this.page
-        .locator(`input[name="sdkEndpoint"][id="sdkEndpoint-${testData.endpointType}"]`)
-        .click();
-    }
-
-    // URL field
+    await this.fillVSphereSpecificFields(testData);
     await this.page.getByTestId('provider-url-input').fill(testData.hostname ?? '');
-
-    // VSphere-specific VDDK fields
-    if (testData.type === 'vsphere' && testData.vddkInitImage) {
-      await this.page.getByTestId('provider-vddk-input').fill(testData.vddkInitImage);
-    }
-
-    if (testData.type === 'vsphere' && testData.useVddkAioOptimization !== undefined) {
-      const checkbox = this.page.locator('#useVddkAioOptimization');
-      const isChecked = await checkbox.isChecked();
-
-      if (isChecked !== testData.useVddkAioOptimization) {
-        await checkbox.click();
-      }
-    }
-
-    // Credentials fields (not present for OVA providers)
-    if (testData.type !== 'ova') {
-      await this.page.getByTestId('provider-username-input').fill(testData.username ?? '');
-
-      if (testData.password) {
-        await this.page.getByTestId('provider-password-input').fill(testData.password);
-      }
-
-      // Certificate validation (not present for OVA providers)
-      const certSwitch = this.page.getByTestId('skip-certificate-validation-switch');
-      if (await certSwitch.isVisible()) {
-        await certSwitch.check({ force: true });
-      }
-    }
-
+    await this.fillCredentialsFields(testData);
     await this.page.getByTestId('create-provider-button').click();
 
     if (this.resourceManager && testData.name) {

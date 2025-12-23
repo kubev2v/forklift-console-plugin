@@ -21,6 +21,7 @@ const LiveDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldR
   const migrationType = getPlanMigrationType(plan);
   return (
     <DetailsItem
+      testId="migration-type-detail-item"
       title={t('Migration type')}
       content={<PlanMigrationTypeLabel migrationType={migrationType} />}
       helpContent={t('Whether this is a live migration.')}
