@@ -55,7 +55,7 @@ const AUTH_TYPE_FIELDS: Record<OpenstackAuthType, FieldMapping> = {
   },
 };
 
-const getAuthTypeValue = (authType: OpenstackAuthType | undefined): string => {
+export const getAuthTypeValue = (authType: OpenstackAuthType | undefined): string => {
   const type = authType ?? OpenstackAuthType.Password;
   if (type === OpenstackAuthType.Password) return 'password';
   if (type === OpenstackAuthType.TokenWithUserId || type === OpenstackAuthType.TokenWithUsername) {

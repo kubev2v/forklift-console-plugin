@@ -14,6 +14,10 @@ echo "============================"
 bash ${script_dir}/install-kind.sh
 bash ${script_dir}/install-kubectl.sh
 
+# #region agent log - Diagnostic: print kind version for debugging
+echo "[DEBUG] KinD version: $(kind version)"
+# #endregion
+
 echo ""
 echo "Install local registry"
 echo "============================"
@@ -37,7 +41,12 @@ echo ""
 echo "Create KinD cluster"
 echo "==================="
 
+# #region agent log - Diagnostic: print cluster config for debugging
+echo "[DEBUG] Creating KinD cluster with pinned Kubernetes v1.31.0 node image"
+# #endregion
+
 # create a cluster with the local registry enabled in containerd
+# Pin to a stable Kubernetes version to avoid compatibility issues with bleeding-edge releases
 cat <<EOF | kind create cluster --config=-
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
@@ -45,6 +54,7 @@ networking:
   apiServerPort: 6443
 nodes:
 - role: control-plane
+  image: kindest/node:v1.31.0
   extraPortMappings:
   - containerPort: 30080
     hostPort: 30080
