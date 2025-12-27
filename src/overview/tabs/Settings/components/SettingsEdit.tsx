@@ -72,6 +72,7 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
         closeModal={closeModal}
         variant={ModalVariant.medium}
         isDisabled={!isDirty}
+        testId="settings-edit-modal"
       >
         <Form>
           {t(

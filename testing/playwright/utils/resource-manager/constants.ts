@@ -4,6 +4,7 @@ export const MTV_NAMESPACE = 'openshift-mtv';
 export const RESOURCE_KINDS = {
   MIGRATION: 'Migration',
   NETWORK_MAP: 'NetworkMap',
+  NETWORK_ATTACHMENT_DEFINITION: 'NetworkAttachmentDefinition',
   PLAN: 'Plan',
   PROVIDER: 'Provider',
   VIRTUAL_MACHINE: 'VirtualMachine',
@@ -14,6 +15,7 @@ export const RESOURCE_KINDS = {
 export const RESOURCE_TYPES = {
   MIGRATIONS: 'migrations',
   NETWORK_MAPS: 'networkmaps',
+  NETWORK_ATTACHMENT_DEFINITIONS: 'network-attachment-definitions',
   PLANS: 'plans',
   PROVIDERS: 'providers',
   VIRTUAL_MACHINES: 'virtualmachines',
@@ -28,6 +30,7 @@ export const NAMESPACE_API_VERSION = 'v1';
 
 export const FORKLIFT_API_VERSION = 'forklift.konveyor.io/v1beta1';
 export const KUBEVIRT_API_VERSION = 'kubevirt.io/v1';
+export const NAD_API_VERSION = 'k8s.cni.cncf.io/v1';
 
 export const RESOURCES_FILE = 'playwright/.resources.json';
 
@@ -38,6 +41,7 @@ export const API_PATHS = {
   OPENSHIFT_PROJECT: '/api/kubernetes/apis/project.openshift.io/v1',
   KUBERNETES_CORE: '/api/kubernetes/api/v1',
   FORKLIFT: '/api/kubernetes/apis/forklift.konveyor.io/v1beta1',
+  NAD: '/api/kubernetes/apis/k8s.cni.cncf.io/v1',
 } as const;
 
 // HTTP headers and other constants
