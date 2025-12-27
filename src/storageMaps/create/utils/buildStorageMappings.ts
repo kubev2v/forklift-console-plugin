@@ -129,7 +129,7 @@ const getSourceStorage = (
  * @param sourceProvider - Source provider configuration
  * @returns Array of storage mappings
  */
-export const buildFormStorageMapping = (
+export const getStorageMappingValues = (
   specMappings: V1beta1StorageMapSpecMap[] | undefined,
   sourceProvider: V1beta1Provider | undefined,
   sourceStorages: Map<string, InventoryStorage>,

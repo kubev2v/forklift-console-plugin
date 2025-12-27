@@ -1,7 +1,6 @@
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import InventorySourceNetworkField from 'src/networkMaps/create/fields/InventorySourceNetworkField';
-import TargetNetworkField from 'src/networkMaps/create/fields/TargetNetworkField';
 import { validateNetworkMaps } from 'src/networkMaps/create/fields/utils';
 import { buildNetworkMappings } from 'src/networkMaps/create/utils/buildNetworkMappings';
 import { defaultNetworkMapping, networkMapFieldLabels } from 'src/networkMaps/utils/constants';
@@ -12,6 +11,7 @@ import useTargetNetworks from 'src/utils/hooks/useTargetNetworks';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
+import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
 import ModalForm from '@components/ModalForm/ModalForm';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { NetworkMapModel } from '@kubev2v/types';
@@ -124,6 +124,10 @@ const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
                 key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
                 fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
                 targetNetworks={targetNetworks}
+                emptyStateMessage={t(
+                  'Select a target provider and project to list available target networks',
+                )}
+                isDisabled={isSubmitting}
               />,
             ],
           }))}

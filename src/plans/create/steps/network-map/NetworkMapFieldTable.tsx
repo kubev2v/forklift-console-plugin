@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { useFieldArray } from 'react-hook-form';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
+import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
 import type { OVirtNicProfile } from '@kubev2v/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -15,7 +16,6 @@ import {
   type NetworkMapping,
 } from './constants';
 import SourceNetworkField from './SourceNetworkField';
-import TargetNetworkField from './TargetNetworkField';
 import { getNetworkMapFieldId, validateNetworkMap } from './utils';
 
 type NetworkMapFieldTableProps = {
@@ -71,6 +71,8 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
           <TargetNetworkField
             fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
             targetNetworks={targetNetworks}
+            showIgnoreNetworkOption
+            triggerFieldId={NetworkMapFieldId.NetworkMap}
           />,
         ],
       }))}

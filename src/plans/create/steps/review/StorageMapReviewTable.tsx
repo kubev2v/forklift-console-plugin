@@ -38,17 +38,26 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
     } else {
       newExpandedRows.add(rowKey);
     }
+
     setExpandedRows(newExpandedRows);
   };
+
+  const headers = [
+    CreatePlanStorageMapFieldId.SourceStorage,
+    CreatePlanStorageMapFieldId.TargetStorage,
+  ];
 
   return (
     <Card>
       <Table aria-label="Storage map review table" variant={TableVariant.compact} borders>
         <Thead>
           <Tr>
-            {hasOffloadStorage && <Th />}
-            <Th>{storageMapFieldLabels[CreatePlanStorageMapFieldId.SourceStorage]}</Th>
-            <Th>{storageMapFieldLabels[CreatePlanStorageMapFieldId.TargetStorage]}</Th>
+            {hasOffloadStorage && <Th width={10} />}
+            {headers.map((header) => (
+              <Th key={header} width={hasOffloadStorage ? 45 : 50}>
+                {storageMapFieldLabels[header]}
+              </Th>
+            ))}
           </Tr>
         </Thead>
 

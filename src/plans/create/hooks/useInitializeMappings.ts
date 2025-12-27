@@ -5,7 +5,6 @@ import { isEmpty } from '@utils/helpers';
 
 import type { MappingFieldIds, MappingValue } from '../types';
 import { fillUnmappedSources } from '../utils/fillUnmappedSources';
-
 type UseInitializeMappingsParams<T extends Record<string, unknown>> = {
   isLoading: boolean;
   currentMap: T[] | undefined;
@@ -75,7 +74,7 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
         [fieldIds.targetField]: targetValue,
       };
 
-      setValue(fieldIds.mapField, [emptyMapping]);
+      setValue(fieldIds.mapField, [emptyMapping], { shouldDirty: true, shouldValidate: true });
       hasInitializedRef.current = true;
       return;
     }
@@ -95,11 +94,11 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
         unmappedSources,
       });
 
-      setValue(fieldIds.mapField, updatedMappings);
+      setValue(fieldIds.mapField, updatedMappings, { shouldDirty: true, shouldValidate: true });
 
       // Trigger validation to ensure form state is correct
       setTimeout(async () => {
-        await trigger(fieldIds.mapField);
+        await trigger();
       }, 0);
 
       unmappedSources.forEach((source) => {

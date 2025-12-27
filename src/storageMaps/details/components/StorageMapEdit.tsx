@@ -77,7 +77,7 @@ const StorageMapEdit: ModalComponent<StorageMapEditProps> = ({
     reset(initialFormValues);
   }, [initialFormValues, reset]);
 
-  const handleUpdate = async (formValues: UpdateMappingsFormData) => {
+  const onSubmit = async (formValues: UpdateMappingsFormData) => {
     const filteredStorageMap = formValues.storageMap?.filter((mapping) => {
       const hasSource = Boolean(mapping[StorageMapFieldId.SourceStorage]?.name);
       const hasTarget = Boolean(mapping[StorageMapFieldId.TargetStorage]?.name);
@@ -112,7 +112,7 @@ const StorageMapEdit: ModalComponent<StorageMapEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        onConfirm={handleSubmit(handleUpdate)}
+        onConfirm={handleSubmit(onSubmit)}
         title={t('Edit storage map')}
         closeModal={closeModal}
         variant={ModalVariant.medium}
