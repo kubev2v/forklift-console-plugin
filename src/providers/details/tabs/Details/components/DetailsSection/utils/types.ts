@@ -1,5 +1,33 @@
+import type { ReactNode } from 'react';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import type { ProviderFormFieldId } from 'src/providers/create/fields/constants';
+import type { VddkSetupMode } from 'src/providers/utils/constants';
+
+import type { V1beta1Provider } from '@kubev2v/types';
 
 export type DetailsSectionProps = {
   data: ProviderData;
+};
+
+/**
+ * Type for the props of the ProviderDetailsItemProps component.
+ *
+ * @typedef {Object} ProviderDetailsItemProps
+ *
+ * @property {V1beta1Provider} resource - The resource for the details item.
+ * @property {boolean} [canPatch] - true if patching is permitted.
+ * @property {ReactNode} [helpContent] - The content to display in the help popover.
+ * @property {string} [moreInfoLink] - An external link to more content for displaying in the help popover (e.g., documentation link).
+ **/
+export type ProviderDetailsItemProps = {
+  resource: V1beta1Provider;
+  canPatch?: boolean;
+  moreInfoLink?: string;
+  helpContent?: ReactNode;
+};
+
+export type EditProviderVDDKImageFormData = {
+  [ProviderFormFieldId.VsphereVddkSetupMode]: VddkSetupMode;
+  [ProviderFormFieldId.VsphereVddkInitImage]: string | undefined;
+  [ProviderFormFieldId.VsphereUseVddkAioOptimization]: string | undefined;
 };

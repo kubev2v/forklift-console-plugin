@@ -79,3 +79,9 @@ export enum SecretFieldsId {
 
 export const YES_VALUE = t('yes');
 export const TRUE_VALUE = t('true');
+
+export enum VddkSetupMode {
+  Upload = 'upload',
+  Manual = 'manual',
+  Skip = 'skip',
+}

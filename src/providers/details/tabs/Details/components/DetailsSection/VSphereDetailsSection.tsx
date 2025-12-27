@@ -4,7 +4,6 @@ import { CredentialsDetailsItem } from 'src/modules/Providers/views/details/comp
 import { ExternalManagementLinkDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/ExternalManagementLinkDetailsItem';
 import { TypeDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/TypeDetailsItem';
 import { URLDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/URLDetailsItem';
-import { VDDKDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/VDDKDetailsItem';
 import { getVSphereProviderWebUILink } from 'src/modules/Providers/views/details/components/DetailsSection/utils/getVSphereProviderWebUILink';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -16,7 +15,7 @@ import type { VSphereProvider } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 
 import type { DetailsSectionProps } from './utils/types';
-
+import { VDDKDetailsItem } from './VDDKDetailsItem';
 const VSphereDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { inventory, permissions, provider } = data;

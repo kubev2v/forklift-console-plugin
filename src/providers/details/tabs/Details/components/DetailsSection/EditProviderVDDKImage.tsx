@@ -1,125 +1,78 @@
-import { type FormEvent, useState } from 'react';
-import { EditModal } from 'src/modules/Providers/modals/EditModal/EditModal';
-import type {
-  EditModalProps,
-  OnConfirmHookType,
-} from 'src/modules/Providers/modals/EditModal/types';
-import { validateVDDKImage } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVDDKImage';
-import {
-  EMPTY_VDDK_INIT_IMAGE_ANNOTATION,
-  TRUE_VALUE,
-  YES_VALUE,
-} from 'src/providers/utils/constants';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
+import VDDKRadioSelection from 'src/providers/components/VDDKRadioSelection';
+import { ProviderFormFieldId } from 'src/providers/create/fields/constants';
+import { validateVddkInitImage } from 'src/providers/create/fields/vsphere/vsphereFieldValidators';
+import { VddkSetupMode } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { type Modify, ProviderModel, type V1beta1Provider } from '@kubev2v/types';
-import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import ModalForm from '@components/ModalForm/ModalForm';
+import type { V1beta1Provider } from '@kubev2v/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { Alert, AlertVariant, Checkbox, Stack, StackItem } from '@patternfly/react-core';
-import { getAnnotations, getUseVddkAioOptimization } from '@utils/crds/common/selectors';
+import { Form } from '@patternfly/react-core';
+import { getUseVddkAioOptimization, getVddkInitImage } from '@utils/crds/common/selectors';
+import { isEmpty } from '@utils/helpers';
 
+import type { EditProviderVDDKImageFormData } from './utils/types';
 import onUpdateVddkImageSettings from './onUpdateVddkImageSettings';
-import VDDKHelperTextShort from './VDDKHelperTextShort';
+export type EditProviderVDDKImageProps = {
+  provider: V1beta1Provider;
+};
 
-export type EditProviderVDDKImageProps = Modify<
-  EditModalProps,
-  {
-    resource: V1beta1Provider;
-    title?: string;
-    model?: K8sModel;
-    jsonPath?: string | string[];
-  }
->;
-const EditProviderVDDKImage: ModalComponent<EditProviderVDDKImageProps> = (props) => {
+const EditProviderVDDKImage: ModalComponent<EditProviderVDDKImageProps> = ({
+  closeModal,
+  provider,
+}) => {
   const { t } = useForkliftTranslation();
 
-  const provider = props.resource;
+  const methods = useForm<EditProviderVDDKImageFormData>({
+    defaultValues: {
+      [ProviderFormFieldId.VsphereUseVddkAioOptimization]: getUseVddkAioOptimization(provider),
+      [ProviderFormFieldId.VsphereVddkInitImage]: getVddkInitImage(provider),
+      [ProviderFormFieldId.VsphereVddkSetupMode]: isEmpty(getVddkInitImage(provider))
+        ? VddkSetupMode.Skip
+        : VddkSetupMode.Manual,
+    },
+  });
 
-  const emptyVddkInitImage = getAnnotations(provider)?.[EMPTY_VDDK_INIT_IMAGE_ANNOTATION];
-  const useVddkAioOptimization = getUseVddkAioOptimization(provider);
+  const { control, handleSubmit, watch } = methods;
 
-  const [emptyImage, setEmptyImage] = useState(emptyVddkInitImage);
-  const [useVddkAio, setUseVddkAio] = useState(useVddkAioOptimization);
+  const vddkInitImage = watch(ProviderFormFieldId.VsphereVddkInitImage);
 
-  const isEmptyImage = emptyImage === YES_VALUE;
-  const isUseVddkAio = useVddkAio === TRUE_VALUE;
-
-  // VddkTextInput is the default text input
-  const VddkTextInput = undefined;
-
-  // Validation of none empty vddk image, make sure it's not undefined
-  const validateNoneEmptyVDDKImage = (value: string | number) => validateVDDKImage(value ?? '');
-
-  const onChangeEmptyImage: (event: React.FormEvent<HTMLInputElement>, checked: boolean) => void = (
-    _event,
-    checked,
-  ) => {
-    if (checked) {
-      setEmptyImage(YES_VALUE);
-    } else {
-      setEmptyImage(undefined);
-    }
+  const onSubmit = async (data: EditProviderVDDKImageFormData) => {
+    await onUpdateVddkImageSettings(provider, data);
+    closeModal();
   };
-
-  const onChangeUseVddkAio: (_event: FormEvent<HTMLInputElement>, checked: boolean) => void = (
-    _event,
-    checked,
-  ) => {
-    if (checked) {
-      setUseVddkAio(TRUE_VALUE);
-    } else {
-      setUseVddkAio(undefined);
-    }
-  };
-
-  const onConfirmHookForVddk: OnConfirmHookType = async ({ model, newValue, resource }) =>
-    onUpdateVddkImageSettings(model ?? ProviderModel, resource, {
-      isEmptyImage,
-      isUseVddkAio,
-      newValue: newValue as string,
-    });
-
-  const body = (
-    <Stack hasGutter>
-      <Alert variant={AlertVariant.warning} isInline title={<VDDKHelperTextShort />}>
-        <Checkbox
-          label={t(
-            'Skip VMware Virtual Disk Development Kit (VDDK) SDK acceleration (not recommended).',
-          )}
-          isChecked={isEmptyImage}
-          onChange={onChangeEmptyImage}
-          id="emptyVddkInitImage"
-          name="emptyVddkInitImage"
-        />
-      </Alert>
-      {!isEmptyImage && (
-        <StackItem isFilled={false}>
-          <Checkbox
-            label={t('Use VMware Virtual Disk Development Kit (VDDK) async IO Optimization.')}
-            isChecked={isUseVddkAio && !isEmptyImage}
-            onChange={onChangeUseVddkAio}
-            id="useVddkAioOptimization"
-            name="useVddkAioOptimization"
-            isDisabled={isEmptyImage}
-          />
-        </StackItem>
-      )}
-    </Stack>
-  );
 
   return (
-    <EditModal
-      {...props}
-      jsonPath={'spec.settings.vddkInitImage'}
-      title={props?.title ?? t('Edit VDDK init image')}
-      label={t('VDDK init image')}
-      model={ProviderModel}
-      body={body}
-      isVisible={!isEmptyImage}
-      validationHook={validateNoneEmptyVDDKImage}
-      InputComponent={VddkTextInput}
-      onConfirmHook={onConfirmHookForVddk}
-    />
+    <FormProvider {...methods}>
+      <ModalForm
+        closeModal={closeModal}
+        title={t('Edit VDDK image')}
+        onConfirm={handleSubmit(onSubmit)}
+      >
+        <Form>
+          <Controller
+            control={control}
+            name={ProviderFormFieldId.VsphereVddkSetupMode}
+            rules={{
+              required: t('VDDK setup selection is required'),
+              validate: {
+                validImage: (mode: VddkSetupMode | undefined) => {
+                  if (mode === VddkSetupMode.Skip) {
+                    return undefined;
+                  }
+                  if (mode === VddkSetupMode.Manual) {
+                    return validateVddkInitImage(vddkInitImage);
+                  }
+                  return undefined;
+                },
+              },
+            }}
+            render={() => <VDDKRadioSelection />}
+          />
+        </Form>
+      </ModalForm>
+    </FormProvider>
   );
 };
 

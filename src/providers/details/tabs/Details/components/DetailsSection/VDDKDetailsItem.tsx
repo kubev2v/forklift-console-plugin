@@ -1,16 +1,15 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { CREATE_VDDK_HELP_LINK } from 'src/plans/details/utils/constants';
-import EditProviderVDDKImage, {
-  type EditProviderVDDKImageProps,
-} from 'src/providers/details/tabs/Details/components/DetailsSection/EditProviderVDDKImage';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
-import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { getVddkInitImage } from '@utils/crds/common/selectors';
+import { isEmpty } from '@utils/helpers';
+import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
-import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
+import type { ProviderDetailsItemProps } from './utils/types';
+import EditProviderVDDKImage, { type EditProviderVDDKImageProps } from './EditProviderVDDKImage';
 
 export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
   canPatch,
@@ -32,23 +31,25 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
     </ForkliftTrans>
   );
 
+  const vddkInitImage = getVddkInitImage(provider);
   return (
     <DetailsItem
       testId="vddk-detail-item"
       title={t('VDDK init image')}
       content={
-        provider?.spec?.settings?.vddkInitImage ?? (
-          <Label isCompact color={'orange'}>
-            <ExclamationTriangleIcon color="#F0AB00" />
-            <span className="forklift-section-provider-empty-vddk-label-text">{t('Empty')}</span>
+        isEmpty(vddkInitImage) ? (
+          <Label isCompact status="warning">
+            {t('Empty')}
           </Label>
+        ) : (
+          vddkInitImage
         )
       }
       moreInfoLink={moreInfoLink ?? CREATE_VDDK_HELP_LINK}
       helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'spec', 'settings', 'vddkInitImage']}
       onEdit={() => {
-        launcher<EditProviderVDDKImageProps>(EditProviderVDDKImage, { resource: provider });
+        launcher<EditProviderVDDKImageProps>(EditProviderVDDKImage, { provider });
       }}
       canEdit={canPatch}
     />

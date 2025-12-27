@@ -1,11 +1,11 @@
 import type { FieldValues } from 'react-hook-form';
-import type { OpenstackAuthType, VSphereEndpointType } from 'src/providers/utils/constants';
-
 import type {
-  CertificateValidationMode,
-  ProviderFormFieldId,
+  OpenstackAuthType,
   VddkSetupMode,
-} from './fields/constants';
+  VSphereEndpointType,
+} from 'src/providers/utils/constants';
+
+import type { CertificateValidationMode, ProviderFormFieldId } from './fields/constants';
 
 type BaseFormData = {
   [ProviderFormFieldId.ProviderName]: string;
