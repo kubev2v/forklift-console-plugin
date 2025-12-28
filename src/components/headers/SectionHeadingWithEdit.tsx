@@ -1,22 +1,25 @@
 import type { FC } from 'react';
 
-import { Button, ButtonVariant, Flex } from '@patternfly/react-core';
+import { Button, type ButtonProps, ButtonVariant, Flex } from '@patternfly/react-core';
 import { PencilAltIcon } from '@patternfly/react-icons';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import SectionHeading, { type SectionHeadingProps } from './SectionHeading';
 
 type SectionHeadingWithEditProps = Omit<
   {
+    onClick: () => void;
     title: string;
     editable?: boolean;
-    onClick: () => void;
+    additionalActions?: ButtonProps[];
     'data-testid'?: string;
   } & SectionHeadingProps,
   'text'
 >;
 
 const SectionHeadingWithEdit: FC<SectionHeadingWithEditProps> = ({
+  additionalActions,
   'data-testid': dataTestId,
   editable = true,
   onClick,
@@ -39,6 +42,8 @@ const SectionHeadingWithEdit: FC<SectionHeadingWithEditProps> = ({
           >
             {t('Edit')}
           </Button>
+          {!isEmpty(additionalActions) &&
+            additionalActions?.map((action) => <Button {...action} variant={ButtonVariant.link} />)}
         </Flex>
       }
     />
