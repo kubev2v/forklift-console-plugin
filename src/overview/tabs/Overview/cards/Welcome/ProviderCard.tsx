@@ -27,7 +27,9 @@ export const ProviderCard: FC<ProviderCardProps> = ({ children, imageSrc, onClic
           <img alt="" src={imageSrc} />
         </FlexItem>
 
-        <FlexItem>{children}</FlexItem>
+        <FlexItem>
+          <b>{children}</b>
+        </FlexItem>
       </Flex>
     </CardBody>
   </Card>
