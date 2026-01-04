@@ -4,12 +4,12 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 import { encodeFormValue } from '@utils/helpers/encodeFormValue';
 
-import { CertificateValidationMode, ProviderFormFieldId, VddkSetupMode } from '../fields/constants';
+import { VddkSetupMode } from '../../utils/constants';
+import { CertificateValidationMode, ProviderFormFieldId } from '../fields/constants';
 import type { VsphereFormData } from '../types';
 
 import { buildProviderObject } from './buildProviderObject';
 import { buildSecretObject } from './buildSecretObject';
-
 type ProviderResources = {
   provider: V1beta1Provider;
   secret: IoK8sApiCoreV1Secret;
