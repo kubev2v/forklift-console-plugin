@@ -58,7 +58,9 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
               providerName={sourceProviderName}
             />
           }
-          helpContent={t('source provider')}
+          helpContent={t(
+            'The repository or distribution channel you want to migrate your virtual machines from into the OpenShift cluster.',
+          )}
           crumbs={['spec', 'providers', 'source']}
         />
 
@@ -75,7 +77,7 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
               providerName={destinationProviderName}
             />
           }
-          helpContent={t('destination provider')}
+          helpContent={t('The OpenShift cluster you want to migrate your virtual machines to.')}
           crumbs={['spec', 'providers', 'destination']}
         />
       </DescriptionList>
