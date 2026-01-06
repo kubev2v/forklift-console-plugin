@@ -44,8 +44,8 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
     sourceProvider: providerName,
     virtualMachines: [
       {
-        sourceName: 'mtv-func-rhel9',
-        targetName: `mtv-func-rhel9-renamed-${Date.now()}`,
+        sourceName: 'mtv-tests-rhel8',
+        targetName: `mtv-tests-rhel8-renamed-${Date.now()}`,
         folder: 'vm',
       },
     ],

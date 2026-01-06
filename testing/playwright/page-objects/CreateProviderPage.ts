@@ -1,9 +1,8 @@
 import { expect, type Page } from '@playwright/test';
 
-import { ProviderType } from '../types/enums';
+import { EndpointType, ProviderType } from '../types/enums';
 import type { ProviderData } from '../types/test-data';
 import { NavigationHelper } from '../utils/NavigationHelper';
-import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 import type { ResourceManager } from '../utils/resource-manager/ResourceManager';
 
 import { ProviderDetailsPage } from './ProviderDetailsPage/ProviderDetailsPage';
@@ -19,57 +18,70 @@ export class CreateProviderPage {
     this.navigationHelper = new NavigationHelper(page);
   }
 
-  private async fillCredentialsFields(testData: ProviderData) {
-    if (testData.type === ProviderType.OVA) {
+  private async configureVddkSetup(testData: ProviderData) {
+    if (testData.skipVddk) {
+      await this.page.getByTestId('vddk-setup-skip-radio').click();
+      // AIO checkbox is not available when skipping VDDK
       return;
-    }
-
-    await this.page.getByTestId('provider-username-input').fill(testData.username ?? '');
-
-    if (testData.password) {
-      await this.page.getByTestId('provider-password-input').fill(testData.password);
-    }
-
-    const certSwitch = this.page.getByTestId('skip-certificate-validation-switch');
-    if (await certSwitch.isVisible()) {
-      await certSwitch.check({ force: true });
-    }
-  }
-
-  private async fillVSphereSpecificFields(testData: ProviderData) {
-    if (testData.type !== ProviderType.VSPHERE) {
-      return;
-    }
-
-    if (testData.endpointType) {
-      await this.page
-        .locator(`input[name="sdkEndpoint"][id="sdkEndpoint-${testData.endpointType}"]`)
-        .click();
     }
 
     if (testData.vddkInitImage) {
-      await this.page.getByTestId('provider-vddk-input').fill(testData.vddkInitImage);
-    }
-
-    await this.toggleCheckboxIfNeeded(
-      this.page.getByTestId('provider-empty-vddk-checkbox'),
-      testData.skipVddk,
-    );
-
-    await this.toggleCheckboxIfNeeded(
-      this.page.locator('#useVddkAioOptimization'),
-      testData.useVddkAioOptimization,
-    );
-  }
-
-  private async toggleCheckboxIfNeeded(checkbox: any, desiredState: boolean | undefined) {
-    if (desiredState === undefined) {
+      await this.page.getByTestId('vddk-setup-manual-radio').click();
+      await this.page.getByTestId('vsphere-vddk-image-input').fill(testData.vddkInitImage);
+    } else {
+      await this.page.getByTestId('vddk-setup-skip-radio').click();
       return;
     }
 
-    const isChecked = await checkbox.isChecked();
-    if (isChecked !== desiredState) {
-      await checkbox.click();
+    // AIO checkbox is only visible when VDDK is configured (not skipped)
+    if (testData.useVddkAioOptimization !== undefined) {
+      const aioCheckbox = this.page.getByTestId('vddk-aio-optimization-checkbox');
+      const isChecked = await aioCheckbox.isChecked();
+
+      if (isChecked !== testData.useVddkAioOptimization) {
+        await aioCheckbox.click();
+      }
+    }
+  }
+
+  private async fillOVAFields(testData: ProviderData) {
+    await this.page.getByTestId('nfs-directory-input').fill(testData.hostname ?? '');
+  }
+
+  private async fillOVirtFields(testData: ProviderData) {
+    await this.page.getByTestId('ovirt-url-input').fill(testData.hostname ?? '');
+    await this.page.getByTestId('ovirt-username-input').fill(testData.username ?? '');
+    await this.page.getByTestId('ovirt-password-input').fill(testData.password ?? '');
+  }
+
+  private async fillVSphereFields(testData: ProviderData) {
+    const esxiRadio = this.page.getByTestId('vsphere-endpoint-esxi-radio');
+    const vcenterRadio = this.page.getByTestId('vsphere-endpoint-vcenter-radio');
+    await vcenterRadio.waitFor({ state: 'visible', timeout: 10000 });
+
+    if (testData.endpointType === EndpointType.ESXI) {
+      await esxiRadio.click();
+      await expect(esxiRadio).toBeChecked({ timeout: 5000 });
+    } else {
+      await vcenterRadio.click();
+      await expect(vcenterRadio).toBeChecked({ timeout: 5000 });
+    }
+
+    await this.page.getByTestId('vsphere-url-input').fill(testData.hostname ?? '');
+    await this.configureVddkSetup(testData);
+    await this.page.getByTestId('vsphere-username-input').fill(testData.username ?? '');
+    await this.page.getByTestId('vsphere-password-input').fill(testData.password ?? '');
+  }
+
+  private async skipCertificateValidation() {
+    await this.page.getByTestId('certificate-validation-skip').click();
+  }
+
+  private async submitForm(testData: ProviderData) {
+    await this.page.getByTestId('provider-create-button').click();
+
+    if (this.resourceManager && testData.name) {
+      this.resourceManager.addProvider(testData.name, testData.projectName);
     }
   }
 
@@ -85,51 +97,82 @@ export class CreateProviderPage {
     }
 
     await providerDetailsPage.verifyProviderDetails(testData);
-
     return providerDetailsPage;
   }
 
   async fillAndSubmit(testData: ProviderData) {
     await this.selectProject(testData.projectName);
-    await this.page.getByTestId(`${testData.type}-provider-card`).locator('label').click();
-    await this.page.getByTestId('provider-name-input').fill(testData.name);
+    await this.selectProviderType(testData.type);
+    await this.fillProviderName(testData.name);
 
-    await this.fillVSphereSpecificFields(testData);
-    await this.page.getByTestId('provider-url-input').fill(testData.hostname ?? '');
-    await this.fillCredentialsFields(testData);
-    await this.page.getByTestId('create-provider-button').click();
-
-    if (this.resourceManager && testData.name) {
-      this.resourceManager.addProvider(testData.name, testData.projectName);
+    switch (testData.type) {
+      case ProviderType.VSPHERE:
+        await this.fillVSphereFields(testData);
+        break;
+      case ProviderType.OVIRT:
+        await this.fillOVirtFields(testData);
+        break;
+      case ProviderType.OVA:
+        await this.fillOVAFields(testData);
+        break;
+      case ProviderType.OPENSTACK:
+      default:
+        break;
     }
+
+    if (testData.type !== ProviderType.OVA) {
+      await this.skipCertificateValidation();
+    }
+
+    await this.submitForm(testData);
+  }
+
+  async fillProviderName(name: string) {
+    await this.page.getByTestId('provider-name-input').fill(name);
   }
 
   async navigate(namespace?: string): Promise<void> {
+    await this.navigationHelper.navigateToConsole();
     await this.navigationHelper.navigateToK8sResource({
       resource: 'Provider',
-      namespace: namespace ?? MTV_NAMESPACE,
-      action: 'new',
+      namespace,
+      allNamespaces: true,
     });
+    await this.page.waitForLoadState('networkidle');
+
+    const createButton = this.page.getByTestId('add-provider-button');
+    await createButton.waitFor({ state: 'visible', timeout: 20000 });
+    await createButton.click();
+    await this.page.waitForLoadState('networkidle');
   }
 
-  async selectProject(projectName: string, showDefaultProjects = false) {
-    const projectSelect = this.page.getByTestId('target-project-select');
+  async selectProject(projectName: string) {
+    const projectSelect = this.page.getByTestId('provider-project-select');
     await projectSelect.waitFor({ state: 'visible', timeout: 10000 });
-    await projectSelect.getByRole('button').click();
 
-    if (showDefaultProjects) {
-      await this.page.locator('label[for="show-default-projects-switch"]').click();
+    const textInput = projectSelect.locator('input');
+    const currentValue = await textInput.inputValue();
+
+    if (currentValue === projectName) {
+      return;
     }
 
-    const searchBox = projectSelect.getByRole('combobox');
-    await searchBox.fill(projectName);
+    await textInput.click();
+    await textInput.clear();
+    await textInput.fill(projectName);
 
-    const option = this.page.getByRole('option', { name: projectName });
-    await option.waitFor({ state: 'visible' });
+    const option = this.page.getByRole('option', { name: projectName, exact: true });
+    await option.waitFor({ state: 'visible', timeout: 10000 });
     await option.click();
   }
 
+  async selectProviderType(providerType: ProviderType) {
+    const typeToggle = this.page.getByTestId('provider-type-toggle');
+    await typeToggle.click();
+    await this.page.getByTestId(`provider-type-option-${providerType}`).click();
+  }
+
   async waitForWizardLoad() {
-    await expect(this.page.getByTestId('create-provider-heading')).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: 'Create provider' })).toBeVisible();
   }
 }
