@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom-v5-compat';
 import {
   DeleteModal,
   type DeleteModalProps,
@@ -17,6 +18,7 @@ type StorageMapActionsDropdownItemsProps = {
 export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
+  const navigate = useNavigate();
 
   const { obj: StorageMap } = data;
 
@@ -31,7 +33,13 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
   };
 
   return [
-    <DropdownItem value={0} key="EditStorageMapping" to={StorageMapURL}>
+    <DropdownItem
+      value={0}
+      key="EditStorageMapping"
+      onClick={() => {
+        navigate(StorageMapURL);
+      }}
+    >
       {t('Edit storage map')}
     </DropdownItem>,
 

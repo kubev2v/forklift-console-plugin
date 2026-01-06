@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { ErrorState } from 'src/components/common/Page/PageStates';
-import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
+import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
@@ -38,11 +38,11 @@ const ProviderDetailsPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) 
   }
 
   return (
-    <TipsAndTricksDrawer>
+    <LearningExperienceDrawer>
       <PageSection hasBodyWrapper={false}>
         <ProviderDetailsPageByType type={provider?.spec?.type} name={name} namespace={namespace} />
       </PageSection>
-    </TipsAndTricksDrawer>
+    </LearningExperienceDrawer>
   );
 };
 

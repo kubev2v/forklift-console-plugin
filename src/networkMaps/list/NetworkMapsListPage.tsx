@@ -4,7 +4,7 @@ import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import NetworkMapsEmptyState from 'src/networkMaps/components/NetworkMapsEmptyState';
-import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
+import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 
 import {
   NetworkMapModel,
@@ -128,7 +128,7 @@ const NetworkMapsListPage: FC<{
   }));
 
   return (
-    <TipsAndTricksDrawer>
+    <LearningExperienceDrawer>
       <StandardPage<NetworkMapData>
         data-testid="network-maps-list"
         {...(permissions.canCreate && {
@@ -145,7 +145,7 @@ const NetworkMapsListPage: FC<{
         userSettings={userSettings}
         customNoResultsFound={<NetworkMapsEmptyState namespace={namespace} />}
       />
-    </TipsAndTricksDrawer>
+    </LearningExperienceDrawer>
   );
 };
 

@@ -3,7 +3,7 @@ import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
+import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 import StorageMapsEmptyState from 'src/storageMaps/components/StorageMapsEmptyState';
 import type { StorageMapData } from 'src/storageMaps/utils/types';
 
@@ -128,7 +128,7 @@ const StorageMapsListPage: FC<{
   }));
 
   return (
-    <TipsAndTricksDrawer>
+    <LearningExperienceDrawer>
       <StandardPage<StorageMapData>
         data-testid="network-maps-list"
         {...(permissions.canCreate && {
@@ -145,7 +145,7 @@ const StorageMapsListPage: FC<{
         userSettings={userSettings}
         customNoResultsFound={<StorageMapsEmptyState namespace={namespace} />}
       />
-    </TipsAndTricksDrawer>
+    </LearningExperienceDrawer>
   );
 };
 

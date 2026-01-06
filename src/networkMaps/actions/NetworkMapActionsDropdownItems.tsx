@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom-v5-compat';
 import {
   DeleteModal,
   type DeleteModalProps,
@@ -18,6 +19,7 @@ type NetworkMapActionsDropdownItemsProps = {
 export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
+  const navigate = useNavigate();
 
   const { obj: networkMap } = data;
 
@@ -32,7 +34,13 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
   };
 
   return [
-    <DropdownItem value={0} key="edit" to={networkMapURL}>
+    <DropdownItem
+      value={0}
+      key="edit"
+      onClick={() => {
+        navigate(networkMapURL);
+      }}
+    >
       {t('Edit network map')}
     </DropdownItem>,
 

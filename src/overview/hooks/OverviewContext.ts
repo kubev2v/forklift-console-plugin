@@ -1,20 +1,16 @@
-import { createContext } from 'react';
-
 import type { TimeRangeOptions } from '../tabs/Overview/utils/timeRangeOptions';
 
-export type CreateOverviewContextData = {
+export type OverviewContextData = {
   hideWelcomeCardByContext?: boolean;
   vmMigrationsDonutSelectedRange?: TimeRangeOptions;
   vmMigrationsHistorySelectedRange?: TimeRangeOptions;
 };
 
-export type CreateOverviewContextType = {
-  data?: CreateOverviewContextData;
-  setData: (data: CreateOverviewContextData) => void;
+export type OverviewContextType = {
+  data?: OverviewContextData;
+  setData: (data: OverviewContextData) => void;
 };
 
-export const CreateOverviewContext = createContext<CreateOverviewContextType>({
+export const createOverviewContext = (): OverviewContextType => ({
   setData: () => undefined,
 });
-
-export const CreateOverviewContextProvider = CreateOverviewContext.Provider;

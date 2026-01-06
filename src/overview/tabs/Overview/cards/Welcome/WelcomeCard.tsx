@@ -2,7 +2,7 @@ import { type FC, useContext, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom-v5-compat';
 import migrationIcon from 'src/components/images/resources/migration.svg';
 import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext';
+import { CreateForkliftContext } from 'src/onlineHelp/learningExperienceDrawer/context/ForkliftContext';
 import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -30,7 +30,8 @@ const WelcomeCard: FC = () => {
   const { trackEvent } = useForkliftAnalytics();
   const navigate = useNavigate();
   const isDarkTheme = useIsDarkTheme();
-  const { data: { hideWelcomeCardByContext } = {}, setData } = useContext(CreateOverviewContext);
+  const { data: { hideWelcomeCardByContext } = {}, setData } =
+    useContext(CreateForkliftContext).overviewContext;
   const providerItems = providerTypes(isDarkTheme);
   const images = getImages(isDarkTheme);
 

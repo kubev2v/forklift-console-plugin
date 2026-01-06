@@ -31,6 +31,8 @@ export const PROVIDER_TYPES = {
   vsphere: 'vsphere',
 } as const;
 
+export type ProviderTypes = (typeof PROVIDER_TYPES)[keyof typeof PROVIDER_TYPES];
+
 export enum VSphereEndpointType {
   ESXi = 'esxi',
   vCenter = 'vcenter',

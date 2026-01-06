@@ -1,9 +1,8 @@
 import type { FC } from 'react';
+import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 
 import { PageSection, PageSectionTypes, Stack, Title } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
-
-import TipsAndTricksDrawer from '../../onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
 
 import CreateProviderForm from './CreateProviderForm';
 
@@ -11,7 +10,7 @@ const ProvidersCreateFormPage: FC = () => {
   const { t } = useForkliftTranslation();
 
   return (
-    <TipsAndTricksDrawer>
+    <LearningExperienceDrawer>
       <PageSection hasBodyWrapper={false}>
         <Stack hasGutter>
           <Title headingLevel="h1" size="2xl">
@@ -34,7 +33,7 @@ const ProvidersCreateFormPage: FC = () => {
       >
         <CreateProviderForm />
       </PageSection>
-    </TipsAndTricksDrawer>
+    </LearningExperienceDrawer>
   );
 };
 
