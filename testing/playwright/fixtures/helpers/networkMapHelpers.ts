@@ -12,27 +12,15 @@ export type TestNetworkMap = V1beta1NetworkMap & {
   };
 };
 
-/**
- * Network mapping configuration for creating network maps
- */
 export type NetworkMapMappingConfig = {
-  /** Source network ID (from provider inventory) */
   sourceId?: string;
-  /** Source network name */
   sourceName: string;
-  /** Source network type (optional, e.g., 'DistributedVirtualPortgroup') */
   sourceType?: string;
-  /** Destination type: 'pod' for default pod network, 'multus' for NAD */
   destinationType: 'pod' | 'multus';
-  /** Destination name (e.g., 'Default network' for pod, or NAD name for multus) */
   destinationName?: string;
-  /** Destination namespace (required for multus type) */
   destinationNamespace?: string;
 };
 
-/**
- * Creates a network map directly via API based on provider references.
- */
 export const createNetworkMap = async (
   page: Page,
   resourceManager: ResourceManager,
@@ -106,9 +94,6 @@ export const createNetworkMap = async (
   };
 };
 
-/**
- * Creates a simple network map with default pod networking for all source networks.
- */
 export const createSimpleNetworkMap = async (
   page: Page,
   resourceManager: ResourceManager,

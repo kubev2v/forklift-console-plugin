@@ -39,9 +39,6 @@ export class OverviewPage {
     await expect(this.tipsAndTricksDrawerTitle).not.toBeVisible();
   }
 
-  /**
-   * Complete flow to edit and save the transfer network setting
-   */
   async editAndSaveTransferNetwork(): Promise<void> {
     await this.openSettingsEditModal();
     await this.toggleTransferNetworkValue();
@@ -194,8 +191,6 @@ export class OverviewPage {
 
       await toggleButton.scrollIntoViewIfNeeded();
       await expect(toggleButton).toBeVisible();
-
-      // Expand then collapse (mimicking old behavior without state assertions)
       await toggleButton.click();
       await toggleButton.click();
     }
@@ -209,11 +204,6 @@ export class OverviewPage {
     return this.page.getByRole('heading', { name: 'Tips and tricks', level: 2 });
   }
 
-  /**
-   * Toggles the transfer network value:
-   * - If a network is selected, changes to None
-   * - If None is selected, selects the first available network
-   */
   async toggleTransferNetworkValue(): Promise<void> {
     const currentValue = await this.getTransferNetworkCurrentValue();
     await this.openTransferNetworkDropdown();
@@ -231,7 +221,6 @@ export class OverviewPage {
     return this.page.getByTestId('controller-transfer-network-select');
   }
 
-  // Settings tab locators
   get transferNetworkField() {
     return this.page.getByTestId('settings-controller-transfer-network');
   }
@@ -271,7 +260,6 @@ export class OverviewPage {
     await expect(this.page.getByRole('heading', { name: topicName, level: 3 })).toBeVisible();
   }
 
-  // Settings tab methods
   async verifyTransferNetworkFieldVisible(): Promise<void> {
     await expect(this.transferNetworkField).toBeVisible();
   }

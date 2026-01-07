@@ -46,7 +46,6 @@ const buildTestProviderResult = (providerData: ProviderData): TestProvider => {
   return provider;
 };
 
-// Re-export helpers from separate files for backwards compatibility
 export { createTestNad, type TestNad } from './nadHelpers';
 export {
   createNetworkMap,

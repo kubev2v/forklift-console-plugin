@@ -12,45 +12,21 @@ export type TestNad = V1NetworkAttachmentDefinition & {
   };
 };
 
-/**
- * Creates a NetworkAttachmentDefinition (NAD) for testing purposes.
- *
- * NADs are used by the Settings tab's "Controller transfer network" dropdown
- * to select a network for data transfer during migrations.
- *
- * @param page - Playwright page instance (needed for CSRF token)
- * @param resourceManager - Resource manager for API calls and cleanup registration
- * @param options - Configuration options for the NAD
- * @returns Promise that resolves to the created TestNad
- *
- * @example
- * const nad = await createTestNad(page, resourceManager, {
- *   name: 'my-test-nad',
- *   namespace: 'openshift-mtv',
- * });
- */
 export const createTestNad = async (
   page: Page,
   resourceManager: ResourceManager,
   options: {
-    /** Name for the NAD (auto-generated if not provided) */
     name?: string;
-    /** Namespace for the NAD */
     namespace: string;
-    /** Bridge name for the CNI config (defaults to 'br0') */
     bridgeName?: string;
   },
 ): Promise<TestNad> => {
   const { namespace, bridgeName = 'br0' } = options;
-
-  // Generate NAD name if not provided
   const nadName = options.name ?? `nad-test-${crypto.randomUUID().slice(0, 8)}`;
 
-  // Navigate to console to establish session (needed for CSRF token)
   const navigationHelper = new NavigationHelper(page);
   await navigationHelper.navigateToConsole();
 
-  // Create the NAD with a simple bridge CNI config
   const nadConfig = {
     cniVersion: '0.3.1',
     name: nadName,
@@ -76,7 +52,6 @@ export const createTestNad = async (
     throw new Error(`Failed to create NAD ${nadName}`);
   }
 
-  // Register NAD for cleanup
   resourceManager.addNad(nadName, namespace);
 
   const result: TestNad = {
