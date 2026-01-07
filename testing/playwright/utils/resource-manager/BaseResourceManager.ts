@@ -1,28 +1,61 @@
+import type { Page } from '@playwright/test';
+
 import { API_PATHS, COOKIE_NAMES, HTTP_HEADERS, RESOURCE_KINDS, RESOURCE_TYPES } from './constants';
+
+type ApiResult<T> = { success: true; data: T } | { success: false; error: string };
 
 /**
  * Base class providing shared functionality for resource manager classes
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class BaseResourceManager {
-  public static getCsrfTokenFromCookie(): string {
-    const cookies = document.cookie.split('; ');
-    const csrfCookie = cookies.find((cookie) => cookie.startsWith(`${COOKIE_NAMES.CSRF_TOKEN}=`));
-    return csrfCookie ? csrfCookie.split('=')[1] : '';
-  }
-
   /**
-   * Returns a function string for extracting CSRF token from cookies.
-   * This is used in page.evaluate() contexts where functions cannot be serialized.
-   *
-   * @returns A string that defines getCsrfTokenFromCookie function
+   * Generic API call helper that handles CSRF token and common error handling.
+   * Reduces duplication across all resource creation functions.
    */
-  public static getCsrfTokenFunctionString(): string {
-    return `const getCsrfTokenFromCookie = () => {
-      const cookies = document.cookie.split('; ');
-      const csrfCookie = cookies.find((cookie) => cookie.startsWith(evalConstants.CSRF_TOKEN_NAME + '='));
-      return csrfCookie ? csrfCookie.split('=')[1] : '';
-    };`;
+  public static async apiPost<R>(page: Page, apiPath: string, data: unknown): Promise<R | null> {
+    const constants = BaseResourceManager.getEvaluateConstants();
+
+    const result = await page.evaluate(
+      async ({ payload, path, evalConstants }): Promise<ApiResult<R>> => {
+        try {
+          // Get CSRF token from cookies
+          const cookies = document.cookie.split('; ');
+          const csrfCookie = cookies.find((cookie) =>
+            cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
+          );
+          const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+
+          const response = await fetch(path, {
+            method: 'POST',
+            headers: {
+              [evalConstants.CONTENT_TYPE_HEADER]: evalConstants.APPLICATION_JSON,
+              [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
+            },
+            credentials: 'include',
+            body: JSON.stringify(payload),
+          });
+
+          if (response.ok) {
+            return { success: true, data: await response.json() };
+          }
+
+          const errorText = await response.text().catch(() => response.statusText);
+          return { success: false, error: errorText };
+        } catch (error: unknown) {
+          const err = error as Error;
+          return { success: false, error: err?.message ?? String(error) };
+        }
+      },
+      { payload: data, path: apiPath, evalConstants: constants },
+    );
+
+    if (result.success) {
+      return result.data;
+    }
+
+    console.error(`API POST to ${apiPath} failed: ${result.error}`);
+    return null;
   }
 
   public static getEvaluateConstants() {

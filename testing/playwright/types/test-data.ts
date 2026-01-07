@@ -92,7 +92,7 @@ export const createPlanTestData = (
         },
       ],
     },
-    virtualMachines: [{ sourceName: 'mtv-func-rhel9', folder: 'vm' }],
+    virtualMachines: [{ sourceName: 'mtv-tests-rhel8', folder: 'vm' }],
   };
 
   return {

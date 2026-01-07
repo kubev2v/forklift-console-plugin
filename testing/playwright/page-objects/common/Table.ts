@@ -145,9 +145,10 @@ export class Table {
     const tableContainer = this.getTableContainer();
 
     let rows = tableContainer.locator('tbody tr');
-
     for (const [_columnName, expectedValue] of Object.entries(options)) {
-      rows = rows.filter({ hasText: expectedValue });
+      rows = rows.filter({
+        has: this.page.getByText(expectedValue, { exact: true }),
+      });
     }
 
     return rows.first();
