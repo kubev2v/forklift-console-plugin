@@ -21,7 +21,7 @@ import {
   RESOURCE_KINDS,
 } from './constants';
 import { ResourceCleaner } from './ResourceCleaner';
-import { createNad, createNetworkMap, createProvider, createSecret } from './ResourceCreator';
+import { createNad, createProvider, createSecret } from './ResourceCreator';
 import { ResourceFetcher } from './ResourceFetcher';
 import { ResourcePatcher } from './ResourcePatcher';
 
@@ -75,18 +75,6 @@ export class ResourceManager {
       },
     };
     this.addResource(nad);
-  }
-
-  addNetworkMap(name: string, namespace: string): void {
-    const networkMap: V1beta1NetworkMap = {
-      apiVersion: FORKLIFT_API_VERSION,
-      kind: RESOURCE_KINDS.NETWORK_MAP,
-      metadata: {
-        name,
-        namespace,
-      },
-    };
-    this.addResource(networkMap);
   }
 
   addPlan(name: string, namespace: string): void {
@@ -163,14 +151,6 @@ export class ResourceManager {
     namespace: string,
   ): Promise<V1NetworkAttachmentDefinition | null> {
     return createNad(page, nad as Parameters<typeof createNad>[1], namespace);
-  }
-
-  async createNetworkMap(
-    page: Page,
-    networkMap: V1beta1NetworkMap,
-    namespace = MTV_NAMESPACE,
-  ): Promise<V1beta1NetworkMap | null> {
-    return createNetworkMap(page, networkMap, namespace);
   }
 
   async createProvider(

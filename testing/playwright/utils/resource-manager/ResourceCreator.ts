@@ -1,4 +1,4 @@
-import type { IoK8sApiCoreV1Secret, V1beta1NetworkMap, V1beta1Provider } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
 import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
@@ -36,15 +36,6 @@ export const createSecret = async (
 ): Promise<IoK8sApiCoreV1Secret | null> => {
   const apiPath = `${API_PATHS.KUBERNETES_CORE}/namespaces/${namespace}/secrets`;
   return BaseResourceManager.apiPost<IoK8sApiCoreV1Secret>(page, apiPath, secret);
-};
-
-export const createNetworkMap = async (
-  page: Page,
-  networkMap: V1beta1NetworkMap,
-  namespace = MTV_NAMESPACE,
-): Promise<V1beta1NetworkMap | null> => {
-  const apiPath = `${API_PATHS.FORKLIFT}/namespaces/${namespace}/networkmaps`;
-  return BaseResourceManager.apiPost<V1beta1NetworkMap>(page, apiPath, networkMap);
 };
 
 export const createNad = async (

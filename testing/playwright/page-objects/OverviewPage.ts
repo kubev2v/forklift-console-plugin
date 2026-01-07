@@ -17,18 +17,8 @@ export class OverviewPage {
     this.navigation = new NavigationHelper(page);
   }
 
-  get choosingMigrationTypeOption() {
-    return this.page.getByText('Choosing the right migration type', { exact: true }).first();
-  }
-
   get closeDrawerButton() {
     return this.page.getByRole('button', { name: 'Close drawer panel' });
-  }
-
-  async closeTipsAndTricks() {
-    await expect(this.closeDrawerButton).toBeVisible();
-    await this.closeDrawerButton.click();
-    await expect(this.tipsAndTricksDrawerTitle).not.toBeVisible();
   }
 
   async editAndSaveTransferNetwork(): Promise<void> {
@@ -41,24 +31,11 @@ export class OverviewPage {
     return this.transferNetworkDropdown.textContent();
   }
 
-  get keyTerminologyOption() {
-    return this.page.getByText('Key terminology', { exact: true }).first();
-  }
-
-  get migratingVMsOption() {
-    return this.page.getByText('Migrating your virtual machines', { exact: true }).first();
-  }
-
   get modalConfirmButton() {
     return this.page.getByTestId('modal-confirm-button');
   }
 
   async navigateDirectly() {
-    await this.navigation.navigateToOverview();
-    await this.waitForPageLoad();
-  }
-
-  async navigateFromMainMenu() {
     await this.navigation.navigateToOverview();
     await this.waitForPageLoad();
   }
@@ -118,21 +95,6 @@ export class OverviewPage {
     await this.transferNetworkOptions.first().click();
   }
 
-  async selectTopic(
-    topicName: 'migrating-vms' | 'migration-type' | 'troubleshooting' | 'terminology',
-  ) {
-    const topicMap = {
-      'migrating-vms': this.migratingVMsOption,
-      'migration-type': this.choosingMigrationTypeOption,
-      troubleshooting: this.troubleshootingOption,
-      terminology: this.keyTerminologyOption,
-    };
-
-    const topic = topicMap[topicName];
-    await expect(topic).toBeVisible();
-    await topic.click();
-  }
-
   get selectTopicButton() {
     return this.page.getByRole('button', { name: 'Select a topic' });
   }
@@ -142,11 +104,6 @@ export class OverviewPage {
     await expect(
       this.page.getByRole('heading', { name: topicConfig.name, level: 3 }),
     ).toBeVisible();
-  }
-
-  async selectTopicByName(topicName: string): Promise<void> {
-    await this.page.getByTestId('topic-card').filter({ hasText: topicName }).click();
-    await this.verifyTopicHeading(topicName);
   }
 
   async selectTransferNetworkNone(): Promise<void> {
@@ -221,10 +178,6 @@ export class OverviewPage {
     return this.page
       .locator('[data-testid^="controller-transfer-network-select-option-"]')
       .filter({ hasNotText: 'None' });
-  }
-
-  get troubleshootingOption() {
-    return this.page.getByText('Troubleshooting', { exact: true }).first();
   }
 
   async verifyPicklist(topics: TopicConfig[]): Promise<void> {
