@@ -17,20 +17,12 @@ export class OverviewPage {
     this.navigation = new NavigationHelper(page);
   }
 
-  async cancelSettingsEdit(): Promise<void> {
-    await this.modalCancelButton.click();
-  }
-
   get choosingMigrationTypeOption() {
     return this.page.getByText('Choosing the right migration type', { exact: true }).first();
   }
 
   get closeDrawerButton() {
     return this.page.getByRole('button', { name: 'Close drawer panel' });
-  }
-
-  async closeDropdownWithEscape(): Promise<void> {
-    await this.page.keyboard.press('Escape');
   }
 
   async closeTipsAndTricks() {
@@ -55,10 +47,6 @@ export class OverviewPage {
 
   get migratingVMsOption() {
     return this.page.getByText('Migrating your virtual machines', { exact: true }).first();
-  }
-
-  get modalCancelButton() {
-    return this.page.getByTestId('modal-cancel-button');
   }
 
   get modalConfirmButton() {
