@@ -77,6 +77,18 @@ export class ResourceManager {
     this.addResource(nad);
   }
 
+  addNetworkMap(name: string, namespace: string): void {
+    const networkMap: V1beta1NetworkMap = {
+      apiVersion: FORKLIFT_API_VERSION,
+      kind: RESOURCE_KINDS.NETWORK_MAP,
+      metadata: {
+        name,
+        namespace,
+      },
+    };
+    this.addResource(networkMap);
+  }
+
   addPlan(name: string, namespace: string): void {
     const plan: V1beta1Plan = {
       apiVersion: FORKLIFT_API_VERSION,
