@@ -13,6 +13,26 @@ import type {
 } from '@kubev2v/types';
 import { DEFAULT_NETWORK } from '@utils/constants';
 
+const getDestination = (
+  targetNetwork: NetworkMappingValue,
+): V1beta1NetworkMapSpecMapDestination => {
+  const isPodNetwork = targetNetwork.name === DEFAULT_NETWORK;
+  const isIgnoreNetwork = targetNetwork.name === IgnoreNetwork.Label;
+
+  if (isPodNetwork) {
+    return { type: POD };
+  }
+
+  if (isIgnoreNetwork) {
+    return { type: IgnoreNetwork.Type };
+  }
+
+  return {
+    name: targetNetwork.name,
+    namespace: targetNetwork.id,
+    type: MULTUS,
+  };
+};
 /**
  * Converts network mappings to network map specification mappings
  * Handles different provider types and network configurations
@@ -32,19 +52,7 @@ export const buildNetworkMappings = (
     }
 
     const isOpenShiftProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
-    const isPodNetwork = targetNetwork.name === DEFAULT_NETWORK;
-    const isIgnoreNetwork = targetNetwork.name === IgnoreNetwork.Label;
-    let destination: V1beta1NetworkMapSpecMapDestination = {
-      name: targetNetwork.name,
-      namespace: targetNetwork.id,
-      type: MULTUS,
-    };
-
-    if (isPodNetwork) {
-      destination = { type: POD };
-    } else if (isIgnoreNetwork) {
-      destination = { type: IgnoreNetwork.Type };
-    }
+    const destination = getDestination(targetNetwork);
 
     if (isOpenShiftProvider) {
       const isPodSourceNetwork = sourceNetwork.name === DEFAULT_NETWORK;
@@ -63,6 +71,7 @@ export const buildNetworkMappings = (
         destination,
         source: {
           id: sourceNetwork.id,
+          name: sourceNetwork.name,
         },
       };
       acc.push(baseMapping);
@@ -75,20 +84,12 @@ export const buildNetworkMappings = (
 const openShiftNetworkAttachmentDefinitionToName = (net: OpenShiftNetworkAttachmentDefinition) =>
   net?.namespace ? `${net?.namespace}/${net?.name}` : (net?.name ?? DEFAULT_NETWORK);
 
-const getSourceNetName = (
-  networks: InventoryNetwork[],
-  source: V1beta1NetworkMapSpecMapSource,
-  isOpenShiftProvider: boolean,
-) => {
+const getSourceNetName = (source: V1beta1NetworkMapSpecMapSource, isOpenShiftProvider: boolean) => {
   if (isOpenShiftProvider && source?.type === POD) {
     return DEFAULT_NETWORK;
   }
 
-  const net = networks.find(
-    (network) => network?.id === source?.id || network?.name === source?.name,
-  );
-
-  return net?.name ?? source?.name ?? source?.id ?? '';
+  return source?.name ?? source?.id ?? '';
 };
 
 const getDestinationNetName = (
@@ -111,7 +112,7 @@ const getDestinationNetName = (
   return DEFAULT_NETWORK;
 };
 
-export const buildFormNetworkMapping = (
+export const getNetworkMappingValues = (
   specMapping: V1beta1NetworkMapSpecMap[] | undefined,
   sourceProvider: V1beta1Provider | undefined,
   sourceNetworks: InventoryNetwork[] = [],
@@ -131,7 +132,7 @@ export const buildFormNetworkMapping = (
       id: isOpenShiftProvider
         ? (sourceNetworks.find((net) => net.name === sourceNet.name)?.id ?? '')
         : (sourceNet.id ?? ''),
-      name: getSourceNetName(sourceNetworks, sourceNet, isOpenShiftProvider),
+      name: getSourceNetName(sourceNet, isOpenShiftProvider),
     };
 
     const targetNetwork: NetworkMappingValue = {

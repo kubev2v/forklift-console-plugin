@@ -27,3 +27,7 @@ export const hasMultiplePodNetworkMappings = (
     return mappedNetworks.length >= 2;
   });
 };
+
+export const hasPodNetworkMappings = (networkMap: NetworkMapping[]) => {
+  return networkMap.some(({ targetNetwork }) => targetNetwork?.name === DefaultNetworkLabel.Source);
+};

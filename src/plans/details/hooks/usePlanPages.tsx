@@ -9,7 +9,6 @@ import PlanMappingsPage from '../tabs/Mappings/PlanMappingsPage';
 import PlanResourcesPage from '../tabs/Resources/PlanResourcesPage';
 import PlanVirtualMachinesPage from '../tabs/VirtualMachines/PlanVirtualMachinesPage';
 import PlanYAMLPage from '../tabs/YAML/PlanYAMLPage';
-
 const usePlanPages = (name: string, namespace: string) => {
   const { t } = useForkliftTranslation();
 
