@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { ItemIsOwnedAlert } from 'src/modules/Providers/modals/components/ItemIsOwnedAlert';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
@@ -12,6 +11,7 @@ import { getGroupVersionKindForModel, k8sDelete } from '@openshift-console/dynam
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Alert, ButtonVariant, Stack, StackItem } from '@patternfly/react-core';
 import { getName, getNamespace, getOwnerReference } from '@utils/crds/common/selectors';
+import { getResourceUrl } from '@utils/getResourceUrl';
 
 import type { PlanModalProps } from './types';
 

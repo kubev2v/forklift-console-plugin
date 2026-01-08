@@ -9,15 +9,19 @@ import type {
 } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
-  LearningExperienceContext: './onlineHelp/tipsAndTricksDrawer/hooks/learningExperienceContext',
-  OverviewContext: './overview/hooks/OverviewContext',
+  OverviewContext: './overview/context/OverviewContext',
   OverviewPage: './overview/OverviewPage',
-  UseLearningExperienceContext:
-    './onlineHelp/tipsAndTricksDrawer/hooks/useLearningExperienceContext',
   useOverviewContext: './overview/hooks/useOverviewContext',
 };
 
 export const extensions: EncodedExtension[] = [
+  {
+    properties: {
+      provider: { $codeRef: 'OverviewContext.OverviewContextProvider' },
+      useValueHook: { $codeRef: 'useOverviewContext.useOverviewContext' },
+    },
+    type: 'console.context-provider',
+  } as EncodedExtension<ContextProvider>,
   {
     flags: {
       required: ['CAN_LIST_NS'],
@@ -70,24 +74,4 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.navigation/href',
   } as EncodedExtension<HrefNavItem>,
-
-  {
-    properties: {
-      provider: { $codeRef: 'OverviewContext.CreateOverviewContextProvider' },
-      useValueHook: {
-        $codeRef: 'useOverviewContext.useOverviewContext',
-      },
-    },
-    type: 'console.context-provider',
-  } as EncodedExtension<ContextProvider>,
-
-  {
-    properties: {
-      provider: { $codeRef: 'LearningExperienceContext.createLearningExperienceContextProvider' },
-      useValueHook: {
-        $codeRef: 'UseLearningExperienceContext.useLearningExperienceContext',
-      },
-    },
-    type: 'console.context-provider',
-  } as EncodedExtension<ContextProvider>,
 ];

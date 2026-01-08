@@ -1,6 +1,7 @@
 import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 import { exposedModules as networkMapModules } from './src/networkMaps/dynamic-plugin';
+import { exposedModules as onlineHelpModules } from './src/onlineHelp/dynamic-plugin';
 import { exposedModules as overviewModules } from './src/overview/dynamic-plugin';
 import { exposedModules as planModules } from './src/plans/dynamic-plugin';
 import { exposedModules as providerModules } from './src/providers/dynamic-plugin';
@@ -15,6 +16,7 @@ const pluginMetadata: ConsolePluginBuildMetadata = {
     'Forklift is a suite of migration tools that facilitate the migration of VM workloads to KubeVirt.',
   displayName: 'OpenShift Console Plugin For Forklift',
   exposedModules: {
+    ...onlineHelpModules,
     ...overviewModules,
     ...providerModules,
     ...planModules,

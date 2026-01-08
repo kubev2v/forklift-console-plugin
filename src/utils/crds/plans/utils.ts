@@ -1,6 +1,6 @@
 import { PlanModelRef, type V1beta1Plan } from '@kubev2v/types';
+import { getResourceUrl } from '@utils/getResourceUrl';
 
-import { getResourceUrl } from '../../../modules/Providers/utils/helpers/getResourceUrl';
 import { getName, getNamespace } from '../common/selectors';
 
 export const getPlanURL = (plan: V1beta1Plan) =>

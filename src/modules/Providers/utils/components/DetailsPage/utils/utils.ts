@@ -1,8 +1,7 @@
 import type { K8sGroupVersionKind, K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { MODEL_KIND } from '@utils/constants';
+import { getResourceUrl } from '@utils/getResourceUrl';
 import { t } from '@utils/i18n';
-
-import { getResourceUrl } from '../../../helpers/getResourceUrl';
 
 const getBreadcrumbLabels = (kind: string, model: K8sModel) => {
   switch (kind) {

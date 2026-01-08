@@ -1,6 +1,5 @@
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
-
 import { PlanModelRef } from '@kubev2v/types';
+import { getResourceUrl } from '@utils/getResourceUrl';
 
 /**
  * Generates the resource URL path for a migration plan

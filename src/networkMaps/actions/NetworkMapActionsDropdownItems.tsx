@@ -1,13 +1,14 @@
+import { useNavigate } from 'react-router-dom-v5-compat';
 import {
   DeleteModal,
   type DeleteModalProps,
 } from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModel, NetworkMapModelRef } from '@kubev2v/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem } from '@patternfly/react-core';
+import { getResourceUrl } from '@utils/getResourceUrl';
 
 import type { NetworkMapData } from '../utils/types';
 
@@ -18,6 +19,7 @@ type NetworkMapActionsDropdownItemsProps = {
 export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
+  const navigate = useNavigate();
 
   const { obj: networkMap } = data;
 
@@ -32,7 +34,13 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
   };
 
   return [
-    <DropdownItem value={0} key="edit" to={networkMapURL}>
+    <DropdownItem
+      value={0}
+      key="edit"
+      onClick={() => {
+        navigate(networkMapURL);
+      }}
+    >
       {t('Edit network map')}
     </DropdownItem>,
 

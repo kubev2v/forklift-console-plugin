@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 
 import {
   Flex,
@@ -16,9 +17,15 @@ type PageHeaderProps = {
   title?: string;
   titleHelpContent?: ReactNode;
   actionButton?: JSX.Element;
+  shouldShowLearningExperienceButton?: boolean;
 };
 
-export const PageHeader = ({ actionButton, title, titleHelpContent }: PageHeaderProps) => {
+export const PageHeader = ({
+  actionButton,
+  shouldShowLearningExperienceButton = false,
+  title,
+  titleHelpContent,
+}: PageHeaderProps) => {
   if (!title) {
     return null;
   }
@@ -45,7 +52,19 @@ export const PageHeader = ({ actionButton, title, titleHelpContent }: PageHeader
             )}
           </Flex>
         </LevelItem>
-        {actionButton && <LevelItem>{actionButton}</LevelItem>}
+        <LevelItem>
+          <Flex
+            alignItems={{ default: 'alignItemsCenter' }}
+            spaceItems={{ default: 'spaceItemsMd' }}
+          >
+            {shouldShowLearningExperienceButton && (
+              <FlexItem>
+                <LearningExperienceButton />
+              </FlexItem>
+            )}
+            {actionButton && <FlexItem>{actionButton}</FlexItem>}
+          </Flex>
+        </LevelItem>
       </Level>
     </PageSection>
   );

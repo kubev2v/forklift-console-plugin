@@ -1,9 +1,16 @@
 import type { FC } from 'react';
+import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
+import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 
-import { PageSection, PageSectionTypes, Stack, Title } from '@patternfly/react-core';
+import {
+  PageSection,
+  PageSectionTypes,
+  Split,
+  SplitItem,
+  Stack,
+  Title,
+} from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
-
-import TipsAndTricksDrawer from '../../onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
 
 import CreateProviderForm from './CreateProviderForm';
 
@@ -11,12 +18,19 @@ const ProvidersCreateFormPage: FC = () => {
   const { t } = useForkliftTranslation();
 
   return (
-    <TipsAndTricksDrawer>
+    <LearningExperienceDrawer>
       <PageSection hasBodyWrapper={false}>
         <Stack hasGutter>
-          <Title headingLevel="h1" size="2xl">
-            {t('Create provider')}
-          </Title>
+          <Split>
+            <SplitItem isFilled>
+              <Title headingLevel="h1" size="2xl">
+                {t('Create provider')}
+              </Title>
+            </SplitItem>
+            <SplitItem>
+              <LearningExperienceButton />
+            </SplitItem>
+          </Split>
 
           <p className="pf-v6-u-text-color-subtle">
             {t(
@@ -34,7 +48,7 @@ const ProvidersCreateFormPage: FC = () => {
       >
         <CreateProviderForm />
       </PageSection>
-    </TipsAndTricksDrawer>
+    </LearningExperienceDrawer>
   );
 };
 

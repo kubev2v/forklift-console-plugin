@@ -3,6 +3,7 @@ import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetD
 import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
 import NetworkMapActionsDropdown from 'src/networkMaps/actions/NetworkMapActionsDropdown';
 import NetworkMapCriticalConditions from 'src/networkMaps/components/NetworkMapCriticalConditions';
+import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 
 import {
   NetworkMapModel,
@@ -10,7 +11,7 @@ import {
   type V1beta1NetworkMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { PageSection } from '@patternfly/react-core';
+import { Flex, FlexItem, PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
 export const NetworkMapPageHeadings: FC<{ name: string; namespace?: string }> = ({
@@ -51,7 +52,20 @@ export const NetworkMapPageHeadings: FC<{ name: string; namespace?: string }> = 
       model={{ ...NetworkMapModel, label: 'Network map' }}
       obj={obj}
       namespace={namespace}
-      actions={<NetworkMapActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />}
+      actions={
+        <Flex
+          direction={{ default: 'row' }}
+          alignItems={{ default: 'alignItemsCenter' }}
+          spaceItems={{ default: 'spaceItemsMd' }}
+        >
+          <FlexItem>
+            <LearningExperienceButton />
+          </FlexItem>
+          <FlexItem>
+            <NetworkMapActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />
+          </FlexItem>
+        </Flex>
+      }
     >
       {!isEmpty(alerts) && (
         <PageSection hasBodyWrapper={false} className="forklift-page-headings-alerts">

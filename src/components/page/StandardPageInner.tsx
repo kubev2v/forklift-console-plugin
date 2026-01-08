@@ -51,6 +51,7 @@ const StandardPageInner = <T,>({
   row = DefaultRow<T>,
   selectedIds,
   setActiveSort,
+  shouldShowLearningExperienceButton = false,
   showManageColumns = true,
   testId,
   title,
@@ -125,7 +126,12 @@ const StandardPageInner = <T,>({
 
   return (
     <span className={className} data-testid={testId}>
-      <PageHeader title={title} titleHelpContent={titleHelpContent} actionButton={addButton} />
+      <PageHeader
+        title={title}
+        titleHelpContent={titleHelpContent}
+        actionButton={addButton}
+        shouldShowLearningExperienceButton={shouldShowLearningExperienceButton}
+      />
 
       {alerts && <PageSection hasBodyWrapper={false}>{alerts}</PageSection>}
 

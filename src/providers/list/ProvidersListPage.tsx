@@ -1,5 +1,5 @@
 import { type FC, useMemo } from 'react';
-import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
+import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 
 import { ProviderModel, ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
@@ -19,7 +19,6 @@ import useProvidersInventoryList from './hooks/useProvidersInventoryList';
 import { providerFields } from './utils/providerFields';
 
 import './ProvidersListPage.style.css';
-
 const ProvidersListPage: FC<{
   namespace: string;
 }> = ({ namespace }) => {
@@ -56,7 +55,7 @@ const ProvidersListPage: FC<{
   );
 
   return (
-    <TipsAndTricksDrawer>
+    <LearningExperienceDrawer>
       <StandardPage<ProviderData>
         data-testid="providers-list"
         addButton={
@@ -83,8 +82,9 @@ const ProvidersListPage: FC<{
         customNoResultsFound={
           <ProvidersEmptyState namespace={namespace} canCreate={permissions.canCreate} />
         }
+        shouldShowLearningExperienceButton
       />
-    </TipsAndTricksDrawer>
+    </LearningExperienceDrawer>
   );
 };
 

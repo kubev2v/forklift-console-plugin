@@ -3,16 +3,16 @@ import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetD
 import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
 import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 import ProviderActionsDropdown from 'src/providers/actions/ProviderActionsDropdown';
 
 import { type ProviderInventory, ProviderModel } from '@kubev2v/types';
-import { Split, SplitItem } from '@patternfly/react-core';
+import { Flex, FlexItem } from '@patternfly/react-core';
 
 import CreatePlanAction from './components/CreatePlanAction';
 import ProviderPageHeaderAlerts from './components/ProviderPageHeaderAlerts';
 import { useProvider } from './hooks/useProvider';
 import type { ProviderDetailsPageProps } from './utils/types';
-
 const ProviderPageHeader: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const { provider } = useProvider(name, namespace);
   const {
@@ -32,15 +32,21 @@ const ProviderPageHeader: FC<ProviderDetailsPageProps> = ({ name, namespace }) =
       namespace={namespace}
       testId="resource-details-title"
       actions={
-        <Split hasGutter>
-          <SplitItem>
+        <Flex
+          direction={{ default: 'row' }}
+          alignItems={{ default: 'alignItemsCenter' }}
+          spaceItems={{ default: 'spaceItemsSm' }}
+        >
+          <FlexItem>
+            <LearningExperienceButton />
+          </FlexItem>
+          <FlexItem>
             <CreatePlanAction namespace={namespace} provider={provider} />
-          </SplitItem>
-
-          <SplitItem>
+          </FlexItem>
+          <FlexItem>
             <ProviderActionsDropdown data={data} />
-          </SplitItem>
-        </Split>
+          </FlexItem>
+        </Flex>
       }
     >
       <ProviderPageHeaderAlerts

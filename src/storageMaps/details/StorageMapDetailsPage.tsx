@@ -1,5 +1,5 @@
 import { type FC, memo } from 'react';
-import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
+import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { HorizontalNav, type K8sModel } from '@openshift-console/dynamic-plugin-sdk';
@@ -34,10 +34,10 @@ const StorageMapDetailsPage: FC<StorageMapDetailsPageProps> = memo(({ name, name
     },
   ];
   return (
-    <TipsAndTricksDrawer>
+    <LearningExperienceDrawer>
       <StorageMapPageHeadings name={name} namespace={namespace} />
       <HorizontalNav pages={pages} />
-    </TipsAndTricksDrawer>
+    </LearningExperienceDrawer>
   );
 });
 

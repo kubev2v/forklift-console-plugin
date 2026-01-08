@@ -1,10 +1,11 @@
 import type { FC } from 'react';
 import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
+import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 import PlanActionsDropdown from 'src/plans/actions/PlanActionsDropdown';
 import PlanEditCutoverButton from 'src/plans/actions/PlanEditCutoverButton';
 
 import { PlanModel } from '@kubev2v/types';
-import { ButtonVariant, Level, LevelItem } from '@patternfly/react-core';
+import { ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';
 
 import { usePlan } from '../../hooks/usePlan';
 import PlanStatusLabel from '../PlanStatus/PlanStatusLabel';
@@ -28,14 +29,21 @@ const PlanPageHeader: FC<PlanPageHeaderProps> = ({ name, namespace, setShowPlanC
       testId="resource-details-title"
       status={<PlanStatusLabel plan={plan} />}
       actions={
-        <Level hasGutter>
-          <LevelItem>
+        <Flex
+          direction={{ default: 'row' }}
+          alignItems={{ default: 'alignItemsCenter' }}
+          spaceItems={{ default: 'spaceItemsSm' }}
+        >
+          <FlexItem>
+            <LearningExperienceButton />
+          </FlexItem>
+          <FlexItem>
             <PlanEditCutoverButton plan={plan} variant={ButtonVariant.primary} />
-          </LevelItem>
-          <LevelItem>
+          </FlexItem>
+          <FlexItem>
             <PlanActionsDropdown plan={plan} />
-          </LevelItem>
-        </Level>
+          </FlexItem>
+        </Flex>
       }
     >
       <PlanAlerts plan={plan} setIsDrawerOpen={setShowPlanConcernsPanel} />

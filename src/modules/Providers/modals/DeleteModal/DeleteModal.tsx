@@ -20,9 +20,9 @@ import {
   Stack,
   StackItem,
 } from '@patternfly/react-core';
+import { getResourceUrl } from '@utils/getResourceUrl';
 
 import useToggle from '../../hooks/useToggle';
-import { getResourceUrl } from '../../utils/helpers/getResourceUrl';
 import { AlertMessageForModals } from '../components/AlertMessageForModals';
 import { ItemIsOwnedAlert } from '../components/ItemIsOwnedAlert';
 

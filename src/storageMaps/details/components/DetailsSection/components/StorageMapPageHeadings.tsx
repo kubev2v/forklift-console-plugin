@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
+import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 import { StorageMapActionsDropdown } from 'src/storageMaps/actions/StorageMapActionsDropdown';
 import StorageMapCriticalConditions from 'src/storageMaps/components/StorageMapCriticalConditions';
 
@@ -10,7 +11,7 @@ import {
   type V1beta1StorageMap,
 } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { PageSection } from '@patternfly/react-core';
+import { Flex, FlexItem, PageSection } from '@patternfly/react-core';
 import { CATEGORY_TYPES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
@@ -53,7 +54,20 @@ export const StorageMapPageHeadings: FC<{ name: string; namespace?: string }> = 
         model={StorageMapModel}
         obj={obj}
         namespace={namespace}
-        actions={<StorageMapActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />}
+        actions={
+          <Flex
+            direction={{ default: 'row' }}
+            alignItems={{ default: 'alignItemsCenter' }}
+            spaceItems={{ default: 'spaceItemsSm' }}
+          >
+            <FlexItem>
+              <LearningExperienceButton />
+            </FlexItem>
+            <FlexItem>
+              <StorageMapActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />
+            </FlexItem>
+          </Flex>
+        }
       >
         {!isEmpty(alerts) && (
           <PageSection hasBodyWrapper={false} className="forklift-page-headings-alerts">

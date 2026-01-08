@@ -68,10 +68,13 @@ export enum TipsTopicSourceComponent {
 }
 
 export enum TipsTopic {
+  CreateNetworkMap = 'createNetworkMap',
+  CreateStorageMap = 'createStorageMap',
+  CreateProvider = 'createProvider',
   MigratingVMs = 'migratingVirtualMachines',
   MigrationTypes = 'choosingMigrationType',
+  MigrationOptimization = 'migrationOptimization',
   Troubleshooting = 'troubleshooting',
-  KeyTerminology = 'terminology',
 }
 
 // Add new events here following the pattern:

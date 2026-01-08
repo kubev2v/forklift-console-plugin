@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { useHistory } from 'react-router';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { TELEMETRY_EVENTS } from 'src/utils/analytics/constants';
 import { useForkliftAnalytics } from 'src/utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -9,6 +8,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModel, PlanModelRef, type V1beta1Provider } from '@kubev2v/types';
 import { Button, ButtonVariant, ToolbarItem } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
+import { getResourceUrl } from '@utils/getResourceUrl';
 
 type CreatePlanActionProps = {
   namespace: string | undefined;

@@ -1,10 +1,10 @@
 import type { FC } from 'react';
 import { TableLabelCell } from 'src/modules/Providers/utils/components/TableCell/TableLabelCell';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { getProviderTypeIcon } from 'src/plans/details/utils/constants';
 
 import ProviderIconLink from '@components/ProviderIconLink';
 import { ProviderModelGroupVersionKind } from '@kubev2v/types';
+import { getResourceUrl } from '@utils/getResourceUrl';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useForkliftTranslation } from '@utils/i18n';
 import { isProviderLocalOpenshift } from '@utils/resources';

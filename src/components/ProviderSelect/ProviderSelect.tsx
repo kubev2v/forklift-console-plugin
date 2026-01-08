@@ -1,5 +1,4 @@
 import { type ComponentProps, type ForwardedRef, forwardRef, type ReactNode, useMemo } from 'react';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { getProviderTypeIcon } from 'src/plans/details/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
@@ -21,6 +20,7 @@ import {
 import { ProviderCreateSource, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getName } from '@utils/crds/common/selectors';
+import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { ForkliftTrans } from '@utils/i18n';
