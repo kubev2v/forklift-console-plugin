@@ -97,9 +97,3 @@ export const validateNoSpaces = (value: string) => {
   // any string without spaces
   return /^[^\s]+$/u.test(value);
 };
-
-export const validateUsernameAndDomain = (value: string) => {
-  // Must contain exactly one @, and no whitespace
-  // example: user@domain valid, user@ domain OR user@@domain invalid
-  return /^[^\s@]+@[^\s@]+$/u.test(value);
-};

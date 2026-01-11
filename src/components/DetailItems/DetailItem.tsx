@@ -107,7 +107,7 @@ const DescriptionTitle: FC<{ title: string }> = ({ title }) => (
  *
  * @component
  */
-export const DisplayTitle: FC<{
+const DisplayTitle: FC<{
   title: string;
   helpContent?: ReactNode;
   showHelpIconNextToTitle?: boolean;
