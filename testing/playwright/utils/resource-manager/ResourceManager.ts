@@ -21,11 +21,11 @@ import {
   RESOURCE_KINDS,
 } from './constants';
 import { ResourceCleaner } from './ResourceCleaner';
-import type { V1NetworkAttachmentDefinition } from './ResourceCreator';
 import { ResourceFetcher } from './ResourceFetcher';
 import { ResourcePatcher } from './ResourcePatcher';
 
-export type { V1NetworkAttachmentDefinition };
+export type { V1NetworkAttachmentDefinition } from './ResourceCreator';
+import type { V1NetworkAttachmentDefinition } from './ResourceCreator';
 
 export type OpenshiftProject = IoK8sApiCoreV1Namespace & {
   kind: typeof OPENSHIFT_PROJECT_KIND;
