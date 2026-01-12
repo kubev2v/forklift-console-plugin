@@ -71,11 +71,12 @@ export class StorageMapStep {
 
     for (let i = 0; i < rowCount; i += 1) {
       const row = rows.nth(i);
-      const text = await row.textContent();
+      const sourceCell = row.locator('td').first();
+      const text = await sourceCell.textContent();
       if (text) {
         availableStorages.push(text.trim());
       }
-      if (text?.includes(sourceStorage)) {
+      if (text?.trim() === sourceStorage) {
         targetRow = row;
         break;
       }

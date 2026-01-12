@@ -4,10 +4,10 @@ import { join } from 'node:path';
 
 import { expect, type Page } from '@playwright/test';
 
-import type { ConfigurableResourceFixtures } from '../../fixtures/resourceFixtures';
-import { isolatedCustomPlanFixtures as test } from '../../fixtures/resourceFixtures';
-import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
-import { NfsCleanupManager } from '../../utils/nfs-cleanup/NfsCleanupManager';
+import type { ConfigurableResourceFixtures } from '../../../fixtures/resourceFixtures';
+import { isolatedCustomPlanFixtures as test } from '../../../fixtures/resourceFixtures';
+import { ProviderDetailsPage } from '../../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
+import { NfsCleanupManager } from '../../../utils/nfs-cleanup/NfsCleanupManager';
 
 test.describe('OVA Provider Upload Tests', { tag: '@downstream' }, () => {
   const nfsCleanupManager = new NfsCleanupManager();
@@ -42,7 +42,7 @@ test.describe('OVA Provider Upload Tests', { tag: '@downstream' }, () => {
     const ORIGINAL_VM_NAME = '2nd-disk-vm';
 
     // Paths for original and modified OVA
-    const testAssetsDir = join(__dirname, '../../test-assets/ova-files');
+    const testAssetsDir = join(__dirname, '../../../test-assets/ova-files');
     const originalOvaPath = join(testAssetsDir, `${baseOvaFileName}.ova`);
     const uniqueOvaPath = join(testAssetsDir, uniqueOvaFileName);
 
