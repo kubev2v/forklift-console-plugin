@@ -13,7 +13,12 @@ import {
   NAD_API_VERSION,
   RESOURCE_KINDS,
 } from '../../utils/resource-manager/constants';
-import type { V1NetworkAttachmentDefinition } from '../../utils/resource-manager/ResourceCreator';
+import {
+  createNad as createNadApi,
+  createProvider as createProviderApi,
+  createSecret as createSecretApi,
+  type V1NetworkAttachmentDefinition,
+} from '../../utils/resource-manager/ResourceCreator';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
 export const createSecretObject = (
@@ -91,10 +96,11 @@ const createOvaProviderViaApi = async (
   const secretName = `${providerData.name}-secret`;
   const secret = createSecretObject(secretName, MTV_NAMESPACE, { url: providerData.hostname });
 
-  const createdSecret = await resourceManager.createSecret(page, secret);
+  const createdSecret = await createSecretApi(page, secret, MTV_NAMESPACE);
   if (!createdSecret) {
     throw new Error(`Failed to create secret for OVA provider ${providerData.name}`);
   }
+  resourceManager.addSecret(secretName, MTV_NAMESPACE);
 
   const provider = createProviderObject(providerData.name, MTV_NAMESPACE, {
     type: ProviderType.OVA,
@@ -103,11 +109,10 @@ const createOvaProviderViaApi = async (
     settings: { applianceManagement: 'true' },
   });
 
-  const createdProvider = await resourceManager.createProvider(page, provider);
+  const createdProvider = await createProviderApi(page, provider, MTV_NAMESPACE);
   if (!createdProvider) {
     throw new Error(`Failed to create OVA provider ${providerData.name}`);
   }
-
   resourceManager.addProvider(providerData.name, MTV_NAMESPACE);
 };
 
@@ -251,11 +256,10 @@ export const createTestNad = async (
     spec: { config: JSON.stringify(nadConfig) },
   };
 
-  const createdNad = await resourceManager.createNad(page, nad, namespace);
+  const createdNad = await createNadApi(page, nad, namespace);
   if (!createdNad) {
     throw new Error(`Failed to create NAD ${nadName}`);
   }
-
   resourceManager.addNad(nadName, namespace);
 
   return {

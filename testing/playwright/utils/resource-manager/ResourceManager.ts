@@ -21,29 +21,15 @@ import {
   RESOURCE_KINDS,
 } from './constants';
 import { ResourceCleaner } from './ResourceCleaner';
-import { createNad, createProvider, createSecret } from './ResourceCreator';
+import type { V1NetworkAttachmentDefinition } from './ResourceCreator';
 import { ResourceFetcher } from './ResourceFetcher';
 import { ResourcePatcher } from './ResourcePatcher';
+
+export type { V1NetworkAttachmentDefinition };
 
 export type OpenshiftProject = IoK8sApiCoreV1Namespace & {
   kind: typeof OPENSHIFT_PROJECT_KIND;
   apiVersion: typeof OPENSHIFT_PROJECT_API_VERSION;
-};
-
-/**
- * NetworkAttachmentDefinition type for CNI network configuration
- */
-export type V1NetworkAttachmentDefinition = {
-  apiVersion: 'k8s.cni.cncf.io/v1';
-  kind: 'NetworkAttachmentDefinition';
-  metadata: {
-    name: string;
-    namespace: string;
-    annotations?: Record<string, string>;
-  };
-  spec: {
-    config: string;
-  };
 };
 
 export type SupportedResource =
@@ -54,6 +40,7 @@ export type SupportedResource =
   | V1VirtualMachine
   | V1NetworkAttachmentDefinition
   | IoK8sApiCoreV1Namespace
+  | IoK8sApiCoreV1Secret
   | OpenshiftProject;
 
 /**
@@ -137,6 +124,18 @@ export class ResourceManager {
     this.resources.push(resource);
   }
 
+  addSecret(name: string, namespace: string): void {
+    const secret: IoK8sApiCoreV1Secret = {
+      apiVersion: 'v1',
+      kind: 'Secret',
+      metadata: {
+        name,
+        namespace,
+      },
+    };
+    this.addResource(secret);
+  }
+
   addVm(name: string, namespace: string): void {
     const vm: V1VirtualMachine = {
       apiVersion: KUBEVIRT_API_VERSION,
@@ -155,30 +154,6 @@ export class ResourceManager {
   async cleanupAll(page: Page): Promise<void> {
     await ResourceCleaner.cleanupAll(page, this.resources);
     this.resources = [];
-  }
-
-  async createNad(
-    page: Page,
-    nad: V1NetworkAttachmentDefinition,
-    namespace: string,
-  ): Promise<V1NetworkAttachmentDefinition | null> {
-    return createNad(page, nad as Parameters<typeof createNad>[1], namespace);
-  }
-
-  async createProvider(
-    page: Page,
-    provider: V1beta1Provider,
-    namespace = MTV_NAMESPACE,
-  ): Promise<V1beta1Provider | null> {
-    return createProvider(page, provider, namespace);
-  }
-
-  async createSecret(
-    page: Page,
-    secret: IoK8sApiCoreV1Secret,
-    namespace = MTV_NAMESPACE,
-  ): Promise<IoK8sApiCoreV1Secret | null> {
-    return createSecret(page, secret, namespace);
   }
 
   async fetchProvider(
