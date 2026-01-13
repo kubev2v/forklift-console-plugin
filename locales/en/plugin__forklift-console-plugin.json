@@ -589,6 +589,7 @@
   "Migration type": "Migration type",
   "Migration type is required.": "Migration type is required.",
   "Migration types (cold vs warm vs)": "Migration types (cold vs warm vs)",
+  "Migration was recently started for this plan. Please wait.": "Migration was recently started for this plan. Please wait.",
   "Missing fields in {{kind}} labels": "Missing fields in {{kind}} labels",
   "Missing fields in node fields": "Missing fields in node fields",
   "Moderate CPU limit": "Moderate CPU limit",

@@ -31,14 +31,14 @@ const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...re
   const [isDateValid, setIsDateValid] = useState<boolean>(true);
   const [isTimeValid, setIsTimeValid] = useState<boolean>(true);
 
-  const [lastMigration] = usePlanMigration(plan);
+  const [activeMigration] = usePlanMigration(plan);
 
   useEffect(() => {
-    const migrationCutoverDate = lastMigration?.spec?.cutover ?? new Date().toISOString();
+    const migrationCutoverDate = activeMigration?.spec?.cutover ?? new Date().toISOString();
 
     setCutoverDate(migrationCutoverDate);
     setTime(formatDateTo12Hours(new Date(migrationCutoverDate)));
-  }, [lastMigration]);
+  }, [activeMigration]);
 
   const onDateChange: (event: FormEvent<HTMLInputElement>, value: string, date?: Date) => void = (
     _event,
@@ -82,19 +82,21 @@ const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...re
     setCutoverDate(updatedFromDate.toISOString());
   };
 
-  const onCutover = useCallback(
-    async () => patchMigrationCutover(lastMigration, cutoverDate, trackEvent),
-    [cutoverDate, lastMigration, trackEvent],
-  );
+  const onCutover = useCallback(async () => {
+    if (activeMigration) {
+      await patchMigrationCutover(activeMigration, cutoverDate, trackEvent);
+    }
+  }, [cutoverDate, activeMigration, trackEvent]);
 
-  const onDeleteCutover = useCallback(
-    async () => patchMigrationCutover(lastMigration, undefined, trackEvent),
-    [lastMigration, trackEvent],
-  );
+  const onDeleteCutover = useCallback(async () => {
+    if (activeMigration) {
+      await patchMigrationCutover(activeMigration, undefined, trackEvent);
+    }
+  }, [activeMigration, trackEvent]);
 
   return (
     <ModalForm
-      title={lastMigration?.spec?.cutover ? t('Edit cutover') : t('Schedule cutover')}
+      title={activeMigration?.spec?.cutover ? t('Edit cutover') : t('Schedule cutover')}
       onConfirm={onCutover}
       confirmLabel={t('Set cutover')}
       additionalAction={{
