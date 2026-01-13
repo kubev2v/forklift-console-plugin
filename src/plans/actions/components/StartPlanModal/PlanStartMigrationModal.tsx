@@ -3,6 +3,7 @@ import { canPlanStart } from 'src/plans/details/components/PlanStatus/utils/util
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -26,13 +27,15 @@ const PlanStartMigrationModal: ModalComponent<PlanStartMigrationModalProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
+  const { sourceProvider } = usePlanSourceProvider(plan);
+  const [activeMigration] = usePlanMigration(plan);
 
+  const isMigrationStarted = activeMigration?.status?.started;
   const name = getName(plan);
   const migrationType = getPlanMigrationType(plan);
-  const { sourceProvider } = usePlanSourceProvider(plan);
 
   const onStart = useCallback(async () => {
-    return startPlanMigration(plan, trackEvent, sourceProvider?.spec?.type);
+    await startPlanMigration(plan, trackEvent, sourceProvider?.spec?.type);
   }, [plan, trackEvent, sourceProvider?.spec?.type]);
 
   const migrationMessage = migrationModalMessage(migrationType);
@@ -44,7 +47,7 @@ const PlanStartMigrationModal: ModalComponent<PlanStartMigrationModalProps> = ({
       title={t('{{title}} migration', { title })}
       onConfirm={onStart}
       confirmLabel={t('{{title}}', { title })}
-      isDisabled={!canPlanStart(plan)}
+      isDisabled={!canPlanStart(plan) || Boolean(isMigrationStarted)}
       {...rest}
     >
       <Stack hasGutter>
