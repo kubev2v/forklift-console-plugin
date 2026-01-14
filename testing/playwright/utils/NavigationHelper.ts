@@ -75,6 +75,14 @@ export class NavigationHelper {
     await disableGuidedTour(this.page);
   }
 
+  async navigateToOverviewSettings(): Promise<void> {
+    await disableGuidedTour(this.page);
+    await this.page.goto('/mtv/overview/settings');
+    await this.page.waitForLoadState('networkidle');
+
+    await disableGuidedTour(this.page);
+  }
+
   async navigateToPlans(): Promise<void> {
     await this.navigateToMigrationMenu();
     await this.page.getByTestId('plans-nav-item').click();

@@ -53,6 +53,7 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
         }}
         className="pf-v6-u-mb-md"
         headingLevel="h3"
+        data-testid="settings-edit-button"
       />
       <DescriptionList>
         <DetailsItem
@@ -107,6 +108,7 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
           helpContent={<SnapshotPoolingIntervalHelpContent />}
         />
         <DetailsItem
+          testId="settings-controller-transfer-network"
           content={
             spec?.[SettingsFields.ControllerTransferNetwork] ??
             defaultValuesMap[SettingsFields.ControllerTransferNetwork]

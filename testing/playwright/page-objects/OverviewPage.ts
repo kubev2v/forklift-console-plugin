@@ -17,26 +17,22 @@ export class OverviewPage {
     this.navigation = new NavigationHelper(page);
   }
 
-  get choosingMigrationTypeOption() {
-    return this.page.getByText('Choosing the right migration type', { exact: true }).first();
-  }
-
   get closeDrawerButton() {
     return this.page.getByRole('button', { name: 'Close drawer panel' });
   }
 
-  async closeTipsAndTricks() {
-    await expect(this.closeDrawerButton).toBeVisible();
-    await this.closeDrawerButton.click();
-    await expect(this.tipsAndTricksDrawerTitle).not.toBeVisible();
+  async editAndSaveTransferNetwork(): Promise<void> {
+    await this.openSettingsEditModal();
+    await this.toggleTransferNetworkValue();
+    await this.saveSettings();
   }
 
-  get keyTerminologyOption() {
-    return this.page.getByText('Key terminology', { exact: true }).first();
+  async getTransferNetworkCurrentValue(): Promise<string | null> {
+    return this.transferNetworkDropdown.textContent();
   }
 
-  get migratingVMsOption() {
-    return this.page.getByText('Migrating your virtual machines', { exact: true }).first();
+  get modalConfirmButton() {
+    return this.page.getByTestId('modal-confirm-button');
   }
 
   async navigateDirectly() {
@@ -44,14 +40,19 @@ export class OverviewPage {
     await this.waitForPageLoad();
   }
 
-  async navigateFromMainMenu() {
-    await this.navigation.navigateToOverview();
-    await this.waitForPageLoad();
-  }
-
   async navigateToNextTopic(currentTopicName: string, nextTopicName: string): Promise<void> {
     await this.selectTopicButton.click();
     await this.page.getByRole('option', { name: nextTopicName }).click();
+  }
+
+  async navigateToSettings() {
+    await this.navigation.navigateToOverviewSettings();
+    await this.waitForSettingsPageLoad();
+  }
+
+  async openSettingsEditModal(): Promise<void> {
+    await this.settingsEditButton.click();
+    await expect(this.settingsEditModal).toBeVisible();
   }
 
   async openTipsAndTricks() {
@@ -77,23 +78,21 @@ export class OverviewPage {
     };
   }
 
+  async openTransferNetworkDropdown(): Promise<void> {
+    await this.transferNetworkDropdown.click();
+  }
+
   get pageTitle() {
     return this.page.getByRole('heading', { name: 'Migration Toolkit for Virtualization' });
   }
 
-  async selectTopic(
-    topicName: 'migrating-vms' | 'migration-type' | 'troubleshooting' | 'terminology',
-  ) {
-    const topicMap = {
-      'migrating-vms': this.migratingVMsOption,
-      'migration-type': this.choosingMigrationTypeOption,
-      troubleshooting: this.troubleshootingOption,
-      terminology: this.keyTerminologyOption,
-    };
+  async saveSettings(): Promise<void> {
+    await this.modalConfirmButton.click();
+    await expect(this.settingsEditModal).not.toBeVisible({ timeout: 10000 });
+  }
 
-    const topic = topicMap[topicName];
-    await expect(topic).toBeVisible();
-    await topic.click();
+  async selectFirstAvailableNetwork(): Promise<void> {
+    await this.transferNetworkOptions.first().click();
   }
 
   get selectTopicButton() {
@@ -107,9 +106,20 @@ export class OverviewPage {
     ).toBeVisible();
   }
 
-  async selectTopicByName(topicName: string): Promise<void> {
-    await this.page.getByTestId('topic-card').filter({ hasText: topicName }).click();
-    await this.verifyTopicHeading(topicName);
+  async selectTransferNetworkNone(): Promise<void> {
+    await this.transferNetworkNoneOption.click();
+  }
+
+  get settingsEditButton() {
+    return this.page.getByTestId('settings-edit-button');
+  }
+
+  get settingsEditModal() {
+    return this.page.getByTestId('settings-edit-modal');
+  }
+
+  get settingsTab() {
+    return this.page.getByRole('tab', { name: 'Settings', selected: true });
   }
 
   async testAccordionsStructure(minimumCount: number): Promise<void> {
@@ -126,8 +136,6 @@ export class OverviewPage {
 
       await toggleButton.scrollIntoViewIfNeeded();
       await expect(toggleButton).toBeVisible();
-
-      // Expand then collapse (mimicking old behavior without state assertions)
       await toggleButton.click();
       await toggleButton.click();
     }
@@ -141,8 +149,35 @@ export class OverviewPage {
     return this.page.getByRole('heading', { name: 'Tips and tricks', level: 2 });
   }
 
-  get troubleshootingOption() {
-    return this.page.getByText('Troubleshooting', { exact: true }).first();
+  async toggleTransferNetworkValue(): Promise<void> {
+    const currentValue = await this.getTransferNetworkCurrentValue();
+    await this.openTransferNetworkDropdown();
+
+    const hasNetworkSelected = currentValue?.includes('/');
+
+    if (hasNetworkSelected) {
+      await this.selectTransferNetworkNone();
+    } else {
+      await this.selectFirstAvailableNetwork();
+    }
+  }
+
+  get transferNetworkDropdown() {
+    return this.page.getByTestId('controller-transfer-network-select');
+  }
+
+  get transferNetworkField() {
+    return this.page.getByTestId('settings-controller-transfer-network');
+  }
+
+  get transferNetworkNoneOption() {
+    return this.page.getByTestId('controller-transfer-network-select-option-none');
+  }
+
+  get transferNetworkOptions() {
+    return this.page
+      .locator('[data-testid^="controller-transfer-network-select-option-"]')
+      .filter({ hasNotText: 'None' });
   }
 
   async verifyPicklist(topics: TopicConfig[]): Promise<void> {
@@ -166,7 +201,15 @@ export class OverviewPage {
     await expect(this.page.getByRole('heading', { name: topicName, level: 3 })).toBeVisible();
   }
 
+  async verifyTransferNetworkFieldVisible(): Promise<void> {
+    await expect(this.transferNetworkField).toBeVisible();
+  }
+
   async waitForPageLoad() {
     await expect(this.pageTitle).toBeVisible({ timeout: 30000 });
+  }
+
+  async waitForSettingsPageLoad() {
+    await expect(this.settingsTab).toBeVisible({ timeout: 30000 });
   }
 }

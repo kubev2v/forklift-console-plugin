@@ -87,12 +87,12 @@ export const createPlanTestData = (
       isPreexisting: false,
       mappings: [
         {
-          source: 'mtv-nfs-rhos-v8',
+          source: 'mtv-nfs-us-v8',
           target: 'ocs-storagecluster-ceph-rbd-virtualization',
         },
       ],
     },
-    virtualMachines: [{ sourceName: 'mtv-func-rhel9', folder: 'vm' }],
+    virtualMachines: [{ sourceName: 'mtv-tests-rhel8', folder: 'vm' }],
   };
 
   return {

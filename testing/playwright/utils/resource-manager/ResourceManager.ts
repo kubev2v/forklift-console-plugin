@@ -13,6 +13,7 @@ import {
   FORKLIFT_API_VERSION,
   KUBEVIRT_API_VERSION,
   MTV_NAMESPACE,
+  NAD_API_VERSION,
   NAMESPACE_API_VERSION,
   NAMESPACE_KIND,
   OPENSHIFT_PROJECT_API_VERSION,
@@ -20,9 +21,11 @@ import {
   RESOURCE_KINDS,
 } from './constants';
 import { ResourceCleaner } from './ResourceCleaner';
-import { createProvider, createSecret } from './ResourceCreator';
 import { ResourceFetcher } from './ResourceFetcher';
 import { ResourcePatcher } from './ResourcePatcher';
+
+export type { V1NetworkAttachmentDefinition } from './ResourceCreator';
+import type { V1NetworkAttachmentDefinition } from './ResourceCreator';
 
 export type OpenshiftProject = IoK8sApiCoreV1Namespace & {
   kind: typeof OPENSHIFT_PROJECT_KIND;
@@ -35,7 +38,9 @@ export type SupportedResource =
   | V1beta1Plan
   | V1beta1Provider
   | V1VirtualMachine
+  | V1NetworkAttachmentDefinition
   | IoK8sApiCoreV1Namespace
+  | IoK8sApiCoreV1Secret
   | OpenshiftProject;
 
 /**
@@ -43,6 +48,21 @@ export type SupportedResource =
  */
 export class ResourceManager {
   private resources: SupportedResource[] = [];
+
+  addNad(name: string, namespace: string): void {
+    const nad: V1NetworkAttachmentDefinition = {
+      apiVersion: NAD_API_VERSION,
+      kind: RESOURCE_KINDS.NETWORK_ATTACHMENT_DEFINITION,
+      metadata: {
+        name,
+        namespace,
+      },
+      spec: {
+        config: '',
+      },
+    };
+    this.addResource(nad);
+  }
 
   addNetworkMap(name: string, namespace: string): void {
     const networkMap: V1beta1NetworkMap = {
@@ -104,6 +124,18 @@ export class ResourceManager {
     this.resources.push(resource);
   }
 
+  addSecret(name: string, namespace: string): void {
+    const secret: IoK8sApiCoreV1Secret = {
+      apiVersion: 'v1',
+      kind: 'Secret',
+      metadata: {
+        name,
+        namespace,
+      },
+    };
+    this.addResource(secret);
+  }
+
   addVm(name: string, namespace: string): void {
     const vm: V1VirtualMachine = {
       apiVersion: KUBEVIRT_API_VERSION,
@@ -122,22 +154,6 @@ export class ResourceManager {
   async cleanupAll(page: Page): Promise<void> {
     await ResourceCleaner.cleanupAll(page, this.resources);
     this.resources = [];
-  }
-
-  async createProvider(
-    page: Page,
-    provider: V1beta1Provider,
-    namespace = MTV_NAMESPACE,
-  ): Promise<V1beta1Provider | null> {
-    return createProvider(page, provider, namespace);
-  }
-
-  async createSecret(
-    page: Page,
-    secret: IoK8sApiCoreV1Secret,
-    namespace = MTV_NAMESPACE,
-  ): Promise<IoK8sApiCoreV1Secret | null> {
-    return createSecret(page, secret, namespace);
   }
 
   async fetchProvider(
