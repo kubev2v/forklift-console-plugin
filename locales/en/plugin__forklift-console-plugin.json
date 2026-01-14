@@ -958,6 +958,7 @@
   "Support": "Support",
   "Switch those VMs to cold migration or enable CBT in VMware before running the plan; otherwise the migration will fail.": "Switch those VMs to cold migration or enable CBT in VMware before running the plan; otherwise the migration will fail.",
   "Target and source": "Target and source",
+  "Target name": "Target name",
   "Target network": "Target network",
   "Target network is required for mapping {{index}}.": "Target network is required for mapping {{index}}.",
   "Target power state": "Target power state",
