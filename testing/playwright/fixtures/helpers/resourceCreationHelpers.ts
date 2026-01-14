@@ -72,13 +72,6 @@ export type TestPlan = V1beta1Plan & {
   testData: ReturnType<typeof createPlanTestData>;
 };
 
-export type TestNad = V1NetworkAttachmentDefinition & {
-  metadata: {
-    name: string;
-    namespace: string;
-  };
-};
-
 export interface CreateProviderOptions {
   providerKey?: string;
   namePrefix?: string;
@@ -234,7 +227,7 @@ export const createTestNad = async (
     namespace: string;
     bridgeName?: string;
   },
-): Promise<TestNad> => {
+): Promise<V1NetworkAttachmentDefinition> => {
   const { namespace, bridgeName = 'br0' } = options;
   const nadName = options.name ?? `nad-test-${crypto.randomUUID().slice(0, 8)}`;
 
