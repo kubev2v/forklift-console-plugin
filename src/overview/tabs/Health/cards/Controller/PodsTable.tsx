@@ -2,7 +2,6 @@ import { type FC, type KeyboardEvent, type MouseEvent, useState } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import StatusIcon from 'src/components/status/StatusIcon';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { IoK8sApiCoreV1Pod } from '@kubev2v/types';
@@ -10,6 +9,7 @@ import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem, Pagination, Tooltip } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { getKind, getName, getNamespace, getOwnerReference } from '@utils/crds/common/selectors';
+import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
 
 type PodsTableProps = {

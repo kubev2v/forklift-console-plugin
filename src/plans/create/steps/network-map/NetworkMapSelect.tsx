@@ -1,5 +1,4 @@
 import { type ComponentProps, type ForwardedRef, forwardRef, useMemo } from 'react';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import Select from '@components/common/Select';
@@ -18,6 +17,7 @@ import {
   Title,
 } from '@patternfly/react-core';
 import { getName } from '@utils/crds/common/selectors';
+import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 

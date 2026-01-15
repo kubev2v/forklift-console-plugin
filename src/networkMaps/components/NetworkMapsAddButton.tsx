@@ -1,6 +1,5 @@
 import { type FC, type Ref, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModelRef } from '@kubev2v/types';
@@ -14,6 +13,7 @@ import {
 } from '@patternfly/react-core';
 import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
+import { getResourceUrl } from '@utils/getResourceUrl';
 
 const NetworkMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
   namespace,

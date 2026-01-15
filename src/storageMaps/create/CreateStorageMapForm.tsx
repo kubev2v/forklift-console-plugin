@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import { StorageMapModelRef } from '@kubev2v/types';
@@ -19,6 +18,7 @@ import {
 } from '@patternfly/react-core';
 import { CreationMethod } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
+import { getResourceUrl } from '@utils/getResourceUrl';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { defaultStorageMapping } from '../utils/constants';

@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import SectionHeading from '@components/headers/SectionHeading';
@@ -10,6 +9,7 @@ import { Stack } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { PodModelGroupVersionKind } from '@utils/crds/common/models';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
+import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 

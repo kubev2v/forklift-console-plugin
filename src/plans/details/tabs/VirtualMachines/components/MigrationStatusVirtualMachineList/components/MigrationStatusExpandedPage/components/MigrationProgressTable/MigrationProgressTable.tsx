@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
 import type { PlanModalProps } from 'src/plans/actions/components/types';
 
@@ -21,6 +20,7 @@ import {
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { taskStatuses } from '@utils/constants';
 import { VirtualMachineModelGroupVersionKind } from '@utils/crds/common/models';
+import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 

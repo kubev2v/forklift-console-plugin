@@ -14,9 +14,6 @@ echo "============================"
 bash ${script_dir}/install-kind.sh
 bash ${script_dir}/install-kubectl.sh
 
-# #region agent log - Diagnostic: print kind version for debugging
-echo "[DEBUG] KinD version: $(kind version)"
-# #endregion
 
 echo ""
 echo "Install local registry"
@@ -40,10 +37,6 @@ reg_ip=$(${CONTAINER_CMD} inspect ${reg_name} -f {{.NetworkSettings.Networks.kin
 echo ""
 echo "Create KinD cluster"
 echo "==================="
-
-# #region agent log - Diagnostic: print cluster config for debugging
-echo "[DEBUG] Creating KinD cluster with pinned Kubernetes v1.31.0 node image"
-# #endregion
 
 # create a cluster with the local registry enabled in containerd
 # Pin to a stable Kubernetes version to avoid compatibility issues with bleeding-edge releases

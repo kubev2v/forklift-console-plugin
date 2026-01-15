@@ -9,7 +9,6 @@ import { TableSortContextProvider } from '@components/TableSortContextProvider';
 import { useTableSortContext } from '@components/useTableSortContext';
 
 import StandardPageInner from './StandardPageInner';
-
 type StandardPageProps<T> = {
   dataSource: [data: T[], loaded: boolean, error: unknown];
   fieldsMetadata: ResourceField[];
@@ -47,6 +46,7 @@ type StandardPageProps<T> = {
   titleHelpContent?: ReactNode;
   noPadding?: boolean;
   testId?: string;
+  shouldShowLearningExperienceButton?: boolean;
 };
 
 const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {

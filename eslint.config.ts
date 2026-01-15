@@ -1,6 +1,3 @@
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
-
 import importPlugin from 'eslint-plugin-import';
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier/recommended';
@@ -9,7 +6,9 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
+import { dirname, join } from 'path';
 import tseslint from 'typescript-eslint';
+import { fileURLToPath } from 'url';
 
 import cspellConfigs from '@cspell/eslint-plugin/configs';
 import eslint from '@eslint/js';

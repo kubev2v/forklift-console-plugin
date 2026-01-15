@@ -1,7 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import type { Interval } from 'luxon';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { TimeRangeOptions } from 'src/overview/tabs/Overview/utils/timeRangeOptions';
 
 import { PlanModelRef } from '@kubev2v/types';
@@ -16,6 +15,7 @@ import {
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
+import { getResourceUrl } from '@utils/getResourceUrl';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import useMigrationCounts from '../../hooks/useMigrationCounts';

@@ -1,14 +1,15 @@
+import { useNavigate } from 'react-router-dom-v5-compat';
 import {
   DeleteModal,
   type DeleteModalProps,
 } from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import type { StorageMapData } from 'src/storageMaps/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModel, StorageMapModelRef } from '@kubev2v/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem } from '@patternfly/react-core';
+import { getResourceUrl } from '@utils/getResourceUrl';
 
 type StorageMapActionsDropdownItemsProps = {
   data: StorageMapData;
@@ -17,6 +18,7 @@ type StorageMapActionsDropdownItemsProps = {
 export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
+  const navigate = useNavigate();
 
   const { obj: StorageMap } = data;
 
@@ -31,7 +33,13 @@ export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdo
   };
 
   return [
-    <DropdownItem value={0} key="EditStorageMapping" to={StorageMapURL}>
+    <DropdownItem
+      value={0}
+      key="EditStorageMapping"
+      onClick={() => {
+        navigate(StorageMapURL);
+      }}
+    >
       {t('Edit storage map')}
     </DropdownItem>,
 

@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -8,6 +7,7 @@ import { PlanModelRef } from '@kubev2v/types';
 import { Button, ButtonVariant, Tooltip } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
+import { getResourceUrl } from '@utils/getResourceUrl';
 
 type PlansAddButtonProps = {
   namespace?: string;
@@ -41,6 +41,7 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, namespace, testId 
   const button = (
     <Button
       data-testid={testId}
+      id="plans-add-button"
       variant={ButtonVariant.primary}
       isAriaDisabled={!hasSufficientProviders}
       onClick={onClick}

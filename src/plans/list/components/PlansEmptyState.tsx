@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -18,6 +17,7 @@ import {
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { ALL_PROJECTS_KEY } from '@utils/constants';
+import { getResourceUrl } from '@utils/getResourceUrl';
 import { FORKLIFT_DOCS_URL } from '@utils/links';
 
 import PlansAddButton from './PlansAddButton';

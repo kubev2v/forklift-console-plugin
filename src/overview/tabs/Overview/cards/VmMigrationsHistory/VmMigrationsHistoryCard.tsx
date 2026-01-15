@@ -1,5 +1,5 @@
 import { type FC, useContext } from 'react';
-import { CreateOverviewContext } from 'src/overview/hooks/OverviewContext';
+import { OverviewContext } from 'src/overview/context/OverviewContext';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
@@ -20,7 +20,7 @@ type MigrationsCardProps = {
 
 const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
   const { t } = useForkliftTranslation();
-  const { data, setData } = useContext(CreateOverviewContext);
+  const { data, setData } = useContext(OverviewContext);
   const selectedRange = data?.vmMigrationsHistorySelectedRange ?? TimeRangeOptions.Last10Days;
   const setSelectedRange = (range: TimeRangeOptions) => {
     setData({

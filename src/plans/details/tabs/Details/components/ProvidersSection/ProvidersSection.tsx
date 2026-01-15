@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { getProviderTypeIcon } from 'src/plans/details/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -9,6 +8,7 @@ import ProviderIconLink from '@components/ProviderIconLink';
 import { ProviderModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
+import { getResourceUrl } from '@utils/getResourceUrl';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 
 import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';

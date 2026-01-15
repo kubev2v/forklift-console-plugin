@@ -1,12 +1,12 @@
 import { type FC, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom-v5-compat';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModelRef, type V1beta1ForkliftController } from '@kubev2v/types';
 import { ChartDonut } from '@patternfly/react-charts/victory';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
+import { getResourceUrl } from '@utils/getResourceUrl';
 
 import usePlanStatusCounts from '../hooks/usePlanStatusCounts';
 import { ChartColors } from '../utils/colors';

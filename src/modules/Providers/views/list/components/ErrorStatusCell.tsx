@@ -1,11 +1,11 @@
 import type { FC, ReactNode } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import SmartLinkify from '@components/common/SmartLinkify';
 import { ProviderModelRef } from '@kubev2v/types';
 import { Button, ButtonVariant, Content, ContentVariants, Popover } from '@patternfly/react-core';
+import { getResourceUrl } from '@utils/getResourceUrl';
 
 import type { CellProps } from './CellProps';
 

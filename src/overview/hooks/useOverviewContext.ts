@@ -8,16 +8,16 @@ import {
   saveOverviewSelectedRanges,
 } from '../utils/helpers/OverviewUserSettings';
 
-import type { CreateOverviewContextData, CreateOverviewContextType } from './OverviewContext';
+import type { OverviewContextData, OverviewContextType } from './OverviewContext';
 
-export const useOverviewContext = (): CreateOverviewContextType => {
+export const useOverviewContext = (): OverviewContextType => {
   const userSettings = useMemo(() => loadUserSettings('Overview'), []);
   const hideWelcomeCardInitState = userSettings?.welcome?.hideWelcome ?? false;
   const {
     vmMigrationsDonutSelectedRange: donutRange,
     vmMigrationsHistorySelectedRange: historyRange,
   } = loadOverviewSelectedRanges();
-  const [data, setData] = useState<CreateOverviewContextData>({
+  const [data, setData] = useState<OverviewContextData>({
     hideWelcomeCardByContext: hideWelcomeCardInitState,
     vmMigrationsDonutSelectedRange: (donutRange as TimeRangeOptions) ?? TimeRangeOptions.All,
     vmMigrationsHistorySelectedRange:
@@ -32,7 +32,7 @@ export const useOverviewContext = (): CreateOverviewContextType => {
     [],
   );
 
-  const setValueSafe = useCallback((newValue: CreateOverviewContextData) => {
+  const setValueSafe = useCallback((newValue: OverviewContextData) => {
     if (mounted.current) {
       setData(newValue);
     }
@@ -41,7 +41,7 @@ export const useOverviewContext = (): CreateOverviewContextType => {
   return useMemo(
     () => ({
       data,
-      setData: (newState: CreateOverviewContextData) => {
+      setData: (newState: OverviewContextData) => {
         // Save/clear the user settings stored in local storage
         if (newState.hideWelcomeCardByContext) userSettings?.welcome?.save(true);
         else userSettings?.welcome?.clear();

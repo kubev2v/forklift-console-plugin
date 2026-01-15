@@ -1,7 +1,8 @@
 import type { FC } from 'react';
-import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
+import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
+import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 
-import { PageSection, PageSectionTypes, Title } from '@patternfly/react-core';
+import { PageSection, PageSectionTypes, Split, SplitItem, Title } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import CreateStorageMapForm from './CreateStorageMapForm';
@@ -10,9 +11,16 @@ const StorageMapCreatePage: FC = () => {
   const { t } = useForkliftTranslation();
 
   return (
-    <TipsAndTricksDrawer>
+    <LearningExperienceDrawer>
       <PageSection hasBodyWrapper={false}>
-        <Title headingLevel="h2">{t('Create storage map')}</Title>
+        <Split>
+          <SplitItem isFilled>
+            <Title headingLevel="h2">{t('Create storage map')}</Title>
+          </SplitItem>
+          <SplitItem>
+            <LearningExperienceButton />
+          </SplitItem>
+        </Split>
       </PageSection>
 
       <PageSection
@@ -23,7 +31,7 @@ const StorageMapCreatePage: FC = () => {
       >
         <CreateStorageMapForm />
       </PageSection>
-    </TipsAndTricksDrawer>
+    </LearningExperienceDrawer>
   );
 };
 

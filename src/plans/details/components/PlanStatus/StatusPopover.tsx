@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { getResourceUrl } from 'src/modules/Providers/utils/helpers/getResourceUrl';
 import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
 import type { PlanModalProps } from 'src/plans/actions/components/types';
 
@@ -19,6 +18,7 @@ import {
 } from '@patternfly/react-core';
 import { TimesIcon } from '@patternfly/react-icons';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
+import { getResourceUrl } from '@utils/getResourceUrl';
 
 import { STATUS_POPOVER_VMS_COUNT_THRESHOLD } from './utils/constants';
 import { migrationStatusIconMap } from './utils/statusIconMapper';

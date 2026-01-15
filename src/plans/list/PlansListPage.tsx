@@ -2,7 +2,7 @@ import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
+import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
@@ -38,7 +38,7 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
   });
 
   return (
-    <TipsAndTricksDrawer>
+    <LearningExperienceDrawer>
       <StandardPage
         data-testid="plans-list"
         addButton={
@@ -59,8 +59,9 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
             ? data
             : data.filter((plan) => !plan?.spec?.archived)
         }
+        shouldShowLearningExperienceButton
       />
-    </TipsAndTricksDrawer>
+    </LearningExperienceDrawer>
   );
 };
 

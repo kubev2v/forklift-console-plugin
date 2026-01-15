@@ -1,5 +1,5 @@
 import { type FC, useState } from 'react';
-import TipsAndTricksDrawer from 'src/onlineHelp/tipsAndTricksDrawer/TipsAndTricksDrawer';
+import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 
 import { HorizontalNav } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -13,7 +13,7 @@ const PlanDetailsNav: FC<PlanPageProps> = ({ name, namespace }) => {
   const [showPlanConcernsPanel, setShowPlanConcernsPanel] = useState(false);
 
   return (
-    <TipsAndTricksDrawer>
+    <LearningExperienceDrawer>
       <PlanConcernsDrawer
         name={name}
         namespace={namespace}
@@ -27,7 +27,7 @@ const PlanDetailsNav: FC<PlanPageProps> = ({ name, namespace }) => {
         />
         <HorizontalNav pages={pages} />
       </PlanConcernsDrawer>
-    </TipsAndTricksDrawer>
+    </LearningExperienceDrawer>
   );
 };
 
