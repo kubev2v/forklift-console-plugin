@@ -88,6 +88,13 @@ export const specVirtualMachineFields: ResourceField[] = [
     sortable: true,
   },
   {
+    isVisible: false,
+    jsonPath: '$.specVM.targetName',
+    label: t('Target name'),
+    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.VMTargetName,
+    sortable: true,
+  },
+  {
     isAction: true,
     isVisible: true,
     label: '',
