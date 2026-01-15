@@ -1344,7 +1344,6 @@
   "You can select a migration target project for the migration virtual machines.": "You can select a migration target project for the migration virtual machines.",
   "You can typically find where the error is occurring here.": "You can typically find where the error is occurring here.",
   "You can use a custom hook-runner image or specify a custom image, for example quay.io/konveyor/hook-runner.": "You can use a custom hook-runner image or specify a custom image, for example quay.io/konveyor/hook-runner.",
-  "You can write configuration files for the migration toolkit for virtualization using YAML, a human-readable data serialization language.": "You can write configuration files for the migration toolkit for virtualization using YAML, a human-readable data serialization language.",
   "You do not have any network maps without owner references.": "You do not have any network maps without owner references.",
   "You do not have any storage maps without owner references.": "You do not have any storage maps without owner references.",
   "You have a pre-planned maintenance window for the final cutover.": "You have a pre-planned maintenance window for the final cutover.",
