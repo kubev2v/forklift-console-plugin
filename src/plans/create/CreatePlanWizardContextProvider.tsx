@@ -6,6 +6,7 @@ import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
 
 import { useCreatePlanFormContext } from './hooks/useCreatePlanFormContext';
+import { useOpenshiftStorageClasses } from './hooks/useOpenshiftStorageClasses';
 import { useOvirtDisksForVMs } from './hooks/useOvirtDisksForVMs';
 import { useOvirtNicProfiles } from './hooks/useOvirtNicProfiles';
 import { GeneralFormFieldId } from './steps/general-information/constants';
@@ -46,6 +47,18 @@ const CreatePlanWizardContextProvider: React.FC<PropsWithChildren> = ({ children
     [vmsWithDisks, vmsWithDisksLoading, vmsWithDisksError],
   );
 
+  // Extract storage classes from OpenShift VMs' dataVolumeTemplates
+  const {
+    error: usedStorageClassesError,
+    loading: usedStorageClassesLoading,
+    usedStorageClasses,
+  } = useOpenshiftStorageClasses(sourceProvider, vmList);
+
+  const usedStorageClassesResult: [Set<string>, boolean, Error | null] = useMemo(
+    () => [usedStorageClasses, usedStorageClassesLoading, usedStorageClassesError],
+    [usedStorageClasses, usedStorageClassesLoading, usedStorageClassesError],
+  );
+
   const value = useMemo(
     () => ({
       network: {
@@ -56,6 +69,7 @@ const CreatePlanWizardContextProvider: React.FC<PropsWithChildren> = ({ children
       storage: {
         sources: sourceStoragesResult,
         targets: targetStoragesResult,
+        usedStorageClasses: usedStorageClassesResult,
       },
       vmsWithDisks: vmsWithDisksResult,
     }),
@@ -65,6 +79,7 @@ const CreatePlanWizardContextProvider: React.FC<PropsWithChildren> = ({ children
       sourceStoragesResult,
       targetNetworksResult,
       targetStoragesResult,
+      usedStorageClassesResult,
       vmsWithDisksResult,
     ],
   );
