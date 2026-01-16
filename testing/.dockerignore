@@ -1,0 +1,8 @@
+.providers.json
+
+# Test artifacts
+playwright-report/
+test-results/
+
+# IDE and local config
+.cursor/
