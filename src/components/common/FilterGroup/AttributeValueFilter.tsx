@@ -42,7 +42,13 @@ export const AttributeValueFilter = ({
   };
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
-    <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullWidth>
+    <MenuToggle
+      ref={toggleRef}
+      onClick={onToggleClick}
+      isExpanded={isOpen}
+      isFullWidth
+      data-testid="attribute-filter-toggle"
+    >
       {currentFilter?.filterDef?.fieldLabel ?? currentFilter?.label}
     </MenuToggle>
   );
@@ -56,7 +62,11 @@ export const AttributeValueFilter = ({
 
   const renderOptions = () => {
     return fieldFilters.map(({ filterDef, label, resourceFieldId }) => (
-      <SelectOption key={resourceFieldId} value={filterDef?.fieldLabel ?? label}>
+      <SelectOption
+        key={resourceFieldId}
+        value={filterDef?.fieldLabel ?? label}
+        data-testid={`filter-option-${resourceFieldId}`}
+      >
         {filterDef?.fieldLabel ?? label}
       </SelectOption>
     ));
