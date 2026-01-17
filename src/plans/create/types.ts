@@ -128,6 +128,7 @@ export type CreatePlanWizardContextProps = {
   storage: {
     sources: ResourceQueryResult<InventoryStorage[]>;
     targets: ResourceQueryResult<TargetStorage[]>;
+    usedStorageClasses: ResourceQueryResult<Set<string>>;
   };
   vmsWithDisks: ResourceQueryResult<ProviderVirtualMachine[]>;
 };

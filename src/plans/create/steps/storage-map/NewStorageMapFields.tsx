@@ -31,15 +31,17 @@ const NewStorageMapFields: FC = () => {
 
   const [availableSourceStorages, sourceStoragesLoading, sourceStoragesError] = storage.sources;
   const [availableTargetStorages, _targetStoragesLoading, targetStoragesError] = storage.targets;
+  const [usedStorageClasses, usedStorageClassesLoading] = storage.usedStorageClasses;
   const [vmsWithDisks, vmsWithDisksLoading] = vmsWithDisksResult;
 
-  const isLoading = sourceStoragesLoading || vmsWithDisksLoading;
+  const isLoading = sourceStoragesLoading || vmsWithDisksLoading || usedStorageClassesLoading;
 
   const { other: otherSourceStorages, used: usedSourceStorages } =
     getSourceStorageValuesForSelectedVms(
       sourceProvider,
       availableSourceStorages,
       vmsWithDisks as ProviderVirtualMachine[],
+      usedStorageClasses,
     );
   const defaultTargetStorageName = availableTargetStorages?.[0]?.name;
 

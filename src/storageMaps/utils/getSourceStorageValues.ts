@@ -3,36 +3,11 @@ import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import type { CategorizedSourceMappings } from 'src/plans/create/types';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import type {
-  OpenshiftVM,
-  ProviderVirtualMachine,
-  V1beta1Provider,
-  V1Volume,
-  VSphereVM,
-} from '@kubev2v/types';
+import type { ProviderVirtualMachine, V1beta1Provider, VSphereVM } from '@kubev2v/types';
 import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 import { isEmpty } from '@utils/helpers';
 
 import type { OVirtVMWithDisks } from './types';
-
-/**
- * Extracts volume names from vSphere VMs (no option to extract storage classes data)
- */
-// TODO: need backend to support fetching the used source storages by VMs for OCP.
-// For now, we fetch all volumes instead of storages for ocp mappings, so if no volume is used then no storage is needed for mapping.
-const getOpenshiftVolumeNames = (vm: ProviderVirtualMachine): string[] => {
-  const openshiftVM = vm as OpenshiftVM;
-
-  const volumes: V1Volume[] | undefined = openshiftVM?.object?.spec?.template?.spec?.volumes;
-  if (!volumes || !Array.isArray(volumes)) {
-    return [];
-  }
-
-  return volumes.reduce<string[]>(
-    (acc, volume) => (volume?.name ? [...acc, volume?.name] : acc),
-    [],
-  );
-};
 
 /**
  * Extracts storage IDs from vSphere VMs
@@ -118,7 +93,7 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
         break;
 
       case 'openshift':
-        storageIds = getOpenshiftVolumeNames(vm);
+        // OpenShift uses usedStorageClasses instead
         break;
 
       case 'openstack':
@@ -134,12 +109,14 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
 };
 
 /**
- * Categorizes available source storages into 'used' and 'other' based on VM usage.
- * This helps prioritize storages that need mapping in the UI.
+ * Categorizes storages into 'used' and 'other' based on selected VMs.
+ * OpenShift: matches storage.name against usedStorageClasses
+ * Others: matches storage.id against VM disk storage IDs
  */
 const getSourceStorageValues = (
   availableSourceStorages: InventoryStorage[],
   vms: ProviderVirtualMachine[] | null,
+  usedStorageClasses?: Set<string>,
 ): CategorizedSourceMappings => {
   const storageIdsUsedByVms = getStoragesUsedBySelectedVms(vms);
   const usedStorageIds = new Set(storageIdsUsedByVms);
@@ -151,14 +128,12 @@ const getSourceStorageValues = (
         name: getMapResourceLabel(storage),
       };
 
-      if (
-        usedStorageIds.has(storage.id) ||
-        (storage.providerType === PROVIDER_TYPES.openshift && !isEmpty(usedStorageIds))
-      ) {
-        acc.used.push(storageEntry);
-      } else {
-        acc.other.push(storageEntry);
-      }
+      const isUsed =
+        storage.providerType === PROVIDER_TYPES.openshift
+          ? usedStorageClasses?.has(storage.name)
+          : usedStorageIds.has(storage.id);
+
+      acc[isUsed ? 'used' : 'other'].push(storageEntry);
 
       return acc;
     },
@@ -182,12 +157,14 @@ const filterStoragesByVmUsage = (
 /**
  * Categorizes source storages with OVA provider filtering.
  * For OVA: only shows storages used by the provided VMs.
+ * For OpenShift: only shows storage classes that are used by VMs' dataVolumeTemplates.
  * For other providers: shows all storages categorized by usage.
  */
 export const getSourceStorageValuesForSelectedVms = (
   sourceProvider: V1beta1Provider | undefined,
   availableSourceStorages: InventoryStorage[],
   vms: ProviderVirtualMachine[] | null,
+  usedStorageClasses?: Set<string>,
 ): CategorizedSourceMappings => {
   const sourceProviderType = sourceProvider?.spec?.type;
 
@@ -197,5 +174,5 @@ export const getSourceStorageValuesForSelectedVms = (
       ? filterStoragesByVmUsage(availableSourceStorages, vms)
       : availableSourceStorages;
 
-  return getSourceStorageValues(relevantStorages, vms);
+  return getSourceStorageValues(relevantStorages, vms, usedStorageClasses);
 };
