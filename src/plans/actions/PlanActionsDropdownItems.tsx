@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -6,9 +6,10 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
-import { getNamespace } from '@utils/crds/common/selectors';
+import { getNamespace, getUID } from '@utils/crds/common/selectors';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 import { getPlanURL } from '@utils/crds/plans/utils';
+import { isEmpty } from '@utils/helpers';
 
 import { PlanStatuses } from '../details/components/PlanStatus/utils/types';
 import {
@@ -27,6 +28,7 @@ import PlanDeleteModal from './components/PlanDeleteModal';
 import PlanStartMigrationModal, {
   type PlanStartMigrationModalProps,
 } from './components/StartPlanModal/PlanStartMigrationModal';
+import { isPlanMigrationInCooldown } from './components/StartPlanModal/utils/utils';
 import type { PlanModalProps } from './components/types';
 import { getDuplicateDescription, getEditDescription, startDescription } from './utils/utils';
 
@@ -38,6 +40,7 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
   const { t } = useForkliftTranslation();
   const launcher = useModal();
   const navigate = useNavigate();
+  const planUid = getUID(plan);
 
   const { canDelete } = useGetDeleteAndEditAccessReview({
     model: PlanModel,
@@ -54,10 +57,25 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
   const buttonStartLabel = canReStart ? t('Restart') : t('Start');
   const canScheduleCutover = isWarmAndExecuting && !isArchived;
 
-  const [lastMigration] = usePlanMigration(plan);
-  const hasCutover = canScheduleCutover && Boolean(lastMigration?.spec?.cutover);
+  const [activeMigration] = usePlanMigration(plan);
+  const hasCutover = canScheduleCutover && Boolean(activeMigration?.spec?.cutover);
+
+  const [, forceUpdate] = useState(0);
+
+  const isInCooldown = isPlanMigrationInCooldown(planUid);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      forceUpdate((prev) => prev + 1);
+    }, 500);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [planUid]);
 
   const onClickPlanStart = () => {
+    if (isInCooldown) return;
     launcher<PlanStartMigrationModalProps>(PlanStartMigrationModal, {
       plan,
       title: buttonStartLabel,
@@ -98,8 +116,8 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
       <DropdownItem
         value={1}
         key="start"
-        isDisabled={!canStart && !canReStart}
-        onClick={onClickPlanStart}
+        isDisabled={(!canStart && !canReStart) || !isEmpty(activeMigration) || isInCooldown}
+        onClick={isEmpty(activeMigration) && !isInCooldown ? onClickPlanStart : undefined}
         description={startDescription[planStatus]}
         data-testid="plan-actions-start-menuitem"
       >

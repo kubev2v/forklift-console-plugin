@@ -7,6 +7,21 @@ import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { t } from '@utils/i18n';
 
+// Track migration start timestamps to prevent duplicate starts within cooldown period
+const migrationStartTimestamps = new Map<string, number>();
+const MIGRATION_COOLDOWN_MS = 10000; // 10 seconds cooldown to allow k8s watch to update
+
+/**
+ * Check if a plan migration is in cooldown period (recently started).
+ * Used to disable the Start button in the UI.
+ */
+export const isPlanMigrationInCooldown = (planUid: string | undefined): boolean => {
+  if (!planUid) return false;
+  const lastStartTime = migrationStartTimestamps.get(planUid);
+  if (!lastStartTime) return false;
+  return Date.now() - lastStartTime < MIGRATION_COOLDOWN_MS;
+};
+
 export const startPlanMigration = async (
   plan: V1beta1Plan,
   trackEvent?: (event: string, data: Record<string, unknown>) => void,
@@ -15,6 +30,13 @@ export const startPlanMigration = async (
   const name = getName(plan);
   const namespace = getNamespace(plan);
   const uid = getUID(plan);
+
+  if (isPlanMigrationInCooldown(uid)) {
+    throw new Error(t('Migration was recently started for this plan. Please wait.'));
+  }
+
+  migrationStartTimestamps.set(uid!, Date.now());
+
   const migration: V1beta1Migration = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Migration',

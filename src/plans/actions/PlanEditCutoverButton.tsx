@@ -23,14 +23,14 @@ const PlanEditCutoverButton: FC<PlanEditCutoverButtonProps> = ({ plan, variant }
   const { t } = useForkliftTranslation();
   const launcher = useModal();
   const cutoverButtonRef = useRef<HTMLButtonElement>(null);
-  const [migration] = usePlanMigration(plan);
+  const [activeMigration] = usePlanMigration(plan);
 
   if (!getPlanIsWarm(plan) || !isPlanExecuting(plan) || isPlanArchived(plan)) {
     return null;
   }
 
-  const cutoverDateTime = migration?.spec?.cutover
-    ? DateTime.fromISO(migration.spec.cutover).toLocaleString(DateTime.DATETIME_FULL)
+  const cutoverDateTime = activeMigration?.spec?.cutover
+    ? DateTime.fromISO(activeMigration.spec.cutover).toLocaleString(DateTime.DATETIME_FULL)
     : '';
 
   return (
