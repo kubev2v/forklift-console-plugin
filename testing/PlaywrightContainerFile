@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.55.0-noble
+FROM mcr.microsoft.com/playwright:v1.57.0-noble
 
 ARG GIT_COMMIT=unknown
 ARG BUILD_DATE=unknown
@@ -30,24 +30,19 @@ RUN curl -sL https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/op
     | tar -xz -C /usr/local/bin oc kubectl \
     && chmod +x /usr/local/bin/oc /usr/local/bin/kubectl
 
-# Install Python dependencies for Report Portal
+# Install Python dependencies for Report Portal (rp-uploader cloned at runtime)
 RUN pip3 install --no-cache-dir --break-system-packages \
     PyYAML requests lxml 'reportportal-client~=5.0.0' \
     xmltodict jinja2 packaging setuptools suds-py3
-
-# Clone Report Portal uploader
-RUN GIT_SSL_NO_VERIFY=1 git clone \
-    https://gitlab.cee.redhat.com/migrationqe/rp-uploader.git \
-    /opt/rp-uploader
 
 COPY package.json yarn.lock ./
 RUN corepack enable && yarn install --frozen-lockfile --ignore-scripts
 
 COPY . .
 
-RUN chmod +x run-tests.sh upload-to-rp.sh && \
-    chown -R 1001:0 /test-runner /opt/rp-uploader && \
-    chmod -R g+w /test-runner /opt/rp-uploader
+RUN chmod +x run-tests.sh && \
+    chown -R 1001:0 /test-runner && \
+    chmod -R g+w /test-runner
 
 USER 1001
 

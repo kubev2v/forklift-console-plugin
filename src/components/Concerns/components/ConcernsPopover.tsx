@@ -28,7 +28,11 @@ const ConcernPopover: FC<{
       footerContent={t('Total: {{length}}', { length: totalLength })}
       data-testid="concerns-popover"
     >
-      <Button isInline variant={ButtonVariant.link}>
+      <Button
+        isInline
+        variant={ButtonVariant.link}
+        data-testid={`concern-badge-${category.toLowerCase()}`}
+      >
         <Label status={getCategoryStatus(category)}>{totalLength}</Label>
       </Button>
     </Popover>
