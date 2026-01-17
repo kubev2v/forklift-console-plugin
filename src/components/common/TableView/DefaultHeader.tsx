@@ -16,7 +16,7 @@ export const DefaultHeader = <T,>({
 }: TableViewHeaderProps<T>) => {
   return (
     <>
-      {visibleColumns.map(({ info, label, resourceFieldId, sortable }, columnIndex) => (
+      {visibleColumns.map(({ info, label, resourceFieldId, sortable, testId }, columnIndex) => (
         <Th
           width={10}
           key={resourceFieldId}
@@ -31,6 +31,7 @@ export const DefaultHeader = <T,>({
               : undefined
           }
           info={info}
+          data-testid={testId}
         >
           {label}
         </Th>

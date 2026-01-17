@@ -12,7 +12,7 @@ const DefaultSelectHeader = <T,>({
   return (
     <>
       {canSelect && <Th screenReaderText="Row select" />}
-      {visibleColumns.map(({ info, label, resourceFieldId, sortable }, columnIndex) => (
+      {visibleColumns.map(({ info, label, resourceFieldId, sortable, testId }, columnIndex) => (
         <Th
           key={resourceFieldId}
           sort={
@@ -26,6 +26,7 @@ const DefaultSelectHeader = <T,>({
               : undefined
           }
           info={info}
+          data-testid={testId}
         >
           {label}
         </Th>

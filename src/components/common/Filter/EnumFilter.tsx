@@ -76,7 +76,13 @@ export const EnumFilter = ({
   };
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
-    <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isFullWidth>
+    <MenuToggle
+      ref={toggleRef}
+      onClick={onToggleClick}
+      isExpanded={isOpen}
+      isFullWidth
+      data-testid={`filter-toggle-${filterId}`}
+    >
       <>{placeholderLabel}</>
       {!isEmpty(selectedUniqueEnumLabels) && (
         <Badge isRead className="pf-v6-u-ml-sm">
@@ -93,6 +99,7 @@ export const EnumFilter = ({
         key={label.id}
         value={label.label}
         isSelected={selectedUniqueEnumLabels.includes(label.label)}
+        data-testid={`filter-value-${label.id}`}
       >
         {label?.icon} {label.label}
       </SelectOption>
