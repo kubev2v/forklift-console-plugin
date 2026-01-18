@@ -45,6 +45,7 @@ networking:
   apiServerPort: 6443
 nodes:
 - role: control-plane
+  image: kindest/node:v1.33.0
   extraPortMappings:
   - containerPort: 30080
     hostPort: 30080
