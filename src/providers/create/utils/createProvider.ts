@@ -27,24 +27,24 @@ export const createProvider = async (provider: V1beta1Provider, secret: IoK8sApi
         namespace: getNamespace(secret),
       };
     }
-  });
 
-  // Remove empty settings (replace empty str with undefined)
-  for (const key in newProvider?.spec?.settings) {
-    if (newProvider.spec.settings[key] === '') {
-      newProvider.spec.settings[key] = undefined!;
+    // Remove empty settings (replace empty str with undefined)
+    for (const key in draft?.spec?.settings) {
+      if (draft.spec.settings[key] === '') {
+        delete draft.spec.settings[key];
+      }
     }
-  }
 
-  const readEmptyVddkInitImage = getAnnotations(newProvider)?.[EMPTY_VDDK_INIT_IMAGE_ANNOTATION];
+    const readEmptyVddkInitImage = getAnnotations(draft)?.[EMPTY_VDDK_INIT_IMAGE_ANNOTATION];
 
-  if (readEmptyVddkInitImage === YES_VALUE && getVddkInitImage(newProvider)) {
-    delete newProvider?.spec?.settings?.vddkInitImage;
-  }
+    if (readEmptyVddkInitImage === YES_VALUE && getVddkInitImage(draft)) {
+      delete draft?.spec?.settings?.vddkInitImage;
+    }
 
-  if (readEmptyVddkInitImage === YES_VALUE && getUseVddkAioOptimization(newProvider)) {
-    delete newProvider?.spec?.settings?.useVddkAioOptimization;
-  }
+    if (readEmptyVddkInitImage === YES_VALUE && getUseVddkAioOptimization(draft)) {
+      delete draft?.spec?.settings?.useVddkAioOptimization;
+    }
+  });
 
   const obj = await k8sCreate({
     data: newProvider,
