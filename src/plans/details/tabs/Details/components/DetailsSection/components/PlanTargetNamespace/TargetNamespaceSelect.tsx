@@ -1,22 +1,19 @@
 import type { FC } from 'react';
 
 import { FilterableSelect } from '@components/FilterableSelect/FilterableSelect';
-import type { V1beta1Provider } from '@kubev2v/types';
-import useWatchProjectNames from '@utils/hooks/useWatchProjectNames';
 import { useForkliftTranslation } from '@utils/i18n';
 
-type TargetNamespaceSelectProps = {
-  provider: V1beta1Provider;
-  value: string;
-  onChange: (val: string) => void;
-};
+import type { TargetNamespaceSelectProps } from './utils/types';
 
-const TargetNamespaceSelect: FC<TargetNamespaceSelectProps> = ({ onChange, value }) => {
+const TargetNamespaceSelect: FC<TargetNamespaceSelectProps> = ({
+  errorMessage,
+  onChange,
+  projectNames,
+  value,
+}) => {
   const { t } = useForkliftTranslation();
 
-  const [options] = useWatchProjectNames();
-
-  const dropdownItems = options.map((name) => ({
+  const dropdownItems = projectNames.map((name) => ({
     children: <>{name}</>,
     itemId: name,
   }));
@@ -31,6 +28,7 @@ const TargetNamespaceSelect: FC<TargetNamespaceSelectProps> = ({ onChange, value
       canCreate={false}
       isScrollable
       placeholder={t('No namespace selected')}
+      noResultFoundLabel={errorMessage}
     />
   );
 };
