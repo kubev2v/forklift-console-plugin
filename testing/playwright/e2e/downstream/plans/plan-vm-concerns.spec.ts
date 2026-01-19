@@ -3,7 +3,7 @@ import { expect } from '@playwright/test';
 import { sharedProviderCustomPlanFixtures as customPlanTest } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 
-customPlanTest.describe('Plan Details - VM Concerns (MTV-3713)', { tag: '@downstream' }, () => {
+customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, () => {
   customPlanTest(
     'should verify VM concerns sorting, badges, filtering, and critical alerts',
     async ({ page, createCustomPlan, resourceManager }) => {
