@@ -47,9 +47,10 @@ test.describe('Provider Creation Tests', () => {
             expect(providerResource).not.toBeNull();
             expect(providerResource?.spec?.type).toBe(providerType);
 
-            if (testProviderData.useVddkAioOptimization === true) {
+            if (testProviderData.useVddkAioOptimization) {
               expect(providerResource?.spec?.settings?.useVddkAioOptimization).toBe('true');
-            } else if (testProviderData.useVddkAioOptimization === false) {
+            }
+            if (!testProviderData.useVddkAioOptimization) {
               const aioValue = providerResource?.spec?.settings?.useVddkAioOptimization;
               expect(aioValue === undefined || aioValue === 'false').toBe(true);
             }

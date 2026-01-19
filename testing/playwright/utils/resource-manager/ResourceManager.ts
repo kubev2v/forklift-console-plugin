@@ -21,16 +21,14 @@ import {
   RESOURCE_KINDS,
 } from './constants';
 import { ResourceCleaner } from './ResourceCleaner';
-import {
-  createProvider,
-  createSecret,
-  type V1NetworkAttachmentDefinition,
-} from './ResourceCreator';
 import { ResourceFetcher } from './ResourceFetcher';
 import { type JsonPatchOperation, type PatchType, ResourcePatcher } from './ResourcePatcher';
 
+// Re-export types for consumers
+export type { JsonPatchOperation, PatchType };
+
 export type { V1NetworkAttachmentDefinition } from './ResourceCreator';
-export type { JsonPatchOperation, PatchType } from './ResourcePatcher';
+import type { V1NetworkAttachmentDefinition } from './ResourceCreator';
 
 export type OpenshiftProject = IoK8sApiCoreV1Namespace & {
   kind: typeof OPENSHIFT_PROJECT_KIND;
@@ -182,11 +180,7 @@ export class ResourceManager {
     planName: string,
     namespace = MTV_NAMESPACE,
   ): Promise<V1beta1Plan | null> {
-    return ResourceFetcher.fetchResource<V1beta1Plan>(page, {
-      kind: RESOURCE_KINDS.PLAN,
-      resourceName: planName,
-      namespace,
-    });
+    return ResourceFetcher.fetchPlan(page, planName, namespace);
   }
 
   async fetchProvider(

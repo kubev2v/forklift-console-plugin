@@ -62,18 +62,21 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     return selectedVMNames;
   }
 
-  async handleCriticalIssuesModal(action: 'confirm' | 'deselect'): Promise<void> {
+  async handleCriticalIssuesModal(action: 'confirm' | 'deselect'): Promise<boolean> {
     const buttonName = action === 'confirm' ? 'Confirm selections' : 'Deselect critical issue VMs';
     const button = this.page.getByRole('button', { name: buttonName });
 
     // Modal may or may not appear depending on whether selected VMs have critical issues
-    const isVisible = await button.isVisible().catch(() => false);
+    const isVisible = await button.isVisible({ timeout: 3000 }).catch(() => false);
 
     if (isVisible) {
       await button.click();
       // Wait for modal to disappear
       await expect(button).not.toBeVisible();
+      return true;
     }
+
+    return false;
   }
 
   async searchAndSelectVirtualMachine(vmName: string, folder?: string) {
