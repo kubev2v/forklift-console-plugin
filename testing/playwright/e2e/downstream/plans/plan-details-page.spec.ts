@@ -28,7 +28,7 @@ test.describe('Plan Details Navigation', { tag: '@downstream' }, () => {
     await planDetailsPage.verifyNavigationTabs();
   });
 });
-//skip this test for now
+
 test.describe('Plan Details - VM Rename Validation', { tag: '@downstream' }, () => {
   test('should handle VM rename validation - success and failure scenarios', async ({
     page,
