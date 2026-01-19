@@ -90,7 +90,8 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   async getRowCount(): Promise<number> {
-    const text = await this.page.getByTestId('pagination-toggle-text').first().textContent();
+    const paginationToggle = this.page.getByRole('button', { name: /\d+\s*-\s*\d+\s+of\s+\d+/ });
+    const text = await paginationToggle.first().textContent();
     return parseInt(/of\s+(?<total>\d+)/.exec(text ?? '')?.groups?.total ?? '0', 10);
   }
 
