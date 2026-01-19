@@ -3,10 +3,7 @@ import { expect, type Page } from '@playwright/test';
 import type { PlanTestData } from '../../../types/test-data';
 import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
 
-/**
- * VirtualMachines tab for Plan Details page.
- * Extends VirtualMachinesTable for flat grid (no folder hierarchy).
- */
+/** VirtualMachines tab for Plan Details page (flat grid, no folder hierarchy). */
 export class VirtualMachinesTab extends VirtualMachinesTable {
   constructor(page: Page) {
     super(page, page.locator('main'));
@@ -90,9 +87,11 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   async getRowCount(): Promise<number> {
-    const paginationToggle = this.page.getByRole('button', { name: /\d+\s*-\s*\d+\s+of\s+\d+/ });
-    const text = await paginationToggle.first().textContent();
-    return parseInt(/of\s+(?<total>\d+)/.exec(text ?? '')?.groups?.total ?? '0', 10);
+    const toggle = '.pf-v5-c-menu-toggle, .pf-v6-c-menu-toggle, .pf-v5-c-pagination__menu-toggle';
+    const text = await this.page.locator(toggle).first().textContent();
+    // Text format: "1 - 10 of 100" → split on "of" and parse the total
+    const total = text?.split(' of ')[1]?.trim();
+    return total ? parseInt(total, 10) : 0;
   }
 
   async getTableCell(rowColumnName: string, rowValue: string, targetColumnName: string) {
