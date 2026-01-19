@@ -192,7 +192,7 @@ export class OverviewPage {
 
   async verifyTopicCards(topics: TopicConfig[]): Promise<void> {
     for (const topic of topics) {
-      await expect(this.page.getByText(topic.name)).toBeVisible();
+      await expect(this.page.getByText(topic.name, { exact: true })).toBeVisible();
       await expect(this.page.getByText(topic.description)).toBeVisible();
     }
   }
