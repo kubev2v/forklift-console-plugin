@@ -1,10 +1,10 @@
 import { expect } from '@playwright/test';
 
-import { providerOnlyFixtures as test } from '../../fixtures/resourceFixtures';
-import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
-import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import { MigrationType } from '../../types/enums';
-import { createPlanTestData, type PlanTestData } from '../../types/test-data';
+import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
+import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
+import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import { MigrationType } from '../../../types/enums';
+import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
 
 test.describe('Plan additional settings', { tag: '@downstream' }, () => {
   test('should set power state on plan creation, plan details tab, and VMs tab', async ({

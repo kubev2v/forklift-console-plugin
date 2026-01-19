@@ -34,6 +34,29 @@ export class PlanDetailsPage {
     await this.page.getByTestId('modal-confirm-button').click();
   }
 
+  /**
+   * Closes the critical concerns drawer panel.
+   */
+  async closeConcernsDrawer(): Promise<void> {
+    const closeButton = this.page.getByRole('button', { name: /Close drawer panel/i });
+    await closeButton.click();
+    await expect(this.concernsDrawerPanel).not.toBeVisible();
+  }
+
+  /**
+   * Returns the concerns drawer panel element.
+   */
+  get concernsDrawerPanel() {
+    return this.page.locator('.plan-concerns-panel');
+  }
+
+  /**
+   * Returns the critical concerns alert element (MTV-3713).
+   */
+  get criticalConcernsAlert() {
+    return this.page.getByTestId('plan-critical-alert');
+  }
+
   async getMigrationProgress(): Promise<string> {
     const statusContainer = this.page.getByTestId('plan-status-container');
     const statusElement = statusContainer.locator('[data-testid^="plan-status-"]').first();
@@ -102,12 +125,28 @@ export class PlanDetailsPage {
     };
   }
 
+  /**
+   * Checks if the critical concerns alert is visible.
+   */
+  async hasCriticalConcernsAlert(): Promise<boolean> {
+    return this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
+  }
+
   async navigate(planName: string, namespace: string): Promise<void> {
     await this.navigation.navigateToK8sResource({
       resource: 'Plan',
       name: planName,
       namespace,
     });
+  }
+
+  /**
+   * Opens the critical concerns drawer panel by clicking "View all critical concerns".
+   */
+  async openConcernsDrawer(): Promise<void> {
+    const viewAllButton = this.page.getByTestId('view-all-critical-concerns-button');
+    await viewAllButton.click();
+    await expect(this.concernsDrawerPanel).toBeVisible();
   }
 
   async renameVMs(planData: PlanTestData): Promise<void> {
@@ -175,6 +214,13 @@ export class PlanDetailsPage {
   async verifyPlanTitle(planName: string): Promise<void> {
     const titleLocator = this.page.getByTestId('resource-details-title');
     await expect(titleLocator).toContainText(planName);
+  }
+
+  /**
+   * Returns the "View all critical concerns" button.
+   */
+  get viewAllCriticalConcernsButton() {
+    return this.page.getByTestId('view-all-critical-concerns-button');
   }
 
   async waitForMigrationCompletion(timeoutMs = 300000, logProgress = false): Promise<void> {

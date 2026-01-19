@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 
-import { sharedProviderFixtures as test } from '../../fixtures/resourceFixtures';
-import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
+import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 
 test.describe('Plan Details Navigation', { tag: '@downstream' }, () => {
   test('should navigate to plan details and verify page content', async ({
@@ -21,7 +21,7 @@ test.describe('Plan Details Navigation', { tag: '@downstream' }, () => {
     await planDetailsPage.verifyNavigationTabs();
   });
 });
-
+//skip this test for now
 test.describe('Plan Details - VM Rename Validation', { tag: '@downstream' }, () => {
   test('should handle VM rename validation - success and failure scenarios', async ({
     page,

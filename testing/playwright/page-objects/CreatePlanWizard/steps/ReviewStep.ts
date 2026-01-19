@@ -80,15 +80,15 @@ export class ReviewStep {
     const section = this.page.getByTestId('review-network-map-section');
     await expect(section).toBeVisible();
 
-    if (expectedNetworkMap) {
+    if (expectedNetworkMap?.name) {
       if (expectedNetworkMap.isPreexisting) {
         await expect(section.getByTestId('review-network-map')).toContainText(
           expectedNetworkMap.name,
         );
       } else {
-        await expect(
-          section.locator('.pf-v6-c-description-list__group', { hasText: 'Network map name' }),
-        ).toContainText(expectedNetworkMap.name);
+        await expect(section.getByTestId('review-network-map-name')).toContainText(
+          expectedNetworkMap.name,
+        );
       }
     }
   }

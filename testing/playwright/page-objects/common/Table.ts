@@ -125,6 +125,23 @@ export class Table {
     await expect(modalBody).not.toBeVisible();
   }
 
+  async getCell(
+    rowColumnName: string,
+    rowValue: string,
+    targetColumnName: string,
+  ): Promise<Locator> {
+    const row = this.getRow({ [rowColumnName]: rowValue });
+    const tableContainer = this.getTableContainer();
+    const headers = await tableContainer
+      .locator('thead th, thead [role="columnheader"]')
+      .allTextContents();
+    const targetIndex = headers.findIndex((header) => header?.trim() === targetColumnName);
+    if (targetIndex === -1) {
+      throw new Error(`Column "${targetColumnName}" not found`);
+    }
+    return row.locator(`td:nth-child(${targetIndex + 1})`);
+  }
+
   async getColumns(): Promise<string[]> {
     const tableContainer = this.getTableContainer();
 
