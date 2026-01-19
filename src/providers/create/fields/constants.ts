@@ -96,7 +96,4 @@ export const providerFormFieldLabels = {
   [ProviderFormFieldId.ProviderType]: t('Provider type'),
   [ProviderFormFieldId.ServiceAccountToken]: t('Service account bearer token'),
   [ProviderFormFieldId.ShowDefaultProjects]: t('Show default projects'),
-  [ProviderFormFieldId.SmbDirectory]: t('SMB shared directory'),
-  [ProviderFormFieldId.SmbPassword]: t('Password'),
-  [ProviderFormFieldId.SmbUsername]: t('Username'),
 };

@@ -2,10 +2,9 @@ import { encode } from 'js-base64';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
-import { encodeFormValue } from '@utils/helpers/encodeFormValue';
 
 import { ProviderFormFieldId } from '../fields/constants';
-import type { OvaFormData } from '../types';
+import type { HypervFormData } from '../types';
 
 import { buildProviderObject } from './buildProviderObject';
 import { buildSecretObject } from './buildSecretObject';
@@ -15,11 +14,7 @@ type ProviderResources = {
   secret: IoK8sApiCoreV1Secret;
 };
 
-/**
- * Builds Kubernetes resources for HyperV provider
- * Follows the same pattern as OVA provider but includes SMB credentials
- */
-export const buildHypervProviderResources = (formData: OvaFormData): ProviderResources => {
+export const buildHypervProviderResources = (formData: HypervFormData): ProviderResources => {
   const namespace = formData[ProviderFormFieldId.ProviderProject];
   const providerName = formData[ProviderFormFieldId.ProviderName];
   const smbDirectory = formData[ProviderFormFieldId.SmbDirectory] ?? '';
@@ -35,8 +30,8 @@ export const buildHypervProviderResources = (formData: OvaFormData): ProviderRes
 
   const secretData: Record<string, string> = {
     insecureSkipVerify: encode('false'),
-    ...(username?.trim() && { username: encodeFormValue(username) }),
-    ...(password?.trim() && { password: encodeFormValue(password) }),
+    ...(username?.trim() && { username: encode(username.trim()) }),
+    ...(password?.trim() && { password: encode(password.trim()) }),
   };
 
   const secret = buildSecretObject({

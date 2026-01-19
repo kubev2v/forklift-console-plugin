@@ -60,4 +60,3 @@ export const getProviderTypeOptions = (isDarkTheme: boolean): ProviderTypeOption
     value: PROVIDER_TYPES.vsphere,
   },
 ];
-// Force rebuild 1765658336

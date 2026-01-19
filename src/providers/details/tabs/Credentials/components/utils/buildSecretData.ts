@@ -91,6 +91,13 @@ export const buildSecretData = (
       return data;
     }
 
+    case PROVIDER_TYPES.hyperv:
+      return {
+        ...baseData,
+        password: encode(formData[ProviderFormFieldId.SmbPassword] ?? ''),
+        username: encode(formData[ProviderFormFieldId.SmbUsername] ?? ''),
+      };
+
     case PROVIDER_TYPES.ova:
     case undefined:
     default:

@@ -4,6 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PROVIDER_TYPES } from '../utils/constants';
 
+import HypervProviderDetailsPage from './HypervProviderDetailsPage';
 import OpenshiftProviderDetailsPage from './OpenshiftProviderDetailsPage';
 import OpenStackProviderDetailsPage from './OpenStackProviderDetailsPage';
 import OvaProviderDetailsPage from './OvaProviderDetailsPage';
@@ -35,8 +36,9 @@ const ProviderDetailsPageByType: FC<ProviderDetailsPageByTypeProps> = ({
     case PROVIDER_TYPES.vsphere:
       return <VSphereProviderDetailsPage name={name} namespace={namespace} />;
     case PROVIDER_TYPES.ova:
-    case PROVIDER_TYPES.hyperv:
       return <OvaProviderDetailsPage name={name} namespace={namespace} />;
+    case PROVIDER_TYPES.hyperv:
+      return <HypervProviderDetailsPage name={name} namespace={namespace} />;
     case undefined:
     default:
       return <ErrorState title={t('Unsupported provider type')} />;

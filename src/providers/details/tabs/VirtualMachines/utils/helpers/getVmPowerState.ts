@@ -1,3 +1,4 @@
+import type { ProviderType } from '@forklift-ui/types';
 import type {
   OpenshiftVM,
   OpenstackVM,
@@ -47,19 +48,16 @@ const getOpenShiftVmPowerState = (vm: OpenshiftVM): PowerState =>
 export const getVmPowerState = (vm: ProviderVirtualMachine | undefined): PowerState => {
   if (!vm) return 'unknown';
 
-  switch (vm?.providerType) {
+  switch (vm?.providerType as ProviderType) {
     case 'ovirt':
-      return getOVirtVmPowerState(vm);
+      return getOVirtVmPowerState(vm as OVirtVM);
     case 'vsphere':
-      return getVSphereVmPowerState(vm);
+      return getVSphereVmPowerState(vm as VSphereVM);
     case 'openstack':
-      return getOpenStackVmPowerState(vm);
+      return getOpenStackVmPowerState(vm as OpenstackVM);
     case 'openshift':
-      return getOpenShiftVmPowerState(vm);
+      return getOpenShiftVmPowerState(vm as OpenshiftVM);
     case 'ova':
-    case 'hyperv':
-      return 'off';
-    // @ts-expect-error - hyperv not yet in backend types
     case 'hyperv':
       return 'off';
     default:
