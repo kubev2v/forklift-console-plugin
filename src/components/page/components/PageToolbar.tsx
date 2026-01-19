@@ -141,7 +141,7 @@ export const PageToolbar = <T,>({
         </Split>
 
         {showPagination && (
-          <ToolbarItem variant="pagination">
+          <ToolbarItem variant="pagination" data-testid="table-pagination">
             <Pagination
               variant="top"
               perPage={itemsPerPage}
@@ -149,6 +149,11 @@ export const PageToolbar = <T,>({
               itemCount={totalItems}
               onSetPage={onSetPage}
               onPerPageSelect={onPerPageSelect}
+              toggleTemplate={({ firstIndex, itemCount, lastIndex }) => (
+                <span data-testid="pagination-toggle-text">
+                  {firstIndex} - {lastIndex} of {itemCount}
+                </span>
+              )}
             />
           </ToolbarItem>
         )}
