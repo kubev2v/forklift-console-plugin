@@ -3,6 +3,8 @@ import { expect, type Page } from '@playwright/test';
 import type { PlanTestData } from '../../../types/test-data';
 import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
 
+type ConcernCategory = 'critical' | 'warning' | 'information';
+
 /** VirtualMachines tab for Plan Details page (flat grid, no folder hierarchy). */
 export class VirtualMachinesTab extends VirtualMachinesTable {
   constructor(page: Page) {
@@ -63,7 +65,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.page.waitForTimeout(300);
   }
 
-  getConcernBadge(category: 'critical' | 'warning' | 'information') {
+  getConcernBadge(category: ConcernCategory) {
     return this.vmTable.getByTestId(`concern-badge-${category}`).first();
   }
 
@@ -88,10 +90,12 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
 
   async getRowCount(): Promise<number> {
     const toggle = '.pf-v5-c-menu-toggle, .pf-v6-c-menu-toggle, .pf-v5-c-pagination__menu-toggle';
-    const text = await this.page.locator(toggle).first().textContent();
-    // Text format: "1 - 10 of 100" → split on "of" and parse the total
-    const total = text?.split(' of ')[1]?.trim();
-    return total ? parseInt(total, 10) : 0;
+    const pagination = this.page.locator(toggle).first();
+    if (await pagination.isVisible({ timeout: 1000 }).catch(() => false)) {
+      const total = (await pagination.textContent())?.split(' of ')[1]?.trim();
+      if (total) return Number.parseInt(total, 10);
+    }
+    return this.vmTable.getByRole('rowgroup').nth(1).getByRole('row').count();
   }
 
   async getTableCell(rowColumnName: string, rowValue: string, targetColumnName: string) {
@@ -112,7 +116,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.page.waitForURL((url) => url.toString().endsWith('/vms'));
   }
 
-  async openConcernPopover(category?: 'critical' | 'warning' | 'information'): Promise<boolean> {
+  async openConcernPopover(category?: ConcernCategory): Promise<boolean> {
     const badge = category
       ? this.getConcernBadge(category)
       : await this.getFirstVisibleConcernBadge();
@@ -212,10 +216,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     return this.page.getByTestId('form-helper-text-error');
   }
 
-  async verifyConcernBadgeExists(
-    category: 'critical' | 'warning' | 'information',
-    rowIndex?: number,
-  ): Promise<void> {
+  async verifyConcernBadgeExists(category: ConcernCategory, rowIndex?: number): Promise<void> {
     if (rowIndex === undefined) {
       await expect(this.vmTable.getByTestId(`concern-badge-${category}`).first()).toBeVisible();
     } else {
@@ -254,9 +255,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await expect(this.page.getByRole('columnheader', { name: 'Label' })).not.toBeVisible();
   }
 
-  async verifyFilteredRowsHaveBadge(
-    category: 'critical' | 'warning' | 'information',
-  ): Promise<void> {
+  async verifyFilteredRowsHaveBadge(category: ConcernCategory): Promise<void> {
     const bodyRowgroup = this.vmTable.getByRole('rowgroup').nth(1);
     const rows = bodyRowgroup.getByRole('row');
     const rowCount = await rows.count();

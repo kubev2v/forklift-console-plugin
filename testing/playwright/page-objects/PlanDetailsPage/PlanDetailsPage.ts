@@ -2,7 +2,7 @@ import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
-import { isEmpty } from '../../utils/utils';
+import { disableGuidedTour, isEmpty } from '../../utils/utils';
 
 import { DetailsTab } from './tabs/DetailsTab';
 import { MappingsTab } from './tabs/MappingsTab';
@@ -51,7 +51,7 @@ export class PlanDetailsPage {
   }
 
   /**
-   * Returns the critical concerns alert element (MTV-3713).
+   * Returns the critical concerns alert element.
    */
   get criticalConcernsAlert() {
     return this.page.getByTestId('plan-critical-alert');
@@ -138,6 +138,7 @@ export class PlanDetailsPage {
       name: planName,
       namespace,
     });
+    await disableGuidedTour(this.page);
   }
 
   /**
