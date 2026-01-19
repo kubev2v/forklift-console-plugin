@@ -89,12 +89,13 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     return vmName?.trim() ?? '';
   }
 
-  /** Gets total row count from pagination (e.g., "1 - 10 of 100" → 100). */
   async getRowCount(): Promise<number> {
-    const paginationText = this.page.getByTestId('pagination-toggle-text');
-    const text = await paginationText.first().textContent();
-    const match = /of\s+(?<total>\d+)/.exec(text ?? '');
-    return match?.groups?.total ? parseInt(match.groups.total, 10) : 0;
+    const text = await this.page.getByTestId('pagination-toggle-text').first().textContent();
+    return parseInt(/of\s+(?<total>\d+)/.exec(text ?? '')?.groups?.total ?? '0', 10);
+  }
+
+  async getTableCell(rowColumnName: string, rowValue: string, targetColumnName: string) {
+    return this.table.getCell(rowColumnName, rowValue, targetColumnName);
   }
 
   getVMActionsMenu(vmName: string) {
