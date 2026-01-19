@@ -51,6 +51,7 @@ const ProviderTypeFields: FC = () => {
       {selectedProviderType === PROVIDER_TYPES.openshift && (
         <>
           <OpenShiftUrlField />
+          <SectionHeading text={t('Provider credentials')} />
           {openshiftUrl?.trim() && <ServiceAccountTokenField />}
           <CertificateValidationField />
         </>
@@ -59,6 +60,7 @@ const ProviderTypeFields: FC = () => {
       {selectedProviderType === PROVIDER_TYPES.openstack && (
         <>
           <OpenStackUrlField />
+          <SectionHeading text={t('Provider credentials')} />
           <OpenStackAuthenticationTypeField />
           <CertificateValidationField />
         </>
@@ -67,6 +69,7 @@ const ProviderTypeFields: FC = () => {
       {selectedProviderType === PROVIDER_TYPES.ovirt && (
         <>
           <OvirtUrlField />
+          <SectionHeading text={t('Provider credentials')} />
           {ovirtUrl?.trim() && <OvirtCredentialsFields />}
           <CertificateValidationField />
         </>

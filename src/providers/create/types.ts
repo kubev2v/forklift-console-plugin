@@ -23,6 +23,9 @@ type OpenshiftFields = {
 
 type OvaFields = {
   [ProviderFormFieldId.NfsDirectory]?: string;
+};
+
+type HypervFields = {
   [ProviderFormFieldId.SmbDirectory]?: string;
   [ProviderFormFieldId.SmbUsername]?: string;
   [ProviderFormFieldId.SmbPassword]?: string;
@@ -72,6 +75,7 @@ export type OvaFormData = BaseFormData & OvaFields;
 export type OpenstackFormData = BaseFormData & OpenstackFields;
 export type OvirtFormData = BaseFormData & OvirtFields;
 export type VsphereFormData = BaseFormData & VsphereFields;
+export type HypervFormData = BaseFormData & HypervFields;
 
 export type CreateProviderFormData = FieldValues &
   BaseFormData &
@@ -79,7 +83,8 @@ export type CreateProviderFormData = FieldValues &
   OvaFields &
   OpenstackFields &
   OvirtFields &
-  VsphereFields;
+  VsphereFields &
+  HypervFields;
 
 export type CreateProviderFormContextProps = {
   providerNames: string[] | undefined;

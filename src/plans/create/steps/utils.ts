@@ -1,5 +1,7 @@
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
+import type { ProviderType } from '@forklift-ui/types';
+
 import type { ProviderNetwork } from '../types';
 
 /**
@@ -15,14 +17,14 @@ export const getMapResourceLabel = (
   if (!resource?.providerType) {
     return '';
   }
-  switch (resource.providerType) {
+  switch (resource.providerType as ProviderType) {
     case 'openshift': {
-      return resource.namespace ? `${resource.namespace}/${resource.name}` : resource.name;
+      return (resource as { namespace?: string; name: string }).namespace
+        ? `${(resource as { namespace: string }).namespace}/${resource.name}`
+        : resource.name;
     }
-    case 'ova':
-      return resource.name || '';
-    // @ts-expect-error - hyperv not yet in backend types
     case 'hyperv':
+    case 'ova':
     case 'vsphere':
     case 'openstack': {
       return resource.name || '';
@@ -32,7 +34,7 @@ export const getMapResourceLabel = (
       // For network: fall back to empty string
       // For storage: fall back to name
       const isStorageResource = 'name' in resource && resource.name !== undefined;
-      return resource.path ?? (isStorageResource ? resource.name || '' : '');
+      return (resource as { path?: string }).path ?? (isStorageResource ? resource.name || '' : '');
     }
     default: {
       return '';

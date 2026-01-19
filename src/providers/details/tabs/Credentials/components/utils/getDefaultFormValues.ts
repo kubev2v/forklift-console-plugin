@@ -74,6 +74,12 @@ export const getDefaultFormValues = (
       };
     }
 
+    case PROVIDER_TYPES.hyperv:
+      return {
+        [ProviderFormFieldId.SmbPassword]: getDecodedValue(secret?.data?.password) ?? '',
+        [ProviderFormFieldId.SmbUsername]: getDecodedValue(secret?.data?.username) ?? '',
+      };
+
     case PROVIDER_TYPES.ova:
     case undefined:
     default:
