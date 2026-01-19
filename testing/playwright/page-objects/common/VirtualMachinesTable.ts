@@ -3,7 +3,10 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { Table } from './Table';
 
 /**
- * Shared component for VM tables in Provider Details, Plan Wizard, and Plan Details pages.
+ * Shared component for VM tables that appear in:
+ * - Provider Details Page > Virtual Machines tab
+ * - Plan Creation Wizard > Virtual Machines step
+ * - Plan Details Page > Virtual Machines tab (extended via VirtualMachinesTab)
  */
 export class VirtualMachinesTable {
   protected readonly page: Page;
@@ -64,6 +67,7 @@ export class VirtualMachinesTable {
     await this.table.enableColumn(columnName);
   }
 
+  /** Expands a folder in the VM tree table using data-testid selectors. */
   async expandFolder(folder: string): Promise<void> {
     const expandCell = this.page.getByTestId(`folder-${folder}-expand-cell`);
 
@@ -84,6 +88,7 @@ export class VirtualMachinesTable {
     return this.table.getColumns();
   }
 
+  /** Gets the first visible VM name from the table (row 0 is folder, rows 1+ are VMs). */
   async getFirstVMName(): Promise<string> {
     await this.page.getByTestId('vsphere-tree-table').waitFor({ state: 'visible' });
 
@@ -97,6 +102,7 @@ export class VirtualMachinesTable {
     return cellText?.trim() ?? '';
   }
 
+  /** Gets the VM count from a folder row (e.g., "25 VMs"). Returns 0 if not found. */
   async getFolderVMCount(folderName: string): Promise<number> {
     const vmCountLabel = this.page.getByTestId(`folder-${folderName}-vm-count`);
 
@@ -137,6 +143,7 @@ export class VirtualMachinesTable {
     await this.page.waitForTimeout(500);
   }
 
+  /** Reorders columns using drag-and-drop via mouse API. */
   async reorderColumn(sourceColumn: string, targetColumn: string): Promise<void> {
     const manageColumnsBtn = this.page.getByTestId('manage-columns-button');
     await manageColumnsBtn.click();
@@ -193,6 +200,7 @@ export class VirtualMachinesTable {
     await this.page.waitForTimeout(500);
   }
 
+  /** Tests concern button by clicking it, verifying popover opens, then closing. Returns false if no concern button found. */
   async testConcernButton(): Promise<boolean> {
     const concernButton = this.page.locator('button').filter({ hasText: /^\d+$/ }).first();
 
@@ -212,6 +220,7 @@ export class VirtualMachinesTable {
     return true;
   }
 
+  /** Tests concern type filter functionality. Returns false if filter UI not available. */
   async testConcernTypeFilter(): Promise<boolean> {
     const showFiltersButton = this.page.getByRole('button', { name: /Show Filters/i });
     if (!(await showFiltersButton.isVisible({ timeout: 3000 }).catch(() => false))) {
@@ -258,6 +267,7 @@ export class VirtualMachinesTable {
     return true;
   }
 
+  /** Tests folder expand/collapse: finds first folder, expands if collapsed, then collapses back. */
   async testFolderExpandCollapse(): Promise<void> {
     const tableGrid = this.page.locator('[role="treegrid"]').first();
     await expect(tableGrid).toBeVisible();
