@@ -1,4 +1,4 @@
-import type { ProvidersPermissionStatus } from 'src/modules/Providers/utils/types/ProvidersPermissionStatus';
+import type { ProvidersPermissionStatus } from 'src/providers/utils/types/ProvidersPermissionStatus';
 
 import type { OVirtVM } from '@kubev2v/types';
 import type { V1beta1StorageMap } from '@kubev2v/types';

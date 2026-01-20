@@ -1,5 +1,5 @@
-import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
 import { OpenstackSecretFieldsId } from 'src/providers/utils/constants';
+import { validateNoSpaces } from 'src/providers/utils/validators/common';
 
 import { t } from '@utils/i18n';
 import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';

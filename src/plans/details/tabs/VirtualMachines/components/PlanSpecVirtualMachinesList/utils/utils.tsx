@@ -1,5 +1,5 @@
-import ConcernsColumnPopover from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/ConcernsColumnPopover';
-import { CustomFilterType } from 'src/modules/Providers/views/details/tabs/VirtualMachines/constants';
+import ConcernsColumnPopover from 'src/providers/details/tabs/VirtualMachines/components/ConcernsColumnPopover';
+import { CustomFilterType } from 'src/providers/details/tabs/VirtualMachines/constants';
 
 import { type EnumValue, FilterDefType, type ResourceField } from '@components/common/utils/types';
 import { getCategoryIcon } from '@components/Concerns/utils/category';

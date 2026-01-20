@@ -1,4 +1,5 @@
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import type {
   OpenshiftProvider,
@@ -7,8 +8,6 @@ import type {
   OVirtProvider,
   VSphereProvider,
 } from '@kubev2v/types';
-
-import type { ProviderData } from '../../../modules/Providers/utils/types/ProviderData';
 
 export const getProviderStorageCount = (provider: ProviderData) => {
   const { inventory } = provider;

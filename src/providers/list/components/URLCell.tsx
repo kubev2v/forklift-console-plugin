@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
-import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
-import type { CellProps } from 'src/modules/Providers/views/list/components/CellProps';
+import { TableCell } from 'src/components/TableCell/TableCell';
+import type { CellProps } from 'src/providers/list/components/CellProps';
 
 import { Truncate } from '@patternfly/react-core';
 import { EMPTY_MSG } from '@utils/constants';

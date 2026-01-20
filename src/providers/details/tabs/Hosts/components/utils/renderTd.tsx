@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { NameCellRenderer } from 'src/modules/Providers/views/details/tabs/Hosts/components/NameCellRenderer';
+import { NameCellRenderer } from 'src/providers/details/tabs/Hosts/components/NameCellRenderer';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';

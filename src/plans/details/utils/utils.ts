@@ -1,5 +1,5 @@
-import { ConcernCategory } from 'src/modules/Providers/views/details/tabs/VirtualMachines/constants';
 import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
+import { ConcernCategory } from 'src/providers/details/tabs/VirtualMachines/constants';
 
 import type { VirtualMachineWithConcerns } from '@components/Concerns/utils/constants';
 import type { Concern, V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@kubev2v/types';

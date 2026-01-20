@@ -1,10 +1,10 @@
 import type { FC } from 'react';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
-import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
-import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import { PageHeadings } from 'src/components/DetailPageHeadings/PageHeadings';
 import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 import ProviderActionsDropdown from 'src/providers/actions/ProviderActionsDropdown';
+import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
+import useProviderInventory from 'src/providers/hooks/useProviderInventory';
+import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import { type ProviderInventory, ProviderModel } from '@kubev2v/types';
 import { Flex, FlexItem } from '@patternfly/react-core';

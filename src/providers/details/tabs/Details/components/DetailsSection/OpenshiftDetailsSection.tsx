@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { CredentialsDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/CredentialsDetailsItem';
-import { ExternalManagementLinkDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/ExternalManagementLinkDetailsItem';
-import { TransferNetworkDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/TransferNetworkDetailsItem';
-import { TypeDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/TypeDetailsItem';
-import { URLDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/URLDetailsItem';
-import { getOpenshiftProviderWebUILink } from 'src/modules/Providers/views/details/components/DetailsSection/utils/getOpenshiftProviderWebUILink';
+import { CredentialsDetailsItem } from 'src/providers/details/components/DetailsSection/components/CredentialsDetailsItem';
+import { ExternalManagementLinkDetailsItem } from 'src/providers/details/components/DetailsSection/components/ExternalManagementLinkDetailsItem';
+import { TransferNetworkDetailsItem } from 'src/providers/details/components/DetailsSection/components/TransferNetworkDetailsItem';
+import { TypeDetailsItem } from 'src/providers/details/components/DetailsSection/components/TypeDetailsItem';
+import { URLDetailsItem } from 'src/providers/details/components/DetailsSection/components/URLDetailsItem';
+import { getOpenshiftProviderWebUILink } from 'src/providers/details/components/DetailsSection/utils/getOpenshiftProviderWebUILink';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import CreatedAtDetailsItem from '@components/DetailItems/CreatedAtDetailItem';

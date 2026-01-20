@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react';
-import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
-import { calculateCidrNotation } from 'src/modules/Providers/views/details/tabs/Hosts/utils/helpers/calculateCidrNotation';
-import { determineHostStatus } from 'src/modules/Providers/views/details/tabs/Hosts/utils/helpers/determineHostStatus';
+import { TableCell } from 'src/components/TableCell/TableCell';
+import { calculateCidrNotation } from 'src/providers/details/tabs/Hosts/utils/helpers/calculateCidrNotation';
+import { determineHostStatus } from 'src/providers/details/tabs/Hosts/utils/helpers/determineHostStatus';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, ButtonVariant, HelperText, HelperTextItem, Popover } from '@patternfly/react-core';

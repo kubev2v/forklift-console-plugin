@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import SectionHeading from '@components/headers/SectionHeading';
 import { DescriptionList, PageSection } from '@patternfly/react-core';

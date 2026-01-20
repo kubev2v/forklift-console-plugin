@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useHistory } from 'react-router';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
 import { TELEMETRY_EVENTS } from 'src/utils/analytics/constants';
 import { useForkliftAnalytics } from 'src/utils/analytics/hooks/useForkliftAnalytics';
 import { useForkliftTranslation } from 'src/utils/i18n';

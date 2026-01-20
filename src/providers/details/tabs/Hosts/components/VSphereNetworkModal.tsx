@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
-import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
 import { VSphereEndpointType } from 'src/providers/utils/constants';
+import { validateNoSpaces } from 'src/providers/utils/validators/common';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';

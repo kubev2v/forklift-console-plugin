@@ -1,6 +1,6 @@
 import { type FC, useMemo } from 'react';
-import InventoryNotReachable from 'src/modules/Providers/views/list/components/InventoryNotReachable';
-import ProviderCriticalCondition from 'src/modules/Providers/views/list/components/ProviderCriticalCondition';
+import InventoryNotReachable from 'src/providers/list/components/InventoryNotReachable';
+import ProviderCriticalCondition from 'src/providers/list/components/ProviderCriticalCondition';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { PageSection } from '@patternfly/react-core';

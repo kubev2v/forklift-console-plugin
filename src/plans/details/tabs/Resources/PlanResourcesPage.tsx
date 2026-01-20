@@ -1,5 +1,5 @@
 import { type FC, useMemo } from 'react';
-import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
+import useProviderInventory from 'src/providers/hooks/useProviderInventory';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import {

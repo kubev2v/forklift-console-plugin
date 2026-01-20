@@ -1,4 +1,4 @@
-import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
 
 import type { SortDirection } from '@components/common/utils/types';
 import type { TdProps } from '@patternfly/react-table';

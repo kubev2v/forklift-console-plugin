@@ -1,7 +1,7 @@
 import type { FieldValues } from 'react-hook-form';
-import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
-import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import type { TargetPowerState, TargetPowerStateValue } from 'src/plans/constants';
+import type { InventoryNetwork } from 'src/providers/hooks/useNetworks';
+import type { InventoryStorage } from 'src/providers/hooks/useStorages';
 import type { StorageMapping, TargetStorage } from 'src/storageMaps/utils/types';
 
 import type {

@@ -1,13 +1,11 @@
 import type { FC } from 'react';
-import { ErrorStatusCell } from 'src/modules/Providers/views/list/components/ErrorStatusCell';
-import { NamespaceCell } from 'src/modules/Providers/views/list/components/NamespaceCell';
-import { ProviderLinkCell } from 'src/modules/Providers/views/list/components/ProviderLinkCell';
-import { createStatusCell } from 'src/modules/utils/createStatusCell';
-import type { CellProps } from 'src/networkMaps/list/components/CellProps';
-import type { NetworkMapData } from 'src/networkMaps/utils/types';
 import ProviderActionsDropdown from 'src/providers/actions/ProviderActionsDropdown';
 import InventoryCell from 'src/providers/components/InventoryCell';
 import { VirtualMachinesCell } from 'src/providers/components/VirtualMachinesCell';
+import type { CellProps } from 'src/providers/list/components/CellProps';
+import { NamespaceCell } from 'src/providers/list/components/NamespaceCell';
+import { PhaseCell } from 'src/providers/list/components/PhaseCell';
+import { ProviderLinkCell } from 'src/providers/list/components/ProviderLinkCell';
 import type { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 
 import { DatabaseIcon, NetworkIcon, OutlinedHddIcon } from '@patternfly/react-icons';
@@ -33,7 +31,7 @@ export const ProviderDataCellRenderers: Record<ProvidersResourceFieldId, FC<Cell
   name: ProviderLinkCell,
   namespace: NamespaceCell,
   networkCount: (props) => <InventoryCell icon={<NetworkIcon />} {...props} />,
-  phase: createStatusCell<NetworkMapData>(ErrorStatusCell),
+  phase: PhaseCell,
   product: nullRenderer,
   projectCount: nullRenderer,
   regionCount: nullRenderer,

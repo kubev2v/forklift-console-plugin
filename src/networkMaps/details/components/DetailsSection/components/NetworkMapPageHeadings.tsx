@@ -1,9 +1,9 @@
 import type { FC } from 'react';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
+import { PageHeadings } from 'src/components/DetailPageHeadings/PageHeadings';
 import NetworkMapActionsDropdown from 'src/networkMaps/actions/NetworkMapActionsDropdown';
 import NetworkMapCriticalConditions from 'src/networkMaps/components/NetworkMapCriticalConditions';
 import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
+import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
 
 import {
   NetworkMapModel,

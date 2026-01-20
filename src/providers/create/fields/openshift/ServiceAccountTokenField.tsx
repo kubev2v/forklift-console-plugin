@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { validateK8sToken } from 'src/modules/Providers/utils/validators/common';
+import { validateK8sToken } from 'src/providers/utils/validators/common';
 
 import { useForkliftTranslation } from '@utils/i18n';
 

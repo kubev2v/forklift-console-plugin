@@ -1,7 +1,7 @@
 import { type FC, useMemo } from 'react';
-import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
-import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
 import type { ProvidersResourceFieldId } from 'src/providers/utils/constants';
+import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';

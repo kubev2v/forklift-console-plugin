@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
+import { getNetworkMappingValues } from 'src/networkMaps/create/utils/buildNetworkMappings';
+import { useOvirtNicProfiles } from 'src/plans/create/hooks/useOvirtNicProfiles';
+import type { NetworkMapping } from 'src/plans/create/steps/network-map/constants';
 import {
   type InventoryNetwork,
   useOpenShiftNetworks,
   useSourceNetworks,
-} from 'src/modules/Providers/hooks/useNetworks';
-import { getNetworkMappingValues } from 'src/networkMaps/create/utils/buildNetworkMappings';
-import { useOvirtNicProfiles } from 'src/plans/create/hooks/useOvirtNicProfiles';
-import type { NetworkMapping } from 'src/plans/create/steps/network-map/constants';
+} from 'src/providers/hooks/useNetworks';
 
 import {
   NetworkMapModelGroupVersionKind,

@@ -1,5 +1,5 @@
-import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
+import type { InventoryStorage } from 'src/providers/hooks/useStorages';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { STORAGE_NAMES } from 'src/storageMaps/utils/constants';
 import {

@@ -1,7 +1,7 @@
 import {
   ConcernCategory,
   CustomFilterType,
-} from 'src/modules/Providers/views/details/tabs/VirtualMachines/constants';
+} from 'src/providers/details/tabs/VirtualMachines/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { FilterDef } from '@components/common/utils/types';

@@ -1,6 +1,6 @@
-import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
-import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
-import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
+import { TableCell } from 'src/components/TableCell/TableCell';
+import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
+import { TableLinkCell } from 'src/components/TableCell/TableLinkCell';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
 import { getProviderTypeIcon } from 'src/plans/details/utils/constants';
 import { PlanTableResourceId } from 'src/plans/list/utils/constants';

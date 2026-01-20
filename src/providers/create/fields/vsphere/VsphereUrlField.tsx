@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import { validateEsxiURL } from 'src/modules/Providers/utils/validators/provider/vsphere/validateEsxiURL';
-import { validateVCenterURL } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVCenterURL';
 import { VSphereEndpointType } from 'src/providers/utils/constants';
+import { validateEsxiURL } from 'src/providers/utils/validators/provider/vsphere/validateEsxiURL';
+import { validateVCenterURL } from 'src/providers/utils/validators/provider/vsphere/validateVCenterURL';
 
 import { useForkliftTranslation } from '@utils/i18n';
 import { ValidationState } from '@utils/validation/Validation';

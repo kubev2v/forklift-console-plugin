@@ -1,6 +1,6 @@
 import type { FC } from 'react';
-import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
-import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
+import { TableCell } from 'src/components/TableCell/TableCell';
+import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
 
 import type { PlanConcernsPanelData } from './utils/types';
 

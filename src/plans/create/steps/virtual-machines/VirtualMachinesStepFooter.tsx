@@ -1,6 +1,6 @@
 import { type FC, useCallback, useMemo, useState } from 'react';
 import { useWatch } from 'react-hook-form';
-import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
+import { useInventoryVms } from 'src/providers/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 
 import {
   Button,

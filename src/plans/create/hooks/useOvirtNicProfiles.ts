@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
+import useProviderInventory from 'src/providers/hooks/useProviderInventory';
 
 import type { OVirtNicProfile, V1beta1Provider } from '@kubev2v/types';
 

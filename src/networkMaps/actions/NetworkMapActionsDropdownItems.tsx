@@ -1,8 +1,5 @@
 import { useNavigate } from 'react-router-dom-v5-compat';
-import {
-  DeleteModal,
-  type DeleteModalProps,
-} from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
+import { DeleteModal, type DeleteModalProps } from 'src/providers/modals/DeleteModal/DeleteModal';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModel, NetworkMapModelRef } from '@kubev2v/types';

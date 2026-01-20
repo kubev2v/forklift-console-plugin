@@ -1,6 +1,6 @@
 import { type FC, useMemo } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
-import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
+import useProviderInventory from 'src/providers/hooks/useProviderInventory';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import Select from '@components/common/Select';

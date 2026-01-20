@@ -4,7 +4,7 @@ import { StandardPageWithSelection } from 'src/components/page/StandardPageWithS
 import {
   extraSupportedFilters,
   extraSupportedMatchers,
-} from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/constants';
+} from 'src/providers/details/tabs/VirtualMachines/components/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ConcernsAndConditionsTable from '@components/ConcernsAndConditionsTable/ConcernsAndConditionsTable';

@@ -1,5 +1,5 @@
 import { type Dispatch, type FC, type FormEvent, type SetStateAction, useState } from 'react';
-import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
+import { validateNoSpaces } from 'src/providers/utils/validators/common';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { TextInput } from '@patternfly/react-core';

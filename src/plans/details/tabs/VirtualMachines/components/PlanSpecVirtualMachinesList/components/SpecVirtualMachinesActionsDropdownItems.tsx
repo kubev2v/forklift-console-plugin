@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import EditNetworkNameTemplate, {
   type EditNetworkNameTemplateProps,
@@ -13,6 +12,7 @@ import EditVmTargetPowerState, {
 import EditVolumeNameTemplate, {
   type EditVolumeNameTemplateProps,
 } from 'src/plans/details/tabs/Details/components/SettingsSection/components/VolumeNameTemplate/EditVolumeNameTemplate';
+import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

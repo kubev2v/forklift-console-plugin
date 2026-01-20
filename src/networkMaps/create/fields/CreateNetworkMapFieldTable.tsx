@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
-import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { getNetworkMapFieldId } from 'src/networkMaps/utils/getNetworkMapFieldId';
+import { useSourceNetworks } from 'src/providers/hooks/useNetworks';
 import useTargetNetworks from 'src/utils/hooks/useTargetNetworks';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';

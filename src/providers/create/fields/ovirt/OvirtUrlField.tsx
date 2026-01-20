@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { validateOvirtURL } from 'src/modules/Providers/utils/validators/provider/ovirt/validateOvirtURL';
+import { validateOvirtURL } from 'src/providers/utils/validators/provider/ovirt/validateOvirtURL';
 
 import { useForkliftTranslation } from '@utils/i18n';
 import { ValidationState } from '@utils/validation/Validation';

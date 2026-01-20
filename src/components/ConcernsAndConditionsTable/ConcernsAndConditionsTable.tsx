@@ -1,6 +1,6 @@
 import { type FC, Fragment } from 'react';
-import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
 import type { SpecVirtualMachinePageData } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/utils/types';
+import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
 
 import {
   groupConcernsByCategory,

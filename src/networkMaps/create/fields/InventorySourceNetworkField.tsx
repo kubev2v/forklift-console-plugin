@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
-import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
+import type { InventoryNetwork } from 'src/providers/hooks/useNetworks';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import Select from '@components/common/Select';

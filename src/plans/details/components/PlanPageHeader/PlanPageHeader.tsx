@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
+import { PageHeadings } from 'src/components/DetailPageHeadings/PageHeadings';
 import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 import PlanActionsDropdown from 'src/plans/actions/PlanActionsDropdown';
 import PlanEditCutoverButton from 'src/plans/actions/PlanEditCutoverButton';

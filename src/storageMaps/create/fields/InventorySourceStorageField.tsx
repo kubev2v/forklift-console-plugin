@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
-import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
+import type { InventoryStorage } from 'src/providers/hooks/useStorages';
 import {
   StorageMapFieldId,
   type StorageMapping,

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { OwnerReferencesItem } from 'src/modules/Providers/utils/components/DetailsPage/OwnerReferencesItem';
+import { OwnerReferencesItem } from 'src/components/DetailItems/OwnerReferencesItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { MORE_INFO_OWNER_DETAIL_ITEM } from '@utils/links';

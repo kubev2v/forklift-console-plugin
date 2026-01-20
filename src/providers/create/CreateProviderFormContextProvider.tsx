@@ -1,7 +1,6 @@
 import type { FC, PropsWithChildren } from 'react';
 import { useMemo } from 'react';
-
-import { useK8sWatchProviderNames } from '../../modules/Providers/hooks/useK8sWatchProviderNames';
+import { useK8sWatchProviderNames } from 'src/providers/hooks/useK8sWatchProviderNames';
 
 import { CreateProviderFormContext } from './constants';
 

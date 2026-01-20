@@ -1,10 +1,10 @@
 import type { FC } from 'react';
-import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
-import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import { TableIconCell } from 'src/components/TableCell/TableIconCell';
+import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
 import {
   getVmPowerState,
   type PowerState,
-} from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/helpers/getVmPowerState';
+} from 'src/providers/details/tabs/VirtualMachines/utils/helpers/getVmPowerState';
 
 import { Tooltip } from '@patternfly/react-core';
 import { OffIcon, PowerOffIcon, UnknownIcon } from '@patternfly/react-icons';

@@ -1,5 +1,5 @@
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
-import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
 
 import type { ResourceField } from '@components/common/utils/types';
 import SectionHeading from '@components/headers/SectionHeading';

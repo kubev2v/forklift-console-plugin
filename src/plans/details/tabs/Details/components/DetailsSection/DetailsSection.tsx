@@ -1,6 +1,6 @@
 import type { FC } from 'react';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType';
+import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
 
 import CreatedAtDetailsItem from '@components/DetailItems/CreatedAtDetailItem';
 import NameDetailsItem from '@components/DetailItems/NameDetailItem';

@@ -1,4 +1,4 @@
-import { validateK8sName } from 'src/modules/Providers/utils/validators/common';
+import { validateK8sName } from 'src/providers/utils/validators/common';
 
 import type { V1beta1Plan } from '@kubev2v/types';
 import { t } from '@utils/i18n';

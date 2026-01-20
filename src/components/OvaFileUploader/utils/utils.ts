@@ -1,4 +1,4 @@
-import { getOVAProxyUrl } from 'src/modules/Providers/utils/helpers/getApiUrl';
+import { getOVAProxyUrl } from 'src/providers/utils/helpers/getApiUrl';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';

@@ -1,5 +1,5 @@
-import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
-import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
+import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 export type ProviderVirtualMachinesListProps = {
   title?: string;

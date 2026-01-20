@@ -1,5 +1,5 @@
-import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
-import { validateVDDKImage } from 'src/modules/Providers/utils/validators/provider/vsphere/validateVDDKImage';
+import { validateNoSpaces } from 'src/providers/utils/validators/common';
+import { validateVDDKImage } from 'src/providers/utils/validators/provider/vsphere/validateVDDKImage';
 
 import { t } from '@utils/i18n';
 import { ValidationState } from '@utils/validation/Validation';

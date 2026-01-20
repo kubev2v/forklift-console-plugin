@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
-import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
-import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
-import type { CellProps } from 'src/modules/Providers/views/list/components/CellProps';
+import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
+import { TableIconCell } from 'src/components/TableCell/TableIconCell';
+import type { CellProps } from 'src/providers/list/components/CellProps';
 
 import { PROVIDER_TYPES, ProvidersResourceFieldId } from '../utils/constants';
 

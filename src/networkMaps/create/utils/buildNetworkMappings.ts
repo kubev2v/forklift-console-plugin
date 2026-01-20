@@ -1,7 +1,7 @@
-import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
 import type { NetworkMapping, NetworkMappingValue } from 'src/networkMaps/utils/types';
 import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
 import { IGNORED, MULTUS, POD } from 'src/plans/details/utils/constants';
+import type { InventoryNetwork } from 'src/providers/hooks/useNetworks';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type {

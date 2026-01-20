@@ -1,7 +1,8 @@
 import type { FC } from 'react';
+import { ConditionsSection } from 'src/components/ConditionsSection/ConditionsSection';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import StorageMapReviewTable from 'src/plans/create/steps/review/StorageMapReviewTable';
+import { useSourceStorages } from 'src/providers/hooks/useStorages';
 import { getStorageMappingValues } from 'src/storageMaps/create/utils/buildStorageMappings';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -26,7 +27,6 @@ import {
   getMapSourceProviderNamespace,
 } from '@utils/crds/maps/selectors';
 
-import { ConditionsSection } from '../../components/ConditionsSection/ConditionsSection';
 import DetailsSection from '../../components/DetailsSection/DetailsSection';
 import StorageMapEdit, { type StorageMapEditProps } from '../../components/StorageMapEdit';
 

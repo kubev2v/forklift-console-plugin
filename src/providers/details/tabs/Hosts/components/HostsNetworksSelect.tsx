@@ -1,5 +1,5 @@
 import type { Dispatch, FC, SetStateAction } from 'react';
-import { calculateCidrNotation } from 'src/modules/Providers/views/details/tabs/Hosts/utils/helpers/calculateCidrNotation';
+import { calculateCidrNotation } from 'src/providers/details/tabs/Hosts/utils/helpers/calculateCidrNotation';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import type { SelectValueType } from '@components/common/utils/types';

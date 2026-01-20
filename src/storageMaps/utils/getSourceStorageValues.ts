@@ -1,6 +1,6 @@
-import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import type { CategorizedSourceMappings } from 'src/plans/create/types';
+import type { InventoryStorage } from 'src/providers/hooks/useStorages';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type {

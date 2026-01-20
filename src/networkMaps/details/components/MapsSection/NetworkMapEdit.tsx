@@ -1,5 +1,4 @@
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
-import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import InventorySourceNetworkField from 'src/networkMaps/create/fields/InventorySourceNetworkField';
 import { validateNetworkMaps } from 'src/networkMaps/create/fields/utils';
 import { buildNetworkMappings } from 'src/networkMaps/create/utils/buildNetworkMappings';
@@ -7,6 +6,7 @@ import { defaultNetworkMapping, networkMapFieldLabels } from 'src/networkMaps/ut
 import { getNetworkMapFieldId } from 'src/networkMaps/utils/getNetworkMapFieldId';
 import { NetworkMapFieldId } from 'src/networkMaps/utils/types';
 import { defaultNetMapping } from 'src/plans/create/steps/network-map/constants';
+import { useSourceNetworks } from 'src/providers/hooks/useNetworks';
 import useTargetNetworks from 'src/utils/hooks/useTargetNetworks';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';

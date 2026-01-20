@@ -1,6 +1,6 @@
 import { type FC, useMemo } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
-import VisibleTableData from 'src/modules/Providers/utils/components/TableCell/VisibleTableData';
+import VisibleTableData from 'src/components/TableCell/VisibleTableData';
 
 import { getPlanConcernsPanelFieldsData } from './utils/getPlanConcernsPanelFieldsData';
 import type { MigrationPlanConcernsTableResourceId, PlanConcernsPanelData } from './utils/types';

@@ -1,10 +1,10 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { CredentialsDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/CredentialsDetailsItem';
-import { ExternalManagementLinkDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/ExternalManagementLinkDetailsItem';
-import { TypeDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/TypeDetailsItem';
-import { URLDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/URLDetailsItem';
-import { getVSphereProviderWebUILink } from 'src/modules/Providers/views/details/components/DetailsSection/utils/getVSphereProviderWebUILink';
+import { CredentialsDetailsItem } from 'src/providers/details/components/DetailsSection/components/CredentialsDetailsItem';
+import { ExternalManagementLinkDetailsItem } from 'src/providers/details/components/DetailsSection/components/ExternalManagementLinkDetailsItem';
+import { TypeDetailsItem } from 'src/providers/details/components/DetailsSection/components/TypeDetailsItem';
+import { URLDetailsItem } from 'src/providers/details/components/DetailsSection/components/URLDetailsItem';
+import { getVSphereProviderWebUILink } from 'src/providers/details/components/DetailsSection/utils/getVSphereProviderWebUILink';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import CreatedAtDetailsItem from '@components/DetailItems/CreatedAtDetailItem';

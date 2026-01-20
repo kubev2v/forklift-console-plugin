@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import { getInventoryApiUrl } from 'src/providers/utils/helpers/getApiUrl';
 
 import type {
   OpenshiftProvider,
@@ -13,7 +14,6 @@ import type {
 } from '@kubev2v/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
-import { getInventoryApiUrl } from '../../../modules/Providers/utils/helpers/getApiUrl';
 import { k8sGetProvidersByNamespace } from '../utils/k8sGetProvidersByNamespace';
 export const getProvidersInventoryByNamespace = async (
   currNamespace: string | undefined,

@@ -1,10 +1,7 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import {
-  DeleteModal,
-  type DeleteModalProps,
-} from 'src/modules/Providers/modals/DeleteModal/DeleteModal';
-import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import { DeleteModal, type DeleteModalProps } from 'src/providers/modals/DeleteModal/DeleteModal';
+import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@kubev2v/types';

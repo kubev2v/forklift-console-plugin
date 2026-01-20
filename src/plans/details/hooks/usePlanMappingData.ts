@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
-import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import type { InventoryNetwork } from 'src/providers/hooks/useNetworks';
+import type { InventoryStorage } from 'src/providers/hooks/useStorages';
 
 import type {
   V1beta1NetworkMap,

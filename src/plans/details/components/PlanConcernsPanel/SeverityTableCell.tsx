@@ -1,6 +1,6 @@
 import type { FC } from 'react';
-import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
-import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
+import { TableCell } from 'src/components/TableCell/TableCell';
+import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
 
 import { getCategoryStatus } from '@components/Concerns/utils/category';
 import { Label } from '@patternfly/react-core';

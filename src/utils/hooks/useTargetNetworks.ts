@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { useOpenShiftNetworks } from 'src/modules/Providers/hooks/useNetworks';
 import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
 import { POD } from 'src/plans/details/utils/constants';
+import { useOpenShiftNetworks } from 'src/providers/hooks/useNetworks';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { DEFAULT_NETWORK } from '@utils/constants';

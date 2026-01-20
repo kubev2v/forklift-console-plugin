@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { type InventoryStorage, useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import { useOvirtDisksForVMs } from 'src/plans/create/hooks/useOvirtDisksForVMs';
+import { type InventoryStorage, useSourceStorages } from 'src/providers/hooks/useStorages';
 import { getStorageMappingValues } from 'src/storageMaps/create/utils/buildStorageMappings';
 import type { StorageMapping, TargetStorage } from 'src/storageMaps/utils/types';
 

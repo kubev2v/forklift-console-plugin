@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
-import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import { Tr } from '@patternfly/react-table';
 

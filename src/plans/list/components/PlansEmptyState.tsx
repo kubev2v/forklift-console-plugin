@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
+import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 

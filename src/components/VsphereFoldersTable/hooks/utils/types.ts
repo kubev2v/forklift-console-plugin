@@ -1,4 +1,4 @@
-import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
 
 import type { Concern } from '@kubev2v/types';
 

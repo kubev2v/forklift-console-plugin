@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
+import { TableCell } from 'src/components/TableCell/TableCell';
 
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';

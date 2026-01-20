@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
+import { TableCell } from 'src/components/TableCell/TableCell';
 
 import type { HostCellProps } from './utils/types';
 

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
+import { useInventoryVms } from 'src/providers/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 
 import type { ProviderVirtualMachine, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';

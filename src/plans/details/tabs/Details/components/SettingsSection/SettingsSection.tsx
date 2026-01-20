@@ -1,8 +1,8 @@
 import type { FC } from 'react';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
 import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
+import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
 
 import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
 import { DescriptionList } from '@patternfly/react-core';

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { getVmPowerState } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/helpers/getVmPowerState';
+import { getVmPowerState } from 'src/providers/details/tabs/VirtualMachines/utils/helpers/getVmPowerState';
 
 import { getCategoryIcon } from '@components/Concerns/utils/category';
 import {

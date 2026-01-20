@@ -1,5 +1,5 @@
 import jsonpath from 'jsonpath';
-import { CustomFilterType } from 'src/modules/Providers/views/details/tabs/VirtualMachines/constants';
+import { CustomFilterType } from 'src/providers/details/tabs/VirtualMachines/constants';
 
 import { getOrderedConcernCategoriesSum } from '@components/Concerns/utils/getOrderedConcernCategoriesSum';
 

@@ -1,14 +1,14 @@
 import { type FC, useMemo } from 'react';
 import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
+import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
+import InventoryNotReachable from 'src/providers/list/components/InventoryNotReachable';
+import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import { ProviderModel, ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { loadUserSettings } from '../../components/common/Page/userSettings';
 import StandardPage from '../../components/page/StandardPage';
-import useGetDeleteAndEditAccessReview from '../../modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import type { ProviderData } from '../../modules/Providers/utils/types/ProviderData';
-import InventoryNotReachable from '../../modules/Providers/views/list/components/InventoryNotReachable';
 import { useForkliftTranslation } from '../../utils/i18n';
 import ProvidersAddButton from '../list/components/ProvidersAddButton';
 import { findInventoryByID } from '../list/utils/findInventoryByID';
