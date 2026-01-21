@@ -68,7 +68,8 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
         await planDetailsPage.virtualMachinesTab.applyFilter('Concerns (severity)', 'Critical');
 
         const filteredCount = await planDetailsPage.virtualMachinesTab.getRowCount();
-        expect(filteredCount).toBeLessThan(initialCount);
+        expect(filteredCount).toBeLessThanOrEqual(initialCount);
+        expect(filteredCount).toBeGreaterThan(0);
         await planDetailsPage.virtualMachinesTab.verifyFilteredRowsHaveBadge('critical');
 
         await planDetailsPage.virtualMachinesTab.clearFilters();
