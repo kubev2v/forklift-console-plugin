@@ -227,7 +227,6 @@ export class VirtualMachinesTable {
     const saveBtn = this.page.getByTestId('manage-columns-save-button');
     await saveBtn.click();
     await expect(modalBody).not.toBeVisible();
-    await this.page.waitForTimeout(500);
   }
 
   async search(value: string): Promise<void> {
@@ -243,7 +242,6 @@ export class VirtualMachinesTable {
       .getByTestId('vsphere-tree-table')
       .getByRole('button', { name: columnName });
     await columnHeader.click();
-    await this.page.waitForTimeout(500);
   }
 
   /**
@@ -270,56 +268,6 @@ export class VirtualMachinesTable {
     // Close the popover by pressing Escape
     await this.page.keyboard.press('Escape');
     await expect(concernsPopover).not.toBeVisible();
-
-    return true;
-  }
-
-  /**
-   * Tests concern type filter functionality
-   * @returns true if filter UI was available and tested, false otherwise
-   */
-  async testConcernTypeFilter(): Promise<boolean> {
-    const showFiltersButton = this.page.getByRole('button', { name: /Show Filters/i });
-    if (!(await showFiltersButton.isVisible({ timeout: 3000 }).catch(() => false))) {
-      return false;
-    }
-    await showFiltersButton.click();
-    await this.page.waitForTimeout(300);
-
-    const filterDropdown = this.page.getByRole('button', { name: /Filter by/i }).first();
-    if (!(await filterDropdown.isVisible({ timeout: 3000 }).catch(() => false))) {
-      return false;
-    }
-    await filterDropdown.click();
-
-    const concernsTypeOption = this.page.getByRole('option', { name: /Concerns.*type/i });
-    if (!(await concernsTypeOption.isVisible({ timeout: 3000 }).catch(() => false))) {
-      await this.page.keyboard.press('Escape');
-      return false;
-    }
-    await concernsTypeOption.click();
-    await this.page.waitForTimeout(300);
-
-    const filterInput = this.page
-      .getByRole('button', { name: /Filter by Concerns/i })
-      .or(this.page.getByPlaceholder(/Filter by/i));
-    if (!(await filterInput.isVisible({ timeout: 3000 }).catch(() => false))) {
-      return false;
-    }
-    await filterInput.click();
-    await this.page.waitForTimeout(300);
-
-    const filterOptions = this.page.locator('[role="option"], .pf-v5-c-menu__list-item');
-    const optionCount = await filterOptions.count();
-    if (optionCount === 0) {
-      await this.page.keyboard.press('Escape');
-      return false;
-    }
-
-    await filterOptions.first().click();
-    await this.page.waitForTimeout(500);
-
-    await this.clearAllFilters();
 
     return true;
   }
