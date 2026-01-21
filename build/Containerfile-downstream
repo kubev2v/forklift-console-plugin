@@ -27,7 +27,7 @@ WORKDIR /opt/app-root/src/app/
 RUN yarn install --frozen-lockfile --ignore-engines --offline && yarn build
 
 # Web server container
-FROM registry.redhat.io/rhel9/nginx-122:9.5-1745931244
+FROM registry.redhat.io/rhel9/nginx-126:9.7-1767846422
 
 # Use none-root user
 USER 1001
