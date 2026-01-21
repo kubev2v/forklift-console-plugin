@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useOvirtDisksForVMs } from 'src/plans/create/hooks/useOvirtDisksForVMs';
-import { type InventoryStorage, useSourceStorages } from 'src/providers/hooks/useStorages';
 import { getStorageMappingValues } from 'src/storageMaps/create/utils/buildStorageMappings';
 import type { StorageMapping, TargetStorage } from 'src/storageMaps/utils/types';
+import { type InventoryStorage, useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import {
   type ProviderVirtualMachine,

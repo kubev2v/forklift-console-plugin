@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
@@ -12,7 +13,6 @@ import { ovirtHostFilter } from './utils/filters/OvirtHostFilter';
 import { getConcernsResourceField } from './utils/helpers/getConcernsResourceField';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
-import { CustomFilterType } from './constants';
 import { OVirtVirtualMachinesCells } from './OVirtVirtualMachinesRow';
 
 const oVirtVmFieldsMetadataFactory: ResourceField[] = [

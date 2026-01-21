@@ -6,9 +6,9 @@ import { OpenShiftVirtualMachinesList } from 'src/providers/details/tabs/Virtual
 import { OpenStackVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OpenStackVirtualMachinesList';
 import { OvaVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OvaVirtualMachinesList';
 import { OVirtVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OVirtVirtualMachinesList';
-import { useInventoryVms } from 'src/providers/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
 import { VSphereVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/VSphereVirtualMachinesList';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 
 import type { ProviderVirtualMachine } from '@kubev2v/types';
 

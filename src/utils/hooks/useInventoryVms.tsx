@@ -1,12 +1,10 @@
-import useProviderInventory, {
-  type UseProviderInventoryParams,
-} from 'src/providers/hooks/useProviderInventory';
 import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import { isProviderLocalOpenshift, isProviderOpenshift } from 'src/utils/resources';
+import type { ProviderVmData } from 'src/utils/types';
 
 import type { OpenshiftVM, ProviderVirtualMachine } from '@kubev2v/types';
 
-import type { VmData } from '../../components/VMCellProps';
+import useProviderInventory, { type UseProviderInventoryParams } from './useProviderInventory';
 
 /**
  * A hook for retrieving VMs from the inventory.
@@ -21,7 +19,7 @@ export const useInventoryVms = (
   { provider }: ProviderData,
   providerLoaded = true,
   providerLoadError?: unknown,
-): [VmData[], boolean, Error | null] => {
+): [ProviderVmData[], boolean, Error | null] => {
   const validProvider = providerLoaded && !providerLoadError ? provider : undefined;
 
   const inventoryOptions: UseProviderInventoryParams = {
@@ -35,7 +33,7 @@ export const useInventoryVms = (
     loading,
   } = useProviderInventory<ProviderVirtualMachine[]>(inventoryOptions);
 
-  const vmData: VmData[] =
+  const vmData: ProviderVmData[] =
     !loading && !error && Array.isArray(vms)
       ? vms.map((vm) => ({
           isProviderLocalOpenshift: isProviderLocalOpenshift(validProvider),

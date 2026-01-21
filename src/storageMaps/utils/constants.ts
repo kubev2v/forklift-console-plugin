@@ -45,7 +45,3 @@ export const storageVendorProductLabels: Record<StorageVendorProduct, ReturnType
 
 export const offloadPlugins = Object.values(OffloadPlugin);
 export const storageVendorProducts = Object.values(StorageVendorProduct);
-
-export const STORAGE_NAMES = {
-  GLANCE: 'glance',
-};

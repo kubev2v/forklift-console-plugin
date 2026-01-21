@@ -1,4 +1,4 @@
-import { validateContainerImage, validateK8sName } from 'src/providers/utils/validators/common';
+import { validateContainerImage, validateK8sName } from 'src/utils/validation/common';
 
 import { t } from '@utils/i18n';
 

@@ -1,6 +1,6 @@
-import useProviderInventory from 'src/providers/hooks/useProviderInventory';
-
 import type { OpenShiftNamespace, V1beta1Provider } from '@kubev2v/types';
+
+import useProviderInventory from './useProviderInventory';
 
 export const useTargetNamespaces = (
   targetProvider: V1beta1Provider | undefined,

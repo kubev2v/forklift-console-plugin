@@ -1,6 +1,8 @@
 import { type MouseEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
+import { AlertMessageForModals } from 'src/components/modals/AlertMessageForModals';
+import { ItemIsOwnedAlert } from 'src/components/modals/ItemIsOwnedAlert';
 import { getValueByJsonPath } from 'src/utils/helpers/getValueByJsonPath';
 import useToggle from 'src/utils/hooks/useToggle';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -21,9 +23,6 @@ import {
   StackItem,
   TextInput,
 } from '@patternfly/react-core';
-
-import { AlertMessageForModals } from '../components/AlertMessageForModals';
-import { ItemIsOwnedAlert } from '../components/ItemIsOwnedAlert';
 
 import { defaultOnConfirm } from './utils/defaultOnConfirm';
 import type { EditModalProps } from './types';

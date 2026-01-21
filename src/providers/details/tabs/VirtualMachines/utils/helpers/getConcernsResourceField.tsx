@@ -1,8 +1,9 @@
+import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
+
 import type { ResourceField } from '@components/common/utils/types';
+import ConcernsColumnPopover from '@components/Concerns/ConcernsColumnPopover';
 import { t } from '@utils/i18n';
 
-import ConcernsColumnPopover from '../../components/ConcernsColumnPopover';
-import { CustomFilterType } from '../../constants';
 import { concernFilter } from '../filters/concernFilter';
 
 export const getConcernsResourceField = (): ResourceField => ({

@@ -23,8 +23,8 @@ import {
 } from '@patternfly/react-core';
 import { getResourceUrl } from '@utils/getResourceUrl';
 
-import { AlertMessageForModals } from '../components/AlertMessageForModals';
-import { ItemIsOwnedAlert } from '../components/ItemIsOwnedAlert';
+import { AlertMessageForModals } from '../AlertMessageForModals';
+import { ItemIsOwnedAlert } from '../ItemIsOwnedAlert';
 
 /**
  * Props for the DeleteModal component

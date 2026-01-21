@@ -1,7 +1,7 @@
+import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
+
 import type { EnumValue } from '@components/common/utils/types';
 import { t } from '@utils/i18n';
-
-import { CustomFilterType } from '../../constants';
 
 const labelToFilterItem = (label: string): EnumValue =>
   label ? { id: label, label } : { id: label, label: 'Undefined' };

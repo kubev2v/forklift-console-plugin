@@ -6,7 +6,7 @@ import {
   validateNFSMount,
   validatePublicCert,
   validateURL,
-} from '../common';
+} from 'src/utils/validation/common';
 
 describe('validator', () => {
   // Tests for validateContainerImage

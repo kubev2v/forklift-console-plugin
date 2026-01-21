@@ -1,9 +1,8 @@
+import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 
 import type { EnumValue, FilterDef } from '@components/common/utils/types';
 import { t } from '@utils/i18n';
-
-import { CustomFilterType } from '../../constants';
 
 type VmConcernsFilterItems = { vm: { concerns: { label: string }[] } };
 

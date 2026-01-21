@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
-import type { InventoryStorage } from 'src/providers/hooks/useStorages';
 import {
   StorageMapFieldId,
   type StorageMapping,
   type StorageMappingValue,
 } from 'src/storageMaps/utils/types';
+import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import Select from '@components/common/Select';

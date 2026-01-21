@@ -1,5 +1,5 @@
 import { type FC, type Ref, useMemo, useState } from 'react';
-import useProviderInventory from 'src/providers/hooks/useProviderInventory';
+import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,

@@ -1,4 +1,4 @@
-import { validatePublicCert } from 'src/providers/utils/validators/common';
+import { validatePublicCert } from 'src/utils/validation/common';
 
 import { t } from '@utils/i18n';
 import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';

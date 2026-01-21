@@ -1,9 +1,8 @@
 import { safeBase64Decode } from 'src/utils/helpers/safeBase64Decode';
+import { validateIpv4, validateURL } from 'src/utils/validation/common';
 
 import { MTVConsole } from '@utils/console';
 import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
-
-import { validateIpv4, validateURL } from '../../common';
 
 const getUrlObject = (url: string) => {
   try {

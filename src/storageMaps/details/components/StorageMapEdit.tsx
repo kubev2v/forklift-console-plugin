@@ -1,9 +1,9 @@
 import { useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
-import { useSourceStorages } from 'src/providers/hooks/useStorages';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { StorageMapFieldId } from 'src/storageMaps/utils/types';
+import { useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import ModalForm from '@components/ModalForm/ModalForm';

@@ -2,9 +2,9 @@ import type { FC } from 'react';
 import { PageHeadings } from 'src/components/DetailPageHeadings/PageHeadings';
 import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 import ProviderActionsDropdown from 'src/providers/actions/ProviderActionsDropdown';
-import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
-import useProviderInventory from 'src/providers/hooks/useProviderInventory';
 import type { ProviderData } from 'src/providers/utils/types/ProviderData';
+import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
+import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 
 import { type ProviderInventory, ProviderModel } from '@kubev2v/types';
 import { Flex, FlexItem } from '@patternfly/react-core';

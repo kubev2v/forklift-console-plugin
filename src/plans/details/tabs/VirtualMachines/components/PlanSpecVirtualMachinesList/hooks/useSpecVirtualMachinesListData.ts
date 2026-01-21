@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
 import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
-import { useInventoryVms } from 'src/providers/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
+import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 
 import type { V1beta1Plan } from '@kubev2v/types';
 import { getPlanTargetNamespace, getPlanVirtualMachines } from '@utils/crds/plans/selectors';

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useController, useWatch } from 'react-hook-form';
 import CertificateUpload from 'src/providers/components/CertificateUpload/CertificateUpload';
-import { validatePublicCert } from 'src/providers/utils/validators/common';
+import { validatePublicCert } from 'src/utils/validation/common';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';

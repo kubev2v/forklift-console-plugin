@@ -2,8 +2,8 @@ import type { FC } from 'react';
 import { ConditionsSection } from 'src/components/ConditionsSection/ConditionsSection';
 import SectionHeading from 'src/components/headers/SectionHeading';
 import StorageMapReviewTable from 'src/plans/create/steps/review/StorageMapReviewTable';
-import { useSourceStorages } from 'src/providers/hooks/useStorages';
 import { getStorageMappingValues } from 'src/storageMaps/create/utils/buildStorageMappings';
+import { useSourceStorages } from 'src/utils/hooks/useStorages';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';

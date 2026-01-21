@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import useToggle from 'src/providers/hooks/useToggle';
+import useToggle from 'src/utils/hooks/useToggle';
 
 import SectionHeading from '@components/headers/SectionHeading';
 import { Button, ButtonVariant, Flex, FlexItem, Icon, Tooltip } from '@patternfly/react-core';

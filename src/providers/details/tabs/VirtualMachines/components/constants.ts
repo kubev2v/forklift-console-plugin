@@ -1,3 +1,4 @@
+import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
 import type { SpecVirtualMachinePageData } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/utils/types';
 
 import { EnumFilter } from '@components/common/Filter/EnumFilter';
@@ -6,8 +7,6 @@ import type { ValueMatcher } from '@components/common/FilterGroup/types';
 import { getCategoryLabel } from '@components/Concerns/utils/category';
 import type { VirtualMachineWithConcerns } from '@components/Concerns/utils/constants';
 import type { Concern } from '@kubev2v/types';
-
-import { CustomFilterType } from '../constants';
 
 import type { VmData } from './VMCellProps';
 

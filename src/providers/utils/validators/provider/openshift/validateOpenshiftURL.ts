@@ -1,6 +1,6 @@
-import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
+import { validateURL } from 'src/utils/validation/common';
 
-import { validateURL } from '../../common';
+import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
 export const validateOpenshiftURL = (url: string | number | undefined): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.

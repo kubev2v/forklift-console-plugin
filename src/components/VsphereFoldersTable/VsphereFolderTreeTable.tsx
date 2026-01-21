@@ -1,5 +1,5 @@
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
-import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
+import type { ProviderVmData } from 'src/utils/types';
 
 import type { ResourceField } from '@components/common/utils/types';
 import SectionHeading from '@components/headers/SectionHeading';
@@ -30,8 +30,8 @@ import type { VmRow } from './utils/types';
 
 type VsphereFolderTreeTableProps = {
   initialSelectedIds: string[] | undefined;
-  onSelect: ((selectedVMs: VmData[] | undefined) => void) | undefined;
-  vmData: VmData[] | undefined;
+  onSelect: ((selectedVMs: ProviderVmData[] | undefined) => void) | undefined;
+  vmData: ProviderVmData[] | undefined;
   foldersDict: Record<string, VSphereResource>;
   hostsDict: Record<string, ProviderHost>;
 };

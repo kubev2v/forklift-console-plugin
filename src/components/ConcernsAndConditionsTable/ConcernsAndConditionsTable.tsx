@@ -1,6 +1,6 @@
 import { type FC, Fragment } from 'react';
 import type { SpecVirtualMachinePageData } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/utils/types';
-import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
+import type { ProviderVmData } from 'src/utils/types';
 
 import {
   groupConcernsByCategory,
@@ -19,10 +19,11 @@ import ConditionsTableRows from './components/ConditionsTableRows';
 
 type VirtualMachineWithConcerns = OVirtVM | VSphereVM | OpenstackVM | OvaVM;
 
-const ConcernsAndConditionsTable: FC<{ vmData: VmData | SpecVirtualMachinePageData }> = ({
+const ConcernsAndConditionsTable: FC<{ vmData: ProviderVmData | SpecVirtualMachinePageData }> = ({
   vmData,
 }) => {
-  const vm = (vmData as VmData)?.vm ?? (vmData as SpecVirtualMachinePageData)?.inventoryVmData?.vm;
+  const vm =
+    (vmData as ProviderVmData)?.vm ?? (vmData as SpecVirtualMachinePageData)?.inventoryVmData?.vm;
 
   const concerns: Concern[] = (vm as VirtualMachineWithConcerns)?.concerns;
   const conditions = (vmData as SpecVirtualMachinePageData)?.conditions;

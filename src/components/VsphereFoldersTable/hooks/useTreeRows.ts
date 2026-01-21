@@ -1,5 +1,5 @@
 import { type Dispatch, type MutableRefObject, type SetStateAction, useMemo } from 'react';
-import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
+import type { ProviderVmData } from 'src/utils/types';
 
 import type { ProviderHost, VSphereResource } from '@kubev2v/types';
 
@@ -31,7 +31,7 @@ type UseTreeRows = (args: {
   controls?: UseTreeRowsControls;
   foldersDict: Record<string, VSphereResource>;
   hostsDict: Record<string, ProviderHost>;
-  vmDataArr: VmData[] | undefined;
+  vmDataArr: ProviderVmData[] | undefined;
   visibleVmIdsRef?: MutableRefObject<Set<string> | undefined>;
 }) => UseTreeRowsReturnValue;
 

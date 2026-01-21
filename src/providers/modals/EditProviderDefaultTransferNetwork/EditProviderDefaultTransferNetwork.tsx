@@ -1,4 +1,5 @@
 import { type FC, type MouseEvent, type Ref, useMemo, useState } from 'react';
+import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -19,7 +20,6 @@ import {
 import { DEFAULT_NETWORK } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
-import useProviderInventory from '../../hooks/useProviderInventory';
 import { EditModal } from '../EditModal/EditModal';
 import type {
   EditModalProps,

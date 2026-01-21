@@ -1,9 +1,7 @@
-import {
-  ConcernCategory,
-  CustomFilterType,
-} from 'src/providers/details/tabs/VirtualMachines/constants';
+import { ConcernCategory } from 'src/providers/details/tabs/VirtualMachines/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
+import { CustomFilterType } from '@components/common/FilterGroup/constants';
 import type { FilterDef } from '@components/common/utils/types';
 import type { Concern, ProviderVirtualMachine as KubeProviderVirtualMachine } from '@kubev2v/types';
 import { isEmpty } from '@utils/helpers';

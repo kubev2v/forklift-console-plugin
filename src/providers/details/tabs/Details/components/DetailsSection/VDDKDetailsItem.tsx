@@ -1,9 +1,9 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { CREATE_VDDK_HELP_LINK } from 'src/plans/details/utils/constants';
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
+import { CREATE_VDDK_HELP_LINK } from '@utils/constants';
 import { getVddkInitImage } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';

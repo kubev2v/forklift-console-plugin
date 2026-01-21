@@ -6,7 +6,7 @@ import { defaultNetworkMapping, networkMapFieldLabels } from 'src/networkMaps/ut
 import { getNetworkMapFieldId } from 'src/networkMaps/utils/getNetworkMapFieldId';
 import { NetworkMapFieldId } from 'src/networkMaps/utils/types';
 import { defaultNetMapping } from 'src/plans/create/steps/network-map/constants';
-import { useSourceNetworks } from 'src/providers/hooks/useNetworks';
+import { useSourceNetworks } from 'src/utils/hooks/useNetworks';
 import useTargetNetworks from 'src/utils/hooks/useTargetNetworks';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';

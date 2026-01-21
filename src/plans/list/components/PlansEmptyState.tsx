@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
-import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
 import { useHasSufficientProviders } from 'src/utils/fetch';
+import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, ProviderModelRef } from '@kubev2v/types';

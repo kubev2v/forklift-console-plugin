@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useOpenShiftStorages } from 'src/providers/hooks/useStorages';
 import { StorageClassAnnotation, type TargetStorage } from 'src/storageMaps/utils/types';
+import { useOpenShiftStorages } from 'src/utils/hooks/useStorages';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 

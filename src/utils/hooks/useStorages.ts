@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { STORAGE_NAMES } from 'src/storageMaps/utils/constants';
 
 import type {
   OpenShiftStorageClass,
@@ -10,6 +9,7 @@ import type {
   V1beta1Provider,
   VSphereDataStore,
 } from '@kubev2v/types';
+import { STORAGE_NAMES } from '@utils/constants';
 
 import useProviderInventory from './useProviderInventory';
 

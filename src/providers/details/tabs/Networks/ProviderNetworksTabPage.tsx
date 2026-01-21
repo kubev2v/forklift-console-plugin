@@ -1,7 +1,7 @@
 import { type FC, useMemo } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
-import useProviderInventory from 'src/providers/hooks/useProviderInventory';
+import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
+import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {

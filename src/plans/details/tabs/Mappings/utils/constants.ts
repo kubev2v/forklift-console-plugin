@@ -1,5 +1,4 @@
-import { IGNORED } from 'src/plans/details/utils/constants';
-
+import { IGNORED } from '@utils/constants';
 import { DEFAULT_NETWORK } from '@utils/constants';
 import { t } from '@utils/i18n';
 

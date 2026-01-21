@@ -1,4 +1,15 @@
+import type { ProviderVirtualMachine } from '@kubev2v/types';
+
 import type { FEATURE_NAMES } from './constants';
+
+export type ProviderVmData = {
+  vm: ProviderVirtualMachine;
+  name: string;
+  namespace: string;
+  isProviderLocalOpenshift?: boolean;
+  folderName?: string;
+  hostName?: string;
+};
 
 export enum ProviderStatus {
   ValidationFailed = 'ValidationFailed',
@@ -17,6 +28,8 @@ export type VmFeatures = {
 };
 
 export type FeatureName = (typeof FEATURE_NAMES)[keyof typeof FEATURE_NAMES];
+
+export type MappingValue = { id?: string; name: string };
 
 /**
  * Type for the return value of access review hooks.

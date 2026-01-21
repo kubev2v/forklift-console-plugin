@@ -1,7 +1,7 @@
 import { type PropsWithChildren, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
-import { useOpenShiftNetworks, useSourceNetworks } from 'src/providers/hooks/useNetworks';
-import { useSourceStorages } from 'src/providers/hooks/useStorages';
+import { useOpenShiftNetworks, useSourceNetworks } from 'src/utils/hooks/useNetworks';
+import { useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import useTargetStorages from '@utils/hooks/useTargetStorages';
 

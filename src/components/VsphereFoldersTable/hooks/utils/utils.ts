@@ -1,5 +1,5 @@
-import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
 import { getVmPowerState } from 'src/providers/details/tabs/VirtualMachines/utils/helpers/getVmPowerState';
+import type { ProviderVmData } from 'src/utils/types';
 
 import type { ProviderHost, VSphereResource, VSphereVM } from '@kubev2v/types';
 
@@ -7,11 +7,11 @@ import { FOLDER_PREFIX, NO_FOLDER } from './constants';
 import type { FolderKey, Indexes, VmKey, VmLookups } from './types';
 
 export const buildIndexes = (
-  vmDataArr: VmData[] | undefined,
+  vmDataArr: ProviderVmData[] | undefined,
   foldersDict: Record<string, VSphereResource>,
   hostsDict: Record<string, ProviderHost>,
 ): Indexes => {
-  const vmByKey = new Map<VmKey, VmData>();
+  const vmByKey = new Map<VmKey, ProviderVmData>();
   const folderToVmKeys = new Map<FolderKey, VmKey[]>();
   const tokensByVmKey = new Map<VmKey, VmLookups>();
 
@@ -26,7 +26,7 @@ export const buildIndexes = (
     const folderName = folder?.name ?? NO_FOLDER;
     const host = hostsDict[vm.host] as { name: string } | undefined;
     const hostName = host?.name ?? '';
-    const enhancedVmData: VmData = {
+    const enhancedVmData: ProviderVmData = {
       ...vmData,
       folderName,
       hostName,

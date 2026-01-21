@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { getProviderTypeIcon } from 'src/plans/details/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
+import { getProviderTypeIcon } from 'src/utils/providers/getProviderTypeIcon';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import ProviderIconLink from '@components/ProviderIconLink';

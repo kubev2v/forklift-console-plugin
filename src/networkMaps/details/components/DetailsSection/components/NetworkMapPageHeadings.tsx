@@ -3,7 +3,7 @@ import { PageHeadings } from 'src/components/DetailPageHeadings/PageHeadings';
 import NetworkMapActionsDropdown from 'src/networkMaps/actions/NetworkMapActionsDropdown';
 import NetworkMapCriticalConditions from 'src/networkMaps/components/NetworkMapCriticalConditions';
 import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
-import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
+import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 
 import {
   NetworkMapModel,

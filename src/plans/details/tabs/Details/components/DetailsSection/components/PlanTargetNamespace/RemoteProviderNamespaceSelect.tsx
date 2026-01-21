@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import Loading from 'src/overview/components/Loading';
+import Loading from 'src/components/Loading/Loading';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 import { isEmpty } from '@utils/helpers';

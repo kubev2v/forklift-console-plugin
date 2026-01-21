@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 
@@ -11,7 +12,6 @@ import type { VmData } from './components/VMCellProps';
 import { getOpenShiftFeatureMap } from './utils/helpers/getOpenShiftFeatureMap';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { toVmFeatureEnum } from './utils/helpers/toVmFeatureEnum';
-import { CustomFilterType } from './constants';
 import { OpenShiftVirtualMachinesCells } from './OpenShiftVirtualMachinesRow';
 
 const openShiftVmFieldsMetadataFactory: ResourceField[] = [

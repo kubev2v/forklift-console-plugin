@@ -12,8 +12,8 @@ import EditVmTargetPowerState, {
 import EditVolumeNameTemplate, {
   type EditVolumeNameTemplateProps,
 } from 'src/plans/details/tabs/Details/components/SettingsSection/components/VolumeNameTemplate/EditVolumeNameTemplate';
-import useGetDeleteAndEditAccessReview from 'src/providers/hooks/useGetDeleteAndEditAccessReview';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, type ProviderType, type V1beta1Plan } from '@kubev2v/types';

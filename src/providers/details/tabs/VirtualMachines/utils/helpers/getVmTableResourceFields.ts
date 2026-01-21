@@ -1,8 +1,7 @@
+import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
 import { criticalConcernTableField } from 'src/plans/create/steps/virtual-machines/constants';
 
 import type { ResourceField } from '@components/common/utils/types';
-
-import { CustomFilterType } from '../../constants';
 
 /**
  * Arranges fields array with critical concern at the beginning when enabled

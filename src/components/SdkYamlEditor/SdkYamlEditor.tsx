@@ -1,6 +1,6 @@
 import { type FC, Suspense } from 'react';
 import { Base64 } from 'js-base64';
-import Loading from 'src/overview/components/Loading';
+import Loading from 'src/components/Loading/Loading';
 
 import { CodeEditor } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';

@@ -1,5 +1,5 @@
 import { type FC, Suspense } from 'react';
-import Loading from 'src/overview/components/Loading';
+import Loading from 'src/components/Loading/Loading';
 import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchForkliftController';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

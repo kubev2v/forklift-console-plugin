@@ -2,8 +2,8 @@ import { TableCell } from 'src/components/TableCell/TableCell';
 import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
 import { TableLinkCell } from 'src/components/TableCell/TableLinkCell';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
-import { getProviderTypeIcon } from 'src/plans/details/utils/constants';
 import { PlanTableResourceId } from 'src/plans/list/utils/constants';
+import { getProviderTypeIcon } from 'src/utils/providers/getProviderTypeIcon';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import ProviderIconLink from '@components/ProviderIconLink';

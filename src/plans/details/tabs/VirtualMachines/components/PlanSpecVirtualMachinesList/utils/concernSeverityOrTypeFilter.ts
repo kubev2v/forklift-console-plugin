@@ -1,5 +1,5 @@
+import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
 import type { SpecVirtualMachinePageData } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/utils/types';
-import { CustomFilterType } from 'src/providers/details/tabs/VirtualMachines/constants';
 
 import type { FilterDef } from '@components/common/utils/types';
 import { getCategoryIcon } from '@components/Concerns/utils/category';

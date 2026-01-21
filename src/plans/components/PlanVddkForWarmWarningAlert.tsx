@@ -2,9 +2,8 @@ import type { FC } from 'react';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import { Alert, AlertVariant, Stack } from '@patternfly/react-core';
+import { CREATE_VDDK_HELP_LINK } from '@utils/constants';
 import { useForkliftTranslation } from '@utils/i18n';
-
-import { CREATE_VDDK_HELP_LINK } from '../details/utils/constants';
 
 const PlanVddkForWarmWarningAlert: FC = () => {
   const { t } = useForkliftTranslation();
