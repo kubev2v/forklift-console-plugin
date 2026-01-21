@@ -13,9 +13,9 @@ import type { DetailsSectionProps } from './utils/types';
 
 const HyperVDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
-  const { provider } = data;
+  const { permissions, provider } = data;
 
-  if (!provider) return null;
+  if (!provider || !permissions) return null;
 
   return (
     <DescriptionList
@@ -28,7 +28,7 @@ const HyperVDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
       <NamespaceDetailsItem resource={provider} />
       <URLDetailsItem
         resource={provider}
-        canPatch={false}
+        canPatch={permissions.canPatch}
         helpContent={t(
           `URL of the SMB file share that serves the Hyper-V exported VMs, for example: //server/share or \\\\server\\share`,
         )}
