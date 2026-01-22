@@ -22,6 +22,12 @@ export class LearningExperienceDrawer {
     this.navigation = new NavigationHelper(page);
   }
 
+  private async verifyQuickReferenceItems(items: readonly string[]): Promise<void> {
+    for (const item of items) {
+      await expect(this.getQuickReferenceItemHeading(item)).toBeVisible();
+    }
+  }
+
   async close(): Promise<void> {
     await this.closeDrawerButton.click();
     await expect(this.drawerTitle).not.toBeVisible();
@@ -64,7 +70,7 @@ export class LearningExperienceDrawer {
   }
 
   getStepButton(stepNumber: number): Locator {
-    return this.page.getByRole('button', { name: new RegExp(`^${stepNumber}\\.`) });
+    return this.page.getByRole('button', { name: new RegExp(String.raw`^${stepNumber}\.`) });
   }
 
   async navigateToResource(resource: string, expectedHeading: string): Promise<void> {
@@ -162,9 +168,7 @@ export class LearningExperienceDrawer {
   }
 
   async verifyKeyConsiderationsItems(items: readonly string[]): Promise<void> {
-    for (const item of items) {
-      await expect(this.getQuickReferenceItemHeading(item)).toBeVisible();
-    }
+    await this.verifyQuickReferenceItems(items);
   }
 
   async verifyKeyTerminologyCollapsed(): Promise<void> {
@@ -173,9 +177,7 @@ export class LearningExperienceDrawer {
   }
 
   async verifyKeyTerminologyItems(items: readonly string[]): Promise<void> {
-    for (const item of items) {
-      await expect(this.getQuickReferenceItemHeading(item)).toBeVisible();
-    }
+    await this.verifyQuickReferenceItems(items);
   }
 
   async verifyPicklist(topics: TopicConfig[]): Promise<void> {
