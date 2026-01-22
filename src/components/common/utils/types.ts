@@ -72,6 +72,8 @@ export type ResourceField = {
   info?: ThProps['info'];
   compareFn?: (a: string, b: string, locale: string) => number;
   defaultSortDirection?: SortDirection;
+  // data-testid for the column header (for e2e testing)
+  testId?: string;
 };
 
 export type GlobalActionToolbarProps<T> = {

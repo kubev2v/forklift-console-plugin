@@ -227,7 +227,6 @@ export class VirtualMachinesTable {
     const saveBtn = this.page.getByTestId('manage-columns-save-button');
     await saveBtn.click();
     await expect(modalBody).not.toBeVisible();
-    await this.page.waitForTimeout(500);
   }
 
   async search(value: string): Promise<void> {
@@ -243,7 +242,6 @@ export class VirtualMachinesTable {
       .getByTestId('vsphere-tree-table')
       .getByRole('button', { name: columnName });
     await columnHeader.click();
-    await this.page.waitForTimeout(500);
   }
 
   /**
@@ -325,7 +323,10 @@ export class VirtualMachinesTable {
   }
 
   async verifyTableLoaded(): Promise<void> {
-    await expect(this.page.getByRole('treegrid')).toBeVisible({ timeout: 30000 });
+    // Handle both grid (Plan Details) and treegrid (Provider Details) tables
+    const grid = this.page.getByRole('grid');
+    const treegrid = this.page.getByRole('treegrid');
+    await expect(grid.or(treegrid)).toBeVisible({ timeout: 30000 });
     await this.table.waitForTableLoad();
   }
 

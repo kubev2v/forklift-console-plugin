@@ -1,185 +1,193 @@
 import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../../types/test-data';
-import { Table } from '../../common/Table';
+import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
 
-export class VirtualMachinesTab {
-  private readonly table: Table;
-  protected readonly page: Page;
+type ConcernCategory = 'critical' | 'warning' | 'information';
 
+/** VirtualMachines tab for Plan Details page (flat grid, no folder hierarchy). */
+export class VirtualMachinesTab extends VirtualMachinesTable {
   constructor(page: Page) {
-    this.page = page;
-    this.table = new Table(page, page.locator('main'));
+    super(page, page.locator('main'));
+  }
+
+  private async dismissOpenModals(): Promise<void> {
+    await this.cancelButton.click({ timeout: 1000 }).catch(() => undefined);
+  }
+
+  private get vmTable() {
+    return this.page.getByRole('grid', { name: 'Virtual machines' });
+  }
+
+  async applyFilter(filterName: string, value: string): Promise<void> {
+    await this.page.getByTestId('attribute-filter-toggle').click();
+    await this.page.getByRole('menuitem', { name: filterName }).click();
+    await this.page.locator('[data-testid^="filter-toggle-"]').first().click();
+    await this.page.getByTestId(`filter-value-${value}`).click();
+    await this.page.keyboard.press('Escape');
   }
 
   get cancelButton() {
     return this.page.getByTestId('modal-cancel-button');
   }
 
-  async clearAllFilters(): Promise<void> {
-    await this.table.clearAllFilters();
+  async clearFilters(): Promise<void> {
+    const btn = this.page.getByRole('button', { name: 'Clear all filters' });
+    if (await btn.isVisible().catch(() => false)) await btn.click();
   }
 
-  async disableColumn(columnName: string): Promise<void> {
-    await this.table.disableColumn(columnName);
+  async closeConcernPopover(): Promise<void> {
+    await this.page.keyboard.press('Escape');
+    await expect(this.page.getByTestId('concerns-popover')).not.toBeVisible();
+  }
+
+  async collapseFirstVMDetailsRow(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Details' }).first().click();
+    await this.page.waitForTimeout(300);
   }
 
   get editTargetNameMenuItem() {
     return this.page.getByTestId('edit-vm-target-name-menu-item');
   }
-
   get editTargetPowerStateModal() {
     return this.page.getByTestId('edit-target-power-state-modal');
   }
 
-  async enableColumn(columnName: string): Promise<void> {
-    await this.table.enableColumn(columnName);
+  async expandFilters(): Promise<void> {
+    const btn = this.page.getByRole('button', { name: 'Show Filters' });
+    if (await btn.isVisible()) await btn.click();
   }
 
-  async getColumns(): Promise<string[]> {
-    return this.table.getColumns();
+  async expandFirstVMDetailsRow(): Promise<void> {
+    const btn = this.page.getByRole('button', { name: 'Details' }).first();
+    await expect(btn).toBeVisible();
+    await btn.click();
+    await this.page.waitForTimeout(300);
+  }
+
+  getConcernBadge(category: ConcernCategory) {
+    return this.vmTable.getByTestId(`concern-badge-${category}`).first();
+  }
+
+  async getFirstVisibleConcernBadge() {
+    for (const category of ['critical', 'warning', 'information'] as const) {
+      const badge = this.getConcernBadge(category);
+      if (await badge.isVisible().catch(() => false)) {
+        return badge;
+      }
+    }
+    return null;
+  }
+
+  override async getFirstVMName(): Promise<string> {
+    await this.vmTable.waitFor({ state: 'visible' });
+    const bodyRowgroup = this.vmTable.getByRole('rowgroup').nth(1);
+    const firstRow = bodyRowgroup.getByRole('row').first();
+    const nameCell = firstRow.getByRole('gridcell').nth(2);
+    const vmName = await nameCell.textContent();
+    return vmName?.trim() ?? '';
+  }
+
+  async getRowCount(): Promise<number> {
+    const toggle = '.pf-v5-c-menu-toggle, .pf-v6-c-menu-toggle, .pf-v5-c-pagination__menu-toggle';
+    const pagination = this.page.locator(toggle).first();
+    if (await pagination.isVisible({ timeout: 1000 }).catch(() => false)) {
+      const total = (await pagination.textContent())?.split(' of ')[1]?.trim();
+      if (total) return Number.parseInt(total, 10);
+    }
+    return this.vmTable.getByRole('rowgroup').nth(1).getByRole('row').count();
   }
 
   async getTableCell(rowColumnName: string, rowValue: string, targetColumnName: string) {
-    const vmRow = this.table.getRow({ [rowColumnName]: rowValue });
-
-    // Get table headers to find the column index
-    const tableContainer = this.page.locator('[role="grid"]');
-    const headers = await tableContainer
-      .locator('thead th, thead [role="columnheader"]')
-      .allTextContents();
-
-    const targetIndex = headers.findIndex((header) => header?.trim() === targetColumnName);
-    if (targetIndex === -1) {
-      throw new Error(`Column "${targetColumnName}" not found`);
-    }
-
-    return vmRow.locator(`td:nth-child(${targetIndex + 1})`);
+    return this.table.getCell(rowColumnName, rowValue, targetColumnName);
   }
 
   getVMActionsMenu(vmName: string) {
-    const vmRow = this.table.getRow({ Name: vmName });
-    return vmRow.getByTestId('vm-actions-menu-toggle');
+    return this.table.getRow({ Name: vmName }).getByTestId('vm-actions-menu-toggle');
   }
 
   async getVMPowerState(vmName: string): Promise<string> {
-    const powerStateCell = await this.getTableCell('Name', vmName, 'Target power state');
-    const powerStateText = await powerStateCell.textContent();
-    return powerStateText?.trim() ?? '';
-  }
-
-  async isColumnVisible(columnName: string): Promise<boolean> {
-    return this.table.isColumnVisible(columnName);
+    const cell = await this.table.getCell('Name', vmName, 'Target power state');
+    return (await cell.textContent())?.trim() ?? '';
   }
 
   async navigateToVirtualMachinesTab(): Promise<void> {
-    const virtualMachinesTab = this.page.locator(
-      '[data-test-id="horizontal-link-Virtual machines"]',
-    );
-    await virtualMachinesTab.click();
+    await this.page.locator('[data-test-id="horizontal-link-Virtual machines"]').click();
     await this.page.waitForURL((url) => url.toString().endsWith('/vms'));
   }
 
+  async openConcernPopover(category?: ConcernCategory): Promise<boolean> {
+    const badge = category
+      ? this.getConcernBadge(category)
+      : await this.getFirstVisibleConcernBadge();
+    if (!badge || !(await badge.isVisible().catch(() => false))) {
+      return false;
+    }
+    await badge.click();
+    const popover = this.page.getByTestId('concerns-popover');
+    await expect(popover).toBeVisible();
+    return true;
+  }
+
   async openPowerStateDialog(vmName: string): Promise<void> {
-    const modalCancelButton = this.page.getByTestId('modal-cancel-button');
-    // Intentionally ignore errors if modal is not present
-    await modalCancelButton.click({ timeout: 1000 }).catch(() => undefined);
-
+    await this.dismissOpenModals();
     await this.getVMActionsMenu(vmName).click();
-
-    const editPowerStateMenuItem = this.page.getByTestId('edit-vm-target-power-state-menu-item');
-    await editPowerStateMenuItem.waitFor({ state: 'visible' });
-    await editPowerStateMenuItem.click();
-
+    const menuItem = this.page.getByTestId('edit-vm-target-power-state-menu-item');
+    await menuItem.waitFor({ state: 'visible' });
+    await menuItem.click();
     await this.editTargetPowerStateModal.waitFor({ state: 'visible' });
   }
 
   async openRenameDialog(vmName: string): Promise<void> {
-    const modalCancelButton = this.page.getByTestId('modal-cancel-button');
-    // Intentionally ignore errors if modal is not present
-    await modalCancelButton.click({ timeout: 1000 }).catch(() => undefined);
-
+    await this.dismissOpenModals();
     await this.getVMActionsMenu(vmName).click();
-
-    const editMenuItem = this.page.getByTestId('edit-vm-target-name-menu-item');
-    await editMenuItem.waitFor({ state: 'visible' });
-    await editMenuItem.click();
-
+    await this.editTargetNameMenuItem.waitFor({ state: 'visible' });
+    await this.editTargetNameMenuItem.click();
     await this.renameTargetNameInput.waitFor({ state: 'visible' });
-    await this.renameTargetNameInput.waitFor({ state: 'attached' });
     await this.renameTargetNameInput.focus();
   }
 
   get powerStateModalSaveButton() {
     return this.page.getByTestId('modal-confirm-button');
   }
-
   get powerStateModalSelect() {
     return this.editTargetPowerStateModal.getByTestId('target-power-state-select');
   }
-
   get powerStateOptionAuto() {
     return this.page.getByRole('option', { name: 'Retain source VM power state', exact: true });
   }
-
   get powerStateOptionInherit() {
     return this.page.getByRole('option', { name: 'Inherit plan wide setting', exact: false });
   }
-
   get powerStateOptionOff() {
     return this.page.getByRole('option', { name: 'Powered off', exact: true });
   }
-
   get powerStateOptionOn() {
     return this.page.getByRole('option', { name: 'Powered on', exact: true });
   }
-
   get renameTargetNameInput() {
     return this.page.getByTestId('vm-target-name-input');
   }
 
   async renameVM(sourceName: string, targetName: string): Promise<void> {
     await this.search(sourceName);
-
     const vmRow = this.table.getRow({ Name: sourceName });
     await expect(vmRow).toBeVisible({ timeout: 2000 });
-
-    const actionsButton = vmRow.getByTestId('vm-actions-menu-toggle');
-    await actionsButton.click();
-
-    const renameOption = this.page.getByTestId('edit-vm-target-name-menu-item');
-    await renameOption.click();
-
-    const nameInput = this.page.getByTestId('vm-target-name-input');
-    await nameInput.fill(targetName);
-
-    const saveButton = this.page.getByRole('button', { name: /save|confirm|rename/iu });
-    await saveButton.click();
-
-    // Wait before trying to open rename dialog again
-    await this.page.waitForTimeout(500);
+    await vmRow.getByTestId('vm-actions-menu-toggle').click();
+    await this.editTargetNameMenuItem.click();
+    await this.renameTargetNameInput.fill(targetName);
+    await this.saveButton.click();
+    await expect(this.renameTargetNameInput).not.toBeVisible();
     await this.page.waitForLoadState('networkidle');
 
+    // Verify rename was applied
     await this.search(sourceName);
     await this.verifyRowIsVisible({ Name: sourceName });
-
-    // Close any leftover modal before opening the menu again
-    const modalCancelButton = this.page.getByTestId('modal-cancel-button');
-    await modalCancelButton.click({ timeout: 1000 }).catch(() => undefined);
-
-    const renamedVmRow = this.table.getRow({ Name: sourceName });
-    const renamedActionsButton = renamedVmRow.getByTestId('vm-actions-menu-toggle');
-    await renamedActionsButton.click();
-
-    const verifyRenameOption = this.page.getByTestId('edit-vm-target-name-menu-item');
-    await verifyRenameOption.click();
-
-    const verifyNameInput = this.page.getByTestId('vm-target-name-input');
-    await expect(verifyNameInput).toHaveValue(targetName);
-
-    const cancelButton = this.page.getByTestId('modal-cancel-button');
-    await cancelButton.click();
-
+    await this.dismissOpenModals();
+    await this.table.getRow({ Name: sourceName }).getByTestId('vm-actions-menu-toggle').click();
+    await this.editTargetNameMenuItem.click();
+    await expect(this.renameTargetNameInput).toHaveValue(targetName);
+    await this.cancelButton.click();
     await this.clearAllFilters();
   }
 
@@ -187,46 +195,104 @@ export class VirtualMachinesTab {
     return this.page.getByRole('button', { name: /save|confirm/iu });
   }
 
-  async search(value: string): Promise<void> {
-    await this.table.search(value);
-  }
-
   async selectVirtualMachine(vmName: string): Promise<void> {
     await this.table.selectRow({ Name: vmName });
   }
 
+  override async sortByColumn(columnName: string): Promise<void> {
+    const columnHeader = this.vmTable
+      .getByRole('columnheader')
+      .getByRole('button', { name: columnName, exact: true });
+    await columnHeader.click();
+    await expect(columnHeader.locator('[class*="sort-indicator"], .pf-v5-c-table__sort-indicator'))
+      .toBeVisible()
+      .catch(() => undefined);
+  }
+
+  async sortByConcerns(): Promise<void> {
+    await this.sortByColumn('Concerns');
+  }
   get validationErrorMessage() {
     return this.page.getByTestId('form-helper-text-error');
   }
 
-  async verifyRowIsVisible(options: Record<string, string>): Promise<void> {
-    await this.table.verifyRowIsVisible(options);
+  async verifyConcernBadgeExists(category: ConcernCategory, rowIndex?: number): Promise<void> {
+    if (rowIndex === undefined) {
+      await expect(this.vmTable.getByTestId(`concern-badge-${category}`).first()).toBeVisible();
+    } else {
+      const bodyRowgroup = this.vmTable.getByRole('rowgroup').nth(1);
+      const row = bodyRowgroup.getByRole('row').nth(rowIndex);
+      await expect(row.getByTestId(`concern-badge-${category}`)).toBeVisible();
+    }
+  }
+
+  async verifyConcernPopoverContent(options?: {
+    headerContains?: string;
+    minItems?: number;
+  }): Promise<void> {
+    const popover = this.page.getByTestId('concerns-popover');
+    await expect(popover.getByText(/Total:/i)).toBeVisible();
+    if (options?.headerContains) {
+      await expect(popover.getByRole('heading')).toContainText(options.headerContains);
+    }
+    if (options?.minItems !== undefined) {
+      const count = await popover.locator('[class*="popover__body"] > div').count();
+      expect(count).toBeGreaterThanOrEqual(options.minItems);
+    }
+  }
+
+  async verifyConcernsColumnVisible(): Promise<void> {
+    await expect(this.page.getByTestId('concerns-column-header')).toBeVisible();
+  }
+
+  async verifyExpandedRowHasConcernDetails(): Promise<void> {
+    for (const col of ['Label', 'Category', 'Assessment']) {
+      await expect(this.page.getByRole('columnheader', { name: col })).toBeVisible();
+    }
+  }
+
+  async verifyExpandedRowIsCollapsed(): Promise<void> {
+    await expect(this.page.getByRole('columnheader', { name: 'Label' })).not.toBeVisible();
+  }
+
+  async verifyFilteredRowsHaveBadge(category: ConcernCategory): Promise<void> {
+    const bodyRowgroup = this.vmTable.getByRole('rowgroup').nth(1);
+    const rows = bodyRowgroup.getByRole('row');
+    const rowCount = await rows.count();
+    for (let i = 0; i < rowCount; i += 1) {
+      await expect(rows.nth(i).getByTestId(`concern-badge-${category}`)).toBeVisible();
+    }
+  }
+
+  async verifyFilterOptionExists(filterName: string): Promise<void> {
+    await this.page.getByTestId('attribute-filter-toggle').click();
+    await expect(this.page.getByRole('menuitem', { name: filterName })).toBeVisible();
+    await this.page.keyboard.press('Escape');
+  }
+
+  async verifyFilterValues(filterName: string, expectedValues?: string[]): Promise<void> {
+    await this.page.getByTestId('attribute-filter-toggle').click();
+    await this.page.getByRole('menuitem', { name: filterName }).click();
+    await this.page.locator('[data-testid^="filter-toggle-"]').first().click();
+    if (expectedValues) {
+      for (const value of expectedValues) {
+        await expect(this.page.getByRole('menuitem', { name: value })).toBeVisible();
+      }
+    } else {
+      expect(await this.page.getByRole('menuitem').count()).toBeGreaterThan(0);
+    }
+    await this.page.keyboard.press('Escape');
   }
 
   async verifyVirtualMachinesTab(planData: PlanTestData): Promise<void> {
     await this.table.waitForTableLoad();
-
-    if (planData.virtualMachines?.length) {
-      for (const vm of planData.virtualMachines) {
-        if (vm.sourceName) {
-          await this.verifyRowIsVisible({ Name: vm.sourceName });
-        }
-      }
-    }
-  }
-
-  async verifyVMExists(vmName: string): Promise<void> {
-    await this.verifyRowIsVisible({ Name: vmName });
-  }
-
-  async verifyVMsExist(vmNames: string[]): Promise<void> {
-    for (const vmName of vmNames) {
-      await this.verifyVMExists(vmName);
+    for (const vm of planData.virtualMachines ?? []) {
+      if (vm.sourceName) await this.verifyRowIsVisible({ Name: vm.sourceName });
     }
   }
 
   async waitForVMPowerState(vmName: string, expectedPowerState: string): Promise<void> {
-    const powerStateCell = await this.getTableCell('Name', vmName, 'Target power state');
+    const powerStateCell = await this.table.getCell('Name', vmName, 'Target power state');
     await expect(powerStateCell).toHaveText(expectedPowerState);
   }
 }

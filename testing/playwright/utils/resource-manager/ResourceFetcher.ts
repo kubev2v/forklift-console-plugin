@@ -1,4 +1,4 @@
-import type { V1beta1Provider, V1VirtualMachine } from '@kubev2v/types';
+import type { V1beta1Plan, V1beta1Provider, V1VirtualMachine } from '@kubev2v/types';
 import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
@@ -10,6 +10,18 @@ import type { SupportedResource } from './ResourceManager';
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ResourceFetcher extends BaseResourceManager {
+  static async fetchPlan(
+    page: Page,
+    planName: string,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1Plan | null> {
+    return ResourceFetcher.fetchResource<V1beta1Plan>(page, {
+      kind: RESOURCE_KINDS.PLAN,
+      resourceName: planName,
+      namespace,
+    });
+  }
+
   static async fetchProvider(
     page: Page,
     providerName: string,

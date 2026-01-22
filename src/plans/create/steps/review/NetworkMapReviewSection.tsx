@@ -71,7 +71,9 @@ const NetworkMapReviewSectionInner: FC = () => {
         <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
           <DescriptionListGroup>
             <DescriptionListTerm>{t('Network map name')}</DescriptionListTerm>
-            <DescriptionListDescription>{netMapName}</DescriptionListDescription>
+            <DescriptionListDescription data-testid="review-network-map-name">
+              {netMapName}
+            </DescriptionListDescription>
           </DescriptionListGroup>
         </DescriptionList>
 

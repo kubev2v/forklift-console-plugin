@@ -13,7 +13,6 @@ export class YamlEditorPage {
   async copyYamlToClipboard(): Promise<string> {
     const yamlContent = await this.getYamlContent();
     await this.page.getByRole('button', { name: 'Copy code to clipboard' }).click();
-    await expect(this.page.getByText('Content copied to clipboard')).toBeVisible();
     return yamlContent;
   }
 

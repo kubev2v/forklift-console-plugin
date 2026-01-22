@@ -1,8 +1,8 @@
-import { providerOnlyFixtures as test } from '../../fixtures/resourceFixtures';
-import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
-import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import { createPlanTestData } from '../../types/test-data';
-import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
+import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
+import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
+import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import { createPlanTestData } from '../../../types/test-data';
+import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 
 test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
   test(

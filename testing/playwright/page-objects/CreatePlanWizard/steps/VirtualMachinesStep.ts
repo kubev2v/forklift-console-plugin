@@ -9,10 +9,7 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     super(page, page.getByTestId('create-plan-vm-step'));
   }
 
-  async fillAndComplete(
-    virtualMachines?: VirtualMachine[],
-    criticalIssuesAction?: 'confirm' | 'deselect',
-  ): Promise<void> {
+  async fillAndComplete(virtualMachines?: VirtualMachine[]): Promise<void> {
     await this.verifyStepVisible();
     await this.verifyTableLoaded();
 
@@ -27,11 +24,6 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
           await this.searchAndSelectVirtualMachine(vm.sourceName, vm.folder);
         }
       }
-    }
-
-    // Handle critical issues modal if needed (appears after selecting VMs with critical issues)
-    if (criticalIssuesAction) {
-      await this.handleCriticalIssuesModal(criticalIssuesAction);
     }
   }
 
@@ -74,11 +66,14 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     const buttonName = action === 'confirm' ? 'Confirm selections' : 'Deselect critical issue VMs';
     const button = this.page.getByRole('button', { name: buttonName });
 
-    await expect(button).toBeVisible();
-    await button.click();
+    // Modal may or may not appear depending on whether selected VMs have critical issues
+    const isVisible = await button.isVisible().catch(() => false);
 
-    // Wait for modal to disappear
-    await expect(button).not.toBeVisible();
+    if (isVisible) {
+      await button.click();
+      // Wait for modal to disappear
+      await expect(button).not.toBeVisible();
+    }
   }
 
   async searchAndSelectVirtualMachine(vmName: string, folder?: string) {

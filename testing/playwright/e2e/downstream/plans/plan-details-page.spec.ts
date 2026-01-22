@@ -1,7 +1,21 @@
+import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import { sharedProviderFixtures as test } from '../../fixtures/resourceFixtures';
-import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
+import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import type { PlanTestData } from '../../../types/test-data';
+
+type TestPlan = { metadata: { name: string; namespace: string }; testData: PlanTestData };
+
+/** Creates PlanDetailsPage and navigates to the plan. Throws if testPlan is missing. */
+const setupPlanDetailsPage = async (page: Page, testPlan: TestPlan | undefined) => {
+  if (!testPlan) throw new Error('testPlan is required');
+  const planDetailsPage = new PlanDetailsPage(page);
+  const { name: planName, namespace } = testPlan.metadata;
+  await planDetailsPage.navigate(planName, namespace);
+  await planDetailsPage.verifyPlanTitle(planName);
+  return { planDetailsPage, planName, namespace, testData: testPlan.testData };
+};
 
 test.describe('Plan Details Navigation', { tag: '@downstream' }, () => {
   test('should navigate to plan details and verify page content', async ({
@@ -9,14 +23,7 @@ test.describe('Plan Details Navigation', { tag: '@downstream' }, () => {
     testPlan,
     testProvider: _testProvider,
   }) => {
-    if (!testPlan) throw new Error('testPlan is required');
-
-    const { name: planName, namespace } = testPlan.metadata;
-    const planDetailsPage = new PlanDetailsPage(page);
-
-    await planDetailsPage.navigate(planName, namespace);
-
-    await planDetailsPage.verifyPlanTitle(planName);
+    const { planDetailsPage, planName } = await setupPlanDetailsPage(page, testPlan);
     await planDetailsPage.verifyPlanDetailsURL(planName);
     await planDetailsPage.verifyNavigationTabs();
   });
@@ -28,17 +35,9 @@ test.describe('Plan Details - VM Rename Validation', { tag: '@downstream' }, () 
     testPlan,
     testProvider: _testProvider,
   }) => {
-    if (!testPlan) throw new Error('testPlan is required');
-
-    const planDetailsPage = new PlanDetailsPage(page);
-
-    const { name: planName, namespace } = testPlan.metadata;
-
-    await planDetailsPage.navigate(planName, namespace);
-    await planDetailsPage.verifyPlanTitle(planName);
+    const { planDetailsPage, testData } = await setupPlanDetailsPage(page, testPlan);
 
     await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
-    const { testData } = testPlan;
     await planDetailsPage.virtualMachinesTab.verifyVirtualMachinesTab(testData);
 
     await planDetailsPage.virtualMachinesTab.enableColumn('Target name');
@@ -118,16 +117,7 @@ test.describe('Plan Details - Guest Conversion Mode', { tag: '@downstream' }, ()
     testPlan,
     testProvider: _testProvider,
   }) => {
-    if (!testPlan) throw new Error('testPlan is required');
-
-    const planDetailsPage = new PlanDetailsPage(page);
-
-    const { name: planName, namespace } = testPlan.metadata;
-
-    await planDetailsPage.navigate(planName, namespace);
-    await planDetailsPage.verifyPlanTitle(planName);
-
-    // Navigate to Details tab to access guest conversion mode settings
+    const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
     await planDetailsPage.detailsTab.navigateToDetailsTab();
 
     // Step 1: Assert "Include guest conversion" is visible (initial state)
@@ -185,16 +175,7 @@ test.describe('Plan Details - Guest Conversion Mode', { tag: '@downstream' }, ()
 
 test.describe('Plan Details - Target Labels', { tag: '@downstream' }, () => {
   test('should edit VM target labels', async ({ page, testPlan, testProvider: _testProvider }) => {
-    if (!testPlan) throw new Error('testPlan is required');
-
-    const planDetailsPage = new PlanDetailsPage(page);
-
-    const { name: planName, namespace } = testPlan.metadata;
-
-    await planDetailsPage.navigate(planName, namespace);
-    await planDetailsPage.verifyPlanTitle(planName);
-
-    // Navigate to Details tab
+    const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
     await planDetailsPage.detailsTab.navigateToDetailsTab();
 
     // Step 1: Verify initial state (no labels)
@@ -244,16 +225,7 @@ test.describe('Plan Details - Target Node Selector', { tag: '@downstream' }, () 
     testPlan,
     testProvider: _testProvider,
   }) => {
-    if (!testPlan) throw new Error('testPlan is required');
-
-    const planDetailsPage = new PlanDetailsPage(page);
-
-    const { name: planName, namespace } = testPlan.metadata;
-
-    await planDetailsPage.navigate(planName, namespace);
-    await planDetailsPage.verifyPlanTitle(planName);
-
-    // Navigate to Details tab
+    const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
     await planDetailsPage.detailsTab.navigateToDetailsTab();
     // Step 1: Verify initial state (no node selectors)
     await planDetailsPage.detailsTab.verifyTargetNodeSelectorCount(0);
@@ -310,15 +282,7 @@ test.describe('Plan Details - Target Affinity Rules', { tag: '@downstream' }, ()
     testPlan,
     testProvider: _testProvider,
   }) => {
-    if (!testPlan) throw new Error('testPlan is required');
-    const planDetailsPage = new PlanDetailsPage(page);
-
-    const { name: planName, namespace } = testPlan.metadata;
-
-    await planDetailsPage.navigate(planName, namespace);
-    await planDetailsPage.verifyPlanTitle(planName);
-
-    // Navigate to Details tab
+    const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
     await planDetailsPage.detailsTab.navigateToDetailsTab();
     // Step 1: Verify initial state (no affinity rules)
     await planDetailsPage.detailsTab.verifyTargetAffinityRulesCount(0);
@@ -394,16 +358,9 @@ test.describe('Plan Details - Target Affinity Rules', { tag: '@downstream' }, ()
 
 test.describe('Plan Details - Description', { tag: '@downstream' }, () => {
   test('should edit plan description', async ({ page, testPlan, testProvider: _testProvider }) => {
-    if (!testPlan) throw new Error('testPlan is required');
+    const { planDetailsPage, testData } = await setupPlanDetailsPage(page, testPlan);
 
-    const planDetailsPage = new PlanDetailsPage(page);
-
-    const { name: planName, namespace } = testPlan.metadata;
-    const { testData } = testPlan;
-
-    await test.step('Navigate to plan details page', async () => {
-      await planDetailsPage.navigate(planName, namespace);
-      await planDetailsPage.verifyPlanTitle(planName);
+    await test.step('Navigate to details tab', async () => {
       await planDetailsPage.detailsTab.navigateToDetailsTab();
     });
 

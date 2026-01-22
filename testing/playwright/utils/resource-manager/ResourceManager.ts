@@ -21,11 +21,16 @@ import {
   RESOURCE_KINDS,
 } from './constants';
 import { ResourceCleaner } from './ResourceCleaner';
+import {
+  createProvider,
+  createSecret,
+  type V1NetworkAttachmentDefinition,
+} from './ResourceCreator';
 import { ResourceFetcher } from './ResourceFetcher';
-import { ResourcePatcher } from './ResourcePatcher';
+import { type JsonPatchOperation, type PatchType, ResourcePatcher } from './ResourcePatcher';
 
 export type { V1NetworkAttachmentDefinition } from './ResourceCreator';
-import type { V1NetworkAttachmentDefinition } from './ResourceCreator';
+export type { JsonPatchOperation, PatchType } from './ResourcePatcher';
 
 export type OpenshiftProject = IoK8sApiCoreV1Namespace & {
   kind: typeof OPENSHIFT_PROJECT_KIND;
@@ -156,6 +161,34 @@ export class ResourceManager {
     this.resources = [];
   }
 
+  async createProvider(
+    page: Page,
+    provider: V1beta1Provider,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1Provider | null> {
+    return createProvider(page, provider, namespace);
+  }
+
+  async createSecret(
+    page: Page,
+    secret: IoK8sApiCoreV1Secret,
+    namespace = MTV_NAMESPACE,
+  ): Promise<IoK8sApiCoreV1Secret | null> {
+    return createSecret(page, secret, namespace);
+  }
+
+  async fetchPlan(
+    page: Page,
+    planName: string,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1Plan | null> {
+    return ResourceFetcher.fetchResource<V1beta1Plan>(page, {
+      kind: RESOURCE_KINDS.PLAN,
+      resourceName: planName,
+      namespace,
+    });
+  }
+
   async fetchProvider(
     page: Page,
     providerName: string,
@@ -199,13 +232,23 @@ export class ResourceManager {
     return ResourcePatcher.patchProvider(page, providerName, patch, namespace);
   }
 
+  /**
+   * Patches a Kubernetes resource using either merge patch or JSON patch.
+   * @param page - Playwright page
+   * @param options.kind - Resource kind (e.g., 'Plan', 'Provider')
+   * @param options.resourceName - Name of the resource
+   * @param options.namespace - Namespace of the resource
+   * @param options.patch - Patch data (object for merge, array of JsonPatchOperation for json)
+   * @param options.patchType - 'merge' (default) or 'json' for array operations
+   */
   async patchResource<T extends SupportedResource>(
     page: Page,
     options: {
       kind: string;
       resourceName: string;
       namespace: string;
-      patch: Record<string, any>;
+      patch: Record<string, any> | JsonPatchOperation[];
+      patchType?: PatchType;
     },
   ): Promise<T | null> {
     return ResourcePatcher.patchResource<T>(page, options);

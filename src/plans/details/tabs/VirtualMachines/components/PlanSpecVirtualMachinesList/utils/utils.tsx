@@ -79,6 +79,7 @@ export const specVirtualMachineFields: ResourceField[] = [
     label: t('Concerns'),
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Concerns,
     sortable: true,
+    testId: 'concerns-column-header',
   },
   {
     isVisible: false,

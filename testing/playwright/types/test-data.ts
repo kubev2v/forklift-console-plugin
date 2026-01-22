@@ -13,8 +13,8 @@ export interface Mapping<T = string> {
 }
 
 export interface NetworkMap {
-  name: string;
-  isPreexisting: boolean;
+  name?: string;
+  isPreexisting?: boolean;
   mappings?: Mapping[];
 }
 
@@ -87,12 +87,12 @@ export const createPlanTestData = (
       isPreexisting: false,
       mappings: [
         {
-          source: 'mtv-nfs-us-v8',
+          source: 'mtv-nfs-rhos-v8',
           target: 'ocs-storagecluster-ceph-rbd-virtualization',
         },
       ],
     },
-    virtualMachines: [{ sourceName: 'mtv-tests-rhel8', folder: 'vm' }],
+    virtualMachines: [{ sourceName: 'mtv-func-rhel9', folder: 'vm' }],
   };
 
   return {

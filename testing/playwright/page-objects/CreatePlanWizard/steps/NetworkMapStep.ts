@@ -36,8 +36,12 @@ export class NetworkMapStep {
       await this.page.getByRole('option', { name: networkMap.name }).click();
     } else {
       await this.page.getByTestId('use-new-network-map-radio').check();
-      await this.page.getByRole('textbox').click();
-      await this.page.getByRole('textbox').fill(networkMap.name);
+
+      // Only fill name if provided, otherwise use auto-generated name
+      if (networkMap.name) {
+        await this.page.getByRole('textbox').click();
+        await this.page.getByRole('textbox').fill(networkMap.name);
+      }
 
       if (!isEmpty(networkMap.mappings)) {
         await this.configureMappings(networkMap.mappings!);
@@ -83,7 +87,7 @@ export class NetworkMapStep {
     }
 
     // Find the target network select button using testId pattern
-    const targetNetworkSelect = targetRow.getByTestId(/^target-network-/);
+    const targetNetworkSelect = targetRow.getByTestId('network-map-target-network-select');
     await expect(targetNetworkSelect).toBeVisible();
     await targetNetworkSelect.click();
 

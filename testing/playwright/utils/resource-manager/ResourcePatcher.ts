@@ -6,6 +6,24 @@ import { MTV_NAMESPACE, RESOURCE_KINDS } from './constants';
 import type { SupportedResource } from './ResourceManager';
 
 /**
+ * JSON Patch operation for RFC 6902.
+ * Export for use by consumers who need to build patch operations.
+ */
+export interface JsonPatchOperation {
+  op: 'add' | 'remove' | 'replace' | 'move' | 'copy' | 'test';
+  path: string;
+  value?: unknown;
+  from?: string;
+}
+
+/**
+ * Patch type determines the Content-Type header and body format.
+ * - 'merge': Uses application/merge-patch+json (RFC 7396) - for simple field updates
+ * - 'json': Uses application/json-patch+json (RFC 6902) - for array operations
+ */
+export type PatchType = 'merge' | 'json';
+
+/**
  * Handles patching resources in Kubernetes APIs
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
@@ -24,22 +42,34 @@ export class ResourcePatcher extends BaseResourceManager {
     });
   }
 
+  /**
+   * Patches a Kubernetes resource using either merge patch or JSON patch.
+   * @param page - Playwright page
+   * @param options.kind - Resource kind (e.g., 'Plan', 'Provider')
+   * @param options.resourceName - Name of the resource
+   * @param options.namespace - Namespace of the resource
+   * @param options.patch - Patch data (object for merge, array of operations for json)
+   * @param options.patchType - 'merge' (default) or 'json' for array operations
+   */
   static async patchResource<T extends SupportedResource>(
     page: Page,
     options: {
       kind: string;
       resourceName: string;
       namespace: string;
-      patch: Record<string, any>;
+      patch: Record<string, any> | JsonPatchOperation[];
+      patchType?: PatchType;
     },
   ): Promise<T | null> {
-    const { kind, resourceName, namespace, patch } = options;
+    const { kind, resourceName, namespace, patch, patchType = 'merge' } = options;
     const resourceType = ResourcePatcher.getResourceTypeFromKind(kind);
     const constants = ResourcePatcher.getEvaluateConstants();
+    const contentType =
+      patchType === 'json' ? 'application/json-patch+json' : 'application/merge-patch+json';
 
     try {
       const result = await page.evaluate(
-        async ({ resType, resourceKind, name, ns, patchData, evalConstants }) => {
+        async ({ resType, resourceKind, name, ns, patchData, patchContentType, evalConstants }) => {
           try {
             const getCsrfTokenFromCookie = () => {
               const cookies = document.cookie.split('; ');
@@ -60,7 +90,7 @@ export class ResourcePatcher extends BaseResourceManager {
             const response = await fetch(apiPath, {
               method: 'PATCH',
               headers: {
-                [evalConstants.CONTENT_TYPE_HEADER]: 'application/merge-patch+json',
+                [evalConstants.CONTENT_TYPE_HEADER]: patchContentType,
                 [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
               },
               credentials: 'include',
@@ -91,6 +121,7 @@ export class ResourcePatcher extends BaseResourceManager {
           name: resourceName,
           ns: namespace,
           patchData: patch,
+          patchContentType: contentType,
           evalConstants: constants,
         },
       );

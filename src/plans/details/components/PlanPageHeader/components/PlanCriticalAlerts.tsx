@@ -31,6 +31,7 @@ const PlanCriticalAlerts: FC<PlanCriticalAlertsProps> = ({
 
   return (
     <Alert
+      data-testid="plan-critical-alert"
       title={`${(conditions?.length ?? 0) + concerns?.size} ${t('critical concerns impacting your migration plan')}`}
       variant={AlertVariant.danger}
     >
@@ -41,6 +42,7 @@ const PlanCriticalAlerts: FC<PlanCriticalAlertsProps> = ({
           </StackItem>
           <StackItem>
             <Button
+              data-testid="view-all-critical-concerns-button"
               variant={ButtonVariant.link}
               isInline
               onClick={() => {
