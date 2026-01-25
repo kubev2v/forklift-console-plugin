@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
+import { TableLinkCell } from 'src/components/TableCell/TableLinkCell';
 
 import { PlanModelGroupVersionKind } from '@kubev2v/types';
 

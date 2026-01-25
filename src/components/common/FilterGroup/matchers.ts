@@ -1,5 +1,4 @@
 import jsonpath from 'jsonpath';
-import { CustomFilterType } from 'src/modules/Providers/views/details/tabs/VirtualMachines/constants';
 
 import { getOrderedConcernCategoriesSum } from '@components/Concerns/utils/getOrderedConcernCategoriesSum';
 
@@ -12,6 +11,7 @@ import { SwitchFilter } from '../Filter/SwitchFilter';
 import { areSameDayInUTCZero, isInClosedRange } from '../utils/dates';
 import type { ResourceField } from '../utils/types';
 
+import { CustomFilterType } from './constants';
 import type { FilterRenderer, ValueMatcher } from './types';
 
 /**

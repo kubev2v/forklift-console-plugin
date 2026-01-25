@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { validateURL } from 'src/modules/Providers/utils/validators/common';
+import { validateURL } from 'src/utils/validation/common';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { useForkliftTranslation } from '@utils/i18n';

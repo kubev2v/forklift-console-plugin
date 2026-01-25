@@ -1,8 +1,8 @@
 import type { FC } from 'react';
-import { CREATE_VDDK_HELP_LINK } from 'src/plans/details/utils/constants';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import { Alert, AlertVariant } from '@patternfly/react-core';
+import { CREATE_VDDK_HELP_LINK } from '@utils/constants';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
 const SkipVddkAlert: FC = () => {

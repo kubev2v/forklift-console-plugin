@@ -1,4 +1,6 @@
 import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
+import { SOURCE_ONLY_PROVIDER_TYPES } from 'src/providers/utils/helpers/getIsTarget';
+import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import { enumToTuple } from '@components/common/FilterGroup/helpers';
 import type { ResourceField } from '@components/common/utils/types';
@@ -6,9 +8,6 @@ import type { ProviderType } from '@kubev2v/types';
 import { PROVIDERS } from '@utils/enums';
 import { t } from '@utils/i18n';
 import { ProviderStatus } from '@utils/types';
-
-import { SOURCE_ONLY_PROVIDER_TYPES } from '../../../modules/Providers/utils/helpers/getIsTarget';
-import type { ProviderData } from '../../../modules/Providers/utils/types/ProviderData';
 
 import { getProviderStorageCount } from './getProviderStorageCount';
 

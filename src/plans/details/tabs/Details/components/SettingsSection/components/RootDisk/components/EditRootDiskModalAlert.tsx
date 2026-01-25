@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { AlertMessageForModals } from 'src/components/modals/AlertMessageForModals';
 
 import type { V1beta1PlanSpecVms } from '@kubev2v/types';
 import { useForkliftTranslation } from '@utils/i18n';

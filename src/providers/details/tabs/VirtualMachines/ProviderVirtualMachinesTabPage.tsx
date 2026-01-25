@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useInventoryVms } from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/hooks/useInventoryVms';
+import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ErrorState } from '@components/common/Page/PageStates';

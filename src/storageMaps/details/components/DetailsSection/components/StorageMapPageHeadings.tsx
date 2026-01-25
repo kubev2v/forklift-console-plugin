@@ -1,9 +1,9 @@
 import type { FC } from 'react';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import { PageHeadings } from 'src/modules/Providers/utils/components/DetailsPage/PageHeadings';
+import { PageHeadings } from 'src/components/DetailPageHeadings/PageHeadings';
 import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 import { StorageMapActionsDropdown } from 'src/storageMaps/actions/StorageMapActionsDropdown';
 import StorageMapCriticalConditions from 'src/storageMaps/components/StorageMapCriticalConditions';
+import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 
 import {
   StorageMapModel,

@@ -1,4 +1,4 @@
-import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import type { ProviderVmData } from 'src/utils/types';
 
 import type { SortDirection } from '@components/common/utils/types';
 import type { TdProps } from '@patternfly/react-table';
@@ -32,7 +32,7 @@ export type VmRow = {
   type: typeof ROW_TYPE.Vm;
   key: string;
   treeRow: TdProps['treeRow'];
-  vmData: VmData;
+  vmData: ProviderVmData;
   isHidden: boolean;
   isSelected?: boolean;
   parentFolderKey: string;
@@ -42,7 +42,7 @@ export type ConcernsRow = {
   type: typeof ROW_TYPE.Concerns;
   key: string;
   isHidden: boolean;
-  vmData: VmData;
+  vmData: ProviderVmData;
   /** this prop is a flag to the show selected toggle */
   isSelected?: boolean;
   parentFolderKey: string;

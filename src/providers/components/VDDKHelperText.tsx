@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
-import { CREATE_VDDK_HELP_LINK } from 'src/plans/details/utils/constants';
 import { ForkliftTrans } from 'src/utils/i18n';
+
+import { CREATE_VDDK_HELP_LINK } from '@utils/constants';
 
 const VDDKHelperText: FC = () => (
   <ForkliftTrans>

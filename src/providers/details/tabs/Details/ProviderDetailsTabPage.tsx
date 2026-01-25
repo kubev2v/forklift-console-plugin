@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
-import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
-import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
+import type { ProviderData } from 'src/providers/utils/types/ProviderData';
+import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
+import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 
 import { type ProviderInventory, ProviderModel } from '@kubev2v/types';
 

@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import { useHistory } from 'react-router';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import { TELEMETRY_EVENTS } from 'src/utils/analytics/constants';
 import { useForkliftAnalytics } from 'src/utils/analytics/hooks/useForkliftAnalytics';
+import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, PlanModelRef, type V1beta1Provider } from '@kubev2v/types';

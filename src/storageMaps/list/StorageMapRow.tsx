@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
-import { createStatusCell } from 'src/modules/utils/createStatusCell';
+import { createStatusCell } from 'src/components/table/utils/createStatusCell';
 import type { StorageMapData } from 'src/storageMaps/utils/types';
 
 import type { ResourceField } from '@components/common/utils/types';

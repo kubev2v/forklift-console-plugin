@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
-import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
 import { VSphereEndpointType } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
+import { validateNoSpaces } from 'src/utils/validation/common';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';

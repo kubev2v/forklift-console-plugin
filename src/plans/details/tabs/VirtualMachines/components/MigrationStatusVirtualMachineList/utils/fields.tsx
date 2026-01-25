@@ -1,4 +1,4 @@
-import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
+import { TableLinkCell } from 'src/components/TableCell/TableLinkCell';
 import MigrationStatusLabel from 'src/plans/details/tabs/Details/components/MigrationsSection/components/MigrationStatusLabel';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';

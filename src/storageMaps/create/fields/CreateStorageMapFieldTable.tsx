@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
-import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
 import { defaultStorageMapping, storageMapFieldLabels } from 'src/storageMaps/utils/constants';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 import { StorageMapFieldId } from 'src/storageMaps/utils/types';
+import { useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import { FEATURE_NAMES } from '@utils/constants';

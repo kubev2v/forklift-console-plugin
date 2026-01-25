@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { Loading } from 'src/components/common/Page/PageStates';
-import {
-  calculateThumbprint,
-  useTlsCertificate,
-} from 'src/modules/Providers/hooks/useTlsCertificate';
+import { calculateThumbprint, useTlsCertificate } from 'src/providers/hooks/useTlsCertificate';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';

@@ -1,9 +1,8 @@
 import type { MutableRefObject } from 'react';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import { hasObjectChangedInGivenFields } from 'src/providers/utils/helpers/hasObjectChangedInGivenFields';
 
 import type { ProviderInventory, ProvidersInventoryList } from '@kubev2v/types';
-
-import { hasObjectChangedInGivenFields } from '../../../modules/Providers/utils/helpers/hasObjectChangedInGivenFields';
 
 export const inventoryContentHasChanged = (
   newInventoryList: ProvidersInventoryList,

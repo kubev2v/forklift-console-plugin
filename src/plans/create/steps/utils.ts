@@ -1,4 +1,4 @@
-import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
+import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
 import type { ProviderNetwork } from '../types';
 

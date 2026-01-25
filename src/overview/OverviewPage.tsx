@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import { Route, Routes } from 'react-router-dom-v5-compat';
-import InventoryNotReachable from 'src/modules/Providers/views/list/components/InventoryNotReachable';
 import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
+import InventoryNotReachable from 'src/providers/list/components/InventoryNotReachable';
 
 import RoutedTabs from '@components/common/RoutedTabs/RoutedTabs';
 import { PageSection, Split, SplitItem, Title } from '@patternfly/react-core';

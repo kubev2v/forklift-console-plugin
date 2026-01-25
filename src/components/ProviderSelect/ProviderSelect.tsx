@@ -1,6 +1,6 @@
 import { type ComponentProps, type ForwardedRef, forwardRef, type ReactNode, useMemo } from 'react';
-import { getProviderTypeIcon } from 'src/plans/details/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import { getProviderTypeIcon } from 'src/utils/providers/getProviderTypeIcon';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import Select from '@components/common/Select';

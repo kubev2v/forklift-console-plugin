@@ -1,4 +1,4 @@
-import { CustomFilterType } from 'src/modules/Providers/views/details/tabs/VirtualMachines/constants';
+import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
 import type { SpecVirtualMachinePageData } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/utils/types';
 
 import type { FilterDef } from '@components/common/utils/types';

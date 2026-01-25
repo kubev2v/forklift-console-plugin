@@ -1,4 +1,4 @@
-import { validateNoSpaces } from 'src/modules/Providers/utils/validators/common';
+import { validateNoSpaces } from 'src/utils/validation/common';
 
 import { t } from '@utils/i18n';
 

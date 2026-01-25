@@ -2,10 +2,10 @@ import { type FC, useMemo } from 'react';
 import { enumToTuple } from 'src/components/common/FilterGroup/helpers';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
-import useGetDeleteAndEditAccessReview from 'src/modules/Providers/hooks/useGetDeleteAndEditAccessReview';
 import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 import StorageMapsEmptyState from 'src/storageMaps/components/StorageMapsEmptyState';
 import type { StorageMapData } from 'src/storageMaps/utils/types';
+import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 
 import {
   StorageMapModel,

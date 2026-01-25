@@ -1,9 +1,9 @@
 import type { FC } from 'react';
 import { Link } from 'react-router-dom-v5-compat';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
-import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
-import { TableLabelCell } from 'src/modules/Providers/utils/components/TableCell/TableLabelCell';
-import type { CellProps } from 'src/modules/Providers/views/list/components/CellProps';
+import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
+import { TableLabelCell } from 'src/components/TableCell/TableLabelCell';
+import type { CellProps } from 'src/providers/list/components/CellProps';
 
 import { VirtualMachineIcon } from '@patternfly/react-icons';
 

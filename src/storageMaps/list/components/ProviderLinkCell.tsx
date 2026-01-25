@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
+import { TableLinkCell } from 'src/components/TableCell/TableLinkCell';
 
 import { ProviderModelGroupVersionKind, type V1beta1StorageMapSpecProvider } from '@kubev2v/types';
 

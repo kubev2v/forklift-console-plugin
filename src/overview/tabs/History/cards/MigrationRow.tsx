@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
-import { TableLinkCell } from 'src/modules/Providers/utils/components/TableCell/TableLinkCell';
-import VisibleTableData from 'src/modules/Providers/utils/components/TableCell/VisibleTableData';
+import { TableLinkCell } from 'src/components/TableCell/TableLinkCell';
+import VisibleTableData from 'src/components/TableCell/VisibleTableData';
 import { getMigrationVMsStatusCounts } from 'src/plans/details/components/PlanStatus/utils/utils';
 import VMStatusIconsRow from 'src/plans/details/components/PlanStatus/VMStatusIconsRow';
 import { getMigrationStatusLabel } from 'src/plans/details/tabs/Details/components/MigrationsSection/components/utils/utils';

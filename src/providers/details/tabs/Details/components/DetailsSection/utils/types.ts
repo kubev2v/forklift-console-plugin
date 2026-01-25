@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import type { ProviderData } from 'src/modules/Providers/utils/types/ProviderData';
 import type { ProviderFormFieldId } from 'src/providers/create/fields/constants';
 import type { VddkSetupMode } from 'src/providers/utils/constants';
+import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import type { V1beta1Provider } from '@kubev2v/types';
 

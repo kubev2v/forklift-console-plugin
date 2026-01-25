@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { AlertMessageForModals } from 'src/modules/Providers/modals/components/AlertMessageForModals';
+import { AlertMessageForModals } from 'src/components/modals/AlertMessageForModals';
 
 import { Stack, StackItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';

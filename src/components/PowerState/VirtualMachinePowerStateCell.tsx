@@ -1,16 +1,16 @@
 import type { FC } from 'react';
-import { TableIconCell } from 'src/modules/Providers/utils/components/TableCell/TableIconCell';
-import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import { TableIconCell } from 'src/components/TableCell/TableIconCell';
 import {
   getVmPowerState,
   type PowerState,
-} from 'src/modules/Providers/views/details/tabs/VirtualMachines/utils/helpers/getVmPowerState';
+} from 'src/providers/details/tabs/VirtualMachines/utils/helpers/getVmPowerState';
+import type { ProviderVmData } from 'src/utils/types';
 
 import { Tooltip } from '@patternfly/react-core';
 import { OffIcon, PowerOffIcon, UnknownIcon } from '@patternfly/react-icons';
 import { useForkliftTranslation } from '@utils/i18n';
 
-const VirtualMachinePowerStateCell: FC<{ vmData: VmData }> = ({ vmData }) => {
+const VirtualMachinePowerStateCell: FC<{ vmData: ProviderVmData }> = ({ vmData }) => {
   const { t } = useForkliftTranslation();
 
   const powerState = getVmPowerState(vmData?.vm);

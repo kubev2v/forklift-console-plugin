@@ -2,7 +2,6 @@ import {
   DefaultNetworkLabel,
   IgnoreNetwork,
 } from 'src/plans/details/tabs/Mappings/utils/constants';
-import { IGNORED, MULTUS, POD } from 'src/plans/details/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import {
@@ -13,6 +12,7 @@ import {
   type V1beta1Provider,
 } from '@kubev2v/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
+import { IGNORED, MULTUS, POD } from '@utils/constants';
 import { getObjectRef } from '@utils/helpers/getObjectRef';
 
 import type { NetworkMapping } from '../steps/network-map/constants';

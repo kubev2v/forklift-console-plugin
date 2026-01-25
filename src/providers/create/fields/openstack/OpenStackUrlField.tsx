@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { validateOpenstackURL } from 'src/modules/Providers/utils/validators/provider/openstack/validateOpenstackURL';
+import { validateOpenstackURL } from 'src/providers/utils/validators/provider/openstack/validateOpenstackURL';
 
 import { useForkliftTranslation } from '@utils/i18n';
 import { ValidationState } from '@utils/validation/Validation';

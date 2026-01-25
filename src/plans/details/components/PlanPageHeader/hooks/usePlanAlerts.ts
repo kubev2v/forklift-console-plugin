@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
-import usePlanProviders from 'src/modules/Providers/hooks/usePlanSourceProvider';
-import { useSourceStorages } from 'src/modules/Providers/hooks/useStorages';
+import usePlanProviders from 'src/providers/hooks/usePlanSourceProvider';
+import { useSourceNetworks } from 'src/utils/hooks/useNetworks';
+import { useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import {
   NetworkMapModelGroupVersionKind,

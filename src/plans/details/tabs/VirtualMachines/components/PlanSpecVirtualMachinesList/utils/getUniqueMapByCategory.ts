@@ -1,4 +1,4 @@
-import { ConcernCategory } from 'src/modules/Providers/views/details/tabs/VirtualMachines/constants';
+import { ConcernCategory } from 'src/providers/details/tabs/VirtualMachines/constants';
 
 import type { EnumValue } from '@components/common/utils/types';
 import { getCategoryLabel } from '@components/Concerns/utils/category';

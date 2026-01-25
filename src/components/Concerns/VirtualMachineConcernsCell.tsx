@@ -1,8 +1,8 @@
 import type { FC } from 'react';
-import { TableCell } from 'src/modules/Providers/utils/components/TableCell/TableCell';
-import { TableEmptyCell } from 'src/modules/Providers/utils/components/TableCell/TableEmptyCell';
-import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import { TableCell } from 'src/components/TableCell/TableCell';
+import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import type { ProviderVmData } from 'src/utils/types';
 
 import type { Concern, V1beta1PlanStatusConditions } from '@kubev2v/types';
 import { Split, SplitItem } from '@patternfly/react-core';
@@ -17,7 +17,7 @@ import {
 import { orderedConcernCategories } from './utils/constants';
 
 type VirtualMachineConcernsCellProps = {
-  vmData: VmData;
+  vmData: ProviderVmData;
   conditions?: V1beta1PlanStatusConditions[];
 };
 

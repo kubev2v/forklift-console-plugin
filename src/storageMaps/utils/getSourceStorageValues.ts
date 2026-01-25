@@ -1,7 +1,7 @@
-import type { InventoryStorage } from 'src/modules/Providers/hooks/useStorages';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import type { CategorizedSourceMappings } from 'src/plans/create/types';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
 import type {
   OpenshiftVM,

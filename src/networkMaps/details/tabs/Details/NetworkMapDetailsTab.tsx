@@ -1,8 +1,9 @@
 import { type FC, useMemo } from 'react';
+import { ConditionsSection } from 'src/components/ConditionsSection/ConditionsSection';
 import SectionHeading from 'src/components/headers/SectionHeading';
-import { useOpenShiftNetworks, useSourceNetworks } from 'src/modules/Providers/hooks/useNetworks';
-import { getNetworkMappingValues } from 'src/networkMaps/create/utils/buildNetworkMappings';
+import { getMappingValues } from 'src/networkMaps/create/utils/buildNetworkMappings';
 import NetworkMapReviewTable from 'src/plans/create/steps/review/NetworkMapReviewTable';
+import { useOpenShiftNetworks, useSourceNetworks } from 'src/utils/hooks/useNetworks';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
@@ -26,7 +27,6 @@ import {
   getMapSourceProviderNamespace,
 } from '@utils/crds/maps/selectors';
 
-import { ConditionsSection } from '../../components/ConditionsSection/ConditionsSection';
 import DetailsSection from '../../components/DetailsSection/DetailsSection';
 import NetworkMapEdit from '../../components/MapsSection/NetworkMapEdit';
 import type { NetworkMapEditProps } from '../../components/MapsSection/utils/types';
@@ -69,7 +69,7 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
 
   const currentMappings = useMemo(
     () =>
-      getNetworkMappingValues(
+      getMappingValues(
         networkMap?.spec?.map,
         sourceProvider,
         sourceNetworks,

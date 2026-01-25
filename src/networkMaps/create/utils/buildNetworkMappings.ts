@@ -1,8 +1,7 @@
-import type { InventoryNetwork } from 'src/modules/Providers/hooks/useNetworks';
-import type { NetworkMapping, NetworkMappingValue } from 'src/networkMaps/utils/types';
+import type { NetworkMapping } from 'src/networkMaps/utils/types';
 import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
-import { IGNORED, MULTUS, POD } from 'src/plans/details/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import type { InventoryNetwork } from 'src/utils/hooks/useNetworks';
 
 import type {
   OpenShiftNetworkAttachmentDefinition,
@@ -11,11 +10,11 @@ import type {
   V1beta1NetworkMapSpecMapSource,
   V1beta1Provider,
 } from '@kubev2v/types';
+import { IGNORED, MULTUS, POD } from '@utils/constants';
 import { DEFAULT_NETWORK } from '@utils/constants';
+import type { MappingValue } from '@utils/types';
 
-const getDestination = (
-  targetNetwork: NetworkMappingValue,
-): V1beta1NetworkMapSpecMapDestination => {
+const getDestination = (targetNetwork: MappingValue): V1beta1NetworkMapSpecMapDestination => {
   const isPodNetwork = targetNetwork.name === DEFAULT_NETWORK;
   const isIgnoreNetwork = targetNetwork.name === IgnoreNetwork.Label;
 
@@ -112,7 +111,7 @@ const getDestinationNetName = (
   return DEFAULT_NETWORK;
 };
 
-export const getNetworkMappingValues = (
+export const getMappingValues = (
   specMapping: V1beta1NetworkMapSpecMap[] | undefined,
   sourceProvider: V1beta1Provider | undefined,
   sourceNetworks: InventoryNetwork[] = [],
@@ -128,14 +127,14 @@ export const getNetworkMappingValues = (
     const sourceNet = mapping.source;
     const destNet = mapping.destination;
 
-    const sourceNetwork: NetworkMappingValue = {
+    const sourceNetwork: MappingValue = {
       id: isOpenShiftProvider
         ? (sourceNetworks.find((net) => net.name === sourceNet.name)?.id ?? '')
         : (sourceNet.id ?? ''),
       name: getSourceNetName(sourceNet, isOpenShiftProvider),
     };
 
-    const targetNetwork: NetworkMappingValue = {
+    const targetNetwork: MappingValue = {
       id: destNet.namespace ?? '',
       name: getDestinationNetName(destinationNetworks, destNet),
     };

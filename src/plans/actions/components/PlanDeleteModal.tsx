@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { ItemIsOwnedAlert } from 'src/modules/Providers/modals/components/ItemIsOwnedAlert';
+import { ItemIsOwnedAlert } from 'src/components/modals/ItemIsOwnedAlert';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';

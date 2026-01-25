@@ -1,4 +1,4 @@
-import type { VmData } from 'src/modules/Providers/views/details/tabs/VirtualMachines/components/VMCellProps';
+import type { ProviderVmData } from 'src/utils/types';
 
 import type { Concern } from '@kubev2v/types';
 
@@ -14,7 +14,7 @@ export type VmLookups = {
 };
 
 export type Indexes = {
-  vmByKey: Map<VmKey, VmData>;
+  vmByKey: Map<VmKey, ProviderVmData>;
   folderToVmKeys: Map<FolderKey, VmKey[]>;
   tokensByVmKey: Map<VmKey, VmLookups>;
 };

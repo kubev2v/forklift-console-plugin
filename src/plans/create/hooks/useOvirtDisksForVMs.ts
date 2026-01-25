@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import useProviderInventory from 'src/modules/Providers/hooks/useProviderInventory';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 
 import type { OVirtDisk, OVirtVM, ProviderVirtualMachine, V1beta1Provider } from '@kubev2v/types';
 import { isEmpty } from '@utils/helpers';

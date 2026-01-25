@@ -1,4 +1,4 @@
-import { CustomFilterType } from 'src/modules/Providers/views/details/tabs/VirtualMachines/constants';
+import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { t } from '@utils/i18n';

@@ -1,6 +1,7 @@
-import type { ProvidersPermissionStatus } from 'src/modules/Providers/utils/types/ProvidersPermissionStatus';
+import type { ProvidersPermissionStatus } from 'src/providers/utils/types/ProvidersPermissionStatus';
 
 import type { V1beta1NetworkMap } from '@kubev2v/types';
+import type { MappingValue } from '@utils/types';
 
 export type NetworkMapData = {
   obj?: V1beta1NetworkMap;
@@ -17,9 +18,7 @@ export enum NetworkMapFieldId {
   TargetNetwork = 'targetNetwork',
 }
 
-export type NetworkMappingValue = { id?: string; name: string };
-
 export type NetworkMapping = {
-  [NetworkMapFieldId.SourceNetwork]: NetworkMappingValue;
-  [NetworkMapFieldId.TargetNetwork]: NetworkMappingValue;
+  [NetworkMapFieldId.SourceNetwork]: MappingValue;
+  [NetworkMapFieldId.TargetNetwork]: MappingValue;
 };
