@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { canPlanStart } from 'src/plans/details/components/PlanStatus/utils/utils';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -35,6 +36,8 @@ const PlanStartMigrationModal: ModalComponent<PlanStartMigrationModalProps> = ({
   }, [plan, trackEvent, sourceProvider?.spec?.type]);
 
   const migrationMessage = migrationModalMessage(migrationType);
+  const isOvaProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.ova;
+  const ovaMigrationMessage = t('Start the migration for plan ');
 
   return (
     <ModalForm
@@ -48,10 +51,12 @@ const PlanStartMigrationModal: ModalComponent<PlanStartMigrationModalProps> = ({
         <StackItem>
           <ForkliftTrans>
             <StackItem>
-              Start the {migrationType} migration for plan{' '}
+              {isOvaProvider
+                ? ovaMigrationMessage
+                : t('Start the {{migrationType}} migration for plan', { migrationType })}{' '}
               <strong className="co-break-word">{name}</strong>?
             </StackItem>
-            <StackItem>{migrationMessage}</StackItem>
+            {isOvaProvider ? null : <StackItem>{migrationMessage}</StackItem>}
           </ForkliftTrans>
         </StackItem>
       </Stack>
