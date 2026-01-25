@@ -1,6 +1,6 @@
 {
   "name": "forklift-console-plugin",
-  "version": "2.8.0",
+  "version": "2.11.0",
   "description": "UI for forklift as an openshift console dynamic plugin",
   "license": "Apache-2.0",
   "private": true,
