@@ -40,25 +40,23 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
     selector: { matchLabels: { plan: getUID(plan)! } },
   };
 
-  const [pods = [], podsLoaded, podsError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
+  const [pods, podsLoaded, podsError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
     ...watchOptions,
     groupVersionKind: PodModelGroupVersionKind,
   });
 
-  const [jobs = [], jobsLoaded, jobsError] = useK8sWatchResource<IoK8sApiBatchV1Job[]>({
+  const [jobs, jobsLoaded, jobsError] = useK8sWatchResource<IoK8sApiBatchV1Job[]>({
     ...watchOptions,
     groupVersionKind: JobModelGroupVersionKind,
     namespace: getNamespace(plan),
   });
 
-  const [pvcs = [], pvcsLoaded, pvcsError] = useK8sWatchResource<
-    IoK8sApiCoreV1PersistentVolumeClaim[]
-  >({
+  const [pvcs, pvcsLoaded, pvcsError] = useK8sWatchResource<IoK8sApiCoreV1PersistentVolumeClaim[]>({
     ...watchOptions,
     groupVersionKind: PersistentVolumeClaimModelGroupVersionKind,
   });
 
-  const [dvs = [], dvsLoaded, dvsError] = useK8sWatchResource<V1beta1DataVolume[]>({
+  const [dvs, dvsLoaded, dvsError] = useK8sWatchResource<V1beta1DataVolume[]>({
     ...watchOptions,
     groupVersionKind: DataVolumeModelGroupVersionKind,
   });
@@ -66,19 +64,19 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
   const virtualMachines = getPlanVirtualMachines(plan);
 
   const dvsDict = useMemo(
-    () => (dvsLoaded && !dvsError ? groupByVmId(dvs) : {}),
+    () => (dvsLoaded && !dvsError ? groupByVmId(dvs ?? []) : {}),
     [dvs, dvsLoaded, dvsError],
   );
   const jobsDict = useMemo(
-    () => (jobsLoaded && !jobsError ? groupByVmId(jobs) : {}),
+    () => (jobsLoaded && !jobsError ? groupByVmId(jobs ?? []) : {}),
     [jobs, jobsLoaded, jobsError],
   );
   const podsDict = useMemo(
-    () => (podsLoaded && !podsError ? groupByVmId(pods) : {}),
+    () => (podsLoaded && !podsError ? groupByVmId(pods ?? []) : {}),
     [pods, podsLoaded, podsError],
   );
   const pvcsDict = useMemo(
-    () => (pvcsLoaded && !pvcsError ? groupByVmId(pvcs) : {}),
+    () => (pvcsLoaded && !pvcsError ? groupByVmId(pvcs ?? []) : {}),
     [pvcs, pvcsLoaded, pvcsError],
   );
 

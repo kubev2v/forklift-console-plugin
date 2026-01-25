@@ -10,7 +10,7 @@ import { localeCompare } from '../utils/localCompare';
  */
 export const useUniqueEnums = ({
   onSelectedEnumIdsChange,
-  resolvedLanguage = 'en',
+  resolvedLanguage,
   selectedEnumIds,
   supportedEnumValues,
 }: {

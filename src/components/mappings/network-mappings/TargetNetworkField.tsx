@@ -49,14 +49,14 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
           id={fieldId}
           testId="network-map-target-network-select"
           value={(field.value as MappingValue)?.name}
-          onSelect={async (_event, value) => {
+          onSelect={(_event, value) => {
             field.onChange(value);
             if (triggerFieldId) {
-              await trigger(triggerFieldId);
+              trigger(triggerFieldId).catch(() => undefined);
               return;
             }
 
-            await trigger();
+            trigger().catch(() => undefined);
           }}
           placeholder={t('Select target network')}
           isDisabled={isDisabled}

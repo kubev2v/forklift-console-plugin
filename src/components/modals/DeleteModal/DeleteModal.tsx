@@ -128,7 +128,9 @@ export const DeleteModal: ModalComponent<DeleteModalProps> = ({
         <Button
           key="confirm"
           variant={ButtonVariant.danger}
-          onClick={onDelete}
+          onClick={() => {
+            onDelete().catch(() => undefined);
+          }}
           isLoading={isLoading}
         >
           {t('Delete')}

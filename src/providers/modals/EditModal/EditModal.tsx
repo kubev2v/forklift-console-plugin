@@ -170,7 +170,9 @@ export const EditModal: ModalComponent<EditModalProps> = ({
         <Button
           key="confirm"
           variant={ButtonVariant.primary}
-          onClick={handleSave}
+          onClick={() => {
+            handleSave().catch(() => undefined);
+          }}
           isDisabled={validation.type === ValidationState.Error}
           isLoading={isLoading}
         >

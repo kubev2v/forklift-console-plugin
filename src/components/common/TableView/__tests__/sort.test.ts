@@ -77,8 +77,19 @@ describe('compareWith compareFn factory', () => {
 describe('buildSort factory', () => {
   const NameColumn = { label: NAME, resourceFieldId: NAME };
   const NamespaceColumn = { label: NAMESPACE, resourceFieldId: NAMESPACE };
+
+  const createSetActiveSort = () => {
+    const mock = jest.fn();
+    return {
+      mock,
+      fn: (sort: { isAsc: boolean; label?: string; resourceFieldId: string }) => {
+        mock(sort);
+      },
+    };
+  };
+
   it('sorts ascending', () => {
-    const setActiveSort = jest.fn();
+    const { mock, fn: setActiveSort } = createSetActiveSort();
     const { columnIndex, onSort, sortBy } =
       buildSort({
         activeSort: {
@@ -93,7 +104,7 @@ describe('buildSort factory', () => {
     expect(columnIndex).toBe(0);
     expect(sortBy).toStrictEqual({ direction: 'asc', index: 0 });
     onSort?.({} as React.MouseEvent, 1, SortByDirection.asc, {});
-    expect(setActiveSort).toBeCalledWith({
+    expect(mock).toBeCalledWith({
       isAsc: true,
       label: NamespaceColumn.label,
       resourceFieldId: NAMESPACE,
@@ -101,7 +112,7 @@ describe('buildSort factory', () => {
   });
 
   it('sorts descending', () => {
-    const setActiveSort = jest.fn();
+    const { mock, fn: setActiveSort } = createSetActiveSort();
     const { columnIndex, onSort, sortBy } =
       buildSort({
         activeSort: {
@@ -116,7 +127,7 @@ describe('buildSort factory', () => {
     expect(columnIndex).toBe(1);
     expect(sortBy).toStrictEqual({ direction: 'desc', index: 0 });
     onSort?.({} as React.MouseEvent, 1, SortByDirection.desc, {});
-    expect(setActiveSort).toBeCalledWith({
+    expect(mock).toBeCalledWith({
       isAsc: false,
       label: NamespaceColumn.label,
       resourceFieldId: NAMESPACE,
@@ -124,7 +135,7 @@ describe('buildSort factory', () => {
   });
 
   it('shows no sorting if activeSort column cannot be found', () => {
-    const setActiveSort = jest.fn();
+    const { fn: setActiveSort } = createSetActiveSort();
     const { sortBy } =
       buildSort({
         activeSort: {
@@ -140,7 +151,7 @@ describe('buildSort factory', () => {
   });
 
   it('skips sort callback if column cannot be found', () => {
-    const setActiveSort = jest.fn();
+    const { mock, fn: setActiveSort } = createSetActiveSort();
     const { onSort } =
       buildSort({
         activeSort: {
@@ -153,6 +164,6 @@ describe('buildSort factory', () => {
         setActiveSort,
       }) ?? {};
     onSort?.({} as React.MouseEvent, 100, SortByDirection.desc, {});
-    expect(setActiveSort).toBeCalledTimes(0);
+    expect(mock).toBeCalledTimes(0);
   });
 });

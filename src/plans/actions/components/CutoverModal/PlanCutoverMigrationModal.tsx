@@ -99,7 +99,9 @@ const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...re
       confirmLabel={t('Set cutover')}
       additionalAction={{
         children: t('Remove cutover'),
-        onClick: onDeleteCutover,
+        onClick: () => {
+          onDeleteCutover().catch(() => undefined);
+        },
         variant: ButtonVariant.secondary,
       }}
       isDisabled={!isTimeValid || !isDateValid}

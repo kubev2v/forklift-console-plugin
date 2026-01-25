@@ -31,9 +31,9 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({ fieldId, targetStorag
           ref={field.ref}
           id={fieldId}
           testId={testId}
-          onSelect={async (_, value) => {
+          onSelect={(_, value) => {
             field.onChange(value);
-            await trigger();
+            trigger().catch(() => undefined);
           }}
           placeholder={t('Select target storage')}
           isDisabled={isSubmitting}

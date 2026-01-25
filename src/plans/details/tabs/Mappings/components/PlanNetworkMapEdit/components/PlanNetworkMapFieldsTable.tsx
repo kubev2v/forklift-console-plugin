@@ -64,8 +64,8 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
   });
 
   useEffect(() => {
-    setTimeout(async () => {
-      await trigger();
+    setTimeout(() => {
+      trigger().catch(() => undefined);
     }, 0);
   }, [trigger]);
 
@@ -104,7 +104,7 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
           isLoading ||
           Boolean(loadError),
         label: t('Add mapping'),
-        onClick: async () => {
+        onClick: () => {
           const missingNetwork = usedSourceNetworks.find(
             (sourceNetwork) =>
               !networkMappingFields.some(
@@ -120,7 +120,7 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
               : defaultNetMapping[NetworkMapFieldId.TargetNetwork],
           });
 
-          await trigger();
+          trigger().catch(() => undefined);
         },
       }}
       removeButton={{

@@ -46,9 +46,9 @@ const InventorySourceNetworkField: FC<InventorySourceNetworkFieldProps> = ({
             testId="network-map-source-network-select"
             isDisabled={isSubmitting}
             value={(field.value as MappingValue).name}
-            onSelect={async (_event, value) => {
+            onSelect={(_event, value) => {
               field.onChange(value);
-              await trigger();
+              trigger().catch(() => undefined);
             }}
             placeholder={t('Select source network')}
           >

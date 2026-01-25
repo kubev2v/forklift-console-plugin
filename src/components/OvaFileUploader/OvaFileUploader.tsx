@@ -90,7 +90,9 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
           <Button
             data-testid="ova-upload-button"
             isLoading={uploading}
-            onClick={handleUpload}
+            onClick={() => {
+              handleUpload().catch(() => undefined);
+            }}
             isDisabled={!file || validation === OvaValidationVariant.Error || uploading}
           >
             {getUploadButtonLabel(uploading)}

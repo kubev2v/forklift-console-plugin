@@ -18,7 +18,7 @@ import type { OnConfirmHookType } from '../../EditModal/types';
 export const patchProviderURL: OnConfirmHookType = async ({ model, newValue: value, resource }) => {
   const provider: V1beta1Provider = resource as V1beta1Provider;
   const providerOp = provider?.spec?.url ? 'replace' : 'add';
-  const urlValue = (value as string).toString().trim();
+  const urlValue = (value as string).trim();
 
   // Get providers secret stub
   const secret: IoK8sApiCoreV1Secret = {

@@ -139,7 +139,9 @@ const CreateNetworkMapForm: React.FC = () => {
             <Split hasGutter>
               <Button
                 data-testid="network-map-create-button"
-                onClick={handleSubmit(onSubmit)}
+                onClick={() => {
+                  handleSubmit(onSubmit)().catch(() => undefined);
+                }}
                 isDisabled={!isValid || isSubmitting}
                 isLoading={isSubmitting}
               >

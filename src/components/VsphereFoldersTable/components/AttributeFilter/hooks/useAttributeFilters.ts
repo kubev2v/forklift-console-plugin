@@ -62,7 +62,11 @@ export const useAttributeFilters = <T>(attributes: AttributeConfig<T>[]): Attrib
         if (attr.kind === AttributeKind.Text) {
           const needle = (text[attr.id] ?? '').trim();
           if (needle) {
-            const hay = (attr.getValue(item) ?? '').toString();
+            const rawValue = attr.getValue(item);
+            let hay = '';
+            if (rawValue !== null && rawValue !== undefined) {
+              hay = typeof rawValue === 'string' ? rawValue : String(rawValue);
+            }
             const def = (filter: string, data: string) => {
               try {
                 return new RegExp(filter, 'iu').test(data);

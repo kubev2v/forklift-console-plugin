@@ -47,9 +47,9 @@ const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
           id={fieldId}
           isDisabled={isSubmitting}
           value={(field.value as StorageMappingValue).name}
-          onSelect={async (_event, value) => {
+          onSelect={(_event, value) => {
             field.onChange(value);
-            await trigger(StorageMapFieldId.StorageMap);
+            trigger(StorageMapFieldId.StorageMap).catch(() => undefined);
           }}
           placeholder={t('Select source storage')}
         >

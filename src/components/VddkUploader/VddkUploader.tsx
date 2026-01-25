@@ -83,7 +83,9 @@ const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
         <StackItem>
           <Button
             isLoading={uploading || isBuilding}
-            onClick={handleUpload}
+            onClick={() => {
+              handleUpload().catch(() => undefined);
+            }}
             isDisabled={!file || uploading || isBuilding}
           >
             {getUploadButtonText(uploading, isBuilding)}

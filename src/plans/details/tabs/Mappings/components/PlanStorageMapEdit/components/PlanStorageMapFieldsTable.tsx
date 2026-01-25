@@ -59,8 +59,8 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
   });
 
   useEffect(() => {
-    setTimeout(async () => {
-      await trigger();
+    setTimeout(() => {
+      trigger().catch(() => undefined);
     }, 0);
   }, [trigger]);
 
@@ -106,7 +106,7 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
           isLoading ||
           Boolean(loadError),
         label: t('Add mapping'),
-        onClick: async () => {
+        onClick: () => {
           const missingStorage = usedSourceStorages.find(
             (sourceStorage) =>
               !storageMappingFields.some(
@@ -124,7 +124,7 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
             },
           });
 
-          await trigger();
+          trigger().catch(() => undefined);
         },
       }}
       removeButton={{

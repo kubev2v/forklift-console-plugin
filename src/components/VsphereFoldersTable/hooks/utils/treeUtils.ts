@@ -24,7 +24,7 @@ type Counts = { Critical: number; Warning: number; Information: number };
 export const getVmName = (row: VmRow) => row.vmData.name ?? '';
 export const getVmHost = (row: VmRow) => row.vmData.hostName ?? '';
 export const getVmPath = (row: VmRow) => (row.vmData.vm as VSphereVM)?.path ?? '';
-export const getVmPower = (row: VmRow) => (getVmPowerState(row?.vmData?.vm) ?? '').toString();
+export const getVmPower = (row: VmRow) => getVmPowerState(row?.vmData?.vm) ?? '';
 
 export const getVmRowsId = (rows: RowNode[]) => {
   return rows

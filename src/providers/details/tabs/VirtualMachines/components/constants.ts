@@ -52,7 +52,7 @@ export const extraSupportedMatchers: ValueMatcher[] = [
     matchValue: (value: unknown) => (filter: string) => {
       if (!value || typeof value !== 'object') return false;
       const features = value as Record<string, boolean>;
-      return Boolean(features?.[filter]);
+      return features?.[filter] ?? false;
     },
   },
 ];

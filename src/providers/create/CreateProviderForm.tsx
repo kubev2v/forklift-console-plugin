@@ -121,7 +121,9 @@ const CreateProviderForm: FC = () => {
             <Split hasGutter>
               <Button
                 data-testid="provider-create-button"
-                onClick={handleSubmit(onSubmit)}
+                onClick={(e) => {
+                  handleSubmit(onSubmit)(e).catch(() => undefined);
+                }}
                 isDisabled={!isValid || isSubmitting}
                 isLoading={isSubmitting}
               >

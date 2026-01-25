@@ -42,9 +42,9 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({
           id={fieldId}
           isDisabled={isSubmitting}
           value={(field.value as StorageMappingValue).name}
-          onSelect={async (_event, value) => {
+          onSelect={(_event, value) => {
             field.onChange(value);
-            await trigger();
+            trigger().catch(() => undefined);
           }}
           placeholder={t('Select source storage')}
         >

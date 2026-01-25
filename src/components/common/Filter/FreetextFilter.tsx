@@ -50,10 +50,12 @@ export const FreetextFilter = ({
     <ToolbarFilter
       key={filterId}
       labels={selectedFilters ?? []}
-      deleteLabel={(category, option) =>
-        onFilterUpdate(selectedFilters?.filter((value) => value !== option) ?? [])
-      }
-      deleteLabelGroup={() => onFilterUpdate([])}
+      deleteLabel={(category, option) => {
+        onFilterUpdate(selectedFilters?.filter((value) => value !== option) ?? []);
+      }}
+      deleteLabelGroup={() => {
+        onFilterUpdate([]);
+      }}
       categoryName={title ?? ''}
       showToolbarItem={showFilter}
     >

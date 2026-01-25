@@ -26,7 +26,7 @@ export const AttributeValueFilter = ({
   fieldFilters,
   onFilterUpdate,
   resolvedLanguage = 'en',
-  selectedFilters = {},
+  selectedFilters,
   supportedFilterTypes,
 }: MetaFilterProps) => {
   const [currentFilter, setCurrentFilter] = useState(fieldFilters?.[0]);

@@ -21,11 +21,11 @@ const StorageMapStep = () => {
   });
 
   const handleStorageMapTypeChange = (newType: StorageMapType) => {
-    setTimeout(async () => {
+    setTimeout(() => {
       if (newType === StorageMapType.Existing && !existingStorageMap) {
-        await trigger(CreatePlanStorageMapFieldId.ExistingStorageMap);
+        trigger(CreatePlanStorageMapFieldId.ExistingStorageMap).catch(() => undefined);
       } else if (newType === StorageMapType.New && !storageMap) {
-        await trigger(CreatePlanStorageMapFieldId.StorageMap);
+        trigger(CreatePlanStorageMapFieldId.StorageMap).catch(() => undefined);
       }
     }, 0);
   };

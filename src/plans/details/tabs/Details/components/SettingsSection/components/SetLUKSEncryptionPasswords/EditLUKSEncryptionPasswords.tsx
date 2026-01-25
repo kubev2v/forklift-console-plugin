@@ -42,7 +42,7 @@ const EditLUKSEncryptionPasswords: ModalComponent<EditPlanProps> = ({ resource, 
   useEffect(() => {
     const vms = getPlanVirtualMachines(resource) as EnhancedPlanSpecVms[];
     if (!isEmpty(vms)) {
-      setNbdeClevis(Boolean(vms[0]?.nbdeClevis ?? false));
+      setNbdeClevis(vms[0]?.nbdeClevis ?? false);
     }
   }, [resource]);
 

@@ -20,7 +20,9 @@ describe('aggregate filters with the same labels', () => {
       },
     } = renderHook(() =>
       useUniqueEnums({
-        onSelectedEnumIdsChange,
+        onSelectedEnumIdsChange: (values: string[]) => {
+          onSelectedEnumIdsChange(values);
+        },
         resolvedLanguage: 'en',
         selectedEnumIds: [],
         supportedEnumValues: testEnumValues,
@@ -40,7 +42,9 @@ describe('aggregate filters with the same labels', () => {
       },
     } = renderHook(() =>
       useUniqueEnums({
-        onSelectedEnumIdsChange,
+        onSelectedEnumIdsChange: (values: string[]) => {
+          onSelectedEnumIdsChange(values);
+        },
         resolvedLanguage: 'en',
         selectedEnumIds: ['True', 'AlsoTrue'],
         supportedEnumValues: testEnumValues,

@@ -147,10 +147,21 @@ const VirtualMachinesStepFooter: FC = () => {
             />
           </ModalBody>
           <ModalFooter>
-            <Button key="confirm" onClick={confirmSelection}>
+            <Button
+              key="confirm"
+              onClick={() => {
+                confirmSelection().catch(() => undefined);
+              }}
+            >
               {t('Confirm selections')}
             </Button>
-            <Button key="deselect" variant={ButtonVariant.secondary} onClick={deselectCriticalVms}>
+            <Button
+              key="deselect"
+              variant={ButtonVariant.secondary}
+              onClick={() => {
+                deselectCriticalVms().catch(() => undefined);
+              }}
+            >
               {t('Deselect critical issue VMs')}
             </Button>
             <Button key="cancel" variant={ButtonVariant.secondary} onClick={closeModal}>

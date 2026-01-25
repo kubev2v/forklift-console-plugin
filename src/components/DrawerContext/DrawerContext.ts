@@ -7,9 +7,9 @@ type DrawerContextType = {
 };
 
 const defaultContext: DrawerContextType = {
-  closeDrawer: () => null,
+  closeDrawer: () => undefined,
   isOpen: false,
-  openDrawer: () => null,
+  openDrawer: () => undefined,
 };
 
 export const DrawerContext = createContext<DrawerContextType>(defaultContext);

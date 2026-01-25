@@ -149,7 +149,9 @@ const useProviderInventory = <T>({
       await fetchData();
     })();
 
-    const intervalId = setInterval(fetchData, interval);
+    const intervalId = setInterval(() => {
+      fetchData().catch(() => undefined);
+    }, interval);
     return () => {
       clearInterval(intervalId);
     };

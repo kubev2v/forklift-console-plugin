@@ -40,7 +40,10 @@ describe('useScrollPositionPersistence - Scroll Event Tracking', () => {
   });
 
   it('calls onPositionChange with scroll position', () => {
-    const onPositionChange = jest.fn();
+    const onPositionChangeMock = jest.fn();
+    const onPositionChange = (position: number) => {
+      onPositionChangeMock(position);
+    };
     const mockElement = createMockScrollableElement();
 
     const { result } = renderHook(() =>
@@ -55,7 +58,7 @@ describe('useScrollPositionPersistence - Scroll Event Tracking', () => {
       fireScrollEvent(mockElement, testScrollPosition);
     });
 
-    expect(onPositionChange).toHaveBeenCalledWith(testScrollPosition);
+    expect(onPositionChangeMock).toHaveBeenCalledWith(testScrollPosition);
   });
 
   it('does not attach listener when isActive is false', () => {

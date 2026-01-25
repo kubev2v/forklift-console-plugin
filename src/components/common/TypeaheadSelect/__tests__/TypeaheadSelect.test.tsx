@@ -8,6 +8,14 @@ import type { TypeaheadSelectOption } from '../utils/types';
 const mockOnChange = jest.fn();
 const mockOnInputChange = jest.fn();
 
+// Wrapper functions to ensure void return for callbacks
+const onChangeWrapper = (value: string | number | undefined) => {
+  mockOnChange(value);
+};
+const onInputChangeWrapper = (value: string) => {
+  mockOnInputChange(value);
+};
+
 describe('TypeaheadSelect', () => {
   const mockOptions: TypeaheadSelectOption[] = [
     { content: 'Option 1', value: 'option1' },
@@ -16,7 +24,7 @@ describe('TypeaheadSelect', () => {
   ];
 
   const defaultProps = {
-    onChange: mockOnChange,
+    onChange: onChangeWrapper,
     options: mockOptions,
   };
 
@@ -234,7 +242,7 @@ describe('TypeaheadSelect', () => {
 
     test('calls onInputChange when input value changes', async () => {
       const user = userEvent.setup();
-      render(<TypeaheadSelect {...defaultProps} onInputChange={mockOnInputChange} />);
+      render(<TypeaheadSelect {...defaultProps} onInputChange={onInputChangeWrapper} />);
 
       const input = screen.getByRole('combobox');
       await user.click(input);
@@ -297,7 +305,11 @@ describe('TypeaheadSelect', () => {
       const user = userEvent.setup();
       const customMessage = 'Custom no options message';
       render(
-        <TypeaheadSelect options={[]} onChange={mockOnChange} noOptionsMessage={customMessage} />,
+        <TypeaheadSelect
+          options={[]}
+          onChange={onChangeWrapper}
+          noOptionsMessage={customMessage}
+        />,
       );
 
       const input = screen.getByRole('combobox');

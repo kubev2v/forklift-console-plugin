@@ -17,10 +17,10 @@ const TOGGLE_CHECKBOX_ID = 'bulk-select-toggle-checkbox';
 
 const TableBulkSelect: FC<TableBulkSelectProps> = ({
   canPageSelect = true,
-  dataIds = [],
+  dataIds,
   onSelect,
-  pageDataIds = [],
-  selectedIds = [],
+  pageDataIds,
+  selectedIds,
 }) => {
   const { t } = useForkliftTranslation();
   const pageSelected = pageDataIds.every((item) => selectedIds.includes(item));

@@ -44,14 +44,17 @@ export const EnumFilter = ({
 }: FilterTypeProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { onUniqueFilterUpdate, selectedUniqueEnumLabels } = useUniqueEnums({
-    onSelectedEnumIdsChange,
+    onSelectedEnumIdsChange: (values: string[]) => {
+      onSelectedEnumIdsChange(values);
+    },
     resolvedLanguage,
     selectedEnumIds,
     supportedEnumValues,
   });
 
   const deleteFilter = (label: string | ToolbarLabel): void => {
-    onUniqueFilterUpdate(selectedUniqueEnumLabels.filter((filterLabel) => filterLabel !== label));
+    const filtered = selectedUniqueEnumLabels.filter((filterLabel) => filterLabel !== label);
+    onUniqueFilterUpdate(filtered);
   };
 
   const hasFilter = (label: string): boolean =>

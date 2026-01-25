@@ -97,8 +97,8 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
       setValue(fieldIds.mapField, updatedMappings, { shouldDirty: true, shouldValidate: true });
 
       // Trigger validation to ensure form state is correct
-      setTimeout(async () => {
-        await trigger();
+      setTimeout(() => {
+        trigger().catch(() => undefined);
       }, 0);
 
       unmappedSources.forEach((source) => {

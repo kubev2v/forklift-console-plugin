@@ -41,7 +41,12 @@ jest.mock(
     ({ value, onChange }: { value: any; onChange: any }) => (
       <div data-testid="luks-passphrase-input-list">
         <div>Passphrases: {value.join(', ')}</div>
-        <button data-testid="add-passphrase" onClick={() => onChange([...value, 'new-passphrase'])}>
+        <button
+          data-testid="add-passphrase"
+          onClick={() => {
+            onChange([...value, 'new-passphrase']);
+          }}
+        >
           Add
         </button>
       </div>
@@ -53,7 +58,10 @@ const mockPlan = {
   spec: { vms: [] },
 } as unknown as V1beta1Plan;
 
-const closeModal = jest.fn();
+const closeModalMock = jest.fn();
+const closeModal = () => {
+  closeModalMock();
+};
 
 describe('EditLUKSEncryptionPasswords', () => {
   beforeEach(() => {

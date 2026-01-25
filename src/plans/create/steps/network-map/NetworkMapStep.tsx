@@ -21,11 +21,11 @@ const NetworkMapStep = () => {
   });
 
   const handleNetworkMapTypeChange = (newType: NetworkMapType) => {
-    setTimeout(async () => {
+    setTimeout(() => {
       if (newType === NetworkMapType.Existing && !existingNetworkMap) {
-        await trigger(NetworkMapFieldId.ExistingNetworkMap);
+        trigger(NetworkMapFieldId.ExistingNetworkMap).catch(() => undefined);
       } else if (newType === NetworkMapType.New && !networkMap) {
-        await trigger(NetworkMapFieldId.NetworkMap);
+        trigger(NetworkMapFieldId.NetworkMap).catch(() => undefined);
       }
     }, 0);
   };

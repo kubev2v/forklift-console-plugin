@@ -88,7 +88,10 @@ describe('useScrollPositionPersistence - Edge Cases', () => {
   });
 
   it('handles rapid scroll events', () => {
-    const onPositionChange = jest.fn();
+    const onPositionChangeMock = jest.fn();
+    const onPositionChange = (position: number) => {
+      onPositionChangeMock(position);
+    };
     const mockElement = createMockScrollableElement();
 
     const { result } = renderHook(() =>
@@ -105,7 +108,7 @@ describe('useScrollPositionPersistence - Edge Cases', () => {
       fireScrollEvent(mockElement, testSavedPosition);
     });
 
-    expect(onPositionChange).toHaveBeenCalled();
+    expect(onPositionChangeMock).toHaveBeenCalled();
   });
 
   it('handles element reattachment', () => {
@@ -134,8 +137,13 @@ describe('useScrollPositionPersistence - Edge Cases', () => {
   });
 
   it('onPositionChange updates are reflected in scroll handler', () => {
-    const onPositionChange1 = jest.fn();
-    const onPositionChange2 = jest.fn();
+    const onPositionChangeMock2 = jest.fn();
+    const onPositionChange1 = (position: number) => {
+      /* noop */
+    };
+    const onPositionChange2 = (position: number) => {
+      onPositionChangeMock2(position);
+    };
     const mockElement = createMockScrollableElement();
 
     const { result, rerender } = renderHook(
@@ -154,6 +162,6 @@ describe('useScrollPositionPersistence - Edge Cases', () => {
       fireScrollEvent(mockElement, testScrollPosition);
     });
 
-    expect(onPositionChange2).toHaveBeenCalledWith(testScrollPosition);
+    expect(onPositionChangeMock2).toHaveBeenCalledWith(testScrollPosition);
   });
 });

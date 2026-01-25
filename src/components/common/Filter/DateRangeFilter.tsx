@@ -98,7 +98,9 @@ export const DateRangeFilter = ({
       deleteLabel={(category, option) => {
         clearSingleRange(option as ToolbarLabel);
       }}
-      deleteLabelGroup={() => onFilterUpdate([])}
+      deleteLabelGroup={() => {
+        onFilterUpdate([]);
+      }}
       categoryName={title as unknown as string}
       showToolbarItem={showFilter}
     >

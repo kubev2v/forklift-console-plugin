@@ -89,7 +89,9 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
         <Button
           key="confirm"
           variant={confirmVariant ?? ButtonVariant.primary}
-          onClick={handleConfirm}
+          onClick={() => {
+            handleConfirm().catch(() => undefined);
+          }}
           isLoading={isLoading}
           isDisabled={isLoading || Boolean(error) || isDisabled}
           data-testid="modal-confirm-button"

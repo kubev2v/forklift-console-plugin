@@ -99,7 +99,14 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
             <Button
               data-testid="wizard-back-button"
               variant={ButtonVariant.secondary}
-              onClick={goToPrevStep}
+              onClick={() => {
+                const result = goToPrevStep();
+                if (result instanceof Promise) {
+                  result.catch(() => {
+                    // navigation error handled
+                  });
+                }
+              }}
               isDisabled={isBackDisabled}
             >
               {t('Back')}
@@ -110,7 +117,11 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
             <Button
               data-testid="wizard-next-button"
               variant={ButtonVariant.primary}
-              onClick={onNextClick}
+              onClick={(event) => {
+                onNextClick(event).catch(() => {
+                  // error handled by onNextClick
+                });
+              }}
               isDisabled={isNextDisabled}
               isLoading={isSubmitting}
             >
@@ -123,7 +134,11 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
               <Button
                 data-testid="wizard-review-button"
                 variant={ButtonVariant.tertiary}
-                onClick={onSkipToReviewClick}
+                onClick={() => {
+                  onSkipToReviewClick().catch(() => {
+                    // error handled by onSkipToReviewClick
+                  });
+                }}
               >
                 {t('Skip to review')}
               </Button>

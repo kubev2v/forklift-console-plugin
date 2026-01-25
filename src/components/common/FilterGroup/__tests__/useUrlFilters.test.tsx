@@ -5,13 +5,17 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import { useUrlFilters } from '../useUrlFilters';
 
 afterEach(cleanup);
+
+let pushStateMock: jest.Mock = jest.fn();
+
 beforeEach(() => {
   Object.defineProperty(window, 'location', {
     value: { assign: jest.fn() },
     writable: true,
   });
   window.location.pathname = '';
-  window.history.pushState = jest.fn();
+  pushStateMock = jest.fn();
+  window.history.pushState = pushStateMock;
 });
 
 describe('parse filters from the URL on initialization', () => {
@@ -88,7 +92,6 @@ describe('display currently selected filters in the URL', () => {
     act(() => {
       setSelectedFilters({ [NAME]: update });
     });
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(window.history.pushState).toBeCalledWith({}, '', pushedState);
+    expect(pushStateMock).toBeCalledWith({}, '', pushedState);
   });
 });

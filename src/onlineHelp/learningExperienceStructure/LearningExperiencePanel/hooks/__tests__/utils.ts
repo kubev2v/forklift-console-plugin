@@ -23,7 +23,9 @@ export const createMockScrollableElement = (initialScrollTop = 0): MockScrollabl
 
 export const createDefaultOptions = (overrides: Partial<HookOptions> = {}): HookOptions => ({
   savedPosition: 0,
-  onPositionChange: jest.fn(),
+  onPositionChange: () => {
+    /* default noop */
+  },
   isActive: true,
   debounceMs: defaultDebounceMs,
   ...overrides,

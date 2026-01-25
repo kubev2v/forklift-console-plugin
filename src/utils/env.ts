@@ -6,4 +6,4 @@ import { ServerBranding } from './constants';
  */
 export const isUpstream = () =>
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  (window.SERVER_FLAGS?.branding ?? '') === String(ServerBranding.Okd);
+  (window.SERVER_FLAGS?.branding ?? '') === ServerBranding.Okd;

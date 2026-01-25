@@ -39,7 +39,7 @@ const DescriptionTitleWithHelp: FC<{
   helpContent,
   moreInfoLabel = 'More info:',
   moreInfoLink,
-  showHelpIconNextToTitle = false,
+  showHelpIconNextToTitle,
   title,
 }) => {
   const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {

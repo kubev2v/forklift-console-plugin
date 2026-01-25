@@ -26,8 +26,7 @@ describe('sendAnalyticsEvent', () => {
     delete process.env.NODE_ENV;
     delete process.env.VERSION;
 
-    console.log = mockConsoleLog;
-    console.warn = mockConsoleWarn;
+    Object.assign(console, { log: mockConsoleLog, warn: mockConsoleWarn });
 
     Object.defineProperty(navigator, 'userAgent', {
       writable: true,

@@ -57,7 +57,9 @@ export const DateFilter = ({
       deleteLabel={(_category, option) => {
         clearSingleDate(option as string);
       }}
-      deleteLabelGroup={() => onFilterUpdate([])}
+      deleteLabelGroup={() => {
+        onFilterUpdate([]);
+      }}
       categoryName={title ?? ''}
       showToolbarItem={showFilter}
     >

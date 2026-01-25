@@ -12,7 +12,7 @@ export const formatDateTo12Hours = (date: Date): string => {
 
 export const patchMigrationCutover = async (
   migration: V1beta1Migration,
-  cutover: string | undefined = undefined,
+  cutover?: string,
   trackEvent?: (event: string, data: Record<string, unknown>) => void,
 ) => {
   const op = migration?.spec?.cutover ? 'replace' : 'add';

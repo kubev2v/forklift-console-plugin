@@ -4,9 +4,11 @@ export const createCancellableDebounce = <T extends (...args: Parameters<T>) => 
 ) => {
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-  const debouncedFn = (...args: Parameters<T>) => {
+  const debouncedFn = (...args: Parameters<T>): void => {
     if (timeoutId) clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func(...args), wait);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, wait);
   };
 
   debouncedFn.cancel = () => {

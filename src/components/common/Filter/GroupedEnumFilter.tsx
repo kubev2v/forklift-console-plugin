@@ -67,7 +67,7 @@ export const GroupedEnumFilter = ({
   selectedFilters: selectedEnumIds = [],
   showFilter = true,
   showFilterIcon,
-  supportedGroups = [],
+  supportedGroups,
   supportedValues: supportedEnumValues = [],
 }: FilterTypeProps) => {
   const [isOpen, setIsOpen] = useState(false);

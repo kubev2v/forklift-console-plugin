@@ -134,7 +134,9 @@ const getNetworksUsedByProviderVms = (
         : toNetworks(vm, nicProfiles);
 
     // Add network IDs to the set
-    networkIds.forEach((id) => acc.add(id));
+    networkIds.forEach((id) => {
+      acc.add(id);
+    });
     return acc;
   }, new Set());
 

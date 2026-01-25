@@ -137,7 +137,10 @@ describe('initialize fields from user settings', () => {
 
 describe('saves fields to user settings', () => {
   it('saves re-order and hidden NAME field)', () => {
-    const saveSettings = jest.fn();
+    const saveSettingsMock = jest.fn();
+    const saveSettings = (settings: { resourceFieldId: string; isVisible?: boolean }[]) => {
+      saveSettingsMock(settings);
+    };
     const {
       result: {
         current: [, setFields],
@@ -149,7 +152,13 @@ describe('saves fields to user settings', () => {
           { isVisible: true, label: '', resourceFieldId: NAME },
           { isVisible: true, label: '', resourceFieldId: NAMESPACE },
         ],
-        { clear: () => undefined, data: [], save: saveSettings },
+        {
+          clear: () => {
+            /* noop */
+          },
+          data: [],
+          save: saveSettings,
+        },
       ),
     );
     act(() => {
@@ -158,13 +167,16 @@ describe('saves fields to user settings', () => {
         { isVisible: false, label: '', resourceFieldId: NAME },
       ]);
     });
-    expect(saveSettings).toBeCalledWith([
+    expect(saveSettingsMock).toBeCalledWith([
       { isVisible: true, resourceFieldId: NAMESPACE },
       { isVisible: false, resourceFieldId: NAME },
     ]);
   });
   it('clears settings if equal to defaults)', () => {
-    const clearSettings = jest.fn();
+    const clearSettingsMock = jest.fn();
+    const clearSettings = () => {
+      clearSettingsMock();
+    };
     const {
       result: {
         current: [, setFields],
@@ -176,7 +188,13 @@ describe('saves fields to user settings', () => {
           { isVisible: true, label: '', resourceFieldId: NAME },
           { isVisible: true, label: '', resourceFieldId: NAMESPACE },
         ],
-        { clear: clearSettings, data: [], save: () => undefined },
+        {
+          clear: clearSettings,
+          data: [],
+          save: () => {
+            /* noop */
+          },
+        },
       ),
     );
     act(() => {
@@ -185,6 +203,6 @@ describe('saves fields to user settings', () => {
         { isVisible: true, label: '', resourceFieldId: NAMESPACE },
       ]);
     });
-    expect(clearSettings).toBeCalled();
+    expect(clearSettingsMock).toBeCalled();
   });
 });

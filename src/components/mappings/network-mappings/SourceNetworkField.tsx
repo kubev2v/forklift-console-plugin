@@ -61,9 +61,9 @@ const SourceNetworkField = <T extends FieldValues>({
           id={fieldId}
           testId={`source-network-${fieldId}`}
           value={(field.value as MappingValue).name}
-          onSelect={async (_event, value) => {
+          onSelect={(_event, value) => {
             field.onChange(value);
-            await trigger(fieldId);
+            trigger(fieldId).catch(() => undefined);
           }}
           placeholder={t('Select source network')}
         >
