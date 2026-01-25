@@ -1,7 +1,7 @@
 import { Base64 } from 'js-base64';
 
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { type IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 const cleanObject = (obj: Record<string, string> | undefined) => {

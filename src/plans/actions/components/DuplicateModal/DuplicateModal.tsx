@@ -7,7 +7,7 @@ import {
   StorageMapModelGroupVersionKind,
   type V1beta1NetworkMap,
   type V1beta1StorageMap,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Stack, StackItem, TextInput } from '@patternfly/react-core';

@@ -3,7 +3,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
 import LoadingSuspend from '@components/LoadingSuspend';
-import { type IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
 import {
   getGroupVersionKindForModel,
   useAccessReview,

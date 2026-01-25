@@ -1,4 +1,4 @@
-import type { ProviderVirtualMachine } from '@kubev2v/types';
+import type { ProviderVirtualMachine } from '@forklift-ui/types';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 

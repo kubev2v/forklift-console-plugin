@@ -22,7 +22,7 @@ type AffinityEditRowProps = {
 const AffinityEditRow: FC<AffinityEditRowProps> = ({ expression, onChange, onDelete }) => {
   const { t } = useForkliftTranslation();
 
-  const { id, key, operator, values = [] } = expression;
+  const { id, key, operator, values } = expression;
   const enableValueField =
     operator !== Operator.Exists.valueOf() && operator !== Operator.DoesNotExist.valueOf();
 

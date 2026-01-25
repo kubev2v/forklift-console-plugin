@@ -38,6 +38,7 @@ export const getMigrationTypeConfig = (migrationType: MigrationTypeValue): Migra
         PreviewLabel: TechPreviewLabel,
       };
     }
+    case MigrationTypeValue.Conversion:
     default:
       return {
         description: '',

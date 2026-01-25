@@ -3,7 +3,7 @@ import type { ProviderVmData } from 'src/utils/types';
 
 import type { ResourceField } from '@components/common/utils/types';
 import SectionHeading from '@components/headers/SectionHeading';
-import type { ProviderHost, VSphereResource } from '@kubev2v/types';
+import type { ProviderHost, VSphereResource } from '@forklift-ui/types';
 import {
   PageSection,
   Pagination,

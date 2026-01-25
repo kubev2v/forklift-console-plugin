@@ -6,7 +6,7 @@ import type {
   V1beta1PlanSpecVms,
   V1beta1PlanSpecVmsHooks,
   V1beta1PlanSpecVmsLuks,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 import { useTargetNamespaces } from '@utils/hooks/useTargetNamespaces';
 
 import TargetProjectSelect from './TargetProjectSelect';

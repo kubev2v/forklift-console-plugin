@@ -1,7 +1,7 @@
 import { getVmPowerState } from 'src/providers/details/tabs/VirtualMachines/utils/helpers/getVmPowerState';
 import type { ProviderVmData } from 'src/utils/types';
 
-import type { ProviderHost, VSphereResource, VSphereVM } from '@kubev2v/types';
+import type { ProviderHost, VSphereResource, VSphereVM } from '@forklift-ui/types';
 
 import { FOLDER_PREFIX, NO_FOLDER } from './constants';
 import type { FolderKey, Indexes, VmKey, VmLookups } from './types';

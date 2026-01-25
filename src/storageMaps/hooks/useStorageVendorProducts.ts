@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type { IoK8sApiextensionsApiserverPkgApisApiextensionsV1CustomResourceDefinition as CustomResourceDefinition } from '@kubev2v/types';
+import type { IoK8sApiextensionsApiserverPkgApisApiextensionsV1CustomResourceDefinition as CustomResourceDefinition } from '@forklift-ui/types';
 import { isEmpty } from '@utils/helpers';
 
 import { storageVendorProducts } from '../utils/constants';

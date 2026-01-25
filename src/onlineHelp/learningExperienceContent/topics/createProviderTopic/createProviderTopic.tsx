@@ -30,6 +30,7 @@ const createProviderSubTopics = (providerType?: ProviderTypes): LearningExperien
         return rhvCreateProviderSubTopics();
       case PROVIDER_TYPES.openshift:
         return openshiftCreateProviderSubTopics();
+      case PROVIDER_TYPES.hyperv: // TODO: return hypervCreateProviderSubTopics();
       case undefined:
       default:
         return vmwareCreateProviderSubTopics();

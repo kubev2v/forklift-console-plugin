@@ -1,4 +1,4 @@
-import type { V1beta1Host } from '@kubev2v/types';
+import type { V1beta1Host } from '@forklift-ui/types';
 
 type StatusResult = {
   status: string;

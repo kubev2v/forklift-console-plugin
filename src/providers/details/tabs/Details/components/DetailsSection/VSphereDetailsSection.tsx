@@ -11,7 +11,7 @@ import CreatedAtDetailsItem from '@components/DetailItems/CreatedAtDetailItem';
 import NameDetailsItem from '@components/DetailItems/NameDetailItem';
 import NamespaceDetailsItem from '@components/DetailItems/NamespaceDetailItem';
 import OwnerDetailsItem from '@components/DetailItems/OwnerDetailItem';
-import type { VSphereProvider } from '@kubev2v/types';
+import type { VSphereProvider } from '@forklift-ui/types';
 import { DescriptionList } from '@patternfly/react-core';
 
 import type { DetailsSectionProps } from './utils/types';

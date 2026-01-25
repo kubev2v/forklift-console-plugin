@@ -1,7 +1,7 @@
 import { type Dispatch, type MutableRefObject, type SetStateAction, useMemo } from 'react';
 import type { ProviderVmData } from 'src/utils/types';
 
-import type { ProviderHost, VSphereResource } from '@kubev2v/types';
+import type { ProviderHost, VSphereResource } from '@forklift-ui/types';
 
 import type { RowNode } from '../utils/types';
 

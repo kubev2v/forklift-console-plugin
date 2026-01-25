@@ -6,7 +6,7 @@ import type {
   ProviderVirtualMachine,
   V1beta1NetworkMap,
   V1beta1Provider,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 
 export type PlanNetworkEditFormValues = {
   networkMap: NetworkMapping[];

@@ -1,6 +1,6 @@
 import type { FieldValues } from 'react-hook-form';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 
 import type { NetworkMapFieldId, NetworkMapping } from '../utils/types';
 

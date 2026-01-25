@@ -4,7 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { validateNoSpaces } from 'src/utils/validation/common';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { NetworkAdapters, V1beta1Provider } from '@kubev2v/types';
+import type { NetworkAdapters, V1beta1Provider } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, ModalVariant, Stack } from '@patternfly/react-core';
 import { getSdkEndpoint } from '@utils/crds/common/selectors';

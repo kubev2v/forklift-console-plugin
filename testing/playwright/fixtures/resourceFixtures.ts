@@ -69,7 +69,9 @@ export const createResourceFixtures = (
                   await cleanupContext.close();
                 }
               } catch (error) {
-                throw new Error(`Failed to create or use provider: ${String(error)}`);
+                throw new Error(`Failed to create or use provider: ${String(error)}`, {
+                  cause: error,
+                });
               }
             },
             { scope: 'worker' },

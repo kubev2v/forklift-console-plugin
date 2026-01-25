@@ -4,7 +4,7 @@ import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 import { isProviderLocalOpenshift } from 'src/utils/resources';
 
-import type { ProviderType } from '@kubev2v/types';
+import type { ProviderType } from '@forklift-ui/types';
 import { Label } from '@patternfly/react-core';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';

@@ -1,4 +1,4 @@
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 
 export const getSkipGuestConversion = (resource: V1beta1Plan): boolean | undefined =>
   resource?.spec?.skipGuestConversion;

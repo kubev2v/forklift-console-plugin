@@ -1,7 +1,7 @@
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/utils';
 
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 
 /**
  * This function gets the number of 'Running', 'Failed', and 'Succeeded' plans.

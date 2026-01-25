@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import { getCategoryStatus, getCategoryTitle } from '@components/Concerns/utils/category';
-import type { Concern } from '@kubev2v/types';
+import type { Concern } from '@forklift-ui/types';
 import { Label } from '@patternfly/react-core';
 import { Td, Tr } from '@patternfly/react-table';
 

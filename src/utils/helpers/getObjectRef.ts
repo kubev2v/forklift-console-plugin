@@ -1,4 +1,4 @@
-import type { IoK8sApimachineryPkgApisMetaV1ObjectMeta } from '@kubev2v/types';
+import type { IoK8sApimachineryPkgApisMetaV1ObjectMeta } from '@forklift-ui/types';
 
 // based on the method used in legacy/src/common/helpers
 // and mocks/src/definitions/utils

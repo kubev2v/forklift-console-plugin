@@ -9,7 +9,7 @@ import type {
   V1beta1Provider,
   V1Volume,
   VSphereVM,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 import { isEmpty } from '@utils/helpers';
 
@@ -105,28 +105,31 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
     let storageIds: string[] = [];
 
     switch (vm.providerType) {
-      case 'vsphere':
+      case PROVIDER_TYPES.vsphere:
         storageIds = getVSphereStorageIds(vm);
         break;
 
-      case 'ova':
+      case PROVIDER_TYPES.ova:
         storageIds = getOvaStorageIds(vm as EnhancedOvaVM);
         break;
 
-      case 'ovirt':
+      case PROVIDER_TYPES.ovirt:
         storageIds = getOvirtStorageIds(vm as OVirtVMWithDisks);
         break;
 
-      case 'openshift':
+      case PROVIDER_TYPES.openshift:
         storageIds = getOpenshiftVolumeNames(vm);
         break;
 
-      case 'openstack':
+      case PROVIDER_TYPES.openstack:
+      case PROVIDER_TYPES.hyperv:
       default:
       // Use empty array
     }
 
-    storageIds.forEach((id) => acc.add(id));
+    storageIds.forEach((id) => {
+      acc.add(id);
+    });
     return acc;
   }, new Set());
 

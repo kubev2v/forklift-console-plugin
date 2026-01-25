@@ -1,7 +1,7 @@
 import type { TargetPowerStateValue } from 'src/plans/constants';
 import type { EnhancedPlanSpecVms } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 
 export const getPlanDestinationProvider = (plan: V1beta1Plan) =>
   plan?.spec?.provider?.destination ?? {};

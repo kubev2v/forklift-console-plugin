@@ -1,6 +1,6 @@
 import { Base64 } from 'js-base64';
 
-import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 import type { OnConfirmHookType } from '../../EditModal/types';
@@ -18,7 +18,7 @@ import type { OnConfirmHookType } from '../../EditModal/types';
 export const patchProviderURL: OnConfirmHookType = async ({ model, newValue: value, resource }) => {
   const provider: V1beta1Provider = resource as V1beta1Provider;
   const providerOp = provider?.spec?.url ? 'replace' : 'add';
-  const urlValue = (value as string).toString().trim();
+  const urlValue = (value as string)?.trim();
 
   // Get providers secret stub
   const secret: IoK8sApiCoreV1Secret = {

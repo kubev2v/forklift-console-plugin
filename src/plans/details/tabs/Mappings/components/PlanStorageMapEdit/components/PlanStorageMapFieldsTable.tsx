@@ -12,7 +12,7 @@ import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId
 import { StorageMapFieldId, type TargetStorage } from 'src/storageMaps/utils/types';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';

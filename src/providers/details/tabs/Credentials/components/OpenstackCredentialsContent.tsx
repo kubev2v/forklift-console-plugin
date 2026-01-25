@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { OpenstackSecretFieldsId } from 'src/providers/utils/constants';
 
 import { DetailsItem } from '@components/DetailItems/DetailItem';
-import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret } from '@forklift-ui/types';
 
 import {
   openstackAuthTypeField,

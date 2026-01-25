@@ -9,9 +9,8 @@ import type {
   V1beta1NetworkMapSpecMapDestination,
   V1beta1NetworkMapSpecMapSource,
   V1beta1Provider,
-} from '@kubev2v/types';
-import { IGNORED, MULTUS, POD } from '@utils/constants';
-import { DEFAULT_NETWORK } from '@utils/constants';
+} from '@forklift-ui/types';
+import { DEFAULT_NETWORK, IGNORED, MULTUS, POD } from '@utils/constants';
 import type { MappingValue } from '@utils/types';
 
 const getDestination = (targetNetwork: MappingValue): V1beta1NetworkMapSpecMapDestination => {

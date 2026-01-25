@@ -1,5 +1,5 @@
+import type { V1beta1Plan } from '@forklift-ui/types';
 import { beforeEach, describe, expect, it } from '@jest/globals';
-import type { V1beta1Plan } from '@kubev2v/types';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 

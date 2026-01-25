@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { ConditionsSection } from 'src/components/ConditionsSection/ConditionsSection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { K8sResourceCondition, V1beta1ForkliftController } from '@kubev2v/types';
+import type { K8sResourceCondition, V1beta1ForkliftController } from '@forklift-ui/types';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 
 type ConditionsCardProps = {

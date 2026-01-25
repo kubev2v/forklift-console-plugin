@@ -6,7 +6,7 @@ import {
   NetworkMapModelGroupVersionKind,
   NetworkMapModelRef,
   type V1beta1NetworkMap,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   EmptyState,

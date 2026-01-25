@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { TableLinkCell } from 'src/components/TableCell/TableLinkCell';
 
-import { StorageMapModelGroupVersionKind } from '@kubev2v/types';
+import { StorageMapModelGroupVersionKind } from '@forklift-ui/types';
 
 import type { CellProps } from './CellProps';
 

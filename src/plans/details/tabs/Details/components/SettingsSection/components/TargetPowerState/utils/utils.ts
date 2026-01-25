@@ -1,7 +1,7 @@
 import type { TargetPowerStateValue } from 'src/plans/constants';
 
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanTargetPowerState, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 

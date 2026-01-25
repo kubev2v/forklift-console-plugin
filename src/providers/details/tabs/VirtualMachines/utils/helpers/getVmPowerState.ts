@@ -4,7 +4,7 @@ import type {
   OVirtVM,
   ProviderVirtualMachine,
   VSphereVM,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 
 export type PowerState = 'on' | 'off' | 'unknown';
 
@@ -57,6 +57,7 @@ export const getVmPowerState = (vm: ProviderVirtualMachine | undefined): PowerSt
     case 'openshift':
       return getOpenShiftVmPowerState(vm);
     case 'ova':
+    case 'hyperv':
       return 'off';
     default:
       return 'unknown';

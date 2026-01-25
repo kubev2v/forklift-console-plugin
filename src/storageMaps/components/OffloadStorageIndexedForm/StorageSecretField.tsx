@@ -5,7 +5,7 @@ import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import Select from '@components/common/Select';
-import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@forklift-ui/types';
 import {
   getGroupVersionKindForModel,
   useK8sWatchResource,

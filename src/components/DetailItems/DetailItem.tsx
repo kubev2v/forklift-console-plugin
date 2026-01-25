@@ -39,7 +39,7 @@ const DescriptionTitleWithHelp: FC<{
   helpContent,
   moreInfoLabel = 'More info:',
   moreInfoLink,
-  showHelpIconNextToTitle = false,
+  showHelpIconNextToTitle,
   title,
 }) => {
   const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
@@ -67,7 +67,9 @@ const DescriptionTitleWithHelp: FC<{
             {!isEmpty(crumbs) && (
               <FlexItem>
                 <Breadcrumb>
-                  {crumbs?.map((crumb) => <BreadcrumbItem key={crumb}>{crumb}</BreadcrumbItem>)}
+                  {crumbs?.map((crumb) => (
+                    <BreadcrumbItem key={crumb}>{crumb}</BreadcrumbItem>
+                  ))}
                 </Breadcrumb>
               </FlexItem>
             )}

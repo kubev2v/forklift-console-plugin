@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 import { decode, encode } from 'js-base64';
 
-import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { getUrl } from '@utils/crds/common/selectors';
 

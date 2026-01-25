@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import SectionHeading from '@components/headers/SectionHeading';
-import type { V1beta1DataVolume } from '@kubev2v/types';
+import type { V1beta1DataVolume } from '@forklift-ui/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';

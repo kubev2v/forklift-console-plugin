@@ -6,7 +6,7 @@ import {
 } from 'src/providers/modals/EditProviderURL/EditProviderURLModal';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { IoK8sApiCoreV1Secret } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret } from '@forklift-ui/types';
 import { useK8sWatchResource, useModal } from '@openshift-console/dynamic-plugin-sdk';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';

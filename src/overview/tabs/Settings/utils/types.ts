@@ -1,4 +1,4 @@
-import type { V1beta1ForkliftController } from '@kubev2v/types';
+import type { V1beta1ForkliftController } from '@forklift-ui/types';
 
 export enum SettingsFields {
   ControllerCPULimit = 'controller_container_limits_cpu',

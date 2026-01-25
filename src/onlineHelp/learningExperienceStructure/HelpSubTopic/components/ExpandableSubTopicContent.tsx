@@ -9,11 +9,9 @@ type ExpandableSubTopicContentProps = {
 
 const ExpandableSubTopicContent: FC<ExpandableSubTopicContentProps> = ({ topic }) => (
   <>
-    {topic
-      .subTopics?.()
-      .map((subTopic, subIndex) => (
-        <HelpTopicSection key={subTopic.id} topic={subTopic} index={subIndex} />
-      ))}
+    {topic.subTopics?.().map((subTopic, subIndex) => (
+      <HelpTopicSection key={subTopic.id} topic={subTopic} index={subIndex} />
+    ))}
   </>
 );
 

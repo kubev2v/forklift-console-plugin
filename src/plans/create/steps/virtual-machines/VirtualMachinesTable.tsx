@@ -10,7 +10,7 @@ import { VSphereVirtualMachinesList } from 'src/providers/details/tabs/VirtualMa
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 
-import type { ProviderVirtualMachine } from '@kubev2v/types';
+import type { ProviderVirtualMachine } from '@forklift-ui/types';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import type { CreatePlanFormData } from '../../types';

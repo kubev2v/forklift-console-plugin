@@ -1,4 +1,4 @@
-import type { OpenstackVM, OvaVM, OVirtVM, VSphereVM } from '@kubev2v/types';
+import type { OpenstackVM, OvaVM, OVirtVM, VSphereVM } from '@forklift-ui/types';
 
 export const ConcernCategoryOptions = {
   Critical: 'Critical',

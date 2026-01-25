@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 
 /**
  * Type for the props of the ProviderDetailsItemProps component.

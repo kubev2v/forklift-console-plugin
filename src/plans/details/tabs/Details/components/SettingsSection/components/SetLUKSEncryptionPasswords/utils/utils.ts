@@ -4,7 +4,7 @@ import {
   PlanModel,
   SecretModel,
   type V1beta1Plan,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { k8sCreate, k8sDelete, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { getLUKSSecretName, getPlanVirtualMachines } from '@utils/crds/plans/selectors';

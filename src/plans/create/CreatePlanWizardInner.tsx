@@ -1,6 +1,6 @@
 import { type FC, useEffect, useRef, useState } from 'react';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 import { Wizard, type WizardProps, WizardStep, type WizardStepType } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';

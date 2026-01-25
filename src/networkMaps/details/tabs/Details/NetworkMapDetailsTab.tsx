@@ -17,7 +17,7 @@ import {
   ProviderModelGroupVersionKind,
   type V1beta1NetworkMap,
   type V1beta1Provider,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource, useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 import {

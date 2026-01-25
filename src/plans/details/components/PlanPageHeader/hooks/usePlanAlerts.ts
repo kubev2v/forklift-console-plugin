@@ -10,7 +10,7 @@ import {
   type V1beta1Plan,
   type V1beta1PlanStatusConditions,
   type V1beta1StorageMap,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { CATEGORY_TYPES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';

@@ -2,7 +2,12 @@ import { useMemo } from 'react';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 
-import type { OVirtDisk, OVirtVM, ProviderVirtualMachine, V1beta1Provider } from '@kubev2v/types';
+import type {
+  OVirtDisk,
+  OVirtVM,
+  ProviderVirtualMachine,
+  V1beta1Provider,
+} from '@forklift-ui/types';
 import { isEmpty } from '@utils/helpers';
 
 /**

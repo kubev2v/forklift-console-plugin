@@ -1,4 +1,4 @@
-import type { V1beta1Plan, V1beta1Provider, V1VirtualMachine } from '@kubev2v/types';
+import type { V1beta1Plan, V1beta1Provider, V1VirtualMachine } from '@forklift-ui/types';
 import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';

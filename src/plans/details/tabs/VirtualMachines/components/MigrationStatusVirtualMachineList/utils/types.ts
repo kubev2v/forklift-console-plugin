@@ -6,7 +6,7 @@ import type {
   V1beta1Plan,
   V1beta1PlanSpecVms,
   V1beta1PlanStatusMigrationVms,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 
 export type MigrationStatusVirtualMachinePageData = {
   pods: IoK8sApiCoreV1Pod[];

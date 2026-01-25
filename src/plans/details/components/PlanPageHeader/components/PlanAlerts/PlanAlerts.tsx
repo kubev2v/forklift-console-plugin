@@ -2,7 +2,7 @@ import { type FC, useMemo } from 'react';
 import { useSpecVirtualMachinesListData } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/hooks/useSpecVirtualMachinesListData';
 import { getCriticalConcernsVmsMap } from 'src/plans/details/utils/utils';
 
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 import { PageSection } from '@patternfly/react-core';
 
 import { PlanStatuses } from '../../../PlanStatus/utils/types';

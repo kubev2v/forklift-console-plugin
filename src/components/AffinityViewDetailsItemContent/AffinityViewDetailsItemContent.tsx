@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import type { V1beta1PlanSpecTargetAffinity } from '@kubev2v/types/dist/generated/forklift/models/V1beta1PlanSpecTargetAffinity';
+import type { V1beta1PlanSpecTargetAffinity } from '@forklift-ui/types/dist/generated/forklift/models/V1beta1PlanSpecTargetAffinity';
 import { Label } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 

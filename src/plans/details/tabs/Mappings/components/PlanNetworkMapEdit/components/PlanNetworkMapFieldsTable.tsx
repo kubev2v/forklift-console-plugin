@@ -10,7 +10,7 @@ import { hasPodNetworkMappings } from 'src/plans/create/utils/hasMultiplePodNetw
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
-import type { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
+import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { PlanNetworkEditFormValues } from '../utils/types';

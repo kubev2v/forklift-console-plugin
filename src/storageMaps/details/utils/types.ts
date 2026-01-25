@@ -1,6 +1,6 @@
 import type { StorageMapping } from 'src/storageMaps/utils/types';
 
-import type { V1beta1StorageMapSpecMap } from '@kubev2v/types';
+import type { V1beta1StorageMapSpecMap } from '@forklift-ui/types';
 
 /**
  * Extended storage map spec with a more flexible offload plugin configuration

@@ -4,7 +4,7 @@ import ConcernsColumnPopover from 'src/components/Concerns/ConcernsColumnPopover
 import { type EnumValue, FilterDefType, type ResourceField } from '@components/common/utils/types';
 import { getCategoryIcon } from '@components/Concerns/utils/category';
 import { orderedConcernCategories } from '@components/Concerns/utils/constants';
-import type { V1beta1Plan, V1beta1PlanStatusConditions } from '@kubev2v/types';
+import type { V1beta1Plan, V1beta1PlanStatusConditions } from '@forklift-ui/types';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 

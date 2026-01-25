@@ -1,7 +1,7 @@
 import { DefaultNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import type { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
+import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
 
 const getNetworksForVM = (vm: ProviderVirtualMachine) => {
   switch (vm.providerType) {
@@ -24,6 +24,8 @@ const getNetworksForVM = (vm: ProviderVirtualMachine) => {
         network?.pod ? DefaultNetworkLabel.Source : (network?.multus?.networkName ?? network?.name),
       );
     }
+    case PROVIDER_TYPES.hyperv:
+      return vm?.networks?.map((network) => network?.id) ?? [];
     case PROVIDER_TYPES.ova: {
       const networks = vm?.Networks;
 
@@ -39,6 +41,7 @@ const getNetworksForVM = (vm: ProviderVirtualMachine) => {
         return null;
       });
     }
+
     default:
       return [];
   }

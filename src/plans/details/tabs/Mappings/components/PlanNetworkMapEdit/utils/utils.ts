@@ -1,7 +1,7 @@
 import { buildNetworkMappings } from 'src/networkMaps/create/utils/buildNetworkMappings';
 
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { NetworkMapModel, type V1beta1NetworkMap, type V1beta1Provider } from '@kubev2v/types';
+import { NetworkMapModel, type V1beta1NetworkMap, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { isEmpty } from '@utils/helpers';
 

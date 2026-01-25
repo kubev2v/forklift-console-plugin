@@ -1,6 +1,6 @@
 import { type LearningExperienceSubTopic, ListStyleType } from 'src/onlineHelp/utils/types';
 
-import { NetworkMapModelGroupVersionKind } from '@kubev2v/types';
+import { NetworkMapModelGroupVersionKind } from '@forklift-ui/types';
 import { t } from '@utils/i18n';
 
 import LabelButton from '../../components/LabelButton';

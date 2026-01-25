@@ -3,7 +3,7 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom-v5-compat';
 
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
-import { StorageMapModelRef } from '@kubev2v/types';
+import { StorageMapModelRef } from '@forklift-ui/types';
 import {
   Alert,
   AlertActionCloseButton,

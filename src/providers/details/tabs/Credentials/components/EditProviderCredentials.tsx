@@ -2,7 +2,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, ModalVariant } from '@patternfly/react-core';
 import { getType } from '@utils/crds/common/selectors';

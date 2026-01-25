@@ -1,4 +1,4 @@
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 
 export type EditableDetailsItemProps = {
   canPatch: boolean;

@@ -1,7 +1,7 @@
 import { type FC, type MouseEvent, useCallback, useMemo } from 'react';
 import { type Location, useLocation, useNavigate } from 'react-router-dom-v5-compat';
 
-import { PlanModelRef } from '@kubev2v/types';
+import { PlanModelRef } from '@forklift-ui/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import {
   ActionList,

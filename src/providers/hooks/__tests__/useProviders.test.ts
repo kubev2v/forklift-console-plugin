@@ -1,4 +1,4 @@
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 
 import { getIsManaged } from '../../utils/helpers/getIsManaged';
 import { getIsOnlySource, getIsTarget } from '../../utils/helpers/getIsTarget';

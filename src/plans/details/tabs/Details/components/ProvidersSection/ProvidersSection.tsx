@@ -5,7 +5,7 @@ import { getProviderTypeIcon } from 'src/utils/providers/getProviderTypeIcon';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import ProviderIconLink from '@components/ProviderIconLink';
-import { ProviderModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
 import { DescriptionList } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';

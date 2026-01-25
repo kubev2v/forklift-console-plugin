@@ -6,7 +6,7 @@ import {
   ProviderModelGroupVersionKind,
   type ProviderVirtualMachine,
   type V1beta1Provider,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { usePlan } from '../../hooks/usePlan';

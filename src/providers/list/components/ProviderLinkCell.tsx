@@ -3,7 +3,7 @@ import { TableLabelCell } from 'src/components/TableCell/TableLabelCell';
 import { getProviderTypeIcon } from 'src/utils/providers/getProviderTypeIcon';
 
 import ProviderIconLink from '@components/ProviderIconLink';
-import { ProviderModelGroupVersionKind } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind } from '@forklift-ui/types';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useForkliftTranslation } from '@utils/i18n';

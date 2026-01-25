@@ -4,7 +4,7 @@ import { useHasSufficientProviders } from 'src/utils/fetch';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel, ProviderModelRef } from '@kubev2v/types';
+import { PlanModel, ProviderModelRef } from '@forklift-ui/types';
 import {
   Bullseye,
   Content,

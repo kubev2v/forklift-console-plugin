@@ -2,7 +2,7 @@ import type { FC, ReactElement } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import SectionHeading from '@components/headers/SectionHeading';
-import type { K8sResourceCondition } from '@kubev2v/types';
+import type { K8sResourceCondition } from '@forklift-ui/types';
 import { HelperText, HelperTextItem, PageSection } from '@patternfly/react-core';
 
 import ConditionsTableItem from './ConditionsTableItem';

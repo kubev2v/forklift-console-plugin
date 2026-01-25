@@ -12,7 +12,7 @@ import type {
   V1beta1Provider,
   V1beta1StorageMapSpecMap,
   V1beta1StorageMapSpecMapSource,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { STORAGE_NAMES } from '@utils/constants';
 
 import type { CustomStorageMapSpecMap, OffloadPluginConfig } from '../types';

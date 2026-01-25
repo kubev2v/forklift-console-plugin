@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type { K8sResourceCommon } from '@kubev2v/types';
+import type { K8sResourceCommon } from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName } from '@utils/crds/common/selectors';
 import { isUpstream } from '@utils/env';

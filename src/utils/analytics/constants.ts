@@ -1,4 +1,4 @@
-import type { ProviderType } from '@kubev2v/types';
+import type { ProviderType } from '@forklift-ui/types';
 
 export { type ProviderType };
 

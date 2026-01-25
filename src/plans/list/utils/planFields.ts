@@ -6,7 +6,7 @@ import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/uti
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 import { t } from '@utils/i18n';
 
 import { planResourceApiJsonPaths, PlanTableResourceId } from './constants';

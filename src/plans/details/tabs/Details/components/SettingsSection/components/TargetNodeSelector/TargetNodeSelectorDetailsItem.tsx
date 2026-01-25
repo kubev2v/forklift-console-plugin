@@ -8,7 +8,7 @@ import NodeSelectorModal, {
   type NodeSelectorModalProps,
 } from '@components/NodeSelectorModal/NodeSelectorModal';
 import NodeSelectorViewDetailsItemContent from '@components/NodeSelectorViewDetailsItemContent/NodeSelectorViewDetailsItemContent';
-import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sPatch, useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';

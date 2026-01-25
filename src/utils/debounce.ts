@@ -6,7 +6,9 @@ export const createCancellableDebounce = <T extends (...args: Parameters<T>) => 
 
   const debouncedFn = (...args: Parameters<T>) => {
     if (timeoutId) clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func(...args), wait);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, wait);
   };
 
   debouncedFn.cancel = () => {

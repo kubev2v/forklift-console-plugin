@@ -24,7 +24,7 @@ export const SwitchFilter = ({
   selectedFilters,
 }: FilterTypeProps) => {
   const onChange: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (checked) => {
-    onFilterUpdate(checked ? [Boolean(checked).toString()] : []);
+    onFilterUpdate(checked ? [checked.toString()] : []);
   };
 
   return (

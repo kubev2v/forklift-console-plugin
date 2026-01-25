@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import Loading from 'src/components/Loading/Loading';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 import { isEmpty } from '@utils/helpers';
 import { useTargetNamespaces } from '@utils/hooks/useTargetNamespaces';
 

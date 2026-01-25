@@ -1,7 +1,7 @@
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 import { OffloadPlugin, StorageMapFieldId, type StorageMapping } from 'src/storageMaps/utils/types';
 
-import type { V1beta1StorageMap, V1beta1StorageMapSpecMap } from '@kubev2v/types';
+import type { V1beta1StorageMap, V1beta1StorageMapSpecMap } from '@forklift-ui/types';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 

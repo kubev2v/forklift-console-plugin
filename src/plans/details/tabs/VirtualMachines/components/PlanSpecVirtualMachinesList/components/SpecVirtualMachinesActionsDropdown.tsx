@@ -1,6 +1,6 @@
 import { type FC, type Ref, useState } from 'react';
 
-import type { ProviderType, V1beta1Plan } from '@kubev2v/types';
+import type { ProviderType, V1beta1Plan } from '@forklift-ui/types';
 import { Dropdown, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
 

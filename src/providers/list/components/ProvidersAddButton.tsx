@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 
-import { ProviderModelRef } from '@kubev2v/types';
+import { ProviderModelRef } from '@forklift-ui/types';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { getResourceUrl } from '@utils/getResourceUrl';
 

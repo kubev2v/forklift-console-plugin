@@ -3,11 +3,11 @@ import type {
   K8sIoApiCoreV1PodAffinityTerm,
   K8sIoApiCoreV1PodAntiAffinity,
   K8sIoApiCoreV1WeightedPodAffinityTerm,
-} from '@kubev2v/types';
-import type { V1beta1PlanSpecTargetAffinity } from '@kubev2v/types/dist/generated/forklift/models/V1beta1PlanSpecTargetAffinity';
-import type { V1beta1PlanSpecTargetAffinityNodeAffinity } from '@kubev2v/types/dist/generated/forklift/models/V1beta1PlanSpecTargetAffinityNodeAffinity';
-import type { V1beta1PlanSpecTargetAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution } from '@kubev2v/types/src/generated/forklift/models/V1beta1PlanSpecTargetAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution';
-import type { V1beta1PlanSpecTargetAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms } from '@kubev2v/types/src/generated/forklift/models/V1beta1PlanSpecTargetAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms';
+  V1beta1PlanSpecTargetAffinity,
+  V1beta1PlanSpecTargetAffinityNodeAffinity,
+  V1beta1PlanSpecTargetAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution,
+  V1beta1PlanSpecTargetAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms,
+} from '@forklift-ui/types';
 
 enum AffinityCondition {
   preferred = 'preferredDuringSchedulingIgnoredDuringExecution',

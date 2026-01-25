@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
 import { useOpenShiftNetworks } from 'src/utils/hooks/useNetworks';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 import { POD } from '@utils/constants';
 import { DEFAULT_NETWORK } from '@utils/constants';
 

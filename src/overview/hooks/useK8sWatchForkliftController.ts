@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   ForkliftControllerModelGroupVersionKind,
   type V1beta1ForkliftController,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 /**

@@ -1,7 +1,7 @@
 import type { MutableRefObject } from 'react';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import type { ProvidersInventoryList } from '@kubev2v/types';
+import type { ProvidersInventoryList } from '@forklift-ui/types';
 
 import { inventoryContentHasChanged } from './inventoryContentHasChanged';
 

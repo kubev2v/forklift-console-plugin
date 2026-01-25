@@ -3,7 +3,10 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { CustomFilterType } from '@components/common/FilterGroup/constants';
 import type { FilterDef } from '@components/common/utils/types';
-import type { Concern, ProviderVirtualMachine as KubeProviderVirtualMachine } from '@kubev2v/types';
+import type {
+  Concern,
+  ProviderVirtualMachine as KubeProviderVirtualMachine,
+} from '@forklift-ui/types';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 

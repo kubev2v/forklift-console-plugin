@@ -1,4 +1,4 @@
-import type { OvaDisk, OvaNetwork, OvaVM } from '@kubev2v/types';
+import type { OvaDisk, OvaNetwork, OvaVM } from '@forklift-ui/types';
 
 type OvaID = {
   ID: string;

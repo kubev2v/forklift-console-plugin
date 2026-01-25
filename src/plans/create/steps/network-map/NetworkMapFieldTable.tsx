@@ -3,7 +3,7 @@ import { useFieldArray } from 'react-hook-form';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
-import type { OVirtNicProfile } from '@kubev2v/types';
+import type { OVirtNicProfile } from '@forklift-ui/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';

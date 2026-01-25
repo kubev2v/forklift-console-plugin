@@ -6,7 +6,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import AffinityModal, { type AffinityModalProps } from '@components/AffinityModal/AffinityModal';
 import AffinityViewDetailsItemContent from '@components/AffinityViewDetailsItemContent/AffinityViewDetailsItemContent';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { type K8sIoApiCoreV1Affinity, PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { type K8sIoApiCoreV1Affinity, PlanModel, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sPatch, useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DOC_MAIN_HELP_LINK } from '@utils/links';
 

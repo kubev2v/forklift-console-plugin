@@ -1,6 +1,6 @@
 import type { ProviderVmData } from 'src/utils/types';
 
-import type { Concern } from '@kubev2v/types';
+import type { Concern } from '@forklift-ui/types';
 
 export type VmKey = string;
 export type FolderKey = string;

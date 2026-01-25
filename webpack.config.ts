@@ -72,7 +72,7 @@ const config: Configuration = {
       },
       {
         generator: {
-          dataUrl: (content: string) => {
+          dataUrl: (content: Buffer) => {
             return svgToMiniDataURI(content.toString());
           },
         },
@@ -118,7 +118,7 @@ const config: Configuration = {
     new ConsoleRemotePlugin({
       extensions,
       pluginMetadata,
-    }),
+    }) as unknown as WebpackPluginInstance,
     new CopyPlugin({
       patterns: [{ from: '../locales', to: '../dist/locales' }],
     }),

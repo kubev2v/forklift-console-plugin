@@ -9,7 +9,7 @@ import type {
   V1beta1Provider,
   V1NetworkAttachmentDefinition,
   VSphereNetwork,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { DEFAULT_NETWORK, POD } from '@utils/constants';
 
 import useProviderInventory from './useProviderInventory';

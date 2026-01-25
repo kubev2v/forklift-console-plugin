@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import { DescriptionList } from '@patternfly/react-core';
 
 import CredentialContent from './CredentialContent';

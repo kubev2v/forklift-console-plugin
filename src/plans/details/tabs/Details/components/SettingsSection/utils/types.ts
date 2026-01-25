@@ -1,4 +1,4 @@
-import type { V1beta1Plan, V1beta1PlanSpecVms } from '@kubev2v/types';
+import type { V1beta1Plan, V1beta1PlanSpecVms } from '@forklift-ui/types';
 
 export type EditPlanProps = {
   resource: V1beta1Plan;

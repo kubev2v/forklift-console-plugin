@@ -1,6 +1,6 @@
 import type { LearningExperienceSubTopic } from 'src/onlineHelp/utils/types';
 
-import { PlanModelGroupVersionKind } from '@kubev2v/types';
+import { PlanModelGroupVersionKind } from '@forklift-ui/types';
 import { t } from '@utils/i18n';
 
 import LabelButton from '../../components/LabelButton';

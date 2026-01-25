@@ -6,7 +6,7 @@ import type {
   IoK8sApiCoreV1Pod,
   V1beta1DataVolume,
   V1beta1Plan,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   DataVolumeModelGroupVersionKind,
@@ -40,25 +40,23 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
     selector: { matchLabels: { plan: getUID(plan)! } },
   };
 
-  const [pods = [], podsLoaded, podsError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
+  const [pods, podsLoaded, podsError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
     ...watchOptions,
     groupVersionKind: PodModelGroupVersionKind,
   });
 
-  const [jobs = [], jobsLoaded, jobsError] = useK8sWatchResource<IoK8sApiBatchV1Job[]>({
+  const [jobs, jobsLoaded, jobsError] = useK8sWatchResource<IoK8sApiBatchV1Job[]>({
     ...watchOptions,
     groupVersionKind: JobModelGroupVersionKind,
     namespace: getNamespace(plan),
   });
 
-  const [pvcs = [], pvcsLoaded, pvcsError] = useK8sWatchResource<
-    IoK8sApiCoreV1PersistentVolumeClaim[]
-  >({
+  const [pvcs, pvcsLoaded, pvcsError] = useK8sWatchResource<IoK8sApiCoreV1PersistentVolumeClaim[]>({
     ...watchOptions,
     groupVersionKind: PersistentVolumeClaimModelGroupVersionKind,
   });
 
-  const [dvs = [], dvsLoaded, dvsError] = useK8sWatchResource<V1beta1DataVolume[]>({
+  const [dvs, dvsLoaded, dvsError] = useK8sWatchResource<V1beta1DataVolume[]>({
     ...watchOptions,
     groupVersionKind: DataVolumeModelGroupVersionKind,
   });

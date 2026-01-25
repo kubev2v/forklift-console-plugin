@@ -3,7 +3,7 @@ import type {
   V1beta1PlanStatusMigrationVmsPipeline,
   V1beta1PlanStatusMigrationVmsPipelineTasks,
   V1beta1PlanStatusMigrationVmsPipelineTasksProgress,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { CATEGORY_TYPES, CONDITION_STATUS, EMPTY_MSG, taskStatuses } from '@utils/constants';
 
 import type { DiskTransferMap, TaskCounterMap } from './types';

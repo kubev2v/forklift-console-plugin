@@ -1,4 +1,4 @@
-import { ProviderModelRef, type V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelRef, type V1beta1Provider } from '@forklift-ui/types';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 

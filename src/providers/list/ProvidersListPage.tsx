@@ -4,7 +4,11 @@ import InventoryNotReachable from 'src/providers/list/components/InventoryNotRea
 import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 
-import { ProviderModel, ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
+import {
+  ProviderModel,
+  ProviderModelGroupVersionKind,
+  type V1beta1Provider,
+} from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { loadUserSettings } from '../../components/common/Page/userSettings';

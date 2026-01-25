@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import HelpText from '@components/HelpText';
 import StatusIcon from '@components/status/StatusIcon';
-import type { V1beta1PlanStatusConditions } from '@kubev2v/types';
+import type { V1beta1PlanStatusConditions } from '@forklift-ui/types';
 import { Icon, Split, SplitItem } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { CATEGORY_TYPES, EMPTY_MSG } from '@utils/constants';

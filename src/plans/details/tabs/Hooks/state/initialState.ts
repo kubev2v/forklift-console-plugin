@@ -1,4 +1,4 @@
-import type { V1beta1Hook } from '@kubev2v/types';
+import type { V1beta1Hook } from '@forklift-ui/types';
 
 import { QUAY_FORKLIFT_HOOK_RUNNER_IMAGE } from '../utils/constants';
 

@@ -138,13 +138,13 @@ export class DetailsTab {
       .getByText(state, { exact: true });
   }
 
+  get vddkWarningAlert(): Locator {
+    return this.page.getByText('Must enable VMware Virtual Disk Development Kit');
+  }
+
   async verifyDescriptionText(expectedText: string): Promise<void> {
     const descriptionElement = this.page.getByTestId('description-detail-item');
     await expect(descriptionElement).toContainText(expectedText);
-  }
-
-  get vddkWarningAlert(): Locator {
-    return this.page.getByText('Must enable VMware Virtual Disk Development Kit');
   }
 
   async verifyDetailsTab(planData: PlanTestData): Promise<void> {

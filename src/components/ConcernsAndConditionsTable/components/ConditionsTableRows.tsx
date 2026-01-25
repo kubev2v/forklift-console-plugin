@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import { getCategoryStatus, getCategoryTitle } from '@components/Concerns/utils/category';
-import type { V1beta1PlanStatusConditions } from '@kubev2v/types';
+import type { V1beta1PlanStatusConditions } from '@forklift-ui/types';
 import { Label } from '@patternfly/react-core';
 import { Td, Tr } from '@patternfly/react-table';
 

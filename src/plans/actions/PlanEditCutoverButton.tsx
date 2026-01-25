@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, type ButtonVariant, Tooltip } from '@patternfly/react-core';
 import { CalendarAltIcon } from '@patternfly/react-icons';

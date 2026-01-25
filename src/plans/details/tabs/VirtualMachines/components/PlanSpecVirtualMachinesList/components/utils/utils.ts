@@ -2,7 +2,7 @@ import type { EnhancedPlanSpecVms } from 'src/plans/details/tabs/Details/compone
 import { validateK8sName } from 'src/utils/validation/common';
 
 import { ADD, REMOVE, REPLACE } from '@components/ModalForm/utils/constants';
-import { PlanModel, type V1beta1Plan, type V1beta1PlanSpecVms } from '@kubev2v/types';
+import { PlanModel, type V1beta1Plan, type V1beta1PlanSpecVms } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { t } from '@utils/i18n';
 

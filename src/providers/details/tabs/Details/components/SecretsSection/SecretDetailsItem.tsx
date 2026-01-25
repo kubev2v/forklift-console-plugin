@@ -2,7 +2,7 @@ import type { FC, ReactNode } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { MORE_INFO_SECRET_DETAIL_ITEM } from '@utils/links';
 

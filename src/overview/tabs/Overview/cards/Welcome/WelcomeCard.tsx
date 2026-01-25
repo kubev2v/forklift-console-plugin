@@ -6,7 +6,7 @@ import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { getImages } from '@components/images/logos';
-import { ProviderModelRef } from '@kubev2v/types';
+import { ProviderModelRef } from '@forklift-ui/types';
 import { useActiveNamespace, useFlag } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Card,

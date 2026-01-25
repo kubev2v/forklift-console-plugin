@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
-import { PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
+import { PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';

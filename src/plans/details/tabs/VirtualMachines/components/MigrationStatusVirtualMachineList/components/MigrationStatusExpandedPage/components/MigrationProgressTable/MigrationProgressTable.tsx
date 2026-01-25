@@ -6,7 +6,7 @@ import type { PlanModalProps } from 'src/plans/actions/components/types';
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import { useDrawer } from '@components/DrawerContext/useDrawer';
 import HelpText from '@components/HelpText';
-import type { V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
+import type { V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Alert,

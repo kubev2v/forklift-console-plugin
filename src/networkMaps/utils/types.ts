@@ -1,6 +1,6 @@
 import type { ProvidersPermissionStatus } from 'src/providers/utils/types/ProvidersPermissionStatus';
 
-import type { V1beta1NetworkMap } from '@kubev2v/types';
+import type { V1beta1NetworkMap } from '@forklift-ui/types';
 import type { MappingValue } from '@utils/types';
 
 export type NetworkMapData = {

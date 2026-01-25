@@ -2,7 +2,7 @@ import { ProviderFormFieldId } from 'src/providers/create/fields/constants';
 import { TRUE_VALUE, VddkSetupMode } from 'src/providers/utils/constants';
 
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { ProviderModel, type V1beta1Provider } from '@kubev2v/types';
+import { ProviderModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { getUseVddkAioOptimization, getVddkInitImage } from '@utils/crds/common/selectors';
 

@@ -1,4 +1,4 @@
-import type { V1beta1NetworkMap, V1beta1StorageMap } from '@kubev2v/types';
+import type { V1beta1NetworkMap, V1beta1StorageMap } from '@forklift-ui/types';
 
 export const getMapSourceProviderName = (map: V1beta1NetworkMap | V1beta1StorageMap) =>
   map?.spec?.provider?.source?.name;

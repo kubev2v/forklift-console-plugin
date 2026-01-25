@@ -56,7 +56,7 @@ const MultiTypeaheadSelect = (
     onChange,
     onCreateOption,
     onInputChange,
-    options = [],
+    options,
     placeholder = DEFAULT_PLACEHOLDER,
     testId,
     toggleProps,

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import type { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
+import type { V1beta1PlanStatusMigrationVmsPipeline } from '@forklift-ui/types';
 import { EMPTY_MSG } from '@utils/constants';
 
 import { getTransferProgress } from './utils/utils';

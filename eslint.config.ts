@@ -34,6 +34,7 @@ export const createEslintConfig = () =>
         'package-lock.json',
         '**/generated/**',
         'eslint.config.ts',
+        'prettier.config.mjs',
       ],
     },
     eslint.configs.all,
@@ -272,6 +273,7 @@ export const createEslintConfig = () =>
         'import/namespace': 'off',
         'import/no-duplicates': 'off',
         'no-unused-vars': 'off',
+        '@typescript-eslint/strict-void-return': 'off',
       },
       settings: {
         react: {
@@ -329,6 +331,8 @@ export const createEslintConfig = () =>
         'perfectionist/sort-objects': 'off',
         'react-refresh/only-export-components': 'off',
         'require-unicode-regexp': 'off',
+        'no-restricted-syntax': 'off',
+        '@typescript-eslint/strict-void-return': 'off',
       },
     },
     prettier,

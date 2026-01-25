@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { K8sResourceCommon } from '@kubev2v/types';
+import type { K8sResourceCommon } from '@forklift-ui/types';
 
 export type ResourceDetailsItemProps = {
   resource: K8sResourceCommon;

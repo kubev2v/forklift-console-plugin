@@ -1,4 +1,4 @@
-import type { V1beta1Migration } from '@kubev2v/types';
+import type { V1beta1Migration } from '@forklift-ui/types';
 
 export const sortMigrationsByStartedAtDate = (migrations: V1beta1Migration[]) =>
   migrations.sort((migrationA, migrationB) => {

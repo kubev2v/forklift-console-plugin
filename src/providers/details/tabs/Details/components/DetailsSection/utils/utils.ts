@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 import { CONDITION_STATUS } from '@utils/constants';
 import { ProviderStatus } from '@utils/types';
 

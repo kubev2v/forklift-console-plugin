@@ -2,7 +2,7 @@ import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/consta
 import { ConcernCategory } from 'src/providers/details/tabs/VirtualMachines/constants';
 
 import type { VirtualMachineWithConcerns } from '@components/Concerns/utils/constants';
-import type { Concern, V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
+import type { Concern, V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@forklift-ui/types';
 
 import { planMigrationVirtualMachineStatuses } from '../components/PlanStatus/utils/types';
 import type { SpecVirtualMachinePageData } from '../tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/utils/types';
@@ -17,8 +17,10 @@ export const getPlanMigrationType = (plan: V1beta1Plan): MigrationTypeValue => {
       return MigrationTypeValue.Warm;
     case 'live':
       return MigrationTypeValue.Live;
-    case undefined:
+    case 'conversion':
+      return MigrationTypeValue.Conversion;
     case 'cold':
+    case undefined:
     default:
       if (plan?.spec?.warm) {
         return MigrationTypeValue.Warm;

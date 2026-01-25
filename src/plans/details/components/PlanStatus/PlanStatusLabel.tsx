@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 
 import { planStatusLabelMapper } from './utils/planStatusMapper';
 import { getPlanStatus } from './utils/utils';

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom-v5-compat';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModelRef } from '@kubev2v/types';
+import { ProviderModelRef } from '@forklift-ui/types';
 import { getResourceUrl } from '@utils/getResourceUrl';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';

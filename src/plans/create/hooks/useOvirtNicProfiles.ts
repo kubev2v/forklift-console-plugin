@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 
-import type { OVirtNicProfile, V1beta1Provider } from '@kubev2v/types';
+import type { OVirtNicProfile, V1beta1Provider } from '@forklift-ui/types';
 
 export const useOvirtNicProfiles = (
   provider: V1beta1Provider | undefined,

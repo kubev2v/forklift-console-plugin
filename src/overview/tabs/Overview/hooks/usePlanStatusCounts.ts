@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
+import { PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { getPlanStatusCounts } from '../utils/getPlanStatusCounts';

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom-v5-compat';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import SectionHeading from '@components/headers/SectionHeading';
-import type { IoK8sApiCoreV1Pod } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Pod } from '@forklift-ui/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';

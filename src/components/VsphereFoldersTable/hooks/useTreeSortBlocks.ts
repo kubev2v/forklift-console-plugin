@@ -66,8 +66,7 @@ const useTreeSortBlocks: UseTreeSortBlocks = ({ columns, filteredRows }) => {
 
         const next = filteredRows[idx + 1];
         const concerns =
-          next &&
-          next.type === ROW_TYPE.Concerns &&
+          next?.type === ROW_TYPE.Concerns &&
           !next.isHidden &&
           next.parentFolderKey === row.parentFolderKey
             ? next

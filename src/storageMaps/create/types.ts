@@ -1,6 +1,6 @@
 import type { FieldValues } from 'react-hook-form';
 
-import type { V1beta1Provider, V1beta1StorageMapSpecMap } from '@kubev2v/types';
+import type { V1beta1Provider, V1beta1StorageMapSpecMap } from '@forklift-ui/types';
 
 import type { StorageMapFieldId, StorageMapping } from '../utils/types';
 

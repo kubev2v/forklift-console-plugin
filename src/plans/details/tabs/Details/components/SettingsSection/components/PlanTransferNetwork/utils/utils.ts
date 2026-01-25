@@ -1,5 +1,9 @@
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { PlanModel, type V1beta1Plan, type V1beta1PlanSpecTransferNetwork } from '@kubev2v/types';
+import {
+  PlanModel,
+  type V1beta1Plan,
+  type V1beta1PlanSpecTransferNetwork,
+} from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanTransferNetwork } from '@utils/crds/plans/selectors';
 

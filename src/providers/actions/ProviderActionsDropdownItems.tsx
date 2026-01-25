@@ -4,7 +4,7 @@ import { DeleteModal, type DeleteModalProps } from 'src/components/modals/Delete
 import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModel } from '@kubev2v/types';
+import { ProviderModel } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';

@@ -1,4 +1,4 @@
-import { ProviderModel, type V1beta1Provider } from '@kubev2v/types';
+import { ProviderModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sGet } from '@openshift-console/dynamic-plugin-sdk';
 
 /**

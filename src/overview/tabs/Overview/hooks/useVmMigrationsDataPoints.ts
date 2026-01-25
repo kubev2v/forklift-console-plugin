@@ -6,7 +6,7 @@ import {
   type V1beta1Migration,
   type V1beta1MigrationStatusVms,
   type V1beta1MigrationStatusVmsConditions,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName } from '@utils/crds/common/selectors';
 

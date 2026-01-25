@@ -4,7 +4,7 @@ import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/Le
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
-import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@forklift-ui/types';
 import { type K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 

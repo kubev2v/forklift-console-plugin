@@ -1,4 +1,4 @@
-import { ProviderModelGroupVersionKind } from '@kubev2v/types';
+import { ProviderModelGroupVersionKind } from '@forklift-ui/types';
 import type {
   CreateResource,
   ModelMetadata,

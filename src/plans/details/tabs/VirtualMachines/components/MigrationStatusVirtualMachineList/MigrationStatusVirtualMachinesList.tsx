@@ -5,7 +5,7 @@ import { TableSortContextProvider } from 'src/components/TableSortContextProvide
 import { isPlanExecuting } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 
 import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
 
