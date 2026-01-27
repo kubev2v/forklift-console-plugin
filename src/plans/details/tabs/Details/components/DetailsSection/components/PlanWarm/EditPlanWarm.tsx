@@ -22,6 +22,7 @@ const EditPlanWarm: ModalComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
+      testId="edit-migration-type-modal"
       title={t('Set warm migration')}
       onConfirm={async () => onConfirmWarm({ newValue: isWarm, resource })}
       {...rest}
