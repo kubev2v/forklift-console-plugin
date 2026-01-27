@@ -10,7 +10,7 @@ import {
   type V1beta1NetworkMapSpecMap,
   type V1beta1NetworkMapSpecMapDestination,
   type V1beta1Provider,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { IGNORED, MULTUS, POD } from '@utils/constants';
 import { getObjectRef } from '@utils/helpers/getObjectRef';

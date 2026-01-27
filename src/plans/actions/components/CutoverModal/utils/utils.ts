@@ -1,4 +1,4 @@
-import { MigrationModel, type V1beta1Migration } from '@kubev2v/types';
+import { MigrationModel, type V1beta1Migration } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 
@@ -12,7 +12,7 @@ export const formatDateTo12Hours = (date: Date): string => {
 
 export const patchMigrationCutover = async (
   migration: V1beta1Migration,
-  cutover: string | undefined = undefined,
+  cutover?: string,
   trackEvent?: (event: string, data: Record<string, unknown>) => void,
 ) => {
   const op = migration?.spec?.cutover ? 'replace' : 'add';

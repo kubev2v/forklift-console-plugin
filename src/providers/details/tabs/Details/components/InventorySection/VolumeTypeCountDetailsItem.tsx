@@ -4,7 +4,7 @@ import InventoryCell from 'src/providers/components/InventoryCell';
 import { PROVIDER_TYPES, ProvidersResourceFieldId } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { OpenstackProvider } from '@kubev2v/types';
+import type { OpenstackProvider } from '@forklift-ui/types';
 
 import type { InventoryDetailsItemProps } from './utils/types';
 

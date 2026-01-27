@@ -1,4 +1,4 @@
-import type { ProviderInventory, V1beta1Provider } from '@kubev2v/types';
+import type { ProviderInventory, V1beta1Provider } from '@forklift-ui/types';
 
 import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
 

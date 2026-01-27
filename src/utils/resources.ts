@@ -1,4 +1,4 @@
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 
 /**
  * Can this provider be considered a local openshift provider?

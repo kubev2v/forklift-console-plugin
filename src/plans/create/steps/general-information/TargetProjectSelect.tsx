@@ -70,7 +70,7 @@ const TargetProjectSelect: FC<TargetProjectSelectProps> = ({
             }
           : undefined
       }
-      showDefaultProjects={Boolean(showDefaultProjects)}
+      showDefaultProjects={showDefaultProjects}
       setShowDefaultProjects={(value) => {
         setValue(GeneralFormFieldId.ShowDefaultProjects, value);
       }}

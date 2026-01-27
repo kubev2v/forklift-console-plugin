@@ -1,4 +1,4 @@
-import type { ProviderType, V1beta1Provider } from '@kubev2v/types';
+import type { ProviderType, V1beta1Provider } from '@forklift-ui/types';
 
 export const SOURCE_ONLY_PROVIDER_TYPES: ProviderType[] = ['ova', 'vsphere', 'ovirt', 'openstack'];
 const TARGET_PROVIDER_TYPES: ProviderType[] = ['openshift'];

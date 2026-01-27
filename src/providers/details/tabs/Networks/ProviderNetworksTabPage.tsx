@@ -8,7 +8,7 @@ import {
   type CnoConfig,
   type OpenShiftNetworkAttachmentDefinition,
   ProviderModel,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, PageSection } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';

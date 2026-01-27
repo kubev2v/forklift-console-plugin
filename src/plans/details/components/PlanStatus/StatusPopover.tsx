@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom-v5-compat';
 import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
 import type { PlanModalProps } from 'src/plans/actions/components/types';
 
-import { PlanModelRef, type V1beta1Plan } from '@kubev2v/types';
+import { PlanModelRef, type V1beta1Plan } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,

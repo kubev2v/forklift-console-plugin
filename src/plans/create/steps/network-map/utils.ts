@@ -5,7 +5,7 @@ import type {
   OVirtNicProfile,
   OVirtVM,
   ProviderVirtualMachine,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { DEFAULT_NETWORK, Namespace } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
@@ -28,16 +28,16 @@ import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
   switch (vm.providerType) {
-    case 'vsphere': {
+    case PROVIDER_TYPES.vsphere: {
       return vm?.networks?.map((network) => network?.id) ?? [];
     }
-    case 'openstack': {
+    case PROVIDER_TYPES.openstack: {
       return Object.keys(vm?.addresses ?? {});
     }
-    case 'ovirt': {
+    case PROVIDER_TYPES.ovirt: {
       return vm?.nics?.map((nic) => nic?.profile) ?? [];
     }
-    case 'openshift': {
+    case PROVIDER_TYPES.openshift: {
       return (vm?.object?.spec?.template?.spec?.networks ?? []).reduce((acc: string[], network) => {
         const networkName = network?.multus?.networkName ?? network?.name;
 
@@ -49,9 +49,11 @@ const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
         return acc;
       }, []);
     }
-    case 'ova': {
+    case PROVIDER_TYPES.ova: {
       return (vm as EnhancedOvaVM)?.networks?.map((network) => network.ID) ?? [];
     }
+    case PROVIDER_TYPES.hyperv:
+      return vm?.networks?.map((network) => network?.id) ?? [];
     default:
       return [];
   }

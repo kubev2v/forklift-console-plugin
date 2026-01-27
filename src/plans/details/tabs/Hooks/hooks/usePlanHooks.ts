@@ -3,7 +3,7 @@ import {
   type V1beta1Hook,
   type V1beta1Plan,
   type V1beta1PlanSpecVmsHooks,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';

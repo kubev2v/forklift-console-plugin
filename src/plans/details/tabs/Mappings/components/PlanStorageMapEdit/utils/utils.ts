@@ -3,7 +3,7 @@ import { transformFormValuesToK8sSpec } from 'src/storageMaps/details/utils/util
 import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { StorageMapModel, type V1beta1Provider, type V1beta1StorageMap } from '@kubev2v/types';
+import { StorageMapModel, type V1beta1Provider, type V1beta1StorageMap } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { isEmpty } from '@utils/helpers';
 

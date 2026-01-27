@@ -1,8 +1,11 @@
 import { useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { K8sIoApiCoreV1Affinity, K8sResourceCommon } from '@kubev2v/types';
-import type { V1beta1PlanSpecTargetAffinity } from '@kubev2v/types/dist/generated/forklift/models/V1beta1PlanSpecTargetAffinity';
+import type {
+  K8sIoApiCoreV1Affinity,
+  K8sResourceCommon,
+  V1beta1PlanSpecTargetAffinity,
+} from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { ModalVariant } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';

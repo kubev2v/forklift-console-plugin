@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import type { V1beta1Migration, V1beta1MigrationStatusVms } from '@kubev2v/types';
+import type { V1beta1Migration, V1beta1MigrationStatusVms } from '@forklift-ui/types';
 
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from './timeRangeOptions';
 

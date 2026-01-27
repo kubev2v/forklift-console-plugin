@@ -1,4 +1,4 @@
-import type { V1beta1Migration } from '@kubev2v/types';
+import type { V1beta1Migration } from '@forklift-ui/types';
 
 /**
  * This function gets the number of 'Running', 'Failed', and 'Succeeded' migrations.

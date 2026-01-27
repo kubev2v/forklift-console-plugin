@@ -1,6 +1,6 @@
 import { Map as ImmutableMap } from 'immutable';
 
-import { NetworkMapModel } from '@kubev2v/types';
+import { NetworkMapModel } from '@forklift-ui/types';
 
 const NetworkMapModelYAMLTemplates = ImmutableMap().setIn(
   ['default'],

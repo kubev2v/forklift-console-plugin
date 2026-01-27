@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { TableLinkCell } from 'src/components/TableCell/TableLinkCell';
 
-import { PlanModelGroupVersionKind } from '@kubev2v/types';
+import { PlanModelGroupVersionKind } from '@forklift-ui/types';
 
 import type { CellProps } from './CellProps';
 

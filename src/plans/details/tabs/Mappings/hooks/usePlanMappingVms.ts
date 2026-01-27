@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 
-import type { ProviderVirtualMachine, V1beta1Plan, V1beta1Provider } from '@kubev2v/types';
+import type { ProviderVirtualMachine, V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 

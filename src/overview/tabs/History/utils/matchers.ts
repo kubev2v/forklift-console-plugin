@@ -3,7 +3,7 @@ import { getMigrationStarted, getPlanKey } from 'src/overview/utils/utils';
 
 import type { ValueMatcher } from '@components/common/FilterGroup/types';
 import { FilterDefType } from '@components/common/utils/types';
-import type { V1beta1Migration } from '@kubev2v/types';
+import type { V1beta1Migration } from '@forklift-ui/types';
 
 export const dateRangeObjectMatcher: ValueMatcher = {
   filterType: FilterDefType.DateRange,

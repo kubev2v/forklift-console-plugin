@@ -7,7 +7,7 @@ import type {
   V1beta1Plan,
   V1beta1Provider,
   V1beta1StorageMap,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { getName } from '@utils/crds/common/selectors';
 import { getPlanNetworkMapName, getPlanStorageMapName } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';

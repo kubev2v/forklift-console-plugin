@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import type { V1beta1PlanStatusMigrationVmsPipelineTasks } from '@kubev2v/types';
+import type { V1beta1PlanStatusMigrationVmsPipelineTasks } from '@forklift-ui/types';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useForkliftTranslation } from '@utils/i18n';
 

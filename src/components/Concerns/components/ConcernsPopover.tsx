@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import type { Concern, V1beta1PlanStatusConditions } from '@kubev2v/types';
+import type { Concern, V1beta1PlanStatusConditions } from '@forklift-ui/types';
 import { Button, ButtonVariant, Label, Popover } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';

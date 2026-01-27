@@ -1,6 +1,6 @@
 import { DefaultNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
 
-import type { OVirtNicProfile, ProviderVirtualMachine } from '@kubev2v/types';
+import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
 
 import type { NetworkMapping } from '../steps/network-map/constants';
 

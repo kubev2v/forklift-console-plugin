@@ -1,4 +1,4 @@
-import { NetworkMapModel, NetworkMapModelGroupVersionKind } from '@kubev2v/types';
+import { NetworkMapModel, NetworkMapModelGroupVersionKind } from '@forklift-ui/types';
 import type {
   ModelMetadata,
   ResourceDetailsPage,

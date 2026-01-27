@@ -5,7 +5,7 @@ import type {
   OpenShiftNetworkAttachmentDefinition,
   V1beta1PlanSpecTransferNetwork,
   V1beta1Provider,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import {
   Dropdown,
   DropdownItem,

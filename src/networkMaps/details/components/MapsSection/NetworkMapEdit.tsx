@@ -14,7 +14,7 @@ import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
 import ModalForm from '@components/ModalForm/ModalForm';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { NetworkMapModel } from '@kubev2v/types';
+import { NetworkMapModel } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { ModalVariant } from '@patternfly/react-core';

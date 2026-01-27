@@ -5,7 +5,7 @@ import type {
   K8sIoApiCoreV1PodAffinityTerm,
   K8sIoApiCoreV1PreferredSchedulingTerm,
   K8sIoApiCoreV1WeightedPodAffinityTerm,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { isEmpty } from '@utils/helpers';
 
 import { K8sIoApiCoreV1NodeSelectorRequirementOperatorEnum } from './constants';

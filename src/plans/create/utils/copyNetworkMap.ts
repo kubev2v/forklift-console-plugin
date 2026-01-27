@@ -1,4 +1,4 @@
-import { NetworkMapModel, type V1beta1NetworkMap } from '@kubev2v/types';
+import { NetworkMapModel, type V1beta1NetworkMap } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 /**

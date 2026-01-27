@@ -11,7 +11,7 @@ import {
   PlanModelGroupVersionKind,
   ProviderModelGroupVersionKind,
   type V1beta1Plan,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { Truncate } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import {

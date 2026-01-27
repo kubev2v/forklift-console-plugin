@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { TableCell } from 'src/components/TableCell/TableCell';
 import { getTargetPowerStateLabel, type TargetPowerStateValue } from 'src/plans/constants';
 
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 import { getPlanTargetPowerState } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';

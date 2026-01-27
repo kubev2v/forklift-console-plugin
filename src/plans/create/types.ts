@@ -23,7 +23,7 @@ import type {
   V1NetworkAttachmentDefinition,
   VSphereNetwork,
   VSphereVM,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 
 import type { GeneralFormFieldId } from './steps/general-information/constants';
 import type { HooksFormFieldId, MigrationHook } from './steps/migration-hooks/constants';

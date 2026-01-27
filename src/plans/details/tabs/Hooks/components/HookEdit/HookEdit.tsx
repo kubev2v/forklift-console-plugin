@@ -8,7 +8,7 @@ import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import ModalForm from '@components/ModalForm/ModalForm';
 import SdkYamlEditor from '@components/SdkYamlEditor/SdkYamlEditor';
-import type { V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Hook, V1beta1Plan } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Checkbox, Form, FormGroup, ModalVariant, TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';

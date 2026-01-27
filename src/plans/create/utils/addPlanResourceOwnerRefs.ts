@@ -7,7 +7,7 @@ import {
   type V1beta1Hook,
   type V1beta1NetworkMap,
   type V1beta1StorageMap,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import type { ObjectRef } from '@utils/helpers/getObjectRef';
 
 import { addOwnerRefs } from './addOwnerRefs';

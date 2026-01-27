@@ -4,7 +4,7 @@ import { calculateCidrNotation } from 'src/providers/details/tabs/Hosts/utils/he
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import type { SelectValueType } from '@components/common/utils/types';
 import { FilterableSelect } from '@components/FilterableSelect/FilterableSelect';
-import type { NetworkAdapters } from '@kubev2v/types';
+import type { NetworkAdapters } from '@forklift-ui/types';
 import { Content, HelperText, HelperTextItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 

@@ -1,6 +1,6 @@
 import type { VmFeatures } from 'src/utils/types';
 
-import type { ProviderVirtualMachine } from '@kubev2v/types';
+import type { ProviderVirtualMachine } from '@forklift-ui/types';
 
 export const getOpenShiftFeatureMap = (vm: ProviderVirtualMachine): VmFeatures => {
   if (vm.providerType !== 'openshift') {

@@ -1,7 +1,7 @@
 import type { MappingValue } from 'src/plans/create/types';
 import type { StorageMapping, TargetStorage } from 'src/storageMaps/utils/types';
 
-import type { V1beta1Provider, V1beta1StorageMap } from '@kubev2v/types';
+import type { V1beta1Provider, V1beta1StorageMap } from '@forklift-ui/types';
 
 export type PlanStorageEditFormValues = {
   storageMap: StorageMapping[];

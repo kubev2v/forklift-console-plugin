@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import SectionHeading from '@components/headers/SectionHeading';
-import type { V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
+import type { V1beta1PlanStatusMigrationVms } from '@forklift-ui/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { VirtualMachineModelGroupVersionKind } from '@utils/crds/common/models';

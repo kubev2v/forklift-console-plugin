@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import type { ProviderType, V1beta1Plan } from '@kubev2v/types';
+import type { ProviderType, V1beta1Plan } from '@forklift-ui/types';
 import { Flex, FlexItem } from '@patternfly/react-core';
 
 import SpecVirtualMachinesActionsDropdown from './SpecVirtualMachinesActionsDropdown';

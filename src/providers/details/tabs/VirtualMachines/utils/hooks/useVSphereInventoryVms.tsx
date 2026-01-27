@@ -3,7 +3,7 @@ import useProviderInventory, {
   type UseProviderInventoryParams,
 } from 'src/utils/hooks/useProviderInventory';
 
-import type { ProviderHost, V1beta1Provider, VSphereResource } from '@kubev2v/types';
+import type { ProviderHost, V1beta1Provider, VSphereResource } from '@forklift-ui/types';
 
 /**
  * Converts an array of Resource objects into a dictionary where the keys are the resource IDs.

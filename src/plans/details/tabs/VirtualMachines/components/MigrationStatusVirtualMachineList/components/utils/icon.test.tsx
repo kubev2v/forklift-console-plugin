@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 
+import type { V1beta1PlanStatusMigrationVmsPipeline } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
-import type { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
 import { Icon } from '@patternfly/react-core';
 import { CheckIcon, ResourcesEmptyIcon, TimesIcon } from '@patternfly/react-icons';
 

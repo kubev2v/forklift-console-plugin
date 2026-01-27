@@ -5,7 +5,7 @@ import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/Le
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@kubev2v/types';
+import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import PlanRow from './components/PlanRow/PlanRow';

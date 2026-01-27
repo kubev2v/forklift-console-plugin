@@ -1,4 +1,4 @@
-import { PlanModel, PlanModelGroupVersionKind } from '@kubev2v/types';
+import { PlanModel, PlanModelGroupVersionKind } from '@forklift-ui/types';
 import type {
   CreateResource,
   ModelMetadata,

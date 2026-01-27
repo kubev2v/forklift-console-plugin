@@ -4,7 +4,7 @@ import CreatedAtDetailsItem from '@components/DetailItems/CreatedAtDetailItem';
 import NameDetailsItem from '@components/DetailItems/NameDetailItem';
 import NamespaceDetailsItem from '@components/DetailItems/NamespaceDetailItem';
 import OwnerDetailsItem from '@components/DetailItems/OwnerDetailItem';
-import type { V1beta1StorageMap } from '@kubev2v/types';
+import type { V1beta1StorageMap } from '@forklift-ui/types';
 import { DescriptionList } from '@patternfly/react-core';
 
 type DetailsSectionProps = {

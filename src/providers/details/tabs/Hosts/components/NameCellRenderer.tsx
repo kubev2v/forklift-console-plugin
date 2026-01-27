@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom-v5-compat';
 import { TableCell } from 'src/components/TableCell/TableCell';
 import type { HostCellProps } from 'src/providers/details/tabs/Hosts/components/utils/types';
 
-import { HostModelRef } from '@kubev2v/types';
+import { HostModelRef } from '@forklift-ui/types';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { getResourceUrl } from '@utils/getResourceUrl';
 

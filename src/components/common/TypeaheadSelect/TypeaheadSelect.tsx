@@ -69,7 +69,7 @@ const TypeaheadSelect = (
     noResultsMessage = getDefaultNoResults,
     onChange,
     onInputChange,
-    options = [],
+    options,
     placeholder = DEFAULT_PLACEHOLDER,
     testId,
     toggleProps,

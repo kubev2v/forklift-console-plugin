@@ -1,4 +1,4 @@
-import type { V1beta1PlanStatusMigrationVmsPipeline } from '@kubev2v/types';
+import type { V1beta1PlanStatusMigrationVmsPipeline } from '@forklift-ui/types';
 import { Icon } from '@patternfly/react-core';
 import { CheckIcon, ResourcesEmptyIcon, TimesIcon } from '@patternfly/react-icons';
 import { taskStatuses } from '@utils/constants';

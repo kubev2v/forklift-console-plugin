@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { MigrationModelGroupVersionKind, type V1beta1Migration } from '@kubev2v/types';
+import { MigrationModelGroupVersionKind, type V1beta1Migration } from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 import { getPlanMigrationCounts } from '../utils/getMigrationCounts';

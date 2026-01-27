@@ -3,7 +3,7 @@ import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 
-import { type ProviderInventory, ProviderModel } from '@kubev2v/types';
+import { type ProviderInventory, ProviderModel } from '@forklift-ui/types';
 
 import { useProvider } from '../../hooks/useProvider';
 import type { ProviderDetailsPageProps } from '../../utils/types';

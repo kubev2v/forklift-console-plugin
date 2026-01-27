@@ -1,6 +1,6 @@
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 
 /**
  * Determines if the source provider supports warm migration

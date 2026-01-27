@@ -11,7 +11,7 @@ import {
   StorageMapModel,
   StorageMapModelGroupVersionKind,
   type V1beta1StorageMap,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { MAP_STATUS } from '@utils/constants';
 import { getMapPhase } from '@utils/crds/maps/shared';

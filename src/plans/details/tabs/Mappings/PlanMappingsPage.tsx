@@ -10,7 +10,10 @@ import { getSourceStorageValuesForSelectedVms } from 'src/storageMaps/utils/getS
 import { DetailsItem } from '@components/DetailItems/DetailItem';
 import SectionHeading from '@components/headers/SectionHeading';
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
-import { NetworkMapModelGroupVersionKind, StorageMapModelGroupVersionKind } from '@kubev2v/types';
+import {
+  NetworkMapModelGroupVersionKind,
+  StorageMapModelGroupVersionKind,
+} from '@forklift-ui/types';
 import { ResourceLink, useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye, DescriptionList, PageSection } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';

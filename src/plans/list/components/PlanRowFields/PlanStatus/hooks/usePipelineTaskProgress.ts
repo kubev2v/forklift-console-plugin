@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 import { taskStatuses } from '@utils/constants';
 
 import type { VirtualMachinePipelineTask } from '../utils/types';

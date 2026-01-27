@@ -1,4 +1,4 @@
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 
 export const getName = (resource: K8sResourceCommon | undefined) => resource?.metadata?.name;

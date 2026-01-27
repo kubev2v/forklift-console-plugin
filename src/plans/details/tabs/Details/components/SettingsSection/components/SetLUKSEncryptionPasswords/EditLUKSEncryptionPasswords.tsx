@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import { type IoK8sApiCoreV1Secret, SecretModel } from '@kubev2v/types';
+import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
 import {
   getGroupVersionKindForModel,
   useK8sWatchResource,
@@ -42,7 +42,7 @@ const EditLUKSEncryptionPasswords: ModalComponent<EditPlanProps> = ({ resource, 
   useEffect(() => {
     const vms = getPlanVirtualMachines(resource) as EnhancedPlanSpecVms[];
     if (!isEmpty(vms)) {
-      setNbdeClevis(Boolean(vms[0]?.nbdeClevis ?? false));
+      setNbdeClevis(vms[0]?.nbdeClevis ?? false);
     }
   }, [resource]);
 

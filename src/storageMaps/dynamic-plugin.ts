@@ -1,4 +1,4 @@
-import { StorageMapModel, StorageMapModelGroupVersionKind } from '@kubev2v/types';
+import { StorageMapModel, StorageMapModelGroupVersionKind } from '@forklift-ui/types';
 import type {
   ModelMetadata,
   ResourceDetailsPage,

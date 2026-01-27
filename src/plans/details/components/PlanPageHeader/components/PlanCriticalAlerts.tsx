@@ -1,6 +1,6 @@
 import type { FC, PropsWithChildren } from 'react';
 
-import type { V1beta1PlanStatusConditions } from '@kubev2v/types';
+import type { V1beta1PlanStatusConditions } from '@forklift-ui/types';
 import {
   Alert,
   AlertVariant,

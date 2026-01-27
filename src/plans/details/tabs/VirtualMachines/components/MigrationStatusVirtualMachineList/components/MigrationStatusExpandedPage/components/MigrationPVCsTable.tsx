@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import SectionHeading from '@components/headers/SectionHeading';
-import type { IoK8sApiCoreV1PersistentVolumeClaim } from '@kubev2v/types';
+import type { IoK8sApiCoreV1PersistentVolumeClaim } from '@forklift-ui/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';

@@ -4,7 +4,7 @@ import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/ut
 
 import { DetailsItem } from '@components/DetailItems/DetailItem';
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
-import type { V1beta1Hook, V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Hook, V1beta1Plan } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { CodeBlock, CodeBlockCode, DescriptionList } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';

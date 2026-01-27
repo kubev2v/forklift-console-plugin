@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import type { Concern, V1beta1PlanStatusConditions } from '@kubev2v/types';
+import type { Concern, V1beta1PlanStatusConditions } from '@forklift-ui/types';
 import { Stack, StackItem } from '@patternfly/react-core';
 
 import { getCategoryIcon } from '../utils/category';

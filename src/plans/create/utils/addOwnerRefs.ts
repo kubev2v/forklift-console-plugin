@@ -3,7 +3,7 @@ import type {
   V1beta1Hook,
   V1beta1NetworkMap,
   V1beta1StorageMap,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { isEmpty } from '@utils/helpers';
 import type { ObjectRef } from '@utils/helpers/getObjectRef';

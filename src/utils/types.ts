@@ -1,4 +1,4 @@
-import type { ProviderVirtualMachine } from '@kubev2v/types';
+import type { ProviderVirtualMachine } from '@forklift-ui/types';
 
 import type { FEATURE_NAMES } from './constants';
 

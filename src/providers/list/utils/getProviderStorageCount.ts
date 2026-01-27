@@ -7,7 +7,7 @@ import type {
   OvaProvider,
   OVirtProvider,
   VSphereProvider,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 
 export const getProviderStorageCount = (provider: ProviderData) => {
   const { inventory } = provider;

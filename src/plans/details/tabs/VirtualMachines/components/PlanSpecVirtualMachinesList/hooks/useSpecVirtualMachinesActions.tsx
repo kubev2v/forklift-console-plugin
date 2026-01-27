@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 
 import DeleteVirtualMachinesButton from '../../DeleteVirtualMachines/DeleteVirtualMachinesButton';
 import type { SpecVirtualMachinePageData } from '../utils/types';

@@ -1,4 +1,4 @@
-import type { OVirtVM, VSphereVM } from '@kubev2v/types';
+import type { OVirtVM, VSphereVM } from '@forklift-ui/types';
 
 export type VMResources = {
   cpuCount: number;

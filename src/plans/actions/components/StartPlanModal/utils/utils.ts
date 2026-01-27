@@ -1,7 +1,7 @@
 import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 
-import { MigrationModel, type V1beta1Migration, type V1beta1Plan } from '@kubev2v/types';
+import { MigrationModel, type V1beta1Migration, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
@@ -52,6 +52,8 @@ export const startPlanMigration = async (
 
 export const migrationModalMessage = (migrationType: MigrationTypeValue): string => {
   switch (migrationType) {
+    case MigrationTypeValue.Conversion:
+      return t('VMs included in conversion migrations are converted to a different architecture.');
     case MigrationTypeValue.Warm:
       return t('VMs included in warm migrations migrate with minimal downtime.');
     case MigrationTypeValue.Live:

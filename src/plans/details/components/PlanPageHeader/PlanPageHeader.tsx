@@ -4,7 +4,7 @@ import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/Le
 import PlanActionsDropdown from 'src/plans/actions/PlanActionsDropdown';
 import PlanEditCutoverButton from 'src/plans/actions/PlanEditCutoverButton';
 
-import { PlanModel } from '@kubev2v/types';
+import { PlanModel } from '@forklift-ui/types';
 import { ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';
 
 import { usePlan } from '../../hooks/usePlan';

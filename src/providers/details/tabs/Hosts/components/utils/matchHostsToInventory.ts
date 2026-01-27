@@ -1,4 +1,4 @@
-import type { V1beta1Host, V1beta1Provider, VSphereHostInventory } from '@kubev2v/types';
+import type { V1beta1Host, V1beta1Provider, VSphereHostInventory } from '@forklift-ui/types';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 

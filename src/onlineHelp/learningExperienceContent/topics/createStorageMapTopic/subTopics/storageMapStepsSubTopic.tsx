@@ -1,6 +1,6 @@
 import { type LearningExperienceSubTopic, ListStyleType } from 'src/onlineHelp/utils/types';
 
-import { StorageMapModelGroupVersionKind } from '@kubev2v/types';
+import { StorageMapModelGroupVersionKind } from '@forklift-ui/types';
 import { t } from '@utils/i18n';
 
 import LabelButton from '../../components/LabelButton';

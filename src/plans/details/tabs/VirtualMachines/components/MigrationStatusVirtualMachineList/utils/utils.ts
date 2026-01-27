@@ -1,4 +1,4 @@
-import type { V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
+import type { V1beta1PlanStatusMigrationVms } from '@forklift-ui/types';
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 import { taskStatuses } from '@utils/constants';
 import { t } from '@utils/i18n';

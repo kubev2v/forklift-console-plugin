@@ -1,4 +1,4 @@
-import { PlanModelRef } from '@kubev2v/types';
+import { PlanModelRef } from '@forklift-ui/types';
 import { getResourceUrl } from '@utils/getResourceUrl';
 
 /**

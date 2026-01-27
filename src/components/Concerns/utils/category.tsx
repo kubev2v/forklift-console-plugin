@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { Concern, V1beta1PlanStatusConditions } from '@kubev2v/types';
+import type { Concern, V1beta1PlanStatusConditions } from '@forklift-ui/types';
 import type { LabelProps } from '@patternfly/react-core';
 import {
   ExclamationCircleIcon,

@@ -1,4 +1,4 @@
-import type { V1beta1Migration } from '@kubev2v/types';
+import type { V1beta1Migration } from '@forklift-ui/types';
 
 export const getPlanKey = (migration: V1beta1Migration) => {
   const plan = migration?.spec?.plan;

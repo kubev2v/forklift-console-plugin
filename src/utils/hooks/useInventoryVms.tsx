@@ -2,7 +2,7 @@ import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import { isProviderLocalOpenshift, isProviderOpenshift } from 'src/utils/resources';
 import type { ProviderVmData } from 'src/utils/types';
 
-import type { OpenshiftVM, ProviderVirtualMachine } from '@kubev2v/types';
+import type { OpenshiftVM, ProviderVirtualMachine } from '@forklift-ui/types';
 
 import useProviderInventory, { type UseProviderInventoryParams } from './useProviderInventory';
 

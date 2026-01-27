@@ -7,7 +7,7 @@ import {
   type V1beta1Plan,
   type V1beta1PlanSpecMap,
   type V1beta1StorageMap,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { k8sCreate, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { buildOwnerReference, getRandomChars } from '@utils/crds/common/utils';

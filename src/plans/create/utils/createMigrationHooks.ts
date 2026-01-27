@@ -1,4 +1,4 @@
-import { HookModel, type V1beta1Hook } from '@kubev2v/types';
+import { HookModel, type V1beta1Hook } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { type MigrationHook, MigrationHookFieldId } from '../steps/migration-hooks/constants';

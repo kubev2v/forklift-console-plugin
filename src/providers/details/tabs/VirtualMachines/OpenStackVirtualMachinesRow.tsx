@@ -3,7 +3,7 @@ import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/components/TableCell/TableCell';
 
 import type { ResourceField } from '@components/common/utils/types';
-import type { OpenstackVM } from '@kubev2v/types';
+import type { OpenstackVM } from '@forklift-ui/types';
 import { Td } from '@patternfly/react-table';
 import { renderResourceRowCells } from '@utils/renderResourceRowCells';
 

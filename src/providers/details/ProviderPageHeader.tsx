@@ -6,7 +6,7 @@ import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 
-import { type ProviderInventory, ProviderModel } from '@kubev2v/types';
+import { type ProviderInventory, ProviderModel } from '@forklift-ui/types';
 import { Flex, FlexItem } from '@patternfly/react-core';
 
 import CreatePlanAction from './components/CreatePlanAction';

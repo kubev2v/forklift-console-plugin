@@ -1,6 +1,6 @@
 import { Map as ImmutableMap } from 'immutable';
 
-import { StorageMapModel } from '@kubev2v/types';
+import { StorageMapModel } from '@forklift-ui/types';
 
 const StorageMapModelYAMLTemplates = ImmutableMap().setIn(
   ['default'],

@@ -14,7 +14,7 @@ import LiveSwitch from './LiveSwitch';
 
 const EditPlanLive: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
   const { t } = useForkliftTranslation();
-  const [value, setValue] = useState<boolean>(Boolean(getPlanIsLive(resource)));
+  const [value, setValue] = useState<boolean>(getPlanIsLive(resource));
 
   return (
     <ModalForm

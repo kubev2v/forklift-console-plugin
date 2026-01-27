@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { AlertMessageForModals } from 'src/components/modals/AlertMessageForModals';
 
-import type { V1beta1PlanSpecVms } from '@kubev2v/types';
+import type { V1beta1PlanSpecVms } from '@forklift-ui/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type EditRootDiskModalAlertProps = {

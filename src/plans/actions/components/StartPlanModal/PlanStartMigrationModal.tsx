@@ -6,7 +6,7 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';

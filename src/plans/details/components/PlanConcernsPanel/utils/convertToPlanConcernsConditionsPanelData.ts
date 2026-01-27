@@ -1,5 +1,5 @@
 import { ConcernCategoryOptions } from '@components/Concerns/utils/constants';
-import type { V1beta1PlanStatusConditions } from '@kubev2v/types';
+import type { V1beta1PlanStatusConditions } from '@forklift-ui/types';
 
 import type { PlanConcernsPanelData } from './types';
 

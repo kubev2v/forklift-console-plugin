@@ -79,7 +79,7 @@ export const useTlsCertificate = (url: string) => {
   const {
     issuer = '',
     thumbprint = '',
-    validTo = undefined,
+    validTo,
   } = x509Cert
     ? {
         issuer: KJUR.asn1.x509.X500Name.onelineToLDAP(x509Cert.getIssuerString()),

@@ -10,16 +10,14 @@ type ExpandableDescriptionContentProps = {
 const ExpandableDescriptionContent: FC<ExpandableDescriptionContentProps> = ({ subTopic }) => {
   return (
     <>
-      {subTopic
-        .subTopics?.()
-        .map((nextSubTopic, subIndex) => (
-          <HelpTopicSection
-            key={nextSubTopic.id}
-            topic={nextSubTopic}
-            index={subIndex}
-            listStyleType={subTopic.subListStyleType}
-          />
-        ))}
+      {subTopic.subTopics?.().map((nextSubTopic, subIndex) => (
+        <HelpTopicSection
+          key={nextSubTopic.id}
+          topic={nextSubTopic}
+          index={subIndex}
+          listStyleType={subTopic.subListStyleType}
+        />
+      ))}
     </>
   );
 };

@@ -7,7 +7,7 @@ import {
   groupConditionsByCategory,
 } from '@components/Concerns/utils/category';
 import { orderedConcernCategories } from '@components/Concerns/utils/constants';
-import type { Concern, OpenstackVM, OvaVM, OVirtVM, VSphereVM } from '@kubev2v/types';
+import type { Concern, OpenstackVM, OvaVM, OVirtVM, VSphereVM } from '@forklift-ui/types';
 import { PageSection } from '@patternfly/react-core';
 import { Table, Tbody } from '@patternfly/react-table';
 import { isEmpty } from '@utils/helpers';

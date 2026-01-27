@@ -11,7 +11,7 @@ import type {
   ProvidersInventoryList,
   V1beta1Provider,
   VSphereProvider,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 import { k8sGetProvidersByNamespace } from '../utils/k8sGetProvidersByNamespace';

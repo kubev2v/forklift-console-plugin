@@ -3,7 +3,7 @@ import { DeleteModal, type DeleteModalProps } from 'src/components/modals/Delete
 import type { StorageMapData } from 'src/storageMaps/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { StorageMapModel, StorageMapModelRef } from '@kubev2v/types';
+import { StorageMapModel, StorageMapModelRef } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem } from '@patternfly/react-core';
 import { getResourceUrl } from '@utils/getResourceUrl';

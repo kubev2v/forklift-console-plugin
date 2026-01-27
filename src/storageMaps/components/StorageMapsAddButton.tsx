@@ -2,7 +2,7 @@ import { type FC, type Ref, useState } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { StorageMapModelRef } from '@kubev2v/types';
+import { StorageMapModelRef } from '@forklift-ui/types';
 import {
   ButtonVariant,
   Dropdown,

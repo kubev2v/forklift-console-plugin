@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom-v5-compat';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModelRef } from '@kubev2v/types';
+import { PlanModelRef } from '@forklift-ui/types';
 import { Button, ButtonVariant, Tooltip } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';

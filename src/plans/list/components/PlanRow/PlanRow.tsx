@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import VisibleTableData from 'src/components/TableCell/VisibleTableData';
 
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 import { Tr } from '@patternfly/react-table';
 
 import type { PlanTableResourceId } from '../../utils/constants';

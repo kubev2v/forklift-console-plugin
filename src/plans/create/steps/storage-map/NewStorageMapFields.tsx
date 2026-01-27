@@ -6,7 +6,7 @@ import type { StorageMapping } from 'src/storageMaps/utils/types';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import type { ProviderVirtualMachine } from '@kubev2v/types';
+import type { ProviderVirtualMachine } from '@forklift-ui/types';
 import { Alert, AlertVariant, Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';

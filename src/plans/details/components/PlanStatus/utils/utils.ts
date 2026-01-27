@@ -5,7 +5,7 @@ import type {
   V1beta1Plan,
   V1beta1PlanSpecVms,
   V1beta1PlanStatusMigrationVms,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { CATEGORY_TYPES, CONDITION_STATUS } from '@utils/constants';
 import { getPlanIsWarm, getPlanVirtualMachinesMigrationStatus } from '@utils/crds/plans/selectors';
 import { deepCopy } from '@utils/deepCopy';

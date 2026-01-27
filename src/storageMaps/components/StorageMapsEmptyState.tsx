@@ -3,7 +3,7 @@ import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModelRef } from '@kubev2v/types';
+import { ProviderModelRef } from '@forklift-ui/types';
 import {
   Bullseye,
   Content,

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { migrationStatusIconMap } from 'src/plans/details/components/PlanStatus/utils/statusIconMapper';
 import { getMigrationVMStatus } from 'src/plans/details/components/PlanStatus/utils/utils';
 
-import type { V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
+import type { V1beta1PlanStatusMigrationVms } from '@forklift-ui/types';
 import { Flex } from '@patternfly/react-core';
 
 import { getVMMigrationStatus } from './utils/utils';

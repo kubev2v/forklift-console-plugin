@@ -5,7 +5,7 @@ import type {
   OpenstackVM,
   ProviderVirtualMachine,
   V1VirtualMachine,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 
 import {

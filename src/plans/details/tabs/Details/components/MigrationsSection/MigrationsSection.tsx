@@ -5,7 +5,7 @@ import {
   MigrationModelGroupVersionKind,
   type V1beta1Migration,
   type V1beta1Plan,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getNamespace, getOwnerReference, getUID } from '@utils/crds/common/selectors';
 

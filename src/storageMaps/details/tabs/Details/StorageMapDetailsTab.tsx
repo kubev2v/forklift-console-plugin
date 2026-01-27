@@ -17,7 +17,7 @@ import {
   StorageMapModelGroupVersionKind,
   type V1beta1Provider,
   type V1beta1StorageMap,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource, useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 import {

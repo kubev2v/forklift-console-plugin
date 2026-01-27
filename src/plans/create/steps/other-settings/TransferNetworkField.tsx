@@ -7,7 +7,7 @@ import Select from '@components/common/Select';
 import type {
   OpenShiftNetworkAttachmentDefinition,
   V1beta1PlanSpecTransferNetwork,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { FormGroup, FormHelperText, SelectList, SelectOption } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 

@@ -2,7 +2,7 @@ import { type ReactNode, useState } from 'react';
 
 import Select from '@components/common/Select';
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, FormGroup, SelectList, SelectOption, TextInput } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';

@@ -4,7 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DetailsItem } from '@components/DetailItems/DetailItem';
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
-import { ForkliftControllerModel, type V1beta1ForkliftController } from '@kubev2v/types';
+import { ForkliftControllerModel, type V1beta1ForkliftController } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionList } from '@patternfly/react-core';
 

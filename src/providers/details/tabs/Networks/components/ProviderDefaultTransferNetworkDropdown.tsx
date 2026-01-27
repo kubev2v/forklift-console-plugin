@@ -1,7 +1,7 @@
 import { type FC, type Ref, useState } from 'react';
 import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 
-import type { OpenShiftNetworkAttachmentDefinition, V1beta1Provider } from '@kubev2v/types';
+import type { OpenShiftNetworkAttachmentDefinition, V1beta1Provider } from '@forklift-ui/types';
 import {
   Dropdown,
   DropdownItem,

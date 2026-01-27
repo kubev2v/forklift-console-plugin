@@ -4,7 +4,7 @@ import InventoryCell from 'src/providers/components/InventoryCell';
 import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { VSphereProvider } from '@kubev2v/types';
+import type { VSphereProvider } from '@forklift-ui/types';
 import { OutlinedHddIcon } from '@patternfly/react-icons';
 
 import type { InventoryDetailsItemProps } from './utils/types';

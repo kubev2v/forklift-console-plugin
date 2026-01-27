@@ -6,7 +6,7 @@ import {
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
-import type { V1beta1Plan } from '@kubev2v/types';
+import type { V1beta1Plan } from '@forklift-ui/types';
 
 import CancelMigrationVirtualMachinesButton from '../../CancelMigrationVirtualMachines/CancelMigrationVirtualMachinesButton';
 import DeleteVirtualMachinesButton from '../../DeleteVirtualMachines/DeleteVirtualMachinesButton';

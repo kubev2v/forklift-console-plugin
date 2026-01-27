@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom-v5-compat';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import SmartLinkify from '@components/common/SmartLinkify';
-import { ProviderModelRef } from '@kubev2v/types';
+import { ProviderModelRef } from '@forklift-ui/types';
 import { Button, ButtonVariant, Content, ContentVariants, Popover } from '@patternfly/react-core';
 import { getResourceUrl } from '@utils/getResourceUrl';
 

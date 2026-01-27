@@ -1,7 +1,7 @@
 import { type FC, useCallback } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, ToolbarItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';

@@ -7,7 +7,7 @@ import {
   type OpenShiftNetworkAttachmentDefinition,
   ProviderModel,
   type V1beta1Provider,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { type K8sModel, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import {

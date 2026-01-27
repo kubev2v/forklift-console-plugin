@@ -16,7 +16,7 @@ export const FilterGroup = ({
   fieldFilters,
   onFilterUpdate,
   resolvedLanguage = 'en',
-  selectedFilters = {},
+  selectedFilters,
   supportedFilterTypes,
 }: MetaFilterProps) => (
   <ToolbarGroup variant="filter-group">

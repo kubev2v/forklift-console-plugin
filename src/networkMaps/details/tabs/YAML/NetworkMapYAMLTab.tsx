@@ -3,7 +3,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import { ResourceYAMLEditorWrapper } from '@components/ResourceYAMLEditorWrapper/ResourceYAMLEditorWrapper';
-import { NetworkMapModelGroupVersionKind, type V1beta1NetworkMap } from '@kubev2v/types';
+import { NetworkMapModelGroupVersionKind, type V1beta1NetworkMap } from '@forklift-ui/types';
 import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
 type NetworkMapYAMLTabProps = {

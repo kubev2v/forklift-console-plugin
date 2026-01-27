@@ -6,7 +6,7 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import ConcernPopover from '@components/Concerns/components/ConcernsPopover';
 import { groupConcernsByCategory } from '@components/Concerns/utils/category';
 import type { ConcernCategory } from '@components/Concerns/utils/constants';
-import type { Concern } from '@kubev2v/types';
+import type { Concern } from '@forklift-ui/types';
 import { Split, SplitItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 

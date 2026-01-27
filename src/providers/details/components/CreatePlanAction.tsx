@@ -5,7 +5,7 @@ import { useForkliftAnalytics } from 'src/utils/analytics/hooks/useForkliftAnaly
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel, PlanModelRef, type V1beta1Provider } from '@kubev2v/types';
+import { PlanModel, PlanModelRef, type V1beta1Provider } from '@forklift-ui/types';
 import { Button, ButtonVariant, ToolbarItem } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';

@@ -12,7 +12,9 @@ type ListSubTopicContentProps = {
 
 const ListSubTopicContent: FC<ListSubTopicContentProps> = ({ topic }) => (
   <Content component={getTextListComponentForListStyle(topic.subListStyleType)}>
-    {topic.subTopics?.().map((subTopic) => <HelpSubTopic key={subTopic.id} topic={subTopic} />)}
+    {topic.subTopics?.().map((subTopic) => (
+      <HelpSubTopic key={subTopic.id} topic={subTopic} />
+    ))}
   </Content>
 );
 

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom-v5-compat';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModelRef, type V1beta1ForkliftController } from '@kubev2v/types';
+import { PlanModelRef, type V1beta1ForkliftController } from '@forklift-ui/types';
 import { ChartDonut } from '@patternfly/react-charts/victory';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 import { getResourceUrl } from '@utils/getResourceUrl';

@@ -1,4 +1,4 @@
-import type { OpenShiftNamespace, V1beta1Provider } from '@kubev2v/types';
+import type { OpenShiftNamespace, V1beta1Provider } from '@forklift-ui/types';
 
 import useProviderInventory from './useProviderInventory';
 

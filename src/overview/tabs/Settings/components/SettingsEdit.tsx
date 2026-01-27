@@ -2,7 +2,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { ForkliftControllerModel, type V1beta1ForkliftController } from '@kubev2v/types';
+import { ForkliftControllerModel, type V1beta1ForkliftController } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, ModalVariant } from '@patternfly/react-core';

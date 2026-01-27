@@ -1,7 +1,10 @@
 import type { FC } from 'react';
 import { TableLinkCell } from 'src/components/TableCell/TableLinkCell';
 
-import { ProviderModelGroupVersionKind, type V1beta1NetworkMapSpecProvider } from '@kubev2v/types';
+import {
+  ProviderModelGroupVersionKind,
+  type V1beta1NetworkMapSpecProvider,
+} from '@forklift-ui/types';
 
 import type { CellProps } from './CellProps';
 

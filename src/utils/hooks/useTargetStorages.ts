@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { StorageClassAnnotation, type TargetStorage } from 'src/storageMaps/utils/types';
 import { useOpenShiftStorages } from 'src/utils/hooks/useStorages';
 
-import type { V1beta1Provider } from '@kubev2v/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 
 const useTargetStorages = (
   targetProvider: V1beta1Provider | undefined,

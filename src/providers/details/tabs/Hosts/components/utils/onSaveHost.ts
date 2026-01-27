@@ -7,7 +7,7 @@ import {
   type V1beta1Host,
   type V1beta1Provider,
   type VSphereHostInventory,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { k8sGet } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 

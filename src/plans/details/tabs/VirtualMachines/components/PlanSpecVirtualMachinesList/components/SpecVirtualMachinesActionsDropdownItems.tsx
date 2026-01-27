@@ -16,7 +16,7 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PlanModel, type ProviderType, type V1beta1Plan } from '@kubev2v/types';
+import { PlanModel, type ProviderType, type V1beta1Plan } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';

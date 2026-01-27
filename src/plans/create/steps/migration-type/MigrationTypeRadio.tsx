@@ -6,7 +6,7 @@ import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigr
 import { hasWarmMigrationProviderType } from 'src/plans/create/utils/hasWarmMigrationProviderType';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
-import type { ProviderVirtualMachine, V1beta1Provider } from '@kubev2v/types';
+import type { ProviderVirtualMachine, V1beta1Provider } from '@forklift-ui/types';
 import {
   Alert,
   AlertVariant,

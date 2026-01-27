@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { PROVIDER_TYPES, VSphereEndpointType } from 'src/providers/utils/constants';
 
-import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@kubev2v/types';
+import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import { getSdkEndpoint, getType } from '@utils/crds/common/selectors';
 
 import {
@@ -44,6 +44,7 @@ const CredentialsContent: FC<CredentialsContentProps> = ({ provider, reveal, sec
       return <OpenstackCredentialsContent secret={secret} reveal={reveal} />;
 
     case PROVIDER_TYPES.ova:
+    case PROVIDER_TYPES.hyperv:
     case undefined:
     default:
       return null;

@@ -14,9 +14,9 @@ const InlineDescriptionContent: FC<InlineDescriptionContentProps> = ({ subTopic 
   return (
     <div className={getClassForListStyle(subTopic.subListStyleType)}>
       <Content component={getTextListComponentForListStyle(subTopic.subListStyleType)}>
-        {subTopic
-          .subTopics?.()
-          .map((nextSubTopic) => <HelpSubTopic key={nextSubTopic.id} topic={nextSubTopic} />)}
+        {subTopic.subTopics?.().map((nextSubTopic) => (
+          <HelpSubTopic key={nextSubTopic.id} topic={nextSubTopic} />
+        ))}
       </Content>
     </div>
   );

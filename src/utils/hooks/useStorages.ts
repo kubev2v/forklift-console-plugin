@@ -8,7 +8,7 @@ import type {
   TypedOvaResource,
   V1beta1Provider,
   VSphereDataStore,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { STORAGE_NAMES } from '@utils/constants';
 
 import useProviderInventory from './useProviderInventory';
@@ -26,6 +26,7 @@ const glanceStorage: InventoryStorage = {
 };
 
 const subPath: Record<ProviderType, string> = {
+  hyperv: 'storages?detail=1',
   openshift: 'storageclasses?detail=1',
   openstack: 'volumetypes',
   ova: 'storages?detail=1',

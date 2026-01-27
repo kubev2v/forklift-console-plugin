@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom-v5-compat';
 import type { Interval } from 'luxon';
 import { TimeRangeOptions } from 'src/overview/tabs/Overview/utils/timeRangeOptions';
 
-import { PlanModelRef } from '@kubev2v/types';
+import { PlanModelRef } from '@forklift-ui/types';
 import {
   Chart,
   ChartArea,

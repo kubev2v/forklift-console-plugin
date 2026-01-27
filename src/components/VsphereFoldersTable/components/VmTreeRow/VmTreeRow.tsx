@@ -5,7 +5,7 @@ import VirtualMachineConcernsCell from '@components/Concerns/VirtualMachineConce
 import VirtualMachinePowerStateCell from '@components/PowerState/VirtualMachinePowerStateCell';
 import { nameColumn } from '@components/VsphereFoldersTable/utils/constants';
 import type { VmRow } from '@components/VsphereFoldersTable/utils/types';
-import type { VSphereVM } from '@kubev2v/types';
+import type { VSphereVM } from '@forklift-ui/types';
 import { Td, TreeRowWrapper } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';
 

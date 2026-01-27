@@ -1,7 +1,7 @@
 import { getMigrationVMsStatusCounts } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { getMigrationStatusLabel } from 'src/plans/details/tabs/Details/components/MigrationsSection/components/utils/utils';
 
-import type { V1beta1Migration } from '@kubev2v/types';
+import type { V1beta1Migration } from '@forklift-ui/types';
 
 export const getMigrationStatusFromVMs = (resourceData: unknown): string | null => {
   const migration = resourceData as V1beta1Migration;

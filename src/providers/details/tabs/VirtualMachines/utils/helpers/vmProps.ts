@@ -1,4 +1,4 @@
-import type { ProviderVirtualMachine } from '@kubev2v/types';
+import type { ProviderVirtualMachine } from '@forklift-ui/types';
 
 import type { VmData } from '../../components/VMCellProps';
 
@@ -7,4 +7,4 @@ export const getVmTemplate = (vm: ProviderVirtualMachine): string | undefined =>
     ? vm.object?.metadata?.labels?.['vm.kubevirt.io/template']
     : undefined;
 
-export const getVmId = (vmData: VmData): string => vmData.vm.id ?? '';
+export const getVmId = (vmData: VmData): string => vmData?.vm?.id ?? '';

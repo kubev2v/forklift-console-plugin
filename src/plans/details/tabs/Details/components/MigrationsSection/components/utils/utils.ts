@@ -4,7 +4,7 @@ import {
 } from 'src/plans/details/components/PlanStatus/utils/types';
 import { isMigrationVirtualMachinePaused } from 'src/plans/details/utils/utils';
 
-import type { V1beta1PlanStatusMigrationVms } from '@kubev2v/types';
+import type { V1beta1PlanStatusMigrationVms } from '@forklift-ui/types';
 import { CATEGORY_TYPES, CONDITION_STATUS, taskStatuses } from '@utils/constants';
 import { t } from '@utils/i18n';
 

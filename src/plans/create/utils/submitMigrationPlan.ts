@@ -1,6 +1,10 @@
 import { createStorageMap } from 'src/storageMaps/create/utils/createStorageMap';
 
-import type { IoK8sApiCoreV1Secret, V1beta1NetworkMap, V1beta1StorageMap } from '@kubev2v/types';
+import type {
+  IoK8sApiCoreV1Secret,
+  V1beta1NetworkMap,
+  V1beta1StorageMap,
+} from '@forklift-ui/types';
 import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { isEmpty } from '@utils/helpers';
 

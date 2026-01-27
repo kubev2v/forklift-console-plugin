@@ -12,7 +12,7 @@ import {
   MigrationModelGroupVersionKind,
   type V1beta1Migration,
   type V1beta1Plan,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Split } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';

@@ -4,7 +4,7 @@ import type { SpecVirtualMachinePageData } from 'src/plans/details/tabs/VirtualM
 import type { FilterDef } from '@components/common/utils/types';
 import { getCategoryIcon } from '@components/Concerns/utils/category';
 import type { VirtualMachineWithConcerns } from '@components/Concerns/utils/constants';
-import type { Concern } from '@kubev2v/types';
+import type { Concern } from '@forklift-ui/types';
 import { t } from '@utils/i18n';
 
 import { createInitialUniqueMaps, getUniqueMapByCategory } from './getUniqueMapByCategory';

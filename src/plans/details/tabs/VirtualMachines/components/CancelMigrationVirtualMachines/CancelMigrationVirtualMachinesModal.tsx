@@ -3,7 +3,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { MigrationModel } from '@kubev2v/types';
+import { MigrationModel } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Stack } from '@patternfly/react-core';

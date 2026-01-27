@@ -1,4 +1,4 @@
-import type { V1beta1NetworkMap, V1beta1Provider, V1beta1StorageMap } from '@kubev2v/types';
+import type { V1beta1NetworkMap, V1beta1Provider, V1beta1StorageMap } from '@forklift-ui/types';
 import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
 
 export enum MapProviderEditFormFields {

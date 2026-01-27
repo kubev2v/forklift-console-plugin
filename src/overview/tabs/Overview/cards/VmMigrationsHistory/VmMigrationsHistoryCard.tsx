@@ -3,7 +3,7 @@ import { OverviewContext } from 'src/overview/context/OverviewContext';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
-import type { V1beta1ForkliftController } from '@kubev2v/types';
+import type { V1beta1ForkliftController } from '@forklift-ui/types';
 import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
 
 import { useVmMigrationsDataPoints } from '../../hooks/useVmMigrationsDataPoints';

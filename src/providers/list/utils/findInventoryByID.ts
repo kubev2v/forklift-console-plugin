@@ -1,6 +1,6 @@
 import type { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import type { ProviderInventory, ProvidersInventoryList } from '@kubev2v/types';
+import type { ProviderInventory, ProvidersInventoryList } from '@forklift-ui/types';
 
 /**
  * Finds an inventory by its unique identifier.

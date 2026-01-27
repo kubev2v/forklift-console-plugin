@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 
-import { HookModel, PlanModel, type V1beta1Hook, type V1beta1Plan } from '@kubev2v/types';
+import { HookModel, PlanModel, type V1beta1Hook, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sCreate, k8sDelete, k8sPatch, k8sUpdate } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';

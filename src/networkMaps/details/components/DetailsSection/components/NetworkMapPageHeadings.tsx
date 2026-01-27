@@ -9,7 +9,7 @@ import {
   NetworkMapModel,
   NetworkMapModelGroupVersionKind,
   type V1beta1NetworkMap,
-} from '@kubev2v/types';
+} from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Flex, FlexItem, PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';

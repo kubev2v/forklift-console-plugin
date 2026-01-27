@@ -1,4 +1,4 @@
-import type { Modify, V1beta1Provider } from '@kubev2v/types';
+import type { Modify, V1beta1Provider } from '@forklift-ui/types';
 import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk/lib/api/core-api';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 

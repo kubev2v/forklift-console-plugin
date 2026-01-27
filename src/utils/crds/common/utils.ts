@@ -1,4 +1,4 @@
-import type { K8sResourceCommon } from '@kubev2v/types';
+import type { K8sResourceCommon } from '@forklift-ui/types';
 import type { OwnerReference } from '@openshift-console/dynamic-plugin-sdk';
 
 import { getApiVersion, getKind, getName, getUID } from './selectors';

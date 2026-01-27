@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { SecretModel, type V1beta1Plan } from '@kubev2v/types';
+import { SecretModel, type V1beta1Plan } from '@forklift-ui/types';
 import { getGroupVersionKindForModel, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';

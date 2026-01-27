@@ -4,7 +4,7 @@ import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigr
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 
-import { PlanModel, type V1beta1Plan } from '@kubev2v/types';
+import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
 import { DescriptionList } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
