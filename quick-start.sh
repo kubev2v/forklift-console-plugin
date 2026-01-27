@@ -59,4 +59,4 @@ fi
 
 # Start console
 echo "🚀 Starting the web console..."
-yarn console
+npm run console

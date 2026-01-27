@@ -23,16 +23,16 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: yarn install
+        run: npm ci
 
       - name: Lint, eslint and stylelint
-        run: yarn lint
+        run: npm run lint
 
       - name: Lint, test i18n files
-        run: yarn test:i18n
+        run: npm run test:i18n
 
       - name: Knip
-        run: yarn knip
+        run: npm run knip
 
   build:
     name: Build project
@@ -50,10 +50,10 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: yarn install
+        run: npm ci
 
       - name: Build project
-        run: yarn build
+        run: npm run build
 
   test:
     name: Run tests and coverage
@@ -71,10 +71,10 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: yarn install
+        run: npm ci
 
       - name: Test
-        run: yarn test:coverage
+        run: npm run test:coverage
 
       - name: Test coverage
         uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673
@@ -100,13 +100,13 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: yarn install
+        run: npm ci
 
       - name: Install testing dependencies
-        run: cd testing && yarn install
+        run: cd testing && npm ci
 
       - name: Run pre e2e test tasks
-        run: yarn e2e:pre-test
+        run: npm run e2e:pre-test
 
       - name: Install Playwright browsers
         run: cd testing && npx playwright install --with-deps chromium

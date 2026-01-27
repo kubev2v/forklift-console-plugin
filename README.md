@@ -18,12 +18,12 @@ Forklift console plugin is managed by Migration Toolkit for Virtualization opera
 
 ## Installation
 
-To get started, clone the repo to your development workstation and install the required dependencies locally with yarn.
+To get started, clone the repo to your development workstation and install the required dependencies locally with npm.
 
 ```bash
 git clone https://github.com/kubev2v/forklift-console-plugin.git
 cd forklift-console-plugin
-yarn install
+npm install
 ```
 
 ## Quick start
@@ -38,7 +38,7 @@ With a user logged in to existing Kubernetes or Openshift environment with Forkl
 #   for example:
 #     export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.example.com
 # - To close the console server run:
-#   yarn console:stop
+#   npm run console:stop
 
 # Setting the console image and forklift service URLs as environment variables:
 #
@@ -49,13 +49,13 @@ export SERVICES_API_SERVER_HOST=https://virt-konveyor-forklift.apps.<your cluste
 export CONSOLE_IMAGE=quay.io/openshift/origin-console:4.19
 
 # Run the web console locally (uses the environment variables we defined above)
-yarn console
+npm run console
 
-# If this is the first time running, yarn build will build the required dependencies
-yarn build
+# If this is the first time running, npm run build will build the required dependencies
+npm run build
 
 # Start the plugin in development mode
-yarn start
+npm start
 ```
 
 #### How to find the cluster address
@@ -77,7 +77,7 @@ Forklift console plugin requires the user to be logged into an openshift or kube
 
 ```bash
 # Setup a kind cluster with Forklift operator and an OKD web console
-yarn cluster:up
+npm run cluster:up
 
 # Example: setup a local KinD cluster with ovirt mock provider
 #          [ options: --with-all-providers --with-ovirt-provider, --with-vmware-provider, --with-openstack-provider]
@@ -86,10 +86,10 @@ yarn cluster:up
 # Note II: mock providers requires NFS server running, look at forkliftci documentation for more details.
 #          See: forkliftci/cluster/providers/utils/install_nfs.sh
 git clone git@github.com:kubev2v/forkliftci.git ./ci/forkliftci
-yarn cluster:up -- --with-ovirt-provider
+npm run cluster:up -- --with-ovirt-provider
 
 # run cleanup to stop and delete the cluster.
-yarn cluster:delete
+npm run cluster:delete
 ```
 
 ## Development
@@ -133,16 +133,16 @@ Update dependencies and chore tasks
 
 ### Local Validation
 
-You can validate commit messages locally using the provided script or yarn commands:
+You can validate commit messages locally using the provided script or npm commands:
 
-**Using yarn commands:**
+**Using npm commands:**
 
 ```bash
 # Validate the latest commit
-yarn validate-commits
+npm run validate-commits
 
 # Validate a range of commits
-yarn validate-commits-range "HEAD~5..HEAD"
+npm run validate-commits-range "HEAD~5..HEAD"
 ```
 
 **Using the script directly:**
