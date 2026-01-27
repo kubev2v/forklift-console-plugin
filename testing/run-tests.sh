@@ -74,7 +74,7 @@ echo "  Playwright Args: ${TEST_ARGS}"
 
 set +e
 echo "Starting Playwright test execution..."
-yarn playwright test \
+npx playwright test \
     ${TEST_ARGS}
 TEST_EXIT_CODE=$?
 set -e

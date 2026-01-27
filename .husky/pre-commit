@@ -1,10 +1,10 @@
 # .husky/pre-commit
 
 export HUSKY_LINT_STAGED=true
-yarn lint-staged
+npx lint-staged
 
-echo "run yarn i18n"
-yarn i18n
+echo "run npm run i18n"
+npm run i18n
 echo "run knip..."
 npx knip --config knip.config.ts || true
 

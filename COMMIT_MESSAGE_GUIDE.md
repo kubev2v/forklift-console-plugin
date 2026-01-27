@@ -165,9 +165,9 @@ Resolves: MTV-XXXX"
 
 You can test your commit messages locally using:
 ```bash
-yarn validate-commits                            # Validate latest commit
-yarn validate-commits-range "HEAD~5..HEAD"       # Validate last 5 commits
-./scripts/validate-commits.sh --verbose         # Show detailed output
+npm run validate-commits                            # Validate latest commit
+npm run validate-commits-range "HEAD~5..HEAD"       # Validate last 5 commits
+./scripts/validate-commits.sh --verbose            # Show detailed output
 ```
 
 ## Adoption Notice

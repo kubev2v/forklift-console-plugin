@@ -11,7 +11,7 @@ This is an **OpenShift Console dynamic plugin** for [Forklift](https://github.co
 - **react-hook-form** for form handling
 - **Jest** for unit testing, **Playwright** for E2E
 - **Webpack** for bundling
-- **Yarn** as package manager
+- **npm** as package manager
 
 ---
 
@@ -483,7 +483,7 @@ t('{{completed}} of {{total}} {{name}}', { completed: 3, total: 10, name: 'tasks
 Run this command to extract new translation keys to locale files:
 
 ```bash
-yarn i18n
+npm run i18n
 ```
 
 Translation files are located in `locales/en/plugin__forklift-console-plugin.json`.
@@ -503,9 +503,9 @@ Translation files are located in `locales/en/plugin__forklift-console-plugin.jso
 
 ### Run Tests
 ```bash
-yarn test                  # Run unit tests
-yarn test:coverage         # Run with coverage
-yarn test:e2e              # Run E2E tests
+npm test                   # Run unit tests
+npm run test:coverage      # Run with coverage
+npm run test:e2e           # Run E2E tests
 ```
 
 ---
@@ -543,8 +543,8 @@ Resolves: MTV-456
 
 ### Validate Locally
 ```bash
-yarn validate-commits              # Validate latest commit
-yarn validate-commits-range "HEAD~5..HEAD"  # Validate range
+npm run validate-commits              # Validate latest commit
+npm run validate-commits-range "HEAD~5..HEAD"  # Validate range
 ```
 
 ---
@@ -553,29 +553,29 @@ yarn validate-commits-range "HEAD~5..HEAD"  # Validate range
 
 ```bash
 # Install dependencies
-yarn install
+npm install
 
 # Start development server
-yarn start
+npm start
 
 # Build for production
-yarn build
+npm run build
 
 # Linting
-yarn lint                 # Check for issues
-yarn lint:fix             # Auto-fix issues
+npm run lint              # Check for issues
+npm run lint:fix          # Auto-fix issues
 
 # Testing
-yarn test                 # Unit tests
-yarn test:e2e             # E2E tests
+npm test                  # Unit tests
+npm run test:e2e          # E2E tests
 
 # Start local OpenShift console
-yarn console              # Start console (background)
-yarn console:stop         # Stop console
+npm run console           # Start console (background)
+npm run console:stop      # Stop console
 
 # Local cluster management
-yarn cluster:up           # Setup KinD cluster with Forklift
-yarn cluster:delete       # Delete cluster
+npm run cluster:up        # Setup KinD cluster with Forklift
+npm run cluster:delete    # Delete cluster
 ```
 
 ---
