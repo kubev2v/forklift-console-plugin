@@ -136,8 +136,12 @@ export const onSaveHost = async ({
   const promises = hostPairs.map(async (hostPair) => {
     const inventory: VSphereHostInventory = hostPair.inventory;
 
-    // Look for the same network name in each host
-    const hostNetwork = inventory?.networkAdapters?.find(({ name }) => name === network.name);
+    // Look for the same network (by name and IP) in each host
+    // We match both name and ipAddress because ESXi hosts can have multiple adapters
+    // with the same name (e.g., VDSwitch) but different IP addresses
+    const hostNetwork = inventory?.networkAdapters?.find(
+      ({ ipAddress, name }) => name === network.name && ipAddress === network.ipAddress,
+    );
 
     if (!hostNetwork) {
       throw new Error(`can't find network ${network.name} on host ${getName(hostPair?.host)}`);
