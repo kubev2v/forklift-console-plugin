@@ -34,7 +34,7 @@ export class DetailsTab {
     this.editDescriptionModal = this.page.getByRole('dialog', { name: 'Edit description' });
     this.descriptionTextbox = this.editDescriptionModal.getByRole('textbox');
     this.saveDescriptionButton = this.editDescriptionModal.getByTestId('modal-confirm-button');
-    this.editMigrationTypeModal = this.page.getByRole('dialog', { name: 'Set warm migration' });
+    this.editMigrationTypeModal = this.page.getByTestId('edit-migration-type-modal');
     this.warmMigrationSwitch = this.editMigrationTypeModal.getByRole('switch');
     this.saveMigrationTypeButton = this.editMigrationTypeModal.getByTestId('modal-confirm-button');
     this.editPowerStateModal = this.page.getByTestId('edit-target-power-state-modal');
@@ -71,6 +71,7 @@ export class DetailsTab {
 
   async clickEditMigrationType(): Promise<void> {
     await this.page.getByTestId('migration-type-detail-item').locator('button').click();
+    await expect(this.editMigrationTypeModal).toBeVisible();
   }
 
   async clickEditTargetAffinity(): Promise<void> {
@@ -130,6 +131,10 @@ export class DetailsTab {
   async saveMigrationType(): Promise<void> {
     await this.saveMigrationTypeButton.click();
     await expect(this.editMigrationTypeModal).not.toBeVisible();
+  }
+
+  async setWarmMigration(isWarm: boolean): Promise<void> {
+    await this.warmMigrationSwitch.setChecked(isWarm, { force: true });
   }
 
   targetVMPowerState(state: string): Locator {
