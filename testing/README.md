@@ -6,21 +6,21 @@ This document outlines the steps to run the Playwright end-to-end tests for the 
 
 Before you begin, ensure you have the following installed:
 - [Node.js](https://nodejs.org/) (LTS version recommended)
-- [Yarn](https://yarnpkg.com/)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
 
 ## Installation
 
 1.  **Install Root Dependencies:**
     From the root directory of the project, install the necessary packages.
     ```bash
-    yarn install
+    npm install
     ```
 
 2.  **Install Testing Dependencies:**
     Navigate to the `testing` directory and install the testing-specific packages.
     ```bash
     cd testing
-    yarn install
+    npm install
     ```
 
 ## Running Tests with a Local Console Server
@@ -30,16 +30,16 @@ This is the most common method for running the e2e tests during development.
 1.  **Start the Local Console:**
     From the **root** of the project, run:
     ```bash
-    yarn start
+    npm start
     ```
     The local server will be available at `http://localhost:9000`.
 
 2.  **Run the E2E Tests:**
     In a separate terminal, from the `testing` directory, run the full suite of tests:
     ```bash
-    yarn test:e2e
+    npm run test:e2e
     ```
-    This command runs all tests in a headless browser. To run them in headed mode, use `yarn test:e2e --headed`.
+    This command runs all tests in a headless browser. To run them in headed mode, use `npm run test:e2e -- --headed`.
 
 ### Running Specific Test Suites
 
@@ -48,9 +48,9 @@ If you want to run only a subset of the tests, you can use the following command
 -   **Upstream Tests Only:**
     These will run with mock provider data.
     ```bash
-    yarn test:upstream
+    npm run test:upstream
     ```
-    To run them in headed mode, use `yarn test:upstream --headed`.
+    To run them in headed mode, use `npm run test:upstream -- --headed`.
 
 -   **Downstream Tests Only:**
     Before running these, you'll need to create a `.providers.json` file in the `testing` directory to specify your provider's credentials.
@@ -66,9 +66,9 @@ If you want to run only a subset of the tests, you can use the following command
 
     3.  **Run the Tests:**
         ```bash
-        yarn test:downstream
+        npm run test:downstream
         ```
-    To run them in headed mode, use `yarn test:downstream --headed`.
+    To run them in headed mode, use `npm run test:downstream -- --headed`.
 
 
 
@@ -92,7 +92,7 @@ Running tests against a remote cluster console requires additional configuration
 3.  **Run the E2E Tests:**
     Once the `.env` file is configured, run the tests from the `testing` directory:
     ```bash
-    yarn test:e2e
+    npm run test:e2e
     ```
 
 ## Replicating the CI Environment
@@ -101,7 +101,7 @@ To closely replicate the downstream CI testing environment, you can run the test
 
 From the `testing` directory, run:
 ```bash
-yarn test:downstream:remote:docker
+npm run test:downstream:remote:docker
 ```
 
 ## Updating the Container Image

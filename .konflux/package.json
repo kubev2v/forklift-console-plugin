@@ -1,7 +1,7 @@
 {
-    "name": "src",
-    "version": "2.9.0",
-    "dependencies": {
-        "yarn": "^1.22.22"
-    }
+  "name": "src",
+  "version": "2.11.0",
+  "description": "Konflux build configuration placeholder",
+  "private": true,
+  "packageManager": "npm@10.9.2"
 }
