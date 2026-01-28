@@ -19,7 +19,7 @@ export const getMapResourceLabel = (
   switch (resource.providerType) {
     case 'openshift': {
       // OpenShift resources have namespace from OpenshiftResource base type
-      if ('namespace' in resource && resource.namespace) {
+      if (resource.namespace) {
         return `${resource.namespace}/${resource.name}`;
       }
       return resource.name;

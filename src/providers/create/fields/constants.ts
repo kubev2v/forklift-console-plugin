@@ -60,8 +60,12 @@ enum VsphereProviderFormFieldId {
 }
 
 enum HypervProviderFormFieldId {
-  SmbDirectory = 'smbDirectory',
-  SmbUsername = 'smbUsername',
+  HypervHost = 'hypervHost',
+  HypervUsername = 'hypervUsername',
+  HypervPassword = 'hypervPassword',
+  SmbUrl = 'smbUrl',
+  UseDifferentSmbCredentials = 'useDifferentSmbCredentials',
+  SmbUser = 'smbUser',
   SmbPassword = 'smbPassword',
 }
 
