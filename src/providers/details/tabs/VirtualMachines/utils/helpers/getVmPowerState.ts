@@ -1,4 +1,6 @@
+import type { ProviderType } from '@forklift-ui/types';
 import type {
+  HypervVM,
   OpenshiftVM,
   OpenstackVM,
   OVirtVM,
@@ -44,20 +46,29 @@ const getOpenStackVmPowerState = (vm: OpenstackVM): PowerState => {
 const getOpenShiftVmPowerState = (vm: OpenshiftVM): PowerState =>
   vm?.object?.status?.printableStatus === 'Running' ? 'on' : 'off';
 
+const getHypervVmPowerState = (vm: HypervVM): PowerState => {
+  // Backend returns powerState as 'On' or 'Off' (capitalized)
+  const powerState = (vm as HypervVM & { powerState?: string })?.powerState?.toLowerCase();
+  if (powerState === 'on') return 'on';
+  if (powerState === 'off') return 'off';
+  return 'unknown';
+};
+
 export const getVmPowerState = (vm: ProviderVirtualMachine | undefined): PowerState => {
   if (!vm) return 'unknown';
 
-  switch (vm?.providerType) {
+  switch (vm?.providerType as ProviderType) {
     case 'ovirt':
-      return getOVirtVmPowerState(vm);
+      return getOVirtVmPowerState(vm as OVirtVM);
     case 'vsphere':
-      return getVSphereVmPowerState(vm);
+      return getVSphereVmPowerState(vm as VSphereVM);
     case 'openstack':
-      return getOpenStackVmPowerState(vm);
+      return getOpenStackVmPowerState(vm as OpenstackVM);
     case 'openshift':
-      return getOpenShiftVmPowerState(vm);
-    case 'ova':
+      return getOpenShiftVmPowerState(vm as OpenshiftVM);
     case 'hyperv':
+      return getHypervVmPowerState(vm as HypervVM);
+    case 'ova':
       return 'off';
     default:
       return 'unknown';

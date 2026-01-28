@@ -2,6 +2,7 @@ import { type FC, useMemo } from 'react';
 import { type ControllerRenderProps, useWatch } from 'react-hook-form';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
+import { HypervVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/HypervVirtualMachinesList';
 import { OpenShiftVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OpenShiftVirtualMachinesList';
 import { OpenStackVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OpenStackVirtualMachinesList';
 import { OvaVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OvaVirtualMachinesList';
@@ -99,6 +100,8 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
       return <OVirtVirtualMachinesList {...tableProps} />;
     case PROVIDER_TYPES.ova:
       return <OvaVirtualMachinesList {...tableProps} />;
+    case PROVIDER_TYPES.hyperv:
+      return <HypervVirtualMachinesList {...tableProps} />;
     case PROVIDER_TYPES.vsphere:
       return <VSphereVirtualMachinesList {...tableProps} />;
     case undefined:

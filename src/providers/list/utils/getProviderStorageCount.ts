@@ -2,6 +2,7 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import type {
+  HypervProvider,
   OpenshiftProvider,
   OpenstackProvider,
   OvaProvider,
@@ -15,6 +16,8 @@ export const getProviderStorageCount = (provider: ProviderData) => {
   switch (inventory?.type) {
     case PROVIDER_TYPES.ova:
       return (inventory as OvaProvider).storageCount;
+    case PROVIDER_TYPES.hyperv:
+      return (inventory as HypervProvider).storageCount;
     case PROVIDER_TYPES.openshift:
       return (inventory as OpenshiftProvider).storageClassCount;
     case PROVIDER_TYPES.vsphere:

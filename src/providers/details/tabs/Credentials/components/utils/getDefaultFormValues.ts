@@ -74,6 +74,21 @@ export const getDefaultFormValues = (
       };
     }
 
+    case PROVIDER_TYPES.hyperv: {
+      const smbUser = getDecodedValue(secret?.data?.smbUser);
+      const smbPassword = getDecodedValue(secret?.data?.smbPassword);
+      const hasSeparateSmbCredentials = Boolean(smbUser ?? smbPassword);
+
+      return {
+        [ProviderFormFieldId.HypervPassword]: getDecodedValue(secret?.data?.password) ?? '',
+        [ProviderFormFieldId.HypervUsername]: getDecodedValue(secret?.data?.username) ?? '',
+        [ProviderFormFieldId.SmbPassword]: smbPassword ?? '',
+        [ProviderFormFieldId.SmbUrl]: getDecodedValue(secret?.data?.smbUrl) ?? '',
+        [ProviderFormFieldId.SmbUser]: smbUser ?? '',
+        [ProviderFormFieldId.UseDifferentSmbCredentials]: hasSeparateSmbCredentials,
+      };
+    }
+
     case PROVIDER_TYPES.ova:
     case undefined:
     default:
