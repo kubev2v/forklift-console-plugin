@@ -22,3 +22,6 @@ kubectl
 kubectl.sha256
 
 forkliftci
+
+# Cursor IDE configuration (contains personal MCP settings)
+.cursor/
