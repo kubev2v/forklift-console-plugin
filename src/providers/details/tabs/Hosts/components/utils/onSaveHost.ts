@@ -18,6 +18,20 @@ import { patchHostSecretOwner } from './patchHostSecretOwner';
 import { patchSecret } from './patchSecret';
 import type { InventoryHostNetworkTriple } from './types';
 
+/**
+ * Finds a network adapter by matching both name and IP address.
+ * ESXi hosts can have multiple adapters with the same name (e.g., VDSwitch)
+ * but different IP addresses, so we must match on both fields.
+ */
+export const findNetworkAdapterByNameAndIp = (
+  adapters: NetworkAdapters[],
+  network: NetworkAdapters,
+): NetworkAdapters | undefined => {
+  return adapters.find(
+    ({ ipAddress, name }) => name === network.name && ipAddress === network.ipAddress,
+  );
+};
+
 type OnSaveHostParams = {
   provider: V1beta1Provider;
   hostPairs: InventoryHostNetworkTriple[];
@@ -136,21 +150,18 @@ export const onSaveHost = async ({
   const promises = hostPairs.map(async (hostPair) => {
     const inventory: VSphereHostInventory = hostPair.inventory;
 
-    // Look for the same network (by name and IP) in each host
-    // We match both name and ipAddress because ESXi hosts can have multiple adapters
-    // with the same name (e.g., VDSwitch) but different IP addresses
-    const hostNetwork = inventory?.networkAdapters?.find(
-      ({ ipAddress, name }) => name === network.name && ipAddress === network.ipAddress,
-    );
+    const hostNetwork = findNetworkAdapterByNameAndIp(inventory?.networkAdapters ?? [], network);
 
     if (!hostNetwork) {
-      throw new Error(`can't find network ${network.name} on host ${getName(hostPair?.host)}`);
+      throw new Error(
+        `Cannot find network ${network.name} with IP ${network.ipAddress} on host ${getName(hostPair?.host)}`,
+      );
     }
 
     return processHostSecretPair(
       provider,
       hostPair,
-      hostNetwork?.ipAddress,
+      hostNetwork.ipAddress,
       encodedUser,
       encodedPassword,
     );
