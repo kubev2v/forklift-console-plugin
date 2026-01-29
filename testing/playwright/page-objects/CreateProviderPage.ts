@@ -9,13 +9,41 @@ import { ProviderDetailsPage } from './ProviderDetailsPage/ProviderDetailsPage';
 
 export class CreateProviderPage {
   private readonly resourceManager?: ResourceManager;
+  // Certificate validation locators
+  readonly certificateConfigureRadio;
+  readonly certificateSkipRadio;
+
+  readonly certificateUploadInput;
   public readonly navigationHelper: NavigationHelper;
   protected readonly page: Page;
+  // VDDK Setup locators
+  readonly vddkAioCheckbox;
+  readonly vddkImageInput;
+  readonly vddkManualRadio;
+
+  readonly vddkSkipRadio;
+  readonly vddkSkipWarning;
+  readonly vddkUploadRadio;
 
   constructor(page: Page, resourceManager?: ResourceManager) {
     this.page = page;
     this.resourceManager = resourceManager;
     this.navigationHelper = new NavigationHelper(page);
+
+    // Certificate validation locators
+    this.certificateConfigureRadio = page.getByTestId('certificate-validation-configure');
+    this.certificateSkipRadio = page.getByTestId('certificate-validation-skip');
+    this.certificateUploadInput = page.locator('#caCertificate');
+
+    // VDDK Setup locators
+    this.vddkAioCheckbox = page.getByTestId('vddk-aio-optimization-checkbox');
+    this.vddkImageInput = page.getByTestId('vsphere-vddk-image-input');
+    this.vddkManualRadio = page.getByTestId('vddk-setup-manual-radio');
+    this.vddkSkipRadio = page.getByTestId('vddk-setup-skip-radio');
+    this.vddkSkipWarning = page.getByRole('heading', {
+      name: /It is highly recommended to use a VDDK image/,
+    });
+    this.vddkUploadRadio = page.getByTestId('vddk-setup-upload-radio');
   }
 
   private async configureVddkSetup(testData: ProviderData) {
