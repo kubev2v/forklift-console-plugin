@@ -35,8 +35,8 @@ RUN pip3 install --no-cache-dir --break-system-packages \
     PyYAML requests lxml 'reportportal-client~=5.0.0' \
     xmltodict jinja2 packaging setuptools suds-py3
 
-COPY package.json yarn.lock ./
-RUN corepack enable && yarn install --frozen-lockfile --ignore-scripts
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts
 
 COPY . .
 

@@ -4,6 +4,7 @@
   "description": "UI for forklift as an openshift console dynamic plugin",
   "license": "Apache-2.0",
   "private": true,
+  "packageManager": "npm@10.9.2",
   "repository": "https://github.com/kubev2v/forklift-console-plugin.git",
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": [
@@ -13,7 +14,7 @@
   },
   "scripts": {
     "clean": "rm -rf ./dist ./coverage",
-    "clean:all": "yarn run clean && rm -rf ./node_modules ./tmp",
+    "clean:all": "npm run clean && rm -rf ./node_modules ./tmp",
     "build": "NODE_ENV=production NODE_OPTIONS=--max-old-space-size=8192 webpack",
     "build:analyze": "ANALYZE_BUNDLE=true NODE_ENV=production webpack",
     "start": "NODE_ENV=development webpack serve --progress",
@@ -25,7 +26,7 @@
     "test": "TZ=UTC jest",
     "test:coverage": "TZ=UTC jest --coverage",
     "test:updateSnapshot": "TZ=UTC jest --updateSnapshot",
-    "test:e2e": "yarn --cwd testing test:e2e",
+    "test:e2e": "npm --prefix testing run test:e2e",
     "console": "bash ./ci/start-console.sh",
     "console:stop": "bash ./ci/stop-console.sh",
     "cluster:up": "bash ./ci/deploy-all.sh",
@@ -34,7 +35,7 @@
     "e2e:build": "bash ./ci/build-and-push-images.sh",
     "e2e:deployCrds": "kubectl apply -f ./ci/yaml/crds/forklift",
     "e2e:console": "bash ./ci/deploy-console.sh",
-    "e2e:pre-test": "yarn run e2e:cluster && yarn run e2e:build && yarn run e2e:deployCrds && yarn run e2e:console",
+    "e2e:pre-test": "npm run e2e:cluster && npm run e2e:build && npm run e2e:deployCrds && npm run e2e:console",
     "knip": "knip",
     "validate-commits": "bash ./scripts/validate-commits.sh --verbose",
     "validate-commits-range": "bash ./scripts/validate-commits.sh --range",
@@ -66,7 +67,6 @@
     "react-hook-form": "^7.54.2",
     "react-i18next": "^11.14.3",
     "react-linkify": "^1.0.0-alpha",
-    "react-router": "5.3.x",
     "react-router-dom": "5.3.x",
     "react-router-dom-v5-compat": "^6.22.0",
     "react-tagsinput": "^3.19.0",
@@ -106,7 +106,6 @@
     "@types/node": "^20.16.6",
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
-    "@types/react-router": "^5.1.20",
     "@types/react-tagsinput": "^3.20.6",
     "@types/webpack-bundle-analyzer": "^4.7.0",
     "copy-webpack-plugin": "^11.0.0",
@@ -148,7 +147,7 @@
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
   },
-  "resolutions": {
+  "overrides": {
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
     "monaco-editor": "^0.52.2",

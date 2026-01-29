@@ -1,6 +1,7 @@
 {
   "name": "e2e-tests",
   "version": "1.0.1",
+  "packageManager": "npm@10.9.2",
   "scripts": {
     "test:e2e": "npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",

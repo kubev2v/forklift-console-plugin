@@ -18,13 +18,7 @@ WORKDIR /opt/app-root/src/app
 
 # Run install as supper tux
 USER 0
-WORKDIR /opt/app-root/src/app/.konflux/
-RUN command -v yarn || npm i
-RUN mv node_modules/yarn/bin/* /usr/local/bin
-RUN mv node_modules/yarn/lib/* /usr/local/lib
-
-WORKDIR /opt/app-root/src/app/
-RUN yarn install --frozen-lockfile --ignore-engines --offline && yarn build
+RUN npm ci --offline && npm run build
 
 # Web server container
 FROM registry.redhat.io/rhel9/nginx-126:9.7-1767846422
