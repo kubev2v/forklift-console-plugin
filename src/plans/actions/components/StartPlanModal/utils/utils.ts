@@ -47,7 +47,7 @@ export const startPlanMigration = async (
     vmCount: plan?.spec?.vms?.length ?? 0,
   });
 
-  return k8sCreate({ data: migration, model: MigrationModel });
+  await k8sCreate({ data: migration, model: MigrationModel });
 };
 
 export const migrationModalMessage = (migrationType: MigrationTypeValue): string => {

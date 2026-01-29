@@ -3,15 +3,13 @@ import {
   type V1beta1Migration,
   type V1beta1Plan,
 } from '@forklift-ui/types';
-import { useK8sWatchResource, type WatchK8sResult } from '@openshift-console/dynamic-plugin-sdk';
-import {
-  getCreatedAt,
-  getNamespace,
-  getOwnerReference,
-  getUID,
-} from '@utils/crds/common/selectors';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { CONDITION_STATUS } from '@utils/constants';
+import { getNamespace, getOwnerReference, getUID } from '@utils/crds/common/selectors';
 
-export const usePlanMigration = (plan: V1beta1Plan): WatchK8sResult<V1beta1Migration> => {
+export const usePlanMigration = (
+  plan: V1beta1Plan,
+): [V1beta1Migration | undefined, boolean, Error | undefined] => {
   const [migrations, migrationLoaded, migrationLoadError] = useK8sWatchResource<V1beta1Migration[]>(
     {
       groupVersionKind: MigrationModelGroupVersionKind,
@@ -25,11 +23,11 @@ export const usePlanMigration = (plan: V1beta1Plan): WatchK8sResult<V1beta1Migra
     migrations && migrationLoaded && !migrationLoadError ? migrations : []
   ).filter((migration) => getOwnerReference(migration)?.uid === getUID(plan));
 
-  planMigrations?.sort(
-    (migA, migB) =>
-      new Date(getCreatedAt(migB) ?? '').getTime() - new Date(getCreatedAt(migA) ?? '').getTime(),
+  const activeMigration = planMigrations.find((migration) =>
+    migration?.status?.conditions?.some(
+      (condition) => condition?.status === CONDITION_STATUS.TRUE && condition?.type === 'Running',
+    ),
   );
-  const [lastMigration] = planMigrations;
 
-  return [lastMigration, migrationLoaded, migrationLoadError];
+  return [activeMigration, migrationLoaded, migrationLoadError as Error | undefined];
 };

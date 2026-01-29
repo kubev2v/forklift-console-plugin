@@ -7,11 +7,11 @@ import { taskStatuses } from '@utils/constants';
 import type { VirtualMachinePipelineTask } from '../utils/types';
 
 const usePipelineTaskProgress = (plan: V1beta1Plan) => {
-  const [lastMigration] = usePlanMigration(plan);
+  const [activeMigration] = usePlanMigration(plan);
 
   const vmPipelineTasks = useMemo(
     () =>
-      lastMigration?.status?.vms?.reduce((acc: VirtualMachinePipelineTask[], migrationVm) => {
+      activeMigration?.status?.vms?.reduce((acc: VirtualMachinePipelineTask[], migrationVm) => {
         migrationVm.pipeline.forEach((pipelineStep) => {
           acc.push({
             status: pipelineStep.phase!,
@@ -22,7 +22,7 @@ const usePipelineTaskProgress = (plan: V1beta1Plan) => {
 
         return acc;
       }, []),
-    [lastMigration?.status?.vms],
+    [activeMigration?.status?.vms],
   );
 
   const completedVmPipelineTasks = vmPipelineTasks?.filter(

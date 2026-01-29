@@ -9,6 +9,7 @@ import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 import { getPlanURL } from '@utils/crds/plans/utils';
+import { isEmpty } from '@utils/helpers';
 
 import { PlanStatuses } from '../details/components/PlanStatus/utils/types';
 import {
@@ -54,8 +55,8 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
   const buttonStartLabel = canReStart ? t('Restart') : t('Start');
   const canScheduleCutover = isWarmAndExecuting && !isArchived;
 
-  const [lastMigration] = usePlanMigration(plan);
-  const hasCutover = canScheduleCutover && Boolean(lastMigration?.spec?.cutover);
+  const [activeMigration] = usePlanMigration(plan);
+  const hasCutover = canScheduleCutover && Boolean(activeMigration?.spec?.cutover);
 
   const onClickPlanStart = () => {
     launcher<PlanStartMigrationModalProps>(PlanStartMigrationModal, {
@@ -98,8 +99,8 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
       <DropdownItem
         value={1}
         key="start"
-        isDisabled={!canStart && !canReStart}
-        onClick={onClickPlanStart}
+        isDisabled={!canStart && !canReStart && !isEmpty(activeMigration)}
+        onClick={isEmpty(activeMigration) ? onClickPlanStart : undefined}
         description={startDescription[planStatus]}
         data-testid="plan-actions-start-menuitem"
       >

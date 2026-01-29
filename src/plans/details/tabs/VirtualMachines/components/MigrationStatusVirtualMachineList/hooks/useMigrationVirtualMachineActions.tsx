@@ -15,17 +15,17 @@ import type { MigrationStatusVirtualMachinePageData } from '../utils/types';
 type PageGlobalActions = FC<GlobalActionToolbarProps<MigrationStatusVirtualMachinePageData>>[];
 
 export const useMigrationVirtualMachineActions = (plan: V1beta1Plan): PageGlobalActions => {
-  const [lastMigration] = usePlanMigration(plan);
+  const [activeMigration] = usePlanMigration(plan);
 
   const isExecuting = isPlanExecuting(plan);
   const isArchived = isPlanArchived(plan);
 
   return [
     ({ selectedIds }) =>
-      isExecuting && !isArchived ? (
+      isExecuting && !isArchived && activeMigration ? (
         <CancelMigrationVirtualMachinesButton
           selectedIds={selectedIds ?? []}
-          migration={lastMigration}
+          migration={activeMigration}
         />
       ) : (
         <DeleteVirtualMachinesButton selectedIds={selectedIds ?? []} plan={plan} />

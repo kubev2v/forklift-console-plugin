@@ -12,6 +12,7 @@ import {
   isPlanExecuting,
 } from 'src/plans/details/components/PlanStatus/utils/utils';
 import VMStatusIconsRow from 'src/plans/details/components/PlanStatus/VMStatusIconsRow';
+import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
@@ -21,6 +22,7 @@ import {
   getPlanVirtualMachines,
   getPlanVirtualMachinesMigrationStatus,
 } from '@utils/crds/plans/selectors';
+import { isEmpty } from '@utils/helpers';
 
 import type { PlanFieldProps } from '../utils/types';
 
@@ -33,8 +35,11 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
   const launcher = useModal();
   const pipelinesProgressPercentage = usePipelineTaskProgress(plan);
   const planStatus = getPlanStatus(plan);
+  const [activeMigration, loaded] = usePlanMigration(plan);
 
-  if (planStatus === PlanStatuses.Ready) {
+  const hasActiveMigration = !isEmpty(activeMigration);
+
+  if (planStatus === PlanStatuses.Ready && loaded && !hasActiveMigration) {
     return (
       <Split hasGutter>
         <Button
@@ -46,6 +51,7 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
               title: t('Start'),
             });
           }}
+          isDisabled={hasActiveMigration}
           isInline
           data-testid="plan-start-button-status"
         >
