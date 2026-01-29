@@ -26,8 +26,12 @@ type OvaFields = {
 };
 
 type HypervFields = {
-  [ProviderFormFieldId.SmbDirectory]?: string;
-  [ProviderFormFieldId.SmbUsername]?: string;
+  [ProviderFormFieldId.HypervHost]?: string;
+  [ProviderFormFieldId.HypervUsername]?: string;
+  [ProviderFormFieldId.HypervPassword]?: string;
+  [ProviderFormFieldId.SmbUrl]?: string;
+  [ProviderFormFieldId.UseDifferentSmbCredentials]?: boolean;
+  [ProviderFormFieldId.SmbUser]?: string;
   [ProviderFormFieldId.SmbPassword]?: string;
 };
 

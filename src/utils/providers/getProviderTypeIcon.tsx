@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import {
   getVmwareLogo,
+  hypervLogo,
   openshiftLogo,
   openstackLogo,
   ovaLogo,
@@ -8,6 +9,7 @@ import {
 } from 'src/components/images/logos';
 
 const providerTypeIcons = (isDarkTheme: boolean): Record<string, ReactNode> => ({
+  hyperv: hypervLogo,
   openshift: openshiftLogo,
   openstack: openstackLogo,
   ova: ovaLogo,

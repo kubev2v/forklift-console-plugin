@@ -1,6 +1,6 @@
 import type { FC } from 'react';
-import { TypeDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/TypeDetailsItem';
-import { URLDetailsItem } from 'src/modules/Providers/views/details/components/DetailsSection/components/URLDetailsItem';
+import { TypeDetailsItem } from 'src/providers/details/components/DetailsSection/components/TypeDetailsItem';
+import { URLDetailsItem } from 'src/providers/details/components/DetailsSection/components/URLDetailsItem';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import CreatedAtDetailsItem from '@components/DetailItems/CreatedAtDetailItem';

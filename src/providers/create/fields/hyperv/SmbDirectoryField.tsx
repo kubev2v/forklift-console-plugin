@@ -6,22 +6,25 @@ import { isValidSmbPath } from '../../utils/validationPatterns';
 import { ProviderFormFieldId } from '../constants';
 import ProviderFormTextInput from '../ProviderFormTextInput';
 
-const SmbDirectoryField: FC = () => {
+const SmbUrlField: FC = () => {
   const { t } = useForkliftTranslation();
 
   return (
     <ProviderFormTextInput
-      label={t('SMB shared directory')}
-      fieldId={ProviderFormFieldId.SmbDirectory}
-      helperText={t('For example: //server/share or \\\\server\\share')}
+      label={t('SMB share URL')}
+      fieldId={ProviderFormFieldId.SmbUrl}
+      helperText={t(
+        'SMB share containing exported Hyper-V VMs, for example: //192.168.1.100/hyperv-share',
+      )}
       fieldRules={{
-        required: t('SMB shared directory is required'),
+        required: t('SMB share URL is required'),
         validate: {
-          pattern: async (val) => {
-            if (!val || !isValidSmbPath(val as string)) {
+          pattern: (val): string | undefined => {
+            if (!val) return undefined;
+            if (!isValidSmbPath(val as string)) {
               return t('SMB path must be in format: //server/share or \\\\server\\share');
             }
-            return true;
+            return undefined;
           },
         },
       }}
@@ -29,4 +32,4 @@ const SmbDirectoryField: FC = () => {
   );
 };
 
-export default SmbDirectoryField;
+export default SmbUrlField;

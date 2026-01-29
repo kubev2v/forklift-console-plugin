@@ -12,25 +12,33 @@ const HypervCredentialsFields: FC = () => {
   return (
     <>
       <ProviderFormTextInput
-        fieldId={ProviderFormFieldId.SmbUsername}
+        fieldId={ProviderFormFieldId.HypervHost}
+        fieldRules={{
+          required: t('Hyper-V host is required'),
+        }}
+        label={t('Hyper-V host')}
+        helperText={t('IP address or hostname of the Hyper-V server, for example: 192.168.1.100')}
+        testId="hyperv-host-input"
+      />
+
+      <ProviderFormTextInput
+        fieldId={ProviderFormFieldId.HypervUsername}
         fieldRules={{
           required: t('Username is required'),
         }}
         label={t('Username')}
-        helperText={t(
-          'Username for accessing the SMB share containing Hyper-V exported VMs, for example: DOMAIN\\username or username',
-        )}
-        testId="smb-username-input"
+        helperText={t('Username for connecting to the Hyper-V server, for example: Administrator')}
+        testId="hyperv-username-input"
       />
 
       <ProviderFormPasswordInput
-        fieldId={ProviderFormFieldId.SmbPassword}
+        fieldId={ProviderFormFieldId.HypervPassword}
         fieldRules={{
           required: t('Password is required'),
         }}
         label={t('Password')}
-        helperText={t('Password for accessing the SMB share')}
-        testId="smb-password-input"
+        helperText={t('Password for connecting to the Hyper-V server')}
+        testId="hyperv-password-input"
       />
     </>
   );

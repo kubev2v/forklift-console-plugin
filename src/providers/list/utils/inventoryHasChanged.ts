@@ -14,9 +14,7 @@ export const inventoryHasChanged = (
     Object.values(PROVIDER_TYPES).reduce(
       (total, type) =>
         total +
-        (inventoryList
-          ? (inventoryList[type as keyof ProvidersInventoryList]?.length ?? 0)
-          : 0),
+        (inventoryList ? (inventoryList[type as keyof ProvidersInventoryList]?.length ?? 0) : 0),
       0,
     );
 
