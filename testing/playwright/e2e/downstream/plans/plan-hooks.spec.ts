@@ -1,5 +1,5 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
@@ -13,7 +13,7 @@ const UPDATED_HOOK_RUNNER_IMAGE = 'quay.io/konveyor/hook-runner:v0.2.0';
 const loadPlaybookFromTemplate = (templatePath: string, hookName: string): string => {
   const absolutePath = path.resolve(__dirname, '../../..', templatePath);
   const template = fs.readFileSync(absolutePath, 'utf-8');
-  return template.replace(/\{\{\s*hook_name\s*\}\}/g, hookName);
+  return template.replaceAll(/\{\{\s*hook_name\s*\}\}/g, hookName);
 };
 
 test.describe('Plan Hooks', { tag: '@downstream' }, () => {

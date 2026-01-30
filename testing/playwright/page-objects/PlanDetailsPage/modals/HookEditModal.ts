@@ -64,12 +64,12 @@ export class HookEditModal {
     await this.serviceAccountInput.fill(serviceAccount);
   }
 
-  async verifyHookEnabled(enabled: boolean): Promise<void> {
-    if (enabled) {
-      await expect(this.enableHookCheckbox).toBeChecked();
-    } else {
-      await expect(this.enableHookCheckbox).not.toBeChecked();
-    }
+  async verifyHookIsDisabled(): Promise<void> {
+    await expect(this.enableHookCheckbox).not.toBeChecked();
+  }
+
+  async verifyHookIsEnabled(): Promise<void> {
+    await expect(this.enableHookCheckbox).toBeChecked();
   }
 
   async waitForModalToClose(): Promise<void> {
