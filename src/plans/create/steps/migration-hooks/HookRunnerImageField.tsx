@@ -51,6 +51,7 @@ const HookRunnerImageField: FC<HookRunnerImageFieldProps> = ({ fieldId }) => {
             <TextInput
               {...field}
               id={hookRunnerImageFieldId}
+              data-testid={`${hookRunnerImageFieldId}-input`}
               aria-describedby={`${hookRunnerImageFieldId}-helper`}
               name={hookRunnerImageFieldId}
               validated={getInputValidated(error)}

@@ -5,12 +5,14 @@ import { NavigationHelper } from '../../utils/NavigationHelper';
 import { disableGuidedTour, isEmpty } from '../../utils/utils';
 
 import { DetailsTab } from './tabs/DetailsTab';
+import { HooksTab } from './tabs/HooksTab';
 import { MappingsTab } from './tabs/MappingsTab';
 import { VirtualMachinesTab } from './tabs/VirtualMachinesTab';
 
 export class PlanDetailsPage {
   private readonly navigation: NavigationHelper;
   public readonly detailsTab: DetailsTab;
+  public readonly hooksTab: HooksTab;
   public readonly mappingsTab: MappingsTab;
   protected readonly page: Page;
   public readonly virtualMachinesTab: VirtualMachinesTab;
@@ -18,6 +20,7 @@ export class PlanDetailsPage {
   constructor(page: Page) {
     this.page = page;
     this.detailsTab = new DetailsTab(page);
+    this.hooksTab = new HooksTab(page);
     this.mappingsTab = new MappingsTab(page);
     this.navigation = new NavigationHelper(page);
     this.virtualMachinesTab = new VirtualMachinesTab(page);

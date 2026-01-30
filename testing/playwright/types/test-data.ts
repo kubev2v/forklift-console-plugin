@@ -41,6 +41,13 @@ export const StorageClasses = {
   STANDARD_CSI: 'standard-csi',
 } as const;
 
+export interface HookConfig {
+  enabled: boolean;
+  hookRunnerImage?: string;
+  serviceAccount?: string;
+  ansiblePlaybook?: string;
+}
+
 export interface PlanTestData {
   planName: string;
   planProject: string;
@@ -57,6 +64,8 @@ export interface PlanTestData {
     targetPowerState?: 'on' | 'off' | 'auto';
     useNbdeClevis?: boolean;
   };
+  preMigrationHook?: HookConfig;
+  postMigrationHook?: HookConfig;
 }
 
 /**

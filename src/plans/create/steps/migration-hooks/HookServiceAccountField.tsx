@@ -54,6 +54,7 @@ const HookServiceAccountField: FC<HookServiceAccountFieldProps> = ({ fieldId }) 
             <TextInput
               {...field}
               id={hookServiceAccountFieldId}
+              data-testid={`${hookServiceAccountFieldId}-input`}
               aria-describedby={`${hookServiceAccountFieldId}-helper`}
               name={hookServiceAccountFieldId}
               validated={getInputValidated(error)}
