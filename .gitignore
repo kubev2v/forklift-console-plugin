@@ -23,5 +23,5 @@ kubectl.sha256
 
 forkliftci
 
-# Cursor IDE configuration (contains personal MCP settings)
-.cursor/
+# Cursor IDE - only ignore sensitive MCP config (prompts are shared)
+.cursor/mcp.json
