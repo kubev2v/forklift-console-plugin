@@ -75,12 +75,14 @@ Ask user to confirm before proceeding.
 2. Stage and commit with the project's commit format:
    ```bash
    git add .
-   git commit -s -m "Resolves: MTV-XXXX | Brief description of the feature"
+   git commit -s -m "Resolves: MTV-XXXX | Brief description of the feature
+
+   Resolves: MTV-XXXX"
    ```
    
    **Important**: 
    - Always use `-s` flag for sign-off
-   - Format: `Resolves: MTV-XXXX | description`
+   - Include `Resolves: MTV-XXXX` in commit body
    - If no Jira ticket: `Resolves: None`
 
 3. Push to origin:
@@ -88,10 +90,33 @@ Ask user to confirm before proceeding.
    git push -u origin feat/MTV-XXXX-brief-description
    ```
 
-4. Create PR with description including:
-   - Summary of the feature
-   - Link to Jira ticket
-   - Changes made
-   - Screenshots (if UI changes)
-   - Acceptance criteria checklist
-   - Testing approach taken (and why, if no tests)
+4. Create PR using the GitHub template format:
+
+```markdown
+## 📝 Links
+
+> References: https://issues.redhat.com/browse/MTV-XXXX
+
+> Related: [Add related tickets/PRs if any]
+
+## 📝 Description
+
+[Brief description of the feature]
+
+**User Story:** [As a... I want... So that...]
+
+**Changes:**
+- [List of changes made]
+
+**Acceptance Criteria:**
+- [ ] [Criterion 1]
+- [ ] [Criterion 2]
+
+## 🎥 Demo
+
+[Add screenshot/video showing the new feature]
+
+## 📝 CC://
+
+[Tag reviewers if needed]
+```

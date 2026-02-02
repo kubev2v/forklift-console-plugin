@@ -73,12 +73,14 @@ Present findings to the user:
 2. Stage and commit with the project's commit format:
    ```bash
    git add .
-   git commit -s -m "Resolves: MTV-XXXX | Brief description of the fix"
+   git commit -s -m "Resolves: MTV-XXXX | Brief description of the fix
+
+   Resolves: MTV-XXXX"
    ```
    
    **Important**: 
    - Always use `-s` flag for sign-off
-   - Format: `Resolves: MTV-XXXX | description`
+   - Include `Resolves: MTV-XXXX` in commit body
    - If no Jira ticket: `Resolves: None`
 
 3. Push to origin:
@@ -86,9 +88,28 @@ Present findings to the user:
    git push -u origin fix/MTV-XXXX-brief-description
    ```
 
-4. Create PR with description including:
-   - Summary of the fix
-   - Link to Jira ticket
-   - Root cause explanation
-   - Changes made
-   - Testing approach taken (and why, if no tests)
+4. Create PR using the GitHub template format:
+
+```markdown
+## 📝 Links
+
+> References: https://issues.redhat.com/browse/MTV-XXXX
+
+> Related: [Add related tickets/PRs if any]
+
+## 📝 Description
+
+[Brief description of the fix]
+
+**Root Cause:** [Clear explanation of why the bug occurs]
+
+**Fix:** [What was changed to fix it]
+
+## 🎥 Demo
+
+[Add screenshot/video showing the fix, or describe manual verification steps]
+
+## 📝 CC://
+
+[Tag reviewers if needed]
+```
