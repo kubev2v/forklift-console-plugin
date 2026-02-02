@@ -37,7 +37,7 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
               statusVM={statusVM}
               vmCreated={vmCreated}
               targetNamespace={targetNamespace}
-              vmName={statusVM?.name}
+              vmName={statusVM?.newName ?? statusVM?.name}
             />
           }
           sectionTitle={
