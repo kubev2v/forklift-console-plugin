@@ -36,6 +36,7 @@ const EditPreCopyInterval: FC = () => {
             onChange={onChange}
             value={String(value)}
             options={preCopyIntervalOptions}
+            testId="precopy-interval-select"
           />
         )}
       />

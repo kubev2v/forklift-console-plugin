@@ -35,6 +35,7 @@ const EditControllerCPULimit: FC = () => {
             onChange={onChange}
             value={String(value)}
             options={controllerCpuLimitOptions}
+            testId="controller-cpu-limit-select"
           />
         )}
       />

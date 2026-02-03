@@ -6,9 +6,15 @@ type SettingsNumberInputProps = {
   value: string | number;
   onChange: (value: string | number) => void;
   defaultValue: number;
+  testId?: string;
 };
 
-const SettingsNumberInput: FC<SettingsNumberInputProps> = ({ defaultValue, onChange, value }) => {
+const SettingsNumberInput: FC<SettingsNumberInputProps> = ({
+  defaultValue,
+  onChange,
+  testId,
+  value,
+}) => {
   const normalize = (val: number | string) => {
     const num = typeof val === 'number' ? val : parseInt(val, 10);
     if (isNaN(num) || num < 1) return defaultValue;
@@ -41,6 +47,7 @@ const SettingsNumberInput: FC<SettingsNumberInputProps> = ({ defaultValue, onCha
       inputAriaLabel="number input"
       minusBtnAriaLabel="minus"
       plusBtnAriaLabel="plus"
+      data-testid={testId}
     />
   );
 };
