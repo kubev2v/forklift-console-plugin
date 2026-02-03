@@ -12,7 +12,7 @@ import { migrationTypeTopic } from '../migrationTypeTopic';
 import { troubleShootingTopic } from '../troubleShootingTopic/troubleShootingTopic';
 
 export const MigrationSourceTypeLabels = {
-  [PROVIDER_TYPES.hyperv]: t('Hyper-V'),
+  [PROVIDER_TYPES.hyperv]: t('Microsoft Hyper-V'),
   [PROVIDER_TYPES.openshift]: t('OpenShift Virtualization'),
   [PROVIDER_TYPES.openstack]: t('OpenStack'),
   [PROVIDER_TYPES.ova]: t('Open Virtual Appliances'),

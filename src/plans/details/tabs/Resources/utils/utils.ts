@@ -6,7 +6,7 @@ import type {
   ProviderVirtualMachine,
   V1VirtualMachine,
 } from '@forklift-ui/types';
-import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
+import type { EnhancedHypervVM, EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 
 import {
   ACTIVE,
@@ -87,6 +87,36 @@ const getOVirtPlanResources = (planInventory: EnhancedOVirtVM[]): PlanResourcesT
 };
 
 const getOVAPlanResources = (planInventory: EnhancedOvaVM[]): PlanResourcesTableProps => {
+  const planInventoryRunning = planInventory?.filter((vm) => vm.powerState === POWERED_ON);
+
+  const totalResources = planInventory.reduce(
+    (accumulator, currentVM) => {
+      return {
+        cpuCount: accumulator.cpuCount + currentVM.cpuCount,
+        memoryMB: accumulator.memoryMB + currentVM.memoryMB,
+      };
+    },
+    { cpuCount: 0, memoryMB: 0 },
+  );
+
+  const totalResourcesRunning = planInventoryRunning.reduce(
+    (accumulator, currentVM) => {
+      return {
+        cpuCount: accumulator.cpuCount + currentVM.cpuCount,
+        memoryMB: accumulator.memoryMB + currentVM.memoryMB,
+      };
+    },
+    { cpuCount: 0, memoryMB: 0 },
+  );
+  return {
+    planInventoryRunningSize: planInventoryRunning?.length,
+    planInventorySize: planInventory?.length,
+    totalResources,
+    totalResourcesRunning,
+  };
+};
+
+const getHypervPlanResources = (planInventory: EnhancedHypervVM[]): PlanResourcesTableProps => {
   const planInventoryRunning = planInventory?.filter((vm) => vm.powerState === POWERED_ON);
 
   const totalResources = planInventory.reduce(
@@ -222,6 +252,8 @@ export const getPlanResourcesTableProps = (
       return getVSpherePlanResources(planInventory as EnhancedVSphereVM[]);
     case PROVIDER_TYPES.ova:
       return getOVAPlanResources(planInventory as EnhancedOvaVM[]);
+    case PROVIDER_TYPES.hyperv:
+      return getHypervPlanResources(planInventory as EnhancedHypervVM[]);
     case undefined:
     default:
       return null;

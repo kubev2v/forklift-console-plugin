@@ -1,3 +1,4 @@
+import hypervImg from './resources/hyperv.png';
 import ovaImg from './resources/open-virtual-appliance.png';
 import openshiftImg from './resources/openshift-virtualization.svg';
 import openstackImg from './resources/openstack2.svg';
@@ -44,6 +45,14 @@ export const ovaLogo = (
     className="forklift--create-provider-edit-card-title-logo"
     src={ovaImg}
     alt="PatternFly logo"
+  />
+);
+
+export const hypervLogo = (
+  <img
+    className="forklift--create-provider-edit-card-title-logo"
+    src={hypervImg}
+    alt="Hyper-V logo"
   />
 );
 
