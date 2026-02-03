@@ -40,6 +40,7 @@ enum OpenstackProviderFormFieldId {
 
 enum OvaProviderFormFieldId {
   NfsDirectory = 'nfsDirectory',
+  OvaApplianceManagement = 'ovaApplianceManagement',
 }
 
 enum OvirtProviderFormFieldId {
