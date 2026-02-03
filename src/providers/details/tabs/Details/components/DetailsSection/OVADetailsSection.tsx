@@ -10,12 +10,15 @@ import OwnerDetailsItem from '@components/DetailItems/OwnerDetailItem';
 import { DescriptionList } from '@patternfly/react-core';
 
 import type { DetailsSectionProps } from './utils/types';
+import ApplianceManagementDetailsItem from './ApplianceManagementDetailsItem';
 
 const OVADetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
-  const { provider } = data;
+  const { permissions, provider } = data;
 
   if (!provider) return null;
+
+  const canPatch = permissions?.canPatch ?? false;
 
   return (
     <DescriptionList
@@ -33,6 +36,7 @@ const OVADetailsSection: FC<DetailsSectionProps> = ({ data }) => {
           `URL of the NFS file share that serves the OVA., for example, 10.10.0.10:/ova`,
         )}
       />
+      <ApplianceManagementDetailsItem resource={provider} canPatch={canPatch} />
       <CreatedAtDetailsItem resource={provider} />
       <OwnerDetailsItem resource={provider} />
     </DescriptionList>

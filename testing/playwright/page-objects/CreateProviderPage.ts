@@ -46,6 +46,15 @@ export class CreateProviderPage {
 
   private async fillOVAFields(testData: ProviderData) {
     await this.page.getByTestId('nfs-directory-input').fill(testData.hostname ?? '');
+
+    if (testData.applianceManagement !== undefined) {
+      const applianceCheckbox = this.page.getByTestId('ova-appliance-management-checkbox');
+      const isChecked = await applianceCheckbox.isChecked();
+
+      if (isChecked !== testData.applianceManagement) {
+        await applianceCheckbox.click();
+      }
+    }
   }
 
   private async fillOVirtFields(testData: ProviderData) {

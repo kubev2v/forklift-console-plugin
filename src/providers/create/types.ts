@@ -23,6 +23,7 @@ type OpenshiftFields = {
 
 type OvaFields = {
   [ProviderFormFieldId.NfsDirectory]?: string;
+  [ProviderFormFieldId.OvaApplianceManagement]?: boolean;
 };
 
 type OpenstackFields = {

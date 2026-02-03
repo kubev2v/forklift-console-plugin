@@ -77,6 +77,13 @@ test.describe('OVA Provider Upload Tests', { tag: '@downstream' }, () => {
       await providerDetailsPage.waitForReadyStatus();
     });
 
+    await test.step('Verify appliance management is enabled', async () => {
+      await expect(providerDetailsPage.detailsTab.applianceManagementDetailItem).toBeVisible();
+      await expect(providerDetailsPage.detailsTab.applianceManagementDetailItem).toContainText(
+        'Enabled',
+      );
+    });
+
     await test.step('Verify the upload section is visible', async () => {
       await expect(providerDetailsPage.detailsTab.uploadSectionHeading).toBeVisible();
     });

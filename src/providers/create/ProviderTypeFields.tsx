@@ -12,6 +12,7 @@ import ServiceAccountTokenField from './fields/openshift/ServiceAccountTokenFiel
 import OpenStackAuthenticationTypeField from './fields/openstack/OpenStackAuthenticationTypeField';
 import OpenStackUrlField from './fields/openstack/OpenStackUrlField';
 import NfsDirectoryField from './fields/ova/NfsDirectoryField';
+import OvaApplianceManagementField from './fields/ova/OvaApplianceManagementField';
 import OvirtCredentialsFields from './fields/ovirt/OvirtCredentialsFields';
 import OvirtUrlField from './fields/ovirt/OvirtUrlField';
 import ProviderNameField from './fields/ProviderNameField';
@@ -44,7 +45,12 @@ const ProviderTypeFields: FC = () => {
 
       {selectedProviderType && <ProviderNameField />}
 
-      {selectedProviderType === PROVIDER_TYPES.ova && <NfsDirectoryField />}
+      {selectedProviderType === PROVIDER_TYPES.ova && (
+        <>
+          <NfsDirectoryField />
+          <OvaApplianceManagementField />
+        </>
+      )}
 
       {selectedProviderType === PROVIDER_TYPES.openshift && (
         <>

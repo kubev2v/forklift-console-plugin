@@ -26,6 +26,12 @@ export const getUseVddkAioOptimization = (provider: V1beta1Provider) =>
 
 export const getSdkEndpoint = (provider: V1beta1Provider) => getSettings(provider)?.sdkEndpoint;
 
+export const getApplianceManagement = (provider: V1beta1Provider) =>
+  getSettings(provider)?.applianceManagement;
+
+export const isApplianceManagementEnabled = (provider: V1beta1Provider) =>
+  getApplianceManagement(provider) === 'true';
+
 export const getAnnotations = (provider: V1beta1Provider) => provider?.metadata?.annotations;
 
 export const getUrl = (provider: V1beta1Provider) => provider?.spec?.url;

@@ -7,6 +7,10 @@ export class DetailsTab {
     this.page = page;
   }
 
+  get applianceManagementDetailItem(): Locator {
+    return this.page.getByTestId('appliance-management-detail-item');
+  }
+
   async clickUploadButton(): Promise<void> {
     await this.uploadButton.click();
   }

@@ -66,11 +66,13 @@ const DescriptionTitleWithHelp: FC<{
 
             {!isEmpty(crumbs) && (
               <FlexItem>
-                <Breadcrumb>
-                  {crumbs?.map((crumb) => (
-                    <BreadcrumbItem key={crumb}>{crumb}</BreadcrumbItem>
-                  ))}
-                </Breadcrumb>
+                <Flex direction={{ default: 'row' }} flexWrap={{ default: 'nowrap' }}>
+                  <Breadcrumb>
+                    {crumbs?.map((crumb) => (
+                      <BreadcrumbItem key={crumb}>{crumb}</BreadcrumbItem>
+                    ))}
+                  </Breadcrumb>
+                </Flex>
               </FlexItem>
             )}
           </Flex>
