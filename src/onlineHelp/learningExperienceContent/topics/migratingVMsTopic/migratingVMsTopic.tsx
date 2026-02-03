@@ -29,7 +29,7 @@ const migratingVMsSubTopics = (providerType?: ProviderTypes): LearningExperience
       case PROVIDER_TYPES.openshift:
         return commonMigratingVMsSubTopics(t('Choose your OpenShift Virtualization provider.'));
       case PROVIDER_TYPES.hyperv:
-        return commonMigratingVMsSubTopics(t('Choose your Hyper-V provider.'));
+        return commonMigratingVMsSubTopics(t('Choose your Microsoft Hyper-V provider.'));
       case undefined:
       default:
         return commonMigratingVMsSubTopics(t('Choose your VMware provider.'));

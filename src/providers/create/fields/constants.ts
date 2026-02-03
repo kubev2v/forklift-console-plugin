@@ -59,6 +59,16 @@ enum VsphereProviderFormFieldId {
   VsphereUseVddkAioOptimization = 'vsphereUseVddkAioOptimization',
 }
 
+enum HypervProviderFormFieldId {
+  HypervHost = 'hypervHost',
+  HypervUsername = 'hypervUsername',
+  HypervPassword = 'hypervPassword',
+  SmbUrl = 'smbUrl',
+  UseDifferentSmbCredentials = 'useDifferentSmbCredentials',
+  SmbUser = 'smbUser',
+  SmbPassword = 'smbPassword',
+}
+
 export const ProviderFormFieldId = {
   ...CommonProviderFormFieldId,
   ...CertificateFormFieldId,
@@ -67,6 +77,7 @@ export const ProviderFormFieldId = {
   ...OpenstackProviderFormFieldId,
   ...OvirtProviderFormFieldId,
   ...VsphereProviderFormFieldId,
+  ...HypervProviderFormFieldId,
 } as const;
 
 export type ProviderFormFieldIdType =
@@ -76,7 +87,8 @@ export type ProviderFormFieldIdType =
   | OpenstackProviderFormFieldId
   | OvaProviderFormFieldId
   | OvirtProviderFormFieldId
-  | VsphereProviderFormFieldId;
+  | VsphereProviderFormFieldId
+  | HypervProviderFormFieldId;
 
 export const providerFormFieldLabels = {
   [ProviderFormFieldId.CaCertificate]: t('CA certificate'),

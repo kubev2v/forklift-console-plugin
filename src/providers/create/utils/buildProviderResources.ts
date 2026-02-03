@@ -5,6 +5,7 @@ import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import { ProviderFormFieldId } from '../fields/constants';
 import type { CreateProviderFormData } from '../types';
 
+import { buildHypervProviderResources } from './buildHypervProviderResources';
 import { buildOpenshiftProviderResources } from './buildOpenshiftProviderResources';
 import { buildOpenstackProviderResources } from './buildOpenstackProviderResources';
 import { buildOvaProviderResources } from './buildOvaProviderResources';
@@ -22,6 +23,8 @@ export const buildProviderResources = (formData: CreateProviderFormData): Provid
   switch (providerType) {
     case PROVIDER_TYPES.ova:
       return buildOvaProviderResources(formData);
+    case PROVIDER_TYPES.hyperv:
+      return buildHypervProviderResources(formData);
     case PROVIDER_TYPES.openshift:
       return buildOpenshiftProviderResources(formData);
     case PROVIDER_TYPES.openstack:

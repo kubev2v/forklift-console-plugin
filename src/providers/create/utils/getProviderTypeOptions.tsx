@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 import {
   getVmwareLogo,
+  hypervLogo,
   openshiftLogo,
   openstackLogo,
   ovaLogo,
@@ -39,6 +40,12 @@ export const getProviderTypeOptions = (isDarkTheme: boolean): ProviderTypeOption
     value: PROVIDER_TYPES.ova,
   },
   {
+    description: t('Microsoft Hyper-V virtualization platform. Supports migration via SMB share.'),
+    icon: hypervLogo,
+    label: t('Microsoft Hyper-V'),
+    value: PROVIDER_TYPES.hyperv,
+  },
+  {
     description: t(
       'Virtualization platform from Red Hat. Currently in maintenance for existing customers only.',
     ),
@@ -47,7 +54,7 @@ export const getProviderTypeOptions = (isDarkTheme: boolean): ProviderTypeOption
     value: PROVIDER_TYPES.ovirt,
   },
   {
-    description: t('Cloud computing virtualization platform'),
+    description: t('Virtualization platform from VMware'),
     icon: getVmwareLogo(isDarkTheme),
     label: t('VMware vSphere'),
     value: PROVIDER_TYPES.vsphere,

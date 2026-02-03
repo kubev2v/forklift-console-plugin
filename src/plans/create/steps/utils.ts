@@ -15,21 +15,27 @@ export const getMapResourceLabel = (
   if (!resource?.providerType) {
     return '';
   }
+
   switch (resource.providerType) {
     case 'openshift': {
-      return resource.namespace ? `${resource.namespace}/${resource.name}` : resource.name;
+      // OpenShift resources have namespace from OpenshiftResource base type
+      if (resource.namespace) {
+        return `${resource.namespace}/${resource.name}`;
+      }
+      return resource.name;
     }
+    case 'hyperv':
     case 'ova':
     case 'vsphere':
     case 'openstack': {
       return resource.name || '';
     }
     case 'ovirt': {
-      // Use path for oVirt if available
-      // For network: fall back to empty string
-      // For storage: fall back to name
-      const isStorageResource = 'name' in resource && resource.name !== undefined;
-      return resource.path ?? (isStorageResource ? resource.name || '' : '');
+      // Use path for oVirt if available, fall back to name for storage resources
+      if ('path' in resource && resource.path) {
+        return resource.path;
+      }
+      return resource.name || '';
     }
     default: {
       return '';

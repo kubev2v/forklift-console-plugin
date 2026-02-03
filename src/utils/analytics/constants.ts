@@ -1,6 +1,6 @@
 import type { ProviderType } from '@forklift-ui/types';
 
-export { type ProviderType };
+export type { ProviderType };
 
 export const ConfigMapModel = {
   abbr: 'CM',

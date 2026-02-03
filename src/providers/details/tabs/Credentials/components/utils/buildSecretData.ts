@@ -91,6 +91,27 @@ export const buildSecretData = (
       return data;
     }
 
+    case PROVIDER_TYPES.hyperv: {
+      const hypervData: Record<string, string> = {
+        ...baseData,
+        password: encode(formData[ProviderFormFieldId.HypervPassword] ?? ''),
+        smbUrl: encode(formData[ProviderFormFieldId.SmbUrl] ?? ''),
+        username: encode(formData[ProviderFormFieldId.HypervUsername] ?? ''),
+      };
+
+      // Add optional SMB credentials if using different credentials
+      if (formData[ProviderFormFieldId.UseDifferentSmbCredentials]) {
+        if (formData[ProviderFormFieldId.SmbUser]) {
+          hypervData.smbUser = encode(formData[ProviderFormFieldId.SmbUser] ?? '');
+        }
+        if (formData[ProviderFormFieldId.SmbPassword]) {
+          hypervData.smbPassword = encode(formData[ProviderFormFieldId.SmbPassword] ?? '');
+        }
+      }
+
+      return hypervData;
+    }
+
     case PROVIDER_TYPES.ova:
     case undefined:
     default:

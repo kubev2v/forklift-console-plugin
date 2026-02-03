@@ -237,3 +237,17 @@ export const openstackApplicationCredentialNameFields: Fields = {
     label: t('Username'),
   },
 };
+
+// HyperV fields
+export const hypervCredentialsFields: Fields = {
+  password: {
+    description: t('A password for accessing the SMB share containing Hyper-V exported VMs.'),
+    label: t('Password'),
+  },
+  username: {
+    description: t(
+      'A username for accessing the SMB share containing Hyper-V exported VMs. For example: DOMAIN\\username or username.',
+    ),
+    label: t('Username'),
+  },
+};

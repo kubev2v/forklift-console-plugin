@@ -11,6 +11,7 @@ import { t } from '@utils/i18n';
 
 import SourceMigrationSelection from '../components/SourceMigrationSelection';
 
+import { hypervCreateProviderSubTopics } from './subTopics/hypervCreateProviderSubTopics';
 import { openshiftCreateProviderSubTopics } from './subTopics/openshiftCreateProviderSubTopics';
 import { openstackCreateProviderSubTopics } from './subTopics/openstackCreateProviderSubTopics';
 import { ovaCreateProviderSubTopics } from './subTopics/ovaCreateProviderSubTopics';
@@ -30,7 +31,8 @@ const createProviderSubTopics = (providerType?: ProviderTypes): LearningExperien
         return rhvCreateProviderSubTopics();
       case PROVIDER_TYPES.openshift:
         return openshiftCreateProviderSubTopics();
-      case PROVIDER_TYPES.hyperv: // TODO: return hypervCreateProviderSubTopics();
+      case PROVIDER_TYPES.hyperv:
+        return hypervCreateProviderSubTopics();
       case undefined:
       default:
         return vmwareCreateProviderSubTopics();
