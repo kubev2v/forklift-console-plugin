@@ -31,6 +31,24 @@ spec:
     value: build/Containerfile-downstream
   - name: path-context
     value: .
+  - name: build-source-image
+    value: "true"
+  - name: hermetic
+    value: "true"
+  - name: prefetch-input
+    value: '[{"type": "npm", "path": "."}, {"type": "npm", "path": ".konflux"}]'
+  - name: build-args-file
+    value: build/release.conf
+  - name: build-args
+    value:
+    - "REVISION={{revision}}"
+  taskRunSpecs:
+  - pipelineTaskName: build-container
+    computeResources:
+      requests:
+        memory: 10Gi
+      limits:
+        memory: 10Gi
   pipelineSpec:
     description: |
       This pipeline is ideal for building container images from a Containerfile while maintaining trust after pipeline customization.
