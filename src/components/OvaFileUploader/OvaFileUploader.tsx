@@ -28,9 +28,7 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
   const [response, setResponse] = useState<UploadOvaResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [validation, setValidation] = useState<OvaValidationVariant>(
-    OvaValidationVariant.Indeterminate,
-  );
+  const [validation, setValidation] = useState<OvaValidationVariant>(OvaValidationVariant.Default);
 
   const handleUpload = async () => {
     if (!file) return;
@@ -68,7 +66,7 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
           onClearClick={() => {
             setFile(undefined);
             setFilename('');
-            setValidation(OvaValidationVariant.Indeterminate);
+            setValidation(OvaValidationVariant.Default);
             setResponse(null);
             setError(null);
           }}

@@ -124,4 +124,5 @@ export interface ProviderData {
   vddkInitImage?: string;
   skipVddk?: boolean;
   useVddkAioOptimization?: boolean;
+  applianceManagement?: boolean;
 }
