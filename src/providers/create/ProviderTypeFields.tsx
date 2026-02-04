@@ -100,6 +100,7 @@ const ProviderTypeFields: FC = () => {
           <SectionHeading text={t('Provider credentials')} />
           {smbUrl?.trim() && <HypervCredentialsFields />}
           {smbUrl?.trim() && <SmbCredentialsFields />}
+          <CertificateValidationField />
         </>
       )}
     </>
