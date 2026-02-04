@@ -88,3 +88,10 @@ export enum VddkSetupMode {
   Manual = 'manual',
   Skip = 'skip',
 }
+
+export const OVA_APPLIANCE_MANAGEMENT_LABEL = t(
+  'Enable appliance management for local OVA file uploads',
+);
+export const OVA_APPLIANCE_MANAGEMENT_DESCRIPTION = t(
+  'When enabled, allows uploading OVA files directly to the provider instead of using NFS shared directory only.',
+);

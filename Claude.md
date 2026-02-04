@@ -34,16 +34,24 @@ This is an **OpenShift Console dynamic plugin** for [Forklift](https://github.co
    }
    ```
 
-2. **Use inline type imports**:
-   ```typescript
-   // ✅ Good
-   import { type FC, useState } from 'react';
-   import { type UserProps } from './types';
-
-   // ❌ Bad
-   import type { FC } from 'react';
-   import { useState } from 'react';
-   ```
+2. **Type imports**:
+   - If **all** imports from a module are types, use `import type`:
+     ```typescript
+     // ✅ Good - all imports are types
+     import type { FC, ReactNode } from 'react';
+     import type { UserProps } from './types';
+     ```
+   - If **some** imports are types and some are values, use inline `type` keyword:
+     ```typescript
+     // ✅ Good - mixed types and values
+     import { type FC, useState, type ReactNode } from 'react';
+     ```
+   - Never separate type and value imports from the same module:
+     ```typescript
+     // ❌ Bad - separate imports from same module
+     import type { FC } from 'react';
+     import { useState } from 'react';
+     ```
 
 3. **Strict null checks are enabled** - always handle nullable values properly.
 
