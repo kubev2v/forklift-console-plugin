@@ -1,7 +1,6 @@
 import { type FC, useState } from 'react';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 
-import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { ExpandableSection, Form, Split, SplitItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -31,9 +30,6 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
       toggleContent={
         <Split hasGutter>
           <SplitItem>{t('Offload options (optional)')}</SplitItem>
-          <SplitItem>
-            <TechPreviewLabel />
-          </SplitItem>
         </Split>
       }
       onToggle={(_e, expanded) => {
