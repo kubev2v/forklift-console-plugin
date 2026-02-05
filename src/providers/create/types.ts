@@ -27,6 +27,8 @@ type OvaFields = {
 };
 
 type HypervFields = {
+  [ProviderFormFieldId.CaCertificate]?: string;
+  [ProviderFormFieldId.CertificateValidation]?: CertificateValidationMode;
   [ProviderFormFieldId.HypervHost]?: string;
   [ProviderFormFieldId.HypervUsername]?: string;
   [ProviderFormFieldId.HypervPassword]?: string;

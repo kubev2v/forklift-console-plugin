@@ -3,7 +3,7 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 
-import { ProviderFormFieldId } from '../fields/constants';
+import { CertificateValidationMode, ProviderFormFieldId } from '../fields/constants';
 import type { HypervFormData } from '../types';
 
 import { buildProviderObject } from './buildProviderObject';
@@ -24,6 +24,9 @@ export const buildHypervProviderResources = (formData: HypervFormData): Provider
   const useDifferentSmbCredentials = formData[ProviderFormFieldId.UseDifferentSmbCredentials];
   const smbUser = formData[ProviderFormFieldId.SmbUser] ?? '';
   const smbPassword = formData[ProviderFormFieldId.SmbPassword] ?? '';
+  const certificateValidation = formData[ProviderFormFieldId.CertificateValidation];
+  const caCertificate = formData[ProviderFormFieldId.CaCertificate] ?? '';
+  const skipCertValidation = certificateValidation === CertificateValidationMode.Skip;
   const providerUrl = hypervHost;
 
   const provider = buildProviderObject({
@@ -34,10 +37,15 @@ export const buildHypervProviderResources = (formData: HypervFormData): Provider
   });
 
   const secretData: Record<string, string> = {
+    insecureSkipVerify: encode(skipCertValidation ? 'true' : 'false'),
     ...(username?.trim() && { username: encode(username.trim()) }),
     ...(password?.trim() && { password: encode(password.trim()) }),
     ...(smbUrl?.trim() && { smbUrl: encode(smbUrl.trim()) }),
   };
+
+  if (!skipCertValidation && caCertificate?.trim()) {
+    secretData.cacert = encode(caCertificate.trim());
+  }
 
   // Add optional SMB credentials if different from Hyper-V credentials
   if (useDifferentSmbCredentials) {

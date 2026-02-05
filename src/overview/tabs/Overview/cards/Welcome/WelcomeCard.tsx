@@ -138,6 +138,17 @@ const WelcomeCard: FC = () => {
 
                     <FlexItem>
                       <ProviderCard
+                        imageSrc={images.hypervImg}
+                        onClick={() => {
+                          navigateToProvider(providerItems.hyperv.key);
+                        }}
+                      >
+                        {providerItems.hyperv.title}
+                      </ProviderCard>
+                    </FlexItem>
+
+                    <FlexItem>
+                      <ProviderCard
                         imageSrc={images.redhatImg}
                         onClick={() => {
                           navigateToProvider(providerItems.ovirt.key);
