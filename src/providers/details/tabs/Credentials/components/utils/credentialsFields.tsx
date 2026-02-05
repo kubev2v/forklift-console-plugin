@@ -240,13 +240,23 @@ export const openstackApplicationCredentialNameFields: Fields = {
 
 // HyperV fields
 export const hypervCredentialsFields: Fields = {
+  cacert: {
+    ...cacertField,
+    description: t(
+      'A CA certificate to be trusted when connecting to the Hyper-V host. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
+    ),
+  },
+  insecureSkipVerify: {
+    ...insecureSkipVerifyField,
+    description: t("If true, the Hyper-V host's TLS certificate won't be validated."),
+  },
   password: {
-    description: t('A password for accessing the SMB share containing Hyper-V exported VMs.'),
+    description: t('A password for connecting to the Hyper-V host.'),
     label: t('Password'),
   },
   username: {
     description: t(
-      'A username for accessing the SMB share containing Hyper-V exported VMs. For example: DOMAIN\\username or username.',
+      'A username for connecting to the Hyper-V host. For example: DOMAIN\\username or username.',
     ),
     label: t('Username'),
   },

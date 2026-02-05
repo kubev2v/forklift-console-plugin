@@ -9,6 +9,7 @@ import vmwareImgLight from './resources/vmware-light.svg';
 import './logos.scss';
 
 export const getImages = (isDarkTheme: boolean) => ({
+  hypervImg,
   openshiftImg,
   openstackImg,
   ovaImg,

@@ -1,5 +1,6 @@
 import {
   getVmwareLogo,
+  hypervLogo,
   openshiftLogo,
   openstackLogo,
   ovaLogo,
@@ -8,6 +9,11 @@ import {
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 export const providerTypes = (isDarkTheme: boolean) => ({
+  hyperv: {
+    key: PROVIDER_TYPES.hyperv,
+    logo: hypervLogo,
+    title: 'Microsoft Hyper-V',
+  },
   openshift: {
     key: PROVIDER_TYPES.openshift,
     logo: openshiftLogo,

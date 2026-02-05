@@ -10,7 +10,7 @@ import {
 } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
-import { getSdkEndpoint, getType } from '@utils/crds/common/selectors';
+import { getSdkEndpoint, getType, getUrl } from '@utils/crds/common/selectors';
 
 import { getDecodedValue } from './getDecodedValue';
 
@@ -27,6 +27,7 @@ export const getDefaultFormValues = (
     [ProviderFormFieldId.CertificateValidation]: insecureSkipVerify
       ? CertificateValidationMode.Skip
       : CertificateValidationMode.Configure,
+    [ProviderFormFieldId.ProviderType]: providerType,
   };
 
   switch (providerType) {
@@ -80,6 +81,8 @@ export const getDefaultFormValues = (
       const hasSeparateSmbCredentials = Boolean(smbUser ?? smbPassword);
 
       return {
+        ...baseValues,
+        [ProviderFormFieldId.HypervHost]: getUrl(provider) ?? '',
         [ProviderFormFieldId.HypervPassword]: getDecodedValue(secret?.data?.password) ?? '',
         [ProviderFormFieldId.HypervUsername]: getDecodedValue(secret?.data?.username) ?? '',
         [ProviderFormFieldId.SmbPassword]: smbPassword ?? '',
