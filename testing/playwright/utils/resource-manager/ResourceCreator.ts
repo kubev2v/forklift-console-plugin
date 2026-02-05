@@ -1,4 +1,4 @@
-import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
+import type { IoK8sApiCoreV1Secret, V1beta1NetworkMap, V1beta1Provider } from '@forklift-ui/types';
 import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
@@ -45,4 +45,13 @@ export const createNad = async (
 ): Promise<V1NetworkAttachmentDefinition | null> => {
   const apiPath = `${API_PATHS.NAD}/namespaces/${namespace}/network-attachment-definitions`;
   return BaseResourceManager.apiPost<V1NetworkAttachmentDefinition>(page, apiPath, nad);
+};
+
+export const createNetworkMap = async (
+  page: Page,
+  networkMap: V1beta1NetworkMap,
+  namespace = MTV_NAMESPACE,
+): Promise<V1beta1NetworkMap | null> => {
+  const apiPath = `${API_PATHS.FORKLIFT}/namespaces/${namespace}/networkmaps`;
+  return BaseResourceManager.apiPost<V1beta1NetworkMap>(page, apiPath, networkMap);
 };

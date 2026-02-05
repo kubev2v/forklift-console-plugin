@@ -20,6 +20,12 @@ import {
   type V1NetworkAttachmentDefinition,
 } from '../../utils/resource-manager/ResourceCreator';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
+export {
+  createNetworkMap,
+  type CreateNetworkMapOptions,
+  type NetworkMapTestData,
+  type TestNetworkMap,
+} from './networkMapHelpers';
 
 export const createSecretObject = (
   name: string,

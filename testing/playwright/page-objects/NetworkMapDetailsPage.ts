@@ -1,21 +1,42 @@
 import { expect, type Page } from '@playwright/test';
 
+import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 import { isEmpty } from '../utils/utils';
 
+import { NetworkMapEditModal } from './PlanDetailsPage/modals/NetworkMapEditModal';
 import { YamlEditorPage } from './YamlEditorPage';
 
 export class NetworkMapDetailsPage {
   private readonly yamlEditor: YamlEditorPage;
+  public readonly networkMapEditModal: NetworkMapEditModal;
   protected readonly page: Page;
 
   constructor(page: Page) {
     this.page = page;
     this.yamlEditor = new YamlEditorPage(page);
+    this.networkMapEditModal = new NetworkMapEditModal(page);
+  }
+
+  private networkMapEditButton() {
+    return this.page.getByTestId('network-map-edit-button');
+  }
+
+  async navigate(networkMapName: string, namespace = MTV_NAMESPACE): Promise<void> {
+    await this.page.goto(
+      `/k8s/ns/${namespace}/forklift.konveyor.io~v1beta1~NetworkMap/${networkMapName}`,
+    );
+    await this.page.waitForLoadState('networkidle');
   }
 
   async navigateToYamlTab(): Promise<void> {
     await this.page.getByRole('tab', { name: 'YAML' }).click();
     await expect(this.page.locator('.monaco-editor')).toBeVisible();
+  }
+
+  async openEditModal(): Promise<NetworkMapEditModal> {
+    await this.networkMapEditButton().click();
+    await this.networkMapEditModal.waitForModalToOpen();
+    return this.networkMapEditModal;
   }
 
   async verifyNetworkMapDetailsPage(expectedData: {

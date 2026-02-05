@@ -1,10 +1,10 @@
 import { expect } from '@playwright/test';
 
-import { sharedProviderFixtures as test } from '../../fixtures/resourceFixtures';
-import { NetworkMapCreatePage } from '../../page-objects/NetworkMapCreatePage';
-import { NetworkMapDetailsPage } from '../../page-objects/NetworkMapDetailsPage';
-import { NetworkMapsListPage } from '../../page-objects/NetworkMapsListPage';
-import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
+import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
+import { NetworkMapCreatePage } from '../../../page-objects/NetworkMapCreatePage';
+import { NetworkMapDetailsPage } from '../../../page-objects/NetworkMapDetailsPage';
+import { NetworkMapsListPage } from '../../../page-objects/NetworkMapsListPage';
+import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 
 test.describe('Network Maps', { tag: '@downstream' }, () => {
   test('should create network map via form and YAML', async ({

@@ -23,6 +23,7 @@ import {
 } from './constants';
 import { ResourceCleaner } from './ResourceCleaner';
 import {
+  createNetworkMap,
   createProvider,
   createSecret,
   type V1NetworkAttachmentDefinition,
@@ -161,6 +162,14 @@ export class ResourceManager {
   async cleanupAll(page: Page): Promise<void> {
     await ResourceCleaner.cleanupAll(page, this.resources);
     this.resources = [];
+  }
+
+  async createNetworkMap(
+    page: Page,
+    networkMap: V1beta1NetworkMap,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1NetworkMap | null> {
+    return createNetworkMap(page, networkMap, namespace);
   }
 
   async createProvider(
