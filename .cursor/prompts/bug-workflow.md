@@ -73,22 +73,14 @@ Present findings to the user:
 2. Stage and commit with the project's commit format:
    ```bash
    git add .
-   git commit -s -m "Resolves: MTV-XXXX | Brief description of the fix
-
-   Resolves: MTV-XXXX"
+   git commit -s -m "Resolves: MTV-XXXX | Brief description of the fix"
    ```
    
    **Important**: 
    - Always use `-s` flag for sign-off
-   - Include `Resolves: MTV-XXXX` in commit body
    - If no Jira ticket: `Resolves: None`
 
-3. Push to origin:
-   ```bash
-   git push -u origin fix/MTV-XXXX-brief-description
-   ```
-
-4. Create PR using the GitHub template format:
+3. Create copyable PR description using the GitHub template format:
 
 ```markdown
 ## 📝 Links

@@ -75,15 +75,12 @@ Ask user to confirm before proceeding.
 2. Stage and commit with the project's commit format:
    ```bash
    git add .
-   git commit -s -m "Resolves: MTV-XXXX | Brief description of the feature
-
-   Resolves: MTV-XXXX"
+   git commit -s -m "Resolves: MTV-XXXX | Brief description of the feature"
    ```
    
    **Important**: 
    - Always use `-s` flag for sign-off
-   - Include `Resolves: MTV-XXXX` in commit body
-   - If no Jira ticket: `Resolves: None`
+   - If no Jira ticket: `Resolves: None | Brief description`
 
 3. Push to origin:
    ```bash
