@@ -1,4 +1,4 @@
-import type { V1beta1Provider } from '@forklift-ui/types';
+import type { V1beta1ForkliftController, V1beta1Provider } from '@forklift-ui/types';
 import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
@@ -28,6 +28,21 @@ export type PatchType = 'merge' | 'json';
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ResourcePatcher extends BaseResourceManager {
+  static async patchForkliftController(
+    page: Page,
+    controllerName: string,
+    patch: JsonPatchOperation[],
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1ForkliftController | null> {
+    return ResourcePatcher.patchResource<V1beta1ForkliftController>(page, {
+      kind: RESOURCE_KINDS.FORKLIFT_CONTROLLER,
+      resourceName: controllerName,
+      namespace,
+      patch,
+      patchType: 'json',
+    });
+  }
+
   static async patchProvider(
     page: Page,
     providerName: string,

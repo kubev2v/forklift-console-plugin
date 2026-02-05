@@ -76,6 +76,7 @@ export interface CreateProviderOptions {
   providerKey?: string;
   namePrefix?: string;
   customProviderData?: Partial<ProviderData>;
+  skipProviderReadyWait?: boolean;
 }
 
 const createOvaProviderViaApi = async (
@@ -113,10 +114,11 @@ const createProviderViaUi = async (
   page: Page,
   resourceManager: ResourceManager,
   providerData: ProviderData,
+  waitForReady = true,
 ): Promise<void> => {
   const createProviderPage = new CreateProviderPage(page, resourceManager);
   await createProviderPage.navigate();
-  await createProviderPage.create(providerData);
+  await createProviderPage.create(providerData, waitForReady);
 };
 
 const buildProviderData = (
@@ -161,7 +163,12 @@ export const createProvider = async (
   resourceManager: ResourceManager,
   options: CreateProviderOptions = {},
 ): Promise<TestProvider> => {
-  const { providerKey, namePrefix = 'test-provider', customProviderData } = options;
+  const {
+    providerKey,
+    namePrefix = 'test-provider',
+    customProviderData,
+    skipProviderReadyWait = false,
+  } = options;
 
   const providerName = generateProviderName(namePrefix, customProviderData?.name);
   const key = resolveProviderKey(providerKey);
@@ -170,7 +177,7 @@ export const createProvider = async (
   if (providerData.type === ProviderType.OVA) {
     await createOvaProviderViaApi(page, resourceManager, providerData);
   } else {
-    await createProviderViaUi(page, resourceManager, providerData);
+    await createProviderViaUi(page, resourceManager, providerData, !skipProviderReadyWait);
   }
 
   return buildTestProviderResult(providerData);

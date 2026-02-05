@@ -1,6 +1,7 @@
 import type {
   IoK8sApiCoreV1Namespace,
   IoK8sApiCoreV1Secret,
+  V1beta1ForkliftController,
   V1beta1Migration,
   V1beta1NetworkMap,
   V1beta1Plan,
@@ -38,6 +39,7 @@ export type OpenshiftProject = IoK8sApiCoreV1Namespace & {
 };
 
 export type SupportedResource =
+  | V1beta1ForkliftController
   | V1beta1Migration
   | V1beta1NetworkMap
   | V1beta1Plan
@@ -177,6 +179,14 @@ export class ResourceManager {
     return createSecret(page, secret, namespace);
   }
 
+  async fetchForkliftController(
+    page: Page,
+    controllerName: string,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1ForkliftController | null> {
+    return ResourceFetcher.fetchForkliftController(page, controllerName, namespace);
+  }
+
   async fetchPlan(
     page: Page,
     planName: string,
@@ -221,6 +231,15 @@ export class ResourceManager {
 
   loadResourcesFromFile(): void {
     this.resources = ResourceCleaner.loadResourcesFromFile();
+  }
+
+  async patchForkliftController(
+    page: Page,
+    controllerName: string,
+    patch: JsonPatchOperation[],
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1ForkliftController | null> {
+    return ResourcePatcher.patchForkliftController(page, controllerName, patch, namespace);
   }
 
   async patchProvider(

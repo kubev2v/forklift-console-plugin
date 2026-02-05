@@ -132,16 +132,18 @@ export class PlanDetailsPage {
    * Checks if the critical concerns alert is visible.
    */
   async hasCriticalConcernsAlert(): Promise<boolean> {
-    return this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
+    return await this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
   }
 
-  async navigate(planName: string, namespace: string): Promise<void> {
+  async navigate(planName: string, namespace: string, tab?: string): Promise<void> {
     await this.navigation.navigateToK8sResource({
       resource: 'Plan',
       name: planName,
       namespace,
+      tab,
     });
     await disableGuidedTour(this.page);
+    await this.verifyPlanTitle(planName);
   }
 
   /**

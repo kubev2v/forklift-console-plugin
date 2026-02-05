@@ -16,6 +16,7 @@ export interface FixtureConfig {
   planScope?: 'test' | 'none';
   providerPrefix?: string;
   planPrefix?: string;
+  skipProviderReadyWait?: boolean;
 }
 
 export interface ConfigurableResourceFixtures {
@@ -30,7 +31,12 @@ export interface ConfigurableResourceFixtures {
 export const createResourceFixtures = (
   config: FixtureConfig = {},
 ): ReturnType<typeof base.extend<ConfigurableResourceFixtures>> => {
-  const { providerScope = 'test', planScope = 'test', providerPrefix = 'test-provider' } = config;
+  const {
+    providerScope = 'test',
+    planScope = 'test',
+    providerPrefix = 'test-provider',
+    skipProviderReadyWait = false,
+  } = config;
 
   return base.extend<ConfigurableResourceFixtures>({
     resourceManager: async ({ page: _page }, use) => {
@@ -49,6 +55,7 @@ export const createResourceFixtures = (
               try {
                 const provider = await createProvider(page as Page, tempResourceManager, {
                   namePrefix: providerPrefix,
+                  skipProviderReadyWait,
                 });
 
                 if (!provider) {
@@ -79,6 +86,7 @@ export const createResourceFixtures = (
         : async ({ page, resourceManager }, use) => {
             const provider = await createProvider(page, resourceManager, {
               namePrefix: providerPrefix,
+              skipProviderReadyWait,
             });
             await use(provider);
           },

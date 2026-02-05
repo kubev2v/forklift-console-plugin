@@ -1,4 +1,9 @@
-import type { V1beta1Plan, V1beta1Provider, V1VirtualMachine } from '@forklift-ui/types';
+import type {
+  V1beta1ForkliftController,
+  V1beta1Plan,
+  V1beta1Provider,
+  V1VirtualMachine,
+} from '@forklift-ui/types';
 import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
@@ -10,6 +15,18 @@ import type { SupportedResource } from './ResourceManager';
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ResourceFetcher extends BaseResourceManager {
+  static async fetchForkliftController(
+    page: Page,
+    controllerName: string,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1ForkliftController | null> {
+    return ResourceFetcher.fetchResource<V1beta1ForkliftController>(page, {
+      kind: RESOURCE_KINDS.FORKLIFT_CONTROLLER,
+      resourceName: controllerName,
+      namespace,
+    });
+  }
+
   static async fetchPlan(
     page: Page,
     planName: string,

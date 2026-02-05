@@ -17,8 +17,9 @@ export class NavigationHelper {
     namespace?: string;
     action?: 'new' | 'edit';
     allNamespaces?: boolean;
+    tab?: string;
   }): string {
-    const { resource, name, namespace, action, allNamespaces = false } = options;
+    const { resource, name, namespace, action, allNamespaces = false, tab } = options;
 
     let url = '/k8s/';
 
@@ -34,6 +35,10 @@ export class NavigationHelper {
 
     if (name) {
       url += `/${name}`;
+    }
+
+    if (tab) {
+      url += `/${tab}`;
     }
 
     if (action) {
@@ -55,6 +60,7 @@ export class NavigationHelper {
     namespace?: string;
     action?: 'new' | 'edit';
     allNamespaces?: boolean;
+    tab?: string;
   }): Promise<void> {
     const url = this.buildK8sUrl(options);
     await this.page.goto(url);

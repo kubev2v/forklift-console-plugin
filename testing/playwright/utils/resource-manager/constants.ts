@@ -2,6 +2,7 @@
 export const MTV_NAMESPACE = 'openshift-mtv';
 
 export const RESOURCE_KINDS = {
+  FORKLIFT_CONTROLLER: 'ForkliftController',
   MIGRATION: 'Migration',
   NETWORK_MAP: 'NetworkMap',
   NETWORK_ATTACHMENT_DEFINITION: 'NetworkAttachmentDefinition',
@@ -13,6 +14,7 @@ export const RESOURCE_KINDS = {
 } as const;
 
 export const RESOURCE_TYPES = {
+  FORKLIFT_CONTROLLERS: 'forkliftcontrollers',
   MIGRATIONS: 'migrations',
   NETWORK_MAPS: 'networkmaps',
   NETWORK_ATTACHMENT_DEFINITIONS: 'network-attachment-definitions',
