@@ -19,7 +19,12 @@ const NetworkMapReviewTable: FC<NetworkMapReviewTableProps> = ({ networkMap }) =
 
   return (
     <Card>
-      <Table aria-label="Network map review table" variant={TableVariant.compact} borders>
+      <Table
+        aria-label="Network map review table"
+        variant={TableVariant.compact}
+        borders
+        data-testid="network-map-review-table"
+      >
         <Thead>
           <Tr>
             <Th width={50}>{t('Source network')}</Th>

@@ -58,6 +58,7 @@ const PlanNetworkMapEdit: ModalComponent<PlanNetworkMapEditProps> = ({
         closeModal={closeModal}
         variant={ModalVariant.medium}
         isDisabled={!isValid || !isDirty}
+        testId="edit-network-map-modal"
       >
         <Stack hasGutter>
           {error?.root && (

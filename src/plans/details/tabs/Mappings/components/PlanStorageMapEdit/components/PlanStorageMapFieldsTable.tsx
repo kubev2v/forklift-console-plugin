@@ -96,7 +96,7 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
             fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
             key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
             targetStorages={targetStorages}
-            testId="target-storage-select"
+            testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
           />,
         ],
       }))}

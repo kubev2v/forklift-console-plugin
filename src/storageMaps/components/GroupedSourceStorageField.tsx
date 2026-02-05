@@ -45,6 +45,7 @@ const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
         <Select
           ref={field.ref}
           id={fieldId}
+          testId={`source-storage-${fieldId}`}
           isDisabled={isSubmitting}
           value={(field.value as StorageMappingValue).name}
           onSelect={async (_event, value) => {

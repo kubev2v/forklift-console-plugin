@@ -113,6 +113,7 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
         icon={<PlusCircleIcon />}
         isDisabled={addButton.isDisabled}
         onClick={addButton.onClick}
+        data-testid="add-mapping-button"
       >
         {addButton.label}
       </Button>

@@ -127,7 +127,7 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
 
   return (
     <PageSection hasBodyWrapper={false} data-testid="plan-mappings-section">
-      <SectionHeading text={t('Mappings')} />
+      <SectionHeading text={t('Mappings')} testId="mappings-section-heading" />
 
       <SectionHeadingWithEdit
         title={t('Network map')}
