@@ -15,6 +15,7 @@ type TargetNetworkFieldProps = {
   emptyStateMessage?: string;
   isDisabled?: boolean;
   triggerFieldId?: string;
+  testId?: string;
 };
 
 const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
@@ -23,6 +24,7 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
   isDisabled,
   showIgnoreNetworkOption,
   targetNetworks,
+  testId,
   triggerFieldId,
 }) => {
   const { control, trigger } = useFormContext();
@@ -47,7 +49,7 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
         <Select
           ref={field.ref}
           id={fieldId}
-          testId={`target-network-${fieldId}`}
+          testId={testId ?? `target-network-${fieldId}`}
           value={(field.value as MappingValue)?.name}
           onSelect={async (_event, value) => {
             field.onChange(value);

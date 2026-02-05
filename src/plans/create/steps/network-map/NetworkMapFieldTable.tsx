@@ -73,6 +73,7 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
             targetNetworks={targetNetworks}
             showIgnoreNetworkOption
             triggerFieldId={NetworkMapFieldId.NetworkMap}
+            testId="network-map-target-network-select"
           />,
         ],
       }))}
