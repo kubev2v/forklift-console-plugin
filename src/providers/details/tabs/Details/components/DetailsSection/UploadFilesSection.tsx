@@ -3,7 +3,8 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import SectionHeading from '@components/headers/SectionHeading';
 import OvaFileUploader from '@components/OvaFileUploader/OvaFileUploader';
-import { PageSection } from '@patternfly/react-core';
+import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
+import { Flex, PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -23,7 +24,19 @@ const UploadFilesSection: FC<DetailsSectionProps> = ({ data }) => {
 
   return (
     <PageSection hasBodyWrapper={false} className="forklift-page-section--details">
-      <SectionHeading text={t('Upload local OVA file')} testId="ova-upload-section-heading" />
+      <SectionHeading
+        text={
+          <Flex
+            alignItems={{ default: 'alignItemsCenter' }}
+            direction={{ default: 'row' }}
+            gap={{ default: 'gapSm' }}
+          >
+            {t('Upload local OVA file')}
+            <TechPreviewLabel />
+          </Flex>
+        }
+        testId="ova-upload-section-heading"
+      />
       <OvaFileUploader provider={provider} />
     </PageSection>
   );
