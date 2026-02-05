@@ -1,9 +1,8 @@
 import { useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { Flex, FlexItem, FormGroup, Stack } from '@patternfly/react-core';
+import { FormGroup, Stack } from '@patternfly/react-core';
 import { getPlanIsLive } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -18,14 +17,7 @@ const EditPlanLive: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
 
   return (
     <ModalForm
-      title={
-        <Flex alignItems={{ default: 'alignItemsCenter' }}>
-          <FlexItem spacer={{ default: 'spacerSm' }}>{t('Set live migration')}</FlexItem>
-          <FlexItem className="pf-v6-u-mb-sm">
-            <TechPreviewLabel />
-          </FlexItem>
-        </Flex>
-      }
+      title={t('Set live migration')}
       onConfirm={async () => onConfirmLive({ newValue: value, resource })}
       {...rest}
     >
