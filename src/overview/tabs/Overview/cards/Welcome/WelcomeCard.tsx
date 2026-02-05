@@ -5,7 +5,6 @@ import { OverviewContext } from 'src/overview/context/OverviewContext';
 import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { getImages } from '@components/images/logos';
 import { ProviderModelRef } from '@forklift-ui/types';
 import { useActiveNamespace, useFlag } from '@openshift-console/dynamic-plugin-sdk';
 import {
@@ -32,7 +31,18 @@ const WelcomeCard: FC = () => {
   const isDarkTheme = useIsDarkTheme();
   const { data: { hideWelcomeCardByContext } = {}, setData } = useContext(OverviewContext);
   const providerItems = providerTypes(isDarkTheme);
-  const images = getImages(isDarkTheme);
+
+  const providerCardData = useMemo(
+    () => [
+      { image: providerItems.vsphere.logo, provider: providerItems.vsphere },
+      { image: providerItems.ova.logo, provider: providerItems.ova },
+      { image: providerItems.openstack.logo, provider: providerItems.openstack },
+      { image: providerItems.hyperv.logo, provider: providerItems.hyperv },
+      { image: providerItems.ovirt.logo, provider: providerItems.ovirt },
+      { image: providerItems.openshift.logo, provider: providerItems.openshift },
+    ],
+    [providerItems],
+  );
 
   const providersListUrl = useMemo(() => {
     return getResourceUrl({
@@ -103,71 +113,18 @@ const WelcomeCard: FC = () => {
                     spaceItems={{ default: 'spaceItemsSm' }}
                     alignItems={{ default: 'alignItemsCenter' }}
                   >
-                    <FlexItem>
-                      <ProviderCard
-                        imageSrc={images.vmwareImg}
-                        onClick={() => {
-                          navigateToProvider(providerItems.vsphere.key);
-                        }}
-                      >
-                        {providerItems.vsphere.title}
-                      </ProviderCard>
-                    </FlexItem>
-
-                    <FlexItem>
-                      <ProviderCard
-                        imageSrc={images.ovaImg}
-                        onClick={() => {
-                          navigateToProvider(providerItems.ova.key);
-                        }}
-                      >
-                        {providerItems.ova.title}
-                      </ProviderCard>
-                    </FlexItem>
-
-                    <FlexItem>
-                      <ProviderCard
-                        imageSrc={images.openstackImg}
-                        onClick={() => {
-                          navigateToProvider(providerItems.openstack.key);
-                        }}
-                      >
-                        {providerItems.openstack.title}
-                      </ProviderCard>
-                    </FlexItem>
-
-                    <FlexItem>
-                      <ProviderCard
-                        imageSrc={images.hypervImg}
-                        onClick={() => {
-                          navigateToProvider(providerItems.hyperv.key);
-                        }}
-                      >
-                        {providerItems.hyperv.title}
-                      </ProviderCard>
-                    </FlexItem>
-
-                    <FlexItem>
-                      <ProviderCard
-                        imageSrc={images.redhatImg}
-                        onClick={() => {
-                          navigateToProvider(providerItems.ovirt.key);
-                        }}
-                      >
-                        {providerItems.ovirt.title}
-                      </ProviderCard>
-                    </FlexItem>
-
-                    <FlexItem>
-                      <ProviderCard
-                        imageSrc={images.openshiftImg}
-                        onClick={() => {
-                          navigateToProvider(providerItems.openshift.key);
-                        }}
-                      >
-                        {providerItems.openshift.title}
-                      </ProviderCard>
-                    </FlexItem>
+                    {providerCardData.map(({ image, provider }) => (
+                      <FlexItem key={provider.key}>
+                        <ProviderCard
+                          image={image}
+                          onClick={() => {
+                            navigateToProvider(provider.key);
+                          }}
+                        >
+                          {provider.title}
+                        </ProviderCard>
+                      </FlexItem>
+                    ))}
                   </Flex>
                 </FlexItem>
               </Flex>
