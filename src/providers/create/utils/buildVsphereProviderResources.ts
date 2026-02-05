@@ -1,5 +1,5 @@
 import { encode } from 'js-base64';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import { PROVIDER_TYPES, VSphereEndpointType } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import { encodeFormValue } from '@utils/helpers/encodeFormValue';
@@ -26,6 +26,8 @@ export const buildVsphereProviderResources = (formData: VsphereFormData): Provid
   const vddkSetupMode = formData[ProviderFormFieldId.VsphereVddkSetupMode];
   const vddkInitImage = formData[ProviderFormFieldId.VsphereVddkInitImage];
   const useVddkAioOptimization = formData[ProviderFormFieldId.VsphereUseVddkAioOptimization];
+  const endpointType =
+    formData[ProviderFormFieldId.VsphereEndpointType] ?? VSphereEndpointType.vCenter;
 
   const skipCertValidation = certificateValidation === CertificateValidationMode.Skip;
   const url = vsphereUrl?.trim() ?? '';
@@ -37,11 +39,13 @@ export const buildVsphereProviderResources = (formData: VsphereFormData): Provid
     url,
   });
 
-  if (vddkSetupMode !== VddkSetupMode.Skip && vddkInitImage?.trim()) {
-    if (provider.spec) {
-      provider.spec.settings = {
-        vddkInitImage: vddkInitImage.trim(),
-      };
+  if (provider.spec) {
+    provider.spec.settings = {
+      sdkEndpoint: endpointType,
+    };
+
+    if (vddkSetupMode !== VddkSetupMode.Skip && vddkInitImage?.trim()) {
+      provider.spec.settings.vddkInitImage = vddkInitImage.trim();
       if (useVddkAioOptimization) {
         provider.spec.settings.useVddkAioOptimization = String(useVddkAioOptimization);
       }
