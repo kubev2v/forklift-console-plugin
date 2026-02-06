@@ -86,6 +86,7 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
           <TargetStorageField
             fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
             targetStorages={targetStorages}
+            testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
           />,
         ],
       }))}

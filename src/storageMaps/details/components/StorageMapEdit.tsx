@@ -117,6 +117,7 @@ const StorageMapEdit: ModalComponent<StorageMapEditProps> = ({
         closeModal={closeModal}
         variant={ModalVariant.medium}
         isDisabled={!isValid || !isDirty}
+        testId="edit-storage-map-modal"
       >
         <UpdateStorageMapFieldTable
           targetStorages={targetStorages}

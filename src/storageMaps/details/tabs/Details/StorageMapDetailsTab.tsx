@@ -93,6 +93,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
       <PageSection hasBodyWrapper={false} className="forklift-page-section">
         <SectionHeadingWithEdit
           title={t('Map')}
+          data-testid="storage-map-edit-button"
           onClick={() => {
             launcher<StorageMapEditProps>(StorageMapEdit, {
               destinationProvider,
