@@ -9,18 +9,23 @@ import {
   createPlan,
   createProvider,
   type CreateProviderOptions,
+  createStorageMap,
+  type CreateStorageMapOptions,
   type TestNetworkMap,
   type TestPlan,
   type TestProvider,
+  type TestStorageMap,
 } from './helpers/resourceCreationHelpers';
 
 export interface FixtureConfig {
   providerScope?: 'test' | 'worker';
   planScope?: 'test' | 'none';
   networkMapScope?: 'test' | 'none';
+  storageMapScope?: 'test' | 'none';
   providerPrefix?: string;
   planPrefix?: string;
   networkMapPrefix?: string;
+  storageMapPrefix?: string;
   skipProviderReadyWait?: boolean;
 }
 
@@ -29,11 +34,13 @@ export interface ConfigurableResourceFixtures {
   testProvider: TestProvider | undefined;
   testPlan: TestPlan | undefined;
   testNetworkMap: TestNetworkMap | undefined;
+  testStorageMap: TestStorageMap | undefined;
   createCustomPlan: (
     customPlanData?: Partial<ReturnType<typeof createPlanTestData>>,
   ) => Promise<TestPlan>;
   createCustomProvider: (options?: CreateProviderOptions) => Promise<TestProvider>;
   createCustomNetworkMap: (options?: Partial<CreateNetworkMapOptions>) => Promise<TestNetworkMap>;
+  createCustomStorageMap: (options?: Partial<CreateStorageMapOptions>) => Promise<TestStorageMap>;
 }
 export const createResourceFixtures = (
   config: FixtureConfig = {},
@@ -42,8 +49,10 @@ export const createResourceFixtures = (
     providerScope = 'test',
     planScope = 'test',
     networkMapScope = 'none',
+    storageMapScope = 'none',
     providerPrefix = 'test-provider',
     networkMapPrefix = 'test-network-map',
+    storageMapPrefix = 'test-storage-map',
     skipProviderReadyWait = false,
   } = config;
 
@@ -161,6 +170,34 @@ export const createResourceFixtures = (
       };
       await use(createNetworkMapFn);
     },
+
+    testStorageMap:
+      storageMapScope === 'none'
+        ? undefined
+        : async ({ page, resourceManager, testProvider }, use) => {
+            if (!testProvider) {
+              throw new Error('testStorageMap fixture requires testProvider fixture to be enabled');
+            }
+
+            const storageMap = await createStorageMap(page, resourceManager, {
+              sourceProvider: testProvider,
+              namePrefix: storageMapPrefix,
+            });
+            await use(storageMap);
+          },
+
+    createCustomStorageMap: async ({ page, resourceManager, testProvider }, use) => {
+      const createStorageMapFn = async (options?: Partial<CreateStorageMapOptions>) => {
+        if (!testProvider) {
+          throw new Error('createCustomStorageMap requires testProvider fixture to be enabled');
+        }
+        return createStorageMap(page, resourceManager, {
+          sourceProvider: testProvider,
+          ...options,
+        });
+      };
+      await use(createStorageMapFn);
+    },
   });
 };
 
@@ -208,4 +245,20 @@ export const isolatedNetworkMapFixtures = createResourceFixtures({
   networkMapScope: 'test',
   providerPrefix: 'test-isolated-provider',
   networkMapPrefix: 'test-network-map',
+});
+
+export const sharedProviderStorageMapFixtures = createResourceFixtures({
+  providerScope: 'worker',
+  planScope: 'none',
+  storageMapScope: 'test',
+  providerPrefix: 'test-shared-provider',
+  storageMapPrefix: 'test-storage-map',
+});
+
+export const isolatedStorageMapFixtures = createResourceFixtures({
+  providerScope: 'test',
+  planScope: 'none',
+  storageMapScope: 'test',
+  providerPrefix: 'test-isolated-provider',
+  storageMapPrefix: 'test-storage-map',
 });

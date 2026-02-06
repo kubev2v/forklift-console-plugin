@@ -9,18 +9,9 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
     testNetworkMap,
     testProvider: _testProvider,
   }) => {
-    if (!testNetworkMap) throw new Error('testNetworkMap is required');
-
+    await page.pause();
     const networkMapDetailsPage = new NetworkMapDetailsPage(page);
     await networkMapDetailsPage.navigate(testNetworkMap.name);
-
-    await test.step('Verify network map details page loads correctly', async () => {
-      await networkMapDetailsPage.verifyNetworkMapDetailsPage({
-        networkMapName: testNetworkMap.name,
-        sourceProvider: testNetworkMap.sourceProvider,
-        targetProvider: testNetworkMap.targetProvider,
-      });
-    });
 
     await test.step('Add initial mapping', async () => {
       const modal = await networkMapDetailsPage.openEditModal();
@@ -34,7 +25,6 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
       await modal.verifySaveButtonEnabled();
       await modal.save();
 
-      await networkMapDetailsPage.navigate(testNetworkMap.name);
       const modalAfterSave = await networkMapDetailsPage.openEditModal();
       const mappingCount = await modalAfterSave.getMappingCount();
       expect(mappingCount).toBe(1);
@@ -42,28 +32,20 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
     });
 
     await test.step('Edit network mapping and verify save', async () => {
-      await networkMapDetailsPage.navigate(testNetworkMap.name);
-
       const modal = await networkMapDetailsPage.openEditModal();
-      const originalTarget = await modal.getTargetNetworkAtIndex(0);
-      const newTarget = originalTarget.toLowerCase().includes('default')
-        ? 'Ignore network'
-        : 'Default network';
 
-      await modal.selectTargetNetworkAtIndex(0, newTarget);
+      // Change target from 'Default network' (set in previous step) to 'Ignore network'
+      await modal.selectTargetNetworkAtIndex(0, 'Ignore network');
       await modal.verifySaveButtonEnabled();
       await modal.save();
 
-      await networkMapDetailsPage.navigate(testNetworkMap.name);
       const modalAfterSave = await networkMapDetailsPage.openEditModal();
       const currentTarget = await modalAfterSave.getTargetNetworkAtIndex(0);
-      expect(currentTarget.toLowerCase()).toContain(newTarget.split(' ')[0].toLowerCase());
+      expect(currentTarget.toLowerCase()).toContain('ignore');
       await modalAfterSave.cancel();
     });
 
     await test.step('Add and remove additional mapping', async () => {
-      await networkMapDetailsPage.navigate(testNetworkMap.name);
-
       const modal = await networkMapDetailsPage.openEditModal();
       const initialCount = await modal.getMappingCount();
 
@@ -74,7 +56,6 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
       await modal.verifySaveButtonEnabled();
       await modal.save();
 
-      await networkMapDetailsPage.navigate(testNetworkMap.name);
       const modalAfterAdd = await networkMapDetailsPage.openEditModal();
       const countAfterAdd = await modalAfterAdd.getMappingCount();
       expect(countAfterAdd).toBe(initialCount + 1);

@@ -6,6 +6,7 @@ import type {
   V1beta1NetworkMap,
   V1beta1Plan,
   V1beta1Provider,
+  V1beta1StorageMap,
   V1VirtualMachine,
 } from '@forklift-ui/types';
 import type { Page } from '@playwright/test';
@@ -26,6 +27,7 @@ import {
   createNetworkMap,
   createProvider,
   createSecret,
+  createStorageMap,
   type V1NetworkAttachmentDefinition,
 } from './ResourceCreator';
 import { ResourceFetcher } from './ResourceFetcher';
@@ -45,6 +47,7 @@ export type SupportedResource =
   | V1beta1NetworkMap
   | V1beta1Plan
   | V1beta1Provider
+  | V1beta1StorageMap
   | V1VirtualMachine
   | V1NetworkAttachmentDefinition
   | IoK8sApiCoreV1Namespace
@@ -144,6 +147,18 @@ export class ResourceManager {
     this.addResource(secret);
   }
 
+  addStorageMap(name: string, namespace: string): void {
+    const storageMap: V1beta1StorageMap = {
+      apiVersion: FORKLIFT_API_VERSION,
+      kind: RESOURCE_KINDS.STORAGE_MAP,
+      metadata: {
+        name,
+        namespace,
+      },
+    };
+    this.addResource(storageMap);
+  }
+
   addVm(name: string, namespace: string): void {
     const vm: V1VirtualMachine = {
       apiVersion: KUBEVIRT_API_VERSION,
@@ -186,6 +201,14 @@ export class ResourceManager {
     namespace = MTV_NAMESPACE,
   ): Promise<IoK8sApiCoreV1Secret | null> {
     return createSecret(page, secret, namespace);
+  }
+
+  async createStorageMap(
+    page: Page,
+    storageMap: V1beta1StorageMap,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1StorageMap | null> {
+    return createStorageMap(page, storageMap, namespace);
   }
 
   async fetchForkliftController(

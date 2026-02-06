@@ -113,9 +113,26 @@ export abstract class BaseMappingEditModal {
     // Wait for dropdown to open (check aria-expanded attribute)
     await expect(sourceSelect).toHaveAttribute('aria-expanded', 'true');
 
-    // Find and click the option with exact match
-    const option = this.page.getByRole('option', { name: trimmedSource, exact: true });
+    // Find and click the option
+    const option = this.page
+      .locator('.pf-v5-c-menu__list-item, .pf-v6-c-menu__list-item, [role="option"]')
+      .filter({ hasText: trimmedSource })
+      .first();
+    await expect(option).toBeVisible();
     await option.click();
+  }
+
+  async selectFirstAvailableSourceAtIndex(index: number): Promise<string> {
+    const sourceSelect = this.sourceSelectLocator(index);
+    await expect(sourceSelect).toBeVisible();
+    await sourceSelect.click();
+    await expect(sourceSelect).toHaveAttribute('aria-expanded', 'true');
+
+    const option = this.page.locator('[role="option"]:enabled').first();
+    await expect(option).toBeVisible();
+    const selectedValue = (await option.textContent()) ?? '';
+    await option.click();
+    return selectedValue.trim();
   }
 
   async selectTargetAtIndex(index: number, targetValue: string): Promise<void> {
@@ -132,9 +149,43 @@ export abstract class BaseMappingEditModal {
     // Wait for dropdown to open (check aria-expanded attribute)
     await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
 
-    // Find and click the option with exact match
-    const option = this.page.getByRole('option', { name: trimmedTarget, exact: true });
+    // Find and click the option - use locator with text filter for reliability
+    const option = this.page
+      .locator('.pf-v5-c-menu__list-item, .pf-v6-c-menu__list-item, [role="option"]')
+      .filter({ hasText: trimmedTarget })
+      .first();
+    await expect(option).toBeVisible();
     await option.click();
+  }
+
+  async selectFirstAvailableTargetAtIndex(index: number): Promise<string> {
+    const targetSelect = this.targetSelectLocator(index);
+    await expect(targetSelect).toBeVisible();
+    await targetSelect.click();
+    await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
+
+    const option = this.page.locator('[role="option"]:enabled').first();
+    await expect(option).toBeVisible();
+    const selectedValue = (await option.textContent()) ?? '';
+    await option.click();
+    return selectedValue.trim();
+  }
+
+  async selectDifferentTargetAtIndex(index: number): Promise<string> {
+    const currentTarget = await this.getTargetAtIndex(index);
+    const targetSelect = this.targetSelectLocator(index);
+
+    await expect(targetSelect).toBeVisible();
+    await targetSelect.click();
+    await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
+
+    const option = this.page.locator('[role="option"]:enabled').nth(1);
+    await expect(option).toBeVisible();
+    const newValue = (await option.textContent()) ?? '';
+    await option.click();
+
+    expect(newValue.trim()).not.toBe(currentTarget);
+    return newValue.trim();
   }
 
   async verifyMappingAtIndex(

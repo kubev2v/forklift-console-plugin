@@ -1,4 +1,9 @@
-import type { IoK8sApiCoreV1Secret, V1beta1NetworkMap, V1beta1Provider } from '@forklift-ui/types';
+import type {
+  IoK8sApiCoreV1Secret,
+  V1beta1NetworkMap,
+  V1beta1Provider,
+  V1beta1StorageMap,
+} from '@forklift-ui/types';
 import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
@@ -54,4 +59,13 @@ export const createNetworkMap = async (
 ): Promise<V1beta1NetworkMap | null> => {
   const apiPath = `${API_PATHS.FORKLIFT}/namespaces/${namespace}/networkmaps`;
   return BaseResourceManager.apiPost<V1beta1NetworkMap>(page, apiPath, networkMap);
+};
+
+export const createStorageMap = async (
+  page: Page,
+  storageMap: V1beta1StorageMap,
+  namespace = MTV_NAMESPACE,
+): Promise<V1beta1StorageMap | null> => {
+  const apiPath = `${API_PATHS.FORKLIFT}/namespaces/${namespace}/storagemaps`;
+  return BaseResourceManager.apiPost<V1beta1StorageMap>(page, apiPath, storageMap);
 };
