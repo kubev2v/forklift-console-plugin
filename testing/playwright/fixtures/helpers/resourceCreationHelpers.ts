@@ -1,31 +1,32 @@
-import type { IoK8sApiCoreV1Secret, V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
+import type {
+  IoK8sApiCoreV1Secret,
+  V1beta1NetworkMap,
+  V1beta1Plan,
+  V1beta1Provider,
+} from '@forklift-ui/types';
 import type { Page } from '@playwright/test';
 
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { EndpointType, ProviderType } from '../../types/enums';
-import { createPlanTestData, type ProviderData } from '../../types/test-data';
+import { createPlanTestData, type Mapping, type ProviderData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { getProviderConfig } from '../../utils/providers';
 import {
+  FORKLIFT_API_VERSION,
   MTV_NAMESPACE,
   NAD_API_VERSION,
   RESOURCE_KINDS,
 } from '../../utils/resource-manager/constants';
 import {
   createNad as createNadApi,
+  createNetworkMap as createNetworkMapApi,
   createProvider as createProviderApi,
   createSecret as createSecretApi,
   type V1NetworkAttachmentDefinition,
 } from '../../utils/resource-manager/ResourceCreator';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
-export {
-  createNetworkMap,
-  type CreateNetworkMapOptions,
-  type NetworkMapTestData,
-  type TestNetworkMap,
-} from './networkMapHelpers';
 
 export const createSecretObject = (
   name: string,
@@ -271,5 +272,71 @@ export const createTestNad = async (
   return {
     ...createdNad,
     metadata: { ...createdNad.metadata, name: nadName, namespace },
+  };
+};
+
+// Network Map types and creation
+export interface TestNetworkMap {
+  name: string;
+  namespace: string;
+  sourceProvider: string;
+  targetProvider: string;
+  mappings: Mapping[];
+}
+
+export interface CreateNetworkMapOptions {
+  sourceProvider: V1beta1Provider;
+  targetProvider?: string;
+  namePrefix?: string;
+  mappings?: Mapping[];
+}
+
+export const createNetworkMap = async (
+  page: Page,
+  resourceManager: ResourceManager,
+  options: CreateNetworkMapOptions,
+): Promise<TestNetworkMap> => {
+  const {
+    sourceProvider,
+    targetProvider = 'host',
+    namePrefix = 'test-network-map',
+    mappings = [],
+  } = options;
+
+  const name = `${namePrefix}-${crypto.randomUUID().slice(0, 8)}`;
+
+  const navigationHelper = new NavigationHelper(page);
+  await navigationHelper.navigateToConsole();
+
+  // Create NetworkMap with empty map array - mappings should be added via UI
+  // to ensure proper network ID resolution from provider inventory
+  const networkMap: V1beta1NetworkMap = {
+    apiVersion: FORKLIFT_API_VERSION,
+    kind: RESOURCE_KINDS.NETWORK_MAP,
+    metadata: { name, namespace: MTV_NAMESPACE },
+    spec: {
+      provider: {
+        source: {
+          name: sourceProvider.metadata!.name!,
+          namespace: sourceProvider.metadata!.namespace!,
+        },
+        destination: { name: targetProvider, namespace: MTV_NAMESPACE },
+      },
+      map: [],
+    },
+  };
+
+  const created = await createNetworkMapApi(page, networkMap, MTV_NAMESPACE);
+  if (!created) {
+    throw new Error(`Failed to create NetworkMap ${name}`);
+  }
+  resourceManager.addNetworkMap(name, MTV_NAMESPACE);
+
+  return {
+    name,
+    namespace: MTV_NAMESPACE,
+    sourceProvider: sourceProvider.metadata!.name!,
+    targetProvider,
+    mappings,
   };
 };

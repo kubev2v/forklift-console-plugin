@@ -1,5 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
+import { NavigationHelper } from '../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 import { isEmpty } from '../utils/utils';
 
@@ -7,12 +8,14 @@ import { NetworkMapEditModal } from './PlanDetailsPage/modals/NetworkMapEditModa
 import { YamlEditorPage } from './YamlEditorPage';
 
 export class NetworkMapDetailsPage {
+  private readonly navigationHelper: NavigationHelper;
   private readonly yamlEditor: YamlEditorPage;
   public readonly networkMapEditModal: NetworkMapEditModal;
   protected readonly page: Page;
 
   constructor(page: Page) {
     this.page = page;
+    this.navigationHelper = new NavigationHelper(page);
     this.yamlEditor = new YamlEditorPage(page);
     this.networkMapEditModal = new NetworkMapEditModal(page);
   }
@@ -22,10 +25,11 @@ export class NetworkMapDetailsPage {
   }
 
   async navigate(networkMapName: string, namespace = MTV_NAMESPACE): Promise<void> {
-    await this.page.goto(
-      `/k8s/ns/${namespace}/forklift.konveyor.io~v1beta1~NetworkMap/${networkMapName}`,
-    );
-    await this.page.waitForLoadState('networkidle');
+    await this.navigationHelper.navigateToK8sResource({
+      resource: 'NetworkMap',
+      name: networkMapName,
+      namespace,
+    });
   }
 
   async navigateToYamlTab(): Promise<void> {
@@ -34,8 +38,13 @@ export class NetworkMapDetailsPage {
   }
 
   async openEditModal(): Promise<NetworkMapEditModal> {
+    // Ensure we're on the NetworkMap details page before trying to open modal
+    await expect(this.page.getByRole('heading', { name: /Network Map.*details/i })).toBeVisible();
+    await expect(this.networkMapEditButton()).toBeVisible();
     await this.networkMapEditButton().click();
     await this.networkMapEditModal.waitForModalToOpen();
+    // Wait for modal content to be ready
+    await this.page.waitForLoadState('networkidle');
     return this.networkMapEditModal;
   }
 

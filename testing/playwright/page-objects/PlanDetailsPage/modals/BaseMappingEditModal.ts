@@ -101,27 +101,39 @@ export abstract class BaseMappingEditModal {
 
   async selectSourceAtIndex(index: number, sourceValue: string): Promise<void> {
     const sourceSelect = this.sourceSelectLocator(index);
-    await sourceSelect.click();
-    await this.page.waitForTimeout(300);
     const trimmedSource = sourceValue.trim();
+
+    // Wait for the select button to be ready
+    await expect(sourceSelect).toBeVisible();
+    await expect(sourceSelect).toBeEnabled();
+
+    // Click to open dropdown
+    await sourceSelect.click();
+
+    // Wait for dropdown to open (check aria-expanded attribute)
+    await expect(sourceSelect).toHaveAttribute('aria-expanded', 'true');
+
+    // Find and click the option with exact match
     const option = this.page.getByRole('option', { name: trimmedSource, exact: true });
-    await option.waitFor({ state: 'visible' });
     await option.click();
   }
 
   async selectTargetAtIndex(index: number, targetValue: string): Promise<void> {
     const targetSelect = this.targetSelectLocator(index);
-    await targetSelect.click();
-    await this.page.waitForTimeout(300);
     const trimmedTarget = targetValue.trim();
-    // Try exact match first, then fallback to partial match
-    let option = this.page.getByRole('option', { name: trimmedTarget, exact: true });
-    const isExactVisible = await option.isVisible().catch(() => false);
-    if (!isExactVisible) {
-      // Fallback to partial match if exact match not found
-      option = this.page.getByRole('option', { name: trimmedTarget });
-    }
-    await option.waitFor({ state: 'visible' });
+
+    // Wait for the select button to be ready
+    await expect(targetSelect).toBeVisible();
+    await expect(targetSelect).toBeEnabled();
+
+    // Click to open dropdown
+    await targetSelect.click();
+
+    // Wait for dropdown to open (check aria-expanded attribute)
+    await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
+
+    // Find and click the option with exact match
+    const option = this.page.getByRole('option', { name: trimmedTarget, exact: true });
     await option.click();
   }
 

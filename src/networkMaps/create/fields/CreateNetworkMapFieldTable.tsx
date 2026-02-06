@@ -80,7 +80,6 @@ const CreateNetworkMapFieldTable: FC = () => {
               'Select a target provider and project to list available target networks',
             )}
             isDisabled={isSubmitting}
-            testId="network-map-target-network-select"
           />,
         ],
       }))}
