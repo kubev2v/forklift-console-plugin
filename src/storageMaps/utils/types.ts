@@ -51,9 +51,9 @@ export enum OffloadPlugin {
   VSphereXcopyConfig = 'vsphereXcopyConfig',
 }
 
-// Reference: https://github.com/kubev2v/forklift/blob/29b60e21c388420e6e0e79a55802c2c0a201ab45/pkg/apis/forklift/v1beta1/mapping.go
+// Reference: https://github.com/kubev2v/forklift/blob/53579b9ffdbf92098507fe58bc59f0856e6c890c/pkg/apis/forklift/v1beta1/mapping.go#L64
 export enum StorageVendorProduct {
-  FlashSystem = 'flashSystem',
+  FlashSystem = 'flashsystem',
   Vantara = 'vantara',
   Ontap = 'ontap',
   Primera3Par = 'primera3par',
