@@ -54,6 +54,7 @@ const ProviderFormPasswordInput: FC<ProviderFormPasswordInputProps> = ({
       validated={getInputValidated(error)}
       helperText={helperText}
       helperTextInvalid={error?.message}
+      testId={testId ? `${testId}-helper` : undefined}
     >
       <InputGroup>
         <TextInput
@@ -74,6 +75,7 @@ const ProviderFormPasswordInput: FC<ProviderFormPasswordInputProps> = ({
             setTextHidden((prev) => !prev);
           }}
           aria-label={textHidden ? `${label} show` : `${label} hide`}
+          data-testid={testId ? `${testId}-toggle` : undefined}
         >
           {textHidden ? <EyeIcon /> : <EyeSlashIcon />}
         </Button>

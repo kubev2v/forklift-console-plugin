@@ -15,6 +15,7 @@ import FetchCertificateModal, { type FetchCertificateModalProps } from './FetchC
 
 type CertificateUploadProps = FileUploadProps & {
   url?: string;
+  'data-testid'?: string;
 };
 
 /**
@@ -25,6 +26,7 @@ type CertificateUploadProps = FileUploadProps & {
  */
 const CertificateUpload: FC<CertificateUploadProps> = ({
   browseButtonText,
+  'data-testid': dataTestId,
   filenamePlaceholder,
   id,
   isDisabled,
@@ -54,34 +56,36 @@ const CertificateUpload: FC<CertificateUploadProps> = ({
   };
 
   return (
-    <FileUpload
-      id={id}
-      type={type ?? 'text'}
-      filenamePlaceholder={filenamePlaceholder ?? t('Drag and drop a file or upload one')}
-      value={value}
-      validated={validated}
-      onDataChange={onDataChange}
-      onTextChange={onTextChange}
-      onClearClick={onClearClick}
-      browseButtonText={browseButtonText ?? t('Upload')}
-      isDisabled={isDisabled}
-      className="pf-v6-u-p-0"
-    >
-      {url && isText && (
-        <Flex>
-          <FlexItem>
-            <Button
-              className="pf-v6-u-mt-sm"
-              isDisabled={isDisabled ?? !url?.trim().startsWith('https://')}
-              variant={ButtonVariant.secondary}
-              onClick={onClick}
-            >
-              {t('Fetch certificate from URL')}
-            </Button>
-          </FlexItem>
-        </Flex>
-      )}
-    </FileUpload>
+    <div data-testid={dataTestId}>
+      <FileUpload
+        id={id}
+        type={type ?? 'text'}
+        filenamePlaceholder={filenamePlaceholder ?? t('Drag and drop a file or upload one')}
+        value={value}
+        validated={validated}
+        onDataChange={onDataChange}
+        onTextChange={onTextChange}
+        onClearClick={onClearClick}
+        browseButtonText={browseButtonText ?? t('Upload')}
+        isDisabled={isDisabled}
+        className="pf-v6-u-p-0"
+      >
+        {url && isText && (
+          <Flex>
+            <FlexItem>
+              <Button
+                className="pf-v6-u-mt-sm"
+                isDisabled={isDisabled ?? !url?.trim().startsWith('https://')}
+                variant={ButtonVariant.secondary}
+                onClick={onClick}
+              >
+                {t('Fetch certificate from URL')}
+              </Button>
+            </FlexItem>
+          </Flex>
+        )}
+      </FileUpload>
+    </div>
   );
 };
 

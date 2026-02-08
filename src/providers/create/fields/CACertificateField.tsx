@@ -82,6 +82,7 @@ const CACertificateField: FC = () => {
         'Upload a CA certificate to be trusted when connecting to Openshift API endpoint, or leave empty to use the system CA certificate.',
       )}
       helperTextInvalid={error?.message}
+      testId="ca-certificate-helper"
     >
       <CertificateUpload
         id={ProviderFormFieldId.CaCertificate}
@@ -102,6 +103,7 @@ const CACertificateField: FC = () => {
         browseButtonText={t('Upload')}
         validated={getInputValidated(error)}
         isDisabled={isDisabled}
+        data-testid="ca-certificate-upload"
       />
     </FormGroupWithHelpText>
   );

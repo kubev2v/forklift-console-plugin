@@ -55,12 +55,14 @@ const ProviderCredentialsTabPage: FC<ProviderDetailsPageProps> = ({ name, namesp
       <PageSection hasBodyWrapper={false}>
         <Stack hasGutter>
           <SectionHeadingWithEdit
+            data-testid="credentials-edit-button"
             onClick={() => {
               launcher<EditProviderCredentialsProps>(EditProviderCredentials, { provider, secret });
             }}
             additionalActions={[
               {
                 children: reveal ? t('Hide values') : t('Reveal values'),
+                'data-testid': 'credentials-reveal-button',
                 icon: reveal ? <EyeSlashIcon /> : <EyeIcon />,
                 key: 'reveal-values-button',
                 onClick: () => {

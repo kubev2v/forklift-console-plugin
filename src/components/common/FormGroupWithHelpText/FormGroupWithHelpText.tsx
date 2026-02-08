@@ -23,6 +23,11 @@ type FormGroupWithHelpTextProps = {
    * Helper text after the field when the field is invalid. It can be a simple text or an object.
    */
   helperTextInvalid?: ReactNode;
+  /**
+   * Optional test ID for the helper text element. When provided, error messages will use
+   * `${testId}-error` and regular helper text will use the testId as-is.
+   */
+  testId?: string;
 } & FormGroupProps;
 
 /**
@@ -54,10 +59,19 @@ export const FormGroupWithHelpText: FC<FormGroupWithHelpTextProps> = ({
   label,
   labelHelp,
   role,
+  testId,
   validated,
 }) => {
   const helperTextMsg = validated === 'error' && helperTextInvalid ? helperTextInvalid : helperText;
   const variant = validatedToVariant(validated);
+  const isError = validated === 'error';
+  const getHelperTextTestId = () => {
+    if (testId) {
+      return isError ? `${testId}-error` : testId;
+    }
+    return isError ? 'form-helper-text-error' : 'form-helper-text';
+  };
+  const helperTextTestId = getHelperTextTestId();
 
   return (
     <FormGroup
@@ -70,10 +84,7 @@ export const FormGroupWithHelpText: FC<FormGroupWithHelpTextProps> = ({
       {children}
       <FormHelperText hidden={false}>
         <HelperText>
-          <HelperTextItem
-            variant={variant}
-            data-testid={validated === 'error' ? 'form-helper-text-error' : 'form-helper-text'}
-          >
+          <HelperTextItem variant={variant} data-testid={helperTextTestId}>
             {helperTextMsg}
           </HelperTextItem>
         </HelperText>

@@ -9,7 +9,6 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
     testNetworkMap,
     testProvider: _testProvider,
   }) => {
-    await page.pause();
     const networkMapDetailsPage = new NetworkMapDetailsPage(page);
     await networkMapDetailsPage.navigate(testNetworkMap.name);
 
