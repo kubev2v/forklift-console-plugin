@@ -20,8 +20,17 @@ export class StorageMapDetailsPage {
     this.storageMapEditModal = new StorageMapEditModal(page);
   }
 
+  private storageMapDetailsHeading() {
+    return this.page.getByRole('heading', { name: 'Storage map details' });
+  }
+
   private storageMapEditButton() {
     return this.page.getByTestId('storage-map-edit-button');
+  }
+
+  private async verifyOnDetailsPage(): Promise<void> {
+    await expect(this.storageMapDetailsHeading()).toBeVisible();
+    await expect(this.storageMapEditButton()).toBeVisible();
   }
 
   async navigate(storageMapName: string, namespace = MTV_NAMESPACE): Promise<void> {
@@ -39,8 +48,7 @@ export class StorageMapDetailsPage {
 
   async openEditModal(): Promise<StorageMapEditModal> {
     // Ensure we're on the StorageMap details page before trying to open modal
-    await expect(this.page.getByRole('heading', { name: /Storage map details/i })).toBeVisible();
-    await expect(this.storageMapEditButton()).toBeVisible();
+    await this.verifyOnDetailsPage();
     await this.storageMapEditButton().click();
     await this.storageMapEditModal.waitForModalToOpen();
     // Wait for modal content to be ready
@@ -60,7 +68,7 @@ export class StorageMapDetailsPage {
   }) {
     await expect(this.page).toHaveURL(
       new RegExp(
-        `/k8s/ns/[^/]+/forklift\\.konveyor\\.io~v1beta1~StorageMap/${expectedData.storageMapName}$`,
+        String.raw`/k8s/ns/[^/]+/forklift\.konveyor\.io~v1beta1~StorageMap/${expectedData.storageMapName}$`,
       ),
     );
 
@@ -73,7 +81,7 @@ export class StorageMapDetailsPage {
       }),
     ).toBeVisible();
 
-    await expect(this.page.getByRole('heading', { name: 'Storage map details' })).toBeVisible();
+    await this.verifyOnDetailsPage();
 
     await expect(
       this.page.getByTestId('name-detail-item').getByText(expectedData.storageMapName),
@@ -88,8 +96,6 @@ export class StorageMapDetailsPage {
 
     await expect(this.page.getByText('Target provider')).toBeVisible();
     await expect(this.page.getByRole('link', { name: expectedData.targetProvider })).toBeVisible();
-
-    await expect(this.storageMapEditButton()).toBeVisible();
 
     if (expectedData.mappings && !isEmpty(expectedData.mappings)) {
       const mappingList = this.page

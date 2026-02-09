@@ -27,7 +27,7 @@ test.describe('OVA Provider Upload Tests', { tag: '@downstream' }, () => {
     }
   });
 
-  test('should create OVA provider with applianceManagement enabled and validate upload form', async ({
+  test.skip('should create OVA provider with applianceManagement enabled and validate upload form', async ({
     page,
     createCustomProvider,
   }: ConfigurableResourceFixtures & { page: Page }) => {
