@@ -1,4 +1,8 @@
+import type { Page } from '@playwright/test';
+
 import { BaseMappingEditModal, type MappingModalConfig } from './BaseMappingEditModal';
+
+const MODAL_TEST_ID = 'edit-network-map-modal';
 
 /**
  * Page object for the Network Map Edit Modal.
@@ -6,11 +10,15 @@ import { BaseMappingEditModal, type MappingModalConfig } from './BaseMappingEdit
  */
 export class NetworkMapEditModal extends BaseMappingEditModal {
   protected readonly config: MappingModalConfig = {
-    modalTestId: 'edit-network-map-modal',
+    modalTestId: MODAL_TEST_ID,
     modalTitle: 'Edit network map',
     sourceTestIdPattern: (index: number) => `source-network-networkMap.${index}.sourceNetwork`,
     targetTestIdPattern: (index: number) => `target-network-networkMap.${index}.targetNetwork`,
   };
+
+  constructor(page: Page) {
+    super(page, MODAL_TEST_ID);
+  }
 
   async getSourceNetworkAtIndex(index: number): Promise<string> {
     return this.getSourceAtIndex(index);

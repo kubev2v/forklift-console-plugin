@@ -1,31 +1,26 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { BaseModal } from '../../common/BaseModal';
+
 /**
  * Page object for the Edit Provider Credentials modal.
  * Supports vSphere provider credential editing including username, password,
  * and certificate validation options.
  */
-export class CredentialEditModal {
+export class CredentialEditModal extends BaseModal {
   readonly caCertificateClearButton: Locator;
   readonly caCertificateTextarea: Locator;
   readonly caCertificateUploadButton: Locator;
-  readonly cancelButton: Locator;
   readonly closeButton: Locator;
   readonly configureCertificateRadio: Locator;
-  readonly modal: Locator;
-  protected readonly page: Page;
   readonly passwordInput: Locator;
   readonly passwordToggleButton: Locator;
-  readonly saveButton: Locator;
   readonly skipCertificateRadio: Locator;
   readonly usernameInput: Locator;
 
   constructor(page: Page) {
-    this.page = page;
-    this.modal = this.page.getByRole('dialog');
+    super(page, page.getByRole('dialog'));
     this.closeButton = this.modal.getByRole('button', { name: 'Close' });
-    this.saveButton = this.page.getByTestId('modal-confirm-button');
-    this.cancelButton = this.page.getByTestId('modal-cancel-button');
 
     // Credential fields
     this.usernameInput = this.page.getByTestId('vsphere-username-input');
@@ -43,11 +38,6 @@ export class CredentialEditModal {
     });
     this.caCertificateUploadButton = caCertificateContainer.getByRole('button', { name: 'Upload' });
     this.caCertificateClearButton = caCertificateContainer.getByRole('button', { name: 'Clear' });
-  }
-
-  async cancel(): Promise<void> {
-    await this.cancelButton.click();
-    await this.waitForModalToClose();
   }
 
   async clearCaCertificate(): Promise<void> {
@@ -105,11 +95,10 @@ export class CredentialEditModal {
     return await this.skipCertificateRadio.isChecked();
   }
 
-  async save(): Promise<void> {
-    await expect(this.saveButton).toBeEnabled();
-    await this.saveButton.click();
-    await this.waitForModalToClose();
-    // Wait for backend to process the change
+  override async save(): Promise<void> {
+    await super.save();
+    // Wait for K8s watch to propagate the change to React state
+    // The credentials are fetched via useK8sWatchResource which needs time to update
     await this.page.waitForTimeout(500);
   }
 
@@ -179,25 +168,13 @@ export class CredentialEditModal {
     await expect(this.passwordToggleButton).toHaveAttribute('aria-label', 'Password show');
   }
 
-  async verifySaveButtonDisabled(): Promise<void> {
-    await expect(this.saveButton).toBeDisabled();
-  }
-
-  async verifySaveButtonEnabled(): Promise<void> {
-    await expect(this.saveButton).toBeEnabled();
-  }
-
   async verifyUsernameRequired(): Promise<void> {
     const errorText = this.page.getByTestId('vsphere-username-input-helper-error');
     await expect(errorText).toContainText('Username is required');
   }
 
-  async waitForModalToClose(): Promise<void> {
-    await expect(this.modal).not.toBeVisible();
-  }
-
-  async waitForModalToOpen(): Promise<void> {
-    await expect(this.modal).toBeVisible();
+  override async waitForModalToOpen(): Promise<void> {
+    await super.waitForModalToOpen();
     await this.verifyModalTitle();
   }
 }

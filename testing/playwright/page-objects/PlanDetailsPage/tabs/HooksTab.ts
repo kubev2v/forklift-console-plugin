@@ -3,6 +3,15 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { disableGuidedTour } from '../../../utils/utils';
 import { HookEditModal } from '../modals/HookEditModal';
 
+export type HookType = 'pre' | 'post';
+
+export interface HookConfig {
+  enabled: boolean;
+  hookRunnerImage?: string;
+  serviceAccount?: string;
+  ansiblePlaybook?: string;
+}
+
 export class HooksTab {
   readonly hookEditModal: HookEditModal;
   readonly hooksTabLink: Locator;
@@ -14,13 +23,11 @@ export class HooksTab {
     this.hookEditModal = new HookEditModal(page);
   }
 
-  async editPostMigrationHook(config: {
-    enabled: boolean;
-    hookRunnerImage?: string;
-    serviceAccount?: string;
-    ansiblePlaybook?: string;
-  }): Promise<void> {
-    await this.openPostMigrationHookEditModal();
+  /**
+   * Edit a migration hook (pre or post) with the given configuration.
+   */
+  async editHook(hookType: HookType, config: HookConfig): Promise<void> {
+    await this.openHookEditModal(hookType);
 
     if (config.enabled) {
       await this.hookEditModal.enableHook();
@@ -40,30 +47,12 @@ export class HooksTab {
     await this.hookEditModal.save();
   }
 
-  async editPreMigrationHook(config: {
-    enabled: boolean;
-    hookRunnerImage?: string;
-    serviceAccount?: string;
-    ansiblePlaybook?: string;
-  }): Promise<void> {
-    await this.openPreMigrationHookEditModal();
+  async editPostMigrationHook(config: HookConfig): Promise<void> {
+    await this.editHook('post', config);
+  }
 
-    if (config.enabled) {
-      await this.hookEditModal.enableHook();
-      if (config.hookRunnerImage) {
-        await this.hookEditModal.setHookRunnerImage(config.hookRunnerImage);
-      }
-      if (config.serviceAccount) {
-        await this.hookEditModal.setServiceAccount(config.serviceAccount);
-      }
-      if (config.ansiblePlaybook) {
-        await this.hookEditModal.setAnsiblePlaybook(config.ansiblePlaybook);
-      }
-    } else {
-      await this.hookEditModal.disableHook();
-    }
-
-    await this.hookEditModal.save();
+  async editPreMigrationHook(config: HookConfig): Promise<void> {
+    await this.editHook('pre', config);
   }
 
   async navigateToHooksTab(): Promise<void> {
@@ -72,29 +61,50 @@ export class HooksTab {
     await expect(this.page.getByTestId('hook-enabled-detail-item').first()).toBeVisible();
   }
 
-  async openPostMigrationHookEditModal(): Promise<void> {
-    await this.page.getByTestId('PostHook-hook-edit-button').click();
+  /**
+   * Open the edit modal for the specified hook type.
+   */
+  async openHookEditModal(hookType: HookType): Promise<void> {
+    const testId = hookType === 'pre' ? 'PreHook-hook-edit-button' : 'PostHook-hook-edit-button';
+    await this.page.getByTestId(testId).click();
     await this.hookEditModal.waitForModalToOpen();
+  }
+
+  async openPostMigrationHookEditModal(): Promise<void> {
+    await this.openHookEditModal('post');
   }
 
   async openPreMigrationHookEditModal(): Promise<void> {
-    await this.page.getByTestId('PreHook-hook-edit-button').click();
-    await this.hookEditModal.waitForModalToOpen();
+    await this.openHookEditModal('pre');
+  }
+
+  /**
+   * Remove a migration hook by disabling it.
+   */
+  async removeHook(hookType: HookType): Promise<void> {
+    await this.openHookEditModal(hookType);
+    await this.hookEditModal.disableHook();
+    await this.hookEditModal.save();
   }
 
   async removePostMigrationHook(): Promise<void> {
-    await this.openPostMigrationHookEditModal();
-    await this.hookEditModal.disableHook();
-    await this.hookEditModal.save();
+    await this.removeHook('post');
   }
 
   async removePreMigrationHook(): Promise<void> {
-    await this.openPreMigrationHookEditModal();
-    await this.hookEditModal.disableHook();
-    await this.hookEditModal.save();
+    await this.removeHook('pre');
   }
 
-  async verifyHookRunnerImage(hookType: 'pre' | 'post', expectedImage: string): Promise<void> {
+  /**
+   * Verify that a hook is enabled or disabled.
+   */
+  async verifyHookEnabled(hookType: HookType, enabled: boolean): Promise<void> {
+    const index = hookType === 'pre' ? 0 : 1;
+    const enabledDetailItem = this.page.getByTestId('hook-enabled-detail-item').nth(index);
+    await expect(enabledDetailItem).toContainText(enabled ? 'True' : 'False');
+  }
+
+  async verifyHookRunnerImage(hookType: HookType, expectedImage: string): Promise<void> {
     const index = hookType === 'pre' ? 0 : 1;
     const runnerImageItem = this.page.getByTestId('hook-runner-image-detail-item').nth(index);
     await expect(runnerImageItem).toContainText(expectedImage);
@@ -104,23 +114,21 @@ export class HooksTab {
     await expect(this.hooksTabLink).toBeVisible();
   }
 
-  async verifyPlaybookContent(hookType: 'pre' | 'post', expectedContent: string): Promise<void> {
+  async verifyPlaybookContent(hookType: HookType, expectedContent: string): Promise<void> {
     const index = hookType === 'pre' ? 0 : 1;
     const playbookItem = this.page.getByTestId('playbook-detail-item').nth(index);
     await expect(playbookItem).toContainText(expectedContent);
   }
 
   async verifyPostMigrationHookEnabled(enabled: boolean): Promise<void> {
-    const enabledDetailItem = this.page.getByTestId('hook-enabled-detail-item').nth(1);
-    await expect(enabledDetailItem).toContainText(enabled ? 'True' : 'False');
+    await this.verifyHookEnabled('post', enabled);
   }
 
   async verifyPreMigrationHookEnabled(enabled: boolean): Promise<void> {
-    const enabledDetailItem = this.page.getByTestId('hook-enabled-detail-item').first();
-    await expect(enabledDetailItem).toContainText(enabled ? 'True' : 'False');
+    await this.verifyHookEnabled('pre', enabled);
   }
 
-  async verifyServiceAccount(hookType: 'pre' | 'post', expectedAccount: string): Promise<void> {
+  async verifyServiceAccount(hookType: HookType, expectedAccount: string): Promise<void> {
     const index = hookType === 'pre' ? 0 : 1;
     const serviceAccountItem = this.page.getByTestId('service-account-detail-item').nth(index);
     await expect(serviceAccountItem).toContainText(expectedAccount);

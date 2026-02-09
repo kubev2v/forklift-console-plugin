@@ -31,7 +31,7 @@ export interface VirtualMachine {
 }
 
 /**
- * Common storage classes available in the cluster
+ * Common storage classes available in the cluster (target storage)
  */
 export const StorageClasses = {
   OCS_RBD_VIRTUALIZATION: 'ocs-storagecluster-ceph-rbd-virtualization',
@@ -39,6 +39,31 @@ export const StorageClasses = {
   OCS_CEPHFS: 'ocs-storagecluster-cephfs',
   HOSTPATH_BASIC: 'hostpath-csi-basic',
   STANDARD_CSI: 'standard-csi',
+} as const;
+
+/**
+ * Common source datastores/storage available from VMware providers
+ */
+export const SourceStorages = {
+  NFS_US_MTV_V8: 'nfs-us-mtv-v8',
+  MTV_NFS_RHOS_V8: 'mtv-nfs-rhos-v8',
+} as const;
+
+/**
+ * Target network options for network mapping
+ */
+export const NetworkTargets = {
+  DEFAULT: 'Default network',
+  IGNORE: 'Ignore network',
+  POD: 'Pod network',
+} as const;
+
+/**
+ * Common source networks available from VMware providers
+ */
+export const SourceNetworks = {
+  VM_NETWORK: 'VM Network',
+  MGMT_NETWORK: 'Mgmt Network',
 } as const;
 
 export interface HookConfig {

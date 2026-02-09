@@ -1,23 +1,23 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 
-export class SettingsEditModal {
-  readonly cancelButton: Locator;
+import { BaseModal } from '../../common/BaseModal';
+
+/**
+ * Page object for the Settings Edit Modal on the Overview page.
+ * Extends BaseModal with settings-specific functionality for configuring
+ * Forklift operator settings like CPU limits, memory limits, and intervals.
+ */
+export class SettingsEditModal extends BaseModal {
   readonly controllerCpuLimitDropdown: Locator;
   readonly controllerMemoryLimitDropdown: Locator;
   readonly controllerTransferNetworkDropdown: Locator;
   readonly inventoryMemoryLimitDropdown: Locator;
   readonly maxVmInFlightInput: Locator;
-  readonly modal: Locator;
-  protected readonly page: Page;
   readonly preCopyIntervalDropdown: Locator;
-  readonly saveButton: Locator;
   readonly snapshotPollingIntervalDropdown: Locator;
 
   constructor(page: Page) {
-    this.page = page;
-    this.modal = this.page.getByTestId('settings-edit-modal');
-    this.saveButton = this.page.getByTestId('modal-confirm-button');
-    this.cancelButton = this.page.getByTestId('modal-cancel-button');
+    super(page, 'settings-edit-modal');
     this.maxVmInFlightInput = this.page
       .getByTestId('max-vm-inflight-input')
       .getByRole('spinbutton');
@@ -33,41 +33,36 @@ export class SettingsEditModal {
     );
   }
 
-  async cancel(): Promise<void> {
-    await this.cancelButton.click();
-    await this.waitForModalToClose();
-  }
-
   async decrementMaxVmInFlight(): Promise<void> {
     await this.page.getByRole('button', { name: 'minus' }).first().click();
   }
 
   async getControllerCpuLimitValue(): Promise<string | null> {
-    return this.controllerCpuLimitDropdown.textContent();
+    return await this.controllerCpuLimitDropdown.textContent();
   }
 
   async getControllerMemoryLimitValue(): Promise<string | null> {
-    return this.controllerMemoryLimitDropdown.textContent();
+    return await this.controllerMemoryLimitDropdown.textContent();
   }
 
   async getInventoryMemoryLimitValue(): Promise<string | null> {
-    return this.inventoryMemoryLimitDropdown.textContent();
+    return await this.inventoryMemoryLimitDropdown.textContent();
   }
 
   async getMaxVmInFlightValue(): Promise<string> {
-    return (await this.maxVmInFlightInput.inputValue()) || '';
+    return (await this.maxVmInFlightInput.inputValue()) ?? '';
   }
 
   async getPrecopyIntervalValue(): Promise<string | null> {
-    return this.preCopyIntervalDropdown.textContent();
+    return await this.preCopyIntervalDropdown.textContent();
   }
 
   async getSnapshotPollingIntervalValue(): Promise<string | null> {
-    return this.snapshotPollingIntervalDropdown.textContent();
+    return await this.snapshotPollingIntervalDropdown.textContent();
   }
 
   async getTransferNetworkCurrentValue(): Promise<string | null> {
-    return this.controllerTransferNetworkDropdown.textContent();
+    return await this.controllerTransferNetworkDropdown.textContent();
   }
 
   async incrementMaxVmInFlight(): Promise<void> {
@@ -76,12 +71,6 @@ export class SettingsEditModal {
 
   async openTransferNetworkDropdown(): Promise<void> {
     await this.controllerTransferNetworkDropdown.click();
-  }
-
-  async save(): Promise<void> {
-    await expect(this.saveButton).toBeEnabled();
-    await this.saveButton.click();
-    await this.waitForModalToClose();
   }
 
   async selectControllerCpuLimit(value: string): Promise<void> {
@@ -135,13 +124,5 @@ export class SettingsEditModal {
     } else {
       await this.selectFirstAvailableNetwork();
     }
-  }
-
-  async waitForModalToClose(): Promise<void> {
-    await expect(this.modal).not.toBeVisible();
-  }
-
-  async waitForModalToOpen(): Promise<void> {
-    await expect(this.modal).toBeVisible();
   }
 }

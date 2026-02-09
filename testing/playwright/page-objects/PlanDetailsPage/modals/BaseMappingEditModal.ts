@@ -1,6 +1,8 @@
 /* eslint-disable perfectionist/sort-classes */
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { BaseModal } from '../../common/BaseModal';
+
 /**
  * Configuration for a mapping edit modal.
  */
@@ -19,48 +21,24 @@ export interface MappingModalConfig {
  * Base class for mapping edit modals (Network and Storage).
  * Contains all shared functionality for interacting with mapping edit dialogs.
  */
-export abstract class BaseMappingEditModal {
+export abstract class BaseMappingEditModal extends BaseModal {
+  readonly addMappingButton: Locator;
   protected abstract readonly config: MappingModalConfig;
-  protected readonly page: Page;
 
-  constructor(page: Page) {
-    this.page = page;
-  }
-
-  private addMappingButtonLocator(): Locator {
-    return this.modalLocator().getByTestId('add-mapping-button');
-  }
-
-  private cancelButtonLocator(): Locator {
-    return this.page.getByTestId('modal-cancel-button');
-  }
-
-  private saveButtonLocator(): Locator {
-    return this.page.getByTestId('modal-confirm-button');
+  constructor(page: Page, modalTestId: string) {
+    super(page, modalTestId);
+    this.addMappingButton = this.modal.getByTestId('add-mapping-button');
   }
 
   async addMapping(): Promise<number> {
     const countBefore = await this.getMappingCount();
-    await this.addMappingButtonLocator().click();
+    await this.addMappingButton.click();
     await this.mappingRowLocator(countBefore).waitFor({ state: 'visible' });
     return countBefore;
   }
 
-  get addMappingButton(): Locator {
-    return this.addMappingButtonLocator();
-  }
-
-  async cancel(): Promise<void> {
-    await this.cancelButtonLocator().click();
-    await this.waitForModalToClose();
-  }
-
-  get cancelButton(): Locator {
-    return this.cancelButtonLocator();
-  }
-
   async getMappingCount(): Promise<number> {
-    return await this.modalLocator().locator('[data-testid^="field-row-"]').count();
+    return await this.modal.locator('[data-testid^="field-row-"]').count();
   }
 
   async getSourceAtIndex(index: number): Promise<string> {
@@ -75,100 +53,17 @@ export abstract class BaseMappingEditModal {
     return text.trim();
   }
 
-  get modal(): Locator {
-    return this.modalLocator();
-  }
-
   async removeMapping(index: number): Promise<void> {
     const countBefore = await this.getMappingCount();
     await this.removeButtonLocator(index).click();
-    await expect(this.modalLocator().locator('[data-testid^="field-row-"]')).toHaveCount(
-      countBefore - 1,
-    );
+    await expect(this.modal.locator('[data-testid^="field-row-"]')).toHaveCount(countBefore - 1);
   }
 
-  async save(): Promise<void> {
-    await expect(this.saveButtonLocator()).toBeEnabled();
-    await this.saveButtonLocator().click();
-    await this.waitForModalToClose();
-    // Wait for backend to process the change
+  override async save(): Promise<void> {
+    await super.save();
+    // Wait for K8s watch to propagate the change to React state
+    // The modal fetches data via useK8sWatchResource which needs time to update
     await this.page.waitForTimeout(500);
-  }
-
-  get saveButton(): Locator {
-    return this.saveButtonLocator();
-  }
-
-  async selectSourceAtIndex(index: number, sourceValue: string): Promise<void> {
-    const sourceSelect = this.sourceSelectLocator(index);
-    const trimmedSource = sourceValue.trim();
-
-    // Wait for the select button to be ready
-    await expect(sourceSelect).toBeVisible();
-    await expect(sourceSelect).toBeEnabled();
-
-    // Click to open dropdown
-    await sourceSelect.click();
-
-    // Wait for dropdown to open (check aria-expanded attribute)
-    await expect(sourceSelect).toHaveAttribute('aria-expanded', 'true');
-
-    // Find and click the option
-    const option = this.page
-      .locator('.pf-v5-c-menu__list-item, .pf-v6-c-menu__list-item, [role="option"]')
-      .filter({ hasText: trimmedSource })
-      .first();
-    await expect(option).toBeVisible();
-    await option.click();
-  }
-
-  async selectFirstAvailableSourceAtIndex(index: number): Promise<string> {
-    const sourceSelect = this.sourceSelectLocator(index);
-    await expect(sourceSelect).toBeVisible();
-    await sourceSelect.click();
-    await expect(sourceSelect).toHaveAttribute('aria-expanded', 'true');
-
-    const option = this.page.locator('[role="option"]:enabled').first();
-    await expect(option).toBeVisible();
-    const selectedValue = (await option.textContent()) ?? '';
-    await option.click();
-    return selectedValue.trim();
-  }
-
-  async selectTargetAtIndex(index: number, targetValue: string): Promise<void> {
-    const targetSelect = this.targetSelectLocator(index);
-    const trimmedTarget = targetValue.trim();
-
-    // Wait for the select button to be ready
-    await expect(targetSelect).toBeVisible();
-    await expect(targetSelect).toBeEnabled();
-
-    // Click to open dropdown
-    await targetSelect.click();
-
-    // Wait for dropdown to open (check aria-expanded attribute)
-    await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
-
-    // Find and click the option - use locator with text filter for reliability
-    const option = this.page
-      .locator('.pf-v5-c-menu__list-item, .pf-v6-c-menu__list-item, [role="option"]')
-      .filter({ hasText: trimmedTarget })
-      .first();
-    await expect(option).toBeVisible();
-    await option.click();
-  }
-
-  async selectFirstAvailableTargetAtIndex(index: number): Promise<string> {
-    const targetSelect = this.targetSelectLocator(index);
-    await expect(targetSelect).toBeVisible();
-    await targetSelect.click();
-    await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
-
-    const option = this.page.locator('[role="option"]:enabled').first();
-    await expect(option).toBeVisible();
-    const selectedValue = (await option.textContent()) ?? '';
-    await option.click();
-    return selectedValue.trim();
   }
 
   async selectDifferentTargetAtIndex(index: number): Promise<string> {
@@ -188,6 +83,66 @@ export abstract class BaseMappingEditModal {
     return newValue.trim();
   }
 
+  async selectFirstAvailableSourceAtIndex(index: number): Promise<string> {
+    const sourceSelect = this.sourceSelectLocator(index);
+    await expect(sourceSelect).toBeVisible();
+    await sourceSelect.click();
+    await expect(sourceSelect).toHaveAttribute('aria-expanded', 'true');
+
+    const option = this.page.locator('[role="option"]:enabled').first();
+    await expect(option).toBeVisible();
+    const selectedValue = (await option.textContent()) ?? '';
+    await option.click();
+    return selectedValue.trim();
+  }
+
+  async selectFirstAvailableTargetAtIndex(index: number): Promise<string> {
+    const targetSelect = this.targetSelectLocator(index);
+    await expect(targetSelect).toBeVisible();
+    await targetSelect.click();
+    await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
+
+    const option = this.page.locator('[role="option"]:enabled').first();
+    await expect(option).toBeVisible();
+    const selectedValue = (await option.textContent()) ?? '';
+    await option.click();
+    return selectedValue.trim();
+  }
+
+  async selectSourceAtIndex(index: number, sourceValue: string): Promise<void> {
+    const sourceSelect = this.sourceSelectLocator(index);
+    const trimmedSource = sourceValue.trim();
+
+    await expect(sourceSelect).toBeVisible();
+    await expect(sourceSelect).toBeEnabled();
+    await sourceSelect.click();
+    await expect(sourceSelect).toHaveAttribute('aria-expanded', 'true');
+
+    const option = this.page
+      .locator('.pf-v5-c-menu__list-item, .pf-v6-c-menu__list-item, [role="option"]')
+      .filter({ hasText: trimmedSource })
+      .first();
+    await expect(option).toBeVisible();
+    await option.click();
+  }
+
+  async selectTargetAtIndex(index: number, targetValue: string): Promise<void> {
+    const targetSelect = this.targetSelectLocator(index);
+    const trimmedTarget = targetValue.trim();
+
+    await expect(targetSelect).toBeVisible();
+    await expect(targetSelect).toBeEnabled();
+    await targetSelect.click();
+    await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
+
+    const option = this.page
+      .locator('.pf-v5-c-menu__list-item, .pf-v6-c-menu__list-item, [role="option"]')
+      .filter({ hasText: trimmedTarget })
+      .first();
+    await expect(option).toBeVisible();
+    await option.click();
+  }
+
   async verifyMappingAtIndex(
     index: number,
     expectedSource: string,
@@ -203,38 +158,16 @@ export abstract class BaseMappingEditModal {
 
   async verifyModalStructure(): Promise<void> {
     await this.verifyModalTitle();
-    await expect(this.addMappingButtonLocator()).toBeVisible();
-    await expect(this.cancelButtonLocator()).toBeVisible();
+    await expect(this.addMappingButton).toBeVisible();
+    await expect(this.cancelButton).toBeVisible();
   }
 
   async verifyModalTitle(): Promise<void> {
-    await expect(
-      this.modalLocator().getByRole('heading', { name: this.config.modalTitle }),
-    ).toBeVisible();
-  }
-
-  async verifySaveButtonDisabled(): Promise<void> {
-    await expect(this.saveButtonLocator()).toBeDisabled();
-  }
-
-  async verifySaveButtonEnabled(): Promise<void> {
-    await expect(this.saveButtonLocator()).toBeEnabled();
-  }
-
-  async waitForModalToClose(): Promise<void> {
-    await expect(this.modalLocator()).not.toBeVisible();
-  }
-
-  async waitForModalToOpen(): Promise<void> {
-    await expect(this.modalLocator()).toBeVisible();
+    await expect(this.modal.getByRole('heading', { name: this.config.modalTitle })).toBeVisible();
   }
 
   protected mappingRowLocator(index: number): Locator {
-    return this.modalLocator().getByTestId(`field-row-${index}`);
-  }
-
-  protected modalLocator(): Locator {
-    return this.page.getByTestId(this.config.modalTestId);
+    return this.modal.getByTestId(`field-row-${index}`);
   }
 
   protected removeButtonLocator(index: number): Locator {
@@ -242,10 +175,10 @@ export abstract class BaseMappingEditModal {
   }
 
   protected sourceSelectLocator(index: number): Locator {
-    return this.modalLocator().getByTestId(this.config.sourceTestIdPattern(index));
+    return this.modal.getByTestId(this.config.sourceTestIdPattern(index));
   }
 
   protected targetSelectLocator(index: number): Locator {
-    return this.modalLocator().getByTestId(this.config.targetTestIdPattern(index));
+    return this.modal.getByTestId(this.config.targetTestIdPattern(index));
   }
 }

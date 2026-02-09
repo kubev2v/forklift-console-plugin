@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 
 import { sharedProviderNetworkMapFixtures as test } from '../../../fixtures/resourceFixtures';
 import { NetworkMapDetailsPage } from '../../../page-objects/NetworkMapDetailsPage';
+import { NetworkTargets, SourceNetworks } from '../../../types/test-data';
 
 test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
   test('should test network map editing interactions', async ({
@@ -9,6 +10,8 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
     testNetworkMap,
     testProvider: _testProvider,
   }) => {
+    if (!testNetworkMap) throw new Error('testNetworkMap is required');
+
     const networkMapDetailsPage = new NetworkMapDetailsPage(page);
     await networkMapDetailsPage.navigate(testNetworkMap.name);
 
@@ -19,8 +22,8 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
       const newRowIndex = await modal.addMapping();
       expect(newRowIndex).toBe(0);
 
-      await modal.selectSourceNetworkAtIndex(newRowIndex, 'VM Network');
-      await modal.selectTargetNetworkAtIndex(newRowIndex, 'Default network');
+      await modal.selectSourceNetworkAtIndex(newRowIndex, SourceNetworks.VM_NETWORK);
+      await modal.selectTargetNetworkAtIndex(newRowIndex, NetworkTargets.DEFAULT);
       await modal.verifySaveButtonEnabled();
       await modal.save();
 
@@ -34,7 +37,7 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
       const modal = await networkMapDetailsPage.openEditModal();
 
       // Change target from 'Default network' (set in previous step) to 'Ignore network'
-      await modal.selectTargetNetworkAtIndex(0, 'Ignore network');
+      await modal.selectTargetNetworkAtIndex(0, NetworkTargets.IGNORE);
       await modal.verifySaveButtonEnabled();
       await modal.save();
 
@@ -50,8 +53,8 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
 
       const newRowIndex = await modal.addMapping();
       expect(newRowIndex).toBe(initialCount);
-      await modal.selectSourceNetworkAtIndex(newRowIndex, 'Mgmt Network');
-      await modal.selectTargetNetworkAtIndex(newRowIndex, 'Ignore network');
+      await modal.selectSourceNetworkAtIndex(newRowIndex, SourceNetworks.MGMT_NETWORK);
+      await modal.selectTargetNetworkAtIndex(newRowIndex, NetworkTargets.IGNORE);
       await modal.verifySaveButtonEnabled();
       await modal.save();
 

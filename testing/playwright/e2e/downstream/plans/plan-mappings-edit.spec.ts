@@ -2,6 +2,12 @@ import { expect } from '@playwright/test';
 
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import {
+  NetworkTargets,
+  SourceNetworks,
+  SourceStorages,
+  StorageClasses,
+} from '../../../types/test-data';
 
 test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, () => {
   test('should test mappings editing interactions on mappings tab', async ({
@@ -53,8 +59,8 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       const modal = await planDetailsPage.mappingsTab.openNetworkMapEditModal();
       originalNetworkTarget = await modal.getTargetNetworkAtIndex(0);
       const newTarget = originalNetworkTarget.includes('Ignore')
-        ? 'Default network'
-        : 'Ignore network';
+        ? NetworkTargets.DEFAULT
+        : NetworkTargets.IGNORE;
 
       await modal.selectTargetNetworkAtIndex(0, newTarget);
       await modal.verifySaveButtonEnabled();
@@ -72,7 +78,9 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       const revertedTarget = await modalAfterRevert.getTargetNetworkAtIndex(0);
       expect(revertedTarget).toContain(originalNetworkTarget.split(' ')[0]);
 
-      const tempTarget = revertedTarget.includes('Ignore') ? 'Default network' : 'Ignore network';
+      const tempTarget = revertedTarget.includes('Ignore')
+        ? NetworkTargets.DEFAULT
+        : NetworkTargets.IGNORE;
       await modalAfterRevert.selectTargetNetworkAtIndex(0, tempTarget);
       await modalAfterRevert.cancel();
 
@@ -87,7 +95,7 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
     await test.step('Edit storage mapping: modify, revert, and verify cancellation', async () => {
       const modal = await planDetailsPage.mappingsTab.openStorageMapEditModal();
       originalStorageTarget = await modal.getTargetStorageAtIndex(0);
-      await modal.selectTargetStorageAtIndex(0, 'hostpath-csi-basic');
+      await modal.selectTargetStorageAtIndex(0, StorageClasses.HOSTPATH_BASIC);
       await modal.verifySaveButtonEnabled();
       await modal.save();
 
@@ -103,7 +111,7 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       const revertedTarget = await modalAfterRevert.getTargetStorageAtIndex(0);
       expect(revertedTarget).toContain(originalStorageTarget.split(' ')[0]);
 
-      await modalAfterRevert.selectTargetStorageAtIndex(0, 'hostpath-csi-basic');
+      await modalAfterRevert.selectTargetStorageAtIndex(0, StorageClasses.HOSTPATH_BASIC);
       await modalAfterRevert.cancel();
 
       const modalAfterCancel = await planDetailsPage.mappingsTab.openStorageMapEditModal();
@@ -112,8 +120,8 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       await modalAfterCancel.cancel();
     });
 
-    const addedNetworkSource = 'VM Network';
-    const addedNetworkTarget = 'Ignore network';
+    const addedNetworkSource = SourceNetworks.VM_NETWORK;
+    const addedNetworkTarget = NetworkTargets.IGNORE;
 
     await test.step('Add and remove network mapping', async () => {
       const modal = await planDetailsPage.mappingsTab.openNetworkMapEditModal();
@@ -146,8 +154,8 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       await modalAfterRemove.cancel();
     });
 
-    const addedStorageSource = 'nfs-us-mtv-v8';
-    const addedStorageTarget = 'hostpath-csi-basic';
+    const addedStorageSource = SourceStorages.NFS_US_MTV_V8;
+    const addedStorageTarget = StorageClasses.HOSTPATH_BASIC;
 
     await test.step('Add and remove storage mapping', async () => {
       const modal = await planDetailsPage.mappingsTab.openStorageMapEditModal();
