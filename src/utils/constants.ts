@@ -69,6 +69,14 @@ export const FEATURE_NAMES = {
   VOLUME_POPULATOR: 'feature_volume_populator',
 } as const;
 
+/**
+ * Default values for feature flags when not specified in the ForkliftController CR.
+ * If a feature is not in this list, it defaults to false.
+ */
+export const FEATURE_FLAG_DEFAULTS: Record<string, boolean> = {
+  [FEATURE_NAMES.COPY_OFFLOAD]: true,
+};
+
 export const DEFAULT_NETWORK = t('Default network');
 
 export const TIPS_AND_TRICKS_LABEL = t('Tips and tricks');
