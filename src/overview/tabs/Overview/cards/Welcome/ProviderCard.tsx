@@ -1,15 +1,15 @@
-import type { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren, ReactNode } from 'react';
 
 import { Card, CardBody, CardHeader, Flex, FlexItem } from '@patternfly/react-core';
 
 import './ProviderCard.scss';
 
 type ProviderCardProps = PropsWithChildren & {
-  imageSrc: string;
+  image: ReactNode;
   onClick: () => void;
 };
 
-export const ProviderCard: FC<ProviderCardProps> = ({ children, imageSrc, onClick }) => (
+export const ProviderCard: FC<ProviderCardProps> = ({ children, image, onClick }) => (
   <Card className="forklift-provider-card" isClickable variant="secondary">
     <CardHeader
       className="pf-v6-u-pb-0"
@@ -23,9 +23,7 @@ export const ProviderCard: FC<ProviderCardProps> = ({ children, imageSrc, onClic
         alignItems={{ default: 'alignItemsCenter' }}
         spaceItems={{ default: 'spaceItemsSm' }}
       >
-        <FlexItem>
-          <img alt="" src={imageSrc} />
-        </FlexItem>
+        <FlexItem>{image}</FlexItem>
 
         <FlexItem>
           <b>{children}</b>
