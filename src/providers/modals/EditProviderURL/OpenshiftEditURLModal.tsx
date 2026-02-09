@@ -1,23 +1,20 @@
+import TextInputEditModal from 'src/components/ModalForm/TextInputEditModal';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModel } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { ModalVariant } from '@patternfly/react-core';
 
 import { validateOpenshiftURL } from '../../utils/validators/provider/openshift/validateOpenshiftURL';
-import { EditModal } from '../EditModal/EditModal';
 
 import { patchProviderURL } from './utils/patchProviderURL';
 import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
 export const OpenshiftEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
-  label = '',
-  title = '',
-  ...props
+  resource: provider,
+  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
-  const ModalBody = (
+  const description = (
     <ForkliftTrans>
       <p>URL of the Openshift Virtualization API endpoint.</p>
       <br />
@@ -29,18 +26,23 @@ export const OpenshiftEditURLModal: ModalComponent<EditProviderURLModalProps> = 
     </ForkliftTrans>
   );
 
+  const onConfirm = async (value: string): Promise<void> => {
+    await patchProviderURL({
+      newValue: value,
+      resource: provider,
+    });
+  };
+
   return (
-    <EditModal
-      {...props}
-      jsonPath={'spec.url'}
-      title={title || t('Edit URL')}
-      label={label || t('URL')}
-      model={ProviderModel}
-      variant={ModalVariant.large}
-      body={ModalBody}
+    <TextInputEditModal
+      {...rest}
+      title={t('Edit URL')}
+      label={t('URL')}
+      initialValue={provider?.spec?.url ?? ''}
+      description={description}
       helperText={t('URL of the Openshift Virtualization API endpoint.')}
       validationHook={validateOpenshiftURL}
-      onConfirmHook={patchProviderURL}
+      onConfirm={onConfirm}
     />
   );
 };

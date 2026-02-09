@@ -1,21 +1,22 @@
 import { providerUiAnnotation } from 'src/providers/utils/constants';
 
+import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
+import { ProviderModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
-import type { OnConfirmHookType } from '../../EditModal/types';
+type PatchProviderUIParams = {
+  newValue: string;
+  resource: V1beta1Provider;
+};
 
 /**
- * Handles the confirmation action for editing a resource annotations.
- * Adds or updates the provider UI annotation in the resource's metadata.
- *
- * @param {Object} options - Options for the confirmation action.
- * @param {Object} options.resource - The resource to be modified.
- * @param {Object} options.model - The model associated with the resource.
- * @param {any} options.newValue - The new value for the provider UI annotation.
- * @returns {Promise<Object>} - The modified resource.
+ * Patches the provider UI annotation in the resource's metadata.
  */
-export const patchProviderUI: OnConfirmHookType = async ({ model, newValue: value, resource }) => {
-  const currentAnnotations: Record<string, any> = resource?.metadata?.annotations ?? {};
+export const patchProviderUI = async ({
+  newValue: value,
+  resource,
+}: PatchProviderUIParams): Promise<V1beta1Provider> => {
+  const currentAnnotations: Record<string, unknown> = resource?.metadata?.annotations ?? {};
   const newAnnotations = { ...currentAnnotations };
   if (value) {
     newAnnotations[providerUiAnnotation] = value;
@@ -23,7 +24,7 @@ export const patchProviderUI: OnConfirmHookType = async ({ model, newValue: valu
     delete newAnnotations[providerUiAnnotation];
   }
 
-  const op = resource?.metadata?.annotations ? 'replace' : 'add';
+  const op = resource?.metadata?.annotations ? REPLACE : ADD;
 
   const obj = await k8sPatch({
     data: [
@@ -33,7 +34,7 @@ export const patchProviderUI: OnConfirmHookType = async ({ model, newValue: valu
         value: newAnnotations,
       },
     ],
-    model: model!,
+    model: ProviderModel,
     resource,
   });
 

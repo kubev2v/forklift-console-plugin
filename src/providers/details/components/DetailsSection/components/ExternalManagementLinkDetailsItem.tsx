@@ -72,7 +72,6 @@ export const ExternalManagementLinkDetailsItem: FC<ExternalManagementLinkDetails
         content={webUILinkContent}
         onEdit={() => {
           launcher<EditProviderUIModalProps>(EditProviderUIModal, {
-            content: webUILink,
             resource: provider,
           });
         }}

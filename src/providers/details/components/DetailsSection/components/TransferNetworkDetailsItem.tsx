@@ -1,9 +1,9 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import {
-  EditProviderDefaultTransferNetwork,
+import EditProviderDefaultTransferNetwork, {
   type EditProviderDefaultTransferNetworkProps,
 } from 'src/providers/modals/EditProviderDefaultTransferNetwork/EditProviderDefaultTransferNetwork';
+import { DEFAULT_TRANSFER_NETWORK_ANNOTATION } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
@@ -35,7 +35,7 @@ export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
       testId="transfer-network-detail-item"
       title={t('Default transfer network')}
       content={
-        provider?.metadata?.annotations?.['forklift.konveyor.io/defaultTransferNetwork'] ?? (
+        provider?.metadata?.annotations?.[DEFAULT_TRANSFER_NETWORK_ANNOTATION] ?? (
           <Label isCompact color="grey">
             {DEFAULT_NETWORK}
           </Label>
@@ -43,12 +43,7 @@ export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
       }
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
       helpContent={helpContent ?? defaultHelpContent}
-      crumbs={[
-        'Provider',
-        'metadata',
-        'annotations',
-        'forklift.konveyor.io/defaultTransferNetwork',
-      ]}
+      crumbs={['Provider', 'metadata', 'annotations', DEFAULT_TRANSFER_NETWORK_ANNOTATION]}
       onEdit={() => {
         launcher<EditProviderDefaultTransferNetworkProps>(EditProviderDefaultTransferNetwork, {
           resource: provider,
