@@ -31,11 +31,11 @@ export class CredentialEditModal extends BaseModal {
     this.configureCertificateRadio = this.page.getByTestId('certificate-validation-configure');
     this.skipCertificateRadio = this.page.getByTestId('certificate-validation-skip');
 
-    // CA certificate upload (within the data-testid container)
-    const caCertificateContainer = this.page.getByTestId('ca-certificate-upload');
-    this.caCertificateTextarea = caCertificateContainer.getByRole('textbox', {
-      name: 'File upload',
-    });
+    // CA certificate upload (scoped via FileUpload container using the textarea's id)
+    this.caCertificateTextarea = this.page.locator('#caCertificate');
+    const caCertificateContainer = this.page
+      .locator('.pf-v5-c-file-upload, .pf-v6-c-file-upload')
+      .filter({ has: this.caCertificateTextarea });
     this.caCertificateUploadButton = caCertificateContainer.getByRole('button', { name: 'Upload' });
     this.caCertificateClearButton = caCertificateContainer.getByRole('button', { name: 'Clear' });
   }

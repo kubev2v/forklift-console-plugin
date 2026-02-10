@@ -103,7 +103,6 @@ const CACertificateField: FC = () => {
         browseButtonText={t('Upload')}
         validated={getInputValidated(error)}
         isDisabled={isDisabled}
-        data-testid="ca-certificate-upload"
       />
     </FormGroupWithHelpText>
   );

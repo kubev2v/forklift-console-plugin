@@ -1,4 +1,3 @@
-/* eslint-disable perfectionist/sort-classes */
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import { BaseModal } from '../../common/BaseModal';
@@ -51,6 +50,14 @@ export abstract class BaseMappingEditModal extends BaseModal {
     const targetSelect = this.targetSelectLocator(index);
     const text = (await targetSelect.textContent()) ?? '';
     return text.trim();
+  }
+
+  protected mappingRowLocator(index: number): Locator {
+    return this.modal.getByTestId(`field-row-${index}`);
+  }
+
+  protected removeButtonLocator(index: number): Locator {
+    return this.mappingRowLocator(index).locator('button[class*="plain"]');
   }
 
   async removeMapping(index: number): Promise<void> {
@@ -143,6 +150,14 @@ export abstract class BaseMappingEditModal extends BaseModal {
     await option.click();
   }
 
+  protected sourceSelectLocator(index: number): Locator {
+    return this.modal.getByTestId(this.config.sourceTestIdPattern(index));
+  }
+
+  protected targetSelectLocator(index: number): Locator {
+    return this.modal.getByTestId(this.config.targetTestIdPattern(index));
+  }
+
   async verifyMappingAtIndex(
     index: number,
     expectedSource: string,
@@ -164,21 +179,5 @@ export abstract class BaseMappingEditModal extends BaseModal {
 
   async verifyModalTitle(): Promise<void> {
     await expect(this.modal.getByRole('heading', { name: this.config.modalTitle })).toBeVisible();
-  }
-
-  protected mappingRowLocator(index: number): Locator {
-    return this.modal.getByTestId(`field-row-${index}`);
-  }
-
-  protected removeButtonLocator(index: number): Locator {
-    return this.mappingRowLocator(index).locator('button[class*="plain"]');
-  }
-
-  protected sourceSelectLocator(index: number): Locator {
-    return this.modal.getByTestId(this.config.sourceTestIdPattern(index));
-  }
-
-  protected targetSelectLocator(index: number): Locator {
-    return this.modal.getByTestId(this.config.targetTestIdPattern(index));
   }
 }
