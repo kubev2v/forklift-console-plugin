@@ -1,4 +1,5 @@
 import type { FC, ReactNode } from 'react';
+import { ValidationState } from 'src/utils/validation/Validation';
 
 import {
   FormGroup,
@@ -62,9 +63,10 @@ export const FormGroupWithHelpText: FC<FormGroupWithHelpTextProps> = ({
   testId,
   validated,
 }) => {
-  const helperTextMsg = validated === 'error' && helperTextInvalid ? helperTextInvalid : helperText;
+  const helperTextMsg =
+    validated === ValidationState.Error && helperTextInvalid ? helperTextInvalid : helperText;
   const variant = validatedToVariant(validated);
-  const isError = validated === 'error';
+  const isError = validated === ValidationState.Error;
   const getHelperTextTestId = () => {
     if (testId) {
       return isError ? `${testId}-error` : testId;
