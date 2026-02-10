@@ -29,10 +29,12 @@ const NetworkMapDetailsPageInternal: FC<{
   ];
 
   return (
-    <>
+    <div className="forklift-details-page-layout">
       <NetworkMapPageHeadings name={name} namespace={namespace} />
-      <HorizontalNav pages={pages} />
-    </>
+      <div className="forklift-details-page-layout__content">
+        <HorizontalNav pages={pages} />
+      </div>
+    </div>
   );
 };
 const NetworkMapDetailsPageInternalMemo = memo(NetworkMapDetailsPageInternal);

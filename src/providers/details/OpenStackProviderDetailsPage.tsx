@@ -37,10 +37,12 @@ const OpenStackProviderDetailsPage: FC<ProviderDetailsPageProps> = memo(({ name,
   ];
 
   return (
-    <>
+    <div className="forklift-details-page-layout">
       <ProviderPageHeader name={name} namespace={namespace} />
-      <HorizontalNav pages={tabPages} />
-    </>
+      <div className="forklift-details-page-layout__content">
+        <HorizontalNav pages={tabPages} />
+      </div>
+    </div>
   );
 });
 
