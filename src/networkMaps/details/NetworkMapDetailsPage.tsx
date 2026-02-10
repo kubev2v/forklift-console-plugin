@@ -36,8 +36,12 @@ const NetworkMapDetailsPage: FC<NetworkMapDetailsPageProps> = memo(({ name, name
 
   return (
     <LearningExperienceDrawer>
-      <NetworkMapPageHeadings name={name} namespace={namespace} />
-      <HorizontalNav pages={pages} />
+      <div className="forklift-details-page-layout">
+        <NetworkMapPageHeadings name={name} namespace={namespace} />
+        <div className="forklift-details-page-layout__content">
+          <HorizontalNav pages={pages} />
+        </div>
+      </div>
     </LearningExperienceDrawer>
   );
 });

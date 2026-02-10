@@ -8,6 +8,8 @@ import PlanPageHeader from './components/PlanPageHeader/PlanPageHeader';
 import usePlanPages from './hooks/usePlanPages';
 import type { PlanPageProps } from './utils/types';
 
+import './PlanDetailsNav.scss';
+
 const PlanDetailsNav: FC<PlanPageProps> = ({ name, namespace }) => {
   const pages = usePlanPages(name, namespace);
   const [showPlanConcernsPanel, setShowPlanConcernsPanel] = useState(false);
@@ -20,12 +22,16 @@ const PlanDetailsNav: FC<PlanPageProps> = ({ name, namespace }) => {
         showPlanConcernsPanel={showPlanConcernsPanel}
         setShowPlanConcernsPanel={setShowPlanConcernsPanel}
       >
-        <PlanPageHeader
-          name={name}
-          namespace={namespace}
-          setShowPlanConcernsPanel={setShowPlanConcernsPanel}
-        />
-        <HorizontalNav pages={pages} />
+        <div className="forklift-details-page-layout">
+          <PlanPageHeader
+            name={name}
+            namespace={namespace}
+            setShowPlanConcernsPanel={setShowPlanConcernsPanel}
+          />
+          <div className="forklift-details-page-layout__content">
+            <HorizontalNav pages={pages} />
+          </div>
+        </div>
       </PlanConcernsDrawer>
     </LearningExperienceDrawer>
   );
