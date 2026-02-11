@@ -57,6 +57,7 @@ const ProviderFormTextInput: FC<ProviderFormTextInputProps> = ({
       validated={getInputValidated(error)}
       helperText={helperText}
       helperTextInvalid={error?.message}
+      testId={testId ? `${testId}-helper` : undefined}
     >
       <TextInput
         type="text"

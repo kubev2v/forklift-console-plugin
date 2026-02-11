@@ -36,6 +36,7 @@ const EditInventoryMemoryLimit: FC = () => {
             onChange={onChange}
             value={String(value)}
             options={inventoryMemoryLimitOptions}
+            testId="inventory-memory-limit-select"
           />
         )}
       />

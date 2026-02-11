@@ -38,6 +38,7 @@ const EditMaxVMInFlight: FC = () => {
             }}
             value={Number(value)}
             defaultValue={defaultValuesMap[SettingsFields.MaxVMInFlight] as number}
+            testId="max-vm-inflight-input"
           />
         )}
       />

@@ -43,7 +43,7 @@ const InventorySourceNetworkField: FC<InventorySourceNetworkFieldProps> = ({
           <Select
             ref={field.ref}
             id={fieldId}
-            testId="network-map-source-network-select"
+            testId={`source-network-${fieldId}`}
             isDisabled={isSubmitting}
             value={(field.value as MappingValue).name}
             onSelect={async (_event, value) => {

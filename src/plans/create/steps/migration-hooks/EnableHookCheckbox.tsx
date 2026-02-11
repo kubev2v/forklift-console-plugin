@@ -23,6 +23,7 @@ const EnableHookCheckbox: FC<EnableHookCheckboxProps> = ({ fieldId }) => {
       render={({ field }) => (
         <Checkbox
           id={subFieldId}
+          data-testid={`${subFieldId}-checkbox`}
           label={getEnableHookFieldLabel(fieldId)}
           isChecked={field.value}
           onChange={(_, value) => {

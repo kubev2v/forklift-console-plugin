@@ -5,11 +5,13 @@ import type { ProviderData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
+import { CredentialsTab } from './tabs/CredentialsTab';
 import { DetailsTab } from './tabs/DetailsTab';
 import { VirtualMachinesTab } from './tabs/VirtualMachinesTab';
 
 export class ProviderDetailsPage {
   private readonly navigation: NavigationHelper;
+  public readonly credentialsTab: CredentialsTab;
   public readonly detailsTab: DetailsTab;
   protected readonly page: Page;
   public readonly virtualMachinesTab: VirtualMachinesTab;
@@ -17,6 +19,7 @@ export class ProviderDetailsPage {
   constructor(page: Page) {
     this.page = page;
     this.navigation = new NavigationHelper(page);
+    this.credentialsTab = new CredentialsTab(page);
     this.detailsTab = new DetailsTab(page);
     this.virtualMachinesTab = new VirtualMachinesTab(page);
   }
@@ -27,6 +30,10 @@ export class ProviderDetailsPage {
       name: providerName,
       namespace,
     });
+  }
+
+  async navigateToCredentialsTab(): Promise<void> {
+    await this.credentialsTab.navigateToCredentialsTab();
   }
 
   async navigateToVirtualMachinesTab(): Promise<void> {

@@ -7,6 +7,14 @@ export class NetworkMapCreatePage {
     this.page = page;
   }
 
+  private sourceNetworkTestId(index: number): string {
+    return `source-network-networkMap.${index}.sourceNetwork`;
+  }
+
+  private targetNetworkTestId(index: number): string {
+    return `target-network-networkMap.${index}.targetNetwork`;
+  }
+
   async addMapping() {
     const addMappingButton = this.page.getByRole('button', { name: 'Add mapping' });
     await expect(addMappingButton).toBeEnabled();
@@ -55,45 +63,22 @@ export class NetworkMapCreatePage {
       .filter({ hasText: data.targetProvider })
       .click();
 
-    const sourceNetworkSelect = this.page.getByTestId('network-map-source-network-select').first();
-    await expect(sourceNetworkSelect).not.toBeDisabled();
-    await sourceNetworkSelect.click();
-    await this.page
-      .locator('button[role="option"]')
-      .filter({ hasText: data.sourceNetwork })
-      .click();
-
-    const targetNetworkSelect = this.page.getByTestId('network-map-target-network-select').first();
-    await expect(targetNetworkSelect).not.toBeDisabled();
-    await targetNetworkSelect.click();
-    await this.page
-      .locator('button[role="option"]')
-      .filter({ hasText: data.targetNetwork })
-      .click();
+    await this.populateMapping(0, data.sourceNetwork, data.targetNetwork);
   }
 
   async populateMapping(index: number, sourceNetwork: string, targetNetwork: string) {
-    const sourceNetworkSelects = this.page.getByTestId('network-map-source-network-select');
-    const targetNetworkSelects = this.page.getByTestId('network-map-target-network-select');
+    const sourceSelect = this.page.getByTestId(this.sourceNetworkTestId(index));
+    const targetSelect = this.page.getByTestId(this.targetNetworkTestId(index));
 
-    const sourceCount = await sourceNetworkSelects.count();
-    const targetCount = await targetNetworkSelects.count();
-
-    if (index >= sourceCount || index >= targetCount) {
-      throw new Error(
-        `Cannot populate mapping at index ${index}. Only ${Math.min(sourceCount, targetCount)} mappings available.`,
-      );
-    }
-
-    const sourceSelect = sourceNetworkSelects.nth(index);
-    await expect(sourceSelect).not.toBeDisabled();
+    await expect(sourceSelect).toBeVisible({ timeout: 10000 });
+    await expect(sourceSelect).toBeEnabled();
     await sourceSelect.click();
-    await this.page.locator('button[role="option"]').filter({ hasText: sourceNetwork }).click();
+    await this.page.getByRole('option', { name: sourceNetwork }).click();
 
-    const targetSelect = targetNetworkSelects.nth(index);
-    await expect(targetSelect).not.toBeDisabled();
+    await expect(targetSelect).toBeVisible();
+    await expect(targetSelect).toBeEnabled();
     await targetSelect.click();
-    await this.page.locator('button[role="option"]').filter({ hasText: targetNetwork }).click();
+    await this.page.getByRole('option', { name: targetNetwork }).click();
   }
 
   async removeMapping(index: number) {

@@ -39,6 +39,7 @@ const HookSection: FC<HookSectionProps> = ({ hook, plan, step, title }) => {
         }}
         className="pf-v6-u-mt-md"
         headingLevel="h3"
+        data-testid={`${step}-hook-edit-button`}
       />
       <DescriptionList>
         <DetailsItem

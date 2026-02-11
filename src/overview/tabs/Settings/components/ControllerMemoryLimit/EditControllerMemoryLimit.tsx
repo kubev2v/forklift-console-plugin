@@ -36,6 +36,7 @@ const EditControllerMemoryLimit: FC = () => {
             onChange={onChange}
             value={String(value)}
             options={controllerMemoryLimitOptions}
+            testId="controller-memory-limit-select"
           />
         )}
       />

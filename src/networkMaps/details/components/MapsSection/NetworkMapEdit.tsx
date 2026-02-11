@@ -98,6 +98,7 @@ const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
         closeModal={closeModal}
         variant={ModalVariant.medium}
         isDisabled={!isValid || !isDirty}
+        testId="edit-network-map-modal"
       >
         <FieldBuilderTable
           headers={[

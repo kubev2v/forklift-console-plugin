@@ -7,6 +7,7 @@ import type { ResourceManager } from '../../utils/resource-manager/ResourceManag
 
 import { AdditionalSettingsStep } from './steps/AdditionalSettingsSteps';
 import { GeneralInformationStep } from './steps/GeneralInformationStep';
+import { HooksStep } from './steps/HooksStep';
 import { MigrationTypeStep } from './steps/MigrationTypeStep';
 import { NetworkMapStep } from './steps/NetworkMapStep';
 import { ReviewStep } from './steps/ReviewStep';
@@ -17,6 +18,7 @@ export class CreatePlanWizardPage {
   private readonly resourceManager?: ResourceManager;
   public readonly additionalSettings: AdditionalSettingsStep;
   public readonly generalInformation: GeneralInformationStep;
+  public readonly hooks: HooksStep;
   public readonly migrationType: MigrationTypeStep;
   public readonly navigationHelper: NavigationHelper;
   public readonly networkMap: NetworkMapStep;
@@ -34,6 +36,7 @@ export class CreatePlanWizardPage {
     this.networkMap = new NetworkMapStep(page);
     this.storageMap = new StorageMapStep(page);
     this.migrationType = new MigrationTypeStep(page);
+    this.hooks = new HooksStep(page);
     this.review = new ReviewStep(page);
     this.additionalSettings = new AdditionalSettingsStep(page);
   }
@@ -131,7 +134,13 @@ export class CreatePlanWizardPage {
 
   async navigateToAdditionalSettings(testData: PlanTestData): Promise<void> {
     await this.navigateToMigrationTypeStep(testData);
-    await this.clickNext(); // Skip Migration Type Step
+    await this.clickNext(); // Skip Migration Type Step -> goes to Other Settings
+    await this.additionalSettings.verifyStepVisible();
+  }
+
+  async navigateToHooksStep(testData: PlanTestData): Promise<void> {
+    await this.navigateToAdditionalSettings(testData);
+    await this.clickNext(); // Skip Other Settings Step -> goes to Hooks
   }
 
   async navigateToMigrationTypeStep(testData: PlanTestData): Promise<void> {

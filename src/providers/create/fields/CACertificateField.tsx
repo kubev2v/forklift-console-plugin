@@ -82,6 +82,7 @@ const CACertificateField: FC = () => {
         'Upload a CA certificate to be trusted when connecting to Openshift API endpoint, or leave empty to use the system CA certificate.',
       )}
       helperTextInvalid={error?.message}
+      testId="ca-certificate-helper"
     >
       <CertificateUpload
         id={ProviderFormFieldId.CaCertificate}

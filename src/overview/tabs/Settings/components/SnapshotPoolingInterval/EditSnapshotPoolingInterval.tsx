@@ -36,6 +36,7 @@ const EditSnapshotPoolingInterval: FC = () => {
             onChange={onChange}
             value={String(value)}
             options={snapshotPoolingIntervalOptions}
+            testId="snapshot-status-check-rate-select"
           />
         )}
       />

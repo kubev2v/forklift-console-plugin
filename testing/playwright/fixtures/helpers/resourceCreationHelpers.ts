@@ -6,20 +6,22 @@ import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { EndpointType, ProviderType } from '../../types/enums';
 import { createPlanTestData, type ProviderData } from '../../types/test-data';
-import { NavigationHelper } from '../../utils/NavigationHelper';
 import { getProviderConfig } from '../../utils/providers';
+import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import {
-  MTV_NAMESPACE,
-  NAD_API_VERSION,
-  RESOURCE_KINDS,
-} from '../../utils/resource-manager/constants';
-import {
-  createNad as createNadApi,
   createProvider as createProviderApi,
   createSecret as createSecretApi,
-  type V1NetworkAttachmentDefinition,
 } from '../../utils/resource-manager/ResourceCreator';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
+
+// Re-export map creation helpers
+export type {
+  CreateNetworkMapOptions,
+  CreateStorageMapOptions,
+  TestNetworkMap,
+  TestStorageMap,
+} from './mapCreationHelpers';
+export { createNetworkMap, createStorageMap, createTestNad } from './mapCreationHelpers';
 
 export const createSecretObject = (
   name: string,
@@ -76,6 +78,7 @@ export interface CreateProviderOptions {
   providerKey?: string;
   namePrefix?: string;
   customProviderData?: Partial<ProviderData>;
+  skipProviderReadyWait?: boolean;
 }
 
 const createOvaProviderViaApi = async (
@@ -113,10 +116,11 @@ const createProviderViaUi = async (
   page: Page,
   resourceManager: ResourceManager,
   providerData: ProviderData,
+  waitForReady = true,
 ): Promise<void> => {
   const createProviderPage = new CreateProviderPage(page, resourceManager);
   await createProviderPage.navigate();
-  await createProviderPage.create(providerData);
+  await createProviderPage.create(providerData, waitForReady);
 };
 
 const buildProviderData = (
@@ -161,7 +165,12 @@ export const createProvider = async (
   resourceManager: ResourceManager,
   options: CreateProviderOptions = {},
 ): Promise<TestProvider> => {
-  const { providerKey, namePrefix = 'test-provider', customProviderData } = options;
+  const {
+    providerKey,
+    namePrefix = 'test-provider',
+    customProviderData,
+    skipProviderReadyWait = false,
+  } = options;
 
   const providerName = generateProviderName(namePrefix, customProviderData?.name);
   const key = resolveProviderKey(providerKey);
@@ -170,7 +179,7 @@ export const createProvider = async (
   if (providerData.type === ProviderType.OVA) {
     await createOvaProviderViaApi(page, resourceManager, providerData);
   } else {
-    await createProviderViaUi(page, resourceManager, providerData);
+    await createProviderViaUi(page, resourceManager, providerData, !skipProviderReadyWait);
   }
 
   return buildTestProviderResult(providerData);
@@ -217,46 +226,4 @@ export const createPlan = async (
   await planDetailsPage.verifyPlanTitle(testPlanData.planName);
 
   return buildTestPlanResult(testPlanData);
-};
-
-export const createTestNad = async (
-  page: Page,
-  resourceManager: ResourceManager,
-  options: {
-    name?: string;
-    namespace: string;
-    bridgeName?: string;
-  },
-): Promise<V1NetworkAttachmentDefinition> => {
-  const { namespace, bridgeName = 'br0' } = options;
-  const nadName = options.name ?? `nad-test-${crypto.randomUUID().slice(0, 8)}`;
-
-  const navigationHelper = new NavigationHelper(page);
-  await navigationHelper.navigateToConsole();
-
-  const nadConfig = {
-    cniVersion: '0.3.1',
-    name: nadName,
-    type: 'bridge',
-    bridge: bridgeName,
-    ipam: {},
-  };
-
-  const nad: V1NetworkAttachmentDefinition = {
-    apiVersion: NAD_API_VERSION,
-    kind: RESOURCE_KINDS.NETWORK_ATTACHMENT_DEFINITION,
-    metadata: { name: nadName, namespace },
-    spec: { config: JSON.stringify(nadConfig) },
-  };
-
-  const createdNad = await createNadApi(page, nad, namespace);
-  if (!createdNad) {
-    throw new Error(`Failed to create NAD ${nadName}`);
-  }
-  resourceManager.addNad(nadName, namespace);
-
-  return {
-    ...createdNad,
-    metadata: { ...createdNad.metadata, name: nadName, namespace },
-  };
 };

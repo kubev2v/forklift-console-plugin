@@ -1,25 +1,50 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
-/* eslint-disable @typescript-eslint/member-ordering */
+import { NetworkMapEditModal } from '../modals/NetworkMapEditModal';
+import { StorageMapEditModal } from '../modals/StorageMapEditModal';
+
 export class MappingsTab {
-  private readonly cancelButton = () => this.page.getByTestId('cancel-mappings-button');
-  private readonly editMappingsButton = () => this.page.getByTestId('edit-mappings-button');
-  private readonly mappingsTab = () => this.page.getByRole('tab', { name: 'Mappings' });
-  private readonly networkMapSection = () => this.page.getByTestId('network-mappings-section');
-  private readonly storageMapSection = () => this.page.getByTestId('storage-mappings-section');
-  private readonly updateMappingsButton = () => this.page.getByTestId('update-mappings-button');
-
+  readonly cancelButton: Locator;
+  readonly mappingsHeading: Locator;
+  readonly mappingsSection: Locator;
+  readonly mappingsTab: Locator;
+  readonly networkMapEditButton: Locator;
+  readonly networkMapEditModal: NetworkMapEditModal;
+  readonly networkMapNameItem: Locator;
+  readonly networkMapReviewTable: Locator;
   protected readonly page: Page;
+  readonly storageMapEditButton: Locator;
+  readonly storageMapEditModal: StorageMapEditModal;
+  readonly storageMapNameItem: Locator;
+  readonly storageMapReviewTable: Locator;
+  readonly updateMappingsButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
+
+    // Locators using data-testid
+    this.cancelButton = this.page.getByTestId('cancel-mappings-button');
+    this.mappingsHeading = this.page.getByTestId('mappings-section-heading');
+    this.mappingsSection = this.page.getByTestId('plan-mappings-section');
+    this.mappingsTab = this.page.getByTestId('plan-details-tab-mappings');
+    this.networkMapEditButton = this.page.getByTestId('network-map-edit-button');
+    this.networkMapNameItem = this.page.getByTestId('network-map-name-item');
+    this.networkMapReviewTable = this.page.getByTestId('network-map-review-table');
+    this.storageMapEditButton = this.page.getByTestId('storage-map-edit-button');
+    this.storageMapNameItem = this.page.getByTestId('storage-map-name-item');
+    this.storageMapReviewTable = this.page.getByTestId('storage-map-review-table');
+    this.updateMappingsButton = this.page.getByTestId('update-mappings-button');
+
+    // Modal instances
+    this.networkMapEditModal = new NetworkMapEditModal(page);
+    this.storageMapEditModal = new StorageMapEditModal(page);
   }
 
-  private getNetworkMappingRow(index: number) {
+  private getNetworkMappingRow(index: number): Locator {
     return this.page.getByTestId(`network-mapping-row-${index}`);
   }
 
-  private getStorageMappingRow(index: number) {
+  private getStorageMappingRow(index: number): Locator {
     return this.page.getByTestId(`storage-mapping-row-${index}`);
   }
 
@@ -46,10 +71,10 @@ export class MappingsTab {
   }
 
   async cancelEditingMappings(): Promise<void> {
-    await this.cancelButton().click();
+    await this.cancelButton.click();
 
-    await expect(this.editMappingsButton()).toBeVisible();
-    await expect(this.updateMappingsButton()).not.toBeVisible();
+    await expect(this.networkMapEditButton).toBeVisible();
+    await expect(this.updateMappingsButton).not.toBeVisible();
   }
 
   async deleteNetworkMappingAtIndex(index: number): Promise<void> {
@@ -92,9 +117,21 @@ export class MappingsTab {
     await expect(targetButton).toContainText(newTargetStorage);
   }
 
+  async getNetworkMapName(): Promise<string> {
+    return (await this.networkMapNameItem.getByRole('link').textContent()) ?? '';
+  }
+
   // eslint-disable-next-line @typescript-eslint/promise-function-async
   getNetworkMappingCount(): Promise<number> {
     return this.page.locator('[data-testid^="network-mapping-row-"]').count();
+  }
+
+  async getNetworkMappingCountFromReviewTable(): Promise<number> {
+    return await this.networkMapReviewTable.locator('tbody tr').count();
+  }
+
+  async getStorageMapName(): Promise<string> {
+    return (await this.storageMapNameItem.getByRole('link').textContent()) ?? '';
   }
 
   // eslint-disable-next-line @typescript-eslint/promise-function-async
@@ -102,33 +139,68 @@ export class MappingsTab {
     return this.page.locator('[data-testid^="storage-mapping-row-"]').count();
   }
 
-  async navigateToMappingsTab(): Promise<void> {
-    await this.mappingsTab().click();
-    await expect(this.mappingsTab()).toHaveAttribute('aria-selected', 'true');
+  async getStorageMappingCountFromReviewTable(): Promise<number> {
+    return await this.storageMapReviewTable.locator('tbody tr').count();
   }
 
-  async startEditingMappings(): Promise<void> {
-    await this.editMappingsButton().click();
+  async navigateToMappingsTab(): Promise<void> {
+    // Wait for tab to be visible (use or() for fallback to role selector if testid not present)
+    const tabLocator = this.mappingsTab.or(this.page.getByRole('tab', { name: 'Mappings' }));
+    await tabLocator.waitFor({ state: 'visible' });
 
-    await expect(this.updateMappingsButton()).toBeVisible();
-    await expect(this.cancelButton()).toBeVisible();
+    // Check if already selected
+    const isSelected = await tabLocator.getAttribute('aria-selected');
+    if (isSelected !== 'true') {
+      await tabLocator.click();
+    }
+
+    await expect(tabLocator).toHaveAttribute('aria-selected', 'true');
+  }
+
+  async openNetworkMapEditModal(): Promise<NetworkMapEditModal> {
+    await this.networkMapEditButton.click();
+    await this.networkMapEditModal.waitForModalToOpen();
+    return this.networkMapEditModal;
+  }
+
+  async openStorageMapEditModal(): Promise<StorageMapEditModal> {
+    await this.storageMapEditButton.click();
+    await this.storageMapEditModal.waitForModalToOpen();
+    return this.storageMapEditModal;
+  }
+
+  async startEditingNetworkMap(): Promise<void> {
+    await this.networkMapEditButton.click();
+
+    await expect(this.updateMappingsButton).toBeVisible();
+    await expect(this.cancelButton).toBeVisible();
+    await expect(
+      this.page.getByText('Click the update mappings button to save your changes'),
+    ).toBeVisible();
+  }
+
+  async startEditingStorageMap(): Promise<void> {
+    await this.storageMapEditButton.click();
+
+    await expect(this.updateMappingsButton).toBeVisible();
+    await expect(this.cancelButton).toBeVisible();
     await expect(
       this.page.getByText('Click the update mappings button to save your changes'),
     ).toBeVisible();
   }
 
   async updateMappings(): Promise<void> {
-    await this.updateMappingsButton().click();
+    await this.updateMappingsButton.click();
 
-    await expect(this.editMappingsButton()).toBeVisible();
-    await expect(this.updateMappingsButton()).not.toBeVisible();
+    await expect(this.networkMapEditButton).toBeVisible();
+    await expect(this.updateMappingsButton).not.toBeVisible();
   }
 
   async verifyMappingsTab(): Promise<void> {
-    await expect(this.page.getByRole('heading', { name: 'Mappings' })).toBeVisible();
-    await expect(this.editMappingsButton()).toBeVisible();
-    await expect(this.storageMapSection()).toBeVisible();
-    await expect(this.networkMapSection()).toBeVisible();
+    await expect(this.mappingsHeading).toBeVisible();
+    await expect(this.networkMapEditButton).toBeVisible();
+    await expect(this.storageMapEditButton).toBeVisible();
+    await expect(this.mappingsSection).toBeVisible();
   }
 
   async verifyNetworkMappingAtIndex(
@@ -146,6 +218,16 @@ export class MappingsTab {
 
     await expect(buttons.nth(0)).toContainText(expectedSource);
     await expect(buttons.nth(1)).toContainText(expectedTarget);
+  }
+
+  async verifyNetworkMappingInReviewTable(
+    index: number,
+    expectedSource: string,
+    expectedTarget: string,
+  ): Promise<void> {
+    const row = this.networkMapReviewTable.locator('tbody tr').nth(index);
+    await expect(row.locator('td').first()).toContainText(expectedSource);
+    await expect(row.locator('td').nth(1)).toContainText(expectedTarget);
   }
 
   async verifyPlanStatus(expectedStatus: string): Promise<void> {
@@ -172,7 +254,22 @@ export class MappingsTab {
     await expect(buttons.nth(1)).toContainText(expectedTarget);
   }
 
+  async verifyStorageMappingInReviewTable(
+    index: number,
+    expectedSource: string,
+    expectedTarget: string,
+  ): Promise<void> {
+    const row = this.storageMapReviewTable.locator('tbody tr').nth(index);
+    await expect(row.locator('td').first()).toContainText(expectedSource);
+    await expect(row.locator('td').nth(1)).toContainText(expectedTarget);
+  }
+
   async verifyUpdateButtonEnabled(): Promise<void> {
-    await expect(this.updateMappingsButton()).toBeEnabled();
+    await expect(this.updateMappingsButton).toBeEnabled();
+  }
+
+  async waitForMappingsTabVisible(): Promise<void> {
+    const tabLocator = this.mappingsTab.or(this.page.getByRole('tab', { name: 'Mappings' }));
+    await tabLocator.waitFor({ state: 'visible' });
   }
 }

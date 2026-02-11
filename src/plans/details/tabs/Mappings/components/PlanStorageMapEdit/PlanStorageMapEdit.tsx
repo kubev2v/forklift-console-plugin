@@ -55,6 +55,7 @@ const PlanStorageMapEdit: ModalComponent<PlanStorageMapEditProps> = ({
         closeModal={closeModal}
         variant={ModalVariant.medium}
         isDisabled={!isValid || !isDirty}
+        testId="edit-storage-map-modal"
       >
         <Stack hasGutter>
           {error?.root && (

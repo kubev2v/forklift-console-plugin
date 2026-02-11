@@ -83,6 +83,7 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
                 <Checkbox
                   id="enabled-set"
                   name="enabled-set"
+                  data-testid="hook-enabled-checkbox"
                   label={t('Enable {{hookTypeLowercase}} migration hook', { hookTypeLowercase })}
                   isChecked={value}
                   onChange={(_, checked) => {
@@ -121,6 +122,7 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
                       spellCheck="false"
                       validated={getInputValidated(error)}
                       type="text"
+                      data-testid="hook-runner-image-input"
                     />
                   </FormGroupWithErrorText>
                 )}
@@ -149,6 +151,7 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
                       spellCheck="false"
                       validated={getInputValidated(error)}
                       type="text"
+                      data-testid="hook-service-account-input"
                     />
                   </FormGroupWithErrorText>
                 )}

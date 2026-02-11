@@ -1,10 +1,12 @@
 import type {
   IoK8sApiCoreV1Namespace,
   IoK8sApiCoreV1Secret,
+  V1beta1ForkliftController,
   V1beta1Migration,
   V1beta1NetworkMap,
   V1beta1Plan,
   V1beta1Provider,
+  V1beta1StorageMap,
   V1VirtualMachine,
 } from '@forklift-ui/types';
 import type { Page } from '@playwright/test';
@@ -22,8 +24,10 @@ import {
 } from './constants';
 import { ResourceCleaner } from './ResourceCleaner';
 import {
+  createNetworkMap,
   createProvider,
   createSecret,
+  createStorageMap,
   type V1NetworkAttachmentDefinition,
 } from './ResourceCreator';
 import { ResourceFetcher } from './ResourceFetcher';
@@ -38,10 +42,12 @@ export type OpenshiftProject = IoK8sApiCoreV1Namespace & {
 };
 
 export type SupportedResource =
+  | V1beta1ForkliftController
   | V1beta1Migration
   | V1beta1NetworkMap
   | V1beta1Plan
   | V1beta1Provider
+  | V1beta1StorageMap
   | V1VirtualMachine
   | V1NetworkAttachmentDefinition
   | IoK8sApiCoreV1Namespace
@@ -141,6 +147,18 @@ export class ResourceManager {
     this.addResource(secret);
   }
 
+  addStorageMap(name: string, namespace: string): void {
+    const storageMap: V1beta1StorageMap = {
+      apiVersion: FORKLIFT_API_VERSION,
+      kind: RESOURCE_KINDS.STORAGE_MAP,
+      metadata: {
+        name,
+        namespace,
+      },
+    };
+    this.addResource(storageMap);
+  }
+
   addVm(name: string, namespace: string): void {
     const vm: V1VirtualMachine = {
       apiVersion: KUBEVIRT_API_VERSION,
@@ -161,6 +179,14 @@ export class ResourceManager {
     this.resources = [];
   }
 
+  async createNetworkMap(
+    page: Page,
+    networkMap: V1beta1NetworkMap,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1NetworkMap | null> {
+    return createNetworkMap(page, networkMap, namespace);
+  }
+
   async createProvider(
     page: Page,
     provider: V1beta1Provider,
@@ -175,6 +201,22 @@ export class ResourceManager {
     namespace = MTV_NAMESPACE,
   ): Promise<IoK8sApiCoreV1Secret | null> {
     return createSecret(page, secret, namespace);
+  }
+
+  async createStorageMap(
+    page: Page,
+    storageMap: V1beta1StorageMap,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1StorageMap | null> {
+    return createStorageMap(page, storageMap, namespace);
+  }
+
+  async fetchForkliftController(
+    page: Page,
+    controllerName: string,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1ForkliftController | null> {
+    return ResourceFetcher.fetchForkliftController(page, controllerName, namespace);
   }
 
   async fetchPlan(
@@ -221,6 +263,15 @@ export class ResourceManager {
 
   loadResourcesFromFile(): void {
     this.resources = ResourceCleaner.loadResourcesFromFile();
+  }
+
+  async patchForkliftController(
+    page: Page,
+    controllerName: string,
+    patch: JsonPatchOperation[],
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1ForkliftController | null> {
+    return ResourcePatcher.patchForkliftController(page, controllerName, patch, namespace);
   }
 
   async patchProvider(

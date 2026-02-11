@@ -2,22 +2,26 @@
 export const MTV_NAMESPACE = 'openshift-mtv';
 
 export const RESOURCE_KINDS = {
+  FORKLIFT_CONTROLLER: 'ForkliftController',
   MIGRATION: 'Migration',
   NETWORK_MAP: 'NetworkMap',
   NETWORK_ATTACHMENT_DEFINITION: 'NetworkAttachmentDefinition',
   PLAN: 'Plan',
   PROVIDER: 'Provider',
+  STORAGE_MAP: 'StorageMap',
   VIRTUAL_MACHINE: 'VirtualMachine',
   PROJECT: 'Project',
   NAMESPACE: 'Namespace',
 } as const;
 
 export const RESOURCE_TYPES = {
+  FORKLIFT_CONTROLLERS: 'forkliftcontrollers',
   MIGRATIONS: 'migrations',
   NETWORK_MAPS: 'networkmaps',
   NETWORK_ATTACHMENT_DEFINITIONS: 'network-attachment-definitions',
   PLANS: 'plans',
   PROVIDERS: 'providers',
+  STORAGE_MAPS: 'storagemaps',
   VIRTUAL_MACHINES: 'virtualmachines',
   PROJECTS: 'projects',
   NAMESPACES: 'namespaces',

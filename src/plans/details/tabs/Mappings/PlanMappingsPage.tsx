@@ -35,6 +35,7 @@ import { usePlanProviders } from './hooks/usePlanProviders';
 import { usePlanStorageMapResources } from './hooks/usePlanStorageMapResources';
 import { getMappingPageMessage } from './utils/utils';
 
+// eslint-disable-next-line max-lines-per-function
 const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
@@ -127,7 +128,7 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
 
   return (
     <PageSection hasBodyWrapper={false} data-testid="plan-mappings-section">
-      <SectionHeading text={t('Mappings')} />
+      <SectionHeading text={t('Mappings')} testId="mappings-section-heading" />
 
       <SectionHeadingWithEdit
         title={t('Network map')}
@@ -159,6 +160,7 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
               namespace={getNamespace(networkMap)}
             />
           }
+          testId="network-map-name-item"
           title={t('Network map name')}
         />
       </DescriptionList>
@@ -190,6 +192,7 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
               namespace={getNamespace(storageMap)}
             />
           }
+          testId="storage-map-name-item"
           title={t('Storage map name')}
         />
       </DescriptionList>

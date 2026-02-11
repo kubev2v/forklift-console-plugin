@@ -7,12 +7,14 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import SectionHeading, { type SectionHeadingProps } from './SectionHeading';
 
+type AdditionalActionProps = ButtonProps & { 'data-testid'?: string };
+
 type SectionHeadingWithEditProps = Omit<
   {
     onClick: () => void;
     title: string;
     editable?: boolean;
-    additionalActions?: ButtonProps[];
+    additionalActions?: AdditionalActionProps[];
     'data-testid'?: string;
   } & SectionHeadingProps,
   'text'
