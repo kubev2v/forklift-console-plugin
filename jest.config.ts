@@ -22,6 +22,7 @@ export const config: JestConfigWithTsJest = {
   transform: {
     '^.+\\.[t|j]sx?$': 'ts-jest',
   },
-  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@patternfly|@openshift-console\\S*?)/.*)'],
+  transformIgnorePatterns: [
+    '<rootDir>/node_modules/(?!(@patternfly|@openshift-console\\S*?|jsonpath-plus)/.*)'],
 };
 export default config;
