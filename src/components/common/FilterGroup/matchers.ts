@@ -1,4 +1,4 @@
-import jsonpath from 'jsonpath';
+import { JSONPath } from 'jsonpath-plus';
 
 import { DateFilter } from '../Filter/DateFilter';
 import { DateRangeFilter } from '../Filter/DateRangeFilter';
@@ -40,7 +40,9 @@ export const getResourceFieldValue = <
   }
 
   if (typeof field.jsonPath === 'string') {
-    return jsonpath.query(resourceData, field.jsonPath)?.[0] as T[keyof T];
+    // eslint-disable-next-line new-cap
+    const result: unknown = JSONPath({ json: resourceData, path: field.jsonPath, wrap: false });
+    return result as T[keyof T];
   }
 
   if (typeof field.jsonPath === 'function') {
