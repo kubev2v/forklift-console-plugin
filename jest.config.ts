@@ -2,6 +2,7 @@ import type { JestConfigWithTsJest } from 'ts-jest';
 
 const moduleNameMapper = {
   '@console/*': '<rootDir>/src/__mocks__/dummy.ts',
+  '@forklift-ui/types': '@kubev2v/types',
   '@openshift-console/*': '<rootDir>/src/__mocks__/dummy.ts',
   '\\.(css|less|scss|svg|png|jpg|jpeg|gif|ico)$': '<rootDir>/src/__mocks__/dummy.ts',
   '^@components/(.*)$': '<rootDir>/src/components/$1',
@@ -32,6 +33,8 @@ export const config: JestConfigWithTsJest = {
   transform: {
     '^.+\\.[t|j]sx?$': 'ts-jest',
   },
-  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@patternfly|@openshift-console\\S*?)/.*)'],
+  transformIgnorePatterns: [
+    '<rootDir>/node_modules/(?!(@patternfly|@openshift-console\\S*?|jsonpath-plus)/.*)',
+  ],
 };
 export default config;
