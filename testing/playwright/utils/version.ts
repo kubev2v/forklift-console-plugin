@@ -23,7 +23,7 @@ const isLatest = (raw: string): boolean => raw.trim().toLowerCase() === 'latest'
 
 const parseVersion = (raw: string): SemverTuple | null => {
   const normalized = raw.trim().replace(/^v/i, '');
-  const parts = normalized.split('.').map((part) => parseInt(part, 10));
+  const parts = normalized.split('.').map((part) => Number.parseInt(part, 10));
   if (parts.length < 2 || parts.some(Number.isNaN)) {
     return null;
   }
