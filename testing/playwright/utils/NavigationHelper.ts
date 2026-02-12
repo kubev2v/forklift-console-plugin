@@ -2,7 +2,6 @@ import type { Page } from '@playwright/test';
 
 import { MTV_NAMESPACE } from './resource-manager/constants';
 import { disableGuidedTour } from './utils';
-import { isVersionAtLeast, V2_11_0 } from './version';
 
 export class NavigationHelper {
   private readonly defaultNamespace = MTV_NAMESPACE;
@@ -71,11 +70,7 @@ export class NavigationHelper {
 
   async navigateToMigrationMenu(): Promise<void> {
     await this.navigateToConsole();
-    if (isVersionAtLeast(V2_11_0)) {
-      await this.page.getByTestId('migration-nav-item').click({ timeout: 20000 });
-    } else {
-      await this.page.getByRole('link', { name: /Migration/i }).click({ timeout: 20000 });
-    }
+    await this.page.getByTestId('migration-nav-item').click({ timeout: 20000 });
   }
 
   async navigateToOverview(): Promise<void> {
@@ -95,26 +90,12 @@ export class NavigationHelper {
   }
 
   async navigateToPlans(): Promise<void> {
-    if (isVersionAtLeast(V2_11_0)) {
-      await this.navigateToMigrationMenu();
-      await this.page.getByTestId('plans-nav-item').click();
-    } else {
-      await this.navigateToConsole();
-      await this.page.goto(this.buildK8sUrl({ resource: 'Plan', allNamespaces: true }));
-      await this.page.waitForLoadState('networkidle');
-      await disableGuidedTour(this.page);
-    }
+    await this.navigateToMigrationMenu();
+    await this.page.getByTestId('plans-nav-item').click();
   }
 
   async navigateToProviders(): Promise<void> {
-    if (isVersionAtLeast(V2_11_0)) {
-      await this.navigateToMigrationMenu();
-      await this.page.getByTestId('providers-nav-item').click();
-    } else {
-      await this.navigateToConsole();
-      await this.page.goto(this.buildK8sUrl({ resource: 'Provider', allNamespaces: true }));
-      await this.page.waitForLoadState('networkidle');
-      await disableGuidedTour(this.page);
-    }
+    await this.navigateToMigrationMenu();
+    await this.page.getByTestId('providers-nav-item').click();
   }
 }
