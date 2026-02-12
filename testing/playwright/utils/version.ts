@@ -1,19 +1,6 @@
-/**
- * Forklift version from environment (e.g. FORKLIFT_VERSION=2.11.0).
- * Used to skip or gate tests that require a minimum Forklift version.
- *
- * The version is auto-detected from the cluster during global setup by reading
- * the MTV/Forklift ClusterServiceVersion (CSV). Set FORKLIFT_VERSION explicitly
- * in the environment to override auto-detection.
- *
- * FORKLIFT_VERSION=latest or LATEST means "always run" (all version checks pass).
- */
+/** Auto-detected from the cluster CSV; set explicitly to override. "latest" means all checks pass. */
 const VERSION_ENV_VAR = 'FORKLIFT_VERSION';
 
-/**
- * Well-known Forklift version constants.
- * Use these instead of raw strings to avoid typos in version checks.
- */
 export const V2_10_5 = '2.10.5';
 export const V2_11_0 = '2.11.0';
 
@@ -49,12 +36,7 @@ const compareTuples = (a: SemverTuple, b: SemverTuple): number => {
   return a[2] - b[2];
 };
 
-/**
- * True if the current Forklift version (from env) is >= minVersion.
- * If FORKLIFT_VERSION is not set, returns false so version-gated checks fail by default.
- *
- * @param minVersion - Minimum required version, e.g. V2_11_0
- */
+/** True if the current Forklift version >= minVersion. Unset version → false. */
 export const isVersionAtLeast = (minVersion: string): boolean => {
   const raw = getForkliftVersion();
   if (!raw) return false;
@@ -66,14 +48,7 @@ export const isVersionAtLeast = (minVersion: string): boolean => {
   return compareTuples(current, min) >= 0;
 };
 
-/**
- * True if the current version (x.y.z) has the feature across multiple version streams.
- * For backported features: list the minimum version per stream that has it; any stream
- * newer than the highest listed is assumed to have it (e.g. fix in 2.11.1 implies 2.12.0+).
- * Only list streams that need an explicit minimum.
- *
- * @param minVersionByStream - e.g. [V2_10_5, '2.11.1'] → 2.10.6 ✓, 2.11.0 ✗, 2.11.2 ✓, 2.12.0 ✓
- */
+/** True if the current version satisfies any of the per-stream minimums (for backported features). */
 export const isVersionInStreams = (minVersionByStream: readonly string[]): boolean => {
   const raw = getForkliftVersion();
   if (!raw) return false;
@@ -95,51 +70,15 @@ export const isVersionInStreams = (minVersionByStream: readonly string[]): boole
   return currPatch >= minForStream[2];
 };
 
-/**
- * Minimal interface for the Playwright test object's skip method.
- * Works with `test` from @playwright/test and any fixture-extended test objects.
- */
+/** Minimal interface for Playwright's test.skip(). */
 type SkippableTest = { skip: (condition: boolean, description: string) => void };
 
-/**
- * Skip all tests in the current describe block when Forklift version is below minVersion.
- * Generates the skip message automatically. Call at the top of a test.describe() block.
- *
- * @example
- * ```ts
- * import { requireVersion, V2_11_0 } from '../../../utils/version';
- *
- * test.describe('Feature X', () => {
- *   requireVersion(test, V2_11_0);
- *   // ...
- * });
- * ```
- *
- * @param testObj - The Playwright test object (base or fixture-extended)
- * @param minVersion - Minimum required version, e.g. V2_11_0
- */
+/** Skip the current describe block when Forklift version < minVersion. */
 export const requireVersion = (testObj: SkippableTest, minVersion: string): void => {
   testObj.skip(!isVersionAtLeast(minVersion), `Requires Forklift ${minVersion}+`);
 };
 
-/**
- * Skip all tests in the current describe block when the Forklift version doesn't satisfy
- * any of the listed stream minimums. For backported features where different version streams
- * have different minimum patch levels.
- *
- * @example
- * ```ts
- * import { requireVersionInStreams, V2_10_5 } from '../../../utils/version';
- *
- * test.describe('Backported feature', () => {
- *   requireVersionInStreams(test, [V2_10_5, '2.11.1']);
- *   // runs on 2.10.5+, 2.11.1+, 2.12.0+ — skipped on 2.11.0, 2.10.4, etc.
- * });
- * ```
- *
- * @param testObj - The Playwright test object (base or fixture-extended)
- * @param minVersionByStream - Minimum version per stream, e.g. [V2_10_5, '2.11.1']
- */
+/** Skip the current describe block when the version doesn't satisfy any stream minimum. */
 export const requireVersionInStreams = (
   testObj: SkippableTest,
   minVersionByStream: readonly string[],
@@ -151,16 +90,7 @@ export const requireVersionInStreams = (
   );
 };
 
-/**
- * Step-level gating: run a block only when version >= minVersion. Use inside a test when only
- * some steps depend on a newer Forklift version. Keeps one test that adapts instead of
- * duplicating tests. Prefer requireVersion when the entire describe only applies to a
- * minimum version.
- *
- * @param minVersion - Minimum required version, e.g. V2_11_0
- * @param fn - Code to run when version is satisfied (e.g. new UI flow or assertion)
- * @returns Promise that resolves when the block ran or was skipped
- */
+/** Run a block only when version >= minVersion (step-level gating within a single test). */
 export const runStepIfVersion = async <T>(
   minVersion: string,
   fn: () => Promise<T>,
