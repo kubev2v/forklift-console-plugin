@@ -134,6 +134,9 @@ format_commit_error() {
     "invalid-format")
       echo "   ❌ Invalid 'Resolves:' format: $description"
       ;;
+    *)
+      echo "   ❌ Unknown error type: $error_type"
+      ;;
   esac
 }
 
@@ -253,6 +256,9 @@ $error_output"
         ;;
       "chore") 
         chore_count=$((chore_count + 1))
+        ;;
+      *)
+        echo "Warning: Unexpected result '$result' for commit $commit"
         ;;
     esac
   done <<< "$commits"
