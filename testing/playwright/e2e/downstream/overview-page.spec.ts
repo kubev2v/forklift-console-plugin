@@ -10,6 +10,7 @@ import {
 import { OverviewPage } from '../../page-objects/OverviewPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
+import { requireVersion, V2_11_0 } from '../../utils/version';
 
 test.describe(
   'Overview Page - Settings',
@@ -17,6 +18,8 @@ test.describe(
     tag: '@downstream',
   },
   () => {
+    requireVersion(test, V2_11_0);
+
     const resourceManager = new ResourceManager();
     let originalSettings: OriginalSettings | null = null;
 

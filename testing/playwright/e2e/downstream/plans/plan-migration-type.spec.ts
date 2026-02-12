@@ -1,8 +1,11 @@
 import { sharedProviderCustomPlanFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { MigrationType } from '../../../types/enums';
+import { requireVersion, V2_11_0 } from '../../../utils/version';
 
 test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
+
   test('should edit migration type', async ({
     page,
     createCustomPlan,

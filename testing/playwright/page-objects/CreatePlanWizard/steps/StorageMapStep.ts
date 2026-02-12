@@ -1,12 +1,40 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import { isEmpty } from '../../../utils/utils';
+import { isVersionAtLeast, V2_11_0 } from '../../../utils/version';
 
 export class StorageMapStep {
   private readonly page: Page;
 
   constructor(page: Page) {
     this.page = page;
+  }
+
+  /**
+   * Returns version-appropriate locators for mapping table rows.
+   * 2.11+: uses data-testid="field-row-*" with td cells and target-storage-select.
+   * <2.11: uses grid > rowgroup (body) > row with gridcell elements.
+   */
+  private getMappingRowLocators(): {
+    rows: Locator;
+    getSourceText: (row: Locator) => Promise<string | null>;
+    getTargetSelect: (row: Locator) => Locator;
+  } {
+    if (isVersionAtLeast(V2_11_0)) {
+      return {
+        rows: this.page.getByTestId(/^field-row-\d+$/),
+        getSourceText: (row: Locator) => row.locator('td').first().textContent(),
+        getTargetSelect: (row: Locator) => row.getByTestId('target-storage-select'),
+      };
+    }
+
+    const grid = this.page.getByRole('grid');
+    const bodyRowGroup = grid.getByRole('rowgroup').nth(1);
+    return {
+      rows: bodyRowGroup.getByRole('row'),
+      getSourceText: (row: Locator) => row.getByRole('gridcell').first().textContent(),
+      getTargetSelect: (row: Locator) => row.getByRole('gridcell').nth(1).getByRole('button'),
+    };
   }
 
   async configureMappings(mappings: { source: string; target: string }[]): Promise<void> {
@@ -56,33 +84,30 @@ export class StorageMapStep {
 
   /**
    * Select a target storage for a given source storage in the storage mapping table.
-   * Uses data-testid selectors for reliability.
-   *
-   * @param sourceStorage - Name of the source storage to find the row
-   * @param targetStorage - Name of the target storage to select
+   * Handles both 2.11+ (data-testid rows) and <2.11 (grid/gridcell rows).
    */
   async selectTargetStorageForSource(sourceStorage: string, targetStorage: string): Promise<void> {
-    // Find all mapping rows and locate the one with the source storage
-    const rows = this.page.getByTestId(/^field-row-\d+$/);
+    const { rows, getSourceText, getTargetSelect } = this.getMappingRowLocators();
     const rowCount = await rows.count();
 
-    let targetRow = null;
+    let matchedRow = rows.first();
+    let found = false;
     const availableStorages: string[] = [];
 
     for (let i = 0; i < rowCount; i += 1) {
       const row = rows.nth(i);
-      const sourceCell = row.locator('td').first();
-      const text = await sourceCell.textContent();
+      const text = await getSourceText(row);
       if (text) {
         availableStorages.push(text.trim());
       }
       if (text?.trim() === sourceStorage) {
-        targetRow = row;
+        matchedRow = row;
+        found = true;
         break;
       }
     }
 
-    if (!targetRow) {
+    if (!found) {
       const storagesList = availableStorages
         .map((storage, i) => `  ${i + 1}. ${storage}`)
         .join('\n');
@@ -92,18 +117,20 @@ export class StorageMapStep {
       );
     }
 
-    // Find the target storage select using testId
-    const targetStorageSelect = targetRow.getByTestId('target-storage-select');
+    const targetStorageSelect = getTargetSelect(matchedRow);
     await expect(targetStorageSelect).toBeVisible();
     await targetStorageSelect.click();
 
-    // Wait for options to appear and select the target storage
     await this.waitForStorageOptions();
     await this.page.getByRole('option', { name: targetStorage }).click();
   }
 
   async verifyStepVisible(): Promise<void> {
-    await expect(this.page.getByTestId('create-plan-storage-map-step')).toBeVisible();
+    if (isVersionAtLeast(V2_11_0)) {
+      await expect(this.page.getByTestId('create-plan-storage-map-step')).toBeVisible();
+    } else {
+      await expect(this.page.getByRole('heading', { name: /Storage map/i })).toBeVisible();
+    }
   }
 
   async waitForData(): Promise<void> {
@@ -114,7 +141,6 @@ export class StorageMapStep {
 
   /**
    * Wait for storage options to appear in the dropdown.
-   * Checks that the listbox is visible rather than using .first() which can be brittle.
    */
   async waitForStorageOptions(): Promise<void> {
     const listbox = this.page.getByRole('listbox');

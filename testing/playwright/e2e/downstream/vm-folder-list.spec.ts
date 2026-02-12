@@ -5,8 +5,11 @@ import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/Create
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { createPlanTestData, type PlanTestData } from '../../types/test-data';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
+import { requireVersion, V2_11_0 } from '../../utils/version';
 
 providerTest.describe('VM folder list - Plan Creation', { tag: '@downstream' }, () => {
+  requireVersion(providerTest, V2_11_0);
+
   providerTest(
     'should verify VM selection functionality on plan creation wizard',
     async ({ page, testProvider, resourceManager }) => {
@@ -74,13 +77,15 @@ providerTest.describe('VM folder list - Plan Creation', { tag: '@downstream' }, 
           checkboxElement &&
           (await checkboxElement.evaluate((el: HTMLInputElement) => el.indeterminate));
 
-        expect(isStillChecked || isIndeterminate).toBe(true);
+        expect(isStillChecked ?? isIndeterminate).toBe(true);
       });
     },
   );
 });
 
 providerTest.describe('VM folder list - Provider Details Page', { tag: '@downstream' }, () => {
+  requireVersion(providerTest, V2_11_0);
+
   providerTest(
     'should verify VM table functionality on provider details page',
     async ({ page, testProvider, resourceManager }) => {

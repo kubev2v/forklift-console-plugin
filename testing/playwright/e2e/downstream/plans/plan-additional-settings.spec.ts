@@ -5,8 +5,11 @@ import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/Cre
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { MigrationType } from '../../../types/enums';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
+import { requireVersion, V2_11_0 } from '../../../utils/version';
 
 test.describe('Plan additional settings', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
+
   test('should set power state on plan creation, plan details tab, and VMs tab', async ({
     page,
     testProvider,

@@ -2,6 +2,7 @@ import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData, TargetProject } from '../../../types/test-data';
 import type { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
+import { isVersionAtLeast, V2_11_0 } from '../../../utils/version';
 
 export class GeneralInformationStep {
   private readonly page: Page;
@@ -39,6 +40,9 @@ export class GeneralInformationStep {
   }
 
   async fillDescription(description: string) {
+    if (!isVersionAtLeast(V2_11_0)) {
+      return;
+    }
     const descriptionInput = this.page.getByTestId('plan-description-input');
     await expect(descriptionInput).toBeVisible();
     await descriptionInput.fill(description);

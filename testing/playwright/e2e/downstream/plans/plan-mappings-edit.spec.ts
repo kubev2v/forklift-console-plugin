@@ -8,8 +8,10 @@ import {
   SourceStorages,
   StorageClasses,
 } from '../../../types/test-data';
+import { requireVersion, V2_11_0 } from '../../../utils/version';
 
 test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
   test('should test mappings editing interactions on mappings tab', async ({
     page,
     testPlan,

@@ -7,7 +7,7 @@ import type {
 import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
-import { MTV_NAMESPACE, RESOURCE_KINDS } from './constants';
+import { API_PATHS, MTV_NAMESPACE, OPERATOR_CSV_PREFIXES, RESOURCE_KINDS } from './constants';
 import type { SupportedResource } from './ResourceManager';
 
 /**
@@ -25,6 +25,74 @@ export class ResourceFetcher extends BaseResourceManager {
       resourceName: controllerName,
       namespace,
     });
+  }
+
+  /**
+   * Fetches the MTV/Forklift operator version from the cluster by reading the
+   * ClusterServiceVersion (CSV) resource created by OLM.
+   *
+   * Looks for a CSV whose name starts with "mtv-operator" (downstream) or
+   * "forklift-operator" (upstream) and returns its spec.version.
+   *
+   * @returns The semver version string (e.g. "2.7.0") or null if not found.
+   */
+  static async fetchMtvVersion(page: Page, namespace = MTV_NAMESPACE): Promise<string | null> {
+    const apiPath = `${API_PATHS.OLM_CSV}/namespaces/${namespace}/clusterserviceversions`;
+    const constants = ResourceFetcher.getEvaluateConstants();
+
+    try {
+      const result = await page.evaluate(
+        async ({ path, prefixes, evalConstants }) => {
+          try {
+            const cookies = document.cookie.split('; ');
+            const csrfCookie = cookies.find((cookie) =>
+              cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
+            );
+            const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+
+            const response = await fetch(path, {
+              credentials: 'include',
+              headers: {
+                [evalConstants.CONTENT_TYPE_HEADER]: evalConstants.APPLICATION_JSON,
+                [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
+              },
+              method: 'GET',
+            });
+
+            if (!response.ok) {
+              return { error: `HTTP ${String(response.status)}`, success: false as const };
+            }
+
+            const data = await response.json();
+            const items: { metadata?: { name?: string }; spec?: { version?: string } }[] =
+              data.items ?? [];
+
+            const operatorCsv = items.find((csv) =>
+              prefixes.some((prefix: string) => csv.metadata?.name?.startsWith(prefix)),
+            );
+
+            if (!operatorCsv?.spec?.version) {
+              return { error: 'Operator CSV not found', success: false as const };
+            }
+
+            return { success: true as const, version: operatorCsv.spec.version };
+          } catch (error: unknown) {
+            const err = error as Error;
+            return { error: err?.message ?? String(error), success: false as const };
+          }
+        },
+        { evalConstants: constants, path: apiPath, prefixes: [...OPERATOR_CSV_PREFIXES] },
+      );
+
+      if (result.success) {
+        return result.version;
+      }
+
+      console.error(`Failed to fetch MTV version: ${result.error}`);
+      return null;
+    } catch {
+      return null;
+    }
   }
 
   static async fetchPlan(

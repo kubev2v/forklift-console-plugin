@@ -4,6 +4,7 @@ import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
+import { isVersionAtLeast, V2_11_0 } from '../../utils/version';
 
 import { AdditionalSettingsStep } from './steps/AdditionalSettingsSteps';
 import { GeneralInformationStep } from './steps/GeneralInformationStep';
@@ -108,8 +109,12 @@ export class CreatePlanWizardPage {
     if (testData.additionalPlanSettings) {
       await this.additionalSettings.fillAndComplete(testData.additionalPlanSettings);
       await this.clickNext();
-    } else {
+    } else if (isVersionAtLeast(V2_11_0)) {
       await this.clickSkipToReview();
+    } else {
+      // <2.11: no "Skip to Review" button — click Next through remaining steps
+      await this.clickNext(); // Other settings → Hooks
+      await this.clickNext(); // Hooks → Review
     }
 
     // STEP 7: Review
@@ -171,6 +176,13 @@ export class CreatePlanWizardPage {
 
   async waitForWizardLoad() {
     expect(this.page.url()).toContain('forklift.konveyor.io~v1beta1~Plan/~new');
-    await expect(this.page.getByTestId('create-plan-wizard')).toBeVisible();
+    if (isVersionAtLeast(V2_11_0)) {
+      await expect(this.page.getByTestId('create-plan-wizard')).toBeVisible();
+    } else {
+      const wizardStep = this.page
+        .getByTestId('plan-name-input')
+        .or(this.page.getByRole('group', { name: /Plan information/i }));
+      await expect(wizardStep.first()).toBeVisible();
+    }
   }
 }

@@ -5,8 +5,11 @@ import { NetworkMapCreatePage } from '../../../page-objects/NetworkMapCreatePage
 import { NetworkMapDetailsPage } from '../../../page-objects/NetworkMapDetailsPage';
 import { NetworkMapsListPage } from '../../../page-objects/NetworkMapsListPage';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
+import { requireVersion, V2_11_0 } from '../../../utils/version';
 
 test.describe('Network Maps', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
+
   test('should create network map via form and YAML', async ({
     page,
     testProvider,

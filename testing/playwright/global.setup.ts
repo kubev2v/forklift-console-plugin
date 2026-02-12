@@ -1,11 +1,36 @@
 import { existsSync, unlinkSync } from 'fs';
 
-import { chromium, type FullConfig } from '@playwright/test';
+import { chromium, type FullConfig, type Page } from '@playwright/test';
 
 import { LoginPage } from './page-objects/LoginPage';
+import { ResourceFetcher } from './utils/resource-manager/ResourceFetcher';
 import { disableGuidedTour } from './utils/utils';
 
 const RESOURCES_FILE = 'playwright/.resources.json';
+const VERSION_ENV_VAR = 'FORKLIFT_VERSION';
+
+/**
+ * Auto-detect the Forklift/MTV operator version from the cluster CSV.
+ * Skips detection when FORKLIFT_VERSION is already set (manual override).
+ */
+const detectForkliftVersion = async (page: Page): Promise<void> => {
+  const existing = process.env[VERSION_ENV_VAR];
+
+  if (existing) {
+    console.error(`📌 Using pre-set Forklift version: ${existing}`);
+    return;
+  }
+
+  const detectedVersion = await ResourceFetcher.fetchMtvVersion(page);
+
+  if (detectedVersion) {
+    // eslint-disable-next-line require-atomic-updates -- single-threaded global setup, no actual race
+    process.env[VERSION_ENV_VAR] = detectedVersion;
+    console.error(`🔍 Auto-detected Forklift version: ${detectedVersion}`);
+  } else {
+    console.error('⚠️ Could not auto-detect Forklift version from cluster');
+  }
+};
 
 const globalSetup = async (config: FullConfig) => {
   console.error('🚀 Starting global setup...');
@@ -39,6 +64,8 @@ const globalSetup = async (config: FullConfig) => {
 
       await page.context().storageState({ path: storageState as string });
       console.error('✅ Authentication completed successfully');
+
+      await detectForkliftVersion(page);
     } catch (error) {
       console.error('❌ Login failed in global setup:', error);
       throw error;
@@ -47,6 +74,12 @@ const globalSetup = async (config: FullConfig) => {
     }
   } else {
     console.error('⚠️ No credentials provided, skipping authentication setup');
+    console.error(`📌 Forklift version: ${process.env[VERSION_ENV_VAR]}`);
+
+    if (!process.env[VERSION_ENV_VAR]) {
+      process.env[VERSION_ENV_VAR] = 'latest';
+      console.error('📌 No credentials and no FORKLIFT_VERSION set, defaulting to "latest"');
+    }
   }
 };
 
