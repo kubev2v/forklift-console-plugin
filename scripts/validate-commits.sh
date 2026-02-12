@@ -124,18 +124,18 @@ format_commit_error() {
   local short_sha=$(echo "$commit" | cut -c1-8)
   local subject=$(echo "$commit_msg" | head -1)
   
-  echo "📋 Commit: $short_sha - $author_name"
-  echo "   Subject: $subject"
+  echo "📋 Commit: $short_sha - $author_name" >&2
+  echo "   Subject: $subject" >&2
   
   case "$error_type" in
     "missing-description")
-      echo "   ❌ Missing commit description with 'Resolves:' line"
+      echo "   ❌ Missing commit description with 'Resolves:' line" >&2
       ;;
     "invalid-format")
-      echo "   ❌ Invalid 'Resolves:' format: $description"
+      echo "   ❌ Invalid 'Resolves:' format: $description" >&2
       ;;
     *)
-      echo "   ❌ Unknown error type: $error_type"
+      echo "   ❌ Unknown error type: $error_type" >&2
       ;;
   esac
 }
@@ -258,40 +258,40 @@ $error_output"
         chore_count=$((chore_count + 1))
         ;;
       *)
-        echo "Warning: Unexpected result '$result' for commit $commit"
+        echo "Warning: Unexpected result '$result' for commit $commit" >&2
         ;;
     esac
   done <<< "$commits"
   
   # Display consolidated error report if there are validation failures
   if [[ "$validation_failed" == true ]]; then
-    echo ""
-    echo "🚨 COMMIT VALIDATION FAILED"
-    echo "═══════════════════════════════════════════════════════════════"
-    echo "$error_details"
-    echo ""
-    echo "📖 For detailed examples and help, see: COMMIT_MESSAGE_GUIDE.md"
-    echo "═══════════════════════════════════════════════════════════════"
+    echo "" >&2
+    echo "🚨 COMMIT VALIDATION FAILED" >&2
+    echo "═══════════════════════════════════════════════════════════════" >&2
+    echo "$error_details" >&2
+    echo "" >&2
+    echo "📖 For detailed examples and help, see: COMMIT_MESSAGE_GUIDE.md" >&2
+    echo "═══════════════════════════════════════════════════════════════" >&2
   fi
   
   # Print summary
   echo ""
   echo "📊 Validation Summary:"
   echo "  ✅ Valid commits: $valid_count"
-  echo "  ❌ Invalid commits: $invalid_count"
+  echo "  ❌ Invalid commits: $invalid_count" >&2
   echo "  🤖 Skipped (bot users): $skipped_count"
   echo "  🔧 Skipped (chore commits): $chore_count"
   
   if [[ "$validation_failed" == true ]]; then
-    echo ""
-    echo "💥 VALIDATION FAILED: $invalid_count commit(s) need to be fixed"
-    echo ""
-    echo "📖 For detailed help with fixing commit messages, see:"
-    echo "   COMMIT_MESSAGE_GUIDE.md"
-    echo ""
-    echo "🚀 Quick fix for latest commit:"
-    echo "   git commit --amend"
-    echo ""
+    echo "" >&2
+    echo "💥 VALIDATION FAILED: $invalid_count commit(s) need to be fixed" >&2
+    echo "" >&2
+    echo "📖 For detailed help with fixing commit messages, see:" >&2
+    echo "   COMMIT_MESSAGE_GUIDE.md" >&2
+    echo "" >&2
+    echo "🚀 Quick fix for latest commit:" >&2
+    echo "   git commit --amend" >&2
+    echo "" >&2
     exit 1
   else
     echo "✅ All commit messages are valid!"
