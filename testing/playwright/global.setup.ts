@@ -11,20 +11,15 @@ const VERSION_ENV_VAR = 'FORKLIFT_VERSION';
 
 /**
  * Auto-detect the Forklift/MTV operator version from the cluster CSV.
- * Skips detection when FORKLIFT_VERSION is already set (manual override).
+ * When FORKLIFT_VERSION is already set (manual override), the pre-set value wins.
  */
 const detectForkliftVersion = async (page: Page): Promise<void> => {
-  const existing = process.env[VERSION_ENV_VAR];
-
-  if (existing) {
-    console.error(`📌 Using pre-set Forklift version: ${existing}`);
-    return;
-  }
-
   const detectedVersion = await ResourceFetcher.fetchMtvVersion(page);
 
-  if (detectedVersion) {
-    // eslint-disable-next-line require-atomic-updates -- single-threaded global setup, no actual race
+  const existing = process.env[VERSION_ENV_VAR];
+  if (existing) {
+    console.error(`📌 Using pre-set Forklift version: ${existing}`);
+  } else if (detectedVersion) {
     process.env[VERSION_ENV_VAR] = detectedVersion;
     console.error(`🔍 Auto-detected Forklift version: ${detectedVersion}`);
   } else {
