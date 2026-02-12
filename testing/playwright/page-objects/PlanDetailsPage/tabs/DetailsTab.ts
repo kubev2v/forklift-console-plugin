@@ -10,12 +10,15 @@ import { TargetLabelsModal } from '../modals/TargetLabelsModal';
 import { TargetNodeSelectorModal } from '../modals/TargetNodeSelectorModal';
 
 export class DetailsTab {
+  readonly affinityModal: TargetAffinityModal;
   readonly descriptionTextbox: Locator;
   readonly editDescriptionModal: Locator;
   readonly editDiskDecryptionModal: Locator;
   readonly editMigrationTypeModal: Locator;
   readonly editPowerStateModal: Locator;
   readonly guestConversionModal: GuestConversionModal;
+  readonly labelsModal: TargetLabelsModal;
+  readonly nodeSelectorModal: TargetNodeSelectorModal;
   protected readonly page: Page;
   readonly powerStateOptionAuto: Locator;
   readonly powerStateOptionOff: Locator;
@@ -24,9 +27,6 @@ export class DetailsTab {
   readonly saveDiskDecryptionButton: Locator;
   readonly saveMigrationTypeButton: Locator;
   readonly savePowerStateButton: Locator;
-  readonly targetAffinityModal: TargetAffinityModal;
-  readonly targetLabelsModal: TargetLabelsModal;
-  readonly targetNodeSelectorModal: TargetNodeSelectorModal;
   readonly targetPowerStateSelect: Locator;
   readonly useNbdeClevisCheckbox: Locator;
   readonly warmMigrationSwitch: Locator;
@@ -52,9 +52,57 @@ export class DetailsTab {
     this.useNbdeClevisCheckbox = this.page.getByTestId('use-nbde-clevis-checkbox');
     this.saveDiskDecryptionButton = this.page.getByTestId('modal-confirm-button');
     this.guestConversionModal = new GuestConversionModal(page);
-    this.targetLabelsModal = new TargetLabelsModal(page);
-    this.targetNodeSelectorModal = new TargetNodeSelectorModal(page);
-    this.targetAffinityModal = new TargetAffinityModal(page);
+    this.labelsModal = new TargetLabelsModal(page);
+    this.nodeSelectorModal = new TargetNodeSelectorModal(page);
+    this.affinityModal = new TargetAffinityModal(page);
+  }
+
+  private async clickEditDetailItem(
+    testId: string,
+    modal: { waitForModalToOpen: () => Promise<void> },
+  ): Promise<void> {
+    await this.page.getByTestId(testId).locator('button').click();
+    await modal.waitForModalToOpen();
+  }
+
+  private async verifyAffinityRulesCount(testId: string, count: number): Promise<void> {
+    const element = this.page.getByTestId(testId);
+    await expect(element).toContainText(`${count} affinity rule`);
+  }
+
+  private async verifyDetailItemText(testId: string, expectedText: string): Promise<void> {
+    const text = this.page.getByTestId(testId).getByText(expectedText);
+    await expect(text).toBeVisible();
+  }
+
+  private async verifyLabelsCount(testId: string, count: number): Promise<void> {
+    const element = this.page.getByTestId(testId);
+    if (count === 0) {
+      await expect(element).toContainText('No labels defined');
+    } else {
+      await expect(element).not.toContainText('No labels defined');
+    }
+  }
+
+  private async verifyNodeSelectorCount(testId: string, count: number): Promise<void> {
+    const element = this.page.getByTestId(testId);
+    if (count === 0) {
+      await expect(element).toContainText('No node selectors defined');
+    } else {
+      await expect(element).not.toContainText('No node selectors defined');
+    }
+  }
+
+  async clickEditConvertorAffinity(): Promise<void> {
+    await this.clickEditDetailItem('convertor-affinity-rules-detail-item', this.affinityModal);
+  }
+
+  async clickEditConvertorLabels(): Promise<void> {
+    await this.clickEditDetailItem('convertor-labels-detail-item', this.labelsModal);
+  }
+
+  async clickEditConvertorNodeSelector(): Promise<void> {
+    await this.clickEditDetailItem('convertor-node-selector-detail-item', this.nodeSelectorModal);
   }
 
   async clickEditDescription(): Promise<void> {
@@ -67,8 +115,7 @@ export class DetailsTab {
   }
 
   async clickEditGuestConversionMode(): Promise<void> {
-    await this.page.getByTestId('guest-conversion-mode-detail-item').locator('button').click();
-    await this.guestConversionModal.waitForModalToOpen();
+    await this.clickEditDetailItem('guest-conversion-mode-detail-item', this.guestConversionModal);
   }
 
   async clickEditMigrationType(): Promise<void> {
@@ -77,18 +124,15 @@ export class DetailsTab {
   }
 
   async clickEditTargetAffinity(): Promise<void> {
-    await this.page.getByTestId('vm-target-affinity-rules-detail-item').locator('button').click();
-    await this.targetAffinityModal.waitForModalToOpen();
+    await this.clickEditDetailItem('vm-target-affinity-rules-detail-item', this.affinityModal);
   }
 
   async clickEditTargetLabels(): Promise<void> {
-    await this.page.getByTestId('vm-target-labels-detail-item').locator('button').click();
-    await this.targetLabelsModal.waitForModalToOpen();
+    await this.clickEditDetailItem('vm-target-labels-detail-item', this.labelsModal);
   }
 
   async clickEditTargetNodeSelector(): Promise<void> {
-    await this.page.getByTestId('vm-target-node-selector-detail-item').locator('button').click();
-    await this.targetNodeSelectorModal.waitForModalToOpen();
+    await this.clickEditDetailItem('vm-target-node-selector-detail-item', this.nodeSelectorModal);
   }
 
   async clickEditTargetVMPowerState(): Promise<void> {
@@ -149,6 +193,30 @@ export class DetailsTab {
     return this.page.getByText('Must enable VMware Virtual Disk Development Kit');
   }
 
+  async verifyConvertorAffinityRulesCount(count: number): Promise<void> {
+    await this.verifyAffinityRulesCount('convertor-affinity-rules-detail-item', count);
+  }
+
+  async verifyConvertorAffinityText(expectedText: string): Promise<void> {
+    await this.verifyDetailItemText('convertor-affinity-rules-detail-item', expectedText);
+  }
+
+  async verifyConvertorLabelsCount(count: number): Promise<void> {
+    await this.verifyLabelsCount('convertor-labels-detail-item', count);
+  }
+
+  async verifyConvertorLabelsText(expectedText: string): Promise<void> {
+    await this.verifyDetailItemText('convertor-labels-detail-item', expectedText);
+  }
+
+  async verifyConvertorNodeSelectorCount(count: number): Promise<void> {
+    await this.verifyNodeSelectorCount('convertor-node-selector-detail-item', count);
+  }
+
+  async verifyConvertorNodeSelectorText(expectedText: string): Promise<void> {
+    await this.verifyDetailItemText('convertor-node-selector-detail-item', expectedText);
+  }
+
   async verifyDescriptionText(expectedText: string): Promise<void> {
     const descriptionElement = this.page.getByTestId('description-detail-item');
     await expect(descriptionElement).toContainText(expectedText);
@@ -161,10 +229,7 @@ export class DetailsTab {
   }
 
   async verifyGuestConversionModeText(expectedText: string): Promise<void> {
-    const guestConversionText = this.page
-      .getByTestId('guest-conversion-mode-detail-item')
-      .getByText(expectedText);
-    await expect(guestConversionText).toBeVisible();
+    await this.verifyDetailItemText('guest-conversion-mode-detail-item', expectedText);
   }
 
   async verifyGuestConversionModeTexts(texts: string[]): Promise<void> {
@@ -195,7 +260,6 @@ export class DetailsTab {
     await expect(this.page.getByTestId('created-at-detail-item')).toBeVisible();
     await expect(this.page.getByTestId('owner-detail-item')).toContainText('No owner');
 
-    // Verify description (only exists in 2.11.0+)
     if (isVersionAtLeast(V2_11_0)) {
       if (planData.description) {
         await this.verifyDescriptionText(planData.description);
@@ -229,46 +293,26 @@ export class DetailsTab {
   }
 
   async verifyTargetAffinityRulesCount(count: number): Promise<void> {
-    const targetAffinityElement = this.page.getByTestId('vm-target-affinity-rules-detail-item');
-    await expect(targetAffinityElement).toContainText(`${count} affinity rule`);
+    await this.verifyAffinityRulesCount('vm-target-affinity-rules-detail-item', count);
   }
 
   async verifyTargetAffinityText(expectedText: string): Promise<void> {
-    const targetAffinityText = this.page
-      .getByTestId('vm-target-affinity-rules-detail-item')
-      .getByText(expectedText);
-    await expect(targetAffinityText).toBeVisible();
+    await this.verifyDetailItemText('vm-target-affinity-rules-detail-item', expectedText);
   }
 
   async verifyTargetLabelsCount(count: number): Promise<void> {
-    const targetLabelsElement = this.page.getByTestId('vm-target-labels-detail-item');
-    if (count === 0) {
-      await expect(targetLabelsElement).toContainText('No labels defined');
-    } else {
-      await expect(targetLabelsElement).not.toContainText('No labels defined');
-    }
+    await this.verifyLabelsCount('vm-target-labels-detail-item', count);
   }
 
   async verifyTargetLabelsText(expectedText: string): Promise<void> {
-    const targetLabelsText = this.page
-      .getByTestId('vm-target-labels-detail-item')
-      .getByText(expectedText);
-    await expect(targetLabelsText).toBeVisible();
+    await this.verifyDetailItemText('vm-target-labels-detail-item', expectedText);
   }
 
   async verifyTargetNodeSelectorCount(count: number): Promise<void> {
-    const targetNodeSelectorElement = this.page.getByTestId('vm-target-node-selector-detail-item');
-    if (count === 0) {
-      await expect(targetNodeSelectorElement).toContainText('No node selectors defined');
-    } else {
-      await expect(targetNodeSelectorElement).not.toContainText('No node selectors defined');
-    }
+    await this.verifyNodeSelectorCount('vm-target-node-selector-detail-item', count);
   }
 
   async verifyTargetNodeSelectorText(expectedText: string): Promise<void> {
-    const targetNodeSelectorText = this.page
-      .getByTestId('vm-target-node-selector-detail-item')
-      .getByText(expectedText);
-    await expect(targetNodeSelectorText).toBeVisible();
+    await this.verifyDetailItemText('vm-target-node-selector-detail-item', expectedText);
   }
 }

@@ -1,13 +1,16 @@
 import type { FC } from 'react';
 
-import type { V1beta1PlanSpecTargetAffinity } from '@forklift-ui/types/dist/generated/forklift/models/V1beta1PlanSpecTargetAffinity';
+import type {
+  V1beta1PlanSpecConvertorAffinity,
+  V1beta1PlanSpecTargetAffinity,
+} from '@forklift-ui/types';
 import { Label } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { getAffinityRules } from './utils/getAffinityRules';
 
 type AffinityViewDetailsItemContentProps = {
-  affinity: V1beta1PlanSpecTargetAffinity | undefined;
+  affinity: V1beta1PlanSpecConvertorAffinity | V1beta1PlanSpecTargetAffinity | undefined;
 };
 
 const AffinityViewDetailsItemContent: FC<AffinityViewDetailsItemContentProps> = ({ affinity }) => {
