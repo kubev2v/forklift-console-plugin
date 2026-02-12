@@ -37,62 +37,26 @@ export class ResourceFetcher extends BaseResourceManager {
    * @returns The semver version string (e.g. "2.7.0") or null if not found.
    */
   static async fetchMtvVersion(page: Page, namespace = MTV_NAMESPACE): Promise<string | null> {
+    type CsvItem = { metadata?: { name?: string }; spec?: { version?: string } };
+    type CsvList = { items?: CsvItem[] };
+
     const apiPath = `${API_PATHS.OLM_CSV}/namespaces/${namespace}/clusterserviceversions`;
-    const constants = ResourceFetcher.getEvaluateConstants();
+    const data = await ResourceFetcher.apiGet<CsvList>(page, apiPath);
 
-    try {
-      const result = await page.evaluate(
-        async ({ path, prefixes, evalConstants }) => {
-          try {
-            const cookies = document.cookie.split('; ');
-            const csrfCookie = cookies.find((cookie) =>
-              cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
-            );
-            const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
-
-            const response = await fetch(path, {
-              credentials: 'include',
-              headers: {
-                [evalConstants.CONTENT_TYPE_HEADER]: evalConstants.APPLICATION_JSON,
-                [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
-              },
-              method: 'GET',
-            });
-
-            if (!response.ok) {
-              return { error: `HTTP ${String(response.status)}`, success: false as const };
-            }
-
-            const data = await response.json();
-            const items: { metadata?: { name?: string }; spec?: { version?: string } }[] =
-              data.items ?? [];
-
-            const operatorCsv = items.find((csv) =>
-              prefixes.some((prefix: string) => csv.metadata?.name?.startsWith(prefix)),
-            );
-
-            if (!operatorCsv?.spec?.version) {
-              return { error: 'Operator CSV not found', success: false as const };
-            }
-
-            return { success: true as const, version: operatorCsv.spec.version };
-          } catch (error: unknown) {
-            const err = error as Error;
-            return { error: err?.message ?? String(error), success: false as const };
-          }
-        },
-        { evalConstants: constants, path: apiPath, prefixes: [...OPERATOR_CSV_PREFIXES] },
-      );
-
-      if (result.success) {
-        return result.version;
-      }
-
-      console.error(`Failed to fetch MTV version: ${result.error}`);
-      return null;
-    } catch {
+    if (!data?.items) {
       return null;
     }
+
+    const operatorCsv = data.items.find((csv) =>
+      OPERATOR_CSV_PREFIXES.some((prefix) => csv.metadata?.name?.startsWith(prefix)),
+    );
+
+    if (!operatorCsv?.spec?.version) {
+      console.error('Operator CSV not found among cluster service versions');
+      return null;
+    }
+
+    return operatorCsv.spec.version;
   }
 
   static async fetchPlan(
@@ -123,74 +87,14 @@ export class ResourceFetcher extends BaseResourceManager {
     page: Page,
     options: { kind: string; resourceName: string; namespace: string },
   ): Promise<T | null> {
-    const { kind, resourceName, namespace } = options;
+    const { kind, namespace, resourceName } = options;
     const resourceType = ResourceFetcher.getResourceTypeFromKind(kind);
-    const constants = ResourceFetcher.getEvaluateConstants();
 
-    try {
-      const result = await page.evaluate(
-        async ({ resType, resourceKind, name, ns, evalConstants }) => {
-          try {
-            const getCsrfTokenFromCookie = () => {
-              const cookies = document.cookie.split('; ');
-              const csrfCookie = cookies.find((cookie) =>
-                cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
-              );
-              return csrfCookie ? csrfCookie.split('=')[1] : '';
-            };
-            const csrfToken = getCsrfTokenFromCookie();
+    const basePath =
+      kind === RESOURCE_KINDS.VIRTUAL_MACHINE ? API_PATHS.KUBEVIRT : API_PATHS.FORKLIFT;
+    const apiPath = `${basePath}/namespaces/${namespace}/${resourceType}/${resourceName}`;
 
-            let apiPath = '';
-            if (resType === evalConstants.VIRTUAL_MACHINES_TYPE) {
-              apiPath = `${evalConstants.KUBEVIRT_PATH}/namespaces/${ns}/${resType}/${name}`;
-            } else {
-              apiPath = `${evalConstants.FORKLIFT_PATH}/namespaces/${ns}/${resType}/${name}`;
-            }
-
-            const response = await fetch(apiPath, {
-              method: 'GET',
-              headers: {
-                [evalConstants.CONTENT_TYPE_HEADER]: evalConstants.APPLICATION_JSON,
-                [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
-              },
-              credentials: 'include',
-            });
-
-            if (response.ok) {
-              return { success: true, data: await response.json() };
-            }
-
-            if (response.status === 404) {
-              return { success: false, error: `${resourceKind} not found` };
-            }
-
-            const errorText = await response.text().catch(() => response.statusText);
-            return { success: false, error: errorText };
-          } catch (error: unknown) {
-            const err = error as any;
-            return {
-              success: false,
-              error: err?.message ?? String(error),
-            };
-          }
-        },
-        {
-          resType: resourceType,
-          resourceKind: kind,
-          name: resourceName,
-          ns: namespace,
-          evalConstants: constants,
-        },
-      );
-
-      if (result.success) {
-        return result.data as T;
-      }
-
-      return null;
-    } catch {
-      return null;
-    }
+    return ResourceFetcher.apiGet<T>(page, apiPath);
   }
 
   static async fetchVirtualMachine(
