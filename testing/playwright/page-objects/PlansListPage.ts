@@ -1,7 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
 import { NavigationHelper } from '../utils/NavigationHelper';
-import { isVersionAtLeast, V2_11_0 } from '../utils/version';
 
 import { Table } from './common/Table';
 
@@ -52,19 +51,12 @@ export class PlansListPage {
   }
 
   async waitForPageLoad() {
-    if (isVersionAtLeast(V2_11_0)) {
-      await expect(
-        this.page
-          .getByRole('table', { name: 'Migration plans' })
-          .or(this.page.getByRole('grid', { name: 'Migration plans' })),
-      ).toBeVisible();
-    } else {
-      await expect(
-        this.page
-          .getByRole('table', { name: /Migration plans?/i })
-          .or(this.page.getByRole('grid', { name: /Migration plans?/i })),
-      ).toBeVisible();
-    }
+    // Support both table and grid roles as some tables are implemented with grid semantics
+    await expect(
+      this.page
+        .getByRole('table', { name: 'Migration plans' })
+        .or(this.page.getByRole('grid', { name: 'Migration plans' })),
+    ).toBeVisible();
     await this.table.waitForTableLoad();
   }
 }

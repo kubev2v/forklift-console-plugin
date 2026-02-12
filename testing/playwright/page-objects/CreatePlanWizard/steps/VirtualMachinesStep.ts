@@ -116,16 +116,10 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
 
   async selectFirstVirtualMachine() {
     const grid = this.page.getByRole('treegrid');
-    if (isVersionAtLeast(V2_11_0)) {
-      const firstRow = grid.locator('tbody tr').first();
-      const checkbox = firstRow.locator('input[type="checkbox"]');
-      await expect(checkbox).toBeVisible();
-      await checkbox.check();
-    } else {
-      const firstDataRow = grid.getByRole('row').nth(1);
-      await expect(firstDataRow).toBeVisible();
-      await firstDataRow.getByRole('checkbox').check();
-    }
+    const firstRow = grid.locator('tbody tr').first();
+    const checkbox = firstRow.locator('input[type="checkbox"]');
+    await expect(checkbox).toBeVisible();
+    await checkbox.check();
   }
 
   async selectFolder(folder: string): Promise<void> {

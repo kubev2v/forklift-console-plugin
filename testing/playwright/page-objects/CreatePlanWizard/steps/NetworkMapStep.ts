@@ -121,11 +121,7 @@ export class NetworkMapStep {
   }
 
   async verifyStepVisible(): Promise<void> {
-    if (isVersionAtLeast(V2_11_0)) {
-      await expect(this.page.getByTestId('create-plan-network-map-step')).toBeVisible();
-    } else {
-      await expect(this.page.getByRole('heading', { name: /Network map/i })).toBeVisible();
-    }
+    await expect(this.page.getByTestId('create-plan-network-map-step')).toBeVisible();
   }
 
   async waitForData(): Promise<void> {
