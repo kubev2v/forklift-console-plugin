@@ -175,6 +175,11 @@ export class Table {
     return this.rootLocator.getByTestId(testId);
   }
 
+  async getRowCount(): Promise<number> {
+    const tableContainer = this.getTableContainer();
+    return tableContainer.locator('tbody tr').count();
+  }
+
   async isColumnVisible(columnName: string): Promise<boolean> {
     const currentColumns = await this.getColumns();
     return currentColumns.includes(columnName);
