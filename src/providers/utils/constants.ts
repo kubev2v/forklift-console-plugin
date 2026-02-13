@@ -1,6 +1,7 @@
 import { t } from '@utils/i18n';
 
 export const EMPTY_VDDK_INIT_IMAGE_ANNOTATION = 'forklift.konveyor.io/empty-vddk-init-image';
+export const DEFAULT_TRANSFER_NETWORK_ANNOTATION = 'forklift.konveyor.io/defaultTransferNetwork';
 
 export enum ProvidersResourceFieldId {
   Name = 'name',

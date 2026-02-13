@@ -1,24 +1,28 @@
 import { Base64 } from 'js-base64';
 
-import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@forklift-ui/types';
+import {
+  type IoK8sApiCoreV1Secret,
+  ProviderModel,
+  SecretModel,
+  type V1beta1Provider,
+} from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
-import type { OnConfirmHookType } from '../../EditModal/types';
+type PatchProviderURLParams = {
+  newValue: string;
+  resource: V1beta1Provider;
+};
 
 /**
- * Handles the confirmation action for editing a resource annotations.
- * Adds or updates the 'forklift.konveyor.io/defaultTransferNetwork' annotation in the resource's metadata.
- *
- * @param {Object} options - Options for the confirmation action.
- * @param {Object} options.resource - The resource to be modified.
- * @param {Object} options.model - The model associated with the resource.
- * @param {any} options.newValue - The new value for the 'forklift.konveyor.io/defaultTransferNetwork' annotation.
- * @returns {Promise<Object>} - The modified resource.
+ * Patches the provider URL in the resource's spec.
  */
-export const patchProviderURL: OnConfirmHookType = async ({ model, newValue: value, resource }) => {
-  const provider: V1beta1Provider = resource as V1beta1Provider;
+export const patchProviderURL = async ({
+  newValue: value,
+  resource,
+}: PatchProviderURLParams): Promise<V1beta1Provider> => {
+  const provider: V1beta1Provider = resource;
   const providerOp = provider?.spec?.url ? 'replace' : 'add';
-  const urlValue = (value as string)?.trim();
+  const urlValue = value?.trim();
 
   // Get providers secret stub
   const secret: IoK8sApiCoreV1Secret = {
@@ -52,7 +56,7 @@ export const patchProviderURL: OnConfirmHookType = async ({ model, newValue: val
         value: urlValue,
       },
     ],
-    model: model!,
+    model: ProviderModel,
     resource: provider,
   });
 

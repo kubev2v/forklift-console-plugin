@@ -1,3 +1,6 @@
+import { DEFAULT_TRANSFER_NETWORK_ANNOTATION } from 'src/providers/utils/constants';
+
+import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { ProviderModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
@@ -11,10 +14,10 @@ export const onConfirmProviderDefaultTransferNetwork = async ({
   const currentAnnotations = resource?.metadata?.annotations;
   const newAnnotations = {
     ...currentAnnotations,
-    'forklift.konveyor.io/defaultTransferNetwork': !value || value === '' ? undefined : value,
+    [DEFAULT_TRANSFER_NETWORK_ANNOTATION]: !value || value === '' ? undefined : value,
   };
 
-  const op = resource?.metadata?.annotations ? 'replace' : 'add';
+  const op = resource?.metadata?.annotations ? REPLACE : ADD;
 
   const obj = await k8sPatch({
     data: [

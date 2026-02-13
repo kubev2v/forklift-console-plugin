@@ -1,23 +1,20 @@
+import TextInputEditModal from 'src/components/ModalForm/TextInputEditModal';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModel } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { ModalVariant } from '@patternfly/react-core';
 
 import { validateOpenstackURL } from '../../utils/validators/provider/openstack/validateOpenstackURL';
-import { EditModal } from '../EditModal/EditModal';
 
 import { patchProviderURL } from './utils/patchProviderURL';
 import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
 export const OpenstackEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
-  label = '',
-  title = '',
-  ...props
+  resource: provider,
+  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
-  const ModalBody = (
+  const description = (
     <ForkliftTrans>
       <p>URL of the OpenStack Identity (Keystone) endpoint.</p>
       <br />
@@ -29,20 +26,23 @@ export const OpenstackEditURLModal: ModalComponent<EditProviderURLModalProps> = 
     </ForkliftTrans>
   );
 
+  const onConfirm = async (value: string): Promise<void> => {
+    await patchProviderURL({
+      newValue: value,
+      resource: provider,
+    });
+  };
+
   return (
-    <EditModal
-      {...props}
-      jsonPath={'spec.url'}
-      title={title || t('Edit URL')}
-      label={label || t('URL')}
-      model={ProviderModel}
-      variant={ModalVariant.large}
-      body={ModalBody}
-      helperText={t(
-        'The URL of the OpenStack Identity (Keystone) endpoint, for example: https://identity_service.com:5000/v3',
-      )}
-      onConfirmHook={patchProviderURL}
+    <TextInputEditModal
+      {...rest}
+      title={t('Edit URL')}
+      label={t('URL')}
+      initialValue={provider?.spec?.url ?? ''}
+      description={description}
+      helperText={t('The URL of the OpenStack Identity endpoint.')}
       validationHook={validateOpenstackURL}
+      onConfirm={onConfirm}
     />
   );
 };

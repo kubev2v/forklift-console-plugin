@@ -595,6 +595,14 @@ npm run cluster:delete    # Delete cluster
 3. **No unused variables** (enforced by TypeScript)
 4. **Exhaustive deps** for `useEffect`, `useMemo`, `useCallback`
 5. **Only export components from component files** (`react-refresh/only-export-components`)
+6. **Use `??` instead of `||`** for default values with strings/numbers to avoid falsy value issues:
+   ```typescript
+   // ✅ Good
+   const name = value ?? DEFAULT_NAME;
+   
+   // ❌ Bad
+   const name = value || DEFAULT_NAME;
+   ```
 
 ---
 

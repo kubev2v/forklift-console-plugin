@@ -1,5 +1,6 @@
 import { type FC, useMemo } from 'react';
 import SectionHeading from 'src/components/headers/SectionHeading';
+import { DEFAULT_TRANSFER_NETWORK_ANNOTATION } from 'src/providers/utils/constants';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -40,7 +41,7 @@ const ProviderNetworksTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace
   const permissions = useGetDeleteAndEditAccessReview({ model: ProviderModel, namespace });
 
   const defaultNetworkName = useMemo(
-    () => provider?.metadata?.annotations?.['forklift.konveyor.io/defaultTransferNetwork'],
+    () => provider?.metadata?.annotations?.[DEFAULT_TRANSFER_NETWORK_ANNOTATION as string],
     [provider?.metadata?.annotations],
   );
 
