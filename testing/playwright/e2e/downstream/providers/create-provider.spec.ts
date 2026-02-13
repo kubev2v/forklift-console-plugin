@@ -11,23 +11,26 @@ if (!existsSync(providersPath)) {
 import { CreateProviderPage } from '../../../page-objects/CreateProviderPage';
 import { ProviderType } from '../../../types/enums';
 import { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
-import { requireVersion, V2_11_0 } from '../../../utils/version';
+import { requireVersion, V2_10_5, V2_11_0 } from '../../../utils/version';
 
 import { createProviderData, providerTestScenarios } from './creation-scenarios';
 
 test.describe('Provider Creation Tests', () => {
-  requireVersion(test, V2_11_0);
+  requireVersion(test, V2_10_5);
 
   const resourceManager = new ResourceManager();
 
   providerTestScenarios.forEach(
-    ({ scenarioName, providerType, providerKey, providerDataOverrides }) => {
+    ({ scenarioName, providerType, providerKey, providerDataOverrides, minVersion }) => {
       test(
         `should create a new ${providerType} provider: ${scenarioName}`,
         {
           tag: '@downstream',
         },
         async ({ page }) => {
+          if (minVersion) {
+            requireVersion(test, minVersion);
+          }
           const createProvider = new CreateProviderPage(page, resourceManager);
           const testProviderData = createProviderData(
             providerType,
@@ -74,6 +77,7 @@ test.describe('Provider Creation Tests', () => {
       tag: '@downstream',
     },
     async ({ page }) => {
+      requireVersion(test, V2_11_0);
       const createProvider = new CreateProviderPage(page, resourceManager);
 
       await test.step('Navigate to provider creation page', async () => {

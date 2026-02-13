@@ -111,6 +111,9 @@ jobs:
       - name: Install Playwright browsers
         run: cd testing && npx playwright install --with-deps chromium
 
+      - name: Check downstream version gating
+        run: cd testing && npm run check:version-gating
+
       - name: Wait for application
         run: |
           timeout 300 bash -c 'until curl -f http://localhost:30080; do sleep 5; done'

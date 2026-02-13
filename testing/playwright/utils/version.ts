@@ -24,9 +24,6 @@ const parseVersion = (raw: string): VersionTuple | null => {
 const resolveTuple = (version: VersionTuple | string): VersionTuple | null =>
   Array.isArray(version) ? version : parseVersion(version);
 
-const formatVersion = (version: VersionTuple | string): string =>
-  Array.isArray(version) ? version.join('.') : version;
-
 const getForkliftVersion = (): string | undefined => {
   const raw = process.env[VERSION_ENV_VAR]?.trim() ?? undefined;
   return raw;
@@ -79,28 +76,36 @@ export const isVersionInStreams = (
   return currPatch >= minForStream[2];
 };
 
-/** Minimal interface for Playwright's test.skip(). */
-type SkippableTest = { skip: (condition: boolean, description: string) => void };
+// ---------------------------------------------------------------------------
+// requireVersion — describe-level and test-level version gating
+// ---------------------------------------------------------------------------
 
-/** Skip the current describe block when Forklift version < minVersion. */
-export const requireVersion = (testObj: SkippableTest, minVersion: VersionTuple | string): void => {
-  testObj.skip(!isVersionAtLeast(minVersion), `Requires Forklift ${formatVersion(minVersion)}+`);
+type SkippableTest = {
+  skip: (condition: boolean, description: string) => void;
 };
 
-/** Skip the current describe block when the version doesn't satisfy any stream minimum. */
-export const requireVersionInStreams = (
+const formatVersion = (tuple: VersionTuple): string => tuple.join('.');
+
+const buildSkipMessage = (version: VersionTuple | readonly VersionTuple[]): string =>
+  Array.isArray(version[0])
+    ? `Requires Forklift version in streams: ${(version as readonly VersionTuple[]).map(formatVersion).join(', ')}`
+    : `Requires Forklift ${formatVersion(version as VersionTuple)}+`;
+
+const shouldSkip = (version: VersionTuple | readonly VersionTuple[]): boolean =>
+  Array.isArray(version[0])
+    ? !isVersionInStreams(version as readonly VersionTuple[])
+    : !isVersionAtLeast(version as VersionTuple);
+
+/**
+ * Skip tests when the cluster version is below the minimum.
+ * Works at both describe-level and inside a test body.
+ *
+ *   requireVersion(test, V2_11_0);
+ *   requireVersion(test, [V2_10_5, V2_11_0]);  // multi-stream
+ */
+export const requireVersion = (
   testObj: SkippableTest,
-  minVersionByStream: readonly (VersionTuple | string)[],
+  version: VersionTuple | readonly VersionTuple[],
 ): void => {
-  const streams = minVersionByStream.map(formatVersion).join(', ');
-  testObj.skip(
-    !isVersionInStreams(minVersionByStream),
-    `Requires Forklift version in streams: ${streams}`,
-  );
+  testObj.skip(shouldSkip(version), buildSkipMessage(version));
 };
-
-/** Run a block only when version >= minVersion (step-level gating within a single test). */
-export const runStepIfVersion = async <T>(
-  minVersion: VersionTuple | string,
-  fn: () => Promise<T>,
-): Promise<T | undefined> => (isVersionAtLeast(minVersion) ? fn() : undefined);
