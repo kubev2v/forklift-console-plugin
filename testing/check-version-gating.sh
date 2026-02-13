@@ -17,16 +17,18 @@ PROVIDERS_FILE=".providers.json"
 CREATED_PROVIDERS=false
 
 # Create stub .providers.json if missing so test files can load
-if [ ! -f "$PROVIDERS_FILE" ]; then
+if [[ ! -f "$PROVIDERS_FILE" ]]; then
   cp .providers.json.template "$PROVIDERS_FILE"
   CREATED_PROVIDERS=true
 fi
 
 cleanup() {
   rm -f "$REPORT_FILE"
-  if [ "$CREATED_PROVIDERS" = true ]; then
+  if [[ "$CREATED_PROVIDERS" == true ]]; then
     rm -f "$PROVIDERS_FILE"
   fi
+
+  return 0
 }
 trap cleanup EXIT
 
