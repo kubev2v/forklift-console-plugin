@@ -38,6 +38,8 @@ npx playwright test \
   --grep @downstream \
   --project=chromium \
   --reporter=json \
+  --timeout=1000 \
+  --global-timeout=60000 \
   || true
 
 # Parse the JSON report and check for non-skipped tests
