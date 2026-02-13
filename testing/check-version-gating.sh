@@ -13,7 +13,22 @@
 set -euo pipefail
 
 REPORT_FILE=$(mktemp).json
-trap 'rm -f "$REPORT_FILE"' EXIT
+PROVIDERS_FILE=".providers.json"
+CREATED_PROVIDERS=false
+
+# Create stub .providers.json if missing so test files can load
+if [ ! -f "$PROVIDERS_FILE" ]; then
+  cp .providers.json.template "$PROVIDERS_FILE"
+  CREATED_PROVIDERS=true
+fi
+
+cleanup() {
+  rm -f "$REPORT_FILE"
+  if [ "$CREATED_PROVIDERS" = true ]; then
+    rm -f "$PROVIDERS_FILE"
+  fi
+}
+trap cleanup EXIT
 
 echo "Running downstream tests with FORKLIFT_VERSION=0.0.0 ..."
 
@@ -40,6 +55,19 @@ node -e "
       ...walk(s.suites || []),
     ]);
 
+  const allTests = (suites) =>
+    suites.flatMap((s) => [
+      ...(s.specs || []).flatMap((spec) => spec.tests || []),
+      ...allTests(s.suites || []),
+    ]);
+
+  const tests = allTests(report.suites || []);
+
+  if (tests.length === 0) {
+    console.error('ERROR: No downstream tests found in report. Files may have failed to load.');
+    process.exit(1);
+  }
+
   const ungated = walk(report.suites || []);
 
   if (ungated.length > 0) {
@@ -48,5 +76,5 @@ node -e "
     process.exit(1);
   }
 
-  console.log('All downstream tests are properly version-gated.');
+  console.log('All ' + tests.length + ' downstream tests are properly version-gated.');
 "
