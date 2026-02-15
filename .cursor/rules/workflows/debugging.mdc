@@ -1,0 +1,149 @@
+---
+description: Systematic debugging workflow
+alwaysApply: false
+---
+
+# Debugging Workflow
+
+Invoke with: *"help debug"*, *"troubleshoot"*, *"why isn't this working"*, *"fix this error"*
+
+---
+
+## 1. Understand the Problem
+
+### Gather Information
+- What is the expected behavior?
+- What is the actual behavior?
+- When did it start happening?
+- Is it reproducible? What are the exact steps?
+- Any error messages in the console or network tab?
+
+### Classify the Issue
+- **Render issue**: Component not displaying correctly
+- **State issue**: Data not updating or stale
+- **API issue**: Network request failing or returning wrong data
+- **Type issue**: TypeScript compilation error
+- **Style issue**: Layout or visual problem
+- **Performance issue**: Slow rendering or memory leak
+
+---
+
+## 2. Isolate the Problem
+
+### Check the Error Message
+- Read the full stack trace
+- Identify the file and line number
+- Understand what the error means
+
+### Narrow Down the Scope
+- Which component is affected?
+- Is it a rendering problem or a data problem?
+- Does it happen with specific data or always?
+- Does it happen in a specific provider type?
+
+### Reproduce Minimally
+- Find the simplest case that triggers the issue
+- Remove unrelated code/props to isolate
+
+---
+
+## 3. Common Issue Categories
+
+### Component Not Rendering
+1. Check if data is loaded (`loaded` flag)
+2. Check for errors (`loadError`)
+3. Check conditional rendering logic
+4. Verify props are being passed correctly
+5. Check for early returns hiding content
+
+### State Not Updating
+1. Check `useState` setter is being called
+2. Check `useEffect` dependencies
+3. Look for stale closures
+4. Verify state is at the right component level
+5. Check if re-render is being suppressed by memoization
+
+### API/Resource Issues
+1. Check `useK8sWatchResource` configuration (GVK, namespace)
+2. Verify the resource exists: `oc get <resource> -n <namespace>`
+3. Check RBAC permissions: `oc auth can-i list <resource>`
+4. Look at network tab for failed requests
+5. Check if provider is in Ready state
+
+### TypeScript Errors
+1. Read the error message carefully
+2. Check type definitions in `@forklift-ui/types`
+3. Verify optional chaining for nullable fields
+4. Check import paths and aliases
+
+### Style Issues
+1. Inspect element in browser DevTools
+2. Check if PatternFly classes are overriding
+3. Verify BEM class names match
+4. Check CSS specificity
+
+---
+
+## 4. Debugging Tools
+
+### Browser DevTools
+- **Console**: Error messages, warnings
+- **Network**: API requests, responses, status codes
+- **Elements**: DOM structure, computed styles
+- **React DevTools**: Component tree, props, state, hooks
+
+### CLI Tools
+```bash
+# Check resource exists
+oc get providers.forklift.konveyor.io -n <namespace>
+
+# Check permissions
+oc auth can-i list plans.forklift.konveyor.io
+
+# Get resource details
+oc get plan <name> -n <namespace> -o yaml
+
+# Check operator logs
+oc logs -n konveyor-forklift deploy/forklift-controller
+```
+
+### Code Analysis
+```bash
+# Type check
+npm run lint
+
+# Find usages
+# Search for the function/component across the codebase
+```
+
+---
+
+## 5. Fix and Verify
+
+### Implement Fix
+1. Make the minimal change needed
+2. Follow project coding conventions (see CLAUDE.md)
+3. Add error handling if the root cause was missing error handling
+4. Consider edge cases
+
+### Verify Fix
+1. Reproduce the original issue - confirm it's fixed
+2. Check that related functionality still works
+3. Run linting and type checking: `npm run lint`
+4. Run tests: `npm test`
+5. Test with different data/scenarios
+
+### Prevent Recurrence
+- Consider adding a unit test for the bug
+- Consider if the pattern exists elsewhere
+- Update documentation if the fix reveals non-obvious behavior
+
+---
+
+## 6. When Stuck
+
+1. **Re-read the error** - often the answer is in the message
+2. **Check recent changes** - `git diff` to see what changed
+3. **Simplify** - remove complexity until it works, then add back
+4. **Check similar code** - how does the rest of the codebase handle this?
+5. **Ask for help** - describe the problem, what you've tried, and what you found

@@ -1,0 +1,245 @@
+---
+description: Playwright E2E testing -- upstream and downstream
+alwaysApply: false
+---
+
+# Playwright Testing Workflow
+
+Invoke with: *"test the UI"*, *"write an e2e test"*, *"test in browser"*, *"upstream test"*, *"downstream test"*
+
+---
+
+## 1. Upstream vs Downstream
+
+This project has **two tiers** of E2E tests, both in this repo:
+
+| | Upstream | Downstream |
+|--|----------|------------|
+| **Location** | `testing/playwright/e2e/upstream/` | `testing/playwright/e2e/downstream/` |
+| **Tag** | `@upstream` | `@downstream` |
+| **Providers** | Mocked via API intercepts | Real providers (vSphere, oVirt, OpenStack, OVA) |
+| **Credentials** | Not required | Requires `testing/.providers.json` (not in repo) |
+| **Data** | Static fixtures (`fixtures/test-data.ts`) | Dynamic data from real provider inventory |
+| **Purpose** | UI logic, rendering, form flows | Full integration -- closest to production |
+| **Run** | `npm run test:upstream` (in `testing/`) | `npm run test:downstream` (in `testing/`) |
+
+**Downstream tests are the priority** -- they exercise real provider connections, actual migrations, and the full UI flow against a real cluster. Upstream tests are useful for fast feedback on UI-only changes.
+
+Upstream is effectively a **subset** of downstream: upstream covers basic happy paths with mocked data, while downstream covers the same flows plus provider-specific behavior with real infrastructure.
+
+---
+
+## 2. Test Directory Structure
+
+```
+testing/
+  playwright/
+    e2e/
+      upstream/              # Mocked tests (2 files)
+      downstream/            # Real provider tests (17+ files)
+        providers/
+        plans/
+        network-maps/
+        storage-maps/
+    fixtures/                # Test fixtures and helpers
+    intercepts/              # API mocking for upstream tests
+    page-objects/            # Page Object Model classes
+    utils/                   # Utility functions (provider config, helpers)
+    types/                   # TypeScript types
+    global.setup.ts          # Authentication setup
+    global.teardown.ts       # Resource cleanup
+  .providers.json.template   # Provider credential template
+  e2e.env.template           # Environment variable template
+  run-tests.sh               # Containerized test runner (CI/Jenkins)
+```
+
+---
+
+## 3. Writing Downstream Tests
+
+Downstream tests are the most important. They use real providers from `.providers.json`.
+
+### Pattern
+```typescript
+import { test, expect } from '@playwright/test';
+
+test.describe.serial('Plans - VSphere Cold Migration', () => {
+  test('should create a new vsphere provider', { tag: ['@downstream'] }, async ({ page }) => {
+    await test.step('load provider config', async () => {
+      const providerKey = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
+      const providerConfig = providers[providerKey];
+      // providerConfig comes from .providers.json
+    });
+
+    await test.step('navigate to provider creation', async () => {
+      await page.goto('/mtv/providers');
+      await page.click('[data-testid="add-provider-button"]');
+    });
+
+    await test.step('fill provider details and submit', async () => {
+      // Use providerConfig for real credentials
+    });
+
+    await test.step('verify provider is ready', async () => {
+      // Wait for provider status to become Ready
+    });
+  });
+});
+```
+
+### Key Points
+- Use `{ tag: ['@downstream'] }` on every test
+- Use `test.describe.serial()` when tests depend on each other (e.g., create provider then create plan)
+- Use `test.step()` with descriptive names for every logical action
+- Load provider config via `getProviderConfig(providerKey)` from `utils/providers.ts`
+- Use `ResourceManager` to track created resources for cleanup
+- Use page objects from `page-objects/` for reusable interactions
+
+### Provider Configuration
+Provider credentials are in `testing/.providers.json` (gitignored). Copy from the template:
+```bash
+cp testing/.providers.json.template testing/.providers.json
+# Fill in real provider credentials
+```
+
+Provider keys: `vsphere-8.0.1`, `vsphere-7.0.3`, `ovirt-4.4.9`, `openstack-psi`, `ova-nfs`, `openshift-remote`, etc.
+
+---
+
+## 4. Writing Upstream Tests
+
+Upstream tests mock all API calls using intercepts. No real providers needed.
+
+### Pattern
+```typescript
+import { test, expect } from '@playwright/test';
+import { setupForkliftIntercepts } from '../../intercepts';
+import { TEST_DATA } from '../../fixtures/test-data';
+
+test.describe('Network Maps', { tag: '@upstream' }, () => {
+  test.beforeEach(async ({ page }) => {
+    await setupForkliftIntercepts(page);
+  });
+
+  test('creates a network map', async ({ page }) => {
+    await test.step('navigate to network maps', async () => {
+      await page.goto('/mtv/networkmaps');
+    });
+
+    await test.step('fill and submit the form', async () => {
+      // Use TEST_DATA for static values
+    });
+
+    await test.step('verify the map was created', async () => {
+      // Assert against mocked response
+    });
+  });
+});
+```
+
+### Key Points
+- Use `{ tag: '@upstream' }` on the describe block
+- Call `setupForkliftIntercepts(page)` in `beforeEach` to mock APIs
+- Use static test data from `fixtures/test-data.ts`
+- No provider credentials needed
+- Good for testing UI logic, form validation, rendering
+
+---
+
+## 5. Page Objects
+
+Reuse page objects from `testing/playwright/page-objects/` for common interactions:
+
+```typescript
+export class ProviderListPage {
+  constructor(private page: Page) {}
+
+  async navigateTo(): Promise<void> {
+    await this.page.goto('/mtv/providers');
+  }
+
+  async clickAddProvider(): Promise<void> {
+    await this.page.click('[data-testid="add-provider-button"]');
+  }
+}
+```
+
+Create new page objects when adding tests for new pages or complex flows.
+
+---
+
+## 6. Running Tests
+
+```bash
+# From the testing/ directory:
+npm run test:e2e              # All tests
+npm run test:upstream          # Upstream only (mocked)
+npm run test:downstream        # Downstream only (real providers)
+npm run test:downstream:local  # Downstream with local console
+npm run test:e2e:ui            # Interactive Playwright UI mode
+
+# From the project root:
+npm run test:e2e               # Delegates to testing/
+```
+
+### Environment Variables
+- `BASE_ADDRESS` -- Console URL (default: `http://localhost:9000`)
+- `CLUSTER_USERNAME` / `CLUSTER_PASSWORD` -- OpenShift auth
+- `VSPHERE_PROVIDER` -- Provider key from `.providers.json` (default: `vsphere-8.0.1`)
+- `OVA_PROVIDER` -- OVA provider key (default: `ova`)
+
+---
+
+## 7. Interactive Browser Testing (Playwright MCP)
+
+For manual verification during development using the Cursor browser MCP:
+
+### Prerequisites
+- Dev server running: `npm start`
+- Console running: `npm run console`
+
+### Common Commands
+```
+"Navigate to http://localhost:9000/mtv/providers"
+"Take a snapshot of the current page"
+"Click the Create button"
+"Fill the provider name field with 'test-provider'"
+"Check for console errors"
+```
+
+### Common URLs (local)
+```
+http://localhost:9000/mtv               # Overview
+http://localhost:9000/mtv/providers     # Providers
+http://localhost:9000/mtv/plans         # Plans
+http://localhost:9000/mtv/networkmaps   # Network maps
+http://localhost:9000/mtv/storagemaps   # Storage maps
+```
+
+### Tips
+- Take a `browser_snapshot` before interacting to understand page structure
+- Wait for loading to complete before asserting
+- Use descriptive element references: "Click the button labeled 'Create plan'"
+
+---
+
+## 8. Resource Cleanup
+
+- `ResourceManager` tracks all resources created during tests
+- `global.teardown.ts` cleans up after all tests complete
+- Resource tracking is stored in `playwright/.resources.json`
+- Always use `ResourceManager` when creating providers, plans, or mappings in downstream tests
+
+---
+
+## 9. When to Write Which Type
+
+| Scenario | Test Type |
+|----------|-----------|
+| New page or form (UI logic only) | Upstream |
+| New provider type integration | Downstream |
+| Migration flow end-to-end | Downstream |
+| Form validation behavior | Upstream |
+| Provider-specific UI differences | Downstream |
+| Bug fix for a rendering issue | Upstream |
+| Bug fix involving real provider data | Downstream |

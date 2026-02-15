@@ -1,0 +1,114 @@
+---
+description: Internationalization (i18n) patterns
+globs: "locales/**,**/i18n*,**/*Translation*"
+alwaysApply: false
+---
+
+# i18n Guidelines (Supplement)
+
+For basic i18n usage (`useForkliftTranslation`, `ForkliftTrans`, `t` function), see **CLAUDE.md**. This rule adds detailed patterns.
+
+---
+
+## 1. Overview
+
+- Uses `react-i18next` for runtime translations
+- Plugin namespace: `plugin__forklift-console-plugin`
+- Translation files: `locales/{lang}/plugin__forklift-console-plugin.json`
+- Source language: English (en)
+
+---
+
+## 2. Translation Utilities
+
+For the three utilities (`useForkliftTranslation`, `ForkliftTrans`, `t`) and when to use each, see **CLAUDE.md**.
+
+---
+
+## 3. String Patterns
+
+### Interpolation
+```typescript
+t('Hello, {{name}}', { name: userName })
+t('{{count}} of {{total}} VMs running', { count: running, total })
+```
+
+### Pluralization
+```typescript
+t('{{count}} plan', { count: planCount })
+// Requires locale file entries:
+// "{{count}} plan": "{{count}} plan"
+// "{{count}} plan_plural": "{{count}} plans"
+```
+
+---
+
+## 4. Console Extensions
+
+For labels in plugin extension files, use the special format:
+```json
+{
+  "type": "console.navigation/href",
+  "properties": {
+    "name": "%plugin__forklift-console-plugin~Migration Plans%",
+    "href": "/mtv/plans"
+  }
+}
+```
+
+---
+
+## 5. What to Translate vs Not
+
+### Always Translate
+- Page titles, headings, button labels
+- Form labels, placeholders, help text
+- Error messages, success messages
+- Tooltip text, table headers
+- Empty state and loading messages
+
+### Never Translate
+- Proper nouns (Kubernetes, OpenShift, Forklift, PatternFly)
+- Technical identifiers (VM names, namespaces, resource names)
+- API field names, code values, URLs
+- Log messages (internal)
+
+---
+
+## 6. Anti-Patterns
+
+```typescript
+// Bad: concatenation breaks translation
+t('Delete') + ' ' + vmName
+
+// Good: single string with interpolation
+t('Delete {{name}}', { name: vmName })
+
+// Bad: split strings lose context
+{t('Click')} {t('here')} {t('to continue')}
+
+// Good: complete sentence
+{t('Click here to continue')}
+```
+
+---
+
+## 7. Updating Translations
+
+```bash
+npm run i18n       # Extract new strings to locale files
+```
+
+Always run before committing if you added new translatable strings.
+
+---
+
+## 8. Checklist
+
+- [ ] All user-facing strings use `t()` function
+- [ ] Using `useForkliftTranslation` hook (not direct i18next)
+- [ ] Dynamic values use interpolation `{{variable}}`
+- [ ] No string concatenation for translated text
+- [ ] Console extensions use `%plugin__forklift-console-plugin~...%` format
+- [ ] `npm run i18n` run before commit
+- [ ] Translation file changes committed
