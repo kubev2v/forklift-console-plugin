@@ -1,5 +1,19 @@
+// Fallback when the editor is not inside a flex chain.
+$resource-yaml-editor-min-height: 400px;
+
+// Approximate height consumed by the console chrome, page header and tabs.
+// 16 rem ≈ 256 px at default font-size, which covers the OpenShift top-bar,
+// the detail-page heading, the tab bar and some padding.
+$resource-yaml-editor-header-offset: 16rem;
+
 .resource-yaml-editor-wrapper {
-  .yaml-editor {
-    min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: max(#{$resource-yaml-editor-min-height}, calc(100vh - #{$resource-yaml-editor-header-offset}));
+
+  > * {
+    flex: 1;
+    min-height: 0;
   }
 }
