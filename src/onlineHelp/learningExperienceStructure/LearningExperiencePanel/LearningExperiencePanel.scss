@@ -21,6 +21,11 @@
     }
   }
 
+  &__ask-ai-card {
+    min-width: 350px;
+    width: fit-content;
+  }
+
   &__help-section {
     .pf-v6-c-expandable-section__toggle-text {
       --pf-v6-c-expandable-section__toggle-text--MarginLeft: var(--pf-t--global--spacer--xs);
@@ -80,6 +85,16 @@
 
     &:not(:first-of-type) {
       margin-top: var(--pf-t--global--spacer--md);
+    }
+
+    &.m-no-border {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    &:has(+ .forklift--learning__help-description.m-no-border) {
+      border-bottom: none;
+      padding-bottom: 0;
     }
   }
 

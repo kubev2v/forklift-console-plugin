@@ -4,7 +4,7 @@ import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchFor
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ResourceYAMLEditorWrapper } from '@components/ResourceYAMLEditorWrapper/ResourceYAMLEditorWrapper';
-import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
+import { type K8sResourceKind, ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 
 const ForkliftControllerYAMLTab: FC = () => {
@@ -22,7 +22,7 @@ const ForkliftControllerYAMLTab: FC = () => {
         <ResourceYAMLEditorWrapper>
           <ResourceYAMLEditor
             header={t('Forklift controller YAML')}
-            initialResource={forkliftController}
+            initialResource={forkliftController as K8sResourceKind}
           />
         </ResourceYAMLEditorWrapper>
       )}

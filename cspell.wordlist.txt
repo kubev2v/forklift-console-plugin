@@ -109,3 +109,4 @@ powerstore
 pfext
 nads
 cooldown
+Lightspeed

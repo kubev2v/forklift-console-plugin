@@ -5,7 +5,7 @@
     "lib": ["ES2022", "DOM"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "types": ["node", "jest"],
+    "types": ["node", "jest", "@testing-library/jest-dom"],
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     /* Bundler mode */

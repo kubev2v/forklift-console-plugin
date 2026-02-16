@@ -17,6 +17,7 @@ export enum ListStyleType {
 export type LearningExperienceSubTopic = {
   id: string;
   title?: ReactNode;
+  className?: string;
   expandable?: boolean;
   subListStyleType?: ListStyleType;
   subTopics?: () => LearningExperienceSubTopic[];
