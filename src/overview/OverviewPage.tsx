@@ -66,31 +66,33 @@ const OverviewPage: FC = () => {
 
   return (
     <LearningExperienceDrawer>
-      <PageSection hasBodyWrapper={false}>
-        <Split hasGutter style={{ alignItems: 'baseline' }}>
-          <SplitItem isFilled>
-            <Title headingLevel="h1">{t('Migration Toolkit for Virtualization')}</Title>
-          </SplitItem>
-          <SplitItem>
-            <LearningExperienceButton />
-          </SplitItem>
-        </Split>
-      </PageSection>
-
-      {inventoryLivelinessError && (
+      <div className="forklift-details-page-layout">
         <PageSection hasBodyWrapper={false}>
-          {[<InventoryNotReachable key="inventoryNotReachable" />]}
+          <Split hasGutter style={{ alignItems: 'baseline' }}>
+            <SplitItem isFilled>
+              <Title headingLevel="h1">{t('Migration Toolkit for Virtualization')}</Title>
+            </SplitItem>
+            <SplitItem>
+              <LearningExperienceButton />
+            </SplitItem>
+          </Split>
         </PageSection>
-      )}
-      <RoutedTabs tabs={tabs} />
-      <div className="pf-v6-u-h-100 pf-v6-u-display-flex pf-v6-u-flex-direction-column pf-v6-u-p-md">
-        <Routes>
-          <Route index element={<ForkliftControllerOverviewTab />} />
-          <Route path={OverviewTabHref.YAML} element={<ForkliftControllerYAMLTab />} />
-          <Route path={OverviewTabHref.Health} element={<ForkliftControllerHealthTab />} />
-          <Route path={OverviewTabHref.History} element={<ForkliftControllerHistoryTab />} />
-          <Route path={OverviewTabHref.Settings} element={<ForkliftControllerSettingsTab />} />
-        </Routes>
+
+        {inventoryLivelinessError && (
+          <PageSection hasBodyWrapper={false}>
+            {[<InventoryNotReachable key="inventoryNotReachable" />]}
+          </PageSection>
+        )}
+        <RoutedTabs tabs={tabs} />
+        <div className="forklift-details-page-layout__content pf-v6-u-p-md">
+          <Routes>
+            <Route index element={<ForkliftControllerOverviewTab />} />
+            <Route path={OverviewTabHref.YAML} element={<ForkliftControllerYAMLTab />} />
+            <Route path={OverviewTabHref.Health} element={<ForkliftControllerHealthTab />} />
+            <Route path={OverviewTabHref.History} element={<ForkliftControllerHistoryTab />} />
+            <Route path={OverviewTabHref.Settings} element={<ForkliftControllerSettingsTab />} />
+          </Routes>
+        </div>
       </div>
     </LearningExperienceDrawer>
   );

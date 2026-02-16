@@ -35,8 +35,12 @@ const StorageMapDetailsPage: FC<StorageMapDetailsPageProps> = memo(({ name, name
   ];
   return (
     <LearningExperienceDrawer>
-      <StorageMapPageHeadings name={name} namespace={namespace} />
-      <HorizontalNav pages={pages} />
+      <div className="forklift-details-page-layout">
+        <StorageMapPageHeadings name={name} namespace={namespace} />
+        <div className="forklift-details-page-layout__content">
+          <HorizontalNav pages={pages} />
+        </div>
+      </div>
     </LearningExperienceDrawer>
   );
 });

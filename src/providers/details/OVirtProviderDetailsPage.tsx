@@ -38,8 +38,12 @@ const OVirtProviderDetailsPage: FC<ProviderDetailsPageProps> = memo(({ name, nam
 
   return (
     <>
-      <ProviderPageHeader name={name} namespace={namespace} />
-      <HorizontalNav pages={tabPages} />
+      <div className="forklift-details-page-layout">
+        <ProviderPageHeader name={name} namespace={namespace} />
+        <div className="forklift-details-page-layout__content">
+          <HorizontalNav pages={tabPages} />
+        </div>
+      </div>
     </>
   );
 });

@@ -1,33 +1,28 @@
+import TextInputEditModal from 'src/components/ModalForm/TextInputEditModal';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { ProviderModel } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { ModalVariant } from '@patternfly/react-core';
 
 import { validateEsxiURL } from '../../utils/validators/provider/vsphere/validateEsxiURL';
 import { validateVCenterURL } from '../../utils/validators/provider/vsphere/validateVCenterURL';
-import { EditModal } from '../EditModal/EditModal';
 
 import { patchProviderURL } from './utils/patchProviderURL';
 import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
 export const VSphereEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
   insecureSkipVerify,
-  label = '',
   resource: provider,
-  title = '',
-  ...props
+  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
-  // VCenter of ESXi
   const sdkEndpoint = provider?.spec?.settings?.sdkEndpoint ?? '';
   const validationHook =
     sdkEndpoint === 'esxi'
       ? validateEsxiURL
-      : (url: string | number | undefined) => validateVCenterURL(url, insecureSkipVerify);
+      : (url: string) => validateVCenterURL(url, insecureSkipVerify);
 
-  const ModalBody = (
+  const description = (
     <ForkliftTrans>
       <p>URL of the vCenter API endpoint.</p>
       <br />
@@ -39,21 +34,23 @@ export const VSphereEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
     </ForkliftTrans>
   );
 
+  const onConfirm = async (value: string): Promise<void> => {
+    await patchProviderURL({
+      newValue: value,
+      resource: provider,
+    });
+  };
+
   return (
-    <EditModal
-      {...props}
-      resource={provider}
-      jsonPath={'spec.url'}
-      title={title || t('Edit URL')}
-      label={label || t('URL')}
-      model={ProviderModel}
-      variant={ModalVariant.large}
-      body={ModalBody}
-      helperText={t(
-        'The URL of the vCenter API endpoint, for example: https://vCenter-host-example.com/sdk.',
-      )}
-      onConfirmHook={patchProviderURL}
+    <TextInputEditModal
+      {...rest}
+      title={t('Edit URL')}
+      label={t('URL')}
+      initialValue={provider?.spec?.url ?? ''}
+      description={description}
+      helperText={t('The URL of the vCenter API endpoint.')}
       validationHook={validationHook}
+      onConfirm={onConfirm}
     />
   );
 };
