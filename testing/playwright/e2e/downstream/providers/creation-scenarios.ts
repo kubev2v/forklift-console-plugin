@@ -2,7 +2,8 @@ import { EndpointType, ProviderType } from '../../../types/enums';
 import type { ProviderData } from '../../../types/test-data';
 import { getProviderConfig } from '../../../utils/providers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
-import { V2_11_0, type VersionTuple } from '../../../utils/version';
+import { V2_11_0 } from '../../../utils/version/constants';
+import type { VersionTuple } from '../../../utils/version/types';
 
 const VSPHERE_KEY = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
 const OVA_KEY = process.env.OVA_PROVIDER ?? 'ova';

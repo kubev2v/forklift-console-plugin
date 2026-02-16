@@ -2,7 +2,8 @@ import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData, TargetProject } from '../../../types/test-data';
 import type { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
-import { isVersionAtLeast, V2_11_0 } from '../../../utils/version';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { isVersionAtLeast } from '../../../utils/version/version';
 
 export class GeneralInformationStep {
   private readonly page: Page;

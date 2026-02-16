@@ -11,7 +11,8 @@ if (!existsSync(providersPath)) {
 import { CreateProviderPage } from '../../../page-objects/CreateProviderPage';
 import { ProviderType } from '../../../types/enums';
 import { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
-import { requireVersion, V2_10_5, V2_11_0 } from '../../../utils/version';
+import { V2_10_5, V2_11_0 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 import { createProviderData, providerTestScenarios } from './creation-scenarios';
 

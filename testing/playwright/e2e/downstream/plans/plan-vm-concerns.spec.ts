@@ -2,7 +2,8 @@ import { expect } from '@playwright/test';
 
 import { sharedProviderCustomPlanFixtures as customPlanTest } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import { requireVersion, V2_11_0 } from '../../../utils/version';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, () => {
   requireVersion(customPlanTest, V2_11_0);

@@ -1,7 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import { isEmpty } from '../../../utils/utils';
-import { isVersionAtLeast, V2_11_0 } from '../../../utils/version';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { isVersionAtLeast } from '../../../utils/version/version';
 
 export class StorageMapStep {
   private readonly page: Page;

@@ -2,7 +2,8 @@ import { expect, type Page } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../../../fixtures/test-data';
 import type { VirtualMachine } from '../../../types/test-data';
-import { isVersionAtLeast, V2_11_0 } from '../../../utils/version';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { isVersionAtLeast } from '../../../utils/version/version';
 import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
 
 export class VirtualMachinesStep extends VirtualMachinesTable {

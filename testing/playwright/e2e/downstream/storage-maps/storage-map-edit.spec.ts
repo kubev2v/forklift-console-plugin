@@ -2,7 +2,8 @@ import { expect } from '@playwright/test';
 
 import { sharedProviderStorageMapFixtures as test } from '../../../fixtures/resourceFixtures';
 import { StorageMapDetailsPage } from '../../../page-objects/StorageMapDetailsPage';
-import { requireVersion, V2_11_0 } from '../../../utils/version';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Storage Map Details - Editing', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);

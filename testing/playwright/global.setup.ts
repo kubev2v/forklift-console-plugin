@@ -5,9 +5,9 @@ import { chromium, type FullConfig, type Page } from '@playwright/test';
 import { LoginPage } from './page-objects/LoginPage';
 import { ResourceFetcher } from './utils/resource-manager/ResourceFetcher';
 import { disableGuidedTour } from './utils/utils';
+import { VERSION_ENV_VAR } from './utils/version/constants';
 
 const RESOURCES_FILE = 'playwright/.resources.json';
-const VERSION_ENV_VAR = 'FORKLIFT_VERSION';
 
 /**
  * Auto-detect the Forklift/MTV operator version from the cluster CSV.

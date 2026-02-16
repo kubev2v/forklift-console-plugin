@@ -4,7 +4,8 @@ import { expect } from '@playwright/test';
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import type { PlanTestData } from '../../../types/test-data';
-import { requireVersion, V2_10_5, V2_11_0 } from '../../../utils/version';
+import { V2_10_5, V2_11_0 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 type TestPlan = { metadata: { name: string; namespace: string }; testData: PlanTestData };
 

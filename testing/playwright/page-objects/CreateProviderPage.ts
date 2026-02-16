@@ -4,7 +4,8 @@ import { EndpointType, ProviderType } from '../types/enums';
 import type { ProviderData } from '../types/test-data';
 import { NavigationHelper } from '../utils/NavigationHelper';
 import type { ResourceManager } from '../utils/resource-manager/ResourceManager';
-import { isVersionAtLeast, V2_11_0 } from '../utils/version';
+import { V2_11_0 } from '../utils/version/constants';
+import { isVersionAtLeast } from '../utils/version/version';
 
 import { ProviderDetailsPage } from './ProviderDetailsPage/ProviderDetailsPage';
 

@@ -3,7 +3,8 @@ import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/Cre
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { createPlanTestData } from '../../../types/test-data';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
-import { requireVersion, V2_10_5 } from '../../../utils/version';
+import { V2_10_5 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
   requireVersion(test, V2_10_5);

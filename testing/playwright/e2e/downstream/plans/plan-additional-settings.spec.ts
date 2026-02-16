@@ -5,7 +5,8 @@ import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/Cre
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { MigrationType } from '../../../types/enums';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
-import { requireVersion, V2_11_0 } from '../../../utils/version';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Plan additional settings', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);

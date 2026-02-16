@@ -10,7 +10,8 @@ import {
 import { OverviewPage } from '../../page-objects/OverviewPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
-import { requireVersion, V2_11_0 } from '../../utils/version';
+import { V2_11_0 } from '../../utils/version/constants';
+import { requireVersion } from '../../utils/version/version';
 
 test.describe(
   'Overview Page - Settings',

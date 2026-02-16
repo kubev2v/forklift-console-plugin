@@ -1,5 +1,6 @@
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
-import { isVersionAtLeast, V2_11_0 } from '../utils/version';
+import { V2_11_0 } from '../utils/version/constants';
+import { isVersionAtLeast } from '../utils/version/version';
 
 import type { EndpointType, MigrationType, ProviderType } from './enums';
 

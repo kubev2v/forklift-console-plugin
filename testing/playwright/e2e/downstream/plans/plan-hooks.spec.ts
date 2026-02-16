@@ -6,7 +6,8 @@ import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/Cre
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
 import { disableGuidedTour } from '../../../utils/utils';
-import { requireVersion, V2_11_0 } from '../../../utils/version';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 const HOOK_RUNNER_IMAGE = 'quay.io/konveyor/hook-runner:latest';
 const UPDATED_HOOK_RUNNER_IMAGE = 'quay.io/konveyor/hook-runner:v0.2.0';

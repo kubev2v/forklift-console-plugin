@@ -8,7 +8,8 @@ import {
   SourceStorages,
   StorageClasses,
 } from '../../../types/test-data';
-import { requireVersion, V2_11_0 } from '../../../utils/version';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);

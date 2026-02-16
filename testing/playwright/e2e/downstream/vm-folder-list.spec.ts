@@ -5,7 +5,8 @@ import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/Create
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { createPlanTestData, type PlanTestData } from '../../types/test-data';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
-import { requireVersion, V2_11_0 } from '../../utils/version';
+import { V2_11_0 } from '../../utils/version/constants';
+import { requireVersion } from '../../utils/version/version';
 
 providerTest.describe('VM folder list - Plan Creation', { tag: '@downstream' }, () => {
   requireVersion(providerTest, V2_11_0);

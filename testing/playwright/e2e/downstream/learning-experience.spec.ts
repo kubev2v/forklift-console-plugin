@@ -8,7 +8,8 @@ import {
 } from '../../fixtures/overview-page-topics';
 import { LearningExperienceDrawer } from '../../page-objects/LearningExperienceDrawer';
 import { OverviewPage } from '../../page-objects/OverviewPage';
-import { requireVersion, V2_11_0 } from '../../utils/version';
+import { V2_11_0 } from '../../utils/version/constants';
+import { requireVersion } from '../../utils/version/version';
 
 const [CREATING_PROVIDER_TOPIC] = TIPS_AND_TRICKS_TOPICS;
 const VMWARE_STEP_COUNT = 5;

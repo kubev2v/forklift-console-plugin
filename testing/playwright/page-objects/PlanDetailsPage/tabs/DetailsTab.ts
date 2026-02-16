@@ -2,7 +2,8 @@ import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { MigrationType } from '../../../types/enums';
 import type { PlanTestData } from '../../../types/test-data';
-import { isVersionAtLeast, V2_11_0 } from '../../../utils/version';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { isVersionAtLeast } from '../../../utils/version/version';
 import { GuestConversionModal } from '../modals/GuestConversionModal';
 import { TargetAffinityModal } from '../modals/TargetAffinityModal';
 import { TargetLabelsModal } from '../modals/TargetLabelsModal';
