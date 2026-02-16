@@ -48,7 +48,7 @@ export const usePageSelection = <T>({
 
   const toggleSelectFor = useCallback(
     (items: T[]) => {
-      const ids = items.map(itemToId);
+      const ids = items.map((item) => itemToId(item));
       const allSelected = ids.every((id) => internalSelectedIds?.includes(id));
       const newSelectedIds = [
         ...(internalSelectedIds ?? []).filter((it) => !ids.includes(it)),
@@ -66,7 +66,7 @@ export const usePageSelection = <T>({
 
   const toggleExpandFor = useCallback(
     (items: T[]) => {
-      const ids = items.map(itemToId);
+      const ids = items.map((item) => itemToId(item));
       const allExpanded = ids.every((id) => internalExpandedIds?.includes(id));
       const newExpandedIds = [
         ...(internalExpandedIds ?? []).filter((it) => !ids.includes(it)),

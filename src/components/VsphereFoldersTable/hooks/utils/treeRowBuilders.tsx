@@ -99,7 +99,7 @@ export const makeVmAndConcernsRows = ({
       onCollapse: onToggle,
       props: {
         'aria-level': topLevel ? 1 : 2,
-        'aria-posinset': topLevel ? vmIdx + 1 : vmIdx + 1,
+        'aria-posinset': vmIdx + 1,
         'aria-setsize': topLevel ? level1SetSize : parentSize,
         icon: <VirtualMachineIcon />,
         isExpanded: isVmExpanded,
