@@ -77,8 +77,10 @@ export const isVersionInStreams = (streamMinimums: readonly (VersionTuple | stri
     return isVersionAtLeast(matchingStreamMinimum);
   }
 
-  const highestStreamMinimum = parsedMinimums.reduce((best, tuple) =>
-    compareTuples([tuple[0], tuple[1], 0], [best[0], best[1], 0]) > 0 ? tuple : best,
+  const highestStreamMinimum = parsedMinimums.reduce(
+    (best, tuple) =>
+      compareTuples([tuple[0], tuple[1], 0], [best[0], best[1], 0]) > 0 ? tuple : best,
+    parsedMinimums[0],
   );
 
   return isVersionAtLeast(highestStreamMinimum);
