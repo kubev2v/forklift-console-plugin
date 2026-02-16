@@ -1,0 +1,16 @@
+// Layout for detail pages (title + tabs + content).
+// Wrap the page in .forklift-details-page-layout and put the nav
+// (e.g. HorizontalNav) inside .forklift-details-page-layout__content.
+
+.forklift-details-page-layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100%;
+}
+
+.forklift-details-page-layout__content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}

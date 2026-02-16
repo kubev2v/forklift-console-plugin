@@ -1,4 +1,10 @@
 @use '../styles/common';
+@use '../styles/details-page-layout';
+
+.forklift-overview-drawer-body {
+  display: flex;
+  flex-direction: column;
+}
 
 .forklift-overview__welcome-right {
   align-self: normal;

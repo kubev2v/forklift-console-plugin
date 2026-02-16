@@ -1,3 +1,4 @@
+import { createRequire } from 'module';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -12,12 +13,16 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 import cspellConfigs from '@cspell/eslint-plugin/configs';
-import eslint from '@eslint/js';
 
 import disabledRules from './eslint-rules-disabled';
 
 const fileName = fileURLToPath(import.meta.url);
 const dirName = dirname(fileName);
+
+// Use createRequire for @eslint/js because jiti 2.4.x doesn't resolve the
+// default import from this CJS-only package (fixed in jiti >=2.6).
+const esmRequire = createRequire(import.meta.url);
+const eslint = esmRequire('@eslint/js');
 const CSPELL_WORD_LIST = join(dirName, 'cspell.wordlist.txt');
 import type { Linter } from 'eslint';
 

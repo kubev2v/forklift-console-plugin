@@ -65,17 +65,22 @@ const OverviewPage: FC = () => {
       <DrawerContent
         panelContent={<ForkliftLearningExperience setIsDrawerOpen={setIsDrawerOpen} />}
       >
-        <DrawerContentBody>
-          <HeaderTitle isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
-          <RoutedTabs tabs={tabs} />
-          <div className="pf-v5-u-h-100 pf-v5-u-display-flex pf-v5-u-flex-direction-column pf-v5-u-min-width-0 pf-v5-u-min-height-0">
-            <Routes>
-              <Route index element={<ForkliftControllerOverviewTab />} />
-              <Route path={OverviewTabHref.YAML} element={<ForkliftControllerYAMLTab />} />
-              <Route path={OverviewTabHref.Health} element={<ForkliftControllerHealthTab />} />
-              <Route path={OverviewTabHref.History} element={<ForkliftControllerHistoryTab />} />
-              <Route path={OverviewTabHref.Settings} element={<ForkliftControllerSettingsTab />} />
-            </Routes>
+        <DrawerContentBody className="forklift-overview-drawer-body">
+          <div className="forklift-details-page-layout">
+            <HeaderTitle isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
+            <RoutedTabs tabs={tabs} />
+            <div className="forklift-details-page-layout__content">
+              <Routes>
+                <Route index element={<ForkliftControllerOverviewTab />} />
+                <Route path={OverviewTabHref.YAML} element={<ForkliftControllerYAMLTab />} />
+                <Route path={OverviewTabHref.Health} element={<ForkliftControllerHealthTab />} />
+                <Route path={OverviewTabHref.History} element={<ForkliftControllerHistoryTab />} />
+                <Route
+                  path={OverviewTabHref.Settings}
+                  element={<ForkliftControllerSettingsTab />}
+                />
+              </Routes>
+            </div>
           </div>
         </DrawerContentBody>
       </DrawerContent>

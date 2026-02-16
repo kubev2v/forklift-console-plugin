@@ -29,10 +29,12 @@ const StorageMapDetailsPageInternal: FC<{
   ];
 
   return (
-    <>
+    <div className="forklift-details-page-layout">
       <StorageMapPageHeadings name={name} namespace={namespace} />
-      <HorizontalNav pages={pages} />
-    </>
+      <div className="forklift-details-page-layout__content">
+        <HorizontalNav pages={pages} />
+      </div>
+    </div>
   );
 };
 const StorageMapDetailsPageInternalMemo = memo(StorageMapDetailsPageInternal);
