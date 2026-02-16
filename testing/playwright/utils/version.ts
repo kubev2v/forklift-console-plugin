@@ -86,10 +86,15 @@ type SkippableTest = {
 
 const formatVersion = (tuple: VersionTuple): string => tuple.join('.');
 
-const buildSkipMessage = (version: VersionTuple | readonly VersionTuple[]): string =>
-  Array.isArray(version[0])
+/** Marker checked by check-version-gating.sh to distinguish version skips from other skips. */
+export const VERSION_GATE_TAG = '[version-gated]';
+
+const buildSkipMessage = (version: VersionTuple | readonly VersionTuple[]): string => {
+  const reason = Array.isArray(version[0])
     ? `Requires Forklift version in streams: ${(version as readonly VersionTuple[]).map(formatVersion).join(', ')}`
     : `Requires Forklift ${formatVersion(version as VersionTuple)}+`;
+  return `${VERSION_GATE_TAG} ${reason}`;
+};
 
 const shouldSkip = (version: VersionTuple | readonly VersionTuple[]): boolean =>
   Array.isArray(version[0])
