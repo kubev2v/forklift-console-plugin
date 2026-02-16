@@ -34,7 +34,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo "Running downstream tests with FORKLIFT_VERSION=0.0.0 ..."
+echo "Dry-run: collecting downstream tests with FORKLIFT_VERSION=0.0.0 ..."
 
 FORKLIFT_VERSION=0.0.0 \
 PLAYWRIGHT_JSON_OUTPUT_NAME="$REPORT_FILE" \
