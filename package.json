@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@forklift-ui/types": "1.0.7",
-    "@openshift-console/dynamic-plugin-sdk": "1.8.0",
+    "@openshift-console/dynamic-plugin-sdk": "^4.20.0",
     "@patternfly/patternfly": "6.4.0",
     "@patternfly/quickstarts": "6.4.0",
     "@patternfly/react-charts": "8.4.0",

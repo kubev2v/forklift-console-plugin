@@ -28,8 +28,8 @@ const SdkYamlEditor: FC<SdkYamlEditorProps> = ({ minHeight = '20rem', onChange, 
         <CodeEditor
           language="yaml"
           value={decodedValue}
-          onChange={(val) => {
-            onChange(Base64.encode(String(val)));
+          onChange={(val: string) => {
+            onChange(Base64.encode(val));
           }}
           minHeight={minHeight}
           showMiniMap={false}

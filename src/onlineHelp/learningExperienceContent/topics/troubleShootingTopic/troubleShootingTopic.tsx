@@ -8,12 +8,19 @@ import { WrenchIcon } from '@patternfly/react-icons';
 import { TipsTopic } from '@utils/analytics/constants';
 import { t } from '@utils/i18n';
 
+import AskAISection from './components/AskAISection';
 import { cliLogsSubTopic } from './subTopics/cliLogsSubTopic';
 import { faqHelpSubTopic } from './subTopics/faqHelpSubTopic';
 import { forkliftControllerLogsSubTopic } from './subTopics/forkliftControllerLogsSubTopic';
 import { migrationProgressSubTopic } from './subTopics/migrationsProgressSubTopic';
 import { podLogsSubTopic } from './subTopics/podLogsSubTopic';
 import { supportSubTopic } from './subTopics/supportSubTopic';
+
+const aiAssistantSubTopic = (): LearningExperienceSubTopic => ({
+  className: 'm-no-border',
+  id: 'troubleshooting-ai-assistant',
+  title: <AskAISection />,
+});
 
 const troubleShootingSubTopics = (): LearningExperienceSubTopic[] => [
   {
@@ -31,6 +38,7 @@ const troubleShootingSubTopics = (): LearningExperienceSubTopic[] => [
       'Stuck and not sure where to start? We recommend looking in this order for troubleshooting:',
     ),
   },
+  aiAssistantSubTopic(),
   faqHelpSubTopic(),
 ];
 

@@ -15,7 +15,7 @@ const DescriptionSubTopicRenderer: FC<DescriptionSubTopicRendererProps> = ({ sub
   const hasTitle = Boolean(subTopic.title);
 
   return (
-    <div className="forklift--learning__help-description">
+    <div className={css('forklift--learning__help-description', subTopic.className)}>
       {subTopic.title}
       {hasSubTopics && (
         <div className={css('pf-v6-u-mb-md', hasTitle && 'pf-v6-u-mt-md')}>

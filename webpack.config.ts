@@ -45,7 +45,7 @@ const config: Configuration = {
     },
     historyApiFallback: true, // Better SPA routing support
     hot: true,
-    port: 9001,
+    port: parseInt(process.env.PORT ?? '9001', 10),
     static: ['./dist'],
   },
   devtool: 'source-map',
