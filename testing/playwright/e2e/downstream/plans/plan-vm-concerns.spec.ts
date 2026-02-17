@@ -2,8 +2,12 @@ import { expect } from '@playwright/test';
 
 import { sharedProviderCustomPlanFixtures as customPlanTest } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, () => {
+  requireVersion(customPlanTest, V2_11_0);
+
   customPlanTest(
     'should verify VM concerns sorting, badges, filtering, and critical alerts',
     async ({ page, createCustomPlan, resourceManager }) => {

@@ -53,6 +53,7 @@ if [ -z "$CLUSTER_PASSWORD" ]; then
     exit 1
 fi
 
+
 log "Validation complete. Using pre-copied test files from /test-runner"
 
 log "Creating .providers.json from environment variable..."
@@ -65,6 +66,7 @@ export NODE_TLS_REJECT_UNAUTHORIZED=0
 export CLUSTER_USERNAME="kubeadmin"
 export CLUSTER_PASSWORD=${CLUSTER_PASSWORD}
 export VSPHERE_PROVIDER=${VSPHERE_PROVIDER}
+export FORKLIFT_VERSION=${FORKLIFT_VERSION}
 
 log "Running Playwright tests..."
 echo "  Cluster: ${CLUSTER_NAME}"
