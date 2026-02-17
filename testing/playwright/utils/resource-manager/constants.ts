@@ -40,13 +40,17 @@ export const RESOURCES_FILE = 'playwright/.resources.json';
 
 // API paths and endpoints
 export const API_PATHS = {
-  KUBERNETES_BASE: '/api/kubernetes',
-  KUBEVIRT: '/api/kubernetes/apis/kubevirt.io/v1',
-  OPENSHIFT_PROJECT: '/api/kubernetes/apis/project.openshift.io/v1',
-  KUBERNETES_CORE: '/api/kubernetes/api/v1',
   FORKLIFT: '/api/kubernetes/apis/forklift.konveyor.io/v1beta1',
+  KUBERNETES_BASE: '/api/kubernetes',
+  KUBERNETES_CORE: '/api/kubernetes/api/v1',
+  KUBEVIRT: '/api/kubernetes/apis/kubevirt.io/v1',
   NAD: '/api/kubernetes/apis/k8s.cni.cncf.io/v1',
+  OLM_CSV: '/api/kubernetes/apis/operators.coreos.com/v1alpha1',
+  OPENSHIFT_PROJECT: '/api/kubernetes/apis/project.openshift.io/v1',
 } as const;
+
+// Prefixes used to identify the MTV/Forklift operator ClusterServiceVersion
+export const OPERATOR_CSV_PREFIXES = ['mtv-operator', 'forklift-operator'] as const;
 
 // HTTP headers and other constants
 export const HTTP_HEADERS = {

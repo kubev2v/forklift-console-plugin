@@ -7,7 +7,7 @@ import type {
 import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
-import { MTV_NAMESPACE, RESOURCE_KINDS } from './constants';
+import { API_PATHS, MTV_NAMESPACE, OPERATOR_CSV_PREFIXES, RESOURCE_KINDS } from './constants';
 import type { SupportedResource } from './ResourceManager';
 
 /**
@@ -25,6 +25,38 @@ export class ResourceFetcher extends BaseResourceManager {
       resourceName: controllerName,
       namespace,
     });
+  }
+
+  /**
+   * Fetches the MTV/Forklift operator version from the cluster by reading the
+   * ClusterServiceVersion (CSV) resource created by OLM.
+   *
+   * Looks for a CSV whose name starts with "mtv-operator" (downstream) or
+   * "forklift-operator" (upstream) and returns its spec.version.
+   *
+   * @returns The semver version string (e.g. "2.7.0") or null if not found.
+   */
+  static async fetchMtvVersion(page: Page, namespace = MTV_NAMESPACE): Promise<string | null> {
+    type CsvItem = { metadata?: { name?: string }; spec?: { version?: string } };
+    type CsvList = { items?: CsvItem[] };
+
+    const apiPath = `${API_PATHS.OLM_CSV}/namespaces/${namespace}/clusterserviceversions`;
+    const data = await ResourceFetcher.apiGet<CsvList>(page, apiPath);
+
+    if (!data?.items) {
+      return null;
+    }
+
+    const operatorCsv = data.items.find((csv) =>
+      OPERATOR_CSV_PREFIXES.some((prefix) => csv.metadata?.name?.startsWith(prefix)),
+    );
+
+    if (!operatorCsv?.spec?.version) {
+      console.error('Operator CSV not found among cluster service versions');
+      return null;
+    }
+
+    return operatorCsv.spec.version;
   }
 
   static async fetchPlan(
@@ -55,74 +87,14 @@ export class ResourceFetcher extends BaseResourceManager {
     page: Page,
     options: { kind: string; resourceName: string; namespace: string },
   ): Promise<T | null> {
-    const { kind, resourceName, namespace } = options;
+    const { kind, namespace, resourceName } = options;
     const resourceType = ResourceFetcher.getResourceTypeFromKind(kind);
-    const constants = ResourceFetcher.getEvaluateConstants();
 
-    try {
-      const result = await page.evaluate(
-        async ({ resType, resourceKind, name, ns, evalConstants }) => {
-          try {
-            const getCsrfTokenFromCookie = () => {
-              const cookies = document.cookie.split('; ');
-              const csrfCookie = cookies.find((cookie) =>
-                cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
-              );
-              return csrfCookie ? csrfCookie.split('=')[1] : '';
-            };
-            const csrfToken = getCsrfTokenFromCookie();
+    const basePath =
+      kind === RESOURCE_KINDS.VIRTUAL_MACHINE ? API_PATHS.KUBEVIRT : API_PATHS.FORKLIFT;
+    const apiPath = `${basePath}/namespaces/${namespace}/${resourceType}/${resourceName}`;
 
-            let apiPath = '';
-            if (resType === evalConstants.VIRTUAL_MACHINES_TYPE) {
-              apiPath = `${evalConstants.KUBEVIRT_PATH}/namespaces/${ns}/${resType}/${name}`;
-            } else {
-              apiPath = `${evalConstants.FORKLIFT_PATH}/namespaces/${ns}/${resType}/${name}`;
-            }
-
-            const response = await fetch(apiPath, {
-              method: 'GET',
-              headers: {
-                [evalConstants.CONTENT_TYPE_HEADER]: evalConstants.APPLICATION_JSON,
-                [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
-              },
-              credentials: 'include',
-            });
-
-            if (response.ok) {
-              return { success: true, data: await response.json() };
-            }
-
-            if (response.status === 404) {
-              return { success: false, error: `${resourceKind} not found` };
-            }
-
-            const errorText = await response.text().catch(() => response.statusText);
-            return { success: false, error: errorText };
-          } catch (error: unknown) {
-            const err = error as any;
-            return {
-              success: false,
-              error: err?.message ?? String(error),
-            };
-          }
-        },
-        {
-          resType: resourceType,
-          resourceKind: kind,
-          name: resourceName,
-          ns: namespace,
-          evalConstants: constants,
-        },
-      );
-
-      if (result.success) {
-        return result.data as T;
-      }
-
-      return null;
-    } catch {
-      return null;
-    }
+    return ResourceFetcher.apiGet<T>(page, apiPath);
   }
 
   static async fetchVirtualMachine(

@@ -18,10 +18,14 @@ import { PlansListPage } from '../../page-objects/PlansListPage';
 import { createPlanTestData, type ProviderConfig, type ProviderData } from '../../types/test-data';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
+import { V2_10_5 } from '../../utils/version/constants';
+import { requireVersion } from '../../utils/version/version';
 
 const targetProjectName = `test-project-${Date.now()}`;
 
 test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => {
+  requireVersion(test, V2_10_5);
+
   const resourceManager = new ResourceManager();
 
   let testProviderData: ProviderData = {

@@ -1,6 +1,8 @@
 import { expect, type Page } from '@playwright/test';
 
 import type { HookConfig, NetworkMap, PlanTestData, StorageMap } from '../../../types/test-data';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { isVersionAtLeast } from '../../../utils/version/version';
 
 export class ReviewStep {
   private readonly page: Page;
@@ -83,7 +85,7 @@ export class ReviewStep {
     await expect(this.page.getByTestId('review-plan-project')).toContainText(
       expectedData.planProject,
     );
-    if (expectedData.description) {
+    if (expectedData.description && isVersionAtLeast(V2_11_0)) {
       await expect(this.page.getByTestId('review-plan-description')).toContainText(
         expectedData.description,
       );
@@ -115,14 +117,15 @@ export class ReviewStep {
     await expect(section).toBeVisible();
 
     if (expectedNetworkMap?.name) {
-      if (expectedNetworkMap.isPreexisting) {
-        await expect(section.getByTestId('review-network-map')).toContainText(
-          expectedNetworkMap.name,
-        );
+      if (isVersionAtLeast(V2_11_0)) {
+        const testId = expectedNetworkMap.isPreexisting
+          ? 'review-network-map'
+          : 'review-network-map-name';
+        await expect(section.getByTestId(testId)).toContainText(expectedNetworkMap.name);
       } else {
-        await expect(section.getByTestId('review-network-map-name')).toContainText(
-          expectedNetworkMap.name,
-        );
+        await expect(
+          section.locator('.pf-v5-c-description-list__group', { hasText: 'Network map name' }),
+        ).toContainText(expectedNetworkMap.name);
       }
     }
   }
@@ -153,20 +156,26 @@ export class ReviewStep {
 
   async verifyStepVisible(): Promise<void> {
     await expect(this.page.getByTestId('create-plan-review-step')).toBeVisible();
-    await expect(this.page.getByRole('heading', { name: 'Review and create' })).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: /Review and create/i })).toBeVisible();
   }
 
   async verifyStorageMapSection(expectedStorageMap: StorageMap): Promise<void> {
     const section = this.page.getByTestId('review-storage-map-section');
     await expect(section).toBeVisible();
-    if (expectedStorageMap) {
-      if (expectedStorageMap.isPreexisting) {
-        await expect(section.getByTestId('review-storage-map')).toContainText(
-          expectedStorageMap.name,
-        );
+    if (expectedStorageMap?.name) {
+      if (isVersionAtLeast(V2_11_0)) {
+        if (expectedStorageMap.isPreexisting) {
+          await expect(section.getByTestId('review-storage-map')).toContainText(
+            expectedStorageMap.name,
+          );
+        } else {
+          await expect(
+            section.locator('.pf-v6-c-description-list__group', { hasText: 'Storage map name' }),
+          ).toContainText(expectedStorageMap.name);
+        }
       } else {
         await expect(
-          section.locator('.pf-v6-c-description-list__group', { hasText: 'Storage map name' }),
+          section.locator('.pf-v5-c-description-list__group', { hasText: 'Storage map name' }),
         ).toContainText(expectedStorageMap.name);
       }
     }

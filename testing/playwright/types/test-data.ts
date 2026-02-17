@@ -1,4 +1,6 @@
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
+import { V2_11_0 } from '../utils/version/constants';
+import { isVersionAtLeast } from '../utils/version/version';
 
 import type { EndpointType, MigrationType, ProviderType } from './enums';
 
@@ -105,7 +107,7 @@ export const createPlanTestData = (
   const defaults: PlanTestData = {
     planName,
     planProject: MTV_NAMESPACE,
-    description: 'Test plan for automated testing',
+    description: isVersionAtLeast(V2_11_0) ? 'Test plan for automated testing' : undefined,
     sourceProvider: 'test-provider',
     targetProvider: 'host',
     targetProject: {

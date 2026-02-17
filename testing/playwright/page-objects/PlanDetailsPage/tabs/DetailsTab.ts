@@ -2,6 +2,8 @@ import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { MigrationType } from '../../../types/enums';
 import type { PlanTestData } from '../../../types/test-data';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { isVersionAtLeast } from '../../../utils/version/version';
 import { GuestConversionModal } from '../modals/GuestConversionModal';
 import { TargetAffinityModal } from '../modals/TargetAffinityModal';
 import { TargetLabelsModal } from '../modals/TargetLabelsModal';
@@ -193,11 +195,13 @@ export class DetailsTab {
     await expect(this.page.getByTestId('created-at-detail-item')).toBeVisible();
     await expect(this.page.getByTestId('owner-detail-item')).toContainText('No owner');
 
-    // Verify description
-    if (planData.description) {
-      await this.verifyDescriptionText(planData.description);
-    } else {
-      await this.verifyDescriptionText('None');
+    // Verify description (only exists in 2.11.0+)
+    if (isVersionAtLeast(V2_11_0)) {
+      if (planData.description) {
+        await this.verifyDescriptionText(planData.description);
+      } else {
+        await this.verifyDescriptionText('None');
+      }
     }
 
     if (planData.additionalPlanSettings?.targetPowerState) {

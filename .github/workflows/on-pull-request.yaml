@@ -105,11 +105,14 @@ jobs:
       - name: Install testing dependencies
         run: cd testing && npm ci
 
-      - name: Run pre e2e test tasks
-        run: npm run e2e:pre-test
-
       - name: Install Playwright browsers
         run: cd testing && npx playwright install --with-deps chromium
+
+      - name: Check downstream version gating
+        run: cd testing && npm run check:version-gating
+
+      - name: Run pre e2e test tasks
+        run: npm run e2e:pre-test
 
       - name: Wait for application
         run: |
