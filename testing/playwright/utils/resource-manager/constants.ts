@@ -2,22 +2,26 @@
 export const MTV_NAMESPACE = 'openshift-mtv';
 
 export const RESOURCE_KINDS = {
+  FORKLIFT_CONTROLLER: 'ForkliftController',
   MIGRATION: 'Migration',
   NETWORK_MAP: 'NetworkMap',
   NETWORK_ATTACHMENT_DEFINITION: 'NetworkAttachmentDefinition',
   PLAN: 'Plan',
   PROVIDER: 'Provider',
+  STORAGE_MAP: 'StorageMap',
   VIRTUAL_MACHINE: 'VirtualMachine',
   PROJECT: 'Project',
   NAMESPACE: 'Namespace',
 } as const;
 
 export const RESOURCE_TYPES = {
+  FORKLIFT_CONTROLLERS: 'forkliftcontrollers',
   MIGRATIONS: 'migrations',
   NETWORK_MAPS: 'networkmaps',
   NETWORK_ATTACHMENT_DEFINITIONS: 'network-attachment-definitions',
   PLANS: 'plans',
   PROVIDERS: 'providers',
+  STORAGE_MAPS: 'storagemaps',
   VIRTUAL_MACHINES: 'virtualmachines',
   PROJECTS: 'projects',
   NAMESPACES: 'namespaces',
@@ -36,13 +40,17 @@ export const RESOURCES_FILE = 'playwright/.resources.json';
 
 // API paths and endpoints
 export const API_PATHS = {
-  KUBERNETES_BASE: '/api/kubernetes',
-  KUBEVIRT: '/api/kubernetes/apis/kubevirt.io/v1',
-  OPENSHIFT_PROJECT: '/api/kubernetes/apis/project.openshift.io/v1',
-  KUBERNETES_CORE: '/api/kubernetes/api/v1',
   FORKLIFT: '/api/kubernetes/apis/forklift.konveyor.io/v1beta1',
+  KUBERNETES_BASE: '/api/kubernetes',
+  KUBERNETES_CORE: '/api/kubernetes/api/v1',
+  KUBEVIRT: '/api/kubernetes/apis/kubevirt.io/v1',
   NAD: '/api/kubernetes/apis/k8s.cni.cncf.io/v1',
+  OLM_CSV: '/api/kubernetes/apis/operators.coreos.com/v1alpha1',
+  OPENSHIFT_PROJECT: '/api/kubernetes/apis/project.openshift.io/v1',
 } as const;
+
+// Prefixes used to identify the MTV/Forklift operator ClusterServiceVersion
+export const OPERATOR_CSV_PREFIXES = ['mtv-operator', 'forklift-operator'] as const;
 
 // HTTP headers and other constants
 export const HTTP_HEADERS = {

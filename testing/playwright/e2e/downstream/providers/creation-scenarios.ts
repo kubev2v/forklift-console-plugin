@@ -2,16 +2,19 @@ import { EndpointType, ProviderType } from '../../../types/enums';
 import type { ProviderData } from '../../../types/test-data';
 import { getProviderConfig } from '../../../utils/providers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
+import { V2_11_0 } from '../../../utils/version/constants';
+import type { VersionTuple } from '../../../utils/version/types';
 
 const VSPHERE_KEY = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
 const OVA_KEY = process.env.OVA_PROVIDER ?? 'ova';
 
-export interface ProviderTestScenario {
+export type ProviderTestScenario = {
   scenarioName: string;
   providerType: ProviderType;
   providerKey: string;
   providerDataOverrides?: Partial<ProviderData>;
-}
+  minVersion?: VersionTuple;
+};
 
 export const createProviderData = (
   providerType: ProviderType,
@@ -47,6 +50,7 @@ export const providerTestScenarios: ProviderTestScenario[] = [
     providerType: ProviderType.VSPHERE,
     providerKey: VSPHERE_KEY,
     providerDataOverrides: { useVddkAioOptimization: true },
+    minVersion: V2_11_0,
   },
   {
     scenarioName: 'vSphere with VDDK AIO optimization disabled',
@@ -58,5 +62,6 @@ export const providerTestScenarios: ProviderTestScenario[] = [
     scenarioName: 'OVA provider',
     providerType: ProviderType.OVA,
     providerKey: OVA_KEY,
+    minVersion: V2_11_0,
   },
 ];

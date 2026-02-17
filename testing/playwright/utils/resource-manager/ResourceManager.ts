@@ -1,10 +1,12 @@
 import type {
   IoK8sApiCoreV1Namespace,
   IoK8sApiCoreV1Secret,
+  V1beta1ForkliftController,
   V1beta1Migration,
   V1beta1NetworkMap,
   V1beta1Plan,
   V1beta1Provider,
+  V1beta1StorageMap,
   V1VirtualMachine,
 } from '@forklift-ui/types';
 import type { Page } from '@playwright/test';
@@ -38,10 +40,12 @@ export type OpenshiftProject = IoK8sApiCoreV1Namespace & {
 };
 
 export type SupportedResource =
+  | V1beta1ForkliftController
   | V1beta1Migration
   | V1beta1NetworkMap
   | V1beta1Plan
   | V1beta1Provider
+  | V1beta1StorageMap
   | V1VirtualMachine
   | V1NetworkAttachmentDefinition
   | IoK8sApiCoreV1Namespace

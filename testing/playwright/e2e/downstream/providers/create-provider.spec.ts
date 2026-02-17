@@ -9,21 +9,29 @@ if (!existsSync(providersPath)) {
 }
 
 import { CreateProviderPage } from '../../../page-objects/CreateProviderPage';
+import { ProviderType } from '../../../types/enums';
 import { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
+import { V2_10_5, V2_11_0 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 import { createProviderData, providerTestScenarios } from './creation-scenarios';
 
 test.describe('Provider Creation Tests', () => {
+  requireVersion(test, V2_10_5);
+
   const resourceManager = new ResourceManager();
 
   providerTestScenarios.forEach(
-    ({ scenarioName, providerType, providerKey, providerDataOverrides }) => {
+    ({ scenarioName, providerType, providerKey, providerDataOverrides, minVersion }) => {
       test(
         `should create a new ${providerType} provider: ${scenarioName}`,
         {
           tag: '@downstream',
         },
         async ({ page }) => {
+          if (minVersion) {
+            requireVersion(test, minVersion);
+          }
           const createProvider = new CreateProviderPage(page, resourceManager);
           const testProviderData = createProviderData(
             providerType,
@@ -63,4 +71,49 @@ test.describe('Provider Creation Tests', () => {
   test.afterAll(async () => {
     await resourceManager.instantCleanup();
   });
+
+  test(
+    'should verify Skip VDDK Setup and Skip Certificate Validation options for vSphere provider',
+    {
+      tag: '@downstream',
+    },
+    async ({ page }) => {
+      requireVersion(test, V2_11_0);
+      const createProvider = new CreateProviderPage(page, resourceManager);
+
+      await test.step('Navigate to provider creation page', async () => {
+        await createProvider.navigate();
+      });
+
+      await test.step('Select VMware vSphere provider type', async () => {
+        await createProvider.selectProviderType(ProviderType.VSPHERE);
+      });
+
+      await test.step('Verify AIO checkbox is visible when VDDK is configured manually', async () => {
+        await createProvider.vddkManualRadio.click();
+        await expect(createProvider.vddkManualRadio).toBeChecked();
+        await expect(createProvider.vddkAioCheckbox).toBeVisible();
+        await expect(createProvider.vddkImageInput).toBeVisible();
+      });
+
+      await test.step('Click Skip VDDK setup and verify warning and hidden AIO checkbox', async () => {
+        await createProvider.vddkSkipRadio.click();
+        await expect(createProvider.vddkSkipRadio).toBeChecked();
+        await expect(createProvider.vddkSkipWarning).toBeVisible();
+        await expect(createProvider.vddkAioCheckbox).not.toBeVisible();
+        await expect(createProvider.vddkImageInput).not.toBeVisible();
+      });
+
+      await test.step('Verify CA certificate section is visible by default', async () => {
+        await expect(createProvider.certificateConfigureRadio).toBeChecked();
+        await expect(createProvider.certificateUploadInput).toBeVisible();
+      });
+
+      await test.step('Click Skip certificate validation and verify CA certificate section is hidden', async () => {
+        await createProvider.certificateSkipRadio.click();
+        await expect(createProvider.certificateSkipRadio).toBeChecked();
+        await expect(createProvider.certificateUploadInput).not.toBeVisible();
+      });
+    },
+  );
 });

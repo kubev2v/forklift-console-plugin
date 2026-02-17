@@ -8,8 +8,11 @@ import type { ConfigurableResourceFixtures } from '../../../fixtures/resourceFix
 import { isolatedCustomPlanFixtures as test } from '../../../fixtures/resourceFixtures';
 import { ProviderDetailsPage } from '../../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { NfsCleanupManager } from '../../../utils/nfs-cleanup/NfsCleanupManager';
+import { V2_11_0 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 test.describe('OVA Provider Upload Tests', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
   const nfsCleanupManager = new NfsCleanupManager();
   let createdOvaPath: string | null = null;
 

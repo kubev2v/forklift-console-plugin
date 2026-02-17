@@ -8,7 +8,8 @@
     "test:downstream": "npx playwright test --grep @downstream",
     "test:downstream:remote:docker": "bash run-e2e-docker.sh",
     "test:downstream:local": "BASE_ADDRESS=http://localhost:9000 npx playwright test --grep @downstream",
-    "test:upstream": "npx playwright test playwright/e2e/upstream/"
+    "test:upstream": "npx playwright test playwright/e2e/upstream/",
+    "check:version-gating": "bash check-version-gating.sh"
   },
   "author": "",
   "license": "ISC",
