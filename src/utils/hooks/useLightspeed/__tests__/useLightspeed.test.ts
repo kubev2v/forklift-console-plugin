@@ -1,7 +1,9 @@
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import { useResolvedExtensions } from '@openshift-console/dynamic-plugin-sdk';
 import { act, renderHook } from '@testing-library/react-hooks';
 
 import { useLightspeed } from '../useLightspeed';
+import { clickOLSSubmitButton } from '../utils';
 
 const mockDispatch = jest.fn();
 
@@ -11,6 +13,11 @@ jest.mock('react-redux', () => ({
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   useResolvedExtensions: jest.fn(),
+}));
+
+jest.mock('../utils', () => ({
+  ...jest.requireActual('../utils'),
+  clickOLSSubmitButton: jest.fn(),
 }));
 
 const mockUseResolvedExtensions = useResolvedExtensions as jest.MockedFunction<
@@ -122,6 +129,31 @@ describe('useLightspeed', () => {
           type: 'attachmentSet',
         }),
       );
+    });
+
+    it('calls clickOLSSubmitButton when autoSubmit option is set', () => {
+      (mockUseResolvedExtensions as jest.Mock).mockReturnValue([[OLS_EXTENSION], true]);
+
+      const { result } = renderHook(() => useLightspeed());
+
+      act(() => {
+        result.current.openLightspeed('test prompt', undefined, { autoSubmit: true });
+      });
+
+      expect(mockDispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'openOLS' }));
+      expect(clickOLSSubmitButton).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not call clickOLSSubmitButton when autoSubmit is not set', () => {
+      (mockUseResolvedExtensions as jest.Mock).mockReturnValue([[OLS_EXTENSION], true]);
+
+      const { result } = renderHook(() => useLightspeed());
+
+      act(() => {
+        result.current.openLightspeed('test prompt');
+      });
+
+      expect(clickOLSSubmitButton).not.toHaveBeenCalled();
     });
   });
 });

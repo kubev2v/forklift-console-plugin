@@ -24,6 +24,19 @@
   &__ask-ai-card {
     min-width: 350px;
     width: fit-content;
+
+    .pf-v6-c-list {
+      --pf-v6-c-list--Gap: 0;
+    }
+  }
+
+  &__ask-ai-icon {
+    color: var(--pf-t--global--text--color--on-primary--default);
+
+    rect {
+      fill: var(--pf-t--global--background--color--primary--default);
+      stroke: var(--pf-t--global--border--color--default);
+    }
   }
 
   &__help-section {

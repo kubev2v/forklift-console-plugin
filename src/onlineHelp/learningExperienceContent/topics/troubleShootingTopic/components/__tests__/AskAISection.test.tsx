@@ -1,12 +1,13 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { useLightspeed } from '@utils/hooks/useLightspeed';
+import { useLightspeed } from '@utils/hooks/useLightspeed/useLightspeed';
 
 import AskAISection from '../AskAISection';
 
 const mockOpenLightspeed = jest.fn();
 
-jest.mock('@utils/hooks/useLightspeed', () => ({
+jest.mock('@utils/hooks/useLightspeed/useLightspeed', () => ({
   useLightspeed: jest.fn(),
 }));
 

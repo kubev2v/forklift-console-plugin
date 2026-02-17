@@ -12,16 +12,11 @@ import {
   ListItem,
   Title,
 } from '@patternfly/react-core';
-import { useLightspeed } from '@utils/hooks/useLightspeed';
+import { useLightspeed } from '@utils/hooks/useLightspeed/useLightspeed';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import AskAIIcon from './AskAIIcon';
-
-const PRE_CANNED_QUESTIONS = [
-  'How do I check network mapping for a failed migration?',
-  'Why is my warm migration stuck?',
-  "Why aren't my VMs working after migration?",
-] as const;
+import { aiPromptQuestions } from './constants';
 
 const AskAISection: FC = () => {
   const { t } = useForkliftTranslation();
@@ -42,27 +37,22 @@ const AskAISection: FC = () => {
         >
           <AskAIIcon />
           <Title headingLevel="h4">{t('Ask AI assistant')}</Title>
-          <ExpandableSectionToggle
-            isExpanded={isExpanded}
-            onToggle={(expanded) => {
-              setIsExpanded(expanded);
-            }}
-          >
+          <ExpandableSectionToggle isExpanded={isExpanded} onToggle={setIsExpanded}>
             {t('Common troubleshooting questions')}
           </ExpandableSectionToggle>
         </Flex>
 
         <ExpandableSection isDetached isExpanded={isExpanded}>
-          <List style={{ '--pf-v6-c-list--Gap': 0 } as React.CSSProperties}>
-            {PRE_CANNED_QUESTIONS.map((question) => (
+          <List>
+            {aiPromptQuestions.map((question) => (
               <ListItem key={question}>
                 <Button
                   onClick={() => {
-                    openLightspeed(t(question));
+                    openLightspeed(question);
                   }}
                   variant={ButtonVariant.link}
                 >
-                  {t(question)}
+                  {question}
                 </Button>
               </ListItem>
             ))}
