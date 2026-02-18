@@ -140,6 +140,7 @@ export class MappingsTab {
   }
 
   async getStorageMappingCountFromReviewTable(): Promise<number> {
+    await this.storageMapReviewTable.locator('tbody tr').first().waitFor({ state: 'visible' });
     return await this.storageMapReviewTable.locator('tbody tr').count();
   }
 

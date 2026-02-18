@@ -88,6 +88,7 @@ const CreateStorageMapFieldTable: FC = () => {
           <TargetStorageField
             fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
             targetStorages={targetStorages}
+            testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
           />,
         ],
       }))}
