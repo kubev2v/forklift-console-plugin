@@ -3,12 +3,15 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { isEmpty } from '../../../utils/utils';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
+import { OffloadOptions } from '../../common/OffloadOptions';
 
 export class StorageMapStep {
   private readonly page: Page;
+  readonly offload: OffloadOptions;
 
   constructor(page: Page) {
     this.page = page;
+    this.offload = new OffloadOptions(page);
   }
 
   /**
@@ -64,7 +67,7 @@ export class StorageMapStep {
       await selectElement.click();
       await this.page.getByRole('option', { name: storageMap.name }).click();
     } else {
-      await this.page.getByTestId('use-new-storage-map-radio').check();
+      await this.useNewStorageMapRadio.check();
       await this.page.getByRole('textbox').click();
       await this.page.getByRole('textbox').fill(storageMap.name);
 
@@ -124,6 +127,10 @@ export class StorageMapStep {
 
     await this.waitForStorageOptions();
     await this.page.getByRole('option', { name: targetStorage }).click();
+  }
+
+  get useNewStorageMapRadio(): Locator {
+    return this.page.getByTestId('use-new-storage-map-radio');
   }
 
   async verifyStepVisible(): Promise<void> {

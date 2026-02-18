@@ -36,6 +36,7 @@ const SourceProviderField: FC = () => {
             isDisabled={isSubmitting}
             placeholder={t('Select source provider')}
             id={StorageMapFieldId.SourceProvider}
+            testId="source-provider-select"
             namespace={project}
             value={field.value?.metadata?.name ?? ''}
             onSelect={(_, value) => {

@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { HookConfig, NetworkMap, PlanTestData, StorageMap } from '../../../types/test-data';
 import { V2_11_0 } from '../../../utils/version/constants';
@@ -67,6 +67,10 @@ export class ReviewStep {
 
     const section = this.page.getByTestId(sectionMap[sectionName]);
     await section.getByRole('button', { name: 'Edit step' }).click();
+  }
+
+  get storageMapSection(): Locator {
+    return this.page.getByTestId('review-storage-map-section');
   }
 
   async verifyAllSections(planData: PlanTestData): Promise<void> {
@@ -159,8 +163,51 @@ export class ReviewStep {
     await expect(this.page.getByRole('heading', { name: /Review and create/i })).toBeVisible();
   }
 
+  async verifyStorageMapOffloadDetails(
+    mappingIndex: number,
+    expectedOffload: {
+      offloadPlugin?: string;
+      storageSecret?: string;
+      storageProduct?: string;
+    },
+  ): Promise<void> {
+    const reviewTable = this.page.getByTestId('storage-map-review-table');
+    await expect(reviewTable).toBeVisible();
+
+    const rows = reviewTable.locator('tbody tr:not([class*="expanded"])');
+    const expandButton = rows.nth(mappingIndex).locator('button').first();
+    await expandButton.click();
+
+    const expandedRow = reviewTable.locator('tr[class*="expanded"]').first();
+    await expect(expandedRow).toBeVisible();
+
+    const descriptionList = expandedRow.locator('.pf-v6-c-description-list');
+
+    if (expectedOffload.offloadPlugin) {
+      await expect(
+        descriptionList.locator('.pf-v6-c-description-list__group', { hasText: 'Offload plugin' }),
+      ).toContainText(expectedOffload.offloadPlugin);
+    }
+
+    if (expectedOffload.storageSecret) {
+      await expect(
+        descriptionList.locator('.pf-v6-c-description-list__group', {
+          hasText: 'Storage secret',
+        }),
+      ).toContainText(expectedOffload.storageSecret);
+    }
+
+    if (expectedOffload.storageProduct) {
+      await expect(
+        descriptionList.locator('.pf-v6-c-description-list__group', {
+          hasText: 'Storage product',
+        }),
+      ).toContainText(expectedOffload.storageProduct);
+    }
+  }
+
   async verifyStorageMapSection(expectedStorageMap: StorageMap): Promise<void> {
-    const section = this.page.getByTestId('review-storage-map-section');
+    const section = this.storageMapSection;
     await expect(section).toBeVisible();
     if (expectedStorageMap?.name) {
       if (isVersionAtLeast(V2_11_0)) {

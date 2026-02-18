@@ -64,6 +64,10 @@ export abstract class BaseMapDetailsPage {
     await expect(this.editButtonLocator()).toBeVisible();
   }
 
+  async waitForDetailsPageReady(timeout = 30_000): Promise<void> {
+    await expect(this.detailsHeadingLocator()).toBeVisible({ timeout });
+  }
+
   async navigate(mapName: string, namespace = MTV_NAMESPACE): Promise<void> {
     await this.navigationHelper.navigateToK8sResource({
       resource: this.config.resourceType,

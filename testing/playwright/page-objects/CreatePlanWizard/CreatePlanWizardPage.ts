@@ -144,19 +144,22 @@ export class CreatePlanWizardPage {
   }
 
   async navigateToMigrationTypeStep(testData: PlanTestData): Promise<void> {
+    await this.navigateToStorageMapStep(testData);
+    await this.storageMap.fillAndComplete(testData.storageMap);
+    await this.clickNext();
+  }
+
+  async navigateToStorageMapStep(testData: PlanTestData): Promise<void> {
     await this.generalInformation.fillAndComplete(testData);
     await this.clickNext();
     await this.virtualMachines.fillAndComplete(testData.virtualMachines);
     await this.clickNext();
 
-    // Handle critical issues modal if it appears (after clicking Next)
     if (testData.criticalIssuesAction) {
       await this.virtualMachines.handleCriticalIssuesModal(testData.criticalIssuesAction);
     }
 
     await this.networkMap.fillAndComplete(testData.networkMap);
-    await this.clickNext();
-    await this.storageMap.fillAndComplete(testData.storageMap);
     await this.clickNext();
   }
 
