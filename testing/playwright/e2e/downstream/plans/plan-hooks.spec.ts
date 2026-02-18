@@ -11,6 +11,9 @@ import { requireVersion } from '../../../utils/version/version';
 
 const HOOK_RUNNER_IMAGE = 'quay.io/konveyor/hook-runner:latest';
 const UPDATED_HOOK_RUNNER_IMAGE = 'quay.io/konveyor/hook-runner:v0.2.0';
+const PRE_HOOK_SERVICE_ACCOUNT = 'pre-hook-sa';
+const POST_HOOK_SERVICE_ACCOUNT = 'post-hook-sa';
+const UPDATED_SERVICE_ACCOUNT = 'updated-hook-sa';
 
 const loadPlaybookFromTemplate = (templatePath: string, hookName: string): string => {
   const absolutePath = path.resolve(__dirname, '../../..', templatePath);
@@ -75,6 +78,7 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
       await wizard.hooks.configurePreMigrationHook({
         enabled: true,
         hookRunnerImage: HOOK_RUNNER_IMAGE,
+        serviceAccount: PRE_HOOK_SERVICE_ACCOUNT,
         ansiblePlaybook: preHookPlaybook,
       });
     });
@@ -83,6 +87,7 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
       await wizard.hooks.configurePostMigrationHook({
         enabled: true,
         hookRunnerImage: HOOK_RUNNER_IMAGE,
+        serviceAccount: POST_HOOK_SERVICE_ACCOUNT,
         ansiblePlaybook: postHookPlaybook,
       });
     });
@@ -90,7 +95,20 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
     await test.step('Verify hooks in review step', async () => {
       await wizard.clickNext();
       await wizard.review.verifyStepVisible();
-      await wizard.review.verifyHooksSection();
+      await wizard.review.verifyHooksSection(
+        {
+          enabled: true,
+          hookRunnerImage: HOOK_RUNNER_IMAGE,
+          serviceAccount: PRE_HOOK_SERVICE_ACCOUNT,
+          ansiblePlaybook: preHookPlaybook,
+        },
+        {
+          enabled: true,
+          hookRunnerImage: HOOK_RUNNER_IMAGE,
+          serviceAccount: POST_HOOK_SERVICE_ACCOUNT,
+          ansiblePlaybook: postHookPlaybook,
+        },
+      );
     });
 
     await test.step('Create plan', async () => {
@@ -106,13 +124,17 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
       await planDetailsPage.hooksTab.verifyPostMigrationHookEnabled(true);
       await planDetailsPage.hooksTab.verifyHookRunnerImage('pre', HOOK_RUNNER_IMAGE);
       await planDetailsPage.hooksTab.verifyHookRunnerImage('post', HOOK_RUNNER_IMAGE);
+      await planDetailsPage.hooksTab.verifyServiceAccount('pre', PRE_HOOK_SERVICE_ACCOUNT);
+      await planDetailsPage.hooksTab.verifyServiceAccount('post', POST_HOOK_SERVICE_ACCOUNT);
     });
 
-    await test.step('Edit pre-migration hook with new image', async () => {
+    await test.step('Edit pre-migration hook with new image and service account', async () => {
       await planDetailsPage.hooksTab.openPreMigrationHookEditModal();
       await planDetailsPage.hooksTab.hookEditModal.setHookRunnerImage(UPDATED_HOOK_RUNNER_IMAGE);
+      await planDetailsPage.hooksTab.hookEditModal.setServiceAccount(UPDATED_SERVICE_ACCOUNT);
       await planDetailsPage.hooksTab.hookEditModal.save();
       await planDetailsPage.hooksTab.verifyHookRunnerImage('pre', UPDATED_HOOK_RUNNER_IMAGE);
+      await planDetailsPage.hooksTab.verifyServiceAccount('pre', UPDATED_SERVICE_ACCOUNT);
     });
 
     await test.step('Remove pre-migration hook', async () => {

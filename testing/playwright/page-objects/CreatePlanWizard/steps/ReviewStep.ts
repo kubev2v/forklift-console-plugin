@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
-import type { NetworkMap, PlanTestData, StorageMap } from '../../../types/test-data';
+import type { HookConfig, NetworkMap, PlanTestData, StorageMap } from '../../../types/test-data';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
 
@@ -9,6 +9,40 @@ export class ReviewStep {
 
   constructor(page: Page) {
     this.page = page;
+  }
+
+  private async verifyHookFields(hookType: 'pre' | 'post', hookConfig?: HookConfig): Promise<void> {
+    const prefix = `review-${hookType}-migration-hook`;
+    const enabledLocator = this.page.getByTestId(`${prefix}-enabled`);
+
+    await expect(enabledLocator).toBeVisible();
+
+    if (!hookConfig) {
+      return;
+    }
+
+    const expectedEnabled = hookConfig.enabled ? 'True' : 'False';
+    await expect(enabledLocator).toHaveText(expectedEnabled);
+
+    if (hookConfig.enabled) {
+      if (hookConfig.hookRunnerImage) {
+        await expect(this.page.getByTestId(`${prefix}-runner-image`)).toHaveText(
+          hookConfig.hookRunnerImage,
+        );
+      }
+
+      if (hookConfig.serviceAccount) {
+        await expect(this.page.getByTestId(`${prefix}-service-account`)).toHaveText(
+          hookConfig.serviceAccount,
+        );
+      }
+
+      const playbookLocator = this.page.getByTestId(`${prefix}-ansible-playbook`);
+      await expect(playbookLocator).toBeVisible();
+      if (hookConfig.ansiblePlaybook) {
+        await expect(playbookLocator).not.toHaveText('None');
+      }
+    }
   }
 
   async clickEditStepInSection(
@@ -67,10 +101,10 @@ export class ReviewStep {
     );
   }
 
-  async verifyHooksSection(): Promise<void> {
+  async verifyHooksSection(preHook?: HookConfig, postHook?: HookConfig): Promise<void> {
     await expect(this.page.getByTestId('review-hooks-section')).toBeVisible();
-    await expect(this.page.getByTestId('review-pre-migration-hook-enabled')).toBeVisible();
-    await expect(this.page.getByTestId('review-post-migration-hook-enabled')).toBeVisible();
+    await this.verifyHookFields('pre', preHook);
+    await this.verifyHookFields('post', postHook);
   }
 
   async verifyMigrationTypeSection(): Promise<void> {
