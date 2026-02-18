@@ -73,7 +73,7 @@ export const transformFormValuesToK8sSpec = (
 export const transformStorageMapToFormValues = (
   storageMap: V1beta1StorageMap,
 ): UpdateMappingsFormData => {
-  if (isEmpty(storageMap) || !storageMap?.spec?.map) {
+  if (isEmpty(storageMap) || !storageMap?.spec?.map || isEmpty(storageMap.spec.map)) {
     return {
       storageMap: [defaultStorageMapping],
     };

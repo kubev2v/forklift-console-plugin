@@ -47,9 +47,45 @@ export const StorageClasses = {
  * Common source datastores/storage available from VMware providers
  */
 export const SourceStorages = {
-  NFS_US_MTV_V8: 'nfs-us-mtv-v8',
   MTV_NFS_RHOS_V8: 'mtv-nfs-rhos-v8',
+  MTV_NFS_US_V8: 'mtv-nfs-us-v8',
+  NFS_US_MTV_V8: 'nfs-us-mtv-v8',
 } as const;
+
+/**
+ * Storage offload options used for vSphere XCOPY/VAAI testing.
+ * Display names are the user-visible labels in the UI dropdowns.
+ * K8s values are the internal representations stored in the CR spec.
+ */
+export const OffloadPlugins = {
+  VSPHERE_XCOPY: 'vSphere XCOPY',
+} as const;
+
+export const OffloadPluginK8sValues = {
+  VSPHERE_XCOPY: 'vsphereXcopyConfig',
+} as const;
+
+export const OffloadSecrets = {
+  VS8_SECRET: 'vs8-secret',
+} as const;
+
+export const StorageProducts = {
+  DELL_POWERFLEX: 'Dell PowerFlex',
+  DELL_POWERMAX: 'Dell PowerMax',
+  DELL_POWERSTORE: 'Dell PowerStore',
+  HITACHI_VANTARA: 'Hitachi Vantara',
+  HPE_PRIMERA_3PAR: 'HPE Primera/3PAR',
+  IBM_FLASHSYSTEM: 'IBM FlashSystem',
+  INFINIDAT_INFINIBOX: 'Infinidat Infinibox',
+  NETAPP_ONTAP: 'NetApp ONTAP',
+  PURE_STORAGE_FLASHARRAY: 'Pure Storage FlashArray',
+} as const;
+
+export const StorageProductK8sValues = {
+  NETAPP_ONTAP: 'ontap',
+} as const;
+
+export const ALL_STORAGE_PRODUCTS = Object.values(StorageProducts);
 
 /**
  * Target network options for network mapping

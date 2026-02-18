@@ -36,6 +36,7 @@ const TargetProviderField: FC = () => {
             isDisabled={isSubmitting}
             placeholder={t('Select target provider')}
             id={StorageMapFieldId.TargetProvider}
+            testId="target-provider-select"
             namespace={project}
             value={field.value?.metadata?.name ?? ''}
             onSelect={(_, value) => {
