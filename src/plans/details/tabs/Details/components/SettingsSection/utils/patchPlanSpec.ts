@@ -15,7 +15,7 @@ export const patchPlanSpec = async <T>({
   path,
   plan,
 }: PatchPlanSpecParams<T>): Promise<V1beta1Plan> => {
-  const op = currentValue ? REPLACE : ADD;
+  const op = currentValue === undefined ? ADD : REPLACE;
 
   return k8sPatch({
     data: [{ op, path, value: newValue }],

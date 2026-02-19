@@ -29,17 +29,19 @@ const TargetAffinityDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, pla
       plan,
     });
 
+  const initialAffinity = plan?.spec?.targetAffinity as K8sIoApiCoreV1Affinity;
+
   return (
     <DetailsItem
       testId="vm-target-affinity-rules-detail-item"
       title={t('VM target affinity rules')}
-      content={<AffinityViewDetailsItemContent affinity={plan?.spec?.targetAffinity} />}
+      content={<AffinityViewDetailsItemContent affinity={initialAffinity} />}
       helpContent={TARGET_AFFINITY_DETAILS_ITEM_DESCRIPTION}
       crumbs={['spec', 'targetAffinity']}
       moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
         launcher<AffinityModalProps>(AffinityModal, {
-          initialAffinity: plan?.spec?.targetAffinity,
+          initialAffinity,
           onConfirm,
           title: t('Edit VM target affinity rules'),
         });
