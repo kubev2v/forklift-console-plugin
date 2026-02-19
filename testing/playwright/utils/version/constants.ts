@@ -9,3 +9,4 @@ export const VERSION_GATE_TAG = '[version-gated]';
 /** Pre-parsed version constants — avoids repeated string parsing. */
 export const V2_10_5: VersionTuple = [2, 10, 5];
 export const V2_11_0: VersionTuple = [2, 11, 0];
+export const V2_12_0: VersionTuple = [2, 12, 0];

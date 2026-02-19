@@ -336,7 +336,6 @@
   "Delete virtual machines from migration plan?": "Delete virtual machines from migration plan?",
   "Deleting a migration plan does not remove temporary resources, it is recommended to <2>archive</2> the plan first before deleting it, to remove temporary resources.": "Deleting a migration plan does not remove temporary resources, it is recommended to <2>archive</2> the plan first before deleting it, to remove temporary resources.",
   "Deleting all virtual machines from a migration plan is not allowed.": "Deleting all virtual machines from a migration plan is not allowed.",
-  "Deleting virtual machines from an archived migration plan is not allowed.": "Deleting virtual machines from an archived migration plan is not allowed.",
   "Dell PowerFlex": "Dell PowerFlex",
   "Dell PowerMax": "Dell PowerMax",
   "Dell PowerStore": "Dell PowerStore",
