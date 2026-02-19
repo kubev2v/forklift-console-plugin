@@ -5,7 +5,7 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
+import { REPLACE } from '@components/ModalForm/utils/constants';
 import { PlanModel, type V1beta1PlanSpecVms } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
@@ -29,7 +29,6 @@ const AddVirtualMachinesModal: ModalComponent<AddVirtualMachineProps> = ({ plan,
 
   const handleSave = useCallback(async () => {
     const currentVms = getPlanVirtualMachines(plan);
-    const op = currentVms ? REPLACE : ADD;
 
     const newVmEntries: V1beta1PlanSpecVms[] = selectedVmsRef.current.map((vmData) => ({
       id: vmData.vm.id,
@@ -42,7 +41,7 @@ const AddVirtualMachinesModal: ModalComponent<AddVirtualMachineProps> = ({ plan,
     const updatedVms = [...(currentVms ?? []), ...newVmEntries];
 
     return k8sPatch({
-      data: [{ op, path: '/spec/vms', value: updatedVms }],
+      data: [{ op: REPLACE, path: '/spec/vms', value: updatedVms }],
       model: PlanModel,
       path: '',
       resource: plan,
@@ -58,7 +57,11 @@ const AddVirtualMachinesModal: ModalComponent<AddVirtualMachineProps> = ({ plan,
       variant={ModalVariant.large}
       {...rest}
     >
-      <AddVirtualMachinesTable onSelect={handleSelect} plan={plan} />
+      <AddVirtualMachinesTable
+        onSelect={handleSelect}
+        plan={plan}
+        sourceProvider={sourceProvider}
+      />
     </ModalForm>
   );
 };

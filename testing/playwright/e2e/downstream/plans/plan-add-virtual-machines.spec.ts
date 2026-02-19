@@ -2,8 +2,12 @@ import { expect } from '@playwright/test';
 
 import { sharedProviderCustomPlanFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import { V2_12_0 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_12_0);
+
   test('should add virtual machines to an existing plan via the modal', async ({
     page,
     createCustomPlan,
@@ -53,10 +57,7 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
       await modal.verifySaveButtonDisabled();
       await expect(modal.cancelButton).toBeVisible();
 
-      // Already-planned VMs must not appear in the modal
       await modal.verifyVmNotInTable(plannedVmName);
-
-      // The removed VM should be available
       await modal.verifyVmInTable(removedVm.name!);
 
       await modal.cancel();
@@ -75,7 +76,6 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
 
       await modal.cancel();
 
-      // Verify the plan VM table row count is unchanged after cancel
       const afterCancelRowCount = await planDetailsPage.virtualMachinesTab.getRowCount();
       expect(afterCancelRowCount).toBe(initialRowCount);
     });
@@ -88,13 +88,11 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
       await modal.selectVirtualMachine(removedVm.name!);
       await modal.save();
 
-      await page.waitForLoadState('networkidle');
       await planDetailsPage.virtualMachinesTab.verifyTableLoaded();
+      await planDetailsPage.virtualMachinesTab.verifyRowIsVisible({ Name: removedVm.name! });
 
       const afterAddRowCount = await planDetailsPage.virtualMachinesTab.getRowCount();
       expect(afterAddRowCount).toBe(initialRowCount + 1);
-
-      await planDetailsPage.virtualMachinesTab.verifyRowIsVisible({ Name: removedVm.name! });
 
       // API-level verification
       const updatedPlan = await resourceManager.fetchPlan(page, planName, planNamespace);
