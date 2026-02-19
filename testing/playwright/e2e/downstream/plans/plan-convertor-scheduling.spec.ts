@@ -14,7 +14,7 @@ const setupPlanDetailsPage = async (page: Page, testPlan: TestPlan | undefined) 
   const { name: planName, namespace } = testPlan.metadata;
   await planDetailsPage.navigate(planName, namespace);
   await planDetailsPage.verifyPlanTitle(planName);
-  return { planDetailsPage, planName, namespace, testData: testPlan.testData };
+  return { planDetailsPage };
 };
 
 test.describe('Plan Details - Convertor Pod Labels', { tag: '@downstream' }, () => {

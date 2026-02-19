@@ -1,8 +1,7 @@
 import type { FC } from 'react';
-import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
+import { DetailsItem } from '@components/DetailItems/DetailItem';
 import NodeSelectorModal, {
   type NodeSelectorModalProps,
 } from '@components/NodeSelectorModal/NodeSelectorModal';
@@ -11,6 +10,8 @@ import type { V1beta1Plan } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
+import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
+import { DOC_MAIN_HELP_LINK } from '@utils/links';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
 import { patchPlanSpec } from '../../utils/patchPlanSpec';
@@ -46,6 +47,7 @@ const ConvertorNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({
       content={<NodeSelectorViewDetailsItemContent labels={plan?.spec?.convertorNodeSelector} />}
       helpContent={description}
       crumbs={['spec', 'convertorNodeSelector']}
+      moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
         launcher<NodeSelectorModalProps>(NodeSelectorModal, {
           description: (

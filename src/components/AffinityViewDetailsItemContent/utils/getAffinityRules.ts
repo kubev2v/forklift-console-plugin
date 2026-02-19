@@ -1,18 +1,13 @@
 import type {
-  V1beta1PlanSpecConvertorAffinity,
-  V1beta1PlanSpecTargetAffinity,
-  V1beta1PlanSpecTargetAffinityNodeAffinity,
-  V1beta1PlanSpecTargetAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution,
-  V1beta1PlanSpecTargetAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms,
-} from '@forklift-ui/types';
-import type {
+  K8sIoApiCoreV1Affinity,
+  K8sIoApiCoreV1NodeAffinity,
+  K8sIoApiCoreV1NodeSelectorTerm,
   K8sIoApiCoreV1PodAffinity,
   K8sIoApiCoreV1PodAffinityTerm,
   K8sIoApiCoreV1PodAntiAffinity,
+  K8sIoApiCoreV1PreferredSchedulingTerm,
   K8sIoApiCoreV1WeightedPodAffinityTerm,
 } from '@forklift-ui/types';
-
-type PlanAffinity = V1beta1PlanSpecConvertorAffinity | V1beta1PlanSpecTargetAffinity;
 
 enum AffinityCondition {
   preferred = 'preferredDuringSchedulingIgnoredDuringExecution',
@@ -20,11 +15,8 @@ enum AffinityCondition {
 }
 
 const getNodeAffinity = (
-  nodeAffinity: V1beta1PlanSpecTargetAffinityNodeAffinity | undefined,
-): (
-  | V1beta1PlanSpecTargetAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution
-  | V1beta1PlanSpecTargetAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms
-)[] => {
+  nodeAffinity: K8sIoApiCoreV1NodeAffinity | undefined,
+): (K8sIoApiCoreV1PreferredSchedulingTerm | K8sIoApiCoreV1NodeSelectorTerm)[] => {
   return [
     ...(nodeAffinity?.[AffinityCondition.preferred] ?? []),
     ...(nodeAffinity?.[AffinityCondition.required]?.nodeSelectorTerms ?? []),
@@ -41,16 +33,14 @@ const getPodAffinity = (
 };
 
 export const getAffinityRules = (
-  affinity: PlanAffinity | undefined,
+  affinity: K8sIoApiCoreV1Affinity | undefined,
 ): (
-  | V1beta1PlanSpecTargetAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution
+  | K8sIoApiCoreV1NodeSelectorTerm
   | K8sIoApiCoreV1PodAffinityTerm
-  | V1beta1PlanSpecTargetAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms
+  | K8sIoApiCoreV1PreferredSchedulingTerm
   | K8sIoApiCoreV1WeightedPodAffinityTerm
 )[] => {
-  const nodeAffinity = getNodeAffinity(
-    affinity?.nodeAffinity as V1beta1PlanSpecTargetAffinityNodeAffinity | undefined,
-  );
+  const nodeAffinity = getNodeAffinity(affinity?.nodeAffinity);
   const podAffinity = getPodAffinity(affinity?.podAffinity);
   const podAntiAffinity = getPodAffinity(affinity?.podAntiAffinity);
   return [...nodeAffinity, ...podAffinity, ...podAntiAffinity];

@@ -1,13 +1,13 @@
 import type { FC } from 'react';
-import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
+import { DetailsItem } from '@components/DetailItems/DetailItem';
 import LabelsModal, { type LabelsModalProps } from '@components/LabelsModal/LabelsModal';
 import LabelsViewDetailsItemContent from '@components/LabelsViewDetailsItemContent/LabelsViewDetailsItemContent';
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
+import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 import { DOC_MAIN_HELP_LINK } from '@utils/links';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
