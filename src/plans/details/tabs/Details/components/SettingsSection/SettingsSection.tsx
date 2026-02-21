@@ -12,6 +12,9 @@ import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 
 import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
 
+import ConvertorAffinityDetailsItem from './components/ConvertorAffinity/ConvertorAffinityDetailsItem';
+import ConvertorLabelsDetailsItem from './components/ConvertorLabels/ConvertorLabelsDetailsItem';
+import ConvertorNodeSelectorDetailsItem from './components/ConvertorNodeSelector/ConvertorNodeSelectorDetailsItem';
 import GuestConversionDetailsItem from './components/GuestConversion/GuestConversionDetailsItem';
 import NetworkNameTemplateDetailsItem from './components/NetworkNameTemplate/NetworkNameTemplateDetailsItem';
 import SharedDisksDetailsItem from './components/PlanMigrateSharedDisks/MigrateSharedDisksDetailsItem';
@@ -77,6 +80,9 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
       <TargetLabelsDetailsItem plan={plan} canPatch={canPatch} />
       <TargetNodeSelectorDetailsItem plan={plan} canPatch={canPatch} />
       <TargetAffinityDetailsItem plan={plan} canPatch={canPatch} />
+      <ConvertorLabelsDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+      <ConvertorNodeSelectorDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+      <ConvertorAffinityDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
     </DescriptionList>
   );
 };
