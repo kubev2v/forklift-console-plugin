@@ -2,6 +2,7 @@ import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../../types/test-data';
 import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
+import { AddVirtualMachinesModal } from '../modals/AddVirtualMachinesModal';
 
 type ConcernCategory = 'critical' | 'warning' | 'information';
 
@@ -17,6 +18,10 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
 
   private get vmTable() {
     return this.page.getByRole('grid', { name: 'Virtual machines' });
+  }
+
+  get addVirtualMachinesButton() {
+    return this.page.getByRole('button', { name: 'Add virtual machines' });
   }
 
   async applyFilter(filterName: string, value: string): Promise<void> {
@@ -36,6 +41,13 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     if (await btn.isVisible().catch(() => false)) await btn.click();
   }
 
+  async clickAddVirtualMachines(): Promise<AddVirtualMachinesModal> {
+    await this.addVirtualMachinesButton.click();
+    const modal = new AddVirtualMachinesModal(this.page);
+    await modal.waitForModalToOpen();
+    return modal;
+  }
+
   async closeConcernPopover(): Promise<void> {
     await this.page.keyboard.press('Escape');
     await expect(this.page.getByTestId('concerns-popover')).not.toBeVisible();
@@ -49,6 +61,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   get editTargetNameMenuItem() {
     return this.page.getByTestId('edit-vm-target-name-menu-item');
   }
+
   get editTargetPowerStateModal() {
     return this.page.getByTestId('edit-target-power-state-modal');
   }
@@ -57,7 +70,6 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     const btn = this.page.getByRole('button', { name: 'Show Filters' });
     if (await btn.isVisible()) await btn.click();
   }
-
   async expandFirstVMDetailsRow(): Promise<void> {
     const btn = this.page.getByRole('button', { name: 'Details' }).first();
     await expect(btn).toBeVisible();
@@ -150,9 +162,11 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   get powerStateModalSaveButton() {
     return this.page.getByTestId('modal-confirm-button');
   }
+
   get powerStateModalSelect() {
     return this.editTargetPowerStateModal.getByTestId('target-power-state-select');
   }
+
   get powerStateOptionAuto() {
     return this.page.getByRole('option', { name: 'Retain source VM power state', exact: true });
   }
@@ -168,7 +182,6 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   get renameTargetNameInput() {
     return this.page.getByTestId('vm-target-name-input');
   }
-
   async renameVM(sourceName: string, targetName: string): Promise<void> {
     await this.search(sourceName);
     const vmRow = this.table.getRow({ Name: sourceName });
@@ -190,7 +203,6 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.cancelButton.click();
     await this.clearAllFilters();
   }
-
   get saveButton() {
     return this.page.getByRole('button', { name: /save|confirm/iu });
   }
@@ -212,8 +224,17 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   async sortByConcerns(): Promise<void> {
     await this.sortByColumn('Concerns');
   }
+
   get validationErrorMessage() {
     return this.page.getByTestId('form-helper-text-error');
+  }
+
+  async verifyAddVirtualMachinesButtonDisabled(): Promise<void> {
+    await expect(this.addVirtualMachinesButton).toHaveAttribute('aria-disabled', 'true');
+  }
+  async verifyAddVirtualMachinesButtonEnabled(): Promise<void> {
+    const ariaDisabled = await this.addVirtualMachinesButton.getAttribute('aria-disabled');
+    expect(ariaDisabled).not.toBe('true');
   }
 
   async verifyConcernBadgeExists(category: ConcernCategory, rowIndex?: number): Promise<void> {
