@@ -62,6 +62,7 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
           <Select
             ref={field.ref}
             id={fieldId}
+            testId={fieldId}
             isDisabled={isSubmitting}
             value={field.value}
             onSelect={(_e, value) => {
