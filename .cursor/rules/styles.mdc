@@ -1,0 +1,118 @@
+---
+description: SCSS styling conventions and PatternFly variable reference
+globs: "**/*.scss"
+alwaysApply: false
+---
+
+# SCSS Styling Guidelines (Supplement)
+
+For core styling conventions (SCSS preference, BEM methodology, no `!important`), see **CLAUDE.md**. This rule adds PatternFly v6 variable references and layout patterns.
+
+---
+
+## 1. PatternFly v6 Variables
+
+### Spacing
+```scss
+padding: var(--pf-v6-global--spacer--xs);   // 4px
+padding: var(--pf-v6-global--spacer--sm);   // 8px
+padding: var(--pf-v6-global--spacer--md);   // 16px
+padding: var(--pf-v6-global--spacer--lg);   // 24px
+padding: var(--pf-v6-global--spacer--xl);   // 32px
+padding: var(--pf-v6-global--spacer--2xl);  // 48px
+padding: var(--pf-v6-global--spacer--3xl);  // 64px
+```
+
+### Colors
+```scss
+// Text
+color: var(--pf-v6-global--Color--100);           // Primary text
+color: var(--pf-v6-global--Color--200);           // Secondary text
+
+// Status
+color: var(--pf-v6-global--success-color--100);   // Success/green
+color: var(--pf-v6-global--warning-color--100);   // Warning/yellow
+color: var(--pf-v6-global--danger-color--100);    // Danger/red
+color: var(--pf-v6-global--info-color--100);      // Info/blue
+
+// Background
+background-color: var(--pf-v6-global--BackgroundColor--100);
+background-color: var(--pf-v6-global--BackgroundColor--200);
+
+// Borders
+border-color: var(--pf-v6-global--BorderColor--100);
+
+// Links
+color: var(--pf-v6-global--link--Color);
+color: var(--pf-v6-global--link--Color--hover);
+```
+
+### Typography
+```scss
+font-size: var(--pf-v6-global--FontSize--xs);   // 12px
+font-size: var(--pf-v6-global--FontSize--sm);   // 14px
+font-size: var(--pf-v6-global--FontSize--md);   // 16px
+font-size: var(--pf-v6-global--FontSize--lg);   // 18px
+font-size: var(--pf-v6-global--FontSize--xl);   // 20px
+font-size: var(--pf-v6-global--FontSize--2xl);  // 24px
+
+font-weight: var(--pf-v6-global--FontWeight--normal); // 400
+font-weight: var(--pf-v6-global--FontWeight--bold);   // 700
+```
+
+### Borders & Shadows
+```scss
+border-width: var(--pf-v6-global--BorderWidth--sm);   // 1px
+border-radius: var(--pf-v6-global--BorderRadius--sm);
+box-shadow: var(--pf-v6-global--BoxShadow--sm);
+```
+
+---
+
+## 2. Layout Patterns
+
+Prefer **PatternFly layout components** over raw CSS flexbox/grid. They handle spacing, responsiveness, and consistency automatically:
+
+- `<Flex>` / `<FlexItem>` -- flexbox layouts
+- `<Stack>` / `<StackItem>` -- vertical stacking
+- `<Split>` / `<SplitItem>` -- horizontal split layouts
+- `<Grid>` / `<GridItem>` -- grid layouts
+- `<Gallery>` / `<GalleryItem>` -- equal-width card grids
+- `<Bullseye>` -- centered content
+
+Use raw SCSS only for component-internal styling that PatternFly layouts don't cover (e.g., sticky headers, custom state-based positioning).
+
+---
+
+## 3. State Styles
+
+Do **not** write custom CSS for loading, selection, or hover states. Use PatternFly components instead:
+
+- **Loading**: `<LoadingSuspend>`, `<Spinner>`, `<Bullseye>` (see `@components/LoadingSuspend`)
+- **Empty states**: `<EmptyState>` with appropriate variant
+- **Selections**: PatternFly table/list built-in selection props
+- **Hover/focus**: PatternFly interactive components handle these automatically
+
+---
+
+## 4. Dark Mode
+
+PatternFly variables automatically adapt to dark mode. Use variables consistently and avoid hardcoded colors:
+
+```scss
+// Always use variables -- supports dark mode automatically
+background-color: var(--pf-v6-global--BackgroundColor--100);
+color: var(--pf-v6-global--Color--100);
+```
+
+---
+
+## 5. Checklist
+
+- [ ] Uses PatternFly variables for spacing, colors, typography
+- [ ] Follows BEM naming convention
+- [ ] No `!important` usage
+- [ ] No PatternFly class targeting (classes change between versions)
+- [ ] No hardcoded colors or sizes
+- [ ] Maximum 3 levels of nesting
+- [ ] Supports dark mode via CSS variables

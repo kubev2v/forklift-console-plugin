@@ -1,0 +1,236 @@
+---
+description: End-to-end feature development workflow from Jira to PR
+alwaysApply: false
+---
+
+# Feature Development Workflow
+
+Invoke with: *"start a new feature"*, *"work on MTV-XXX end to end"*, *"full development workflow"*
+
+This is the complete workflow from picking up a Jira ticket to submitting a PR.
+
+---
+
+## 1. Workflow Overview
+
+```
+1. PICK UP TICKET
+   "Start working on MTV-1885"
+   Fetch ticket, understand requirements, plan approach
+
+2. PLAN IMPLEMENTATION
+   "Help me plan the implementation"
+   Identify files to modify, components to create
+
+3. IMPLEMENT
+   "Create the component", "Add the feature"
+   Write code following project standards (CLAUDE.md)
+
+4. TEST
+   "Test my changes", "Add unit tests"
+   Unit tests, interactive testing with Playwright
+
+5. REVIEW
+   "Review my code"
+   Multi-perspective review (dev, UX, QE, security, Forklift expert)
+
+6. PREPARE PR
+   "Prepare this for PR"
+   Quality checks, PR description, update Jira
+```
+
+---
+
+## 2. Phase 1: Pick Up Ticket
+
+### Get the Ticket
+```
+"Start working on MTV-1885"
+```
+
+I will:
+1. **Fetch ticket details** from Jira
+2. **Summarize requirements** - what needs to be built
+3. **Identify acceptance criteria** - definition of done
+4. **Check dependencies** - blockers, related tickets
+
+### Understand the Context
+- Epic/parent story
+- Related tickets and comments
+- Attached mockups or designs
+
+---
+
+## 3. Phase 2: Plan Implementation
+
+### Identify Code Changes
+```
+"Help me plan how to implement this"
+```
+
+I will:
+1. **Find relevant existing code** - similar components, utilities
+2. **Identify files to modify** - which components are affected
+3. **Suggest new files needed** - new components, hooks, utils
+4. **Recommend approach** - how to structure the solution
+
+### Consider Architecture
+- Does this fit existing patterns?
+- Should this be a reusable component?
+- What's the impact on other features?
+- Which provider types are affected?
+
+---
+
+## 4. Phase 3: Implement
+
+### Create Components
+Following `new-component.mdc` workflow:
+- Proper folder structure
+- TypeScript types (using `type`, not `interface`)
+- SCSS styles with BEM
+- Translation support (`useForkliftTranslation`)
+- Accessibility requirements
+
+### Follow Project Conventions
+- Never use default/star React imports
+- Use `ButtonVariant` enum, not string literals
+- Use custom Select from `@components/common/Select`
+- Use `isEmpty()` from `@utils/helpers`
+- Use `testId` prop for test identifiers
+- No barrel file imports
+- Keep files under 300 lines
+
+### Agent Perspectives During Implementation
+**As Developer**: Code quality, patterns, performance
+**As UX**: Loading/error/empty states, accessibility
+**As QE**: Edge cases while coding
+**As Security**: Input validation, auth checks
+**As Forklift Expert**: CRD patterns, provider type handling
+
+---
+
+## 5. Phase 4: Test
+
+### Unit Tests
+```
+"Add tests for this component"
+```
+- Create test file in `__tests__` folder
+- Test happy path, error states, edge cases
+- Run: `npm test <path-to-test-file>`
+
+### Interactive Testing
+```
+"Test my changes in the browser"
+```
+Using Playwright MCP (see `playwright-testing.mdc`):
+1. Navigate to the affected page
+2. Verify new functionality
+3. Check loading/error states
+
+### Run All Checks
+```bash
+npm run lint && npm test
+```
+
+---
+
+## 6. Phase 5: Review
+
+### Self-Review
+```
+"Review my changes"
+```
+Using `team-review.mdc`:
+- **Developer**: Code quality, patterns
+- **UX**: Accessibility, states
+- **QE**: Edge cases, test coverage
+- **Security**: Input handling, auth
+- **Forklift Expert**: CRD usage, migration patterns
+
+### Fix Issues
+Address any blockers or suggestions before moving on.
+
+---
+
+## 7. Phase 6: Prepare PR
+
+### Pre-PR Checks
+```bash
+npm run lint && npm test && npm run i18n
+```
+
+### Create PR
+Following `pr-preparation.mdc`:
+- Descriptive title
+- Complete description with Jira link
+- Demo screenshots/video
+- Reviewers assigned
+
+### Update Jira
+```
+"Add comment to MTV-XXXX with PR link"
+```
+
+---
+
+## 8. Quick Reference Commands
+
+### Starting Work
+```
+"Start working on MTV-1885"
+"Show my assigned tickets"
+```
+
+### During Development
+```
+"Help me implement this"
+"Create a component for X"
+"What's the pattern for Y?"
+```
+
+### Testing
+```
+"Add tests for this"
+"Test this in the browser"
+"Run all checks"
+```
+
+### Reviewing
+```
+"Review my code"
+"As [role], check this"
+"What am I missing?"
+```
+
+### Finishing Up
+```
+"Prepare this for PR"
+"Create PR description"
+"Update Jira with progress"
+```
+
+---
+
+## 9. Integration Points
+
+### MCP Servers Used
+- **Jira MCP**: Ticket management, status updates
+- **Playwright MCP**: Interactive testing
+
+### Risks and Security (MCP / agents)
+- **Jira**: Tokens are not granular; the agent runs with full account permissions. Use Jira MCP only to **create** and **fetch** tickets. Review carefully before allowing status transitions or updates.
+- **Playwright / E2E**: Use separate clusters or avoid heavy automated traffic so shared environments are not blocked.
+
+### Rules Applied
+- **CLAUDE.md**: Project coding standards
+- **team-review.mdc**: Multi-perspective review
+- **ticket-workflow.mdc**: Agent tracking for tickets
+- **pr-preparation.mdc**: PR checklist
+
+### Workflows Referenced
+- `new-component.mdc`: Creating components
+- `debugging.mdc`: When issues arise
+- `jira-workflow.mdc`: Jira operations
+- `playwright-testing.mdc`: Interactive testing
