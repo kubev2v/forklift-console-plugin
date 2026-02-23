@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useHistory } from 'react-router-dom';
 import { TELEMETRY_EVENTS } from 'src/utils/analytics/constants';
 import { useForkliftAnalytics } from 'src/utils/analytics/hooks/useForkliftAnalytics';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
@@ -17,7 +17,7 @@ type CreatePlanActionProps = {
 
 const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) => {
   const { t } = useForkliftTranslation();
-  const navigate = useNavigate();
+  const history = useHistory();
   const { trackEvent } = useForkliftAnalytics();
 
   const { canCreate } = useGetDeleteAndEditAccessReview({
@@ -38,9 +38,10 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
       reference: PlanModelRef,
     });
 
-    navigate(`${planResourceUrl}/~new`, {
+    history.push({
+      pathname: `${planResourceUrl}/~new`,
       state: {
-        planProject: provider ? getNamespace(provider) : undefined,
+        planProject: provider ? getNamespace(provider) : '',
         sourceProvider: provider,
       },
     });
@@ -48,7 +49,12 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
 
   return (
     <ToolbarItem>
-      <Button variant={ButtonVariant.primary} onClick={handleCreatePlan} isDisabled={!canCreate}>
+      <Button
+        data-testid="create-plan-from-provider-button"
+        variant={ButtonVariant.primary}
+        onClick={handleCreatePlan}
+        isDisabled={!canCreate}
+      >
         {t('Create migration plan')}
       </Button>
     </ToolbarItem>
