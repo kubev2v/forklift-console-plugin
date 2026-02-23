@@ -1,5 +1,5 @@
 import { type FC, useMemo } from 'react';
-import { isPlanArchived } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
@@ -19,8 +19,8 @@ const DeleteVirtualMachinesButton: FC<DeleteVirtualMachineProps> = ({ plan, sele
   };
 
   const reason = useMemo(() => {
-    if (isPlanArchived(plan)) {
-      return t('Deleting virtual machines from an archived migration plan is not allowed.');
+    if (!isPlanEditable(plan)) {
+      return t('The migration plan is not editable.');
     }
     if (plan?.spec?.vms.length === 1) {
       return t('Deleting all virtual machines from a migration plan is not allowed.');
