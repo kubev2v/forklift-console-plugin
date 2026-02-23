@@ -133,6 +133,12 @@ export class GeneralInformationStep {
     await option.click();
   }
 
+  async verifySourceProviderPrePopulated(expectedProviderName: string): Promise<void> {
+    const selector = this.page.getByTestId('source-provider-select');
+    await selector.waitFor({ state: 'visible' });
+    await expect(selector).toContainText(expectedProviderName);
+  }
+
   async waitForTargetProviderNamespaces() {
     const targetProjectSelect = this.page.getByTestId('target-project-select');
     await expect(targetProjectSelect).toBeEnabled();
