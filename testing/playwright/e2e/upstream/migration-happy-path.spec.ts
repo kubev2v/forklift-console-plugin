@@ -3,7 +3,7 @@ import { test } from '@playwright/test';
 import { setupForkliftIntercepts } from '../../intercepts';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import { PlansListPage } from '../../page-objects/PlansListPage';
+import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { createPlanTestData } from '../../types/test-data';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
@@ -18,7 +18,8 @@ test.describe(
     });
 
     test('should run plan creation wizard', async ({ page }) => {
-      const plansPage = new PlansListPage(page);
+      const sourceProvider = 'test-source-provider';
+      const providerDetailsPage = new ProviderDetailsPage(page);
       const createWizard = new CreatePlanWizardPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
 
@@ -26,7 +27,7 @@ test.describe(
         planName: 'test-create-plan',
         planProject: MTV_NAMESPACE,
         description: 'Test plan for automated testing',
-        sourceProvider: 'test-source-provider',
+        sourceProvider,
         targetProvider: 'test-target-provider',
         targetProject: { name: 'test-target-project', isPreexisting: true },
         networkMap: { name: 'test-network-map-1', isPreexisting: true },
@@ -34,9 +35,11 @@ test.describe(
         virtualMachines: [{ sourceName: 'test-virtual-machine-1' }],
       });
 
-      await plansPage.navigateFromMainMenu();
-      await plansPage.clickCreatePlanButton();
+      await providerDetailsPage.navigate(sourceProvider, MTV_NAMESPACE);
+      await providerDetailsPage.waitForReadyStatus();
+      await providerDetailsPage.clickCreatePlanButton();
       await createWizard.waitForWizardLoad();
+      await createWizard.generalInformation.verifySourceProviderPrePopulated(sourceProvider);
       await createWizard.fillAndSubmit(testData);
       await planDetailsPage.verifyPlanTitle(testData.planName);
       await planDetailsPage.verifyBasicPlanDetailsPage(testData);
