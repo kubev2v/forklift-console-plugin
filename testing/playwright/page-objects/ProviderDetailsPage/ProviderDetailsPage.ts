@@ -30,7 +30,7 @@ export class ProviderDetailsPage {
     const createPlanButton = isVersionAtLeast(V2_12_0)
       ? this.page.getByTestId('create-plan-from-provider-button')
       : this.page.getByRole('button', { name: 'Create migration plan' });
-    await expect(createPlanButton).toBeVisible({ timeout: 30000 });
+    await expect(createPlanButton).toBeVisible();
     await expect(createPlanButton).toBeEnabled();
     await createPlanButton.click();
   }
