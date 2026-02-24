@@ -1,30 +1,50 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import { BaseModal } from '../../common/BaseModal';
-import { Table } from '../../common/Table';
 
-/**
- * Page object for the Add Virtual Machines modal.
- * Extends BaseModal and composes with Table for VM selection functionality.
- */
 export class AddVirtualMachinesModal extends BaseModal {
-  readonly table: Table;
-
   constructor(page: Page) {
     super(page, page.getByRole('dialog'));
-    this.table = new Table(page, this.modal);
+  }
+
+  private getVmRow(vmName: string): Locator {
+    return this.treegrid.getByRole('row').filter({
+      has: this.page.getByText(vmName, { exact: true }),
+    });
+  }
+
+  private get searchInput(): Locator {
+    return this.modal.getByRole('textbox', { name: 'Search input' });
+  }
+
+  private get treegrid(): Locator {
+    return this.modal.getByRole('treegrid');
+  }
+
+  async expandAllFolders(): Promise<void> {
+    const expandButtons = this.treegrid.getByRole('button', { name: /Expand row/ });
+    const count = await expandButtons.count();
+
+    for (let i = 0; i < count; i += 1) {
+      await expandButtons.nth(i).click();
+    }
   }
 
   async getRowCount(): Promise<number> {
-    return this.table.getRowCount();
+    const allRows = await this.treegrid.getByRole('row').count();
+
+    return Math.max(0, allRows - 1);
   }
 
   async search(vmName: string): Promise<void> {
-    await this.table.search(vmName);
+    await this.searchInput.fill(vmName);
+    await this.searchInput.press('Enter');
   }
 
   async selectVirtualMachine(vmName: string): Promise<void> {
-    await this.table.selectRow({ Name: vmName });
+    await this.search(vmName);
+    await this.expandAllFolders();
+    await this.getVmRow(vmName).first().getByRole('checkbox').check();
   }
 
   async verifyModalTitle(): Promise<void> {
@@ -32,11 +52,19 @@ export class AddVirtualMachinesModal extends BaseModal {
   }
 
   async verifyVmInTable(vmName: string): Promise<void> {
-    await this.table.verifyRowIsVisible({ Name: vmName });
+    await this.search(vmName);
+    await this.expandAllFolders();
+    await expect(this.getVmRow(vmName).first()).toBeVisible();
   }
 
   async verifyVmNotInTable(vmName: string): Promise<void> {
-    const row = this.table.getRow({ Name: vmName });
-    await expect(row).not.toBeVisible();
+    await this.search(vmName);
+    await expect(this.getVmRow(vmName).first()).not.toBeVisible();
+  }
+
+  override async waitForModalToOpen(): Promise<void> {
+    await super.waitForModalToOpen();
+    await expect(this.treegrid).toBeVisible();
+    await expect(this.treegrid.getByRole('row').first()).toBeVisible();
   }
 }
