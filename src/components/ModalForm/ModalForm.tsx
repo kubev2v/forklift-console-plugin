@@ -91,7 +91,7 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
           variant={confirmVariant ?? ButtonVariant.primary}
           onClick={handleConfirm}
           isLoading={isLoading}
-          isDisabled={isLoading || Boolean(error) || isDisabled}
+          isDisabled={isLoading || isDisabled}
           data-testid="modal-confirm-button"
         >
           {confirmLabel ?? t('Save')}
