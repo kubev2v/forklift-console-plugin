@@ -269,4 +269,11 @@ export class PlanDetailsPage {
       }
     }
   }
+
+  async waitForPlanStatus(expectedStatus: string): Promise<void> {
+    const statusLabel = this.page
+      .getByTestId('plan-status-container')
+      .getByTestId('plan-status-label');
+    await expect(statusLabel).toContainText(expectedStatus);
+  }
 }
