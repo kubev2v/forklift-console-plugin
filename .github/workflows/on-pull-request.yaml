@@ -87,6 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BASE_ADDRESS: http://localhost:30080
+      UPSTREAM_TEST_IMAGE: quay.io/kubev2v/forklift-ui-tests:upstream-latest
     steps:
       - name: Increase File Descriptors Limit
         run: ulimit -n 4096
@@ -102,14 +103,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install testing dependencies
-        run: cd testing && npm ci
+      - name: Start test runner container
+        run: |
+          docker run -d --name test-runner --network host \
+            -v ${{ github.workspace }}/testing:/test-runner \
+            -v /test-runner/node_modules \
+            -e BASE_ADDRESS=http://localhost:30080 \
+            -e CI=true \
+            -e GITHUB_ACTIONS=true \
+            ${UPSTREAM_TEST_IMAGE} \
+            sleep infinity
 
-      - name: Install Playwright browsers
-        run: cd testing && npx playwright install --with-deps chromium
+      - name: Sync test dependencies
+        run: |
+          docker exec test-runner bash -c \
+            "diff -q /opt/package-lock.json.baked package-lock.json > /dev/null 2>&1 \
+             || npm ci --ignore-scripts"
 
       - name: Check downstream version gating
-        run: cd testing && npm run check:version-gating
+        run: docker exec test-runner bash -c "npm run check:version-gating"
 
       - name: Run pre e2e test tasks
         run: npm run e2e:pre-test
@@ -119,9 +131,11 @@ jobs:
           timeout 300 bash -c 'until curl -f http://localhost:30080; do sleep 5; done'
 
       - name: Run Playwright tests (upstream only)
-        run: cd testing && npm run test:upstream
-        env:
-          BASE_ADDRESS: http://localhost:30080
+        run: docker exec test-runner bash -c "npm run test:upstream"
+
+      - name: Stop test runner container
+        if: always()
+        run: docker rm -f test-runner
 
       - name: Upload Playwright test results
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
