@@ -101,14 +101,6 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   async getRowCount(): Promise<number> {
-    return await this.vmTable.getByRole('rowgroup').nth(1).getByRole('row').count();
-  }
-
-  async getTableCell(rowColumnName: string, rowValue: string, targetColumnName: string) {
-    return this.table.getCell(rowColumnName, rowValue, targetColumnName);
-  }
-
-  async getTotalVMCount(): Promise<number> {
     const paginationNav = this.rootLocator.getByRole('navigation', { name: 'Pagination' }).first();
 
     if (await paginationNav.isVisible().catch(() => false)) {
@@ -121,7 +113,11 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
       }
     }
 
-    return this.getRowCount();
+    return await this.vmTable.getByRole('rowgroup').nth(1).getByRole('row').count();
+  }
+
+  async getTableCell(rowColumnName: string, rowValue: string, targetColumnName: string) {
+    return this.table.getCell(rowColumnName, rowValue, targetColumnName);
   }
 
   getVMActionsMenu(vmName: string) {
