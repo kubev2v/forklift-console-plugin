@@ -111,8 +111,40 @@ jobs:
       - name: Check downstream version gating
         run: cd testing && npm run check:version-gating
 
-      - name: Run pre e2e test tasks
-        run: npm run e2e:pre-test
+      - name: Cache KinD node image
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        with:
+          path: /tmp/kind-node-image.tar
+          key: kind-node-v1.33.0
+
+      - name: Load cached KinD node image
+        run: |
+          if [ -f /tmp/kind-node-image.tar ]; then
+            docker load -i /tmp/kind-node-image.tar
+          fi
+
+      - name: Setup cluster tools and registry
+        run: bash ./ci/setup-registry.sh
+
+      - name: Create cluster and build plugin image
+        run: |
+          bash ./ci/create-kind-cluster.sh &
+          PID_CLUSTER=$!
+          bash ./ci/build-and-push-images.sh &
+          PID_BUILD=$!
+          wait $PID_CLUSTER
+          wait $PID_BUILD
+
+      - name: Deploy CRDs and console
+        run: |
+          npm run e2e:deployCrds
+          npm run e2e:console
+
+      - name: Save KinD node image to cache
+        run: |
+          if [ ! -f /tmp/kind-node-image.tar ]; then
+            docker save kindest/node:v1.33.0 -o /tmp/kind-node-image.tar
+          fi
 
       - name: Wait for application
         run: |
