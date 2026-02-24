@@ -1,0 +1,23 @@
+FROM mcr.microsoft.com/playwright:v1.58.0-noble
+
+ARG GIT_COMMIT=unknown
+ARG BUILD_DATE=unknown
+ARG VERSION=dev
+
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+    org.opencontainers.image.source="https://github.com/kubev2v/forklift-console-plugin" \
+    org.opencontainers.image.version="${VERSION}" \
+    org.opencontainers.image.revision="${GIT_COMMIT}" \
+    org.opencontainers.image.title="MTV Upstream UI Test Runner"
+
+WORKDIR /test-runner
+
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts
+
+# Baked lockfile for runtime comparison — if the PR's lockfile differs,
+# the CI step knows to re-run npm ci.
+RUN cp package-lock.json /opt/package-lock.json.baked
+
+RUN chown -R 1001:0 /test-runner && chmod -R g+w /test-runner
+USER 1001
