@@ -22,6 +22,11 @@
     }
   }
 
+  // Remove row borders
+  .pf-v6-c-table__tbody .pf-v6-c-table__tr {
+    border-block-end: 0;
+  }
+
   // Align first column cells
   .pf-v6-c-table__tbody .pf-v6-c-table__td:first-of-type {
     padding-left: 0;

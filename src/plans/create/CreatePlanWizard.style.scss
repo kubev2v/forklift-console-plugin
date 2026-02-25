@@ -1,3 +1,9 @@
+.plan-create-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .create-plan-wizard {
   .pf-v6-c-wizard__main {
     overflow-x: auto;
