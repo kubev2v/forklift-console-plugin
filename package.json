@@ -47,6 +47,7 @@
     "@patternfly/patternfly": "6.4.0",
     "@patternfly/quickstarts": "6.4.0",
     "@patternfly/react-charts": "8.4.0",
+    "@patternfly/react-code-editor": "^6.4.0",
     "@patternfly/react-component-groups": "6.4.0",
     "@patternfly/react-core": "6.4.0",
     "@patternfly/react-drag-drop": "6.4.0",

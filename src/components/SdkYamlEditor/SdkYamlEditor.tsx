@@ -3,6 +3,7 @@ import { Base64 } from 'js-base64';
 import Loading from 'src/components/Loading/Loading';
 
 import { CodeEditor } from '@openshift-console/dynamic-plugin-sdk';
+import { Language } from '@patternfly/react-code-editor';
 import { Bullseye } from '@patternfly/react-core';
 
 import './SdkYamlEditor.scss';
@@ -26,13 +27,13 @@ const SdkYamlEditor: FC<SdkYamlEditorProps> = ({ minHeight = '20rem', onChange, 
     >
       <div className="code-editor-container">
         <CodeEditor
-          language="yaml"
+          language={Language.yaml}
           value={decodedValue}
           onChange={(val: string) => {
             onChange(Base64.encode(val));
           }}
           minHeight={minHeight}
-          showMiniMap={false}
+          isMinimapVisible={false}
         />
       </div>
     </Suspense>
