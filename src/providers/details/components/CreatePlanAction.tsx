@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 import { TELEMETRY_EVENTS } from 'src/utils/analytics/constants';
 import { useForkliftAnalytics } from 'src/utils/analytics/hooks/useForkliftAnalytics';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
@@ -17,7 +17,7 @@ type CreatePlanActionProps = {
 
 const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) => {
   const { t } = useForkliftTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { trackEvent } = useForkliftAnalytics();
 
   const { canCreate } = useGetDeleteAndEditAccessReview({
@@ -25,7 +25,7 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
     namespace,
   });
 
-  const handleCreatePlan = () => {
+  const handleCreatePlan = (): void => {
     trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_FROM_PROVIDER_CLICKED, {
       planNamespace: namespace,
       providerId: provider?.metadata?.name,
@@ -38,13 +38,21 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
       reference: PlanModelRef,
     });
 
-    history.push({
-      pathname: `${planResourceUrl}/~new`,
-      state: {
-        planProject: provider ? getNamespace(provider) : '',
-        sourceProvider: provider,
-      },
-    });
+    const searchParams = new URLSearchParams();
+
+    if (provider?.metadata?.name) {
+      searchParams.set('sourceProvider', provider.metadata.name);
+    }
+
+    const providerNamespace = getNamespace(provider);
+
+    if (providerNamespace) {
+      searchParams.set('planProject', providerNamespace);
+    }
+
+    const query = searchParams.toString();
+    const queryString = query ? `?${query}` : '';
+    navigate(`${planResourceUrl}/~new${queryString}`);
   };
 
   return (

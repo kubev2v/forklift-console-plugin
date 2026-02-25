@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
-import { type Location, useLocation, useNavigate } from 'react-router-dom-v5-compat';
+import { useLocation, useNavigate } from 'react-router-dom-v5-compat';
 
 import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
@@ -8,24 +8,28 @@ import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 
 import { useCreatePlanForm } from './hooks/useCreatePlanForm';
+import { useSourceProviderFromSearchParams } from './hooks/useSourceProviderFromSearchParams';
 import { GeneralFormFieldId } from './steps/general-information/constants';
 import { getCreatedPlanPath } from './utils/getCreatedPlanPath';
 import { getDefaultFormValues } from './utils/getDefaultFormValues';
 import { submitMigrationPlan } from './utils/submitMigrationPlan';
 import CreatePlanWizardContextProvider from './CreatePlanWizardContextProvider';
 import CreatePlanWizardInner from './CreatePlanWizardInner';
-import type { CreatePlanFormData } from './types';
 
 import './CreatePlanWizard.style.scss';
 
 const CreatePlanWizard: FC = () => {
   const navigate = useNavigate();
-  const location: Location<CreatePlanFormData> = useLocation();
+  const location = useLocation();
   const { isFeatureEnabled } = useFeatureFlags();
   const { trackEvent } = useForkliftAnalytics();
 
+  const searchPlanProject = new URLSearchParams(location.search).get('planProject') ?? undefined;
+
   const isLiveMigrationFeatureEnabled = isFeatureEnabled(FEATURE_NAMES.OCP_LIVE_MIGRATION);
-  const defaultValues = getDefaultFormValues(location.state);
+  const defaultValues = getDefaultFormValues(
+    searchPlanProject ? { planProject: searchPlanProject } : undefined,
+  );
 
   const form = useCreatePlanForm({
     defaultValues,
@@ -37,7 +41,10 @@ const CreatePlanWizard: FC = () => {
     formState: { isSubmitting },
     getValues,
     handleSubmit,
+    setValue,
   } = form;
+
+  useSourceProviderFromSearchParams(setValue);
 
   const [planName, planProject, sourceProvider] = useWatch({
     control,
