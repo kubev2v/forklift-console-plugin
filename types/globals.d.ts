@@ -88,14 +88,6 @@ type SegmentAnalytics = {
   _writeKey?: string;
 };
 
-declare module 'react-router-dom' {
-  export function useHistory(): {
-    push: (location: { pathname: string; state?: unknown }) => void;
-    replace: (location: { pathname: string; state?: unknown }) => void;
-    goBack: () => void;
-  };
-}
-
 declare module 'eslint-plugin-import' {
   const flatConfigs: {
     recommended: unknown;
