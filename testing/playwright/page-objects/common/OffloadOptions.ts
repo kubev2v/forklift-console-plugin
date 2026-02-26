@@ -40,11 +40,7 @@ export class OffloadOptions {
   }
 
   private async isOffloadExpanded(mappingIndex: number): Promise<boolean> {
-    try {
-      return await this.fieldToggleButton(OFFLOAD_FIELD.offloadPlugin(mappingIndex)).isVisible();
-    } catch {
-      return false;
-    }
+    return await this.fieldToggleButton(OFFLOAD_FIELD.offloadPlugin(mappingIndex)).isVisible();
   }
 
   private async selectFromDropdown(fieldId: string, optionText: string): Promise<void> {
@@ -130,7 +126,7 @@ export class OffloadOptions {
     await listbox.waitFor({ state: 'visible' });
 
     const optionTexts = (await listbox.getByRole('option').allTextContents())
-      .map((t) => t.trim())
+      .map((text) => text.trim())
       .filter(Boolean);
 
     for (const expected of expectedOptions) {

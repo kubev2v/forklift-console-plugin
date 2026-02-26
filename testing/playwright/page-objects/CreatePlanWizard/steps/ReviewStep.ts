@@ -40,7 +40,7 @@ export class ReviewStep {
       const playbookLocator = this.page.getByTestId(`${prefix}-ansible-playbook`);
       await expect(playbookLocator).toBeVisible();
       if (hookConfig.ansiblePlaybook) {
-        await expect(playbookLocator).not.toHaveText('None');
+        await expect(playbookLocator).toHaveText(hookConfig.ansiblePlaybook);
       }
     }
   }
@@ -178,31 +178,25 @@ export class ReviewStep {
     const expandButton = rows.nth(mappingIndex).locator('button').first();
     await expandButton.click();
 
-    const expandedRow = reviewTable.locator('tr[class*="expanded"]').first();
-    await expect(expandedRow).toBeVisible();
-
-    const descriptionList = expandedRow.locator('.pf-v6-c-description-list');
+    const offloadDetails = this.page.getByTestId(`review-offload-details-${mappingIndex}`);
+    await expect(offloadDetails).toBeVisible();
 
     if (expectedOffload.offloadPlugin) {
-      await expect(
-        descriptionList.locator('.pf-v6-c-description-list__group', { hasText: 'Offload plugin' }),
-      ).toContainText(expectedOffload.offloadPlugin);
+      await expect(this.page.getByTestId(`review-offload-plugin-${mappingIndex}`)).toContainText(
+        expectedOffload.offloadPlugin,
+      );
     }
 
     if (expectedOffload.storageSecret) {
-      await expect(
-        descriptionList.locator('.pf-v6-c-description-list__group', {
-          hasText: 'Storage secret',
-        }),
-      ).toContainText(expectedOffload.storageSecret);
+      await expect(this.page.getByTestId(`review-storage-secret-${mappingIndex}`)).toContainText(
+        expectedOffload.storageSecret,
+      );
     }
 
     if (expectedOffload.storageProduct) {
-      await expect(
-        descriptionList.locator('.pf-v6-c-description-list__group', {
-          hasText: 'Storage product',
-        }),
-      ).toContainText(expectedOffload.storageProduct);
+      await expect(this.page.getByTestId(`review-storage-product-${mappingIndex}`)).toContainText(
+        expectedOffload.storageProduct,
+      );
     }
   }
 
