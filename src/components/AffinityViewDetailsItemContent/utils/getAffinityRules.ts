@@ -1,12 +1,12 @@
 import type {
+  K8sIoApiCoreV1Affinity,
+  K8sIoApiCoreV1NodeAffinity,
+  K8sIoApiCoreV1NodeSelectorTerm,
   K8sIoApiCoreV1PodAffinity,
   K8sIoApiCoreV1PodAffinityTerm,
   K8sIoApiCoreV1PodAntiAffinity,
+  K8sIoApiCoreV1PreferredSchedulingTerm,
   K8sIoApiCoreV1WeightedPodAffinityTerm,
-  V1beta1PlanSpecTargetAffinity,
-  V1beta1PlanSpecTargetAffinityNodeAffinity,
-  V1beta1PlanSpecTargetAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution,
-  V1beta1PlanSpecTargetAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms,
 } from '@forklift-ui/types';
 
 enum AffinityCondition {
@@ -15,11 +15,8 @@ enum AffinityCondition {
 }
 
 const getNodeAffinity = (
-  nodeAffinity: V1beta1PlanSpecTargetAffinityNodeAffinity | undefined,
-): (
-  | V1beta1PlanSpecTargetAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution
-  | V1beta1PlanSpecTargetAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms
-)[] => {
+  nodeAffinity: K8sIoApiCoreV1NodeAffinity | undefined,
+): (K8sIoApiCoreV1PreferredSchedulingTerm | K8sIoApiCoreV1NodeSelectorTerm)[] => {
   return [
     ...(nodeAffinity?.[AffinityCondition.preferred] ?? []),
     ...(nodeAffinity?.[AffinityCondition.required]?.nodeSelectorTerms ?? []),
@@ -36,11 +33,11 @@ const getPodAffinity = (
 };
 
 export const getAffinityRules = (
-  affinity: V1beta1PlanSpecTargetAffinity | undefined,
+  affinity: K8sIoApiCoreV1Affinity | undefined,
 ): (
-  | V1beta1PlanSpecTargetAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution
+  | K8sIoApiCoreV1NodeSelectorTerm
   | K8sIoApiCoreV1PodAffinityTerm
-  | V1beta1PlanSpecTargetAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms
+  | K8sIoApiCoreV1PreferredSchedulingTerm
   | K8sIoApiCoreV1WeightedPodAffinityTerm
 )[] => {
   const nodeAffinity = getNodeAffinity(affinity?.nodeAffinity);

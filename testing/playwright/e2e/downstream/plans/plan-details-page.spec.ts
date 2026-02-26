@@ -193,10 +193,10 @@ test.describe('Plan Details - Target Labels', { tag: '@downstream' }, () => {
     await planDetailsPage.detailsTab.clickEditTargetLabels();
 
     // Step 3: Add a label
-    await planDetailsPage.detailsTab.targetLabelsModal.addLabel('environment', 'production');
+    await planDetailsPage.detailsTab.labelsModal.addLabel('environment', 'production');
 
     // Step 4: Save changes
-    await planDetailsPage.detailsTab.targetLabelsModal.save();
+    await planDetailsPage.detailsTab.labelsModal.save();
 
     // Step 5: Verify label is displayed
     await planDetailsPage.detailsTab.verifyTargetLabelsCount(1);
@@ -204,24 +204,21 @@ test.describe('Plan Details - Target Labels', { tag: '@downstream' }, () => {
 
     // Step 6: Edit again and add another label
     await planDetailsPage.detailsTab.clickEditTargetLabels();
-    await planDetailsPage.detailsTab.targetLabelsModal.verifyLabelExists(
-      'environment',
-      'production',
-    );
-    await planDetailsPage.detailsTab.targetLabelsModal.addLabel('team', 'migration');
+    await planDetailsPage.detailsTab.labelsModal.verifyLabelExists('environment', 'production');
+    await planDetailsPage.detailsTab.labelsModal.addLabel('team', 'migration');
 
     // Step 7: Save and verify both labels
-    await planDetailsPage.detailsTab.targetLabelsModal.save();
+    await planDetailsPage.detailsTab.labelsModal.save();
     await planDetailsPage.detailsTab.verifyTargetLabelsCount(2);
     await planDetailsPage.detailsTab.verifyTargetLabelsText('environment');
     await planDetailsPage.detailsTab.verifyTargetLabelsText('team');
 
     // Step 8: Edit again and remove one label
     await planDetailsPage.detailsTab.clickEditTargetLabels();
-    await planDetailsPage.detailsTab.targetLabelsModal.deleteLabelByKey('team');
+    await planDetailsPage.detailsTab.labelsModal.deleteLabelByKey('team');
 
     // Step 9: Save and verify only one label remains
-    await planDetailsPage.detailsTab.targetLabelsModal.save();
+    await planDetailsPage.detailsTab.labelsModal.save();
     await planDetailsPage.detailsTab.verifyTargetLabelsCount(1);
     await planDetailsPage.detailsTab.verifyTargetLabelsText('environment');
   });
@@ -243,13 +240,13 @@ test.describe('Plan Details - Target Node Selector', { tag: '@downstream' }, () 
     await planDetailsPage.detailsTab.clickEditTargetNodeSelector();
 
     // Step 3: Add a node selector
-    await planDetailsPage.detailsTab.targetNodeSelectorModal.addNodeSelector(
+    await planDetailsPage.detailsTab.nodeSelectorModal.addNodeSelector(
       'kubernetes.io/arch',
       'amd64',
     );
 
     // Step 4: Save changes
-    await planDetailsPage.detailsTab.targetNodeSelectorModal.save();
+    await planDetailsPage.detailsTab.nodeSelectorModal.save();
 
     // Step 5: Verify node selector is displayed
     await planDetailsPage.detailsTab.verifyTargetNodeSelectorCount(1);
@@ -257,29 +254,29 @@ test.describe('Plan Details - Target Node Selector', { tag: '@downstream' }, () 
 
     // Step 6: Edit again and add another node selector
     await planDetailsPage.detailsTab.clickEditTargetNodeSelector();
-    await planDetailsPage.detailsTab.targetNodeSelectorModal.verifyNodeSelectorExists(
+    await planDetailsPage.detailsTab.nodeSelectorModal.verifyNodeSelectorExists(
       'kubernetes.io/arch',
       'amd64',
     );
-    await planDetailsPage.detailsTab.targetNodeSelectorModal.addNodeSelector(
+    await planDetailsPage.detailsTab.nodeSelectorModal.addNodeSelector(
       'node-role.kubernetes.io/worker',
       '',
     );
 
     // Step 7: Save and verify both node selectors
-    await planDetailsPage.detailsTab.targetNodeSelectorModal.save();
+    await planDetailsPage.detailsTab.nodeSelectorModal.save();
     await planDetailsPage.detailsTab.verifyTargetNodeSelectorCount(2);
     await planDetailsPage.detailsTab.verifyTargetNodeSelectorText('kubernetes.io/arch');
     await planDetailsPage.detailsTab.verifyTargetNodeSelectorText('node-role.kubernetes.io/worker');
 
     // Step 8: Edit again and remove one node selector
     await planDetailsPage.detailsTab.clickEditTargetNodeSelector();
-    await planDetailsPage.detailsTab.targetNodeSelectorModal.deleteNodeSelectorByKey(
+    await planDetailsPage.detailsTab.nodeSelectorModal.deleteNodeSelectorByKey(
       'node-role.kubernetes.io/worker',
     );
 
     // Step 9: Save and verify only one node selector remains
-    await planDetailsPage.detailsTab.targetNodeSelectorModal.save();
+    await planDetailsPage.detailsTab.nodeSelectorModal.save();
     await planDetailsPage.detailsTab.verifyTargetNodeSelectorCount(1);
     await planDetailsPage.detailsTab.verifyTargetNodeSelectorText('kubernetes.io/arch');
   });
@@ -301,67 +298,59 @@ test.describe('Plan Details - Target Affinity Rules', { tag: '@downstream' }, ()
     await planDetailsPage.detailsTab.clickEditTargetAffinity();
 
     // Step 3: Click "Add affinity rule" button
-    await planDetailsPage.detailsTab.targetAffinityModal.clickAddAffinityRule();
+    await planDetailsPage.detailsTab.affinityModal.clickAddAffinityRule();
 
     // Step 4: Verify available affinity type options
-    await planDetailsPage.detailsTab.targetAffinityModal.verifyAffinityTypeOptions([
+    await planDetailsPage.detailsTab.affinityModal.verifyAffinityTypeOptions([
       'Node affinity',
       'Workload (pod) affinity',
       'Workload (pod) anti-affinity',
     ]);
 
     // Step 5: Select affinity type (Node affinity)
-    await planDetailsPage.detailsTab.targetAffinityModal.selectAffinityType('Node affinity');
+    await planDetailsPage.detailsTab.affinityModal.selectAffinityType('Node affinity');
 
     // Step 6: Verify available condition options
-    await planDetailsPage.detailsTab.targetAffinityModal.verifyConditionOptions([
+    await planDetailsPage.detailsTab.affinityModal.verifyConditionOptions([
       'Required during scheduling',
       'Preferred during scheduling',
     ]);
 
     // Step 7: Select rule type (Required during scheduling)
-    await planDetailsPage.detailsTab.targetAffinityModal.selectRuleType(
-      'Required during scheduling',
-    );
+    await planDetailsPage.detailsTab.affinityModal.selectRuleType('Required during scheduling');
 
     // Step 8: Add an expression to make the rule valid
-    await planDetailsPage.detailsTab.targetAffinityModal.addExpression();
-    await planDetailsPage.detailsTab.targetAffinityModal.fillExpressionKey(
-      'kubernetes.io/hostname',
-    );
-    await planDetailsPage.detailsTab.targetAffinityModal.fillExpressionValue('worker-node-1');
+    await planDetailsPage.detailsTab.affinityModal.addExpression();
+    await planDetailsPage.detailsTab.affinityModal.fillExpressionKey('kubernetes.io/hostname');
+    await planDetailsPage.detailsTab.affinityModal.fillExpressionValue('worker-node-1');
 
     // Step 9: Save the affinity rule
-    await planDetailsPage.detailsTab.targetAffinityModal.saveAffinityRule();
+    await planDetailsPage.detailsTab.affinityModal.saveAffinityRule();
 
     // Step 10: Verify rule exists in the list
-    await planDetailsPage.detailsTab.targetAffinityModal.verifyAffinityRuleExists();
+    await planDetailsPage.detailsTab.affinityModal.verifyAffinityRuleExists();
 
     // Step 11: Apply rules and close modal
-    await planDetailsPage.detailsTab.targetAffinityModal.save();
+    await planDetailsPage.detailsTab.affinityModal.save();
 
     // Step 12: Verify affinity rule is displayed
     await planDetailsPage.detailsTab.verifyTargetAffinityRulesCount(1);
 
     // Step 13: Edit again and add another affinity rule
     await planDetailsPage.detailsTab.clickEditTargetAffinity();
-    await planDetailsPage.detailsTab.targetAffinityModal.clickAddAffinityRule();
-    await planDetailsPage.detailsTab.targetAffinityModal.selectAffinityType(
-      'Workload (pod) affinity',
-    );
-    await planDetailsPage.detailsTab.targetAffinityModal.selectRuleType(
-      'Preferred during scheduling',
-    );
+    await planDetailsPage.detailsTab.affinityModal.clickAddAffinityRule();
+    await planDetailsPage.detailsTab.affinityModal.selectAffinityType('Workload (pod) affinity');
+    await planDetailsPage.detailsTab.affinityModal.selectRuleType('Preferred during scheduling');
 
-    await planDetailsPage.detailsTab.targetAffinityModal.fillWeight('50');
-    await planDetailsPage.detailsTab.targetAffinityModal.fillTopologyKey('kubernetes.io/hostname');
-    await planDetailsPage.detailsTab.targetAffinityModal.addExpression();
-    await planDetailsPage.detailsTab.targetAffinityModal.fillExpressionKey('app');
-    await planDetailsPage.detailsTab.targetAffinityModal.fillExpressionValue('database');
-    await planDetailsPage.detailsTab.targetAffinityModal.saveAffinityRule();
+    await planDetailsPage.detailsTab.affinityModal.fillWeight('50');
+    await planDetailsPage.detailsTab.affinityModal.fillTopologyKey('kubernetes.io/hostname');
+    await planDetailsPage.detailsTab.affinityModal.addExpression();
+    await planDetailsPage.detailsTab.affinityModal.fillExpressionKey('app');
+    await planDetailsPage.detailsTab.affinityModal.fillExpressionValue('database');
+    await planDetailsPage.detailsTab.affinityModal.saveAffinityRule();
 
     // Step 14: Apply rules and verify multiple rules
-    await planDetailsPage.detailsTab.targetAffinityModal.save();
+    await planDetailsPage.detailsTab.affinityModal.save();
     await planDetailsPage.detailsTab.verifyTargetAffinityRulesCount(2);
   });
 });

@@ -1,8 +1,7 @@
 import type { FC } from 'react';
-import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
+import { DetailsItem } from '@components/DetailItems/DetailItem';
 import NodeSelectorModal, {
   type NodeSelectorModalProps,
 } from '@components/NodeSelectorModal/NodeSelectorModal';
@@ -11,39 +10,50 @@ import type { V1beta1Plan } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
+import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
+import { DOC_MAIN_HELP_LINK } from '@utils/links';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
 import { patchPlanSpec } from '../../utils/patchPlanSpec';
 
-const TargetNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan }) => {
+const ConvertorNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({
+  canPatch,
+  plan,
+  shouldRender,
+}) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
 
-  const TARGET_NODE_SELECTOR_DETAILS_ITEM_DESCRIPTION = t(
-    'Specify node labels that will be applied after migration to all target virtual machines of the migration plan for constraining virtual machines scheduling to specific nodes, based on node labels. This will ensure that the migrated virtual machines will run on nodes with required capabilities (GPU, storage type, CPU architecture).',
+  if (!shouldRender) {
+    return null;
+  }
+
+  const description = t(
+    'Specify node selector labels for virt-v2v convertor pods to constrain their scheduling to specific nodes. This ensures convertor pods run on nodes with required capabilities such as network proximity to source infrastructure or specific storage access.',
   );
 
   const onConfirm = async (newLabels: Record<string, string | null>): Promise<V1beta1Plan> =>
     patchPlanSpec({
-      currentValue: plan?.spec?.targetNodeSelector,
+      currentValue: plan?.spec?.convertorNodeSelector,
       newValue: isEmpty(newLabels) ? undefined : newLabels,
-      path: '/spec/targetNodeSelector',
+      path: '/spec/convertorNodeSelector',
       plan,
     });
 
   return (
     <DetailsItem
-      testId="vm-target-node-selector-detail-item"
-      title={t('VM target node selector')}
-      content={<NodeSelectorViewDetailsItemContent labels={plan?.spec?.targetNodeSelector} />}
-      helpContent={TARGET_NODE_SELECTOR_DETAILS_ITEM_DESCRIPTION}
-      crumbs={['spec', 'targetNodeSelector']}
+      testId="convertor-node-selector-detail-item"
+      title={t('Convertor pod node selector')}
+      content={<NodeSelectorViewDetailsItemContent labels={plan?.spec?.convertorNodeSelector} />}
+      helpContent={description}
+      crumbs={['spec', 'convertorNodeSelector']}
+      moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
         launcher<NodeSelectorModalProps>(NodeSelectorModal, {
           description: (
             <ForkliftTrans>
               <Stack hasGutter>
-                <StackItem>{TARGET_NODE_SELECTOR_DETAILS_ITEM_DESCRIPTION}</StackItem>
+                <StackItem>{description}</StackItem>
                 <StackItem>
                   Add labels to specify qualifying nodes. For each nodes label, set{' '}
                   <strong>key, value</strong> pair(s). For example: key set to{' '}
@@ -52,9 +62,9 @@ const TargetNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch,
               </Stack>
             </ForkliftTrans>
           ),
-          initialLabels: plan?.spec?.targetNodeSelector,
+          initialLabels: plan?.spec?.convertorNodeSelector,
           onConfirm,
-          title: t('Edit VM target node selector'),
+          title: t('Edit convertor pod node selector'),
         });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
@@ -62,4 +72,4 @@ const TargetNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch,
   );
 };
 
-export default TargetNodeSelectorDetailsItem;
+export default ConvertorNodeSelectorDetailsItem;

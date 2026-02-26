@@ -1,57 +1,65 @@
 import type { FC } from 'react';
-import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
+import { DetailsItem } from '@components/DetailItems/DetailItem';
 import LabelsModal, { type LabelsModalProps } from '@components/LabelsModal/LabelsModal';
 import LabelsViewDetailsItemContent from '@components/LabelsViewDetailsItemContent/LabelsViewDetailsItemContent';
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
+import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 import { DOC_MAIN_HELP_LINK } from '@utils/links';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
 import { patchPlanSpec } from '../../utils/patchPlanSpec';
 
-const TargetLabelsDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan }) => {
+const ConvertorLabelsDetailsItem: FC<EditableDetailsItemProps> = ({
+  canPatch,
+  plan,
+  shouldRender,
+}) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
 
-  const TARGET_LABELS_DETAILS_ITEM_DESCRIPTION = t(
-    'Specify custom labels that will be applied after migration to all target virtual machines of the migration plan. This can apply organizational or operational labels to migrated virtual machines for further identification and management.',
+  if (!shouldRender) {
+    return null;
+  }
+
+  const description = t(
+    'Specify custom labels to apply to virt-v2v convertor pods during migration. This can help with organizational labeling, monitoring, or targeting convertor pods with network policies.',
   );
 
   const onConfirm = async (newLabels: Record<string, string | null>): Promise<V1beta1Plan> =>
     patchPlanSpec({
-      currentValue: plan?.spec?.targetLabels,
+      currentValue: plan?.spec?.convertorLabels,
       newValue: newLabels,
-      path: '/spec/targetLabels',
+      path: '/spec/convertorLabels',
       plan,
     });
 
   return (
     <DetailsItem
-      testId="vm-target-labels-detail-item"
-      title={t('VM target labels')}
-      content={<LabelsViewDetailsItemContent labels={plan?.spec?.targetLabels} />}
-      helpContent={TARGET_LABELS_DETAILS_ITEM_DESCRIPTION}
-      crumbs={['spec', 'targetLabels']}
+      testId="convertor-labels-detail-item"
+      title={t('Convertor pod labels')}
+      content={<LabelsViewDetailsItemContent labels={plan?.spec?.convertorLabels} />}
+      helpContent={description}
+      crumbs={['spec', 'convertorLabels']}
       moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
         launcher<LabelsModalProps>(LabelsModal, {
           description: (
             <ForkliftTrans>
               <Stack hasGutter>
-                <StackItem>{TARGET_LABELS_DETAILS_ITEM_DESCRIPTION}</StackItem>
+                <StackItem>{description}</StackItem>
                 <StackItem>
                   Enter <strong>key=value</strong> pair(s). For example: project=myProject
                 </StackItem>
               </Stack>
             </ForkliftTrans>
           ),
-          initialLabels: plan?.spec?.targetLabels,
+          initialLabels: plan?.spec?.convertorLabels,
           onConfirm,
-          title: t('Edit VM target labels'),
+          title: t('Edit convertor pod labels'),
         });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
@@ -59,4 +67,4 @@ const TargetLabelsDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan 
   );
 };
 
-export default TargetLabelsDetailsItem;
+export default ConvertorLabelsDetailsItem;

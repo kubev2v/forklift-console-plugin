@@ -1,11 +1,7 @@
 import { useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type {
-  K8sIoApiCoreV1Affinity,
-  K8sResourceCommon,
-  V1beta1PlanSpecTargetAffinity,
-} from '@forklift-ui/types';
+import type { K8sIoApiCoreV1Affinity, K8sResourceCommon } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { ModalVariant } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
@@ -23,7 +19,7 @@ import AffinityList from './AffinityList';
 export type AffinityModalProps = {
   title?: string;
   onConfirm: (updatedAffinity: K8sIoApiCoreV1Affinity) => Promise<K8sResourceCommon>;
-  initialAffinity: V1beta1PlanSpecTargetAffinity | undefined;
+  initialAffinity: K8sIoApiCoreV1Affinity | undefined;
 };
 
 const AffinityModal: ModalComponent<AffinityModalProps> = ({
