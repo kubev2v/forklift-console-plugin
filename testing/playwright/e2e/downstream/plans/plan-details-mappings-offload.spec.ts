@@ -63,7 +63,7 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
       await modal.save();
     });
 
-    await test.step('Verify Mappings tab is still functional after save', async () => {
+    await test.step('Verify offload values persisted after save', async () => {
       await planDetailsPage.mappingsTab.verifyMappingsTab();
 
       const modal = await planDetailsPage.mappingsTab.openStorageMapEditModal();
@@ -73,6 +73,17 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
       expect(mappingCount).toBeGreaterThan(0);
 
       await modal.offload.verifyOffloadToggleVisible(0);
+      await modal.offload.expandOffloadOptions(0);
+
+      const pluginText = await modal.offload.getOffloadPluginText(0);
+      expect(pluginText).toContain(OffloadPlugins.VSPHERE_XCOPY);
+
+      const secretText = await modal.offload.getStorageSecretText(0);
+      expect(secretText).toContain(OffloadSecrets.VS8_SECRET);
+
+      const productText = await modal.offload.getStorageProductText(0);
+      expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
+
       await modal.cancel();
     });
   });

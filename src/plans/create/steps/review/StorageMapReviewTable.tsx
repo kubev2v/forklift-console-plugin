@@ -114,7 +114,7 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
                   {hasOffloadStorage && isExpanded && hasOffloadData && (
                     <Tr isExpanded>
                       <Td />
-                      <Td colSpan={3}>
+                      <Td colSpan={3} data-testid={`review-offload-details-${index}`}>
                         <Stack hasGutter className="pf-v6-u-pt-md pf-v6-u-pb-md">
                           <StackItem>
                             <DescriptionList isHorizontal isCompact>
@@ -122,7 +122,9 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
                                 <DescriptionListTerm>
                                   {storageMapFieldLabels[CreatePlanStorageMapFieldId.OffloadPlugin]}
                                 </DescriptionListTerm>
-                                <DescriptionListDescription>
+                                <DescriptionListDescription
+                                  data-testid={`review-offload-plugin-${index}`}
+                                >
                                   {mapping[CreatePlanStorageMapFieldId.OffloadPlugin] ?? EMPTY_MSG}
                                 </DescriptionListDescription>
                               </DescriptionListGroup>
@@ -130,7 +132,9 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
                                 <DescriptionListTerm>
                                   {storageMapFieldLabels[CreatePlanStorageMapFieldId.StorageSecret]}
                                 </DescriptionListTerm>
-                                <DescriptionListDescription>
+                                <DescriptionListDescription
+                                  data-testid={`review-storage-secret-${index}`}
+                                >
                                   {mapping[CreatePlanStorageMapFieldId.StorageSecret] ?? EMPTY_MSG}
                                 </DescriptionListDescription>
                               </DescriptionListGroup>
@@ -142,7 +146,9 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
                                     ]
                                   }
                                 </DescriptionListTerm>
-                                <DescriptionListDescription>
+                                <DescriptionListDescription
+                                  data-testid={`review-storage-product-${index}`}
+                                >
                                   {mapping[CreatePlanStorageMapFieldId.StorageProduct] ?? EMPTY_MSG}
                                 </DescriptionListDescription>
                               </DescriptionListGroup>
