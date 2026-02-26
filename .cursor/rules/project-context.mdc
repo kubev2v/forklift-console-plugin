@@ -1,0 +1,128 @@
+---
+description: Forklift Console Plugin project context and domain knowledge
+alwaysApply: true
+---
+
+# Forklift Console Plugin - Domain Context
+
+For coding standards, conventions, and development commands, see **CLAUDE.md** at the project root.
+
+This rule provides Forklift-specific domain knowledge not covered there.
+
+---
+
+## What Is Forklift
+
+Forklift (Migration Toolkit for Virtualization) migrates virtual machines from external providers to OpenShift Virtualization (KubeVirt). This plugin is an OpenShift Console dynamic plugin providing the web UI.
+
+---
+
+## Core CRDs
+
+All CRDs belong to group `forklift.konveyor.io`, version `v1beta1`. Types are imported from `@forklift-ui/types`.
+
+### Provider
+Represents a source or target infrastructure connection.
+
+- **Source types**: `vsphere` (VMware), `ovirt` (RHV), `openstack`, `ova` (file uploads), `hyperv` (Hyper-V), `ec2` (AWS EC2 -- backend only, not yet in UI)
+- **Target type**: `openshift` (OpenShift Virtualization)
+- **Backend phases** (Go controller): Ready, Staging, ValidationFailed, ConnectionFailed
+- **Frontend additions** (UI enum in `src/utils/types.ts`): ApplianceManagementEnabled, Unknown
+- Manages credentials, inventory discovery, default transfer network
+
+### Plan
+Defines a migration plan selecting VMs and their mappings.
+
+- **Migration types**: Cold (power off), Warm (incremental with cutover), Live, Conversion
+- **Backend conditions** (Go controller): Ready, Executing, Succeeded, Failed
+- **Frontend statuses** (UI enum in `src/plans/details/components/PlanStatus/utils/types.ts`): Ready, Executing, Completed, Paused, Incomplete, CannotStart, Canceled, Archived, Unknown
+- References NetworkMap, StorageMap, and optional Hooks
+- Specifies target namespace and power state settings
+
+### Migration
+Represents an active migration execution, created when a Plan starts.
+
+- Tracks per-VM status: Succeeded, Running, Failed, Canceled, Paused, CantStart
+- Creates Pods, Jobs, DataVolumes, and PVCs for migration operations
+
+### NetworkMap
+Maps source networks to target networks. Referenced by Plans.
+
+### StorageMap
+Maps source storage to target storage. Referenced by Plans.
+
+- Supports offload plugins (e.g., vSphere XCOPY)
+- Integrates with storage vendors (IBM FlashSystem, NetApp ONTAP, Dell PowerFlex/PowerMax/PowerStore, HPE Primera/3PAR, Pure Storage, Hitachi, Infinidat)
+
+### Hook
+Pre/post migration scripts executed as containers (`quay.io/konveyor/hook-runner`). Referenced in Plan VM specifications.
+
+### Host
+Represents ESXi hosts for direct disk transfer operations with vSphere providers.
+
+### ForkliftController
+Operator configuration resource controlling feature flags: `feature_copy_offload`, `feature_ocp_live_migration`, `feature_volume_populator`.
+
+---
+
+## Migration Flow
+
+```
+Source Provider --> Plan (with NetworkMap + StorageMap) --> Migration --> VirtualMachine on OpenShift
+```
+
+1. Connect source and target Providers
+2. Create NetworkMap and StorageMap for the migration
+3. Create a Plan selecting VMs and referencing the mappings
+4. Start the Plan, which creates a Migration resource
+5. Migration creates worker Pods/Jobs that transfer disks via DataVolumes
+6. VMs are created on the target OpenShift cluster
+
+---
+
+## Project Structure
+
+```
+src/
+  providers/     # Provider CRUD, details, inventory
+  plans/         # Plan CRUD, details, migration management
+  networkMaps/   # Network mapping management
+  storageMaps/   # Storage mapping management
+  overview/      # Dashboard and overview pages
+  components/    # Shared/reusable UI components
+  utils/         # Shared utilities, hooks, CRD helpers
+  test-utils/    # Testing utilities
+```
+
+---
+
+## Key Patterns
+
+- GVK constants: `ProviderModelGroupVersionKind`, `PlanModelGroupVersionKind`, etc.
+- Use `useK8sWatchResource` from Console SDK for resource watching
+- Use `k8sCreate`, `k8sUpdate`, `k8sPatch`, `k8sDelete` for operations
+- Jira project: **MTV** (tickets are MTV-XXXX)
+
+---
+
+## Do / Don't
+
+- **Do:** Use GVK constants, useK8sWatchResource, k8s* for operations
+- **Do:** Check provider phase before plan creation; handle async statuses
+- **Don't:** Import from feature code in shared (`components/`, `utils/`)
+- **Don't:** Assume resources are always loaded — handle loading/error/empty
+
+---
+
+## Rule Maintenance
+
+When implementing a new feature that introduces concepts, patterns, CRDs, provider types, statuses, or conventions **not already covered** by the existing rules (this file, `CLAUDE.md`, or any file under `.cursor/rules/`), you **must** update the relevant rule file as part of the same change. Examples:
+
+- New CRD or resource type -- add it to this file under **Core CRDs**.
+- New provider type or status -- add it to this file and to `agents/forklift-expert.mdc`.
+- New shared hook, utility, or component pattern -- add it to `CLAUDE.md` or the matching file-specific rule.
+- New testing pattern or tooling -- update `testing.mdc`.
+- New i18n utility or namespace change -- update `i18n.mdc`.
+- New workflow or development process -- add or update the relevant file under `workflows/`.
+
+Keeping the rules accurate ensures every team member and AI assistant works with up-to-date project knowledge.

@@ -1,0 +1,163 @@
+---
+description: Testing conventions and Playwright patterns
+globs: "**/*.test.{ts,tsx},testing/**"
+alwaysApply: false
+---
+
+# Testing Guidelines (Supplement)
+
+For basic testing approach (Jest for unit, Playwright for E2E), see **CLAUDE.md**. This rule adds detailed patterns.
+
+---
+
+## 1. Unit Tests (Jest)
+
+### File Location
+- Place test files in `__tests__` folder adjacent to the module being tested
+- Naming: `ComponentName.test.tsx` or `utilName.test.ts`
+
+### Structure
+```typescript
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+
+describe('ComponentName', () => {
+  it('renders correctly with valid props', () => {
+    render(<Component {...defaultProps} />);
+    expect(screen.getByText('Expected text')).toBeInTheDocument();
+  });
+
+  it('handles user interactions', async () => {
+    const user = userEvent.setup();
+    render(<Component {...defaultProps} />);
+    await user.click(screen.getByRole('button'));
+    await user.type(screen.getByLabelText('Name'), 'test-value');
+    expect(screen.getByDisplayValue('test-value')).toBeInTheDocument();
+  });
+
+  it('handles loading state', () => {
+    render(<Component loaded={false} />);
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+  });
+
+  it('handles error state', () => {
+    render(<Component loadError={new Error('Failed')} />);
+    expect(screen.getByText(/failed/i)).toBeInTheDocument();
+  });
+
+  it('handles empty state', () => {
+    render(<Component data={[]} />);
+    expect(screen.getByText(/no items/i)).toBeInTheDocument();
+  });
+});
+```
+
+### Mocking
+```typescript
+// Mock i18n
+jest.mock('src/utils/i18n', () => ({
+  useForkliftTranslation: () => ({ t: (key: string) => key }),
+}));
+
+// Mock Console SDK
+jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
+  useK8sWatchResource: jest.fn(),
+}));
+```
+
+### What to Test
+- Renders without error
+- Displays correct data
+- Handles loading, error, empty states
+- User interactions trigger correct callbacks
+- Edge cases (null data, empty arrays, boundary values)
+
+### Run Commands
+```bash
+npm test                         # Run all unit tests
+npm run test:coverage            # With coverage report
+npm test path/to/file.test.ts    # Run specific test file
+```
+
+---
+
+## 2. E2E Tests (Playwright)
+
+### File Location
+- Located in `testing/playwright/e2e/`
+- Page objects in `testing/playwright/page-objects/`
+
+### Pattern
+
+Use `test.step()` to break tests into named steps. This makes test reports readable and failures easy to locate:
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test.describe('Provider management', () => {
+  test('creates a new provider', async ({ page }) => {
+    await test.step('navigate to provider list', async () => {
+      await page.goto('/mtv/providers');
+    });
+
+    await test.step('open the create provider form', async () => {
+      await page.click('[data-testid="add-provider-button"]');
+    });
+
+    await test.step('fill in provider details and submit', async () => {
+      await page.fill('[data-testid="provider-name"]', 'test-provider');
+      await page.click('[data-testid="submit-button"]');
+    });
+
+    await test.step('verify provider appears in the list', async () => {
+      await expect(page.locator('[data-testid="provider-list"]'))
+        .toContainText('test-provider');
+    });
+  });
+});
+```
+
+### Page Object Pattern
+```typescript
+export class ProviderListPage {
+  constructor(private page: Page) {}
+
+  async navigateTo(): Promise<void> {
+    await this.page.goto('/mtv/providers');
+  }
+
+  async clickAddProvider(): Promise<void> {
+    await this.page.click('[data-testid="add-provider-button"]');
+  }
+}
+```
+
+### Run Commands
+```bash
+npm run test:e2e    # Run Playwright E2E tests
+```
+
+---
+
+## 3. Test Coverage Goals
+
+### For New Features
+- All public functions tested
+- All branches covered (if/else, switch)
+- Loading, error, and empty states tested
+- User interactions verified
+
+### For Bug Fixes
+- Add a test covering the specific edge case that caused the bug, so it cannot regress
+
+---
+
+## 4. Testing Best Practices
+
+- Test behavior, not implementation
+- Use `testId` prop for selectors in component code; in tests, query via `[data-testid="..."]` or testing-library's `getByTestId`
+- `screen.getByRole` / `screen.getByText` are fine for simple cases, but prefer `testId` when PatternFly nesting makes role/text queries ambiguous or fragile
+- Keep tests focused -- one assertion per test when practical
+- Mock external dependencies (API calls, Console SDK hooks)
+- Use `@test-utils/` for shared testing utilities
+- In Playwright E2E tests, always use `test.step()` with descriptive names so reports clearly show what each part of the test does

@@ -1,0 +1,152 @@
+---
+description: Workflow for creating new React components
+alwaysApply: false
+---
+
+# Creating a New Component
+
+Invoke with: *"create a component"*, *"new component"*, *"build a component for"*
+
+Follow this comprehensive workflow when creating new components. For coding conventions, see **CLAUDE.md**.
+
+---
+
+## 1. Planning Phase
+
+### Understand Requirements
+- What is the component's purpose?
+- What data does it need?
+- What actions can users perform?
+- What states does it have (loading, error, empty)?
+- How does it fit into the existing UI?
+
+### Identify Component Type
+- **Page Component**: Top-level route component
+- **Container Component**: Fetches data, manages state
+- **Presentational Component**: Pure UI, receives props
+- **Modal Component**: Overlay dialog
+- **Form Component**: User input handling (react-hook-form)
+- **Error Boundary**: Class component with componentDidCatch
+
+### Check Existing Patterns
+- Look for similar components in codebase
+- Identify reusable hooks from `@utils/` or feature-specific hooks
+- Find existing utility functions
+- Check PatternFly for appropriate components
+- Use custom Select from `@components/common/Select` (not PatternFly Select directly)
+
+---
+
+## 2. Folder Structure
+
+```
+src/{feature}/components/{component-name}/
+  ComponentName.tsx       # Main component
+  component-name.scss     # Styles
+  components/             # Sub-components
+    SubComponent.tsx
+  hooks/                  # Component-specific hooks
+    useComponentLogic.ts
+  utils/                  # Component-specific utilities
+    helpers.ts
+    constants.ts
+```
+
+### Naming Conventions
+- **Folder**: lowercase kebab-case (`provider-details-page`)
+- **Component file**: PascalCase (`ProviderDetailsPage.tsx`)
+- **SCSS file**: lowercase kebab-case (`provider-details-page.scss`)
+- **Hook files**: camelCase with use prefix (`useProviderDetails.ts`)
+- **No barrel files** -- import directly from the source file
+
+---
+
+## 3. Component Implementation
+
+### Component Structure Order
+1. Imports (external, then internal, then styles)
+2. Type definitions (using `type`, not `interface`)
+3. Constants (if small, otherwise separate file)
+4. Component function (using `FC` type)
+5. Default export
+
+### Inside Component Function
+Follow the component order from `react-components.mdc` (translation, router, data, state, derived, callbacks, effects, returns, JSX).
+
+### Key Rules
+- Never use default/star imports for React: `import { useState, type FC } from 'react'`
+- Use `ButtonVariant` enum, not string literals
+- Use `isEmpty()` from `@utils/helpers` for empty checks
+- Use `testId` prop for test identifiers
+- Keep files under 300 lines
+- One component per file, no nested components
+
+---
+
+## 4. Handling States
+
+### Loading State
+```typescript
+<LoadingSuspend obj={data} loaded={loaded} loadError={error}>
+  <MyContent data={data} />
+</LoadingSuspend>
+```
+
+### Error, Empty, and Success States
+- Display user-friendly error message with recovery action
+- Empty states explain why empty and guide the user
+- Success feedback confirms what was done
+
+---
+
+## 5. i18n Requirements
+
+- Use `useForkliftTranslation` hook
+- All user-visible strings wrapped with `t()`
+- Interpolation for dynamic values: `t('{{count}} items', { count })`
+- Run `npm run i18n` after adding strings
+
+---
+
+## 6. Checklist Before Completing
+
+### Structure
+- [ ] Correct folder structure and file naming
+- [ ] Imports organized (external, internal, styles)
+- [ ] No barrel file imports
+
+### Code Quality
+- [ ] Uses `type` not `interface`
+- [ ] Props typed explicitly with `FC<Props>`
+- [ ] Explicit return types on functions
+- [ ] No `any` types
+- [ ] Logic extracted to hooks/utils
+- [ ] File under 300 lines
+
+### UI/UX
+- [ ] Loading state handled
+- [ ] Error state handled
+- [ ] Empty state handled
+- [ ] Uses PatternFly components
+- [ ] Uses `ButtonVariant` enum
+
+### Accessibility
+- [ ] Keyboard navigable
+- [ ] ARIA labels present
+
+### i18n
+- [ ] Uses `useForkliftTranslation`
+- [ ] All strings translated
+- [ ] `npm run i18n` run
+
+### Styling
+- [ ] SCSS file created
+- [ ] BEM naming used
+- [ ] PatternFly variables used
+- [ ] No `!important`
+
+### Final
+- [ ] Default export used
+- [ ] No console.log statements
+- [ ] Linting passes (`npm run lint`)
+- [ ] Types check (`npm run build`)

@@ -163,10 +163,6 @@ This is an **OpenShift Console dynamic plugin** for [Forklift](https://github.co
 - Use **Playwright** for end-to-end (E2E) testing.
 - Aim for comprehensive test coverage/UI coverage.
 
-#### File and Function Length
-- **File Length**: Keep files under **150 lines** whenever possible.
-- **Function Length**: Functions should focus on a single responsibility and be easily understood.
-
 #### Performance Optimization
 - Use React's memoization tools (`React.memo`, `useMemo`, `useCallback`) to avoid unnecessary re-renders.
 - Lazy load components with `React.lazy` and `Suspense`.
@@ -349,8 +345,8 @@ Imports should be sorted in this order (auto-fixed by ESLint):
 7. Style imports (`.css`, `.scss`)
 
 ### File Size Limits
-- **Max 300 lines per file** (excluding comments and blank lines)
-- **Max 150 lines per function**
+- **Target:** Keep files under 150 lines when practical
+- **Hard limit:** 300 lines per file, 150 lines per function (excluding comments and blank lines)
 - **Max 5 parameters per function**
 
 ### Directory Structure
@@ -359,7 +355,6 @@ src/
 ├── components/          # Shared/reusable components
 │   ├── common/          # Generic UI components
 │   └── [Feature]/       # Feature-specific components
-├── modules/             # Feature modules
 ├── providers/           # Provider-related pages (feature)
 ├── plans/               # Plan-related pages (feature)
 ├── networkMaps/         # Network mapping pages (feature)
