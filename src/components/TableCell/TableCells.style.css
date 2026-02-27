@@ -5,3 +5,7 @@
 .forklift-table__cell {
   white-space: nowrap;
 }
+
+.forklift-table-link-cell--truncate {
+  max-width: 30ch;
+}

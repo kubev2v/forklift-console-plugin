@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react';
 
 import { Bullseye } from '@patternfly/react-core';
-import { Table, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
+import { InnerScrollContainer, Table, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
 import { isEmpty } from '@utils/helpers';
 
 import { UID } from '../utils/constants';
@@ -43,34 +43,36 @@ export const TableView = <T,>({
   const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
 
   return (
-    <Table aria-label={ariaLabel} variant="compact" isStickyHeader className="table-view">
-      <Thead>
-        <Tr>
-          <Header {...{ activeSort, dataOnScreen: entities, setActiveSort, visibleColumns }} />
-        </Tr>
-      </Thead>
-      <Tbody>
-        {hasChildren && (
+    <InnerScrollContainer>
+      <Table aria-label={ariaLabel} variant="compact" isStickyHeader className="table-view">
+        <Thead>
           <Tr>
-            <Td colSpan={emptyStateColSpan as number}>
-              <Bullseye>{children}</Bullseye>
-            </Td>
+            <Header {...{ activeSort, dataOnScreen: entities, setActiveSort, visibleColumns }} />
           </Tr>
-        )}
-        {!hasChildren &&
-          entities.map((resourceData: T, index) => (
-            <Row
-              key={`${columnSignature}_${String(resourceData?.[uidFieldId as keyof T] ?? index)}`}
-              resourceData={resourceData}
-              resourceFields={visibleColumns}
-              namespace={currentNamespace}
-              resourceIndex={index}
-              length={visibleColumns.length}
-              isExpanded={expandedIds?.includes(toId ? toId(resourceData) : '')}
-            />
-          ))}
-      </Tbody>
-    </Table>
+        </Thead>
+        <Tbody>
+          {hasChildren && (
+            <Tr>
+              <Td colSpan={emptyStateColSpan as number}>
+                <Bullseye>{children}</Bullseye>
+              </Td>
+            </Tr>
+          )}
+          {!hasChildren &&
+            entities.map((resourceData: T, index) => (
+              <Row
+                key={`${columnSignature}_${String(resourceData?.[uidFieldId as keyof T] ?? index)}`}
+                resourceData={resourceData}
+                resourceFields={visibleColumns}
+                namespace={currentNamespace}
+                resourceIndex={index}
+                length={visibleColumns.length}
+                isExpanded={expandedIds?.includes(toId ? toId(resourceData) : '')}
+              />
+            ))}
+        </Tbody>
+      </Table>
+    </InnerScrollContainer>
   );
 };
 

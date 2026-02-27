@@ -15,7 +15,6 @@ import './ConsoleTimestamp.style.css';
 
 type TimestampProps = {
   timestamp: string | number | Date | null | undefined;
-  className?: string;
   showGlobalIcon?: boolean;
 };
 
@@ -27,11 +26,7 @@ type TimestampProps = {
  *   glob icon
  *   custom format
  */
-export const ConsoleTimestamp: FC<TimestampProps> = ({
-  className,
-  showGlobalIcon = true,
-  timestamp,
-}) => {
+export const ConsoleTimestamp: FC<TimestampProps> = ({ showGlobalIcon = true, timestamp }) => {
   // Check for null. If props.timestamp is null, it returns incorrect date and time of Wed Dec 31 1969 19:00:00 GMT-0500 (Eastern Standard Time)
   if (!timestamp) {
     return <div className="co-timestamp">-</div>;
@@ -40,7 +35,7 @@ export const ConsoleTimestamp: FC<TimestampProps> = ({
   const currentDate = new Date(timestamp);
 
   return (
-    <div className={className}>
+    <div className="forklift-table__console-timestamp">
       {showGlobalIcon && <GlobeAmericasIcon className="co-icon-and-text__icon" />}
       <Timestamp
         className="forklift-table__console-timestamp"

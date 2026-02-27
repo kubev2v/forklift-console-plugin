@@ -5,8 +5,6 @@ import { isEmpty } from '@utils/helpers';
 
 import type { FilterTypeProps } from './types';
 
-import './SwitchFilter.scss';
-
 /**
  * Simple boolean filter without support for filter chips.
  *
@@ -28,7 +26,7 @@ export const SwitchFilter = ({
   };
 
   return (
-    <ToolbarItem className="forklift-switch-filter">
+    <ToolbarItem>
       <Switch
         label={placeholderLabel}
         isChecked={!isEmpty(selectedFilters) && selectedFilters?.[0] === 'true'}

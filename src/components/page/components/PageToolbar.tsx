@@ -104,7 +104,11 @@ export const PageToolbar = <T,>({
             />
           )}
 
-          <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
+          <ToolbarToggleGroup
+            className="forklift-page-toolbar__toggle-group"
+            toggleIcon={<FilterIcon />}
+            breakpoint="xl"
+          >
             {!isEmpty(primaryFilters) && (
               <FilterGroup
                 fieldFilters={primaryFilters}

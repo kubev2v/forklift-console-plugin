@@ -12,6 +12,7 @@ import { TableCell, type TableCellProps } from './TableCell';
  */
 export const TableLabelCell: FC<TableLabelCellProps> = ({
   children,
+  className,
   hasLabel = false,
   isWrap = false,
   label,
@@ -21,7 +22,7 @@ export const TableLabelCell: FC<TableLabelCellProps> = ({
   const labelColors = Array.isArray(labelColor) ? labelColor : labels.map(() => labelColor);
 
   return (
-    <TableCell isWrap={isWrap}>
+    <TableCell className={className} isWrap={isWrap}>
       {children}
       {hasLabel &&
         labels.map((_, i) => (

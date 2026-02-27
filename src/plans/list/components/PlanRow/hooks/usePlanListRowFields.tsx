@@ -54,6 +54,7 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
         groupVersionKind={{ kind: 'Project', version: 'v1' }}
         name={getPlanTargetNamespace(plan)}
         namespace={getPlanTargetNamespace(plan)}
+        truncate
       />
     ),
     [PlanTableResourceId.MigrationStarted]: (
@@ -65,6 +66,7 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
         groupVersionKind={PlanModelGroupVersionKind}
         name={planName}
         namespace={planNamespace}
+        truncate
       />
     ),
     [PlanTableResourceId.Namespace]: (
@@ -72,6 +74,7 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
         groupVersionKind={{ kind: 'Project', version: 'v1' }}
         name={planNamespace}
         namespace={planNamespace}
+        truncate
       />
     ),
     [PlanTableResourceId.Phase]: <PlanStatus plan={plan} />,
