@@ -3,3 +3,7 @@
   margin-inline-start: auto;
   align-self: center;
 }
+
+.forklift-page-toolbar__toggle-group {
+  align-items: center;
+}

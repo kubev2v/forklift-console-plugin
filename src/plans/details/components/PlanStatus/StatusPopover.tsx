@@ -99,7 +99,7 @@ const StatusPopover: FC<StatusPopoverProps> = ({ count, plan, status, vms }) => 
         </Stack>
       }
     >
-      <Flex gap={{ default: 'gapXs' }}>
+      <Flex gap={{ default: 'gapXs' }} flexWrap={{ default: 'nowrap' }}>
         {migrationStatusIconMap[status]}
         <Button isInline variant={ButtonVariant.link} onClick={navigateToVMsTab}>
           {count}

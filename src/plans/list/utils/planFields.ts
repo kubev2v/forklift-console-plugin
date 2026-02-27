@@ -40,6 +40,7 @@ export const planFields: ResourceField[] = [
     label: t('Name'),
     resourceFieldId: PlanTableResourceId.Name,
     sortable: true,
+    width: 15,
   },
   {
     filter: {
@@ -52,6 +53,7 @@ export const planFields: ResourceField[] = [
     label: t('Project'),
     resourceFieldId: PlanTableResourceId.Namespace,
     sortable: true,
+    width: 15,
   },
   {
     filter: {
@@ -63,6 +65,7 @@ export const planFields: ResourceField[] = [
     label: t('Source provider'),
     resourceFieldId: PlanTableResourceId.Source,
     sortable: true,
+    width: 15,
   },
   {
     filter: {
@@ -74,6 +77,7 @@ export const planFields: ResourceField[] = [
     label: t('Target project'),
     resourceFieldId: PlanTableResourceId.Destination,
     sortable: true,
+    width: 15,
   },
   {
     isVisible: true,

@@ -7,3 +7,9 @@
   justify-content: center;
   flex-shrink: 0;
 }
+
+.forklift-provider-icon-link__name {
+  max-width: 30ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

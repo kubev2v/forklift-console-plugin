@@ -10,8 +10,12 @@ import './TableCells.style.css';
  * @param {TableCellProps} props - The props for the component.
  * @returns {ReactElement} The rendered TableCell component.
  */
-export const TableCell: FC<TableCellProps> = ({ children, isWrap = false }) => {
+export const TableCell: FC<TableCellProps> = ({ children, className, isWrap = false }) => {
   const arrayChildren = Children.toArray(children);
+
+  const cellClass = [isWrap ? undefined : 'forklift-table__cell', className]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <Flex
@@ -19,7 +23,7 @@ export const TableCell: FC<TableCellProps> = ({ children, isWrap = false }) => {
       display={{ default: 'inlineFlex' }}
       flexWrap={isWrap ? {} : { default: 'nowrap' }}
       alignItems={{ default: 'alignItemsCenter' }}
-      className={isWrap ? undefined : 'forklift-table__cell'}
+      className={cellClass || undefined}
     >
       {Children.map(arrayChildren, (child, index) => (
         <FlexItem key={index} flex={{ default: 'flexNone' }}>
@@ -32,5 +36,6 @@ export const TableCell: FC<TableCellProps> = ({ children, isWrap = false }) => {
 
 export type TableCellProps = {
   children?: ReactNode;
+  className?: string;
   isWrap?: boolean;
 };
