@@ -37,6 +37,7 @@ export abstract class BaseMappingEditModal extends BaseModal {
   }
 
   async getMappingCount(): Promise<number> {
+    await this.modal.locator('[data-testid^="field-row-"]').first().waitFor({ state: 'visible' });
     return await this.modal.locator('[data-testid^="field-row-"]').count();
   }
 

@@ -58,6 +58,7 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
           <Select
             ref={field.ref}
             id={fieldId}
+            testId={fieldId}
             isDisabled={isSubmitting || loading}
             value={field.value}
             options={options}

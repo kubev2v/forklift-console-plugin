@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { HookConfig, NetworkMap, PlanTestData, StorageMap } from '../../../types/test-data';
 import { V2_11_0 } from '../../../utils/version/constants';
@@ -40,7 +40,7 @@ export class ReviewStep {
       const playbookLocator = this.page.getByTestId(`${prefix}-ansible-playbook`);
       await expect(playbookLocator).toBeVisible();
       if (hookConfig.ansiblePlaybook) {
-        await expect(playbookLocator).not.toHaveText('None');
+        await expect(playbookLocator).toHaveText(hookConfig.ansiblePlaybook);
       }
     }
   }
@@ -67,6 +67,10 @@ export class ReviewStep {
 
     const section = this.page.getByTestId(sectionMap[sectionName]);
     await section.getByRole('button', { name: 'Edit step' }).click();
+  }
+
+  get storageMapSection(): Locator {
+    return this.page.getByTestId('review-storage-map-section');
   }
 
   async verifyAllSections(planData: PlanTestData): Promise<void> {
@@ -159,8 +163,45 @@ export class ReviewStep {
     await expect(this.page.getByRole('heading', { name: /Review and create/i })).toBeVisible();
   }
 
+  async verifyStorageMapOffloadDetails(
+    mappingIndex: number,
+    expectedOffload: {
+      offloadPlugin?: string;
+      storageSecret?: string;
+      storageProduct?: string;
+    },
+  ): Promise<void> {
+    const reviewTable = this.page.getByTestId('storage-map-review-table');
+    await expect(reviewTable).toBeVisible();
+
+    const rows = reviewTable.locator('tbody tr:not([class*="expanded"])');
+    const expandButton = rows.nth(mappingIndex).locator('button').first();
+    await expandButton.click();
+
+    const offloadDetails = this.page.getByTestId(`review-offload-details-${mappingIndex}`);
+    await expect(offloadDetails).toBeVisible();
+
+    if (expectedOffload.offloadPlugin) {
+      await expect(this.page.getByTestId(`review-offload-plugin-${mappingIndex}`)).toContainText(
+        expectedOffload.offloadPlugin,
+      );
+    }
+
+    if (expectedOffload.storageSecret) {
+      await expect(this.page.getByTestId(`review-storage-secret-${mappingIndex}`)).toContainText(
+        expectedOffload.storageSecret,
+      );
+    }
+
+    if (expectedOffload.storageProduct) {
+      await expect(this.page.getByTestId(`review-storage-product-${mappingIndex}`)).toContainText(
+        expectedOffload.storageProduct,
+      );
+    }
+  }
+
   async verifyStorageMapSection(expectedStorageMap: StorageMap): Promise<void> {
-    const section = this.page.getByTestId('review-storage-map-section');
+    const section = this.storageMapSection;
     await expect(section).toBeVisible();
     if (expectedStorageMap?.name) {
       if (isVersionAtLeast(V2_11_0)) {

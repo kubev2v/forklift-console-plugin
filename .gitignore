@@ -23,5 +23,8 @@ kubectl.sha256
 
 forkliftci
 
+# macOS
+.DS_Store
+
 # Cursor IDE - only ignore sensitive MCP config (prompts are shared)
 .cursor/mcp.json

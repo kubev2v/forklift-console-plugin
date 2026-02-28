@@ -1,5 +1,7 @@
 import type { Page } from '@playwright/test';
 
+import { OffloadOptions } from '../../common/OffloadOptions';
+
 import { BaseMappingEditModal, type MappingModalConfig } from './BaseMappingEditModal';
 
 const MODAL_TEST_ID = 'edit-storage-map-modal';
@@ -16,8 +18,11 @@ export class StorageMapEditModal extends BaseMappingEditModal {
     targetTestIdPattern: (index: number) => `target-storage-storageMap.${index}.targetStorage`,
   };
 
+  readonly offload: OffloadOptions;
+
   constructor(page: Page) {
     super(page, MODAL_TEST_ID);
+    this.offload = new OffloadOptions(page, this.modal);
   }
 
   async getSourceStorageAtIndex(index: number): Promise<string> {
