@@ -101,13 +101,19 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   async getRowCount(): Promise<number> {
-    const toggle = '.pf-v5-c-menu-toggle, .pf-v6-c-menu-toggle, .pf-v5-c-pagination__menu-toggle';
-    const pagination = this.page.locator(toggle).first();
-    if (await pagination.isVisible({ timeout: 1000 }).catch(() => false)) {
-      const total = (await pagination.textContent())?.split(' of ')[1]?.trim();
-      if (total) return Number.parseInt(total, 10);
+    const paginationNav = this.rootLocator.getByRole('navigation', { name: 'Pagination' }).first();
+
+    if (await paginationNav.isVisible().catch(() => false)) {
+      const paginationArea = paginationNav.locator('..');
+      const text = await paginationArea.textContent();
+      const match = text?.match(/of\s+(?<total>\d+)/);
+
+      if (match?.groups?.total) {
+        return Number.parseInt(match.groups.total, 10);
+      }
     }
-    return this.vmTable.getByRole('rowgroup').nth(1).getByRole('row').count();
+
+    return await this.vmTable.getByRole('rowgroup').nth(1).getByRole('row').count();
   }
 
   async getTableCell(rowColumnName: string, rowValue: string, targetColumnName: string) {
@@ -230,11 +236,11 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   async verifyAddVirtualMachinesButtonDisabled(): Promise<void> {
-    await expect(this.addVirtualMachinesButton).toHaveAttribute('aria-disabled', 'true');
+    await expect(this.addVirtualMachinesButton).toBeDisabled();
   }
+
   async verifyAddVirtualMachinesButtonEnabled(): Promise<void> {
-    const ariaDisabled = await this.addVirtualMachinesButton.getAttribute('aria-disabled');
-    expect(ariaDisabled).not.toBe('true');
+    await expect(this.addVirtualMachinesButton).toBeEnabled();
   }
 
   async verifyConcernBadgeExists(category: ConcernCategory, rowIndex?: number): Promise<void> {
