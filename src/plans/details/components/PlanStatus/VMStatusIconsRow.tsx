@@ -21,6 +21,7 @@ const VMStatusIconsRow: FC<VMStatusIconsRowProps> = ({ plan, statuses }) => {
       alignItems={{ default: 'alignItemsCenter' }}
       gap={{ default: 'gapSm' }}
       direction={{ default: 'row' }}
+      flexWrap={{ default: 'nowrap' }}
     >
       {(
         Object.entries(statuses) as [
@@ -32,7 +33,7 @@ const VMStatusIconsRow: FC<VMStatusIconsRowProps> = ({ plan, statuses }) => {
         .sort(([statusA], [statusB]) => statusPriority[statusA] - statusPriority[statusB])
         .map(([status, { count, vms }]) => {
           return (
-            <Flex gap={{ default: 'gapXs' }} key={status}>
+            <Flex gap={{ default: 'gapXs' }} key={status} flexWrap={{ default: 'nowrap' }}>
               <StatusPopover count={count} plan={plan} status={status} vms={vms} />
             </Flex>
           );

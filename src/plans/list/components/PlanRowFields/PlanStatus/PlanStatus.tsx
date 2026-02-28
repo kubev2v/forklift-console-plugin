@@ -73,29 +73,28 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
         );
 
   return (
-    <>
-      <Flex
-        direction={{ default: 'row' }}
-        alignItems={{ default: 'alignItemsCenter' }}
-        spaceItems={{ default: 'spaceItemsSm' }}
-      >
-        <FlexItem className="plan-status-cell-label-section">
-          {isPlanRunning && PlanStatuses.Paused !== planStatus ? (
-            <Split hasGutter>
-              <Spinner size="md" data-testid="plan-progress-spinner" />
-              <span className="pf-v6-u-font-size-sm" data-testid="plan-progress-percentage">
-                {Math.trunc(pipelinesProgressPercentage)}%
-              </span>
-            </Split>
-          ) : (
-            <PlanStatusLabel plan={plan} />
-          )}
-        </FlexItem>
-        <FlexItem>
-          <VMStatusIconsRow plan={plan} statuses={vmStatuses} />
-        </FlexItem>
-      </Flex>
-    </>
+    <Flex
+      direction={{ default: 'row' }}
+      alignItems={{ default: 'alignItemsCenter' }}
+      spaceItems={{ default: 'spaceItemsSm' }}
+      flexWrap={{ default: 'nowrap' }}
+    >
+      <FlexItem className="plan-status-cell-label-section">
+        {isPlanRunning && PlanStatuses.Paused !== planStatus ? (
+          <Split hasGutter>
+            <Spinner size="md" data-testid="plan-progress-spinner" />
+            <span className="pf-v6-u-font-size-sm" data-testid="plan-progress-percentage">
+              {Math.trunc(pipelinesProgressPercentage)}%
+            </span>
+          </Split>
+        ) : (
+          <PlanStatusLabel plan={plan} />
+        )}
+      </FlexItem>
+      <FlexItem>
+        <VMStatusIconsRow plan={plan} statuses={vmStatuses} />
+      </FlexItem>
+    </Flex>
   );
 };
 

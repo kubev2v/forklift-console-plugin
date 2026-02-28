@@ -4,12 +4,6 @@ import { type K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynam
 
 import { TableLabelCell, type TableLabelCellProps } from './TableLabelCell';
 
-/**
- * A component that displays a resource link, with an optional label.
- *
- * @param {TableLinkCellProps} props - The props for the component.
- * @returns {ReactElement} The rendered TableLinkCell component.
- */
 export const TableLinkCell: FC<TableLinkCellProps> = ({
   groupVersionKind,
   hasLabel = false,
@@ -17,10 +11,21 @@ export const TableLinkCell: FC<TableLinkCellProps> = ({
   labelColor = 'grey',
   name,
   namespace,
+  truncate,
 }) => {
   return (
-    <TableLabelCell hasLabel={hasLabel} label={label} labelColor={labelColor}>
-      <ResourceLink groupVersionKind={groupVersionKind} name={name} namespace={namespace} />
+    <TableLabelCell
+      className={truncate ? 'forklift-table-link-cell--truncate' : undefined}
+      hasLabel={hasLabel}
+      label={label}
+      labelColor={labelColor}
+    >
+      <ResourceLink
+        groupVersionKind={groupVersionKind}
+        name={name}
+        namespace={namespace}
+        truncate={truncate}
+      />
     </TableLabelCell>
   );
 };
@@ -29,4 +34,5 @@ type TableLinkCellProps = {
   groupVersionKind: K8sGroupVersionKind;
   name: string | undefined;
   namespace: string | undefined;
+  truncate?: boolean;
 } & TableLabelCellProps;

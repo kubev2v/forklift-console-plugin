@@ -16,26 +16,28 @@ export const DefaultHeader = <T,>({
 }: TableViewHeaderProps<T>) => {
   return (
     <>
-      {visibleColumns.map(({ info, label, resourceFieldId, sortable, testId }, columnIndex) => (
-        <Th
-          width={10}
-          key={resourceFieldId}
-          sort={
-            sortable
-              ? buildSort({
-                  activeSort,
-                  columnIndex,
-                  resourceFields: visibleColumns,
-                  setActiveSort,
-                })
-              : undefined
-          }
-          info={info}
-          data-testid={testId}
-        >
-          {label}
-        </Th>
-      ))}
+      {visibleColumns.map(
+        ({ info, label, resourceFieldId, sortable, testId, width }, columnIndex) => (
+          <Th
+            width={width}
+            key={resourceFieldId}
+            sort={
+              sortable
+                ? buildSort({
+                    activeSort,
+                    columnIndex,
+                    resourceFields: visibleColumns,
+                    setActiveSort,
+                  })
+                : undefined
+            }
+            info={info}
+            data-testid={testId}
+          >
+            {label}
+          </Th>
+        ),
+      )}
     </>
   );
 };
