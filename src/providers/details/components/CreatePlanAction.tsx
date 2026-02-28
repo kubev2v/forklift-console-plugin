@@ -25,7 +25,7 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
     namespace,
   });
 
-  const handleCreatePlan = () => {
+  const handleCreatePlan = (): void => {
     trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_FROM_PROVIDER_CLICKED, {
       planNamespace: namespace,
       providerId: provider?.metadata?.name,
@@ -38,17 +38,31 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
       reference: PlanModelRef,
     });
 
-    navigate(`${planResourceUrl}/~new`, {
-      state: {
-        planProject: provider ? getNamespace(provider) : undefined,
-        sourceProvider: provider,
-      },
-    });
+    const searchParams = new URLSearchParams();
+
+    if (provider?.metadata?.name) {
+      searchParams.set('sourceProvider', provider.metadata.name);
+    }
+
+    const providerNamespace = getNamespace(provider);
+
+    if (providerNamespace) {
+      searchParams.set('planProject', providerNamespace);
+    }
+
+    const query = searchParams.toString();
+    const queryString = query ? `?${query}` : '';
+    navigate(`${planResourceUrl}/~new${queryString}`);
   };
 
   return (
     <ToolbarItem>
-      <Button variant={ButtonVariant.primary} onClick={handleCreatePlan} isDisabled={!canCreate}>
+      <Button
+        data-testid="create-plan-from-provider-button"
+        variant={ButtonVariant.primary}
+        onClick={handleCreatePlan}
+        isDisabled={!canCreate}
+      >
         {t('Create migration plan')}
       </Button>
     </ToolbarItem>

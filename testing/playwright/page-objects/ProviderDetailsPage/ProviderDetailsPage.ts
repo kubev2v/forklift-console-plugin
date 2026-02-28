@@ -4,6 +4,8 @@ import { ProviderType } from '../../types/enums';
 import type { ProviderData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
+import { V2_12_0 } from '../../utils/version/constants';
+import { isVersionAtLeast } from '../../utils/version/version';
 
 import { CredentialsTab } from './tabs/CredentialsTab';
 import { DetailsTab } from './tabs/DetailsTab';
@@ -22,6 +24,15 @@ export class ProviderDetailsPage {
     this.credentialsTab = new CredentialsTab(page);
     this.detailsTab = new DetailsTab(page);
     this.virtualMachinesTab = new VirtualMachinesTab(page);
+  }
+
+  async clickCreatePlanButton(): Promise<void> {
+    const createPlanButton = isVersionAtLeast(V2_12_0)
+      ? this.page.getByTestId('create-plan-from-provider-button')
+      : this.page.getByRole('button', { name: 'Create migration plan' });
+    await expect(createPlanButton).toBeVisible();
+    await expect(createPlanButton).toBeEnabled();
+    await createPlanButton.click();
   }
 
   async navigate(providerName: string, namespace: string): Promise<void> {

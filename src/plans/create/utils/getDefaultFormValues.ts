@@ -20,7 +20,7 @@ import type { CreatePlanFormData } from '../types';
  * Accepts optional overrides for `planProject` and `sourceProvider`.
  */
 export const getDefaultFormValues = (
-  initialValues?: Pick<CreatePlanFormData, 'planProject' | 'sourceProvider'>,
+  initialValues?: Partial<Pick<CreatePlanFormData, 'planProject' | 'sourceProvider'>>,
 ): Partial<CreatePlanFormData> => {
   return {
     [CreatePlanStorageMapFieldId.StorageMapType]: StorageMapType.Existing,
