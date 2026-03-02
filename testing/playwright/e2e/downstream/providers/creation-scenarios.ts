@@ -7,6 +7,8 @@ import type { VersionTuple } from '../../../utils/version/types';
 
 const VSPHERE_KEY = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
 const OVA_KEY = process.env.OVA_PROVIDER ?? 'ova';
+const OVIRT_KEY = process.env.OVIRT_PROVIDER ?? 'ovirt-4.4.9';
+const OPENSTACK_KEY = process.env.OPENSTACK_PROVIDER ?? 'openstack-psi';
 
 export type ProviderTestScenario = {
   scenarioName: string;
@@ -41,6 +43,12 @@ export const createProviderData = (
     baseData.vddkInitImage = providerConfig.vddk_init_image;
   }
 
+  if (providerType === ProviderType.OPENSTACK) {
+    baseData.regionName = providerConfig.region_name;
+    baseData.openstackProjectName = providerConfig.project_name;
+    baseData.domainName = providerConfig.user_domain_name;
+  }
+
   return { ...baseData, ...overrides };
 };
 
@@ -63,5 +71,15 @@ export const providerTestScenarios: ProviderTestScenario[] = [
     providerType: ProviderType.OVA,
     providerKey: OVA_KEY,
     minVersion: V2_11_0,
+  },
+  {
+    scenarioName: 'oVirt provider',
+    providerType: ProviderType.OVIRT,
+    providerKey: OVIRT_KEY,
+  },
+  {
+    scenarioName: 'OpenStack provider with password authentication',
+    providerType: ProviderType.OPENSTACK,
+    providerKey: OPENSTACK_KEY,
   },
 ];

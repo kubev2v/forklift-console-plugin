@@ -24,6 +24,17 @@ export class ProviderDetailsPage {
     this.virtualMachinesTab = new VirtualMachinesTab(page);
   }
 
+  private getProviderTypeDisplayName(type: string): string {
+    const typeMap: Record<string, string> = {
+      openshift: 'OpenShift',
+      openstack: 'OpenStack',
+      ova: 'OVA',
+      ovirt: 'oVirt',
+      vsphere: 'VMware',
+    };
+    return typeMap[type] ?? type;
+  }
+
   async navigate(providerName: string, namespace: string): Promise<void> {
     await this.navigation.navigateToK8sResource({
       resource: 'Provider',
@@ -58,21 +69,17 @@ export class ProviderDetailsPage {
     await expect(this.page.getByTestId('resource-details-title')).toContainText(providerData.name);
     await expect(this.page.getByTestId('name-detail-item')).toContainText(providerData.name);
 
-    // Map provider types to their display names
-    let displayType: string = providerData.type;
-    if (providerData.type === ProviderType.VSPHERE) {
-      displayType = 'VMware';
-    } else if (providerData.type === ProviderType.OVA) {
-      displayType = 'OVA';
-    }
+    const displayType = this.getProviderTypeDisplayName(providerData.type);
 
     await expect(this.page.getByTestId('type-detail-item')).toContainText(displayType);
     await expect(this.page.getByTestId('url-detail-item')).toContainText(providerData.hostname);
     await expect(this.page.getByTestId('project-detail-item')).toContainText(MTV_NAMESPACE);
 
-    // Only verify these fields for non-OVA providers
-    if (providerData.type !== ProviderType.OVA) {
+    if (providerData.type === ProviderType.VSPHERE) {
       await expect(this.page.getByTestId('product-detail-item')).toContainText('');
+    }
+
+    if (providerData.type !== ProviderType.OVA) {
       await expect(this.page.getByTestId('credentials-detail-item')).toContainText('');
     }
 
@@ -114,7 +121,7 @@ export class ProviderDetailsPage {
     await this.page.waitForLoadState('domcontentloaded');
   }
 
-  async waitForReadyStatus(timeoutMs = 120000): Promise<void> {
+  async waitForReadyStatus(timeoutMs = 180000): Promise<void> {
     const statusLocator = this.page.getByTestId('resource-status');
     await expect(statusLocator).toContainText('Ready', { timeout: timeoutMs });
   }
