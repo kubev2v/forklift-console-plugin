@@ -83,6 +83,17 @@ export class CreateProviderPage {
     }
   }
 
+  private async fillOpenStackFields(testData: ProviderData) {
+    await this.page.getByTestId('openstack-url-input').fill(testData.hostname ?? '');
+    await this.page.getByTestId('openstack-username-input').fill(testData.username ?? '');
+    await this.page.getByTestId('openstack-password-input').fill(testData.password ?? '');
+    await this.page.getByTestId('openstack-region-input').fill(testData.regionName ?? '');
+    await this.page
+      .getByTestId('openstack-project-input')
+      .fill(testData.openstackProjectName ?? '');
+    await this.page.getByTestId('openstack-domain-input').fill(testData.domainName ?? '');
+  }
+
   private async fillOVAFields(testData: ProviderData) {
     await this.page.getByTestId('nfs-directory-input').fill(testData.hostname ?? '');
 
@@ -188,6 +199,8 @@ export class CreateProviderPage {
         await this.fillOVAFields(testData);
         break;
       case ProviderType.OPENSTACK:
+        await this.fillOpenStackFields(testData);
+        break;
       default:
         break;
     }
