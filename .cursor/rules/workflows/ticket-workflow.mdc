@@ -1,0 +1,135 @@
+---
+description: Complete ticket workflow with multi-agent tracking
+alwaysApply: false
+---
+
+# Ticket Workflow with Agent Tracking
+
+Invoke with: *"start working on MTV-XXX"*, *Jira ticket URL*, *"ticket workflow"*
+
+This workflow defines how to execute a complete Jira ticket from analysis to PR using agent tracking.
+
+---
+
+## 1. Workflow Steps
+
+When a ticket URL or MTV-XXXX reference is received:
+
+1. **Fetch and analyze the ticket** - Understand requirements
+2. **Present analysis and solution options** - Wait for user to confirm approach
+3. **Implement after user confirms** - Follow the selected approach
+4. **Run review agents** - UX, QE, Security, Forklift Expert
+5. **Ask to implement recommendations** - After each review phase
+
+---
+
+## 2. Phase 1: Understand the Issue
+
+1. Use `get_jira` tool to fetch the ticket details by key (e.g., MTV-1885)
+2. Use `get_issue_comments` to read any additional context from the team
+3. Identify key information:
+   - For bugs: affected version, steps to reproduce, expected vs actual behavior, logs/screenshots
+   - For features: user story, acceptance criteria, technical requirements, mockups
+
+---
+
+## 3. Phase 2: Investigate the Codebase
+
+1. Based on the ticket description, identify likely affected areas:
+   - Component mentioned in the ticket
+   - Error messages that can be searched
+   - UI elements or API endpoints involved
+2. Search the codebase for related code
+3. Trace the code flow that would be executed
+4. Identify the root cause (bugs) or implementation approach (features)
+
+---
+
+## 4. Phase 3: Present Analysis
+
+Present findings to the user:
+- **Root Cause / Approach**: Clear explanation
+- **Affected Files**: List of files that need modification
+- **Solution Options**: Provide 2-3 possible approaches with tradeoffs:
+  - Option A: [Quick fix] - Description and implications
+  - Option B: [Proper fix] - Description and implications
+  - Option C: [Comprehensive fix] - If applicable
+
+---
+
+## 5. Phase 4: Implementation (after user selects approach)
+
+1. Implement the selected fix/feature
+2. Follow project coding conventions (CLAUDE.md)
+3. Add appropriate error handling
+4. Consider edge cases
+
+---
+
+## 6. Phase 5: Testing (ASK USER)
+
+**IMPORTANT**: Before writing any tests, ASK the user:
+
+> "What testing approach would you like?"
+> - **A) Unit tests** - Create tests in `__tests__` folder next to the modified file
+> - **B) E2E tests** - Create/update tests in the `testing/` folder (Playwright)
+> - **C) No tests** - Skip testing
+
+---
+
+## 7. Phase 6: Review with Agents
+
+For each review agent (UX, QE, Security, Forklift Expert):
+1. Run the agent review on the changes
+2. Present findings with severity
+3. Ask: "Implement these recommendations? [Yes/Skip]"
+4. If Yes: implement and continue
+5. Move to next agent
+
+### Post-Agent Prompt
+
+```
+[Agent Name] found:
+🔴 X blockers | 🟡 Y suggestions | 🟢 Z nitpicks
+
+Implement these recommendations?
+1. Yes, implement now
+2. Skip, continue to next agent
+3. Stop here
+```
+
+---
+
+## 8. Phase 7: Create PR
+
+1. Create a feature branch:
+   ```bash
+   git checkout -b fix/MTV-XXXX-brief-description   # for bugs
+   git checkout -b feat/MTV-XXXX-brief-description   # for features
+   ```
+
+2. Stage and commit:
+   ```bash
+   git add .
+   git commit -m "Resolves: MTV-XXXX | Brief description of the change"
+   ```
+
+3. Create PR description using the template from `pr-preparation.mdc`
+
+---
+
+## 9. Final Summary
+
+After all agents complete:
+
+```
+## MTV-XXXXX Complete!
+
+Developer: [summary of implementation]
+UX: [summary of UX changes]
+QE: [summary of test additions]
+Security: [summary of findings]
+Forklift Expert: [summary of validation]
+
+Ready for PR? [Yes/Review changes first]
+```
