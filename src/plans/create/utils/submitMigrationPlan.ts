@@ -1,6 +1,7 @@
 import { createStorageMap } from 'src/storageMaps/create/utils/createStorageMap';
 
 import type {
+  IoK8sApiCoreV1ConfigMap,
   IoK8sApiCoreV1Secret,
   V1beta1NetworkMap,
   V1beta1StorageMap,
@@ -18,6 +19,7 @@ import { createDecryptionSecret } from './createDecryptionSecret';
 import { type CreatedHooks, createMigrationHooks } from './createMigrationHooks';
 import { createNetworkMap } from './createNetworkMap';
 import { createPlan } from './createPlan';
+import { resolveScriptsConfigMap } from './resolveScriptsConfigMap';
 
 /**
  * Handles the migration plan submission process including creation of network map,
@@ -28,7 +30,10 @@ export const submitMigrationPlan = async (
   trackEvent?: (eventType: string, properties?: Record<string, unknown>) => void,
 ): Promise<void> => {
   const {
+    customScripts,
+    customScriptsType,
     diskDecryptionPassPhrases,
+    existingCustomScriptsConfigMap,
     existingNetworkMap,
     existingStorageMap,
     migrateSharedDisks,
@@ -63,6 +68,7 @@ export const submitMigrationPlan = async (
     Promise<V1beta1StorageMap>,
     Promise<IoK8sApiCoreV1Secret | undefined>,
     Promise<CreatedHooks>,
+    Promise<IoK8sApiCoreV1ConfigMap | undefined>,
   ] = [
     existingNetworkMap
       ? copyNetworkMap(existingNetworkMap, planName, planProject)
@@ -100,14 +106,23 @@ export const submitMigrationPlan = async (
           preMigrationHook,
         })
       : Promise.resolve({}),
+
+    resolveScriptsConfigMap({
+      customScripts,
+      customScriptsType,
+      existingCustomScriptsConfigMap,
+      planName,
+      planProject,
+    }),
   ];
 
   // Execute all prerequisite resource creation concurrently
-  const [planNetworkMap, planStorageMap, createdSecret, createdHooks] =
+  const [planNetworkMap, planStorageMap, createdSecret, createdHooks, scriptsConfigMap] =
     await Promise.all(createResourceRequests);
 
   // Create the migration plan
   const createdPlanRef = await createPlan({
+    customScriptsConfigMap: scriptsConfigMap,
     luks: createdSecret ? { name: createdSecret.metadata?.name } : undefined,
     migrateSharedDisks,
     migrationType,
@@ -134,6 +149,7 @@ export const submitMigrationPlan = async (
     {
       hooks: createdHooks,
       networkMap: planNetworkMap,
+      scriptsConfigMap,
       secret: createdSecret,
       storageMap: planStorageMap,
     },

@@ -1,5 +1,6 @@
 import {
   HookModel,
+  type IoK8sApiCoreV1ConfigMap,
   type IoK8sApiCoreV1Secret,
   NetworkMapModel,
   SecretModel,
@@ -8,19 +9,18 @@ import {
   type V1beta1NetworkMap,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
+import { ConfigMapModel } from '@utils/analytics/constants';
 import type { ObjectRef } from '@utils/helpers/getObjectRef';
 
 import { addOwnerRefs } from './addOwnerRefs';
 
-/**
- * Adds owner references to all created resources for a created plan
- */
 export const addPlanResourceOwnerRefs = async (
   resources: {
     networkMap: V1beta1NetworkMap;
     storageMap: V1beta1StorageMap;
     secret?: IoK8sApiCoreV1Secret;
     hooks: { preHook?: V1beta1Hook; postHook?: V1beta1Hook };
+    scriptsConfigMap?: IoK8sApiCoreV1ConfigMap;
   },
   planRef: ObjectRef,
 ) => {
@@ -39,6 +39,10 @@ export const addPlanResourceOwnerRefs = async (
 
   if (resources.hooks.postHook) {
     ownerRefRequests.push(addOwnerRefs(HookModel, resources.hooks.postHook, [planRef]));
+  }
+
+  if (resources.scriptsConfigMap) {
+    ownerRefRequests.push(addOwnerRefs(ConfigMapModel, resources.scriptsConfigMap, [planRef]));
   }
 
   await Promise.all(ownerRefRequests);

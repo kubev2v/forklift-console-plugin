@@ -4,8 +4,9 @@ import type { StorageMapping, TargetStorage } from 'src/storageMaps/utils/types'
 import type { InventoryNetwork } from 'src/utils/hooks/useNetworks';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
-import type { HypervNetwork } from '@forklift-ui/types';
 import type {
+  HypervNetwork,
+  IoK8sApiCoreV1ConfigMap,
   OpenShiftNetworkAttachmentDefinition,
   OpenshiftVM,
   OpenstackNetwork,
@@ -26,6 +27,11 @@ import type {
   VSphereVM,
 } from '@forklift-ui/types';
 
+import type {
+  CustomScriptsFieldId,
+  CustomScriptsType,
+} from './steps/customization-scripts/constants';
+import type { CustomScript } from './steps/customization-scripts/types';
 import type { GeneralFormFieldId } from './steps/general-information/constants';
 import type { HooksFormFieldId, MigrationHook } from './steps/migration-hooks/constants';
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
@@ -77,6 +83,9 @@ export type CreatePlanFormData = FieldValues & {
   [OtherSettingsFormFieldId.NBDEClevis]: boolean;
   [OtherSettingsFormFieldId.PreserveStaticIps]: boolean;
   [OtherSettingsFormFieldId.MigrateSharedDisks]: boolean;
+  [CustomScriptsFieldId.ScriptsType]: CustomScriptsType;
+  [CustomScriptsFieldId.ExistingConfigMap]: IoK8sApiCoreV1ConfigMap | undefined;
+  [CustomScriptsFieldId.Scripts]: CustomScript[];
   [HooksFormFieldId.PreMigration]: MigrationHook;
   [HooksFormFieldId.PostMigration]: MigrationHook;
   [OtherSettingsFormFieldId.RootDevice]: string;
@@ -114,6 +123,7 @@ export type CreatePlanParams = {
   migrateSharedDisks?: boolean;
   luks?: V1beta1PlanSpecVmsLuks;
   nbdeClevis?: boolean;
+  customScriptsConfigMap?: IoK8sApiCoreV1ConfigMap;
   preHook?: V1beta1Hook;
   postHook?: V1beta1Hook;
   targetPowerState: TargetPowerStateValue;

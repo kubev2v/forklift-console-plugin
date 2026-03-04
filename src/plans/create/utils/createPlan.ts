@@ -12,6 +12,7 @@ import { buildPlanSpecVms } from './buildPlanSpecVms';
  * Connects providers, maps, transfer networks, hooks, and selected VMs.
  */
 export const createPlan = async ({
+  customScriptsConfigMap,
   luks,
   migrateSharedDisks,
   migrationType,
@@ -40,6 +41,12 @@ export const createPlan = async ({
       namespace: planProject,
     },
     spec: {
+      ...(customScriptsConfigMap && {
+        customizationScripts: {
+          name: customScriptsConfigMap.metadata?.name,
+          namespace: customScriptsConfigMap.metadata?.namespace,
+        },
+      }),
       ...(planDescription ? { description: planDescription } : {}),
       map: {
         network: getObjectRef(networkMap),
