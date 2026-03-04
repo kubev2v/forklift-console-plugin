@@ -7,6 +7,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
+import CustomScriptsReviewSection from './CustomScriptsReviewSection';
 import GeneralInfoReviewSection from './GeneralInfoReviewSection';
 import HooksReviewSection from './HooksReviewSection';
 import MigrationTypeReviewSection from './MigrationTypeReviewSection';
@@ -18,8 +19,8 @@ import VirtualMachinesReviewSection from './VirtualMachinesReviewSection';
 
 type ReviewStepProps = {
   error: Error | undefined;
-  onBackToReviewClick: () => void;
   isLiveMigrationFeatureEnabled: boolean;
+  onBackToReviewClick: () => void;
 };
 
 const ReviewStep: FC<ReviewStepProps> = ({
@@ -61,6 +62,7 @@ const ReviewStep: FC<ReviewStepProps> = ({
       <StorageMapReviewSection />
       <MigrationTypeReviewSection isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled} />
       <OtherSettingsReviewSection isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled} />
+      <CustomScriptsReviewSection />
       <HooksReviewSection />
     </WizardStepContainer>
   );

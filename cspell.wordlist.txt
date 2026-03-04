@@ -110,3 +110,5 @@ pfext
 nads
 cooldown
 Lightspeed
+firstboot
+configmap

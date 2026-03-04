@@ -3,6 +3,7 @@ import { createContext } from 'react';
 import type { WizardStepType } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
 
+import { CustomScriptsFieldId } from './steps/customization-scripts/constants';
 import { GeneralFormFieldId } from './steps/general-information/constants';
 import { HooksFormFieldId } from './steps/migration-hooks/constants';
 import { MigrationTypeFieldId } from './steps/migration-type/constants';
@@ -21,6 +22,7 @@ export enum PlanWizardStepId {
   MigrationType = 'migration-type',
   AdditionalSetup = 'additional-setup',
   OtherSettings = 'other-settings',
+  CustomizationScripts = 'customization-scripts',
   Hooks = 'hooks',
   ReviewAndCreate = 'review-and-create',
 }
@@ -28,6 +30,7 @@ export enum PlanWizardStepId {
 export const planStepNames: Record<PlanWizardStepId, ReturnType<typeof t>> = {
   [PlanWizardStepId.AdditionalSetup]: t('Additional setup'),
   [PlanWizardStepId.BasicSetup]: t('Basic setup'),
+  [PlanWizardStepId.CustomizationScripts]: t('Customization scripts (optional)'),
   [PlanWizardStepId.General]: t('General'),
   [PlanWizardStepId.Hooks]: t('Hooks (optional)'),
   [PlanWizardStepId.MigrationType]: t('Migration type'),
@@ -41,12 +44,13 @@ export const planStepNames: Record<PlanWizardStepId, ReturnType<typeof t>> = {
 export const planStepOrder: Record<PlanWizardStepId, number> = {
   [PlanWizardStepId.AdditionalSetup]: 7,
   [PlanWizardStepId.BasicSetup]: 1,
+  [PlanWizardStepId.CustomizationScripts]: 9,
   [PlanWizardStepId.General]: 2,
-  [PlanWizardStepId.Hooks]: 9,
+  [PlanWizardStepId.Hooks]: 10,
   [PlanWizardStepId.MigrationType]: 6,
   [PlanWizardStepId.NetworkMap]: 4,
   [PlanWizardStepId.OtherSettings]: 8,
-  [PlanWizardStepId.ReviewAndCreate]: 10,
+  [PlanWizardStepId.ReviewAndCreate]: 11,
   [PlanWizardStepId.StorageMap]: 5,
   [PlanWizardStepId.VirtualMachines]: 3,
 };
@@ -63,6 +67,7 @@ export const CreatePlanWizardContext = createContext({} as CreatePlanWizardConte
 export const stepFieldMap: Record<PlanWizardStepId, string[]> = {
   [PlanWizardStepId.AdditionalSetup]: [],
   [PlanWizardStepId.BasicSetup]: [],
+  [PlanWizardStepId.CustomizationScripts]: Object.values(CustomScriptsFieldId),
   [PlanWizardStepId.General]: Object.values(GeneralFormFieldId),
   [PlanWizardStepId.Hooks]: Object.values(HooksFormFieldId),
   [PlanWizardStepId.MigrationType]: Object.values(MigrationTypeFieldId),

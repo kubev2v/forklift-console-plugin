@@ -12,20 +12,22 @@ const PlanCreatePage: FC = () => {
 
   return (
     <LearningExperienceDrawer>
-      <PageSection hasBodyWrapper={false}>
-        <Split>
-          <SplitItem isFilled>
-            <Title headingLevel="h2">{t('Create migration plan')}</Title>
-          </SplitItem>
-          <SplitItem>
-            <LearningExperienceButton />
-          </SplitItem>
-        </Split>
-      </PageSection>
+      <div className="plan-create-page">
+        <PageSection hasBodyWrapper={false}>
+          <Split>
+            <SplitItem isFilled>
+              <Title headingLevel="h2">{t('Create migration plan')}</Title>
+            </SplitItem>
+            <SplitItem>
+              <LearningExperienceButton />
+            </SplitItem>
+          </Split>
+        </PageSection>
 
-      <PageSection hasBodyWrapper={false} hasOverflowScroll type={PageSectionTypes.wizard}>
-        <CreatePlanWizard />
-      </PageSection>
+        <PageSection hasBodyWrapper={false} type={PageSectionTypes.wizard}>
+          <CreatePlanWizard />
+        </PageSection>
+      </div>
     </LearningExperienceDrawer>
   );
 };

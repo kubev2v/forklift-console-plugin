@@ -3,6 +3,11 @@ import { QUAY_FORKLIFT_HOOK_RUNNER_IMAGE } from 'src/plans/details/tabs/Hooks/ut
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
+import {
+  CustomScriptsFieldId,
+  CustomScriptsType,
+  DefaultScript,
+} from '../steps/customization-scripts/constants';
 import { GeneralFormFieldId } from '../steps/general-information/constants';
 import { HooksFormFieldId, MigrationHookFieldId } from '../steps/migration-hooks/constants';
 import {
@@ -24,6 +29,8 @@ export const getDefaultFormValues = (
 ): Partial<CreatePlanFormData> => {
   return {
     [CreatePlanStorageMapFieldId.StorageMapType]: StorageMapType.Existing,
+    [CustomScriptsFieldId.Scripts]: [DefaultScript],
+    [CustomScriptsFieldId.ScriptsType]: CustomScriptsType.Existing,
     [GeneralFormFieldId.PlanProject]: initialValues?.planProject,
     [GeneralFormFieldId.ShowDefaultProjects]: false,
     [GeneralFormFieldId.SourceProvider]: initialValues?.sourceProvider,
