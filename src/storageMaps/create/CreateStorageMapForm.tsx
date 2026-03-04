@@ -138,6 +138,7 @@ const CreateStorageMapForm: React.FC = () => {
 
             <Split hasGutter>
               <Button
+                data-testid="create-storage-map-button"
                 onClick={handleSubmit(onSubmit)}
                 isDisabled={!isValid || isSubmitting}
                 isLoading={isSubmitting}
