@@ -38,13 +38,16 @@ export const ScriptTypeLabels: Record<ScriptType, ReturnType<typeof t>> = {
   [ScriptType.Run]: t('Run'),
 };
 
-export const ORDER_INCREMENT = 10;
+// The backend reads scripts alphabetically via Go's os.ReadDir.
+// MTV's own scripts use prefix 9999 (see customize.go). Customer scripts
+// use 99999 so they always sort after MTV scripts.
+// https://github.com/kubev2v/forklift/blob/main/pkg/virt-v2v/customize/customize.go
+export const CUSTOMER_SCRIPT_PREFIX = 99999;
 
 export const DefaultScript: CustomScript = {
   content: '',
   guestType: GuestType.Linux,
   name: '',
-  order: ORDER_INCREMENT,
   scriptType: ScriptType.Firstboot,
 };
 

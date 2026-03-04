@@ -1,9 +1,8 @@
-import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
 import {
+  CUSTOMER_SCRIPT_PREFIX,
   FILE_EXTENSIONS,
-  ORDER_INCREMENT,
   OS_PREFIXES,
   SCRIPT_KEY_PATTERN,
   SCRIPT_NAME_REGEX,
@@ -12,15 +11,14 @@ import type { CustomScript } from './types';
 
 /**
  * Builds a ConfigMap data key matching the backend regex patterns in customize.go.
- * Order is zero-padded so lexicographic sorting matches numeric order (e.g. `02_` before `10_`).
+ * Uses a large prefix (99999) so customer scripts sort after virt-v2v (4000–5005) and MTV (9999) scripts.
  * @see https://github.com/kubev2v/forklift/blob/main/pkg/virt-v2v/customize/customize.go
  */
 export const buildConfigMapKey = (script: CustomScript): string => {
-  const paddedOrder = String(script.order).padStart(2, '0');
   const osPrefix = OS_PREFIXES[script.guestType];
   const ext = FILE_EXTENSIONS[script.guestType];
 
-  return `${paddedOrder}_${osPrefix}_${script.scriptType}_${script.name}.${ext}`;
+  return `${CUSTOMER_SCRIPT_PREFIX}_${osPrefix}_${script.scriptType}_${script.name}.${ext}`;
 };
 
 export const scriptsToConfigMapData = (scripts: CustomScript[]): Record<string, string> => {
@@ -28,15 +26,6 @@ export const scriptsToConfigMapData = (scripts: CustomScript[]): Record<string, 
     data[buildConfigMapKey(script)] = script.content;
     return data;
   }, {});
-};
-
-export const getNextOrder = (scripts: CustomScript[]): number => {
-  if (isEmpty(scripts)) {
-    return ORDER_INCREMENT;
-  }
-
-  const maxOrder = Math.max(...scripts.map((script) => script.order));
-  return maxOrder + ORDER_INCREMENT;
 };
 
 export const validateScriptName = (value: string): string | undefined => {

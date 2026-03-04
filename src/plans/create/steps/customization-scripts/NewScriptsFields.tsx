@@ -18,11 +18,11 @@ import {
   ScriptTypeLabels,
 } from './constants';
 import ScriptContentField from './ScriptContentField';
-import { getNextOrder, validateScriptName } from './utils';
+import { validateScriptName } from './utils';
 
 const NewScriptsFields: FC = () => {
   const { t } = useForkliftTranslation();
-  const { control, getValues, setValue } = useCreatePlanFormContext();
+  const { control, setValue } = useCreatePlanFormContext();
 
   const {
     append,
@@ -39,11 +39,7 @@ const NewScriptsFields: FC = () => {
     `${CustomScriptsFieldId.Scripts}.${index}.${field}`;
 
   const handleAddScript = (): void => {
-    const currentScripts = getValues(CustomScriptsFieldId.Scripts);
-    append({
-      ...DefaultScript,
-      order: getNextOrder(currentScripts),
-    });
+    append({ ...DefaultScript });
   };
 
   const handleRemoveScript = (index: number): void => {
