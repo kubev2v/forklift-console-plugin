@@ -20,6 +20,7 @@ import { createProviderData } from './creation-scenarios';
 
 const VSPHERE_KEY = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
 const INVALID_CERTIFICATE = 'this-is-not-a-valid-pem-certificate';
+const BEGIN_CERTIFICATE = '-----BEGIN CERTIFICATE-----';
 
 test.describe('vSphere Provider Certificate Validation', () => {
   requireVersion(test, V2_11_0);
@@ -68,7 +69,7 @@ test.describe('vSphere Provider Certificate Validation', () => {
         await verifyCertificateModal.trustAndSave();
 
         fetchedCertificate = await createProvider.getCaCertificateValue();
-        expect(fetchedCertificate).toContain('-----BEGIN CERTIFICATE-----');
+        expect(fetchedCertificate).toContain(BEGIN_CERTIFICATE);
 
         await createProvider.submitCreateForm(testData.name, MTV_NAMESPACE);
         await providerDetailsPage.waitForPageLoad();
@@ -76,7 +77,7 @@ test.describe('vSphere Provider Certificate Validation', () => {
       });
 
       await test.step('Create provider with certificate uploaded from text', async () => {
-        expect(fetchedCertificate).toContain('-----BEGIN CERTIFICATE-----');
+        expect(fetchedCertificate).toContain(BEGIN_CERTIFICATE);
         const testData = createProviderData(ProviderType.VSPHERE, VSPHERE_KEY, {
           skipVddk: true,
         });
