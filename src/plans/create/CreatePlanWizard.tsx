@@ -24,7 +24,9 @@ const CreatePlanWizard: FC = () => {
   const { isFeatureEnabled } = useFeatureFlags();
   const { trackEvent } = useForkliftAnalytics();
 
-  const searchPlanProject = new URLSearchParams(location.search).get('planProject') ?? undefined;
+  const searchParams = new URLSearchParams(location.search);
+  const searchPlanProject = searchParams.get('planProject') ?? undefined;
+  const sourceProviderName = searchParams.get('sourceProvider') ?? undefined;
 
   const isLiveMigrationFeatureEnabled = isFeatureEnabled(FEATURE_NAMES.OCP_LIVE_MIGRATION);
   const defaultValues = getDefaultFormValues(
@@ -44,7 +46,7 @@ const CreatePlanWizard: FC = () => {
     setValue,
   } = form;
 
-  useSourceProviderFromSearchParams(setValue);
+  useSourceProviderFromSearchParams(setValue, sourceProviderName, searchPlanProject);
 
   const [planName, planProject, sourceProvider] = useWatch({
     control,
