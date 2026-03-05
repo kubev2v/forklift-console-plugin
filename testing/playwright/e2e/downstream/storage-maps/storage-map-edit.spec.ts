@@ -22,11 +22,11 @@ test.describe('Storage Map Details - Editing', { tag: '@downstream' }, () => {
       const modal = await storageMapDetailsPage.openEditModal();
       await modal.verifyModalStructure();
 
-      const newRowIndex = await modal.addMapping();
-      expect(newRowIndex).toBe(0);
+      const initialCount = await modal.getMappingCount();
+      expect(initialCount).toBe(1);
 
-      await modal.selectFirstAvailableSourceAtIndex(newRowIndex);
-      await modal.selectFirstAvailableTargetAtIndex(newRowIndex);
+      await modal.selectFirstAvailableSourceAtIndex(0);
+      await modal.selectFirstAvailableTargetAtIndex(0);
 
       await modal.verifySaveButtonEnabled();
       await modal.save();
