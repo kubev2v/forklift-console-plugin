@@ -1,4 +1,6 @@
 // Shared constants for resource management
+
+export const K8S_RECONCILE_TIMEOUT = 40000;
 export const MTV_NAMESPACE = 'openshift-mtv';
 
 export const RESOURCE_KINDS = {

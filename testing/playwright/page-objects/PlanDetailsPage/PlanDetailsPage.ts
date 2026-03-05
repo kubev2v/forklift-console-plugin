@@ -2,6 +2,7 @@ import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
+import { K8S_RECONCILE_TIMEOUT } from '../../utils/resource-manager/constants';
 import { disableGuidedTour, isEmpty } from '../../utils/utils';
 
 import { DetailsTab } from './tabs/DetailsTab';
@@ -268,5 +269,12 @@ export class PlanDetailsPage {
         clearInterval(progressInterval);
       }
     }
+  }
+
+  async waitForPlanStatus(expectedStatus: string): Promise<void> {
+    const statusLabel = this.page
+      .getByTestId('plan-status-container')
+      .getByTestId('plan-status-label');
+    await expect(statusLabel).toContainText(expectedStatus, { timeout: K8S_RECONCILE_TIMEOUT });
   }
 }

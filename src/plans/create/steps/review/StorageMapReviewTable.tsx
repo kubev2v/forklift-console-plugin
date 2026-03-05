@@ -1,5 +1,6 @@
 import { type FC, Fragment, useState } from 'react';
 import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
+import { getPluginLabel, getVendorProductLabel } from 'src/storageMaps/utils/labelHelpers';
 import type { StorageMapping } from 'src/storageMaps/utils/types';
 
 import {
@@ -125,7 +126,11 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
                                 <DescriptionListDescription
                                   data-testid={`review-offload-plugin-${index}`}
                                 >
-                                  {mapping[CreatePlanStorageMapFieldId.OffloadPlugin] ?? EMPTY_MSG}
+                                  {mapping[CreatePlanStorageMapFieldId.OffloadPlugin]
+                                    ? getPluginLabel(
+                                        mapping[CreatePlanStorageMapFieldId.OffloadPlugin] ?? '',
+                                      )
+                                    : EMPTY_MSG}
                                 </DescriptionListDescription>
                               </DescriptionListGroup>
                               <DescriptionListGroup>
@@ -149,7 +154,11 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
                                 <DescriptionListDescription
                                   data-testid={`review-storage-product-${index}`}
                                 >
-                                  {mapping[CreatePlanStorageMapFieldId.StorageProduct] ?? EMPTY_MSG}
+                                  {mapping[CreatePlanStorageMapFieldId.StorageProduct]
+                                    ? getVendorProductLabel(
+                                        mapping[CreatePlanStorageMapFieldId.StorageProduct] ?? '',
+                                      )
+                                    : EMPTY_MSG}
                                 </DescriptionListDescription>
                               </DescriptionListGroup>
                             </DescriptionList>

@@ -1,5 +1,6 @@
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 import { OffloadPlugin, StorageMapFieldId, type StorageMapping } from 'src/storageMaps/utils/types';
+import { validateOffloadFields } from 'src/storageMaps/utils/validateOffloadFields';
 
 import type { V1beta1StorageMap, V1beta1StorageMapSpecMap } from '@forklift-ui/types';
 import { isEmpty } from '@utils/helpers';
@@ -147,6 +148,13 @@ export const validateUpdatedStorageMaps = (values: StorageMapping[]) => {
   // No valid rows
   if (validCount === 0) {
     return t('At least one row must have both source and target storages');
+  }
+
+  for (const value of values) {
+    const offloadError = validateOffloadFields(value);
+    if (offloadError) {
+      return offloadError;
+    }
   }
 
   return undefined;

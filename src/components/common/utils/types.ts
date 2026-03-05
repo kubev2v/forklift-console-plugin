@@ -74,6 +74,8 @@ export type ResourceField = {
   defaultSortDirection?: SortDirection;
   // data-testid for the column header (for e2e testing)
   testId?: string;
+  // column width as a percentage (PatternFly Th width prop)
+  width?: 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 60 | 70 | 80 | 90 | 100;
 };
 
 export type GlobalActionToolbarProps<T> = {

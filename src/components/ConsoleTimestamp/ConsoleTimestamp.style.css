@@ -1,4 +1,5 @@
 .forklift-table__console-timestamp {
   text-decoration-line: none !important;
   color: var(--pf-v6-c-content--Color);
+  white-space: nowrap;
 }
