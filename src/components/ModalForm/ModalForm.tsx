@@ -29,6 +29,8 @@ type ModalFormProps = {
   isDisabled?: boolean;
   additionalAction?: ButtonProps;
   testId?: string;
+  description?: ReactNode;
+  headerHelp?: ReactNode;
 };
 
 const ModalForm: ModalComponent<ModalFormProps> = ({
@@ -39,6 +41,8 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
   closeModal,
   confirmLabel,
   confirmVariant,
+  description,
+  headerHelp,
   isDisabled,
   onConfirm,
   testId,
@@ -72,7 +76,7 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
       data-testid={testId}
       className={className}
     >
-      <ModalHeader title={title} />
+      <ModalHeader title={title} description={description} help={headerHelp} />
       <ModalBody>
         <Stack hasGutter>
           <StackItem>{children}</StackItem>
