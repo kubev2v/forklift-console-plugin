@@ -1,5 +1,25 @@
 .offload-storage {
+  &__header {
+    align-items: flex-start;
+  }
+
+  &__clear-button-container {
+    padding-top: var(--pf-t--global--spacer--sm);
+    white-space: nowrap;
+  }
+
+  &__clear-button {
+    text-decoration: none;
+    &:hover { 
+      text-decoration: none;
+    }
+  }
+
   &__form {
     padding: 0 24px 24px 24px;
   }
+}
+
+.fit-content {
+  width: fit-content;
 }
