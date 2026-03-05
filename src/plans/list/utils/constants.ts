@@ -1,3 +1,5 @@
+export const PLAN_FIELD_WIDTH_PERCENTAGE = 15;
+
 export enum PlanTableResourceId {
   Name = 'name',
   Namespace = 'namespace',

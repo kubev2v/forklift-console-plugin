@@ -9,7 +9,11 @@ import { FilterDefType, type ResourceField } from '@components/common/utils/type
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { t } from '@utils/i18n';
 
-import { planResourceApiJsonPaths, PlanTableResourceId } from './constants';
+import {
+  PLAN_FIELD_WIDTH_PERCENTAGE,
+  planResourceApiJsonPaths,
+  PlanTableResourceId,
+} from './constants';
 
 const planPhases: { id: PlanStatuses; label: string }[] = [
   { id: PlanStatuses.Archived, label: t('Archived') },
@@ -40,6 +44,7 @@ export const planFields: ResourceField[] = [
     label: t('Name'),
     resourceFieldId: PlanTableResourceId.Name,
     sortable: true,
+    width: PLAN_FIELD_WIDTH_PERCENTAGE,
   },
   {
     filter: {
@@ -52,6 +57,7 @@ export const planFields: ResourceField[] = [
     label: t('Project'),
     resourceFieldId: PlanTableResourceId.Namespace,
     sortable: true,
+    width: PLAN_FIELD_WIDTH_PERCENTAGE,
   },
   {
     filter: {
@@ -63,6 +69,7 @@ export const planFields: ResourceField[] = [
     label: t('Source provider'),
     resourceFieldId: PlanTableResourceId.Source,
     sortable: true,
+    width: PLAN_FIELD_WIDTH_PERCENTAGE,
   },
   {
     filter: {
@@ -74,6 +81,7 @@ export const planFields: ResourceField[] = [
     label: t('Target project'),
     resourceFieldId: PlanTableResourceId.Destination,
     sortable: true,
+    width: PLAN_FIELD_WIDTH_PERCENTAGE,
   },
   {
     isVisible: true,
