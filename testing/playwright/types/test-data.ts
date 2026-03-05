@@ -111,19 +111,24 @@ export interface HookConfig {
   ansiblePlaybook?: string;
 }
 
+export type GuestType = 'linux' | 'windows';
+export type ScriptType = 'firstboot' | 'run';
+
+export type ScriptConfig = {
+  content?: string;
+  guestType?: GuestType;
+  name: string;
+  scriptType?: ScriptType;
+};
+
 export type CustomizationScriptsTestData =
   | {
-      mode: 'existing';
       configMapName: string;
+      mode: 'existing';
     }
   | {
       mode: 'new';
-      scripts: {
-        name: string;
-        guestType?: 'linux' | 'windows';
-        scriptType?: 'firstboot' | 'run';
-        content?: string;
-      }[];
+      scripts: ScriptConfig[];
     };
 
 export interface PlanTestData {

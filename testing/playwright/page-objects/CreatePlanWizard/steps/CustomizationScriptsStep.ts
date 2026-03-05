@@ -1,24 +1,11 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-export type GuestType = 'linux' | 'windows';
-export type ScriptType = 'firstboot' | 'run';
-
-export type ScriptConfig = {
-  content?: string;
-  guestType?: GuestType;
-  name: string;
-  scriptType?: ScriptType;
-};
-
-export type CustomizationScriptsConfig =
-  | {
-      configMapName: string;
-      mode: 'existing';
-    }
-  | {
-      mode: 'new';
-      scripts: ScriptConfig[];
-    };
+import type {
+  CustomizationScriptsTestData,
+  GuestType,
+  ScriptConfig,
+  ScriptType,
+} from '../../../types/test-data';
 
 const GUEST_TYPE_LABELS: Record<GuestType, string> = {
   linux: 'Linux',
@@ -78,7 +65,7 @@ export class CustomizationScriptsStep {
     await this.page.getByRole('option', { name }).click();
   }
 
-  async fillAndComplete(config?: CustomizationScriptsConfig): Promise<void> {
+  async fillAndComplete(config?: CustomizationScriptsTestData): Promise<void> {
     await this.verifyStepVisible();
 
     if (!config) {

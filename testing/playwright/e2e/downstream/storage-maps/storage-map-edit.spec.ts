@@ -18,7 +18,7 @@ test.describe('Storage Map Details - Editing', { tag: '@downstream' }, () => {
     const storageMapDetailsPage = new StorageMapDetailsPage(page);
     await storageMapDetailsPage.navigate(testStorageMap.name);
 
-    await test.step('Add initial mapping', async () => {
+    await test.step('Configure existing mapping', async () => {
       const modal = await storageMapDetailsPage.openEditModal();
       await modal.verifyModalStructure();
 
