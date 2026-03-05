@@ -1,0 +1,10 @@
+{
+  "pluginName": "plugin__forklift-console-plugin",
+  "projectTitle": "[Forklift $VERSION] UI Localization - Sprint $SPRINT/Branch $BRANCH",
+  "templateId": "169304",
+  "languages": ["ja", "zh-cn", "ko", "fr", "es"],
+  "languageAliases": { "zh-cn": "zh" },
+  "pluralOverrides": {
+    "{{count}} virtual machine selected_other": "{{count}} virtual machines selected"
+  }
+}
