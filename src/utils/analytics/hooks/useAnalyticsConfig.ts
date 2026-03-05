@@ -4,8 +4,9 @@ import {
   getGroupVersionKindForModel,
   useK8sWatchResource,
 } from '@openshift-console/dynamic-plugin-sdk';
+import { ConfigMapModel } from '@utils/constants';
 
-import { ConfigMapModel, ConsoleConfigMap, TelemetryConfigField } from '../constants';
+import { ConsoleConfigMap, TelemetryConfigField } from '../constants';
 import type { AnalyticsConfig, ConsoleConfigMap as ConsoleConfigMapType } from '../types';
 
 /**
