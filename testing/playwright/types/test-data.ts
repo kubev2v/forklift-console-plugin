@@ -111,6 +111,21 @@ export interface HookConfig {
   ansiblePlaybook?: string;
 }
 
+export type CustomizationScriptsTestData =
+  | {
+      mode: 'existing';
+      configMapName: string;
+    }
+  | {
+      mode: 'new';
+      scripts: {
+        name: string;
+        guestType?: 'linux' | 'windows';
+        scriptType?: 'firstboot' | 'run';
+        content?: string;
+      }[];
+    };
+
 export interface PlanTestData {
   planName: string;
   planProject: string;
@@ -127,6 +142,7 @@ export interface PlanTestData {
     targetPowerState?: 'on' | 'off' | 'auto';
     useNbdeClevis?: boolean;
   };
+  customizationScripts?: CustomizationScriptsTestData;
   preMigrationHook?: HookConfig;
   postMigrationHook?: HookConfig;
 }
