@@ -17,9 +17,8 @@ import { useForkliftTranslation } from '@utils/i18n';
 import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
 
 import DescriptionDetailItem from './components/Description/DescriptionDetailItem';
-import LiveDetailsItem from './components/PlanLive/LiveDetailsItem';
+import MigrationTypeDetailsItem from './components/EditPlanMigrationType/MigrationTypeDetailsItem';
 import TargetNamespaceDetailsItem from './components/PlanTargetNamespace/TargetNamespaceDetailsItem';
-import WarmDetailsItem from './components/PlanWarm/WarmDetailsItem';
 import StatusDetailsItem from './StatusDetailsItem';
 
 type DetailsSectionProps = {
@@ -54,13 +53,13 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
         }}
       >
         <NameDetailsItem resource={plan} />
-        <WarmDetailsItem
+        <MigrationTypeDetailsItem
           plan={plan}
           isVddkInitImageNotSet={isVddkInitImageNotSet}
           canPatch={canPatch}
-          shouldRender={isOvirt || isVsphere}
+          shouldRender={isOvirt || isVsphere || isLiveMigrationEnabled}
+          sourceProvider={sourceProvider}
         />
-        <LiveDetailsItem plan={plan} canPatch={canPatch} shouldRender={isLiveMigrationEnabled} />
         <NamespaceDetailsItem title={t('Plan project')} resource={plan} />
         <TargetNamespaceDetailsItem plan={plan} canPatch={canPatch} />
         <DescriptionDetailItem plan={plan} canPatch={canPatch} />
