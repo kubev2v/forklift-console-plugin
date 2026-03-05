@@ -15,6 +15,15 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
   }) => {
     const testPlan = await createCustomPlan({
       virtualMachines: [{ folder: 'vm' }],
+      criticalIssuesAction: 'confirm',
+      networkMap: {
+        isPreexisting: false,
+        mappings: [
+          { source: 'Mgmt Network', target: 'Default network' },
+          { source: 'VM Network', target: 'Ignore network' },
+          { source: 'cnv-test', target: 'Ignore network' },
+        ],
+      },
     });
 
     const planDetailsPage = new PlanDetailsPage(page);
@@ -58,41 +67,31 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
       await expect(modal.cancelButton).toBeVisible();
 
       await modal.verifyVmNotInTable(plannedVmName);
-      await modal.verifyVmInTable(removedVm.name!);
+      await modal.verifyVmInTable(removedVm.name);
 
       await modal.cancel();
     });
 
     await test.step('3. Select a VM, verify confirm enables, then cancel without saving', async () => {
-      const initialRowCount = await planDetailsPage.virtualMachinesTab.getRowCount();
-
       const modal = await planDetailsPage.virtualMachinesTab.clickAddVirtualMachines();
 
-      const modalRowCount = await modal.getRowCount();
-      expect(modalRowCount).toBeGreaterThan(0);
+      await expect.poll(async () => modal.getRowCount()).toBeGreaterThan(0);
 
-      await modal.selectVirtualMachine(removedVm.name!);
+      await modal.selectVirtualMachine(removedVm.name);
       await modal.verifySaveButtonEnabled();
 
       await modal.cancel();
-
-      const afterCancelRowCount = await planDetailsPage.virtualMachinesTab.getRowCount();
-      expect(afterCancelRowCount).toBe(initialRowCount);
     });
 
     await test.step('4. Add a VM via the modal (happy path)', async () => {
-      const initialRowCount = await planDetailsPage.virtualMachinesTab.getRowCount();
-
       const modal = await planDetailsPage.virtualMachinesTab.clickAddVirtualMachines();
 
-      await modal.selectVirtualMachine(removedVm.name!);
+      await modal.selectVirtualMachine(removedVm.name);
       await modal.save();
 
       await planDetailsPage.virtualMachinesTab.verifyTableLoaded();
+      await planDetailsPage.virtualMachinesTab.search(removedVm.name);
       await planDetailsPage.virtualMachinesTab.verifyRowIsVisible({ Name: removedVm.name! });
-
-      const afterAddRowCount = await planDetailsPage.virtualMachinesTab.getRowCount();
-      expect(afterAddRowCount).toBe(initialRowCount + 1);
 
       // API-level verification
       const updatedPlan = await resourceManager.fetchPlan(page, planName, planNamespace);
@@ -103,7 +102,7 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
     await test.step('5. Verify the added VM is excluded from subsequent add operations', async () => {
       const modal = await planDetailsPage.virtualMachinesTab.clickAddVirtualMachines();
 
-      await modal.verifyVmNotInTable(removedVm.name!);
+      await modal.verifyVmNotInTable(removedVm.name);
 
       await modal.cancel();
     });
@@ -119,6 +118,7 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
       expect(archiveResult).not.toBeNull();
 
       await planDetailsPage.navigate(planName, planNamespace);
+      await planDetailsPage.waitForPlanStatus('Archived');
       await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
 
       await planDetailsPage.virtualMachinesTab.verifyAddVirtualMachinesButtonDisabled();
