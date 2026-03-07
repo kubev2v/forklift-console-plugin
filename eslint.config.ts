@@ -35,6 +35,7 @@ export const createEslintConfig = () =>
         '**/generated/**',
         'eslint.config.ts',
         'prettier.config.mjs',
+        'i18n-scripts/**',
       ],
     },
     eslint.configs.all,
