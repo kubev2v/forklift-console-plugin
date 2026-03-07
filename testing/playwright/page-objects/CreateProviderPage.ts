@@ -7,15 +7,18 @@ import type { ResourceManager } from '../utils/resource-manager/ResourceManager'
 import { V2_11_0 } from '../utils/version/constants';
 import { isVersionAtLeast } from '../utils/version/version';
 
+import { VerifyCertificateModal } from './CreateProviderPage/VerifyCertificateModal';
 import { ProviderDetailsPage } from './ProviderDetailsPage/ProviderDetailsPage';
 
 export class CreateProviderPage {
   private readonly resourceManager?: ResourceManager;
   // Certificate validation locators
+  readonly caCertificateErrorText;
   readonly certificateConfigureRadio;
   readonly certificateSkipRadio;
-
   readonly certificateUploadInput;
+  readonly createButton;
+  readonly fetchCertificateButton;
   public readonly navigationHelper: NavigationHelper;
   protected readonly page: Page;
   // VDDK Setup locators
@@ -26,6 +29,7 @@ export class CreateProviderPage {
   readonly vddkSkipRadio;
   readonly vddkSkipWarning;
   readonly vddkUploadRadio;
+  readonly verifyCertificateModal: VerifyCertificateModal;
 
   constructor(page: Page, resourceManager?: ResourceManager) {
     this.page = page;
@@ -36,6 +40,14 @@ export class CreateProviderPage {
     this.certificateConfigureRadio = page.getByTestId('certificate-validation-configure');
     this.certificateSkipRadio = page.getByTestId('certificate-validation-skip');
     this.certificateUploadInput = page.locator('#caCertificate');
+    this.fetchCertificateButton = page.getByRole('button', {
+      name: 'Fetch certificate from URL',
+    });
+    this.caCertificateErrorText = page.getByTestId('ca-certificate-helper-error');
+    this.verifyCertificateModal = new VerifyCertificateModal(page);
+
+    // Create button
+    this.createButton = page.getByTestId('provider-create-button');
 
     // VDDK Setup locators
     this.vddkAioCheckbox = page.getByTestId('vddk-aio-optimization-checkbox');
@@ -172,7 +184,27 @@ export class CreateProviderPage {
     return providerDetailsPage;
   }
 
+  async enterCaCertificate(certificate: string): Promise<void> {
+    await this.certificateUploadInput.fill(certificate);
+  }
+
+  async fetchAndAcceptCertificate(): Promise<void> {
+    await this.fetchCertificateButton.click();
+    await this.verifyCertificateModal.waitForModalToOpen();
+    await this.verifyCertificateModal.trustAndSave();
+  }
+
   async fillAndSubmit(testData: ProviderData) {
+    await this.fillProviderFields(testData);
+
+    if (testData.type !== ProviderType.OVA) {
+      await this.skipCertificateValidation();
+    }
+
+    await this.submitForm(testData);
+  }
+
+  async fillProviderFields(testData: ProviderData): Promise<void> {
     await this.selectProject(testData.projectName);
     await this.selectProviderType(testData.type);
     await this.fillProviderName(testData.name);
@@ -191,16 +223,14 @@ export class CreateProviderPage {
       default:
         break;
     }
-
-    if (testData.type !== ProviderType.OVA) {
-      await this.skipCertificateValidation();
-    }
-
-    await this.submitForm(testData);
   }
 
   async fillProviderName(name: string) {
     await this.page.getByTestId('provider-name-input').fill(name);
+  }
+
+  async getCaCertificateValue(): Promise<string> {
+    return (await this.certificateUploadInput.inputValue()) ?? '';
   }
 
   async navigate(namespace?: string): Promise<void> {
@@ -251,6 +281,13 @@ export class CreateProviderPage {
     const typeToggle = this.page.getByTestId('provider-type-toggle');
     await typeToggle.click();
     await this.page.getByTestId(`provider-type-option-${providerType}`).click();
+  }
+
+  async submitCreateForm(providerName?: string, projectName?: string): Promise<void> {
+    await this.createButton.click();
+    if (this.resourceManager && providerName) {
+      this.resourceManager.addProvider(providerName, projectName ?? '');
+    }
   }
 
   async waitForWizardLoad() {
