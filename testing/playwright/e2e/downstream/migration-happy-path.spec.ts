@@ -15,11 +15,12 @@ import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/Create
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { PlansListPage } from '../../page-objects/PlansListPage';
+import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { createPlanTestData, type ProviderConfig, type ProviderData } from '../../types/test-data';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
-import { V2_10_5 } from '../../utils/version/constants';
-import { requireVersion } from '../../utils/version/version';
+import { V2_10_5, V2_12_0 } from '../../utils/version/constants';
+import { isVersionInStreams, requireVersion } from '../../utils/version/version';
 
 const targetProjectName = `test-project-${Date.now()}`;
 
@@ -94,13 +95,19 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
     },
     async ({ page }) => {
       test.setTimeout(60000);
-      const plansPage = new PlansListPage(page);
+      const providerDetailsPage = new ProviderDetailsPage(page);
       const createWizard = new CreatePlanWizardPage(page, resourceManager);
       const planDetailsPage = new PlanDetailsPage(page);
 
-      await plansPage.navigateFromMainMenu();
-      await plansPage.clickCreatePlanButton();
+      await providerDetailsPage.navigate(providerName, MTV_NAMESPACE);
+      await providerDetailsPage.waitForReadyStatus();
+      await providerDetailsPage.clickCreatePlanButton();
       await createWizard.waitForWizardLoad();
+
+      if (isVersionInStreams([V2_10_5, V2_12_0])) {
+        await createWizard.generalInformation.verifySourceProviderPrePopulated(providerName);
+      }
+
       await createWizard.fillAndSubmit(testPlanData);
 
       await planDetailsPage.verifyBasicPlanDetailsPage(testPlanData);
