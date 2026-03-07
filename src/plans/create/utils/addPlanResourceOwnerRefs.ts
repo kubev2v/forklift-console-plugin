@@ -9,7 +9,7 @@ import {
   type V1beta1NetworkMap,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
-import { ConfigMapModel } from '@utils/analytics/constants';
+import { ConfigMapModel } from '@utils/constants';
 import type { ObjectRef } from '@utils/helpers/getObjectRef';
 
 import { addOwnerRefs } from './addOwnerRefs';

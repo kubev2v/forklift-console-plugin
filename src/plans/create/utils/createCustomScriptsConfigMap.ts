@@ -1,6 +1,6 @@
 import type { IoK8sApiCoreV1ConfigMap } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
-import { ConfigMapModel } from '@utils/analytics/constants';
+import { ConfigMapModel } from '@utils/constants';
 
 import type { CustomScript } from '../steps/customization-scripts/types';
 import { scriptsToConfigMapData } from '../steps/customization-scripts/utils';

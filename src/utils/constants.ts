@@ -91,3 +91,13 @@ export const CREATE_VDDK_HELP_LINK =
 export const STORAGE_NAMES = {
   GLANCE: 'glance',
 };
+
+export const ConfigMapModel = {
+  abbr: 'CM',
+  apiVersion: 'v1',
+  kind: 'ConfigMap',
+  label: 'ConfigMap',
+  labelPlural: 'ConfigMaps',
+  namespaced: true,
+  plural: 'configmaps',
+};
