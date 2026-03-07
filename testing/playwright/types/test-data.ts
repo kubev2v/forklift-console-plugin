@@ -111,6 +111,26 @@ export interface HookConfig {
   ansiblePlaybook?: string;
 }
 
+export type GuestType = 'linux' | 'windows';
+export type ScriptType = 'firstboot' | 'run';
+
+export type ScriptConfig = {
+  content?: string;
+  guestType?: GuestType;
+  name: string;
+  scriptType?: ScriptType;
+};
+
+export type CustomizationScriptsTestData =
+  | {
+      configMapName: string;
+      mode: 'existing';
+    }
+  | {
+      mode: 'new';
+      scripts: ScriptConfig[];
+    };
+
 export interface PlanTestData {
   planName: string;
   planProject: string;
@@ -127,6 +147,7 @@ export interface PlanTestData {
     targetPowerState?: 'on' | 'off' | 'auto';
     useNbdeClevis?: boolean;
   };
+  customizationScripts?: CustomizationScriptsTestData;
   preMigrationHook?: HookConfig;
   postMigrationHook?: HookConfig;
 }

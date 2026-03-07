@@ -6,6 +6,7 @@ import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
 import { AdditionalSettingsStep } from './steps/AdditionalSettingsSteps';
+import { CustomizationScriptsStep } from './steps/CustomizationScriptsStep';
 import { GeneralInformationStep } from './steps/GeneralInformationStep';
 import { HooksStep } from './steps/HooksStep';
 import { MigrationTypeStep } from './steps/MigrationTypeStep';
@@ -17,6 +18,7 @@ import { VirtualMachinesStep } from './steps/VirtualMachinesStep';
 export class CreatePlanWizardPage {
   private readonly resourceManager?: ResourceManager;
   public readonly additionalSettings: AdditionalSettingsStep;
+  public readonly customizationScripts: CustomizationScriptsStep;
   public readonly generalInformation: GeneralInformationStep;
   public readonly hooks: HooksStep;
   public readonly migrationType: MigrationTypeStep;
@@ -36,6 +38,7 @@ export class CreatePlanWizardPage {
     this.networkMap = new NetworkMapStep(page);
     this.storageMap = new StorageMapStep(page);
     this.migrationType = new MigrationTypeStep(page);
+    this.customizationScripts = new CustomizationScriptsStep(page);
     this.hooks = new HooksStep(page);
     this.review = new ReviewStep(page);
     this.additionalSettings = new AdditionalSettingsStep(page);
@@ -107,15 +110,22 @@ export class CreatePlanWizardPage {
     // STEP 6: Other settings
     if (testData.additionalPlanSettings) {
       await this.additionalSettings.fillAndComplete(testData.additionalPlanSettings);
-      await this.clickNext();
-    } else {
-      await this.clickSkipToReview();
     }
+    await this.clickNext();
 
-    // STEP 7: Review
+    // STEP 7: Customization scripts
+    if (testData.customizationScripts) {
+      await this.customizationScripts.fillAndComplete(testData.customizationScripts);
+    }
+    await this.clickNext();
+
+    // STEP 8: Hooks (skip)
+    await this.clickNext();
+
+    // STEP 9: Review
     await this.review.verifyReviewStep(testData);
 
-    // STEP 8: Create the plan
+    // STEP 10: Create the plan
     await this.clickNext();
     await this.waitForPlanCreation();
 
@@ -138,9 +148,15 @@ export class CreatePlanWizardPage {
     await this.additionalSettings.verifyStepVisible();
   }
 
-  async navigateToHooksStep(testData: PlanTestData): Promise<void> {
+  async navigateToCustomizationScriptsStep(testData: PlanTestData): Promise<void> {
     await this.navigateToAdditionalSettings(testData);
-    await this.clickNext(); // Skip Other Settings Step -> goes to Hooks
+    await this.clickNext(); // Other Settings -> Customization Scripts
+    await this.customizationScripts.verifyStepVisible();
+  }
+
+  async navigateToHooksStep(testData: PlanTestData): Promise<void> {
+    await this.navigateToCustomizationScriptsStep(testData);
+    await this.clickNext(); // Customization Scripts -> Hooks
   }
 
   async navigateToMigrationTypeStep(testData: PlanTestData): Promise<void> {
