@@ -19,6 +19,21 @@ function oc_available_loggedin () {
     fi
 }
 
+function setup_monitoring_endpoints () {
+    BRIDGE_K8S_MODE_OFF_CLUSTER_THANOS=$(oc -n openshift-config-managed get configmap monitoring-shared-config -o jsonpath='{.data.thanosPublicURL}' 2>/dev/null || echo "")
+    BRIDGE_K8S_MODE_OFF_CLUSTER_ALERTMANAGER=$(oc -n openshift-config-managed get configmap monitoring-shared-config -o jsonpath='{.data.alertmanagerPublicURL}' 2>/dev/null || echo "")
+
+    if [[ -n "$BRIDGE_K8S_MODE_OFF_CLUSTER_THANOS" ]]; then
+        echo "Thanos endpoint: $BRIDGE_K8S_MODE_OFF_CLUSTER_THANOS"
+    else
+        echo "Warning: Could not discover Thanos endpoint - Prometheus metrics will not be available"
+    fi
+
+    if [[ -n "$BRIDGE_K8S_MODE_OFF_CLUSTER_ALERTMANAGER" ]]; then
+        echo "Alertmanager endpoint: $BRIDGE_K8S_MODE_OFF_CLUSTER_ALERTMANAGER"
+    fi
+}
+
 function setup_bridge_for_bearer_token () {
     BRIDGE_BASE_ADDRESS="http://localhost:${CONSOLE_PORT:-9000}"
     BRIDGE_K8S_MODE="off-cluster"
@@ -40,6 +55,8 @@ function setup_bridge_for_bearer_token () {
         # If we have oc tool and an Openshift token, assume we are connected to openshift
         BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT=${BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT:=$(oc whoami --show-server)}
         BRIDGE_K8S_AUTH_BEARER_TOKEN=$(oc whoami --show-token 2>/dev/null)
+
+        setup_monitoring_endpoints
     else
         echo "Setup for K8s environment"
 
@@ -62,6 +79,8 @@ function setup_bridge_for_openshift_oauth () {
         setup_oauth_client "$(pwd)/tmp"
 
         BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT=${BRIDGE_K8S_MODE_OFF_CLUSTER_ENDPOINT:=$(oc whoami --show-server)}
+
+        setup_monitoring_endpoints
     else
         echo "Please login to a cluster with 'oc' first"
         exit 1

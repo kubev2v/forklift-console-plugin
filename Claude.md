@@ -573,8 +573,10 @@ npm test                  # Unit tests
 npm run test:e2e          # E2E tests
 
 # Start local OpenShift console
-npm run console           # Start console (background)
-npm run console:stop      # Stop console
+npm run console                                    # Start console (forklift only)
+npm run console -- --plugins monitoring-plugin      # With monitoring plugin
+npm run console -- --plugins all                    # With all plugins
+npm run console:stop                                # Stop console
 
 # Local cluster management
 npm run cluster:up        # Setup KinD cluster with Forklift
