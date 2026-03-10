@@ -19,7 +19,7 @@ const CustomScriptsStep: FC = () => {
 
   return (
     <WizardStepContainer
-      title={planStepNames[PlanWizardStepId.CustomizationScripts]}
+      title={planStepNames[PlanWizardStepId.Automation]}
       description={
         <Flex spaceItems={{ default: 'spaceItemsSm' }} alignItems={{ default: 'alignItemsCenter' }}>
           <FlexItem>

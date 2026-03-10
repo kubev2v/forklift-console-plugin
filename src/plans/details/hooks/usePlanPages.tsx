@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import type { NavPage } from '@openshift-console/dynamic-plugin-sdk';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import PlanAutomationPage from '../tabs/Automation/PlanAutomationPage';
 import PlanDetailsPage from '../tabs/Details/PlanDetailsPage';
 import PlanHooksPage from '../tabs/Hooks/PlanHooksPage';
 import PlanMappingsPage from '../tabs/Mappings/PlanMappingsPage';
@@ -38,6 +39,11 @@ const usePlanPages = (name: string, namespace: string) => {
         component: () => <PlanMappingsPage name={name} namespace={namespace} />,
         href: 'mappings',
         name: t('Mappings'),
+      },
+      {
+        component: () => <PlanAutomationPage name={name} namespace={namespace} />,
+        href: 'automation',
+        name: t('Automation'),
       },
       {
         component: () => <PlanHooksPage name={name} namespace={namespace} />,
