@@ -111,16 +111,27 @@ export class CreatePlanWizardPage {
     if (testData.additionalPlanSettings) {
       await this.additionalSettings.fillAndComplete(testData.additionalPlanSettings);
     }
-    await this.clickNext();
 
-    // STEP 7: Customization scripts
-    if (testData.customizationScripts) {
-      await this.customizationScripts.fillAndComplete(testData.customizationScripts);
+    const hasRemainingStepData =
+      testData.customizationScripts ?? testData.preMigrationHook ?? testData.postMigrationHook;
+
+    if (hasRemainingStepData) {
+      await this.clickNext();
+
+      // STEP 7: Customization scripts
+      if (testData.customizationScripts) {
+        await this.customizationScripts.fillAndComplete(testData.customizationScripts);
+      }
+      await this.clickNext();
+
+      // STEP 8: Hooks
+      if (testData.preMigrationHook || testData.postMigrationHook) {
+        await this.hooks.fillAndComplete(testData.preMigrationHook, testData.postMigrationHook);
+      }
+      await this.clickNext();
+    } else {
+      await this.clickSkipToReview();
     }
-    await this.clickNext();
-
-    // STEP 8: Hooks (skip)
-    await this.clickNext();
 
     // STEP 9: Review
     await this.review.verifyReviewStep(testData);

@@ -78,14 +78,14 @@ export abstract class BaseResourceManager {
           });
 
           if (response.ok) {
-            return { success: true, data: await response.json() };
+            return { data: await response.json(), status: response.status, success: true };
           }
 
           const errorText = await response.text().catch(() => response.statusText);
-          return { success: false, error: errorText };
+          return { error: errorText, status: response.status, success: false };
         } catch (error: unknown) {
           const err = error as Error;
-          return { success: false, error: err?.message ?? String(error) };
+          return { error: err?.message ?? String(error), status: 0, success: false };
         }
       },
       { payload: data, path: apiPath, evalConstants: constants },
@@ -95,7 +95,14 @@ export abstract class BaseResourceManager {
       return result.data;
     }
 
-    console.error(`API POST to ${apiPath} failed: ${result.error}`);
+    const HTTP_CONFLICT = 409;
+
+    if (result.status === HTTP_CONFLICT) {
+      console.warn(`API POST to ${apiPath}: resource already exists (409)`);
+    } else {
+      console.error(`API POST to ${apiPath} failed: ${result.error}`);
+    }
+
     return null;
   }
 
@@ -110,6 +117,7 @@ export abstract class BaseResourceManager {
       KUBERNETES_CORE: API_PATHS.KUBERNETES_CORE,
       OPENSHIFT_PROJECT_PATH: API_PATHS.OPENSHIFT_PROJECT,
       NAD_PATH: API_PATHS.NAD,
+      SECRETS_TYPE: RESOURCE_TYPES.SECRETS,
       VIRTUAL_MACHINES_TYPE: RESOURCE_TYPES.VIRTUAL_MACHINES,
       PROJECTS_TYPE: RESOURCE_TYPES.PROJECTS,
       NAMESPACES_TYPE: RESOURCE_TYPES.NAMESPACES,
@@ -124,6 +132,7 @@ export abstract class BaseResourceManager {
       [RESOURCE_KINDS.NETWORK_ATTACHMENT_DEFINITION]: RESOURCE_TYPES.NETWORK_ATTACHMENT_DEFINITIONS,
       [RESOURCE_KINDS.PLAN]: RESOURCE_TYPES.PLANS,
       [RESOURCE_KINDS.PROVIDER]: RESOURCE_TYPES.PROVIDERS,
+      [RESOURCE_KINDS.SECRET]: RESOURCE_TYPES.SECRETS,
       [RESOURCE_KINDS.STORAGE_MAP]: RESOURCE_TYPES.STORAGE_MAPS,
       [RESOURCE_KINDS.VIRTUAL_MACHINE]: RESOURCE_TYPES.VIRTUAL_MACHINES,
       [RESOURCE_KINDS.PROJECT]: RESOURCE_TYPES.PROJECTS,
