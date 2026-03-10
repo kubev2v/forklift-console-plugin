@@ -1,0 +1,152 @@
+---
+description: TypeScript conventions and type safety rules
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# TypeScript Guidelines (Supplement)
+
+For core TypeScript conventions (type vs interface, no `any`, explicit return types, naming), see **CLAUDE.md**. This rule adds advanced patterns.
+
+---
+
+## 1. Type Narrowing
+
+### Type Guard Functions
+```typescript
+const isProvider = (obj: unknown): obj is V1beta1Provider => {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    'kind' in obj &&
+    obj.kind === 'Provider'
+  );
+};
+```
+
+### Discriminated Unions
+```typescript
+type FetchState<T> =
+  | { status: 'loading' }
+  | { status: 'error'; error: Error }
+  | { status: 'success'; data: T };
+```
+
+---
+
+## 2. Null & Undefined Handling
+
+### Optional Chaining for Deep Access
+```typescript
+const providerName = provider?.metadata?.name;
+const planStatus = plan?.status?.conditions?.[0]?.type;
+const vmCount = plan?.spec?.vms?.length ?? 0;
+```
+
+### Nullish Coalescing for Defaults
+```typescript
+const namespace = provider?.metadata?.namespace ?? 'default';
+const conditions = migration?.status?.conditions ?? [];
+```
+
+---
+
+## 3. Generics
+
+### Constrained Generics
+```typescript
+const getResourceName = <T extends { metadata?: { name?: string } }>(
+  resource: T,
+): string => {
+  return resource.metadata?.name ?? 'Unknown';
+};
+```
+
+### Generic Hooks
+```typescript
+const useForkliftResource = <T>(config: WatchConfig): [T | undefined, boolean, Error | undefined] => {
+  // implementation
+};
+```
+
+---
+
+## 4. Utility Types
+
+### Built-in
+```typescript
+type PartialProvider = Partial<V1beta1Provider>;
+type ProviderIdentifier = Pick<V1beta1Provider, 'metadata'>;
+type PlanWithoutStatus = Omit<V1beta1Plan, 'status'>;
+type LabelMap = Record<string, string>;
+```
+
+### Custom
+```typescript
+type Nullable<T> = T | null;
+type Maybe<T> = T | null | undefined;
+
+type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+};
+```
+
+---
+
+## 5. Error Handling Types
+
+```typescript
+type APIError = {
+  code: number;
+  message: string;
+  details?: string;
+};
+
+type Result<T, E = APIError> =
+  | { success: true; data: T }
+  | { success: false; error: E };
+```
+
+---
+
+## 6. Forklift API Types
+
+### Import Patterns
+```typescript
+import type { V1beta1Provider, V1beta1Plan, V1beta1Migration } from '@forklift-ui/types';
+import { ProviderModelGroupVersionKind, PlanModelGroupVersionKind } from '@forklift-ui/types';
+```
+
+### Common Types
+- `V1beta1Provider` - Provider resource
+- `V1beta1Plan` - Migration plan
+- `V1beta1Migration` - Active migration
+- `V1beta1NetworkMap` - Network mapping
+- `V1beta1StorageMap` - Storage mapping
+- `V1beta1Hook` - Migration hook
+
+### Status Access
+```typescript
+const phase = provider?.status?.phase;
+const conditions = plan?.status?.conditions ?? [];
+const vmStatuses = migration?.status?.migration?.vms ?? [];
+```
+
+---
+
+## 7. Best Practices Summary
+
+### Do
+- Define explicit return types
+- Use `type` over `interface`
+- Use `unknown` instead of `any`
+- Use optional chaining and nullish coalescing
+- Import from `@forklift-ui/types`
+- Create type guards for runtime checks
+
+### Don't
+- Never use `any` type
+- Do not use type assertions without validation
+- Do not ignore TypeScript errors with `@ts-ignore`
+- Do not create duplicate type definitions
+- Do not use non-null assertion (`!`) without justification

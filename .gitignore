@@ -29,5 +29,6 @@ forkliftci
 # Local dev fixtures (test data, debug helpers)
 .dev/
 
-# Cursor IDE - only ignore sensitive MCP config (prompts are shared)
+# Cursor IDE – ignore sensitive MCP config (credentials); shared prompts stay in repo
 .cursor/mcp.json
+.cursor/rules/personal-*.mdc
