@@ -92,3 +92,27 @@
   width: 200px;
   text-align: start;
 }
+
+.forklift-overview__throughput-card {
+  height: 358px;
+
+  .pf-v6-c-card__body {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.forklift-overview__throughput-chart {
+  overflow: hidden;
+  height: 100%;
+
+  --pf-v5-chart-global--label--Fill: var(--pf-t--global--text--color--regular);
+}
+
+.forklift-overview__throughput-plan-select {
+  width: 140px;
+}
+
+.forklift-overview__throughput-plan-search {
+  padding: var(--pf-t--global--spacer--sm);
+}
