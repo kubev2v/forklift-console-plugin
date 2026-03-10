@@ -7,7 +7,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, PlanModelRef, type V1beta1Provider } from '@forklift-ui/types';
 import { Button, ButtonVariant, ToolbarItem } from '@patternfly/react-core';
-import { getNamespace } from '@utils/crds/common/selectors';
+import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 
 type CreatePlanActionProps = {
@@ -28,7 +28,7 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
   const handleCreatePlan = (): void => {
     trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_FROM_PROVIDER_CLICKED, {
       planNamespace: namespace,
-      providerId: provider?.metadata?.name,
+      providerId: getName(provider),
       providerNamespace: getNamespace(provider),
       providerType: provider?.spec?.type,
     });
@@ -39,9 +39,10 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
     });
 
     const searchParams = new URLSearchParams();
+    const providerName = getName(provider);
 
-    if (provider?.metadata?.name) {
-      searchParams.set('sourceProvider', provider.metadata.name);
+    if (providerName) {
+      searchParams.set('sourceProvider', providerName);
     }
 
     const providerNamespace = getNamespace(provider);

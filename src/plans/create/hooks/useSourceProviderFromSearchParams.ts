@@ -1,10 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { UseFormSetValue } from 'react-hook-form';
 
-import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { getName } from '@utils/crds/common/selectors';
-import { isEmpty } from '@utils/helpers';
+import { useProvider } from '@utils/hooks/useProvider';
 
 import { GeneralFormFieldId } from '../steps/general-information/constants';
 import type { CreatePlanFormData } from '../types';
@@ -17,26 +14,15 @@ export const useSourceProviderFromSearchParams = (
   sourceProviderName: string | undefined,
   planProject: string | undefined,
 ): void => {
-  const shouldWatch = Boolean(sourceProviderName && planProject);
-
-  const [providers, loaded] = useK8sWatchResource<V1beta1Provider[]>(
-    shouldWatch
-      ? { groupVersionKind: ProviderModelGroupVersionKind, isList: true, namespace: planProject }
-      : null,
-  );
+  const { loaded, provider } = useProvider(sourceProviderName, planProject);
 
   const hasSetProvider = useRef(false);
 
   useEffect(() => {
-    if (!sourceProviderName || hasSetProvider.current || !loaded) return;
+    if (!sourceProviderName || hasSetProvider.current || !loaded || !provider?.metadata?.name)
+      return;
 
-    const matched = isEmpty(providers)
-      ? undefined
-      : providers.find((provider) => getName(provider) === sourceProviderName);
-
-    if (matched) {
-      setValue(GeneralFormFieldId.SourceProvider, matched);
-      hasSetProvider.current = true;
-    }
-  }, [sourceProviderName, loaded, providers, setValue]);
+    setValue(GeneralFormFieldId.SourceProvider, provider);
+    hasSetProvider.current = true;
+  }, [sourceProviderName, loaded, provider, setValue]);
 };
