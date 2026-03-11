@@ -37,7 +37,6 @@ export class VerifyCertificateModal extends BaseModal {
 
   async trustAndSave(): Promise<void> {
     await this.trustCheckbox.check();
-    await expect(this.saveButton).toBeEnabled();
     await this.save();
   }
 

@@ -46,8 +46,10 @@ export class CreateProviderPage {
     this.caCertificateErrorText = page.getByTestId('ca-certificate-helper-error');
     this.verifyCertificateModal = new VerifyCertificateModal(page);
 
-    // Create button
-    this.createButton = page.getByTestId('provider-create-button');
+    const createButtonTestId = isVersionAtLeast(V2_11_0)
+      ? 'provider-create-button'
+      : 'create-provider-button';
+    this.createButton = page.getByTestId(createButtonTestId);
 
     // VDDK Setup locators
     this.vddkAioCheckbox = page.getByTestId('vddk-aio-optimization-checkbox');
@@ -159,10 +161,7 @@ export class CreateProviderPage {
   }
 
   private async submitForm(testData: ProviderData) {
-    const createButtonTestId = isVersionAtLeast(V2_11_0)
-      ? 'provider-create-button'
-      : 'create-provider-button';
-    await this.page.getByTestId(createButtonTestId).click();
+    await this.createButton.click();
 
     if (this.resourceManager && testData.name) {
       this.resourceManager.addProvider(testData.name, testData.projectName);
