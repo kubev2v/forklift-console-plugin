@@ -183,6 +183,9 @@ export interface ProviderConfig {
   username: string;
   password: string;
   vddk_init_image?: string;
+  region_name?: string;
+  project_name?: string;
+  user_domain_name?: string;
 }
 export interface ProviderData {
   name: string;
@@ -197,4 +200,7 @@ export interface ProviderData {
   skipVddk?: boolean;
   useVddkAioOptimization?: boolean;
   applianceManagement?: boolean;
+  regionName?: string;
+  openstackProjectName?: string;
+  domainName?: string;
 }
