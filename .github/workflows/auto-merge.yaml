@@ -1,0 +1,266 @@
+name: Auto Merge
+
+on:
+  # Re-evaluate when GitHub Actions checks complete on a PR
+  check_suite:
+    types: [completed]
+
+  # Re-evaluate when the approved label is added
+  pull_request:
+    types: [labeled]
+
+  # Re-evaluate when GitHub Actions workflow runs complete (covers re-runs)
+  workflow_run:
+    workflows: ["Test", "Validate Commit Messages"]
+    types: [completed]
+
+  # Re-evaluate when external CI (Konflux / Pipelines as Code) reports commit statuses
+  status: {}
+
+concurrency:
+  group: auto-merge
+  cancel-in-progress: false
+
+jobs:
+  auto-merge:
+    name: Auto merge
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
+      actions: write
+
+    steps:
+      - name: Collect approved PRs with passing checks
+        id: collect
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const APPROVED_LABEL = 'approved';
+            const MAX_RETRIES = 3;
+            const RETRY_LABEL_PREFIX = 'auto-merge/retry-';
+
+            // Determine which PRs to evaluate based on trigger
+            let pullNumbers = [];
+
+            if (context.eventName === 'pull_request') {
+              pullNumbers = [context.payload.pull_request.number];
+            } else if (context.eventName === 'check_suite') {
+              const prs = context.payload.check_suite.pull_requests || [];
+              pullNumbers = prs.map(pr => pr.number);
+            } else if (context.eventName === 'workflow_run') {
+              const prs = context.payload.workflow_run.pull_requests || [];
+              pullNumbers = prs.map(pr => pr.number);
+            } else if (context.eventName === 'status') {
+              // Konflux / Pipelines as Code reports results via commit statuses.
+              // Resolve associated PRs from the commit SHA.
+              const sha = context.payload.sha;
+              if (sha) {
+                const { data: associatedPRs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                  owner, repo, commit_sha: sha
+                });
+                pullNumbers = associatedPRs
+                  .filter(pr => pr.state === 'open')
+                  .map(pr => pr.number);
+              }
+            }
+
+            if (!pullNumbers.length) {
+              core.info('No PRs associated with this event.');
+              return;
+            }
+
+            for (const prNumber of pullNumbers) {
+              core.info(`\n--- Evaluating PR #${prNumber} ---`);
+
+              const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: prNumber });
+
+              if (pr.state !== 'open' || pr.draft || pr.merged) {
+                core.info(`PR #${prNumber} is not eligible (state=${pr.state}, draft=${pr.draft}, merged=${pr.merged})`);
+                continue;
+              }
+
+              const labels = pr.labels.map(l => l.name);
+              if (!labels.includes(APPROVED_LABEL)) {
+                core.info(`PR #${prNumber} missing '${APPROVED_LABEL}' label`);
+                continue;
+              }
+
+              if (labels.includes('do-not-merge/hold')) {
+                core.info(`PR #${prNumber} is on hold — skipping.`);
+                continue;
+              }
+
+              // Check required statuses
+              const { data: combinedStatus } = await github.rest.repos.getCombinedStatusForRef({
+                owner, repo, ref: pr.head.sha
+              });
+
+              const { data: checkRuns } = await github.rest.checks.listForRef({
+                owner, repo, ref: pr.head.sha, per_page: 100
+              });
+
+              const allCheckRuns = checkRuns.check_runs.filter(
+                cr => cr.name !== 'Auto merge'
+              );
+
+              const pendingChecks = allCheckRuns.filter(cr => cr.status !== 'completed');
+              const pendingStatuses = (combinedStatus.statuses || []).filter(
+                s => s.state === 'pending'
+              );
+
+              if (pendingChecks.length > 0 || pendingStatuses.length > 0) {
+                const pendingNames = [
+                  ...pendingChecks.map(c => c.name),
+                  ...pendingStatuses.map(s => s.context)
+                ];
+                core.info(`PR #${prNumber} has ${pendingNames.length} pending check(s): ${pendingNames.join(', ')}`);
+                continue;
+              }
+
+              const failedChecks = allCheckRuns.filter(
+                cr => cr.conclusion !== 'success' && cr.conclusion !== 'skipped' && cr.conclusion !== 'neutral'
+              );
+
+              const failedStatuses = (combinedStatus.statuses || []).filter(
+                s => s.state === 'failure' || s.state === 'error'
+              );
+
+              const hasFailures = failedChecks.length > 0 || failedStatuses.length > 0;
+
+              if (!hasFailures) {
+                core.info(`All checks passed for PR #${prNumber} — merging.`);
+
+                try {
+                  await github.rest.pulls.merge({
+                    owner, repo, pull_number: prNumber, merge_method: 'merge'
+                  });
+                  core.info(`PR #${prNumber} merged successfully.`);
+
+                  // Clean up retry labels
+                  for (const label of labels) {
+                    if (label.startsWith(RETRY_LABEL_PREFIX)) {
+                      await github.rest.issues.removeLabel({
+                        owner, repo, issue_number: prNumber, name: label
+                      }).catch(() => {});
+                    }
+                  }
+                } catch (err) {
+                  core.warning(`Failed to merge PR #${prNumber}: ${err.message}`);
+                }
+                continue;
+              }
+
+              // --- Retry logic ---
+              const retryLabels = labels.filter(l => l.startsWith(RETRY_LABEL_PREFIX));
+              const currentRetry = retryLabels.length > 0
+                ? Math.max(...retryLabels.map(l => parseInt(l.replace(RETRY_LABEL_PREFIX, ''), 10)))
+                : 0;
+
+              if (currentRetry >= MAX_RETRIES) {
+                core.warning(`PR #${prNumber} has reached max retries (${MAX_RETRIES}).`);
+
+                await github.rest.issues.createComment({
+                  owner, repo, issue_number: prNumber,
+                  body: [
+                    `❌ **Auto-merge failed** — reached maximum retries (${MAX_RETRIES}).`,
+                    '',
+                    '**Failing checks:**',
+                    ...failedChecks.map(c => `- \`${c.name}\`: ${c.conclusion}`),
+                    ...failedStatuses.map(s => `- \`${s.context}\`: ${s.state}`),
+                    '',
+                    '**Retest commands:**',
+                    '- `/retest` — re-trigger Konflux pipelines',
+                    '- `/retest-gh` — re-run failed GitHub Actions jobs',
+                    '- `/retest-gh-all` — re-run all GitHub Actions workflows from scratch',
+                    '- `/retest-all` — re-run failed GitHub Actions jobs + Konflux pipelines',
+                  ].join('\n')
+                });
+                continue;
+              }
+
+              // Trigger retry
+              const nextRetry = currentRetry + 1;
+              const retryLabel = `${RETRY_LABEL_PREFIX}${nextRetry}`;
+
+              core.info(`PR #${prNumber} has failures. Triggering retry ${nextRetry}/${MAX_RETRIES}.`);
+
+              // Ensure retry label exists
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name: retryLabel });
+              } catch {
+                await github.rest.issues.createLabel({
+                  owner, repo, name: retryLabel, color: 'fbca04',
+                  description: `Auto-merge retry attempt ${nextRetry}`
+                });
+              }
+
+              await github.rest.issues.addLabels({
+                owner, repo, issue_number: prNumber, labels: [retryLabel]
+              });
+
+              // Re-run failed GitHub Actions workflow runs
+              const { data: workflowRuns } = await github.rest.actions.listWorkflowRunsForRepo({
+                owner, repo, head_sha: pr.head.sha, per_page: 100
+              });
+
+              const rerunIds = new Set();
+              for (const run of workflowRuns.workflow_runs) {
+                if (run.conclusion === 'failure' || run.conclusion === 'timed_out') {
+                  rerunIds.add(run.id);
+                }
+              }
+
+              let rerunCount = 0;
+              for (const runId of rerunIds) {
+                try {
+                  // Only re-run failed jobs (not the full workflow) to save time on automatic retries
+                  await github.rest.actions.reRunWorkflowFailedJobs({ owner, repo, run_id: runId });
+                  core.info(`Re-ran failed jobs for workflow run ${runId}`);
+                  rerunCount++;
+                } catch (err) {
+                  core.warning(`Failed to re-run workflow ${runId}: ${err.message}`);
+                }
+              }
+
+              // Separate Konflux (external status) failures from GitHub Actions failures
+              const konfluxFailures = failedStatuses.filter(
+                s => s.context.includes('konflux') || s.context.includes('appstudio') || s.context.includes('build-container')
+              );
+              const hasKonfluxFailures = konfluxFailures.length > 0;
+
+              const commentLines = [
+                `🔄 **Auto-merge retry ${nextRetry}/${MAX_RETRIES}**`,
+                '',
+              ];
+
+              if (rerunCount > 0) {
+                commentLines.push(`Re-running ${rerunCount} failed GitHub Actions workflow(s).`);
+              }
+
+              if (hasKonfluxFailures) {
+                commentLines.push(
+                  'Konflux pipeline failures cannot be retried automatically.'
+                );
+              }
+
+              commentLines.push(
+                '',
+                '**Failing checks:**',
+                ...failedChecks.map(c => `- \`${c.name}\`: ${c.conclusion}`),
+                ...failedStatuses.map(s => `- \`${s.context}\`: ${s.state}`),
+                '',
+                '**Retest commands:**',
+                '- `/retest` — re-trigger Konflux pipelines',
+                '- `/retest-gh` — re-run failed GitHub Actions jobs',
+                '- `/retest-gh-all` — re-run all GitHub Actions workflows from scratch',
+                '- `/retest-all` — re-run failed GitHub Actions jobs + Konflux pipelines',
+              );
+
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: prNumber,
+                body: commentLines.join('\n')
+              });
+            }

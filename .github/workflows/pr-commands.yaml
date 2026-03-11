@@ -1,0 +1,358 @@
+name: PR Commands
+
+on:
+  # Slash commands via comments
+  issue_comment:
+    types: [created]
+
+  # GitHub native review approval
+  pull_request_review:
+    types: [submitted]
+
+  # New commits pushed to PR (includes force-pushes)
+  pull_request:
+    types: [synchronize]
+
+jobs:
+  # ─── Reset approval when new commits are pushed ───
+  reset-on-push:
+    name: Reset approval on new commits
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.action == 'synchronize'
+
+    steps:
+      - name: Remove approved label and retry labels
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request.number;
+            const APPROVED_LABEL = 'approved';
+            const RETRY_LABEL_PREFIX = 'auto-merge/retry-';
+
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: prNumber });
+            const labels = pr.labels.map(l => l.name);
+
+            if (!labels.includes(APPROVED_LABEL)) {
+              core.info(`PR #${prNumber} does not have '${APPROVED_LABEL}' label — nothing to reset.`);
+              return;
+            }
+
+            // Remove approved label
+            await github.rest.issues.removeLabel({
+              owner, repo, issue_number: prNumber, name: APPROVED_LABEL
+            }).catch(() => {});
+
+            // Remove retry labels
+            for (const label of labels) {
+              if (label.startsWith(RETRY_LABEL_PREFIX)) {
+                await github.rest.issues.removeLabel({
+                  owner, repo, issue_number: prNumber, name: label
+                }).catch(() => {});
+              }
+            }
+
+            // Dismiss bot-submitted approvals so the GitHub review state stays in sync
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner, repo, pull_number: prNumber
+            });
+            for (const review of reviews) {
+              if (review.state === 'APPROVED' && review.user.type === 'Bot') {
+                await github.rest.pulls.dismissReview({
+                  owner, repo, pull_number: prNumber, review_id: review.id,
+                  message: 'New commits were pushed — approval reset.'
+                }).catch(() => {});
+              }
+            }
+
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: prNumber,
+              body: '🔄 **Approval reset** — new commits were pushed. Please re-approve with `/lgtm`, `/approve`, or a GitHub review.'
+            });
+
+            core.info(`Reset approval for PR #${prNumber}`);
+
+  # ─── Handle /lgtm and /approve comments ───
+  handle-approval-commands:
+    name: Handle approval commands
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+    if: |
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      (
+        contains(github.event.comment.body, '/lgtm') ||
+        contains(github.event.comment.body, '/approve')
+      ) &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+
+    steps:
+      - name: Add approved label
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.issue.number;
+            const commenter = context.payload.comment.user.login;
+            const body = context.payload.comment.body;
+            const APPROVED_LABEL = 'approved';
+
+            const words = body.split(/\s+/);
+            if (!words.some(w => w === '/lgtm' || w === '/approve')) {
+              core.info('No exact /lgtm or /approve command found — skipping.');
+              return;
+            }
+
+            core.info(`Processing approval command from ${commenter} on PR #${prNumber}`);
+
+            // Ensure label exists
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: APPROVED_LABEL });
+            } catch {
+              await github.rest.issues.createLabel({
+                owner, repo, name: APPROVED_LABEL, color: '0e8a16',
+                description: 'PR is approved and eligible for auto-merge'
+              });
+            }
+
+            await github.rest.issues.addLabels({
+              owner, repo, issue_number: prNumber, labels: [APPROVED_LABEL]
+            });
+
+            // Also submit a GitHub review approval for visibility
+            try {
+              await github.rest.pulls.createReview({
+                owner, repo, pull_number: prNumber,
+                event: 'APPROVE',
+                body: `Approved via \`${words.find(w => w === '/lgtm' || w === '/approve')}\` by @${commenter}`
+              });
+            } catch (err) {
+              core.info(`Could not submit review (may already be approved): ${err.message}`);
+            }
+
+            await github.rest.reactions.createForIssueComment({
+              owner, repo, comment_id: context.payload.comment.id, content: '+1'
+            });
+
+            core.info(`Added '${APPROVED_LABEL}' label to PR #${prNumber}`);
+
+  # ─── Handle GitHub native review approvals ───
+  handle-review-approval:
+    name: Handle review approval
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    if: |
+      github.event_name == 'pull_request_review' &&
+      github.event.review.state == 'approved' &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.review.author_association)
+
+    steps:
+      - name: Add approved label from review
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request.number;
+            const reviewer = context.payload.review.user.login;
+            const APPROVED_LABEL = 'approved';
+
+            core.info(`Processing GitHub review approval from ${reviewer} on PR #${prNumber}`);
+
+            // Ensure label exists
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: APPROVED_LABEL });
+            } catch {
+              await github.rest.issues.createLabel({
+                owner, repo, name: APPROVED_LABEL, color: '0e8a16',
+                description: 'PR is approved and eligible for auto-merge'
+              });
+            }
+
+            await github.rest.issues.addLabels({
+              owner, repo, issue_number: prNumber, labels: [APPROVED_LABEL]
+            });
+
+            core.info(`Added '${APPROVED_LABEL}' label to PR #${prNumber}`);
+
+  # ─── Handle retest commands (GitHub Actions) ───
+  # `/retest`        -- reserved for Konflux (Pipelines as Code handles natively)
+  # `/retest-gh`     -- re-run only failed GitHub Actions jobs
+  # `/retest-gh-all` -- re-run all GitHub Actions workflows from scratch
+  # `/retest-all`    -- re-run failed GitHub Actions jobs + Konflux (PaC picks up `/retest` substring)
+  handle-retest:
+    name: Handle retest command
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+      issues: write
+      actions: write
+    if: |
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      (
+        contains(github.event.comment.body, '/retest-gh') ||
+        contains(github.event.comment.body, '/retest-all')
+      ) &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+
+    steps:
+      - name: Retest PR
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.issue.number;
+            const commenter = context.payload.comment.user.login;
+            const RETRY_LABEL_PREFIX = 'auto-merge/retry-';
+            const VALID_COMMANDS = ['/retest-gh', '/retest-gh-all', '/retest-all'];
+
+            const body = context.payload.comment.body;
+            const words = body.split(/\s+/);
+            const matched = VALID_COMMANDS.find(cmd => words.includes(cmd));
+
+            if (!matched) {
+              core.info('No exact retest command found — skipping.');
+              return;
+            }
+
+            const fullRerun = matched === '/retest-gh-all';
+            const includesKonflux = matched === '/retest-all';
+
+            core.info(`Processing ${matched} from ${commenter} on PR #${prNumber}`);
+
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: prNumber });
+
+            // Reset auto-merge retry labels
+            const labels = pr.labels.map(l => l.name);
+            for (const label of labels) {
+              if (label.startsWith(RETRY_LABEL_PREFIX)) {
+                await github.rest.issues.removeLabel({
+                  owner, repo, issue_number: prNumber, name: label
+                }).catch(() => {});
+              }
+            }
+
+            const { data: workflowRuns } = await github.rest.actions.listWorkflowRunsForRepo({
+              owner, repo, head_sha: pr.head.sha, per_page: 100
+            });
+
+            let rerunCount = 0;
+
+            if (fullRerun) {
+              // /retest-gh-all: re-run every workflow from scratch
+              for (const run of workflowRuns.workflow_runs) {
+                try {
+                  await github.rest.actions.reRunWorkflow({ owner, repo, run_id: run.id });
+                  core.info(`Re-ran entire workflow ${run.id} (${run.name})`);
+                  rerunCount++;
+                } catch (err) {
+                  core.warning(`Failed to re-run workflow ${run.id}: ${err.message}`);
+                }
+              }
+            } else {
+              // /retest-gh, /retest-all: re-run only failed jobs
+              for (const run of workflowRuns.workflow_runs) {
+                if (run.conclusion === 'failure' || run.conclusion === 'timed_out' || run.conclusion === 'cancelled') {
+                  try {
+                    await github.rest.actions.reRunWorkflowFailedJobs({ owner, repo, run_id: run.id });
+                    core.info(`Re-ran failed jobs for workflow ${run.id} (${run.name})`);
+                    rerunCount++;
+                  } catch (err) {
+                    core.warning(`Failed to re-run workflow ${run.id}: ${err.message}`);
+                  }
+                }
+              }
+            }
+
+            await github.rest.reactions.createForIssueComment({
+              owner, repo, comment_id: context.payload.comment.id, content: 'rocket'
+            });
+
+            const mode = fullRerun ? 're-running all workflows from scratch' : 're-running failed jobs';
+            const konfluxNote = includesKonflux
+              ? '\n> Konflux pipelines will also be re-triggered by Pipelines as Code.'
+              : '';
+
+            if (rerunCount > 0) {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: prNumber,
+                body: `🔄 **Retest** (\`${matched}\`) by @${commenter} — ${mode} for ${rerunCount} workflow(s). Retry counter reset.${konfluxNote}`
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: prNumber,
+                body: `✅ **Retest** (\`${matched}\`) by @${commenter} — no ${fullRerun ? '' : 'failed '}workflows to re-run.${konfluxNote}`
+              });
+            }
+
+  # ─── Handle /hold and /unhold commands ───
+  handle-hold:
+    name: Handle hold commands
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    if: |
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      (
+        contains(github.event.comment.body, '/hold') ||
+        contains(github.event.comment.body, '/unhold')
+      ) &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+
+    steps:
+      - name: Toggle hold
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.issue.number;
+            const body = context.payload.comment.body;
+            const HOLD_LABEL = 'do-not-merge/hold';
+
+            const words = body.split(/\s+/);
+            const isUnhold = words.includes('/unhold');
+            const isHold = words.includes('/hold');
+
+            if (!isUnhold && !isHold) {
+              core.info('No exact /hold or /unhold command found — skipping.');
+              return;
+            }
+
+            // Ensure label exists
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: HOLD_LABEL });
+            } catch {
+              await github.rest.issues.createLabel({
+                owner, repo, name: HOLD_LABEL, color: 'e11d48',
+                description: 'PR is on hold and should not be merged'
+              });
+            }
+
+            if (isUnhold) {
+              try {
+                await github.rest.issues.removeLabel({
+                  owner, repo, issue_number: prNumber, name: HOLD_LABEL
+                });
+                core.info(`Removed '${HOLD_LABEL}' from PR #${prNumber}`);
+              } catch {
+                core.info(`Label '${HOLD_LABEL}' was not present on PR #${prNumber}`);
+              }
+            } else {
+              await github.rest.issues.addLabels({
+                owner, repo, issue_number: prNumber, labels: [HOLD_LABEL]
+              });
+              core.info(`Added '${HOLD_LABEL}' to PR #${prNumber}`);
+            }
+
+            await github.rest.reactions.createForIssueComment({
+              owner, repo, comment_id: context.payload.comment.id, content: '+1'
+            });
