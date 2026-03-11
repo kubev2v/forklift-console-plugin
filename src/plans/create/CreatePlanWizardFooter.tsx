@@ -1,5 +1,5 @@
 import { type FC, type MouseEvent, useCallback, useMemo } from 'react';
-import { type Location, useLocation, useNavigate } from 'react-router-dom-v5-compat';
+import { useLocation, useNavigate } from 'react-router-dom-v5-compat';
 
 import { PlanModelRef } from '@forklift-ui/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
@@ -21,7 +21,6 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from './hooks/useCreatePlanFormContext';
 import { useStepValidation } from './hooks/useStepValidation';
 import { PlanWizardStepId } from './constants';
-import type { CreatePlanFormData } from './types';
 
 type CreatePlanWizardFooterProps = Partial<Pick<WizardFooterProps, 'nextButtonText' | 'onNext'>> & {
   hasError?: boolean;
@@ -33,7 +32,7 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
   onNext: onSubmit,
 }) => {
   const navigate = useNavigate();
-  const location: Location<CreatePlanFormData> = useLocation();
+  const location = useLocation();
   const { t } = useForkliftTranslation();
   const [activeNamespace] = useActiveNamespace();
   const {
@@ -77,8 +76,10 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
     }
   }, [validateStep, activeStep.id, goToStepById, trackEvent]);
 
+  const hasSourceProvider = new URLSearchParams(location.search).has('sourceProvider');
+
   const onCancel = useCallback(() => {
-    if (location.state?.sourceProvider) {
+    if (hasSourceProvider) {
       navigate(-1);
       return;
     }
@@ -89,7 +90,7 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
     });
 
     navigate(plansListUrl);
-  }, [location.state?.sourceProvider, navigate, activeNamespace]);
+  }, [hasSourceProvider, navigate, activeNamespace]);
 
   return (
     <WizardFooterWrapper>
