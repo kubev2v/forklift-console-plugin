@@ -118,8 +118,8 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
             <OtherSettingsStep isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled} />
           </WizardStep>,
           <WizardStep
-            key={PlanWizardStepId.CustomizationScripts}
-            {...getStepProps(PlanWizardStepId.CustomizationScripts)}
+            key={PlanWizardStepId.Automation}
+            {...getStepProps(PlanWizardStepId.Automation)}
           >
             <CustomScriptsStep />
           </WizardStep>,

@@ -22,15 +22,15 @@ export enum PlanWizardStepId {
   MigrationType = 'migration-type',
   AdditionalSetup = 'additional-setup',
   OtherSettings = 'other-settings',
-  CustomizationScripts = 'customization-scripts',
+  Automation = 'automation',
   Hooks = 'hooks',
   ReviewAndCreate = 'review-and-create',
 }
 
 export const planStepNames: Record<PlanWizardStepId, ReturnType<typeof t>> = {
   [PlanWizardStepId.AdditionalSetup]: t('Additional setup'),
+  [PlanWizardStepId.Automation]: t('Automation (optional)'),
   [PlanWizardStepId.BasicSetup]: t('Basic setup'),
-  [PlanWizardStepId.CustomizationScripts]: t('Customization scripts (optional)'),
   [PlanWizardStepId.General]: t('General'),
   [PlanWizardStepId.Hooks]: t('Hooks (optional)'),
   [PlanWizardStepId.MigrationType]: t('Migration type'),
@@ -43,8 +43,8 @@ export const planStepNames: Record<PlanWizardStepId, ReturnType<typeof t>> = {
 
 export const planStepOrder: Record<PlanWizardStepId, number> = {
   [PlanWizardStepId.AdditionalSetup]: 7,
+  [PlanWizardStepId.Automation]: 9,
   [PlanWizardStepId.BasicSetup]: 1,
-  [PlanWizardStepId.CustomizationScripts]: 9,
   [PlanWizardStepId.General]: 2,
   [PlanWizardStepId.Hooks]: 10,
   [PlanWizardStepId.MigrationType]: 6,
@@ -66,8 +66,8 @@ export const CreatePlanWizardContext = createContext({} as CreatePlanWizardConte
 
 export const stepFieldMap: Record<PlanWizardStepId, string[]> = {
   [PlanWizardStepId.AdditionalSetup]: [],
+  [PlanWizardStepId.Automation]: Object.values(CustomScriptsFieldId),
   [PlanWizardStepId.BasicSetup]: [],
-  [PlanWizardStepId.CustomizationScripts]: Object.values(CustomScriptsFieldId),
   [PlanWizardStepId.General]: Object.values(GeneralFormFieldId),
   [PlanWizardStepId.Hooks]: Object.values(HooksFormFieldId),
   [PlanWizardStepId.MigrationType]: Object.values(MigrationTypeFieldId),

@@ -38,10 +38,10 @@ const CustomScriptsReviewSection: FC = () => {
 
   return (
     <ExpandableReviewSection
-      title={planStepNames[PlanWizardStepId.CustomizationScripts]}
+      title={planStepNames[PlanWizardStepId.Automation]}
       testId="review-custom-scripts-section"
       onEditClick={() => {
-        goToStepById(PlanWizardStepId.CustomizationScripts);
+        goToStepById(PlanWizardStepId.Automation);
       }}
     >
       <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
