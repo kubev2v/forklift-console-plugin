@@ -5,33 +5,32 @@ import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 
-type OnConfirmWarmParams = {
-  newValue: boolean;
+type OnConfirmMigrationTypeParams = {
+  newValue: MigrationTypeValue;
   resource: V1beta1Plan;
 };
 
-type OnConfirmWarm = (param: OnConfirmWarmParams) => Promise<V1beta1Plan>;
+export const onConfirmMigrationType = async ({
+  newValue,
+  resource,
+}: OnConfirmMigrationTypeParams): Promise<V1beta1Plan> => {
+  const isWarm = newValue === MigrationTypeValue.Warm;
+  const warmOp = getPlanIsWarm(resource) === undefined ? ADD : REPLACE;
 
-export const onConfirmWarm: OnConfirmWarm = async ({ newValue, resource }) => {
-  const op = getPlanIsWarm(resource) === undefined ? ADD : REPLACE;
-  const type = newValue ? MigrationTypeValue.Warm : MigrationTypeValue.Cold;
-
-  const obj = await k8sPatch({
+  return k8sPatch({
     data: [
       {
-        op,
+        op: warmOp,
         path: '/spec/warm',
-        value: newValue,
+        value: isWarm,
       },
       {
         op: REPLACE,
         path: '/spec/type',
-        value: type,
+        value: newValue,
       },
     ],
     model: PlanModel,
     resource,
   });
-
-  return obj;
 };

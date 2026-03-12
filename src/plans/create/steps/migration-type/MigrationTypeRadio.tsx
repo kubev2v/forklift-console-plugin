@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import HelpIconWithLabel from 'src/plans/components/HelpIconWithLabel';
+import PlanCbtWarningAlert from 'src/plans/components/PlanCbtWarningAlert';
 import PlanVddkForWarmWarningAlert from 'src/plans/components/PlanVddkForWarmWarningAlert';
 import { getMigrationTypeConfig } from 'src/plans/create/steps/migration-type/utils';
 import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType';
@@ -7,19 +8,9 @@ import { hasWarmMigrationProviderType } from 'src/plans/create/utils/hasWarmMigr
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import type { ProviderVirtualMachine, V1beta1Provider } from '@forklift-ui/types';
-import {
-  Alert,
-  AlertVariant,
-  FlexItem,
-  Radio,
-  Split,
-  SplitItem,
-  Stack,
-  StackItem,
-} from '@patternfly/react-core';
+import { FlexItem, Radio, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import { CBT_HELP_LINK } from '@utils/links';
 
 import { migrationTypeLabels, MigrationTypeValue } from './constants';
 
@@ -94,25 +85,7 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
       </FlexItem>
 
       {isWarmOptionSelected && !isEmpty(cbtDisabledVms) && (
-        <Alert
-          isInline
-          variant={AlertVariant.warning}
-          title={t('Must enable Changed Block Tracking (CBT) for warm migration')}
-          className="pf-v6-u-ml-lg"
-        >
-          <Stack hasGutter>
-            <p>
-              {cbtDisabledVms.length} {t('of your selected VMs do not have CBT enabled.')}
-              <br />
-              {t(
-                'Switch those VMs to cold migration or enable CBT in VMware before running the plan; otherwise the migration will fail.',
-              )}
-            </p>
-            <ExternalLink isInline href={CBT_HELP_LINK}>
-              {t('Learn more')}
-            </ExternalLink>
-          </Stack>
-        </Alert>
+        <PlanCbtWarningAlert cbtDisabledVmsCount={cbtDisabledVms.length} />
       )}
 
       {isWarmOptionSelected && isVddkInitImageNotSet && <PlanVddkForWarmWarningAlert />}
