@@ -4,11 +4,13 @@ import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/Le
 import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 import InventoryNotReachable from 'src/providers/list/components/InventoryNotReachable';
 
+import LightspeedMcpWarning from '@components/common/LightspeedMcpWarning/LightspeedMcpWarning';
 import RoutedTabs from '@components/common/RoutedTabs/RoutedTabs';
 import { PageSection, Split, SplitItem, Title } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getOverviewPath } from '@utils/helpers/getOverviewPath';
+import { useLightspeedMcpStatus } from '@utils/hooks/useLightspeedMcpStatus/useLightspeedMcpStatus';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useProvidersInventoryIsLive } from './hooks/useProvidersInventoryIsLive';
@@ -25,6 +27,7 @@ const OverviewPage: FC = () => {
   const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
   const { loadError: inventoryLivelinessError } = useProvidersInventoryIsLive({});
+  const { showMcpWarning } = useLightspeedMcpStatus();
 
   const tabs = [
     {
@@ -81,6 +84,12 @@ const OverviewPage: FC = () => {
         {inventoryLivelinessError && (
           <PageSection hasBodyWrapper={false}>
             {[<InventoryNotReachable key="inventoryNotReachable" />]}
+          </PageSection>
+        )}
+
+        {showMcpWarning && (
+          <PageSection hasBodyWrapper={false}>
+            <LightspeedMcpWarning />
           </PageSection>
         )}
         <RoutedTabs tabs={tabs} />
