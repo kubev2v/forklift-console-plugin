@@ -49,7 +49,6 @@ export const StorageClasses = {
 export const SourceStorages = {
   MTV_NFS_RHOS_V8: 'mtv-nfs-rhos-v8',
   MTV_NFS_US_V8: 'mtv-nfs-us-v8',
-  NFS_US_MTV_V8: 'nfs-us-mtv-v8',
 } as const;
 
 /**
@@ -63,10 +62,6 @@ export const OffloadPlugins = {
 
 export const OffloadPluginK8sValues = {
   VSPHERE_XCOPY: 'vsphereXcopyConfig',
-} as const;
-
-export const OffloadSecrets = {
-  VS8_SECRET: 'vs8-secret',
 } as const;
 
 export const StorageProducts = {
@@ -111,6 +106,26 @@ export interface HookConfig {
   ansiblePlaybook?: string;
 }
 
+export type GuestType = 'linux' | 'windows';
+export type ScriptType = 'firstboot' | 'run';
+
+export type ScriptConfig = {
+  content?: string;
+  guestType?: GuestType;
+  name: string;
+  scriptType?: ScriptType;
+};
+
+export type CustomizationScriptsTestData =
+  | {
+      configMapName: string;
+      mode: 'existing';
+    }
+  | {
+      mode: 'new';
+      scripts: ScriptConfig[];
+    };
+
 export interface PlanTestData {
   planName: string;
   planProject: string;
@@ -127,6 +142,7 @@ export interface PlanTestData {
     targetPowerState?: 'on' | 'off' | 'auto';
     useNbdeClevis?: boolean;
   };
+  customizationScripts?: CustomizationScriptsTestData;
   preMigrationHook?: HookConfig;
   postMigrationHook?: HookConfig;
 }

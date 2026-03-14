@@ -157,7 +157,7 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       await modalAfterRemove.cancel();
     });
 
-    const addedStorageSource = SourceStorages.NFS_US_MTV_V8;
+    const addedStorageSource = SourceStorages.MTV_NFS_US_V8;
     const addedStorageTarget = StorageClasses.HOSTPATH_BASIC;
 
     await test.step('Add and remove storage mapping', async () => {

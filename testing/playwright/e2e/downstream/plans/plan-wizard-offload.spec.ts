@@ -2,14 +2,8 @@ import { expect } from '@playwright/test';
 
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
-import {
-  createPlanTestData,
-  OffloadPluginK8sValues,
-  OffloadPlugins,
-  OffloadSecrets,
-  StorageProductK8sValues,
-  StorageProducts,
-} from '../../../types/test-data';
+import { createPlanTestData, OffloadPlugins, StorageProducts } from '../../../types/test-data';
+import { createOffloadTestSecret } from '../../../utils/offload-helpers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
@@ -39,6 +33,7 @@ test.describe(
       });
 
       const wizard = new CreatePlanWizardPage(page, resourceManager);
+      const secretName = await createOffloadTestSecret(page, resourceManager);
 
       await test.step('Navigate to Storage Map step', async () => {
         await wizard.navigate();
@@ -59,7 +54,7 @@ test.describe(
         await wizard.storageMap.offload.verifyAllDropdownsVisible(0);
 
         await wizard.storageMap.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
-        await wizard.storageMap.offload.selectStorageSecret(0, OffloadSecrets.VS8_SECRET);
+        await wizard.storageMap.offload.selectStorageSecret(0, secretName);
         await wizard.storageMap.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
       });
 
@@ -74,9 +69,9 @@ test.describe(
         await expect(wizard.review.storageMapSection).toBeVisible();
 
         await wizard.review.verifyStorageMapOffloadDetails(0, {
-          offloadPlugin: OffloadPluginK8sValues.VSPHERE_XCOPY,
-          storageProduct: StorageProductK8sValues.NETAPP_ONTAP,
-          storageSecret: OffloadSecrets.VS8_SECRET,
+          offloadPlugin: OffloadPlugins.VSPHERE_XCOPY,
+          storageProduct: StorageProducts.NETAPP_ONTAP,
+          storageSecret: secretName,
         });
       });
 

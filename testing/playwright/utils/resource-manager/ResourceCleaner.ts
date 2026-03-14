@@ -85,6 +85,8 @@ export class ResourceCleaner extends BaseResourceManager {
               apiPath = `${evalConstants.OPENSHIFT_PROJECT_PATH}/${resType}/${resName}`;
             } else if (resType === evalConstants.NAMESPACES_TYPE) {
               apiPath = `${evalConstants.KUBERNETES_CORE}/${resType}/${resName}`;
+            } else if (resType === evalConstants.SECRETS_TYPE) {
+              apiPath = `${evalConstants.KUBERNETES_CORE}/namespaces/${resNamespace}/${resType}/${resName}`;
             } else {
               apiPath = `${evalConstants.FORKLIFT_PATH}/namespaces/${resNamespace}/${resType}/${resName}`;
             }
