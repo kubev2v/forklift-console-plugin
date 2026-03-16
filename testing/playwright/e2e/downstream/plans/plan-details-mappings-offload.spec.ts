@@ -2,7 +2,8 @@ import { expect } from '@playwright/test';
 
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import { OffloadPlugins, OffloadSecrets, StorageProducts } from '../../../types/test-data';
+import { OffloadPlugins, StorageProducts } from '../../../types/test-data';
+import { createOffloadTestSecret } from '../../../utils/offload-helpers';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
@@ -11,12 +12,14 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
 
   test('should display storage mappings and allow editing offload from plan Mappings tab', async ({
     page,
+    resourceManager,
     testPlan,
     testProvider: _testProvider,
   }) => {
     if (!testPlan) throw new Error('testPlan is required');
 
     const planDetailsPage = new PlanDetailsPage(page);
+    const secretName = await createOffloadTestSecret(page, resourceManager);
 
     await test.step('Navigate to Mappings tab', async () => {
       await planDetailsPage.mappingsTab.navigateToMappingsTab();
@@ -56,7 +59,7 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
       await modal.offload.verifyAllDropdownsVisible(0);
 
       await modal.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
-      await modal.offload.selectStorageSecret(0, OffloadSecrets.VS8_SECRET);
+      await modal.offload.selectStorageSecret(0, secretName);
       await modal.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
 
       await modal.verifySaveButtonEnabled();
@@ -79,7 +82,7 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
       expect(pluginText).toContain(OffloadPlugins.VSPHERE_XCOPY);
 
       const secretText = await modal.offload.getStorageSecretText(0);
-      expect(secretText).toContain(OffloadSecrets.VS8_SECRET);
+      expect(secretText).toContain(secretName);
 
       const productText = await modal.offload.getStorageProductText(0);
       expect(productText).toContain(StorageProducts.NETAPP_ONTAP);

@@ -4,12 +4,8 @@ import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures
 import { StorageMapCreatePage } from '../../../page-objects/StorageMapCreatePage';
 import { StorageMapDetailsPage } from '../../../page-objects/StorageMapDetailsPage';
 import { StorageMapsListPage } from '../../../page-objects/StorageMapsListPage';
-import {
-  ALL_STORAGE_PRODUCTS,
-  OffloadPlugins,
-  OffloadSecrets,
-  StorageProducts,
-} from '../../../types/test-data';
+import { ALL_STORAGE_PRODUCTS, OffloadPlugins, StorageProducts } from '../../../types/test-data';
+import { createOffloadTestSecret } from '../../../utils/offload-helpers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
@@ -31,6 +27,7 @@ test.describe(
       const listPage = new StorageMapsListPage(page);
       const createPage = new StorageMapCreatePage(page);
       const detailsPage = new StorageMapDetailsPage(page);
+      const secretName = await createOffloadTestSecret(page, resourceManager);
 
       await test.step('Navigate to Create Storage Map form', async () => {
         await listPage.navigate(MTV_NAMESPACE);
@@ -70,9 +67,9 @@ test.describe(
         const pluginText = await createPage.offload.getOffloadPluginText(0);
         expect(pluginText).toContain(OffloadPlugins.VSPHERE_XCOPY);
 
-        await createPage.offload.selectStorageSecret(0, OffloadSecrets.VS8_SECRET);
+        await createPage.offload.selectStorageSecret(0, secretName);
         const secretText = await createPage.offload.getStorageSecretText(0);
-        expect(secretText).toContain(OffloadSecrets.VS8_SECRET);
+        expect(secretText).toContain(secretName);
 
         await createPage.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
         const productText = await createPage.offload.getStorageProductText(0);
