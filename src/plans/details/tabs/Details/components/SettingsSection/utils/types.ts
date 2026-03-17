@@ -7,5 +7,6 @@ export type EditPlanProps = {
 };
 
 export type EnhancedPlanSpecVms = V1beta1PlanSpecVms & {
+  migrateSharedDisks?: boolean;
   nbdeClevis?: boolean;
 };

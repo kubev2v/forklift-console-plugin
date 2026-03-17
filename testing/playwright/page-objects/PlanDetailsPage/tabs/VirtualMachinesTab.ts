@@ -4,12 +4,15 @@ import type { PlanTestData } from '../../../types/test-data';
 import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
 import { AddVirtualMachinesModal } from '../modals/AddVirtualMachinesModal';
 
-type ConcernCategory = 'critical' | 'warning' | 'information';
+import { ConcernsHelpers } from './ConcernsHelpers';
 
 /** VirtualMachines tab for Plan Details page (flat grid, no folder hierarchy). */
 export class VirtualMachinesTab extends VirtualMachinesTable {
+  readonly concerns: ConcernsHelpers;
+
   constructor(page: Page) {
     super(page, page.locator('main'));
+    this.concerns = new ConcernsHelpers(page);
   }
 
   private async dismissOpenModals(): Promise<void> {
@@ -48,14 +51,13 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     return modal;
   }
 
-  async closeConcernPopover(): Promise<void> {
-    await this.page.keyboard.press('Escape');
-    await expect(this.page.getByTestId('concerns-popover')).not.toBeVisible();
-  }
-
   async collapseFirstVMDetailsRow(): Promise<void> {
     await this.page.getByRole('button', { name: 'Details' }).first().click();
     await this.page.waitForTimeout(300);
+  }
+
+  get editSharedDisksModal() {
+    return this.page.getByTestId('edit-vm-shared-disks-modal');
   }
 
   get editTargetNameMenuItem() {
@@ -75,20 +77,6 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await expect(btn).toBeVisible();
     await btn.click();
     await this.page.waitForTimeout(300);
-  }
-
-  getConcernBadge(category: ConcernCategory) {
-    return this.vmTable.getByTestId(`concern-badge-${category}`).first();
-  }
-
-  async getFirstVisibleConcernBadge() {
-    for (const category of ['critical', 'warning', 'information'] as const) {
-      const badge = this.getConcernBadge(category);
-      if (await badge.isVisible().catch(() => false)) {
-        return badge;
-      }
-    }
-    return null;
   }
 
   override async getFirstVMName(): Promise<string> {
@@ -113,7 +101,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
       }
     }
 
-    return await this.vmTable.getByRole('rowgroup').nth(1).getByRole('row').count();
+    return this.vmTable.getByRole('rowgroup').nth(1).getByRole('row').count();
   }
 
   async getTableCell(rowColumnName: string, rowValue: string, targetColumnName: string) {
@@ -129,22 +117,14 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     return (await cell.textContent())?.trim() ?? '';
   }
 
+  async getVMSharedDisks(vmName: string): Promise<string> {
+    const cell = await this.table.getCell('Name', vmName, 'Shared disks');
+    return (await cell.textContent())?.trim() ?? '';
+  }
+
   async navigateToVirtualMachinesTab(): Promise<void> {
     await this.page.locator('[data-test-id="horizontal-link-Virtual machines"]').click();
     await this.page.waitForURL((url) => url.toString().endsWith('/vms'));
-  }
-
-  async openConcernPopover(category?: ConcernCategory): Promise<boolean> {
-    const badge = category
-      ? this.getConcernBadge(category)
-      : await this.getFirstVisibleConcernBadge();
-    if (!badge || !(await badge.isVisible().catch(() => false))) {
-      return false;
-    }
-    await badge.click();
-    const popover = this.page.getByTestId('concerns-popover');
-    await expect(popover).toBeVisible();
-    return true;
   }
 
   async openPowerStateDialog(vmName: string): Promise<void> {
@@ -163,6 +143,15 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.editTargetNameMenuItem.click();
     await this.renameTargetNameInput.waitFor({ state: 'visible' });
     await this.renameTargetNameInput.focus();
+  }
+
+  async openSharedDisksDialog(vmName: string): Promise<void> {
+    await this.dismissOpenModals();
+    await this.getVMActionsMenu(vmName).click();
+    const menuItem = this.page.getByTestId('edit-vm-shared-disks-menu-item');
+    await menuItem.waitFor({ state: 'visible' });
+    await menuItem.click();
+    await this.editSharedDisksModal.waitFor({ state: 'visible' });
   }
 
   get powerStateModalSaveButton() {
@@ -188,6 +177,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   get renameTargetNameInput() {
     return this.page.getByTestId('vm-target-name-input');
   }
+
   async renameVM(sourceName: string, targetName: string): Promise<void> {
     await this.search(sourceName);
     const vmRow = this.table.getRow({ Name: sourceName });
@@ -209,12 +199,27 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.cancelButton.click();
     await this.clearAllFilters();
   }
+
   get saveButton() {
     return this.page.getByRole('button', { name: /save|confirm/iu });
   }
 
   async selectVirtualMachine(vmName: string): Promise<void> {
     await this.table.selectRow({ Name: vmName });
+  }
+
+  get sharedDisksModalSaveButton() {
+    return this.editSharedDisksModal.getByTestId('modal-confirm-button');
+  }
+  get sharedDisksOptionDisabled() {
+    return this.editSharedDisksModal.getByTestId('shared-disks-option-disabled');
+  }
+  get sharedDisksOptionEnabled() {
+    return this.editSharedDisksModal.getByTestId('shared-disks-option-enabled');
+  }
+
+  get sharedDisksOptionInherit() {
+    return this.editSharedDisksModal.getByTestId('shared-disks-option-inherit');
   }
 
   override async sortByColumn(columnName: string): Promise<void> {
@@ -241,54 +246,6 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
 
   async verifyAddVirtualMachinesButtonEnabled(): Promise<void> {
     await expect(this.addVirtualMachinesButton).toBeEnabled();
-  }
-
-  async verifyConcernBadgeExists(category: ConcernCategory, rowIndex?: number): Promise<void> {
-    if (rowIndex === undefined) {
-      await expect(this.vmTable.getByTestId(`concern-badge-${category}`).first()).toBeVisible();
-    } else {
-      const bodyRowgroup = this.vmTable.getByRole('rowgroup').nth(1);
-      const row = bodyRowgroup.getByRole('row').nth(rowIndex);
-      await expect(row.getByTestId(`concern-badge-${category}`)).toBeVisible();
-    }
-  }
-
-  async verifyConcernPopoverContent(options?: {
-    headerContains?: string;
-    minItems?: number;
-  }): Promise<void> {
-    const popover = this.page.getByTestId('concerns-popover');
-    await expect(popover.getByText(/Total:/i)).toBeVisible();
-    if (options?.headerContains) {
-      await expect(popover.getByRole('heading')).toContainText(options.headerContains);
-    }
-    if (options?.minItems !== undefined) {
-      const count = await popover.locator('[class*="popover__body"] > div').count();
-      expect(count).toBeGreaterThanOrEqual(options.minItems);
-    }
-  }
-
-  async verifyConcernsColumnVisible(): Promise<void> {
-    await expect(this.page.getByTestId('concerns-column-header')).toBeVisible();
-  }
-
-  async verifyExpandedRowHasConcernDetails(): Promise<void> {
-    for (const col of ['Label', 'Category', 'Assessment']) {
-      await expect(this.page.getByRole('columnheader', { name: col })).toBeVisible();
-    }
-  }
-
-  async verifyExpandedRowIsCollapsed(): Promise<void> {
-    await expect(this.page.getByRole('columnheader', { name: 'Label' })).not.toBeVisible();
-  }
-
-  async verifyFilteredRowsHaveBadge(category: ConcernCategory): Promise<void> {
-    const bodyRowgroup = this.vmTable.getByRole('rowgroup').nth(1);
-    const rows = bodyRowgroup.getByRole('row');
-    const rowCount = await rows.count();
-    for (let i = 0; i < rowCount; i += 1) {
-      await expect(rows.nth(i).getByTestId(`concern-badge-${category}`)).toBeVisible();
-    }
   }
 
   async verifyFilterOptionExists(filterName: string): Promise<void> {
@@ -321,5 +278,10 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   async waitForVMPowerState(vmName: string, expectedPowerState: string): Promise<void> {
     const powerStateCell = await this.table.getCell('Name', vmName, 'Target power state');
     await expect(powerStateCell).toHaveText(expectedPowerState);
+  }
+
+  async waitForVMSharedDisks(vmName: string, expectedText: string): Promise<void> {
+    const cell = await this.table.getCell('Name', vmName, 'Shared disks');
+    await expect(cell).toHaveText(expectedText);
   }
 }

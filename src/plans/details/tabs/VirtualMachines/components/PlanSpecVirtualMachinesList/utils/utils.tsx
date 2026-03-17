@@ -83,6 +83,13 @@ export const specVirtualMachineFields: ResourceField[] = [
   },
   {
     isVisible: false,
+    jsonPath: '$.specVM.migrateSharedDisks',
+    label: t('Shared disks'),
+    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.MigrateSharedDisks,
+    sortable: true,
+  },
+  {
+    isVisible: false,
     jsonPath: '$.specVM.targetPowerState',
     label: t('Target power state'),
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.TargetPowerState,

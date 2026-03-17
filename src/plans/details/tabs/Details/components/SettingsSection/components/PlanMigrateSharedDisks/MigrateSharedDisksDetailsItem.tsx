@@ -22,6 +22,7 @@ const SharedDisksDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, 
 
   return (
     <DetailsItem
+      testId="shared-disks-detail-item"
       title={t('Shared disks')}
       content={
         <Label isCompact color="grey">
