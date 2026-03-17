@@ -21,6 +21,7 @@ export enum PlanSpecVirtualMachinesTableResourceId {
   Name = 'name',
   Concerns = 'concerns',
   Actions = 'actions',
+  MigrateSharedDisks = 'migrateSharedDisks',
   VMTargetName = 'vmTargetName',
   TargetPowerState = 'targetPowerState',
 }

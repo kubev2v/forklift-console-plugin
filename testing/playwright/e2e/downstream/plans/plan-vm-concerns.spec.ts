@@ -33,29 +33,29 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
       });
 
       await customPlanTest.step('2. Sort by concerns column (descending)', async () => {
-        await planDetailsPage.virtualMachinesTab.verifyConcernsColumnVisible();
+        await planDetailsPage.virtualMachinesTab.concerns.verifyConcernsColumnVisible();
         await planDetailsPage.virtualMachinesTab.sortByConcerns();
         await planDetailsPage.virtualMachinesTab.sortByConcerns(); // Click twice for descending
       });
 
       await customPlanTest.step('3. Verify concern badges (critical, warning, info)', async () => {
-        await planDetailsPage.virtualMachinesTab.verifyConcernBadgeExists('critical', 0);
-        await planDetailsPage.virtualMachinesTab.verifyConcernBadgeExists('warning');
-        await planDetailsPage.virtualMachinesTab.verifyConcernBadgeExists('information');
+        await planDetailsPage.virtualMachinesTab.concerns.verifyConcernBadgeExists('critical', 0);
+        await planDetailsPage.virtualMachinesTab.concerns.verifyConcernBadgeExists('warning');
+        await planDetailsPage.virtualMachinesTab.concerns.verifyConcernBadgeExists('information');
 
-        await planDetailsPage.virtualMachinesTab.openConcernPopover('critical');
-        await planDetailsPage.virtualMachinesTab.verifyConcernPopoverContent({
+        await planDetailsPage.virtualMachinesTab.concerns.openConcernPopover('critical');
+        await planDetailsPage.virtualMachinesTab.concerns.verifyConcernPopoverContent({
           headerContains: 'Critical',
           minItems: 1,
         });
-        await planDetailsPage.virtualMachinesTab.closeConcernPopover();
+        await planDetailsPage.virtualMachinesTab.concerns.closeConcernPopover();
       });
 
       await customPlanTest.step('4. Test expandable VM row for concerns details', async () => {
         await planDetailsPage.virtualMachinesTab.expandFirstVMDetailsRow();
-        await planDetailsPage.virtualMachinesTab.verifyExpandedRowHasConcernDetails();
+        await planDetailsPage.virtualMachinesTab.concerns.verifyExpandedRowHasConcernDetails();
         await planDetailsPage.virtualMachinesTab.collapseFirstVMDetailsRow();
-        await planDetailsPage.virtualMachinesTab.verifyExpandedRowIsCollapsed();
+        await planDetailsPage.virtualMachinesTab.concerns.verifyExpandedRowIsCollapsed();
       });
 
       await customPlanTest.step('5. Test concern filters (severity and type)', async () => {
@@ -74,7 +74,7 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
         const filteredCount = await planDetailsPage.virtualMachinesTab.getRowCount();
         expect(filteredCount).toBeLessThanOrEqual(initialCount);
         expect(filteredCount).toBeGreaterThan(0);
-        await planDetailsPage.virtualMachinesTab.verifyFilteredRowsHaveBadge('critical');
+        await planDetailsPage.virtualMachinesTab.concerns.verifyFilteredRowsHaveBadge('critical');
 
         await planDetailsPage.virtualMachinesTab.clearFilters();
         const restoredCount = await planDetailsPage.virtualMachinesTab.getRowCount();

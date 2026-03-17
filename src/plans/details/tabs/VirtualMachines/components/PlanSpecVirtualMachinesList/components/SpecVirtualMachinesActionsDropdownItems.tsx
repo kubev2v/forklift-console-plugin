@@ -3,6 +3,9 @@ import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/ut
 import EditNetworkNameTemplate, {
   type EditNetworkNameTemplateProps,
 } from 'src/plans/details/tabs/Details/components/SettingsSection/components/NetworkNameTemplate/EditNetworkNameTemplate';
+import EditVmMigrateSharedDisks, {
+  type EditVmMigrateSharedDisksProps,
+} from 'src/plans/details/tabs/Details/components/SettingsSection/components/PlanMigrateSharedDisks/EditVmMigrateSharedDisks';
 import EditPVCNameTemplate, {
   type EditPVCNameTemplateProps,
 } from 'src/plans/details/tabs/Details/components/SettingsSection/components/PVCNameTemplate/EditPVCNameTemplate';
@@ -110,6 +113,19 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
             }}
           >
             {t('Edit network name template')}
+          </DropdownItem>
+          <DropdownItem
+            key="edit-vm-shared-disks"
+            isDisabled={!canEdit}
+            onClick={() => {
+              launcher<EditVmMigrateSharedDisksProps>(EditVmMigrateSharedDisks, {
+                index: vmIndex,
+                resource: plan,
+              });
+            }}
+            data-testid="edit-vm-shared-disks-menu-item"
+          >
+            {t('Edit shared disks')}
           </DropdownItem>
         </>
       )}
