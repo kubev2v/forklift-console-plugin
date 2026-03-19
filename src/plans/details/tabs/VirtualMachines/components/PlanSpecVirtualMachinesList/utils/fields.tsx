@@ -1,7 +1,10 @@
+import type { EnhancedPlanSpecVms } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
+
 import VirtualMachineConcernsCell from '@components/Concerns/VirtualMachineConcernsCell';
 import { EMPTY_MSG } from '@utils/constants';
 
 import SpecVirtualMachinesActions from '../components/SpecVirtualMachinesActions';
+import { VMMigrateSharedDisksCellRenderer } from '../components/VMMigrateSharedDisksCellRenderer';
 import { VMTargetPowerStateCellRenderer } from '../components/VMTargetPowerStateCellRenderer';
 
 import { PlanSpecVirtualMachinesTableResourceId, type SpecVirtualMachinePageData } from './types';
@@ -18,6 +21,12 @@ export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePa
     ),
     [PlanSpecVirtualMachinesTableResourceId.Concerns]: (
       <VirtualMachineConcernsCell vmData={inventoryVmData} conditions={conditions} />
+    ),
+    [PlanSpecVirtualMachinesTableResourceId.MigrateSharedDisks]: (
+      <VMMigrateSharedDisksCellRenderer
+        plan={plan}
+        migrateSharedDisks={(specVM as EnhancedPlanSpecVms)?.migrateSharedDisks}
+      />
     ),
     [PlanSpecVirtualMachinesTableResourceId.Name]: <>{specVM?.name ?? inventoryVmData?.vm?.name}</>,
     [PlanSpecVirtualMachinesTableResourceId.TargetPowerState]: (
