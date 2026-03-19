@@ -149,6 +149,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+      pull-requests: write
     if: |
       github.event_name == 'pull_request_review' &&
       github.event.review.state == 'approved' &&

@@ -58,6 +58,38 @@ npm run build
 npm start
 ```
 
+### Loading additional console plugins
+
+The console startup script supports loading additional OpenShift console plugins alongside forklift. This is useful for features that depend on other plugins (e.g. Prometheus metrics require the monitoring plugin) or for testing the full console experience locally.
+
+Available plugins:
+
+| Plugin | Port | Repository |
+|--------|------|------------|
+| `monitoring-plugin` | 9002 | [openshift/monitoring-plugin](https://github.com/openshift/monitoring-plugin) |
+| `networking-console-plugin` | 9003 | [openshift/networking-console-plugin](https://github.com/openshift/networking-console-plugin) |
+| `nmstate-console-plugin` | 9004 | [openshift/nmstate-console-plugin](https://github.com/openshift/nmstate-console-plugin) |
+| `kubevirt-plugin` | 9005 | [kubevirt-ui/kubevirt-plugin](https://github.com/kubevirt-ui/kubevirt-plugin) |
+
+```bash
+# Load a single additional plugin (e.g. monitoring for Prometheus metrics)
+npm run console -- --plugins monitoring-plugin
+
+# Load multiple plugins
+npm run console -- --plugins monitoring-plugin,kubevirt-plugin
+
+# Load all available plugins
+npm run console -- --plugins all
+
+# Combine with OAuth authentication
+npm run console -- --auth --plugins monitoring-plugin
+
+# See all available options
+bash ./ci/start-console.sh --help
+```
+
+Plugins are automatically cloned to sibling directories (e.g. `../monitoring-plugin`), their dependencies installed, and their dev servers started before the console container launches. On subsequent runs, existing clones are updated with `git pull`.
+
 #### How to find the cluster address
 
 The cluster address will be the part of the address after the `apps.` or `api.` in the cluster services or API service address.

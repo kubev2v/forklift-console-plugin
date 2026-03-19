@@ -112,3 +112,4 @@ cooldown
 Lightspeed
 firstboot
 configmap
+timespan
