@@ -75,7 +75,13 @@ const PlanSelectFilter: FC<PlanSelectFilterProps> = ({
       isExpanded={isOpen}
       isDisabled={disabled}
       className="forklift-overview__throughput-plan-select"
-      badge={disabled ? undefined : <Badge isRead>{selectedPlanIds.length}</Badge>}
+      badge={
+        disabled ? undefined : (
+          <Badge isRead data-testid="plan-badge-count">
+            {selectedPlanIds.length}
+          </Badge>
+        )
+      }
     >
       {t('Plans')}
     </MenuToggle>

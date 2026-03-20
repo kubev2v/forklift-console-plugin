@@ -3,6 +3,7 @@ import { expect, type Page } from '@playwright/test';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { LearningExperienceDrawer } from '../LearningExperienceDrawer';
 
+import { ThroughputCard } from './components/ThroughputCard';
 import { SettingsTab } from './tabs/SettingsTab';
 
 export type { TopicConfig } from '../LearningExperienceDrawer';
@@ -11,13 +12,17 @@ export class OverviewPage {
   private readonly navigation: NavigationHelper;
   private readonly page: Page;
   public readonly learningExperience: LearningExperienceDrawer;
+  public readonly networkThroughputCard: ThroughputCard;
   public readonly settingsTab: SettingsTab;
+  public readonly storageThroughputCard: ThroughputCard;
 
   constructor(page: Page) {
     this.page = page;
     this.navigation = new NavigationHelper(page);
     this.learningExperience = new LearningExperienceDrawer(page);
+    this.networkThroughputCard = new ThroughputCard(page, 'Network throughput');
     this.settingsTab = new SettingsTab(page);
+    this.storageThroughputCard = new ThroughputCard(page, 'Storage throughput');
   }
 
   async editAndSaveTransferNetwork(): Promise<void> {
