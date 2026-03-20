@@ -171,8 +171,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
     async ({ page }) => {
       test.setTimeout(120000);
       const overviewPage = new OverviewPage(page);
-      //pause
-      await page.pause();
+
       await test.step('Navigate to Overview page', async () => {
         await overviewPage.navigateDirectly();
       });
