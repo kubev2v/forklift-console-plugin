@@ -24,7 +24,7 @@ test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
 
     await test.step('Edit migration type from warm to cold', async () => {
       await planDetailsPage.detailsTab.clickEditMigrationType();
-      await planDetailsPage.detailsTab.setWarmMigration(false);
+      await planDetailsPage.detailsTab.selectMigrationType(MigrationType.COLD);
       await planDetailsPage.detailsTab.saveMigrationType();
     });
 
@@ -34,7 +34,7 @@ test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
 
     await test.step('Edit migration type from cold back to warm', async () => {
       await planDetailsPage.detailsTab.clickEditMigrationType();
-      await planDetailsPage.detailsTab.setWarmMigration(true);
+      await planDetailsPage.detailsTab.selectMigrationType(MigrationType.WARM);
       await planDetailsPage.detailsTab.saveMigrationType();
     });
 

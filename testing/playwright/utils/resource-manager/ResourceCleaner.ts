@@ -215,7 +215,7 @@ export class ResourceCleaner extends BaseResourceManager {
 
     try {
       await page.goto(`${baseUrl}/k8s/all-namespaces/forklift.konveyor.io~v1beta1~Provider`);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await ResourceCleaner.cleanupAll(page, resources);
     } catch (error) {
       console.error('Error during instant cleanup:', error);

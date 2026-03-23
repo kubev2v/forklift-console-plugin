@@ -26,7 +26,7 @@ export class StorageMapDetailsPage extends BaseMapDetailsPage {
     await this.verifyOnDetailsPage();
     await this.editButtonLocator().click();
     await this.storageMapEditModal.waitForModalToOpen();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
     return this.storageMapEditModal;
   }
 

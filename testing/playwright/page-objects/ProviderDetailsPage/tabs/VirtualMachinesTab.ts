@@ -37,6 +37,6 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   async waitForTableLoad(): Promise<void> {
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 }

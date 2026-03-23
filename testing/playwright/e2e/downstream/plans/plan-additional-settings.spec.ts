@@ -244,21 +244,21 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await test.step('Edit migration type to warm and verify VDDK warning appears', async () => {
       await planDetailsPage.detailsTab.clickEditMigrationType();
       await expect(planDetailsPage.detailsTab.editMigrationTypeModal).toBeVisible();
-      await expect(planDetailsPage.detailsTab.warmMigrationSwitch).not.toBeChecked(); // Should be off for cold
-      await planDetailsPage.detailsTab.warmMigrationSwitch.check({ force: true }); // Turn on warm migration
-      await expect(planDetailsPage.detailsTab.warmMigrationSwitch).toBeChecked();
+      await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.COLD)).toBeChecked();
+      await planDetailsPage.detailsTab.selectMigrationType(MigrationType.WARM);
+      await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.WARM)).toBeChecked();
       await expect(planDetailsPage.detailsTab.vddkWarningAlert).toBeVisible();
     });
 
     await test.step('Toggle back to cold migration and verify warning disappears', async () => {
-      await planDetailsPage.detailsTab.warmMigrationSwitch.uncheck({ force: true }); // Turn off warm migration
-      await expect(planDetailsPage.detailsTab.warmMigrationSwitch).not.toBeChecked();
+      await planDetailsPage.detailsTab.selectMigrationType(MigrationType.COLD);
+      await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.COLD)).toBeChecked();
       await expect(planDetailsPage.detailsTab.vddkWarningAlert).not.toBeVisible();
     });
 
     await test.step('Toggle to warm migration again and verify warning reappears', async () => {
-      await planDetailsPage.detailsTab.warmMigrationSwitch.check({ force: true }); // Turn on warm migration
-      await expect(planDetailsPage.detailsTab.warmMigrationSwitch).toBeChecked();
+      await planDetailsPage.detailsTab.selectMigrationType(MigrationType.WARM);
+      await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.WARM)).toBeChecked();
       await expect(planDetailsPage.detailsTab.vddkWarningAlert).toBeVisible();
     });
 

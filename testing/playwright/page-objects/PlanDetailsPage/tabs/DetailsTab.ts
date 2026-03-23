@@ -29,15 +29,12 @@ export class DetailsTab {
   readonly savePowerStateButton: Locator;
   readonly targetPowerStateSelect: Locator;
   readonly useNbdeClevisCheckbox: Locator;
-  readonly warmMigrationSwitch: Locator;
-
   constructor(page: Page) {
     this.page = page;
     this.editDescriptionModal = this.page.getByRole('dialog', { name: 'Edit description' });
     this.descriptionTextbox = this.editDescriptionModal.getByRole('textbox');
     this.saveDescriptionButton = this.editDescriptionModal.getByTestId('modal-confirm-button');
     this.editMigrationTypeModal = this.page.getByTestId('edit-migration-type-modal');
-    this.warmMigrationSwitch = this.editMigrationTypeModal.getByRole('switch');
     this.saveMigrationTypeButton = this.editMigrationTypeModal.getByTestId('modal-confirm-button');
     this.editPowerStateModal = this.page.getByTestId('edit-target-power-state-modal');
     this.savePowerStateButton = this.page.getByTestId('modal-confirm-button');
@@ -155,6 +152,10 @@ export class DetailsTab {
     return statusText?.trim() ?? '';
   }
 
+  migrationTypeRadio(type: MigrationType): Locator {
+    return this.editMigrationTypeModal.getByTestId(`migration-type-${type}`);
+  }
+
   async navigateToDetailsTab(): Promise<void> {
     const detailsTab = this.page.locator('[data-test-id="horizontal-link-Details"]');
     await detailsTab.click();
@@ -179,8 +180,8 @@ export class DetailsTab {
     await expect(this.editMigrationTypeModal).not.toBeVisible();
   }
 
-  async setWarmMigration(isWarm: boolean): Promise<void> {
-    await this.warmMigrationSwitch.setChecked(isWarm, { force: true });
+  async selectMigrationType(type: MigrationType): Promise<void> {
+    await this.migrationTypeRadio(type).click();
   }
 
   targetVMPowerState(state: string): Locator {
@@ -225,7 +226,6 @@ export class DetailsTab {
   async verifyDetailsTab(planData: PlanTestData): Promise<void> {
     await this.verifyNavigationTabs();
     await this.verifyPlanDetails(planData);
-    await this.verifyPlanStatus();
   }
 
   async verifyGuestConversionModeText(expectedText: string): Promise<void> {
@@ -281,6 +281,7 @@ export class DetailsTab {
 
   async verifyPlanStatus(expectedStatus = 'Ready for migration', soft = false): Promise<void> {
     const statusLocator = this.page.getByTestId('status-detail-item');
+
     const expectFn = expect.configure({ soft });
 
     await expectFn(statusLocator).not.toContainText('Unknown', { timeout: 30000 });

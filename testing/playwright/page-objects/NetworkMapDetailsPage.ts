@@ -26,7 +26,7 @@ export class NetworkMapDetailsPage extends BaseMapDetailsPage {
     await this.verifyOnDetailsPage();
     await this.editButtonLocator().click();
     await this.networkMapEditModal.waitForModalToOpen();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
     return this.networkMapEditModal;
   }
 
