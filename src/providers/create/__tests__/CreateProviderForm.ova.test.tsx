@@ -80,26 +80,25 @@ jest.mock('../fields/ProviderTypeField', () => {
     '../hooks/useCreateProviderFormContext',
   );
 
-  return {
-    __esModule: true,
-    default: () => {
-      const { control } = useCreateProviderFormContext();
-      const { field } = useController({
-        control,
-        name: 'providerType',
-      });
+  const ProviderTypeField = () => {
+    const { control } = useCreateProviderFormContext();
+    const { field } = useController({
+      control,
+      name: 'providerType',
+    });
 
-      return (
-        <div>
-          <label htmlFor="provider-type-select">Provider type</label>
-          <select id="provider-type-select" data-testid="provider-type-select" {...field}>
-            <option value="">Select a provider type</option>
-            <option value="ova">Open Virtual Appliance</option>
-          </select>
-        </div>
-      );
-    },
+    return (
+      <div>
+        <label htmlFor="provider-type-select">Provider type</label>
+        <select id="provider-type-select" data-testid="provider-type-select" {...field}>
+          <option value="">Select a provider type</option>
+          <option value="ova">Open Virtual Appliance</option>
+        </select>
+      </div>
+    );
   };
+
+  return { __esModule: true, default: ProviderTypeField };
 });
 
 describe('CreateProviderForm - OVA Provider', () => {
