@@ -10,11 +10,13 @@ import {
   mockCreateProviderSecret,
   mockNavigate,
   mockPatchProviderSecretOwner,
+  mockSearchParams,
 } from './test-utils';
 
 jest.mock('react-router-dom-v5-compat', () => ({
   ...jest.requireActual('react-router-dom-v5-compat'),
   useNavigate: () => mockNavigate,
+  useSearchParams: () => [mockSearchParams, jest.fn()],
 }));
 
 jest.mock('@utils/analytics/hooks/useForkliftAnalytics', () => ({

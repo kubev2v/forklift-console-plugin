@@ -4,10 +4,13 @@ import type { CreateProviderFormData } from '../types';
 /**
  * Returns default form values for the Create Provider form
  */
-export const getDefaultFormValues = (namespace: string): Partial<CreateProviderFormData> => {
+export const getDefaultFormValues = (
+  namespace: string,
+  providerType?: string,
+): Partial<CreateProviderFormData> => {
   return {
     [ProviderFormFieldId.ProviderName]: '',
     [ProviderFormFieldId.ProviderProject]: namespace,
-    [ProviderFormFieldId.ProviderType]: undefined,
+    [ProviderFormFieldId.ProviderType]: providerType,
   };
 };

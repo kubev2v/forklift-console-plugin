@@ -245,6 +245,10 @@ export class CreateProviderPage {
     return (await this.certificateUploadInput.inputValue()) ?? '';
   }
 
+  getProviderTypeToggle() {
+    return this.page.getByTestId('provider-type-toggle');
+  }
+
   async navigate(namespace?: string): Promise<void> {
     await this.navigationHelper.navigateToConsole();
     await this.navigationHelper.navigateToK8sResource({
@@ -257,6 +261,13 @@ export class CreateProviderPage {
     const createButton = this.page.getByTestId('add-provider-button');
     await createButton.waitFor({ state: 'visible', timeout: 20000 });
     await createButton.click();
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  async navigateWithProviderType(providerType: string): Promise<void> {
+    await this.page.goto(
+      `/k8s/cluster/forklift.konveyor.io~v1beta1~Provider/~new?providerType=${providerType}`,
+    );
     await this.page.waitForLoadState('networkidle');
   }
 

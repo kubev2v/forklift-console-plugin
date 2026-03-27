@@ -1,6 +1,7 @@
 import { type FC, useCallback, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate, useSearchParams } from 'react-router-dom-v5-compat';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
 
 import {
@@ -30,14 +31,21 @@ import type { CreateProviderFormData } from './types';
 
 import './CreateProviderForm.style.scss';
 
+const VALID_PROVIDER_TYPES = new Set(Object.values(PROVIDER_TYPES));
+
 const CreateProviderForm: FC = () => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
   const { trackEvent } = useForkliftAnalytics();
   const [apiError, setApiError] = useState<Error | null>(null);
+  const [searchParams] = useSearchParams();
+
+  const urlProviderType = searchParams.get('providerType');
+  const validatedProviderType =
+    urlProviderType && VALID_PROVIDER_TYPES.has(urlProviderType) ? urlProviderType : undefined;
 
   const form = useForm<CreateProviderFormData>({
-    defaultValues: getDefaultFormValues(''),
+    defaultValues: getDefaultFormValues('', validatedProviderType),
     mode: 'onChange',
   });
 
