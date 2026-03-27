@@ -39,19 +39,16 @@ test.describe('Plan Wizard-Details Consistency', { tag: '@downstream' }, () => {
       await wizard.review.verifyMigrationTypeValue('Warm migration');
     });
 
-    await test.step('Create the plan', async () => {
+    await test.step('Create plan and verify details page', async () => {
       await wizard.clickNext();
       await wizard.waitForPlanCreation();
-    });
-
-    await test.step('Verify migration type on details page matches review', async () => {
       const planDetailsPage = new PlanDetailsPage(page);
       await planDetailsPage.detailsTab.navigateToDetailsTab();
       await planDetailsPage.detailsTab.verifyMigrationType(MigrationType.WARM);
     });
   });
 
-  test('should verify preserve static IPs default in review step matches details page', async ({
+  test('should verify default settings in review step match details page', async ({
     page,
     testProvider,
     resourceManager,
@@ -64,75 +61,21 @@ test.describe('Plan Wizard-Details Consistency', { tag: '@downstream' }, () => {
     const wizard = new CreatePlanWizardPage(page, resourceManager);
     await wizard.navigate();
     await wizard.waitForWizardLoad();
+    await wizard.navigateToMigrationTypeStep(testData);
+    await wizard.clickSkipToReview();
 
-    await test.step('Navigate through wizard to review step', async () => {
-      await wizard.generalInformation.fillAndComplete(testData);
-      await wizard.clickNext();
-      await wizard.virtualMachines.fillAndComplete(testData.virtualMachines);
-      await wizard.clickNext();
-      await wizard.networkMap.fillAndComplete(testData.networkMap);
-      await wizard.clickNext();
-      await wizard.storageMap.fillAndComplete(testData.storageMap);
-      await wizard.clickNext();
-      await wizard.clickSkipToReview();
-    });
-
-    await test.step('Verify preserve static IPs is Enabled in review (vSphere default)', async () => {
+    await test.step('Verify default values in review step (vSphere)', async () => {
       await wizard.review.verifyStepVisible();
       await wizard.review.verifyPreserveStaticIPs(true);
-    });
-
-    await test.step('Create the plan', async () => {
-      await wizard.clickNext();
-      await wizard.waitForPlanCreation();
-    });
-
-    await test.step('Verify preserve static IPs on details page matches review', async () => {
-      const planDetailsPage = new PlanDetailsPage(page);
-      await planDetailsPage.detailsTab.navigateToDetailsTab();
-      await planDetailsPage.detailsTab.verifyPreserveStaticIPs(true);
-    });
-  });
-
-  test('should verify shared disks default in review step matches details page', async ({
-    page,
-    testProvider,
-    resourceManager,
-  }) => {
-    const testData: PlanTestData = createPlanTestData({
-      sourceProvider: testProvider?.metadata?.name ?? '',
-    });
-    resourceManager.addPlan(testData.planName, testData.planProject);
-
-    const wizard = new CreatePlanWizardPage(page, resourceManager);
-    await wizard.navigate();
-    await wizard.waitForWizardLoad();
-
-    await test.step('Navigate through wizard to review step', async () => {
-      await wizard.generalInformation.fillAndComplete(testData);
-      await wizard.clickNext();
-      await wizard.virtualMachines.fillAndComplete(testData.virtualMachines);
-      await wizard.clickNext();
-      await wizard.networkMap.fillAndComplete(testData.networkMap);
-      await wizard.clickNext();
-      await wizard.storageMap.fillAndComplete(testData.storageMap);
-      await wizard.clickNext();
-      await wizard.clickSkipToReview();
-    });
-
-    await test.step('Verify shared disks is Enabled in review (default)', async () => {
-      await wizard.review.verifyStepVisible();
       await wizard.review.verifySharedDisks(true);
     });
 
-    await test.step('Create the plan', async () => {
+    await test.step('Create plan and verify details page matches review', async () => {
       await wizard.clickNext();
       await wizard.waitForPlanCreation();
-    });
-
-    await test.step('Verify shared disks on details page matches review', async () => {
       const planDetailsPage = new PlanDetailsPage(page);
       await planDetailsPage.detailsTab.navigateToDetailsTab();
+      await planDetailsPage.detailsTab.verifyPreserveStaticIPs(true);
       await planDetailsPage.detailsTab.verifySharedDisks(true);
     });
   });
