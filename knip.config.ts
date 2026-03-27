@@ -30,24 +30,10 @@ export default {
     'src/storageMaps/create/StorageMapCreatePage.tsx',
   ],
   ignore: ['i18next-parser.config.ts', 'testing/**', 'eslint.ide.config.ts'],
-  ignoreBinaries: [
-    'kubectl',
-    'ocp-i18n-defaults',
-    'ocp-i18n-dummy-locale',
-    'ocp-i18n-export-pos',
-    'ocp-i18n-fix-plurals',
-    'ocp-i18n-memsource-download',
-    'ocp-i18n-memsource-upload',
-    'ocp-i18n-po-to-i18n',
-    'ocp-i18n-replace-br',
-    'ocp-i18n-to-po',
-    'playwright',
-  ],
+  ignoreBinaries: ['kubectl', 'playwright'],
   ignoreDependencies: [
     'ts-node',
     '@types/i18next', // Provides TypeScript types for i18next
     'monaco-editor', // Required peer dependency for @patternfly/react-code-editor
-    'ocp-plugin-i18n-scripts', // Provides ocp-i18n-* CLI binaries for i18n workflow
-    'react-redux', // Provided by OpenShift Console host at runtime
   ],
 } satisfies KnipConfig;
