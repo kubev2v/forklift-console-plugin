@@ -6,11 +6,13 @@ import type { PlanTestData } from '../../../types/test-data';
 export class MigrationTypeStep {
   private readonly page: Page;
   readonly coldMigrationRadio: Locator;
+  readonly liveMigrationRadio: Locator;
   readonly warmMigrationRadio: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.coldMigrationRadio = page.getByTestId('migration-type-cold');
+    this.liveMigrationRadio = page.getByTestId('migration-type-live');
     this.warmMigrationRadio = page.getByTestId('migration-type-warm');
   }
 
@@ -29,6 +31,8 @@ export class MigrationTypeStep {
       await this.coldMigrationRadio.click();
     } else if (migrationType === MigrationType.WARM) {
       await this.warmMigrationRadio.click();
+    } else if (migrationType === MigrationType.LIVE) {
+      await this.liveMigrationRadio.click();
     }
   }
 

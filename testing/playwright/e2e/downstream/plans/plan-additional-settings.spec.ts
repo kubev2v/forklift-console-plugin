@@ -5,7 +5,7 @@ import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/Cre
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { MigrationType } from '../../../types/enums';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_11_0, V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Plan additional settings', { tag: '@downstream' }, () => {
@@ -254,6 +254,108 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await planDetailsPage.detailsTab.saveDiskDecryptionButton.click();
     await expect(planDetailsPage.detailsTab.editDiskDecryptionModal).not.toBeVisible();
   });
+});
+
+test.describe('Plan additional settings - PR #2292', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_12_0);
+
+  test('should edit preserve static IPs from details page', async ({
+    page,
+    testProvider,
+    resourceManager,
+  }) => {
+    const testData: PlanTestData = createPlanTestData({
+      sourceProvider: testProvider?.metadata?.name ?? '',
+    });
+    resourceManager.addPlan(testData.planName, testData.planProject);
+
+    await test.step('Create plan via wizard', async () => {
+      const wizard = new CreatePlanWizardPage(page, resourceManager);
+      await wizard.navigate();
+      await wizard.waitForWizardLoad();
+      await wizard.fillAndSubmit(testData);
+    });
+
+    const planDetailsPage = new PlanDetailsPage(page);
+
+    await test.step('Verify initial state on details page (default is enabled for vSphere)', async () => {
+      await planDetailsPage.detailsTab.navigateToDetailsTab();
+      await planDetailsPage.detailsTab.verifyPreserveStaticIPs(true);
+    });
+
+    await test.step('Open edit modal and disable preserve static IPs', async () => {
+      await planDetailsPage.detailsTab.clickEditPreserveStaticIPs();
+      await expect(planDetailsPage.detailsTab.preserveStaticIPsCheckbox).toBeChecked();
+      await planDetailsPage.detailsTab.preserveStaticIPsCheckbox.uncheck();
+      await expect(planDetailsPage.detailsTab.preserveStaticIPsCheckbox).not.toBeChecked();
+      await planDetailsPage.detailsTab.savePreserveStaticIPs();
+    });
+
+    await test.step('Verify preserve static IPs is now disabled', async () => {
+      await planDetailsPage.detailsTab.verifyPreserveStaticIPs(false);
+    });
+
+    await test.step('Re-enable preserve static IPs', async () => {
+      await planDetailsPage.detailsTab.clickEditPreserveStaticIPs();
+      await expect(planDetailsPage.detailsTab.preserveStaticIPsCheckbox).not.toBeChecked();
+      await planDetailsPage.detailsTab.preserveStaticIPsCheckbox.check();
+      await expect(planDetailsPage.detailsTab.preserveStaticIPsCheckbox).toBeChecked();
+      await planDetailsPage.detailsTab.savePreserveStaticIPs();
+    });
+
+    await test.step('Verify preserve static IPs is now enabled again', async () => {
+      await planDetailsPage.detailsTab.verifyPreserveStaticIPs(true);
+    });
+  });
+
+  test('should edit shared disks from details page', async ({
+    page,
+    testProvider,
+    resourceManager,
+  }) => {
+    const testData: PlanTestData = createPlanTestData({
+      sourceProvider: testProvider?.metadata?.name ?? '',
+    });
+    resourceManager.addPlan(testData.planName, testData.planProject);
+
+    await test.step('Create plan via wizard', async () => {
+      const wizard = new CreatePlanWizardPage(page, resourceManager);
+      await wizard.navigate();
+      await wizard.waitForWizardLoad();
+      await wizard.fillAndSubmit(testData);
+    });
+
+    const planDetailsPage = new PlanDetailsPage(page);
+
+    await test.step('Navigate to details tab', async () => {
+      await planDetailsPage.detailsTab.navigateToDetailsTab();
+    });
+
+    await test.step('Open edit modal and enable shared disks migration', async () => {
+      await planDetailsPage.detailsTab.clickEditMigrateSharedDisks();
+      await planDetailsPage.detailsTab.migrateSharedDisksCheckbox.check();
+      await expect(planDetailsPage.detailsTab.migrateSharedDisksCheckbox).toBeChecked();
+      await expect(planDetailsPage.detailsTab.sharedDisksInfoAlert).toBeVisible();
+      await planDetailsPage.detailsTab.saveMigrateSharedDisks();
+    });
+
+    await test.step('Verify shared disks migration is enabled', async () => {
+      await planDetailsPage.detailsTab.verifySharedDisks(true);
+    });
+
+    await test.step('Disable shared disks migration', async () => {
+      await planDetailsPage.detailsTab.clickEditMigrateSharedDisks();
+      await expect(planDetailsPage.detailsTab.migrateSharedDisksCheckbox).toBeChecked();
+      await planDetailsPage.detailsTab.migrateSharedDisksCheckbox.uncheck();
+      await expect(planDetailsPage.detailsTab.migrateSharedDisksCheckbox).not.toBeChecked();
+      await expect(planDetailsPage.detailsTab.sharedDisksInfoAlert).not.toBeVisible();
+      await planDetailsPage.detailsTab.saveMigrateSharedDisks();
+    });
+
+    await test.step('Verify shared disks migration is disabled', async () => {
+      await planDetailsPage.detailsTab.verifySharedDisks(false);
+    });
+  });
 
   test('should show validation error when selecting warm migration with provider without VDDK', async ({
     page,
@@ -327,13 +429,13 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
       await expect(planDetailsPage.detailsTab.vddkWarningAlert).toBeVisible();
     });
 
-    await test.step('Toggle back to cold migration and verify warning disappears', async () => {
+    await test.step('Switch back to cold migration and verify warning disappears', async () => {
       await planDetailsPage.detailsTab.selectMigrationType(MigrationType.COLD);
       await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.COLD)).toBeChecked();
       await expect(planDetailsPage.detailsTab.vddkWarningAlert).not.toBeVisible();
     });
 
-    await test.step('Toggle to warm migration again and verify warning reappears', async () => {
+    await test.step('Switch to warm migration again and verify warning reappears', async () => {
       await planDetailsPage.detailsTab.selectMigrationType(MigrationType.WARM);
       await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.WARM)).toBeChecked();
       await expect(planDetailsPage.detailsTab.vddkWarningAlert).toBeVisible();

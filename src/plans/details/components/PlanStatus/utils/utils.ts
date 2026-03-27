@@ -151,12 +151,12 @@ export const getPlanStatus = (plan: V1beta1Plan): PlanStatuses => {
 
   const conditions = getConditions(plan);
 
-  if (isEmpty(conditions)) {
-    return PlanStatuses.Unknown;
-  }
-
   if (plan?.spec?.archived || conditions.includes(PlanStatuses.Archived)) {
     return PlanStatuses.Archived;
+  }
+
+  if (isEmpty(conditions)) {
+    return PlanStatuses.Unknown;
   }
 
   if (conditions.includes(CATEGORY_TYPES.SUCCEEDED)) {

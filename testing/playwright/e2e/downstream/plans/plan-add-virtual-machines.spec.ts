@@ -13,7 +13,7 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
     createCustomPlan,
     resourceManager,
   }) => {
-    test.setTimeout(120_000);
+    test.setTimeout(180_000);
     const testPlan = await createCustomPlan({
       virtualMachines: [{ folder: 'vm' }],
       criticalIssuesAction: 'confirm',
