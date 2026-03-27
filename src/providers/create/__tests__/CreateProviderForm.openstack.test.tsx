@@ -74,32 +74,10 @@ jest.mock('@utils/hooks/useDefaultProject', () => ({
   useDefaultProject: () => 'test-namespace',
 }));
 
-jest.mock('../fields/ProviderTypeField', () => {
-  const { useController } = jest.requireActual('react-hook-form');
-  const { useCreateProviderFormContext } = jest.requireActual(
-    '../hooks/useCreateProviderFormContext',
-  );
-
-  const ProviderTypeField = () => {
-    const { control } = useCreateProviderFormContext();
-    const { field } = useController({
-      control,
-      name: 'providerType',
-    });
-
-    return (
-      <div>
-        <label htmlFor="provider-type-select">Provider type</label>
-        <select id="provider-type-select" data-testid="provider-type-select" {...field}>
-          <option value="">Select a provider type</option>
-          <option value="openstack">OpenStack</option>
-        </select>
-      </div>
-    );
-  };
-
-  return { __esModule: true, default: ProviderTypeField };
-});
+jest.mock('../fields/ProviderTypeField', () =>
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  require('./test-utils').mockCreateProviderTypeField('openstack', 'OpenStack'),
+);
 
 describe('CreateProviderForm - OpenStack Provider', () => {
   beforeEach(() => {
