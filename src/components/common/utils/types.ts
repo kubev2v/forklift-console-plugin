@@ -42,7 +42,7 @@ export type FilterDef = {
   showFilterIcon?: boolean;
 };
 
-type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => string);
+export type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => string);
 
 type OpenApiJsonResourcePath =
   | OpenApiJsonPath

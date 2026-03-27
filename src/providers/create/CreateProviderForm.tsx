@@ -31,7 +31,7 @@ import type { CreateProviderFormData } from './types';
 
 import './CreateProviderForm.style.scss';
 
-const VALID_PROVIDER_TYPES = new Set(Object.values(PROVIDER_TYPES));
+const VALID_PROVIDER_TYPES = new Set<string>(Object.values(PROVIDER_TYPES));
 
 const CreateProviderForm: FC = () => {
   const { t } = useForkliftTranslation();
