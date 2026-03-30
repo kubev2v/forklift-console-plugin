@@ -26,17 +26,9 @@ export class ProviderDetailsPage {
     this.virtualMachinesTab = new VirtualMachinesTab(page);
   }
 
-  async clickCreatePlanButton(): Promise<void> {
-    const createPlanButton = isVersionAtLeast(V2_12_0)
-      ? this.page.getByTestId('create-plan-from-provider-button')
-      : this.page.getByRole('button', { name: 'Create migration plan' });
-    await expect(createPlanButton).toBeVisible();
-    await expect(createPlanButton).toBeEnabled();
-    await createPlanButton.click();
-  }
-
   private getProviderTypeDisplayName(type: string): string {
     const typeMap: Record<string, string> = {
+      hyperv: 'HyperV',
       openshift: 'OpenShift',
       openstack: 'OpenStack',
       ova: 'OVA',
@@ -44,6 +36,15 @@ export class ProviderDetailsPage {
       vsphere: 'VMware',
     };
     return typeMap[type] ?? type;
+  }
+
+  async clickCreatePlanButton(): Promise<void> {
+    const createPlanButton = isVersionAtLeast(V2_12_0)
+      ? this.page.getByTestId('create-plan-from-provider-button')
+      : this.page.getByRole('button', { name: 'Create migration plan' });
+    await expect(createPlanButton).toBeVisible();
+    await expect(createPlanButton).toBeEnabled();
+    await createPlanButton.click();
   }
 
   async navigate(providerName: string, namespace: string): Promise<void> {

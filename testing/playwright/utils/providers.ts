@@ -10,6 +10,13 @@ if (!existsSync(providersPath)) {
 }
 
 /**
+ * Check if a provider configuration exists in .providers.json
+ */
+export const hasProviderConfig = (providerKey: string): boolean => {
+  return providerKey in (providers as Record<string, ProviderConfig>);
+};
+
+/**
  * Get provider configuration from .providers.json
  */
 export const getProviderConfig = (providerKey: string): ProviderConfig => {

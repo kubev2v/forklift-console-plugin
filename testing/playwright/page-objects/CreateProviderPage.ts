@@ -97,6 +97,25 @@ export class CreateProviderPage {
     }
   }
 
+  private async fillHypervFields(testData: ProviderData) {
+    // SMB URL must be filled first — credential fields render only after it has a value
+    await this.page.locator('#smbUrl').fill(testData.smbUrl ?? '');
+    await this.page.getByTestId('hyperv-host-input').waitFor({ state: 'visible', timeout: 10000 });
+
+    await this.page.getByTestId('hyperv-host-input').fill(testData.hostname ?? '');
+    await this.page.getByTestId('hyperv-username-input').fill(testData.username ?? '');
+    await this.page.getByTestId('hyperv-password-input').fill(testData.password ?? '');
+
+    if (testData.useDifferentSmbCredentials) {
+      const checkbox = this.page.locator('#useDifferentSmbCredentials');
+      if (!(await checkbox.isChecked())) {
+        await checkbox.click();
+      }
+      await this.page.getByTestId('smb-user-input').fill(testData.smbUsername ?? '');
+      await this.page.getByTestId('smb-password-input').fill(testData.smbPassword ?? '');
+    }
+  }
+
   private async fillOpenStackFields(testData: ProviderData) {
     await this.page.getByTestId('openstack-url-input').fill(testData.hostname ?? '');
     await this.page.getByTestId('openstack-username-input').fill(testData.username ?? '');
@@ -220,6 +239,9 @@ export class CreateProviderPage {
     await this.fillProviderName(testData.name);
 
     switch (testData.type) {
+      case ProviderType.HYPERV:
+        await this.fillHypervFields(testData);
+        break;
       case ProviderType.VSPHERE:
         await this.fillVSphereFields(testData);
         break;
