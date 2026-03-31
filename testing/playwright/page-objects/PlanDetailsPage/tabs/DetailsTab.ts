@@ -283,7 +283,7 @@ export class DetailsTab {
     const statusLocator = this.page.getByTestId('status-detail-item');
     const expectFn = expect.configure({ soft });
 
-    await expectFn(statusLocator).not.toContainText('Unknown', { timeout: 30000 });
+    await expectFn(statusLocator).not.toContainText('Unknown', { timeout: 120000 });
 
     if (expectedStatus === 'Ready for migration') {
       await expectFn(

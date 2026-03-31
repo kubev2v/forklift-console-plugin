@@ -129,6 +129,20 @@ export class ProviderDetailsPage {
     await expect(titleLocator).toContainText(providerName);
   }
 
+  async waitForInventoryReady(timeoutMs = 180000): Promise<void> {
+    await this.waitForReadyStatus(timeoutMs);
+    await this.virtualMachinesTab.navigateToVirtualMachinesTab();
+
+    const treegrid = this.page.getByRole('treegrid');
+    await expect(treegrid).toBeVisible({ timeout: 30000 });
+    const vmRow = treegrid.locator(
+      'tbody tr[data-testid^="folder-"], tbody tr[data-testid^="vm-"]',
+    );
+    await expect(vmRow.first()).toBeVisible({ timeout: timeoutMs });
+
+    await this.page.locator('[data-test-id="horizontal-link-Details"]').click();
+  }
+
   async waitForPageLoad(): Promise<void> {
     await this.page.waitForLoadState('domcontentloaded');
   }
