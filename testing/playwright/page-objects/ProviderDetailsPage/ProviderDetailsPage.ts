@@ -26,17 +26,9 @@ export class ProviderDetailsPage {
     this.virtualMachinesTab = new VirtualMachinesTab(page);
   }
 
-  async clickCreatePlanButton(): Promise<void> {
-    const createPlanButton = isVersionAtLeast(V2_12_0)
-      ? this.page.getByTestId('create-plan-from-provider-button')
-      : this.page.getByRole('button', { name: 'Create migration plan' });
-    await expect(createPlanButton).toBeVisible();
-    await expect(createPlanButton).toBeEnabled();
-    await createPlanButton.click();
-  }
-
   private getProviderTypeDisplayName(type: string): string {
     const typeMap: Record<string, string> = {
+      hyperv: 'HyperV',
       openshift: 'OpenShift',
       openstack: 'OpenStack',
       ova: 'OVA',
@@ -44,6 +36,15 @@ export class ProviderDetailsPage {
       vsphere: 'VMware',
     };
     return typeMap[type] ?? type;
+  }
+
+  async clickCreatePlanButton(): Promise<void> {
+    const createPlanButton = isVersionAtLeast(V2_12_0)
+      ? this.page.getByTestId('create-plan-from-provider-button')
+      : this.page.getByRole('button', { name: 'Create migration plan' });
+    await expect(createPlanButton).toBeVisible();
+    await expect(createPlanButton).toBeEnabled();
+    await createPlanButton.click();
   }
 
   async navigate(providerName: string, namespace: string): Promise<void> {
@@ -126,6 +127,20 @@ export class ProviderDetailsPage {
   async verifyProviderTitle(providerName: string): Promise<void> {
     const titleLocator = this.page.getByTestId('resource-details-title');
     await expect(titleLocator).toContainText(providerName);
+  }
+
+  async waitForInventoryReady(timeoutMs = 180000): Promise<void> {
+    await this.waitForReadyStatus(timeoutMs);
+    await this.virtualMachinesTab.navigateToVirtualMachinesTab();
+
+    const treegrid = this.page.getByRole('treegrid');
+    await expect(treegrid).toBeVisible({ timeout: 30000 });
+    const vmRow = treegrid.locator(
+      'tbody tr[data-testid^="folder-"], tbody tr[data-testid^="vm-"]',
+    );
+    await expect(vmRow.first()).toBeVisible({ timeout: timeoutMs });
+
+    await this.page.locator('[data-test-id="horizontal-link-Details"]').click();
   }
 
   async waitForPageLoad(): Promise<void> {

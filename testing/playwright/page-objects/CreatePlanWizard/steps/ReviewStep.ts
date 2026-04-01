@@ -256,7 +256,7 @@ export class ReviewStep {
   async verifyVirtualMachinesSection(): Promise<void> {
     await expect(this.page.getByTestId('review-virtual-machines-section')).toBeVisible();
     await expect(this.page.getByTestId('review-vm-count')).toContainText(
-      'virtual machine selected',
+      /virtual machines? selected/,
     );
   }
 }
