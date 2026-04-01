@@ -17,7 +17,13 @@ import { OverviewPage } from '../../page-objects/OverviewPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { PlansListPage } from '../../page-objects/PlansListPage';
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
-import { createPlanTestData, type ProviderConfig, type ProviderData } from '../../types/test-data';
+import {
+  createPlanTestData,
+  NetworkTargets,
+  type ProviderConfig,
+  type ProviderData,
+  SourceNetworks,
+} from '../../types/test-data';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 import { V2_10_5, V2_12_0 } from '../../utils/version/constants';
@@ -54,7 +60,18 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
         targetName: `mtv-func-rhel9-renamed-${Date.now()}`,
         folder: 'vm',
       },
+      {
+        sourceName: 'mtv-func-win2019',
+        targetName: `mtv-func-win2019-renamed-${Date.now()}`,
+        folder: 'vm',
+      },
     ],
+    networkMap: {
+      mappings: [
+        { source: SourceNetworks.MGMT_NETWORK, target: NetworkTargets.DEFAULT },
+        { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.IGNORE },
+      ],
+    },
     targetProject: {
       name: targetProjectName,
       isPreexisting: false,
@@ -101,7 +118,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       const planDetailsPage = new PlanDetailsPage(page);
 
       await providerDetailsPage.navigate(providerName, MTV_NAMESPACE);
-      await providerDetailsPage.waitForReadyStatus();
+      await providerDetailsPage.waitForInventoryReady();
       await providerDetailsPage.clickCreatePlanButton();
       await createWizard.waitForWizardLoad();
 

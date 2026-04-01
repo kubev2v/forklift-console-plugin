@@ -202,6 +202,9 @@ export interface ProviderConfig {
   region_name?: string;
   project_name?: string;
   user_domain_name?: string;
+  smb_url?: string;
+  smb_username?: string;
+  smb_password?: string;
 }
 export interface ProviderData {
   name: string;
@@ -219,4 +222,8 @@ export interface ProviderData {
   regionName?: string;
   openstackProjectName?: string;
   domainName?: string;
+  smbUrl?: string;
+  smbUsername?: string;
+  smbPassword?: string;
+  useDifferentSmbCredentials?: boolean;
 }

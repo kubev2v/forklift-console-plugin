@@ -19,6 +19,9 @@ export class CredentialsTab {
   readonly passwordValue: Locator;
   readonly revealHideButton: Locator;
   readonly skipCertificateField: Locator;
+  readonly smbPasswordValue: Locator;
+  readonly smbUrlValue: Locator;
+  readonly smbUserValue: Locator;
   readonly usernameCopyButton: Locator;
   readonly usernameValue: Locator;
 
@@ -35,6 +38,10 @@ export class CredentialsTab {
     this.skipCertificateField = this.page.getByTestId('credential-insecureSkipVerify');
     this.passwordValue = this.page.getByTestId('credential-password');
     this.usernameValue = this.page.getByTestId('credential-user');
+
+    this.smbUrlValue = this.page.getByTestId('credential-smbUrl');
+    this.smbUserValue = this.page.getByTestId('credential-smbUser');
+    this.smbPasswordValue = this.page.getByTestId('credential-smbPassword');
 
     this.passwordCopyButton = this.passwordValue.getByRole('button', { name: 'Copy to clipboard' });
     this.usernameCopyButton = this.usernameValue.getByRole('button', { name: 'Copy to clipboard' });
@@ -60,6 +67,18 @@ export class CredentialsTab {
 
   async getSkipCertificateValue(): Promise<string> {
     return (await this.skipCertificateField.textContent()) ?? '';
+  }
+
+  async getSmbPasswordValue(): Promise<string> {
+    return (await this.smbPasswordValue.textContent()) ?? '';
+  }
+
+  async getSmbUrlValue(): Promise<string> {
+    return (await this.smbUrlValue.textContent()) ?? '';
+  }
+
+  async getSmbUserValue(): Promise<string> {
+    return (await this.smbUserValue.textContent()) ?? '';
   }
 
   async getUsernameValue(): Promise<string> {
