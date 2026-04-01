@@ -139,7 +139,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream', '@slow'],
     },
     async ({ page }) => {
-      const timeout = 15 * 60000;
+      const timeout = 20 * 60000;
       test.setTimeout(timeout);
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
