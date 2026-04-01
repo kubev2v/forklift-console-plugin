@@ -1,4 +1,5 @@
-import hypervImg from './resources/hyperv.png';
+import ec2Img from './resources/aws-ec2.svg';
+import hypervImg from './resources/hyperv.svg';
 import ovaImg from './resources/open-virtual-appliance.png';
 import openshiftImg from './resources/openshift-virtualization.svg';
 import openstackImg from './resources/openstack2.svg';
@@ -7,6 +8,14 @@ import vmwareImgDark from './resources/vmware-dark.svg';
 import vmwareImgLight from './resources/vmware-light.svg';
 
 import './logos.scss';
+
+export const ec2Logo = (
+  <img
+    className="forklift--create-provider-edit-card-title-logo"
+    src={ec2Img}
+    alt="Amazon EC2 logo"
+  />
+);
 
 export const openshiftLogo = (
   <img
@@ -44,7 +53,7 @@ export const hypervLogo = (
   <img
     className="forklift--create-provider-edit-card-title-logo"
     src={hypervImg}
-    alt="Hyper-V logo"
+    alt="Microsoft Hyper-V logo"
   />
 );
 

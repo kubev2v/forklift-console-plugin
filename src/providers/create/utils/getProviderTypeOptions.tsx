@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 import {
+  ec2Logo,
   getVmwareLogo,
   hypervLogo,
   openshiftLogo,
@@ -19,6 +20,12 @@ type ProviderTypeOption = {
 };
 
 export const getProviderTypeOptions = (isDarkTheme: boolean): ProviderTypeOption[] => [
+  {
+    description: t('Migrate Amazon EC2 instances to OpenShift Virtualization'),
+    icon: ec2Logo,
+    label: t('Amazon EC2'),
+    value: PROVIDER_TYPES.ec2,
+  },
   {
     description: t('Run and manage virtual machines in Red Hat OpenShift'),
     icon: openshiftLogo,

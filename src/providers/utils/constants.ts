@@ -25,6 +25,7 @@ export enum ProvidersResourceFieldId {
 export const providerUiAnnotation = 'forklift.konveyor.io/providerUI';
 
 export const PROVIDER_TYPES = {
+  ec2: 'ec2',
   hyperv: 'hyperv',
   openshift: 'openshift',
   openstack: 'openstack',

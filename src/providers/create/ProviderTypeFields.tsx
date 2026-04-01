@@ -7,6 +7,10 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import CertificateValidationField from './fields/CertificateValidationField';
 import { ProviderFormFieldId } from './fields/constants';
+import Ec2CredentialsFields from './fields/ec2/Ec2CredentialsFields';
+import Ec2CrossAccountCredentialsFields from './fields/ec2/Ec2CrossAccountCredentialsFields';
+import Ec2RegionField from './fields/ec2/Ec2RegionField';
+import Ec2TargetSettingsFields from './fields/ec2/Ec2TargetSettingsFields';
 import HypervCredentialsFields from './fields/hyperv/HypervCredentialsFields';
 import SmbCredentialsFields from './fields/hyperv/SmbCredentialsFields';
 import SmbUrlField from './fields/hyperv/SmbDirectoryField';
@@ -48,6 +52,17 @@ const ProviderTypeFields: FC = () => {
       <ProviderTypeField />
 
       {selectedProviderType && <ProviderNameField />}
+
+      {selectedProviderType === PROVIDER_TYPES.ec2 && (
+        <>
+          <Ec2RegionField />
+          <SectionHeading text={t('Provider credentials')} />
+          <Ec2CredentialsFields />
+          <SectionHeading text={t('Target settings')} />
+          <Ec2TargetSettingsFields />
+          <Ec2CrossAccountCredentialsFields />
+        </>
+      )}
 
       {selectedProviderType === PROVIDER_TYPES.ova && (
         <>

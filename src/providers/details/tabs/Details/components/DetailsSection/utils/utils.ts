@@ -5,6 +5,7 @@ import type { V1beta1Provider } from '@forklift-ui/types';
 import { CONDITION_STATUS } from '@utils/constants';
 import { ProviderStatus } from '@utils/types';
 
+import Ec2DetailsSection from '../Ec2DetailsSection';
 import HyperVDetailsSection from '../HyperVDetailsSection';
 import OpenshiftDetailsSection from '../OpenshiftDetailsSection';
 import OpenstackDetailsSection from '../OpenstackDetailsSection';
@@ -18,6 +19,8 @@ export const getDetailsSectionByType = (
   type: string | undefined,
 ): FC<DetailsSectionProps> | undefined => {
   switch (type) {
+    case PROVIDER_TYPES.ec2:
+      return Ec2DetailsSection;
     case PROVIDER_TYPES.ovirt:
       return OvirtDetailsSection;
     case PROVIDER_TYPES.openshift:

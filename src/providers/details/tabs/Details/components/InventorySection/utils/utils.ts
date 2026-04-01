@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
+import Ec2InventorySection from '../Ec2InventorySection';
 import HyperVInventorySection from '../HyperVInventorySection';
 import OpenshiftInventorySection from '../OpenshiftInventorySection';
 import OpenstackInventorySection from '../OpenstackInventorySection';
@@ -14,6 +15,8 @@ export const getInventorySectionByType = (
   type: string | undefined,
 ): FC<InventorySectionProps> | undefined => {
   switch (type) {
+    case PROVIDER_TYPES.ec2:
+      return Ec2InventorySection;
     case PROVIDER_TYPES.ovirt:
       return OvirtInventorySection;
     case PROVIDER_TYPES.openshift:

@@ -70,9 +70,22 @@ enum HypervProviderFormFieldId {
   SmbPassword = 'smbPassword',
 }
 
+enum Ec2ProviderFormFieldId {
+  Ec2AccessKeyId = 'ec2AccessKeyId',
+  Ec2AutoTargetCredentials = 'ec2AutoTargetCredentials',
+  Ec2Region = 'ec2Region',
+  Ec2SecretAccessKey = 'ec2SecretAccessKey',
+  Ec2TargetAccessKeyId = 'ec2TargetAccessKeyId',
+  Ec2TargetAz = 'ec2TargetAz',
+  Ec2TargetRegion = 'ec2TargetRegion',
+  Ec2TargetSecretAccessKey = 'ec2TargetSecretAccessKey',
+  Ec2UseCrossAccountCredentials = 'ec2UseCrossAccountCredentials',
+}
+
 export const ProviderFormFieldId = {
   ...CommonProviderFormFieldId,
   ...CertificateFormFieldId,
+  ...Ec2ProviderFormFieldId,
   ...OvaProviderFormFieldId,
   ...OpenshiftProviderFormFieldId,
   ...OpenstackProviderFormFieldId,
@@ -84,6 +97,7 @@ export const ProviderFormFieldId = {
 export type ProviderFormFieldIdType =
   | CommonProviderFormFieldId
   | CertificateFormFieldId
+  | Ec2ProviderFormFieldId
   | OpenshiftProviderFormFieldId
   | OpenstackProviderFormFieldId
   | OvaProviderFormFieldId

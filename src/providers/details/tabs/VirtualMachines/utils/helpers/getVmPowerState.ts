@@ -1,4 +1,3 @@
-import type { ProviderType } from '@forklift-ui/types';
 import type {
   HypervVM,
   OpenshiftVM,
@@ -7,6 +6,9 @@ import type {
   ProviderVirtualMachine,
   VSphereVM,
 } from '@forklift-ui/types';
+import type { ExtendedProviderType } from '@utils/enums';
+
+import type { Ec2VM } from '../types/Ec2VM';
 
 export type PowerState = 'on' | 'off' | 'unknown';
 
@@ -54,10 +56,24 @@ const getHypervVmPowerState = (vm: HypervVM): PowerState => {
   return 'unknown';
 };
 
-export const getVmPowerState = (vm: ProviderVirtualMachine | undefined): PowerState => {
+const getEc2VmPowerState = (vm: Ec2VM): PowerState => {
+  const state = vm?.object?.State?.Name?.toLowerCase();
+
+  switch (state) {
+    case 'running':
+      return 'on';
+    case 'stopped':
+      return 'off';
+    case undefined:
+    default:
+      return 'unknown';
+  }
+};
+
+export const getVmPowerState = (vm: ProviderVirtualMachine | Ec2VM | undefined): PowerState => {
   if (!vm) return 'unknown';
 
-  switch (vm?.providerType as ProviderType) {
+  switch (vm?.providerType as ExtendedProviderType) {
     case 'ovirt':
       return getOVirtVmPowerState(vm as OVirtVM);
     case 'vsphere':
@@ -68,6 +84,8 @@ export const getVmPowerState = (vm: ProviderVirtualMachine | undefined): PowerSt
       return getOpenShiftVmPowerState(vm as OpenshiftVM);
     case 'hyperv':
       return getHypervVmPowerState(vm as HypervVM);
+    case 'ec2':
+      return getEc2VmPowerState(vm as Ec2VM);
     case 'ova':
       return 'off';
     default:
