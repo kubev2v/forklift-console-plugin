@@ -29,6 +29,9 @@ forkliftci
 # Local dev fixtures (test data, debug helpers)
 .dev/
 
+# CI copies repo-root locales/ into testing/ for the Playwright container build
+testing/locales/
+
 # Cursor IDE – ignore sensitive MCP config (credentials); shared prompts stay in repo
 .cursor/mcp.json
 .cursor/rules/personal-*.mdc

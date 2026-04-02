@@ -109,6 +109,8 @@ npm run test:downstream:remote:docker
 To build and push the test container image manually:
 
 ```bash
+# Copy locale files into the build context (they live at repo root)
+cp -r locales/ testing/locales/
 cd testing
 
 podman build \
@@ -122,5 +124,5 @@ podman build \
   .
 
 podman login quay.io
-podman quay.io/kubev2v/forklift-ui-tests:latest
+podman push quay.io/kubev2v/forklift-ui-tests:latest
 ```

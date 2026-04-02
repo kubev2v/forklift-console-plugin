@@ -53,14 +53,18 @@ export abstract class BaseResourceManager {
     return null;
   }
 
-  /** Generic POST helper — handles CSRF token, headers, and error handling. */
-  public static async apiPost<R>(page: Page, apiPath: string, data: unknown): Promise<R | null> {
+  /** Generic PATCH helper — handles CSRF token, headers, and error handling. */
+  public static async apiPatch<R>(
+    page: Page,
+    apiPath: string,
+    data: unknown,
+    contentType = 'application/merge-patch+json',
+  ): Promise<R | null> {
     const constants = BaseResourceManager.getEvaluateConstants();
 
     const result = await page.evaluate(
-      async ({ payload, path, evalConstants }): Promise<ApiResult<R>> => {
+      async ({ payload, path, patchContentType, evalConstants }): Promise<ApiResult<R>> => {
         try {
-          // Get CSRF token from cookies
           const cookies = document.cookie.split('; ');
           const csrfCookie = cookies.find((cookie) =>
             cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
@@ -68,13 +72,58 @@ export abstract class BaseResourceManager {
           const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
 
           const response = await fetch(path, {
-            method: 'POST',
+            body: JSON.stringify(payload),
+            credentials: 'include',
+            headers: {
+              [evalConstants.CONTENT_TYPE_HEADER]: patchContentType,
+              [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
+            },
+            method: 'PATCH',
+          });
+
+          if (response.ok) {
+            return { data: await response.json(), success: true };
+          }
+
+          const errorText = await response.text().catch(() => response.statusText);
+          return { error: errorText, success: false };
+        } catch (error: unknown) {
+          const err = error as Error;
+          return { error: err?.message ?? String(error), success: false };
+        }
+      },
+      { evalConstants: constants, path: apiPath, payload: data, patchContentType: contentType },
+    );
+
+    if (result.success) {
+      return result.data;
+    }
+
+    console.error(`API PATCH ${apiPath} failed: ${result.error}`);
+    return null;
+  }
+
+  /** Generic POST helper — handles CSRF token, headers, and error handling. */
+  public static async apiPost<R>(page: Page, apiPath: string, data: unknown): Promise<R | null> {
+    const constants = BaseResourceManager.getEvaluateConstants();
+
+    const result = await page.evaluate(
+      async ({ payload, path, evalConstants }): Promise<ApiResult<R>> => {
+        try {
+          const cookies = document.cookie.split('; ');
+          const csrfCookie = cookies.find((cookie) =>
+            cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
+          );
+          const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+
+          const response = await fetch(path, {
+            body: JSON.stringify(payload),
+            credentials: 'include',
             headers: {
               [evalConstants.CONTENT_TYPE_HEADER]: evalConstants.APPLICATION_JSON,
               [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
             },
-            credentials: 'include',
-            body: JSON.stringify(payload),
+            method: 'POST',
           });
 
           if (response.ok) {
