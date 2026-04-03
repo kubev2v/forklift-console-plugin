@@ -50,11 +50,13 @@ describe('ScriptsSection', () => {
     jest.clearAllMocks();
   });
 
-  it('shows "None" when no scripts are configured', () => {
+  it('shows empty state when no scripts are configured', () => {
+    mockIsPlanEditable.mockReturnValue(true);
+
     render(<ScriptsSection configMap={undefined} plan={mockPlan} scripts={[]} />);
 
     expect(screen.getByText('Customization scripts')).toBeInTheDocument();
-    expect(screen.getByText('None')).toBeInTheDocument();
+    expect(screen.getByText('No customization scripts are configured.')).toBeInTheDocument();
   });
 
   it('displays script details when scripts exist', () => {

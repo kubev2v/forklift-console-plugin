@@ -3,7 +3,6 @@ import type { CustomScript } from 'src/plans/create/steps/customization-scripts/
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 
 import { DetailsItem } from '@components/DetailItems/DetailItem';
-import SectionHeading from '@components/headers/SectionHeading';
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
 import type { IoK8sApiCoreV1ConfigMap, V1beta1Plan } from '@forklift-ui/types';
 import {
@@ -11,7 +10,7 @@ import {
   ResourceLink,
   useOverlay,
 } from '@openshift-console/dynamic-plugin-sdk';
-import { DescriptionList, Flex } from '@patternfly/react-core';
+import { Content, DescriptionList, Flex } from '@patternfly/react-core';
 import { ConfigMapModel } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
@@ -38,17 +37,17 @@ const ScriptsSection: FC<ScriptsSectionProps> = ({ configMap, plan, scripts }) =
 
   return (
     <Flex direction={{ default: 'column' }}>
+      <SectionHeadingWithEdit
+        editable={planEditable}
+        title={t('Customization scripts')}
+        onClick={() => {
+          launchOverlay(ScriptEdit, { configMap, plan, scripts });
+        }}
+        data-testid="scripts-section-edit-button"
+        headingLevel="h3"
+      />
       {hasScripts && configMap ? (
         <>
-          <SectionHeadingWithEdit
-            editable={planEditable}
-            title={t('Customization scripts')}
-            onClick={() => {
-              launchOverlay(ScriptEdit, { configMap, scripts });
-            }}
-            data-testid="scripts-section-edit-button"
-            headingLevel="h3"
-          />
           <DescriptionList>
             <DetailsItem
               testId="scripts-configmap"
@@ -67,12 +66,9 @@ const ScriptsSection: FC<ScriptsSectionProps> = ({ configMap, plan, scripts }) =
           ))}
         </>
       ) : (
-        <>
-          <SectionHeading text={t('Customization scripts')} headingLevel="h3" />
-          <DescriptionList>
-            <DetailsItem testId="scripts-none" title={t('Configured')} content={t('None')} />
-          </DescriptionList>
-        </>
+        <Content component="p" className="pf-v6-u-color-200">
+          {t('No customization scripts are configured.')}
+        </Content>
       )}
     </Flex>
   );
