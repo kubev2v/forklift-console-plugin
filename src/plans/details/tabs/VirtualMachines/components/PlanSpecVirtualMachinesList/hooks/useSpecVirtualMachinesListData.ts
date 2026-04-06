@@ -3,7 +3,7 @@ import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider
 import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
 import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 
-import type { V1beta1Plan } from '@forklift-ui/types';
+import type { ProviderType, V1beta1Plan } from '@forklift-ui/types';
 import { getPlanTargetNamespace, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 
@@ -55,6 +55,7 @@ export const useSpecVirtualMachinesListData = (
           conditions: conditionsDict[id],
           inventoryVmData: inventoryVmMap.get(id)!,
           plan,
+          sourceProviderType: sourceProvider?.spec?.type as ProviderType,
           specVM,
           statusVM: vmDict[id],
           targetNamespace: getPlanTargetNamespace(plan)!,
@@ -73,6 +74,7 @@ export const useSpecVirtualMachinesListData = (
     conditionsDict,
     inventoryVmMap,
     plan,
+    sourceProvider,
     vmDict,
   ]);
 

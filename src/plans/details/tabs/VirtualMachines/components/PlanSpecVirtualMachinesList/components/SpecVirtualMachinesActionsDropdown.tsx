@@ -9,7 +9,7 @@ import SpecVirtualMachinesActionsDropdownItems from './SpecVirtualMachinesAction
 type SpecVirtualMachinesActionsDropdownProps = {
   plan: V1beta1Plan;
   vmIndex: number;
-  providerType: ProviderType;
+  providerType?: ProviderType;
 };
 
 const SpecVirtualMachinesActionsDropdown: FC<SpecVirtualMachinesActionsDropdownProps> = ({

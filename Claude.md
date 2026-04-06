@@ -155,6 +155,7 @@ This is an **OpenShift Console dynamic plugin** for [Forklift](https://github.co
 #### Logic Separation
 - **Extract as much logic as possible** from components into custom hooks or utility files. It is much easier to unit test a hook or a utility function.
 - Avoid bloated components by delegating logic to external modules.
+- **Avoid duplicating JSX blocks.** When the same markup is rendered in multiple places within a component (e.g., an alert, a badge, a tooltip), extract it into a local variable or a small helper component and reference it from each location.
 
 #### Exports
 - Use **default exports** for all components.
