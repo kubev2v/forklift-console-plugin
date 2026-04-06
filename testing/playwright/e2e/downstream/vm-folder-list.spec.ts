@@ -175,7 +175,6 @@ providerTest.describe('VM folder list - Provider Details Page', { tag: '@downstr
         expect(firstVMNameBefore).not.toBe('');
         expect(firstVMNameAfterSort).not.toBe('');
       });
-
       await test.step('9. Test sorting by Concerns column and expand concern icons', async () => {
         await vmTab.sortByColumn('Concerns');
         await vmTab.testConcernButton();

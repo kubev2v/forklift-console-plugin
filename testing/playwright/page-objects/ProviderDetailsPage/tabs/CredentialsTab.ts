@@ -88,7 +88,7 @@ export class CredentialsTab {
   async navigateToCredentialsTab(): Promise<void> {
     await this.credentialsTab.click();
     await expect(this.credentialsTab).toHaveAttribute('aria-selected', 'true');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async openEditModal(): Promise<CredentialEditModal> {

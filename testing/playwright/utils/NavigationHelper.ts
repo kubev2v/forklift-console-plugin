@@ -50,7 +50,7 @@ export class NavigationHelper {
 
   async navigateToConsole(): Promise<void> {
     await this.page.goto('/');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
     await disableGuidedTour(this.page);
   }
 
@@ -64,7 +64,7 @@ export class NavigationHelper {
   }): Promise<void> {
     const url = this.buildK8sUrl(options);
     await this.page.goto(url);
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
     await disableGuidedTour(this.page);
   }
 
@@ -76,7 +76,7 @@ export class NavigationHelper {
   async navigateToOverview(): Promise<void> {
     await disableGuidedTour(this.page);
     await this.page.goto('/mtv/overview');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
 
     await disableGuidedTour(this.page);
   }
@@ -84,7 +84,7 @@ export class NavigationHelper {
   async navigateToOverviewSettings(): Promise<void> {
     await disableGuidedTour(this.page);
     await this.page.goto('/mtv/overview/settings');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
 
     await disableGuidedTour(this.page);
   }

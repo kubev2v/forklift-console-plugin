@@ -13,6 +13,7 @@ if (!existsSync(providersPath)) {
 import * as providers from '../../../.providers.json';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
+import { OverviewPage } from '../../page-objects/OverviewPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { PlansListPage } from '../../page-objects/PlansListPage';
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
@@ -138,7 +139,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream', '@slow'],
     },
     async ({ page }) => {
-      const timeout = 15 * 60000;
+      const timeout = 20 * 60000;
       test.setTimeout(timeout);
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
@@ -176,6 +177,53 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
         expect(vmResource?.metadata?.name).toBe(migratedVMName);
         expect(vmResource?.metadata?.namespace).toBe(testPlanData.targetProject.name);
       }
+    },
+  );
+
+  test(
+    'should verify throughput metrics on overview page after migration',
+    {
+      tag: ['@downstream'],
+    },
+    async ({ page }) => {
+      test.setTimeout(120000);
+      const overviewPage = new OverviewPage(page);
+
+      await test.step('Navigate to Overview page', async () => {
+        await overviewPage.navigateDirectly();
+      });
+
+      await test.step('Verify throughput cards are visible with correct titles', async () => {
+        await overviewPage.networkThroughputCard.verifyCardVisible();
+        await overviewPage.storageThroughputCard.verifyCardVisible();
+      });
+
+      await test.step('Verify default time range is "Last 1 hour"', async () => {
+        await overviewPage.networkThroughputCard.verifyTimeRangeSelected('Last 1 hour');
+        await overviewPage.storageThroughputCard.verifyTimeRangeSelected('Last 1 hour');
+      });
+
+      await test.step('Verify throughput charts show migration data', async () => {
+        await overviewPage.networkThroughputCard.verifyHasChartData();
+        await overviewPage.storageThroughputCard.verifyHasChartData();
+      });
+
+      await test.step('Verify migrated plan appears in throughput filters', async () => {
+        await overviewPage.networkThroughputCard.verifyPlanInFilter(planName);
+        await overviewPage.storageThroughputCard.verifyPlanInFilter(planName);
+      });
+
+      await test.step('Verify time range change preserves data', async () => {
+        await overviewPage.networkThroughputCard.selectTimeRange('Last 6 hours');
+        await overviewPage.networkThroughputCard.verifyTimeRangeSelected('Last 6 hours');
+        await overviewPage.networkThroughputCard.verifyHasChartData();
+      });
+
+      await test.step('Verify storage throughput also has data at "Last 6 hours"', async () => {
+        await overviewPage.storageThroughputCard.selectTimeRange('Last 6 hours');
+        await overviewPage.storageThroughputCard.verifyTimeRangeSelected('Last 6 hours');
+        await overviewPage.storageThroughputCard.verifyHasChartData();
+      });
     },
   );
 

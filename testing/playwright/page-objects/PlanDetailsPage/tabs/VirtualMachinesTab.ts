@@ -187,7 +187,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.renameTargetNameInput.fill(targetName);
     await this.saveButton.click();
     await expect(this.renameTargetNameInput).not.toBeVisible();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
 
     // Verify rename was applied
     await this.search(sourceName);

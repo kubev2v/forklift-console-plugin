@@ -91,6 +91,6 @@ export class CustomizationScriptsStep {
   }
 
   async verifyStepVisible(): Promise<void> {
-    await expect(this.page.getByRole('heading', { name: 'Customization scripts' })).toBeVisible();
+    await expect(this.page.getByTestId('create-plan-custom-scripts-step')).toBeVisible();
   }
 }

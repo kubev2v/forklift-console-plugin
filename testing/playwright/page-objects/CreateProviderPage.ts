@@ -278,12 +278,12 @@ export class CreateProviderPage {
       namespace,
       allNamespaces: true,
     });
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
 
     const createButton = this.page.getByTestId('add-provider-button');
     await createButton.waitFor({ state: 'visible', timeout: 20000 });
     await createButton.click();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async navigateWithProviderType(providerType: string): Promise<void> {
