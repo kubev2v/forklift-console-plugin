@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { TELEMETRY_EVENTS } from 'src/utils/analytics/constants';
 import { useForkliftAnalytics } from 'src/utils/analytics/hooks/useForkliftAnalytics';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
@@ -9,6 +10,7 @@ import { PlanModel, PlanModelRef, type V1beta1Provider } from '@forklift-ui/type
 import { Button, ButtonVariant, ToolbarItem } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
+import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
 
 type CreatePlanActionProps = {
   namespace: string | undefined;
@@ -19,6 +21,8 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
   const { trackEvent } = useForkliftAnalytics();
+  const isAwsPlatform = useClusterIsAwsPlatform();
+  const isEc2OnNonAwsCluster = provider?.spec?.type === PROVIDER_TYPES.ec2 && !isAwsPlatform;
 
   const { canCreate } = useGetDeleteAndEditAccessReview({
     model: PlanModel,
@@ -55,6 +59,10 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
     const queryString = query ? `?${query}` : '';
     navigate(`${planResourceUrl}/~new${queryString}`);
   };
+
+  if (isEc2OnNonAwsCluster) {
+    return null;
+  }
 
   return (
     <ToolbarItem>

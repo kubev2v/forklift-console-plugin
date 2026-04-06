@@ -92,6 +92,14 @@ export const STORAGE_NAMES = {
   GLANCE: 'glance',
 };
 
+export const AWS_PLATFORM = 'AWS';
+
+export const INFRASTRUCTURE_GVK = {
+  group: 'config.openshift.io',
+  kind: 'Infrastructure',
+  version: 'v1',
+};
+
 export const ConfigMapModel = {
   abbr: 'CM',
   apiVersion: 'v1',
