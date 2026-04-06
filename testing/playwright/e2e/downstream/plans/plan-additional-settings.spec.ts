@@ -122,6 +122,83 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await planDetailsPage.virtualMachinesTab.waitForVMPowerState(vmName, 'Powered on');
   });
 
+  test('should edit shared disks on plan details and override per-VM', async ({
+    page,
+    testProvider,
+    resourceManager,
+  }) => {
+    const testData: PlanTestData = createPlanTestData({
+      sourceProvider: testProvider?.metadata?.name ?? '',
+    });
+    resourceManager.addPlan(testData.planName, testData.planProject);
+
+    const wizard = new CreatePlanWizardPage(page, resourceManager);
+    await wizard.navigate();
+    await wizard.waitForWizardLoad();
+    await wizard.navigateToAdditionalSettings(testData);
+    await wizard.clickSkipToReview();
+    await wizard.review.verifyReviewStep(testData);
+    await wizard.clickNext();
+    await wizard.waitForPlanCreation();
+
+    const planDetailsPage = new PlanDetailsPage(page);
+    await planDetailsPage.detailsTab.navigateToDetailsTab();
+
+    await expect(
+      planDetailsPage.detailsTab.sharedDisksDetailItem('Migrate shared disks'),
+    ).toBeVisible();
+
+    await planDetailsPage.detailsTab.clickEditSharedDisks();
+    await expect(planDetailsPage.detailsTab.editSharedDisksModal).toBeVisible();
+
+    await planDetailsPage.detailsTab.editSharedDisksCheckbox.uncheck();
+    await expect(planDetailsPage.detailsTab.editSharedDisksCheckbox).not.toBeChecked();
+    await planDetailsPage.detailsTab.saveSharedDisksButton.click();
+    await expect(planDetailsPage.detailsTab.editSharedDisksModal).not.toBeVisible();
+
+    await expect(
+      planDetailsPage.detailsTab.sharedDisksDetailItem('Do not migrate shared disks'),
+    ).toBeVisible();
+
+    await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
+    await planDetailsPage.virtualMachinesTab.enableColumn('Shared disks');
+
+    const isColumnVisible =
+      await planDetailsPage.virtualMachinesTab.isColumnVisible('Shared disks');
+    expect(isColumnVisible).toBe(true);
+
+    const vmName = testData.virtualMachines?.[0]?.sourceName ?? '';
+    const sharedDisks = await planDetailsPage.virtualMachinesTab.getVMSharedDisks(vmName);
+    expect(sharedDisks).toBe('Do not migrate shared disks (Inherited from plan)');
+
+    await planDetailsPage.virtualMachinesTab.openSharedDisksDialog(vmName);
+
+    const { virtualMachinesTab } = planDetailsPage;
+    await expect(virtualMachinesTab.sharedDisksModalSaveButton).toBeDisabled();
+
+    await expect(virtualMachinesTab.sharedDisksOptionInherit).toBeVisible();
+    await expect(virtualMachinesTab.sharedDisksOptionEnabled).toBeVisible();
+    await expect(virtualMachinesTab.sharedDisksOptionDisabled).toBeVisible();
+
+    await virtualMachinesTab.sharedDisksOptionEnabled.click();
+    await expect(virtualMachinesTab.sharedDisksModalSaveButton).toBeEnabled();
+    await virtualMachinesTab.sharedDisksModalSaveButton.click();
+
+    await expect(virtualMachinesTab.editSharedDisksModal).not.toBeVisible();
+    await planDetailsPage.virtualMachinesTab.waitForVMSharedDisks(vmName, 'Migrate shared disks');
+
+    await planDetailsPage.virtualMachinesTab.openSharedDisksDialog(vmName);
+    await virtualMachinesTab.sharedDisksOptionInherit.click();
+    await expect(virtualMachinesTab.sharedDisksModalSaveButton).toBeEnabled();
+    await virtualMachinesTab.sharedDisksModalSaveButton.click();
+
+    await expect(virtualMachinesTab.editSharedDisksModal).not.toBeVisible();
+    await planDetailsPage.virtualMachinesTab.waitForVMSharedDisks(
+      vmName,
+      'Do not migrate shared disks (Inherited from plan)',
+    );
+  });
+
   test('should set NBDE/Clevis on plan creation and edit from details page', async ({
     page,
     testProvider,

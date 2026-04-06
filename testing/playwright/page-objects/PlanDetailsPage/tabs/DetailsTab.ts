@@ -16,6 +16,8 @@ export class DetailsTab {
   readonly editDiskDecryptionModal: Locator;
   readonly editMigrationTypeModal: Locator;
   readonly editPowerStateModal: Locator;
+  readonly editSharedDisksCheckbox: Locator;
+  readonly editSharedDisksModal: Locator;
   readonly guestConversionModal: GuestConversionModal;
   readonly labelsModal: TargetLabelsModal;
   readonly nodeSelectorModal: TargetNodeSelectorModal;
@@ -27,6 +29,7 @@ export class DetailsTab {
   readonly saveDiskDecryptionButton: Locator;
   readonly saveMigrationTypeButton: Locator;
   readonly savePowerStateButton: Locator;
+  readonly saveSharedDisksButton: Locator;
   readonly targetPowerStateSelect: Locator;
   readonly useNbdeClevisCheckbox: Locator;
   constructor(page: Page) {
@@ -46,6 +49,11 @@ export class DetailsTab {
     this.powerStateOptionOn = this.page.getByRole('option', { name: 'Powered on', exact: true });
     this.powerStateOptionOff = this.page.getByRole('option', { name: 'Powered off', exact: true });
     this.editDiskDecryptionModal = this.page.getByRole('dialog', { name: 'Disk decryption' });
+    this.editSharedDisksModal = this.page.getByRole('dialog', { name: 'Edit shared disks' });
+    this.editSharedDisksCheckbox = this.editSharedDisksModal.getByTestId(
+      'migrate-shared-disks-checkbox',
+    );
+    this.saveSharedDisksButton = this.editSharedDisksModal.getByTestId('modal-confirm-button');
     this.useNbdeClevisCheckbox = this.page.getByTestId('use-nbde-clevis-checkbox');
     this.saveDiskDecryptionButton = this.page.getByTestId('modal-confirm-button');
     this.guestConversionModal = new GuestConversionModal(page);
@@ -120,6 +128,10 @@ export class DetailsTab {
     await expect(this.editMigrationTypeModal).toBeVisible();
   }
 
+  async clickEditSharedDisks(): Promise<void> {
+    await this.page.getByTestId('shared-disks-detail-item').locator('button').click();
+  }
+
   async clickEditTargetAffinity(): Promise<void> {
     await this.clickEditDetailItem('vm-target-affinity-rules-detail-item', this.affinityModal);
   }
@@ -182,6 +194,10 @@ export class DetailsTab {
 
   async selectMigrationType(type: MigrationType): Promise<void> {
     await this.migrationTypeRadio(type).click();
+  }
+
+  sharedDisksDetailItem(text: string): Locator {
+    return this.page.getByTestId('shared-disks-detail-item').getByText(text, { exact: false });
   }
 
   targetVMPowerState(state: string): Locator {

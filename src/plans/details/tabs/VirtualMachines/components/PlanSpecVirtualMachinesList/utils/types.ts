@@ -1,6 +1,7 @@
 import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
 
 import type {
+  ProviderType,
   V1beta1Plan,
   V1beta1PlanSpecVms,
   V1beta1PlanStatusConditions,
@@ -11,6 +12,7 @@ export type SpecVirtualMachinePageData = {
   plan: V1beta1Plan;
   vmIndex: number;
   specVM: V1beta1PlanSpecVms;
+  sourceProviderType?: ProviderType;
   statusVM?: V1beta1PlanStatusMigrationVms;
   conditions?: V1beta1PlanStatusConditions[];
   inventoryVmData: VmData;
@@ -20,7 +22,8 @@ export type SpecVirtualMachinePageData = {
 export enum PlanSpecVirtualMachinesTableResourceId {
   Name = 'name',
   Concerns = 'concerns',
-  Actions = 'actions',
+  MigrateSharedDisks = 'migrateSharedDisks',
   VMTargetName = 'vmTargetName',
   TargetPowerState = 'targetPowerState',
+  Actions = 'actions',
 }
