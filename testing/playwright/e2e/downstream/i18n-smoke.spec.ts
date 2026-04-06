@@ -14,6 +14,8 @@ import { V2_12_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const LOCALE_NAMESPACE = 'plugin__forklift-console-plugin';
+const PAGE_LOAD_TIMEOUT_MS = 15_000;
+const ELEMENT_VISIBLE_TIMEOUT_MS = 10_000;
 
 const LOCALE_SEARCH_PATHS = [
   resolve(__dirname, '../../../../locales'),
@@ -37,7 +39,7 @@ const loadLocale = (lang: string): Record<string, string> => {
   return JSON.parse(readFileSync(filePath, 'utf-8'));
 };
 
-const TESTED_LANGUAGES: SupportedLanguage[] = ['ja', 'zh'];
+const TESTED_LANGUAGES: SupportedLanguage[] = ['es', 'fr', 'ja', 'ko', 'zh'];
 
 const missingKeyPattern = (language: string): RegExp =>
   new RegExp(`Missing i18n key .+ in namespace "${LOCALE_NAMESPACE}" and language "${language}"`);
@@ -66,10 +68,10 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
     test(`locale files load and render correctly in ${lang}`, async ({ page }) => {
       const locale = loadLocale(lang);
       const navigation = new NavigationHelper(page);
-      const consoleErrors: string[] = [];
+      const allConsoleErrors: string[] = [];
       page.on('console', (msg) => {
         if (msg.type() === 'error') {
-          consoleErrors.push(msg.text());
+          allConsoleErrors.push(msg.text());
         }
       });
 
@@ -81,10 +83,10 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
       });
 
       await test.step('Verify Overview page translations', async () => {
-        await page.waitForSelector('h1', { timeout: 15_000 });
+        await page.waitForSelector('h1', { timeout: PAGE_LOAD_TIMEOUT_MS });
 
         const welcomeHeading = page.getByRole('heading', { name: locale.Welcome });
-        await expect(welcomeHeading).toBeVisible({ timeout: 10_000 });
+        await expect(welcomeHeading).toBeVisible({ timeout: ELEMENT_VISIBLE_TIMEOUT_MS });
 
         const createPlanButton = page.getByRole('button', {
           name: locale['Create migration plan'],
@@ -97,17 +99,17 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
           allNamespaces: true,
           resource: 'Provider',
         });
-        await page.waitForSelector('h1', { timeout: 15_000 });
+        await page.waitForSelector('h1', { timeout: PAGE_LOAD_TIMEOUT_MS });
 
         const createButton = page.getByRole('button', {
           name: locale['Create provider'],
         });
-        await expect(createButton).toBeVisible({ timeout: 10_000 });
+        await expect(createButton).toBeVisible({ timeout: ELEMENT_VISIBLE_TIMEOUT_MS });
       });
 
       await test.step('No unexpected missing i18n keys for forklift plugin', () => {
         const pattern = missingKeyPattern(lang);
-        const forkliftMissingKeys = consoleErrors.filter((e) => pattern.test(e));
+        const forkliftMissingKeys = allConsoleErrors.filter((e) => pattern.test(e));
         const KNOWN_MISSING_KEYS = ['Source'];
         const unexpected = forkliftMissingKeys.filter(
           (e) => !KNOWN_MISSING_KEYS.some((key) => e.includes(`"${key}"`)),
