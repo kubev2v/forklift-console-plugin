@@ -109,6 +109,16 @@ export interface HookConfig {
 export type GuestType = 'linux' | 'windows';
 export type ScriptType = 'firstboot' | 'run';
 
+export const GUEST_TYPE_LABELS: Record<GuestType, string> = {
+  linux: 'Linux',
+  windows: 'Windows',
+};
+
+export const SCRIPT_TYPE_LABELS: Record<ScriptType, string> = {
+  firstboot: 'Firstboot',
+  run: 'Run',
+};
+
 export type ScriptConfig = {
   content?: string;
   guestType?: GuestType;

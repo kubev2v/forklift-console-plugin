@@ -1,21 +1,11 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import type {
-  CustomizationScriptsTestData,
-  GuestType,
-  ScriptConfig,
-  ScriptType,
+import {
+  type CustomizationScriptsTestData,
+  GUEST_TYPE_LABELS,
+  SCRIPT_TYPE_LABELS,
+  type ScriptConfig,
 } from '../../../types/test-data';
-
-const GUEST_TYPE_LABELS: Record<GuestType, string> = {
-  linux: 'Linux',
-  windows: 'Windows',
-};
-
-const SCRIPT_TYPE_LABELS: Record<ScriptType, string> = {
-  firstboot: 'Firstboot',
-  run: 'Run',
-};
 
 export class CustomizationScriptsStep {
   private readonly page: Page;

@@ -1,17 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import type { GuestType, ScriptConfig, ScriptType } from '../../../types/test-data';
+import { GUEST_TYPE_LABELS, SCRIPT_TYPE_LABELS, type ScriptConfig } from '../../../types/test-data';
 import { BaseModal } from '../../common/BaseModal';
-
-const GUEST_TYPE_LABELS: Record<GuestType, string> = {
-  linux: 'Linux',
-  windows: 'Windows',
-};
-
-const SCRIPT_TYPE_LABELS: Record<ScriptType, string> = {
-  firstboot: 'Firstboot',
-  run: 'Run',
-};
 
 export class ScriptEditModal extends BaseModal {
   readonly addScriptButton: Locator;
