@@ -3,7 +3,7 @@ import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/Cre
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { createPlanTestData, type PlanTestData, type ScriptConfig } from '../../../types/test-data';
 import { disableGuidedTour } from '../../../utils/utils';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 const LINUX_FIRSTBOOT_SCRIPT: ScriptConfig = {
@@ -28,7 +28,7 @@ const UPDATED_SCRIPT: ScriptConfig = {
 };
 
 test.describe('Plan Customization Scripts', { tag: '@downstream' }, () => {
-  requireVersion(test, V2_11_0);
+  requireVersion(test, V2_12_0);
 
   test('should create plan with new customization scripts and verify on Automation tab', async ({
     page,
