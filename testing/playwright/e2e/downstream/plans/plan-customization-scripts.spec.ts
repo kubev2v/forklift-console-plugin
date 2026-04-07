@@ -56,7 +56,7 @@ test.describe('Plan Customization Scripts', { tag: '@downstream' }, () => {
       await wizard.customizationScripts.verifyStepVisible();
     });
 
-    await test.step('Configure Linux firstboot script', async () => {
+    await test.step('Configure customization scripts', async () => {
       await wizard.customizationScripts.fillAndComplete({
         mode: 'new',
         scripts: [LINUX_FIRSTBOOT_SCRIPT, WINDOWS_FIRSTBOOT_SCRIPT],

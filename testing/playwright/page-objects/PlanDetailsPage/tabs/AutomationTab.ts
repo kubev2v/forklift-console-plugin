@@ -37,7 +37,6 @@ export class AutomationTab {
   async navigateToAutomationTab(): Promise<void> {
     await disableGuidedTour(this.page);
     await this.automationTabLink.click();
-    await this.page.waitForLoadState('networkidle');
   }
 
   async openScriptEditModal(): Promise<void> {
@@ -47,10 +46,6 @@ export class AutomationTab {
 
   async verifyConfigMapLink(): Promise<void> {
     await expect(this.page.getByTestId('scripts-configmap')).toBeVisible();
-  }
-
-  async verifyEditButtonDisabled(): Promise<void> {
-    await expect(this.page.getByTestId('scripts-section-edit-button')).toBeDisabled();
   }
 
   async verifyEditButtonVisible(): Promise<void> {

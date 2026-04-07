@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 
 import { GUEST_TYPE_LABELS, SCRIPT_TYPE_LABELS, type ScriptConfig } from '../../../types/test-data';
 import { BaseModal } from '../../common/BaseModal';
@@ -61,10 +61,5 @@ export class ScriptEditModal extends BaseModal {
     if (!success) {
       throw new Error(`Failed to set script content at index ${index} - Monaco editor not found`);
     }
-  }
-
-  async verifyScriptName(index: number, expectedName: string): Promise<void> {
-    const nameInput = this.page.getByTestId(`script-name-input-${index}`);
-    await expect(nameInput).toHaveValue(expectedName);
   }
 }
