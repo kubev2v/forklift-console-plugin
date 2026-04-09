@@ -1,4 +1,5 @@
 .field-builder-table {
+  background-color: transparent;
   table-layout: fixed;
 
   // Remove extra padding from headers and form groups
@@ -30,5 +31,10 @@
   // Align first column cells
   .pf-v6-c-table__tbody .pf-v6-c-table__td:first-of-type {
     padding-left: 0;
+  }
+
+  // Vertically center the remove button with field inputs
+  .pf-v6-c-table__tbody .pf-v6-c-table__action {
+    vertical-align: middle;
   }
 }
