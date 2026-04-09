@@ -5,6 +5,7 @@ import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import { getSdkEndpoint, getType } from '@utils/crds/common/selectors';
 
 import {
+  ec2CredentialsFields,
   esxiCredentialsFields,
   hypervCredentialsFields,
   openshiftCredentialsFields,
@@ -26,6 +27,9 @@ const CredentialsContent: FC<CredentialsContentProps> = ({ provider, reveal, sec
     (getSdkEndpoint(provider) as VSphereEndpointType) ?? VSphereEndpointType.vCenter;
 
   switch (providerType) {
+    case PROVIDER_TYPES.ec2:
+      return <CredentialFields fields={ec2CredentialsFields} secret={secret} reveal={reveal} />;
+
     case PROVIDER_TYPES.vsphere:
       if (sdkEndpoint === VSphereEndpointType.ESXi) {
         return <CredentialFields fields={esxiCredentialsFields} secret={secret} reveal={reveal} />;

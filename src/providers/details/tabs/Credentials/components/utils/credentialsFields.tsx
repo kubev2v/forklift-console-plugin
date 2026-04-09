@@ -238,7 +238,17 @@ export const openstackApplicationCredentialNameFields: Fields = {
   },
 };
 
-// HyperV fields
+export const ec2CredentialsFields: Fields = {
+  accessKeyId: {
+    description: t('AWS access key ID for authenticating to the EC2 API.'),
+    label: t('Access key ID'),
+  },
+  secretAccessKey: {
+    description: t('AWS secret access key for authenticating to the EC2 API.'),
+    label: t('Secret access key'),
+  },
+};
+
 export const hypervCredentialsFields: Fields = {
   cacert: {
     ...cacertField,

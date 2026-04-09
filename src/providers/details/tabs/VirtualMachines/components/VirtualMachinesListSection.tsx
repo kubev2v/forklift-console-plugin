@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { Ec2VirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/Ec2VirtualMachinesList';
 import { HypervVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/HypervVirtualMachinesList';
 import { OpenShiftVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OpenShiftVirtualMachinesList';
 import { OpenStackVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OpenStackVirtualMachinesList';
@@ -38,6 +39,8 @@ const VirtualMachinesListSection: FC<VirtualMachinesListSectionProps> = ({ provi
       return <OvaVirtualMachinesList {...tableProps} />;
     case PROVIDER_TYPES.hyperv:
       return <HypervVirtualMachinesList {...tableProps} />;
+    case PROVIDER_TYPES.ec2:
+      return <Ec2VirtualMachinesList {...tableProps} />;
     case undefined:
     default:
       return <ErrorState title={t('Unsupported provider type')} />;

@@ -10,7 +10,9 @@ export const inventoryContentHasChanged = (
   fieldsToAvoidComparing: string[],
 ): boolean => {
   const flatInventory = (inventoryList: ProvidersInventoryList | null) =>
-    Object.values(PROVIDER_TYPES).flatMap<ProviderInventory>((type) => inventoryList?.[type] ?? []);
+    Object.values(PROVIDER_TYPES).flatMap<ProviderInventory>(
+      (type) => (inventoryList as Record<string, ProviderInventory[]> | null)?.[type] ?? [],
+    );
 
   const oldFlatInventory = flatInventory(oldDataRef.current);
   const newFlatInventory = flatInventory(newInventoryList);

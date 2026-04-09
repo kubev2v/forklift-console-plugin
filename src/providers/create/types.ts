@@ -77,6 +77,19 @@ type VsphereFields = {
   [ProviderFormFieldId.VsphereUseVddkAioOptimization]?: boolean;
 };
 
+type Ec2Fields = {
+  [ProviderFormFieldId.Ec2AccessKeyId]?: string;
+  [ProviderFormFieldId.Ec2AutoTargetCredentials]?: boolean;
+  [ProviderFormFieldId.Ec2Region]?: string;
+  [ProviderFormFieldId.Ec2SecretAccessKey]?: string;
+  [ProviderFormFieldId.Ec2TargetAccessKeyId]?: string;
+  [ProviderFormFieldId.Ec2TargetAz]?: string;
+  [ProviderFormFieldId.Ec2TargetRegion]?: string;
+  [ProviderFormFieldId.Ec2TargetSecretAccessKey]?: string;
+  [ProviderFormFieldId.Ec2UseCrossAccountCredentials]?: boolean;
+};
+
+export type Ec2FormData = BaseFormData & Ec2Fields;
 export type OpenshiftFormData = BaseFormData & OpenshiftFields;
 export type OvaFormData = BaseFormData & OvaFields;
 export type OpenstackFormData = BaseFormData & OpenstackFields;
@@ -86,6 +99,7 @@ export type HypervFormData = BaseFormData & HypervFields;
 
 export type CreateProviderFormData = FieldValues &
   BaseFormData &
+  Ec2Fields &
   OpenshiftFields &
   OvaFields &
   OpenstackFields &

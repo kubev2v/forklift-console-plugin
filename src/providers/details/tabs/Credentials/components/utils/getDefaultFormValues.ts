@@ -92,6 +92,14 @@ export const getDefaultFormValues = (
       };
     }
 
+    case PROVIDER_TYPES.ec2:
+      return {
+        ...baseValues,
+        [ProviderFormFieldId.Ec2AccessKeyId]: getDecodedValue(secret?.data?.accessKeyId) ?? '',
+        [ProviderFormFieldId.Ec2SecretAccessKey]:
+          getDecodedValue(secret?.data?.secretAccessKey) ?? '',
+      };
+
     case PROVIDER_TYPES.ova:
     case undefined:
     default:

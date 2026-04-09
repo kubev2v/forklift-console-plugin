@@ -7,7 +7,6 @@ import {
   getAnnotations,
   getName,
   getNamespace,
-  getUrl,
   getUseVddkAioOptimization,
   getVddkInitImage,
 } from '@utils/crds/common/selectors';
@@ -21,7 +20,7 @@ export const createProvider = async (
   }
 
   const newProvider: V1beta1Provider = produce(provider, (draft) => {
-    if ((!secret || getUrl(provider)) && draft?.spec) {
+    if (secret && draft?.spec) {
       draft.spec.secret = {
         name: getName(secret),
         namespace: getNamespace(secret),

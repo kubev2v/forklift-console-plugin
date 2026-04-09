@@ -5,6 +5,7 @@ import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/
 import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
+import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -18,6 +19,7 @@ import './ProviderTypeField.style.scss';
 const ProviderTypeField: FC = () => {
   const { t } = useForkliftTranslation();
   const isDarkTheme = useIsDarkTheme();
+  const isAwsPlatform = useClusterIsAwsPlatform();
   const { control } = useCreateProviderFormContext();
 
   const {
@@ -31,7 +33,7 @@ const ProviderTypeField: FC = () => {
     },
   });
 
-  const providerTypeOptions = getProviderTypeOptions(isDarkTheme);
+  const providerTypeOptions = getProviderTypeOptions(isDarkTheme, isAwsPlatform);
 
   const onSelect = (_event: React.MouseEvent | undefined, itemId: string | number | undefined) => {
     if (typeof itemId === 'string') {

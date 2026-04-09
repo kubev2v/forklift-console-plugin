@@ -4,6 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PROVIDER_TYPES } from '../utils/constants';
 
+import Ec2ProviderDetailsPage from './Ec2ProviderDetailsPage';
 import HypervProviderDetailsPage from './HypervProviderDetailsPage';
 import OpenshiftProviderDetailsPage from './OpenshiftProviderDetailsPage';
 import OpenStackProviderDetailsPage from './OpenStackProviderDetailsPage';
@@ -27,6 +28,8 @@ const ProviderDetailsPageByType: FC<ProviderDetailsPageByTypeProps> = ({
   const { t } = useForkliftTranslation();
 
   switch (type) {
+    case PROVIDER_TYPES.ec2:
+      return <Ec2ProviderDetailsPage name={name} namespace={namespace} />;
     case PROVIDER_TYPES.openshift:
       return <OpenshiftProviderDetailsPage name={name} namespace={namespace} />;
     case PROVIDER_TYPES.openstack:

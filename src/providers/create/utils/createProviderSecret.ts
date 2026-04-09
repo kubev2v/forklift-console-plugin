@@ -28,18 +28,17 @@ export const createProviderSecret = async (
   provider: V1beta1Provider,
   secret: IoK8sApiCoreV1Secret,
 ) => {
-  const url = getUrl(provider);
-  if (!secret || !url || !provider) {
+  if (!secret || !provider) {
     return undefined;
   }
 
-  const encodedURL = url && encode(url);
+  const url = getUrl(provider);
   const generateName = `${provider?.metadata?.name}-`;
   const cleanedData = cleanObject(secret?.data);
 
   const newSecret: IoK8sApiCoreV1Secret = produce(secret, (draft) => {
     draft.data = cleanedData;
-    if (draft.data) draft.data.url = encodedURL;
+    if (draft.data && url) draft.data.url = encode(url);
     if (draft.metadata) {
       draft.metadata.generateName = generateName;
       draft.metadata.labels = {

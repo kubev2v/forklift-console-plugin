@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import Ec2CredentialsFields from 'src/providers/create/fields/ec2/Ec2CredentialsFields';
 import HypervCredentialsFields from 'src/providers/create/fields/hyperv/HypervCredentialsFields';
 import ServiceAccountTokenField from 'src/providers/create/fields/openshift/ServiceAccountTokenField';
 import OpenStackAuthenticationTypeField from 'src/providers/create/fields/openstack/OpenStackAuthenticationTypeField';
@@ -8,6 +9,9 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 const CredentialFieldsByType: FC<{ providerType: string | undefined }> = ({ providerType }) => {
   switch (providerType) {
+    case PROVIDER_TYPES.ec2:
+      return <Ec2CredentialsFields />;
+
     case PROVIDER_TYPES.vsphere:
       return <VsphereCredentialsFields />;
 

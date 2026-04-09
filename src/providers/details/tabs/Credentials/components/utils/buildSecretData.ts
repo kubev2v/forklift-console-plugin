@@ -6,6 +6,7 @@ import {
 import type { CreateProviderFormData } from 'src/providers/create/types';
 import { getAuthTypeValue } from 'src/providers/create/utils/buildOpenstackProviderResources';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import { getEc2Url } from 'src/providers/utils/helpers/getEc2Url';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { getType } from '@utils/crds/common/selectors';
@@ -110,6 +111,18 @@ export const buildSecretData = (
       }
 
       return hypervData;
+    }
+
+    case PROVIDER_TYPES.ec2: {
+      const ec2Region = provider?.spec?.settings?.ec2Region ?? '';
+
+      return {
+        accessKeyId: encode(formData[ProviderFormFieldId.Ec2AccessKeyId] ?? ''),
+        insecureSkipVerify: encode('false'),
+        region: encode(ec2Region),
+        secretAccessKey: encode(formData[ProviderFormFieldId.Ec2SecretAccessKey] ?? ''),
+        url: encode(getEc2Url(ec2Region)),
+      };
     }
 
     case PROVIDER_TYPES.ova:

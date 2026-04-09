@@ -12,12 +12,10 @@ import type { ProviderFormFieldIdType } from './constants';
 
 type ProviderFormTextInputProps = {
   fieldId: ProviderFormFieldIdType;
-  fieldRules:
-    | Omit<
-        RegisterOptions<CreateProviderFormData, any>,
-        'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-      >
-    | undefined;
+  fieldRules?: Omit<
+    RegisterOptions<CreateProviderFormData, any>,
+    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
+  >;
   label: string;
   labelHelp?: FormGroupProps['labelHelp'];
   testId?: string;

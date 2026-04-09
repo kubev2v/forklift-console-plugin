@@ -22,6 +22,7 @@ import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytic
 import { getName } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
+import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { ForkliftTrans } from '@utils/i18n';
 import { ProviderStatus } from '@utils/types';
@@ -57,6 +58,7 @@ const ProviderSelect = (
   ref: ForwardedRef<HTMLButtonElement>,
 ) => {
   const isDarkTheme = useIsDarkTheme();
+  const isAwsPlatform = useClusterIsAwsPlatform();
   const { trackEvent } = useForkliftAnalytics();
   const [rawProviders, loaded] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
@@ -79,10 +81,14 @@ const ProviderSelect = (
               return isReady && provider.spec?.type === PROVIDER_TYPES.openshift;
             }
 
+            if (!isAwsPlatform && provider.spec?.type === PROVIDER_TYPES.ec2) {
+              return false;
+            }
+
             return isReady;
           })
         : [],
-    [isTarget, providers, loaded],
+    [isAwsPlatform, isTarget, providers, loaded],
   );
 
   const providersListUrl = useMemo(

@@ -1,6 +1,8 @@
 import type { ProviderType, V1beta1Provider } from '@forklift-ui/types';
+import type { ExtendedProviderType } from '@utils/enums';
 
-export const SOURCE_ONLY_PROVIDER_TYPES: ProviderType[] = [
+export const SOURCE_ONLY_PROVIDER_TYPES: ExtendedProviderType[] = [
+  'ec2',
   'ova',
   'hyperv',
   'vsphere',
@@ -26,5 +28,5 @@ export const getIsTarget = (provider: V1beta1Provider): boolean => {
  * @returns {boolean} - Returns true if the provider is a target provider, false otherwise.
  */
 export const getIsOnlySource = (provider?: V1beta1Provider): boolean => {
-  return SOURCE_ONLY_PROVIDER_TYPES.includes(provider?.spec?.type as ProviderType);
+  return SOURCE_ONLY_PROVIDER_TYPES.includes(provider?.spec?.type as ExtendedProviderType);
 };

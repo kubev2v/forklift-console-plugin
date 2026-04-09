@@ -1,4 +1,5 @@
 import {
+  ec2Logo,
   getVmwareLogo,
   hypervLogo,
   openshiftLogo,
@@ -9,6 +10,11 @@ import {
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 export const providerTypes = (isDarkTheme: boolean) => ({
+  ec2: {
+    key: PROVIDER_TYPES.ec2,
+    logo: ec2Logo,
+    title: 'Amazon EC2',
+  },
   hyperv: {
     key: PROVIDER_TYPES.hyperv,
     logo: hypervLogo,
