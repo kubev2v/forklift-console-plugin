@@ -4,8 +4,8 @@ import type { StorageMapping, TargetStorage } from 'src/storageMaps/utils/types'
 import type { InventoryNetwork } from 'src/utils/hooks/useNetworks';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
-import type { HypervNetwork } from '@forklift-ui/types';
 import type {
+  HypervNetwork,
   OpenShiftNetworkAttachmentDefinition,
   OpenshiftVM,
   OpenstackNetwork,
