@@ -7,17 +7,59 @@ import type { ResourceManager } from '../utils/resource-manager/ResourceManager'
 import { V2_11_0 } from '../utils/version/constants';
 import { isVersionAtLeast } from '../utils/version/version';
 
+import { VerifyCertificateModal } from './CreateProviderPage/VerifyCertificateModal';
 import { ProviderDetailsPage } from './ProviderDetailsPage/ProviderDetailsPage';
 
 export class CreateProviderPage {
   private readonly resourceManager?: ResourceManager;
+  // Certificate validation locators
+  readonly caCertificateErrorText;
+  readonly certificateConfigureRadio;
+  readonly certificateSkipRadio;
+  readonly certificateUploadInput;
+  readonly createButton;
+  readonly fetchCertificateButton;
   public readonly navigationHelper: NavigationHelper;
   protected readonly page: Page;
+  // VDDK Setup locators
+  readonly vddkAioCheckbox;
+  readonly vddkImageInput;
+  readonly vddkManualRadio;
+
+  readonly vddkSkipRadio;
+  readonly vddkSkipWarning;
+  readonly vddkUploadRadio;
+  readonly verifyCertificateModal: VerifyCertificateModal;
 
   constructor(page: Page, resourceManager?: ResourceManager) {
     this.page = page;
     this.resourceManager = resourceManager;
     this.navigationHelper = new NavigationHelper(page);
+
+    // Certificate validation locators
+    this.certificateConfigureRadio = page.getByTestId('certificate-validation-configure');
+    this.certificateSkipRadio = page.getByTestId('certificate-validation-skip');
+    this.certificateUploadInput = page.locator('#caCertificate');
+    this.fetchCertificateButton = page.getByRole('button', {
+      name: 'Fetch certificate from URL',
+    });
+    this.caCertificateErrorText = page.getByTestId('ca-certificate-helper-error');
+    this.verifyCertificateModal = new VerifyCertificateModal(page);
+
+    const createButtonTestId = isVersionAtLeast(V2_11_0)
+      ? 'provider-create-button'
+      : 'create-provider-button';
+    this.createButton = page.getByTestId(createButtonTestId);
+
+    // VDDK Setup locators
+    this.vddkAioCheckbox = page.getByTestId('vddk-aio-optimization-checkbox');
+    this.vddkImageInput = page.getByTestId('vsphere-vddk-image-input');
+    this.vddkManualRadio = page.getByTestId('vddk-setup-manual-radio');
+    this.vddkSkipRadio = page.getByTestId('vddk-setup-skip-radio');
+    this.vddkSkipWarning = page.getByRole('heading', {
+      name: /It is highly recommended to use a VDDK image/,
+    });
+    this.vddkUploadRadio = page.getByTestId('vddk-setup-upload-radio');
   }
 
   private async configureVddkSetup(testData: ProviderData) {
@@ -53,6 +95,36 @@ export class CreateProviderPage {
         await aioCheckbox.click();
       }
     }
+  }
+
+  private async fillHypervFields(testData: ProviderData) {
+    // SMB URL must be filled first — credential fields render only after it has a value
+    await this.page.locator('#smbUrl').fill(testData.smbUrl ?? '');
+    await this.page.getByTestId('hyperv-host-input').waitFor({ state: 'visible', timeout: 10000 });
+
+    await this.page.getByTestId('hyperv-host-input').fill(testData.hostname ?? '');
+    await this.page.getByTestId('hyperv-username-input').fill(testData.username ?? '');
+    await this.page.getByTestId('hyperv-password-input').fill(testData.password ?? '');
+
+    if (testData.useDifferentSmbCredentials) {
+      const checkbox = this.page.locator('#useDifferentSmbCredentials');
+      if (!(await checkbox.isChecked())) {
+        await checkbox.click();
+      }
+      await this.page.getByTestId('smb-user-input').fill(testData.smbUsername ?? '');
+      await this.page.getByTestId('smb-password-input').fill(testData.smbPassword ?? '');
+    }
+  }
+
+  private async fillOpenStackFields(testData: ProviderData) {
+    await this.page.getByTestId('openstack-url-input').fill(testData.hostname ?? '');
+    await this.page.getByTestId('openstack-username-input').fill(testData.username ?? '');
+    await this.page.getByTestId('openstack-password-input').fill(testData.password ?? '');
+    await this.page.getByTestId('openstack-region-input').fill(testData.regionName ?? '');
+    await this.page
+      .getByTestId('openstack-project-input')
+      .fill(testData.openstackProjectName ?? '');
+    await this.page.getByTestId('openstack-domain-input').fill(testData.domainName ?? '');
   }
 
   private async fillOVAFields(testData: ProviderData) {
@@ -119,10 +191,7 @@ export class CreateProviderPage {
   }
 
   private async submitForm(testData: ProviderData) {
-    const createButtonTestId = isVersionAtLeast(V2_11_0)
-      ? 'provider-create-button'
-      : 'create-provider-button';
-    await this.page.getByTestId(createButtonTestId).click();
+    await this.createButton.click();
 
     if (this.resourceManager && testData.name) {
       this.resourceManager.addProvider(testData.name, testData.projectName);
@@ -144,12 +213,35 @@ export class CreateProviderPage {
     return providerDetailsPage;
   }
 
+  async enterCaCertificate(certificate: string): Promise<void> {
+    await this.certificateUploadInput.fill(certificate);
+  }
+
+  async fetchAndAcceptCertificate(): Promise<void> {
+    await this.fetchCertificateButton.click();
+    await this.verifyCertificateModal.waitForModalToOpen();
+    await this.verifyCertificateModal.trustAndSave();
+  }
+
   async fillAndSubmit(testData: ProviderData) {
+    await this.fillProviderFields(testData);
+
+    if (testData.type !== ProviderType.OVA) {
+      await this.skipCertificateValidation();
+    }
+
+    await this.submitForm(testData);
+  }
+
+  async fillProviderFields(testData: ProviderData): Promise<void> {
     await this.selectProject(testData.projectName);
     await this.selectProviderType(testData.type);
     await this.fillProviderName(testData.name);
 
     switch (testData.type) {
+      case ProviderType.HYPERV:
+        await this.fillHypervFields(testData);
+        break;
       case ProviderType.VSPHERE:
         await this.fillVSphereFields(testData);
         break;
@@ -160,19 +252,23 @@ export class CreateProviderPage {
         await this.fillOVAFields(testData);
         break;
       case ProviderType.OPENSTACK:
+        await this.fillOpenStackFields(testData);
+        break;
       default:
         break;
     }
-
-    if (testData.type !== ProviderType.OVA) {
-      await this.skipCertificateValidation();
-    }
-
-    await this.submitForm(testData);
   }
 
   async fillProviderName(name: string) {
     await this.page.getByTestId('provider-name-input').fill(name);
+  }
+
+  async getCaCertificateValue(): Promise<string> {
+    return (await this.certificateUploadInput.inputValue()) ?? '';
+  }
+
+  getProviderTypeToggle() {
+    return this.page.getByTestId('provider-type-toggle');
   }
 
   async navigate(namespace?: string): Promise<void> {
@@ -182,11 +278,18 @@ export class CreateProviderPage {
       namespace,
       allNamespaces: true,
     });
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
 
     const createButton = this.page.getByTestId('add-provider-button');
     await createButton.waitFor({ state: 'visible', timeout: 20000 });
     await createButton.click();
+    await this.page.waitForLoadState('domcontentloaded');
+  }
+
+  async navigateWithProviderType(providerType: string): Promise<void> {
+    await this.page.goto(
+      `/k8s/cluster/forklift.konveyor.io~v1beta1~Provider/~new?providerType=${providerType}`,
+    );
     await this.page.waitForLoadState('networkidle');
   }
 
@@ -223,6 +326,13 @@ export class CreateProviderPage {
     const typeToggle = this.page.getByTestId('provider-type-toggle');
     await typeToggle.click();
     await this.page.getByTestId(`provider-type-option-${providerType}`).click();
+  }
+
+  async submitCreateForm(providerName?: string, projectName?: string): Promise<void> {
+    await this.createButton.click();
+    if (this.resourceManager && providerName) {
+      this.resourceManager.addProvider(providerName, projectName ?? '');
+    }
   }
 
   async waitForWizardLoad() {
