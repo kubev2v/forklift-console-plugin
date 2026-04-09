@@ -1,5 +1,6 @@
 export enum MigrationType {
   COLD = 'cold',
+  LIVE = 'live',
   WARM = 'warm',
 }
 

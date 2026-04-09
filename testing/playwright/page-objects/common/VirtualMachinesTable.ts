@@ -252,7 +252,7 @@ export class VirtualMachinesTable {
   async testConcernButton(): Promise<boolean> {
     const concernButton = this.page.getByTestId(/^concern-badge-/).first();
 
-    if (!(await concernButton.isVisible())) {
+    if (!(await concernButton.isVisible().catch(() => false))) {
       return false;
     }
 

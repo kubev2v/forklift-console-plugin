@@ -11,34 +11,57 @@ import { TargetNodeSelectorModal } from '../modals/TargetNodeSelectorModal';
 
 export class DetailsTab {
   readonly affinityModal: TargetAffinityModal;
+  readonly coldMigrationRadio: Locator;
   readonly descriptionTextbox: Locator;
   readonly editDescriptionModal: Locator;
   readonly editDiskDecryptionModal: Locator;
+  readonly editMigrateSharedDisksModal: Locator;
   readonly editMigrationTypeModal: Locator;
   readonly editPowerStateModal: Locator;
+  readonly editPreserveStaticIPsModal: Locator;
   readonly editSharedDisksCheckbox: Locator;
   readonly editSharedDisksModal: Locator;
   readonly guestConversionModal: GuestConversionModal;
   readonly labelsModal: TargetLabelsModal;
+  readonly liveMigrationRadio: Locator;
+  readonly migrateSharedDisksCheckbox: Locator;
   readonly nodeSelectorModal: TargetNodeSelectorModal;
   protected readonly page: Page;
   readonly powerStateOptionAuto: Locator;
   readonly powerStateOptionOff: Locator;
   readonly powerStateOptionOn: Locator;
+  readonly preserveStaticIPsCheckbox: Locator;
   readonly saveDescriptionButton: Locator;
   readonly saveDiskDecryptionButton: Locator;
+  readonly saveMigrateSharedDisksButton: Locator;
   readonly saveMigrationTypeButton: Locator;
   readonly savePowerStateButton: Locator;
+  readonly savePreserveStaticIPsButton: Locator;
   readonly saveSharedDisksButton: Locator;
   readonly targetPowerStateSelect: Locator;
   readonly useNbdeClevisCheckbox: Locator;
+  readonly warmMigrationRadio: Locator;
+
   constructor(page: Page) {
     this.page = page;
     this.editDescriptionModal = this.page.getByRole('dialog', { name: 'Edit description' });
     this.descriptionTextbox = this.editDescriptionModal.getByRole('textbox');
     this.saveDescriptionButton = this.editDescriptionModal.getByTestId('modal-confirm-button');
     this.editMigrationTypeModal = this.page.getByTestId('edit-migration-type-modal');
+    this.coldMigrationRadio = this.editMigrationTypeModal.getByTestId('migration-type-cold');
+    this.liveMigrationRadio = this.editMigrationTypeModal.getByTestId('migration-type-live');
+    this.warmMigrationRadio = this.editMigrationTypeModal.getByTestId('migration-type-warm');
     this.saveMigrationTypeButton = this.editMigrationTypeModal.getByTestId('modal-confirm-button');
+    this.editPreserveStaticIPsModal = this.page.getByRole('dialog', { name: 'Edit static IPs' });
+    this.preserveStaticIPsCheckbox = this.page.getByTestId('preserve-static-ips-checkbox');
+    this.savePreserveStaticIPsButton =
+      this.editPreserveStaticIPsModal.getByTestId('modal-confirm-button');
+    this.editMigrateSharedDisksModal = this.page.getByRole('dialog', {
+      name: 'Edit shared disks',
+    });
+    this.migrateSharedDisksCheckbox = this.page.getByTestId('migrate-shared-disks-checkbox');
+    this.saveMigrateSharedDisksButton =
+      this.editMigrateSharedDisksModal.getByTestId('modal-confirm-button');
     this.editPowerStateModal = this.page.getByTestId('edit-target-power-state-modal');
     this.savePowerStateButton = this.page.getByTestId('modal-confirm-button');
     this.targetPowerStateSelect = this.editPowerStateModal.getByTestId('target-power-state-select');
@@ -70,32 +93,38 @@ export class DetailsTab {
     await modal.waitForModalToOpen();
   }
 
+  private detailGroupByTitle(title: string): Locator {
+    return this.page.getByRole('term').filter({ hasText: title }).locator('..');
+  }
+
   private async verifyAffinityRulesCount(testId: string, count: number): Promise<void> {
-    const element = this.page.getByTestId(testId);
-    await expect(element).toContainText(`${count} affinity rule`);
+    await expect(this.page.getByTestId(testId)).toContainText(`${count} affinity rule`);
   }
 
   private async verifyDetailItemText(testId: string, expectedText: string): Promise<void> {
-    const text = this.page.getByTestId(testId).getByText(expectedText);
-    await expect(text).toBeVisible();
+    await expect(this.page.getByTestId(testId).getByText(expectedText)).toBeVisible();
   }
 
   private async verifyLabelsCount(testId: string, count: number): Promise<void> {
-    const element = this.page.getByTestId(testId);
+    const el = this.page.getByTestId(testId);
     if (count === 0) {
-      await expect(element).toContainText('No labels defined');
+      await expect(el).toContainText('No labels defined');
     } else {
-      await expect(element).not.toContainText('No labels defined');
+      await expect(el).not.toContainText('No labels defined');
     }
   }
 
   private async verifyNodeSelectorCount(testId: string, count: number): Promise<void> {
-    const element = this.page.getByTestId(testId);
+    const el = this.page.getByTestId(testId);
     if (count === 0) {
-      await expect(element).toContainText('No node selectors defined');
+      await expect(el).toContainText('No node selectors defined');
     } else {
-      await expect(element).not.toContainText('No node selectors defined');
+      await expect(el).not.toContainText('No node selectors defined');
     }
+  }
+
+  get cbtWarningAlert(): Locator {
+    return this.page.getByText('Must enable Changed Block Tracking (CBT) for warm migration');
   }
 
   async clickEditConvertorAffinity(): Promise<void> {
@@ -123,9 +152,19 @@ export class DetailsTab {
     await this.clickEditDetailItem('guest-conversion-mode-detail-item', this.guestConversionModal);
   }
 
+  async clickEditMigrateSharedDisks(): Promise<void> {
+    await this.detailGroupByTitle('Shared disks').locator('dd button').last().click();
+    await expect(this.editMigrateSharedDisksModal).toBeVisible();
+  }
+
   async clickEditMigrationType(): Promise<void> {
     await this.page.getByTestId('migration-type-detail-item').locator('button').click();
     await expect(this.editMigrationTypeModal).toBeVisible();
+  }
+
+  async clickEditPreserveStaticIPs(): Promise<void> {
+    await this.detailGroupByTitle('Preserve static IPs').locator('dd button').last().click();
+    await expect(this.editPreserveStaticIPsModal).toBeVisible();
   }
 
   async clickEditSharedDisks(): Promise<void> {
@@ -157,11 +196,8 @@ export class DetailsTab {
   }
 
   async getCurrentPlanStatus(): Promise<string> {
-    const statusElement = this.page
-      .getByTestId('status-detail-item')
-      .getByTestId('plan-status-label');
-    const statusText = await statusElement.textContent();
-    return statusText?.trim() ?? '';
+    const el = this.page.getByTestId('status-detail-item').getByTestId('plan-status-label');
+    return (await el.textContent())?.trim() ?? '';
   }
 
   migrationTypeRadio(type: MigrationType): Locator {
@@ -169,17 +205,12 @@ export class DetailsTab {
   }
 
   async navigateToDetailsTab(): Promise<void> {
-    const detailsTab = this.page.locator('[data-test-id="horizontal-link-Details"]');
-    await detailsTab.click();
+    await this.page.locator('[data-test-id="horizontal-link-Details"]').click();
   }
 
   powerStateOption(state: 'on' | 'off' | 'auto'): Locator {
-    const optionNames = {
-      auto: 'Retain source VM power state',
-      on: 'Powered on',
-      off: 'Powered off',
-    };
-    return this.page.getByRole('option', { name: optionNames[state], exact: true });
+    const names = { auto: 'Retain source VM power state', off: 'Powered off', on: 'Powered on' };
+    return this.page.getByRole('option', { name: names[state], exact: true });
   }
 
   async saveDescription(): Promise<void> {
@@ -187,13 +218,27 @@ export class DetailsTab {
     await expect(this.editDescriptionModal).not.toBeVisible();
   }
 
+  async saveMigrateSharedDisks(): Promise<void> {
+    await this.saveMigrateSharedDisksButton.click();
+    await expect(this.editMigrateSharedDisksModal).not.toBeVisible();
+  }
+
   async saveMigrationType(): Promise<void> {
     await this.saveMigrationTypeButton.click();
     await expect(this.editMigrationTypeModal).not.toBeVisible();
   }
 
+  async savePreserveStaticIPs(): Promise<void> {
+    await this.savePreserveStaticIPsButton.click();
+    await expect(this.editPreserveStaticIPsModal).not.toBeVisible();
+  }
+
   async selectMigrationType(type: MigrationType): Promise<void> {
     await this.migrationTypeRadio(type).click();
+  }
+
+  get sharedDisksInfoAlert(): Locator {
+    return this.page.getByText('This may slow down the migration process');
   }
 
   sharedDisksDetailItem(text: string): Locator {
@@ -201,9 +246,9 @@ export class DetailsTab {
   }
 
   targetVMPowerState(state: string): Locator {
-    return this.page
-      .getByTestId('target-vm-power-state-detail-item')
-      .getByText(state, { exact: true });
+    return this.page.getByTestId('target-vm-power-state-detail-item').getByText(state, {
+      exact: true,
+    });
   }
 
   get vddkWarningAlert(): Locator {
@@ -214,29 +259,28 @@ export class DetailsTab {
     await this.verifyAffinityRulesCount('convertor-affinity-rules-detail-item', count);
   }
 
-  async verifyConvertorAffinityText(expectedText: string): Promise<void> {
-    await this.verifyDetailItemText('convertor-affinity-rules-detail-item', expectedText);
+  async verifyConvertorAffinityText(text: string): Promise<void> {
+    await this.verifyDetailItemText('convertor-affinity-rules-detail-item', text);
   }
 
   async verifyConvertorLabelsCount(count: number): Promise<void> {
     await this.verifyLabelsCount('convertor-labels-detail-item', count);
   }
 
-  async verifyConvertorLabelsText(expectedText: string): Promise<void> {
-    await this.verifyDetailItemText('convertor-labels-detail-item', expectedText);
+  async verifyConvertorLabelsText(text: string): Promise<void> {
+    await this.verifyDetailItemText('convertor-labels-detail-item', text);
   }
 
   async verifyConvertorNodeSelectorCount(count: number): Promise<void> {
     await this.verifyNodeSelectorCount('convertor-node-selector-detail-item', count);
   }
 
-  async verifyConvertorNodeSelectorText(expectedText: string): Promise<void> {
-    await this.verifyDetailItemText('convertor-node-selector-detail-item', expectedText);
+  async verifyConvertorNodeSelectorText(text: string): Promise<void> {
+    await this.verifyDetailItemText('convertor-node-selector-detail-item', text);
   }
 
-  async verifyDescriptionText(expectedText: string): Promise<void> {
-    const descriptionElement = this.page.getByTestId('description-detail-item');
-    await expect(descriptionElement).toContainText(expectedText);
+  async verifyDescriptionText(text: string): Promise<void> {
+    await expect(this.page.getByTestId('description-detail-item')).toContainText(text);
   }
 
   async verifyDetailsTab(planData: PlanTestData): Promise<void> {
@@ -244,14 +288,12 @@ export class DetailsTab {
     await this.verifyPlanDetails(planData);
   }
 
-  async verifyGuestConversionModeText(expectedText: string): Promise<void> {
-    await this.verifyDetailItemText('guest-conversion-mode-detail-item', expectedText);
+  async verifyGuestConversionModeText(text: string): Promise<void> {
+    await this.verifyDetailItemText('guest-conversion-mode-detail-item', text);
   }
 
   async verifyGuestConversionModeTexts(texts: string[]): Promise<void> {
-    for (const text of texts) {
-      await this.verifyGuestConversionModeText(text);
-    }
+    for (const text of texts) await this.verifyGuestConversionModeText(text);
   }
 
   async verifyMigrationType(type: MigrationType): Promise<void> {
@@ -261,8 +303,7 @@ export class DetailsTab {
   }
 
   async verifyNavigationTabs(): Promise<void> {
-    const detailsTab = this.page.locator('[data-test-id="horizontal-link-Details"]');
-    await expect(detailsTab).toBeVisible();
+    await expect(this.page.locator('[data-test-id="horizontal-link-Details"]')).toBeVisible();
   }
 
   async verifyPlanDetails(planData: PlanTestData): Promise<void> {
@@ -275,23 +316,18 @@ export class DetailsTab {
     );
     await expect(this.page.getByTestId('created-at-detail-item')).toBeVisible();
     await expect(this.page.getByTestId('owner-detail-item')).toContainText('No owner');
-
     if (isVersionAtLeast(V2_11_0)) {
-      if (planData.description) {
-        await this.verifyDescriptionText(planData.description);
-      } else {
-        await this.verifyDescriptionText('None');
-      }
+      await this.verifyDescriptionText(planData.description ?? 'None');
     }
-
     if (planData.additionalPlanSettings?.targetPowerState) {
-      let powerState = 'Retain source VM power state';
-      if (planData.additionalPlanSettings.targetPowerState === 'on') {
-        powerState = 'Powered on';
-      } else if (planData.additionalPlanSettings.targetPowerState === 'off') {
-        powerState = 'Powered off';
-      }
-      await expect(this.targetVMPowerState(powerState)).toBeVisible();
+      const labels: Record<string, string> = {
+        auto: 'Retain source VM power state',
+        off: 'Powered off',
+        on: 'Powered on',
+      };
+      await expect(
+        this.targetVMPowerState(labels[planData.additionalPlanSettings.targetPowerState]),
+      ).toBeVisible();
     }
   }
 
@@ -299,37 +335,43 @@ export class DetailsTab {
     const statusLocator = this.page.getByTestId('status-detail-item');
 
     const expectFn = expect.configure({ soft });
-
     await expectFn(statusLocator).not.toContainText('Unknown', { timeout: 120000 });
-
     if (expectedStatus === 'Ready for migration') {
-      await expectFn(
-        this.page.getByTestId('status-detail-item').getByTestId('plan-start-button-status'),
-      ).toBeVisible();
+      await expectFn(statusLocator.getByTestId('plan-start-button-status')).toBeVisible();
     }
+  }
+
+  async verifyPreserveStaticIPs(enabled: boolean): Promise<void> {
+    const text = enabled ? 'Preserve static IPs' : 'Do not preserve static IPs';
+    await expect(this.detailGroupByTitle('Preserve static IPs')).toContainText(text);
+  }
+
+  async verifySharedDisks(migrate: boolean): Promise<void> {
+    const text = migrate ? 'Migrate shared disks' : 'Do not migrate shared disks';
+    await expect(this.detailGroupByTitle('Shared disks')).toContainText(text);
   }
 
   async verifyTargetAffinityRulesCount(count: number): Promise<void> {
     await this.verifyAffinityRulesCount('vm-target-affinity-rules-detail-item', count);
   }
 
-  async verifyTargetAffinityText(expectedText: string): Promise<void> {
-    await this.verifyDetailItemText('vm-target-affinity-rules-detail-item', expectedText);
+  async verifyTargetAffinityText(text: string): Promise<void> {
+    await this.verifyDetailItemText('vm-target-affinity-rules-detail-item', text);
   }
 
   async verifyTargetLabelsCount(count: number): Promise<void> {
     await this.verifyLabelsCount('vm-target-labels-detail-item', count);
   }
 
-  async verifyTargetLabelsText(expectedText: string): Promise<void> {
-    await this.verifyDetailItemText('vm-target-labels-detail-item', expectedText);
+  async verifyTargetLabelsText(text: string): Promise<void> {
+    await this.verifyDetailItemText('vm-target-labels-detail-item', text);
   }
 
   async verifyTargetNodeSelectorCount(count: number): Promise<void> {
     await this.verifyNodeSelectorCount('vm-target-node-selector-detail-item', count);
   }
 
-  async verifyTargetNodeSelectorText(expectedText: string): Promise<void> {
-    await this.verifyDetailItemText('vm-target-node-selector-detail-item', expectedText);
+  async verifyTargetNodeSelectorText(text: string): Promise<void> {
+    await this.verifyDetailItemText('vm-target-node-selector-detail-item', text);
   }
 }

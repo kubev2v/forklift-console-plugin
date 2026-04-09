@@ -1,18 +1,19 @@
+import { expect } from '@playwright/test';
+
 import { sharedProviderCustomPlanFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { MigrationType } from '../../../types/enums';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
-  requireVersion(test, V2_11_0);
+  requireVersion(test, V2_12_0);
 
   test('should edit migration type', async ({
     page,
     createCustomPlan,
     testProvider: _testProvider,
   }) => {
-    // Create a plan with warm migration type (already navigates to plan details page)
     await createCustomPlan({ migrationType: MigrationType.WARM });
 
     const planDetailsPage = new PlanDetailsPage(page);
@@ -22,9 +23,17 @@ test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
       await planDetailsPage.detailsTab.verifyMigrationType(MigrationType.WARM);
     });
 
-    await test.step('Edit migration type from warm to cold', async () => {
+    await test.step('Open edit modal and verify radio buttons', async () => {
       await planDetailsPage.detailsTab.clickEditMigrationType();
+      await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.COLD)).toBeVisible();
+      await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.WARM)).toBeVisible();
+      await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.WARM)).toBeChecked();
+      await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.COLD)).not.toBeChecked();
+    });
+
+    await test.step('Select cold migration and save', async () => {
       await planDetailsPage.detailsTab.selectMigrationType(MigrationType.COLD);
+      await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.COLD)).toBeChecked();
       await planDetailsPage.detailsTab.saveMigrationType();
     });
 
@@ -32,9 +41,11 @@ test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
       await planDetailsPage.detailsTab.verifyMigrationType(MigrationType.COLD);
     });
 
-    await test.step('Edit migration type from cold back to warm', async () => {
+    await test.step('Edit back to warm migration', async () => {
       await planDetailsPage.detailsTab.clickEditMigrationType();
+      await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.COLD)).toBeChecked();
       await planDetailsPage.detailsTab.selectMigrationType(MigrationType.WARM);
+      await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.WARM)).toBeChecked();
       await planDetailsPage.detailsTab.saveMigrationType();
     });
 

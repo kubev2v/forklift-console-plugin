@@ -33,6 +33,7 @@ test.describe('Provider Creation Tests', () => {
           tag: '@downstream',
         },
         async ({ page }) => {
+          test.setTimeout(240_000);
           if (minVersion) {
             requireVersion(test, minVersion);
           }

@@ -46,6 +46,7 @@ export const getDefaultFormValues = (
     [NetworkMapFieldId.NetworkMapType]: NetworkMapType.Existing,
     [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [defaultDiskPassPhrase],
     [OtherSettingsFormFieldId.MigrateSharedDisks]: true,
+    [OtherSettingsFormFieldId.PreserveStaticIps]: true,
     [OtherSettingsFormFieldId.TargetPowerState]: defaultTargetPowerStateOption,
     [StorageMapFieldId.StorageMap]: [defaultStorageMapping],
     [VmFormFieldId.Vms]: defaultVms,

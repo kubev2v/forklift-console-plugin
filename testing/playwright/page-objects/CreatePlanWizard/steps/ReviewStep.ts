@@ -147,6 +147,10 @@ export class ReviewStep {
     await expect(this.page.getByTestId('review-migration-type')).toBeVisible();
   }
 
+  async verifyMigrationTypeValue(expectedLabel: string): Promise<void> {
+    await expect(this.page.getByTestId('review-migration-type')).toHaveText(expectedLabel);
+  }
+
   async verifyNetworkMapSection(expectedNetworkMap: NetworkMap): Promise<void> {
     const section = this.page.getByTestId('review-network-map-section');
     await expect(section).toBeVisible();
@@ -184,9 +188,19 @@ export class ReviewStep {
     }
   }
 
+  async verifyPreserveStaticIPs(enabled: boolean): Promise<void> {
+    const expected = enabled ? 'Enabled' : 'Disabled';
+    await expect(this.page.getByTestId('review-preserve-static-ips')).toHaveText(expected);
+  }
+
   async verifyReviewStep(planData: PlanTestData): Promise<void> {
     await this.verifyStepVisible();
     await this.verifyAllSections(planData);
+  }
+
+  async verifySharedDisks(enabled: boolean): Promise<void> {
+    const expected = enabled ? 'Enabled' : 'Disabled';
+    await expect(this.page.getByTestId('review-shared-disks')).toHaveText(expected);
   }
 
   async verifyStepVisible(): Promise<void> {
