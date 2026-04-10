@@ -21,6 +21,11 @@ echo "deploy console CRDs"
 kubectl apply -f ${script_dir}/yaml/crds/console
 
 echo ""
+echo "deploy operator CRDs"
+
+kubectl apply -f ${script_dir}/yaml/crds/operators
+
+echo ""
 echo "deploy OKD console"
 
 cat ${OKD_CONSOLE_YAML} | \

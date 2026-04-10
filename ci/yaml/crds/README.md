@@ -20,3 +20,12 @@ Mimic an installed Forklift operator API
 | ----------- | ----------------------------------------------------------------------- |
 | Source      | https://github.com/kubev2v/forklift/tree/main/operator/config/crd/bases |
 | PR ref      | https://github.com/kubev2v/forklift/pull/121                            |
+
+## Operators CRDs
+
+Minimal OLM Subscription CRD so upstream E2E tests can mock
+Lightspeed operator presence via `useK8sWatchResource`.
+
+| API version | v1alpha1                                                                                    |
+| ----------- | ------------------------------------------------------------------------------------------- |
+| Source      | https://github.com/operator-framework/api/tree/master/crds (simplified for test use only)   |
