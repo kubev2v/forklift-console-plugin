@@ -33,14 +33,22 @@ export const usePlanMappingData = ({
   sourceProvider,
   storageMaps,
 }: UsePlanMappingDataOptions) => {
+  const planNetworkMapName = getPlanNetworkMapName(plan);
   const planNetworkMap = useMemo(
-    () => networkMaps.find((map) => getName(map) === getPlanNetworkMapName(plan)),
-    [networkMaps, plan],
+    () =>
+      planNetworkMapName
+        ? networkMaps.find((map) => getName(map) === planNetworkMapName)
+        : undefined,
+    [networkMaps, planNetworkMapName],
   );
 
+  const planStorageMapName = getPlanStorageMapName(plan);
   const planStorageMap = useMemo(
-    () => storageMaps.find((map) => getName(map) === getPlanStorageMapName(plan)),
-    [storageMaps, plan],
+    () =>
+      planStorageMapName
+        ? storageMaps.find((map) => getName(map) === planStorageMapName)
+        : undefined,
+    [storageMaps, planStorageMapName],
   );
 
   const sourceStorages = useMemo(() => {

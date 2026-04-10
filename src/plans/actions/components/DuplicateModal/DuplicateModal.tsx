@@ -29,21 +29,31 @@ const DuplicateModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
   const name = getName(plan);
   const [newName, setNewName] = useState<string>(`copy-of-${name}`);
 
-  const [networkMap] = useK8sWatchResource<V1beta1NetworkMap>({
-    groupVersionKind: NetworkMapModelGroupVersionKind,
-    isList: false,
-    name: getPlanNetworkMapName(plan),
-    namespace: getPlanNetworkMapNamespace(plan),
-    namespaced: true,
-  });
+  const networkMapName = getPlanNetworkMapName(plan);
+  const [networkMap] = useK8sWatchResource<V1beta1NetworkMap>(
+    networkMapName
+      ? {
+          groupVersionKind: NetworkMapModelGroupVersionKind,
+          isList: false,
+          name: networkMapName,
+          namespace: getPlanNetworkMapNamespace(plan),
+          namespaced: true,
+        }
+      : null,
+  );
 
-  const [storageMap] = useK8sWatchResource<V1beta1StorageMap>({
-    groupVersionKind: StorageMapModelGroupVersionKind,
-    isList: false,
-    name: getPlanStorageMapName(plan),
-    namespace: getPlanStorageMapNamespace(plan),
-    namespaced: true,
-  });
+  const storageMapName = getPlanStorageMapName(plan);
+  const [storageMap] = useK8sWatchResource<V1beta1StorageMap>(
+    storageMapName
+      ? {
+          groupVersionKind: StorageMapModelGroupVersionKind,
+          isList: false,
+          name: storageMapName,
+          namespace: getPlanStorageMapNamespace(plan),
+          namespaced: true,
+        }
+      : null,
+  );
 
   const onChange = (value: string): void => {
     setNewName(value);
