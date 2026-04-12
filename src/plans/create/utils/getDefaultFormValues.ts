@@ -9,7 +9,12 @@ import {
   DefaultScript,
 } from '../steps/customization-scripts/constants';
 import { GeneralFormFieldId } from '../steps/general-information/constants';
-import { HooksFormFieldId, MigrationHookFieldId } from '../steps/migration-hooks/constants';
+import {
+  AapFormFieldId,
+  HOOK_SOURCE_NONE,
+  HooksFormFieldId,
+  MigrationHookFieldId,
+} from '../steps/migration-hooks/constants';
 import {
   defaultNetMapping,
   NetworkMapFieldId,
@@ -28,6 +33,12 @@ export const getDefaultFormValues = (
   initialValues?: Partial<Pick<CreatePlanFormData, 'planProject' | 'sourceProvider'>>,
 ): Partial<CreatePlanFormData> => {
   return {
+    [AapFormFieldId.AapPostHookJobTemplateId]: undefined,
+    [AapFormFieldId.AapPreHookJobTemplateId]: undefined,
+    [AapFormFieldId.AapTimeout]: undefined,
+    [AapFormFieldId.AapToken]: '',
+    [AapFormFieldId.AapUrl]: '',
+    [AapFormFieldId.HookSource]: HOOK_SOURCE_NONE,
     [CreatePlanStorageMapFieldId.StorageMapType]: StorageMapType.Existing,
     [CustomScriptsFieldId.Scripts]: [DefaultScript],
     [CustomScriptsFieldId.ScriptsType]: CustomScriptsType.Existing,

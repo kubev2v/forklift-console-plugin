@@ -16,14 +16,15 @@ import { addOwnerRefs } from './addOwnerRefs';
 
 export const addPlanResourceOwnerRefs = async (
   resources: {
-    networkMap: V1beta1NetworkMap;
-    storageMap: V1beta1StorageMap;
-    secret?: IoK8sApiCoreV1Secret;
+    aapTokenSecret?: IoK8sApiCoreV1Secret;
     hooks: { preHook?: V1beta1Hook; postHook?: V1beta1Hook };
+    networkMap: V1beta1NetworkMap;
     scriptsConfigMap?: IoK8sApiCoreV1ConfigMap;
+    secret?: IoK8sApiCoreV1Secret;
+    storageMap: V1beta1StorageMap;
   },
   planRef: ObjectRef,
-) => {
+): Promise<void> => {
   const ownerRefRequests: ReturnType<typeof addOwnerRefs>[] = [
     addOwnerRefs(StorageMapModel, resources.storageMap, [planRef]),
     addOwnerRefs(NetworkMapModel, resources.networkMap, [planRef]),
@@ -31,6 +32,10 @@ export const addPlanResourceOwnerRefs = async (
 
   if (resources.secret) {
     ownerRefRequests.push(addOwnerRefs(SecretModel, resources.secret, [planRef]));
+  }
+
+  if (resources.aapTokenSecret) {
+    ownerRefRequests.push(addOwnerRefs(SecretModel, resources.aapTokenSecret, [planRef]));
   }
 
   if (resources.hooks.preHook) {

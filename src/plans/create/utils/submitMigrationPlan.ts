@@ -10,17 +10,85 @@ import type {
 import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { isEmpty } from '@utils/helpers';
 
-import { MigrationHookFieldId } from '../steps/migration-hooks/constants';
+import {
+  AapFormFieldId,
+  HOOK_SOURCE_AAP,
+  HOOK_SOURCE_LOCAL,
+  type MigrationHook,
+  MigrationHookFieldId,
+} from '../steps/migration-hooks/constants';
 import type { CreatePlanFormData } from '../types';
 
 import { addPlanResourceOwnerRefs } from './addPlanResourceOwnerRefs';
 import { copyNetworkMap } from './copyNetworkMap';
 import { copyStorageMap } from './copyStorageMap';
+import { createAapTokenSecret } from './createAapTokenSecret';
 import { createDecryptionSecret } from './createDecryptionSecret';
-import { type CreatedHooks, createMigrationHooks } from './createMigrationHooks';
+import {
+  createAapMigrationHooks,
+  type CreatedHooks,
+  createLocalMigrationHooks,
+} from './createMigrationHooks';
 import { createNetworkMap } from './createNetworkMap';
 import { createPlan } from './createPlan';
 import { resolveScriptsConfigMap } from './resolveScriptsConfigMap';
+
+type ResolveHooksParams = {
+  aapTimeout?: number;
+  aapTokenSecretName: string;
+  aapUrl: string;
+  hasAapHooks: boolean;
+  hasLocalHooks: boolean;
+  planName: string;
+  planProject: string;
+  postHookJobTemplateId?: number;
+  postMigrationHook: MigrationHook;
+  preHookJobTemplateId?: number;
+  preMigrationHook: MigrationHook;
+};
+
+const resolveHooksCreation = async (params: ResolveHooksParams): Promise<CreatedHooks> => {
+  if (params.hasAapHooks) {
+    return createAapMigrationHooks({
+      aapUrl: params.aapUrl,
+      planName: params.planName,
+      planProject: params.planProject,
+      postHookJobTemplateId: params.postHookJobTemplateId,
+      preHookJobTemplateId: params.preHookJobTemplateId,
+      timeout: params.aapTimeout,
+      tokenSecretName: params.aapTokenSecretName,
+    });
+  }
+
+  if (params.hasLocalHooks) {
+    return createLocalMigrationHooks({
+      planName: params.planName,
+      planProject: params.planProject,
+      postMigrationHook: params.postMigrationHook,
+      preMigrationHook: params.preMigrationHook,
+    });
+  }
+
+  return Promise.resolve({});
+};
+
+const buildTelemetryProps = (
+  formData: CreatePlanFormData,
+  hasEnabledHooks: boolean,
+): Record<string, unknown> => ({
+  creationMethod: CreationMethod.PlanWizard,
+  hasCustomNetworkMap: !formData.existingNetworkMap,
+  hasCustomStorageMap: !formData.existingStorageMap,
+  hasEncryption: Boolean(formData.diskDecryptionPassPhrases?.length),
+  hasHooks: hasEnabledHooks,
+  hookSource: formData[AapFormFieldId.HookSource],
+  migrationType: formData.migrationType,
+  planNamespace: formData.planProject,
+  sourceProviderType: formData.sourceProvider?.spec?.type,
+  targetNamespace: formData.targetProject,
+  targetProviderType: formData.targetProvider?.spec?.type,
+  vmCount: Object.keys(formData.vms ?? {}).length,
+});
 
 /**
  * Handles the migration plan submission process including creation of network map,
@@ -61,11 +129,29 @@ export const submitMigrationPlan = async (
     vms,
   } = formData;
 
-  const hasEnabledHooks =
-    preMigrationHook[MigrationHookFieldId.EnableHook] ||
-    postMigrationHook[MigrationHookFieldId.EnableHook];
+  const hookSource = formData[AapFormFieldId.HookSource];
 
-  // Collection of promises for concurrent plan resource creation with fixed positioning
+  const hasLocalHooks =
+    hookSource === HOOK_SOURCE_LOCAL &&
+    (preMigrationHook[MigrationHookFieldId.EnableHook] ||
+      postMigrationHook[MigrationHookFieldId.EnableHook]);
+
+  const aapUrl = formData[AapFormFieldId.AapUrl];
+  const aapToken = formData[AapFormFieldId.AapToken];
+  const aapPreHookJobTemplateId = formData[AapFormFieldId.AapPreHookJobTemplateId];
+  const aapPostHookJobTemplateId = formData[AapFormFieldId.AapPostHookJobTemplateId];
+  const aapTimeout = formData[AapFormFieldId.AapTimeout];
+
+  const hasAapHooks =
+    hookSource === HOOK_SOURCE_AAP &&
+    (aapPreHookJobTemplateId !== undefined || aapPostHookJobTemplateId !== undefined);
+
+  const hasEnabledHooks = hasLocalHooks || hasAapHooks;
+
+  const aapTokenSecret: IoK8sApiCoreV1Secret | undefined = hasAapHooks
+    ? await createAapTokenSecret(aapToken, planName, planProject)
+    : undefined;
+
   const createResourceRequests: [
     Promise<V1beta1NetworkMap>,
     Promise<V1beta1StorageMap>,
@@ -102,14 +188,19 @@ export const submitMigrationPlan = async (
       ? Promise.resolve(undefined)
       : createDecryptionSecret(diskDecryptionPassPhrases, planName, planProject),
 
-    hasEnabledHooks
-      ? createMigrationHooks({
-          planName,
-          planProject,
-          postMigrationHook,
-          preMigrationHook,
-        })
-      : Promise.resolve({}),
+    resolveHooksCreation({
+      aapTimeout,
+      aapTokenSecretName: aapTokenSecret?.metadata?.name ?? '',
+      aapUrl,
+      hasAapHooks,
+      hasLocalHooks,
+      planName,
+      planProject,
+      postHookJobTemplateId: aapPostHookJobTemplateId,
+      postMigrationHook,
+      preHookJobTemplateId: aapPreHookJobTemplateId,
+      preMigrationHook,
+    }),
 
     resolveScriptsConfigMap({
       customScripts,
@@ -120,11 +211,9 @@ export const submitMigrationPlan = async (
     }),
   ];
 
-  // Execute all prerequisite resource creation concurrently
   const [planNetworkMap, planStorageMap, createdSecret, createdHooks, scriptsConfigMap] =
     await Promise.all(createResourceRequests);
 
-  // Create the migration plan
   const createdPlanRef = await createPlan({
     customScriptsConfigMap: scriptsConfigMap,
     instanceTypes,
@@ -149,9 +238,9 @@ export const submitMigrationPlan = async (
     vms: Object.values(vms),
   });
 
-  // Add owner references to all created resources
   await addPlanResourceOwnerRefs(
     {
+      aapTokenSecret,
       hooks: createdHooks,
       networkMap: planNetworkMap,
       scriptsConfigMap,
@@ -161,17 +250,8 @@ export const submitMigrationPlan = async (
     createdPlanRef,
   );
 
-  trackEvent?.(TELEMETRY_EVENTS.PLAN_CREATE_COMPLETED, {
-    creationMethod: CreationMethod.PlanWizard,
-    hasCustomNetworkMap: !existingNetworkMap,
-    hasCustomStorageMap: !existingStorageMap,
-    hasEncryption: Boolean(createdSecret),
-    hasHooks: hasEnabledHooks,
-    migrationType,
-    planNamespace: planProject,
-    sourceProviderType: sourceProvider?.spec?.type,
-    targetNamespace: targetProject,
-    targetProviderType: targetProvider?.spec?.type,
-    vmCount: Object.keys(vms).length,
-  });
+  trackEvent?.(
+    TELEMETRY_EVENTS.PLAN_CREATE_COMPLETED,
+    buildTelemetryProps(formData, hasEnabledHooks),
+  );
 };
