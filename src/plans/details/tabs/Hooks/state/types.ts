@@ -1,13 +1,25 @@
+import type { HookSource } from 'src/plans/create/steps/migration-hooks/constants';
+
 export type HookEditFormValues = {
-  enabled: boolean;
+  aapExistingTokenSecretName?: string;
+  aapJobTemplateId?: number;
+  aapTimeout?: number;
+  aapToken?: string;
+  aapUrl?: string;
+  hookSource: HookSource;
   image: string;
   playbook: string;
   serviceAccount: string;
 };
 
 export enum HookField {
-  Enabled = 'enabled',
+  AapExistingTokenSecretName = 'aapExistingTokenSecretName',
+  AapJobTemplateId = 'aapJobTemplateId',
+  AapTimeout = 'aapTimeout',
+  AapToken = 'aapToken',
+  AapUrl = 'aapUrl',
+  HookSource = 'hookSource',
   Image = 'image',
   Playbook = 'playbook',
-  serviceAccount = 'serviceAccount',
+  ServiceAccount = 'serviceAccount',
 }

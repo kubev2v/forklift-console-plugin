@@ -28,10 +28,6 @@ const TargetProjectEmptyState: FC<TargetProjectEmptyStateProps> = ({
   return (
     <ForkliftTrans>
       <Stack hasGutter>
-        <StackItem>
-          Target provider <strong>{targetProviderName}</strong> does not have network mappings
-          available in any existing projects.
-        </StackItem>
         <StackItem>Create a project or select a different target provider.</StackItem>
       </Stack>
     </ForkliftTrans>

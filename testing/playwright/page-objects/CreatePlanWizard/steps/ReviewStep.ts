@@ -138,6 +138,15 @@ export class ReviewStep {
 
   async verifyHooksSection(preHook?: HookConfig, postHook?: HookConfig): Promise<void> {
     await expect(this.page.getByTestId('review-hooks-section')).toBeVisible();
+
+    const hookSourceLocator = this.page.getByTestId('review-hook-source');
+    const hookSourceVisible = await hookSourceLocator.isVisible().catch(() => false);
+
+    if (hookSourceVisible && !preHook && !postHook) {
+      await expect(hookSourceLocator).toHaveText('No hooks configured');
+      return;
+    }
+
     await this.verifyHookFields('pre', preHook);
     await this.verifyHookFields('post', postHook);
   }
