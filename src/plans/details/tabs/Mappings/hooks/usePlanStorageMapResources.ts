@@ -44,12 +44,17 @@ export const usePlanStorageMapResources: UsePlanStorageMapResources = ({
   targetProvider,
   vms,
 }) => {
-  const storageMapResult = useK8sWatchResource<V1beta1StorageMap>({
-    groupVersionKind: StorageMapModelGroupVersionKind,
-    isList: false,
-    name: getPlanStorageMapName(plan),
-    namespace: getPlanStorageMapNamespace(plan),
-  });
+  const storageMapName = getPlanStorageMapName(plan);
+  const storageMapResult = useK8sWatchResource<V1beta1StorageMap>(
+    storageMapName
+      ? {
+          groupVersionKind: StorageMapModelGroupVersionKind,
+          isList: false,
+          name: storageMapName,
+          namespace: getPlanStorageMapNamespace(plan),
+        }
+      : null,
+  );
 
   const sourceStoragesResult = useSourceStorages(sourceProvider);
   const targetStoragesResult = useTargetStorages(targetProvider, getPlanTargetNamespace(plan));

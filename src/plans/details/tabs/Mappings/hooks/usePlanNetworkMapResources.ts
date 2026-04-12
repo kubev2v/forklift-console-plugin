@@ -42,12 +42,17 @@ export const usePlanNetworkMapResources: UsePlanNetworkMapResources = ({
   sourceProvider,
   targetProvider,
 }) => {
-  const networkMapResult = useK8sWatchResource<V1beta1NetworkMap>({
-    groupVersionKind: NetworkMapModelGroupVersionKind,
-    isList: false,
-    name: getPlanNetworkMapName(plan),
-    namespace: getPlanNetworkMapNamespace(plan),
-  });
+  const networkMapName = getPlanNetworkMapName(plan);
+  const networkMapResult = useK8sWatchResource<V1beta1NetworkMap>(
+    networkMapName
+      ? {
+          groupVersionKind: NetworkMapModelGroupVersionKind,
+          isList: false,
+          name: networkMapName,
+          namespace: getPlanNetworkMapNamespace(plan),
+        }
+      : null,
+  );
 
   const sourceNetworksResult = useSourceNetworks(sourceProvider);
   const targetNetworksResult = useOpenShiftNetworks(targetProvider);
