@@ -4,6 +4,8 @@ import { expect } from '@playwright/test';
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import type { PlanTestData } from '../../../types/test-data';
+import { V2_10_5, V2_11_0 } from '../../../utils/version/constants';
+import { requireVersion } from '../../../utils/version/version';
 
 type TestPlan = { metadata: { name: string; namespace: string }; testData: PlanTestData };
 
@@ -18,6 +20,8 @@ const setupPlanDetailsPage = async (page: Page, testPlan: TestPlan | undefined) 
 };
 
 test.describe('Plan Details Navigation', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_10_5);
+
   test('should navigate to plan details and verify page content', async ({
     page,
     testPlan,
@@ -30,6 +34,8 @@ test.describe('Plan Details Navigation', { tag: '@downstream' }, () => {
 });
 
 test.describe('Plan Details - VM Rename Validation', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
+
   test('should handle VM rename validation - success and failure scenarios', async ({
     page,
     testPlan,
@@ -112,6 +118,7 @@ test.describe('Plan Details - VM Rename Validation', { tag: '@downstream' }, () 
 });
 
 test.describe('Plan Details - Guest Conversion Mode', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
   test('should edit Guest conversion mode', async ({
     page,
     testPlan,
@@ -174,6 +181,7 @@ test.describe('Plan Details - Guest Conversion Mode', { tag: '@downstream' }, ()
 });
 
 test.describe('Plan Details - Target Labels', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
   test('should edit VM target labels', async ({ page, testPlan, testProvider: _testProvider }) => {
     const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
     await planDetailsPage.detailsTab.navigateToDetailsTab();
@@ -220,6 +228,7 @@ test.describe('Plan Details - Target Labels', { tag: '@downstream' }, () => {
 });
 
 test.describe('Plan Details - Target Node Selector', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
   test('should edit VM target node selector', async ({
     page,
     testPlan,
@@ -277,6 +286,7 @@ test.describe('Plan Details - Target Node Selector', { tag: '@downstream' }, () 
 });
 
 test.describe('Plan Details - Target Affinity Rules', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
   test('should edit VM target affinity rules', async ({
     page,
     testPlan,
@@ -357,6 +367,7 @@ test.describe('Plan Details - Target Affinity Rules', { tag: '@downstream' }, ()
 });
 
 test.describe('Plan Details - Description', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
   test('should edit plan description', async ({ page, testPlan, testProvider: _testProvider }) => {
     const { planDetailsPage, testData } = await setupPlanDetailsPage(page, testPlan);
 

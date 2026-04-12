@@ -26,6 +26,18 @@ type OvaFields = {
   [ProviderFormFieldId.OvaApplianceManagement]?: boolean;
 };
 
+type HypervFields = {
+  [ProviderFormFieldId.CaCertificate]?: string;
+  [ProviderFormFieldId.CertificateValidation]?: CertificateValidationMode;
+  [ProviderFormFieldId.HypervHost]?: string;
+  [ProviderFormFieldId.HypervUsername]?: string;
+  [ProviderFormFieldId.HypervPassword]?: string;
+  [ProviderFormFieldId.SmbUrl]?: string;
+  [ProviderFormFieldId.UseDifferentSmbCredentials]?: boolean;
+  [ProviderFormFieldId.SmbUser]?: string;
+  [ProviderFormFieldId.SmbPassword]?: string;
+};
+
 type OpenstackFields = {
   [ProviderFormFieldId.CaCertificate]?: string;
   [ProviderFormFieldId.CertificateValidation]?: CertificateValidationMode;
@@ -70,6 +82,7 @@ export type OvaFormData = BaseFormData & OvaFields;
 export type OpenstackFormData = BaseFormData & OpenstackFields;
 export type OvirtFormData = BaseFormData & OvirtFields;
 export type VsphereFormData = BaseFormData & VsphereFields;
+export type HypervFormData = BaseFormData & HypervFields;
 
 export type CreateProviderFormData = FieldValues &
   BaseFormData &
@@ -77,7 +90,8 @@ export type CreateProviderFormData = FieldValues &
   OvaFields &
   OpenstackFields &
   OvirtFields &
-  VsphereFields;
+  VsphereFields &
+  HypervFields;
 
 export type CreateProviderFormContextProps = {
   providerNames: string[] | undefined;

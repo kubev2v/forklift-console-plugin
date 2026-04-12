@@ -4,6 +4,8 @@ import { createTestNad } from '../../fixtures/helpers/resourceCreationHelpers';
 import { OverviewPage } from '../../page-objects/OverviewPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
+import { V2_11_0 } from '../../utils/version/constants';
+import { requireVersion } from '../../utils/version/version';
 
 test.describe(
   'Overview Page - Settings',
@@ -11,6 +13,8 @@ test.describe(
     tag: '@downstream',
   },
   () => {
+    requireVersion(test, V2_11_0);
+
     const resourceManager = new ResourceManager();
 
     test.beforeAll(async ({ browser }) => {

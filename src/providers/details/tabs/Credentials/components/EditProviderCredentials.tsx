@@ -66,7 +66,7 @@ const EditProviderCredentials: ModalComponent<EditProviderCredentialsProps> = ({
       >
         <Form>
           <CredentialFieldsByType providerType={providerType} />
-          <CertificateValidationField />
+          {providerType !== PROVIDER_TYPES.ova && <CertificateValidationField />}
         </Form>
       </ModalForm>
     </FormProvider>

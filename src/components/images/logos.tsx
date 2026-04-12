@@ -1,3 +1,4 @@
+import hypervImg from './resources/hyperv.svg';
 import ovaImg from './resources/open-virtual-appliance.png';
 import openshiftImg from './resources/openshift-virtualization.svg';
 import openstackImg from './resources/openstack2.svg';
@@ -8,6 +9,7 @@ import vmwareImgLight from './resources/vmware-light.svg';
 import './logos.scss';
 
 export const getImages = (isDarkTheme: boolean) => ({
+  hypervImg,
   openshiftImg,
   openstackImg,
   ovaImg,
@@ -44,6 +46,14 @@ export const ovaLogo = (
     className="forklift--create-provider-edit-card-title-logo"
     src={ovaImg}
     alt="PatternFly logo"
+  />
+);
+
+export const hypervLogo = (
+  <img
+    className="forklift--create-provider-edit-card-title-logo"
+    src={hypervImg}
+    alt="Microsoft Hyper-V logo"
   />
 );
 

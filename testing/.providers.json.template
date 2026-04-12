@@ -79,5 +79,16 @@
     "api_url": "",
     "username": "",
     "password": ""
+  },
+  "hyperv-smb": {
+    "type": "hyperv",
+    "version": "smb",
+    "fqdn": "",
+    "api_url": "",
+    "username": "",
+    "password": "",
+    "smb_url": "",
+    "smb_username": "",
+    "smb_password": ""
   }
 }
