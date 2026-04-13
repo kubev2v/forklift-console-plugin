@@ -20,11 +20,14 @@ import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEdit
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, type ProviderType, type V1beta1Plan } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useModal, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 
+import EditVmInstanceType, {
+  type EditVmInstanceTypeProps,
+} from './InstanceType/EditVmInstanceType';
 import {
   onConfirmVirtualMachineNetworkNameTemplate,
   onConfirmVirtualMachinePVCNameTemplate,
@@ -47,6 +50,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
 }) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const { canPatch } = useGetDeleteAndEditAccessReview({
     model: PlanModel,
@@ -142,6 +146,19 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
         data-testid="edit-vm-target-power-state-menu-item"
       >
         {t('Edit target power state')}
+      </DropdownItem>
+      <DropdownItem
+        key="edit-instance-type"
+        isDisabled={!canEdit}
+        onClick={() => {
+          launchOverlay<EditVmInstanceTypeProps>(EditVmInstanceType, {
+            index: vmIndex,
+            resource: plan,
+          });
+        }}
+        data-testid="edit-vm-instance-type-menu-item"
+      >
+        {t('Edit instance type')}
       </DropdownItem>
     </DropdownList>
   );

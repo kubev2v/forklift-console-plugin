@@ -1,5 +1,7 @@
 import { t } from '@utils/i18n';
 
+export const NO_INSTANCE_TYPE = 'none';
+
 export const TargetPowerStates = {
   AUTO: 'auto',
   OFF: 'off',

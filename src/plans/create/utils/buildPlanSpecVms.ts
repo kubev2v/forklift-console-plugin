@@ -14,6 +14,7 @@ type PlanSpecVmsParams = {
   vms: ProviderVirtualMachine[];
   preHook?: V1beta1Hook;
   postHook?: V1beta1Hook;
+  instanceTypes?: Record<string, string>;
   luks?: V1beta1PlanSpecVmsLuks;
   rootDevice?: string;
   nbdeClevis?: boolean;
@@ -24,6 +25,7 @@ type PlanSpecVmsParams = {
  * Adds pre/post hooks, root disk info, LUKS config, and namespace (if OpenShift).
  */
 export const buildPlanSpecVms = ({
+  instanceTypes,
   luks,
   nbdeClevis,
   postHook,
@@ -63,6 +65,7 @@ export const buildPlanSpecVms = ({
       id: vm.id,
       name: vm.name,
       ...(vm.providerType === PROVIDER_TYPES.openshift && { namespace: vm.namespace }),
+      ...(instanceTypes?.[vm.id] && { instanceType: instanceTypes[vm.id] }),
       ...(rootDevice && { rootDisk: rootDevice }),
       ...(luks && { luks }),
       ...(nbdeClevis && { nbdeClevis }),

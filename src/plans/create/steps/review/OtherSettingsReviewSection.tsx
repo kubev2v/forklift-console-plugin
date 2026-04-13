@@ -19,6 +19,7 @@ import { hasLiveMigrationProviderType } from '../../utils/hasLiveMigrationProvid
 import { GeneralFormFieldId } from '../general-information/constants';
 import { MigrationTypeFieldId, MigrationTypeValue } from '../migration-type/constants';
 import { otherFormFieldLabels, OtherSettingsFormFieldId } from '../other-settings/constants';
+import { VmFormFieldId } from '../virtual-machines/constants';
 
 const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
   isLiveMigrationFeatureEnabled,
@@ -36,6 +37,8 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
     sharedDisks,
     targetPowerState,
     migrationType,
+    instanceTypes,
+    vms,
   ] = useWatch({
     control,
     name: [
@@ -48,8 +51,14 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
       OtherSettingsFormFieldId.MigrateSharedDisks,
       OtherSettingsFormFieldId.TargetPowerState,
       MigrationTypeFieldId.MigrationType,
+      OtherSettingsFormFieldId.InstanceTypes,
+      VmFormFieldId.Vms,
     ],
   });
+
+  const instanceTypeEntries = Object.entries(instanceTypes ?? {}).filter(([, value]) =>
+    Boolean(value),
+  );
   const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
   const hasNoDiskPassPhrases =
     isEmpty(diskPassPhrases) || (diskPassPhrases.length === 1 && !diskPassPhrases[0].value);
@@ -156,6 +165,22 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
 
           <DescriptionListDescription data-testid="review-target-power-state">
             {targetPowerState.label}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>
+            {otherFormFieldLabels[OtherSettingsFormFieldId.InstanceTypes]}
+          </DescriptionListTerm>
+
+          <DescriptionListDescription data-testid="review-instance-types">
+            {isEmpty(instanceTypeEntries)
+              ? t('None')
+              : instanceTypeEntries.map(([vmId, instanceType]) => (
+                  <div key={vmId}>
+                    {vms?.[vmId]?.name ?? vmId}: {instanceType}
+                  </div>
+                ))}
           </DescriptionListDescription>
         </DescriptionListGroup>
       </DescriptionList>

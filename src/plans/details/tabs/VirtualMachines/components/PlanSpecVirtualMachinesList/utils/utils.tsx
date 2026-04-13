@@ -83,6 +83,13 @@ export const specVirtualMachineFields: ResourceField[] = [
   },
   {
     isVisible: false,
+    jsonPath: '$.specVM.instanceType',
+    label: t('Instance type'),
+    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.InstanceType,
+    sortable: true,
+  },
+  {
+    isVisible: false,
     jsonPath: '$.specVM.migrateSharedDisks',
     label: t('Shared disks'),
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.MigrateSharedDisks,

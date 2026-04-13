@@ -14,6 +14,7 @@ jest.mock('../../../hooks/useCreatePlanFormContext', () => ({
   useCreatePlanFormContext: () => mockUseCreatePlanFormContext(),
 }));
 
+jest.mock('../InstanceTypeField', () => () => <div data-testid="instance-type-field" />);
 jest.mock('../NBDEClevisField', () => () => <div data-testid="nbde-field" />);
 jest.mock('../DiskPassPhraseFieldTable', () => () => <div data-testid="passphrase-field" />);
 jest.mock('../TransferNetworkField', () => () => <div data-testid="transfer-field" />);
