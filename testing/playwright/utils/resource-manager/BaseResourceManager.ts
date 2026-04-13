@@ -2,7 +2,15 @@ import type { Page } from '@playwright/test';
 
 import { API_PATHS, COOKIE_NAMES, HTTP_HEADERS, RESOURCE_KINDS, RESOURCE_TYPES } from './constants';
 
-type ApiResult<T> = { success: true; data: T } | { success: false; error: string };
+type ApiResult<T> =
+  | { data: T; status: number; success: true }
+  | { error: string; status: number; success: false };
+
+type ApiRequestOptions = {
+  body?: unknown;
+  contentType?: string;
+  method: string;
+};
 
 /**
  * Base class providing shared functionality for resource manager classes
@@ -11,56 +19,63 @@ type ApiResult<T> = { success: true; data: T } | { success: false; error: string
 export abstract class BaseResourceManager {
   /** Generic GET helper — handles CSRF token, headers, and error handling. */
   public static async apiGet<R>(page: Page, apiPath: string): Promise<R | null> {
-    const constants = BaseResourceManager.getEvaluateConstants();
+    const result = await BaseResourceManager.apiRequest<R>(page, apiPath, { method: 'GET' });
 
-    const result = await page.evaluate(
-      async ({ path, evalConstants }): Promise<ApiResult<R>> => {
-        try {
-          const cookies = document.cookie.split('; ');
-          const csrfCookie = cookies.find((cookie) =>
-            cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
-          );
-          const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
-
-          const response = await fetch(path, {
-            credentials: 'include',
-            headers: {
-              [evalConstants.CONTENT_TYPE_HEADER]: evalConstants.APPLICATION_JSON,
-              [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
-            },
-            method: 'GET',
-          });
-
-          if (response.ok) {
-            return { data: await response.json(), success: true };
-          }
-
-          const errorText = await response.text().catch(() => response.statusText);
-          return { error: errorText, success: false };
-        } catch (error: unknown) {
-          const err = error as Error;
-          return { error: err?.message ?? String(error), success: false };
-        }
-      },
-      { evalConstants: constants, path: apiPath },
-    );
-
-    if (result.success) {
-      return result.data;
-    }
+    if (result.success) return result.data;
 
     console.error(`API GET ${apiPath} failed: ${result.error}`);
     return null;
   }
 
+  /** Generic PATCH helper — handles CSRF token, headers, and error handling. */
+  public static async apiPatch<R>(
+    page: Page,
+    apiPath: string,
+    data: unknown,
+    contentType = 'application/merge-patch+json',
+  ): Promise<R | null> {
+    const result = await BaseResourceManager.apiRequest<R>(page, apiPath, {
+      body: data,
+      contentType,
+      method: 'PATCH',
+    });
+
+    if (result.success) return result.data;
+
+    console.error(`API PATCH ${apiPath} failed: ${result.error}`);
+    return null;
+  }
+
   /** Generic POST helper — handles CSRF token, headers, and error handling. */
   public static async apiPost<R>(page: Page, apiPath: string, data: unknown): Promise<R | null> {
+    const result = await BaseResourceManager.apiRequest<R>(page, apiPath, {
+      body: data,
+      method: 'POST',
+    });
+
+    if (result.success) return result.data;
+
+    const HTTP_CONFLICT = 409;
+
+    if (result.status === HTTP_CONFLICT) {
+      console.warn(`API POST to ${apiPath}: resource already exists (409)`);
+    } else {
+      console.error(`API POST to ${apiPath} failed: ${result.error}`);
+    }
+
+    return null;
+  }
+
+  private static async apiRequest<R>(
+    page: Page,
+    apiPath: string,
+    options: ApiRequestOptions,
+  ): Promise<ApiResult<R>> {
     const constants = BaseResourceManager.getEvaluateConstants();
 
-    const result = await page.evaluate(
-      async ({ payload, path, evalConstants }): Promise<ApiResult<R>> => {
+    return await page.evaluate(
+      async ({ body, contentType, evalConstants, method, path }): Promise<ApiResult<R>> => {
         try {
-          // Get CSRF token from cookies
           const cookies = document.cookie.split('; ');
           const csrfCookie = cookies.find((cookie) =>
             cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
@@ -68,13 +83,13 @@ export abstract class BaseResourceManager {
           const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
 
           const response = await fetch(path, {
-            method: 'POST',
+            ...(body !== undefined && { body: JSON.stringify(body) }),
+            credentials: 'include',
             headers: {
-              [evalConstants.CONTENT_TYPE_HEADER]: evalConstants.APPLICATION_JSON,
+              [evalConstants.CONTENT_TYPE_HEADER]: contentType ?? evalConstants.APPLICATION_JSON,
               [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
             },
-            credentials: 'include',
-            body: JSON.stringify(payload),
+            method,
           });
 
           if (response.ok) {
@@ -88,22 +103,14 @@ export abstract class BaseResourceManager {
           return { error: err?.message ?? String(error), status: 0, success: false };
         }
       },
-      { payload: data, path: apiPath, evalConstants: constants },
+      {
+        body: options.body,
+        contentType: options.contentType,
+        evalConstants: constants,
+        method: options.method,
+        path: apiPath,
+      },
     );
-
-    if (result.success) {
-      return result.data;
-    }
-
-    const HTTP_CONFLICT = 409;
-
-    if (result.status === HTTP_CONFLICT) {
-      console.warn(`API POST to ${apiPath}: resource already exists (409)`);
-    } else {
-      console.error(`API POST to ${apiPath} failed: ${result.error}`);
-    }
-
-    return null;
   }
 
   public static getEvaluateConstants() {

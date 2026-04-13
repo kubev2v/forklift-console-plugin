@@ -2,7 +2,7 @@ import type { V1beta1ForkliftController, V1beta1Provider } from '@forklift-ui/ty
 import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
-import { MTV_NAMESPACE, RESOURCE_KINDS } from './constants';
+import { API_PATHS, MTV_NAMESPACE, RESOURCE_KINDS, RESOURCE_TYPES } from './constants';
 import type { SupportedResource } from './ResourceManager';
 
 /**
@@ -59,12 +59,7 @@ export class ResourcePatcher extends BaseResourceManager {
 
   /**
    * Patches a Kubernetes resource using either merge patch or JSON patch.
-   * @param page - Playwright page
-   * @param options.kind - Resource kind (e.g., 'Plan', 'Provider')
-   * @param options.resourceName - Name of the resource
-   * @param options.namespace - Namespace of the resource
-   * @param options.patch - Patch data (object for merge, array of operations for json)
-   * @param options.patchType - 'merge' (default) or 'json' for array operations
+   * Delegates to {@link BaseResourceManager.apiPatch} after building the path.
    */
   static async patchResource<T extends SupportedResource>(
     page: Page,
@@ -78,78 +73,13 @@ export class ResourcePatcher extends BaseResourceManager {
   ): Promise<T | null> {
     const { kind, resourceName, namespace, patch, patchType = 'merge' } = options;
     const resourceType = ResourcePatcher.getResourceTypeFromKind(kind);
-    const constants = ResourcePatcher.getEvaluateConstants();
     const contentType =
       patchType === 'json' ? 'application/json-patch+json' : 'application/merge-patch+json';
 
-    try {
-      const result = await page.evaluate(
-        async ({ resType, resourceKind, name, ns, patchData, patchContentType, evalConstants }) => {
-          try {
-            const getCsrfTokenFromCookie = () => {
-              const cookies = document.cookie.split('; ');
-              const csrfCookie = cookies.find((cookie) =>
-                cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
-              );
-              return csrfCookie ? csrfCookie.split('=')[1] : '';
-            };
-            const csrfToken = getCsrfTokenFromCookie();
+    const basePath =
+      resourceType === RESOURCE_TYPES.VIRTUAL_MACHINES ? API_PATHS.KUBEVIRT : API_PATHS.FORKLIFT;
+    const apiPath = `${basePath}/namespaces/${namespace}/${resourceType}/${resourceName}`;
 
-            let apiPath = '';
-            if (resType === evalConstants.VIRTUAL_MACHINES_TYPE) {
-              apiPath = `${evalConstants.KUBEVIRT_PATH}/namespaces/${ns}/${resType}/${name}`;
-            } else {
-              apiPath = `${evalConstants.FORKLIFT_PATH}/namespaces/${ns}/${resType}/${name}`;
-            }
-
-            const response = await fetch(apiPath, {
-              method: 'PATCH',
-              headers: {
-                [evalConstants.CONTENT_TYPE_HEADER]: patchContentType,
-                [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
-              },
-              credentials: 'include',
-              body: JSON.stringify(patchData),
-            });
-
-            if (response.ok) {
-              return { success: true, data: await response.json() };
-            }
-
-            if (response.status === 404) {
-              return { success: false, error: `${resourceKind} not found` };
-            }
-
-            const errorText = await response.text().catch(() => response.statusText);
-            return { success: false, error: errorText };
-          } catch (error: unknown) {
-            const err = error as Error;
-            return {
-              success: false,
-              error: err?.message ?? String(error),
-            };
-          }
-        },
-        {
-          resType: resourceType,
-          resourceKind: kind,
-          name: resourceName,
-          ns: namespace,
-          patchData: patch,
-          patchContentType: contentType,
-          evalConstants: constants,
-        },
-      );
-
-      if (result.success && result.data) {
-        return result.data as T;
-      }
-
-      console.error(`Failed to patch ${kind} ${resourceName}: ${result.error}`);
-      return null;
-    } catch (error) {
-      console.error(`Exception while patching ${kind} ${resourceName}:`, error);
-      return null;
-    }
+    return ResourcePatcher.apiPatch<T>(page, apiPath, patch, contentType);
   }
 }
