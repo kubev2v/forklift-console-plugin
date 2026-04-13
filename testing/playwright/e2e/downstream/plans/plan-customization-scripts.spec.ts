@@ -1,7 +1,13 @@
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import { createPlanTestData, type PlanTestData, type ScriptConfig } from '../../../types/test-data';
+import {
+  createPlanTestData,
+  GUEST_TYPE_LABELS,
+  type PlanTestData,
+  SCRIPT_TYPE_LABELS,
+  type ScriptConfig,
+} from '../../../types/test-data';
 import { disableGuidedTour } from '../../../utils/utils';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
@@ -85,13 +91,13 @@ test.describe('Plan Customization Scripts', { tag: '@downstream' }, () => {
       await planDetailsPage.automationTab.verifyConfigMapLink();
       await planDetailsPage.automationTab.verifyScriptDetails(
         LINUX_FIRSTBOOT_SCRIPT.name,
-        'Linux',
-        'Firstboot',
+        GUEST_TYPE_LABELS[LINUX_FIRSTBOOT_SCRIPT.guestType!],
+        SCRIPT_TYPE_LABELS[LINUX_FIRSTBOOT_SCRIPT.scriptType!],
       );
       await planDetailsPage.automationTab.verifyScriptDetails(
         WINDOWS_FIRSTBOOT_SCRIPT.name,
-        'Windows',
-        'Firstboot',
+        GUEST_TYPE_LABELS[WINDOWS_FIRSTBOOT_SCRIPT.guestType!],
+        SCRIPT_TYPE_LABELS[WINDOWS_FIRSTBOOT_SCRIPT.scriptType!],
       );
     });
 
@@ -101,7 +107,11 @@ test.describe('Plan Customization Scripts', { tag: '@downstream' }, () => {
     });
 
     await test.step('Verify updated scripts on Automation tab', async () => {
-      await planDetailsPage.automationTab.verifyScriptDetails(UPDATED_SCRIPT.name, 'Linux', 'Run');
+      await planDetailsPage.automationTab.verifyScriptDetails(
+        UPDATED_SCRIPT.name,
+        GUEST_TYPE_LABELS[UPDATED_SCRIPT.guestType!],
+        SCRIPT_TYPE_LABELS[UPDATED_SCRIPT.scriptType!],
+      );
     });
   });
 

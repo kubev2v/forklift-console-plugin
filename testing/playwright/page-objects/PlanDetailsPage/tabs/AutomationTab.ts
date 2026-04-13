@@ -15,6 +15,8 @@ export class AutomationTab {
     this.scriptEditModal = new ScriptEditModal(page);
   }
 
+  // The modal always keeps at least one script row, so we remove all but
+  // the first, reuse row 0 for the first new script, then add + configure the rest.
   async editScripts(scripts: ScriptConfig[]): Promise<void> {
     await this.openScriptEditModal();
 
