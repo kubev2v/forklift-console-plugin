@@ -1,7 +1,7 @@
-import { type FC, useMemo } from 'react';
+import { type FC, useCallback, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 import { NO_INSTANCE_TYPE } from 'src/plans/constants';
-import { useClusterInstanceTypes } from 'src/plans/hooks/useClusterInstanceTypes';
+import { useInstanceTypeOptions } from 'src/plans/hooks/useInstanceTypeOptions';
 
 import Select from '@components/common/Select';
 import {
@@ -21,6 +21,8 @@ import { VmFormFieldId } from '../virtual-machines/constants';
 
 import { OtherSettingsFormFieldId } from './constants';
 
+import './InstanceTypeField.scss';
+
 const InstanceTypeField: FC = () => {
   const { t } = useForkliftTranslation();
   const { control, setValue } = useCreatePlanFormContext();
@@ -35,41 +37,28 @@ const InstanceTypeField: FC = () => {
     name: OtherSettingsFormFieldId.InstanceTypes,
   });
 
-  const { instanceTypes, loaded } = useClusterInstanceTypes();
+  const { loaded, options } = useInstanceTypeOptions();
 
-  const options = useMemo(
-    () => [
-      {
-        description: t("Keep the VM's original CPU and memory"),
-        label: t('None'),
-        value: NO_INSTANCE_TYPE,
-      },
-      ...instanceTypes.map((instanceType) => ({
-        description: instanceType.description,
-        label: instanceType.name,
-        value: instanceType.name,
-      })),
-    ],
-    [instanceTypes, t],
+  const vmEntries = useMemo(() => Object.entries(vms ?? {}), [vms]);
+
+  const handleInstanceTypeChange = useCallback(
+    (vmId: string, selectedValue: string | undefined): void => {
+      const updated = { ...currentInstanceTypes };
+
+      if (selectedValue) {
+        updated[vmId] = selectedValue;
+      } else {
+        delete updated[vmId];
+      }
+
+      setValue(OtherSettingsFormFieldId.InstanceTypes, updated);
+    },
+    [currentInstanceTypes, setValue],
   );
-
-  const vmEntries = Object.entries(vms ?? {});
 
   if (isEmpty(vmEntries)) {
     return null;
   }
-
-  const handleInstanceTypeChange = (vmId: string, selectedValue: string | undefined): void => {
-    const updated = { ...currentInstanceTypes };
-
-    if (selectedValue) {
-      updated[vmId] = selectedValue;
-    } else {
-      delete updated[vmId];
-    }
-
-    setValue(OtherSettingsFormFieldId.InstanceTypes, updated);
-  };
 
   return (
     <FormGroup fieldId={OtherSettingsFormFieldId.InstanceTypes} label={t('Instance types')}>
@@ -89,7 +78,7 @@ const InstanceTypeField: FC = () => {
                   alignItems={{ default: 'alignItemsCenter' }}
                   spaceItems={{ default: 'spaceItemsMd' }}
                 >
-                  <FlexItem style={{ minWidth: '200px' }}>{vm.name}</FlexItem>
+                  <FlexItem className="instance-type-field__vm-name">{vm.name}</FlexItem>
                   <FlexItem grow={{ default: 'grow' }}>
                     <Select
                       id={`instance-type-${vmId}`}

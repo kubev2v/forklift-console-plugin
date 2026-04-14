@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { NO_INSTANCE_TYPE } from 'src/plans/constants';
 import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
-import { useClusterInstanceTypes } from 'src/plans/hooks/useClusterInstanceTypes';
+import { useInstanceTypeOptions } from 'src/plans/hooks/useInstanceTypeOptions';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import Select from '@components/common/Select';
@@ -26,23 +26,7 @@ const EditVmInstanceType: OverlayComponent<EditVmInstanceTypeProps> = ({
   const { t } = useForkliftTranslation();
   const vm = getPlanVirtualMachines(resource)[index];
   const [value, setValue] = useState<string | undefined>(vm?.instanceType);
-  const { instanceTypes, loaded } = useClusterInstanceTypes();
-
-  const options = useMemo(
-    () => [
-      {
-        description: t("Keep the VM's original CPU and memory"),
-        label: t('None'),
-        value: NO_INSTANCE_TYPE,
-      },
-      ...instanceTypes.map((instanceType) => ({
-        description: instanceType.description,
-        label: instanceType.name,
-        value: instanceType.name,
-      })),
-    ],
-    [instanceTypes, t],
-  );
+  const { loaded, options } = useInstanceTypeOptions();
 
   return (
     <ModalForm

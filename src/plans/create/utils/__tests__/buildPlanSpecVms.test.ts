@@ -4,9 +4,12 @@ import { describe, expect, it } from '@jest/globals';
 
 import { buildPlanSpecVms } from '../buildPlanSpecVms';
 
+const MOCK_VM_ID = 'vm-1';
+const MOCK_INSTANCE_TYPE = 'cx1.2xlarge';
+
 const createMockVm = (overrides: Partial<ProviderVirtualMachine> = {}): ProviderVirtualMachine =>
   ({
-    id: 'vm-1',
+    id: MOCK_VM_ID,
     name: 'test-vm',
     providerType: 'vsphere',
     ...overrides,
@@ -14,25 +17,25 @@ const createMockVm = (overrides: Partial<ProviderVirtualMachine> = {}): Provider
 
 describe('buildPlanSpecVms', () => {
   it('applies instance type to a VM when provided', () => {
-    const vms = [createMockVm({ id: 'vm-1' })];
+    const vms = [createMockVm({ id: MOCK_VM_ID })];
 
     const result = buildPlanSpecVms({
-      instanceTypes: { 'vm-1': 'cx1.2xlarge' },
+      instanceTypes: { [MOCK_VM_ID]: MOCK_INSTANCE_TYPE },
       vms,
     });
 
-    expect(result[0].instanceType).toBe('cx1.2xlarge');
+    expect(result[0].instanceType).toBe(MOCK_INSTANCE_TYPE);
   });
 
   it('does not set instance type when not provided for a VM', () => {
-    const vms = [createMockVm({ id: 'vm-1' }), createMockVm({ id: 'vm-2', name: 'other-vm' })];
+    const vms = [createMockVm({ id: MOCK_VM_ID }), createMockVm({ id: 'vm-2', name: 'other-vm' })];
 
     const result = buildPlanSpecVms({
-      instanceTypes: { 'vm-1': 'cx1.2xlarge' },
+      instanceTypes: { [MOCK_VM_ID]: MOCK_INSTANCE_TYPE },
       vms,
     });
 
-    expect(result[0].instanceType).toBe('cx1.2xlarge');
+    expect(result[0].instanceType).toBe(MOCK_INSTANCE_TYPE);
     expect(result[1].instanceType).toBeUndefined();
   });
 
