@@ -33,4 +33,22 @@ export class ScriptEditModal extends BaseModal {
   async removeScript(index: number): Promise<void> {
     await this.page.getByTestId(`remove-script-${index}`).click();
   }
+
+  async setScripts(scripts: ScriptConfig[]): Promise<void> {
+    const existingCount = await this.getScriptCount();
+    const reusable = Math.min(existingCount, scripts.length);
+
+    for (let i = 0; i < reusable; i += 1) {
+      await this.configureScript(i, scripts[i]);
+    }
+
+    for (let i = reusable; i < scripts.length; i += 1) {
+      await this.addScript();
+      await this.configureScript(i, scripts[i]);
+    }
+
+    for (let i = existingCount - 1; i >= scripts.length; i -= 1) {
+      await this.removeScript(i);
+    }
+  }
 }

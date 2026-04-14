@@ -15,28 +15,6 @@ export class AutomationTab {
     this.scriptEditModal = new ScriptEditModal(page);
   }
 
-  async editScripts(scripts: ScriptConfig[]): Promise<void> {
-    await this.openScriptEditModal();
-
-    const existingCount = await this.scriptEditModal.getScriptCount();
-    const reusable = Math.min(existingCount, scripts.length);
-
-    for (let i = 0; i < reusable; i += 1) {
-      await this.scriptEditModal.configureScript(i, scripts[i]);
-    }
-
-    for (let i = reusable; i < scripts.length; i += 1) {
-      await this.scriptEditModal.addScript();
-      await this.scriptEditModal.configureScript(i, scripts[i]);
-    }
-
-    for (let i = existingCount - 1; i >= scripts.length; i -= 1) {
-      await this.scriptEditModal.removeScript(i);
-    }
-
-    await this.scriptEditModal.save();
-  }
-
   async navigateToAutomationTab(): Promise<void> {
     await disableGuidedTour(this.page);
     await this.automationTabLink.click();
@@ -45,6 +23,12 @@ export class AutomationTab {
   async openScriptEditModal(): Promise<void> {
     await this.page.getByTestId('scripts-section-edit-button').click();
     await this.scriptEditModal.waitForModalToOpen();
+  }
+
+  async replaceScripts(scripts: ScriptConfig[]): Promise<void> {
+    await this.openScriptEditModal();
+    await this.scriptEditModal.setScripts(scripts);
+    await this.scriptEditModal.save();
   }
 
   async verifyConfigMapLink(): Promise<void> {

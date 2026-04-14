@@ -103,7 +103,7 @@ test.describe('Plan Customization Scripts', { tag: '@downstream' }, () => {
 
     await test.step('Edit scripts via Edit modal', async () => {
       await planDetailsPage.automationTab.verifyEditButtonVisible();
-      await planDetailsPage.automationTab.editScripts([UPDATED_SCRIPT]);
+      await planDetailsPage.automationTab.replaceScripts([UPDATED_SCRIPT]);
     });
 
     await test.step('Verify updated scripts on Automation tab', async () => {
