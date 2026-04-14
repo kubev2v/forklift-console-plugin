@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 import { setupForkliftIntercepts, setupLightspeedIntercepts } from '../../intercepts';
 import { OverviewPage } from '../../page-objects/OverviewPage';
-import { disableGuidedTour } from '../../utils/utils';
 
 test.describe(
   'Lightspeed MCP Warning Banner',
@@ -22,9 +21,7 @@ test.describe(
       const overviewPage = new OverviewPage(page);
 
       await test.step('Navigate to MTV Overview page', async () => {
-        await page.goto('/mtv/overview');
-        await disableGuidedTour(page);
-        await overviewPage.waitForPageLoad();
+        await overviewPage.navigateDirectly();
       });
 
       await test.step('Verify warning banner is visible with correct text', async () => {
@@ -53,9 +50,7 @@ test.describe(
       const overviewPage = new OverviewPage(page);
 
       await test.step('Navigate to MTV Overview page', async () => {
-        await page.goto('/mtv/overview');
-        await disableGuidedTour(page);
-        await overviewPage.waitForPageLoad();
+        await overviewPage.navigateDirectly();
       });
 
       await test.step('Verify warning banner is not visible', async () => {
@@ -65,17 +60,12 @@ test.describe(
 
     test('should not show warning when Lightspeed is not installed', async ({ page }) => {
       await setupForkliftIntercepts(page);
-      await setupLightspeedIntercepts(page, {
-        hasLightspeedSubscription: false,
-        hasMcpService: false,
-      });
+      await setupLightspeedIntercepts(page);
 
       const overviewPage = new OverviewPage(page);
 
       await test.step('Navigate to MTV Overview page', async () => {
-        await page.goto('/mtv/overview');
-        await disableGuidedTour(page);
-        await overviewPage.waitForPageLoad();
+        await overviewPage.navigateDirectly();
       });
 
       await test.step('Verify warning banner is not visible', async () => {

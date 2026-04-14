@@ -17,5 +17,5 @@ docker run --rm -it \
   --env LC_ALL=en_US.UTF-8 \
   --env LANG=en_US.UTF-8 \
   --env LANGUAGE=en_US.UTF-8 \
-  mcr.microsoft.com/playwright:v1.54.0-noble \
+  mcr.microsoft.com/playwright:v1.59.0-noble \
   bash -c "npm install && npx playwright test --grep @downstream"
