@@ -36,6 +36,7 @@ export const submitMigrationPlan = async (
     existingCustomScriptsConfigMap,
     existingNetworkMap,
     existingStorageMap,
+    instanceTypes,
     migrateSharedDisks,
     migrationType,
     nbdeClevis,
@@ -123,6 +124,7 @@ export const submitMigrationPlan = async (
   // Create the migration plan
   const createdPlanRef = await createPlan({
     customScriptsConfigMap: scriptsConfigMap,
+    instanceTypes,
     luks: createdSecret ? { name: createdSecret.metadata?.name } : undefined,
     migrateSharedDisks,
     migrationType,

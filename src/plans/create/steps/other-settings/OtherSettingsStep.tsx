@@ -13,6 +13,7 @@ import { MigrationTypeFieldId, MigrationTypeValue } from '../migration-type/cons
 
 import { OtherSettingsFormFieldId } from './constants';
 import DiskPassPhraseFieldTable from './DiskPassPhraseFieldTable';
+import InstanceTypeField from './InstanceTypeField';
 import NBDEClevisField from './NBDEClevisField';
 import PreserveStaticIpsField from './PreserveStaticIpsField';
 import RootDeviceField from './RootDeviceField';
@@ -60,6 +61,8 @@ const OtherSettingsStep: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
         )}
 
         <TargetPowerStateField />
+
+        <InstanceTypeField />
       </Form>
     </WizardStepContainer>
   );

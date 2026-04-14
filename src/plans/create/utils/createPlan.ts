@@ -13,6 +13,7 @@ import { buildPlanSpecVms } from './buildPlanSpecVms';
  */
 export const createPlan = async ({
   customScriptsConfigMap,
+  instanceTypes,
   luks,
   migrateSharedDisks,
   migrationType,
@@ -62,7 +63,15 @@ export const createPlan = async ({
       ...(transferNetwork && { transferNetwork }),
       targetPowerState,
       type: migrationType,
-      vms: buildPlanSpecVms({ luks, nbdeClevis, postHook, preHook, rootDevice, vms }),
+      vms: buildPlanSpecVms({
+        instanceTypes,
+        luks,
+        nbdeClevis,
+        postHook,
+        preHook,
+        rootDevice,
+        vms,
+      }),
       warm: migrationType === MigrationTypeValue.Warm,
     },
   };

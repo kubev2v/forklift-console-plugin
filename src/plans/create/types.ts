@@ -80,6 +80,7 @@ export type CreatePlanFormData = FieldValues & {
   [CreatePlanStorageMapFieldId.StorageMapName]: string;
   [MigrationTypeFieldId.MigrationType]: MigrationTypeValue;
   [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: DiskPassPhrase[];
+  [OtherSettingsFormFieldId.InstanceTypes]: Record<string, string>;
   [OtherSettingsFormFieldId.NBDEClevis]: boolean;
   [OtherSettingsFormFieldId.PreserveStaticIps]: boolean;
   [OtherSettingsFormFieldId.MigrateSharedDisks]: boolean;
@@ -120,6 +121,7 @@ export type CreatePlanParams = {
   preserveStaticIps?: boolean;
   rootDevice?: string;
   transferNetwork?: V1beta1PlanSpecTransferNetwork;
+  instanceTypes?: Record<string, string>;
   migrateSharedDisks?: boolean;
   luks?: V1beta1PlanSpecVmsLuks;
   nbdeClevis?: boolean;

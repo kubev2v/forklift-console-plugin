@@ -113,3 +113,4 @@ Lightspeed
 firstboot
 configmap
 timespan
+instancetype

@@ -2,6 +2,7 @@ import { t } from '@utils/i18n';
 
 export enum OtherSettingsFormFieldId {
   DiskDecryptionPassPhrases = 'diskDecryptionPassPhrases',
+  InstanceTypes = 'instanceTypes',
   NBDEClevis = 'nbdeClevis',
   TransferNetwork = 'transferNetwork',
   PreserveStaticIps = 'preserveStaticIps',
@@ -12,6 +13,7 @@ export enum OtherSettingsFormFieldId {
 
 export const otherFormFieldLabels: Record<OtherSettingsFormFieldId, ReturnType<typeof t>> = {
   [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: t('Disk decryption passphrases'),
+  [OtherSettingsFormFieldId.InstanceTypes]: t('Instance types'),
   [OtherSettingsFormFieldId.MigrateSharedDisks]: t('Migrate shared disks'),
   [OtherSettingsFormFieldId.NBDEClevis]: t('Use network-bound disk encryption (NBDE/Clevis)'),
   [OtherSettingsFormFieldId.PreserveStaticIps]: t('Preserve static IPs'),
