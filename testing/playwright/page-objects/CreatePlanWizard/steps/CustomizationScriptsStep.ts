@@ -1,20 +1,12 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import type {
-  CustomizationScriptsTestData,
-  GuestType,
-  ScriptConfig,
-  ScriptType,
-} from '../../../types/test-data';
+import type { CustomizationScriptsTestData, ScriptConfig } from '../../../types/test-data';
+import { fillScriptFields } from '../../../utils/script-form-helpers';
 
-const GUEST_TYPE_LABELS: Record<GuestType, string> = {
-  linux: 'Linux',
-  windows: 'Windows',
-};
-
-const SCRIPT_TYPE_LABELS: Record<ScriptType, string> = {
-  firstboot: 'Firstboot',
-  run: 'Run',
+const WIZARD_FIELD_TEST_IDS = {
+  guestTypeSelect: (i: number): string => `script-guest-type-${i}`,
+  nameInput: (i: number): string => `script-name-${i}`,
+  scriptTypeSelect: (i: number): string => `script-type-${i}`,
 };
 
 export class CustomizationScriptsStep {
@@ -32,31 +24,7 @@ export class CustomizationScriptsStep {
   }
 
   private async configureScript(index: number, config: ScriptConfig): Promise<void> {
-    await this.page.getByTestId(`script-name-${index}`).fill(config.name);
-
-    if (config.guestType) {
-      const select = this.page.getByTestId(`script-guest-type-${index}`);
-      await select.click();
-      await this.page.getByRole('option', { name: GUEST_TYPE_LABELS[config.guestType] }).click();
-    }
-
-    if (config.scriptType) {
-      const select = this.page.getByTestId(`script-type-${index}`);
-      await select.click();
-      await this.page.getByRole('option', { name: SCRIPT_TYPE_LABELS[config.scriptType] }).click();
-    }
-
-    if (config.content) {
-      await this.page.evaluate(
-        ({ idx, scriptContent }) => {
-          const editors = (globalThis as any).monaco?.editor?.getEditors?.();
-          if (editors && Array.isArray(editors) && editors.length > idx) {
-            editors[idx].setValue(scriptContent);
-          }
-        },
-        { idx: index, scriptContent: config.content },
-      );
-    }
+    await fillScriptFields(this.page, index, config, WIZARD_FIELD_TEST_IDS);
   }
 
   private async selectConfigMap(name: string): Promise<void> {

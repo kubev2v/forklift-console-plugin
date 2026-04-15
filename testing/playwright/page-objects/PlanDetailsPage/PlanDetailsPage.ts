@@ -5,6 +5,7 @@ import { NavigationHelper } from '../../utils/NavigationHelper';
 import { K8S_RECONCILE_TIMEOUT } from '../../utils/resource-manager/constants';
 import { disableGuidedTour, isEmpty } from '../../utils/utils';
 
+import { AutomationTab } from './tabs/AutomationTab';
 import { DetailsTab } from './tabs/DetailsTab';
 import { HooksTab } from './tabs/HooksTab';
 import { MappingsTab } from './tabs/MappingsTab';
@@ -12,6 +13,7 @@ import { VirtualMachinesTab } from './tabs/VirtualMachinesTab';
 
 export class PlanDetailsPage {
   private readonly navigation: NavigationHelper;
+  public readonly automationTab: AutomationTab;
   public readonly detailsTab: DetailsTab;
   public readonly hooksTab: HooksTab;
   public readonly mappingsTab: MappingsTab;
@@ -20,6 +22,7 @@ export class PlanDetailsPage {
 
   constructor(page: Page) {
     this.page = page;
+    this.automationTab = new AutomationTab(page);
     this.detailsTab = new DetailsTab(page);
     this.hooksTab = new HooksTab(page);
     this.mappingsTab = new MappingsTab(page);
