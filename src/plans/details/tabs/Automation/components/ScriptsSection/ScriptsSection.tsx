@@ -66,7 +66,7 @@ const ScriptsSection: FC<ScriptsSectionProps> = ({ configMap, plan, scripts }) =
           ))}
         </>
       ) : (
-        <Content component="p" className="pf-v6-u-color-200">
+        <Content component="p" className="pf-v6-u-color-200" data-testid="scripts-none">
           {t('No customization scripts are configured.')}
         </Content>
       )}

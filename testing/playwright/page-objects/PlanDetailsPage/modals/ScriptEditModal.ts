@@ -15,7 +15,7 @@ export class ScriptEditModal extends BaseModal {
 
   constructor(page: Page) {
     super(page, page.getByTestId('script-edit-modal'));
-    this.addScriptButton = this.page.getByTestId('add-script-button');
+    this.addScriptButton = this.modal.getByTestId('add-mapping-button');
   }
 
   async addScript(): Promise<void> {
@@ -27,11 +27,12 @@ export class ScriptEditModal extends BaseModal {
   }
 
   async getScriptCount(): Promise<number> {
-    return await this.page.locator('[data-testid^="script-edit-row-"]').count();
+    return await this.modal.locator('[data-testid^="field-row-"]').count();
   }
 
   async removeScript(index: number): Promise<void> {
-    await this.page.getByTestId(`remove-script-${index}`).click();
+    const row = this.modal.getByTestId(`field-row-${index}`);
+    await row.locator('button').last().click();
   }
 
   async setScripts(scripts: ScriptConfig[]): Promise<void> {

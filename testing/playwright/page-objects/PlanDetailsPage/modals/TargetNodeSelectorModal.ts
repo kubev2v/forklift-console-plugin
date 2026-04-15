@@ -27,16 +27,13 @@ export class TargetNodeSelectorModal extends BaseModal {
 
   async deleteNodeSelectorByKey(key: string): Promise<void> {
     const keyInputs = this.modal.getByTestId('node-selector-key-input');
+    const deleteButtons = this.modal.getByTestId('node-selector-delete-button');
     const count = await keyInputs.count();
 
     for (let i = 0; i < count; i += 1) {
       const inputValue = await keyInputs.nth(i).inputValue();
       if (inputValue === key) {
-        const deleteButton = this.modal
-          .locator('button')
-          .filter({ has: this.page.locator('svg') })
-          .nth(i);
-        await deleteButton.click();
+        await deleteButtons.nth(i).click();
         break;
       }
     }
