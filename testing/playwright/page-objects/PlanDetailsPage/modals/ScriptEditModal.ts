@@ -31,8 +31,7 @@ export class ScriptEditModal extends BaseModal {
   }
 
   async removeScript(index: number): Promise<void> {
-    const row = this.modal.getByTestId(`field-row-${index}`);
-    await row.locator('button').last().click();
+    await this.modal.getByTestId(`remove-row-${index}`).click();
   }
 
   async setScripts(scripts: ScriptConfig[]): Promise<void> {
