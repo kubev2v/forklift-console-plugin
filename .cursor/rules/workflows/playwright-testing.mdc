@@ -146,16 +146,20 @@ test.describe('Network Maps', { tag: '@upstream' }, () => {
 
 ---
 
-## 5. Page Objects
+## 5. Page Objects & Navigation
 
 Reuse page objects from `testing/playwright/page-objects/` for common interactions:
 
 ```typescript
 export class ProviderListPage {
-  constructor(private page: Page) {}
+  private readonly navigation: NavigationHelper;
 
-  async navigateTo(): Promise<void> {
-    await this.page.goto('/mtv/providers');
+  constructor(private page: Page) {
+    this.navigation = new NavigationHelper(page);
+  }
+
+  async navigateDirectly(): Promise<void> {
+    await this.navigation.navigateToProviders();
   }
 
   async clickAddProvider(): Promise<void> {
@@ -165,6 +169,23 @@ export class ProviderListPage {
 ```
 
 Create new page objects when adding tests for new pages or complex flows.
+
+### Navigation — Use Page Object Methods, Not Raw `page.goto`
+
+**Always use page object navigation methods** (e.g., `overviewPage.navigateDirectly()`, `providerListPage.navigateTo()`) instead of calling `page.goto(...)` directly in specs. These methods wrap `NavigationHelper` and handle guided-tour dismissal, `waitForLoadState`, and page-load assertions consistently.
+
+```typescript
+// ✅ Good — uses page object navigation
+const overviewPage = new OverviewPage(page);
+await overviewPage.navigateDirectly();
+
+// ❌ Bad — raw page.goto duplicates logic and skips guided-tour handling
+await page.goto('/mtv/overview');
+await disableGuidedTour(page);
+await overviewPage.waitForPageLoad();
+```
+
+Raw `page.goto` should only appear **inside** page objects or `NavigationHelper` — never in spec files.
 
 ---
 

@@ -3,6 +3,12 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { EXTERNAL_LINKS, PROVIDER_TYPES_LIST } from '../fixtures/overview-page-topics';
 import { NavigationHelper } from '../utils/NavigationHelper';
 
+export const AI_PROMPT_QUESTIONS = [
+  'How do I check network mapping for a failed migration?',
+  'Why is my warm migration stuck?',
+  "Why aren't my VMs working after migration?",
+] as const;
+
 export interface TopicConfig {
   name: string;
   description: string;
@@ -28,6 +34,10 @@ export class LearningExperienceDrawer {
     }
   }
 
+  get askAIHeading(): Locator {
+    return this.page.getByRole('heading', { name: 'Ask AI assistant', level: 4 });
+  }
+
   async close(): Promise<void> {
     await this.closeDrawerButton.click();
     await expect(this.drawerTitle).not.toBeVisible();
@@ -35,6 +45,10 @@ export class LearningExperienceDrawer {
 
   get closeDrawerButton(): Locator {
     return this.page.getByRole('button', { name: 'Close drawer panel' });
+  }
+
+  get commonQuestionsToggle(): Locator {
+    return this.page.getByRole('button', { name: 'Common troubleshooting questions' });
   }
 
   get drawerTitle(): Locator {
@@ -61,6 +75,10 @@ export class LearningExperienceDrawer {
     return this.page.getByRole('menuitem', { name: providerName });
   }
 
+  getQuestionButton(questionText: string): Locator {
+    return this.page.getByRole('button', { name: questionText });
+  }
+
   getQuickReferenceHeading(): Locator {
     return this.page.getByRole('heading', { name: 'Quick reference', level: 3 });
   }
@@ -81,6 +99,14 @@ export class LearningExperienceDrawer {
   async navigateToTopic(nextTopicName: string): Promise<void> {
     await this.selectTopicButton.click();
     await this.page.getByRole('option', { name: nextTopicName }).click();
+  }
+
+  get olsInputField(): Locator {
+    return this.page.getByRole('textbox', { name: 'Send a message...' });
+  }
+
+  get olsPanel(): Locator {
+    return this.page.getByRole('region', { name: 'Red Hat OpenShift Lightspeed' });
   }
 
   async open(): Promise<void> {

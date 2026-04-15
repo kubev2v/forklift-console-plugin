@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { LearningExperienceDrawer } from '../LearningExperienceDrawer';
@@ -31,6 +31,16 @@ export class OverviewPage {
 
   async getTransferNetworkCurrentValue(): Promise<string | null> {
     return this.settingsTab.getTransferNetworkCurrentValue();
+  }
+
+  get mcpWarningBanner(): Locator {
+    return this.page.locator('.pf-v6-c-alert').filter({
+      hasText: 'AI assistant not connected to Lightspeed',
+    });
+  }
+
+  get mcpWarningLink(): Locator {
+    return this.mcpWarningBanner.getByRole('link', { name: 'Go to Installed Operators' });
   }
 
   get modalConfirmButton() {
