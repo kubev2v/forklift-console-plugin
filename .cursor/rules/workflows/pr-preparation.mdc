@@ -128,27 +128,28 @@ npm run validate-commits
 
 ## 7. PR Description
 
+When the user asks to "prepare PR", "write PR description", or similar, **always output the description as a raw Markdown code block** so it can be copied and pasted directly into GitHub/GitLab. Keep it concise -- a short summary paragraph plus a bullet list of key changes. Use the project's PR template structure from `.github/pull_request_template.md`.
+
 ### Template
 
 ```markdown
-## Links
+## 📝 Links
 
-> References: https://issues.redhat.com/browse/MTV-XXXX
+- [MTV-XXXX](https://redhat.atlassian.net/browse/MTV-XXXX)
 
-> Related: [Add related tickets/PRs if any]
+## 📝 Description
 
-## Description
+[One-sentence summary of the change.]
 
-[Brief description of the changes]
+- [Key change 1]
+- [Key change 2]
+- [Key change 3]
 
-**Changes:**
-- [List of changes made]
+## 🎥 Demo
 
-## Demo
+<!-- Please add a video or an image of the behavior/changes -->
 
-[Add screenshot/video showing the changes, preferably before and after]
-
-## CC://
+## 📝 CC://
 
 [Tag reviewers if needed]
 ```

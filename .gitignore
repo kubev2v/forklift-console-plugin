@@ -35,3 +35,8 @@ testing/locales/
 # Cursor IDE – ignore sensitive MCP config (credentials); shared prompts stay in repo
 .cursor/mcp.json
 .cursor/rules/personal-*.mdc
+
+# Cursor personal skills and hooks
+.cursor/skills/personal-*/
+.cursor/hooks/personal-*
+.cursor/hooks.json

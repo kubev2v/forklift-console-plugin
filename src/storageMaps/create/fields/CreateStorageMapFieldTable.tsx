@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
+import TargetStorageWithSuggestion from 'src/storageMaps/components/TargetStorageWithSuggestion';
 import { defaultStorageMapping, storageMapFieldLabels } from 'src/storageMaps/utils/constants';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 import { StorageMapFieldId } from 'src/storageMaps/utils/types';
@@ -14,7 +15,7 @@ import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import OffloadStorageIndexedForm from '../../components/OffloadStorageIndexedForm/OffloadStorageIndexedForm';
+import OffloadStorageRow from '../../components/OffloadStorageIndexedForm/OffloadStorageRow';
 import type { CreateStorageMapFormData } from '../types';
 
 import InventorySourceStorageField from './InventorySourceStorageField';
@@ -57,6 +58,8 @@ const CreateStorageMapFieldTable: FC = () => {
     project,
   );
   const loadError = sourceStoragesError ?? targetStoragesError;
+  const isVsphereOffload =
+    sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere && isCopyOffloadEnabled;
 
   return (
     <FieldBuilderTable
@@ -77,7 +80,12 @@ const CreateStorageMapFieldTable: FC = () => {
         ...(sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere &&
           isCopyOffloadEnabled && {
             additionalOptions: (
-              <OffloadStorageIndexedForm index={index} sourceProvider={sourceProvider} />
+              <OffloadStorageRow
+                index={index}
+                sourceProvider={sourceProvider}
+                sourceStorages={sourceStorages}
+                targetStorages={targetStorages}
+              />
             ),
           }),
         inputs: [
@@ -85,11 +93,21 @@ const CreateStorageMapFieldTable: FC = () => {
             fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
             sourceStorages={sourceStorages}
           />,
-          <TargetStorageField
-            fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-            targetStorages={targetStorages}
-            testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
-          />,
+          isVsphereOffload ? (
+            <TargetStorageWithSuggestion
+              fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              index={index}
+              sourceStorages={sourceStorages}
+              targetStorages={targetStorages}
+              testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
+            />
+          ) : (
+            <TargetStorageField
+              fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              targetStorages={targetStorages}
+              testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
+            />
+          ),
         ],
       }))}
       addButton={{
