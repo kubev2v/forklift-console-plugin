@@ -11,6 +11,7 @@ if (!existsSync(providersPath)) {
 }
 
 import * as providers from '../../../.providers.json';
+import { VirtualMachineDetailsPage } from '../../page-objects/CNV/VirtualMachineDetailsPage';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
 import { OverviewPage } from '../../page-objects/OverviewPage';
@@ -24,10 +25,10 @@ import {
   type ProviderData,
   SourceNetworks,
 } from '../../types/test-data';
-import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
+import { ELEMENT_TIMEOUT, MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
-import { V2_10_5, V2_12_0 } from '../../utils/version/constants';
-import { isVersionInStreams, requireVersion } from '../../utils/version/version';
+import { CNV_4_21_0, V2_10_5, V2_12_0 } from '../../utils/version/constants';
+import { isVersionInStreams, requireCNVVersion, requireVersion } from '../../utils/version/version';
 
 const targetProjectName = `test-project-${Date.now()}`;
 
@@ -176,6 +177,54 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
         expect(vmResource).not.toBeNull();
         expect(vmResource?.metadata?.name).toBe(migratedVMName);
         expect(vmResource?.metadata?.namespace).toBe(testPlanData.targetProject.name);
+      }
+    },
+  );
+
+  test(
+    'should verify migrated VMs on CNV overview page',
+    {
+      tag: ['@downstream'],
+    },
+    async ({ page }) => {
+      const TEST_TIMEOUT = 120_000;
+
+      requireCNVVersion(test, CNV_4_21_0);
+      test.setTimeout(TEST_TIMEOUT);
+
+      const planDetailsPage = new PlanDetailsPage(page);
+      const plansPage = new PlansListPage(page);
+      const cnvVMPage = new VirtualMachineDetailsPage(page);
+
+      await test.step('Navigate to plan VM tab', async () => {
+        await plansPage.navigateFromMainMenu();
+        await plansPage.waitForPageLoad();
+        await plansPage.navigateToPlan(planName);
+        await planDetailsPage.verifyPlanTitle(planName);
+        await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
+      });
+
+      const vmsToVerify = (testPlanData.virtualMachines ?? [])
+        .map((vm) => vm.targetName ?? vm.sourceName)
+        .filter((name): name is string => Boolean(name));
+
+      expect(vmsToVerify.length).toBeGreaterThan(0);
+
+      for (const vmName of vmsToVerify) {
+        await test.step(`Click VM "${vmName}" link and verify CNV overview`, async () => {
+          const vmLink = page.getByRole('link', { name: vmName, exact: true });
+          await expect(vmLink).toBeVisible({ timeout: ELEMENT_TIMEOUT });
+          await vmLink.click();
+
+          await cnvVMPage.waitForPageLoad(vmName);
+          await cnvVMPage.verifySmokeOverview(vmName);
+
+          await plansPage.navigateFromMainMenu();
+          await plansPage.waitForPageLoad();
+          await plansPage.navigateToPlan(planName);
+          await planDetailsPage.verifyPlanTitle(planName);
+          await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
+        });
       }
     },
   );

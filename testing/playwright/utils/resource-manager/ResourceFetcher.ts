@@ -7,7 +7,14 @@ import type {
 import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
-import { API_PATHS, MTV_NAMESPACE, OPERATOR_CSV_PREFIXES, RESOURCE_KINDS } from './constants';
+import {
+  API_PATHS,
+  CNV_NAMESPACE,
+  CNV_OPERATOR_CSV_PREFIXES,
+  MTV_NAMESPACE,
+  OPERATOR_CSV_PREFIXES,
+  RESOURCE_KINDS,
+} from './constants';
 import type { SupportedResource } from './ResourceManager';
 
 /**
@@ -15,6 +22,38 @@ import type { SupportedResource } from './ResourceManager';
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ResourceFetcher extends BaseResourceManager {
+  /**
+   * Fetches the CNV (OpenShift Virtualization) operator version from the cluster
+   * by reading the ClusterServiceVersion (CSV) resource created by OLM.
+   *
+   * Looks for a CSV whose name starts with "kubevirt-hyperconverged-operator"
+   * (downstream) or "community-kubevirt-hyperconverged" (upstream).
+   *
+   * @returns The semver version string (e.g. "4.18.0") or null if not found.
+   */
+  static async fetchCnvVersion(page: Page, namespace = CNV_NAMESPACE): Promise<string | null> {
+    type CsvItem = { metadata?: { name?: string }; spec?: { version?: string } };
+    type CsvList = { items?: CsvItem[] };
+
+    const apiPath = `${API_PATHS.OLM_CSV}/namespaces/${namespace}/clusterserviceversions`;
+    const data = await ResourceFetcher.apiGet<CsvList>(page, apiPath);
+
+    if (!data?.items) {
+      return null;
+    }
+
+    const operatorCsv = data.items.find((csv) =>
+      CNV_OPERATOR_CSV_PREFIXES.some((prefix) => csv.metadata?.name?.startsWith(prefix)),
+    );
+
+    if (!operatorCsv?.spec?.version) {
+      console.error('CNV operator CSV not found among cluster service versions');
+      return null;
+    }
+
+    return operatorCsv.spec.version;
+  }
+
   static async fetchForkliftController(
     page: Page,
     controllerName: string,
