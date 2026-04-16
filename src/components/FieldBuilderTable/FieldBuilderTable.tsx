@@ -60,6 +60,7 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
             const removeButtonTip = removeButton.tooltip?.(rowIndex);
             const button = (
               <Button
+                data-testid={`remove-row-${rowIndex}`}
                 icon={
                   <Icon size="md">
                     <MinusCircleIcon />

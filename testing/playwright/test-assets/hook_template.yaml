@@ -1,0 +1,8 @@
+---
+- name: "{{ hook_name }}"
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Log migration hook execution
+      debug:
+        msg: "Executing hook: {{ hook_name }}"

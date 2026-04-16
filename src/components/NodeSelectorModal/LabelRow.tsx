@@ -74,6 +74,7 @@ const LabelRow: FC<LabelRowProps> = ({ isLabelsVisible, label, onChange, onDelet
       <GridItem span={1}>
         <FormGroup label={isLabelsVisible && ' '}>
           <Button
+            data-testid="node-selector-delete-button"
             icon={<MinusCircleIcon />}
             onClick={() => {
               onDelete(id);
