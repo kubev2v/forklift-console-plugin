@@ -88,7 +88,8 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
         const welcomeHeading = page.getByRole('heading', { name: locale.Welcome });
         await expect(welcomeHeading).toBeVisible({ timeout: ELEMENT_VISIBLE_TIMEOUT_MS });
 
-        const migrationPlansCard = page.getByText(locale['Migration plans']);
+        const mainContent = page.locator('main');
+        const migrationPlansCard = mainContent.getByText(locale['Migration plans']);
         await expect(migrationPlansCard.first()).toBeVisible({
           timeout: ELEMENT_VISIBLE_TIMEOUT_MS,
         });
