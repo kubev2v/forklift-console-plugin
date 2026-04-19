@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PlanVddkForSharedDisksWarningAlert from 'src/plans/components/PlanVddkForSharedDisksWarningAlert';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -10,7 +11,11 @@ import type { EditPlanProps } from '../../utils/types';
 
 import { getMigrateSharedDisksValue, onConfirmMigrateSharedDisks } from './utils/utils';
 
-const EditMigrateSharedDisks: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
+const EditMigrateSharedDisks: ModalComponent<EditPlanProps> = ({
+  isVddkInitImageNotSet,
+  resource,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<boolean>(getMigrateSharedDisksValue(resource));
 
@@ -48,6 +53,11 @@ const EditMigrateSharedDisks: ModalComponent<EditPlanProps> = ({ resource, ...re
               variant={AlertVariant.info}
               title={t('This may slow down the migration process')}
             />
+          </StackItem>
+        )}
+        {!value && isVddkInitImageNotSet && (
+          <StackItem>
+            <PlanVddkForSharedDisksWarningAlert />
           </StackItem>
         )}
       </Stack>

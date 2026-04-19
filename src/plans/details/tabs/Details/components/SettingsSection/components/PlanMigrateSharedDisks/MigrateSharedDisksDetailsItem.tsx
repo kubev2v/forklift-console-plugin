@@ -12,7 +12,12 @@ import type { EditableDetailsItemProps } from '../../../utils/types';
 import { getMigrateSharedDisksValue } from './utils/utils';
 import EditMigrateSharedDisks from './EditMigrateSharedDisks';
 
-const SharedDisksDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldRender }) => {
+const SharedDisksDetailsItem: FC<EditableDetailsItemProps> = ({
+  canPatch,
+  isVddkInitImageNotSet,
+  plan,
+  shouldRender,
+}) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
 
@@ -31,7 +36,7 @@ const SharedDisksDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, 
       }
       crumbs={['spec', 'migrateSharedDisks']}
       onEdit={() => {
-        launcher<EditPlanProps>(EditMigrateSharedDisks, { resource: plan });
+        launcher<EditPlanProps>(EditMigrateSharedDisks, { isVddkInitImageNotSet, resource: plan });
       }}
       canEdit={canPatch && isPlanEditable(plan)}
     />
