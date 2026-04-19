@@ -1,11 +1,15 @@
 import type { FC } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
+import PlanVddkForSharedDisksWarningAlert from 'src/plans/components/PlanVddkForSharedDisksWarningAlert';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { Checkbox, FormGroup, FormHelperText, Stack } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
+import { GeneralFormFieldId } from '../general-information/constants';
 
 import { otherFormFieldLabels, OtherSettingsFormFieldId } from './constants';
 
@@ -14,6 +18,14 @@ const SharedDisksField: FC = () => {
   const { control } = useCreatePlanFormContext();
   const fieldId = OtherSettingsFormFieldId.MigrateSharedDisks;
   const label = otherFormFieldLabels[fieldId];
+
+  const [migrateSharedDisks, sourceProvider] = useWatch({
+    control,
+    name: [fieldId, GeneralFormFieldId.SourceProvider],
+  });
+  const isVddkInitImageNotSet =
+    sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere &&
+    isEmpty(sourceProvider?.spec?.settings?.vddkInitImage);
 
   return (
     <FormGroup
@@ -45,6 +57,8 @@ const SharedDisksField: FC = () => {
             />
           )}
         />
+
+        {!migrateSharedDisks && isVddkInitImageNotSet && <PlanVddkForSharedDisksWarningAlert />}
       </Stack>
     </FormGroup>
   );

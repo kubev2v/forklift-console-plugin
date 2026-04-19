@@ -380,6 +380,7 @@
   "Details": "Détails",
   "Determines the frequency with which the system checks the status of snapshot creation or removal during oVirt warm migration. The default value is 10 seconds.": "Détermine la fréquence à laquelle le système vérifie l'état de création ou de suppression des snapshots lors d'une migration à chaud oVirt. La valeur par défaut est de 10 secondes.",
   "Disabled": "Désactivé",
+  "Disabling shared disk migration requires VDDK to be configured on the VMware provider. Without VDDK, the migration will stall. Either enable VDDK on the provider or keep shared disk migration enabled.": "Disabling shared disk migration requires VDDK to be configured on the VMware provider. Without VDDK, the migration will stall. Either enable VDDK on the provider or keep shared disk migration enabled.",
   "Disk counter": "Compteur de disque",
   "Disk decryption": "Déchiffrement du disque",
   "Disk decryption passphrases": "Phrases de passe de décryptage de disque",
