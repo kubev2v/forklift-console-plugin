@@ -1,7 +1,9 @@
+import type { ExtensionDeclaration } from '@openshift-console/dynamic-plugin-sdk/lib/types';
+
 import { OLS_SUBMIT_BUTTON_CLASS, OLS_SUBMIT_TIMEOUT_MS, OLSActionType } from './constants';
 import type { LightspeedAttachment, OLSReducerExtension } from './types';
 
-export const isOLSReducer = (e: OLSReducerExtension): e is OLSReducerExtension =>
+export const isOLSReducer = (e: ExtensionDeclaration): e is OLSReducerExtension =>
   e.type === 'console.redux-reducer' && e.properties?.scope === 'ols';
 
 export const openOLSAction = (): { type: string } => ({
