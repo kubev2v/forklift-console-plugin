@@ -44,7 +44,7 @@ const LocalHookReview: FC<LocalHookReviewProps> = ({ hookFieldId, hookLabel }) =
               {hooksFormFieldLabels[MigrationHookFieldId.HookRunnerImage]}
             </DescriptionListTerm>
             <DescriptionListDescription>
-              {hookData[MigrationHookFieldId.HookRunnerImage]}
+              {hookData[MigrationHookFieldId.HookRunnerImage] ?? t('None')}
             </DescriptionListDescription>
           </DescriptionListGroup>
 

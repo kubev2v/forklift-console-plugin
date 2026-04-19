@@ -19,6 +19,9 @@ import {
   SettingsFields,
 } from '../utils/types';
 
+import AapTimeoutHelpContent from './AapTimeout/AapTimeoutHelpContent';
+import AapTokenSecretHelpContent from './AapTokenSecret/AapTokenSecretHelpContent';
+import AapUrlHelpContent from './AapUrl/AapUrlHelpContent';
 import ControllerCPULimitHelpContent from './ControllerCPULimit/ControllerCPULimitHelpContent';
 import ControllerMemoryLimitHelpContent from './ControllerMemoryLimit/ControllerMemoryLimitHelpContent';
 import ControllerTransferNetworkHelpContent from './ControllerTransferNetwork/ControllerTransferNetworkHelpContent';
@@ -115,6 +118,24 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
           }
           title={t('Controller transfer network')}
           helpContent={<ControllerTransferNetworkHelpContent />}
+        />
+        <DetailsItem
+          testId="settings-aap-url"
+          content={spec?.[SettingsFields.AapUrl] ?? t('Not configured')}
+          title={t('AAP URL')}
+          helpContent={<AapUrlHelpContent />}
+        />
+        <DetailsItem
+          testId="settings-aap-token-secret"
+          content={spec?.[SettingsFields.AapTokenSecretName] ?? t('Not configured')}
+          title={t('AAP token secret')}
+          helpContent={<AapTokenSecretHelpContent />}
+        />
+        <DetailsItem
+          testId="settings-aap-timeout"
+          content={spec?.[SettingsFields.AapTimeout] ?? defaultValuesMap[SettingsFields.AapTimeout]}
+          title={t('AAP timeout (seconds)')}
+          helpContent={<AapTimeoutHelpContent />}
         />
       </DescriptionList>
     </>

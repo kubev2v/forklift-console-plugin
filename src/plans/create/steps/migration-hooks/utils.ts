@@ -1,18 +1,18 @@
-import { getServicesApiUrl } from 'src/providers/utils/helpers/getApiUrl';
-import { validateContainerImage, validateK8sName, validateURL } from 'src/utils/validation/common';
+import { getInventoryApiUrl } from 'src/providers/utils/helpers/getApiUrl';
+import { validateContainerImage, validateK8sName } from 'src/utils/validation/common';
 
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 import { t } from '@utils/i18n';
 import type { AapJobTemplatesResponse } from '@utils/types/aap';
 
-import { AAP_URL_PLACEHOLDER, HooksFormFieldId, MigrationHookFieldId } from './constants';
+import { HooksFormFieldId, MigrationHookFieldId } from './constants';
 
 export const getHooksSubFieldId = <T extends MigrationHookFieldId>(
   fieldId: HooksFormFieldId,
   subFieldId: T,
 ): `${HooksFormFieldId}.${T}` => `${fieldId}.${subFieldId}`;
 
-export const getEnableHookFieldLabel = (fieldId: HooksFormFieldId) =>
+export const getEnableHookFieldLabel = (fieldId: HooksFormFieldId): string =>
   `Enable ${fieldId === HooksFormFieldId.PreMigration ? 'pre' : 'post'} migration hook`;
 
 export const hooksFormFieldLabels: Partial<Record<MigrationHookFieldId, ReturnType<typeof t>>> = {
@@ -21,10 +21,6 @@ export const hooksFormFieldLabels: Partial<Record<MigrationHookFieldId, ReturnTy
   [MigrationHookFieldId.ServiceAccount]: t('Service account'),
 };
 
-/**
- * Validates a hook runner image field value.
- * Ensures the image is not empty and follows valid container image format.
- */
 export const validateHookRunnerImage = (value: string): string | undefined => {
   const trimmedValue = value?.trim();
 
@@ -55,49 +51,12 @@ export const validateHookServiceAccount = (value: string): string | undefined =>
   return undefined;
 };
 
-export const validateAapUrl = (value: string | undefined): string | undefined => {
-  const trimmedValue = value?.trim() ?? '';
-
-  if (!trimmedValue) {
-    return t('AAP URL is required.');
-  }
-
-  if (!validateURL(trimmedValue)) {
-    return t('Invalid URL format. Expected format: {{example}}', { example: AAP_URL_PLACEHOLDER });
-  }
-
-  return undefined;
-};
-
-export const validateAapToken = (value: string): string | undefined => {
-  if (!value?.trim()) {
-    return t('AAP token is required.');
-  }
-
-  return undefined;
-};
-
-const MIN_JOB_TEMPLATE_ID = 1;
-
-export const validateJobTemplateId = (value: number | undefined): string | undefined => {
-  if (value === undefined || value === null) {
-    return undefined;
-  }
-
-  if (!Number.isInteger(value) || value < MIN_JOB_TEMPLATE_ID) {
-    return t('Job template ID must be a positive integer.');
-  }
-
-  return undefined;
-};
+const DEFAULT_MAX_TEMPLATES = 500;
 
 export const fetchAapJobTemplates = async (
-  url: string,
-  token: string,
   signal?: AbortSignal,
+  max = DEFAULT_MAX_TEMPLATES,
 ): Promise<AapJobTemplatesResponse> =>
-  (await consoleFetchJSON(
-    getServicesApiUrl(`aap/job-templates?url=${encodeURIComponent(url)}`),
-    'GET',
-    { headers: { 'X-AAP-Token': token }, signal },
-  )) as AapJobTemplatesResponse;
+  (await consoleFetchJSON(getInventoryApiUrl(`aap/job-templates?max=${String(max)}`), 'GET', {
+    signal,
+  })) as AapJobTemplatesResponse;

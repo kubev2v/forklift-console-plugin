@@ -23,11 +23,7 @@ export const getDefaultHookValues = (hook: V1beta1Hook | undefined): HookEditFor
   }
 
   return {
-    aapExistingTokenSecretName: aap?.tokenSecret?.name,
     aapJobTemplateId: aap?.jobTemplateId,
-    aapTimeout: aap?.timeout ?? undefined,
-    aapToken: '',
-    aapUrl: aap?.url ?? '',
     hookSource,
     image: hook?.spec?.image ?? QUAY_FORKLIFT_HOOK_RUNNER_IMAGE,
     playbook: hook?.spec?.playbook ?? '',

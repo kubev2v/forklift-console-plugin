@@ -92,9 +92,6 @@ export type CreatePlanFormData = FieldValues & {
   [CustomScriptsFieldId.Scripts]: CustomScript[];
   [AapFormFieldId.AapPostHookJobTemplateId]: number | undefined;
   [AapFormFieldId.AapPreHookJobTemplateId]: number | undefined;
-  [AapFormFieldId.AapTimeout]: number | undefined;
-  [AapFormFieldId.AapToken]: string;
-  [AapFormFieldId.AapUrl]: string;
   [AapFormFieldId.HookSource]: HookSource;
   [HooksFormFieldId.PostMigration]: MigrationHook;
   [HooksFormFieldId.PreMigration]: MigrationHook;

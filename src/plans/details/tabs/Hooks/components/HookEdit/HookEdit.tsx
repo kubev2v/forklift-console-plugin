@@ -59,9 +59,6 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
   const onSubmit = async (formData: HookEditFormValues): Promise<void> => {
     await createUpdateOrDeleteHook({
       aapJobTemplateId: formData.aapJobTemplateId,
-      aapTimeout: formData.aapTimeout,
-      aapToken: formData.aapToken,
-      aapUrl: formData.aapUrl,
       hook,
       hookImage: formData.image,
       hookPlaybook: formData.playbook,

@@ -47,6 +47,7 @@ type SettingsSelectInputProps = {
   blankOption?: BlankOption;
   showKeyAsSelected?: boolean; // a flag to show selected value that's based on option key and not name
   testId?: string;
+  isScrollable?: boolean;
 };
 
 const BLANK_OPTION_KEY = '__blank__';
@@ -56,6 +57,7 @@ const BLANK_OPTION_KEY = '__blank__';
  */
 const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
   blankOption,
+  isScrollable = false,
   onChange,
   options,
   showKeyAsSelected = false,
@@ -169,6 +171,7 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
       toggle={toggle}
       shouldFocusToggleOnSelect
       shouldFocusFirstItemOnOpen={false}
+      isScrollable={isScrollable}
       popperProps={{
         direction: 'down',
         enableFlip: true,

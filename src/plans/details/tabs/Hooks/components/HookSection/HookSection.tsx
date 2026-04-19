@@ -51,7 +51,7 @@ const HookSection: FC<HookSectionProps> = ({ hook, plan, step, title }) => {
           title={t('Enabled')}
           content={hookExists ? t('True') : t('False')}
         />
-        {hookExists && aapConfig && <AapHookDetails aap={aapConfig} />}
+        {hookExists && aapConfig && hook && <AapHookDetails aap={aapConfig} hook={hook} />}
         {hookExists && !aapConfig && hook && <LocalHookDetails hook={hook} />}
       </DescriptionList>
     </>

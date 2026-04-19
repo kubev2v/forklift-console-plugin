@@ -42,13 +42,7 @@ const HookSourceRadio: FC<HookSourceRadioProps> = ({ onChange }) => {
   };
 
   const unregisterAapFields = (): void => {
-    unregister([
-      AapFormFieldId.AapUrl,
-      AapFormFieldId.AapToken,
-      AapFormFieldId.AapPreHookJobTemplateId,
-      AapFormFieldId.AapPostHookJobTemplateId,
-      AapFormFieldId.AapTimeout,
-    ]);
+    unregister([AapFormFieldId.AapPreHookJobTemplateId, AapFormFieldId.AapPostHookJobTemplateId]);
   };
 
   return (

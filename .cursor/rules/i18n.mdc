@@ -93,7 +93,25 @@ t('Delete {{name}}', { name: vmName })
 
 ---
 
-## 7. Updating Translations
+## 7. Fixing Plural / Translation Issues
+
+`npm run i18n` regenerates all locale files from source code. **Never edit locale JSON files directly** to fix plural forms or wording -- the script will overwrite your changes.
+
+- **Wrong wording**: Fix the string in the **component** that renders it (the `t('...')` call). The script will propagate the new key on next run.
+- **Wrong plural form**: Add an override entry in `i18n-scripts.config.json` under `"pluralOverrides"`. The script reads this file and applies corrections after extraction.
+
+```jsonc
+// i18n-scripts.config.json
+{
+  "pluralOverrides": {
+    "{{count}} virtual machine selected_other": "{{count}} virtual machines selected"
+  }
+}
+```
+
+---
+
+## 8. Updating Translations
 
 ```bash
 npm run i18n       # Extract new strings to locale files
@@ -103,7 +121,7 @@ Always run before committing if you added new translatable strings.
 
 ---
 
-## 8. Checklist
+## 9. Checklist
 
 - [ ] All user-facing strings use `t()` function
 - [ ] Using `useForkliftTranslation` hook (not direct i18next)

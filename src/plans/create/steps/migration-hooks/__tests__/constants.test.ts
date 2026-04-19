@@ -32,11 +32,8 @@ describe('HookSource constants', () => {
 describe('AapFormFieldId enum', () => {
   it('contains all required AAP form fields', () => {
     expect(AapFormFieldId.HookSource).toBe('hookSource');
-    expect(AapFormFieldId.AapUrl).toBe('aapUrl');
-    expect(AapFormFieldId.AapToken).toBe('aapToken');
     expect(AapFormFieldId.AapPreHookJobTemplateId).toBe('aapPreHookJobTemplateId');
     expect(AapFormFieldId.AapPostHookJobTemplateId).toBe('aapPostHookJobTemplateId');
-    expect(AapFormFieldId.AapTimeout).toBe('aapTimeout');
   });
 
   it('does not overlap with HooksFormFieldId values', () => {

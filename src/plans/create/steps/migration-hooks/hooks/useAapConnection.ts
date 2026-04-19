@@ -3,7 +3,6 @@ import { useCallback, useRef, useState } from 'react';
 import type { AapJobTemplate } from '@utils/types/aap';
 
 import {
-  AAP_CONNECTION_STATUS_AUTH_FAILED,
   AAP_CONNECTION_STATUS_CONNECTED,
   AAP_CONNECTION_STATUS_CONNECTING,
   AAP_CONNECTION_STATUS_CONNECTION_FAILED,
@@ -11,9 +10,6 @@ import {
   type AapConnectionStatus,
 } from '../constants';
 import { fetchAapJobTemplates } from '../utils';
-
-const HTTP_STATUS_UNAUTHORIZED = 401;
-const HTTP_STATUS_FORBIDDEN = 403;
 
 type AapConnectResult = {
   status: AapConnectionStatus;
@@ -29,7 +25,7 @@ type UseAapConnectionResult = {
   status: AapConnectionStatus;
 };
 
-const useAapConnection = (url: string, token: string): UseAapConnectionResult => {
+const useAapConnection = (): UseAapConnectionResult => {
   const [status, setStatus] = useState<AapConnectionStatus>(AAP_CONNECTION_STATUS_IDLE);
   const [jobTemplates, setJobTemplates] = useState<AapJobTemplate[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -43,10 +39,6 @@ const useAapConnection = (url: string, token: string): UseAapConnectionResult =>
   }, []);
 
   const connect = useCallback(async (): Promise<AapConnectResult | undefined> => {
-    if (!url || !token) {
-      return undefined;
-    }
-
     abortControllerRef.current?.abort();
     const controller = new AbortController();
     abortControllerRef.current = controller;
@@ -55,7 +47,7 @@ const useAapConnection = (url: string, token: string): UseAapConnectionResult =>
     setError(null);
 
     try {
-      const data = await fetchAapJobTemplates(url, token, controller.signal);
+      const data = await fetchAapJobTemplates(controller.signal);
 
       if (controller.signal.aborted) {
         return undefined;
@@ -71,22 +63,14 @@ const useAapConnection = (url: string, token: string): UseAapConnectionResult =>
         return undefined;
       }
 
-      const typedError = err as Error & { statusCode?: number };
-      const isAuthError =
-        typedError.statusCode === HTTP_STATUS_UNAUTHORIZED ||
-        typedError.statusCode === HTTP_STATUS_FORBIDDEN;
-
-      const resultStatus = isAuthError
-        ? AAP_CONNECTION_STATUS_AUTH_FAILED
-        : AAP_CONNECTION_STATUS_CONNECTION_FAILED;
-
-      setStatus(resultStatus);
-      setError(typedError.message ?? 'Failed to connect to AAP');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch AAP job templates';
+      setStatus(AAP_CONNECTION_STATUS_CONNECTION_FAILED);
+      setError(errorMessage);
       setJobTemplates([]);
 
-      return { status: resultStatus, templates: [] };
+      return { status: AAP_CONNECTION_STATUS_CONNECTION_FAILED, templates: [] };
     }
-  }, [url, token]);
+  }, []);
 
   return {
     connect,

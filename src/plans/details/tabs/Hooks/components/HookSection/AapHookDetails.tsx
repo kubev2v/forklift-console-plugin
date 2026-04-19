@@ -1,15 +1,18 @@
 import type { FC } from 'react';
 
 import { DetailsItem } from '@components/DetailItems/DetailItem';
+import type { V1beta1Hook } from '@forklift-ui/types';
 import { useForkliftTranslation } from '@utils/i18n';
-import type { AAPConfig } from '@utils/types/aap';
+import { type AAPConfig, ANNOTATION_AAP_JOB_TEMPLATE_NAME } from '@utils/types/aap';
 
 type AapHookDetailsProps = {
   aap: AAPConfig;
+  hook: V1beta1Hook;
 };
 
-const AapHookDetails: FC<AapHookDetailsProps> = ({ aap }) => {
+const AapHookDetails: FC<AapHookDetailsProps> = ({ aap, hook }) => {
   const { t } = useForkliftTranslation();
+  const templateName = hook?.metadata?.annotations?.[ANNOTATION_AAP_JOB_TEMPLATE_NAME];
 
   return (
     <>
@@ -18,24 +21,18 @@ const AapHookDetails: FC<AapHookDetailsProps> = ({ aap }) => {
         title={t('Hook type')}
         content={t('Ansible Automation Platform')}
       />
-      <DetailsItem testId="aap-url-detail-item" title={t('AAP URL')} content={aap.url} />
       <DetailsItem
         testId="aap-job-template-id-detail-item"
         title={t('Job template ID')}
         content={String(aap.jobTemplateId)}
       />
-      <DetailsItem
-        testId="aap-token-secret-detail-item"
-        title={t('Token secret')}
-        content={aap.tokenSecret?.name ?? t('None')}
-      />
-      {aap.timeout ? (
+      {templateName && (
         <DetailsItem
-          testId="aap-timeout-detail-item"
-          title={t('Timeout')}
-          content={`${String(aap.timeout)}s`}
+          testId="aap-job-template-name-detail-item"
+          title={t('Job template name')}
+          content={templateName}
         />
-      ) : null}
+      )}
     </>
   );
 };

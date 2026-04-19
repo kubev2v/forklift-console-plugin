@@ -4,7 +4,6 @@ import { Alert, AlertVariant, Spinner } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import {
-  AAP_CONNECTION_STATUS_AUTH_FAILED,
   AAP_CONNECTION_STATUS_CONNECTED,
   AAP_CONNECTION_STATUS_CONNECTING,
   AAP_CONNECTION_STATUS_CONNECTION_FAILED,
@@ -40,7 +39,7 @@ const ConnectionStatusAlert: FC<ConnectionStatusAlertProps> = ({
           variant={AlertVariant.info}
           isInline
           isPlain
-          title={t('Connecting to AAP...')}
+          title={t('Loading AAP job templates...')}
           customIcon={<Spinner size="md" />}
           data-testid="aap-connection-status-connecting"
         />
@@ -57,37 +56,22 @@ const ConnectionStatusAlert: FC<ConnectionStatusAlertProps> = ({
           data-testid="aap-connection-status-connected"
         />
       );
-    case AAP_CONNECTION_STATUS_AUTH_FAILED:
-      return (
-        <Alert
-          variant={AlertVariant.danger}
-          isInline
-          title={t('Authentication failed')}
-          data-testid="aap-connection-status-auth-failed"
-        >
-          {t(
-            'The AAP token you provided is invalid or expired. Please verify your token and try again.',
-          )}
-          {truncatedError ? ` (${truncatedError})` : ''}
-        </Alert>
-      );
     case AAP_CONNECTION_STATUS_CONNECTION_FAILED:
       return (
         <Alert
           variant={AlertVariant.warning}
           isInline
-          title={t('Cannot connect to AAP')}
+          title={t('Failed to load AAP job templates')}
           data-testid="aap-connection-status-failed"
         >
           {t(
-            'Unable to reach the AAP server. Check the URL and your network connection, or switch to "Local playbook" to paste a playbook directly.',
+            'Unable to fetch job templates from AAP. Verify the AAP URL and token secret are configured correctly in the ForkliftController settings.',
           )}
           {truncatedError ? ` (${truncatedError})` : ''}
         </Alert>
       );
-    default: {
-      return <>{status}</>;
-    }
+    default:
+      return null;
   }
 };
 

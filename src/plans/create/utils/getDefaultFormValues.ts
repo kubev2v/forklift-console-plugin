@@ -35,9 +35,6 @@ export const getDefaultFormValues = (
   return {
     [AapFormFieldId.AapPostHookJobTemplateId]: undefined,
     [AapFormFieldId.AapPreHookJobTemplateId]: undefined,
-    [AapFormFieldId.AapTimeout]: undefined,
-    [AapFormFieldId.AapToken]: '',
-    [AapFormFieldId.AapUrl]: '',
     [AapFormFieldId.HookSource]: HOOK_SOURCE_NONE,
     [CreatePlanStorageMapFieldId.StorageMapType]: StorageMapType.Existing,
     [CustomScriptsFieldId.Scripts]: [DefaultScript],

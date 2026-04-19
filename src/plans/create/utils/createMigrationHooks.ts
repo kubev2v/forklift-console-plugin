@@ -1,11 +1,13 @@
 import { HookModel, type V1beta1Hook } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
+import { isEmpty } from '@utils/helpers';
+import { ANNOTATION_AAP_JOB_TEMPLATE_NAME } from '@utils/types/aap';
 
 import { type MigrationHook, MigrationHookFieldId } from '../steps/migration-hooks/constants';
 
 export type CreatedHooks = {
-  preHook?: V1beta1Hook;
   postHook?: V1beta1Hook;
+  preHook?: V1beta1Hook;
 };
 
 type LocalHookParams = {
@@ -16,13 +18,11 @@ type LocalHookParams = {
 };
 
 type AapHookParams = {
-  aapUrl: string;
   hookType: 'pre' | 'post';
   jobTemplateId: number;
+  jobTemplateName?: string;
   planName: string;
   planProject: string;
-  timeout?: number;
-  tokenSecretName: string;
 };
 
 type CreateLocalHooksParams = {
@@ -33,13 +33,12 @@ type CreateLocalHooksParams = {
 };
 
 type CreateAapHooksParams = {
-  aapUrl: string;
   planName: string;
   planProject: string;
   postHookJobTemplateId?: number;
+  postHookJobTemplateName?: string;
   preHookJobTemplateId?: number;
-  timeout?: number;
-  tokenSecretName: string;
+  preHookJobTemplateName?: string;
 };
 
 const createLocalHook = async (params: LocalHookParams): Promise<V1beta1Hook> => {
@@ -63,23 +62,23 @@ const createLocalHook = async (params: LocalHookParams): Promise<V1beta1Hook> =>
 };
 
 const createAapHook = async (params: AapHookParams): Promise<V1beta1Hook> => {
-  const { aapUrl, hookType, jobTemplateId, planName, planProject, timeout, tokenSecretName } =
-    params;
+  const { hookType, jobTemplateId, jobTemplateName, planName, planProject } = params;
+
+  const annotations: Record<string, string> = {};
+  if (jobTemplateName) {
+    annotations[ANNOTATION_AAP_JOB_TEMPLATE_NAME] = jobTemplateName;
+  }
 
   const hook = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Hook',
     metadata: {
+      ...(!isEmpty(annotations) && { annotations }),
       name: `${planName}-${hookType}-hook`,
       namespace: planProject,
     },
     spec: {
-      aap: {
-        jobTemplateId,
-        timeout: timeout ?? 0,
-        tokenSecret: { name: tokenSecretName, namespace: planProject },
-        url: aapUrl,
-      },
+      aap: { jobTemplateId },
     },
   };
 
@@ -117,37 +116,32 @@ export const createAapMigrationHooks = async (
   params: CreateAapHooksParams,
 ): Promise<CreatedHooks> => {
   const {
-    aapUrl,
     planName,
     planProject,
     postHookJobTemplateId,
+    postHookJobTemplateName,
     preHookJobTemplateId,
-    timeout,
-    tokenSecretName,
+    preHookJobTemplateName,
   } = params;
   const hooks: CreatedHooks = {};
 
   if (preHookJobTemplateId) {
     hooks.preHook = await createAapHook({
-      aapUrl,
       hookType: 'pre',
       jobTemplateId: preHookJobTemplateId,
+      jobTemplateName: preHookJobTemplateName,
       planName,
       planProject,
-      timeout,
-      tokenSecretName,
     });
   }
 
   if (postHookJobTemplateId) {
     hooks.postHook = await createAapHook({
-      aapUrl,
       hookType: 'post',
       jobTemplateId: postHookJobTemplateId,
+      jobTemplateName: postHookJobTemplateName,
       planName,
       planProject,
-      timeout,
-      tokenSecretName,
     });
   }
 

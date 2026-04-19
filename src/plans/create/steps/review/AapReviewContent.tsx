@@ -16,14 +16,9 @@ const AapReviewContent: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useCreatePlanFormContext();
 
-  const [aapUrl, preJobTemplateId, postJobTemplateId, aapTimeout] = useWatch({
+  const [preJobTemplateId, postJobTemplateId] = useWatch({
     control,
-    name: [
-      AapFormFieldId.AapUrl,
-      AapFormFieldId.AapPreHookJobTemplateId,
-      AapFormFieldId.AapPostHookJobTemplateId,
-      AapFormFieldId.AapTimeout,
-    ],
+    name: [AapFormFieldId.AapPreHookJobTemplateId, AapFormFieldId.AapPostHookJobTemplateId],
   });
 
   return (
@@ -32,13 +27,6 @@ const AapReviewContent: FC = () => {
         <DescriptionListTerm>{t('Hook source')}</DescriptionListTerm>
         <DescriptionListDescription data-testid="review-hook-source">
           {t('Ansible Automation Platform')}
-        </DescriptionListDescription>
-      </DescriptionListGroup>
-
-      <DescriptionListGroup>
-        <DescriptionListTerm>{t('AAP URL')}</DescriptionListTerm>
-        <DescriptionListDescription data-testid="review-aap-url">
-          {aapUrl ?? t('None')}
         </DescriptionListDescription>
       </DescriptionListGroup>
 
@@ -55,15 +43,6 @@ const AapReviewContent: FC = () => {
           {postJobTemplateId ? String(postJobTemplateId) : t('None')}
         </DescriptionListDescription>
       </DescriptionListGroup>
-
-      {aapTimeout ? (
-        <DescriptionListGroup>
-          <DescriptionListTerm>{t('Timeout')}</DescriptionListTerm>
-          <DescriptionListDescription data-testid="review-aap-timeout">
-            {`${String(aapTimeout)}s`}
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-      ) : null}
     </DescriptionList>
   );
 };

@@ -6,6 +6,7 @@ import { ForkliftControllerModel, type V1beta1ForkliftController } from '@forkli
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, ModalVariant } from '@patternfly/react-core';
+import { getNamespace } from '@utils/crds/common/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type {
@@ -15,6 +16,9 @@ import type {
 } from '../utils/types';
 import { getDefaultValues } from '../utils/utils';
 
+import EditAapTimeout from './AapTimeout/EditAapTimeout';
+import EditAapTokenSecret from './AapTokenSecret/EditAapTokenSecret';
+import EditAapUrl from './AapUrl/EditAapUrl';
 import EditControllerCPULimit from './ControllerCPULimit/EditControllerCPULimit';
 import EditControllerMemoryLimit from './ControllerMemoryLimit/EditControllerMemoryLimit';
 import EditControllerTransferNetwork from './ControllerTransferNetwork/EditControllerTransferNetwork';
@@ -85,6 +89,9 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
           <EditPreCopyInterval />
           <EditSnapshotPoolingInterval />
           <EditControllerTransferNetwork />
+          <EditAapUrl />
+          <EditAapTokenSecret namespace={getNamespace(controller)!} />
+          <EditAapTimeout />
         </Form>
       </ModalForm>
     </FormProvider>

@@ -22,7 +22,6 @@ import type { CreatePlanFormData } from '../types';
 import { addPlanResourceOwnerRefs } from './addPlanResourceOwnerRefs';
 import { copyNetworkMap } from './copyNetworkMap';
 import { copyStorageMap } from './copyStorageMap';
-import { createAapTokenSecret } from './createAapTokenSecret';
 import { createDecryptionSecret } from './createDecryptionSecret';
 import {
   createAapMigrationHooks,
@@ -34,9 +33,6 @@ import { createPlan } from './createPlan';
 import { resolveScriptsConfigMap } from './resolveScriptsConfigMap';
 
 type ResolveHooksParams = {
-  aapTimeout?: number;
-  aapTokenSecretName: string;
-  aapUrl: string;
   hasAapHooks: boolean;
   hasLocalHooks: boolean;
   planName: string;
@@ -50,13 +46,10 @@ type ResolveHooksParams = {
 const resolveHooksCreation = async (params: ResolveHooksParams): Promise<CreatedHooks> => {
   if (params.hasAapHooks) {
     return createAapMigrationHooks({
-      aapUrl: params.aapUrl,
       planName: params.planName,
       planProject: params.planProject,
       postHookJobTemplateId: params.postHookJobTemplateId,
       preHookJobTemplateId: params.preHookJobTemplateId,
-      timeout: params.aapTimeout,
-      tokenSecretName: params.aapTokenSecretName,
     });
   }
 
@@ -136,21 +129,14 @@ export const submitMigrationPlan = async (
     (preMigrationHook[MigrationHookFieldId.EnableHook] ||
       postMigrationHook[MigrationHookFieldId.EnableHook]);
 
-  const aapUrl = formData[AapFormFieldId.AapUrl];
-  const aapToken = formData[AapFormFieldId.AapToken];
   const aapPreHookJobTemplateId = formData[AapFormFieldId.AapPreHookJobTemplateId];
   const aapPostHookJobTemplateId = formData[AapFormFieldId.AapPostHookJobTemplateId];
-  const aapTimeout = formData[AapFormFieldId.AapTimeout];
 
   const hasAapHooks =
     hookSource === HOOK_SOURCE_AAP &&
     (aapPreHookJobTemplateId !== undefined || aapPostHookJobTemplateId !== undefined);
 
   const hasEnabledHooks = hasLocalHooks || hasAapHooks;
-
-  const aapTokenSecret: IoK8sApiCoreV1Secret | undefined = hasAapHooks
-    ? await createAapTokenSecret(aapToken, planName, planProject)
-    : undefined;
 
   const createResourceRequests: [
     Promise<V1beta1NetworkMap>,
@@ -189,9 +175,6 @@ export const submitMigrationPlan = async (
       : createDecryptionSecret(diskDecryptionPassPhrases, planName, planProject),
 
     resolveHooksCreation({
-      aapTimeout,
-      aapTokenSecretName: aapTokenSecret?.metadata?.name ?? '',
-      aapUrl,
       hasAapHooks,
       hasLocalHooks,
       planName,
@@ -240,7 +223,6 @@ export const submitMigrationPlan = async (
 
   await addPlanResourceOwnerRefs(
     {
-      aapTokenSecret,
       hooks: createdHooks,
       networkMap: planNetworkMap,
       scriptsConfigMap,
