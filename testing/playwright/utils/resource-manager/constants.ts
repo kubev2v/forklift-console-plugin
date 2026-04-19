@@ -1,6 +1,8 @@
 // Shared constants for resource management
 
-export const K8S_RECONCILE_TIMEOUT = 40000;
+export const ELEMENT_TIMEOUT = 15_000;
+export const K8S_RECONCILE_TIMEOUT = 40_000;
+export const PAGE_LOAD_TIMEOUT = 30_000;
 export const MTV_NAMESPACE = 'openshift-mtv';
 
 export const RESOURCE_KINDS = {
@@ -55,6 +57,13 @@ export const API_PATHS = {
 
 // Prefixes used to identify the MTV/Forklift operator ClusterServiceVersion
 export const OPERATOR_CSV_PREFIXES = ['mtv-operator', 'forklift-operator'] as const;
+
+// CNV (OpenShift Virtualization) operator detection
+export const CNV_NAMESPACE = 'openshift-cnv';
+export const CNV_OPERATOR_CSV_PREFIXES = [
+  'kubevirt-hyperconverged-operator',
+  'community-kubevirt-hyperconverged',
+] as const;
 
 // HTTP headers and other constants
 export const HTTP_HEADERS = {
