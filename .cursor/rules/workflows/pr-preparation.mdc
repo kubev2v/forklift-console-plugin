@@ -100,20 +100,22 @@ npm run i18n
 ## 6. Commit Hygiene
 
 ### Commit Format
-All commits must include a `Resolves:` line:
+All commits must include a `Resolves:` line and be **signed off** (`-s` flag) for DCO compliance:
 
-```
-Brief description of the change
+```bash
+git commit -s -m "Brief description of the change
 
 Detailed explanation if needed.
 
-Resolves: MTV-XXXX
+Resolves: MTV-XXXX"
 ```
 
 **No associated ticket:**
 ```
 Resolves: None
 ```
+
+**Always use `-s` (or `--signoff`)** when committing. The DCO check will fail without `Signed-off-by`.
 
 ### Branch
 - [ ] Branch up-to-date with main

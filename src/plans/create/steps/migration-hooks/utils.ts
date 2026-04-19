@@ -1,8 +1,11 @@
-import { validateContainerImage, validateK8sName } from 'src/utils/validation/common';
+import { getServicesApiUrl } from 'src/providers/utils/helpers/getApiUrl';
+import { validateContainerImage, validateK8sName, validateURL } from 'src/utils/validation/common';
 
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 import { t } from '@utils/i18n';
+import type { AapJobTemplatesResponse } from '@utils/types/aap';
 
-import { HooksFormFieldId, MigrationHookFieldId } from './constants';
+import { AAP_URL_PLACEHOLDER, HooksFormFieldId, MigrationHookFieldId } from './constants';
 
 export const getHooksSubFieldId = <T extends MigrationHookFieldId>(
   fieldId: HooksFormFieldId,
@@ -51,3 +54,50 @@ export const validateHookServiceAccount = (value: string): string | undefined =>
 
   return undefined;
 };
+
+export const validateAapUrl = (value: string | undefined): string | undefined => {
+  const trimmedValue = value?.trim() ?? '';
+
+  if (!trimmedValue) {
+    return t('AAP URL is required.');
+  }
+
+  if (!validateURL(trimmedValue)) {
+    return t('Invalid URL format. Expected format: {{example}}', { example: AAP_URL_PLACEHOLDER });
+  }
+
+  return undefined;
+};
+
+export const validateAapToken = (value: string): string | undefined => {
+  if (!value?.trim()) {
+    return t('AAP token is required.');
+  }
+
+  return undefined;
+};
+
+const MIN_JOB_TEMPLATE_ID = 1;
+
+export const validateJobTemplateId = (value: number | undefined): string | undefined => {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+
+  if (!Number.isInteger(value) || value < MIN_JOB_TEMPLATE_ID) {
+    return t('Job template ID must be a positive integer.');
+  }
+
+  return undefined;
+};
+
+export const fetchAapJobTemplates = async (
+  url: string,
+  token: string,
+  signal?: AbortSignal,
+): Promise<AapJobTemplatesResponse> =>
+  (await consoleFetchJSON(
+    getServicesApiUrl(`aap/job-templates?url=${encodeURIComponent(url)}`),
+    'GET',
+    { headers: { 'X-AAP-Token': token }, signal },
+  )) as AapJobTemplatesResponse;

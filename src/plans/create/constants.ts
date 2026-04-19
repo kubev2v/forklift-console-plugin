@@ -5,7 +5,7 @@ import { t } from '@utils/i18n';
 
 import { CustomScriptsFieldId } from './steps/customization-scripts/constants';
 import { GeneralFormFieldId } from './steps/general-information/constants';
-import { HooksFormFieldId } from './steps/migration-hooks/constants';
+import { AapFormFieldId, HooksFormFieldId } from './steps/migration-hooks/constants';
 import { MigrationTypeFieldId } from './steps/migration-type/constants';
 import { NetworkMapFieldId } from './steps/network-map/constants';
 import { OtherSettingsFormFieldId } from './steps/other-settings/constants';
@@ -69,7 +69,7 @@ export const stepFieldMap: Record<PlanWizardStepId, string[]> = {
   [PlanWizardStepId.Automation]: Object.values(CustomScriptsFieldId),
   [PlanWizardStepId.BasicSetup]: [],
   [PlanWizardStepId.General]: Object.values(GeneralFormFieldId),
-  [PlanWizardStepId.Hooks]: Object.values(HooksFormFieldId),
+  [PlanWizardStepId.Hooks]: [...Object.values(HooksFormFieldId), ...Object.values(AapFormFieldId)],
   [PlanWizardStepId.MigrationType]: Object.values(MigrationTypeFieldId),
   [PlanWizardStepId.NetworkMap]: Object.values(NetworkMapFieldId),
   [PlanWizardStepId.OtherSettings]: Object.values(OtherSettingsFormFieldId),

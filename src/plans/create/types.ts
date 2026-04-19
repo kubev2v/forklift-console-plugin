@@ -33,7 +33,12 @@ import type {
 } from './steps/customization-scripts/constants';
 import type { CustomScript } from './steps/customization-scripts/types';
 import type { GeneralFormFieldId } from './steps/general-information/constants';
-import type { HooksFormFieldId, MigrationHook } from './steps/migration-hooks/constants';
+import type {
+  AapFormFieldId,
+  HooksFormFieldId,
+  HookSource,
+  MigrationHook,
+} from './steps/migration-hooks/constants';
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
 import type { NetworkMapFieldId, NetworkMapping } from './steps/network-map/constants';
 import type { DiskPassPhrase, OtherSettingsFormFieldId } from './steps/other-settings/constants';
@@ -87,8 +92,14 @@ export type CreatePlanFormData = FieldValues & {
   [CustomScriptsFieldId.ScriptsType]: CustomScriptsType;
   [CustomScriptsFieldId.ExistingConfigMap]: IoK8sApiCoreV1ConfigMap | undefined;
   [CustomScriptsFieldId.Scripts]: CustomScript[];
-  [HooksFormFieldId.PreMigration]: MigrationHook;
+  [AapFormFieldId.AapPostHookJobTemplateId]: number | undefined;
+  [AapFormFieldId.AapPreHookJobTemplateId]: number | undefined;
+  [AapFormFieldId.AapTimeout]: number | undefined;
+  [AapFormFieldId.AapToken]: string;
+  [AapFormFieldId.AapUrl]: string;
+  [AapFormFieldId.HookSource]: HookSource;
   [HooksFormFieldId.PostMigration]: MigrationHook;
+  [HooksFormFieldId.PreMigration]: MigrationHook;
   [OtherSettingsFormFieldId.RootDevice]: string;
   [OtherSettingsFormFieldId.TransferNetwork]: V1beta1PlanSpecTransferNetwork;
   [OtherSettingsFormFieldId.TargetPowerState]: TargetPowerState;

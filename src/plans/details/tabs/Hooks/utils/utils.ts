@@ -1,4 +1,10 @@
 import { produce } from 'immer';
+import {
+  HOOK_SOURCE_AAP,
+  HOOK_SOURCE_NONE,
+  type HookSource,
+} from 'src/plans/create/steps/migration-hooks/constants';
+import { createAapTokenSecret } from 'src/plans/create/utils/createAapTokenSecret';
 
 import { HookModel, PlanModel, type V1beta1Hook, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sCreate, k8sDelete, k8sPatch, k8sUpdate } from '@openshift-console/dynamic-plugin-sdk';
@@ -6,18 +12,31 @@ import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
+import type { AAPConfig } from '@utils/types/aap';
 
 import { type HookType, HookTypeLabelLowercase, hookTypes } from './constants';
 
+export const getAapConfig = (hook: V1beta1Hook | undefined): AAPConfig | undefined =>
+  (hook?.spec as unknown as { aap?: AAPConfig })?.aap;
+
 type HookTemplateParams = {
   image: string;
+  plan: V1beta1Plan;
   playbook: string;
   serviceAccount: string;
-  plan: V1beta1Plan;
   step: HookType;
 };
 
-const getHookTemplate = ({
+type AapHookTemplateParams = {
+  aapJobTemplateId: number;
+  aapTimeout?: number;
+  aapUrl: string;
+  plan: V1beta1Plan;
+  step: HookType;
+  tokenSecretName: string;
+};
+
+const getLocalHookTemplate = ({
   image,
   plan,
   playbook,
@@ -40,6 +59,39 @@ const getHookTemplate = ({
   },
   spec: { image, playbook, serviceAccount },
 });
+
+const getAapHookTemplate = ({
+  aapJobTemplateId,
+  aapTimeout,
+  aapUrl,
+  plan,
+  step,
+  tokenSecretName,
+}: AapHookTemplateParams): V1beta1Hook =>
+  ({
+    apiVersion: 'forklift.konveyor.io/v1beta1',
+    kind: 'Hook',
+    metadata: {
+      name: `${getName(plan)}-${HookTypeLabelLowercase[step]}-hook`,
+      namespace: getNamespace(plan),
+      ownerReferences: [
+        {
+          apiVersion: plan?.apiVersion,
+          kind: plan?.kind,
+          name: getName(plan)!,
+          uid: getUID(plan)!,
+        },
+      ],
+    },
+    spec: {
+      aap: {
+        jobTemplateId: aapJobTemplateId,
+        timeout: aapTimeout ?? 0,
+        tokenSecret: { name: tokenSecretName, namespace: getNamespace(plan) },
+        url: aapUrl,
+      },
+    },
+  }) as unknown as V1beta1Hook;
 
 const createHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) => {
   await k8sCreate({
@@ -95,51 +147,110 @@ const updateHook = async (hook: V1beta1Hook) => {
   await k8sUpdate({ data: hook, model: HookModel });
 };
 
-type createUpdateOrDeleteHookParams = {
+type CreateUpdateOrDeleteHookParams = {
+  aapJobTemplateId?: number;
+  aapTimeout?: number;
+  aapToken?: string;
+  aapUrl?: string;
   hook?: V1beta1Hook;
   hookImage?: string;
   hookPlaybook?: string;
   hookServiceAccount?: string;
   hookSet: boolean;
+  hookSource?: HookSource;
   plan: V1beta1Plan;
   step: HookType;
 };
 
+const resolveAapTokenSecretName = async (
+  aapToken: string | undefined,
+  existingSecretName: string,
+  plan: V1beta1Plan,
+): Promise<string> => {
+  if (aapToken?.trim()) {
+    const newSecret = await createAapTokenSecret(
+      aapToken,
+      getName(plan) ?? '',
+      getNamespace(plan) ?? '',
+    );
+    return newSecret.metadata?.name ?? existingSecretName;
+  }
+  return existingSecretName;
+};
+
 export const createUpdateOrDeleteHook = async ({
+  aapJobTemplateId,
+  aapTimeout,
+  aapToken,
+  aapUrl,
   hook,
   hookImage,
   hookPlaybook,
   hookServiceAccount,
   hookSet,
+  hookSource = HOOK_SOURCE_NONE,
   plan,
   step,
-}: createUpdateOrDeleteHookParams): Promise<V1beta1Plan> => {
+}: CreateUpdateOrDeleteHookParams): Promise<V1beta1Plan> => {
+  if (!hookSet && hook) {
+    return deleteHook(plan, hook, step);
+  }
+
+  if (!hookSet) {
+    return plan;
+  }
+
+  if (hookSource === HOOK_SOURCE_AAP && aapUrl && aapJobTemplateId) {
+    const existingAap = getAapConfig(hook);
+    const existingSecretName = existingAap?.tokenSecret?.name ?? '';
+    const tokenSecretName = await resolveAapTokenSecretName(aapToken, existingSecretName, plan);
+
+    if (!hook) {
+      const resourceHook = getAapHookTemplate({
+        aapJobTemplateId,
+        aapTimeout,
+        aapUrl,
+        plan,
+        step,
+        tokenSecretName,
+      });
+      return createHook(plan, resourceHook, step);
+    }
+
+    const updatedHook = {
+      ...hook,
+      spec: {
+        aap: {
+          jobTemplateId: aapJobTemplateId,
+          timeout: aapTimeout ?? 0,
+          tokenSecret: { name: tokenSecretName, namespace: getNamespace(plan) },
+          url: aapUrl,
+        },
+      },
+    } as unknown as V1beta1Hook;
+
+    await updateHook(updatedHook);
+    return plan;
+  }
+
   const image = hookImage ?? '';
   const playbook = hookPlaybook ?? '';
   const serviceAccount = hookServiceAccount ?? '';
 
-  if (hookSet && !hook) {
-    const resourceHook = getHookTemplate({ image, plan, playbook, serviceAccount, step });
-    const newPlan = await createHook(plan, resourceHook, step);
-    return newPlan;
+  if (!hook) {
+    const resourceHook = getLocalHookTemplate({ image, plan, playbook, serviceAccount, step });
+    return createHook(plan, resourceHook, step);
   }
 
-  if (!hookSet && hook) {
-    const newPlan = await deleteHook(plan, hook, step);
-    return newPlan;
-  }
+  const updatedHook = produce(hook, (draft) => {
+    draft.spec ??= { image: '', playbook: '', serviceAccount: '' };
+    draft.spec.image = image;
+    draft.spec.playbook = playbook;
+    draft.spec.serviceAccount = serviceAccount;
+    delete (draft.spec as unknown as Record<string, unknown>).aap;
+  });
 
-  if (hookSet && hook) {
-    const updatedHook = produce(hook, (draft) => {
-      draft.spec ??= { image: '', playbook: '', serviceAccount: '' };
-      draft.spec.image = image;
-      draft.spec.playbook = playbook;
-      draft.spec.serviceAccount = serviceAccount;
-    });
-
-    await updateHook(updatedHook);
-  }
-
+  await updateHook(updatedHook);
   return plan;
 };
 

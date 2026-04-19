@@ -100,6 +100,10 @@ export class HooksStep {
   ): Promise<void> {
     await this.verifyStepVisible();
 
+    if (preMigrationHook || postMigrationHook) {
+      await this.page.getByTestId('hook-source-local').click();
+    }
+
     if (preMigrationHook) {
       await this.configurePreMigrationHook(preMigrationHook);
     }
@@ -145,7 +149,6 @@ export class HooksStep {
 
   async verifyStepVisible(): Promise<void> {
     await expect(this.page.getByRole('heading', { name: 'Hooks (optional)' })).toBeVisible();
-    await expect(this.page.getByText('Pre migration hook', { exact: true })).toBeVisible();
-    await expect(this.page.getByText('Post migration hook', { exact: true })).toBeVisible();
+    await expect(this.page.getByTestId('hook-source-none')).toBeVisible();
   }
 }

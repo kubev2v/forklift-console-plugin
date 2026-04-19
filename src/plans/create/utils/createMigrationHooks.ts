@@ -8,24 +8,41 @@ export type CreatedHooks = {
   postHook?: V1beta1Hook;
 };
 
-type HookParams = {
-  hookType: 'pre' | 'post';
+type LocalHookParams = {
   hookConfig: MigrationHook;
+  hookType: 'pre' | 'post';
   planName: string;
   planProject: string;
 };
 
-type CreateHooksParams = {
-  preMigrationHook: MigrationHook;
+type AapHookParams = {
+  aapUrl: string;
+  hookType: 'pre' | 'post';
+  jobTemplateId: number;
+  planName: string;
+  planProject: string;
+  timeout?: number;
+  tokenSecretName: string;
+};
+
+type CreateLocalHooksParams = {
+  planName: string;
+  planProject: string;
   postMigrationHook: MigrationHook;
-  planName: string;
-  planProject: string;
+  preMigrationHook: MigrationHook;
 };
 
-/**
- * Creates a migration hook with the specified configuration
- */
-const createHook = async (params: HookParams): Promise<V1beta1Hook> => {
+type CreateAapHooksParams = {
+  aapUrl: string;
+  planName: string;
+  planProject: string;
+  postHookJobTemplateId?: number;
+  preHookJobTemplateId?: number;
+  timeout?: number;
+  tokenSecretName: string;
+};
+
+const createLocalHook = async (params: LocalHookParams): Promise<V1beta1Hook> => {
   const { hookConfig, hookType, planName, planProject } = params;
 
   const hook: V1beta1Hook = {
@@ -45,15 +62,38 @@ const createHook = async (params: HookParams): Promise<V1beta1Hook> => {
   return k8sCreate({ data: hook, model: HookModel });
 };
 
-/**
- * Creates pre and post migration hooks based on form configuration
- */
-export const createMigrationHooks = async (params: CreateHooksParams): Promise<CreatedHooks> => {
+const createAapHook = async (params: AapHookParams): Promise<V1beta1Hook> => {
+  const { aapUrl, hookType, jobTemplateId, planName, planProject, timeout, tokenSecretName } =
+    params;
+
+  const hook = {
+    apiVersion: 'forklift.konveyor.io/v1beta1',
+    kind: 'Hook',
+    metadata: {
+      name: `${planName}-${hookType}-hook`,
+      namespace: planProject,
+    },
+    spec: {
+      aap: {
+        jobTemplateId,
+        timeout: timeout ?? 0,
+        tokenSecret: { name: tokenSecretName, namespace: planProject },
+        url: aapUrl,
+      },
+    },
+  };
+
+  return k8sCreate({ data: hook as unknown as V1beta1Hook, model: HookModel });
+};
+
+export const createLocalMigrationHooks = async (
+  params: CreateLocalHooksParams,
+): Promise<CreatedHooks> => {
   const { planName, planProject, postMigrationHook, preMigrationHook } = params;
   const hooks: CreatedHooks = {};
 
   if (preMigrationHook[MigrationHookFieldId.EnableHook]) {
-    hooks.preHook = await createHook({
+    hooks.preHook = await createLocalHook({
       hookConfig: preMigrationHook,
       hookType: 'pre',
       planName,
@@ -62,11 +102,52 @@ export const createMigrationHooks = async (params: CreateHooksParams): Promise<C
   }
 
   if (postMigrationHook[MigrationHookFieldId.EnableHook]) {
-    hooks.postHook = await createHook({
+    hooks.postHook = await createLocalHook({
       hookConfig: postMigrationHook,
       hookType: 'post',
       planName,
       planProject,
+    });
+  }
+
+  return hooks;
+};
+
+export const createAapMigrationHooks = async (
+  params: CreateAapHooksParams,
+): Promise<CreatedHooks> => {
+  const {
+    aapUrl,
+    planName,
+    planProject,
+    postHookJobTemplateId,
+    preHookJobTemplateId,
+    timeout,
+    tokenSecretName,
+  } = params;
+  const hooks: CreatedHooks = {};
+
+  if (preHookJobTemplateId) {
+    hooks.preHook = await createAapHook({
+      aapUrl,
+      hookType: 'pre',
+      jobTemplateId: preHookJobTemplateId,
+      planName,
+      planProject,
+      timeout,
+      tokenSecretName,
+    });
+  }
+
+  if (postHookJobTemplateId) {
+    hooks.postHook = await createAapHook({
+      aapUrl,
+      hookType: 'post',
+      jobTemplateId: postHookJobTemplateId,
+      planName,
+      planProject,
+      timeout,
+      tokenSecretName,
     });
   }
 
