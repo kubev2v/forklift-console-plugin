@@ -376,6 +376,7 @@
   "Details": "세부 정보",
   "Determines the frequency with which the system checks the status of snapshot creation or removal during oVirt warm migration. The default value is 10 seconds.": "oVirt 웜 마이그레이션 중에 시스템이 스냅샷 생성 또는 제거 상태를 확인하는 빈도를 결정합니다. 기본값은 10초입니다.",
   "Disabled": "비활성화됨",
+  "Disabling shared disk migration requires VDDK to be configured on the VMware provider. Without VDDK, the migration will stall. Either enable VDDK on the provider or keep shared disk migration enabled.": "Disabling shared disk migration requires VDDK to be configured on the VMware provider. Without VDDK, the migration will stall. Either enable VDDK on the provider or keep shared disk migration enabled.",
   "Disk counter": "디스크 수",
   "Disk decryption": "디스크 복호화",
   "Disk decryption passphrases": "디스크 복호화 암호문",
