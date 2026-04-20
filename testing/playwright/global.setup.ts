@@ -101,11 +101,11 @@ const globalSetup = async (config: FullConfig) => {
     } finally {
       await browser.close();
     }
-  }
 
-  if (!process.env[VERSION_ENV_VAR]) {
-    process.env[VERSION_ENV_VAR] = 'latest';
-    console.error('📌 No FORKLIFT_VERSION detected or set, defaulting to "latest"');
+    if (!process.env[VERSION_ENV_VAR]) {
+      process.env[VERSION_ENV_VAR] = 'latest';
+      console.error('📌 No credentials and no FORKLIFT_VERSION set, defaulting to "latest"');
+    }
   }
 };
 
