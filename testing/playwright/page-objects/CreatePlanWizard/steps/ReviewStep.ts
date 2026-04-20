@@ -1,12 +1,15 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import type {
-  CustomizationScriptsTestData,
-  HookConfig,
-  NetworkMap,
-  PlanTestData,
-  StorageMap,
+import {
+  type CustomizationScriptsTestData,
+  type HookConfig,
+  INSTANCE_TYPE_FIRST_AVAILABLE,
+  INSTANCE_TYPE_SECOND_AVAILABLE,
+  type NetworkMap,
+  type PlanTestData,
+  type StorageMap,
 } from '../../../types/test-data';
+import { isEmpty } from '../../../utils/utils';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
 
@@ -187,6 +190,25 @@ export class ReviewStep {
       const expectedLabel = powerStateLabels[additionalPlanSettings.targetPowerState];
 
       await expect(this.page.getByTestId('review-target-power-state')).toHaveText(expectedLabel);
+    }
+
+    const instanceTypes = additionalPlanSettings?.instanceTypes;
+    if (instanceTypes && !isEmpty(Object.keys(instanceTypes))) {
+      const reviewBlock = this.page.getByTestId('review-instance-types');
+      const resolvedEntries = Object.entries(instanceTypes).filter(
+        ([, label]) =>
+          Boolean(label) &&
+          label !== INSTANCE_TYPE_FIRST_AVAILABLE &&
+          label !== INSTANCE_TYPE_SECOND_AVAILABLE,
+      );
+
+      if (isEmpty(resolvedEntries)) {
+        await expect(reviewBlock).toHaveText('None');
+      } else {
+        for (const [vmName, label] of resolvedEntries) {
+          await expect(reviewBlock).toContainText(`${vmName}: ${label}`);
+        }
+      }
     }
   }
 

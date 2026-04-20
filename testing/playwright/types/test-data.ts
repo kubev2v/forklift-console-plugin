@@ -82,6 +82,12 @@ export const StorageProductK8sValues = {
 
 export const ALL_STORAGE_PRODUCTS = Object.values(StorageProducts);
 
+/** Select the first non-None cluster instance type in the wizard Other settings step (per-VM). */
+export const INSTANCE_TYPE_FIRST_AVAILABLE = '__INSTANCE_TYPE_FIRST__';
+
+/** Select the second non-None cluster instance type in the wizard Other settings step (per-VM). */
+export const INSTANCE_TYPE_SECOND_AVAILABLE = '__INSTANCE_TYPE_SECOND__';
+
 /**
  * Target network options for network mapping
  */
@@ -151,6 +157,8 @@ export interface PlanTestData {
   additionalPlanSettings?: {
     targetPowerState?: 'on' | 'off' | 'auto';
     useNbdeClevis?: boolean;
+    /** VM display name → instance type label, or `INSTANCE_TYPE_FIRST_AVAILABLE` / `INSTANCE_TYPE_SECOND_AVAILABLE` */
+    instanceTypes?: Record<string, string>;
   };
   customizationScripts?: CustomizationScriptsTestData;
   preMigrationHook?: HookConfig;
