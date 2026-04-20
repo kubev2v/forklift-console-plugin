@@ -1,4 +1,4 @@
-import { FormProvider, useFieldArray, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { DefaultScript } from 'src/plans/create/steps/customization-scripts/constants';
 
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -33,8 +33,6 @@ const ScriptEdit: OverlayComponent<ScriptEditProps> = ({
   } = methods;
 
   const { append, fields, remove } = useFieldArray({ control, name: 'scripts' });
-  const watchedScripts = useWatch({ control, name: 'scripts' });
-  const scriptNames = watchedScripts?.map((script) => script.name) ?? [];
 
   const onSubmit = async (formData: ScriptEditFormValues): Promise<void> => {
     await saveCustomScripts({ configMap, plan, scripts: formData.scripts });
@@ -69,12 +67,7 @@ const ScriptEdit: OverlayComponent<ScriptEditProps> = ({
               </Button>
             </>
           ) : (
-            <ScriptEditTable
-              append={append}
-              fields={fields}
-              remove={remove}
-              scriptNames={scriptNames}
-            />
+            <ScriptEditTable append={append} fields={fields} remove={remove} />
           )}
         </Form>
       </ModalForm>

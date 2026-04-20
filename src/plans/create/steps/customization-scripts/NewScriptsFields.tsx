@@ -3,7 +3,9 @@ import { Controller, useFieldArray, useWatch } from 'react-hook-form';
 
 import Select from '@components/common/Select';
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
+import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import { SelectList, SelectOption, TextInput } from '@patternfly/react-core';
+import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -18,11 +20,11 @@ import {
   ScriptTypeLabels,
 } from './constants';
 import ScriptContentField from './ScriptContentField';
-import { validateScriptName } from './utils';
+import { validateUniqueScriptKey } from './utils';
 
 const NewScriptsFields: FC = () => {
   const { t } = useForkliftTranslation();
-  const { control, setValue } = useCreatePlanFormContext();
+  const { control, setValue, trigger } = useCreatePlanFormContext();
 
   const {
     append,
@@ -83,13 +85,24 @@ const NewScriptsFields: FC = () => {
                 key="name"
                 name={getScriptFieldId(index, 'name')}
                 control={control}
-                rules={{ validate: validateScriptName }}
-                render={({ field }) => (
-                  <TextInput
-                    {...field}
-                    data-testid={`script-name-${index}`}
-                    placeholder={t('Script name')}
-                  />
+                rules={{
+                  validate: (value) =>
+                    validateUniqueScriptKey(
+                      { ...watchedScripts?.[index], name: value },
+                      index,
+                      watchedScripts ?? [],
+                    ),
+                }}
+                render={({ field, fieldState: { error } }) => (
+                  <>
+                    <TextInput
+                      {...field}
+                      data-testid={`script-name-${index}`}
+                      placeholder={t('Script name')}
+                      validated={getInputValidated(error)}
+                    />
+                    <FormErrorHelperText error={error} />
+                  </>
                 )}
               />,
               <Controller
@@ -100,12 +113,14 @@ const NewScriptsFields: FC = () => {
                   <Select
                     id={getScriptFieldId(index, 'guestType')}
                     value={GuestTypeLabels[guestTypeField.value as GuestType]}
-                    onSelect={(_event, value) => {
+                    onSelect={async (_event, value) => {
                       guestTypeField.onChange(value);
 
                       if (value === GuestType.Windows) {
                         setValue(getScriptFieldId(index, 'scriptType'), ScriptType.Firstboot);
                       }
+
+                      await trigger(getScriptFieldId(index, 'name'));
                     }}
                     testId={`script-guest-type-${index}`}
                   >
@@ -127,8 +142,9 @@ const NewScriptsFields: FC = () => {
                   <Select
                     id={getScriptFieldId(index, 'scriptType')}
                     value={ScriptTypeLabels[scriptTypeField.value as ScriptType]}
-                    onSelect={(_event, value) => {
+                    onSelect={async (_event, value) => {
                       scriptTypeField.onChange(value);
+                      await trigger(getScriptFieldId(index, 'name'));
                     }}
                     testId={`script-type-${index}`}
                   >
