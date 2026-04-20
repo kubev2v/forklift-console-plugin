@@ -45,8 +45,10 @@ export class ReviewStep {
 
       const playbookLocator = this.page.getByTestId(`${prefix}-ansible-playbook`);
       await expect(playbookLocator).toBeVisible();
-      // TODO: Skipping exact value assertion — review page shows base64 instead of
-      // decoded YAML due to SdkYamlEditor switch in PR #2283. Bug filed upstream.
+
+      if (hookConfig.ansiblePlaybook) {
+        await expect(playbookLocator).toContainText(hookConfig.ansiblePlaybook);
+      }
     }
   }
 
