@@ -1,7 +1,9 @@
 import type {
   V1beta1ForkliftController,
+  V1beta1NetworkMap,
   V1beta1Plan,
   V1beta1Provider,
+  V1beta1StorageMap,
   V1VirtualMachine,
 } from '@forklift-ui/types';
 import type { Page } from '@playwright/test';
@@ -59,6 +61,18 @@ export class ResourceFetcher extends BaseResourceManager {
     return operatorCsv.spec.version;
   }
 
+  static async fetchNetworkMap(
+    page: Page,
+    networkMapName: string,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1NetworkMap | null> {
+    return ResourceFetcher.fetchResource<V1beta1NetworkMap>(page, {
+      kind: RESOURCE_KINDS.NETWORK_MAP,
+      resourceName: networkMapName,
+      namespace,
+    });
+  }
+
   static async fetchPlan(
     page: Page,
     planName: string,
@@ -95,6 +109,18 @@ export class ResourceFetcher extends BaseResourceManager {
     const apiPath = `${basePath}/namespaces/${namespace}/${resourceType}/${resourceName}`;
 
     return ResourceFetcher.apiGet<T>(page, apiPath);
+  }
+
+  static async fetchStorageMap(
+    page: Page,
+    storageMapName: string,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1StorageMap | null> {
+    return ResourceFetcher.fetchResource<V1beta1StorageMap>(page, {
+      kind: RESOURCE_KINDS.STORAGE_MAP,
+      resourceName: storageMapName,
+      namespace,
+    });
   }
 
   static async fetchVirtualMachine(
