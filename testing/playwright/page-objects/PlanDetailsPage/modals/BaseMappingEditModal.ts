@@ -29,6 +29,26 @@ export abstract class BaseMappingEditModal extends BaseModal {
     this.addMappingButton = this.modal.getByTestId('add-mapping-button');
   }
 
+  private async expandAndSelectNth(selectLocator: Locator, nth: number): Promise<void> {
+    await expect(selectLocator).toBeVisible();
+    await expect(selectLocator).toBeEnabled();
+    await selectLocator.click();
+    await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
+    const option = this.page.locator('[role="option"]:enabled').nth(nth);
+    await expect(option).toBeVisible();
+    await option.click();
+  }
+
+  private async selectFromDropdown(selectLocator: Locator, optionText: string): Promise<void> {
+    await expect(selectLocator).toBeVisible();
+    await expect(selectLocator).toBeEnabled();
+    await selectLocator.click();
+    await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
+    const option = this.page.getByRole('option', { name: optionText, exact: true }).first();
+    await expect(option).toBeVisible();
+    await option.click();
+  }
+
   async addMapping(): Promise<number> {
     const countBefore = await this.getMappingCount();
     await this.addMappingButton.click();
@@ -79,86 +99,36 @@ export abstract class BaseMappingEditModal extends BaseModal {
 
   override async save(): Promise<void> {
     await super.save();
-    // Wait for K8s watch to propagate the change to React state
-    // The modal fetches data via useK8sWatchResource which needs time to update
-    await this.page.waitForTimeout(500);
+    // K8s watch must deliver the updated resource before the modal can be
+    // reopened with fresh data. No user-visible signal marks this completion.
+    await this.page.waitForTimeout(2000);
   }
 
   async selectDifferentTargetAtIndex(index: number): Promise<string> {
     const currentTarget = await this.getTargetAtIndex(index);
     const targetSelect = this.targetSelectLocator(index);
-
-    await expect(targetSelect).toBeVisible();
-    await targetSelect.click();
-    await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
-
-    const option = this.page.locator('[role="option"]:enabled').nth(1);
-    await expect(option).toBeVisible();
-    const newValue = (await option.textContent()) ?? '';
-    await option.click();
-
-    expect(newValue.trim()).not.toBe(currentTarget);
-    return newValue.trim();
+    await this.expandAndSelectNth(targetSelect, 1);
+    const newValue = await this.getTargetAtIndex(index);
+    expect(newValue).not.toBe(currentTarget);
+    return newValue;
   }
 
   async selectFirstAvailableSourceAtIndex(index: number): Promise<string> {
-    const sourceSelect = this.sourceSelectLocator(index);
-    await expect(sourceSelect).toBeVisible();
-    await sourceSelect.click();
-    await expect(sourceSelect).toHaveAttribute('aria-expanded', 'true');
-
-    const option = this.page.locator('[role="option"]:enabled').first();
-    await expect(option).toBeVisible();
-    const selectedValue = (await option.textContent()) ?? '';
-    await option.click();
-    return selectedValue.trim();
+    await this.expandAndSelectNth(this.sourceSelectLocator(index), 0);
+    return this.getSourceAtIndex(index);
   }
 
   async selectFirstAvailableTargetAtIndex(index: number): Promise<string> {
-    const targetSelect = this.targetSelectLocator(index);
-    await expect(targetSelect).toBeVisible();
-    await targetSelect.click();
-    await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
-
-    const option = this.page.locator('[role="option"]:enabled').first();
-    await expect(option).toBeVisible();
-    const selectedValue = (await option.textContent()) ?? '';
-    await option.click();
-    return selectedValue.trim();
+    await this.expandAndSelectNth(this.targetSelectLocator(index), 0);
+    return this.getTargetAtIndex(index);
   }
 
   async selectSourceAtIndex(index: number, sourceValue: string): Promise<void> {
-    const sourceSelect = this.sourceSelectLocator(index);
-    const trimmedSource = sourceValue.trim();
-
-    await expect(sourceSelect).toBeVisible();
-    await expect(sourceSelect).toBeEnabled();
-    await sourceSelect.click();
-    await expect(sourceSelect).toHaveAttribute('aria-expanded', 'true');
-
-    const option = this.page
-      .locator('.pf-v5-c-menu__list-item, .pf-v6-c-menu__list-item, [role="option"]')
-      .filter({ hasText: trimmedSource })
-      .first();
-    await expect(option).toBeVisible();
-    await option.click();
+    await this.selectFromDropdown(this.sourceSelectLocator(index), sourceValue.trim());
   }
 
   async selectTargetAtIndex(index: number, targetValue: string): Promise<void> {
-    const targetSelect = this.targetSelectLocator(index);
-    const trimmedTarget = targetValue.trim();
-
-    await expect(targetSelect).toBeVisible();
-    await expect(targetSelect).toBeEnabled();
-    await targetSelect.click();
-    await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
-
-    const option = this.page
-      .locator('.pf-v5-c-menu__list-item, .pf-v6-c-menu__list-item, [role="option"]')
-      .filter({ hasText: trimmedTarget })
-      .first();
-    await expect(option).toBeVisible();
-    await option.click();
+    await this.selectFromDropdown(this.targetSelectLocator(index), targetValue.trim());
   }
 
   protected sourceSelectLocator(index: number): Locator {
