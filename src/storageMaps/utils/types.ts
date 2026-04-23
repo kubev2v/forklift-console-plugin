@@ -11,6 +11,7 @@ export type TargetStorage = {
   id: string;
   name: string;
   isDefault: boolean;
+  provisioner?: string;
 };
 
 export enum StorageClassAnnotation {
@@ -49,6 +50,12 @@ export type StorageMapping = {
 
 export enum OffloadPlugin {
   VSphereXcopyConfig = 'vsphereXcopyConfig',
+}
+
+export enum OffloadMatchStatus {
+  Incomplete = 'incomplete',
+  Optimal = 'optimal',
+  Suboptimal = 'suboptimal',
 }
 
 // Reference: https://github.com/kubev2v/forklift/blob/53579b9ffdbf92098507fe58bc59f0856e6c890c/pkg/apis/forklift/v1beta1/mapping.go#L64

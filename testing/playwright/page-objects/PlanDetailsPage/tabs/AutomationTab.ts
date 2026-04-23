@@ -40,7 +40,9 @@ export class AutomationTab {
   }
 
   async verifyNoScripts(): Promise<void> {
-    await expect(this.page.getByTestId('scripts-none')).toContainText('None');
+    await expect(this.page.getByTestId('scripts-none')).toContainText(
+      'No customization scripts are configured',
+    );
   }
 
   async verifyScriptDetails(

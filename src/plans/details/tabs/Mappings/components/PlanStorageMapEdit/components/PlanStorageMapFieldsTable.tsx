@@ -5,8 +5,9 @@ import { validatePlanStorageMaps } from 'src/plans/create/steps/storage-map/util
 import type { MappingValue } from 'src/plans/create/types';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import GroupedSourceStorageField from 'src/storageMaps/components/GroupedSourceStorageField';
-import OffloadStorageIndexedForm from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageIndexedForm';
+import OffloadStorageRow from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageRow';
 import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
+import TargetStorageWithSuggestion from 'src/storageMaps/components/TargetStorageWithSuggestion';
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 import { StorageMapFieldId, type TargetStorage } from 'src/storageMaps/utils/types';
@@ -15,12 +16,14 @@ import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
+import type { InventoryStorage } from '@utils/hooks/useStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { PlanStorageEditFormValues } from '../utils/types';
 
 type PlanStorageMapFieldsTableProps = {
   sourceProvider: V1beta1Provider;
+  sourceStorages?: InventoryStorage[];
   targetStorages: TargetStorage[];
   usedSourceStorages: MappingValue[];
   otherSourceStorages: MappingValue[];
@@ -33,6 +36,7 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
   loadError,
   otherSourceStorages,
   sourceProvider,
+  sourceStorages,
   targetStorages,
   usedSourceStorages,
 }) => {
@@ -81,7 +85,12 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
         ...(isVsphere &&
           isCopyOffloadEnabled && {
             additionalOptions: (
-              <OffloadStorageIndexedForm index={index} sourceProvider={sourceProvider} />
+              <OffloadStorageRow
+                index={index}
+                sourceProvider={sourceProvider}
+                sourceStorages={sourceStorages ?? []}
+                targetStorages={targetStorages}
+              />
             ),
           }),
         inputs: [
@@ -92,12 +101,23 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
             usedSourceStorages={usedSourceStorages}
             otherSourceStorages={otherSourceStorages}
           />,
-          <TargetStorageField
-            fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-            key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-            targetStorages={targetStorages}
-            testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
-          />,
+          isVsphere && isCopyOffloadEnabled ? (
+            <TargetStorageWithSuggestion
+              fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              index={index}
+              sourceStorages={sourceStorages ?? []}
+              targetStorages={targetStorages}
+              testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
+            />
+          ) : (
+            <TargetStorageField
+              fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              targetStorages={targetStorages}
+              testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
+            />
+          ),
         ],
       }))}
       addButton={{

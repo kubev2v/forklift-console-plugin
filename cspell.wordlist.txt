@@ -114,3 +114,14 @@ firstboot
 configmap
 timespan
 instancetype
+datastores
+dellemc
+hitachi
+hspc
+netapp
+pardata
+portworx
+trident
+vVol
+vxflexos
+VMFS

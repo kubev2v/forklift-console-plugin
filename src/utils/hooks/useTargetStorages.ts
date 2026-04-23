@@ -21,6 +21,7 @@ const useTargetStorages = (
             id: storage.uid,
             isDefault,
             name: storage.name,
+            provisioner: storage?.object?.provisioner,
           };
 
           if (isDefault) {

@@ -174,6 +174,7 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
             loadError: sourceStoragesLoadError ?? targetStoragesLoadError,
             otherSourceStorages,
             sourceProvider,
+            sourceStorages: availableSourceStorages,
             storageMap,
             storageMappings,
             targetStorages: availableTargetStorages,

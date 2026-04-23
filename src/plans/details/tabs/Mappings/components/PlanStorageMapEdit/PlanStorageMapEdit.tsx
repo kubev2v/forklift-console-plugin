@@ -17,6 +17,7 @@ const PlanStorageMapEdit: ModalComponent<PlanStorageMapEditProps> = ({
   loadError,
   otherSourceStorages,
   sourceProvider,
+  sourceStorages,
   storageMap,
   storageMappings,
   targetStorages,
@@ -74,6 +75,7 @@ const PlanStorageMapEdit: ModalComponent<PlanStorageMapEditProps> = ({
             loadError={loadError}
             otherSourceStorages={otherSourceStorages}
             sourceProvider={sourceProvider}
+            sourceStorages={sourceStorages}
             targetStorages={targetStorages}
             usedSourceStorages={usedSourceStorages}
           />

@@ -24,7 +24,11 @@ const getStorageVendorProductNames = (crd: CustomResourceDefinition): string[] |
     schema?.spec?.properties?.map?.items?.properties?.offloadPlugin?.properties?.vsphereXcopyConfig
       ?.properties?.storageVendorProduct?.enum;
 
-  return Array.isArray(enumValues) && isEmpty(enumValues) ? undefined : enumValues;
+  if (!Array.isArray(enumValues) || isEmpty(enumValues)) {
+    return undefined;
+  }
+
+  return enumValues;
 };
 
 /**

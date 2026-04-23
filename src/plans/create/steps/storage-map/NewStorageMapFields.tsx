@@ -72,6 +72,7 @@ const NewStorageMapFields: FC = () => {
         targetStorages={availableTargetStorages}
         usedSourceStorages={usedSourceStorages}
         otherSourceStorages={otherSourceStorages}
+        sourceStorageInventory={availableSourceStorages}
         isLoading={isLoading}
         loadError={sourceStoragesError ?? targetStoragesError}
       />
