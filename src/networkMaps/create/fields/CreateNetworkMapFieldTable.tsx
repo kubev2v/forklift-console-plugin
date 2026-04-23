@@ -23,13 +23,9 @@ const CreateNetworkMapFieldTable: FC = () => {
     formState: { isSubmitting },
     setValue,
   } = useFormContext<CreateNetworkMapFormData>();
-  const [project, sourceProvider, targetProvider] = useWatch({
+  const [sourceProvider, targetProvider] = useWatch({
     control,
-    name: [
-      NetworkMapFieldId.Project,
-      NetworkMapFieldId.SourceProvider,
-      NetworkMapFieldId.TargetProvider,
-    ],
+    name: [NetworkMapFieldId.SourceProvider, NetworkMapFieldId.TargetProvider],
   });
 
   const {
@@ -46,10 +42,8 @@ const CreateNetworkMapFieldTable: FC = () => {
 
   const [sourceNetworks, sourceNetworksLoading, sourceNetworksError] =
     useSourceNetworks(sourceProvider);
-  const [targetNetworks, _targetNetworksLoading, targetNetworksError] = useTargetNetworks(
-    targetProvider,
-    project,
-  );
+  const [targetNetworks, _targetNetworksLoading, targetNetworksError] =
+    useTargetNetworks(targetProvider);
   const loadError = sourceNetworksError ?? targetNetworksError;
 
   return (
@@ -76,9 +70,8 @@ const CreateNetworkMapFieldTable: FC = () => {
           <TargetNetworkField
             fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
             targetNetworks={targetNetworks}
-            emptyStateMessage={t(
-              'Select a target provider and project to list available target networks',
-            )}
+            showIgnoreNetworkOption
+            emptyStateMessage={t('Select a target provider to list available target networks')}
             isDisabled={isSubmitting}
           />,
         ],

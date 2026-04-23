@@ -7,7 +7,6 @@ export type NetworkEditFormValues = {
 };
 
 export type NetworkMapEditProps = {
-  namespace: string;
   sourceProvider: V1beta1Provider;
   destinationProvider: V1beta1Provider;
   networkMap: V1beta1NetworkMap;
