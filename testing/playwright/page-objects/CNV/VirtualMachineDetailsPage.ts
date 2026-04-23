@@ -25,7 +25,7 @@ export class VirtualMachineDetailsPage {
   }
 
   async verifySmokeOverview(expectedName: string): Promise<void> {
-    await expect(this.main.getByText(expectedName).first()).toBeVisible();
+    await expect(this.main.getByText(expectedName, { exact: true }).first()).toBeVisible();
 
     await expect(
       this.main
@@ -55,7 +55,7 @@ export class VirtualMachineDetailsPage {
     await disableGuidedTour(this.page);
     await expect(this.overviewTab).toBeVisible({ timeout: PAGE_LOAD_TIMEOUT });
     if (vmName) {
-      await expect(this.main.getByText(vmName).first()).toBeVisible({
+      await expect(this.main.getByText(vmName, { exact: true }).first()).toBeVisible({
         timeout: PAGE_LOAD_TIMEOUT,
       });
     }
