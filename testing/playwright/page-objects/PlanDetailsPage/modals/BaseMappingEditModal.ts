@@ -2,6 +2,8 @@ import { expect, type Locator, type Page } from '@playwright/test';
 
 import { BaseModal } from '../../common/BaseModal';
 
+const FORM_SETTLE_MS = 500;
+
 /**
  * Configuration for a mapping edit modal.
  */
@@ -32,6 +34,7 @@ export abstract class BaseMappingEditModal extends BaseModal {
   private async expandAndSelectNth(selectLocator: Locator, nth: number): Promise<void> {
     await expect(selectLocator).toBeVisible();
     await expect(selectLocator).toBeEnabled();
+    await this.page.waitForTimeout(FORM_SETTLE_MS);
     await selectLocator.click();
     await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
     const option = this.page.locator('[role="option"]:enabled').nth(nth);
@@ -42,6 +45,7 @@ export abstract class BaseMappingEditModal extends BaseModal {
   private async selectFromDropdown(selectLocator: Locator, optionText: string): Promise<void> {
     await expect(selectLocator).toBeVisible();
     await expect(selectLocator).toBeEnabled();
+    await this.page.waitForTimeout(FORM_SETTLE_MS);
     await selectLocator.click();
     await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
     const option = this.page.getByRole('option', { name: optionText, exact: true }).first();
