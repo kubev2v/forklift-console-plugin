@@ -33,16 +33,22 @@ const detectForkliftVersion = async (page: Page): Promise<void> => {
  * Unlike Forklift, CNV version is optional — tests run when it's unknown.
  */
 const detectCnvVersion = async (page: Page): Promise<void> => {
-  const detectedVersion = await ResourceFetcher.fetchCnvVersion(page);
+  try {
+    const detectedVersion = await ResourceFetcher.fetchCnvVersion(page);
 
-  const existing = process.env[CNV_VERSION_ENV_VAR];
-  if (existing) {
-    console.error(`📌 Using pre-set CNV version: ${existing}`);
-  } else if (detectedVersion) {
-    process.env[CNV_VERSION_ENV_VAR] = detectedVersion;
-    console.error(`🔍 Auto-detected CNV version: ${detectedVersion}`);
-  } else {
-    console.error('⚠️ Could not auto-detect CNV version from cluster (CNV gating will be skipped)');
+    const existing = process.env[CNV_VERSION_ENV_VAR];
+    if (existing) {
+      console.error(`📌 Using pre-set CNV version: ${existing}`);
+    } else if (detectedVersion) {
+      process.env[CNV_VERSION_ENV_VAR] = detectedVersion;
+      console.error(`🔍 Auto-detected CNV version: ${detectedVersion}`);
+    } else {
+      console.error(
+        '⚠️ Could not auto-detect CNV version from cluster (CNV gating will be skipped)',
+      );
+    }
+  } catch (error) {
+    console.error('⚠️ CNV version detection failed (CNV gating will be skipped):', error);
   }
 };
 

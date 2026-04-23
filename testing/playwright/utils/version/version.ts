@@ -63,7 +63,7 @@ const versionAtLeast = (
   if (!versionString) return whenUnset;
   if (isLatest(versionString)) return true;
   const currentVersion = getVersionTuple(envVar);
-  if (!currentVersion) return whenUnset;
+  if (!currentVersion) return false;
   const resolvedMinimum = resolveTuple(minimumVersion);
   if (!resolvedMinimum) return false;
   return compareTuples(currentVersion, resolvedMinimum) >= 0;

@@ -27,9 +27,24 @@ export class VirtualMachineDetailsPage {
   async verifySmokeOverview(expectedName: string): Promise<void> {
     await expect(this.main.getByText(expectedName).first()).toBeVisible();
 
-    await expect(this.main.locator('dt').filter({ hasText: 'Name' }).first()).toBeVisible();
-    await expect(this.main.locator('dt').filter({ hasText: 'Status' }).first()).toBeVisible();
-    await expect(this.main.locator('dt').filter({ hasText: 'CPU | Memory' }).first()).toBeVisible();
+    await expect(
+      this.main
+        .locator('dt')
+        .filter({ hasText: /^Name$/ })
+        .first(),
+    ).toBeVisible();
+    await expect(
+      this.main
+        .locator('dt')
+        .filter({ hasText: /^Status$/ })
+        .first(),
+    ).toBeVisible();
+    await expect(
+      this.main
+        .locator('dt')
+        .filter({ hasText: /^CPU \| Memory$/ })
+        .first(),
+    ).toBeVisible();
 
     await expect(this.main.getByRole('link', { name: /Network \(\d+\)/ })).toBeVisible();
     await expect(this.main.getByRole('link', { name: /Storage \([1-9]\d*\)/ })).toBeVisible();
