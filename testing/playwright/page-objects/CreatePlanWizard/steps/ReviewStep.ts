@@ -8,7 +8,7 @@ import type {
   StorageMap,
 } from '../../../types/test-data';
 import { isEmpty } from '../../../utils/utils';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_11_0, V2_12_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
 
 export class ReviewStep {
@@ -90,7 +90,9 @@ export class ReviewStep {
     await this.verifyStorageMapSection(planData.storageMap);
     await this.verifyMigrationTypeSection();
     await this.verifyOtherSettingsSection(planData.additionalPlanSettings);
-    await this.verifyCustomScriptsSection(planData.customizationScripts);
+    if (isVersionAtLeast(V2_12_0)) {
+      await this.verifyCustomScriptsSection(planData.customizationScripts);
+    }
     await this.verifyHooksSection();
   }
 
