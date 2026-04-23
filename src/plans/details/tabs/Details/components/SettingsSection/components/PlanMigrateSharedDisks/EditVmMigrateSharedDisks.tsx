@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import PlanVddkForSharedDisksWarningAlert from 'src/plans/components/PlanVddkForSharedDisksWarningAlert';
+import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
 import type { EnhancedPlanSpecVms } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
@@ -6,6 +8,7 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Alert, AlertVariant, Radio, Stack, StackItem } from '@patternfly/react-core';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { EditPlanProps } from '../../utils/types';
@@ -26,6 +29,8 @@ const EditVmMigrateSharedDisks: ModalComponent<EditVmMigrateSharedDisksProps> = 
   ...rest
 }) => {
   const { t } = useForkliftTranslation();
+  const { sourceProvider } = usePlanSourceProvider(resource);
+  const isVddkInitImageNotSet = isEmpty(sourceProvider?.spec?.settings?.vddkInitImage);
   const vm = getPlanVirtualMachines(resource)[index] as EnhancedPlanSpecVms | undefined;
   const currentVmValue = getVmMigrateSharedDisks(vm);
   const planValue = getMigrateSharedDisksValue(resource);
@@ -83,6 +88,9 @@ const EditVmMigrateSharedDisks: ModalComponent<EditVmMigrateSharedDisksProps> = 
             data-testid="shared-disks-option-inherit"
           />
           {isInherit && planValue && sharedDisksSlowdownAlert}
+          {isInherit && !planValue && isVddkInitImageNotSet && (
+            <PlanVddkForSharedDisksWarningAlert />
+          )}
         </StackItem>
         <StackItem>
           <Radio
@@ -108,6 +116,9 @@ const EditVmMigrateSharedDisks: ModalComponent<EditVmMigrateSharedDisksProps> = 
             }}
             data-testid="shared-disks-option-disabled"
           />
+          {!isInherit && !resolvedValue && isVddkInitImageNotSet && (
+            <PlanVddkForSharedDisksWarningAlert />
+          )}
         </StackItem>
       </Stack>
     </ModalForm>
