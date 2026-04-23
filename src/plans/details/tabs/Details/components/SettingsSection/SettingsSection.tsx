@@ -8,6 +8,7 @@ import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
 import { DescriptionList } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
+import { isEmpty } from '@utils/helpers';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 
 import usePlanSourceProvider from '../../../../hooks/usePlanSourceProvider';
@@ -43,6 +44,7 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
   const isVsphere = sourceProvider?.spec?.type === 'vsphere';
   const isOvirt = sourceProvider?.spec?.type === 'ovirt';
   const migrationType = getPlanMigrationType(plan);
+  const isVddkInitImageNotSet = isEmpty(sourceProvider?.spec?.settings?.vddkInitImage);
 
   const isTransferNetworkVisible =
     !hasLiveMigrationProviderType(sourceProvider) ||
@@ -61,7 +63,12 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
         shouldRender={isVsphere}
       />
       <RootDiskDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-      <SharedDisksDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+      <SharedDisksDetailsItem
+        plan={plan}
+        canPatch={canPatch}
+        shouldRender={isVsphere}
+        isVddkInitImageNotSet={isVddkInitImageNotSet}
+      />
       <PVCNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
       <TransferNetworkDetailsItem
         plan={plan}
