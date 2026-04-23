@@ -37,7 +37,9 @@ export abstract class BaseMappingEditModal extends BaseModal {
     await this.page.waitForTimeout(FORM_SETTLE_MS);
     await selectLocator.click();
     await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
-    const option = this.page.locator('[role="option"]:enabled').nth(nth);
+    const listbox = this.page.locator('[role="listbox"]:visible').last();
+    await expect(listbox).toBeVisible();
+    const option = listbox.locator('[role="option"]:enabled').nth(nth);
     await expect(option).toBeVisible();
     await option.click();
   }
@@ -48,7 +50,9 @@ export abstract class BaseMappingEditModal extends BaseModal {
     await this.page.waitForTimeout(FORM_SETTLE_MS);
     await selectLocator.click();
     await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
-    const option = this.page.getByRole('option', { name: optionText, exact: true }).first();
+    const listbox = this.page.locator('[role="listbox"]:visible').last();
+    await expect(listbox).toBeVisible();
+    const option = listbox.getByRole('option', { name: optionText, exact: true }).first();
     await expect(option).toBeVisible();
     await option.click();
   }
