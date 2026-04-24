@@ -48,7 +48,7 @@ get_plugin_subdir() {
 # ============================================================================
 
 USE_AUTH=false
-EXTRA_PLUGINS=""
+EXTRA_PLUGINS="${DEFAULT_PLUGINS:-}"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -76,6 +76,11 @@ while [[ $# -gt 0 ]]; do
             echo "  --auth                Use OpenShift OAuth instead of bearer token"
             echo "  --plugins <list|all>  Load additional console plugins alongside forklift"
             echo "                        Comma-separated list, or 'all' for every plugin"
+            echo ""
+            echo "Environment variables:"
+            echo "  DEFAULT_PLUGINS       Plugins to load when --plugins is not specified"
+            echo "                        Same format as --plugins (comma-separated or 'all')"
+            echo "                        --plugins overrides DEFAULT_PLUGINS when both are set"
             echo ""
             echo "Available plugins:"
             for p in $AVAILABLE_PLUGINS; do

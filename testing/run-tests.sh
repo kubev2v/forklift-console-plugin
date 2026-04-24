@@ -67,6 +67,7 @@ export CLUSTER_USERNAME="kubeadmin"
 export CLUSTER_PASSWORD=${CLUSTER_PASSWORD}
 export VSPHERE_PROVIDER=${VSPHERE_PROVIDER}
 export FORKLIFT_VERSION=${FORKLIFT_VERSION}
+export CNV_VERSION=${CNV_VERSION}
 
 log "Running Playwright tests..."
 echo "  Cluster: ${CLUSTER_NAME}"
