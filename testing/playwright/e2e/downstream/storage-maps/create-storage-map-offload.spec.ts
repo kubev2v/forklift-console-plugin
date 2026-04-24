@@ -62,6 +62,32 @@ test.describe(
         await createPage.offload.verifyDropdownOptions(0, 'storageProduct', ALL_STORAGE_PRODUCTS);
       });
 
+      await test.step('Verify clear button is disabled when no offload values set', async () => {
+        await createPage.offload.verifyClearButtonDisabled(0);
+      });
+
+      await test.step('Set only offload plugin and verify validation error', async () => {
+        await createPage.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
+        await createPage.offload.verifyValidationError('must be set when configuring offload');
+      });
+
+      await test.step('Fill remaining fields and verify validation error clears', async () => {
+        await createPage.offload.selectStorageSecret(0, secretName);
+        await createPage.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
+        await createPage.offload.verifyNoValidationError();
+      });
+
+      await test.step('Verify clear button works and resets all fields', async () => {
+        await createPage.offload.verifyClearButtonEnabled(0);
+        await createPage.offload.clickClearOffloadOptions(0);
+
+        const pluginText = await createPage.offload.getOffloadPluginText(0);
+        expect(pluginText).not.toContain(OffloadPlugins.VSPHERE_XCOPY);
+
+        await createPage.offload.verifyClearButtonDisabled(0);
+        await createPage.offload.verifyNoValidationError();
+      });
+
       await test.step('Configure offload options on first mapping row', async () => {
         await createPage.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
         const pluginText = await createPage.offload.getOffloadPluginText(0);
@@ -149,6 +175,36 @@ test.describe(
         expect(productText).toContain(StorageProducts.HITACHI_VANTARA);
 
         await modal.cancel();
+      });
+    });
+
+    test('should hide offload options for non-vSphere providers', async ({
+      page,
+      createCustomProvider,
+    }) => {
+      const listPage = new StorageMapsListPage(page);
+      const createPage = new StorageMapCreatePage(page);
+
+      const ovaProviderKey = process.env.OVA_PROVIDER ?? 'ova';
+      const ovaProvider = await createCustomProvider({
+        providerKey: ovaProviderKey,
+        namePrefix: 'offload-ova',
+      });
+
+      await test.step('Navigate to Create Storage Map form', async () => {
+        await listPage.navigate(MTV_NAMESPACE);
+        await listPage.clickCreateWithFormButton();
+        await createPage.waitForPageLoad();
+      });
+
+      await test.step('Select OVA source provider and verify no offload toggle', async () => {
+        await createPage.fillMapName(`gating-sm-${crypto.randomUUID().slice(0, 8)}`);
+        await createPage.selectProject(MTV_NAMESPACE);
+        await createPage.selectSourceProvider(ovaProvider.metadata.name);
+        await createPage.selectTargetProvider('host');
+        await createPage.waitForMappingTableReady();
+
+        await createPage.offload.verifyOffloadToggleNotVisible(0);
       });
     });
   },

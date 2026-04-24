@@ -52,6 +52,20 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
       await modal.cancel();
     });
 
+    await test.step('Verify partial offload triggers validation error in modal', async () => {
+      const modal = await planDetailsPage.mappingsTab.openStorageMapEditModal();
+
+      await modal.offload.expandOffloadOptions(0);
+      await modal.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
+      await modal.offload.verifyValidationError('must be set when configuring offload');
+      await modal.verifySaveButtonDisabled();
+
+      await modal.offload.clickClearOffloadOptions(0);
+      await modal.offload.verifyNoValidationError();
+
+      await modal.cancel();
+    });
+
     await test.step('Configure offload options and save', async () => {
       const modal = await planDetailsPage.mappingsTab.openStorageMapEditModal();
 
