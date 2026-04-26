@@ -60,8 +60,14 @@ enum VsphereProviderFormFieldId {
   VsphereUseVddkAioOptimization = 'vsphereUseVddkAioOptimization',
 }
 
+export enum HypervTransferMethod {
+  SMB = 'smb',
+  ISCSI = 'iscsi',
+}
+
 enum HypervProviderFormFieldId {
   HypervHost = 'hypervHost',
+  TransferMethod = 'hypervTransferMethod',
   HypervUsername = 'hypervUsername',
   HypervPassword = 'hypervPassword',
   SmbUrl = 'smbUrl',

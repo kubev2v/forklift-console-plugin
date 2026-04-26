@@ -28,9 +28,11 @@ type CreatePlanStorageMapFieldTableProps = {
   sourceStorageInventory?: InventoryStorage[];
   isLoading: boolean;
   loadError: Error | null;
+  isIscsi?: boolean;
 };
 
 const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = ({
+  isIscsi,
   isLoading,
   loadError,
   otherSourceStorages,
@@ -60,22 +62,32 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
     control,
     name: CreatePlanStorageMapFieldId.StorageMap,
     rules: {
-      validate: (values) => validatePlanStorageMaps(values, usedSourceStorages, isOpenshift),
+      validate: (values) =>
+        validatePlanStorageMaps(values, usedSourceStorages, isOpenshift, isIscsi),
     },
   });
 
-  return (
-    <FieldBuilderTable
-      headers={[
+  const headers = isIscsi
+    ? [
+        {
+          label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.TargetStorage],
+          width: 90 as const,
+        },
+      ]
+    : [
         {
           label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.SourceStorage],
-          width: 45,
+          width: 45 as const,
         },
         {
           label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.TargetStorage],
-          width: 45,
+          width: 45 as const,
         },
-      ]}
+      ];
+
+  return (
+    <FieldBuilderTable
+      headers={headers}
       fieldRows={storageMappingFields.map((field, index) => ({
         ...field,
         ...(sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere &&
@@ -89,32 +101,45 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
               />
             ),
           }),
-        inputs: [
-          <GroupedSourceStorageField
-            fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.SourceStorage, index)}
-            storageMappings={storageMappings}
-            usedSourceStorages={usedSourceStorages}
-            otherSourceStorages={otherSourceStorages}
-          />,
-          isVsphereOffload ? (
-            <TargetStorageWithSuggestion
-              fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
-              index={index}
-              sourceStorages={sourceStorageInventory ?? []}
-              targetStorages={targetStorages}
-              testId="target-storage-select"
-            />
-          ) : (
-            <TargetStorageField
-              fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
-              targetStorages={targetStorages}
-              testId="target-storage-select"
-            />
-          ),
-        ],
+        inputs: isIscsi
+          ? [
+              <TargetStorageField
+                fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
+                key={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
+                targetStorages={targetStorages}
+                testId="target-storage-select"
+              />,
+            ]
+          : [
+              <GroupedSourceStorageField
+                fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.SourceStorage, index)}
+                key={getStorageMapFieldId(CreatePlanStorageMapFieldId.SourceStorage, index)}
+                storageMappings={storageMappings}
+                usedSourceStorages={usedSourceStorages}
+                otherSourceStorages={otherSourceStorages}
+              />,
+              isVsphereOffload ? (
+                <TargetStorageWithSuggestion
+                  fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
+                  key={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
+                  index={index}
+                  sourceStorages={sourceStorageInventory ?? []}
+                  targetStorages={targetStorages}
+                  testId="target-storage-select"
+                />
+              ) : (
+                <TargetStorageField
+                  fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
+                  key={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
+                  targetStorages={targetStorages}
+                  testId="target-storage-select"
+                />
+              ),
+            ],
       }))}
       addButton={{
         isDisabled:
+          Boolean(isIscsi) ||
           [...usedSourceStorages, ...otherSourceStorages].length === storageMappingFields.length ||
           isLoading ||
           Boolean(loadError),
@@ -132,7 +157,7 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
         },
       }}
       removeButton={{
-        isDisabled: () => storageMappingFields.length <= 1,
+        isDisabled: () => Boolean(isIscsi) || storageMappingFields.length <= 1,
         onClick: (index) => {
           if (storageMappingFields.length > 1) {
             remove(index);

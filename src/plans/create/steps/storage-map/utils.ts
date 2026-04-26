@@ -20,8 +20,11 @@ export const validatePlanStorageMaps = (
   values: StorageMapping[],
   usedSourceStorages: MappingValue[],
   isOpenshift = false,
+  isIscsi = false,
 ): string | undefined => {
   if (
+    // iSCSI providers have no source storages in inventory — only target mapping is needed
+    !isIscsi &&
     // TODO: once backend will support fetching the used source storages by VMs for OCP, we will remove this check for ocp. For now, we add all source storages for ocp mappings, so validation is skipped
     !isOpenshift &&
     !usedSourceStorages.every((usedStorage) =>

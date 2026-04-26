@@ -1,5 +1,6 @@
 import {
   CertificateValidationMode,
+  HypervTransferMethod,
   ProviderFormFieldId,
 } from 'src/providers/create/fields/constants';
 import type { CreateProviderFormData } from 'src/providers/create/types';
@@ -79,6 +80,10 @@ export const getDefaultFormValues = (
       const smbUser = getDecodedValue(secret?.data?.smbUser);
       const smbPassword = getDecodedValue(secret?.data?.smbPassword);
       const hasSeparateSmbCredentials = Boolean(smbUser ?? smbPassword);
+      const transferMethod =
+        provider?.spec?.settings?.hyperVTransferMethod === HypervTransferMethod.ISCSI
+          ? HypervTransferMethod.ISCSI
+          : HypervTransferMethod.SMB;
 
       return {
         ...baseValues,
@@ -88,6 +93,7 @@ export const getDefaultFormValues = (
         [ProviderFormFieldId.SmbPassword]: smbPassword ?? '',
         [ProviderFormFieldId.SmbUrl]: getDecodedValue(secret?.data?.smbUrl) ?? '',
         [ProviderFormFieldId.SmbUser]: smbUser ?? '',
+        [ProviderFormFieldId.TransferMethod]: transferMethod,
         [ProviderFormFieldId.UseDifferentSmbCredentials]: hasSeparateSmbCredentials,
       };
     }

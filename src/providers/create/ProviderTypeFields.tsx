@@ -12,8 +12,7 @@ import Ec2CrossAccountCredentialsFields from './fields/ec2/Ec2CrossAccountCreden
 import Ec2RegionField from './fields/ec2/Ec2RegionField';
 import Ec2TargetSettingsFields from './fields/ec2/Ec2TargetSettingsFields';
 import HypervCredentialsFields from './fields/hyperv/HypervCredentialsFields';
-import SmbCredentialsFields from './fields/hyperv/SmbCredentialsFields';
-import SmbUrlField from './fields/hyperv/SmbDirectoryField';
+import HypervTransferMethodField from './fields/hyperv/HypervTransferMethodField';
 import OpenShiftUrlField from './fields/openshift/OpenShiftUrlField';
 import ServiceAccountTokenField from './fields/openshift/ServiceAccountTokenField';
 import OpenStackAuthenticationTypeField from './fields/openstack/OpenStackAuthenticationTypeField';
@@ -35,14 +34,13 @@ const ProviderTypeFields: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useFormContext<CreateProviderFormData>();
 
-  const [selectedProviderType, openshiftUrl, ovirtUrl, vsphereUrl, smbUrl] = useWatch({
+  const [selectedProviderType, openshiftUrl, ovirtUrl, vsphereUrl] = useWatch({
     control,
     name: [
       ProviderFormFieldId.ProviderType,
       ProviderFormFieldId.OpenshiftUrl,
       ProviderFormFieldId.OvirtUrl,
       ProviderFormFieldId.VsphereUrl,
-      ProviderFormFieldId.SmbUrl,
     ],
   });
 
@@ -111,10 +109,9 @@ const ProviderTypeFields: FC = () => {
 
       {selectedProviderType === PROVIDER_TYPES.hyperv && (
         <>
-          <SmbUrlField />
+          <HypervTransferMethodField />
           <SectionHeading text={t('Provider credentials')} />
-          {smbUrl?.trim() && <HypervCredentialsFields />}
-          {smbUrl?.trim() && <SmbCredentialsFields />}
+          <HypervCredentialsFields />
           <CertificateValidationField />
         </>
       )}

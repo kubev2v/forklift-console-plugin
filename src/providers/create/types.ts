@@ -5,7 +5,11 @@ import type {
   VSphereEndpointType,
 } from 'src/providers/utils/constants';
 
-import type { CertificateValidationMode, ProviderFormFieldId } from './fields/constants';
+import type {
+  CertificateValidationMode,
+  HypervTransferMethod,
+  ProviderFormFieldId,
+} from './fields/constants';
 
 type BaseFormData = {
   [ProviderFormFieldId.ProviderName]: string;
@@ -30,6 +34,7 @@ type HypervFields = {
   [ProviderFormFieldId.CaCertificate]?: string;
   [ProviderFormFieldId.CertificateValidation]?: CertificateValidationMode;
   [ProviderFormFieldId.HypervHost]?: string;
+  [ProviderFormFieldId.TransferMethod]?: HypervTransferMethod;
   [ProviderFormFieldId.HypervUsername]?: string;
   [ProviderFormFieldId.HypervPassword]?: string;
   [ProviderFormFieldId.SmbUrl]?: string;
