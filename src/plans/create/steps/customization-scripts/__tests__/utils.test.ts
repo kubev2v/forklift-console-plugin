@@ -7,6 +7,7 @@ import {
   isScriptConfigMap,
   scriptsToConfigMapData,
   validateScriptName,
+  validateUniqueScriptKey,
 } from '../utils';
 
 const createScript = (overrides: Partial<CustomScript> = {}): CustomScript => ({
@@ -73,6 +74,48 @@ describe('validateScriptName', () => {
 
   it('rejects uppercase characters', () => {
     expect(validateScriptName('Setup')).toBeDefined();
+  });
+});
+
+describe('validateUniqueScriptKey', () => {
+  it('returns undefined when all scripts produce unique keys', () => {
+    const scripts = [createScript({ name: 'init' }), createScript({ name: 'cleanup' })];
+    expect(validateUniqueScriptKey(scripts[0], 0, scripts)).toBeUndefined();
+    expect(validateUniqueScriptKey(scripts[1], 1, scripts)).toBeUndefined();
+  });
+
+  it('returns error when two scripts have the same name, guestType, and scriptType', () => {
+    const scripts = [createScript({ name: 'init' }), createScript({ name: 'init' })];
+    expect(validateUniqueScriptKey(scripts[0], 0, scripts)).toBeDefined();
+    expect(validateUniqueScriptKey(scripts[1], 1, scripts)).toBeDefined();
+  });
+
+  it('allows same name with different guestType', () => {
+    const scripts = [
+      createScript({ guestType: GuestType.Linux, name: 'init' }),
+      createScript({ guestType: GuestType.Windows, name: 'init' }),
+    ];
+    expect(validateUniqueScriptKey(scripts[0], 0, scripts)).toBeUndefined();
+    expect(validateUniqueScriptKey(scripts[1], 1, scripts)).toBeUndefined();
+  });
+
+  it('allows same name with different scriptType', () => {
+    const scripts = [
+      createScript({ name: 'init', scriptType: ScriptType.Firstboot }),
+      createScript({ name: 'init', scriptType: ScriptType.Run }),
+    ];
+    expect(validateUniqueScriptKey(scripts[0], 0, scripts)).toBeUndefined();
+    expect(validateUniqueScriptKey(scripts[1], 1, scripts)).toBeUndefined();
+  });
+
+  it('returns format error for invalid script name', () => {
+    const scripts = [createScript({ name: '-invalid' })];
+    expect(validateUniqueScriptKey(scripts[0], 0, scripts)).toBeDefined();
+  });
+
+  it('returns required error for empty script name', () => {
+    const scripts = [createScript({ name: '' })];
+    expect(validateUniqueScriptKey(scripts[0], 0, scripts)).toBeDefined();
   });
 });
 

@@ -42,6 +42,26 @@ export const validateScriptName = (value: string): string | undefined => {
   return undefined;
 };
 
+export const validateUniqueScriptKey = (
+  script: CustomScript,
+  index: number,
+  allScripts: CustomScript[],
+): string | undefined => {
+  const nameError = validateScriptName(script.name);
+  if (nameError) return nameError;
+
+  const currentKey = buildConfigMapKey(script);
+  const isDuplicate = allScripts.some(
+    (other, i) => i !== index && buildConfigMapKey(other) === currentKey,
+  );
+
+  if (isDuplicate) {
+    return t('A script with this name, guest type, and script type already exists.');
+  }
+
+  return undefined;
+};
+
 export const isScriptConfigMap = (data: Record<string, string> | undefined): boolean => {
   if (!data) {
     return false;

@@ -10,24 +10,26 @@ import {
 } from 'src/plans/create/steps/customization-scripts/constants';
 import ScriptContentField from 'src/plans/create/steps/customization-scripts/ScriptContentField';
 import type { CustomScript } from 'src/plans/create/steps/customization-scripts/types';
+import { validateUniqueScriptKey } from 'src/plans/create/steps/customization-scripts/utils';
 
 import Select from '@components/common/Select';
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
+import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import { SelectList, SelectOption, TextInput } from '@patternfly/react-core';
+import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { validateScriptContent, validateUniqueScriptName } from '../../utils/validateScripts';
+import { validateScriptContent } from '../../utils/validateScripts';
 
 type ScriptEditTableProps = {
   append: (value: CustomScript) => void;
   fields: { id: string }[];
   remove: (index: number) => void;
-  scriptNames: string[];
 };
 
-const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove, scriptNames }) => {
+const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove }) => {
   const { t } = useForkliftTranslation();
-  const { control, setValue } = useFormContext<{ scripts: CustomScript[] }>();
+  const { control, setValue, trigger } = useFormContext<{ scripts: CustomScript[] }>();
 
   const watchedScripts = useWatch({ control, name: 'scripts' });
 
@@ -60,14 +62,23 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove, scr
               control={control}
               name={`scripts.${index}.name`}
               rules={{
-                validate: (value) => validateUniqueScriptName(value, index, scriptNames),
+                validate: (value) =>
+                  validateUniqueScriptKey(
+                    { ...watchedScripts?.[index], name: value },
+                    index,
+                    watchedScripts ?? [],
+                  ),
               }}
-              render={({ field }) => (
-                <TextInput
-                  {...field}
-                  data-testid={`script-name-input-${index}`}
-                  placeholder={t('Script name')}
-                />
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <TextInput
+                    {...field}
+                    data-testid={`script-name-input-${index}`}
+                    placeholder={t('Script name')}
+                    validated={getInputValidated(error)}
+                  />
+                  <FormErrorHelperText error={error} />
+                </>
               )}
             />,
             <Controller
@@ -78,12 +89,14 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove, scr
                 <Select
                   id={`scripts.${index}.guestType`}
                   value={GuestTypeLabels[guestTypeField.value]}
-                  onSelect={(_event, value) => {
+                  onSelect={async (_event, value) => {
                     guestTypeField.onChange(value);
 
                     if (value === GuestType.Windows) {
                       setValue(`scripts.${index}.scriptType`, ScriptType.Firstboot);
                     }
+
+                    await trigger(`scripts.${index}.name`);
                   }}
                   testId={`script-guest-type-select-${index}`}
                 >
@@ -105,8 +118,9 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove, scr
                 <Select
                   id={`scripts.${index}.scriptType`}
                   value={ScriptTypeLabels[scriptTypeField.value]}
-                  onSelect={(_event, value) => {
+                  onSelect={async (_event, value) => {
                     scriptTypeField.onChange(value);
+                    await trigger(`scripts.${index}.name`);
                   }}
                   testId={`script-type-select-${index}`}
                 >
