@@ -1,8 +1,11 @@
 import type { FC } from 'react';
 import { useWatch } from 'react-hook-form';
+import { Base64 } from 'js-base64';
 
 import ExpandableReviewSection from '@components/ExpandableReviewSection/ExpandableReviewSection';
 import {
+  CodeBlock,
+  CodeBlockCode,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -73,7 +76,15 @@ const HooksReviewSection: FC = () => {
                     {hooksFormFieldLabels[MigrationHookFieldId.AnsiblePlaybook]}
                   </DescriptionListTerm>
                   <DescriptionListDescription data-testid="review-pre-migration-hook-ansible-playbook">
-                    {preMigration[MigrationHookFieldId.AnsiblePlaybook] ?? t('None')}
+                    {preMigration[MigrationHookFieldId.AnsiblePlaybook] ? (
+                      <CodeBlock>
+                        <CodeBlockCode>
+                          {Base64.decode(preMigration[MigrationHookFieldId.AnsiblePlaybook])}
+                        </CodeBlockCode>
+                      </CodeBlock>
+                    ) : (
+                      t('None')
+                    )}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
               </>
@@ -124,7 +135,15 @@ const HooksReviewSection: FC = () => {
                     {hooksFormFieldLabels[MigrationHookFieldId.AnsiblePlaybook]}
                   </DescriptionListTerm>
                   <DescriptionListDescription data-testid="review-post-migration-hook-ansible-playbook">
-                    {postMigration[MigrationHookFieldId.AnsiblePlaybook] ?? t('None')}
+                    {postMigration[MigrationHookFieldId.AnsiblePlaybook] ? (
+                      <CodeBlock>
+                        <CodeBlockCode>
+                          {Base64.decode(postMigration[MigrationHookFieldId.AnsiblePlaybook])}
+                        </CodeBlockCode>
+                      </CodeBlock>
+                    ) : (
+                      t('None')
+                    )}
                   </DescriptionListDescription>
                 </DescriptionListGroup>
               </>
