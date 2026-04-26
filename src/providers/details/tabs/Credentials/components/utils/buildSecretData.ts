@@ -1,6 +1,7 @@
 import { encode } from 'js-base64';
 import {
   CertificateValidationMode,
+  HypervTransferMethod,
   ProviderFormFieldId,
 } from 'src/providers/create/fields/constants';
 import type { CreateProviderFormData } from 'src/providers/create/types';
@@ -93,20 +94,23 @@ export const buildSecretData = (
     }
 
     case PROVIDER_TYPES.hyperv: {
+      const isIscsi = formData[ProviderFormFieldId.TransferMethod] === HypervTransferMethod.ISCSI;
       const hypervData: Record<string, string> = {
         ...baseData,
         password: encode(formData[ProviderFormFieldId.HypervPassword] ?? ''),
-        smbUrl: encode(formData[ProviderFormFieldId.SmbUrl] ?? ''),
         username: encode(formData[ProviderFormFieldId.HypervUsername] ?? ''),
       };
 
-      // Add optional SMB credentials if using different credentials
-      if (formData[ProviderFormFieldId.UseDifferentSmbCredentials]) {
-        if (formData[ProviderFormFieldId.SmbUser]) {
-          hypervData.smbUser = encode(formData[ProviderFormFieldId.SmbUser] ?? '');
-        }
-        if (formData[ProviderFormFieldId.SmbPassword]) {
-          hypervData.smbPassword = encode(formData[ProviderFormFieldId.SmbPassword] ?? '');
+      if (!isIscsi) {
+        hypervData.smbUrl = encode(formData[ProviderFormFieldId.SmbUrl] ?? '');
+
+        if (formData[ProviderFormFieldId.UseDifferentSmbCredentials]) {
+          if (formData[ProviderFormFieldId.SmbUser]) {
+            hypervData.smbUser = encode(formData[ProviderFormFieldId.SmbUser] ?? '');
+          }
+          if (formData[ProviderFormFieldId.SmbPassword]) {
+            hypervData.smbPassword = encode(formData[ProviderFormFieldId.SmbPassword] ?? '');
+          }
         }
       }
 

@@ -1,8 +1,10 @@
 import type { V1beta1Provider } from '@forklift-ui/types';
+import { isEmpty } from '@utils/helpers';
 
 type BuildProviderObjectParams = {
   name: string;
   namespace: string;
+  settings?: Record<string, string>;
   type: string;
   url?: string;
 };
@@ -10,6 +12,7 @@ type BuildProviderObjectParams = {
 export const buildProviderObject = ({
   name,
   namespace,
+  settings,
   type,
   url,
 }: BuildProviderObjectParams): V1beta1Provider => ({
@@ -24,6 +27,7 @@ export const buildProviderObject = ({
       name: undefined,
       namespace,
     },
+    ...(settings && !isEmpty(settings) && { settings }),
     type,
     url,
   },

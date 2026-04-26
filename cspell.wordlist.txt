@@ -125,3 +125,5 @@ trident
 vVol
 vxflexos
 VMFS
+iscsi
+ISCSI

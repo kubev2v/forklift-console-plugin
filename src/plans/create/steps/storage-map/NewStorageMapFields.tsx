@@ -1,5 +1,7 @@
 import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
+import { isHypervIscsiProvider } from 'src/providers/utils/helpers/isHypervIscsiProvider';
+import StorageMapStatusAlerts from 'src/storageMaps/components/StorageMapStatusAlerts';
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 import { getSourceStorageValuesForSelectedVms } from 'src/storageMaps/utils/getSourceStorageValues';
 import type { StorageMapping } from 'src/storageMaps/utils/types';
@@ -8,7 +10,6 @@ import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import type { ProviderVirtualMachine } from '@forklift-ui/types';
 import { Alert, AlertVariant, Stack, StackItem, TextInput } from '@patternfly/react-core';
-import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -28,6 +29,8 @@ const NewStorageMapFields: FC = () => {
     control,
     name: [GeneralFormFieldId.SourceProvider, CreatePlanStorageMapFieldId.StorageMap],
   });
+
+  const isIscsi = isHypervIscsiProvider(sourceProvider);
 
   const [availableSourceStorages, sourceStoragesLoading, sourceStoragesError] = storage.sources;
   const [availableTargetStorages, _targetStoragesLoading, targetStoragesError] = storage.targets;
@@ -60,13 +63,11 @@ const NewStorageMapFields: FC = () => {
     <Stack hasGutter className="pf-v6-u-ml-lg">
       {error?.root && <Alert variant={AlertVariant.danger} isInline title={error.root.message} />}
 
-      {isEmpty(usedSourceStorages) && !isLoading && (
-        <Alert
-          variant={AlertVariant.warning}
-          isInline
-          title={t('No source storages are available for the selected VMs.')}
-        />
-      )}
+      <StorageMapStatusAlerts
+        isIscsi={isIscsi}
+        isLoading={isLoading}
+        usedSourceStorages={usedSourceStorages}
+      />
 
       <CreatePlanStorageMapFieldTable
         targetStorages={availableTargetStorages}
@@ -75,6 +76,7 @@ const NewStorageMapFields: FC = () => {
         sourceStorageInventory={availableSourceStorages}
         isLoading={isLoading}
         loadError={sourceStoragesError ?? targetStoragesError}
+        isIscsi={isIscsi}
       />
 
       <FormGroupWithHelpText

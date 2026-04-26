@@ -1,10 +1,11 @@
 import { FormProvider, useForm } from 'react-hook-form';
+import { isHypervIscsiProvider } from 'src/providers/utils/helpers/isHypervIscsiProvider';
+import StorageMapStatusAlerts from 'src/storageMaps/components/StorageMapStatusAlerts';
 import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Alert, AlertVariant, ModalVariant, Stack } from '@patternfly/react-core';
-import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import PlanStorageMapFieldsTable from './components/PlanStorageMapFieldsTable';
@@ -24,6 +25,7 @@ const PlanStorageMapEdit: ModalComponent<PlanStorageMapEditProps> = ({
   usedSourceStorages,
 }) => {
   const { t } = useForkliftTranslation();
+  const isIscsi = isHypervIscsiProvider(sourceProvider);
 
   const methods = useForm<PlanStorageEditFormValues>({
     defaultValues: {
@@ -63,13 +65,11 @@ const PlanStorageMapEdit: ModalComponent<PlanStorageMapEditProps> = ({
             <Alert variant={AlertVariant.danger} isInline title={error.root.message} />
           )}
 
-          {isEmpty(usedSourceStorages) && !isLoading && (
-            <Alert
-              variant={AlertVariant.warning}
-              isInline
-              title={t('No source storages are available for the selected VMs.')}
-            />
-          )}
+          <StorageMapStatusAlerts
+            isIscsi={isIscsi}
+            isLoading={isLoading}
+            usedSourceStorages={usedSourceStorages}
+          />
           <PlanStorageMapFieldsTable
             isLoading={isLoading}
             loadError={loadError}
@@ -78,6 +78,7 @@ const PlanStorageMapEdit: ModalComponent<PlanStorageMapEditProps> = ({
             sourceStorages={sourceStorages}
             targetStorages={targetStorages}
             usedSourceStorages={usedSourceStorages}
+            isIscsi={isIscsi}
           />
         </Stack>
       </ModalForm>
