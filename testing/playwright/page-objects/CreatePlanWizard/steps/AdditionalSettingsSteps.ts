@@ -1,10 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import {
-  INSTANCE_TYPE_FIRST_AVAILABLE,
-  INSTANCE_TYPE_SECOND_AVAILABLE,
-  type PlanTestData,
-} from '../../../types/test-data';
+import type { PlanTestData } from '../../../types/test-data';
 import { isEmpty } from '../../../utils/utils';
 
 export class AdditionalSettingsStep {
@@ -24,20 +20,6 @@ export class AdditionalSettingsStep {
     this.useNbdeClevisCheckbox = page.getByTestId('use-nbde-clevis-checkbox');
   }
 
-  private async applyInstanceTypeSelections(instanceTypes: Record<string, string>): Promise<void> {
-    for (const [vmName, spec] of Object.entries(instanceTypes)) {
-      if (spec === INSTANCE_TYPE_FIRST_AVAILABLE) {
-        await this.selectNonNoneInstanceTypeByIndex(vmName, 0);
-      } else if (spec === INSTANCE_TYPE_SECOND_AVAILABLE) {
-        await this.selectNonNoneInstanceTypeByIndex(vmName, 1);
-      } else if (spec === '') {
-        await this.selectNoneInstanceType(vmName);
-      } else {
-        await this.selectInstanceTypeByLabel(vmName, spec);
-      }
-    }
-  }
-
   async fillAndComplete(
     additionalPlanSettings: PlanTestData['additionalPlanSettings'],
   ): Promise<void> {
@@ -49,7 +31,9 @@ export class AdditionalSettingsStep {
       await this.useNbdeClevisCheckbox.check();
     }
     if (additionalPlanSettings?.instanceTypes && !isEmpty(additionalPlanSettings.instanceTypes)) {
-      await this.applyInstanceTypeSelections(additionalPlanSettings.instanceTypes);
+      for (const [vmName, label] of Object.entries(additionalPlanSettings.instanceTypes)) {
+        await this.selectInstanceTypeByLabel(vmName, label);
+      }
     }
   }
 
