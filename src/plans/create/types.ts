@@ -5,7 +5,6 @@ import type { InventoryNetwork } from 'src/utils/hooks/useNetworks';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
 import type {
-  HypervNetwork,
   OpenShiftNetworkAttachmentDefinition,
   OpenshiftVM,
   OpenstackNetwork,
@@ -41,8 +40,7 @@ export type ProviderNetwork =
   | OpenstackNetwork
   | OVirtNetwork
   | VSphereNetwork
-  | OvaNetwork
-  | HypervNetwork;
+  | OvaNetwork;
 
 type VsphereVirtualMachine = VSphereVM & {
   changeTrackingEnabled: boolean;

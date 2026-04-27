@@ -10,7 +10,7 @@ import {
 } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
-import { getSdkEndpoint, getType, getUrl } from '@utils/crds/common/selectors';
+import { getSdkEndpoint, getType } from '@utils/crds/common/selectors';
 
 import { getDecodedValue } from './getDecodedValue';
 
@@ -27,7 +27,6 @@ export const getDefaultFormValues = (
     [ProviderFormFieldId.CertificateValidation]: insecureSkipVerify
       ? CertificateValidationMode.Skip
       : CertificateValidationMode.Configure,
-    [ProviderFormFieldId.ProviderType]: providerType,
   };
 
   switch (providerType) {
@@ -72,23 +71,6 @@ export const getDefaultFormValues = (
         [ProviderFormFieldId.OpenstackToken]: getDecodedValue(secret?.data?.token) ?? '',
         [ProviderFormFieldId.OpenstackUserId]: getDecodedValue(secret?.data?.userID) ?? '',
         [ProviderFormFieldId.OpenstackUsername]: getDecodedValue(secret?.data?.username) ?? '',
-      };
-    }
-
-    case PROVIDER_TYPES.hyperv: {
-      const smbUser = getDecodedValue(secret?.data?.smbUser);
-      const smbPassword = getDecodedValue(secret?.data?.smbPassword);
-      const hasSeparateSmbCredentials = Boolean(smbUser ?? smbPassword);
-
-      return {
-        ...baseValues,
-        [ProviderFormFieldId.HypervHost]: getUrl(provider) ?? '',
-        [ProviderFormFieldId.HypervPassword]: getDecodedValue(secret?.data?.password) ?? '',
-        [ProviderFormFieldId.HypervUsername]: getDecodedValue(secret?.data?.username) ?? '',
-        [ProviderFormFieldId.SmbPassword]: smbPassword ?? '',
-        [ProviderFormFieldId.SmbUrl]: getDecodedValue(secret?.data?.smbUrl) ?? '',
-        [ProviderFormFieldId.SmbUser]: smbUser ?? '',
-        [ProviderFormFieldId.UseDifferentSmbCredentials]: hasSeparateSmbCredentials,
       };
     }
 

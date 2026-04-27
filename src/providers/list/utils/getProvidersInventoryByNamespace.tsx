@@ -3,7 +3,6 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { getInventoryApiUrl } from 'src/providers/utils/helpers/getApiUrl';
 
 import type {
-  HypervProvider,
   OpenshiftProvider,
   OpenstackProvider,
   OvaProvider,
@@ -16,7 +15,6 @@ import type {
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 
 import { k8sGetProvidersByNamespace } from '../utils/k8sGetProvidersByNamespace';
-
 export const getProvidersInventoryByNamespace = async (
   currNamespace: string | undefined,
 ): Promise<ProvidersInventoryList | null> => {
@@ -71,12 +69,6 @@ export const getProvidersInventoryByNamespace = async (
                 newInventory.ova = [
                   ...(newInventory.ova ?? []),
                   newInventoryProvider as OvaProvider,
-                ];
-                break;
-              case PROVIDER_TYPES.hyperv:
-                newInventory.hyperv = [
-                  ...(newInventory.hyperv ?? []),
-                  newInventoryProvider as HypervProvider,
                 ];
                 break;
               default:

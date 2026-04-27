@@ -1,41 +1,12 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 import { isEmpty } from '../../../utils/utils';
-import { V2_11_0 } from '../../../utils/version/constants';
-import { isVersionAtLeast } from '../../../utils/version/version';
 
 export class NetworkMapStep {
   private readonly page: Page;
 
   constructor(page: Page) {
     this.page = page;
-  }
-
-  /**
-   * Returns version-appropriate locators for mapping table rows.
-   * 2.11+: uses data-testid="field-row-*" with network-map-target-network-select.
-   * <2.11: uses grid > rowgroup (body) > row with gridcell elements.
-   */
-  private getMappingRowLocators(): {
-    rows: Locator;
-    getRowText: (row: Locator) => Promise<string | null>;
-    getTargetSelect: (row: Locator) => Locator;
-  } {
-    if (isVersionAtLeast(V2_11_0)) {
-      return {
-        rows: this.page.getByTestId(/^field-row-\d+$/),
-        getRowText: async (row: Locator) => row.textContent(),
-        getTargetSelect: (row: Locator) => row.getByTestId('network-map-target-network-select'),
-      };
-    }
-
-    const grid = this.page.getByRole('grid');
-    const bodyRowGroup = grid.getByRole('rowgroup').nth(1);
-    return {
-      rows: bodyRowGroup.getByRole('row'),
-      getRowText: async (row: Locator) => row.getByRole('gridcell').first().textContent(),
-      getTargetSelect: (row: Locator) => row.getByRole('gridcell').nth(1).getByRole('button'),
-    };
   }
 
   async configureMappings(mappings: { source: string; target: string }[]): Promise<void> {
@@ -80,30 +51,32 @@ export class NetworkMapStep {
 
   /**
    * Select a target network for a given source network in the network mapping table.
-   * Handles both 2.11+ (data-testid rows) and <2.11 (grid/gridcell rows).
+   * Uses data-testid selectors for reliability.
+   *
+   * @param sourceNetwork - Name of the source network to find the row
+   * @param targetNetwork - Name of the target network to select
    */
   async selectTargetNetworkForSource(sourceNetwork: string, targetNetwork: string): Promise<void> {
-    const { rows, getRowText, getTargetSelect } = this.getMappingRowLocators();
+    // Find all mapping rows and locate the one with the source network
+    const rows = this.page.getByTestId(/^field-row-\d+$/);
     const rowCount = await rows.count();
 
-    let matchedRow = rows.first();
-    let found = false;
+    let targetRow = null;
     const availableNetworks: string[] = [];
 
     for (let i = 0; i < rowCount; i += 1) {
       const row = rows.nth(i);
-      const text = await getRowText(row);
+      const text = await row.textContent();
       if (text) {
         availableNetworks.push(text.trim());
       }
       if (text?.includes(sourceNetwork)) {
-        matchedRow = row;
-        found = true;
+        targetRow = row;
         break;
       }
     }
 
-    if (!found) {
+    if (!targetRow) {
       const networksList = availableNetworks
         .map((network, i) => `  ${i + 1}. ${network}`)
         .join('\n');
@@ -113,10 +86,12 @@ export class NetworkMapStep {
       );
     }
 
-    const targetNetworkSelect = getTargetSelect(matchedRow);
+    // Find the target network select button using testId pattern
+    const targetNetworkSelect = targetRow.getByTestId('network-map-target-network-select');
     await expect(targetNetworkSelect).toBeVisible();
     await targetNetworkSelect.click();
 
+    // Wait for options to appear and select the target network
     await this.waitForNetworkOptions();
     await this.page.getByRole('option', { name: targetNetwork }).click();
   }
@@ -133,6 +108,7 @@ export class NetworkMapStep {
 
   /**
    * Wait for network options to appear in the dropdown.
+   * Checks that the listbox is visible rather than using .first() which can be brittle.
    */
   async waitForNetworkOptions(): Promise<void> {
     const listbox = this.page.getByRole('listbox');

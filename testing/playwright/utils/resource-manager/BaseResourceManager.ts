@@ -9,51 +9,10 @@ type ApiResult<T> = { success: true; data: T } | { success: false; error: string
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class BaseResourceManager {
-  /** Generic GET helper — handles CSRF token, headers, and error handling. */
-  public static async apiGet<R>(page: Page, apiPath: string): Promise<R | null> {
-    const constants = BaseResourceManager.getEvaluateConstants();
-
-    const result = await page.evaluate(
-      async ({ path, evalConstants }): Promise<ApiResult<R>> => {
-        try {
-          const cookies = document.cookie.split('; ');
-          const csrfCookie = cookies.find((cookie) =>
-            cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
-          );
-          const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
-
-          const response = await fetch(path, {
-            credentials: 'include',
-            headers: {
-              [evalConstants.CONTENT_TYPE_HEADER]: evalConstants.APPLICATION_JSON,
-              [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
-            },
-            method: 'GET',
-          });
-
-          if (response.ok) {
-            return { data: await response.json(), success: true };
-          }
-
-          const errorText = await response.text().catch(() => response.statusText);
-          return { error: errorText, success: false };
-        } catch (error: unknown) {
-          const err = error as Error;
-          return { error: err?.message ?? String(error), success: false };
-        }
-      },
-      { evalConstants: constants, path: apiPath },
-    );
-
-    if (result.success) {
-      return result.data;
-    }
-
-    console.error(`API GET ${apiPath} failed: ${result.error}`);
-    return null;
-  }
-
-  /** Generic POST helper — handles CSRF token, headers, and error handling. */
+  /**
+   * Generic API call helper that handles CSRF token and common error handling.
+   * Reduces duplication across all resource creation functions.
+   */
   public static async apiPost<R>(page: Page, apiPath: string, data: unknown): Promise<R | null> {
     const constants = BaseResourceManager.getEvaluateConstants();
 
@@ -118,13 +77,11 @@ export abstract class BaseResourceManager {
 
   public static getResourceTypeFromKind(kind: string): string {
     const kindToType: Record<string, string> = {
-      [RESOURCE_KINDS.FORKLIFT_CONTROLLER]: RESOURCE_TYPES.FORKLIFT_CONTROLLERS,
       [RESOURCE_KINDS.MIGRATION]: RESOURCE_TYPES.MIGRATIONS,
       [RESOURCE_KINDS.NETWORK_MAP]: RESOURCE_TYPES.NETWORK_MAPS,
       [RESOURCE_KINDS.NETWORK_ATTACHMENT_DEFINITION]: RESOURCE_TYPES.NETWORK_ATTACHMENT_DEFINITIONS,
       [RESOURCE_KINDS.PLAN]: RESOURCE_TYPES.PLANS,
       [RESOURCE_KINDS.PROVIDER]: RESOURCE_TYPES.PROVIDERS,
-      [RESOURCE_KINDS.STORAGE_MAP]: RESOURCE_TYPES.STORAGE_MAPS,
       [RESOURCE_KINDS.VIRTUAL_MACHINE]: RESOURCE_TYPES.VIRTUAL_MACHINES,
       [RESOURCE_KINDS.PROJECT]: RESOURCE_TYPES.PROJECTS,
       [RESOURCE_KINDS.NAMESPACE]: RESOURCE_TYPES.NAMESPACES,

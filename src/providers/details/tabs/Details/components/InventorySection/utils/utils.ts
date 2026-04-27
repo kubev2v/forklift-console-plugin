@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
-import HyperVInventorySection from '../HyperVInventorySection';
 import OpenshiftInventorySection from '../OpenshiftInventorySection';
 import OpenstackInventorySection from '../OpenstackInventorySection';
 import OVAInventorySection from '../OVAInventorySection';
@@ -24,8 +23,6 @@ export const getInventorySectionByType = (
       return VSphereInventorySection;
     case PROVIDER_TYPES.ova:
       return OVAInventorySection;
-    case PROVIDER_TYPES.hyperv:
-      return HyperVInventorySection;
     case undefined:
     default:
       return undefined;
