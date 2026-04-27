@@ -1,11 +1,17 @@
 import type { FC } from 'react';
 import { PageHeadings } from 'src/components/DetailPageHeadings/PageHeadings';
+import { useCanInspectPlan } from 'src/components/InspectVirtualMachines/hooks/useCanInspectPlan';
+import InspectVirtualMachinesModal, {
+  type InspectVirtualMachinesModalProps,
+} from 'src/components/InspectVirtualMachines/InspectVirtualMachinesModal';
 import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 import PlanActionsDropdown from 'src/plans/actions/PlanActionsDropdown';
 import PlanEditCutoverButton from 'src/plans/actions/PlanEditCutoverButton';
 
 import { PlanModel } from '@forklift-ui/types';
-import { ButtonVariant, Flex, FlexItem } from '@patternfly/react-core';
+import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { Button, ButtonVariant, Flex, FlexItem, Tooltip } from '@patternfly/react-core';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import { usePlan } from '../../hooks/usePlan';
 import PlanStatusLabel from '../PlanStatus/PlanStatusLabel';
@@ -20,6 +26,31 @@ type PlanPageHeaderProps = {
 
 const PlanPageHeader: FC<PlanPageHeaderProps> = ({ name, namespace, setShowPlanConcernsPanel }) => {
   const { plan } = usePlan(name, namespace);
+  const { t } = useForkliftTranslation();
+  const launcher = useModal();
+  const { canInspect, disabledReason, isVsphere, provider } = useCanInspectPlan(plan);
+
+  const onClickInspectVms = (): void => {
+    launcher<InspectVirtualMachinesModalProps>(InspectVirtualMachinesModal, {
+      plan,
+      provider,
+    });
+  };
+
+  const inspectButton = isVsphere ? (
+    <FlexItem>
+      <Tooltip content={disabledReason} trigger={disabledReason ? undefined : 'manual'}>
+        <Button
+          variant={ButtonVariant.secondary}
+          isDisabled={!canInspect}
+          onClick={onClickInspectVms}
+          data-testid="plan-inspect-vms-button"
+        >
+          {t('Inspect VMs')}
+        </Button>
+      </Tooltip>
+    </FlexItem>
+  ) : null;
 
   return (
     <PageHeadings
@@ -37,6 +68,7 @@ const PlanPageHeader: FC<PlanPageHeaderProps> = ({ name, namespace, setShowPlanC
           <FlexItem>
             <LearningExperienceButton />
           </FlexItem>
+          {inspectButton}
           <FlexItem>
             <PlanEditCutoverButton plan={plan} variant={ButtonVariant.primary} />
           </FlexItem>

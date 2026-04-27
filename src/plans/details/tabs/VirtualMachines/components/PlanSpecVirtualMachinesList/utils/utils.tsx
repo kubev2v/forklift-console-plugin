@@ -82,6 +82,13 @@ export const specVirtualMachineFields: ResourceField[] = [
     testId: 'concerns-column-header',
   },
   {
+    isVisible: true,
+    jsonPath: '$.specVM.id',
+    label: t('Inspection status'),
+    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.InspectionStatus,
+    sortable: false,
+  },
+  {
     isVisible: false,
     jsonPath: '$.specVM.instanceType',
     label: t('Instance type'),
