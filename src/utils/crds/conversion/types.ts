@@ -1,10 +1,10 @@
 import type { IoK8sApimachineryPkgApisMetaV1ObjectMeta } from '@forklift-ui/types';
 
-export type ConversionType = 'DeepInspection' | 'Inspection' | 'InPlace' | 'Remote';
+type ConversionType = 'DeepInspection' | 'Inspection' | 'InPlace' | 'Remote';
 
 export type ConversionPhase = 'CreatingPod' | 'Failed' | 'Pending' | 'Running' | 'Succeeded';
 
-export type DiskRef = {
+type DiskRef = {
   devicePath?: string;
   mountPath?: string;
   name: string;
@@ -18,7 +18,7 @@ export type ObjectReference = {
   uid?: string;
 };
 
-export type PodSettings = {
+type PodSettings = {
   affinity?: unknown;
   annotations?: Record<string, string>;
   generateName?: string;
