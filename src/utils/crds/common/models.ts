@@ -1,3 +1,17 @@
+export const ConversionModelGroupVersionKind = {
+  group: 'forklift.konveyor.io',
+  kind: 'Conversion',
+  version: 'v1beta1',
+};
+
+export const ConversionModel = {
+  apiGroup: 'forklift.konveyor.io',
+  apiVersion: 'v1beta1',
+  kind: 'Conversion',
+  namespaced: true,
+  plural: 'conversions',
+};
+
 export const VirtualMachineModelGroupVersionKind = {
   group: 'kubevirt.io',
   kind: 'VirtualMachine',
