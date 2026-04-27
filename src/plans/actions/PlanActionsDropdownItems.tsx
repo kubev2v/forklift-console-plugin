@@ -1,5 +1,9 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
+import { useCanInspectPlan } from 'src/components/InspectVirtualMachines/hooks/useCanInspectPlan';
+import InspectVirtualMachinesModal, {
+  type InspectVirtualMachinesModalProps,
+} from 'src/components/InspectVirtualMachines/InspectVirtualMachinesModal';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -78,6 +82,20 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
     launcher<PlanModalProps>(ArchiveModal, { plan });
   };
 
+  const {
+    canInspect,
+    disabledReason: inspectDisabledReason,
+    isVsphere,
+    provider,
+  } = useCanInspectPlan(plan);
+
+  const onClickInspectVms = () => {
+    launcher<InspectVirtualMachinesModalProps>(InspectVirtualMachinesModal, {
+      plan,
+      provider,
+    });
+  };
+
   const onClickPlanDelete = () => {
     launcher<PlanModalProps>(PlanDeleteModal, { plan });
   };
@@ -118,8 +136,20 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
       >
         {hasCutover ? t('Edit cutover') : t('Schedule cutover')}
       </DropdownItem>
+      {isVsphere && (
+        <DropdownItem
+          value={3}
+          key="inspect"
+          isDisabled={!canInspect}
+          onClick={onClickInspectVms}
+          description={inspectDisabledReason}
+          data-testid="plan-actions-inspect-menuitem"
+        >
+          {t('Inspect VMs')}
+        </DropdownItem>
+      )}
       <DropdownItem
-        value={3}
+        value={4}
         key="duplicate"
         isDisabled={planStatus === PlanStatuses.CannotStart}
         onClick={onClickDuplicate}

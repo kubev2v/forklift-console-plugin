@@ -5,9 +5,12 @@ export const ConversionModelGroupVersionKind = {
 };
 
 export const ConversionModel = {
+  abbr: 'CV',
   apiGroup: 'forklift.konveyor.io',
   apiVersion: 'v1beta1',
   kind: 'Conversion',
+  label: 'Conversion',
+  labelPlural: 'Conversions',
   namespaced: true,
   plural: 'conversions',
 };
