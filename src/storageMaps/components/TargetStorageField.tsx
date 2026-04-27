@@ -7,9 +7,12 @@ import {
   FormHelperText,
   HelperText,
   HelperTextItem,
+  Label,
   SelectGroup,
   SelectList,
   SelectOption,
+  Split,
+  SplitItem,
 } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -23,6 +26,19 @@ type TargetStorageFieldProps = {
   testId?: string;
   suggestedVendorProduct?: StorageVendorProduct;
 };
+
+const renderStorageOption = (storage: TargetStorage, t: (k: string) => string) => (
+  <Split hasGutter>
+    <SplitItem isFilled>{storage.name}</SplitItem>
+    {storage.isNetAppShift && (
+      <SplitItem>
+        <Label isCompact color="blue">
+          {t('NetApp Shift')}
+        </Label>
+      </SplitItem>
+    )}
+  </Split>
+);
 
 const TargetStorageField: FC<TargetStorageFieldProps> = ({
   fieldId,
@@ -86,7 +102,7 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({
                   <SelectList>
                     {recommended.map((storage) => (
                       <SelectOption key={storage.id} value={storage}>
-                        {storage.name}
+                        {renderStorageOption(storage, t)}
                       </SelectOption>
                     ))}
                   </SelectList>
@@ -101,7 +117,7 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({
                     ) : (
                       others.map((storage) => (
                         <SelectOption key={storage.id} value={storage}>
-                          {storage.name}
+                          {renderStorageOption(storage, t)}
                         </SelectOption>
                       ))
                     )}
@@ -117,7 +133,7 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({
                 ) : (
                   targetStorages.map((storage) => (
                     <SelectOption key={storage.id} value={storage}>
-                      {storage.name}
+                      {renderStorageOption(storage, t)}
                     </SelectOption>
                   ))
                 )}

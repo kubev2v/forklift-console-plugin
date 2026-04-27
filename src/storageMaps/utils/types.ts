@@ -11,8 +11,8 @@ export type TargetStorage = {
   id: string;
   name: string;
   isDefault: boolean;
+  isNetAppShift?: boolean;
   provisioner?: string;
-  annotations?: Record<string, string>;
 };
 
 export enum StorageClassAnnotation {

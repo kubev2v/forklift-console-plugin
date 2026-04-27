@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { isNetAppShiftStorageClassAnnotations } from 'src/storageMaps/utils/netAppShift';
 import { StorageClassAnnotation, type TargetStorage } from 'src/storageMaps/utils/types';
 import { useOpenShiftStorages } from 'src/utils/hooks/useStorages';
 
@@ -15,12 +16,13 @@ const useTargetStorages = (
     () =>
       availableTargetStorages?.reduce((acc: TargetStorage[], storage) => {
         if (storage.namespace === targetProject || !storage.namespace) {
+          const scAnnotations = storage?.object?.metadata?.annotations;
           const isDefault =
-            storage?.object?.metadata?.annotations?.[StorageClassAnnotation.IsDefault] === 'true';
+            scAnnotations?.[StorageClassAnnotation.IsDefault] === 'true';
           const targetStorage: TargetStorage = {
-            annotations: storage?.object?.metadata?.annotations,
             id: storage.uid,
             isDefault,
+            isNetAppShift: isNetAppShiftStorageClassAnnotations(scAnnotations),
             name: storage.name,
             provisioner: storage?.object?.provisioner,
           };
