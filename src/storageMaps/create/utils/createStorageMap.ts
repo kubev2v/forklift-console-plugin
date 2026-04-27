@@ -1,3 +1,5 @@
+import { getNetAppShiftLabels } from 'src/storageMaps/utils/netAppShift';
+
 import {
   StorageMapModel,
   type V1beta1Provider,
@@ -8,7 +10,7 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { getObjectRef } from '@utils/helpers/getObjectRef';
 
-import type { StorageMapping } from '../../utils/types';
+import type { StorageMapping, TargetStorage } from '../../utils/types';
 
 import { buildStorageMappings } from './buildStorageMappings';
 
@@ -18,6 +20,7 @@ type CreateStorageMapParams = {
   sourceProvider: V1beta1Provider | undefined;
   targetProvider: V1beta1Provider | undefined;
   name?: string;
+  targetStorages?: TargetStorage[];
   trackEvent?: (eventType: string, properties?: Record<string, unknown>) => void;
 };
 
@@ -39,6 +42,7 @@ export const createStorageMap = async ({
   project,
   sourceProvider,
   targetProvider,
+  targetStorages,
   trackEvent,
 }: CreateStorageMapParams) => {
   const sourceProviderName = sourceProvider?.metadata?.name;
@@ -52,12 +56,17 @@ export const createStorageMap = async ({
   });
 
   try {
+    const netAppShiftLabels = targetStorages
+      ? getNetAppShiftLabels(mappings, targetStorages)
+      : undefined;
+
     const storageMap: V1beta1StorageMap = {
       apiVersion: 'forklift.konveyor.io/v1beta1',
       kind: 'StorageMap',
       metadata: {
         name,
         ...(!name && sourceProviderName && { generateName: `${sourceProvider?.metadata?.name}-` }),
+        ...(netAppShiftLabels && { labels: netAppShiftLabels }),
         namespace: project,
       },
       spec: {

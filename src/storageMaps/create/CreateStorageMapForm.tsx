@@ -19,6 +19,7 @@ import {
 import { CreationMethod } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getResourceUrl } from '@utils/getResourceUrl';
+import useTargetStorages from '@utils/hooks/useTargetStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { defaultStorageMapping } from '../utils/constants';
@@ -51,10 +52,11 @@ const CreateStorageMapForm: React.FC = () => {
     handleSubmit,
   } = form;
   const [createError, setCreateError] = useState<Error>();
-  const project = useWatch({
+  const [project, targetProvider] = useWatch({
     control,
-    name: StorageMapFieldId.Project,
+    name: [StorageMapFieldId.Project, StorageMapFieldId.TargetProvider],
   });
+  const [targetStorages] = useTargetStorages(targetProvider, project);
 
   const { error } = getFieldState(StorageMapFieldId.StorageMap);
 
@@ -66,7 +68,7 @@ const CreateStorageMapForm: React.FC = () => {
   const onSubmit = async () => {
     setCreateError(undefined);
 
-    const { mapName, sourceProvider, storageMap, targetProvider } = getValues();
+    const { mapName, sourceProvider, storageMap } = getValues();
 
     const trackStorageMapEvent = (eventType: string, properties = {}) => {
       trackEvent(eventType, { ...properties, creationMethod: CreationMethod.Form });
@@ -79,6 +81,7 @@ const CreateStorageMapForm: React.FC = () => {
         project,
         sourceProvider,
         targetProvider,
+        targetStorages,
         trackEvent: trackStorageMapEvent,
       });
 
