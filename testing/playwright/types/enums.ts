@@ -4,11 +4,10 @@ export enum MigrationType {
 }
 
 export enum ProviderType {
-  HYPERV = 'hyperv',
-  OPENSTACK = 'openstack',
-  OVA = 'ova',
-  OVIRT = 'ovirt',
   VSPHERE = 'vsphere',
+  OVIRT = 'ovirt',
+  OVA = 'ova',
+  OPENSTACK = 'openstack',
 }
 
 export enum EndpointType {

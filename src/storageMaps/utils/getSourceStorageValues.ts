@@ -4,7 +4,6 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
 import type {
-  HypervVM,
   OpenshiftVM,
   ProviderVirtualMachine,
   V1beta1Provider,
@@ -56,19 +55,6 @@ const getVSphereStorageIds = (vm: ProviderVirtualMachine): string[] => {
  */
 const getOvaStorageIds = (vm: EnhancedOvaVM): string[] =>
   vm.disks?.reduce<string[]>((acc, disk) => (disk.ID ? [...acc, disk.ID] : acc), []) ?? [];
-
-/**
- * Extracts storage IDs from Hyper-V VMs
- */
-const getHypervStorageIds = (vm: ProviderVirtualMachine): string[] => {
-  const hypervVM = vm as HypervVM;
-  return (
-    hypervVM.disks?.reduce<string[]>((acc, disk) => {
-      const datastoreId = (disk as unknown as { datastore?: { id: string } })?.datastore?.id;
-      return datastoreId ? [...acc, datastoreId] : acc;
-    }, []) ?? []
-  );
-};
 
 /**
  * Extracts storage IDs from oVirt VMs using disk attachments and storage domain data
@@ -127,10 +113,6 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
         storageIds = getOvaStorageIds(vm as EnhancedOvaVM);
         break;
 
-      case PROVIDER_TYPES.hyperv:
-        storageIds = getHypervStorageIds(vm);
-        break;
-
       case PROVIDER_TYPES.ovirt:
         storageIds = getOvirtStorageIds(vm as OVirtVMWithDisks);
         break;
@@ -140,6 +122,7 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
         break;
 
       case PROVIDER_TYPES.openstack:
+      case PROVIDER_TYPES.hyperv:
       default:
       // Use empty array
     }

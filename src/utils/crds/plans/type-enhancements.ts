@@ -1,4 +1,4 @@
-import type { HypervVM, OvaDisk, OvaNetwork, OvaVM } from '@forklift-ui/types';
+import type { OvaDisk, OvaNetwork, OvaVM } from '@forklift-ui/types';
 
 type OvaID = {
   ID: string;
@@ -14,8 +14,4 @@ export type EnhancedOvaVM = OvaVM & {
   networks: EnhancedOvaNetwork[];
   memoryMB: number;
   cpuCount: number;
-};
-
-export type EnhancedHypervVM = HypervVM & {
-  powerState: string;
 };

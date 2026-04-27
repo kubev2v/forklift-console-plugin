@@ -7,9 +7,6 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import CertificateValidationField from './fields/CertificateValidationField';
 import { ProviderFormFieldId } from './fields/constants';
-import HypervCredentialsFields from './fields/hyperv/HypervCredentialsFields';
-import SmbCredentialsFields from './fields/hyperv/SmbCredentialsFields';
-import SmbUrlField from './fields/hyperv/SmbDirectoryField';
 import OpenShiftUrlField from './fields/openshift/OpenShiftUrlField';
 import ServiceAccountTokenField from './fields/openshift/ServiceAccountTokenField';
 import OpenStackAuthenticationTypeField from './fields/openstack/OpenStackAuthenticationTypeField';
@@ -31,14 +28,13 @@ const ProviderTypeFields: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useFormContext<CreateProviderFormData>();
 
-  const [selectedProviderType, openshiftUrl, ovirtUrl, vsphereUrl, smbUrl] = useWatch({
+  const [selectedProviderType, openshiftUrl, ovirtUrl, vsphereUrl] = useWatch({
     control,
     name: [
       ProviderFormFieldId.ProviderType,
       ProviderFormFieldId.OpenshiftUrl,
       ProviderFormFieldId.OvirtUrl,
       ProviderFormFieldId.VsphereUrl,
-      ProviderFormFieldId.SmbUrl,
     ],
   });
 
@@ -90,16 +86,6 @@ const ProviderTypeFields: FC = () => {
           <VsphereVddkField />
           <SectionHeading text={t('Provider credentials')} />
           {vsphereUrl?.trim() && <VsphereCredentialsFields />}
-          <CertificateValidationField />
-        </>
-      )}
-
-      {selectedProviderType === PROVIDER_TYPES.hyperv && (
-        <>
-          <SmbUrlField />
-          <SectionHeading text={t('Provider credentials')} />
-          {smbUrl?.trim() && <HypervCredentialsFields />}
-          {smbUrl?.trim() && <SmbCredentialsFields />}
           <CertificateValidationField />
         </>
       )}

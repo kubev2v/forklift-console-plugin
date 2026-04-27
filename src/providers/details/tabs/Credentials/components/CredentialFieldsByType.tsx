@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import HypervCredentialsFields from 'src/providers/create/fields/hyperv/HypervCredentialsFields';
 import ServiceAccountTokenField from 'src/providers/create/fields/openshift/ServiceAccountTokenField';
 import OpenStackAuthenticationTypeField from 'src/providers/create/fields/openstack/OpenStackAuthenticationTypeField';
 import OvirtCredentialsFields from 'src/providers/create/fields/ovirt/OvirtCredentialsFields';
@@ -19,9 +18,6 @@ const CredentialFieldsByType: FC<{ providerType: string | undefined }> = ({ prov
 
     case PROVIDER_TYPES.openstack:
       return <OpenStackAuthenticationTypeField />;
-
-    case PROVIDER_TYPES.hyperv:
-      return <HypervCredentialsFields />;
 
     case PROVIDER_TYPES.ova:
     case undefined:

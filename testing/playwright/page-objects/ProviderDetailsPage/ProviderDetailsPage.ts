@@ -21,18 +21,6 @@ export class ProviderDetailsPage {
     this.virtualMachinesTab = new VirtualMachinesTab(page);
   }
 
-  private getProviderTypeDisplayName(type: string): string {
-    const typeMap: Record<string, string> = {
-      hyperv: 'HyperV',
-      openshift: 'OpenShift',
-      openstack: 'OpenStack',
-      ova: 'OVA',
-      ovirt: 'oVirt',
-      vsphere: 'VMware',
-    };
-    return typeMap[type] ?? type;
-  }
-
   async navigate(providerName: string, namespace: string): Promise<void> {
     await this.navigation.navigateToK8sResource({
       resource: 'Provider',
@@ -63,17 +51,21 @@ export class ProviderDetailsPage {
     await expect(this.page.getByTestId('resource-details-title')).toContainText(providerData.name);
     await expect(this.page.getByTestId('name-detail-item')).toContainText(providerData.name);
 
-    const displayType = this.getProviderTypeDisplayName(providerData.type);
+    // Map provider types to their display names
+    let displayType: string = providerData.type;
+    if (providerData.type === ProviderType.VSPHERE) {
+      displayType = 'VMware';
+    } else if (providerData.type === ProviderType.OVA) {
+      displayType = 'OVA';
+    }
 
     await expect(this.page.getByTestId('type-detail-item')).toContainText(displayType);
     await expect(this.page.getByTestId('url-detail-item')).toContainText(providerData.hostname);
     await expect(this.page.getByTestId('project-detail-item')).toContainText(MTV_NAMESPACE);
 
-    if (providerData.type === ProviderType.VSPHERE) {
-      await expect(this.page.getByTestId('product-detail-item')).toContainText('');
-    }
-
+    // Only verify these fields for non-OVA providers
     if (providerData.type !== ProviderType.OVA) {
+      await expect(this.page.getByTestId('product-detail-item')).toContainText('');
       await expect(this.page.getByTestId('credentials-detail-item')).toContainText('');
     }
 

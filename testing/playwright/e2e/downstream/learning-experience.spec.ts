@@ -8,8 +8,6 @@ import {
 } from '../../fixtures/overview-page-topics';
 import { LearningExperienceDrawer } from '../../page-objects/LearningExperienceDrawer';
 import { OverviewPage } from '../../page-objects/OverviewPage';
-import { V2_11_0 } from '../../utils/version/constants';
-import { requireVersion } from '../../utils/version/version';
 
 const [CREATING_PROVIDER_TOPIC] = TIPS_AND_TRICKS_TOPICS;
 const VMWARE_STEP_COUNT = 5;
@@ -20,8 +18,6 @@ test.describe(
     tag: '@downstream',
   },
   () => {
-    requireVersion(test, V2_11_0);
-
     test('should verify Tips and tricks drawer structure and all topics', async ({ page }) => {
       const overviewPage = new OverviewPage(page);
       const { learningExperience } = overviewPage;
@@ -70,8 +66,6 @@ test.describe(
     tag: '@downstream',
   },
   () => {
-    requireVersion(test, V2_11_0);
-
     test('should verify provider type selector switches between all provider types', async ({
       page,
     }) => {
@@ -155,8 +149,6 @@ test.describe(
     tag: '@downstream',
   },
   () => {
-    requireVersion(test, V2_11_0);
-
     test('should show Tips and tricks on all MTV pages', async ({ page }) => {
       const learningExperience = new LearningExperienceDrawer(page);
 

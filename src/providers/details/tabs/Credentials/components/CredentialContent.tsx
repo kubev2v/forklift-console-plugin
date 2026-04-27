@@ -6,7 +6,6 @@ import { getSdkEndpoint, getType } from '@utils/crds/common/selectors';
 
 import {
   esxiCredentialsFields,
-  hypervCredentialsFields,
   openshiftCredentialsFields,
   ovirtCredentialsFields,
   vCenterCredentialsFields,
@@ -44,10 +43,8 @@ const CredentialsContent: FC<CredentialsContentProps> = ({ provider, reveal, sec
     case PROVIDER_TYPES.openstack:
       return <OpenstackCredentialsContent secret={secret} reveal={reveal} />;
 
-    case PROVIDER_TYPES.hyperv:
-      return <CredentialFields fields={hypervCredentialsFields} secret={secret} reveal={reveal} />;
-
     case PROVIDER_TYPES.ova:
+    case PROVIDER_TYPES.hyperv:
     case undefined:
     default:
       return null;
