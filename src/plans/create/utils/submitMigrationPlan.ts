@@ -1,4 +1,5 @@
 import { createStorageMap } from 'src/storageMaps/create/utils/createStorageMap';
+import type { TargetStorage } from 'src/storageMaps/utils/types';
 
 import type {
   IoK8sApiCoreV1ConfigMap,
@@ -28,6 +29,7 @@ import { resolveScriptsConfigMap } from './resolveScriptsConfigMap';
 export const submitMigrationPlan = async (
   formData: CreatePlanFormData,
   trackEvent?: (eventType: string, properties?: Record<string, unknown>) => void,
+  targetStorages?: TargetStorage[],
 ): Promise<void> => {
   const {
     customScripts,
@@ -91,6 +93,7 @@ export const submitMigrationPlan = async (
           project: planProject,
           sourceProvider,
           targetProvider,
+          targetStorages,
           trackEvent,
         }),
 

@@ -12,10 +12,12 @@ export type TargetStorage = {
   name: string;
   isDefault: boolean;
   provisioner?: string;
+  annotations?: Record<string, string>;
 };
 
 export enum StorageClassAnnotation {
   IsDefault = 'storageclass.kubernetes.io/is-default-class',
+  NetAppShiftStorageClassType = 'shift.netapp.io/storage-class-type',
 }
 
 export type StorageMappingValue = { id?: string; name: string };

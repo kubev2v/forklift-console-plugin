@@ -18,6 +18,7 @@ const useTargetStorages = (
           const isDefault =
             storage?.object?.metadata?.annotations?.[StorageClassAnnotation.IsDefault] === 'true';
           const targetStorage: TargetStorage = {
+            annotations: storage?.object?.metadata?.annotations,
             id: storage.uid,
             isDefault,
             name: storage.name,
