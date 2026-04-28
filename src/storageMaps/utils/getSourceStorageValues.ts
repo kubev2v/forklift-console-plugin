@@ -55,7 +55,7 @@ const getVSphereStorageIds = (vm: ProviderVirtualMachine): string[] => {
  * Extracts storage IDs from OVA VMs
  */
 const getOvaStorageIds = (vm: EnhancedOvaVM): string[] =>
-  vm.disks?.reduce<string[]>((acc, disk) => (disk.ID ? [...acc, disk.ID] : acc), []) ?? [];
+  vm.disks?.reduce<string[]>((acc, disk) => (disk.id ? [...acc, disk.id] : acc), []) ?? [];
 
 /**
  * Extracts storage IDs from Hyper-V VMs

@@ -160,8 +160,8 @@ const getOpenstackPlanResources = (planInventory: OpenstackVM[]): PlanResourcesT
 const getK8sCPU = (vm: V1VirtualMachine) =>
   vm?.spec?.template?.spec?.domain?.cpu?.cores ?? EMPTY_CPU;
 const getK8sVMMemory = (vm: V1VirtualMachine): string =>
-  (vm?.spec?.template?.spec?.domain?.resources?.requests as Record<string, string>)?.memory ??
-  EMPTY_MEMORY;
+  (vm?.spec?.template?.spec?.domain?.resources?.requests as unknown as Record<string, string>)
+    ?.memory ?? EMPTY_MEMORY;
 
 const k8sMemoryToBytes = (quantity: string, fallback: number | null = null): number | null => {
   const input = quantity.trim();
