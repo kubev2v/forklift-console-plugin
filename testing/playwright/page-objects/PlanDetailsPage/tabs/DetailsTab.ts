@@ -237,12 +237,12 @@ export class DetailsTab {
     await this.migrationTypeRadio(type).click();
   }
 
-  get sharedDisksInfoAlert(): Locator {
-    return this.page.getByText('This may slow down the migration process');
-  }
-
   sharedDisksDetailItem(text: string): Locator {
     return this.page.getByTestId('shared-disks-detail-item').getByText(text, { exact: false });
+  }
+
+  get sharedDisksInfoAlert(): Locator {
+    return this.page.getByText('This may slow down the migration process');
   }
 
   targetVMPowerState(state: string): Locator {

@@ -48,7 +48,7 @@ export abstract class BaseMappingEditModal extends BaseModal {
       return 0;
     }
 
-    return await rows.count();
+    return rows.count();
   }
 
   async getSourceAtIndex(index: number): Promise<string> {

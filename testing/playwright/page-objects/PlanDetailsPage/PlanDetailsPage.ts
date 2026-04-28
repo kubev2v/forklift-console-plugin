@@ -136,7 +136,7 @@ export class PlanDetailsPage {
    * Checks if the critical concerns alert is visible.
    */
   async hasCriticalConcernsAlert(): Promise<boolean> {
-    return await this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
+    return this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
   }
 
   async navigate(planName: string, namespace: string, tab?: string): Promise<void> {

@@ -28,7 +28,9 @@ test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
       await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.COLD)).toBeVisible();
       await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.WARM)).toBeVisible();
       await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.WARM)).toBeChecked();
-      await expect(planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.COLD)).not.toBeChecked();
+      await expect(
+        planDetailsPage.detailsTab.migrationTypeRadio(MigrationType.COLD),
+      ).not.toBeChecked();
     });
 
     await test.step('Select cold migration and save', async () => {

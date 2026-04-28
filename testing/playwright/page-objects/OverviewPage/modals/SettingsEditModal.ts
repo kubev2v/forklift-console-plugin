@@ -38,15 +38,15 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async getControllerCpuLimitValue(): Promise<string | null> {
-    return await this.controllerCpuLimitDropdown.textContent();
+    return this.controllerCpuLimitDropdown.textContent();
   }
 
   async getControllerMemoryLimitValue(): Promise<string | null> {
-    return await this.controllerMemoryLimitDropdown.textContent();
+    return this.controllerMemoryLimitDropdown.textContent();
   }
 
   async getInventoryMemoryLimitValue(): Promise<string | null> {
-    return await this.inventoryMemoryLimitDropdown.textContent();
+    return this.inventoryMemoryLimitDropdown.textContent();
   }
 
   async getMaxVmInFlightValue(): Promise<string> {
@@ -54,15 +54,15 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async getPrecopyIntervalValue(): Promise<string | null> {
-    return await this.preCopyIntervalDropdown.textContent();
+    return this.preCopyIntervalDropdown.textContent();
   }
 
   async getSnapshotPollingIntervalValue(): Promise<string | null> {
-    return await this.snapshotPollingIntervalDropdown.textContent();
+    return this.snapshotPollingIntervalDropdown.textContent();
   }
 
   async getTransferNetworkCurrentValue(): Promise<string | null> {
-    return await this.controllerTransferNetworkDropdown.textContent();
+    return this.controllerTransferNetworkDropdown.textContent();
   }
 
   async incrementMaxVmInFlight(): Promise<void> {

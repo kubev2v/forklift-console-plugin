@@ -40,7 +40,7 @@ export class OffloadOptions {
   }
 
   private async isOffloadExpanded(mappingIndex: number): Promise<boolean> {
-    return await this.fieldToggleButton(OFFLOAD_FIELD.offloadPlugin(mappingIndex)).isVisible();
+    return this.fieldToggleButton(OFFLOAD_FIELD.offloadPlugin(mappingIndex)).isVisible();
   }
 
   private async selectFromDropdown(fieldId: string, optionText: string): Promise<void> {

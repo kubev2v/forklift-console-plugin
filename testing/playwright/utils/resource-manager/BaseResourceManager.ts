@@ -73,7 +73,7 @@ export abstract class BaseResourceManager {
   ): Promise<ApiResult<R>> {
     const constants = BaseResourceManager.getEvaluateConstants();
 
-    return await page.evaluate(
+    return page.evaluate(
       async ({ body, contentType, evalConstants, method, path }): Promise<ApiResult<R>> => {
         try {
           const cookies = document.cookie.split('; ');
