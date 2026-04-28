@@ -534,15 +534,32 @@ gh pr checks <PR_NUMBER>
 
 ### 7c. Act on results
 
-- **All checks passing**: Notify the user that the PR is ready for review/merge.
-- **Any check failing**: Gather details:
+- **All checks passing**: Notify the user that the PR is ready for review/merge. Done.
+- **Checks still running**: Sleep another 10 minutes and repeat from 7b.
+- **Any check failing**: Gather details and present a summary:
   ```bash
   gh pr checks <PR_NUMBER> --json name,state,conclusion,detailsUrl
   ```
-  For each failed check, fetch the log URL and summarize the failure. Suggest fixes if possible.
-- **Checks still running**: Sleep another 10 minutes and repeat from 7b.
+  For each failed check, fetch the log URL and summarize the failure.
 
-Continue the check loop until all checks have a terminal state (pass or fail).
+### 7d. Handle failures
+
+After presenting the failure summary, use the AskQuestion tool to ask the user:
+
+1. **"Fix it for me"** -- The agent enters a fix-verify loop:
+   - Analyze the failure logs and identify the root cause
+   - Apply the fix (edit code, update config, etc.)
+   - Run local verification (`npm run lint`, `npx tsc --noEmit`, `npm test` as appropriate)
+   - Commit, push, and go back to **step 7a** (wait then re-check CI)
+   - If the fix attempt fails or the agent cannot determine a fix, fall back to presenting the error and asking again
+
+2. **"I'll fix it myself"** -- The agent pauses and waits for the user to signal readiness:
+   - Present the failure details and stop
+   - When the user indicates they are done (clicks the option or sends a message), go back to **step 7a** (wait then re-check CI)
+
+3. **"Skip / Stop monitoring"** -- End Phase 7. The PR is left as-is for manual handling.
+
+Continue the fix-verify loop until all checks pass or the user chooses to stop.
 
 ---
 
