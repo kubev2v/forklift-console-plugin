@@ -24,7 +24,7 @@ export class NetworkMapStep {
     if (isVersionAtLeast(V2_11_0)) {
       return {
         rows: this.page.getByTestId(/^field-row-\d+$/),
-        getRowText: (row: Locator) => row.textContent(),
+        getRowText: async (row: Locator) => row.textContent(),
         getTargetSelect: (row: Locator) => row.getByTestId('network-map-target-network-select'),
       };
     }
@@ -33,7 +33,7 @@ export class NetworkMapStep {
     const bodyRowGroup = grid.getByRole('rowgroup').nth(1);
     return {
       rows: bodyRowGroup.getByRole('row'),
-      getRowText: (row: Locator) => row.getByRole('gridcell').first().textContent(),
+      getRowText: async (row: Locator) => row.getByRole('gridcell').first().textContent(),
       getTargetSelect: (row: Locator) => row.getByRole('gridcell').nth(1).getByRole('button'),
     };
   }

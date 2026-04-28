@@ -27,7 +27,7 @@ export class ScriptEditModal extends BaseModal {
   }
 
   async getScriptCount(): Promise<number> {
-    return await this.modal.locator('[data-testid^="field-row-"]').count();
+    return this.modal.locator('[data-testid^="field-row-"]').count();
   }
 
   async removeScript(index: number): Promise<void> {

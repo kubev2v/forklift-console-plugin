@@ -83,7 +83,7 @@ export class CredentialEditModal extends BaseModal {
   }
 
   async isConfigureCertificateSelected(): Promise<boolean> {
-    return await this.configureCertificateRadio.isChecked();
+    return this.configureCertificateRadio.isChecked();
   }
 
   async isPasswordVisible(): Promise<boolean> {
@@ -92,7 +92,7 @@ export class CredentialEditModal extends BaseModal {
   }
 
   async isSkipCertificateSelected(): Promise<boolean> {
-    return await this.skipCertificateRadio.isChecked();
+    return this.skipCertificateRadio.isChecked();
   }
 
   override async save(): Promise<void> {

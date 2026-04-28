@@ -27,7 +27,7 @@ export class StorageMapStep {
     if (isVersionAtLeast(V2_11_0)) {
       return {
         rows: this.page.getByTestId(/^field-row-\d+$/),
-        getSourceText: (row: Locator) => row.locator('td').first().textContent(),
+        getSourceText: async (row: Locator) => row.locator('td').first().textContent(),
         getTargetSelect: (row: Locator) => row.getByTestId('target-storage-select'),
       };
     }
@@ -36,7 +36,7 @@ export class StorageMapStep {
     const bodyRowGroup = grid.getByRole('rowgroup').nth(1);
     return {
       rows: bodyRowGroup.getByRole('row'),
-      getSourceText: (row: Locator) => row.getByRole('gridcell').first().textContent(),
+      getSourceText: async (row: Locator) => row.getByRole('gridcell').first().textContent(),
       getTargetSelect: (row: Locator) => row.getByRole('gridcell').nth(1).getByRole('button'),
     };
   }

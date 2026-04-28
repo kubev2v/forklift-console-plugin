@@ -54,14 +54,12 @@ type VsphereVirtualMachine = VSphereVM & {
   changeTrackingEnabled: boolean;
 };
 
-type OvaVirtualMachine = Omit<OvaVM, 'changeTrackingEnabled'>;
-
 export type ProviderVirtualMachine =
   | VsphereVirtualMachine
   | OpenshiftVM
   | OVirtVM
   | OpenstackVM
-  | OvaVirtualMachine;
+  | OvaVM;
 
 export type CreatePlanFormData = FieldValues & {
   [GeneralFormFieldId.PlanName]: string;

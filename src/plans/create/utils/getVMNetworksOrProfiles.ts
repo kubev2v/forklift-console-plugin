@@ -27,19 +27,7 @@ const getNetworksForVM = (vm: ProviderVirtualMachine) => {
     case PROVIDER_TYPES.hyperv:
       return vm?.networks?.map((network) => network?.id) ?? [];
     case PROVIDER_TYPES.ova: {
-      const networks = vm?.Networks;
-
-      if (!networks || !Array.isArray(networks)) {
-        return [];
-      }
-
-      return networks.map((network: unknown) => {
-        if (network && typeof network === 'object') {
-          return Object.values(network as Record<string, unknown>)[0];
-        }
-
-        return null;
-      });
+      return vm?.networks?.map((network) => network?.id) ?? [];
     }
 
     default:

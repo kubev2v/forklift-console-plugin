@@ -48,7 +48,7 @@
     "postinstall": "husky"
   },
   "dependencies": {
-    "@forklift-ui/types": "^1.0.8",
+    "@forklift-ui/types": "^1.0.10",
     "@openshift-console/dynamic-plugin-sdk": "^4.20.0",
     "@patternfly/patternfly": "6.4.0",
     "@patternfly/quickstarts": "6.4.0",

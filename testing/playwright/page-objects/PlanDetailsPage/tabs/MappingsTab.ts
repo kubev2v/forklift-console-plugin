@@ -127,7 +127,7 @@ export class MappingsTab {
   }
 
   async getNetworkMappingCountFromReviewTable(): Promise<number> {
-    return await this.networkMapReviewTable.locator('tbody tr').count();
+    return this.networkMapReviewTable.locator('tbody tr').count();
   }
 
   async getStorageMapName(): Promise<string> {
@@ -141,7 +141,7 @@ export class MappingsTab {
 
   async getStorageMappingCountFromReviewTable(): Promise<number> {
     await this.storageMapReviewTable.locator('tbody tr').first().waitFor({ state: 'visible' });
-    return await this.storageMapReviewTable.locator('tbody tr').count();
+    return this.storageMapReviewTable.locator('tbody tr').count();
   }
 
   async navigateToMappingsTab(): Promise<void> {

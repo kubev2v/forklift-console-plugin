@@ -14,7 +14,7 @@ import { VMNameCellRenderer } from './components/VMNameCellRenderer';
 const cellRenderers: Record<string, FC<VMCellProps>> = {
   concerns: VMConcernsCellRenderer,
   name: VMNameCellRenderer,
-  ovaPath: ({ data }) => <TableCell>{(data?.vm as OvaVM)?.OvaPath}</TableCell>,
+  ovaPath: ({ data }) => <TableCell>{(data?.vm as OvaVM)?.ovfPath}</TableCell>,
 };
 
 const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {

@@ -24,8 +24,6 @@ type ValidateNetworkMapParams = {
   oVirtNicProfiles: OVirtNicProfile[];
 };
 
-import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
-
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere: {
@@ -50,7 +48,7 @@ const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
       }, []);
     }
     case PROVIDER_TYPES.ova: {
-      return (vm as EnhancedOvaVM)?.networks?.map((network) => network.ID) ?? [];
+      return vm?.networks?.map((network) => network.id) ?? [];
     }
     case PROVIDER_TYPES.hyperv:
       return vm?.networks?.map((network) => network?.id) ?? [];
