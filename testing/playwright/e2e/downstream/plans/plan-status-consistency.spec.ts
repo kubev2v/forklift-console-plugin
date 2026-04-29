@@ -96,11 +96,6 @@ test.describe(
         await planDetailsPage.detailsTab.navigateToDetailsTab();
       });
 
-      const uiStatus = await test.step('Read UI status', async () => {
-        const { status } = await planDetailsPage.getMigrationStatus();
-        return status;
-      });
-
       const plan = await test.step('Fetch Plan CR via API', async () => {
         const fetched = await resourceManager.fetchPlan(page, planName, planNamespace);
         expect(fetched).not.toBeNull();
@@ -121,15 +116,20 @@ test.describe(
         }
       });
 
-      await test.step('Verify UI status matches YAML conditions', () => {
-        const uiLower = uiStatus.toLowerCase();
+      await test.step('Verify UI status matches YAML conditions', async () => {
         const isCritical = hasCritical(planConditions);
         const isReady = hasReady(planConditions);
 
         if (isReady && !isCritical) {
+          await planDetailsPage.waitForPlanStatus('Ready for migration');
+          const { status: uiStatus } = await planDetailsPage.getMigrationStatus();
+          const uiLower = uiStatus.toLowerCase();
           expect.soft(uiLower, `YAML is Ready but UI shows "${uiStatus}"`).toContain('ready');
         }
         if (isCritical) {
+          await planDetailsPage.waitForPlanStatus('Cannot start');
+          const { status: uiStatus } = await planDetailsPage.getMigrationStatus();
+          const uiLower = uiStatus.toLowerCase();
           expect
             .soft(uiLower, `YAML has Critical but UI shows "${uiStatus}"`)
             .toContain('cannot start');
@@ -170,37 +170,52 @@ test.describe(
 
       const nmNamespace = networkMapRef.namespace ?? planNamespace;
 
-      await test.step('Break NetworkMap by pointing to non-existent provider', async () => {
-        const patched = await resourceManager.patchResource(page, {
-          kind: 'NetworkMap',
-          resourceName: networkMapRef.name!,
-          namespace: nmNamespace,
-          patch: {
-            spec: {
-              provider: { source: { name: 'non-existent-provider', namespace: MTV_NAMESPACE } },
+      const originalNetworkMap = await resourceManager.fetchNetworkMap(
+        page,
+        networkMapRef.name,
+        nmNamespace,
+      );
+      expect(originalNetworkMap).not.toBeNull();
+
+      const originalProvider = originalNetworkMap?.spec?.provider;
+      if (!originalProvider?.source?.name) {
+        test.skip(true, 'NetworkMap has no source provider to restore');
+        return;
+      }
+
+      const missingProviderName = `missing-provider-${Date.now()}`;
+
+      try {
+        await test.step('Break NetworkMap by pointing to non-existent provider', async () => {
+          const patched = await resourceManager.patchResource(page, {
+            kind: 'NetworkMap',
+            resourceName: networkMapRef.name!,
+            namespace: nmNamespace,
+            patch: {
+              spec: {
+                provider: { source: { name: missingProviderName, namespace: MTV_NAMESPACE } },
+              },
             },
-          },
+          });
+          expect(patched).not.toBeNull();
         });
-        expect(patched).not.toBeNull();
-      });
 
-      await test.step('Wait for Plan to show Cannot start', async () => {
-        await planDetailsPage.navigate(planName, planNamespace);
-        await planDetailsPage.waitForPlanStatus('Cannot start');
-      });
-
-      await test.step('Restore NetworkMap to original provider', async () => {
-        const source = plan.spec?.provider?.source;
-        const patched = await resourceManager.patchResource(page, {
-          kind: 'NetworkMap',
-          resourceName: networkMapRef.name!,
-          namespace: nmNamespace,
-          patch: {
-            spec: { provider: { source: { name: source?.name, namespace: source?.namespace } } },
-          },
+        await test.step('Wait for Plan to show Cannot start', async () => {
+          await planDetailsPage.navigate(planName, planNamespace);
+          await planDetailsPage.waitForPlanStatus('Cannot start');
         });
-        expect(patched).not.toBeNull();
-      });
+      } finally {
+        await test.step('Restore NetworkMap to original provider', async () => {
+          await resourceManager.patchResource(page, {
+            kind: 'NetworkMap',
+            resourceName: networkMapRef.name!,
+            namespace: nmNamespace,
+            patch: {
+              spec: { provider: originalProvider },
+            },
+          });
+        });
+      }
 
       await test.step('Verify Plan recovers to Ready (MTV-4995 core assertion)', async () => {
         await page.reload();
