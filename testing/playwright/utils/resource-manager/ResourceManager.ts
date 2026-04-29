@@ -219,6 +219,14 @@ export class ResourceManager {
     return ResourceFetcher.fetchForkliftController(page, controllerName, namespace);
   }
 
+  async fetchNetworkMap(
+    page: Page,
+    networkMapName: string,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1NetworkMap | null> {
+    return ResourceFetcher.fetchNetworkMap(page, networkMapName, namespace);
+  }
+
   async fetchPlan(
     page: Page,
     planName: string,
@@ -237,6 +245,14 @@ export class ResourceManager {
     namespace = MTV_NAMESPACE,
   ): Promise<V1beta1Provider | null> {
     return ResourceFetcher.fetchProvider(page, providerName, namespace);
+  }
+
+  async fetchStorageMap(
+    page: Page,
+    storageMapName: string,
+    namespace = MTV_NAMESPACE,
+  ): Promise<V1beta1StorageMap | null> {
+    return ResourceFetcher.fetchStorageMap(page, storageMapName, namespace);
   }
 
   async fetchVirtualMachine(
