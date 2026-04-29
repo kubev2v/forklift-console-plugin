@@ -4,6 +4,8 @@ import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
 
 const getNetworksForVM = (vm: ProviderVirtualMachine) => {
+  if (vm.providerType === (PROVIDER_TYPES.ec2 as string)) return [];
+
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere: {
       return vm?.networks?.map((network) => network?.id) ?? [];
@@ -29,7 +31,6 @@ const getNetworksForVM = (vm: ProviderVirtualMachine) => {
     case PROVIDER_TYPES.ova: {
       return vm?.networks?.map((network) => network?.id) ?? [];
     }
-
     default:
       return [];
   }

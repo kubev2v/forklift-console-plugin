@@ -25,6 +25,8 @@ type ValidateNetworkMapParams = {
 };
 
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
+  if (vm.providerType === (PROVIDER_TYPES.ec2 as string)) return [];
+
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere: {
       return vm?.networks?.map((network) => network?.id) ?? [];

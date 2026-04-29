@@ -7,7 +7,6 @@ import { renderResourceRowCells } from '@utils/renderResourceRowCells';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
 import type { VMCellProps, VmData } from './components/VMCellProps';
-import { VMConcernsCellRenderer } from './components/VMConcernsCellRenderer';
 import { VMNameCellRenderer } from './components/VMNameCellRenderer';
 import { getEc2VM } from './utils/types/Ec2VM';
 
@@ -23,7 +22,6 @@ const Ec2AvailabilityZoneCellRenderer: FC<VMCellProps> = ({ data }) => {
 
 const cellRenderers: Record<string, FC<VMCellProps>> = {
   availabilityZone: Ec2AvailabilityZoneCellRenderer,
-  concerns: VMConcernsCellRenderer,
   instanceType: Ec2InstanceTypeCellRenderer,
   name: VMNameCellRenderer,
   status: PowerStateCellRenderer,

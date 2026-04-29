@@ -24,7 +24,7 @@ All CRDs belong to group `forklift.konveyor.io`, version `v1beta1`. Types are im
 ### Provider
 Represents a source or target infrastructure connection.
 
-- **Source types**: `vsphere` (VMware), `ovirt` (RHV), `openstack`, `ova` (file uploads), `hyperv` (Hyper-V), `ec2` (AWS EC2 -- backend only, not yet in UI)
+- **Source types**: `vsphere` (VMware), `ovirt` (RHV), `openstack`, `ova` (file uploads), `hyperv` (Hyper-V), `ec2` (AWS EC2 -- available on AWS-platform clusters only, gated by `useClusterIsAwsPlatform`)
 - **Target type**: `openshift` (OpenShift Virtualization)
 - **Backend phases** (Go controller): Ready, Staging, ValidationFailed, ConnectionFailed
 - **Frontend additions** (UI enum in `src/utils/types.ts`): ApplianceManagementEnabled, Unknown
