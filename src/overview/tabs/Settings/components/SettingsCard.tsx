@@ -121,13 +121,21 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
         />
         <DetailsItem
           testId="settings-aap-url"
-          content={spec?.[SettingsFields.AapUrl] ?? t('Not configured')}
+          content={
+            spec?.[SettingsFields.AapUrl]?.trim()
+              ? spec[SettingsFields.AapUrl]
+              : t('Not configured')
+          }
           title={t('AAP URL')}
           helpContent={<AapUrlHelpContent />}
         />
         <DetailsItem
           testId="settings-aap-token-secret"
-          content={spec?.[SettingsFields.AapTokenSecretName] ?? t('Not configured')}
+          content={
+            spec?.[SettingsFields.AapTokenSecretName]?.trim()
+              ? spec[SettingsFields.AapTokenSecretName]
+              : t('Not configured')
+          }
           title={t('AAP token secret')}
           helpContent={<AapTokenSecretHelpContent />}
         />

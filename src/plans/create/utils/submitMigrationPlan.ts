@@ -38,8 +38,10 @@ type ResolveHooksParams = {
   planName: string;
   planProject: string;
   postHookJobTemplateId?: number;
+  postHookJobTemplateName?: string;
   postMigrationHook: MigrationHook;
   preHookJobTemplateId?: number;
+  preHookJobTemplateName?: string;
   preMigrationHook: MigrationHook;
 };
 
@@ -49,7 +51,9 @@ const resolveHooksCreation = async (params: ResolveHooksParams): Promise<Created
       planName: params.planName,
       planProject: params.planProject,
       postHookJobTemplateId: params.postHookJobTemplateId,
+      postHookJobTemplateName: params.postHookJobTemplateName,
       preHookJobTemplateId: params.preHookJobTemplateId,
+      preHookJobTemplateName: params.preHookJobTemplateName,
     });
   }
 
@@ -130,7 +134,9 @@ export const submitMigrationPlan = async (
       postMigrationHook[MigrationHookFieldId.EnableHook]);
 
   const aapPreHookJobTemplateId = formData[AapFormFieldId.AapPreHookJobTemplateId];
+  const aapPreHookJobTemplateName = formData[AapFormFieldId.AapPreHookJobTemplateName];
   const aapPostHookJobTemplateId = formData[AapFormFieldId.AapPostHookJobTemplateId];
+  const aapPostHookJobTemplateName = formData[AapFormFieldId.AapPostHookJobTemplateName];
 
   const hasAapHooks =
     hookSource === HOOK_SOURCE_AAP &&
@@ -180,8 +186,10 @@ export const submitMigrationPlan = async (
       planName,
       planProject,
       postHookJobTemplateId: aapPostHookJobTemplateId,
+      postHookJobTemplateName: aapPostHookJobTemplateName,
       postMigrationHook,
       preHookJobTemplateId: aapPreHookJobTemplateId,
+      preHookJobTemplateName: aapPreHookJobTemplateName,
       preMigrationHook,
     }),
 

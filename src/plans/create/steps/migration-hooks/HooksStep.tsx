@@ -49,7 +49,11 @@ const HooksStep: FC = () => {
       title={planStepNames[PlanWizardStepId.Hooks]}
       description={
         <>
-          <p>{t('Hooks allow you to run Ansible playbooks before or after the migration.')}</p>
+          <p>
+            {t(
+              'Hooks allow you to run Ansible playbooks or Ansible Automation Platform job templates before or after the migration.',
+            )}
+          </p>
           <p>{t('Hooks are applied to all virtual machines in the plan.')}</p>
         </>
       }

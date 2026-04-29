@@ -16,7 +16,7 @@ type AapConnectionSectionProps = {
 
 const AapConnectionSection: FC<AapConnectionSectionProps> = ({ onConnected }) => {
   const { t } = useForkliftTranslation();
-  const { aapUrl, isConfigured, loaded: configLoaded } = useAapConfig();
+  const { aapUrl, error: configError, isConfigured, loaded: configLoaded } = useAapConfig();
   const { connect, error, isConnecting, jobTemplates, status } = useAapConnection();
 
   const onConnectedRef = useRef(onConnected);
@@ -47,6 +47,14 @@ const AapConnectionSection: FC<AapConnectionSectionProps> = ({ onConnected }) =>
 
   if (!configLoaded) {
     return <Spinner size="md" />;
+  }
+
+  if (configError) {
+    return (
+      <Alert variant={AlertVariant.danger} isInline title={t('Failed to load AAP configuration')}>
+        {configError.message}
+      </Alert>
+    );
   }
 
   if (!isConfigured) {

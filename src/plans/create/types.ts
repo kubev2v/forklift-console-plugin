@@ -91,7 +91,9 @@ export type CreatePlanFormData = FieldValues & {
   [CustomScriptsFieldId.ExistingConfigMap]: IoK8sApiCoreV1ConfigMap | undefined;
   [CustomScriptsFieldId.Scripts]: CustomScript[];
   [AapFormFieldId.AapPostHookJobTemplateId]: number | undefined;
+  [AapFormFieldId.AapPostHookJobTemplateName]: string | undefined;
   [AapFormFieldId.AapPreHookJobTemplateId]: number | undefined;
+  [AapFormFieldId.AapPreHookJobTemplateName]: string | undefined;
   [AapFormFieldId.HookSource]: HookSource;
   [HooksFormFieldId.PostMigration]: MigrationHook;
   [HooksFormFieldId.PreMigration]: MigrationHook;

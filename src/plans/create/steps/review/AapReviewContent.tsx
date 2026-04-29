@@ -12,13 +12,27 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { AapFormFieldId } from '../migration-hooks/constants';
 
+const formatTemplateDisplay = (
+  id: number | undefined,
+  name: string | undefined,
+  fallback: string,
+): string => {
+  if (id === undefined) return fallback;
+  return name ? `${name} (ID: ${String(id)})` : String(id);
+};
+
 const AapReviewContent: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useCreatePlanFormContext();
 
-  const [preJobTemplateId, postJobTemplateId] = useWatch({
+  const [preJobTemplateId, preJobTemplateName, postJobTemplateId, postJobTemplateName] = useWatch({
     control,
-    name: [AapFormFieldId.AapPreHookJobTemplateId, AapFormFieldId.AapPostHookJobTemplateId],
+    name: [
+      AapFormFieldId.AapPreHookJobTemplateId,
+      AapFormFieldId.AapPreHookJobTemplateName,
+      AapFormFieldId.AapPostHookJobTemplateId,
+      AapFormFieldId.AapPostHookJobTemplateName,
+    ],
   });
 
   return (
@@ -31,16 +45,16 @@ const AapReviewContent: FC = () => {
       </DescriptionListGroup>
 
       <DescriptionListGroup>
-        <DescriptionListTerm>{t('Pre-hook job template ID')}</DescriptionListTerm>
+        <DescriptionListTerm>{t('Pre-migration hook')}</DescriptionListTerm>
         <DescriptionListDescription data-testid="review-aap-pre-hook-template">
-          {preJobTemplateId === undefined ? t('None') : String(preJobTemplateId)}
+          {formatTemplateDisplay(preJobTemplateId, preJobTemplateName, t('None'))}
         </DescriptionListDescription>
       </DescriptionListGroup>
 
       <DescriptionListGroup>
-        <DescriptionListTerm>{t('Post-hook job template ID')}</DescriptionListTerm>
+        <DescriptionListTerm>{t('Post-migration hook')}</DescriptionListTerm>
         <DescriptionListDescription data-testid="review-aap-post-hook-template">
-          {postJobTemplateId === undefined ? t('None') : String(postJobTemplateId)}
+          {formatTemplateDisplay(postJobTemplateId, postJobTemplateName, t('None'))}
         </DescriptionListDescription>
       </DescriptionListGroup>
     </DescriptionList>

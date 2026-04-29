@@ -20,7 +20,9 @@ export type HookSource =
 
 export enum AapFormFieldId {
   AapPostHookJobTemplateId = 'aapPostHookJobTemplateId',
+  AapPostHookJobTemplateName = 'aapPostHookJobTemplateName',
   AapPreHookJobTemplateId = 'aapPreHookJobTemplateId',
+  AapPreHookJobTemplateName = 'aapPreHookJobTemplateName',
   HookSource = 'hookSource',
 }
 

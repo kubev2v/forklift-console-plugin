@@ -34,7 +34,9 @@ export const getDefaultFormValues = (
 ): Partial<CreatePlanFormData> => {
   return {
     [AapFormFieldId.AapPostHookJobTemplateId]: undefined,
+    [AapFormFieldId.AapPostHookJobTemplateName]: undefined,
     [AapFormFieldId.AapPreHookJobTemplateId]: undefined,
+    [AapFormFieldId.AapPreHookJobTemplateName]: undefined,
     [AapFormFieldId.HookSource]: HOOK_SOURCE_NONE,
     [CreatePlanStorageMapFieldId.StorageMapType]: StorageMapType.Existing,
     [CustomScriptsFieldId.Scripts]: [DefaultScript],

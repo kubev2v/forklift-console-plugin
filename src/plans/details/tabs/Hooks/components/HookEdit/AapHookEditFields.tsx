@@ -25,7 +25,7 @@ type AapHookEditFieldsProps = {
 
 const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
   const { t } = useForkliftTranslation();
-  const { aapUrl, isConfigured, loaded: configLoaded } = useAapConfig();
+  const { aapUrl, error: configError, isConfigured, loaded: configLoaded } = useAapConfig();
   const { connect, error, status } = useAapConnection();
   const [templates, setTemplates] = useState<AapJobTemplate[]>([]);
 
@@ -56,6 +56,14 @@ const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
 
   if (!configLoaded) {
     return <Spinner size="md" />;
+  }
+
+  if (configError) {
+    return (
+      <Alert variant={AlertVariant.danger} isInline title={t('Failed to load AAP configuration')}>
+        {configError.message}
+      </Alert>
+    );
   }
 
   if (!isConfigured) {

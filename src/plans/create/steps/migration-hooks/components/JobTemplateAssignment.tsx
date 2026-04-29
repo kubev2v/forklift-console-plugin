@@ -14,9 +14,15 @@ type JobTemplateAssignmentProps = {
   jobTemplates: AapJobTemplate[];
 };
 
+const findTemplateName = (
+  templates: AapJobTemplate[],
+  id: number | undefined,
+): string | undefined =>
+  id === undefined ? undefined : templates.find((tpl) => tpl.id === id)?.name;
+
 const JobTemplateAssignment: FC<JobTemplateAssignmentProps> = ({ jobTemplates }) => {
   const { t } = useForkliftTranslation();
-  const { control, watch } = useCreatePlanFormContext();
+  const { control, setValue, watch } = useCreatePlanFormContext();
 
   const preHookId = watch(AapFormFieldId.AapPreHookJobTemplateId);
   const postHookId = watch(AapFormFieldId.AapPostHookJobTemplateId);
@@ -54,6 +60,10 @@ const JobTemplateAssignment: FC<JobTemplateAssignmentProps> = ({ jobTemplates })
                 const numericValue =
                   selected !== undefined && selected !== '' ? Number(selected) : undefined;
                 field.onChange(numericValue);
+                setValue(
+                  AapFormFieldId.AapPreHookJobTemplateName,
+                  findTemplateName(jobTemplates, numericValue),
+                );
               }}
               allowClear
               placeholder={t('Select a job template...')}
@@ -80,6 +90,10 @@ const JobTemplateAssignment: FC<JobTemplateAssignmentProps> = ({ jobTemplates })
                 const numericValue =
                   selected !== undefined && selected !== '' ? Number(selected) : undefined;
                 field.onChange(numericValue);
+                setValue(
+                  AapFormFieldId.AapPostHookJobTemplateName,
+                  findTemplateName(jobTemplates, numericValue),
+                );
               }}
               allowClear
               placeholder={t('Select a job template...')}

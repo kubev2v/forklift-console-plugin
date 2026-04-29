@@ -32,7 +32,7 @@ const EditAapTimeout: FC = () => {
           <SettingsNumberInput
             value={value ?? 0}
             onChange={(newValue: number | string) => {
-              onChange(Number(newValue));
+              onChange(Math.max(0, Number(newValue)));
             }}
             defaultValue={Number(defaultValuesMap[SettingsFields.AapTimeout])}
             testId="settings-aap-timeout-input"
