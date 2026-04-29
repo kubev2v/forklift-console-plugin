@@ -81,11 +81,11 @@ test.describe(
         await createPage.offload.verifyClearButtonEnabled(0);
         await createPage.offload.clickClearOffloadOptions(0);
 
-        const pluginText = await createPage.offload.getOffloadPluginText(0);
-        expect(pluginText).not.toContain(OffloadPlugins.VSPHERE_XCOPY);
-
         await createPage.offload.verifyClearButtonDisabled(0);
         await createPage.offload.verifyNoValidationError();
+
+        const pluginText = await createPage.offload.getOffloadPluginText(0);
+        expect(pluginText).not.toContain(OffloadPlugins.VSPHERE_XCOPY);
       });
 
       await test.step('Configure offload options on first mapping row', async () => {
