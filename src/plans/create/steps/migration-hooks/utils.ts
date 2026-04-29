@@ -59,7 +59,7 @@ export const AAP_SELECT_POPPER_PROPS = { direction: 'up' as const };
 
 export const toAapSelectOptions = (templates: AapJobTemplate[]): TypeaheadSelectOption[] =>
   templates.map((template) => ({
-    content: template.name,
+    content: `${template.name} (ID: ${String(template.id)})`,
     optionProps: { description: template.description },
     value: template.id,
   }));
