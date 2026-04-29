@@ -13,7 +13,7 @@ const AapTimeoutHelpContent: FC = () => {
           'Global timeout (in seconds) for AAP job template execution. When set, this value is used for all AAP hooks unless overridden per hook.',
         )}
       </StackItem>
-      <StackItem>{t('A value of 0 means no timeout (wait indefinitely).')}</StackItem>
+      <StackItem>{t('A value of 0 means use backend defaults.')}</StackItem>
     </Stack>
   );
 };

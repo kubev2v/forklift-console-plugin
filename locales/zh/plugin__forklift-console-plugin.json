@@ -123,7 +123,7 @@
   "A username for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint, for example: name@internal": "一个用户名，用于连接到 Red Hat Virtualization Manager (RHVM) API 端点，例如：name@internal",
   "A username for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint. Ensure the username is in the format of username@user-domain. For example: admin@internal.": "一个用户名，用于连接到 Red Hat Virtualization Manager (RHVM) API 端点。确保用户名格式为 username@user-domain。例如： admin@internal。",
   "A username for connecting to the vCenter API endpoint. Ensure the username includes the user domain. For example: <1>user@vsphere.local</1>.": "应用户名，用于连接到 vCenter API 端点的用户名。确保用户名包含用户域。例如：<1>user@vsphere.local</1>。",
-  "A value of 0 means no timeout (wait indefinitely).": "A value of 0 means no timeout (wait indefinitely).",
+  "A value of 0 means use backend defaults.": "A value of 0 means use backend defaults.",
   "A virtual or bare-metal machine in a Kubernetes cluster.": "Kubernetes 集群中的虚拟机或裸机。",
   "A VM can support up to 28 CBT snapshots. If the source VM has too many CBT snapshots and the Migration Controller service is not able to create a new snapshot, warm migration might fail. The Migration Controller service deletes each snapshot when the snapshot is no longer required.": "虚拟机可以最多支持 28 CBT 快照。如果源虚拟机有太多的 CBT 快照，且 Migration Controller 服务无法创建新快照，则温迁移可能会失败。当不再需要快照时，Migration Controller 服务可能会删除快照。",
   "A warm migration moves an active VM between hosts with minimal downtime. This is not live migration. A warm migration can only be used when migrating from VMware or Red Hat Virtualization.": "温迁移会在主机间以最少的停机时间移动活跃的虚拟机。这不是实时迁移。只有在从 VMware 或 Red Hat Virtualization 迁移时才可以使用温迁移。",
