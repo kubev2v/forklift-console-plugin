@@ -47,7 +47,9 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
     const patches = Object.keys(dirtyFields).map((key) => {
       const fieldKey = key as keyof ForkliftSettingsValues;
       const currentValue = (controller?.spec as Record<string, string | number>)?.[fieldKey];
-      if (!formData[fieldKey]) {
+      const newValue = formData[fieldKey];
+
+      if (newValue === undefined || newValue === '') {
         return {
           op: 'remove',
           path: `/spec/${fieldKey}`,
@@ -55,9 +57,9 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
       }
 
       return {
-        op: currentValue ? REPLACE : ADD,
+        op: currentValue === undefined ? ADD : REPLACE,
         path: `/spec/${fieldKey}`,
-        value: formData[fieldKey],
+        value: newValue,
       };
     });
 

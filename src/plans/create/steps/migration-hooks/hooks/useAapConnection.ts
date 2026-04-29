@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 
+import { t } from '@utils/i18n';
 import type { AapJobTemplate } from '@utils/types/aap';
 
 import {
@@ -63,7 +64,8 @@ const useAapConnection = (): UseAapConnectionResult => {
         return undefined;
       }
 
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch AAP job templates';
+      const errorMessage =
+        err instanceof Error ? err.message : t('Failed to fetch AAP job templates');
       setStatus(AAP_CONNECTION_STATUS_CONNECTION_FAILED);
       setError(errorMessage);
       setJobTemplates([]);

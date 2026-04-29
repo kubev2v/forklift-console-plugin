@@ -5,9 +5,13 @@ import ConnectionStatusAlert from 'src/plans/create/steps/migration-hooks/compon
 import { AAP_CONNECTION_STATUS_CONNECTED } from 'src/plans/create/steps/migration-hooks/constants';
 import useAapConfig from 'src/plans/create/steps/migration-hooks/hooks/useAapConfig';
 import useAapConnection from 'src/plans/create/steps/migration-hooks/hooks/useAapConnection';
+import {
+  AAP_SELECT_MAX_MENU_HEIGHT,
+  AAP_SELECT_POPPER_PROPS,
+  toAapSelectOptions,
+} from 'src/plans/create/steps/migration-hooks/utils';
 
 import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
-import type { TypeaheadSelectOption } from '@components/common/TypeaheadSelect/utils/types';
 import { Alert, AlertVariant, FormGroup, Spinner } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 import type { AapJobTemplate } from '@utils/types/aap';
@@ -15,19 +19,9 @@ import type { AapJobTemplate } from '@utils/types/aap';
 import type { HookEditFormValues } from '../../state/types';
 import { HookField } from '../../state/types';
 
-const MAX_MENU_HEIGHT = '200px';
-const POPPER_PROPS = { direction: 'up' as const };
-
 type AapHookEditFieldsProps = {
   control: Control<HookEditFormValues>;
 };
-
-const toSelectOptions = (templates: AapJobTemplate[]): TypeaheadSelectOption[] =>
-  templates.map((tpl) => ({
-    content: tpl.name,
-    optionProps: { description: tpl.description },
-    value: tpl.id,
-  }));
 
 const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
   const { t } = useForkliftTranslation();
@@ -58,7 +52,7 @@ const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
     };
   }, [configLoaded, isConfigured, connect]);
 
-  const templateOptions = useMemo(() => toSelectOptions(templates), [templates]);
+  const templateOptions = useMemo(() => toAapSelectOptions(templates), [templates]);
 
   if (!configLoaded) {
     return <Spinner size="md" />;
@@ -104,8 +98,8 @@ const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
                 allowClear
                 placeholder={t('Select a job template...')}
                 testId="hook-edit-aap-template-select"
-                maxMenuHeight={MAX_MENU_HEIGHT}
-                popperProps={POPPER_PROPS}
+                maxMenuHeight={AAP_SELECT_MAX_MENU_HEIGHT}
+                popperProps={AAP_SELECT_POPPER_PROPS}
               />
             </FormGroup>
           )}

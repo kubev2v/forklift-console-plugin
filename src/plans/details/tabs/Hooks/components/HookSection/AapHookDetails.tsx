@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 
 import { DetailsItem } from '@components/DetailItems/DetailItem';
-import type { V1beta1Hook } from '@forklift-ui/types';
+import type { V1beta1Hook, V1beta1HookSpecAap } from '@forklift-ui/types';
 import { useForkliftTranslation } from '@utils/i18n';
-import { type AAPConfig, ANNOTATION_AAP_JOB_TEMPLATE_NAME } from '@utils/types/aap';
+import { ANNOTATION_AAP_JOB_TEMPLATE_NAME } from '@utils/types/aap';
 
 type AapHookDetailsProps = {
-  aap: AAPConfig;
+  aap: V1beta1HookSpecAap;
   hook: V1beta1Hook;
 };
 

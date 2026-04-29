@@ -2,27 +2,17 @@ import { type FC, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 
 import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
-import type { TypeaheadSelectOption } from '@components/common/TypeaheadSelect/utils/types';
 import { FormGroup, FormSection } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 import type { AapJobTemplate } from '@utils/types/aap';
 
 import { useCreatePlanFormContext } from '../../../hooks/useCreatePlanFormContext';
 import { AapFormFieldId } from '../constants';
-
-const MAX_MENU_HEIGHT = '200px';
-const POPPER_PROPS = { direction: 'up' as const };
+import { AAP_SELECT_MAX_MENU_HEIGHT, AAP_SELECT_POPPER_PROPS, toAapSelectOptions } from '../utils';
 
 type JobTemplateAssignmentProps = {
   jobTemplates: AapJobTemplate[];
 };
-
-const toSelectOptions = (templates: AapJobTemplate[]): TypeaheadSelectOption[] =>
-  templates.map((template) => ({
-    content: template.name,
-    optionProps: { description: template.description },
-    value: template.id,
-  }));
 
 const JobTemplateAssignment: FC<JobTemplateAssignmentProps> = ({ jobTemplates }) => {
   const { t } = useForkliftTranslation();
@@ -32,12 +22,12 @@ const JobTemplateAssignment: FC<JobTemplateAssignmentProps> = ({ jobTemplates })
   const postHookId = watch(AapFormFieldId.AapPostHookJobTemplateId);
 
   const preHookOptions = useMemo(
-    () => toSelectOptions(jobTemplates.filter((tpl) => tpl.id !== postHookId)),
+    () => toAapSelectOptions(jobTemplates.filter((tpl) => tpl.id !== postHookId)),
     [jobTemplates, postHookId],
   );
 
   const postHookOptions = useMemo(
-    () => toSelectOptions(jobTemplates.filter((tpl) => tpl.id !== preHookId)),
+    () => toAapSelectOptions(jobTemplates.filter((tpl) => tpl.id !== preHookId)),
     [jobTemplates, preHookId],
   );
 
@@ -68,8 +58,8 @@ const JobTemplateAssignment: FC<JobTemplateAssignmentProps> = ({ jobTemplates })
               allowClear
               placeholder={t('Select a job template...')}
               testId="aap-pre-hook-template-select"
-              maxMenuHeight={MAX_MENU_HEIGHT}
-              popperProps={POPPER_PROPS}
+              maxMenuHeight={AAP_SELECT_MAX_MENU_HEIGHT}
+              popperProps={AAP_SELECT_POPPER_PROPS}
             />
           </FormGroup>
         )}
@@ -94,8 +84,8 @@ const JobTemplateAssignment: FC<JobTemplateAssignmentProps> = ({ jobTemplates })
               allowClear
               placeholder={t('Select a job template...')}
               testId="aap-post-hook-template-select"
-              maxMenuHeight={MAX_MENU_HEIGHT}
-              popperProps={POPPER_PROPS}
+              maxMenuHeight={AAP_SELECT_MAX_MENU_HEIGHT}
+              popperProps={AAP_SELECT_POPPER_PROPS}
             />
           </FormGroup>
         )}

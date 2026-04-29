@@ -5,18 +5,24 @@ import {
   type HookSource,
 } from 'src/plans/create/steps/migration-hooks/constants';
 
-import { HookModel, PlanModel, type V1beta1Hook, type V1beta1Plan } from '@forklift-ui/types';
+import {
+  HookModel,
+  PlanModel,
+  type V1beta1Hook,
+  type V1beta1HookSpecAap,
+  type V1beta1Plan,
+} from '@forklift-ui/types';
 import { k8sCreate, k8sDelete, k8sPatch, k8sUpdate } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
-import { type AAPConfig, ANNOTATION_AAP_JOB_TEMPLATE_NAME } from '@utils/types/aap';
+import { ANNOTATION_AAP_JOB_TEMPLATE_NAME } from '@utils/types/aap';
 
 import { type HookType, HookTypeLabelLowercase, hookTypes } from './constants';
 
-export const getAapConfig = (hook: V1beta1Hook | undefined): AAPConfig | undefined =>
-  (hook?.spec as unknown as { aap?: AAPConfig })?.aap;
+export const getAapConfig = (hook: V1beta1Hook | undefined): V1beta1HookSpecAap | undefined =>
+  hook?.spec?.aap;
 
 type HookTemplateParams = {
   image: string;
@@ -87,10 +93,14 @@ const getAapHookTemplate = ({
     spec: {
       aap: { jobTemplateId: aapJobTemplateId },
     },
-  } as unknown as V1beta1Hook;
+  };
 };
 
-const createHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) => {
+const createHook = async (
+  plan: V1beta1Plan,
+  hook: V1beta1Hook,
+  step: HookType,
+): Promise<V1beta1Plan> => {
   await k8sCreate({
     data: hook,
     model: HookModel,
@@ -120,7 +130,11 @@ const createHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) 
   return newPlan;
 };
 
-const deleteHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) => {
+const deleteHook = async (
+  plan: V1beta1Plan,
+  hook: V1beta1Hook,
+  step: HookType,
+): Promise<V1beta1Plan> => {
   await k8sDelete({ model: HookModel, resource: hook });
 
   const vms = getPlanVirtualMachines(plan);
@@ -140,7 +154,7 @@ const deleteHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) 
   });
 };
 
-const updateHook = async (hook: V1beta1Hook) => {
+const updateHook = async (hook: V1beta1Hook): Promise<void> => {
   await k8sUpdate({ data: hook, model: HookModel });
 };
 
@@ -197,13 +211,13 @@ export const createUpdateOrDeleteHook = async ({
       delete annotations[ANNOTATION_AAP_JOB_TEMPLATE_NAME];
     }
 
-    const updatedHook = {
+    const updatedHook: V1beta1Hook = {
       ...hook,
       metadata: { ...hook.metadata, annotations },
       spec: {
         aap: { jobTemplateId: aapJobTemplateId },
       },
-    } as unknown as V1beta1Hook;
+    };
 
     await updateHook(updatedHook);
     return plan;
@@ -223,7 +237,7 @@ export const createUpdateOrDeleteHook = async ({
     draft.spec.image = image;
     draft.spec.playbook = playbook;
     draft.spec.serviceAccount = serviceAccount;
-    delete (draft.spec as unknown as Record<string, unknown>).aap;
+    delete draft.spec.aap;
   });
 
   await updateHook(updatedHook);
@@ -254,10 +268,10 @@ export const validateHooks = (plan: V1beta1Plan): string => {
     return t('the plan is configured with more then one hook per step');
   }
 
-  const sortedFirstVMHooks = hooksOnFirstVM.sort((a, b) => a.step.localeCompare(b.step));
+  const sortedFirstVMHooks = [...hooksOnFirstVM].sort((a, b) => a.step.localeCompare(b.step));
 
   const sameHooks = vms.every((vm) => {
-    const sortedVMHooks = (vm.hooks ?? []).sort((a, b) => a.step.localeCompare(b.step));
+    const sortedVMHooks = [...(vm.hooks ?? [])].sort((a, b) => a.step.localeCompare(b.step));
     return JSON.stringify(sortedFirstVMHooks) === JSON.stringify(sortedVMHooks);
   });
 

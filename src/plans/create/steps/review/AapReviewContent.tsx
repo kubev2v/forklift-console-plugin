@@ -33,14 +33,14 @@ const AapReviewContent: FC = () => {
       <DescriptionListGroup>
         <DescriptionListTerm>{t('Pre-hook job template ID')}</DescriptionListTerm>
         <DescriptionListDescription data-testid="review-aap-pre-hook-template">
-          {preJobTemplateId ? String(preJobTemplateId) : t('None')}
+          {preJobTemplateId === undefined ? t('None') : String(preJobTemplateId)}
         </DescriptionListDescription>
       </DescriptionListGroup>
 
       <DescriptionListGroup>
         <DescriptionListTerm>{t('Post-hook job template ID')}</DescriptionListTerm>
         <DescriptionListDescription data-testid="review-aap-post-hook-template">
-          {postJobTemplateId ? String(postJobTemplateId) : t('None')}
+          {postJobTemplateId === undefined ? t('None') : String(postJobTemplateId)}
         </DescriptionListDescription>
       </DescriptionListGroup>
     </DescriptionList>

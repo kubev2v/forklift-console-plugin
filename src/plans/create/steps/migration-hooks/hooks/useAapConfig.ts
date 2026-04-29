@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
 import { useK8sWatchForkliftController } from 'src/overview/hooks/useK8sWatchForkliftController';
-import type { EnhancedForkliftController } from 'src/overview/tabs/Settings/utils/types';
-import { SettingsFields } from 'src/overview/tabs/Settings/utils/types';
+import {
+  type EnhancedForkliftController,
+  SettingsFields,
+} from 'src/overview/tabs/Settings/utils/types';
 
 type AapConfig = {
   aapTimeout: number | undefined;

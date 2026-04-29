@@ -69,7 +69,7 @@ const createAapHook = async (params: AapHookParams): Promise<V1beta1Hook> => {
     annotations[ANNOTATION_AAP_JOB_TEMPLATE_NAME] = jobTemplateName;
   }
 
-  const hook = {
+  const hook: V1beta1Hook = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Hook',
     metadata: {
@@ -82,7 +82,7 @@ const createAapHook = async (params: AapHookParams): Promise<V1beta1Hook> => {
     },
   };
 
-  return k8sCreate({ data: hook as unknown as V1beta1Hook, model: HookModel });
+  return k8sCreate({ data: hook, model: HookModel });
 };
 
 export const createLocalMigrationHooks = async (
@@ -125,7 +125,7 @@ export const createAapMigrationHooks = async (
   } = params;
   const hooks: CreatedHooks = {};
 
-  if (preHookJobTemplateId) {
+  if (preHookJobTemplateId !== undefined) {
     hooks.preHook = await createAapHook({
       hookType: 'pre',
       jobTemplateId: preHookJobTemplateId,
@@ -135,7 +135,7 @@ export const createAapMigrationHooks = async (
     });
   }
 
-  if (postHookJobTemplateId) {
+  if (postHookJobTemplateId !== undefined) {
     hooks.postHook = await createAapHook({
       hookType: 'post',
       jobTemplateId: postHookJobTemplateId,
