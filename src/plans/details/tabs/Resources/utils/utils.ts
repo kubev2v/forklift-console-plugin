@@ -254,6 +254,13 @@ export const getPlanResourcesTableProps = (
       return getOVAPlanResources(planInventory as EnhancedOvaVM[]);
     case PROVIDER_TYPES.hyperv:
       return getHypervPlanResources(planInventory as EnhancedHypervVM[]);
+    case PROVIDER_TYPES.ec2:
+      return {
+        planInventoryRunningSize: planInventory?.length,
+        planInventorySize: planInventory?.length,
+        totalResources: {} as VMResources,
+        totalResourcesRunning: {} as VMResources,
+      };
     case undefined:
     default:
       return null;

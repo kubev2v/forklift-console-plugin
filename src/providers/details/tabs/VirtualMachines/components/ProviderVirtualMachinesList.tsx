@@ -9,7 +9,7 @@ import type { ResourceField } from '@components/common/utils/types';
 import ConcernsAndConditionsTable from '@components/ConcernsAndConditionsTable/ConcernsAndConditionsTable';
 import { EmptyState, EmptyStateVariant, Spinner, Title } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
-import { isProviderOpenshift } from '@utils/resources';
+import { isProviderEc2, isProviderOpenshift } from '@utils/resources';
 
 import { getVmId } from '../utils/helpers/vmProps';
 
@@ -72,16 +72,18 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   }
 
   const getStandardPageProps = () => {
+    const ec2 = isProviderEc2(provider);
+
     if (handleSelectedIds) {
       return {
-        expandedIds: [],
+        ...(ec2 ? {} : { expandedIds: [] }),
         onSelect: handleSelectedIds,
         selectedIds: initialSelectedIds,
         toId: getVmId,
       };
     }
 
-    if (!isProviderOpenshift(provider)) {
+    if (!isProviderOpenshift(provider) && !ec2) {
       return {
         expandedIds: [],
         onExpand: () => undefined,
@@ -106,7 +108,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       extraSupportedMatchers={extraSupportedMatchers}
       {...getStandardPageProps()}
       expanded={
-        isProviderOpenshift(provider)
+        isProviderOpenshift(provider) || isProviderEc2(provider)
           ? undefined
           : (props) => <ConcernsAndConditionsTable vmData={props.resourceData} />
       }

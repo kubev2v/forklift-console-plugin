@@ -8,7 +8,6 @@ import { t } from '@utils/i18n';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import type { VmData } from './components/VMCellProps';
-import { getConcernsResourceField } from './utils/helpers/getConcernsResourceField';
 import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
 import { getEc2VM } from './utils/types/Ec2VM';
@@ -27,7 +26,6 @@ const ec2VmFieldsMetadataFactory: ResourceField[] = [
     resourceFieldId: 'name',
     sortable: true,
   },
-  getConcernsResourceField(),
   {
     filter: {
       placeholderLabel: t('Filter by status'),

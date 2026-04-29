@@ -38,7 +38,7 @@ Your approach:
 - `openstack` - OpenStack (requires Keystone auth URL and credentials)
 - `ova` - OVA file uploads (requires NFS or similar storage)
 - `hyperv` - Microsoft Hyper-V (requires SMB share access)
-- `ec2` - AWS EC2 (backend only, not yet in UI plugin)
+- `ec2` - AWS EC2 (available on AWS-platform clusters, gated by `useClusterIsAwsPlatform`)
 - `openshift` - OpenShift Virtualization/KubeVirt 
 
 **Target Provider**
