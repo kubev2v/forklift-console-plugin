@@ -1,6 +1,6 @@
 import { type FC, useEffect, useMemo, useState } from 'react';
 import type { Control } from 'react-hook-form';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import ConnectionStatusAlert from 'src/plans/create/steps/migration-hooks/components/ConnectionStatusAlert';
 import { AAP_CONNECTION_STATUS_CONNECTED } from 'src/plans/create/steps/migration-hooks/constants';
 import useAapConfig from 'src/plans/create/steps/migration-hooks/hooks/useAapConfig';
@@ -25,6 +25,7 @@ type AapHookEditFieldsProps = {
 
 const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
   const { t } = useForkliftTranslation();
+  const { setValue } = useFormContext<HookEditFormValues>();
   const { aapUrl, error: configError, isConfigured, loaded: configLoaded } = useAapConfig();
   const { connect, error, status } = useAapConnection();
   const [templates, setTemplates] = useState<AapJobTemplate[]>([]);
@@ -99,8 +100,14 @@ const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
                 options={templateOptions}
                 value={field.value}
                 onChange={(selected) => {
-                  field.onChange(
-                    selected !== undefined && selected !== '' ? Number(selected) : undefined,
+                  const numericId =
+                    selected !== undefined && selected !== '' ? Number(selected) : undefined;
+                  field.onChange(numericId);
+                  setValue(
+                    HookField.AapJobTemplateName,
+                    numericId === undefined
+                      ? undefined
+                      : templates.find((tpl) => tpl.id === numericId)?.name,
                   );
                 }}
                 allowClear

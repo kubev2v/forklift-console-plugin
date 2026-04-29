@@ -2,6 +2,7 @@ import type { HookSource } from 'src/plans/create/steps/migration-hooks/constant
 
 export type HookEditFormValues = {
   aapJobTemplateId?: number;
+  aapJobTemplateName?: string;
   hookSource: HookSource;
   image: string;
   playbook: string;
@@ -10,6 +11,7 @@ export type HookEditFormValues = {
 
 export enum HookField {
   AapJobTemplateId = 'aapJobTemplateId',
+  AapJobTemplateName = 'aapJobTemplateName',
   HookSource = 'hookSource',
   Image = 'image',
   Playbook = 'playbook',
