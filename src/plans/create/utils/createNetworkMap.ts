@@ -105,7 +105,8 @@ export const createNetworkMap = async ({
         namespace: project,
       },
       spec: {
-        map: mappings?.reduce(
+        // EC2 plans skip the mapping step entirely, producing an empty array
+        map: (mappings ?? []).reduce(
           (acc: V1beta1NetworkMapSpecMap[], { sourceNetwork, targetNetwork }) => {
             if (sourceNetwork.name) {
               acc.push({

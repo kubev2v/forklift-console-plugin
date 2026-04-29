@@ -1,9 +1,9 @@
 import { type FC, useState } from 'react';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { Wizard, WizardStep } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { isProviderEc2 } from '@utils/resources';
 
 import { useStepNavigation } from './hooks/useStepNavigation';
 import CustomScriptsStep from './steps/customization-scripts/CustomScriptsStep';
@@ -40,7 +40,7 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
   const { currentStep, handleStepChange, hasStepErrors } = useStepNavigation();
 
   const hasCreatePlanError = Boolean(createPlanError?.message);
-  const isEc2 = sourceProvider?.spec?.type === PROVIDER_TYPES.ec2;
+  const isEc2 = isProviderEc2(sourceProvider);
 
   const skippedStepIds = new Set<PlanWizardStepId>(
     isEc2 ? [PlanWizardStepId.NetworkMap, PlanWizardStepId.StorageMap] : [],
