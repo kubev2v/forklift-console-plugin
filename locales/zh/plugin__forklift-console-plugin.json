@@ -781,6 +781,7 @@
   "Navigate to the directory where you want to store the must-gather data.": "进入到要存储 must-gather 数据的目录。",
   "NBDE/Clevis enabled": "启用了 NBDE/Clevis",
   "NetApp ONTAP": "NetApp ONTAP",
+  "NetApp Shift": "NetApp Shift",
   "Network attachment definitions": "网络附加定义",
   "Network for data transfer": "用于数据传输的网络",
   "Network interfaces": "网络接口",

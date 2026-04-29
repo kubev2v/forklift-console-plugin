@@ -6,6 +6,7 @@ import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
+import useTargetStorages from '@utils/hooks/useTargetStorages';
 
 import { useCreatePlanForm } from './hooks/useCreatePlanForm';
 import { useSourceProviderFromSearchParams } from './hooks/useSourceProviderFromSearchParams';
@@ -48,14 +49,17 @@ const CreatePlanWizard: FC = () => {
 
   useSourceProviderFromSearchParams(setValue, sourceProviderName, searchPlanProject);
 
-  const [planName, planProject, sourceProvider] = useWatch({
+  const [planName, planProject, sourceProvider, targetProvider, targetProject] = useWatch({
     control,
     name: [
       GeneralFormFieldId.PlanName,
       GeneralFormFieldId.PlanProject,
       GeneralFormFieldId.SourceProvider,
+      GeneralFormFieldId.TargetProvider,
+      GeneralFormFieldId.TargetProject,
     ],
   });
+  const [targetStorages] = useTargetStorages(targetProvider, targetProject);
 
   const onSubmit = async () => {
     const formData = getValues();
@@ -73,7 +77,7 @@ const CreatePlanWizard: FC = () => {
     };
 
     try {
-      await submitMigrationPlan(formData, trackPlanWizardEvent);
+      await submitMigrationPlan(formData, trackPlanWizardEvent, targetStorages);
 
       navigate(getCreatedPlanPath(planName, planProject));
     } catch (error) {
