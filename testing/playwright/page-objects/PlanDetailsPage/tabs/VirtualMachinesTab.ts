@@ -5,14 +5,17 @@ import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
 import { AddVirtualMachinesModal } from '../modals/AddVirtualMachinesModal';
 
 import { ConcernsHelpers } from './ConcernsHelpers';
+import { PlanVmInstanceTypeModal } from './PlanVmInstanceTypeModal';
 
 /** VirtualMachines tab for Plan Details page (flat grid, no folder hierarchy). */
 export class VirtualMachinesTab extends VirtualMachinesTable {
   readonly concerns: ConcernsHelpers;
+  readonly editVmInstanceTypeModal: PlanVmInstanceTypeModal;
 
   constructor(page: Page) {
     super(page, page.locator('main'));
     this.concerns = new ConcernsHelpers(page);
+    this.editVmInstanceTypeModal = new PlanVmInstanceTypeModal(page);
   }
 
   private async dismissOpenModals(): Promise<void> {
@@ -56,6 +59,10 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.page.waitForTimeout(300);
   }
 
+  get editInstanceTypeModal() {
+    return this.editVmInstanceTypeModal.root;
+  }
+
   get editSharedDisksModal() {
     return this.page.getByTestId('edit-vm-shared-disks-modal');
   }
@@ -72,6 +79,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     const btn = this.page.getByRole('button', { name: 'Show Filters' });
     if (await btn.isVisible()) await btn.click();
   }
+
   async expandFirstVMDetailsRow(): Promise<void> {
     const btn = this.page.getByRole('button', { name: 'Details' }).first();
     await expect(btn).toBeVisible();
@@ -87,7 +95,6 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     const vmName = await nameCell.textContent();
     return vmName?.trim() ?? '';
   }
-
   async getRowCount(): Promise<number> {
     const paginationNav = this.rootLocator.getByRole('navigation', { name: 'Pagination' }).first();
 
@@ -112,6 +119,11 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     return this.table.getRow({ Name: vmName }).getByTestId('vm-actions-menu-toggle');
   }
 
+  async getVMInstanceType(vmName: string): Promise<string> {
+    const cell = await this.table.getCell('Name', vmName, 'Instance type');
+    return (await cell.textContent())?.trim() ?? '';
+  }
+
   async getVMPowerState(vmName: string): Promise<string> {
     const cell = await this.table.getCell('Name', vmName, 'Target power state');
     return (await cell.textContent())?.trim() ?? '';
@@ -122,9 +134,25 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     return (await cell.textContent())?.trim() ?? '';
   }
 
+  get instanceTypeModalSaveButton() {
+    return this.editVmInstanceTypeModal.confirmButton;
+  }
+
+  get instanceTypeModalSelect() {
+    return this.editVmInstanceTypeModal.selectToggle;
+  }
+
   async navigateToVirtualMachinesTab(): Promise<void> {
     await this.page.locator('[data-test-id="horizontal-link-Virtual machines"]').click();
     await this.page.waitForURL((url) => url.toString().endsWith('/vms'));
+  }
+
+  async openInstanceTypeDialog(vmName: string): Promise<void> {
+    await this.editVmInstanceTypeModal.openFromKebab(
+      vmName,
+      (name) => this.getVMActionsMenu(name),
+      async () => this.dismissOpenModals(),
+    );
   }
 
   async openPowerStateDialog(vmName: string): Promise<void> {
@@ -273,6 +301,11 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     for (const vm of planData.virtualMachines ?? []) {
       if (vm.sourceName) await this.verifyRowIsVisible({ Name: vm.sourceName });
     }
+  }
+
+  async waitForVMInstanceType(vmName: string, expected: string): Promise<void> {
+    const cell = await this.table.getCell('Name', vmName, 'Instance type');
+    await expect(cell).toHaveText(expected);
   }
 
   async waitForVMPowerState(vmName: string, expectedPowerState: string): Promise<void> {

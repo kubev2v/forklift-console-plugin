@@ -7,6 +7,7 @@ import type {
   PlanTestData,
   StorageMap,
 } from '../../../types/test-data';
+import { isEmpty } from '../../../utils/utils';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
 
@@ -187,6 +188,15 @@ export class ReviewStep {
       const expectedLabel = powerStateLabels[additionalPlanSettings.targetPowerState];
 
       await expect(this.page.getByTestId('review-target-power-state')).toHaveText(expectedLabel);
+    }
+
+    const instanceTypes = additionalPlanSettings?.instanceTypes;
+    if (instanceTypes && !isEmpty(Object.keys(instanceTypes))) {
+      const reviewBlock = this.page.getByTestId('review-instance-types');
+
+      for (const [vmName, label] of Object.entries(instanceTypes)) {
+        await expect(reviewBlock).toContainText(`${vmName}: ${label}`);
+      }
     }
   }
 

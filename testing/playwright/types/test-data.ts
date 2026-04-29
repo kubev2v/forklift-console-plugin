@@ -151,6 +151,8 @@ export interface PlanTestData {
   additionalPlanSettings?: {
     targetPowerState?: 'on' | 'off' | 'auto';
     useNbdeClevis?: boolean;
+    /** VM display name → resolved instance type label */
+    instanceTypes?: Record<string, string>;
   };
   customizationScripts?: CustomizationScriptsTestData;
   preMigrationHook?: HookConfig;
