@@ -14,6 +14,7 @@ import {
 } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import { CreatePlanStorageMapFieldId } from '../storage-map/constants';
 
@@ -28,10 +29,19 @@ type StorageMapReviewTableProps = {
 };
 
 const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) => {
+  const { t } = useForkliftTranslation();
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
-  if (!storageMap) {
-    return null;
+  if (!storageMap) return null;
+
+  const hasValidMappings = storageMap.some(
+    (mapping) =>
+      mapping[CreatePlanStorageMapFieldId.SourceStorage].name &&
+      mapping[CreatePlanStorageMapFieldId.TargetStorage].name,
+  );
+
+  if (!hasValidMappings) {
+    return <>{t('No storage mappings defined.')}</>;
   }
 
   const hasOffloadStorage = storageMap.some(

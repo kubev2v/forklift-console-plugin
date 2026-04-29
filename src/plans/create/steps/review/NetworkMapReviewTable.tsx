@@ -17,6 +17,16 @@ const NetworkMapReviewTable: FC<NetworkMapReviewTableProps> = ({ networkMap }) =
     return null;
   }
 
+  const hasValidMappings = networkMap.some(
+    (mapping) =>
+      mapping[NetworkMapFieldId.SourceNetwork].name &&
+      mapping[NetworkMapFieldId.TargetNetwork].name,
+  );
+
+  if (!hasValidMappings) {
+    return <>{t('No network mappings defined.')}</>;
+  }
+
   return (
     <Card>
       <Table
