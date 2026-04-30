@@ -1113,7 +1113,6 @@
   "Select a source provider to list available source networks": "사용 가능한 소스 네트워크 목록을 보려면 소스 공급자를 선택하십시오.",
   "Select a source provider to list available source storages": "사용 가능한 소스 스토리지를 보려면 소스 공급자를 선택하십시오.",
   "Select a storage map:": "스토리지 맵 선택:",
-  "Select a target provider and project to list available target networks": "사용 가능한 대상 네트워크를 보려면 대상 공급자와 프로젝트를 선택하세요.",
   "Select a target provider and project to list available target storages": "사용 가능한 대상 스토리지 목록을 보려면 대상 공급자와 프로젝트를 선택하세요.",
   "Select a target provider to list available target networks": "Select a target provider to list available target networks",
   "Select a target provider to list available target projects": "사용 가능한 대상 프로젝트를 보려면 대상 공급자를 선택하세요",

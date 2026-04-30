@@ -124,9 +124,7 @@ const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
                 fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
                 targetNetworks={targetNetworks}
                 showIgnoreNetworkOption
-                emptyStateMessage={t(
-                  'Select a target provider and project to list available target networks',
-                )}
+                emptyStateMessage={t('Select a target provider to list available target networks')}
                 isDisabled={isSubmitting}
               />,
             ],
