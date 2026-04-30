@@ -40,7 +40,7 @@ The types repo (`forklift-console-types`) lives **outside** the current workspac
 
 Copy this checklist and track progress:
 
-```
+```text
 Types Update Progress:
 - [ ] Phase 1: Setup and discovery
 - [ ] Phase 2: Create Jira ticket
@@ -91,7 +91,7 @@ This outputs the latest commit SHA on `main` for Forklift, and the latest releas
 ### 1d. Present comparison and ask user
 
 Present a table:
-```
+```text
 Types Update Discovery
 =======================
 Package version: 1.0.8
@@ -158,7 +158,7 @@ See [reference.md](reference.md) for the complete Go source file map, type mappi
 
 For each provider, download the Go source files from GitHub at the same Forklift version/branch selected in Phase 1. Use the GitHub raw content URL:
 
-```
+```text
 https://raw.githubusercontent.com/kubev2v/forklift/<VERSION>/pkg/controller/provider/web/<provider>/<file>.go
 https://raw.githubusercontent.com/kubev2v/forklift/<VERSION>/pkg/controller/provider/model/<provider>/model.go
 ```
@@ -435,7 +435,7 @@ Run the polling script:
 This polls `npm view @forklift-ui/types version` every 30 seconds for up to 10 minutes.
 
 If the poll times out, notify the user:
-```
+```text
 The new version <NEW_VERSION> has not appeared on npm after 10 minutes.
 Check the GitHub Action logs:
 https://github.com/kubev2v/forklift-console-types/actions/workflows/release.yml
@@ -567,6 +567,6 @@ Continue the fix-verify loop until all checks pass or the user chooses to stop.
 
 - The types repo uses **npm Trusted Publishing** (`--provenance`). No npm token is needed; the GitHub Action handles auth via OIDC.
 - **Forklift always targets `main`** (never a tagged release) to pick up the latest CRD and inventory type changes. Record the commit SHA in MAINTENANCE.md for reproducibility.
-- Kubernetes, KubeVirt, and CDI use **stable tagged releases**. Kubernetes defaults to the **`master`** branch naming convention for its tags.
+- Kubernetes, KubeVirt, and CDI use **stable tagged releases** (e.g., `v1.32.0`).
 - The `openapi-generator-cli` requires a **Java runtime**. If `npx openapi-generator-cli` fails with a Java error, the user needs to install JDK 11+.
 - After updating, `swagger.json` files are kept in the repo (they are large but committed). This is intentional for reproducibility.

@@ -47,7 +47,7 @@ In `src/generated/index.ts`, the KubeVirt export block follows these rules:
 ### Auto-fix for Duplicate identifier errors
 
 If `npm run build` fails with errors like:
-```
+```text
 error TS2300: Duplicate identifier 'V1beta1SomeType'.
 ```
 
@@ -70,7 +70,7 @@ Compare against the `CRDS` array in `scripts/update-forklift.sh`. If new `.yaml`
 
 ### Current known CRDs (as of 1.0.10)
 
-```
+```text
 forklift.konveyor.io_forkliftcontrollers.yaml
 forklift.konveyor.io_hooks.yaml
 forklift.konveyor.io_hosts.yaml
@@ -165,10 +165,10 @@ The table in `MAINTENANCE.md` looks like:
 ```markdown
 | Source | Current Version | Last Updated | Updated By |
 |--------|-----------------|--------------|------------|
-| Forklift | main | 2026-JAN-21 | |
-| Kubernetes | master | YYYY-MM-DD | |
-| KubeVirt | main | YYYY-MM-DD | |
-| CDI | main | YYYY-MM-DD | |
+| Forklift | main (<short-sha>) | 2026-APR-28 | aturgema (made with cursor) |
+| Kubernetes | v1.32.0 | 2026-APR-28 | aturgema (made with cursor) |
+| KubeVirt | v1.5.0 | 2026-APR-28 | aturgema (made with cursor) |
+| CDI | v1.62.0 | 2026-APR-28 | aturgema (made with cursor) |
 ```
 
 Update only the rows for sources that were actually updated. Use the format `YYYY-MMM-DD` (e.g. `2026-APR-28`) for dates. Set "Updated By" to `aturgema (made with cursor)`.

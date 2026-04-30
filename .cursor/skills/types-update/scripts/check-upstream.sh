@@ -10,15 +10,15 @@
 
 set -euo pipefail
 
-AUTH_HEADER=""
+AUTH_ARGS=()
 if [ -n "${GITHUB_TOKEN:-}" ]; then
-  AUTH_HEADER="-H Authorization: token ${GITHUB_TOKEN}"
+  AUTH_ARGS=(-H "Authorization: token ${GITHUB_TOKEN}")
 fi
 
 fetch_latest_tag() {
   local repo="$1"
   local result
-  result=$(curl -sf ${AUTH_HEADER} \
+  result=$(curl -sf "${AUTH_ARGS[@]}" \
     "https://api.github.com/repos/${repo}/releases/latest" 2>/dev/null \
     | jq -r '.tag_name // empty') || true
   echo "${result:-N/A}"
@@ -26,7 +26,7 @@ fetch_latest_tag() {
 
 fetch_forklift_main_sha() {
   local result
-  result=$(curl -sf ${AUTH_HEADER} \
+  result=$(curl -sf "${AUTH_ARGS[@]}" \
     "https://api.github.com/repos/kubev2v/forklift/commits/main" 2>/dev/null \
     | jq -r '.sha[:7] // empty') || true
   echo "${result:-N/A}"
