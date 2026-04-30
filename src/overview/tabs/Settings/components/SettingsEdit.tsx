@@ -1,11 +1,13 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
+import { ADD, REMOVE, REPLACE } from '@components/ModalForm/utils/constants';
 import { ForkliftControllerModel, type V1beta1ForkliftController } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, ModalVariant } from '@patternfly/react-core';
+import { getNamespace } from '@utils/crds/common/selectors';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type {
@@ -15,6 +17,9 @@ import type {
 } from '../utils/types';
 import { getDefaultValues } from '../utils/utils';
 
+import EditAapTimeout from './AapTimeout/EditAapTimeout';
+import EditAapTokenSecret from './AapTokenSecret/EditAapTokenSecret';
+import EditAapUrl from './AapUrl/EditAapUrl';
 import EditControllerCPULimit from './ControllerCPULimit/EditControllerCPULimit';
 import EditControllerMemoryLimit from './ControllerMemoryLimit/EditControllerMemoryLimit';
 import EditControllerTransferNetwork from './ControllerTransferNetwork/EditControllerTransferNetwork';
@@ -43,17 +48,19 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
     const patches = Object.keys(dirtyFields).map((key) => {
       const fieldKey = key as keyof ForkliftSettingsValues;
       const currentValue = (controller?.spec as Record<string, string | number>)?.[fieldKey];
-      if (!formData[fieldKey]) {
+      const newValue = formData[fieldKey];
+
+      if (newValue === undefined || isEmpty(String(newValue))) {
         return {
-          op: 'remove',
+          op: REMOVE,
           path: `/spec/${fieldKey}`,
         };
       }
 
       return {
-        op: currentValue ? REPLACE : ADD,
+        op: currentValue === undefined ? ADD : REPLACE,
         path: `/spec/${fieldKey}`,
-        value: formData[fieldKey],
+        value: newValue,
       };
     });
 
@@ -85,6 +92,9 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
           <EditPreCopyInterval />
           <EditSnapshotPoolingInterval />
           <EditControllerTransferNetwork />
+          <EditAapUrl />
+          <EditAapTokenSecret namespace={getNamespace(controller)!} />
+          <EditAapTimeout />
         </Form>
       </ModalForm>
     </FormProvider>

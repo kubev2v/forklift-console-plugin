@@ -16,14 +16,14 @@ import { addOwnerRefs } from './addOwnerRefs';
 
 export const addPlanResourceOwnerRefs = async (
   resources: {
+    hooks: { postHook?: V1beta1Hook; preHook?: V1beta1Hook };
     networkMap: V1beta1NetworkMap;
-    storageMap: V1beta1StorageMap;
-    secret?: IoK8sApiCoreV1Secret;
-    hooks: { preHook?: V1beta1Hook; postHook?: V1beta1Hook };
     scriptsConfigMap?: IoK8sApiCoreV1ConfigMap;
+    secret?: IoK8sApiCoreV1Secret;
+    storageMap: V1beta1StorageMap;
   },
   planRef: ObjectRef,
-) => {
+): Promise<void> => {
   const ownerRefRequests: ReturnType<typeof addOwnerRefs>[] = [
     addOwnerRefs(StorageMapModel, resources.storageMap, [planRef]),
     addOwnerRefs(NetworkMapModel, resources.networkMap, [planRef]),

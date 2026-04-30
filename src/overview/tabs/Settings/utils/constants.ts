@@ -46,6 +46,9 @@ export const snapshotPoolingIntervalMap = Object.fromEntries(
 );
 
 export const defaultValuesMap: Record<SettingsFields, string | number> = {
+  [SettingsFields.AapTimeout]: 0,
+  [SettingsFields.AapTokenSecretName]: '',
+  [SettingsFields.AapUrl]: '',
   [SettingsFields.ControllerCPULimit]: '500m',
   [SettingsFields.ControllerMemoryLimit]: '800Mi',
   [SettingsFields.ControllerTransferNetwork]: t('None'),

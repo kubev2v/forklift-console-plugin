@@ -1,13 +1,19 @@
+import type { HookSource } from 'src/plans/create/steps/migration-hooks/constants';
+
 export type HookEditFormValues = {
-  enabled: boolean;
+  aapJobTemplateId?: number;
+  aapJobTemplateName?: string;
+  hookSource: HookSource;
   image: string;
   playbook: string;
   serviceAccount: string;
 };
 
 export enum HookField {
-  Enabled = 'enabled',
+  AapJobTemplateId = 'aapJobTemplateId',
+  AapJobTemplateName = 'aapJobTemplateName',
+  HookSource = 'hookSource',
   Image = 'image',
   Playbook = 'playbook',
-  serviceAccount = 'serviceAccount',
+  ServiceAccount = 'serviceAccount',
 }

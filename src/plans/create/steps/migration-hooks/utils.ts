@@ -1,6 +1,10 @@
+import { getInventoryApiUrl } from 'src/providers/utils/helpers/getApiUrl';
 import { validateContainerImage, validateK8sName } from 'src/utils/validation/common';
 
+import type { TypeaheadSelectOption } from '@components/common/TypeaheadSelect/utils/types';
+import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 import { t } from '@utils/i18n';
+import type { AapJobTemplate, AapJobTemplatesResponse } from '@utils/types/aap';
 
 import { HooksFormFieldId, MigrationHookFieldId } from './constants';
 
@@ -9,8 +13,10 @@ export const getHooksSubFieldId = <T extends MigrationHookFieldId>(
   subFieldId: T,
 ): `${HooksFormFieldId}.${T}` => `${fieldId}.${subFieldId}`;
 
-export const getEnableHookFieldLabel = (fieldId: HooksFormFieldId) =>
-  `Enable ${fieldId === HooksFormFieldId.PreMigration ? 'pre' : 'post'} migration hook`;
+export const getEnableHookFieldLabel = (fieldId: HooksFormFieldId): string =>
+  fieldId === HooksFormFieldId.PreMigration
+    ? t('Enable pre-migration hook')
+    : t('Enable post-migration hook');
 
 export const hooksFormFieldLabels: Partial<Record<MigrationHookFieldId, ReturnType<typeof t>>> = {
   [MigrationHookFieldId.AnsiblePlaybook]: t('Ansible playbook'),
@@ -18,10 +24,6 @@ export const hooksFormFieldLabels: Partial<Record<MigrationHookFieldId, ReturnTy
   [MigrationHookFieldId.ServiceAccount]: t('Service account'),
 };
 
-/**
- * Validates a hook runner image field value.
- * Ensures the image is not empty and follows valid container image format.
- */
 export const validateHookRunnerImage = (value: string): string | undefined => {
   const trimmedValue = value?.trim();
 
@@ -51,3 +53,23 @@ export const validateHookServiceAccount = (value: string): string | undefined =>
 
   return undefined;
 };
+
+export const AAP_SELECT_MAX_MENU_HEIGHT = '200px';
+export const AAP_SELECT_POPPER_PROPS = { direction: 'up' as const };
+
+export const toAapSelectOptions = (templates: AapJobTemplate[]): TypeaheadSelectOption[] =>
+  templates.map((template) => ({
+    content: `${template.name} (ID: ${String(template.id)})`,
+    optionProps: { description: template.description },
+    value: template.id,
+  }));
+
+const DEFAULT_MAX_TEMPLATES = 500;
+
+export const fetchAapJobTemplates = async (
+  signal?: AbortSignal,
+  max = DEFAULT_MAX_TEMPLATES,
+): Promise<AapJobTemplatesResponse> =>
+  (await consoleFetchJSON(getInventoryApiUrl(`aap/job-templates?max=${String(max)}`), 'GET', {
+    signal,
+  })) as AapJobTemplatesResponse;

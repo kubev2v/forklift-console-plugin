@@ -54,13 +54,13 @@ const PlanHooksPage: FC<PlanPageProps> = ({ name, namespace }) => {
           )}
           <HookSection
             hook={preHookResource}
-            title={t('Pre migration hook')}
+            title={t('Pre-migration hook')}
             plan={plan}
             step={hookTypes.PreHook}
           />
           <HookSection
             hook={postHookResource}
-            title={t('Post migration hook')}
+            title={t('Post-migration hook')}
             plan={plan}
             step={hookTypes.PostHook}
           />

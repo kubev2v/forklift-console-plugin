@@ -1,6 +1,9 @@
 import type { V1beta1ForkliftController } from '@forklift-ui/types';
 
 export enum SettingsFields {
+  AapTimeout = 'aap_timeout',
+  AapTokenSecretName = 'aap_token_secret_name',
+  AapUrl = 'aap_url',
   ControllerCPULimit = 'controller_container_limits_cpu',
   ControllerMemoryLimit = 'controller_container_limits_memory',
   ControllerTransferNetwork = 'controller_transfer_network',
@@ -11,6 +14,9 @@ export enum SettingsFields {
 }
 
 export type ForkliftSettingsValues = {
+  [SettingsFields.AapTimeout]?: number;
+  [SettingsFields.AapTokenSecretName]?: string;
+  [SettingsFields.AapUrl]?: string;
   [SettingsFields.ControllerCPULimit]?: string;
   [SettingsFields.ControllerMemoryLimit]?: string;
   [SettingsFields.ControllerTransferNetwork]?: string;
@@ -22,6 +28,9 @@ export type ForkliftSettingsValues = {
 
 export type EnhancedForkliftController = V1beta1ForkliftController & {
   spec: {
+    [SettingsFields.AapTimeout]?: number;
+    [SettingsFields.AapTokenSecretName]?: string;
+    [SettingsFields.AapUrl]?: string;
     [SettingsFields.ControllerCPULimit]?: string;
     [SettingsFields.ControllerMemoryLimit]?: string;
     [SettingsFields.ControllerTransferNetwork]?: string;

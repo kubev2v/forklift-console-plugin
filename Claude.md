@@ -239,6 +239,20 @@ This is an **OpenShift Console dynamic plugin** for [Forklift](https://github.co
   };
   ```
 
+#### Avoid Regular Expressions
+- **Prefer string methods** (`startsWith`, `endsWith`, `includes`, `slice`, `indexOf`) over regex for simple string operations.
+- Regex introduces ReDoS risk (flagged by SonarCloud) and is harder to read.
+- Only use regex when the pattern genuinely requires it (e.g., complex validation in `src/utils/validation/common.ts`).
+  ```typescript
+  // ✅ Good
+  while (url.endsWith('/')) {
+    url = url.slice(0, -1);
+  }
+
+  // ❌ Bad
+  url.replace(/\/+$/u, '');
+  ```
+
 #### Avoid Magic Numbers
 - Avoid hardcoded values (magic numbers) and define them as constants for easy adjustments and readability:
   ```typescript

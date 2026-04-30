@@ -1,23 +1,45 @@
 import { produce } from 'immer';
+import {
+  HOOK_SOURCE_AAP,
+  HOOK_SOURCE_NONE,
+  type HookSource,
+} from 'src/plans/create/steps/migration-hooks/constants';
 
-import { HookModel, PlanModel, type V1beta1Hook, type V1beta1Plan } from '@forklift-ui/types';
+import {
+  HookModel,
+  PlanModel,
+  type V1beta1Hook,
+  type V1beta1HookSpecAap,
+  type V1beta1Plan,
+} from '@forklift-ui/types';
 import { k8sCreate, k8sDelete, k8sPatch, k8sUpdate } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
+import { ANNOTATION_AAP_JOB_TEMPLATE_NAME } from '@utils/types/aap';
 
 import { type HookType, HookTypeLabelLowercase, hookTypes } from './constants';
 
+export const getAapConfig = (hook: V1beta1Hook | undefined): V1beta1HookSpecAap | undefined =>
+  hook?.spec?.aap;
+
 type HookTemplateParams = {
   image: string;
+  plan: V1beta1Plan;
   playbook: string;
   serviceAccount: string;
+  step: HookType;
+};
+
+type AapHookTemplateParams = {
+  aapJobTemplateId: number;
+  aapJobTemplateName?: string;
   plan: V1beta1Plan;
   step: HookType;
 };
 
-const getHookTemplate = ({
+const getLocalHookTemplate = ({
   image,
   plan,
   playbook,
@@ -41,7 +63,44 @@ const getHookTemplate = ({
   spec: { image, playbook, serviceAccount },
 });
 
-const createHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) => {
+const getAapHookTemplate = ({
+  aapJobTemplateId,
+  aapJobTemplateName,
+  plan,
+  step,
+}: AapHookTemplateParams): V1beta1Hook => {
+  const annotations: Record<string, string> = {};
+  if (aapJobTemplateName) {
+    annotations[ANNOTATION_AAP_JOB_TEMPLATE_NAME] = aapJobTemplateName;
+  }
+
+  return {
+    apiVersion: 'forklift.konveyor.io/v1beta1',
+    kind: 'Hook',
+    metadata: {
+      ...(!isEmpty(annotations) && { annotations }),
+      name: `${getName(plan)}-${HookTypeLabelLowercase[step]}-hook`,
+      namespace: getNamespace(plan),
+      ownerReferences: [
+        {
+          apiVersion: plan?.apiVersion,
+          kind: plan?.kind,
+          name: getName(plan)!,
+          uid: getUID(plan)!,
+        },
+      ],
+    },
+    spec: {
+      aap: { jobTemplateId: aapJobTemplateId },
+    },
+  };
+};
+
+const createHook = async (
+  plan: V1beta1Plan,
+  hook: V1beta1Hook,
+  step: HookType,
+): Promise<V1beta1Plan> => {
   await k8sCreate({
     data: hook,
     model: HookModel,
@@ -71,7 +130,11 @@ const createHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) 
   return newPlan;
 };
 
-const deleteHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) => {
+const deleteHook = async (
+  plan: V1beta1Plan,
+  hook: V1beta1Hook,
+  step: HookType,
+): Promise<V1beta1Plan> => {
   await k8sDelete({ model: HookModel, resource: hook });
 
   const vms = getPlanVirtualMachines(plan);
@@ -91,55 +154,93 @@ const deleteHook = async (plan: V1beta1Plan, hook: V1beta1Hook, step: HookType) 
   });
 };
 
-const updateHook = async (hook: V1beta1Hook) => {
+const updateHook = async (hook: V1beta1Hook): Promise<void> => {
   await k8sUpdate({ data: hook, model: HookModel });
 };
 
-type createUpdateOrDeleteHookParams = {
+type CreateUpdateOrDeleteHookParams = {
+  aapJobTemplateId?: number;
+  aapJobTemplateName?: string;
   hook?: V1beta1Hook;
   hookImage?: string;
   hookPlaybook?: string;
   hookServiceAccount?: string;
   hookSet: boolean;
+  hookSource?: HookSource;
   plan: V1beta1Plan;
   step: HookType;
 };
 
 export const createUpdateOrDeleteHook = async ({
+  aapJobTemplateId,
+  aapJobTemplateName,
   hook,
   hookImage,
   hookPlaybook,
   hookServiceAccount,
   hookSet,
+  hookSource = HOOK_SOURCE_NONE,
   plan,
   step,
-}: createUpdateOrDeleteHookParams): Promise<V1beta1Plan> => {
+}: CreateUpdateOrDeleteHookParams): Promise<V1beta1Plan> => {
+  if (!hookSet && hook) {
+    return deleteHook(plan, hook, step);
+  }
+
+  if (!hookSet) {
+    return plan;
+  }
+
+  if (hookSource === HOOK_SOURCE_AAP && aapJobTemplateId !== undefined) {
+    if (!hook) {
+      const resourceHook = getAapHookTemplate({
+        aapJobTemplateId,
+        aapJobTemplateName,
+        plan,
+        step,
+      });
+      return createHook(plan, resourceHook, step);
+    }
+
+    const annotations: Record<string, string> = {
+      ...(hook.metadata?.annotations ?? {}),
+    };
+    if (aapJobTemplateName) {
+      annotations[ANNOTATION_AAP_JOB_TEMPLATE_NAME] = aapJobTemplateName;
+    } else {
+      delete annotations[ANNOTATION_AAP_JOB_TEMPLATE_NAME];
+    }
+
+    const updatedHook: V1beta1Hook = {
+      ...hook,
+      metadata: { ...hook.metadata, annotations },
+      spec: {
+        aap: { jobTemplateId: aapJobTemplateId },
+      },
+    };
+
+    await updateHook(updatedHook);
+    return plan;
+  }
+
   const image = hookImage ?? '';
   const playbook = hookPlaybook ?? '';
   const serviceAccount = hookServiceAccount ?? '';
 
-  if (hookSet && !hook) {
-    const resourceHook = getHookTemplate({ image, plan, playbook, serviceAccount, step });
-    const newPlan = await createHook(plan, resourceHook, step);
-    return newPlan;
+  if (!hook) {
+    const resourceHook = getLocalHookTemplate({ image, plan, playbook, serviceAccount, step });
+    return createHook(plan, resourceHook, step);
   }
 
-  if (!hookSet && hook) {
-    const newPlan = await deleteHook(plan, hook, step);
-    return newPlan;
-  }
+  const updatedHook = produce(hook, (draft) => {
+    draft.spec ??= { image: '', playbook: '', serviceAccount: '' };
+    draft.spec.image = image;
+    draft.spec.playbook = playbook;
+    draft.spec.serviceAccount = serviceAccount;
+    delete draft.spec.aap;
+  });
 
-  if (hookSet && hook) {
-    const updatedHook = produce(hook, (draft) => {
-      draft.spec ??= { image: '', playbook: '', serviceAccount: '' };
-      draft.spec.image = image;
-      draft.spec.playbook = playbook;
-      draft.spec.serviceAccount = serviceAccount;
-    });
-
-    await updateHook(updatedHook);
-  }
-
+  await updateHook(updatedHook);
   return plan;
 };
 
@@ -167,10 +268,10 @@ export const validateHooks = (plan: V1beta1Plan): string => {
     return t('the plan is configured with more then one hook per step');
   }
 
-  const sortedFirstVMHooks = hooksOnFirstVM.sort((a, b) => a.step.localeCompare(b.step));
+  const sortedFirstVMHooks = [...hooksOnFirstVM].sort((a, b) => a.step.localeCompare(b.step));
 
   const sameHooks = vms.every((vm) => {
-    const sortedVMHooks = (vm.hooks ?? []).sort((a, b) => a.step.localeCompare(b.step));
+    const sortedVMHooks = [...(vm.hooks ?? [])].sort((a, b) => a.step.localeCompare(b.step));
     return JSON.stringify(sortedFirstVMHooks) === JSON.stringify(sortedVMHooks);
   });
 

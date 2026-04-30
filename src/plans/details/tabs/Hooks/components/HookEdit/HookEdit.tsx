@@ -1,29 +1,40 @@
+import { useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import {
-  validateHookRunnerImage,
-  validateHookServiceAccount,
-} from 'src/plans/create/steps/migration-hooks/utils';
+  HOOK_SOURCE_AAP,
+  HOOK_SOURCE_LOCAL,
+  HOOK_SOURCE_NONE,
+} from 'src/plans/create/steps/migration-hooks/constants';
 
-import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
-import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import ModalForm from '@components/ModalForm/ModalForm';
-import SdkYamlEditor from '@components/SdkYamlEditor/SdkYamlEditor';
+import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
 import type { V1beta1Hook, V1beta1Plan } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { Checkbox, Form, FormGroup, ModalVariant, TextInput } from '@patternfly/react-core';
-import { getInputValidated } from '@utils/form';
+import {
+  Flex,
+  FlexItem,
+  Form,
+  FormGroup,
+  ModalVariant,
+  Radio,
+  Split,
+  SplitItem,
+} from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { getDefaultHookValues } from '../../state/initialState';
 import { type HookEditFormValues, HookField } from '../../state/types';
-import { type HookType, HookTypeLabelLowercase, hookTypes } from '../../utils/constants';
-import { createUpdateOrDeleteHook, getServiceAccountHelperText } from '../../utils/utils';
+import { type HookType, HookTypeLabelLowercase } from '../../utils/constants';
+import { createUpdateOrDeleteHook } from '../../utils/utils';
+
+import AapHookEditFields from './AapHookEditFields';
+import LocalHookEditFields from './LocalHookEditFields';
 
 export type HookEditProps = {
   hook: V1beta1Hook | undefined;
-  step: HookType;
   plan: V1beta1Plan;
+  step: HookType;
 };
 
 const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step }) => {
@@ -35,6 +46,7 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
   });
 
   const {
+    clearErrors,
     control,
     formState: { errors, isDirty },
     handleSubmit,
@@ -42,23 +54,33 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
     watch,
   } = methods;
 
-  const enabledHook = watch('enabled');
+  const hookSource = watch('hookSource');
+
+  useEffect(() => {
+    if (hookSource !== HOOK_SOURCE_LOCAL) {
+      clearErrors([HookField.Image, HookField.ServiceAccount, HookField.Playbook]);
+    }
+    if (hookSource !== HOOK_SOURCE_AAP) {
+      clearErrors([HookField.AapJobTemplateId]);
+    }
+  }, [clearErrors, hookSource]);
   const hookTypeLowercase = HookTypeLabelLowercase[step];
   const title = t('Edit {{hookTypeLowercase}} migration hook', { hookTypeLowercase });
 
-  const onSubmit = async (formData: HookEditFormValues) => {
-    const { enabled, image, playbook, serviceAccount } = formData;
+  const onSubmit = async (formData: HookEditFormValues): Promise<void> => {
     await createUpdateOrDeleteHook({
+      aapJobTemplateId: formData.aapJobTemplateId,
+      aapJobTemplateName: formData.aapJobTemplateName,
       hook,
-      hookImage: image,
-      hookPlaybook: playbook,
-      hookServiceAccount: serviceAccount,
-      hookSet: enabled,
+      hookImage: formData.image,
+      hookPlaybook: formData.playbook,
+      hookServiceAccount: formData.serviceAccount,
+      hookSet: formData.hookSource !== HOOK_SOURCE_NONE,
+      hookSource: formData.hookSource,
       plan,
       step,
     });
 
-    // Reset the form state to match the new server state
     reset(formData);
   };
 
@@ -73,106 +95,70 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
       >
         <Form>
           {t(
-            'Edit Ansible hook configuration for your migration plan. Hooks are applied to all virtual machines in the plan.',
+            'Edit hook configuration for your migration plan. Hooks are applied to all virtual machines in the plan.',
           )}
-          <FormGroup fieldId={HookField.Enabled}>
+          <FormGroup fieldId={HookField.HookSource} label={t('Hook source')}>
             <Controller
               control={control}
-              name={HookField.Enabled}
+              name={HookField.HookSource}
               render={({ field: { onChange, value } }) => (
-                <Checkbox
-                  id="enabled-set"
-                  name="enabled-set"
-                  data-testid="hook-enabled-checkbox"
-                  label={t('Enable {{hookTypeLowercase}} migration hook', { hookTypeLowercase })}
-                  isChecked={value}
-                  onChange={(_, checked) => {
-                    onChange(checked);
-                  }}
-                />
+                <Split hasGutter>
+                  <SplitItem>
+                    <Radio
+                      id="hook-edit-source-none"
+                      name="hookSource"
+                      data-testid="hook-edit-source-none"
+                      label={t('No hook')}
+                      isChecked={value === HOOK_SOURCE_NONE}
+                      onChange={() => {
+                        onChange(HOOK_SOURCE_NONE);
+                      }}
+                    />
+                  </SplitItem>
+                  <SplitItem>
+                    <Radio
+                      id="hook-edit-source-local"
+                      name="hookSource"
+                      data-testid="hook-edit-source-local"
+                      label={t('Local playbook')}
+                      isChecked={value === HOOK_SOURCE_LOCAL}
+                      onChange={() => {
+                        onChange(HOOK_SOURCE_LOCAL);
+                      }}
+                    />
+                  </SplitItem>
+                  <SplitItem>
+                    <Flex
+                      spaceItems={{ default: 'spaceItemsSm' }}
+                      alignItems={{ default: 'alignItemsCenter' }}
+                    >
+                      <FlexItem>
+                        <Radio
+                          id="hook-edit-source-aap"
+                          name="hookSource"
+                          data-testid="hook-edit-source-aap"
+                          label={t('Ansible Automation Platform')}
+                          isChecked={value === HOOK_SOURCE_AAP}
+                          onChange={() => {
+                            onChange(HOOK_SOURCE_AAP);
+                          }}
+                        />
+                      </FlexItem>
+                      <FlexItem>
+                        <TechPreviewLabel />
+                      </FlexItem>
+                    </Flex>
+                  </SplitItem>
+                </Split>
               )}
             />
           </FormGroup>
-          {enabledHook && (
-            <>
-              <Controller
-                control={control}
-                name={HookField.Image}
-                rules={{
-                  validate: validateHookRunnerImage,
-                }}
-                render={({ field: { onChange, value }, fieldState: { error } }) => (
-                  <FormGroupWithErrorText
-                    label={t('Hook runner image')}
-                    isRequired
-                    fieldId={HookField.Image}
-                    helperText={
-                      isEmpty(error) ? (
-                        t(
-                          'You can use a custom hook-runner image or specify a custom image, for example quay.io/konveyor/hook-runner.',
-                        )
-                      ) : (
-                        <FormErrorHelperText error={error} showIcon />
-                      )
-                    }
-                  >
-                    <TextInput
-                      onChange={onChange}
-                      value={value}
-                      spellCheck="false"
-                      validated={getInputValidated(error)}
-                      type="text"
-                      data-testid="hook-runner-image-input"
-                    />
-                  </FormGroupWithErrorText>
-                )}
-              />
-              <Controller
-                control={control}
-                name={HookField.serviceAccount}
-                rules={{
-                  validate: validateHookServiceAccount,
-                }}
-                render={({ field: { onChange, value }, fieldState: { error } }) => (
-                  <FormGroupWithErrorText
-                    label={t('Service account')}
-                    fieldId={HookField.serviceAccount}
-                    helperText={
-                      isEmpty(error) ? (
-                        getServiceAccountHelperText(step === hookTypes.PreHook, plan)
-                      ) : (
-                        <FormErrorHelperText error={error} showIcon />
-                      )
-                    }
-                  >
-                    <TextInput
-                      onChange={onChange}
-                      value={value}
-                      spellCheck="false"
-                      validated={getInputValidated(error)}
-                      type="text"
-                      data-testid="hook-service-account-input"
-                    />
-                  </FormGroupWithErrorText>
-                )}
-              />
-              <FormGroupWithErrorText
-                label={t('Ansible playbook')}
-                fieldId={HookField.Playbook}
-                helperText={t(
-                  'Ansible playbook. If you specify a playbook, the image must be hook-runner.',
-                )}
-              >
-                <Controller
-                  control={control}
-                  name={HookField.Playbook}
-                  render={({ field: { onChange, value } }) => (
-                    <SdkYamlEditor value={value ?? ''} onChange={onChange} />
-                  )}
-                />
-              </FormGroupWithErrorText>
-            </>
+
+          {hookSource === HOOK_SOURCE_LOCAL && (
+            <LocalHookEditFields control={control} plan={plan} step={step} />
           )}
+
+          {hookSource === HOOK_SOURCE_AAP && <AapHookEditFields control={control} />}
         </Form>
       </ModalForm>
     </FormProvider>

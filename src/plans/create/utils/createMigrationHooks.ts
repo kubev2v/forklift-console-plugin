@@ -1,31 +1,47 @@
 import { HookModel, type V1beta1Hook } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
+import { isEmpty } from '@utils/helpers';
+import { ANNOTATION_AAP_JOB_TEMPLATE_NAME } from '@utils/types/aap';
 
 import { type MigrationHook, MigrationHookFieldId } from '../steps/migration-hooks/constants';
 
 export type CreatedHooks = {
-  preHook?: V1beta1Hook;
   postHook?: V1beta1Hook;
+  preHook?: V1beta1Hook;
 };
 
-type HookParams = {
-  hookType: 'pre' | 'post';
+type LocalHookParams = {
   hookConfig: MigrationHook;
+  hookType: 'pre' | 'post';
   planName: string;
   planProject: string;
 };
 
-type CreateHooksParams = {
-  preMigrationHook: MigrationHook;
+type AapHookParams = {
+  hookType: 'pre' | 'post';
+  jobTemplateId: number;
+  jobTemplateName?: string;
+  planName: string;
+  planProject: string;
+};
+
+type CreateLocalHooksParams = {
+  planName: string;
+  planProject: string;
   postMigrationHook: MigrationHook;
-  planName: string;
-  planProject: string;
+  preMigrationHook: MigrationHook;
 };
 
-/**
- * Creates a migration hook with the specified configuration
- */
-const createHook = async (params: HookParams): Promise<V1beta1Hook> => {
+type CreateAapHooksParams = {
+  planName: string;
+  planProject: string;
+  postHookJobTemplateId?: number;
+  postHookJobTemplateName?: string;
+  preHookJobTemplateId?: number;
+  preHookJobTemplateName?: string;
+};
+
+const createLocalHook = async (params: LocalHookParams): Promise<V1beta1Hook> => {
   const { hookConfig, hookType, planName, planProject } = params;
 
   const hook: V1beta1Hook = {
@@ -45,15 +61,38 @@ const createHook = async (params: HookParams): Promise<V1beta1Hook> => {
   return k8sCreate({ data: hook, model: HookModel });
 };
 
-/**
- * Creates pre and post migration hooks based on form configuration
- */
-export const createMigrationHooks = async (params: CreateHooksParams): Promise<CreatedHooks> => {
+const createAapHook = async (params: AapHookParams): Promise<V1beta1Hook> => {
+  const { hookType, jobTemplateId, jobTemplateName, planName, planProject } = params;
+
+  const annotations: Record<string, string> = {};
+  if (jobTemplateName) {
+    annotations[ANNOTATION_AAP_JOB_TEMPLATE_NAME] = jobTemplateName;
+  }
+
+  const hook: V1beta1Hook = {
+    apiVersion: 'forklift.konveyor.io/v1beta1',
+    kind: 'Hook',
+    metadata: {
+      ...(!isEmpty(annotations) && { annotations }),
+      name: `${planName}-${hookType}-hook`,
+      namespace: planProject,
+    },
+    spec: {
+      aap: { jobTemplateId },
+    },
+  };
+
+  return k8sCreate({ data: hook, model: HookModel });
+};
+
+export const createLocalMigrationHooks = async (
+  params: CreateLocalHooksParams,
+): Promise<CreatedHooks> => {
   const { planName, planProject, postMigrationHook, preMigrationHook } = params;
   const hooks: CreatedHooks = {};
 
   if (preMigrationHook[MigrationHookFieldId.EnableHook]) {
-    hooks.preHook = await createHook({
+    hooks.preHook = await createLocalHook({
       hookConfig: preMigrationHook,
       hookType: 'pre',
       planName,
@@ -62,9 +101,45 @@ export const createMigrationHooks = async (params: CreateHooksParams): Promise<C
   }
 
   if (postMigrationHook[MigrationHookFieldId.EnableHook]) {
-    hooks.postHook = await createHook({
+    hooks.postHook = await createLocalHook({
       hookConfig: postMigrationHook,
       hookType: 'post',
+      planName,
+      planProject,
+    });
+  }
+
+  return hooks;
+};
+
+export const createAapMigrationHooks = async (
+  params: CreateAapHooksParams,
+): Promise<CreatedHooks> => {
+  const {
+    planName,
+    planProject,
+    postHookJobTemplateId,
+    postHookJobTemplateName,
+    preHookJobTemplateId,
+    preHookJobTemplateName,
+  } = params;
+  const hooks: CreatedHooks = {};
+
+  if (preHookJobTemplateId !== undefined) {
+    hooks.preHook = await createAapHook({
+      hookType: 'pre',
+      jobTemplateId: preHookJobTemplateId,
+      jobTemplateName: preHookJobTemplateName,
+      planName,
+      planProject,
+    });
+  }
+
+  if (postHookJobTemplateId !== undefined) {
+    hooks.postHook = await createAapHook({
+      hookType: 'post',
+      jobTemplateId: postHookJobTemplateId,
+      jobTemplateName: postHookJobTemplateName,
       planName,
       planProject,
     });

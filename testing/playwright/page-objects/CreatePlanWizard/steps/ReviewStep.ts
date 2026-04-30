@@ -141,8 +141,25 @@ export class ReviewStep {
     );
   }
 
-  async verifyHooksSection(preHook?: HookConfig, postHook?: HookConfig): Promise<void> {
+  async verifyHooksSection(
+    hookSource: 'none' | 'local' | 'aap' = 'none',
+    preHook?: HookConfig,
+    postHook?: HookConfig,
+  ): Promise<void> {
     await expect(this.page.getByTestId('review-hooks-section')).toBeVisible();
+
+    const hookSourceLocator = this.page.getByTestId('review-hook-source');
+
+    if (hookSource === 'none') {
+      await expect(hookSourceLocator).toHaveText('No hooks configured');
+      return;
+    }
+
+    if (hookSource === 'aap') {
+      await expect(hookSourceLocator).toHaveText('Ansible Automation Platform');
+      return;
+    }
+
     await this.verifyHookFields('pre', preHook);
     await this.verifyHookFields('post', postHook);
   }
