@@ -1,8 +1,6 @@
 import type { FC } from 'react';
 
 import {
-  Button,
-  ButtonVariant,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -133,9 +131,7 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({ convers
                     </FlexItem>
                     {run.metadata?.name && (
                       <FlexItem>
-                        <Button variant={ButtonVariant.link} isInline size="sm">
-                          {run.metadata.name}
-                        </Button>
+                        <span className="pf-v6-u-font-size-sm">{run.metadata.name}</span>
                       </FlexItem>
                     )}
                   </Flex>
