@@ -156,7 +156,7 @@ export class OffloadOptions {
   }
 
   async verifyNoValidationError(): Promise<void> {
-    const error = this.container.locator('.pf-m-error');
+    const error = this.container.getByTestId('offload-validation-error');
     await expect(error).not.toBeVisible();
   }
 
@@ -170,7 +170,9 @@ export class OffloadOptions {
   }
 
   async verifyValidationError(partialText: string): Promise<void> {
-    const error = this.container.locator('.pf-m-error', { hasText: partialText });
+    const error = this.container
+      .getByTestId('offload-validation-error')
+      .filter({ hasText: partialText });
     await expect(error).toBeVisible();
   }
 }

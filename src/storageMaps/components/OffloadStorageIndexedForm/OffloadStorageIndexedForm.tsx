@@ -117,7 +117,9 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
               <StorageProductField fieldId={productFieldId} suggestedProduct={suggestedProduct} />
               {offloadError && (
                 <HelperText>
-                  <HelperTextItem variant="error">{offloadError}</HelperTextItem>
+                  <HelperTextItem data-testid="offload-validation-error" variant="error">
+                    {offloadError}
+                  </HelperTextItem>
                 </HelperText>
               )}
               {hasAnyOffloadValue && !offloadError && (
