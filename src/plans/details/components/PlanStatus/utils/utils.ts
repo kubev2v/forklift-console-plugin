@@ -138,6 +138,14 @@ const isPlanWaitingForCutover = (plan: V1beta1Plan) =>
   isPlanExecuting(plan) &&
   getPlanIsWarm(plan);
 
+const isPlanPendingExecution = (plan: V1beta1Plan): boolean => {
+  if (!isPlanExecuting(plan)) return false;
+
+  const vms = getPlanVirtualMachinesMigrationStatus(plan);
+
+  return isEmpty(vms) || vms.every((vm) => !vm?.started);
+};
+
 export const isPlanArchived = (plan: V1beta1Plan) => {
   const conditions = getConditions(plan);
   return (
@@ -184,6 +192,10 @@ export const getPlanStatus = (plan: V1beta1Plan): PlanStatuses => {
 
   if (conditions.includes(CATEGORY_TYPES.FAILED) || vmError) {
     return PlanStatuses.Incomplete;
+  }
+
+  if (isPlanPendingExecution(plan)) {
+    return PlanStatuses.Pending;
   }
 
   if (isPlanExecuting(plan)) {

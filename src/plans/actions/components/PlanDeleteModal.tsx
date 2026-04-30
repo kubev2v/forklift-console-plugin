@@ -56,7 +56,7 @@ const PlanDeleteModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
           </ForkliftTrans>
         </StackItem>
         <StackItem>
-          {status === PlanStatuses.Executing && (
+          {(status === PlanStatuses.Executing || status === PlanStatuses.Pending) && (
             <Alert
               variant="danger"
               title={t('Plan is currently running')}

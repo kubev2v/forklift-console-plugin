@@ -961,6 +961,7 @@
   "Path": "Ruta",
   "paused": "en pausa",
   "Paused": "En pausa",
+  "Pending": "Pending",
   "Performance characteristics": "Características de rendimiento",
   "Persistent storage": "Almacenamiento persistente",
   "Persistent storage holds the migrated VM disks, ensuring data integrity and availability.": "El almacenamiento persistente contiene los discos de máquina virtual migrados, lo que garantiza la integridad y disponibilidad de los datos.",

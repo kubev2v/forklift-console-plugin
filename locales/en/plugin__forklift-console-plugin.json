@@ -956,6 +956,7 @@
   "Path": "Path",
   "paused": "paused",
   "Paused": "Paused",
+  "Pending": "Pending",
   "Performance characteristics": "Performance characteristics",
   "Persistent storage": "Persistent storage",
   "Persistent storage holds the migrated VM disks, ensuring data integrity and availability.": "Persistent storage holds the migrated VM disks, ensuring data integrity and availability.",

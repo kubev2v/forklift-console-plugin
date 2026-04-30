@@ -955,6 +955,7 @@
   "Path": "경로",
   "paused": "일시 중지됨",
   "Paused": "일시 중지됨",
+  "Pending": "Pending",
   "Performance characteristics": "성능 특성",
   "Persistent storage": "영구 스토리지",
   "Persistent storage holds the migrated VM disks, ensuring data integrity and availability.": "영구 스토리지는 마이그레이션된 VM 디스크를 저장하여 데이터 무결성과 가용성을 보장합니다.",

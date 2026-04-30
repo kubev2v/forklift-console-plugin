@@ -10,7 +10,12 @@ import { CalendarAltIcon } from '@patternfly/react-icons';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { isPlanArchived, isPlanExecuting } from '../details/components/PlanStatus/utils/utils';
+import { PlanStatuses } from '../details/components/PlanStatus/utils/types';
+import {
+  getPlanStatus,
+  isPlanArchived,
+  isPlanExecuting,
+} from '../details/components/PlanStatus/utils/utils';
 
 import type { PlanModalProps } from './components/types';
 
@@ -25,7 +30,12 @@ const PlanEditCutoverButton: FC<PlanEditCutoverButtonProps> = ({ plan, variant }
   const cutoverButtonRef = useRef<HTMLButtonElement>(null);
   const [activeMigration] = usePlanMigration(plan);
 
-  if (!getPlanIsWarm(plan) || !isPlanExecuting(plan) || isPlanArchived(plan)) {
+  if (
+    !getPlanIsWarm(plan) ||
+    !isPlanExecuting(plan) ||
+    isPlanArchived(plan) ||
+    getPlanStatus(plan) === PlanStatuses.Pending
+  ) {
     return null;
   }
 

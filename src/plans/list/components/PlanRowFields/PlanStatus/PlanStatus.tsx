@@ -80,7 +80,9 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
       flexWrap={{ default: 'nowrap' }}
     >
       <FlexItem className="plan-status-cell-label-section">
-        {isPlanRunning && PlanStatuses.Paused !== planStatus ? (
+        {isPlanRunning &&
+        PlanStatuses.Paused !== planStatus &&
+        PlanStatuses.Pending !== planStatus ? (
           <Split hasGutter>
             <Spinner size="md" data-testid="plan-progress-spinner" />
             <span className="pf-v6-u-font-size-sm" data-testid="plan-progress-percentage">
