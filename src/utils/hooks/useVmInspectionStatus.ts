@@ -19,8 +19,11 @@ export type VmInspectionStatus = {
 type GetVmInspectionStatusFn = (vmId: string) => VmInspectionStatus | undefined;
 
 const shouldReplace = (existing: V1beta1Conversion, candidate: V1beta1Conversion): boolean => {
-  if (isConversionActive(candidate)) return true;
-  if (isConversionActive(existing)) return false;
+  const candidateActive = isConversionActive(candidate);
+  const existingActive = isConversionActive(existing);
+
+  if (candidateActive && !existingActive) return true;
+  if (!candidateActive && existingActive) return false;
 
   return (
     (getConversionCreationTimestamp(candidate) ?? '') >
