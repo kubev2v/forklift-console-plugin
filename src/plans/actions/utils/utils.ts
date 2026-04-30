@@ -10,6 +10,7 @@ const partialStartDescription: Partial<StartDescriptionMap> = {
   [PlanStatuses.Completed]: t('All VMs were migrated'),
   [PlanStatuses.Executing]: t('The plan is currently in progress'),
   [PlanStatuses.Paused]: t('The plan is currently in progress'),
+  [PlanStatuses.Pending]: t('The plan is currently in progress'),
 };
 
 export const startDescription: StartDescriptionMap = Object.values(PlanStatuses).reduce(
@@ -26,7 +27,11 @@ export const getDuplicateDescription = (planStatus: PlanStatuses): string | null
 };
 
 export const getEditDescription = (planStatus: PlanStatuses): string | null => {
-  if (planStatus === PlanStatuses.Executing || planStatus === PlanStatuses.Paused)
+  if (
+    planStatus === PlanStatuses.Executing ||
+    planStatus === PlanStatuses.Paused ||
+    planStatus === PlanStatuses.Pending
+  )
     return t('Plans cannot be modified during migration');
   if (planStatus === PlanStatuses.Archived) return t('Archived plans cannot be edited');
   return null;

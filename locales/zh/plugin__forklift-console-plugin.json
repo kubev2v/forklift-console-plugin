@@ -955,6 +955,7 @@
   "Path": "路径",
   "paused": "暂停",
   "Paused": "暂停",
+  "Pending": "Pending",
   "Performance characteristics": "性能特性",
   "Persistent storage": "持久性存储",
   "Persistent storage holds the migrated VM disks, ensuring data integrity and availability.": "持久性存储包含迁移的虚拟机磁盘，确保数据完整性和可用性。",

@@ -53,7 +53,8 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
   const isWarmAndExecuting = getPlanIsWarm(plan) && isPlanExecuting(plan);
   const isArchived = isPlanArchived(plan);
   const buttonStartLabel = canReStart ? t('Restart') : t('Start');
-  const canScheduleCutover = isWarmAndExecuting && !isArchived;
+  const canScheduleCutover =
+    isWarmAndExecuting && !isArchived && planStatus !== PlanStatuses.Pending;
 
   const [activeMigration] = usePlanMigration(plan);
   const hasCutover = canScheduleCutover && Boolean(activeMigration?.spec?.cutover);
@@ -90,9 +91,12 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
           navigate(planURL);
         }}
         description={getEditDescription(planStatus)}
-        isDisabled={[PlanStatuses.Executing, PlanStatuses.Paused, PlanStatuses.Archived].some(
-          (status) => status === planStatus,
-        )}
+        isDisabled={[
+          PlanStatuses.Executing,
+          PlanStatuses.Paused,
+          PlanStatuses.Pending,
+          PlanStatuses.Archived,
+        ].some((status) => status === planStatus)}
       >
         {t('Edit')}
       </DropdownItem>

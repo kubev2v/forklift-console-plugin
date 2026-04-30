@@ -43,6 +43,7 @@ export enum PlanStatuses {
   CannotStart = 'CannotStart',
   Incomplete = 'Incomplete',
   Paused = 'Paused',
+  Pending = 'Pending',
   Executing = 'Executing',
   Ready = 'Ready',
 }

@@ -23,6 +23,7 @@ const planPhases: { id: PlanStatuses; label: string }[] = [
   { id: PlanStatuses.Executing, label: t('Running') },
   { id: PlanStatuses.Incomplete, label: t('Incomplete') },
   { id: PlanStatuses.Paused, label: t('Paused') },
+  { id: PlanStatuses.Pending, label: t('Pending') },
   { id: PlanStatuses.Ready, label: t('Ready to start') },
 ];
 

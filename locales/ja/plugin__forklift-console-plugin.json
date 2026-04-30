@@ -955,6 +955,7 @@
   "Path": "パス",
   "paused": "一時停止",
   "Paused": "一時停止",
+  "Pending": "Pending",
   "Performance characteristics": "パフォーマンス特性",
   "Persistent storage": "永続ストレージ",
   "Persistent storage holds the migrated VM disks, ensuring data integrity and availability.": "永続ストレージは、移行済みの仮想マシンのディスクを格納し、データの整合性と可用性を確保します。",

@@ -27,7 +27,7 @@ const ArchiveModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
   }, [plan]);
 
   const status = getPlanStatus(plan);
-  const isPlanRunning = status === PlanStatuses.Executing;
+  const isPlanRunning = status === PlanStatuses.Executing || status === PlanStatuses.Pending;
 
   return (
     <ModalForm

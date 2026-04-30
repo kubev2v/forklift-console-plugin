@@ -71,6 +71,11 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
       {t('Paused')}
     </Label>
   ),
+  [PlanStatuses.Pending]: (
+    <Label color="yellow" isCompact variant="filled" data-testid="plan-status-label">
+      {t('Pending')}
+    </Label>
+  ),
   [PlanStatuses.Ready]: (
     <Label
       className="forklift-plan-status__grey-label"
