@@ -119,6 +119,74 @@ describe('buildNetworkMappings', () => {
     });
   });
 
+  describe('namespace/name format parsing', () => {
+    it('should parse namespace/name from target network name', () => {
+      const mappings = [
+        {
+          [NetworkMapFieldId.SourceNetwork]: { name: 'source-network', id: 'source-network' },
+          [NetworkMapFieldId.TargetNetwork]: { name: 'my-namespace/my-nad', id: 'some-uid' },
+        },
+      ];
+
+      const result = buildNetworkMappings(mappings, mockVMwareProvider);
+
+      expect(result).toEqual([
+        {
+          destination: {
+            name: 'my-nad',
+            namespace: 'my-namespace',
+            type: 'multus',
+          },
+          source: { id: 'source-network', name: 'source-network' },
+        },
+      ]);
+    });
+
+    it('should fall back to id as namespace when name has no slash', () => {
+      const mappings = [
+        {
+          [NetworkMapFieldId.SourceNetwork]: { name: 'source-network', id: 'source-network' },
+          [NetworkMapFieldId.TargetNetwork]: { name: 'bare-name', id: 'fallback-ns' },
+        },
+      ];
+
+      const result = buildNetworkMappings(mappings, mockVMwareProvider);
+
+      expect(result).toEqual([
+        {
+          destination: {
+            name: 'bare-name',
+            namespace: 'fallback-ns',
+            type: 'multus',
+          },
+          source: { id: 'source-network', name: 'source-network' },
+        },
+      ]);
+    });
+
+    it('should parse namespace/name for OpenShift provider targets', () => {
+      const mappings = [
+        {
+          [NetworkMapFieldId.SourceNetwork]: { name: 'source-network', id: 'source-network' },
+          [NetworkMapFieldId.TargetNetwork]: { name: 'default/linux-bridge', id: 'uid-123' },
+        },
+      ];
+
+      const result = buildNetworkMappings(mappings, mockOpenShiftProvider);
+
+      expect(result).toEqual([
+        {
+          destination: {
+            name: 'linux-bridge',
+            namespace: 'default',
+            type: 'multus',
+          },
+          source: { name: 'source-network' },
+        },
+      ]);
+    });
+  });
+
   describe('Edge cases and validation', () => {
     it('should filter out mappings with missing source network name', () => {
       const mappings = [
