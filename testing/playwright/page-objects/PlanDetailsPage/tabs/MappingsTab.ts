@@ -159,12 +159,18 @@ export class MappingsTab {
   }
 
   async openNetworkMapEditModal(): Promise<NetworkMapEditModal> {
+    await expect(this.networkMapEditButton).toBeVisible({ timeout: 10000 });
     await this.networkMapEditButton.click();
     await this.networkMapEditModal.waitForModalToOpen();
     return this.networkMapEditModal;
   }
 
   async openStorageMapEditModal(): Promise<StorageMapEditModal> {
+    await this.storageMapReviewTable.locator('tbody tr').first().waitFor({
+      state: 'visible',
+      timeout: 15000,
+    });
+    await expect(this.storageMapEditButton).toBeVisible({ timeout: 10000 });
     await this.storageMapEditButton.click();
     await this.storageMapEditModal.waitForModalToOpen();
     return this.storageMapEditModal;

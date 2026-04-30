@@ -64,6 +64,19 @@ export class PlanDetailsPage {
     return this.page.getByTestId('plan-critical-alert');
   }
 
+  async duplicatePlan(newPlanName: string, namespace: string): Promise<void> {
+    await this.page.getByTestId('plan-actions-dropdown-button').click();
+    await this.page.getByRole('menuitem', { name: 'Duplicate' }).click();
+    const duplicateModal = this.page.getByRole('dialog', { name: 'Duplicate migration plan' });
+    await expect(duplicateModal).toBeVisible();
+    const nameInput = duplicateModal.locator('#name');
+    await nameInput.clear();
+    await nameInput.fill(newPlanName);
+    await duplicateModal.getByTestId('modal-confirm-button').click();
+    await expect(duplicateModal).not.toBeVisible();
+    await this.navigate(newPlanName, namespace);
+  }
+
   async getMigrationProgress(): Promise<string> {
     const statusContainer = this.page.getByTestId('plan-status-container');
     const statusElement = statusContainer.locator('[data-testid^="plan-status-"]').first();
