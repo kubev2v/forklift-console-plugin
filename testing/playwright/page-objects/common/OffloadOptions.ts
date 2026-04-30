@@ -12,6 +12,7 @@ const OFFLOAD_FIELD = {
 } as const;
 
 const EXPANDABLE_TOGGLE_TEXT = 'Offload options (optional)';
+const CLEAR_BUTTON_TEXT = 'Clear offload options';
 
 /**
  * Page object for interacting with the offload options expandable section
@@ -54,6 +55,12 @@ export class OffloadOptions {
     const option = listbox.getByRole('option', { name: optionText });
     await expect(option).toBeVisible();
     await option.click();
+  }
+
+  async clickClearOffloadOptions(mappingIndex: number): Promise<void> {
+    const btn = this.container.getByRole('button', { name: CLEAR_BUTTON_TEXT }).nth(mappingIndex);
+    await expect(btn).toBeVisible();
+    await btn.click();
   }
 
   async collapseOffloadOptions(mappingIndex: number): Promise<void> {
@@ -113,6 +120,18 @@ export class OffloadOptions {
     await expect(productBtn).toBeVisible();
   }
 
+  async verifyClearButtonDisabled(mappingIndex: number): Promise<void> {
+    const btn = this.container.getByRole('button', { name: CLEAR_BUTTON_TEXT }).nth(mappingIndex);
+    await expect(btn).toBeVisible();
+    await expect(btn).toBeDisabled();
+  }
+
+  async verifyClearButtonEnabled(mappingIndex: number): Promise<void> {
+    const btn = this.container.getByRole('button', { name: CLEAR_BUTTON_TEXT }).nth(mappingIndex);
+    await expect(btn).toBeVisible();
+    await expect(btn).toBeEnabled();
+  }
+
   async verifyDropdownOptions(
     mappingIndex: number,
     field: 'offloadPlugin' | 'storageProduct' | 'storageSecret',
@@ -136,6 +155,11 @@ export class OffloadOptions {
     await toggle.click();
   }
 
+  async verifyNoValidationError(): Promise<void> {
+    const error = this.container.getByTestId('offload-validation-error');
+    await expect(error).not.toBeVisible();
+  }
+
   async verifyOffloadToggleNotVisible(mappingIndex: number): Promise<void> {
     await expect(this.expandableToggle(mappingIndex)).not.toBeVisible();
   }
@@ -143,5 +167,12 @@ export class OffloadOptions {
   async verifyOffloadToggleVisible(mappingIndex: number): Promise<void> {
     const toggle = this.expandableToggle(mappingIndex);
     await expect(toggle).toBeVisible();
+  }
+
+  async verifyValidationError(partialText: string): Promise<void> {
+    const error = this.container
+      .getByTestId('offload-validation-error')
+      .filter({ hasText: partialText });
+    await expect(error).toBeVisible();
   }
 }
