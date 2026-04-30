@@ -21,13 +21,13 @@ import { ModalVariant } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { PlanOwnerAlert } from './utils/PlanOwnerAlert';
 import type { NetworkEditFormValues, NetworkMapEditProps } from './utils/types';
 
 const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
   closeModal,
   destinationProvider,
   initialMappings,
-  namespace,
   networkMap,
   sourceProvider,
 }) => {
@@ -63,10 +63,8 @@ const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
 
   const [sourceNetworks, sourceNetworksLoading, sourceNetworksError] =
     useSourceNetworks(sourceProvider);
-  const [targetNetworks, targetNetworksLoading, targetNetworksError] = useTargetNetworks(
-    destinationProvider,
-    namespace,
-  );
+  const [targetNetworks, targetNetworksLoading, targetNetworksError] =
+    useTargetNetworks(destinationProvider);
   const loadError = sourceNetworksError ?? targetNetworksError;
 
   const onSubmit = async (formData: NetworkEditFormValues) => {
@@ -125,9 +123,8 @@ const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
                 key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
                 fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
                 targetNetworks={targetNetworks}
-                emptyStateMessage={t(
-                  'Select a target provider and project to list available target networks',
-                )}
+                showIgnoreNetworkOption
+                emptyStateMessage={t('Select a target provider to list available target networks')}
                 isDisabled={isSubmitting}
               />,
             ],
@@ -162,6 +159,7 @@ const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
             },
           }}
         />
+        <PlanOwnerAlert networkMap={networkMap} />
         {error?.root && (
           <div className="pf-v6-u-mt-sm">
             <FormErrorHelperText error={error.root} />

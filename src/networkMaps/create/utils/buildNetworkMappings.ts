@@ -14,20 +14,23 @@ import { DEFAULT_NETWORK, IGNORED, MULTUS, POD } from '@utils/constants';
 import type { MappingValue } from '@utils/types';
 
 const getDestination = (targetNetwork: MappingValue): V1beta1NetworkMapSpecMapDestination => {
-  const isPodNetwork = targetNetwork.name === DEFAULT_NETWORK;
-  const isIgnoreNetwork = targetNetwork.name === IgnoreNetwork.Label;
-
-  if (isPodNetwork) {
+  if (targetNetwork.name === DEFAULT_NETWORK) {
     return { type: POD };
   }
 
-  if (isIgnoreNetwork) {
+  if (targetNetwork.name === IgnoreNetwork.Label) {
     return { type: IgnoreNetwork.Type };
   }
 
+  const slashIndex = targetNetwork.name.indexOf('/');
+  const [nadNamespace, nadName] =
+    slashIndex === -1
+      ? [targetNetwork.id, targetNetwork.name]
+      : [targetNetwork.name.substring(0, slashIndex), targetNetwork.name.substring(slashIndex + 1)];
+
   return {
-    name: targetNetwork.name,
-    namespace: targetNetwork.id,
+    name: nadName,
+    namespace: nadNamespace,
     type: MULTUS,
   };
 };

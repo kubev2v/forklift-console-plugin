@@ -204,7 +204,11 @@ export const validateNetworkMap = (validateNetworkMapParams: ValidateNetworkMapP
 };
 
 /**
- * Filters target networks by project/namespace and transforms to mapping object
+ * Filters target networks to those allowed by the Plan validation:
+ * only NADs in the Plan's target namespace or the `default` namespace.
+ *
+ * The forklift controller rejects Plans with NADs from other namespaces
+ * (NetMapDestinationNADNotValid condition).
  */
 export const filterTargetNetworksByProject = (
   availableTargetNetworks: OpenShiftNetworkAttachmentDefinition[],
