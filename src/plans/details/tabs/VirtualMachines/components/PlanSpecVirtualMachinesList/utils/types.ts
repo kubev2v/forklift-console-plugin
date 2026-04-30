@@ -22,6 +22,7 @@ export type SpecVirtualMachinePageData = {
 export enum PlanSpecVirtualMachinesTableResourceId {
   Name = 'name',
   Concerns = 'concerns',
+  InspectionStatus = 'inspectionStatus',
   InstanceType = 'instanceType',
   MigrateSharedDisks = 'migrateSharedDisks',
   VMTargetName = 'vmTargetName',

@@ -3,6 +3,7 @@ import type { EnhancedPlanSpecVms } from 'src/plans/details/tabs/Details/compone
 import VirtualMachineConcernsCell from '@components/Concerns/VirtualMachineConcernsCell';
 import { EMPTY_MSG } from '@utils/constants';
 
+import InspectionStatusCell from '../components/InspectionStatusCell';
 import { InstanceTypeCellRenderer } from '../components/InstanceType/InstanceTypeCellRenderer';
 import SpecVirtualMachinesActions from '../components/SpecVirtualMachinesActions';
 import { VMMigrateSharedDisksCellRenderer } from '../components/VMMigrateSharedDisksCellRenderer';
@@ -18,6 +19,9 @@ export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePa
     ),
     [PlanSpecVirtualMachinesTableResourceId.Concerns]: (
       <VirtualMachineConcernsCell vmData={inventoryVmData} conditions={conditions} />
+    ),
+    [PlanSpecVirtualMachinesTableResourceId.InspectionStatus]: (
+      <InspectionStatusCell data={fieldsData} />
     ),
     [PlanSpecVirtualMachinesTableResourceId.InstanceType]: (
       <InstanceTypeCellRenderer instanceType={specVM?.instanceType} />
