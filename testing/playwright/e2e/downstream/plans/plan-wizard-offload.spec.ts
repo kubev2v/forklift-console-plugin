@@ -5,14 +5,14 @@ import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/Cre
 import { createPlanTestData, OffloadPlugins, StorageProducts } from '../../../types/test-data';
 import { createOffloadTestSecret } from '../../../utils/offload-helpers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe(
   'Storage Offloading - Plan Wizard with Offload + Review',
   { tag: '@downstream' },
   () => {
-    requireVersion(test, V2_11_0);
+    requireVersion(test, V2_12_0);
 
     test('should configure offload in plan wizard and display it correctly in review', async ({
       page,

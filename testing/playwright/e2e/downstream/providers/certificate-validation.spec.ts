@@ -13,7 +13,7 @@ import { ProviderDetailsPage } from '../../../page-objects/ProviderDetailsPage/P
 import { ProviderType } from '../../../types/enums';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 import { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_11_0, V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 import { createProviderData } from './creation-scenarios';
@@ -105,6 +105,8 @@ test.describe('vSphere Provider Certificate Validation', () => {
       tag: '@downstream',
     },
     async ({ page }) => {
+      requireVersion(test, V2_12_0);
+
       const createProvider = new CreateProviderPage(page, resourceManager);
       const testData = createProviderData(ProviderType.VSPHERE, VSPHERE_KEY, {
         skipVddk: true,

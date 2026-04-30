@@ -7,14 +7,14 @@ import { StorageMapsListPage } from '../../../page-objects/StorageMapsListPage';
 import { ALL_STORAGE_PRODUCTS, OffloadPlugins, StorageProducts } from '../../../types/test-data';
 import { createOffloadTestSecret } from '../../../utils/offload-helpers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe(
   'Storage Offloading - Create, Verify & Edit Storage Map',
   { tag: '@downstream' },
   () => {
-    requireVersion(test, V2_11_0);
+    requireVersion(test, V2_12_0);
 
     test('should create storage map with offload, verify details, and edit offload options', async ({
       page,

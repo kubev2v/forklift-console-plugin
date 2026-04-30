@@ -3,11 +3,11 @@ import { expect } from '@playwright/test';
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { ProviderDetailsPage } from '../../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Provider Credentials - Editing', { tag: '@downstream' }, () => {
-  requireVersion(test, V2_11_0);
+  requireVersion(test, V2_12_0);
 
   test('should test credential editing interactions', async ({ page, testProvider }) => {
     const providerDetailsPage = new ProviderDetailsPage(page);
