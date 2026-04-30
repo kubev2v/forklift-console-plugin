@@ -72,12 +72,7 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
     </Label>
   ),
   [PlanStatuses.Pending]: (
-    <Label
-      className="forklift-plan-status__gold-label"
-      isCompact
-      variant="filled"
-      data-testid="plan-status-label"
-    >
+    <Label color="yellow" isCompact variant="filled" data-testid="plan-status-label">
       {t('Pending')}
     </Label>
   ),
