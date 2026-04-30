@@ -1,12 +1,13 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
+import { ADD, REMOVE, REPLACE } from '@components/ModalForm/utils/constants';
 import { ForkliftControllerModel, type V1beta1ForkliftController } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, ModalVariant } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type {
@@ -49,9 +50,9 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
       const currentValue = (controller?.spec as Record<string, string | number>)?.[fieldKey];
       const newValue = formData[fieldKey];
 
-      if (newValue === undefined || newValue === '') {
+      if (newValue === undefined || isEmpty(String(newValue))) {
         return {
-          op: 'remove',
+          op: REMOVE,
           path: `/spec/${fieldKey}`,
         };
       }

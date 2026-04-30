@@ -32,6 +32,9 @@ export const getApplianceManagement = (provider: V1beta1Provider) =>
 export const isApplianceManagementEnabled = (provider: V1beta1Provider) =>
   getApplianceManagement(provider) === 'true';
 
+export const getAnnotation = (resource: K8sResourceCommon, key: string): string | undefined =>
+  resource?.metadata?.annotations?.[key];
+
 export const getAnnotations = (provider: V1beta1Provider) => provider?.metadata?.annotations;
 
 export const getUrl = (provider: V1beta1Provider) => provider?.spec?.url;

@@ -15,8 +15,8 @@ export const getHooksSubFieldId = <T extends MigrationHookFieldId>(
 
 export const getEnableHookFieldLabel = (fieldId: HooksFormFieldId): string =>
   fieldId === HooksFormFieldId.PreMigration
-    ? t('Enable pre migration hook')
-    : t('Enable post migration hook');
+    ? t('Enable pre-migration hook')
+    : t('Enable post-migration hook');
 
 export const hooksFormFieldLabels: Partial<Record<MigrationHookFieldId, ReturnType<typeof t>>> = {
   [MigrationHookFieldId.AnsiblePlaybook]: t('Ansible playbook'),

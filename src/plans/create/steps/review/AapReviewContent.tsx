@@ -16,9 +16,10 @@ const formatTemplateDisplay = (
   id: number | undefined,
   name: string | undefined,
   fallback: string,
+  translate: (key: string, options?: Record<string, unknown>) => string,
 ): string => {
   if (id === undefined) return fallback;
-  return name ? `${name} (ID: ${String(id)})` : String(id);
+  return name ? translate('{{name}} (ID: {{id}})', { id: String(id), name }) : String(id);
 };
 
 const AapReviewContent: FC = () => {
@@ -47,14 +48,14 @@ const AapReviewContent: FC = () => {
       <DescriptionListGroup>
         <DescriptionListTerm>{t('Pre-migration hook')}</DescriptionListTerm>
         <DescriptionListDescription data-testid="review-aap-pre-hook-template">
-          {formatTemplateDisplay(preJobTemplateId, preJobTemplateName, t('None'))}
+          {formatTemplateDisplay(preJobTemplateId, preJobTemplateName, t('None'), t)}
         </DescriptionListDescription>
       </DescriptionListGroup>
 
       <DescriptionListGroup>
         <DescriptionListTerm>{t('Post-migration hook')}</DescriptionListTerm>
         <DescriptionListDescription data-testid="review-aap-post-hook-template">
-          {formatTemplateDisplay(postJobTemplateId, postJobTemplateName, t('None'))}
+          {formatTemplateDisplay(postJobTemplateId, postJobTemplateName, t('None'), t)}
         </DescriptionListDescription>
       </DescriptionListGroup>
     </DescriptionList>

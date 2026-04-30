@@ -2,6 +2,7 @@ import type { FC } from 'react';
 
 import { DetailsItem } from '@components/DetailItems/DetailItem';
 import type { V1beta1Hook, V1beta1HookSpecAap } from '@forklift-ui/types';
+import { getAnnotation } from '@utils/crds/common/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 import { ANNOTATION_AAP_JOB_TEMPLATE_NAME } from '@utils/types/aap';
 
@@ -12,7 +13,7 @@ type AapHookDetailsProps = {
 
 const AapHookDetails: FC<AapHookDetailsProps> = ({ aap, hook }) => {
   const { t } = useForkliftTranslation();
-  const templateName = hook?.metadata?.annotations?.[ANNOTATION_AAP_JOB_TEMPLATE_NAME];
+  const templateName = getAnnotation(hook, ANNOTATION_AAP_JOB_TEMPLATE_NAME);
 
   return (
     <>

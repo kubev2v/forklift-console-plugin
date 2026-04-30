@@ -63,7 +63,7 @@ const HooksStep: FC = () => {
 
         {hookSource === HOOK_SOURCE_LOCAL && (
           <>
-            <FormSection title={t('Pre migration hook')}>
+            <FormSection title={t('Pre-migration hook')}>
               <EnableHookCheckbox fieldId={HooksFormFieldId.PreMigration} />
 
               {preMigrationHook?.enableHook && (
@@ -75,7 +75,7 @@ const HooksStep: FC = () => {
               )}
             </FormSection>
 
-            <FormSection title={t('Post migration hook')} className="pf-v6-u-mt-md">
+            <FormSection title={t('Post-migration hook')} className="pf-v6-u-mt-md">
               <EnableHookCheckbox fieldId={HooksFormFieldId.PostMigration} />
 
               {postMigrationHook?.enableHook && (

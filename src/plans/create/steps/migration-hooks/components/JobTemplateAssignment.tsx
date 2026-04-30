@@ -3,6 +3,7 @@ import { Controller } from 'react-hook-form';
 
 import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { FormGroup, FormSection } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import type { AapJobTemplate } from '@utils/types/aap';
 
@@ -57,8 +58,7 @@ const JobTemplateAssignment: FC<JobTemplateAssignmentProps> = ({ jobTemplates })
               options={preHookOptions}
               value={field.value}
               onChange={(selected) => {
-                const numericValue =
-                  selected !== undefined && selected !== '' ? Number(selected) : undefined;
+                const numericValue = isEmpty(selected as string) ? Number(selected) : undefined;
                 field.onChange(numericValue);
                 setValue(
                   AapFormFieldId.AapPreHookJobTemplateName,

@@ -96,6 +96,7 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
       await wizard.clickNext();
       await wizard.review.verifyStepVisible();
       await wizard.review.verifyHooksSection(
+        'local',
         {
           enabled: true,
           hookRunnerImage: HOOK_RUNNER_IMAGE,

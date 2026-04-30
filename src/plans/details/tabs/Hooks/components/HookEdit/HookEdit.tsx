@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import {
   HOOK_SOURCE_AAP,
@@ -45,6 +46,7 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
   });
 
   const {
+    clearErrors,
     control,
     formState: { errors, isDirty },
     handleSubmit,
@@ -53,6 +55,15 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
   } = methods;
 
   const hookSource = watch('hookSource');
+
+  useEffect(() => {
+    if (hookSource !== HOOK_SOURCE_LOCAL) {
+      clearErrors([HookField.Image, HookField.ServiceAccount, HookField.Playbook]);
+    }
+    if (hookSource !== HOOK_SOURCE_AAP) {
+      clearErrors([HookField.AapJobTemplateId]);
+    }
+  }, [clearErrors, hookSource]);
   const hookTypeLowercase = HookTypeLabelLowercase[step];
   const title = t('Edit {{hookTypeLowercase}} migration hook', { hookTypeLowercase });
 
