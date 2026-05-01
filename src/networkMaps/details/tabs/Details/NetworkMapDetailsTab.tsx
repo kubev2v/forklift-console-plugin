@@ -108,7 +108,6 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
             launcher<NetworkMapEditProps>(NetworkMapEdit, {
               destinationProvider,
               initialMappings: currentMappings,
-              namespace,
               networkMap,
               sourceProvider,
             });
