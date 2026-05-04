@@ -1,4 +1,4 @@
-# Claude.md - AI Assistant Guidelines for Forklift Console Plugin
+# AI Assistant Guidelines for Forklift Console Plugin
 
 ## Project Overview
 

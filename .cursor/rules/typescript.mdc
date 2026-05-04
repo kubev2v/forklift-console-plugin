@@ -6,7 +6,7 @@ alwaysApply: false
 
 # TypeScript Guidelines (Supplement)
 
-For core TypeScript conventions (type vs interface, no `any`, explicit return types, naming), see **CLAUDE.md**. This rule adds advanced patterns.
+For core TypeScript conventions (type vs interface, no `any`, explicit return types, naming), see **AGENTS.md**. This rule adds advanced patterns.
 
 ---
 

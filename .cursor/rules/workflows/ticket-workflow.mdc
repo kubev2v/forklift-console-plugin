@@ -60,7 +60,7 @@ Present findings to the user:
 ## 5. Phase 4: Implementation (after user selects approach)
 
 1. Implement the selected fix/feature
-2. Follow project coding conventions (CLAUDE.md)
+2. Follow project coding conventions (AGENTS.md)
 3. Add appropriate error handling
 4. Consider edge cases
 

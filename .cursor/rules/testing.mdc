@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Testing Guidelines (Supplement)
 
-For basic testing approach (Jest for unit, Playwright for E2E), see **CLAUDE.md**. This rule adds detailed patterns.
+For basic testing approach (Jest for unit, Playwright for E2E), see **AGENTS.md**. This rule adds detailed patterns.
 
 ---
 

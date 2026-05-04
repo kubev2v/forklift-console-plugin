@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Forklift Console Plugin - Domain Context
 
-For coding standards, conventions, and development commands, see **CLAUDE.md** at the project root.
+For coding standards, conventions, and development commands, see **AGENTS.md** at the project root.
 
 This rule provides Forklift-specific domain knowledge not covered there.
 
@@ -116,11 +116,11 @@ src/
 
 ## Rule Maintenance
 
-When implementing a new feature that introduces concepts, patterns, CRDs, provider types, statuses, or conventions **not already covered** by the existing rules (this file, `CLAUDE.md`, or any file under `.cursor/rules/`), you **must** update the relevant rule file as part of the same change. Examples:
+When implementing a new feature that introduces concepts, patterns, CRDs, provider types, statuses, or conventions **not already covered** by the existing rules (this file, `AGENTS.md`, or any file under `.cursor/rules/`), you **must** update the relevant rule file as part of the same change. Examples:
 
 - New CRD or resource type -- add it to this file under **Core CRDs**.
 - New provider type or status -- add it to this file and to `agents/forklift-expert.mdc`.
-- New shared hook, utility, or component pattern -- add it to `CLAUDE.md` or the matching file-specific rule.
+- New shared hook, utility, or component pattern -- add it to `AGENTS.md` or the matching file-specific rule.
 - New testing pattern or tooling -- update `testing.mdc`.
 - New i18n utility or namespace change -- update `i18n.mdc`.
 - New workflow or development process -- add or update the relevant file under `workflows/`.

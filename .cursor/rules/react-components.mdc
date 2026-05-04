@@ -6,7 +6,7 @@ alwaysApply: false
 
 # React Component Patterns (Supplement)
 
-For core React conventions (functional components, FC type, imports, hooks rules), see **CLAUDE.md**. This rule adds PatternFly and Console SDK patterns.
+For core React conventions (functional components, FC type, imports, hooks rules), see **AGENTS.md**. This rule adds PatternFly and Console SDK patterns.
 
 ---
 
