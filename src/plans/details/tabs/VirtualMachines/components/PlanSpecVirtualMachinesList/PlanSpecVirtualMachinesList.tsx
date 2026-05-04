@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react';
+import { type FC, useCallback, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import InspectionExpandedSection from 'src/components/InspectVirtualMachines/InspectionExpandedSection';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
@@ -13,6 +13,7 @@ import type { V1beta1Plan } from '@forklift-ui/types';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { getNamespace, getUID } from '@utils/crds/common/selectors';
 import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
+import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 import { useWatchConversions } from '@utils/hooks/useWatchConversions';
 
 import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
@@ -54,11 +55,39 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
     },
   });
 
+  const getVmInspectionStatus = useVmInspectionStatus(conversions);
+
+  const enrichedData = useMemo(
+    () =>
+      (specVirtualMachinesListData ?? []).map((item) => ({
+        ...item,
+        inspectionStatus: getVmInspectionStatus(item.specVM?.id ?? ''),
+      })),
+    [specVirtualMachinesListData, getVmInspectionStatus],
+  );
+
+  const expanded = useCallback(
+    (props: { resourceData: SpecVirtualMachinePageData }) => {
+      const vmId = props.resourceData?.specVM?.id ?? '';
+      return (
+        <Stack hasGutter>
+          <StackItem>
+            <ConcernsAndConditionsTable vmData={props.resourceData} />
+          </StackItem>
+          <StackItem>
+            <InspectionExpandedSection conversions={conversions} vmId={vmId} />
+          </StackItem>
+        </Stack>
+      );
+    },
+    [conversions],
+  );
+
   return (
     <StandardPageWithSelection<SpecVirtualMachinePageData>
       title={t('Virtual machines')}
       data-testid="plan-spec-virtual-machines-list"
-      dataSource={[specVirtualMachinesListData ?? [], !loading, inventoryError]}
+      dataSource={[enrichedData, !loading, inventoryError]}
       cell={PlanSpecVirtualMachinesRow}
       fieldsMetadata={specVirtualMachineFields}
       userSettings={userSettings}
@@ -67,19 +96,7 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       onSelect={onSelect}
       selectedIds={selectedIds}
       GlobalActionToolbarItems={actions}
-      expanded={(props) => {
-        const vmId = props.resourceData?.specVM?.id ?? '';
-        return (
-          <Stack hasGutter>
-            <StackItem>
-              <ConcernsAndConditionsTable vmData={props.resourceData} />
-            </StackItem>
-            <StackItem>
-              <InspectionExpandedSection conversions={conversions} vmId={vmId} />
-            </StackItem>
-          </Stack>
-        );
-      }}
+      expanded={expanded}
       expandedIds={expandedIds}
       extraSupportedMatchers={extraSupportedMatchers}
       extraSupportedFilters={extraSupportedFilters}

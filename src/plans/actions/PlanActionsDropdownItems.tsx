@@ -1,9 +1,9 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { useCanInspectPlan } from 'src/components/InspectVirtualMachines/hooks/useCanInspectPlan';
 import InspectVirtualMachinesModal, {
   type InspectVirtualMachinesModalProps,
 } from 'src/components/InspectVirtualMachines/InspectVirtualMachinesModal';
+import { useCanInspectPlan } from 'src/plans/details/hooks/useCanInspectPlan';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -158,14 +158,14 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
         {t('Duplicate')}
       </DropdownItem>
       <DropdownItem
-        value={4}
+        value={5}
         key="archive"
         isDisabled={!canDelete || planStatus === PlanStatuses.Archived}
         onClick={onClickArchive}
       >
         {t('Archive')}
       </DropdownItem>
-      <DropdownItem value={5} key="delete" isDisabled={!canDelete} onClick={onClickPlanDelete}>
+      <DropdownItem value={6} key="delete" isDisabled={!canDelete} onClick={onClickPlanDelete}>
         {t('Delete')}
       </DropdownItem>
     </DropdownList>

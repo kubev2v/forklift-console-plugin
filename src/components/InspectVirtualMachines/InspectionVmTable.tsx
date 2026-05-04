@@ -63,7 +63,7 @@ const InspectionVmTable: FC<InspectionVmTableProps> = ({
           </Tr>
         </Thead>
         <Tbody>
-          {vmRows.map((vm) => {
+          {vmRows.map((vm, rowIndex) => {
             const status = getVmInspectionStatus(vm.id);
             return (
               <Tr key={vm.id}>
@@ -74,7 +74,7 @@ const InspectionVmTable: FC<InspectionVmTableProps> = ({
                     onSelect: () => {
                       toggleVmSelection(vm.id);
                     },
-                    rowIndex: 0,
+                    rowIndex,
                   }}
                 />
                 <Td dataLabel={t('VM Name')}>{vm.name}</Td>

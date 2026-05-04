@@ -1,15 +1,17 @@
-import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { getVddkInitImage } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import {
   isPlanArchived,
   isPlanExecuting,
   isPlanSucceeded,
-} from '../../../plans/details/components/PlanStatus/utils/utils';
+} from '../components/PlanStatus/utils/utils';
+
+import usePlanSourceProvider from './usePlanSourceProvider';
 
 type UseCanInspectPlanResult = {
   canInspect: boolean;
@@ -20,6 +22,7 @@ type UseCanInspectPlanResult = {
 
 export const useCanInspectPlan = (plan: V1beta1Plan): UseCanInspectPlanResult => {
   const { loaded, sourceProvider } = usePlanSourceProvider(plan);
+  const { t } = useForkliftTranslation();
   const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
   const isVddkConfigured = !isEmpty(getVddkInitImage(sourceProvider));
   const providerReady =
@@ -35,7 +38,7 @@ export const useCanInspectPlan = (plan: V1beta1Plan): UseCanInspectPlanResult =>
   if (!providerReady) {
     return {
       canInspect: false,
-      disabledReason: 'Source provider is not ready.',
+      disabledReason: t('Source provider is not ready.'),
       isVsphere,
       provider: sourceProvider,
     };
@@ -44,8 +47,9 @@ export const useCanInspectPlan = (plan: V1beta1Plan): UseCanInspectPlanResult =>
   if (!isVddkConfigured) {
     return {
       canInspect: false,
-      disabledReason:
+      disabledReason: t(
         'VDDK image is required for deep inspection. Configure it in the provider settings.',
+      ),
       isVsphere,
       provider: sourceProvider,
     };
@@ -54,7 +58,7 @@ export const useCanInspectPlan = (plan: V1beta1Plan): UseCanInspectPlanResult =>
   if (isPlanExecuting(plan)) {
     return {
       canInspect: false,
-      disabledReason: 'Cannot inspect VMs while migration is in progress.',
+      disabledReason: t('Cannot inspect VMs while migration is in progress.'),
       isVsphere,
       provider: sourceProvider,
     };
@@ -63,7 +67,7 @@ export const useCanInspectPlan = (plan: V1beta1Plan): UseCanInspectPlanResult =>
   if (isPlanArchived(plan)) {
     return {
       canInspect: false,
-      disabledReason: 'Cannot inspect VMs in an archived plan.',
+      disabledReason: t('Cannot inspect VMs in an archived plan.'),
       isVsphere,
       provider: sourceProvider,
     };
@@ -72,7 +76,7 @@ export const useCanInspectPlan = (plan: V1beta1Plan): UseCanInspectPlanResult =>
   if (isPlanSucceeded(plan)) {
     return {
       canInspect: false,
-      disabledReason: 'VMs in a completed migration cannot be inspected.',
+      disabledReason: t('VMs in a completed migration cannot be inspected.'),
       isVsphere,
       provider: sourceProvider,
     };

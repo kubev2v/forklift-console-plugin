@@ -6,7 +6,7 @@ export const CONVERSION_TYPE = {
 } as const;
 
 export const CONVERSION_PHASE = {
-  CREATING_POD: 'CreatingPod',
+  CANCELED: 'Canceled',
   FAILED: 'Failed',
   PENDING: 'Pending',
   RUNNING: 'Running',
@@ -24,8 +24,7 @@ export const CONVERSION_LABELS = {
   VM_ID: 'vmID',
 } as const;
 
-export const ACTIVE_CONVERSION_PHASES = new Set([
+export const ACTIVE_CONVERSION_PHASES: ReadonlySet<string> = new Set<string>([
   CONVERSION_PHASE.PENDING,
-  CONVERSION_PHASE.CREATING_POD,
   CONVERSION_PHASE.RUNNING,
 ]);

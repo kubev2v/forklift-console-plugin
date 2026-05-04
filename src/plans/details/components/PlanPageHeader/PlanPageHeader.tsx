@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 import { PageHeadings } from 'src/components/DetailPageHeadings/PageHeadings';
-import { useCanInspectPlan } from 'src/components/InspectVirtualMachines/hooks/useCanInspectPlan';
 import InspectVirtualMachinesModal, {
   type InspectVirtualMachinesModalProps,
 } from 'src/components/InspectVirtualMachines/InspectVirtualMachinesModal';
 import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 import PlanActionsDropdown from 'src/plans/actions/PlanActionsDropdown';
 import PlanEditCutoverButton from 'src/plans/actions/PlanEditCutoverButton';
+import { useCanInspectPlan } from 'src/plans/details/hooks/useCanInspectPlan';
 
 import { PlanModel } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';

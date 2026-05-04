@@ -51,7 +51,7 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
   const planUid = plan?.metadata?.uid ?? '';
   const isVddkConfigured = !isEmpty(getVddkInitImage(provider));
 
-  const [conversions] = useWatchConversions({
+  const [conversions, conversionsLoaded, conversionsError] = useWatchConversions({
     namespace: planNamespace,
     selector: {
       matchLabels: {
@@ -84,21 +84,18 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
   const toggleVmSelection = (vmId: string): void => {
     setSelectedVmIds((prev) => {
       const next = new Set(prev);
-      if (next.has(vmId)) {
-        next.delete(vmId);
-      } else {
-        next.add(vmId);
-      }
+      if (next.has(vmId)) next.delete(vmId);
+      else next.add(vmId);
       return next;
     });
   };
 
   const toggleSelectAll = (): void => {
-    if (selectedCount === selectableVms.length) {
-      setSelectedVmIds(new Set());
-    } else {
-      setSelectedVmIds(new Set(selectableVms.map((vm) => vm.id)));
-    }
+    setSelectedVmIds(
+      selectedCount === selectableVms.length
+        ? new Set()
+        : new Set(selectableVms.map((vm) => vm.id)),
+    );
   };
 
   const handleSubmit = useCallback(async () => {
@@ -106,7 +103,7 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
     setError(null);
 
     const vmsToInspect = vmRows
-      .filter((vm) => selectedVmIds.has(vm.id))
+      .filter((vm) => selectedVmIds.has(vm.id) && !vm.isActive)
       .map((vm) => ({ id: vm.id, name: vm.name }));
 
     try {
@@ -116,7 +113,7 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
         closeModal();
       } else {
         setError(
-          t('Failed to create inspections for {{count}} VMs', {
+          t('Failed to create inspection for {{count}} VM', {
             count: result.failed.length,
           }),
         );
@@ -128,8 +125,15 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
     }
   }, [vmRows, selectedVmIds, createInspections, closeModal, t]);
 
+  const isSubmitDisabled =
+    selectedCount === 0 ||
+    !isVddkConfigured ||
+    isSubmitting ||
+    !conversionsLoaded ||
+    Boolean(conversionsError);
+
   const confirmLabel =
-    selectedCount > 0 ? t('Inspect {{count}} VMs', { count: selectedCount }) : t('Inspect VMs');
+    selectedCount > 0 ? t('Inspect {{count}} VM', { count: selectedCount }) : t('Inspect VMs');
 
   return (
     <Modal
@@ -179,7 +183,7 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
           variant={ButtonVariant.primary}
           onClick={handleSubmit}
           isLoading={isSubmitting}
-          isDisabled={selectedCount === 0 || !isVddkConfigured || isSubmitting}
+          isDisabled={isSubmitDisabled}
           data-testid="inspect-vms-confirm-button"
         >
           {confirmLabel}

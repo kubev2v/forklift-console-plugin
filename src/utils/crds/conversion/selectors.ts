@@ -3,6 +3,7 @@ import type {
   ConversionCondition,
   ConversionPhase,
   ConversionStatus,
+  InspectionResult,
   V1beta1Conversion,
 } from './types';
 
@@ -15,9 +16,15 @@ export const getConversionPodRef = (conversion: V1beta1Conversion): ConversionSt
 export const getConversionCreationTimestamp = (conversion: V1beta1Conversion): string | undefined =>
   conversion?.metadata?.creationTimestamp;
 
+export const getConversionCompletionTime = (conversion: V1beta1Conversion): string | undefined =>
+  conversion?.status?.completionTime;
+
+export const getInspectionResult = (conversion: V1beta1Conversion): InspectionResult | undefined =>
+  conversion?.status?.inspectionResult;
+
 export const isConversionActive = (conversion: V1beta1Conversion): boolean => {
   const phase = getConversionPhase(conversion);
-  return phase !== undefined && (ACTIVE_CONVERSION_PHASES as Set<string>).has(phase);
+  return phase !== undefined && ACTIVE_CONVERSION_PHASES.has(phase);
 };
 
 export const getCriticalConditions = (conversion: V1beta1Conversion): ConversionCondition[] =>

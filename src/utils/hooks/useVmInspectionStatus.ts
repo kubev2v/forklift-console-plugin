@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { CONVERSION_LABELS } from '@utils/crds/conversion/constants';
 import {
@@ -51,15 +51,18 @@ export const useVmInspectionStatus = (
     return map;
   }, [conversions]);
 
-  return (vmId: string): VmInspectionStatus | undefined => {
-    const conversion = vmStatusMap.get(vmId);
-    if (!conversion) return undefined;
+  return useCallback(
+    (vmId: string): VmInspectionStatus | undefined => {
+      const conversion = vmStatusMap.get(vmId);
+      if (!conversion) return undefined;
 
-    return {
-      conversion,
-      conversionName: conversion.metadata?.name,
-      lastRun: getConversionCreationTimestamp(conversion),
-      phase: getConversionPhase(conversion),
-    };
-  };
+      return {
+        conversion,
+        conversionName: conversion.metadata?.name,
+        lastRun: getConversionCreationTimestamp(conversion),
+        phase: getConversionPhase(conversion),
+      };
+    },
+    [vmStatusMap],
+  );
 };

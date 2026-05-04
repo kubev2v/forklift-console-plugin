@@ -2,6 +2,7 @@ import type { FC, ReactNode } from 'react';
 
 import { Flex, FlexItem, Icon, Label, Timestamp } from '@patternfly/react-core';
 import {
+  BanIcon,
   CheckCircleIcon,
   ExclamationCircleIcon,
   InProgressIcon,
@@ -51,6 +52,16 @@ const getStatusConfig = (
         labelStatus: 'danger',
         showTimestamp: true,
       };
+    case CONVERSION_PHASE.CANCELED:
+      return {
+        icon: (
+          <Icon isInline>
+            <BanIcon />
+          </Icon>
+        ),
+        label: t('Canceled'),
+        showTimestamp: true,
+      };
     case CONVERSION_PHASE.RUNNING:
       return {
         icon: (
@@ -62,7 +73,6 @@ const getStatusConfig = (
         labelStatus: 'info',
         showTimestamp: false,
       };
-    case CONVERSION_PHASE.CREATING_POD:
     case CONVERSION_PHASE.PENDING:
     default:
       return {

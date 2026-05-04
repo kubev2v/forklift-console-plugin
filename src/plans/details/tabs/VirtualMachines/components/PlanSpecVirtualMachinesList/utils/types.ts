@@ -7,16 +7,18 @@ import type {
   V1beta1PlanStatusConditions,
   V1beta1PlanStatusMigrationVms,
 } from '@forklift-ui/types';
+import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 
 export type SpecVirtualMachinePageData = {
-  plan: V1beta1Plan;
-  vmIndex: number;
-  specVM: V1beta1PlanSpecVms;
-  sourceProviderType?: ProviderType;
-  statusVM?: V1beta1PlanStatusMigrationVms;
   conditions?: V1beta1PlanStatusConditions[];
+  inspectionStatus?: VmInspectionStatus;
   inventoryVmData: VmData;
+  plan: V1beta1Plan;
+  sourceProviderType?: ProviderType;
+  specVM: V1beta1PlanSpecVms;
+  statusVM?: V1beta1PlanStatusMigrationVms;
   targetNamespace: string;
+  vmIndex: number;
 };
 
 export enum PlanSpecVirtualMachinesTableResourceId {
