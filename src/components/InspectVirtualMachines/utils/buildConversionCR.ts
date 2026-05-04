@@ -10,15 +10,37 @@ type BuildConversionCRParams = {
   vmName: string;
 };
 
-const sanitizeK8sName = (name: string): string => {
-  const sanitized = name
-    .toLowerCase()
-    .replaceAll(/[^a-z0-9-]/gu, '-')
-    .replaceAll(/-+/gu, '-')
-    .replace(/^-+|-+$/gu, '')
-    .slice(0, 40);
+const isAlphanumericOrHyphen = (char: string): boolean =>
+  (char >= 'a' && char <= 'z') || (char >= '0' && char <= '9') || char === '-';
 
-  return sanitized || 'vm';
+const sanitizeK8sName = (name: string): string => {
+  let result = '';
+  let lastWasHyphen = false;
+
+  for (const char of name.toLowerCase()) {
+    if (isAlphanumericOrHyphen(char)) {
+      if (char === '-') {
+        if (!lastWasHyphen) {
+          result += char;
+          lastWasHyphen = true;
+        }
+      } else {
+        result += char;
+        lastWasHyphen = false;
+      }
+    } else if (!lastWasHyphen) {
+      result += '-';
+      lastWasHyphen = true;
+    }
+  }
+
+  let start = 0;
+  while (start < result.length && result[start] === '-') start += 1;
+  let end = result.length;
+  while (end > start && result[end - 1] === '-') end -= 1;
+
+  const trimmed = result.slice(start, end).slice(0, 40);
+  return trimmed || 'vm';
 };
 
 export const buildConversionCR = ({
