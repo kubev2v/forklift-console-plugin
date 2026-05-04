@@ -2,6 +2,8 @@ import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 
+import type { ConversionPhase } from '@utils/crds/conversion/types';
+
 import { inspectionVmFields } from './utils/inspectionVmFields';
 import InspectionVmRow from './InspectionVmRow';
 
@@ -11,7 +13,7 @@ type InspectionVmRowData = {
   id: string;
   isActive: boolean;
   name: string;
-  phase?: string;
+  phase?: ConversionPhase;
   timestamp?: string;
 };
 

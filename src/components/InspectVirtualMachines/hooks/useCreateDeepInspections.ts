@@ -53,21 +53,13 @@ export const useCreateDeepInspections = ({
     async (vms: VmRef[]): Promise<InspectionCreateResult> => {
       const results: InspectionCreateResult = { failed: [], succeeded: [] };
 
-      const chunks = Array.from(
-        { length: Math.ceil(vms.length / CONCURRENCY_LIMIT) },
-        (_, chunkIdx) =>
-          vms.slice(chunkIdx * CONCURRENCY_LIMIT, (chunkIdx + 1) * CONCURRENCY_LIMIT),
-      );
-
-      await chunks.reduce<Promise<unknown>>(
-        async (prev, chunk) =>
-          prev.then(async () =>
-            Promise.allSettled(
-              chunk.map(async (vm) => createDeepInspection(vm, plan, provider, results)),
-            ),
-          ),
-        Promise.resolve(),
-      );
+      for (let offset = 0; offset < vms.length; offset += CONCURRENCY_LIMIT) {
+        const chunk = vms.slice(offset, offset + CONCURRENCY_LIMIT);
+        // eslint-disable-next-line no-await-in-loop -- sequential chunks limit API concurrency
+        await Promise.allSettled(
+          chunk.map(async (vm) => createDeepInspection(vm, plan, provider, results)),
+        );
+      }
 
       return results;
     },
