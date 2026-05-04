@@ -16,9 +16,6 @@ export const getConversionPodRef = (conversion: V1beta1Conversion): ConversionSt
 export const getConversionCreationTimestamp = (conversion: V1beta1Conversion): string | undefined =>
   conversion?.metadata?.creationTimestamp;
 
-export const getConversionCompletionTime = (conversion: V1beta1Conversion): string | undefined =>
-  conversion?.status?.completionTime;
-
 export const getInspectionResult = (conversion: V1beta1Conversion): InspectionResult | undefined =>
   conversion?.status?.inspectionResult;
 
