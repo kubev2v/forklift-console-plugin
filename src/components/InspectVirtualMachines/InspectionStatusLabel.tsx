@@ -103,7 +103,7 @@ const InspectionStatusLabel: FC<InspectionStatusLabelProps> = ({ phase, testId, 
   const label = (
     <Label
       isCompact
-      variant="filled"
+      variant="outline"
       status={config.labelStatus}
       icon={config.icon}
       data-testid={testId}

@@ -1,10 +1,15 @@
-import { type FC, useMemo } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
-import { ExpandableSection, PageSection, Stack, StackItem, Title } from '@patternfly/react-core';
-import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
+import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import { PageSection, Title } from '@patternfly/react-core';
+import { ExpandableRowContent, Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import {
+  ConversionModelGroupVersionKind,
+  PodModelGroupVersionKind,
+} from '@utils/crds/common/models';
 import { CONVERSION_LABELS } from '@utils/crds/conversion/constants';
 import {
-  getConversionCompletionTime,
   getConversionCreationTimestamp,
   getConversionPhase,
   getConversionPodRef,
@@ -25,6 +30,7 @@ type InspectionExpandedSectionProps = {
 
 const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({ conversions, vmId }) => {
   const { t } = useForkliftTranslation();
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   const vmConversions = useMemo(
     () =>
@@ -42,81 +48,112 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({ convers
     return null;
   }
 
-  const [latest] = vmConversions;
-  const phase = getConversionPhase(latest);
-  const podRef = getConversionPodRef(latest);
-  const criticalConditions = getCriticalConditions(latest);
-  const completionTime = getConversionCompletionTime(latest);
-  const inspectionResult = getInspectionResult(latest);
-  const olderRuns = vmConversions.slice(1);
+  const toggleExpand = (uid: string): void => {
+    setExpandedRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(uid)) next.delete(uid);
+      else next.add(uid);
+      return next;
+    });
+  };
+
+  const columnCount = 5;
 
   return (
-    <Stack hasGutter>
-      <StackItem>
-        <Title headingLevel="h4">{t('Deep inspection')}</Title>
-      </StackItem>
+    <>
+      <Title headingLevel="h4">{t('Inspections')}</Title>
+      <PageSection hasBodyWrapper={false}>
+        <Table aria-label={t('Inspections')} variant="compact">
+          <Thead>
+            <Tr>
+              <Th screenReaderText={t('Expand')} />
+              <Th>{t('Inspection name')}</Th>
+              <Th>{t('Status')}</Th>
+              <Th>{t('Pod')}</Th>
+              <Th>{t('Created at')}</Th>
+            </Tr>
+          </Thead>
+          {vmConversions.map((conversion) => {
+            const uid = conversion.metadata?.uid ?? '';
+            const isExpanded = expandedRows.has(uid);
+            const podRef = getConversionPodRef(conversion);
+            const phase = getConversionPhase(conversion);
+            const inspectionResult = getInspectionResult(conversion);
+            const criticalConditions = getCriticalConditions(conversion);
+            const hasExpandableContent =
+              inspectionResult !== undefined || !isEmpty(criticalConditions);
 
-      <StackItem>
-        <PageSection hasBodyWrapper={false}>
-          <Table aria-label={t('Deep inspection details')} variant="compact">
-            <Thead>
-              <Tr>
-                <Th width={20}>{t('Label')}</Th>
-                <Th width={30}>{t('Value')}</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td>{t('Status')}</Td>
-                <Td>
-                  <InspectionStatusLabel phase={phase} timestamp={completionTime} />
-                </Td>
-              </Tr>
-              {podRef?.name && (
+            return (
+              <Tbody key={uid} isExpanded={isExpanded}>
                 <Tr>
-                  <Td>{t('Pod')}</Td>
-                  <Td>{podRef.namespace ? `${podRef.namespace}/${podRef.name}` : podRef.name}</Td>
-                </Tr>
-              )}
-              {criticalConditions.map((condition, index) => (
-                <Tr key={`${condition.type}-${index}`}>
-                  <Td>{t('Error')}</Td>
-                  <Td>{condition.message}</Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </PageSection>
-      </StackItem>
-
-      {inspectionResult && (
-        <StackItem>
-          <InspectionResultsSection result={inspectionResult} />
-        </StackItem>
-      )}
-
-      {!isEmpty(olderRuns) && (
-        <StackItem>
-          <ExpandableSection
-            data-testid={`previous-inspections-${vmId}`}
-            toggleText={t('Previous inspection ({{count}})', { count: olderRuns.length })}
-          >
-            <Stack hasGutter>
-              {olderRuns.map((run) => (
-                <StackItem key={run.metadata?.uid}>
-                  <InspectionStatusLabel
-                    phase={getConversionPhase(run)}
-                    timestamp={
-                      getConversionCompletionTime(run) ?? getConversionCreationTimestamp(run)
+                  <Td
+                    expand={
+                      hasExpandableContent
+                        ? {
+                            isExpanded,
+                            onToggle: () => {
+                              toggleExpand(uid);
+                            },
+                            rowIndex: 0,
+                          }
+                        : undefined
                     }
                   />
-                </StackItem>
-              ))}
-            </Stack>
-          </ExpandableSection>
-        </StackItem>
-      )}
-    </Stack>
+                  <Td>
+                    <ResourceLink
+                      groupVersionKind={ConversionModelGroupVersionKind}
+                      name={conversion.metadata?.name}
+                      namespace={conversion.metadata?.namespace}
+                    />
+                  </Td>
+                  <Td>
+                    <InspectionStatusLabel
+                      phase={phase}
+                      timestamp={getConversionCreationTimestamp(conversion)}
+                    />
+                  </Td>
+                  <Td>
+                    {podRef?.name ? (
+                      <ResourceLink
+                        groupVersionKind={PodModelGroupVersionKind}
+                        name={podRef.name}
+                        namespace={podRef.namespace}
+                      />
+                    ) : (
+                      '-'
+                    )}
+                  </Td>
+                  <Td>
+                    <ConsoleTimestamp
+                      timestamp={getConversionCreationTimestamp(conversion)}
+                      showGlobalIcon={false}
+                    />
+                  </Td>
+                </Tr>
+                {hasExpandableContent && (
+                  <Tr isExpanded={isExpanded}>
+                    <Td />
+                    <Td noPadding colSpan={columnCount - 1}>
+                      {isExpanded && (
+                        <ExpandableRowContent>
+                          {!isEmpty(criticalConditions) &&
+                            criticalConditions.map((condition, index) => (
+                              <div key={`${condition.type}-${index}`}>{condition.message}</div>
+                            ))}
+                          {inspectionResult && (
+                            <InspectionResultsSection result={inspectionResult} />
+                          )}
+                        </ExpandableRowContent>
+                      )}
+                    </Td>
+                  </Tr>
+                )}
+              </Tbody>
+            );
+          })}
+        </Table>
+      </PageSection>
+    </>
   );
 };
 

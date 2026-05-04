@@ -73,7 +73,7 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       const vmId = props.resourceData?.specVM?.id ?? '';
       return (
         <Stack hasGutter>
-          <StackItem>
+          <StackItem className="forklift-concerns-title">
             <Title headingLevel="h4">{t('Concerns')}</Title>
           </StackItem>
           <StackItem>
