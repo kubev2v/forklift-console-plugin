@@ -1055,6 +1055,7 @@
   "Provider default": "Par défaut du fournisseur",
   "Provider details": "Détails du fournisseur",
   "Provider inventory": "Inventaire du fournisseur",
+  "Provider is not ready.": "Provider is not ready.",
   "Provider name": "Nom du fournisseur",
   "Provider name is required": "Le nom du fournisseur est requis.",
   "Provider project": "Projet fournisseur",

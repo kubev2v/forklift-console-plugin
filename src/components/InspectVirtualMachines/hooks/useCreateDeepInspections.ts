@@ -14,7 +14,7 @@ type VmRef = {
 };
 
 type UseCreateDeepInspectionsParams = {
-  plan: V1beta1Plan;
+  plan?: V1beta1Plan;
   provider: V1beta1Provider;
 };
 
@@ -24,9 +24,9 @@ const CONCURRENCY_LIMIT = 10;
 
 const createDeepInspection = async (
   vm: VmRef,
-  plan: V1beta1Plan,
   provider: V1beta1Provider,
   results: InspectionCreateResult,
+  plan?: V1beta1Plan,
 ): Promise<void> => {
   try {
     const conversion = buildConversionCR({
@@ -57,7 +57,7 @@ export const useCreateDeepInspections = ({
         const chunk = vms.slice(offset, offset + CONCURRENCY_LIMIT);
         // eslint-disable-next-line no-await-in-loop -- sequential chunks limit API concurrency
         await Promise.allSettled(
-          chunk.map(async (vm) => createDeepInspection(vm, plan, provider, results)),
+          chunk.map(async (vm) => createDeepInspection(vm, provider, results, plan)),
         );
       }
 

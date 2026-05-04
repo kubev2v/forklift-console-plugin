@@ -1045,6 +1045,7 @@
   "Provider default": "공급자 기본값",
   "Provider details": "공급자 세부 정보",
   "Provider inventory": "공급자 인벤토리",
+  "Provider is not ready.": "Provider is not ready.",
   "Provider name": "공급자 이름",
   "Provider name is required": "공급자 이름은 필수 입력 사항입니다.",
   "Provider project": "공급자 프로젝트",

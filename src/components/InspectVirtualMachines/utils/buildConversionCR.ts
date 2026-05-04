@@ -5,7 +5,7 @@ import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 import { isEmpty } from '@utils/helpers';
 
 type BuildConversionCRParams = {
-  plan: V1beta1Plan;
+  plan?: V1beta1Plan;
   provider: V1beta1Provider;
   vmId: string;
   vmName: string;
@@ -34,29 +34,41 @@ const sanitizeForK8sName = (value: string): string => {
   return result.slice(0, 40) || 'vm';
 };
 
+const buildLabels = (
+  provider: V1beta1Provider,
+  plan: V1beta1Plan | undefined,
+  vmId: string,
+): Record<string, string> => {
+  const labels: Record<string, string> = {
+    [CONVERSION_LABELS.CONVERSION_TYPE]: CONVERSION_TYPE.DEEP_INSPECTION,
+    [CONVERSION_LABELS.PROVIDER]: getUID(provider) ?? '',
+    [CONVERSION_LABELS.VM_ID]: vmId,
+  };
+
+  if (plan) {
+    labels[CONVERSION_LABELS.PLAN] = getUID(plan) ?? '';
+    labels[CONVERSION_LABELS.PLAN_NAME] = getName(plan) ?? '';
+    labels[CONVERSION_LABELS.PLAN_NAMESPACE] = getNamespace(plan) ?? '';
+  }
+
+  return labels;
+};
+
 export const buildConversionCR = ({
   plan,
   provider,
   vmId,
   vmName,
 }: BuildConversionCRParams): V1beta1Conversion => {
-  const planName = getName(plan) ?? '';
-  const planNamespace = getNamespace(plan) ?? '';
-  const planUid = getUID(plan) ?? '';
+  const namespace = plan ? getNamespace(plan) : getNamespace(provider);
 
   return {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Conversion',
     metadata: {
       generateName: `deep-inspection-${sanitizeForK8sName(vmName)}-`,
-      labels: {
-        [CONVERSION_LABELS.CONVERSION_TYPE]: CONVERSION_TYPE.DEEP_INSPECTION,
-        [CONVERSION_LABELS.PLAN]: planUid,
-        [CONVERSION_LABELS.PLAN_NAME]: planName,
-        [CONVERSION_LABELS.PLAN_NAMESPACE]: planNamespace,
-        [CONVERSION_LABELS.VM_ID]: vmId,
-      },
-      namespace: planNamespace,
+      labels: buildLabels(provider, plan, vmId),
+      namespace: namespace ?? '',
     },
     spec: {
       connection: {

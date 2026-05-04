@@ -6,20 +6,21 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Alert, AlertVariant, ModalVariant } from '@patternfly/react-core';
-import { getVddkInitImage } from '@utils/crds/common/selectors';
+import { getNamespace, getUID, getVddkInitImage } from '@utils/crds/common/selectors';
 import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
-import { isConversionActive } from '@utils/crds/conversion/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useInventoryVms } from '@utils/hooks/useInventoryVms';
 import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 import { useWatchConversions } from '@utils/hooks/useWatchConversions';
 
 import { useCreateDeepInspections } from './hooks/useCreateDeepInspections';
+import { normalizeInventoryVms, normalizePlanVms } from './utils/normalizeVmsForInspection';
 import InspectionVmTable from './InspectionVmTable';
 
 import './InspectVirtualMachinesModal.scss';
 
 export type InspectVirtualMachinesModalProps = {
-  plan: V1beta1Plan;
+  plan?: V1beta1Plan;
   provider: V1beta1Provider;
 };
 
@@ -31,42 +32,38 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
   const { t } = useForkliftTranslation();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const planNamespace = plan?.metadata?.namespace ?? '';
-  const planUid = plan?.metadata?.uid ?? '';
+  const namespace = plan ? getNamespace(plan) : getNamespace(provider);
   const isVddkConfigured = !isEmpty(getVddkInitImage(provider));
 
+  const matchLabels: Record<string, string> = {
+    [CONVERSION_LABELS.CONVERSION_TYPE]: CONVERSION_TYPE.DEEP_INSPECTION,
+  };
+
+  if (plan) {
+    matchLabels[CONVERSION_LABELS.PLAN] = getUID(plan) ?? '';
+  } else {
+    matchLabels[CONVERSION_LABELS.PROVIDER] = getUID(provider) ?? '';
+  }
+
   const [conversions, conversionsLoaded, conversionsError] = useWatchConversions({
-    namespace: planNamespace,
-    selector: {
-      matchLabels: {
-        [CONVERSION_LABELS.CONVERSION_TYPE]: CONVERSION_TYPE.DEEP_INSPECTION,
-        [CONVERSION_LABELS.PLAN]: planUid,
-      },
-    },
+    namespace: namespace ?? '',
+    selector: { matchLabels },
   });
 
   const getVmInspectionStatus = useVmInspectionStatus(conversions);
   const createInspections = useCreateDeepInspections({ plan, provider });
 
-  const vmRows = useMemo(
-    () =>
-      (plan?.spec?.vms ?? []).map((specVm) => {
-        const vmId = specVm.id ?? '';
-        const status = getVmInspectionStatus(vmId);
-        const hasActiveInspection = status?.conversion
-          ? isConversionActive(status.conversion)
-          : false;
+  const [inventoryVmData] = useInventoryVms({ provider: plan ? undefined : provider });
 
-        return {
-          id: vmId,
-          isActive: hasActiveInspection,
-          name: specVm.name ?? vmId,
-          phase: status?.phase,
-          timestamp: status?.lastRun,
-        };
-      }),
-    [plan?.spec?.vms, getVmInspectionStatus],
-  );
+  const vmRows = useMemo(() => {
+    if (plan) {
+      return normalizePlanVms(plan?.spec?.vms ?? [], getVmInspectionStatus);
+    }
+    return normalizeInventoryVms(
+      inventoryVmData.map((vmData) => vmData.vm),
+      getVmInspectionStatus,
+    );
+  }, [plan, inventoryVmData, getVmInspectionStatus]);
 
   const selectedCount = selectedIds.length;
 

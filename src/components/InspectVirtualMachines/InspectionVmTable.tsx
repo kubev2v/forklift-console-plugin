@@ -2,20 +2,11 @@ import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 
-import type { ConversionPhase } from '@utils/crds/conversion/types';
-
 import { inspectionVmFields } from './utils/inspectionVmFields';
+import type { InspectionVmRowData } from './utils/normalizeVmsForInspection';
 import InspectionVmRow from './InspectionVmRow';
 
 const INSPECTION_VM_TABLE_ID = 'inspection-vm-table';
-
-type InspectionVmRowData = {
-  id: string;
-  isActive: boolean;
-  name: string;
-  phase?: ConversionPhase;
-  timestamp?: string;
-};
 
 type InspectionVmTableProps = {
   onSelect: (selectedIds: string[]) => void;

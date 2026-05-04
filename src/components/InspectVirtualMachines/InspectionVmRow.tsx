@@ -2,18 +2,9 @@ import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import VisibleTableData from 'src/components/TableCell/VisibleTableData';
 
-import type { ConversionPhase } from '@utils/crds/conversion/types';
-
 import { InspectionVmFieldId } from './utils/inspectionVmFields';
+import type { InspectionVmRowData } from './utils/normalizeVmsForInspection';
 import InspectionStatusLabel from './InspectionStatusLabel';
-
-type InspectionVmRowData = {
-  id: string;
-  isActive: boolean;
-  name: string;
-  phase?: ConversionPhase;
-  timestamp?: string;
-};
 
 const InspectionVmRow: FC<RowProps<InspectionVmRowData>> = ({ resourceData, resourceFields }) => {
   const rowFields: Record<string, React.ReactNode> = {

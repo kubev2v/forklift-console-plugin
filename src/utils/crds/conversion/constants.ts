@@ -21,6 +21,7 @@ export const CONVERSION_LABELS = {
   PLAN: 'plan',
   PLAN_NAME: 'plan-name',
   PLAN_NAMESPACE: 'plan-namespace',
+  PROVIDER: 'provider',
   VM_ID: 'vmID',
 } as const;
 
