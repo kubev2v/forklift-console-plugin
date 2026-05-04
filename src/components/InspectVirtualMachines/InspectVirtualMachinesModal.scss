@@ -1,5 +1,10 @@
-.forklift-inspect-vms-modal {
-  .pf-v6-c-table {
-    --pf-v6-c-table--BackgroundColor: transparent;
+.forklift-inspect-vms-modal .pf-v6-c-modal-box__body {
+  .pf-v6-c-table,
+  .pf-v6-c-table thead,
+  .pf-v6-c-table thead tr,
+  .pf-v6-c-table thead th,
+  .pf-v6-c-toolbar,
+  .pf-v6-c-pagination {
+    background-color: transparent;
   }
 }

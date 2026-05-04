@@ -9,6 +9,7 @@ import InspectionVmRow from './InspectionVmRow';
 const INSPECTION_VM_TABLE_ID = 'inspection-vm-table';
 
 type InspectionVmTableProps = {
+  isLoading?: boolean;
   onSelect: (selectedIds: string[]) => void;
   selectedIds: string[];
   vmRows: InspectionVmRowData[];
@@ -18,12 +19,17 @@ const toId = (item: InspectionVmRowData): string => item.id;
 
 const canSelect = (item: InspectionVmRowData): boolean => !item.isActive;
 
-const InspectionVmTable: FC<InspectionVmTableProps> = ({ onSelect, selectedIds, vmRows }) => {
+const InspectionVmTable: FC<InspectionVmTableProps> = ({
+  isLoading = false,
+  onSelect,
+  selectedIds,
+  vmRows,
+}) => {
   const userSettings = useMemo(() => loadUserSettings({ pageId: INSPECTION_VM_TABLE_ID }), []);
 
   return (
     <StandardPageWithSelection<InspectionVmRowData>
-      dataSource={[vmRows, true, null]}
+      dataSource={[vmRows, !isLoading, null]}
       cell={InspectionVmRow}
       fieldsMetadata={inspectionVmFields}
       userSettings={userSettings}

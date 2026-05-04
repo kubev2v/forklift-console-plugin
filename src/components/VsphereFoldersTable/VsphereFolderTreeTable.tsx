@@ -12,7 +12,9 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { Table, Th, Thead, Tr } from '@patternfly/react-table';
+import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
+import { useWatchConversions } from '@utils/hooks/useWatchConversions';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useAttributeFilters } from './components/AttributeFilter/hooks/useAttributeFilters';
@@ -29,11 +31,13 @@ import { defaultColumns } from './utils/constants';
 import type { VmRow } from './utils/types';
 
 type VsphereFolderTreeTableProps = {
-  initialSelectedIds: string[] | undefined;
-  onSelect: ((selectedVMs: ProviderVmData[] | undefined) => void) | undefined;
-  vmData: ProviderVmData[] | undefined;
   foldersDict: Record<string, VSphereResource>;
   hostsDict: Record<string, ProviderHost>;
+  initialSelectedIds: string[] | undefined;
+  onSelect: ((selectedVMs: ProviderVmData[] | undefined) => void) | undefined;
+  providerNamespace?: string;
+  providerUid?: string;
+  vmData: ProviderVmData[] | undefined;
 };
 
 const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
@@ -41,10 +45,23 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
   hostsDict,
   initialSelectedIds,
   onSelect,
+  providerNamespace,
+  providerUid,
   vmData,
 }) => {
   const { t } = useForkliftTranslation();
   const [columns, setColumns] = useState<ResourceField[]>(defaultColumns);
+  const [inspectionExpandedRows, setInspectionExpandedRows] = useState<Set<string>>(new Set());
+
+  const [conversions] = useWatchConversions({
+    namespace: providerNamespace ?? '',
+    selector: {
+      matchLabels: {
+        [CONVERSION_LABELS.CONVERSION_TYPE]: CONVERSION_TYPE.DEEP_INSPECTION,
+        ...(providerUid ? { [CONVERSION_LABELS.PROVIDER]: providerUid } : {}),
+      },
+    },
+  });
   const visibleVmIdsRef = useRef<Set<string> | undefined>(undefined);
 
   const setSelectedVmKeysControlled = useCallback(
@@ -151,10 +168,13 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
         <TreeTableBody
           clearAllFilters={filters.clearAll}
           columns={columns}
+          conversions={conversions}
           groupVMCountByFolder={
             filters.hasAttrFilters ? filteredGroupVMCountByFolder : groupVMCountByFolder
           }
           hasFiltersApplied={filters.hasAttrFilters}
+          inspectionExpandedRows={inspectionExpandedRows}
+          onToggleInspectionExpand={setInspectionExpandedRows}
           pagedRows={pagedRows}
           showAll={showAll}
         />

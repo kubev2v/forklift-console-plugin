@@ -10,6 +10,12 @@ export const nameColumn = {
 
 export const defaultColumns: ResourceField[] = [
   { isVisible: true, label: t('Concerns'), resourceFieldId: COLUMN_IDS.Concerns, sortable: true },
+  {
+    isVisible: true,
+    label: t('Inspection status'),
+    resourceFieldId: COLUMN_IDS.InspectionStatus,
+    sortable: false,
+  },
   { isVisible: true, label: t('Host'), resourceFieldId: COLUMN_IDS.Host, sortable: true },
   { isVisible: false, label: t('Path'), resourceFieldId: COLUMN_IDS.Path, sortable: true },
   { isVisible: true, label: t('Power'), resourceFieldId: COLUMN_IDS.Power, sortable: true },

@@ -53,7 +53,9 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
   const getVmInspectionStatus = useVmInspectionStatus(conversions);
   const createInspections = useCreateDeepInspections({ plan, provider });
 
-  const [inventoryVmData] = useInventoryVms({ provider: plan ? undefined : provider });
+  const [inventoryVmData, inventoryLoading] = useInventoryVms({
+    provider: plan ? undefined : provider,
+  });
 
   const vmRows = useMemo(() => {
     if (plan) {
@@ -110,7 +112,12 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
           )}
         />
       )}
-      <InspectionVmTable vmRows={vmRows} selectedIds={selectedIds} onSelect={setSelectedIds} />
+      <InspectionVmTable
+        vmRows={vmRows}
+        selectedIds={selectedIds}
+        onSelect={setSelectedIds}
+        isLoading={!plan && inventoryLoading}
+      />
     </ModalForm>
   );
 };

@@ -99,6 +99,8 @@ export const buildVmComparator = (sort: SortState) => {
         // stable tiebreaker by name
         return cmpStr(getVmName(a), getVmName(b)) * dir;
       };
+    case COLUMN_IDS.InspectionStatus:
+      return () => 0;
     default:
       return () => 0;
   }
