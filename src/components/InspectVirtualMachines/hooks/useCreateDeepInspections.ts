@@ -22,7 +22,7 @@ type CreateInspectionsFn = (vms: VmRef[]) => Promise<InspectionCreateResult>;
 
 const CONCURRENCY_LIMIT = 10;
 
-const createOne = async (
+const createDeepInspection = async (
   vm: VmRef,
   plan: V1beta1Plan,
   provider: V1beta1Provider,
@@ -62,7 +62,9 @@ export const useCreateDeepInspections = ({
       await chunks.reduce<Promise<unknown>>(
         async (prev, chunk) =>
           prev.then(async () =>
-            Promise.allSettled(chunk.map(async (vm) => createOne(vm, plan, provider, results))),
+            Promise.allSettled(
+              chunk.map(async (vm) => createDeepInspection(vm, plan, provider, results)),
+            ),
           ),
         Promise.resolve(),
       );

@@ -1,18 +1,7 @@
 import { type FC, useMemo } from 'react';
 
-import {
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-  ExpandableSection,
-  Flex,
-  FlexItem,
-  Stack,
-  StackItem,
-  Timestamp,
-  Title,
-} from '@patternfly/react-core';
+import { ExpandableSection, PageSection, Stack, StackItem, Title } from '@patternfly/react-core';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { CONVERSION_LABELS } from '@utils/crds/conversion/constants';
 import {
   getConversionCompletionTime,
@@ -57,7 +46,6 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({ convers
   const phase = getConversionPhase(latest);
   const podRef = getConversionPodRef(latest);
   const criticalConditions = getCriticalConditions(latest);
-  const creationTimestamp = getConversionCreationTimestamp(latest);
   const completionTime = getConversionCompletionTime(latest);
   const inspectionResult = getInspectionResult(latest);
   const olderRuns = vmConversions.slice(1);
@@ -69,55 +57,37 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({ convers
       </StackItem>
 
       <StackItem>
-        <DescriptionList isHorizontal isCompact>
-          <DescriptionListGroup>
-            <DescriptionListTerm>{t('Status')}</DescriptionListTerm>
-            <DescriptionListDescription>
-              <InspectionStatusLabel
-                phase={phase}
-                timestamp={completionTime ?? creationTimestamp}
-              />
-            </DescriptionListDescription>
-          </DescriptionListGroup>
-
-          {creationTimestamp && (
-            <DescriptionListGroup>
-              <DescriptionListTerm>{t('Started')}</DescriptionListTerm>
-              <DescriptionListDescription>
-                <Timestamp date={new Date(creationTimestamp)} />
-              </DescriptionListDescription>
-            </DescriptionListGroup>
-          )}
-
-          {completionTime && (
-            <DescriptionListGroup>
-              <DescriptionListTerm>{t('Completed')}</DescriptionListTerm>
-              <DescriptionListDescription>
-                <Timestamp date={new Date(completionTime)} />
-              </DescriptionListDescription>
-            </DescriptionListGroup>
-          )}
-
-          {podRef?.name && (
-            <DescriptionListGroup>
-              <DescriptionListTerm>{t('Pod')}</DescriptionListTerm>
-              <DescriptionListDescription>
-                {podRef.namespace ? `${podRef.namespace}/${podRef.name}` : podRef.name}
-              </DescriptionListDescription>
-            </DescriptionListGroup>
-          )}
-        </DescriptionList>
+        <PageSection hasBodyWrapper={false}>
+          <Table aria-label={t('Deep inspection details')} variant="compact">
+            <Thead>
+              <Tr>
+                <Th width={20}>{t('Label')}</Th>
+                <Th width={30}>{t('Value')}</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td>{t('Status')}</Td>
+                <Td>
+                  <InspectionStatusLabel phase={phase} timestamp={completionTime} />
+                </Td>
+              </Tr>
+              {podRef?.name && (
+                <Tr>
+                  <Td>{t('Pod')}</Td>
+                  <Td>{podRef.namespace ? `${podRef.namespace}/${podRef.name}` : podRef.name}</Td>
+                </Tr>
+              )}
+              {criticalConditions.map((condition, index) => (
+                <Tr key={`${condition.type}-${index}`}>
+                  <Td>{t('Error')}</Td>
+                  <Td>{condition.message}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </PageSection>
       </StackItem>
-
-      {!isEmpty(criticalConditions) && (
-        <StackItem>
-          <Stack>
-            {criticalConditions.map((condition, index) => (
-              <StackItem key={`${condition.type}-${index}`}>{condition.message}</StackItem>
-            ))}
-          </Stack>
-        </StackItem>
-      )}
 
       {inspectionResult && (
         <StackItem>
@@ -134,16 +104,12 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({ convers
             <Stack hasGutter>
               {olderRuns.map((run) => (
                 <StackItem key={run.metadata?.uid}>
-                  <Flex alignItems={{ default: 'alignItemsCenter' }} gap={{ default: 'gapMd' }}>
-                    <FlexItem>
-                      <InspectionStatusLabel
-                        phase={getConversionPhase(run)}
-                        timestamp={
-                          getConversionCompletionTime(run) ?? getConversionCreationTimestamp(run)
-                        }
-                      />
-                    </FlexItem>
-                  </Flex>
+                  <InspectionStatusLabel
+                    phase={getConversionPhase(run)}
+                    timestamp={
+                      getConversionCompletionTime(run) ?? getConversionCreationTimestamp(run)
+                    }
+                  />
                 </StackItem>
               ))}
             </Stack>

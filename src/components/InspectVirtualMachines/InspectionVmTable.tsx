@@ -1,93 +1,45 @@
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
+import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 
-import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
-import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { useForkliftTranslation } from '@utils/i18n';
+import { inspectionVmFields } from './utils/inspectionVmFields';
+import InspectionVmRow from './InspectionVmRow';
 
-import type { VmInspectionStatus } from '../../utils/hooks/useVmInspectionStatus';
+const INSPECTION_VM_TABLE_ID = 'inspection-vm-table';
 
-import InspectionStatusLabel from './InspectionStatusLabel';
-
-type VmRow = {
+type InspectionVmRowData = {
   id: string;
   isActive: boolean;
   name: string;
+  phase?: string;
+  timestamp?: string;
 };
 
 type InspectionVmTableProps = {
-  getVmInspectionStatus: (vmId: string) => VmInspectionStatus | undefined;
-  selectableCount: number;
-  selectedCount: number;
-  selectedVmIds: Set<string>;
-  toggleSelectAll: () => void;
-  toggleVmSelection: (vmId: string) => void;
-  vmRows: VmRow[];
+  onSelect: (selectedIds: string[]) => void;
+  selectedIds: string[];
+  vmRows: InspectionVmRowData[];
 };
 
-const InspectionVmTable: FC<InspectionVmTableProps> = ({
-  getVmInspectionStatus,
-  selectableCount,
-  selectedCount,
-  selectedVmIds,
-  toggleSelectAll,
-  toggleVmSelection,
-  vmRows,
-}) => {
-  const { t } = useForkliftTranslation();
+const toId = (item: InspectionVmRowData): string => item.id;
+
+const canSelect = (item: InspectionVmRowData): boolean => !item.isActive;
+
+const InspectionVmTable: FC<InspectionVmTableProps> = ({ onSelect, selectedIds, vmRows }) => {
+  const userSettings = useMemo(() => loadUserSettings({ pageId: INSPECTION_VM_TABLE_ID }), []);
 
   return (
-    <>
-      <Toolbar>
-        <ToolbarContent>
-          <ToolbarItem>
-            {t('{{selected}} of {{total}} VMs selected', {
-              selected: selectedCount,
-              total: selectableCount,
-            })}
-          </ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
-
-      <Table aria-label={t('Virtual machines for inspection')} variant="compact">
-        <Thead>
-          <Tr>
-            <Th
-              select={{
-                isSelected: selectedCount === selectableCount && selectedCount > 0,
-                onSelect: toggleSelectAll,
-              }}
-            />
-            <Th>{t('VM Name')}</Th>
-            <Th>{t('VM ID')}</Th>
-            <Th>{t('Inspection status')}</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {vmRows.map((vm, rowIndex) => {
-            const status = getVmInspectionStatus(vm.id);
-            return (
-              <Tr key={vm.id}>
-                <Td
-                  select={{
-                    isDisabled: vm.isActive,
-                    isSelected: selectedVmIds.has(vm.id),
-                    onSelect: () => {
-                      toggleVmSelection(vm.id);
-                    },
-                    rowIndex,
-                  }}
-                />
-                <Td dataLabel={t('VM Name')}>{vm.name}</Td>
-                <Td dataLabel={t('VM ID')}>{vm.id}</Td>
-                <Td dataLabel={t('Inspection status')}>
-                  <InspectionStatusLabel phase={status?.phase} timestamp={status?.lastRun} />
-                </Td>
-              </Tr>
-            );
-          })}
-        </Tbody>
-      </Table>
-    </>
+    <StandardPageWithSelection<InspectionVmRowData>
+      dataSource={[vmRows, true, null]}
+      cell={InspectionVmRow}
+      fieldsMetadata={inspectionVmFields}
+      userSettings={userSettings}
+      toId={toId}
+      canSelect={canSelect}
+      onSelect={onSelect}
+      selectedIds={selectedIds}
+      data-testid="inspection-vm-table"
+    />
   );
 };
 

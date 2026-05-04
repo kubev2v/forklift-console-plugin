@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 
-import { Flex, FlexItem, Icon, Label, Timestamp } from '@patternfly/react-core';
+import { Icon, Label, Popover, Timestamp } from '@patternfly/react-core';
 import {
   BanIcon,
   CheckCircleIcon,
@@ -100,30 +100,27 @@ const InspectionStatusLabel: FC<InspectionStatusLabelProps> = ({ phase, testId, 
 
   const config = getStatusConfig(phase, t);
 
-  return (
-    <Flex
-      alignItems={{ default: 'alignItemsCenter' }}
-      gap={{ default: 'gapSm' }}
-      flexWrap={{ default: 'nowrap' }}
+  const label = (
+    <Label
+      isCompact
+      variant="filled"
+      status={config.labelStatus}
+      icon={config.icon}
+      data-testid={testId}
     >
-      <FlexItem>
-        <Label
-          isCompact
-          variant="filled"
-          status={config.labelStatus}
-          icon={config.icon}
-          data-testid={testId}
-        >
-          {config.label}
-        </Label>
-      </FlexItem>
-      {timestamp && config.showTimestamp && (
-        <FlexItem>
-          <Timestamp date={new Date(timestamp)} />
-        </FlexItem>
-      )}
-    </Flex>
+      {config.label}
+    </Label>
   );
+
+  if (timestamp && config.showTimestamp) {
+    return (
+      <Popover triggerAction="hover" bodyContent={<Timestamp date={new Date(timestamp)} />}>
+        {label}
+      </Popover>
+    );
+  }
+
+  return label;
 };
 
 export default InspectionStatusLabel;

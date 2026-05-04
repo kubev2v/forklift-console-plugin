@@ -10,7 +10,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ConcernsAndConditionsTable from '@components/ConcernsAndConditionsTable/ConcernsAndConditionsTable';
 import type { V1beta1Plan } from '@forklift-ui/types';
-import { Stack, StackItem } from '@patternfly/react-core';
+import { Stack, StackItem, Title } from '@patternfly/react-core';
 import { getNamespace, getUID } from '@utils/crds/common/selectors';
 import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
 import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
@@ -23,6 +23,8 @@ import { useSpecVirtualMachinesListData } from './hooks/useSpecVirtualMachinesLi
 import type { SpecVirtualMachinePageData } from './utils/types';
 import { canSelect, specVirtualMachineFields, vmDataToId } from './utils/utils';
 import PlanSpecVirtualMachinesRow from './PlanSpecVirtualMachinesRow';
+
+import 'src/components/InspectVirtualMachines/InspectionExpandedSection.scss';
 
 type PlanVirtualMachinesListProps = {
   plan: V1beta1Plan;
@@ -72,15 +74,18 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       return (
         <Stack hasGutter>
           <StackItem>
-            <ConcernsAndConditionsTable vmData={props.resourceData} />
+            <Title headingLevel="h4">{t('Concerns')}</Title>
           </StackItem>
           <StackItem>
+            <ConcernsAndConditionsTable vmData={props.resourceData} />
+          </StackItem>
+          <StackItem className="forklift-inspection-expanded-section">
             <InspectionExpandedSection conversions={conversions} vmId={vmId} />
           </StackItem>
         </Stack>
       );
     },
-    [conversions],
+    [conversions, t],
   );
 
   return (

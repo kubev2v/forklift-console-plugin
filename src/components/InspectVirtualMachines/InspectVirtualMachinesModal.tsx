@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
+import TechPreviewLabel from 'src/components/PreviewLabels/TechPreviewLabel';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
@@ -8,6 +9,8 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+  Flex,
+  FlexItem,
   Modal,
   ModalBody,
   ModalFooter,
@@ -31,19 +34,13 @@ export type InspectVirtualMachinesModalProps = {
   provider: V1beta1Provider;
 };
 
-type VmRow = {
-  id: string;
-  isActive: boolean;
-  name: string;
-};
-
 const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalProps> = ({
   closeModal,
   plan,
   provider,
 }) => {
   const { t } = useForkliftTranslation();
-  const [selectedVmIds, setSelectedVmIds] = useState<Set<string>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,7 +61,7 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
   const getVmInspectionStatus = useVmInspectionStatus(conversions);
   const createInspections = useCreateDeepInspections({ plan, provider });
 
-  const vmRows: VmRow[] = useMemo(
+  const vmRows = useMemo(
     () =>
       (plan?.spec?.vms ?? []).map((specVm) => {
         const vmId = specVm.id ?? '';
@@ -73,49 +70,36 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
           ? isConversionActive(status.conversion)
           : false;
 
-        return { id: vmId, isActive: hasActiveInspection, name: specVm.name ?? vmId };
+        return {
+          id: vmId,
+          isActive: hasActiveInspection,
+          name: specVm.name ?? vmId,
+          phase: status?.phase,
+          timestamp: status?.lastRun,
+        };
       }),
     [plan?.spec?.vms, getVmInspectionStatus],
   );
 
-  const selectableVms = vmRows.filter((vm) => !vm.isActive);
-  const selectedCount = selectedVmIds.size;
-
-  const toggleVmSelection = (vmId: string): void => {
-    setSelectedVmIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(vmId)) next.delete(vmId);
-      else next.add(vmId);
-      return next;
-    });
-  };
-
-  const toggleSelectAll = (): void => {
-    setSelectedVmIds(
-      selectedCount === selectableVms.length
-        ? new Set()
-        : new Set(selectableVms.map((vm) => vm.id)),
-    );
-  };
+  const selectedCount = selectedIds.length;
 
   const handleSubmit = useCallback(async () => {
     setIsSubmitting(true);
     setError(null);
 
+    const selectedSet = new Set(selectedIds);
     const vmsToInspect = vmRows
-      .filter((vm) => selectedVmIds.has(vm.id) && !vm.isActive)
+      .filter((vm) => selectedSet.has(vm.id) && !vm.isActive)
       .map((vm) => ({ id: vm.id, name: vm.name }));
 
     try {
       const result = await createInspections(vmsToInspect);
       if (isEmpty(result.failed)) {
-        setSelectedVmIds(new Set());
+        setSelectedIds([]);
         closeModal();
       } else {
         setError(
-          t('Failed to create inspection for {{count}} VM', {
-            count: result.failed.length,
-          }),
+          t('Failed to create inspection for {{count}} VM', { count: result.failed.length }),
         );
       }
     } catch (err) {
@@ -123,7 +107,7 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
     } finally {
       setIsSubmitting(false);
     }
-  }, [vmRows, selectedVmIds, createInspections, closeModal, t]);
+  }, [vmRows, selectedIds, createInspections, closeModal, t]);
 
   const isSubmitDisabled =
     selectedCount === 0 ||
@@ -143,7 +127,16 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
       onClose={closeModal}
       data-testid="inspect-vms-modal"
     >
-      <ModalHeader title={t('Inspect virtual machines')} />
+      <ModalHeader
+        title={
+          <Flex alignItems={{ default: 'alignItemsCenter' }} gap={{ default: 'gapSm' }}>
+            <FlexItem>{t('Inspect virtual machines')}</FlexItem>
+            <FlexItem>
+              <TechPreviewLabel />
+            </FlexItem>
+          </Flex>
+        }
+      />
       <ModalBody>
         <Stack hasGutter>
           {!isVddkConfigured && (
@@ -167,12 +160,8 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
           <StackItem>
             <InspectionVmTable
               vmRows={vmRows}
-              selectedVmIds={selectedVmIds}
-              selectedCount={selectedCount}
-              selectableCount={selectableVms.length}
-              toggleVmSelection={toggleVmSelection}
-              toggleSelectAll={toggleSelectAll}
-              getVmInspectionStatus={getVmInspectionStatus}
+              selectedIds={selectedIds}
+              onSelect={setSelectedIds}
             />
           </StackItem>
         </Stack>
