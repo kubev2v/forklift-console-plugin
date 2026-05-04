@@ -2,12 +2,36 @@ import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
 import { getName, getNamespace, getUID, getVddkInitImage } from '@utils/crds/common/selectors';
 import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
 import type { V1beta1Conversion } from '@utils/crds/conversion/types';
+import { isEmpty } from '@utils/helpers';
 
 type BuildConversionCRParams = {
   plan: V1beta1Plan;
   provider: V1beta1Provider;
   vmId: string;
   vmName: string;
+};
+
+const sanitizeForK8sName = (value: string): string => {
+  let result = '';
+  let lastWasHyphen = false;
+
+  for (const char of value.toLowerCase()) {
+    const isValid = (char >= 'a' && char <= 'z') || (char >= '0' && char <= '9');
+
+    if (isValid) {
+      result += char;
+      lastWasHyphen = false;
+    } else if (!lastWasHyphen && !isEmpty(result)) {
+      result += '-';
+      lastWasHyphen = true;
+    }
+  }
+
+  if (result.endsWith('-')) {
+    result = result.slice(0, -1);
+  }
+
+  return result.slice(0, 40) || 'vm';
 };
 
 export const buildConversionCR = ({
@@ -24,7 +48,7 @@ export const buildConversionCR = ({
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Conversion',
     metadata: {
-      generateName: `deep-inspection-${vmName}-`,
+      generateName: `deep-inspection-${sanitizeForK8sName(vmName)}-`,
       labels: {
         [CONVERSION_LABELS.CONVERSION_TYPE]: CONVERSION_TYPE.DEEP_INSPECTION,
         [CONVERSION_LABELS.PLAN]: planUid,

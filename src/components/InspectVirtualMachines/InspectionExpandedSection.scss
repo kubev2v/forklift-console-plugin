@@ -2,6 +2,6 @@
   padding-bottom: var(--pf-t--global--spacer--lg);
 }
 
-.forklift-concerns-title {
-  margin-top: var(--pf-t--global--spacer--md);
+.forklift-inspections-table tbody:last-child tr:last-child td {
+  border-bottom: none;
 }

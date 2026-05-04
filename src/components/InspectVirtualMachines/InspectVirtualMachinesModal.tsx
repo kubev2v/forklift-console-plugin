@@ -2,23 +2,10 @@ import { useCallback, useMemo, useState } from 'react';
 import TechPreviewLabel from 'src/components/PreviewLabels/TechPreviewLabel';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import {
-  Alert,
-  AlertVariant,
-  Button,
-  ButtonVariant,
-  Flex,
-  FlexItem,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  ModalVariant,
-  Stack,
-  StackItem,
-} from '@patternfly/react-core';
+import { Alert, AlertVariant, ModalVariant } from '@patternfly/react-core';
 import { getVddkInitImage } from '@utils/crds/common/selectors';
 import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
 import { isConversionActive } from '@utils/crds/conversion/selectors';
@@ -37,14 +24,12 @@ export type InspectVirtualMachinesModalProps = {
 };
 
 const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalProps> = ({
-  closeModal,
   plan,
   provider,
+  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const planNamespace = plan?.metadata?.namespace ?? '';
   const planUid = plan?.metadata?.uid ?? '';
@@ -85,111 +70,51 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
 
   const selectedCount = selectedIds.length;
 
-  const handleSubmit = useCallback(async () => {
-    setIsSubmitting(true);
-    setError(null);
-
+  const handleConfirm = useCallback(async () => {
     const selectedSet = new Set(selectedIds);
     const vmsToInspect = vmRows
       .filter((vm) => selectedSet.has(vm.id) && !vm.isActive)
       .map((vm) => ({ id: vm.id, name: vm.name }));
 
-    try {
-      const result = await createInspections(vmsToInspect);
-      if (isEmpty(result.failed)) {
-        setSelectedIds([]);
-        closeModal();
-      } else {
-        setError(
-          t('Failed to create inspection for {{count}} VM', { count: result.failed.length }),
-        );
-      }
-    } catch (err) {
-      setError((err as Error)?.message ?? String(err));
-    } finally {
-      setIsSubmitting(false);
+    const result = await createInspections(vmsToInspect);
+    if (!isEmpty(result.failed)) {
+      throw new Error(
+        t('Failed to create inspection for {{count}} VM', { count: result.failed.length }),
+      );
     }
-  }, [vmRows, selectedIds, createInspections, closeModal, t]);
+
+    setSelectedIds([]);
+  }, [vmRows, selectedIds, createInspections, t]);
 
   const isSubmitDisabled =
-    selectedCount === 0 ||
-    !isVddkConfigured ||
-    isSubmitting ||
-    !conversionsLoaded ||
-    Boolean(conversionsError);
+    selectedCount === 0 || !isVddkConfigured || !conversionsLoaded || Boolean(conversionsError);
 
   const confirmLabel =
     selectedCount > 0 ? t('Inspect {{count}} VM', { count: selectedCount }) : t('Inspect VMs');
 
   return (
-    <Modal
+    <ModalForm
+      title={t('Inspect virtual machines')}
+      label={<TechPreviewLabel />}
+      onConfirm={handleConfirm}
+      confirmLabel={confirmLabel}
+      isDisabled={isSubmitDisabled}
       variant={ModalVariant.large}
-      isOpen
-      position="top"
-      onClose={closeModal}
       className="forklift-inspect-vms-modal"
-      data-testid="inspect-vms-modal"
+      testId="inspect-vms-modal"
+      {...rest}
     >
-      <ModalHeader
-        title={
-          <Flex alignItems={{ default: 'alignItemsCenter' }} gap={{ default: 'gapSm' }}>
-            <FlexItem>{t('Inspect virtual machines')}</FlexItem>
-            <FlexItem>
-              <TechPreviewLabel />
-            </FlexItem>
-          </Flex>
-        }
-      />
-      <ModalBody>
-        <Stack hasGutter>
-          {!isVddkConfigured && (
-            <StackItem>
-              <Alert
-                variant={AlertVariant.warning}
-                isInline
-                title={t(
-                  'VDDK image is required for deep inspection. Configure it in the provider settings.',
-                )}
-              />
-            </StackItem>
+      {!isVddkConfigured && (
+        <Alert
+          variant={AlertVariant.warning}
+          isInline
+          title={t(
+            'VDDK image is required for deep inspection. Configure it in the provider settings.',
           )}
-          {error && (
-            <StackItem>
-              <Alert variant={AlertVariant.danger} isInline title={t('Error')}>
-                {error}
-              </Alert>
-            </StackItem>
-          )}
-          <StackItem>
-            <InspectionVmTable
-              vmRows={vmRows}
-              selectedIds={selectedIds}
-              onSelect={setSelectedIds}
-            />
-          </StackItem>
-        </Stack>
-      </ModalBody>
-      <ModalFooter>
-        <Button
-          key="confirm"
-          variant={ButtonVariant.primary}
-          onClick={handleSubmit}
-          isLoading={isSubmitting}
-          isDisabled={isSubmitDisabled}
-          data-testid="inspect-vms-confirm-button"
-        >
-          {confirmLabel}
-        </Button>
-        <Button
-          key="cancel"
-          variant={ButtonVariant.secondary}
-          onClick={closeModal}
-          data-testid="inspect-vms-cancel-button"
-        >
-          {t('Cancel')}
-        </Button>
-      </ModalFooter>
-    </Modal>
+        />
+      )}
+      <InspectionVmTable vmRows={vmRows} selectedIds={selectedIds} onSelect={setSelectedIds} />
+    </ModalForm>
   );
 };
 

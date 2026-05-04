@@ -1,9 +1,18 @@
-import { type FC, useMemo, useState } from 'react';
+import { type Dispatch, type FC, type SetStateAction, useMemo } from 'react';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { PageSection, Title } from '@patternfly/react-core';
-import { ExpandableRowContent, Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { HelperText, HelperTextItem, PageSection, Title } from '@patternfly/react-core';
+import {
+  ExpandableRowContent,
+  Table,
+  TableVariant,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from '@patternfly/react-table';
 import {
   ConversionModelGroupVersionKind,
   PodModelGroupVersionKind,
@@ -23,14 +32,24 @@ import { useForkliftTranslation } from '@utils/i18n';
 import InspectionResultsSection from './InspectionResultsSection';
 import InspectionStatusLabel from './InspectionStatusLabel';
 
+import './InspectionExpandedSection.scss';
+
 type InspectionExpandedSectionProps = {
   conversions: V1beta1Conversion[];
+  expandedRows: Set<string>;
+  onToggleExpand: Dispatch<SetStateAction<Set<string>>>;
   vmId: string;
 };
 
-const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({ conversions, vmId }) => {
+const COLUMN_COUNT = 5;
+
+const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({
+  conversions,
+  expandedRows,
+  onToggleExpand,
+  vmId,
+}) => {
   const { t } = useForkliftTranslation();
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   const vmConversions = useMemo(
     () =>
@@ -44,12 +63,8 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({ convers
     [conversions, vmId],
   );
 
-  if (isEmpty(vmConversions)) {
-    return null;
-  }
-
   const toggleExpand = (uid: string): void => {
-    setExpandedRows((prev) => {
+    onToggleExpand((prev) => {
       const next = new Set(prev);
       if (next.has(uid)) next.delete(uid);
       else next.add(uid);
@@ -57,13 +72,28 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({ convers
     });
   };
 
-  const columnCount = 5;
+  if (isEmpty(vmConversions)) {
+    return (
+      <>
+        <Title headingLevel="h4">{t('Inspections')}</Title>
+        <PageSection hasBodyWrapper={false}>
+          <HelperText>
+            <HelperTextItem>{t('No inspections found for this virtual machine.')}</HelperTextItem>
+          </HelperText>
+        </PageSection>
+      </>
+    );
+  }
 
   return (
     <>
       <Title headingLevel="h4">{t('Inspections')}</Title>
       <PageSection hasBodyWrapper={false}>
-        <Table aria-label={t('Inspections')} variant="compact">
+        <Table
+          aria-label={t('Inspections')}
+          variant={TableVariant.compact}
+          className="forklift-inspections-table"
+        >
           <Thead>
             <Tr>
               <Th screenReaderText={t('Expand')} />
@@ -80,24 +110,18 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({ convers
             const phase = getConversionPhase(conversion);
             const inspectionResult = getInspectionResult(conversion);
             const criticalConditions = getCriticalConditions(conversion);
-            const hasExpandableContent =
-              inspectionResult !== undefined || !isEmpty(criticalConditions);
 
             return (
               <Tbody key={uid} isExpanded={isExpanded}>
                 <Tr>
                   <Td
-                    expand={
-                      hasExpandableContent
-                        ? {
-                            isExpanded,
-                            onToggle: () => {
-                              toggleExpand(uid);
-                            },
-                            rowIndex: 0,
-                          }
-                        : undefined
-                    }
+                    expand={{
+                      isExpanded,
+                      onToggle: () => {
+                        toggleExpand(uid);
+                      },
+                      rowIndex: 0,
+                    }}
                   />
                   <Td>
                     <ResourceLink
@@ -130,24 +154,25 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({ convers
                     />
                   </Td>
                 </Tr>
-                {hasExpandableContent && (
-                  <Tr isExpanded={isExpanded}>
-                    <Td />
-                    <Td noPadding colSpan={columnCount - 1}>
-                      {isExpanded && (
-                        <ExpandableRowContent>
-                          {!isEmpty(criticalConditions) &&
-                            criticalConditions.map((condition, index) => (
-                              <div key={`${condition.type}-${index}`}>{condition.message}</div>
-                            ))}
-                          {inspectionResult && (
-                            <InspectionResultsSection result={inspectionResult} />
-                          )}
-                        </ExpandableRowContent>
-                      )}
-                    </Td>
-                  </Tr>
-                )}
+                <Tr isExpanded={isExpanded}>
+                  <Td />
+                  <Td noPadding colSpan={COLUMN_COUNT - 1}>
+                    {isExpanded && (
+                      <ExpandableRowContent>
+                        {!isEmpty(criticalConditions) &&
+                          criticalConditions.map((condition, index) => (
+                            <div key={`${condition.type}-${index}`}>{condition.message}</div>
+                          ))}
+                        {inspectionResult && <InspectionResultsSection result={inspectionResult} />}
+                        {!inspectionResult && isEmpty(criticalConditions) && (
+                          <HelperText>
+                            <HelperTextItem>{t('No results available yet.')}</HelperTextItem>
+                          </HelperText>
+                        )}
+                      </ExpandableRowContent>
+                    )}
+                  </Td>
+                </Tr>
               </Tbody>
             );
           })}

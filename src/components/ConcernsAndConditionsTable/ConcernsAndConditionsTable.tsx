@@ -8,9 +8,10 @@ import {
 } from '@components/Concerns/utils/category';
 import { orderedConcernCategories } from '@components/Concerns/utils/constants';
 import type { Concern, OpenstackVM, OvaVM, OVirtVM, VSphereVM } from '@forklift-ui/types';
-import { PageSection } from '@patternfly/react-core';
-import { Table, Tbody } from '@patternfly/react-table';
+import { PageSection, Title } from '@patternfly/react-core';
+import { Table, TableVariant, Tbody } from '@patternfly/react-table';
 import { isEmpty } from '@utils/helpers';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import ConcernsAndConditionsTableEmptyState from './components/ConcernsAndConditionsTableEmptyState';
 import ConcernsAndConditionsTableHeader from './components/ConcernsAndConditionsTableHeader';
@@ -22,6 +23,7 @@ type VirtualMachineWithConcerns = OVirtVM | VSphereVM | OpenstackVM | OvaVM;
 const ConcernsAndConditionsTable: FC<{ vmData: ProviderVmData | SpecVirtualMachinePageData }> = ({
   vmData,
 }) => {
+  const { t } = useForkliftTranslation();
   const vm =
     (vmData as ProviderVmData)?.vm ?? (vmData as SpecVirtualMachinePageData)?.inventoryVmData?.vm;
 
@@ -36,29 +38,34 @@ const ConcernsAndConditionsTable: FC<{ vmData: ProviderVmData | SpecVirtualMachi
   const groupedConditions = groupConditionsByCategory(conditions);
 
   return (
-    <PageSection hasBodyWrapper={false}>
-      <Table aria-label="Expandable table" variant="compact">
-        <ConcernsAndConditionsTableHeader />
-        <Tbody>
-          {orderedConcernCategories.map((category) => {
-            return (
-              <Fragment key={`${category}-key`}>
-                <ConcernsTableRows
-                  category={category}
-                  groupedConcerns={groupedConcerns}
-                  key={`${category}-key`}
-                />
-                <ConditionsTableRows
-                  category={category}
-                  groupedConditions={groupedConditions}
-                  key={`${category}-key`}
-                />
-              </Fragment>
-            );
-          })}
-        </Tbody>
-      </Table>
-    </PageSection>
+    <>
+      <Title className="pf-v6-u-mt-md" headingLevel="h4">
+        {t('Concerns')}
+      </Title>
+      <PageSection hasBodyWrapper={false}>
+        <Table aria-label="Expandable table" variant={TableVariant.compact}>
+          <ConcernsAndConditionsTableHeader />
+          <Tbody>
+            {orderedConcernCategories.map((category) => {
+              return (
+                <Fragment key={`${category}-key`}>
+                  <ConcernsTableRows
+                    category={category}
+                    groupedConcerns={groupedConcerns}
+                    key={`${category}-key`}
+                  />
+                  <ConditionsTableRows
+                    category={category}
+                    groupedConditions={groupedConditions}
+                    key={`${category}-key`}
+                  />
+                </Fragment>
+              );
+            })}
+          </Tbody>
+        </Table>
+      </PageSection>
+    </>
   );
 };
 

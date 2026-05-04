@@ -1,4 +1,4 @@
-import { type FC, useCallback, useMemo } from 'react';
+import { type FC, useCallback, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import InspectionExpandedSection from 'src/components/InspectVirtualMachines/InspectionExpandedSection';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
@@ -10,7 +10,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ConcernsAndConditionsTable from '@components/ConcernsAndConditionsTable/ConcernsAndConditionsTable';
 import type { V1beta1Plan } from '@forklift-ui/types';
-import { Stack, StackItem, Title } from '@patternfly/react-core';
+import { Stack, StackItem } from '@patternfly/react-core';
 import { getNamespace, getUID } from '@utils/crds/common/selectors';
 import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
 import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
@@ -58,6 +58,7 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
   });
 
   const getVmInspectionStatus = useVmInspectionStatus(conversions);
+  const [inspectionExpandedRows, setInspectionExpandedRows] = useState<Set<string>>(new Set());
 
   const enrichedData = useMemo(
     () =>
@@ -73,19 +74,21 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       const vmId = props.resourceData?.specVM?.id ?? '';
       return (
         <Stack hasGutter>
-          <StackItem className="forklift-concerns-title">
-            <Title headingLevel="h4">{t('Concerns')}</Title>
-          </StackItem>
           <StackItem>
             <ConcernsAndConditionsTable vmData={props.resourceData} />
           </StackItem>
           <StackItem className="forklift-inspection-expanded-section">
-            <InspectionExpandedSection conversions={conversions} vmId={vmId} />
+            <InspectionExpandedSection
+              conversions={conversions}
+              vmId={vmId}
+              expandedRows={inspectionExpandedRows}
+              onToggleExpand={setInspectionExpandedRows}
+            />
           </StackItem>
         </Stack>
       );
     },
-    [conversions, t],
+    [conversions, inspectionExpandedRows, setInspectionExpandedRows],
   );
 
   return (

@@ -5,6 +5,8 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  Flex,
+  FlexItem,
   Icon,
   Label,
   Stack,
@@ -24,35 +26,38 @@ const InspectionResultsSection: FC<InspectionResultsSectionProps> = ({ result })
   const { t } = useForkliftTranslation();
 
   return (
-    <Stack hasGutter>
-      <StackItem>
-        <Title headingLevel="h5">{t('Inspection results')}</Title>
-      </StackItem>
-
-      <StackItem>
-        {result.allChecksPassed ? (
-          <Label
-            status="success"
-            icon={
-              <Icon isInline>
-                <CheckCircleIcon />
-              </Icon>
-            }
-          >
-            {t('All checks passed')}
-          </Label>
-        ) : (
-          <Label
-            status="warning"
-            icon={
-              <Icon isInline>
-                <ExclamationTriangleIcon />
-              </Icon>
-            }
-          >
-            {t('Issues found')}
-          </Label>
-        )}
+    <Stack hasGutter className="pf-v6-u-mb-md">
+      <StackItem className="pf-v6-u-mt-md">
+        <Flex alignItems={{ default: 'alignItemsCenter' }} gap={{ default: 'gapSm' }}>
+          <FlexItem>
+            <Title headingLevel="h5">{t('Inspection results')}</Title>
+          </FlexItem>
+          <FlexItem>
+            {result.allChecksPassed ? (
+              <Label
+                status="success"
+                icon={
+                  <Icon isInline>
+                    <CheckCircleIcon />
+                  </Icon>
+                }
+              >
+                {t('All checks passed')}
+              </Label>
+            ) : (
+              <Label
+                status="warning"
+                icon={
+                  <Icon isInline>
+                    <ExclamationTriangleIcon />
+                  </Icon>
+                }
+              >
+                {t('Issues found')}
+              </Label>
+            )}
+          </FlexItem>
+        </Flex>
       </StackItem>
 
       {result.osInfo && (

@@ -7,6 +7,8 @@ import {
   Button,
   type ButtonProps,
   ButtonVariant,
+  Flex,
+  FlexItem,
   Modal,
   ModalBody,
   ModalFooter,
@@ -31,6 +33,7 @@ type ModalFormProps = {
   testId?: string;
   description?: ReactNode;
   headerHelp?: ReactNode;
+  label?: ReactNode;
 };
 
 const ModalForm: ModalComponent<ModalFormProps> = ({
@@ -44,6 +47,7 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
   description,
   headerHelp,
   isDisabled,
+  label,
   onConfirm,
   testId,
   title,
@@ -60,12 +64,23 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
     try {
       await onConfirm();
       closeModal();
-    } catch (e) {
-      setError((e as Error)?.message ?? e?.toString());
+    } catch (err) {
+      setError((err as Error)?.message ?? err?.toString());
     } finally {
       setIsLoading(false);
     }
   }, [onConfirm, closeModal]);
+
+  const headerTitle = label ? (
+    <Flex alignItems={{ default: 'alignItemsBaseline' }} gap={{ default: 'gapXs' }}>
+      <FlexItem>
+        <ModalHeader title={title} description={description} help={headerHelp} />
+      </FlexItem>
+      <FlexItem>{label}</FlexItem>
+    </Flex>
+  ) : (
+    <ModalHeader title={title} description={description} help={headerHelp} />
+  );
 
   return (
     <Modal
@@ -76,7 +91,7 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
       data-testid={testId}
       className={className}
     >
-      <ModalHeader title={title} description={description} help={headerHelp} />
+      {headerTitle}
       <ModalBody>
         <Stack hasGutter>
           <StackItem>{children}</StackItem>
