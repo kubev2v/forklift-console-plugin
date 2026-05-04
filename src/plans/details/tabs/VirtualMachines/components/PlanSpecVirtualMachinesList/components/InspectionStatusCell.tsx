@@ -9,7 +9,11 @@ type InspectionStatusCellProps = {
 
 const InspectionStatusCell: FC<InspectionStatusCellProps> = ({ inspectionStatus }) => {
   return (
-    <InspectionStatusLabel phase={inspectionStatus?.phase} timestamp={inspectionStatus?.lastRun} />
+    <InspectionStatusLabel
+      phase={inspectionStatus?.phase}
+      testId="inspection-status-cell"
+      timestamp={inspectionStatus?.lastRun}
+    />
   );
 };
 

@@ -47,6 +47,28 @@ export class ProviderDetailsPage {
     await createPlanButton.click();
   }
 
+  async clickInspectVmsButton(): Promise<void> {
+    await expect(this.inspectVmsButton).toBeVisible();
+    await this.inspectVmsButton.click();
+  }
+
+  async clickInspectVmsFromActions(): Promise<void> {
+    await this.page.getByTestId('provider-actions-dropdown-button').click();
+    await this.inspectVmsMenuItem.click();
+  }
+
+  get inspectVmsButton() {
+    return this.page.getByTestId('provider-inspect-vms-button');
+  }
+
+  get inspectVmsMenuItem() {
+    return this.page.getByTestId('provider-actions-inspect-menuitem');
+  }
+
+  async isInspectVmsButtonVisible(): Promise<boolean> {
+    return this.inspectVmsButton.isVisible();
+  }
+
   async navigate(providerName: string, namespace: string): Promise<void> {
     await this.navigation.navigateToK8sResource({
       resource: 'Provider',
@@ -117,6 +139,8 @@ export class ProviderDetailsPage {
       url.toString().includes(`forklift.konveyor.io~v1beta1~Provider/${namespace}/${providerName}`),
     );
   }
+
+  // Deep inspection methods
 
   async verifyProviderStatus(expectedStatus: string): Promise<void> {
     await expect(this.page.getByTestId('resource-status')).toContainText(expectedStatus, {

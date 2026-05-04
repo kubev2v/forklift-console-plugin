@@ -74,19 +74,19 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({
 
   if (isEmpty(vmConversions)) {
     return (
-      <>
+      <div data-testid="inspections-section">
         <Title headingLevel="h4">{t('Inspections')}</Title>
         <PageSection hasBodyWrapper={false}>
           <HelperText>
             <HelperTextItem>{t('No inspections found for this virtual machine.')}</HelperTextItem>
           </HelperText>
         </PageSection>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div data-testid="inspections-section">
       <Title headingLevel="h4">{t('Inspections')}</Title>
       <PageSection hasBodyWrapper={false}>
         <Table
@@ -178,7 +178,7 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({
           })}
         </Table>
       </PageSection>
-    </>
+    </div>
   );
 };
 
