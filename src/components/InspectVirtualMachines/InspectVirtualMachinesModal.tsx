@@ -29,6 +29,8 @@ import { useWatchConversions } from '@utils/hooks/useWatchConversions';
 import { useCreateDeepInspections } from './hooks/useCreateDeepInspections';
 import InspectionVmTable from './InspectionVmTable';
 
+import './InspectVirtualMachinesModal.scss';
+
 export type InspectVirtualMachinesModalProps = {
   plan: V1beta1Plan;
   provider: V1beta1Provider;
@@ -125,6 +127,7 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
       isOpen
       position="top"
       onClose={closeModal}
+      className="forklift-inspect-vms-modal"
       data-testid="inspect-vms-modal"
     >
       <ModalHeader
