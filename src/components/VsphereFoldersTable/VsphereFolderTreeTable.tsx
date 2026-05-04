@@ -97,7 +97,7 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
     pagination: { page, perPage },
   } = usePagination();
 
-  const attributes = useTreeFilterAttributes(rows);
+  const attributes = useTreeFilterAttributes(rows, conversions);
   const filters = useAttributeFilters<VmRow>(attributes);
 
   const { filteredGroupVMCountByFolder, filteredRows, visibleVmIds } = useTreeFilters({

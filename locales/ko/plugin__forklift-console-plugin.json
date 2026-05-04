@@ -552,6 +552,7 @@
   "Filter by flavor": "플레이버별로 필터링",
   "Filter by host": "호스트별로 필터링",
   "Filter by image": "이미지로 필터링",
+  "Filter by inspection status": "Filter by inspection status",
   "Filter by instance type": "Filter by instance type",
   "Filter by migration": "마이그레이션으로 필터링",
   "Filter by name": "이름별 필터링",

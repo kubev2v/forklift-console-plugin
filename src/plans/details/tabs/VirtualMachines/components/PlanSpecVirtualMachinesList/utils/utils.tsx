@@ -5,6 +5,10 @@ import { type EnumValue, FilterDefType, type ResourceField } from '@components/c
 import { getCategoryIcon } from '@components/Concerns/utils/category';
 import { orderedConcernCategories } from '@components/Concerns/utils/constants';
 import type { V1beta1Plan, V1beta1PlanStatusConditions } from '@forklift-ui/types';
+import {
+  INSPECTION_STATUS_FILTER_VALUES,
+  INSPECTION_STATUS_NOT_INSPECTED,
+} from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
@@ -82,8 +86,18 @@ export const specVirtualMachineFields: ResourceField[] = [
     testId: 'concerns-column-header',
   },
   {
+    filter: {
+      placeholderLabel: t('Filter by inspection status'),
+      type: FilterDefType.Enum,
+      values: INSPECTION_STATUS_FILTER_VALUES.map((value) => ({
+        id: value,
+        label: t(value),
+      })),
+    },
     isVisible: true,
-    jsonPath: '$.specVM.id',
+    jsonPath: (item: unknown) =>
+      (item as SpecVirtualMachinePageData).inspectionStatus?.phase ??
+      INSPECTION_STATUS_NOT_INSPECTED,
     label: t('Inspection status'),
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.InspectionStatus,
     sortable: false,

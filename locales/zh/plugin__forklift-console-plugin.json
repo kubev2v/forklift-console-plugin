@@ -552,6 +552,7 @@
   "Filter by flavor": "按 flavor 过滤",
   "Filter by host": "按主机过滤",
   "Filter by image": "按镜像过滤",
+  "Filter by inspection status": "Filter by inspection status",
   "Filter by instance type": "Filter by instance type",
   "Filter by migration": "按迁移过滤",
   "Filter by name": "按名称过滤",

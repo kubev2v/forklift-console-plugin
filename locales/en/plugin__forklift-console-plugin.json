@@ -554,6 +554,7 @@
   "Filter by flavor": "Filter by flavor",
   "Filter by host": "Filter by host",
   "Filter by image": "Filter by image",
+  "Filter by inspection status": "Filter by inspection status",
   "Filter by instance type": "Filter by instance type",
   "Filter by migration": "Filter by migration",
   "Filter by name": "Filter by name",

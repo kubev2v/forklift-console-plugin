@@ -552,6 +552,7 @@
   "Filter by flavor": "フレーバーでフィルター",
   "Filter by host": "ホストでフィルター",
   "Filter by image": "イメージでフィルター",
+  "Filter by inspection status": "Filter by inspection status",
   "Filter by instance type": "Filter by instance type",
   "Filter by migration": "移行でフィルター",
   "Filter by name": "名前でフィルター",
