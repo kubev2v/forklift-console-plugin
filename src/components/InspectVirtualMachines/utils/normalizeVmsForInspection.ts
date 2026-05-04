@@ -1,8 +1,7 @@
 import type { V1beta1PlanSpecVms } from '@forklift-ui/types';
+import { isConversionActive } from '@utils/crds/conversion/selectors';
 import type { ConversionPhase } from '@utils/crds/conversion/types';
 import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
-
-import { isConversionActive } from '../../../utils/crds/conversion/selectors';
 
 export type InspectionVmRowData = {
   id: string;

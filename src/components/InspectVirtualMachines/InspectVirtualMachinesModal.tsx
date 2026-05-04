@@ -35,19 +35,24 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
   const namespace = plan ? getNamespace(plan) : getNamespace(provider);
   const isVddkConfigured = !isEmpty(getVddkInitImage(provider));
 
-  const matchLabels: Record<string, string> = {
-    [CONVERSION_LABELS.CONVERSION_TYPE]: CONVERSION_TYPE.DEEP_INSPECTION,
-  };
+  const planUid = plan ? getUID(plan) : undefined;
+  const providerUid = getUID(provider);
 
-  if (plan) {
-    matchLabels[CONVERSION_LABELS.PLAN] = getUID(plan) ?? '';
-  } else {
-    matchLabels[CONVERSION_LABELS.PROVIDER] = getUID(provider) ?? '';
-  }
+  const watchSelector = useMemo(() => {
+    const labels: Record<string, string> = {
+      [CONVERSION_LABELS.CONVERSION_TYPE]: CONVERSION_TYPE.DEEP_INSPECTION,
+    };
+    if (plan) {
+      labels[CONVERSION_LABELS.PLAN] = planUid ?? '';
+    } else {
+      labels[CONVERSION_LABELS.PROVIDER] = providerUid ?? '';
+    }
+    return { matchLabels: labels };
+  }, [plan, planUid, providerUid]);
 
   const [conversions, conversionsLoaded, conversionsError] = useWatchConversions({
     namespace: namespace ?? '',
-    selector: { matchLabels },
+    selector: watchSelector,
   });
 
   const getVmInspectionStatus = useVmInspectionStatus(conversions);

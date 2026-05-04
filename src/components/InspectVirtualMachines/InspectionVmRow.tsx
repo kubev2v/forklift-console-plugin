@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import VisibleTableData from 'src/components/TableCell/VisibleTableData';
 
@@ -7,7 +7,7 @@ import type { InspectionVmRowData } from './utils/normalizeVmsForInspection';
 import InspectionStatusLabel from './InspectionStatusLabel';
 
 const InspectionVmRow: FC<RowProps<InspectionVmRowData>> = ({ resourceData, resourceFields }) => {
-  const rowFields: Record<string, React.ReactNode> = {
+  const rowFields: Record<string, ReactNode> = {
     [InspectionVmFieldId.InspectionStatus]: (
       <InspectionStatusLabel phase={resourceData.phase} timestamp={resourceData.timestamp} />
     ),
