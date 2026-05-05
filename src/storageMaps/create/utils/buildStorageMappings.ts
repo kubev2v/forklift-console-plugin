@@ -131,7 +131,8 @@ const getSourceStorage = (
   }
 
   if (isEc2Provider) {
-    return { name: source.name ?? '' };
+    const inventoryLabel = getMapResourceLabel(sourceStorages.get(source?.id ?? ''));
+    return { name: source.name ?? inventoryLabel ?? source.id ?? '' };
   }
 
   return {
