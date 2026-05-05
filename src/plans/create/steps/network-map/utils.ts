@@ -9,7 +9,7 @@ import type {
 import { DEFAULT_NETWORK, Namespace } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
-import type { Ec2VmObject } from '@utils/types/ec2Inventory';
+import { getEc2SubnetIds, isEc2Vm } from '@utils/types/ec2Inventory';
 
 import type { CategorizedSourceMappings, MappingValue, ProviderNetwork } from '../../types';
 import { hasMultiplePodNetworkMappings } from '../../utils/hasMultiplePodNetworkMappings';
@@ -23,26 +23,6 @@ type ValidateNetworkMapParams = {
   usedSourceNetworks: MappingValue[];
   vms: Record<string, ProviderVirtualMachine>;
   oVirtNicProfiles: OVirtNicProfile[];
-};
-
-type Ec2VmLike = ProviderVirtualMachine & { object?: Ec2VmObject };
-
-// ProviderVirtualMachine from @forklift-ui/types does not include 'ec2' yet
-const isEc2Vm = (vm: ProviderVirtualMachine): vm is Ec2VmLike =>
-  (vm.providerType as string) === PROVIDER_TYPES.ec2;
-
-const getEc2SubnetIds = (vm: Ec2VmLike): string[] => {
-  const interfaces = vm.object?.NetworkInterfaces;
-
-  if (interfaces?.length) {
-    const subnetIds = interfaces.reduce<string[]>(
-      (acc, nic) => (nic.SubnetId ? [...acc, nic.SubnetId] : acc),
-      [],
-    );
-    if (!isEmpty(subnetIds)) return subnetIds;
-  }
-
-  return vm.object?.SubnetId ? [vm.object.SubnetId] : [];
 };
 
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {

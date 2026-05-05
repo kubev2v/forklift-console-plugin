@@ -1,7 +1,10 @@
 // EC2 inventory types — defined locally because @forklift-ui/types
 // does not include EC2 inventory types yet.
 
-import type { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+
+import type { ProviderVirtualMachine } from '@forklift-ui/types';
+import { isEmpty } from '@utils/helpers';
 
 // EC2 networks are AWS subnets, identified by SubnetId.
 export type Ec2Network = {
@@ -27,4 +30,29 @@ export type Ec2VmObject = {
   SubnetId?: string;
   NetworkInterfaces?: { SubnetId?: string }[];
   BlockDeviceMappings?: { Ebs?: { VolumeType?: string } }[];
+};
+
+export type Ec2VmLike = ProviderVirtualMachine & { object?: Ec2VmObject };
+
+// ProviderVirtualMachine from @forklift-ui/types does not include 'ec2' yet
+export const isEc2Vm = (vm: ProviderVirtualMachine): vm is Ec2VmLike =>
+  (vm.providerType as string) === PROVIDER_TYPES.ec2;
+
+/**
+ * Extracts subnet IDs from an EC2 VM.
+ * Prefers NetworkInterfaces entries; falls back to top-level SubnetId
+ * when interfaces are absent or contain no subnet IDs.
+ */
+export const getEc2SubnetIds = (vm: Ec2VmLike): string[] => {
+  const interfaces = vm.object?.NetworkInterfaces;
+
+  if (interfaces?.length) {
+    const subnetIds = interfaces.reduce<string[]>(
+      (acc, nic) => (nic.SubnetId ? [...acc, nic.SubnetId] : acc),
+      [],
+    );
+    if (!isEmpty(subnetIds)) return subnetIds;
+  }
+
+  return vm.object?.SubnetId ? [vm.object.SubnetId] : [];
 };
