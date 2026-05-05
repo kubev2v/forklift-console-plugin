@@ -2,9 +2,24 @@ import { DefaultNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/const
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
+import type { Ec2VmObject } from '@utils/types/ec2Inventory';
+
+const getEc2SubnetIds = (vm: ProviderVirtualMachine): string[] => {
+  const { object } = vm as unknown as { object?: Ec2VmObject };
+  const interfaces = object?.NetworkInterfaces;
+
+  if (interfaces?.length) {
+    return interfaces.reduce<string[]>(
+      (acc, nic) => (nic.SubnetId ? [...acc, nic.SubnetId] : acc),
+      [],
+    );
+  }
+
+  return object?.SubnetId ? [object.SubnetId] : [];
+};
 
 const getNetworksForVM = (vm: ProviderVirtualMachine) => {
-  if (vm.providerType === (PROVIDER_TYPES.ec2 as string)) return [];
+  if (vm.providerType === (PROVIDER_TYPES.ec2 as string)) return getEc2SubnetIds(vm);
 
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere: {

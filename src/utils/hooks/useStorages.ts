@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type {
   OpenShiftStorageClass,
@@ -10,6 +11,7 @@ import type {
   VSphereDataStore,
 } from '@forklift-ui/types';
 import { STORAGE_NAMES } from '@utils/constants';
+import type { Ec2Storage } from '@utils/types/ec2Inventory';
 
 import useProviderInventory from './useProviderInventory';
 
@@ -25,13 +27,14 @@ const glanceStorage: InventoryStorage = {
   selfLink: '',
 };
 
-const subPath: Record<ProviderType, string> = {
-  hyperv: 'storages?detail=1',
-  openshift: 'storageclasses?detail=1',
-  openstack: 'volumetypes',
-  ova: 'storages?detail=1',
-  ovirt: 'storagedomains',
-  vsphere: 'datastores',
+const subPath: Record<string, string> = {
+  [PROVIDER_TYPES.ec2]: 'storages',
+  [PROVIDER_TYPES.hyperv]: 'storages?detail=1',
+  [PROVIDER_TYPES.openshift]: 'storageclasses?detail=1',
+  [PROVIDER_TYPES.openstack]: 'volumetypes',
+  [PROVIDER_TYPES.ova]: 'storages?detail=1',
+  [PROVIDER_TYPES.ovirt]: 'storagedomains',
+  [PROVIDER_TYPES.vsphere]: 'datastores',
 };
 
 export type InventoryStorage =
@@ -39,7 +42,8 @@ export type InventoryStorage =
   | OVirtStorageDomain
   | OpenstackVolumeType
   | OpenShiftStorageClass
-  | TypedOvaResource;
+  | TypedOvaResource
+  | Ec2Storage;
 
 export const useSourceStorages = (
   provider: V1beta1Provider | undefined,

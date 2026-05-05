@@ -3,7 +3,6 @@ import { type FC, useState } from 'react';
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { Wizard, WizardStep } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
-import { isProviderEc2 } from '@utils/resources';
 
 import { useStepNavigation } from './hooks/useStepNavigation';
 import CustomScriptsStep from './steps/customization-scripts/CustomScriptsStep';
@@ -40,11 +39,6 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
   const { currentStep, handleStepChange, hasStepErrors } = useStepNavigation();
 
   const hasCreatePlanError = Boolean(createPlanError?.message);
-  const isEc2 = isProviderEc2(sourceProvider);
-
-  const skippedStepIds = new Set<PlanWizardStepId>(
-    isEc2 ? [PlanWizardStepId.NetworkMap, PlanWizardStepId.StorageMap] : [],
-  );
 
   const handleSubmit = async () => {
     setCreatePlanError(undefined);
@@ -61,7 +55,7 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
       isSubmitting ||
       hasCreatePlanError ||
       (planStepOrder[id] > planStepOrder[currentStep.id as PlanWizardStepId] &&
-        hasPreviousStepErrors(id, hasStepErrors, skippedStepIds)),
+        hasPreviousStepErrors(id, hasStepErrors)),
     name: planStepNames[id],
   });
 
@@ -91,14 +85,12 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
           <WizardStep
             key={PlanWizardStepId.NetworkMap}
             {...getStepProps(PlanWizardStepId.NetworkMap)}
-            isHidden={isEc2}
           >
             <NetworkMapStep />
           </WizardStep>,
           <WizardStep
             key={PlanWizardStepId.StorageMap}
             {...getStepProps(PlanWizardStepId.StorageMap)}
-            isHidden={isEc2}
           >
             <StorageMapStep />
           </WizardStep>,

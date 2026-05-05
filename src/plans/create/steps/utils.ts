@@ -1,3 +1,4 @@
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
 import type { ProviderNetwork } from '../types';
@@ -17,20 +18,20 @@ export const getMapResourceLabel = (
   }
 
   switch (resource.providerType) {
-    case 'openshift': {
-      // OpenShift resources have namespace from OpenshiftResource base type
+    case PROVIDER_TYPES.openshift: {
       if (resource.namespace) {
         return `${resource.namespace}/${resource.name}`;
       }
       return resource.name;
     }
-    case 'hyperv':
-    case 'ova':
-    case 'vsphere':
-    case 'openstack': {
+    case PROVIDER_TYPES.ec2:
+    case PROVIDER_TYPES.hyperv:
+    case PROVIDER_TYPES.ova:
+    case PROVIDER_TYPES.vsphere:
+    case PROVIDER_TYPES.openstack: {
       return resource.name || '';
     }
-    case 'ovirt': {
+    case PROVIDER_TYPES.ovirt: {
       // Use path for oVirt if available, fall back to name for storage resources
       if ('path' in resource && resource.path) {
         return resource.path;

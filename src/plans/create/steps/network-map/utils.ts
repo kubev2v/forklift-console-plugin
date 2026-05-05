@@ -9,6 +9,7 @@ import type {
 import { DEFAULT_NETWORK, Namespace } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
+import type { Ec2VmObject } from '@utils/types/ec2Inventory';
 
 import type { CategorizedSourceMappings, MappingValue, ProviderNetwork } from '../../types';
 import { hasMultiplePodNetworkMappings } from '../../utils/hasMultiplePodNetworkMappings';
@@ -24,8 +25,22 @@ type ValidateNetworkMapParams = {
   oVirtNicProfiles: OVirtNicProfile[];
 };
 
+const getEc2SubnetIds = (vm: ProviderVirtualMachine): string[] => {
+  const { object } = vm as unknown as { object?: Ec2VmObject };
+  const interfaces = object?.NetworkInterfaces;
+
+  if (interfaces?.length) {
+    return interfaces.reduce<string[]>(
+      (acc, nic) => (nic.SubnetId ? [...acc, nic.SubnetId] : acc),
+      [],
+    );
+  }
+
+  return object?.SubnetId ? [object.SubnetId] : [];
+};
+
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
-  if (vm.providerType === (PROVIDER_TYPES.ec2 as string)) return [];
+  if (vm.providerType === (PROVIDER_TYPES.ec2 as string)) return getEc2SubnetIds(vm);
 
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere: {

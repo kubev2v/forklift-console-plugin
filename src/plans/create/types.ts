@@ -3,6 +3,7 @@ import type { TargetPowerState, TargetPowerStateValue } from 'src/plans/constant
 import type { StorageMapping, TargetStorage } from 'src/storageMaps/utils/types';
 import type { InventoryNetwork } from 'src/utils/hooks/useNetworks';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
+import type { Ec2Network } from 'src/utils/types/ec2Inventory';
 
 import type {
   HypervNetwork,
@@ -53,7 +54,8 @@ export type ProviderNetwork =
   | OVirtNetwork
   | VSphereNetwork
   | OvaNetwork
-  | HypervNetwork;
+  | HypervNetwork
+  | Ec2Network;
 
 type VsphereVirtualMachine = VSphereVM & {
   changeTrackingEnabled: boolean;
