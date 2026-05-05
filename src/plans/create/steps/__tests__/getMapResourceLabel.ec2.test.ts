@@ -11,18 +11,20 @@ describe('getMapResourceLabel - EC2', () => {
       id: 'subnet-abc123',
       name: 'my-subnet',
       providerType: 'ec2',
+      revision: 1,
+      selfLink: '/providers/ec2/uid/networks/subnet-abc123',
     };
     expect(getMapResourceLabel(network)).toBe('my-subnet');
   });
 
   it('returns name for EC2 storage (volume type)', () => {
-    const storage = {
+    const storage: InventoryStorage = {
       id: 'gp3',
       name: 'gp3',
       providerType: 'ec2',
       revision: 1,
       selfLink: '/providers/ec2/uid/storages/gp3',
-    } as unknown as InventoryStorage;
+    };
     expect(getMapResourceLabel(storage)).toBe('gp3');
   });
 
@@ -31,6 +33,8 @@ describe('getMapResourceLabel - EC2', () => {
       id: 'subnet-abc123',
       name: '',
       providerType: 'ec2',
+      revision: 1,
+      selfLink: '',
     };
     expect(getMapResourceLabel(network)).toBe('');
   });
