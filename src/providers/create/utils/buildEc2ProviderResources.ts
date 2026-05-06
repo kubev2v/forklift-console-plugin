@@ -41,8 +41,9 @@ export const buildEc2ProviderResources = (formData: Ec2FormData): ProviderResour
     provider.spec.settings = {
       ec2Region: ec2Region.trim(),
       ...(autoTargetCredentials && { autoTargetCredentials: 'true' }),
-      ...(!autoTargetCredentials && targetAz?.trim() && { targetAz: targetAz.trim() }),
-      ...(!autoTargetCredentials && targetRegion?.trim() && { targetRegion: targetRegion.trim() }),
+      ...(!autoTargetCredentials && targetAz?.trim() && { 'target-az': targetAz.trim() }),
+      ...(!autoTargetCredentials &&
+        targetRegion?.trim() && { 'target-region': targetRegion.trim() }),
     };
   }
 
