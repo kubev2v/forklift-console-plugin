@@ -103,8 +103,8 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({
               <Th>{t('Created at')}</Th>
             </Tr>
           </Thead>
-          {vmConversions.map((conversion) => {
-            const uid = conversion.metadata?.uid ?? '';
+          {vmConversions.map((conversion, rowIndex) => {
+            const uid = conversion.metadata?.uid ?? conversion.metadata?.name ?? '';
             const isExpanded = expandedRows.has(uid);
             const podRef = getConversionPodRef(conversion);
             const phase = getConversionPhase(conversion);
@@ -120,7 +120,7 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({
                       onToggle: () => {
                         toggleExpand(uid);
                       },
-                      rowIndex: 0,
+                      rowIndex,
                     }}
                   />
                   <Td>

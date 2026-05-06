@@ -10,6 +10,7 @@ import type { VSphereVM } from '@forklift-ui/types';
 import { Td, TreeRowWrapper } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';
 import type { V1beta1Conversion } from '@utils/crds/conversion/types';
+import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 
 type VmTreeRowProps = {
@@ -18,19 +19,22 @@ type VmTreeRowProps = {
   row: VmRow;
 };
 
-const VmCells: Record<string, FC<{ conversions: V1beta1Conversion[]; row: VmRow }>> = {
+type CellProps = { inspectionStatus: VmInspectionStatus | undefined; row: VmRow };
+
+const VmCells: Record<string, FC<CellProps>> = {
   concerns: ({ row }) => <VirtualMachineConcernsCell vmData={row.vmData} />,
   host: ({ row }) => <>{row.vmData.hostName ?? EMPTY_MSG}</>,
-  inspectionStatus: ({ conversions, row }) => {
-    const getStatus = useVmInspectionStatus(conversions);
-    const status = getStatus(row.vmData.vm?.id ?? '');
-    return <InspectionStatusLabel phase={status?.phase} timestamp={status?.lastRun} />;
-  },
+  inspectionStatus: ({ inspectionStatus }) => (
+    <InspectionStatusLabel phase={inspectionStatus?.phase} timestamp={inspectionStatus?.lastRun} />
+  ),
   path: ({ row }) => <>{(row.vmData.vm as VSphereVM).path ?? EMPTY_MSG}</>,
   power: ({ row }) => <VirtualMachinePowerStateCell vmData={row.vmData} />,
 };
 
 const VmTreeRow: FC<VmTreeRowProps> = ({ columns, conversions, row }) => {
+  const getInspectionStatus = useVmInspectionStatus(conversions);
+  const inspectionStatus = getInspectionStatus(row.vmData.vm?.id ?? '');
+
   return (
     <TreeRowWrapper data-testid={row.key} key={row.key} row={{ props: row?.treeRow?.props }}>
       <Td treeRow={row.treeRow} dataLabel={nameColumn.label} data-testid={`${row.key}-name-cell`}>
@@ -46,7 +50,7 @@ const VmTreeRow: FC<VmTreeRowProps> = ({ columns, conversions, row }) => {
             dataLabel={col.label ?? ''}
             data-testid={`${row.key}-${col.resourceFieldId}-cell`}
           >
-            <Component row={row} conversions={conversions} />
+            <Component row={row} inspectionStatus={inspectionStatus} />
           </Td>
         );
       })}
