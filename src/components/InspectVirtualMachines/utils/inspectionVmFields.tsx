@@ -8,6 +8,7 @@ import { t } from '@utils/i18n';
 import type { InspectionVmRowData } from './normalizeVmsForInspection';
 
 export enum InspectionVmFieldId {
+  DiskEncryption = 'diskEncryption',
   InspectionStatus = 'inspectionStatus',
   Name = 'name',
   VmId = 'vmId',
@@ -47,6 +48,13 @@ export const inspectionVmFields: ResourceField[] = [
       (item as InspectionVmRowData).phase ?? INSPECTION_STATUS_NOT_INSPECTED,
     label: t('Inspection status'),
     resourceFieldId: InspectionVmFieldId.InspectionStatus,
+    sortable: false,
+  },
+  {
+    isVisible: false,
+    jsonPath: '$.diskEncryptionLabel',
+    label: t('Disk encryption'),
+    resourceFieldId: InspectionVmFieldId.DiskEncryption,
     sortable: false,
   },
 ];

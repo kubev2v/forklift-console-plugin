@@ -8,6 +8,7 @@ import InspectionStatusLabel from './InspectionStatusLabel';
 
 const InspectionVmRow: FC<RowProps<InspectionVmRowData>> = ({ resourceData, resourceFields }) => {
   const rowFields: Record<string, ReactNode> = {
+    [InspectionVmFieldId.DiskEncryption]: <>{resourceData.diskEncryptionLabel ?? '-'}</>,
     [InspectionVmFieldId.InspectionStatus]: (
       <InspectionStatusLabel phase={resourceData.phase} timestamp={resourceData.timestamp} />
     ),

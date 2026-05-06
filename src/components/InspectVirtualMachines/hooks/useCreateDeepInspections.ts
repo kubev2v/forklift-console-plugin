@@ -3,12 +3,18 @@ import { useCallback } from 'react';
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { ConversionModel } from '@utils/crds/common/models';
-import type { V1beta1Conversion } from '@utils/crds/conversion/types';
+import type { ObjectReference, V1beta1Conversion } from '@utils/crds/conversion/types';
 
 import { buildConversionCR } from '../utils/buildConversionCR';
 import type { InspectionCreateResult } from '../utils/types';
 
-type VmRef = {
+type DiskEncryptionParam = {
+  secret?: ObjectReference;
+  type: 'Clevis' | 'LUKS';
+};
+
+export type VmInspectionRef = {
+  diskEncryption?: DiskEncryptionParam;
   id: string;
   name: string;
 };
@@ -18,18 +24,19 @@ type UseCreateDeepInspectionsParams = {
   provider: V1beta1Provider;
 };
 
-type CreateInspectionsFn = (vms: VmRef[]) => Promise<InspectionCreateResult>;
+type CreateInspectionsFn = (vms: VmInspectionRef[]) => Promise<InspectionCreateResult>;
 
 const CONCURRENCY_LIMIT = 10;
 
 const createDeepInspection = async (
-  vm: VmRef,
+  vm: VmInspectionRef,
   provider: V1beta1Provider,
   results: InspectionCreateResult,
   plan?: V1beta1Plan,
 ): Promise<void> => {
   try {
     const conversion = buildConversionCR({
+      diskEncryption: vm.diskEncryption,
       plan,
       provider,
       vmId: vm.id,
@@ -50,7 +57,7 @@ export const useCreateDeepInspections = ({
   provider,
 }: UseCreateDeepInspectionsParams): CreateInspectionsFn => {
   return useCallback(
-    async (vms: VmRef[]): Promise<InspectionCreateResult> => {
+    async (vms: VmInspectionRef[]): Promise<InspectionCreateResult> => {
       const results: InspectionCreateResult = { failed: [], succeeded: [] };
 
       for (let offset = 0; offset < vms.length; offset += CONCURRENCY_LIMIT) {

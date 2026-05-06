@@ -4,6 +4,7 @@ import type { ConversionPhase } from '@utils/crds/conversion/types';
 import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 
 export type InspectionVmRowData = {
+  diskEncryptionLabel?: string;
   id: string;
   isActive: boolean;
   name: string;

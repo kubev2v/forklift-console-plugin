@@ -30,6 +30,11 @@ export const ACTIVE_CONVERSION_PHASES: ReadonlySet<string> = new Set<string>([
   CONVERSION_PHASE.RUNNING,
 ]);
 
+export const DISK_ENCRYPTION_TYPE = {
+  CLEVIS: 'Clevis',
+  LUKS: 'LUKS',
+} as const;
+
 export const INSPECTION_STATUS_NOT_INSPECTED = 'Not inspected';
 
 export const INSPECTION_STATUS_FILTER_VALUES = [

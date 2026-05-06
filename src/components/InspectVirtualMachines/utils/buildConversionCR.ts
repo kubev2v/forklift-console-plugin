@@ -1,10 +1,16 @@
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
 import { getName, getNamespace, getUID, getVddkInitImage } from '@utils/crds/common/selectors';
 import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
-import type { V1beta1Conversion } from '@utils/crds/conversion/types';
+import type { ObjectReference, V1beta1Conversion } from '@utils/crds/conversion/types';
 import { isEmpty } from '@utils/helpers';
 
+type DiskEncryptionParam = {
+  secret?: ObjectReference;
+  type: 'Clevis' | 'LUKS';
+};
+
 type BuildConversionCRParams = {
+  diskEncryption?: DiskEncryptionParam;
   plan?: V1beta1Plan;
   provider: V1beta1Provider;
   vmId: string;
@@ -55,6 +61,7 @@ const buildLabels = (
 };
 
 export const buildConversionCR = ({
+  diskEncryption,
   plan,
   provider,
   vmId,
@@ -77,6 +84,8 @@ export const buildConversionCR = ({
           namespace: provider?.spec?.secret?.namespace,
         },
       },
+      ...(diskEncryption && { diskEncryption }),
+      targetNamespace: namespace ?? '',
       type: CONVERSION_TYPE.DEEP_INSPECTION,
       vddkImage: getVddkInitImage(provider),
       vm: {
