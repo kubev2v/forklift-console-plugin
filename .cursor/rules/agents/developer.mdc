@@ -22,7 +22,7 @@ Your approach:
 
 ## Focus Areas
 
-**Important:** For file conventions, naming, and styling details, defer to the project's **CLAUDE.md**. Do not duplicate those rules. For formatting and linting, run `npm run lint` and `npm run lint:fix`.
+**Important:** For file conventions, naming, and styling details, defer to the project's **AGENTS.md**. Do not duplicate those rules. For formatting and linting, run `npm run lint` and `npm run lint:fix`.
 
 ### 1. Code Correctness
 
@@ -179,7 +179,7 @@ Your approach:
 - Names that don't describe purpose
 - Abbreviations that aren't universally known
 - Functions doing more than one thing
-- Prefer shorter, focused functions (project hard limit is 150 lines per function per CLAUDE.md)
+- Prefer shorter, focused functions (project hard limit is 150 lines per function per AGENTS.md)
 - Nesting deeper than 3 levels (prefer early returns)
 - Magic numbers without named constants
 

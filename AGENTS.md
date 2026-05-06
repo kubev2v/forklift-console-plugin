@@ -1,4 +1,4 @@
-# Claude.md - AI Assistant Guidelines for Forklift Console Plugin
+# AI Assistant Guidelines for Forklift Console Plugin
 
 ## Project Overview
 
@@ -530,6 +530,8 @@ npm run test:e2e           # Run E2E tests
 
 ## Commit Message Format
 
+**All commits must be signed off** (`git commit -s`) for DCO compliance. The DCO check **will fail** without `Signed-off-by`. **Always use `-s` (or `--signoff`) on every `git commit` command.**
+
 **All commits must include a `Resolves:` line** in the commit description:
 
 ### Format Options
@@ -557,6 +559,7 @@ Updated login validation to handle edge cases.
 Added proper error messages for invalid inputs.
 
 Resolves: MTV-456
+Signed-off-by: Your Name <your-email@redhat.com>
 ```
 
 ### Validate Locally

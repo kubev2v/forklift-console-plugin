@@ -6,7 +6,7 @@ alwaysApply: false
 
 # SCSS Styling Guidelines (Supplement)
 
-For core styling conventions (SCSS preference, BEM methodology, no `!important`), see **CLAUDE.md**. This rule adds PatternFly theme variable references (version-agnostic) and layout patterns.
+For core styling conventions (SCSS preference, BEM methodology, no `!important`), see **AGENTS.md**. This rule adds PatternFly theme variable references (version-agnostic) and layout patterns.
 
 ---
 

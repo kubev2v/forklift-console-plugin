@@ -2,7 +2,7 @@
 
 This project includes Cursor AI rules that provide consistent coding assistance across the team. When you open this project in Cursor, these rules are automatically loaded.
 
-**CLAUDE.md** is the source of truth for conventions; `.cursor/rules/` supplements it.
+**AGENTS.md** is the source of truth for conventions; `.cursor/rules/` supplements it.
 
 ---
 
@@ -32,7 +32,7 @@ Rules are in `.cursor/rules/` and apply automatically:
 
 | Knowledge Area | What It Knows |
 | -------------- | ------------- |
-| **Project Conventions** | TypeScript, React, SCSS standards (from CLAUDE.md) |
+| **Project Conventions** | TypeScript, React, SCSS standards (from AGENTS.md) |
 | **Domain Context** | Forklift CRDs, provider types, migration flow |
 | **Team Perspectives** | Developer, UX, QE, Security, Forklift Expert |
 | **Workflows** | How to create components, debug, prepare PRs |
@@ -162,4 +162,4 @@ Create `.cursor/rules/personal-<name>.mdc` -- it's gitignored. Add your preferen
 
 ## Contributing to Rules
 
-Edit files in `.cursor/rules/`, keep them focused, avoid duplicating CLAUDE.md, and submit a PR.
+Edit files in `.cursor/rules/`, keep them focused, avoid duplicating AGENTS.md, and submit a PR.

@@ -122,7 +122,7 @@ npm run lint
 
 ### Implement Fix
 1. Make the minimal change needed
-2. Follow project coding conventions (see CLAUDE.md)
+2. Follow project coding conventions (see AGENTS.md)
 3. Add error handling if the root cause was missing error handling
 4. Consider edge cases
 

@@ -24,7 +24,7 @@ This is the complete workflow from picking up a Jira ticket to submitting a PR.
 
 3. IMPLEMENT
    "Create the component", "Add the feature"
-   Write code following project standards (CLAUDE.md)
+   Write code following project standards (AGENTS.md)
 
 4. TEST
    "Test my changes", "Add unit tests"
@@ -224,7 +224,7 @@ Following `pr-preparation.mdc`:
 - **Playwright / E2E**: Use separate clusters or avoid heavy automated traffic so shared environments are not blocked.
 
 ### Rules Applied
-- **CLAUDE.md**: Project coding standards
+- **AGENTS.md**: Project coding standards
 - **team-review.mdc**: Multi-perspective review
 - **ticket-workflow.mdc**: Agent tracking for tickets
 - **pr-preparation.mdc**: PR checklist

@@ -6,7 +6,7 @@ alwaysApply: false
 
 # i18n Guidelines (Supplement)
 
-For basic i18n usage (`useForkliftTranslation`, `ForkliftTrans`, `t` function), see **CLAUDE.md**. This rule adds detailed patterns.
+For basic i18n usage (`useForkliftTranslation`, `ForkliftTrans`, `t` function), see **AGENTS.md**. This rule adds detailed patterns.
 
 ---
 
@@ -21,7 +21,7 @@ For basic i18n usage (`useForkliftTranslation`, `ForkliftTrans`, `t` function), 
 
 ## 2. Translation Utilities
 
-For the three utilities (`useForkliftTranslation`, `ForkliftTrans`, `t`) and when to use each, see **CLAUDE.md**.
+For the three utilities (`useForkliftTranslation`, `ForkliftTrans`, `t`) and when to use each, see **AGENTS.md**.
 
 ---
 

@@ -121,7 +121,7 @@ Your approach:
 - Using appropriate PatternFly components
 - Not recreating existing components
 - Consistent with OpenShift Console patterns
-- **Reference:** [PatternFly docs](https://www.patternfly.org/components) and project Coding Standards (CLAUDE.md)
+- **Reference:** [PatternFly docs](https://www.patternfly.org/components) and project Coding Standards (AGENTS.md)
 
 **Visual Consistency**
 - Using PatternFly spacing variables

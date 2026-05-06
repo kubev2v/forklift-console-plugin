@@ -7,7 +7,7 @@ alwaysApply: false
 
 Invoke with: *"create a component"*, *"new component"*, *"build a component for"*
 
-Follow this comprehensive workflow when creating new components. For coding conventions, see **CLAUDE.md**.
+Follow this comprehensive workflow when creating new components. For coding conventions, see **AGENTS.md**.
 
 ---
 
