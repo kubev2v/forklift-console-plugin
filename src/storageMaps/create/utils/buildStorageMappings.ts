@@ -62,6 +62,7 @@ export const buildStorageMappings = (
 
     const offloadPluginConfig = createOffloadPluginConfig(mapping);
     const isOpenShiftProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
+    const isEc2Provider = sourceProvider?.spec?.type === PROVIDER_TYPES.ec2;
     const isGlanceStorage = sourceStorage.name === STORAGE_NAMES.GLANCE;
 
     // OpenShift provider: uses name-based mapping
@@ -73,6 +74,17 @@ export const buildStorageMappings = (
         },
       };
       acc.push(createStorageMapping(baseMapping, offloadPluginConfig));
+    }
+
+    // EC2 provider: backend FindStorageClass matches Source.Name against EBS volume type
+    if (isEc2Provider) {
+      const baseMapping = {
+        destination: { storageClass: targetStorage.name },
+        source: {
+          name: sourceStorage.name,
+        },
+      };
+      acc.push(createStorageMapping(baseMapping));
     }
 
     // Glance storage: uses name-based mapping
@@ -87,7 +99,7 @@ export const buildStorageMappings = (
     }
 
     // Default storage mapping: uses id-based mapping
-    if (!isOpenShiftProvider && !isGlanceStorage) {
+    if (!isOpenShiftProvider && !isEc2Provider && !isGlanceStorage) {
       const defaultBaseMapping = {
         destination: { storageClass: targetStorage.name },
         source: {
@@ -107,6 +119,7 @@ const getSourceStorage = (
   sourceStorages: Map<string, InventoryStorage>,
 ): StorageMappingValue => {
   const isOpenShiftProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
+  const isEc2Provider = sourceProvider?.spec?.type === PROVIDER_TYPES.ec2;
   const isGlanceStorage = source.name === STORAGE_NAMES.GLANCE;
 
   if (isOpenShiftProvider) {
@@ -115,6 +128,11 @@ const getSourceStorage = (
 
   if (isGlanceStorage) {
     return { name: STORAGE_NAMES.GLANCE };
+  }
+
+  if (isEc2Provider) {
+    const inventoryLabel = getMapResourceLabel(sourceStorages.get(source?.id ?? ''));
+    return { name: source.name ?? inventoryLabel ?? source.id ?? '' };
   }
 
   return {

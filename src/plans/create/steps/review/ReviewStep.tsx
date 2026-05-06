@@ -1,6 +1,4 @@
 import type { FC } from 'react';
-import { useWatch } from 'react-hook-form';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
 import { EmptyState, Spinner } from '@patternfly/react-core';
@@ -8,7 +6,6 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { GeneralFormFieldId } from '../general-information/constants';
 
 import CustomScriptsReviewSection from './CustomScriptsReviewSection';
 import GeneralInfoReviewSection from './GeneralInfoReviewSection';
@@ -33,11 +30,8 @@ const ReviewStep: FC<ReviewStepProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const {
-    control,
     formState: { isSubmitting },
   } = useCreatePlanFormContext();
-  const sourceProvider = useWatch({ control, name: GeneralFormFieldId.SourceProvider });
-  const isEc2 = sourceProvider?.spec?.type === PROVIDER_TYPES.ec2;
 
   if (isSubmitting) {
     return (
@@ -64,8 +58,8 @@ const ReviewStep: FC<ReviewStepProps> = ({
     >
       <GeneralInfoReviewSection />
       <VirtualMachinesReviewSection />
-      {!isEc2 && <NetworkMapReviewSection />}
-      {!isEc2 && <StorageMapReviewSection />}
+      <NetworkMapReviewSection />
+      <StorageMapReviewSection />
       <MigrationTypeReviewSection isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled} />
       <OtherSettingsReviewSection isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled} />
       <CustomScriptsReviewSection />

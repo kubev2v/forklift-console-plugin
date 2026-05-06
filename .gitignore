@@ -40,3 +40,6 @@ testing/locales/
 .cursor/skills/personal-*/
 .cursor/hooks/personal-*
 .cursor/hooks.json
+
+# Playwright MCP artifacts (browser snapshots, console logs, screenshots)
+.playwright-mcp/

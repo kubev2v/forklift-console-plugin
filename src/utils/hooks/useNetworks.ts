@@ -11,6 +11,7 @@ import type {
   VSphereNetwork,
 } from '@forklift-ui/types';
 import { DEFAULT_NETWORK, POD } from '@utils/constants';
+import type { Ec2Network } from '@utils/types/ec2Inventory';
 
 import useProviderInventory from './useProviderInventory';
 
@@ -32,7 +33,8 @@ export type InventoryNetwork =
   | OpenstackNetwork
   | OVirtNetwork
   | VSphereNetwork
-  | OvaNetwork;
+  | OvaNetwork
+  | Ec2Network;
 
 export const useSourceNetworks = (
   provider: V1beta1Provider | undefined,

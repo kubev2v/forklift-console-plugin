@@ -200,8 +200,10 @@ const filterStoragesByVmUsage = (
 };
 
 /**
- * Categorizes source storages with OVA provider filtering.
+ * Categorizes source storages with provider-specific filtering.
  * For OVA: only shows storages used by the provided VMs.
+ * For EC2: all storage types are treated as "used" since the backend validates
+ * that every EBS volume type has a mapping.
  * For other providers: shows all storages categorized by usage.
  */
 export const getSourceStorageValuesForSelectedVms = (
@@ -210,6 +212,16 @@ export const getSourceStorageValuesForSelectedVms = (
   vms: ProviderVirtualMachine[] | null,
 ): CategorizedSourceMappings => {
   const sourceProviderType = sourceProvider?.spec?.type;
+
+  if (sourceProviderType === PROVIDER_TYPES.ec2) {
+    return {
+      other: [],
+      used: availableSourceStorages.map((storage) => ({
+        id: storage.id,
+        name: getMapResourceLabel(storage),
+      })),
+    };
+  }
 
   // For OVA providers, filter storages to only those used by the provided VMs
   const relevantStorages =

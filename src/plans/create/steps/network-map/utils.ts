@@ -9,6 +9,7 @@ import type {
 import { DEFAULT_NETWORK, Namespace } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
+import { getEc2SubnetIds, isEc2Vm } from '@utils/types/ec2Inventory';
 
 import type { CategorizedSourceMappings, MappingValue, ProviderNetwork } from '../../types';
 import { hasMultiplePodNetworkMappings } from '../../utils/hasMultiplePodNetworkMappings';
@@ -25,7 +26,7 @@ type ValidateNetworkMapParams = {
 };
 
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
-  if (vm.providerType === (PROVIDER_TYPES.ec2 as string)) return [];
+  if (isEc2Vm(vm)) return getEc2SubnetIds(vm);
 
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere: {

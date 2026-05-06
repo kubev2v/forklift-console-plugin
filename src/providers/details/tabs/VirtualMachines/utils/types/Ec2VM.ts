@@ -9,6 +9,8 @@ export type Ec2InstanceDetails = {
   PrivateIpAddress?: string;
   VpcId?: string;
   SubnetId?: string;
+  NetworkInterfaces?: { SubnetId?: string }[];
+  BlockDeviceMappings?: { Ebs?: { VolumeType?: string } }[];
 };
 
 // EC2 VM as returned by the inventory API (/providers/ec2/{uid}/vms).
