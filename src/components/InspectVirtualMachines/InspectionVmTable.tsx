@@ -2,18 +2,19 @@ import { type FC, useCallback, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 
+import { DISK_ENCRYPTION_TYPE } from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
 
 import { inspectionVmFields } from './utils/inspectionVmFields';
-import type { InspectionVmRowData } from './utils/normalizeVmsForInspection';
+import type { InspectionVmRowData, VmOverrides } from './utils/types';
 import InspectionVmRow from './InspectionVmRow';
-import VmConfigForm, { type VmOverrides } from './VmConfigForm';
+import VmConfigForm from './VmConfigForm';
 
 const INSPECTION_VM_TABLE_ID = 'inspection-vm-table';
 
 const getDiskEncryptionLabel = (overrides?: VmOverrides): string | undefined => {
-  if (overrides?.nbdeClevis) return 'Clevis';
-  if (overrides?.passphrases?.some((phrase) => !isEmpty(phrase))) return 'LUKS';
+  if (overrides?.nbdeClevis) return DISK_ENCRYPTION_TYPE.CLEVIS;
+  if (overrides?.passphrases?.some((phrase) => !isEmpty(phrase))) return DISK_ENCRYPTION_TYPE.LUKS;
   return undefined;
 };
 

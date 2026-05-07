@@ -213,7 +213,7 @@
   "Authentication type": "認証タイプ",
   "Auto-detect target settings": "Auto-detect target settings",
   "Automatic VM renaming": "仮想マシン名の自動変更",
-  "Automatically decrypt LUKS-encrypted disks using Tang servers during inspection, or provide manual passphrases.": "Automatically decrypt LUKS-encrypted disks using Tang servers during inspection, or provide manual passphrases.",
+  "Automatically decrypt LUKS-encrypted disks using Tang servers during inspection or provide manual passphrases.": "Automatically decrypt LUKS-encrypted disks using Tang servers during inspection or provide manual passphrases.",
   "Automatically decrypt LUKS-encrypted disks using Tang servers during migration. The Tang servers must be accessible from the OpenShift cluster.": "移行中に、Tang サーバーを使用して LUKS で暗号化されたディスクを自動的に復号します。Tang サーバーは OpenShift クラスターからアクセスできる必要があります。",
   "Automatically fetch target AWS credentials from the cluster and detect the target availability zone from worker nodes": "Automatically fetch target AWS credentials from the cluster and detect the target availability zone from worker nodes",
   "Automation": "Automation",

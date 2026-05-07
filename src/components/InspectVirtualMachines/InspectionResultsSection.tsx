@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 
+import { getCategoryStatus } from '@components/Concerns/utils/category';
 import { DetailsItem } from '@components/DetailItems/DetailItem';
 import {
   DescriptionList,
@@ -20,19 +21,6 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 type InspectionResultsSectionProps = {
   result: InspectionResult;
-};
-
-const getConcernCategoryStatus = (category: string): 'danger' | 'info' | 'warning' => {
-  switch (category) {
-    case 'Critical':
-    case 'Error':
-      return 'danger';
-    case 'Information':
-    case 'Advisory':
-      return 'info';
-    default:
-      return 'warning';
-  }
 };
 
 const InspectionResultsSection: FC<InspectionResultsSectionProps> = ({ result }) => {
@@ -114,7 +102,7 @@ const InspectionResultsSection: FC<InspectionResultsSectionProps> = ({ result })
                     <Tr key={concern.id}>
                       <Td>{concern.label}</Td>
                       <Td>
-                        <Label status={getConcernCategoryStatus(concern.category)}>
+                        <Label status={getCategoryStatus(concern.category)}>
                           {concern.category}
                         </Label>
                       </Td>

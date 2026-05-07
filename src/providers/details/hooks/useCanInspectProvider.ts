@@ -1,6 +1,7 @@
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
+import { CATEGORY_TYPES, CONDITION_STATUS } from '@utils/constants';
 import { getVddkInitImage } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -23,7 +24,8 @@ export const useCanInspectProvider = (
 
   const isVddkConfigured = !isEmpty(getVddkInitImage(provider));
   const providerReady = provider.status?.conditions?.some(
-    (condition) => condition.type === 'Ready' && condition.status === 'True',
+    (condition) =>
+      condition.type === CATEGORY_TYPES.READY && condition.status === CONDITION_STATUS.TRUE,
   );
 
   if (!providerReady) {

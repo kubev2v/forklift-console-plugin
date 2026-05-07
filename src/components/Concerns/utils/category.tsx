@@ -52,7 +52,10 @@ export const getCategoryIcon = (category: string): ReactNode => {
 };
 
 export const getCategoryStatus = (category: string): LabelProps['status'] | undefined => {
-  return isConcernCategory(category) ? CATEGORY_STATUS[category] : undefined;
+  if (isConcernCategory(category)) return CATEGORY_STATUS[category];
+  if (category === 'Error') return 'danger';
+  if (category === 'Advisory') return 'info';
+  return 'warning';
 };
 
 export const getCategoryLabel = (category: string): string => {

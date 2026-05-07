@@ -217,7 +217,7 @@
   "Authentication type": "Type d’authentification",
   "Auto-detect target settings": "Auto-detect target settings",
   "Automatic VM renaming": "Renommage automatique des machines virtuelles",
-  "Automatically decrypt LUKS-encrypted disks using Tang servers during inspection, or provide manual passphrases.": "Automatically decrypt LUKS-encrypted disks using Tang servers during inspection, or provide manual passphrases.",
+  "Automatically decrypt LUKS-encrypted disks using Tang servers during inspection or provide manual passphrases.": "Automatically decrypt LUKS-encrypted disks using Tang servers during inspection or provide manual passphrases.",
   "Automatically decrypt LUKS-encrypted disks using Tang servers during migration. The Tang servers must be accessible from the OpenShift cluster.": "Déchiffrez automatiquement les disques chiffrés LUKS à l'aide des serveurs Tang lors de la migration. Ces serveurs doivent être accessibles depuis le cluster OpenShift.",
   "Automatically fetch target AWS credentials from the cluster and detect the target availability zone from worker nodes": "Automatically fetch target AWS credentials from the cluster and detect the target availability zone from worker nodes",
   "Automation": "Automation",

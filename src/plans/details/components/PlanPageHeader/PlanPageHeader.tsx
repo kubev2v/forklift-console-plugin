@@ -11,6 +11,7 @@ import { useCanInspectPlan } from 'src/plans/details/hooks/useCanInspectPlan';
 import { PlanModel } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, Flex, FlexItem, Tooltip } from '@patternfly/react-core';
+import { TOOLTIP_TRIGGER_MANUAL } from '@utils/constants';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { usePlan } from '../../hooks/usePlan';
@@ -39,7 +40,10 @@ const PlanPageHeader: FC<PlanPageHeaderProps> = ({ name, namespace, setShowPlanC
 
   const inspectButton = isVsphere ? (
     <FlexItem>
-      <Tooltip content={disabledReason} trigger={disabledReason ? undefined : 'manual'}>
+      <Tooltip
+        content={disabledReason}
+        trigger={disabledReason ? undefined : TOOLTIP_TRIGGER_MANUAL}
+      >
         <Button
           variant={ButtonVariant.secondary}
           isDisabled={!canInspect}

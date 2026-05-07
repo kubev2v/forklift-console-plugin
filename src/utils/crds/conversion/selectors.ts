@@ -20,9 +20,6 @@ export const getConversionPhase = (conversion: V1beta1Conversion): ConversionPha
 export const getConversionPodRef = (conversion: V1beta1Conversion): ConversionStatus['pod'] =>
   conversion?.status?.pod;
 
-export const getConversionCreationTimestamp = (conversion: V1beta1Conversion): string | undefined =>
-  conversion?.metadata?.creationTimestamp;
-
 export const getInspectionResult = (conversion: V1beta1Conversion): InspectionResult | undefined =>
   conversion?.status?.inspectionResult;
 

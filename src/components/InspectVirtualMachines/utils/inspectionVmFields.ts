@@ -5,7 +5,7 @@ import {
 } from '@utils/crds/conversion/constants';
 import { t } from '@utils/i18n';
 
-import type { InspectionVmRowData } from './normalizeVmsForInspection';
+import type { InspectionVmRowData } from './types';
 
 export enum InspectionVmFieldId {
   DiskEncryption = 'diskEncryption',

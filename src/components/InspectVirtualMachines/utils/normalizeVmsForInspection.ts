@@ -1,17 +1,9 @@
 import type { V1beta1PlanSpecVms } from '@forklift-ui/types';
-import type { InspectionStatus } from '@utils/crds/conversion/constants';
 import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
 import { isConversionActive } from '@utils/crds/conversion/selectors';
 import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 
-export type InspectionVmRowData = {
-  diskEncryptionLabel?: string;
-  id: string;
-  inspectionStatus: InspectionStatus;
-  isActive: boolean;
-  name: string;
-  timestamp?: string;
-};
+import type { InspectionVmRowData } from './types';
 
 type GetVmInspectionStatusFn = (vmId: string) => VmInspectionStatus | undefined;
 

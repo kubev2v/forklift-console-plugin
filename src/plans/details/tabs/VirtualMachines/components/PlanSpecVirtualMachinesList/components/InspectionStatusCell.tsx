@@ -13,7 +13,6 @@ const InspectionStatusCell: FC<InspectionStatusCellProps> = ({ inspectionStatus 
     <InspectionStatusLabel
       status={inspectionStatus?.status ?? INSPECTION_STATUS.NOT_INSPECTED}
       testId="inspection-status-cell"
-      timestamp={inspectionStatus?.lastRun}
     />
   );
 };

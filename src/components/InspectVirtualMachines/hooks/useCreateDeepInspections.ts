@@ -3,21 +3,10 @@ import { useCallback } from 'react';
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { ConversionModel } from '@utils/crds/common/models';
-import type { ObjectReference, V1beta1Conversion } from '@utils/crds/conversion/types';
+import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 
 import { buildConversionCR } from '../utils/buildConversionCR';
-import type { InspectionCreateResult } from '../utils/types';
-
-type DiskEncryptionParam = {
-  secret?: ObjectReference;
-  type: 'Clevis' | 'LUKS';
-};
-
-export type VmInspectionRef = {
-  diskEncryption?: DiskEncryptionParam;
-  id: string;
-  name: string;
-};
+import type { InspectionCreateResult, VmInspectionRef } from '../utils/types';
 
 type UseCreateDeepInspectionsParams = {
   plan?: V1beta1Plan;

@@ -3,17 +3,14 @@ import type { RowProps } from 'src/components/common/TableView/types';
 import VisibleTableData from 'src/components/TableCell/VisibleTableData';
 
 import { InspectionVmFieldId } from './utils/inspectionVmFields';
-import type { InspectionVmRowData } from './utils/normalizeVmsForInspection';
+import type { InspectionVmRowData } from './utils/types';
 import InspectionStatusLabel from './InspectionStatusLabel';
 
 const InspectionVmRow: FC<RowProps<InspectionVmRowData>> = ({ resourceData, resourceFields }) => {
   const rowFields: Record<string, ReactNode> = {
     [InspectionVmFieldId.DiskEncryption]: <>{resourceData.diskEncryptionLabel ?? '-'}</>,
     [InspectionVmFieldId.InspectionStatus]: (
-      <InspectionStatusLabel
-        status={resourceData.inspectionStatus}
-        timestamp={resourceData.timestamp}
-      />
+      <InspectionStatusLabel status={resourceData.inspectionStatus} />
     ),
     [InspectionVmFieldId.Name]: <>{resourceData.name}</>,
     [InspectionVmFieldId.VmId]: <>{resourceData.id}</>,

@@ -14,10 +14,7 @@ import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-export type VmOverrides = {
-  nbdeClevis?: boolean;
-  passphrases?: string[];
-};
+import type { VmOverrides } from './utils/types';
 
 type VmConfigFormProps = {
   onChange: (vmId: string, overrides: VmOverrides) => void;
@@ -71,7 +68,7 @@ const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
         labelHelp={
           <HelpIconPopover>
             {t(
-              'Automatically decrypt LUKS-encrypted disks using Tang servers during inspection, or provide manual passphrases.',
+              'Automatically decrypt LUKS-encrypted disks using Tang servers during inspection or provide manual passphrases.',
             )}
           </HelpIconPopover>
         }

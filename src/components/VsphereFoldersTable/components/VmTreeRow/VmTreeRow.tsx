@@ -26,10 +26,7 @@ const VmCells: Record<string, FC<CellProps>> = {
   concerns: ({ row }) => <VirtualMachineConcernsCell vmData={row.vmData} />,
   host: ({ row }) => <>{row.vmData.hostName ?? EMPTY_MSG}</>,
   inspectionStatus: ({ inspectionStatus }) => (
-    <InspectionStatusLabel
-      status={inspectionStatus?.status ?? INSPECTION_STATUS.NOT_INSPECTED}
-      timestamp={inspectionStatus?.lastRun}
-    />
+    <InspectionStatusLabel status={inspectionStatus?.status ?? INSPECTION_STATUS.NOT_INSPECTED} />
   ),
   path: ({ row }) => <>{(row.vmData.vm as VSphereVM).path ?? EMPTY_MSG}</>,
   power: ({ row }) => <VirtualMachinePowerStateCell vmData={row.vmData} />,

@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
 
+import { getCreatedAt } from '@utils/crds/common/selectors';
 import type { InspectionStatus } from '@utils/crds/conversion/constants';
 import { CONVERSION_LABELS } from '@utils/crds/conversion/constants';
 import {
-  getConversionCreationTimestamp,
   getConversionPhase,
   getInspectionResult,
   getInspectionStatus,
@@ -30,10 +30,7 @@ const shouldReplace = (existing: V1beta1Conversion, candidate: V1beta1Conversion
   if (candidateActive && !existingActive) return true;
   if (!candidateActive && existingActive) return false;
 
-  return (
-    (getConversionCreationTimestamp(candidate) ?? '') >
-    (getConversionCreationTimestamp(existing) ?? '')
-  );
+  return (getCreatedAt(candidate) ?? '') > (getCreatedAt(existing) ?? '');
 };
 
 export const useVmInspectionStatus = (
@@ -68,7 +65,7 @@ export const useVmInspectionStatus = (
         conversion,
         conversionName: conversion.metadata?.name,
         inspectionPassed,
-        lastRun: getConversionCreationTimestamp(conversion),
+        lastRun: getCreatedAt(conversion),
         status: getInspectionStatus(phase, inspectionPassed),
       };
     },

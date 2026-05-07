@@ -1,13 +1,11 @@
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
+import { ConversionModel } from '@utils/crds/common/models';
 import { getName, getNamespace, getUID, getVddkInitImage } from '@utils/crds/common/selectors';
 import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
-import type { ObjectReference, V1beta1Conversion } from '@utils/crds/conversion/types';
+import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 import { isEmpty } from '@utils/helpers';
 
-type DiskEncryptionParam = {
-  secret?: ObjectReference;
-  type: 'Clevis' | 'LUKS';
-};
+import type { DiskEncryptionParam } from './types';
 
 type BuildConversionCRParams = {
   diskEncryption?: DiskEncryptionParam;
@@ -70,8 +68,9 @@ export const buildConversionCR = ({
   const namespace = plan ? getNamespace(plan) : getNamespace(provider);
 
   return {
-    apiVersion: 'forklift.konveyor.io/v1beta1',
-    kind: 'Conversion',
+    apiVersion:
+      `${ConversionModel.apiGroup}/${ConversionModel.apiVersion}` as V1beta1Conversion['apiVersion'],
+    kind: ConversionModel.kind as V1beta1Conversion['kind'],
     metadata: {
       generateName: `deep-inspection-${sanitizeForK8sName(vmName)}-`,
       labels: buildLabels(provider, plan, vmId),

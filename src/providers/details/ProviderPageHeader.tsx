@@ -12,6 +12,7 @@ import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 import { type ProviderInventory, ProviderModel } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, Flex, FlexItem, Tooltip } from '@patternfly/react-core';
+import { TOOLTIP_TRIGGER_MANUAL } from '@utils/constants';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import CreatePlanAction from './components/CreatePlanAction';
@@ -44,7 +45,10 @@ const ProviderPageHeader: FC<ProviderDetailsPageProps> = ({ name, namespace }) =
 
   const inspectButton = isVsphere ? (
     <FlexItem>
-      <Tooltip content={disabledReason} trigger={disabledReason ? undefined : 'manual'}>
+      <Tooltip
+        content={disabledReason}
+        trigger={disabledReason ? undefined : TOOLTIP_TRIGGER_MANUAL}
+      >
         <Button
           variant={ButtonVariant.secondary}
           isDisabled={!canInspect}
