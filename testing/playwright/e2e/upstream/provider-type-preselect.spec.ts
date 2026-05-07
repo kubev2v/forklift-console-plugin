@@ -3,6 +3,8 @@ import { expect, test } from '@playwright/test';
 import { setupForkliftIntercepts } from '../../intercepts';
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
 import { disableGuidedTour } from '../../utils/utils';
+import { V2_12_0 } from '../../utils/version/constants';
+import { requireVersion } from '../../utils/version/version';
 
 const PROVIDER_TYPE_LABELS: Record<string, string> = {
   hyperv: 'Microsoft Hyper-V',
@@ -19,6 +21,7 @@ test.describe(
     tag: '@upstream',
   },
   () => {
+    requireVersion(test, V2_12_0);
     test.beforeEach(async ({ page }) => {
       await setupForkliftIntercepts(page);
     });

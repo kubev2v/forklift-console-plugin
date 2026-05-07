@@ -235,6 +235,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream'],
     },
     async ({ page }) => {
+      requireVersion(test, V2_12_0);
       test.setTimeout(120000);
       const overviewPage = new OverviewPage(page);
 

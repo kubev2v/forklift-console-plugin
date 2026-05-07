@@ -4,11 +4,11 @@ import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtur
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { OffloadPlugins, StorageProducts } from '../../../types/test-data';
 import { createOffloadTestSecret } from '../../../utils/offload-helpers';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstream' }, () => {
-  requireVersion(test, V2_11_0);
+  requireVersion(test, V2_12_0);
 
   test('should display storage mappings and allow editing offload from plan Mappings tab', async ({
     page,

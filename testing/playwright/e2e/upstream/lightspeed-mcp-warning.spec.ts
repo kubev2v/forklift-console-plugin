@@ -2,6 +2,8 @@ import { expect, test } from '@playwright/test';
 
 import { setupForkliftIntercepts, setupLightspeedIntercepts } from '../../intercepts';
 import { OverviewPage } from '../../page-objects/OverviewPage';
+import { V2_12_0 } from '../../utils/version/constants';
+import { requireVersion } from '../../utils/version/version';
 
 test.describe(
   'Lightspeed MCP Warning Banner',
@@ -9,6 +11,7 @@ test.describe(
     tag: '@upstream',
   },
   () => {
+    requireVersion(test, V2_12_0);
     test('should show warning when Lightspeed is installed but MCP service is missing', async ({
       page,
     }) => {

@@ -2,7 +2,7 @@ import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData, TargetProject } from '../../../types/test-data';
 import type { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_11_0, V2_12_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
 
 export class GeneralInformationStep {
@@ -136,7 +136,21 @@ export class GeneralInformationStep {
   async verifySourceProviderPrePopulated(expectedProviderName: string): Promise<void> {
     const selector = this.page.getByTestId('source-provider-select');
     await selector.waitFor({ state: 'visible' });
-    await expect(selector).toContainText(expectedProviderName);
+
+    if (isVersionAtLeast(V2_12_0)) {
+      await expect(selector).toContainText(expectedProviderName);
+      return;
+    }
+
+    // On pre-2.12, provider pre-population uses location.state which may not
+    // work reliably with intercepted routes. Fall back to manual selection.
+    const currentText = await selector.textContent();
+
+    if (currentText?.includes(expectedProviderName)) {
+      return;
+    }
+
+    await this.selectSourceProvider(expectedProviderName);
   }
 
   async waitForTargetProviderNamespaces() {

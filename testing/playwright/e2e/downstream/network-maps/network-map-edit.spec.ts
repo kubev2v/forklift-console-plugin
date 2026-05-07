@@ -3,11 +3,11 @@ import { expect } from '@playwright/test';
 import { sharedProviderNetworkMapFixtures as test } from '../../../fixtures/resourceFixtures';
 import { NetworkMapDetailsPage } from '../../../page-objects/NetworkMapDetailsPage';
 import { NetworkTargets, SourceNetworks } from '../../../types/test-data';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
-  requireVersion(test, V2_11_0);
+  requireVersion(test, V2_12_0);
 
   test('should test network map editing interactions', async ({
     page,

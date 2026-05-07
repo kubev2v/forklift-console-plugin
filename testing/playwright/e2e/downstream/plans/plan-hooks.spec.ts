@@ -6,7 +6,7 @@ import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/Cre
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
 import { disableGuidedTour } from '../../../utils/utils';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 const HOOK_RUNNER_IMAGE = 'quay.io/konveyor/hook-runner:latest';
@@ -22,7 +22,7 @@ const loadPlaybookFromTemplate = (templatePath: string, hookName: string): strin
 };
 
 test.describe('Plan Hooks', { tag: '@downstream' }, () => {
-  requireVersion(test, V2_11_0);
+  requireVersion(test, V2_12_0);
 
   test('should configure, edit, and remove hooks on plans', async ({
     page,
