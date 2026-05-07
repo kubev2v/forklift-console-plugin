@@ -1,5 +1,6 @@
 import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
 import ConcernsColumnPopover from 'src/components/Concerns/ConcernsColumnPopover';
+import InspectionStatusColumnPopover from 'src/components/InspectVirtualMachines/InspectionStatusColumnPopover';
 
 import { type EnumValue, FilterDefType, type ResourceField } from '@components/common/utils/types';
 import { getCategoryIcon } from '@components/Concerns/utils/category';
@@ -94,13 +95,18 @@ export const specVirtualMachineFields: ResourceField[] = [
         label: t(value),
       })),
     },
+    info: {
+      ariaLabel: 'More information on inspection status',
+      popover: <InspectionStatusColumnPopover />,
+    },
     isVisible: true,
     jsonPath: (item: unknown) =>
-      (item as SpecVirtualMachinePageData).inspectionStatus?.phase ??
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      (item as SpecVirtualMachinePageData).inspectionStatus?.status ??
       INSPECTION_STATUS_NOT_INSPECTED,
     label: t('Inspection status'),
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.InspectionStatus,
-    sortable: false,
+    sortable: true,
   },
   {
     isVisible: false,

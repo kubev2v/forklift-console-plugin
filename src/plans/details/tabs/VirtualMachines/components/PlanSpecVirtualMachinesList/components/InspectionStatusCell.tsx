@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import InspectionStatusLabel from 'src/components/InspectVirtualMachines/InspectionStatusLabel';
 
+import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
 import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 
 type InspectionStatusCellProps = {
@@ -10,7 +11,7 @@ type InspectionStatusCellProps = {
 const InspectionStatusCell: FC<InspectionStatusCellProps> = ({ inspectionStatus }) => {
   return (
     <InspectionStatusLabel
-      phase={inspectionStatus?.phase}
+      status={inspectionStatus?.status ?? INSPECTION_STATUS.NOT_INSPECTED}
       testId="inspection-status-cell"
       timestamp={inspectionStatus?.lastRun}
     />

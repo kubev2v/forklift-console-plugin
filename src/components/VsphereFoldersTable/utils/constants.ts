@@ -14,7 +14,7 @@ export const defaultColumns: ResourceField[] = [
     isVisible: true,
     label: t('Inspection status'),
     resourceFieldId: COLUMN_IDS.InspectionStatus,
-    sortable: false,
+    sortable: true,
   },
   { isVisible: true, label: t('Host'), resourceFieldId: COLUMN_IDS.Host, sortable: true },
   { isVisible: false, label: t('Path'), resourceFieldId: COLUMN_IDS.Path, sortable: true },

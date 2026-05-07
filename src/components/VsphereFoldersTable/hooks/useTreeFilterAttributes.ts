@@ -64,8 +64,8 @@ export const useTreeFilterAttributes = (rows: RowNode[], conversions: V1beta1Con
       },
       {
         getValues: (row) => {
-          const status = getVmInspectionStatus(row.vmData.vm?.id ?? '');
-          return [status?.phase ?? INSPECTION_STATUS_NOT_INSPECTED];
+          const vmStatus = getVmInspectionStatus(row.vmData.vm?.id ?? '');
+          return [vmStatus?.status ?? INSPECTION_STATUS_NOT_INSPECTED];
         },
         id: COLUMN_IDS.InspectionStatus,
         kind: AttributeKind.Checkbox,

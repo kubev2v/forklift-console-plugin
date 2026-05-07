@@ -2,6 +2,8 @@ import { type FC, useCallback, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 
+import { isEmpty } from '@utils/helpers';
+
 import { inspectionVmFields } from './utils/inspectionVmFields';
 import type { InspectionVmRowData } from './utils/normalizeVmsForInspection';
 import InspectionVmRow from './InspectionVmRow';
@@ -11,7 +13,7 @@ const INSPECTION_VM_TABLE_ID = 'inspection-vm-table';
 
 const getDiskEncryptionLabel = (overrides?: VmOverrides): string | undefined => {
   if (overrides?.nbdeClevis) return 'Clevis';
-  if (overrides?.passphrases?.some((phrase) => phrase.length > 0)) return 'LUKS';
+  if (overrides?.passphrases?.some((phrase) => !isEmpty(phrase))) return 'LUKS';
   return undefined;
 };
 

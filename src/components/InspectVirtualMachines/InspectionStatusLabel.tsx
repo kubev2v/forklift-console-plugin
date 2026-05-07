@@ -1,19 +1,19 @@
 import type { FC, ReactNode } from 'react';
 
-import { Icon, Label, Popover, Timestamp } from '@patternfly/react-core';
+import { Icon, Label } from '@patternfly/react-core';
 import {
-  BanIcon,
   CheckCircleIcon,
   ExclamationCircleIcon,
+  ExclamationTriangleIcon,
   InProgressIcon,
   MinusCircleIcon,
 } from '@patternfly/react-icons';
-import { CONVERSION_PHASE } from '@utils/crds/conversion/constants';
-import type { ConversionPhase } from '@utils/crds/conversion/types';
+import type { InspectionStatus } from '@utils/crds/conversion/constants';
+import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type InspectionStatusLabelProps = {
-  phase: ConversionPhase | undefined;
+  status: InspectionStatus;
   testId?: string;
   timestamp?: string;
 };
@@ -26,22 +26,33 @@ type StatusConfig = {
 };
 
 const getStatusConfig = (
-  phase: ConversionPhase,
+  status: InspectionStatus,
   t: ReturnType<typeof useForkliftTranslation>['t'],
 ): StatusConfig => {
-  switch (phase) {
-    case CONVERSION_PHASE.SUCCEEDED:
+  switch (status) {
+    case INSPECTION_STATUS.INSPECTION_PASSED:
       return {
         icon: (
           <Icon isInline status="success">
             <CheckCircleIcon />
           </Icon>
         ),
-        label: t('Completed'),
+        label: t('Inspection passed'),
         labelStatus: 'success',
         showTimestamp: true,
       };
-    case CONVERSION_PHASE.FAILED:
+    case INSPECTION_STATUS.ISSUES_FOUND:
+      return {
+        icon: (
+          <Icon isInline status="warning">
+            <ExclamationTriangleIcon />
+          </Icon>
+        ),
+        label: t('Issues found'),
+        labelStatus: 'warning',
+        showTimestamp: true,
+      };
+    case INSPECTION_STATUS.FAILED:
       return {
         icon: (
           <Icon isInline status="danger">
@@ -52,17 +63,7 @@ const getStatusConfig = (
         labelStatus: 'danger',
         showTimestamp: true,
       };
-    case CONVERSION_PHASE.CANCELED:
-      return {
-        icon: (
-          <Icon isInline>
-            <BanIcon />
-          </Icon>
-        ),
-        label: t('Canceled'),
-        showTimestamp: true,
-      };
-    case CONVERSION_PHASE.RUNNING:
+    case INSPECTION_STATUS.RUNNING:
       return {
         icon: (
           <Icon isInline>
@@ -73,8 +74,7 @@ const getStatusConfig = (
         labelStatus: 'info',
         showTimestamp: false,
       };
-    case CONVERSION_PHASE.PENDING:
-    default:
+    case INSPECTION_STATUS.PENDING:
       return {
         icon: (
           <Icon isInline>
@@ -84,43 +84,35 @@ const getStatusConfig = (
         label: t('Pending'),
         showTimestamp: false,
       };
+    case INSPECTION_STATUS.CANCELED:
+      return {
+        icon: (
+          <Icon isInline>
+            <BanIcon />
+          </Icon>
+        ),
+        label: t('Canceled'),
+        showTimestamp: true,
+      };
+    case INSPECTION_STATUS.NOT_INSPECTED:
+    default:
+      return {
+        icon: undefined,
+        label: t('Not inspected'),
+        showTimestamp: false,
+      };
   }
 };
 
-const InspectionStatusLabel: FC<InspectionStatusLabelProps> = ({ phase, testId, timestamp }) => {
+const InspectionStatusLabel: FC<InspectionStatusLabelProps> = ({ status, testId, timestamp }) => {
   const { t } = useForkliftTranslation();
+  const config = getStatusConfig(status, t);
 
-  if (!phase) {
-    return (
-      <Label isCompact variant="outline" data-testid={testId}>
-        {t('Not inspected')}
-      </Label>
-    );
-  }
-
-  const config = getStatusConfig(phase, t);
-
-  const label = (
-    <Label
-      isCompact
-      variant="outline"
-      status={config.labelStatus}
-      icon={config.icon}
-      data-testid={testId}
-    >
+  return (
+    <Label variant="outline" status={config.labelStatus} icon={config.icon} data-testid={testId}>
       {config.label}
     </Label>
   );
-
-  if (timestamp && config.showTimestamp) {
-    return (
-      <Popover triggerAction="hover" bodyContent={<Timestamp date={new Date(timestamp)} />}>
-        {label}
-      </Popover>
-    );
-  }
-
-  return label;
 };
 
 export default InspectionStatusLabel;

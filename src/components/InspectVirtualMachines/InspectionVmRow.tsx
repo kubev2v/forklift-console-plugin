@@ -10,7 +10,10 @@ const InspectionVmRow: FC<RowProps<InspectionVmRowData>> = ({ resourceData, reso
   const rowFields: Record<string, ReactNode> = {
     [InspectionVmFieldId.DiskEncryption]: <>{resourceData.diskEncryptionLabel ?? '-'}</>,
     [InspectionVmFieldId.InspectionStatus]: (
-      <InspectionStatusLabel phase={resourceData.phase} timestamp={resourceData.timestamp} />
+      <InspectionStatusLabel
+        status={resourceData.inspectionStatus}
+        timestamp={resourceData.timestamp}
+      />
     ),
     [InspectionVmFieldId.Name]: <>{resourceData.name}</>,
     [InspectionVmFieldId.VmId]: <>{resourceData.id}</>,

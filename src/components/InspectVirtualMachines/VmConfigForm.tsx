@@ -5,9 +5,8 @@ import {
   Button,
   ButtonVariant,
   Checkbox,
+  Form,
   FormGroup,
-  Stack,
-  StackItem,
   TextInput,
 } from '@patternfly/react-core';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
@@ -66,81 +65,75 @@ const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
   };
 
   return (
-    <div className="pf-v6-u-py-md pf-v6-u-pl-xl">
-      <Stack hasGutter>
-        <StackItem>
-          <FormGroup
-            label={t('Disk encryption')}
-            labelHelp={
-              <HelpIconPopover>
-                {t(
-                  'Automatically decrypt LUKS-encrypted disks using Tang servers during inspection, or provide manual passphrases.',
-                )}
-              </HelpIconPopover>
-            }
-          >
-            <Checkbox
-              id={`nbde-clevis-${vmId}`}
-              data-testid={`nbde-clevis-checkbox-${vmId}`}
-              isChecked={overrides.nbdeClevis ?? false}
-              onChange={handleNbdeClevisChange}
-              label={t('Use NBDE/Clevis')}
-              description={t(
-                'Use Tang servers for network-bound decryption instead of manual passphrases.',
-              )}
-            />
-          </FormGroup>
-        </StackItem>
+    <Form className="pf-v6-u-py-md pf-v6-u-pl-xl">
+      <FormGroup
+        label={t('Disk encryption')}
+        labelHelp={
+          <HelpIconPopover>
+            {t(
+              'Automatically decrypt LUKS-encrypted disks using Tang servers during inspection, or provide manual passphrases.',
+            )}
+          </HelpIconPopover>
+        }
+      >
+        <Checkbox
+          id={`nbde-clevis-${vmId}`}
+          data-testid={`nbde-clevis-checkbox-${vmId}`}
+          isChecked={overrides.nbdeClevis ?? false}
+          onChange={handleNbdeClevisChange}
+          label={t('Use NBDE/Clevis')}
+          description={t(
+            'Use Tang servers for network-bound decryption instead of manual passphrases.',
+          )}
+        />
+      </FormGroup>
 
-        {!overrides.nbdeClevis && (
-          <StackItem>
-            <FormGroup label={t('Disk decryption passphrases')}>
-              {!isEmpty(localPhrases) && (
-                <Table borders={false} variant="compact">
-                  <Tbody>
-                    {localPhrases.map((phrase, index) => (
-                      <Tr key={index}>
-                        <Td>
-                          <TextInput
-                            value={phrase}
-                            onChange={(_event, value) => {
-                              updateLocalPassphrase(index, value);
-                            }}
-                            onBlur={commitPassphrase}
-                            aria-label={t('Passphrase {{index}}', { index: index + 1 })}
-                            data-testid={`luks-passphrase-${vmId}-${index}`}
-                          />
-                        </Td>
-                        <Td isActionCell>
-                          <Button
-                            variant={ButtonVariant.plain}
-                            onClick={() => {
-                              removePassphrase(index);
-                            }}
-                            aria-label={t('Remove passphrase')}
-                          >
-                            <MinusCircleIcon />
-                          </Button>
-                        </Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              )}
-              <Button
-                variant={ButtonVariant.link}
-                icon={<PlusCircleIcon />}
-                isDisabled={localPhrases.length >= MAX_PASSPHRASES}
-                onClick={addPassphrase}
-                size="sm"
-              >
-                {t('Add passphrase')}
-              </Button>
-            </FormGroup>
-          </StackItem>
-        )}
-      </Stack>
-    </div>
+      {!overrides.nbdeClevis && (
+        <FormGroup label={t('Disk decryption passphrases')}>
+          {!isEmpty(localPhrases) && (
+            <Table borders={false} variant="compact">
+              <Tbody>
+                {localPhrases.map((phrase, index) => (
+                  <Tr key={index}>
+                    <Td>
+                      <TextInput
+                        value={phrase}
+                        onChange={(_event, value) => {
+                          updateLocalPassphrase(index, value);
+                        }}
+                        onBlur={commitPassphrase}
+                        aria-label={t('Passphrase {{index}}', { index: index + 1 })}
+                        data-testid={`luks-passphrase-${vmId}-${index}`}
+                      />
+                    </Td>
+                    <Td isActionCell>
+                      <Button
+                        variant={ButtonVariant.plain}
+                        onClick={() => {
+                          removePassphrase(index);
+                        }}
+                        aria-label={t('Remove passphrase')}
+                      >
+                        <MinusCircleIcon />
+                      </Button>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          )}
+          <Button
+            variant={ButtonVariant.link}
+            icon={<PlusCircleIcon />}
+            isDisabled={localPhrases.length >= MAX_PASSPHRASES}
+            onClick={addPassphrase}
+            size="sm"
+          >
+            {t('Add passphrase')}
+          </Button>
+        </FormGroup>
+      )}
+    </Form>
   );
 };
 

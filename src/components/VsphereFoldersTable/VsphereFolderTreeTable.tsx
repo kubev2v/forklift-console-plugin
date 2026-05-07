@@ -3,6 +3,7 @@ import type { ProviderVmData } from 'src/utils/types';
 
 import type { ResourceField } from '@components/common/utils/types';
 import SectionHeading from '@components/headers/SectionHeading';
+import InspectionStatusColumnPopover from '@components/InspectVirtualMachines/InspectionStatusColumnPopover';
 import type { ProviderHost, VSphereResource } from '@forklift-ui/types';
 import {
   PageSection,
@@ -50,7 +51,20 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
   vmData,
 }) => {
   const { t } = useForkliftTranslation();
-  const [columns, setColumns] = useState<ResourceField[]>(defaultColumns);
+
+  const [columns, setColumns] = useState<ResourceField[]>(() =>
+    defaultColumns.map((col) =>
+      col.resourceFieldId === 'inspectionStatus'
+        ? {
+            ...col,
+            info: {
+              ariaLabel: 'More information on inspection status',
+              popover: <InspectionStatusColumnPopover />,
+            },
+          }
+        : col,
+    ),
+  );
   const [inspectionExpandedRows, setInspectionExpandedRows] = useState<Set<string>>(new Set());
 
   const [conversions] = useWatchConversions({
@@ -110,6 +124,7 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
 
   const { handleOnSort, sortBy, sortedBlocks, visibleCols } = useTreeSortBlocks({
     columns,
+    conversions,
     filteredRows,
   });
 
@@ -159,7 +174,11 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
         <Thead>
           <Tr>
             {visibleCols.map((col, idx) => (
-              <Th key={col.id} sort={{ columnIndex: idx, onSort: handleOnSort, sortBy }}>
+              <Th
+                key={col.id}
+                sort={col.sortable ? { columnIndex: idx, onSort: handleOnSort, sortBy } : undefined}
+                info={col.info}
+              >
                 {col.label}
               </Th>
             ))}

@@ -17,7 +17,20 @@ import {
   type VmRow,
 } from '@components/VsphereFoldersTable/utils/types';
 import type { Concern, VSphereVM } from '@forklift-ui/types';
+import type { InspectionStatus } from '@utils/crds/conversion/constants';
+import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
+import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
+
+const INSPECTION_STATUS_SEVERITY_RANK: Record<InspectionStatus, number> = {
+  [INSPECTION_STATUS.CANCELED]: 6,
+  [INSPECTION_STATUS.FAILED]: 1,
+  [INSPECTION_STATUS.INSPECTION_PASSED]: 5,
+  [INSPECTION_STATUS.ISSUES_FOUND]: 0,
+  [INSPECTION_STATUS.NOT_INSPECTED]: 4,
+  [INSPECTION_STATUS.PENDING]: 3,
+  [INSPECTION_STATUS.RUNNING]: 2,
+};
 
 type Counts = { Critical: number; Warning: number; Information: number };
 
@@ -79,7 +92,12 @@ const cmpCountsQuantityAsc = (first: Counts, second: Counts) => {
   return 0;
 };
 
-export const buildVmComparator = (sort: SortState) => {
+type GetVmInspectionStatusFn = (vmId: string) => VmInspectionStatus | undefined;
+
+export const buildVmComparator = (
+  sort: SortState,
+  getVmInspectionStatus?: GetVmInspectionStatusFn,
+) => {
   const dir = sort.direction === 'asc' ? 1 : -1;
   switch (sort.column) {
     case COLUMN_IDS.Name:
@@ -94,13 +112,23 @@ export const buildVmComparator = (sort: SortState) => {
       return (a: VmRow, b: VmRow) => {
         const ca = getConcernCounts(a);
         const cb = getConcernCounts(b);
-        const base = cmpCountsQuantityAsc(ca, cb); // Critical↓, Warning↓, Info↓
-        if (base !== 0) return base * dir; // apply direction
-        // stable tiebreaker by name
+        const base = cmpCountsQuantityAsc(ca, cb);
+        if (base !== 0) return base * dir;
         return cmpStr(getVmName(a), getVmName(b)) * dir;
       };
     case COLUMN_IDS.InspectionStatus:
-      return () => 0;
+      return (first: VmRow, second: VmRow) => {
+        const statusA =
+          getVmInspectionStatus?.(first.vmData.vm?.id ?? '')?.status ??
+          INSPECTION_STATUS.NOT_INSPECTED;
+        const statusB =
+          getVmInspectionStatus?.(second.vmData.vm?.id ?? '')?.status ??
+          INSPECTION_STATUS.NOT_INSPECTED;
+        const rankDiff =
+          INSPECTION_STATUS_SEVERITY_RANK[statusA] - INSPECTION_STATUS_SEVERITY_RANK[statusB];
+        if (rankDiff !== 0) return rankDiff * dir;
+        return cmpStr(getVmName(first), getVmName(second)) * dir;
+      };
     default:
       return () => 0;
   }

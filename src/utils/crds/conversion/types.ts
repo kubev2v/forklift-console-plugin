@@ -99,7 +99,10 @@ export type InspectionMountpoint = {
 };
 
 export type InspectionResult = {
-  allChecksPassed: boolean;
+  // Backend bug: may arrive as snake_case `all_checks_passed` instead of camelCase.
+  // Use the `hasInspectionPassed` selector instead of reading this directly.
+  all_checks_passed?: boolean;
+  allChecksPassed?: boolean;
   concerns?: InspectionConcern[];
   filesystems?: InspectionFilesystem[];
   mountpoints?: InspectionMountpoint[];

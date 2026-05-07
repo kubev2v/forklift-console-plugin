@@ -9,6 +9,7 @@ import type { VmRow } from '@components/VsphereFoldersTable/utils/types';
 import type { VSphereVM } from '@forklift-ui/types';
 import { Td, TreeRowWrapper } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';
+import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
 import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
@@ -25,7 +26,10 @@ const VmCells: Record<string, FC<CellProps>> = {
   concerns: ({ row }) => <VirtualMachineConcernsCell vmData={row.vmData} />,
   host: ({ row }) => <>{row.vmData.hostName ?? EMPTY_MSG}</>,
   inspectionStatus: ({ inspectionStatus }) => (
-    <InspectionStatusLabel phase={inspectionStatus?.phase} timestamp={inspectionStatus?.lastRun} />
+    <InspectionStatusLabel
+      status={inspectionStatus?.status ?? INSPECTION_STATUS.NOT_INSPECTED}
+      timestamp={inspectionStatus?.lastRun}
+    />
   ),
   path: ({ row }) => <>{(row.vmData.vm as VSphereVM).path ?? EMPTY_MSG}</>,
   power: ({ row }) => <VirtualMachinePowerStateCell vmData={row.vmData} />,

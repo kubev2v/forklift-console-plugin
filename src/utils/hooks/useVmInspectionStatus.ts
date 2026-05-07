@@ -1,19 +1,24 @@
 import { useCallback, useMemo } from 'react';
 
+import type { InspectionStatus } from '@utils/crds/conversion/constants';
 import { CONVERSION_LABELS } from '@utils/crds/conversion/constants';
 import {
   getConversionCreationTimestamp,
   getConversionPhase,
+  getInspectionResult,
+  getInspectionStatus,
+  hasInspectionPassed,
   isConversionActive,
 } from '@utils/crds/conversion/selectors';
 
-import type { ConversionPhase, V1beta1Conversion } from '../crds/conversion/types';
+import type { V1beta1Conversion } from '../crds/conversion/types';
 
 export type VmInspectionStatus = {
   conversion: V1beta1Conversion;
   conversionName: string | undefined;
+  inspectionPassed: boolean | undefined;
   lastRun: string | undefined;
-  phase: ConversionPhase | undefined;
+  status: InspectionStatus;
 };
 
 type GetVmInspectionStatusFn = (vmId: string) => VmInspectionStatus | undefined;
@@ -56,11 +61,15 @@ export const useVmInspectionStatus = (
       const conversion = vmStatusMap.get(vmId);
       if (!conversion) return undefined;
 
+      const phase = getConversionPhase(conversion);
+      const inspectionPassed = hasInspectionPassed(getInspectionResult(conversion));
+
       return {
         conversion,
         conversionName: conversion.metadata?.name,
+        inspectionPassed,
         lastRun: getConversionCreationTimestamp(conversion),
-        phase: getConversionPhase(conversion),
+        status: getInspectionStatus(phase, inspectionPassed),
       };
     },
     [vmStatusMap],

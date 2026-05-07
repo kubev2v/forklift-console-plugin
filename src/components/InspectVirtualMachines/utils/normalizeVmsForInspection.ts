@@ -1,14 +1,15 @@
 import type { V1beta1PlanSpecVms } from '@forklift-ui/types';
+import type { InspectionStatus } from '@utils/crds/conversion/constants';
+import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
 import { isConversionActive } from '@utils/crds/conversion/selectors';
-import type { ConversionPhase } from '@utils/crds/conversion/types';
 import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 
 export type InspectionVmRowData = {
   diskEncryptionLabel?: string;
   id: string;
+  inspectionStatus: InspectionStatus;
   isActive: boolean;
   name: string;
-  phase?: ConversionPhase;
   timestamp?: string;
 };
 
@@ -25,9 +26,9 @@ export const normalizePlanVms = (
 
     return {
       id: vmId,
+      inspectionStatus: status?.status ?? INSPECTION_STATUS.NOT_INSPECTED,
       isActive: hasActiveInspection,
       name: specVm.name ?? vmId,
-      phase: status?.phase,
       timestamp: status?.lastRun,
     };
   });
@@ -43,9 +44,9 @@ export const normalizeInventoryVms = (
 
     return {
       id: vmId,
+      inspectionStatus: status?.status ?? INSPECTION_STATUS.NOT_INSPECTED,
       isActive: hasActiveInspection,
       name: vm.name ?? vmId,
-      phase: status?.phase,
       timestamp: status?.lastRun,
     };
   });

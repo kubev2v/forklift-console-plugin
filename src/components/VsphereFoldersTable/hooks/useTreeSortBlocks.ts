@@ -13,7 +13,9 @@ import {
   type SortState,
 } from '@components/VsphereFoldersTable/utils/types';
 import type { OnSort, Th } from '@patternfly/react-table';
+import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 import { isEmpty } from '@utils/helpers';
+import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 
 import { nameColumn } from '../utils/constants';
 
@@ -21,8 +23,9 @@ import { NO_FOLDER } from './utils/constants';
 import { buildVmComparator, cmpStr, getFolderNameFromFolderRow } from './utils/treeUtils';
 
 type UseTreeSortBlocks = (args: {
-  filteredRows: RowNode[]; // output of useTreeFilters
   columns: ResourceField[];
+  conversions: V1beta1Conversion[];
+  filteredRows: RowNode[];
 }) => {
   sortedBlocks: Block[];
   sortBy: {
@@ -31,6 +34,7 @@ type UseTreeSortBlocks = (args: {
   };
   visibleCols: {
     id: string;
+    info?: ResourceField['info'];
     label: string;
     sortable: boolean;
   }[];
@@ -40,8 +44,9 @@ type UseTreeSortBlocks = (args: {
 /**
  * Build folder blocks and sort VMs inside each block.
  */
-const useTreeSortBlocks: UseTreeSortBlocks = ({ columns, filteredRows }) => {
+const useTreeSortBlocks: UseTreeSortBlocks = ({ columns, conversions, filteredRows }) => {
   const [sort, setSort] = useState<SortState>({ column: COLUMN_IDS.Name, direction: 'asc' });
+  const getVmInspectionStatus = useVmInspectionStatus(conversions);
 
   const sortedBlocks = useMemo(() => {
     if (isEmpty(filteredRows)) return [];
@@ -82,7 +87,7 @@ const useTreeSortBlocks: UseTreeSortBlocks = ({ columns, filteredRows }) => {
       }
     }
 
-    const cmpVm = buildVmComparator(sort);
+    const cmpVm = buildVmComparator(sort, getVmInspectionStatus);
     for (const block of blocks) {
       const { items } = block;
       if (items.length > 1) items.sort((first, second) => cmpVm(first.vm, second.vm));
@@ -105,7 +110,7 @@ const useTreeSortBlocks: UseTreeSortBlocks = ({ columns, filteredRows }) => {
     }
 
     return blocks;
-  }, [filteredRows, sort]);
+  }, [filteredRows, sort, getVmInspectionStatus]);
 
   const visibleCols = useMemo(
     () => [
@@ -114,8 +119,9 @@ const useTreeSortBlocks: UseTreeSortBlocks = ({ columns, filteredRows }) => {
         .filter((col) => col.isVisible)
         .map((col) => ({
           id: col.resourceFieldId!,
+          info: col.info,
           label: col.label ?? '',
-          sortable: true,
+          sortable: col.sortable !== false,
         })),
     ],
     [columns],

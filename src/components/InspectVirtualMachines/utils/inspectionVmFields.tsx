@@ -45,7 +45,7 @@ export const inspectionVmFields: ResourceField[] = [
     },
     isVisible: true,
     jsonPath: (item: unknown) =>
-      (item as InspectionVmRowData).phase ?? INSPECTION_STATUS_NOT_INSPECTED,
+      (item as InspectionVmRowData).inspectionStatus ?? INSPECTION_STATUS_NOT_INSPECTED,
     label: t('Inspection status'),
     resourceFieldId: InspectionVmFieldId.InspectionStatus,
     sortable: false,
