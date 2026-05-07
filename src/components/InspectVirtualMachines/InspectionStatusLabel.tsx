@@ -2,6 +2,7 @@ import type { FC, ReactNode } from 'react';
 
 import { Icon, Label } from '@patternfly/react-core';
 import {
+  BanIcon,
   CheckCircleIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
