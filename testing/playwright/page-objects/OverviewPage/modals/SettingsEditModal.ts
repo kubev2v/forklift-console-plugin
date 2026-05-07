@@ -65,7 +65,7 @@ export class SettingsEditModal extends BaseModal {
       await this.page.getByTestId(`${testIdPrefix}-option-${optionKey}`).click();
     } else {
       const text = displayText ?? String(optionKey);
-      await this.page.getByRole('menuitem', { name: text }).click();
+      await this.modal.getByRole('menuitem', { name: text }).click();
     }
   }
 

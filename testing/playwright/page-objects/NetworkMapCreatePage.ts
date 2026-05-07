@@ -11,17 +11,11 @@ export class NetworkMapCreatePage {
   }
 
   private sourceNetworkTestId(index: number): string {
-    if (isVersionAtLeast(V2_12_0)) {
-      return `source-network-networkMap.${index}.sourceNetwork`;
-    }
-    return 'network-map-source-network-select';
+    return `source-network-networkMap.${index}.sourceNetwork`;
   }
 
   private targetNetworkTestId(index: number): string {
-    if (isVersionAtLeast(V2_12_0)) {
-      return `target-network-networkMap.${index}.targetNetwork`;
-    }
-    return 'network-map-target-network-select';
+    return `target-network-networkMap.${index}.targetNetwork`;
   }
 
   async addMapping() {
