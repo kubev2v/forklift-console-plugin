@@ -53,6 +53,44 @@ export class CreatePlanWizardPage {
     this.resourceManager.addPlan(testData.planName, testData.planProject ?? MTV_NAMESPACE);
   }
 
+  private async completeRemainingSteps(testData: PlanTestData): Promise<void> {
+    const hasHookData = testData.preMigrationHook ?? testData.postMigrationHook;
+    const hasCustomScriptData = testData.customizationScripts;
+
+    if (isVersionAtLeast(V2_12_0)) {
+      await this.completeRemainingStepsModern(testData, hasCustomScriptData, hasHookData);
+    } else if (hasHookData) {
+      await this.clickNext();
+      await this.hooks.fillAndComplete(testData.preMigrationHook, testData.postMigrationHook);
+      await this.clickNext();
+    } else {
+      await this.clickSkipToReview();
+    }
+  }
+
+  private async completeRemainingStepsModern(
+    testData: PlanTestData,
+    hasCustomScriptData: PlanTestData['customizationScripts'],
+    hasHookData: unknown,
+  ): Promise<void> {
+    if (!hasCustomScriptData && !hasHookData) {
+      await this.clickSkipToReview();
+      return;
+    }
+
+    await this.clickNext();
+
+    if (hasCustomScriptData) {
+      await this.customizationScripts.fillAndComplete(testData.customizationScripts);
+    }
+    await this.clickNext();
+
+    if (hasHookData) {
+      await this.hooks.fillAndComplete(testData.preMigrationHook, testData.postMigrationHook);
+    }
+    await this.clickNext();
+  }
+
   async clickBack() {
     await this.page.getByTestId('wizard-back-button').click();
   }
@@ -114,33 +152,7 @@ export class CreatePlanWizardPage {
       await this.additionalSettings.fillAndComplete(testData.additionalPlanSettings);
     }
 
-    const hasHookData = testData.preMigrationHook ?? testData.postMigrationHook;
-    const hasCustomScriptData = testData.customizationScripts;
-    const hasRemainingStepData = hasCustomScriptData ?? hasHookData;
-
-    if (isVersionAtLeast(V2_12_0)) {
-      if (hasRemainingStepData) {
-        await this.clickNext();
-
-        if (hasCustomScriptData) {
-          await this.customizationScripts.fillAndComplete(testData.customizationScripts);
-        }
-        await this.clickNext();
-
-        if (hasHookData) {
-          await this.hooks.fillAndComplete(testData.preMigrationHook, testData.postMigrationHook);
-        }
-        await this.clickNext();
-      } else {
-        await this.clickSkipToReview();
-      }
-    } else if (hasHookData) {
-      await this.clickNext();
-      await this.hooks.fillAndComplete(testData.preMigrationHook, testData.postMigrationHook);
-      await this.clickNext();
-    } else {
-      await this.clickSkipToReview();
-    }
+    await this.completeRemainingSteps(testData);
 
     // STEP 9: Review
     await this.review.verifyReviewStep(testData);
