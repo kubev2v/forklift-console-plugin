@@ -123,7 +123,7 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
         {hasCutover ? t('Edit cutover') : t('Schedule cutover')}
       </DropdownItem>
       <DropdownItem
-        value={4}
+        value={3}
         key="duplicate"
         isDisabled={planStatus === PlanStatuses.CannotStart}
         onClick={onClickDuplicate}
@@ -132,14 +132,14 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
         {t('Duplicate')}
       </DropdownItem>
       <DropdownItem
-        value={5}
+        value={4}
         key="archive"
         isDisabled={!canDelete || planStatus === PlanStatuses.Archived}
         onClick={onClickArchive}
       >
         {t('Archive')}
       </DropdownItem>
-      <DropdownItem value={6} key="delete" isDisabled={!canDelete} onClick={onClickPlanDelete}>
+      <DropdownItem value={5} key="delete" isDisabled={!canDelete} onClick={onClickPlanDelete}>
         {t('Delete')}
       </DropdownItem>
     </DropdownList>

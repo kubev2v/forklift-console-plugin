@@ -3,7 +3,7 @@ import { type Dispatch, type FC, type SetStateAction, useMemo } from 'react';
 import { HelperText, HelperTextItem, PageSection, Title } from '@patternfly/react-core';
 import { Table, TableVariant, Th, Thead, Tr } from '@patternfly/react-table';
 import { getCreatedAt, getLabels, getName, getUID } from '@utils/crds/common/selectors';
-import { CONVERSION_LABELS } from '@utils/crds/conversion/constants';
+import { CONVERSION_LABELS, INSPECTION_TABLE_COLUMN_COUNT } from '@utils/crds/conversion/constants';
 import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -18,8 +18,6 @@ type InspectionExpandedSectionProps = {
   onToggleExpand: Dispatch<SetStateAction<Set<string>>>;
   vmId: string;
 };
-
-const COLUMN_COUNT = 5;
 
 const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({
   conversions,
@@ -86,7 +84,7 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({
             return (
               <InspectionTableRow
                 key={uid}
-                columnCount={COLUMN_COUNT}
+                columnCount={INSPECTION_TABLE_COLUMN_COUNT}
                 conversion={conversion}
                 isExpanded={expandedRows.has(uid)}
                 onToggle={() => {

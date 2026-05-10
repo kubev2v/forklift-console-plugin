@@ -1,10 +1,11 @@
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
+import { useCanInspectProvider } from 'src/providers/details/hooks/useCanInspectProvider';
 import type { ProviderVmData } from 'src/utils/types';
 
 import type { ResourceField } from '@components/common/utils/types';
 import SectionHeading from '@components/headers/SectionHeading';
-import InspectionStatusColumnPopover from '@components/InspectVirtualMachines/InspectionStatusColumnPopover';
-import type { ProviderHost, VSphereResource } from '@forklift-ui/types';
+import InspectVirtualMachinesButton from '@components/InspectVirtualMachines/InspectVirtualMachinesButton';
+import type { ProviderHost, V1beta1Provider, VSphereResource } from '@forklift-ui/types';
 import {
   PageSection,
   Pagination,
@@ -29,13 +30,14 @@ import useTreeSortBlocks from './hooks/useTreeSortBlocks';
 import useTreeFilters from './hooks/useTreeVMFilters';
 import { getVmRowsId } from './hooks/utils/treeUtils';
 import { defaultColumns } from './utils/constants';
-import { COLUMN_IDS, type VmRow } from './utils/types';
+import type { VmRow } from './utils/types';
 
 type VsphereFolderTreeTableProps = {
   foldersDict: Record<string, VSphereResource>;
   hostsDict: Record<string, ProviderHost>;
   initialSelectedIds: string[] | undefined;
   onSelect: ((selectedVMs: ProviderVmData[] | undefined) => void) | undefined;
+  provider?: V1beta1Provider;
   providerNamespace?: string;
   providerUid?: string;
   vmData: ProviderVmData[] | undefined;
@@ -46,25 +48,13 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
   hostsDict,
   initialSelectedIds,
   onSelect,
+  provider,
   providerNamespace,
   providerUid,
   vmData,
 }) => {
   const { t } = useForkliftTranslation();
-
-  const [columns, setColumns] = useState<ResourceField[]>(() =>
-    defaultColumns.map((col) =>
-      col.resourceFieldId === COLUMN_IDS.InspectionStatus
-        ? {
-            ...col,
-            info: {
-              ariaLabel: 'More information on inspection status',
-              popover: <InspectionStatusColumnPopover />,
-            },
-          }
-        : col,
-    ),
-  );
+  const [columns, setColumns] = useState<ResourceField[]>(defaultColumns);
   const [inspectionExpandedRows, setInspectionExpandedRows] = useState<Set<string>>(new Set());
 
   const [conversions] = useWatchConversions({
@@ -88,6 +78,18 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
   );
 
   const canSelect = initialSelectedIds !== undefined;
+  const { canInspect, disabledReason } = useCanInspectProvider(provider);
+
+  const inspectToolbarAction =
+    !canSelect && provider ? (
+      <ToolbarItem>
+        <InspectVirtualMachinesButton
+          canInspect={canInspect}
+          disabledReason={disabledReason}
+          provider={provider}
+        />
+      </ToolbarItem>
+    ) : undefined;
   const { groupVMCountByFolder, rows, selectedVmKeys, setSelectedVmKeys, setShowAll, showAll } =
     useTreeRows({
       ...(initialSelectedIds
@@ -169,6 +171,7 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
         setColumns={setColumns}
         setShowAll={setShowAll}
         showAll={showAll}
+        toolbarActions={inspectToolbarAction}
       />
       <Table isTreeTable data-testid="vsphere-tree-table">
         <Thead>

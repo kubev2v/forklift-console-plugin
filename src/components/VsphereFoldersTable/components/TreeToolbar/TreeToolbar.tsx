@@ -26,6 +26,7 @@ type TreeToolbarProps = {
   setShowAll: Dispatch<SetStateAction<boolean>>;
   showAll: boolean;
   pagination: ReactNode;
+  toolbarActions?: ReactNode;
 };
 
 const TreeToolbar: FC<TreeToolbarProps> = ({
@@ -41,6 +42,7 @@ const TreeToolbar: FC<TreeToolbarProps> = ({
   setColumns,
   setShowAll,
   showAll,
+  toolbarActions,
 }) => {
   return (
     <Toolbar clearAllFilters={filters.clearAll} id="vm-list-toolbar" className="pf-v6-u-pb-0">
@@ -64,6 +66,7 @@ const TreeToolbar: FC<TreeToolbarProps> = ({
           resourceFields={columns}
           setColumns={setColumns}
         />
+        {toolbarActions}
         {canSelect && (
           <ToolbarItem>
             <SelectedToggle

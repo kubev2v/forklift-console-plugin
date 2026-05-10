@@ -55,7 +55,7 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
         </DropdownItem>
       )}
       <DropdownItem
-        value={3}
+        value={2}
         key="delete"
         isDisabled={!data?.permissions?.canDelete}
         onClick={onProviderDelete}

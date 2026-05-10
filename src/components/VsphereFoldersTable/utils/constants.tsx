@@ -1,4 +1,5 @@
 import type { ResourceField } from '@components/common/utils/types';
+import InspectionStatusColumnPopover from '@components/InspectVirtualMachines/InspectionStatusColumnPopover';
 import { t } from '@utils/i18n';
 
 import { COLUMN_IDS } from './types';
@@ -11,6 +12,10 @@ export const nameColumn = {
 export const defaultColumns: ResourceField[] = [
   { isVisible: true, label: t('Concerns'), resourceFieldId: COLUMN_IDS.Concerns, sortable: true },
   {
+    info: {
+      ariaLabel: 'More information on inspection status',
+      popover: <InspectionStatusColumnPopover />,
+    },
     isVisible: true,
     label: t('Inspection status'),
     resourceFieldId: COLUMN_IDS.InspectionStatus,

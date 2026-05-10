@@ -30,3 +30,5 @@ export type VmOverrides = {
   nbdeClevis?: boolean;
   passphrases?: string[];
 };
+
+export type CreateInspectionsFn = (vms: VmInspectionRef[]) => Promise<InspectionCreateResult>;

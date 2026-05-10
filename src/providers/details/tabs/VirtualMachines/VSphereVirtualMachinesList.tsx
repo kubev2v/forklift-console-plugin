@@ -31,6 +31,7 @@ export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = 
       hostsDict={hostsDict}
       initialSelectedIds={initialSelectedIds}
       onSelect={onSelect}
+      provider={provider}
       providerNamespace={provider ? getNamespace(provider) : undefined}
       providerUid={provider ? getUID(provider) : undefined}
       vmData={vmData}
