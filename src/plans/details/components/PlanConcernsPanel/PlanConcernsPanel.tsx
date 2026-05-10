@@ -13,7 +13,11 @@ import {
   StackItem,
   Title,
 } from '@patternfly/react-core';
+import { getUID } from '@utils/crds/common/selectors';
+import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
+import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 import { getPlanURL } from '@utils/crds/plans/utils';
+import { useWatchConversions } from '@utils/hooks/useWatchConversions';
 
 import { usePlan } from '../../hooks/usePlan';
 import { useSpecVirtualMachinesListData } from '../../tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/hooks/useSpecVirtualMachinesListData';
@@ -21,7 +25,11 @@ import {
   MIGRATION_PLAN_CONCERNS_DESC_LABEL,
   MIGRATION_PLAN_CONCERNS_TITLE_LABEL,
 } from '../../utils/constants';
-import { getCriticalConcernsVmsMap } from '../../utils/utils';
+import {
+  getCriticalConcernsVmsMap,
+  getCriticalInspectionConcernsVmsMap,
+  mergeConcernsMaps,
+} from '../../utils/utils';
 import usePlanAlerts from '../PlanPageHeader/hooks/usePlanAlerts';
 import { PlanStatuses } from '../PlanStatus/utils/types';
 
@@ -52,14 +60,36 @@ const PlanConcernsPanel: FC<PlanConcernsPanelProps> = ({
   const { loaded, loadError, plan } = usePlan(name, namespace);
   const { criticalConditions, showCriticalConditions, status } = usePlanAlerts(plan);
   const [specVirtualMachinesListData] = useSpecVirtualMachinesListData(plan);
-  const criticalConcerns = useMemo(
-    () => getCriticalConcernsVmsMap(specVirtualMachinesListData),
-    [specVirtualMachinesListData],
-  );
+
+  const [conversions]: [V1beta1Conversion[], boolean, unknown] = useWatchConversions({
+    namespace,
+    selector: {
+      matchLabels: {
+        [CONVERSION_LABELS.CONVERSION_TYPE]: CONVERSION_TYPE.DEEP_INSPECTION,
+        ...(getUID(plan) ? { [CONVERSION_LABELS.PLAN]: getUID(plan)! } : {}),
+      },
+    },
+  });
+
+  const { inspectionLabels, mergedConcerns } = useMemo(() => {
+    const inventoryConcerns = getCriticalConcernsVmsMap(specVirtualMachinesListData);
+    const inspectionConcerns = getCriticalInspectionConcernsVmsMap(conversions);
+    return {
+      inspectionLabels: new Set(inspectionConcerns.keys()),
+      mergedConcerns: mergeConcernsMaps(inventoryConcerns, inspectionConcerns),
+    };
+  }, [specVirtualMachinesListData, conversions]);
+
   const planUrl = useMemo(() => getPlanURL(plan), [plan]);
   const planConcernsConditionsPanelData: PlanConcernsPanelData[] = useMemo(
-    () => convertToPlanConcernsConditionsPanelData(criticalConditions, criticalConcerns, planUrl),
-    [criticalConditions, criticalConcerns, planUrl],
+    () =>
+      convertToPlanConcernsConditionsPanelData(
+        criticalConditions,
+        mergedConcerns,
+        planUrl,
+        inspectionLabels,
+      ),
+    [criticalConditions, mergedConcerns, planUrl, inspectionLabels],
   );
   const alertsNotRelevant = useMemo(
     () => status === PlanStatuses.Completed || status === PlanStatuses.Archived,

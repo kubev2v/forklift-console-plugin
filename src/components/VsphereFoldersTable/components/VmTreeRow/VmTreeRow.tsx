@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import InspectionConcernBadges from 'src/components/InspectVirtualMachines/InspectionConcernBadges';
 import InspectionStatusLabel from 'src/components/InspectVirtualMachines/InspectionStatusLabel';
 
 import type { ResourceField } from '@components/common/utils/types';
@@ -10,6 +11,7 @@ import type { VSphereVM } from '@forklift-ui/types';
 import { Td, TreeRowWrapper } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';
 import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
+import { getInspectionResult } from '@utils/crds/conversion/selectors';
 import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
@@ -25,9 +27,15 @@ type CellProps = { inspectionStatus: VmInspectionStatus | undefined; row: VmRow 
 const VmCells: Record<string, FC<CellProps>> = {
   concerns: ({ row }) => <VirtualMachineConcernsCell vmData={row.vmData} />,
   host: ({ row }) => <>{row.vmData.hostName ?? EMPTY_MSG}</>,
-  inspectionStatus: ({ inspectionStatus }) => (
-    <InspectionStatusLabel status={inspectionStatus?.status ?? INSPECTION_STATUS.NOT_INSPECTED} />
-  ),
+  inspectionStatus: ({ inspectionStatus }) => {
+    if (inspectionStatus?.status === INSPECTION_STATUS.ISSUES_FOUND) {
+      const concerns = getInspectionResult(inspectionStatus.conversion)?.concerns ?? [];
+      return <InspectionConcernBadges concerns={concerns} />;
+    }
+    return (
+      <InspectionStatusLabel status={inspectionStatus?.status ?? INSPECTION_STATUS.NOT_INSPECTED} />
+    );
+  },
   path: ({ row }) => <>{(row.vmData.vm as VSphereVM).path ?? EMPTY_MSG}</>,
   power: ({ row }) => <VirtualMachinePowerStateCell vmData={row.vmData} />,
 };

@@ -27,7 +27,7 @@ export const getInspectionStatusConfig = (
     case INSPECTION_STATUS.INSPECTION_PASSED:
       return {
         icon: (
-          <Icon isInline status="success">
+          <Icon isInline>
             <CheckCircleIcon />
           </Icon>
         ),
@@ -37,7 +37,7 @@ export const getInspectionStatusConfig = (
     case INSPECTION_STATUS.ISSUES_FOUND:
       return {
         icon: (
-          <Icon isInline status="warning">
+          <Icon isInline>
             <ExclamationTriangleIcon />
           </Icon>
         ),
@@ -47,7 +47,7 @@ export const getInspectionStatusConfig = (
     case INSPECTION_STATUS.FAILED:
       return {
         icon: (
-          <Icon isInline status="danger">
+          <Icon isInline>
             <ExclamationCircleIcon />
           </Icon>
         ),

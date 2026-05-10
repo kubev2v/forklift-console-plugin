@@ -4,9 +4,18 @@ export enum MigrationPlanConcernsTableResourceId {
   Resource = 'resource',
 }
 
+export const CONCERN_SOURCE = {
+  CONDITION: 'condition',
+  INSPECTION: 'inspection',
+  INVENTORY: 'inventory',
+} as const;
+
+export type ConcernSource = (typeof CONCERN_SOURCE)[keyof typeof CONCERN_SOURCE];
+
 type PlanConcernOrConditionData = {
-  severity: string;
   message: string | undefined;
+  severity: string;
+  source: ConcernSource;
   type: string;
   vmsNum: number;
 };

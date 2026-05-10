@@ -23,7 +23,8 @@ const STATUS_DESCRIPTIONS: Record<InspectionStatus, JSX.Element> = {
   ),
   [INSPECTION_STATUS.ISSUES_FOUND]: (
     <ForkliftTrans>
-      <strong>Issues found:</strong> The inspection was completed and issues were found.
+      <strong>Issues found:</strong> The inspection was completed and issues were found. Issues are
+      grouped by severity. Click a severity badge to see the individual concerns.
     </ForkliftTrans>
   ),
   [INSPECTION_STATUS.NOT_INSPECTED]: (
@@ -55,6 +56,12 @@ const POPOVER_ORDER: InspectionStatus[] = [
 
 const InspectionStatusColumnPopover: FC = () => (
   <Stack hasGutter>
+    <StackItem>
+      <ForkliftTrans>
+        The <strong>Inspection tool</strong> looks into the internal contents of your disks for
+        potential issues.
+      </ForkliftTrans>
+    </StackItem>
     {POPOVER_ORDER.map((status) => (
       <StackItem key={status}>
         <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>

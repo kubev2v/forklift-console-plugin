@@ -37,7 +37,7 @@ const InspectionResultsSection: FC<InspectionResultsSectionProps> = ({ result })
           <FlexItem>
             {passed ? (
               <Label
-                variant="outline"
+                variant="filled"
                 status="success"
                 icon={
                   <Icon isInline>
@@ -49,7 +49,7 @@ const InspectionResultsSection: FC<InspectionResultsSectionProps> = ({ result })
               </Label>
             ) : (
               <Label
-                variant="outline"
+                variant="filled"
                 status="warning"
                 icon={
                   <Icon isInline>

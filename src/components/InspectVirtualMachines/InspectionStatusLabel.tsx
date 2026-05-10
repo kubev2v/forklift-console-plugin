@@ -16,7 +16,7 @@ const InspectionStatusLabel: FC<InspectionStatusLabelProps> = ({ status, testId 
   const config = getInspectionStatusConfig(status, t);
 
   return (
-    <Label variant="outline" status={config.labelStatus} icon={config.icon} data-testid={testId}>
+    <Label variant="filled" status={config.labelStatus} icon={config.icon} data-testid={testId}>
       {config.label}
     </Label>
   );
