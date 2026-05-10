@@ -1,3 +1,4 @@
+import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { DISK_ENCRYPTION_TYPE } from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
 
@@ -19,7 +20,7 @@ export const resolveDiskEncryption = async (
   if (!isEmpty(nonEmptyPhrases)) {
     const secret = await createInspectionSecret(nonEmptyPhrases, vmName, namespace);
     return {
-      secret: { name: secret.metadata?.name, namespace: secret.metadata?.namespace },
+      secret: { name: getName(secret), namespace: getNamespace(secret) },
       type: DISK_ENCRYPTION_TYPE.LUKS,
     };
   }

@@ -1,6 +1,13 @@
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
 import { ConversionModel } from '@utils/crds/common/models';
-import { getName, getNamespace, getUID, getVddkInitImage } from '@utils/crds/common/selectors';
+import {
+  getName,
+  getNamespace,
+  getProviderSecretRef,
+  getType,
+  getUID,
+  getVddkInitImage,
+} from '@utils/crds/common/selectors';
 import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
 import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 import { isEmpty } from '@utils/helpers';
@@ -15,27 +22,18 @@ type BuildConversionCRParams = {
   vmName: string;
 };
 
+const DEFAULT_GENERATE_NAME_PREFIX = 'vm';
+
 const sanitizeForK8sName = (value: string): string => {
-  let result = '';
-  let lastWasHyphen = false;
-
-  for (const char of value.toLowerCase()) {
+  const sanitized = Array.from(value.toLowerCase()).reduce((acc, char) => {
     const isValid = (char >= 'a' && char <= 'z') || (char >= '0' && char <= '9');
+    if (isValid) return acc + char;
+    if (!isEmpty(acc) && !acc.endsWith('-')) return `${acc}-`;
+    return acc;
+  }, '');
 
-    if (isValid) {
-      result += char;
-      lastWasHyphen = false;
-    } else if (!lastWasHyphen && !isEmpty(result)) {
-      result += '-';
-      lastWasHyphen = true;
-    }
-  }
-
-  if (result.endsWith('-')) {
-    result = result.slice(0, -1);
-  }
-
-  return result.slice(0, 40) || 'vm';
+  const trimmed = sanitized.endsWith('-') ? sanitized.slice(0, -1) : sanitized;
+  return trimmed.slice(0, 40) || DEFAULT_GENERATE_NAME_PREFIX;
 };
 
 const buildLabels = (
@@ -66,7 +64,9 @@ export const buildConversionCR = ({
   vmName,
 }: BuildConversionCRParams): V1beta1Conversion => {
   const namespace = plan ? getNamespace(plan) : getNamespace(provider);
+  const secretRef = getProviderSecretRef(provider);
 
+  // Model constants produce the correct literal values
   return {
     apiVersion:
       `${ConversionModel.apiGroup}/${ConversionModel.apiVersion}` as V1beta1Conversion['apiVersion'],
@@ -79,8 +79,8 @@ export const buildConversionCR = ({
     spec: {
       connection: {
         secret: {
-          name: provider?.spec?.secret?.name,
-          namespace: provider?.spec?.secret?.namespace,
+          name: secretRef?.name,
+          namespace: secretRef?.namespace,
         },
       },
       ...(diskEncryption && { diskEncryption }),
@@ -90,7 +90,7 @@ export const buildConversionCR = ({
       vm: {
         id: vmId,
         name: vmName,
-        type: provider?.spec?.type,
+        type: getType(provider),
       },
     },
   };

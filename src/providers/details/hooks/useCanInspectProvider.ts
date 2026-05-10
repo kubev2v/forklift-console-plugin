@@ -18,8 +18,14 @@ export const useCanInspectProvider = (
   const { t } = useForkliftTranslation();
   const isVsphere = provider?.spec?.type === PROVIDER_TYPES.vsphere;
 
+  const disabled = (reason?: string): UseCanInspectProviderResult => ({
+    canInspect: false,
+    disabledReason: reason,
+    isVsphere,
+  });
+
   if (!isVsphere || !provider) {
-    return { canInspect: false, disabledReason: undefined, isVsphere };
+    return disabled();
   }
 
   const isVddkConfigured = !isEmpty(getVddkInitImage(provider));
@@ -29,21 +35,13 @@ export const useCanInspectProvider = (
   );
 
   if (!providerReady) {
-    return {
-      canInspect: false,
-      disabledReason: t('Provider is not ready.'),
-      isVsphere,
-    };
+    return disabled(t('Provider is not ready.'));
   }
 
   if (!isVddkConfigured) {
-    return {
-      canInspect: false,
-      disabledReason: t(
-        'VDDK image is required for deep inspection. Configure it in the provider settings.',
-      ),
-      isVsphere,
-    };
+    return disabled(
+      t('VDDK image is required for deep inspection. Configure it in the provider settings.'),
+    );
   }
 
   return { canInspect: true, disabledReason: undefined, isVsphere };

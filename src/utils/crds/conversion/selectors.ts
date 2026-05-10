@@ -1,3 +1,4 @@
+import { CATEGORY_TYPES, CONDITION_STATUS } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
 import {
@@ -61,5 +62,6 @@ export const isConversionActive = (conversion: V1beta1Conversion): boolean => {
 
 export const getCriticalConditions = (conversion: V1beta1Conversion): ConversionCondition[] =>
   (conversion?.status?.conditions ?? []).filter(
-    (condition) => condition.category === 'Critical' && condition.status === 'True',
+    (condition) =>
+      condition.category === CATEGORY_TYPES.CRITICAL && condition.status === CONDITION_STATUS.TRUE,
   );

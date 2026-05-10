@@ -10,7 +10,8 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
-import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
+import { Table, TableVariant, Tbody, Td, Tr } from '@patternfly/react-table';
+import { MAX_PASSPHRASES } from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -21,8 +22,6 @@ type VmConfigFormProps = {
   overrides: VmOverrides;
   vmId: string;
 };
-
-const MAX_PASSPHRASES = 20;
 
 const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
   const { t } = useForkliftTranslation();
@@ -88,7 +87,7 @@ const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
       {!overrides.nbdeClevis && (
         <FormGroup label={t('Disk decryption passphrases')}>
           {!isEmpty(localPhrases) && (
-            <Table borders={false} variant="compact">
+            <Table borders={false} variant={TableVariant.compact}>
               <Tbody>
                 {localPhrases.map((phrase, index) => (
                   <Tr key={index}>

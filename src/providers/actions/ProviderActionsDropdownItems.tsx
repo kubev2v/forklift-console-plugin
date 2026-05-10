@@ -1,10 +1,6 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import InspectVirtualMachinesModal, {
-  type InspectVirtualMachinesModalProps,
-} from 'src/components/InspectVirtualMachines/InspectVirtualMachinesModal';
 import { DeleteModal, type DeleteModalProps } from 'src/components/modals/DeleteModal/DeleteModal';
-import { useCanInspectProvider } from 'src/providers/details/hooks/useCanInspectProvider';
 import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -26,7 +22,6 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
   const navigate = useNavigate();
 
   const { provider } = data;
-  const { canInspect, disabledReason, isVsphere } = useCanInspectProvider(provider);
 
   if (!provider || !getName(provider) || !getNamespace(provider)) return null;
 
@@ -34,10 +29,6 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
 
   const onProviderDelete = () => {
     launcher<DeleteModalProps>(DeleteModal, { model: ProviderModel, resource: provider });
-  };
-
-  const onClickInspectVms = () => {
-    launcher<InspectVirtualMachinesModalProps>(InspectVirtualMachinesModal, { provider });
   };
 
   return (
@@ -61,18 +52,6 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
           }}
         >
           {t('Edit provider credentials')}
-        </DropdownItem>
-      )}
-      {isVsphere && (
-        <DropdownItem
-          value={2}
-          key="InspectVMs"
-          isDisabled={!canInspect}
-          onClick={onClickInspectVms}
-          description={disabledReason}
-          data-testid="provider-actions-inspect-menuitem"
-        >
-          {t('Inspect VMs')}
         </DropdownItem>
       )}
       <DropdownItem

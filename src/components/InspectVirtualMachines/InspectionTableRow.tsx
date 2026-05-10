@@ -2,14 +2,13 @@ import type { FC } from 'react';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { Content } from '@patternfly/react-core';
 import { ExpandableRowContent, Tbody, Td, Tr } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';
 import {
   ConversionModelGroupVersionKind,
   PodModelGroupVersionKind,
 } from '@utils/crds/common/models';
-import { getCreatedAt } from '@utils/crds/common/selectors';
+import { getCreatedAt, getName, getNamespace } from '@utils/crds/common/selectors';
 import {
   getConversionPhase,
   getConversionPodRef,
@@ -17,11 +16,9 @@ import {
   getInspectionResult,
 } from '@utils/crds/conversion/selectors';
 import type { V1beta1Conversion } from '@utils/crds/conversion/types';
-import { isEmpty } from '@utils/helpers';
-import { useForkliftTranslation } from '@utils/i18n';
 
 import ConversionPhaseLabel from './ConversionPhaseLabel';
-import InspectionResultsSection from './InspectionResultsSection';
+import InspectionRowExpandedContent from './InspectionRowExpandedContent';
 
 type InspectionTableRowProps = {
   columnCount: number;
@@ -38,7 +35,6 @@ const InspectionTableRow: FC<InspectionTableRowProps> = ({
   onToggle,
   rowIndex,
 }) => {
-  const { t } = useForkliftTranslation();
   const podRef = getConversionPodRef(conversion);
   const phase = getConversionPhase(conversion);
   const inspectionResult = getInspectionResult(conversion);
@@ -51,8 +47,8 @@ const InspectionTableRow: FC<InspectionTableRowProps> = ({
         <Td>
           <ResourceLink
             groupVersionKind={ConversionModelGroupVersionKind}
-            name={conversion.metadata?.name}
-            namespace={conversion.metadata?.namespace}
+            name={getName(conversion)}
+            namespace={getNamespace(conversion)}
           />
         </Td>
         <Td>
@@ -74,23 +70,15 @@ const InspectionTableRow: FC<InspectionTableRowProps> = ({
         </Td>
       </Tr>
       <Tr isExpanded={isExpanded}>
+        {/* Spacer cell aligns content with the expand toggle column */}
         <Td />
         <Td noPadding colSpan={columnCount - 1}>
           {isExpanded && (
             <ExpandableRowContent>
-              {!isEmpty(criticalConditions) && (
-                <Content className="pf-v6-u-py-sm pf-v6-u-pl-xl">
-                  {criticalConditions.map((condition, index) => (
-                    <Content key={`${condition.type}-${index}`}>{condition.message}</Content>
-                  ))}
-                </Content>
-              )}
-              {inspectionResult && <InspectionResultsSection result={inspectionResult} />}
-              {!inspectionResult && isEmpty(criticalConditions) && (
-                <Content className="pf-v6-u-py-md pf-v6-u-pl-xl">
-                  <Content>{t('No results available yet.')}</Content>
-                </Content>
-              )}
+              <InspectionRowExpandedContent
+                criticalConditions={criticalConditions}
+                inspectionResult={inspectionResult}
+              />
             </ExpandableRowContent>
           )}
         </Td>

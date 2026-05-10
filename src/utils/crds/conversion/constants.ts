@@ -47,6 +47,8 @@ export const INSPECTION_STATUS = {
 
 export type InspectionStatus = (typeof INSPECTION_STATUS)[keyof typeof INSPECTION_STATUS];
 
+export const MAX_PASSPHRASES = 20;
+
 export const INSPECTION_STATUS_NOT_INSPECTED = INSPECTION_STATUS.NOT_INSPECTED;
 
 export const INSPECTION_STATUS_FILTER_VALUES = [

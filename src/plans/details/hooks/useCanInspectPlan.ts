@@ -33,55 +33,37 @@ export const useCanInspectPlan = (plan: V1beta1Plan): UseCanInspectPlanResult =>
         condition.type === CATEGORY_TYPES.READY && condition.status === CONDITION_STATUS.TRUE,
     );
 
+  const disabled = (reason?: string): UseCanInspectPlanResult => ({
+    canInspect: false,
+    disabledReason: reason,
+    isVsphere,
+    provider: sourceProvider,
+  });
+
   if (!isVsphere) {
-    return { canInspect: false, disabledReason: undefined, isVsphere, provider: sourceProvider };
+    return disabled();
   }
 
   if (!providerReady) {
-    return {
-      canInspect: false,
-      disabledReason: t('Source provider is not ready.'),
-      isVsphere,
-      provider: sourceProvider,
-    };
+    return disabled(t('Source provider is not ready.'));
   }
 
   if (!isVddkConfigured) {
-    return {
-      canInspect: false,
-      disabledReason: t(
-        'VDDK image is required for deep inspection. Configure it in the provider settings.',
-      ),
-      isVsphere,
-      provider: sourceProvider,
-    };
+    return disabled(
+      t('VDDK image is required for deep inspection. Configure it in the provider settings.'),
+    );
   }
 
   if (isPlanExecuting(plan)) {
-    return {
-      canInspect: false,
-      disabledReason: t('Cannot inspect VMs while migration is in progress.'),
-      isVsphere,
-      provider: sourceProvider,
-    };
+    return disabled(t('Cannot inspect VMs while migration is in progress.'));
   }
 
   if (isPlanArchived(plan)) {
-    return {
-      canInspect: false,
-      disabledReason: t('Cannot inspect VMs in an archived plan.'),
-      isVsphere,
-      provider: sourceProvider,
-    };
+    return disabled(t('Cannot inspect VMs in an archived plan.'));
   }
 
   if (isPlanSucceeded(plan)) {
-    return {
-      canInspect: false,
-      disabledReason: t('VMs in a completed migration cannot be inspected.'),
-      isVsphere,
-      provider: sourceProvider,
-    };
+    return disabled(t('VMs in a completed migration cannot be inspected.'));
   }
 
   return { canInspect: true, disabledReason: undefined, isVsphere, provider: sourceProvider };

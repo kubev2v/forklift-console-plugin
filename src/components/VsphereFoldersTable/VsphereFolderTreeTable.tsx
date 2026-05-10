@@ -29,7 +29,7 @@ import useTreeSortBlocks from './hooks/useTreeSortBlocks';
 import useTreeFilters from './hooks/useTreeVMFilters';
 import { getVmRowsId } from './hooks/utils/treeUtils';
 import { defaultColumns } from './utils/constants';
-import type { VmRow } from './utils/types';
+import { COLUMN_IDS, type VmRow } from './utils/types';
 
 type VsphereFolderTreeTableProps = {
   foldersDict: Record<string, VSphereResource>;
@@ -54,7 +54,7 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
 
   const [columns, setColumns] = useState<ResourceField[]>(() =>
     defaultColumns.map((col) =>
-      col.resourceFieldId === 'inspectionStatus'
+      col.resourceFieldId === COLUMN_IDS.InspectionStatus
         ? {
             ...col,
             info: {

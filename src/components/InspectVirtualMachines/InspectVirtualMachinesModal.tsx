@@ -14,7 +14,7 @@ import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 import { useWatchConversions } from '@utils/hooks/useWatchConversions';
 
 import { useCreateDeepInspections } from './hooks/useCreateDeepInspections';
-import { normalizeInventoryVms, normalizePlanVms } from './utils/normalizeVmsForInspection';
+import { normalizeVmsForInspection } from './utils/normalizeVmsForInspection';
 import { resolveDiskEncryption } from './utils/resolveDiskEncryption';
 import type { VmInspectionRef, VmOverrides } from './utils/types';
 import InspectionVmTable from './InspectionVmTable';
@@ -67,13 +67,8 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
   });
 
   const vmRows = useMemo(() => {
-    if (plan) {
-      return normalizePlanVms(plan?.spec?.vms ?? [], getVmInspectionStatus);
-    }
-    return normalizeInventoryVms(
-      inventoryVmData.map((vmData) => vmData.vm),
-      getVmInspectionStatus,
-    );
+    const vms = plan ? (plan?.spec?.vms ?? []) : inventoryVmData.map((vmData) => vmData.vm);
+    return normalizeVmsForInspection(vms, getVmInspectionStatus);
   }, [plan, inventoryVmData, getVmInspectionStatus]);
 
   const selectedCount = selectedIds.length;

@@ -1,4 +1,4 @@
-import { type FC, useCallback, useMemo, useState } from 'react';
+import { type FC, useCallback, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import InspectionExpandedSection from 'src/components/InspectVirtualMachines/InspectionExpandedSection';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
@@ -11,13 +11,10 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import ConcernsAndConditionsTable from '@components/ConcernsAndConditionsTable/ConcernsAndConditionsTable';
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { Stack, StackItem } from '@patternfly/react-core';
-import { getNamespace, getUID } from '@utils/crds/common/selectors';
-import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
-import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
-import { useWatchConversions } from '@utils/hooks/useWatchConversions';
 
 import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
 
+import { useInspectionData } from './hooks/useInspectionData';
 import { useSpecVirtualMachinesActions } from './hooks/useSpecVirtualMachinesActions';
 import { useSpecVirtualMachinesListData } from './hooks/useSpecVirtualMachinesListData';
 import type { SpecVirtualMachinePageData } from './utils/types';
@@ -47,26 +44,12 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
 
   const actions = useSpecVirtualMachinesActions(plan);
 
-  const [conversions] = useWatchConversions({
-    namespace: getNamespace(plan) ?? '',
-    selector: {
-      matchLabels: {
-        [CONVERSION_LABELS.CONVERSION_TYPE]: CONVERSION_TYPE.DEEP_INSPECTION,
-        [CONVERSION_LABELS.PLAN]: getUID(plan) ?? '',
-      },
-    },
-  });
-
-  const getVmInspectionStatus = useVmInspectionStatus(conversions);
-  const [inspectionExpandedRows, setInspectionExpandedRows] = useState<Set<string>>(new Set());
+  const { conversions, enrichData, inspectionExpandedRows, setInspectionExpandedRows } =
+    useInspectionData(plan);
 
   const enrichedData = useMemo(
-    () =>
-      (specVirtualMachinesListData ?? []).map((item) => ({
-        ...item,
-        inspectionStatus: getVmInspectionStatus(item.specVM?.id ?? ''),
-      })),
-    [specVirtualMachinesListData, getVmInspectionStatus],
+    () => enrichData(specVirtualMachinesListData ?? []),
+    [specVirtualMachinesListData, enrichData],
   );
 
   const expanded = useCallback(

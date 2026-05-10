@@ -3,7 +3,8 @@ import { ConcernCategory } from 'src/providers/details/tabs/VirtualMachines/cons
 
 import type { VirtualMachineWithConcerns } from '@components/Concerns/utils/constants';
 import type { Concern, V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@forklift-ui/types';
-import { getCreatedAt } from '@utils/crds/common/selectors';
+import { CATEGORY_TYPES } from '@utils/constants';
+import { getCreatedAt, getLabels } from '@utils/crds/common/selectors';
 import { CONVERSION_LABELS, CONVERSION_PHASE } from '@utils/crds/conversion/constants';
 import { getConversionPhase, getInspectionResult } from '@utils/crds/conversion/selectors';
 import type { V1beta1Conversion } from '@utils/crds/conversion/types';
@@ -56,7 +57,7 @@ const resolveLatestSucceededPerVm = (
       getConversionPhase(conversion) === CONVERSION_PHASE.SUCCEEDED &&
       getInspectionResult(conversion)
     ) {
-      const vmId = conversion.metadata?.labels?.[CONVERSION_LABELS.VM_ID] ?? '';
+      const vmId = getLabels(conversion)?.[CONVERSION_LABELS.VM_ID] ?? '';
       const existing = map.get(vmId);
       if (!existing || (getCreatedAt(conversion) ?? '') > (getCreatedAt(existing) ?? '')) {
         map.set(vmId, conversion);
@@ -75,7 +76,10 @@ export const getCriticalInspectionConcernsVmsMap = (
   for (const [vmId, conversion] of latestPerVm) {
     const concerns = getInspectionResult(conversion)?.concerns ?? [];
     for (const concern of concerns) {
-      if (concern.category === 'Critical' || concern.category === 'Error') {
+      if (
+        concern.category === CATEGORY_TYPES.CRITICAL ||
+        concern.category === CATEGORY_TYPES.ERROR
+      ) {
         const vmIds = labelToVmIds.get(concern.label) ?? new Set();
         vmIds.add(vmId);
         labelToVmIds.set(concern.label, vmIds);

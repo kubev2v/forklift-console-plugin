@@ -42,6 +42,7 @@ export const CATEGORY_TYPES = {
   CONNECTION_FAILED: 'ConnectionFailed',
   CRITERIA_MET: 'SuccessCriteriaMet',
   CRITICAL: 'Critical',
+  ERROR: 'Error',
   EXECUTING: 'Executing',
   FAILED: 'Failed',
   NOT_READY: 'Not Ready',

@@ -41,24 +41,40 @@ const createDeepInspection = async (
   }
 };
 
+const processChunk = async (
+  vms: VmInspectionRef[],
+  provider: V1beta1Provider,
+  results: InspectionCreateResult,
+  offset: number,
+  plan?: V1beta1Plan,
+): Promise<void> => {
+  if (offset >= vms.length) return;
+
+  const chunk = vms.slice(offset, offset + CONCURRENCY_LIMIT);
+  await Promise.allSettled(
+    chunk.map(async (vm) => createDeepInspection(vm, provider, results, plan)),
+  );
+
+  return processChunk(vms, provider, results, offset + CONCURRENCY_LIMIT, plan);
+};
+
+const processChunks = async (
+  vms: VmInspectionRef[],
+  provider: V1beta1Provider,
+  plan?: V1beta1Plan,
+): Promise<InspectionCreateResult> => {
+  const results: InspectionCreateResult = { failed: [], succeeded: [] };
+  await processChunk(vms, provider, results, 0, plan);
+  return results;
+};
+
 export const useCreateDeepInspections = ({
   plan,
   provider,
 }: UseCreateDeepInspectionsParams): CreateInspectionsFn => {
   return useCallback(
-    async (vms: VmInspectionRef[]): Promise<InspectionCreateResult> => {
-      const results: InspectionCreateResult = { failed: [], succeeded: [] };
-
-      for (let offset = 0; offset < vms.length; offset += CONCURRENCY_LIMIT) {
-        const chunk = vms.slice(offset, offset + CONCURRENCY_LIMIT);
-        // eslint-disable-next-line no-await-in-loop -- sequential chunks limit API concurrency
-        await Promise.allSettled(
-          chunk.map(async (vm) => createDeepInspection(vm, provider, results, plan)),
-        );
-      }
-
-      return results;
-    },
+    async (vms: VmInspectionRef[]): Promise<InspectionCreateResult> =>
+      processChunks(vms, provider, plan),
     [plan, provider],
   );
 };
