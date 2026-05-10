@@ -10,7 +10,7 @@ export const CONCERN_SOURCE = {
   INVENTORY: 'inventory',
 } as const;
 
-export type ConcernSource = (typeof CONCERN_SOURCE)[keyof typeof CONCERN_SOURCE];
+type ConcernSource = (typeof CONCERN_SOURCE)[keyof typeof CONCERN_SOURCE];
 
 type PlanConcernOrConditionData = {
   message: string | undefined;

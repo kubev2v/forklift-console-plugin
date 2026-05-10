@@ -13,7 +13,7 @@ import type { InspectionStatus } from '@utils/crds/conversion/constants';
 import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
 import type { useForkliftTranslation } from '@utils/i18n';
 
-export type InspectionStatusConfig = {
+type InspectionStatusConfig = {
   icon: ReactNode;
   label: string;
   labelStatus?: 'custom' | 'danger' | 'info' | 'success' | 'warning';
