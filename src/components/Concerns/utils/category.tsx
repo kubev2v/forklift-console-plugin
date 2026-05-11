@@ -13,28 +13,36 @@ import { t } from '@utils/i18n';
 import { type ConcernCategory, ConcernCategoryOptions } from './constants';
 
 const CATEGORY_LABELS: Record<ConcernCategory, string> = {
+  [ConcernCategoryOptions.Advisory]: 'Advisory',
   [ConcernCategoryOptions.Critical]: 'Critical',
+  [ConcernCategoryOptions.Error]: 'Error',
   [ConcernCategoryOptions.Information]: 'Information',
   [ConcernCategoryOptions.Warn]: 'Warning',
   [ConcernCategoryOptions.Warning]: 'Warning',
 };
 
 const CATEGORY_TITLES: Record<ConcernCategory, string> = {
+  [ConcernCategoryOptions.Advisory]: t('Advisory concerns'),
   [ConcernCategoryOptions.Critical]: t('Critical concerns'),
+  [ConcernCategoryOptions.Error]: t('Error concerns'),
   [ConcernCategoryOptions.Information]: t('Information concerns'),
   [ConcernCategoryOptions.Warn]: t('Warning concerns'),
   [ConcernCategoryOptions.Warning]: t('Warning concerns'),
 };
 
 const CATEGORY_ICONS: Record<ConcernCategory, ReactNode> = {
+  [ConcernCategoryOptions.Advisory]: <InfoCircleIcon color="#2B9AF3" />,
   [ConcernCategoryOptions.Critical]: <ExclamationCircleIcon color="#C9190B" />,
+  [ConcernCategoryOptions.Error]: <ExclamationCircleIcon color="#C9190B" />,
   [ConcernCategoryOptions.Information]: <InfoCircleIcon color="#2B9AF3" />,
   [ConcernCategoryOptions.Warn]: <ExclamationTriangleIcon color="#F0AB00" />,
   [ConcernCategoryOptions.Warning]: <ExclamationTriangleIcon color="#F0AB00" />,
 };
 
 const CATEGORY_STATUS: Record<ConcernCategory, LabelProps['status'] | undefined> = {
+  [ConcernCategoryOptions.Advisory]: 'info',
   [ConcernCategoryOptions.Critical]: 'danger',
+  [ConcernCategoryOptions.Error]: 'danger',
   [ConcernCategoryOptions.Information]: 'info',
   [ConcernCategoryOptions.Warn]: 'warning',
   [ConcernCategoryOptions.Warning]: 'warning',
@@ -52,7 +60,8 @@ export const getCategoryIcon = (category: string): ReactNode => {
 };
 
 export const getCategoryStatus = (category: string): LabelProps['status'] | undefined => {
-  return isConcernCategory(category) ? CATEGORY_STATUS[category] : undefined;
+  if (isConcernCategory(category)) return CATEGORY_STATUS[category];
+  return 'warning';
 };
 
 export const getCategoryLabel = (category: string): string => {

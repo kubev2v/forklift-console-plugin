@@ -10,6 +10,12 @@ import {
   type RowNode,
   type VmRow,
 } from '@components/VsphereFoldersTable/utils/types';
+import {
+  INSPECTION_STATUS_FILTER_VALUES,
+  INSPECTION_STATUS_NOT_INSPECTED,
+} from '@utils/crds/conversion/constants';
+import type { V1beta1Conversion } from '@utils/crds/conversion/types';
+import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { orderedConcernCategoriesFilterOptions, powerFilterOptions } from './utils/constants';
@@ -24,8 +30,14 @@ import {
   getVmPower,
 } from './utils/treeUtils';
 
-export const useTreeFilterAttributes = (rows: RowNode[]) => {
+const inspectionStatusFilterOptions = INSPECTION_STATUS_FILTER_VALUES.map((value) => ({
+  id: value,
+  label: value,
+}));
+
+export const useTreeFilterAttributes = (rows: RowNode[], conversions: V1beta1Conversion[]) => {
   const { t } = useForkliftTranslation();
+  const getVmInspectionStatus = useVmInspectionStatus(conversions);
 
   const attributes: AttributeConfig<VmRow>[] = useMemo(
     () => [
@@ -51,6 +63,16 @@ export const useTreeFilterAttributes = (rows: RowNode[]) => {
         options: getConcernLabelFilterOptions(rows),
       },
       {
+        getValues: (row) => {
+          const vmStatus = getVmInspectionStatus(row.vmData.vm?.id ?? '');
+          return [vmStatus?.status ?? INSPECTION_STATUS_NOT_INSPECTED];
+        },
+        id: COLUMN_IDS.InspectionStatus,
+        kind: AttributeKind.Checkbox,
+        label: t('Inspection status'),
+        options: inspectionStatusFilterOptions,
+      },
+      {
         getValues: getVmHost,
         id: COLUMN_IDS.Host,
         kind: AttributeKind.Checkbox,
@@ -71,7 +93,7 @@ export const useTreeFilterAttributes = (rows: RowNode[]) => {
         label: t('Path'),
       },
     ],
-    [rows, t],
+    [rows, t, getVmInspectionStatus],
   );
   return attributes;
 };

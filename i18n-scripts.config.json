@@ -5,6 +5,8 @@
   "languages": ["ja", "zh-cn", "ko", "fr", "es"],
   "languageAliases": { "zh-cn": "zh" },
   "pluralOverrides": {
-    "{{count}} virtual machine selected_other": "{{count}} virtual machines selected"
+    "{{count}} virtual machine selected_other": "{{count}} virtual machines selected",
+    "Failed to create inspection for {{count}} VM_other": "Failed to create inspections for {{count}} VMs",
+    "Inspect {{count}} VM_other": "Inspect {{count}} VMs"
   }
 }

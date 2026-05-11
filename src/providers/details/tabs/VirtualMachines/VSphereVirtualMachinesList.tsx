@@ -3,6 +3,7 @@ import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tab
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import VsphereFolderTreeTable from '@components/VsphereFoldersTable/VsphereFolderTreeTable';
+import { getNamespace, getUID } from '@utils/crds/common/selectors';
 
 import { useVSphereInventoryVms } from './utils/hooks/useVSphereInventoryVms';
 
@@ -30,6 +31,9 @@ export const VSphereVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = 
       hostsDict={hostsDict}
       initialSelectedIds={initialSelectedIds}
       onSelect={onSelect}
+      provider={provider}
+      providerNamespace={provider ? getNamespace(provider) : undefined}
+      providerUid={provider ? getUID(provider) : undefined}
       vmData={vmData}
     />
   );

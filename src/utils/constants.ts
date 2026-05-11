@@ -2,6 +2,8 @@ import { t } from '@utils/i18n';
 
 export const EMPTY_MSG = '-';
 
+export const TOOLTIP_TRIGGER_MANUAL = 'manual';
+
 export const Namespace = {
   AllProjects: '#ALL_NS#',
   Default: 'default',
@@ -40,6 +42,7 @@ export const CATEGORY_TYPES = {
   CONNECTION_FAILED: 'ConnectionFailed',
   CRITERIA_MET: 'SuccessCriteriaMet',
   CRITICAL: 'Critical',
+  ERROR: 'Error',
   EXECUTING: 'Executing',
   FAILED: 'Failed',
   NOT_READY: 'Not Ready',

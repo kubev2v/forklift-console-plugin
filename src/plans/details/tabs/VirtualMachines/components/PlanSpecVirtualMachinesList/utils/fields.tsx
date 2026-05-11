@@ -3,6 +3,7 @@ import type { EnhancedPlanSpecVms } from 'src/plans/details/tabs/Details/compone
 import VirtualMachineConcernsCell from '@components/Concerns/VirtualMachineConcernsCell';
 import { EMPTY_MSG } from '@utils/constants';
 
+import InspectionStatusCell from '../components/InspectionStatusCell';
 import { InstanceTypeCellRenderer } from '../components/InstanceType/InstanceTypeCellRenderer';
 import SpecVirtualMachinesActions from '../components/SpecVirtualMachinesActions';
 import { VMMigrateSharedDisksCellRenderer } from '../components/VMMigrateSharedDisksCellRenderer';
@@ -11,13 +12,24 @@ import { VMTargetPowerStateCellRenderer } from '../components/VMTargetPowerState
 import { PlanSpecVirtualMachinesTableResourceId, type SpecVirtualMachinePageData } from './types';
 
 export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePageData) => {
-  const { conditions, inventoryVmData, plan, sourceProviderType, specVM, vmIndex } = fieldsData;
+  const {
+    conditions,
+    inspectionStatus,
+    inventoryVmData,
+    plan,
+    sourceProviderType,
+    specVM,
+    vmIndex,
+  } = fieldsData;
   return {
     [PlanSpecVirtualMachinesTableResourceId.Actions]: (
       <SpecVirtualMachinesActions plan={plan} vmIndex={vmIndex} providerType={sourceProviderType} />
     ),
     [PlanSpecVirtualMachinesTableResourceId.Concerns]: (
       <VirtualMachineConcernsCell vmData={inventoryVmData} conditions={conditions} />
+    ),
+    [PlanSpecVirtualMachinesTableResourceId.InspectionStatus]: (
+      <InspectionStatusCell inspectionStatus={inspectionStatus} />
     ),
     [PlanSpecVirtualMachinesTableResourceId.InstanceType]: (
       <InstanceTypeCellRenderer instanceType={specVM?.instanceType} />

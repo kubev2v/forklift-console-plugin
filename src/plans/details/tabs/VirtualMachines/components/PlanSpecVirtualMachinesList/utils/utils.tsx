@@ -1,10 +1,15 @@
 import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
 import ConcernsColumnPopover from 'src/components/Concerns/ConcernsColumnPopover';
+import InspectionStatusColumnPopover from 'src/components/InspectVirtualMachines/InspectionStatusColumnPopover';
 
 import { type EnumValue, FilterDefType, type ResourceField } from '@components/common/utils/types';
 import { getCategoryIcon } from '@components/Concerns/utils/category';
 import { orderedConcernCategories } from '@components/Concerns/utils/constants';
 import type { V1beta1Plan, V1beta1PlanStatusConditions } from '@forklift-ui/types';
+import {
+  INSPECTION_STATUS_FILTER_VALUES,
+  INSPECTION_STATUS_NOT_INSPECTED,
+} from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
@@ -80,6 +85,28 @@ export const specVirtualMachineFields: ResourceField[] = [
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Concerns,
     sortable: true,
     testId: 'concerns-column-header',
+  },
+  {
+    filter: {
+      placeholderLabel: t('Filter by inspection status'),
+      type: FilterDefType.Enum,
+      values: INSPECTION_STATUS_FILTER_VALUES.map((value) => ({
+        id: value,
+        label: t(value),
+      })),
+    },
+    info: {
+      ariaLabel: 'More information on inspection status',
+      popover: <InspectionStatusColumnPopover />,
+    },
+    isVisible: true,
+    jsonPath: (item: unknown) =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      (item as SpecVirtualMachinePageData).inspectionStatus?.status ??
+      INSPECTION_STATUS_NOT_INSPECTED,
+    label: t('Inspection status'),
+    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.InspectionStatus,
+    sortable: true,
   },
   {
     isVisible: false,

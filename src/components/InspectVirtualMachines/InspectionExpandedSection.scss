@@ -1,0 +1,10 @@
+.forklift-inspection-expanded-section {
+  padding-bottom: var(--pf-t--global--spacer--lg);
+}
+
+.forklift-inspections-table {
+  tbody:last-of-type > tr ,
+  tbody:last-of-type > tr:last-child {
+    border-bottom: none;
+  }
+}

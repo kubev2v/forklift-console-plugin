@@ -10,6 +10,8 @@ export const getCreatedAt = (resource: K8sResourceCommon) => resource?.metadata?
 
 export const getUID = (resource: K8sResourceCommon) => resource?.metadata?.uid;
 
+export const getLabels = (resource: K8sResourceCommon) => resource?.metadata?.labels;
+
 export const getOwnerReference = (resource: K8sResourceCommon) =>
   resource?.metadata?.ownerReferences?.[0];
 
@@ -40,3 +42,5 @@ export const getAnnotations = (provider: V1beta1Provider) => provider?.metadata?
 export const getUrl = (provider: V1beta1Provider) => provider?.spec?.url;
 
 export const getType = (provider: V1beta1Provider | undefined) => provider?.spec?.type;
+
+export const getProviderSecretRef = (provider: V1beta1Provider) => provider?.spec?.secret;

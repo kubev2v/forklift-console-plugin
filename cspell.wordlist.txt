@@ -55,6 +55,9 @@ snapshotting
 hotplug
 RHVM
 metav
+moref
+mountpoint
+mountpoints
 tolerations
 Virtualmachine
 domainname

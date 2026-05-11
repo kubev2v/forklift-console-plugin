@@ -103,7 +103,11 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
       <DropdownItem
         value={1}
         key="start"
-        isDisabled={!canStart && !canReStart && !isEmpty(activeMigration)}
+        isDisabled={
+          (!canStart && !canReStart) ||
+          !isEmpty(activeMigration) ||
+          PlanStatuses.CannotStart === planStatus
+        }
         onClick={isEmpty(activeMigration) ? onClickPlanStart : undefined}
         description={startDescription[planStatus]}
         data-testid="plan-actions-start-menuitem"

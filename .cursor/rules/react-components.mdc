@@ -117,7 +117,44 @@ const { control, handleSubmit, formState: { errors } } = methods;
 
 ---
 
-## 6. Test Identifiers
+## 6. Modals
+
+Always use the shared `ModalForm` component (`@components/ModalForm/ModalForm`) when creating new modals. It handles:
+- Modal shell (open/close, variant, position)
+- Loading state on confirm button
+- Error display (catches thrown errors automatically)
+- Confirm/Cancel buttons with proper variants
+- `closeModal` on success
+
+```typescript
+import ModalForm from '@components/ModalForm/ModalForm';
+
+const MyModal: ModalComponent<MyModalProps> = ({ myData, ...rest }) => {
+  const handleConfirm = useCallback(async () => {
+    await doSomething(myData);
+    // throw new Error('message') on failure -- ModalForm catches and displays it
+  }, [myData]);
+
+  return (
+    <ModalForm
+      title={t('My title')}
+      onConfirm={handleConfirm}
+      confirmLabel={t('Confirm')}
+      isDisabled={!isValid}
+      variant={ModalVariant.large}
+      {...rest}
+    >
+      {/* Modal body content */}
+    </ModalForm>
+  );
+};
+```
+
+Do NOT use raw `Modal` + `ModalHeader` + `ModalBody` + `ModalFooter` + manual error/loading state.
+
+---
+
+## 7. Test Identifiers
 
 Use `testId` prop for test selectors:
 ```typescript

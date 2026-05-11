@@ -36,6 +36,16 @@ export class PlanDetailsPage {
     await this.page.getByTestId('modal-confirm-button').click();
   }
 
+  async clickInspectVmsButton(): Promise<void> {
+    await expect(this.inspectVmsButton).toBeVisible();
+    await this.inspectVmsButton.click();
+  }
+
+  async clickInspectVmsFromActions(): Promise<void> {
+    await this.page.getByTestId('plan-actions-dropdown-button').click();
+    await this.inspectVmsMenuItem.click();
+  }
+
   async clickStartButtonInStatus(): Promise<void> {
     await this.page.getByTestId('plan-start-button-status').click();
     await this.page.getByTestId('modal-confirm-button').click();
@@ -152,6 +162,22 @@ export class PlanDetailsPage {
     return this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
   }
 
+  get inspectVmsButton() {
+    return this.page.getByTestId('plan-inspect-vms-button');
+  }
+
+  get inspectVmsMenuItem() {
+    return this.page.getByTestId('plan-actions-inspect-menuitem');
+  }
+
+  async isInspectVmsButtonDisabled(): Promise<boolean> {
+    return this.inspectVmsButton.isDisabled();
+  }
+
+  async isInspectVmsButtonVisible(): Promise<boolean> {
+    return this.inspectVmsButton.isVisible();
+  }
+
   async navigate(planName: string, namespace: string, tab?: string): Promise<void> {
     await this.navigation.navigateToK8sResource({
       resource: 'Plan',
@@ -223,6 +249,8 @@ export class PlanDetailsPage {
     );
     await expect(virtualMachinesTab).toBeVisible();
   }
+
+  // Deep inspection methods
 
   async verifyPlanDetailsURL(planName: string) {
     await expect(this.page).toHaveURL((url) =>

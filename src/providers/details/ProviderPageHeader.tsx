@@ -13,6 +13,7 @@ import CreatePlanAction from './components/CreatePlanAction';
 import ProviderPageHeaderAlerts from './components/ProviderPageHeaderAlerts';
 import { useProvider } from './hooks/useProvider';
 import type { ProviderDetailsPageProps } from './utils/types';
+
 const ProviderPageHeader: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const { provider } = useProvider(name, namespace);
   const {
