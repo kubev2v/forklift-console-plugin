@@ -4,6 +4,8 @@ import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
+import { V2_12_0 } from '../../utils/version/constants';
+import { isVersionAtLeast } from '../../utils/version/version';
 
 import { AdditionalSettingsStep } from './steps/AdditionalSettingsSteps';
 import { CustomizationScriptsStep } from './steps/CustomizationScriptsStep';
@@ -49,6 +51,44 @@ export class CreatePlanWizardPage {
       return;
     }
     this.resourceManager.addPlan(testData.planName, testData.planProject ?? MTV_NAMESPACE);
+  }
+
+  private async completeRemainingSteps(testData: PlanTestData): Promise<void> {
+    const hasHookData = testData.preMigrationHook ?? testData.postMigrationHook;
+    const hasCustomScriptData = testData.customizationScripts;
+
+    if (isVersionAtLeast(V2_12_0)) {
+      await this.completeRemainingStepsModern(testData, hasCustomScriptData, hasHookData);
+    } else if (hasHookData) {
+      await this.clickNext();
+      await this.hooks.fillAndComplete(testData.preMigrationHook, testData.postMigrationHook);
+      await this.clickNext();
+    } else {
+      await this.clickSkipToReview();
+    }
+  }
+
+  private async completeRemainingStepsModern(
+    testData: PlanTestData,
+    hasCustomScriptData: PlanTestData['customizationScripts'],
+    hasHookData: unknown,
+  ): Promise<void> {
+    if (!hasCustomScriptData && !hasHookData) {
+      await this.clickSkipToReview();
+      return;
+    }
+
+    await this.clickNext();
+
+    if (hasCustomScriptData) {
+      await this.customizationScripts.fillAndComplete(testData.customizationScripts);
+    }
+    await this.clickNext();
+
+    if (hasHookData) {
+      await this.hooks.fillAndComplete(testData.preMigrationHook, testData.postMigrationHook);
+    }
+    await this.clickNext();
   }
 
   async clickBack() {
@@ -112,26 +152,7 @@ export class CreatePlanWizardPage {
       await this.additionalSettings.fillAndComplete(testData.additionalPlanSettings);
     }
 
-    const hasRemainingStepData =
-      testData.customizationScripts ?? testData.preMigrationHook ?? testData.postMigrationHook;
-
-    if (hasRemainingStepData) {
-      await this.clickNext();
-
-      // STEP 7: Customization scripts
-      if (testData.customizationScripts) {
-        await this.customizationScripts.fillAndComplete(testData.customizationScripts);
-      }
-      await this.clickNext();
-
-      // STEP 8: Hooks
-      if (testData.preMigrationHook || testData.postMigrationHook) {
-        await this.hooks.fillAndComplete(testData.preMigrationHook, testData.postMigrationHook);
-      }
-      await this.clickNext();
-    } else {
-      await this.clickSkipToReview();
-    }
+    await this.completeRemainingSteps(testData);
 
     // STEP 9: Review
     await this.review.verifyReviewStep(testData);
@@ -166,8 +187,13 @@ export class CreatePlanWizardPage {
   }
 
   async navigateToHooksStep(testData: PlanTestData): Promise<void> {
-    await this.navigateToCustomizationScriptsStep(testData);
-    await this.clickNext(); // Customization Scripts -> Hooks
+    if (isVersionAtLeast(V2_12_0)) {
+      await this.navigateToCustomizationScriptsStep(testData);
+      await this.clickNext(); // Customization Scripts -> Hooks
+    } else {
+      await this.navigateToAdditionalSettings(testData);
+      await this.clickNext(); // Other Settings -> Hooks (no Custom Scripts step in pre-2.12)
+    }
   }
 
   async navigateToMigrationTypeStep(testData: PlanTestData): Promise<void> {

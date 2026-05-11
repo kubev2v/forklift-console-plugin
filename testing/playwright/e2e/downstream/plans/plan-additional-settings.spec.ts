@@ -6,7 +6,7 @@ import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetai
 import { MigrationType } from '../../../types/enums';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
 import { V2_11_0, V2_12_0 } from '../../../utils/version/constants';
-import { requireVersion } from '../../../utils/version/version';
+import { isVersionAtLeast, requireVersion } from '../../../utils/version/version';
 
 test.describe('Plan additional settings', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
@@ -24,86 +24,58 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     });
     resourceManager.addPlan(testData.planName, testData.planProject);
 
-    // Step 1: Navigate to Additional Settings
     const wizard = new CreatePlanWizardPage(page, resourceManager);
     await wizard.navigate();
     await wizard.waitForWizardLoad();
     await wizard.navigateToAdditionalSettings(testData);
 
-    // Step 2: Configure power state in Additional Settings
     const { additionalSettings } = wizard;
     await additionalSettings.verifyStepVisible();
-
-    // Review and verify power state options
     await additionalSettings.targetPowerStateSelect.click();
     await expect(additionalSettings.powerStateOptionAuto).toHaveText(
       'Retain source VM power state',
     );
     await expect(additionalSettings.powerStateOptionOn).toHaveText('Powered on');
     await expect(additionalSettings.powerStateOptionOff).toHaveText('Powered off');
-
-    // Select the target power state from test data
     await additionalSettings
       .powerStateOption(testData.additionalPlanSettings?.targetPowerState ?? 'on')
       .click();
-
     await wizard.clickSkipToReview();
 
-    // Step 3: Review and create plan
     await wizard.review.verifyReviewStep(testData);
     await wizard.clickNext();
     await wizard.waitForPlanCreation();
 
-    // Step 4: Verify and edit power state on Details tab
     const planDetailsPage = new PlanDetailsPage(page);
-    await planDetailsPage.detailsTab.navigateToDetailsTab();
-    await expect(planDetailsPage.detailsTab.targetVMPowerState('Powered on')).toBeVisible();
+    const { detailsTab } = planDetailsPage;
+    await detailsTab.navigateToDetailsTab();
+    await expect(detailsTab.targetVMPowerState('Powered on')).toBeVisible();
+    await detailsTab.clickEditTargetVMPowerState();
+    await expect(detailsTab.editPowerStateModal).toBeVisible();
+    await expect(detailsTab.savePowerStateButton).toBeDisabled();
+    await detailsTab.targetPowerStateSelect.click();
+    await expect(detailsTab.powerStateOptionAuto).toHaveText('Retain source VM power state');
+    await expect(detailsTab.powerStateOptionOn).toHaveText('Powered on');
+    await expect(detailsTab.powerStateOptionOff).toHaveText('Powered off');
 
-    // Edit power state on Details tab
-    await planDetailsPage.detailsTab.clickEditTargetVMPowerState();
-    await expect(planDetailsPage.detailsTab.editPowerStateModal).toBeVisible();
-    // Verify save is disabled and options are present
-    await expect(planDetailsPage.detailsTab.savePowerStateButton).toBeDisabled();
-    await planDetailsPage.detailsTab.targetPowerStateSelect.click();
-    await expect(planDetailsPage.detailsTab.powerStateOptionAuto).toHaveText(
-      'Retain source VM power state',
-    );
-    await expect(planDetailsPage.detailsTab.powerStateOptionOn).toHaveText('Powered on');
-    await expect(planDetailsPage.detailsTab.powerStateOptionOff).toHaveText('Powered off');
+    await detailsTab.powerStateOption('off').click();
+    await expect(detailsTab.savePowerStateButton).toBeEnabled();
+    await detailsTab.savePowerStateButton.click();
+    await expect(detailsTab.targetVMPowerState('Powered off')).toBeVisible();
 
-    // Select new power state and save
-    const detailsNewPowerState = 'off';
-    await planDetailsPage.detailsTab.powerStateOption(detailsNewPowerState).click();
-    await expect(planDetailsPage.detailsTab.savePowerStateButton).toBeEnabled();
-    await planDetailsPage.detailsTab.savePowerStateButton.click();
-
-    // Verify the change is reflected on the details page
-    await expect(planDetailsPage.detailsTab.targetVMPowerState('Powered off')).toBeVisible();
-
-    // Step 5: Navigate to VMs tab and verify column management
     await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
 
-    // Enable target power state column
-    await planDetailsPage.virtualMachinesTab.enableColumn('Target power state');
-
-    // Verify column is visible
-    const isPowerStateColumnVisible =
-      await planDetailsPage.virtualMachinesTab.isColumnVisible('Target power state');
-    expect(isPowerStateColumnVisible).toBe(true);
-
-    // Step 6: Verify VM inherits plan power state
-    const vmName = testData.virtualMachines?.[0]?.sourceName ?? '';
-    const powerState = await planDetailsPage.virtualMachinesTab.getVMPowerState(vmName);
-    expect(powerState).toBe('Powered off (Inherited from plan)');
-
-    // Step 7: Edit VM power state and verify all options
-    await planDetailsPage.virtualMachinesTab.openPowerStateDialog(vmName);
-
-    // Verify save is disabled and all 4 options are present
     const { virtualMachinesTab } = planDetailsPage;
-    await expect(virtualMachinesTab.powerStateModalSaveButton).toBeDisabled();
+    await virtualMachinesTab.enableColumn('Target power state');
+    expect(await virtualMachinesTab.isColumnVisible('Target power state')).toBe(true);
 
-    // Click dropdown to see all options
+    const vmName = testData.virtualMachines?.[0]?.sourceName ?? '';
+    expect(await virtualMachinesTab.getVMPowerState(vmName)).toBe(
+      'Powered off (Inherited from plan)',
+    );
+
+    await virtualMachinesTab.openPowerStateDialog(vmName);
+    await expect(virtualMachinesTab.powerStateModalSaveButton).toBeDisabled();
     await virtualMachinesTab.powerStateModalSelect.click();
     await expect(virtualMachinesTab.powerStateOptionInherit).toBeVisible();
     await expect(virtualMachinesTab.powerStateOptionInherit).toContainText('Set to: Powered off');
@@ -111,14 +83,11 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await expect(virtualMachinesTab.powerStateOptionOn).toBeVisible();
     await expect(virtualMachinesTab.powerStateOptionOff).toBeVisible();
 
-    // Step 8: Change VM power state and verify
     await virtualMachinesTab.powerStateOptionOn.click();
     await expect(virtualMachinesTab.powerStateModalSaveButton).toBeEnabled();
     await virtualMachinesTab.powerStateModalSaveButton.click();
 
-    // Wait for modal to close and table to refresh
     await expect(virtualMachinesTab.editTargetPowerStateModal).not.toBeVisible();
-    // Verify the VM now shows the overridden power state
     await planDetailsPage.virtualMachinesTab.waitForVMPowerState(vmName, 'Powered on');
   });
 
@@ -126,7 +95,8 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     page,
     testProvider,
     resourceManager,
-  }) => {
+  }, testInfo) => {
+    testInfo.skip(!isVersionAtLeast(V2_12_0), 'Shared disks requires Forklift 2.12.0+');
     const testData: PlanTestData = createPlanTestData({
       sourceProvider: testProvider?.metadata?.name ?? '',
     });
@@ -142,61 +112,44 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await wizard.waitForPlanCreation();
 
     const planDetailsPage = new PlanDetailsPage(page);
-    await planDetailsPage.detailsTab.navigateToDetailsTab();
+    const { detailsTab: dt, virtualMachinesTab: vmt } = planDetailsPage;
+    await dt.navigateToDetailsTab();
+    await expect(dt.sharedDisksDetailItem('Migrate shared disks')).toBeVisible();
 
-    await expect(
-      planDetailsPage.detailsTab.sharedDisksDetailItem('Migrate shared disks'),
-    ).toBeVisible();
+    await dt.clickEditSharedDisks();
+    await expect(dt.editSharedDisksModal).toBeVisible();
+    await dt.editSharedDisksCheckbox.uncheck();
+    await expect(dt.editSharedDisksCheckbox).not.toBeChecked();
+    await dt.saveSharedDisksButton.click();
+    await expect(dt.editSharedDisksModal).not.toBeVisible();
+    await expect(dt.sharedDisksDetailItem('Do not migrate shared disks')).toBeVisible();
 
-    await planDetailsPage.detailsTab.clickEditSharedDisks();
-    await expect(planDetailsPage.detailsTab.editSharedDisksModal).toBeVisible();
-
-    await planDetailsPage.detailsTab.editSharedDisksCheckbox.uncheck();
-    await expect(planDetailsPage.detailsTab.editSharedDisksCheckbox).not.toBeChecked();
-    await planDetailsPage.detailsTab.saveSharedDisksButton.click();
-    await expect(planDetailsPage.detailsTab.editSharedDisksModal).not.toBeVisible();
-
-    await expect(
-      planDetailsPage.detailsTab.sharedDisksDetailItem('Do not migrate shared disks'),
-    ).toBeVisible();
-
-    await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
-    await planDetailsPage.virtualMachinesTab.enableColumn('Shared disks');
-
-    const isColumnVisible =
-      await planDetailsPage.virtualMachinesTab.isColumnVisible('Shared disks');
-    expect(isColumnVisible).toBe(true);
+    await vmt.navigateToVirtualMachinesTab();
+    await vmt.enableColumn('Shared disks');
+    expect(await vmt.isColumnVisible('Shared disks')).toBe(true);
 
     const vmName = testData.virtualMachines?.[0]?.sourceName ?? '';
-    const sharedDisks = await planDetailsPage.virtualMachinesTab.getVMSharedDisks(vmName);
-    expect(sharedDisks).toBe('Do not migrate shared disks (Inherited from plan)');
-
-    await planDetailsPage.virtualMachinesTab.openSharedDisksDialog(vmName);
-
-    const { virtualMachinesTab } = planDetailsPage;
-    await expect(virtualMachinesTab.sharedDisksModalSaveButton).toBeDisabled();
-
-    await expect(virtualMachinesTab.sharedDisksOptionInherit).toBeVisible();
-    await expect(virtualMachinesTab.sharedDisksOptionEnabled).toBeVisible();
-    await expect(virtualMachinesTab.sharedDisksOptionDisabled).toBeVisible();
-
-    await virtualMachinesTab.sharedDisksOptionEnabled.click();
-    await expect(virtualMachinesTab.sharedDisksModalSaveButton).toBeEnabled();
-    await virtualMachinesTab.sharedDisksModalSaveButton.click();
-
-    await expect(virtualMachinesTab.editSharedDisksModal).not.toBeVisible();
-    await planDetailsPage.virtualMachinesTab.waitForVMSharedDisks(vmName, 'Migrate shared disks');
-
-    await planDetailsPage.virtualMachinesTab.openSharedDisksDialog(vmName);
-    await virtualMachinesTab.sharedDisksOptionInherit.click();
-    await expect(virtualMachinesTab.sharedDisksModalSaveButton).toBeEnabled();
-    await virtualMachinesTab.sharedDisksModalSaveButton.click();
-
-    await expect(virtualMachinesTab.editSharedDisksModal).not.toBeVisible();
-    await planDetailsPage.virtualMachinesTab.waitForVMSharedDisks(
-      vmName,
+    expect(await vmt.getVMSharedDisks(vmName)).toBe(
       'Do not migrate shared disks (Inherited from plan)',
     );
+    await vmt.openSharedDisksDialog(vmName);
+    await expect(vmt.sharedDisksModalSaveButton).toBeDisabled();
+    await expect(vmt.sharedDisksOptionInherit).toBeVisible();
+    await expect(vmt.sharedDisksOptionEnabled).toBeVisible();
+    await expect(vmt.sharedDisksOptionDisabled).toBeVisible();
+
+    await vmt.sharedDisksOptionEnabled.click();
+    await expect(vmt.sharedDisksModalSaveButton).toBeEnabled();
+    await vmt.sharedDisksModalSaveButton.click();
+    await expect(vmt.editSharedDisksModal).not.toBeVisible();
+    await vmt.waitForVMSharedDisks(vmName, 'Migrate shared disks');
+
+    await vmt.openSharedDisksDialog(vmName);
+    await vmt.sharedDisksOptionInherit.click();
+    await expect(vmt.sharedDisksModalSaveButton).toBeEnabled();
+    await vmt.sharedDisksModalSaveButton.click();
+    await expect(vmt.editSharedDisksModal).not.toBeVisible();
+    await vmt.waitForVMSharedDisks(vmName, 'Do not migrate shared disks (Inherited from plan)');
   });
 
   test('should set NBDE/Clevis on plan creation and edit from details page', async ({

@@ -1,5 +1,8 @@
 import { expect, type Page } from '@playwright/test';
 
+import { V2_12_0 } from '../utils/version/constants';
+import { isVersionAtLeast } from '../utils/version/version';
+
 export class NetworkMapCreatePage {
   protected readonly page: Page;
 
@@ -67,8 +70,17 @@ export class NetworkMapCreatePage {
   }
 
   async populateMapping(index: number, sourceNetwork: string, targetNetwork: string) {
-    const sourceSelect = this.page.getByTestId(this.sourceNetworkTestId(index));
-    const targetSelect = this.page.getByTestId(this.targetNetworkTestId(index));
+    const sourceSelect = isVersionAtLeast(V2_12_0)
+      ? this.page.getByTestId(this.sourceNetworkTestId(index))
+      : this.page
+          .getByTestId(`field-row-${index}`)
+          .getByTestId('network-map-source-network-select');
+
+    const targetSelect = isVersionAtLeast(V2_12_0)
+      ? this.page.getByTestId(this.targetNetworkTestId(index))
+      : this.page
+          .getByTestId(`field-row-${index}`)
+          .getByTestId('network-map-target-network-select');
 
     await expect(sourceSelect).toBeVisible({ timeout: 10000 });
     await expect(sourceSelect).toBeEnabled();

@@ -92,8 +92,10 @@ export class ReviewStep {
     await this.verifyOtherSettingsSection(planData.additionalPlanSettings);
     if (isVersionAtLeast(V2_12_0)) {
       await this.verifyCustomScriptsSection(planData.customizationScripts);
+      await this.verifyHooksSection();
+    } else {
+      await this.verifyHooksSectionLegacy();
     }
-    await this.verifyHooksSection();
   }
 
   async verifyCustomScriptsSection(config?: CustomizationScriptsTestData): Promise<void> {
@@ -162,6 +164,12 @@ export class ReviewStep {
 
     await this.verifyHookFields('pre', preHook);
     await this.verifyHookFields('post', postHook);
+  }
+
+  async verifyHooksSectionLegacy(): Promise<void> {
+    await expect(this.page.getByTestId('review-hooks-section')).toBeVisible();
+    await expect(this.page.getByTestId('review-pre-migration-hook-enabled')).toBeVisible();
+    await expect(this.page.getByTestId('review-post-migration-hook-enabled')).toBeVisible();
   }
 
   async verifyMigrationTypeSection(): Promise<void> {

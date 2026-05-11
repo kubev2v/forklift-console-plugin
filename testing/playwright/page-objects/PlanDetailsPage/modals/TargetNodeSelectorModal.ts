@@ -1,5 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { V2_12_0 } from '../../../utils/version/constants';
+import { isVersionAtLeast } from '../../../utils/version/version';
 import { BaseModal } from '../../common/BaseModal';
 
 export class TargetNodeSelectorModal extends BaseModal {
@@ -27,13 +29,17 @@ export class TargetNodeSelectorModal extends BaseModal {
 
   async deleteNodeSelectorByKey(key: string): Promise<void> {
     const keyInputs = this.modal.getByTestId('node-selector-key-input');
-    const deleteButtons = this.modal.getByTestId('node-selector-delete-button');
     const count = await keyInputs.count();
 
     for (let i = 0; i < count; i += 1) {
       const inputValue = await keyInputs.nth(i).inputValue();
       if (inputValue === key) {
-        await deleteButtons.nth(i).click();
+        if (isVersionAtLeast(V2_12_0)) {
+          await this.modal.getByTestId('node-selector-delete-button').nth(i).click();
+        } else {
+          const row = keyInputs.nth(i).locator('xpath=ancestor::div[@rowspan]');
+          await row.locator('button').click();
+        }
         break;
       }
     }

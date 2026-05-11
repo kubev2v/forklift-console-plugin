@@ -2,11 +2,11 @@ import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
 import { disableGuidedTour } from '../../../utils/utils';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Plan AAP Hooks', { tag: '@downstream' }, () => {
-  requireVersion(test, V2_11_0);
+  requireVersion(test, V2_12_0);
 
   test('should display hook source radio options and switch between modes', async ({
     page,

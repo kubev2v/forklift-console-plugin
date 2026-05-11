@@ -1,11 +1,19 @@
 import type { Locator, Page } from '@playwright/test';
 
+import { V2_12_0 } from '../../../utils/version/constants';
+import { isVersionAtLeast } from '../../../utils/version/version';
 import { BaseModal } from '../../common/BaseModal';
 
 /**
  * Page object for the Settings Edit Modal on the Overview page.
  * Extends BaseModal with settings-specific functionality for configuring
  * Forklift operator settings like CPU limits, memory limits, and intervals.
+ *
+ * On 2.12+, locators use data-testid attributes added to each setting input.
+ * On 2.11, setting inputs lack testIds. Locators fall back to:
+ *   - role='spinbutton' for the NumberInput (unique within the modal)
+ *   - the project class 'forklift-overview__settings-select' indexed by position
+ *   - role='option' for selecting dropdown values by display text
  */
 export class SettingsEditModal extends BaseModal {
   readonly controllerCpuLimitDropdown: Locator;
@@ -18,35 +26,63 @@ export class SettingsEditModal extends BaseModal {
 
   constructor(page: Page) {
     super(page, 'settings-edit-modal');
-    this.maxVmInFlightInput = this.page
-      .getByTestId('max-vm-inflight-input')
-      .getByRole('spinbutton');
-    this.controllerCpuLimitDropdown = this.page.getByTestId('controller-cpu-limit-select');
-    this.controllerMemoryLimitDropdown = this.page.getByTestId('controller-memory-limit-select');
-    this.inventoryMemoryLimitDropdown = this.page.getByTestId('inventory-memory-limit-select');
-    this.preCopyIntervalDropdown = this.page.getByTestId('precopy-interval-select');
-    this.snapshotPollingIntervalDropdown = this.page.getByTestId(
-      'snapshot-status-check-rate-select',
-    );
+
+    if (isVersionAtLeast(V2_12_0)) {
+      this.maxVmInFlightInput = this.page
+        .getByTestId('max-vm-inflight-input')
+        .getByRole('spinbutton');
+      this.controllerCpuLimitDropdown = this.page.getByTestId('controller-cpu-limit-select');
+      this.controllerMemoryLimitDropdown = this.page.getByTestId('controller-memory-limit-select');
+      this.inventoryMemoryLimitDropdown = this.page.getByTestId('inventory-memory-limit-select');
+      this.preCopyIntervalDropdown = this.page.getByTestId('precopy-interval-select');
+      this.snapshotPollingIntervalDropdown = this.page.getByTestId(
+        'snapshot-status-check-rate-select',
+      );
+    } else {
+      this.maxVmInFlightInput = this.modal.getByRole('spinbutton');
+      const selects = this.modal.locator('.forklift-overview__settings-select');
+      this.controllerCpuLimitDropdown = selects.nth(0);
+      this.controllerMemoryLimitDropdown = selects.nth(1);
+      this.inventoryMemoryLimitDropdown = selects.nth(2);
+      this.preCopyIntervalDropdown = selects.nth(3);
+      this.snapshotPollingIntervalDropdown = selects.nth(4);
+    }
+
     this.controllerTransferNetworkDropdown = this.page.getByTestId(
       'controller-transfer-network-select',
     );
   }
 
+  private async selectOptionByTestIdOrText(
+    dropdown: Locator,
+    testIdPrefix: string,
+    optionKey: string | number,
+    displayText?: string,
+  ): Promise<void> {
+    await dropdown.click();
+
+    if (isVersionAtLeast(V2_12_0)) {
+      await this.page.getByTestId(`${testIdPrefix}-option-${optionKey}`).click();
+    } else {
+      const text = displayText ?? String(optionKey);
+      await this.modal.getByRole('menuitem', { name: text }).click();
+    }
+  }
+
   async decrementMaxVmInFlight(): Promise<void> {
-    await this.page.getByRole('button', { name: 'minus' }).first().click();
+    await this.modal.getByRole('button', { name: 'minus' }).click();
   }
 
   async getControllerCpuLimitValue(): Promise<string | null> {
-    return this.controllerCpuLimitDropdown.textContent();
+    return await this.controllerCpuLimitDropdown.textContent();
   }
 
   async getControllerMemoryLimitValue(): Promise<string | null> {
-    return this.controllerMemoryLimitDropdown.textContent();
+    return await this.controllerMemoryLimitDropdown.textContent();
   }
 
   async getInventoryMemoryLimitValue(): Promise<string | null> {
-    return this.inventoryMemoryLimitDropdown.textContent();
+    return await this.inventoryMemoryLimitDropdown.textContent();
   }
 
   async getMaxVmInFlightValue(): Promise<string> {
@@ -54,19 +90,19 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async getPrecopyIntervalValue(): Promise<string | null> {
-    return this.preCopyIntervalDropdown.textContent();
+    return await this.preCopyIntervalDropdown.textContent();
   }
 
   async getSnapshotPollingIntervalValue(): Promise<string | null> {
-    return this.snapshotPollingIntervalDropdown.textContent();
+    return await this.snapshotPollingIntervalDropdown.textContent();
   }
 
   async getTransferNetworkCurrentValue(): Promise<string | null> {
-    return this.controllerTransferNetworkDropdown.textContent();
+    return await this.controllerTransferNetworkDropdown.textContent();
   }
 
   async incrementMaxVmInFlight(): Promise<void> {
-    await this.page.getByRole('button', { name: 'plus' }).first().click();
+    await this.modal.getByRole('button', { name: 'plus' }).click();
   }
 
   async openTransferNetworkDropdown(): Promise<void> {
@@ -74,13 +110,19 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async selectControllerCpuLimit(value: string): Promise<void> {
-    await this.controllerCpuLimitDropdown.click();
-    await this.page.getByTestId(`controller-cpu-limit-select-option-${value}`).click();
+    await this.selectOptionByTestIdOrText(
+      this.controllerCpuLimitDropdown,
+      'controller-cpu-limit-select',
+      value,
+    );
   }
 
   async selectControllerMemoryLimit(value: string): Promise<void> {
-    await this.controllerMemoryLimitDropdown.click();
-    await this.page.getByTestId(`controller-memory-limit-select-option-${value}`).click();
+    await this.selectOptionByTestIdOrText(
+      this.controllerMemoryLimitDropdown,
+      'controller-memory-limit-select',
+      value,
+    );
   }
 
   async selectFirstAvailableNetwork(): Promise<void> {
@@ -91,18 +133,29 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async selectInventoryMemoryLimit(value: string): Promise<void> {
-    await this.inventoryMemoryLimitDropdown.click();
-    await this.page.getByTestId(`inventory-memory-limit-select-option-${value}`).click();
+    await this.selectOptionByTestIdOrText(
+      this.inventoryMemoryLimitDropdown,
+      'inventory-memory-limit-select',
+      value,
+    );
   }
 
   async selectPrecopyInterval(value: number): Promise<void> {
-    await this.preCopyIntervalDropdown.click();
-    await this.page.getByTestId(`precopy-interval-select-option-${value}`).click();
+    await this.selectOptionByTestIdOrText(
+      this.preCopyIntervalDropdown,
+      'precopy-interval-select',
+      value,
+      `${value}min`,
+    );
   }
 
   async selectSnapshotPollingInterval(value: number): Promise<void> {
-    await this.snapshotPollingIntervalDropdown.click();
-    await this.page.getByTestId(`snapshot-status-check-rate-select-option-${value}`).click();
+    await this.selectOptionByTestIdOrText(
+      this.snapshotPollingIntervalDropdown,
+      'snapshot-status-check-rate-select',
+      value,
+      `${value}s`,
+    );
   }
 
   async selectTransferNetworkNone(): Promise<void> {
