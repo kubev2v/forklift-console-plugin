@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { Spinner } from '@patternfly/react-core';
+import { Icon, Spinner } from '@patternfly/react-core';
 import {
   BanIcon,
   CheckCircleIcon,
@@ -56,7 +56,11 @@ const StatusIcon: FC<{ phase: string }> = ({ phase }) => {
 
     case 'Warning':
     case 'RequiresApproval':
-      return <ExclamationTriangleIcon color="#F0AB00" />;
+      return (
+        <Icon status="warning">
+          <ExclamationTriangleIcon />
+        </Icon>
+      );
 
     case 'ContainerCannotRun':
     case 'CrashLoopBackOff':
@@ -70,7 +74,11 @@ const StatusIcon: FC<{ phase: string }> = ({ phase }) => {
     case 'Lost':
     case 'Rejected':
     case 'UpgradeFailed':
-      return <ExclamationCircleIcon color="#C9190B" />;
+      return (
+        <Icon status="danger">
+          <ExclamationCircleIcon />
+        </Icon>
+      );
 
     case 'Accepted':
     case 'Active':
@@ -87,10 +95,18 @@ const StatusIcon: FC<{ phase: string }> = ({ phase }) => {
     case 'Preferred':
     case 'Connected':
     case 'Deployed':
-      return <CheckCircleIcon color="#3E8635" />;
+      return (
+        <Icon status="success">
+          <CheckCircleIcon />
+        </Icon>
+      );
 
     case 'Info':
-      return <InfoCircleIcon color="#2B9AF3" />;
+      return (
+        <Icon status="info">
+          <InfoCircleIcon />
+        </Icon>
+      );
 
     case 'Unknown':
       return <UnknownIcon />;

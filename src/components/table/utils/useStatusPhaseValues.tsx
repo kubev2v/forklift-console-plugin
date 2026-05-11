@@ -1,13 +1,21 @@
 import { type ReactNode, useMemo } from 'react';
 
-import { Spinner } from '@patternfly/react-core';
+import { Icon, Spinner } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 import { CATEGORY_TYPES } from '@utils/constants';
 import { useForkliftTranslation } from '@utils/i18n';
 
-const errorIcon = () => <ExclamationCircleIcon color="#C9190B" />;
+const errorIcon = () => (
+  <Icon status="danger">
+    <ExclamationCircleIcon />
+  </Icon>
+);
 const progressIcon = () => <Spinner size="sm" />;
-const readyIcon = () => <CheckCircleIcon color="#3E8635" />;
+const readyIcon = () => (
+  <Icon status="success">
+    <CheckCircleIcon />
+  </Icon>
+);
 
 export const useStatusPhaseValues = (
   phase?: string,
