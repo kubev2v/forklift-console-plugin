@@ -55,7 +55,7 @@ const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = ({ data, isKeb
         width: '200px',
       }}
     >
-      <ProviderActionsDropdownItems data={data} />
+      <ProviderActionsDropdownItems data={data} isKebab={isKebab} />
     </Dropdown>
   );
 };

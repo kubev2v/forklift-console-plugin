@@ -10,41 +10,46 @@ import { getResourceUrl } from '@utils/getResourceUrl';
 
 type StorageMapActionsDropdownItemsProps = {
   data: StorageMapData;
+  isKebab?: boolean;
 };
 
-export const StorageMapActionsDropdownItems = ({ data }: StorageMapActionsDropdownItemsProps) => {
+export const StorageMapActionsDropdownItems = ({
+  data,
+  isKebab,
+}: StorageMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
   const navigate = useNavigate();
 
-  const { obj: StorageMap } = data;
+  const { obj: storageMap } = data;
 
-  const StorageMapURL = getResourceUrl({
-    name: StorageMap?.metadata?.name,
-    namespace: StorageMap?.metadata?.namespace,
+  const storageMapURL = getResourceUrl({
+    name: storageMap?.metadata?.name,
+    namespace: storageMap?.metadata?.namespace,
     reference: StorageMapModelRef,
   });
 
-  const onClick = () => {
-    launcher<DeleteModalProps>(DeleteModal, { model: StorageMapModel, resource: StorageMap! });
+  const onDelete = () => {
+    if (!storageMap) return;
+    launcher<DeleteModalProps>(DeleteModal, { model: StorageMapModel, resource: storageMap });
   };
 
   return [
     <DropdownItem
       value={0}
-      key="EditStorageMapping"
+      key="edit"
       onClick={() => {
-        navigate(StorageMapURL);
+        navigate(isKebab ? storageMapURL : `${storageMapURL}/yaml`);
       }}
     >
-      {t('Edit storage map')}
+      {isKebab ? t('Edit') : t('Edit YAML')}
     </DropdownItem>,
 
     <DropdownItem
       value={1}
       key="delete"
-      isDisabled={!data?.permissions?.canDelete}
-      onClick={onClick}
+      isDisabled={!data?.permissions?.canDelete || !storageMap}
+      onClick={onDelete}
     >
       {t('Delete storage map')}
     </DropdownItem>,

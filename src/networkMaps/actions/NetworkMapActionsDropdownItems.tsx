@@ -11,9 +11,13 @@ import type { NetworkMapData } from '../utils/types';
 
 type NetworkMapActionsDropdownItemsProps = {
   data: NetworkMapData;
+  isKebab?: boolean;
 };
 
-export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdownItemsProps) => {
+export const NetworkMapActionsDropdownItems = ({
+  data,
+  isKebab,
+}: NetworkMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
   const navigate = useNavigate();
@@ -26,8 +30,9 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
     reference: NetworkMapModelRef,
   });
 
-  const onClick = () => {
-    launcher<DeleteModalProps>(DeleteModal, { model: NetworkMapModel, resource: networkMap! });
+  const onDelete = () => {
+    if (!networkMap) return;
+    launcher<DeleteModalProps>(DeleteModal, { model: NetworkMapModel, resource: networkMap });
   };
 
   return [
@@ -35,17 +40,17 @@ export const NetworkMapActionsDropdownItems = ({ data }: NetworkMapActionsDropdo
       value={0}
       key="edit"
       onClick={() => {
-        navigate(networkMapURL);
+        navigate(isKebab ? networkMapURL : `${networkMapURL}/yaml`);
       }}
     >
-      {t('Edit network map')}
+      {isKebab ? t('Edit') : t('Edit YAML')}
     </DropdownItem>,
 
     <DropdownItem
       value={1}
       key="delete"
-      isDisabled={!data?.permissions?.canDelete}
-      onClick={onClick}
+      isDisabled={!data?.permissions?.canDelete || !networkMap}
+      onClick={onDelete}
     >
       {t('Delete network map')}
     </DropdownItem>,

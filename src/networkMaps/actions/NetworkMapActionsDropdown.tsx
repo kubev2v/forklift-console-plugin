@@ -61,7 +61,7 @@ const NetworkMapActionsDropdown: FC<NetworkMapActionsDropdownProps> = ({ data, i
           }}
         >
           <DropdownList>
-            <NetworkMapActionsDropdownItems data={data} />
+            <NetworkMapActionsDropdownItems data={data} isKebab={isKebab} />
           </DropdownList>
         </Dropdown>
       </FlexItem>
