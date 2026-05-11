@@ -50,7 +50,7 @@ const PlanActionsDropdown: FC<PlanActionsDropdownProps> = ({ isKebab, plan }) =>
         width: '200px',
       }}
     >
-      <PlanActionsDropdownItems plan={plan} />
+      <PlanActionsDropdownItems isKebab={isKebab} plan={plan} />
     </Dropdown>
   );
 };
