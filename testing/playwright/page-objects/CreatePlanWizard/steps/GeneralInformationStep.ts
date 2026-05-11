@@ -142,8 +142,8 @@ export class GeneralInformationStep {
       return;
     }
 
-    // On pre-2.12, provider pre-population uses location.state which may not
-    // work reliably with intercepted routes. Fall back to manual selection.
+    // On Forklift 2.11 and earlier, provider pre-population uses location.state
+    // which may not work reliably with intercepted routes. Fall back to manual selection.
     const currentText = await selector.textContent();
 
     if (currentText?.includes(expectedProviderName)) {

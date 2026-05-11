@@ -63,7 +63,6 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await detailsTab.savePowerStateButton.click();
     await expect(detailsTab.targetVMPowerState('Powered off')).toBeVisible();
 
-    // Step 5: Navigate to VMs tab and verify column management
     await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
 
     const { virtualMachinesTab } = planDetailsPage;
@@ -84,14 +83,11 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await expect(virtualMachinesTab.powerStateOptionOn).toBeVisible();
     await expect(virtualMachinesTab.powerStateOptionOff).toBeVisible();
 
-    // Step 8: Change VM power state and verify
     await virtualMachinesTab.powerStateOptionOn.click();
     await expect(virtualMachinesTab.powerStateModalSaveButton).toBeEnabled();
     await virtualMachinesTab.powerStateModalSaveButton.click();
 
-    // Wait for modal to close and table to refresh
     await expect(virtualMachinesTab.editTargetPowerStateModal).not.toBeVisible();
-    // Verify the VM now shows the overridden power state
     await planDetailsPage.virtualMachinesTab.waitForVMPowerState(vmName, 'Powered on');
   });
 
