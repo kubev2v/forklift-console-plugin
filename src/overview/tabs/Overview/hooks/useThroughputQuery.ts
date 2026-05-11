@@ -45,18 +45,21 @@ export const parseThroughputResponse = (
   }));
 };
 
-const POLL_DELAY_MS = 30000;
+const POLL_DELAY_MS = 30_000;
+const MS_PER_SECOND = 1000;
 
 export const useThroughputQuery = (
   metricName: string,
   timeRange: ThroughputTimeRange,
 ): UseThroughputQueryResult => {
   const config = THROUGHPUT_TIME_RANGE_CONFIG[timeRange];
+  const stepSeconds = Math.round(config.timespan / (config.samples * MS_PER_SECOND));
+  const query = `max_over_time(${metricName}[${stepSeconds}s])`;
 
   const [response, loaded, error] = usePrometheusPoll({
     delay: POLL_DELAY_MS,
     endpoint: PrometheusEndpoint.QUERY_RANGE,
-    query: metricName,
+    query,
     samples: config.samples,
     timespan: config.timespan,
   });
