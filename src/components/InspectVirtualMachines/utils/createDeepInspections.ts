@@ -7,6 +7,8 @@ import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 import { buildConversionCR } from './buildConversionCR';
 import type { InspectionCreateResult, VmInspectionRef } from './types';
 
+const INITIAL_OFFSET = 0;
+
 const createDeepInspection = async (
   vm: VmInspectionRef,
   provider: V1beta1Provider,
@@ -47,8 +49,6 @@ const processChunk = async (
 
   return processChunk(vms, provider, results, offset + CONCURRENCY_LIMIT, plan);
 };
-
-const INITIAL_OFFSET = 0;
 
 export const processDeepInspections = async (
   vms: VmInspectionRef[],

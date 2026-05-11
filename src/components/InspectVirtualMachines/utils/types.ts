@@ -32,3 +32,9 @@ export type VmOverrides = {
 };
 
 export type CreateInspectionsFn = (vms: VmInspectionRef[]) => Promise<InspectionCreateResult>;
+
+export type PhaseConfig = {
+  icon: JSX.Element;
+  label: string;
+  labelStatus?: 'danger' | 'info' | 'success' | 'warning';
+};

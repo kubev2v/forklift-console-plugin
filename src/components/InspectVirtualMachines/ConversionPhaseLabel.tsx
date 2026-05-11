@@ -12,14 +12,10 @@ import { CONVERSION_PHASE } from '@utils/crds/conversion/constants';
 import type { ConversionPhase } from '@utils/crds/conversion/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import type { PhaseConfig } from './utils/types';
+
 type ConversionPhaseLabelProps = {
   phase: ConversionPhase | undefined;
-};
-
-type PhaseConfig = {
-  icon: JSX.Element;
-  label: string;
-  labelStatus?: 'danger' | 'info' | 'success' | 'warning';
 };
 
 const getPhaseConfig = (
