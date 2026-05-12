@@ -90,5 +90,12 @@
     "smb_url": "",
     "smb_username": "",
     "smb_password": ""
+  },
+  "ec2": {
+    "type": "ec2",
+    "region": "us-east-2",
+    "api_url": "https://ec2.us-east-2.amazonaws.com",
+    "access_key_id": "",
+    "secret_access_key": ""
   }
 }

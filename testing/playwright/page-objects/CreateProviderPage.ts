@@ -7,6 +7,9 @@ import type { ResourceManager } from '../utils/resource-manager/ResourceManager'
 import { V2_11_0 } from '../utils/version/constants';
 import { isVersionAtLeast } from '../utils/version/version';
 
+import { fillEC2ProviderFields } from './CreateProviderPage/fillEC2ProviderFields';
+import { selectProviderProject } from './CreateProviderPage/selectProviderProject';
+import { skipProviderCertificateValidation } from './CreateProviderPage/skipProviderCertificateValidation';
 import { VerifyCertificateModal } from './CreateProviderPage/VerifyCertificateModal';
 import { ProviderDetailsPage } from './ProviderDetailsPage/ProviderDetailsPage';
 
@@ -18,6 +21,15 @@ export class CreateProviderPage {
   readonly certificateSkipRadio;
   readonly certificateUploadInput;
   readonly createButton;
+  readonly ec2AccessKeyIdInput;
+  readonly ec2AutoTargetCheckbox;
+  readonly ec2CrossAccountCheckbox;
+  readonly ec2RegionInput;
+  readonly ec2SecretAccessKeyInput;
+  readonly ec2TargetAccessKeyIdInput;
+  readonly ec2TargetAzInput;
+  readonly ec2TargetRegionInput;
+  readonly ec2TargetSecretAccessKeyInput;
   readonly fetchCertificateButton;
   public readonly navigationHelper: NavigationHelper;
   protected readonly page: Page;
@@ -45,6 +57,16 @@ export class CreateProviderPage {
     });
     this.caCertificateErrorText = page.getByTestId('ca-certificate-helper-error');
     this.verifyCertificateModal = new VerifyCertificateModal(page);
+
+    this.ec2AccessKeyIdInput = page.getByTestId('ec2-access-key-id-input');
+    this.ec2AutoTargetCheckbox = page.getByTestId('ec2-auto-target-credentials-checkbox');
+    this.ec2CrossAccountCheckbox = page.getByTestId('ec2-cross-account-credentials-checkbox');
+    this.ec2RegionInput = page.getByTestId('ec2-region-input');
+    this.ec2SecretAccessKeyInput = page.getByTestId('ec2-secret-access-key-input');
+    this.ec2TargetAccessKeyIdInput = page.getByTestId('ec2-target-access-key-id-input');
+    this.ec2TargetAzInput = page.getByTestId('ec2-target-az-input');
+    this.ec2TargetRegionInput = page.getByTestId('ec2-target-region-input');
+    this.ec2TargetSecretAccessKeyInput = page.getByTestId('ec2-target-secret-access-key-input');
 
     const createButtonTestId = isVersionAtLeast(V2_11_0)
       ? 'provider-create-button'
@@ -180,16 +202,6 @@ export class CreateProviderPage {
     await this.page.getByTestId('vsphere-password-input').fill(testData.password ?? '');
   }
 
-  private async skipCertificateValidation() {
-    if (!isVersionAtLeast(V2_11_0)) {
-      await this.page
-        .getByRole('checkbox', { name: /Skip certificate validation/i })
-        .check({ force: true });
-      return;
-    }
-    await this.page.getByTestId('certificate-validation-skip').click();
-  }
-
   private async submitForm(testData: ProviderData) {
     await this.createButton.click();
 
@@ -223,11 +235,11 @@ export class CreateProviderPage {
     await this.verifyCertificateModal.trustAndSave();
   }
 
-  async fillAndSubmit(testData: ProviderData) {
+  async fillAndSubmit(testData: ProviderData): Promise<void> {
     await this.fillProviderFields(testData);
 
-    if (testData.type !== ProviderType.OVA) {
-      await this.skipCertificateValidation();
+    if (testData.type !== ProviderType.OVA && testData.type !== ProviderType.EC2) {
+      await skipProviderCertificateValidation(this.page);
     }
 
     await this.submitForm(testData);
@@ -239,27 +251,30 @@ export class CreateProviderPage {
     await this.fillProviderName(testData.name);
 
     switch (testData.type) {
+      case ProviderType.EC2:
+        await fillEC2ProviderFields(this.page, testData);
+        break;
       case ProviderType.HYPERV:
         await this.fillHypervFields(testData);
         break;
-      case ProviderType.VSPHERE:
-        await this.fillVSphereFields(testData);
-        break;
-      case ProviderType.OVIRT:
-        await this.fillOVirtFields(testData);
+      case ProviderType.OPENSTACK:
+        await this.fillOpenStackFields(testData);
         break;
       case ProviderType.OVA:
         await this.fillOVAFields(testData);
         break;
-      case ProviderType.OPENSTACK:
-        await this.fillOpenStackFields(testData);
+      case ProviderType.OVIRT:
+        await this.fillOVirtFields(testData);
+        break;
+      case ProviderType.VSPHERE:
+        await this.fillVSphereFields(testData);
         break;
       default:
         break;
     }
   }
 
-  async fillProviderName(name: string) {
+  async fillProviderName(name: string): Promise<void> {
     await this.page.getByTestId('provider-name-input').fill(name);
   }
 
@@ -293,32 +308,11 @@ export class CreateProviderPage {
     await this.page.waitForLoadState('networkidle');
   }
 
-  async selectProject(projectName: string) {
-    if (!isVersionAtLeast(V2_11_0)) {
-      const projectSelect = this.page.getByTestId('target-project-select');
-      await projectSelect.waitFor({ state: 'visible', timeout: 10000 });
-      await projectSelect.getByRole('button').click();
-      await projectSelect.getByRole('combobox').fill(projectName);
-      const option = this.page.getByRole('option', { name: projectName });
-      await option.waitFor({ state: 'visible', timeout: 10000 });
-      await option.click();
-      return;
-    }
-
-    const projectSelect = this.page.getByTestId('provider-project-select');
-    await projectSelect.waitFor({ state: 'visible', timeout: 10000 });
-    const textInput = projectSelect.locator('input');
-    const currentValue = await textInput.inputValue();
-    if (currentValue === projectName) return;
-    await textInput.click();
-    await textInput.clear();
-    await textInput.fill(projectName);
-    const option = this.page.getByRole('option', { name: projectName, exact: true });
-    await option.waitFor({ state: 'visible', timeout: 10000 });
-    await option.click();
+  async selectProject(projectName: string): Promise<void> {
+    await selectProviderProject(this.page, projectName);
   }
 
-  async selectProviderType(providerType: ProviderType) {
+  async selectProviderType(providerType: ProviderType): Promise<void> {
     if (!isVersionAtLeast(V2_11_0)) {
       await this.page.getByTestId(`${providerType}-provider-card`).locator('label').click();
       return;
@@ -335,7 +329,7 @@ export class CreateProviderPage {
     }
   }
 
-  async waitForWizardLoad() {
+  async waitForWizardLoad(): Promise<void> {
     await expect(this.page.getByRole('heading', { name: 'Create provider' })).toBeVisible();
   }
 }

@@ -10,6 +10,7 @@ const OVA_KEY = process.env.OVA_PROVIDER ?? 'ova';
 const OVIRT_KEY = process.env.OVIRT_PROVIDER ?? 'ovirt-4.4.9';
 const OPENSTACK_KEY = process.env.OPENSTACK_PROVIDER ?? 'openstack-psi';
 const HYPERV_KEY = process.env.HYPERV_PROVIDER ?? 'hyperv-smb';
+const EC2_KEY = process.env.EC2_PROVIDER ?? 'ec2';
 
 export type ProviderTestScenario = {
   scenarioName: string;
@@ -59,6 +60,13 @@ export const createProviderData = (
     }
   }
 
+  if (providerType === ProviderType.EC2) {
+    baseData.accessKeyId = providerConfig.access_key_id;
+    baseData.autoTargetCredentials = true;
+    baseData.ec2Region = providerConfig.region_name ?? providerConfig.region;
+    baseData.secretAccessKey = providerConfig.secret_access_key;
+  }
+
   return { ...baseData, ...overrides };
 };
 
@@ -91,6 +99,12 @@ export const providerTestScenarios: ProviderTestScenario[] = [
     scenarioName: 'OpenStack provider with password authentication',
     providerType: ProviderType.OPENSTACK,
     providerKey: OPENSTACK_KEY,
+  },
+  {
+    scenarioName: 'Amazon EC2 provider with auto-detect target settings',
+    providerType: ProviderType.EC2,
+    providerKey: EC2_KEY,
+    minVersion: V2_12_0,
   },
   {
     scenarioName: 'Hyper-V provider with SMB share',

@@ -28,6 +28,7 @@ export class ProviderDetailsPage {
 
   private getProviderTypeDisplayName(type: string): string {
     const typeMap: Record<string, string> = {
+      ec2: 'Amazon EC2',
       hyperv: 'HyperV',
       openshift: 'OpenShift',
       openstack: 'OpenStack',
@@ -66,7 +67,7 @@ export class ProviderDetailsPage {
   }
 
   async isInspectVmsButtonVisible(): Promise<boolean> {
-    return this.inspectVmsButton.isVisible();
+    return await this.inspectVmsButton.isVisible();
   }
 
   async navigate(providerName: string, namespace: string): Promise<void> {
@@ -113,7 +114,7 @@ export class ProviderDetailsPage {
       await expect(this.page.getByTestId('product-detail-item')).toContainText('');
     }
 
-    if (providerData.type !== ProviderType.OVA) {
+    if (providerData.type !== ProviderType.OVA && providerData.type !== ProviderType.EC2) {
       await expect(this.page.getByTestId('credentials-detail-item')).toContainText('');
     }
 
