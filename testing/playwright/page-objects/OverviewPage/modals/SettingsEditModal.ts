@@ -1,4 +1,4 @@
-import type { Locator, Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import { V2_12_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
@@ -16,6 +16,9 @@ import { BaseModal } from '../../common/BaseModal';
  *   - role='option' for selecting dropdown values by display text
  */
 export class SettingsEditModal extends BaseModal {
+  readonly aapTimeoutInput: Locator;
+  readonly aapTokenSecretDropdown: Locator;
+  readonly aapUrlInput: Locator;
   readonly controllerCpuLimitDropdown: Locator;
   readonly controllerMemoryLimitDropdown: Locator;
   readonly controllerTransferNetworkDropdown: Locator;
@@ -51,6 +54,12 @@ export class SettingsEditModal extends BaseModal {
     this.controllerTransferNetworkDropdown = this.page.getByTestId(
       'controller-transfer-network-select',
     );
+
+    this.aapUrlInput = this.page.getByTestId('aap-url-settings-input');
+    this.aapTokenSecretDropdown = this.page.getByTestId('aap-token-secret-settings-select');
+    this.aapTimeoutInput = this.page
+      .getByTestId('settings-aap-timeout-input')
+      .getByRole('spinbutton');
   }
 
   private async selectOptionByTestIdOrText(
@@ -70,7 +79,18 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async decrementMaxVmInFlight(): Promise<void> {
-    await this.modal.getByRole('button', { name: 'minus' }).click();
+    await this.page
+      .getByTestId('max-vm-inflight-input')
+      .getByRole('button', { name: 'minus' })
+      .click();
+  }
+
+  async getAapTimeoutValue(): Promise<string> {
+    return (await this.aapTimeoutInput.inputValue()) ?? '';
+  }
+
+  async getAapUrlValue(): Promise<string> {
+    return (await this.aapUrlInput.inputValue()) ?? '';
   }
 
   async getControllerCpuLimitValue(): Promise<string | null> {
@@ -102,7 +122,10 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async incrementMaxVmInFlight(): Promise<void> {
-    await this.modal.getByRole('button', { name: 'plus' }).click();
+    await this.page
+      .getByTestId('max-vm-inflight-input')
+      .getByRole('button', { name: 'plus' })
+      .click();
   }
 
   async openTransferNetworkDropdown(): Promise<void> {
@@ -162,6 +185,15 @@ export class SettingsEditModal extends BaseModal {
     await this.page.getByTestId('controller-transfer-network-select-option-none').click();
   }
 
+  async setAapTimeout(value: number): Promise<void> {
+    await this.aapTimeoutInput.fill(String(value));
+  }
+
+  async setAapUrl(url: string): Promise<void> {
+    await this.aapUrlInput.clear();
+    await this.aapUrlInput.fill(url);
+  }
+
   async setMaxVmInFlight(value: number): Promise<void> {
     await this.maxVmInFlightInput.fill(String(value));
   }
@@ -177,5 +209,11 @@ export class SettingsEditModal extends BaseModal {
     } else {
       await this.selectFirstAvailableNetwork();
     }
+  }
+
+  async verifyAapFieldsVisible(): Promise<void> {
+    await expect(this.aapUrlInput).toBeVisible();
+    await expect(this.aapTokenSecretDropdown).toBeVisible();
+    await expect(this.aapTimeoutInput).toBeVisible();
   }
 }

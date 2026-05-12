@@ -5,6 +5,7 @@ export enum MigrationType {
 }
 
 export enum ProviderType {
+  EC2 = 'ec2',
   HYPERV = 'hyperv',
   OPENSTACK = 'openstack',
   OVA = 'ova',
@@ -15,4 +16,10 @@ export enum ProviderType {
 export enum EndpointType {
   VCENTER = 'vcenter',
   ESXI = 'esxi',
+}
+
+export enum HookSource {
+  AAP = 'aap',
+  LOCAL = 'local',
+  NONE = 'none',
 }

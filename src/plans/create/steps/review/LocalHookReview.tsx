@@ -20,9 +20,10 @@ import { hooksFormFieldLabels } from '../migration-hooks/utils';
 type LocalHookReviewProps = {
   hookFieldId: HooksFormFieldId;
   hookLabel: string;
+  testIdPrefix: string;
 };
 
-const LocalHookReview: FC<LocalHookReviewProps> = ({ hookFieldId, hookLabel }) => {
+const LocalHookReview: FC<LocalHookReviewProps> = ({ hookFieldId, hookLabel, testIdPrefix }) => {
   const { t } = useForkliftTranslation();
   const { control } = useCreatePlanFormContext();
 
@@ -36,14 +37,16 @@ const LocalHookReview: FC<LocalHookReviewProps> = ({ hookFieldId, hookLabel }) =
         <>
           <DescriptionListGroup>
             <DescriptionListTerm>{t('Enabled')}</DescriptionListTerm>
-            <DescriptionListDescription>{t('True')}</DescriptionListDescription>
+            <DescriptionListDescription data-testid={`${testIdPrefix}-enabled`}>
+              {t('True')}
+            </DescriptionListDescription>
           </DescriptionListGroup>
 
           <DescriptionListGroup>
             <DescriptionListTerm>
               {hooksFormFieldLabels[MigrationHookFieldId.HookRunnerImage]}
             </DescriptionListTerm>
-            <DescriptionListDescription>
+            <DescriptionListDescription data-testid={`${testIdPrefix}-runner-image`}>
               {hookData[MigrationHookFieldId.HookRunnerImage] ?? t('None')}
             </DescriptionListDescription>
           </DescriptionListGroup>
@@ -52,7 +55,7 @@ const LocalHookReview: FC<LocalHookReviewProps> = ({ hookFieldId, hookLabel }) =
             <DescriptionListTerm>
               {hooksFormFieldLabels[MigrationHookFieldId.ServiceAccount]}
             </DescriptionListTerm>
-            <DescriptionListDescription>
+            <DescriptionListDescription data-testid={`${testIdPrefix}-service-account`}>
               {hookData[MigrationHookFieldId.ServiceAccount] ?? t('None')}
             </DescriptionListDescription>
           </DescriptionListGroup>
@@ -61,7 +64,7 @@ const LocalHookReview: FC<LocalHookReviewProps> = ({ hookFieldId, hookLabel }) =
             <DescriptionListTerm>
               {hooksFormFieldLabels[MigrationHookFieldId.AnsiblePlaybook]}
             </DescriptionListTerm>
-            <DescriptionListDescription>
+            <DescriptionListDescription data-testid={`${testIdPrefix}-ansible-playbook`}>
               {hookData[MigrationHookFieldId.AnsiblePlaybook] ? (
                 <CodeBlock>
                   <CodeBlockCode>
@@ -77,7 +80,9 @@ const LocalHookReview: FC<LocalHookReviewProps> = ({ hookFieldId, hookLabel }) =
       ) : (
         <DescriptionListGroup>
           <DescriptionListTerm>{t('Enabled')}</DescriptionListTerm>
-          <DescriptionListDescription>{t('False')}</DescriptionListDescription>
+          <DescriptionListDescription data-testid={`${testIdPrefix}-enabled`}>
+            {t('False')}
+          </DescriptionListDescription>
         </DescriptionListGroup>
       )}
     </DescriptionList>

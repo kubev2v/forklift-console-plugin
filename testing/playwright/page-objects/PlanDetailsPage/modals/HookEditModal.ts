@@ -2,31 +2,35 @@ import { expect, type Locator, type Page } from '@playwright/test';
 
 import { BaseModal } from '../../common/BaseModal';
 
-/**
- * Page object for the Hook Edit Modal.
- * Extends BaseModal with hook-specific functionality for configuring
- * pre/post migration hooks with Ansible playbooks.
- */
 export class HookEditModal extends BaseModal {
-  readonly enableHookCheckbox: Locator;
   readonly hookRunnerImageInput: Locator;
   readonly serviceAccountInput: Locator;
+  readonly sourceAapRadio: Locator;
+  readonly sourceLocalRadio: Locator;
+  readonly sourceNoneRadio: Locator;
 
   constructor(page: Page) {
     super(page, page.getByRole('dialog'));
-    this.enableHookCheckbox = this.page.getByTestId('hook-enabled-checkbox');
+    this.sourceAapRadio = this.page.getByTestId('hook-edit-source-aap');
+    this.sourceNoneRadio = this.page.getByTestId('hook-edit-source-none');
+    this.sourceLocalRadio = this.page.getByTestId('hook-edit-source-local');
     this.hookRunnerImageInput = this.page.getByTestId('hook-runner-image-input');
     this.serviceAccountInput = this.page.getByTestId('hook-service-account-input');
   }
 
   async disableHook(): Promise<void> {
-    await this.enableHookCheckbox.uncheck();
-    await expect(this.enableHookCheckbox).not.toBeChecked();
+    await this.sourceNoneRadio.click();
+    await expect(this.sourceNoneRadio).toBeChecked();
   }
 
   async enableHook(): Promise<void> {
-    await this.enableHookCheckbox.check();
-    await expect(this.enableHookCheckbox).toBeChecked();
+    await this.sourceLocalRadio.click();
+    await expect(this.sourceLocalRadio).toBeChecked();
+  }
+
+  async selectAap(): Promise<void> {
+    await this.sourceAapRadio.click();
+    await expect(this.sourceAapRadio).toBeChecked();
   }
 
   async setAnsiblePlaybook(playbook: string): Promise<void> {
@@ -59,11 +63,29 @@ export class HookEditModal extends BaseModal {
     await this.serviceAccountInput.fill(serviceAccount);
   }
 
+  async verifyAapNotConfiguredAlert(): Promise<void> {
+    await expect(this.page.getByRole('dialog').getByText('AAP is not configured')).toBeVisible();
+  }
+
+  async verifyAapRadioVisible(): Promise<void> {
+    await expect(this.sourceAapRadio).toBeVisible();
+  }
+
   async verifyHookIsDisabled(): Promise<void> {
-    await expect(this.enableHookCheckbox).not.toBeChecked();
+    await expect(this.sourceNoneRadio).toBeChecked();
   }
 
   async verifyHookIsEnabled(): Promise<void> {
-    await expect(this.enableHookCheckbox).toBeChecked();
+    await expect(this.sourceLocalRadio).toBeChecked();
+  }
+
+  async verifyLocalFieldsHidden(): Promise<void> {
+    await expect(this.hookRunnerImageInput).not.toBeVisible();
+    await expect(this.serviceAccountInput).not.toBeVisible();
+  }
+
+  async verifyLocalFieldsVisible(): Promise<void> {
+    await expect(this.hookRunnerImageInput).toBeVisible();
+    await expect(this.serviceAccountInput).toBeVisible();
   }
 }

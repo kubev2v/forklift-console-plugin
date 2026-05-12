@@ -5,6 +5,9 @@ import { SettingsEditModal } from '../modals/SettingsEditModal';
 
 export class SettingsTab {
   private readonly navigation: NavigationHelper;
+  readonly aapTimeoutField: Locator;
+  readonly aapTokenSecretField: Locator;
+  readonly aapUrlField: Locator;
   readonly controllerTransferNetworkField: Locator;
   readonly maxVmInFlightField: Locator;
   protected readonly page: Page;
@@ -21,6 +24,9 @@ export class SettingsTab {
       'settings-controller-transfer-network',
     );
     this.maxVmInFlightField = this.page.locator('dd').first();
+    this.aapUrlField = this.page.getByTestId('settings-aap-url');
+    this.aapTokenSecretField = this.page.getByTestId('settings-aap-token-secret');
+    this.aapTimeoutField = this.page.getByTestId('settings-aap-timeout');
     this.settingsEditModal = new SettingsEditModal(page);
   }
 
@@ -31,7 +37,7 @@ export class SettingsTab {
   }
 
   async getTransferNetworkCurrentValue(): Promise<string | null> {
-    return this.controllerTransferNetworkField.textContent();
+    return await this.controllerTransferNetworkField.textContent();
   }
 
   async navigateToSettings(): Promise<void> {
