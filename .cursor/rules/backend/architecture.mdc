@@ -1,0 +1,285 @@
+---
+description: Forklift backend architecture - entry points, deployment roles, controller-runtime framework
+alwaysApply: false
+---
+
+# Backend Architecture
+
+> Analyzed from commit: `a976d24b6` on `2026-05-04`
+> Source paths: `cmd/forklift-controller/`, `cmd/forklift-api/`, `pkg/controller/controller.go`, `pkg/controller/base/`, `pkg/settings/`
+
+## Package Purpose
+
+The Forklift backend is a Go application built on **controller-runtime** (the sigs.k8s.io operator framework). It consists of **two binaries** that run as separate Deployments inside OpenShift:
+
+| Binary | Entry Point | What It Does |
+|---|---|---|
+| `forklift-controller` | `cmd/forklift-controller/main.go` | Runs all CRD reconciliation controllers (split by role). Registers K8s API schemes, sets up the controller-runtime Manager, and starts a Prometheus metrics endpoint on `:2112`. |
+| `forklift-api` | `cmd/forklift-api/forklift-api.go` | Runs admission webhooks (`:8443`) and a REST service API (`:8444`). Operates independently of controller-runtime Manager — uses plain `net/http` servers with TLS. |
+
+Both binaries share the `pkg/` library packages but have completely separate lifecycles.
+
+## Key Types and Structs
+
+### `settings.ControllerSettings` (`pkg/settings/settings.go`)
+
+Global singleton at `settings.Settings`. Loaded from environment variables in `init()` before `main()` runs. Composes:
+
+| Field | Type | Purpose |
+|---|---|---|
+| `Role` | `settings.Role` | Which controller sets to start (`main`, `inventory`, or both) |
+| `Metrics` | `settings.Metrics` | Prometheus metrics port (default `8080`) |
+| `Inventory` | `settings.Inventory` | Inventory API host/port/TLS/CORS/auth/namespace |
+| `Migration` | `settings.Migration` | VM concurrency, retry limits, virt-v2v images, container resource defaults |
+| `PolicyAgent` | `settings.PolicyAgent` | Validation policy agent URL and TLS |
+| `Logging` | `settings.Logging` | Log level and development mode |
+| `Profiler` | `settings.Profiler` | CPU/memory profiling output |
+| `Features` | `settings.Features` | Feature gates (warm migration, copy offload, live migration, etc.) |
+| `Providers` | `settings.Providers` | OVA/HyperV server images and resource limits |
+| `OpenShift` | `bool` | Whether running on OpenShift (adds Route API scheme) |
+| `Development` | `bool` | Development mode flag |
+
+### `settings.Role` (`pkg/settings/role.go`)
+
+Loaded from `ROLE` environment variable. Comma-separated list of `main` and/or `inventory`. If unset, **both roles are enabled** (single-pod deployment). The `Has(name)` method checks membership.
+
+### `base.Reconciler` (`pkg/controller/base/controller.go`)
+
+Shared base struct embedded by every controller's reconciler:
+
+```go
+type Reconciler struct {
+    record.EventRecorder    // K8s event recording
+    client.Client           // K8s API client (cached)
+    Log logging.LevelLogger // Structured logger
+}
+```
+
+Provides:
+- `Started()` / `Ended(reQ, err)` — lifecycle logging with requeue duration calculation
+- `Record(object, conditions)` — translates condition changes to K8s Events
+- Requeue constants: `FastReQ` (500ms), `SlowReQ` (3s), `LongReQ` (30s)
+- On conflict errors: logs info-level and returns `SlowReQ`
+- On `ProviderNotReadyError`: logs at V(1) and returns `SlowReQ`
+
+### `base.GetInsecureSkipVerifyFlag` / `base.VerifyTLSConnection`
+
+Helpers for provider TLS certificate handling. `GetInsecureSkipVerifyFlag` reads the `insecureSkipVerify` key from a provider connection Secret. `VerifyTLSConnection` performs a full TLS handshake against a provider URL using the secret-provided certificate.
+
+## Reconciliation / Execution Flow
+
+### Startup Sequence (`forklift-controller`)
+
+```
+init()
+  └─ Settings.Load()          ← reads ALL env vars (role, features, migration, etc.)
+  └─ logging.Factory.New()    ← configures structured logger
+
+main()
+  ├─ profiler()               ← optional CPU/memory profiler
+  ├─ http ":2112/metrics"     ← Prometheus scrape endpoint (goroutine)
+  ├─ http "localhost:6060"    ← pprof debug endpoint (goroutine)
+  ├─ config.GetConfig()       ← kubeconfig / in-cluster config
+  ├─ manager.New(cfg, opts)   ← controller-runtime Manager
+  ├─ apis.AddToScheme()       ← Forklift CRDs
+  ├─ [external schemes]       ← storage, CNI, KubeVirt, CDI, export, instancetype, multicluster, Route, Template
+  ├─ controller.AddToManager(mgr)  ← register controllers by role
+  ├─ webhook.AddToManager(mgr)     ← register manager-level webhooks
+  └─ mgr.Start(signals)       ← blocks until termination
+```
+
+### Two Deployment Roles
+
+The `ROLE` env var splits controllers into two groups, enabling separate Deployment scaling:
+
+**Main role** (`settings.MainRole = "main"`):
+| Controller | CRD | Package |
+|---|---|---|
+| `migration` | `Migration` | `pkg/controller/migration/` |
+| `plan` | `Plan` | `pkg/controller/plan/` |
+| `network` | `NetworkMap` | `pkg/controller/map/network/` |
+| `storage` | `StorageMap` | `pkg/controller/map/storage/` |
+| `host` | `Host` | `pkg/controller/host/` |
+| `hook` | `Hook` | `pkg/controller/hook/` |
+
+**Inventory role** (`settings.InventoryRole = "inventory"`):
+| Controller | CRD | Package |
+|---|---|---|
+| `provider` | `Provider` | `pkg/controller/provider/` |
+| `ova` | `OVAProviderServer` | `pkg/controller/ova/` |
+| `hyperv` | `HyperVProviderServer` | `pkg/controller/hyperv/` |
+
+The inventory role is special — the **provider controller** also starts:
+- An **inventory web server** (`libweb.WebServer`) on the configured port (default `8080`), serving the REST inventory API with TLS and CORS
+- A **policy agent** for VM validation rules
+
+### Controller Registration Pattern
+
+Every controller follows the same `Add(mgr manager.Manager) error` pattern:
+
+```go
+func Add(mgr manager.Manager) error {
+    reconciler := &Reconciler{
+        Reconciler: base.Reconciler{
+            EventRecorder: mgr.GetEventRecorderFor(Name),
+            Client:        mgr.GetClient(),
+            Log:           log,
+        },
+    }
+    cnt, err := controller.New(Name, mgr, controller.Options{
+        Reconciler:              reconciler,
+        MaxConcurrentReconciles: Settings.MaxConcurrentReconciles,
+    })
+    // Watch primary CRD
+    cnt.Watch(source.Kind(mgr.GetCache(), &api.PrimaryCRD{}, ...))
+    // Watch referenced resources (Secrets, Providers, Maps, etc.)
+    cnt.Watch(source.Kind(mgr.GetCache(), &api.ReferencedCRD{},
+        libref.TypedHandler[*api.ReferencedCRD](&api.PrimaryCRD{}), ...))
+    return nil
+}
+```
+
+Key points:
+- `MaxConcurrentReconciles` defaults to **10** (from `MAX_CONCURRENT_RECONCILES` env var)
+- Controllers watch their primary CR plus any referenced resources using `libref.TypedHandler` to map owner references back to the primary CR
+- The Plan controller additionally uses a `channel` source to receive events when provider inventory changes
+
+### `controller.AddToManager` dispatcher (`pkg/controller/controller.go`)
+
+```go
+var MainControllers = []AddFunction{migration.Add, plan.Add, network.Add, storage.Add, host.Add, hook.Add}
+var InventoryControllers = []AddFunction{provider.Add, ova.Add, hyperv.Add}
+
+func AddToManager(m manager.Manager) error {
+    if Settings.Role.Has("inventory") { load(InventoryControllers) }
+    if Settings.Role.Has("main")      { load(MainControllers) }
+}
+```
+
+## Integration Points
+
+### `forklift-api` Binary — Webhooks & Services
+
+The `forklift-api` binary runs two independent HTTPS servers:
+
+**Webhook server (`:8443`)** — Kubernetes admission webhooks:
+| Path | Type | Resource |
+|---|---|---|
+| `/secret-validate` | Validating | Secret (provider credentials) |
+| `/secret-mutate` | Mutating | Secret |
+| `/plan-validate` | Validating | Plan |
+| `/plan-mutate` | Mutating | Plan (sets transfer network, populator labels) |
+| `/provider-validate` | Validating | Provider |
+| `/provider-mutate` | Mutating | Provider |
+| `/migration-validate` | Validating | Migration |
+
+**Services server (`:8444`)** — REST API:
+| Path | Purpose |
+|---|---|
+| `/tls-certificate?URL=...` | Fetches and returns the TLS certificate from a given URL (used by frontend for provider certificate discovery) |
+
+Both servers require TLS certificates via environment variables:
+- Webhooks: `API_TLS_CERTIFICATE`, `API_TLS_KEY`
+- Services: `SERVICES_TLS_CERTIFICATE`, `SERVICES_TLS_KEY`
+
+### Inventory REST API (inside `forklift-controller`, inventory role)
+
+The provider controller starts a `libweb.WebServer` serving the inventory REST API. This is the API the **frontend** consumes to browse VMs, networks, datastores from source providers. Configured via `Inventory` settings (port, TLS, CORS, auth).
+
+### Scheme Registration
+
+The controller binary registers these API groups at startup:
+- `forklift.konveyor.io/v1beta1` (Forklift CRDs)
+- `storage.k8s.io/v1` (StorageClass)
+- `k8s.cni.cncf.io/v1` (NetworkAttachmentDefinition)
+- `kubevirt.io/v1` (VirtualMachine, etc.)
+- `cdi.kubevirt.io/v1beta1` (DataVolume, etc.)
+- `export.kubevirt.io/v1alpha1` (VirtualMachineExport)
+- `instancetype.kubevirt.io/v1beta1` (VirtualMachineInstancetype)
+- `multicluster.x-k8s.io/v1alpha1` (ServiceImport)
+- `template.openshift.io/v1` (optional, OpenShift only)
+- `route.openshift.io/v1` (optional, OpenShift only)
+
+## Configuration
+
+### Critical Environment Variables
+
+**Deployment role:**
+| Env Var | Default | Description |
+|---|---|---|
+| `ROLE` | `main,inventory` | Comma-separated roles |
+| `OPENSHIFT` | `false` | Enable OpenShift-specific APIs |
+| `DEVELOPMENT` | `false` | Development mode |
+| `OPENSHIFT_VERSION` | (none) | Used for feature gate version checks |
+
+**Feature gates (all default `false` unless noted):**
+| Env Var | Default | Description |
+|---|---|---|
+| `FEATURE_OVIRT_WARM_MIGRATION` | `false` | oVirt warm migration |
+| `FEATURE_VSPHERE_INCREMENTAL_BACKUP` | `false` | vSphere changeID-based incremental backup |
+| `FEATURE_COPY_OFFLOAD` | `false` | Storage copy offload plugins |
+| `FEATURE_OCP_LIVE_MIGRATION` | `false` | Cross-cluster live migration |
+| `FEATURE_VMWARE_SYSTEM_SERIAL_NUMBER` | `true` | VMware system serial number (requires OCP ≥ 4.20) |
+| `FEATURE_STATIC_UDN_IP_ADDRESSES` | `false` | Static IPs in User Defined Network (requires OCP ≥ 4.20) |
+| `FEATURE_OVF_APPLIANCE_MANAGEMENT` | `false` | OVA/HyperV appliance management endpoints |
+| `FEATURE_VSPHERE_VMWARE_DRIVER_REMOVAL` | `false` | VMware driver removal during Windows conversion |
+
+Some feature gates have **OCP version floor checks** — they are silently disabled if `OPENSHIFT_VERSION` is below the minimum.
+
+**Migration tuning:**
+| Env Var | Default | Description |
+|---|---|---|
+| `MAX_VM_INFLIGHT` | `20` | Max concurrent VM migrations |
+| `MAX_CONCURRENT_RECONCILES` | `10` | Controller-runtime reconciler concurrency |
+| `VIRT_V2V_IMAGE` | (required for main) | Guest conversion image |
+| `BLOCKER_GRACE_PERIOD_MINUTES` | `5` | How long blocker conditions must persist before failing |
+| `PRECOPY_INTERVAL` | `60` | Warm migration precopy interval (minutes) |
+
+**Inventory API:**
+| Env Var | Default | Description |
+|---|---|---|
+| `API_HOST` | `localhost` | Inventory API bind host |
+| `API_PORT` | `8080` | Inventory API port |
+| `INVENTORY_SERVICE_SCHEME` | `https` | HTTP or HTTPS |
+| `AUTH_REQUIRED` | `true` | Whether auth is required |
+| `POD_NAMESPACE` | (none) | Pod's namespace |
+
+## Frontend Relevance
+
+### What the frontend talks to
+
+1. **Inventory REST API** (via the provider controller's web server) — Browse source provider inventory (VMs, networks, datastores). The frontend calls this through a proxy or route. Port is `API_PORT` (default 8080).
+
+2. **TLS certificate service** (`:8444/tls-certificate`) — The frontend's "Fetch certificate" button in provider creation calls this endpoint to discover a provider's TLS certificate before the user saves it.
+
+3. **Kubernetes API** (via OpenShift Console SDK) — CRUD operations on Forklift CRDs (Provider, Plan, NetworkMap, StorageMap, Migration, Hook). The webhooks on `:8443` validate/mutate these transparently.
+
+### CRD status fields driven by controllers
+
+Frontend status displays map to conditions and phases set by these controllers:
+
+| Frontend Page | Controller | Key Status Fields |
+|---|---|---|
+| Providers list/details | `provider` | `status.phase` (Ready, Staging, ValidationFailed, ConnectionFailed), `status.conditions` |
+| Plans list/details | `plan` | `status.conditions` (Ready, Executing, Succeeded, Failed), `status.migration.vms[]` |
+| Migrations | `migration` | `status.vms[].phase` (Running, Succeeded, Failed, Canceled, etc.) |
+| Network Maps | `network` | `status.conditions` |
+| Storage Maps | `storage` | `status.conditions` |
+
+### Feature gates the frontend should mirror
+
+The ForkliftController CR's `spec.feature_*` fields map to the `FEATURE_*` env vars above. When the frontend needs to show/hide UI based on feature gates, it reads the ForkliftController CR and checks these fields. Key ones:
+
+- `feature_copy_offload` → shows storage vendor offload options
+- `feature_ocp_live_migration` → enables live migration type in plan creation
+- `feature_ovf_appliance_management` → shows appliance management UI for OVA/HyperV providers
+
+### Webhook side effects on frontend operations
+
+When the frontend creates or updates a Plan via the K8s API:
+- **Mutating webhook** (`/plan-mutate`) auto-sets the transfer network from the destination provider's default and adds `populatorLabels` annotation
+- **Validating webhook** (`/plan-validate`) rejects plans with invalid storage mappings (e.g., ReadWriteOnce with live migration on non-vSphere sources)
+
+When the frontend creates a Provider Secret:
+- **Mutating webhook** (`/secret-mutate`) may normalize the secret data
+- **Validating webhook** (`/secret-validate`) checks credential format

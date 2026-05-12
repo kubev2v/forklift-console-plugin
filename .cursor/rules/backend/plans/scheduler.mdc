@@ -1,0 +1,216 @@
+---
+description: Plan scheduler - VM scheduling logic, concurrency limits, per-provider batching
+alwaysApply: false
+---
+
+# Plan Scheduler
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+## Overview
+
+The scheduler determines **which VM to migrate next** from a Plan's VM list. It enforces concurrency limits to prevent overloading source infrastructure. Each provider type has its own scheduler implementation, but all share the same interface and factory.
+
+**Source**: `pkg/controller/plan/scheduler/`
+
+---
+
+## Scheduler Interface
+
+```go
+// pkg/controller/plan/scheduler/doc.go
+type Scheduler interface {
+    Next() (vm *plan.VMStatus, hasNext bool, err error)
+}
+```
+
+`Next()` returns:
+- `vm` — the next `VMStatus` eligible to start migration
+- `hasNext` — `true` if a VM was found, `false` if all are busy/done or concurrency limit reached
+- `err` — any error during scheduling
+
+### Factory
+
+`scheduler.New(ctx *plancontext.Context)` creates the correct scheduler based on `ctx.Source.Provider.Type()`. All schedulers receive `settings.Settings.MaxInFlight` as their concurrency limit.
+
+---
+
+## MaxInFlight Setting
+
+| Setting | Env Var | Default | Scope |
+|---------|---------|---------|-------|
+| `MaxInFlight` | `MAX_VM_INFLIGHT` | **20** | Per source provider (all plans sharing the same provider) |
+
+Defined in `pkg/settings/migration.go`. Must be a positive integer.
+
+---
+
+## Two Scheduling Models
+
+### 1. Simple Model (oVirt, OpenStack, OCP, OVA, Hyper-V, EC2)
+
+These providers use a **flat VM-count** concurrency model:
+
+```
+inFlight (running VMs across all plans for same provider) < MaxInFlight → schedule next VM
+```
+
+**Algorithm** (`Next()`):
+1. Acquire package-level mutex
+2. List all Plans in the cluster
+3. Count running VMs across all Plans sharing the same source provider (skip archived, non-executing plans)
+4. If `inFlight >= MaxInFlight` → return no VM
+5. Iterate this Plan's VMs in order; return the first VM that is not canceled, not started, and not completed
+
+**Concurrency unit**: 1 VM = 1 slot. Simple counter across the provider.
+
+### 2. Host-Aware Model (vSphere only)
+
+vSphere uses a **per-ESXi-host disk-count** concurrency model. The limit is per host, not globally flat:
+
+```
+inFlight[host] (disk slots in use on that host) + cost(vm) <= MaxInFlight → schedulable
+```
+
+**Concurrency unit**: number of actively-transferring **disks** on each ESXi host. Each host gets up to `MaxInFlight` disk slots independently.
+
+---
+
+## vSphere Scheduler — Deep Dive
+
+### Data Structures
+
+```go
+type Scheduler struct {
+    *plancontext.Context
+    MaxInFlight int
+    inFlight    map[string]int          // host ID → occupied disk slots
+    pending     map[string][]*pendingVM  // host ID → VMs waiting to start
+}
+
+type pendingVM struct {
+    status *plan.VMStatus
+    cost   int  // number of disk slots this VM would consume
+}
+```
+
+### Cost Calculation
+
+The "cost" of a VM depends on the transfer method:
+
+**V2V transfer** (`ShouldUseV2vForTransfer` returns true):
+- Active transfer phases → cost = **1** (single transfer stream)
+- Post-transfer phases (`CreateVM`, `PostHook`, `Completed`) → cost = **0** (frees the slot)
+
+**CDI transfer** (default):
+- Active transfer phases → cost = `len(vm.Disks) - finishedDisks` (each disk is a parallel transfer pod)
+- Phases where disks are already transferred (`CopyingPaused`, `ConvertGuest`, `CreateGuestConversionPod`, `CreateVM`, `PostHook`, `Completed`) → cost = **0**
+
+The `finishedDisks()` helper counts disk-transfer tasks in the `Completed` phase, so slots free up as individual disks finish — a VM with 1 large + 5 small disks won't block the host after the small disks complete.
+
+### Build Schedule
+
+`buildSchedule()` runs two passes:
+
+1. **`buildInFlight()`** — counts occupied disk slots per host:
+   - From the current Plan's running VMs
+   - From **all other executing Plans** sharing the same source provider (cross-plan awareness)
+   - Skips archived plans, non-executing plans, canceled VMs
+   - Tolerates `NotFoundError` / `RefNotUniqueError` from inventory for other plans' VMs
+
+2. **`buildPending()`** — groups this Plan's unstarted VMs by host, computing each VM's cost
+
+### Schedulable Logic
+
+```go
+func (r *Scheduler) schedulable() map[string][]*pendingVM {
+    for host, vms := range r.pending {
+        if r.inFlight[host] >= r.MaxInFlight {
+            continue  // host at capacity
+        }
+        for _, vm := range vms {
+            if vm.cost + r.inFlight[host] <= r.MaxInFlight {
+                // VM fits within remaining capacity
+            }
+            if vm.cost > r.MaxInFlight && r.inFlight[host] == 0 {
+                // VM has more disks than MaxInFlight, but host is idle — allow it
+            }
+        }
+    }
+}
+```
+
+**Key rule**: A VM with more disks than `MaxInFlight` is still allowed if the host is completely idle (no other migrations running). This prevents large VMs from being permanently blocked.
+
+### Next() for vSphere
+
+After building the schedule, `Next()` iterates the schedulable map and returns the **first VM** from any host that has capacity. Only one VM is returned per call.
+
+---
+
+## Thread Safety
+
+Every provider's `Next()` acquires a **package-level `sync.Mutex`** before doing any work. Each provider package has its own independent mutex. This prevents concurrent reconcile loops from double-scheduling VMs into the same slots.
+
+Note: the mutexes are per-package, not per-instance, so concurrent schedulers for different plans using the same provider type are serialized.
+
+---
+
+## Cross-Plan Awareness
+
+All schedulers count in-flight VMs **across all Plans in the cluster** that share the same source provider. This means:
+- Two Plans migrating from the same vCenter share the per-host disk limits
+- Two Plans migrating from the same oVirt engine share the flat VM limit
+- Plans using different source providers are independent
+
+Plans are filtered by:
+1. Same `Spec.Provider.Source` reference
+2. Not archived (`Spec.Archived == false`) — vSphere only explicitly checks this
+3. Active snapshot has `Executing` condition
+
+---
+
+## Provider Comparison Matrix
+
+| Provider | Concurrency Unit | Scope | Cost Model | Cross-Plan | Special Rules |
+|----------|-----------------|-------|------------|------------|---------------|
+| **vSphere** | Disk slots per ESXi host | Per host | Disk count minus finished | Yes | Large VMs allowed on idle host; V2V vs CDI cost |
+| **oVirt** | VM count | Per provider | 1 per running VM | Yes | — |
+| **OpenStack** | VM count | Per provider | 1 per running VM | Yes | — |
+| **OCP** | VM count | Per provider | 1 per running VM | Yes | — |
+| **OVA** | VM count | Per provider | 1 per running VM | Yes | — |
+| **Hyper-V** | VM count | Per provider | 1 per running VM | Yes | — |
+| **EC2** | VM count | Per provider | 1 per running VM | Yes | Lives in `pkg/provider/ec2/controller/scheduler/` |
+
+---
+
+## Key Takeaways for the UI
+
+1. **MaxInFlight is global per provider** — the UI cannot show a per-plan concurrency limit; it's shared across all plans using the same source provider.
+
+2. **vSphere is host-aware** — the scheduler considers per-host capacity, so VMs on different ESXi hosts can migrate in parallel even if one host is at capacity.
+
+3. **Disk-level granularity (vSphere)** — as individual disks finish transferring, their slots free up immediately, allowing new VMs to start sooner.
+
+4. **VM ordering** — VMs are scheduled in the order they appear in `Plan.Status.Migration.VMs`. The scheduler returns the **first eligible** VM, not the optimal one.
+
+5. **No priority or preemption** — the scheduler is first-come-first-served with no priority mechanism.
+
+6. **Default 20 concurrent** — with default settings, up to 20 VMs (or 20 disk slots per host for vSphere) can migrate simultaneously per provider.
+
+---
+
+## File Map
+
+| File | Purpose |
+|------|---------|
+| `scheduler/doc.go` | Interface definition, factory function |
+| `scheduler/vsphere/scheduler.go` | Host-aware disk-slot scheduler |
+| `scheduler/vsphere/scheduler_test.go` | Unit tests for schedulable() logic |
+| `scheduler/ovirt/scheduler.go` | Flat VM-count scheduler |
+| `scheduler/openstack/scheduler.go` | Flat VM-count scheduler |
+| `scheduler/ocp/scheduler.go` | Flat VM-count scheduler |
+| `scheduler/ova/scheduler.go` | Flat VM-count scheduler |
+| `scheduler/hyperv/scheduler.go` | Flat VM-count scheduler |
+| `provider/ec2/controller/scheduler/scheduler.go` | Flat VM-count scheduler (separate package) |
+| `settings/migration.go` | `MaxInFlight` setting (env: `MAX_VM_INFLIGHT`, default: 20) |

@@ -1,0 +1,226 @@
+---
+description: Forklift operator - Ansible-based deployment, feature flags, container images, ForkliftController CRD
+alwaysApply: false
+---
+
+# Forklift Operator
+
+> Analyzed from commit: `a976d24b6` on `2026-05-04`
+
+## Overview
+
+The Forklift operator is an **Ansible-based operator** (operator-sdk) that watches the `ForkliftController` CRD and reconciles all Forklift components into the target namespace. It uses a single Ansible role (`forkliftcontroller`) with Jinja2 templates.
+
+---
+
+## ForkliftController CRD
+
+- **Group**: `forklift.konveyor.io`, **Version**: `v1beta1`, **Kind**: `ForkliftController`
+- Single watched resource defined in `operator/watches.yaml`
+- Has a finalizer (`forklift.konveyor.io/finalizer`) for cleanup on deletion
+- The CR's `.spec` fields map to Ansible variables that override defaults in `roles/forkliftcontroller/defaults/main.yml`
+
+### Key Configurable Fields (CR spec → Ansible var)
+
+| CR field | Ansible variable | Default |
+|----------|-----------------|---------|
+| `feature_volume_populator` | `feature_volume_populator` | `true` |
+| `feature_copy_offload` | `feature_copy_offload` | `true` |
+| `feature_ocp_live_migration` | `feature_ocp_live_migration` | `true` |
+| `feature_vmware_system_serial_number` | `feature_vmware_system_serial_number` | `true` |
+| `feature_vsphere_vmware_driver_removal` | `feature_vsphere_vmware_driver_removal` | `false` |
+| `feature_ui_plugin` | `feature_ui_plugin` | `true` |
+| `feature_validation` | `feature_validation` | `true` |
+| `feature_cli_download` | `feature_cli_download` | `true` |
+| `feature_ova_appliance_management` | `feature_ova_appliance_management` | `true` |
+| `controller_max_vm_inflight` | `controller_max_vm_inflight` | `20` |
+| `controller_precopy_interval` | `controller_precopy_interval` | `60` |
+| `controller_log_level` | `controller_log_level` | `3` |
+
+---
+
+## Feature Flags
+
+Feature flags flow from the ForkliftController CR through Ansible into environment variables on the controller pod:
+
+```
+ForkliftController CR spec
+  → Ansible defaults/main.yml
+    → Jinja2 template (deployment-controller.yml.j2)
+      → Pod env vars (FEATURE_*)
+        → Go pkg/settings/features.go loads them
+```
+
+### Feature Flag Environment Variables
+
+| Env Var | Go constant | Description |
+|---------|-------------|-------------|
+| `FEATURE_COPY_OFFLOAD` | `FeatureCopyOffload` | vSphere XCOPY copy offload plugins |
+| `FEATURE_OCP_LIVE_MIGRATION` | `FeatureOCPLiveMigration` | Cross-cluster live migration |
+| `FEATURE_VSPHERE_INCREMENTAL_BACKUP` | `FeatureVsphereIncrementalBackup` | changeID-based incremental backup |
+| `FEATURE_OVIRT_WARM_MIGRATION` | `FeatureOvirtWarmMigration` | oVirt warm migration support |
+| `FEATURE_STATIC_UDN_IP_ADDRESSES` | `FeatureStaticUdnIpAddresses` | Static IPs in User Defined Networks |
+| `FEATURE_VMWARE_SYSTEM_SERIAL_NUMBER` | `FeatureVmwareSystemSerialNumber` | VMware serial number for VMs |
+| `FEATURE_OVF_APPLIANCE_MANAGEMENT` | `FeatureOVFApplianceManagement` | Appliance management for OVA/HyperV |
+| `FEATURE_VSPHERE_VMWARE_DRIVER_REMOVAL` | `FeatureVsphereVmwareDriverRemoval` | VMware driver removal in Windows |
+| `FEATURE_RETAIN_PRECOPY_IMPORTER_PODS` | `FeatureRetainPrecopyImporterPods` | Keep precopy importer pods |
+
+Some features are gated by OpenShift version (e.g., `VmwareSystemSerialNumber` requires OCP ≥ 4.20, `InsecureSkipVerify` requires OCP ≥ 4.21).
+
+---
+
+## Container Images
+
+Defined in `operator/related_images.yaml` (referenced via `RELATED_IMAGE_*` env vars):
+
+| Name | Variable | Purpose |
+|------|----------|---------|
+| `controller` | `CONTROLLER_IMAGE` | Main controller + inventory binary |
+| `api` | `API_IMAGE` | Webhook/validation API server |
+| `validation` | `VALIDATION_IMAGE` | OPA policy agent for VM validation |
+| `ui_plugin` | `UI_PLUGIN_IMAGE` | Console UI plugin (this project) |
+| `virt_v2v` | `VIRT_V2V_IMAGE` | Guest conversion (virt-v2v) |
+| `populator_controller` | `POPULATOR_CONTROLLER_IMAGE` | Volume populator controller |
+| `rhv_populator` | `OVIRT_POPULATOR_IMAGE` | oVirt/RHV disk populator |
+| `openstack_populator` | `OPENSTACK_POPULATOR_IMAGE` | OpenStack disk populator |
+| `vsphere_copy_offload_populator` | `VSPHERE_COPY_OFFLOAD_POPULATOR_IMAGE` | vSphere XCOPY offload |
+| `ova_provider_server` | `OVA_PROVIDER_SERVER_IMAGE` | OVA inventory server (per-provider pod) |
+| `hyperv_provider_server` | `HYPERV_PROVIDER_SERVER_IMAGE` | Hyper-V inventory server |
+| `ova_proxy` | `OVA_PROXY_IMAGE` | OVA inventory proxy |
+| `cli_download` | `CLI_DOWNLOAD_IMAGE` | kubectl-mtv CLI download server |
+| `must_gather` | `MUST_GATHER_IMAGE` | Must-gather diagnostics |
+
+---
+
+## Deployment Topology
+
+The operator creates these Deployments (all in the Forklift namespace):
+
+### forklift-controller (single pod, two containers)
+
+| Container | Role | Binary | Key Env |
+|-----------|------|--------|---------|
+| `main` | Migration reconciler | `forklift-controller` | `ROLE=main` |
+| `inventory` | Inventory API server | `forklift-controller` | `ROLE=inventory` |
+
+Both containers share the same image (`controller_image_fqin`) but run different roles based on the `ROLE` env var. The Go code (`pkg/settings/role.go`) loads `ROLE` to enable `main`, `inventory`, or both.
+
+### forklift-api
+Admission webhooks (validating + mutating) for Plans, Providers, Migrations, Secrets.
+
+### forklift-validation (optional, `feature_validation`)
+OPA-based policy agent that validates VMs before migration.
+
+### forklift-ui-plugin (optional, `feature_ui_plugin`, OCP only)
+This console plugin. Registers as a ConsolePlugin CR with OpenShift.
+
+### forklift-volume-populator-controller (optional, `feature_volume_populator`)
+Watches VolumePopulator CRs and spawns populator pods (oVirt, OpenStack, XCOPY).
+
+### forklift-ova-proxy
+Proxies inventory requests for OVA-based providers.
+
+### forklift-cli-download (optional, `feature_cli_download`, OCP only)
+Serves kubectl-mtv binary downloads. Registered via ConsoleCLIDownload CR.
+
+---
+
+## Ansible Role Structure
+
+```
+operator/roles/forkliftcontroller/
+├── defaults/main.yml      # All configurable defaults
+├── tasks/main.yml         # Reconciliation logic
+├── tasks/cleanup.yml      # Resource cleanup for disabled features
+├── tasks/webhooks.yml     # Webhook configuration
+├── meta/main.yml          # Role metadata
+└── templates/
+    ├── controller/        # Controller deployment, configmap, services, routes
+    ├── api/               # API deployment, webhooks, certificates
+    ├── validation/        # Validation deployment, configmap
+    ├── ui-plugin/         # UI plugin deployment, ConsolePlugin CR
+    ├── populator/         # Volume populator controller deployment
+    ├── ova-proxy/         # OVA proxy deployment, service, route
+    ├── cli-download/      # CLI download server
+    ├── monitor/           # ServiceMonitor, PrometheusRules, alerts
+    └── smb-csi/           # SMB CSI driver (HyperV)
+```
+
+### Reconciliation Flow (tasks/main.yml)
+
+1. Evaluate feature flags → set `*_state` facts (`present`/`absent`)
+2. Detect cluster type (OpenShift vs plain k8s via `route.openshift.io` API group)
+3. Deploy controller ConfigMap + Deployment (always)
+4. Deploy OVA proxy (always)
+5. Deploy monitoring resources (OCP only)
+6. Deploy volume populator controller (if enabled)
+7. Configure TLS certificates (k8s: cert-manager; OCP: service-serving-cert)
+8. Deploy API server + webhooks
+9. Create default host Provider (if KubeVirt present)
+10. Deploy validation (if enabled)
+11. Deploy UI plugin + register ConsolePlugin (if enabled, OCP only)
+12. Deploy CLI download (if enabled, OCP only)
+13. Cleanup disabled features
+
+---
+
+## Environment Variable Propagation
+
+The operator injects configuration into the controller pod via two mechanisms:
+
+1. **Direct env vars** in the Deployment template (feature flags, image refs, resource limits)
+2. **ConfigMap** (`forklift-controller-config`) mounted as `envFrom`
+
+The Go controller loads all settings at startup via `pkg/settings.Settings.Load()` which reads:
+- `pkg/settings/role.go` — `ROLE` (main, inventory)
+- `pkg/settings/features.go` — `FEATURE_*` flags
+- `pkg/settings/migration.go` — Migration tuning (MAX_VM_INFLIGHT, VIRT_V2V_IMAGE, etc.)
+- `pkg/settings/inventory.go` — API server config (port, TLS, auth)
+- `pkg/settings/policy.go` — Validation policy agent URL
+- `pkg/settings/metrics.go` — Metrics port
+- `pkg/settings/logging.go` — Log level
+- `pkg/settings/profiler.go` — CPU/memory profiling
+- `pkg/settings/providers.go` — Provider-specific image refs
+
+---
+
+## Streams (Upstream vs Downstream)
+
+| Property | Upstream (Forklift) | Downstream (MTV) |
+|----------|-------------------|-----------------|
+| CSV name | `forklift-operator` | `mtv-operator` |
+| Display name | Forklift Operator | Migration Toolkit for Virtualization Operator |
+| Namespace | `konveyor-forklift` | `openshift-mtv` |
+| Provider | Konveyor | Red Hat |
+| Certified | No | Yes |
+
+---
+
+## OCP vs K8s Differences
+
+The operator detects OpenShift by checking for `route.openshift.io` API group:
+
+| Capability | OpenShift | Plain K8s |
+|------------|-----------|-----------|
+| Routes | Yes | No (use Ingress) |
+| UI Plugin | Yes | No |
+| CLI download | Yes | No |
+| TLS certs | service-serving-cert annotation | cert-manager Issuer/Certificate |
+| SCC | Applied | Skipped |
+| Monitoring | ServiceMonitor + PrometheusRules | Skipped |
+| Catalog | OLM Subscription | OLM Subscription (different source) |
+
+---
+
+## Key Tuning Parameters
+
+| Env Var | Default | Description |
+|---------|---------|-------------|
+| `MAX_VM_INFLIGHT` | 20 | Concurrent VMs per migration |
+| `PRECOPY_INTERVAL` | 60 min | Warm migration precopy frequency |
+| `VDDK_JOB_ACTIVE_DEADLINE` | 300 sec | VDDK validation job timeout |
+| `MAX_CONCURRENT_RECONCILES` | 10 | Controller reconcile parallelism |
+| `FILESYSTEM_OVERHEAD` | 10% | Extra space for filesystem PVCs |
+| `TLS_CONNECTION_TIMEOUT` | 5 sec | TLS handshake timeout |
+| `SNAPSHOT_REMOVAL_TIMEOUT` | 120 min | vSphere snapshot removal timeout |
+| `LOG_LEVEL` | 3 | Controller log verbosity (0-9) |

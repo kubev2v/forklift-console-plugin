@@ -1,0 +1,283 @@
+---
+description: Plan controller - reconciliation, validation conditions, lifecycle, Migration CR relationship
+alwaysApply: false
+---
+
+# Plan Controller
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+## Overview
+
+The Plan controller (`pkg/controller/plan/controller.go`) is the central reconciler for migration plans. It watches Plan CRs plus related resources (Provider, NetworkMap, StorageMap, Hook, Migration) and drives the full lifecycle from validation through execution.
+
+The Migration controller (`pkg/controller/migration/controller.go`) is intentionally thin — it sets owner references, validates the plan reference, and reflects plan snapshot status back onto the Migration CR.
+
+---
+
+## Reconcile Flow
+
+```
+Reconcile(plan)
+│
+├─ 1. Fetch Plan (abort if deleted → cleanup orphaned resources)
+├─ 2. Skip if Archived (spec.archived + status has Archived condition)
+├─ 3. Skip if Succeeded (unless needs archiving)
+├─ 4. Postpone if dependencies not yet reconciled
+│     (Provider, NetworkMap, StorageMap, Host, Hook ObservedGeneration < Generation)
+├─ 5. BeginStagingConditions()
+├─ 6. validate(plan) — sets conditions on plan.Status
+│     └─ If validation returns error for dangling archived plan → archive + return
+├─ 7. Set PopulatorDataSource labels (one-time, post-Succeeded/Failed/Canceled)
+├─ 8. Archive if spec.archived
+├─ 9. Set Ready condition (if no blockers, not archived, not validating VDDK)
+├─ 10. EndStagingConditions()
+└─ 11. execute(plan) — find/run migration, update status
+```
+
+### Execute Flow
+
+```
+execute(plan)
+│
+├─ If blocker/archived/reQ-condition → fail executing migration if grace period exceeded → return
+├─ Build plancontext.Context
+├─ Find active migration (from snapshot)
+│   ├─ If found → SetMigration, matchSnapshot (cancel if mutated)
+│   └─ If snapshot marked Canceled → propagate to all non-terminal VMs
+├─ runner.Cancel() — cancel VMs marked for cancellation
+├─ Find pending migrations (sorted by creationTimestamp)
+├─ If no active + pending exists → select first pending, create new snapshot
+├─ If no migration at all → delete Executing condition, slow requeue
+├─ runner.Run() — execute the migration
+└─ Reflect snapshot conditions (Executing/Succeeded/Failed/Canceled) onto plan.Status
+```
+
+---
+
+## Validation Conditions
+
+All conditions set during `validate()`. The UI reads these from `plan.status.conditions[]`.
+
+### Critical (Blockers — prevent execution)
+
+| Condition Type | When Set |
+|---|---|
+| `SourceProviderNotReady` | Source provider missing or not Ready |
+| `DestinationProviderNotReady` | Destination provider missing or not Ready |
+| `NamespaceNotValid` | Target namespace empty or invalid DNS1123 |
+| `NetworkMapRefNotValid` | Network map ref not set or not found |
+| `NetworkMapNotReady` | Referenced NetworkMap lacks Ready condition |
+| `StorageRefNotValid` | Storage map ref not set or not found |
+| `StorageMapNotReady` | Referenced StorageMap lacks Ready condition |
+| `VMRefNotValid` | VM ref has neither ID nor Name |
+| `VMNotFound` | VM not found in source inventory |
+| `VMAlreadyExists` | Target VM already exists in destination |
+| `DuplicateVM` | Duplicate source VM ID or duplicate targetName |
+| `VMNetworksNotMapped` | VM has networks not covered by NetworkMap |
+| `VMStorageNotMapped` | VM has storage not covered by StorageMap |
+| `VMStorageNotSupported` | Unsupported storage (e.g., Direct LUN/FC < oVirt 4.5.2.1) |
+| `VMMultiplePodNetworkMappings` | Multiple NICs mapped to pod network |
+| `VMDuplicateNADMappings` | Multiple NICs use same Multus NAD |
+| `VMMissingChangedBlockTracking` | Warm migration: CBT not enabled |
+| `VMHasSnapshots` | Warm migration: pre-existing snapshots |
+| `VMPowerStateUnsupported` | VM power state incompatible with migration type |
+| `VMMigrationTypeUnsupported` | VM incompatible with selected migration type |
+| `GuestToolsIssue` | VMware Tools not properly installed/running |
+| `InvalidDiskSizes` | VM has disks with invalid sizes |
+| `MacConflicts` | MAC address conflicts with existing destination VMs |
+| `MissingPvcForOnlyConversion` | Conversion-only mode: missing vendor PVCs |
+| `WarmMigrationNotReady` | Warm migration not supported from source provider |
+| `MigrationTypeNotValid` | Selected migration type not supported |
+| `TransferNetworkNotValid` | Transfer network NAD not found or invalid |
+| `HookNotValid` | Hook ref not set, not found, or not executable |
+| `HookNotReady` | Referenced Hook lacks Ready condition |
+| `HookStepNotValid` | Hook step not PreHook or PostHook |
+| `HookServiceAccountNotValid` | Hook ServiceAccount not found |
+| `ServiceAccountNotValid` | Plan ServiceAccount not found in target namespace |
+| `VDDKInvalid` | VDDK validation job failed |
+| `VDDKInitImageUnavailable` | VDDK image not set (required for warm/raw-copy) or pull exceeded deadline |
+| `UnsupportedVersion` | OCP-to-OCP: source version < 1.26 |
+| `UnsupportedUserDefinedNetwork` | UDN Layer3 in destination namespace |
+| `SharedDisks` | VMs with shared disks (critical category) |
+| `VDDKAndOffloadMixedUsage` | Mixed VDDK and copy-offload in same plan |
+| `VMCriticalConcerns` | VMs have critical-category inventory concerns |
+| `NetMapDestinationNADNotValid` | NAD in wrong namespace |
+| `TargetNameNotValid` | Manually-assigned target name invalid |
+
+### Warning (Non-blocking)
+
+| Condition Type | When Set |
+|---|---|
+| `TargetNameNotValid` | Source VM name not DNS1123 (auto-renamed) |
+| `HostNotReady` | VM host in maintenance mode |
+| `VMMissingGuestIPs` | Cannot preserve static IPs (no guest info) |
+| `VMIpNotMatchingUdnSubnet` | VM IP outside primary UDN subnet |
+| `NetMapPreservingIPsOnPodNetwork` | Preserving IPs with Pod networking (unsupported combo) |
+| `TransferNetworkMissingDefaultRoute` | Transfer network NAD missing route annotation |
+| `SharedWarnDisks` | VMs with shared disks (warning category) |
+| `LuksAndClevisIncompatibility` | LUKS + Clevis configured together |
+| `UnsupportedOVFExportSource` | OVA VM from unsupported OVF source |
+| `ConversionHasWarnings` | Conversion produced warnings |
+| `RestrictedPodSecurity` | Controller namespace has restricted pod security |
+
+### Advisory (Informational)
+
+| Condition Type | When Set |
+|---|---|
+| `ValidatingVDDK` | VDDK image validation in progress |
+| `VDDKInitImageNotReady` | VDDK image pull still in progress (within deadline) |
+| `Archived` | Plan has been archived |
+
+### Lifecycle Conditions (set during execution)
+
+| Condition Type | Meaning |
+|---|---|
+| `Executing` | Migration is actively running |
+| `Succeeded` | Migration completed successfully |
+| `Failed` | Migration failed |
+| `Canceled` | Migration was canceled (user request or snapshot mutation) |
+
+---
+
+## Condition Categories
+
+```go
+Required  = "Required"   // blocks Ready condition
+Advisory  = "Advisory"   // informational
+Critical  = "Critical"   // blocker — prevents execution
+Error     = "Error"      // blocker — prevents execution  
+Warn      = "Warn"       // non-blocking warning
+```
+
+The plan is **Ready** when: no blocker conditions + not Archived + not ValidatingVDDK.
+
+---
+
+## Blocker Grace Period
+
+When blocker conditions (Critical/Error) appear during active execution, the controller waits a configurable grace period (default 5 minutes, controlled by `BLOCKER_GRACE_PERIOD_MINUTES`) before failing the migration. This prevents transient issues from immediately killing migrations.
+
+---
+
+## Plan ↔ Migration Relationship
+
+```
+Plan (1) ──references──> (N) Migration CRs
+Plan.Status.Migration.History[] ──contains──> Snapshot[] (one per Migration)
+```
+
+1. **User creates a Migration CR** referencing a Plan
+2. **Migration controller** sets ownerReference (Plan owns Migration → auto-delete on plan deletion)
+3. **Plan controller** discovers pending migrations, sorted by creationTimestamp
+4. Plan creates a **Snapshot** capturing the current state of Plan + Provider + Maps
+5. Plan runs the migration via `Migration.Run()`
+6. Snapshot conditions are reflected back to `plan.status.conditions`
+7. **Migration controller** reflects snapshot state → migration.status (Running, Succeeded, Failed, Canceled)
+
+### Snapshot Mutation Detection
+
+If the Plan, providers, or maps change while a migration is active, `matchSnapshot()` detects the mismatch and marks the active snapshot as **Canceled**. This ensures migrations run against consistent configuration.
+
+---
+
+## Plan Context (`pkg/controller/plan/context`)
+
+The `Context` struct aggregates all data needed for migration execution:
+
+| Field | Source |
+|---|---|
+| `Plan` | The Plan CR with Referenced data populated |
+| `Migration` | The active Migration CR |
+| `Map.Network` | Referenced NetworkMap |
+| `Map.Storage` | Referenced StorageMap |
+| `Source.Provider` | Source provider + secret + inventory client |
+| `Destination.Provider` | Destination provider + remote k8s client + inventory |
+| `Hooks` | Referenced Hook CRs |
+| `Labeler` | Generates consistent labels (plan UID, migration UID, VM ID) |
+
+Context creation fails with `NotEnoughDataError` if required referenced data is missing.
+
+---
+
+## Ensurer (`pkg/controller/plan/ensurer`)
+
+The `Ensurer` creates resources on the destination cluster during migration:
+
+| Method | Creates | Matching Strategy |
+|---|---|---|
+| `VirtualMachine()` | Target VM | By label (vmID) |
+| `DataVolumes()` | CDI DataVolumes | By label + disk-source annotation |
+| `PersistentVolumeClaims()` | PVCs | By label + disk-source annotation |
+| `SharedConfigMaps()` | ConfigMaps | By name (shared across VMs) |
+| `SharedSecrets()` | Secrets | By name (shared across VMs) |
+
+Resources are labeled with: `plan=<planUID>`, `migration=<migrationUID>`, `vmID=<vmRefID>`
+
+---
+
+## Utilities (`pkg/controller/plan/util`)
+
+- `ChangeVmName(name)` — Converts VM names to DNS1123-compliant format
+- `CalculateSpaceWithOverhead(size, volumeMode)` — Adds filesystem/block overhead to disk sizes
+- `GetDeviceNumber(deviceString)` — Parses `/dev/sdX` for boot order
+- `VirtualMachineKind = "VirtualMachine"` — Used in owner reference checks
+
+---
+
+## Archived / Succeeded Plans
+
+- **Archived**: `plan.spec.archived=true` triggers `archive()` which cleans up lingering resources and sets the `Archived` condition. Once archived, reconciliation is skipped entirely.
+- **Succeeded**: Once a plan has `Succeeded` condition and is not being archived, reconciliation is skipped.
+- **Dangling archived plan**: If validation fails and the plan is archived with no source provider, it's force-archived.
+
+---
+
+## Orphaned Resource Cleanup
+
+When a Plan is deleted, `cleanupOrphanedResources` removes resources by plan-name/namespace labels:
+- PVCs, DataVolumes (preserving those owned by VirtualMachine)
+- Pods, Secrets, ConfigMaps, PersistentVolumes
+
+---
+
+## Migration Controller (Thin Layer)
+
+The Migration controller's responsibilities are minimal:
+
+1. **setOwnerReference** — Plan owns Migration (auto-cleanup)
+2. **validate** — Checks plan ref is set/found/Ready; validates Cancel[] VM refs
+3. **reflectPlan** — Copies snapshot conditions to migration.status:
+   - Snapshot `Executing` → Migration gets `Running` condition + `MarkStarted()`
+   - Snapshot `Succeeded` → Migration gets `Succeeded` + `MarkCompleted()`
+   - Snapshot `Failed` → Migration gets `Failed` + `MarkCompleted()`
+   - Snapshot `Canceled` → Migration gets `Canceled` + `MarkedCompleted()`
+4. Sets `Ready` if no blocker conditions
+
+### Migration Validation Conditions
+
+| Condition | When Set |
+|---|---|
+| `PlanNotValid` | Plan ref not set or not found |
+| `PlanNotReady` | Referenced Plan lacks Ready condition |
+| `VMNotFound` | VM in Cancel[] not found in inventory |
+| `VMNotUnique` | VM in Cancel[] reference is ambiguous |
+
+---
+
+## Key Constants for UI Mapping
+
+The UI should map these backend condition types to user-visible plan statuses:
+
+```
+Backend Condition  →  UI Status
+─────────────────────────────────
+Ready (no blockers) →  Ready
+Executing           →  Executing
+Succeeded           →  Completed
+Failed              →  Failed
+Canceled            →  Canceled
+Archived            →  Archived
+Any Critical/Error  →  CannotStart (when not executing)
+ValidatingVDDK      →  Validating (not yet ready)
+```

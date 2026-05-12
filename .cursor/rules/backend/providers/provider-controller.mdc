@@ -1,0 +1,250 @@
+---
+description: Provider controller - common reconciliation loop, inventory lifecycle, credentials, status phases
+alwaysApply: false
+---
+
+# Provider Controller (Common)
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+Source: `pkg/controller/provider/` in the [forklift](https://github.com/kubev2v/forklift) backend.
+
+---
+
+## Reconciliation Loop
+
+The Provider controller watches `Provider`, `Secret`, `OVAProviderServer`, and `HyperVProviderServer` resources. On each reconcile cycle it runs the following steps in order:
+
+```
+Reconcile(request)
+│
+├─ 1. Fetch Provider CR (delete container if NotFound)
+├─ 2. Set phase = Staging, begin staging conditions
+├─ 3. Provider-server lifecycle (OVA / HyperV only)
+│     ├─ If deletion → cleanupProviderServer (remove server + finalizer)
+│     └─ If alive → ensureProviderServer (create/redeploy)
+├─ 4. Validate
+│     ├─ validateType
+│     ├─ validateURL
+│     ├─ validateSecret (provider-type-specific key checks)
+│     ├─ testConnection (builds ephemeral collector, calls Test())
+│     ├─ inventoryCreated (checks collector parity)
+│     ├─ validateSSHReadiness (vSphere + SSH method only)
+│     └─ validateSMBCSI (HyperV only)
+├─ 5. Ensure SSH keys (vSphere only)
+├─ 6. Update container (build/replace inventory collector)
+├─ 7. Ready check
+│     └─ If no blocker AND ConnectionTestSucceeded + InventoryCreated → phase = Ready
+├─ 8. Update DB (sync provider into collector owner)
+├─ 9. Requeue
+│     ├─ SlowReQ  if not yet ConnectionTestSucceeded + InventoryCreated
+│     └─ LongReQ  for periodic re-testing
+│
+└─ deferred: EndStagingConditions → updateProviderStatus
+             Stop reconciliation entirely on ConnectionAuthFailed
+```
+
+### Key behaviors
+
+- **Generation tracking**: `HasReconciled()` compares `ObservedGeneration` with `Generation`. When the provider spec changes, the old collector is shut down and its DB closed before a new one is created.
+- **Secret change detection**: `SecretResourceVersion` in status tracks the last reconciled secret version. When it changes the collector is replaced even if the provider spec hasn't changed.
+- **Auth failure stops reconciliation**: If `ConnectionAuthFailed` is set, `RequeueAfter` is zeroed and no further reconciles happen until the secret/spec changes (prevents account lockout).
+
+---
+
+## Status Phases
+
+| Phase              | Constant           | Set When                                                    |
+|--------------------|--------------------|------------------------------------------------------------|
+| `Staging`          | `Staging`          | Beginning of every reconcile                               |
+| `Ready`            | `Ready`            | No blocker + `ConnectionTestSucceeded` + `InventoryCreated`|
+| `ValidationFailed` | `ValidationFailed` | Type/URL/Secret validation fails, SMB CSI missing, pod errors |
+| `ConnectionFailed` | `ConnectionFailed` | Connection test fails or TLS certificate error             |
+
+---
+
+## Condition Types
+
+### Blocker / Critical conditions
+
+| Condition               | Category   | Trigger                                                      |
+|-------------------------|------------|--------------------------------------------------------------|
+| `ProviderTypeNotSupported` | Critical | `provider.Type()` not in `api.ProviderTypes`                |
+| `UrlNotValid`           | Critical   | URL empty, malformed, or invalid NFS/HyperV format          |
+| `SecretNotValid`        | Critical   | Secret ref missing, secret not found, or required keys absent|
+| `ConnectionAuthFailed`  | Critical   | HTTP 401/400 from connection test (stops reconciliation)     |
+| `ConnectionTestFailed`  | Critical   | Any other connection test failure or TLS error               |
+| `SMBCSIDriverNotReady`  | Critical   | HyperV: `smb.csi.k8s.io` CSIDriver not found               |
+| `SMBMountFailed`        | Critical   | HyperV: provider-server pod stuck pending with mount error   |
+
+### Required conditions (must be present for Ready)
+
+| Condition                 | Category | Trigger                                       |
+|---------------------------|----------|-----------------------------------------------|
+| `ConnectionTestSucceeded` | Required | Connection test passes                        |
+| `InventoryCreated`        | Required | Collector has reached parity (`HasParity()`)  |
+
+### Advisory / Warning conditions
+
+| Condition            | Category | Trigger                                                |
+|----------------------|----------|--------------------------------------------------------|
+| `Validated`          | Advisory | All validations pass with no blockers                  |
+| `LoadInventory`      | Advisory | Collector exists but hasn't reached parity yet         |
+| `WaitingForService`  | Advisory | OVA/HyperV provider-server pod not yet ready           |
+| `ConnectionInsecure` | Warn     | `insecureSkipVerify` flag set in secret                |
+| `SSHReady`           | Advisory | vSphere SSH: some/all ESXi hosts pass SSH test         |
+| `SSHNotReady`        | Warn     | vSphere SSH: keys missing or hosts fail SSH test       |
+
+---
+
+## Secret / Credentials Handling
+
+Each provider type requires specific keys in the referenced `Secret`:
+
+| Provider    | Required Secret Keys                              | Optional            |
+|-------------|---------------------------------------------------|---------------------|
+| `openshift` | `token`                                           |                     |
+| `vsphere`   | `user`, `password`                                | `ca.crt` (required unless `insecureSkipVerify`) |
+| `ovirt`     | `user`, `password`                                | `ca.crt` (required unless `insecureSkipVerify`) |
+| `openstack` | *(validated by collector)*                        |                     |
+| `ova`       | `url` (NFS path of OVA server service)            |                     |
+| `hyperv`    | `username`, `password`, `smbUrl`                  | `ca.crt` (required unless `insecureSkipVerify`) |
+| `ec2`       | *(validated by collector)*                        |                     |
+
+The `insecureSkipVerify` flag is read from `secret.Data` via `base.GetInsecureSkipVerifyFlag()`. When set, TLS certificate validation is skipped and a `ConnectionInsecure` warning condition is added.
+
+For vSphere, the controller also computes a TLS fingerprint (`provider.Status.Fingerprint`) from the server certificate.
+
+---
+
+## SSH Key Management (vSphere)
+
+When `provider.Spec.Settings["esxiCloneMethod"] == "ssh"`:
+
+1. **Key generation** (`ensureSSHKeys`): Generates a 2048-bit RSA key pair and stores them in two secrets:
+   - `{sanitized-provider-name}-ssh-private` with key `private-key`
+   - `{sanitized-provider-name}-ssh-public` with key `public-key`
+   - Both secrets have `ownerReferences` pointing to the Provider (garbage-collected on deletion).
+
+2. **SSH validation** (`validateSSHReadiness`): Runs only after inventory is ready. Tests SSH connectivity to every ESXi host:
+   - **vCenter**: Lists hosts from inventory DB, checks `Host` CRD `IpAddress` (migration network override) then falls back to `ManagementIPs`.
+   - **Direct ESXi**: Extracts host IP from `provider.Spec.URL`.
+   - Sets `SSHReady` (with per-host items) and/or `SSHNotReady` (with setup instructions in `Suggestion` field).
+
+---
+
+## Inventory Container Lifecycle
+
+### Building collectors (`container.Build`)
+
+`container.Build(db, provider, secret)` dispatches by `provider.Type()`:
+
+| Type        | Collector Package                                     |
+|-------------|-------------------------------------------------------|
+| `openshift` | `pkg/controller/provider/container/ocp`               |
+| `vsphere`   | `pkg/controller/provider/container/vsphere`            |
+| `ovirt`     | `pkg/controller/provider/container/ovirt`              |
+| `openstack` | `pkg/controller/provider/container/openstack`          |
+| `ova`       | `pkg/controller/provider/container/ova`                |
+| `ec2`       | `pkg/provider/ec2/inventory/collector`                 |
+| `hyperv`    | `pkg/controller/provider/container/hyperv`             |
+
+Each collector implements `libcontainer.Collector` with `Test()`, `Start()`, `Shutdown()`, `HasParity()`, `DB()`, and `Owner()`.
+
+### Container update flow
+
+```
+updateContainer(provider)
+│
+├─ getSecret → check SecretResourceVersion changed?
+├─ If secret unchanged AND already reconciled → skip
+├─ If secret unchanged AND blocker or no ConnectionTestSucceeded → skip
+├─ Open/create SQLite DB at: {WorkingDir}/{namespace}/{name}/{uid}.db
+├─ container.Build(db, provider, secret) → new collector
+├─ container.Replace(collector) → old collector DB closed
+└─ Update provider.Status.SecretResourceVersion
+```
+
+### Connection testing
+
+`testConnection` builds an **ephemeral** collector (with `db=nil`) and calls `Test()`. This returns an HTTP status code and error. Status 401/400 triggers `ConnectionAuthFailed`; other errors trigger `ConnectionTestFailed`.
+
+For OVA and HyperV, connection testing is gated on the provider-server pod being ready (`checkOVAServiceReady` / `checkHyperVServiceReady`).
+
+---
+
+## Provider-Server Lifecycle (OVA / HyperV)
+
+OVA and HyperV providers require a sidecar server deployment managed via CRDs:
+
+| Provider | CR Type              | Finalizer                      |
+|----------|----------------------|--------------------------------|
+| OVA      | `OVAProviderServer`  | `api.OvaProviderFinalizer`     |
+| HyperV   | `HyperVProviderServer` | `api.HyperVProviderFinalizer`|
+
+### Lifecycle steps
+
+1. **Ensure** (`ensureProviderServer`): Creates the provider-server CR if it doesn't exist. If the provider spec changed (`!HasReconciled()`), the old server is deleted first to force a redeploy.
+
+2. **Readiness checks**: Before connection testing:
+   - **OVA**: Checks Deployment has `ReadyReplicas > 0`. Inspects pod `ContainerStatuses` for image pull errors, crash loops, and pending timeout (configurable via `Settings.Providers.ProviderPendingTimeoutSeconds`).
+   - **HyperV**: Checks pod readiness and detects stuck SMB mounts (pods pending on a node beyond timeout).
+
+3. **Cleanup on deletion** (`cleanupProviderServer`):
+   - OVA: Legacy PV cleanup (labels `subapp=ova-server`, `app=forklift`, `provider={name}`).
+   - Deletes the provider-server CR.
+   - Removes the finalizer from the Provider.
+
+---
+
+## Web API Handlers
+
+The inventory REST API is served by `libweb.WebServer` on `Settings.Inventory.Port` (with optional TLS).
+
+### Handler registration (`web.All`)
+
+`web.All(container)` returns all request handlers:
+
+1. `SchemaHandler` — OpenAPI schema
+2. `ProviderHandler` — `/providers` endpoint (aggregates all provider types)
+3. Per-type handlers registered via `{type}.Handlers(container)`:
+   - `ocp.Handlers` — OpenShift resources (namespaces, VMs, etc.)
+   - `vsphere.Handlers` — vSphere resources (datacenters, clusters, hosts, VMs, networks, datastores)
+   - `ovirt.Handlers` — oVirt resources (datacenters, clusters, hosts, VMs, networks, storage domains)
+   - `openstack.Handlers` — OpenStack resources (projects, VMs, volumes, networks)
+   - `ova.Handlers` — OVA resources (VMs, networks, disks)
+   - `ec2web.Handlers` — EC2 resources (instances, volumes, VPCs)
+   - `hyperv.Handlers` — HyperV resources (VMs, networks, disks)
+
+### Provider list endpoint
+
+`GET /providers` aggregates inventory from all provider types into a single JSON response keyed by provider type string (`openshift`, `vsphere`, `ovirt`, `openstack`, `ova`, `hyperv`).
+
+---
+
+## Base Model Types
+
+`pkg/controller/provider/model/base/model.go` defines shared types:
+
+- **`Ref`**: `{ Kind string, ID string }` — generic object reference used in inventory models.
+- **`Concern`**: `{ Id, Label, Category, Assessment string }` — VM migration concern (displayed in UI's concerns table).
+- **`ConcernHolder`** interface: `GetConcerns() []Concern` — implemented by all provider-specific VM models.
+- **`InvalidRefError`** / **`InvalidKindError`**: Error types for model lookups.
+
+---
+
+## DB Storage
+
+Each provider gets its own SQLite database:
+
+```
+{Settings.Inventory.WorkingDir}/{namespace}/{name}/{uid}.db
+```
+
+The DB schema is defined by `model.Models(provider)` which returns provider-type-specific model slices. The `libmodel.DB` handle is passed to the collector via `container.Build`.
+
+---
+
+## Catalog
+
+The `Catalog` is a thread-safe in-memory map (`sync.Mutex` + `map[reconcile.Request]*api.Provider`) that tracks the last-known Provider for each reconcile request. Used during deletion to retrieve the provider reference after the CR is gone (needed to shut down the correct collector).

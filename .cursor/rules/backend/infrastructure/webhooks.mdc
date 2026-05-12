@@ -1,0 +1,234 @@
+---
+description: Forklift API webhooks - validating and mutating admission webhooks, paths, authorization, and TLS setup
+alwaysApply: false
+---
+
+# Forklift API Webhooks
+
+The forklift-api process runs Kubernetes admission webhooks over TLS on **port 8443**.
+It validates and mutates Forklift CRDs (Plans, Migrations, Providers) and their
+associated Secrets before they are persisted to etcd.
+
+Source: `pkg/forklift-api/` in the [forklift](https://github.com/kubev2v/forklift) repo.
+
+---
+
+## Server Setup
+
+```
+pkg/forklift-api/api.go  →  ForkliftApi.Execute()
+  ├── goroutine: serveServices()   → :8444 (REST services, see rest-api.mdc)
+  └── serveWebhooks()              → :8443 (admission webhooks)
+```
+
+- **Port**: 8443
+- **TLS**: Certificates from env vars `API_TLS_CERTIFICATE` and `API_TLS_KEY`
+- **Framework**: Plain `net/http.ServeMux` (no gin for webhooks)
+- **API version**: `admission/v1beta1` (backwards-compatible with v1)
+
+---
+
+## Webhook Paths
+
+### Validating Webhooks
+
+| Path | Handler | Resource |
+|------|---------|----------|
+| `/secret-validate` | `SecretAdmitter` | `Secret` (labeled for Forklift) |
+| `/plan-validate` | `PlanAdmitter` | `Plan` |
+| `/provider-validate` | `ProviderAdmitter` | `Provider` |
+| `/migration-validate` | `MigrationAdmitter` | `Migration` |
+
+### Mutating Webhooks
+
+| Path | Handler | Resource |
+|------|---------|----------|
+| `/secret-mutate` | `SecretMutator` | `Secret` (labeled for Forklift) |
+| `/plan-mutate` | `PlanMutator` | `Plan` |
+| `/provider-mutate` | `ProviderMutator` | `Provider` |
+
+---
+
+## Validating Webhook Details
+
+### SecretAdmitter (`/secret-validate`)
+
+Dispatches by the `createdForResourceType` label on the Secret:
+
+**For `providers` secrets:**
+- Validates `insecure` field is a valid boolean
+- Rejects secrets that set both `insecure=true` and a CA certificate
+- Requires `createdForProviderType` label
+- On UPDATE of OVA provider secrets: rejects URL changes (OVA URLs are immutable)
+- For all other provider types: builds a provider collector and runs a **connection test**
+  - 401/400 → reject with "Invalid credentials"
+  - Other errors → log warning but allow (connection may be temporarily unreachable)
+
+**For `hosts` secrets:**
+- Requires `createdForResource` label (the host name)
+- Requires `user` field in secret data
+- Tests ESXi host connection via vSphere SDK
+  - Fetches host thumbprint from inventory
+  - Copies ESXi credentials from provider secret if user field is empty
+  - Test failure → reject; inability to test → allow with warning
+
+### PlanAdmitter (`/plan-validate`)
+
+1. **Unmarshal** the Plan from the admission request
+2. **Skip validation** if the Plan is archived
+3. **Fetch source and destination Providers**
+4. **Authorization checks** (via `SubjectAccessReview`):
+   - User must have `get` on the source Provider
+   - User must have `get` on the destination Provider
+   - If destination is the host cluster: user must have `create` on `virtualmachines` in the target namespace
+   - If source is the host cluster: user must have `get` on each VM listed in the Plan
+5. **Storage validation**: Rejects plans using `kubernetes.io/no-provisioner` storage classes (static provisioners) for cold migrations from non-vSphere sources to the host cluster
+6. **Warm migration validation**: Rejects warm migrations from OpenStack (not supported)
+7. **LUKS validation**: Only vSphere and OVA sources support encrypted (LUKS) disk migration
+
+### ProviderAdmitter (`/provider-validate`)
+
+- Validates vSphere SDK endpoint type: if `spec.settings["sdk"]` is set for a vSphere provider, it must be either `vcenter` or `esxi`
+
+### MigrationAdmitter (`/migration-validate`)
+
+1. **Unmarshal** the Migration and fetch its referenced Plan
+2. **Fetch destination Provider**
+3. **Authorization checks**:
+   - If destination is host cluster: user must have `create` on `virtualmachines` in target namespace
+   - If source is host cluster: user must have `get` on each VM in the Plan
+
+---
+
+## Mutating Webhook Details
+
+### SecretMutator (`/secret-mutate`)
+
+Dispatches by `createdForResourceType` label:
+
+**For `providers` secrets:**
+- Sets `insecureSkipVerify` to `"false"` if not present
+- For **oVirt** providers in secure mode:
+  - Requires a valid CA certificate in the secret
+  - Fetches the engine CA certificate from `https://<host>/ovirt-engine/services/pki-resource`
+  - Appends the engine CA to the secret's `ca.crt` field if not already present
+  - Migrates legacy `cacert` field to `ca.crt`
+  - Adds `ca-cert-updated` label
+- Returns a JSON Patch replacing `/data` and `/metadata/labels`
+
+**For `hosts` secrets:**
+- If user/password are empty and the provider is ESXi: copies credentials from the provider secret
+- Copies `insecureSkipVerify` from the provider secret if not already set on the host secret
+- Returns a JSON Patch replacing `/data` and `/metadata/labels`
+
+### PlanMutator (`/plan-mutate`)
+
+- **Transfer network**: If `spec.transferNetwork` is unset, checks the destination Provider's
+  `forklift.konveyor.io/defaultTransferNetwork` annotation. If a matching
+  `NetworkAttachmentDefinition` exists on the target cluster, sets it as the transfer network.
+- **Populator labels annotation**: On CREATE, adds `populatorLabels: "True"` annotation if not present
+- Returns a JSON Patch replacing `/spec` and/or `/metadata`
+
+### ProviderMutator (`/provider-mutate`)
+
+- **SDK endpoint default**: For vSphere providers without `spec.settings["sdk"]`, defaults to `vcenter`
+- **Finalizers**: On CREATE, adds cleanup finalizers:
+  - OVA providers → `OvaProviderFinalizer`
+  - HyperV providers → `HyperVProviderFinalizer`
+- Returns a JSON Patch replacing `/spec` and/or `/metadata`
+
+---
+
+## Authorization Pattern (SubjectAccessReview)
+
+Webhooks use `util.PermitUser()` to check permissions:
+
+```go
+func PermitUser(request *AdmissionRequest, client Client,
+    groupResource GroupResource, name, ns, verb string) error
+```
+
+- Extracts user info (username, UID, groups, extra) from the AdmissionRequest
+- Creates a `SubjectAccessReview` against the K8s API
+- Supported verbs: `get`, `create`, `list`
+- On denial: returns a descriptive error message including user, verb, resource, group, and namespace
+
+---
+
+## Webhook Utilities (`webhooks/util/`)
+
+| Function | Purpose |
+|----------|---------|
+| `GetAdmissionReview(r)` | Parses admission review from HTTP request body (requires `application/json`) |
+| `ToAdmissionResponseError(err)` | Returns an `Allowed: false` response with the error message |
+| `ToAdmissionResponseAllow()` | Returns an `Allowed: true` response |
+| `GeneratePatchPayload(patches...)` | Marshals `PatchOperation` structs to JSON patch bytes |
+| `PermitUser(...)` | SubjectAccessReview authorization check |
+
+### PatchOperation
+
+```go
+type PatchOperation struct {
+    Op    string      `json:"op"`
+    Path  string      `json:"path"`
+    Value interface{} `json:"value"`
+}
+```
+
+Used by mutating webhooks to produce RFC 6902 JSON Patches.
+
+---
+
+## Request/Response Flow
+
+```
+K8s API Server
+  │
+  ├─ CREATE/UPDATE Secret ──→ /secret-mutate  ──→ /secret-validate
+  ├─ CREATE/UPDATE Plan    ──→ /plan-mutate    ──→ /plan-validate
+  ├─ CREATE/UPDATE Provider──→ /provider-mutate──→ /provider-validate
+  └─ CREATE Migration      ──→                    /migration-validate
+```
+
+1. K8s sends an `AdmissionReview` (JSON, `application/json`)
+2. Webhook deserializes the embedded resource
+3. For mutating: returns `Allowed: true` with a JSON Patch, or `Allowed: false`
+4. For validating: returns `Allowed: true` or `Allowed: false` with `StatusCause` details
+5. Response preserves the request UID and clears Object/OldObject before replying
+
+---
+
+## Frontend Impact
+
+- **Plan creation errors**: The UI must handle 422 (Unprocessable Entity) responses from plan validation — storage class issues, warm migration restrictions, LUKS restrictions, and permission denials
+- **Provider credential errors**: Secret validation returns 403 for invalid credentials — the UI shows these during provider creation/edit
+- **OVA URL immutability**: The UI should disable URL editing for existing OVA providers
+- **Transfer network defaults**: Plans may have their transfer network auto-populated by the mutating webhook
+
+---
+
+## Source File Map
+
+```
+pkg/forklift-api/
+├── api.go                          # Server setup, port 8443/8444
+└── webhooks/
+    ├── webhooks.go                 # Path constants, registration
+    ├── validating-webhook.go       # Serve* functions for validating
+    ├── mutating-webhook.go         # Serve* functions for mutating
+    ├── validating-webhook/
+    │   ├── validating-webhook.go   # Admitter interface, Serve(), response builders
+    │   └── admitters/
+    │       ├── secret-admitter.go  # Provider/host secret validation + connection test
+    │       ├── plan-admitter.go    # Plan validation (authz, storage, warm, LUKS)
+    │       ├── provider-admitter.go# SDK endpoint validation
+    │       └── migration-admitter.go # Migration authz checks
+    ├── mutating-webhook/
+    │   ├── mutating-webhook.go     # Mutator interface, Serve()
+    │   └── mutators/
+    │       ├── secret-mutator.go   # CA cert enrichment, credential copying
+    │       ├── plan-mutator.go     # Transfer network default, populator labels
+    │       └── provider-mutator.go # SDK default, finalizers
+    └── util/
+        └── util.go                 # AdmissionReview parsing, authz, patch helpers
+```

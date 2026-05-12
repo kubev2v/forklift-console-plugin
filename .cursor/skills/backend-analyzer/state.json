@@ -1,0 +1,116 @@
+{
+  "lastAnalyzedCommit": "412c71822",
+  "lastRunDate": "2026-05-04",
+  "forkliftRepoPath": "/Users/aturgema/Workspace/forklift",
+  "targetBranch": "upstream/main",
+  "analyzedDomains": {
+    "architecture": {
+      "commit": "412c71822",
+      "paths": [
+        "cmd/forklift-controller/",
+        "cmd/forklift-api/",
+        "pkg/controller/controller.go",
+        "pkg/controller/base/",
+        "pkg/settings/"
+      ]
+    },
+    "api-types": {
+      "commit": "412c71822",
+      "paths": ["pkg/apis/forklift/v1beta1/", "pkg/lib/condition/"]
+    },
+    "providers/provider-controller": {
+      "commit": "412c71822",
+      "paths": [
+        "pkg/controller/provider/controller.go",
+        "pkg/controller/provider/validation.go",
+        "pkg/controller/provider/container/doc.go",
+        "pkg/controller/provider/web/doc.go"
+      ]
+    },
+    "providers/vsphere": {
+      "commit": "412c71822",
+      "paths": [
+        "pkg/controller/provider/container/vsphere/",
+        "pkg/controller/provider/model/vsphere/",
+        "pkg/controller/provider/web/vsphere/"
+      ]
+    },
+    "providers/ovirt": {
+      "commit": "412c71822",
+      "paths": [
+        "pkg/controller/provider/container/ovirt/",
+        "pkg/controller/provider/model/ovirt/",
+        "pkg/controller/provider/web/ovirt/"
+      ]
+    },
+    "providers/openstack": {
+      "commit": "412c71822",
+      "paths": [
+        "pkg/controller/provider/container/openstack/",
+        "pkg/controller/provider/model/openstack/",
+        "pkg/controller/provider/web/openstack/"
+      ]
+    },
+    "providers/ova": {
+      "commit": "412c71822",
+      "paths": [
+        "pkg/controller/provider/container/ova/",
+        "pkg/controller/provider/model/ovf/",
+        "pkg/controller/provider/web/ova/",
+        "pkg/controller/ova/"
+      ]
+    },
+    "providers/hyperv": {
+      "commit": "412c71822",
+      "paths": [
+        "pkg/controller/provider/container/hyperv/",
+        "pkg/controller/provider/model/hyperv/",
+        "pkg/controller/provider/web/hyperv/",
+        "pkg/controller/hyperv/"
+      ]
+    },
+    "providers/ec2": { "commit": "412c71822", "paths": ["pkg/provider/ec2/"] },
+    "providers/ocp": {
+      "commit": "412c71822",
+      "paths": [
+        "pkg/controller/provider/container/ocp/",
+        "pkg/controller/provider/model/ocp/",
+        "pkg/controller/provider/web/ocp/"
+      ]
+    },
+    "plans/plan-controller": {
+      "commit": "412c71822",
+      "paths": [
+        "pkg/controller/plan/controller.go",
+        "pkg/controller/plan/validation.go",
+        "pkg/controller/plan/context/",
+        "pkg/controller/plan/ensurer/",
+        "pkg/controller/migration/"
+      ]
+    },
+    "plans/plan-adapters": { "commit": "412c71822", "paths": ["pkg/controller/plan/adapter/"] },
+    "plans/migration-pipeline": {
+      "commit": "412c71822",
+      "paths": [
+        "pkg/controller/plan/migration.go",
+        "pkg/controller/plan/kubevirt.go",
+        "pkg/controller/plan/handler/",
+        "pkg/controller/plan/migrator/"
+      ]
+    },
+    "plans/scheduler": { "commit": "412c71822", "paths": ["pkg/controller/plan/scheduler/"] },
+    "mappings/network-map": { "commit": "412c71822", "paths": ["pkg/controller/map/network/"] },
+    "mappings/storage-map": { "commit": "412c71822", "paths": ["pkg/controller/map/storage/"] },
+    "infrastructure/webhooks": { "commit": "412c71822", "paths": ["pkg/forklift-api/webhooks/"] },
+    "infrastructure/rest-api": {
+      "commit": "412c71822",
+      "paths": ["pkg/forklift-api/services/", "pkg/controller/provider/web/"]
+    },
+    "infrastructure/virt-v2v": { "commit": "412c71822", "paths": ["pkg/virt-v2v/"] },
+    "infrastructure/shared-libraries": { "commit": "412c71822", "paths": ["pkg/lib/"] },
+    "infrastructure/monitoring": { "commit": "412c71822", "paths": ["pkg/monitoring/"] },
+    "infrastructure/host-controller": { "commit": "412c71822", "paths": ["pkg/controller/host/"] },
+    "infrastructure/hook-controller": { "commit": "412c71822", "paths": ["pkg/controller/hook/"] },
+    "operator/operator": { "commit": "412c71822", "paths": ["operator/"] }
+  }
+}

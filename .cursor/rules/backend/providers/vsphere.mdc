@@ -1,0 +1,260 @@
+---
+description: vSphere provider - inventory collection, data model, REST API, credentials, VDDK
+alwaysApply: false
+---
+
+# vSphere Provider
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+## Inventory Collection
+
+### Connection & Authentication
+
+The collector uses the `govmomi` library to connect to vCenter or standalone ESXi hosts.
+
+**Credentials** come from a Kubernetes Secret with these keys:
+- `user` — vCenter/ESXi username
+- `password` — vCenter/ESXi password
+
+**TLS thumbprint** comes from `provider.Status.Fingerprint`. If `insecureSkipVerify` is not set in the secret, TLS is verified and the thumbprint is computed from the server certificate.
+
+**SDK endpoint validation**: The provider's `spec.settings["sdkEndpoint"]` value (`vCenter` or `ESXI`) is checked against the actual server type. Mismatches fail the connection.
+
+### Collection Mechanism
+
+The collector uses vSphere's **PropertyCollector** with `WaitForUpdatesEx` — a long-polling mechanism that blocks until the server reports changes.
+
+```
+Connect → Create PropertyCollector → Create Filter → WaitForUpdatesEx loop
+```
+
+**Key constants:**
+- `RetryDelay`: 5 seconds between reconnection attempts
+- `MaxObjectUpdates`: 10,000 objects per update batch
+- `ConnectionTimeout`: 30 seconds
+
+**Tracked vSphere object types:**
+| vSphere Type | Model Type | Notes |
+|---|---|---|
+| `Folder` | `Folder` | Hierarchy container |
+| `Datacenter` | `Datacenter` | Top-level organizational unit |
+| `ClusterComputeResource` | `Cluster` | Also handles standalone `ComputeResource` (variant) |
+| `HostSystem` | `Host` | ESXi host |
+| `Network` | `Network` | Standard network (variant=`Standard`) |
+| `OpaqueNetwork` | `Network` | NSX-T network (variant=`OpaqueNetwork`) |
+| `DistributedVirtualPortgroup` | `Network` | DVS port group (variant=`DvPortGroup`) |
+| `VmwareDistributedVirtualSwitch` | `Network` | DVS switch (variant=`DvSwitch`) |
+| `Datastore` | `Datastore` | Storage |
+| `VirtualMachine` | `VM` | VMs — templates are excluded from API responses |
+
+**Parity**: After the first complete `WaitForUpdatesEx` response (not truncated), `parity=true` is set and model watches begin.
+
+### Adapters
+
+Each vSphere object type has an adapter that translates `ObjectUpdate` changesets into model structs. For VMs, adapter logic handles:
+- Disk extraction from multiple backing types (FlatVer1, FlatVer2, RDM)
+- Controller mapping (IDE, SCSI, SATA, NVME, USB)
+- NIC extraction from various ethernet card types (E1000, E1000e, Vmxnet, Vmxnet2, Vmxnet3, PCNet32)
+- Guest network info, guest disk mount points, guest IP stacks
+- Changed Block Tracking (CBT) per disk via `ExtraConfig` keys
+- NUMA affinity from `ExtraConfig`
+- TPM detection (only for vSphere API >= 6.7)
+
+## Data Model
+
+### VM Fields (Complete)
+
+```
+ID, Name, Parent, Variant, Revision
+Folder, Host, UUID, Firmware, PowerState, ConnectionState
+CpuAffinity, CpuHotAddEnabled, CpuHotRemoveEnabled, MemoryHotAddEnabled
+FaultToleranceEnabled, CpuCount, CoresPerSocket, MemoryMB
+GuestName, GuestNameFromVmwareTools, HostName, GuestID
+BalloonedMemory, IpAddress, NumaNodeAffinity, StorageUsed
+Snapshot, IsTemplate, ChangeTrackingEnabled, TpmEnabled
+SecureBoot, NestedHVEnabled, DiskEnableUuid
+ToolsStatus, ToolsRunningStatus, ToolsVersionStatus
+RevisionValidated, PolicyVersion
+Devices[]        — {kind}
+NICs[]           — {network, mac, order, deviceKey}
+Disks[]          — {key, unitNumber, controllerKey, file, datastore, capacity,
+                    shared, rdm, bus, mode, serial, winDriveLetter,
+                    changeTrackingEnabled, parent}
+Controllers[]    — {key, bus, disks[]}
+Networks[]       — Ref[]
+Concerns[]       — {category, label, assessment}
+GuestNetworks[]  — {device, deviceConfigId, mac, ip, origin, prefix, dns[], network}
+GuestDisks[]     — {key, diskPath, capacity, freeSpace, filesystemType}
+GuestIpStacks[]  — {device, gateway, network, prefix, dns[]}
+```
+
+### Disk Bus Types
+
+```
+SCSI = "scsi"   IDE = "ide"   SATA = "sata"   NVME = "nvme"   USB = "usb"
+```
+
+### Network Variants
+
+```
+Standard      — standard vSwitch port group
+DvPortGroup   — distributed virtual port group
+OpaqueNetwork — NSX-T opaque network
+DvSwitch      — distributed virtual switch (hosts/PNICs, not selectable as VM network)
+```
+
+### Concern Structure
+
+```json
+{ "category": "Warning|Critical|Information|Advisory",
+  "label": "Human-readable short label",
+  "assessment": "Detailed explanation" }
+```
+
+## REST API
+
+### Base Path
+
+```
+/providers/vsphere/:provider
+```
+
+Where `:provider` is the Provider CR's UID.
+
+### Endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/providers/vsphere` | List all vSphere providers |
+| `GET` | `/providers/vsphere/:provider` | Get provider details (with inventory counts) |
+| `GET` | `…/folders` | List folders |
+| `GET` | `…/folders/:folder` | Get folder |
+| `GET` | `…/datacenters` | List datacenters |
+| `GET` | `…/datacenters/:datacenter` | Get datacenter |
+| `GET` | `…/clusters` | List clusters (excludes standalone ComputeResource) |
+| `GET` | `…/clusters/:cluster` | Get cluster |
+| `GET` | `…/hosts` | List hosts |
+| `GET` | `…/hosts/:host` | Get host (supports `?advancedOption=key`) |
+| `GET` | `…/networks` | List networks |
+| `GET` | `…/networks/:network` | Get network |
+| `GET` | `…/datastores` | List datastores |
+| `GET` | `…/datastores/:datastore` | Get datastore |
+| `GET` | `…/vms` | List VMs (templates excluded) |
+| `GET` | `…/vms/:vm` | Get VM |
+| `GET` | `…/workloads/:vm` | Get workload (VM + host + cluster + datacenter) |
+| `GET` | `…/tree/host` | Datacenter → Cluster → Host → VM tree |
+| `GET` | `…/tree/vm` | Datacenter → Folder → VM tree |
+| `POST` | `/vddk/build-image` | Upload VDDK tar, trigger OpenShift build |
+| `GET` | `/vddk/image-url` | Get VDDK image URL (supports WebSocket watch) |
+| `GET` | `/vddk/download-tar` | Download previously uploaded VDDK tar |
+
+### Query Parameters
+
+- `?detail=` — Controls response depth: `0` = minimal (id, name, path, selfLink), `1` = summary, `2+` or `all` = full detail
+- `?name=` — Filter by name; supports path-based matching (`/DC/folder/name`)
+- `?advancedOption=key` — On host GET: fetch a specific vSphere advanced option value
+
+### WebSocket Watch
+
+Any list endpoint supports WebSocket upgrade via the `X-Watch` header. The server pushes `{action, updated}` events as inventory changes.
+
+### Detail Levels — VM Response
+
+**detail=0** (Resource):
+```json
+{ "id": "vm-123", "variant": "", "parent": {"kind":"Folder","id":"group-v4"},
+  "path": "/DC/vm/MyVM", "revision": 5, "name": "MyVM", "selfLink": "..." }
+```
+
+**detail=1** (VM1): Adds `revisionValidated`, `isTemplate`, `powerState`, `host`, `networks[]`, `disks[]`, `concerns[]`
+
+**detail=2+** (VM full): Adds all remaining fields: `uuid`, `firmware`, `connectionState`, `snapshot`, `changeTrackingEnabled`, `cpuAffinity[]`, `cpuHotAddEnabled`, `cpuHotRemoveEnabled`, `memoryHotAddEnabled`, `faultToleranceEnabled`, `cpuCount`, `coresPerSocket`, `memoryMB`, `guestName`, `guestNameFromVmwareTools`, `hostName`, `guestId`, `balloonedMemory`, `ipAddress`, `storageUsed`, `tpmEnabled`, `numaNodeAffinity[]`, `devices[]`, `nics[]`, `guestNetworks[]`, `guestDisks[]`, `guestIpStacks[]`, `secureBoot`, `toolsStatus`, `toolsRunningStatus`, `toolsVersionStatus2`, `diskEnableUuid`, `nestedHVEnabled`, `policyVersion`
+
+### Provider Response (detail>0)
+
+Includes inventory counts: `datacenterCount`, `clusterCount`, `hostCount`, `vmCount`, `networkCount`, `datastoreCount`, plus `apiVersion`, `product`, `instanceUuid`.
+
+### Workload Response
+
+Enriched VM that embeds host and cluster data:
+```json
+{
+  "selfLink": "...",
+  "<all VM fields>": "...",
+  "host": {
+    "<all Host fields>": "...",
+    "cluster": {
+      "<all Cluster fields>": "...",
+      "datacenter": { "<Datacenter fields>" }
+    }
+  }
+}
+```
+
+Used for policy validation workloads sent to the OPA policy agent.
+
+## Policy Validation (Concerns)
+
+### Architecture
+
+Validation is **asynchronous and non-blocking**:
+1. VM create/update events trigger validation via the `VMEventHandler`
+2. A periodic search finds VMs where `revision != revisionValidated`
+3. Each VM is sent to the OPA **policy agent** at `/v1/data/io/konveyor/forklift/vmware/validate`
+4. Results (concerns) are batched and written back to the VM model
+
+### Validation Triggers
+
+- **VM events**: Created or Updated VMs are queued for validation
+- **Host events**: All VMs on the host get `revisionValidated=0` → revalidated
+- **Cluster events**: All hosts in the cluster → all VMs on those hosts revalidated
+- **Shared disk changes**: When a VM is deleted or validated, VMs sharing its disk files are revalidated
+
+### Shared Disk Detection
+
+A `diskFileMap` (disk file path → VM count) is rebuilt each validation cycle. Disks are marked `shared=true` when multiple VMs reference the same file path. The concern ID is `vmware.disk.shared.detected`.
+
+### Policy Version
+
+The policy agent exposes a version at `/v1/data/io/konveyor/forklift/vmware/rules_version`. If the version changes, all VMs are revalidated.
+
+## VDDK (Virtual Disk Development Kit)
+
+VDDK is VMware's SDK for reading virtual disks. The backend provides endpoints to:
+
+1. **Upload** a VDDK tar.gz file (`POST /vddk/build-image`)
+2. **Build** an OCI image via an OpenShift `BuildConfig` named `vddk`
+3. **Watch** build progress via WebSocket (`GET /vddk/image-url` with `X-Watch` + `?build-name=`)
+4. **Query** the final image URL from the `vddk:latest` ImageStreamTag
+
+VDDK endpoints are only registered when running on OpenShift (`settings.Settings.OpenShift`).
+
+## ESXi Host Handling
+
+- Hosts track: `cluster`, `status`, `inMaintenanceMode`, `managementServerIp`, `managementIPs[]`, `thumbprint`, `timezone`, CPU/memory specs, `productName`, `productVersion`
+- Host networking is modeled in detail: `PNICs[]`, `VNICs[]`, `PortGroups[]`, `Switches[]`
+- The REST API builds `networkAdapters[]` by correlating VNICs with port groups and switches
+- SCSI disk info (`hostScsiDisks[]`), HBA info (`hbaDiskInfo[]`), and SCSI topology are tracked for storage offload features
+- `advancedOptions` can be queried on demand via the `?advancedOption=key` query parameter (lazy-loaded from vCenter)
+
+## Disk Sorting for Migration
+
+Disks are sorted to match the order that `virt-v2v` (via libvirt) expects:
+- **Libvirt order**: SCSI → SATA → IDE → NVME
+- **VMware order**: SATA → IDE → SCSI → NVME
+
+Within each bus type, disks are sorted by `key`. This ensures PVCs are populated with the correct disk content during migration.
+
+## Key Frontend Implications
+
+1. **Templates are filtered out** of VM list responses — the backend skips `isTemplate=true`
+2. **Concerns** drive migration readiness warnings in the UI; they come from OPA policy validation
+3. **Network variant** determines how a network is displayed and which additional fields are present (`dvSwitch`, `key`, `tag`, `vlanId`)
+4. **detail=1** is typically used for table/list views (has power state, disks, concerns); **detail=2+** for detail panels
+5. **Tree endpoints** provide pre-built hierarchies for folder pickers
+6. **Workload endpoint** is used internally for policy validation, not typically called by the frontend directly
+7. **Shared disks** (`disk.shared=true`) need special handling — they can be excluded or flagged in the UI
+8. **CBT per disk** (`disk.changeTrackingEnabled`) is important for warm migration eligibility
+9. **Guest tools status** fields: `toolsStatus`, `toolsRunningStatus`, `toolsVersionStatus2` — note the `2` suffix on version
+10. **`guestNameFromVmwareTools`** may differ from `guestName` (which comes from config summary); prefer the tools version when available

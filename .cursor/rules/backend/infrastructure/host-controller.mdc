@@ -1,0 +1,93 @@
+---
+description: Host controller - ESXi host management, connection testing, inventory watches
+alwaysApply: false
+---
+
+# Host Controller
+
+Source: `pkg/controller/host/`
+
+## Purpose
+
+The Host CRD represents an ESXi host used for **direct disk transfer** during vSphere migrations. The controller validates the host configuration and tests connectivity to the ESXi SDK endpoint.
+
+**Only vSphere providers** are supported. All other provider types set a `TypeNotValid` blocker condition. Non-vSphere handler implementations (oVirt, OCP, OpenStack, OVA, HyperV) are no-ops.
+
+## Watched Resources
+
+| Resource | Watch Type | Purpose |
+|----------|-----------|---------|
+| `Host` | Primary | Reconcile on create/update/delete |
+| `Provider` | Reference | Re-reconcile hosts when their provider changes; sets up inventory watches |
+| `Secret` | Reference | Re-reconcile when host credentials change |
+| Channel | Generic events | Receives events from inventory watches (host changes in vSphere) |
+
+## Reconciliation Flow
+
+```
+Fetch Host CR
+  → BeginStagingConditions
+  → validate()
+    → validateProvider()   — provider exists, is reconciled, and is vSphere
+    → validateRef()        — host ref (ID/Name) resolves in provider inventory
+    → validateIp()         — ipAddress is set
+    → validateSecret()     — secret exists, has "user" + "password" keys, TLS validates
+    → Set Validated condition
+    → testConnection()     — connect to ESXi SDK, check maintenance/health
+  → Set Ready if no blockers AND ConnectionTestSucceeded
+  → EndStagingConditions
+  → Record events, update status
+  → If ConnectionTestFailed: requeue after 15 minutes
+```
+
+## Conditions
+
+| Condition | Category | When Set |
+|-----------|----------|----------|
+| `Validated` | Advisory | All validations pass |
+| `RefNotValid` | Critical | Host ref not set, not found in inventory, or ambiguous |
+| `SecretNotValid` | Critical | Secret missing, not found, missing keys, or TLS failure |
+| `TypeNotValid` | Critical | Provider is not vSphere |
+| `IpNotValid` | Critical | `ipAddress` field is empty |
+| `ConnectionTestSucceeded` | Required | ESXi SDK connection successful |
+| `ConnectionTestFailed` | Critical | Cannot connect to ESXi host |
+| `InMaintenance` | Critical | ESXi host is in maintenance mode |
+| `NotHealthy` | Critical | ESXi host status is not "green" |
+| `Ready` | Required | No blockers + connection test succeeded |
+
+## Connection Testing
+
+`testConnection()` only runs when there are no blocker conditions:
+
+1. Queries the inventory API for the host model to get `Thumbprint`, `InMaintenanceMode`, and `Status`.
+2. Sets `InMaintenance` / `NotHealthy` conditions if applicable.
+3. Injects the host thumbprint into the secret data.
+4. Constructs URL: `https://{ipAddress}/sdk`.
+5. Creates an `EsxHost` adapter (from `pkg/controller/plan/adapter/vsphere`) and calls `TestConnection()`.
+6. On failure: requeues with a **15-minute** backoff to avoid triggering ESXi DOS protection.
+
+## Inventory Watch (vSphere Handler)
+
+File: `handler/vsphere/handler.go`
+
+The vSphere handler watches for inventory changes to `vsphere.Host` objects:
+
+- **Created/Deleted**: Finds all Host CRs referencing the same provider and enqueues reconcile events.
+- **Updated**: Only triggers if `Path` or `InMaintenanceMode` changed.
+- Matching: compares `host.Spec.Ref.ID` against inventory ID or path suffix against ref name.
+
+## Predicate Logic
+
+- **HostPredicate**: Reconciles on create/delete; on update only when `ObservedGeneration < Generation`.
+- **ProviderPredicate**: Triggers on provider updates (when reconciled); ensures inventory watch is started for ready providers.
+
+## Secret Requirements (vSphere)
+
+The host secret must contain:
+- `user` — ESXi username
+- `password` — ESXi password
+- Optional `insecureSkipVerify` — skips TLS verification if set
+
+## Frontend Relevance
+
+The Host CRD is surfaced in the UI under provider details for vSphere providers. The connection status conditions (`ConnectionTestSucceeded`, `ConnectionTestFailed`, `InMaintenance`, `NotHealthy`) are displayed to users. Plan execution uses Host resources for direct ESXi disk transfers.

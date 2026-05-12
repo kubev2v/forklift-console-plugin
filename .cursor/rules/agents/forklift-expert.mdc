@@ -8,6 +8,8 @@ alwaysApply: false
 Invoke with: *"as forklift expert"*, *"as migration expert"*, *"domain review"*, *"migration review"*
 
 > **Canonical source:** For the list of CRDs and provider types, see `project-context.mdc`. This agent expands on that with implementation details, status handling, and common pitfalls.
+>
+> **Backend deep-dive:** Detailed Go backend knowledge is available in `.cursor/rules/backend/`. Use the routing table below to load the relevant file when answering backend questions.
 
 ## Your Role
 
@@ -286,6 +288,39 @@ Your approach:
 - 403: Permission denied
 - 409: Conflict (resource modified)
 - 422: Validation error (invalid plan configuration)
+
+---
+
+## Backend Knowledge Routing Table
+
+When answering questions about backend behavior, read the relevant `.mdc` file from `.cursor/rules/backend/`:
+
+| Topic | Load file |
+|-------|-----------|
+| Architecture, entry points, deployment roles | `backend/architecture.mdc` |
+| CRD types, phase constants, conditions framework | `backend/api-types.mdc` |
+| Provider reconciliation, credentials, inventory lifecycle | `backend/providers/provider-controller.mdc` |
+| vSphere inventory, VDDK, ESXi, vCenter API | `backend/providers/vsphere.mdc` |
+| oVirt Engine API, storage domains | `backend/providers/ovirt.mdc` |
+| OpenStack Keystone/Nova/Glance/Neutron | `backend/providers/openstack.mdc` |
+| OVA file parsing, NFS, OVAProviderServer | `backend/providers/ova.mdc` |
+| Hyper-V SMB/PowerShell, HyperVProviderServer | `backend/providers/hyperv.mdc` |
+| EC2 AWS SDK, AMI, platform gating | `backend/providers/ec2.mdc` |
+| OpenShift target provider, namespaces, StorageClass | `backend/providers/ocp.mdc` |
+| Plan validation, conditions, lifecycle | `backend/plans/plan-controller.mdc` |
+| Provider adapters, Builder/Client interfaces | `backend/plans/plan-adapters.mdc` |
+| Migration phases, itineraries, disk transfer, KubeVirt | `backend/plans/migration-pipeline.mdc` |
+| VM scheduling, concurrency, MaxInFlight | `backend/plans/scheduler.mdc` |
+| NetworkMap validation, source/target mapping | `backend/mappings/network-map.mdc` |
+| StorageMap, offload plugins, vendor integrations | `backend/mappings/storage-map.mdc` |
+| Admission webhooks (validating + mutating) | `backend/infrastructure/webhooks.mdc` |
+| Inventory REST API endpoints, per-provider routes | `backend/infrastructure/rest-api.mdc` |
+| virt-v2v conversion, inspection, customization | `backend/infrastructure/virt-v2v.mdc` |
+| Condition framework, inventory containers, lib/ | `backend/infrastructure/shared-libraries.mdc` |
+| Prometheus metrics, monitoring | `backend/infrastructure/monitoring.mdc` |
+| ESXi host controller | `backend/infrastructure/host-controller.mdc` |
+| Pre/post migration hooks | `backend/infrastructure/hook-controller.mdc` |
+| Operator deployment, feature flags, images | `backend/operator/operator.mdc` |
 
 ---
 

@@ -1,0 +1,286 @@
+---
+description: Plan adapters - provider-specific migration logic, Builder/Client/Validator interfaces
+alwaysApply: false
+---
+
+# Plan Adapters
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+## Overview
+
+The plan adapter pattern abstracts provider-specific migration logic behind a uniform interface. Each source provider (vSphere, oVirt, OpenStack, OVA, Hyper-V, OpenShift) implements the same set of interfaces so the plan controller can orchestrate migrations without provider-specific branching.
+
+**Source**: `pkg/controller/plan/adapter/`
+
+---
+
+## Factory Pattern
+
+`pkg/controller/plan/adapter/doc.go` contains the `New()` factory that returns the correct adapter based on `provider.Type()`:
+
+```go
+func New(provider *api.Provider) (adapter Adapter, err error) {
+    switch provider.Type() {
+    case api.VSphere:   adapter = &vsphere.Adapter{}
+    case api.OVirt:     adapter = &ovirt.Adapter{}
+    case api.OpenStack: adapter = &openstack.Adapter{}
+    case api.OpenShift: adapter = &ocp.Adapter{}
+    case api.Ova:       adapter = &ova.Adapter{}    // alias for ovfbase.Adapter
+    case api.EC2:       adapter = ec2adapter.New()   // separate package
+    case api.HyperV:    adapter = &hyperv.Adapter{}
+    }
+}
+```
+
+The package re-exports base types so consumers import from `adapter` directly:
+`Adapter`, `Builder`, `Ensurer`, `Client`, `Validator`, `DestinationClient`.
+
+---
+
+## Core Interfaces
+
+### Adapter (top-level factory)
+
+Each provider's `Adapter` struct implements this interface to construct the four sub-interfaces. All methods receive `*plancontext.Context` (the plan execution context with source/destination provider refs, secrets, inventory clients, and plan spec).
+
+```go
+type Adapter interface {
+    Builder(ctx *plancontext.Context) (Builder, error)
+    Client(ctx *plancontext.Context) (Client, error)
+    Validator(ctx *plancontext.Context) (Validator, error)
+    DestinationClient(ctx *plancontext.Context) (DestinationClient, error)
+    Ensurer(ctx *plancontext.Context) (Ensurer, error)
+}
+```
+
+### Builder — constructs migration K8s resources
+
+The Builder translates source VM inventory into destination Kubernetes objects (DataVolumes, PVCs, VirtualMachine specs, Secrets, ConfigMaps).
+
+| Method | Purpose |
+|--------|---------|
+| `Secret()` | Build credential secret for CDI import (user/password, CA cert) |
+| `ConfigMap()` | Build certificate/config ConfigMap for the import |
+| `DataVolumes()` | Create `cdi.DataVolume` specs per disk (VDDK source for vSphere, imageIO for oVirt, HTTP for OpenStack/OVA) |
+| `VirtualMachine()` | Build the `cnv.VirtualMachineSpec` — disks, NICs, firmware, CPU, memory, TPM |
+| `Tasks()` | Build migration progress tasks (one per disk, sized in MB) |
+| `TemplateLabels()` | OS-based template labels for the destination VM |
+| `PodEnvironment()` | Env vars for the virt-v2v conversion pod |
+| `LunPersistentVolumes/Claims()` | Direct LUN PVs/PVCs (oVirt FC/iSCSI LUNs) |
+| `SupportsVolumePopulators()` | Whether provider uses volume populators (vSphere XCOPY offload) |
+| `PopulatorVolumes()` | Build PVCs with DataSourceRef pointing to a volume populator CR |
+| `PopulatorTransferredBytes()` | Query transfer progress from the populator CR |
+| `PreferenceName()` | Resolve KubeVirt instance type preference |
+| `ConfigMaps()` / `Secrets()` | Additional ConfigMaps/Secrets to create for the VM |
+| `ConversionPodConfig()` | Provider-specific node selectors, labels, annotations for the conversion pod |
+
+### Client — source VM operations
+
+The Client performs runtime operations on the source VM during migration.
+
+| Method | Purpose |
+|--------|---------|
+| `PowerOn/Off()` | Control source VM power state |
+| `PowerState()` / `PoweredOff()` | Query source VM power state |
+| `CreateSnapshot()` | Create a warm-migration precopy snapshot (returns snapshot ID + task ID) |
+| `RemoveSnapshot()` | Remove a snapshot after transfer |
+| `CheckSnapshotReady/Remove()` | Poll snapshot creation/removal task status |
+| `SetCheckpoints()` | Set CDI DataVolume checkpoint annotations for incremental copies |
+| `GetSnapshotDeltas()` | Get per-disk change IDs from a snapshot (CBT for vSphere) |
+| `Finalize()` | Post-migration cleanup (e.g., delete VMExports for OCP) |
+| `DetachDisks()` | Detach LUN disks from the source VM (oVirt) |
+| `PreTransferActions()` | Provider-specific pre-transfer setup (OpenStack: create volumes from snapshots) |
+| `Close()` | Close API connections |
+
+### Validator — plan validation
+
+The Validator performs pre-flight checks before migration starts.
+
+| Method | Purpose |
+|--------|---------|
+| `StorageMapped()` | All VM disks have storage mapping entries |
+| `DirectStorage()` | LUN/FC disk details are complete (oVirt-specific) |
+| `NetworksMapped()` | All VM NICs have network mapping entries |
+| `MaintenanceMode()` | Host is not in maintenance mode |
+| `WarmMigration()` | Provider supports warm migration |
+| `MigrationType()` | Plan's migration type is valid for this provider |
+| `StaticIPs()` | Static IP info available for all NICs |
+| `UdnStaticIPs()` | UDN subnet matches VM IP addresses |
+| `SharedDisks()` | Shared disk validation (vSphere: running VMs, duplicate detection) |
+| `ChangeTrackingEnabled()` | CBT enabled for warm migration (vSphere) |
+| `HasSnapshot()` | No pre-existing snapshots that conflict with warm migration |
+| `PowerState()` | VM power state compatible with migration type |
+| `VMMigrationType()` | VM inherently compatible (OCP: live migration checks) |
+| `InvalidDiskSizes()` | All disks have valid sizes (> 0) |
+| `MacConflicts()` | Source MAC addresses don't conflict with destination VMs |
+| `PVCNameTemplate()` | PVC name template produces valid DNS1123 labels |
+| `GuestToolsInstalled()` | Guest tools status check (vSphere: VMware Tools) |
+
+### DestinationClient — destination cluster operations
+
+| Method | Purpose |
+|--------|---------|
+| `DeletePopulatorDataSource()` | Clean up volume populator CRs after migration |
+| `SetPopulatorCrOwnership()` | Set owner references on populator CRs |
+
+### Ensurer — resource creation on destination
+
+Shared across all providers (uses `ensurer.Ensurer` from `pkg/controller/plan/ensurer/`):
+
+| Method | Purpose |
+|--------|---------|
+| `SharedConfigMaps()` | Ensure ConfigMaps exist in destination namespace |
+| `SharedSecrets()` | Ensure Secrets exist in destination namespace |
+
+The Ensurer also has `VirtualMachine()`, `DataVolumes()`, and `PersistentVolumeClaims()` methods on the concrete struct (not on the interface) that create resources idempotently using label-based lookups.
+
+---
+
+## Per-Provider Key Differences
+
+### vSphere (`vsphere/`)
+
+- **Transfer method**: VDDK (VMware Virtual Disk Development Kit) via CDI, or virt-v2v for disk copying
+- **Warm migration**: Supported via Changed Block Tracking (CBT) snapshots
+- **Volume populators**: Supported via vSphere XCOPY offload (`VSphereXcopyVolumePopulator` CR) when `feature_copy_offload` is enabled and StorageMap has `OffloadPlugin.VSphereXcopyPluginConfig`
+- **Host CRs**: Loads `api.Host` resources to determine ESXi direct transfer vs vCenter transfer
+- **Builder.Load()**: Pre-loads host map on construction (unique to vSphere)
+- **Connection**: govmomi SOAP client; supports per-ESXi-host client caching
+- **Shared disks**: Full support — detects shared VMDK, validates running VMs, finds existing PVCs
+- **RDM disks**: Maps as LUN devices when `RDMAsLun` is set
+- **OS mapping**: Large `osMap` translating VMware guest IDs → osinfo IDs
+- **PVC name templates**: Full template support with `VSpherePVCNameTemplateData` (VmName, PlanName, DiskIndex, FileName, WinDriveLetter, etc.)
+- **Legacy Windows**: Detects legacy OS (XP, 2003, Vista, 2008) for VirtIO driver selection
+- **Secret**: Maps `user`→`accessKeyId`, `password`→`secretKey`; adds CA cert
+- **Conversion pod config**: No special requirements (empty result)
+- **Libvirt URL**: Constructs `vpx://` (vCenter), `esx://` (ESXi direct) URLs for virt-v2v
+
+### oVirt (`ovirt/`)
+
+- **Transfer method**: imageIO (oVirt image transfer API) via CDI
+- **Warm migration**: Supported via oVirt snapshot API (event-based polling for snapshot completion)
+- **LUN disks**: Full support for FC/iSCSI LUNs — builds `LunPersistentVolumes()` and `LunPersistentVolumeClaims()` with iSCSI target details
+- **Connection**: `go-ovirt` SDK (`ovirtsdk.Connection`)
+- **DirectStorage()**: Validates LUN disk details (logical unit size, storage type)
+- **Finalize**: Removes migration snapshots and deletes transferred disks from source
+- **DetachDisks**: Detaches LUN disks from source VM
+- **OS mapping**: Maps oVirt guest IDs → osinfo IDs
+- **Secret**: Includes CA certificate from provider in PEM format
+- **ConfigMap**: Writes CA certificate for imageIO connections
+- **Conversion pod config**: Adds `V2V_source=ovirt`, libvirt URI, password from secret
+
+### OpenStack (`openstack/`)
+
+- **Transfer method**: Glance image download via HTTP(S) or Cinder volume snapshots
+- **Warm migration**: Not supported
+- **Connection**: Custom OpenStack client (`libclient.Client`) with Keystone auth
+- **Snapshot flow**: Creates Cinder volume snapshots → temporary volumes → Glance images for transfer
+- **PreTransferActions**: Complex multi-step: snapshot → volume → image pipeline, with polling for each status transition
+- **Finalize**: Deletes temporary volumes and images created during migration
+- **Image-based VMs**: Special handling for Glance-sourced VMs (maps `__glance` storage domain)
+- **Secret**: OpenStack credentials (username, password, domain, project, region)
+- **ConfigMap**: Writes CA certificate for Glance/Cinder connections
+- **Volume populators**: Not supported
+- **Conversion pod config**: Adds `V2V_source=openstack`, Keystone auth env vars
+
+### OVA (`ova/`) — alias for ovfbase
+
+- **Implementation**: Pure type alias to `ovfbase` package — `Adapter = ovfbase.Adapter`, etc.
+- **Transfer method**: HTTP download from OVA server appliance (NFS-backed)
+- **Warm migration**: Not supported
+- **OVF parsing**: Shared `ovfparser.go` parses OVF XML for VM metadata (firmware, OS, disks)
+- **DataVolumes**: Uses `cdi.DataVolumeSourceHTTP` pointing to the OVA server URL
+- **Secret**: No-op (no per-VM credentials needed)
+- **ConfigMap**: No-op
+- **Conversion pod config**: Adds `V2V_source=ova`, source disk paths
+- **Volume populators**: Not supported
+- **DestinationClient**: All methods are no-ops
+
+### Hyper-V (`hyperv/`)
+
+- **Implementation**: Separate adapter, not based on ovfbase despite initial similarity
+- **Transfer method**: SMB share with CSI driver (`-i disk` mode for virt-v2v)
+- **Warm migration**: Not supported
+- **Connection**: HyperV driver (`driver.HyperVDriver`) via WinRM/PowerShell
+- **Storage validation**: Checks `disk.SMBPath` presence (single SMB share model)
+- **Secret**: No-op (SMB credentials handled by CSI driver at pod mount time)
+- **ConfigMap**: No-op
+- **OS mapping**: Uses `ovfbase.OsMapToOsinfoId()` from shared OVF logic
+- **Conversion pod config**: Adds node selector for `hyperv-host` label, sets SMB-related labels/annotations
+- **Volume populators**: Not supported
+- **Builder**: Simpler disk mapping (no snapshot suffixes, no shared disk logic)
+
+### OpenShift (`ocp/`)
+
+- **Transfer method**: VirtualMachineExport API → HTTPS download of VM volumes
+- **Migration types**: Cold, Live (via `DecentralizedLiveMigration` feature gate), and Conversion
+- **Warm migration**: Not supported
+- **Connection**: `k8sclient.Client` to source OpenShift cluster (via kubeconfig from provider secret, or local for `IsHost`)
+- **ConfigMap**: Fetches TLS certificate from `VirtualMachineExport.Status.Links.External.Cert`
+- **DataVolumes**: Uses `cdi.DataVolumeSourceHTTP` with export URL; special handling for ContainerDisk (blank DV with prePopulated annotation)
+- **VirtualMachine**: Copies spec from source VM, remaps networks, handles ContainerDisk volumes
+- **PreTransferActions**: Creates `VirtualMachineExport` CR on source cluster, waits for it to become ready
+- **Finalize**: Deletes `VirtualMachineExport` CRs from source cluster
+- **Live migration**: Validates `LiveMigratable` and `StorageLiveMigratable` conditions on source VMI
+- **Secret**: Exports source cluster token as `accessKeyId`
+- **Volume populators**: Not supported
+
+---
+
+## Shared Utilities
+
+### `base/` package
+
+- **Annotations**: Constants for CDI/Forklift annotations (`AnnDiskSource`, `AnnBindImmediate`, `AnnRequiresConversion`, etc.)
+- **`ConversionPodConfigResult`**: Struct for provider-specific conversion pod config (NodeSelector, Labels, Annotations)
+- **`VolumePopulatorNotSupportedError`**: Sentinel error for providers that don't support volume populators
+- **`ValidatePVCNameTemplate()`**: Shared utility to validate PVC name templates produce valid DNS1123 labels
+- **MAC conflict detection**: `CheckMacConflicts()`, `FindSourceVM()`, `GetDestinationVMsFromInventory()` helpers
+
+### `ovfbase/` package
+
+Shared logic for OVF-format providers (OVA and partially Hyper-V):
+- **`ovfparser.go`**: Parses OVF XML for firmware type, OS info, disk metadata
+- **`OsMapToOsinfoId()`**: Maps OVF OS type strings to osinfo IDs
+- **`ParseCapacity()`**: Converts OVF capacity strings (with units) to bytes
+
+### `ensurer/` package
+
+Provider-agnostic resource creation on the destination cluster:
+- Creates VirtualMachines, DataVolumes, PVCs by label (idempotent)
+- Creates shared ConfigMaps and Secrets by name (allows pre-existing resources)
+
+---
+
+## How Adapters Connect Inventory to Execution
+
+```
+plancontext.Context
+├── Source.Provider     → API provider CR
+├── Source.Secret       → Provider credentials
+├── Source.Inventory    → Inventory client (Find/Get/List VMs, networks, datastores)
+├── Destination.Client  → K8s client for target cluster
+├── Plan               → Plan CR (spec.vms, mappings, settings)
+├── Migration          → Active Migration CR
+└── Map.Network/Storage → Resolved NetworkMap/StorageMap CRs
+
+Adapter.Builder(ctx) → reads inventory → builds K8s objects
+Adapter.Client(ctx)  → connects to source API → manages VM lifecycle
+Adapter.Validator(ctx) → reads inventory → validates plan feasibility
+```
+
+Each sub-interface embeds `*plancontext.Context` and uses `r.Source.Inventory.Find(vm, vmRef)` to load VM details from the provider inventory cache, then applies provider-specific transformations to produce Kubernetes resources.
+
+---
+
+## Migration Type Support Matrix
+
+| Provider | Cold | Warm | Live | Conversion |
+|----------|------|------|------|------------|
+| vSphere | Yes | Yes (CBT) | No | Yes |
+| oVirt | Yes | Yes (snapshots) | No | Yes |
+| OpenStack | Yes | No | No | No |
+| OVA | Yes | No | No | No |
+| Hyper-V | Yes | No | No | No |
+| OpenShift | Yes | No | Yes | Yes |

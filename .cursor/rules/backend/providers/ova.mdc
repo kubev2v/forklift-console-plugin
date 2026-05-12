@@ -1,0 +1,255 @@
+---
+description: OVA provider - inventory collection, OVF parsing, NFS storage, REST API, OVAProviderServer CRD
+alwaysApply: false
+---
+
+# OVA Provider
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+## Architecture Overview
+
+The OVA provider imports VMs from OVF/OVA files stored on an NFS share. It uses a **sidecar server** pattern: a dedicated pod (OVA provider server) mounts the NFS share, parses OVF descriptors, and exposes a REST API. The main inventory controller then polls this sidecar to build its in-memory DB.
+
+```
+NFS Share (OVA/OVF files)
+    │
+    ▼
+┌─────────────────────────┐
+│  OVA Provider Server    │  (Deployment + Service in Forklift namespace)
+│  - Mounts NFS via PV    │
+│  - Parses OVF files     │
+│  - Exposes REST :8080   │
+└────────────┬────────────┘
+             │ HTTP (cluster-internal)
+             ▼
+┌─────────────────────────┐
+│  Inventory Collector    │  (runs inside forklift-controller)
+│  - Polls sidecar API    │
+│  - Stores in libmodel DB│
+│  - Validates VMs (OPA)  │
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐
+│  Inventory REST API     │  (gin handlers in forklift-controller)
+│  /providers/ova/:uid/…  │
+└─────────────────────────┘
+```
+
+---
+
+## Key Source Locations
+
+| Component | Path (under `pkg/`) |
+|-----------|---------------------|
+| Collector (thin wrapper) | `controller/provider/container/ova/collector.go` |
+| Shared OVF collector logic | `controller/provider/container/ovfbase/` |
+| OVF data model | `controller/provider/model/ovf/` |
+| REST API handlers | `controller/provider/web/ova/` + `web/ovfbase/` |
+| OVAProviderServer controller | `controller/ova/` |
+
+---
+
+## OVAProviderServer CRD
+
+**Kind**: `OVAProviderServer` (group `forklift.konveyor.io/v1beta1`)
+**Finalizer**: `api.OvaProviderFinalizer`
+**Controller name**: `ova-server`
+
+### Lifecycle
+
+1. Provider controller creates an `OVAProviderServer` CR when an OVA-type Provider is reconciled.
+2. The OVA server controller watches `OVAProviderServer` and ensures these resources:
+   - **PersistentVolume** — NFS volume, `ReadOnlyMany`, source parsed from `Provider.Spec.URL` (`server:path` format).
+   - **PersistentVolumeClaim** — Binds to the PV, owned by the OVAProviderServer.
+   - **Deployment** — Runs the sidecar image (`Settings.Providers.OVA.ContainerImage`), mounts NFS at `/ova`.
+   - **Service** — ClusterIP on port `8080`, named `api-http`.
+3. On deletion, the controller tears down Service → Deployment → PVC → PV.
+
+### Builder Constants
+
+```go
+NFSVolumeMountPath = "/ova"
+QEMUGroup          = 107   // container runs as this GID
+PVSize             = "1Gi" // minimal; NFS doesn't enforce
+```
+
+### Provider URL Format
+
+```
+<nfs-server>:<nfs-path>
+```
+
+Split on `:` → `segments[0]` = NFS server, `segments[1]` = NFS export path.
+
+### Appliance Management Feature
+
+Controlled by two gates:
+- Global: `Settings.Features.OVFApplianceManagement`
+- Per-provider: `Provider.Spec.Settings["applianceManagement"]`
+
+When both enabled, the deployment sets `APPLIANCE_ENDPOINTS=true` and the controller adds an `ApplianceManagementEnabled` condition to the CRD status.
+
+---
+
+## Inventory Collector
+
+### Initialization
+
+```go
+// OVA-specific: just delegates to the shared OVF collector
+func New(db, provider, secret) *ovfbase.Collector {
+    return ovfbase.New(db, provider, secret, "ova")
+}
+```
+
+### Connection
+
+The collector connects to the sidecar via:
+```
+http://<service-name>.<namespace>.svc.cluster.local:8080/test_connection
+```
+The service reference comes from `Provider.Status.Service`.
+
+### Phases
+
+| Phase | Description |
+|-------|-------------|
+| `Started` | Connect to sidecar |
+| `Load` | Initial full inventory load |
+| `Loaded` | Post-load refresh |
+| `Parity` | Begin DB watches, set parity=true |
+| `Refresh` | Periodic re-sync (every 60s) |
+
+### Adapters
+
+Four adapters handle different resource types:
+
+1. **NetworkAdapter** — fetches `GET /networks`
+2. **DiskAdapter** — fetches `GET /disks`
+3. **VMAdapter** — fetches `GET /vms`
+4. **StorageAdapter** — derives storage from disks
+
+Each adapter implements:
+- `List()` — initial population
+- `GetUpdates()` — upsert changes
+- `DeleteUnexisting()` — remove stale records
+
+### Refresh Strategy
+
+Two-phased approach:
+1. Fetch data from sidecar API (no DB lock held)
+2. Apply changeSet in a single transaction
+
+VM updates are triggered when `OvfPath` or `ExportSource` changes.
+
+---
+
+## Data Model (`model/ovf`)
+
+### Entities
+
+| Model | PK | Key Fields |
+|-------|-----|-----------|
+| `VM` | UUID | OvfPath, ExportSource, OsType, Firmware, SecureBoot, CpuCount, MemoryMB, Disks[], NICs[], Concerns[] |
+| `Network` | ID | Name, Description |
+| `Disk` | DiskId | FilePath, Capacity, Format, PopulatedSize |
+| `Storage` | ID | Name (derived from Disks) |
+
+### VM Validation
+
+VMs are validated against OPA policy at:
+```
+/v1/data/io/konveyor/forklift/ova/validate
+```
+
+The `VMEventHandler` watch:
+- Triggers on VM create/update events
+- Periodically searches for `Revision != RevisionValidated`
+- Submits validation tasks to the policy agent
+- Harvests results in batches (max 1024) and updates `Concerns`
+
+---
+
+## REST API Endpoints
+
+Base path: `/providers/ova`
+
+| Method | Path | Handler | Description |
+|--------|------|---------|-------------|
+| GET | `/providers/ova` | ProviderHandler.List | List OVA providers |
+| GET | `/providers/ova/:provider` | ProviderHandler.Get | Get provider details (includes counts) |
+| GET | `/providers/ova/:provider/vms` | VMHandler.List | List VMs (supports websocket watch) |
+| GET | `/providers/ova/:provider/vms/:vm` | VMHandler.Get | Get VM details |
+| GET | `/providers/ova/:provider/networks` | NetworkHandler.List | List networks |
+| GET | `/providers/ova/:provider/networks/:network` | NetworkHandler.Get | Get network |
+| GET | `/providers/ova/:provider/disks` | DiskHandler.List | List disks |
+| GET | `/providers/ova/:provider/disks/:disk` | DiskHandler.Get | Get disk |
+| GET | `/providers/ova/:provider/storages` | StorageHandler.List | List storages |
+| GET | `/providers/ova/:provider/storages/:storage` | StorageHandler.Get | Get storage |
+| GET | `/providers/ova/:provider/workloads` | WorkloadHandler.List | List workloads (validation payloads) |
+| GET | `/providers/ova/:provider/workloads/:vm` | WorkloadHandler.Get | Get workload |
+| GET | `/providers/ova/:provider/tree` | TreeHandler | Tree view |
+| GET | `/providers/ova/:provider/tree/vm` | TreeHandler | VM tree |
+
+### Detail Levels
+
+- `detail=0` — minimal (ID, Name, Revision, SelfLink)
+- `detail=1` — includes Disks, Networks, Concerns, RevisionValidated
+- `detail=2` (full) — all fields including firmware, CPU, memory, NICs, devices
+
+### Query Parameters
+
+- `name` — filter by name (supports path-based filtering)
+- `X-Watch` header — upgrades to websocket for real-time events
+
+### Provider Response (detail > 0)
+
+Includes derived counts:
+```json
+{
+  "vmCount": 42,
+  "networkCount": 3,
+  "diskCount": 84,
+  "storageCount": 84
+}
+```
+
+---
+
+## Sidecar REST Endpoints
+
+The OVA provider server pod exposes (consumed by the collector):
+
+| Path | Description |
+|------|-------------|
+| `GET /test_connection` | Health/readiness check |
+| `GET /vms` | List all VMs parsed from OVF |
+| `GET /networks` | List all networks |
+| `GET /disks` | List all virtual disks |
+
+---
+
+## Labels & Selectors
+
+Resources created by the OVA controller use these labels:
+
+```yaml
+app: forklift
+subapp: ova-server
+provider: <provider-UID>
+ova-server: <server-UID>
+```
+
+---
+
+## Frontend Implications
+
+- **Provider URL**: Must be `<nfs-server>:<path>` format (split on first colon)
+- **Provider.Status.Service**: Populated when sidecar is ready — indicates provider is operational
+- **ApplianceManagementEnabled condition**: Drives UI feature flag for appliance management
+- **VM.ExportSource**: Indicates origin system (vSphere, etc.) for OVA exports
+- **VM.OvfPath**: Path to the OVF descriptor file within the NFS share
+- **Disk.Format**: `vmdk`, `raw`, etc. from the OVF descriptor
+- **Storage**: One storage record per disk (synthetic, derived from disk list)

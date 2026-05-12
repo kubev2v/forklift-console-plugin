@@ -1,0 +1,88 @@
+---
+description: Forklift monitoring - Prometheus metrics, collection loops, HTTPS endpoint
+alwaysApply: false
+---
+
+# Monitoring & Metrics
+
+Source: `pkg/monitoring/`, `pkg/metrics/`
+
+## Prometheus Endpoint
+
+`pkg/metrics/promethousutil.go` → `StartPrometheusEndpoint(certsDirectory)`
+
+- Generates a self-signed TLS cert/key pair at startup.
+- Serves `/metrics` over HTTPS on port **8443** using `promhttp.Handler()`.
+- All metrics auto-registered via `promauto` (no manual `prometheus.Register` calls).
+
+## Metrics Defined
+
+All metrics live in `pkg/monitoring/metrics/forklift-controller/metrics.go`.
+
+### Counters
+
+| Metric | Type | Labels | Purpose |
+|--------|------|--------|---------|
+| `mtv_migrations_status_total` | CounterVec | status, provider, mode, target | Total VM migrations by terminal status |
+| `mtv_workload_migrations_status_total` | CounterVec | status, provider, mode, target, plan | Same but correlated to a specific plan UID |
+
+### Gauges
+
+| Metric | Type | Labels | Purpose |
+|--------|------|--------|---------|
+| `mtv_plans_status` | GaugeVec | status, provider, mode, target | Current plan counts by status (reset each cycle) |
+| `mtv_plan_alert_status` | GaugeVec | status, provider, mode, target, plan, plan_name, phase | Per-plan alerting (1 = active, deleted when resolved) |
+| `mtv_migration_duration_seconds` | GaugeVec | provider, mode, target, plan | Duration of completed migrations |
+| `mtv_migration_data_transferred_bytes` | GaugeVec | provider, mode, target, plan | Total bytes transferred (updated during execution and on completion) |
+
+### Histograms
+
+| Metric | Type | Labels | Buckets |
+|--------|------|--------|---------|
+| `mtv_migrations_duration_seconds` | HistogramVec | provider, mode, target | 1h, 2h, 5h, 10h, 24h, 48h (in seconds) |
+
+## Label Value Constants
+
+```
+status:   Succeeded, Failed, Executing, Running, Pending, Canceled, Completed, Blocked, Ready, Deleted
+provider: oVirt, VSphere, Openstack, OVA, Openshift
+mode:     Cold, Warm
+target:   Local (dest URL empty), Remote (dest URL set)
+```
+
+## Collection Loops
+
+Both run as background goroutines, polling every **10 seconds**.
+
+### Plan Metrics — `RecordPlanMetrics(client)`
+
+File: `plan_metrics.go`
+
+1. Lists all `Plan` resources via the k8s client.
+2. For each plan, resolves source/destination `Provider` to determine provider type, mode, and target.
+3. Checks plan conditions (Succeeded, Failed, Executing, Running, Pending, Canceled, Blocked, Deleted).
+4. Aggregates counts into `mtv_plans_status` gauge (reset stale label combos to 0).
+5. Sets `mtv_plan_alert_status` = 1 for active plans; deletes label set when plan no longer active.
+6. During Executing: sums `DiskTransfer`/`DiskTransferV2v` task progress into `mtv_migration_data_transferred_bytes`.
+7. For Failed plans: collects per-VM error phases into the `phase` alert label.
+
+### Migration Metrics — `RecordMigrationMetrics(client)`
+
+File: `migration_metrics.go`
+
+1. Lists all `Migration` resources.
+2. For each migration, resolves the parent `Plan` and its providers.
+3. Tracks terminal states (Succeeded, Failed, Canceled) using in-memory maps to avoid double-counting.
+4. On first observation of a terminal migration:
+   - Increments `mtv_migrations_status_total` and `mtv_workload_migrations_status_total`.
+   - For Succeeded: computes duration from `Status.Started` → `Status.Completed`, records to gauge and histogram; sums data transferred.
+
+## Key Design Decisions
+
+- **Polling, not event-driven**: Metrics are recalculated on a fixed 10s interval, not via controller watches.
+- **In-memory deduplication**: Maps like `processedSucceededMigrations` prevent counter double-increments across restarts — but these reset on pod restart, so counters may re-increment after operator restarts.
+- **Stale label cleanup**: `planStatusGauge` zeros out label combos that no longer appear; `planAlertStatusGauge` deletes stale label sets entirely.
+
+## Frontend Relevance
+
+The UI does not directly query these metrics, but they power Prometheus alerts and Grafana dashboards. The plan alert gauge (`mtv_plan_alert_status`) can trigger OpenShift alerts for failed/stalled migrations.

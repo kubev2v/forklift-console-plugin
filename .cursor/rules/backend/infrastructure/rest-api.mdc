@@ -1,0 +1,394 @@
+---
+description: Forklift inventory REST API - endpoints, per-provider routes, authentication, pagination, and web server setup
+alwaysApply: false
+---
+
+# Forklift Inventory REST API
+
+The forklift-api process runs an inventory REST API over TLS on **port 8444**.
+It exposes provider inventory data (VMs, networks, storage, hosts, etc.) collected
+by the inventory controller. The frontend plugin queries these endpoints for
+provider details, VM selection in plans, and mapping configuration.
+
+Source: `pkg/controller/provider/web/` and `pkg/forklift-api/services/` in the
+[forklift](https://github.com/kubev2v/forklift) repo.
+
+---
+
+## Server Setup
+
+```
+pkg/forklift-api/api.go  →  ForkliftApi.Execute()
+  ├── goroutine: serveServices()   → :8444 (REST services + inventory)
+  └── serveWebhooks()              → :8443 (webhooks, see webhooks.mdc)
+```
+
+- **Port**: 8444
+- **TLS**: Certificates from env vars `SERVICES_TLS_CERTIFICATE` and `SERVICES_TLS_KEY`
+- **Framework**: `gin-gonic/gin` for inventory routes; plain `net/http.ServeMux` for service endpoints
+- **Router**: Inventory handlers register via `AddRoutes(*gin.Engine)`
+
+---
+
+## Service Endpoints (port 8444, ServeMux)
+
+| Path | Method | Handler | Purpose |
+|------|--------|---------|---------|
+| `/tls-certificate` | GET | `serveTlsCertificate` | Fetches TLS certificate from a remote URL |
+
+**TLS Certificate Service**: Accepts a `?URL=<url>` query parameter, connects to the URL with
+`insecureSkipVerify`, retrieves the server's TLS certificate, and returns it as PEM-encoded
+`text/plain`. Used by the UI to auto-discover CA certificates during provider creation.
+
+---
+
+## Inventory REST Endpoints (port 8444, gin)
+
+All inventory endpoints are **GET-only** (read-only). The base path is `/providers`.
+
+### Cross-Provider Endpoints
+
+| Route | Description |
+|-------|-------------|
+| `GET /providers` | Lists all providers across all types, grouped by provider type |
+| `GET /providers/` | Same as above |
+
+The aggregated `/providers` endpoint queries each provider-type handler and returns:
+```json
+{
+  "openshift": [...],
+  "vsphere": [...],
+  "ovirt": [...],
+  "openstack": [...],
+  "ova": [...],
+  "hyperv": [...]
+}
+```
+
+### Per-Provider Route Pattern
+
+All per-provider endpoints follow this pattern:
+```
+/providers/<type>                        # List providers of this type
+/providers/<type>/:provider              # Get a specific provider (by UID)
+/providers/<type>/:provider/<resource>   # List resources
+/providers/<type>/:provider/<resource>/:id  # Get a specific resource
+```
+
+The `:provider` parameter is always the **K8s UID** of the Provider CR.
+
+---
+
+## vSphere Endpoints (`/providers/vsphere`)
+
+| Route | Description |
+|-------|-------------|
+| `/providers/vsphere` | List vSphere providers |
+| `/providers/vsphere/:provider` | Get provider details |
+| `/providers/vsphere/:provider/datacenters` | List datacenters |
+| `/providers/vsphere/:provider/datacenters/:datacenter` | Get datacenter |
+| `/providers/vsphere/:provider/clusters` | List clusters |
+| `/providers/vsphere/:provider/clusters/:cluster` | Get cluster |
+| `/providers/vsphere/:provider/hosts` | List ESXi hosts |
+| `/providers/vsphere/:provider/hosts/:host` | Get host |
+| `/providers/vsphere/:provider/networks` | List networks |
+| `/providers/vsphere/:provider/networks/:network` | Get network |
+| `/providers/vsphere/:provider/datastores` | List datastores |
+| `/providers/vsphere/:provider/datastores/:datastore` | Get datastore |
+| `/providers/vsphere/:provider/folders` | List folders |
+| `/providers/vsphere/:provider/folders/:folder` | Get folder |
+| `/providers/vsphere/:provider/vms` | List VMs |
+| `/providers/vsphere/:provider/vms/:vm` | Get VM |
+| `/providers/vsphere/:provider/workloads/:vm` | Get VM workload (migration-ready view) |
+| `/providers/vsphere/:provider/tree/host` | Host-based inventory tree |
+| `/providers/vsphere/:provider/tree/vm` | VM-based inventory tree |
+
+**VDDK endpoints** (OpenShift only):
+
+| Route | Method | Description |
+|-------|--------|-------------|
+| `/providers/vsphere/:provider/vddk/build-image` | POST | Upload VDDK tar and trigger BuildConfig |
+| `/providers/vsphere/:provider/vddk/image-url` | GET | Get VDDK container image URL |
+| `/providers/vsphere/:provider/vddk/download-tar` | GET | Download VDDK tar file |
+
+---
+
+## oVirt (RHV) Endpoints (`/providers/ovirt`)
+
+| Route | Description |
+|-------|-------------|
+| `/providers/ovirt` | List oVirt providers |
+| `/providers/ovirt/:provider` | Get provider details |
+| `/providers/ovirt/:provider/datacenters` | List datacenters |
+| `/providers/ovirt/:provider/datacenters/:datacenter` | Get datacenter |
+| `/providers/ovirt/:provider/clusters` | List clusters |
+| `/providers/ovirt/:provider/clusters/:cluster` | Get cluster |
+| `/providers/ovirt/:provider/hosts` | List hosts |
+| `/providers/ovirt/:provider/hosts/:host` | Get host |
+| `/providers/ovirt/:provider/vms` | List VMs |
+| `/providers/ovirt/:provider/vms/:vm` | Get VM |
+| `/providers/ovirt/:provider/networks` | List networks |
+| `/providers/ovirt/:provider/networks/:network` | Get network |
+| `/providers/ovirt/:provider/nicprofiles` | List NIC profiles |
+| `/providers/ovirt/:provider/nicprofiles/:profile` | Get NIC profile |
+| `/providers/ovirt/:provider/diskprofiles` | List disk profiles |
+| `/providers/ovirt/:provider/diskprofiles/:profile` | Get disk profile |
+| `/providers/ovirt/:provider/storagedomains` | List storage domains |
+| `/providers/ovirt/:provider/storagedomains/:storagedomain` | Get storage domain |
+| `/providers/ovirt/:provider/disks` | List disks |
+| `/providers/ovirt/:provider/disks/:disk` | Get disk |
+| `/providers/ovirt/:provider/servercpus` | List server CPU types |
+| `/providers/ovirt/:provider/servercpus/:servercpu` | Get server CPU |
+| `/providers/ovirt/:provider/tree/cluster` | Cluster-based inventory tree |
+| `/providers/ovirt/:provider/workloads/:vm` | Get VM workload |
+
+---
+
+## OpenStack Endpoints (`/providers/openstack`)
+
+| Route | Description |
+|-------|-------------|
+| `/providers/openstack` | List OpenStack providers |
+| `/providers/openstack/:provider` | Get provider details |
+| `/providers/openstack/:provider/regions` | List regions |
+| `/providers/openstack/:provider/regions/:region` | Get region |
+| `/providers/openstack/:provider/projects` | List projects |
+| `/providers/openstack/:provider/projects/:project` | Get project |
+| `/providers/openstack/:provider/flavors` | List flavors |
+| `/providers/openstack/:provider/flavors/:flavor` | Get flavor |
+| `/providers/openstack/:provider/images` | List images |
+| `/providers/openstack/:provider/images/:image` | Get image |
+| `/providers/openstack/:provider/vms` | List VMs |
+| `/providers/openstack/:provider/vms/:vm` | Get VM |
+| `/providers/openstack/:provider/volumes` | List volumes |
+| `/providers/openstack/:provider/volumes/:volume` | Get volume |
+| `/providers/openstack/:provider/volumetypes` | List volume types |
+| `/providers/openstack/:provider/volumetypes/:volumetype` | Get volume type |
+| `/providers/openstack/:provider/snapshots` | List snapshots |
+| `/providers/openstack/:provider/snapshots/:snapshot` | Get snapshot |
+| `/providers/openstack/:provider/networks` | List networks |
+| `/providers/openstack/:provider/networks/:network` | Get network |
+| `/providers/openstack/:provider/subnets` | List subnets |
+| `/providers/openstack/:provider/subnets/:subnet` | Get subnet |
+| `/providers/openstack/:provider/tree/project` | Project-based inventory tree |
+| `/providers/openstack/:provider/workloads/:vm` | Get VM workload |
+
+---
+
+## OpenShift (OCP) Endpoints (`/providers/openshift`)
+
+| Route | Description |
+|-------|-------------|
+| `/providers/openshift` | List OpenShift providers |
+| `/providers/openshift/:provider` | Get provider details |
+| `/providers/openshift/:provider/namespaces` | List namespaces |
+| `/providers/openshift/:provider/namespaces/:namespace` | Get namespace |
+| `/providers/openshift/:provider/storageclasses` | List storage classes |
+| `/providers/openshift/:provider/storageclasses/:sc` | Get storage class |
+| `/providers/openshift/:provider/networkattachmentdefinitions` | List NADs |
+| `/providers/openshift/:provider/networkattachmentdefinitions/:network` | Get NAD |
+| `/providers/openshift/:provider/instancetypes` | List instance types |
+| `/providers/openshift/:provider/instancetypes/:instancetype` | Get instance type |
+| `/providers/openshift/:provider/clusterinstancetypes` | List cluster instance types |
+| `/providers/openshift/:provider/clusterinstancetypes/:clusterinstancetype` | Get cluster instance type |
+| `/providers/openshift/:provider/vms` | List VMs (VirtualMachines) |
+| `/providers/openshift/:provider/vms/:vm` | Get VM |
+| `/providers/openshift/:provider/persistentvolumeclaims` | List PVCs |
+| `/providers/openshift/:provider/persistentvolumeclaims/:pvc` | Get PVC |
+| `/providers/openshift/:provider/datavolumes` | List DataVolumes |
+| `/providers/openshift/:provider/datavolumes/:datavolume` | Get DataVolume |
+| `/providers/openshift/:provider/kubevirts` | List KubeVirt CRs |
+| `/providers/openshift/:provider/kubevirts/:kubevirt` | Get KubeVirt CR |
+| `/providers/openshift/:provider/tree/namespace` | Namespace-based inventory tree |
+
+OCP endpoints use a **user-scoped client** for restricted host providers — the user's
+Bearer token from the HTTP request is used to query the K8s API directly, ensuring
+RBAC enforcement.
+
+---
+
+## OVA Endpoints (`/providers/ova`)
+
+OVA uses the shared `ovfbase` handler package.
+
+| Route | Description |
+|-------|-------------|
+| `/providers/ova` | List OVA providers |
+| `/providers/ova/:provider` | Get provider details |
+| `/providers/ova/:provider/vms` | List VMs |
+| `/providers/ova/:provider/vms/:vm` | Get VM |
+| `/providers/ova/:provider/networks` | List networks |
+| `/providers/ova/:provider/networks/:network` | Get network |
+| `/providers/ova/:provider/disks` | List disks |
+| `/providers/ova/:provider/disks/:disk` | Get disk |
+| `/providers/ova/:provider/storages` | List storages |
+| `/providers/ova/:provider/storages/:storage` | Get storage |
+| `/providers/ova/:provider/workloads/:vm` | Get VM workload |
+
+---
+
+## Hyper-V Endpoints (`/providers/hyperv`)
+
+| Route | Description |
+|-------|-------------|
+| `/providers/hyperv` | List Hyper-V providers |
+| `/providers/hyperv/:provider` | Get provider details |
+| `/providers/hyperv/:provider/vms` | List VMs |
+| `/providers/hyperv/:provider/vms/:vm` | Get VM |
+| `/providers/hyperv/:provider/networks` | List networks |
+| `/providers/hyperv/:provider/networks/:network` | Get network |
+| `/providers/hyperv/:provider/storages` | List storages |
+| `/providers/hyperv/:provider/storages/:storage` | Get storage |
+| `/providers/hyperv/:provider/disks` | List disks |
+| `/providers/hyperv/:provider/disks/:disk` | Get disk |
+| `/providers/hyperv/:provider/tree/vm` | VM-based inventory tree |
+| `/providers/hyperv/:provider/workloads/:vm` | Get VM workload |
+
+---
+
+## Authentication & Authorization
+
+### Bearer Token Authentication
+
+All inventory endpoints require a **Bearer token** in the `Authorization` header:
+```
+Authorization: Bearer <token>
+```
+
+Controlled by `Settings.AuthRequired` (enabled by default in production).
+
+### Authorization Flow
+
+1. **TokenReview**: Validates the Bearer token via the K8s TokenReview API
+2. **SubjectAccessReview**: Checks if the authenticated user can `get` (single provider)
+   or `list` (all providers) the `providers` resource in `forklift.konveyor.io`
+3. **Token caching**: Successful authorizations are cached for 10 seconds per
+   `(token, provider-namespace, provider-name)` tuple
+
+### OCP Provider User-Scoped Client
+
+For restricted host providers (non-operator-namespace OpenShift providers), the handler
+constructs a new K8s client using the requesting user's token. This ensures the user
+only sees resources they have RBAC access to.
+
+---
+
+## Query Parameters
+
+| Parameter | Description | Example |
+|-----------|-------------|---------|
+| `detail` | Detail level (0 = summary, `all` = full) | `?detail=all` |
+| `name` | Filter by resource name | `?name=my-vm` |
+| `namespace` | Filter by namespace (OCP endpoints) | `?namespace=default` |
+
+### Pagination (via `libweb.Paged`)
+
+Pagination is handled by the base handler's `Paged` mixin. List endpoints support
+standard offset/limit pagination through query parameters.
+
+### WebSocket Watch
+
+List endpoints support real-time updates via WebSocket. Send a request with the
+`X-Watch` header to upgrade the connection:
+```
+GET /providers/vsphere/:provider/vms
+X-Watch: true
+```
+
+The server pushes inventory change events over the WebSocket connection.
+
+---
+
+## Response Format
+
+### Resource Object
+
+Every inventory resource includes:
+```json
+{
+  "id": "<provider-internal-id>",
+  "name": "<display-name>",
+  "selfLink": "/providers/<type>/<uid>/<collection>/<id>",
+  "revision": 12345,
+  "path": "<hierarchical/path>",
+  "variant": "<optional-subtype>"
+}
+```
+
+Additional fields depend on the resource type and detail level.
+
+### Error Responses
+
+| Status | Header | Meaning |
+|--------|--------|---------|
+| 401 | — | Missing or invalid Bearer token |
+| 403 | — | User lacks RBAC permission on the Provider resource |
+| 404 | `X-Reason: ProviderNotFound` | Provider UID not in inventory |
+| 404 | — | Resource not found within the provider |
+| 206 | — | Provider not fully reconciled (partial content) |
+| 500 | `forklift-error-message: <msg>` | Internal error with detail in header |
+
+---
+
+## Base Handler Architecture
+
+```
+base.Handler
+  ├── Parity    (libweb.Parity)    → ensures collector is up-to-date
+  ├── Watched   (libweb.Watched)   → WebSocket watch support
+  ├── Paged     (libweb.Paged)     → pagination
+  ├── Container                     → inventory container (all collectors)
+  ├── Provider                      → resolved Provider CR for this request
+  ├── Collector                     → collector for this provider
+  └── Detail                        → requested detail level
+```
+
+The `Prepare(ctx)` method on each request:
+1. Initializes pagination from query params
+2. Sets up WebSocket watch if requested
+3. Parses detail level
+4. Resolves the Provider from the `:provider` UID param
+5. Runs Bearer token authorization
+
+### Provider-Specific Handlers
+
+Each provider type has its own `Handler` struct embedding `base.Handler` with
+additional logic for list options, predicates (name filtering), and path building
+for hierarchical inventory (datacenter → cluster → host → VM).
+
+### Internal REST Client (`web.NewClient`)
+
+Controllers and plan adapters query the inventory programmatically via
+`web.NewClient(provider)` which returns a typed client with `Get`, `List`,
+`Watch`, `Find`, and `Finder()` methods.
+Supported types: `openshift`, `vsphere`, `ovirt`, `openstack`, `ova`, `ec2`, `hyperv`.
+
+---
+
+## Source File Map
+
+```
+pkg/forklift-api/
+├── api.go                              # Server setup, port 8443/8444
+└── services/
+    ├── services.go                     # /tls-certificate registration
+    └── tls-certificate.go              # TLS cert retrieval handler
+
+pkg/controller/provider/web/
+├── doc.go                              # All() handler aggregation
+├── provider.go                         # Aggregated /providers endpoint
+├── client.go                           # ProviderClient + NewClient factory
+├── base/
+│   ├── handler.go                      # Base handler (auth, pagination, detail)
+│   ├── auth.go                         # TokenReview + SubjectAccessReview
+│   ├── client.go                       # RestClient, Finder, Resolver interfaces
+│   ├── tree.go                         # Tree builder for hierarchical views
+│   └── utils.go                        # Error helpers
+├── vsphere/                            # vSphere inventory handlers
+├── ovirt/                              # oVirt inventory handlers
+├── openstack/                          # OpenStack inventory handlers
+├── ocp/                                # OpenShift inventory handlers
+├── ovfbase/                            # Shared OVF handlers (OVA base)
+├── ova/                                # OVA provider (delegates to ovfbase)
+└── hyperv/                             # Hyper-V inventory handlers
+```
