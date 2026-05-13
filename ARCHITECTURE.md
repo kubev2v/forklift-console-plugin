@@ -54,17 +54,7 @@ Console loads the plugin at runtime from a container image (`quay.io/kubev2v/for
 
 ### Technology Stack
 
-| Layer | Technology |
-|---|---|
-| UI framework | React 17, TypeScript (strict mode) |
-| Component library | PatternFly 6 |
-| Forms | react-hook-form |
-| Internationalization | react-i18next |
-| State management | React hooks + Kubernetes watch subscriptions |
-| Bundler | Webpack |
-| Unit testing | Jest + Testing Library |
-| E2E testing | Playwright |
-| Container | UBI 9 + Nginx |
+For the full technology stack, see [AGENTS.md - Tech Stack](AGENTS.md#tech-stack).
 
 ## Core CRDs and Migration Flow
 
@@ -93,18 +83,7 @@ No global store (Redux, etc.). State flows through:
 
 ### Feature Module Structure
 
-Each feature (providers, plans, networkMaps, storageMaps, overview) is self-contained with its own components, hooks, and utils. A typical feature module contains:
-
-```text
-src/{feature}/
-├── dynamic-plugin.ts          # Console extension and module registration
-├── components/                # Feature-specific React components
-├── hooks/                     # Feature-specific custom hooks
-├── utils/                     # Feature-specific utilities and types
-├── create/                    # Creation flows (wizards, forms)
-└── details/                   # Detail view sub-pages
-    └── components/
-```
+Each feature (providers, plans, networkMaps, storageMaps, overview) is self-contained. For the directory layout and file organization rules, see [AGENTS.md - Directory Structure](AGENTS.md#directory-structure).
 
 Each feature registers its pages and navigation items through `dynamic-plugin.ts`, which exports `extensions` (console extensions array) and `exposedModules` (lazy-loaded component map).
 

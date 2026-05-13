@@ -22,6 +22,8 @@ OpenShift Console dynamic plugin for [Forklift](https://github.com/kubev2v/forkl
 
 ## Key Rules
 
+Complete coding standards and conventions are in [AGENTS.md](AGENTS.md). Key rules summarized here:
+
 - Shared code (`components/`, `utils/`) must never import from feature code
 - One component per file, default export, `.tsx` extension
 - File limit: 300 lines, function limit: 150 lines (excluding blanks/comments)
