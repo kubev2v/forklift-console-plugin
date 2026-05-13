@@ -129,6 +129,21 @@ const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
           </Button>
         </FormGroup>
       )}
+
+      <FormGroup label={t('XFS compatibility')}>
+        <Checkbox
+          id={`xfs-compat-${vmId}`}
+          data-testid={`xfs-compat-checkbox-${vmId}`}
+          isChecked={overrides.xfsCompatibility ?? false}
+          onChange={(_event, checked) => {
+            pushOverrides({ xfsCompatibility: checked });
+          }}
+          label={t('Enable XFS v4 compatibility')}
+          description={t(
+            'XFS v4 and BTRFS support are mutually exclusive. Enable for XFS v4 filesystems; leave disabled for BTRFS.',
+          )}
+        />
+      </FormGroup>
     </Form>
   );
 };

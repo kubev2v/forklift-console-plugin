@@ -20,6 +20,7 @@ type BuildConversionCRParams = {
   provider: V1beta1Provider;
   vmId: string;
   vmName: string;
+  xfsCompatibility?: boolean;
 };
 
 const DEFAULT_GENERATE_NAME_PREFIX = 'vm';
@@ -62,6 +63,7 @@ export const buildConversionCR = ({
   provider,
   vmId,
   vmName,
+  xfsCompatibility,
 }: BuildConversionCRParams): V1beta1Conversion => {
   const namespace = plan ? getNamespace(plan) : getNamespace(provider);
   const secretRef = getProviderSecretRef(provider);
@@ -87,6 +89,7 @@ export const buildConversionCR = ({
       targetNamespace: namespace ?? '',
       type: CONVERSION_TYPE.DEEP_INSPECTION,
       vddkImage: getVddkInitImage(provider),
+      ...(xfsCompatibility && { xfsCompatibility }),
       vm: {
         id: vmId,
         name: vmName,

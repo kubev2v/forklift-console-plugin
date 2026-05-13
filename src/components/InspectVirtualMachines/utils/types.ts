@@ -24,11 +24,13 @@ export type VmInspectionRef = {
   diskEncryption?: DiskEncryptionParam;
   id: string;
   name: string;
+  xfsCompatibility?: boolean;
 };
 
 export type VmOverrides = {
   nbdeClevis?: boolean;
   passphrases?: string[];
+  xfsCompatibility?: boolean;
 };
 
 export type CreateInspectionsFn = (vms: VmInspectionRef[]) => Promise<InspectionCreateResult>;

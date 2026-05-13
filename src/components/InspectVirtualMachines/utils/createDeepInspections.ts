@@ -22,6 +22,7 @@ const createDeepInspection = async (
       provider,
       vmId: vm.id,
       vmName: vm.name,
+      xfsCompatibility: vm.xfsCompatibility,
     });
     const created = await k8sCreate<V1beta1Conversion>({
       data: conversion,

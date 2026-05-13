@@ -30,6 +30,7 @@ import TargetLabelsDetailsItem from './components/TargetLabels/TargetLabelsDetai
 import TargetNodeSelectorDetailsItem from './components/TargetNodeSelector/TargetNodeSelectorDetailsItem';
 import TargetPowerStateDetailsItem from './components/TargetPowerState/TargetPowerStateDetailsItem';
 import VolumeNameTemplateDetailsItem from './components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
+import XfsCompatibilityDetailsItem from './components/XfsCompatibility/XfsCompatibilityDetailsItem';
 
 type SettingsSectionProps = {
   plan: V1beta1Plan;
@@ -82,6 +83,7 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
       <PreserveStaticIPsDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
       <NetworkNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
       <PreserveClusterCpuModelDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt} />
+      <XfsCompatibilityDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
       <GuestConversionDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
       <TargetPowerStateDetailsItem plan={plan} canPatch={canPatch} />
       <TargetLabelsDetailsItem plan={plan} canPatch={canPatch} />
