@@ -10,6 +10,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
+import { useScriptFieldValidation } from './hooks/useScriptFieldValidation';
 import {
   CustomScriptsFieldId,
   DefaultScript,
@@ -20,11 +21,10 @@ import {
   ScriptTypeLabels,
 } from './constants';
 import ScriptContentField from './ScriptContentField';
-import { validateUniqueScriptKey } from './utils';
 
 const NewScriptsFields: FC = () => {
   const { t } = useForkliftTranslation();
-  const { control, setValue, trigger } = useCreatePlanFormContext();
+  const { control, getValues, setValue, trigger } = useCreatePlanFormContext();
 
   const {
     append,
@@ -36,22 +36,13 @@ const NewScriptsFields: FC = () => {
   });
 
   const watchedScripts = useWatch({ control, name: CustomScriptsFieldId.Scripts });
-
   const getScriptFieldId = (index: number, field: string): string =>
     `${CustomScriptsFieldId.Scripts}.${index}.${field}`;
-
-  const handleAddScript = (): void => {
-    append({ ...DefaultScript });
-  };
-
-  const handleRemoveScript = (index: number): void => {
-    if (scripts.length > 1) {
-      remove(index);
-      return;
-    }
-
-    setValue(CustomScriptsFieldId.Scripts, [DefaultScript]);
-  };
+  const { nameDeps, triggerAllNames, validateName } = useScriptFieldValidation(
+    CustomScriptsFieldId.Scripts,
+    trigger,
+    () => getValues(CustomScriptsFieldId.Scripts),
+  );
 
   return (
     <div className="pf-v6-u-ml-lg">
@@ -64,7 +55,6 @@ const NewScriptsFields: FC = () => {
         fieldRows={scripts.map((fieldRow, index) => {
           const guestType = watchedScripts?.[index]?.guestType ?? GuestType.Linux;
           const isWindows = guestType === GuestType.Windows;
-
           return {
             ...fieldRow,
             additionalOptions: (
@@ -85,14 +75,7 @@ const NewScriptsFields: FC = () => {
                 key="name"
                 name={getScriptFieldId(index, 'name')}
                 control={control}
-                rules={{
-                  validate: (value) =>
-                    validateUniqueScriptKey(
-                      { ...watchedScripts?.[index], name: value },
-                      index,
-                      watchedScripts ?? [],
-                    ),
-                }}
+                rules={{ deps: nameDeps(scripts.length), validate: validateName(index) }}
                 render={({ field, fieldState: { error } }) => (
                   <>
                     <TextInput
@@ -115,12 +98,10 @@ const NewScriptsFields: FC = () => {
                     value={GuestTypeLabels[guestTypeField.value as GuestType]}
                     onSelect={async (_event, value) => {
                       guestTypeField.onChange(value);
-
                       if (value === GuestType.Windows) {
                         setValue(getScriptFieldId(index, 'scriptType'), ScriptType.Firstboot);
                       }
-
-                      await trigger(getScriptFieldId(index, 'name'));
+                      await triggerAllNames(scripts.length);
                     }}
                     testId={`script-guest-type-${index}`}
                   >
@@ -144,7 +125,7 @@ const NewScriptsFields: FC = () => {
                     value={ScriptTypeLabels[scriptTypeField.value as ScriptType]}
                     onSelect={async (_event, value) => {
                       scriptTypeField.onChange(value);
-                      await trigger(getScriptFieldId(index, 'name'));
+                      await triggerAllNames(scripts.length);
                     }}
                     testId={`script-type-${index}`}
                   >
@@ -172,10 +153,18 @@ const NewScriptsFields: FC = () => {
         })}
         addButton={{
           label: t('Add script'),
-          onClick: handleAddScript,
+          onClick: () => {
+            append({ ...DefaultScript });
+          },
         }}
         removeButton={{
-          onClick: handleRemoveScript,
+          onClick: (index) => {
+            if (scripts.length > 1) {
+              remove(index);
+            } else {
+              setValue(CustomScriptsFieldId.Scripts, [DefaultScript]);
+            }
+          },
         }}
       />
     </div>

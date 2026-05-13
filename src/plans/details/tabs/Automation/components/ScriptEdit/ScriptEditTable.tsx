@@ -8,9 +8,9 @@ import {
   ScriptType,
   ScriptTypeLabels,
 } from 'src/plans/create/steps/customization-scripts/constants';
+import { useScriptFieldValidation } from 'src/plans/create/steps/customization-scripts/hooks/useScriptFieldValidation';
 import ScriptContentField from 'src/plans/create/steps/customization-scripts/ScriptContentField';
 import type { CustomScript } from 'src/plans/create/steps/customization-scripts/types';
-import { validateUniqueScriptKey } from 'src/plans/create/steps/customization-scripts/utils';
 
 import Select from '@components/common/Select';
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
@@ -27,11 +27,20 @@ type ScriptEditTableProps = {
   remove: (index: number) => void;
 };
 
+const SCRIPTS_FIELD = 'scripts';
+
 const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove }) => {
   const { t } = useForkliftTranslation();
-  const { control, setValue, trigger } = useFormContext<{ scripts: CustomScript[] }>();
+  const { control, getValues, setValue, trigger } = useFormContext<{ scripts: CustomScript[] }>();
 
-  const watchedScripts = useWatch({ control, name: 'scripts' });
+  const watchedScripts = useWatch({ control, name: SCRIPTS_FIELD });
+  const triggerByName = async (name?: string | string[]): Promise<boolean> =>
+    trigger(name as Parameters<typeof trigger>[0]);
+  const { nameDeps, triggerAllNames, validateName } = useScriptFieldValidation(
+    SCRIPTS_FIELD,
+    triggerByName,
+    () => getValues(SCRIPTS_FIELD),
+  );
 
   return (
     <FieldBuilderTable
@@ -62,12 +71,8 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove }) =
               control={control}
               name={`scripts.${index}.name`}
               rules={{
-                validate: (value) =>
-                  validateUniqueScriptKey(
-                    { ...watchedScripts?.[index], name: value },
-                    index,
-                    watchedScripts ?? [],
-                  ),
+                deps: nameDeps(fields.length) as `scripts.${number}.name`[],
+                validate: validateName(index),
               }}
               render={({ field, fieldState: { error } }) => (
                 <>
@@ -96,7 +101,7 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove }) =
                       setValue(`scripts.${index}.scriptType`, ScriptType.Firstboot);
                     }
 
-                    await trigger(`scripts.${index}.name`);
+                    await triggerAllNames(fields.length);
                   }}
                   testId={`script-guest-type-select-${index}`}
                 >
@@ -120,7 +125,7 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove }) =
                   value={ScriptTypeLabels[scriptTypeField.value]}
                   onSelect={async (_event, value) => {
                     scriptTypeField.onChange(value);
-                    await trigger(`scripts.${index}.name`);
+                    await triggerAllNames(fields.length);
                   }}
                   testId={`script-type-select-${index}`}
                 >
