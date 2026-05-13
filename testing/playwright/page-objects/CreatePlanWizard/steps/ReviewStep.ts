@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { HookSource } from '../../../types/enums';
 import type {
   CustomizationScriptsTestData,
   HookConfig,
@@ -144,7 +145,7 @@ export class ReviewStep {
   }
 
   async verifyHooksSection(
-    hookSource: 'none' | 'local' | 'aap' = 'none',
+    hookSource: HookSource = HookSource.NONE,
     preHook?: HookConfig,
     postHook?: HookConfig,
   ): Promise<void> {
@@ -152,12 +153,12 @@ export class ReviewStep {
 
     const hookSourceLocator = this.page.getByTestId('review-hook-source');
 
-    if (hookSource === 'none') {
+    if (hookSource === HookSource.NONE) {
       await expect(hookSourceLocator).toHaveText('No hooks configured');
       return;
     }
 
-    if (hookSource === 'aap') {
+    if (hookSource === HookSource.AAP) {
       await expect(hookSourceLocator).toHaveText('Ansible Automation Platform');
       return;
     }

@@ -10,8 +10,8 @@ import {
 import { OverviewPage } from '../../page-objects/OverviewPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
-import { V2_11_0 } from '../../utils/version/constants';
-import { requireVersion } from '../../utils/version/version';
+import { V2_11_0, V2_12_0 } from '../../utils/version/constants';
+import { isVersionAtLeast, requireVersion } from '../../utils/version/version';
 
 test.describe(
   'Overview Page - Settings',
@@ -150,6 +150,28 @@ test.describe(
         await expect(overviewPage.settingsTab.settingsEditModal.saveButton).toBeEnabled();
         await overviewPage.settingsTab.settingsEditModal.save();
       });
+
+      if (isVersionAtLeast(V2_12_0)) {
+        await test.step('Verify AAP settings fields are visible in read-only view', async () => {
+          await expect(overviewPage.settingsTab.aapUrlField).toBeVisible();
+          await expect(overviewPage.settingsTab.aapTokenSecretField).toBeVisible();
+          await expect(overviewPage.settingsTab.aapTimeoutField).toBeVisible();
+        });
+
+        await test.step('Verify AAP fields are present in edit modal', async () => {
+          await overviewPage.settingsTab.openSettingsEditModal();
+          await overviewPage.settingsTab.settingsEditModal.verifyAapFieldsVisible();
+
+          const aapUrl = await overviewPage.settingsTab.settingsEditModal.getAapUrlValue();
+          expect(aapUrl).toBe('');
+
+          const aapTimeout = await overviewPage.settingsTab.settingsEditModal.getAapTimeoutValue();
+          expect(Number(aapTimeout)).toBe(0);
+
+          await expect(overviewPage.settingsTab.settingsEditModal.saveButton).toBeDisabled();
+          await overviewPage.settingsTab.settingsEditModal.cancel();
+        });
+      }
     });
   },
 );

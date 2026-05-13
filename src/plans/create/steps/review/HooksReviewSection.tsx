@@ -58,14 +58,16 @@ const HooksReviewSection: FC = () => {
         <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsXl' }}>
           <FlexItem>
             <LocalHookReview
-              hookLabel={t('Pre-migration hook')}
               hookFieldId={HooksFormFieldId.PreMigration}
+              hookLabel={t('Pre-migration hook')}
+              testIdPrefix="review-pre-migration-hook"
             />
           </FlexItem>
           <FlexItem>
             <LocalHookReview
-              hookLabel={t('Post-migration hook')}
               hookFieldId={HooksFormFieldId.PostMigration}
+              hookLabel={t('Post-migration hook')}
+              testIdPrefix="review-post-migration-hook"
             />
           </FlexItem>
         </Flex>

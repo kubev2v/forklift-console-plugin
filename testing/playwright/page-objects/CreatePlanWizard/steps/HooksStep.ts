@@ -1,5 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { HookSource } from '../../../types/enums';
+
 export interface HookConfig {
   enabled: boolean;
   hookRunnerImage?: string;
@@ -101,7 +103,7 @@ export class HooksStep {
     await this.verifyStepVisible();
 
     if (preMigrationHook || postMigrationHook) {
-      await this.page.getByTestId('hook-source-local').click();
+      await this.selectHookSource(HookSource.LOCAL);
     }
 
     if (preMigrationHook) {
@@ -123,6 +125,10 @@ export class HooksStep {
       },
       { yamlContent: content, index: editorIndex },
     );
+  }
+
+  async selectHookSource(source: HookSource): Promise<void> {
+    await this.page.getByTestId(`hook-source-${source}`).click();
   }
 
   async verifyPostMigrationHookDisabled(): Promise<void> {

@@ -1,5 +1,6 @@
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
+import { HookSource } from '../../../types/enums';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
 import { disableGuidedTour } from '../../../utils/utils';
 import { V2_12_0 } from '../../../utils/version/constants';
@@ -29,39 +30,52 @@ test.describe('Plan AAP Hooks', { tag: '@downstream' }, () => {
     });
 
     await test.step('Verify hook source radio is visible with three options', async () => {
+      await wizard.hooks.verifyStepVisible();
+
       const noHooksRadio = page.getByTestId('hook-source-none');
       const localRadio = page.getByTestId('hook-source-local');
       const aapRadio = page.getByTestId('hook-source-aap');
 
-      await noHooksRadio.waitFor({ state: 'visible' });
-      await localRadio.waitFor({ state: 'visible' });
-      await aapRadio.waitFor({ state: 'visible' });
+      await test.expect(noHooksRadio).toBeVisible();
+      await test.expect(localRadio).toBeVisible();
+      await test.expect(aapRadio).toBeVisible();
     });
 
     await test.step('Verify "No hooks" is selected by default', async () => {
-      const noHooksRadio = page.getByTestId('hook-source-none');
-      await test.expect(noHooksRadio).toBeChecked();
-
+      await test.expect(page.getByTestId('hook-source-none')).toBeChecked();
       await test.expect(page.getByTestId('preMigrationHook.enableHook-checkbox')).not.toBeVisible();
     });
 
     await test.step('Switch to "Local playbook" and verify local fields appear', async () => {
-      await page.getByTestId('hook-source-local').click();
+      await wizard.hooks.selectHookSource(HookSource.LOCAL);
 
       await test.expect(page.getByTestId('preMigrationHook.enableHook-checkbox')).toBeVisible();
       await test.expect(page.getByTestId('postMigrationHook.enableHook-checkbox')).toBeVisible();
     });
 
     await test.step('Switch to "AAP" and verify AAP section appears', async () => {
-      await page.getByTestId('hook-source-aap').click();
+      await wizard.hooks.selectHookSource(HookSource.AAP);
 
       await test.expect(page.getByTestId('preMigrationHook.enableHook-checkbox')).not.toBeVisible();
+      await test.expect(page.getByText('AAP is not configured')).toBeVisible();
+    });
+
+    await test.step('Verify Technology Preview badge on AAP option', async () => {
+      await test.expect(page.getByText('Technology Preview')).toBeVisible();
     });
 
     await test.step('Switch back to "No hooks" and verify fields are hidden', async () => {
-      await page.getByTestId('hook-source-none').click();
+      await wizard.hooks.selectHookSource(HookSource.NONE);
 
       await test.expect(page.getByTestId('preMigrationHook.enableHook-checkbox')).not.toBeVisible();
+      await test.expect(page.getByText('AAP is not configured')).not.toBeVisible();
+    });
+
+    await test.step('Verify review step shows AAP hook source', async () => {
+      await wizard.hooks.selectHookSource(HookSource.AAP);
+      await wizard.clickNext();
+      await wizard.review.verifyStepVisible();
+      await wizard.review.verifyHooksSection(HookSource.AAP);
     });
   });
 });

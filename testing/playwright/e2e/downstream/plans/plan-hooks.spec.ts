@@ -4,6 +4,7 @@ import * as path from 'node:path';
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import { HookSource } from '../../../types/enums';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
 import { disableGuidedTour } from '../../../utils/utils';
 import { V2_12_0 } from '../../../utils/version/constants';
@@ -55,7 +56,11 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
       await wizard.hooks.verifyStepVisible();
     });
 
-    await test.step('Verify hook checkboxes are disabled by default', async () => {
+    await test.step('Select Local playbook as hook source', async () => {
+      await wizard.hooks.selectHookSource(HookSource.LOCAL);
+    });
+
+    await test.step('Verify hook checkboxes are unchecked by default', async () => {
       await wizard.hooks.verifyPreMigrationHookDisabled();
       await wizard.hooks.verifyPostMigrationHookDisabled();
     });
@@ -96,7 +101,7 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
       await wizard.clickNext();
       await wizard.review.verifyStepVisible();
       await wizard.review.verifyHooksSection(
-        'local',
+        HookSource.LOCAL,
         {
           enabled: true,
           hookRunnerImage: HOOK_RUNNER_IMAGE,
@@ -155,6 +160,24 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
       });
       await planDetailsPage.hooksTab.verifyPreMigrationHookEnabled(true);
       await planDetailsPage.hooksTab.verifyHookRunnerImage('pre', HOOK_RUNNER_IMAGE);
+    });
+
+    await test.step('Verify edit modal shows AAP radio with three-way switching', async () => {
+      await planDetailsPage.hooksTab.openPreMigrationHookEditModal();
+
+      const { hookEditModal } = planDetailsPage.hooksTab;
+      await hookEditModal.verifyAapRadioVisible();
+      await hookEditModal.verifyHookIsEnabled();
+      await hookEditModal.verifyLocalFieldsVisible();
+
+      await hookEditModal.selectAap();
+      await hookEditModal.verifyLocalFieldsHidden();
+      await hookEditModal.verifyAapNotConfiguredAlert();
+
+      await hookEditModal.disableHook();
+      await hookEditModal.verifyLocalFieldsHidden();
+
+      await hookEditModal.cancel();
     });
   });
 });
