@@ -11,6 +11,7 @@ import {
   type PlanTestData,
   type ProviderData,
 } from '../../../types/test-data';
+import { getMappingWizardFieldRows } from '../../../utils/mappingWizardFieldRows';
 import { getProviderConfig, hasProviderConfig } from '../../../utils/providers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 import { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
@@ -19,51 +20,45 @@ import { requireVersion } from '../../../utils/version/version';
 
 const EC2_PROVIDER_KEY = process.env.EC2_PROVIDER ?? 'ec2';
 
-const PROVIDER_CREATION_TIMEOUT_MS = 240_000;
-const WIZARD_FLOW_TIMEOUT_MS = 300_000;
+/** Downstream EC2 flows wait on controller + inventory; one ceiling for the whole serial suite. */
+const EC2_PLAN_WIZARD_SUITE_TIMEOUT_MS = 300_000;
 
-/**
- * Navigates through the plan wizard filling general info and VM selection,
- * then advances to the network map step and returns the wizard instance.
- */
-const fillWizardThroughVmStep = async (
+/** From provider details: create-plan wizard through general + VMs, stop on the network-map step. */
+const openCreatePlanWizardFromProviderThroughNetworkMapStep = async (
   page: Page,
-  providerName: string,
+  wizard: CreatePlanWizardPage,
+  sourceProviderName: string,
   planData: PlanTestData,
-): Promise<CreatePlanWizardPage> => {
-  const wizard = new CreatePlanWizardPage(page);
+): Promise<void> => {
   const providerDetailsPage = new ProviderDetailsPage(page);
-
-  await providerDetailsPage.navigate(providerName, MTV_NAMESPACE);
+  await providerDetailsPage.navigate(sourceProviderName, MTV_NAMESPACE);
   await providerDetailsPage.waitForReadyStatus();
   await providerDetailsPage.clickCreatePlanButton();
   await wizard.waitForWizardLoad();
-  await wizard.generalInformation.verifySourceProviderPrePopulated(providerName);
+  await wizard.generalInformation.verifySourceProviderPrePopulated(sourceProviderName);
   await wizard.generalInformation.fillAndComplete(planData);
   await wizard.clickNext();
   await wizard.virtualMachines.fillAndComplete(planData.virtualMachines);
   await wizard.clickNext();
-
-  return wizard;
 };
 
 test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
   requireVersion(test, V2_12_0);
+  test.describe.configure({ timeout: EC2_PLAN_WIZARD_SUITE_TIMEOUT_MS });
+
+  if (!hasProviderConfig(EC2_PROVIDER_KEY)) {
+    test.skip();
+  }
 
   const resourceManager = new ResourceManager();
 
-  // Set by the first test (provider creation) and used by subsequent serial tests.
-  // Stays empty if provider creation fails, causing dependent tests to skip.
+  /**
+   * First serial test assigns this after create; later tests read it. `buildPlanData` closes over it so
+   * `sourceProvider` matches the live provider name (cannot be inlined before the first test runs).
+   */
   let providerName = '';
 
-  test.beforeEach(() => {
-    test.skip(
-      !hasProviderConfig(EC2_PROVIDER_KEY),
-      `Provider config '${EC2_PROVIDER_KEY}' not found in .providers.json`,
-    );
-  });
-
-  const buildPlanData = (planName: string): PlanTestData =>
+  const buildPlanData = (planName: string) =>
     createPlanTestData({
       networkMap: { isPreexisting: false, name: `${planName}-net` },
       planName,
@@ -83,15 +78,15 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
     'should create EC2 provider for plan wizard tests',
     { tag: ['@downstream'] },
     async ({ page }) => {
-      test.setTimeout(PROVIDER_CREATION_TIMEOUT_MS);
       const providerConfig = getProviderConfig(EC2_PROVIDER_KEY);
-      const name = `test-ec2-plan-wizard-${Date.now()}`;
+      providerName = `test-ec2-plan-wizard-${Date.now()}`;
       const providerData: ProviderData = {
         accessKeyId: providerConfig.access_key_id,
         autoTargetCredentials: providerConfig.auto_target_credentials,
         ec2Region: providerConfig.region_name ?? providerConfig.region,
         hostname: providerConfig.api_url,
-        name,
+        // Unique per run so ResourceManager cleanup and serial follow-up tests stay deterministic.
+        name: providerName,
         projectName: MTV_NAMESPACE,
         secretAccessKey: providerConfig.secret_access_key,
         type: ProviderType.EC2,
@@ -99,8 +94,6 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
       const createProvider = new CreateProviderPage(page, resourceManager);
       await createProvider.navigate();
       await createProvider.create(providerData);
-
-      providerName = name;
     },
   );
 
@@ -108,17 +101,23 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
     'should verify network map step shows populated EC2 sources',
     { tag: ['@downstream'] },
     async ({ page }) => {
-      test.skip(!providerName, 'Provider was not created — skipping dependent test');
-      test.setTimeout(WIZARD_FLOW_TIMEOUT_MS);
+      const createWizard = new CreatePlanWizardPage(page);
       const planData = buildPlanData(`ec2-net-map-${Date.now()}`);
-      const wizard = await fillWizardThroughVmStep(page, providerName, planData);
+
+      await test.step('Navigate to network map with a new VM selection', async () => {
+        await openCreatePlanWizardFromProviderThroughNetworkMapStep(
+          page,
+          createWizard,
+          providerName,
+          planData,
+        );
+      });
 
       await test.step('Assert subnets or map options exist', async () => {
-        await wizard.networkMap.verifyStepVisible();
-        await wizard.networkMap.waitForData();
-        await wizard.page.getByTestId('use-new-network-map-radio').check();
-        // Matches field-row-0, field-row-1, etc. — each row in the mapping table
-        const fieldRows = wizard.page.getByTestId(/^field-row-\d+$/);
+        await createWizard.networkMap.verifyStepVisible();
+        await createWizard.networkMap.waitForData();
+        await createWizard.page.getByTestId('use-new-network-map-radio').check();
+        const fieldRows = getMappingWizardFieldRows(createWizard.page);
         await expect(fieldRows.first()).toBeVisible({ timeout: 15_000 });
         const rowCount = await fieldRows.count();
         expect(rowCount).toBeGreaterThan(0);
@@ -131,20 +130,25 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
     'should verify storage map step shows populated EBS sources',
     { tag: ['@downstream'] },
     async ({ page }) => {
-      test.skip(!providerName, 'Provider was not created — skipping dependent test');
-      test.setTimeout(WIZARD_FLOW_TIMEOUT_MS);
+      const createWizard = new CreatePlanWizardPage(page);
       const planData = buildPlanData(`ec2-stor-map-${Date.now()}`);
-      const wizard = await fillWizardThroughVmStep(page, providerName, planData);
 
-      await wizard.networkMap.fillAndComplete(planData.networkMap);
-      await wizard.clickNext();
+      await test.step('Open wizard through network map', async () => {
+        await openCreatePlanWizardFromProviderThroughNetworkMapStep(
+          page,
+          createWizard,
+          providerName,
+          planData,
+        );
+        await createWizard.networkMap.fillAndComplete(planData.networkMap);
+        await createWizard.clickNext();
+      });
 
       await test.step('Assert EBS sources and storage class targets', async () => {
-        await wizard.storageMap.verifyStepVisible();
-        await wizard.storageMap.waitForData();
-        await wizard.page.getByTestId('use-new-storage-map-radio').check();
-        // Matches field-row-0, field-row-1, etc. — each row in the mapping table
-        const fieldRows = wizard.page.getByTestId(/^field-row-\d+$/);
+        await createWizard.storageMap.verifyStepVisible();
+        await createWizard.storageMap.waitForData();
+        await createWizard.page.getByTestId('use-new-storage-map-radio').check();
+        const fieldRows = getMappingWizardFieldRows(createWizard.page);
         await expect(fieldRows.first()).toBeVisible({ timeout: 15_000 });
         const rowCount = await fieldRows.count();
         expect(rowCount).toBeGreaterThan(0);
@@ -173,26 +177,29 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
     'should complete plan creation and verify Mappings tab',
     { tag: ['@downstream'] },
     async ({ page }) => {
-      test.skip(!providerName, 'Provider was not created — skipping dependent test');
-      test.setTimeout(WIZARD_FLOW_TIMEOUT_MS);
-      const wizardWithRm = new CreatePlanWizardPage(page, resourceManager);
+      const createWizard = new CreatePlanWizardPage(page, resourceManager);
       const planDetailsPage = new PlanDetailsPage(page);
       const planName = `ec2-mappings-plan-${Date.now()}`;
       const planData = buildPlanData(planName);
 
-      await test.step('Navigate wizard to review', async () => {
-        const wizard = await fillWizardThroughVmStep(page, providerName, planData);
-        await wizard.networkMap.fillAndComplete(planData.networkMap);
-        await wizard.clickNext();
-        await wizard.storageMap.fillAndComplete(planData.storageMap);
-        await wizard.clickNext();
-        await wizard.clickSkipToReview();
+      await test.step('Reach review with default post-migration steps skipped', async () => {
+        await openCreatePlanWizardFromProviderThroughNetworkMapStep(
+          page,
+          createWizard,
+          providerName,
+          planData,
+        );
+        await createWizard.networkMap.fillAndComplete(planData.networkMap);
+        await createWizard.clickNext();
+        await createWizard.storageMap.fillAndComplete(planData.storageMap);
+        await createWizard.clickNext();
+        await createWizard.clickSkipToReview();
       });
 
       await test.step('Review storage map table (EC2 has no default network mappings)', async () => {
-        await wizardWithRm.review.verifyStepVisible();
+        await createWizard.review.verifyStepVisible();
         expect(
-          await wizardWithRm.page
+          await createWizard.page
             .getByTestId('storage-map-review-table')
             .locator('tbody tr')
             .count(),
@@ -200,8 +207,8 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
       });
 
       await test.step('Submit and verify plan mappings tab', async () => {
-        await wizardWithRm.clickNext();
-        await wizardWithRm.waitForPlanCreation();
+        await createWizard.clickNext();
+        await createWizard.waitForPlanCreation();
         resourceManager.addPlan(planName, MTV_NAMESPACE);
         await planDetailsPage.verifyPlanTitle(planName);
         await planDetailsPage.mappingsTab.navigateToMappingsTab();

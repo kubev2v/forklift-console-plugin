@@ -29,10 +29,5 @@ export const fillEC2ProviderFields = async (page: Page, testData: ProviderData):
     await page
       .getByTestId('ec2-target-secret-access-key-input')
       .fill(testData.targetSecretAccessKey ?? '');
-  } else if (testData.crossAccountCredentials === false) {
-    const crossCheckbox = page.getByTestId('ec2-cross-account-credentials-checkbox');
-    if (await crossCheckbox.isChecked()) {
-      await crossCheckbox.click();
-    }
   }
 };
