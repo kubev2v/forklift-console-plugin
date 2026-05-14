@@ -24,19 +24,15 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
 
   const resourceManager = new ResourceManager();
 
-  /**
-   * Set by the first serial test after provider creation; subsequent tests read it.
-   * `buildPlanData` closes over this variable so `sourceProvider` reflects the live provider
-   * name — it cannot be inlined before the first test runs.
-   */
+  /** Assigned by the first serial test; subsequent tests read it. */
   let providerName = '';
 
-  const buildPlanData = (planName: string) =>
+  const buildPlanData = (planName: string, sourceProvider: string) =>
     createPlanTestData({
       networkMap: { isPreexisting: false, name: `${planName}-net` },
       planName,
       planProject: MTV_NAMESPACE,
-      sourceProvider: providerName,
+      sourceProvider,
       storageMap: {
         isPreexisting: false,
         mappings: [],
@@ -75,7 +71,7 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
     { tag: ['@downstream'] },
     async ({ page }) => {
       const createWizard = new CreatePlanWizardPage(page);
-      const planData = buildPlanData(`ec2-net-map-${Date.now()}`);
+      const planData = buildPlanData(`ec2-net-map-${Date.now()}`, providerName);
 
       await test.step('Navigate to network map with a new VM selection', async () => {
         const providerDetailsPage = new ProviderDetailsPage(page);
@@ -108,7 +104,7 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
     { tag: ['@downstream'] },
     async ({ page }) => {
       const createWizard = new CreatePlanWizardPage(page);
-      const planData = buildPlanData(`ec2-stor-map-${Date.now()}`);
+      const planData = buildPlanData(`ec2-stor-map-${Date.now()}`, providerName);
 
       await test.step('Open wizard through network map', async () => {
         const providerDetailsPage = new ProviderDetailsPage(page);
@@ -161,7 +157,7 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
       const createWizard = new CreatePlanWizardPage(page, resourceManager);
       const planDetailsPage = new PlanDetailsPage(page);
       const planName = `ec2-mappings-plan-${Date.now()}`;
-      const planData = buildPlanData(planName);
+      const planData = buildPlanData(planName, providerName);
 
       await test.step('Reach review with default post-migration steps skipped', async () => {
         const providerDetailsPage = new ProviderDetailsPage(page);
