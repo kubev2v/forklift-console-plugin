@@ -119,6 +119,11 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     return this.table.getRow({ Name: vmName }).getByTestId('vm-actions-menu-toggle');
   }
 
+  async getVmInspectionStatus(vmName: string): Promise<string> {
+    const cell = await this.table.getCell('Name', vmName, 'Inspection status');
+    return (await cell.textContent())?.trim() ?? '';
+  }
+
   async getVMInstanceType(vmName: string): Promise<string> {
     const cell = await this.table.getCell('Name', vmName, 'Instance type');
     return (await cell.textContent())?.trim() ?? '';

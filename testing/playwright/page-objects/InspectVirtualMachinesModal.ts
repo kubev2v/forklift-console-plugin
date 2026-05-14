@@ -28,17 +28,33 @@ export class InspectVirtualMachinesModal {
     return (await this.confirmButton.textContent()) ?? '';
   }
 
+  async getVmInspectionStatus(vmName: string): Promise<string> {
+    const row = this.vmTable.getByRole('row', { name: new RegExp(vmName) });
+    const statusCell = row.getByRole('gridcell').last();
+    return (await statusCell.textContent())?.trim() ?? '';
+  }
+
+  async getVmRowCount(): Promise<number> {
+    const body = this.vmTable.getByRole('rowgroup').nth(1);
+    return await body.getByRole('row').count();
+  }
+
   async isConfirmDisabled(): Promise<boolean> {
-    return this.confirmButton.isDisabled();
+    return await this.confirmButton.isDisabled();
   }
 
   get modal(): Locator {
     return this.page.getByTestId('inspect-vms-modal');
   }
 
+  async selectAllVms(): Promise<void> {
+    const selectAllCheckbox = this.modal.getByRole('checkbox', { name: 'Select page' });
+    await selectAllCheckbox.check();
+  }
+
   async selectVmByName(vmName: string): Promise<void> {
-    const row = this.vmTable.locator('tr', { hasText: vmName });
-    await row.locator('input[type="checkbox"]').check();
+    const row = this.vmTable.getByRole('row', { name: new RegExp(vmName) });
+    await row.getByRole('checkbox').check();
   }
 
   get techPreviewLabel(): Locator {
@@ -46,7 +62,7 @@ export class InspectVirtualMachinesModal {
   }
 
   get vmTable(): Locator {
-    return this.page.getByTestId('inspection-vm-table');
+    return this.modal.getByRole('grid', { name: 'Page table' });
   }
 
   async waitForModalOpen(): Promise<void> {
