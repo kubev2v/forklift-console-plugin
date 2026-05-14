@@ -63,32 +63,37 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
   }
 
   const resourceManager = new ResourceManager();
-
-  /** Assigned by the first serial test; subsequent tests read it. */
   let providerName = '';
 
-  test(
-    'should create EC2 provider for plan wizard tests',
-    { tag: ['@downstream'] },
-    async ({ page }) => {
-      const providerConfig = getProviderConfig(EC2_PROVIDER_KEY);
-      const name = `test-ec2-plan-wizard-${Date.now()}`;
-      providerName = name;
-      const providerData: ProviderData = {
-        accessKeyId: providerConfig.access_key_id,
-        autoTargetCredentials: providerConfig.auto_target_credentials,
-        ec2Region: providerConfig.region_name ?? providerConfig.region,
-        hostname: providerConfig.api_url,
-        name,
-        projectName: MTV_NAMESPACE,
-        secretAccessKey: providerConfig.secret_access_key,
-        type: ProviderType.EC2,
-      };
-      const createProvider = new CreateProviderPage(page, resourceManager);
-      await createProvider.navigate();
-      await createProvider.create(providerData);
-    },
-  );
+  test.beforeAll(async ({ browser }) => {
+    const context = await browser.newContext({ ignoreHTTPSErrors: true });
+    const page = await context.newPage();
+
+    const providerConfig = getProviderConfig(EC2_PROVIDER_KEY);
+    const name = `test-ec2-plan-wizard-${Date.now()}`;
+    providerName = name;
+
+    const providerData: ProviderData = {
+      accessKeyId: providerConfig.access_key_id,
+      autoTargetCredentials: providerConfig.auto_target_credentials,
+      ec2Region: providerConfig.region_name ?? providerConfig.region,
+      hostname: providerConfig.api_url,
+      name,
+      projectName: MTV_NAMESPACE,
+      secretAccessKey: providerConfig.secret_access_key,
+      type: ProviderType.EC2,
+    };
+
+    const createProvider = new CreateProviderPage(page, resourceManager);
+    await createProvider.navigate();
+    await createProvider.create(providerData);
+
+    await context.close();
+  });
+
+  test.afterAll(async () => {
+    await resourceManager.instantCleanup();
+  });
 
   test(
     'should verify network map step shows populated EC2 sources',
@@ -196,8 +201,4 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
       });
     },
   );
-
-  test.afterAll(async () => {
-    await resourceManager.instantCleanup();
-  });
 });
