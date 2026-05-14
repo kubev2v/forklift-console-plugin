@@ -45,6 +45,7 @@ const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = ({ data, isKeb
           onClick={onToggleClick}
           isExpanded={isOpen}
           variant={isKebab ? 'plain' : 'default'}
+          data-testid={isKebab ? undefined : 'provider-actions-dropdown-button'}
         >
           {isKebab ? <EllipsisVIcon /> : t('Actions')}
         </MenuToggle>
