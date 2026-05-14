@@ -87,7 +87,12 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
         const diskEncryption = isProviderFlow
           ? await resolveDiskEncryption(vmOverrides[vm.id], vm.name, ns)
           : undefined;
-        return { diskEncryption, id: vm.id, name: vm.name };
+        return {
+          diskEncryption,
+          id: vm.id,
+          name: vm.name,
+          xfsCompatibility: vmOverrides[vm.id]?.xfsCompatibility,
+        };
       }),
     );
 
