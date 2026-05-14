@@ -1,5 +1,9 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
+import InspectVirtualMachinesModal, {
+  type InspectVirtualMachinesModalProps,
+} from 'src/components/InspectVirtualMachines/InspectVirtualMachinesModal';
+import { useCanInspectPlan } from 'src/plans/details/hooks/useCanInspectPlan';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -45,6 +49,13 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
     namespace: getNamespace(plan),
   });
 
+  const {
+    canInspect,
+    disabledReason: inspectDisabledReason,
+    isVsphere,
+    provider,
+  } = useCanInspectPlan(plan);
+
   const planURL = getPlanURL(plan);
   const planStatus = getPlanStatus(plan);
 
@@ -80,6 +91,12 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
 
   const onClickPlanDelete = () => {
     launcher<PlanModalProps>(PlanDeleteModal, { plan });
+  };
+
+  const onClickInspectVms = () => {
+    if (provider) {
+      launcher<InspectVirtualMachinesModalProps>(InspectVirtualMachinesModal, { plan, provider });
+    }
   };
 
   return (
@@ -139,7 +156,20 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
       >
         {t('Archive')}
       </DropdownItem>
-      <DropdownItem value={5} key="delete" isDisabled={!canDelete} onClick={onClickPlanDelete}>
+      {isVsphere && (
+        <DropdownItem
+          value={5}
+          key="inspectVms"
+          isDisabled={!canInspect}
+          isAriaDisabled={!canInspect}
+          description={inspectDisabledReason}
+          onClick={onClickInspectVms}
+          data-testid="plan-actions-inspect-menuitem"
+        >
+          {t('Inspect VMs')}
+        </DropdownItem>
+      )}
+      <DropdownItem value={6} key="delete" isDisabled={!canDelete} onClick={onClickPlanDelete}>
         {t('Delete')}
       </DropdownItem>
     </DropdownList>
