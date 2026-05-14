@@ -1,11 +1,16 @@
-import { expect, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { CreateProviderPage } from '../../../page-objects/CreateProviderPage';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { ProviderDetailsPage } from '../../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { ProviderType } from '../../../types/enums';
-import { createPlanTestData, Ec2SourceStorages, type ProviderData } from '../../../types/test-data';
+import {
+  createPlanTestData,
+  Ec2SourceStorages,
+  type PlanTestData,
+  type ProviderData,
+} from '../../../types/test-data';
 import { getProviderConfig, hasProviderConfig } from '../../../utils/providers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 import { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
@@ -13,6 +18,41 @@ import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 const EC2_PROVIDER_KEY = process.env.EC2_PROVIDER ?? 'ec2';
+
+/** Opens the plan wizard from the provider details page and completes the General and VMs steps. */
+const fillWizardThroughVMsStep = async (
+  page: Page,
+  wizard: CreatePlanWizardPage,
+  provider: string,
+  planData: PlanTestData,
+): Promise<void> => {
+  const providerDetailsPage = new ProviderDetailsPage(page);
+  await providerDetailsPage.navigate(provider, MTV_NAMESPACE);
+  await providerDetailsPage.waitForReadyStatus();
+  await providerDetailsPage.clickCreatePlanButton();
+  await wizard.waitForWizardLoad();
+  await wizard.generalInformation.verifySourceProviderPrePopulated(provider);
+  await wizard.generalInformation.fillAndComplete(planData);
+  await wizard.clickNext();
+  await wizard.virtualMachines.fillAndComplete(planData.virtualMachines);
+  await wizard.clickNext();
+};
+
+const buildPlanData = (planName: string, sourceProvider: string): PlanTestData =>
+  createPlanTestData({
+    networkMap: { isPreexisting: false, name: `${planName}-net` },
+    planName,
+    planProject: MTV_NAMESPACE,
+    sourceProvider,
+    storageMap: {
+      isPreexisting: false,
+      mappings: [],
+      name: `${planName}-stor`,
+    },
+    targetProject: { isPreexisting: true, name: MTV_NAMESPACE },
+    targetProvider: 'host',
+    virtualMachines: undefined,
+  });
 
 test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
   requireVersion(test, V2_12_0);
@@ -26,22 +66,6 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
 
   /** Assigned by the first serial test; subsequent tests read it. */
   let providerName = '';
-
-  const buildPlanData = (planName: string, sourceProvider: string) =>
-    createPlanTestData({
-      networkMap: { isPreexisting: false, name: `${planName}-net` },
-      planName,
-      planProject: MTV_NAMESPACE,
-      sourceProvider,
-      storageMap: {
-        isPreexisting: false,
-        mappings: [],
-        name: `${planName}-stor`,
-      },
-      targetProject: { isPreexisting: true, name: MTV_NAMESPACE },
-      targetProvider: 'host',
-      virtualMachines: undefined,
-    });
 
   test(
     'should create EC2 provider for plan wizard tests',
@@ -74,16 +98,7 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
       const planData = buildPlanData(`ec2-net-map-${Date.now()}`, providerName);
 
       await test.step('Navigate to network map with a new VM selection', async () => {
-        const providerDetailsPage = new ProviderDetailsPage(page);
-        await providerDetailsPage.navigate(providerName, MTV_NAMESPACE);
-        await providerDetailsPage.waitForReadyStatus();
-        await providerDetailsPage.clickCreatePlanButton();
-        await createWizard.waitForWizardLoad();
-        await createWizard.generalInformation.verifySourceProviderPrePopulated(providerName);
-        await createWizard.generalInformation.fillAndComplete(planData);
-        await createWizard.clickNext();
-        await createWizard.virtualMachines.fillAndComplete(planData.virtualMachines);
-        await createWizard.clickNext();
+        await fillWizardThroughVMsStep(page, createWizard, providerName, planData);
       });
 
       await test.step('Assert subnets or map options exist', async () => {
@@ -107,16 +122,7 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
       const planData = buildPlanData(`ec2-stor-map-${Date.now()}`, providerName);
 
       await test.step('Open wizard through network map', async () => {
-        const providerDetailsPage = new ProviderDetailsPage(page);
-        await providerDetailsPage.navigate(providerName, MTV_NAMESPACE);
-        await providerDetailsPage.waitForReadyStatus();
-        await providerDetailsPage.clickCreatePlanButton();
-        await createWizard.waitForWizardLoad();
-        await createWizard.generalInformation.verifySourceProviderPrePopulated(providerName);
-        await createWizard.generalInformation.fillAndComplete(planData);
-        await createWizard.clickNext();
-        await createWizard.virtualMachines.fillAndComplete(planData.virtualMachines);
-        await createWizard.clickNext();
+        await fillWizardThroughVMsStep(page, createWizard, providerName, planData);
         await createWizard.networkMap.fillAndComplete(planData.networkMap);
         await createWizard.clickNext();
       });
@@ -160,16 +166,7 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
       const planData = buildPlanData(planName, providerName);
 
       await test.step('Reach review with default post-migration steps skipped', async () => {
-        const providerDetailsPage = new ProviderDetailsPage(page);
-        await providerDetailsPage.navigate(providerName, MTV_NAMESPACE);
-        await providerDetailsPage.waitForReadyStatus();
-        await providerDetailsPage.clickCreatePlanButton();
-        await createWizard.waitForWizardLoad();
-        await createWizard.generalInformation.verifySourceProviderPrePopulated(providerName);
-        await createWizard.generalInformation.fillAndComplete(planData);
-        await createWizard.clickNext();
-        await createWizard.virtualMachines.fillAndComplete(planData.virtualMachines);
-        await createWizard.clickNext();
+        await fillWizardThroughVMsStep(page, createWizard, providerName, planData);
         await createWizard.networkMap.fillAndComplete(planData.networkMap);
         await createWizard.clickNext();
         await createWizard.storageMap.fillAndComplete(planData.storageMap);
