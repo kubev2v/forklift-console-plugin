@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../../../fixtures/test-data';
 import type { VirtualMachine } from '../../../types/test-data';
@@ -9,6 +9,14 @@ import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
 export class VirtualMachinesStep extends VirtualMachinesTable {
   constructor(page: Page) {
     super(page, page.getByTestId('create-plan-vm-step'));
+  }
+
+  private async getVmGrid(): Promise<Locator> {
+    const treegrid = this.rootLocator.getByRole('treegrid');
+    if (await treegrid.isVisible().catch(() => false)) {
+      return treegrid;
+    }
+    return this.rootLocator.getByRole('grid');
   }
 
   async expandFolderForLegacy(folder: string): Promise<void> {
@@ -116,7 +124,7 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
   }
 
   async selectFirstVirtualMachine() {
-    const grid = this.page.getByRole('treegrid');
+    const grid = await this.getVmGrid();
     const firstRow = grid.locator('tbody tr').first();
     const checkbox = firstRow.locator('input[type="checkbox"]');
     await expect(checkbox).toBeVisible();
@@ -150,11 +158,13 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
 
   override async verifyTableLoaded(): Promise<void> {
     const treegrid = this.rootLocator.getByRole('treegrid');
-    await expect(treegrid).toBeVisible({ timeout: 30000 });
+    const grid = this.rootLocator.getByRole('grid');
+    const tableLocator = treegrid.or(grid);
+    await expect(tableLocator).toBeVisible({ timeout: 30000 });
     if (isVersionAtLeast(V2_11_0)) {
       await this.table.waitForTableLoad();
     } else {
-      await expect(treegrid.getByRole('row').first()).toBeVisible();
+      await expect(tableLocator.getByRole('row').first()).toBeVisible();
     }
   }
 

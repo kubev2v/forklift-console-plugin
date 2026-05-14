@@ -6,6 +6,9 @@ import { disableGuidedTour } from '../../utils/utils';
 import { V2_12_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
+// EC2 is excluded: its dropdown option is gated behind useClusterIsAwsPlatform(),
+// which requires a real Infrastructure resource that upstream mocks cannot provide.
+// EC2 pre-selection is covered by downstream tests instead.
 const PROVIDER_TYPE_LABELS: Record<string, string> = {
   hyperv: 'Microsoft Hyper-V',
   openshift: 'OpenShift Virtualization',

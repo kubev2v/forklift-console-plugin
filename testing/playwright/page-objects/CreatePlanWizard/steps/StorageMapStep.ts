@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { getMappingWizardFieldRows } from '../../../utils/mappingWizardFieldRows';
 import { isEmpty } from '../../../utils/utils';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
@@ -16,7 +17,7 @@ export class StorageMapStep {
 
   /**
    * Returns version-appropriate locators for mapping table rows.
-   * 2.11+: uses data-testid="field-row-*" with td cells and target-storage-select.
+   * 2.11+: uses data-testid="field-row-{n}" (see `getMappingWizardFieldRows`) with td cells and target-storage-select.
    * <2.11: uses grid > rowgroup (body) > row with gridcell elements.
    */
   private getMappingRowLocators(): {
@@ -26,8 +27,8 @@ export class StorageMapStep {
   } {
     if (isVersionAtLeast(V2_11_0)) {
       return {
-        rows: this.page.getByTestId(/^field-row-\d+$/),
-        getSourceText: async (row: Locator) => row.locator('td').first().textContent(),
+        rows: getMappingWizardFieldRows(this.page),
+        getSourceText: (row: Locator) => row.locator('td').first().textContent(),
         getTargetSelect: (row: Locator) => row.getByTestId('target-storage-select'),
       };
     }
@@ -36,7 +37,7 @@ export class StorageMapStep {
     const bodyRowGroup = grid.getByRole('rowgroup').nth(1);
     return {
       rows: bodyRowGroup.getByRole('row'),
-      getSourceText: async (row: Locator) => row.getByRole('gridcell').first().textContent(),
+      getSourceText: (row: Locator) => row.getByRole('gridcell').first().textContent(),
       getTargetSelect: (row: Locator) => row.getByRole('gridcell').nth(1).getByRole('button'),
     };
   }

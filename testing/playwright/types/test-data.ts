@@ -51,6 +51,18 @@ export const SourceStorages = {
   MTV_NFS_US_V8: 'mtv-nfs-us-v8',
 } as const;
 
+export const Ec2SourceStorages = {
+  GP2: 'gp2',
+  GP3: 'gp3',
+  IO1: 'io1',
+  IO2: 'io2',
+  SC1: 'sc1',
+  ST1: 'st1',
+  STANDARD: 'standard',
+} as const;
+
+export type Ec2SourceStorage = (typeof Ec2SourceStorages)[keyof typeof Ec2SourceStorages];
+
 /**
  * Storage offload options used for vSphere XCOPY/VAAI testing.
  * Display names are the user-visible labels in the UI dropdowns.
@@ -205,37 +217,50 @@ export const createPlanTestData = (
 };
 
 export interface ProviderConfig {
-  type: ProviderType;
-  endpoint_type?: EndpointType;
+  access_key_id?: string;
   api_url: string;
-  username: string;
-  password: string;
-  vddk_init_image?: string;
-  region_name?: string;
+  auto_target_credentials?: boolean;
+  endpoint_type?: EndpointType;
+  password?: string;
   project_name?: string;
-  user_domain_name?: string;
+  region?: string;
+  region_name?: string;
+  secret_access_key?: string;
+  smb_password?: string;
   smb_url?: string;
   smb_username?: string;
-  smb_password?: string;
+  type: ProviderType;
+  user_domain_name?: string;
+  username?: string;
+  vddk_init_image?: string;
 }
 export interface ProviderData {
-  name: string;
-  projectName: string;
-  type: ProviderType;
-  endpointType?: EndpointType;
-  hostname: string;
-  username?: string;
-  password?: string;
-  fingerprint?: string;
-  vddkInitImage?: string;
-  skipVddk?: boolean;
-  useVddkAioOptimization?: boolean;
+  accessKeyId?: string;
   applianceManagement?: boolean;
-  regionName?: string;
-  openstackProjectName?: string;
+  autoTargetCredentials?: boolean;
+  crossAccountCredentials?: boolean;
   domainName?: string;
+  ec2Region?: string;
+  endpointType?: EndpointType;
+  fingerprint?: string;
+  hostname: string;
+  name: string;
+  openstackProjectName?: string;
+  password?: string;
+  projectName: string;
+  regionName?: string;
+  secretAccessKey?: string;
+  skipVddk?: boolean;
+  smbPassword?: string;
   smbUrl?: string;
   smbUsername?: string;
-  smbPassword?: string;
+  targetAccessKeyId?: string;
+  targetAz?: string;
+  targetRegion?: string;
+  targetSecretAccessKey?: string;
+  type: ProviderType;
   useDifferentSmbCredentials?: boolean;
+  useVddkAioOptimization?: boolean;
+  username?: string;
+  vddkInitImage?: string;
 }
