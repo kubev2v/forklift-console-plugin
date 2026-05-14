@@ -85,6 +85,7 @@ test.describe('EC2 Provider target-az CR Verification', () => {
         const settings = providerResource?.spec?.settings as Record<string, string> | undefined;
         expect(settings?.autoTargetCredentials).toBe('true');
         expect(settings?.['target-az']).toBeUndefined();
+        expect(settings?.['target-region']).toBeUndefined();
       });
     },
   );

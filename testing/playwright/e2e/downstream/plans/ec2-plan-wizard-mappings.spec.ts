@@ -1,17 +1,11 @@
-import { expect, type Page, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { CreateProviderPage } from '../../../page-objects/CreateProviderPage';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { ProviderDetailsPage } from '../../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { ProviderType } from '../../../types/enums';
-import {
-  createPlanTestData,
-  Ec2SourceStorages,
-  type PlanTestData,
-  type ProviderData,
-} from '../../../types/test-data';
-import { getMappingWizardFieldRows } from '../../../utils/mappingWizardFieldRows';
+import { createPlanTestData, Ec2SourceStorages, type ProviderData } from '../../../types/test-data';
 import { getProviderConfig, hasProviderConfig } from '../../../utils/providers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 import { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
@@ -20,31 +14,9 @@ import { requireVersion } from '../../../utils/version/version';
 
 const EC2_PROVIDER_KEY = process.env.EC2_PROVIDER ?? 'ec2';
 
-/** Downstream EC2 flows wait on controller + inventory; one ceiling for the whole serial suite. */
-const EC2_PLAN_WIZARD_SUITE_TIMEOUT_MS = 300_000;
-
-/** From provider details: create-plan wizard through general + VMs, stop on the network-map step. */
-const openCreatePlanWizardFromProviderThroughNetworkMapStep = async (
-  page: Page,
-  wizard: CreatePlanWizardPage,
-  sourceProviderName: string,
-  planData: PlanTestData,
-): Promise<void> => {
-  const providerDetailsPage = new ProviderDetailsPage(page);
-  await providerDetailsPage.navigate(sourceProviderName, MTV_NAMESPACE);
-  await providerDetailsPage.waitForReadyStatus();
-  await providerDetailsPage.clickCreatePlanButton();
-  await wizard.waitForWizardLoad();
-  await wizard.generalInformation.verifySourceProviderPrePopulated(sourceProviderName);
-  await wizard.generalInformation.fillAndComplete(planData);
-  await wizard.clickNext();
-  await wizard.virtualMachines.fillAndComplete(planData.virtualMachines);
-  await wizard.clickNext();
-};
-
 test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
   requireVersion(test, V2_12_0);
-  test.describe.configure({ timeout: EC2_PLAN_WIZARD_SUITE_TIMEOUT_MS });
+  test.describe.configure({ timeout: 300_000 });
 
   if (!hasProviderConfig(EC2_PROVIDER_KEY)) {
     test.skip();
@@ -53,8 +25,9 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
   const resourceManager = new ResourceManager();
 
   /**
-   * First serial test assigns this after create; later tests read it. `buildPlanData` closes over it so
-   * `sourceProvider` matches the live provider name (cannot be inlined before the first test runs).
+   * Set by the first serial test after provider creation; subsequent tests read it.
+   * `buildPlanData` closes over this variable so `sourceProvider` reflects the live provider
+   * name — it cannot be inlined before the first test runs.
    */
   let providerName = '';
 
@@ -79,14 +52,14 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
     { tag: ['@downstream'] },
     async ({ page }) => {
       const providerConfig = getProviderConfig(EC2_PROVIDER_KEY);
-      providerName = `test-ec2-plan-wizard-${Date.now()}`;
+      const name = `test-ec2-plan-wizard-${Date.now()}`;
+      providerName = name;
       const providerData: ProviderData = {
         accessKeyId: providerConfig.access_key_id,
         autoTargetCredentials: providerConfig.auto_target_credentials,
         ec2Region: providerConfig.region_name ?? providerConfig.region,
         hostname: providerConfig.api_url,
-        // Unique per run so ResourceManager cleanup and serial follow-up tests stay deterministic.
-        name: providerName,
+        name,
         projectName: MTV_NAMESPACE,
         secretAccessKey: providerConfig.secret_access_key,
         type: ProviderType.EC2,
@@ -105,19 +78,23 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
       const planData = buildPlanData(`ec2-net-map-${Date.now()}`);
 
       await test.step('Navigate to network map with a new VM selection', async () => {
-        await openCreatePlanWizardFromProviderThroughNetworkMapStep(
-          page,
-          createWizard,
-          providerName,
-          planData,
-        );
+        const providerDetailsPage = new ProviderDetailsPage(page);
+        await providerDetailsPage.navigate(providerName, MTV_NAMESPACE);
+        await providerDetailsPage.waitForReadyStatus();
+        await providerDetailsPage.clickCreatePlanButton();
+        await createWizard.waitForWizardLoad();
+        await createWizard.generalInformation.verifySourceProviderPrePopulated(providerName);
+        await createWizard.generalInformation.fillAndComplete(planData);
+        await createWizard.clickNext();
+        await createWizard.virtualMachines.fillAndComplete(planData.virtualMachines);
+        await createWizard.clickNext();
       });
 
       await test.step('Assert subnets or map options exist', async () => {
         await createWizard.networkMap.verifyStepVisible();
         await createWizard.networkMap.waitForData();
         await createWizard.page.getByTestId('use-new-network-map-radio').check();
-        const fieldRows = getMappingWizardFieldRows(createWizard.page);
+        const fieldRows = createWizard.page.locator('[data-testid^="field-row-"]');
         await expect(fieldRows.first()).toBeVisible({ timeout: 15_000 });
         const rowCount = await fieldRows.count();
         expect(rowCount).toBeGreaterThan(0);
@@ -134,12 +111,16 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
       const planData = buildPlanData(`ec2-stor-map-${Date.now()}`);
 
       await test.step('Open wizard through network map', async () => {
-        await openCreatePlanWizardFromProviderThroughNetworkMapStep(
-          page,
-          createWizard,
-          providerName,
-          planData,
-        );
+        const providerDetailsPage = new ProviderDetailsPage(page);
+        await providerDetailsPage.navigate(providerName, MTV_NAMESPACE);
+        await providerDetailsPage.waitForReadyStatus();
+        await providerDetailsPage.clickCreatePlanButton();
+        await createWizard.waitForWizardLoad();
+        await createWizard.generalInformation.verifySourceProviderPrePopulated(providerName);
+        await createWizard.generalInformation.fillAndComplete(planData);
+        await createWizard.clickNext();
+        await createWizard.virtualMachines.fillAndComplete(planData.virtualMachines);
+        await createWizard.clickNext();
         await createWizard.networkMap.fillAndComplete(planData.networkMap);
         await createWizard.clickNext();
       });
@@ -148,7 +129,7 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
         await createWizard.storageMap.verifyStepVisible();
         await createWizard.storageMap.waitForData();
         await createWizard.page.getByTestId('use-new-storage-map-radio').check();
-        const fieldRows = getMappingWizardFieldRows(createWizard.page);
+        const fieldRows = createWizard.page.locator('[data-testid^="field-row-"]');
         await expect(fieldRows.first()).toBeVisible({ timeout: 15_000 });
         const rowCount = await fieldRows.count();
         expect(rowCount).toBeGreaterThan(0);
@@ -183,12 +164,16 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
       const planData = buildPlanData(planName);
 
       await test.step('Reach review with default post-migration steps skipped', async () => {
-        await openCreatePlanWizardFromProviderThroughNetworkMapStep(
-          page,
-          createWizard,
-          providerName,
-          planData,
-        );
+        const providerDetailsPage = new ProviderDetailsPage(page);
+        await providerDetailsPage.navigate(providerName, MTV_NAMESPACE);
+        await providerDetailsPage.waitForReadyStatus();
+        await providerDetailsPage.clickCreatePlanButton();
+        await createWizard.waitForWizardLoad();
+        await createWizard.generalInformation.verifySourceProviderPrePopulated(providerName);
+        await createWizard.generalInformation.fillAndComplete(planData);
+        await createWizard.clickNext();
+        await createWizard.virtualMachines.fillAndComplete(planData.virtualMachines);
+        await createWizard.clickNext();
         await createWizard.networkMap.fillAndComplete(planData.networkMap);
         await createWizard.clickNext();
         await createWizard.storageMap.fillAndComplete(planData.storageMap);
