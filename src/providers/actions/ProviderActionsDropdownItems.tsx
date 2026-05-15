@@ -36,7 +36,7 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
     launcher<DeleteModalProps>(DeleteModal, { model: ProviderModel, resource: provider });
   };
 
-  const onInspectVms = () => {
+  const onInspectVms = (): void => {
     launcher<InspectVirtualMachinesModalProps>(InspectVirtualMachinesModal, { provider });
   };
 

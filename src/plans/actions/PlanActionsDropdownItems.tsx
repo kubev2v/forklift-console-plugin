@@ -93,7 +93,7 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
     launcher<PlanModalProps>(PlanDeleteModal, { plan });
   };
 
-  const onClickInspectVms = () => {
+  const onClickInspectVms = (): void => {
     if (provider) {
       launcher<InspectVirtualMachinesModalProps>(InspectVirtualMachinesModal, { plan, provider });
     }
