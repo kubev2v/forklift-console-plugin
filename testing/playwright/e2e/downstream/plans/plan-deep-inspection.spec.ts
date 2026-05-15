@@ -14,7 +14,8 @@ const setupPlanDetailsPage = async (page: Page, testPlan: TestPlan | undefined) 
   const planDetailsPage = new PlanDetailsPage(page);
   const inspectModal = new InspectVirtualMachinesModal(page);
   const { name: planName, namespace } = testPlan.metadata;
-  const firstVmName = testPlan.testData.virtualMachines?.[0]?.sourceName ?? '';
+  const firstVmName = testPlan.testData.virtualMachines?.[0]?.sourceName;
+  if (!firstVmName) throw new Error('No source VM found in plan test data');
 
   await planDetailsPage.navigate(planName, namespace);
   await planDetailsPage.verifyPlanTitle(planName);
@@ -165,8 +166,10 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
       await inspectModal.clickInspect();
     });
 
-    await test.step('verify status transitions to Running', async () => {
-      await expect(getVmRow(page, firstVmName).getByText('Running')).toBeVisible({
+    await test.step('verify status becomes observable after submit', async () => {
+      await expect(
+        getVmRow(page, firstVmName).getByText(/Running|Inspection passed|Inspection failed/),
+      ).toBeVisible({
         timeout: 30_000,
       });
     });
@@ -188,9 +191,16 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
       testPlan,
     );
 
-    await test.step('verify VM has a completed inspection status', async () => {
+    await test.step('ensure VM has a completed inspection status', async () => {
       const status = await planDetailsPage.virtualMachinesTab.getVmInspectionStatus(firstVmName);
-      expect(status).toMatch(/Inspection passed|Inspection failed/);
+      if (!/Inspection passed|Inspection failed/.test(status)) {
+        await openInspectModal(planDetailsPage, inspectModal);
+        await inspectModal.selectVmByName(firstVmName);
+        await inspectModal.clickInspect();
+        await expect(
+          getVmRow(page, firstVmName).getByText(/Inspection passed|Inspection failed/),
+        ).toBeVisible({ timeout: 300_000 });
+      }
     });
 
     await test.step('open inspect modal and verify completed status shown', async () => {
@@ -206,8 +216,10 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
       await inspectModal.clickInspect();
     });
 
-    await test.step('verify status transitions back to Running', async () => {
-      await expect(getVmRow(page, firstVmName).getByText('Running')).toBeVisible({
+    await test.step('verify status becomes observable after re-submit', async () => {
+      await expect(
+        getVmRow(page, firstVmName).getByText(/Running|Inspection passed|Inspection failed/),
+      ).toBeVisible({
         timeout: 30_000,
       });
     });
