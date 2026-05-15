@@ -34,7 +34,8 @@ const openInspectModal = async (
 
 const getVmRow = (page: Page, vmName: string): Locator => {
   return page.getByRole('grid', { name: 'Virtual machines' }).getByRole('row', {
-    name: new RegExp(vmName),
+    name: vmName,
+    exact: false,
   });
 };
 
