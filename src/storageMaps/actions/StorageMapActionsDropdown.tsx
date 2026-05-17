@@ -51,7 +51,7 @@ const StorageMapActionsKebabDropdown: FC<StorageMapActionsDropdownProps> = ({ da
       }}
     >
       <DropdownList>
-        <StorageMapActionsDropdownItems data={data} />
+        <StorageMapActionsDropdownItems data={data} isKebab={isKebab} />
       </DropdownList>
     </Dropdown>
   );
