@@ -81,7 +81,9 @@ export const groupConcernsByCategory = (
       return acc;
     },
     {
+      [ConcernCategoryOptions.Advisory]: [],
       [ConcernCategoryOptions.Critical]: [],
+      [ConcernCategoryOptions.Error]: [],
       [ConcernCategoryOptions.Information]: [],
       [ConcernCategoryOptions.Warning]: [],
     },
@@ -93,15 +95,18 @@ export const groupConditionsByCategory = (
 ): Record<ConcernCategory, V1beta1PlanStatusConditions[]> => {
   return conditions.reduce<Record<string, V1beta1PlanStatusConditions[]>>(
     (acc, condition) => {
-      if (isEmpty(getCategoryLabel(condition?.category))) return acc;
-      if (isEmpty(acc[getCategoryLabel(condition?.category)])) {
-        acc[condition?.category] = [];
+      const label = getCategoryLabel(condition?.category);
+      if (isEmpty(label)) return acc;
+      if (isEmpty(acc[label])) {
+        acc[label] = [];
       }
-      acc[getCategoryLabel(condition?.category)].push(condition);
+      acc[label].push(condition);
       return acc;
     },
     {
+      [ConcernCategoryOptions.Advisory]: [],
       [ConcernCategoryOptions.Critical]: [],
+      [ConcernCategoryOptions.Error]: [],
       [ConcernCategoryOptions.Information]: [],
       [ConcernCategoryOptions.Warning]: [],
     },

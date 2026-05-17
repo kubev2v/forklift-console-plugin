@@ -17,6 +17,6 @@ export const getOrderedConcernCategoriesSum = (
   const groupedConditions = groupConditionsByCategory(conditions);
 
   return orderedConcernCategories.map((category) => {
-    return groupedConcerns[category].length + groupedConditions[category].length;
+    return (groupedConcerns[category]?.length ?? 0) + (groupedConditions[category]?.length ?? 0);
   });
 };

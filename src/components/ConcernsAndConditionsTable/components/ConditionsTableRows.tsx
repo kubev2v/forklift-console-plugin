@@ -23,7 +23,7 @@ const ConditionsTableRows: FC<ConditionsTableRowsProps> = ({ category, groupedCo
     </Tr>
   ));
 
-  return rows;
+  return rows ?? null;
 };
 
 export default ConditionsTableRows;
