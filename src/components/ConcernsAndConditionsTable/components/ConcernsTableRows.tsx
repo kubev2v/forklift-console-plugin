@@ -21,7 +21,7 @@ const ConcernsTableRows: FC<ConcernsTableRowsProps> = ({ category, groupedConcer
       <Td>{concern?.assessment ?? EMPTY_MSG}</Td>
     </Tr>
   ));
-  return rows;
+  return rows ?? null;
 };
 
 export default ConcernsTableRows;
