@@ -16,6 +16,7 @@ type ProviderTypeOption = {
   description: string;
   icon: ReactElement;
   label: string;
+  techPreview?: boolean;
   value: string;
 };
 
@@ -29,6 +30,7 @@ export const getProviderTypeOptions = (
           description: t('Migrate Amazon EC2 instances to OpenShift Virtualization'),
           icon: ec2Logo,
           label: t('Amazon EC2'),
+          techPreview: true,
           value: PROVIDER_TYPES.ec2,
         },
       ]
@@ -57,6 +59,7 @@ export const getProviderTypeOptions = (
     description: t('Microsoft Hyper-V virtualization platform. Supports migration via SMB share.'),
     icon: hypervLogo,
     label: t('Microsoft Hyper-V'),
+    techPreview: true,
     value: PROVIDER_TYPES.hyperv,
   },
   {
