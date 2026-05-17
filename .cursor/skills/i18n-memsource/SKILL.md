@@ -13,15 +13,45 @@ Read `.cursor/skills/i18n-memsource/state.json` for current sprint, version, and
 
 ## Prerequisites
 
-Before running any Memsource commands, always authenticate first:
+### Memsource CLI
+
+The `memsource` CLI is a Python package (`memsource-cli`) installed via pip3. The
+executable lives at `/Users/aturgema/Library/Python/3.9/bin/memsource` and is **not**
+on the default PATH. Always prepend it:
 
 ```bash
-source ~/.memsourcerc
+export PATH="/Users/aturgema/Library/Python/3.9/bin:$PATH"
 ```
 
-Run this in the Shell tool at the start of every action. Do not ask the user to do it.
+### Authentication
 
-Also read `i18n-scripts.config.json` from the project root for plugin config (languages, plugin name, etc).
+Credentials are stored in `~/.memsourcerc` (exports `MEMSOURCE_USERNAME` and
+`MEMSOURCE_PASSWORD`). The CLI also accepts a token via the `MEMSOURCE_TOKEN`
+environment variable.
+
+**Important:** The `memsource auth login` command returns a token but does not
+persist it for child processes (like those spawned by `npm run`). To make auth
+work inside npm scripts, you must capture the token and export it as
+`MEMSOURCE_TOKEN`:
+
+```bash
+export PATH="/Users/aturgema/Library/Python/3.9/bin:$PATH"
+source ~/.memsourcerc
+export MEMSOURCE_TOKEN=$(memsource auth login \
+  --user-name "$MEMSOURCE_USERNAME" \
+  --password "$MEMSOURCE_PASSWORD" \
+  -f json 2>/dev/null \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+```
+
+Run this **once** at the start of every action. All subsequent `memsource` and
+`npm run memsource-*` commands in the same shell session will inherit the token.
+Do not ask the user to authenticate manually.
+
+### Config
+
+Read `i18n-scripts.config.json` from the project root for plugin config
+(languages, plugin name, language aliases, etc).
 
 ---
 
@@ -58,11 +88,9 @@ Read these files:
 
 ### Step 3: Authenticate
 
-```bash
-source ~/.memsourcerc
-```
+Run the full authentication sequence from Prerequisites (export PATH, source
+credentials, capture MEMSOURCE_TOKEN). Verify with:
 
-Verify authentication works:
 ```bash
 memsource auth whoami
 ```
@@ -83,6 +111,9 @@ Verify it exits with code 0 and writes locale files.
 rm -rf po-files
 npm run export-pos
 ```
+
+The script resolves `languageAliases` from `i18n-scripts.config.json` automatically
+(e.g. `zh-cn` maps to locale directory `zh/`). Fixed in `ocp-plugin-i18n-scripts@1.0.2`.
 
 ### Step 6: Validate PO files
 
@@ -122,11 +153,17 @@ Ask for explicit approval before proceeding. Use the AskQuestion tool:
 
 ### Step 8: Upload to Memsource
 
+Run the upload (MEMSOURCE_TOKEN must be exported from Step 3):
+
 ```bash
 npm run memsource-upload -- -v VERSION -s SPRINT
 ```
 
-Capture the output. The script prints the PROJECT_ID. Extract it from the `memsource project create` output line.
+The script handles branch names with `/` and resolves language aliases
+automatically (fixed in `ocp-plugin-i18n-scripts@1.0.2`).
+
+Capture the output. The script prints the PROJECT_ID in JSON. Extract the `uid`
+field from the `memsource project create` output.
 
 If the upload fails (auth error, network error), report the error and suggest fixes.
 
@@ -185,9 +222,8 @@ Read `.cursor/skills/i18n-memsource/state.json` for `lastProjectId`. Show it to 
 
 ### Step 2: Authenticate
 
-```bash
-source ~/.memsourcerc
-```
+Run the full authentication sequence from Prerequisites (export PATH, source
+credentials, capture MEMSOURCE_TOKEN).
 
 ### Step 3: Check translation status
 
@@ -249,10 +285,8 @@ Trigger: user says "translation status", "memsource status", "check translations
 
 1. Read `.cursor/skills/i18n-memsource/state.json` for `lastProjectId`
 2. Ask user to confirm or provide a different PROJECT_ID
-3. Authenticate:
-   ```bash
-   source ~/.memsourcerc
-   ```
+3. Authenticate using the full sequence from Prerequisites (export PATH, source
+   credentials, capture MEMSOURCE_TOKEN).
 4. For each language in `i18n-scripts.config.json`, query:
    ```bash
    memsource job list --project-id PROJECT_ID --target-lang LANG -f json -c uid,status,targetLang
@@ -274,7 +308,9 @@ Trigger: user says "translation status", "memsource status", "check translations
 
 ## Important Notes
 
-- Always run `source ~/.memsourcerc` before any `memsource` CLI command. Do this silently.
+- **CLI path:** The `memsource` binary is at `/Users/aturgema/Library/Python/3.9/bin/memsource`. Always export this to PATH before use.
+- **Auth token:** Use `MEMSOURCE_TOKEN` env var (captured from `memsource auth login`) so child processes (npm scripts) inherit auth. Do not rely on `memsource auth login` alone -- the token is not persisted to disk.
+- **Language aliases and branch names:** Both are handled automatically since `ocp-plugin-i18n-scripts@1.0.2`. No symlinks or branch switching needed.
 - The `npm run memsource-upload` and `npm run memsource-download` scripts use the `ocp-plugin-i18n-scripts` npm package CLI commands under the hood.
 - PO files are temporary artifacts in `po-files/` -- they're cleaned up after upload.
 - The `memsource-download` script auto-commits. The PR creation is a separate step.
