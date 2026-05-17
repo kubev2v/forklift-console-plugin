@@ -1,9 +1,10 @@
 {
   "version": "2.12",
-  "sprint": 1,
-  "lastProjectId": "28wosG55nMVH8VwafbqC13",
-  "memsourceProjectUrl": "https://cloud.memsource.com/web/project2/show/28wosG55nMVH8VwafbqC13",
+  "sprint": 2,
+  "lastProjectId": "xNCkdYqlrFbPdd3B1ruWB5",
+  "memsourceProjectUrl": "https://cloud.memsource.com/web/project2/show/xNCkdYqlrFbPdd3B1ruWB5",
   "history": [
-    { "sprint": 1, "version": "2.12", "projectId": "28wosG55nMVH8VwafbqC13", "date": "2026-03-05" }
+    { "sprint": 1, "version": "2.12", "projectId": "28wosG55nMVH8VwafbqC13", "date": "2026-03-05" },
+    { "sprint": 2, "version": "2.12", "projectId": "xNCkdYqlrFbPdd3B1ruWB5", "date": "2026-05-17" }
   ]
 }
