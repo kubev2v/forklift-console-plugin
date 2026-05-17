@@ -1,7 +1,9 @@
 import type { FC } from 'react';
 
 import { DetailsItem } from '@components/DetailItems/DetailItem';
+import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
 import type { V1beta1Hook, V1beta1HookSpecAap } from '@forklift-ui/types';
+import { Flex, FlexItem } from '@patternfly/react-core';
 import { getAnnotation } from '@utils/crds/common/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 import { ANNOTATION_AAP_JOB_TEMPLATE_NAME } from '@utils/types/aap';
@@ -20,7 +22,17 @@ const AapHookDetails: FC<AapHookDetailsProps> = ({ aap, hook }) => {
       <DetailsItem
         testId="hook-type-detail-item"
         title={t('Hook type')}
-        content={t('Ansible Automation Platform')}
+        content={
+          <Flex
+            spaceItems={{ default: 'spaceItemsSm' }}
+            alignItems={{ default: 'alignItemsCenter' }}
+          >
+            <FlexItem>{t('Ansible Automation Platform')}</FlexItem>
+            <FlexItem>
+              <TechPreviewLabel />
+            </FlexItem>
+          </Flex>
+        }
       />
       <DetailsItem
         testId="aap-job-template-id-detail-item"
