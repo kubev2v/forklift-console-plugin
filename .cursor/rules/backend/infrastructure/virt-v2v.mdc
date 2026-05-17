@@ -1,0 +1,338 @@
+---
+description: virt-v2v integration - guest conversion, inspection, customization, provider-specific args
+alwaysApply: false
+---
+
+# virt-v2v Integration
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+## Overview
+
+virt-v2v is the core guest conversion engine in Forklift. It runs as a pod during migration and is responsible for:
+
+1. **Disk conversion** — converting guest disk images from source format (VMDK, QCOW2, etc.) to raw format suitable for KubeVirt
+2. **Guest OS inspection** — detecting the OS type, distro, architecture via `virt-v2v-inspector`
+3. **Driver injection** — installing VirtIO drivers and removing source-specific drivers (e.g., VMware Tools)
+4. **Guest customization** — running `virt-customize` scripts for network config, static IPs, and cleanup
+
+Source: `pkg/virt-v2v/` and `cmd/virt-v2v/entrypoint.go`
+
+---
+
+## Entrypoint Flow (`cmd/virt-v2v/entrypoint.go`)
+
+The virt-v2v pod entrypoint follows this sequence:
+
+```
+1. Load environment config (AppConfig)
+2. Link SSL certificates (vSphere only)
+3. Create output directory (/var/tmp/v2v)
+4. Branch based on mode:
+
+   A. Remote Inspection (IsRemoteInspection=true):
+      └─ RunRemoteV2vInspection() → exits
+
+   B. Conversion (IsRemoteInspection=false):
+      ├─ In-Place (IsInPlace=true):
+      │   ├─ With LibvirtUrl → GetDomainXML() → RunVirtV2vInPlace() (-i libvirtxml)
+      │   └─ Without LibvirtUrl → RunVirtV2vInPlaceDisk() (-i disk, e.g. EC2)
+      ├─ Cold (default):
+      │   └─ RunVirtV2v() → pipes stdout to virt-v2v-monitor
+      │
+      ├─ RunVirtV2VInspection() → local inspection on converted disks
+      ├─ RunCustomize() → virt-customize with OS-specific scripts
+      │   (failure is non-fatal → adds Warning)
+      └─ Start HTTP server on :8080 (local migrations only)
+```
+
+Key behavior: customization failure does NOT fail the migration — it logs a warning exposed via `/warnings`.
+
+---
+
+## Conversion Modes
+
+### Cold Migration (`RunVirtV2v`)
+
+Used for vSphere, OVA, and HyperV. Runs `virt-v2v` with `-o kubevirt` output mode, producing KubeVirt YAML + converted disk images in the workdir.
+
+Output is piped through `virt-v2v-monitor` which parses progress lines and exposes Prometheus metrics on `:2112/metrics`.
+
+### In-Place with Libvirt XML (`RunVirtV2vInPlace`)
+
+Used when disks are already populated (warm/live migration). Fetches domain XML from libvirt, updates disk paths to local mounts, writes to `/tmp/input.xml`, runs `virt-v2v-in-place -i libvirtxml`.
+
+### In-Place Disk Mode (`RunVirtV2vInPlaceDisk`)
+
+Used for EC2 and providers without libvirt. Runs `virt-v2v-in-place -i disk` directly on mounted block devices or files.
+
+### Local Inspection (`RunVirtV2VInspection`)
+
+Runs `virt-v2v-inspector -i disk` on already-converted local disks. Outputs XML to `/var/tmp/v2v/inspection.xml`. Always runs after conversion (not in remote-inspection mode).
+
+### Remote Inspection (`RunRemoteV2vInspection`)
+
+vSphere-only. Runs `virt-v2v-inspector` directly against the source VM via VDDK without downloading disks first. Uses `-io vddk-file=<disk>` args to specify which remote disks to inspect. Controlled by `V2V_remoteInspection=true` and `V2V_remoteInspectDisk_N` env vars.
+
+---
+
+## Environment Variables (`pkg/virt-v2v/config/variables.go`)
+
+### Core Variables
+
+| Variable | Field | Description |
+|---|---|---|
+| `V2V_source` | `Source` | Provider type: `vSphere`, `ova`, `hyperv`, `ec2` |
+| `V2V_vmName` | `VmName` | Original VM name |
+| `V2V_NewName` | `NewVmName` | Renamed VM in output |
+| `V2V_inPlace` | `IsInPlace` | Run in-place conversion (bool) |
+| `LOCAL_MIGRATION` | `IsLocalMigration` | Whether controller can reach the pod (enables HTTP server) |
+| `V2V_RootDisk` | `RootDisk` | Which disk to boot from (default: `first`) |
+
+### vSphere-Specific
+
+| Variable | Field | Description |
+|---|---|---|
+| `V2V_libvirtURL` | `LibvirtUrl` | Libvirt connection URI for vSphere |
+| `V2V_fingerprint` | `Fingerprint` | SSL thumbprint for VDDK |
+| `V2V_HOSTNAME` | `HostName` | ESXi host for direct transfer |
+| `V2V_vsphereVmwareDriverRemoval` | `VsphereVmwareDriverRemoval` | Run VMware driver cleanup on Windows |
+
+### Network & Encryption
+
+| Variable | Field | Description |
+|---|---|---|
+| `V2V_staticIPs` | `StaticIPs` | MAC-to-IP mappings, `_`-separated |
+| `V2V_multipleIPsPerNic` | `MultipleIpsPerNicName` | Enable multiple IPs per NIC |
+| `V2V_NBDE_CLEVIS` | `NbdeClevis` | Decrypt disks via Clevis/NBDE |
+
+### Remote Inspection
+
+| Variable | Field | Description |
+|---|---|---|
+| `V2V_remoteInspection` | `IsRemoteInspection` | Enable remote inspection mode |
+| `V2V_remoteInspectDisk_N` | `RemoteInspectionDisks` | Indexed disk list (N=0,1,2...) |
+
+### Tuning & Compatibility
+
+| Variable | Field | Description |
+|---|---|---|
+| `V2V_extra_args` | `ExtraArgs` | JSON array of extra args for virt-v2v / virt-v2v-in-place |
+| `V2V_inspector_extra_args` | `InspectorExtraArgs` | JSON array of extra args for virt-v2v-inspector |
+| `V2V_memSize` | `MemSize` | Memory (MB) for conversion appliance |
+| `V2V_smp` | `Smp` | Virtual CPUs for conversion appliance |
+| `V2V_xfsCompatibility` | `XfsCompatibility` | Omit `--no-fstrim` (el9 v2v lacks this flag) |
+| `VIRTIO_WIN` | `VirtIoWinLegacyDrivers` | Path to legacy VirtIO drivers ISO |
+| `V2V_diskPath` | `DiskPath` | Disk path for OVA/HyperV (comma-separated for HyperV) |
+| `V2V_secretKey` | `SecretKey` | Path to password file (default `/etc/secret/secretKey`) |
+
+### Important Paths (Constants)
+
+| Path | Purpose |
+|---|---|
+| `/var/tmp/v2v` | Workdir for conversion output |
+| `/var/tmp/v2v/inspection.xml` | Inspection XML output |
+| `/opt/vmware-vix-disklib-distrib` | VDDK library directory |
+| `/etc/luks` | LUKS key files directory |
+| `/mnt/vddk-conf/vddk-config-file` | VDDK configuration file |
+| `/mnt/dynamic_scripts` | Dynamic customization scripts mount |
+| `/mnt/disks/disk[0-9]*` | Filesystem-backed disk mounts |
+| `/dev/block[0-9]*` | Block device disk mounts |
+| `/etc/secret/accessKeyId` | Username secret mount |
+| `/etc/secret/secretKey` | Password secret mount |
+| `/tmp/input.xml` | Libvirt domain XML for in-place conversion |
+
+---
+
+## HTTP Server (`pkg/virt-v2v/server/server.go`)
+
+The virt-v2v pod exposes an HTTP server on **`:8080`** (local migrations only) so the plan controller can retrieve conversion results.
+
+### Endpoints
+
+| Endpoint | Method | Response | Purpose |
+|---|---|---|---|
+| `/vm` | GET | `text/yaml` (200) or 204 (in-place) | KubeVirt VM YAML generated by virt-v2v |
+| `/inspection` | GET | `application/xml` (200) | Inspection XML from virt-v2v-inspector |
+| `/warnings` | GET | `application/json` (200) or 204 | Non-fatal warnings (e.g., customization failure) |
+| `/shutdown` | POST/GET | 204 | Gracefully shut down the pod |
+
+The controller polls these endpoints during the `CreateVM` phase. After retrieving the data, it calls `/shutdown` to terminate the pod.
+
+### Warning Structure
+
+```go
+type Warning struct {
+    Reason  string `json:"reason"`  // e.g. "CustomizationFailed"
+    Message string `json:"message"` // Detailed error message
+}
+```
+
+---
+
+## Progress Monitoring (`cmd/virt-v2v-monitor/virt-v2v-monitor.go`)
+
+A sidecar process that reads virt-v2v stdout, parses progress lines, and exposes Prometheus metrics:
+
+- **Endpoint**: `:2112/metrics`
+- **Metric**: `v2v_disk_transfers` (counter vec, label: `disk_id`)
+- **Regex patterns**:
+  - `Copying disk N/M` → new disk started
+  - `N% [***---]` → progress percentage update
+  - `Finishing off` → mark all disks at 100%
+
+---
+
+## Inspection XML Format
+
+The virt-v2v-inspector produces XML parsed by both the virt-v2v pod and the plan controller.
+
+### XML Structure (v2v pod parsing — `pkg/virt-v2v/utils/xml-reader.go`)
+
+```xml
+<v2v>
+  <operatingsystem>
+    <name>linux</name>
+    <distro>rhel</distro>
+    <osinfo>rhel9.4</osinfo>
+    <arch>x86_64</arch>
+  </operatingsystem>
+</v2v>
+```
+
+### OS Detection
+
+`InspectionOS.IsWindows()` checks if `osinfo` contains `"win"` (case-insensitive).
+
+### Controller-Side Parsing (`pkg/controller/plan/adapter/vsphere/inspectionparser.go`)
+
+The controller parses the same XML to map `osinfo` values to VMware guest IDs via `osV2VMap`. This mapping handles:
+
+- **Linux**: rocky, opensuse, ubuntu, fedora, centos6-9, rhel7-10, sles10-16, debian4-13
+- **Windows Desktop**: win7, win8, win10, win11, win12
+- **Windows Server**: win2k8r2, win2k12, win2k12r2, win2k16, win2k19, win2k22, win2k25
+- **Fallback**: `genericLinuxGuest` for unknown Linux, `otherGuest64` for everything else
+
+Minor versions are stripped (e.g., `rhel9.5` → `rhel9`) before lookup.
+
+---
+
+## Guest Customization (`pkg/virt-v2v/customize/`)
+
+Runs `virt-customize` on converted disks to prepare the guest for KubeVirt. Customization is OS-specific and non-fatal (failures produce warnings).
+
+### Embedded Scripts (`customize/scripts/`)
+
+Scripts are embedded via Go's `//go:embed` directive and extracted to the workdir at runtime.
+
+#### Windows Scripts
+
+| Script | Purpose |
+|---|---|
+| `9999-run-mtv-ps-scripts.bat` | Main firstboot init (standard) |
+| `9999-run-mtv-ps-scripts-legacy.bat` | Main firstboot init (legacy VirtIO drivers) |
+| `9999-restore_config-legacy.ps1` | Legacy driver config restoration |
+| `9999-network-config.ps1.tmpl` | Static IP configuration template |
+| `9999-remove_duplicate_persistent_routes.ps1` | Clean up duplicate routes after IP migration |
+| `9999-preserve_complementry_ips_per_nic.ps1.tmpl` | Multiple IPs per NIC template |
+| `9101-9105_*.bat` | VMware driver/service removal sequence (vSphere only) |
+
+VMware driver removal scripts (`9101`–`9105`) are only injected when `VsphereVmwareDriverRemoval=true` AND source is vSphere. They disable services, remove drivers, clean registry entries.
+
+#### Linux Scripts
+
+Located in `scripts/rhel/run/` and `scripts/rhel/firstboot/`:
+
+- **Run scripts** (`--run`): executed during customization (network config utility)
+- **Firstboot scripts** (`--firstboot`): executed on first boot after migration
+- `network_config_util.sh`: handles ifcfg, NetworkManager, netplan, wicked, and systemd-networkd configurations
+
+### Dynamic Scripts
+
+User-supplied scripts mounted at `/mnt/dynamic_scripts`. Naming convention with regex matching:
+
+- **Windows**: `^([0-9]+_win_firstboot([\w\-]*.ps1))$` → uploaded to Firstboot directory
+- **Linux**: `^([0-9]+_linux_(run|firstboot)([\w\-]*.sh))$` → `run` or `firstboot` based on second group
+
+### Static IP Handling
+
+For **Linux**: MAC-to-IP mappings written to `/tmp/macToIP` inside the guest, consumed by `network_config_util.sh`.
+
+For **Windows**: Templates rendered with Go `text/template`, generating PowerShell scripts that configure NICs by MAC address. Supports primary IP, complementary IPs (multiple per NIC), and DNS.
+
+### LUKS Encryption Support
+
+Both virt-v2v and virt-customize accept `--key` args for encrypted disks:
+
+- `--key all:clevis` — use Clevis/NBDE for decryption
+- `--key all:file:/etc/luks/<keyfile>` — use key files from the mounted LUKS directory
+
+---
+
+## Provider-Specific Conversion
+
+### vSphere
+
+- Input mode: `-i libvirt -ic <libvirtUrl>`
+- Authentication: `-ip <secretKeyPath>` + `--hostname <esxi-host>`
+- VDDK transport: `-it vddk -io vddk-libdir=<path> -io vddk-thumbprint=<fp>`
+- Optional: `-io vddk-config=<config-file>`
+- SSL certificates: symlinked from `/etc/secret/cacert` or system CA bundle
+- VM specified as positional arg after `--` separator
+
+### OVA
+
+- Input mode: `-i ova <diskPath>`
+- Minimal args — no authentication needed
+
+### HyperV
+
+- Input mode: `-i disk <disk1> <disk2> ...`
+- Disk paths from `V2V_diskPath` (comma-separated)
+- VM name derived from `VmName` when `NewVmName` is empty
+
+### EC2
+
+- Uses in-place disk mode (`RunVirtV2vInPlaceDisk`)
+- No libvirt connection — disks already mounted as block devices
+- `virt-v2v-in-place -i disk /dev/block0 /dev/block1 ...`
+
+---
+
+## Disk Management (`pkg/virt-v2v/conversion/disk.go`)
+
+Disks are discovered via glob patterns:
+
+- Filesystem disks: `/mnt/disks/disk[0-9]*` → adds `/disk.img` suffix
+- Block devices: `/dev/block[0-9]*` → used as-is
+
+Each disk gets a symlink in the workdir: `<vmName>-sd<letter>` (e.g., `myvm-sda`, `myvm-sdb`). Letter generation handles >26 disks with multi-character names (`aa`, `ab`, etc.).
+
+---
+
+## Domain XML Handling
+
+For in-place conversion with libvirt, the pod:
+
+1. Connects to libvirt using credentials from `/etc/secret/`
+2. Fetches the domain XML via `LookupDomainByName`
+3. Updates disk source paths to point at local mounts
+4. Sets disk driver to `qemu/raw`
+5. Removes CD-ROM devices
+6. Writes modified XML to `/tmp/input.xml`
+
+---
+
+## Frontend Relevance
+
+The UI interacts with virt-v2v indirectly through:
+
+- **Plan creation**: sets env vars via the Plan spec (static IPs, root disk, extra args, etc.)
+- **Migration monitoring**: reads Prometheus metrics from the monitor sidecar for progress bars
+- **Inspection results**: controller fetches from `:8080/inspection` and stores in VM annotations
+- **Warnings**: controller fetches from `:8080/warnings`, surfaced in the UI as migration warnings
+- **OS detection**: `osinfo` from inspection drives the VM's guest OS icon and compatibility checks in the UI
+
+### CRD Types Used in UI (`src/utils/crds/conversion/`)
+
+The frontend has TypeScript types mirroring the inspection XML structure for displaying conversion results in the plan details view.

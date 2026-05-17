@@ -1,0 +1,244 @@
+---
+description: StorageMap controller - validation, inventory-based checks, offload plugins, mapping structure
+alwaysApply: false
+---
+
+# StorageMap Controller
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+Source: `pkg/controller/map/storage/` in the [forklift](https://github.com/kubev2v/forklift) repo.
+
+---
+
+## Overview
+
+The StorageMap controller reconciles `StorageMap` CRs (`forklift.konveyor.io/v1beta1`). Each StorageMap defines how source provider storage maps to target OpenShift StorageClasses for VM disk migration.
+
+---
+
+## Mapping Structure
+
+```
+spec:
+  provider:
+    source:      { namespace, name }    # ref to source Provider CR
+    destination: { namespace, name }    # ref to destination Provider CR (must be OpenShift)
+  map:
+    - source:                           # ref.Ref — identifies source storage
+        id: "<inventory-id>"            # match by ID
+        name: "<storage-name>"          # OR match by name (path suffix)
+      destination:
+        storageClass: "<sc-name>"       # target StorageClass name
+        volumeMode: "Filesystem" | "Block"        # optional
+        accessMode: "ReadWriteOnce" | "ReadWriteMany" | "ReadOnlyMany"  # optional
+      offloadPlugin:                    # optional — per-pair offload config
+        vsphereXcopyConfig:
+          secretRef: "<secret-name>"
+          storageVendorProduct: "<vendor>"
+```
+
+### Destination Fields
+
+| Field | Required | Values | Purpose |
+|---|---|---|---|
+| `storageClass` | Yes | Any valid SC name | Target StorageClass on OpenShift |
+| `volumeMode` | No | `Filesystem`, `Block` | PVC volume mode |
+| `accessMode` | No | `ReadWriteOnce`, `ReadWriteMany`, `ReadOnlyMany` | PVC access mode |
+
+---
+
+## Reconciliation Flow
+
+```
+Reconcile()
+ ├─ Fetch StorageMap CR (return if NotFound)
+ ├─ BeginStagingConditions()
+ ├─ Record Kubernetes events
+ ├─ validate(mp)
+ │   ├─ ProviderPair.Validate() — validate source + destination providers
+ │   │   └─ Short-circuit if any provider condition is set
+ │   ├─ validateSource(mp) — check source storage against inventory
+ │   └─ validateDestination(mp) — check destination StorageClasses against inventory
+ ├─ Set Ready condition (if no blocker conditions)
+ ├─ EndStagingConditions()
+ └─ Update status (ObservedGeneration = Generation)
+```
+
+---
+
+## Validation Detail
+
+### Provider Pair Validation (shared with NetworkMap)
+
+Identical to NetworkMap — uses `validation.ProviderPair`. Destination must be OpenShift.
+
+Conditions on failure: `SourceProviderNotValid`, `SourceProviderNotReady`, `DestinationProviderNotValid`, `DestinationProviderNotReady`.
+
+### Source Storage Validation (`validateSource`)
+
+For each entry in `spec.map`:
+1. If `source.ID` and `source.Name` are both empty → `SourceStorageNotValid` (reason: `NotSet`, category: `Critical`)
+2. Look up via `inventory.Storage(ref)` against the source provider's inventory API
+3. `NotFoundError` → collected into `notValid` list
+4. `RefNotUniqueError` → collected into `ambiguous` list
+5. Valid refs added to `status.refs`
+
+Conditions:
+- `SourceStorageNotValid` / `NotFound` / `Warn` — with `Items` listing invalid refs
+- `SourceStorageNotValid` / `Ambiguous` / `Critical` — with `Items` listing ambiguous refs
+
+### Destination Storage Validation (`validateDestination`)
+
+For each entry in `spec.map`:
+1. Look up `destination.storageClass` by name via `inventory.Storage(&ref.Ref{Name: name})`
+2. `NotFoundError` → collected into `notValid` list
+
+Conditions:
+- `DestinationStorageNotValid` / `NotFound` / `Critical` — StorageClass not found in inventory
+
+**Note**: Unlike NetworkMap, there is no `Ambiguous` condition for destinations since StorageClasses are looked up by exact name.
+
+---
+
+## Conditions Summary
+
+| Condition | Category | Reason | Blocker? | Meaning |
+|---|---|---|---|---|
+| `Ready` | Required | — | No | Map is valid and usable |
+| `SourceProviderNotValid` | Critical | NotSet, NotFound | Yes | Source provider ref missing or not found |
+| `SourceProviderNotReady` | Critical | — | Yes | Source provider not reconciled |
+| `DestinationProviderNotValid` | Critical | NotSet, NotFound, TypeNotValid | Yes | Dest provider invalid or not OpenShift |
+| `DestinationProviderNotReady` | Critical | — | Yes | Dest provider not reconciled |
+| `SourceStorageNotValid` | Critical/Warn | NotSet, NotFound, Ambiguous | Yes (Critical) | Source storage ref issue |
+| `DestinationStorageNotValid` | Critical | NotFound | Yes | Target StorageClass not found |
+
+---
+
+## Watch Triggers
+
+### 1. Primary Watch — StorageMap CR
+
+- **Create**: Always reconcile; registers with `libref.Mapper`
+- **Update**: Only if `ObservedGeneration < Generation` (spec changed)
+- **Delete**: Always; cleans up `libref.Mapper`
+
+### 2. Provider Watch — Provider CR
+
+- **Create**: Reconcile only if provider is already reconciled
+- **Update**: If reconciled, ensures inventory watch via `ensureWatch()`; triggers reconcile
+- **Delete**: Cleans up watch via `WatchManager.Deleted()`
+
+### 3. Inventory Channel — Provider Inventory Changes
+
+Buffered channel (size 10) receives events from per-provider inventory watchers.
+
+### Per-Provider Inventory Resources Watched
+
+| Provider | Inventory Resource | Match Logic |
+|---|---|---|
+| vSphere | `vsphere.Datastore` | `ref.ID == ds.ID` or `HasSuffix(ds.Path, ref.Name)` |
+| oVirt | `ovirt.StorageDomain` | Same as vSphere |
+| OpenStack | `openstack.VolumeType` | Same as vSphere |
+| OVA | `ova.Disk` | Same as vSphere |
+| Hyper-V | *(no watch)* | Single SMB share — no separate storage entities |
+| OpenShift | `ocp.StorageClass` | Periodic polling (`DefaultEventInterval`) |
+| EC2 | (via `ec2handler.NewStorageHandler`) | Separate EC2 provider package |
+
+**OCP special case**: Uses `EnsurePeriodicEvents()` instead of real-time watches. Enqueues reconcile events for all StorageMaps referencing the OCP provider at regular intervals.
+
+**Hyper-V special case**: The handler is a no-op (`Watch()` returns nil). Hyper-V uses a single SMB share, so there are no distinct storage entities to watch.
+
+---
+
+## Storage Offload Plugin (XCOPY)
+
+Each `StoragePair` in the map can optionally specify an `offloadPlugin` for hardware-accelerated copy. Currently only vSphere XCOPY is supported.
+
+### OffloadPlugin Structure
+
+```go
+type OffloadPlugin struct {
+    VSphereXcopyPluginConfig *VSphereXcopyPluginConfig
+}
+
+type VSphereXcopyPluginConfig struct {
+    SecretRef            string               // secret with storage array credentials
+    StorageVendorProduct StorageVendorProduct  // identifies the storage array type
+}
+```
+
+The `VSphereXcopyVolumePopulator` CR works with the plugin to offload disk copy to vSphere + the storage array, bypassing standard CDI data transfer.
+
+### Supported Storage Vendors
+
+| Enum Value | Vendor / Product |
+|---|---|
+| `flashsystem` | IBM FlashSystem |
+| `vantara` | Hitachi Vantara |
+| `ontap` | NetApp ONTAP |
+| `primera3par` | HPE Primera / 3PAR |
+| `pureFlashArray` | Pure Storage FlashArray |
+| `powerflex` | Dell PowerFlex |
+| `powermax` | Dell PowerMax |
+| `powerstore` | Dell PowerStore |
+| `infinibox` | Infinidat InfiniBox |
+
+### How It Works
+
+1. User configures `offloadPlugin.vsphereXcopyConfig` on a storage pair
+2. `secretRef` points to a Secret with storage array credentials (must be in source provider's namespace)
+3. `storageVendorProduct` selects the correct storage driver
+4. During migration, the plan controller detects `IsUsingOffloadPlugin()` and creates `VSphereXcopyVolumePopulator` CRs instead of standard CDI DataVolumes
+5. The volume populator handles the XCOPY transfer at the storage array level
+
+### Feature Gate
+
+Copy offload requires `feature_copy_offload` to be enabled in the `ForkliftController` CR.
+
+---
+
+## Key Code Locations
+
+| File | Purpose |
+|---|---|
+| `controller.go` | Controller setup, watches, `Reconcile()` method |
+| `validation.go` | Source/destination validation against inventory |
+| `predicate.go` | Event filtering for StorageMap and Provider watches |
+| `handler/doc.go` | Handler factory — dispatches to provider-specific handler |
+| `handler/<provider>/handler.go` | Inventory watch setup and change detection per provider |
+
+### API Types (in `pkg/apis/forklift/v1beta1/mapping.go`)
+
+| Type | Purpose |
+|---|---|
+| `StoragePair` | Source ref + destination StorageClass + optional offload plugin |
+| `DestinationStorage` | StorageClass name, volumeMode, accessMode |
+| `OffloadPlugin` | Container for offload plugin configs |
+| `VSphereXcopyPluginConfig` | Secret ref + vendor product identifier |
+| `StorageVendorProduct` | Enum of supported storage vendors |
+
+---
+
+## Differences from NetworkMap
+
+| Aspect | NetworkMap | StorageMap |
+|---|---|---|
+| Destination type | `pod` / `multus` / `ignored` | StorageClass name |
+| Destination validation | Skips pod/ignored; checks NAD for multus | Always checks StorageClass exists |
+| Ambiguous destination | Yes (missing namespace for multus) | No (exact name lookup) |
+| Offload plugin | N/A | Per-pair XCOPY offload config |
+| Hyper-V watch | Watches `hyperv.Network` | No-op (single SMB share) |
+| Source inventory type | Network | Datastore (vSphere), StorageDomain (oVirt), VolumeType (OpenStack), Disk (OVA) |
+
+---
+
+## Frontend Relevance
+
+- The UI must present source storage from inventory and let users select target StorageClass
+- Optional `volumeMode` and `accessMode` fields let users override PVC defaults
+- The offload plugin section is shown only when the `feature_copy_offload` feature gate is enabled
+- The vendor dropdown should use the `StorageVendorProduct` enum values
+- Conditions on StorageMap status drive validation indicators in the UI
+- `SourceStorageNotValid` with reason `NotFound` uses `Warn` (non-blocking)
+- `SourceStorageNotValid` with reason `Ambiguous` is `Critical` (blocking)

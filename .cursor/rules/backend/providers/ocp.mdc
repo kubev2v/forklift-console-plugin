@@ -1,0 +1,371 @@
+---
+description: OpenShift provider - target/source provider, namespace inventory, StorageClass, NetworkAttachmentDefinition
+alwaysApply: false
+---
+
+# OpenShift (OCP) Provider
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+## Overview
+
+The OpenShift provider is unique among Forklift providers: it serves as the **migration target** in every migration, and can also act as a **source** for OCP-to-OCP (live) migrations. Unlike source-only providers (vSphere, oVirt, OpenStack), it watches native Kubernetes/KubeVirt resources rather than connecting to a vendor-specific API.
+
+### Dual Role
+
+| Role | When | Resources used |
+|------|------|----------------|
+| **Target** | Every migration | StorageClasses, NetworkAttachmentDefinitions, Namespaces |
+| **Source** | OCP live migration | VirtualMachines, VirtualMachineInstances |
+
+### Host vs Remote Provider
+
+- **Host provider** (`Spec.URL == ""`): represents the local cluster where Forklift is installed. Uses the controller's in-cluster ServiceAccount. Determined by `Provider.IsHost()`.
+- **Remote OCP provider**: connects to a different OCP cluster via `Spec.URL` + Secret containing a bearer token.
+- **Restricted host provider**: a host-type provider created outside the operator namespace (`POD_NAMESPACE`). Scoped to its own namespace only; API requests use the requesting user's token for RBAC. Determined by `Provider.IsRestrictedHost()`.
+
+---
+
+## Source Files
+
+```
+pkg/controller/provider/
+├── container/ocp/    # Inventory collector (K8s watches)
+│   ├── collector.go  # Collector factory, Version() stub
+│   └── collection.go # Collection types wrapping K8s objects
+├── model/ocp/        # Data model (SQLite-backed)
+│   ├── model.go      # Base, Namespace, StorageClass, NAD, VM, etc.
+│   ├── tree.go       # Tree kinds (VmKind, NamespaceKind)
+│   └── doc.go        # All() returns registered model types
+└── web/ocp/          # REST API handlers (gin)
+    ├── doc.go         # Handler registration, Root path
+    ├── base.go        # Base handler, UserClient, list helpers
+    ├── provider.go    # GET /providers/openshift[/:uid]
+    ├── namespace.go   # .../namespaces[/:uid]
+    ├── storageclass.go          # .../storageclasses[/:uid]
+    ├── netattachdefinition.go   # .../networkattachmentdefinitions[/:uid]
+    ├── vm.go                    # .../vms[/:uid]
+    ├── instancetype.go          # .../instancetypes[/:uid]
+    ├── clusterinstancetype.go   # .../clusterinstancetypes[/:uid]
+    ├── persistentvolumeclaim.go # .../persistentvolumeclaims[/:uid]
+    ├── datavolume.go            # .../datavolumes[/:uid]
+    ├── kubevirt.go              # .../kubevirts[/:uid]
+    ├── tree.go        # .../tree/namespace (VM-by-namespace tree)
+    ├── resource.go    # Base REST resource struct
+    └── client.go      # Finder + Resolver for ref-based lookups
+```
+
+---
+
+## Inventory Collection
+
+### Watched Kubernetes Resources
+
+The collector watches **9 resource types** using `controller-runtime` watches:
+
+| # | Collection Type | K8s Object | Scope |
+|---|----------------|------------|-------|
+| 1 | `Namespace` | `core/v1.Namespace` | Cluster |
+| 2 | `NetworkAttachmentDefinition` | `k8s.cni.cncf.io/v1.NetworkAttachmentDefinition` | Namespaced |
+| 3 | `StorageClass` | `storage/v1.StorageClass` | Cluster |
+| 4 | `InstanceType` | `instancetype.kubevirt.io/v1beta1.VirtualMachineInstancetype` | Namespaced |
+| 5 | `ClusterInstanceType` | `instancetype.kubevirt.io/v1beta1.VirtualMachineClusterInstancetype` | Cluster |
+| 6 | `VM` | `kubevirt.io/v1.VirtualMachine` | Namespaced |
+| 7 | `PersistentVolumeClaim` | `core/v1.PersistentVolumeClaim` | Namespaced |
+| 8 | `DataVolume` | `cdi.kubevirt.io/v1beta1.DataVolume` | Namespaced |
+| 9 | `KubeVirt` | `kubevirt.io/v1.KubeVirt` | Namespaced |
+
+Each collection embeds `libocp.BaseCollection` and returns its K8s object type via `Object()`.
+
+### Collection Architecture
+
+```
+ocp.Collector
+  └── libocp.Collector  (pkg/lib/inventory/container/ocp)
+       ├── cluster   Cluster   (the Provider CR)
+       ├── secret    *core.Secret
+       ├── client    controller-runtime client.Client
+       └── collections []Collection  (the 9 types above)
+```
+
+The base `libocp.Collector` calls `buildClient()` which uses `ocp.RestCfg()` to produce a `rest.Config`:
+- **Host provider**: uses in-cluster config (ServiceAccount token)
+- **Remote provider**: uses `Spec.URL` as host + `Secret.Data["token"]` as BearerToken
+
+### Version
+
+`Version()` is a **no-op** for OCP (returns empty strings). OCP providers don't expose a product version the way vSphere/oVirt do.
+
+---
+
+## Data Model
+
+All models share a common `Base` struct stored in SQLite:
+
+```go
+type Base struct {
+    UID       string  `sql:"pk"`     // K8s UID
+    Version   string  `sql:"d0"`     // resourceVersion
+    Namespace string  `sql:"key"`
+    Name      string  `sql:"key"`
+    labels    libmodel.Labels
+}
+```
+
+### Model Types
+
+| Model | Embedded K8s Object | Notes |
+|-------|-------------------|-------|
+| `Provider` | `api.Provider` | Also stores `Type` string |
+| `Namespace` | `core.Namespace` | Full namespace object |
+| `StorageClass` | `storage.StorageClass` | Cluster-scoped |
+| `NetworkAttachmentDefinition` | `net.NetworkAttachmentDefinition` | Contains `NetworkConfig` for UDN filtering |
+| `VM` | `cnv.VirtualMachine` + `*cnv.VirtualMachineInstance` | VMI attached separately via `WithVMI()` |
+| `InstanceType` | `instancetype.VirtualMachineInstancetype` | Namespaced |
+| `ClusterInstanceType` | `instancetype.VirtualMachineClusterInstancetype` | Cluster-scoped |
+| `PersistentVolumeClaim` | `core.PersistentVolumeClaim` | |
+| `DataVolume` | `cdi.DataVolume` | CDI data volumes |
+| `KubeVirt` | `cnv.KubeVirt` | KubeVirt operator CR |
+
+### NetworkConfig and UDN Filtering
+
+NADs are parsed for OVN-Kubernetes UDN (User Defined Network) configuration:
+
+```go
+type NetworkConfig struct {
+    AllowPersistentIPs bool
+    CNIVersion         string
+    Name               string
+    Role               RoleType      // "primary" | "secondary"
+    Topology           TopologyType  // "layer2" | "layer3"
+    Type               NadType       // "ovn-k8s-cni-overlay"
+}
+```
+
+**Unsupported UDN NADs are filtered out** during listing. A NAD is excluded if:
+- `Type == "ovn-k8s-cni-overlay"` AND (`Role == "primary"` OR `Topology == "layer3"`)
+
+This prevents users from selecting incompatible network configurations as migration targets.
+
+### Registered Models
+
+`doc.go` → `All()` returns models for SQLite table creation (note: `KubeVirt` is **not** in this list, only tracked at runtime):
+
+```
+Provider, NetworkAttachmentDefinition, StorageClass, Namespace,
+InstanceType, ClusterInstanceType, VM, PersistentVolumeClaim, DataVolume
+```
+
+---
+
+## REST API
+
+### Base Path
+
+```
+providers/openshift/:provider
+```
+
+All endpoints are GET-only (inventory is read-only).
+
+### Endpoints
+
+| Endpoint | Handler | Description |
+|----------|---------|-------------|
+| `GET /providers/openshift` | `ProviderHandler.List` | List all OCP providers |
+| `GET /providers/openshift/:provider` | `ProviderHandler.Get` | Single provider with counts |
+| `GET .../namespaces` | `NamespaceHandler.List` | All namespaces |
+| `GET .../namespaces/:namespace` | `NamespaceHandler.Get` | Single namespace by UID |
+| `GET .../storageclasses` | `StorageClassHandler.List` | All storage classes |
+| `GET .../storageclasses/:sc` | `StorageClassHandler.Get` | Single SC by UID |
+| `GET .../networkattachmentdefinitions` | `NadHandler.List` | NADs (UDN-filtered) |
+| `GET .../networkattachmentdefinitions/:network` | `NadHandler.Get` | Single NAD by UID |
+| `GET .../vms` | `VMHandler.List` | VMs with VMI data |
+| `GET .../vms/:vm` | `VMHandler.Get` | Single VM by UID |
+| `GET .../instancetypes` | `InstanceHandler.List` | Namespaced instance types |
+| `GET .../instancetypes/:instancetype` | `InstanceHandler.Get` | Single instance type |
+| `GET .../clusterinstancetypes` | `ClusterInstanceHandler.List` | Cluster-scoped instance types |
+| `GET .../clusterinstancetypes/:clusterinstancetype` | `ClusterInstanceHandler.Get` | Single cluster instance type |
+| `GET .../persistentvolumeclaims` | `PersistentVolumeClaimHandler.List` | PVCs |
+| `GET .../persistentvolumeclaims/:pvc` | `PersistentVolumeClaimHandler.Get` | Single PVC |
+| `GET .../datavolumes` | `DataVolumeHandler.List` | CDI DataVolumes |
+| `GET .../datavolumes/:dv` | `DataVolumeHandler.Get` | Single DataVolume |
+| `GET .../kubevirts` | `KubeVirtHandler.List` | KubeVirt CRs |
+| `GET .../kubevirts/:kubevirt` | `KubeVirtHandler.Get` | Single KubeVirt CR |
+| `GET .../tree/namespace` | `TreeHandler.Tree` | Namespace → VM hierarchy |
+
+### Query Parameters
+
+| Param | Key | Description |
+|-------|-----|-------------|
+| Namespace | `namespace` | Filter namespaced resources |
+| Name | `name` | Filter by name |
+| Detail | `detail` | Detail level (`0` = summary, `1+` = full object) |
+
+### Provider Detail Response
+
+When `detail > 0`, the provider response includes inventory counts:
+
+```json
+{
+  "uid": "...",
+  "type": "openshift",
+  "object": { /* full Provider CR */ },
+  "vmCount": 42,
+  "networkCount": 5,
+  "storageClassCount": 3
+}
+```
+
+`networkCount` = NAD count **+ 1** (accounts for the default pod network).
+
+### REST Resource Shape
+
+Every resource shares this base shape:
+
+```json
+{
+  "uid": "k8s-uid",
+  "version": "resourceVersion",
+  "namespace": "ns",
+  "name": "resource-name",
+  "selfLink": "/providers/openshift/<provider-uid>/...",
+  "id": "k8s-uid",
+  "object": { /* full K8s object */ }
+}
+```
+
+The `id` field duplicates `uid` for compatibility with providers that use a separate ID system.
+
+---
+
+## Authentication & Authorization
+
+### UserClient Pattern
+
+The OCP handler has a unique `UserClient()` method not found in other providers. Instead of querying a cached inventory DB, it makes **live K8s API calls** using the appropriate client:
+
+1. **Restricted host provider** → builds a new `client.Client` using the **requesting user's bearer token** from the HTTP request. This enforces RBAC so users only see resources they have access to.
+2. **Non-restricted provider** → uses the collector's cached client (SA or secret-based).
+
+### Credentials
+
+| Provider Type | Auth Method | Source |
+|--------------|-------------|--------|
+| Host (operator namespace) | ServiceAccount | In-cluster config |
+| Host (other namespace) | User's bearer token | HTTP `Authorization` header |
+| Remote OCP | Bearer token | `Secret.Data["token"]` |
+| Remote OCP | CA cert | `Secret.Data["cacert"]` (optional) |
+| Remote OCP | Insecure flag | `Secret.Data["insecure"]` |
+
+---
+
+## Restricted Host Provider Scoping
+
+When `provider.IsRestrictedHost() == true`, resources are scoped:
+
+| Resource | Scope |
+|----------|-------|
+| Namespaces | Only the provider's own namespace |
+| VMs | Only in provider's namespace |
+| NADs | Provider's namespace + `default` namespace |
+| InstanceTypes | Only in provider's namespace |
+| PVCs | Only in provider's namespace |
+| DataVolumes | Only in provider's namespace |
+| KubeVirts | Only in provider's namespace |
+| StorageClasses | All (cluster-scoped, readable by any user) |
+| ClusterInstanceTypes | All (cluster-scoped, readable by any user) |
+
+---
+
+## Storage Mapping (Target)
+
+StorageClasses are listed via the `/storageclasses` endpoint. The frontend uses this list to build StorageMap entries:
+
+```
+Source datastore/domain → Target StorageClass
+```
+
+StorageClasses are **cluster-scoped** and accessible to all authenticated users, so no namespace restriction is applied even for restricted providers.
+
+---
+
+## Network Mapping (Target)
+
+NetworkAttachmentDefinitions are listed via `/networkattachmentdefinitions`. The frontend uses this plus the implicit Pod network to build NetworkMap entries:
+
+```
+Source network → Target NAD (or Pod network)
+```
+
+NADs that represent unsupported UDN configurations (OVN overlay with primary role or layer3 topology) are **automatically excluded** from the API response.
+
+For restricted providers, NAD queries are limited to:
+- The provider's own namespace
+- The `default` namespace
+
+---
+
+## Tree API
+
+The namespace tree endpoint (`/tree/namespace`) builds a hierarchy:
+
+```
+Root
+├── Namespace A
+│   ├── VM 1
+│   └── VM 2
+└── Namespace B
+    └── VM 3
+```
+
+Only namespaces **containing at least one VM** are included. The tree is built by:
+1. Fetching all VMs → extracting unique namespaces
+2. Fetching all namespaces → filtering to those with VMs
+3. For each namespace, listing VMs as children
+
+---
+
+## Finder / Resolver
+
+The `Finder` resolves resource references (`Ref`) used in Plans and Mappings:
+
+| Method | Resolves To |
+|--------|-------------|
+| `VM(ref)` | VirtualMachine |
+| `Workload(ref)` | VirtualMachine (alias) |
+| `Network(ref)` | NetworkAttachmentDefinition |
+| `Storage(ref)` | StorageClass |
+| `Host(ref)` | Always returns NotFound (OCP has no host concept) |
+| `InstanceType(ref)` | VirtualMachineInstancetype |
+| `ClusterInstanceType(ref)` | VirtualMachineClusterInstancetype |
+| `PersistentVolumeClaim(ref)` | PersistentVolumeClaim |
+| `DataVolume(ref)` | DataVolume |
+| `KubeVirt(ref)` | KubeVirt |
+
+Refs can be resolved by:
+- `ref.ID` (UID) → direct GET
+- `ref.Namespace` + `ref.Name` → filtered list
+- `ref.Name` containing `namespace/name` → parsed and split
+
+---
+
+## Frontend Integration Points
+
+The frontend plugin consumes these endpoints for:
+
+1. **Plan creation** (target provider):
+   - `/storageclasses` → populate StorageMap target dropdown
+   - `/networkattachmentdefinitions` → populate NetworkMap target dropdown
+   - `/namespaces` → select target namespace for migrated VMs
+
+2. **Plan creation** (source, OCP-to-OCP):
+   - `/vms` → select VMs to migrate
+   - `/tree/namespace` → browse VMs by namespace
+
+3. **Provider details page**:
+   - Provider GET with detail → vmCount, networkCount, storageClassCount
+   - `/namespaces`, `/vms` → inventory tables
+
+4. **Instance type selection**:
+   - `/instancetypes` + `/clusterinstancetypes` → select instance types for target VMs

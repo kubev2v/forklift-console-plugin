@@ -1,0 +1,308 @@
+---
+description: Migration pipeline - itineraries (cold/warm/conversion), VM phases, disk transfer, KubeVirt resources
+alwaysApply: false
+---
+
+# Migration Pipeline
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+Source: `pkg/controller/plan/migration.go`, `pkg/controller/plan/kubevirt.go`,
+`pkg/controller/plan/migrator/base/`, `pkg/controller/plan/migrator/ocp/`
+
+---
+
+## Migration.Run() — Top-Level Loop
+
+The plan controller creates a `Migration` struct and calls `Run()` on each reconcile.
+
+```
+Run()
+  ├── init()           Build adapter (Client, Builder, Ensurer), KubeVirt helper,
+  │                    Scheduler, and Migrator based on source provider type
+  ├── begin()          Mark migration started, ensure target namespace,
+  │                    build VM status list and pipelines, call migrator.Begin()
+  ├── resolveCanceledRefs()
+  ├── for each runningVMs()  →  execute(vm)      // Resume already-running VMs
+  ├── loop: scheduler.Next() →  execute(vm)      // Schedule new VMs
+  └── end()            Check all VMs completed → set Succeeded/Failed/Canceled
+```
+
+**Polling**: `Run()` returns `PollReQ = 3s` until all VMs complete, then `NoReQ = 0`.
+
+---
+
+## Migrator Factory
+
+`migrator.New(context)` in `pkg/controller/plan/migrator/doc.go`:
+
+| Provider Type | Migrator            | Notes                                        |
+|---------------|---------------------|----------------------------------------------|
+| `openshift`   | `ocp.LiveMigrator`  | Only for `Plan.Spec.Type == MigrationLive`   |
+| `openshift`   | `base.BaseMigrator` | For non-live OCP-to-OCP                      |
+| `ec2`         | `ec2migrator`       | AWS EC2 custom migrator                      |
+| All others    | `base.BaseMigrator` | vSphere, oVirt, OpenStack, OVA, HyperV      |
+
+---
+
+## Migrator Interface
+
+Defined in `pkg/controller/plan/migrator/base/doc.go`:
+
+```go
+type Migrator interface {
+    Init() error
+    Begin() error
+    Complete(*plan.VMStatus)
+    Status(plan.VM) *plan.VMStatus
+    Reset(*plan.VMStatus, []*plan.Step)
+    Itinerary(plan.VM) *libitr.Itinerary
+    Pipeline(plan.VM) ([]*plan.Step, error)
+    Step(*plan.VMStatus) string
+    ExecutePhase(*plan.VMStatus) (bool, error)   // true = handled, false = delegate to migration.go
+    Logger() logging.LevelLogger
+}
+```
+
+---
+
+## Itinerary System
+
+An itinerary is an ordered list of **phases** (state machine steps). Each phase can have a
+predicate **flag** — if the flag evaluates to `false`, the phase is skipped.
+
+### Predicate Flags (base)
+
+| Flag                    | Hex    | Condition                                      |
+|-------------------------|--------|------------------------------------------------|
+| `HasPreHook`            | `0x01` | VM has a pre-migration hook defined            |
+| `HasPostHook`           | `0x02` | VM has a post-migration hook defined           |
+| `RequiresConversion`    | `0x04` | Provider requires virt-v2v AND not skipped     |
+| `CDIDiskCopy`           | `0x08` | Uses CDI DataVolume transfer (not virt-v2v)    |
+| `VirtV2vDiskCopy`       | `0x10` | Uses virt-v2v for disk transfer                |
+| `OpenstackImageMigration`| `0x20`| Source is OpenStack                            |
+| `VSphere`               | `0x40` | Source is vSphere                              |
+| `RunInspection`         | `0x80` | Plan should run preflight inspection           |
+
+### Cold Itinerary (default)
+
+```
+Started → [PreHook] → StorePowerState → PowerOffSource → WaitForPowerOff
+→ CreateDataVolumes → CopyDisks(CDI) | AllocateDisks(v2v)
+→ [CreateGuestConversionPod → ConvertGuest → CopyDisksVirtV2V]
+→ [ConvertOpenstackSnapshot]
+→ CreateVM → [PostHook] → Completed
+```
+
+Phases gated by flags:
+- `PreHook` / `PostHook`: only if hooks defined
+- `CopyDisks`: `CDIDiskCopy` (not v2v)
+- `AllocateDisks`: `VirtV2vDiskCopy` (v2v path)
+- `CreateGuestConversionPod` / `ConvertGuest` / `CopyDisksVirtV2V`: `RequiresConversion`
+- `ConvertOpenstackSnapshot`: `OpenstackImageMigration`
+
+### Warm Itinerary
+
+```
+Started → [PreHook]
+→ CreateInitialSnapshot → WaitForInitialSnapshot → [StoreInitialSnapshotDeltas(vSphere)]
+→ [PreflightInspection] → CreateDataVolumes
+── Precopy loop: ──────────────────────────────────────────
+│ CopyDisks → CopyingPaused → [RemovePreviousSnapshot(vSphere)]
+│ → [WaitForPreviousSnapshotRemoval(vSphere)]
+│ → CreateSnapshot → WaitForSnapshot → [StoreSnapshotDeltas(vSphere)]
+│ → AddCheckpoint  (loops back to CopyDisks until cutover)
+── End precopy loop ───────────────────────────────────────
+→ StorePowerState → PowerOffSource → WaitForPowerOff
+→ [RemovePenultimateSnapshot(vSphere)] → [WaitForPenultimateSnapshotRemoval(vSphere)]
+→ CreateFinalSnapshot → WaitForFinalSnapshot → AddFinalCheckpoint
+→ Finalize → [RemoveFinalSnapshot(vSphere)] → [WaitForFinalSnapshotRemoval(vSphere)]
+→ [CreateGuestConversionPod → ConvertGuest]
+→ CreateVM → [PostHook] → Completed
+```
+
+**CopyingPaused**: waits for either `Migration.Spec.Cutover` time or `NextPrecopyAt`
+(based on `Settings.PrecopyInterval` minutes).
+
+### Conversion-Only Itinerary (`MigrationOnlyConversion`)
+
+```
+Started → [PreHook] → StorePowerState → PowerOffSource → WaitForPowerOff
+→ [CreateGuestConversionPod → ConvertGuest]
+→ CreateVM → [PostHook] → Completed
+```
+
+No disk transfer at all — assumes disks are already present (e.g., storage offload).
+
+### OCP Live Migration Itinerary
+
+Completely separate phase set for OpenShift-to-OpenShift live migration:
+
+```
+Started → [PreHook] → CreateSecrets → CreateConfigMaps
+→ EnsurePreference → EnsureInstanceType → EnsureDataVolumes
+→ EnsurePersistentVolumeClaims → CreateTarget → SetOwnerReferences
+→ [CreateServiceExports(Submariner+Intercluster)]
+→ WaitForTargetVMI → CreateVirtualMachineInstanceMigrations
+→ WaitForStateTransfer → [PostHook] → Completed
+```
+
+---
+
+## Pipeline Steps (What the UI Shows)
+
+The **pipeline** is a higher-level grouping of phases into named steps shown in the UI.
+Many phases map to the same pipeline step.
+
+| Pipeline Step             | Phases Included                                                    |
+|---------------------------|--------------------------------------------------------------------|
+| `Initialize`              | Started, CreateInitialSnapshot, WaitForInitialSnapshot, StoreInitialSnapshotDeltas, CreateDataVolumes*, StorePowerState**, PowerOffSource**, WaitForPowerOff** |
+| `PreHook`                 | PreHook                                                            |
+| `DiskTransfer`            | CopyDisks, CopyingPaused, RemovePreviousSnapshot, WaitForPreviousSnapshotRemoval, CreateSnapshot, WaitForSnapshot, StoreSnapshotDeltas, AddCheckpoint, ConvertOpenstackSnapshot, CreateDataVolumes*** |
+| `DiskAllocation`          | AllocateDisks                                                      |
+| `DiskTransferV2v`         | CopyDisksVirtV2V                                                   |
+| `Cutover`                 | RemovePenultimateSnapshot, WaitForPenultimateSnapshotRemoval, CreateFinalSnapshot, WaitForFinalSnapshot, AddFinalCheckpoint, Finalize, RemoveFinalSnapshot, WaitForFinalSnapshotRemoval, StorePowerState**(warm), PowerOffSource**(warm), WaitForPowerOff**(warm) |
+| `ImageConversion`         | CreateGuestConversionPod, ConvertGuest                             |
+| `VirtualMachineCreation`  | CreateVM                                                           |
+| `PreflightInspection`     | PreflightInspection                                                |
+| `PostHook`                | PostHook                                                           |
+
+\* CreateDataVolumes maps to Initialize unless preflight inspection is active.
+\*\* StorePowerState/PowerOff phases map to Initialize in cold, Cutover in warm.
+\*\*\* CreateDataVolumes maps to DiskTransfer when preflight inspection is active.
+
+**OCP Live Migration Steps**: `Initialize`, `PrepareTarget`, `Synchronization`
+
+---
+
+## Phase Execution — execute(vm)
+
+The `execute()` method in `migration.go` steps each VM through its itinerary:
+
+1. **Check cancellation**: if user canceled, set condition and jump to Completed
+2. **Delegate to migrator**: `migrator.ExecutePhase(vm)` — if returns `true`, the migrator handled it
+3. **Default phase switch**: handles all common phases (see below)
+4. **Reflect pipeline**: `vm.ReflectPipeline()` updates step progress
+5. **Terminal handling**: on Completed, set Succeeded/Failed condition
+
+### Key Phase Behaviors
+
+**Started**: Validate VM name (DNS1123), check target name uniqueness, validate CustomizationScripts ConfigMap, cleanup previous resources, then advance.
+
+**PreHook / PostHook**: Run `HookRunner` which creates/monitors a Kubernetes Job.
+
+**CreateDataVolumes**: Call `provider.PreTransferActions()`, create populator PVCs or CDI DataVolumes (with snapshot checkpoints for warm), then advance.
+
+**CopyDisks / AllocateDisks**: Monitor DataVolume or PVC progress. Track per-disk tasks. For warm migrations, record precopy success and set `NextPrecopyAt`.
+
+**CopyingPaused** (warm only): Wait for cutover time or next precopy interval.
+
+**Snapshot phases** (warm, vSphere-gated): Create/wait/remove snapshots via provider, store deltas.
+
+**CreateGuestConversionPod**: Create virt-v2v pod with VM volumes mounted. For OVA/HyperV, also wait for provider storage PVC readiness.
+
+**ConvertGuest / CopyDisksVirtV2V**: Monitor virt-v2v pod. Poll `http://<podIP>:2112/metrics` for disk transfer progress. Fetch VM config from `http://<podIP>:8080/vm` when pod completes.
+
+**PreflightInspection**: Create virt-v2v inspection pod, wait for pod success/failure.
+
+**CreateVM**: Call `kubevirt.EnsureVM()` to create `VirtualMachine` CR, set PVC owner references, delete consumed DataVolumes and importer pods.
+
+**Completed**: Mark VM completed, set Succeeded condition, optionally delete guest conversion pod, detach LUN disks from source.
+
+---
+
+## KubeVirt Helper — K8s Resources Created
+
+The `KubeVirt` struct in `kubevirt.go` manages all Kubernetes resources:
+
+| Resource              | Created By                    | Purpose                                          |
+|-----------------------|-------------------------------|--------------------------------------------------|
+| **Namespace**         | `EnsureNamespace()`           | Target namespace for migrated VMs                |
+| **Secret**            | `ensureSecret()`              | Provider credentials for CDI/populator/v2v       |
+| **ConfigMap**         | `ensureConfigMap()`           | VM configuration, VDDK settings                  |
+| **DataVolume**        | `EnsureDataVolumes()`         | CDI disk transfer from source                    |
+| **PVC** (populator)   | `EnsurePopulatorVolumes()`    | Volume populator path for storage offload        |
+| **virt-v2v Pod**      | `EnsureVirtV2vPod()`         | Guest conversion or inspection pod               |
+| **VirtualMachine**    | `EnsureVM()`                  | Target KubeVirt VM CR                            |
+| **PV / PVC** (NFS)    | `EnsurePVForNFS()`           | OVA provider storage                             |
+| **PV / PVC** (SMB)    | `EnsurePVForSMB()`           | HyperV provider storage                          |
+| **Hook Jobs**         | `HookRunner`                  | Pre/post migration hook execution                |
+
+### Disk Transfer Paths
+
+**CDI DataVolume path** (oVirt, OpenStack without v2v):
+1. Create DataVolume with source URL/credentials
+2. CDI creates importer pod that pulls disk data
+3. Monitor `DataVolume.Status.Phase` (Pending → ImportInProgress → Succeeded)
+4. Track `PercentComplete()` for progress
+
+**Volume Populator path** (storage offload — vSphere XCOPY, etc.):
+1. Create PVC with populator data source annotations
+2. CDI/populator creates populator pod (`populate-<pvcUID>`)
+3. Monitor PVC `ClaimBound` status and `PopulatorTransferredBytes()`
+
+**virt-v2v path** (vSphere, OVA, HyperV, EC2):
+1. Create DataVolumes with blank source (or allocate disks directly)
+2. Create virt-v2v conversion pod with all disk PVCs mounted
+3. virt-v2v copies and converts disks inside the pod
+4. Monitor via Prometheus metrics endpoint `:2112/metrics`
+5. Fetch converted VM config from `:8080/vm` endpoint
+
+### Warm Migration Specifics
+
+- **Snapshots**: Provider creates incremental snapshots; deltas tracked per precopy
+- **Checkpoints**: CDI DataVolume checkpoints enable incremental copy
+- **Precopy loop**: CopyDisks → pause → new snapshot → checkpoint → CopyDisks
+- **Cutover**: Triggered by `Migration.Spec.Cutover` timestamp
+- **Final copy**: Power off source → final snapshot → finalize transfer
+
+---
+
+## Handler Pattern (Watch/Reconcile)
+
+Handlers in `pkg/controller/plan/handler/` are **inventory watch event handlers**, not
+migration phase handlers. They watch provider inventory for VM changes and trigger
+plan reconciliation.
+
+```go
+type Handler interface {
+    Watch(m *handler.WatchManager) error
+}
+```
+
+Factory in `handler/doc.go` creates per-provider handler:
+- `vsphere.Handler` — watches vSphere VMs
+- `ovirt.Handler` — watches oVirt VMs
+- `openstack.Handler`, `ova.Handler`, `hyperv.Handler`, `ocp.Handler`, `ec2.Handler`
+
+When a VM changes in inventory, the handler finds Plans referencing that provider+VM
+and enqueues reconcile events.
+
+---
+
+## Error Handling & Cleanup
+
+- **Step errors**: `step.AddError(msg)` — sets error on pipeline step, VM continues to Completed with Failed condition
+- **Fatal errors**: Return `err` from `execute()` — stops the reconcile, retried on next poll
+- **Cleanup on cancel/fail**: `cleanup(vm)` deletes VM (if `DeleteVmOnFailMigration`), DataVolumes, importer pods, conversion pods, secrets, configmaps, hook jobs, populator resources
+- **Archive**: `Archive()` cleans up all retained resources when plan is archived
+
+---
+
+## Phase Constants Reference
+
+All defined in `pkg/apis/forklift/v1beta1/doc.go`:
+
+```
+Started, PreHook, PostHook, Completed,
+AddCheckpoint, AddFinalCheckpoint, AllocateDisks,
+ConvertGuest, ConvertOpenstackSnapshot, CopyDisks, CopyDisksVirtV2V,
+CopyingPaused, CreateDataVolumes, CreateFinalSnapshot,
+CreateGuestConversionPod, CreateInitialSnapshot, CreateSnapshot,
+CreateVM, Finalize, PreflightInspection, PowerOffSource,
+RemoveFinalSnapshot, RemovePenultimateSnapshot, RemovePreviousSnapshot,
+StoreInitialSnapshotDeltas, StorePowerState, StoreSnapshotDeltas,
+WaitForFinalSnapshot, WaitForFinalSnapshotRemoval,
+WaitForInitialSnapshot, WaitForPenultimateSnapshotRemoval,
+WaitForPowerOff, WaitForPreviousSnapshotRemoval, WaitForSnapshot
+```

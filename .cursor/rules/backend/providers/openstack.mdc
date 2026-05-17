@@ -1,0 +1,325 @@
+---
+description: OpenStack provider - Keystone/Nova/Glance/Neutron inventory, data model, REST API
+alwaysApply: false
+---
+
+# OpenStack Provider
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+## Architecture Overview
+
+The OpenStack provider uses **gophercloud** to talk to five OpenStack services, collects inventory into an in-process SQLite DB, and exposes it via a REST API.
+
+```
+Keystone (Identity v3)   ──► Region, Project
+Nova    (Compute v2)     ──► VM (servers.Server), Flavor
+Glance  (Image v2)       ──► Image
+Cinder  (Block Storage v3) ► Volume, VolumeType, Snapshot
+Neutron (Network v2)     ──► Network, Subnet
+```
+
+Source: `pkg/lib/client/openstack/client.go`
+
+---
+
+## Credentials (Secret Keys)
+
+All values are read from the Provider's referenced `Secret.data` map.
+
+| Secret key | Purpose |
+|---|---|
+| `authType` | `password` (default), `token`, or `applicationcredential` |
+| `username` | Keystone username (password & app-credential auth) |
+| `userID` | Alternative to username |
+| `password` | Keystone password |
+| `applicationCredentialID` | App credential ID |
+| `applicationCredentialName` | App credential name |
+| `applicationCredentialSecret` | App credential secret |
+| `token` | Pre-existing token (token auth) |
+| `projectName` / `projectID` | Scoped project |
+| `domainName` / `domainID` | Keystone domain |
+| `userDomainName` / `userDomainID` | User's domain |
+| `projectDomainName` / `projectDomainID` | Project's domain |
+| `defaultDomain` | Fallback domain |
+| `regionName` | OpenStack region to use |
+| `insecureSkipVerify` | Skip TLS verification (`"true"`) |
+| `cacert` | PEM-encoded CA certificate |
+| `availability` | Endpoint availability: `public` (default), `internal`, `admin` |
+
+Provider `spec.url` is the **Keystone auth URL** (e.g. `https://openstack.example.com:5000/v3`).
+
+---
+
+## Inventory Collection
+
+### Collector Lifecycle
+
+`pkg/controller/provider/container/openstack/collector.go`
+
+Phases: **Started → Load → Loaded → Parity → Refresh (loop)**
+
+| Phase | Action |
+|---|---|
+| Started | `Client.Connect()` — authenticate with Keystone, verify user projects |
+| Load | Full list of all resources via adapters, bulk insert into DB |
+| Loaded | First refresh pass (detect deletes + updates) |
+| Parity | Start DB watches (VMEventHandler), mark `parity = true` |
+| Refresh | Every **10 seconds**: delete missing resources, upsert changed ones |
+
+On error in any phase, retry after **5 seconds**.
+
+### Adapter Order
+
+Adapters are executed sequentially in this order:
+
+```
+Region → Project → Image → Flavor → VM → Snapshot → Volume → VolumeType → Network → Subnet
+```
+
+Each adapter implements the `Adapter` interface:
+
+```go
+type Adapter interface {
+    List(ctx *Context) (itr fb.Iterator, err error)
+    GetUpdates(ctx *Context) (updates []Updater, err error)
+    DeleteUnexisting(ctx *Context) (updates []Updater, err error)
+}
+```
+
+### Change Detection Strategies
+
+| Resource | Update detection | Delete detection |
+|---|---|---|
+| Image | `UpdatedAt` filter (`SetUpdateAtQueryFilterGT`) | Status `deleted` / `pending_delete`, or GET returns 404 |
+| Flavor | `ChangesSince` query param | GET returns 404 |
+| VM | `ChangesSince` query param | Status `DELETED` / `SOFT_DELETED`, or GET returns 404 |
+| Volume | Full re-list (gophercloud lacks `UpdatedAt` filter) | Status `deleting`, or GET returns 404 |
+| Snapshot | Full re-list, compare `UpdatedAt` | GET returns 404 |
+| Network | Full re-list, compare `UpdatedAt` | GET returns 404 |
+| Subnet | Full re-list, field equality check | GET returns 404 |
+| Region/Project | Full re-list, field equality check | GET returns 404 |
+| VolumeType | Full re-list, field equality check | GET returns 404 |
+
+### Volume → VM Cascading Revalidation
+
+When a volume changes, the adapter finds all VMs attached to that volume (via `volume.Attachments[].ServerID`) and resets their `RevisionValidated = 0`, triggering revalidation.
+
+---
+
+## Data Model
+
+`pkg/controller/provider/model/openstack/model.go`
+
+### Base
+
+All models share a `Base` with `ID` (PK), `Name` (indexed), and `Revision` (auto-incremented).
+
+### VM
+
+```go
+type VM struct {
+    Base
+    RevisionValidated int64                    // tracks validation state
+    PolicyVersion     int                      // OPA policy version
+    TenantID          string                   // FK → Project
+    UserID            string
+    Updated, Created  time.Time
+    HostID            string
+    Status            string                   // ACTIVE, SHUTOFF, ERROR, etc.
+    Progress          int
+    AccessIPv4/v6     string
+    ImageID           string                   // FK → Image
+    FlavorID          string                   // FK → Flavor
+    Addresses         map[string]interface{}   // network name → address list
+    Metadata          map[string]string
+    KeyName           string
+    AdminPass         string
+    SecurityGroups    []map[string]interface{}
+    AttachedVolumes   []AttachedVolume         // list of {ID}
+    Fault             Fault                    // {Code, Created, Details, Message}
+    Tags              *[]string
+    ServerGroups      *[]string
+    Concerns          []Concern                // populated by OPA validation
+}
+```
+
+Foreign keys: `TenantID → Project (+cascade)`, `ImageID → Image (+cascade)`, `FlavorID → Flavor (+cascade)`.
+
+### Image (Glance)
+
+Key fields: `Status`, `ContainerFormat`, `DiskFormat`, `MinDiskGigabytes`, `MinRAMMegabytes`, `SizeBytes`, `VirtualSize`, `Checksum`, `Properties` (map), `Visibility`.
+
+### Flavor (Nova)
+
+Key fields: `Disk`, `RAM`, `VCPUs`, `Swap`, `Ephemeral`, `RxTxFactor`, `IsPublic`, `ExtraSpecs` (map).
+
+### Volume (Cinder)
+
+Key fields: `Status`, `Size`, `AvailabilityZone`, `VolumeType` (name string), `Bootable` (string "true"/"false"), `Encrypted`, `Multiattach`, `Attachments` (list of `Attachment`), `VolumeImageMetadata` (map — contains `image_id` for boot volumes), `SnapshotID`, `SourceVolID`.
+
+### VolumeType (Cinder)
+
+Key fields: `ExtraSpecs`, `IsPublic`, `QosSpecID`, `PublicAccess`.
+
+### Snapshot (Cinder)
+
+Key fields: `VolumeID`, `Status`, `Size`, `Metadata`.
+
+### Network (Neutron)
+
+Key fields: `AdminStateUp`, `Status`, `Subnets` (list of subnet IDs), `TenantID`, `ProjectID`, `Shared`, `AvailabilityZoneHints`, `RevisionNumber`.
+
+FK: `TenantID → Project (+cascade)`, `ProjectID → Project (+cascade)`.
+
+### Subnet (Neutron)
+
+Key fields: `NetworkID` (FK → Network +cascade), `IPVersion`, `CIDR`, `GatewayIP`, `DNSNameservers`, `AllocationPools` [{Start, End}], `HostRoutes` [{DestinationCIDR, NextHop}], `EnableDHCP`, `IPv6AddressMode`, `IPv6RAMode`, `SubnetPoolID`.
+
+### Region / Project (Keystone)
+
+Region: `Description`, `ParentRegionID`.
+Project: `Description`, `DomainID`, `ParentID`, `Enabled`, `IsDomain`.
+
+### Tree Kinds
+
+```go
+RegionKind, ProjectKind, ImageKind, FlavorKind, VMKind,
+SnapshotKind, VolumeKind, VolumeTypeKind, NetworkKind, SubnetKind
+```
+
+---
+
+## VM Concern Validation (OPA Policy Agent)
+
+`pkg/controller/provider/container/openstack/watch.go`
+
+### How It Works
+
+1. **VMEventHandler** watches the VM model table for create/update events.
+2. VMs with `Revision != RevisionValidated` are submitted to the **OPA policy agent**.
+3. The policy endpoint: `/v1/data/io/konveyor/forklift/openstack/validate`
+4. The workload payload is built by `Workload.Expand()` which joins VM + Image + Flavor + Networks + Subnets + Volumes + VolumeTypes + Snapshots.
+5. Results (concerns list) are written back: `VM.Concerns = task.Concerns`.
+6. A periodic search also finds unvalidated VMs (batch up to 1024).
+7. Updates are applied in batches to reduce DB transactions.
+
+### Workload Expansion
+
+The `XVM` struct sent to the policy agent includes all related resources:
+
+```go
+type XVM struct {
+    VM
+    Image       Image
+    Flavor      Flavor
+    Networks    []Network
+    Subnets     []Subnet
+    Volumes     []Volume
+    VolumeTypes []VolumeType
+    Snapshots   []Snapshot
+}
+```
+
+Image resolution: uses `VM.ImageID` first; if empty, checks attached bootable volumes for `VolumeImageMetadata["image_id"]`.
+
+---
+
+## REST API Endpoints
+
+Base path: `/v1/providers/openstack`
+
+All collection endpoints support `GET` (list) and `GET /:id` (get).
+Most support **WebSocket watch** via `X-Watch` header.
+Query params: `name` (filter by name/path), `detail` (detail level).
+
+| Endpoint | Collection | Handler |
+|---|---|---|
+| `GET .../` | Providers | `ProviderHandler` |
+| `GET .../:provider/regions` | Regions | `RegionHandler` |
+| `GET .../:provider/projects` | Projects | `ProjectHandler` |
+| `GET .../:provider/images` | Images | `ImageHandler` |
+| `GET .../:provider/flavors` | Flavors | `FlavorHandler` |
+| `GET .../:provider/vms` | Virtual Machines | `VMHandler` |
+| `GET .../:provider/snapshots` | Snapshots | `SnapshotHandler` |
+| `GET .../:provider/volumes` | Volumes | `VolumeHandler` |
+| `GET .../:provider/volumetypes` | Volume Types | `VolumeTypeHandler` |
+| `GET .../:provider/networks` | Networks | `NetworkHandler` |
+| `GET .../:provider/subnets` | Subnets | `SubnetHandler` |
+| `GET .../:provider/workloads/:vm` | Workload (expanded VM) | `WorkloadHandler` |
+| `GET .../:provider/tree/project` | Project tree | `TreeHandler` |
+
+### Detail Levels
+
+VM uses three detail tiers:
+
+- **detail=0** (`VM0`/`Resource`): `id`, `revision`, `name`, `path`, `selfLink`
+- **detail=1** (`VM1`): adds `tenantID`, `status`, `hostID`, `revisionValidated`, `imageID`, `flavorID`, `addresses`, `attachedVolumes`, `concerns`
+- **detail=2** (`VM`): adds `userID`, `updated`, `created`, `progress`, `accessIPv4/v6`, `metadata`, `keyName`, `adminPass`, `securityGroups`, `fault`, `tags`, `serverGroups`
+
+Other resources use two tiers (0 = base resource, full = all fields).
+
+### Provider Summary (with detail)
+
+The provider GET response includes derived counts: `regionCount`, `projectCount`, `vmCount`, `imageCount`, `volumeCount`, `volumeTypeCount`, `networkCount`.
+
+### Workload Endpoint
+
+`GET .../:provider/workloads/:vmID` returns a fully expanded VM with nested image, flavor, networks, subnets, volumes, volume types, and snapshots. This is the payload used for policy validation.
+
+### Finder / Resolver
+
+The `Finder` struct supports lookup by ref (ID or Name) for: VM, Workload, Network, VolumeType, Snapshot, Volume, Image.
+
+Storage mapping uses `VolumeType` as the storage unit. The special name `api.GlanceSource` is handled to indicate image-based (non-volume) storage.
+
+### Tree Endpoint
+
+`GET .../:provider/tree/project` returns a hierarchical tree: `Project → [VM, VM, ...]`. The `BranchNavigator` lists VMs for each project using `TenantID` predicate.
+
+---
+
+## Key Patterns for Frontend
+
+### OpenStack IDs
+
+All OpenStack resources use **UUID strings** as their primary key (`ID` field), not numeric IDs.
+
+### VM Status Values
+
+From `pkg/lib/client/openstack/model.go`:
+`ACTIVE`, `BUILD`, `DELETED`, `ERROR`, `HARD_REBOOT`, `MIGRATING`, `PASSWORD`, `PAUSED`, `REBOOT`, `REBUILD`, `RESCUE`, `RESIZE`, `REVERT_RESIZE`, `SHELVED`, `SHELVED_OFFLOADED`, `SHUTOFF`, `SOFT_DELETED`, `SUSPENDED`, `UNKNOWN`, `VERIFY_RESIZE`.
+
+### Network Status Values
+
+`null`, `ACTIVE`, `DOWN`.
+
+### Image Status Values
+
+`queued`, `saving`, `active`, `killed`, `deleted`, `pending_delete`, `deactivated`, `uploading`, `importing`.
+
+### Volume Status Values
+
+`creating`, `available`, `reserved`, `attaching`, `detaching`, `in-use`, `maintenance`, `deleting`, `awaiting-transfer`, `error`, `error_deleting`, `backing-up`, `restoring-backup`, `error_backing-up`, `error_restoring`, `error_extending`, `downloading`, `uploading`, `retyping`, `extending`.
+
+### Boot Volume Detection
+
+A volume is a boot volume when `Bootable == "true"`. The original image ID can be found in `VolumeImageMetadata["image_id"]`.
+
+### Addresses Structure
+
+`VM.Addresses` is `map[string]interface{}` where keys are **network names** and values are arrays of address objects. The workload expansion resolves networks by matching these names.
+
+### Auth Types
+
+Three supported: `password` (default), `token`, `applicationcredential`.
+
+### Migration Operations (Client Methods)
+
+The client exposes methods used during migration execution:
+- `VMStatus(vmID)` — get VM power state
+- `VMStart(vmID)` / `VMStop(vmID)` — power on/off source VM
+- `VMCreateSnapshotImage(vmID, opts)` — create snapshot image
+- `UploadImage(name, volumeID)` — convert volume to image (raw format)
+- `DownloadImage(imageID)` — stream image data
+- `VMRemoveSnapshotImage(imageID)` — clean up snapshot

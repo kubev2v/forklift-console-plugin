@@ -1,0 +1,294 @@
+---
+description: EC2 provider - AWS SDK inventory, adapter, migrator, platform-gated availability
+alwaysApply: false
+---
+
+# EC2 Provider
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+## Architecture Overview
+
+EC2 lives in `pkg/provider/ec2/` — **separate from other providers** which are under `pkg/controller/provider/`. It has its own self-contained packages for adapter, migrator, inventory, web API, builder, validator, ensurer, scheduler, and client.
+
+```
+pkg/provider/ec2/
+├── controller/          # Plan controller integration
+│   ├── adapter/         # base.Adapter implementation (factory)
+│   ├── builder/         # VirtualMachine + PV/PVC spec generation
+│   ├── client/          # AWS SDK client for migration operations
+│   ├── ensurer/         # K8s resource creation (PV, PVC)
+│   ├── handler/         # Plan reconciliation event handler
+│   ├── inventory/       # Inventory lookup helpers (instances, volumes)
+│   ├── mapping/         # Network/storage mapping utilities
+│   ├── migrator/        # Migration state machine and phase executor
+│   ├── scheduler/       # VM scheduling with MaxInFlight limit
+│   └── validator/       # Pre-migration validation
+├── inventory/           # Inventory collection and REST API
+│   ├── client/          # AWS SDK client for inventory polling
+│   ├── collector/       # Periodic AWS API poller
+│   ├── model/           # Database models (Instance, Volume, Network, Storage)
+│   └── web/             # REST API handlers (gin)
+├── testutil/            # Fake EC2/STS API implementations
+└── docs/                # Feature comparison, guest conversion, tagging docs
+```
+
+---
+
+## Platform Gating
+
+EC2 is **only available on AWS-platform OpenShift clusters**. The frontend gates visibility using `useClusterIsAwsPlatform` hook. The backend requires AWS credentials in the Provider secret.
+
+---
+
+## Inventory Collection
+
+### AWS SDK v2
+
+Uses `github.com/aws/aws-sdk-go-v2` with paginated API calls.
+
+**Inventory client interface** (`inventory/client/ec2api.go`):
+- `DescribeInstances` — paginated, all instances in region
+- `DescribeVolumes` — paginated, all EBS volumes
+- `DescribeVpcs` — non-paginated
+- `DescribeSubnets` — paginated
+- `DescribeSecurityGroups` — paginated
+
+### Collector Loop
+
+`inventory/collector/collector.go` — polls AWS at `RefreshInterval` (default 10s, configurable via `EC2_INVENTORY_INTERVAL_SECONDS` env var).
+
+Collection tasks run sequentially with partial-success semantics:
+1. `collectInstances` — EC2 instances → `model.Instance`
+2. `collectVolumes` — EBS volumes → `model.Volume`
+3. `collectNetworks` — VPCs + Subnets → `model.Network`
+4. `collectStorageTypes` — static EBS type definitions → `model.Storage`
+
+Each task uses change detection (`HasChanged()`) to avoid unnecessary DB writes. Records track `Revision` (incremented on update) for efficient watch/polling.
+
+### Database Models (`inventory/model/`)
+
+| Model | AWS Resource | PK (UID) | Indexed Fields | Labels Source |
+|-------|-------------|----------|----------------|---------------|
+| `Instance` | EC2 Instance | Instance ID | instanceType, state, platform | AWS Tags |
+| `Volume` | EBS Volume | Volume ID | volumeType, state, size | AWS Tags |
+| `Network` | VPC or Subnet | VPC/Subnet ID | networkType, cidr | AWS Tags (subnet only) |
+| `Storage` | EBS volume type | Type code (gp2, gp3, …) | volumeType | None (static) |
+
+All models embed `Base` struct with `UID`, `Name`, `Kind`, `Provider`, `Revision`. Models store the complete AWS SDK object for full-fidelity API responses.
+
+### Static Storage Types
+
+Storage types are a hardcoded list of EBS volume types (not fetched from AWS):
+
+| Type | Description | Max IOPS | Max Throughput (MB/s) |
+|------|-------------|----------|----------------------|
+| gp2 | General Purpose SSD | 16,000 | 250 |
+| gp3 | General Purpose SSD | 16,000 | 1,000 |
+| io1 | Provisioned IOPS SSD | 64,000 | 1,000 |
+| io2 | Provisioned IOPS SSD | 64,000 | 1,000 |
+| st1 | Throughput Optimized HDD | 500 | 500 |
+| sc1 | Cold HDD | 250 | 250 |
+| standard | Magnetic | 0 | 0 |
+
+---
+
+## REST API Endpoints (`inventory/web/`)
+
+Base: `/providers/ec2/:provider`
+
+| Endpoint | Handler | Model | Label Filtering | Watch |
+|----------|---------|-------|-----------------|-------|
+| `GET /vms` | VMHandler | Instance | Yes (`label.*`) | Yes |
+| `GET /vms/:vm` | VMHandler | Instance | — | — |
+| `GET /networks` | NetworkHandler | Network | Yes (`label.*`) | Yes |
+| `GET /networks/:id` | NetworkHandler | Network | — | — |
+| `GET /volumes` | VolumeHandler | Volume | Yes (`label.*`) | Yes |
+| `GET /volumes/:id` | VolumeHandler | Volume | — | — |
+| `GET /storages` | StorageHandler | Storage | No (static) | Yes |
+| `GET /storages/:id` | StorageHandler | Storage | — | — |
+
+Query parameters: `?name=...` for name filter, `?label.key=value` for AWS tag filtering. WebSocket watch via `X-Watch` header.
+
+---
+
+## AWS Credentials
+
+### Provider Secret Fields
+
+| Field | Required | Purpose |
+|-------|----------|---------|
+| `region` | Yes | AWS region (e.g., us-east-1) |
+| `accessKeyId` | Optional* | IAM access key |
+| `secretAccessKey` | Optional* | IAM secret key |
+| `targetAccessKeyId` | Optional | Cross-account target key |
+| `targetSecretAccessKey` | Optional | Cross-account target secret |
+
+*If access keys are omitted, falls back to default AWS credential chain (IAM role, EKS pod identity, env vars).
+
+### Cross-Account Mode
+
+When `targetAccessKeyId` and `targetSecretAccessKey` are present, the client operates in **cross-account mode**:
+- **Source client**: snapshots, power operations (source account)
+- **Target client**: volume creation, volume checks (target account)
+- **STS client**: `GetCallerIdentity` to retrieve target account ID for snapshot sharing
+
+---
+
+## Adapter (`controller/adapter/`)
+
+`Adapter` implements `base.Adapter` — the factory interface the plan controller calls to get provider-specific components:
+
+| Method | Returns | Purpose |
+|--------|---------|---------|
+| `Builder()` | `*builder.Builder` | VM spec, PV/PVC generation |
+| `Validator()` | `*validator.Validator` | Pre-migration checks |
+| `Ensurer()` | `*ensurer.Ensurer` | K8s resource creation |
+| `Client()` | `*client.Client` | AWS operations (power, snapshots, volumes) |
+| `DestinationClient()` | `*DestinationClient` | No-op (no volume populators) |
+
+`DestinationClient` methods (`DeletePopulatorDataSource`, `SetPopulatorCrOwnership`) are no-ops because EC2 uses **direct volume creation** instead of volume populators.
+
+---
+
+## Migrator (`controller/migrator/`)
+
+### Migration Type
+
+EC2 **only supports cold migration** (`api.MigrationCold`). Warm/live migration is not supported because EC2 requires instance shutdown for consistent EBS snapshots.
+
+### Phase Itinerary
+
+```
+Started → [PreHook] → PowerOffSource → WaitForPowerOff →
+CreateSnapshots → WaitForSnapshots → [ShareSnapshots] →
+CreateVolumes → WaitForVolumes → CreatePVsAndPVCs →
+[CreateGuestConversionPod → ConvertGuest] →
+Finalize → CreateVM → RemoveSnapshots → [PostHook] → Completed
+```
+
+Conditional phases (controlled by predicate flags):
+- **PreHook/PostHook** — included if VM has hook configuration
+- **ShareSnapshots** — included if cross-account mode is enabled
+- **CreateGuestConversionPod/ConvertGuest** — included if provider `RequiresConversion()` and `SkipGuestConversion` is false
+
+### EC2-Specific Phases
+
+| Phase | What It Does |
+|-------|-------------|
+| `CreateSnapshots` | Creates EBS snapshots for all attached volumes, tags with `forklift.konveyor.io/vmID` |
+| `WaitForSnapshots` | Polls `DescribeSnapshots` until all reach `completed` state |
+| `ShareSnapshots` | Cross-account: `ModifySnapshotAttribute` to grant `createVolumePermission` to target account |
+| `CreateVolumes` | Creates EBS volumes from snapshots in target AZ, tags with `forklift.konveyor.io/original-volume` |
+| `WaitForVolumes` | Polls `DescribeVolumes` until all reach `available` state |
+| `CreatePVsAndPVCs` | Creates PVs with CSI source (`ebs.csi.aws.com`) pre-bound to PVCs via ClaimRef |
+| `RemoveSnapshots` | Deletes snapshots; on failure also cleans up created volumes |
+
+### UI Pipeline Steps
+
+| Step Name | Mapped Phases |
+|-----------|--------------|
+| Initialize | PhaseStarted |
+| PrepareSource | PhasePowerOffSource, PhaseWaitForPowerOff |
+| CreateSnapshots | PhaseCreateSnapshots, PhaseWaitForSnapshots |
+| ShareSnapshots | PhaseShareSnapshots |
+| DiskTransfer | PhaseCreateVolumes, PhaseWaitForVolumes, PhaseCreatePVsAndPVCs |
+| ImageConversion | PhaseCreateGuestConversionPod, PhaseConvertGuest |
+| CreateVM | PhaseFinalize, PhaseCreateVM |
+| Cleanup | PhaseRemoveSnapshots |
+
+---
+
+## Builder (`controller/builder/`)
+
+### VM Spec Generation
+
+`VirtualMachine()` converts an EC2 instance to a KubeVirt `VirtualMachineSpec`:
+
+- **CPU**: Maps EC2 instance size suffix (nano→32xlarge) to vCPU/memory. Defaults: 2 vCPU / 4096 MiB. Bare metal instances (`.metal` suffix) get nested virt features (vmx/svm).
+- **Firmware**: Maps EC2 `BootMode` → BIOS or UEFI. Uses instance ID as serial number.
+- **Disks**: Attaches PVCs as virtio disks (or SATA in compatibility mode). First disk gets boot order 1.
+- **Networks**: Maps subnets via NetworkMap to pod/Multus/UDN networking. Preserves MAC addresses. Compatibility mode uses E1000e instead of VirtIO NIC.
+- **Node Selector**: Sets `topology.kubernetes.io/zone` to target AZ for co-location with EBS volumes (skippable via `SkipZoneNodeSelector`).
+- **OS Detection**: Reads `Platform` and `PlatformDetails` to set template labels (RHEL, Ubuntu, Windows variants).
+- **Compatibility Mode**: Active when both `SkipGuestConversion` and `UseCompatibilityMode` are true. Uses SATA disks, E1000e NICs, USB input.
+
+### PV/PVC Creation
+
+PVs use **CSI volume source** with `ebs.csi.aws.com` driver, `VolumeHandle` = EBS volume ID. PVCs are created in block mode with pre-binding via PV's `ClaimRef`. Storage class comes from StorageMap (EBS volume type → K8s StorageClass).
+
+EC2 **does not use volume populators** — `SupportsVolumePopulators()` returns `false`. All populator-related builder methods are no-ops.
+
+---
+
+## Validator (`controller/validator/`)
+
+Three validation checks run before migration starts:
+
+1. **Storage** (`validateStorage`): Ensures VM has at least one EBS volume. Instance store volumes are detected and warned but don't fail validation.
+2. **Network Mapping** (`NetworksMapped`): Verifies all subnet IDs have entries in the NetworkMap.
+3. **Storage Mapping** (`StorageMapped`): Verifies all EBS volume types have entries in the StorageMap.
+4. **Migration Type** (`MigrationType`): Only cold migration (or empty/default) is accepted.
+
+---
+
+## Scheduler (`controller/scheduler/`)
+
+Controls concurrent VM migration with `MaxInFlight` limit. Counts in-flight VMs across all plans sharing the same source provider. Uses package-level mutex for thread safety. Skips canceled VMs.
+
+---
+
+## Resource Tagging Convention
+
+All AWS resources created during migration are tagged with `forklift.konveyor.io/*` tags:
+
+| Tag Key | Applied To | Purpose |
+|---------|-----------|---------|
+| `forklift.konveyor.io/vmID` | Snapshots, Volumes | VM instance ID for filtering |
+| `forklift.konveyor.io/vm-name` | Snapshots, Volumes | Human-readable VM name |
+| `forklift.konveyor.io/volume` | Snapshots | Source volume ID |
+| `forklift.konveyor.io/original-volume` | Volumes | Maps new volume → original |
+| `forklift.konveyor.io/snapshot` | Volumes | Snapshot used to create volume |
+
+These tags enable idempotent operations — each phase checks for existing tagged resources before creating new ones.
+
+---
+
+## Provider Settings
+
+EC2 providers use `spec.settings` on the Provider CR:
+
+| Setting | Required | Purpose |
+|---------|----------|---------|
+| `target-az` | Yes | Availability zone for volume creation and VM scheduling |
+
+---
+
+## Key Differences from Other Providers
+
+| Aspect | Other Providers | EC2 |
+|--------|----------------|-----|
+| Code location | `pkg/controller/provider/` | `pkg/provider/ec2/` |
+| Migration type | Cold, Warm, Live | **Cold only** |
+| Disk transfer | CDI DataVolumes / Volume Populators | **Direct EBS snapshot → volume → PV/PVC** |
+| Volume source | Disk image transfer | CSI (`ebs.csi.aws.com`) VolumeHandle |
+| Cross-account | N/A | Supported via separate source/target credentials |
+| Platform gating | None | **AWS-platform clusters only** |
+| DestinationClient | Active (populator management) | **No-op** |
+
+---
+
+## Environment Variables
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `EC2_INVENTORY_INTERVAL_SECONDS` | 10 | Inventory collector AWS polling interval |
+| `EC2_CONTROLLER_INTERVAL_SECONDS` | 15 | Plan handler reconciliation interval |
+
+---
+
+## Test Utilities (`testutil/`)
+
+- `fake_ec2api.go` — Mock `EC2API` interface for unit tests
+- `fake_stsapi.go` — Mock `STSAPI` interface for unit tests
+- `fixtures.go` — Test data fixtures (instances, volumes, subnets, VPCs)
