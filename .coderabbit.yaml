@@ -1,0 +1,77 @@
+# CodeRabbit Configuration
+# https://docs.coderabbit.ai/guides/configuration
+
+reviews:
+  profile: chill
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "!locales/**/*.json"
+    - "!package-lock.json"
+    - "!**/*.svg"
+    - "!docs/icons/**"
+    - "!.tekton/**"
+    - "!.konflux/**"
+    - "!ci/yaml/**"
+  path_instructions:
+    - path: "src/components/**"
+      instructions: |
+        Shared/reusable components. Must NOT import from feature-specific code
+        (providers/, plans/, storageMaps/, networkMaps/, overview/). The
+        dependency direction is: feature -> shared -> external libraries.
+        One component per file. Default export at end of file.
+        File limit: 300 lines (skipBlankLines, skipComments). Function limit: 150 lines.
+    - path: "src/utils/**"
+      instructions: |
+        Shared utilities. Must NOT import from feature-specific code.
+        The dependency direction is: feature -> shared -> external libraries.
+    - path: "src/providers/**"
+      instructions: |
+        Provider feature module. Source types: vsphere, ovirt, openstack, ova, hyperv, ec2.
+        Target type: openshift. Check provider phase before plan creation.
+    - path: "src/plans/**"
+      instructions: |
+        Plan feature module. Plans reference NetworkMap and StorageMap.
+        Migration types: Cold, Warm, Live, Conversion.
+        Wizard step-level validation guards the submit path --
+        explicit loading/error guards from hooks are not always needed if the wizard
+        prevents advancing without valid data.
+    - path: "src/storageMaps/**"
+      instructions: |
+        Storage mapping feature module. Supports copy-offload plugins and
+        NetApp Shift storage class highlighting/recommendation.
+    - path: "src/networkMaps/**"
+      instructions: |
+        Network mapping feature module. Target networks are formatted
+        as namespace/name from useTargetNetworks.
+    - path: "locales/**/*.json"
+      instructions: |
+        Never edit locale JSON files directly; always regenerate them using
+        `npm run i18n` script to avoid losing manual edits on next generation.
+        English fallback values in non-English locale files are intentional for
+        new features -- translations are handled via the Memsource pipeline in a
+        separate localization cycle. Do not flag untranslated strings as issues.
+        Use i18next v21+ CLDR pluralization: _one, _many, _other suffixes.
+    - path: "testing/**"
+      instructions: |
+        E2E tests use Playwright with page object model. Use version gating
+        via isVersionAtLeast() for retrocompatibility across release branches.
+        Prefer getByRole/getByTestId with exact:true over substring hasText.
+        Avoid hard-coded sleeps -- use deterministic waits.
+        Resource cleanup via ResourceManager.
+    - path: "**/*.tsx"
+      instructions: |
+        React components: use FC type, one component per file, default export.
+        Use useForkliftTranslation hook for i18n, ForkliftTrans for JSX interpolation.
+        Use ButtonVariant enum, not string literals.
+        Use custom Select from @components/common/Select, not PatternFly Select directly.
+        Use testId prop, not dataTestId.
+        Use isEmpty() helper from @utils/helpers instead of manual length checks.
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  learnings:
+    scope: auto
