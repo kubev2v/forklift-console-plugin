@@ -4,7 +4,14 @@ import { calculateCidrNotation } from 'src/providers/details/tabs/Hosts/utils/he
 import { determineHostStatus } from 'src/providers/details/tabs/Hosts/utils/helpers/determineHostStatus';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { Button, ButtonVariant, HelperText, HelperTextItem, Popover } from '@patternfly/react-core';
+import {
+  Button,
+  ButtonVariant,
+  HelperText,
+  HelperTextItem,
+  Icon,
+  Popover,
+} from '@patternfly/react-core';
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
@@ -14,9 +21,21 @@ import {
 import type { HostCellProps } from './utils/types';
 
 const statusIcons: Record<string, ReactNode> = {
-  error: <ExclamationCircleIcon color="#C9190B" />,
-  ready: <CheckCircleIcon color="#3E8635" />,
-  running: <ExclamationTriangleIcon color="#F0AB00" />,
+  error: (
+    <Icon status="danger">
+      <ExclamationCircleIcon />
+    </Icon>
+  ),
+  ready: (
+    <Icon status="success">
+      <CheckCircleIcon />
+    </Icon>
+  ),
+  running: (
+    <Icon status="warning">
+      <ExclamationTriangleIcon />
+    </Icon>
+  ),
 };
 
 // Define cell renderer for 'network'

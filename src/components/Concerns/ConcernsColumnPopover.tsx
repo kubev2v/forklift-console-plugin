@@ -22,8 +22,8 @@ const ConcernsColumnPopover: FC = () => {
       {/* Informational */}
       <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>
         <FlexItem className="pf-v6-u-mr-sm">
-          <Icon size="md">
-            <InfoCircleIcon color="var(--pf-t--global--color--status--info--default)" />
+          <Icon size="md" status="info">
+            <InfoCircleIcon />
           </Icon>
         </FlexItem>
 
@@ -37,8 +37,8 @@ const ConcernsColumnPopover: FC = () => {
       {/* Warning */}
       <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>
         <FlexItem className="pf-v6-u-mr-sm">
-          <Icon size="md">
-            <ExclamationTriangleIcon color="var(--pf-t--global--color--status--warning--default)" />
+          <Icon size="md" status="warning">
+            <ExclamationTriangleIcon />
           </Icon>
         </FlexItem>
 
@@ -53,8 +53,8 @@ const ConcernsColumnPopover: FC = () => {
       {/* Critical */}
       <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>
         <FlexItem className="pf-v6-u-mr-sm">
-          <Icon size="md">
-            <ExclamationCircleIcon color="var(--pf-t--global--color--status--danger--default)" />
+          <Icon size="md" status="danger">
+            <ExclamationCircleIcon />
           </Icon>
         </FlexItem>
 
