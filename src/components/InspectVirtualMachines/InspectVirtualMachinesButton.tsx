@@ -15,6 +15,7 @@ type InspectVirtualMachinesButtonProps = {
   disabledReason: string | undefined;
   plan?: V1beta1Plan;
   provider: V1beta1Provider;
+  testId?: string;
 };
 
 const InspectVirtualMachinesButton: FC<InspectVirtualMachinesButtonProps> = ({
@@ -22,6 +23,7 @@ const InspectVirtualMachinesButton: FC<InspectVirtualMachinesButtonProps> = ({
   disabledReason,
   plan,
   provider,
+  testId = 'plan-inspect-vms-button',
 }) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
@@ -39,7 +41,7 @@ const InspectVirtualMachinesButton: FC<InspectVirtualMachinesButtonProps> = ({
         variant={ButtonVariant.secondary}
         isDisabled={!canInspect}
         onClick={onClickInspectVms}
-        data-testid="plan-inspect-vms-button"
+        data-testid={testId}
       >
         {t('Inspect VMs')}
       </Button>

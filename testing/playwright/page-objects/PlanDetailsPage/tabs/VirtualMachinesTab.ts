@@ -27,7 +27,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   get addVirtualMachinesButton() {
-    return this.page.getByRole('button', { name: 'Add virtual machines' });
+    return this.page.getByRole('button', { name: 'Add VMs' });
   }
 
   async applyFilter(filterName: string, value: string): Promise<void> {
@@ -119,6 +119,11 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     return this.table.getRow({ Name: vmName }).getByTestId('vm-actions-menu-toggle');
   }
 
+  async getVmInspectionStatus(vmName: string): Promise<string> {
+    const cell = await this.table.getCell('Name', vmName, 'Inspection status');
+    return (await cell.textContent())?.trim() ?? '';
+  }
+
   async getVMInstanceType(vmName: string): Promise<string> {
     const cell = await this.table.getCell('Name', vmName, 'Instance type');
     return (await cell.textContent())?.trim() ?? '';
@@ -194,7 +199,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     return this.page.getByRole('option', { name: 'Retain source VM power state', exact: true });
   }
   get powerStateOptionInherit() {
-    return this.page.getByRole('option', { name: 'Inherit plan wide setting', exact: false });
+    return this.page.getByTestId('power-state-option-inherit');
   }
   get powerStateOptionOff() {
     return this.page.getByRole('option', { name: 'Powered off', exact: true });
@@ -261,7 +266,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   async sortByConcerns(): Promise<void> {
-    await this.sortByColumn('Concerns');
+    await this.page.getByTestId('concerns-column-header').click();
   }
 
   get validationErrorMessage() {
