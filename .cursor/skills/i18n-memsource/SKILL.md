@@ -15,12 +15,15 @@ Read `.cursor/skills/i18n-memsource/state.json` for current sprint, version, and
 
 ### Memsource CLI
 
-The `memsource` CLI is a Python package (`memsource-cli`) installed via pip3. The
-executable lives at `/Users/aturgema/Library/Python/3.9/bin/memsource` and is **not**
-on the default PATH. Always prepend it:
+The `memsource` CLI is a Python package (`memsource-cli`) installed via pip3. It
+may not be on the default PATH. Locate and export it:
 
 ```bash
-export PATH="/Users/aturgema/Library/Python/3.9/bin:$PATH"
+MEMSOURCE_BIN=$(python3 -c "import shutil; print(shutil.which('memsource') or '')")
+if [ -z "$MEMSOURCE_BIN" ]; then
+  MEMSOURCE_BIN=$(find "$HOME/Library/Python" -name memsource -type f 2>/dev/null | head -1)
+fi
+export PATH="$(dirname "$MEMSOURCE_BIN"):$PATH"
 ```
 
 ### Authentication
@@ -35,13 +38,17 @@ work inside npm scripts, you must capture the token and export it as
 `MEMSOURCE_TOKEN`:
 
 ```bash
-export PATH="/Users/aturgema/Library/Python/3.9/bin:$PATH"
 source ~/.memsourcerc
 export MEMSOURCE_TOKEN=$(memsource auth login \
   --user-name "$MEMSOURCE_USERNAME" \
   --password "$MEMSOURCE_PASSWORD" \
-  -f json 2>/dev/null \
+  -f json \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+
+if [ -z "$MEMSOURCE_TOKEN" ]; then
+  echo "ERROR: Memsource authentication failed. Check ~/.memsourcerc credentials."
+  return 1
+fi
 ```
 
 Run this **once** at the start of every action. All subsequent `memsource` and
@@ -308,7 +315,7 @@ Trigger: user says "translation status", "memsource status", "check translations
 
 ## Important Notes
 
-- **CLI path:** The `memsource` binary is at `/Users/aturgema/Library/Python/3.9/bin/memsource`. Always export this to PATH before use.
+- **CLI path:** The `memsource` binary is installed via pip3 and may not be on PATH. Use the discovery snippet from Prerequisites to locate it.
 - **Auth token:** Use `MEMSOURCE_TOKEN` env var (captured from `memsource auth login`) so child processes (npm scripts) inherit auth. Do not rely on `memsource auth login` alone -- the token is not persisted to disk.
 - **Language aliases and branch names:** Both are handled automatically since `ocp-plugin-i18n-scripts@1.0.2`. No symlinks or branch switching needed.
 - The `npm run memsource-upload` and `npm run memsource-download` scripts use the `ocp-plugin-i18n-scripts` npm package CLI commands under the hood.
