@@ -29,7 +29,7 @@ export class InspectVirtualMachinesModal {
   }
 
   async getVmInspectionStatus(vmName: string): Promise<string> {
-    const row = this.vmTable.getByRole('row', { name: new RegExp(vmName) });
+    const row = this.vmTable.getByRole('row', { exact: false, name: vmName });
     const statusCell = row.getByRole('gridcell').last();
     return (await statusCell.textContent())?.trim() ?? '';
   }
@@ -53,7 +53,7 @@ export class InspectVirtualMachinesModal {
   }
 
   async selectVmByName(vmName: string): Promise<void> {
-    const row = this.vmTable.getByRole('row', { name: new RegExp(vmName) });
+    const row = this.vmTable.getByRole('row', { exact: false, name: vmName });
     await row.getByRole('checkbox').check();
   }
 

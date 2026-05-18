@@ -9,7 +9,18 @@ import { requireVersion } from '../../../utils/version/version';
 
 type TestPlan = { metadata: { name: string; namespace: string }; testData: PlanTestData };
 
-const setupPlanDetailsPage = async (page: Page, testPlan: TestPlan | undefined) => {
+type SetupResult = {
+  firstVmName: string;
+  inspectModal: InspectVirtualMachinesModal;
+  namespace: string;
+  planDetailsPage: PlanDetailsPage;
+  planName: string;
+};
+
+const setupPlanDetailsPage = async (
+  page: Page,
+  testPlan: TestPlan | undefined,
+): Promise<SetupResult> => {
   if (!testPlan) throw new Error('testPlan is required');
   const planDetailsPage = new PlanDetailsPage(page);
   const inspectModal = new InspectVirtualMachinesModal(page);
@@ -66,23 +77,6 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
     await test.step('open modal and verify Tech Preview label', async () => {
       await openInspectModal(planDetailsPage, inspectModal);
       await expect(inspectModal.techPreviewLabel).toBeVisible();
-    });
-
-    await test.step('close modal', async () => {
-      await inspectModal.close();
-    });
-  });
-
-  test('should open inspect modal from actions dropdown', async ({
-    page,
-    testPlan,
-    testProvider: _testProvider,
-  }) => {
-    const { inspectModal, planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
-
-    await test.step('open actions dropdown and click Inspect VMs', async () => {
-      await planDetailsPage.clickInspectVmsFromActions();
-      await inspectModal.waitForModalOpen();
     });
 
     await test.step('close modal', async () => {

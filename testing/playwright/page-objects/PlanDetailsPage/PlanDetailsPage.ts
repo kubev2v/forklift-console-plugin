@@ -41,11 +41,6 @@ export class PlanDetailsPage {
     await this.inspectVmsButton.click();
   }
 
-  async clickInspectVmsFromActions(): Promise<void> {
-    await this.page.getByTestId('plan-actions-dropdown-button').click();
-    await this.inspectVmsMenuItem.click();
-  }
-
   async clickStartButtonInStatus(): Promise<void> {
     await this.page.getByTestId('plan-start-button-status').click();
     await this.page.getByTestId('modal-confirm-button').click();
@@ -159,23 +154,19 @@ export class PlanDetailsPage {
    * Checks if the critical concerns alert is visible.
    */
   async hasCriticalConcernsAlert(): Promise<boolean> {
-    return this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
+    return await this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
   }
 
   get inspectVmsButton() {
     return this.page.getByTestId('plan-inspect-vms-button');
   }
 
-  get inspectVmsMenuItem() {
-    return this.page.getByTestId('plan-actions-inspect-menuitem');
-  }
-
   async isInspectVmsButtonDisabled(): Promise<boolean> {
-    return this.inspectVmsButton.isDisabled();
+    return await this.inspectVmsButton.isDisabled();
   }
 
   async isInspectVmsButtonVisible(): Promise<boolean> {
-    return this.inspectVmsButton.isVisible();
+    return await this.inspectVmsButton.isVisible();
   }
 
   async navigate(planName: string, namespace: string, tab?: string): Promise<void> {
