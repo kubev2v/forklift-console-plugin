@@ -1,23 +1,28 @@
+import { existsSync, readFileSync } from 'fs';
+
 import { defineConfig, devices } from '@playwright/test';
 
 const authFile = 'playwright/.auth/user.json';
 
 /**
- * Console URL: prefer BRIDGE_BASE_ADDRESS when non-empty, else BASE_ADDRESS, else local default.
- * Empty / whitespace-only BRIDGE_BASE_ADDRESS is treated as unset so e2e env files can clear
- * a stale shell export (e.g. `BRIDGE_BASE_ADDRESS=` in a personal .env).
+ * Workers run in a different process context than the shell-launched main process
+ * (e.g. IDE extension host in Cursor/VS Code) and do NOT automatically inherit
+ * shell-sourced env vars. globalSetup writes a relay file with the correct values;
+ * we apply them here so every process that evaluates this config — both the main
+ * process and each worker — gets the right environment.
+ *
+ * The relay file is only present after globalSetup has run, so the first evaluation
+ * (main process, before globalSetup) reads from process.env as normal.
  */
-const resolvePlaywrightBaseUrl = (): string => {
-  const bridge = process.env.BRIDGE_BASE_ADDRESS?.trim();
-  if (bridge) {
-    return bridge;
+const ENV_RELAY_FILE = 'playwright/.env-relay.json';
+if (existsSync(ENV_RELAY_FILE)) {
+  const relay = JSON.parse(readFileSync(ENV_RELAY_FILE, 'utf8')) as Record<string, string>;
+  for (const [key, value] of Object.entries(relay)) {
+    if (value !== '') {
+      process.env[key] = value;
+    }
   }
-  const baseAddress = process.env.BASE_ADDRESS?.trim();
-  if (baseAddress) {
-    return baseAddress;
-  }
-  return 'http://localhost:9000';
-};
+}
 
 export default defineConfig({
   globalSetup: './playwright/global.setup.ts',
@@ -51,7 +56,8 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         storageState:
           process.env.CLUSTER_USERNAME && process.env.CLUSTER_PASSWORD ? authFile : undefined,
-        baseURL: resolvePlaywrightBaseUrl(),
+        baseURL:
+          process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS ?? 'http://localhost:9000',
         headless: true,
         viewport: { width: 1920, height: 1080 },
         screenshot: 'only-on-failure',
