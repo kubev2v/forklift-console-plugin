@@ -167,10 +167,13 @@ export class PlanDetailsPage {
 
   async isInspectVmsButtonVisible(): Promise<boolean> {
     try {
-      await expect(this.inspectVmsButton).toBeVisible({ timeout: 15000 });
+      await this.inspectVmsButton.waitFor({ state: 'visible', timeout: 15000 });
       return true;
-    } catch {
-      return false;
+    } catch (e) {
+      if (e instanceof Error && e.name === 'TimeoutError') {
+        return false;
+      }
+      throw e;
     }
   }
 
