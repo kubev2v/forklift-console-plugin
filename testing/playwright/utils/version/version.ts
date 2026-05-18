@@ -153,7 +153,7 @@ export const requireVersion = (
   testObj: SkippableTest,
   version: VersionTuple | readonly VersionTuple[],
 ): void => {
-  testObj.skip(shouldSkipForklift(version), buildForkliftSkipMessage(version));
+  testObj.skip(() => shouldSkipForklift(version), buildForkliftSkipMessage(version));
 };
 
 // ---------------------------------------------------------------------------
@@ -196,5 +196,5 @@ export const requireCNVVersion = (
   testObj: SkippableTest,
   version: VersionTuple | readonly VersionTuple[],
 ): void => {
-  testObj.skip(shouldSkipCNV(version), buildCNVSkipMessage(version));
+  testObj.skip(() => shouldSkipCNV(version), buildCNVSkipMessage(version));
 };
