@@ -53,21 +53,17 @@ export class ProviderDetailsPage {
     await this.inspectVmsButton.click();
   }
 
-  async clickInspectVmsFromActions(): Promise<void> {
-    await this.page.getByTestId('provider-actions-dropdown-button').click();
-    await this.inspectVmsMenuItem.click();
-  }
-
   get inspectVmsButton() {
     return this.page.getByTestId('provider-inspect-vms-button');
   }
 
-  get inspectVmsMenuItem() {
-    return this.page.getByTestId('provider-actions-inspect-menuitem');
-  }
-
   async isInspectVmsButtonVisible(): Promise<boolean> {
-    return await this.inspectVmsButton.isVisible();
+    try {
+      await expect(this.inspectVmsButton).toBeVisible({ timeout: 15000 });
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   async navigate(providerName: string, namespace: string): Promise<void> {

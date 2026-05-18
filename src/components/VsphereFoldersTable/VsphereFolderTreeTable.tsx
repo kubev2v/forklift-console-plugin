@@ -70,16 +70,14 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
 
   const setSelectedVmKeysControlled = useCallback(
     (ids: string[]) => {
-      const set = new Set(ids);
-      const selected = vmData?.filter((data) => set.has(data.vm.id));
-      onSelect?.(selected);
+      const idsSet = new Set(ids);
+      onSelect?.(vmData?.filter(({ vm }) => idsSet.has(vm.id)));
     },
     [vmData, onSelect],
   );
 
   const canSelect = initialSelectedIds !== undefined;
   const { canInspect, disabledReason } = useCanInspectProvider(provider);
-
   const inspectToolbarAction =
     !canSelect && provider ? (
       <ToolbarItem>
@@ -87,6 +85,7 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
           canInspect={canInspect}
           disabledReason={disabledReason}
           provider={provider}
+          testId="provider-inspect-vms-button"
         />
       </ToolbarItem>
     ) : undefined;

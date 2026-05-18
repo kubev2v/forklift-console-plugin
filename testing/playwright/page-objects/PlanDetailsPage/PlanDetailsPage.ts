@@ -166,7 +166,12 @@ export class PlanDetailsPage {
   }
 
   async isInspectVmsButtonVisible(): Promise<boolean> {
-    return await this.inspectVmsButton.isVisible();
+    try {
+      await expect(this.inspectVmsButton).toBeVisible({ timeout: 15000 });
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   async navigate(planName: string, namespace: string, tab?: string): Promise<void> {
