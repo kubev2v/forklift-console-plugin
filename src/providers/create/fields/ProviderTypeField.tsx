@@ -3,7 +3,8 @@ import { useController } from 'react-hook-form';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import Select from '@components/common/Select';
-import { SelectList, SelectOption } from '@patternfly/react-core';
+import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
+import { Flex, FlexItem, SelectList, SelectOption } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
 import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
@@ -67,7 +68,19 @@ const ProviderTypeField: FC = () => {
               icon={option.icon}
               data-testid={`provider-type-option-${option.value}`}
             >
-              {option.label}
+              {option.techPreview ? (
+                <Flex
+                  spaceItems={{ default: 'spaceItemsSm' }}
+                  alignItems={{ default: 'alignItemsCenter' }}
+                >
+                  <FlexItem>{option.label}</FlexItem>
+                  <FlexItem>
+                    <TechPreviewLabel />
+                  </FlexItem>
+                </Flex>
+              ) : (
+                option.label
+              )}
             </SelectOption>
           ))}
         </SelectList>

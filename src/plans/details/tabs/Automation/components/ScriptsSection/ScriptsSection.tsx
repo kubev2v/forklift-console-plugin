@@ -4,13 +4,14 @@ import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/ut
 
 import { DetailsItem } from '@components/DetailItems/DetailItem';
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
+import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
 import type { IoK8sApiCoreV1ConfigMap, V1beta1Plan } from '@forklift-ui/types';
 import {
   getGroupVersionKindForModel,
   ResourceLink,
   useOverlay,
 } from '@openshift-console/dynamic-plugin-sdk';
-import { Content, DescriptionList, Flex } from '@patternfly/react-core';
+import { Content, DescriptionList, Flex, FlexItem } from '@patternfly/react-core';
 import { ConfigMapModel } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
@@ -37,15 +38,22 @@ const ScriptsSection: FC<ScriptsSectionProps> = ({ configMap, plan, scripts }) =
 
   return (
     <Flex direction={{ default: 'column' }}>
-      <SectionHeadingWithEdit
-        editable={planEditable}
-        title={t('Customization scripts')}
-        onClick={() => {
-          launchOverlay(ScriptEdit, { configMap, plan, scripts });
-        }}
-        data-testid="scripts-section-edit-button"
-        headingLevel="h3"
-      />
+      <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsSm' }}>
+        <FlexItem>
+          <SectionHeadingWithEdit
+            editable={planEditable}
+            title={t('Customization scripts')}
+            onClick={() => {
+              launchOverlay(ScriptEdit, { configMap, plan, scripts });
+            }}
+            data-testid="scripts-section-edit-button"
+            headingLevel="h3"
+          />
+        </FlexItem>
+        <FlexItem>
+          <TechPreviewLabel />
+        </FlexItem>
+      </Flex>
       {hasScripts && configMap ? (
         <>
           <DescriptionList>
