@@ -39,8 +39,13 @@ export default defineConfig({
         headless: true,
         viewport: { width: 1920, height: 1080 },
         screenshot: 'only-on-failure',
-        video: 'retain-on-failure',
-        trace: 'retain-on-failure',
+        video: {
+          mode: 'retain-on-failure',
+          show: {
+            actions: { position: 'top-right' },
+          },
+        },
+        trace: 'retain-on-failure-and-retries',
         // Use data-testid to match actual rendered HTML
         testIdAttribute: 'data-testid',
         ignoreHTTPSErrors: true,
