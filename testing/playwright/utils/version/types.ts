@@ -1,5 +1,6 @@
 export type VersionTuple = [number, number, number];
 
 export type SkippableTest = {
-  skip: (condition: boolean | (() => boolean), description: string) => void;
+  beforeEach: (fn: () => void) => void;
+  skip: (condition: boolean, description: string) => void;
 };
