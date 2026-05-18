@@ -30,10 +30,7 @@ const ConcernsAndConditionsTable: FC<{ vmData: ProviderVmData | SpecVirtualMachi
   const concerns: Concern[] = (vm as VirtualMachineWithConcerns)?.concerns;
   const conditions = (vmData as SpecVirtualMachinePageData)?.conditions;
 
-  if (isEmpty(concerns) && isEmpty(conditions)) {
-    return <ConcernsAndConditionsTableEmptyState />;
-  }
-
+  const hasData = !isEmpty(concerns) || !isEmpty(conditions);
   const groupedConcerns = groupConcernsByCategory(concerns);
   const groupedConditions = groupConditionsByCategory(conditions);
 
@@ -42,29 +39,33 @@ const ConcernsAndConditionsTable: FC<{ vmData: ProviderVmData | SpecVirtualMachi
       <Title className="pf-v6-u-mt-md" headingLevel="h4">
         {t('Concerns')}
       </Title>
-      <PageSection hasBodyWrapper={false}>
-        <Table aria-label="Expandable table" variant={TableVariant.compact}>
-          <ConcernsAndConditionsTableHeader />
-          <Tbody>
-            {orderedConcernCategories.map((category) => {
-              return (
-                <Fragment key={`${category}-key`}>
-                  <ConcernsTableRows
-                    category={category}
-                    groupedConcerns={groupedConcerns}
-                    key={`${category}-key`}
-                  />
-                  <ConditionsTableRows
-                    category={category}
-                    groupedConditions={groupedConditions}
-                    key={`${category}-key`}
-                  />
-                </Fragment>
-              );
-            })}
-          </Tbody>
-        </Table>
-      </PageSection>
+      {hasData ? (
+        <PageSection hasBodyWrapper={false}>
+          <Table aria-label="Expandable table" variant={TableVariant.compact}>
+            <ConcernsAndConditionsTableHeader />
+            <Tbody>
+              {orderedConcernCategories.map((category) => {
+                return (
+                  <Fragment key={`${category}-key`}>
+                    <ConcernsTableRows
+                      category={category}
+                      groupedConcerns={groupedConcerns}
+                      key={`${category}-key`}
+                    />
+                    <ConditionsTableRows
+                      category={category}
+                      groupedConditions={groupedConditions}
+                      key={`${category}-key`}
+                    />
+                  </Fragment>
+                );
+              })}
+            </Tbody>
+          </Table>
+        </PageSection>
+      ) : (
+        <ConcernsAndConditionsTableEmptyState />
+      )}
     </>
   );
 };
