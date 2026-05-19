@@ -8,6 +8,8 @@ alwaysApply: false
 Invoke with: *"as forklift expert"*, *"as migration expert"*, *"domain review"*, *"migration review"*
 
 > **Canonical source:** For the list of CRDs and provider types, see `project-context.mdc`. This agent expands on that with implementation details, status handling, and common pitfalls.
+>
+> **Backend deep-dive:** Detailed Go backend knowledge is available in `.cursor/rules/backend/`. Use the routing table below to load the relevant file when answering backend questions.
 
 ## Your Role
 
@@ -219,7 +221,38 @@ Your approach:
 
 ---
 
-### 9. Kubernetes Fundamentals
+### 9. Conversions & Deep Inspection
+
+**V1beta1Conversion**
+- Represents a conversion or deep-inspection operation on a VM
+- Group: `forklift.konveyor.io`, Version: `v1beta1`, Kind: `Conversion`
+- Types defined locally in `src/utils/crds/conversion/` (pending upstream `@forklift-ui/types`)
+
+**Conversion Types**
+- `DeepInspection` - Pre-migration VM analysis (detects compatibility issues, OS info, filesystem details)
+- `Inspection` - Basic inspection
+- `InPlace` - In-place conversion
+- `Remote` - Remote conversion
+
+**Phases**: `Pending` → `Running` → `Succeeded` / `Failed` / `Canceled`
+
+**Deep Inspection Feature (vSphere only)**
+- Entry points: Provider Details header button, Plan Details header button, Plan VM list kebab action
+- Guard hooks: `useCanInspectProvider`, `useCanInspectPlan` — check provider type is vSphere and provider is Ready
+- Modal: `InspectVirtualMachinesModal` — select VMs, configure disk encryption, set XFS v4 compatibility
+- Results stored in `status.inspectionResult` with OS info, filesystems, mountpoints, and concerns
+- Status flow: `getInspectionStatus(phase, inspectionPassed)` maps phase + results to UI status labels
+
+**Key Patterns**
+- Backend returns `all_checks_passed` in snake_case — always use the `hasInspectionPassed` selector which handles both casings
+- Inspection concerns use the same `ConcernsTable` as inventory concerns but with different categories
+- Conversion CRs are label-filtered: `CONVERSION_LABELS.PLAN_NAME`, `CONVERSION_LABELS.VM_ID`, etc.
+- XFS v4 compatibility: plan-level setting with per-VM override (Inherit/Enable/Disable)
+- Concurrency limit: `CONCURRENCY_LIMIT = 10` parallel inspections
+
+---
+
+### 10. Kubernetes Fundamentals
 
 **Resource Model**
 - Group: `forklift.konveyor.io`, Version: `v1beta1`
@@ -245,7 +278,7 @@ Your approach:
 
 ---
 
-### 10. Console SDK Integration
+### 11. Console SDK Integration
 
 **useK8sWatchResource Hook**
 - Proper GVK configuration
@@ -261,7 +294,7 @@ Your approach:
 
 ---
 
-### 11. Common Patterns & Pitfalls
+### 12. Common Patterns & Pitfalls
 
 **Resource Fetching**
 - Always handle loading and error states
@@ -286,6 +319,39 @@ Your approach:
 - 403: Permission denied
 - 409: Conflict (resource modified)
 - 422: Validation error (invalid plan configuration)
+
+---
+
+## Backend Knowledge Routing Table
+
+When answering questions about backend behavior, read the relevant `.mdc` file from `.cursor/rules/backend/`:
+
+| Topic | Load file |
+|-------|-----------|
+| Architecture, entry points, deployment roles | `backend/architecture.mdc` |
+| CRD types, phase constants, conditions framework | `backend/api-types.mdc` |
+| Provider reconciliation, credentials, inventory lifecycle | `backend/providers/provider-controller.mdc` |
+| vSphere inventory, VDDK, ESXi, vCenter API | `backend/providers/vsphere.mdc` |
+| oVirt Engine API, storage domains | `backend/providers/ovirt.mdc` |
+| OpenStack Keystone/Nova/Glance/Neutron | `backend/providers/openstack.mdc` |
+| OVA file parsing, NFS, OVAProviderServer | `backend/providers/ova.mdc` |
+| Hyper-V SMB/PowerShell, HyperVProviderServer | `backend/providers/hyperv.mdc` |
+| EC2 AWS SDK, AMI, platform gating | `backend/providers/ec2.mdc` |
+| OpenShift target provider, namespaces, StorageClass | `backend/providers/ocp.mdc` |
+| Plan validation, conditions, lifecycle | `backend/plans/plan-controller.mdc` |
+| Provider adapters, Builder/Client interfaces | `backend/plans/plan-adapters.mdc` |
+| Migration phases, itineraries, disk transfer, KubeVirt | `backend/plans/migration-pipeline.mdc` |
+| VM scheduling, concurrency, MaxInFlight | `backend/plans/scheduler.mdc` |
+| NetworkMap validation, source/target mapping | `backend/mappings/network-map.mdc` |
+| StorageMap, offload plugins, vendor integrations | `backend/mappings/storage-map.mdc` |
+| Admission webhooks (validating + mutating) | `backend/infrastructure/webhooks.mdc` |
+| Inventory REST API endpoints, per-provider routes | `backend/infrastructure/rest-api.mdc` |
+| virt-v2v conversion, inspection, customization | `backend/infrastructure/virt-v2v.mdc` |
+| Condition framework, inventory containers, lib/ | `backend/infrastructure/shared-libraries.mdc` |
+| Prometheus metrics, monitoring | `backend/infrastructure/monitoring.mdc` |
+| ESXi host controller | `backend/infrastructure/host-controller.mdc` |
+| Pre/post migration hooks | `backend/infrastructure/hook-controller.mdc` |
+| Operator deployment, feature flags, images | `backend/operator/operator.mdc` |
 
 ---
 

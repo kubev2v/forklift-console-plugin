@@ -1,0 +1,181 @@
+---
+description: NetworkMap controller - validation, inventory-based checks, mapping structure
+alwaysApply: false
+---
+
+# NetworkMap Controller
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+Source: `pkg/controller/map/network/` in the [forklift](https://github.com/kubev2v/forklift) repo.
+
+---
+
+## Overview
+
+The NetworkMap controller reconciles `NetworkMap` CRs (`forklift.konveyor.io/v1beta1`). Each NetworkMap defines how source provider networks map to target OpenShift networks for VM migration.
+
+---
+
+## Mapping Structure
+
+```
+spec:
+  provider:
+    source:   { namespace, name }      # ref to source Provider CR
+    destination: { namespace, name }   # ref to destination Provider CR (must be OpenShift)
+  map:
+    - source:                          # ref.Ref — identifies source network
+        id: "<inventory-id>"           # match by ID
+        name: "<network-name>"         # OR match by name (path suffix)
+      destination:
+        type: "pod" | "multus" | "ignored"
+        namespace: "<ns>"              # required when type=multus
+        name: "<nad-name>"            # NAD name when type=multus
+```
+
+### Destination Types
+
+| Type | Meaning | Validation |
+|---|---|---|
+| `pod` | Kubernetes pod network (default CNI) | Skipped — always valid |
+| `multus` | Multus NetworkAttachmentDefinition (NAD) | Looked up via inventory; namespace required |
+| `ignored` | Network is excluded from mapping | Skipped — always valid |
+
+---
+
+## Reconciliation Flow
+
+```
+Reconcile()
+ ├─ Fetch NetworkMap CR (return if NotFound)
+ ├─ BeginStagingConditions()
+ ├─ validate(mp)
+ │   ├─ ProviderPair.Validate() — validate source + destination providers
+ │   │   └─ Short-circuit if any provider condition is set
+ │   ├─ validateSource(mp) — check source networks against inventory
+ │   └─ validateDestination(mp) — check destination networks against inventory
+ ├─ Set Ready condition (if no blocker conditions)
+ ├─ EndStagingConditions()
+ ├─ Record Kubernetes events
+ └─ Update status (ObservedGeneration = Generation)
+```
+
+---
+
+## Validation Detail
+
+### Provider Pair Validation (shared with StorageMap)
+
+Uses `validation.ProviderPair` from `pkg/controller/validation/provider.go`:
+
+1. **Source Provider**: Must exist, must have `Ready` condition
+2. **Destination Provider**: Must exist, must have `Ready` condition, must be type `OpenShift`
+
+Conditions set on failure:
+- `SourceProviderNotValid` (reason: `NotSet` | `NotFound`)
+- `SourceProviderNotReady`
+- `DestinationProviderNotValid` (reason: `NotSet` | `NotFound` | `TypeNotValid`)
+- `DestinationProviderNotReady`
+
+If any provider condition fires, source/destination validation is **skipped entirely**.
+
+### Source Network Validation (`validateSource`)
+
+For each entry in `spec.map`:
+1. If `source.ID` and `source.Name` are both empty → `SourceNetworkNotValid` (reason: `NotSet`, category: `Critical`)
+2. Look up via `inventory.Network(ref)` against the source provider's inventory API
+3. `NotFoundError` → collected into `notValid` list
+4. `RefNotUniqueError` → collected into `ambiguous` list
+5. Valid refs are added to `status.refs`
+
+Conditions:
+- `SourceNetworkNotValid` / `NotFound` / `Warn` — with `Items` listing invalid refs
+- `SourceNetworkNotValid` / `Ambiguous` / `Critical` — with `Items` listing ambiguous refs
+
+### Destination Network Validation (`validateDestination`)
+
+For each entry in `spec.map`:
+1. `type=pod` or `type=ignored` → **skip** (always valid)
+2. `type=multus` with empty `namespace` → `Ambiguous` (namespace is required)
+3. `type=multus` → look up NAD as `<namespace>/<name>` via destination inventory
+4. `NotFoundError` → collected into `notFound` list
+
+Conditions:
+- `DestinationNetworkNotValid` / `NotFound` / `Critical` — NAD not found in inventory
+- `DestinationNetworkNotValid` / `Ambiguous` / `Critical` — namespace required for Multus
+
+---
+
+## Conditions Summary
+
+| Condition | Category | Reason | Blocker? | Meaning |
+|---|---|---|---|---|
+| `Ready` | Required | — | No | Map is valid and usable |
+| `SourceProviderNotValid` | Critical | NotSet, NotFound | Yes | Source provider ref missing or not found |
+| `SourceProviderNotReady` | Critical | — | Yes | Source provider not reconciled |
+| `DestinationProviderNotValid` | Critical | NotSet, NotFound, TypeNotValid | Yes | Dest provider invalid or not OpenShift |
+| `DestinationProviderNotReady` | Critical | — | Yes | Dest provider not reconciled |
+| `SourceNetworkNotValid` | Critical/Warn | NotSet, NotFound, Ambiguous | Yes (Critical) | Source network ref issue |
+| `DestinationNetworkNotValid` | Critical | NotFound, Ambiguous | Yes | Dest NAD not found or missing namespace |
+
+---
+
+## Watch Triggers
+
+### 1. Primary Watch — NetworkMap CR
+
+- **Create**: Always reconcile; registers with `libref.Mapper`
+- **Update**: Only if `ObservedGeneration < Generation` (spec changed)
+- **Delete**: Always; cleans up `libref.Mapper`
+
+### 2. Provider Watch — Provider CR
+
+- **Create**: Reconcile only if provider is already reconciled (`ObservedGeneration == Generation`)
+- **Update**: If reconciled, ensures inventory watch is started via `ensureWatch()`; triggers reconcile
+- **Delete**: Cleans up watch via `WatchManager.Deleted()`
+
+### 3. Inventory Channel — Provider Inventory Changes
+
+A buffered channel (size 10) receives events from per-provider inventory watchers. When a source network changes in the provider inventory, the handler:
+
+1. Lists all NetworkMap CRs
+2. Filters to those referencing the changed provider
+3. Checks if any mapping entry references the changed network (by ID or name suffix)
+4. Enqueues a reconcile event for matching maps
+
+### Per-Provider Inventory Resources Watched
+
+| Provider | Inventory Resource | Match Logic |
+|---|---|---|
+| vSphere | `vsphere.Network` | `ref.ID == network.ID` or `HasSuffix(network.Path, ref.Name)` |
+| oVirt | `ovirt.Network` | Same as vSphere |
+| OpenStack | `openstack.Network` | Same as vSphere |
+| OVA | `ova.Network` | Same as vSphere |
+| Hyper-V | `hyperv.Network` | `ref.ID == network.ID` or `ref.Name == network.Name` |
+| OpenShift | `ocp.NetworkAttachmentDefinition` | Periodic polling (no inventory watch support) |
+| EC2 | (via `ec2handler.NewNetworkHandler`) | Separate EC2 provider package |
+
+**OCP special case**: OCP inventory doesn't support real-time watches. Instead, `EnsurePeriodicEvents()` fires at `DefaultEventInterval` and enqueues reconcile events for all NetworkMaps that reference the OCP provider.
+
+---
+
+## Key Code Locations
+
+| File | Purpose |
+|---|---|
+| `controller.go` | Controller setup, watches, `Reconcile()` method |
+| `validation.go` | Source/destination validation against inventory |
+| `predicate.go` | Event filtering for NetworkMap and Provider watches |
+| `handler/doc.go` | Handler factory — dispatches to provider-specific handler |
+| `handler/<provider>/handler.go` | Inventory watch setup and change detection per provider |
+
+---
+
+## Frontend Relevance
+
+- The UI must present source networks from inventory and let users pick destination type (`pod`/`multus`/`ignored`)
+- For `multus`, both namespace and NAD name are required
+- Conditions on the NetworkMap status drive the UI's validation indicators
+- `SourceNetworkNotValid` with reason `NotFound` uses `Warn` (not blocking) — the map can still be Ready if other mappings are valid
+- `SourceNetworkNotValid` with reason `Ambiguous` is `Critical` (blocking)

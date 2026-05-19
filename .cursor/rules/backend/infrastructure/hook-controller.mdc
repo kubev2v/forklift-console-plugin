@@ -1,0 +1,117 @@
+---
+description: Hook controller - validation, Job creation, AAP integration, playbook execution
+alwaysApply: false
+---
+
+# Hook Controller
+
+Source: `pkg/controller/hook/` (validation), `pkg/controller/plan/hook.go` (execution)
+
+## Two Concerns
+
+The Hook lifecycle is split across two controllers:
+
+1. **Hook controller** (`pkg/controller/hook/`) — validates the Hook CRD and sets Ready.
+2. **Plan controller** (`pkg/controller/plan/hook.go`) — executes hooks via `HookRunner` during migration phases `PreHook` and `PostHook`.
+
+## Hook CRD Validation
+
+### Reconciliation Flow
+
+```
+Fetch Hook CR
+  → BeginStagingConditions
+  → validate()
+    → If spec.aap is set:
+        → Reject if image or playbook also set (InvalidHookExecute)
+        → validateAAP() — url, jobTemplateId > 0, tokenSecret.name required
+    → If spec.aap is nil (local hook):
+        → HookExecutionConfigValid() — image is required, playbook optional
+        → validateImage() — Docker image reference regex (OCI-compliant)
+        → validatePlaybook() — must be valid base64 if provided
+  → Set Ready if no blockers
+  → EndStagingConditions, record events, update status
+```
+
+### Conditions
+
+| Condition | Category | When Set |
+|-----------|----------|----------|
+| `InvalidImage` | Critical | Image name fails OCI reference regex |
+| `InvalidPlaybook` | Critical | Playbook is not valid base64 |
+| `InvalidHookExecute` | Critical | Invalid combination: AAP + image/playbook, or missing image for local hook |
+| `Ready` | Required | No blocker conditions |
+
+### Image Validation
+
+The `regexp.go` file contains a full OCI/Docker image reference parser:
+- Validates `[domain/]name[:tag][@digest]` format.
+- Supports multi-level paths, port numbers, tags, and SHA digests.
+
+## Hook Execution (HookRunner)
+
+File: `pkg/controller/plan/hook.go`
+
+Invoked by the migration controller during `PhasePreHook` and `PhasePostHook`:
+
+```go
+runner := HookRunner{Context: r.Context}
+err = runner.Run(vm)
+```
+
+### Two Execution Modes
+
+#### 1. Local Hook (Kubernetes Job)
+
+When `spec.aap` is nil:
+
+1. **ConfigMap**: Created with `workload.yml` (VM inventory data), `playbook.yml` (decoded from base64), and `plan.yml` (plan spec as YAML).
+2. **Job**: Created in the plan's namespace with:
+   - Container image from `hook.Spec.Image`
+   - ConfigMap mounted at `/tmp/hook`
+   - If playbook provided: command is `/bin/entrypoint ansible-runner run /tmp/runner -p /tmp/hook/playbook.yml`
+   - `BackoffLimit: 1`
+   - Resource requests/limits from `Settings.Migration.HooksContainer{Requests,Limits}{Cpu,Memory}`
+   - `ActiveDeadlineSeconds` from `hook.Spec.Deadline` (if > 0)
+3. **Service account precedence**: Hook SA → Plan SA → Global controller SA → namespace default.
+4. **Owned by Plan**: Job has owner reference to the Plan CR.
+
+**Failure handling**:
+- Job condition "Failed" → step gets error message, marked completed.
+- `job.Status.Failed > Settings.Migration.HookRetry` → "Retry limit exceeded."
+- `job.Status.Succeeded > 0` → step progress set to 1, marked completed.
+
+#### 2. AAP Hook (Remote Job Template)
+
+When `spec.aap` is set:
+
+1. Reads AAP token from the referenced Secret (`tokenSecret`).
+2. Creates an `AAPClient` with the AAP URL and token.
+3. Launches the job template with extra vars: `vm_id`, `vm_name`, `plan_name`, `plan_namespace`, `migration_phase`, `vm_source_id`.
+4. Polls for completion with timeout:
+   - `spec.aap.timeout < 0`: unlimited
+   - `spec.aap.timeout > 0`: use that value (seconds)
+   - `spec.aap.timeout == 0`: use `spec.deadline`, else default **3600 seconds**
+
+**Failure handling**: any error → step gets error message, marked completed.
+
+### Resource Labels
+
+All hook-created resources (Jobs, ConfigMaps) are labeled:
+- `plan`: Plan UID
+- `migration`: Migration UID
+- `vmID`: VM ID
+- `step`: current phase (PreHook/PostHook)
+- `hook`: Hook UID
+- `resource`: "hook-config"
+
+## Predicate Logic
+
+`HookPredicate`: Reconciles on create/delete; on update only when `ObservedGeneration < Generation` (spec changed).
+
+## Frontend Relevance
+
+- Hooks are configured in Plan creation/edit — each VM can have pre/post hook references.
+- The Hook CRD conditions (`InvalidImage`, `InvalidPlaybook`, `InvalidHookExecute`) should be surfaced as validation errors.
+- Hook execution status is visible in the per-VM migration pipeline as `PreHook`/`PostHook` steps.
+- The default hook runner image is `quay.io/konveyor/hook-runner` (or `quay.io/kubev2v/hook-runner`).

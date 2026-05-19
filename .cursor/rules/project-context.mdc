@@ -54,6 +54,17 @@ Maps source storage to target storage. Referenced by Plans.
 - Supports offload plugins (e.g., vSphere XCOPY)
 - Integrates with storage vendors (IBM FlashSystem, NetApp ONTAP, Dell PowerFlex/PowerMax/PowerStore, HPE Primera/3PAR, Pure Storage, Hitachi, Infinidat)
 
+### Conversion
+Represents a conversion or deep-inspection operation on a VM.
+
+- **Conversion types**: `DeepInspection` (pre-migration analysis), `Inspection`, `InPlace`, `Remote`
+- **Phases**: Pending, Running, Succeeded, Failed, Canceled
+- **Stages**: CreatingPod, CreatingSnapshot, WaitingForSnapshot, PodRunning, FetchingResults, RemovingSnapshot, WaitingForSnapshotRemoval, Finished
+- Stores inspection results (`status.inspectionResult`) with OS info, filesystem details, and compatibility concerns
+- Types defined locally in `src/utils/crds/conversion/` (pending upstream `@forklift-ui/types` export)
+- Constants and selectors: `CONVERSION_PHASE`, `CONVERSION_TYPE`, `getInspectionStatus`, `hasInspectionPassed`
+- **Note**: Backend returns `all_checks_passed` in snake_case — use the `hasInspectionPassed` selector to handle both casings
+
 ### Hook
 Pre/post migration scripts executed as containers (`quay.io/konveyor/hook-runner`). Referenced in Plan VM specifications.
 
