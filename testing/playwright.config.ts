@@ -54,8 +54,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState:
-          process.env.CLUSTER_USERNAME && process.env.CLUSTER_PASSWORD ? authFile : undefined,
+        storageState: existsSync(authFile) ? authFile : undefined,
         baseURL:
           process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS ?? 'http://localhost:9000',
         headless: true,

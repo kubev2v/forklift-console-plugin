@@ -20,15 +20,13 @@ const RESOURCES_FILE = 'playwright/.resources.json';
 const ENV_RELAY_FILE = 'playwright/.env-relay.json';
 
 const ENV_KEYS_TO_RELAY = [
-  'FORKLIFT_VERSION',
-  'CNV_VERSION',
   'BASE_ADDRESS',
   'BRIDGE_BASE_ADDRESS',
-  'CLUSTER_USERNAME',
-  'CLUSTER_PASSWORD',
-  'VSPHERE_PROVIDER',
+  'CNV_VERSION',
+  'FORKLIFT_VERSION',
   'JENKINS',
   'LIGHTSPEED_INSTALLED',
+  'VSPHERE_PROVIDER',
 ] as const;
 
 /**
@@ -55,16 +53,22 @@ const detectForkliftVersion = async (page: Page): Promise<void> => {
  * Unlike Forklift, CNV version is optional — tests run when it's unknown.
  */
 const detectCnvVersion = async (page: Page): Promise<void> => {
-  const detectedVersion = await ResourceFetcher.fetchCnvVersion(page);
+  try {
+    const detectedVersion = await ResourceFetcher.fetchCnvVersion(page);
 
-  const existing = process.env[CNV_VERSION_ENV_VAR];
-  if (existing) {
-    console.error(`📌 Using pre-set CNV version: ${existing}`);
-  } else if (detectedVersion) {
-    process.env[CNV_VERSION_ENV_VAR] = detectedVersion;
-    console.error(`🔍 Auto-detected CNV version: ${detectedVersion}`);
-  } else {
-    console.error('⚠️ Could not auto-detect CNV version from cluster (CNV gating will be skipped)');
+    const existing = process.env[CNV_VERSION_ENV_VAR];
+    if (existing) {
+      console.error(`📌 Using pre-set CNV version: ${existing}`);
+    } else if (detectedVersion) {
+      process.env[CNV_VERSION_ENV_VAR] = detectedVersion;
+      console.error(`🔍 Auto-detected CNV version: ${detectedVersion}`);
+    } else {
+      console.error(
+        '⚠️ Could not auto-detect CNV version from cluster (CNV gating will be skipped)',
+      );
+    }
+  } catch (error) {
+    console.error('⚠️ CNV version detection failed (CNV gating will be skipped):', error);
   }
 };
 
