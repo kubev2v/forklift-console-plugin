@@ -639,6 +639,25 @@ import { useForm, FormProvider } from 'react-hook-form';
 const { control, handleSubmit } = useForm<FormValues>();
 ```
 
+**Validation with cross-field dependencies:** In `validate` closures, use `getValues()` instead of `useWatch` to read sibling field values -- `useWatch` captures stale React state inside validation functions. Use the `deps` option to trigger cross-field re-validation when related fields change:
+
+```typescript
+const { control, getValues } = useForm<FormValues>();
+
+<Controller
+  name="scriptName"
+  control={control}
+  rules={{
+    validate: (value) => {
+      const allNames = getValues('scripts').map((s) => s.name);
+      const duplicates = allNames.filter((n) => n === value);
+      return duplicates.length <= 1 || 'Duplicate script name';
+    },
+    deps: ['scripts'],
+  }}
+/>
+```
+
 ### Kubernetes Resources
 Use hooks from `@openshift-console/dynamic-plugin-sdk`:
 ```typescript
