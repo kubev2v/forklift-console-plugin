@@ -32,7 +32,11 @@ export class PlanDetailsPage {
 
   async clickActionsMenuAndStart(): Promise<void> {
     await this.page.getByTestId('plan-actions-dropdown-button').click();
-    await this.page.getByTestId('plan-actions-start-menuitem').click();
+    const startItem = this.page.getByTestId('plan-actions-start-menuitem');
+    // PF6 marks disabled menu items with pf-m-disabled (CSS class, not the disabled attribute).
+    // Wait for that class to be gone before clicking so we don't hit the 15s action timeout.
+    await expect(startItem).not.toHaveClass(/pf-m-disabled/, { timeout: 120000 });
+    await startItem.click();
     await this.page.getByTestId('modal-confirm-button').click();
   }
 

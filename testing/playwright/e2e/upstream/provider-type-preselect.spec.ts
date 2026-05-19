@@ -10,6 +10,7 @@ import { requireVersion } from '../../utils/version/version';
 // which requires a real Infrastructure resource that upstream mocks cannot provide.
 // EC2 pre-selection is covered by downstream tests instead.
 const PROVIDER_TYPE_LABELS: Record<string, string> = {
+  ec2: 'Amazon EC2',
   hyperv: 'Microsoft Hyper-V',
   openshift: 'OpenShift Virtualization',
   openstack: 'OpenStack',
