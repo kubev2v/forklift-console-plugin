@@ -10,7 +10,7 @@ const PlanActions: FC<PlanFieldProps> = ({ plan }) => (
     <FlexItem grow={{ default: 'grow' }} />
 
     <FlexItem align={{ default: 'alignRight' }}>
-      <PlanActionsDropdown isKebab plan={plan} />
+      <PlanActionsDropdown plan={plan} />
     </FlexItem>
   </Flex>
 );

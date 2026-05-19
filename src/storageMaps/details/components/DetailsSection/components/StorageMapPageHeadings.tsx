@@ -64,7 +64,12 @@ export const StorageMapPageHeadings: FC<{ name: string; namespace?: string }> = 
               <LearningExperienceButton />
             </FlexItem>
             <FlexItem>
-              <StorageMapActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />
+              <StorageMapActionsDropdown
+                data={{ obj, permissions }}
+                fieldId={''}
+                fields={[]}
+                isDetailsPage
+              />
             </FlexItem>
           </Flex>
         }

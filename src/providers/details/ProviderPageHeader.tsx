@@ -45,7 +45,7 @@ const ProviderPageHeader: FC<ProviderDetailsPageProps> = ({ name, namespace }) =
             <CreatePlanAction namespace={namespace} provider={provider} />
           </FlexItem>
           <FlexItem>
-            <ProviderActionsDropdown data={data} />
+            <ProviderActionsDropdown data={data} isDetailsPage />
           </FlexItem>
         </Flex>
       }

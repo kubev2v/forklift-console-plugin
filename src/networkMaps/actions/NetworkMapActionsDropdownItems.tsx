@@ -11,12 +11,12 @@ import type { NetworkMapData } from '../utils/types';
 
 type NetworkMapActionsDropdownItemsProps = {
   data: NetworkMapData;
-  isKebab?: boolean;
+  isDetailsPage?: boolean;
 };
 
 export const NetworkMapActionsDropdownItems = ({
   data,
-  isKebab,
+  isDetailsPage,
 }: NetworkMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
@@ -40,10 +40,10 @@ export const NetworkMapActionsDropdownItems = ({
       value={0}
       key="edit"
       onClick={() => {
-        navigate(isKebab ? networkMapURL : `${networkMapURL}/yaml`);
+        navigate(isDetailsPage ? `${networkMapURL}/yaml` : networkMapURL);
       }}
     >
-      {isKebab ? t('Edit') : t('Edit YAML')}
+      {isDetailsPage ? t('Edit YAML') : t('Edit')}
     </DropdownItem>,
 
     <DropdownItem

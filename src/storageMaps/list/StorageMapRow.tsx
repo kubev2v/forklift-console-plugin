@@ -17,7 +17,7 @@ import { ProviderLinkCell } from './components/ProviderLinkCell';
 import { StorageMapLinkCell } from './components/StorageMapLinkCell';
 
 const cellRenderers: Record<string, FC<CellProps>> = {
-  actions: (props) => <StorageMapActionsDropdown isKebab {...props} />,
+  actions: (props) => <StorageMapActionsDropdown {...props} />,
   destination: ProviderLinkCell,
   name: StorageMapLinkCell,
   namespace: NamespaceCell,

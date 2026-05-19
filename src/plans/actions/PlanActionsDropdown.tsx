@@ -10,11 +10,11 @@ import PlanActionsDropdownItems from './PlanActionsDropdownItems';
 import './PlanActionsDropdown.scss';
 
 type PlanActionsDropdownProps = {
-  isKebab?: boolean;
+  isDetailsPage?: boolean;
   plan: V1beta1Plan;
 };
 
-const PlanActionsDropdown: FC<PlanActionsDropdownProps> = ({ isKebab, plan }) => {
+const PlanActionsDropdown: FC<PlanActionsDropdownProps> = ({ isDetailsPage, plan }) => {
   const { t } = useForkliftTranslation();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +29,7 @@ const PlanActionsDropdown: FC<PlanActionsDropdownProps> = ({ isKebab, plan }) =>
 
   return (
     <Dropdown
-      className={isKebab ? undefined : 'forklift-dropdown'}
+      className={isDetailsPage ? 'forklift-dropdown' : undefined}
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       onSelect={onSelect}
@@ -38,10 +38,10 @@ const PlanActionsDropdown: FC<PlanActionsDropdownProps> = ({ isKebab, plan }) =>
           ref={toggleRef}
           onClick={onToggleClick}
           isExpanded={isOpen}
-          variant={isKebab ? 'plain' : 'default'}
-          data-testid={isKebab ? 'plan-kebab-actions-button' : 'plan-actions-dropdown-button'}
+          variant={isDetailsPage ? 'default' : 'plain'}
+          data-testid={isDetailsPage ? 'plan-actions-dropdown-button' : 'plan-kebab-actions-button'}
         >
-          {isKebab ? <EllipsisVIcon /> : t('Actions')}
+          {isDetailsPage ? t('Actions') : <EllipsisVIcon />}
         </MenuToggle>
       )}
       shouldFocusToggleOnSelect
@@ -50,7 +50,7 @@ const PlanActionsDropdown: FC<PlanActionsDropdownProps> = ({ isKebab, plan }) =>
         width: '200px',
       }}
     >
-      <PlanActionsDropdownItems isKebab={isKebab} plan={plan} />
+      <PlanActionsDropdownItems isDetailsPage={isDetailsPage} plan={plan} />
     </Dropdown>
   );
 };

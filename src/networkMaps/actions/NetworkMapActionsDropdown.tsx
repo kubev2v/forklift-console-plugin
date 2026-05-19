@@ -18,10 +18,10 @@ import { NetworkMapActionsDropdownItems } from './NetworkMapActionsDropdownItems
 import './NetworkMapActionsDropdown.style.css';
 
 type NetworkMapActionsDropdownProps = {
-  isKebab?: boolean;
+  isDetailsPage?: boolean;
 } & CellProps;
 
-const NetworkMapActionsDropdown: FC<NetworkMapActionsDropdownProps> = ({ data, isKebab }) => {
+const NetworkMapActionsDropdown: FC<NetworkMapActionsDropdownProps> = ({ data, isDetailsPage }) => {
   const { t } = useForkliftTranslation();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +39,7 @@ const NetworkMapActionsDropdown: FC<NetworkMapActionsDropdownProps> = ({ data, i
       <FlexItem grow={{ default: 'grow' }} />
       <FlexItem align={{ default: 'alignRight' }}>
         <Dropdown
-          className={isKebab ? undefined : 'forklift-dropdown pf-c-menu-toggle'}
+          className={isDetailsPage ? 'forklift-dropdown pf-c-menu-toggle' : undefined}
           isOpen={isOpen}
           onOpenChange={(value: boolean) => {
             setIsOpen(value);
@@ -50,9 +50,9 @@ const NetworkMapActionsDropdown: FC<NetworkMapActionsDropdownProps> = ({ data, i
               ref={toggleRef}
               onClick={onToggleClick}
               isExpanded={isOpen}
-              variant={isKebab ? 'plain' : 'default'}
+              variant={isDetailsPage ? 'default' : 'plain'}
             >
-              {isKebab ? <EllipsisVIcon /> : t('Actions')}
+              {isDetailsPage ? t('Actions') : <EllipsisVIcon />}
             </MenuToggle>
           )}
           shouldFocusToggleOnSelect
@@ -61,7 +61,7 @@ const NetworkMapActionsDropdown: FC<NetworkMapActionsDropdownProps> = ({ data, i
           }}
         >
           <DropdownList>
-            <NetworkMapActionsDropdownItems data={data} isKebab={isKebab} />
+            <NetworkMapActionsDropdownItems data={data} isDetailsPage={isDetailsPage} />
           </DropdownList>
         </Dropdown>
       </FlexItem>

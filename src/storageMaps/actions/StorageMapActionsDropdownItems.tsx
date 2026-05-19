@@ -10,12 +10,12 @@ import { getResourceUrl } from '@utils/getResourceUrl';
 
 type StorageMapActionsDropdownItemsProps = {
   data: StorageMapData;
-  isKebab?: boolean;
+  isDetailsPage?: boolean;
 };
 
 export const StorageMapActionsDropdownItems = ({
   data,
-  isKebab,
+  isDetailsPage,
 }: StorageMapActionsDropdownItemsProps) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
@@ -39,10 +39,10 @@ export const StorageMapActionsDropdownItems = ({
       value={0}
       key="edit"
       onClick={() => {
-        navigate(isKebab ? storageMapURL : `${storageMapURL}/yaml`);
+        navigate(isDetailsPage ? `${storageMapURL}/yaml` : storageMapURL);
       }}
     >
-      {isKebab ? t('Edit') : t('Edit YAML')}
+      {isDetailsPage ? t('Edit YAML') : t('Edit')}
     </DropdownItem>,
 
     <DropdownItem
