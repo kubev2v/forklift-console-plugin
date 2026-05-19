@@ -52,6 +52,27 @@ export class InspectVirtualMachinesModal {
     await selectAllCheckbox.check();
   }
 
+  /**
+   * Selects the first VM whose checkbox is not disabled and returns its name.
+   * Useful when the test does not know VM names upfront (e.g. dynamically created plans).
+   */
+  async selectFirstEligibleVm(): Promise<string> {
+    const rows = this.vmTable.getByRole('rowgroup').nth(1).getByRole('row');
+    const rowCount = await rows.count();
+
+    for (let i = 0; i < rowCount; i += 1) {
+      const row = rows.nth(i);
+      const checkbox = row.getByRole('checkbox');
+      if (!(await checkbox.isDisabled())) {
+        const vmName = (await row.getByRole('gridcell').nth(1).textContent())?.trim() ?? '';
+        await checkbox.check();
+        return vmName;
+      }
+    }
+
+    throw new Error('No eligible VMs found for inspection');
+  }
+
   async selectVmByName(vmName: string): Promise<void> {
     const row = this.vmTable.getByRole('row', { exact: false, name: vmName });
     await row.getByRole('checkbox').check();
