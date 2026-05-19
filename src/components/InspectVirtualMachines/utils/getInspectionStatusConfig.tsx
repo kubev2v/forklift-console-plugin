@@ -16,7 +16,7 @@ import type { useForkliftTranslation } from '@utils/i18n';
 type InspectionStatusConfig = {
   icon: ReactNode;
   label: string;
-  labelStatus?: 'custom' | 'danger' | 'info' | 'success' | 'warning';
+  labelStatus?: 'danger' | 'info' | 'success' | 'warning';
 };
 
 export const getInspectionStatusConfig = (
@@ -51,8 +51,8 @@ export const getInspectionStatusConfig = (
             <ExclamationCircleIcon />
           </Icon>
         ),
-        label: t('Failed'),
-        labelStatus: 'danger',
+        label: t('Inspection error'),
+        labelStatus: 'warning',
       };
     case INSPECTION_STATUS.RUNNING:
       return {

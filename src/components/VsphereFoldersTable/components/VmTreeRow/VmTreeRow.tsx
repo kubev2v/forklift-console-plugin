@@ -8,6 +8,7 @@ import VirtualMachinePowerStateCell from '@components/PowerState/VirtualMachineP
 import { nameColumn } from '@components/VsphereFoldersTable/utils/constants';
 import type { VmRow } from '@components/VsphereFoldersTable/utils/types';
 import type { VSphereVM } from '@forklift-ui/types';
+import { Split, SplitItem } from '@patternfly/react-core';
 import { Td, TreeRowWrapper } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';
 import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
@@ -30,7 +31,16 @@ const VmCells: Record<string, FC<CellProps>> = {
   inspectionStatus: ({ inspectionStatus }) => {
     if (inspectionStatus?.status === INSPECTION_STATUS.ISSUES_FOUND) {
       const concerns = getInspectionResult(inspectionStatus.conversion)?.concerns ?? [];
-      return <InspectionConcernBadges concerns={concerns} />;
+      return (
+        <Split hasGutter>
+          <SplitItem>
+            <InspectionStatusLabel status={INSPECTION_STATUS.ISSUES_FOUND} />
+          </SplitItem>
+          <SplitItem>
+            <InspectionConcernBadges concerns={concerns} />
+          </SplitItem>
+        </Split>
+      );
     }
     return (
       <InspectionStatusLabel status={inspectionStatus?.status ?? INSPECTION_STATUS.NOT_INSPECTED} />

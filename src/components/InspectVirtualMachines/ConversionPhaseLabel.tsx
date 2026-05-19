@@ -26,7 +26,7 @@ const getPhaseConfig = (
     case CONVERSION_PHASE.SUCCEEDED:
       return { icon: <CheckCircleIcon />, label: t('Succeeded'), labelStatus: 'success' };
     case CONVERSION_PHASE.FAILED:
-      return { icon: <ExclamationCircleIcon />, label: t('Failed'), labelStatus: 'danger' };
+      return { icon: <ExclamationCircleIcon />, label: t('Failed'), labelStatus: 'warning' };
     case CONVERSION_PHASE.CANCELED:
       return { icon: <BanIcon />, label: t('Canceled') };
     case CONVERSION_PHASE.RUNNING:

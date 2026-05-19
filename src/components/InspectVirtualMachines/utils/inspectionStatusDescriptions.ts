@@ -12,8 +12,8 @@ export const STATUS_DESCRIPTIONS: Record<InspectionStatus, StatusDescription> = 
     label: 'Canceled',
   },
   [INSPECTION_STATUS.FAILED]: {
-    description: 'The inspection itself failed.',
-    label: 'Failed',
+    description: 'The inspection encountered an error and could not complete.',
+    label: 'Inspection error',
   },
   [INSPECTION_STATUS.INSPECTION_PASSED]: {
     description: 'The inspection was completed and no issues were found.',

@@ -9,9 +9,9 @@ const ConcernsAndConditionsTableHeader: FC = () => {
   return (
     <Thead>
       <Tr>
-        <Th width={10}>{t('Label')}</Th>
-        <Th width={10}>{t('Category')}</Th>
-        <Th width={30}>{t('Assessment')}</Th>
+        <Th width={10}>{t('Issue')}</Th>
+        <Th width={10}>{t('Severity')}</Th>
+        <Th width={30}>{t('Description')}</Th>
       </Tr>
     </Thead>
   );
