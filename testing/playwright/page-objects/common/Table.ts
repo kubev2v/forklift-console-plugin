@@ -135,7 +135,12 @@ export class Table {
     const headers = await tableContainer
       .locator('thead th, thead [role="columnheader"]')
       .allTextContents();
-    const targetIndex = headers.findIndex((header) => header?.trim() === targetColumnName);
+    // PatternFly Th with an `info` prop appends screen-reader text (e.g. "More information on
+    // inspection status") directly inside the <th>, so allTextContents() returns the column label
+    // concatenated with that extra text. Use startsWith so we match the label regardless.
+    const targetIndex = headers.findIndex((header) =>
+      (header?.trim() ?? '').startsWith(targetColumnName),
+    );
     if (targetIndex === -1) {
       throw new Error(`Column "${targetColumnName}" not found`);
     }

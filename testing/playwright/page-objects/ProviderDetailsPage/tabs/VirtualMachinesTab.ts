@@ -16,7 +16,9 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
       .locator('thead th, thead [role="columnheader"]')
       .allTextContents();
 
-    const targetIndex = headers.findIndex((header) => header?.trim() === targetColumnName);
+    const targetIndex = headers.findIndex((header) =>
+      (header?.trim() ?? '').startsWith(targetColumnName),
+    );
     if (targetIndex === -1) {
       throw new Error(`Column "${targetColumnName}" not found`);
     }

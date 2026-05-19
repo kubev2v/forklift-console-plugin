@@ -72,7 +72,24 @@ export class VirtualMachinesTable {
   }
 
   /**
-   * Expand a folder in the virtual machines tree table.
+   * Expand the first folder in the vSphere tree table.
+   * vSphere VMs are always grouped inside folders which start collapsed,
+   * so VM rows are hidden until their parent folder is expanded.
+   */
+  async expandFirstFolder(): Promise<void> {
+    const firstFolderRow = this.page.getByTestId(/^folder-/).first();
+    if ((await firstFolderRow.count()) === 0) return;
+    const expandButton = firstFolderRow.locator('button').first();
+    if (await expandButton.isVisible().catch(() => false)) {
+      const isExpanded = await expandButton.getAttribute('aria-expanded');
+      if (isExpanded === 'false') {
+        await expandButton.click();
+      }
+    }
+  }
+
+  /**
+   * Expand a folder in the virtual machines tree table by name.
    * Uses data-testid selectors for reliability.
    *
    * @param folder - Name of the folder to expand
