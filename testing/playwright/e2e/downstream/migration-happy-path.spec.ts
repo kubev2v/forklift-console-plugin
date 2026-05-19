@@ -77,6 +77,9 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       name: targetProjectName,
       isPreexisting: false,
     },
+    // VMs are powered off (no IPs). Preserve static IPs requires powered-on VMs with
+    // VMware tools running — leaving it enabled causes a critical plan concern.
+    additionalPlanSettings: { preserveStaticIPs: false },
   });
 
   test(

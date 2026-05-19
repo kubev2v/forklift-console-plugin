@@ -35,6 +35,9 @@ export class AdditionalSettingsStep {
         await this.selectInstanceTypeByLabel(vmName, label);
       }
     }
+    if (additionalPlanSettings?.preserveStaticIPs === false) {
+      await this.page.getByRole('checkbox', { name: 'Preserve static IPs' }).uncheck();
+    }
   }
 
   instanceTypeSelectToggle(vmName: string): Locator {
