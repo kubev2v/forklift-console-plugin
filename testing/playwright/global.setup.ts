@@ -38,6 +38,10 @@ const detectForkliftVersion = async (page: Page): Promise<void> => {
 
   const existing = process.env[VERSION_ENV_VAR];
   if (existing) {
+    // Re-assign so Playwright includes it in the env diff sent to worker processes.
+    // Workers only receive vars that globalSetup *sets* — pre-existing vars are not
+    // automatically propagated (see https://github.com/microsoft/playwright/issues/21565).
+    process.env[VERSION_ENV_VAR] = existing;
     console.error(`📌 Using pre-set Forklift version: ${existing}`);
   } else if (detectedVersion) {
     process.env[VERSION_ENV_VAR] = detectedVersion;
@@ -58,6 +62,7 @@ const detectCnvVersion = async (page: Page): Promise<void> => {
 
     const existing = process.env[CNV_VERSION_ENV_VAR];
     if (existing) {
+      process.env[CNV_VERSION_ENV_VAR] = existing; // ensure propagation to workers (see above)
       console.error(`📌 Using pre-set CNV version: ${existing}`);
     } else if (detectedVersion) {
       process.env[CNV_VERSION_ENV_VAR] = detectedVersion;
