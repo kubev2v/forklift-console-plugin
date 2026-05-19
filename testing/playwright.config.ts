@@ -1,28 +1,8 @@
-import { existsSync, readFileSync } from 'fs';
+import { existsSync } from 'fs';
 
 import { defineConfig, devices } from '@playwright/test';
 
 const authFile = 'playwright/.auth/user.json';
-
-/**
- * Workers run in a different process context than the shell-launched main process
- * (e.g. IDE extension host in Cursor/VS Code) and do NOT automatically inherit
- * shell-sourced env vars. globalSetup writes a relay file with the correct values;
- * we apply them here so every process that evaluates this config — both the main
- * process and each worker — gets the right environment.
- *
- * The relay file is only present after globalSetup has run, so the first evaluation
- * (main process, before globalSetup) reads from process.env as normal.
- */
-const ENV_RELAY_FILE = 'playwright/.env-relay.json';
-if (existsSync(ENV_RELAY_FILE)) {
-  const relay = JSON.parse(readFileSync(ENV_RELAY_FILE, 'utf8')) as Record<string, string>;
-  for (const [key, value] of Object.entries(relay)) {
-    if (value !== '') {
-      process.env[key] = value;
-    }
-  }
-}
 
 export default defineConfig({
   globalSetup: './playwright/global.setup.ts',

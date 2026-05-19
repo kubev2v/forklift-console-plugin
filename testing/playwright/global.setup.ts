@@ -1,4 +1,4 @@
-import { existsSync, unlinkSync, writeFileSync } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 
 import { chromium, type FullConfig, type Page } from '@playwright/test';
 
@@ -10,37 +10,20 @@ import { CNV_VERSION_ENV_VAR, VERSION_ENV_VAR } from './utils/version/constants'
 const RESOURCES_FILE = 'playwright/.resources.json';
 
 /**
- * File used to relay env vars from the main (shell-launched) process to Playwright
- * worker processes. Workers run in a different env context (e.g. IDE extension host)
- * and do NOT automatically inherit shell-sourced variables. Playwright only propagates
- * env changes that globalSetup *newly sets*, so pre-existing shell vars are lost.
- * Writing them to a file lets workers pick them up when they evaluate playwright.config.ts
- * (which runs after globalSetup).
- */
-const ENV_RELAY_FILE = 'playwright/.env-relay.json';
-
-const ENV_KEYS_TO_RELAY = [
-  'BASE_ADDRESS',
-  'BRIDGE_BASE_ADDRESS',
-  'CNV_VERSION',
-  'FORKLIFT_VERSION',
-  'JENKINS',
-  'LIGHTSPEED_INSTALLED',
-  'VSPHERE_PROVIDER',
-] as const;
-
-/**
  * Auto-detect the Forklift/MTV operator version from the cluster CSV.
  * When FORKLIFT_VERSION is already set (manual override), the pre-set value wins.
+ *
+ * The explicit re-assignment (`process.env[VERSION_ENV_VAR] = existing`) is intentional:
+ * Playwright only propagates env vars that globalSetup *sets* to worker processes.
+ * Pre-existing vars (sourced from a .env file before launch) are not included in that
+ * diff automatically, so we re-assign to ensure the value reaches workers.
+ * See: https://github.com/microsoft/playwright/issues/21565
  */
 const detectForkliftVersion = async (page: Page): Promise<void> => {
   const detectedVersion = await ResourceFetcher.fetchMtvVersion(page);
 
   const existing = process.env[VERSION_ENV_VAR];
   if (existing) {
-    // Re-assign so Playwright includes it in the env diff sent to worker processes.
-    // Workers only receive vars that globalSetup *sets* — pre-existing vars are not
-    // automatically propagated (see https://github.com/microsoft/playwright/issues/21565).
     process.env[VERSION_ENV_VAR] = existing;
     console.error(`📌 Using pre-set Forklift version: ${existing}`);
   } else if (detectedVersion) {
@@ -82,9 +65,6 @@ const globalSetup = async (config: FullConfig) => {
 
   if (existsSync(RESOURCES_FILE)) {
     unlinkSync(RESOURCES_FILE);
-  }
-  if (existsSync(ENV_RELAY_FILE)) {
-    unlinkSync(ENV_RELAY_FILE);
   }
 
   const { baseURL, storageState } = config.projects[0].use;
@@ -141,12 +121,6 @@ const globalSetup = async (config: FullConfig) => {
       console.error('📌 No credentials and no FORKLIFT_VERSION set, defaulting to "latest"');
     }
   }
-  // Write env relay so worker processes can read the correct values.
-  // Workers evaluate playwright.config.ts after globalSetup completes, so they
-  // will find this file and apply these values to their own process.env.
-  const relay = Object.fromEntries(ENV_KEYS_TO_RELAY.map((key) => [key, process.env[key] ?? '']));
-  writeFileSync(ENV_RELAY_FILE, JSON.stringify(relay));
-  console.error('📝 Wrote env relay for workers:', JSON.stringify(relay));
 };
 
 export default globalSetup;
