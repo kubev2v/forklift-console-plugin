@@ -1,0 +1,316 @@
+---
+description: oVirt provider - Engine API inventory, data model, REST API, storage domains, networks
+alwaysApply: false
+---
+
+# oVirt Provider
+
+> Analyzed from commit: `412c71822` on `2026-05-04`
+
+## Authentication & Connection
+
+The collector authenticates against the oVirt Engine SSO endpoint:
+
+- **Token URL**: `{engine-url}/ovirt-engine/sso/oauth/token`
+- **Grant type**: `password` with scope `ovirt-app-api`
+- **Secret fields**: `user`, `password`, `cacert` (PEM CA certificate)
+- **InsecureSkipVerify**: controlled by `insecureSkipVerify` flag in the Secret
+- **API version header**: `Version: 4` (oVirt API v4)
+- **Token management**: Bearer token with automatic refresh on expiry
+- **Client timeout**: default 30 minutes, overridable via `spec.settings.ovirtClientTimeout`
+
+Source: `pkg/controller/provider/container/ovirt/client.go`
+
+---
+
+## Inventory Collector
+
+### Lifecycle Phases
+
+The collector runs a state machine loop:
+
+| Phase     | Action                                                              |
+|-----------|---------------------------------------------------------------------|
+| `Started` | Note the last oVirt event ID (GET `events?max=1`)                   |
+| `Load`    | Full inventory load — list every resource type from Engine API       |
+| `Loaded`  | First incremental refresh via Engine events                         |
+| `Parity`  | Start DB watches; mark `parity = true`                              |
+| `Refresh` | Poll Engine events every **10 s**, apply changesets to local DB     |
+
+On any error the collector retries after **5 s**.
+
+### oVirt Engine API Endpoints Queried
+
+Resources are loaded in this adapter order (important for FK resolution):
+
+| # | Adapter              | Engine API path            | `follow` params                                                      |
+|---|----------------------|----------------------------|----------------------------------------------------------------------|
+| 1 | DataCenterAdapter    | `datacenters`              | —                                                                    |
+| 2 | StorageDomainAdapter | `storagedomains`           | —                                                                    |
+| 3 | NICProfileAdapter    | `vnicprofiles`             | —                                                                    |
+| 4 | DiskProfileAdapter   | `diskprofiles`             | —                                                                    |
+| 5 | NetworkAdapter       | `networks`                 | `vnic_profiles`                                                      |
+| 6 | DiskAdapter          | `disks`                    | — (LUN disks re-fetched individually for logical unit details)       |
+| 7 | ClusterAdapter       | `clusters`                 | —                                                                    |
+| 8 | ServerCPUAdapter     | `options/ServerCPUList`    | —                                                                    |
+| 9 | HostAdapter          | `hosts`                    | `network_attachments`, `nics`                                        |
+|10 | VMAdapter            | `vms`                      | `disk_attachments`, `host_devices`, `snapshots`, `watchdogs`, `cdroms`, `nics` |
+
+Source: `pkg/controller/provider/container/ovirt/model.go`
+
+### Event-Driven Refresh
+
+After initial load, the collector polls oVirt Engine events (integer event codes). Key event codes:
+
+**DataCenter** (950/952/954), **Network** (942/1114/944), **StorageDomain** (956/958/960/981/964),
+**vNIC Profile** (1122/1124/1126), **DiskProfile** (10120/10124/10122),
+**Cluster** (809/811/813), **Host** (42/43/44/600/620/10453/13),
+**VM** (34/53/35/253/113/1130/172/1720/1152 + disk/NIC/snapshot/host-device/power events),
+**Disk** (2021/2014/2042 + VM-related events)
+
+Source: `pkg/controller/provider/container/ovirt/model.go` (event code constants)
+
+---
+
+## Data Model
+
+All models are in `pkg/controller/provider/model/ovirt/model.go`.
+
+### Base Fields (all resources)
+
+```
+ID          string    (primary key — oVirt UUID)
+Name        string    (indexed)
+Description string
+Revision    int64     (auto-incremented, indexed)
+```
+
+### VM Model — Key Fields
+
+| Field                        | Type               | Notes                                       |
+|------------------------------|--------------------|---------------------------------------------|
+| Cluster                      | string (FK)        | Cluster ID, cascading delete                 |
+| Host                         | string             | Current host ID (indexed)                    |
+| Status                       | string             | `up`, `down`, `suspended`, etc.              |
+| GuestName                    | string             | `distribution + " " + version`               |
+| CpuSockets / CpuCores / CpuThreads | int16       | CPU topology                                 |
+| CpuAffinity                  | []CpuPinning       | vCPU pinning set                             |
+| CpuPinningPolicy             | string             | `none`, `manual`, `resize_and_pin_numa`, `dedicated`, `isolate_threads` |
+| Memory                       | int64              | Bytes                                        |
+| BalloonedMemory              | bool               | Memory ballooning enabled                    |
+| BIOS                         | string             | BIOS type (e.g. `q35_sea_bios`)             |
+| Display                      | string             | Display type (e.g. `spice`, `vnc`)           |
+| IOThreads                    | int16              | I/O thread count                             |
+| HaEnabled                    | bool               | High availability                            |
+| UsbEnabled                   | bool               |                                              |
+| BootMenuEnabled              | bool               |                                              |
+| HasIllegalImages             | bool               | VM has disks in illegal state                |
+| LeaseStorageDomain           | string             | Storage domain for VM lease                  |
+| StorageErrorResumeBehaviour  | string             |                                              |
+| Stateless                    | string             |                                              |
+| SerialNumber                 | string             |                                              |
+| Timezone                     | string             |                                              |
+| OSType                       | string             | e.g. `rhel_8x64`                             |
+| CustomCpuModel               | string             |                                              |
+| Guest                        | Guest              | `{distribution, fullVersion}`                |
+| DiskAttachments              | []DiskAttachment   | See below                                    |
+| NICs                         | []NIC              | See below                                    |
+| HostDevices                  | []HostDevice       | Passthrough devices                          |
+| CDROMs                       | []CDROM            |                                              |
+| WatchDogs                    | []WatchDog         |                                              |
+| Properties                   | []Property         | Custom properties `{name, value}`            |
+| Snapshots                    | []Snapshot         | `{id, description, type, persistMemory}`     |
+| Concerns                     | []Concern          | Populated by policy validation               |
+| RevisionValidated            | int64              | Last validated revision                      |
+| PolicyVersion                | int                | OPA policy version                           |
+
+### DiskAttachment
+
+```go
+type DiskAttachment struct {
+    ID              string   // attachment ID
+    Interface       string   // "virtio", "virtio_scsi", "ide", "sata"
+    SCSIReservation bool
+    Disk            string   // Disk ID (FK to Disk)
+    Bootable        bool
+}
+```
+
+### NIC
+
+```go
+type NIC struct {
+    ID        string
+    Name      string
+    Interface string       // "virtio", "e1000", "rtl8139"
+    Plugged   bool
+    IpAddress []IpAddress  // {address, version}
+    Profile   string       // vNIC Profile ID (FK to NICProfile)
+    MAC       string
+}
+```
+
+### Disk
+
+| Field           | Type   | Notes                                           |
+|-----------------|--------|-------------------------------------------------|
+| Shared          | bool   |                                                 |
+| Profile         | string | DiskProfile ID                                  |
+| StorageDomain   | string | StorageDomain ID (FK)                           |
+| Status          | string | `ok`, `locked`, `illegal`                       |
+| ActualSize      | int64  | Bytes                                           |
+| ProvisionedSize | int64  | Bytes                                           |
+| Backup          | string |                                                 |
+| StorageType     | string | `image` or `lun`                                |
+| Lun             | Lun    | Only populated for `lun` type disks             |
+
+### StorageDomain
+
+| Field      | Type   | Notes                                                |
+|------------|--------|------------------------------------------------------|
+| DataCenter | string | DataCenter ID                                         |
+| Type       | string | `data`, `iso`, `export`                               |
+| Storage    | struct | `.Type` = `nfs`, `iscsi`, `fcp`, `glusterfs`, `posixfs`, `localfs` |
+| Available  | int64  | Bytes                                                 |
+| Used       | int64  | Bytes                                                 |
+
+### Network & NICProfile
+
+**Network**: `{DataCenter, VLan, Usages[]string, Profiles[]string}`
+- Usages: `"vm"`, `"display"`, `"migration"`, `"management"`, `"default_route"`
+
+**NICProfile** (vNIC Profile): `{Network, PortMirroring, NetworkFilter, QoS, Properties[], PassThrough}`
+- PassThrough mode maps to SR-IOV
+
+### Other Models
+
+- **Cluster**: `{DataCenter, HaReservation, KsmEnabled, BiosType, CPU{Architecture,Type}, Version{Major,Minor}}`
+- **Host**: `{Cluster, Status, ProductName, ProductVersion, InMaintenance, CpuSockets, CpuCores, NetworkAttachments[], NICs[]}`
+- **ServerCpu**: `{DataCenter, SystemOptionValue{Value, Version}}` — keyed by cluster compatibility version
+
+---
+
+## REST API Endpoints
+
+Base path: `/providers/ovirt/:provider`
+
+| Collection       | List                        | Get                           | Watch | Notes                              |
+|------------------|-----------------------------|-------------------------------|-------|------------------------------------|
+| providers        | `GET /providers/ovirt`      | `GET /providers/ovirt/:uid`   | No    | Includes resource counts           |
+| datacenters      | `GET .../datacenters`       | `GET .../datacenters/:id`     | Yes   |                                    |
+| clusters         | `GET .../clusters`          | `GET .../clusters/:id`        | Yes   |                                    |
+| hosts            | `GET .../hosts`             | `GET .../hosts/:id`           | Yes   |                                    |
+| networks         | `GET .../networks`          | `GET .../networks/:id`        | Yes   |                                    |
+| nicprofiles      | `GET .../nicprofiles`       | `GET .../nicprofiles/:id`     | Yes   | vNIC profiles                      |
+| diskprofiles     | `GET .../diskprofiles`      | `GET .../diskprofiles/:id`    | Yes   |                                    |
+| storagedomains   | `GET .../storagedomains`    | `GET .../storagedomains/:id`  | Yes   |                                    |
+| disks            | `GET .../disks`             | `GET .../disks/:id`           | Yes   |                                    |
+| vms              | `GET .../vms`               | `GET .../vms/:id`             | Yes   | Detail levels 0/1/2                |
+| servercpus       | `GET .../servercpus`        | `GET .../servercpus/:id`      | Yes   |                                    |
+| workloads        | —                           | `GET .../workloads/:vm-id`    | No    | Expanded VM with all refs resolved |
+| tree/cluster     | `GET .../tree/cluster`      | —                             | No    | Hierarchical DC→Cluster→Host/VM   |
+
+### Query Parameters
+
+- `?detail=0` — minimal (id, name, revision, selfLink); `?detail=1` — summary; omit / `?detail=all` — full
+- `?name=<path>` — filter by hierarchical path (e.g. `datacenter/cluster/vm-name`)
+- Watch via `X-Watch` header (upgrades to WebSocket)
+
+### VM Detail Levels
+
+| Level | JSON fields included                                                    |
+|-------|-------------------------------------------------------------------------|
+| 0     | `id`, `revision`, `path`, `name`, `description`, `selfLink`            |
+| 1     | + `cluster`, `status`, `host`, `revisionValidated`, `nics`, `diskAttachments`, `concerns` |
+| 2     | + all remaining fields (cpu, memory, bios, display, snapshots, etc.)    |
+
+### Workload Endpoint (Expanded VM)
+
+`GET .../workloads/:vm-id` returns a fully expanded VM with:
+- **DiskAttachments** → each disk resolved with its DiskProfile
+- **NICs** → each NIC resolved with its NICProfile
+- **Host** object (if VM is running)
+- **Cluster** object
+- **DataCenter** object
+- **ServerCpu** object (keyed by cluster version)
+
+This is the payload sent to the OPA policy agent for validation.
+
+Source: `pkg/controller/provider/web/ovirt/workload.go`
+
+---
+
+## VM Concerns (Validation)
+
+Concerns are populated by an OPA (Open Policy Agent) policy engine.
+
+### How It Works
+
+1. **VMEventHandler** watches for VM create/update events
+2. Unvalidated VMs (where `Revision != RevisionValidated`) are submitted to the policy agent
+3. The policy agent evaluates rules at `/v1/data/io/konveyor/forklift/ovirt/validate`
+4. The workload payload (expanded VM) is sent as input
+5. Returned concerns are stored on `VM.Concerns`
+6. `RevisionValidated` is set to current `Revision`
+
+### Cascade Revalidation
+
+Changes to related resources trigger revalidation of affected VMs:
+- **Cluster update** → all VMs in that cluster's hosts get `RevisionValidated = 0`
+- **Host update** → all VMs on that host get `RevisionValidated = 0`
+- **NICProfile update** → all VMs referencing that profile get `RevisionValidated = 0`
+- **DiskProfile update** → all VMs with disks referencing that profile get `RevisionValidated = 0`
+
+Source: `pkg/controller/provider/container/ovirt/watch.go`
+
+---
+
+## Provider Summary JSON
+
+`GET /providers/ovirt/:uid` (detail > 0) returns:
+
+```json
+{
+  "uid": "...",
+  "type": "ovirt",
+  "object": { /* full Provider CR */ },
+  "datacenterCount": 2,
+  "clusterCount": 4,
+  "hostCount": 8,
+  "vmCount": 150,
+  "networkCount": 6,
+  "storageDomainCount": 3
+}
+```
+
+---
+
+## Frontend-Relevant JSON Field Names
+
+These are the `json` tags the frontend reads from the inventory REST API:
+
+### VM (detail=2)
+`id`, `revision`, `path`, `name`, `description`, `selfLink`, `cluster`, `status`, `host`,
+`revisionValidated`, `policyVersion`, `guestName`, `cpuSockets`, `cpuCores`, `cpuThreads`,
+`cpuShares`, `cpuAffinity`, `cpuPinningPolicy`, `memory`, `balloonedMemory`, `ioThreads`,
+`bios`, `display`, `hasIllegalImages`, `numaNodeAffinity`, `leaseStorageDomain`,
+`storageErrorResumeBehaviour`, `haEnabled`, `usbEnabled`, `bootMenuEnabled`,
+`placementPolicyAffinity`, `timezone`, `stateless`, `serialNumber`,
+`hostDevices[]`, `cdroms[]`, `watchDogs[]`, `properties[]`, `snapshots[]`,
+`guest{distribution,fullVersion}`, `osType`, `customCpuModel`,
+`nics[]{id,name,interface,plugged,ipAddress[],profile,mac}`,
+`diskAttachments[]{id,interface,scsiReservation,disk,bootable}`,
+`concerns[]{category,label,assessment}`
+
+### Disk
+`id`, `name`, `shared`, `storageDomain`, `profile`, `provisionedSize`, `actualSize`,
+`storageType` (`image`|`lun`), `status`, `lunStorage`
+
+### StorageDomain
+`id`, `name`, `dataCenter`, `type`, `capacity`, `free`, `storage{type}`
+
+### Network
+`id`, `name`, `dataCenter`, `vlan`, `usages[]`, `nicProfiles[]`
+
+### NICProfile
+`id`, `name`, `network`, `networkFilter`, `portMirroring`, `qos`, `properties[]`, `passThrough`
