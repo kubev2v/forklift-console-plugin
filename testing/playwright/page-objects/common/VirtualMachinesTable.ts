@@ -78,8 +78,28 @@ export class VirtualMachinesTable {
    */
   async expandFirstFolder(): Promise<void> {
     const firstFolderRow = this.page.getByTestId(/^folder-/).first();
+    // Wait for the tree table to finish loading before checking for folders.
+    await firstFolderRow.waitFor({ state: 'visible', timeout: 15_000 }).catch(() => null);
     if ((await firstFolderRow.count()) === 0) return;
     const expandButton = firstFolderRow.locator('button').first();
+    if (await expandButton.isVisible().catch(() => false)) {
+      const isExpanded = await expandButton.getAttribute('aria-expanded');
+      if (isExpanded === 'false') {
+        await expandButton.click();
+      }
+    }
+  }
+
+  /**
+   * Expand the first VM row in the vSphere tree table to reveal the
+   * Concerns/Inspections inline section. Call after expandFirstFolder()
+   * since VM rows are nested inside folder rows.
+   */
+  async expandFirstVMRow(): Promise<void> {
+    const firstVmRow = this.page.getByTestId(/^vm-/).first();
+    await firstVmRow.waitFor({ state: 'visible', timeout: 15_000 }).catch(() => null);
+    if ((await firstVmRow.count()) === 0) return;
+    const expandButton = firstVmRow.locator('button').first();
     if (await expandButton.isVisible().catch(() => false)) {
       const isExpanded = await expandButton.getAttribute('aria-expanded');
       if (isExpanded === 'false') {

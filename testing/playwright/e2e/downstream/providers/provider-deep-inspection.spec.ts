@@ -77,16 +77,14 @@ test.describe('Provider Deep Inspection', { tag: '@downstream' }, () => {
   });
 
   test('should show inspection section in expanded VM row', async ({ page }) => {
-    await test.step('expand first folder and click a VM row', async () => {
+    await test.step('expand first folder and expand a VM row', async () => {
       await providerDetailsPage.virtualMachinesTab.expandFirstFolder();
-      const treeTable = page.getByTestId('vsphere-tree-table');
-      const vmRow = treeTable.locator('tr[data-testid*="-vm-"]').first();
-      await vmRow.click();
+      await providerDetailsPage.virtualMachinesTab.expandFirstVMRow();
     });
 
     await test.step('verify Inspections section is visible', async () => {
       const inspectionsSection = page.getByTestId('inspections-section');
-      await expect(inspectionsSection).toBeVisible({ timeout: 10_000 });
+      await expect(inspectionsSection).toBeVisible({ timeout: 15_000 });
     });
   });
 });

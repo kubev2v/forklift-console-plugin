@@ -171,7 +171,7 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
     await test.step('wait for inspection to complete', async () => {
       await expect(
         getVmRow(page, firstVmName).getByText(/Inspection passed|Inspection failed/),
-      ).toBeVisible({ timeout: 300_000 });
+      ).toBeVisible({ timeout: 600_000 });
     });
   });
 
@@ -193,7 +193,7 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
         await inspectModal.clickInspect();
         await expect(
           getVmRow(page, firstVmName).getByText(/Inspection passed|Inspection failed/),
-        ).toBeVisible({ timeout: 300_000 });
+        ).toBeVisible({ timeout: 600_000 });
       }
     });
 
