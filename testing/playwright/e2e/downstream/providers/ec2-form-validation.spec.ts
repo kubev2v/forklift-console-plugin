@@ -2,11 +2,13 @@ import { expect, test } from '@playwright/test';
 
 import { CreateProviderPage } from '../../../page-objects/CreateProviderPage';
 import { ProviderType } from '../../../types/enums';
+import { requireAwsPlatform } from '../../../utils/aws/aws';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe('EC2 Provider Form Validation', () => {
   requireVersion(test, V2_12_0);
+  requireAwsPlatform(test);
 
   test(
     'should display all EC2 form fields and toggle conditional sections',
