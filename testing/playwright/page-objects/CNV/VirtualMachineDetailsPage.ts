@@ -53,15 +53,6 @@ export class VirtualMachineDetailsPage {
   async waitForPageLoad(vmName?: string): Promise<void> {
     await expect(this.page).toHaveURL(CNV_VM_URL_PATTERN, { timeout: PAGE_LOAD_TIMEOUT });
     await disableGuidedTour(this.page);
-    // The CNV "Welcome to OpenShift Virtualization" modal blocks the page on first visit.
-    const welcomeDialog = this.page.getByRole('dialog', { name: 'Welcome modal' });
-    try {
-      await welcomeDialog.waitFor({ state: 'visible', timeout: 3000 });
-      await welcomeDialog.getByRole('button', { name: 'Close' }).click();
-      await welcomeDialog.waitFor({ state: 'hidden' });
-    } catch {
-      // Dialog not present — safe to ignore
-    }
     await expect(this.overviewTab).toBeVisible({ timeout: PAGE_LOAD_TIMEOUT });
     if (vmName) {
       await expect(this.main.getByText(vmName, { exact: true }).first()).toBeVisible({
