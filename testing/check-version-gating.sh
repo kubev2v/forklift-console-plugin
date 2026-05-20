@@ -29,7 +29,11 @@ cleanup() {
   if [[ "$CREATED_PROVIDERS" == true ]]; then
     rm -f "$PROVIDERS_FILE"
   fi
-
+  # Remove the relay written by globalSetup during this dry-run.
+  # The dry-run uses FORKLIFT_VERSION=0.0.0 which must not bleed into
+  # subsequent test runs (e.g. the upstream test step) where that value
+  # would cause page objects to choose old, removed testId selectors.
+  rm -f "playwright/.env-relay.json"
   return 0
 }
 trap cleanup EXIT
