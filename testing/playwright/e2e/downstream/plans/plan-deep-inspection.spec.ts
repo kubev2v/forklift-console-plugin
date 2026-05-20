@@ -52,6 +52,7 @@ const getVmRow = (page: Page, vmName: string): Locator => {
 };
 
 test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
+  test.describe.configure({ mode: 'serial' });
   requireVersion(test, V2_12_0);
 
   test('should show Inspect VMs button for vSphere plans', async ({

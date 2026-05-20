@@ -58,8 +58,7 @@ test.describe('Provider Deep Inspection', { tag: '@downstream' }, () => {
     });
 
     await test.step('select a VM from inventory', async () => {
-      const firstVmRow = inspectModal.vmTable.locator('tbody tr').first();
-      await firstVmRow.locator('input[type="checkbox"]').check();
+      await inspectModal.selectFirstEligibleVm();
     });
 
     await test.step('submit inspection', async () => {
