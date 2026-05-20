@@ -61,8 +61,11 @@ export class ProviderDetailsPage {
     try {
       await this.inspectVmsButton.waitFor({ state: 'visible', timeout: 15000 });
       return true;
-    } catch {
-      return false;
+    } catch (error) {
+      if (error instanceof Error && error.name === 'TimeoutError') {
+        return false;
+      }
+      throw error;
     }
   }
 
