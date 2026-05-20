@@ -153,14 +153,7 @@ export const requireVersion = (
   testObj: SkippableTest,
   version: VersionTuple | readonly VersionTuple[],
 ): void => {
-  try {
-    testObj.beforeEach(() => {
-      testObj.skip(shouldSkipForklift(version), buildForkliftSkipMessage(version));
-    });
-  } catch {
-    // Called inside a test body — beforeEach is not allowed there; skip directly.
-    testObj.skip(shouldSkipForklift(version), buildForkliftSkipMessage(version));
-  }
+  testObj.skip(shouldSkipForklift(version), buildForkliftSkipMessage(version));
 };
 
 // ---------------------------------------------------------------------------
@@ -203,12 +196,5 @@ export const requireCNVVersion = (
   testObj: SkippableTest,
   version: VersionTuple | readonly VersionTuple[],
 ): void => {
-  try {
-    testObj.beforeEach(() => {
-      testObj.skip(shouldSkipCNV(version), buildCNVSkipMessage(version));
-    });
-  } catch {
-    // Called inside a test body — beforeEach is not allowed there; skip directly.
-    testObj.skip(shouldSkipCNV(version), buildCNVSkipMessage(version));
-  }
+  testObj.skip(shouldSkipCNV(version), buildCNVSkipMessage(version));
 };

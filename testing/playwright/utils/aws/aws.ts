@@ -26,7 +26,5 @@ const isAwsPlatform = (): boolean => {
 };
 
 export const requireAwsPlatform = (testObj: SkippableTest): void => {
-  testObj.beforeEach(() => {
-    testObj.skip(!isAwsPlatform(), SKIP_MESSAGE);
-  });
+  testObj.skip(!isAwsPlatform(), SKIP_MESSAGE);
 };

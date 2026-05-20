@@ -4,8 +4,6 @@ import { defineConfig, devices } from '@playwright/test';
 
 const authFile = 'playwright/.auth/user.json';
 
-// Apply the relay written by globalSetup so worker processes have the same
-// env vars as the main process. See global.setup.ts for the full explanation.
 const ENV_RELAY_FILE = 'playwright/.env-relay.json';
 if (existsSync(ENV_RELAY_FILE)) {
   const relay = JSON.parse(readFileSync(ENV_RELAY_FILE, 'utf8')) as Record<string, string>;

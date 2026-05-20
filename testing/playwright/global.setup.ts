@@ -10,18 +10,12 @@ import { CNV_VERSION_ENV_VAR, VERSION_ENV_VAR } from './utils/version/constants'
 const RESOURCES_FILE = 'playwright/.resources.json';
 
 /**
- * Playwright propagates env vars to workers only when globalSetup *newly sets* them
- * (value-based diff: process.env before vs after). Pre-existing vars from a sourced
- * .env file are NOT in that diff and disappear in workers.
- *
- * Workaround (recommended by the Playwright team in github.com/microsoft/playwright/issues/21565):
- * write the values we need to a file at the end of globalSetup. Workers evaluate
- * playwright.config.ts AFTER globalSetup completes and read the file there.
- *
- * CLUSTER_PASSWORD is intentionally excluded — storageState now uses existsSync(authFile)
- * so credentials never need to be on disk.
+ * Playwright workers do not inherit env vars that were already set before Playwright
+ * started — only vars that changed during globalSetup are diffed and forwarded.
+ * Write a relay file here so playwright.config.ts (re-evaluated in each worker) can
+ * restore them. See github.com/microsoft/playwright/issues/21565.
  */
-export const ENV_RELAY_FILE = 'playwright/.env-relay.json';
+const ENV_RELAY_FILE = 'playwright/.env-relay.json';
 
 const ENV_KEYS_TO_RELAY = [
   'BASE_ADDRESS',
@@ -138,8 +132,6 @@ const globalSetup = async (config: FullConfig) => {
     }
   }
 
-  // Write the relay so workers can read the correct env values from playwright.config.ts.
-  // This runs after all detection above, so the values are final.
   const relay = Object.fromEntries(ENV_KEYS_TO_RELAY.map((key) => [key, process.env[key] ?? '']));
   writeFileSync(ENV_RELAY_FILE, JSON.stringify(relay));
   console.error('📝 Env relay written for workers:', JSON.stringify(relay));
