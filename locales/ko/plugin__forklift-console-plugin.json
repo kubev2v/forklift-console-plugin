@@ -1488,6 +1488,7 @@
   "Username is required": "사용자 이름은 필수입니다",
   "Username is required. The username usually includes @ character, for example: name@internal": "사용자 이름은 필수 입력 사항입니다. 사용자 이름에는 일반적으로 '@' 문자가 포함됩니다. 예: name@internal",
   "Uses an SMB share to access VM disks. Requires an SMB share URL and optionally separate SMB credentials.": "SMB 공유를 사용하여 VM 디스크에 액세스합니다. SMB 공유 URL과 선택적으로 별도의 SMB 자격 증명이 필요합니다.",
+  "Validating": "Validating",
   "Validation Failed": "검증 실패",
   "Value": "값",
   "Values": "값",

@@ -97,4 +97,9 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
       {t('Unknown')}
     </Label>
   ),
+  [PlanStatuses.Validating]: (
+    <Label status="info" isCompact variant="filled" data-testid="plan-status-label">
+      {t('Validating')}
+    </Label>
+  ),
 };
