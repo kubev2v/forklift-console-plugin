@@ -206,6 +206,10 @@ export const getPlanStatus = (plan: V1beta1Plan): PlanStatuses => {
     return PlanStatuses.Ready;
   }
 
+  if (conditions.includes('ValidatingVDDK') || conditions.includes('VDDKInitImageNotReady')) {
+    return PlanStatuses.Validating;
+  }
+
   return PlanStatuses.Unknown;
 };
 
