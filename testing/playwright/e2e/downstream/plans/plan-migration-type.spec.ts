@@ -63,8 +63,10 @@ test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
     resourceManager,
     testProvider: _testProvider,
   }) => {
-    // mtv-func-rhel9 is powered-off; with preserveStaticIPs defaulting to true in the wizard
-    // the plan would enter CannotStart (missing IP data), disabling the Duplicate action.
+    // mtv-func-rhel9 is powered-off and has no IPs — preserveStaticIPs must be false
+    // to avoid the VMMissingGuestIPs critical condition that would put the plan in CannotStart.
+    // The VM must also have no pre-existing snapshots on vSphere; snapshots are incompatible
+    // with warm migration (VMHasSnapshots → CannotStart → Duplicate disabled).
     const originalPlan = await createCustomPlan({
       migrationType: MigrationType.WARM,
       additionalPlanSettings: { preserveStaticIPs: false },
