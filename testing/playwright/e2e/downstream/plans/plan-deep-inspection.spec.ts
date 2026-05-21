@@ -1,11 +1,26 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
+import { createPlan } from '../../../fixtures/helpers/resourceCreationHelpers';
+import { sharedProviderFixtures } from '../../../fixtures/resourceFixtures';
 import { InspectVirtualMachinesModal } from '../../../page-objects/InspectVirtualMachinesModal';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import type { PlanTestData } from '../../../types/test-data';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
+
+// Deep inspection creates vSphere snapshots during the inspection process. A leftover
+// snapshot on mtv-func-rhel9 triggers VMHasSnapshots (Critical) on any subsequent warm
+// plan, keeping it in CannotStart. Using mtv-func-win2019 here keeps the two VMs isolated.
+const test = sharedProviderFixtures.extend<{ testPlan: Awaited<ReturnType<typeof createPlan>> }>({
+  testPlan: async ({ page, resourceManager, testProvider }, use) => {
+    if (!testProvider) throw new Error('testPlan fixture requires testProvider');
+    const plan = await createPlan(page, resourceManager, {
+      sourceProvider: testProvider,
+      customPlanData: { virtualMachines: [{ folder: 'vm', sourceName: 'mtv-func-win2019' }] },
+    });
+    await use(plan);
+  },
+});
 
 type TestPlan = { metadata: { name: string; namespace: string }; testData: PlanTestData };
 
