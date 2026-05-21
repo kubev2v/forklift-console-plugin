@@ -17,7 +17,10 @@ import { StorageMapActionsDropdownItems } from './StorageMapActionsDropdownItems
 
 import './StorageMapActionsDropdown.style.css';
 
-const StorageMapActionsKebabDropdown: FC<StorageMapActionsDropdownProps> = ({ data, isKebab }) => {
+const StorageMapActionsKebabDropdown: FC<StorageMapActionsDropdownProps> = ({
+  data,
+  isDetailsPage,
+}) => {
   const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,7 +34,7 @@ const StorageMapActionsKebabDropdown: FC<StorageMapActionsDropdownProps> = ({ da
 
   return (
     <Dropdown
-      className={isKebab ? undefined : 'forklift-dropdown pf-c-menu-toggle'}
+      className={isDetailsPage ? 'forklift-dropdown pf-c-menu-toggle' : undefined}
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       onSelect={onSelect}
@@ -40,9 +43,9 @@ const StorageMapActionsKebabDropdown: FC<StorageMapActionsDropdownProps> = ({ da
           ref={toggleRef}
           onClick={onToggleClick}
           isExpanded={isOpen}
-          variant={isKebab ? 'plain' : 'default'}
+          variant={isDetailsPage ? 'default' : 'plain'}
         >
-          {isKebab ? <EllipsisVIcon /> : t('Actions')}
+          {isDetailsPage ? t('Actions') : <EllipsisVIcon />}
         </MenuToggle>
       )}
       shouldFocusToggleOnSelect
@@ -51,7 +54,7 @@ const StorageMapActionsKebabDropdown: FC<StorageMapActionsDropdownProps> = ({ da
       }}
     >
       <DropdownList>
-        <StorageMapActionsDropdownItems data={data} />
+        <StorageMapActionsDropdownItems data={data} isDetailsPage={isDetailsPage} />
       </DropdownList>
     </Dropdown>
   );
@@ -67,5 +70,5 @@ export const StorageMapActionsDropdown: FC<StorageMapActionsDropdownProps> = (pr
 );
 
 type StorageMapActionsDropdownProps = {
-  isKebab?: boolean;
+  isDetailsPage?: boolean;
 } & CellProps;

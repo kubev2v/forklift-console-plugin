@@ -17,7 +17,7 @@ import { PlanCell } from './components/PlanCell';
 import { ProviderLinkCell } from './components/ProviderLinkCell';
 
 const cellRenderers: Record<string, FC<CellProps>> = {
-  actions: (props) => <NetworkMapActionsDropdown isKebab {...props} />,
+  actions: (props) => <NetworkMapActionsDropdown {...props} />,
   destination: ProviderLinkCell,
   name: NetworkMapLinkCell,
   namespace: NamespaceCell,

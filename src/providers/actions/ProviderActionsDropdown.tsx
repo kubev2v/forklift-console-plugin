@@ -12,16 +12,10 @@ import './ProviderActionsDropdown.style.scss';
 
 type ProviderActionsDropdownProps = {
   data: ProviderData;
-  isKebab?: boolean;
+  isDetailsPage?: boolean;
 };
 
-/**
- * ProviderActionsKebabDropdown_ is a helper component that displays a kebab dropdown menu.
- * @param {CellProps} props - The properties passed to this component.
- * @param {ProviderWithInventory} props.data - The data to be used in ProviderActionsDropdownItems.
- * @returns {Element} The rendered dropdown menu component.
- */
-const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = ({ data, isKebab }) => {
+const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = ({ data, isDetailsPage }) => {
   const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -35,7 +29,7 @@ const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = ({ data, isKeb
 
   return (
     <Dropdown
-      className={classNames({ 'forklift-dropdown': !isKebab })}
+      className={classNames({ 'forklift-dropdown': isDetailsPage })}
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       onSelect={onSelect}
@@ -44,9 +38,9 @@ const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = ({ data, isKeb
           ref={toggleRef}
           onClick={onToggleClick}
           isExpanded={isOpen}
-          variant={isKebab ? 'plain' : 'default'}
+          variant={isDetailsPage ? 'default' : 'plain'}
         >
-          {isKebab ? <EllipsisVIcon /> : t('Actions')}
+          {isDetailsPage ? t('Actions') : <EllipsisVIcon />}
         </MenuToggle>
       )}
       shouldFocusToggleOnSelect
@@ -55,7 +49,7 @@ const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = ({ data, isKeb
         width: '200px',
       }}
     >
-      <ProviderActionsDropdownItems data={data} />
+      <ProviderActionsDropdownItems data={data} isDetailsPage={isDetailsPage} />
     </Dropdown>
   );
 };

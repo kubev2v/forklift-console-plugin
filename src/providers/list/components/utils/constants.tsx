@@ -24,7 +24,7 @@ export enum ProvidersInventoryFields {
 const nullRenderer = () => null;
 
 export const ProviderDataCellRenderers: Record<ProvidersResourceFieldId, FC<CellProps>> = {
-  actions: (props) => <ProviderActionsDropdown isKebab {...props} />,
+  actions: (props) => <ProviderActionsDropdown {...props} />,
   clusterCount: (props) => <InventoryCell icon={<></>} {...props} />,
   datacenterCount: nullRenderer,
   hostCount: (props) => <InventoryCell icon={<OutlinedHddIcon />} {...props} />,
