@@ -39,7 +39,7 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
       });
 
       await customPlanTest.step('3. Verify concern badges (critical, warning, info)', async () => {
-        await planDetailsPage.virtualMachinesTab.concerns.verifyConcernBadgeExists('critical', 0);
+        await planDetailsPage.virtualMachinesTab.concerns.verifyConcernBadgeExists('critical');
         await planDetailsPage.virtualMachinesTab.concerns.verifyConcernBadgeExists('warning');
         await planDetailsPage.virtualMachinesTab.concerns.verifyConcernBadgeExists('information');
 

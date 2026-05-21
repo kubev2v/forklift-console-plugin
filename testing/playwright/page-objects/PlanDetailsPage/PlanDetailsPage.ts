@@ -75,7 +75,10 @@ export class PlanDetailsPage {
 
   async duplicatePlan(newPlanName: string, namespace: string): Promise<void> {
     await this.page.getByTestId('plan-actions-dropdown-button').click();
-    await this.page.getByRole('menuitem', { name: 'Duplicate' }).click();
+    const duplicateItem = this.page.getByRole('menuitem', { name: 'Duplicate' });
+    // Plan actions are disabled while the plan is reconciling; wait for enabled before clicking.
+    await expect(duplicateItem).toBeEnabled({ timeout: K8S_RECONCILE_TIMEOUT });
+    await duplicateItem.click();
     const duplicateModal = this.page.getByRole('dialog', { name: 'Duplicate migration plan' });
     await expect(duplicateModal).toBeVisible();
     const nameInput = duplicateModal.locator('#name');
