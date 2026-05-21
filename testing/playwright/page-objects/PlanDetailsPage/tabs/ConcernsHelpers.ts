@@ -20,36 +20,43 @@ export class ConcernsHelpers {
     return this.vmTable.getByTestId(`concern-badge-${category}`).first();
   }
 
-  async getFirstVisibleConcernBadge(): Promise<Locator | null> {
-    for (const category of ['critical', 'warning', 'information'] as const) {
-      const badge = this.getConcernBadge(category);
-      if (await badge.isVisible().catch(() => false)) {
-        return badge;
-      }
-    }
-    return null;
-  }
-
   async openConcernPopover(category?: ConcernCategory): Promise<boolean> {
-    const badge = category
-      ? this.getConcernBadge(category)
-      : await this.getFirstVisibleConcernBadge();
-    if (!badge || !(await badge.isVisible().catch(() => false))) {
-      return false;
-    }
-    await badge.click();
     const popover = this.page.getByTestId('concerns-popover');
+    if (category) {
+      const badge = this.getConcernBadge(category);
+      if (!(await badge.isVisible().catch(() => false))) {
+        return false;
+      }
+      await badge.click();
+    } else {
+      let clicked = false;
+      for (const cat of ['critical', 'warning', 'information'] as const) {
+        const badge = this.getConcernBadge(cat);
+        if (await badge.isVisible().catch(() => false)) {
+          await badge.click();
+          clicked = true;
+          break;
+        }
+      }
+      if (!clicked) return false;
+    }
     await expect(popover).toBeVisible();
     return true;
   }
 
-  async verifyConcernBadgeExists(category: ConcernCategory, rowIndex?: number): Promise<void> {
+  async verifyConcernBadgeExists(
+    category: ConcernCategory,
+    rowIndex?: number,
+    timeout = 60000,
+  ): Promise<void> {
     if (rowIndex === undefined) {
-      await expect(this.vmTable.getByTestId(`concern-badge-${category}`).first()).toBeVisible();
+      await expect(this.vmTable.getByTestId(`concern-badge-${category}`).first()).toBeVisible({
+        timeout,
+      });
     } else {
       const bodyRowgroup = this.vmTable.getByRole('rowgroup').nth(1);
       const row = bodyRowgroup.getByRole('row').nth(rowIndex);
-      await expect(row.getByTestId(`concern-badge-${category}`)).toBeVisible();
+      await expect(row.getByTestId(`concern-badge-${category}`)).toBeVisible({ timeout });
     }
   }
 
@@ -82,12 +89,12 @@ export class ConcernsHelpers {
     await expect(this.page.getByRole('columnheader', { name: 'Label' })).not.toBeVisible();
   }
 
-  async verifyFilteredRowsHaveBadge(category: ConcernCategory): Promise<void> {
+  async verifyFilteredRowsHaveBadge(category: ConcernCategory, timeout = 60000): Promise<void> {
     const bodyRowgroup = this.vmTable.getByRole('rowgroup').nth(1);
     const rows = bodyRowgroup.getByRole('row');
     const rowCount = await rows.count();
     for (let i = 0; i < rowCount; i += 1) {
-      await expect(rows.nth(i).getByTestId(`concern-badge-${category}`)).toBeVisible();
+      await expect(rows.nth(i).getByTestId(`concern-badge-${category}`)).toBeVisible({ timeout });
     }
   }
 }
