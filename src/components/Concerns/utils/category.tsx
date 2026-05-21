@@ -1,12 +1,8 @@
 import type { ReactNode } from 'react';
 
+import { STATUS_ICONS } from '@components/status/statusIcons';
 import type { Concern, V1beta1PlanStatusConditions } from '@forklift-ui/types';
 import type { LabelProps } from '@patternfly/react-core';
-import {
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-  InfoCircleIcon,
-} from '@patternfly/react-icons';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
@@ -31,12 +27,12 @@ const CATEGORY_TITLES: Record<ConcernCategory, string> = {
 };
 
 const CATEGORY_ICONS: Record<ConcernCategory, ReactNode> = {
-  [ConcernCategoryOptions.Advisory]: <InfoCircleIcon color="#2B9AF3" />,
-  [ConcernCategoryOptions.Critical]: <ExclamationCircleIcon color="#C9190B" />,
-  [ConcernCategoryOptions.Error]: <ExclamationCircleIcon color="#C9190B" />,
-  [ConcernCategoryOptions.Information]: <InfoCircleIcon color="#2B9AF3" />,
-  [ConcernCategoryOptions.Warn]: <ExclamationTriangleIcon color="#F0AB00" />,
-  [ConcernCategoryOptions.Warning]: <ExclamationTriangleIcon color="#F0AB00" />,
+  [ConcernCategoryOptions.Advisory]: STATUS_ICONS.info,
+  [ConcernCategoryOptions.Critical]: STATUS_ICONS.danger,
+  [ConcernCategoryOptions.Error]: STATUS_ICONS.danger,
+  [ConcernCategoryOptions.Information]: STATUS_ICONS.info,
+  [ConcernCategoryOptions.Warn]: STATUS_ICONS.warning,
+  [ConcernCategoryOptions.Warning]: STATUS_ICONS.warning,
 };
 
 const CATEGORY_STATUS: Record<ConcernCategory, LabelProps['status'] | undefined> = {

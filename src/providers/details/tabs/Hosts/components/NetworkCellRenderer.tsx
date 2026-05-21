@@ -1,22 +1,18 @@
 import type { FC, ReactNode } from 'react';
+import { STATUS_ICONS } from 'src/components/status/statusIcons';
 import { TableCell } from 'src/components/TableCell/TableCell';
 import { calculateCidrNotation } from 'src/providers/details/tabs/Hosts/utils/helpers/calculateCidrNotation';
 import { determineHostStatus } from 'src/providers/details/tabs/Hosts/utils/helpers/determineHostStatus';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Button, ButtonVariant, HelperText, HelperTextItem, Popover } from '@patternfly/react-core';
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-} from '@patternfly/react-icons';
 
 import type { HostCellProps } from './utils/types';
 
 const statusIcons: Record<string, ReactNode> = {
-  error: <ExclamationCircleIcon color="#C9190B" />,
-  ready: <CheckCircleIcon color="#3E8635" />,
-  running: <ExclamationTriangleIcon color="#F0AB00" />,
+  error: STATUS_ICONS.danger,
+  ready: STATUS_ICONS.success,
+  running: STATUS_ICONS.warning,
 };
 
 // Define cell renderer for 'network'

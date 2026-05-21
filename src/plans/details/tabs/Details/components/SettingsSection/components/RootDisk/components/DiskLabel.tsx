@@ -25,8 +25,8 @@ const DiskLabel: FC<DiskLabelProps> = ({ diskKey }) => {
               'Root filesystem format should start with "/dev/sd[X]", see documentation for more information.',
             )}
           >
-            <Icon className="pf-v6-u-mr-xs">
-              <ExclamationTriangleIcon color="#F0AB00" />
+            <Icon className="pf-v6-u-mr-xs" status="warning">
+              <ExclamationTriangleIcon />
             </Icon>
           </Tooltip>
         )
