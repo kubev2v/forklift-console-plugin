@@ -38,14 +38,15 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
         await planDetailsPage.virtualMachinesTab.sortByConcerns(); // Click twice for descending
       });
 
-      await customPlanTest.step('3. Verify concern badges (critical, warning, info)', async () => {
-        await planDetailsPage.virtualMachinesTab.concerns.verifyConcernBadgeExists('critical');
+      await customPlanTest.step('3. Verify concern badges (warning, info)', async () => {
+        // VMs in the 'vm' folder have Warning/Information VM-level concerns only.
+        // Plan-level critical conditions (DuplicateVM etc.) are tested in step 6.
         await planDetailsPage.virtualMachinesTab.concerns.verifyConcernBadgeExists('warning');
         await planDetailsPage.virtualMachinesTab.concerns.verifyConcernBadgeExists('information');
 
-        await planDetailsPage.virtualMachinesTab.concerns.openConcernPopover('critical');
+        await planDetailsPage.virtualMachinesTab.concerns.openConcernPopover('warning');
         await planDetailsPage.virtualMachinesTab.concerns.verifyConcernPopoverContent({
-          headerContains: 'Critical',
+          headerContains: 'Warning',
           minItems: 1,
         });
         await planDetailsPage.virtualMachinesTab.concerns.closeConcernPopover();
@@ -69,12 +70,12 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
         ]);
 
         const initialCount = await planDetailsPage.virtualMachinesTab.getRowCount();
-        await planDetailsPage.virtualMachinesTab.applyFilter('Concerns (severity)', 'Critical');
+        await planDetailsPage.virtualMachinesTab.applyFilter('Concerns (severity)', 'Warning');
 
         const filteredCount = await planDetailsPage.virtualMachinesTab.getRowCount();
         expect(filteredCount).toBeLessThanOrEqual(initialCount);
         expect(filteredCount).toBeGreaterThan(0);
-        await planDetailsPage.virtualMachinesTab.concerns.verifyFilteredRowsHaveBadge('critical');
+        await planDetailsPage.virtualMachinesTab.concerns.verifyFilteredRowsHaveBadge('warning');
 
         await planDetailsPage.virtualMachinesTab.clearFilters();
         const restoredCount = await planDetailsPage.virtualMachinesTab.getRowCount();
