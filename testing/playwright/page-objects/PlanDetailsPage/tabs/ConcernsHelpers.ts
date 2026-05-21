@@ -80,13 +80,13 @@ export class ConcernsHelpers {
   }
 
   async verifyExpandedRowHasConcernDetails(): Promise<void> {
-    for (const col of ['Label', 'Category', 'Assessment']) {
+    for (const col of ['Issue', 'Severity', 'Description']) {
       await expect(this.page.getByRole('columnheader', { name: col })).toBeVisible();
     }
   }
 
   async verifyExpandedRowIsCollapsed(): Promise<void> {
-    await expect(this.page.getByRole('columnheader', { name: 'Label' })).not.toBeVisible();
+    await expect(this.page.getByRole('columnheader', { name: 'Issue' })).not.toBeVisible();
   }
 
   async verifyFilteredRowsHaveBadge(category: ConcernCategory, timeout = 60000): Promise<void> {

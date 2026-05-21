@@ -63,7 +63,12 @@ test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
     resourceManager,
     testProvider: _testProvider,
   }) => {
-    const originalPlan = await createCustomPlan({ migrationType: MigrationType.WARM });
+    // mtv-func-rhel9 is powered-off; with preserveStaticIPs defaulting to true in the wizard
+    // the plan would enter CannotStart (missing IP data), disabling the Duplicate action.
+    const originalPlan = await createCustomPlan({
+      migrationType: MigrationType.WARM,
+      additionalPlanSettings: { preserveStaticIPs: false },
+    });
     const duplicatePlanName = `dup-${originalPlan.metadata.name}`;
     resourceManager.addPlan(duplicatePlanName, MTV_NAMESPACE);
 
