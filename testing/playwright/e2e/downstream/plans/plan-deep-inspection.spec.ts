@@ -12,13 +12,13 @@ import { requireVersion } from '../../../utils/version/version';
 // snapshot on mtv-func-rhel9 triggers VMHasSnapshots (Critical) on any subsequent warm
 // plan, keeping it in CannotStart. Using mtv-func-win2019 here keeps the two VMs isolated.
 const test = sharedProviderFixtures.extend<{ testPlan: Awaited<ReturnType<typeof createPlan>> }>({
-  testPlan: async ({ page, resourceManager, testProvider }, use) => {
+  testPlan: async ({ page, resourceManager, testProvider }, setValue) => {
     if (!testProvider) throw new Error('testPlan fixture requires testProvider');
     const plan = await createPlan(page, resourceManager, {
       sourceProvider: testProvider,
       customPlanData: { virtualMachines: [{ folder: 'vm', sourceName: 'mtv-func-win2019' }] },
     });
-    await use(plan);
+    await setValue(plan);
   },
 });
 
