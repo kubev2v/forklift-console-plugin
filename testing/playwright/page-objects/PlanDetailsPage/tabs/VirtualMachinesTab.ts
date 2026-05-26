@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../../types/test-data';
 import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
@@ -132,6 +132,10 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   async getVMPowerState(vmName: string): Promise<string> {
     const cell = await this.table.getCell('Name', vmName, 'Target power state');
     return (await cell.textContent())?.trim() ?? '';
+  }
+
+  getVmRow(vmName: string): Locator {
+    return this.vmTable.getByRole('row', { exact: false, name: vmName });
   }
 
   async getVMSharedDisks(vmName: string): Promise<string> {
@@ -279,6 +283,19 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
 
   async verifyAddVirtualMachinesButtonEnabled(): Promise<void> {
     await expect(this.addVirtualMachinesButton).toBeEnabled();
+  }
+
+  async verifyFilteredRowsHaveInspectionStatus(
+    expectedDisplayStatus: string,
+    timeout = 60000,
+  ): Promise<void> {
+    const bodyRowgroup = this.vmTable.getByRole('rowgroup').nth(1);
+    const rows = bodyRowgroup.getByRole('row');
+    const rowCount = await rows.count();
+    expect(rowCount).toBeGreaterThan(0);
+    for (let i = 0; i < rowCount; i += 1) {
+      await expect(rows.nth(i).getByText(expectedDisplayStatus)).toBeVisible({ timeout });
+    }
   }
 
   async verifyFilterOptionExists(filterName: string): Promise<void> {

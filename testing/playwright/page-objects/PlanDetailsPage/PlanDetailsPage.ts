@@ -4,6 +4,7 @@ import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { K8S_RECONCILE_TIMEOUT } from '../../utils/resource-manager/constants';
 import { disableGuidedTour, isEmpty } from '../../utils/utils';
+import { InspectVirtualMachinesModal } from '../InspectVirtualMachinesModal';
 
 import { AutomationTab } from './tabs/AutomationTab';
 import { DetailsTab } from './tabs/DetailsTab';
@@ -199,6 +200,14 @@ export class PlanDetailsPage {
     const viewAllButton = this.page.getByTestId('view-all-critical-concerns-button');
     await viewAllButton.click();
     await expect(this.concernsDrawerPanel).toBeVisible();
+  }
+
+  async openInspectModal(): Promise<InspectVirtualMachinesModal> {
+    const inspectModal = new InspectVirtualMachinesModal(this.page);
+    await this.clickInspectVmsButton();
+    await inspectModal.waitForModalOpen();
+    await inspectModal.waitForVmTableLoaded();
+    return inspectModal;
   }
 
   async renameVMs(planData: PlanTestData): Promise<void> {
