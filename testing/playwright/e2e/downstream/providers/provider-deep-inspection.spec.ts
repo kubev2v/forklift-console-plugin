@@ -26,8 +26,7 @@ test.describe('Provider Deep Inspection', { tag: '@downstream' }, () => {
     const providerDetailsPage = await setupProviderDetailsPage(page, testProvider);
 
     await test.step('verify Inspect VMs button is visible', async () => {
-      const isVisible = await providerDetailsPage.isInspectVmsButtonVisible();
-      expect(isVisible).toBe(true);
+      await providerDetailsPage.verifyInspectVmsButtonVisible();
     });
   });
 

@@ -57,15 +57,6 @@ export class ProviderDetailsPage {
     return this.page.getByTestId('provider-inspect-vms-button');
   }
 
-  async isInspectVmsButtonVisible(): Promise<boolean> {
-    try {
-      await this.inspectVmsButton.waitFor({ state: 'visible', timeout: 15000 });
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
   async navigate(providerName: string, namespace: string): Promise<void> {
     await this.navigation.navigateToK8sResource({
       resource: 'Provider',
@@ -85,6 +76,10 @@ export class ProviderDetailsPage {
   async verifyBreadcrumbs(): Promise<void> {
     await expect(this.page.getByTestId('breadcrumb-link-0')).toContainText('Providers');
     await expect(this.page.getByTestId('breadcrumb-item-1')).toContainText('Provider details');
+  }
+
+  async verifyInspectVmsButtonVisible(): Promise<void> {
+    await expect(this.inspectVmsButton).toBeVisible({ timeout: 15000 });
   }
 
   async verifyNavigationTabs(): Promise<void> {

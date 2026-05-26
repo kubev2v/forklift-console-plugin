@@ -173,15 +173,6 @@ export class PlanDetailsPage {
     return await this.inspectVmsButton.isDisabled();
   }
 
-  async isInspectVmsButtonVisible(): Promise<boolean> {
-    try {
-      await this.inspectVmsButton.waitFor({ state: 'visible', timeout: 15000 });
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
   async navigate(planName: string, namespace: string, tab?: string): Promise<void> {
     await this.navigation.navigateToK8sResource({
       resource: 'Plan',
@@ -242,6 +233,10 @@ export class PlanDetailsPage {
   async verifyBreadcrumbs() {
     await expect(this.page.getByTestId('breadcrumb-link-0')).toContainText('Plans');
     await expect(this.page.getByTestId('breadcrumb-item-1')).toContainText('Plan Details');
+  }
+
+  async verifyInspectVmsButtonVisible(): Promise<void> {
+    await expect(this.inspectVmsButton).toBeVisible({ timeout: 15000 });
   }
 
   async verifyMigrationInProgress(): Promise<void> {
