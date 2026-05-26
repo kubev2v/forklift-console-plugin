@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../../types/test-data';
 import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
@@ -27,7 +27,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   get addVirtualMachinesButton() {
-    return this.page.getByRole('button', { name: 'Add virtual machines' });
+    return this.page.getByRole('button', { name: 'Add VMs' });
   }
 
   async applyFilter(filterName: string, value: string): Promise<void> {
@@ -119,6 +119,11 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     return this.table.getRow({ Name: vmName }).getByTestId('vm-actions-menu-toggle');
   }
 
+  async getVmInspectionStatus(vmName: string): Promise<string> {
+    const cell = await this.table.getCell('Name', vmName, 'Inspection status');
+    return (await cell.textContent())?.trim() ?? '';
+  }
+
   async getVMInstanceType(vmName: string): Promise<string> {
     const cell = await this.table.getCell('Name', vmName, 'Instance type');
     return (await cell.textContent())?.trim() ?? '';
@@ -127,6 +132,10 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   async getVMPowerState(vmName: string): Promise<string> {
     const cell = await this.table.getCell('Name', vmName, 'Target power state');
     return (await cell.textContent())?.trim() ?? '';
+  }
+
+  getVmRow(vmName: string): Locator {
+    return this.vmTable.getByRole('row', { exact: false, name: vmName });
   }
 
   async getVMSharedDisks(vmName: string): Promise<string> {
@@ -194,7 +203,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     return this.page.getByRole('option', { name: 'Retain source VM power state', exact: true });
   }
   get powerStateOptionInherit() {
-    return this.page.getByRole('option', { name: 'Inherit plan wide setting', exact: false });
+    return this.page.getByTestId('power-state-option-inherit');
   }
   get powerStateOptionOff() {
     return this.page.getByRole('option', { name: 'Powered off', exact: true });
@@ -261,7 +270,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   async sortByConcerns(): Promise<void> {
-    await this.sortByColumn('Concerns');
+    await this.page.getByTestId('concerns-column-header').click();
   }
 
   get validationErrorMessage() {
@@ -274,6 +283,19 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
 
   async verifyAddVirtualMachinesButtonEnabled(): Promise<void> {
     await expect(this.addVirtualMachinesButton).toBeEnabled();
+  }
+
+  async verifyFilteredRowsHaveInspectionStatus(
+    expectedDisplayStatus: string,
+    timeout = 60000,
+  ): Promise<void> {
+    const bodyRowgroup = this.vmTable.getByRole('rowgroup').nth(1);
+    const rows = bodyRowgroup.getByRole('row');
+    const rowCount = await rows.count();
+    expect(rowCount).toBeGreaterThan(0);
+    for (let i = 0; i < rowCount; i += 1) {
+      await expect(rows.nth(i).getByText(expectedDisplayStatus)).toBeVisible({ timeout });
+    }
   }
 
   async verifyFilterOptionExists(filterName: string): Promise<void> {

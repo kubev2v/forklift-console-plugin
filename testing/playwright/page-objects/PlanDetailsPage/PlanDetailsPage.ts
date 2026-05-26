@@ -4,6 +4,7 @@ import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { K8S_RECONCILE_TIMEOUT } from '../../utils/resource-manager/constants';
 import { disableGuidedTour, isEmpty } from '../../utils/utils';
+import { InspectVirtualMachinesModal } from '../InspectVirtualMachinesModal';
 
 import { AutomationTab } from './tabs/AutomationTab';
 import { DetailsTab } from './tabs/DetailsTab';
@@ -32,18 +33,17 @@ export class PlanDetailsPage {
 
   async clickActionsMenuAndStart(): Promise<void> {
     await this.page.getByTestId('plan-actions-dropdown-button').click();
-    await this.page.getByTestId('plan-actions-start-menuitem').click();
+    const startItem = this.page.getByTestId('plan-actions-start-menuitem');
+    // PF6 marks disabled menu items with pf-m-disabled (CSS class, not the disabled attribute).
+    // Wait for that class to be gone before clicking so we don't hit the 15s action timeout.
+    await expect(startItem).not.toHaveClass(/pf-m-disabled/, { timeout: 120000 });
+    await startItem.click();
     await this.page.getByTestId('modal-confirm-button').click();
   }
 
   async clickInspectVmsButton(): Promise<void> {
     await expect(this.inspectVmsButton).toBeVisible();
     await this.inspectVmsButton.click();
-  }
-
-  async clickInspectVmsFromActions(): Promise<void> {
-    await this.page.getByTestId('plan-actions-dropdown-button').click();
-    await this.inspectVmsMenuItem.click();
   }
 
   async clickStartButtonInStatus(): Promise<void> {
@@ -76,7 +76,10 @@ export class PlanDetailsPage {
 
   async duplicatePlan(newPlanName: string, namespace: string): Promise<void> {
     await this.page.getByTestId('plan-actions-dropdown-button').click();
-    await this.page.getByRole('menuitem', { name: 'Duplicate' }).click();
+    const duplicateItem = this.page.getByRole('menuitem', { name: 'Duplicate' });
+    // Plan actions are disabled while the plan is reconciling; wait for enabled before clicking.
+    await expect(duplicateItem).toBeEnabled({ timeout: K8S_RECONCILE_TIMEOUT });
+    await duplicateItem.click();
     const duplicateModal = this.page.getByRole('dialog', { name: 'Duplicate migration plan' });
     await expect(duplicateModal).toBeVisible();
     const nameInput = duplicateModal.locator('#name');
@@ -159,23 +162,15 @@ export class PlanDetailsPage {
    * Checks if the critical concerns alert is visible.
    */
   async hasCriticalConcernsAlert(): Promise<boolean> {
-    return this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
+    return await this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
   }
 
   get inspectVmsButton() {
     return this.page.getByTestId('plan-inspect-vms-button');
   }
 
-  get inspectVmsMenuItem() {
-    return this.page.getByTestId('plan-actions-inspect-menuitem');
-  }
-
   async isInspectVmsButtonDisabled(): Promise<boolean> {
-    return this.inspectVmsButton.isDisabled();
-  }
-
-  async isInspectVmsButtonVisible(): Promise<boolean> {
-    return this.inspectVmsButton.isVisible();
+    return await this.inspectVmsButton.isDisabled();
   }
 
   async navigate(planName: string, namespace: string, tab?: string): Promise<void> {
@@ -196,6 +191,14 @@ export class PlanDetailsPage {
     const viewAllButton = this.page.getByTestId('view-all-critical-concerns-button');
     await viewAllButton.click();
     await expect(this.concernsDrawerPanel).toBeVisible();
+  }
+
+  async openInspectModal(): Promise<InspectVirtualMachinesModal> {
+    const inspectModal = new InspectVirtualMachinesModal(this.page);
+    await this.clickInspectVmsButton();
+    await inspectModal.waitForModalOpen();
+    await inspectModal.waitForVmTableLoaded();
+    return inspectModal;
   }
 
   async renameVMs(planData: PlanTestData): Promise<void> {
@@ -230,6 +233,10 @@ export class PlanDetailsPage {
   async verifyBreadcrumbs() {
     await expect(this.page.getByTestId('breadcrumb-link-0')).toContainText('Plans');
     await expect(this.page.getByTestId('breadcrumb-item-1')).toContainText('Plan Details');
+  }
+
+  async verifyInspectVmsButtonVisible(): Promise<void> {
+    await expect(this.inspectVmsButton).toBeVisible({ timeout: 15000 });
   }
 
   async verifyMigrationInProgress(): Promise<void> {

@@ -165,6 +165,12 @@ export interface PlanTestData {
     useNbdeClevis?: boolean;
     /** VM display name → resolved instance type label */
     instanceTypes?: Record<string, string>;
+    /**
+     * Set to false to uncheck "Preserve static IPs" in the wizard.
+     * Default in the wizard is true; powered-off VMs have no IPs and will
+     * cause a critical plan concern when this is left enabled.
+     */
+    preserveStaticIPs?: boolean;
   };
   customizationScripts?: CustomizationScriptsTestData;
   preMigrationHook?: HookConfig;

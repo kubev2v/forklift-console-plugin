@@ -1,6 +1,18 @@
+import { existsSync, readFileSync } from 'node:fs';
+
 import { defineConfig, devices } from '@playwright/test';
 
 const authFile = 'playwright/.auth/user.json';
+
+const ENV_RELAY_FILE = 'playwright/.env-relay.json';
+if (existsSync(ENV_RELAY_FILE)) {
+  const relay = JSON.parse(readFileSync(ENV_RELAY_FILE, 'utf8')) as Record<string, string>;
+  for (const [key, value] of Object.entries(relay)) {
+    if (value !== '') {
+      process.env[key] = value;
+    }
+  }
+}
 
 export default defineConfig({
   globalSetup: './playwright/global.setup.ts',
@@ -32,8 +44,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState:
-          process.env.CLUSTER_USERNAME && process.env.CLUSTER_PASSWORD ? authFile : undefined,
+        storageState: existsSync(authFile) ? authFile : undefined,
         baseURL:
           process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS ?? 'http://localhost:9000',
         headless: true,

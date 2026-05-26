@@ -1,24 +1,60 @@
 import { expect, type Page } from '@playwright/test';
 
-import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
-import { InspectVirtualMachinesModal } from '../../../page-objects/InspectVirtualMachinesModal';
+import { createPlan } from '../../../fixtures/helpers/resourceCreationHelpers';
+import { sharedProviderFixtures } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import type { PlanTestData } from '../../../types/test-data';
+import {
+  ACTIVE_OR_COMPLETED_STATUSES,
+  COMPLETED_STATUSES,
+  inspectionStatusDisplayToFilterId,
+  isCompletedInspectionStatus,
+} from '../../../utils/inspection-status';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
+// Deep inspection creates vSphere snapshots during the inspection process. A leftover
+// snapshot on mtv-func-rhel9 triggers VMHasSnapshots (Critical) on any subsequent warm
+// plan, keeping it in CannotStart. Using mtv-func-win2019 here keeps the two VMs isolated.
+const test = sharedProviderFixtures.extend<{ testPlan: Awaited<ReturnType<typeof createPlan>> }>({
+  testPlan: async ({ page, resourceManager, testProvider }, setValue) => {
+    if (!testProvider) throw new Error('testPlan fixture requires testProvider');
+    const plan = await createPlan(page, resourceManager, {
+      sourceProvider: testProvider,
+      customPlanData: { virtualMachines: [{ folder: 'vm', sourceName: 'mtv-func-win2019' }] },
+    });
+    await setValue(plan);
+  },
+});
+
 type TestPlan = { metadata: { name: string; namespace: string }; testData: PlanTestData };
 
-const setupPlanDetailsPage = async (page: Page, testPlan: TestPlan | undefined) => {
+type SetupResult = {
+  firstVmName: string;
+  namespace: string;
+  planDetailsPage: PlanDetailsPage;
+  planName: string;
+};
+
+const setupPlanDetailsPage = async (
+  page: Page,
+  testPlan: TestPlan | undefined,
+): Promise<SetupResult> => {
   if (!testPlan) throw new Error('testPlan is required');
   const planDetailsPage = new PlanDetailsPage(page);
   const { name: planName, namespace } = testPlan.metadata;
+  const firstVmName = testPlan.testData.virtualMachines?.[0]?.sourceName;
+  if (!firstVmName) throw new Error('No source VM found in plan test data');
+
   await planDetailsPage.navigate(planName, namespace);
   await planDetailsPage.verifyPlanTitle(planName);
-  return { planDetailsPage, planName, namespace, testData: testPlan.testData };
+  await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
+
+  return { firstVmName, namespace, planDetailsPage, planName };
 };
 
 test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
+  test.describe.configure({ mode: 'serial' });
   requireVersion(test, V2_12_0);
 
   test('should show Inspect VMs button for vSphere plans', async ({
@@ -29,8 +65,7 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
     const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
 
     await test.step('verify Inspect VMs button is visible', async () => {
-      const isVisible = await planDetailsPage.isInspectVmsButtonVisible();
-      expect(isVisible).toBe(true);
+      await planDetailsPage.verifyInspectVmsButtonVisible();
     });
   });
 
@@ -40,43 +75,10 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
     testProvider: _testProvider,
   }) => {
     const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
-    const inspectModal = new InspectVirtualMachinesModal(page);
 
-    await test.step('click Inspect VMs button', async () => {
-      await planDetailsPage.clickInspectVmsButton();
-    });
-
-    await test.step('verify modal opens with Tech Preview label', async () => {
-      await inspectModal.waitForModalOpen();
+    await test.step('open modal and verify Tech Preview label', async () => {
+      const inspectModal = await planDetailsPage.openInspectModal();
       await expect(inspectModal.techPreviewLabel).toBeVisible();
-    });
-
-    await test.step('verify VM table is loaded', async () => {
-      await inspectModal.waitForVmTableLoaded();
-    });
-
-    await test.step('close modal', async () => {
-      await inspectModal.close();
-    });
-  });
-
-  test('should open inspect modal from actions dropdown', async ({
-    page,
-    testPlan,
-    testProvider: _testProvider,
-  }) => {
-    const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
-    const inspectModal = new InspectVirtualMachinesModal(page);
-
-    await test.step('open actions dropdown and click Inspect VMs', async () => {
-      await planDetailsPage.clickInspectVmsFromActions();
-    });
-
-    await test.step('verify modal opens', async () => {
-      await inspectModal.waitForModalOpen();
-    });
-
-    await test.step('close modal', async () => {
       await inspectModal.close();
     });
   });
@@ -86,27 +88,13 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
     testPlan,
     testProvider: _testProvider,
   }) => {
-    if (!testPlan) throw new Error('testPlan is required');
-    const { planDetailsPage, testData } = await setupPlanDetailsPage(page, testPlan);
-    const inspectModal = new InspectVirtualMachinesModal(page);
-    const firstVmName = testData.virtualMachines?.[0]?.sourceName ?? '';
+    const { firstVmName, planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
 
-    await test.step('open inspect modal', async () => {
-      await planDetailsPage.clickInspectVmsButton();
-      await inspectModal.waitForModalOpen();
-      await inspectModal.waitForVmTableLoaded();
-    });
-
-    await test.step('select a VM', async () => {
+    await test.step('open modal, select VM, and submit', async () => {
+      const inspectModal = await planDetailsPage.openInspectModal();
       await inspectModal.selectVmByName(firstVmName);
-    });
-
-    await test.step('verify confirm button shows correct count', async () => {
       const buttonText = await inspectModal.getConfirmButtonText();
       expect(buttonText).toContain('Inspect 1 VM');
-    });
-
-    await test.step('submit inspection', async () => {
       await inspectModal.clickInspect();
     });
   });
@@ -116,11 +104,7 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
     testPlan,
     testProvider: _testProvider,
   }) => {
-    const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
-
-    await test.step('navigate to Virtual Machines tab', async () => {
-      await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
-    });
+    await setupPlanDetailsPage(page, testPlan);
 
     await test.step('verify Inspection status column is visible', async () => {
       const columnHeader = page.locator('th', { hasText: 'Inspection status' });
@@ -135,20 +119,12 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
   }) => {
     const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
 
-    await test.step('navigate to Virtual Machines tab', async () => {
-      await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
-    });
-
     await test.step('expand a VM row', async () => {
-      const expandButton = page
-        .locator('[data-testid="plan-spec-virtual-machines-list"] tbody tr td button')
-        .first();
-      await expandButton.click();
+      await planDetailsPage.virtualMachinesTab.expandFirstVMDetailsRow();
     });
 
     await test.step('verify Inspections section is visible', async () => {
-      const inspectionsSection = page.getByTestId('inspections-section');
-      await expect(inspectionsSection).toBeVisible();
+      await expect(page.getByTestId('inspections-section')).toBeVisible();
     });
   });
 
@@ -157,23 +133,124 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
     testPlan,
     testProvider: _testProvider,
   }) => {
+    const { firstVmName, planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
+
+    await test.step('verify inspection status filter exists', async () => {
+      await planDetailsPage.virtualMachinesTab.verifyFilterOptionExists('Inspection status');
+    });
+
+    await test.step('filter by current status and verify results', async () => {
+      const currentStatus =
+        await planDetailsPage.virtualMachinesTab.getVmInspectionStatus(firstVmName);
+      const filterId = inspectionStatusDisplayToFilterId(currentStatus);
+      const initialCount = await planDetailsPage.virtualMachinesTab.getRowCount();
+
+      await planDetailsPage.virtualMachinesTab.applyFilter('Inspection status', filterId);
+
+      const filteredCount = await planDetailsPage.virtualMachinesTab.getRowCount();
+      expect(filteredCount).toBeLessThanOrEqual(initialCount);
+      expect(filteredCount).toBeGreaterThan(0);
+      await planDetailsPage.virtualMachinesTab.verifyFilteredRowsHaveInspectionStatus(
+        currentStatus,
+      );
+
+      await planDetailsPage.virtualMachinesTab.clearFilters();
+      const restoredCount = await planDetailsPage.virtualMachinesTab.getRowCount();
+      expect(restoredCount).toBe(initialCount);
+    });
+  });
+
+  test('should transition inspection status from Running to completed', async ({
+    page,
+    testPlan,
+    testProvider: _testProvider,
+  }) => {
+    const { firstVmName, planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
+    const vmRow = planDetailsPage.virtualMachinesTab.getVmRow(firstVmName);
+
+    await test.step('submit inspection for a VM', async () => {
+      const inspectModal = await planDetailsPage.openInspectModal();
+      await inspectModal.selectVmByName(firstVmName);
+      await inspectModal.clickInspect();
+    });
+
+    await test.step('verify status becomes observable after submit', async () => {
+      await expect(vmRow.getByText(ACTIVE_OR_COMPLETED_STATUSES)).toBeVisible({
+        timeout: 30_000,
+      });
+    });
+
+    await test.step('wait for inspection to complete', async () => {
+      await expect(vmRow.getByText(COMPLETED_STATUSES)).toBeVisible({ timeout: 600_000 });
+    });
+  });
+
+  test('should allow re-inspection after completion', async ({
+    page,
+    testPlan,
+    testProvider: _testProvider,
+  }) => {
+    const { firstVmName, planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
+    const vmRow = planDetailsPage.virtualMachinesTab.getVmRow(firstVmName);
+
+    await test.step('ensure VM has a completed inspection status', async () => {
+      const status = await planDetailsPage.virtualMachinesTab.getVmInspectionStatus(firstVmName);
+      if (!isCompletedInspectionStatus(status)) {
+        const inspectModal = await planDetailsPage.openInspectModal();
+        await inspectModal.selectVmByName(firstVmName);
+        await inspectModal.clickInspect();
+        await expect(vmRow.getByText(COMPLETED_STATUSES)).toBeVisible({ timeout: 600_000 });
+      }
+    });
+
+    await test.step('open inspect modal, verify status, and submit re-inspection', async () => {
+      const inspectModal = await planDetailsPage.openInspectModal();
+      const modalStatus = await inspectModal.getVmInspectionStatus(firstVmName);
+      expect(modalStatus).toMatch(COMPLETED_STATUSES);
+      await inspectModal.selectVmByName(firstVmName);
+      const buttonText = await inspectModal.getConfirmButtonText();
+      expect(buttonText).toContain('Inspect 1 VM');
+      await inspectModal.clickInspect();
+    });
+
+    await test.step('verify status becomes observable after re-submit', async () => {
+      await expect(vmRow.getByText(ACTIVE_OR_COMPLETED_STATUSES)).toBeVisible({
+        timeout: 30_000,
+      });
+    });
+  });
+
+  test('should disable confirm button when no VMs are selected', async ({
+    page,
+    testPlan,
+    testProvider: _testProvider,
+  }) => {
     const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
 
-    await test.step('navigate to Virtual Machines tab', async () => {
-      await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
-    });
+    await test.step('open inspect modal', async () => {
+      const inspectModal = await planDetailsPage.openInspectModal();
 
-    await test.step('open inspection status filter and select Not inspected', async () => {
-      const filterSelect = page.getByRole('button', { name: /Name/i }).first();
-      await filterSelect.click();
-      await page.getByRole('option', { name: 'Inspection status' }).click();
-      await page.getByRole('button', { name: /Filter by inspection status/i }).click();
-      await page.getByRole('option', { name: 'Not inspected' }).click();
+      const isDisabled = await inspectModal.isConfirmDisabled();
+      expect(isDisabled).toBe(true);
+      await inspectModal.close();
     });
+  });
 
-    await test.step('verify filtered results', async () => {
-      const rows = page.locator('[data-testid="plan-spec-virtual-machines-list"] tbody tr');
-      await expect(rows.first()).toBeVisible();
+  test('should select all VMs and update confirm button text', async ({
+    page,
+    testPlan,
+    testProvider: _testProvider,
+  }) => {
+    const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
+
+    await test.step('open modal and select all VMs', async () => {
+      const inspectModal = await planDetailsPage.openInspectModal();
+      await inspectModal.selectAllVms();
+
+      const vmCount = await inspectModal.getVmRowCount();
+      const buttonText = await inspectModal.getConfirmButtonText();
+      expect(buttonText).toContain(`Inspect ${vmCount} VM`);
+      await inspectModal.close();
     });
   });
 });

@@ -1,4 +1,4 @@
-import { existsSync, unlinkSync } from 'fs';
+import { existsSync, unlinkSync, writeFileSync } from 'fs';
 
 import { chromium, type FullConfig, type Page } from '@playwright/test';
 
@@ -8,6 +8,24 @@ import { disableGuidedTour } from './utils/utils';
 import { CNV_VERSION_ENV_VAR, VERSION_ENV_VAR } from './utils/version/constants';
 
 const RESOURCES_FILE = 'playwright/.resources.json';
+
+/**
+ * Playwright workers do not inherit env vars that were already set before Playwright
+ * started — only vars that changed during globalSetup are diffed and forwarded.
+ * Write a relay file here so playwright.config.ts (re-evaluated in each worker) can
+ * restore them. See github.com/microsoft/playwright/issues/21565.
+ */
+const ENV_RELAY_FILE = 'playwright/.env-relay.json';
+
+const ENV_KEYS_TO_RELAY = [
+  'BASE_ADDRESS',
+  'BRIDGE_BASE_ADDRESS',
+  'CNV_VERSION',
+  'FORKLIFT_VERSION',
+  'JENKINS',
+  'LIGHTSPEED_INSTALLED',
+  'VSPHERE_PROVIDER',
+] as const;
 
 /**
  * Auto-detect the Forklift/MTV operator version from the cluster CSV.
@@ -113,6 +131,10 @@ const globalSetup = async (config: FullConfig) => {
       console.error('📌 No credentials and no FORKLIFT_VERSION set, defaulting to "latest"');
     }
   }
+
+  const relay = Object.fromEntries(ENV_KEYS_TO_RELAY.map((key) => [key, process.env[key] ?? '']));
+  writeFileSync(ENV_RELAY_FILE, JSON.stringify(relay));
+  console.error('📝 Env relay written for workers:', JSON.stringify(relay));
 };
 
 export default globalSetup;

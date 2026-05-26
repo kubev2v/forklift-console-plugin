@@ -49,13 +49,10 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
   test.describe.configure({ mode: 'serial' });
 
   test.afterAll(async ({ browser }) => {
-    const authFile =
-      process.env.CLUSTER_USERNAME && process.env.CLUSTER_PASSWORD
-        ? 'playwright/.auth/user.json'
-        : undefined;
+    const AUTH_FILE = 'playwright/.auth/user.json';
     const context = await browser.newContext({
       ignoreHTTPSErrors: true,
-      storageState: authFile,
+      storageState: existsSync(AUTH_FILE) ? AUTH_FILE : undefined,
     });
     const page = await context.newPage();
     await page.goto('/');

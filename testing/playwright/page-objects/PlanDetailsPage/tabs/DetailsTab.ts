@@ -9,6 +9,8 @@ import { TargetAffinityModal } from '../modals/TargetAffinityModal';
 import { TargetLabelsModal } from '../modals/TargetLabelsModal';
 import { TargetNodeSelectorModal } from '../modals/TargetNodeSelectorModal';
 
+type ModalLike = { waitForModalToOpen: () => Promise<void> };
+
 export class DetailsTab {
   readonly affinityModal: TargetAffinityModal;
   readonly coldMigrationRadio: Locator;
@@ -31,12 +33,9 @@ export class DetailsTab {
   readonly powerStateOptionOff: Locator;
   readonly powerStateOptionOn: Locator;
   readonly preserveStaticIPsCheckbox: Locator;
-  readonly saveDescriptionButton: Locator;
   readonly saveDiskDecryptionButton: Locator;
-  readonly saveMigrateSharedDisksButton: Locator;
   readonly saveMigrationTypeButton: Locator;
   readonly savePowerStateButton: Locator;
-  readonly savePreserveStaticIPsButton: Locator;
   readonly saveSharedDisksButton: Locator;
   readonly targetPowerStateSelect: Locator;
   readonly useNbdeClevisCheckbox: Locator;
@@ -46,7 +45,6 @@ export class DetailsTab {
     this.page = page;
     this.editDescriptionModal = this.page.getByRole('dialog', { name: 'Edit description' });
     this.descriptionTextbox = this.editDescriptionModal.getByRole('textbox');
-    this.saveDescriptionButton = this.editDescriptionModal.getByTestId('modal-confirm-button');
     this.editMigrationTypeModal = this.page.getByTestId('edit-migration-type-modal');
     this.coldMigrationRadio = this.editMigrationTypeModal.getByTestId('migration-type-cold');
     this.liveMigrationRadio = this.editMigrationTypeModal.getByTestId('migration-type-live');
@@ -54,14 +52,8 @@ export class DetailsTab {
     this.saveMigrationTypeButton = this.editMigrationTypeModal.getByTestId('modal-confirm-button');
     this.editPreserveStaticIPsModal = this.page.getByRole('dialog', { name: 'Edit static IPs' });
     this.preserveStaticIPsCheckbox = this.page.getByTestId('preserve-static-ips-checkbox');
-    this.savePreserveStaticIPsButton =
-      this.editPreserveStaticIPsModal.getByTestId('modal-confirm-button');
-    this.editMigrateSharedDisksModal = this.page.getByRole('dialog', {
-      name: 'Edit shared disks',
-    });
+    this.editMigrateSharedDisksModal = this.page.getByRole('dialog', { name: 'Edit shared disks' });
     this.migrateSharedDisksCheckbox = this.page.getByTestId('migrate-shared-disks-checkbox');
-    this.saveMigrateSharedDisksButton =
-      this.editMigrateSharedDisksModal.getByTestId('modal-confirm-button');
     this.editPowerStateModal = this.page.getByTestId('edit-target-power-state-modal');
     this.savePowerStateButton = this.page.getByTestId('modal-confirm-button');
     this.targetPowerStateSelect = this.editPowerStateModal.getByTestId('target-power-state-select');
@@ -85,10 +77,7 @@ export class DetailsTab {
     this.affinityModal = new TargetAffinityModal(page);
   }
 
-  private async clickEditDetailItem(
-    testId: string,
-    modal: { waitForModalToOpen: () => Promise<void> },
-  ): Promise<void> {
+  private async clickEditDetailItem(testId: string, modal: ModalLike): Promise<void> {
     await this.page.getByTestId(testId).locator('button').click();
     await modal.waitForModalToOpen();
   }
@@ -107,20 +96,16 @@ export class DetailsTab {
 
   private async verifyLabelsCount(testId: string, count: number): Promise<void> {
     const el = this.page.getByTestId(testId);
-    if (count === 0) {
-      await expect(el).toContainText('No labels defined');
-    } else {
-      await expect(el).not.toContainText('No labels defined');
-    }
+    await (count === 0
+      ? expect(el).toContainText('No labels defined')
+      : expect(el).not.toContainText('No labels defined'));
   }
 
   private async verifyNodeSelectorCount(testId: string, count: number): Promise<void> {
     const el = this.page.getByTestId(testId);
-    if (count === 0) {
-      await expect(el).toContainText('No node selectors defined');
-    } else {
-      await expect(el).not.toContainText('No node selectors defined');
-    }
+    await (count === 0
+      ? expect(el).toContainText('No node selectors defined')
+      : expect(el).not.toContainText('No node selectors defined'));
   }
 
   get cbtWarningAlert(): Locator {
@@ -214,12 +199,12 @@ export class DetailsTab {
   }
 
   async saveDescription(): Promise<void> {
-    await this.saveDescriptionButton.click();
+    await this.editDescriptionModal.getByTestId('modal-confirm-button').click();
     await expect(this.editDescriptionModal).not.toBeVisible();
   }
 
   async saveMigrateSharedDisks(): Promise<void> {
-    await this.saveMigrateSharedDisksButton.click();
+    await this.editMigrateSharedDisksModal.getByTestId('modal-confirm-button').click();
     await expect(this.editMigrateSharedDisksModal).not.toBeVisible();
   }
 
@@ -229,7 +214,7 @@ export class DetailsTab {
   }
 
   async savePreserveStaticIPs(): Promise<void> {
-    await this.savePreserveStaticIPsButton.click();
+    await this.editPreserveStaticIPsModal.getByTestId('modal-confirm-button').click();
     await expect(this.editPreserveStaticIPsModal).not.toBeVisible();
   }
 
@@ -316,15 +301,9 @@ export class DetailsTab {
     );
     await expect(this.page.getByTestId('created-at-detail-item')).toBeVisible();
     await expect(this.page.getByTestId('owner-detail-item')).toContainText('No owner');
-    if (isVersionAtLeast(V2_11_0)) {
-      await this.verifyDescriptionText(planData.description ?? 'None');
-    }
+    if (isVersionAtLeast(V2_11_0)) await this.verifyDescriptionText(planData.description ?? 'None');
     if (planData.additionalPlanSettings?.targetPowerState) {
-      const labels: Record<string, string> = {
-        auto: 'Retain source VM power state',
-        off: 'Powered off',
-        on: 'Powered on',
-      };
+      const labels = { auto: 'Retain source VM power state', off: 'Powered off', on: 'Powered on' };
       await expect(
         this.targetVMPowerState(labels[planData.additionalPlanSettings.targetPowerState]),
       ).toBeVisible();
@@ -333,11 +312,15 @@ export class DetailsTab {
 
   async verifyPlanStatus(expectedStatus = 'Ready for migration', soft = false): Promise<void> {
     const statusLocator = this.page.getByTestId('status-detail-item');
-
     const expectFn = expect.configure({ soft });
+
     await expectFn(statusLocator).not.toContainText('Unknown', { timeout: 120000 });
     if (expectedStatus === 'Ready for migration') {
-      await expectFn(statusLocator.getByTestId('plan-start-button-status')).toBeVisible();
+      // The plan transitions through intermediate states (Incomplete, validation) before
+      // reaching Ready — give it the same long budget as the Unknown-exit check.
+      await expectFn(statusLocator.getByTestId('plan-start-button-status')).toBeVisible({
+        timeout: 120000,
+      });
     }
   }
 

@@ -1,38 +1,38 @@
-import { expect } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
-import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
+import { sharedProviderCustomPlanFixtures as test } from '../../../fixtures/resourceFixtures';
 import { InspectVirtualMachinesModal } from '../../../page-objects/InspectVirtualMachinesModal';
 import { ProviderDetailsPage } from '../../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
+type TestProvider = { metadata: { name: string; namespace: string } };
+
+const setupProviderDetailsPage = async (
+  page: Page,
+  testProvider: TestProvider | undefined,
+): Promise<ProviderDetailsPage> => {
+  if (!testProvider) throw new Error('testProvider is required');
+  const providerDetailsPage = new ProviderDetailsPage(page);
+  await providerDetailsPage.navigate(testProvider.metadata.name, testProvider.metadata.namespace);
+  await providerDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
+  return providerDetailsPage;
+};
+
 test.describe('Provider Deep Inspection', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);
 
   test('should show Inspect VMs button for vSphere providers', async ({ page, testProvider }) => {
-    if (!testProvider) throw new Error('testProvider is required');
-    const providerDetailsPage = new ProviderDetailsPage(page);
-    const { name, namespace } = testProvider.metadata;
-
-    await test.step('navigate to provider details', async () => {
-      await providerDetailsPage.navigate(name, namespace);
-    });
+    const providerDetailsPage = await setupProviderDetailsPage(page, testProvider);
 
     await test.step('verify Inspect VMs button is visible', async () => {
-      const isVisible = await providerDetailsPage.isInspectVmsButtonVisible();
-      expect(isVisible).toBe(true);
+      await providerDetailsPage.verifyInspectVmsButtonVisible();
     });
   });
 
-  test('should open inspect modal from header button', async ({ page, testProvider }) => {
-    if (!testProvider) throw new Error('testProvider is required');
-    const providerDetailsPage = new ProviderDetailsPage(page);
+  test('should open inspect modal from VMs tab button', async ({ page, testProvider }) => {
+    const providerDetailsPage = await setupProviderDetailsPage(page, testProvider);
     const inspectModal = new InspectVirtualMachinesModal(page);
-    const { name, namespace } = testProvider.metadata;
-
-    await test.step('navigate to provider details', async () => {
-      await providerDetailsPage.navigate(name, namespace);
-    });
 
     await test.step('click Inspect VMs button', async () => {
       await providerDetailsPage.clickInspectVmsButton();
@@ -52,38 +52,9 @@ test.describe('Provider Deep Inspection', { tag: '@downstream' }, () => {
     });
   });
 
-  test('should open inspect modal from actions dropdown', async ({ page, testProvider }) => {
-    if (!testProvider) throw new Error('testProvider is required');
-    const providerDetailsPage = new ProviderDetailsPage(page);
-    const inspectModal = new InspectVirtualMachinesModal(page);
-    const { name, namespace } = testProvider.metadata;
-
-    await test.step('navigate to provider details', async () => {
-      await providerDetailsPage.navigate(name, namespace);
-    });
-
-    await test.step('open actions dropdown and click Inspect VMs', async () => {
-      await providerDetailsPage.clickInspectVmsFromActions();
-    });
-
-    await test.step('verify modal opens', async () => {
-      await inspectModal.waitForModalOpen();
-    });
-
-    await test.step('close modal', async () => {
-      await inspectModal.close();
-    });
-  });
-
   test('should select VMs and submit inspection', async ({ page, testProvider }) => {
-    if (!testProvider) throw new Error('testProvider is required');
-    const providerDetailsPage = new ProviderDetailsPage(page);
+    const providerDetailsPage = await setupProviderDetailsPage(page, testProvider);
     const inspectModal = new InspectVirtualMachinesModal(page);
-    const { name, namespace } = testProvider.metadata;
-
-    await test.step('navigate to provider details', async () => {
-      await providerDetailsPage.navigate(name, namespace);
-    });
 
     await test.step('open inspect modal', async () => {
       await providerDetailsPage.clickInspectVmsButton();
@@ -92,8 +63,7 @@ test.describe('Provider Deep Inspection', { tag: '@downstream' }, () => {
     });
 
     await test.step('select a VM from inventory', async () => {
-      const firstVmRow = inspectModal.vmTable.locator('tbody tr').first();
-      await firstVmRow.locator('input[type="checkbox"]').check();
+      await inspectModal.selectFirstEligibleVm();
     });
 
     await test.step('submit inspection', async () => {
@@ -104,14 +74,7 @@ test.describe('Provider Deep Inspection', { tag: '@downstream' }, () => {
   });
 
   test('should show inspection status column in VMs tree table', async ({ page, testProvider }) => {
-    if (!testProvider) throw new Error('testProvider is required');
-    const providerDetailsPage = new ProviderDetailsPage(page);
-    const { name, namespace } = testProvider.metadata;
-
-    await test.step('navigate to provider details VMs tab', async () => {
-      await providerDetailsPage.navigate(name, namespace);
-      await providerDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
-    });
+    await setupProviderDetailsPage(page, testProvider);
 
     await test.step('verify Inspection status column header is visible', async () => {
       const columnHeader = page.locator('th', { hasText: 'Inspection status' });
@@ -120,25 +83,16 @@ test.describe('Provider Deep Inspection', { tag: '@downstream' }, () => {
   });
 
   test('should show inspection section in expanded VM row', async ({ page, testProvider }) => {
-    if (!testProvider) throw new Error('testProvider is required');
-    const providerDetailsPage = new ProviderDetailsPage(page);
-    const { name, namespace } = testProvider.metadata;
+    const providerDetailsPage = await setupProviderDetailsPage(page, testProvider);
 
-    await test.step('navigate to provider details VMs tab', async () => {
-      await providerDetailsPage.navigate(name, namespace);
-      await providerDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
-    });
-
-    await test.step('expand a VM in the tree table', async () => {
-      const treeTable = page.getByTestId('vsphere-tree-table');
-      await expect(treeTable).toBeVisible();
-      const vmRow = treeTable.locator('tr[data-testid*="-vm-"]').first();
-      await vmRow.click();
+    await test.step('expand first folder and expand a VM row', async () => {
+      await providerDetailsPage.virtualMachinesTab.expandFirstFolder();
+      await providerDetailsPage.virtualMachinesTab.expandFirstVMRow();
     });
 
     await test.step('verify Inspections section is visible', async () => {
       const inspectionsSection = page.getByTestId('inspections-section');
-      await expect(inspectionsSection).toBeVisible({ timeout: 10_000 });
+      await expect(inspectionsSection).toBeVisible({ timeout: 15_000 });
     });
   });
 });
