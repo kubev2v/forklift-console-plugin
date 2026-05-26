@@ -77,8 +77,11 @@ export class PlanDetailsPage {
   async duplicatePlan(newPlanName: string, namespace: string): Promise<void> {
     await this.page.getByTestId('plan-actions-dropdown-button').click();
     const duplicateItem = this.page.getByRole('menuitem', { name: 'Duplicate' });
-    // Plan actions are disabled while the plan is reconciling; wait for enabled before clicking.
-    await expect(duplicateItem).toBeEnabled({ timeout: K8S_RECONCILE_TIMEOUT });
+    // PF6 marks disabled menu items with pf-m-disabled (CSS class, not the disabled attribute).
+    // Duplicate is disabled under CannotStart while the plan reconciles — wait for the class to clear.
+    await expect(duplicateItem).not.toHaveClass(/pf-m-disabled/, {
+      timeout: K8S_RECONCILE_TIMEOUT,
+    });
     await duplicateItem.click();
     const duplicateModal = this.page.getByRole('dialog', { name: 'Duplicate migration plan' });
     await expect(duplicateModal).toBeVisible();
