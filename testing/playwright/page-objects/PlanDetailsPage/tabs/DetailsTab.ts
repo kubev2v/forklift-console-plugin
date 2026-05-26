@@ -315,6 +315,9 @@ export class DetailsTab {
     const expectFn = expect.configure({ soft });
 
     await expectFn(statusLocator).not.toContainText('Unknown', { timeout: 120000 });
+    await expectFn(statusLocator.getByTestId('plan-status-label')).toContainText(expectedStatus, {
+      timeout: 120000,
+    });
     if (expectedStatus === 'Ready for migration') {
       // The plan transitions through intermediate states (Incomplete, validation) before
       // reaching Ready — give it the same long budget as the Unknown-exit check.
