@@ -137,10 +137,13 @@ export class Table {
       .allTextContents();
     // PatternFly Th with an `info` prop appends screen-reader text (e.g. "More information on
     // inspection status") directly inside the <th>, so allTextContents() returns the column label
-    // concatenated with that extra text. Use startsWith so we match the label regardless.
-    const targetIndex = headers.findIndex((header) =>
-      (header?.trim() ?? '').startsWith(targetColumnName),
-    );
+    // concatenated with that extra text. Match exact label OR label followed by a space (the
+    // separator before the appended screen-reader text) to avoid prefix collisions like
+    // "Name" accidentally matching "Namespace".
+    const targetIndex = headers.findIndex((header) => {
+      const trimmed = header?.trim() ?? '';
+      return trimmed === targetColumnName || trimmed.startsWith(`${targetColumnName} `);
+    });
     if (targetIndex === -1) {
       throw new Error(`Column "${targetColumnName}" not found`);
     }

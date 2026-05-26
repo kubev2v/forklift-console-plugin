@@ -16,9 +16,10 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
       .locator('thead th, thead [role="columnheader"]')
       .allTextContents();
 
-    const targetIndex = headers.findIndex((header) =>
-      (header?.trim() ?? '').startsWith(targetColumnName),
-    );
+    const targetIndex = headers.findIndex((header) => {
+      const trimmed = header?.trim() ?? '';
+      return trimmed === targetColumnName || trimmed.startsWith(`${targetColumnName} `);
+    });
     if (targetIndex === -1) {
       throw new Error(`Column "${targetColumnName}" not found`);
     }
