@@ -20,12 +20,13 @@ const NodeSelectorViewDetailsItemContent: FC<NodeSelectorViewDetailsItemContentP
           {t('No node selectors defined')}
         </Label>
       ) : (
-        Object.entries(labels ?? {})?.map(([key]) => {
+        Object.entries(labels ?? {}).map(([key], index, entries) => {
           const labelText = labels?.[key] ? `${key}=${labels[key]}` : key;
+          const isLast = index === entries.length - 1;
 
           return (
             <span key={key} className="co-text-node">
-              <StackItem>{labelText},</StackItem>
+              <StackItem>{isLast ? labelText : `${labelText},`}</StackItem>
             </span>
           );
         })
