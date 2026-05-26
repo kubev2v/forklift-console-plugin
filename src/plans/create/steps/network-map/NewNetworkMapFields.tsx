@@ -65,7 +65,7 @@ const NewNetworkMapFields: FC = () => {
     <Stack hasGutter className="pf-v6-u-ml-lg">
       {error?.root && <Alert variant={AlertVariant.danger} isInline title={error.root.message} />}
 
-      {isEmpty(usedSourceNetworks) && !sourceNetworksLoading && (
+      {isEmpty(availableSourceNetworks) && !sourceNetworksLoading && (
         <Alert
           variant={AlertVariant.warning}
           isInline

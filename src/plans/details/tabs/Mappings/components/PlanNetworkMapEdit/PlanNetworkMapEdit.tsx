@@ -65,14 +65,16 @@ const PlanNetworkMapEdit: ModalComponent<PlanNetworkMapEditProps> = ({
             <Alert variant={AlertVariant.danger} isInline title={error.root.message} />
           )}
 
-          {isEmpty(usedSourceNetworks) && !sourceNetworksLoading && (
-            <Alert
-              variant={AlertVariant.warning}
-              isInline
-              title={t('No source networks are available for the selected VMs.')}
-              className="pf-v"
-            />
-          )}
+          {isEmpty(usedSourceNetworks) &&
+            isEmpty(otherSourceNetworks) &&
+            !sourceNetworksLoading && (
+              <Alert
+                variant={AlertVariant.warning}
+                isInline
+                title={t('No source networks are available for the selected VMs.')}
+                className="pf-v"
+              />
+            )}
 
           <PlanNetworkMapFieldsTable
             oVirtNicProfiles={oVirtNicProfiles}
