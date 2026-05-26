@@ -6,6 +6,7 @@ import {
   usePrometheusPoll,
 } from '@openshift-console/dynamic-plugin-sdk';
 
+import { computeStepSeconds } from '../utils/throughputChartTicks';
 import {
   THROUGHPUT_TIME_RANGE_CONFIG,
   type ThroughputTimeRange,
@@ -46,14 +47,13 @@ export const parseThroughputResponse = (
 };
 
 const POLL_DELAY_MS = 30_000;
-const MS_PER_SECOND = 1000;
 
 export const useThroughputQuery = (
   metricName: string,
   timeRange: ThroughputTimeRange,
 ): UseThroughputQueryResult => {
   const config = THROUGHPUT_TIME_RANGE_CONFIG[timeRange];
-  const stepSeconds = Math.round(config.timespan / (config.samples * MS_PER_SECOND));
+  const stepSeconds = computeStepSeconds(timeRange);
   const query = `max_over_time(${metricName}[${stepSeconds}s])`;
 
   const [response, loaded, error] = usePrometheusPoll({
