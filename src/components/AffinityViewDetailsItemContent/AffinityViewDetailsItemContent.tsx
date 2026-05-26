@@ -14,7 +14,7 @@ const AffinityViewDetailsItemContent: FC<AffinityViewDetailsItemContentProps> = 
   const { t } = useForkliftTranslation();
 
   const rulesCount = getAffinityRules(affinity)?.length ?? 0;
-  const content = t('{{rules}} affinity rules', { rules: rulesCount });
+  const content = t('{{count}} affinity rule', { count: rulesCount });
 
   return rulesCount === 0 ? (
     <Label isCompact color="grey">
