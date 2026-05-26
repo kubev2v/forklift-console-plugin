@@ -32,10 +32,11 @@ import type { PlanModalProps } from './components/types';
 import { getDuplicateDescription, getEditDescription, startDescription } from './utils/utils';
 
 type PlanActionsDropdownItemsProps = {
+  isDetailsPage?: boolean;
   plan: V1beta1Plan;
 };
 
-const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) => {
+const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetailsPage, plan }) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
   const navigate = useNavigate();
@@ -88,17 +89,20 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ plan }) =
         value={0}
         key="edit"
         onClick={() => {
-          navigate(planURL);
+          navigate(isDetailsPage ? `${planURL}/yaml` : planURL);
         }}
-        description={getEditDescription(planStatus)}
-        isDisabled={[
-          PlanStatuses.Executing,
-          PlanStatuses.Paused,
-          PlanStatuses.Pending,
-          PlanStatuses.Archived,
-        ].some((status) => status === planStatus)}
+        description={isDetailsPage ? undefined : getEditDescription(planStatus)}
+        isDisabled={
+          !isDetailsPage &&
+          [
+            PlanStatuses.Executing,
+            PlanStatuses.Paused,
+            PlanStatuses.Pending,
+            PlanStatuses.Archived,
+          ].some((status) => status === planStatus)
+        }
       >
-        {t('Edit')}
+        {isDetailsPage ? t('Edit YAML') : t('Edit')}
       </DropdownItem>
       <DropdownItem
         value={1}

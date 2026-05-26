@@ -62,7 +62,12 @@ export const NetworkMapPageHeadings: FC<{ name: string; namespace?: string }> = 
             <LearningExperienceButton />
           </FlexItem>
           <FlexItem>
-            <NetworkMapActionsDropdown data={{ obj, permissions }} fieldId={''} fields={[]} />
+            <NetworkMapActionsDropdown
+              data={{ obj, permissions }}
+              fieldId={''}
+              fields={[]}
+              isDetailsPage
+            />
           </FlexItem>
         </Flex>
       }

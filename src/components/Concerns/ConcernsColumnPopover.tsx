@@ -1,11 +1,7 @@
 import type { FC } from 'react';
 
-import { Flex, FlexItem, Icon } from '@patternfly/react-core';
-import {
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-  InfoCircleIcon,
-} from '@patternfly/react-icons';
+import { STATUS_ICONS } from '@components/status/statusIcons';
+import { Flex, FlexItem } from '@patternfly/react-core';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
 const ConcernsColumnPopover: FC = () => {
@@ -19,13 +15,8 @@ const ConcernsColumnPopover: FC = () => {
         )}
       </p>
 
-      {/* Informational */}
       <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>
-        <FlexItem className="pf-v6-u-mr-sm">
-          <Icon size="md">
-            <InfoCircleIcon color="var(--pf-t--global--color--status--info--default)" />
-          </Icon>
-        </FlexItem>
+        <FlexItem className="pf-v6-u-mr-sm">{STATUS_ICONS.info}</FlexItem>
 
         <FlexItem>
           <ForkliftTrans>
@@ -34,13 +25,8 @@ const ConcernsColumnPopover: FC = () => {
         </FlexItem>
       </Flex>
 
-      {/* Warning */}
       <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>
-        <FlexItem className="pf-v6-u-mr-sm">
-          <Icon size="md">
-            <ExclamationTriangleIcon color="var(--pf-t--global--color--status--warning--default)" />
-          </Icon>
-        </FlexItem>
+        <FlexItem className="pf-v6-u-mr-sm">{STATUS_ICONS.warning}</FlexItem>
 
         <FlexItem>
           <ForkliftTrans>
@@ -50,13 +36,8 @@ const ConcernsColumnPopover: FC = () => {
         </FlexItem>
       </Flex>
 
-      {/* Critical */}
       <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>
-        <FlexItem className="pf-v6-u-mr-sm">
-          <Icon size="md">
-            <ExclamationCircleIcon color="var(--pf-t--global--color--status--danger--default)" />
-          </Icon>
-        </FlexItem>
+        <FlexItem className="pf-v6-u-mr-sm">{STATUS_ICONS.danger}</FlexItem>
 
         <FlexItem>
           <ForkliftTrans>

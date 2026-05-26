@@ -41,7 +41,7 @@ const PlanPageHeader: FC<PlanPageHeaderProps> = ({ name, namespace, setShowPlanC
             <PlanEditCutoverButton plan={plan} variant={ButtonVariant.primary} />
           </FlexItem>
           <FlexItem>
-            <PlanActionsDropdown plan={plan} />
+            <PlanActionsDropdown isDetailsPage plan={plan} />
           </FlexItem>
         </Flex>
       }

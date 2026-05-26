@@ -14,9 +14,13 @@ import { getProviderDetailsPageUrl } from '../utils/getProviderDetailsPageUrl';
 
 type ProviderActionsDropdownItemsProps = {
   data: ProviderData;
+  isDetailsPage?: boolean;
 };
 
-const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ data }) => {
+const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({
+  data,
+  isDetailsPage,
+}) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
   const navigate = useNavigate();
@@ -37,10 +41,10 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({ d
         value={0}
         key="EditProvider"
         onClick={() => {
-          navigate(providerURL);
+          navigate(isDetailsPage ? `${providerURL}/yaml` : providerURL);
         }}
       >
-        {t('Edit provider')}
+        {isDetailsPage ? t('Edit YAML') : t('Edit')}
       </DropdownItem>
       {provider?.spec?.type !== PROVIDER_TYPES.ova && (
         <DropdownItem

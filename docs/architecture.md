@@ -187,6 +187,6 @@ No global store (Redux, etc.). State flows through:
 
 - **PR**: lint, build, test, E2E (upstream Playwright against KinD)
 - **Merge to `main`**: build and push container image to `quay.io/kubev2v/forklift-console-plugin:latest`
-- **Push to `release-vX.Y.Z`**: build and push tagged image to `quay.io/kubev2v/forklift-console-plugin:release-vX.Y.Z`
+- **Push to `release-X.Y`**: build and push tagged image to `quay.io/kubev2v/forklift-console-plugin:release-X.Y`
 - **Container**: two-stage build (UBI 9 Node.js builder + UBI 9 Nginx server)
 - **Deployment**: the Forklift Operator manages the plugin Deployment, Service, and ConsolePlugin resource on the cluster

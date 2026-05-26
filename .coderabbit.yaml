@@ -1,0 +1,64 @@
+# CodeRabbit Configuration
+# https://docs.coderabbit.ai/guides/configuration
+
+reviews:
+  profile: chill
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "!package-lock.json"
+    - "!**/*.svg"
+    - "!docs/icons/**"
+    - "!.tekton/**"
+    - "!.konflux/**"
+    - "!ci/yaml/**"
+  path_instructions:
+    - path: "**/*"
+      instructions: |
+        Read AGENTS.md at the repo root for full coding standards, conventions,
+        dependency flow rules, and review guidelines. Apply those rules during review.
+    - path: "src/components/**"
+      instructions: |
+        Shared/reusable components. Verify no imports from feature-specific code.
+    - path: "src/utils/**"
+      instructions: |
+        Shared utilities. Verify no imports from feature-specific code.
+    - path: "src/providers/**"
+      instructions: |
+        Provider feature module. Source types: vsphere, ovirt, openstack, ova, hyperv, ec2.
+        Target type: openshift. Check provider phase before plan creation.
+    - path: "src/plans/**"
+      instructions: |
+        Plan feature module. Plans reference NetworkMap and StorageMap.
+        Migration types: Cold, Warm, Live, Conversion.
+    - path: "src/storageMaps/**"
+      instructions: |
+        Storage mapping feature module.
+    - path: "src/networkMaps/**"
+      instructions: |
+        Network mapping feature module.
+    - path: "src/overview/**"
+      instructions: |
+        Overview/dashboard feature module.
+    - path: "src/onlineHelp/**"
+      instructions: |
+        In-app help and quickstarts feature module.
+    - path: "locales/**/*.json"
+      instructions: |
+        Never edit locale JSON files directly; always regenerate them using
+        `npm run i18n`. English fallback values in non-English locale files are
+        intentional -- translations are handled via the Memsource pipeline in a
+        separate localization cycle. Do not flag untranslated strings as issues.
+    - path: "testing/**"
+      instructions: |
+        E2E tests use Playwright with page object model. Use version gating
+        via isVersionAtLeast() for retrocompatibility across release branches.
+        Prefer getByRole/getByTestId with exact:true over substring hasText.
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  learnings:
+    scope: auto

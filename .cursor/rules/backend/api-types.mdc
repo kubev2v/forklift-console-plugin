@@ -1,0 +1,399 @@
+---
+description: Forklift CRD type definitions - Plan, Provider, Migration, NetworkMap, StorageMap, Hook, Host, conditions, phases
+alwaysApply: false
+---
+
+# API Types (CRD Definitions)
+
+> Analyzed from commit: `a976d24b6` on `2026-05-04`
+> Source paths: `pkg/apis/forklift/v1beta1/`, `pkg/lib/condition/`
+
+## Package Purpose
+
+Package `v1beta1` (`forklift.konveyor.io/v1beta1`) defines all Forklift CRDs. The `SchemeGroupVersion` is `forklift.konveyor.io/v1beta1`. All CRD types embed `meta.TypeMeta` + `meta.ObjectMeta` and follow the standard Spec/Status pattern. Every Status struct embeds `libcnd.Conditions` for the shared condition framework.
+
+---
+
+## Key Types and Structs
+
+### Provider (`provider.go`)
+
+Represents a source or target infrastructure connection.
+
+```
+ProviderSpec {
+  Type           *ProviderType            // required, see ProviderType enum below
+  URL            string                   // empty for "host" (local) OpenShift provider
+  Secret         core.ObjectReference     // credentials secret
+  Settings       map[string]string        // VDDK, SDK endpoint, vCenter, ESXi, target-az, etc.
+}
+ProviderStatus {
+  Phase                 string             // free-form string (Ready, Staging, ValidationFailed, ConnectionFailed)
+  Conditions            libcnd.Conditions  // embedded
+  ObservedGeneration    int64
+  Fingerprint           string
+  Service               *core.ObjectReference
+  SecretResourceVersion string
+}
+```
+
+**ProviderType enum**: `openshift`, `vsphere`, `ovirt`, `openstack`, `ova`, `ec2`, `hyperv`, `""` (Undefined)
+
+**Key methods on Provider**:
+- `Type() ProviderType` — returns the provider type (or `Undefined`)
+- `IsHost() bool` — OpenShift provider with empty URL (local cluster)
+- `IsRestrictedHost() bool` — host provider outside the main Forklift namespace
+- `RequiresConversion() bool` — true for `vsphere`, `ova`, `hyperv`, `ec2`
+- `SupportsPreserveStaticIps() bool` — true for `vsphere`, `hyperv`
+- `HasReconciled() bool` — generation == observedGeneration
+- `UseVddkAioOptimization() bool` — reads `settings["useVddkAioOptimization"]`
+
+**Provider settings constants**: `VDDK`, `SDK` (sdkEndpoint), `VCenter`, `ESXI`, `UseVddkAioOptimization`, `VddkConfig`, `ESXiCloneMethod` ("vib"|"ssh"), `TargetAZ` (target-az), `TargetRegion` (target-region)
+
+### Plan (`plan.go`)
+
+Defines a migration plan selecting VMs and their mappings.
+
+```
+PlanSpec {
+  Description                    string
+  TargetNamespace                string
+  ServiceAccount                 string
+  TargetLabels                   map[string]string
+  TargetNodeSelector             map[string]string
+  TargetAffinity                 *core.Affinity
+  ConvertorLabels                map[string]string
+  ConvertorNodeSelector          map[string]string
+  ConvertorAffinity              *core.Affinity
+  ConversionTempStorageClass     string
+  ConversionTempStorageSize      string
+  Provider                       provider.Pair          // Source + Destination ObjectReferences
+  Map                            plan.Map               // Network + Storage ObjectReferences
+  VMs                            []plan.VM              // list of VMs to migrate
+  Warm                           bool                   // deprecated, use Type
+  Type                           MigrationType          // "cold"|"warm"|"live"|"conversion"
+  TransferNetwork                *core.ObjectReference
+  Archived                       bool
+  PreserveClusterCPUModel        bool
+  PreserveStaticIPs              bool                   // default true
+  SkipZoneNodeSelector           bool                   // EC2 only
+  MigrateSharedDisks             bool                   // default true
+  RDMAsLun                       bool
+  DeleteGuestConversionPod       bool
+  DeleteVmOnFailMigration        bool                   // default true
+  SkipGuestConversion            bool                   // default false
+  UseCompatibilityMode           bool                   // default true (SATA/E1000E when skip guest conversion)
+  RunPreflightInspection         bool                   // default true
+  TargetPowerState               plan.TargetPowerState  // "on"|"off"|"auto"
+  InstallLegacyDrivers           *bool
+  EnableNestedVirtualization     *bool
+  XfsCompatibility               bool                   // default false
+  VirtV2vImage                   string
+  CustomizationScripts           *core.ObjectReference
+  PVCNameTemplate                string
+  PVCNameTemplateUseGenerateName bool                   // default true
+  VolumeNameTemplate             string
+  NetworkNameTemplate            string
+  DiskBus                        cnv.DiskBus            // deprecated
+}
+PlanStatus {
+  Conditions         libcnd.Conditions
+  ObservedGeneration int64
+  Migration          plan.MigrationStatus   // VMs statuses, history snapshots, timing
+}
+```
+
+**MigrationType enum**: `cold`, `warm`, `live`, `conversion`
+
+**TargetPowerState enum**: `on`, `off`, `auto`
+
+**Key methods on Plan**:
+- `IsWarm() bool` — `Spec.Warm || Spec.Type == "warm"`
+- `ShouldUseV2vForTransfer(vmRef) (bool, error)` — true when cold vSphere migration to host cluster, with shared disks, not skip-guest-conversion, not conversion-only
+- `ShouldRunPreflightInspection() bool` — vSphere + warm + !skipGuestConversion + runPreflightInspection
+- `IsUsingOffloadPlugin() bool` — any storage mapping has VSphereXcopyPluginConfig
+- `IsSourceProviderVSphere/Ovirt/OCP/Openstack() bool`
+- `DestinationHasUdnNetwork(client) bool` — checks for primary UDN in target namespace
+
+### plan.VM (`plan/vm.go`)
+
+Individual VM entry in a Plan. Embeds `ref.Ref` (ID, Name, Namespace, Type). Key fields: `Hooks []HookRef`, `LUKS` (secret ref), `NbdeClevis`, `RootDisk`, `InstanceType`, `TargetName`, `TargetPowerState`. Override fields: `PVCNameTemplate`, `VolumeNameTemplate`, `NetworkNameTemplate`, `DeleteVmOnFailMigration`, `MigrateSharedDisks *bool`, `EnableNestedVirtualization *bool`, `RDMAsLun *bool`.
+
+### plan.VMStatus (`plan/vm.go`)
+
+Per-VM migration status. Embeds `Timed` + `VM` + `libcnd.Conditions`. Key fields: `Pipeline []*Step`, `Phase string` (phase constant), `Error *Error` (phase + reasons), `Warm *Warm` (successes/failures/precopies tracking), `RestorePowerState` ("On"|"Off"|"Unknown"), `Firmware`, `OperatingSystem`, `DetectedBootDisk *int`, `NewName`.
+
+### Migration (`migration.go`)
+
+Active migration execution, created when a Plan runs.
+
+```
+MigrationSpec {
+  Plan    core.ObjectReference  // ref to Plan
+  Cancel  []ref.Ref             // VMs to cancel
+  Cutover *meta.Time            // warm migration cutover override
+}
+MigrationStatus {
+  Timed                          // Started, Completed
+  Conditions      libcnd.Conditions
+  ObservedGeneration int64
+  VMs             []*plan.VMStatus
+}
+```
+
+### NetworkMap (`mapping.go`)
+
+Maps source networks to target networks.
+
+```
+NetworkMapSpec {
+  Provider   provider.Pair   // Source + Destination
+  Map        []NetworkPair   // source ref → DestinationNetwork
+}
+DestinationNetwork { Type string ("pod"|"multus"|"ignored"), Namespace, Name }
+```
+
+### StorageMap (`mapping.go`)
+
+Maps source storage to target storage classes.
+
+```
+StorageMapSpec {
+  Provider   provider.Pair
+  Map        []StoragePair   // source ref → DestinationStorage + optional OffloadPlugin
+}
+DestinationStorage { StorageClass, VolumeMode ("Filesystem"|"Block"), AccessMode }
+OffloadPlugin { VSphereXcopyPluginConfig { SecretRef, StorageVendorProduct } }
+```
+
+**StorageVendorProduct enum**: `flashsystem`, `vantara`, `ontap`, `primera3par`, `pureFlashArray`, `powerflex`, `powermax`, `powerstore`, `infinibox`
+
+Both NetworkMap and StorageMap share `MapStatus { Conditions, Refs, ObservedGeneration }`.
+
+### Hook (`hook.go`)
+
+Pre/post migration scripts. Local hooks need `image`; AAP hooks need `aap` config.
+
+```
+HookSpec {
+  ServiceAccount string
+  Image          string     // container image (local hooks)
+  Playbook       string     // base64-encoded Ansible playbook
+  Deadline       int64      // seconds
+  AAP            *AAPConfig // Ansible Automation Platform remote execution
+}
+AAPConfig { URL, JobTemplateID int, TokenSecret core.ObjectReference, Timeout int64 }
+```
+
+`HookExecutionConfigValid(hook)` validates mutual exclusivity of local vs AAP config.
+
+### Host (`host.go`)
+
+ESXi host for direct disk transfer (vSphere only).
+
+```
+HostSpec {
+  ref.Ref               // inline
+  Provider   core.ObjectReference
+  IpAddress  string
+  Secret     core.ObjectReference
+}
+```
+
+**Printed columns**: READY, CONNECTED, AGE
+
+### OVAProviderServer / HyperVProviderServer
+
+Sidecar server pods for OVA/HyperV inventory. Both have: `Spec { Provider ObjectRef }`, `Status { Phase, Service *ObjectRef, Conditions }`.
+
+### Volume Populators
+
+Provider-specific CRDs for disk transfer:
+- **OvirtVolumePopulator** — `Spec { EngineURL, EngineSecretName, DiskID, TransferNetwork }`
+- **OpenstackVolumePopulator** — `Spec { IdentityURL, SecretName, ImageID, TransferNetwork }`
+- **VSphereXcopyVolumePopulator** — `Spec { VmId, VmdkPath, SecretName, StorageVendorProduct }`
+
+### ref.Ref (`ref/ref.go`)
+
+Universal source reference: `{ ID, Name, Namespace, Type }`. `ID` = managed object ID (e.g., vSphere MoRef). `Namespace` only relevant for OpenShift sources.
+
+### Referenced (`referenced.go`)
+
+Transient (non-serialized, `json:"-"`) struct holding resolved references during validation. Contains `Provider {Source, Destination}`, `Secret`, `Plan`, `Map {Network, Storage}`, `Hooks`.
+
+---
+
+## Phase Constants (`doc.go`)
+
+### Common VM Phases
+| Constant | Value |
+|---|---|
+| `PhaseStarted` | `"Started"` |
+| `PhasePreHook` | `"PreHook"` |
+| `PhasePostHook` | `"PostHook"` |
+| `PhaseCompleted` | `"Completed"` |
+
+### Warm and Cold Migration Phases
+| Constant | Value |
+|---|---|
+| `PhaseAddCheckpoint` | `"AddCheckpoint"` |
+| `PhaseAddFinalCheckpoint` | `"AddFinalCheckpoint"` |
+| `PhaseAllocateDisks` | `"AllocateDisks"` |
+| `PhaseConvertGuest` | `"ConvertGuest"` |
+| `PhaseConvertOpenstackSnapshot` | `"ConvertOpenstackSnapshot"` |
+| `PhaseCopyDisks` | `"CopyDisks"` |
+| `PhaseCopyDisksVirtV2V` | `"CopyDisksVirtV2V"` |
+| `PhaseCopyingPaused` | `"CopyingPaused"` |
+| `PhaseCreateDataVolumes` | `"CreateDataVolumes"` |
+| `PhaseCreateFinalSnapshot` | `"CreateFinalSnapshot"` |
+| `PhaseCreateGuestConversionPod` | `"CreateGuestConversionPod"` |
+| `PhaseCreateInitialSnapshot` | `"CreateInitialSnapshot"` |
+| `PhaseCreateSnapshot` | `"CreateSnapshot"` |
+| `PhaseCreateVM` | `"CreateVM"` |
+| `PhaseFinalize` | `"Finalize"` |
+| `PhasePreflightInspection` | `"PreflightInspection"` |
+| `PhasePowerOffSource` | `"PowerOffSource"` |
+| `PhaseRemoveFinalSnapshot` | `"RemoveFinalSnapshot"` |
+| `PhaseRemovePenultimateSnapshot` | `"RemovePenultimateSnapshot"` |
+| `PhaseRemovePreviousSnapshot` | `"RemovePreviousSnapshot"` |
+| `PhaseStoreInitialSnapshotDeltas` | `"StoreInitialSnapshotDeltas"` |
+| `PhaseStorePowerState` | `"StorePowerState"` |
+| `PhaseStoreSnapshotDeltas` | `"StoreSnapshotDeltas"` |
+| `PhaseWaitForFinalSnapshot` | `"WaitForFinalSnapshot"` |
+| `PhaseWaitForFinalSnapshotRemoval` | `"WaitForFinalSnapshotRemoval"` |
+| `PhaseWaitForInitialSnapshot` | `"WaitForInitialSnapshot"` |
+| `PhaseWaitForPenultimateSnapshotRemoval` | `"WaitForPenultimateSnapshotRemoval"` |
+| `PhaseWaitForPowerOff` | `"WaitForPowerOff"` |
+| `PhaseWaitForPreviousSnapshotRemoval` | `"WaitForPreviousSnapshotRemoval"` |
+| `PhaseWaitForSnapshot` | `"WaitForSnapshot"` |
+
+### Step/Task Phases
+`StepStarted`, `StepPending`, `StepRunning`, `StepCompleted`
+
+---
+
+## Condition Framework (`pkg/lib/condition/`)
+
+### Condition Struct
+
+Fields: `Type` (string), `Status` ("True"/"False"), `Reason`, `Category`, `Message`, `Suggestion` (proposed resolution), `LastTransitionTime`, `Durable` (bool, never removed during staging), `Items` ([]string, referenced in Message).
+
+### Categories
+| Category | Effect |
+|---|---|
+| `Critical` | Blocks reconcile AND the `Ready` condition |
+| `Error` | Blocks the `Ready` condition |
+| `Warn` | Warning; does NOT block `Ready` |
+| `Required` | Required for `Ready` |
+| `Advisory` | Informational only |
+| `ValidatingVDDK` | Special: triggers re-queue while pending |
+| `VMMissingGuestIPs` | Special: VM missing guest IPs |
+| `VMMissingChangedBlockTracking` | Special: triggers re-queue |
+| `SharedDisks` | Special: user needs to power off VMs with shared disks |
+
+### Conditions Collection
+
+Embedded in every CRD Status via `libcnd.Conditions`. Uses a **staging pattern**:
+
+```go
+status.BeginStagingConditions()  // mark all non-Durable conditions as un-staged
+status.SetCondition(c1)          // stage conditions
+status.SetCondition(c2)
+status.EndStagingConditions()    // delete un-staged conditions
+status.SetReady(!status.HasBlockerCondition(), "Ready message")
+```
+
+**Key collection methods**:
+- `HasCondition(types...) bool` — all specified conditions exist with Status=True
+- `HasAnyCondition(types...) bool` — any of specified conditions exist
+- `HasBlockerCondition() bool` — has Critical or Error category
+- `HasCriticalCondition() bool` — has Critical category
+- `IsReady() bool` — Ready condition with Status=True
+- `FindCondition(type) *Condition`
+- `HasReQCondition() bool` — has ValidatingVDDK or VMMissingChangedBlockTracking
+
+### CRD-level Condition Type Constants (`doc.go`)
+| Constant | Value | Used by |
+|---|---|---|
+| `ConditionExecuting` | `"Executing"` | Plan |
+| `ConditionRunning` | `"Running"` | Migration |
+| `ConditionPending` | `"Pending"` | Migration VMs |
+| `ConditionCanceled` | `"Canceled"` | Migration VMs |
+| `ConditionSucceeded` | `"Succeeded"` | Plan, Migration |
+| `ConditionFailed` | `"Failed"` | Plan, Migration |
+| `ConditionBlocked` | `"Blocked"` | Plan VMs |
+| `ConditionDeleted` | `"Deleted"` | Plan VMs |
+
+Built-in types from `lib/condition`: `Ready`, `ReconcileFailed`
+
+---
+
+## Status Conditions per CRD
+
+| CRD | Printed Columns (kubebuilder) | Key Conditions |
+|---|---|---|
+| **Provider** | READY, CONNECTED (`ConnectionTestSucceeded`), INVENTORY (`InventoryCreated`) | Ready, ConnectionTestSucceeded, InventoryCreated |
+| **Plan** | READY, EXECUTING, SUCCEEDED, FAILED | Ready, Executing, Succeeded, Failed |
+| **Migration** | READY, RUNNING, SUCCEEDED, FAILED | Ready, Running, Succeeded, Failed |
+| **NetworkMap** | READY | Ready |
+| **StorageMap** | READY | Ready |
+| **Hook** | Ready | Ready |
+| **Host** | READY, CONNECTED (`ConnectionTestSucceeded`) | Ready, ConnectionTestSucceeded |
+
+---
+
+## Important Methods
+
+### Plan Decision Helpers
+- **`ShouldUseV2vForTransfer(vmRef)`** — Uses virt-v2v direct transfer (vs CDI+v2v-in-place). True when: vSphere source AND cold AND destination is host AND migrateSharedDisks AND !skipGuestConversion AND type != conversion. For OVA/HyperV always true.
+- **`ShouldRunPreflightInspection()`** — True when: vSphere AND warm AND !skipGuestConversion AND runPreflightInspection enabled.
+- **`IsUsingOffloadPlugin()`** — Scans storage map for XCOPY offload configs.
+- **`IsWarm()`** — Checks both deprecated `Warm` bool and new `Type` field.
+
+### Provider Type Checks
+- `RequiresConversion()` — `vsphere | ova | hyperv | ec2`
+- `SupportsPreserveStaticIps()` — `vsphere | hyperv`
+
+### Timed (plan/timed.go)
+Base struct for Started/Completed timestamps, used by VMStatus, MigrationStatus, Step, Task.
+- `MarkStarted()`, `MarkCompleted()`, `MarkedStarted()`, `MarkedCompleted()`, `Running()`
+
+### Pipeline (plan/migration.go)
+- `Step { Task, Tasks []*Task }` — nested pipeline structure
+- `Task { Timed, Name, Description, Phase, Reason, Progress, Annotations, Error }`
+- `VMStatus.ReflectPipeline()` — aggregates step states into VM-level started/completed/errors
+
+---
+
+## Labels and Annotations
+
+| Key | Constant | Usage |
+|---|---|---|
+| `forklift.konveyor.io/disk-source` | `AnnDiskSource` | Annotation on PVCs identifying source disk |
+| `forklift.konveyor.io/source` | `AnnSource` | Annotation on PVCs identifying source type |
+| `k8s.ovn.org/primary-user-defined-network` | (internal) | Namespace label for UDN detection |
+| `k8s.ovn.org/user-defined-network` | (internal) | NAD label for UDN detection |
+
+System-managed labels on target VMs and convertor pods (noted in PlanSpec docs): `migration`, `plan`, `vmID`, `app`/`forklift.app`.
+
+---
+
+## Frontend Relevance
+
+The Go types map to TypeScript types in `@forklift-ui/types`:
+
+| Go Type | TS Usage | Notes |
+|---|---|---|
+| `ProviderType` | Provider `spec.type` field | UI adds `ApplianceManagementEnabled`, `Unknown` pseudo-phases |
+| `MigrationType` | Plan `spec.type` | "cold"/"warm"/"live"/"conversion" |
+| `TargetPowerState` | Plan `spec.targetPowerState` | "on"/"off"/"auto" |
+| `Provider.Status.Phase` | Provider phase column | Go has no enum; UI adds Unknown |
+| `Condition.Type/Status/Category` | `status.conditions[]` on all CRDs | UI reads conditions array directly |
+| Phase constants | `VMStatus.phase` | Displayed in migration progress pipeline |
+| `Step/Task` | Pipeline progress bars | `progress.completed` tracked per task |
+| `plan.VM.TargetName` | VM rename in wizard | Empty = auto DNS1123 normalization |
+| `StorageVendorProduct` | Offload plugin config in storage mapping | Used for XCOPY vendor selection |
+| `DestinationNetwork.Type` | Network mapping "pod"/"multus"/"ignored" | Drives network mapping UI |
+| `DestinationStorage` | Storage mapping target | storageClass + volumeMode + accessMode |
+
+The console plugin reads `status.conditions` arrays and uses `condition.type` + `condition.status` to derive UI states. The Plan UI maps backend conditions (Ready, Executing, Succeeded, Failed) to frontend statuses (Ready, Executing, Completed, Paused, Incomplete, CannotStart, Canceled, Archived, Unknown).
