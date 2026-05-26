@@ -7,17 +7,14 @@ import {
   type UseFormTrigger,
   useWatch,
 } from 'react-hook-form';
-import EmptyCategorySelectOption from 'src/plans/components/EmptyCategorySelectOption';
-import {
-  NetworkMapFieldId,
-  type NetworkMapping,
-} from 'src/plans/create/steps/network-map/constants';
-import type { MappingValue } from 'src/plans/create/types';
 
+import EmptyCategorySelectOption from '@components/common/EmptyCategorySelectOption/EmptyCategorySelectOption';
 import Select from '@components/common/Select';
 import { SelectGroup, SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import { NetworkMapFieldId, type NetworkMapping } from '@utils/mappings/networkMap';
+import type { MappingValue } from '@utils/types';
 
 import { isNetworkMappingDisabled } from './utils/utils';
 

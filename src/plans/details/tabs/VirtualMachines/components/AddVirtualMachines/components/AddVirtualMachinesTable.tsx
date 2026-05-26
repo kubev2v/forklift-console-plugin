@@ -9,13 +9,13 @@ import { OvaVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachin
 import { OVirtVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OVirtVirtualMachinesList';
 import { getVmId } from 'src/providers/details/tabs/VirtualMachines/utils/helpers/vmProps';
 import { VSphereVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/VSphereVirtualMachinesList';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
 import { EmptyState, EmptyStateVariant, Spinner, Title } from '@patternfly/react-core';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 type AddVirtualMachinesTableProps = {
   plan: V1beta1Plan;

@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { KJUR, pemtohex, X509, zulutodate } from 'jsrsasign';
 
 import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';
-
-import { getServicesApiUrl } from '../utils/helpers/getApiUrl';
+import { getServicesApiUrl } from '@utils/api/getApiUrl';
 
 /**
  * @param value PEM encoded certificate

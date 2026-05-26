@@ -1,4 +1,4 @@
-import { OVERVIEW_BASE_PATH, type OverviewTabHref } from '../../overview/constants';
+import { OVERVIEW_BASE_PATH, type OverviewTabHref } from '@utils/paths/overview';
 
 export const getOverviewPath = (tab?: OverviewTabHref): string => {
   if (tab) {

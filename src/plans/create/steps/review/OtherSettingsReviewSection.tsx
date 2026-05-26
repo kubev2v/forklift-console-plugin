@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { useWatch } from 'react-hook-form';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import ExpandableReviewSection from '@components/ExpandableReviewSection/ExpandableReviewSection';
 import {
@@ -12,6 +11,7 @@ import {
 } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';

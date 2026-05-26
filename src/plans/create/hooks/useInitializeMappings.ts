@@ -2,8 +2,9 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { isEmpty } from '@utils/helpers';
+import type { MappingValue } from '@utils/types';
 
-import type { MappingFieldIds, MappingValue } from '../types';
+import type { MappingFieldIds } from '../types';
 import { fillUnmappedSources } from '../utils/fillUnmappedSources';
 type UseInitializeMappingsParams<T extends Record<string, unknown>> = {
   isLoading: boolean;

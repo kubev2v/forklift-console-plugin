@@ -1,7 +1,6 @@
 import { type FC, Fragment, useState } from 'react';
 import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
 import { getPluginLabel, getVendorProductLabel } from 'src/storageMaps/utils/labelHelpers';
-import type { StorageMapping } from 'src/storageMaps/utils/types';
 
 import {
   Card,
@@ -15,6 +14,7 @@ import {
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { EMPTY_MSG } from '@utils/constants';
 import { useForkliftTranslation } from '@utils/i18n';
+import type { StorageMapping } from '@utils/storage/types';
 
 import { CreatePlanStorageMapFieldId } from '../storage-map/constants';
 

@@ -1,7 +1,6 @@
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-
 import type { ProviderVirtualMachine } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { type Ec2VmLike, getEc2SubnetIds, isEc2Vm } from '../ec2Inventory';
 

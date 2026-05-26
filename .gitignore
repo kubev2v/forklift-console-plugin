@@ -4,6 +4,7 @@ distlib/
 coverage/
 test-results/
 testing/.providers.json
+testing/e2e.env
 testing/playwright/.resources.json
 testing/playwright-report
 tmp/

@@ -1,5 +1,3 @@
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-
 import type {
   OpenShiftNetworkAttachmentDefinition,
   OVirtNicProfile,
@@ -9,13 +7,18 @@ import type {
 import { DEFAULT_NETWORK, Namespace } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
+import {
+  defaultNetMapping,
+  NetworkMapFieldId,
+  type NetworkMapping,
+} from '@utils/mappings/networkMap';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import type { MappingValue } from '@utils/types';
 import { getEc2SubnetIds, isEc2Vm } from '@utils/types/ec2Inventory';
 
-import type { CategorizedSourceMappings, MappingValue, ProviderNetwork } from '../../types';
+import type { CategorizedSourceMappings, ProviderNetwork } from '../../types';
 import { hasMultiplePodNetworkMappings } from '../../utils/hasMultiplePodNetworkMappings';
 import { getMapResourceLabel } from '../utils';
-
-import { defaultNetMapping, NetworkMapFieldId, type NetworkMapping } from './constants';
 type NetworkMappingId = `${NetworkMapFieldId.NetworkMap}.${number}.${keyof NetworkMapping}`;
 
 type ValidateNetworkMapParams = {

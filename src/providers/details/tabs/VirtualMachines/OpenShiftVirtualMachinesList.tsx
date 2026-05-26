@@ -6,11 +6,11 @@ import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tab
 import type { ResourceField } from '@components/common/utils/types';
 import { TableSortContextProvider } from '@components/TableSortContextProvider';
 import { t } from '@utils/i18n';
+import { getVmPowerState } from '@utils/virtual-machines/getVmPowerState';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import type { VmData } from './components/VMCellProps';
 import { getOpenShiftFeatureMap } from './utils/helpers/getOpenShiftFeatureMap';
-import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { toVmFeatureEnum } from './utils/helpers/toVmFeatureEnum';
 import { OpenShiftVirtualMachinesCells } from './OpenShiftVirtualMachinesRow';
 

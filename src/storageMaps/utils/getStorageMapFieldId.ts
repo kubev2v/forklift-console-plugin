@@ -1,6 +1,5 @@
 import { getMapFieldId } from '@utils/mapForms/getMapFieldId';
-
-import { StorageMapFieldId, type StorageMapping } from './types';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 
 type StorageMappingId = `${StorageMapFieldId.StorageMap}.${number}.${keyof StorageMapping}`;
 

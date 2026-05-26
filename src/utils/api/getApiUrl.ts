@@ -1,8 +1,8 @@
 /**
  * Provides API url.
  *
- * @param {string} relativePath - An optional relative path to append to the URL
- * @returns {string} - The API URL
+ * @param relativePath - An optional relative path to append to the URL
+ * @returns The API URL
  */
 const getApiUrl = (relativePath = ''): string => {
   const pluginPath = `/api/proxy/plugin/${process.env.PLUGIN_NAME}`;
@@ -12,8 +12,8 @@ const getApiUrl = (relativePath = ''): string => {
 /**
  * Provides API url for getting inventory.
  *
- * @param {string} relativePath - An optional relative path to append to the URL
- * @returns {string} - The API URL for getting inventory
+ * @param relativePath - An optional relative path to append to the URL
+ * @returns The API URL for getting inventory
  */
 export const getInventoryApiUrl = (relativePath = ''): string => {
   const inventoryPath = 'forklift-inventory';
@@ -23,8 +23,8 @@ export const getInventoryApiUrl = (relativePath = ''): string => {
 /**
  * Provides API url for getting services.
  *
- * @param {string} relativePath - An optional relative path to append to the URL
- * @returns {string} - The API URL for getting services
+ * @param relativePath - An optional relative path to append to the URL
+ * @returns The API URL for getting services
  */
 export const getServicesApiUrl = (relativePath = ''): string => {
   const path = 'forklift-services';
@@ -34,8 +34,8 @@ export const getServicesApiUrl = (relativePath = ''): string => {
 /**
  * Provides API url for the OVA proxy.
  *
- * @param {string} relativePath - An optional relative path to append to the URL
- * @returns {string} - The API URL for getting services
+ * @param relativePath - An optional relative path to append to the URL
+ * @returns The API URL for the OVA proxy
  */
 export const getOVAProxyUrl = (relativePath = ''): string => {
   const path = 'forklift-ova-proxy';

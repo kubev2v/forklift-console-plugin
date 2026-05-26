@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { TargetPowerStateValue } from 'src/plans/constants';
 import { getVmTargetPowerState } from 'src/plans/details/components/PlanStatus/utils/utils';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
@@ -8,6 +7,7 @@ import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/a
 import { Form, Stack } from '@patternfly/react-core';
 import { getPlanTargetPowerState, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
+import type { TargetPowerStateValue } from '@utils/plans/constants';
 
 import type { EditPlanProps } from '../../utils/types';
 

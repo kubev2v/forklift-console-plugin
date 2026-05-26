@@ -4,12 +4,12 @@ import {
   getTargetPowerStateLabel,
   type TargetPowerState,
   targetPowerStateOptions,
-  type TargetPowerStateValue,
 } from 'src/plans/constants';
 
 import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import type { TargetPowerStateValue } from '@utils/plans/constants';
 
 type TargetPowerStateDropdownProps = {
   value: TargetPowerStateValue;

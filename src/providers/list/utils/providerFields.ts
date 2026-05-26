@@ -1,12 +1,12 @@
 import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 import { SOURCE_ONLY_PROVIDER_TYPES } from 'src/providers/utils/helpers/getIsTarget';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import { enumToTuple } from '@components/common/FilterGroup/helpers';
 import type { ResourceField } from '@components/common/utils/types';
 import type { ProviderType } from '@forklift-ui/types';
 import { PROVIDERS } from '@utils/enums';
 import { t } from '@utils/i18n';
+import type { ProviderData } from '@utils/providers/types';
 import { ProviderStatus } from '@utils/types';
 
 import { getProviderStorageCount } from './getProviderStorageCount';

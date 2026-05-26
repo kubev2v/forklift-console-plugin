@@ -2,7 +2,8 @@ import type { FC } from 'react';
 import { useFormContext } from 'react-hook-form';
 import SharedSourceNetworkField from 'src/components/mappings/network-mappings/SourceNetworkField';
 import type { NetworkMappingId } from 'src/networkMaps/utils/getNetworkMapFieldId';
-import type { MappingValue } from 'src/plans/create/types';
+
+import type { MappingValue } from '@utils/types';
 
 import type { PlanNetworkEditFormValues } from '../utils/types';
 

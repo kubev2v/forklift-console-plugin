@@ -1,9 +1,8 @@
-import type { StorageMapping } from 'src/storageMaps/utils/types';
 import { validateOffloadFields } from 'src/storageMaps/utils/validateOffloadFields';
 
 import { t } from '@utils/i18n';
-
-import type { MappingValue } from '../../types';
+import type { StorageMapping } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 import { CreatePlanStorageMapFieldId } from './constants';
 

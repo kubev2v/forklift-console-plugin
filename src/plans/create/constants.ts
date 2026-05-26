@@ -2,12 +2,12 @@ import { createContext } from 'react';
 
 import type { WizardStepType } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
+import { NetworkMapFieldId } from '@utils/mappings/networkMap';
 
 import { CustomScriptsFieldId } from './steps/customization-scripts/constants';
 import { GeneralFormFieldId } from './steps/general-information/constants';
 import { AapFormFieldId, HooksFormFieldId } from './steps/migration-hooks/constants';
 import { MigrationTypeFieldId } from './steps/migration-type/constants';
-import { NetworkMapFieldId } from './steps/network-map/constants';
 import { OtherSettingsFormFieldId } from './steps/other-settings/constants';
 import { CreatePlanStorageMapFieldId } from './steps/storage-map/constants';
 import { VmFormFieldId } from './steps/virtual-machines/constants';

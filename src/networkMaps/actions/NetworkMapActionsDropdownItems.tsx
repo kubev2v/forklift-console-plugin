@@ -5,9 +5,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { NetworkMapModel, NetworkMapModelRef } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem } from '@patternfly/react-core';
+import type { NetworkMapData } from '@utils/crds/maps/types';
 import { getResourceUrl } from '@utils/getResourceUrl';
-
-import type { NetworkMapData } from '../utils/types';
 
 type NetworkMapActionsDropdownItemsProps = {
   data: NetworkMapData;

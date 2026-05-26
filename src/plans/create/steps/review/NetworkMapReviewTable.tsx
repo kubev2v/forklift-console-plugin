@@ -3,8 +3,7 @@ import type { FC } from 'react';
 import { Card } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useForkliftTranslation } from '@utils/i18n';
-
-import { NetworkMapFieldId, type NetworkMapping } from '../network-map/constants';
+import { NetworkMapFieldId, type NetworkMapping } from '@utils/mappings/networkMap';
 
 type NetworkMapReviewTableProps = {
   networkMap: NetworkMapping[];

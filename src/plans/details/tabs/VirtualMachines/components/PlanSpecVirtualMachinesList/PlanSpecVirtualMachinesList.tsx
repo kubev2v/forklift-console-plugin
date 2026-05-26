@@ -11,13 +11,13 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import ConcernsAndConditionsTable from '@components/ConcernsAndConditionsTable/ConcernsAndConditionsTable';
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { Stack, StackItem } from '@patternfly/react-core';
+import type { SpecVirtualMachinePageData } from '@utils/types/specVirtualMachinePageData';
 
 import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
 
 import { useInspectionData } from './hooks/useInspectionData';
 import { useSpecVirtualMachinesActions } from './hooks/useSpecVirtualMachinesActions';
 import { useSpecVirtualMachinesListData } from './hooks/useSpecVirtualMachinesListData';
-import type { SpecVirtualMachinePageData } from './utils/types';
 import { canSelect, specVirtualMachineFields, vmDataToId } from './utils/utils';
 import PlanSpecVirtualMachinesRow from './PlanSpecVirtualMachinesRow';
 

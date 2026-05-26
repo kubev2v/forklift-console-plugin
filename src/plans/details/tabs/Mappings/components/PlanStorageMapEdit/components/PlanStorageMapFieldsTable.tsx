@@ -2,13 +2,10 @@ import { type FC, useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { createPlanStorageMapFieldLabels } from 'src/plans/create/steps/storage-map/constants';
 import { validatePlanStorageMaps } from 'src/plans/create/steps/storage-map/utils';
-import type { MappingValue } from 'src/plans/create/types';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import GroupedSourceStorageField from 'src/storageMaps/components/GroupedSourceStorageField';
 import OffloadStorageRow from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageRow';
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
-import { StorageMapFieldId, type TargetStorage } from 'src/storageMaps/utils/types';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import type { V1beta1Provider } from '@forklift-ui/types';
@@ -16,6 +13,9 @@ import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import type { InventoryStorage } from '@utils/hooks/useStorages';
 import { useForkliftTranslation } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import { StorageMapFieldId, type TargetStorage } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 import type { PlanStorageEditFormValues } from '../utils/types';
 

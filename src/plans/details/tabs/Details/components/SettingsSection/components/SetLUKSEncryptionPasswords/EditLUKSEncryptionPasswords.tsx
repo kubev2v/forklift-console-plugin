@@ -12,8 +12,9 @@ import { getNamespace } from '@utils/crds/common/selectors';
 import { getLUKSSecretName, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
-import type { EditPlanProps, EnhancedPlanSpecVms } from '../../utils/types';
+import type { EditPlanProps } from '../../utils/types';
 
 import EditLUKSModalAlert from './components/EditLUKSModalAlert';
 import EditLUKSModalBody from './components/EditLUKSModalBody';

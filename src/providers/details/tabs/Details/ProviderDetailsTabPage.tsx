@@ -1,9 +1,9 @@
 import type { FC } from 'react';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 
 import { type ProviderInventory, ProviderModel } from '@forklift-ui/types';
+import type { ProviderData } from '@utils/providers/types';
 
 import { useProvider } from '../../hooks/useProvider';
 import type { ProviderDetailsPageProps } from '../../utils/types';

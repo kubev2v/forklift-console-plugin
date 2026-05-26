@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { EnhancedPlanSpecVms } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -9,6 +8,7 @@ import { Stack, StackItem, TextInput, ValidatedOptions } from '@patternfly/react
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
+import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 import { patchVMTargetName, validateVMTargetName } from '../utils/utils';
 

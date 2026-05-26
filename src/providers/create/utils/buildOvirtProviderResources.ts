@@ -1,8 +1,8 @@
 import { encode } from 'js-base64';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import { encodeFormValue } from '@utils/helpers/encodeFormValue';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { CertificateValidationMode, ProviderFormFieldId } from '../fields/constants';
 import type { OvirtFormData } from '../types';

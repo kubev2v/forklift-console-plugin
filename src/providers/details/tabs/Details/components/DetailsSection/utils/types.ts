@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import type { ProviderFormFieldId } from 'src/providers/create/fields/constants';
 import type { VddkSetupMode } from 'src/providers/utils/constants';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
+import type { ProviderData } from '@utils/providers/types';
 
 export type DetailsSectionProps = {
   data: ProviderData;

@@ -1,5 +1,4 @@
 import { FormProvider, useForm } from 'react-hook-form';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
@@ -8,6 +7,7 @@ import { Form, ModalVariant } from '@patternfly/react-core';
 import { getType } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import CertificateValidationField from '../../../../create/fields/CertificateValidationField';
 import type { CreateProviderFormData } from '../../../../create/types';

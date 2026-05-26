@@ -2,7 +2,6 @@ import { type FC, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import type { GlobalActionToolbarProps } from 'src/components/common/utils/types';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -14,6 +13,7 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
+import type { ProviderData } from '@utils/providers/types';
 
 import { hostsFields } from './utils/constants';
 import { matchHostsToInventory } from './utils/matchHostsToInventory';

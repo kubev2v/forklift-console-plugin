@@ -2,13 +2,13 @@ import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { ResourceField } from '@components/common/utils/types';
 import ConcernsAndConditionsTable from '@components/ConcernsAndConditionsTable/ConcernsAndConditionsTable';
 import { EmptyState, EmptyStateVariant, Spinner, Title } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
+import type { ProviderData } from '@utils/providers/types';
 import { isProviderEc2, isProviderOpenshift } from '@utils/resources';
 
 import { getVmId } from '../utils/helpers/vmProps';

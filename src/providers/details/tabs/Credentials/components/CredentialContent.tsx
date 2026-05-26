@@ -1,8 +1,9 @@
 import type { FC } from 'react';
-import { PROVIDER_TYPES, VSphereEndpointType } from 'src/providers/utils/constants';
+import { VSphereEndpointType } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import { getSdkEndpoint, getType } from '@utils/crds/common/selectors';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import {
   ec2CredentialsFields,

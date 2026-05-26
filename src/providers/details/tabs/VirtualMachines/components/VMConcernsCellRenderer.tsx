@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { TableCell } from 'src/components/TableCell/TableCell';
 import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import ConcernPopover from '@components/Concerns/components/ConcernsPopover';
 import { groupConcernsByCategory } from '@components/Concerns/utils/category';
@@ -9,6 +8,7 @@ import type { ConcernCategory } from '@components/Concerns/utils/constants';
 import type { Concern } from '@forklift-ui/types';
 import { Split, SplitItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { orderedConcernCategories } from '../constants';
 

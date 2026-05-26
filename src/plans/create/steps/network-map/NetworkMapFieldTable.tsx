@@ -5,16 +5,17 @@ import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
 import type { OVirtNicProfile } from '@forklift-ui/types';
 import { useForkliftTranslation } from '@utils/i18n';
-
-import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import type { MappingValue, ProviderVirtualMachine } from '../../types';
-
 import {
   defaultNetMapping,
   netMapFieldLabels,
   NetworkMapFieldId,
   type NetworkMapping,
-} from './constants';
+} from '@utils/mappings/networkMap';
+import type { MappingValue } from '@utils/types';
+
+import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
+import type { ProviderVirtualMachine } from '../../types';
+
 import SourceNetworkField from './SourceNetworkField';
 import { getNetworkMapFieldId, validateNetworkMap } from './utils';
 

@@ -37,7 +37,7 @@ export class SettingsTab {
   }
 
   async getTransferNetworkCurrentValue(): Promise<string | null> {
-    return await this.controllerTransferNetworkField.textContent();
+    return this.controllerTransferNetworkField.textContent();
   }
 
   async navigateToSettings(): Promise<void> {

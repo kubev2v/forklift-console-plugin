@@ -4,10 +4,10 @@ import { createStatusCell } from 'src/components/table/utils/createStatusCell';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
+import type { NetworkMapData } from '@utils/crds/maps/types';
 import { renderResourceRowCells } from '@utils/renderResourceRowCells';
 
 import NetworkMapActionsDropdown from '../actions/NetworkMapActionsDropdown';
-import type { NetworkMapData } from '../utils/types';
 
 import type { CellProps } from './components/CellProps';
 import { ErrorStatusCell } from './components/ErrorStatusCell';

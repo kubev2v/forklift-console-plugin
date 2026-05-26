@@ -1,6 +1,5 @@
+import { NetworkMapFieldId, type NetworkMapping } from '@utils/crds/maps/types';
 import { t } from '@utils/i18n';
-
-import { NetworkMapFieldId, type NetworkMapping } from './types';
 
 export const defaultNetworkMapping: NetworkMapping = {
   [NetworkMapFieldId.SourceNetwork]: { name: '' },

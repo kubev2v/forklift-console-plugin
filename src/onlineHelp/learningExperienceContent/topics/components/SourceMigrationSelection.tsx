@@ -1,6 +1,5 @@
 import { type FC, type Ref, useContext, useState } from 'react';
 import { LearningExperienceContext } from 'src/onlineHelp/learningExperienceDrawer/context/LearningExperienceContext';
-import { PROVIDER_TYPES, type ProviderTypes } from 'src/providers/utils/constants';
 
 import {
   Dropdown,
@@ -9,6 +8,7 @@ import {
   MenuToggle,
   type MenuToggleElement,
 } from '@patternfly/react-core';
+import { PROVIDER_TYPES, type ProviderTypes } from '@utils/providers/constants';
 
 import { MigrationSourceTypeLabels } from '../utils/constants';
 

@@ -7,8 +7,7 @@ import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 import { useWatchConversions } from '@utils/hooks/useWatchConversions';
-
-import type { SpecVirtualMachinePageData } from '../utils/types';
+import type { SpecVirtualMachinePageData } from '@utils/types/specVirtualMachinePageData';
 
 type UseInspectionDataResult = {
   conversions: V1beta1Conversion[];

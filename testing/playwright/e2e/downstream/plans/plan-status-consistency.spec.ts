@@ -99,7 +99,7 @@ test.describe(
       const plan = await test.step('Fetch Plan CR via API', async () => {
         const fetched = await resourceManager.fetchPlan(page, planName, planNamespace);
         expect(fetched).not.toBeNull();
-        return fetched as V1beta1Plan;
+        return fetched!;
       });
 
       const planConditions = (plan.status?.conditions ?? []) as Condition[];
@@ -159,7 +159,7 @@ test.describe(
       const plan = await test.step('Fetch Plan CR', async () => {
         const fetched = await resourceManager.fetchPlan(page, planName, planNamespace);
         expect(fetched).not.toBeNull();
-        return fetched as V1beta1Plan;
+        return fetched!;
       });
 
       const networkMapRef = plan.spec?.map?.network;
@@ -224,7 +224,7 @@ test.describe(
         const refreshed = await resourceManager.fetchPlan(page, planName, planNamespace);
         expect(refreshed).not.toBeNull();
 
-        const conditions = ((refreshed as V1beta1Plan).status?.conditions ?? []) as Condition[];
+        const conditions = (refreshed!.status?.conditions ?? []) as Condition[];
         expect(hasReady(conditions)).toBe(true);
         expect(hasCritical(conditions)).toBe(false);
       });

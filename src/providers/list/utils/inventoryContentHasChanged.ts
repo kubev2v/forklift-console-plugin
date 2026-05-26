@@ -1,8 +1,8 @@
 import type { MutableRefObject } from 'react';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-import { hasObjectChangedInGivenFields } from 'src/providers/utils/helpers/hasObjectChangedInGivenFields';
 
 import type { ProviderInventory, ProvidersInventoryList } from '@forklift-ui/types';
+import { hasObjectChangedInGivenFields } from '@utils/helpers/hasObjectChangedInGivenFields';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 export const inventoryContentHasChanged = (
   newInventoryList: ProvidersInventoryList,

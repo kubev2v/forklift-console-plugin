@@ -12,6 +12,7 @@ import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytic
 import { getOverviewPath } from '@utils/helpers/getOverviewPath';
 import { useLightspeedMcpStatus } from '@utils/hooks/useLightspeedMcpStatus/useLightspeedMcpStatus';
 import { useForkliftTranslation } from '@utils/i18n';
+import { OverviewTabHref } from '@utils/paths/overview';
 
 import { useProvidersInventoryIsLive } from './hooks/useProvidersInventoryIsLive';
 import ForkliftControllerHealthTab from './tabs/Health/ForkliftControllerHealthTab';
@@ -19,7 +20,7 @@ import ForkliftControllerHistoryTab from './tabs/History/ForkliftControllerHisto
 import ForkliftControllerOverviewTab from './tabs/Overview/ForkliftControllerOverviewTab';
 import ForkliftControllerSettingsTab from './tabs/Settings/ForkliftControllerSettingsTab';
 import ForkliftControllerYAMLTab from './tabs/YAML/ForkliftControllerYAMLTab';
-import { OverviewTabHref, OverviewTabName } from './constants';
+import { OverviewTabName } from './constants';
 
 import './OverviewPage.scss';
 

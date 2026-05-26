@@ -1,7 +1,5 @@
-import type { StorageMapping } from 'src/storageMaps/utils/types';
-import { StorageMapFieldId } from 'src/storageMaps/utils/types';
-
 import { describe, expect, it } from '@jest/globals';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 
 import { validatePlanStorageMaps } from '../utils';
 

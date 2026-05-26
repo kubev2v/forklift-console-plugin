@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useOvirtDisksForVMs } from 'src/plans/create/hooks/useOvirtDisksForVMs';
 import { getStorageMappingValues } from 'src/storageMaps/create/utils/buildStorageMappings';
-import type { StorageMapping, TargetStorage } from 'src/storageMaps/utils/types';
 import { type InventoryStorage, useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import {
@@ -18,6 +17,7 @@ import {
   getPlanTargetNamespace,
 } from '@utils/crds/plans/selectors';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
+import type { StorageMapping, TargetStorage } from '@utils/storage/types';
 
 type UsePlanStorageMapResourcesParams = {
   sourceProvider: V1beta1Provider;

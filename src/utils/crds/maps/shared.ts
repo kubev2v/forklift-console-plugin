@@ -1,7 +1,6 @@
-import type { NetworkMapData } from 'src/networkMaps/utils/types';
-import type { StorageMapData } from 'src/storageMaps/utils/types';
-
 import { CATEGORY_TYPES, CONDITION_STATUS } from '@utils/constants';
+import type { NetworkMapData } from '@utils/crds/maps/types';
+import type { StorageMapData } from '@utils/storage/types';
 
 export const getMapPhase = (data: NetworkMapData | StorageMapData) => {
   const conditions = data?.obj?.status?.conditions;

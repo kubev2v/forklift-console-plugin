@@ -1,9 +1,8 @@
-import type { EnhancedPlanSpecVms } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
-
 import { ADD, REMOVE, REPLACE } from '@components/ModalForm/utils/constants';
 import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
+import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 const getMigrateSharedDisks = (resource: V1beta1Plan): boolean | undefined =>
   resource?.spec?.migrateSharedDisks;
