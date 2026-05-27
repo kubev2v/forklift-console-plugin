@@ -1,3 +1,4 @@
+import type { PfLabelStatus } from '@utils/constants';
 import type { InspectionStatus } from '@utils/crds/conversion/constants';
 import type { ObjectReference, V1beta1Conversion } from '@utils/crds/conversion/types';
 
@@ -38,5 +39,5 @@ export type CreateInspectionsFn = (vms: VmInspectionRef[]) => Promise<Inspection
 export type PhaseConfig = {
   icon: JSX.Element;
   label: string;
-  labelStatus?: 'danger' | 'info' | 'success' | 'warning';
+  labelStatus?: PfLabelStatus;
 };

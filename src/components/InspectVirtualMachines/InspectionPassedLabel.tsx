@@ -2,6 +2,7 @@ import type { FC } from 'react';
 
 import { Icon, Label } from '@patternfly/react-core';
 import { CheckCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { PF_LABEL_STATUS } from '@utils/constants';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type InspectionPassedLabelProps = {
@@ -15,7 +16,7 @@ const InspectionPassedLabel: FC<InspectionPassedLabelProps> = ({ passed }) => {
     return (
       <Label
         variant="filled"
-        status="success"
+        status={PF_LABEL_STATUS.SUCCESS}
         icon={
           <Icon isInline>
             <CheckCircleIcon />
@@ -30,7 +31,7 @@ const InspectionPassedLabel: FC<InspectionPassedLabelProps> = ({ passed }) => {
   return (
     <Label
       variant="filled"
-      status="warning"
+      status={PF_LABEL_STATUS.WARNING}
       icon={
         <Icon isInline>
           <ExclamationTriangleIcon />

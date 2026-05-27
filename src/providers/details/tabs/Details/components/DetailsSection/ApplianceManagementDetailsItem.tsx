@@ -4,6 +4,7 @@ import { OVA_APPLIANCE_MANAGEMENT_DESCRIPTION } from 'src/providers/utils/consta
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
+import { PF_LABEL_STATUS } from '@utils/constants';
 import { isApplianceManagementEnabled } from '@utils/crds/common/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -28,7 +29,7 @@ const ApplianceManagementDetailsItem: FC<ProviderDetailsItemProps> = ({
       title={t('Appliance management')}
       content={
         isEnabled ? (
-          <Label isCompact status="success">
+          <Label isCompact status={PF_LABEL_STATUS.SUCCESS}>
             {t('Enabled')}
           </Label>
         ) : (

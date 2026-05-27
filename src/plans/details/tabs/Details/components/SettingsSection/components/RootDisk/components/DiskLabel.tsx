@@ -2,6 +2,7 @@ import type { FC } from 'react';
 
 import { Icon, Label, Tooltip } from '@patternfly/react-core';
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { PF_LABEL_STATUS } from '@utils/constants';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { getRootDiskLabelByKey, isNotFirstKeyOrRootFilesystem } from '../utils/utils';
@@ -25,7 +26,7 @@ const DiskLabel: FC<DiskLabelProps> = ({ diskKey }) => {
               'Root filesystem format should start with "/dev/sd[X]", see documentation for more information.',
             )}
           >
-            <Icon className="pf-v6-u-mr-xs" status="warning">
+            <Icon className="pf-v6-u-mr-xs" status={PF_LABEL_STATUS.WARNING}>
               <ExclamationTriangleIcon />
             </Icon>
           </Tooltip>

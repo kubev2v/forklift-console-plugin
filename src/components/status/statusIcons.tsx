@@ -5,25 +5,26 @@ import {
   ExclamationTriangleIcon,
   InfoCircleIcon,
 } from '@patternfly/react-icons';
+import { PF_LABEL_STATUS } from '@utils/constants';
 
 export const STATUS_ICONS = {
   danger: (
-    <Icon status="danger">
+    <Icon status={PF_LABEL_STATUS.DANGER}>
       <ExclamationCircleIcon />
     </Icon>
   ),
   info: (
-    <Icon status="info">
+    <Icon status={PF_LABEL_STATUS.INFO}>
       <InfoCircleIcon />
     </Icon>
   ),
   success: (
-    <Icon status="success">
+    <Icon status={PF_LABEL_STATUS.SUCCESS}>
       <CheckCircleIcon />
     </Icon>
   ),
   warning: (
-    <Icon status="warning">
+    <Icon status={PF_LABEL_STATUS.WARNING}>
       <ExclamationTriangleIcon />
     </Icon>
   ),
