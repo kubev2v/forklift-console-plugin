@@ -43,7 +43,7 @@ testing/locales/
 .cursor/extensions/
 
 # VS Code / Cursor local launch configs
-.vscode/
+.vscode/launch.json
 
 # E2E test credentials (contains cluster passwords)
 testing/e2e.env
