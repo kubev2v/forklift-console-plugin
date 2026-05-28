@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 
 import { type K8sGroupVersionKind, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import { Tooltip } from '@patternfly/react-core';
 
 import { TableLabelCell, type TableLabelCellProps } from './TableLabelCell';
 
@@ -13,6 +14,15 @@ export const TableLinkCell: FC<TableLinkCellProps> = ({
   namespace,
   truncate,
 }) => {
+  const link = (
+    <ResourceLink
+      groupVersionKind={groupVersionKind}
+      name={name}
+      namespace={namespace}
+      truncate={truncate}
+    />
+  );
+
   return (
     <TableLabelCell
       className={truncate ? 'forklift-table-link-cell--truncate' : undefined}
@@ -20,12 +30,13 @@ export const TableLinkCell: FC<TableLinkCellProps> = ({
       label={label}
       labelColor={labelColor}
     >
-      <ResourceLink
-        groupVersionKind={groupVersionKind}
-        name={name}
-        namespace={namespace}
-        truncate={truncate}
-      />
+      {truncate && name ? (
+        <Tooltip content={name}>
+          <span>{link}</span>
+        </Tooltip>
+      ) : (
+        link
+      )}
     </TableLabelCell>
   );
 };
