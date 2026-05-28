@@ -41,9 +41,9 @@ With a user logged in to an OpenShift cluster with the Forklift Operator availab
 
 ```bash
 # Set environment variables for your cluster
-export INVENTORY_SERVER_HOST=https://virt-konveyor-forklift.apps.<your-cluster-address>
-export SERVICES_API_SERVER_HOST=https://virt-konveyor-forklift.apps.<your-cluster-address>
-export CONSOLE_IMAGE=quay.io/openshift/origin-console:4.19
+export INVENTORY_SERVER_HOST=$(oc get route -n openshift-mtv forklift-inventory -o jsonpath='https://{.spec.host}')
+export SERVICES_API_SERVER_HOST=$(oc get route -n openshift-mtv forklift-services -o jsonpath='https://{.spec.host}')
+export CONSOLE_IMAGE=quay.io/openshift/origin-console:4.22
 
 # Start the local console server (serves at http://localhost:9000)
 npm run console
