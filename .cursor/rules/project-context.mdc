@@ -15,6 +15,15 @@ This rule provides Forklift-specific domain knowledge not covered there.
 
 Forklift (Migration Toolkit for Virtualization) migrates virtual machines from external providers to OpenShift Virtualization (KubeVirt). This plugin is an OpenShift Console dynamic plugin providing the web UI.
 
+### Tech Stack
+- **React 17** with **TypeScript** (strict mode)
+- **PatternFly 6** for UI components
+- **i18next** for internationalization
+- **react-hook-form** for form handling
+- **Jest** for unit testing, **Playwright** for E2E
+- **Webpack** for bundling
+- **npm** as package manager
+
 ---
 
 ## Core CRDs

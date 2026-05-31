@@ -1,6 +1,6 @@
 # AI Assistant Guidelines for Forklift Console Plugin
 
-> **Project overview and domain knowledge:** See `.cursor/rules/project-context.mdc` for Forklift-specific context (CRDs, providers, migration flow, architecture). This file focuses on coding standards and conventions.
+> **Project overview, tech stack, and domain knowledge:** See `.cursor/rules/project-context.mdc` for Forklift-specific context (CRDs, providers, migration flow, architecture). This file focuses on coding standards and conventions.
 
 ---
 

@@ -12,9 +12,6 @@ Additional specialized knowledge is available in `.cursor/rules/`:
 - **Project Context:** `.cursor/rules/project-context.mdc` - Forklift domain, CRDs, migration flow, architecture
 - **Code Style:** `.cursor/rules/styles.mdc` - SCSS conventions and PatternFly variables
 
-### Personal Rules (local only, gitignored)
-- **Screenshots:** `.cursor/rules/personal-taking-screenshots.mdc` - Personal screenshot workflow
-
 ### Specialized Agents (Load when needed)
 - **Forklift Expert:** `.cursor/rules/agents/forklift-expert.mdc` - Deep domain knowledge, migration patterns
 - **Developer:** `.cursor/rules/agents/developer.mdc` - Development best practices
@@ -52,17 +49,6 @@ Cursor skills in `.cursor/skills/` contain executable workflows.
 - **i18n/Translation:** `.cursor/skills/i18n-memsource/SKILL.md` - Memsource upload/download workflow
 - **Backend Analysis:** `.cursor/skills/backend-analyzer/SKILL.md` - Analyze Go backend codebase
 - **Type Updates:** `.cursor/skills/types-update/SKILL.md` - Update @forklift-ui/types
-
-### Personal Skills (local only, gitignored)
-- **Development Helper:** `.cursor/skills/personal-dev-helper/SKILL.md` - Personal dev workflow automation
-- **Bug Workflows:** `.cursor/skills/personal-bug-report/`, `.cursor/skills/personal-bug-triage/`
-- **Issue Triage:** `.cursor/skills/personal-issue-triage/`
-- **PR Monitoring:** `.cursor/skills/personal-monitor-pr/`, `.cursor/skills/personal-track-jira-merged/`
-- **Calendar Integration:** `.cursor/skills/personal-agent-calendar/`
-- **Security:** `.cursor/skills/personal-cve-remediation/`
-- **Utilities:** `.cursor/skills/personal-ask-more-info/`, `.cursor/skills/personal-grill-me/`
-
-**Note:** Personal skills are gitignored but exist on your local machine - Claude Code can read them from disk.
 
 For full workflow details, read the relevant SKILL.md file.
 
