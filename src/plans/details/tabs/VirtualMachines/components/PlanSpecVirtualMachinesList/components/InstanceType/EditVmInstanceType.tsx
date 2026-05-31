@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { NO_INSTANCE_TYPE } from 'src/plans/constants';
 import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 import { useInstanceTypeOptions } from 'src/plans/hooks/useInstanceTypeOptions';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import Select from '@components/common/Select';
+import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, Stack } from '@patternfly/react-core';
@@ -28,6 +28,10 @@ const EditVmInstanceType: OverlayComponent<EditVmInstanceTypeProps> = ({
   const [value, setValue] = useState<string | undefined>(vm?.instanceType);
   const { loaded, options } = useInstanceTypeOptions();
 
+  const handleChange = useCallback((selected: string | number | undefined): void => {
+    setValue(selected === NO_INSTANCE_TYPE ? undefined : String(selected ?? ''));
+  }, []);
+
   return (
     <ModalForm
       title={t('Edit instance type')}
@@ -45,14 +49,13 @@ const EditVmInstanceType: OverlayComponent<EditVmInstanceTypeProps> = ({
         )}
         <Form>
           <FormGroupWithHelpText label={t('Instance type')} isRequired={false}>
-            <Select
+            <TypeaheadSelect
               id="instanceType"
               testId="instance-type-select"
               value={value ?? NO_INSTANCE_TYPE}
               options={options}
-              onSelect={(_event, val) => {
-                setValue(val === NO_INSTANCE_TYPE ? undefined : String(val));
-              }}
+              onChange={handleChange}
+              allowClear
               placeholder={t('Select instance type')}
               isDisabled={!loaded}
             />

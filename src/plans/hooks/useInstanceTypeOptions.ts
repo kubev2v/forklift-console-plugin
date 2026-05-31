@@ -1,19 +1,14 @@
 import { useMemo } from 'react';
 import { NO_INSTANCE_TYPE } from 'src/plans/constants';
 
+import type { TypeaheadSelectOption } from '@components/common/TypeaheadSelect/utils/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useClusterInstanceTypes } from './useClusterInstanceTypes';
 
-type SelectOption = {
-  description: string;
-  label: string;
-  value: string;
-};
-
 type UseInstanceTypeOptionsResult = {
-  options: SelectOption[];
   loaded: boolean;
+  options: TypeaheadSelectOption[];
 };
 
 export const useInstanceTypeOptions = (): UseInstanceTypeOptionsResult => {
@@ -21,15 +16,15 @@ export const useInstanceTypeOptions = (): UseInstanceTypeOptionsResult => {
   const { instanceTypes, loaded } = useClusterInstanceTypes();
 
   const options = useMemo(
-    (): SelectOption[] => [
+    (): TypeaheadSelectOption[] => [
       {
-        description: t("Keep the VM's original CPU and memory"),
-        label: t('None'),
+        content: t('None'),
+        optionProps: { description: t("Keep the VM's original CPU and memory") },
         value: NO_INSTANCE_TYPE,
       },
       ...instanceTypes.map((instanceType) => ({
-        description: instanceType.description,
-        label: instanceType.name,
+        content: instanceType.name,
+        optionProps: { description: instanceType.description },
         value: instanceType.name,
       })),
     ],

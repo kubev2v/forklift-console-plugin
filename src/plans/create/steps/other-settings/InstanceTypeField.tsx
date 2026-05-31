@@ -3,7 +3,7 @@ import { useWatch } from 'react-hook-form';
 import { NO_INSTANCE_TYPE } from 'src/plans/constants';
 import { useInstanceTypeOptions } from 'src/plans/hooks/useInstanceTypeOptions';
 
-import Select from '@components/common/Select';
+import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import {
   Flex,
   FlexItem,
@@ -42,11 +42,11 @@ const InstanceTypeField: FC = () => {
   const vmEntries = useMemo(() => Object.entries(vms ?? {}), [vms]);
 
   const handleInstanceTypeChange = useCallback(
-    (vmId: string, selectedValue: string | undefined): void => {
+    (vmId: string, selectedValue: string | number | undefined): void => {
       const updated = { ...currentInstanceTypes };
 
-      if (selectedValue) {
-        updated[vmId] = selectedValue;
+      if (selectedValue && selectedValue !== NO_INSTANCE_TYPE) {
+        updated[vmId] = String(selectedValue);
       } else {
         delete updated[vmId];
       }
@@ -80,19 +80,17 @@ const InstanceTypeField: FC = () => {
                 >
                   <FlexItem className="instance-type-field__vm-name">{vm.name}</FlexItem>
                   <FlexItem grow={{ default: 'grow' }}>
-                    <Select
+                    <TypeaheadSelect
                       id={`instance-type-${vmId}`}
                       testId={`instance-type-select-${vmId}`}
                       value={selectedValue ?? NO_INSTANCE_TYPE}
                       options={options}
-                      isDisabled={!loaded}
-                      onSelect={(_event, val) => {
-                        handleInstanceTypeChange(
-                          vmId,
-                          val === NO_INSTANCE_TYPE ? undefined : String(val),
-                        );
+                      onChange={(val) => {
+                        handleInstanceTypeChange(vmId, val);
                       }}
+                      allowClear
                       placeholder={t('Select instance type')}
+                      isDisabled={!loaded}
                     />
                   </FlexItem>
                 </Flex>
