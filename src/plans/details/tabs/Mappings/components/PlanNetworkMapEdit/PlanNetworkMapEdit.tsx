@@ -72,7 +72,6 @@ const PlanNetworkMapEdit: ModalComponent<PlanNetworkMapEditProps> = ({
                 variant={AlertVariant.warning}
                 isInline
                 title={t('No source networks are available for the selected VMs.')}
-                className="pf-v"
               />
             )}
 
