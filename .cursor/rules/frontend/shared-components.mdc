@@ -1,0 +1,241 @@
+---
+description: Shared components catalog with "used by" index across all feature directories
+alwaysApply: false
+---
+
+# Shared Components Architecture (`src/components/`)
+
+> Analyzed on 2026-05-29
+
+~280 TS/TSX files. **409 importing files** across features.
+
+## Component Catalog
+
+### Page Layout & List Infrastructure
+
+| Component | Path | Purpose |
+|-----------|------|---------|
+| `StandardPage` | `page/StandardPage.tsx` | Full list page: filters, sort, pagination, optional selection |
+| `StandardPageWithSelection` | `page/StandardPageWithSelection.tsx` | StandardPage + enforced selection/expand props |
+| `WizardStepContainer` | `common/WizardStepContainer.tsx` | Plan create wizard step wrapper |
+| `RoutedTabs` | `common/RoutedTabs/RoutedTabs.tsx` | URL-synced tab navigation |
+| `PageHeadings` | `DetailPageHeadings/PageHeadings.tsx` | Detail page title/breadcrumbs/actions |
+| `SectionHeading` | `headers/SectionHeading.tsx` | Section title in detail views |
+| `SectionHeadingWithEdit` | `headers/SectionHeadingWithEdit.tsx` | Section title + edit button |
+| `ExpandableSectionHeading` | `ExpandableSectionHeading/` | Collapsible section header |
+| `ExpandableReviewSection` | `ExpandableReviewSection/` | Plan wizard review accordion |
+| `DrawerProvider` | `DrawerContext/DrawerProvider.tsx` | Side drawer context |
+
+### Tables & List Cells
+
+| Component | Path | Purpose |
+|-----------|------|---------|
+| `TableView` | `common/TableView/TableView.tsx` | Sortable PF table with stable row keys |
+| `TableCell` | `TableCell/TableCell.tsx` | Generic cell |
+| `TableLinkCell` | `TableCell/TableLinkCell.tsx` | Link cell |
+| `TableLabelCell` | `TableCell/TableLabelCell.tsx` | Label/badge cell |
+| `TableIconCell` | `TableCell/TableIconCell.tsx` | Icon + text cell |
+| `TableEmptyCell` | `TableCell/TableEmptyCell.tsx` | Empty placeholder |
+| `VisibleTableData` | `TableCell/VisibleTableData.tsx` | Renders visible columns for a row |
+| `TableBulkSelect` | `TableBulkSelect.tsx` | Header checkbox for bulk select |
+| `TableSortContextProvider` | `TableSortContextProvider.tsx` | Sort state provider |
+| `FieldBuilderTable` | `FieldBuilderTable/FieldBuilderTable.tsx` | Dynamic mapping rows (add/remove) |
+| `VsphereFolderTreeTable` | `VsphereFoldersTable/` | vSphere VM folder tree table |
+| `createStatusCell` | `table/utils/createStatusCell.tsx` | Factory for status column cells |
+
+### Filters
+
+| Component | Path | Purpose |
+|-----------|------|---------|
+| `FilterGroup` | `common/FilterGroup/FilterGroup.tsx` | Multi-filter toolbar |
+| `AttributeValueFilter` | `common/FilterGroup/AttributeValueFilter.tsx` | Filter chip UI |
+| `useUrlFilters` | `common/FilterGroup/useUrlFilters.ts` | Sync filters to URL |
+| `SwitchFilter` | `common/Filter/SwitchFilter.tsx` | Boolean toggle filter |
+
+### Forms & Inputs
+
+| Component | Path | Purpose |
+|-----------|------|---------|
+| `Select` (custom) | `common/Select.tsx` | Project-standard PF Select wrapper |
+| `FilterableSelect` | `FilterableSelect/FilterableSelect.tsx` | Searchable/creatable select |
+| `TypeaheadSelect` | `common/TypeaheadSelect/TypeaheadSelect.tsx` | Typeahead dropdown |
+| `ProjectSelect` | `common/ProjectSelect/ProjectSelect.tsx` | Namespace/project picker |
+| `ProviderSelect` | `ProviderSelect/ProviderSelect.tsx` | Provider dropdown with icons |
+| `FormGroupWithHelpText` | `common/FormGroupWithHelpText/` | PF FormGroup + helper/error text |
+| `FormGroupWithErrorText` | `common/FormGroupWithErrorText.tsx` | Form group wired to RHF errors |
+| `FormErrorHelperText` | `FormErrorHelperText.tsx` | Standalone form error text |
+| `HelpIconPopover` | `common/HelpIconPopover/` | `?` icon with popover help |
+| `InputList` | `InputList/InputList.tsx` | Dynamic list of inputs |
+| `TargetNetworkField` | `mappings/network-mappings/TargetNetworkField.tsx` | Network map target network |
+| `SourceNetworkField` | `mappings/network-mappings/SourceNetworkField.tsx` | Source network field |
+
+### Modals & Confirmations
+
+| Component | Path | Purpose |
+|-----------|------|---------|
+| `ModalForm` | `ModalForm/ModalForm.tsx` | Standard edit modal (loading, errors, confirm) |
+| `TextInputEditModal` | `ModalForm/TextInputEditModal.tsx` | Single-field text edit modal |
+| Patch constants (`ADD`, `REPLACE`, `REMOVE`) | `ModalForm/utils/constants.ts` | JSON patch ops |
+| `DeleteModal` | `modals/DeleteModal/DeleteModal.tsx` | Generic K8s delete modal |
+| `CreateProjectModal` | `modals/CreateProjectModal.tsx` | Create namespace/project |
+| `AlertMessageForModals` | `modals/AlertMessageForModals.tsx` | Warning alert in modals |
+| `ItemIsOwnedAlert` | `modals/ItemIsOwnedAlert.tsx` | Owner reference warning |
+
+### Loading & Status
+
+| Component | Path | Purpose |
+|-----------|------|---------|
+| `LoadingSuspend` | `LoadingSuspend.tsx` | Spinner until obj loaded without error |
+| `Loading` | `Loading/Loading.tsx` | Simple loading indicator |
+| `StatusIcon` | `status/StatusIcon.tsx` | Condition status icon |
+| `ConsoleTimestamp` | `ConsoleTimestamp/ConsoleTimestamp.tsx` | Console-style relative time |
+| `ProviderIconLink` | `ProviderIconLink.tsx` | Provider icon + link |
+
+### Detail Display
+
+| Component | Path | Purpose |
+|-----------|------|---------|
+| `DetailsItem` | `DetailItems/DetailItem.tsx` | Description list item with edit/help |
+| `NameDetailItem`, `NamespaceDetailItem`, etc. | `DetailItems/` | Prebuilt detail rows |
+| `CreatedAtDetailItem` | `DetailItems/CreatedAtDetailItem.tsx` | Timestamp detail |
+| `OwnerDetailItem` | `DetailItems/` | Owner refs display |
+| `ConditionsSection` | `ConditionsSection/ConditionsSection.tsx` | Conditions table for CRs |
+| `MapProvidersDetails` / `MapProvidersEdit` | `MapProvidersDetails/` | Map provider summary + edit |
+| `ResourceYAMLEditorWrapper` | `ResourceYAMLEditorWrapper/` | YAML tab for resources |
+| `ExternalLink` | `common/ExternalLink/` | Doc/external links |
+
+### Domain-specific
+
+| Component | Path | Purpose |
+|-----------|------|---------|
+| `VirtualMachineConcernsCell` | `Concerns/` | VM concerns in tables |
+| `ConcernsAndConditionsTable` | `ConcernsAndConditionsTable/` | Concerns/conditions panel |
+| `InspectVirtualMachines*` | `InspectVirtualMachines/` | Deep inspection UI |
+| `AffinityModal` | `AffinityModal/` | VM affinity rules editor |
+| `NodeSelectorModal` | `NodeSelectorModal/` | Node selector editor |
+| `LabelsModal` | `LabelsModal/` | Edit K8s labels |
+| `OvaFileUploader` | `OvaFileUploader/` | OVA file upload |
+| `VddkUploader` | `VddkUploader/` | VDDK image upload |
+| `TechPreviewLabel` | `PreviewLabels/TechPreviewLabel.tsx` | Tech preview badge |
+
+## "Used By" Index
+
+### Tier 1 — All 5 features
+
+| Component | providers | plans | networkMaps | storageMaps | overview |
+|-----------|:---------:|:-----:|:-----------:|:-----------:|:--------:|
+| **ModalForm** (+ patch constants) | ✓ (21) | ✓ (51) | ✓ | ✓ | ✓ |
+| **LoadingSuspend** | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **ResourceYAMLEditorWrapper** | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **ResourceField types** | ✓ (24) | ✓ (10) | ✓ | ✓ | ✓ |
+| **StandardPage** | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **TableView** (+ types/RowProps) | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **TableCell** family | ✓ (24) | ✓ (12) | ✓ | ✓ | ✓ |
+| **DetailItems** | ✓ (31) | ✓ (30) | ✓ | ✓ | ✓ |
+| **FilterGroup** (+ matchers) | ✓ (18) | ✓ | ✓ | ✓ | ✓ |
+| **headers** (SectionHeading*) | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **HelpIconPopover** | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+### Tier 2 — 4 features
+
+| Component | providers | plans | networkMaps | storageMaps | overview |
+|-----------|:---------:|:-----:|:-----------:|:-----------:|:--------:|
+| **PageHeadings** | ✓ | ✓ | ✓ | ✓ | — |
+| **Page/userSettings** | ✓ | ✓ | ✓ | ✓ | — |
+| **DeleteModal** | ✓ | ✓ | ✓ | ✓ | — |
+| **common/Select** | ✓ | ✓ | ✓ | ✓ | — |
+| **FormGroupWithErrorText** | ✓ | ✓ | ✓ | ✓ | — |
+| **ExternalLink** | ✓ | ✓ | ✓ | ✓ | — |
+
+### Tier 3 — 3 features
+
+| Component | Key consumers |
+|-----------|--------------|
+| **FieldBuilderTable** | plans, networkMaps, storageMaps |
+| **ProviderSelect** | plans, networkMaps, storageMaps |
+| **MapProvidersDetails/Edit** | networkMaps, storageMaps (+ plans indirectly) |
+| **ConditionsSection** | networkMaps, storageMaps, overview |
+| **FormGroupWithHelpText** | providers, plans, overview |
+| **ConsoleTimestamp** | providers, plans, overview |
+| **createStatusCell** | providers, networkMaps, storageMaps |
+
+### Tier 4 — 2 features
+
+| Component | Consumers |
+|-----------|-----------|
+| **StandardPageWithSelection** | providers, plans |
+| **FilterableSelect** | providers, plans |
+| **TableSortContextProvider** | providers, plans |
+| **Concerns***, **ConcernsAndConditionsTable** | providers, plans |
+| **ProviderIconLink** | providers, plans |
+| **TechPreviewLabel** | providers, plans |
+| **mappings/network-mappings** | plans, networkMaps |
+| **StatusIcon** | plans, overview |
+| **SmartLinkify** | providers, networkMaps |
+| **SwitchFilter** | overview, providers |
+
+### Tier 5 — Single feature
+
+| Component | Consumer |
+|-----------|----------|
+| **WizardStepContainer**, **ExpandableReviewSection** | plans only |
+| **DrawerProvider**, **InspectVirtualMachines** | plans only |
+| **AffinityModal**, **NodeSelectorModal**, **LabelsModal** | plans only |
+| **InputList** | plans only |
+| **VsphereFolderTreeTable** | providers only |
+| **OvaFileUploader**, **VddkUploader** | providers only |
+| **RoutedTabs**, **LightspeedMcpWarning** | overview only |
+
+## Component Dependency Graph (internal)
+
+```
+StandardPage → StandardPageInner → PageToolbar + PageTable
+PageToolbar → FilterGroup + TableBulkSelect
+PageTable → TableView
+StandardPageWithSelection → StandardPage + DefaultRow/withTr
+ProviderSelect → common/Select + ExternalLink
+ProjectSelect → TypeaheadSelect + CreateProjectModal
+VsphereFolderTreeTable → Concerns + TableView + FilterGroup
+InspectVirtualMachines → Concerns + StandardPageWithSelection
+```
+
+### Key external library dependencies
+- **@patternfly/react-core** — Modal, Form, Alert, EmptyState, Select (FilterableSelect)
+- **@patternfly/react-table** — TableView, FieldBuilderTable, tree tables
+- **@openshift-console/dynamic-plugin-sdk** — `useK8sWatchResource`, `k8s*` operations, modals
+- **react-hook-form** — Form fields, FieldBuilderTable, feature forms
+- **react-router-dom-v5-compat** — DeleteModal navigate, RoutedTabs
+
+## Blast Radius Summary
+
+### Critical (change breaks most of the app)
+
+1. **`ModalForm`** — 75 importing files across all 5 features. Every edit modal.
+2. **`ResourceField` / filter types** — 41 files; columns, filters, sort for every list page.
+3. **`StandardPage` + `FilterGroup` + `TableView` stack** — all list pages.
+4. **`DetailsItem`** — 64 files; universal detail-tab layout.
+5. **`TableCell` primitives** — 45 files; all `*Row.tsx` list components.
+
+### High (major feature areas)
+
+6. **`common/Select`** — 20 files; all dropdowns in create flows and settings.
+7. **`FormGroupWithHelpText` / `FormGroupWithErrorText`** — form validation UX.
+8. **`LoadingSuspend`** — 17 files; loading guards on detail tabs.
+
+### Medium (scoped but deep)
+
+9. **`ProviderSelect`** — maps + plan create; ties to inventory and analytics.
+10. **`FieldBuilderTable`** — network/storage map editors + plan mapping steps.
+11. **`InspectVirtualMachines` / `VsphereFolderTreeTable` / `AffinityModal`** — plans-only or providers-only but large UX surfaces.
+12. **`DeleteModal`** — delete actions on providers, plans, maps.
+
+### Low blast radius
+- `LightspeedMcpWarning`, `RoutedTabs` — overview only
+- `images/logos` — visual only
+- `BreadCrumb`, empty-states — limited imports
+
+## Practical Notes
+
+- Import paths are mixed (`@components/...`, `src/components/...`, `../../components/...`) — grep all three when assessing impact
+- New modals should extend `ModalForm`; new dropdowns should use `common/Select`; new list pages should compose `StandardPage` + `ResourceField[]`
+- Feature code should use `@components/common/Select`, not PatternFly Select directly
