@@ -1,5 +1,5 @@
 import type { OVirtVM, V1beta1StorageMap } from '@forklift-ui/types';
-import type { PermissionStatus } from '@utils/types';
+import type { MappingValue, PermissionStatus } from '@utils/types';
 
 export type StorageMapData = {
   obj?: V1beta1StorageMap;
@@ -19,7 +19,8 @@ export enum StorageClassAnnotation {
   NetAppShiftStorageClassType = 'shift.netapp.io/storage-class-type',
 }
 
-export type StorageMappingValue = { id?: string; name: string };
+/** @deprecated Use MappingValue from @utils/types instead */
+export type StorageMappingValue = MappingValue;
 
 export type OVirtVMWithDisks = OVirtVM & {
   disks?: {
