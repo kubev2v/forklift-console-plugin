@@ -1,12 +1,12 @@
 import { THROUGHPUT_TIME_RANGE_CONFIG, type ThroughputTimeRange } from './throughputTimeRanges';
 
-type ChartDatum = {
+export type BaseChartDatum = {
   x: number;
   y: number;
 };
 
-type ChartLineEntry = {
-  data: ChartDatum[];
+export type BaseChartLineEntry = {
+  data: BaseChartDatum[];
 };
 
 const MS_PER_MINUTE = 60_000;
@@ -40,7 +40,7 @@ export const computeTimeTicks = (
   return ticks;
 };
 
-export const computeNiceTicks = (data: ChartLineEntry[]): number[] => {
+export const computeNiceTicks = (data: BaseChartLineEntry[]): number[] => {
   let max = 0;
 
   for (const entry of data) {

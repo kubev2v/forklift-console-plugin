@@ -15,7 +15,12 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import type { ThroughputSeries } from '../../hooks/useThroughputQuery';
 import { formatThroughput, formatThroughputTick } from '../../utils/formatThroughput';
-import { computeNiceTicks, computeTimeTicks } from '../../utils/throughputChartTicks';
+import {
+  type BaseChartDatum,
+  type BaseChartLineEntry,
+  computeNiceTicks,
+  computeTimeTicks,
+} from '../../utils/throughputChartTicks';
 import {
   THROUGHPUT_TIME_RANGE_CONFIG,
   ThroughputTimeRange,
@@ -29,10 +34,8 @@ type ThroughputLineChartProps = {
   visiblePlanIds: string[];
 };
 
-type ChartDatum = {
+type ChartDatum = BaseChartDatum & {
   name: string;
-  x: number;
-  y: number;
 };
 
 const SHORT_RANGES = new Set<ThroughputTimeRange>([
@@ -54,7 +57,7 @@ const formatTimestamp = (ts: number, timeRange: ThroughputTimeRange): string => 
   return `${datePart}\n${timePart}`;
 };
 
-type ChartLineEntry = {
+type ChartLineEntry = BaseChartLineEntry & {
   data: ChartDatum[];
   name: string;
   planId: string;
