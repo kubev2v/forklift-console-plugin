@@ -12,7 +12,11 @@ import { deepCopy } from '@utils/deepCopy';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
-import { STATUS_POPOVER_VMS_COUNT_THRESHOLD } from './constants';
+import {
+  PLAN_CONDITION_VALIDATING_VDDK,
+  PLAN_CONDITION_VDDK_INIT_IMAGE_NOT_READY,
+  STATUS_POPOVER_VMS_COUNT_THRESHOLD,
+} from './constants';
 import {
   type MigrationVirtualMachinesStatusCountObjectVM,
   type MigrationVirtualMachinesStatusesCounts,
@@ -206,7 +210,10 @@ export const getPlanStatus = (plan: V1beta1Plan): PlanStatuses => {
     return PlanStatuses.Ready;
   }
 
-  if (conditions.includes('ValidatingVDDK') || conditions.includes('VDDKInitImageNotReady')) {
+  if (
+    conditions.includes(PLAN_CONDITION_VALIDATING_VDDK) ||
+    conditions.includes(PLAN_CONDITION_VDDK_INIT_IMAGE_NOT_READY)
+  ) {
     return PlanStatuses.Validating;
   }
 
