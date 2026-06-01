@@ -4,7 +4,13 @@ import type {
   V1beta1PlanStatusMigrationVmsPipelineTasks,
   V1beta1PlanStatusMigrationVmsPipelineTasksProgress,
 } from '@forklift-ui/types';
-import { CATEGORY_TYPES, CONDITION_STATUS, EMPTY_MSG, taskStatuses } from '@utils/constants';
+import {
+  CATEGORY_TYPES,
+  CONDITION_STATUS,
+  EMPTY_MSG,
+  PHASES,
+  taskStatuses,
+} from '@utils/constants';
 
 import type { DiskTransferMap, TaskCounterMap } from './types';
 
@@ -92,7 +98,7 @@ export const getJobPhase = (job: IoK8sApiBatchV1Job) => {
   if (
     status?.conditions?.some(
       (condition) =>
-        condition.type === CATEGORY_TYPES.CRITERIA_MET &&
+        (condition.type === PHASES.COMPLETE || condition.type === CATEGORY_TYPES.CRITERIA_MET) &&
         condition.status === CONDITION_STATUS.TRUE,
     )
   ) {
