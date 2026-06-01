@@ -93,10 +93,22 @@ const PlanConcernsPanel: FC<PlanConcernsPanelProps> = ({
   );
 
   useEffect(() => {
-    if (showPlanConcernsPanel && (alertsNotRelevant || !showCriticalConditions)) {
+    if (
+      loaded &&
+      !loadError &&
+      showPlanConcernsPanel &&
+      (alertsNotRelevant || !showCriticalConditions)
+    ) {
       setShowPlanConcernsPanel(false);
     }
-  }, [alertsNotRelevant, setShowPlanConcernsPanel, showCriticalConditions, showPlanConcernsPanel]);
+  }, [
+    alertsNotRelevant,
+    loaded,
+    loadError,
+    setShowPlanConcernsPanel,
+    showCriticalConditions,
+    showPlanConcernsPanel,
+  ]);
 
   return (
     <DrawerPanelContent isResizable className="pfext-quick-start__base plan-concerns-panel">
