@@ -19,8 +19,10 @@ approve() { echo '{"decision": "approve"}'; exit 0; }
 ask()     { echo '{"decision": "ask"}'; exit 0; }
 
 # Block destructive git operations (force push without lease, hard reset, clean)
-[[ "$cmd" == *"push --force"* && "$cmd" != *"--force-with-lease"* ]] && ask
-[[ "$cmd" == *"push -f "* ]] && ask
+if [[ "$cmd" == *"push"* && "$cmd" != *"--force-with-lease"* ]]; then
+  [[ "$cmd" == *"--force"* ]] && ask
+  [[ "$cmd" =~ (^|[[:space:]])-f([[:space:]]|$) ]] && ask
+fi
 [[ "$cmd" == *"reset --hard"* ]] && ask
 [[ "$cmd" == *"clean -fd"* ]] && ask
 

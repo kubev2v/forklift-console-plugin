@@ -106,7 +106,7 @@ If not gated, present the plan as FYI and auto-advance.
 
 Write the full design plan to the ticket's artifact folder:
 
-```
+```text
 File: .cursor/skills/dev-helper/state/${TICKET_KEY}/design.md
 ```
 

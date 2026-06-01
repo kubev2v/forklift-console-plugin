@@ -153,13 +153,6 @@ if [[ "$is_approved" == "false" ]]; then
     is_approved="true"
   fi
 fi
-# Also check for LGTM in review bodies
-if [[ "$is_approved" == "false" ]]; then
-  lgtm_count=$(echo "$pr" | jq '[.reviews.nodes[] | select(.body | test("(?i)lgtm"))] | length')
-  if [[ "$lgtm_count" -gt 0 ]]; then
-    is_approved="true"
-  fi
-fi
 
 ci_passing="false"
 if [[ "$ci_state" == "SUCCESS" ]]; then

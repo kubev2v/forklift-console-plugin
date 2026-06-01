@@ -2,7 +2,7 @@
 
 **Gate:** Auto-recap (present evidence, continue)
 **For Bug tickets:** This phase is mandatory -- visual evidence is required.
-**For Story/Feature tickets:** Skip if there is no UI to reproduce.
+**For non-bug tickets only:** Skip if there is no UI to reproduce.
 
 **HARD CONSTRAINT:** For Bug tickets, this phase is NEVER skippable. If the
 cluster is unavailable or reproduction fails, the agent MUST NOT skip this
@@ -66,7 +66,7 @@ CallMcpTool: browser_wait_for -> { "text": "Providers" }
 If the console is not reachable, ask the user:
 - Provide a different URL
 - Start the console (`npm run console`)
-- Skip this phase (fall back to manual reproduction later)
+- For non-bug tickets only: skip this phase (fall back to manual reproduction later)
 
 If the page requires authentication:
 1. Take a snapshot to identify the login form
@@ -86,7 +86,7 @@ At each significant step:
 1. **Snapshot** -- `browser_snapshot` to get the accessibility tree with element refs
 2. **Interact** -- `browser_click`, `browser_fill`, `browser_select_option` using refs from the snapshot
 3. **Wait** -- `browser_wait_for` to handle async loading (spinners, data fetching)
-4. **Screenshot** -- `browser_take_screenshot` at key moments (before/after the bug manifests). Save reproduction screenshots to `.cursor/skills/dev-helper/state/${TICKET_KEY}/screenshots/` with `repro-` prefix.
+4. **Screenshot** -- `browser_take_screenshot` at key moments (before/after the bug manifests). Save reproduction screenshots to `~/Downloads/${TICKET_KEY}/` with `repro-` prefix.
 5. **Network** -- `browser_network_requests` with filter to check specific API calls if the issue involves data
 
 Example flow for a navigation bug:
@@ -178,4 +178,4 @@ Present a summary of the reproduction results, then advance:
 If the issue could not be reproduced, the user may choose to:
 - Retry with different steps
 - Move to `ask-more-info` for clarification from the reporter
-- Skip and proceed to Jira Track (Phase 5) based on code analysis alone
+- For non-bug tickets only: skip and proceed to Jira Track (Phase 5) based on code analysis alone

@@ -2,7 +2,8 @@
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/_config.sh"
 
-STATE_DIR="$(cd "$(dirname "$0")/../state" && pwd)"
+STATE_DIR="$(cd "$(dirname "$0")/.." && pwd)/state"
+mkdir -p "$STATE_DIR"
 
 usage() {
   cat <<'USAGE'

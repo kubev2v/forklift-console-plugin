@@ -100,7 +100,7 @@ Hooks provide session-level automation (context injection, session logging, shel
 
 ```bash
 cp .cursor/skills/dev-helper/examples/hooks/*.sh .cursor/hooks/
-chmod +x .cursor/hooks/dev-helper-state.sh
+chmod +x .cursor/hooks/personal-dev-helper-state.sh
 chmod +x .cursor/hooks/personal-session-summary.sh
 chmod +x .cursor/hooks/personal-shell-allowlist.sh
 ```
@@ -114,7 +114,7 @@ Merge the entries from `examples/hooks.json` into your `.cursor/hooks.json`:
   "hooks": [
     {
       "event": "onNewConversation",
-      "script": ".cursor/hooks/dev-helper-state.sh",
+      "script": ".cursor/hooks/personal-dev-helper-state.sh",
       "description": "Injects active dev-helper ticket context into new sessions"
     },
     {
@@ -156,7 +156,7 @@ curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
 gh repo view "$GH_REPO" --json name -q .name
 
 # 5. Hooks are executable
-.cursor/hooks/dev-helper-state.sh
+.cursor/hooks/personal-dev-helper-state.sh
 .cursor/hooks/personal-shell-allowlist.sh <<< '{"command": "echo test"}'
 ```
 
@@ -166,9 +166,9 @@ gh repo view "$GH_REPO" --json name -q .name
 
 ```
 .cursor/
+├── hooks.json
 ├── hooks/
-│   ├── hooks.json
-│   ├── dev-helper-state.sh
+│   ├── personal-dev-helper-state.sh
 │   ├── personal-session-summary.sh
 │   └── personal-shell-allowlist.sh
 └── skills/
@@ -187,7 +187,7 @@ gh repo view "$GH_REPO" --json name -q .name
         └── examples/
             ├── hooks.json
             └── hooks/
-                ├── dev-helper-state.sh
+                ├── personal-dev-helper-state.sh
                 ├── personal-session-summary.sh
                 └── personal-shell-allowlist.sh
 ```

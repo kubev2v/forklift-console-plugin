@@ -3,34 +3,26 @@
 **Gate:** Auto-recap for valid outcomes; gate destructive outcomes (wrong team, duplicate, invalid)
 
 Evaluates ticket validity before investing investigation time. Also performs a
-minimal Jira claim (Assigned, component, labels) so others know the ticket is
+minimal Jira claim (Assigned, component) so others know the ticket is
 being looked at.
 
 ---
 
 ## Steps
 
-### 1.0 Initialize state (if missing)
+### 1.0 Minimal claim
 
-```bash
-.cursor/skills/dev-helper/scripts/state-cli.sh get ${TICKET_KEY} 2>/dev/null || \
-  .cursor/skills/dev-helper/scripts/state-cli.sh init ${TICKET_KEY} <TYPE>
-```
-
-### 1.1 Minimal claim
-
-Transition to Assigned and set component/labels so the ticket is visibly owned:
+Transition to Assigned and set component so the ticket is visibly owned:
 
 ```bash
 source .cursor/skills/dev-helper/scripts/_config.sh
 .cursor/skills/dev-helper/scripts/jira-transition.sh ${TICKET_KEY} "Assigned"
 .cursor/skills/dev-helper/scripts/jira-track.sh set-component ${TICKET_KEY} "${JIRA_COMPONENT_ID}"
-.cursor/skills/dev-helper/scripts/jira-track.sh set-labels ${TICKET_KEY} "${PR_LABELS}"
 ```
 
 If already Assigned or In Progress, skip the transition.
 
-### 1.2 Fetch ticket details
+### 1.1 Fetch ticket details
 
 ```bash
 source .cursor/skills/dev-helper/scripts/_config.sh
@@ -44,10 +36,18 @@ curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
   | jq '.comments[] | {author: .author.displayName, body: .body, created: .created}'
 ```
 
-Store the ticket type in state:
+### 1.2 Initialize state (if missing)
+
+Now that the ticket type is known from the response above, initialize state:
+
 ```bash
+TYPE="<issuetype.name from response>"
+
+.cursor/skills/dev-helper/scripts/state-cli.sh get ${TICKET_KEY} 2>/dev/null || \
+  .cursor/skills/dev-helper/scripts/state-cli.sh init ${TICKET_KEY} "${TYPE}"
+
 .cursor/skills/dev-helper/scripts/state-cli.sh set ${TICKET_KEY} \
-  --arg type "<issuetype.name from response>" \
+  --arg type "${TYPE}" \
   '.type = $type'
 ```
 

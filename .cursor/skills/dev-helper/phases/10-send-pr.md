@@ -67,7 +67,7 @@ confirm the issue is resolved:
 REPRO_SCRIPT=".cursor/skills/dev-helper/state/${TICKET_KEY}/reproduction-script.ts"
 if [[ -f "$REPRO_SCRIPT" ]]; then
   # Run reproduction script via Playwright MCP to generate "after" screenshot
-  # Save to state/${TICKET_KEY}/screenshots/after-*.png
+  # Save to ~/Downloads/${TICKET_KEY}/after-*.png
 fi
 ```
 

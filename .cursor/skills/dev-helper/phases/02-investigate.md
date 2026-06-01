@@ -131,7 +131,7 @@ gh pr diff <PR_NUMBER> --repo kubev2v/forklift
 
 ### 2.7 Present findings
 
-```
+```markdown
 ## Investigation Findings: ${TICKET_KEY}
 
 **Type:** Bug / Story / Epic
@@ -146,7 +146,7 @@ gh pr diff <PR_NUMBER> --repo kubev2v/forklift
 
 Write the investigation recap to the ticket's artifact folder:
 
-```
+```markdown
 File: .cursor/skills/dev-helper/state/${TICKET_KEY}/investigation.md
 ```
 

@@ -303,7 +303,7 @@ import { chromium } from 'playwright';
 
 const CONSOLE_URL = 'http://localhost:9000';
 const START_URL = `${CONSOLE_URL}/k8s/...`; // starting page
-const OUTPUT_DIR = '/Users/aturgema/Downloads/{TICKET_KEY}';
+const OUTPUT_DIR = `${process.env.HOME}/Downloads/{TICKET_KEY}`;
 const PAUSE_MS = 1200; // pause between actions for viewer readability
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -380,8 +380,7 @@ Ensure playwright is available in the output directory:
 ```bash
 cd ~/Downloads/{TICKET_KEY}
 npm init -y && npm install playwright@1.59.1
-PLAYWRIGHT_BROWSERS_PATH=/Users/aturgema/Library/Caches/ms-playwright \
-  node record-demo.mjs
+node record-demo.mjs
 ```
 
 ### Step 5: Convert and clean up

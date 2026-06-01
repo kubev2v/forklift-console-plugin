@@ -29,8 +29,10 @@ CURRENT_STATUS=$(curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
 TYPE=$(.cursor/skills/dev-helper/scripts/state-cli.sh field ${TICKET_KEY} '.type')
 ```
 
-Only transition if the ticket is not already at its target status. Jira may
-not allow skipping intermediate states, so chain through them:
+Only transition if the ticket is not already at a terminal status (target
+status, Closed, or Verified). The guard below skips any ticket that has
+already reached its destination. Jira may not allow skipping intermediate
+states, so chain through them:
 
 | Ticket Type | Target Status | Intermediate Chain |
 |-------------|--------------|-------------------|
@@ -134,7 +136,7 @@ fi
 
 Present final summary:
 
-```
+```text
 ## Ticket Complete: ${TICKET_KEY}
 
 **PR:** ${PR_URL}

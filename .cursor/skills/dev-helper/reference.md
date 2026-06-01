@@ -134,7 +134,7 @@ If the Google Doc is inaccessible, ask the user for the content.
 
 All PRs must use this title format:
 
-```
+```text
 Resolves: MTV-XXXX | Short description
 ```
 

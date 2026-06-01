@@ -34,7 +34,11 @@ end_epoch=$(date -j -f "%Y-%m-%d" "$end_date" +%s 2>/dev/null || date -d "$end_d
 total_days=$(( (end_epoch - start_epoch) / 86400 ))
 elapsed_days=$(( (now_epoch - start_epoch) / 86400 ))
 remaining_days=$(( (end_epoch - now_epoch) / 86400 ))
-progress_pct=$(( elapsed_days * 100 / total_days ))
+if (( total_days <= 0 )); then
+  progress_pct=100
+else
+  progress_pct=$(( elapsed_days * 100 / total_days ))
+fi
 
 # Query assigned story points in active sprint
 assigned_points=$(curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
@@ -42,7 +46,8 @@ assigned_points=$(curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
   | jq '[.issues[].fields.customfield_10028 // 0] | add // 0')
 
 # Determine recommendation
-if [[ $progress_pct -ge $CAPACITY_THRESHOLD ]]; then
+future_id=$(echo "$future_sprint" | jq -r '.id // empty')
+if [[ -n "$future_id" && $progress_pct -ge $CAPACITY_THRESHOLD ]]; then
   recommend="future"
   reason="Sprint is ${progress_pct}% elapsed (${remaining_days} days left) with ${assigned_points} points assigned"
 else

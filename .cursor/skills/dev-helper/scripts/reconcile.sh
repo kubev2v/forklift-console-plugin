@@ -127,8 +127,8 @@ check_awaiting_info_comments() {
   [[ -n "$latest_comment_date" ]] || return 0
 
   local comment_epoch waiting_epoch_val
-  comment_epoch=$(date -j -f "%Y-%m-%dT%H:%M:%S" "${latest_comment_date%%.*}" +%s 2>/dev/null) || \
-    comment_epoch=$(date -d "${latest_comment_date%%.*}" +%s 2>/dev/null) || return 0
+  comment_epoch=$(date -j -f "%Y-%m-%dT%H:%M:%S%z" "${latest_comment_date%%.*}+0000" +%s 2>/dev/null) || \
+    comment_epoch=$(date -d "$latest_comment_date" +%s 2>/dev/null) || return 0
   waiting_epoch_val=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$waiting_since" +%s 2>/dev/null) || \
     waiting_epoch_val=$(date -d "$waiting_since" +%s 2>/dev/null) || return 0
 

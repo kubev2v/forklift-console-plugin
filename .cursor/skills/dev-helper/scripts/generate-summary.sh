@@ -10,6 +10,24 @@ OUTPUT_FILE="$SUMMARIES_DIR/$TODAY.html"
 
 mkdir -p "$SUMMARIES_DIR"
 
+html_escape() {
+  local s="$1"
+  s="${s//&/&amp;}"
+  s="${s//</&lt;}"
+  s="${s//>/&gt;}"
+  s="${s//\"/&quot;}"
+  echo "$s"
+}
+
+safe_href() {
+  local url="$1"
+  if [[ "$url" =~ ^https?:// ]]; then
+    echo "$url"
+  else
+    echo "#"
+  fi
+}
+
 # Collect state data
 ACTIVE_TICKETS=()
 WAITING_TICKETS=()
@@ -94,18 +112,26 @@ build_active_cards() {
     category=$(phase_category "$phase")
     time_since=$(time_ago "$started_at")
 
+    local esc_ticket esc_type esc_branch esc_phase safe_jira_href safe_pr_href
+    esc_ticket=$(html_escape "$ticket")
+    esc_type=$(html_escape "$type")
+    esc_branch=$(html_escape "$branch")
+    esc_phase=$(html_escape "$phase")
+    safe_jira_href=$(safe_href "${JIRA_BASE_URL}/browse/${ticket}")
+    safe_pr_href=$(safe_href "$pr_url")
+
     cat <<CARD
       <div class="card">
         <div class="card__header">
-          <a class="card__ticket" href="${JIRA_BASE_URL}/browse/${ticket}" target="_blank">${ticket}</a>
-          <span class="badge badge--${category}">${phase}</span>
+          <a class="card__ticket" href="${safe_jira_href}" target="_blank">${esc_ticket}</a>
+          <span class="badge badge--${category}">${esc_phase}</span>
         </div>
         <div class="card__meta">
-          <span class="card__type">${type}</span>
+          <span class="card__type">${esc_type}</span>
           <span class="card__time">Started ${time_since}</span>
         </div>
-        ${branch:+<div class="card__branch"><code>${branch}</code></div>}
-        ${pr_url:+<div class="card__pr"><a href="${pr_url}" target="_blank">PR ↗</a></div>}
+        ${branch:+<div class="card__branch"><code>${esc_branch}</code></div>}
+        ${pr_url:+<div class="card__pr"><a href="${safe_pr_href}" target="_blank">PR ↗</a></div>}
       </div>
 CARD
   done
@@ -123,17 +149,24 @@ build_waiting_cards() {
     type=$(jq -r '.type // "Unknown"' "$f")
     duration=$(time_ago "$since")
 
+    local esc_ticket esc_type esc_reason safe_jira_href safe_pr_href
+    esc_ticket=$(html_escape "$ticket")
+    esc_type=$(html_escape "$type")
+    esc_reason=$(html_escape "$reason")
+    safe_jira_href=$(safe_href "${JIRA_BASE_URL}/browse/${ticket}")
+    safe_pr_href=$(safe_href "$pr_url")
+
     cat <<CARD
       <div class="card card--waiting">
         <div class="card__header">
-          <a class="card__ticket" href="${JIRA_BASE_URL}/browse/${ticket}" target="_blank">${ticket}</a>
-          <span class="badge badge--waiting">${reason}</span>
+          <a class="card__ticket" href="${safe_jira_href}" target="_blank">${esc_ticket}</a>
+          <span class="badge badge--waiting">${esc_reason}</span>
         </div>
         <div class="card__meta">
-          <span class="card__type">${type}</span>
+          <span class="card__type">${esc_type}</span>
           <span class="card__time">Waiting ${duration}</span>
         </div>
-        ${pr_url:+<div class="card__pr"><a href="${pr_url}" target="_blank">PR ↗</a></div>}
+        ${pr_url:+<div class="card__pr"><a href="${safe_pr_href}" target="_blank">PR ↗</a></div>}
       </div>
 CARD
   done
@@ -148,15 +181,21 @@ build_done_rows() {
     pr_url=$(jq -r '.prUrl // empty' "$f")
     merged_at=$(jq -r '.pr.mergedAt // empty' "$f")
 
+    local esc_ticket esc_type safe_jira_href safe_pr_href
+    esc_ticket=$(html_escape "$ticket")
+    esc_type=$(html_escape "$type")
+    safe_jira_href=$(safe_href "${JIRA_BASE_URL}/browse/${ticket}")
+    safe_pr_href=$(safe_href "$pr_url")
+
     local pr_link="-"
-    [[ -n "$pr_url" ]] && pr_link="<a href=\"${pr_url}\" target=\"_blank\">PR ↗</a>"
+    [[ -n "$pr_url" ]] && pr_link="<a href=\"${safe_pr_href}\" target=\"_blank\">PR ↗</a>"
     local merged_display="${merged_at:-"-"}"
     [[ -n "$merged_at" && "$merged_at" != "null" ]] && merged_display="${merged_at%T*}"
 
     cat <<ROW
         <tr>
-          <td><a href="${JIRA_BASE_URL}/browse/${ticket}" target="_blank">${ticket}</a></td>
-          <td>${type}</td>
+          <td><a href="${safe_jira_href}" target="_blank">${esc_ticket}</a></td>
+          <td>${esc_type}</td>
           <td>${pr_link}</td>
           <td>${merged_display}</td>
         </tr>

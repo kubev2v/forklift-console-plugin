@@ -205,13 +205,13 @@ gh api graphql -f query='mutation {
 
 Commit and push fixes (always use `-s` for DCO sign-off):
 ```bash
-git add -A
+git add <changed-source-files>
 git commit -s -m "Address review comments
 
 <brief description>
 
 Resolves: ${TICKET_KEY}"
-git push origin ${BRANCH_NAME}
+git push origin ${BRANCH}
 ```
 
 Update PR description if review feedback meaningfully expanded the scope.
@@ -264,7 +264,7 @@ When the PR is ready to merge (all criteria pass):
    git commit -s -m "chore: update rules with learnings from ${TICKET_KEY}
 
    Resolves: None"
-   git push origin ${BRANCH_NAME}
+   git push origin ${BRANCH}
    ```
 
 4. **Record learn status** in state:

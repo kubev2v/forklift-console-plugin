@@ -72,7 +72,7 @@ cmd_set_component() {
   local comp_id="${2:?Missing COMPONENT_ID}"
 
   local payload
-  payload=$(jq -n --arg id "$comp_id" '{fields: {components: [{id: $id}]}}')
+  payload=$(jq -n --arg id "$comp_id" '{update: {components: [{add: {id: $id}}]}}')
   jira_update "$key" "$payload"
 }
 
@@ -135,23 +135,45 @@ cmd_add_comment() {
   local tmp
   tmp=$(mktemp)
   echo "$payload" > "$tmp"
-  trap 'rm -f "$tmp"' EXIT
 
   curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
     -X POST -H "Content-Type: application/json" \
     -d "@${tmp}" \
     "${JIRA_BASE_URL}/rest/api/2/issue/${key}/comment" | jq -r '.id // "OK"'
+
+  rm -f "$tmp"
+}
+
+cmd_set_field() {
+  local key="${1:?Missing KEY}"
+  local field_id="${2:?Missing FIELD_ID}"
+  local val="${3:?Missing VAL}"
+  local payload
+  payload=$(jq -n --arg id "$field_id" --arg v "$val" '{fields: {($id): $v}}')
+  jira_update "$key" "$payload"
 }
 
 cmd_set_sprint() {
   local key="${1:?Missing KEY}"
   local sprint_id="${2:?Missing SPRINT_ID}"
 
-  curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
+  local response
+  response=$(curl -s -w "\n%{http_code}" -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
     -X POST -H "Content-Type: application/json" \
     -d "{\"issues\": [\"${key}\"]}" \
-    "${JIRA_BASE_URL}/rest/agile/1.0/sprint/${sprint_id}/issue" \
-    | jq -r '.// "OK"'
+    "${JIRA_BASE_URL}/rest/agile/1.0/sprint/${sprint_id}/issue")
+
+  local code
+  code=$(echo "$response" | tail -1)
+  local body
+  body=$(echo "$response" | sed '$d')
+
+  if [[ "$code" != "204" && "$code" != "200" ]]; then
+    echo "ERROR: HTTP $code" >&2
+    echo "$body" >&2
+    return 1
+  fi
+  echo "OK"
 }
 
 cmd_get_sprint_info() {
@@ -170,7 +192,7 @@ case "${1:-}" in
   set-qa-contact)   shift; cmd_set_qa_contact "$@" ;;
   set-story-points) shift; cmd_set_story_points "$@" ;;
   set-sprint)       shift; cmd_set_sprint "$@" ;;
-  set-field)        shift; echo "Use jira_update directly for custom fields" ;;
+  set-field)        shift; cmd_set_field "$@" ;;
   add-comment)      shift; cmd_add_comment "$@" ;;
   get-sprint-info)  shift; cmd_get_sprint_info ;;
   *)                usage ;;

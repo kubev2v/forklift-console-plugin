@@ -71,7 +71,7 @@ transition the Epic too.
 
 Present a summary of what was set:
 
-```
+```text
 ## Jira Tracking: ${TICKET_KEY}
 
 **Status:** In Progress
