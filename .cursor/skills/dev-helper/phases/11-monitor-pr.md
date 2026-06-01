@@ -109,11 +109,15 @@ git checkout ${BRANCH}
 git rebase upstream/main
 ```
 
-2. **Clean rebase (no conflicts)** -- force push and continue the loop:
+2. **Clean rebase (no conflicts)** -- force push:
 ```bash
 git push origin ${BRANCH} --force-with-lease
 ```
-CI will re-run on the new base. Continue to check remaining priorities.
+CI will re-run on the new base. **STOP processing this PR.** Mark as waiting
+for CI and do NOT proceed to merge until all checks pass on the new HEAD:
+```bash
+.cursor/skills/dev-helper/scripts/state-cli.sh wait ${TICKET_KEY} pr-ci-pending
+```
 
 3. **Conflicts** -- abort, alert user, stop processing this PR:
 ```bash
@@ -297,15 +301,29 @@ Inform the user this ticket is waiting. They can work on another ticket.
 
 ### 11.7 Priority 6: Auto-merge
 
-If ALL merge criteria are met AND learn status is `learned` or `skipped`:
+**HARD CONSTRAINT: NEVER submit a PR to the merge queue unless ALL 6 merge
+criteria below are verified as passing.** Every single criterion is a hard
+gate -- if even one is not met, merging is FORBIDDEN. No exceptions.
 
-**Merge criteria checklist:**
-- At least one approval
-- All required CI checks pass
-- No merge conflicts
-- No unresolved `CHANGES_REQUESTED`
-- Branch is up to date with upstream main
-- Learn status is `learned` or `skipped` (NOT `none`)
+After a rebase or force-push, the commit SHA changes. CI must re-run and
+approval may be reset. You MUST re-verify ALL 6 criteria on the new HEAD
+before merging. Submitting with pending/running checks is FORBIDDEN -- even
+if the code is identical, the new commit is unvalidated.
+
+**Merge criteria (ALL 6 required):**
+
+| # | Criterion | Verified by |
+|---|-----------|-------------|
+| 1 | **CI Passing** -- all required checks show SUCCESS on the **current HEAD** | `ci_passing == true` in pr-monitor output |
+| 2 | **Approved** -- at least one human approval, not reset by new commits | `is_approved == true` |
+| 3 | **No Conflicts** -- PR mergeable state is not CONFLICTING | `has_conflicts == false` |
+| 4 | **Up to Date** -- branch is not behind upstream/main | `needs_rebase == false` |
+| 5 | **No Unresolved Threads** -- all review threads resolved | `unresolved == 0` |
+| 6 | **Learn Done** -- learn status is `learned` or `reviewed-skipped` | `learn_ready == true` |
+
+If ANY criterion is not met, DO NOT MERGE. Handle the blocking criterion
+first (rebase, fix CI, address comments, run learn, etc.) and re-verify
+ALL criteria afterward.
 
 **Auto-merge:**
 
