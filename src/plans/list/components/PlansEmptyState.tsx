@@ -18,6 +18,8 @@ import { FORKLIFT_DOCS_URL } from '@utils/links';
 
 import PlansAddButton from './PlansAddButton';
 
+import './plans-empty-state.scss';
+
 type PlansEmptyStateProps = {
   namespace?: string;
 };
@@ -52,7 +54,7 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
       headingLevel="h4"
       icon={PlusCircleIcon}
     >
-      <EmptyStateBody>
+      <EmptyStateBody className="plans-empty-state__body">
         {hasSufficientProviders
           ? t(
               'Migration plans are used to document the moving of virtualization workloads from source providers to target providers.',
