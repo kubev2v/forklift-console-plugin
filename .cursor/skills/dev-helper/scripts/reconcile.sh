@@ -42,9 +42,17 @@ check_pr_merged() {
     "$JIRA_TRACK" set-qa-contact "$ticket" "$QA_CONTACT" 2>/dev/null || true
 
     "$STATE_CLI" set "$ticket" '.pr.mergedAt = (now | todate) | .pr.ciStatus = "merged" | .waiting = {active: false, reason: null, since: null}' 2>/dev/null
-    "$STATE_CLI" phase "$ticket" track-jira-merged 2>/dev/null
 
-    add_report "${ticket}: PR #${pr_number} merged -> Jira auto-transitioned, phase -> track-jira-merged"
+    local learn_status
+    learn_status=$(jq -r '.learn.status // "none"' "$SCRIPT_DIR/../state/$ticket/state.json" 2>/dev/null || echo "none")
+
+    if [[ "$learn_status" == "learned" || "$learn_status" == "reviewed-skipped" || "$learn_status" == "skipped" ]]; then
+      "$STATE_CLI" phase "$ticket" track-jira-merged 2>/dev/null
+      add_report "${ticket}: PR #${pr_number} merged -> Jira auto-transitioned, phase -> track-jira-merged"
+    else
+      "$STATE_CLI" phase "$ticket" learn 2>/dev/null
+      add_report "${ticket}: PR #${pr_number} merged -> learn pending (review required before advancing)"
+    fi
     changes=$((changes + 1))
   fi
 }
@@ -159,7 +167,9 @@ check_post_merge_phases() {
   local ticket="$1"
   local phase="$2"
 
-  if [[ "$phase" == "track-jira-merged" ]]; then
+  if [[ "$phase" == "learn" ]]; then
+    add_report "${ticket}: Learn phase pending — agent will review work and capture learnings on resume"
+  elif [[ "$phase" == "track-jira-merged" ]]; then
     add_report "${ticket}: Post-merge Jira tracking pending — agent will run Phase 12 on resume"
   fi
 }

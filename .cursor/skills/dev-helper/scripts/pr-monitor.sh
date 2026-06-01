@@ -214,7 +214,11 @@ if [[ "$learn_status" == "learned" || "$learn_status" == "skipped" ]]; then
 fi
 
 if [[ "$merged" == "true" ]]; then
-  echo "STATUS: MERGED"
+  if [[ "$learn_status" == "learned" || "$learn_status" == "reviewed-skipped" || "$learn_status" == "skipped" ]]; then
+    echo "STATUS: MERGED"
+  else
+    echo "STATUS: LEARN_PENDING"
+  fi
 elif [[ "$is_approved" == "true" && "$ci_passing" == "true" && "$has_conflicts" == "false" && "$needs_rebase" == "false" && "$unresolved" -eq 0 ]]; then
   if [[ "$learn_ready" == "true" ]]; then
     echo "STATUS: READY_TO_MERGE"

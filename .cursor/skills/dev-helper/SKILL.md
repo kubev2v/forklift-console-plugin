@@ -160,6 +160,8 @@ name a specific ticket to start or resume.
 ```
 
 - **State exists**: Read the current `phase` and resume from there.
+- **Phase is `learn`**: Auto-run Phase 11b immediately. The PR is already
+  merged; learning review is required before advancing.
 - **Phase is `track-jira-merged`**: Auto-run Phase 12 immediately without waiting
   for user prompt. The PR is already merged; there's nothing to gate.
 - **No state**: Initialize (default phase: `triage`) and start from Phase 1.
@@ -179,6 +181,8 @@ SKIP=$(config_get '.phases.skip // [] | join(",")')
 ```
 
 - If the current phase is in `skip`: advance to the next phase immediately.
+  **Exception:** The `learn` phase is a hard constraint and MUST be ignored
+  in `skip` even if listed. It can never be auto-skipped.
 - If the current phase is in `gates`: after the phase completes, STOP and wait
   for user approval before advancing.
 - Otherwise: the phase auto-recaps (presents findings) and advances.
@@ -200,6 +204,7 @@ Read and follow the phase file matching the current state:
 | `e2e-test` | `phases/09-e2e-test.md` |
 | `send-pr` | `phases/10-send-pr.md` |
 | `monitor-pr` | `phases/11-monitor-pr.md` |
+| `learn` | `phases/11b-learn.md` |
 | `track-jira-merged` | `phases/12-track-jira-merged.md` |
 | `done` | Ticket is complete. Report summary. |
 
@@ -297,11 +302,18 @@ work on, or resume this one later."
 | 8 | Verify (unit tests) | Auto-retry 3x | Required |
 | 9 | E2E Test | Skip if no cluster | Required |
 | 10 | Send PR | Autonomous (send-pr.sh) | Required |
-| 11 | Monitor PR (+Learn) | Auto-fix + learn on approval | Required |
+| 11 | Monitor PR | Auto-fix + merge | Required |
+| 11b | Learn | **HARD CONSTRAINT** (never skippable) | Required |
 | 12 | Post-Merge Jira | Autonomous (reconcile.sh) | Required |
 
 **Gating:** Only phases in `phases.gates` config block for approval. Default:
 `["design"]`. All other phases auto-recap and continue.
+
+**Learn (hard constraint):** Phase 11b (`learn`) cannot be added to
+`phases.skip`. The agent must review the work done on every ticket before
+advancing. If the PR is merged without learning (manual merge, reconcile),
+the learn phase runs post-merge and opens a separate PR for any rule/doc
+updates.
 
 **Auto-retry:** Phases 7-8 self-correct up to 3 times on build/lint/test
 failure.

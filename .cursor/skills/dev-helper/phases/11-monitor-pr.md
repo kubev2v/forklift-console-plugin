@@ -70,11 +70,27 @@ If the PR is merged:
 ```bash
 .cursor/skills/dev-helper/scripts/state-cli.sh set ${TICKET_KEY} \
   '.pr.mergedAt = (now | todate) | .pr.ciStatus = "merged"'
-
-.cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} track-jira-merged
 ```
 
-Proceed to Phase 12. Read and follow `phases/12-track-jira-merged.md`.
+Check learn status before advancing:
+
+```bash
+LEARN_STATUS=$(.cursor/skills/dev-helper/scripts/state-cli.sh field ${TICKET_KEY} '.learn.status // "none"')
+```
+
+- If `LEARN_STATUS` is `learned`, `reviewed-skipped`, or `skipped` (legacy):
+  advance to `track-jira-merged` and proceed to Phase 12.
+- If `LEARN_STATUS` is `none` or missing: advance to `learn` phase.
+
+```bash
+if [[ "$LEARN_STATUS" == "learned" || "$LEARN_STATUS" == "reviewed-skipped" || "$LEARN_STATUS" == "skipped" ]]; then
+  .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} track-jira-merged
+  # Proceed to Phase 12. Read and follow phases/12-track-jira-merged.md.
+else
+  .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} learn
+  # Proceed to Phase 11b. Read and follow phases/11b-learn.md.
+fi
+```
 
 **Done with this PR.**
 
@@ -302,11 +318,21 @@ On merge success:
 ```bash
 .cursor/skills/dev-helper/scripts/state-cli.sh set ${TICKET_KEY} \
   '.pr.mergedAt = (now | todate) | .pr.ciStatus = "merged"'
-
-.cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} track-jira-merged
 ```
 
-Proceed to Phase 12. Read and follow `phases/12-track-jira-merged.md`.
+Check learn status before advancing (same logic as Priority 1):
+
+```bash
+LEARN_STATUS=$(.cursor/skills/dev-helper/scripts/state-cli.sh field ${TICKET_KEY} '.learn.status // "none"')
+
+if [[ "$LEARN_STATUS" == "learned" || "$LEARN_STATUS" == "reviewed-skipped" || "$LEARN_STATUS" == "skipped" ]]; then
+  .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} track-jira-merged
+  # Proceed to Phase 12. Read and follow phases/12-track-jira-merged.md.
+else
+  .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} learn
+  # Proceed to Phase 11b. Read and follow phases/11b-learn.md.
+fi
+```
 
 **If learn status is `none`:** Do NOT merge. Run the Learn sub-step (Priority 5)
 first, then re-check merge criteria.
