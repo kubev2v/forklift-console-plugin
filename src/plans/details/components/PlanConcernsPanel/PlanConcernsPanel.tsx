@@ -1,10 +1,8 @@
-import { type FC, useMemo } from 'react';
+import { type FC, useEffect, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
-import { useForkliftTranslation } from 'src/utils/i18n';
 
 import StandardPage from '@components/page/StandardPage';
 import {
-  Bullseye,
   DrawerActions,
   DrawerCloseButton,
   DrawerHead,
@@ -51,8 +49,6 @@ const PlanConcernsPanel: FC<PlanConcernsPanelProps> = ({
   setShowPlanConcernsPanel,
   showPlanConcernsPanel,
 }) => {
-  const { t } = useForkliftTranslation();
-
   const userSettings = useMemo(
     () => loadUserSettings({ pageId: 'MigrationPlanConcernsPanel' }),
     [],
@@ -96,9 +92,23 @@ const PlanConcernsPanel: FC<PlanConcernsPanelProps> = ({
     [status],
   );
 
-  if (showPlanConcernsPanel && (alertsNotRelevant || !showCriticalConditions)) {
-    return <Bullseye className="text-muted">{t('No data available.')}</Bullseye>;
-  }
+  useEffect(() => {
+    if (
+      loaded &&
+      !loadError &&
+      showPlanConcernsPanel &&
+      (alertsNotRelevant || !showCriticalConditions)
+    ) {
+      setShowPlanConcernsPanel(false);
+    }
+  }, [
+    alertsNotRelevant,
+    loaded,
+    loadError,
+    setShowPlanConcernsPanel,
+    showCriticalConditions,
+    showPlanConcernsPanel,
+  ]);
 
   return (
     <DrawerPanelContent isResizable className="pfext-quick-start__base plan-concerns-panel">
