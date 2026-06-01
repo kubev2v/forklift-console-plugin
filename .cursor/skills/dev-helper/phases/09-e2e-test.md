@@ -86,3 +86,10 @@ cd testing && npm run test:downstream  # Only if cluster + .providers.json avail
 
 Proceed to Phase 10: Send PR.
 Read and follow `phases/10-send-pr.md`.
+
+## Completion Checklist
+
+Before advancing from this phase, `state-cli.sh phase` validates:
+
+- [ ] `.branch` field set in state
+- [ ] E2E tests pass (or phase explicitly skipped)

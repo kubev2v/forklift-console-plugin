@@ -70,3 +70,10 @@ If the change is purely logic/utility (no UI flow changed), skip to Send PR:
 .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} send-pr
 ```
 Read and follow `phases/10-send-pr.md`.
+
+## Completion Checklist
+
+Before advancing from this phase, `state-cli.sh phase` validates:
+
+- [ ] `.branch` field set in state
+- [ ] Unit tests pass (`npm test`)

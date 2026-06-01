@@ -135,6 +135,13 @@ File: .cursor/skills/dev-helper/state/${TICKET_KEY}/triage.md
 Content: the triage outcome summary from step 1.9 (outcome, clarity, ownership,
 duplicates, blockers, scope). Use the Write tool.
 
+## Completion Checklist
+
+Before advancing from this phase, `state-cli.sh phase` validates:
+
+- [ ] `state/${TICKET_KEY}/triage.md` artifact written (step 1.10)
+- [ ] `.type` field set in state (step 1.2)
+
 ### 1.11 Advance phase
 
 ```bash

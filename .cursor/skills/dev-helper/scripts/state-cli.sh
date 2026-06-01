@@ -258,12 +258,82 @@ cmd_set() {
   atomic_write "$file" "$updated"
 }
 
+validate_transition() {
+  local key="$1"
+  local target="$2"
+  local file
+  file=$(state_file "$key")
+  local errors=()
+  local artifact_dir="${STATE_DIR}/${key}"
+
+  local current_type current_phase learn_status
+  current_type=$(jq -r '.type // "null"' "$file")
+  current_phase=$(jq -r '.phase' "$file")
+  learn_status=$(jq -r '.learn.status // "none"' "$file")
+
+  has_field() { [[ "$(jq -r "$1 // empty" "$file")" != "" ]]; }
+  has_artifact() { [[ -f "${artifact_dir}/${1}" ]]; }
+
+  case "$target" in
+    investigate)
+      has_artifact "triage.md" || errors+=("Missing artifact: triage.md")
+      [[ "$current_type" != "null" ]] || errors+=("Missing state field: .type")
+      ;;
+    ask-more-info|reproduce)
+      has_artifact "investigation.md" || errors+=("Missing artifact: investigation.md")
+      has_field '.investigation.completedAt' || errors+=("Missing state field: .investigation.completedAt")
+      ;;
+    jira-track)
+      [[ "$current_type" != "null" ]] || errors+=("Missing state field: .type")
+      if [[ "$current_type" == "Bug" ]]; then
+        has_artifact "reproduction-script.ts" || has_artifact "reproduction.md" || \
+          errors+=("Bug tickets require reproduction evidence (reproduction-script.ts or reproduction.md)")
+      fi
+      ;;
+    design)
+      has_field '.investigation.completedAt' || errors+=("Missing state field: .investigation.completedAt")
+      ;;
+    implement|verify|e2e-test|send-pr)
+      has_field '.branch' || errors+=("Missing state field: .branch (create a branch first)")
+      ;;
+    monitor-pr)
+      has_field '.prNumber' || errors+=("Missing state field: .prNumber (send a PR first)")
+      ;;
+    learn)
+      has_field '.pr.mergedAt' || errors+=("Missing state field: .pr.mergedAt (PR must be merged first)")
+      ;;
+    track-jira-merged)
+      if [[ "$learn_status" != "learned" && "$learn_status" != "reviewed-skipped" && "$learn_status" != "skipped" ]]; then
+        errors+=("Learn phase not completed: .learn.status is '${learn_status}' (must be 'learned' or 'reviewed-skipped')")
+      fi
+      ;;
+    done)
+      [[ "$current_phase" == "track-jira-merged" ]] || errors+=("Can only advance to 'done' from 'track-jira-merged' (current: ${current_phase})")
+      ;;
+  esac
+
+  if [[ ${#errors[@]} -gt 0 ]]; then
+    echo "ERROR: Cannot transition ${key} to '${target}' -- missing prerequisites:" >&2
+    for err in "${errors[@]}"; do
+      echo "  - ${err}" >&2
+    done
+    return 1
+  fi
+  return 0
+}
+
 cmd_phase() {
+  local force=false
+  if [[ "${1:-}" == "--force" ]]; then force=true; shift; fi
   local key="${1:?Missing TICKET_KEY}"
   local phase="${2:?Missing PHASE_NAME}"
   local file
   file=$(state_file "$key")
   [[ -f "$file" ]] || { echo "No state for $key" >&2; exit 1; }
+
+  if [[ "$force" == "false" ]]; then
+    validate_transition "$key" "$phase" || exit 1
+  fi
 
   local now
   now=$(date -u +"%Y-%m-%dT%H:%M:%SZ")

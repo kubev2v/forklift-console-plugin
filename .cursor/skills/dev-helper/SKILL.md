@@ -216,6 +216,26 @@ After each phase completes successfully, update the state:
 .cursor/skills/dev-helper/scripts/state-cli.sh phase MTV-5300 <next-phase>
 ```
 
+**Phase transition validation:** The `phase` command validates prerequisites
+before allowing the transition. If required artifacts or state fields are
+missing, it prints the missing items and exits without changing state. Each
+phase doc has a **Completion Checklist** listing what the validator checks.
+
+If validation fails, complete the missing step and retry. For recovery
+scenarios (e.g., manually fixing corrupted state), use `--force`:
+
+```bash
+.cursor/skills/dev-helper/scripts/state-cli.sh phase --force MTV-5300 <phase>
+```
+
+Key validations:
+- `investigate` requires `triage.md` artifact and `.type` set
+- `implement` through `send-pr` require `.branch` set
+- `monitor-pr` requires `.prNumber` set
+- `learn` requires `.pr.mergedAt` set
+- `track-jira-merged` requires `.learn.status` to be `learned` or `reviewed-skipped`
+- `done` requires previous phase to be `track-jira-merged`
+
 ### 6. Branch safety check
 
 Before any code changes (phases 7-10), verify the current git branch matches the

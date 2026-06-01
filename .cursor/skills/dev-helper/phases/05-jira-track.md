@@ -96,5 +96,15 @@ else
 fi
 ```
 
+## Completion Checklist
+
+No hard validation for this phase -- the Jira fields are set via
+`jira-track.sh` commands. Verify these were called:
+
+- [ ] Story points set (`jira-track.sh set-story-points`)
+- [ ] Sprint assigned (`sprint-lookup.sh`)
+- [ ] Fix version set (`jira-track.sh set-fix-version`)
+- [ ] Jira status transitioned to In Progress
+
 **IMPORTANT:** Do NOT transition to POST here. POST is reserved for Phase 10
 (Send PR) after the PR is created. This phase transitions to In Progress only.

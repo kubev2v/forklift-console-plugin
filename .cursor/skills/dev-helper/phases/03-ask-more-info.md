@@ -61,3 +61,9 @@ the user says "resume work on MTV-XXXX"):
 .cursor/skills/dev-helper/scripts/state-cli.sh resume ${TICKET_KEY}
 .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} investigate
 ```
+
+## Completion Checklist
+
+No hard validation for this phase -- it completes when the agent
+posts a Jira comment and marks the ticket as waiting, or when new
+information arrives and the ticket resumes.

@@ -179,3 +179,10 @@ If the issue could not be reproduced, the user may choose to:
 - Retry with different steps
 - Move to `ask-more-info` for clarification from the reporter
 - For non-bug tickets only: skip and proceed to Jira Track (Phase 5) based on code analysis alone
+
+## Completion Checklist
+
+Before advancing from this phase, `state-cli.sh phase` validates:
+
+- [ ] For Bug tickets: `state/${TICKET_KEY}/reproduction-script.ts` or `reproduction.md` exists
+- [ ] Screenshots saved (recommended but not enforced by script)

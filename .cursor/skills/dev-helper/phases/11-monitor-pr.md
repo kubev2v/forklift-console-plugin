@@ -354,3 +354,11 @@ fi
 
 **If learn status is `none`:** Do NOT merge. Run the Learn sub-step (Priority 5)
 first, then re-check merge criteria.
+
+## Completion Checklist
+
+Before merging or advancing from this phase, verify:
+
+- [ ] All 6 merge criteria pass (approved, CI, no conflicts, up to date, no unresolved threads, learn done)
+- [ ] `.learn.status` is `learned` or `reviewed-skipped` (not `none`)
+- [ ] `.prNumber` field set in state

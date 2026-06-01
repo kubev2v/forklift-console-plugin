@@ -182,3 +182,12 @@ rm -f /tmp/pr-body-${TICKET_KEY}.md
 
 Proceed to Phase 11 (Monitor PR).
 Read and follow `phases/11-monitor-pr.md`.
+
+## Completion Checklist
+
+The `send-pr.sh` script handles validation atomically. After it runs:
+
+- [ ] `.prNumber` field set in state
+- [ ] `.prUrl` field set in state
+- [ ] Jira transitioned to POST
+- [ ] PR link set in Jira

@@ -126,3 +126,12 @@ and ask for guidance.
 
 Proceed to Phase 8: Verify.
 Read and follow `phases/08-verify.md`.
+
+## Completion Checklist
+
+Before advancing from this phase, `state-cli.sh phase` validates:
+
+- [ ] `.branch` field set in state
+- [ ] Code compiles (`npm run build` passes)
+- [ ] Lint passes (`npm run lint`)
+- [ ] i18n extracted (`npm run i18n`)

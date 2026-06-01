@@ -158,3 +158,13 @@ After completing this ticket, check for other active work:
 - If there are **other active tickets**, suggest resuming the next one.
 - If there are **no active tickets**, offer: "Shall I run bug triage to find the
   next ticket to work on?"
+
+## Completion Checklist
+
+Before advancing to `done`, `state-cli.sh phase` validates:
+
+- [ ] Previous phase was `track-jira-merged`
+- [ ] `.learn.status` is `learned` or `reviewed-skipped`
+- [ ] Jira status transitioned (Modified for bugs, Closed for stories/tasks)
+- [ ] Story points set (non-Epic tickets)
+- [ ] QA contact set

@@ -122,3 +122,10 @@ decision tree, scope, file changes, test plan, todos). Use the Write tool.
 
 .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} implement
 ```
+
+## Completion Checklist
+
+Before advancing from this phase, `state-cli.sh phase` validates:
+
+- [ ] `.investigation.completedAt` field set (investigation was done before design)
+- [ ] `state/${TICKET_KEY}/design.md` artifact written (step 6.7)

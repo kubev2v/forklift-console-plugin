@@ -169,3 +169,11 @@ ask-more-info (Phase 3) and returned here, the same routing applies.
 ```bash
 .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} jira-track
 ```
+
+## Completion Checklist
+
+Before advancing from this phase, `state-cli.sh phase` validates:
+
+- [ ] `state/${TICKET_KEY}/investigation.md` artifact written
+- [ ] `.investigation.completedAt` field set in state
+- [ ] `.investigation.findings` and `.investigation.rootCause` populated

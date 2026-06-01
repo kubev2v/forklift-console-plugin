@@ -166,3 +166,13 @@ $STATE_CLI phase ${TICKET_KEY} track-jira-merged
 State files with `learn.status = "skipped"` (old value) are treated as
 `reviewed-skipped` for routing purposes. The old value should not be written
 by new code.
+
+## Completion Checklist
+
+Before advancing from this phase, `state-cli.sh phase` validates:
+
+- [ ] `.learn.status` is `learned` or `reviewed-skipped`
+- [ ] PR diff was reviewed (step 11b.1)
+- [ ] Review comments were reviewed (step 11b.1)
+- [ ] If learnings exist: learning PR created and `.learn.prNumber` set
+- [ ] If no learnings: `.learn.reviewedAt` timestamp set
