@@ -7,7 +7,7 @@ GH_REPO_NAME="${GH_REPO##*/}"
 
 usage() {
   cat <<'USAGE'
-Usage: pr-monitor.sh <PR_NUMBER>
+Usage: pr-monitor.sh <PR_NUMBER> [TICKET_KEY]
 
 Checks a PR for:
   - CI status (passing/failing/pending)
@@ -15,6 +15,7 @@ Checks a PR for:
   - Review decisions
   - Merge conflicts
   - Merge readiness
+  - Learn status (when TICKET_KEY provided)
 
 Output is structured text for agent consumption.
 USAGE
@@ -22,6 +23,16 @@ USAGE
 }
 
 PR="${1:?Missing PR_NUMBER}"
+TICKET="${2:-}"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+learn_status="none"
+if [[ -n "$TICKET" ]]; then
+  state_file="$SCRIPT_DIR/../state/$TICKET/state.json"
+  if [[ -f "$state_file" ]]; then
+    learn_status=$(jq -r '.learn.status // "none"' "$state_file")
+  fi
+fi
 
 # Fetch PR data via GraphQL
 pr_data=$(gh api graphql -f query='
@@ -195,11 +206,21 @@ echo "CI Passing: ${ci_passing}"
 echo "Conflicts: ${has_conflicts}"
 echo "Needs Rebase: ${needs_rebase} (${behind_count:-0} commits behind)"
 echo "Unresolved Threads: ${unresolved}"
+echo "Learn: ${learn_status}"
+
+learn_ready="false"
+if [[ "$learn_status" == "learned" || "$learn_status" == "skipped" ]]; then
+  learn_ready="true"
+fi
 
 if [[ "$merged" == "true" ]]; then
   echo "STATUS: MERGED"
 elif [[ "$is_approved" == "true" && "$ci_passing" == "true" && "$has_conflicts" == "false" && "$needs_rebase" == "false" && "$unresolved" -eq 0 ]]; then
-  echo "STATUS: READY_TO_MERGE"
+  if [[ "$learn_ready" == "true" ]]; then
+    echo "STATUS: READY_TO_MERGE"
+  else
+    echo "STATUS: LEARN_PENDING"
+  fi
 elif [[ "$is_approved" == "true" && "$ci_state" == "PENDING" ]]; then
   echo "STATUS: CI_PENDING"
 elif [[ "$is_approved" == "true" && "$ci_passing" == "false" ]]; then

@@ -220,6 +220,7 @@ cmd_init() {
       investigation: { completedAt: null, findings: null, rootCause: null, affectedFiles: [] },
       design: { planFile: null, approvedAt: null },
       pr: { createdAt: null, mergedAt: null, ciStatus: null, lastChecked: null },
+      learn: { status: "none", committedAt: null },
       history: []
     }')
 

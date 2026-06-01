@@ -9,6 +9,7 @@
   "github": {
     "repo": "your-org/your-repo",
     "backendRepo": "your-org/your-backend-repo",
+    "user": "your-github-username",
     "upstreamRemote": "upstream",
     "forkRemote": "origin",
     "baseBranch": "main"

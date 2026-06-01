@@ -31,8 +31,12 @@ check_pr_merged() {
     ticket_type=$("$STATE_CLI" field "$ticket" '.type' 2>/dev/null)
 
     if [[ "$ticket_type" == "Bug" ]]; then
+      "$JIRA_TRANSITION" "$ticket" "In Progress" 2>/dev/null || true
+      "$JIRA_TRANSITION" "$ticket" "POST" 2>/dev/null || true
       "$JIRA_TRANSITION" "$ticket" "Modified" 2>/dev/null || true
     elif [[ "$ticket_type" != "Epic" ]]; then
+      "$JIRA_TRANSITION" "$ticket" "In Progress" 2>/dev/null || true
+      "$JIRA_TRANSITION" "$ticket" "POST" 2>/dev/null || true
       "$JIRA_TRANSITION" "$ticket" "Closed" 2>/dev/null || true
     fi
     "$JIRA_TRACK" set-qa-contact "$ticket" "$QA_CONTACT" 2>/dev/null || true

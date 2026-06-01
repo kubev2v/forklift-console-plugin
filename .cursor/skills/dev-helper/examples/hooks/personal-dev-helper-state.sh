@@ -53,8 +53,30 @@ if [[ -d "$STATE_DIR" ]] && [[ -n "$(ls -A "$STATE_DIR" 2>/dev/null)" ]]; then
       active_tickets+=", PR: ${pr}"
     fi
     if [[ "$is_waiting" == "true" ]]; then
+      waiting_since=$(jq -r '.waiting.since // ""' "$f")
+      days_waiting=""
+      if [[ -n "$waiting_since" && "$waiting_since" != "null" ]]; then
+        now_epoch=$(date +%s)
+        w_epoch=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$waiting_since" +%s 2>/dev/null) || \
+          w_epoch=$(date -d "$waiting_since" +%s 2>/dev/null) || w_epoch=""
+        if [[ -n "$w_epoch" ]]; then
+          days_waiting=$(( (now_epoch - w_epoch) / 86400 ))
+        fi
+      fi
+
       active_tickets+=", **WAITING**: ${wait_reason}"
-      waiting_tickets+="- ${ticket}: ${wait_reason}\n"
+      if [[ -n "$days_waiting" && "$days_waiting" -ge 7 ]]; then
+        active_tickets+=" (${days_waiting}d -- STALE)"
+        case "$wait_reason" in
+          pr-review-pending) waiting_tickets+="- ${ticket}: ${wait_reason} (${days_waiting}d) -- consider pinging the reviewer\n" ;;
+          pr-ci-pending)     waiting_tickets+="- ${ticket}: ${wait_reason} (${days_waiting}d) -- CI may be permanently broken, investigate\n" ;;
+          awaiting-info)     waiting_tickets+="- ${ticket}: ${wait_reason} (${days_waiting}d) -- consider closing as incomplete\n" ;;
+          rebase-conflicts)  waiting_tickets+="- ${ticket}: ${wait_reason} (${days_waiting}d) -- conflicts need manual resolution\n" ;;
+          *)                 waiting_tickets+="- ${ticket}: ${wait_reason} (${days_waiting}d) -- needs follow-up\n" ;;
+        esac
+      else
+        waiting_tickets+="- ${ticket}: ${wait_reason}\n"
+      fi
       waiting_count=$((waiting_count + 1))
     fi
     active_tickets+="\n"

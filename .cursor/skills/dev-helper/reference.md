@@ -45,9 +45,17 @@ These IDs are consistent across all ticket types (Bug, Story, Task, Epic, Vulner
 |------|----|-------------|
 | New | Assigned | Phase 1 (Triage): picking up ticket |
 | Assigned | In Progress | Phase 5 (Jira Track): starting work |
-| In Progress | POST | Phase 10 (Send PR): PR opened (bugs/tasks) |
-| POST | Modified | Phase 12 (Post-Merge): PR merged (bugs) |
+| In Progress | POST | Phase 10 (Send PR): PR opened (all types except Epic) |
+| POST | Modified | Phase 12 (Post-Merge): PR merged (bugs only) |
 | POST | Closed | Phase 12 (Post-Merge): PR merged (stories/tasks) |
+
+**All ticket types follow the same path:** New -> Assigned -> In Progress -> POST -> final status.
+Scripts chain through intermediate transitions automatically since Jira does
+not allow skipping states (e.g., New directly to Closed will fail).
+
+**Epic transitions:** Epics are never transitioned by individual PR merges.
+An Epic is closed only when ALL its child stories reach Closed/Verified status
+(checked in Phase 12, step 12.6).
 
 Note: Transition IDs vary per project. Use `jira-transition.sh discover <TICKET_KEY>` to find available transitions.
 

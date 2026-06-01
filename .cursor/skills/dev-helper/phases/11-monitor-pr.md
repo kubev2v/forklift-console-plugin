@@ -251,7 +251,18 @@ When the PR is ready to merge (all criteria pass):
    git push origin ${BRANCH_NAME}
    ```
 
-4. **Notify user** the PR is ready to merge (with learnings included).
+4. **Record learn status** in state:
+   ```bash
+   # If learnings were captured and committed:
+   .cursor/skills/dev-helper/scripts/state-cli.sh set ${TICKET_KEY} \
+     '.learn.status = "learned" | .learn.committedAt = (now | todate)'
+
+   # If no learnings needed (nothing new to capture):
+   .cursor/skills/dev-helper/scripts/state-cli.sh set ${TICKET_KEY} \
+     '.learn.status = "skipped"'
+   ```
+
+5. **Notify user** the PR is ready to merge (with learnings included).
 
 #### Not ready (no action possible)
 
@@ -267,3 +278,35 @@ or CI), mark as waiting:
 ```
 
 Inform the user this ticket is waiting. They can work on another ticket.
+
+### 11.7 Priority 6: Auto-merge
+
+If ALL merge criteria are met AND learn status is `learned` or `skipped`:
+
+**Merge criteria checklist:**
+- At least one approval
+- All required CI checks pass
+- No merge conflicts
+- No unresolved `CHANGES_REQUESTED`
+- Branch is up to date with upstream main
+- Learn status is `learned` or `skipped` (NOT `none`)
+
+**Auto-merge:**
+
+```bash
+gh pr merge ${PR_NUMBER} --repo $GH_REPO --squash --delete-branch
+```
+
+On merge success:
+
+```bash
+.cursor/skills/dev-helper/scripts/state-cli.sh set ${TICKET_KEY} \
+  '.pr.mergedAt = (now | todate) | .pr.ciStatus = "merged"'
+
+.cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} track-jira-merged
+```
+
+Proceed to Phase 12. Read and follow `phases/12-track-jira-merged.md`.
+
+**If learn status is `none`:** Do NOT merge. Run the Learn sub-step (Priority 5)
+first, then re-check merge criteria.

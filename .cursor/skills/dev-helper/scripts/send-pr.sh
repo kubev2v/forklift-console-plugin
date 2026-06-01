@@ -101,10 +101,12 @@ echo "[4/8] State updated with PR info"
 
 # Step 5: Transition Jira
 ticket_type=$("$STATE_CLI" field "$TICKET" '.type')
-if [[ "$ticket_type" == "Bug" || "$ticket_type" == "Task" ]]; then
-  "$JIRA_TRANSITION" "$TICKET" "POST" 2>/dev/null && echo "[5/8] Jira -> POST" || echo "[5/8] Jira transition failed (may need manual)"
+if [[ "$ticket_type" == "Epic" ]]; then
+  echo "[5/8] Epic: skipping transition (managed separately)"
 else
-  echo "[5/8] Story: keeping In Progress"
+  # Ensure ticket is at In Progress before moving to POST
+  "$JIRA_TRANSITION" "$TICKET" "In Progress" 2>/dev/null || true
+  "$JIRA_TRANSITION" "$TICKET" "POST" 2>/dev/null && echo "[5/8] Jira -> POST" || echo "[5/8] Jira transition failed (may need manual)"
 fi
 
 # Step 6: Set Jira PR link + Ready flag

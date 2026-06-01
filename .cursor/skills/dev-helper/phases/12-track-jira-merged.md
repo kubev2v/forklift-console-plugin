@@ -29,21 +29,30 @@ CURRENT_STATUS=$(curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
 TYPE=$(.cursor/skills/dev-helper/scripts/state-cli.sh field ${TICKET_KEY} '.type')
 ```
 
-Only transition if the ticket is still in a pre-merge state (POST, In Progress, Assigned):
+Only transition if the ticket is not already at its target status. Jira may
+not allow skipping intermediate states, so chain through them:
 
-| Ticket Type | Transition To | Condition |
-|-------------|--------------|-----------|
-| Bug | Modified | Status is POST or In Progress |
-| Story / Task | Closed | Status is POST or In Progress |
-| Epic | Skip | Epics are managed separately |
+| Ticket Type | Target Status | Intermediate Chain |
+|-------------|--------------|-------------------|
+| Bug | Modified | In Progress -> POST -> Modified |
+| Story / Task | Closed | In Progress -> POST -> Closed |
+| Epic | Skip | Closed only when all child stories are done (step 12.6) |
 
 ```bash
-if [[ "$TYPE" == "Bug" && "$CURRENT_STATUS" != "Modified" && "$CURRENT_STATUS" != "Closed" ]]; then
+if [[ "$TYPE" == "Bug" && "$CURRENT_STATUS" != "Modified" && "$CURRENT_STATUS" != "Closed" && "$CURRENT_STATUS" != "Verified" ]]; then
+  .cursor/skills/dev-helper/scripts/jira-transition.sh ${TICKET_KEY} "In Progress" 2>/dev/null || true
+  .cursor/skills/dev-helper/scripts/jira-transition.sh ${TICKET_KEY} "POST" 2>/dev/null || true
   .cursor/skills/dev-helper/scripts/jira-transition.sh ${TICKET_KEY} "Modified"
-elif [[ "$TYPE" != "Bug" && "$TYPE" != "Epic" && "$CURRENT_STATUS" != "Closed" ]]; then
+elif [[ "$TYPE" != "Bug" && "$TYPE" != "Epic" && "$CURRENT_STATUS" != "Closed" && "$CURRENT_STATUS" != "Verified" ]]; then
+  .cursor/skills/dev-helper/scripts/jira-transition.sh ${TICKET_KEY} "In Progress" 2>/dev/null || true
+  .cursor/skills/dev-helper/scripts/jira-transition.sh ${TICKET_KEY} "POST" 2>/dev/null || true
   .cursor/skills/dev-helper/scripts/jira-transition.sh ${TICKET_KEY} "Closed"
 fi
 ```
+
+Each intermediate transition is attempted and silently ignored if the ticket
+is already past that state. Only the final target transition is required to
+succeed.
 
 ### 12.2 Calculate and set story points (skip for Epics)
 
@@ -90,8 +99,32 @@ Key fields:
 
 ### 12.6 Check parent epic (stories only)
 
-If this was a Story under an Epic, check if all stories in the Epic are now
-Modified/Closed. If so, consider transitioning the Epic too.
+If this was a Story under an Epic, check if all child stories of the Epic
+are now done. If so, close the Epic.
+
+```bash
+source .cursor/skills/dev-helper/scripts/_config.sh
+source ~/.jira-creds
+
+PARENT_EPIC=$(curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
+  "${JIRA_BASE_URL}/rest/api/2/issue/${TICKET_KEY}?fields=parent" \
+  | jq -r '.fields.parent.key // empty')
+
+if [[ -n "$PARENT_EPIC" ]]; then
+  OPEN_CHILDREN=$(curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
+    "${JIRA_BASE_URL}/rest/api/2/search" \
+    -G --data-urlencode "jql=parent = ${PARENT_EPIC} AND status not in (Closed, Verified, \"Release Pending\")" \
+    --data-urlencode "maxResults=0" \
+    | jq '.total')
+
+  if [[ "$OPEN_CHILDREN" -eq 0 ]]; then
+    .cursor/skills/dev-helper/scripts/jira-transition.sh ${PARENT_EPIC} "Closed" 2>/dev/null || true
+    echo "Epic ${PARENT_EPIC}: all children closed -> Epic closed"
+  else
+    echo "Epic ${PARENT_EPIC}: ${OPEN_CHILDREN} children still open -> skipping"
+  fi
+fi
+```
 
 ### 12.7 Advance to done
 
@@ -109,3 +142,17 @@ Present final summary:
 **Jira Status:** Modified/Closed
 **Duration:** <elapsed time>
 ```
+
+### 12.8 What's Next
+
+After completing this ticket, check for other active work:
+
+```bash
+.cursor/skills/dev-helper/scripts/state-cli.sh active
+```
+
+- If there are **waiting tickets** that may have unblocked (e.g., PR review came in),
+  suggest resuming the most relevant one.
+- If there are **other active tickets**, suggest resuming the next one.
+- If there are **no active tickets**, offer: "Shall I run bug triage to find the
+  next ticket to work on?"

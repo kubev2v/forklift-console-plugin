@@ -160,6 +160,8 @@ name a specific ticket to start or resume.
 ```
 
 - **State exists**: Read the current `phase` and resume from there.
+- **Phase is `track-jira-merged`**: Auto-run Phase 12 immediately without waiting
+  for user prompt. The PR is already merged; there's nothing to gate.
 - **No state**: Initialize (default phase: `triage`) and start from Phase 1.
 
 ```bash
