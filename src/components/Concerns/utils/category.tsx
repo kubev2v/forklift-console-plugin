@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import { STATUS_ICONS } from '@components/status/statusIcons';
 import type { Concern, V1beta1PlanStatusConditions } from '@forklift-ui/types';
-import type { LabelProps } from '@patternfly/react-core';
+import { PF_LABEL_STATUS, type PfLabelStatus } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
@@ -35,13 +35,13 @@ const CATEGORY_ICONS: Record<ConcernCategory, ReactNode> = {
   [ConcernCategoryOptions.Warning]: STATUS_ICONS.warning,
 };
 
-const CATEGORY_STATUS: Record<ConcernCategory, LabelProps['status'] | undefined> = {
-  [ConcernCategoryOptions.Advisory]: 'info',
-  [ConcernCategoryOptions.Critical]: 'danger',
-  [ConcernCategoryOptions.Error]: 'danger',
-  [ConcernCategoryOptions.Information]: 'info',
-  [ConcernCategoryOptions.Warn]: 'warning',
-  [ConcernCategoryOptions.Warning]: 'warning',
+const CATEGORY_STATUS: Record<ConcernCategory, PfLabelStatus | undefined> = {
+  [ConcernCategoryOptions.Advisory]: PF_LABEL_STATUS.INFO,
+  [ConcernCategoryOptions.Critical]: PF_LABEL_STATUS.DANGER,
+  [ConcernCategoryOptions.Error]: PF_LABEL_STATUS.DANGER,
+  [ConcernCategoryOptions.Information]: PF_LABEL_STATUS.INFO,
+  [ConcernCategoryOptions.Warn]: PF_LABEL_STATUS.WARNING,
+  [ConcernCategoryOptions.Warning]: PF_LABEL_STATUS.WARNING,
 };
 
 const isConcernCategory = (value: string): value is ConcernCategory =>
@@ -55,9 +55,9 @@ export const getCategoryIcon = (category: string): ReactNode => {
   return isConcernCategory(category) ? CATEGORY_ICONS[category] : <></>;
 };
 
-export const getCategoryStatus = (category: string): LabelProps['status'] | undefined => {
+export const getCategoryStatus = (category: string): PfLabelStatus | undefined => {
   if (isConcernCategory(category)) return CATEGORY_STATUS[category];
-  return 'warning';
+  return PF_LABEL_STATUS.WARNING;
 };
 
 export const getCategoryLabel = (category: string): string => {

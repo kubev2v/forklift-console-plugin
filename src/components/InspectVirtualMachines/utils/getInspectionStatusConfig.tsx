@@ -9,6 +9,7 @@ import {
   InProgressIcon,
   MinusCircleIcon,
 } from '@patternfly/react-icons';
+import { PF_LABEL_STATUS, type PfLabelStatus } from '@utils/constants';
 import type { InspectionStatus } from '@utils/crds/conversion/constants';
 import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
 import type { useForkliftTranslation } from '@utils/i18n';
@@ -16,7 +17,7 @@ import type { useForkliftTranslation } from '@utils/i18n';
 type InspectionStatusConfig = {
   icon: ReactNode;
   label: string;
-  labelStatus?: 'danger' | 'info' | 'success' | 'warning';
+  labelStatus?: PfLabelStatus;
 };
 
 export const getInspectionStatusConfig = (
@@ -32,7 +33,7 @@ export const getInspectionStatusConfig = (
           </Icon>
         ),
         label: t('Inspection passed'),
-        labelStatus: 'success',
+        labelStatus: PF_LABEL_STATUS.SUCCESS,
       };
     case INSPECTION_STATUS.ISSUES_FOUND:
       return {
@@ -42,7 +43,7 @@ export const getInspectionStatusConfig = (
           </Icon>
         ),
         label: t('Issues found'),
-        labelStatus: 'warning',
+        labelStatus: PF_LABEL_STATUS.WARNING,
       };
     case INSPECTION_STATUS.FAILED:
       return {
@@ -52,7 +53,7 @@ export const getInspectionStatusConfig = (
           </Icon>
         ),
         label: t('Inspection error'),
-        labelStatus: 'warning',
+        labelStatus: PF_LABEL_STATUS.WARNING,
       };
     case INSPECTION_STATUS.RUNNING:
       return {
@@ -62,7 +63,7 @@ export const getInspectionStatusConfig = (
           </Icon>
         ),
         label: t('Running'),
-        labelStatus: 'info',
+        labelStatus: PF_LABEL_STATUS.INFO,
       };
     case INSPECTION_STATUS.PENDING:
       return {

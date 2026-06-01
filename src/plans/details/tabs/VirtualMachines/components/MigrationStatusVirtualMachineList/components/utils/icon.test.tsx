@@ -4,6 +4,7 @@ import type { V1beta1PlanStatusMigrationVmsPipeline } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
 import { Icon } from '@patternfly/react-core';
 import { CheckIcon, ResourcesEmptyIcon, TimesIcon } from '@patternfly/react-icons';
+import { PF_LABEL_STATUS } from '@utils/constants';
 
 import { getPipelineProgressIcon } from './icon';
 
@@ -30,7 +31,7 @@ describe('getPipelineProgressIcon', () => {
       const result = getPipelineProgressIcon(pipeline) as ReactElement<IconWithStatusProps>;
 
       expect(result.type).toBe(Icon);
-      expect(result.props.status).toBe('danger');
+      expect(result.props.status).toBe(PF_LABEL_STATUS.DANGER);
       expect(result.props.children.type).toBe(TimesIcon);
     });
   });
@@ -49,7 +50,7 @@ describe('getPipelineProgressIcon', () => {
       const result = getPipelineProgressIcon(pipeline) as ReactElement<IconWithStatusProps>;
 
       expect(result.type).toBe(Icon);
-      expect(result.props.status).toBe('success');
+      expect(result.props.status).toBe(PF_LABEL_STATUS.SUCCESS);
       expect(result.props.children.type).toBe(CheckIcon);
     });
   });
@@ -68,7 +69,7 @@ describe('getPipelineProgressIcon', () => {
       const result = getPipelineProgressIcon(pipeline) as ReactElement<IconWithStatusProps>;
 
       expect(result.type).toBe(Icon);
-      expect(result.props.status).toBe('success');
+      expect(result.props.status).toBe(PF_LABEL_STATUS.SUCCESS);
       expect(result.props.children.type).toBe(CheckIcon);
     });
 
@@ -84,7 +85,7 @@ describe('getPipelineProgressIcon', () => {
       const result = getPipelineProgressIcon(pipeline) as ReactElement<IconWithStatusProps>;
 
       expect(result.type).toBe(Icon);
-      expect(result.props.status).toBe('success');
+      expect(result.props.status).toBe(PF_LABEL_STATUS.SUCCESS);
       expect(result.props.children.type).toBe(CheckIcon);
     });
   });
@@ -162,7 +163,7 @@ describe('getPipelineProgressIcon', () => {
       const result = getPipelineProgressIcon(pipeline) as ReactElement<IconWithStatusProps>;
 
       expect(result.type).toBe(Icon);
-      expect(result.props.status).toBe('success');
+      expect(result.props.status).toBe(PF_LABEL_STATUS.SUCCESS);
       expect(result.props.children.type).toBe(CheckIcon);
     });
 
