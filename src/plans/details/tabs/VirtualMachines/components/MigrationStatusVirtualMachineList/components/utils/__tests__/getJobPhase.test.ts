@@ -1,6 +1,6 @@
 import type { IoK8sApiBatchV1Job } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
-import { taskStatuses } from '@utils/constants';
+import { CATEGORY_TYPES, CONDITION_STATUS, PHASES, taskStatuses } from '@utils/constants';
 
 import { getJobPhase } from '../utils';
 
@@ -23,7 +23,7 @@ describe('getJobPhase', () => {
 
   it('returns Completed when condition type is Complete', () => {
     const job = createJob({
-      conditions: [{ status: 'True', type: 'Complete' }],
+      conditions: [{ status: CONDITION_STATUS.TRUE, type: PHASES.COMPLETE }],
     });
 
     expect(getJobPhase(job)).toBe(taskStatuses.completed);
@@ -31,7 +31,7 @@ describe('getJobPhase', () => {
 
   it('returns Completed when condition type is SuccessCriteriaMet', () => {
     const job = createJob({
-      conditions: [{ status: 'True', type: 'SuccessCriteriaMet' }],
+      conditions: [{ status: CONDITION_STATUS.TRUE, type: CATEGORY_TYPES.CRITERIA_MET }],
     });
 
     expect(getJobPhase(job)).toBe(taskStatuses.completed);
@@ -40,8 +40,8 @@ describe('getJobPhase', () => {
   it('returns Completed when both Complete and SuccessCriteriaMet are present', () => {
     const job = createJob({
       conditions: [
-        { status: 'True', type: 'SuccessCriteriaMet' },
-        { status: 'True', type: 'Complete' },
+        { status: CONDITION_STATUS.TRUE, type: CATEGORY_TYPES.CRITERIA_MET },
+        { status: CONDITION_STATUS.TRUE, type: PHASES.COMPLETE },
       ],
     });
 
@@ -50,7 +50,7 @@ describe('getJobPhase', () => {
 
   it('returns Pending when Complete condition status is False', () => {
     const job = createJob({
-      conditions: [{ status: 'False', type: 'Complete' }],
+      conditions: [{ status: CONDITION_STATUS.FALSE, type: PHASES.COMPLETE }],
     });
 
     expect(getJobPhase(job)).toBe(taskStatuses.pending);
@@ -70,7 +70,7 @@ describe('getJobPhase', () => {
 
   it('prioritizes Error over Completed', () => {
     const job = createJob({
-      conditions: [{ status: 'True', type: 'Complete' }],
+      conditions: [{ status: CONDITION_STATUS.TRUE, type: PHASES.COMPLETE }],
       failed: 1,
     });
 
