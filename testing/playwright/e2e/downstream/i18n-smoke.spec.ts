@@ -56,7 +56,10 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
     });
     const page = await context.newPage();
     await page.goto('/');
-    await page.waitForLoadState('domcontentloaded');
+    // Wait for console SPA to initialize its auth token before patching the ConfigMap.
+    // domcontentloaded fires for the HTML shell; the auth token is loaded asynchronously.
+    // Waiting for networkidle gives the console time to complete auth initialization.
+    await page.waitForLoadState('networkidle');
     await restoreConsoleLanguage(page);
     await context.close();
   });

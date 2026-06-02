@@ -83,6 +83,7 @@ export class Table {
     await saveButton.click();
 
     await expect(modalBody).not.toBeVisible();
+    await this.waitForTableLoad();
   }
 
   async enableColumn(columnName: string): Promise<void> {
@@ -123,6 +124,7 @@ export class Table {
     await saveButton.click();
 
     await expect(modalBody).not.toBeVisible();
+    await this.waitForTableLoad();
   }
 
   async getCell(
