@@ -59,7 +59,10 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
     // Wait for console SPA to initialize its auth token before patching the ConfigMap.
     // domcontentloaded fires for the HTML shell; the auth token is loaded asynchronously.
     // Waiting for networkidle gives the console time to complete auth initialization.
-    await page.waitForLoadState('networkidle');
+    // Add a catch so this never hangs forever on a very busy cluster.
+    await page.waitForLoadState('networkidle', { timeout: 60_000 }).catch(() => {
+      // networkidle may never fire on very busy clusters — proceed anyway.
+    });
     await restoreConsoleLanguage(page);
     await context.close();
   });

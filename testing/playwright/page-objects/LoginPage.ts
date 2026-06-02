@@ -1,8 +1,12 @@
 import type { Page } from '@playwright/test';
 
-/** Post-login console routes (default landing pages vary by cluster/version). */
+/**
+ * Post-login console routes (default landing pages vary by cluster/version).
+ * Anchored to the path portion (^[^?#]*) so OAuth query params containing
+ * "console" or similar words cannot trigger a false-positive success match.
+ */
 const POST_LOGIN_URL_PATTERN =
-  /\/(?:dashboards|console|k8s|overview|monitoring|topology|dev-console)/;
+  /^[^?#]*\/(?:dashboards|console|k8s|overview|monitoring|topology|dev-console)\//;
 
 const OAUTH_ACCESS_DENIED_PATTERN = /reason=access_denied/;
 
@@ -68,7 +72,13 @@ export class LoginPage {
       );
     });
 
-    if (outcome === 'access_denied' || outcome === 'invalid_credentials') {
+    if (outcome === 'access_denied') {
+      throw new Error(
+        `Login failed: OAuth access denied for user "${username}". URL: ${this.page.url()}`,
+      );
+    }
+
+    if (outcome === 'invalid_credentials') {
       throw new Error(
         `Login failed: invalid credentials for user "${username}". URL: ${this.page.url()}`,
       );
