@@ -1,0 +1,218 @@
+---
+description: Network maps and storage maps architecture -- list, create, details pages, plan integration, offload plugins
+alwaysApply: false
+---
+
+# Mappings Feature Architecture (`src/networkMaps/` + `src/storageMaps/`)
+
+> Analyzed on 2026-05-29
+
+Both features follow the same CRUD pattern (list → create form/YAML → details with tabs). Storage maps add offload-plugin complexity. Plugin registration: `networkMaps/dynamic-plugin.ts`, `storageMaps/dynamic-plugin.ts`.
+
+## Page Composition
+
+### List Pages
+
+**Network Maps** (`networkMaps/list/NetworkMapsListPage.tsx`):
+```
+LearningExperienceDrawer
+└── StandardPage<NetworkMapData>
+    ├── NetworkMapsAddButton ("Create with form" / "Create with YAML")
+    ├── NetworkMapRow → cell renderers per column
+    └── NetworkMapsEmptyState
+```
+
+**Storage Maps** (`storageMaps/list/StorageMapsListPage.tsx`): identical pattern with `StorageMap*` equivalents.
+
+**Columns** (same schema for both):
+
+| Column | Cell | Filter |
+|--------|------|--------|
+| Name | `*MapLinkCell` | freetext |
+| Namespace | `NamespaceCell` | freetext |
+| Status | `createStatusCell(ErrorStatusCell)` | enum (`MAP_STATUS`) |
+| Source provider | `ProviderLinkCell` | freetext |
+| Target provider | `ProviderLinkCell` | freetext |
+| Owner | `PlanCell` (links to owning Plan) | freetext |
+| Actions | `*MapActionsDropdown` | — |
+
+### Create Forms
+
+**Network Maps** (`networkMaps/create/NetworkMapCreatePage.tsx` → `CreateNetworkMapForm`):
+```
+CreateNetworkMapForm (react-hook-form)
+├── MapNameField (optional, generateName fallback)
+├── ProjectSelectField
+├── SourceProviderField (ProviderSelect)
+├── TargetProviderField (ProviderSelect)
+└── CreateNetworkMapFieldTable (FieldBuilderTable)
+    ├── Source: InventorySourceNetworkField
+    └── Target: TargetNetworkField (@components/mappings/network-mappings/)
+```
+
+**Storage Maps** (`storageMaps/create/StorageMapCreatePage.tsx` → `CreateStorageMapForm`): same top-level structure with:
+- `CreateStorageMapFieldTable` instead
+- Source: `InventorySourceStorageField`
+- Target: `TargetStorageField` or `TargetStorageWithSuggestion` (vSphere + copy offload)
+- Expandable `OffloadStorageRow` per row (plugin, secret, product fields)
+
+**Provider data for source options:**
+- Networks: `useSourceNetworks(provider)` → `useProviderInventory` with subPath `networks`
+- Storages: `useSourceStorages(provider)` → provider-type-specific inventory subPaths
+
+**Submit:**
+- Network: `createNetworkMap()` → `k8sCreate` with `buildNetworkMappings()`
+- Storage: `createStorageMap()` → includes NetApp Shift label detection
+
+### Details Pages
+
+**Both** share identical structure (Details + YAML tabs):
+```
+*MapDetailsPage → LoadingSuspend
+├── *MapPageHeadings (title, critical conditions, actions, learning button)
+└── HorizontalNav
+    ├── Details tab
+    │   ├── DetailsSection (name, namespace, created, owner)
+    │   ├── MapProvidersDetails (+ MapProvidersEdit modal)
+    │   ├── *MapReviewTable (+ *MapEdit modal)
+    │   └── ConditionsSection
+    └── YAML tab (ResourceYAMLEditorWrapper)
+```
+
+**Network edit:** `NetworkMapEdit` modal patches `/spec/map` via `k8sPatch`.
+**Storage edit:** `StorageMapEdit` modal with offload support, transforms via `transformStorageMapToFormValues` / `transformFormValuesToK8sSpec`.
+
+### Actions
+
+| Action | Both types |
+|--------|-----------|
+| Edit | Navigate to details or YAML tab |
+| Delete | `DeleteModal` (gated by `permissions.canDelete`) |
+
+Used in: list row actions + details page header.
+
+## Shared Component Usage
+
+| Component | Used by |
+|-----------|---------|
+| `StandardPage` | Both list pages |
+| `FieldBuilderTable` | Both create/edit mapping tables |
+| `ProviderSelect` | Both source/target provider fields |
+| `ProjectSelect` | Both project fields |
+| `ModalForm` + patch constants | Both edit modals |
+| `FormGroupWithErrorText`, `FormErrorHelperText` | Both create forms |
+| `common/Select` | Inventory source fields, storage target, offload fields |
+| `HelpIconPopover` | Project select, offload fields |
+| `LoadingSuspend` | Both details/YAML tabs |
+| `ResourceYAMLEditorWrapper` | Both YAML tabs |
+| `MapProvidersDetails` / `MapProvidersEdit` | Both details tabs |
+| `SectionHeadingWithEdit`, `SectionHeading` | Both details tabs |
+| `DetailItems/*` (Name, Namespace, etc.) | Both details sections |
+| `ConditionsSection` | Both details tabs |
+| `DeleteModal` | Both actions |
+| `TableLinkCell`, `createStatusCell`, `ErrorStatusCell` | Both list rows |
+| `TargetNetworkField` | Network create/edit only (from `@components/mappings/network-mappings/`) |
+
+## Data Sources
+
+### K8s Watches
+
+| Resource | Network Maps | Storage Maps |
+|----------|:-----------:|:------------:|
+| `NetworkMap` (list/single) | ✓ | — |
+| `StorageMap` (list/single) | — | ✓ |
+| `Provider` (source/dest) | ✓ | ✓ |
+| `CustomResourceDefinition` (StorageMap CRD) | — | ✓ |
+| `Secret` | — | ✓ (offload) |
+
+### Inventory / Feature Hooks
+
+| Hook | Purpose |
+|------|---------|
+| `useSourceNetworks` | Source networks via provider inventory REST |
+| `useOpenShiftNetworks` | NADs on OpenShift target |
+| `useTargetNetworks` | Target network select options |
+| `useSourceStorages` | Source datastores/storage domains (provider-type-specific) |
+| `useTargetStorages` | Target StorageClasses (+ default ordering, NetApp Shift) |
+| `useProviderInventory` | Low-level Forklift inventory REST client |
+| `useStorageMapCrd` | CRD schema for enum discovery |
+| `useOffloadPlugins` | Offload plugin names from CRD + constants |
+| `useStorageVendorProducts` | Vendor product enum from CRD |
+| `useDatastoreVendor` | vSphere SCSI disk → vendor for offload hints |
+| `useFeatureFlags` | `feature_copy_offload` gate (storage only) |
+
+## Cross-Feature Connections
+
+### Plans → Mappings (heaviest integration)
+
+**Plan wizard:**
+- `NetworkMapStep` — existing map select or new map via `NetworkMapFieldTable`
+- `StorageMapStep` — existing map select or new map via `CreatePlanStorageMapFieldTable`
+
+**Plan submit:**
+- Network: plan-local `createNetworkMap.ts` (duplicated, not shared)
+- Storage: reuses `storageMaps/create/utils/createStorageMap.ts` (shared)
+- Existing maps cloned with `copyNetworkMap.ts` / `copyStorageMap.ts`
+
+**Plan details — Mappings tab:**
+- `PlanNetworkMapEdit`, `PlanStorageMapEdit` use same field tables/validation
+- `usePlanNetworkMapResources`, `usePlanStorageMapResources` import `getMappingValues` / `getStorageMappingValues`
+
+**Review tables:**
+- `NetworkMapReviewTable` (from `plans/create/steps/review/`) used on network map details
+- `StorageMapReviewTable` used on storage map details
+
+### Providers → Mappings
+- Both require source + target providers with collected inventory (Ready phase)
+- `PROVIDER_TYPES` used in `buildNetworkMappings`, `buildStorageMappings`
+- Empty states redirect to providers list when `useHasSufficientProviders` is false
+
+### External imports of mapping code
+
+| Consumer | Imports |
+|----------|---------|
+| `plans/**` | Types, constants, build utils, storage components, review tables |
+| `utils/crds/maps/shared.ts` | `NetworkMapData`, `StorageMapData` types |
+| `utils/hooks/useTargetStorages.ts` | `TargetStorage`, NetApp Shift utils from storageMaps |
+
+## Structural Similarities and Differences
+
+### Shared patterns
+- Identical list column schema and filter types
+- Same `MapProvidersDetails` shared component
+- Same `ModalForm` + `k8sPatch` edit pattern
+- Same owner-reference semantics (Plan-owned maps in Owner column)
+
+### Divergences
+
+| Aspect | Network Maps | Storage Maps |
+|--------|-------------|--------------|
+| Complexity | Simple 2-column mapping | Offload plugins, vendor products, secrets, NetApp Shift |
+| Target field | Shared `@components/mappings/` | Feature-local `TargetStorageField` etc. |
+| CRD schema hooks | None | `useStorageMapCrd`, offload/product enum discovery |
+| Plan create util | Duplicated in plans | Reused from storageMaps |
+| Feature flags | None | `FEATURE_NAMES.COPY_OFFLOAD` for vSphere XCOPY |
+| Extra hooks | None | `storageMaps/hooks/` (5 hooks) |
+
+## Blast Radius Notes
+
+### Changes to shared components that break both mappings
+- `StandardPage` → both list pages
+- `FieldBuilderTable` → all create/edit mapping tables
+- `MapProvidersDetails/Edit` → both details provider sections
+- `ModalForm` → all edit modals
+- `ProviderSelect` → both create forms
+- `getMapPhase` (`utils/crds/maps/shared.ts`) → both list status columns
+
+### Network-specific exports consumed elsewhere
+- `TargetNetworkField` → plan wizard, plan edit, network map create/edit
+- `buildNetworkMappings` / `getMappingValues` → plan mapping hooks
+- `NetworkMapReviewTable` → network map details, plan mappings page, plan review
+
+### Storage-specific exports consumed elsewhere (high blast radius)
+- `TargetStorageField`, `TargetStorageWithSuggestion` → plan wizard, plan storage edit
+- `GroupedSourceStorageField`, `OffloadStorageRow` → plan wizard, plan storage edit
+- `createStorageMap`, `buildStorageMappings` → plan submit, plan edit utils
+- `validateOffloadFields`, offload utils → plan storage validation
+- `TargetStorage` type, `useTargetStorages` → shared utils hook
+- `StorageMapReviewTable` → storage details, plan mappings, plan review

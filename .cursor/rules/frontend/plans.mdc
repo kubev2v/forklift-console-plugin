@@ -1,0 +1,309 @@
+---
+description: Plan pages - list, create wizard (9 steps), details tabs, migration actions
+alwaysApply: false
+---
+
+# Plan Pages
+
+> Analyzed on 2026-05-29 — ~240 `.tsx` files, the largest feature in the plugin.
+
+---
+
+## Plugin Registration (`dynamic-plugin.ts`)
+
+Exposes three modules to the Console SDK:
+
+| Extension type | Module | Component |
+|---|---|---|
+| `console.navigation/resource-ns` | — | Nav items (admin + virt perspectives) |
+| `console.page/resource/list` | `PlansListPage` | `PlansListPage` |
+| `console.page/resource/details` | `PlanDetailsNav` | `PlanDetailsNav` |
+| `console.resource/create` | `PlanCreatePage` | `PlanCreatePage` |
+
+All use `PlanModelGroupVersionKind` from `@forklift-ui/types`.
+
+---
+
+## Page Composition
+
+### 1. List Page — `PlansListPage`
+
+```
+PlansListPage
+├── LearningExperienceDrawer
+└── StandardPage                      ← shared, data-driven table
+    ├── PlansAddButton                ← gated by useGetDeleteAndEditAccessReview
+    ├── PlansEmptyState
+    └── PlanRow (per row)
+        └── usePlanListRowFields      ← renders each column cell
+```
+
+**Data source:** `useK8sWatchResource<V1beta1Plan[]>` (list, namespaced).
+
+**Table columns** (defined in `planFields`): Name, Project, Source provider, Target project, Virtual machines count, Migration status, Migration type, Migration started, Description, Actions. Plus a hidden "Archived" slider filter.
+
+**Post-filter:** Archived plans are hidden by default; toggling the "Show archived" slider includes them.
+
+### 2. Create Page — `PlanCreatePage` → `CreatePlanWizard`
+
+```
+PlanCreatePage
+├── LearningExperienceDrawer
+├── Title ("Create migration plan")
+└── CreatePlanWizard
+    ├── FormProvider (react-hook-form)
+    ├── CreatePlanWizardContextProvider
+    └── CreatePlanWizardInner          ← PF6 Wizard shell
+        ├── WizardStep (Basic setup)   ← expandable parent
+        │   ├── GeneralInformationStep
+        │   ├── VirtualMachinesStep
+        │   ├── NetworkMapStep
+        │   ├── StorageMapStep
+        │   └── MigrationTypeStep      ← conditionally hidden
+        ├── WizardStep (Additional setup) ← expandable parent
+        │   ├── OtherSettingsStep
+        │   ├── CustomScriptsStep
+        │   └── HooksStep
+        └── WizardStep (Review and create)
+            └── ReviewStep
+```
+
+**Form framework:** `react-hook-form` via `useCreatePlanForm` (custom hook wrapping `useForm`). The form context is accessed by steps via `useCreatePlanFormContext`. All step field IDs are defined in each step's `constants.ts`.
+
+**Step navigation:** `useStepNavigation` tracks the current step and per-step error state. Steps ahead of the current one are disabled if previous steps have errors (`hasPreviousStepErrors`). The wizard enforces `isVisitRequired`.
+
+**URL params on entry:** `?planProject=<ns>&sourceProvider=<name>` pre-fills the general step (used when navigating from a provider's detail page).
+
+### 3. Details Page — `PlanDetailsNav`
+
+```
+PlanDetailsNav
+├── LearningExperienceDrawer
+├── PlanConcernsDrawer                ← side panel for VM concerns
+├── PlanPageHeader
+│   ├── PageHeadings (shared)
+│   ├── PlanStatusLabel
+│   ├── PlanEditCutoverButton
+│   ├── PlanActionsDropdown
+│   └── PlanAlerts
+└── HorizontalNav                     ← Console SDK tabbed nav
+    └── (tabs defined by usePlanPages)
+```
+
+**Data source:** `usePlan(name, namespace)` — wraps `useK8sWatchResource<V1beta1Plan>` (single resource watch).
+
+---
+
+## Create Wizard Steps
+
+The wizard has two expandable groups plus the review step.
+
+### Group 1 — Basic Setup
+
+| # | Step ID | Component | Key fields | Notes |
+|---|---|---|---|---|
+| 1 | `general` | `GeneralInformationStep` | planName, planProject, planDescription, sourceProvider, targetProvider, targetProject | Uses `ProviderSelect` (shared). Changing source provider resets VMs, network map, storage map, migration type. |
+| 2 | `virtual-machines` | `VirtualMachinesStep` | vms (object keyed by VM ID) | `VirtualMachinesTable` fetches inventory from source provider. Has custom footer (`VirtualMachinesStepFooter`). Changing VM selection unregisters network/storage map fields. |
+| 3 | `network-map` | `NetworkMapStep` | networkMapType, existingNetworkMap OR (networkMap, networkMapName) | Radio: existing (no ownerRef) vs. new. New shows `NewNetworkMapFields` mapping table. |
+| 4 | `storage-map` | `StorageMapStep` | storageMapType, existingStorageMap OR (storageMap, storageMapName) | Same pattern as network map. |
+| 5 | `migration-type` | `MigrationTypeStep` | migrationType (Cold/Warm/Live) | **Conditionally hidden** when source provider doesn't support warm or live. For vSphere, warns about VMs without CBT enabled. |
+
+### Group 2 — Additional Setup
+
+| # | Step ID | Component | Key fields | Notes |
+|---|---|---|---|---|
+| 6 | `other-settings` | `OtherSettingsStep` | transferNetwork, preserveStaticIps, rootDevice, targetPowerState, instanceTypes, nbdeClevis, diskDecryptionPassPhrases, migrateSharedDisks | Several fields are vSphere-only. Transfer network hidden for live migration. |
+| 7 | `automation` | `CustomScriptsStep` | scriptsType (Existing/New), existingConfigMap OR customScripts | Tech Preview. Customization scripts injected via virt-customize. |
+| 8 | `hooks` | `HooksStep` | hookSource (local/AAP), preMigration, postMigration, AAP fields | Two sources: local Ansible playbooks or AAP job templates. Pre/post migration hooks with runner image and service account. |
+
+### Review
+
+| # | Step ID | Component | Notes |
+|---|---|---|---|
+| 9 | `review-and-create` | `ReviewStep` | Shows all 8 review sections. Displays spinner during submit, error state on failure. "Create plan" button triggers `submitMigrationPlan`. |
+
+### Submission Flow (`submitMigrationPlan`)
+
+Creates resources in parallel via `Promise.all`:
+1. **NetworkMap** — copy existing or create new
+2. **StorageMap** — copy existing or create new
+3. **Decryption Secret** — if disk passphrases provided (vSphere LUKS)
+4. **Hooks** — local or AAP, creates Hook CRDs
+5. **Scripts ConfigMap** — if custom scripts configured
+
+Then creates the **Plan** CRD, then patches all created resources to add the plan as owner reference (`addPlanResourceOwnerRefs`).
+
+Telemetry events are fired: `PLAN_CREATE_STARTED`, `PLAN_CREATE_COMPLETED`, `PLAN_CREATE_FAILED`.
+
+---
+
+## Details Tabs
+
+Defined in `usePlanPages` — returns `NavPage[]` consumed by Console SDK `HorizontalNav`.
+
+| Tab | Component | href | Data sources | Key sub-components |
+|---|---|---|---|---|
+| **Details** | `PlanDetailsPage` | `""` | `usePlan` | DetailsSection, ProvidersSection, SettingsSection, MigrationsSection (expandable), ConditionsSection (expandable) |
+| **YAML** | `PlanYAMLPage` | `yaml` | `usePlan` | `ResourceYAMLEditor` (Console SDK) |
+| **Virtual machines** | `PlanVirtualMachinesPage` | `vms` | `usePlan` | Switches between `PlanSpecVirtualMachinesList` (pre-execution) and `MigrationStatusVirtualMachinesList` (during/after execution, wrapped in `DrawerProvider`) |
+| **Resources** | `PlanResourcesPage` | `resources` | `usePlan`, `useK8sWatchResource<V1beta1Provider>`, `useProviderInventory` (REST API: `vms?detail=4`) | `PlanResourcesTable` — shows CPU, memory, disks per VM |
+| **Mappings** | `PlanMappingsPage` | `mappings` | `usePlan`, `usePlanProviders`, `usePlanMappingVms`, `usePlanNetworkMapResources`, `usePlanStorageMapResources` | Network/storage map review tables with edit modals (`PlanNetworkMapEdit`, `PlanStorageMapEdit`). Editable when plan is in Ready/Canceled/Incomplete/Unknown/CannotStart. |
+| **Automation** | `PlanAutomationPage` | `automation` | `usePlan`, `usePlanCustomScripts` | `ScriptsSection` — shows configured virt-customize scripts from ConfigMap |
+| **Hooks** | `PlanHooksPage` | `hooks` | `usePlan`, `usePlanHooks` | Pre/post migration `HookSection` components, warning when hooks were manually configured |
+
+---
+
+## Plan Actions
+
+`PlanActionsDropdown` → `PlanActionsDropdownItems` renders a `DropdownList` with these actions:
+
+| Action | Modal | Condition |
+|---|---|---|
+| **Edit** | navigates to details or YAML | Disabled when Executing/Paused/Pending/Archived |
+| **Start / Restart** | `PlanStartMigrationModal` | `canPlanStart` or `canPlanReStart`, no active migration |
+| **Schedule / Edit cutover** | `PlanCutoverMigrationModal` | Warm + Executing + not Archived + not Pending |
+| **Duplicate** | `DuplicateModal` | Disabled when CannotStart |
+| **Archive** | `ArchiveModal` | Requires delete permission, not already archived |
+| **Delete** | `PlanDeleteModal` | Requires delete permission |
+
+The details header also has a standalone `PlanEditCutoverButton` (primary variant).
+
+---
+
+## Plan Statuses
+
+Computed by `getPlanStatus(plan)` in `PlanStatus/utils/utils.ts`. Evaluation order:
+
+1. `Archived` — `spec.archived` or Archived condition
+2. `Unknown` — no conditions
+3. `Completed` — Succeeded condition
+4. `Canceled` — Canceled condition
+5. `Paused` — warm + executing + VMs paused (waiting for cutover)
+6. `CannotStart` — Critical condition present
+7. `Incomplete` — Failed condition or any VM has error
+8. `Pending` — Executing but no VM started yet
+9. `Executing` — Executing condition
+10. `Ready` — Ready condition
+11. `Unknown` — fallback
+
+**Editable statuses** (for mapping edits): Ready, Canceled, Incomplete, Unknown, CannotStart.
+
+**VM-level statuses** (`MigrationVirtualMachineStatus`): Succeeded, Failed, Canceled, InProgress (Running), Paused, CantStart.
+
+---
+
+## Shared Component Usage
+
+| Shared component | Used in |
+|---|---|
+| `StandardPage` | List page (data table with filters, pagination, column management) |
+| `LoadingSuspend` | Resources tab, Automation tab, Hooks tab |
+| `PageHeadings` | Details header |
+| `ProviderSelect` | General step (source + target provider selects) |
+| `WizardStepContainer` | Every wizard step |
+| `FormGroupWithErrorText` | General step, Migration type step |
+| `ModalForm` | Action modals |
+| `DetailsItem` / `DescriptionList` | Mappings tab |
+| `SectionHeading` / `SectionHeadingWithEdit` | Detail tabs |
+| `ExpandableSectionHeading` | Migrations history, Conditions sections |
+| `ResourceYAMLEditorWrapper` | YAML tab |
+| `LearningExperienceDrawer` | List, Create, Details pages |
+| `StatusIcon` | Conditions section |
+| `DrawerProvider` / `DrawerContext` | VM tab (migration status drawer) |
+| `TechPreviewLabel` | Custom scripts step |
+
+---
+
+## Data Sources
+
+### K8s Watches (`useK8sWatchResource`)
+
+| Resource | GVK constant | Where used |
+|---|---|---|
+| `V1beta1Plan` (list) | `PlanModelGroupVersionKind` | List page |
+| `V1beta1Plan` (single) | `PlanModelGroupVersionKind` | `usePlan` → all detail tabs |
+| `V1beta1Provider` | `ProviderModelGroupVersionKind` | Resources tab, Mappings tab (via `usePlanProviders`) |
+| `V1beta1Migration` (list) | `MigrationModelGroupVersionKind` | `usePlanMigration` → actions dropdown |
+| `V1beta1NetworkMap` | `NetworkMapModelGroupVersionKind` | Mappings tab |
+| `V1beta1StorageMap` | `StorageMapModelGroupVersionKind` | Mappings tab |
+
+### REST Inventory API (`useProviderInventory`)
+
+| Endpoint | Where used |
+|---|---|
+| `vms?detail=4` | Resources tab (CPU/memory/disk details), VM selection in wizard |
+| Source networks/storages | Mappings tab (via `usePlanNetworkMapResources`, `usePlanStorageMapResources`) |
+
+### Custom Hooks
+
+| Hook | Purpose |
+|---|---|
+| `usePlan` | Single plan watch — used by all detail pages |
+| `usePlanMigration` | Finds active Migration CR owned by the plan |
+| `usePlanPages` | Defines the 7 detail tabs |
+| `useCreatePlanForm` | Initializes react-hook-form with default values |
+| `useCreatePlanFormContext` | Provides form methods to wizard steps |
+| `useStepNavigation` | Tracks wizard step, validates field groups |
+| `useSourceProviderFromSearchParams` | Pre-fills source provider from URL |
+| `usePlanProviders` | Resolves source + target provider objects from plan spec |
+| `usePlanMappingVms` | Fetches inventory VMs for mapping pages |
+| `usePlanNetworkMapResources` | Loads network map, source/target networks, NIC profiles |
+| `usePlanStorageMapResources` | Loads storage map, source/target storages, VM disks |
+| `usePlanCustomScripts` | Loads ConfigMap with virt-customize scripts |
+| `usePlanHooks` | Loads pre/post Hook CRDs |
+| `useFeatureFlags` | Gates migration type step (live migration) |
+| `useTargetStorages` | Fetches target storage classes for wizard submission |
+
+---
+
+## Cross-Feature Connections
+
+### Plans → Providers
+- Plan spec references source + target providers by name/namespace
+- General step uses shared `ProviderSelect` which watches all providers in the plan project
+- Migration type step checks `sourceProvider.spec.type` (vSphere warm, OCP live)
+- Resources tab watches the source provider to fetch inventory
+- `useSourceProviderFromSearchParams` enables deep-linking from provider pages
+
+### Plans → NetworkMaps
+- Plan spec references a NetworkMap by name/namespace
+- Wizard creates or copies a NetworkMap during submission (owned by plan)
+- Mappings tab watches the plan's NetworkMap and allows editing via `PlanNetworkMapEdit` modal
+- Reuses `NetworkMapReviewTable` from wizard review step in Mappings tab
+
+### Plans → StorageMaps
+- Same pattern as NetworkMaps — plan references, wizard creates/copies, Mappings tab allows editing
+- Reuses `StorageMapReviewTable` from wizard review step
+- `createStorageMap` utility imported from `src/storageMaps/create/utils/`
+
+### Plans → Migrations
+- `usePlanMigration` watches all Migrations in the namespace, filters by owner UID
+- Active migration determines if Start action is disabled and if cutover is available
+- VMs tab switches rendering mode based on execution state
+
+### Plans → Hooks
+- Plan spec embeds pre/post hook references in `spec.vms[].hooks`
+- Wizard creates Hook CRDs during submission
+- Hooks tab loads Hook resources via `usePlanHooks`
+
+### Plans → ConfigMaps (Custom Scripts)
+- Plan spec references a ConfigMap for virt-customize scripts
+- Wizard creates or references an existing ConfigMap
+- Automation tab loads via `usePlanCustomScripts`
+
+### Plans → Secrets (Disk Encryption)
+- Plan spec may reference a LUKS decryption Secret
+- Wizard creates Secret via `createDecryptionSecret` (vSphere only)
+
+---
+
+## Blast Radius Notes
+
+- **`StandardPage` changes** affect all list pages (providers, plans, network maps, storage maps). Plans list adds custom `postFilterData` for archived plans.
+- **`ProviderSelect` changes** affect both the plan wizard (general step) and provider pages.
+- **`PlanStatus/utils/utils.ts`** is imported by: list page (field filters), actions dropdown (enable/disable logic), VM tab (rendering mode), Mappings tab (`isPlanEditable`). Changes here affect all plan views.
+- **`submitMigrationPlan`** orchestrates creation of 5+ K8s resources in parallel. Failures mid-submission can leave orphaned resources (NetworkMap, StorageMap, Hooks, Secret). Owner references are added in a second pass.
+- **Wizard step field IDs** (`constants.ts` in each step) are referenced by `stepFieldMap` for validation and by `submitMigrationPlan` for extraction. Renaming a field ID requires updating both.
+- **Mapping components** are shared between wizard review and detail Mappings tab (`NetworkMapReviewTable`, `StorageMapReviewTable`). Changes affect both contexts.
+- **Feature flags** (`OCP_LIVE_MIGRATION`) gate the migration type step visibility and transfer network visibility in other settings. Must be tested with flag on/off.
+- **`usePlan` hook** is the single data source for all 7 detail tabs. Any K8s watch issues affect the entire details view.
