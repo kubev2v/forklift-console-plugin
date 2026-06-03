@@ -37,6 +37,12 @@ border-color: var(--pf-t--global--border--color--default);
 // Links
 color: var(--pf-t--global--link--Color);
 color: var(--pf-t--global--link--Color--hover);
+
+// Status (icons, labels) — prefer over hardcoded hex for dark-mode support
+color: var(--pf-t--global--color--status--info--default);
+color: var(--pf-t--global--color--status--warning--default);
+color: var(--pf-t--global--color--status--danger--default);
+color: var(--pf-t--global--color--status--success--default);
 ```
 
 ### Typography

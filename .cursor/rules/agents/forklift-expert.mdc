@@ -242,6 +242,8 @@ Your approach:
 - Modal: `InspectVirtualMachinesModal` — select VMs, configure disk encryption, set XFS v4 compatibility
 - Results stored in `status.inspectionResult` with OS info, filesystems, mountpoints, and concerns
 - Status flow: `getInspectionStatus(phase, inspectionPassed)` maps phase + results to UI status labels
+- Failed inspection uses `labelStatus: 'warning'` in `getInspectionStatusConfig` (not danger) so it does not clash with Critical concern badge color
+- VMs table shows `InspectionConcernBadges` (per-category counts); inspection modal uses `InspectionStatusLabel` — keep both surfaces aligned with design
 
 **Key Patterns**
 - Backend returns `all_checks_passed` in snake_case — always use the `hasInspectionPassed` selector which handles both casings
