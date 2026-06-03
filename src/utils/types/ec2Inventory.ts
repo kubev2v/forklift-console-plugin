@@ -1,10 +1,9 @@
 // EC2 inventory types — defined locally because @forklift-ui/types
 // does not include EC2 inventory types yet.
 
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-
 import type { ProviderVirtualMachine } from '@forklift-ui/types';
 import { isEmpty } from '@utils/helpers';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 // EC2 networks are AWS subnets, identified by SubnetId.
 export type Ec2Network = {

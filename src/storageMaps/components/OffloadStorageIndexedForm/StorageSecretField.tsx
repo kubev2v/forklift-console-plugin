@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
-import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import Select from '@components/common/Select';
@@ -14,6 +13,7 @@ import { FormGroup, SelectList, SelectOption, Stack, StackItem } from '@patternf
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import { StorageMapFieldId } from '@utils/storage/types';
 
 type StorageSecretFieldProps = {
   fieldId: string;

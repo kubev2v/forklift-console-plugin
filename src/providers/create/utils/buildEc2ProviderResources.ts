@@ -1,8 +1,8 @@
 import { encode } from 'js-base64';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { getEc2Url } from 'src/providers/utils/helpers/getEc2Url';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { ProviderFormFieldId } from '../fields/constants';
 import type { Ec2FormData } from '../types';

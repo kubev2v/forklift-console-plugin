@@ -5,8 +5,11 @@ import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-
-import { StorageMapFieldId, type StorageMapping, type StorageMappingValue } from '../utils/types';
+import {
+  StorageMapFieldId,
+  type StorageMapping,
+  type StorageMappingValue,
+} from '@utils/storage/types';
 
 type SourceStorageFieldProps = {
   fieldId: string;

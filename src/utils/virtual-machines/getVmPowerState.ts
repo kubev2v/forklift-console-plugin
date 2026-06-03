@@ -7,8 +7,7 @@ import type {
   VSphereVM,
 } from '@forklift-ui/types';
 import type { ExtendedProviderType } from '@utils/enums';
-
-import type { Ec2VM } from '../types/Ec2VM';
+import type { Ec2VM } from '@utils/types/ec2VM';
 
 export type PowerState = 'on' | 'off' | 'unknown';
 

@@ -9,10 +9,10 @@ import { OpenStackVirtualMachinesList } from 'src/providers/details/tabs/Virtual
 import { OvaVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OvaVirtualMachinesList';
 import { OVirtVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OVirtVirtualMachinesList';
 import { VSphereVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/VSphereVirtualMachinesList';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 
 import type { ProviderVirtualMachine } from '@forklift-ui/types';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import type { CreatePlanFormData } from '../../types';

@@ -1,22 +1,22 @@
 import type { FC } from 'react';
 import { useFieldArray, useWatch } from 'react-hook-form';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import GroupedSourceStorageField from 'src/storageMaps/components/GroupedSourceStorageField';
 import OffloadStorageRow from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageRow';
 import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
 import TargetStorageWithSuggestion from 'src/storageMaps/components/TargetStorageWithSuggestion';
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
-import type { TargetStorage } from 'src/storageMaps/utils/types';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import type { InventoryStorage } from '@utils/hooks/useStorages';
 import { useForkliftTranslation } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import type { TargetStorage } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import type { MappingValue } from '../../types';
 
 import { CreatePlanStorageMapFieldId, createPlanStorageMapFieldLabels } from './constants';
 import { validatePlanStorageMaps } from './utils';

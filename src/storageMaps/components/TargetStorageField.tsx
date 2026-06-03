@@ -16,8 +16,9 @@ import {
 } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import type { StorageMappingValue, TargetStorage } from '@utils/storage/types';
 
-import type { StorageMappingValue, StorageVendorProduct, TargetStorage } from '../utils/types';
+import type { StorageVendorProduct } from '../utils/types';
 import { resolveProductFromCsiProvisioner } from '../utils/vendorLookupTables';
 
 type TargetStorageFieldProps = {

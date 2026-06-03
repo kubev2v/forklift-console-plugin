@@ -1,5 +1,3 @@
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-
 import type {
   ProviderVirtualMachine,
   V1beta1Hook,
@@ -9,6 +7,7 @@ import type {
 } from '@forklift-ui/types';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 type PlanSpecVmsParams = {
   vms: ProviderVirtualMachine[];

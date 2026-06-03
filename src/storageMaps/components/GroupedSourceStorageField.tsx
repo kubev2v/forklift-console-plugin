@@ -1,13 +1,16 @@
 import type { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import EmptyCategorySelectOption from 'src/plans/components/EmptyCategorySelectOption';
 
+import EmptyCategorySelectOption from '@components/common/EmptyCategorySelectOption/EmptyCategorySelectOption';
 import Select from '@components/common/Select';
 import { SelectGroup, SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-
-import { StorageMapFieldId, type StorageMapping, type StorageMappingValue } from '../utils/types';
+import {
+  StorageMapFieldId,
+  type StorageMapping,
+  type StorageMappingValue,
+} from '@utils/storage/types';
 
 type GroupedSourceStorageFieldProps = {
   fieldId: string;

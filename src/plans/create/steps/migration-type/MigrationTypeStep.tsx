@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import { GeneralFormFieldId } from 'src/plans/create/steps/general-information/constants';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Flex } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';

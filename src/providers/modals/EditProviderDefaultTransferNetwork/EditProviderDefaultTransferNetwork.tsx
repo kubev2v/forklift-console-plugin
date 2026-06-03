@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { DEFAULT_TRANSFER_NETWORK_ANNOTATION, PROVIDER_TYPES } from 'src/providers/utils/constants';
+import { DEFAULT_TRANSFER_NETWORK_ANNOTATION } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -9,6 +9,7 @@ import { ProviderModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Form, Stack, StackItem } from '@patternfly/react-core';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import NetworkDropdown from './components/NetworkDropdown';
 

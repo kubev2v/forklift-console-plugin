@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { ErrorState } from 'src/components/common/Page/PageStates';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { PROVIDER_TYPES } from '../utils/constants';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import Ec2ProviderDetailsPage from './Ec2ProviderDetailsPage';
 import HypervProviderDetailsPage from './HypervProviderDetailsPage';

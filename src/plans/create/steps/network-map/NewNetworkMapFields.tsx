@@ -6,6 +6,12 @@ import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopo
 import { Alert, AlertVariant, Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import {
+  defaultNetMapping,
+  netMapFieldLabels,
+  NetworkMapFieldId,
+  type NetworkMapping,
+} from '@utils/mappings/networkMap';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { useCreatePlanWizardContext } from '../../hooks/useCreatePlanWizardContext';
@@ -13,12 +19,6 @@ import { useInitializeMappings } from '../../hooks/useInitializeMappings';
 import { GeneralFormFieldId } from '../general-information/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
-import {
-  defaultNetMapping,
-  netMapFieldLabels,
-  NetworkMapFieldId,
-  type NetworkMapping,
-} from './constants';
 import NetworkMapFieldTable from './NetworkMapFieldTable';
 import { filterTargetNetworksByProject, getSourceNetworkValues } from './utils';
 

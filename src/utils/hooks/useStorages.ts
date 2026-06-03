@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type {
   OpenShiftStorageClass,
@@ -11,6 +10,7 @@ import type {
   VSphereDataStore,
 } from '@forklift-ui/types';
 import { STORAGE_NAMES } from '@utils/constants';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { Ec2Storage } from '@utils/types/ec2Inventory';
 
 import useProviderInventory from './useProviderInventory';

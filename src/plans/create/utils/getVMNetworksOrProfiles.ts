@@ -1,7 +1,6 @@
-import { DefaultNetworkLabel } from 'src/plans/details/tabs/Mappings/utils/constants';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
+import { DefaultNetworkLabel } from '@utils/mappings/constants';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { getEc2SubnetIds, isEc2Vm } from '@utils/types/ec2Inventory';
 
 const getNetworksForVM = (vm: ProviderVirtualMachine) => {

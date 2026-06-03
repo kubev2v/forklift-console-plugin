@@ -1,5 +1,4 @@
 import { createStorageMap } from 'src/storageMaps/create/utils/createStorageMap';
-import type { TargetStorage } from 'src/storageMaps/utils/types';
 
 import type {
   IoK8sApiCoreV1ConfigMap,
@@ -9,6 +8,7 @@ import type {
 } from '@forklift-ui/types';
 import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { isEmpty } from '@utils/helpers';
+import type { TargetStorage } from '@utils/storage/types';
 
 import {
   AapFormFieldId,

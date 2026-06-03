@@ -4,11 +4,11 @@ import type { RowProps } from 'src/components/common/TableView/types';
 import type { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 import { renderResourceRowCells } from '@utils/renderResourceRowCells';
+import { getEc2VM } from '@utils/types/ec2VM';
 
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
 import type { VMCellProps, VmData } from './components/VMCellProps';
 import { VMNameCellRenderer } from './components/VMNameCellRenderer';
-import { getEc2VM } from './utils/types/Ec2VM';
 
 const Ec2InstanceTypeCellRenderer: FC<VMCellProps> = ({ data }) => {
   const vm = getEc2VM(data);

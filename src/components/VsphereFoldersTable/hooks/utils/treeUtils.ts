@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { getVmPowerState } from 'src/providers/details/tabs/VirtualMachines/utils/helpers/getVmPowerState';
 
 import { getCategoryIcon } from '@components/Concerns/utils/category';
 import {
@@ -21,6 +20,7 @@ import type { InspectionStatus } from '@utils/crds/conversion/constants';
 import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
 import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
+import { getVmPowerState } from '@utils/virtual-machines/getVmPowerState';
 
 const INSPECTION_STATUS_SEVERITY_RANK: Record<InspectionStatus, number> = {
   [INSPECTION_STATUS.CANCELED]: 6,

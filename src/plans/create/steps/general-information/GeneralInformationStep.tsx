@@ -6,12 +6,12 @@ import WizardStepContainer from '@components/common/WizardStepContainer';
 import ProviderSelect from '@components/ProviderSelect/ProviderSelect';
 import { Form, FormSection, MenuToggleStatus } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { NetworkMapFieldId } from '@utils/mappings/networkMap';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { validateVmSelection } from '../../utils/vmValidation';
 import { MigrationTypeFieldId } from '../migration-type/constants';
-import { NetworkMapFieldId } from '../network-map/constants';
 import { CreatePlanStorageMapFieldId } from '../storage-map/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 

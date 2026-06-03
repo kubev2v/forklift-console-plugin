@@ -1,9 +1,9 @@
 import { FormProvider, useForm } from 'react-hook-form';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { GeneralFormFieldId } from '../../general-information/constants';
 import { OtherSettingsFormFieldId } from '../constants';

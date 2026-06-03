@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 
 import type {
@@ -9,6 +8,7 @@ import type {
   V1beta1Provider,
 } from '@forklift-ui/types';
 import { isEmpty } from '@utils/helpers';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 /**
  * Fetches oVirt disk data and adds storage domain info to VMs

@@ -1,6 +1,3 @@
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
-
 import type {
   HypervProvider,
   OpenshiftProvider,
@@ -9,6 +6,8 @@ import type {
   OVirtProvider,
   VSphereProvider,
 } from '@forklift-ui/types';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import type { ProviderData } from '@utils/providers/types';
 
 export const getProviderStorageCount = (provider: ProviderData) => {
   const { inventory } = provider;

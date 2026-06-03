@@ -1,5 +1,3 @@
-import { getNetAppShiftLabels } from 'src/storageMaps/utils/netAppShift';
-
 import {
   StorageMapModel,
   type V1beta1Provider,
@@ -9,8 +7,8 @@ import {
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { getObjectRef } from '@utils/helpers/getObjectRef';
-
-import type { StorageMapping, TargetStorage } from '../../utils/types';
+import { getNetAppShiftLabels } from '@utils/storage/netAppShift';
+import type { StorageMapping, TargetStorage } from '@utils/storage/types';
 
 import { buildStorageMappings } from './buildStorageMappings';
 

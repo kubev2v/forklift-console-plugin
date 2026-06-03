@@ -1,7 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
 import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -12,6 +11,7 @@ import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/a
 import { ModalVariant } from '@patternfly/react-core';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import AddVirtualMachinesTable from './components/AddVirtualMachinesTable';
 import type { AddVirtualMachineProps } from './utils/types';

@@ -6,9 +6,9 @@ import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 import type { ProviderType, V1beta1Plan } from '@forklift-ui/types';
 import { getPlanTargetNamespace, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
+import type { SpecVirtualMachinePageData } from '@utils/types/specVirtualMachinePageData';
 
 import { getPlanVirtualMachinesDict } from '../../utils/utils';
-import type { SpecVirtualMachinePageData } from '../utils/types';
 import { getPlanConditionsDict } from '../utils/utils';
 
 const EMPTY_LIST = [] as SpecVirtualMachinePageData[];

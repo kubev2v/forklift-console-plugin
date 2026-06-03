@@ -1,8 +1,9 @@
 import type { FC } from 'react';
 import SharedSourceNetworkField from 'src/components/mappings/network-mappings/SourceNetworkField';
 
+import type { MappingValue } from '@utils/types';
+
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import type { MappingValue } from '../../types';
 type SourceNetworkFieldProps = {
   fieldId: string;
   usedSourceNetworks: MappingValue[];

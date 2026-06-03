@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { DeleteModal, type DeleteModalProps } from 'src/components/modals/DeleteModal/DeleteModal';
-import type { StorageMapData } from 'src/storageMaps/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModel, StorageMapModelRef } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem } from '@patternfly/react-core';
 import { getResourceUrl } from '@utils/getResourceUrl';
+import type { StorageMapData } from '@utils/storage/types';
 
 type StorageMapActionsDropdownItemsProps = {
   data: StorageMapData;

@@ -1,8 +1,8 @@
-import { getInventoryApiUrl } from 'src/providers/utils/helpers/getApiUrl';
 import { validateContainerImage, validateK8sName } from 'src/utils/validation/common';
 
 import type { TypeaheadSelectOption } from '@components/common/TypeaheadSelect/utils/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
+import { getInventoryApiUrl } from '@utils/api/getApiUrl';
 import { t } from '@utils/i18n';
 import type { AapJobTemplate, AapJobTemplatesResponse } from '@utils/types/aap';
 

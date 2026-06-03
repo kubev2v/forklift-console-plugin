@@ -1,8 +1,7 @@
-import { NetworkMapFieldId } from 'src/networkMaps/utils/types';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { DEFAULT_NETWORK } from '@utils/constants';
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { buildNetworkMappings } from '../buildNetworkMappings';
 

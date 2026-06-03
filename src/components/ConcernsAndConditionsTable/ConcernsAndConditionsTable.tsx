@@ -1,5 +1,4 @@
 import { type FC, Fragment } from 'react';
-import type { SpecVirtualMachinePageData } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/utils/types';
 import type { ProviderVmData } from 'src/utils/types';
 
 import {
@@ -12,6 +11,7 @@ import { PageSection, Title } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody } from '@patternfly/react-table';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import type { SpecVirtualMachinePageData } from '@utils/types/specVirtualMachinePageData';
 
 import ConcernsAndConditionsTableEmptyState from './components/ConcernsAndConditionsTableEmptyState';
 import ConcernsAndConditionsTableHeader from './components/ConcernsAndConditionsTableHeader';

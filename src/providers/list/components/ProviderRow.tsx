@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import { Tr } from '@patternfly/react-table';
+import type { ProviderData } from '@utils/providers/types';
 
 import ProviderDataCell from './ProviderDataCell';
 

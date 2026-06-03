@@ -1,5 +1,3 @@
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-
 import type {
   OpenshiftVM,
   OpenstackVM,
@@ -7,6 +5,7 @@ import type {
   V1VirtualMachine,
 } from '@forklift-ui/types';
 import type { EnhancedHypervVM, EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import {
   ACTIVE,

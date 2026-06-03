@@ -4,11 +4,11 @@ import { Controller } from 'react-hook-form';
 import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Alert, AlertVariant, Stack } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { NetworkMapFieldId } from '@utils/mappings/networkMap';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { validateVmSelection } from '../../utils/vmValidation';
-import { NetworkMapFieldId } from '../network-map/constants';
 import { CreatePlanStorageMapFieldId } from '../storage-map/constants';
 
 import { defaultVms, VmFormFieldId } from './constants';

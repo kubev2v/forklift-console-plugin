@@ -1,8 +1,7 @@
 import { DEFAULT_NETWORK } from '@utils/constants';
+import { NetworkMapFieldId, type NetworkMapping } from '@utils/crds/maps/types';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
-
-import { NetworkMapFieldId, type NetworkMapping } from '../../utils/types';
 
 export const validateNetworkMaps = (mappings: NetworkMapping[]): string | undefined => {
   if (isEmpty(mappings)) {

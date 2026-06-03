@@ -1,7 +1,7 @@
 import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
-import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import { t } from '@utils/i18n';
+import { StorageMapFieldId } from '@utils/storage/types';
 
 export const CreatePlanStorageMapFieldId = {
   ...StorageMapFieldId,

@@ -1,9 +1,9 @@
 import type { FC } from 'react';
 import { useWatch } from 'react-hook-form';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Form } from '@patternfly/react-core';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';

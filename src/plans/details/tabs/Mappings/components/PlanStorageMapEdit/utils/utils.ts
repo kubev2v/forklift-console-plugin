@@ -1,11 +1,11 @@
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { transformFormValuesToK8sSpec } from 'src/storageMaps/details/utils/utils';
-import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { StorageMapModel, type V1beta1Provider, type V1beta1StorageMap } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { isEmpty } from '@utils/helpers';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import { StorageMapFieldId } from '@utils/storage/types';
 
 import type { PlanStorageEditFormValues } from './types';
 

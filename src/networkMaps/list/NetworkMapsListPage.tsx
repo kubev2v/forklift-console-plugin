@@ -14,10 +14,10 @@ import {
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { MAP_STATUS } from '@utils/constants';
 import { getMapPhase } from '@utils/crds/maps/shared';
+import type { NetworkMapData } from '@utils/crds/maps/types';
 import { t } from '@utils/i18n';
 
 import NetworkMapsAddButton from '../components/NetworkMapsAddButton';
-import type { NetworkMapData } from '../utils/types';
 
 import NetworkMapRow from './NetworkMapRow';
 

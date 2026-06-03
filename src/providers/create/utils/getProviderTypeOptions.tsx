@@ -8,9 +8,9 @@ import {
   ovaLogo,
   redhatLogo,
 } from 'src/components/images/logos';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { t } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 type ProviderTypeOption = {
   description: string;

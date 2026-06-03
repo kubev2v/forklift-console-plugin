@@ -1,4 +1,3 @@
-import type { TargetPowerStateValue } from 'src/plans/constants';
 import { isMigrationVirtualMachinePaused } from 'src/plans/details/utils/utils';
 
 import type {
@@ -11,6 +10,7 @@ import { getPlanIsWarm, getPlanVirtualMachinesMigrationStatus } from '@utils/crd
 import { deepCopy } from '@utils/deepCopy';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
+import type { TargetPowerStateValue } from '@utils/plans/constants';
 
 import {
   PLAN_CONDITION_VALIDATING_VDDK,

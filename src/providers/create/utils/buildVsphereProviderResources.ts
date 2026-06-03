@@ -1,8 +1,9 @@
 import { encode } from 'js-base64';
-import { PROVIDER_TYPES, VSphereEndpointType } from 'src/providers/utils/constants';
+import { VSphereEndpointType } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import { encodeFormValue } from '@utils/helpers/encodeFormValue';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { VddkSetupMode } from '../../utils/constants';
 import { CertificateValidationMode, ProviderFormFieldId } from '../fields/constants';

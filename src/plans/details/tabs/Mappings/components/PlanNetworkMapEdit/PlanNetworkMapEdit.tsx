@@ -1,9 +1,9 @@
 import { FormProvider, useForm } from 'react-hook-form';
-import { NetworkMapFieldId } from 'src/networkMaps/utils/types';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Alert, AlertVariant, ModalVariant, Stack } from '@patternfly/react-core';
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 

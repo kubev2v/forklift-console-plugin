@@ -4,14 +4,11 @@ import {
   ProviderFormFieldId,
 } from 'src/providers/create/fields/constants';
 import type { CreateProviderFormData } from 'src/providers/create/types';
-import {
-  type OpenstackAuthType,
-  PROVIDER_TYPES,
-  VSphereEndpointType,
-} from 'src/providers/utils/constants';
+import { type OpenstackAuthType, VSphereEndpointType } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import { getSdkEndpoint, getType, getUrl } from '@utils/crds/common/selectors';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { getDecodedValue } from './getDecodedValue';
 

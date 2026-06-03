@@ -1,12 +1,12 @@
 import { type FC, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import type { MappingValue } from 'src/plans/create/types';
-import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
 
 import Select from '@components/common/Select';
 import { Divider, SelectList, SelectOption } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import { IgnoreNetwork } from '@utils/mappings/constants';
+import type { MappingValue } from '@utils/types';
 
 type TargetNetworkFieldProps = {
   fieldId: string;

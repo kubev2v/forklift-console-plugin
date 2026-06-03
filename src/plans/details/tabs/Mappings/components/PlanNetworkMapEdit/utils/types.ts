@@ -1,12 +1,11 @@
-import type { NetworkMapping } from 'src/networkMaps/utils/types';
-import type { MappingValue } from 'src/plans/create/types';
-
 import type {
   OVirtNicProfile,
   ProviderVirtualMachine,
   V1beta1NetworkMap,
   V1beta1Provider,
 } from '@forklift-ui/types';
+import type { NetworkMapping } from '@utils/crds/maps/types';
+import type { MappingValue } from '@utils/types';
 
 export type PlanNetworkEditFormValues = {
   networkMap: NetworkMapping[];

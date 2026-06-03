@@ -1,5 +1,4 @@
 import { type ComponentProps, type ForwardedRef, forwardRef, type ReactNode, useMemo } from 'react';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { getProviderTypeIcon } from 'src/utils/providers/getProviderTypeIcon';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
@@ -25,6 +24,7 @@ import { isEmpty } from '@utils/helpers';
 import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { ForkliftTrans } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { ProviderStatus } from '@utils/types';
 
 import { extractProviders } from './utils/utils';

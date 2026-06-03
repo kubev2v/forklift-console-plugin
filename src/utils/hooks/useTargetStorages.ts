@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { isNetAppShiftStorageClassAnnotations } from 'src/storageMaps/utils/netAppShift';
-import { StorageClassAnnotation, type TargetStorage } from 'src/storageMaps/utils/types';
 import { useOpenShiftStorages } from 'src/utils/hooks/useStorages';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
+import { isNetAppShiftStorageClassAnnotations } from '@utils/storage/netAppShift';
+import { StorageClassAnnotation, type TargetStorage } from '@utils/storage/types';
 
 const useTargetStorages = (
   targetProvider: V1beta1Provider | undefined,

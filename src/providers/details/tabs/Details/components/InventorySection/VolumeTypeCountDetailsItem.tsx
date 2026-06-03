@@ -1,10 +1,11 @@
 import { type FC, useMemo } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import InventoryCell from 'src/providers/components/InventoryCell';
-import { PROVIDER_TYPES, ProvidersResourceFieldId } from 'src/providers/utils/constants';
+import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { OpenstackProvider } from '@forklift-ui/types';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import type { InventoryDetailsItemProps } from './utils/types';
 

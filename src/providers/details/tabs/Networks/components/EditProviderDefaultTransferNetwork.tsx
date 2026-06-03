@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
@@ -7,6 +6,7 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Provider } from '@forklift-ui/types';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Stack } from '@patternfly/react-core';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { onConfirmProviderDefaultTransferNetwork } from './utils/onConfirmProviderDefaultTransferNetwork';
 import ProviderDefaultTransferNetworkDropdown from './ProviderDefaultTransferNetworkDropdown';

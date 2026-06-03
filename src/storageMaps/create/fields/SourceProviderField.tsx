@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { defaultStorageMapping, storageMapFieldLabels } from 'src/storageMaps/utils/constants';
-import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import ProviderSelect from '@components/ProviderSelect/ProviderSelect';
 import { MenuToggleStatus } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { StorageMapFieldId } from '@utils/storage/types';
 
 import type { CreateStorageMapFormData } from '../types';
 

@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import PlanVddkForSharedDisksWarningAlert from 'src/plans/components/PlanVddkForSharedDisksWarningAlert';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { Checkbox, FormGroup, FormHelperText, Stack } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { GeneralFormFieldId } from '../general-information/constants';

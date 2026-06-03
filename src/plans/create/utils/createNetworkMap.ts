@@ -1,10 +1,4 @@
 import {
-  DefaultNetworkLabel,
-  IgnoreNetwork,
-} from 'src/plans/details/tabs/Mappings/utils/constants';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-
-import {
   NetworkMapModel,
   type V1beta1NetworkMap,
   type V1beta1NetworkMapSpecMap,
@@ -14,9 +8,10 @@ import {
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { IGNORED, MULTUS, POD } from '@utils/constants';
 import { getObjectRef } from '@utils/helpers/getObjectRef';
-
-import type { NetworkMapping } from '../steps/network-map/constants';
-import type { MappingValue } from '../types';
+import { DefaultNetworkLabel, IgnoreNetwork } from '@utils/mappings/constants';
+import type { NetworkMapping } from '@utils/mappings/networkMap';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import type { MappingValue } from '@utils/types';
 
 type CreateNetworkMapParams = {
   mappings: NetworkMapping[];

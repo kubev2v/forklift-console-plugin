@@ -21,9 +21,9 @@ import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytic
 import { getResourceUrl } from '@utils/getResourceUrl';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
 import { useForkliftTranslation } from '@utils/i18n';
+import { StorageMapFieldId } from '@utils/storage/types';
 
 import { defaultStorageMapping } from '../utils/constants';
-import { StorageMapFieldId } from '../utils/types';
 
 import CreateStorageMapFieldTable from './fields/CreateStorageMapFieldTable';
 import MapNameField from './fields/MapNameField';
