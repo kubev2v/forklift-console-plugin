@@ -45,9 +45,9 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-[[ -n "$TICKET" ]] || { echo "ERROR: TICKET_KEY required (e.g. MTV-5388)"; usage; }
-[[ -n "$TITLE" ]] || { echo "ERROR: --title required"; usage; }
-[[ -n "$BODY_FILE" && -f "$BODY_FILE" ]] || { echo "ERROR: --body-file required and must exist"; usage; }
+[[ -n "$TICKET" ]] || { echo "ERROR: TICKET_KEY required (e.g. MTV-5388)" >&2; usage; }
+[[ -n "$TITLE" ]] || { echo "ERROR: --title required" >&2; usage; }
+[[ -n "$BODY_FILE" && -f "$BODY_FILE" ]] || { echo "ERROR: --body-file required and must exist" >&2; usage; }
 
 # Validate title format
 if [[ ! "$TITLE" =~ ^Resolves:\ ${JIRA_PROJECT_KEY}- ]]; then
@@ -61,7 +61,7 @@ expected_branch=$("$STATE_CLI" field "$TICKET" '.branch')
 current_branch=$(git branch --show-current)
 
 if [[ "$current_branch" != "$expected_branch" ]]; then
-  echo "ERROR: On branch '$current_branch' but state expects '$expected_branch'"
+  echo "ERROR: On branch '$current_branch' but state expects '$expected_branch'" >&2
   exit 1
 fi
 echo "[1/8] Branch verified: $current_branch"

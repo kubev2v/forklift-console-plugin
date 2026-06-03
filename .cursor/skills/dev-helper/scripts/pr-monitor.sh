@@ -95,7 +95,7 @@ query($owner: String!, $repo: String!, $number: Int!) {
 }' -f owner="$GH_OWNER" -f repo="$GH_REPO_NAME" -F number="$PR" 2>/dev/null)
 
 if [[ -z "$pr_data" ]]; then
-  echo "ERROR: Failed to fetch PR data"
+  echo "ERROR: Failed to fetch PR data" >&2
   exit 1
 fi
 
