@@ -34,9 +34,9 @@ export class PlanDetailsPage {
   async clickActionsMenuAndStart(): Promise<void> {
     await this.page.getByTestId('plan-actions-dropdown-button').click();
     const startItem = this.page.getByTestId('plan-actions-start-menuitem');
-    // PF6 marks disabled menu items with pf-m-disabled (CSS class, not the disabled attribute).
-    // Wait for that class to be gone before clicking so we don't hit the 15s action timeout.
-    await expect(startItem).not.toHaveClass(/pf-m-disabled/, { timeout: 120000 });
+    // PF6 marks disabled menu items with aria-disabled="true" (not the native disabled attribute).
+    // Wait for that attribute to clear before clicking so we don't hit the action timeout.
+    await expect(startItem).not.toHaveAttribute('aria-disabled', 'true', { timeout: 120000 });
     await startItem.click();
     await this.page.getByTestId('modal-confirm-button').click();
   }
@@ -77,9 +77,9 @@ export class PlanDetailsPage {
   async duplicatePlan(newPlanName: string, namespace: string): Promise<void> {
     await this.page.getByTestId('plan-actions-dropdown-button').click();
     const duplicateItem = this.page.getByRole('menuitem', { name: 'Duplicate' });
-    // PF6 marks disabled menu items with pf-m-disabled (CSS class, not the disabled attribute).
-    // Duplicate is disabled under CannotStart while the plan reconciles — wait for the class to clear.
-    await expect(duplicateItem).not.toHaveClass(/pf-m-disabled/, {
+    // PF6 marks disabled menu items with aria-disabled="true" (not the native disabled attribute).
+    // Duplicate is disabled under CannotStart while the plan reconciles — wait for the attribute to clear.
+    await expect(duplicateItem).not.toHaveAttribute('aria-disabled', 'true', {
       timeout: K8S_RECONCILE_TIMEOUT,
     });
     await duplicateItem.click();

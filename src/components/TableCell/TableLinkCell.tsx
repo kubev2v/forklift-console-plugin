@@ -30,13 +30,7 @@ export const TableLinkCell: FC<TableLinkCellProps> = ({
       label={label}
       labelColor={labelColor}
     >
-      {truncate && name ? (
-        <Tooltip content={name}>
-          <span>{link}</span>
-        </Tooltip>
-      ) : (
-        link
-      )}
+      {truncate && name ? <Tooltip content={name}>{link}</Tooltip> : link}
     </TableLabelCell>
   );
 };

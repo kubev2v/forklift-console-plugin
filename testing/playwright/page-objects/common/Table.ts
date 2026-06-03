@@ -135,11 +135,8 @@ export class Table {
     const headers = await tableContainer
       .locator('thead th, thead [role="columnheader"]')
       .allTextContents();
-    // PatternFly Th with an `info` prop appends screen-reader text (e.g. "More information on
-    // inspection status") directly inside the <th>, so allTextContents() returns the column label
-    // concatenated with that extra text. Match exact label OR label followed by a space (the
-    // separator before the appended screen-reader text) to avoid prefix collisions like
-    // "Name" accidentally matching "Namespace".
+    // PF appends screen-reader text inside <th> for the `info` prop, so match exact label OR
+    // label followed by a space to avoid "Name" matching "Namespace".
     const targetIndex = headers.findIndex((header) => {
       const trimmed = header?.trim() ?? '';
       return trimmed === targetColumnName || trimmed.startsWith(`${targetColumnName} `);
