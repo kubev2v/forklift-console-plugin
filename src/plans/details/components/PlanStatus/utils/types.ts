@@ -46,6 +46,7 @@ export enum PlanStatuses {
   Pending = 'Pending',
   Executing = 'Executing',
   Ready = 'Ready',
+  Validating = 'Validating',
 }
 
 export const planMigrationVirtualMachineStatuses = {

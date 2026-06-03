@@ -1488,6 +1488,7 @@
   "Username is required": "名称是必需的",
   "Username is required. The username usually includes @ character, for example: name@internal": "用户名是必需的。用户名通常包含 @ 字符，例如： name@internal",
   "Uses an SMB share to access VM disks. Requires an SMB share URL and optionally separate SMB credentials.": "使用 SMB 共享访问虚拟机磁盘。需要 SMB 共享 URL 以及可选的单独的 SMB 凭证。",
+  "Validating": "Validating",
   "Validation Failed": "验证失败",
   "Value": "值",
   "Values": "值",

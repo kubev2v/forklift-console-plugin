@@ -1497,6 +1497,7 @@
   "Username is required": "El nombre de usuario es obligatorio",
   "Username is required. The username usually includes @ character, for example: name@internal": "Se requiere un nombre de usuario. Por lo general, el nombre de usuario incluye el carácter @, por ejemplo: name@internal",
   "Uses an SMB share to access VM disks. Requires an SMB share URL and optionally separate SMB credentials.": "Utiliza un recurso compartido SMB para acceder a los discos de la máquina virtual. Requiere una URL de recurso compartido SMB y, opcionalmente, credenciales SMB independientes.",
+  "Validating": "Validating",
   "Validation Failed": "Validación fallida",
   "Value": "Valor",
   "Values": "Valores",

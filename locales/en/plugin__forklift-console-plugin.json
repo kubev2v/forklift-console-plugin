@@ -1489,6 +1489,7 @@
   "Username is required": "Username is required",
   "Username is required. The username usually includes @ character, for example: name@internal": "Username is required. The username usually includes @ character, for example: name@internal",
   "Uses an SMB share to access VM disks. Requires an SMB share URL and optionally separate SMB credentials.": "Uses an SMB share to access VM disks. Requires an SMB share URL and optionally separate SMB credentials.",
+  "Validating": "Validating",
   "Validation Failed": "Validation Failed",
   "Value": "Value",
   "Values": "Values",
