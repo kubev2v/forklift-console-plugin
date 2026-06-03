@@ -154,6 +154,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   async navigateToVirtualMachinesTab(): Promise<void> {
     await this.page.locator('[data-test-id="horizontal-link-Virtual machines"]').click();
     await this.page.waitForURL((url) => url.toString().endsWith('/vms'));
+    await this.table.waitForTableLoad();
   }
 
   async openInstanceTypeDialog(vmName: string): Promise<void> {

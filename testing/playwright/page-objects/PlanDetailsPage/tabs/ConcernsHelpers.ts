@@ -80,13 +80,21 @@ export class ConcernsHelpers {
   }
 
   async verifyExpandedRowHasConcernDetails(): Promise<void> {
+    // PatternFly v6 compact nested tables do not expose <Th> as columnheader in the
+    // accessibility tree when rendered inside an expandable row — use th element locator.
+    // Scope to the last row in vmTable that contains a <th> (the expanded details row)
+    // so assertions cannot spuriously match headers from other tables on the page.
+    const expandedRow = this.vmTable
+      .getByRole('row')
+      .filter({ has: this.page.locator('th') })
+      .last();
     for (const col of ['Issue', 'Severity', 'Description']) {
-      await expect(this.page.getByRole('columnheader', { name: col })).toBeVisible();
+      await expect(expandedRow.locator('th', { hasText: col })).toBeVisible();
     }
   }
 
   async verifyExpandedRowIsCollapsed(): Promise<void> {
-    await expect(this.page.getByRole('columnheader', { name: 'Issue' })).not.toBeVisible();
+    await expect(this.vmTable.locator('th', { hasText: 'Issue' })).not.toBeVisible();
   }
 
   async verifyFilteredRowsHaveBadge(category: ConcernCategory, timeout = 60000): Promise<void> {

@@ -5,10 +5,17 @@ import { defineConfig, devices } from '@playwright/test';
 const authFile = 'playwright/.auth/user.json';
 
 const ENV_RELAY_FILE = 'playwright/.env-relay.json';
+
+// Capture keys explicitly set by the user (shell / e2e.env) *before* the relay is loaded.
+// global.setup.ts reads this list to decide whether a version was user-set vs stale-relay.
+process.env.PLAYWRIGHT_USER_SET_KEYS = Object.keys(process.env).join(',');
+
 if (existsSync(ENV_RELAY_FILE)) {
   const relay = JSON.parse(readFileSync(ENV_RELAY_FILE, 'utf8')) as Record<string, string>;
   for (const [key, value] of Object.entries(relay)) {
-    if (value !== '') {
+    // ??= semantics: shell / e2e.env values take priority over relay.
+    // This prevents a stale relay from overwriting what the user explicitly exported.
+    if (value !== '' && !process.env[key]) {
       process.env[key] = value;
     }
   }
