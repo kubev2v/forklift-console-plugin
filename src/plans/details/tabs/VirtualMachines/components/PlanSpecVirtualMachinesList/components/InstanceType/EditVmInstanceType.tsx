@@ -29,7 +29,9 @@ const EditVmInstanceType: OverlayComponent<EditVmInstanceTypeProps> = ({
   const { loaded, options } = useInstanceTypeOptions();
 
   const handleChange = useCallback((selected: string | number | undefined): void => {
-    setValue(selected === NO_INSTANCE_TYPE ? undefined : String(selected ?? ''));
+    setValue(
+      selected === undefined || selected === NO_INSTANCE_TYPE ? undefined : String(selected),
+    );
   }, []);
 
   return (
