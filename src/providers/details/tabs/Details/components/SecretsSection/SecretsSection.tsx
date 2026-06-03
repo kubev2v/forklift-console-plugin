@@ -1,9 +1,9 @@
 import type { FC } from 'react';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import SectionHeading from '@components/headers/SectionHeading';
 import { DescriptionList, PageSection } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import type { ProviderData } from '@utils/providers/types';
 
 import { SecretDetailsItem } from './SecretDetailsItem';
 

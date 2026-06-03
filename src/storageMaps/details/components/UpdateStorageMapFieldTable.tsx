@@ -7,13 +7,17 @@ import type { V1beta1Provider } from '@forklift-ui/types';
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';
+import {
+  StorageMapFieldId,
+  type StorageMappingValue,
+  type TargetStorage,
+} from '@utils/storage/types';
 
 import OffloadStorageIndexedForm from '../../components/OffloadStorageIndexedForm/OffloadStorageIndexedForm';
 import SourceStorageField from '../../components/SourceStorageField';
 import TargetStorageField from '../../components/TargetStorageField';
 import { defaultStorageMapping, storageMapFieldLabels } from '../../utils/constants';
 import { getStorageMapFieldId } from '../../utils/getStorageMapFieldId';
-import { StorageMapFieldId, type StorageMappingValue, type TargetStorage } from '../../utils/types';
 import type { UpdateMappingsFormData } from '../utils/types';
 import { validateUpdatedStorageMaps } from '../utils/utils';
 

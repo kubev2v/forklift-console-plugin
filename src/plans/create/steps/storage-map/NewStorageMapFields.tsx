@@ -4,13 +4,13 @@ import { isHypervIscsiProvider } from 'src/providers/utils/helpers/isHypervIscsi
 import StorageMapStatusAlerts from 'src/storageMaps/components/StorageMapStatusAlerts';
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 import { getSourceStorageValuesForSelectedVms } from 'src/storageMaps/utils/getSourceStorageValues';
-import type { StorageMapping } from 'src/storageMaps/utils/types';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import type { ProviderVirtualMachine } from '@forklift-ui/types';
 import { Alert, AlertVariant, Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import type { StorageMapping } from '@utils/storage/types';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { useCreatePlanWizardContext } from '../../hooks/useCreatePlanWizardContext';

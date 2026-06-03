@@ -17,6 +17,7 @@ import {
   StackItem,
 } from '@patternfly/react-core';
 import { TimesIcon } from '@patternfly/react-icons';
+import { PF_LABEL_STATUS } from '@utils/constants';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 
@@ -66,7 +67,7 @@ const StatusPopover: FC<StatusPopoverProps> = ({ count, plan, status, vms }) => 
                     {failedTaskName && (
                       <ListItem
                         icon={
-                          <Icon status="danger">
+                          <Icon status={PF_LABEL_STATUS.DANGER}>
                             <TimesIcon />
                           </Icon>
                         }

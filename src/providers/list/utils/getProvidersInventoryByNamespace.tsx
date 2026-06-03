@@ -1,7 +1,4 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-import { getInventoryApiUrl } from 'src/providers/utils/helpers/getApiUrl';
-
 import type {
   HypervProvider,
   OpenshiftProvider,
@@ -14,6 +11,8 @@ import type {
   VSphereProvider,
 } from '@forklift-ui/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
+import { getInventoryApiUrl } from '@utils/api/getApiUrl';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { k8sGetProvidersByNamespace } from '../utils/k8sGetProvidersByNamespace';
 

@@ -3,10 +3,11 @@ import { getResourceFieldValue } from 'src/components/common/FilterGroup/matcher
 import TechPreviewLabel from 'src/components/PreviewLabels/TechPreviewLabel';
 import { TableLabelCell } from 'src/components/TableCell/TableLabelCell';
 import type { CellProps } from 'src/providers/list/components/CellProps';
-import { isTechPreviewProvider, type PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { getIsOnlySource } from 'src/providers/utils/helpers/getIsTarget';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
+
+import { isTechPreviewProvider, type PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { SOURCE_LABEL_COLOR, SOURCE_LABEL_TEXT } from './utils/constants';
 

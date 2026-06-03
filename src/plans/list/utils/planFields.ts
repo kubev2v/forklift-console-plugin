@@ -25,6 +25,7 @@ const planPhases: { id: PlanStatuses; label: string }[] = [
   { id: PlanStatuses.Paused, label: t('Paused') },
   { id: PlanStatuses.Pending, label: t('Pending') },
   { id: PlanStatuses.Ready, label: t('Ready to start') },
+  { id: PlanStatuses.Validating, label: t('Validating') },
 ];
 
 const migrationTypes: { id: MigrationTypeValue; label: string }[] = [

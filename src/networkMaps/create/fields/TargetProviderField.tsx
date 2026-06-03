@@ -4,10 +4,10 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import ProviderSelect from '@components/ProviderSelect/ProviderSelect';
 import { MenuToggleStatus } from '@patternfly/react-core';
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { defaultNetworkMapping, networkMapFieldLabels } from '../../utils/constants';
-import { NetworkMapFieldId } from '../../utils/types';
 import type { CreateNetworkMapFormData } from '../types';
 
 const TargetProviderField: FC = () => {

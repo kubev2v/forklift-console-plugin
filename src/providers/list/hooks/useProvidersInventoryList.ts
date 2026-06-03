@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { getInventoryApiUrl } from 'src/providers/utils/helpers/getApiUrl';
 
 import type { ProvidersInventoryList } from '@forklift-ui/types';
 import { consoleFetchJSON, useFlag } from '@openshift-console/dynamic-plugin-sdk';
+import { getInventoryApiUrl } from '@utils/api/getApiUrl';
 
 import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from '../utils/constants';
 import { getProvidersInventoryByNamespace } from '../utils/getProvidersInventoryByNamespace';

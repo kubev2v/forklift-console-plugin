@@ -1,9 +1,9 @@
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import useProviderInventory, {
   type UseProviderInventoryParams,
 } from 'src/utils/hooks/useProviderInventory';
 
 import type { ProviderHost, V1beta1Provider, VSphereResource } from '@forklift-ui/types';
+import type { ProviderData } from '@utils/providers/types';
 
 /**
  * Converts an array of Resource objects into a dictionary where the keys are the resource IDs.

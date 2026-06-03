@@ -1,7 +1,7 @@
 import type { LearningExperienceTopic } from 'src/onlineHelp/utils/types';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { t } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { createNetworkMapTopic } from '../createNetworkMapTopic/createNetworkMapTopic';
 import { createProviderTopic } from '../createProviderTopic/createProviderTopic';

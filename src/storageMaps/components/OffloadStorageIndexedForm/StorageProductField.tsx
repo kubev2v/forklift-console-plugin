@@ -1,7 +1,7 @@
 import { type FC, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
-import { StorageMapFieldId, type StorageVendorProduct } from 'src/storageMaps/utils/types';
+import type { StorageVendorProduct } from 'src/storageMaps/utils/types';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import Select from '@components/common/Select';
@@ -16,6 +16,7 @@ import {
   SelectOption,
 } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { StorageMapFieldId } from '@utils/storage/types';
 
 import { useStorageVendorProducts } from '../../hooks/useStorageVendorProducts';
 import { getVendorProductLabel } from '../../utils/labelHelpers';

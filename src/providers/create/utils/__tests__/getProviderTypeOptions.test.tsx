@@ -1,6 +1,5 @@
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-
 import { describe, expect, it } from '@jest/globals';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { getProviderTypeOptions } from '../getProviderTypeOptions';
 

@@ -1,9 +1,9 @@
 import { FormProvider, useForm } from 'react-hook-form';
-import { NetworkMapFieldId } from 'src/networkMaps/utils/types';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Alert, AlertVariant, ModalVariant, Stack } from '@patternfly/react-core';
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -65,14 +65,15 @@ const PlanNetworkMapEdit: ModalComponent<PlanNetworkMapEditProps> = ({
             <Alert variant={AlertVariant.danger} isInline title={error.root.message} />
           )}
 
-          {isEmpty(usedSourceNetworks) && !sourceNetworksLoading && (
-            <Alert
-              variant={AlertVariant.warning}
-              isInline
-              title={t('No source networks are available for the selected VMs.')}
-              className="pf-v"
-            />
-          )}
+          {isEmpty(usedSourceNetworks) &&
+            isEmpty(otherSourceNetworks) &&
+            !sourceNetworksLoading && (
+              <Alert
+                variant={AlertVariant.warning}
+                isInline
+                title={t('No source networks are available for the selected VMs.')}
+              />
+            )}
 
           <PlanNetworkMapFieldsTable
             oVirtNicProfiles={oVirtNicProfiles}

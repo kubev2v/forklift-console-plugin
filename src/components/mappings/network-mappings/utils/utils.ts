@@ -1,8 +1,5 @@
-import {
-  NetworkMapFieldId,
-  type NetworkMapping,
-} from 'src/plans/create/steps/network-map/constants';
-import type { MappingValue } from 'src/plans/create/types';
+import { NetworkMapFieldId, type NetworkMapping } from '@utils/mappings/networkMap';
+import type { MappingValue } from '@utils/types';
 
 export const isNetworkMappingDisabled = (
   networkMappings: NetworkMapping[],

@@ -1,6 +1,5 @@
 import type { FieldValues } from 'react-hook-form';
-import type { TargetPowerState, TargetPowerStateValue } from 'src/plans/constants';
-import type { StorageMapping, TargetStorage } from 'src/storageMaps/utils/types';
+import type { TargetPowerState } from 'src/plans/constants';
 import type { InventoryNetwork } from 'src/utils/hooks/useNetworks';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 import type { Ec2Network } from 'src/utils/types/ec2Inventory';
@@ -27,6 +26,10 @@ import type {
   VSphereNetwork,
   VSphereVM,
 } from '@forklift-ui/types';
+import type { NetworkMapFieldId, NetworkMapping } from '@utils/mappings/networkMap';
+import type { TargetPowerStateValue } from '@utils/plans/constants';
+import type { StorageMapping, TargetStorage } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 import type {
   CustomScriptsFieldId,
@@ -41,7 +44,6 @@ import type {
   MigrationHook,
 } from './steps/migration-hooks/constants';
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
-import type { NetworkMapFieldId, NetworkMapping } from './steps/network-map/constants';
 import type { DiskPassPhrase, OtherSettingsFormFieldId } from './steps/other-settings/constants';
 import type { CreatePlanStorageMapFieldId } from './steps/storage-map/constants';
 import type { VmFormFieldId } from './steps/virtual-machines/constants';
@@ -103,8 +105,6 @@ export type CreatePlanFormData = FieldValues & {
   [OtherSettingsFormFieldId.TransferNetwork]: V1beta1PlanSpecTransferNetwork;
   [OtherSettingsFormFieldId.TargetPowerState]: TargetPowerState;
 };
-
-export type MappingValue = { id?: string; name: string };
 
 export type MappingFieldIds = {
   sourceField: string;

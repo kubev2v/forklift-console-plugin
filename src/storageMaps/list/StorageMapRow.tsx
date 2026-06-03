@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { createStatusCell } from 'src/components/table/utils/createStatusCell';
-import type { StorageMapData } from 'src/storageMaps/utils/types';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { Td, Tr } from '@patternfly/react-table';
 import { renderResourceRowCells } from '@utils/renderResourceRowCells';
+import type { StorageMapData } from '@utils/storage/types';
 
 import { StorageMapActionsDropdown } from '../actions/StorageMapActionsDropdown';
 

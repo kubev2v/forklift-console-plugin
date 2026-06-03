@@ -1,4 +1,3 @@
-import type { TargetPowerStateValue } from 'src/plans/constants';
 import { isMigrationVirtualMachinePaused } from 'src/plans/details/utils/utils';
 
 import type {
@@ -11,8 +10,13 @@ import { getPlanIsWarm, getPlanVirtualMachinesMigrationStatus } from '@utils/crd
 import { deepCopy } from '@utils/deepCopy';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
+import type { TargetPowerStateValue } from '@utils/plans/constants';
 
-import { STATUS_POPOVER_VMS_COUNT_THRESHOLD } from './constants';
+import {
+  PLAN_CONDITION_VALIDATING_VDDK,
+  PLAN_CONDITION_VDDK_INIT_IMAGE_NOT_READY,
+  STATUS_POPOVER_VMS_COUNT_THRESHOLD,
+} from './constants';
 import {
   type MigrationVirtualMachinesStatusCountObjectVM,
   type MigrationVirtualMachinesStatusesCounts,
@@ -204,6 +208,13 @@ export const getPlanStatus = (plan: V1beta1Plan): PlanStatuses => {
 
   if (conditions.includes(PlanStatuses.Ready)) {
     return PlanStatuses.Ready;
+  }
+
+  if (
+    conditions.includes(PLAN_CONDITION_VALIDATING_VDDK) ||
+    conditions.includes(PLAN_CONDITION_VDDK_INIT_IMAGE_NOT_READY)
+  ) {
+    return PlanStatuses.Validating;
   }
 
   return PlanStatuses.Unknown;

@@ -13,6 +13,7 @@ import {
   Spinner,
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
+import { PF_LABEL_STATUS } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -86,7 +87,7 @@ const ThroughputCard: FC<ThroughputCardProps> = ({ metricName, title }) => {
         <Bullseye>
           <EmptyState
             icon={ExclamationCircleIcon}
-            status="danger"
+            status={PF_LABEL_STATUS.DANGER}
             titleText={t('Unable to load throughput data')}
           >
             <EmptyStateBody>

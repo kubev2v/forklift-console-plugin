@@ -17,13 +17,9 @@ import {
   SplitItem,
 } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 
-import {
-  type OffloadMatchStatus,
-  StorageMapFieldId,
-  type StorageMapping,
-  type StorageVendorProduct,
-} from '../../utils/types';
+import type { OffloadMatchStatus, StorageVendorProduct } from '../../utils/types';
 
 import OffloadOptimalityHint from './OffloadOptimalityHint';
 import OffloadPluginField from './OffloadPluginField';

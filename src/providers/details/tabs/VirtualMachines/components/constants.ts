@@ -1,5 +1,4 @@
 import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
-import type { SpecVirtualMachinePageData } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/utils/types';
 
 import { EnumFilter } from '@components/common/Filter/EnumFilter';
 import { GroupedEnumFilter } from '@components/common/Filter/GroupedEnumFilter';
@@ -7,6 +6,7 @@ import type { ValueMatcher } from '@components/common/FilterGroup/types';
 import { getCategoryLabel } from '@components/Concerns/utils/category';
 import type { VirtualMachineWithConcerns } from '@components/Concerns/utils/constants';
 import type { Concern } from '@forklift-ui/types';
+import type { SpecVirtualMachinePageData } from '@utils/types/specVirtualMachinePageData';
 
 import type { VmData } from './VMCellProps';
 

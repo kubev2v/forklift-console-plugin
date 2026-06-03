@@ -1,8 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 import { useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
@@ -16,6 +14,8 @@ import { getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
 import { useForkliftTranslation } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import { StorageMapFieldId } from '@utils/storage/types';
 
 import type { UpdateMappingsFormData } from '../utils/types';
 import { transformFormValuesToK8sSpec, transformStorageMapToFormValues } from '../utils/utils';

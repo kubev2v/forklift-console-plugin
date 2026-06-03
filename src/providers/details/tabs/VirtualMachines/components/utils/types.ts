@@ -1,5 +1,6 @@
 import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
+
+import type { ProviderData } from '@utils/providers/types';
 
 export type ProviderVirtualMachinesListProps = {
   title?: string;

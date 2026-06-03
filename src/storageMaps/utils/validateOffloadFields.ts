@@ -1,6 +1,5 @@
 import { t } from '@utils/i18n';
-
-import { StorageMapFieldId, type StorageMapping } from './types';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 
 /**
  * Validates that offload fields follow an "all or nothing" rule:

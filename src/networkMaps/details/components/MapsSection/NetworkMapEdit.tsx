@@ -4,8 +4,6 @@ import { validateNetworkMaps } from 'src/networkMaps/create/fields/utils';
 import { buildNetworkMappings } from 'src/networkMaps/create/utils/buildNetworkMappings';
 import { defaultNetworkMapping, networkMapFieldLabels } from 'src/networkMaps/utils/constants';
 import { getNetworkMapFieldId } from 'src/networkMaps/utils/getNetworkMapFieldId';
-import { NetworkMapFieldId } from 'src/networkMaps/utils/types';
-import { defaultNetMapping } from 'src/plans/create/steps/network-map/constants';
 import { useSourceNetworks } from 'src/utils/hooks/useNetworks';
 import useTargetNetworks from 'src/utils/hooks/useTargetNetworks';
 
@@ -18,8 +16,10 @@ import { NetworkMapModel } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { ModalVariant } from '@patternfly/react-core';
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import { defaultNetMapping } from '@utils/mappings/networkMap';
 
 import { PlanOwnerAlert } from './utils/PlanOwnerAlert';
 import type { NetworkEditFormValues, NetworkMapEditProps } from './utils/types';

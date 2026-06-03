@@ -4,10 +4,10 @@ import { useCanInspectPlan } from 'src/plans/details/hooks/useCanInspectPlan';
 
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 import type { V1beta1Plan } from '@forklift-ui/types';
+import type { SpecVirtualMachinePageData } from '@utils/types/specVirtualMachinePageData';
 
 import AddVirtualMachinesButton from '../../AddVirtualMachines/AddVirtualMachinesButton';
 import DeleteVirtualMachinesButton from '../../DeleteVirtualMachines/DeleteVirtualMachinesButton';
-import type { SpecVirtualMachinePageData } from '../utils/types';
 
 type PageGlobalActions = FC<GlobalActionToolbarProps<SpecVirtualMachinePageData>>[];
 

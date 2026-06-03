@@ -1,6 +1,7 @@
-import { PROVIDER_TYPES, TRUE_VALUE } from 'src/providers/utils/constants';
+import { TRUE_VALUE } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { ProviderFormFieldId } from '../fields/constants';
 import type { OvaFormData } from '../types';

@@ -18,11 +18,11 @@ import {
 } from '@patternfly/react-core';
 import { CreationMethod } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { defaultNetworkMapping } from '../utils/constants';
-import { NetworkMapFieldId } from '../utils/types';
 
 import CreateNetworkMapFieldTable from './fields/CreateNetworkMapFieldTable';
 import MapNameField from './fields/MapNameField';

@@ -2,16 +2,16 @@ import { type FC, useEffect } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { networkMapFieldLabels } from 'src/networkMaps/utils/constants';
 import { getNetworkMapFieldId } from 'src/networkMaps/utils/getNetworkMapFieldId';
-import { NetworkMapFieldId } from 'src/networkMaps/utils/types';
-import { defaultNetMapping, ignoreNetMapping } from 'src/plans/create/steps/network-map/constants';
 import { validateNetworkMap } from 'src/plans/create/steps/network-map/utils';
-import type { MappingValue } from 'src/plans/create/types';
 import { hasPodNetworkMappings } from 'src/plans/create/utils/hasMultiplePodNetworkMappings';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { useForkliftTranslation } from '@utils/i18n';
+import { defaultNetMapping, ignoreNetMapping } from '@utils/mappings/networkMap';
+import type { MappingValue } from '@utils/types';
 
 import type { PlanNetworkEditFormValues } from '../utils/types';
 

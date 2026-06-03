@@ -2,8 +2,12 @@ import {
   getNetAppShiftLabels,
   isNetAppShiftStorageClassAnnotations,
   NETAPP_SHIFT_STORAGE_CLASS_TYPE_VALUE,
-} from '../netAppShift';
-import { StorageClassAnnotation, StorageMapFieldId, type TargetStorage } from '../types';
+} from '@utils/storage/netAppShift';
+import {
+  StorageClassAnnotation,
+  StorageMapFieldId,
+  type TargetStorage,
+} from '@utils/storage/types';
 
 describe('isNetAppShiftStorageClassAnnotations', () => {
   it('is true when annotation is shift', () => {

@@ -5,12 +5,12 @@ import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tab
 import type { ResourceField } from '@components/common/utils/types';
 import { TableSortContextProvider } from '@components/TableSortContextProvider';
 import { t } from '@utils/i18n';
+import { getEc2VM } from '@utils/types/ec2VM';
+import { getVmPowerState } from '@utils/virtual-machines/getVmPowerState';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import type { VmData } from './components/VMCellProps';
-import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
-import { getEc2VM } from './utils/types/Ec2VM';
 import { Ec2VirtualMachinesCells } from './Ec2VirtualMachinesRow';
 
 const ec2VmFieldsMetadataFactory: ResourceField[] = [

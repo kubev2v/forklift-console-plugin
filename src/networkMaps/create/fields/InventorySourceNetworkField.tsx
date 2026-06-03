@@ -6,11 +6,11 @@ import type { InventoryNetwork } from 'src/utils/hooks/useNetworks';
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
+import { NetworkMapFieldId, type NetworkMapping } from '@utils/crds/maps/types';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import type { MappingValue } from '@utils/types';
 
-import { NetworkMapFieldId, type NetworkMapping } from '../../utils/types';
 import type { CreateNetworkMapFormData } from '../types';
 
 type InventorySourceNetworkFieldProps = {

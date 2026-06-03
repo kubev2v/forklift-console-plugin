@@ -3,11 +3,15 @@ import { Controller, useWatch } from 'react-hook-form';
 import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Flex, FlexItem, Form, Radio, Stack } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import {
+  NetworkMapFieldId,
+  NetworkMapType,
+  networkMapTypeLabels,
+} from '@utils/mappings/networkMap';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
-import { NetworkMapFieldId, NetworkMapType, networkMapTypeLabels } from './constants';
 import ExistingNetworkMapField from './ExistingNetworkMapField';
 import NewNetworkMapFields from './NewNetworkMapFields';
 

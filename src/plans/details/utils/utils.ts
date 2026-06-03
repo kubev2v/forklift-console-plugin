@@ -8,9 +8,9 @@ import { getCreatedAt, getLabels } from '@utils/crds/common/selectors';
 import { CONVERSION_LABELS, CONVERSION_PHASE } from '@utils/crds/conversion/constants';
 import { getConversionPhase, getInspectionResult } from '@utils/crds/conversion/selectors';
 import type { V1beta1Conversion } from '@utils/crds/conversion/types';
+import type { SpecVirtualMachinePageData } from '@utils/types/specVirtualMachinePageData';
 
 import { planMigrationVirtualMachineStatuses } from '../components/PlanStatus/utils/types';
-import type { SpecVirtualMachinePageData } from '../tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/utils/types';
 
 export const isMigrationVirtualMachinePaused = (vm: V1beta1PlanStatusMigrationVms | undefined) =>
   vm?.phase === planMigrationVirtualMachineStatuses.CopyingPaused;

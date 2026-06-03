@@ -1,0 +1,387 @@
+---
+description: Provider pages - list, create, details (per-type dispatch), tabs, actions, modals
+alwaysApply: false
+---
+
+# Provider Pages
+
+> Analyzed on 2026-05-29
+
+## Extension Registration (`src/providers/dynamic-plugin.ts`)
+
+Three exposed modules registered via Console SDK extensions:
+
+| Extension type | Module | Component |
+|---|---|---|
+| `console.page/resource/list` | `ProvidersListPage` | `src/providers/list/ProvidersListPage.tsx` |
+| `console.page/resource/details` | `ProviderDetailsPage` | `src/providers/details/ProviderDetailsPage.tsx` |
+| `console.resource/create` | `ProvidersCreatePage` | `src/providers/create/ProvidersCreatePage.tsx` |
+
+Two nav items (`console.navigation/resource-ns`) are registered: one for `admin` perspective, one for `virtualization-perspective`.
+
+---
+
+## Page Composition
+
+### 1. List Page (`src/providers/list/ProvidersListPage.tsx`)
+
+```
+ProvidersListPage
+├── LearningExperienceDrawer
+│   └── StandardPage<ProviderData>
+│       ├── ProvidersAddButton              (add button)
+│       ├── ProviderRow                     (row component)
+│       │   └── ProviderDataCell            (cell renderer per field)
+│       ├── ProvidersEmptyState             (no results)
+│       └── InventoryNotReachable           (alert when inventory API is down)
+```
+
+**Data sources:**
+- `useK8sWatchResource<V1beta1Provider[]>` — watches Provider CRs in namespace
+- `useProvidersInventoryList(namespace)` — polls inventory REST API every 20s
+- `useGetDeleteAndEditAccessReview({ model: ProviderModel })` — RBAC permissions
+
+**Data shape:** Each row is `ProviderData = { provider, inventory, permissions }` — the Provider CR is joined with its matching inventory entry via `findInventoryByID`.
+
+**Column definitions:** `src/providers/list/utils/providerFields.ts` — defines Name, Project, Status, Endpoint, Type, VMs, Networks, Hosts, Clusters, Storage, and Actions columns. Filterable by freetext and enum (Status, Type with source/target groups).
+
+### 2. Create Page (`src/providers/create/ProvidersCreatePage.tsx`)
+
+```
+ProvidersCreateFormPage
+├── LearningExperienceDrawer
+│   ├── Title "Create provider"
+│   └── CreateProviderForm
+│       ├── FormProvider (react-hook-form)
+│       │   └── CreateProviderFormContextProvider  (provides existing provider names for uniqueness validation)
+│       │       └── ProviderTypeFields             (conditional field rendering per provider type)
+│       │           ├── ProviderProjectField
+│       │           ├── ProviderTypeField
+│       │           ├── ProviderNameField
+│       │           └── <type-specific fields>
+│       ├── Create button
+│       └── Cancel button
+```
+
+**Data sources:**
+- `useK8sWatchProviderNames({ namespace })` via `CreateProviderFormContextProvider` — fetches existing names for uniqueness validation
+- `useSearchParams` — reads `?providerType=` from URL to pre-select provider type
+
+**Create flow (in `onSubmit`):**
+1. `buildProviderResources(formData)` → builds Provider + Secret objects
+2. `createProviderSecret(provider, secret)` → `k8sCreate` the Secret
+3. `createProvider(provider, secret)` → `k8sCreate` the Provider
+4. `patchProviderSecretOwner(provider, secret)` → patches Secret with ownerRef
+5. Navigates to provider details page on success
+
+**Per-type field groups** (in `ProviderTypeFields.tsx`):
+
+| Type | Fields |
+|---|---|
+| `ec2` | Ec2RegionField, Ec2CredentialsFields, Ec2TargetSettingsFields, Ec2CrossAccountCredentialsFields |
+| `ova` | NfsDirectoryField, OvaApplianceManagementField |
+| `openshift` | OpenShiftUrlField, ServiceAccountTokenField, CertificateValidationField |
+| `openstack` | OpenStackUrlField, OpenStackAuthenticationTypeField (5 auth strategies), CertificateValidationField |
+| `ovirt` | OvirtUrlField, OvirtCredentialsFields, CertificateValidationField |
+| `vsphere` | VsphereEndpointTypeField, VsphereUrlField, VsphereVddkField, VsphereCredentialsFields, CertificateValidationField |
+| `hyperv` | HypervTransferMethodField, HypervCredentialsFields, CertificateValidationField |
+
+**Provider type constant:** `PROVIDER_TYPES` in `src/providers/utils/constants.ts` — `ec2`, `hyperv`, `openshift`, `openstack`, `ova`, `ovirt`, `vsphere`.
+
+### 3. Details Page — Dispatch Layer
+
+```
+ProviderDetailsPage                             (src/providers/details/ProviderDetailsPage.tsx)
+├── useK8sWatchResource<V1beta1Provider>        (single provider)
+├── LoadingSuspend / ErrorState
+└── ProviderDetailsPageByType                   (switch on provider.spec.type)
+    ├── OpenshiftProviderDetailsPage
+    ├── VSphereProviderDetailsPage
+    ├── OVirtProviderDetailsPage
+    ├── OpenStackProviderDetailsPage
+    ├── OvaProviderDetailsPage
+    ├── HypervProviderDetailsPage
+    └── Ec2ProviderDetailsPage
+```
+
+Each per-type details page follows the same pattern:
+
+```
+<Type>ProviderDetailsPage (memo'd)
+├── ProviderPageHeader
+│   ├── PageHeadings (shared)
+│   ├── CreatePlanAction       → navigates to Plan create with ?sourceProvider=&planProject=
+│   ├── LearningExperienceButton
+│   └── ProviderActionsDropdown
+├── HorizontalNav (Console SDK)
+│   ├── Details tab
+│   ├── YAML tab
+│   ├── Credentials tab       (not on ova)
+│   ├── Virtual machines tab
+│   ├── ESXi hosts tab        (vsphere only)
+│   └── Networks tab          (openshift only)
+```
+
+### 4. Tabs per Provider Type
+
+| Tab | openshift | vsphere | ovirt | openstack | ova | hyperv | ec2 |
+|---|---|---|---|---|---|---|---|
+| Details | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| YAML | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Credentials | ✓ | ✓ | ✓ | ✓ | — | ✓ | ✓ |
+| Virtual machines | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| ESXi hosts | — | ✓ | — | — | — | — | — |
+| Networks | ✓ | — | — | — | — | — | — |
+
+---
+
+## Tab Page Details
+
+### Details Tab (`tabs/Details/ProviderDetailsTabPage.tsx`)
+
+```
+ProviderDetailsTabPage
+├── DetailsSection            → dispatches to <Type>DetailsSection via getDetailsSectionByType()
+├── UploadFilesSection        → OVA-only file upload
+├── SecretsSection            → shows linked Secret ref
+├── InventorySection          → dispatches to <Type>InventorySection via getInventorySectionByType()
+└── ConditionsSection         → renders provider.status.conditions
+```
+
+**Data:** `useProvider(name, namespace)`, `useProviderInventory<ProviderInventory>`, `useGetDeleteAndEditAccessReview`
+
+Per-type details sections: `OpenshiftDetailsSection`, `VSphereDetailsSection`, `OvirtDetailsSection`, `OpenstackDetailsSection`, `OVADetailsSection`, `HyperVDetailsSection`, `Ec2DetailsSection`
+
+Per-type inventory sections: `VSphereInventorySection`, `OvirtInventorySection`, `OpenstackInventorySection`, `Ec2InventorySection`
+
+### YAML Tab (`tabs/YAML/ProviderYAMLTabPage.tsx`)
+
+Wraps Console SDK `ResourceYAMLEditor` with `ResourceYAMLEditorWrapper`. Fetches provider via `useProvider`.
+
+### Credentials Tab (`tabs/Credentials/ProviderCredentialsTabPage.tsx`)
+
+```
+ProviderCredentialsTabPage
+├── useProvider + useK8sWatchResource<Secret>   (watches the provider's linked Secret)
+├── useAccessReview (patch on Secret)
+├── SectionHeadingWithEdit → launches EditProviderCredentials modal
+├── Reveal/Hide toggle
+└── CredentialsSection → CredentialFieldsByType → per-type field rendering
+```
+
+### Virtual Machines Tab (`tabs/VirtualMachines/ProviderVirtualMachinesTabPage.tsx`)
+
+```
+ProviderVirtualMachinesTabPage
+├── useProvider + useInventoryVms({ provider })
+└── VirtualMachinesListSection                  (switch on provider type)
+    ├── OpenShiftVirtualMachinesList
+    ├── VSphereVirtualMachinesList
+    ├── OVirtVirtualMachinesList
+    ├── OpenStackVirtualMachinesList
+    ├── OvaVirtualMachinesList
+    ├── HypervVirtualMachinesList
+    └── Ec2VirtualMachinesList
+```
+
+Each VM list uses `ProviderVirtualMachinesList` (a shared sub-component wrapping `StandardPage`) with type-specific columns and row components.
+
+### Hosts Tab (`tabs/Hosts/ProviderHostsTabPage.tsx`) — vSphere only
+
+Renders `VSphereHostsList` when `provider.spec.type === 'vsphere'`, otherwise `null`.
+
+### Networks Tab (`tabs/Networks/ProviderNetworksTabPage.tsx`) — OpenShift only
+
+Uses `useProviderInventory` with `subPath: 'networkattachmentdefinitions?detail=4'`. Shows a table of NADs. Supports setting a default transfer network via `EditProviderDefaultTransferNetwork` modal.
+
+---
+
+## Actions (`src/providers/actions/`)
+
+`ProviderActionsDropdown` renders a kebab (list) or "Actions" button (details page) containing `ProviderActionsDropdownItems`:
+
+| Action | Behavior |
+|---|---|
+| **Edit** / **Edit YAML** | Navigates to details page (list) or YAML tab (details) |
+| **Edit provider credentials** | Navigates to `/credentials` tab (hidden for `ova`) |
+| **Delete provider** | Opens `DeleteModal` (shared component) via `useModal` |
+
+---
+
+## Modals (`src/providers/modals/`)
+
+### EditProviderURLModal
+Dispatches to per-type URL edit modals (`OvirtEditURLModal`, `OpenshiftEditURLModal`, `OpenstackEditURLModal`, `VSphereEditURLModal`). Used from details sections.
+
+### EditProviderUIModal
+Dispatches to per-type UI link edit modals (`OpenshiftEditUIModal`, `OvirtEditUIModal`, `OpenstackEditUIModal`, `VSphereEditUIModal`). Edits `forklift.konveyor.io/providerUI` annotation.
+
+### EditProviderDefaultTransferNetwork
+OpenShift-only. Patches `forklift.konveyor.io/defaultTransferNetwork` annotation. Uses shared `ModalForm`, `k8sPatch`, and `NetworkDropdown`.
+
+---
+
+## Shared Component Usage
+
+| Shared component | Where used |
+|---|---|
+| `StandardPage` (`@components/page/StandardPage`) | List page, VM lists |
+| `LoadingSuspend` (`@components/LoadingSuspend`) | Details page, Credentials tab |
+| `PageHeadings` (`@components/DetailPageHeadings/PageHeadings`) | Provider page header |
+| `SectionHeading` / `SectionHeadingWithEdit` | All details tab sections |
+| `ModalForm` (`@components/ModalForm/ModalForm`) | Transfer network modal, credentials edit |
+| `DeleteModal` (`@components/modals/DeleteModal`) | Provider delete action |
+| `ResourceYAMLEditorWrapper` | YAML tab |
+| `FormGroupWithHelpText` | Modals |
+| `ErrorState` / `LoadingSuspend` | Error/loading states |
+| `LearningExperienceDrawer` / `LearningExperienceButton` | List page, Create page, Details header |
+
+---
+
+## Data Sources Summary
+
+| Hook / Call | Source | Used in |
+|---|---|---|
+| `useK8sWatchResource<V1beta1Provider[]>` | Console SDK (k8s watch) | List page |
+| `useK8sWatchResource<V1beta1Provider>` | Console SDK (k8s watch) | Details dispatch page |
+| `useProvider(name, namespace)` | Re-exported from `@utils/hooks/useProvider` | All detail tabs, header |
+| `useProvidersInventoryList(namespace)` | Polls `/providers?detail=1` every 20s | List page |
+| `useProviderInventory<T>({ provider, subPath? })` | Shared hook | Details tab, Networks tab, Header |
+| `useInventoryVms({ provider })` | Shared hook | VMs tab |
+| `useK8sWatchResource<Secret>` | Console SDK | Credentials tab |
+| `useGetDeleteAndEditAccessReview` | Custom RBAC hook | List page, Details tab, Hosts tab, Header |
+| `useAccessReview` | Console SDK | Credentials tab (Secret patch) |
+| `useK8sWatchProviderNames` | Custom hook | Create form context |
+| `useClusterIsAwsPlatform` | Custom hook | CreatePlanAction (gate EC2) |
+
+---
+
+## Cross-Feature Connections
+
+- **Plans:** `CreatePlanAction` in provider details header navigates to Plan create page with `?sourceProvider=&planProject=` query params. The Plans feature reads these params to pre-fill the source provider.
+- **Plans (delete guard):** When deleting a provider, downstream Plans referencing it may become invalid. The `DeleteModal` handles this generically.
+- **Overview:** The overview dashboard queries provider counts and status. Changes to provider status fields can affect overview cards.
+- **NetworkMap / StorageMap:** Mappings reference providers. Provider inventory (networks, storage) feeds the mapping create forms.
+- **Telemetry:** Create flow fires `PROVIDER_CREATE_STARTED`, `PROVIDER_CREATE_COMPLETED`, `PROVIDER_CREATE_FAILED` events. "Create migration plan" fires `PLAN_CREATE_FROM_PROVIDER_CLICKED`.
+
+---
+
+## Key Types and Constants
+
+- **`ProviderData`** (`src/providers/utils/types/ProviderData.ts`): `{ provider, inventory, permissions, vmData?, vmDataLoading? }` — the universal data bag passed through provider components
+- **`PROVIDER_TYPES`** (`src/providers/utils/constants.ts`): `ec2 | hyperv | openshift | openstack | ova | ovirt | vsphere`
+- **`ProviderTypes`** (type): `(typeof PROVIDER_TYPES)[keyof typeof PROVIDER_TYPES]`
+- **`isTechPreviewProvider(type)`**: returns `true` for `ec2` and `hyperv`
+- **`ProvidersResourceFieldId`** (enum): column IDs for the list page
+- **`ProviderDetailsPageProps`**: `{ name: string; namespace: string }` — shared prop type for all tabs
+
+---
+
+## Blast Radius Notes
+
+### Adding a new provider type
+1. Add to `PROVIDER_TYPES` in `src/providers/utils/constants.ts`
+2. Add a `<Type>ProviderDetailsPage` in `src/providers/details/` with tab configuration
+3. Add case to `ProviderDetailsPageByType` switch
+4. Add create form fields in `src/providers/create/fields/<type>/`
+5. Add case to `ProviderTypeFields.tsx`
+6. Add `<Type>DetailsSection` and `<Type>InventorySection` in details tab components
+7. Add `<Type>VirtualMachinesList` and row component in `tabs/VirtualMachines/`
+8. Add case to `VirtualMachinesListSection` switch
+9. Add URL/UI modal variants if applicable in `src/providers/modals/`
+10. Add credential fields in `tabs/Credentials/components/CredentialFieldsByType.tsx`
+11. Update `buildProviderResources`, `getDefaultFormValues`, and `createProviderSecret` utils
+12. Consider tech preview gating (`isTechPreviewProvider`) and platform gating (`useClusterIsAwsPlatform`)
+
+### Adding a new details tab
+1. Create tab page component in `src/providers/details/tabs/<TabName>/`
+2. Add to `tabPages` array in each per-type details page that needs it
+3. If provider-type-specific, add only to relevant `<Type>ProviderDetailsPage.tsx` files
+
+### Changing provider actions
+1. Edit `ProviderActionsDropdownItems.tsx` — single file for all action items
+2. If adding a modal action, use `useModal` launcher from Console SDK
+
+### Modifying list columns
+1. Edit `src/providers/list/utils/providerFields.ts` for field definitions
+2. Edit `src/providers/list/components/ProviderDataCell.tsx` for cell rendering
+
+### Changing create form validation
+1. Per-field validation lives in each field component under `src/providers/create/fields/`
+2. Cross-field validation uses `react-hook-form` `validate` with `getValues()`
+3. Provider name uniqueness checked via `CreateProviderFormContextProvider`
+
+---
+
+## File Index
+
+```
+src/providers/
+├── dynamic-plugin.ts                 # Extension registration
+├── actions/
+│   ├── ProviderActionsDropdown.tsx    # Dropdown shell (kebab / "Actions" button)
+│   └── ProviderActionsDropdownItems.tsx # Edit, Edit Credentials, Delete
+├── create/
+│   ├── ProvidersCreatePage.tsx        # Page wrapper
+│   ├── CreateProviderForm.tsx         # Form with react-hook-form, submit logic
+│   ├── CreateProviderFormContextProvider.tsx # Provider names context
+│   ├── ProviderTypeFields.tsx         # Conditional field rendering per type
+│   ├── fields/                        # Per-type and shared form fields
+│   │   ├── ec2/
+│   │   ├── hyperv/
+│   │   ├── openshift/
+│   │   ├── openstack/credentials/    # 5 auth type variants
+│   │   ├── ova/
+│   │   ├── ovirt/
+│   │   └── vsphere/
+│   └── utils/                         # buildProviderResources, createProvider, etc.
+├── details/
+│   ├── ProviderDetailsPage.tsx        # Dispatch: loads provider → ProviderDetailsPageByType
+│   ├── ProviderDetailsPageByType.tsx  # Switch on type → per-type details page
+│   ├── ProviderPageHeader.tsx         # Shared header with actions
+│   ├── <Type>ProviderDetailsPage.tsx  # 7 files, one per provider type (tab config)
+│   ├── hooks/useProvider.ts           # Re-export of @utils/hooks/useProvider
+│   ├── components/
+│   │   ├── CreatePlanAction.tsx        # "Create migration plan" button → Plan create
+│   │   └── ProviderPageHeaderAlerts.tsx
+│   └── tabs/
+│       ├── Details/                    # DetailsSection, InventorySection, ConditionsSection
+│       ├── YAML/                       # ResourceYAMLEditor wrapper
+│       ├── Credentials/                # Secret viewer/editor with per-type fields
+│       ├── VirtualMachines/            # Per-type VM lists + shared list shell
+│       ├── Hosts/                      # vSphere ESXi hosts only
+│       └── Networks/                   # OpenShift NADs + default transfer network
+├── list/
+│   ├── ProvidersListPage.tsx          # StandardPage composition
+│   ├── components/
+│   │   ├── ProviderRow.tsx
+│   │   ├── ProviderDataCell.tsx
+│   │   ├── ProvidersAddButton.tsx
+│   │   ├── ProvidersEmptyState.tsx
+│   │   └── InventoryNotReachable.tsx
+│   ├── hooks/
+│   │   └── useProvidersInventoryList.ts # Inventory polling
+│   └── utils/
+│       ├── providerFields.ts          # Column definitions
+│       └── findInventoryByID.ts
+├── modals/
+│   ├── EditProviderURL/               # URL edit (4 provider variants)
+│   ├── EditProviderUI/                # UI link edit (4 provider variants)
+│   └── EditProviderDefaultTransferNetwork/ # OpenShift-only transfer network
+├── hooks/
+│   └── useK8sWatchProviderNames.ts
+└── utils/
+    ├── constants.ts                   # PROVIDER_TYPES, enums, annotations
+    ├── getProviderDetailsPageUrl.ts
+    ├── types/
+    │   ├── ProviderData.ts
+    │   └── ProvidersPermissionStatus.ts
+    ├── helpers/
+    │   ├── getApiUrl.ts
+    │   ├── getIsTarget.ts
+    │   ├── getIsManaged.ts
+    │   ├── getEc2Url.ts
+    │   ├── isHypervIscsiProvider.ts
+    │   └── hasObjectChangedInGivenFields.ts
+    └── validators/provider/           # URL + UI link validators per type
+```

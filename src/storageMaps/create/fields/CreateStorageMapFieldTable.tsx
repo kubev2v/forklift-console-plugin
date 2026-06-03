@@ -1,11 +1,9 @@
 import type { FC } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
 import TargetStorageWithSuggestion from 'src/storageMaps/components/TargetStorageWithSuggestion';
 import { defaultStorageMapping, storageMapFieldLabels } from 'src/storageMaps/utils/constants';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
-import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 import { useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
@@ -14,6 +12,8 @@ import { isEmpty } from '@utils/helpers';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
 import { useForkliftTranslation } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import { StorageMapFieldId } from '@utils/storage/types';
 
 import OffloadStorageRow from '../../components/OffloadStorageIndexedForm/OffloadStorageRow';
 import type { CreateStorageMapFormData } from '../types';

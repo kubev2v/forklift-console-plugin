@@ -3,7 +3,7 @@ import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
-import { CREATE_VDDK_HELP_LINK } from '@utils/constants';
+import { CREATE_VDDK_HELP_LINK, PF_LABEL_STATUS } from '@utils/constants';
 import { getVddkInitImage } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
@@ -38,7 +38,7 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
       title={t('VDDK init image')}
       content={
         isEmpty(vddkInitImage) ? (
-          <Label isCompact status="warning">
+          <Label isCompact status={PF_LABEL_STATUS.WARNING}>
             {t('Empty')}
           </Label>
         ) : (

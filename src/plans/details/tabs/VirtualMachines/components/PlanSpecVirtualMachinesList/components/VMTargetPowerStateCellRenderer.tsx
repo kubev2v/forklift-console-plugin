@@ -1,11 +1,12 @@
 import type { FC } from 'react';
 import { TableCell } from 'src/components/TableCell/TableCell';
-import { getTargetPowerStateLabel, type TargetPowerStateValue } from 'src/plans/constants';
+import { getTargetPowerStateLabel } from 'src/plans/constants';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { getPlanTargetPowerState } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
+import type { TargetPowerStateValue } from '@utils/plans/constants';
 
 type VMTargetPowerStateCellRendererProps = {
   plan: V1beta1Plan;

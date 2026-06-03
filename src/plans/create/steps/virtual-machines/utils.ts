@@ -1,5 +1,4 @@
 import { ConcernCategory } from 'src/providers/details/tabs/VirtualMachines/constants';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { CustomFilterType } from '@components/common/FilterGroup/constants';
 import type { FilterDef } from '@components/common/utils/types';
@@ -9,6 +8,7 @@ import type {
 } from '@forklift-ui/types';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import type { ProviderVirtualMachine } from '../../types';
 

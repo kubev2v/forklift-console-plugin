@@ -1,6 +1,5 @@
-import type { SpecVirtualMachinePageData } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/utils/types';
-
 import type { Concern, V1beta1PlanStatusConditions } from '@forklift-ui/types';
+import type { SpecVirtualMachinePageData } from '@utils/types/specVirtualMachinePageData';
 
 import { groupConcernsByCategory, groupConditionsByCategory } from './category';
 import { orderedConcernCategories, type VirtualMachineWithConcerns } from './constants';

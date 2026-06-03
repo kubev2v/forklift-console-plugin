@@ -1,9 +1,9 @@
 import { HypervTransferMethod } from 'src/providers/create/fields/constants';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { isHypervIscsiProvider } from 'src/providers/utils/helpers/isHypervIscsiProvider';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 const makeProvider = (type: string, transferMethod?: string): V1beta1Provider =>
   ({

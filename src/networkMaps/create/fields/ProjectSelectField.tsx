@@ -11,13 +11,13 @@ import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import ProjectSelect from '@components/common/ProjectSelect/ProjectSelect';
 import { MenuToggleStatus, Stack, StackItem } from '@patternfly/react-core';
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { useDefaultProject } from '@utils/hooks/useDefaultProject';
 import useWatchProjectNames from '@utils/hooks/useWatchProjectNames';
 import { useForkliftTranslation } from '@utils/i18n';
 import { isSystemNamespace } from '@utils/namespaces';
 
 import { networkMapFieldLabels } from '../../utils/constants';
-import { NetworkMapFieldId } from '../../utils/types';
 import type { CreateNetworkMapFormData } from '../types';
 
 const ProjectSelectField: FC = () => {

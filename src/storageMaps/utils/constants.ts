@@ -1,11 +1,7 @@
 import { t } from '@utils/i18n';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 
-import {
-  OffloadPlugin,
-  StorageMapFieldId,
-  type StorageMapping,
-  StorageVendorProduct,
-} from './types';
+import { OffloadPlugin, StorageVendorProduct } from './types';
 
 export const defaultStorageMapping: StorageMapping = {
   [StorageMapFieldId.OffloadPlugin]: '',

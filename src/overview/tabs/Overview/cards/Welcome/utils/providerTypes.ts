@@ -7,7 +7,8 @@ import {
   ovaLogo,
   redhatLogo,
 } from 'src/components/images/logos';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 export const providerTypes = (isDarkTheme: boolean) => ({
   ec2: {

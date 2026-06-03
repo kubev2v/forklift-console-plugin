@@ -1,15 +1,15 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { DeleteModal, type DeleteModalProps } from 'src/components/modals/DeleteModal/DeleteModal';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import type { ProviderData } from '@utils/providers/types';
 
-import { PROVIDER_TYPES } from '../utils/constants';
 import { getProviderDetailsPageUrl } from '../utils/getProviderDetailsPageUrl';
 
 type ProviderActionsDropdownItemsProps = {

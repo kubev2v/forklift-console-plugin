@@ -12,10 +12,10 @@ import {
 } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import { NetworkMapFieldId, NetworkMapType } from '@utils/mappings/networkMap';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
-import { NetworkMapFieldId, NetworkMapType } from '../network-map/constants';
 
 import NetworkMapReviewTable from './NetworkMapReviewTable';
 

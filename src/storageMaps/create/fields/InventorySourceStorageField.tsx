@@ -1,11 +1,6 @@
 import type { FC } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
-import {
-  StorageMapFieldId,
-  type StorageMapping,
-  type StorageMappingValue,
-} from 'src/storageMaps/utils/types';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
@@ -13,6 +8,11 @@ import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import {
+  StorageMapFieldId,
+  type StorageMapping,
+  type StorageMappingValue,
+} from '@utils/storage/types';
 
 import type { CreateStorageMapFormData } from '../types';
 

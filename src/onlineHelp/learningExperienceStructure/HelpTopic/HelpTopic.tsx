@@ -1,8 +1,8 @@
 import { type FC, useContext } from 'react';
 import { ListStyleType } from 'src/onlineHelp/utils/types';
-import type { ProviderTypes } from 'src/providers/utils/constants';
 
 import { Content } from '@patternfly/react-core';
+import type { ProviderTypes } from '@utils/providers/constants';
 
 import { LearningExperienceContext } from '../../learningExperienceDrawer/context/LearningExperienceContext';
 import HelpTopicSection from '../HelpTopicSection/HelpTopicSection';

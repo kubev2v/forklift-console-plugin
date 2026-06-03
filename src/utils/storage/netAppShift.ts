@@ -2,7 +2,7 @@ import {
   StorageClassAnnotation,
   type StorageMapping,
   type TargetStorage,
-} from 'src/storageMaps/utils/types';
+} from '@utils/storage/types';
 
 /** Value matching pkg/apis/forklift/v1beta1.ValueNetAppShiftStorageClassType */
 export const NETAPP_SHIFT_STORAGE_CLASS_TYPE_VALUE = 'shift';

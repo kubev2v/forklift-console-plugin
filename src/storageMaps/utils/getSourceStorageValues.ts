@@ -1,6 +1,5 @@
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import type { CategorizedSourceMappings } from 'src/plans/create/types';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
 import type {
@@ -13,8 +12,8 @@ import type {
 } from '@forklift-ui/types';
 import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 import { isEmpty } from '@utils/helpers';
-
-import type { OVirtVMWithDisks } from './types';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import type { OVirtVMWithDisks } from '@utils/storage/types';
 
 /**
  * Extracts volume names from vSphere VMs (no option to extract storage classes data)

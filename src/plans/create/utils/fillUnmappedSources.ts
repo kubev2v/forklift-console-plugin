@@ -1,4 +1,6 @@
-import type { MappingFieldIds, MappingValue } from '../types';
+import type { MappingValue } from '@utils/types';
+
+import type { MappingFieldIds } from '../types';
 
 type FillMappingsOptions<T> = {
   existingMappings: T[];
