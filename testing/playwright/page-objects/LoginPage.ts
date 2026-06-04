@@ -6,7 +6,7 @@ import type { Page } from '@playwright/test';
  * "console" or similar words cannot trigger a false-positive success match.
  */
 const POST_LOGIN_URL_PATTERN =
-  /^[^?#]*\/(?:dashboards|console|k8s|overview|monitoring|topology|dev-console)\//;
+  /^[^?#]*\/(?:dashboards|console|k8s|overview|monitoring|topology|dev-console)(?:\/|$)/;
 
 const OAUTH_ACCESS_DENIED_PATTERN = /reason=access_denied/;
 
