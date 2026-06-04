@@ -34,7 +34,7 @@ Requires:
 
 Reads credentials from environment variables (or .mcp.json fallback):
   JIRA_URL          https://redhat.atlassian.net
-  JIRA_USERNAME     pabreu@redhat.com
+  JIRA_USERNAME     <your Atlassian account email>
   JIRA_API_TOKEN    ATATT3x...
 """
 
@@ -43,15 +43,16 @@ import os
 import re
 import subprocess
 import sys
+import urllib.parse
 from base64 import b64encode
 from typing import Optional
+
 import requests
 
 # ── Configuration ────────────────────────────────────────────────────────────
 
-BOARD_ID       = 11806
-QUICK_FILTER   = "project = \"Migration Toolkit for Virtualization\""
-# "Waiting on build" column status IDs on board 11806
+BOARD_ID         = 11806
+QUICK_FILTER     = "project = \"Migration Toolkit for Virtualization\""
 WAITING_STATUSES = ["MODIFIED", "Dev Complete"]
 
 _here    = os.path.abspath(__file__)                         # .../scripts/query.py
@@ -60,7 +61,7 @@ REPO_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.pa
 # ── Credentials ───────────────────────────────────────────────────────────────
 
 def _load_mcp_creds() -> tuple[str, str, str]:
-    """Fall back to reading .mcp.json when env vars are absent."""
+    """Return (url, username, token) from .mcp.json, or empty strings on failure."""
     mcp_path = os.path.join(REPO_DIR, ".mcp.json")
     try:
         with open(mcp_path) as f:
@@ -75,20 +76,23 @@ def _load_mcp_creds() -> tuple[str, str, str]:
         return ("", "", "")
 
 
-def get_auth_header() -> dict:
-    url      = os.getenv("JIRA_URL")      or _load_mcp_creds()[0]
-    username = os.getenv("JIRA_USERNAME") or _load_mcp_creds()[1]
-    token    = os.getenv("JIRA_API_TOKEN") or _load_mcp_creds()[2]
+def get_auth_config() -> tuple[str, dict]:
+    """Return (jira_base_url, auth_headers) using env vars with .mcp.json fallback."""
+    _url, _user, _token = _load_mcp_creds()
+    url      = os.getenv("JIRA_URL")       or _url
+    username = os.getenv("JIRA_USERNAME")  or _user
+    token    = os.getenv("JIRA_API_TOKEN") or _token
     if not (url and username and token):
         raise RuntimeError(
             "Jira credentials missing. Set JIRA_URL, JIRA_USERNAME, JIRA_API_TOKEN "
             "or populate .mcp.json with those values."
         )
     encoded = b64encode(f"{username}:{token}".encode()).decode()
-    return {"Authorization": f"Basic {encoded}", "Accept": "application/json"}
+    return url, {"Authorization": f"Basic {encoded}", "Accept": "application/json"}
 
 
-def jira_get(path: str, headers: dict, base: str = "https://redhat.atlassian.net") -> dict:
+def jira_get(path: str, headers: dict, base: str) -> dict:
+    """Perform a GET request against the Jira REST API and return the JSON response."""
     r = requests.get(f"{base}{path}", headers=headers, timeout=20)
     r.raise_for_status()
     return r.json()
@@ -96,37 +100,50 @@ def jira_get(path: str, headers: dict, base: str = "https://redhat.atlassian.net
 
 # ── Jira queries ──────────────────────────────────────────────────────────────
 
-def get_active_sprint(board_id: int, headers: dict) -> dict:
-    data = jira_get(f"/rest/agile/1.0/board/{board_id}/sprint?state=active", headers)
+def get_active_sprint(board_id: int, headers: dict, base: str) -> dict:
+    """Return the first active sprint for the given Agile board."""
+    data = jira_get(f"/rest/agile/1.0/board/{board_id}/sprint?state=active", headers, base)
     sprints = data.get("values", [])
     if not sprints:
         raise RuntimeError(f"No active sprint found on board {board_id}")
     return sprints[0]
 
 
-def get_waiting_for_build_issues(sprint_id: int, headers: dict) -> list[dict]:
+def get_waiting_for_build_issues(sprint_id: int, headers: dict, base: str) -> list[dict]:
+    """Return all MTV issues in the 'Waiting on build' column for the given sprint.
+
+    Paginates automatically if the result set exceeds the page size.
+    """
     status_clause = ",".join(f'"{s}"' for s in WAITING_STATUSES)
-    jql = (
-        f'({QUICK_FILTER}) AND status in ({status_clause})'
-    )
-    import urllib.parse
-    encoded_jql = urllib.parse.quote(jql)
-    fields = "summary,status,assignee,priority,fixVersions"
-    path = (
-        f"/rest/agile/1.0/sprint/{sprint_id}/issue"
-        f"?jql={encoded_jql}&fields={fields}&maxResults=100"
-    )
-    data = jira_get(path, headers)
-    issues = data.get("issues", [])
+    jql           = f'({QUICK_FILTER}) AND status in ({status_clause})'
+    encoded_jql   = urllib.parse.quote(jql)
+    fields        = "summary,status,assignee,priority,fixVersions"
+
+    page_size = 100
+    start_at  = 0
+    raw: list[dict] = []
+    while True:
+        path = (
+            f"/rest/agile/1.0/sprint/{sprint_id}/issue"
+            f"?jql={encoded_jql}&fields={fields}&maxResults={page_size}&startAt={start_at}"
+        )
+        data  = jira_get(path, headers, base)
+        page  = data.get("issues", [])
+        raw.extend(page)
+        total    = data.get("total", len(raw))
+        start_at += len(page)
+        if start_at >= total or not page:
+            break
+
     result = []
-    for issue in issues:
+    for issue in raw:
         f = issue.get("fields", {})
         result.append({
-            "key":      issue["key"],
-            "status":   (f.get("status") or {}).get("name", "?"),
-            "priority": (f.get("priority") or {}).get("name", "?"),
-            "assignee": (f.get("assignee") or {}).get("displayName", "Unassigned"),
-            "summary":  f.get("summary", ""),
+            "key":         issue["key"],
+            "status":      (f.get("status")   or {}).get("name", "?"),
+            "priority":    (f.get("priority") or {}).get("name", "?"),
+            "assignee":    (f.get("assignee") or {}).get("displayName", "Unassigned"),
+            "summary":     f.get("summary", ""),
             "fixVersions": [v.get("name", "") for v in f.get("fixVersions", [])],
         })
     return result
@@ -135,28 +152,36 @@ def get_waiting_for_build_issues(sprint_id: int, headers: dict) -> list[dict]:
 # ── Git queries ───────────────────────────────────────────────────────────────
 
 def _git(args: list[str]) -> str:
+    """Run a git command in REPO_DIR and return stdout as a stripped string."""
     return subprocess.check_output(
         ["git"] + args, cwd=REPO_DIR, stderr=subprocess.DEVNULL, text=True
     ).strip()
 
 
 def find_merge_commit(ticket_key: str) -> Optional[dict]:
-    """Return the merge commit info for a Jira ticket key, or None."""
+    """Return the merge commit info for a Jira ticket key, or None.
+
+    Uses a whole-word grep so MTV-5 does not accidentally match MTV-50 or MTV-500.
+    """
     try:
-        # Search by ticket key in commit message (case-insensitive)
-        out = _git(["log", "--oneline", "--all", f"--grep={ticket_key}", "-i", "--format=%H %ad %s", "--date=short"])
+        out = _git([
+            "log", "--all", f"--grep={ticket_key}", "-i",
+            "--format=%H %ad %s", "--date=short",
+        ])
         if not out:
             return None
-        # Take the first (most recent) match
-        first_line = out.splitlines()[0]
-        parts = first_line.split(" ", 2)
+        # Post-filter to whole-word matches to avoid MTV-5 matching MTV-50, etc.
+        pattern = re.compile(rf'\b{re.escape(ticket_key)}\b', re.IGNORECASE)
+        lines = [line for line in out.splitlines() if pattern.search(line)]
+        if not lines:
+            return None
+        parts = lines[0].split(" ", 2)
         if len(parts) < 3:
             return None
         full_hash, date, subject = parts[0], parts[1], parts[2]
         short_hash = full_hash[:7]
-        # Extract PR number from subject like "(#2442)"
-        pr_match = re.search(r'\(#(\d+)\)', subject)
-        pr = int(pr_match.group(1)) if pr_match else None
+        pr_match   = re.search(r'\(#(\d+)\)', subject)
+        pr         = int(pr_match.group(1)) if pr_match else None
         return {"commit": short_hash, "merge_date": date, "pr": pr, "subject": subject}
     except subprocess.CalledProcessError:
         return None
@@ -181,13 +206,14 @@ def check_in_build(commit: str, build_tips: list[str]) -> bool:
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-def main():
+def main() -> None:
+    """Entry point: query Jira + git and print JSON to stdout."""
     build_tips = sys.argv[1:]  # optional positional args
 
-    headers = get_auth_header()
+    jira_base, headers = get_auth_config()
 
-    sprint = get_active_sprint(BOARD_ID, headers)
-    issues = get_waiting_for_build_issues(sprint["id"], headers)
+    sprint = get_active_sprint(BOARD_ID, headers, jira_base)
+    issues = get_waiting_for_build_issues(sprint["id"], headers, jira_base)
 
     enriched = []
     for issue in issues:
@@ -196,22 +222,22 @@ def main():
         if commit_info and build_tips:
             in_build = check_in_build(commit_info["commit"], build_tips)
         enriched.append({
-            "key":        issue["key"],
-            "status":     issue["status"],
-            "priority":   issue["priority"],
-            "assignee":   issue["assignee"],
-            "summary":    issue["summary"],
+            "key":         issue["key"],
+            "status":      issue["status"],
+            "priority":    issue["priority"],
+            "assignee":    issue["assignee"],
+            "summary":     issue["summary"],
             "fixVersions": issue["fixVersions"],
-            "commit":     commit_info["commit"] if commit_info else None,
-            "pr":         commit_info["pr"] if commit_info else None,
-            "merge_date": commit_info["merge_date"] if commit_info else None,
-            "subject":    commit_info["subject"] if commit_info else None,
-            "in_build":   in_build,
+            "commit":      commit_info["commit"]     if commit_info else None,
+            "pr":          commit_info["pr"]         if commit_info else None,
+            "merge_date":  commit_info["merge_date"] if commit_info else None,
+            "subject":     commit_info["subject"]    if commit_info else None,
+            "in_build":    in_build,
         })
 
     output = {
-        "board_id":   BOARD_ID,
-        "sprint":     {
+        "board_id": BOARD_ID,
+        "sprint": {
             "id":    sprint["id"],
             "name":  sprint["name"],
             "state": sprint["state"],

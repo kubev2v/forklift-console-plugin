@@ -51,6 +51,7 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
+import threading
 from pathlib import Path
 
 # ── Constants ─────────────────────────────────────────────────────────────────
@@ -70,6 +71,7 @@ COMMIT_SHORT_RE = re.compile(r'\b([0-9a-f]{7,40})\b')
 # ── Config from .mcp.json ─────────────────────────────────────────────────────
 
 def _load_mcp_env() -> dict:
+    """Return the Slack env block from .mcp.json, or an empty dict on failure."""
     mcp_path = REPO_DIR / ".mcp.json"
     try:
         mcp = json.loads(mcp_path.read_text())
@@ -81,6 +83,7 @@ def _load_mcp_env() -> dict:
 # ── slackdump helpers ──────────────────────────────────────────────────────────
 
 def _slackdump_bin() -> str:
+    """Return the path to the slackdump binary, or exit with an error if not found."""
     sd = shutil.which("slackdump")
     if not sd:
         print("ERROR: slackdump not found. Install with: brew install slackdump", file=sys.stderr)
@@ -113,8 +116,9 @@ def _ensure_workspace(workspace: str, token: str, cookie: str) -> None:
         )
         sys.exit(1)
 
-    cookie_file = Path(tempfile.mktemp(suffix=".txt"))
-    cookie_file.write_text(cookie)
+    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as tmp:
+        tmp.write(cookie)
+        cookie_file = Path(tmp.name)
     try:
         r = subprocess.run(
             [sd, "workspace", "new", "-no-encryption",
@@ -145,8 +149,7 @@ def _archive_channel(channel_id: str, days: int) -> Path:
     )
 
     # Run for up to 45 s (rate-limited; usually done in < 20 s for 30-day window)
-    import threading
-    def _kill():
+    def _kill() -> None:
         proc.kill()
 
     timer = threading.Timer(45, _kill)
@@ -199,6 +202,7 @@ def _parse_block_table_commits(data_json: str) -> list[str]:
 
 
 def _extract_build_data(db_path: Path) -> list[dict]:
+    """Parse the slackdump SQLite archive and return a list of IIB build records."""
     conn = sqlite3.connect(str(db_path))
     cur  = conn.cursor()
 
@@ -275,8 +279,7 @@ def main() -> None:
     try:
         builds = _extract_build_data(db_path)
     finally:
-        import shutil as _sh
-        _sh.rmtree(db_path.parent, ignore_errors=True)
+        shutil.rmtree(db_path.parent, ignore_errors=True)
 
     if not builds:
         print(

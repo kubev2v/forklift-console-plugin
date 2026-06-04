@@ -20,18 +20,17 @@ description: >-
 3. Checks whether each commit is an ancestor of the latest build tip hashes (fetched
    automatically from the `#mtv-builds` Slack channel via `fetch-build.py`).
 4. **Transitions all `in_build: true` tickets to `ON_QA`** in Jira (transition ID `41`).
-5. Renders an interactive canvas at
-   `~/.cursor/projects/Users-pabreu-forklift-console-plugin/canvases/waiting-for-build.canvas.tsx`.
+5. Renders an interactive canvas (`waiting-for-build.canvas.tsx`) via the canvas skill.
 
 > **Default behaviour:** transition is always performed. If the user explicitly says
 > "just check" or "don't transition", skip step 4.
 
 ## Step 0 — Get build tip hashes automatically from Slack
 
-Run `fetch-build.py` to pull the latest build's commits from the `#mtv-builds` channel:
+Run `fetch-build.py` to pull the latest build's commits from the `#mtv-builds` channel
+(from the repository root):
 
 ```bash
-cd /Users/pabreu/forklift-console-plugin
 python3 .cursor/skills/waiting-for-build/scripts/fetch-build.py
 ```
 
@@ -112,7 +111,6 @@ python3 .cursor/skills/waiting-for-build/scripts/fetch-build.py
 ## Step 1 — Run the query script
 
 ```bash
-cd /Users/pabreu/forklift-console-plugin
 python3 .cursor/skills/waiting-for-build/scripts/query.py [hash1] [hash2] ...
 ```
 
@@ -160,8 +158,12 @@ Key fields:
 For every issue where `in_build: true`, call the Jira transitions API:
 
 ```bash
+# Read credentials from .mcp.json first:
+JIRA_USERNAME=$(python3 -c "import json; d=json.load(open('.mcp.json')); print(d['mcpServers']['jira-mcp']['env']['JIRA_USERNAME'])")
+JIRA_API_TOKEN=$(python3 -c "import json; d=json.load(open('.mcp.json')); print(d['mcpServers']['jira-mcp']['env']['JIRA_API_TOKEN'])")
+
 curl -s -X POST \
-  -u "pabreu@redhat.com:$JIRA_API_TOKEN" \
+  -u "$JIRA_USERNAME:$JIRA_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"transition": {"id": "41"}}' \
   "https://redhat.atlassian.net/rest/api/3/issue/<KEY>/transitions"
@@ -171,13 +173,16 @@ curl -s -X POST \
 Or via Python (using credentials from `.mcp.json`):
 
 ```python
-import requests, base64
-creds = base64.b64encode(b"pabreu@redhat.com:<token>").decode()
+import json, requests
+from base64 import b64encode
+from pathlib import Path
+
+env = json.loads(Path(".mcp.json").read_text())["mcpServers"]["jira-mcp"]["env"]
+creds = b64encode(f"{env['JIRA_USERNAME']}:{env['JIRA_API_TOKEN']}".encode()).decode()
 requests.post(
     f"https://redhat.atlassian.net/rest/api/3/issue/{key}/transitions",
     headers={"Authorization": f"Basic {creds}", "Content-Type": "application/json"},
     json={"transition": {"id": "41"}},
-    verify=False,
 )
 ```
 
@@ -205,9 +210,9 @@ Read the canvas skill (`~/.cursor/skills-cursor/canvas/SKILL.md`) and produce a
 - **Filterable table**: build status (In build / Missing), priority, key, summary, PR link + date, commit hash
 - **Row tones**: `success` for in-build, `warning` for Major-not-in-build, `danger` for Blocker/Critical
 
-Reuse the canvas at
-`~/.cursor/projects/Users-pabreu-forklift-console-plugin/canvases/waiting-for-build.canvas.tsx`
-if it already exists (update in place).
+Reuse the canvas named `waiting-for-build.canvas.tsx` in this workspace's Cursor canvases
+directory if it already exists (update in place). The canvas skill determines the correct
+path for the current workspace automatically.
 
 ## Board & filter constants
 
@@ -226,7 +231,7 @@ if it already exists (update in place).
 
 The script reads from `.mcp.json` → `mcpServers.jira-mcp.env`:
 - `JIRA_URL` — `https://redhat.atlassian.net`
-- `JIRA_USERNAME` — `pabreu@redhat.com`
+- `JIRA_USERNAME` — your Atlassian account email
 - `JIRA_API_TOKEN` — Atlassian Cloud API token
 
 ## Commit-search heuristic
