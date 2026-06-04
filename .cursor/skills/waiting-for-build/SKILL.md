@@ -1,6 +1,5 @@
 ---
 name: waiting-for-build
-disable-model-invocation: true
 description: >-
   Query the active sprint on the Migrations & Networking Frontend Jira board for all
   MTV tickets in the "Waiting on build" column, find their merge commits in the local

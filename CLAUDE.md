@@ -49,6 +49,7 @@ Cursor skills in `.cursor/skills/` contain executable workflows.
 - **i18n/Translation:** `.cursor/skills/i18n-memsource/SKILL.md` - Memsource upload/download workflow
 - **Backend Analysis:** `.cursor/skills/backend-analyzer/SKILL.md` - Analyze Go backend codebase
 - **Type Updates:** `.cursor/skills/types-update/SKILL.md` - Update @forklift-ui/types
+- **Build Tracking:** `.cursor/skills/waiting-for-build/SKILL.md` - Automate QE sprint transition (Waiting for Build → ON_QA)
 
 For full workflow details, read the relevant SKILL.md file.
 

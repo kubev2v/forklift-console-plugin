@@ -154,14 +154,33 @@ def get_waiting_for_build_issues(sprint_id: int, headers: dict, base: str) -> li
 def _git(args: list[str]) -> str:
     """Run a git command in REPO_DIR and return stdout as a stripped string."""
     return subprocess.check_output(
-        ["git"] + args, cwd=REPO_DIR, stderr=subprocess.DEVNULL, text=True
+        ["git", *args], cwd=REPO_DIR, stderr=subprocess.DEVNULL, text=True
     ).strip()
 
 
-def find_merge_commit(ticket_key: str) -> Optional[dict]:
+def _parse_commit_line(line: str) -> Optional[dict]:
+    """Parse a single 'git log --format=%H %ad %s' line into a commit dict, or None."""
+    parts = line.split(" ", 2)
+    if len(parts) < 3:
+        return None
+    full_hash, date, subject = parts[0], parts[1], parts[2]
+    pr_match = re.search(r'\(#(\d+)\)', subject)
+    return {
+        "commit":     full_hash[:7],
+        "merge_date": date,
+        "pr":         int(pr_match.group(1)) if pr_match else None,
+        "subject":    subject,
+    }
+
+
+def find_merge_commit(ticket_key: str, build_tips: Optional[list[str]] = None) -> Optional[dict]:
     """Return the merge commit info for a Jira ticket key, or None.
 
     Uses a whole-word grep so MTV-5 does not accidentally match MTV-50 or MTV-500.
+    When build_tips are provided, prefers the most recent commit that is an
+    ancestor of any build tip — avoiding false negatives when a ticket has
+    multiple commits (e.g., original merge plus a follow-up fix or cherry-pick).
+    Falls back to the first whole-word match if none are build-reachable.
     """
     try:
         out = _git([
@@ -170,19 +189,23 @@ def find_merge_commit(ticket_key: str) -> Optional[dict]:
         ])
         if not out:
             return None
-        # Post-filter to whole-word matches to avoid MTV-5 matching MTV-50, etc.
         pattern = re.compile(rf'\b{re.escape(ticket_key)}\b', re.IGNORECASE)
-        lines = [line for line in out.splitlines() if pattern.search(line)]
-        if not lines:
+        candidates = [
+            _parse_commit_line(line)
+            for line in out.splitlines()
+            if pattern.search(line)
+        ]
+        candidates = [c for c in candidates if c is not None]
+        if not candidates:
             return None
-        parts = lines[0].split(" ", 2)
-        if len(parts) < 3:
-            return None
-        full_hash, date, subject = parts[0], parts[1], parts[2]
-        short_hash = full_hash[:7]
-        pr_match   = re.search(r'\(#(\d+)\)', subject)
-        pr         = int(pr_match.group(1)) if pr_match else None
-        return {"commit": short_hash, "merge_date": date, "pr": pr, "subject": subject}
+
+        # Prefer the most recent commit reachable from the build when tips are known.
+        if build_tips:
+            for candidate in candidates:
+                if check_in_build(candidate["commit"], build_tips):
+                    return candidate
+
+        return candidates[0]
     except subprocess.CalledProcessError:
         return None
 
@@ -217,7 +240,7 @@ def main() -> None:
 
     enriched = []
     for issue in issues:
-        commit_info = find_merge_commit(issue["key"])
+        commit_info = find_merge_commit(issue["key"], build_tips or None)
         in_build: Optional[bool] = None
         if commit_info and build_tips:
             in_build = check_in_build(commit_info["commit"], build_tips)

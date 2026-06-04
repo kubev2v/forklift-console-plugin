@@ -150,6 +150,7 @@ def _archive_channel(channel_id: str, days: int) -> Path:
 
     # Run for up to 45 s (rate-limited; usually done in < 20 s for 30-day window)
     def _kill() -> None:
+        """Terminate the slackdump archive process after the timeout fires."""
         proc.kill()
 
     timer = threading.Timer(45, _kill)
