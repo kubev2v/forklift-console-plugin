@@ -203,60 +203,60 @@ def _parse_block_table_commits(data_json: str) -> list[str]:
 
 def _extract_build_data(db_path: Path) -> list[dict]:
     """Parse the slackdump SQLite archive and return a list of IIB build records."""
-    conn = sqlite3.connect(str(db_path))
-    cur  = conn.cursor()
-
-    # Find all IIB build parent messages, latest first
-    cur.execute(
-        "SELECT TXT, TS, THREAD_TS FROM MESSAGE "
-        "WHERE IS_PARENT = 1 AND TXT LIKE '%IIB %' "
-        "ORDER BY TS DESC LIMIT 10"
-    )
-    parents = [(r[0], r[1], r[2]) for r in cur.fetchall()
-               if IIB_TITLE_RE.search(r[0] or "")]
-
     results: list[dict] = []
-    for txt, ts, thread_ts in parents:
-        title = (txt or "").splitlines()[0].strip()
+    with sqlite3.connect(str(db_path)) as conn:
+        cur = conn.cursor()
 
-        # Fetch all thread replies
+        # Find all IIB build parent messages, latest first
         cur.execute(
-            "SELECT TXT, DATA FROM MESSAGE WHERE THREAD_TS = ? ORDER BY TS",
-            (thread_ts,)
+            "SELECT TXT, TS, THREAD_TS FROM MESSAGE "
+            "WHERE IS_PARENT = 1 AND TXT LIKE '%IIB %' "
+            "ORDER BY TS DESC LIMIT 10"
         )
-        replies = cur.fetchall()
+        parents = [(r[0], r[1], r[2]) for r in cur.fetchall()
+                   if IIB_TITLE_RE.search(r[0] or "")]
 
-        container_sha   = ""
-        plugin_commits: list[str] = []
+        for txt, ts, thread_ts in parents:
+            title = (txt or "").splitlines()[0].strip()
 
-        for reply_txt, reply_data in replies:
-            reply_txt = reply_txt or ""
+            # Fetch all thread replies
+            cur.execute(
+                "SELECT TXT, DATA FROM MESSAGE WHERE THREAD_TS = ? ORDER BY TS",
+                (thread_ts,)
+            )
+            replies = cur.fetchall()
 
-            # Konflux Bundle message contains the full container SHA
-            if not container_sha:
-                m = CONTAINER_RE.search(reply_txt)
-                if m:
-                    container_sha = m.group(1)
+            container_sha   = ""
+            plugin_commits: list[str] = []
 
-            # forklift-console-plugin changes message (block-kit table)
-            if not plugin_commits and "forklift-console-plugin" in reply_txt:
-                if reply_data:
-                    plugin_commits = _parse_block_table_commits(reply_data)
+            for reply_txt, reply_data in replies:
+                reply_txt = reply_txt or ""
 
-        results.append({
-            "build_label":                  title,
-            "ts":                           ts,
-            "console_plugin_commits":       plugin_commits,
-            "mtv_console_plugin_container": container_sha,
-        })
+                # Konflux Bundle message contains the full container SHA
+                if not container_sha:
+                    m = CONTAINER_RE.search(reply_txt)
+                    if m:
+                        container_sha = m.group(1)
 
-    conn.close()
+                # forklift-console-plugin changes message (block-kit table)
+                if not plugin_commits and "forklift-console-plugin" in reply_txt:
+                    if reply_data:
+                        plugin_commits = _parse_block_table_commits(reply_data)
+
+            results.append({
+                "build_label":                  title,
+                "ts":                           ts,
+                "console_plugin_commits":       plugin_commits,
+                "mtv_console_plugin_container": container_sha,
+            })
+
     return results
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    """Parse arguments, fetch the latest build from Slack, and print JSON to stdout."""
     env = _load_mcp_env()
 
     parser = argparse.ArgumentParser(description="Fetch latest MTV build info from Slack")
@@ -296,7 +296,7 @@ def main() -> None:
     output = builds if args.show_all else builds[0]
 
     # Warn if the latest build has no commits — likely a partial/stale archive
-    latest = builds[0] if not args.show_all else (builds[0] if builds else {})
+    latest = builds[0]
     if not latest.get("console_plugin_commits") and not latest.get("mtv_console_plugin_container"):
         print(
             "WARNING: Latest build was found but has no console-plugin commits.\n"

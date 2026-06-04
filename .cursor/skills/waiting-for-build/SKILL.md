@@ -1,5 +1,6 @@
 ---
 name: waiting-for-build
+disable-model-invocation: true
 description: >-
   Query the active sprint on the Migrations & Networking Frontend Jira board for all
   MTV tickets in the "Waiting on build" column, find their merge commits in the local
@@ -236,9 +237,11 @@ The script reads from `.mcp.json` → `mcpServers.jira-mcp.env`:
 
 ## Commit-search heuristic
 
-The script runs `git log --all --grep=<KEY> -i` (case-insensitive). Most commits
-follow `Resolves: MTV-XXXX | title (#PR)` or `MTV-XXXX | title (#PR)`. If a ticket
-has no match, `commit` is `null` — investigate manually with:
+The script runs `git log --all --grep=<KEY> -i` (case-insensitive), then
+post-filters results to **whole-word matches** so that e.g. `MTV-5` does not
+accidentally match `MTV-50` or `MTV-500`. Most commits follow
+`Resolves: MTV-XXXX | title (#PR)` or `MTV-XXXX | title (#PR)`.
+If a ticket has no match, `commit` is `null` — investigate manually with:
 
 ```bash
 git log --all --oneline | grep -i "keyword from summary"
