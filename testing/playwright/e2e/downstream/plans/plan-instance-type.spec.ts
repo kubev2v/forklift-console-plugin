@@ -109,6 +109,7 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
     await wizard.waitForPlanCreation();
 
     const planDetailsPage = new PlanDetailsPage(page);
+    await planDetailsPage.waitForPlanEditable();
     await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
     await planDetailsPage.virtualMachinesTab.enableColumn('Instance type');
 
@@ -126,12 +127,17 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
         createReadyPlan(page, testProvider, resourceManager));
     const { virtualMachinesTab } = planDetailsPage;
 
-    await test.step('Verify initial state, then select and save instance type', async () => {
-      await virtualMachinesTab.openInstanceTypeDialog(vmName);
+    // Open the modal once; both steps operate within the same modal session so we
+    // also verify that the full open → verify → select → save flow works end-to-end.
+    await virtualMachinesTab.openInstanceTypeDialog(vmName);
+
+    await test.step('Verify modal initial state — save disabled before selection', async () => {
       await expect(virtualMachinesTab.editInstanceTypeModal).toBeVisible();
       await expect(virtualMachinesTab.instanceTypeModalSelect).toBeVisible();
       await expect(virtualMachinesTab.instanceTypeModalSaveButton).toBeDisabled();
+    });
 
+    await test.step('Select instance type and save', async () => {
       await virtualMachinesTab.instanceTypeModalSelect.click();
       const listbox = page.getByRole('listbox');
       await expect(listbox).toBeVisible();
@@ -154,8 +160,7 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
         createReadyPlan(page, testProvider, resourceManager));
     const { virtualMachinesTab } = planDetailsPage;
 
-    const picked = await test.step('Set initial instance type', async () =>
-      pickAndSaveNonNoneInstanceType(page, virtualMachinesTab, vmName));
+    const picked = await pickAndSaveNonNoneInstanceType(page, virtualMachinesTab, vmName);
 
     await test.step('Cancel preserves the existing instance type', async () => {
       await virtualMachinesTab.openInstanceTypeDialog(vmName);
@@ -173,9 +178,7 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
         createReadyPlan(page, testProvider, resourceManager));
     const { virtualMachinesTab } = planDetailsPage;
 
-    await test.step('Set initial instance type', async () => {
-      await pickAndSaveNonNoneInstanceType(page, virtualMachinesTab, vmName);
-    });
+    await pickAndSaveNonNoneInstanceType(page, virtualMachinesTab, vmName);
 
     await test.step('Select None and save clears instance type', async () => {
       await virtualMachinesTab.openInstanceTypeDialog(vmName);

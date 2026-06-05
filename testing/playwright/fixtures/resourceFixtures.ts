@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 
-import { type Browser, test as base } from '@playwright/test';
+import { type Browser, type BrowserContext, test as base } from '@playwright/test';
 
 import type { createPlanTestData } from '../types/test-data';
 import { AUTH_FILE } from '../utils/constants';
@@ -20,11 +20,12 @@ import {
   type TestStorageMap,
 } from './helpers/resourceCreationHelpers';
 
-const createAuthenticatedContext = async (browser: Browser) =>
-  browser.newContext({
+const createAuthenticatedContext = async (browser: Browser): Promise<BrowserContext> => {
+  return await browser.newContext({
     ignoreHTTPSErrors: true,
     storageState: existsSync(AUTH_FILE) ? AUTH_FILE : undefined,
   });
+};
 
 export interface FixtureConfig {
   providerScope?: 'test' | 'worker';

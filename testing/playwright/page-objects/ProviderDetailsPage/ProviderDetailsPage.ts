@@ -11,6 +11,9 @@ import { CredentialsTab } from './tabs/CredentialsTab';
 import { DetailsTab } from './tabs/DetailsTab';
 import { VirtualMachinesTab } from './tabs/VirtualMachinesTab';
 
+/** URL navigation timeout after the Create Provider wizard submits — not full K8s reconciliation. */
+const PROVIDER_CREATION_TIMEOUT_MS = 60_000;
+
 export class ProviderDetailsPage {
   private readonly navigation: NavigationHelper;
   public readonly credentialsTab: CredentialsTab;
@@ -185,7 +188,7 @@ export class ProviderDetailsPage {
   async waitForProviderCreation(
     providerName: string,
     namespace: string,
-    timeoutMs = 60000,
+    timeoutMs = PROVIDER_CREATION_TIMEOUT_MS,
   ): Promise<void> {
     try {
       await this.page.waitForURL((url) => this.isProviderDetailsUrl(url, providerName, namespace), {
