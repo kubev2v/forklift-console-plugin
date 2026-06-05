@@ -229,6 +229,7 @@ export class PlanDetailsPage {
     await this.verifyNavigationTabs();
     await this.detailsTab.navigateToDetailsTab();
     await this.detailsTab.verifyDetailsTab(planData);
+    await this.waitForPlanEditable();
     await this.virtualMachinesTab.navigateToVirtualMachinesTab();
     await this.virtualMachinesTab.verifyVirtualMachinesTab(planData);
   }
