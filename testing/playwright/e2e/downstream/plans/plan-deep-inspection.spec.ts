@@ -13,15 +13,22 @@ import {
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
-// Deep inspection creates vSphere snapshots during the inspection process. A leftover
-// snapshot on mtv-func-rhel9 triggers VMHasSnapshots (Critical) on any subsequent warm
-// plan, keeping it in CannotStart. Using mtv-func-win2019 here keeps the two VMs isolated.
+// Deep inspection creates vSphere snapshots during the inspection process. Leftover snapshots
+// trigger VMHasSnapshots (Critical) on any subsequent plan, keeping it in CannotStart.
+//
+// VM ownership map — keep these isolated; each VM must appear in at most one snapshot-creating suite:
+//   mtv-func-rhel9       → migration-happy-path (cold migration)
+//   mtv-func-win2019     → migration-happy-path (cold migration)
+//   mtv-func-rhel9-uefi  → plan-migration-type  (warm migration)
+//   mtv-func-win2022     → plan-deep-inspection  (this file — inspection snapshots)
+//
+// mtv-func-win2022 has no other test consumers and is confirmed snapshot-free in the inventory.
 const test = sharedProviderFixtures.extend<{ testPlan: Awaited<ReturnType<typeof createPlan>> }>({
   testPlan: async ({ page, resourceManager, testProvider }, setValue) => {
     if (!testProvider) throw new Error('testPlan fixture requires testProvider');
     const plan = await createPlan(page, resourceManager, {
       sourceProvider: testProvider,
-      customPlanData: { virtualMachines: [{ folder: 'vm', sourceName: 'mtv-func-win2019' }] },
+      customPlanData: { virtualMachines: [{ folder: 'vm', sourceName: 'mtv-func-win2022' }] },
     });
     await setValue(plan);
   },

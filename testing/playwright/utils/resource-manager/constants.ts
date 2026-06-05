@@ -3,6 +3,10 @@
 export const ELEMENT_TIMEOUT = 15_000;
 export const K8S_RECONCILE_TIMEOUT = 40_000;
 export const PAGE_LOAD_TIMEOUT = 30_000;
+// After plan creation the controller runs VDDK validation, which can surface a
+// transient 'Cannot start' state before the plan reaches 'Ready for migration'.
+// This budget covers that initial validation window end-to-end.
+export const PLAN_READY_TIMEOUT = 5 * 60_000;
 export const MTV_NAMESPACE = 'openshift-mtv';
 
 export const RESOURCE_KINDS = {
