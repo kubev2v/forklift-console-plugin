@@ -94,15 +94,9 @@ export const createResourceFixtures = (
 
                 await use(provider);
 
-                const cleanupContext = await createAuthenticatedContext(browser);
                 const cleanupManager = new ResourceManager();
-
-                try {
-                  cleanupManager.addResource(provider);
-                  await cleanupManager.instantCleanup();
-                } finally {
-                  await cleanupContext.close();
-                }
+                cleanupManager.addResource(provider);
+                await cleanupManager.instantCleanup();
               } catch (error) {
                 throw new Error(`Failed to create or use provider: ${String(error)}`, {
                   cause: error,
