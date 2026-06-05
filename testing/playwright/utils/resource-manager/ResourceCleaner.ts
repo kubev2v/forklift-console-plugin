@@ -2,6 +2,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 import type { BrowserContextOptions, Page } from '@playwright/test';
 
+import { AUTH_FILE } from '../constants';
 import { isEmpty } from '../utils';
 
 import { BaseResourceManager } from './BaseResourceManager';
@@ -203,11 +204,10 @@ export class ResourceCleaner extends BaseResourceManager {
       ignoreHTTPSErrors: true,
     };
 
-    const defaultAuthPath = 'playwright/.auth/user.json';
     if (storageStatePath) {
       contextOptions.storageState = storageStatePath;
-    } else if (existsSync(defaultAuthPath)) {
-      contextOptions.storageState = defaultAuthPath;
+    } else if (existsSync(AUTH_FILE)) {
+      contextOptions.storageState = AUTH_FILE;
     }
 
     const context = await browser.newContext(contextOptions);

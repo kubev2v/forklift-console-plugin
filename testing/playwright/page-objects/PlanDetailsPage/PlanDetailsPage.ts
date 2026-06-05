@@ -325,6 +325,20 @@ export class PlanDetailsPage {
     }
   }
 
+  /**
+   * Waits until the plan reaches a status where VM/plan edits are allowed.
+   * New plans stay in Validating (VDDK check) until reconciliation finishes.
+   */
+  async waitForPlanEditable(): Promise<void> {
+    const statusLabel = this.page
+      .getByTestId('plan-status-container')
+      .getByTestId('plan-status-label');
+    await expect(statusLabel).toHaveText(
+      /Ready for migration|Cannot start|Incomplete|Canceled|Unknown/i,
+      { timeout: K8S_RECONCILE_TIMEOUT },
+    );
+  }
+
   async waitForPlanStatus(expectedStatus: string): Promise<void> {
     const statusLabel = this.page
       .getByTestId('plan-status-container')

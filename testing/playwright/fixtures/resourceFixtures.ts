@@ -1,6 +1,9 @@
-import { type Page, test as base } from '@playwright/test';
+import { existsSync } from 'node:fs';
+
+import { type Browser, test as base } from '@playwright/test';
 
 import type { createPlanTestData } from '../types/test-data';
+import { AUTH_FILE } from '../utils/constants';
 import { ResourceManager } from '../utils/resource-manager/ResourceManager';
 
 import {
@@ -16,6 +19,12 @@ import {
   type TestProvider,
   type TestStorageMap,
 } from './helpers/resourceCreationHelpers';
+
+const createAuthenticatedContext = async (browser: Browser) =>
+  browser.newContext({
+    ignoreHTTPSErrors: true,
+    storageState: existsSync(AUTH_FILE) ? AUTH_FILE : undefined,
+  });
 
 export interface FixtureConfig {
   providerScope?: 'test' | 'worker';
@@ -66,12 +75,12 @@ export const createResourceFixtures = (
       providerScope === 'worker'
         ? ([
             async ({ browser }: { browser: any }, use: any) => {
-              const context = await browser.newContext({ ignoreHTTPSErrors: true });
+              const context = await createAuthenticatedContext(browser);
               const page = await context.newPage();
               const tempResourceManager = new ResourceManager();
 
               try {
-                const provider = await createProvider(page as Page, tempResourceManager, {
+                const provider = await createProvider(page, tempResourceManager, {
                   namePrefix: providerPrefix,
                   skipProviderReadyWait,
                 });
@@ -84,7 +93,7 @@ export const createResourceFixtures = (
 
                 await use(provider);
 
-                const cleanupContext = await browser.newContext({ ignoreHTTPSErrors: true });
+                const cleanupContext = await createAuthenticatedContext(browser);
                 const cleanupManager = new ResourceManager();
 
                 try {

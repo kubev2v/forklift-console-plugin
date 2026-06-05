@@ -1,14 +1,71 @@
-import { expect } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import type { VirtualMachinesTab } from '../../../page-objects/PlanDetailsPage/tabs/VirtualMachinesTab';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
+import type { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 const VM_RHEL = 'mtv-func-rhel9';
 const VM_WIN = 'mtv-func-win2019';
+
+/**
+ * Creates a plan via the wizard, waits for it to become editable, and navigates
+ * to the VMs tab with the Instance type column enabled.
+ *
+ * Calling this in each test makes the tests independent — every test owns its
+ * full setup so `--last-failed` re-runs the whole scenario from scratch.
+ */
+const createReadyPlan = async (
+  page: Page,
+  testProvider: { metadata?: { name?: string } } | undefined,
+  resourceManager: ResourceManager,
+): Promise<{ planDetailsPage: PlanDetailsPage; vmName: string }> => {
+  const testData: PlanTestData = createPlanTestData({
+    sourceProvider: testProvider?.metadata?.name ?? '',
+  });
+  resourceManager.addPlan(testData.planName, testData.planProject);
+
+  const wizard = new CreatePlanWizardPage(page, resourceManager);
+  await wizard.navigate();
+  await wizard.waitForWizardLoad();
+  await wizard.fillAndSubmit(testData);
+
+  const planDetailsPage = new PlanDetailsPage(page);
+  await planDetailsPage.waitForPlanEditable();
+  await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
+  await planDetailsPage.virtualMachinesTab.enableColumn('Instance type');
+
+  const vmName = testData.virtualMachines?.[0]?.sourceName ?? '';
+  return { planDetailsPage, vmName };
+};
+
+/**
+ * Opens the instance-type dialog for a VM, selects the first non-None option,
+ * saves, and waits for the table cell to reflect the change.
+ *
+ * Returns the label of the selected option so callers can assert against it.
+ */
+const pickAndSaveNonNoneInstanceType = async (
+  page: Page,
+  virtualMachinesTab: VirtualMachinesTab,
+  vmName: string,
+): Promise<string> => {
+  await virtualMachinesTab.openInstanceTypeDialog(vmName);
+  await virtualMachinesTab.instanceTypeModalSelect.click();
+  const listbox = page.getByRole('listbox');
+  await expect(listbox).toBeVisible();
+  const secondOption = listbox.getByRole('option').nth(1);
+  const picked = (await secondOption.innerText()).split('\n')[0]?.trim() ?? '';
+  await secondOption.click();
+  await virtualMachinesTab.instanceTypeModalSaveButton.click();
+  await expect(virtualMachinesTab.editInstanceTypeModal).not.toBeVisible();
+  await virtualMachinesTab.waitForVMInstanceType(vmName, picked);
+  return picked;
+};
 
 test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);
@@ -59,33 +116,17 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
     await planDetailsPage.virtualMachinesTab.waitForVMInstanceType(VM_WIN, winLabel);
   });
 
-  test('should edit instance type from plan details VM kebab menu', async ({
+  test('should set instance type from plan details VM kebab menu', async ({
     page,
     testProvider,
     resourceManager,
   }) => {
-    const testData: PlanTestData = createPlanTestData({
-      sourceProvider: testProvider?.metadata?.name ?? '',
-    });
-    resourceManager.addPlan(testData.planName, testData.planProject);
+    const { planDetailsPage, vmName } =
+      await test.step('Create plan and navigate to VMs tab', async () =>
+        createReadyPlan(page, testProvider, resourceManager));
+    const { virtualMachinesTab } = planDetailsPage;
 
-    await test.step('Create plan via wizard', async () => {
-      const wizard = new CreatePlanWizardPage(page, resourceManager);
-      await wizard.navigate();
-      await wizard.waitForWizardLoad();
-      await wizard.fillAndSubmit(testData);
-    });
-
-    const planDetailsPage = new PlanDetailsPage(page);
-    await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
-    await planDetailsPage.virtualMachinesTab.enableColumn('Instance type');
-
-    const vmName = testData.virtualMachines?.[0]?.sourceName ?? '';
-
-    let picked = '';
-
-    await test.step('Set instance type from modal', async () => {
-      const { virtualMachinesTab } = planDetailsPage;
+    await test.step('Verify initial state, then select and save instance type', async () => {
       await virtualMachinesTab.openInstanceTypeDialog(vmName);
       await expect(virtualMachinesTab.editInstanceTypeModal).toBeVisible();
       await expect(virtualMachinesTab.instanceTypeModalSelect).toBeVisible();
@@ -95,15 +136,28 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
       const listbox = page.getByRole('listbox');
       await expect(listbox).toBeVisible();
       const secondOption = listbox.getByRole('option').nth(1);
-      picked = (await secondOption.innerText()).split('\n')[0]?.trim() ?? '';
+      const picked = (await secondOption.innerText()).split('\n')[0]?.trim() ?? '';
       await secondOption.click();
       await virtualMachinesTab.instanceTypeModalSaveButton.click();
       await expect(virtualMachinesTab.editInstanceTypeModal).not.toBeVisible();
       await virtualMachinesTab.waitForVMInstanceType(vmName, picked);
     });
+  });
 
-    await test.step('Cancel discards changes', async () => {
-      const { virtualMachinesTab } = planDetailsPage;
+  test('should cancel instance type modal without saving changes', async ({
+    page,
+    testProvider,
+    resourceManager,
+  }) => {
+    const { planDetailsPage, vmName } =
+      await test.step('Create plan and navigate to VMs tab', async () =>
+        createReadyPlan(page, testProvider, resourceManager));
+    const { virtualMachinesTab } = planDetailsPage;
+
+    const picked = await test.step('Set initial instance type', async () =>
+      pickAndSaveNonNoneInstanceType(page, virtualMachinesTab, vmName));
+
+    await test.step('Cancel preserves the existing instance type', async () => {
       await virtualMachinesTab.openInstanceTypeDialog(vmName);
       await virtualMachinesTab.instanceTypeModalSelect.click();
       await page.getByRole('option', { name: /^None/ }).click();
@@ -111,9 +165,19 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
       await expect(virtualMachinesTab.editInstanceTypeModal).not.toBeVisible();
       await virtualMachinesTab.waitForVMInstanceType(vmName, picked);
     });
+  });
 
-    await test.step('Clear instance type to None', async () => {
-      const { virtualMachinesTab } = planDetailsPage;
+  test('should clear instance type to None', async ({ page, testProvider, resourceManager }) => {
+    const { planDetailsPage, vmName } =
+      await test.step('Create plan and navigate to VMs tab', async () =>
+        createReadyPlan(page, testProvider, resourceManager));
+    const { virtualMachinesTab } = planDetailsPage;
+
+    await test.step('Set initial instance type', async () => {
+      await pickAndSaveNonNoneInstanceType(page, virtualMachinesTab, vmName);
+    });
+
+    await test.step('Select None and save clears instance type', async () => {
       await virtualMachinesTab.openInstanceTypeDialog(vmName);
       await virtualMachinesTab.instanceTypeModalSelect.click();
       await page.getByRole('option', { name: /^None/ }).click();
