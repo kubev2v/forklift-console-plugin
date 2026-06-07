@@ -40,10 +40,33 @@ PR_LABELS=$(config_get '.workflow.prLabels | join(",")')
 STALE_THRESHOLD_DAYS=$(config_get '.workflow.staleWaitingDays')
 
 # Personal secrets (not in config -- per-developer)
+# Parsed as key-value text instead of sourced as bash to prevent command injection.
 CREDS_FILE="${HOME}/.jira-creds"
+ALLOWED_KEYS="JIRA_BASE_URL JIRA_EMAIL JIRA_API_TOKEN JIRA_ASSIGNEE_ID"
+
 if [[ -f "$CREDS_FILE" ]]; then
-  source "$CREDS_FILE"
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    [[ "$line" =~ ^[[:space:]]*# ]] && continue
+    [[ -z "${line// /}" ]] && continue
+
+    if [[ "$line" =~ ^[[:space:]]*(export[[:space:]]+)?([A-Za-z_][A-Za-z0-9_]*)=(.*)$ ]]; then
+      key="${BASH_REMATCH[2]}"
+      val="${BASH_REMATCH[3]}"
+      val="${val#\"}" ; val="${val%\"}"
+      val="${val#\'}" ; val="${val%\'}"
+
+      if [[ " $ALLOWED_KEYS " != *" $key "* ]]; then
+        echo "WARNING: unexpected key '$key' in $CREDS_FILE (ignored)" >&2
+        continue
+      fi
+
+      export "$key=$val"
+    else
+      echo "WARNING: malformed line in $CREDS_FILE (ignored): ${line:0:40}" >&2
+    fi
+  done < "$CREDS_FILE"
 fi
+
 export JIRA_EMAIL="${JIRA_EMAIL:-}"
 export JIRA_API_TOKEN="${JIRA_API_TOKEN:-}"
 export JIRA_ASSIGNEE_ID="${JIRA_ASSIGNEE_ID:-}"

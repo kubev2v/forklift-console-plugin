@@ -54,6 +54,12 @@ Find your account ID: go to your Jira profile, the URL contains `/people/<accoun
 
 To generate an API token, visit: https://id.atlassian.com/manage-profile/security/api-tokens
 
+**Security note:** The credentials file is parsed as key-value text, not
+sourced as bash. Only three keys are accepted: `JIRA_EMAIL`,
+`JIRA_API_TOKEN`, `JIRA_ASSIGNEE_ID`. Lines with unrecognized keys or
+malformed syntax are ignored with a warning. This prevents command injection
+if the file is tampered with.
+
 ### Verify Jira access
 
 ```bash
