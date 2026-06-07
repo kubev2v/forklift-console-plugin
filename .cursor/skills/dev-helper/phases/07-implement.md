@@ -118,7 +118,36 @@ If any verification step (7.3-7.5) fails:
 If still failing after 3 attempts, interrupt the user with the error details
 and ask for guidance.
 
-### 7.7 Advance phase
+### 7.7 Re-evaluation check
+
+During implementation, if you discover the root cause from Phase 2 was wrong
+or the design approach doesn't work:
+
+1. Check the re-evaluation count:
+```bash
+REEVAL_COUNT=$(.cursor/skills/dev-helper/scripts/state-cli.sh field ${TICKET_KEY} '.reevaluation.count // 0')
+```
+
+2. If `REEVAL_COUNT < 2`: record the reason and loop back to investigate:
+```bash
+NEXT_COUNT=$((REEVAL_COUNT + 1))
+.cursor/skills/dev-helper/scripts/state-cli.sh set ${TICKET_KEY} \
+  --argjson count "$NEXT_COUNT" \
+  --arg reason "<why the root cause was wrong>" \
+  --arg from "implement" \
+  '.reevaluation = { count: $count, reason: $reason, from: $from }'
+
+.cursor/skills/dev-helper/scripts/state-cli.sh phase --force ${TICKET_KEY} investigate
+```
+Then read and follow `phases/02-investigate.md` with the new findings.
+
+3. If `REEVAL_COUNT >= 2`: stop and ask the user. Two re-evaluation cycles
+   have already failed — a human must decide whether to continue, re-scope,
+   or abandon.
+
+If the root cause is confirmed correct, proceed normally.
+
+### 7.8 Advance phase
 
 ```bash
 .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} verify

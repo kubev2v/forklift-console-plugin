@@ -57,7 +57,18 @@ If tests fail:
 
 If still failing after 3 attempts, interrupt the user with error details.
 
-### 8.5 Advance phase
+### 8.5 Re-evaluation check
+
+If test failures reveal the root cause or approach was fundamentally wrong
+(not just a test bug), follow the same re-evaluation protocol as Phase 7:
+
+1. Check `.reevaluation.count` — if < 2, record reason and loop back to
+   Phase 2 (investigate) with `--force`.
+2. If >= 2, stop and ask the user.
+
+See step 7.7 in `phases/07-implement.md` for the full protocol.
+
+### 8.6 Advance phase
 
 If the change affects a user-visible UI flow, advance to E2E testing:
 ```bash

@@ -224,6 +224,7 @@ cmd_init() {
       learn: { status: "none", committedAt: null },
       complexity: null,
       workSize: null,
+      reevaluation: { count: 0, reason: null, from: null },
       history: []
     }')
 

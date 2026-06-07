@@ -306,7 +306,21 @@ For Bug tickets, Reproduce (Phase 4) is **NEVER skippable**, even when
 fast-tracking. If the cluster is unavailable, the agent MUST ask the user
 before proceeding -- never skip silently.
 
-### 8. Waiting behavior
+### 8. Re-evaluation loop
+
+If during Phase 7 (Implement) or Phase 8 (Verify) the agent discovers the
+root cause from investigation was wrong or the design approach doesn't work,
+the pipeline can loop back to Phase 2 (Investigate) with new findings.
+
+- **Max 2 re-evaluation cycles.** Tracked in `.reevaluation.count`.
+- On the third failure, the agent must stop and ask the user.
+- The backward transition uses `--force` to bypass normal phase ordering.
+- The existing branch and partial implementation are preserved — the agent
+  re-investigates with the knowledge gained from the failed attempt.
+
+See steps 7.7 and 8.5 in the respective phase files for the full protocol.
+
+### 9. Waiting behavior
 
 When a ticket enters a **waiting state** (no agent action possible), the agent
 marks it and stops:
