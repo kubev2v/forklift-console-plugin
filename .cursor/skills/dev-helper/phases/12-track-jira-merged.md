@@ -128,24 +128,65 @@ if [[ -n "$PARENT_EPIC" ]]; then
 fi
 ```
 
-### 12.7 Advance to done
+### 12.7 Generate consolidated report
+
+Write a summary of the entire ticket lifecycle to disk. This makes
+retrospectives, standups, and handoffs easier — one file per ticket.
+
+```bash
+STATE_CLI=".cursor/skills/dev-helper/scripts/state-cli.sh"
+STATE_DIR=".cursor/skills/dev-helper/state/${TICKET_KEY}"
+
+TYPE=$($STATE_CLI field ${TICKET_KEY} '.type')
+STARTED=$($STATE_CLI field ${TICKET_KEY} '.startedAt')
+MERGED=$($STATE_CLI field ${TICKET_KEY} '.pr.mergedAt')
+PR_NUM=$($STATE_CLI field ${TICKET_KEY} '.prNumber')
+PR_URL=$($STATE_CLI field ${TICKET_KEY} '.prUrl')
+ROOT_CAUSE=$($STATE_CLI field ${TICKET_KEY} '.investigation.rootCause // "N/A"')
+LEARN_STATUS=$($STATE_CLI field ${TICKET_KEY} '.learn.status // "none"')
+COMPLEXITY=$($STATE_CLI field ${TICKET_KEY} '.complexity // "N/A"')
+WORK_SIZE=$($STATE_CLI field ${TICKET_KEY} '.workSize // "N/A"')
+SKIPPED=$($STATE_CLI field ${TICKET_KEY} '.skippedPhases // [] | join(", ")')
+PHASES=$($STATE_CLI field ${TICKET_KEY} '[.history[].phase] | join(" → ")')
+```
+
+Write the summary using the template below:
+
+```text
+File: .cursor/skills/dev-helper/state/${TICKET_KEY}/summary.md
+```
+
+Template:
+
+```markdown
+# ${TICKET_KEY} Summary
+
+**Type:** ${TYPE} | **Complexity:** ${COMPLEXITY} | **Work size:** ${WORK_SIZE}
+**Started:** ${STARTED} | **Merged:** ${MERGED}
+**PR:** #${PR_NUM} (${PR_URL})
+
+## Root Cause
+${ROOT_CAUSE}
+
+## Phases
+${PHASES}
+
+## Skipped Phases
+${SKIPPED or "None"}
+
+## Learn Status
+${LEARN_STATUS}
+```
+
+### 12.8 Advance to done
 
 ```bash
 .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} done
 ```
 
-Present final summary:
+Present the summary from step 12.7 in chat as the final ticket report.
 
-```text
-## Ticket Complete: ${TICKET_KEY}
-
-**PR:** ${PR_URL}
-**Story Points:** <points>
-**Jira Status:** Modified/Closed
-**Duration:** <elapsed time>
-```
-
-### 12.8 What's Next
+### 12.9 What's Next
 
 After completing this ticket, check for other active work:
 
