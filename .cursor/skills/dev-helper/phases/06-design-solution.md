@@ -68,22 +68,37 @@ details page, tips panel, icons, lists, filters, mappings, plans, etc.
 
 ### 6.5 Create the plan
 
-Use Cursor's `CreatePlan` tool (or markdown in chat if unavailable) with this
-structure:
+Use Cursor's `CreatePlan` tool (or markdown in chat if unavailable). The design
+**must** follow this template -- do not deviate from the section structure:
 
-1. **Issue summary**: Clear, concise description of the problem or feature
-2. **Root cause / feature description**: From investigation
-3. **Approach**: What approach was chosen and WHY
-4. **Architecture**: Component structure, data flow, API integration
-5. **Decision tree**: For any ambiguous decisions, list the options considered
-   and the rationale for the chosen path. **If unsure about any decision, ASK
-   the user -- do not assume.**
-6. **Scope**: Explicit list of what IS and IS NOT included in this change
-7. **File changes**: Specific files and what changes in each
-8. **Test plan**: What tests to write and what they verify
-9. **Todos**: Actionable implementation steps
+```markdown
+# Design: ${TICKET_KEY} -- [short title]
 
-The plan should reference specific file paths and code snippets.
+## Problem (2-3 sentences)
+[What is wrong or what is being added. Not the solution -- the problem.]
+
+## Approach
+[What will change and why this approach was chosen over alternatives.
+ Reference specific file paths and code snippets.]
+
+## Files Affected
+[From blast radius analysis. Specific paths, not vague areas.
+ For each file: what changes and why.]
+
+## Decision Tree
+[Options considered. For each: what it is, pros, cons, chosen/rejected.
+ If any branch is unresolved -- STOP and ask the user.]
+
+## Scope
+**In scope:** [explicit list]
+**Out of scope:** [explicit list]
+
+## Test Plan
+[What tests to write. What they verify. Edge cases to cover.]
+
+## Risks / Trade-offs
+[What are we giving up? What could go wrong?]
+```
 
 **HARD CONSTRAINT**: If the decision tree has unresolved branches (the agent
 is uncertain which path to take), the plan MUST stop and ask the user before
@@ -91,16 +106,24 @@ proceeding. Do not assume the answer.
 
 ### 6.6 Present for approval
 
-The plan is presented to the user via `CreatePlan`. If the `CreatePlan` tool is
-not available, present the plan as markdown in chat.
+Present the design using the template above. If findings were identified
+during the design review, classify each one:
 
-If this phase is gated (in `phases.gates` config), wait for:
+- **REQUIRED** -- must be resolved before implementation begins
+- **SUGGESTED** -- advisory, user decides
+- **POSITIVE** -- something done well (reinforces good patterns)
 
-- **Approved** -> Store plan file path in state, advance to Phase 7
-- **Changes requested** -> Iterate on the plan
-- **Rejected** -> Redesign from a different angle
+If this phase is gated (in `phases.gates` config), present the approval prompt:
 
-If not gated, present the plan as FYI and auto-advance.
+```
+A) Approve -- proceed to implement
+B) Revise -- provide specific feedback; design will be updated
+C) Reject -- return to investigate or re-scope the ticket
+```
+
+Do not interpret silence as approval. Wait for an explicit choice.
+
+If not gated, present the design as FYI (with any findings) and auto-advance.
 
 ### 6.7 Save design artifact
 
@@ -110,8 +133,7 @@ Write the full design plan to the ticket's artifact folder:
 File: .cursor/skills/dev-helper/state/${TICKET_KEY}/design.md
 ```
 
-Content: the complete plan from step 6.5 (issue summary, approach, architecture,
-decision tree, scope, file changes, test plan, todos). Use the Write tool.
+Content: the design following the template from step 6.5. Use the Write tool.
 
 ### 6.8 Advance phase
 
