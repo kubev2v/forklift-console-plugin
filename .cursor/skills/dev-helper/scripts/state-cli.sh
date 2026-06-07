@@ -303,7 +303,7 @@ validate_transition() {
       has_field '.pr.mergedAt' || errors+=("Missing state field: .pr.mergedAt (PR must be merged first)")
       ;;
     track-jira-merged)
-      if [[ "$learn_status" != "learned" && "$learn_status" != "reviewed-skipped" && "$learn_status" != "skipped" ]]; then
+      if [[ "$learn_status" != "learned" && "$learn_status" != "reviewed-skipped" ]]; then
         errors+=("Learn phase not completed: .learn.status is '${learn_status}' (must be 'learned' or 'reviewed-skipped')")
       fi
       ;;

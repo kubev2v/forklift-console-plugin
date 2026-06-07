@@ -1,6 +1,6 @@
 # Phase 11: Monitor PR
 
-**Gate:** Auto-fix CI/review issues; learn on approval; advance on merge
+**Gate:** Auto-fix CI/review issues; learn before merge; advance on merge
 
 Monitors the PR for CI failures, review comments, and merge readiness. Uses
 an ordered action loop to handle all fixable criteria before marking as
@@ -83,7 +83,7 @@ LEARN_STATUS=$(.cursor/skills/dev-helper/scripts/state-cli.sh field ${TICKET_KEY
 - If `LEARN_STATUS` is `none` or missing: advance to `learn` phase.
 
 ```bash
-if [[ "$LEARN_STATUS" == "learned" || "$LEARN_STATUS" == "reviewed-skipped" || "$LEARN_STATUS" == "skipped" ]]; then
+if [[ "$LEARN_STATUS" == "learned" || "$LEARN_STATUS" == "reviewed-skipped" ]]; then
   .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} track-jira-merged
   # Proceed to Phase 12. Read and follow phases/12-track-jira-merged.md.
 else
@@ -279,7 +279,7 @@ When the PR is ready to merge (all criteria pass):
 
    # If no learnings needed (nothing new to capture):
    .cursor/skills/dev-helper/scripts/state-cli.sh set ${TICKET_KEY} \
-     '.learn.status = "skipped"'
+     '.learn.status = "reviewed-skipped"'
    ```
 
 5. **Notify user** the PR is ready to merge (with learnings included).
@@ -343,7 +343,7 @@ Check learn status before advancing (same logic as Priority 1):
 ```bash
 LEARN_STATUS=$(.cursor/skills/dev-helper/scripts/state-cli.sh field ${TICKET_KEY} '.learn.status // "none"')
 
-if [[ "$LEARN_STATUS" == "learned" || "$LEARN_STATUS" == "reviewed-skipped" || "$LEARN_STATUS" == "skipped" ]]; then
+if [[ "$LEARN_STATUS" == "learned" || "$LEARN_STATUS" == "reviewed-skipped" ]]; then
   .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} track-jira-merged
   # Proceed to Phase 12. Read and follow phases/12-track-jira-merged.md.
 else

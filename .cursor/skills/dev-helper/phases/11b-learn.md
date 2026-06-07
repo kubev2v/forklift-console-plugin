@@ -163,9 +163,15 @@ $STATE_CLI phase ${TICKET_KEY} track-jira-merged
 
 ## Backward Compatibility
 
-State files with `learn.status = "skipped"` (old value) are treated as
-`reviewed-skipped` for routing purposes. The old value should not be written
-by new code.
+State files with `learn.status = "skipped"` (old value from earlier versions)
+are no longer accepted by `validate_transition()`. If you encounter an old
+state file with this value, update it manually using:
+
+```bash
+.cursor/skills/dev-helper/scripts/state-cli.sh set MTV-XXXX '.learn.status = "reviewed-skipped"'
+```
+
+Or use `--force` to advance past the validation.
 
 ## Completion Checklist
 

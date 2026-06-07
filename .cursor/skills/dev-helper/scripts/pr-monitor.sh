@@ -202,12 +202,12 @@ echo "Unresolved Threads: ${unresolved}"
 echo "Learn: ${learn_status}"
 
 learn_ready="false"
-if [[ "$learn_status" == "learned" || "$learn_status" == "skipped" ]]; then
+if [[ "$learn_status" == "learned" || "$learn_status" == "reviewed-skipped" ]]; then
   learn_ready="true"
 fi
 
 if [[ "$merged" == "true" ]]; then
-  if [[ "$learn_status" == "learned" || "$learn_status" == "reviewed-skipped" || "$learn_status" == "skipped" ]]; then
+  if [[ "$learn_status" == "learned" || "$learn_status" == "reviewed-skipped" ]]; then
     echo "STATUS: MERGED"
   else
     echo "STATUS: LEARN_PENDING"

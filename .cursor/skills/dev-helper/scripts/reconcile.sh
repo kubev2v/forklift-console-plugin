@@ -46,7 +46,7 @@ check_pr_merged() {
     local learn_status
     learn_status=$(jq -r '.learn.status // "none"' "$SCRIPT_DIR/../state/$ticket/state.json" 2>/dev/null || echo "none")
 
-    if [[ "$learn_status" == "learned" || "$learn_status" == "reviewed-skipped" || "$learn_status" == "skipped" ]]; then
+    if [[ "$learn_status" == "learned" || "$learn_status" == "reviewed-skipped" ]]; then
       "$STATE_CLI" phase "$ticket" track-jira-merged 2>/dev/null
       add_report "${ticket}: PR #${pr_number} merged -> Jira auto-transitioned, phase -> track-jira-merged"
     else
