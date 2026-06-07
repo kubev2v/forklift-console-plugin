@@ -13,6 +13,20 @@ waiting. Includes a Learn sub-step on approval.
 - PR created and Jira updated (Phase 10)
 - State file has `prUrl` and `prNumber`
 
+## Standalone Mode
+
+This phase can be invoked standalone (outside the dev-helper lifecycle) via
+the `personal-pr-monitor` skill. In standalone mode:
+
+- **Skip** all `state-cli.sh phase` and `state-cli.sh wait` commands
+- **Skip** the Learn sub-step (Priority 5) and Learn gate in merge criteria
+- **Run** the action loop (sections 11.1 through 11.7) for monitoring, rebase,
+  CI fix, and review reply actions
+- **Report** the status and actions taken to the user without advancing state
+
+Standalone mode is useful for ad-hoc "check my PR" requests and for batch
+monitoring without requiring a full dev-helper ticket lifecycle.
+
 ## Monitoring Modes
 
 ### Manual trigger
