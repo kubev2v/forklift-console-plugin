@@ -46,6 +46,7 @@
     "e2e:console": "bash ./ci/deploy-console.sh",
     "e2e:pre-test": "npm run e2e:cluster && npm run e2e:build && npm run e2e:deployCrds && npm run e2e:console",
     "knip": "knip",
+    "test:scripts": "bats .cursor/skills/dev-helper/scripts/__tests__/",
     "validate-commits": "bash ./scripts/validate-commits.sh --verbose",
     "validate-commits-range": "bash ./scripts/validate-commits.sh --range",
     "postinstall": "husky"
