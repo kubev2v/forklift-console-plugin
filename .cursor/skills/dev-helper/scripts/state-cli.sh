@@ -222,6 +222,8 @@ cmd_init() {
       design: { planFile: null, approvedAt: null },
       pr: { createdAt: null, mergedAt: null, ciStatus: null, lastChecked: null },
       learn: { status: "none", committedAt: null },
+      complexity: null,
+      workSize: null,
       history: []
     }')
 

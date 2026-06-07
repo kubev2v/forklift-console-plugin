@@ -99,7 +99,36 @@ Never hardcode the sprint name -- it changes every 3 weeks.
 | 13 | L | Complex (new area / research / complex impl) | 4-7 days |
 | 21 | XL | Too big, should be broken into smaller tasks | >1 week |
 
-Calculation inputs: elapsed time (Assigned -> PR merged), investigation depth, implementation complexity.
+Calculation inputs: elapsed time (Assigned -> PR merged), investigation depth, work size.
+
+---
+
+## Complexity Classification
+
+Set during Phase 1 (Triage). Two independent axes.
+
+### Axis 1: Certainty (drives pipeline behavior)
+
+| Level | Definition | Fast-track | Design phase | Investigation depth |
+|-------|-----------|-----------|-------------|-------------------|
+| clear | Solution known from ticket. Done this type before. | Auto-eligible | Skippable (user prompted if gated) | Minimal |
+| complicated | Need investigation. Deterministic once understood. | Standard criteria | Per config | Full |
+| complex | Solution shape unknown. Requirements may emerge. | Forbidden | Always mandatory | Full + Architect |
+
+Default: `complicated`.
+
+### Axis 2: Work Size (informational, drives estimation)
+
+| Level | Definition | Rough SP mapping |
+|-------|-----------|-----------------|
+| small | 1-3 files, single area | 2-5 |
+| medium | 4-10 files, crosses boundaries | 5-8 |
+| large | 10+ files, multiple features | 8-21 |
+
+Default: `medium`.
+
+Work size does not change pipeline behavior. It helps Phase 5 set story
+points and guides sprint assignment.
 
 ---
 

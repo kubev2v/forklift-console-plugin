@@ -99,6 +99,40 @@ gh pr view <PR_NUMBER> --repo kubev2v/forklift --json state,mergeable
 - **Too broad**: recommend splitting
 - **Too vague**: needs info
 
+### 1.8b Classify complexity
+
+Assess two independent dimensions and store in state:
+
+**Certainty** -- how confident are you about the solution path?
+
+| Level | Definition | Signal |
+|-------|-----------|--------|
+| `clear` | Solution obvious from the ticket. Known pattern, done before. | Agent can describe the fix after reading the ticket, before any code search. |
+| `complicated` | Need investigation first, but solution will be deterministic once understood. | Agent needs to read code, trace data flows, or understand behavior before proposing a fix. |
+| `complex` | Solution shape unknown. Requirements may shift as we build. May need prototyping. | Agent cannot predict the solution even after investigation. Multiple experts would disagree on approach. |
+
+Examples:
+- **clear**: Fix typo in i18n key. Missing null check. PatternFly enum update. Add a new provider type (12-step checklist in providers.mdc). Add a field to storage map details (known pattern).
+- **complicated**: Plan status shows Ready but migration fails -- need to trace getPlanStatus. Validation doesn't catch duplicates -- need to find where checks live. Performance regression -- need to profile.
+- **complex**: New conversion/inspection UX for an unfamiliar CRD. Redesign wizard for a new migration type. Integrate with a system whose API is still evolving.
+
+**Work size** -- estimated implementation scope (independent of certainty):
+
+| Level | Definition |
+|-------|-----------|
+| `small` | 1-3 files, single component/area |
+| `medium` | 4-10 files, crosses component boundaries |
+| `large` | 10+ files, multiple features affected |
+
+Default to `complicated` / `medium` when uncertain.
+
+```bash
+.cursor/skills/dev-helper/scripts/state-cli.sh set ${TICKET_KEY} \
+  --arg c "<clear|complicated|complex>" \
+  --arg w "<small|medium|large>" \
+  '.complexity = $c | .workSize = $w'
+```
+
 ### 1.9 Present triage outcome
 
 Present the result. For **valid** outcomes, proceed automatically. For
@@ -114,6 +148,8 @@ confirmation** before closing or transitioning.
 **Duplicates found:** None / MTV-XXXX
 **Backend blockers:** None / MTV-XXXX PR #NNN
 **Scope:** Appropriate / Too broad
+**Certainty:** clear / complicated / complex
+**Work size:** small / medium / large
 ```
 
 | Outcome | Action |

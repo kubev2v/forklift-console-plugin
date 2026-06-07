@@ -258,35 +258,47 @@ from `reproduce` through `jira-track` directly to `implement`.
 **Fast-track always includes Reproduce (Phase 4) and Jira Track (Phase 5).**
 Visual evidence is mandatory for bugs; sprint/points must always be set.
 
+**HARD CONSTRAINT -- Complexity overrides:**
+
+The `.complexity` field (set during Phase 1 Triage) determines fast-track
+eligibility:
+
+| Certainty | Fast-track | Design phase | Investigation depth |
+|-----------|-----------|-------------|-------------------|
+| `clear` | Auto-qualifies. If `design` is in `phases.gates`, prompt user: "This is a clear-certainty ticket. Skip design gate?" | Skippable (user prompted if gated) | Minimal -- confirm fix location |
+| `complicated` | Standard criteria (see below) | Per config (default: gated) | Full -- trace data flows, blast radius |
+| `complex` | **FORBIDDEN** | **Always mandatory** regardless of `phases.gates` | Full + Architect blast-radius analysis |
+
 **HARD CONSTRAINT -- Gates override fast-track:**
 
-Phases listed in `phases.gates` config can NEVER be skipped by fast-track.
-If `design` is in `gates`, the agent MUST run the design phase even when
-all other fast-track criteria are met. Fast-track only skips phases that
-are NOT gated.
+Phases listed in `phases.gates` config can NEVER be skipped by fast-track
+unless the user explicitly approves (only prompted for `clear` tickets).
+For `complicated` and `complex` tickets, gates are always honored.
 
 **Criteria for fast-tracking** (ALL must be true):
 
+- `.complexity` is `clear` (set in Phase 1), OR `.complexity` is
+  `complicated` AND all criteria below also pass
 - Root cause is immediately obvious from code inspection
-- Fix is a small, isolated change (1-3 files at most)
 - No design decisions or trade-offs to evaluate
 - No ambiguity about the correct behavior
 - The phases being skipped are NOT in the `phases.gates` config
+  (unless user approved skipping for a `clear` ticket)
 
 **When fast-tracking:**
 
 1. Complete the investigation phase as normal
 2. Proceed through reproduce (Phase 4)
 3. Proceed through jira-track (Phase 5) -- set sprint, points, fix version
-4. Skip to `implement` only if `design` is NOT gated:
+4. Skip to `implement` only if `design` is NOT gated (or user approved skip):
    ```bash
    .cursor/skills/dev-helper/scripts/state-cli.sh set ${TICKET_KEY} \
      --argjson skipped '["ask-more-info","design"]' \
      '.skippedPhases = $skipped'
    .cursor/skills/dev-helper/scripts/state-cli.sh phase ${TICKET_KEY} implement
    ```
-   If `design` IS in `phases.gates`, skip only `ask-more-info` and proceed
-   to `design` normally.
+   If `design` IS in `phases.gates` and user did not approve skip, skip only
+   `ask-more-info` and proceed to `design` normally.
 
 **HARD CONSTRAINT -- Bugs require visual evidence:**
 
@@ -310,21 +322,21 @@ work on, or resume this one later."
 
 ## Phase Summary
 
-| # | Phase | Gate (default) | Fast-track |
-|---|-------|---------------|------------|
-| 1 | Triage (+ claim) | Auto-recap (gate destructive) | Required |
-| 2 | Investigate | Auto-recap | Required |
-| 3 | Ask More Info | Waiting (optional) | Skipped |
-| 4 | Reproduce | Auto-recap (mandatory for bugs) | Required |
-| 5 | Jira Track | Auto-recap | Required |
-| 6 | Design Solution | **GATED** (configurable) | Skipped |
-| 7 | Implement | Auto-retry 3x | Required |
-| 8 | Verify (unit tests) | Auto-retry 3x | Required |
-| 9 | E2E Test | Skip if no cluster | Required |
-| 10 | Send PR | Autonomous (send-pr.sh) | Required |
-| 11 | Monitor PR | Auto-fix + merge | Required |
-| 11b | Learn | **HARD CONSTRAINT** (never skippable) | Required |
-| 12 | Post-Merge Jira | Autonomous (reconcile.sh) | Required |
+| # | Phase | Gate (default) | Fast-track | Complexity effect |
+|---|-------|---------------|------------|-------------------|
+| 1 | Triage (+ claim) | Auto-recap (gate destructive) | Required | Sets `.complexity` + `.workSize` |
+| 2 | Investigate | Auto-recap | Required | clear: minimal depth; complex: full + Architect |
+| 3 | Ask More Info | Waiting (optional) | Skipped | |
+| 4 | Reproduce | Auto-recap (mandatory for bugs) | Required | |
+| 5 | Jira Track | Auto-recap | Required | `.workSize` informs story points |
+| 6 | Design Solution | **GATED** (configurable) | Skipped | complex: always mandatory |
+| 7 | Implement | Auto-retry 3x | Required | |
+| 8 | Verify (unit tests) | Auto-retry 3x | Required | |
+| 9 | E2E Test | Skip if no cluster | Required | |
+| 10 | Send PR | Autonomous (send-pr.sh) | Required | |
+| 11 | Monitor PR | Auto-fix + merge | Required | |
+| 11b | Learn | **HARD CONSTRAINT** (never skippable) | Required | |
+| 12 | Post-Merge Jira | Autonomous (reconcile.sh) | Required | |
 
 **Gating:** Only phases in `phases.gates` config block for approval. Default:
 `["design"]`. All other phases auto-recap and continue.
