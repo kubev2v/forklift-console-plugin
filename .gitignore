@@ -46,6 +46,7 @@ testing/locales/
 # Dev-helper skill runtime data (user-specific, not committed)
 .cursor/skills/dev-helper/dev-helper.config.json
 .cursor/skills/dev-helper/state/*/
+.cursor/skills/dev-helper/audit/
 .cursor/skills/dev-helper/summaries/*.md
 .cursor/skills/dev-helper/summaries/*.html
 

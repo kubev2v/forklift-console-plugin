@@ -340,6 +340,9 @@ cmd_phase() {
   local now
   now=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
+  local prev_phase
+  prev_phase=$(jq -r '.phase' "$file")
+
   local updated
   updated=$(jq \
     --arg phase "$phase" \
@@ -347,6 +350,31 @@ cmd_phase() {
     '.phase = $phase | .history += [{ phase: $phase, at: $now }]' \
     "$file")
   atomic_write "$file" "$updated"
+
+  append_audit "$key" "$prev_phase" "$phase" "$now"
+}
+
+append_audit() {
+  local key="$1" from="$2" to="$3" timestamp="$4"
+  local audit_dir
+  audit_dir="$(dirname "$STATE_DIR")/audit"
+  mkdir -p "$audit_dir"
+  local audit_file="${audit_dir}/${key}.md"
+  local date_short="${timestamp%%T*}"
+  local time_short="${timestamp#*T}"
+  time_short="${time_short%%:*}:${timestamp#*T}" 
+  time_short="${timestamp:11:5}"
+
+  if [[ ! -f "$audit_file" ]]; then
+    cat > "$audit_file" << EOF
+# ${key} Audit Trail
+
+| Phase | From | Date | Time (UTC) |
+|-------|------|------|------------|
+EOF
+  fi
+
+  echo "| ${to} | ${from} | ${date_short} | ${time_short} |" >> "$audit_file"
 }
 
 cmd_list() {
