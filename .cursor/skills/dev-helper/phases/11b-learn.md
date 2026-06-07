@@ -73,19 +73,51 @@ gh pr view ${PR_NUMBER} --repo $GH_REPO --json body --jq '.body'
 
 ### 11b.2 Determine if learnings exist
 
-After reviewing all the above, evaluate whether any of these warrant
-rule or documentation updates:
+After reviewing all the above, evaluate whether any insights warrant
+updates. There are two output channels:
 
-| Category | Update target | Example |
-|----------|--------------|---------|
-| New CRD or resource type | `.cursor/rules/project-context.mdc` | New Conversion CRD added |
-| New provider type or status | `.cursor/rules/project-context.mdc`, `agents/forklift-expert.mdc` | New provider phase |
-| New shared utility or hook | `AGENTS.md` | New `useMyHook` pattern |
-| New convention or anti-pattern | `AGENTS.md` | Discovered footgun to document |
-| New test pattern or mock | `.cursor/rules/workflows/playwright-testing.mdc` | New page object pattern |
-| New i18n pattern | `.cursor/rules/frontend/*` | Translation edge case |
-| Skill/workflow improvement | `.cursor/skills/dev-helper/**` | Workflow gap discovered |
-| Backend insight | `.cursor/rules/backend/**` | API behavior clarification |
+**Channel 1: Project rule updates** (update `.cursor/rules/`, `AGENTS.md`)
+
+These are project-specific changes — new CRDs, conventions, patterns.
+
+**Channel 2: Themed lesson entries** (append to `lessons/*.md`)
+
+These are transferable patterns — what we learned that applies beyond
+this one ticket. Each entry uses the format:
+
+```
+- [Theme] Pattern observed -> What to do differently -> Why it matters (MTV-XXXX, YYYY-MM-DD)
+```
+
+**Routing table** — for each learning, determine both the rule target and
+the lesson theme:
+
+| Category | Rule update target | Lesson theme file |
+|----------|-------------------|-------------------|
+| New CRD or resource type | `.cursor/rules/project-context.mdc` | `lessons/architecture.md` |
+| New provider type or status | `.cursor/rules/project-context.mdc`, `agents/forklift-expert.mdc` | `lessons/architecture.md` |
+| New shared utility or hook | `AGENTS.md` | `lessons/implementation.md` |
+| New convention or anti-pattern | `AGENTS.md` | `lessons/implementation.md` |
+| New test pattern or mock | `.cursor/rules/workflows/playwright-testing.mdc` | `lessons/implementation.md` |
+| New i18n pattern | `.cursor/rules/frontend/*` | `lessons/ui-patterns.md` |
+| PatternFly / component pattern | `.cursor/rules/frontend/*` | `lessons/ui-patterns.md` |
+| Skill/workflow improvement | `.cursor/skills/dev-helper/**` | `lessons/process.md` |
+| PR review / CI behavior insight | — | `lessons/process.md` |
+| Security or trust boundary | `.cursor/rules/backend/**` or `AGENTS.md` | `lessons/security.md` |
+| Backend API insight | `.cursor/rules/backend/**` | `lessons/architecture.md` |
+| PR description / commit style | — | `lessons/communication.md` |
+
+A learning may produce a rule update, a lesson entry, or both. Some
+learnings (process patterns, communication insights) produce only a
+lesson entry with no rule file change.
+
+**HARD CONSTRAINT:** Lesson entries must NOT contain verbatim code,
+business logic, data models, or ticket-specific implementation details.
+Lessons are generic, transferable patterns.
+
+**Superseding:** If a new lesson contradicts an existing entry in the
+same theme file, move the old entry to the `## Superseded` section with
+a `[Superseded by MTV-XXXX]` tag.
 
 ### 11b.3 Act on determination
 
@@ -99,11 +131,18 @@ git fetch upstream main
 git checkout -b chore/learn-${TICKET_KEY} upstream/main
 ```
 
-2. **Make the rule/doc updates** (edit the relevant files).
+2. **Make the rule/doc updates** (edit the relevant `.cursor/rules/` or
+   `AGENTS.md` files per the routing table).
 
-3. **Commit and push:**
+3. **Append lesson entries** to the appropriate themed files in
+   `.cursor/skills/dev-helper/lessons/`. Each entry follows the format:
+```
+- [Theme] Pattern observed -> What to do differently -> Why it matters (MTV-XXXX, YYYY-MM-DD)
+```
+
+4. **Commit and push:**
 ```bash
-git add <changed-rule-files>
+git add <changed-rule-files> .cursor/skills/dev-helper/lessons/
 git commit -s -m "chore: update rules with learnings from ${TICKET_KEY}
 
 Resolves: None"

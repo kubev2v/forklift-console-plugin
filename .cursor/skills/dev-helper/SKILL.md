@@ -345,7 +345,9 @@ work on, or resume this one later."
 `phases.skip`. The agent must review the work done on every ticket before
 advancing. If the PR is merged without learning (manual merge, reconcile),
 the learn phase runs post-merge and opens a separate PR for any rule/doc
-updates.
+updates. Learnings are also recorded as structured entries in themed files
+under `lessons/` (architecture, security, process, ui-patterns,
+implementation, communication) — searchable across tickets.
 
 **Auto-retry:** Phases 7-8 self-correct up to 3 times on build/lint/test
 failure.
