@@ -199,7 +199,9 @@ export class ProviderDetailsPage {
       const creationError = this.page.getByRole('heading', { name: /Error creating provider/i });
       if (await creationError.isVisible()) {
         const alert = this.page.getByRole('alert').filter({ hasText: 'Error creating provider' });
-        const message = (await alert.textContent())?.trim() ?? 'unknown error';
+        await expect(alert.first()).toBeVisible({ timeout: 5_000 });
+        const rawMessage = ((await alert.first().textContent()) ?? '').trim();
+        const message = rawMessage.length > 0 ? rawMessage : 'unknown error';
         throw new Error(`Provider creation failed: ${message}`, { cause: error });
       }
       throw error;

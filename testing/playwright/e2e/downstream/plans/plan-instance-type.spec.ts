@@ -39,7 +39,10 @@ const createReadyPlan = async (
   await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
   await planDetailsPage.virtualMachinesTab.enableColumn('Instance type');
 
-  const vmName = testData.virtualMachines?.[0]?.sourceName ?? '';
+  const vmName = testData.virtualMachines?.[0]?.sourceName;
+  if (!vmName) {
+    throw new Error('createReadyPlan: testData must include at least one VM with sourceName');
+  }
   return { planDetailsPage, vmName };
 };
 
@@ -58,9 +61,10 @@ const pickAndSaveNonNoneInstanceType = async (
   await virtualMachinesTab.instanceTypeModalSelect.click();
   const listbox = page.getByRole('listbox');
   await expect(listbox).toBeVisible();
-  const secondOption = listbox.getByRole('option').nth(1);
-  const picked = (await secondOption.innerText()).split('\n')[0]?.trim() ?? '';
-  await secondOption.click();
+  const nonNoneOption = listbox.getByRole('option').filter({ hasNotText: /^None/ }).first();
+  const picked = (await nonNoneOption.innerText()).split('\n')[0]?.trim() ?? '';
+  if (!picked) throw new Error('pickAndSaveNonNoneInstanceType: no non-None option available');
+  await nonNoneOption.click();
   await virtualMachinesTab.instanceTypeModalSaveButton.click();
   await expect(virtualMachinesTab.editInstanceTypeModal).not.toBeVisible();
   await virtualMachinesTab.waitForVMInstanceType(vmName, picked);
@@ -141,9 +145,9 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
       await virtualMachinesTab.instanceTypeModalSelect.click();
       const listbox = page.getByRole('listbox');
       await expect(listbox).toBeVisible();
-      const secondOption = listbox.getByRole('option').nth(1);
-      const picked = (await secondOption.innerText()).split('\n')[0]?.trim() ?? '';
-      await secondOption.click();
+      const nonNoneOption = listbox.getByRole('option').filter({ hasNotText: /^None/ }).first();
+      const picked = (await nonNoneOption.innerText()).split('\n')[0]?.trim() ?? '';
+      await nonNoneOption.click();
       await virtualMachinesTab.instanceTypeModalSaveButton.click();
       await expect(virtualMachinesTab.editInstanceTypeModal).not.toBeVisible();
       await virtualMachinesTab.waitForVMInstanceType(vmName, picked);
