@@ -1,7 +1,7 @@
-import { StorageMapFieldId, type StorageMapping } from 'src/storageMaps/utils/types';
 import { validateOffloadFields } from 'src/storageMaps/utils/validateOffloadFields';
 
 import { t } from '@utils/i18n';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 
 /**
  * Validates storage mapping configurations to ensure complete and valid mappings

@@ -3,12 +3,12 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { TextInput } from '@patternfly/react-core';
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 import { validateMapName } from '@utils/validation/mapNameValidation';
 
 import { networkMapFieldLabels } from '../../utils/constants';
-import { NetworkMapFieldId } from '../../utils/types';
 import type { CreateNetworkMapFormData } from '../types';
 
 const MapNameField: FC = () => {

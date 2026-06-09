@@ -1,7 +1,6 @@
-import { getOVAProxyUrl } from 'src/providers/utils/helpers/getApiUrl';
-
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';
+import { getOVAProxyUrl } from '@utils/api/getApiUrl';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 

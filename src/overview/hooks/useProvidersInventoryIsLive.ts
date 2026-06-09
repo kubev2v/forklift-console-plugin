@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { getInventoryApiUrl } from 'src/providers/utils/helpers/getApiUrl';
 
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
+import { getInventoryApiUrl } from '@utils/api/getApiUrl';
 
 /**
  * Parameters for useProvidersInventoryIsLive hook.

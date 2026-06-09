@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import PlanVddkForSharedDisksWarningAlert from 'src/plans/components/PlanVddkForSharedDisksWarningAlert';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
-import type { EnhancedPlanSpecVms } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -10,6 +9,7 @@ import { Alert, AlertVariant, Radio, Stack, StackItem } from '@patternfly/react-
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 import type { EditPlanProps } from '../../utils/types';
 

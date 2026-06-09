@@ -1,6 +1,5 @@
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-
 import type { V1beta1Provider } from '@forklift-ui/types';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 /**
  * Determines if the source provider supports live migration.

@@ -1,7 +1,7 @@
 import type { ComponentClass, ReactNode } from 'react';
-import type { ProviderTypes } from 'src/providers/utils/constants';
 
 import type { SVGIconProps } from '@patternfly/react-icons/dist/esm/createIcon';
+import type { ProviderTypes } from '@utils/providers/constants';
 
 export enum ListStyleType {
   CIRCLE = 'circle',

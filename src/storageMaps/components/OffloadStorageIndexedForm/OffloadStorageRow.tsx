@@ -4,9 +4,13 @@ import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId
 
 import type { V1beta1Provider } from '@forklift-ui/types';
 import type { InventoryStorage } from '@utils/hooks/useStorages';
+import {
+  StorageMapFieldId,
+  type StorageMappingValue,
+  type TargetStorage,
+} from '@utils/storage/types';
 
 import { useDatastoreVendor } from '../../hooks/useDatastoreVendor';
-import { StorageMapFieldId, type StorageMappingValue, type TargetStorage } from '../../utils/types';
 import type { DatastoreWithBacking } from '../../utils/vendorLookupTables';
 
 import OffloadStorageIndexedForm from './OffloadStorageIndexedForm';

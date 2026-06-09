@@ -1,5 +1,6 @@
 import type { FC } from 'react';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import Ec2InventorySection from '../Ec2InventorySection';
 import HyperVInventorySection from '../HyperVInventorySection';

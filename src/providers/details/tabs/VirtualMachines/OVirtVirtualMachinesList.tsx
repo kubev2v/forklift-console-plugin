@@ -6,12 +6,13 @@ import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tab
 import type { ResourceField } from '@components/common/utils/types';
 import { TableSortContextProvider } from '@components/TableSortContextProvider';
 import { t } from '@utils/i18n';
+import { getVmPowerState } from '@utils/virtual-machines/getVmPowerState';
+import { getVmGuestOS } from '@utils/vm/getVmGuestOS';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import type { VmData } from './components/VMCellProps';
 import { ovirtHostFilter } from './utils/filters/OvirtHostFilter';
 import { getConcernsResourceField } from './utils/helpers/getConcernsResourceField';
-import { getVmPowerState } from './utils/helpers/getVmPowerState';
 import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
 import { OVirtVirtualMachinesCells } from './OVirtVirtualMachinesRow';
 
@@ -29,6 +30,17 @@ const oVirtVmFieldsMetadataFactory: ResourceField[] = [
     sortable: true,
   },
   getConcernsResourceField(),
+  {
+    filter: {
+      placeholderLabel: t('Filter by guest OS'),
+      type: 'freetext',
+    },
+    isVisible: true,
+    jsonPath: (data: unknown) => getVmGuestOS((data as VmData)?.vm),
+    label: t('Guest OS'),
+    resourceFieldId: 'guestOS',
+    sortable: true,
+  },
   {
     filter: {
       placeholderLabel: t('Filter by cluster'),

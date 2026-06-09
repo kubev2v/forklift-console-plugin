@@ -1,4 +1,4 @@
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { useCreateProviderFormContext } from '../../hooks/useCreateProviderFormContext';
 import { ProviderFormFieldId } from '../constants';

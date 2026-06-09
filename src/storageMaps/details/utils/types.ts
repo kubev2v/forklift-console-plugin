@@ -1,6 +1,5 @@
-import type { StorageMapping } from 'src/storageMaps/utils/types';
-
 import type { V1beta1StorageMapSpecMap } from '@forklift-ui/types';
+import type { StorageMapping } from '@utils/storage/types';
 
 /**
  * Extended storage map spec with a more flexible offload plugin configuration

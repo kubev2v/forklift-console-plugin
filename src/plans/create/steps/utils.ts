@@ -1,5 +1,6 @@
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
+
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import type { ProviderNetwork } from '../types';
 

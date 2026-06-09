@@ -1,8 +1,7 @@
 import type { FieldValues } from 'react-hook-form';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
-
-import type { NetworkMapFieldId, NetworkMapping } from '../utils/types';
+import type { NetworkMapFieldId, NetworkMapping } from '@utils/crds/maps/types';
 
 export type CreateNetworkMapFormData = FieldValues & {
   [NetworkMapFieldId.MapName]: string;

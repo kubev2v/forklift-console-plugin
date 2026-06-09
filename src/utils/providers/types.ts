@@ -1,14 +1,11 @@
 import type { ProviderInventory, V1beta1Provider } from '@forklift-ui/types';
-
-import type { VmData } from '../../details/tabs/VirtualMachines/components/VMCellProps';
-
-import type { ProvidersPermissionStatus } from './ProvidersPermissionStatus';
+import type { PermissionStatus, ProviderVmData } from '@utils/types';
 
 export type ProviderData = {
   provider?: V1beta1Provider;
   inventory?: ProviderInventory | undefined;
   inventoryLoading?: boolean;
-  vmData?: VmData[];
+  vmData?: ProviderVmData[];
   vmDataLoading?: boolean;
-  permissions?: ProvidersPermissionStatus;
+  permissions?: PermissionStatus;
 };

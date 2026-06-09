@@ -24,6 +24,7 @@ import {
   getHostnameFilterOptions,
   getVmConcernCategories,
   getVmConcernLabels,
+  getVmGuestOSValue,
   getVmHost,
   getVmName,
   getVmPath,
@@ -42,6 +43,12 @@ export const useTreeFilterAttributes = (rows: RowNode[], conversions: V1beta1Con
   const attributes: AttributeConfig<VmRow>[] = useMemo(
     () => [
       { getValue: getVmName, id: COLUMN_IDS.Name, kind: AttributeKind.Text, label: t('VM name') },
+      {
+        getValue: getVmGuestOSValue,
+        id: COLUMN_IDS.GuestOS,
+        kind: AttributeKind.Text,
+        label: t('Guest OS'),
+      },
       {
         getValue: (row) => row.vmData.folderName ?? '',
         id: folderFilterId,

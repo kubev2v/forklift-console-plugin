@@ -3,8 +3,10 @@ import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tab
 
 import { TableSortContextProvider } from '@components/TableSortContextProvider';
 import { t } from '@utils/i18n';
+import { getVmGuestOS } from '@utils/vm/getVmGuestOS';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
+import type { VmData } from './components/VMCellProps';
 import { getConcernsResourceField } from './utils/helpers/getConcernsResourceField';
 import { getVmTableResourceFields } from './utils/helpers/getVmTableResourceFields';
 import { OvaVirtualMachinesCells } from './OvaVirtualMachinesRow';
@@ -23,6 +25,17 @@ const ovaVmFieldsMetadataFactory = [
     sortable: true,
   },
   getConcernsResourceField(),
+  {
+    filter: {
+      placeholderLabel: t('Filter by guest OS'),
+      type: 'freetext',
+    },
+    isVisible: true,
+    jsonPath: (data: unknown) => getVmGuestOS((data as VmData)?.vm),
+    label: t('Guest OS'),
+    resourceFieldId: 'guestOS',
+    sortable: true,
+  },
   {
     filter: {
       placeholderLabel: t('Filter by path'),

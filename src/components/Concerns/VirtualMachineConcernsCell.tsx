@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 import { TableCell } from 'src/components/TableCell/TableCell';
 import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import type { ProviderVmData } from 'src/utils/types';
 
 import type { Concern, V1beta1PlanStatusConditions } from '@forklift-ui/types';
 import { Split, SplitItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import ConcernPopover from './components/ConcernsPopover';
 import {

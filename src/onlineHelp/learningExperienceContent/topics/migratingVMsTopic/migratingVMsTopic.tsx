@@ -3,12 +3,12 @@ import {
   type LearningExperienceTopic,
   ListStyleType,
 } from 'src/onlineHelp/utils/types';
-import { PROVIDER_TYPES, type ProviderTypes } from 'src/providers/utils/constants';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import { CubesIcon } from '@patternfly/react-icons';
 import { TipsTopic } from '@utils/analytics/constants';
 import { t } from '@utils/i18n';
+import { PROVIDER_TYPES, type ProviderTypes } from '@utils/providers/constants';
 
 import SourceMigrationSelection from '../components/SourceMigrationSelection';
 import { LEARN_MORE_MIGRATING_VMS_DOCS_URL } from '../utils/constants';

@@ -7,7 +7,6 @@ import {
   useWatch,
 } from 'react-hook-form';
 import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
-import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
@@ -17,6 +16,7 @@ import { useDefaultProject } from '@utils/hooks/useDefaultProject';
 import useWatchProjectNames from '@utils/hooks/useWatchProjectNames';
 import { useForkliftTranslation } from '@utils/i18n';
 import { isSystemNamespace } from '@utils/namespaces';
+import { StorageMapFieldId } from '@utils/storage/types';
 
 import type { CreateStorageMapFormData } from '../types';
 

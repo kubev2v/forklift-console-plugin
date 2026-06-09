@@ -1,8 +1,8 @@
 import type { FC } from 'react';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { CONDITION_STATUS } from '@utils/constants';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { ProviderStatus } from '@utils/types';
 
 import Ec2DetailsSection from '../Ec2DetailsSection';

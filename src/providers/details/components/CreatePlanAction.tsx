@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { TELEMETRY_EVENTS } from 'src/utils/analytics/constants';
 import { useForkliftAnalytics } from 'src/utils/analytics/hooks/useForkliftAnalytics';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
@@ -11,6 +10,7 @@ import { Button, ButtonVariant, ToolbarItem } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 type CreatePlanActionProps = {
   namespace: string | undefined;

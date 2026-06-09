@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { getMappingValues } from 'src/networkMaps/create/utils/buildNetworkMappings';
 import { useOvirtNicProfiles } from 'src/plans/create/hooks/useOvirtNicProfiles';
-import type { NetworkMapping } from 'src/plans/create/steps/network-map/constants';
 import {
   type InventoryNetwork,
   useOpenShiftNetworks,
@@ -18,6 +17,7 @@ import {
 } from '@forklift-ui/types';
 import { useK8sWatchResource, type WatchK8sResult } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanNetworkMapName, getPlanNetworkMapNamespace } from '@utils/crds/plans/selectors';
+import type { NetworkMapping } from '@utils/mappings/networkMap';
 
 type UsePlanNetworkMapResourcesParams = {
   sourceProvider: V1beta1Provider;

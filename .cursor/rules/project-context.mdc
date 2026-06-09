@@ -15,6 +15,15 @@ This rule provides Forklift-specific domain knowledge not covered there.
 
 Forklift (Migration Toolkit for Virtualization) migrates virtual machines from external providers to OpenShift Virtualization (KubeVirt). This plugin is an OpenShift Console dynamic plugin providing the web UI.
 
+### Tech Stack
+- **React 17** with **TypeScript** (strict mode)
+- **PatternFly 6** for UI components
+- **i18next** for internationalization
+- **react-hook-form** for form handling
+- **Jest** for unit testing, **Playwright** for E2E
+- **Webpack** for bundling
+- **npm** as package manager
+
 ---
 
 ## Core CRDs
@@ -26,6 +35,7 @@ Represents a source or target infrastructure connection.
 
 - **Source types**: `vsphere` (VMware), `ovirt` (RHV), `openstack`, `ova` (file uploads), `hyperv` (Hyper-V), `ec2` (AWS EC2 -- available on AWS-platform clusters only, gated by `useClusterIsAwsPlatform`)
 - **Target type**: `openshift` (OpenShift Virtualization)
+- **Tech Preview providers** (`ec2`, `hyperv`): Use `isTechPreviewProvider()` from `src/providers/utils/constants.ts` and show `TechPreviewLabel` from `@components/PreviewLabels/TechPreviewLabel` wherever the provider type or a tech-preview feature is surfaced (provider list/create, hooks, scripts, deep inspection modal).
 - **Backend phases** (Go controller): Ready, Staging, ValidationFailed, ConnectionFailed
 - **Frontend additions** (UI enum in `src/utils/types.ts`): ApplianceManagementEnabled, Unknown
 - Manages credentials, inventory discovery, default transfer network

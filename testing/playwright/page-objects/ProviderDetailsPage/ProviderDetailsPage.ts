@@ -57,6 +57,14 @@ export class ProviderDetailsPage {
     return this.page.getByTestId('provider-inspect-vms-button');
   }
 
+  get inspectVmsMenuItem() {
+    return this.page.getByTestId('provider-actions-inspect-menuitem');
+  }
+
+  async isInspectVmsButtonVisible(): Promise<boolean> {
+    return this.inspectVmsButton.isVisible();
+  }
+
   async navigate(providerName: string, namespace: string): Promise<void> {
     await this.navigation.navigateToK8sResource({
       resource: 'Provider',

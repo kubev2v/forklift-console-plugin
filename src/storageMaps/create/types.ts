@@ -1,8 +1,7 @@
 import type { FieldValues } from 'react-hook-form';
 
 import type { V1beta1Provider, V1beta1StorageMapSpecMap } from '@forklift-ui/types';
-
-import type { StorageMapFieldId, StorageMapping } from '../utils/types';
+import type { StorageMapFieldId, StorageMapping } from '@utils/storage/types';
 
 export type CreateStorageMapFormData = FieldValues & {
   [StorageMapFieldId.MapName]: string;

@@ -1,5 +1,3 @@
-import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
-
 import type {
   ProviderType,
   V1beta1Plan,
@@ -8,11 +6,12 @@ import type {
   V1beta1PlanStatusMigrationVms,
 } from '@forklift-ui/types';
 import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
+import type { ProviderVmData } from '@utils/types';
 
 export type SpecVirtualMachinePageData = {
   conditions?: V1beta1PlanStatusConditions[];
   inspectionStatus?: VmInspectionStatus;
-  inventoryVmData: VmData;
+  inventoryVmData: ProviderVmData;
   plan: V1beta1Plan;
   sourceProviderType?: ProviderType;
   specVM: V1beta1PlanSpecVms;
@@ -24,6 +23,7 @@ export type SpecVirtualMachinePageData = {
 export enum PlanSpecVirtualMachinesTableResourceId {
   Name = 'name',
   Concerns = 'concerns',
+  GuestOS = 'guestOS',
   InspectionStatus = 'inspectionStatus',
   InstanceType = 'instanceType',
   MigrateSharedDisks = 'migrateSharedDisks',

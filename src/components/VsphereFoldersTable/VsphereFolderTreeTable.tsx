@@ -1,5 +1,4 @@
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
-import { useCanInspectProvider } from 'src/providers/details/hooks/useCanInspectProvider';
 import type { ProviderVmData } from 'src/utils/types';
 
 import type { ResourceField } from '@components/common/utils/types';
@@ -16,6 +15,7 @@ import {
 import { Table, Th, Thead, Tr } from '@patternfly/react-table';
 import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
+import { useCanInspectProvider } from '@utils/hooks/useCanInspectProvider';
 import { useWatchConversions } from '@utils/hooks/useWatchConversions';
 import { useForkliftTranslation } from '@utils/i18n';
 

@@ -3,7 +3,6 @@ import { canPlanStart } from 'src/plans/details/components/PlanStatus/utils/util
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -12,6 +11,7 @@ import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/a
 import { Stack, StackItem } from '@patternfly/react-core';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getName } from '@utils/crds/common/selectors';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { migrationModalMessage, startPlanMigration } from './utils/utils';
 

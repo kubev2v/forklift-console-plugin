@@ -1,12 +1,12 @@
 import { type FC, useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { NetworkMapFieldId, type NetworkMapping } from 'src/networkMaps/utils/types';
-import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
 
 import type { V1beta1NetworkMap } from '@forklift-ui/types';
 import { Alert, AlertVariant } from '@patternfly/react-core';
 import { DEFAULT_NETWORK } from '@utils/constants';
+import { NetworkMapFieldId, type NetworkMapping } from '@utils/crds/maps/types';
 import { useForkliftTranslation } from '@utils/i18n';
+import { IgnoreNetwork } from '@utils/mappings/constants';
 
 type PlanOwnerAlertProps = {
   networkMap: V1beta1NetworkMap;

@@ -3,11 +3,11 @@ import {
   type LearningExperienceTopic,
   ListStyleType,
 } from 'src/onlineHelp/utils/types';
-import { PROVIDER_TYPES, type ProviderTypes } from 'src/providers/utils/constants';
 
 import { TelegramPlaneIcon } from '@patternfly/react-icons';
 import { TipsTopic } from '@utils/analytics/constants';
 import { t } from '@utils/i18n';
+import { PROVIDER_TYPES, type ProviderTypes } from '@utils/providers/constants';
 
 import SourceMigrationSelection from '../components/SourceMigrationSelection';
 

@@ -1,7 +1,6 @@
 import { type FC, useMemo } from 'react';
 import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 import InventoryNotReachable from 'src/providers/list/components/InventoryNotReachable';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 
 import {
@@ -10,6 +9,7 @@ import {
   type V1beta1Provider,
 } from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import type { ProviderData } from '@utils/providers/types';
 
 import { loadUserSettings } from '../../components/common/Page/userSettings';
 import StandardPage from '../../components/page/StandardPage';

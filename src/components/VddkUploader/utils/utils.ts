@@ -1,6 +1,5 @@
-import { getInventoryApiUrl } from 'src/providers/utils/helpers/getApiUrl';
-
 import { consoleFetch } from '@openshift-console/dynamic-plugin-sdk';
+import { getInventoryApiUrl } from '@utils/api/getApiUrl';
 import { PHASES } from '@utils/constants';
 import { t } from '@utils/i18n';
 

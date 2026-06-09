@@ -1,0 +1,198 @@
+---
+description: Overview/dashboard feature architecture -- tabbed layout, dashboard cards, health, history, settings
+alwaysApply: false
+---
+
+# Overview Feature Architecture (`src/overview/`)
+
+> Analyzed on 2026-05-29
+
+Route: `/mtv/overview`. Plugin registration: `src/overview/dynamic-plugin.ts` (admin + virtualization-perspective, requires `CAN_LIST_NS`).
+
+## Page Composition
+
+### Main Page (`OverviewPage.tsx`)
+
+```
+LearningExperienceDrawer
+└── forklift-details-page-layout
+    ├── PageSection: H1 title + LearningExperienceButton
+    ├── PageSection (conditional): InventoryNotReachable alert
+    ├── PageSection (conditional): LightspeedMcpWarning
+    ├── RoutedTabs (5 tabs, telemetry on click)
+    └── Routes → active tab component
+```
+
+### Tabs (from `constants.ts` — `OverviewTabHref`)
+
+| Tab | Component | Path |
+|-----|-----------|------|
+| Overview | `ForkliftControllerOverviewTab` | `tabs/Overview/` |
+| YAML | `ForkliftControllerYAMLTab` | `tabs/YAML/` |
+| Health | `ForkliftControllerHealthTab` | `tabs/Health/` |
+| History | `ForkliftControllerHistoryTab` | `tabs/History/` |
+| Settings | `ForkliftControllerSettingsTab` | `tabs/Settings/` |
+
+### Overview Tab — Dashboard Cards
+
+```
+ForkliftControllerOverviewTab (vertical Flex)
+├── WelcomeCard (full width, expandable intro + provider tiles)
+├── Row: VmMigrationsDonutCard (325px) | VmMigrationsHistoryCard (flex-1)
+├── Row: MigrationPlansDonutCard (325px) | ControllerCard limit=6 (flex-1)
+└── Row: ThroughputCard (network) | ThroughputCard (storage)
+```
+
+| Card | Data Shown |
+|------|-----------|
+| `WelcomeCard` | Expandable intro; clickable provider tiles → provider create |
+| `VmMigrationsDonutCard` | VM migration counts by status (Running/Failed/Succeeded/Canceled) + time-range filter |
+| `VmMigrationsHistoryCard` | Stacked area chart of VM migrations over time |
+| `MigrationPlansDonutCard` | Plan counts by UI status (9 statuses) |
+| `ControllerCard` | Forklift pods (label `app=forklift`), limited to 6 on overview |
+| `ThroughputCard` (x2) | Prometheus metrics: net + storage throughput per plan |
+
+### Health Tab
+
+```
+ForkliftControllerHealthTab
+├── ControllerCard (full pod list, no limit)
+│   └── PodsTable (pagination when >10)
+└── ConditionsCard
+    └── ConditionsSection
+```
+
+### History Tab
+
+```
+ForkliftControllerHistoryTab → HistoryCard
+└── MigrationsListPage (StandardPage)
+    └── MigrationRow
+```
+
+Filterable table of all Migration CRs. Columns: Migration name, Status, Plan, Started at, Completed at.
+Filters: freetext (name, plan), enum (status), date range, "Group by plan" toggle (`SwitchFilter`).
+Deep-linking from overview charts via `navigateToHistoryTab()` query params.
+
+### Settings Tab
+
+```
+ForkliftControllerSettingsTab → SettingsCard
+├── SectionHeadingWithEdit → SettingsEdit modal
+└── DescriptionList of DetailsItem rows
+    └── SettingsEdit (ModalForm + react-hook-form)
+        └── 10 field editors → k8sPatch on ForkliftControllerModel
+```
+
+**Configurable settings** (10 fields from `SettingsFields` enum):
+
+| Setting | Spec field | Default |
+|---------|-----------|---------|
+| Max concurrent VM migrations | `controller_max_vm_inflight` | 20 |
+| Controller CPU limit | `controller_container_limits_cpu` | 500m |
+| Controller memory limit | `controller_container_limits_memory` | 800Mi |
+| Inventory memory limit | `inventory_container_limits_memory` | 1000Mi |
+| Precopy interval | `controller_precopy_interval` | 60 min |
+| Snapshot polling interval | `controller_snapshot_status_check_rate_seconds` | 10s |
+| Controller transfer network | `controller_transfer_network` | None |
+| AAP URL | `aap_url` | Not configured |
+| AAP token secret | `aap_token_secret_name` | Not configured |
+| AAP timeout | `aap_timeout` | 0 |
+
+Note: Feature flags (`feature_copy_offload`, `feature_ocp_live_migration`, `feature_volume_populator`) are NOT in this Settings UI — only visible in YAML tab.
+
+## Shared Component Usage
+
+| Component | Used in |
+|-----------|---------|
+| `RoutedTabs` | Main page tab navigation |
+| `LightspeedMcpWarning` | Page banner |
+| `LoadingSuspend` | VM donut/history cards, ControllerCard, MigrationsListPage |
+| `ModalForm` + patch constants | SettingsEdit |
+| `FormGroupWithHelpText`, `HelpIconPopover` | All settings editors |
+| `DetailsItem`, `SectionHeadingWithEdit` | Settings card |
+| `ResourceYAMLEditorWrapper` | YAML tab |
+| `StandardPage` + filter types | History tab table |
+| `ConsoleTimestamp`, `TableLinkCell`, `VisibleTableData` | History rows |
+| `ConditionsSection` | Health conditions |
+| `StatusIcon` | Pod status |
+| `SwitchFilter` | History "group by plan" filter |
+
+## Data Sources
+
+### K8s Watches
+
+| Resource | Where |
+|----------|-------|
+| `ForkliftController` | `useK8sWatchForkliftController` (central hook) |
+| `Plan` | `usePlanStatusCounts`, history plan links |
+| `Migration` | `useVmMigrationsDataPoints`, `useMigrationCounts`, history table |
+| `Pod` | `ControllerCard` (selector: `app=forklift`) |
+| `NetworkAttachmentDefinition` | `EditControllerTransferNetwork` |
+| `Secret` | `EditAapTokenSecret` |
+
+### Other Hooks
+
+| Hook | Source |
+|------|--------|
+| `useProvidersInventoryIsLive` | REST poll to inventory API |
+| `useThroughputQuery` | `usePrometheusPoll` (Prometheus QUERY_RANGE) |
+| `usePlanStatusCounts` | Derived from Plans watch |
+| `useVmMigrationsDataPoints` | Derived from Migrations watch (bucketed by time range) |
+| `useOverviewContext` | Local state + localStorage persistence |
+
+### Context Providers
+- `OverviewContext` (registered in `dynamic-plugin.ts`) — welcome card collapsed state, VM chart time ranges
+
+## Cross-Feature Connections
+
+### Overview imports from other features
+
+| Feature | Import | Purpose |
+|---------|--------|---------|
+| **providers** | `InventoryNotReachable`, `getInventoryApiUrl`, `PROVIDER_TYPES` | Alert, liveness, welcome card |
+| **plans** | `PlanStatuses`, `getPlanStatus`, `getMigrationVMsStatusCounts`, `VMStatusIconsRow` | Charts, history status |
+
+### Overview exports used by other features
+
+| Export | Consumer | Purpose |
+|--------|----------|---------|
+| `useK8sWatchForkliftController` | `plans/.../useAapConfig.ts` | Read AAP config during plan creation |
+| `SettingsFields`, `EnhancedForkliftController` | `plans/.../useAapConfig.ts` | Field enum for AAP detection |
+| `TabTitle` | `plans/.../PlanHooksPage.tsx` | Consistent tab title + help icon |
+| `OVERVIEW_BASE_PATH`, `OverviewTabHref` | `utils/helpers/getOverviewPath.ts` | Build overview URLs from anywhere |
+
+### Navigation cross-links from overview
+
+| From | To |
+|------|----|
+| WelcomeCard provider tiles | Provider create (`~new?providerType=...`) |
+| MigrationPlansDonutCard slices | Plans list filtered by phase |
+| VM donut/history chart | History tab with filters |
+| History empty state | Plan create |
+| ControllerCard (overview) | Health tab |
+
+## Blast Radius Notes
+
+### Changes to shared components that break overview
+- `RoutedTabs` → entire tab navigation
+- `LoadingSuspend` → 4+ cards loading states
+- `StandardPage` + filter types → entire History tab
+- `ModalForm` + `FormGroupWithHelpText` → Settings edit flow
+- `ConditionsSection` → Health conditions
+- `ResourceYAMLEditorWrapper` → YAML tab
+
+### Changes to plans utilities that break overview
+- `getPlanStatus` / `PlanStatuses` → migration plans donut counts
+- `getMigrationVMsStatusCounts` → history status column, VM donut
+- `VMStatusIconsRow` → history status icons
+
+### Overview exports — changes affect consumers
+- `useK8sWatchForkliftController` → plans hook creation flow (AAP config)
+- `SettingsFields` → field renames break AAP config detection
+- `OVERVIEW_BASE_PATH` → URL structure changes break nav links
+
+### External infrastructure dependencies
+- Monitoring/Prometheus unavailable → throughput cards error empty state
+- Inventory REST API down → `InventoryNotReachable` banner
+- ForkliftController CR missing → Settings, YAML, Health conditions fail to load

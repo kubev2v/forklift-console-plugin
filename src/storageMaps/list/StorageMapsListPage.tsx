@@ -4,7 +4,6 @@ import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 import StorageMapsEmptyState from 'src/storageMaps/components/StorageMapsEmptyState';
-import type { StorageMapData } from 'src/storageMaps/utils/types';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 
 import {
@@ -16,6 +15,7 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { MAP_STATUS } from '@utils/constants';
 import { getMapPhase } from '@utils/crds/maps/shared';
 import { t } from '@utils/i18n';
+import type { StorageMapData } from '@utils/storage/types';
 
 import StorageMapsAddButton from '../components/StorageMapsAddButton';
 

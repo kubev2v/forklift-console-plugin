@@ -1,12 +1,12 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { isHypervIscsiProvider } from 'src/providers/utils/helpers/isHypervIscsiProvider';
 import StorageMapStatusAlerts from 'src/storageMaps/components/StorageMapStatusAlerts';
-import { StorageMapFieldId } from 'src/storageMaps/utils/types';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import { Alert, AlertVariant, ModalVariant, Stack } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { StorageMapFieldId } from '@utils/storage/types';
 
 import PlanStorageMapFieldsTable from './components/PlanStorageMapFieldsTable';
 import type { PlanStorageEditFormValues, PlanStorageMapEditProps } from './utils/types';

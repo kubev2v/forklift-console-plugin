@@ -6,11 +6,11 @@ import { OpenStackVirtualMachinesList } from 'src/providers/details/tabs/Virtual
 import { OvaVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OvaVirtualMachinesList';
 import { OVirtVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/OVirtVirtualMachinesList';
 import { VSphereVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/VSphereVirtualMachinesList';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 
 import { ErrorState } from '@components/common/Page/PageStates';
 import { useForkliftTranslation } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import type { ProviderData } from '@utils/providers/types';
 
 import type { ProviderVirtualMachinesListProps } from './utils/types';
 

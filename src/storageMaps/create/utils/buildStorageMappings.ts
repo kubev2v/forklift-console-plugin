@@ -1,11 +1,5 @@
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-import {
-  OffloadPlugin,
-  StorageMapFieldId,
-  type StorageMapping,
-  type StorageMappingValue,
-} from 'src/storageMaps/utils/types';
+import { OffloadPlugin } from 'src/storageMaps/utils/types';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
 import type {
@@ -14,6 +8,12 @@ import type {
   V1beta1StorageMapSpecMapSource,
 } from '@forklift-ui/types';
 import { STORAGE_NAMES } from '@utils/constants';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import {
+  StorageMapFieldId,
+  type StorageMapping,
+  type StorageMappingValue,
+} from '@utils/storage/types';
 
 import type { CustomStorageMapSpecMap, OffloadPluginConfig } from '../types';
 

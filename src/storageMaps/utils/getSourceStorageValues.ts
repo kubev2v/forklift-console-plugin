@@ -1,6 +1,5 @@
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import type { CategorizedSourceMappings } from 'src/plans/create/types';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
 import type {
@@ -13,8 +12,8 @@ import type {
 } from '@forklift-ui/types';
 import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 import { isEmpty } from '@utils/helpers';
-
-import type { OVirtVMWithDisks } from './types';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import type { OVirtVMWithDisks } from '@utils/storage/types';
 
 /**
  * Extracts volume names from vSphere VMs (no option to extract storage classes data)
@@ -52,10 +51,21 @@ const getVSphereStorageIds = (vm: ProviderVirtualMachine): string[] => {
 };
 
 /**
- * Extracts storage IDs from OVA VMs
+ * Extracts storage IDs from OVA VMs.
+ *
+ * The OVA backend returns embedded disk objects with PascalCase field names (e.g. `ID`),
+ * while @forklift-ui/types defines them as camelCase (e.g. `id`). Access `ID` directly
+ * and fall back to `id` so the code keeps working if the API is ever aligned.
  */
-const getOvaStorageIds = (vm: EnhancedOvaVM): string[] =>
-  vm.disks?.reduce<string[]>((acc, disk) => (disk.id ? [...acc, disk.id] : acc), []) ?? [];
+const getOvaStorageIds = (vm: EnhancedOvaVM): string[] => {
+  type RawDisk = { ID?: string };
+  return (
+    vm.disks?.reduce<string[]>((acc, disk) => {
+      const id = (disk as unknown as RawDisk).ID ?? disk.id;
+      return id ? [...acc, id] : acc;
+    }, []) ?? []
+  );
+};
 
 /**
  * Extracts storage IDs from Hyper-V VMs

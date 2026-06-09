@@ -8,6 +8,7 @@ import {
   InProgressIcon,
   MinusCircleIcon,
 } from '@patternfly/react-icons';
+import { PF_LABEL_STATUS } from '@utils/constants';
 import { CONVERSION_PHASE } from '@utils/crds/conversion/constants';
 import type { ConversionPhase } from '@utils/crds/conversion/types';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -24,13 +25,21 @@ const getPhaseConfig = (
 ): PhaseConfig => {
   switch (phase) {
     case CONVERSION_PHASE.SUCCEEDED:
-      return { icon: <CheckCircleIcon />, label: t('Succeeded'), labelStatus: 'success' };
+      return {
+        icon: <CheckCircleIcon />,
+        label: t('Succeeded'),
+        labelStatus: PF_LABEL_STATUS.SUCCESS,
+      };
     case CONVERSION_PHASE.FAILED:
-      return { icon: <ExclamationCircleIcon />, label: t('Failed'), labelStatus: 'warning' };
+      return {
+        icon: <ExclamationCircleIcon />,
+        label: t('Failed'),
+        labelStatus: PF_LABEL_STATUS.WARNING,
+      };
     case CONVERSION_PHASE.CANCELED:
       return { icon: <BanIcon />, label: t('Canceled') };
     case CONVERSION_PHASE.RUNNING:
-      return { icon: <InProgressIcon />, label: t('Running'), labelStatus: 'info' };
+      return { icon: <InProgressIcon />, label: t('Running'), labelStatus: PF_LABEL_STATUS.INFO };
     case CONVERSION_PHASE.PENDING:
     case undefined:
     default:

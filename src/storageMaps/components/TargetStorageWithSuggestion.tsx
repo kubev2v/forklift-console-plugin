@@ -3,8 +3,12 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 
 import type { InventoryStorage } from '@utils/hooks/useStorages';
+import {
+  StorageMapFieldId,
+  type StorageMappingValue,
+  type TargetStorage,
+} from '@utils/storage/types';
 
-import { StorageMapFieldId, type StorageMappingValue, type TargetStorage } from '../utils/types';
 import { resolveProductFromDatastoreName } from '../utils/vendorLookupTables';
 
 import TargetStorageField from './TargetStorageField';

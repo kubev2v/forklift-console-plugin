@@ -1,16 +1,7 @@
 import { t } from '@utils/i18n';
+import { TargetPowerStates, type TargetPowerStateValue } from '@utils/plans/constants';
 
 export const NO_INSTANCE_TYPE = 'none';
-
-export const TargetPowerStates = {
-  AUTO: 'auto',
-  OFF: 'off',
-  ON: 'on',
-} as const;
-
-export type TargetPowerStateValue =
-  | (typeof TargetPowerStates)[keyof typeof TargetPowerStates]
-  | undefined;
 
 export type TargetPowerState = {
   description?: string;

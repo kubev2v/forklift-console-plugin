@@ -1,7 +1,9 @@
 import { defaultTargetPowerStateOption } from 'src/plans/constants';
 import { QUAY_FORKLIFT_HOOK_RUNNER_IMAGE } from 'src/plans/details/tabs/Hooks/utils/constants';
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
-import { StorageMapFieldId } from 'src/storageMaps/utils/types';
+
+import { defaultNetMapping, NetworkMapFieldId, NetworkMapType } from '@utils/mappings/networkMap';
+import { StorageMapFieldId } from '@utils/storage/types';
 
 import {
   CustomScriptsFieldId,
@@ -15,11 +17,6 @@ import {
   HooksFormFieldId,
   MigrationHookFieldId,
 } from '../steps/migration-hooks/constants';
-import {
-  defaultNetMapping,
-  NetworkMapFieldId,
-  NetworkMapType,
-} from '../steps/network-map/constants';
 import { defaultDiskPassPhrase, OtherSettingsFormFieldId } from '../steps/other-settings/constants';
 import { CreatePlanStorageMapFieldId, StorageMapType } from '../steps/storage-map/constants';
 import { defaultVms, VmFormFieldId } from '../steps/virtual-machines/constants';

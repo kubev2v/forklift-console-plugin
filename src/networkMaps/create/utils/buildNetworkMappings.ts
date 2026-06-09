@@ -1,6 +1,3 @@
-import type { NetworkMapping } from 'src/networkMaps/utils/types';
-import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import type { InventoryNetwork } from 'src/utils/hooks/useNetworks';
 
 import type {
@@ -11,6 +8,9 @@ import type {
   V1beta1Provider,
 } from '@forklift-ui/types';
 import { DEFAULT_NETWORK, IGNORED, MULTUS, POD } from '@utils/constants';
+import type { NetworkMapping } from '@utils/crds/maps/types';
+import { IgnoreNetwork } from '@utils/mappings/constants';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { MappingValue } from '@utils/types';
 
 const getDestination = (targetNetwork: MappingValue): V1beta1NetworkMapSpecMapDestination => {

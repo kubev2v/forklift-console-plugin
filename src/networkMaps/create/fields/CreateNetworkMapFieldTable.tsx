@@ -6,11 +6,11 @@ import useTargetNetworks from 'src/utils/hooks/useTargetNetworks';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { defaultNetworkMapping, networkMapFieldLabels } from '../../utils/constants';
-import { NetworkMapFieldId } from '../../utils/types';
 import type { CreateNetworkMapFormData } from '../types';
 
 import InventorySourceNetworkField from './InventorySourceNetworkField';

@@ -5,7 +5,8 @@ import ServiceAccountTokenField from 'src/providers/create/fields/openshift/Serv
 import OpenStackAuthenticationTypeField from 'src/providers/create/fields/openstack/OpenStackAuthenticationTypeField';
 import OvirtCredentialsFields from 'src/providers/create/fields/ovirt/OvirtCredentialsFields';
 import VsphereCredentialsFields from 'src/providers/create/fields/vsphere/VsphereCredentialsFields';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 const CredentialFieldsByType: FC<{ providerType: string | undefined }> = ({ providerType }) => {
   switch (providerType) {

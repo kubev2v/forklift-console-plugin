@@ -1,7 +1,6 @@
 import { type FC, useCallback, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router-dom-v5-compat';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
 
 import {
@@ -18,6 +17,7 @@ import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getType } from '@utils/crds/common/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { ProviderFormFieldId } from './fields/constants';
 import { buildProviderResources } from './utils/buildProviderResources';

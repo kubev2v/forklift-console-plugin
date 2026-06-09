@@ -12,9 +12,13 @@ import {
 } from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
+import {
+  PlanSpecVirtualMachinesTableResourceId,
+  type SpecVirtualMachinePageData,
+} from '@utils/types/specVirtualMachinePageData';
+import { getVmGuestOS } from '@utils/vm/getVmGuestOS';
 
 import { concernSeverityOrTypeFilter } from './concernSeverityOrTypeFilter';
-import { PlanSpecVirtualMachinesTableResourceId, type SpecVirtualMachinePageData } from './types';
 
 /**
  * Extracts the ID and name from a condition item string.
@@ -85,6 +89,18 @@ export const specVirtualMachineFields: ResourceField[] = [
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Concerns,
     sortable: true,
     testId: 'concerns-column-header',
+  },
+  {
+    filter: {
+      placeholderLabel: t('Filter by guest OS'),
+      type: FilterDefType.FreeText,
+    },
+    isVisible: true,
+    jsonPath: (item: unknown) =>
+      getVmGuestOS((item as SpecVirtualMachinePageData).inventoryVmData?.vm),
+    label: t('Guest OS'),
+    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.GuestOS,
+    sortable: true,
   },
   {
     filter: {

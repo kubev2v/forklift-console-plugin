@@ -91,19 +91,19 @@ export class CreatePlanWizardPage {
     await this.clickNext();
   }
 
-  async clickBack() {
+  async clickBack(): Promise<void> {
     await this.page.getByTestId('wizard-back-button').click();
   }
 
-  async clickCreatePlan() {
+  async clickCreatePlan(): Promise<void> {
     await this.page.getByTestId('wizard-create-button').click();
   }
 
-  async clickNext() {
+  async clickNext(): Promise<void> {
     await this.page.getByTestId('wizard-next-button').click();
   }
 
-  async clickSkipToReview() {
+  async clickSkipToReview(): Promise<void> {
     await this.page.getByTestId('wizard-review-button').click();
   }
 

@@ -1,17 +1,6 @@
 # AI Assistant Guidelines for Forklift Console Plugin
 
-## Project Overview
-
-This is an **OpenShift Console dynamic plugin** for [Forklift](https://github.com/kubev2v/forklift) (Migration Toolkit for Virtualization). It provides a web-based UI inside OpenShift console for migrating VMs from oVirt, VMware, and OpenStack to OpenShift Virtualization.
-
-### Tech Stack
-- **React 17** with **TypeScript** (strict mode)
-- **PatternFly 6** for UI components
-- **i18next** for internationalization
-- **react-hook-form** for form handling
-- **Jest** for unit testing, **Playwright** for E2E
-- **Webpack** for bundling
-- **npm** as package manager
+> **Project overview, tech stack, and domain knowledge:** See `.cursor/rules/project-context.mdc` for Forklift-specific context (CRDs, providers, migration flow, architecture). This file focuses on coding standards and conventions.
 
 ---
 

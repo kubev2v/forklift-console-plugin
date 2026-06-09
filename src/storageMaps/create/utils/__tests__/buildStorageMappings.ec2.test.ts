@@ -1,8 +1,7 @@
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
-import { StorageMapFieldId, type StorageMapping } from 'src/storageMaps/utils/types';
-
 import type { V1beta1Provider, V1beta1StorageMapSpecMapSource } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 
 import { buildStorageMappings, getStorageMappingValues } from '../buildStorageMappings';
 

@@ -15,7 +15,6 @@ import EditVmTargetPowerState, {
 import EditVolumeNameTemplate, {
   type EditVolumeNameTemplateProps,
 } from 'src/plans/details/tabs/Details/components/SettingsSection/components/VolumeNameTemplate/EditVolumeNameTemplate';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -24,6 +23,7 @@ import { useModal, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import EditVmInstanceType, {
   type EditVmInstanceTypeProps,

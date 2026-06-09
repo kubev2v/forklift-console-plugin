@@ -1,10 +1,10 @@
-import type { EnhancedPlanSpecVms } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 import { validateK8sName } from 'src/utils/validation/common';
 
 import { ADD, REMOVE, REPLACE } from '@components/ModalForm/utils/constants';
 import { PlanModel, type V1beta1Plan, type V1beta1PlanSpecVms } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { t } from '@utils/i18n';
+import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 import type { SetVMTargetName } from './types';
 

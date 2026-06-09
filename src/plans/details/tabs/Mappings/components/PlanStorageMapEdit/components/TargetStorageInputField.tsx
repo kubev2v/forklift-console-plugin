@@ -2,9 +2,9 @@ import type { FC } from 'react';
 import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
 import TargetStorageWithSuggestion from 'src/storageMaps/components/TargetStorageWithSuggestion';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
-import { StorageMapFieldId, type TargetStorage } from 'src/storageMaps/utils/types';
 
 import type { InventoryStorage } from '@utils/hooks/useStorages';
+import { StorageMapFieldId, type TargetStorage } from '@utils/storage/types';
 
 type TargetStorageInputFieldProps = {
   index: number;

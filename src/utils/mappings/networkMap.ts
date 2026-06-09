@@ -1,9 +1,8 @@
-import { IgnoreNetwork } from 'src/plans/details/tabs/Mappings/utils/constants';
-
 import { DEFAULT_NETWORK } from '@utils/constants';
 import { t } from '@utils/i18n';
+import { IgnoreNetwork } from '@utils/mappings/constants';
+import type { MappingValue } from '@utils/types';
 
-import type { MappingValue } from '../../types';
 export enum NetworkMapFieldId {
   NetworkMap = 'networkMap',
   ExistingNetworkMap = 'existingNetworkMap',

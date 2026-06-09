@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { Label } from '@patternfly/react-core';
+import { PF_LABEL_STATUS } from '@utils/constants';
 import { t } from '@utils/i18n';
 
 import { PlanStatuses } from './types';
@@ -27,7 +28,12 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
     </Label>
   ),
   [PlanStatuses.CannotStart]: (
-    <Label status="danger" isCompact variant="filled" data-testid="plan-status-label">
+    <Label
+      status={PF_LABEL_STATUS.DANGER}
+      isCompact
+      variant="filled"
+      data-testid="plan-status-label"
+    >
       {t('Cannot start')}
     </Label>
   ),
@@ -89,6 +95,11 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
   [PlanStatuses.Unknown]: (
     <Label isCompact variant="filled" data-testid="plan-status-label">
       {t('Unknown')}
+    </Label>
+  ),
+  [PlanStatuses.Validating]: (
+    <Label status="info" isCompact variant="filled" data-testid="plan-status-label">
+      {t('Validating')}
     </Label>
   ),
 };

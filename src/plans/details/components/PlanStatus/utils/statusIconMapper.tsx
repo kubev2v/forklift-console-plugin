@@ -7,6 +7,7 @@ import {
   MinusCircleIcon,
   PauseCircleIcon,
 } from '@patternfly/react-icons';
+import { PF_LABEL_STATUS } from '@utils/constants';
 
 import InProgressIcon from './InProgressIcon';
 import { MigrationVirtualMachineStatus } from './types';
@@ -18,12 +19,12 @@ export const migrationStatusIconMap: Record<MigrationVirtualMachineStatus, React
     </Icon>
   ),
   [MigrationVirtualMachineStatus.CantStart]: (
-    <Icon status="danger">
+    <Icon status={PF_LABEL_STATUS.DANGER}>
       <ExclamationCircleIcon />
     </Icon>
   ),
   [MigrationVirtualMachineStatus.Failed]: (
-    <Icon status="danger">
+    <Icon status={PF_LABEL_STATUS.DANGER}>
       <ExclamationCircleIcon />
     </Icon>
   ),
@@ -33,12 +34,12 @@ export const migrationStatusIconMap: Record<MigrationVirtualMachineStatus, React
     </Icon>
   ),
   [MigrationVirtualMachineStatus.Paused]: (
-    <Icon status="warning">
+    <Icon status={PF_LABEL_STATUS.WARNING}>
       <PauseCircleIcon />
     </Icon>
   ),
   [MigrationVirtualMachineStatus.Succeeded]: (
-    <Icon status="success">
+    <Icon status={PF_LABEL_STATUS.SUCCESS}>
       <CheckCircleIcon />
     </Icon>
   ),

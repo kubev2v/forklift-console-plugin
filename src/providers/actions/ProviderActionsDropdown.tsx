@@ -1,10 +1,10 @@
 import { type FC, type MouseEvent, type Ref, useState } from 'react';
 import classNames from 'classnames';
-import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Dropdown, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
 import { EllipsisVIcon } from '@patternfly/react-icons';
+import type { ProviderData } from '@utils/providers/types';
 
 import ProviderActionsDropdownItems from './ProviderActionsDropdownItems';
 

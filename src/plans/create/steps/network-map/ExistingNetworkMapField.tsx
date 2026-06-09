@@ -4,11 +4,11 @@ import { Controller, useWatch } from 'react-hook-form';
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { MenuToggleStatus } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { netMapFieldLabels, NetworkMapFieldId } from '@utils/mappings/networkMap';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { GeneralFormFieldId } from '../general-information/constants';
 
-import { netMapFieldLabels, NetworkMapFieldId } from './constants';
 import NetworkMapSelect from './NetworkMapSelect';
 
 const ExistingNetworkMapField: FC = () => {

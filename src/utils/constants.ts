@@ -72,6 +72,16 @@ export const FEATURE_NAMES = {
   VOLUME_POPULATOR: 'feature_volume_populator',
 } as const;
 
+export const PF_LABEL_STATUS = {
+  CUSTOM: 'custom',
+  DANGER: 'danger',
+  INFO: 'info',
+  SUCCESS: 'success',
+  WARNING: 'warning',
+} as const;
+
+export type PfLabelStatus = (typeof PF_LABEL_STATUS)[keyof typeof PF_LABEL_STATUS];
+
 /**
  * Default values for feature flags when not specified in the ForkliftController CR.
  * If a feature is not in this list, it defaults to false.

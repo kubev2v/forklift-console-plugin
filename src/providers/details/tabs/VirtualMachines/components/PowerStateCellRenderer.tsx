@@ -4,8 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { Tooltip } from '@patternfly/react-core';
 import { OffIcon, PowerOffIcon, UnknownIcon } from '@patternfly/react-icons';
-
-import { getVmPowerState, type PowerState } from '../utils/helpers/getVmPowerState';
+import { getVmPowerState, type PowerState } from '@utils/virtual-machines/getVmPowerState';
 
 import type { VMCellProps } from './VMCellProps';
 

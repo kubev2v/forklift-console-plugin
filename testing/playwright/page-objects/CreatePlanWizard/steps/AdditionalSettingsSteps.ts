@@ -44,7 +44,7 @@ export class AdditionalSettingsStep {
     return this.page
       .locator('.instance-type-field__vm-name', { hasText: vmName })
       .locator('..')
-      .getByRole('button', { name: 'Select menu toggle' });
+      .locator('[data-testid^="instance-type-select-"]');
   }
 
   get instanceTypesSection(): Locator {

@@ -1,11 +1,11 @@
 import type { FC } from 'react';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import SectionHeading from '@components/headers/SectionHeading';
 import OvaFileUploader from '@components/OvaFileUploader/OvaFileUploader';
 import { PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import type { DetailsSectionProps } from './utils/types';
 import { isApplianceManagementEnabled } from './utils/utils';

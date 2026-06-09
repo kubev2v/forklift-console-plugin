@@ -83,6 +83,7 @@ export class Table {
     await saveButton.click();
 
     await expect(modalBody).not.toBeVisible();
+    await expect.poll(async () => this.isColumnVisible(columnName)).toBe(false);
   }
 
   async enableColumn(columnName: string): Promise<void> {
@@ -123,6 +124,7 @@ export class Table {
     await saveButton.click();
 
     await expect(modalBody).not.toBeVisible();
+    await expect.poll(async () => this.isColumnVisible(columnName)).toBe(true);
   }
 
   async getCell(
@@ -137,10 +139,13 @@ export class Table {
       .allTextContents();
     // PatternFly Th with an `info` prop appends screen-reader text (e.g. "More information on
     // inspection status") directly inside the <th>, so allTextContents() returns the column label
-    // concatenated with that extra text. Use startsWith so we match the label regardless.
-    const targetIndex = headers.findIndex((header) =>
-      (header?.trim() ?? '').startsWith(targetColumnName),
-    );
+    // concatenated with that extra text. Match exact label OR label followed by a space (the
+    // separator before the appended screen-reader text) to avoid prefix collisions like
+    // "Name" accidentally matching "Namespace".
+    const targetIndex = headers.findIndex((header) => {
+      const trimmed = header?.trim() ?? '';
+      return trimmed === targetColumnName || trimmed.startsWith(`${targetColumnName} `);
+    });
     if (targetIndex === -1) {
       throw new Error(`Column "${targetColumnName}" not found`);
     }
@@ -154,7 +159,7 @@ export class Table {
     const count = await headers.count();
 
     const headerTexts = await Promise.all(
-      Array.from({ length: count }, async (_, i) => await headers.nth(i).textContent()),
+      Array.from({ length: count }, async (_, i) => headers.nth(i).textContent()),
     );
 
     return headerTexts
@@ -182,7 +187,7 @@ export class Table {
 
   async getRowCount(): Promise<number> {
     const tableContainer = this.getTableContainer();
-    return await tableContainer.locator('tbody tr').count();
+    return tableContainer.locator('tbody tr').count();
   }
 
   async isColumnVisible(columnName: string): Promise<boolean> {

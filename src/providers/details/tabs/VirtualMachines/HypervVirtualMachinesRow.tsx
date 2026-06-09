@@ -5,6 +5,7 @@ import type { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 import { renderResourceRowCells } from '@utils/renderResourceRowCells';
 
+import { GuestOSCellRenderer } from './components/GuestOSCellRenderer';
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
 import type { VMCellProps, VmData } from './components/VMCellProps';
 import { VMConcernsCellRenderer } from './components/VMConcernsCellRenderer';
@@ -12,6 +13,7 @@ import { VMNameCellRenderer } from './components/VMNameCellRenderer';
 
 const cellRenderers: Record<string, FC<VMCellProps>> = {
   concerns: VMConcernsCellRenderer,
+  guestOS: GuestOSCellRenderer,
   name: VMNameCellRenderer,
   status: PowerStateCellRenderer,
 };
