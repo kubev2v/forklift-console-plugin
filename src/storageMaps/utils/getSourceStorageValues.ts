@@ -52,10 +52,21 @@ const getVSphereStorageIds = (vm: ProviderVirtualMachine): string[] => {
 };
 
 /**
- * Extracts storage IDs from OVA VMs
+ * Extracts storage IDs from OVA VMs.
+ *
+ * The OVA backend returns embedded disk objects with PascalCase field names (e.g. `ID`),
+ * while @forklift-ui/types defines them as camelCase (e.g. `id`). Access `ID` directly
+ * and fall back to `id` so the code keeps working if the API is ever aligned.
  */
-const getOvaStorageIds = (vm: EnhancedOvaVM): string[] =>
-  vm.disks?.reduce<string[]>((acc, disk) => (disk.id ? [...acc, disk.id] : acc), []) ?? [];
+const getOvaStorageIds = (vm: EnhancedOvaVM): string[] => {
+  type RawDisk = { ID?: string };
+  return (
+    vm.disks?.reduce<string[]>((acc, disk) => {
+      const id = (disk as unknown as RawDisk).ID ?? disk.id;
+      return id ? [...acc, id] : acc;
+    }, []) ?? []
+  );
+};
 
 /**
  * Extracts storage IDs from Hyper-V VMs
