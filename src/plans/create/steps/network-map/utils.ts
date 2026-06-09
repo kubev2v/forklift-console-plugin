@@ -51,7 +51,15 @@ const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
       }, []);
     }
     case PROVIDER_TYPES.ova: {
-      return vm?.networks?.map((network) => network.id) ?? [];
+      // The OVA backend returns embedded network objects with PascalCase field names (ID),
+      // while @forklift-ui/types defines them as camelCase (id). Access ID directly
+      // and fall back to id so the code keeps working if the API is ever aligned.
+      type RawOvaNet = { ID?: string };
+      return (
+        vm?.networks
+          ?.map((network) => (network as unknown as RawOvaNet).ID ?? network.id)
+          .filter((id): id is string => Boolean(id)) ?? []
+      );
     }
     case PROVIDER_TYPES.hyperv:
       return vm?.networks?.map((network) => network?.id) ?? [];
