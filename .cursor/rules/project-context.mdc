@@ -126,12 +126,29 @@ src/
 
 ---
 
+## OVA Inventory API Field Casing (MTV-5734)
+
+The OVA backend returns **different field casing** depending on context:
+
+- **Standalone endpoints** (`GET /providers/ova/:uid/storages`, `.../networks`): return **camelCase** `id`, `name` — matches `@forklift-ui/types` TypeScript types.
+- **Embedded objects** within VM responses (`GET /providers/ova/:uid/vms?detail=N`): `disks[]` and `networks[]` use **PascalCase** (`ID`, `Name`, `DiskId`, `FilePath`…) — does NOT match TypeScript types.
+
+This means `disk.id` and `network.id` are `undefined` at runtime on VM-embedded objects. Always access via raw cast with fallback:
+
+```typescript
+const id = (disk as unknown as { ID?: string }).ID ?? disk.id;
+```
+
+---
+
 ## Do / Don't
 
 - **Do:** Use GVK constants, useK8sWatchResource, k8s* for operations
 - **Do:** Check provider phase before plan creation; handle async statuses
+- **Do:** Verify actual API responses when investigating field-name bugs — type analysis alone is insufficient
 - **Don't:** Import from feature code in shared (`components/`, `utils/`)
 - **Don't:** Assume resources are always loaded — handle loading/error/empty
+- **Don't:** Assume `@forklift-ui/types` field names match API field names for OVA embedded objects
 
 ---
 

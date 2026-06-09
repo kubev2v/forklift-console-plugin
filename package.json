@@ -28,7 +28,7 @@
     "po-to-i18n": "ocp-i18n-po-to-i18n",
     "memsource-upload": "ocp-i18n-memsource-upload",
     "memsource-download": "ocp-i18n-memsource-download",
-    "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}' plugin-extensions.ts plugin-metadata.ts environment-defaults.ts --cache --cache-location .eslintcache && stylelint \"src/**/*.css\" --allow-empty-input",
+    "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}' 'testing/playwright/**/*.ts' plugin-extensions.ts plugin-metadata.ts environment-defaults.ts --cache --cache-location .eslintcache && stylelint \"src/**/*.css\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.css\" --allow-empty-input --fix",
     "lint:ia": "rm -rf node_modules/.cache/eslint-interactive && npx eslint-interactive .",
     "test:i18n": "bash ./ci/test-i18n.sh",
