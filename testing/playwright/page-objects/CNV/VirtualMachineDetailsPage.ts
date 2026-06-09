@@ -64,7 +64,11 @@ export class VirtualMachineDetailsPage {
         await welcomeDialog.getByRole('button', { name: 'Close' }).click();
         await welcomeDialog.waitFor({ state: 'hidden' });
       }),
-    ]).catch(() => undefined);
+    ]).catch((error: unknown) => {
+      if (!(error instanceof Error) || !error.message.includes('Timeout')) {
+        throw error;
+      }
+    });
 
     await expect(this.overviewTab).toBeVisible({ timeout: PAGE_LOAD_TIMEOUT });
     if (vmName) {

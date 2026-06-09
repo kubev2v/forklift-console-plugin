@@ -8,23 +8,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   async getTableCell(rowColumnName: string, rowValue: string, targetColumnName: string) {
-    const vmRow = this.table.getRow({ [rowColumnName]: rowValue });
-
-    // Get table headers to find the column index
-    const tableContainer = this.page.locator('[role="treegrid"]');
-    const headers = await tableContainer
-      .locator('thead th, thead [role="columnheader"]')
-      .allTextContents();
-
-    const targetIndex = headers.findIndex((header) => {
-      const trimmed = header?.trim() ?? '';
-      return trimmed === targetColumnName || trimmed.startsWith(`${targetColumnName} `);
-    });
-    if (targetIndex === -1) {
-      throw new Error(`Column "${targetColumnName}" not found`);
-    }
-
-    return vmRow.locator(`td:nth-child(${targetIndex + 1})`);
+    return this.table.getCell(rowColumnName, rowValue, targetColumnName);
   }
 
   async navigateToVirtualMachinesTab(): Promise<void> {

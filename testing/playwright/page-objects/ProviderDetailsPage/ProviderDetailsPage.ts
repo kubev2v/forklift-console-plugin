@@ -62,7 +62,7 @@ export class ProviderDetailsPage {
   }
 
   async isInspectVmsButtonVisible(): Promise<boolean> {
-    return this.inspectVmsButton.isVisible();
+    return await this.inspectVmsButton.isVisible();
   }
 
   async navigate(providerName: string, namespace: string): Promise<void> {
