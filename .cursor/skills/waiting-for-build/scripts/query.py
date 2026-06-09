@@ -177,6 +177,9 @@ def find_merge_commit(ticket_key: str, build_tips: Optional[list[str]] = None) -
     """Return the merge commit info for a Jira ticket key, or None.
 
     Uses a whole-word grep so MTV-5 does not accidentally match MTV-50 or MTV-500.
+    Checks both the commit subject and body for the ticket key, so commits that
+    place the reference only in the body (e.g. "Resolves: MTV-XXXX" on its own
+    line) are not silently dropped by the subject-only post-filter.
     When build_tips are provided, prefers the most recent commit that is an
     ancestor of any build tip — avoiding false negatives when a ticket has
     multiple commits (e.g., original merge plus a follow-up fix or cherry-pick).
@@ -190,12 +193,28 @@ def find_merge_commit(ticket_key: str, build_tips: Optional[list[str]] = None) -
         if not out:
             return None
         pattern = re.compile(rf'\b{re.escape(ticket_key)}\b', re.IGNORECASE)
-        candidates = [
-            _parse_commit_line(line)
-            for line in out.splitlines()
-            if pattern.search(line)
-        ]
-        candidates = [c for c in candidates if c is not None]
+        candidates = []
+        for line in out.splitlines():
+            if pattern.search(line):
+                # Key is present in the subject line — fast path.
+                c = _parse_commit_line(line)
+                if c:
+                    candidates.append(c)
+                continue
+            # Key may be only in the commit body (e.g. "Resolves: MTV-XXXX" on
+            # its own line). git's --grep found it there; verify with the full body.
+            parts = line.split(" ", 2)
+            if not parts:
+                continue
+            try:
+                body = _git(["log", "-1", "--format=%B", parts[0]])
+                if pattern.search(body):
+                    c = _parse_commit_line(line)
+                    if c:
+                        candidates.append(c)
+            except subprocess.CalledProcessError:
+                pass
+
         if not candidates:
             return None
 

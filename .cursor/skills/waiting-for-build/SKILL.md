@@ -238,8 +238,12 @@ The script reads from `.mcp.json` → `mcpServers.jira-mcp.env`:
 
 The script runs `git log --all --grep=<KEY> -i` (case-insensitive), then
 post-filters results to **whole-word matches** so that e.g. `MTV-5` does not
-accidentally match `MTV-50` or `MTV-500`. Most commits follow
-`Resolves: MTV-XXXX | title (#PR)` or `MTV-XXXX | title (#PR)`.
+accidentally match `MTV-50` or `MTV-500`. The post-filter checks **both** the
+commit subject and the full commit body, so commits that put the reference only
+in the body (e.g. `Resolves: MTV-XXXX` on its own line, with a generic subject
+like `Fix React crashes (#2420)`) are correctly identified.
+
+Most commits follow `Resolves: MTV-XXXX | title (#PR)` or `MTV-XXXX | title (#PR)`.
 If a ticket has no match, `commit` is `null` — investigate manually with:
 
 ```bash
