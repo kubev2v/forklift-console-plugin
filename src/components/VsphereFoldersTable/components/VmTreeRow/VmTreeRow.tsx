@@ -16,6 +16,7 @@ import { getInspectionResult } from '@utils/crds/conversion/selectors';
 import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
+import { getVmGuestOS } from '@utils/vm/getVmGuestOS';
 
 type VmTreeRowProps = {
   columns: ResourceField[];
@@ -27,6 +28,7 @@ type CellProps = { inspectionStatus: VmInspectionStatus | undefined; row: VmRow 
 
 const VmCells: Record<string, FC<CellProps>> = {
   concerns: ({ row }) => <VirtualMachineConcernsCell vmData={row.vmData} />,
+  guestOS: ({ row }) => <>{getVmGuestOS(row.vmData.vm) || EMPTY_MSG}</>,
   host: ({ row }) => <>{row.vmData.hostName ?? EMPTY_MSG}</>,
   inspectionStatus: ({ inspectionStatus }) => {
     if (inspectionStatus?.status === INSPECTION_STATUS.ISSUES_FOUND) {

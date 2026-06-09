@@ -5,6 +5,7 @@ import {
   PlanSpecVirtualMachinesTableResourceId,
   type SpecVirtualMachinePageData,
 } from '@utils/types/specVirtualMachinePageData';
+import { getVmGuestOS } from '@utils/vm/getVmGuestOS';
 
 import InspectionStatusCell from '../components/InspectionStatusCell';
 import { InstanceTypeCellRenderer } from '../components/InstanceType/InstanceTypeCellRenderer';
@@ -28,6 +29,9 @@ export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePa
     ),
     [PlanSpecVirtualMachinesTableResourceId.Concerns]: (
       <VirtualMachineConcernsCell vmData={inventoryVmData} conditions={conditions} />
+    ),
+    [PlanSpecVirtualMachinesTableResourceId.GuestOS]: (
+      <>{getVmGuestOS(inventoryVmData?.vm) || EMPTY_MSG}</>
     ),
     [PlanSpecVirtualMachinesTableResourceId.InspectionStatus]: (
       <InspectionStatusCell inspectionStatus={inspectionStatus} />

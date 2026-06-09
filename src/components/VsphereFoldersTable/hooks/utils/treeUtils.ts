@@ -21,6 +21,7 @@ import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
 import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 import { getVmPowerState } from '@utils/virtual-machines/getVmPowerState';
+import { getVmGuestOS } from '@utils/vm/getVmGuestOS';
 
 const INSPECTION_STATUS_SEVERITY_RANK: Record<InspectionStatus, number> = {
   [INSPECTION_STATUS.CANCELED]: 6,
@@ -35,6 +36,7 @@ const INSPECTION_STATUS_SEVERITY_RANK: Record<InspectionStatus, number> = {
 type Counts = { Critical: number; Warning: number; Information: number };
 
 export const getVmName = (row: VmRow) => row.vmData.name ?? '';
+export const getVmGuestOSValue = (row: VmRow) => getVmGuestOS(row.vmData.vm);
 export const getVmHost = (row: VmRow) => row.vmData.hostName ?? '';
 export const getVmPath = (row: VmRow) => (row.vmData.vm as VSphereVM)?.path ?? '';
 export const getVmPower = (row: VmRow) => getVmPowerState(row?.vmData?.vm) ?? '';
@@ -102,6 +104,9 @@ export const buildVmComparator = (
   switch (sort.column) {
     case COLUMN_IDS.Name:
       return (first: VmRow, second: VmRow) => dir * cmpStr(getVmName(first), getVmName(second));
+    case COLUMN_IDS.GuestOS:
+      return (first: VmRow, second: VmRow) =>
+        dir * cmpStr(getVmGuestOSValue(first), getVmGuestOSValue(second));
     case COLUMN_IDS.Host:
       return (first: VmRow, second: VmRow) => dir * cmpStr(getVmHost(first), getVmHost(second));
     case COLUMN_IDS.Path:

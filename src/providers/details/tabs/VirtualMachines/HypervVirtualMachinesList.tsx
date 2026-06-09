@@ -6,6 +6,7 @@ import type { ResourceField } from '@components/common/utils/types';
 import { TableSortContextProvider } from '@components/TableSortContextProvider';
 import { t } from '@utils/i18n';
 import { getVmPowerState } from '@utils/virtual-machines/getVmPowerState';
+import { getVmGuestOS } from '@utils/vm/getVmGuestOS';
 
 import { ProviderVirtualMachinesList } from './components/ProviderVirtualMachinesList';
 import type { VmData } from './components/VMCellProps';
@@ -27,6 +28,17 @@ const hypervVmFieldsMetadataFactory: ResourceField[] = [
     sortable: true,
   },
   getConcernsResourceField(),
+  {
+    filter: {
+      placeholderLabel: t('Filter by guest OS'),
+      type: 'freetext',
+    },
+    isVisible: true,
+    jsonPath: (data: unknown) => getVmGuestOS((data as VmData)?.vm),
+    label: t('Guest OS'),
+    resourceFieldId: 'guestOS',
+    sortable: true,
+  },
   {
     filter: {
       placeholderLabel: t('Filter by status'),

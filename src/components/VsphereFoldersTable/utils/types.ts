@@ -13,6 +13,7 @@ export const ROW_TYPE = {
 
 export const COLUMN_IDS = {
   Concerns: 'concerns',
+  GuestOS: 'guestOS',
   Host: 'host',
   InspectionStatus: 'inspectionStatus',
   Name: 'name',

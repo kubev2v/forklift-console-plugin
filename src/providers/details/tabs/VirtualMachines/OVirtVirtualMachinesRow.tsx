@@ -7,6 +7,7 @@ import type { OVirtVM } from '@forklift-ui/types';
 import { Td } from '@patternfly/react-table';
 import { renderResourceRowCells } from '@utils/renderResourceRowCells';
 
+import { GuestOSCellRenderer } from './components/GuestOSCellRenderer';
 import { PowerStateCellRenderer } from './components/PowerStateCellRenderer';
 import type { VMCellProps, VmData } from './components/VMCellProps';
 import { VMConcernsCellRenderer } from './components/VMConcernsCellRenderer';
@@ -16,6 +17,7 @@ const cellRenderers: Record<string, FC<VMCellProps>> = {
   cluster: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.cluster}</TableCell>,
   concerns: VMConcernsCellRenderer,
   description: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.description}</TableCell>,
+  guestOS: GuestOSCellRenderer,
   host: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.host}</TableCell>,
   name: VMNameCellRenderer,
   path: ({ data }) => <TableCell>{(data?.vm as OVirtVM)?.path}</TableCell>,

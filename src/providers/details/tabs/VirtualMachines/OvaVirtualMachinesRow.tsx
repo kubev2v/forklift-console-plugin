@@ -7,12 +7,14 @@ import type { OvaVM } from '@forklift-ui/types';
 import { Td } from '@patternfly/react-table';
 import { renderResourceRowCells } from '@utils/renderResourceRowCells';
 
+import { GuestOSCellRenderer } from './components/GuestOSCellRenderer';
 import type { VMCellProps, VmData } from './components/VMCellProps';
 import { VMConcernsCellRenderer } from './components/VMConcernsCellRenderer';
 import { VMNameCellRenderer } from './components/VMNameCellRenderer';
 
 const cellRenderers: Record<string, FC<VMCellProps>> = {
   concerns: VMConcernsCellRenderer,
+  guestOS: GuestOSCellRenderer,
   name: VMNameCellRenderer,
   ovaPath: ({ data }) => <TableCell>{(data?.vm as OvaVM)?.ovfPath}</TableCell>,
 };

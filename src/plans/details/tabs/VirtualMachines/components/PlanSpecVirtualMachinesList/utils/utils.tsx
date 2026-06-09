@@ -16,6 +16,7 @@ import {
   PlanSpecVirtualMachinesTableResourceId,
   type SpecVirtualMachinePageData,
 } from '@utils/types/specVirtualMachinePageData';
+import { getVmGuestOS } from '@utils/vm/getVmGuestOS';
 
 import { concernSeverityOrTypeFilter } from './concernSeverityOrTypeFilter';
 
@@ -88,6 +89,18 @@ export const specVirtualMachineFields: ResourceField[] = [
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.Concerns,
     sortable: true,
     testId: 'concerns-column-header',
+  },
+  {
+    filter: {
+      placeholderLabel: t('Filter by guest OS'),
+      type: FilterDefType.FreeText,
+    },
+    isVisible: true,
+    jsonPath: (item: unknown) =>
+      getVmGuestOS((item as SpecVirtualMachinePageData).inventoryVmData?.vm),
+    label: t('Guest OS'),
+    resourceFieldId: PlanSpecVirtualMachinesTableResourceId.GuestOS,
+    sortable: true,
   },
   {
     filter: {

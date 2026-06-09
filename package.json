@@ -4,6 +4,9 @@
   "description": "UI for forklift as an openshift console dynamic plugin",
   "license": "Apache-2.0",
   "private": true,
+  "engines": {
+    "node": ">=20 <23"
+  },
   "packageManager": "npm@10.9.2",
   "repository": "https://github.com/kubev2v/forklift-console-plugin.git",
   "lint-staged": {
@@ -48,7 +51,7 @@
     "postinstall": "husky"
   },
   "dependencies": {
-    "@forklift-ui/types": "^1.0.10",
+    "@forklift-ui/types": "^1.1.0",
     "@openshift-console/dynamic-plugin-sdk": "^4.20.0",
     "@patternfly/patternfly": "6.4.0",
     "@patternfly/quickstarts": "6.4.0",

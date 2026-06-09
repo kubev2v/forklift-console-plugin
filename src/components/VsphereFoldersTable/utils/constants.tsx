@@ -11,6 +11,7 @@ export const nameColumn = {
 
 export const defaultColumns: ResourceField[] = [
   { isVisible: true, label: t('Concerns'), resourceFieldId: COLUMN_IDS.Concerns, sortable: true },
+  { isVisible: true, label: t('Guest OS'), resourceFieldId: COLUMN_IDS.GuestOS, sortable: true },
   {
     info: {
       ariaLabel: 'More information on inspection status',
