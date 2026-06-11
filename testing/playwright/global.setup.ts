@@ -4,28 +4,11 @@ import { chromium, type FullConfig, type Page } from '@playwright/test';
 
 import { restoreConsoleLanguage } from './fixtures/helpers/languageHelpers';
 import { LoginPage } from './page-objects/LoginPage';
+import { AUTH_FILE, ENV_RELAY_FILE } from './utils/constants';
+import { RESOURCES_FILE } from './utils/resource-manager/constants';
 import { ResourceFetcher } from './utils/resource-manager/ResourceFetcher';
 import { disableGuidedTour } from './utils/utils';
 import { CNV_VERSION_ENV_VAR, VERSION_ENV_VAR } from './utils/version/constants';
-
-const RESOURCES_FILE = 'playwright/.resources.json';
-
-/**
- * Hardcoded auth file path — must match playwright.config.ts.
- * Never read this from config.projects[0].use.storageState: that value is computed by
- * existsSync() at config-evaluation time and will be `undefined` if the file was deleted
- * (e.g. by a previous failed run). Always writing to this constant path keeps the file
- * alive for config evaluation on the next run.
- */
-const AUTH_FILE = 'playwright/.auth/user.json';
-
-/**
- * Playwright workers do not inherit env vars that were already set before Playwright
- * started — only vars that changed during globalSetup are diffed and forwarded.
- * Write a relay file here so playwright.config.ts (re-evaluated in each worker) can
- * restore them. See github.com/microsoft/playwright/issues/21565.
- */
-const ENV_RELAY_FILE = 'playwright/.env-relay.json';
 
 const ENV_KEYS_TO_RELAY = [
   'BASE_ADDRESS',

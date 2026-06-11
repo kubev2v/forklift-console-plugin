@@ -1,6 +1,9 @@
-import { type Page, test as base } from '@playwright/test';
+import { existsSync } from 'node:fs';
+
+import { type Browser, type BrowserContext, test as base } from '@playwright/test';
 
 import type { createPlanTestData } from '../types/test-data';
+import { AUTH_FILE } from '../utils/constants';
 import { ResourceManager } from '../utils/resource-manager/ResourceManager';
 
 import {
@@ -16,6 +19,13 @@ import {
   type TestProvider,
   type TestStorageMap,
 } from './helpers/resourceCreationHelpers';
+
+const createAuthenticatedContext = async (browser: Browser): Promise<BrowserContext> => {
+  return await browser.newContext({
+    ignoreHTTPSErrors: true,
+    storageState: existsSync(AUTH_FILE) ? AUTH_FILE : undefined,
+  });
+};
 
 export interface FixtureConfig {
   providerScope?: 'test' | 'worker';
@@ -66,12 +76,12 @@ export const createResourceFixtures = (
       providerScope === 'worker'
         ? ([
             async ({ browser }: { browser: any }, use: any) => {
-              const context = await browser.newContext({ ignoreHTTPSErrors: true });
+              const context = await createAuthenticatedContext(browser);
               const page = await context.newPage();
               const tempResourceManager = new ResourceManager();
 
               try {
-                const provider = await createProvider(page as Page, tempResourceManager, {
+                const provider = await createProvider(page, tempResourceManager, {
                   namePrefix: providerPrefix,
                   skipProviderReadyWait,
                 });
@@ -84,15 +94,9 @@ export const createResourceFixtures = (
 
                 await use(provider);
 
-                const cleanupContext = await browser.newContext({ ignoreHTTPSErrors: true });
                 const cleanupManager = new ResourceManager();
-
-                try {
-                  cleanupManager.addResource(provider);
-                  await cleanupManager.instantCleanup();
-                } finally {
-                  await cleanupContext.close();
-                }
+                cleanupManager.addResource(provider);
+                await cleanupManager.instantCleanup();
               } catch (error) {
                 throw new Error(`Failed to create or use provider: ${String(error)}`, {
                   cause: error,

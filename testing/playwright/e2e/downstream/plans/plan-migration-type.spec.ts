@@ -63,12 +63,13 @@ test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
     resourceManager,
     testProvider: _testProvider,
   }) => {
-    // mtv-func-rhel9 is powered-off and has no IPs — preserveStaticIPs must be false
+    // mtv-func-rhel9-uefi is powered-off and has no IPs — preserveStaticIPs must be false
     // to avoid the VMMissingGuestIPs critical condition that would put the plan in CannotStart.
     // The VM must also have no pre-existing snapshots on vSphere; snapshots are incompatible
     // with warm migration (VMHasSnapshots → CannotStart → Duplicate disabled).
     const originalPlan = await createCustomPlan({
       migrationType: MigrationType.WARM,
+      virtualMachines: [{ folder: 'vm', sourceName: 'mtv-func-rhel9-uefi' }],
       additionalPlanSettings: { preserveStaticIPs: false },
     });
     const duplicatePlanName = `dup-${originalPlan.metadata.name}`;

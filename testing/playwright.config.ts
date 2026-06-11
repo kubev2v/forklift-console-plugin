@@ -2,9 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 
 import { defineConfig, devices } from '@playwright/test';
 
-const authFile = 'playwright/.auth/user.json';
-
-const ENV_RELAY_FILE = 'playwright/.env-relay.json';
+import { AUTH_FILE as authFile, ENV_RELAY_FILE } from './playwright/utils/constants';
 
 // Capture keys explicitly set by the user (shell / e2e.env) *before* the relay is loaded.
 // global.setup.ts reads this list to decide whether a version was user-set vs stale-relay.

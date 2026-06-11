@@ -11,6 +11,9 @@ import { CredentialsTab } from './tabs/CredentialsTab';
 import { DetailsTab } from './tabs/DetailsTab';
 import { VirtualMachinesTab } from './tabs/VirtualMachinesTab';
 
+/** URL navigation timeout after the Create Provider wizard submits — not full K8s reconciliation. */
+const PROVIDER_CREATION_TIMEOUT_MS = 60_000;
+
 export class ProviderDetailsPage {
   private readonly navigation: NavigationHelper;
   public readonly credentialsTab: CredentialsTab;
@@ -37,6 +40,17 @@ export class ProviderDetailsPage {
       vsphere: 'VMware',
     };
     return typeMap[type] ?? type;
+  }
+
+  private isProviderDetailsUrl(url: URL, providerName: string, namespace: string): boolean {
+    const urlStr = url.toString();
+    const encodedName = encodeURIComponent(providerName);
+
+    return (
+      urlStr.includes(`/ns/${namespace}/`) &&
+      urlStr.includes(`forklift.konveyor.io~v1beta1~Provider/${encodedName}`) &&
+      !urlStr.includes('~new')
+    );
   }
 
   async clickCreatePlanButton(): Promise<void> {
@@ -136,7 +150,7 @@ export class ProviderDetailsPage {
 
   async verifyProviderDetailsURL(providerName: string, namespace: string): Promise<void> {
     await expect(this.page).toHaveURL((url) =>
-      url.toString().includes(`forklift.konveyor.io~v1beta1~Provider/${namespace}/${providerName}`),
+      this.isProviderDetailsUrl(url, providerName, namespace),
     );
   }
 
@@ -168,6 +182,30 @@ export class ProviderDetailsPage {
   }
 
   async waitForPageLoad(): Promise<void> {
+    await this.page.waitForLoadState('domcontentloaded');
+  }
+
+  async waitForProviderCreation(
+    providerName: string,
+    namespace: string,
+    timeoutMs = PROVIDER_CREATION_TIMEOUT_MS,
+  ): Promise<void> {
+    try {
+      await this.page.waitForURL((url) => this.isProviderDetailsUrl(url, providerName, namespace), {
+        timeout: timeoutMs,
+        waitUntil: 'commit',
+      });
+    } catch (error) {
+      const creationError = this.page.getByRole('heading', { name: /Error creating provider/i });
+      if (await creationError.isVisible()) {
+        const alert = this.page.getByRole('alert').filter({ hasText: 'Error creating provider' });
+        await expect(alert.first()).toBeVisible({ timeout: 5_000 });
+        const rawMessage = ((await alert.first().textContent()) ?? '').trim();
+        const message = rawMessage.length > 0 ? rawMessage : 'unknown error';
+        throw new Error(`Provider creation failed: ${message}`, { cause: error });
+      }
+      throw error;
+    }
     await this.page.waitForLoadState('domcontentloaded');
   }
 
