@@ -236,15 +236,21 @@ The script reads from `.mcp.json` → `mcpServers.jira-mcp.env`:
 
 ## Commit-search heuristic
 
-The script runs `git log --all --grep=<KEY> -i` (case-insensitive), then
-post-filters results to **whole-word matches** so that e.g. `MTV-5` does not
-accidentally match `MTV-50` or `MTV-500`. The post-filter checks **both** the
-commit subject and the full commit body, so commits that put the reference only
-in the body (e.g. `Resolves: MTV-XXXX` on its own line, with a generic subject
-like `Fix React crashes (#2420)`) are correctly identified.
+The script uses a three-stage search for each ticket's merge commit:
+
+**Stage 1 — git grep (subject + body):** Runs `git log --all --grep=<KEY> -i`,
+post-filters to **whole-word matches** (`\b` boundary) so `MTV-5` cannot match
+`MTV-50` or `MTV-500`. Checks both the subject line and the full commit body, so
+commits with `Resolves: MTV-XXXX` only in the body are correctly found.
+
+**Stage 2 — Jira dev-status API (fallback):** If git grep finds nothing, queries
+`/rest/dev-status/1.0/issue/detail` for GitHub PRs directly linked to the ticket
+in Jira. For each MERGED PR returned, searches git log for `(#<number>)` to find
+the merge commit. This catches PRs whose commit messages contain no ticket key at all.
 
 Most commits follow `Resolves: MTV-XXXX | title (#PR)` or `MTV-XXXX | title (#PR)`.
-If a ticket has no match, `commit` is `null` — investigate manually with:
+If a ticket still has no match after both stages, `commit` is `null` — investigate
+manually with:
 
 ```bash
 git log --all --oneline | grep -i "keyword from summary"
