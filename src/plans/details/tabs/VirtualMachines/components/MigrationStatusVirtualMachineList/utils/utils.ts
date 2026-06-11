@@ -9,12 +9,42 @@ import { t } from '@utils/i18n';
 
 import type { MigrationStatusVirtualMachinePageData } from './types';
 
-export const VIRTUAL_MACHINE_CREATION_NAME = 'VirtualMachineCreation';
 export const CUTOVER_NAME = 'Cutover';
 const DISK_ALLOCATION_NAME = 'DiskAllocation';
 const DISK_TRANSFER_PREFIX = 'DiskTransfer';
+export const VIRTUAL_MACHINE_CREATION_NAME = 'VirtualMachineCreation';
+export const WAIT_FOR_GUEST_REBOOTS_NAME = 'WaitForGuestReboots';
 
-export const getVMMigrationStatus = (obj: unknown) => {
+const PIPELINE_STEP_DISPLAY_KEYS: Record<string, string> = {
+  Cutover: 'Cutover',
+  DiskAllocation: 'Disk allocation',
+  DiskTransfer: 'Disk transfer',
+  DiskTransferV2v: 'Disk transfer',
+  ImageConversion: 'Image conversion',
+  Initialize: 'Initialize',
+  PostHook: 'Post-migration hook',
+  PreflightInspection: 'Preflight inspection',
+  PreHook: 'Pre-migration hook',
+  VirtualMachineCreation: 'Virtual machine creation',
+  WaitForFinalSnapshotConsolidation: 'Snapshot consolidation',
+  WaitForGuestReboots: 'Post-migration setup',
+};
+
+export const getPipelineStepDisplayName = (name: string): string => {
+  const key = PIPELINE_STEP_DISPLAY_KEYS[name];
+  return key ? t(key) : name;
+};
+
+export const isVmInPostMigrationSetup = (
+  statusVM: V1beta1PlanStatusMigrationVms | undefined,
+): boolean => {
+  const pipeline = statusVM?.pipeline ?? [];
+  return pipeline.some(
+    (pipe) => pipe?.name === WAIT_FOR_GUEST_REBOOTS_NAME && pipe?.phase === taskStatuses.running,
+  );
+};
+
+export const getVMMigrationStatus = (obj: unknown): string => {
   const vmMigrationStatusData = obj as MigrationStatusVirtualMachinePageData;
   const isError = vmMigrationStatusData.statusVM?.conditions?.find(
     (condition) => condition.type === 'Failed' && condition.status === 'True',
@@ -23,6 +53,7 @@ export const getVMMigrationStatus = (obj: unknown) => {
     (condition) => condition.type === 'Succeeded' && condition.status === 'True',
   );
   const isWaiting = vmMigrationStatusData.statusVM?.phase === 'CopyingPaused';
+  const isPostMigrationSetup = isVmInPostMigrationSetup(vmMigrationStatusData.statusVM);
   const isRunning = vmMigrationStatusData.statusVM?.completed === undefined;
   const notStarted = vmMigrationStatusData.statusVM?.pipeline[0].phase === 'Pending';
 
@@ -36,6 +67,10 @@ export const getVMMigrationStatus = (obj: unknown) => {
 
   if (isWaiting) {
     return t('Waiting');
+  }
+
+  if (isPostMigrationSetup) {
+    return t('Post-migration setup');
   }
 
   if (notStarted) {

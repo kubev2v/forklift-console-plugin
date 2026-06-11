@@ -9,11 +9,12 @@ import { getVMDiskProgress, getVMMigrationStatus } from './utils';
 
 const vmStatuses = [
   { id: 'Failed', label: 'Failed' },
+  { id: 'NotStarted', label: 'Not started' },
+  { id: 'Post-migration setup', label: 'Post-migration setup' },
   { id: 'Running', label: 'Running' },
   { id: 'Succeeded', label: 'Succeeded' },
   { id: 'Unknown', label: 'Unknown' },
   { id: 'Waiting', label: 'Waiting for cutover' },
-  { id: 'NotStarted', label: 'Not started' },
 ];
 export const planMigrationVirtualMachinesFields: ResourceField[] = [
   {
