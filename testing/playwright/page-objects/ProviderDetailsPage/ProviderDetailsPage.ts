@@ -101,7 +101,15 @@ export class ProviderDetailsPage {
   }
 
   async verifyInspectVmsButtonVisible(): Promise<void> {
-    await expect(this.inspectVmsButton).toBeVisible({ timeout: 15000 });
+    // The inspect button lives inside VsphereFolderTreeTable, which is replaced by
+    // LoadingSuspend while inventory is loading. Wait for the treegrid first so we
+    // don't time out on the button before the inventory has finished reloading
+    // (e.g. after navigating away from VMs tab and back).
+    const INVENTORY_LOAD_TIMEOUT_MS = 60_000;
+    await expect(this.page.getByRole('treegrid')).toBeVisible({
+      timeout: INVENTORY_LOAD_TIMEOUT_MS,
+    });
+    await expect(this.inspectVmsButton).toBeVisible({ timeout: 15_000 });
   }
 
   async verifyNavigationTabs(): Promise<void> {

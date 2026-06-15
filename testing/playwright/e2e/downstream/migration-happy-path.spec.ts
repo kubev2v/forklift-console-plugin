@@ -155,6 +155,20 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       await plansPage.navigateToPlan(planName);
       await planDetailsPage.verifyPlanTitle(planName);
 
+      // Guard: skip if the plan has a permanent MAC conflict caused by leftover migrated
+      // VMs from a previous test run that were not cleaned up.  The conflict prevents
+      // the plan from ever becoming Ready, so retrying is pointless.
+      const planResource = await resourceManager.fetchPlan(planName);
+      const hasMacConflict = planResource?.status?.conditions?.some(
+        (condition) => condition.type === 'MacConflicts' && condition.status === 'True',
+      );
+      test.skip(
+        hasMacConflict === true,
+        'Plan has MAC address conflicts from leftover VMs of a previous test run. ' +
+          'Delete VMs matching the mtv-func-*-renamed-* pattern from old test namespaces ' +
+          'on the target cluster, then re-run.',
+      );
+
       // After creation the controller runs VDDK validation, which can transiently surface
       // 'Cannot start' before clearing. waitForPlanReady uses a 5-minute budget so the
       // soft-assertion window doesn't expire before the plan becomes genuinely ready.

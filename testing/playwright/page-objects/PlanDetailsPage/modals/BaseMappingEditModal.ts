@@ -3,6 +3,8 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { BaseModal } from '../../common/BaseModal';
 
 const FORM_SETTLE_MS = 500;
+const MAX_DROPDOWN_ATTEMPTS = 3;
+const OPTION_CLICK_TIMEOUT_MS = 3_000;
 
 /**
  * Configuration for a mapping edit modal.
@@ -31,30 +33,61 @@ export abstract class BaseMappingEditModal extends BaseModal {
     this.addMappingButton = this.modal.getByTestId('add-mapping-button');
   }
 
+  /**
+   * Opens a dropdown and clicks the nth enabled option, retrying if the listbox closes
+   * prematurely between opening and clicking (a known PatternFly flakiness).
+   */
   private async expandAndSelectNth(selectLocator: Locator, nth: number): Promise<void> {
     await expect(selectLocator).toBeVisible();
     await expect(selectLocator).toBeEnabled();
+
+    for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
+      const listbox = await this.openDropdown(selectLocator);
+      const option = listbox.locator('[role="option"]:enabled').nth(nth);
+      try {
+        await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
+        return;
+      } catch {
+        if (attempt === MAX_DROPDOWN_ATTEMPTS - 1) {
+          throw new Error(
+            `Failed to select option at index ${nth} after ${MAX_DROPDOWN_ATTEMPTS} attempts`,
+          );
+        }
+      }
+    }
+  }
+
+  private async openDropdown(selectLocator: Locator): Promise<Locator> {
     await this.page.waitForTimeout(FORM_SETTLE_MS);
     await selectLocator.click();
     await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
     const listbox = this.page.locator('[role="listbox"]:visible').last();
     await expect(listbox).toBeVisible();
-    const option = listbox.locator('[role="option"]:enabled').nth(nth);
-    await expect(option).toBeVisible();
-    await option.click();
+    return listbox;
   }
 
+  /**
+   * Opens a dropdown and clicks the option matching optionText, retrying if the listbox
+   * closes prematurely between opening and clicking (a known PatternFly flakiness).
+   */
   private async selectFromDropdown(selectLocator: Locator, optionText: string): Promise<void> {
     await expect(selectLocator).toBeVisible();
     await expect(selectLocator).toBeEnabled();
-    await this.page.waitForTimeout(FORM_SETTLE_MS);
-    await selectLocator.click();
-    await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
-    const listbox = this.page.locator('[role="listbox"]:visible').last();
-    await expect(listbox).toBeVisible();
-    const option = listbox.getByRole('option', { name: optionText, exact: true }).first();
-    await expect(option).toBeVisible();
-    await option.click();
+
+    for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
+      const listbox = await this.openDropdown(selectLocator);
+      const option = listbox.getByRole('option', { name: optionText, exact: true }).first();
+      try {
+        await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
+        return;
+      } catch {
+        if (attempt === MAX_DROPDOWN_ATTEMPTS - 1) {
+          throw new Error(
+            `Failed to select "${optionText}" after ${MAX_DROPDOWN_ATTEMPTS} attempts`,
+          );
+        }
+      }
+    }
   }
 
   async addMapping(): Promise<number> {

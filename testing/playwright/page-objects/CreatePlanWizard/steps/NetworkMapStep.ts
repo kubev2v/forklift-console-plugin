@@ -13,6 +13,33 @@ export class NetworkMapStep {
   }
 
   /**
+   * Forklift disallows multiple source networks mapped to Default Network (pod network).
+   * When a VM has multiple NICs that are all auto-mapped to Default Network, the wizard
+   * shows a danger alert and blocks "Next". Remove all but the first row so the wizard
+   * can advance.  Only runs when no explicit mappings were provided (auto-map scenario).
+   */
+  private async fixDuplicateDefaultNetworkRows(): Promise<void> {
+    const alertText = 'more than one interface mapped to Default Network';
+    const hasAlert = await this.page
+      .getByText(alertText, { exact: false })
+      .isVisible({ timeout: 1_000 })
+      .catch(() => false);
+
+    if (!hasAlert) return;
+
+    const rows = getMappingWizardFieldRows(this.page);
+    const count = await rows.count();
+
+    for (let i = count - 1; i > 0; i -= 1) {
+      const removeBtn = this.page.getByTestId(`remove-row-${i}`);
+      if (await removeBtn.isVisible()) {
+        await removeBtn.click();
+        await removeBtn.waitFor({ state: 'hidden' });
+      }
+    }
+  }
+
+  /**
    * Returns version-appropriate locators for mapping table rows.
    * 2.11+: uses data-testid="field-row-{n}" (see `getMappingWizardFieldRows`) with network-map-target-network-select.
    * <2.11: uses grid > rowgroup (body) > row with gridcell elements.
@@ -53,6 +80,7 @@ export class NetworkMapStep {
     await this.verifyStepVisible();
     await this.waitForData();
     await this.selectNetworkMap(networkMap);
+    await this.fixDuplicateDefaultNetworkRows();
   }
 
   async selectNetworkMap(networkMap: {
