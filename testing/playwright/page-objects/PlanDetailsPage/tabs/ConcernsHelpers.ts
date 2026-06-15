@@ -84,17 +84,18 @@ export class ConcernsHelpers {
     // accessibility tree when rendered inside an expandable row — use th element locator.
     // Scope to the last row in vmTable that contains a <th> (the expanded details row)
     // so assertions cannot spuriously match headers from other tables on the page.
+    // Column names in the expanded concerns table: Label, Category, Assessment.
     const expandedRow = this.vmTable
       .getByRole('row')
       .filter({ has: this.page.locator('th') })
       .last();
-    for (const col of ['Issue', 'Severity', 'Description']) {
+    for (const col of ['Label', 'Category', 'Assessment']) {
       await expect(expandedRow.locator('th', { hasText: col })).toBeVisible();
     }
   }
 
   async verifyExpandedRowIsCollapsed(): Promise<void> {
-    await expect(this.vmTable.locator('th', { hasText: 'Issue' })).not.toBeVisible();
+    await expect(this.vmTable.locator('th', { hasText: 'Label' })).not.toBeVisible();
   }
 
   async verifyFilteredRowsHaveBadge(category: ConcernCategory, timeout = 60000): Promise<void> {

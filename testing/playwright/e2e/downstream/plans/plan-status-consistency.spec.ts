@@ -159,6 +159,24 @@ test.describe(
         return fetched!;
       });
 
+      // This test verifies plan status RECOVERS to Ready after a NetworkMap is fixed.
+      // It requires the plan to start in Ready state — if it is already Cannot start
+      // (e.g. due to critical VM concerns unrelated to the NetworkMap), restoring the
+      // NetworkMap will not clear those concerns and the assertion will never pass.
+      const planHasCriticalCondition = plan.status?.conditions?.some(
+        (condition) =>
+          (condition.category === 'Critical' || condition.type === 'Critical') &&
+          condition.status === 'True',
+      );
+      if (planHasCriticalCondition) {
+        test.skip(
+          true,
+          'Plan already has a Critical condition before the test scenario starts — ' +
+            'skipping stale-conditions test (precondition: plan must be in Ready state).',
+        );
+        return;
+      }
+
       const networkMapRef = plan.spec?.map?.network;
       if (!networkMapRef?.name) {
         test.skip(true, 'Plan has no referenced NetworkMap');

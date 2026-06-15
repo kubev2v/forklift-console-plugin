@@ -25,6 +25,7 @@ import {
   type ProviderData,
   SourceNetworks,
 } from '../../types/test-data';
+import { requireVddk } from '../../utils/requireVddk';
 import { ELEMENT_TIMEOUT, MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 import { CNV_4_21_0, V2_10_5, V2_12_0 } from '../../utils/version/constants';
@@ -34,6 +35,7 @@ const targetProjectName = `test-project-${Date.now()}`;
 
 test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => {
   requireVersion(test, V2_10_5);
+  requireVddk(test);
 
   const resourceManager = new ResourceManager();
 

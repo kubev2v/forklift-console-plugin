@@ -10,6 +10,7 @@ import {
   inspectionStatusDisplayToFilterId,
   isCompletedInspectionStatus,
 } from '../../../utils/inspection-status';
+import { requireVddk } from '../../../utils/requireVddk';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
@@ -63,6 +64,7 @@ const setupPlanDetailsPage = async (
 test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
   test.describe.configure({ mode: 'serial' });
   requireVersion(test, V2_12_0);
+  requireVddk(test);
 
   test('should show Inspect VMs button for vSphere plans', async ({
     page,
