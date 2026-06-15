@@ -32,14 +32,14 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
     const planNamespace = testPlan.metadata.namespace;
 
     // Remove the last VM from the plan via API so it becomes available for the "add" flow
-    const plan = await resourceManager.fetchPlan(page, planName, planNamespace);
+    const plan = await resourceManager.fetchPlan(planName, planNamespace);
     const vms = plan?.spec?.vms ?? [];
     expect(vms.length).toBeGreaterThan(1);
 
     const removedVm = vms[vms.length - 1];
     const remainingVms = vms.slice(0, -1);
 
-    const patchResult = await resourceManager.patchResource(page, {
+    const patchResult = await resourceManager.patchResource({
       kind: 'Plan',
       resourceName: planName,
       namespace: planNamespace,
@@ -95,7 +95,7 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
       await planDetailsPage.virtualMachinesTab.verifyRowIsVisible({ Name: removedVm.name! });
 
       // API-level verification
-      const updatedPlan = await resourceManager.fetchPlan(page, planName, planNamespace);
+      const updatedPlan = await resourceManager.fetchPlan(planName, planNamespace);
       const planVmNames = (updatedPlan?.spec?.vms ?? []).map((vm) => vm.name);
       expect(planVmNames).toContain(removedVm.name);
     });
@@ -109,7 +109,7 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
     });
 
     await test.step('6. Verify button is disabled for non-editable plans (archived)', async () => {
-      const archiveResult = await resourceManager.patchResource(page, {
+      const archiveResult = await resourceManager.patchResource({
         kind: 'Plan',
         resourceName: planName,
         namespace: planNamespace,

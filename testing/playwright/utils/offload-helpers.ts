@@ -1,5 +1,3 @@
-import type { Page } from '@playwright/test';
-
 import { MTV_NAMESPACE } from './resource-manager/constants';
 import { createSecret } from './resource-manager/ResourceCreator';
 import type { ResourceManager } from './resource-manager/ResourceManager';
@@ -9,7 +7,6 @@ import type { ResourceManager } from './resource-manager/ResourceManager';
  * and returns the generated secret name.
  */
 export const createOffloadTestSecret = async (
-  page: Page,
   resourceManager: ResourceManager,
 ): Promise<string> => {
   const secretName = `vs8-secret-${crypto.randomUUID().slice(0, 8)}`;
@@ -22,7 +19,7 @@ export const createOffloadTestSecret = async (
     type: 'Opaque',
   };
 
-  await createSecret(page, secret, MTV_NAMESPACE);
+  await createSecret(secret, MTV_NAMESPACE);
   resourceManager.addSecret(secretName, MTV_NAMESPACE);
 
   return secretName;

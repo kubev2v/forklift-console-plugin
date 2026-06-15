@@ -108,7 +108,7 @@ test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
     await test.step('Verify spec.type and spec.warm are both updated via API', async () => {
       await expect
         .poll(async () => {
-          const plan = await resourceManager.fetchPlan(page, duplicatePlanName);
+          const plan = await resourceManager.fetchPlan(duplicatePlanName);
           return { type: plan?.spec?.type, warm: plan?.spec?.warm };
         })
         .toEqual({ type: 'cold', warm: false });

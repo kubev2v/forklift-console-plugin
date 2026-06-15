@@ -58,10 +58,7 @@ test.describe('Provider Creation Tests', () => {
           });
 
           await test.step('Verify provider resource', async () => {
-            const providerResource = await resourceManager.fetchProvider(
-              page,
-              testProviderData.name,
-            );
+            const providerResource = await resourceManager.fetchProvider(testProviderData.name);
             expect(providerResource).not.toBeNull();
             expect(providerResource?.spec?.type).toBe(providerType);
 

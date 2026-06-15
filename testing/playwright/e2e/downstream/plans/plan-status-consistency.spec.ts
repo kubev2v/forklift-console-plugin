@@ -1,5 +1,4 @@
-import type { V1beta1Plan } from '@forklift-ui/types';
-import { expect, type Page } from '@playwright/test';
+import { expect } from '@playwright/test';
 
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
@@ -39,19 +38,17 @@ const findStaleMapCondition = (conditions: Condition[], mapKind: string): Condit
 type MapVerifyOptions = {
   fallbackNamespace: string;
   mapKind: 'network' | 'storage';
-  page: Page;
   planConditions: Condition[];
   ref: { name?: string; namespace?: string } | undefined;
   resourceManager: ResourceManager;
 };
 
 const verifyMapNotStale = async (opts: MapVerifyOptions): Promise<void> => {
-  const { fallbackNamespace, mapKind, page, planConditions, ref, resourceManager } = opts;
+  const { fallbackNamespace, mapKind, planConditions, ref, resourceManager } = opts;
   if (!ref?.name) return;
 
   const fetchMethod = mapKind === 'network' ? 'fetchNetworkMap' : 'fetchStorageMap';
   const mapResource = await resourceManager[fetchMethod](
-    page,
     ref.name,
     ref.namespace ?? fallbackNamespace,
   );
@@ -97,7 +94,7 @@ test.describe(
       });
 
       const plan = await test.step('Fetch Plan CR via API', async () => {
-        const fetched = await resourceManager.fetchPlan(page, planName, planNamespace);
+        const fetched = await resourceManager.fetchPlan(planName, planNamespace);
         expect(fetched).not.toBeNull();
         return fetched!;
       });
@@ -137,7 +134,7 @@ test.describe(
       });
 
       await test.step('Verify maps are Ready with no stale plan conditions', async () => {
-        const common = { fallbackNamespace: planNamespace, page, planConditions, resourceManager };
+        const common = { fallbackNamespace: planNamespace, planConditions, resourceManager };
         await verifyMapNotStale({ ...common, mapKind: 'network', ref: plan.spec?.map?.network });
         await verifyMapNotStale({ ...common, mapKind: 'storage', ref: plan.spec?.map?.storage });
       });
@@ -157,7 +154,7 @@ test.describe(
       const planDetailsPage = new PlanDetailsPage(page);
 
       const plan = await test.step('Fetch Plan CR', async () => {
-        const fetched = await resourceManager.fetchPlan(page, planName, planNamespace);
+        const fetched = await resourceManager.fetchPlan(planName, planNamespace);
         expect(fetched).not.toBeNull();
         return fetched!;
       });
@@ -171,7 +168,6 @@ test.describe(
       const nmNamespace = networkMapRef.namespace ?? planNamespace;
 
       const originalNetworkMap = await resourceManager.fetchNetworkMap(
-        page,
         networkMapRef.name,
         nmNamespace,
       );
@@ -187,7 +183,7 @@ test.describe(
 
       try {
         await test.step('Break NetworkMap by pointing to non-existent provider', async () => {
-          const patched = await resourceManager.patchResource(page, {
+          const patched = await resourceManager.patchResource({
             kind: 'NetworkMap',
             resourceName: networkMapRef.name!,
             namespace: nmNamespace,
@@ -206,7 +202,7 @@ test.describe(
         });
       } finally {
         await test.step('Restore NetworkMap to original provider', async () => {
-          await resourceManager.patchResource(page, {
+          await resourceManager.patchResource({
             kind: 'NetworkMap',
             resourceName: networkMapRef.name!,
             namespace: nmNamespace,
@@ -221,7 +217,7 @@ test.describe(
         await page.reload();
         await planDetailsPage.waitForPlanStatus('Ready for migration');
 
-        const refreshed = await resourceManager.fetchPlan(page, planName, planNamespace);
+        const refreshed = await resourceManager.fetchPlan(planName, planNamespace);
         expect(refreshed).not.toBeNull();
 
         const conditions = (refreshed!.status?.conditions ?? []) as Condition[];

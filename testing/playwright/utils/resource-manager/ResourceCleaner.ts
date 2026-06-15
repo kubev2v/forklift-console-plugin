@@ -1,27 +1,25 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
-import type { BrowserContextOptions, Page } from '@playwright/test';
-
-import { AUTH_FILE } from '../constants';
 import { isEmpty } from '../utils';
 
 import { BaseResourceManager } from './BaseResourceManager';
-import { MTV_NAMESPACE, RESOURCES_FILE } from './constants';
+import { API_PATHS, MTV_NAMESPACE, RESOURCE_TYPES, RESOURCES_FILE } from './constants';
 import type { SupportedResource } from './ResourceManager';
 
 /**
- * Handles cleanup and deletion of Kubernetes resources
+ * Handles cleanup and deletion of Kubernetes resources.
+ * All operations use Node.js HTTP directly — no browser Page required.
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ResourceCleaner extends BaseResourceManager {
-  static async cleanupAll(page: Page, resources: SupportedResource[]): Promise<void> {
+  static async cleanupAll(resources: SupportedResource[]): Promise<void> {
     if (isEmpty(resources)) {
       console.log('No resources to cleanup');
       return;
     }
 
     const cleanupPromises = resources.map(async (resource) =>
-      ResourceCleaner.deleteResource(page, resource),
+      ResourceCleaner.deleteResource(resource),
     );
 
     const results = await Promise.allSettled(cleanupPromises);
@@ -33,7 +31,6 @@ export class ResourceCleaner extends BaseResourceManager {
     for (const result of results) {
       if (result.status === 'fulfilled') {
         const { skipped } = result.value;
-
         if (skipped) {
           skippedCount += 1;
         } else {
@@ -52,7 +49,6 @@ export class ResourceCleaner extends BaseResourceManager {
   }
 
   private static async deleteResource(
-    page: Page,
     resource: SupportedResource,
   ): Promise<{ success: boolean; skipped: boolean; reason?: string }> {
     const resourceName = resource.metadata?.name;
@@ -64,101 +60,26 @@ export class ResourceCleaner extends BaseResourceManager {
 
     const resourceType = ResourceCleaner.getResourceType(resource);
 
-    const constants = ResourceCleaner.getEvaluateConstants();
+    const buildApiPath = (): string => {
+      if (resourceType === RESOURCE_TYPES.VIRTUAL_MACHINES) {
+        return `${API_PATHS.KUBEVIRT}/namespaces/${namespace}/${resourceType}/${resourceName}`;
+      }
+      if (resourceType === RESOURCE_TYPES.PROJECTS) {
+        return `${API_PATHS.OPENSHIFT_PROJECT}/${resourceType}/${resourceName}`;
+      }
+      if (resourceType === RESOURCE_TYPES.NAMESPACES) {
+        return `${API_PATHS.KUBERNETES_CORE}/${resourceType}/${resourceName}`;
+      }
+      if (resourceType === RESOURCE_TYPES.SECRETS) {
+        return `${API_PATHS.KUBERNETES_CORE}/namespaces/${namespace}/${resourceType}/${resourceName}`;
+      }
+      return `${API_PATHS.FORKLIFT}/namespaces/${namespace}/${resourceType}/${resourceName}`;
+    };
+
+    const apiPath = buildApiPath();
 
     try {
-      const result = await page.evaluate(
-        async ({ resType, resName, resNamespace, evalConstants }) => {
-          try {
-            const getCsrfTokenFromCookie = () => {
-              const cookies = document.cookie.split('; ');
-              const csrfCookie = cookies.find((cookie) =>
-                cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
-              );
-              return csrfCookie ? csrfCookie.split('=')[1] : '';
-            };
-            const csrfToken = getCsrfTokenFromCookie();
-
-            let apiPath = '';
-            if (resType === evalConstants.VIRTUAL_MACHINES_TYPE) {
-              apiPath = `${evalConstants.KUBEVIRT_PATH}/namespaces/${resNamespace}/${resType}/${resName}`;
-            } else if (resType === evalConstants.PROJECTS_TYPE) {
-              apiPath = `${evalConstants.OPENSHIFT_PROJECT_PATH}/${resType}/${resName}`;
-            } else if (resType === evalConstants.NAMESPACES_TYPE) {
-              apiPath = `${evalConstants.KUBERNETES_CORE}/${resType}/${resName}`;
-            } else if (resType === evalConstants.SECRETS_TYPE) {
-              apiPath = `${evalConstants.KUBERNETES_CORE}/namespaces/${resNamespace}/${resType}/${resName}`;
-            } else {
-              apiPath = `${evalConstants.FORKLIFT_PATH}/namespaces/${resNamespace}/${resType}/${resName}`;
-            }
-
-            const response = await fetch(apiPath, {
-              method: 'DELETE',
-              headers: {
-                [evalConstants.CONTENT_TYPE_HEADER]: evalConstants.APPLICATION_JSON,
-                [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
-              },
-              credentials: 'include',
-            });
-
-            if (response.ok || response.status === 404) {
-              return { success: true, error: null, wasNotFound: response.status === 404 };
-            }
-
-            const errorText = await response.text().catch(() => response.statusText);
-
-            return {
-              success: false,
-              error: {
-                message: errorText,
-                status: response.status,
-              },
-            };
-          } catch (error: unknown) {
-            const err = error as any;
-            return {
-              success: false,
-              error: {
-                message: err?.message ?? String(error),
-                status: err?.status ?? 'unknown',
-              },
-            };
-          }
-        },
-        {
-          resType: resourceType,
-          resName: resourceName,
-          resNamespace: namespace,
-          evalConstants: constants,
-        },
-      );
-
-      if (!result.success) {
-        const { error } = result;
-
-        if (!error) {
-          throw new Error('Failed to delete: unknown error');
-        }
-
-        if (error.status === 404 || error.message.includes('not found')) {
-          return { success: true, skipped: true, reason: 'not found' };
-        }
-
-        if (error.status === 403 || error.message.includes('Forbidden')) {
-          return {
-            success: true,
-            skipped: true,
-            reason: 'deletion forbidden',
-          };
-        }
-
-        throw new Error(`Failed to delete: ${error.message}`);
-      }
-
-      if (result.wasNotFound) {
-        return { success: true, skipped: true, reason: 'not found' };
-      }
-
+      await ResourceCleaner.apiDelete(apiPath);
       return { success: true, skipped: false };
     } catch (error) {
       const errorStr = String(error);
@@ -168,11 +89,7 @@ export class ResourceCleaner extends BaseResourceManager {
       }
 
       if (errorStr.includes('403') || errorStr.includes('Forbidden')) {
-        return {
-          success: true,
-          skipped: true,
-          reason: 'deletion forbidden',
-        };
+        return { success: true, skipped: true, reason: 'deletion forbidden' };
       }
 
       throw error;
@@ -184,46 +101,6 @@ export class ResourceCleaner extends BaseResourceManager {
       return ResourceCleaner.getResourceTypeFromKind(resource.kind);
     }
     return 'unknown';
-  }
-
-  static async instantCleanup(
-    resources: SupportedResource[],
-    baseUrl = process.env.BRIDGE_BASE_ADDRESS ??
-      process.env.BASE_ADDRESS ??
-      'http://localhost:9000',
-    storageStatePath?: string,
-  ): Promise<void> {
-    if (isEmpty(resources)) {
-      return;
-    }
-
-    const { chromium } = await import('@playwright/test');
-    const browser = await chromium.launch({ headless: true });
-
-    const contextOptions: BrowserContextOptions = {
-      ignoreHTTPSErrors: true,
-    };
-
-    if (storageStatePath) {
-      contextOptions.storageState = storageStatePath;
-    } else if (existsSync(AUTH_FILE)) {
-      contextOptions.storageState = AUTH_FILE;
-    }
-
-    const context = await browser.newContext(contextOptions);
-    const page = await context.newPage();
-
-    try {
-      await page.goto(`${baseUrl}/k8s/all-namespaces/forklift.konveyor.io~v1beta1~Provider`);
-      await page.waitForLoadState('domcontentloaded');
-      await ResourceCleaner.cleanupAll(page, resources);
-    } catch (error) {
-      console.error('Error during instant cleanup:', error);
-      throw error;
-    } finally {
-      await context.close();
-      await browser.close();
-    }
   }
 
   static loadResourcesFromFile(): SupportedResource[] {

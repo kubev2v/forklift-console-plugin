@@ -31,7 +31,7 @@ const fetchProviderSettings = async (
   resourceManager: ResourceManager,
   providerName: string,
 ): Promise<Record<string, string> | undefined> => {
-  const providerResource = await resourceManager.fetchProvider(page, providerName);
+  const providerResource = await resourceManager.fetchProvider(providerName);
   expect(providerResource).not.toBeNull();
   return providerResource?.spec?.settings as Record<string, string> | undefined;
 };

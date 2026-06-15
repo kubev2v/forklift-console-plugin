@@ -1,6 +1,11 @@
-import type { Page } from '@playwright/test';
+import { existsSync, readFileSync } from 'node:fs';
+import * as http from 'node:http';
+import * as https from 'node:https';
+import { URL } from 'node:url';
 
-import { API_PATHS, COOKIE_NAMES, HTTP_HEADERS, RESOURCE_KINDS, RESOURCE_TYPES } from './constants';
+import { AUTH_FILE } from '../constants';
+
+import { RESOURCE_KINDS, RESOURCE_TYPES } from './constants';
 
 type ApiResult<T> =
   | { data: T; status: number; success: true }
@@ -12,14 +17,73 @@ type ApiRequestOptions = {
   method: string;
 };
 
+type StorageCookie = {
+  name: string;
+  value: string;
+};
+
+type StorageState = {
+  cookies: StorageCookie[];
+};
+
 /**
- * Base class providing shared functionality for resource manager classes
+ * Reads session cookies from the saved Playwright storageState file.
+ * These cookies are written by global.setup.ts after browser login and
+ * are the same credentials the browser would use — but now consumed
+ * directly by Node.js HTTP calls so that no browser page is required.
+ */
+const getSessionCookies = (): { sessionToken: string; csrfToken: string } => {
+  if (!existsSync(AUTH_FILE)) {
+    throw new Error(
+      `Auth file not found at "${AUTH_FILE}". ` +
+        'Run global setup (login) before resource operations.',
+    );
+  }
+
+  const state = JSON.parse(readFileSync(AUTH_FILE, 'utf8')) as StorageState;
+  const sessionCookie = state.cookies.find((cookie) => cookie.name === 'openshift-session-token');
+  const csrfCookie = state.cookies.find((cookie) => cookie.name === 'csrf-token');
+
+  if (!sessionCookie?.value) {
+    throw new Error(
+      'openshift-session-token not found in auth file. ' +
+        'Re-run global setup to refresh the session.',
+    );
+  }
+
+  return {
+    sessionToken: sessionCookie.value,
+    csrfToken: csrfCookie?.value ?? '',
+  };
+};
+
+const getConsoleBaseUrl = (): string =>
+  (process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS ?? 'http://localhost:9000').replace(
+    /\/$/,
+    '',
+  );
+
+/**
+ * Base class providing shared Node.js HTTP functionality for resource managers.
+ *
+ * All Kubernetes API calls go through the OpenShift console proxy
+ * (/api/kubernetes/...) using the session cookies saved by global.setup.ts.
+ * This decouples resource creation/deletion/fetching from any browser Page
+ * instance — the browser is only required for UI interactions in actual test steps.
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class BaseResourceManager {
-  /** Generic GET helper — handles CSRF token, headers, and error handling. */
-  public static async apiGet<R>(page: Page, apiPath: string): Promise<R | null> {
-    const result = await BaseResourceManager.apiRequest<R>(page, apiPath, { method: 'GET' });
+  static async apiDelete<R>(apiPath: string): Promise<R | null> {
+    const result = await BaseResourceManager.apiRequest<R>(apiPath, { method: 'DELETE' });
+
+    if (result.success) return result.data;
+
+    console.error(`API DELETE ${apiPath} failed: ${result.error}`);
+    return null;
+  }
+
+  static async apiGet<R>(apiPath: string): Promise<R | null> {
+    const result = await BaseResourceManager.apiRequest<R>(apiPath, { method: 'GET' });
 
     if (result.success) return result.data;
 
@@ -27,14 +91,12 @@ export abstract class BaseResourceManager {
     return null;
   }
 
-  /** Generic PATCH helper — handles CSRF token, headers, and error handling. */
-  public static async apiPatch<R>(
-    page: Page,
+  static async apiPatch<R>(
     apiPath: string,
     data: unknown,
     contentType = 'application/merge-patch+json',
   ): Promise<R | null> {
-    const result = await BaseResourceManager.apiRequest<R>(page, apiPath, {
+    const result = await BaseResourceManager.apiRequest<R>(apiPath, {
       body: data,
       contentType,
       method: 'PATCH',
@@ -46,9 +108,8 @@ export abstract class BaseResourceManager {
     return null;
   }
 
-  /** Generic POST helper — handles CSRF token, headers, and error handling. */
-  public static async apiPost<R>(page: Page, apiPath: string, data: unknown): Promise<R | null> {
-    const result = await BaseResourceManager.apiRequest<R>(page, apiPath, {
+  static async apiPost<R>(apiPath: string, data: unknown): Promise<R | null> {
+    const result = await BaseResourceManager.apiRequest<R>(apiPath, {
       body: data,
       method: 'POST',
     });
@@ -67,71 +128,66 @@ export abstract class BaseResourceManager {
   }
 
   private static async apiRequest<R>(
-    page: Page,
     apiPath: string,
     options: ApiRequestOptions,
   ): Promise<ApiResult<R>> {
-    const constants = BaseResourceManager.getEvaluateConstants();
+    const baseUrl = getConsoleBaseUrl();
+    const { sessionToken, csrfToken } = getSessionCookies();
 
-    return page.evaluate(
-      async ({ body, contentType, evalConstants, method, path }): Promise<ApiResult<R>> => {
-        try {
-          const cookies = document.cookie.split('; ');
-          const csrfCookie = cookies.find((cookie) =>
-            cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
-          );
-          const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+    const fullUrl = new URL(apiPath, baseUrl);
+    const isHttps = fullUrl.protocol === 'https:';
+    const transport = isHttps ? https : http;
+    const body = options.body === undefined ? undefined : JSON.stringify(options.body);
 
-          const response = await fetch(path, {
-            ...(body !== undefined && { body: JSON.stringify(body) }),
-            credentials: 'include',
-            headers: {
-              [evalConstants.CONTENT_TYPE_HEADER]: contentType ?? evalConstants.APPLICATION_JSON,
-              [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
-            },
-            method,
-          });
+    const cookieHeader = csrfToken
+      ? `openshift-session-token=${sessionToken}; csrf-token=${csrfToken}`
+      : `openshift-session-token=${sessionToken}`;
 
-          if (response.ok) {
-            return { data: await response.json(), status: response.status, success: true };
-          }
-
-          const errorText = await response.text().catch(() => response.statusText);
-          return { error: errorText, status: response.status, success: false };
-        } catch (error: unknown) {
-          const err = error as Error;
-          return { error: err?.message ?? String(error), status: 0, success: false };
-        }
-      },
-      {
-        body: options.body,
-        contentType: options.contentType,
-        evalConstants: constants,
+    return new Promise((resolve) => {
+      const reqOptions: https.RequestOptions = {
+        hostname: fullUrl.hostname,
+        port: fullUrl.port || (isHttps ? 443 : 80),
+        path: fullUrl.pathname + fullUrl.search,
         method: options.method,
-        path: apiPath,
-      },
-    );
+        rejectUnauthorized: false,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': options.contentType ?? 'application/json',
+          Cookie: cookieHeader,
+          'X-CSRFToken': csrfToken,
+          ...(body ? { 'Content-Length': String(Buffer.byteLength(body)) } : {}),
+        },
+      };
+
+      const req = transport.request(reqOptions, (res) => {
+        let data = '';
+        res.on('data', (chunk: string) => {
+          data += chunk;
+        });
+        res.on('end', () => {
+          const status = res.statusCode ?? 0;
+          if (status >= 200 && status < 300) {
+            try {
+              resolve({ data: JSON.parse(data) as R, status, success: true });
+            } catch {
+              resolve({ data: data as unknown as R, status, success: true });
+            }
+          } else {
+            resolve({ error: data || `HTTP ${status}`, status, success: false });
+          }
+        });
+      });
+
+      req.on('error', (err: Error) => {
+        resolve({ error: err.message, status: 0, success: false });
+      });
+
+      if (body) req.write(body);
+      req.end();
+    });
   }
 
-  public static getEvaluateConstants() {
-    return {
-      CSRF_TOKEN_NAME: COOKIE_NAMES.CSRF_TOKEN,
-      CONTENT_TYPE_HEADER: HTTP_HEADERS.CONTENT_TYPE,
-      APPLICATION_JSON: HTTP_HEADERS.APPLICATION_JSON,
-      CSRF_TOKEN_HEADER: HTTP_HEADERS.CSRF_TOKEN,
-      FORKLIFT_PATH: API_PATHS.FORKLIFT,
-      KUBEVIRT_PATH: API_PATHS.KUBEVIRT,
-      KUBERNETES_CORE: API_PATHS.KUBERNETES_CORE,
-      OPENSHIFT_PROJECT_PATH: API_PATHS.OPENSHIFT_PROJECT,
-      NAD_PATH: API_PATHS.NAD,
-      SECRETS_TYPE: RESOURCE_TYPES.SECRETS,
-      VIRTUAL_MACHINES_TYPE: RESOURCE_TYPES.VIRTUAL_MACHINES,
-      PROJECTS_TYPE: RESOURCE_TYPES.PROJECTS,
-      NAMESPACES_TYPE: RESOURCE_TYPES.NAMESPACES,
-    } as const;
-  }
-
-  public static getResourceTypeFromKind(kind: string): string {
+  static getResourceTypeFromKind(kind: string): string {
     const kindToType: Record<string, string> = {
       [RESOURCE_KINDS.FORKLIFT_CONTROLLER]: RESOURCE_TYPES.FORKLIFT_CONTROLLERS,
       [RESOURCE_KINDS.MIGRATION]: RESOURCE_TYPES.MIGRATIONS,

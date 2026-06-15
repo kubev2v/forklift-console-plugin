@@ -19,7 +19,7 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
     if (!testPlan) throw new Error('testPlan is required');
 
     const planDetailsPage = new PlanDetailsPage(page);
-    const secretName = await createOffloadTestSecret(page, resourceManager);
+    const secretName = await createOffloadTestSecret(resourceManager);
 
     await test.step('Navigate to Mappings tab', async () => {
       await planDetailsPage.mappingsTab.navigateToMappingsTab();

@@ -55,7 +55,7 @@ const buildTestProviderResult = (providerData: ProviderData): TestProvider => {
       namespace: MTV_NAMESPACE,
     },
   };
-  (provider as any).testData = providerData;
+  (provider as unknown as { testData: ProviderData }).testData = providerData;
   return provider;
 };
 
@@ -74,25 +74,25 @@ export type TestPlan = V1beta1Plan & {
   testData: ReturnType<typeof createPlanTestData>;
 };
 
-export interface CreateProviderOptions {
+export type CreateProviderOptions = {
   providerKey?: string;
   namePrefix?: string;
   customProviderData?: Partial<ProviderData>;
   skipProviderReadyWait?: boolean;
-}
+};
 
+/**
+ * Creates an OVA provider directly via the Kubernetes API.
+ * Does not require a browser page — uses Node.js HTTP with storageState cookies.
+ */
 const createOvaProviderViaApi = async (
-  page: Page,
   resourceManager: ResourceManager,
   providerData: ProviderData,
 ): Promise<void> => {
-  const createProviderPage = new CreateProviderPage(page, resourceManager);
-  await createProviderPage.navigationHelper.navigateToConsole();
-
   const secretName = `${providerData.name}-secret`;
   const secret = createSecretObject(secretName, MTV_NAMESPACE, { url: providerData.hostname });
 
-  const createdSecret = await createSecretApi(page, secret, MTV_NAMESPACE);
+  const createdSecret = await createSecretApi(secret, MTV_NAMESPACE);
   if (!createdSecret) {
     throw new Error(`Failed to create secret for OVA provider ${providerData.name}`);
   }
@@ -105,7 +105,7 @@ const createOvaProviderViaApi = async (
     settings: { applianceManagement: 'true' },
   });
 
-  const createdProvider = await createProviderApi(page, provider, MTV_NAMESPACE);
+  const createdProvider = await createProviderApi(provider, MTV_NAMESPACE);
   if (!createdProvider) {
     throw new Error(`Failed to create OVA provider ${providerData.name}`);
   }
@@ -177,7 +177,7 @@ export const createProvider = async (
   const providerData = buildProviderData(key, providerName, customProviderData);
 
   if (providerData.type === ProviderType.OVA) {
-    await createOvaProviderViaApi(page, resourceManager, providerData);
+    await createOvaProviderViaApi(resourceManager, providerData);
   } else {
     await createProviderViaUi(page, resourceManager, providerData, !skipProviderReadyWait);
   }
@@ -185,10 +185,10 @@ export const createProvider = async (
   return buildTestProviderResult(providerData);
 };
 
-export interface CreatePlanOptions {
+export type CreatePlanOptions = {
   sourceProvider: V1beta1Provider;
   customPlanData?: Partial<ReturnType<typeof createPlanTestData>>;
-}
+};
 
 const buildPlanTestData = (
   sourceProviderName: string,

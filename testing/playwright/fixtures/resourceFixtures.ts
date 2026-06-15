@@ -27,7 +27,7 @@ const createAuthenticatedContext = async (browser: Browser): Promise<BrowserCont
   });
 };
 
-export interface FixtureConfig {
+export type FixtureConfig = {
   providerScope?: 'test' | 'worker';
   planScope?: 'test' | 'none';
   networkMapScope?: 'test' | 'none';
@@ -37,9 +37,9 @@ export interface FixtureConfig {
   networkMapPrefix?: string;
   storageMapPrefix?: string;
   skipProviderReadyWait?: boolean;
-}
+};
 
-export interface ConfigurableResourceFixtures {
+export type ConfigurableResourceFixtures = {
   resourceManager: ResourceManager;
   testProvider: TestProvider | undefined;
   testPlan: TestPlan | undefined;
@@ -51,7 +51,8 @@ export interface ConfigurableResourceFixtures {
   createCustomProvider: (options?: CreateProviderOptions) => Promise<TestProvider>;
   createCustomNetworkMap: (options?: Partial<CreateNetworkMapOptions>) => Promise<TestNetworkMap>;
   createCustomStorageMap: (options?: Partial<CreateStorageMapOptions>) => Promise<TestStorageMap>;
-}
+};
+
 export const createResourceFixtures = (
   config: FixtureConfig = {},
 ): ReturnType<typeof base.extend<ConfigurableResourceFixtures>> => {
@@ -70,12 +71,16 @@ export const createResourceFixtures = (
     resourceManager: async ({ page: _page }, use) => {
       const manager = new ResourceManager();
       await use(manager);
-      await manager.instantCleanup();
+      await manager.cleanupAll();
     },
+
     testProvider:
       providerScope === 'worker'
         ? ([
-            async ({ browser }: { browser: any }, use: any) => {
+            async (
+              { browser }: { browser: Browser },
+              use: (provider: TestProvider) => Promise<void>,
+            ) => {
               const context = await createAuthenticatedContext(browser);
               const page = await context.newPage();
               const tempResourceManager = new ResourceManager();
@@ -96,7 +101,7 @@ export const createResourceFixtures = (
 
                 const cleanupManager = new ResourceManager();
                 cleanupManager.addResource(provider);
-                await cleanupManager.instantCleanup();
+                await cleanupManager.cleanupAll();
               } catch (error) {
                 throw new Error(`Failed to create or use provider: ${String(error)}`, {
                   cause: error,
@@ -150,24 +155,24 @@ export const createResourceFixtures = (
     testNetworkMap:
       networkMapScope === 'none'
         ? undefined
-        : async ({ page, resourceManager, testProvider }, use) => {
+        : async ({ resourceManager, testProvider }, use) => {
             if (!testProvider) {
               throw new Error('testNetworkMap fixture requires testProvider fixture to be enabled');
             }
 
-            const networkMap = await createNetworkMap(page, resourceManager, {
+            const networkMap = await createNetworkMap(resourceManager, {
               sourceProvider: testProvider,
               namePrefix: networkMapPrefix,
             });
             await use(networkMap);
           },
 
-    createCustomNetworkMap: async ({ page, resourceManager, testProvider }, use) => {
+    createCustomNetworkMap: async ({ resourceManager, testProvider }, use) => {
       const createNetworkMapFn = async (options?: Partial<CreateNetworkMapOptions>) => {
         if (!testProvider) {
           throw new Error('createCustomNetworkMap requires testProvider fixture to be enabled');
         }
-        return createNetworkMap(page, resourceManager, {
+        return createNetworkMap(resourceManager, {
           sourceProvider: testProvider,
           ...options,
         });
@@ -178,24 +183,24 @@ export const createResourceFixtures = (
     testStorageMap:
       storageMapScope === 'none'
         ? undefined
-        : async ({ page, resourceManager, testProvider }, use) => {
+        : async ({ resourceManager, testProvider }, use) => {
             if (!testProvider) {
               throw new Error('testStorageMap fixture requires testProvider fixture to be enabled');
             }
 
-            const storageMap = await createStorageMap(page, resourceManager, {
+            const storageMap = await createStorageMap(resourceManager, {
               sourceProvider: testProvider,
               namePrefix: storageMapPrefix,
             });
             await use(storageMap);
           },
 
-    createCustomStorageMap: async ({ page, resourceManager, testProvider }, use) => {
+    createCustomStorageMap: async ({ resourceManager, testProvider }, use) => {
       const createStorageMapFn = async (options?: Partial<CreateStorageMapOptions>) => {
         if (!testProvider) {
           throw new Error('createCustomStorageMap requires testProvider fixture to be enabled');
         }
-        return createStorageMap(page, resourceManager, {
+        return createStorageMap(resourceManager, {
           sourceProvider: testProvider,
           ...options,
         });

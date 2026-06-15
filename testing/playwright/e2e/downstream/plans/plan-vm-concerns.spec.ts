@@ -87,12 +87,12 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
         const planNamespace = testPlan.metadata.namespace;
 
         // Add a duplicate VM to trigger Critical:DuplicateVM condition
-        const plan = await resourceManager.fetchPlan(page, planName, planNamespace);
+        const plan = await resourceManager.fetchPlan(planName, planNamespace);
         const vms = plan?.spec?.vms ?? [];
         expect(vms.length).toBeGreaterThan(0);
 
         const [firstVm] = vms;
-        const patchedPlan = await resourceManager.patchResource(page, {
+        const patchedPlan = await resourceManager.patchResource({
           kind: 'Plan',
           resourceName: planName,
           namespace: planNamespace,

@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
 
-import { chromium, type FullConfig, type Page } from '@playwright/test';
+import { chromium, type FullConfig } from '@playwright/test';
 
 import { restoreConsoleLanguage } from './fixtures/helpers/languageHelpers';
 import { LoginPage } from './page-objects/LoginPage';
@@ -31,13 +31,12 @@ const USER_SET_KEYS = new Set(
 /**
  * Auto-detect the Forklift/MTV operator version from the cluster CSV.
  *
- * Always fetches from the cluster. If the user explicitly set FORKLIFT_VERSION in e2e.env / shell,
- * the detected value is discarded in favour of theirs (intentional override). This ensures a stale
- * relay value is never silently carried forward across runs.
+ * Called after browser login so user.json (storageState) is available for
+ * the Node.js HTTP client used by ResourceFetcher.
  */
-const detectForkliftVersion = async (page: Page): Promise<void> => {
+const detectForkliftVersion = async (): Promise<void> => {
   try {
-    const detectedVersion = await ResourceFetcher.fetchMtvVersion(page);
+    const detectedVersion = await ResourceFetcher.fetchMtvVersion();
     if (process.env[VERSION_ENV_VAR] && USER_SET_KEYS.has(VERSION_ENV_VAR)) {
       console.error(`📌 Using user-set Forklift version: ${process.env[VERSION_ENV_VAR]}`);
     } else if (detectedVersion) {
@@ -56,9 +55,9 @@ const detectForkliftVersion = async (page: Page): Promise<void> => {
  * When CNV_VERSION was explicitly set by the user in e2e.env / shell, respect it.
  * Unlike Forklift, CNV version is optional — tests run when it's unknown.
  */
-const detectCnvVersion = async (page: Page): Promise<void> => {
+const detectCnvVersion = async (): Promise<void> => {
   try {
-    const detectedVersion = await ResourceFetcher.fetchCnvVersion(page);
+    const detectedVersion = await ResourceFetcher.fetchCnvVersion();
     if (process.env[CNV_VERSION_ENV_VAR] && USER_SET_KEYS.has(CNV_VERSION_ENV_VAR)) {
       console.error(`📌 Using user-set CNV version: ${process.env[CNV_VERSION_ENV_VAR]}`);
     } else if (detectedVersion) {
@@ -119,8 +118,10 @@ const globalSetup = async (config: FullConfig) => {
       await page.context().storageState({ path: AUTH_FILE });
       console.error('✅ Authentication completed successfully');
 
-      await detectForkliftVersion(page);
-      await detectCnvVersion(page);
+      // Version detection uses the saved storageState (user.json) to authenticate
+      // Node.js HTTP calls — no browser page needed beyond this point.
+      await detectForkliftVersion();
+      await detectCnvVersion();
     } catch (error) {
       const screenshotPath = 'playwright/test-results/global-setup-login-failure.png';
       await page.screenshot({ path: screenshotPath, fullPage: true }).catch(() => undefined);
@@ -132,19 +133,6 @@ const globalSetup = async (config: FullConfig) => {
     }
   } else {
     console.error('⚠️ No credentials provided, skipping authentication setup');
-
-    const browser = await chromium.launch();
-    const page = await browser.newPage({ ignoreHTTPSErrors: true });
-
-    try {
-      await page.goto(baseURL, { waitUntil: 'domcontentloaded', timeout: 10_000 });
-      await detectForkliftVersion(page);
-      await detectCnvVersion(page);
-    } catch {
-      console.error('⚠️ Could not reach cluster for version detection, using env vars/defaults');
-    } finally {
-      await browser.close();
-    }
 
     if (!process.env[VERSION_ENV_VAR]) {
       process.env[VERSION_ENV_VAR] = 'latest';

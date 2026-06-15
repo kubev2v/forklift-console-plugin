@@ -6,7 +6,6 @@ import type {
   V1beta1StorageMap,
   V1VirtualMachine,
 } from '@forklift-ui/types';
-import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
 import {
@@ -20,25 +19,17 @@ import {
 import type { SupportedResource } from './ResourceManager';
 
 /**
- * Handles fetching resources from Kubernetes APIs
+ * Handles fetching resources from Kubernetes APIs.
+ * All operations use Node.js HTTP directly — no browser Page required.
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ResourceFetcher extends BaseResourceManager {
-  /**
-   * Fetches the CNV (OpenShift Virtualization) operator version from the cluster
-   * by reading the ClusterServiceVersion (CSV) resource created by OLM.
-   *
-   * Looks for a CSV whose name starts with "kubevirt-hyperconverged-operator"
-   * (downstream) or "community-kubevirt-hyperconverged" (upstream).
-   *
-   * @returns The semver version string (e.g. "4.18.0") or null if not found.
-   */
-  static async fetchCnvVersion(page: Page, namespace = CNV_NAMESPACE): Promise<string | null> {
+  static async fetchCnvVersion(namespace = CNV_NAMESPACE): Promise<string | null> {
     type CsvItem = { metadata?: { name?: string }; spec?: { version?: string } };
     type CsvList = { items?: CsvItem[] };
 
     const apiPath = `${API_PATHS.OLM_CSV}/namespaces/${namespace}/clusterserviceversions`;
-    const data = await ResourceFetcher.apiGet<CsvList>(page, apiPath);
+    const data = await ResourceFetcher.apiGet<CsvList>(apiPath);
 
     if (!data?.items) {
       return null;
@@ -57,32 +48,22 @@ export class ResourceFetcher extends BaseResourceManager {
   }
 
   static async fetchForkliftController(
-    page: Page,
     controllerName: string,
     namespace = MTV_NAMESPACE,
   ): Promise<V1beta1ForkliftController | null> {
-    return ResourceFetcher.fetchResource<V1beta1ForkliftController>(page, {
+    return ResourceFetcher.fetchResource<V1beta1ForkliftController>({
       kind: RESOURCE_KINDS.FORKLIFT_CONTROLLER,
       resourceName: controllerName,
       namespace,
     });
   }
 
-  /**
-   * Fetches the MTV/Forklift operator version from the cluster by reading the
-   * ClusterServiceVersion (CSV) resource created by OLM.
-   *
-   * Looks for a CSV whose name starts with "mtv-operator" (downstream) or
-   * "forklift-operator" (upstream) and returns its spec.version.
-   *
-   * @returns The semver version string (e.g. "2.7.0") or null if not found.
-   */
-  static async fetchMtvVersion(page: Page, namespace = MTV_NAMESPACE): Promise<string | null> {
+  static async fetchMtvVersion(namespace = MTV_NAMESPACE): Promise<string | null> {
     type CsvItem = { metadata?: { name?: string }; spec?: { version?: string } };
     type CsvList = { items?: CsvItem[] };
 
     const apiPath = `${API_PATHS.OLM_CSV}/namespaces/${namespace}/clusterserviceversions`;
-    const data = await ResourceFetcher.apiGet<CsvList>(page, apiPath);
+    const data = await ResourceFetcher.apiGet<CsvList>(apiPath);
 
     if (!data?.items) {
       return null;
@@ -101,23 +82,18 @@ export class ResourceFetcher extends BaseResourceManager {
   }
 
   static async fetchNetworkMap(
-    page: Page,
     networkMapName: string,
     namespace = MTV_NAMESPACE,
   ): Promise<V1beta1NetworkMap | null> {
-    return ResourceFetcher.fetchResource<V1beta1NetworkMap>(page, {
+    return ResourceFetcher.fetchResource<V1beta1NetworkMap>({
       kind: RESOURCE_KINDS.NETWORK_MAP,
       resourceName: networkMapName,
       namespace,
     });
   }
 
-  static async fetchPlan(
-    page: Page,
-    planName: string,
-    namespace = MTV_NAMESPACE,
-  ): Promise<V1beta1Plan | null> {
-    return ResourceFetcher.fetchResource<V1beta1Plan>(page, {
+  static async fetchPlan(planName: string, namespace = MTV_NAMESPACE): Promise<V1beta1Plan | null> {
+    return ResourceFetcher.fetchResource<V1beta1Plan>({
       kind: RESOURCE_KINDS.PLAN,
       resourceName: planName,
       namespace,
@@ -125,21 +101,21 @@ export class ResourceFetcher extends BaseResourceManager {
   }
 
   static async fetchProvider(
-    page: Page,
     providerName: string,
     namespace = MTV_NAMESPACE,
   ): Promise<V1beta1Provider | null> {
-    return ResourceFetcher.fetchResource<V1beta1Provider>(page, {
+    return ResourceFetcher.fetchResource<V1beta1Provider>({
       kind: RESOURCE_KINDS.PROVIDER,
       resourceName: providerName,
       namespace,
     });
   }
 
-  static async fetchResource<T extends SupportedResource>(
-    page: Page,
-    options: { kind: string; resourceName: string; namespace: string },
-  ): Promise<T | null> {
+  static async fetchResource<T extends SupportedResource>(options: {
+    kind: string;
+    resourceName: string;
+    namespace: string;
+  }): Promise<T | null> {
     const { kind, namespace, resourceName } = options;
     const resourceType = ResourceFetcher.getResourceTypeFromKind(kind);
 
@@ -147,15 +123,14 @@ export class ResourceFetcher extends BaseResourceManager {
       kind === RESOURCE_KINDS.VIRTUAL_MACHINE ? API_PATHS.KUBEVIRT : API_PATHS.FORKLIFT;
     const apiPath = `${basePath}/namespaces/${namespace}/${resourceType}/${resourceName}`;
 
-    return ResourceFetcher.apiGet<T>(page, apiPath);
+    return ResourceFetcher.apiGet<T>(apiPath);
   }
 
   static async fetchStorageMap(
-    page: Page,
     storageMapName: string,
     namespace = MTV_NAMESPACE,
   ): Promise<V1beta1StorageMap | null> {
-    return ResourceFetcher.fetchResource<V1beta1StorageMap>(page, {
+    return ResourceFetcher.fetchResource<V1beta1StorageMap>({
       kind: RESOURCE_KINDS.STORAGE_MAP,
       resourceName: storageMapName,
       namespace,
@@ -163,11 +138,10 @@ export class ResourceFetcher extends BaseResourceManager {
   }
 
   static async fetchVirtualMachine(
-    page: Page,
     vmName: string,
     namespace: string,
   ): Promise<V1VirtualMachine | null> {
-    return ResourceFetcher.fetchResource<V1VirtualMachine>(page, {
+    return ResourceFetcher.fetchResource<V1VirtualMachine>({
       kind: RESOURCE_KINDS.VIRTUAL_MACHINE,
       resourceName: vmName,
       namespace,
