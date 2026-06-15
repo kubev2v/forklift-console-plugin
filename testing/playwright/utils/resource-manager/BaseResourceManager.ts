@@ -150,6 +150,12 @@ export abstract class BaseResourceManager {
 
     if (result.success) return result.data;
 
+    const HTTP_NOT_FOUND = 404;
+
+    if (result.status === HTTP_NOT_FOUND) {
+      return null;
+    }
+
     console.error(`API DELETE ${apiPath} failed: ${result.error}`);
     return null;
   }
