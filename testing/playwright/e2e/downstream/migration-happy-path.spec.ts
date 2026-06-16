@@ -145,8 +145,12 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream', '@slow'],
     },
     async ({ page }) => {
-      const timeout = 20 * 60000;
-      test.setTimeout(timeout);
+      // Budget for the actual disk-transfer phase (two VMs: Linux + Windows).
+      // A Windows cold migration can take 20-30 min on a loaded cluster.
+      const MIGRATION_TIMEOUT_MS = 30 * 60_000;
+      // Add headroom for navigation, plan-ready wait (up to 5 min) and post-migration checks.
+      const OVERHEAD_MS = 8 * 60_000;
+      test.setTimeout(MIGRATION_TIMEOUT_MS + OVERHEAD_MS);
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
 
@@ -178,7 +182,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       await planDetailsPage.verifyMigrationInProgress();
 
       console.log('⏳ Waiting for migration to complete...');
-      await planDetailsPage.waitForMigrationCompletion(timeout, true);
+      await planDetailsPage.waitForMigrationCompletion(MIGRATION_TIMEOUT_MS, true);
 
       // Verify each migrated VM exists and add to cleanup
       for (const vm of testPlanData.virtualMachines ?? []) {
