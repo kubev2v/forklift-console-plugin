@@ -68,7 +68,11 @@ export class ProviderDetailsPage {
   }
 
   get inspectVmsButton() {
-    return this.page.getByTestId('provider-inspect-vms-button');
+    // The testId on this button changed between builds:
+    //   - older builds: data-testid="plan-inspect-vms-button" (default value)
+    //   - newer builds (after MTV-2487): data-testid="provider-inspect-vms-button"
+    // Use a role-based locator so the test works regardless of which build is deployed.
+    return this.page.getByRole('main').getByRole('button', { name: 'Inspect VMs' });
   }
 
   get inspectVmsMenuItem() {
