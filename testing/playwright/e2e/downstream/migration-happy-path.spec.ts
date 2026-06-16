@@ -165,8 +165,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       expect(
         hasMacConflict,
         'Plan has MAC address conflicts from leftover VMs of a previous test run. ' +
-          'Delete VMs matching the mtv-func-*-renamed-* pattern from old test namespaces ' +
-          'on the target cluster, then re-run.',
+          'Run global-cleanup-migration.sh on the target cluster to remove them, then re-run.',
       ).toBe(false);
 
       // After creation the controller runs VDDK validation, which can transiently surface
