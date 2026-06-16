@@ -37,6 +37,12 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   requireVersion(test, V2_10_5);
   requireVddk(test);
 
+  // Tracks whether the cold migration test actually ran. When it is skipped (e.g.
+  // due to MAC conflicts), subsequent tests that depend on migrated VMs must also
+  // skip. Playwright's test.describe.serial only auto-skips on FAILURE, not on an
+  // intentional test.skip(), so we propagate the skip manually via this flag.
+  let migrationDidRun = false;
+
   const resourceManager = new ResourceManager();
 
   let testProviderData: ProviderData = {
@@ -199,6 +205,8 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
         expect(vmResource?.metadata?.name).toBe(migratedVMName);
         expect(vmResource?.metadata?.namespace).toBe(testPlanData.targetProject.name);
       }
+
+      migrationDidRun = true;
     },
   );
 
@@ -212,6 +220,10 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
       requireCNVVersion(test, CNV_4_21_0);
       test.setTimeout(TEST_TIMEOUT);
+
+      // The cold migration test was skipped (e.g. MAC conflict). No VMs were
+      // migrated, so there is nothing to verify here.
+      test.skip(!migrationDidRun, 'Skipped: cold migration did not run (see previous test).');
 
       const planDetailsPage = new PlanDetailsPage(page);
       const plansPage = new PlansListPage(page);
@@ -257,6 +269,10 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
     },
     async ({ page }) => {
       requireVersion(test, V2_12_0);
+      test.skip(
+        !migrationDidRun,
+        'Skipped: cold migration did not run (see "should run cold migration").',
+      );
       test.setTimeout(120000);
       const overviewPage = new OverviewPage(page);
 

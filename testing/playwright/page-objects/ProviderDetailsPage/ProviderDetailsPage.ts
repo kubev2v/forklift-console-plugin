@@ -63,7 +63,7 @@ export class ProviderDetailsPage {
   }
 
   async clickInspectVmsButton(): Promise<void> {
-    await expect(this.inspectVmsButton).toBeVisible();
+    await this.verifyInspectVmsButtonVisible();
     await this.inspectVmsButton.click();
   }
 
@@ -105,11 +105,16 @@ export class ProviderDetailsPage {
     // LoadingSuspend while inventory is loading. Wait for the treegrid first so we
     // don't time out on the button before the inventory has finished reloading
     // (e.g. after navigating away from VMs tab and back).
+    //
+    // The button also depends on the provider resource being available via
+    // useK8sWatchResource (separate from VM inventory loading). After the SPA
+    // navigates away and back the WebSocket watch reconnects, which can take
+    // additional seconds after the treegrid renders. Give it the same budget.
     const INVENTORY_LOAD_TIMEOUT_MS = 60_000;
     await expect(this.page.getByRole('treegrid')).toBeVisible({
       timeout: INVENTORY_LOAD_TIMEOUT_MS,
     });
-    await expect(this.inspectVmsButton).toBeVisible({ timeout: 15_000 });
+    await expect(this.inspectVmsButton).toBeVisible({ timeout: INVENTORY_LOAD_TIMEOUT_MS });
   }
 
   async verifyNavigationTabs(): Promise<void> {
