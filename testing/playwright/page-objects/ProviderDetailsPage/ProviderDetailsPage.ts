@@ -101,19 +101,26 @@ export class ProviderDetailsPage {
   }
 
   async verifyInspectVmsButtonVisible(): Promise<void> {
-    // The inspect button lives inside VsphereFolderTreeTable, which is replaced by
-    // LoadingSuspend while inventory is loading. Wait for the treegrid first so we
-    // don't time out on the button before the inventory has finished reloading
-    // (e.g. after navigating away from VMs tab and back).
+    // The inspect button is rendered by VsphereFolderTreeTable only when `provider`
+    // (from useK8sWatchResource) is non-null. On fresh page loads or after SPA
+    // navigation the loading sequence is:
+    //   1. provider = null  → treegrid renders but is EMPTY (no VM rows)
+    //   2. k8s watch resolves → useInventoryVms re-triggers → LoadingSuspend replaces treegrid
+    //   3. inventory REST response → treegrid re-renders with real rows AND provider is set → button appears
     //
-    // The button also depends on the provider resource being available via
-    // useK8sWatchResource (separate from VM inventory loading). After the SPA
-    // navigates away and back the WebSocket watch reconnects, which can take
-    // additional seconds after the treegrid renders. Give it the same budget.
+    // Waiting for just the treegrid catches step 1 (empty treegrid, no button yet).
+    // Waiting for actual VM rows ensures we are at step 3 where the button is present.
     const INVENTORY_LOAD_TIMEOUT_MS = 60_000;
-    await expect(this.page.getByRole('treegrid')).toBeVisible({
-      timeout: INVENTORY_LOAD_TIMEOUT_MS,
-    });
+    const treegrid = this.page.getByRole('treegrid');
+    await expect(treegrid).toBeVisible({ timeout: INVENTORY_LOAD_TIMEOUT_MS });
+
+    // Wait for at least one real VM or folder row — this ensures the full load cycle
+    // (k8s watch + inventory REST call) has completed and `provider` is non-null.
+    const vmRow = treegrid.locator(
+      'tbody tr[data-testid^="folder-"], tbody tr[data-testid^="vm-"]',
+    );
+    await expect(vmRow.first()).toBeVisible({ timeout: INVENTORY_LOAD_TIMEOUT_MS });
+
     await expect(this.inspectVmsButton).toBeVisible({ timeout: INVENTORY_LOAD_TIMEOUT_MS });
   }
 
