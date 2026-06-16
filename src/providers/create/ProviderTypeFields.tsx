@@ -12,7 +12,6 @@ import Ec2CrossAccountCredentialsFields from './fields/ec2/Ec2CrossAccountCreden
 import Ec2RegionField from './fields/ec2/Ec2RegionField';
 import Ec2TargetSettingsFields from './fields/ec2/Ec2TargetSettingsFields';
 import HypervCredentialsFields from './fields/hyperv/HypervCredentialsFields';
-import HypervTransferMethodField from './fields/hyperv/HypervTransferMethodField';
 import OpenShiftUrlField from './fields/openshift/OpenShiftUrlField';
 import ServiceAccountTokenField from './fields/openshift/ServiceAccountTokenField';
 import OpenStackAuthenticationTypeField from './fields/openstack/OpenStackAuthenticationTypeField';
@@ -109,7 +108,6 @@ const ProviderTypeFields: FC = () => {
 
       {selectedProviderType === PROVIDER_TYPES.hyperv && (
         <>
-          <HypervTransferMethodField />
           <SectionHeading text={t('Provider credentials')} />
           <HypervCredentialsFields />
           <CertificateValidationField />
