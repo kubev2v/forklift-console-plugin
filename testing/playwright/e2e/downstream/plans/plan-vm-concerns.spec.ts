@@ -52,7 +52,7 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
         await planDetailsPage.virtualMachinesTab.concerns.closeConcernPopover();
       });
 
-      await customPlanTest.step('4. Test expandable VM row for concerns details', async () => {
+      await customPlanTest.step('4. Test expandable VM row shows inspections section', async () => {
         await planDetailsPage.virtualMachinesTab.expandFirstVMDetailsRow();
         await planDetailsPage.virtualMachinesTab.concerns.verifyExpandedRowHasConcernDetails();
         await planDetailsPage.virtualMachinesTab.collapseFirstVMDetailsRow();
