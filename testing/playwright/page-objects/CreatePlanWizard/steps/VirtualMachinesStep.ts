@@ -112,6 +112,11 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     }
 
     if (isVersionAtLeast(V2_11_0)) {
+      // Wait for the search results to load before trying to check the row.
+      // The inventory API can be slow; without this the default 15s action
+      // timeout fires before the filtered row is visible.
+      const VM_ROW_TIMEOUT = 60_000;
+      await expect(this.table.getRow({ Name: vmName })).toBeVisible({ timeout: VM_ROW_TIMEOUT });
       await this.table.selectRow({ Name: vmName });
     } else {
       // 2.10.x: treegrid uses role="row"; rows contain checkbox "Row N checkbox" and VM name in rowheader

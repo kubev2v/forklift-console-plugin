@@ -177,6 +177,16 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       // soft-assertion window doesn't expire before the plan becomes genuinely ready.
       await planDetailsPage.waitForPlanReady();
 
+      // Pre-register VMs for cleanup before migration starts so teardown removes them
+      // even if waitForMigrationCompletion times out (without this, a timeout leaves
+      // VMs on the cluster and the retry immediately hits MAC conflicts).
+      for (const vm of testPlanData.virtualMachines ?? []) {
+        const migratedVMName = vm.targetName ?? vm.sourceName;
+        if (migratedVMName) {
+          resourceManager.addVm(migratedVMName, testPlanData.targetProject.name);
+        }
+      }
+
       await planDetailsPage.clickActionsMenuAndStart();
 
       await planDetailsPage.verifyMigrationInProgress();
@@ -184,16 +194,13 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       console.log('⏳ Waiting for migration to complete...');
       await planDetailsPage.waitForMigrationCompletion(MIGRATION_TIMEOUT_MS, true);
 
-      // Verify each migrated VM exists and add to cleanup
+      // Verify each migrated VM exists
       for (const vm of testPlanData.virtualMachines ?? []) {
         const migratedVMName = vm.targetName ?? vm.sourceName;
         if (!migratedVMName) {
           throw new Error('VM name is required for verification');
         }
 
-        resourceManager.addVm(migratedVMName, testPlanData.targetProject.name);
-
-        // Fetch the migrated VM to verify it exists
         const vmResource = await resourceManager.fetchVirtualMachine(
           migratedVMName,
           testPlanData.targetProject.name,
