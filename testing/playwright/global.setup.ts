@@ -1,10 +1,13 @@
 import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
 
+import { execSync } from 'node:child_process';
+
 import { chromium, type FullConfig } from '@playwright/test';
 
 import { restoreConsoleLanguage } from './fixtures/helpers/languageHelpers';
 import { LoginPage } from './page-objects/LoginPage';
-import { AUTH_FILE, ENV_RELAY_FILE } from './utils/constants';
+import { AUTH_FILE, ENV_RELAY_FILE, KUBECONFIG_FILE } from './utils/constants';
+import { BaseResourceManager } from './utils/resource-manager/BaseResourceManager';
 import { RESOURCES_FILE } from './utils/resource-manager/constants';
 import { ResourceFetcher } from './utils/resource-manager/ResourceFetcher';
 import { disableGuidedTour } from './utils/utils';
@@ -16,6 +19,7 @@ const ENV_KEYS_TO_RELAY = [
   'CNV_VERSION',
   'FORKLIFT_VERSION',
   'JENKINS',
+  'KUBECONFIG_PATH',
   'LIGHTSPEED_INSTALLED',
   'VSPHERE_PROVIDER',
 ] as const;
@@ -27,6 +31,54 @@ const ENV_KEYS_TO_RELAY = [
 const USER_SET_KEYS = new Set(
   (process.env.PLAYWRIGHT_USER_SET_KEYS ?? '').split(',').filter(Boolean),
 );
+
+/**
+ * Fetches the cluster API server URL from the OpenShift infrastructure CR.
+ * Uses cookie-based auth (console proxy) — called while cookies are still fresh,
+ * before the kubeconfig is generated.
+ */
+const fetchClusterApiUrl = async (): Promise<string | null> => {
+  type InfraCluster = { status?: { apiServerURL?: string } };
+  const infra = await BaseResourceManager.apiGet<InfraCluster>(
+    '/api/kubernetes/apis/config.openshift.io/v1/infrastructures/cluster',
+  );
+  return infra?.status?.apiServerURL ?? null;
+};
+
+/**
+ * Runs `oc login` to generate a kubeconfig at KUBECONFIG_FILE.
+ * Writes KUBECONFIG_PATH into process.env so subsequent Node.js HTTP calls in
+ * this process (detectForkliftVersion, etc.) use the kubeconfig-based auth path.
+ *
+ * Falls back gracefully when:
+ *  - CLUSTER_USERNAME / CLUSTER_PASSWORD are not set
+ *  - The cluster API URL cannot be determined
+ *  - The `oc` binary is not available
+ */
+const generateKubeconfig = async (username: string, password: string): Promise<void> => {
+  const clusterApiUrl =
+    process.env.CLUSTER_API_URL?.replace(/\/$/, '') ?? (await fetchClusterApiUrl());
+
+  if (!clusterApiUrl) {
+    console.error(
+      '⚠️ Could not determine cluster API URL — skipping kubeconfig generation. ' +
+        'Set CLUSTER_API_URL env var to enable kubeconfig-based auth.',
+    );
+    return;
+  }
+
+  try {
+    execSync(
+      `oc login "${clusterApiUrl}" -u "${username}" -p "${password}" --insecure-skip-tls-verify --kubeconfig "${KUBECONFIG_FILE}"`,
+      { stdio: 'pipe', timeout: 30_000 },
+    );
+    Object.assign(process.env, { KUBECONFIG_PATH: KUBECONFIG_FILE });
+    console.error(`✅ kubeconfig written to ${KUBECONFIG_FILE} — workers will use direct API auth`);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`⚠️ oc login failed (${message}) — workers will fall back to session cookies`);
+  }
+};
 
 /**
  * Auto-detect the Forklift/MTV operator version from the cluster CSV.
@@ -113,13 +165,19 @@ const globalSetup = async (config: FullConfig) => {
         console.error('⚠️ networkidle timed out before language restore; proceeding');
       });
 
-      await restoreConsoleLanguage(page);
-
       await page.context().storageState({ path: AUTH_FILE });
       console.error('✅ Authentication completed successfully');
 
-      // Version detection uses the saved storageState (user.json) to authenticate
-      // Node.js HTTP calls — no browser page needed beyond this point.
+      await restoreConsoleLanguage(page);
+
+      // Generate a kubeconfig using oc login so workers can talk directly to the
+      // cluster API server with a long-lived Bearer token instead of session cookies.
+      // Must happen after storageState is saved (fetchClusterApiUrl uses cookies)
+      // and before detectForkliftVersion (which will then use the kubeconfig).
+      await generateKubeconfig(username, password);
+
+      // Version detection: prefers the kubeconfig auth path if generateKubeconfig
+      // succeeded, otherwise falls back to session cookies automatically.
       await detectForkliftVersion();
       await detectCnvVersion();
     } catch (error) {

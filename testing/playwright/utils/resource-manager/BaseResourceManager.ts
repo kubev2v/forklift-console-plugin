@@ -3,9 +3,16 @@ import * as http from 'node:http';
 import * as https from 'node:https';
 import { URL } from 'node:url';
 
+import { KubeConfig } from '@kubernetes/client-node';
+
 import { AUTH_FILE } from '../constants';
 
 import { RESOURCE_KINDS, RESOURCE_TYPES } from './constants';
+
+// The console proxy strips this prefix before forwarding to the k8s API server.
+// When calling the API server directly we strip it ourselves so the path
+// reaches the correct endpoint (e.g. /apis/... instead of /api/kubernetes/apis/...).
+const PROXY_PREFIX = '/api/kubernetes' as const;
 
 type ApiResult<T> =
   | { data: T; status: number; success: true }
@@ -17,6 +24,13 @@ type ApiRequestOptions = {
   method: string;
 };
 
+type AuthConfig = {
+  baseUrl: string;
+  headers: Record<string, string>;
+  /** true  → talking to console proxy (cookies); false → direct API server (bearer token) */
+  proxyMode: boolean;
+};
+
 type StorageCookie = {
   name: string;
   value: string;
@@ -24,6 +38,31 @@ type StorageCookie = {
 
 type StorageState = {
   cookies: StorageCookie[];
+};
+
+/**
+ * Tries to load kubeconfig from KUBECONFIG_PATH (relayed from globalSetup via ENV_RELAY_FILE).
+ * Returns null when the path is unset, the file is missing, or the config is invalid.
+ */
+const tryKubeconfigAuth = (): AuthConfig | null => {
+  const kubeconfigPath = process.env.KUBECONFIG_PATH;
+  if (!kubeconfigPath || !existsSync(kubeconfigPath)) return null;
+
+  try {
+    const kc = new KubeConfig();
+    kc.loadFromFile(kubeconfigPath);
+    const cluster = kc.getCurrentCluster();
+    const user = kc.getCurrentUser();
+    if (!cluster?.server || !user?.token) return null;
+
+    return {
+      baseUrl: cluster.server.replace(/\/$/, ''),
+      headers: { Authorization: `Bearer ${user.token}` },
+      proxyMode: false,
+    };
+  } catch {
+    return null;
+  }
 };
 
 /**
@@ -64,12 +103,33 @@ const getConsoleBaseUrl = (): string =>
   );
 
 /**
+ * Returns the auth config to use for this request.
+ * Priority: kubeconfig (direct API server) → session cookies (console proxy).
+ */
+const getAuthConfig = (): AuthConfig => {
+  const kubeconfigAuth = tryKubeconfigAuth();
+  if (kubeconfigAuth) return kubeconfigAuth;
+
+  const { sessionToken, csrfToken } = getSessionCookies();
+  return {
+    baseUrl: getConsoleBaseUrl(),
+    headers: {
+      Cookie: sessionToken,
+      'X-CSRFToken': csrfToken,
+    },
+    proxyMode: true,
+  };
+};
+
+/**
  * Base class providing shared Node.js HTTP functionality for resource managers.
  *
- * All Kubernetes API calls go through the OpenShift console proxy
- * (/api/kubernetes/...) using the session cookies saved by global.setup.ts.
- * This decouples resource creation/deletion/fetching from any browser Page
- * instance — the browser is only required for UI interactions in actual test steps.
+ * Auth mode is resolved at call time:
+ *  - **Kubeconfig mode** (preferred): uses the kubeconfig written by globalSetup after
+ *    `oc login`. Talks directly to the cluster API server with a long-lived Bearer token.
+ *    Session expiry only affects UI test steps, not resource operations.
+ *  - **Cookie fallback**: when no kubeconfig is available, falls back to the OpenShift
+ *    console proxy (/api/kubernetes/...) using the session cookies saved in AUTH_FILE.
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class BaseResourceManager {
@@ -131,10 +191,14 @@ export abstract class BaseResourceManager {
     apiPath: string,
     options: ApiRequestOptions,
   ): Promise<ApiResult<R>> {
-    const baseUrl = getConsoleBaseUrl();
-    const { sessionToken, csrfToken } = getSessionCookies();
+    const { baseUrl, headers, proxyMode } = getAuthConfig();
 
-    const fullUrl = new URL(apiPath, baseUrl);
+    // In direct (kubeconfig) mode the caller's path still carries the console proxy
+    // prefix — strip it so the request reaches the correct API server endpoint.
+    const adjustedPath =
+      proxyMode || !apiPath.startsWith(PROXY_PREFIX) ? apiPath : apiPath.slice(PROXY_PREFIX.length);
+
+    const fullUrl = new URL(adjustedPath || '/', baseUrl);
     const isHttps = fullUrl.protocol === 'https:';
     const transport = isHttps ? https : http;
     const body = options.body === undefined ? undefined : JSON.stringify(options.body);
@@ -153,8 +217,7 @@ export abstract class BaseResourceManager {
         headers: {
           Accept: 'application/json',
           'Content-Type': options.contentType ?? 'application/json',
-          Cookie: cookieHeader,
-          'X-CSRFToken': csrfToken,
+          ...headers,
           ...(body ? { 'Content-Length': String(Buffer.byteLength(body)) } : {}),
         },
       };
