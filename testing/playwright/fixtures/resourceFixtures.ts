@@ -84,25 +84,27 @@ export const createResourceFixtures = (
               const page = await context.newPage();
               const tempResourceManager = new ResourceManager();
 
+              // Use promise chaining for creation so that `use` is never inside a
+              // try/catch block — required by SonarCloud S6440 (React Hook rules flag
+              // any `use()` call inside try/catch). Cleanup runs in the .catch() on
+              // creation failure, and in the finally block after the worker tests finish.
+              const created = await createProvider(page, tempResourceManager, {
+                namePrefix: providerPrefix,
+                skipProviderReadyWait,
+              })
+                .then((result) => {
+                  if (!result) throw new Error('Failed to create provider');
+                  return result;
+                })
+                .catch(async (error: unknown) => {
+                  await context.close().catch(() => undefined);
+                  await tempResourceManager.cleanupAll().catch(console.error);
+                  throw new Error(`Failed to create provider: ${String(error)}`, { cause: error });
+                });
+
               try {
-                const created = await createProvider(page, tempResourceManager, {
-                  namePrefix: providerPrefix,
-                  skipProviderReadyWait,
-                });
-
-                if (!created) {
-                  throw new Error('Failed to create provider');
-                }
-
                 await use(created);
-              } catch (error) {
-                throw new Error(`Failed to create or use provider: ${String(error)}`, {
-                  cause: error,
-                });
               } finally {
-                // Always close the context and clean up provider + any OVA secrets
-                // registered in tempResourceManager, even if provider creation or
-                // the test itself throws.
                 await context.close().catch(() => undefined);
                 await tempResourceManager.cleanupAll().catch(console.error);
               }
