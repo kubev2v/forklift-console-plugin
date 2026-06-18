@@ -94,7 +94,6 @@ export const createResourceFixtures = (
                   throw new Error('Failed to create provider');
                 }
 
-                await context.close();
                 await use(created);
               } catch (error) {
                 throw new Error(`Failed to create or use provider: ${String(error)}`, {
