@@ -68,6 +68,8 @@ const generateKubeconfig = async (username: string, password: string): Promise<v
   }
 
   try {
+    // Restrict PATH to fixed, non-writable system directories to prevent PATH hijacking.
+    const SAFE_PATH = '/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin';
     execFileSync(
       'oc',
       [
@@ -81,7 +83,7 @@ const generateKubeconfig = async (username: string, password: string): Promise<v
         '--kubeconfig',
         KUBECONFIG_FILE,
       ],
-      { stdio: 'pipe', timeout: 30_000 },
+      { env: { PATH: SAFE_PATH }, stdio: 'pipe', timeout: 30_000 },
     );
     Object.assign(process.env, { KUBECONFIG_PATH: KUBECONFIG_FILE });
     console.error(`✅ kubeconfig written to ${KUBECONFIG_FILE} — workers will use direct API auth`);
