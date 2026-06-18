@@ -46,6 +46,14 @@ const fetchClusterApiUrl = async (): Promise<string | null> => {
 };
 
 /**
+ * Standard installation paths for the `oc` CLI on Linux and macOS.
+ * Using absolute paths avoids PATH-based resolution entirely (SonarCloud S4036).
+ */
+const OC_BINARY_LOCATIONS = ['/usr/local/bin/oc', '/usr/bin/oc', '/opt/homebrew/bin/oc'] as const;
+
+const findOcBinary = (): string | null => OC_BINARY_LOCATIONS.find(existsSync) ?? null;
+
+/**
  * Runs `oc login` to generate a kubeconfig at KUBECONFIG_FILE.
  * Writes KUBECONFIG_PATH into process.env so subsequent Node.js HTTP calls in
  * this process (detectForkliftVersion, etc.) use the kubeconfig-based auth path.
@@ -67,9 +75,17 @@ const generateKubeconfig = async (username: string, password: string): Promise<v
     return;
   }
 
+  const ocBin = findOcBinary();
+  if (!ocBin) {
+    console.error(
+      `⚠️ oc binary not found in ${OC_BINARY_LOCATIONS.join(', ')} — skipping kubeconfig generation.`,
+    );
+    return;
+  }
+
   try {
     execFileSync(
-      'oc',
+      ocBin,
       [
         'login',
         clusterApiUrl,
@@ -81,14 +97,7 @@ const generateKubeconfig = async (username: string, password: string): Promise<v
         '--kubeconfig',
         KUBECONFIG_FILE,
       ],
-      // Inline literal PATH so SonarCloud S4036 can statically verify it contains
-      // only fixed, non-writable system directories (named constants aren't tracked).
-      // NOSONAR: env intentionally omits process.env to prevent PATH hijacking.
-      {
-        env: { PATH: '/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin' },
-        stdio: 'pipe',
-        timeout: 30_000,
-      },
+      { stdio: 'pipe', timeout: 30_000 },
     );
     Object.assign(process.env, { KUBECONFIG_PATH: KUBECONFIG_FILE });
     console.error(`✅ kubeconfig written to ${KUBECONFIG_FILE} — workers will use direct API auth`);
