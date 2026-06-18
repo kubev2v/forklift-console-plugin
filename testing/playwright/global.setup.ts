@@ -13,9 +13,6 @@ import { ResourceFetcher } from './utils/resource-manager/ResourceFetcher';
 import { disableGuidedTour } from './utils/utils';
 import { CNV_VERSION_ENV_VAR, VERSION_ENV_VAR } from './utils/version/constants';
 
-/** Fixed, non-writable system directories used when spawning child processes (SonarCloud S4036). */
-const SAFE_EXEC_PATH = '/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin';
-
 const ENV_KEYS_TO_RELAY = [
   'BASE_ADDRESS',
   'BRIDGE_BASE_ADDRESS',
@@ -84,7 +81,14 @@ const generateKubeconfig = async (username: string, password: string): Promise<v
         '--kubeconfig',
         KUBECONFIG_FILE,
       ],
-      { env: { PATH: SAFE_EXEC_PATH }, stdio: 'pipe', timeout: 30_000 },
+      // Inline literal PATH so SonarCloud S4036 can statically verify it contains
+      // only fixed, non-writable system directories (named constants aren't tracked).
+      // NOSONAR: env intentionally omits process.env to prevent PATH hijacking.
+      {
+        env: { PATH: '/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin' },
+        stdio: 'pipe',
+        timeout: 30_000,
+      },
     );
     Object.assign(process.env, { KUBECONFIG_PATH: KUBECONFIG_FILE });
     console.error(`✅ kubeconfig written to ${KUBECONFIG_FILE} — workers will use direct API auth`);
