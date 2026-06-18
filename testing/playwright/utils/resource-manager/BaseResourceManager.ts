@@ -13,6 +13,7 @@ import { RESOURCE_KINDS, RESOURCE_TYPES } from './constants';
 // When calling the API server directly we strip it ourselves so the path
 // reaches the correct endpoint (e.g. /apis/... instead of /api/kubernetes/apis/...).
 const PROXY_PREFIX = '/api/kubernetes' as const;
+const API_REQUEST_TIMEOUT_MS = 30_000;
 
 type ApiResult<T> =
   | { data: T; status: number; success: true }
@@ -66,12 +67,15 @@ const tryKubeconfigAuth = (): AuthConfig | null => {
 };
 
 /**
- * Reads session cookies from the saved Playwright storageState file.
- * These cookies are written by global.setup.ts after browser login and
- * are the same credentials the browser would use — but now consumed
- * directly by Node.js HTTP calls so that no browser page is required.
+ * Reads all session cookies from the saved Playwright storageState file and
+ * builds the Cookie header string that Node.js HTTP requests will send.
+ *
+ * The OpenShift console uses a pod-specific suffix in the auth cookie name
+ * (e.g. "openshift-session-token-console-769d4c7cf7-gqqk4"), so an exact-name
+ * lookup is not reliable.  Forwarding ALL cookies mimics credentials:'include'
+ * and works regardless of the pod suffix.
  */
-const getSessionCookies = (): { sessionToken: string; csrfToken: string } => {
+const getSessionCookies = (): { cookieHeader: string; csrfToken: string } => {
   if (!existsSync(AUTH_FILE)) {
     throw new Error(
       `Auth file not found at "${AUTH_FILE}". ` +
@@ -80,18 +84,19 @@ const getSessionCookies = (): { sessionToken: string; csrfToken: string } => {
   }
 
   const state = JSON.parse(readFileSync(AUTH_FILE, 'utf8')) as StorageState;
-  const sessionCookie = state.cookies.find((cookie) => cookie.name === 'openshift-session-token');
-  const csrfCookie = state.cookies.find((cookie) => cookie.name === 'csrf-token');
 
-  if (!sessionCookie?.value) {
+  if (!state.cookies.length) {
     throw new Error(
-      'openshift-session-token not found in auth file. ' +
+      `No cookies found in auth file "${AUTH_FILE}". ` +
         'Re-run global setup to refresh the session.',
     );
   }
 
+  const cookieHeader = state.cookies.map((cookie) => `${cookie.name}=${cookie.value}`).join('; ');
+  const csrfCookie = state.cookies.find((cookie) => cookie.name === 'csrf-token');
+
   return {
-    sessionToken: sessionCookie.value,
+    cookieHeader,
     csrfToken: csrfCookie?.value ?? '',
   };
 };
@@ -110,11 +115,11 @@ const getAuthConfig = (): AuthConfig => {
   const kubeconfigAuth = tryKubeconfigAuth();
   if (kubeconfigAuth) return kubeconfigAuth;
 
-  const { sessionToken, csrfToken } = getSessionCookies();
+  const { cookieHeader, csrfToken } = getSessionCookies();
   return {
     baseUrl: getConsoleBaseUrl(),
     headers: {
-      Cookie: sessionToken,
+      Cookie: cookieHeader,
       'X-CSRFToken': csrfToken,
     },
     proxyMode: true,
@@ -133,6 +138,13 @@ const getAuthConfig = (): AuthConfig => {
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class BaseResourceManager {
+  /**
+   * Convenience wrapper for DELETE requests.
+   * `ResourceCleaner.deleteResource` calls `apiRequest` directly to inspect
+   * the raw status code (404 → skip, 403 → skip, other → throw). This method
+   * is kept as a public extension point for callers that only need a
+   * success/null response and do not need status-code dispatch.
+   */
   static async apiDelete<R>(apiPath: string): Promise<R | null> {
     const result = await BaseResourceManager.apiRequest<R>(apiPath, { method: 'DELETE' });
 
@@ -187,7 +199,7 @@ export abstract class BaseResourceManager {
     return null;
   }
 
-  private static async apiRequest<R>(
+  protected static async apiRequest<R>(
     apiPath: string,
     options: ApiRequestOptions,
   ): Promise<ApiResult<R>> {
@@ -210,6 +222,7 @@ export abstract class BaseResourceManager {
         path: fullUrl.pathname + fullUrl.search,
         method: options.method,
         rejectUnauthorized: false,
+        timeout: API_REQUEST_TIMEOUT_MS,
         headers: {
           Accept: 'application/json',
           'Content-Type': options.contentType ?? 'application/json',
@@ -235,6 +248,12 @@ export abstract class BaseResourceManager {
             resolve({ error: data || `HTTP ${status}`, status, success: false });
           }
         });
+      });
+
+      req.on('timeout', () => {
+        req.destroy(
+          new Error(`API ${options.method} ${apiPath} timed out after ${API_REQUEST_TIMEOUT_MS}ms`),
+        );
       });
 
       req.on('error', (err: Error) => {

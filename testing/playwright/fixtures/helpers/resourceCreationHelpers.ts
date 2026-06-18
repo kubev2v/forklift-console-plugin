@@ -47,16 +47,15 @@ const createProviderObject = (
 });
 
 const buildTestProviderResult = (providerData: ProviderData): TestProvider => {
-  const provider: TestProvider = {
+  return {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Provider',
     metadata: {
       name: providerData.name,
       namespace: MTV_NAMESPACE,
     },
+    testData: providerData,
   };
-  (provider as unknown as { testData: ProviderData }).testData = providerData;
-  return provider;
 };
 
 export type TestProvider = V1beta1Provider & {
@@ -64,6 +63,7 @@ export type TestProvider = V1beta1Provider & {
     name: string;
     namespace: string;
   };
+  testData?: ProviderData;
 };
 
 export type TestPlan = V1beta1Plan & {
@@ -215,7 +215,12 @@ export const createPlan = async (
 ): Promise<TestPlan> => {
   const { sourceProvider, customPlanData } = options;
 
-  const testPlanData = buildPlanTestData(sourceProvider.metadata!.name!, customPlanData);
+  const sourceName = sourceProvider.metadata?.name;
+  if (!sourceName) {
+    throw new Error(`sourceProvider has no metadata.name — cannot create Plan`);
+  }
+
+  const testPlanData = buildPlanTestData(sourceName, customPlanData);
 
   const createWizard = new CreatePlanWizardPage(page, resourceManager);
   const planDetailsPage = new PlanDetailsPage(page);

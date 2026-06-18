@@ -25,26 +25,11 @@ import type { SupportedResource } from './ResourceManager';
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ResourceFetcher extends BaseResourceManager {
   static async fetchCnvVersion(namespace = CNV_NAMESPACE): Promise<string | null> {
-    type CsvItem = { metadata?: { name?: string }; spec?: { version?: string } };
-    type CsvList = { items?: CsvItem[] };
-
-    const apiPath = `${API_PATHS.OLM_CSV}/namespaces/${namespace}/clusterserviceversions`;
-    const data = await ResourceFetcher.apiGet<CsvList>(apiPath);
-
-    if (!data?.items) {
-      return null;
-    }
-
-    const operatorCsv = data.items.find((csv) =>
-      CNV_OPERATOR_CSV_PREFIXES.some((prefix) => csv.metadata?.name?.startsWith(prefix)),
+    return ResourceFetcher.fetchOperatorVersion(
+      namespace,
+      CNV_OPERATOR_CSV_PREFIXES,
+      'CNV operator',
     );
-
-    if (!operatorCsv?.spec?.version) {
-      console.error('CNV operator CSV not found among cluster service versions');
-      return null;
-    }
-
-    return operatorCsv.spec.version;
   }
 
   static async fetchForkliftController(
@@ -59,26 +44,7 @@ export class ResourceFetcher extends BaseResourceManager {
   }
 
   static async fetchMtvVersion(namespace = MTV_NAMESPACE): Promise<string | null> {
-    type CsvItem = { metadata?: { name?: string }; spec?: { version?: string } };
-    type CsvList = { items?: CsvItem[] };
-
-    const apiPath = `${API_PATHS.OLM_CSV}/namespaces/${namespace}/clusterserviceversions`;
-    const data = await ResourceFetcher.apiGet<CsvList>(apiPath);
-
-    if (!data?.items) {
-      return null;
-    }
-
-    const operatorCsv = data.items.find((csv) =>
-      OPERATOR_CSV_PREFIXES.some((prefix) => csv.metadata?.name?.startsWith(prefix)),
-    );
-
-    if (!operatorCsv?.spec?.version) {
-      console.error('Operator CSV not found among cluster service versions');
-      return null;
-    }
-
-    return operatorCsv.spec.version;
+    return ResourceFetcher.fetchOperatorVersion(namespace, OPERATOR_CSV_PREFIXES, 'Operator');
   }
 
   static async fetchNetworkMap(
@@ -90,6 +56,31 @@ export class ResourceFetcher extends BaseResourceManager {
       resourceName: networkMapName,
       namespace,
     });
+  }
+
+  private static async fetchOperatorVersion(
+    namespace: string,
+    prefixes: readonly string[],
+    operatorLabel: string,
+  ): Promise<string | null> {
+    type CsvItem = { metadata?: { name?: string }; spec?: { version?: string } };
+    type CsvList = { items?: CsvItem[] };
+
+    const apiPath = `${API_PATHS.OLM_CSV}/namespaces/${namespace}/clusterserviceversions`;
+    const data = await ResourceFetcher.apiGet<CsvList>(apiPath);
+
+    if (!data?.items) return null;
+
+    const csv = data.items.find((item) =>
+      prefixes.some((prefix) => item.metadata?.name?.startsWith(prefix)),
+    );
+
+    if (!csv?.spec?.version) {
+      console.error(`${operatorLabel} CSV not found among cluster service versions`);
+      return null;
+    }
+
+    return csv.spec.version;
   }
 
   static async fetchPlan(planName: string, namespace = MTV_NAMESPACE): Promise<V1beta1Plan | null> {

@@ -33,7 +33,6 @@ export type FixtureConfig = {
   networkMapScope?: 'test' | 'none';
   storageMapScope?: 'test' | 'none';
   providerPrefix?: string;
-  planPrefix?: string;
   networkMapPrefix?: string;
   storageMapPrefix?: string;
   skipProviderReadyWait?: boolean;
@@ -86,26 +85,27 @@ export const createResourceFixtures = (
               const tempResourceManager = new ResourceManager();
 
               try {
-                const provider = await createProvider(page, tempResourceManager, {
+                const created = await createProvider(page, tempResourceManager, {
                   namePrefix: providerPrefix,
                   skipProviderReadyWait,
                 });
 
-                if (!provider) {
+                if (!created) {
                   throw new Error('Failed to create provider');
                 }
 
                 await context.close();
-
-                await use(provider);
-
-                const cleanupManager = new ResourceManager();
-                cleanupManager.addResource(provider);
-                await cleanupManager.cleanupAll();
+                await use(created);
               } catch (error) {
                 throw new Error(`Failed to create or use provider: ${String(error)}`, {
                   cause: error,
                 });
+              } finally {
+                // Always close the context and clean up provider + any OVA secrets
+                // registered in tempResourceManager, even if provider creation or
+                // the test itself throws.
+                await context.close().catch(() => undefined);
+                await tempResourceManager.cleanupAll().catch(console.error);
               }
             },
             { scope: 'worker' },

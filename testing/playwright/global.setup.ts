@@ -153,6 +153,10 @@ const detectCnvVersion = async (): Promise<void> => {
 };
 
 const globalSetup = async (config: FullConfig) => {
+  // console.error is used intentionally throughout this function.
+  // Playwright routes stderr to the test reporter unconditionally, so these
+  // lines are always visible in CI output regardless of --quiet or verbosity
+  // settings.  Do not change them to console.log.
   console.error('🚀 Starting global setup...');
 
   if (existsSync(RESOURCES_FILE)) {
@@ -197,14 +201,8 @@ const globalSetup = async (config: FullConfig) => {
 
       await restoreConsoleLanguage(page);
 
-      // Generate a kubeconfig using oc login so workers can talk directly to the
-      // cluster API server with a long-lived Bearer token instead of session cookies.
-      // Must happen after storageState is saved (fetchClusterApiUrl uses cookies)
-      // and before detectForkliftVersion (which will then use the kubeconfig).
       await generateKubeconfig(username, password);
 
-      // Version detection: prefers the kubeconfig auth path if generateKubeconfig
-      // succeeded, otherwise falls back to session cookies automatically.
       await detectForkliftVersion();
       await detectCnvVersion();
     } catch (error) {

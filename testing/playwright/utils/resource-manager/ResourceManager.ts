@@ -223,11 +223,7 @@ export class ResourceManager {
   }
 
   async fetchPlan(planName: string, namespace = MTV_NAMESPACE): Promise<V1beta1Plan | null> {
-    return ResourceFetcher.fetchResource<V1beta1Plan>({
-      kind: RESOURCE_KINDS.PLAN,
-      resourceName: planName,
-      namespace,
-    });
+    return ResourceFetcher.fetchPlan(planName, namespace);
   }
 
   async fetchProvider(

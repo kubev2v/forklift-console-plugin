@@ -80,6 +80,14 @@ export const createNetworkMap = async (
     mappings = [],
   } = options;
 
+  const sourceName = sourceProvider.metadata?.name;
+  const sourceNamespace = sourceProvider.metadata?.namespace;
+  if (!sourceName || !sourceNamespace) {
+    throw new Error(
+      `sourceProvider has no metadata.name or metadata.namespace — cannot create NetworkMap`,
+    );
+  }
+
   const name = `${namePrefix}-${crypto.randomUUID().slice(0, 8)}`;
 
   const networkMap: V1beta1NetworkMap = {
@@ -89,8 +97,8 @@ export const createNetworkMap = async (
     spec: {
       provider: {
         source: {
-          name: sourceProvider.metadata!.name!,
-          namespace: sourceProvider.metadata!.namespace!,
+          name: sourceName,
+          namespace: sourceNamespace,
         },
         destination: { name: targetProvider, namespace: MTV_NAMESPACE },
       },
@@ -107,7 +115,7 @@ export const createNetworkMap = async (
   return {
     name,
     namespace: MTV_NAMESPACE,
-    sourceProvider: sourceProvider.metadata!.name!,
+    sourceProvider: sourceName,
     targetProvider,
     mappings,
   };
@@ -140,6 +148,14 @@ export const createStorageMap = async (
     mappings = [],
   } = options;
 
+  const sourceName = sourceProvider.metadata?.name;
+  const sourceNamespace = sourceProvider.metadata?.namespace;
+  if (!sourceName || !sourceNamespace) {
+    throw new Error(
+      `sourceProvider has no metadata.name or metadata.namespace — cannot create StorageMap`,
+    );
+  }
+
   const name = `${namePrefix}-${crypto.randomUUID().slice(0, 8)}`;
 
   const storageMap: V1beta1StorageMap = {
@@ -149,8 +165,8 @@ export const createStorageMap = async (
     spec: {
       provider: {
         source: {
-          name: sourceProvider.metadata!.name!,
-          namespace: sourceProvider.metadata!.namespace!,
+          name: sourceName,
+          namespace: sourceNamespace,
         },
         destination: { name: targetProvider, namespace: MTV_NAMESPACE },
       },
@@ -167,7 +183,7 @@ export const createStorageMap = async (
   return {
     name,
     namespace: MTV_NAMESPACE,
-    sourceProvider: sourceProvider.metadata!.name!,
+    sourceProvider: sourceName,
     targetProvider,
     mappings,
   };

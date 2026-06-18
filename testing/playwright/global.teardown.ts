@@ -19,7 +19,7 @@ const globalTeardown = async (_config: FullConfig) => {
     console.error('Error during cleanup in globalTeardown:', error);
   }
 
-  console.error('Cleanup process finished.');
+  console.log('Cleanup process finished.');
 };
 
 export default globalTeardown;

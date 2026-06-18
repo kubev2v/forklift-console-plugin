@@ -47,7 +47,6 @@ export class ResourceCleaner extends BaseResourceManager {
       return;
     }
 
-    // Index resources by kind for O(1) group lookup
     const byKind = new Map<string, SupportedResource[]>();
     for (const resource of resources) {
       const kind = resource.kind ?? 'unknown';
