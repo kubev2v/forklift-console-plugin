@@ -84,10 +84,13 @@ export const createResourceFixtures = (
               const page = await context.newPage();
               const tempResourceManager = new ResourceManager();
 
-              // Use promise chaining for creation so that `use` is never inside a
-              // try/catch block — required by SonarCloud S6440 (React Hook rules flag
-              // any `use()` call inside try/catch). Cleanup runs in the .catch() on
-              // creation failure, and in the finally block after the worker tests finish.
+              // Promise chaining keeps `use` outside any try block (SonarCloud S6440
+              // treats any `use()` call inside try as a React Hook violation). On
+              // creation failure the .catch() handler cleans up and rethrows so
+              // `use` is never reached. On success, Playwright worker fixtures
+              // return from `use` normally once all worker tests complete — test
+              // failures are handled by the runner, not propagated here as
+              // exceptions — so sequential cleanup after `use` is safe.
               const created = await createProvider(page, tempResourceManager, {
                 namePrefix: providerPrefix,
                 skipProviderReadyWait,
@@ -102,12 +105,9 @@ export const createResourceFixtures = (
                   throw new Error(`Failed to create provider: ${String(error)}`, { cause: error });
                 });
 
-              try {
-                await use(created);
-              } finally {
-                await context.close().catch(() => undefined);
-                await tempResourceManager.cleanupAll().catch(console.error);
-              }
+              await use(created);
+              await context.close().catch(() => undefined);
+              await tempResourceManager.cleanupAll().catch(console.error);
             },
             { scope: 'worker' },
           ] as any)
