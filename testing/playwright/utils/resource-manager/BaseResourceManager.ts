@@ -203,10 +203,6 @@ export abstract class BaseResourceManager {
     const transport = isHttps ? https : http;
     const body = options.body === undefined ? undefined : JSON.stringify(options.body);
 
-    const cookieHeader = csrfToken
-      ? `openshift-session-token=${sessionToken}; csrf-token=${csrfToken}`
-      : `openshift-session-token=${sessionToken}`;
-
     return new Promise((resolve) => {
       const reqOptions: https.RequestOptions = {
         hostname: fullUrl.hostname,

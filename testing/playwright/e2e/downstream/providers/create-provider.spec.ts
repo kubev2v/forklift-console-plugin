@@ -76,7 +76,7 @@ test.describe('Provider Creation Tests', () => {
   );
 
   test.afterAll(async () => {
-    await resourceManager.instantCleanup();
+    await resourceManager.cleanupAll();
   });
 
   test(

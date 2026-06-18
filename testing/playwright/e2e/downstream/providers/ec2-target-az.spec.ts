@@ -91,6 +91,6 @@ test.describe('EC2 Provider target-az CR Verification', () => {
   );
 
   test.afterAll(async () => {
-    await resourceManager.instantCleanup();
+    await resourceManager.cleanupAll();
   });
 });

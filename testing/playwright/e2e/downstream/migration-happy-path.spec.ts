@@ -283,6 +283,6 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   );
 
   test.afterAll(async () => {
-    await resourceManager.instantCleanup();
+    await resourceManager.cleanupAll();
   });
 });

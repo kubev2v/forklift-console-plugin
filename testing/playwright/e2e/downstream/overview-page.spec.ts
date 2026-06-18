@@ -49,7 +49,7 @@ test.describe(
         }
         await context.close();
       }
-      await resourceManager.instantCleanup();
+      await resourceManager.cleanupAll();
     });
 
     test('should navigate to settings tab, edit settings, and verify changes', async ({ page }) => {

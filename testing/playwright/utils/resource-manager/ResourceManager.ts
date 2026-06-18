@@ -252,14 +252,6 @@ export class ResourceManager {
     return this.resources.length;
   }
 
-  /**
-   * @deprecated Use cleanupAll() directly.
-   * Kept for backward compatibility — previously launched a headless browser.
-   */
-  async instantCleanup(): Promise<void> {
-    return this.cleanupAll();
-  }
-
   loadResourcesFromFile(): void {
     this.resources = ResourceCleaner.loadResourcesFromFile();
   }

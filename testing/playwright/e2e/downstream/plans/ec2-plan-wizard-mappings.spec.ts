@@ -92,7 +92,7 @@ test.describe.serial('EC2 Plan Wizard — Mapping Auto-Population', () => {
   });
 
   test.afterAll(async () => {
-    await resourceManager.instantCleanup();
+    await resourceManager.cleanupAll();
   });
 
   test(
