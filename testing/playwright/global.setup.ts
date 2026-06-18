@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
 
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 
 import { chromium, type FullConfig } from '@playwright/test';
 
@@ -68,8 +68,19 @@ const generateKubeconfig = async (username: string, password: string): Promise<v
   }
 
   try {
-    execSync(
-      `oc login "${clusterApiUrl}" -u "${username}" -p "${password}" --insecure-skip-tls-verify --kubeconfig "${KUBECONFIG_FILE}"`,
+    execFileSync(
+      'oc',
+      [
+        'login',
+        clusterApiUrl,
+        '-u',
+        username,
+        '-p',
+        password,
+        '--insecure-skip-tls-verify',
+        '--kubeconfig',
+        KUBECONFIG_FILE,
+      ],
       { stdio: 'pipe', timeout: 30_000 },
     );
     Object.assign(process.env, { KUBECONFIG_PATH: KUBECONFIG_FILE });

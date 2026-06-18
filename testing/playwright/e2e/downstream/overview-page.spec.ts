@@ -43,7 +43,10 @@ test.describe(
         const context = await browser.newContext({ ignoreHTTPSErrors: true });
         const page = await context.newPage();
         await page.goto(process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS ?? '/');
-        await restoreForkliftSettings(originalSettings);
+        const restored = await restoreForkliftSettings(originalSettings);
+        if (!restored) {
+          throw new Error('Failed to restore Forklift settings in afterAll');
+        }
         await context.close();
       }
       await resourceManager.instantCleanup();

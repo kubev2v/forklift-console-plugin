@@ -19,7 +19,10 @@ export const createOffloadTestSecret = async (
     type: 'Opaque',
   };
 
-  await createSecret(secret, MTV_NAMESPACE);
+  const createdSecret = await createSecret(secret, MTV_NAMESPACE);
+  if (!createdSecret) {
+    throw new Error(`Failed to create offload test secret ${secretName}`);
+  }
   resourceManager.addSecret(secretName, MTV_NAMESPACE);
 
   return secretName;

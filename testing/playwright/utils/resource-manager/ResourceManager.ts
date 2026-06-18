@@ -253,8 +253,8 @@ export class ResourceManager {
   }
 
   /**
-   * Alias for cleanupAll — kept for backward compatibility.
-   * Previously launched a headless browser; now uses the Node.js HTTP client.
+   * @deprecated Use cleanupAll() directly.
+   * Kept for backward compatibility — previously launched a headless browser.
    */
   async instantCleanup(): Promise<void> {
     return this.cleanupAll();

@@ -21,12 +21,13 @@ const CLEANUP_GROUPS = [
   // Group 1: execution resources — reference providers, maps, and each other
   [RESOURCE_KINDS.MIGRATION, RESOURCE_KINDS.PLAN],
   // Group 2: configuration resources — referenced by plans
+  // Note: FORKLIFT_CONTROLLER is intentionally excluded — deleting it would destroy
+  // the entire Forklift installation. Tests that modify it via patch must restore it.
   [
     RESOURCE_KINDS.NETWORK_MAP,
     RESOURCE_KINDS.STORAGE_MAP,
     RESOURCE_KINDS.PROVIDER,
     RESOURCE_KINDS.SECRET,
-    RESOURCE_KINDS.FORKLIFT_CONTROLLER,
   ],
   // Group 3: workload resources
   [RESOURCE_KINDS.VIRTUAL_MACHINE, RESOURCE_KINDS.NETWORK_ATTACHMENT_DEFINITION],
@@ -104,7 +105,7 @@ export class ResourceCleaner extends BaseResourceManager {
 
   private static async deleteResource(
     resource: SupportedResource,
-  ): Promise<{ success: boolean; skipped: boolean; reason?: string }> {
+  ): Promise<{ skipped: boolean; reason?: string }> {
     const resourceName = resource.metadata?.name;
     const namespace = resource.metadata?.namespace ?? MTV_NAMESPACE;
 
@@ -127,27 +128,35 @@ export class ResourceCleaner extends BaseResourceManager {
       if (resourceType === RESOURCE_TYPES.SECRETS) {
         return `${API_PATHS.KUBERNETES_CORE}/namespaces/${namespace}/${resourceType}/${resourceName}`;
       }
+      if (resourceType === RESOURCE_TYPES.NETWORK_ATTACHMENT_DEFINITIONS) {
+        return `${API_PATHS.NAD}/namespaces/${namespace}/${resourceType}/${resourceName}`;
+      }
       return `${API_PATHS.FORKLIFT}/namespaces/${namespace}/${resourceType}/${resourceName}`;
     };
 
-    const apiPath = buildApiPath();
+    const HTTP_NOT_FOUND = 404;
+    const HTTP_FORBIDDEN = 403;
 
-    try {
-      await ResourceCleaner.apiDelete(apiPath);
-      return { success: true, skipped: false };
-    } catch (error) {
-      const errorStr = String(error);
+    const result = await ResourceCleaner.apiRequest<unknown>(buildApiPath(), { method: 'DELETE' });
 
-      if (errorStr.includes('404') || errorStr.includes('not found')) {
-        return { success: true, skipped: true, reason: 'not found' };
-      }
-
-      if (errorStr.includes('403') || errorStr.includes('Forbidden')) {
-        return { success: true, skipped: true, reason: 'deletion forbidden' };
-      }
-
-      throw error;
+    if (result.success || result.status === HTTP_NOT_FOUND) {
+      return {
+        skipped: result.status === HTTP_NOT_FOUND,
+        reason: result.status === HTTP_NOT_FOUND ? 'not found' : undefined,
+      };
     }
+
+    if (result.status === HTTP_FORBIDDEN) {
+      console.warn(
+        `Cleanup: DELETE ${resourceName} (${resourceType}) returned 403 Forbidden — skipping`,
+      );
+      return { skipped: true, reason: 'deletion forbidden' };
+    }
+
+    console.error(`Cleanup: DELETE ${resourceName} (${resourceType}) failed: ${result.error}`);
+    throw new Error(
+      `DELETE ${resourceName} (${resourceType}) failed with HTTP ${result.status}: ${result.error}`,
+    );
   }
 
   private static getResourceType(resource: SupportedResource): string {
