@@ -11,7 +11,11 @@ import {
   type MigrationStatusVirtualMachinePageData,
   MigrationStatusVirtualMachinesTableResourceId,
 } from './types';
-import { getVMDiskTransferPipeline, isVirtualMachineCreationCompleted } from './utils';
+import {
+  getVMDiskTransferPipeline,
+  isVirtualMachineCreationCompleted,
+  isVmInPostMigrationSetup,
+} from './utils';
 
 export const getMigrationStatusVirtualMachinesRowFields = (
   fieldsData: MigrationStatusVirtualMachinePageData,
@@ -30,15 +34,16 @@ export const getMigrationStatusVirtualMachinesRowFields = (
     [MigrationStatusVirtualMachinesTableResourceId.MigrationStarted]: (
       <ConsoleTimestamp timestamp={statusVM?.started ?? null} showGlobalIcon={false} />
     ),
-    [MigrationStatusVirtualMachinesTableResourceId.Name]: vmCreated ? (
-      <TableLinkCell
-        groupVersionKind={VirtualMachineModelGroupVersionKind}
-        name={statusVM?.newName ?? statusVM?.name ?? specVM?.name}
-        namespace={targetNamespace}
-      />
-    ) : (
-      <>{statusVM?.newName ?? statusVM?.name ?? specVM?.name}</>
-    ),
+    [MigrationStatusVirtualMachinesTableResourceId.Name]:
+      vmCreated && !isVmInPostMigrationSetup(statusVM) ? (
+        <TableLinkCell
+          groupVersionKind={VirtualMachineModelGroupVersionKind}
+          name={statusVM?.newName ?? statusVM?.name ?? specVM?.name}
+          namespace={targetNamespace}
+        />
+      ) : (
+        <>{statusVM?.newName ?? statusVM?.name ?? specVM?.name}</>
+      ),
     [MigrationStatusVirtualMachinesTableResourceId.Status]: (
       <MigrationStatusLabel statusVM={statusVM} />
     ),
