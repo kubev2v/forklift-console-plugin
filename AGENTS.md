@@ -458,6 +458,16 @@ const ERROR_MESSAGES = {
 };
 ```
 
+**Important:** Call `t()` at **runtime** (inside functions), not at **module initialization** (top-level const). Module-level `t()` calls freeze translations and prevent updates on language change:
+
+```typescript
+// ✅ Good - t() called at runtime
+const getDisplayName = (key: string): string => t(DISPLAY_KEYS[key] ?? key);
+
+// ❌ Bad - t() called at module init (frozen)
+const DISPLAY_NAMES = { foo: t('Foo'), bar: t('Bar') };
+```
+
 ### Translation with Variables
 
 Use interpolation for dynamic values:

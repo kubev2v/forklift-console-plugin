@@ -54,6 +54,8 @@ Represents an active migration execution, created when a Plan starts.
 
 - Tracks per-VM status: Succeeded, Running, Failed, Canceled, Paused, CantStart
 - Creates Pods, Jobs, DataVolumes, and PVCs for migration operations
+- **Pipeline steps** (visible in UI): Initialize, DiskTransfer, DiskAllocation, ImageConversion, Cutover, VirtualMachineCreation, WaitForGuestReboots, PreHook, PostHook, PreflightInspection, WaitForFinalSnapshotConsolidation
+- **WaitForGuestReboots**: Post-migration setup phase for Windows VMs. Gated by `WindowsWaitForGuestReboot` flag (requires `WindowsWaitForReboot` setting enabled, target power state not "off", Windows VM detected via inventory, and guest conversion enabled). Creates a pod that monitors the VM serial console for guest reboot completion. Runs after VMCreation, before PostHook. The UI maps pipeline step names to display names via `getPipelineStepDisplayName()` in `src/plans/details/.../MigrationStatusVirtualMachineList/utils/utils.ts`.
 
 ### NetworkMap
 Maps source networks to target networks. Referenced by Plans.
