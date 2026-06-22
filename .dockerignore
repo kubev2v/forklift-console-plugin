@@ -1,14 +1,11 @@
-# Build context for testing/PlaywrightContainerFile must be the project root
-# so that locales/ is available alongside testing/.
-# Exclude everything that the test image does not need.
+# Root .dockerignore — applies to all container builds from this directory.
+# Must NOT exclude src/, plugins/, or public/ — the main app container needs them.
+# The Playwright test container uses testing/.dockerignore via --ignorefile.
 
 .git/
 node_modules/
 dist/
 coverage/
-src/
-plugins/
-public/
 
 # Testing artifacts and local-only files
 testing/.providers.json
@@ -16,6 +13,3 @@ testing/playwright-report/
 testing/test-results/
 testing/.cursor/
 testing/node_modules/
-
-# Keep: testing/ (test code and runner)
-# Keep: locales/ (i18n smoke tests read locale JSON from /test-runner/locales/)
