@@ -3,6 +3,7 @@ import { useFieldArray } from 'react-hook-form';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
+import { isSameSourceNetwork } from '@components/mappings/network-mappings/utils/utils';
 import type { OVirtNicProfile } from '@forklift-ui/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -86,8 +87,8 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
         onClick: () => {
           const missingNetwork = usedSourceNetworks.find(
             (sourceNetwork) =>
-              !netMappingFields.find(
-                (netMapping) => netMapping.sourceNetwork.id === sourceNetwork.id,
+              !netMappingFields.find((netMapping) =>
+                isSameSourceNetwork(netMapping.sourceNetwork, sourceNetwork),
               ),
           );
 
@@ -104,16 +105,16 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
             return true;
           }
           return Boolean(
-            usedSourceNetworks.find(
-              (network) => network.id === netMappingFields[index].sourceNetwork.id,
+            usedSourceNetworks.find((network) =>
+              isSameSourceNetwork(network, netMappingFields[index].sourceNetwork),
             ),
           );
         },
         onClick: (index) => {
           if (
             netMappingFields.length > 1 &&
-            !usedSourceNetworks.find(
-              (network) => network.id === netMappingFields[index].sourceNetwork.id,
+            !usedSourceNetworks.find((network) =>
+              isSameSourceNetwork(network, netMappingFields[index].sourceNetwork),
             )
           ) {
             remove(index);
@@ -124,8 +125,8 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
             return t('At least one network mapping must be provided.');
           }
           if (
-            usedSourceNetworks.find(
-              (network) => network.id === netMappingFields[index].sourceNetwork.id,
+            usedSourceNetworks.find((network) =>
+              isSameSourceNetwork(network, netMappingFields[index].sourceNetwork),
             )
           ) {
             return t('All networks detected on the selected VMs require a mapping.');
