@@ -29,7 +29,7 @@ export type VmFeatures = {
 
 export type FeatureName = (typeof FEATURE_NAMES)[keyof typeof FEATURE_NAMES];
 
-export type MappingValue = { id?: string; name: string };
+export type MappingValue = { id?: string; name: string; vlan?: string };
 
 /**
  * Type for the return value of access review hooks.
