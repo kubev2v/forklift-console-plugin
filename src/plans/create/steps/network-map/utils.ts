@@ -152,6 +152,76 @@ const getNetworksUsedByProviderVms = (
   return Array.from(networkIdSet);
 };
 
+type HypervNic = { network?: { id?: string }; vlanId?: number };
+type HypervVmWithNics = ProviderVirtualMachine & { nics?: HypervNic[] };
+
+const collectDistinctVlansByNetwork = (nics: HypervNic[]): Map<string, Set<number>> => {
+  const vlansByNetwork = new Map<string, Set<number>>();
+  for (const nic of nics) {
+    const netId = nic.network?.id;
+    if (netId) {
+      if (!vlansByNetwork.has(netId)) vlansByNetwork.set(netId, new Set<number>());
+      vlansByNetwork.get(netId)!.add(nic.vlanId ?? 0);
+    }
+  }
+  return vlansByNetwork;
+};
+
+const upsertVlanEntry = (
+  vlanEntries: Map<string, MappingValue>,
+  networkId: string,
+  networkName: string,
+  vlanId: number,
+): void => {
+  const key = vlanId === 0 ? `${networkId}/untagged` : `${networkId}/${vlanId}`;
+  if (vlanEntries.has(key)) return;
+  vlanEntries.set(
+    key,
+    vlanId === 0
+      ? { id: networkId, name: `${networkName} (Untagged)`, vlan: '0' }
+      : { id: networkId, name: `${networkName} (VLAN ${vlanId})`, vlan: String(vlanId) },
+  );
+};
+
+/**
+ * For Hyper-V VMs, detects NICs that share the same network but have different VLANs.
+ * Returns VLAN-qualified MappingValues for those cases.
+ *
+ * Disambiguation is scoped to a single VM: only when one VM has multiple NICs on
+ * the same network with distinct VLAN IDs are VLAN-qualified entries generated.
+ * Cross-VM differences (each VM has a single NIC per network but with different
+ * VLANs) do not create mapping conflicts and are handled by the plain network entry.
+ */
+export const getHypervVlanQualifiedNetworks = (
+  vms: ProviderVirtualMachine[],
+  availableSourceNetworks: (ProviderNetwork | OpenShiftNetworkAttachmentDefinition)[],
+): MappingValue[] => {
+  const networkNameById = new Map(availableSourceNetworks.map((net) => [net.id, net.name]));
+  const vlanEntries = new Map<string, MappingValue>();
+
+  const hypervVms = vms.filter(
+    (vm): vm is HypervVmWithNics =>
+      vm.providerType === PROVIDER_TYPES.hyperv && Boolean((vm as HypervVmWithNics).nics),
+  );
+
+  for (const vm of hypervVms) {
+    const nics = vm.nics ?? [];
+    const vlansByNetwork = collectDistinctVlansByNetwork(nics);
+
+    const conflictNics = nics.filter(
+      (nic) => nic.network?.id && (vlansByNetwork.get(nic.network.id)?.size ?? 0) > 1,
+    );
+
+    for (const nic of conflictNics) {
+      const networkId = nic.network!.id!;
+      const networkName = networkNameById.get(networkId) ?? networkId;
+      upsertVlanEntry(vlanEntries, networkId, networkName, nic.vlanId ?? 0);
+    }
+  }
+
+  return Array.from(vlanEntries.values());
+};
+
 /**
  * Categorizes available source networks into 'used' and 'other' based on VM usage
  * This helps prioritize networks that need mapping in the UI
@@ -165,21 +235,31 @@ export const getSourceNetworkValues = (
     getNetworksUsedByProviderVms(vms, nicProfiles, availableSourceNetworks),
   );
 
+  // For Hyper-V, detect VLAN conflicts and generate VLAN-qualified entries
+  const vlanQualified = getHypervVlanQualifiedNetworks(vms, availableSourceNetworks);
+  const networksWithVlanConflict = new Set(vlanQualified.map((entry) => entry.id));
+
   const used: MappingValue[] = [];
   const other: MappingValue[] = [];
 
   for (const network of availableSourceNetworks) {
-    const mappingValue = {
-      id: network.id,
-      name: network.name === DEFAULT_NETWORK ? DEFAULT_NETWORK : getMapResourceLabel(network),
-    };
-
-    if (usedNetworkIds.has(mappingValue.id) || usedNetworkIds.has(mappingValue.name)) {
-      used.push(mappingValue);
+    if (networksWithVlanConflict.has(network.id)) {
+      // Network replaced by VLAN-qualified entries below
     } else {
-      other.push(mappingValue);
+      const mappingValue = {
+        id: network.id,
+        name: network.name === DEFAULT_NETWORK ? DEFAULT_NETWORK : getMapResourceLabel(network),
+      };
+
+      if (usedNetworkIds.has(mappingValue.id) || usedNetworkIds.has(mappingValue.name)) {
+        used.push(mappingValue);
+      } else {
+        other.push(mappingValue);
+      }
     }
   }
+
+  used.push(...vlanQualified);
 
   return { other, used };
 };

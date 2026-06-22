@@ -10,6 +10,7 @@ import { hasPodNetworkMappings } from 'src/plans/create/utils/hasMultiplePodNetw
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
+import { isSameSourceNetwork } from '@components/mappings/network-mappings/utils/utils';
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -107,8 +108,8 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
         onClick: async () => {
           const missingNetwork = usedSourceNetworks.find(
             (sourceNetwork) =>
-              !networkMappingFields.some(
-                (netMapping) => netMapping.sourceNetwork.id === sourceNetwork.id,
+              !networkMappingFields.some((netMapping) =>
+                isSameSourceNetwork(netMapping.sourceNetwork, sourceNetwork),
               ),
           );
 
@@ -128,15 +129,15 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
           if (networkMappingFields.length <= 1) {
             return true;
           }
-          return usedSourceNetworks.some(
-            (network) => network.id === networkMappingFields[index].sourceNetwork.id,
+          return usedSourceNetworks.some((network) =>
+            isSameSourceNetwork(network, networkMappingFields[index].sourceNetwork),
           );
         },
         onClick: (index) => {
           if (
             networkMappingFields.length > 1 &&
-            !usedSourceNetworks.some(
-              (network) => network.id === networkMappingFields[index].sourceNetwork.id,
+            !usedSourceNetworks.some((network) =>
+              isSameSourceNetwork(network, networkMappingFields[index].sourceNetwork),
             )
           ) {
             remove(index);
@@ -147,8 +148,8 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
             return t('At least one network mapping must be provided.');
           }
           if (
-            usedSourceNetworks.some(
-              (network) => network.id === networkMappingFields[index].sourceNetwork.id,
+            usedSourceNetworks.some((network) =>
+              isSameSourceNetwork(network, networkMappingFields[index].sourceNetwork),
             )
           ) {
             return t('All networks detected on the selected VMs require a mapping.');

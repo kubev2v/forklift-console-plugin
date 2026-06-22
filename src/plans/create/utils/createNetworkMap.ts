@@ -49,6 +49,7 @@ const getSource = (sourceNetwork: MappingValue, sourceProvider?: V1beta1Provider
     name: sourceNetwork.name,
     // Set type to 'multus' only for OpenShift source providers
     type: sourceProvider?.spec?.type === PROVIDER_TYPES.openshift ? MULTUS : undefined,
+    ...(sourceNetwork.vlan ? { vlan: sourceNetwork.vlan } : {}),
   };
 };
 
