@@ -660,10 +660,26 @@ const [data, loaded, error] = useK8sWatchResource<Resource>({
 
 ---
 
+## Dev-Helper Skill
+
+The [dev-helper](https://github.com/avivtur/dev-helper) Cursor AI skill automates
+the full ticket lifecycle from Jira triage to merged PR. Install it once:
+
+```bash
+git clone https://github.com/avivtur/dev-helper .cursor/skills/dev-helper
+cp .cursor/skills/dev-helper/examples/config.full.json .cursor/skills/dev-helper/dev-helper.config.json
+cp -r .cursor/skills/dev-helper/examples/phases-rules.example/ .cursor/skills/dev-helper/phases-rules/
+```
+
+See the [dev-helper SETUP.md](https://github.com/avivtur/dev-helper/blob/main/SETUP.md) for full instructions.
+
+---
+
 ## Additional Resources
 
 - [Forklift Repository](https://github.com/kubev2v/forklift/)
 - [OpenShift Console](https://github.com/openshift/console)
 - [PatternFly Documentation](https://www.patternfly.org/)
 - [OpenShift Dynamic Plugin SDK](https://github.com/openshift/dynamic-plugin-sdk)
+- [Dev-Helper Skill](https://github.com/avivtur/dev-helper)
 
