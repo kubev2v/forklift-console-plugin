@@ -668,6 +668,20 @@ const [data, loaded, error] = useK8sWatchResource<Resource>({
 });
 ```
 
+### Actions Dropdown Convention
+Action dropdowns use `isDetailsPage` (not `isKebab`) to control behavior by context:
+- **List page** (default): kebab icon, "Edit" navigates to resource, "Delete"
+- **Details page** (`isDetailsPage`): "Actions" button, "Edit YAML" navigates to YAML tab, "Delete"
+
+### Build-Time Feature Hiding
+When a UI component is ready but the backend feature isn't, hide it at build time rather than deleting the code:
+1. Keep the component file intact
+2. Remove the import and JSX usage from the parent component
+3. Add the orphaned file to `knip.config.ts` `ignore` with a comment linking to the upstream issue
+4. Re-enable when the backend lands
+
+This avoids re-implementation work and keeps knip from flagging the file as unused.
+
 ---
 
 ## Dev-Helper Skill
