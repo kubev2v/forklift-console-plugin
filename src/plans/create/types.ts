@@ -104,7 +104,7 @@ export type CreatePlanFormData = FieldValues & {
   [OtherSettingsFormFieldId.TargetPowerState]: TargetPowerState;
 };
 
-export type MappingValue = { id?: string; name: string };
+export type MappingValue = { id?: string; name: string; vlan?: string };
 
 export type MappingFieldIds = {
   sourceField: string;
