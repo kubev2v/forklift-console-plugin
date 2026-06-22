@@ -1,5 +1,3 @@
-import type { Page } from '@playwright/test';
-
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceFetcher } from '../../utils/resource-manager/ResourceFetcher';
 import type { JsonPatchOperation } from '../../utils/resource-manager/ResourceManager';
@@ -25,17 +23,15 @@ export const KNOWN_SETTINGS = {
 
 type SettingsKey = keyof typeof KNOWN_SETTINGS;
 
-export interface OriginalSettings {
+export type OriginalSettings = {
   controllerName: string;
   values: Partial<Record<SettingsKey, string | number>>;
-}
+};
 
 export const initializeForkliftSettings = async (
-  page: Page,
   namespace = MTV_NAMESPACE,
 ): Promise<OriginalSettings | null> => {
   const controller = await ResourceFetcher.fetchForkliftController(
-    page,
     'forklift-controller',
     namespace,
   );
@@ -68,7 +64,6 @@ export const initializeForkliftSettings = async (
 
   if (patches.length > 0) {
     const result = await ResourcePatcher.patchForkliftController(
-      page,
       controllerName,
       patches,
       namespace,
@@ -83,7 +78,6 @@ export const initializeForkliftSettings = async (
 };
 
 export const restoreForkliftSettings = async (
-  page: Page,
   original: OriginalSettings,
   namespace = MTV_NAMESPACE,
 ): Promise<boolean> => {
@@ -98,7 +92,6 @@ export const restoreForkliftSettings = async (
   );
 
   const result = await ResourcePatcher.patchForkliftController(
-    page,
     original.controllerName,
     patches,
     namespace,

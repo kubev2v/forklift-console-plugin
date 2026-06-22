@@ -1,10 +1,13 @@
 import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
 
-import { chromium, type FullConfig, type Page } from '@playwright/test';
+import { execFileSync } from 'node:child_process';
+
+import { chromium, type FullConfig } from '@playwright/test';
 
 import { restoreConsoleLanguage } from './fixtures/helpers/languageHelpers';
 import { LoginPage } from './page-objects/LoginPage';
-import { AUTH_FILE, ENV_RELAY_FILE } from './utils/constants';
+import { AUTH_FILE, ENV_RELAY_FILE, KUBECONFIG_FILE } from './utils/constants';
+import { BaseResourceManager } from './utils/resource-manager/BaseResourceManager';
 import { RESOURCES_FILE } from './utils/resource-manager/constants';
 import { ResourceFetcher } from './utils/resource-manager/ResourceFetcher';
 import { disableGuidedTour } from './utils/utils';
@@ -16,6 +19,7 @@ const ENV_KEYS_TO_RELAY = [
   'CNV_VERSION',
   'FORKLIFT_VERSION',
   'JENKINS',
+  'KUBECONFIG_PATH',
   'LIGHTSPEED_INSTALLED',
   'VSPHERE_PROVIDER',
 ] as const;
@@ -29,15 +33,89 @@ const USER_SET_KEYS = new Set(
 );
 
 /**
+ * Fetches the cluster API server URL from the OpenShift infrastructure CR.
+ * Uses cookie-based auth (console proxy) — called while cookies are still fresh,
+ * before the kubeconfig is generated.
+ */
+const fetchClusterApiUrl = async (): Promise<string | null> => {
+  type InfraCluster = { status?: { apiServerURL?: string } };
+  const infra = await BaseResourceManager.apiGet<InfraCluster>(
+    '/api/kubernetes/apis/config.openshift.io/v1/infrastructures/cluster',
+  );
+  return infra?.status?.apiServerURL ?? null;
+};
+
+/**
+ * Standard installation paths for the `oc` CLI on Linux and macOS.
+ * Using absolute paths avoids PATH-based resolution entirely (SonarCloud S4036).
+ */
+const OC_BINARY_LOCATIONS = ['/usr/local/bin/oc', '/usr/bin/oc', '/opt/homebrew/bin/oc'] as const;
+
+const findOcBinary = (): string | null => OC_BINARY_LOCATIONS.find(existsSync) ?? null;
+
+/**
+ * Runs `oc login` to generate a kubeconfig at KUBECONFIG_FILE.
+ * Writes KUBECONFIG_PATH into process.env so subsequent Node.js HTTP calls in
+ * this process (detectForkliftVersion, etc.) use the kubeconfig-based auth path.
+ *
+ * Falls back gracefully when:
+ *  - CLUSTER_USERNAME / CLUSTER_PASSWORD are not set
+ *  - The cluster API URL cannot be determined
+ *  - The `oc` binary is not available
+ */
+const generateKubeconfig = async (username: string, password: string): Promise<void> => {
+  const clusterApiUrl =
+    process.env.CLUSTER_API_URL?.replace(/\/$/, '') ?? (await fetchClusterApiUrl());
+
+  if (!clusterApiUrl) {
+    console.error(
+      '⚠️ Could not determine cluster API URL — skipping kubeconfig generation. ' +
+        'Set CLUSTER_API_URL env var to enable kubeconfig-based auth.',
+    );
+    return;
+  }
+
+  const ocBin = findOcBinary();
+  if (!ocBin) {
+    console.error(
+      `⚠️ oc binary not found in ${OC_BINARY_LOCATIONS.join(', ')} — skipping kubeconfig generation.`,
+    );
+    return;
+  }
+
+  try {
+    execFileSync(
+      ocBin,
+      [
+        'login',
+        clusterApiUrl,
+        '-u',
+        username,
+        '-p',
+        password,
+        '--insecure-skip-tls-verify',
+        '--kubeconfig',
+        KUBECONFIG_FILE,
+      ],
+      { stdio: 'pipe', timeout: 30_000 },
+    );
+    Object.assign(process.env, { KUBECONFIG_PATH: KUBECONFIG_FILE });
+    console.error(`✅ kubeconfig written to ${KUBECONFIG_FILE} — workers will use direct API auth`);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`⚠️ oc login failed (${message}) — workers will fall back to session cookies`);
+  }
+};
+
+/**
  * Auto-detect the Forklift/MTV operator version from the cluster CSV.
  *
- * Always fetches from the cluster. If the user explicitly set FORKLIFT_VERSION in e2e.env / shell,
- * the detected value is discarded in favour of theirs (intentional override). This ensures a stale
- * relay value is never silently carried forward across runs.
+ * Called after browser login so user.json (storageState) is available for
+ * the Node.js HTTP client used by ResourceFetcher.
  */
-const detectForkliftVersion = async (page: Page): Promise<void> => {
+const detectForkliftVersion = async (): Promise<void> => {
   try {
-    const detectedVersion = await ResourceFetcher.fetchMtvVersion(page);
+    const detectedVersion = await ResourceFetcher.fetchMtvVersion();
     if (process.env[VERSION_ENV_VAR] && USER_SET_KEYS.has(VERSION_ENV_VAR)) {
       console.error(`📌 Using user-set Forklift version: ${process.env[VERSION_ENV_VAR]}`);
     } else if (detectedVersion) {
@@ -56,9 +134,9 @@ const detectForkliftVersion = async (page: Page): Promise<void> => {
  * When CNV_VERSION was explicitly set by the user in e2e.env / shell, respect it.
  * Unlike Forklift, CNV version is optional — tests run when it's unknown.
  */
-const detectCnvVersion = async (page: Page): Promise<void> => {
+const detectCnvVersion = async (): Promise<void> => {
   try {
-    const detectedVersion = await ResourceFetcher.fetchCnvVersion(page);
+    const detectedVersion = await ResourceFetcher.fetchCnvVersion();
     if (process.env[CNV_VERSION_ENV_VAR] && USER_SET_KEYS.has(CNV_VERSION_ENV_VAR)) {
       console.error(`📌 Using user-set CNV version: ${process.env[CNV_VERSION_ENV_VAR]}`);
     } else if (detectedVersion) {
@@ -75,6 +153,10 @@ const detectCnvVersion = async (page: Page): Promise<void> => {
 };
 
 const globalSetup = async (config: FullConfig) => {
+  // console.error is used intentionally throughout this function.
+  // Playwright routes stderr to the test reporter unconditionally, so these
+  // lines are always visible in CI output regardless of --quiet or verbosity
+  // settings.  Do not change them to console.log.
   console.error('🚀 Starting global setup...');
 
   if (existsSync(RESOURCES_FILE)) {
@@ -114,13 +196,15 @@ const globalSetup = async (config: FullConfig) => {
         console.error('⚠️ networkidle timed out before language restore; proceeding');
       });
 
-      await restoreConsoleLanguage(page);
-
       await page.context().storageState({ path: AUTH_FILE });
       console.error('✅ Authentication completed successfully');
 
-      await detectForkliftVersion(page);
-      await detectCnvVersion(page);
+      await restoreConsoleLanguage(page);
+
+      await generateKubeconfig(username, password);
+
+      await detectForkliftVersion();
+      await detectCnvVersion();
     } catch (error) {
       const screenshotPath = 'playwright/test-results/global-setup-login-failure.png';
       await page.screenshot({ path: screenshotPath, fullPage: true }).catch(() => undefined);
@@ -132,19 +216,6 @@ const globalSetup = async (config: FullConfig) => {
     }
   } else {
     console.error('⚠️ No credentials provided, skipping authentication setup');
-
-    const browser = await chromium.launch();
-    const page = await browser.newPage({ ignoreHTTPSErrors: true });
-
-    try {
-      await page.goto(baseURL, { waitUntil: 'domcontentloaded', timeout: 10_000 });
-      await detectForkliftVersion(page);
-      await detectCnvVersion(page);
-    } catch {
-      console.error('⚠️ Could not reach cluster for version detection, using env vars/defaults');
-    } finally {
-      await browser.close();
-    }
 
     if (!process.env[VERSION_ENV_VAR]) {
       process.env[VERSION_ENV_VAR] = 'latest';

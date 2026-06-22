@@ -4,14 +4,10 @@ import type {
   V1beta1Provider,
   V1beta1StorageMap,
 } from '@forklift-ui/types';
-import type { Page } from '@playwright/test';
 
 import { BaseResourceManager } from './BaseResourceManager';
 import { API_PATHS, MTV_NAMESPACE } from './constants';
 
-/**
- * NetworkAttachmentDefinition type for CNI network configuration
- */
 export type V1NetworkAttachmentDefinition = {
   apiVersion: 'k8s.cni.cncf.io/v1';
   kind: 'NetworkAttachmentDefinition';
@@ -26,46 +22,41 @@ export type V1NetworkAttachmentDefinition = {
 };
 
 export const createProvider = async (
-  page: Page,
   provider: V1beta1Provider,
   namespace = MTV_NAMESPACE,
 ): Promise<V1beta1Provider | null> => {
   const apiPath = `${API_PATHS.FORKLIFT}/namespaces/${namespace}/providers`;
-  return BaseResourceManager.apiPost<V1beta1Provider>(page, apiPath, provider);
+  return BaseResourceManager.apiPost<V1beta1Provider>(apiPath, provider);
 };
 
 export const createSecret = async (
-  page: Page,
   secret: IoK8sApiCoreV1Secret,
   namespace = MTV_NAMESPACE,
 ): Promise<IoK8sApiCoreV1Secret | null> => {
   const apiPath = `${API_PATHS.KUBERNETES_CORE}/namespaces/${namespace}/secrets`;
-  return BaseResourceManager.apiPost<IoK8sApiCoreV1Secret>(page, apiPath, secret);
+  return BaseResourceManager.apiPost<IoK8sApiCoreV1Secret>(apiPath, secret);
 };
 
 export const createNad = async (
-  page: Page,
   nad: V1NetworkAttachmentDefinition,
   namespace: string,
 ): Promise<V1NetworkAttachmentDefinition | null> => {
   const apiPath = `${API_PATHS.NAD}/namespaces/${namespace}/network-attachment-definitions`;
-  return BaseResourceManager.apiPost<V1NetworkAttachmentDefinition>(page, apiPath, nad);
+  return BaseResourceManager.apiPost<V1NetworkAttachmentDefinition>(apiPath, nad);
 };
 
 export const createNetworkMap = async (
-  page: Page,
   networkMap: V1beta1NetworkMap,
   namespace = MTV_NAMESPACE,
 ): Promise<V1beta1NetworkMap | null> => {
   const apiPath = `${API_PATHS.FORKLIFT}/namespaces/${namespace}/networkmaps`;
-  return BaseResourceManager.apiPost<V1beta1NetworkMap>(page, apiPath, networkMap);
+  return BaseResourceManager.apiPost<V1beta1NetworkMap>(apiPath, networkMap);
 };
 
 export const createStorageMap = async (
-  page: Page,
   storageMap: V1beta1StorageMap,
   namespace = MTV_NAMESPACE,
 ): Promise<V1beta1StorageMap | null> => {
   const apiPath = `${API_PATHS.FORKLIFT}/namespaces/${namespace}/storagemaps`;
-  return BaseResourceManager.apiPost<V1beta1StorageMap>(page, apiPath, storageMap);
+  return BaseResourceManager.apiPost<V1beta1StorageMap>(apiPath, storageMap);
 };

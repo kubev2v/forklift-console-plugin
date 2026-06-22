@@ -1,47 +1,98 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
-import type { BrowserContextOptions, Page } from '@playwright/test';
-
-import { AUTH_FILE } from '../constants';
 import { isEmpty } from '../utils';
 
 import { BaseResourceManager } from './BaseResourceManager';
-import { MTV_NAMESPACE, RESOURCES_FILE } from './constants';
+import {
+  API_PATHS,
+  MTV_NAMESPACE,
+  RESOURCE_KINDS,
+  RESOURCE_TYPES,
+  RESOURCES_FILE,
+} from './constants';
 import type { SupportedResource } from './ResourceManager';
 
 /**
- * Handles cleanup and deletion of Kubernetes resources
+ * Deletion groups ordered by dependency: resources in later groups may reference
+ * resources in earlier groups, so earlier groups must be deleted first.
+ * Within each group all deletions run in parallel.
+ */
+const CLEANUP_GROUPS = [
+  // Group 1: execution resources — reference providers, maps, and each other
+  [RESOURCE_KINDS.MIGRATION, RESOURCE_KINDS.PLAN],
+  // Group 2: configuration resources — referenced by plans
+  // Note: FORKLIFT_CONTROLLER is intentionally excluded — deleting it would destroy
+  // the entire Forklift installation. Tests that modify it via patch must restore it.
+  [
+    RESOURCE_KINDS.NETWORK_MAP,
+    RESOURCE_KINDS.STORAGE_MAP,
+    RESOURCE_KINDS.PROVIDER,
+    RESOURCE_KINDS.SECRET,
+  ],
+  // Group 3: workload resources
+  [RESOURCE_KINDS.VIRTUAL_MACHINE, RESOURCE_KINDS.NETWORK_ATTACHMENT_DEFINITION],
+  // Group 4: namespaces / projects must be last (deleting them cascades everything inside)
+  [RESOURCE_KINDS.NAMESPACE, RESOURCE_KINDS.PROJECT],
+] as const;
+
+/**
+ * Handles cleanup and deletion of Kubernetes resources.
+ * All operations use Node.js HTTP directly — no browser Page required.
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class ResourceCleaner extends BaseResourceManager {
-  static async cleanupAll(page: Page, resources: SupportedResource[]): Promise<void> {
+  static async cleanupAll(resources: SupportedResource[]): Promise<void> {
     if (isEmpty(resources)) {
       console.log('No resources to cleanup');
       return;
     }
 
-    const cleanupPromises = resources.map(async (resource) =>
-      ResourceCleaner.deleteResource(page, resource),
-    );
-
-    const results = await Promise.allSettled(cleanupPromises);
+    const byKind = new Map<string, SupportedResource[]>();
+    for (const resource of resources) {
+      const kind = resource.kind ?? 'unknown';
+      const bucket = byKind.get(kind) ?? [];
+      bucket.push(resource);
+      byKind.set(kind, bucket);
+    }
 
     let deletedCount = 0;
     let skippedCount = 0;
     let failureCount = 0;
 
-    for (const result of results) {
-      if (result.status === 'fulfilled') {
-        const { skipped } = result.value;
-
-        if (skipped) {
-          skippedCount += 1;
+    const processResults = (results: PromiseSettledResult<{ skipped: boolean }>[]) => {
+      for (const result of results) {
+        if (result.status === 'fulfilled') {
+          if (result.value.skipped) {
+            skippedCount += 1;
+          } else {
+            deletedCount += 1;
+          }
         } else {
-          deletedCount += 1;
+          failureCount += 1;
         }
-      } else {
-        failureCount += 1;
       }
+    };
+
+    // Delete in dependency order — each group waits for the previous to finish
+    for (const group of CLEANUP_GROUPS) {
+      const groupResources = group.flatMap((kind) => byKind.get(kind) ?? []);
+      group.forEach((kind) => byKind.delete(kind));
+
+      if (groupResources.length > 0) {
+        const results = await Promise.allSettled(
+          groupResources.map(async (resource) => ResourceCleaner.deleteResource(resource)),
+        );
+        processResults(results);
+      }
+    }
+
+    // Catch-all for any kind not covered by the groups above (future-proofing)
+    const remainingResources = [...byKind.values()].flat();
+    if (remainingResources.length > 0) {
+      const results = await Promise.allSettled(
+        remainingResources.map(async (resource) => ResourceCleaner.deleteResource(resource)),
+      );
+      processResults(results);
     }
 
     if (failureCount > 0) {
@@ -52,9 +103,8 @@ export class ResourceCleaner extends BaseResourceManager {
   }
 
   private static async deleteResource(
-    page: Page,
     resource: SupportedResource,
-  ): Promise<{ success: boolean; skipped: boolean; reason?: string }> {
+  ): Promise<{ skipped: boolean; reason?: string }> {
     const resourceName = resource.metadata?.name;
     const namespace = resource.metadata?.namespace ?? MTV_NAMESPACE;
 
@@ -64,119 +114,48 @@ export class ResourceCleaner extends BaseResourceManager {
 
     const resourceType = ResourceCleaner.getResourceType(resource);
 
-    const constants = ResourceCleaner.getEvaluateConstants();
-
-    try {
-      const result = await page.evaluate(
-        async ({ resType, resName, resNamespace, evalConstants }) => {
-          try {
-            const getCsrfTokenFromCookie = () => {
-              const cookies = document.cookie.split('; ');
-              const csrfCookie = cookies.find((cookie) =>
-                cookie.startsWith(`${evalConstants.CSRF_TOKEN_NAME}=`),
-              );
-              return csrfCookie ? csrfCookie.split('=')[1] : '';
-            };
-            const csrfToken = getCsrfTokenFromCookie();
-
-            let apiPath = '';
-            if (resType === evalConstants.VIRTUAL_MACHINES_TYPE) {
-              apiPath = `${evalConstants.KUBEVIRT_PATH}/namespaces/${resNamespace}/${resType}/${resName}`;
-            } else if (resType === evalConstants.PROJECTS_TYPE) {
-              apiPath = `${evalConstants.OPENSHIFT_PROJECT_PATH}/${resType}/${resName}`;
-            } else if (resType === evalConstants.NAMESPACES_TYPE) {
-              apiPath = `${evalConstants.KUBERNETES_CORE}/${resType}/${resName}`;
-            } else if (resType === evalConstants.SECRETS_TYPE) {
-              apiPath = `${evalConstants.KUBERNETES_CORE}/namespaces/${resNamespace}/${resType}/${resName}`;
-            } else {
-              apiPath = `${evalConstants.FORKLIFT_PATH}/namespaces/${resNamespace}/${resType}/${resName}`;
-            }
-
-            const response = await fetch(apiPath, {
-              method: 'DELETE',
-              headers: {
-                [evalConstants.CONTENT_TYPE_HEADER]: evalConstants.APPLICATION_JSON,
-                [evalConstants.CSRF_TOKEN_HEADER]: csrfToken,
-              },
-              credentials: 'include',
-            });
-
-            if (response.ok || response.status === 404) {
-              return { success: true, error: null, wasNotFound: response.status === 404 };
-            }
-
-            const errorText = await response.text().catch(() => response.statusText);
-
-            return {
-              success: false,
-              error: {
-                message: errorText,
-                status: response.status,
-              },
-            };
-          } catch (error: unknown) {
-            const err = error as any;
-            return {
-              success: false,
-              error: {
-                message: err?.message ?? String(error),
-                status: err?.status ?? 'unknown',
-              },
-            };
-          }
-        },
-        {
-          resType: resourceType,
-          resName: resourceName,
-          resNamespace: namespace,
-          evalConstants: constants,
-        },
-      );
-
-      if (!result.success) {
-        const { error } = result;
-
-        if (!error) {
-          throw new Error('Failed to delete: unknown error');
-        }
-
-        if (error.status === 404 || error.message.includes('not found')) {
-          return { success: true, skipped: true, reason: 'not found' };
-        }
-
-        if (error.status === 403 || error.message.includes('Forbidden')) {
-          return {
-            success: true,
-            skipped: true,
-            reason: 'deletion forbidden',
-          };
-        }
-
-        throw new Error(`Failed to delete: ${error.message}`);
+    const buildApiPath = (): string => {
+      if (resourceType === RESOURCE_TYPES.VIRTUAL_MACHINES) {
+        return `${API_PATHS.KUBEVIRT}/namespaces/${namespace}/${resourceType}/${resourceName}`;
       }
-
-      if (result.wasNotFound) {
-        return { success: true, skipped: true, reason: 'not found' };
+      if (resourceType === RESOURCE_TYPES.PROJECTS) {
+        return `${API_PATHS.OPENSHIFT_PROJECT}/${resourceType}/${resourceName}`;
       }
-
-      return { success: true, skipped: false };
-    } catch (error) {
-      const errorStr = String(error);
-
-      if (errorStr.includes('404') || errorStr.includes('not found')) {
-        return { success: true, skipped: true, reason: 'not found' };
+      if (resourceType === RESOURCE_TYPES.NAMESPACES) {
+        return `${API_PATHS.KUBERNETES_CORE}/${resourceType}/${resourceName}`;
       }
-
-      if (errorStr.includes('403') || errorStr.includes('Forbidden')) {
-        return {
-          success: true,
-          skipped: true,
-          reason: 'deletion forbidden',
-        };
+      if (resourceType === RESOURCE_TYPES.SECRETS) {
+        return `${API_PATHS.KUBERNETES_CORE}/namespaces/${namespace}/${resourceType}/${resourceName}`;
       }
+      if (resourceType === RESOURCE_TYPES.NETWORK_ATTACHMENT_DEFINITIONS) {
+        return `${API_PATHS.NAD}/namespaces/${namespace}/${resourceType}/${resourceName}`;
+      }
+      return `${API_PATHS.FORKLIFT}/namespaces/${namespace}/${resourceType}/${resourceName}`;
+    };
 
-      throw error;
+    const HTTP_NOT_FOUND = 404;
+    const HTTP_FORBIDDEN = 403;
+
+    const result = await ResourceCleaner.apiRequest<unknown>(buildApiPath(), { method: 'DELETE' });
+
+    if (result.success || result.status === HTTP_NOT_FOUND) {
+      return {
+        skipped: result.status === HTTP_NOT_FOUND,
+        reason: result.status === HTTP_NOT_FOUND ? 'not found' : undefined,
+      };
     }
+
+    if (result.status === HTTP_FORBIDDEN) {
+      console.warn(
+        `Cleanup: DELETE ${resourceName} (${resourceType}) returned 403 Forbidden — skipping`,
+      );
+      return { skipped: true, reason: 'deletion forbidden' };
+    }
+
+    console.error(`Cleanup: DELETE ${resourceName} (${resourceType}) failed: ${result.error}`);
+    throw new Error(
+      `DELETE ${resourceName} (${resourceType}) failed with HTTP ${result.status}: ${result.error}`,
+    );
   }
 
   private static getResourceType(resource: SupportedResource): string {
@@ -184,46 +163,6 @@ export class ResourceCleaner extends BaseResourceManager {
       return ResourceCleaner.getResourceTypeFromKind(resource.kind);
     }
     return 'unknown';
-  }
-
-  static async instantCleanup(
-    resources: SupportedResource[],
-    baseUrl = process.env.BRIDGE_BASE_ADDRESS ??
-      process.env.BASE_ADDRESS ??
-      'http://localhost:9000',
-    storageStatePath?: string,
-  ): Promise<void> {
-    if (isEmpty(resources)) {
-      return;
-    }
-
-    const { chromium } = await import('@playwright/test');
-    const browser = await chromium.launch({ headless: true });
-
-    const contextOptions: BrowserContextOptions = {
-      ignoreHTTPSErrors: true,
-    };
-
-    if (storageStatePath) {
-      contextOptions.storageState = storageStatePath;
-    } else if (existsSync(AUTH_FILE)) {
-      contextOptions.storageState = AUTH_FILE;
-    }
-
-    const context = await browser.newContext(contextOptions);
-    const page = await context.newPage();
-
-    try {
-      await page.goto(`${baseUrl}/k8s/all-namespaces/forklift.konveyor.io~v1beta1~Provider`);
-      await page.waitForLoadState('domcontentloaded');
-      await ResourceCleaner.cleanupAll(page, resources);
-    } catch (error) {
-      console.error('Error during instant cleanup:', error);
-      throw error;
-    } finally {
-      await context.close();
-      await browser.close();
-    }
   }
 
   static loadResourcesFromFile(): SupportedResource[] {

@@ -1,0 +1,15 @@
+# Root .dockerignore — applies to all container builds from this directory.
+# Must NOT exclude src/, plugins/, or public/ — the main app container needs them.
+# The Playwright test container uses testing/.dockerignore via --ignorefile.
+
+.git/
+node_modules/
+dist/
+coverage/
+
+# Testing artifacts and local-only files
+testing/.providers.json
+testing/playwright-report/
+testing/test-results/
+testing/.cursor/
+testing/node_modules/

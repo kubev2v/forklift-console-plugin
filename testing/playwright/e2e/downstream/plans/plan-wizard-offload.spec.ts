@@ -33,7 +33,7 @@ test.describe(
       });
 
       const wizard = new CreatePlanWizardPage(page, resourceManager);
-      const secretName = await createOffloadTestSecret(page, resourceManager);
+      const secretName = await createOffloadTestSecret(resourceManager);
 
       await test.step('Navigate to Storage Map step', async () => {
         await wizard.navigate();

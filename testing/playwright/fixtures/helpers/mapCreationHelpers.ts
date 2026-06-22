@@ -1,8 +1,6 @@
 import type { V1beta1NetworkMap, V1beta1Provider, V1beta1StorageMap } from '@forklift-ui/types';
-import type { Page } from '@playwright/test';
 
 import type { Mapping } from '../../types/test-data';
-import { NavigationHelper } from '../../utils/NavigationHelper';
 import {
   FORKLIFT_API_VERSION,
   MTV_NAMESPACE,
@@ -18,7 +16,6 @@ import {
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
 export const createTestNad = async (
-  page: Page,
   resourceManager: ResourceManager,
   options: {
     name?: string;
@@ -28,9 +25,6 @@ export const createTestNad = async (
 ): Promise<V1NetworkAttachmentDefinition> => {
   const { namespace, bridgeName = 'br0' } = options;
   const nadName = options.name ?? `nad-test-${crypto.randomUUID().slice(0, 8)}`;
-
-  const navigationHelper = new NavigationHelper(page);
-  await navigationHelper.navigateToConsole();
 
   const nadConfig = {
     cniVersion: '0.3.1',
@@ -47,7 +41,7 @@ export const createTestNad = async (
     spec: { config: JSON.stringify(nadConfig) },
   };
 
-  const createdNad = await createNadApi(page, nad, namespace);
+  const createdNad = await createNadApi(nad, namespace);
   if (!createdNad) {
     throw new Error(`Failed to create NAD ${nadName}`);
   }
@@ -60,23 +54,22 @@ export const createTestNad = async (
 };
 
 // Network Map types and creation
-export interface TestNetworkMap {
+export type TestNetworkMap = {
   name: string;
   namespace: string;
   sourceProvider: string;
   targetProvider: string;
   mappings: Mapping[];
-}
+};
 
-export interface CreateNetworkMapOptions {
+export type CreateNetworkMapOptions = {
   sourceProvider: V1beta1Provider;
   targetProvider?: string;
   namePrefix?: string;
   mappings?: Mapping[];
-}
+};
 
 export const createNetworkMap = async (
-  page: Page,
   resourceManager: ResourceManager,
   options: CreateNetworkMapOptions,
 ): Promise<TestNetworkMap> => {
@@ -87,13 +80,16 @@ export const createNetworkMap = async (
     mappings = [],
   } = options;
 
+  const sourceName = sourceProvider.metadata?.name;
+  const sourceNamespace = sourceProvider.metadata?.namespace;
+  if (!sourceName || !sourceNamespace) {
+    throw new Error(
+      `sourceProvider has no metadata.name or metadata.namespace — cannot create NetworkMap`,
+    );
+  }
+
   const name = `${namePrefix}-${crypto.randomUUID().slice(0, 8)}`;
 
-  const navigationHelper = new NavigationHelper(page);
-  await navigationHelper.navigateToConsole();
-
-  // Create NetworkMap with empty map array - mappings should be added via UI
-  // to ensure proper network ID resolution from provider inventory
   const networkMap: V1beta1NetworkMap = {
     apiVersion: FORKLIFT_API_VERSION,
     kind: RESOURCE_KINDS.NETWORK_MAP,
@@ -101,8 +97,8 @@ export const createNetworkMap = async (
     spec: {
       provider: {
         source: {
-          name: sourceProvider.metadata!.name!,
-          namespace: sourceProvider.metadata!.namespace!,
+          name: sourceName,
+          namespace: sourceNamespace,
         },
         destination: { name: targetProvider, namespace: MTV_NAMESPACE },
       },
@@ -110,7 +106,7 @@ export const createNetworkMap = async (
     },
   };
 
-  const created = await createNetworkMapApi(page, networkMap, MTV_NAMESPACE);
+  const created = await createNetworkMapApi(networkMap, MTV_NAMESPACE);
   if (!created) {
     throw new Error(`Failed to create NetworkMap ${name}`);
   }
@@ -119,30 +115,29 @@ export const createNetworkMap = async (
   return {
     name,
     namespace: MTV_NAMESPACE,
-    sourceProvider: sourceProvider.metadata!.name!,
+    sourceProvider: sourceName,
     targetProvider,
     mappings,
   };
 };
 
 // Storage Map types and creation
-export interface TestStorageMap {
+export type TestStorageMap = {
   name: string;
   namespace: string;
   sourceProvider: string;
   targetProvider: string;
   mappings: Mapping[];
-}
+};
 
-export interface CreateStorageMapOptions {
+export type CreateStorageMapOptions = {
   sourceProvider: V1beta1Provider;
   targetProvider?: string;
   namePrefix?: string;
   mappings?: Mapping[];
-}
+};
 
 export const createStorageMap = async (
-  page: Page,
   resourceManager: ResourceManager,
   options: CreateStorageMapOptions,
 ): Promise<TestStorageMap> => {
@@ -153,10 +148,15 @@ export const createStorageMap = async (
     mappings = [],
   } = options;
 
-  const name = `${namePrefix}-${crypto.randomUUID().slice(0, 8)}`;
+  const sourceName = sourceProvider.metadata?.name;
+  const sourceNamespace = sourceProvider.metadata?.namespace;
+  if (!sourceName || !sourceNamespace) {
+    throw new Error(
+      `sourceProvider has no metadata.name or metadata.namespace — cannot create StorageMap`,
+    );
+  }
 
-  const navigationHelper = new NavigationHelper(page);
-  await navigationHelper.navigateToConsole();
+  const name = `${namePrefix}-${crypto.randomUUID().slice(0, 8)}`;
 
   const storageMap: V1beta1StorageMap = {
     apiVersion: FORKLIFT_API_VERSION,
@@ -165,8 +165,8 @@ export const createStorageMap = async (
     spec: {
       provider: {
         source: {
-          name: sourceProvider.metadata!.name!,
-          namespace: sourceProvider.metadata!.namespace!,
+          name: sourceName,
+          namespace: sourceNamespace,
         },
         destination: { name: targetProvider, namespace: MTV_NAMESPACE },
       },
@@ -174,7 +174,7 @@ export const createStorageMap = async (
     },
   };
 
-  const created = await createStorageMapApi(page, storageMap, MTV_NAMESPACE);
+  const created = await createStorageMapApi(storageMap, MTV_NAMESPACE);
   if (!created) {
     throw new Error(`Failed to create StorageMap ${name}`);
   }
@@ -183,7 +183,7 @@ export const createStorageMap = async (
   return {
     name,
     namespace: MTV_NAMESPACE,
-    sourceProvider: sourceProvider.metadata!.name!,
+    sourceProvider: sourceName,
     targetProvider,
     mappings,
   };

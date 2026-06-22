@@ -27,7 +27,7 @@ test.describe(
       const listPage = new StorageMapsListPage(page);
       const createPage = new StorageMapCreatePage(page);
       const detailsPage = new StorageMapDetailsPage(page);
-      const secretName = await createOffloadTestSecret(page, resourceManager);
+      const secretName = await createOffloadTestSecret(resourceManager);
 
       await test.step('Navigate to Create Storage Map form', async () => {
         await listPage.navigate(MTV_NAMESPACE);

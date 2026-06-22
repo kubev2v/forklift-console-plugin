@@ -176,7 +176,6 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
         // Fetch the migrated VM to verify it exists
         const vmResource = await resourceManager.fetchVirtualMachine(
-          page,
           migratedVMName,
           testPlanData.targetProject.name,
         );
@@ -284,6 +283,6 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   );
 
   test.afterAll(async () => {
-    await resourceManager.instantCleanup();
+    await resourceManager.cleanupAll();
   });
 });

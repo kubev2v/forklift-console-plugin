@@ -31,7 +31,7 @@ const fetchProviderSettings = async (
   resourceManager: ResourceManager,
   providerName: string,
 ): Promise<Record<string, string> | undefined> => {
-  const providerResource = await resourceManager.fetchProvider(page, providerName);
+  const providerResource = await resourceManager.fetchProvider(providerName);
   expect(providerResource).not.toBeNull();
   return providerResource?.spec?.settings as Record<string, string> | undefined;
 };
@@ -91,6 +91,6 @@ test.describe('EC2 Provider target-az CR Verification', () => {
   );
 
   test.afterAll(async () => {
-    await resourceManager.instantCleanup();
+    await resourceManager.cleanupAll();
   });
 });
