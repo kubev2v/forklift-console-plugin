@@ -6,24 +6,13 @@ const FORM_SETTLE_MS = 500;
 const MAX_DROPDOWN_ATTEMPTS = 3;
 const OPTION_CLICK_TIMEOUT_MS = 3_000;
 
-/**
- * Configuration for a mapping edit modal.
- */
 export interface MappingModalConfig {
-  /** The data-testid for the modal container */
   modalTestId: string;
-  /** The modal title text (e.g., 'Edit network map') */
   modalTitle: string;
-  /** Function to generate the source select data-testid for a given index */
   sourceTestIdPattern: (index: number) => string;
-  /** Function to generate the target select data-testid for a given index */
   targetTestIdPattern: (index: number) => string;
 }
 
-/**
- * Base class for mapping edit modals (Network and Storage).
- * Contains all shared functionality for interacting with mapping edit dialogs.
- */
 export abstract class BaseMappingEditModal extends BaseModal {
   readonly addMappingButton: Locator;
   protected abstract readonly config: MappingModalConfig;
@@ -33,18 +22,14 @@ export abstract class BaseMappingEditModal extends BaseModal {
     this.addMappingButton = this.modal.getByTestId('add-mapping-button');
   }
 
-  /**
-   * Opens a dropdown and clicks the nth enabled option, retrying if the listbox closes
-   * prematurely between opening and clicking (a known PatternFly flakiness).
-   */
   private async expandAndSelectNth(selectLocator: Locator, nth: number): Promise<void> {
     await expect(selectLocator).toBeVisible();
     await expect(selectLocator).toBeEnabled();
 
     for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
-      const listbox = await this.openDropdown(selectLocator);
-      const option = listbox.locator('[role="option"]:enabled').nth(nth);
       try {
+        const listbox = await this.openDropdown(selectLocator);
+        const option = listbox.locator('[role="option"]:enabled').nth(nth);
         await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
         return;
       } catch {
@@ -66,18 +51,14 @@ export abstract class BaseMappingEditModal extends BaseModal {
     return listbox;
   }
 
-  /**
-   * Opens a dropdown and clicks the option matching optionText, retrying if the listbox
-   * closes prematurely between opening and clicking (a known PatternFly flakiness).
-   */
   private async selectFromDropdown(selectLocator: Locator, optionText: string): Promise<void> {
     await expect(selectLocator).toBeVisible();
     await expect(selectLocator).toBeEnabled();
 
     for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
-      const listbox = await this.openDropdown(selectLocator);
-      const option = listbox.getByRole('option', { name: optionText, exact: true }).first();
       try {
+        const listbox = await this.openDropdown(selectLocator);
+        const option = listbox.getByRole('option', { name: optionText, exact: true }).first();
         await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
         return;
       } catch {
@@ -140,8 +121,7 @@ export abstract class BaseMappingEditModal extends BaseModal {
 
   override async save(): Promise<void> {
     await super.save();
-    // K8s watch must deliver the updated resource before the modal can be
-    // reopened with fresh data. No user-visible signal marks this completion.
+    // Wait for K8s watch to deliver the updated resource before the modal is reopened.
     await this.page.waitForTimeout(2000);
   }
 

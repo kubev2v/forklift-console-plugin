@@ -12,12 +12,6 @@ export class NetworkMapStep {
     this.page = page;
   }
 
-  /**
-   * Forklift disallows multiple source networks mapped to Default Network (pod network).
-   * When a VM has multiple NICs that are all auto-mapped to Default Network, the wizard
-   * shows a danger alert and blocks "Next". Remove all but the first row so the wizard
-   * can advance.  Only runs when no explicit mappings were provided (auto-map scenario).
-   */
   private async fixDuplicateDefaultNetworkRows(): Promise<void> {
     const alertText = 'more than one interface mapped to Default Network';
     const hasAlert = await this.page
@@ -39,11 +33,6 @@ export class NetworkMapStep {
     }
   }
 
-  /**
-   * Returns version-appropriate locators for mapping table rows.
-   * 2.11+: uses data-testid="field-row-{n}" (see `getMappingWizardFieldRows`) with network-map-target-network-select.
-   * <2.11: uses grid > rowgroup (body) > row with gridcell elements.
-   */
   private getMappingRowLocators(): {
     rows: Locator;
     getRowText: (row: Locator) => Promise<string | null>;
@@ -95,7 +84,6 @@ export class NetworkMapStep {
     } else {
       await this.page.getByTestId('use-new-network-map-radio').check();
 
-      // Only fill name if provided, otherwise use auto-generated name
       if (networkMap.name) {
         await this.page.getByRole('textbox').click();
         await this.page.getByRole('textbox').fill(networkMap.name);
@@ -107,10 +95,6 @@ export class NetworkMapStep {
     }
   }
 
-  /**
-   * Select a target network for a given source network in the network mapping table.
-   * Handles both 2.11+ (data-testid rows) and <2.11 (grid/gridcell rows).
-   */
   async selectTargetNetworkForSource(sourceNetwork: string, targetNetwork: string): Promise<void> {
     const { rows, getRowText, getTargetSelect } = this.getMappingRowLocators();
     const rowCount = await rows.count();
@@ -160,9 +144,6 @@ export class NetworkMapStep {
     await expect(selectElement).toBeEnabled();
   }
 
-  /**
-   * Wait for network options to appear in the dropdown.
-   */
   async waitForNetworkOptions(): Promise<void> {
     const listbox = this.page.getByRole('listbox');
     await expect(listbox).toBeVisible();

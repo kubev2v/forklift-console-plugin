@@ -41,7 +41,6 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
       await this.selectFirstVirtualMachine();
     } else {
       for (const vm of virtualMachines) {
-        // If VM name is empty but folder is specified, select the folder
         if (!vm.sourceName && vm.folder) {
           await this.selectFolder(vm.folder);
         } else if (vm.sourceName) {
@@ -51,32 +50,21 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     }
   }
 
-  /**
-   * Gets the names of all currently selected VMs
-   * @returns Array of selected VM names
-   */
   async getSelectedVMNames(): Promise<string[]> {
     const selectedVMNames: string[] = [];
-
-    // Find all VM rows (not folders) with checked checkboxes
-    // VM rows have data-testid starting with "vm-"
     const table = this.page.getByTestId('vsphere-tree-table');
     const vmRows = table.locator('tbody tr[data-testid^="vm-"]');
 
     const count = await vmRows.count();
     for (let i = 0; i < count; i += 1) {
       const row = vmRows.nth(i);
-
-      // Check if the checkbox is checked
       const checkbox = row.locator('input[type="checkbox"]');
       const isChecked = await checkbox.isChecked().catch(() => false);
 
       if (isChecked) {
-        // Get the VM name from the name cell using data-testid
         const testId = await row.getAttribute('data-testid');
         const nameCell = row.getByTestId(`${testId}-name-cell`);
         const vmNameText = await nameCell.textContent().catch(() => '');
-
         if (vmNameText) {
           selectedVMNames.push(vmNameText.trim());
         }
@@ -90,12 +78,10 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     const buttonName = action === 'confirm' ? 'Confirm selections' : 'Deselect critical issue VMs';
     const button = this.page.getByRole('button', { name: buttonName });
 
-    // Modal may or may not appear depending on whether selected VMs have critical issues
     const isVisible = await button.isVisible().catch(() => false);
 
     if (isVisible) {
       await button.click();
-      // Wait for modal to disappear
       await expect(button).not.toBeVisible();
     }
   }
@@ -112,14 +98,11 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     }
 
     if (isVersionAtLeast(V2_11_0)) {
-      // Wait for the search results to load before trying to check the row.
-      // The inventory API can be slow; without this the default 15s action
-      // timeout fires before the filtered row is visible.
+      // Inventory API can be slow; 60s timeout prevents the default 15s firing before the row appears.
       const VM_ROW_TIMEOUT = 60_000;
       await expect(this.table.getRow({ Name: vmName })).toBeVisible({ timeout: VM_ROW_TIMEOUT });
       await this.table.selectRow({ Name: vmName });
     } else {
-      // 2.10.x: treegrid uses role="row"; rows contain checkbox "Row N checkbox" and VM name in rowheader
       const treegrid = this.rootLocator.getByRole('treegrid');
       const row = treegrid.getByRole('row').filter({
         has: this.page.getByText(vmName, { exact: true }),
