@@ -416,14 +416,14 @@ test.describe('Plan Details - Resources Tab', { tag: '@downstream' }, () => {
       await planDetailsPage.resourcesTab.verifyTableStructure();
     });
 
-    await test.step('Verify each resource row renders a numeric total and a non-empty running value', async () => {
+    await test.step('Verify each resource row renders a numeric total and a valid running value', async () => {
       for (const row of [
         planDetailsPage.resourcesTab.rowVirtualMachines,
         planDetailsPage.resourcesTab.rowTotalCpuCount,
         planDetailsPage.resourcesTab.rowTotalMemory,
       ]) {
         await expect(row.getByRole('gridcell').nth(1)).toContainText(/\d/);
-        await expect(row.getByRole('gridcell').nth(2)).not.toBeEmpty();
+        await expect(row.getByRole('gridcell').nth(2)).toContainText(/\d|-/);
       }
     });
   });
