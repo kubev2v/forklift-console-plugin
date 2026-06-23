@@ -1,24 +1,7 @@
-import type { Page } from '@playwright/test';
-
+import { setupPlanDetailsPage } from '../../../fixtures/helpers/planDetailsHelpers';
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
-import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import type { PlanTestData } from '../../../types/test-data';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
-
-type TestPlan = { metadata: { name: string; namespace: string }; testData: PlanTestData };
-
-const setupPlanDetailsPage = async (
-  page: Page,
-  testPlan: TestPlan | undefined,
-): Promise<{ planDetailsPage: PlanDetailsPage; planName: string; namespace: string }> => {
-  if (!testPlan) throw new Error('testPlan is required');
-  const planDetailsPage = new PlanDetailsPage(page);
-  const { name: planName, namespace } = testPlan.metadata;
-  await planDetailsPage.navigate(planName, namespace);
-  await planDetailsPage.verifyPlanTitle(planName);
-  return { planDetailsPage, planName, namespace };
-};
 
 test.describe('Plan Details - Resources Tab', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);

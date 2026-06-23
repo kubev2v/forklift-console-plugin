@@ -51,7 +51,7 @@ export class ResourcesTab {
 
   async verifyResourcesTabSelected(): Promise<void> {
     await expect(this.tab).toHaveAttribute('aria-selected', 'true');
-    await expect(this.page).toHaveURL(/\/resources/);
+    await expect(this.page).toHaveURL(/\/resources(?:\?|$)/);
   }
 
   async verifyTableStructure(): Promise<void> {
