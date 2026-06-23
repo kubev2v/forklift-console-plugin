@@ -4,7 +4,7 @@ import { expect } from '@playwright/test';
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import type { PlanTestData } from '../../../types/test-data';
-import { V2_10_5, V2_11_0, V2_12_0 } from '../../../utils/version/constants';
+import { V2_10_5, V2_11_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 type TestPlan = { metadata: { name: string; namespace: string }; testData: PlanTestData };
@@ -390,41 +390,6 @@ test.describe('Plan Details - Description', { tag: '@downstream' }, () => {
       await planDetailsPage.detailsTab.editDescription('');
       await planDetailsPage.detailsTab.saveDescription();
       await planDetailsPage.detailsTab.verifyDescriptionText('None');
-    });
-  });
-});
-
-test.describe('Plan Details - Resources Tab', { tag: '@downstream' }, () => {
-  requireVersion(test, V2_12_0);
-
-  test('should render resources tab with VM/CPU/memory inventory aggregates', async ({
-    page,
-    testPlan,
-    testProvider: _testProvider,
-  }) => {
-    const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
-
-    await test.step('Navigate to the Resources tab', async () => {
-      await planDetailsPage.resourcesTab.navigateToResourcesTab();
-    });
-
-    await test.step('Verify tab is selected and URL contains /resources', async () => {
-      await planDetailsPage.resourcesTab.verifyResourcesTabSelected();
-    });
-
-    await test.step('Verify column headers and all resource row labels are present', async () => {
-      await planDetailsPage.resourcesTab.verifyTableStructure();
-    });
-
-    await test.step('Verify each resource row renders a numeric total and a valid running value', async () => {
-      for (const row of [
-        planDetailsPage.resourcesTab.rowVirtualMachines,
-        planDetailsPage.resourcesTab.rowTotalCpuCount,
-        planDetailsPage.resourcesTab.rowTotalMemory,
-      ]) {
-        await expect(row.getByRole('gridcell').nth(1)).toContainText(/\d/);
-        await expect(row.getByRole('gridcell').nth(2)).toContainText(/\d|-/);
-      }
     });
   });
 });

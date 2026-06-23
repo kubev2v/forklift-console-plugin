@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 export class ResourcesTab {
   protected readonly page: Page;
@@ -7,23 +7,7 @@ export class ResourcesTab {
     this.page = page;
   }
 
-  private async verifyResourceRows(): Promise<void> {
-    await expect(this.rowVirtualMachines).toBeVisible();
-    await expect(this.rowTotalCpuCount).toBeVisible();
-    await expect(this.rowTotalMemory).toBeVisible();
-  }
-
-  private async verifyTableHeaders(): Promise<void> {
-    await expect(this.page.getByRole('columnheader', { name: 'Resource' })).toBeVisible();
-    await expect(
-      this.page.getByRole('columnheader', { name: 'Total virtual machines' }),
-    ).toBeVisible();
-    await expect(
-      this.page.getByRole('columnheader', { name: 'Running virtual machines' }),
-    ).toBeVisible();
-  }
-
-  get heading() {
+  get heading(): Locator {
     return this.page.getByTestId('plan-resources-heading');
   }
 
@@ -32,24 +16,37 @@ export class ResourcesTab {
     await expect(this.heading).toBeVisible();
   }
 
-  get rowTotalCpuCount() {
+  get rowTotalCpuCount(): Locator {
     return this.table.locator('tbody').getByRole('row', { name: /Total CPU count/ });
   }
 
-  get rowTotalMemory() {
+  get rowTotalMemory(): Locator {
     return this.table.locator('tbody').getByRole('row', { name: /Total memory/ });
   }
 
-  get rowVirtualMachines() {
+  get rowVirtualMachines(): Locator {
     return this.table.locator('tbody').getByRole('row', { name: /Virtual machines/ });
   }
 
-  get tab() {
+  get tab(): Locator {
     return this.page.locator('[data-test-id="horizontal-link-Resources"]');
   }
 
-  get table() {
+  get table(): Locator {
     return this.page.getByTestId('plan-resources-table');
+  }
+
+  async verifyAggregateCells(): Promise<void> {
+    for (const testId of ['resources-vms-total', 'resources-cpu-total', 'resources-memory-total']) {
+      await expect(this.page.getByTestId(testId)).toContainText(/\d/);
+    }
+    for (const testId of [
+      'resources-vms-running',
+      'resources-cpu-running',
+      'resources-memory-running',
+    ]) {
+      await expect(this.page.getByTestId(testId)).toContainText(/\d|-/);
+    }
   }
 
   async verifyResourcesTabSelected(): Promise<void> {
@@ -59,7 +56,15 @@ export class ResourcesTab {
 
   async verifyTableStructure(): Promise<void> {
     await expect(this.table).toBeVisible();
-    await this.verifyTableHeaders();
-    await this.verifyResourceRows();
+    await expect(this.page.getByRole('columnheader', { name: 'Resource' })).toBeVisible();
+    await expect(
+      this.page.getByRole('columnheader', { name: 'Total virtual machines' }),
+    ).toBeVisible();
+    await expect(
+      this.page.getByRole('columnheader', { name: 'Running virtual machines' }),
+    ).toBeVisible();
+    await expect(this.rowVirtualMachines).toBeVisible();
+    await expect(this.rowTotalCpuCount).toBeVisible();
+    await expect(this.rowTotalMemory).toBeVisible();
   }
 }
