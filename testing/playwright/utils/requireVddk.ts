@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { join } from 'node:path';
 
 type SkippableTest = {
   skip: (condition: boolean, description: string) => void;
@@ -15,7 +15,7 @@ type ProviderEntry = {
  * require a VDDK image — without it the plan/provider shows "Cannot start".
  */
 export const isVddkConfigured = (): boolean => {
-  const providersFile = resolve(process.cwd(), '.providers.json');
+  const providersFile = join(__dirname, '../../.providers.json');
 
   if (!existsSync(providersFile)) return false;
 

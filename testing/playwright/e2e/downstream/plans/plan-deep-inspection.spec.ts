@@ -3,8 +3,7 @@ import { expect, type Page } from '@playwright/test';
 import { createPlan } from '../../../fixtures/helpers/resourceCreationHelpers';
 import { sharedProviderFixtures } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import type { PlanTestData } from '../../../types/test-data';
-import { NetworkTargets, SourceNetworks } from '../../../types/test-data';
+import { NetworkTargets, type PlanTestData, SourceNetworks } from '../../../types/test-data';
 import {
   ACTIVE_OR_COMPLETED_STATUSES,
   COMPLETED_STATUSES,
@@ -32,11 +31,7 @@ const test = sharedProviderFixtures.extend<{ testPlan: Awaited<ReturnType<typeof
       sourceProvider: testProvider,
       customPlanData: {
         virtualMachines: [{ folder: 'vm', sourceName: 'mtv-func-win2022' }],
-        // mtv-func-win2022 has two NICs (Mgmt Network + VM Network). Without explicit
-        // mappings the wizard auto-maps both to "Default Network", triggers the
-        // "more than one interface mapped to Default Network" validation error, and
-        // disables the remove buttons on auto-generated rows (cannot be dismissed).
-        // Providing explicit mappings avoids the duplicate-mapping alert entirely.
+        // mtv-func-win2022 has 2 NICs; explicit mappings avoid the duplicate-Default-Network validation error.
         networkMap: {
           mappings: [
             { source: SourceNetworks.MGMT_NETWORK, target: NetworkTargets.DEFAULT },

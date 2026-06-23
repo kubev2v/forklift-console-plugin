@@ -79,8 +79,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       name: targetProjectName,
       isPreexisting: false,
     },
-    // VMs are powered off (no IPs). Preserve static IPs requires powered-on VMs with
-    // VMware tools running — leaving it enabled causes a critical plan concern.
+    // preserveStaticIPs requires powered-on VMs with VMware tools — disabling to avoid a critical plan concern.
     additionalPlanSettings: { preserveStaticIPs: false },
   });
 
@@ -145,11 +144,8 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream', '@slow'],
     },
     async ({ page }) => {
-      // Budget for the actual disk-transfer phase (two VMs: Linux + Windows).
-      // Windows cold migration includes a WaitForGuestReboots phase (backend timeout: 30 min)
-      // on top of disk transfer, so the total can reach ~35 min on a loaded cluster.
+      // 40 min covers disk-transfer + Windows WaitForGuestReboots (backend timeout: 30 min).
       const MIGRATION_TIMEOUT_MS = 40 * 60_000;
-      // Add headroom for navigation, plan-ready wait (up to 5 min) and post-migration checks.
       const OVERHEAD_MS = 10 * 60_000;
       test.setTimeout(MIGRATION_TIMEOUT_MS + OVERHEAD_MS);
       const plansPage = new PlansListPage(page);
@@ -160,9 +156,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       await plansPage.navigateToPlan(planName);
       await planDetailsPage.verifyPlanTitle(planName);
 
-      // Fail immediately if the plan has a MAC conflict caused by leftover migrated VMs
-      // from a previous test run that were not cleaned up.  This is an environment problem
-      // that must be fixed before migration can proceed.
+      // Abort early on MAC conflict — leftover VMs from a previous run must be cleaned up first.
       const planResource = await resourceManager.fetchPlan(planName);
       const hasMacConflict = planResource?.status?.conditions?.some(
         (condition) => condition.type === 'MacConflicts' && condition.status === 'True',
@@ -173,14 +167,10 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
           'Run global-cleanup-migration.sh on the target cluster to remove them, then re-run.',
       ).toBe(false);
 
-      // After creation the controller runs VDDK validation, which can transiently surface
-      // 'Cannot start' before clearing. waitForPlanReady uses a 5-minute budget so the
-      // soft-assertion window doesn't expire before the plan becomes genuinely ready.
+      // waitForPlanReady polls until Ready, tolerating transient 'Cannot start' from VDDK validation.
       await planDetailsPage.waitForPlanReady();
 
-      // Pre-register VMs for cleanup before migration starts so teardown removes them
-      // even if waitForMigrationCompletion times out (without this, a timeout leaves
-      // VMs on the cluster and the retry immediately hits MAC conflicts).
+      // Register VMs for cleanup before migration starts — prevents MAC conflicts if the test times out.
       for (const vm of testPlanData.virtualMachines ?? []) {
         const migratedVMName = vm.targetName ?? vm.sourceName;
         if (migratedVMName) {
@@ -195,7 +185,6 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       console.log('⏳ Waiting for migration to complete...');
       await planDetailsPage.waitForMigrationCompletion(MIGRATION_TIMEOUT_MS, true);
 
-      // Verify each migrated VM exists
       for (const vm of testPlanData.virtualMachines ?? []) {
         const migratedVMName = vm.targetName ?? vm.sourceName;
         if (!migratedVMName) {

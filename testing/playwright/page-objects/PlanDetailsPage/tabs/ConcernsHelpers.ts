@@ -80,14 +80,11 @@ export class ConcernsHelpers {
   }
 
   async verifyExpandedRowHasConcernDetails(): Promise<void> {
-    // The expandable row now renders InspectionExpandedSection (data-testid="inspections-section"),
-    // which shows either an inspections table or an empty-state message.
-    // The expanded content lives inside the VM grid's expanded <td> — scope the lookup there.
-    await expect(this.page.getByTestId('inspections-section')).toBeVisible();
+    await expect(this.vmTable.getByTestId('inspections-section')).toBeVisible();
   }
 
   async verifyExpandedRowIsCollapsed(): Promise<void> {
-    await expect(this.page.getByTestId('inspections-section')).not.toBeVisible();
+    await expect(this.vmTable.getByTestId('inspections-section')).not.toBeVisible();
   }
 
   async verifyFilteredRowsHaveBadge(category: ConcernCategory, timeout = 60000): Promise<void> {
