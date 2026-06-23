@@ -7,16 +7,20 @@ export class ResourcesTab {
     this.page = page;
   }
 
-  get columnHeaderResource() {
-    return this.page.getByRole('columnheader', { name: 'Resource' });
+  private async verifyResourceRows(): Promise<void> {
+    await expect(this.rowVirtualMachines).toBeVisible();
+    await expect(this.rowTotalCpuCount).toBeVisible();
+    await expect(this.rowTotalMemory).toBeVisible();
   }
 
-  get columnHeaderRunningVMs() {
-    return this.page.getByRole('columnheader', { name: 'Running virtual machines' });
-  }
-
-  get columnHeaderTotalVMs() {
-    return this.page.getByRole('columnheader', { name: 'Total virtual machines' });
+  private async verifyTableHeaders(): Promise<void> {
+    await expect(this.page.getByRole('columnheader', { name: 'Resource' })).toBeVisible();
+    await expect(
+      this.page.getByRole('columnheader', { name: 'Total virtual machines' }),
+    ).toBeVisible();
+    await expect(
+      this.page.getByRole('columnheader', { name: 'Running virtual machines' }),
+    ).toBeVisible();
   }
 
   get heading() {
@@ -29,15 +33,15 @@ export class ResourcesTab {
   }
 
   get rowTotalCpuCount() {
-    return this.table.getByRole('row', { name: /Total CPU count/ });
+    return this.table.locator('tbody').getByRole('row', { name: /Total CPU count/ });
   }
 
   get rowTotalMemory() {
-    return this.table.getByRole('row', { name: /Total memory/ });
+    return this.table.locator('tbody').getByRole('row', { name: /Total memory/ });
   }
 
   get rowVirtualMachines() {
-    return this.table.getByRole('row', { name: /Virtual machines/ });
+    return this.table.locator('tbody').getByRole('row', { name: /Virtual machines/ });
   }
 
   get tab() {
@@ -48,25 +52,12 @@ export class ResourcesTab {
     return this.page.getByTestId('plan-resources-table');
   }
 
-  async verifyResourceRows(): Promise<void> {
-    await expect(this.rowVirtualMachines).toBeVisible();
-    await expect(this.rowTotalCpuCount).toBeVisible();
-    await expect(this.rowTotalMemory).toBeVisible();
-  }
-
   async verifyResourcesTabSelected(): Promise<void> {
     await expect(this.tab).toHaveAttribute('aria-selected', 'true');
     await expect(this.page).toHaveURL(/\/resources/);
   }
 
-  async verifyTableHeaders(): Promise<void> {
-    await expect(this.columnHeaderResource).toBeVisible();
-    await expect(this.columnHeaderTotalVMs).toBeVisible();
-    await expect(this.columnHeaderRunningVMs).toBeVisible();
-  }
-
   async verifyTableStructure(): Promise<void> {
-    await expect(this.heading).toBeVisible();
     await expect(this.table).toBeVisible();
     await this.verifyTableHeaders();
     await this.verifyResourceRows();
