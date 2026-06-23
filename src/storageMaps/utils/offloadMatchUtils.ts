@@ -28,5 +28,6 @@ export const deriveSuggestedProduct = (
     return datastoreVendor;
   }
 
-  return datastoreVendor ?? storageClassVendor;
+  // CSI provisioner is unambiguous; SCSI/name-based detection may not be (Dell/EMC)
+  return storageClassVendor ?? datastoreVendor;
 };
