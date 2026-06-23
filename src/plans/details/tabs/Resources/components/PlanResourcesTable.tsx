@@ -18,10 +18,10 @@ const PlanResourcesTable: FC<PlanResourcesTableProps> = ({
   const { t } = useForkliftTranslation();
   return (
     <PageSection hasBodyWrapper={false}>
-      <SectionHeading text={t('Resources')} />
+      <SectionHeading text={t('Resources')} testId="plan-resources-heading" />
 
       <Card>
-        <Table variant="compact" borders>
+        <Table variant="compact" borders data-testid="plan-resources-table">
           <Thead>
             <Tr>
               <Th>{t('Resource')}</Th>

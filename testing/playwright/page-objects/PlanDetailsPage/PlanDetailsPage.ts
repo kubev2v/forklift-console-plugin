@@ -10,6 +10,7 @@ import { AutomationTab } from './tabs/AutomationTab';
 import { DetailsTab } from './tabs/DetailsTab';
 import { HooksTab } from './tabs/HooksTab';
 import { MappingsTab } from './tabs/MappingsTab';
+import { ResourcesTab } from './tabs/ResourcesTab';
 import { VirtualMachinesTab } from './tabs/VirtualMachinesTab';
 
 export class PlanDetailsPage {
@@ -19,6 +20,7 @@ export class PlanDetailsPage {
   public readonly hooksTab: HooksTab;
   public readonly mappingsTab: MappingsTab;
   protected readonly page: Page;
+  public readonly resourcesTab: ResourcesTab;
   public readonly virtualMachinesTab: VirtualMachinesTab;
 
   constructor(page: Page) {
@@ -28,6 +30,7 @@ export class PlanDetailsPage {
     this.hooksTab = new HooksTab(page);
     this.mappingsTab = new MappingsTab(page);
     this.navigation = new NavigationHelper(page);
+    this.resourcesTab = new ResourcesTab(page);
     this.virtualMachinesTab = new VirtualMachinesTab(page);
   }
 
