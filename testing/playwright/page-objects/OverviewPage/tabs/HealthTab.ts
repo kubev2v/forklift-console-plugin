@@ -33,6 +33,6 @@ export class HealthTab {
 
   async verifyHealthTabSelected(): Promise<void> {
     await expect(this.tab).toHaveAttribute('aria-selected', 'true');
-    await expect(this.page).toHaveURL(/\/health/);
+    await expect(this.page).toHaveURL(/\/health(?:\?|$)/);
   }
 }
