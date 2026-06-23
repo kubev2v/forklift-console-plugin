@@ -13,10 +13,6 @@ describe('resolveProductFromScsiVendor', () => {
   it.each([
     ['PURE', StorageVendorProduct.PureFlashArray],
     ['NETAPP', StorageVendorProduct.Ontap],
-    ['DGC', StorageVendorProduct.PowerFlex],
-    ['DellEMC', StorageVendorProduct.PowerStore],
-    ['DELL', StorageVendorProduct.PowerStore],
-    ['EMC', StorageVendorProduct.PowerMax],
     ['IBM', StorageVendorProduct.FlashSystem],
     ['HITACHI', StorageVendorProduct.Vantara],
     ['3PARdata', StorageVendorProduct.Primera3Par],
@@ -25,6 +21,13 @@ describe('resolveProductFromScsiVendor', () => {
   ])('resolves "%s" to %s', (vendor, expected) => {
     expect(resolveProductFromScsiVendor(vendor)).toBe(expected);
   });
+
+  it.each(['DGC', 'DellEMC', 'DELL', 'EMC'])(
+    'returns undefined for ambiguous Dell/EMC vendor "%s"',
+    (vendor) => {
+      expect(resolveProductFromScsiVendor(vendor)).toBeUndefined();
+    },
+  );
 
   it('handles case-insensitive matching', () => {
     expect(resolveProductFromScsiVendor('pure')).toBe(StorageVendorProduct.PureFlashArray);
@@ -92,7 +95,7 @@ describe('resolveProductFromDatastore', () => {
   const hostScsiDisks = [
     { canonicalName: 'naa.600508b400105e834000200000490000', vendor: 'IBM' },
     { canonicalName: 'naa.624a9370aef5214a38ee4fa500011234', vendor: 'PURE' },
-    { canonicalName: 'naa.60060160b1234f00abcd1234abcd1234', vendor: 'DGC' },
+    { canonicalName: 'naa.60060160b1234f00abcd1234abcd1234', vendor: 'NETAPP' },
   ];
 
   it('resolves vendor from matching backing device', () => {
@@ -167,15 +170,30 @@ describe('resolveProductFromDatastoreName', () => {
     ['ibm_flashsystem_lun3', StorageVendorProduct.FlashSystem],
     ['hpe-primera-vol1', StorageVendorProduct.Primera3Par],
     ['infinidat-prod', StorageVendorProduct.Infinibox],
-    ['Dell-PowerStore-01', StorageVendorProduct.PowerStore],
   ])('resolves "%s" to %s', (name, expected) => {
     expect(resolveProductFromDatastoreName(name)).toBe(expected);
   });
 
-  it('prefers longer vendor key when names overlap', () => {
+  it.each([
+    ['Dell-PowerStore-01', StorageVendorProduct.PowerStore],
+    ['eco-powermax-ds1', StorageVendorProduct.PowerMax],
+    ['eco-dellpf-powerflex', StorageVendorProduct.PowerFlex],
+  ])('resolves product-specific Dell name "%s" to %s', (name, expected) => {
+    expect(resolveProductFromDatastoreName(name)).toBe(expected);
+  });
+
+  it('prefers product-specific pattern over generic vendor key', () => {
     expect(resolveProductFromDatastoreName('dellemc-powermax-lun')).toBe(
-      StorageVendorProduct.PowerStore,
+      StorageVendorProduct.PowerMax,
     );
+  });
+
+  it('returns undefined for ambiguous Dell/EMC names without product hint', () => {
+    expect(resolveProductFromDatastoreName('dell-storage-01')).toBeUndefined();
+    expect(resolveProductFromDatastoreName('emc-lun-05')).toBeUndefined();
+  });
+
+  it('still resolves unambiguous vendors in names', () => {
     expect(resolveProductFromDatastoreName('infinidat-ds01')).toBe(StorageVendorProduct.Infinibox);
   });
 
