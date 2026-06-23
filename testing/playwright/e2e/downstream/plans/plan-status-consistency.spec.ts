@@ -159,26 +159,20 @@ test.describe(
         return fetched!;
       });
 
-      // Skip if plan already has Critical conditions — restoring the NetworkMap won't clear unrelated concerns.
-      const planHasCriticalCondition = plan.status?.conditions?.some(
-        (condition) =>
-          (condition.category === CRITICAL || condition.type === CRITICAL) &&
-          condition.status === CONDITION_TRUE,
+      const planHasCriticalCondition =
+        plan.status?.conditions?.some(
+          (condition) =>
+            (condition.category === CRITICAL || condition.type === CRITICAL) &&
+            condition.status === CONDITION_TRUE,
+        ) ?? false;
+      test.skip(
+        planHasCriticalCondition,
+        "Plan already has a Critical condition — restoring the NetworkMap won't clear unrelated concerns.",
       );
-      if (planHasCriticalCondition) {
-        test.skip(
-          true,
-          'Plan already has a Critical condition before the test scenario starts — ' +
-            'skipping stale-conditions test (precondition: plan must be in Ready state).',
-        );
-        return;
-      }
 
       const networkMapRef = plan.spec?.map?.network;
-      if (!networkMapRef?.name) {
-        test.skip(true, 'Plan has no referenced NetworkMap');
-        return;
-      }
+      test.skip(!networkMapRef?.name, 'Plan has no referenced NetworkMap');
+      if (!networkMapRef?.name) return;
 
       const nmNamespace = networkMapRef.namespace ?? planNamespace;
 
@@ -189,10 +183,8 @@ test.describe(
       expect(originalNetworkMap).not.toBeNull();
 
       const originalProvider = originalNetworkMap?.spec?.provider;
-      if (!originalProvider?.source?.name) {
-        test.skip(true, 'NetworkMap has no source provider to restore');
-        return;
-      }
+      test.skip(!originalProvider?.source?.name, 'NetworkMap has no source provider to restore');
+      if (!originalProvider?.source?.name) return;
 
       const missingProviderName = `missing-provider-${Date.now()}`;
 
