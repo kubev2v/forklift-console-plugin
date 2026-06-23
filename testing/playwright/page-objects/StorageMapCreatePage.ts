@@ -25,11 +25,16 @@ export class StorageMapCreatePage {
   }
 
   private async selectOptionFromDropdown(testId: string, optionName: string): Promise<void> {
+    const OPTION_TIMEOUT = 30_000;
     const dropdown = this.page.getByTestId(testId);
     await expect(dropdown).toBeVisible();
     await expect(dropdown).toBeEnabled();
     await dropdown.click();
-    await this.page.getByRole('listbox').getByRole('option', { name: optionName }).click();
+    // Wait for the listbox to open before looking for the specific option.
+    // Newly-created providers (or slow API responses) can delay option availability.
+    const listbox = this.page.getByRole('listbox');
+    await expect(listbox).toBeVisible();
+    await listbox.getByRole('option', { name: optionName }).click({ timeout: OPTION_TIMEOUT });
   }
 
   private sourceStorageTestId(index: number): string {

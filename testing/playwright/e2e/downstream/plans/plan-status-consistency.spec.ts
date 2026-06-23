@@ -145,7 +145,7 @@ test.describe(
       testPlan,
       testProvider: _testProvider,
       resourceManager,
-    }) => {
+    }, testInfo) => {
       test.setTimeout(120_000);
 
       if (!testPlan) throw new Error('testPlan fixture is required');
@@ -159,11 +159,20 @@ test.describe(
         return fetched!;
       });
 
+      const planHasCriticalCondition =
+        plan.status?.conditions?.some(
+          (condition) =>
+            (condition.category === CRITICAL || condition.type === CRITICAL) &&
+            condition.status === CONDITION_TRUE,
+        ) ?? false;
+      testInfo.skip(
+        planHasCriticalCondition,
+        "Plan already has a Critical condition — restoring the NetworkMap won't clear unrelated concerns.",
+      );
+
       const networkMapRef = plan.spec?.map?.network;
-      if (!networkMapRef?.name) {
-        test.skip(true, 'Plan has no referenced NetworkMap');
-        return;
-      }
+      testInfo.skip(!networkMapRef?.name, 'Plan has no referenced NetworkMap');
+      if (!networkMapRef?.name) return;
 
       const nmNamespace = networkMapRef.namespace ?? planNamespace;
 
@@ -174,10 +183,11 @@ test.describe(
       expect(originalNetworkMap).not.toBeNull();
 
       const originalProvider = originalNetworkMap?.spec?.provider;
-      if (!originalProvider?.source?.name) {
-        test.skip(true, 'NetworkMap has no source provider to restore');
-        return;
-      }
+      testInfo.skip(
+        !originalProvider?.source?.name,
+        'NetworkMap has no source provider to restore',
+      );
+      if (!originalProvider?.source?.name) return;
 
       const missingProviderName = `missing-provider-${Date.now()}`;
 

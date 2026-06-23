@@ -25,6 +25,7 @@ import {
   type ProviderData,
   SourceNetworks,
 } from '../../types/test-data';
+import { requireVddk } from '../../utils/requireVddk';
 import { ELEMENT_TIMEOUT, MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 import { CNV_4_21_0, V2_10_5, V2_12_0 } from '../../utils/version/constants';
@@ -34,6 +35,7 @@ const targetProjectName = `test-project-${Date.now()}`;
 
 test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => {
   requireVersion(test, V2_10_5);
+  requireVddk(test);
 
   const resourceManager = new ResourceManager();
 
@@ -77,8 +79,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       name: targetProjectName,
       isPreexisting: false,
     },
-    // VMs are powered off (no IPs). Preserve static IPs requires powered-on VMs with
-    // VMware tools running — leaving it enabled causes a critical plan concern.
+    // preserveStaticIPs requires powered-on VMs with VMware tools — disabling to avoid a critical plan concern.
     additionalPlanSettings: { preserveStaticIPs: false },
   });
 
@@ -143,8 +144,10 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream', '@slow'],
     },
     async ({ page }) => {
-      const timeout = 20 * 60000;
-      test.setTimeout(timeout);
+      // 40 min covers disk-transfer + Windows WaitForGuestReboots (backend timeout: 30 min).
+      const MIGRATION_TIMEOUT_MS = 40 * 60_000;
+      const OVERHEAD_MS = 10 * 60_000;
+      test.setTimeout(MIGRATION_TIMEOUT_MS + OVERHEAD_MS);
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
 
@@ -153,28 +156,41 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       await plansPage.navigateToPlan(planName);
       await planDetailsPage.verifyPlanTitle(planName);
 
-      // After creation the controller runs VDDK validation, which can transiently surface
-      // 'Cannot start' before clearing. waitForPlanReady uses a 5-minute budget so the
-      // soft-assertion window doesn't expire before the plan becomes genuinely ready.
+      // Abort early on MAC conflict — leftover VMs from a previous run must be cleaned up first.
+      const planResource = await resourceManager.fetchPlan(planName);
+      const hasMacConflict = planResource?.status?.conditions?.some(
+        (condition) => condition.type === 'MacConflicts' && condition.status === 'True',
+      );
+      expect(
+        hasMacConflict,
+        'Plan has MAC address conflicts from leftover VMs of a previous test run. ' +
+          'Run global-cleanup-migration.sh on the target cluster to remove them, then re-run.',
+      ).toBe(false);
+
+      // waitForPlanReady polls until Ready, tolerating transient 'Cannot start' from VDDK validation.
       await planDetailsPage.waitForPlanReady();
+
+      // Register VMs for cleanup before migration starts — prevents MAC conflicts if the test times out.
+      for (const vm of testPlanData.virtualMachines ?? []) {
+        const migratedVMName = vm.targetName ?? vm.sourceName;
+        if (migratedVMName) {
+          resourceManager.addVm(migratedVMName, testPlanData.targetProject.name);
+        }
+      }
 
       await planDetailsPage.clickActionsMenuAndStart();
 
       await planDetailsPage.verifyMigrationInProgress();
 
       console.log('⏳ Waiting for migration to complete...');
-      await planDetailsPage.waitForMigrationCompletion(timeout, true);
+      await planDetailsPage.waitForMigrationCompletion(MIGRATION_TIMEOUT_MS, true);
 
-      // Verify each migrated VM exists and add to cleanup
       for (const vm of testPlanData.virtualMachines ?? []) {
         const migratedVMName = vm.targetName ?? vm.sourceName;
         if (!migratedVMName) {
           throw new Error('VM name is required for verification');
         }
 
-        resourceManager.addVm(migratedVMName, testPlanData.targetProject.name);
-
-        // Fetch the migrated VM to verify it exists
         const vmResource = await resourceManager.fetchVirtualMachine(
           migratedVMName,
           testPlanData.targetProject.name,

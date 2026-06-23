@@ -3,25 +3,16 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { BaseModal } from '../../common/BaseModal';
 
 const FORM_SETTLE_MS = 500;
+const MAX_DROPDOWN_ATTEMPTS = 3;
+const OPTION_CLICK_TIMEOUT_MS = 3_000;
 
-/**
- * Configuration for a mapping edit modal.
- */
 export interface MappingModalConfig {
-  /** The data-testid for the modal container */
   modalTestId: string;
-  /** The modal title text (e.g., 'Edit network map') */
   modalTitle: string;
-  /** Function to generate the source select data-testid for a given index */
   sourceTestIdPattern: (index: number) => string;
-  /** Function to generate the target select data-testid for a given index */
   targetTestIdPattern: (index: number) => string;
 }
 
-/**
- * Base class for mapping edit modals (Network and Storage).
- * Contains all shared functionality for interacting with mapping edit dialogs.
- */
 export abstract class BaseMappingEditModal extends BaseModal {
   readonly addMappingButton: Locator;
   protected abstract readonly config: MappingModalConfig;
@@ -34,27 +25,50 @@ export abstract class BaseMappingEditModal extends BaseModal {
   private async expandAndSelectNth(selectLocator: Locator, nth: number): Promise<void> {
     await expect(selectLocator).toBeVisible();
     await expect(selectLocator).toBeEnabled();
+
+    for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
+      try {
+        const listbox = await this.openDropdown(selectLocator);
+        const option = listbox.locator('[role="option"]:enabled').nth(nth);
+        await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
+        return;
+      } catch {
+        if (attempt === MAX_DROPDOWN_ATTEMPTS - 1) {
+          throw new Error(
+            `Failed to select option at index ${nth} after ${MAX_DROPDOWN_ATTEMPTS} attempts`,
+          );
+        }
+      }
+    }
+  }
+
+  private async openDropdown(selectLocator: Locator): Promise<Locator> {
     await this.page.waitForTimeout(FORM_SETTLE_MS);
     await selectLocator.click();
     await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
     const listbox = this.page.locator('[role="listbox"]:visible').last();
     await expect(listbox).toBeVisible();
-    const option = listbox.locator('[role="option"]:enabled').nth(nth);
-    await expect(option).toBeVisible();
-    await option.click();
+    return listbox;
   }
 
   private async selectFromDropdown(selectLocator: Locator, optionText: string): Promise<void> {
     await expect(selectLocator).toBeVisible();
     await expect(selectLocator).toBeEnabled();
-    await this.page.waitForTimeout(FORM_SETTLE_MS);
-    await selectLocator.click();
-    await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
-    const listbox = this.page.locator('[role="listbox"]:visible').last();
-    await expect(listbox).toBeVisible();
-    const option = listbox.getByRole('option', { name: optionText, exact: true }).first();
-    await expect(option).toBeVisible();
-    await option.click();
+
+    for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
+      try {
+        const listbox = await this.openDropdown(selectLocator);
+        const option = listbox.getByRole('option', { name: optionText, exact: true }).first();
+        await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
+        return;
+      } catch {
+        if (attempt === MAX_DROPDOWN_ATTEMPTS - 1) {
+          throw new Error(
+            `Failed to select "${optionText}" after ${MAX_DROPDOWN_ATTEMPTS} attempts`,
+          );
+        }
+      }
+    }
   }
 
   async addMapping(): Promise<number> {
@@ -107,8 +121,7 @@ export abstract class BaseMappingEditModal extends BaseModal {
 
   override async save(): Promise<void> {
     await super.save();
-    // K8s watch must deliver the updated resource before the modal can be
-    // reopened with fresh data. No user-visible signal marks this completion.
+    // Wait for K8s watch to deliver the updated resource before the modal is reopened.
     await this.page.waitForTimeout(2000);
   }
 

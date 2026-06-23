@@ -3,6 +3,7 @@ import { expect, type Page } from '@playwright/test';
 import { sharedProviderCustomPlanFixtures as test } from '../../../fixtures/resourceFixtures';
 import { InspectVirtualMachinesModal } from '../../../page-objects/InspectVirtualMachinesModal';
 import { ProviderDetailsPage } from '../../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
+import { requireVddk } from '../../../utils/requireVddk';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
@@ -22,6 +23,7 @@ const setupProviderDetailsPage = async (
 
 test.describe('Provider Deep Inspection', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);
+  requireVddk(test);
 
   test('should show Inspect VMs button for vSphere providers', async ({ page, testProvider }) => {
     const providerDetailsPage = await setupProviderDetailsPage(page, testProvider);

@@ -3,32 +3,34 @@ import { expect, type Page } from '@playwright/test';
 import { createPlan } from '../../../fixtures/helpers/resourceCreationHelpers';
 import { sharedProviderFixtures } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import type { PlanTestData } from '../../../types/test-data';
+import { NetworkTargets, type PlanTestData, SourceNetworks } from '../../../types/test-data';
 import {
   ACTIVE_OR_COMPLETED_STATUSES,
   COMPLETED_STATUSES,
   inspectionStatusDisplayToFilterId,
   isCompletedInspectionStatus,
 } from '../../../utils/inspection-status';
+import { requireVddk } from '../../../utils/requireVddk';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
-// Deep inspection creates vSphere snapshots during the inspection process. Leftover snapshots
-// trigger VMHasSnapshots (Critical) on any subsequent plan, keeping it in CannotStart.
-//
-// VM ownership map — keep these isolated; each VM must appear in at most one snapshot-creating suite:
-//   mtv-func-rhel9       → migration-happy-path (cold migration)
-//   mtv-func-win2019     → migration-happy-path (cold migration)
-//   mtv-func-rhel9-uefi  → plan-migration-type  (warm migration)
-//   mtv-func-win2022     → plan-deep-inspection  (this file — inspection snapshots)
-//
-// mtv-func-win2022 has no other test consumers and is confirmed snapshot-free in the inventory.
+// Deep inspection creates vSphere snapshots — keep mtv-func-win2022 isolated here to avoid
+// VMHasSnapshots conflicts with other suites (migration-happy-path, plan-migration-type).
 const test = sharedProviderFixtures.extend<{ testPlan: Awaited<ReturnType<typeof createPlan>> }>({
   testPlan: async ({ page, resourceManager, testProvider }, setValue) => {
     if (!testProvider) throw new Error('testPlan fixture requires testProvider');
     const plan = await createPlan(page, resourceManager, {
       sourceProvider: testProvider,
-      customPlanData: { virtualMachines: [{ folder: 'vm', sourceName: 'mtv-func-win2022' }] },
+      customPlanData: {
+        virtualMachines: [{ folder: 'vm', sourceName: 'mtv-func-win2022' }],
+        // mtv-func-win2022 has 2 NICs; explicit mappings avoid the duplicate-Default-Network validation error.
+        networkMap: {
+          mappings: [
+            { source: SourceNetworks.MGMT_NETWORK, target: NetworkTargets.DEFAULT },
+            { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.IGNORE },
+          ],
+        },
+      },
     });
     await setValue(plan);
   },
@@ -63,6 +65,7 @@ const setupPlanDetailsPage = async (
 test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
   test.describe.configure({ mode: 'serial' });
   requireVersion(test, V2_12_0);
+  requireVddk(test);
 
   test('should show Inspect VMs button for vSphere plans', async ({
     page,
