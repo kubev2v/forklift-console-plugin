@@ -10,7 +10,7 @@ Development happens on `main`. Release branches follow the pattern `release-X.Y`
 
 - **Feature branches**: fork from `main`, open a PR against `main`
 - **Release branches**: cut from `main` when a release stabilizes
-- **Backports**: after a PR merges to `main`, comment `/backport release-X.Y` on the PR to create a cherry-pick PR to that release branch. `/cherrypick` and `/cherry-pick` also work. Add `--dry-run` to test first.
+- **Backports**: after a PR merges to `main`, comment `/backport release-X.Y` on the PR to create a cherry-pick PR to that release branch. `/cherrypick` and `/cherry-pick` also work. Add `--dry-run` to test first. The backport workflow also clones the associated Jira ticket (if any) and links it to the backport PR -- see [Repository Secrets](#repository-secrets) below.
 
 ## Pull Request Process
 
@@ -142,3 +142,16 @@ npm run lint:fix    # auto-fix
 - **Jira project**: MTV (tickets are `MTV-XXXX`)
 - **Repository**: [kubev2v/forklift-console-plugin](https://github.com/kubev2v/forklift-console-plugin)
 - **Forklift ecosystem**: [kubev2v/forklift](https://github.com/kubev2v/forklift) (operator and controllers)
+
+## Repository Secrets
+
+The backport workflow requires Jira API access to clone tickets. Two secrets must be configured in repository settings (Settings > Secrets and variables > Actions):
+
+| Secret | Description |
+|--------|-------------|
+| `JIRA_EMAIL` | Jira account email (personal or service account) |
+| `JIRA_API_TOKEN` | API token for that account ([generate here](https://id.atlassian.com/manage-profile/security/api-tokens)) |
+
+These are used by the backport workflow to create cloned Jira tickets for backport PRs. The workflow code is credential-agnostic -- when a shared service account becomes available, update the secret values without changing any workflow logic.
+
+If these secrets are not configured, the backport still works but skips the Jira integration (ticket cloning, linking, and status transitions).
