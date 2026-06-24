@@ -15,7 +15,9 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
 }));
 
 jest.mock('src/plans/create/utils/addOwnerRefs', () => ({
-  addOwnerRefs: jest.fn(async () => undefined),
+  addOwnerRefs: jest.fn(async () => {
+    await Promise.resolve();
+  }),
 }));
 
 jest.mock('@utils/crds/common/utils', () => ({
@@ -93,10 +95,13 @@ const configMap: IoK8sApiCoreV1ConfigMap = {
 describe('createDuplicatePlanAndMapResources', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockK8sCreate.mockImplementation(async ({ data }) => ({
-      ...data,
-      metadata: { ...data.metadata, uid: `uid-${data.metadata?.name}` },
-    }));
+    mockK8sCreate.mockImplementation(async ({ data }) => {
+      const result = await Promise.resolve({
+        ...data,
+        metadata: { ...data.metadata, uid: `uid-${data.metadata?.name}` },
+      });
+      return result;
+    });
   });
 
   it('creates duplicated hooks when plan has hooks', async () => {
