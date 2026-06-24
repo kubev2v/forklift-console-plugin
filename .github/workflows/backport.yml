@@ -219,6 +219,7 @@ jobs:
       - name: Clone Jira ticket for backport
         id: clone_ticket
         if: steps.extract_ticket.outputs.ticket_key != '' && steps.parse_comment.outputs.dry_run == 'false'
+        continue-on-error: true
         env:
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
@@ -228,7 +229,7 @@ jobs:
           set -euo pipefail
 
           JIRA_BASE="https://redhat.atlassian.net"
-          AUTH_HEADER="Authorization: Basic $(echo -n "${JIRA_EMAIL}:${JIRA_API_TOKEN}" | base64)"
+          AUTH_HEADER="Authorization: Basic $(echo -n "${JIRA_EMAIL}:${JIRA_API_TOKEN}" | base64 -w 0)"
 
           jira_get() {
             curl -sSf -H "$AUTH_HEADER" -H "Content-Type: application/json" "$1"
@@ -279,7 +280,7 @@ jobs:
               # Query Jira for matching fix version
               versions_data=$(jira_get "${JIRA_BASE}/rest/api/3/project/MTV/versions")
               fix_version_id=$(echo "$versions_data" | jq -r --arg cpe "$cpe_version" '
-                .[] | select(.name | contains($cpe)) | .id
+                .[] | select(.name | contains($cpe)) | select(.released == false) | .id
               ' | head -1 || true)
 
               if [[ -n "$fix_version_id" ]]; then
@@ -496,6 +497,7 @@ jobs:
 
       - name: Update cloned Jira ticket (POST + PR link)
         if: success() && steps.clone_ticket.outputs.clone_key != '' && steps.parse_comment.outputs.dry_run == 'false'
+        continue-on-error: true
         env:
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
@@ -505,7 +507,7 @@ jobs:
           set -euo pipefail
 
           JIRA_BASE="https://redhat.atlassian.net"
-          AUTH_HEADER="Authorization: Basic $(echo -n "${JIRA_EMAIL}:${JIRA_API_TOKEN}" | base64)"
+          AUTH_HEADER="Authorization: Basic $(echo -n "${JIRA_EMAIL}:${JIRA_API_TOKEN}" | base64 -w 0)"
 
           jira_get() {
             curl -sSf -H "$AUTH_HEADER" -H "Content-Type: application/json" "$1"
