@@ -12,6 +12,7 @@ export class ResourcesTab {
   }
 
   async navigateToResourcesTab(): Promise<void> {
+    await this.tab.waitFor({ state: 'visible' });
     await this.tab.click();
     await expect(this.heading).toBeVisible();
   }
@@ -29,7 +30,7 @@ export class ResourcesTab {
   }
 
   get tab(): Locator {
-    return this.page.locator('[data-test-id="horizontal-link-Resources"]');
+    return this.page.getByRole('tab', { exact: true, name: 'Resources' });
   }
 
   get table(): Locator {
@@ -56,12 +57,12 @@ export class ResourcesTab {
 
   async verifyTableStructure(): Promise<void> {
     await expect(this.table).toBeVisible();
-    await expect(this.page.getByRole('columnheader', { name: 'Resource' })).toBeVisible();
+    await expect(this.table.getByRole('columnheader', { name: 'Resource' })).toBeVisible();
     await expect(
-      this.page.getByRole('columnheader', { name: 'Total virtual machines' }),
+      this.table.getByRole('columnheader', { name: 'Total virtual machines' }),
     ).toBeVisible();
     await expect(
-      this.page.getByRole('columnheader', { name: 'Running virtual machines' }),
+      this.table.getByRole('columnheader', { name: 'Running virtual machines' }),
     ).toBeVisible();
     await expect(this.rowVirtualMachines).toBeVisible();
     await expect(this.rowTotalCpuCount).toBeVisible();
