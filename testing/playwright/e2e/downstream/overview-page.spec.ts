@@ -13,6 +13,30 @@ import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 import { V2_11_0, V2_12_0 } from '../../utils/version/constants';
 import { isVersionAtLeast, requireVersion } from '../../utils/version/version';
 
+test.describe('Overview Page - Health Tab', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
+
+  test('should navigate to Health tab and verify status cards render', async ({ page }) => {
+    const overviewPage = new OverviewPage(page);
+
+    await test.step('Navigate to the Overview page', async () => {
+      await overviewPage.navigateDirectly();
+    });
+
+    await test.step('Navigate to the Health tab', async () => {
+      await overviewPage.healthTab.navigateToHealthTab();
+    });
+
+    await test.step('Verify the Health tab is selected and URL contains /health', async () => {
+      await overviewPage.healthTab.verifyHealthTabSelected();
+    });
+
+    await test.step('Verify Health and Conditions cards render with expected content', async () => {
+      await overviewPage.healthTab.verifyCardsRender();
+    });
+  });
+});
+
 test.describe(
   'Overview Page - Settings',
   {

@@ -18,7 +18,7 @@ const ConditionsCard: FC<ConditionsCardProps> = ({ obj }) => {
     | undefined;
 
   return (
-    <Card className="pf-m-full-height">
+    <Card className="pf-m-full-height" data-testid="health-conditions-card">
       <CardTitle className="forklift-title">{t('Conditions')}</CardTitle>
       <CardBody>
         {status?.conditions && <ConditionsSection conditions={status.conditions} />}
