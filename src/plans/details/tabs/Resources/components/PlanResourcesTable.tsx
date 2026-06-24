@@ -18,10 +18,10 @@ const PlanResourcesTable: FC<PlanResourcesTableProps> = ({
   const { t } = useForkliftTranslation();
   return (
     <PageSection hasBodyWrapper={false}>
-      <SectionHeading text={t('Resources')} />
+      <SectionHeading text={t('Resources')} testId="plan-resources-heading" />
 
       <Card>
-        <Table variant="compact" borders>
+        <Table variant="compact" borders data-testid="plan-resources-table">
           <Thead>
             <Tr>
               <Th>{t('Resource')}</Th>
@@ -32,28 +32,28 @@ const PlanResourcesTable: FC<PlanResourcesTableProps> = ({
           <Tbody>
             <Tr>
               <Td>{t('Virtual machines')}</Td>
-              <Td>
+              <Td data-testid="resources-vms-total">
                 <AlignedDecimal value={planInventorySize} fractionalPrecision={0} />
               </Td>
-              <Td>
+              <Td data-testid="resources-vms-running">
                 <AlignedDecimal value={planInventoryRunningSize} fractionalPrecision={0} />
               </Td>
             </Tr>
             <Tr>
               <Td>{t('Total CPU count')}</Td>
-              <Td>
+              <Td data-testid="resources-cpu-total">
                 <AlignedDecimal value={totalResources.cpuCount} unit={t('Cores')} />
               </Td>
-              <Td>
+              <Td data-testid="resources-cpu-running">
                 <AlignedDecimal value={totalResourcesRunning.cpuCount} unit={t('Cores')} />
               </Td>
             </Tr>
             <Tr>
               <Td>{t('Total memory')}</Td>
-              <Td>
+              <Td data-testid="resources-memory-total">
                 <AlignedDecimal value={totalResources.memoryMB} unit={'MB'} />
               </Td>
-              <Td>
+              <Td data-testid="resources-memory-running">
                 <AlignedDecimal value={totalResourcesRunning.memoryMB} unit={'MB'} />
               </Td>
             </Tr>

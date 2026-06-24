@@ -1,23 +1,9 @@
-import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
+import { setupPlanDetailsPage } from '../../../fixtures/helpers/planDetailsHelpers';
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
-import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import type { PlanTestData } from '../../../types/test-data';
 import { V2_10_5, V2_11_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
-
-type TestPlan = { metadata: { name: string; namespace: string }; testData: PlanTestData };
-
-/** Creates PlanDetailsPage and navigates to the plan. Throws if testPlan is missing. */
-const setupPlanDetailsPage = async (page: Page, testPlan: TestPlan | undefined) => {
-  if (!testPlan) throw new Error('testPlan is required');
-  const planDetailsPage = new PlanDetailsPage(page);
-  const { name: planName, namespace } = testPlan.metadata;
-  await planDetailsPage.navigate(planName, namespace);
-  await planDetailsPage.verifyPlanTitle(planName);
-  return { planDetailsPage, planName, namespace, testData: testPlan.testData };
-};
 
 test.describe('Plan Details Navigation', { tag: '@downstream' }, () => {
   requireVersion(test, V2_10_5);
