@@ -3,18 +3,12 @@ import type { OpenShiftStorageClass, VSphereDataStore } from '@forklift-ui/types
 import { StorageVendorProduct } from './types';
 
 /**
- * T10 SCSI Vendor ID -> StorageVendorProduct mapping.
- * Source: https://www.t10.org/lists/vid-alph.htm
- *
- * These are hardware-level identifiers reported by vSphere HostScsiDisk.Vendor.
- * The Forklift backend trims whitespace before returning them.
+ * Dell/EMC IDs (dell, dellemc, dgc, emc) are intentionally excluded —
+ * Dell produces PowerStore, PowerMax, AND PowerFlex and the SCSI vendor
+ * string alone cannot distinguish between them. Use CSI provisioner instead.
  */
 const SCSI_VENDOR_TO_PRODUCT: Record<string, StorageVendorProduct> = {
   '3pardata': StorageVendorProduct.Primera3Par,
-  dell: StorageVendorProduct.PowerStore,
-  dellemc: StorageVendorProduct.PowerStore,
-  dgc: StorageVendorProduct.PowerFlex,
-  emc: StorageVendorProduct.PowerMax,
   hitachi: StorageVendorProduct.Vantara,
   hpe: StorageVendorProduct.Primera3Par,
   ibm: StorageVendorProduct.FlashSystem,
@@ -23,12 +17,12 @@ const SCSI_VENDOR_TO_PRODUCT: Record<string, StorageVendorProduct> = {
   pure: StorageVendorProduct.PureFlashArray,
 };
 
-/**
- * CSI provisioner string -> StorageVendorProduct mapping.
- * Source: https://kubernetes-csi.github.io/docs/drivers.html
- *
- * Entries are matched via substring inclusion against the StorageClass provisioner.
- */
+const DATASTORE_NAME_PRODUCT_PATTERNS: [string, StorageVendorProduct][] = [
+  ['powerflex', StorageVendorProduct.PowerFlex],
+  ['powermax', StorageVendorProduct.PowerMax],
+  ['powerstore', StorageVendorProduct.PowerStore],
+];
+
 const CSI_PROVISIONER_ENTRIES: [string, StorageVendorProduct][] = [
   ['block.csi.ibm.com', StorageVendorProduct.FlashSystem],
   ['csi-powermax.dellemc.com', StorageVendorProduct.PowerMax],
@@ -82,13 +76,6 @@ export const resolveProductFromStorageClass = (
   return resolveProductFromCsiProvisioner(provisioner);
 };
 
-/**
- * Heuristic fallback: checks if the datastore name contains a known vendor keyword.
- * Used when backingDevicesNames is not available (vVol, NFS datastores).
- *
- * Entries are sorted by key length descending so longer, more-specific keys
- * (e.g. "dellemc") match before shorter prefixes (e.g. "dell", "emc").
- */
 export const resolveProductFromDatastoreName = (
   name: string | undefined,
 ): StorageVendorProduct | undefined => {
@@ -98,11 +85,13 @@ export const resolveProductFromDatastoreName = (
 
   const normalized = name.toLowerCase();
 
-  const sortedEntries = Object.entries(SCSI_VENDOR_TO_PRODUCT).sort(
-    ([a], [b]) => b.length - a.length,
-  );
+  for (const [pattern, product] of DATASTORE_NAME_PRODUCT_PATTERNS) {
+    if (normalized.includes(pattern)) {
+      return product;
+    }
+  }
 
-  for (const [vendorKey, product] of sortedEntries) {
+  for (const [vendorKey, product] of Object.entries(SCSI_VENDOR_TO_PRODUCT)) {
     if (normalized.includes(vendorKey)) {
       return product;
     }
@@ -111,11 +100,6 @@ export const resolveProductFromDatastoreName = (
   return undefined;
 };
 
-/**
- * Resolves the StorageVendorProduct for a datastore by:
- * 1. Correlating backingDevicesNames with Host SCSI disk canonical names (VMFS)
- * 2. Falling back to a name-based heuristic (vVol, NFS)
- */
 export const resolveProductFromDatastore = (
   datastore: DatastoreWithBacking | undefined,
   hostScsiDisks: HostScsiDisk[],

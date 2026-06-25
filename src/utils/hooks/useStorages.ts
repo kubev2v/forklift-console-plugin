@@ -34,7 +34,7 @@ const subPath: Record<string, string> = {
   [PROVIDER_TYPES.openstack]: 'volumetypes',
   [PROVIDER_TYPES.ova]: 'storages?detail=1',
   [PROVIDER_TYPES.ovirt]: 'storagedomains',
-  [PROVIDER_TYPES.vsphere]: 'datastores',
+  [PROVIDER_TYPES.vsphere]: 'datastores?detail=1',
 };
 
 export type InventoryStorage =
