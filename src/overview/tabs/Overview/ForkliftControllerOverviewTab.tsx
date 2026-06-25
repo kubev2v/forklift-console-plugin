@@ -11,6 +11,7 @@ import ThroughputCard from './cards/throughput/ThroughputCard';
 import VmMigrationsDonutCard from './cards/VmMigrationsDonutCard';
 import VmMigrationsHistoryCard from './cards/VmMigrationsHistory/VmMigrationsHistoryCard';
 import WelcomeCard from './cards/Welcome/WelcomeCard';
+import MigrationAlertsCard from './components/MigrationAlertsCard/MigrationAlertsCard';
 
 import '@patternfly/patternfly/patternfly-charts.css';
 
@@ -50,6 +51,12 @@ const ForkliftControllerOverviewTab: FC = () => {
           >
             <FlexItem className="forklift-overview__donut-card">
               <MigrationPlansDonutCard obj={forkliftController} />
+            </FlexItem>
+            <FlexItem
+              flex={{ default: 'flex_1' }}
+              className="forklift-overview__migration-alerts-card"
+            >
+              <MigrationAlertsCard />
             </FlexItem>
             <FlexItem flex={{ default: 'flex_1' }} className="forklift-overview__pods">
               <ControllerCard obj={forkliftController} limit={6} />
