@@ -19,6 +19,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
 
       - name: Ensure jq is available
         run: |
@@ -49,25 +50,22 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             "${GH_API_URL}/repos/${GH_REPO}/pulls/${PR_NUMBER}/commits?per_page=100")
 
-          # Search commit messages for "Resolves:" line
-          resolves_line=""
-          while IFS= read -r msg; do
-            if [[ -n "$msg" ]]; then
-              resolves_line="$msg"
-              break
-            fi
-          done < <(echo "$commits_data" | jq -r '.[].commit.message' | grep -i "^Resolves:" | head -1)
-
-          if [[ -n "$resolves_line" ]]; then
-            # Check for "Resolves: None" (case-insensitive)
+          # Collect all unique MTV keys from every Resolves: line
+          all_keys=""
+          while IFS= read -r resolves_line; do
             if echo "$resolves_line" | grep -iq "^Resolves:[[:space:]]*none$"; then
-              echo "ℹ️ PR has 'Resolves: None' - skipping"
-              echo "ticket_key=" >> $GITHUB_OUTPUT
-              exit 0
+              continue
             fi
-            # Extract MTV-XXXX pattern
-            ticket_key=$(echo "$resolves_line" | grep -oE "MTV-[0-9]+" | head -1 || true)
-          else
+            keys=$(echo "$resolves_line" | grep -oE "MTV-[0-9]+" || true)
+            if [[ -n "$keys" ]]; then
+              all_keys="${all_keys} ${keys}"
+            fi
+          done < <(echo "$commits_data" | jq -r '.[].commit.message' | grep -i "^Resolves:")
+
+          # Deduplicate and take the first key
+          ticket_key=$(echo "$all_keys" | tr ' ' '\n' | sort -u | head -1 || true)
+
+          if [[ -z "$ticket_key" ]]; then
             # Fallback: check PR title for MTV-XXXX
             ticket_key=$(echo "$PR_TITLE" | grep -oE "MTV-[0-9]+" | head -1 || true)
           fi
@@ -195,15 +193,23 @@ jobs:
       - name: Post backport suggestion comment
         if: steps.find_branch.outputs.branch != ''
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        env:
+          BRANCH: ${{ steps.find_branch.outputs.branch }}
+          TICKET_KEY: ${{ steps.extract_ticket.outputs.ticket_key }}
+          SEVERITY_NAME: ${{ steps.check_ticket.outputs.severity_name }}
+          DRY_RUN_OUTCOME: ${{ steps.dry_run.outcome }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const issue_number = context.payload.pull_request.number;
-            const branch = '${{ steps.find_branch.outputs.branch }}';
-            const ticketKey = '${{ steps.extract_ticket.outputs.ticket_key }}';
-            const severityName = '${{ steps.check_ticket.outputs.severity_name }}';
-            const dryRunOutcome = '${{ steps.dry_run.outcome }}';
-            const prTitle = context.payload.pull_request.title;
+            const branch = process.env.BRANCH;
+            const ticketKey = process.env.TICKET_KEY;
+            const severityName = process.env.SEVERITY_NAME;
+            const dryRunOutcome = process.env.DRY_RUN_OUTCOME;
+            const prTitle = context.payload.pull_request.title
+              .replaceAll('\r', ' ')
+              .replaceAll('\n', ' ');
+            const shellQuote = (v) => `'${String(v).replaceAll("'", `'"'"'`)}'`;
 
             let body;
             if (dryRunOutcome === 'success') {
@@ -214,7 +220,6 @@ jobs:
 
             \`/backport ${branch}\``;
             } else {
-              // Fetch commit SHAs for manual steps
               let commitShas = '';
               try {
                 const commits = await github.paginate(github.rest.pulls.listCommits, {
@@ -224,6 +229,8 @@ jobs:
               } catch {
                 commitShas = '<commit-sha(s)>';
               }
+
+              const backportTitle = `Resolves: ${ticketKey} | [Backport ${branch}] ${prTitle}`;
 
               body = `🔔 **Backport Suggested (conflicts detected)**
 
@@ -238,7 +245,7 @@ jobs:
             git add .
             git commit
             git push origin backport-${issue_number}-to-${branch}
-            gh pr create --base ${branch} --title "Resolves: ${ticketKey} | [Backport ${branch}] ${prTitle}"
+            gh pr create --base ${shellQuote(branch)} --title ${shellQuote(backportTitle)}
             \`\`\``;
             }
 
