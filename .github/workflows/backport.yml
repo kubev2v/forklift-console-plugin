@@ -144,6 +144,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.parse_comment.outputs.pr_number }}
+          PR_TITLE: ${{ steps.verify_refs.outputs.pr_title }}
         run: |
           set -euo pipefail
 
@@ -185,7 +186,7 @@ jobs:
             fi
           else
             # Fallback: check PR title for MTV-XXXX
-            pr_title="${{ steps.verify_refs.outputs.pr_title }}"
+            pr_title="$PR_TITLE"
             ticket_key=$(echo "$pr_title" | grep -oE "MTV-[0-9]+" | head -1 || true)
             if [[ -n "$ticket_key" ]]; then
               echo "✅ Found ticket in PR title: $ticket_key"
@@ -437,12 +438,14 @@ jobs:
         id: label_pr
         if: success() && steps.parse_comment.outputs.dry_run == 'false'
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        env:
+          PR_TITLE: ${{ steps.verify_refs.outputs.pr_title }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const branch = '${{ steps.parse_comment.outputs.branch_name }}';
             const originalNumber = parseInt('${{ steps.parse_comment.outputs.pr_number }}', 10);
-            const originalTitle = `${{ toJSON(steps.verify_refs.outputs.pr_title) }}`;
+            const originalTitle = process.env.PR_TITLE;
 
             // Heuristic: find the most recent open PR to the target branch
             // that looks like a backport of the original PR.
@@ -550,6 +553,8 @@ jobs:
       - name: Post failure comment
         if: failure()
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        env:
+          PR_TITLE: ${{ steps.verify_refs.outputs.pr_title || 'Original PR title' }}
         with:
           script: |
             const { owner, repo } = context.repo;
@@ -571,7 +576,7 @@ jobs:
             }
 
             const resolvedTicket = cloneKey || ticketKey || 'MTV-XXXX';
-            const prTitle = `${{ steps.verify_refs.outputs.pr_title || 'Original PR title' }}`;
+            const prTitle = process.env.PR_TITLE;
 
             const body = `❌ **Backport Failed**
 
@@ -594,7 +599,7 @@ jobs:
             git cherry-pick -x ${commitShas}
             # Resolve any conflicts, then:
             git add .
-            git commit
+            git cherry-pick --continue
             git push origin backport-${prNumber}-to-${branch}
             gh pr create --base ${branch} --title "Resolves: ${resolvedTicket} | [Backport ${branch}] ${prTitle}"
             \`\`\``;
