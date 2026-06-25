@@ -1,13 +1,14 @@
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+
 import type {
   V1beta1Provider,
   V1beta1StorageMapSpecMap,
   V1beta1StorageMapSpecMapOffloadPluginVsphereXcopyConfig,
 } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
-import type { InventoryStorage } from '@utils/hooks/useStorages';
-import { PROVIDER_TYPES } from '@utils/providers/constants';
-import { StorageMapFieldId } from '@utils/storage/types';
 
+import type { InventoryStorage } from '../../../../utils/hooks/useStorages';
+import { StorageMapFieldId } from '../../../utils/types';
 import { getStorageMappingValues } from '../buildStorageMappings';
 
 const makeProvider = (type: string): V1beta1Provider =>
