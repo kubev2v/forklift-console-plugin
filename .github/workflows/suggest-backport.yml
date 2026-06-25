@@ -33,10 +33,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          GH_API_URL: ${{ github.api_url }}
+          GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
 
-          repo="${{ github.repository }}"
           ticket_key=""
 
           echo "🔍 Extracting Jira ticket from PR #$PR_NUMBER..."
@@ -45,7 +47,7 @@ jobs:
           commits_data=$(curl -sSf \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github+json" \
-            "${{ github.api_url }}/repos/${repo}/pulls/${PR_NUMBER}/commits?per_page=100")
+            "${GH_API_URL}/repos/${GH_REPO}/pulls/${PR_NUMBER}/commits?per_page=100")
 
           # Search commit messages for "Resolves:" line
           resolves_line=""
@@ -67,8 +69,7 @@ jobs:
             ticket_key=$(echo "$resolves_line" | grep -oE "MTV-[0-9]+" | head -1 || true)
           else
             # Fallback: check PR title for MTV-XXXX
-            pr_title="${{ github.event.pull_request.title }}"
-            ticket_key=$(echo "$pr_title" | grep -oE "MTV-[0-9]+" | head -1 || true)
+            ticket_key=$(echo "$PR_TITLE" | grep -oE "MTV-[0-9]+" | head -1 || true)
           fi
 
           if [[ -z "$ticket_key" ]]; then
@@ -147,6 +148,8 @@ jobs:
       - name: Determine latest release branch
         id: find_branch
         if: steps.check_ticket.outputs.qualifies == 'true'
+        env:
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
         run: |
           set -euo pipefail
 
@@ -166,9 +169,7 @@ jobs:
 
           echo "✅ Latest release branch: $latest_branch"
 
-          # Verify merge commit is not already in that branch
-          merge_sha="${{ github.event.pull_request.merge_commit_sha }}"
-          if git branch -r --contains "$merge_sha" 2>/dev/null | grep -q "origin/${latest_branch}"; then
+          if git branch -r --contains "$MERGE_SHA" 2>/dev/null | grep -q "origin/${latest_branch}"; then
             echo "ℹ️ Merge commit already in $latest_branch - no backport needed"
             echo "branch=" >> $GITHUB_OUTPUT
             exit 0
