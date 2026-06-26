@@ -2,12 +2,7 @@ import { expect } from '@playwright/test';
 
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import {
-  NetworkTargets,
-  SourceNetworks,
-  SourceStorages,
-  StorageClasses,
-} from '../../../types/test-data';
+import { NetworkTargets, SourceNetworks, SourceStorages } from '../../../types/test-data';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
@@ -94,11 +89,12 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
     });
 
     let originalStorageTarget = '';
+    let alternateStorageTarget = '';
 
     await test.step('Edit storage mapping: modify, revert, and verify cancellation', async () => {
       const modal = await planDetailsPage.mappingsTab.openStorageMapEditModal();
       originalStorageTarget = await modal.getTargetStorageAtIndex(0);
-      await modal.selectTargetStorageAtIndex(0, StorageClasses.HOSTPATH_BASIC);
+      alternateStorageTarget = await modal.selectDifferentTargetAtIndex(0);
       await modal.verifySaveButtonEnabled();
       await modal.save();
 
@@ -114,7 +110,7 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       const revertedTarget = await modalAfterRevert.getTargetStorageAtIndex(0);
       expect(revertedTarget).toContain(originalStorageTarget.split(' ')[0]);
 
-      await modalAfterRevert.selectTargetStorageAtIndex(0, StorageClasses.HOSTPATH_BASIC);
+      await modalAfterRevert.selectTargetStorageAtIndex(0, alternateStorageTarget);
       await modalAfterRevert.cancel();
 
       const modalAfterCancel = await planDetailsPage.mappingsTab.openStorageMapEditModal();
@@ -158,7 +154,6 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
     });
 
     const addedStorageSource = SourceStorages.MTV_NFS_US_V8;
-    const addedStorageTarget = StorageClasses.HOSTPATH_BASIC;
 
     await test.step('Add and remove storage mapping', async () => {
       const modal = await planDetailsPage.mappingsTab.openStorageMapEditModal();
@@ -167,7 +162,7 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       const newRowIndex = await modal.addMapping();
       expect(newRowIndex).toBe(initialCount);
       await modal.selectSourceStorageAtIndex(newRowIndex, addedStorageSource);
-      await modal.selectTargetStorageAtIndex(newRowIndex, addedStorageTarget);
+      await modal.selectFirstAvailableTargetAtIndex(newRowIndex);
       await modal.verifySaveButtonEnabled();
       await modal.save();
 

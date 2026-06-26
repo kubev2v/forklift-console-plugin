@@ -128,10 +128,27 @@ export abstract class BaseMappingEditModal extends BaseModal {
   async selectDifferentTargetAtIndex(index: number): Promise<string> {
     const currentTarget = await this.getTargetAtIndex(index);
     const targetSelect = this.targetSelectLocator(index);
-    await this.expandAndSelectNth(targetSelect, 1);
-    const newValue = await this.getTargetAtIndex(index);
-    expect(newValue).not.toBe(currentTarget);
-    return newValue;
+
+    await this.page.waitForTimeout(FORM_SETTLE_MS);
+    await targetSelect.click();
+    await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
+    const listbox = this.page.locator('[role="listbox"]:visible').last();
+    await expect(listbox).toBeVisible();
+
+    const options = listbox.locator('[role="option"]:enabled');
+    const count = await options.count();
+
+    for (let i = 0; i < count; i += 1) {
+      const optionText = ((await options.nth(i).textContent()) ?? '').trim();
+      if (optionText !== currentTarget) {
+        await options.nth(i).click({ timeout: OPTION_CLICK_TIMEOUT_MS });
+        return this.getTargetAtIndex(index);
+      }
+    }
+
+    throw new Error(
+      `selectDifferentTargetAtIndex: no alternative option found at row ${index} (current: "${currentTarget}")`,
+    );
   }
 
   async selectFirstAvailableSourceAtIndex(index: number): Promise<string> {
