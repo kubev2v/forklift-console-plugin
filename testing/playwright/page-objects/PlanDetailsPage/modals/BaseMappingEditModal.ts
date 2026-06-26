@@ -129,26 +129,33 @@ export abstract class BaseMappingEditModal extends BaseModal {
     const currentTarget = await this.getTargetAtIndex(index);
     const targetSelect = this.targetSelectLocator(index);
 
-    await this.page.waitForTimeout(FORM_SETTLE_MS);
-    await targetSelect.click();
-    await expect(targetSelect).toHaveAttribute('aria-expanded', 'true');
-    const listbox = this.page.locator('[role="listbox"]:visible').last();
-    await expect(listbox).toBeVisible();
+    for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
+      try {
+        const listbox = await this.openDropdown(targetSelect);
+        const options = listbox.locator('[role="option"]:enabled');
+        const count = await options.count();
 
-    const options = listbox.locator('[role="option"]:enabled');
-    const count = await options.count();
+        for (let i = 0; i < count; i += 1) {
+          const option = options.nth(i);
+          const optionText = ((await option.textContent()) ?? '').trim();
+          if (optionText !== currentTarget) {
+            await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
+            await expect(targetSelect).toContainText(optionText);
+            return optionText;
+          }
+        }
 
-    for (let i = 0; i < count; i += 1) {
-      const optionText = ((await options.nth(i).textContent()) ?? '').trim();
-      if (optionText !== currentTarget) {
-        await options.nth(i).click({ timeout: OPTION_CLICK_TIMEOUT_MS });
-        return this.getTargetAtIndex(index);
+        throw new Error(
+          `selectDifferentTargetAtIndex: no alternative option found at row ${index} (current: "${currentTarget}")`,
+        );
+      } catch (err) {
+        if (attempt === MAX_DROPDOWN_ATTEMPTS - 1) {
+          throw err;
+        }
       }
     }
 
-    throw new Error(
-      `selectDifferentTargetAtIndex: no alternative option found at row ${index} (current: "${currentTarget}")`,
-    );
+    throw new Error(`selectDifferentTargetAtIndex: exhausted all attempts at row ${index}`);
   }
 
   async selectFirstAvailableSourceAtIndex(index: number): Promise<string> {

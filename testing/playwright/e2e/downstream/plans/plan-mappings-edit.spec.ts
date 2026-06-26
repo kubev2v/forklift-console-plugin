@@ -100,7 +100,7 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
 
       const modalAfterSave = await planDetailsPage.mappingsTab.openStorageMapEditModal();
       const currentTarget = await modalAfterSave.getTargetStorageAtIndex(0);
-      expect(currentTarget).toBeTruthy();
+      expect(currentTarget).toContain(alternateStorageTarget.split(' ')[0]);
 
       await modalAfterSave.selectTargetStorageAtIndex(0, originalStorageTarget);
       await modalAfterSave.verifySaveButtonEnabled();
