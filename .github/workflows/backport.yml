@@ -281,8 +281,8 @@ jobs:
               # Query Jira for matching fix version (highest unreleased in the series)
               if versions_data=$(jira_get "${JIRA_BASE}/rest/api/3/project/MTV/versions"); then
                 fix_version_id=$(echo "$versions_data" | jq -r --arg cpe "$cpe_version" '
-                  [.[] | select(.name | startswith($cpe)) | select(.released == false)]
-                  | sort_by(.name | split(".") | map(tonumber? // 999))
+                  [.[] | select(.name | startswith($cpe + ".")) | select(.released == false)]
+                  | sort_by(.name | split(".") | map(tonumber? // 0))
                   | last
                   | .id // empty
                 ' || true)
