@@ -10,7 +10,7 @@ Development happens on `main`. Release branches follow the pattern `release-X.Y`
 
 - **Feature branches**: fork from `main`, open a PR against `main`
 - **Release branches**: cut from `main` when a release stabilizes
-- **Backports**: after a PR merges to `main`, comment `/backport release-X.Y` on the PR to create a cherry-pick PR to that release branch. `/cherrypick` and `/cherry-pick` also work. Add `--dry-run` to test first. The backport workflow also clones the associated Jira ticket (if any) and links it to the backport PR -- see [Repository Secrets](#repository-secrets) below.
+- **Backports**: after a PR merges to `main`, comment `/backport release-X.Y` on the PR to create a cherry-pick PR to that release branch. `/cherrypick` and `/cherry-pick` also work. Add `--dry-run` to test first. The backport workflow also clones the associated Jira ticket (if any) and links it to the backport PR -- see [Repository Secrets](#repository-secrets) below. For high-severity bug PRs, a backport suggestion comment is posted automatically on merge.
 
 ## Pull Request Process
 

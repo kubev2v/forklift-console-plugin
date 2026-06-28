@@ -1,0 +1,252 @@
+name: Suggest Backport
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  suggest-backport:
+    name: Suggest Backport for High-Severity Bugs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    if: github.event.pull_request.merged == true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
+
+      - name: Ensure jq is available
+        run: |
+          set -euo pipefail
+          if ! command -v jq >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y jq
+          fi
+
+      - name: Extract Jira ticket from PR
+        id: extract_ticket
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          GH_API_URL: ${{ github.api_url }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          ticket_key=""
+
+          echo "🔍 Extracting Jira ticket from PR #$PR_NUMBER..."
+
+          # Fetch commits from the PR
+          commits_data=$(curl -sSf \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "${GH_API_URL}/repos/${GH_REPO}/pulls/${PR_NUMBER}/commits?per_page=100")
+
+          # Collect all unique MTV keys from every Resolves: line
+          all_keys=""
+          while IFS= read -r resolves_line; do
+            if echo "$resolves_line" | grep -iq "^Resolves:[[:space:]]*none$"; then
+              continue
+            fi
+            keys=$(echo "$resolves_line" | grep -oE "MTV-[0-9]+" || true)
+            if [[ -n "$keys" ]]; then
+              all_keys="${all_keys} ${keys}"
+            fi
+          done < <(echo "$commits_data" | jq -r '.[].commit.message' | grep -i "^Resolves:")
+
+          # Deduplicate and take the first key
+          ticket_key=$(echo "$all_keys" | tr ' ' '\n' | sort -u | head -1 || true)
+
+          if [[ -z "$ticket_key" ]]; then
+            # Fallback: check PR title for MTV-XXXX
+            ticket_key=$(echo "$PR_TITLE" | grep -oE "MTV-[0-9]+" | head -1 || true)
+          fi
+
+          if [[ -z "$ticket_key" ]]; then
+            echo "ℹ️ No MTV ticket found - skipping"
+          else
+            echo "✅ Found ticket: $ticket_key"
+          fi
+
+          echo "ticket_key=$ticket_key" >> $GITHUB_OUTPUT
+
+      - name: Check ticket type and severity
+        id: check_ticket
+        if: steps.extract_ticket.outputs.ticket_key != ''
+        continue-on-error: true
+        env:
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          TICKET_KEY: ${{ steps.extract_ticket.outputs.ticket_key }}
+        run: |
+          set -euo pipefail
+
+          JIRA_BASE="https://redhat.atlassian.net"
+          AUTH_HEADER="Authorization: Basic $(echo -n "${JIRA_EMAIL}:${JIRA_API_TOKEN}" | base64 -w 0)"
+
+          echo "🔍 Checking ticket $TICKET_KEY..."
+
+          ticket_data=$(curl -sSf \
+            -H "$AUTH_HEADER" \
+            -H "Content-Type: application/json" \
+            "${JIRA_BASE}/rest/api/3/issue/${TICKET_KEY}?fields=issuetype,priority,customfield_10840")
+
+          # Check issue type is Bug (exact casing)
+          issue_type=$(echo "$ticket_data" | jq -r '.fields.issuetype.name')
+          if [[ "$issue_type" != "Bug" ]]; then
+            echo "ℹ️ Ticket is type '$issue_type', not Bug - skipping"
+            echo "qualifies=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Check severity field (customfield_10840)
+          severity_id=$(echo "$ticket_data" | jq -r '.fields.customfield_10840.id // empty')
+          severity_name=$(echo "$ticket_data" | jq -r '.fields.customfield_10840.value // empty')
+          priority_id=$(echo "$ticket_data" | jq -r '.fields.priority.id // empty')
+          priority_name=$(echo "$ticket_data" | jq -r '.fields.priority.name // empty')
+
+          qualifies="false"
+
+          # Severity IDs: 19917=Critical, 19918=Important, 19919=Moderate
+          if [[ -n "$severity_id" ]]; then
+            case "$severity_id" in
+              19917|19918|19919)
+                qualifies="true"
+                echo "✅ Bug with severity: $severity_name (qualifies)"
+                ;;
+              *)
+                echo "ℹ️ Bug with severity: $severity_name (does not qualify)"
+                ;;
+            esac
+          else
+            # Fallback to priority: 10000=Blocker, 10001=Critical, 10002=Major
+            case "$priority_id" in
+              10000|10001|10002)
+                qualifies="true"
+                severity_name="$priority_name (priority fallback)"
+                echo "✅ Bug with priority: $priority_name (qualifies via fallback)"
+                ;;
+              *)
+                echo "ℹ️ Bug with priority: $priority_name (does not qualify)"
+                ;;
+            esac
+          fi
+
+          echo "qualifies=$qualifies" >> $GITHUB_OUTPUT
+          echo "severity_name=$severity_name" >> $GITHUB_OUTPUT
+
+      - name: Determine latest release branch
+        id: find_branch
+        if: steps.check_ticket.outputs.qualifies == 'true'
+        env:
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          set -euo pipefail
+
+          echo "🔍 Finding latest release branch..."
+
+          latest_branch=$(git ls-remote --heads origin 'release-*' \
+            | sed 's|.*refs/heads/||' \
+            | grep -E '^release-[0-9]+\.[0-9]+$' \
+            | sort -V \
+            | tail -1 || true)
+
+          if [[ -z "$latest_branch" ]]; then
+            echo "⚠️ No release branches found - skipping"
+            echo "branch=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "✅ Latest release branch: $latest_branch"
+
+          if git branch -r --contains "$MERGE_SHA" 2>/dev/null | grep -q "origin/${latest_branch}"; then
+            echo "ℹ️ Merge commit already in $latest_branch - no backport needed"
+            echo "branch=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "✅ Commit not in $latest_branch - backport needed"
+          echo "branch=$latest_branch" >> $GITHUB_OUTPUT
+
+      - name: Run dry-run backport
+        id: dry_run
+        if: steps.find_branch.outputs.branch != ''
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: kiegroup/git-backporting@7ff4fce545cf2b9170c91c032bf66a9348ba2490
+        with:
+          target-branch: ${{ steps.find_branch.outputs.branch }}
+          pull-request: ${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
+          no-squash: true
+          auth: ${{ secrets.GITHUB_TOKEN }}
+          dry-run: true
+
+      - name: Post backport suggestion comment
+        if: steps.find_branch.outputs.branch != ''
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        env:
+          BRANCH: ${{ steps.find_branch.outputs.branch }}
+          TICKET_KEY: ${{ steps.extract_ticket.outputs.ticket_key }}
+          SEVERITY_NAME: ${{ steps.check_ticket.outputs.severity_name }}
+          DRY_RUN_OUTCOME: ${{ steps.dry_run.outcome }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const branch = process.env.BRANCH;
+            const ticketKey = process.env.TICKET_KEY;
+            const severityName = process.env.SEVERITY_NAME;
+            const dryRunOutcome = process.env.DRY_RUN_OUTCOME;
+            const prTitle = context.payload.pull_request.title
+              .replaceAll('\r', ' ')
+              .replaceAll('\n', ' ');
+            const shellQuote = (v) => `'${String(v).replaceAll("'", `'"'"'`)}'`;
+
+            let body;
+            if (dryRunOutcome === 'success') {
+              body = `🔔 **Backport Suggested**
+
+            This PR fixes a high-severity bug ([${ticketKey}](https://redhat.atlassian.net/browse/${ticketKey}) - Severity: ${severityName}).
+            A dry-run confirmed it cherry-picks cleanly to \`${branch}\`.
+
+            \`/backport ${branch}\``;
+            } else {
+              let commitShas = '';
+              try {
+                const commits = await github.paginate(github.rest.pulls.listCommits, {
+                  owner, repo, pull_number: issue_number, per_page: 100
+                });
+                commitShas = commits.map(c => c.sha.substring(0, 12)).join(' ');
+              } catch {
+                commitShas = '<commit-sha(s)>';
+              }
+
+              const backportTitle = `Resolves: ${ticketKey} | [Backport ${branch}] ${prTitle}`;
+
+              body = `🔔 **Backport Suggested (conflicts detected)**
+
+            This PR fixes a high-severity bug ([${ticketKey}](https://redhat.atlassian.net/browse/${ticketKey}) - Severity: ${severityName}).
+            A dry-run detected conflicts when cherry-picking to \`${branch}\`. Manual resolution is needed:
+
+            \`\`\`bash
+            git fetch origin
+            git checkout -b backport-${issue_number}-to-${branch} origin/${branch}
+            git cherry-pick -x ${commitShas}
+            # Resolve any conflicts, then:
+            git add .
+            git cherry-pick --continue
+            git push origin backport-${issue_number}-to-${branch}
+            gh pr create --base ${shellQuote(branch)} --title ${shellQuote(backportTitle)}
+            \`\`\``;
+            }
+
+            await github.rest.issues.createComment({ owner, repo, issue_number, body });

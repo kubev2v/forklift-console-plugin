@@ -278,11 +278,14 @@ jobs:
             echo "  - CPE version from release.conf: $cpe_version"
 
             if [[ -n "$cpe_version" ]]; then
-              # Query Jira for matching fix version
+              # Query Jira for matching fix version (highest unreleased in the series)
               if versions_data=$(jira_get "${JIRA_BASE}/rest/api/3/project/MTV/versions"); then
                 fix_version_id=$(echo "$versions_data" | jq -r --arg cpe "$cpe_version" '
-                  .[] | select(.name | contains($cpe)) | select(.released == false) | .id
-                ' | head -1 || true)
+                  [.[] | select(.name | startswith($cpe + ".")) | select(.released == false)]
+                  | sort_by(.name | split(".") | map(tonumber? // 0))
+                  | last
+                  | .id // empty
+                ' || true)
               else
                 echo "  ⚠️ Could not fetch MTV fix versions; creating clone without fixVersion"
               fi
