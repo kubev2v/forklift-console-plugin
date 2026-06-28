@@ -1,6 +1,7 @@
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+
 import type { TypedOvaResource, V1beta1Provider } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
-import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { InventoryStorage } from '../../../utils/hooks/useStorages';
 import { getSourceStorageValuesForSelectedVms } from '../getSourceStorageValues';
