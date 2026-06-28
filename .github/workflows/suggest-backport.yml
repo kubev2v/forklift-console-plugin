@@ -243,7 +243,7 @@ jobs:
             git cherry-pick -x ${commitShas}
             # Resolve any conflicts, then:
             git add .
-            git commit
+            git cherry-pick --continue
             git push origin backport-${issue_number}-to-${branch}
             gh pr create --base ${shellQuote(branch)} --title ${shellQuote(backportTitle)}
             \`\`\``;
