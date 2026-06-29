@@ -7,6 +7,7 @@ import type { Ec2Network } from 'src/utils/types/ec2Inventory';
 import type {
   HypervNetwork,
   IoK8sApiCoreV1ConfigMap,
+  IoK8sApiCoreV1Secret,
   OpenShiftNetworkAttachmentDefinition,
   OpenshiftVM,
   OpenstackNetwork,
@@ -44,7 +45,11 @@ import type {
   MigrationHook,
 } from './steps/migration-hooks/constants';
 import type { MigrationTypeFieldId, MigrationTypeValue } from './steps/migration-type/constants';
-import type { DiskPassPhrase, OtherSettingsFormFieldId } from './steps/other-settings/constants';
+import type {
+  DiskDecryptionType,
+  DiskPassPhrase,
+  OtherSettingsFormFieldId,
+} from './steps/other-settings/constants';
 import type { CreatePlanStorageMapFieldId } from './steps/storage-map/constants';
 import type { VmFormFieldId } from './steps/virtual-machines/constants';
 
@@ -87,6 +92,8 @@ export type CreatePlanFormData = FieldValues & {
   [CreatePlanStorageMapFieldId.StorageMapName]: string;
   [MigrationTypeFieldId.MigrationType]: MigrationTypeValue;
   [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: DiskPassPhrase[];
+  [OtherSettingsFormFieldId.DiskDecryptionType]: DiskDecryptionType;
+  [OtherSettingsFormFieldId.ExistingLUKSSecret]: IoK8sApiCoreV1Secret | undefined;
   [OtherSettingsFormFieldId.InstanceTypes]: Record<string, string>;
   [OtherSettingsFormFieldId.NBDEClevis]: boolean;
   [OtherSettingsFormFieldId.PreserveStaticIps]: boolean;

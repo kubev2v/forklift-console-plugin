@@ -6,6 +6,8 @@ test-results/
 testing/.providers.json
 testing/e2e.env
 testing/playwright/.resources.json
+testing/playwright/.env-relay.json
+testing/playwright/.auth/
 testing/playwright-report
 tmp/
 yarn-error.log

@@ -161,8 +161,7 @@ export interface PlanTestData {
   migrationType?: MigrationType;
   criticalIssuesAction?: 'confirm' | 'deselect';
   additionalPlanSettings?: {
-    targetPowerState?: 'on' | 'off' | 'auto';
-    useNbdeClevis?: boolean;
+    existingLUKSSecretName?: string;
     /** VM display name → resolved instance type label */
     instanceTypes?: Record<string, string>;
     /**
@@ -171,6 +170,8 @@ export interface PlanTestData {
      * cause a critical plan concern when this is left enabled.
      */
     preserveStaticIPs?: boolean;
+    targetPowerState?: 'on' | 'off' | 'auto';
+    useNbdeClevis?: boolean;
   };
   customizationScripts?: CustomizationScriptsTestData;
   preMigrationHook?: HookConfig;

@@ -17,6 +17,7 @@ import { addOwnerRefs } from './addOwnerRefs';
 export const addPlanResourceOwnerRefs = async (
   resources: {
     hooks: { postHook?: V1beta1Hook; preHook?: V1beta1Hook };
+    isExistingSecret?: boolean;
     networkMap: V1beta1NetworkMap;
     scriptsConfigMap?: IoK8sApiCoreV1ConfigMap;
     secret?: IoK8sApiCoreV1Secret;
@@ -29,7 +30,7 @@ export const addPlanResourceOwnerRefs = async (
     addOwnerRefs(NetworkMapModel, resources.networkMap, [planRef]),
   ];
 
-  if (resources.secret) {
+  if (resources.secret && !resources.isExistingSecret) {
     ownerRefRequests.push(addOwnerRefs(SecretModel, resources.secret, [planRef]));
   }
 
