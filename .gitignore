@@ -43,6 +43,12 @@ testing/locales/
 .cursor/hooks.json
 .cursor/extensions/
 
+# Dev-helper skill (installed from https://github.com/avivtur/dev-helper)
+.cursor/skills/dev-helper/
+
+# Frontend analyzer runtime state
+.cursor/skills/frontend-analyzer/state.json
+
 # VS Code / Cursor local launch configs
 .vscode/launch.json
 

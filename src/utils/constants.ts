@@ -25,6 +25,7 @@ export const taskStatuses = {
   error: 'Error',
   failed: 'Failed',
   pending: 'Pending',
+  running: 'Running',
 };
 
 export const PHASES = {

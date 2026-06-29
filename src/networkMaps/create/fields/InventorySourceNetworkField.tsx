@@ -13,6 +13,15 @@ import type { MappingValue } from '@utils/types';
 
 import type { CreateNetworkMapFormData } from '../types';
 
+/**
+ * Displays a flat list of source networks from provider inventory.
+ *
+ * NOTE: This component does NOT perform Hyper-V VLAN disambiguation because it
+ * operates at the provider inventory level without VM context. Per-VM VLAN
+ * conflicts (multiple NICs on the same switch with different VLANs) are only
+ * detected in the plan wizard flow where selected VMs are known.
+ * See getHypervVlanQualifiedNetworks() in plans/create/steps/network-map/utils.ts.
+ */
 type InventorySourceNetworkFieldProps = {
   fieldId: string;
   sourceNetworks: InventoryNetwork[];

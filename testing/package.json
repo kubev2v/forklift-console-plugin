@@ -9,12 +9,14 @@
     "test:downstream:remote:docker": "bash run-e2e-docker.sh",
     "test:downstream:local": "BASE_ADDRESS=http://localhost:9000 npx playwright test --grep @downstream",
     "test:upstream": "npx playwright test playwright/e2e/upstream/",
-    "check:version-gating": "bash check-version-gating.sh"
+    "check:version-gating": "bash check-version-gating.sh",
+    "coverage:extract": "npx ts-node scripts/extract-tests.ts"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@kubernetes/client-node": "^1.4.0",
     "@playwright/test": "^1.60.0",
     "@types/node": "^20.0.0",
     "playwright": "^1.60.0",

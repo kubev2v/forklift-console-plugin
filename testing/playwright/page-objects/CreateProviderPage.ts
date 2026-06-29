@@ -215,7 +215,7 @@ export class CreateProviderPage {
 
     await this.waitForWizardLoad();
     await this.fillAndSubmit(testData);
-    await providerDetailsPage.waitForPageLoad();
+    await providerDetailsPage.waitForProviderCreation(testData.name, testData.projectName);
 
     if (waitForReady) {
       await providerDetailsPage.waitForReadyStatus();

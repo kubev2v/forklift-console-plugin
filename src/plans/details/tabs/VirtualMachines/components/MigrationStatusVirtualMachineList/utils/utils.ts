@@ -1,14 +1,50 @@
-import type { V1beta1PlanStatusMigrationVms } from '@forklift-ui/types';
+import type {
+  V1beta1PlanStatusMigrationVms,
+  V1beta1PlanStatusMigrationVmsPipeline,
+} from '@forklift-ui/types';
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 import { taskStatuses } from '@utils/constants';
+import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
 import type { MigrationStatusVirtualMachinePageData } from './types';
 
-export const VIRTUAL_MACHINE_CREATION_NAME = 'VirtualMachineCreation';
 export const CUTOVER_NAME = 'Cutover';
+const DISK_ALLOCATION_NAME = 'DiskAllocation';
+const DISK_TRANSFER_PREFIX = 'DiskTransfer';
+export const VIRTUAL_MACHINE_CREATION_NAME = 'VirtualMachineCreation';
+export const WAIT_FOR_GUEST_REBOOTS_NAME = 'WaitForGuestReboots';
 
-export const getVMMigrationStatus = (obj: unknown) => {
+const PIPELINE_STEP_DISPLAY_KEYS: Record<string, string> = {
+  Cutover: 'Cutover',
+  DiskAllocation: 'Disk allocation',
+  DiskTransfer: 'Disk transfer',
+  DiskTransferV2v: 'Disk transfer',
+  ImageConversion: 'Image conversion',
+  Initialize: 'Initialize',
+  PostHook: 'Post-migration hook',
+  PreflightInspection: 'Preflight inspection',
+  PreHook: 'Pre-migration hook',
+  VirtualMachineCreation: 'Virtual machine creation',
+  WaitForFinalSnapshotConsolidation: 'Snapshot consolidation',
+  WaitForGuestReboots: 'Post-migration setup',
+};
+
+export const getPipelineStepDisplayName = (name: string): string => {
+  const key = PIPELINE_STEP_DISPLAY_KEYS[name];
+  return key ? t(key) : name;
+};
+
+export const isVmInPostMigrationSetup = (
+  statusVM: V1beta1PlanStatusMigrationVms | undefined,
+): boolean => {
+  const pipeline = statusVM?.pipeline ?? [];
+  return pipeline.some(
+    (pipe) => pipe?.name === WAIT_FOR_GUEST_REBOOTS_NAME && pipe?.phase === taskStatuses.running,
+  );
+};
+
+export const getVMMigrationStatus = (obj: unknown): string => {
   const vmMigrationStatusData = obj as MigrationStatusVirtualMachinePageData;
   const isError = vmMigrationStatusData.statusVM?.conditions?.find(
     (condition) => condition.type === 'Failed' && condition.status === 'True',
@@ -17,6 +53,7 @@ export const getVMMigrationStatus = (obj: unknown) => {
     (condition) => condition.type === 'Succeeded' && condition.status === 'True',
   );
   const isWaiting = vmMigrationStatusData.statusVM?.phase === 'CopyingPaused';
+  const isPostMigrationSetup = isVmInPostMigrationSetup(vmMigrationStatusData.statusVM);
   const isRunning = vmMigrationStatusData.statusVM?.completed === undefined;
   const notStarted = vmMigrationStatusData.statusVM?.pipeline[0].phase === 'Pending';
 
@@ -30,6 +67,10 @@ export const getVMMigrationStatus = (obj: unknown) => {
 
   if (isWaiting) {
     return t('Waiting');
+  }
+
+  if (isPostMigrationSetup) {
+    return t('Post-migration setup');
   }
 
   if (notStarted) {
@@ -53,9 +94,39 @@ export const isVirtualMachineCreationCompleted = (
   );
 };
 
-export const getVMDiskTransferPipeline = (statusVM: V1beta1PlanStatusMigrationVms | undefined) => {
-  const diskTransfer = statusVM?.pipeline.find((pipe) => pipe.name.startsWith('DiskTransfer'));
-  return diskTransfer;
+const isDiskTransferStep = (pipe: V1beta1PlanStatusMigrationVmsPipeline): boolean =>
+  pipe?.name?.startsWith(DISK_TRANSFER_PREFIX) || pipe?.name === DISK_ALLOCATION_NAME;
+
+const isStepActive = (pipe: V1beta1PlanStatusMigrationVmsPipeline): boolean =>
+  Boolean(pipe.phase) &&
+  pipe.phase !== taskStatuses.pending &&
+  pipe.phase !== taskStatuses.completed;
+
+/**
+ * Returns the pipeline step representing disk transfer progress.
+ * For copy-offload migrations, actual transfer happens in DiskAllocation
+ * while DiskTransferV2v runs instantly with no per-task progress.
+ * Prefers the currently active step; falls back to the one with more progress.
+ */
+export const getVMDiskTransferPipeline = (
+  statusVM: V1beta1PlanStatusMigrationVms | undefined,
+): V1beta1PlanStatusMigrationVmsPipeline | undefined => {
+  const pipeline = statusVM?.pipeline ?? [];
+  const diskSteps = pipeline.filter(isDiskTransferStep);
+
+  if (isEmpty(diskSteps)) return undefined;
+  if (diskSteps.length === 1) return diskSteps[0];
+
+  const running = diskSteps.find(isStepActive);
+  if (running) return running;
+
+  const diskTransfer = diskSteps.find((pipe) => pipe.name.startsWith(DISK_TRANSFER_PREFIX));
+  const diskAllocation = diskSteps.find((pipe) => pipe.name === DISK_ALLOCATION_NAME);
+
+  if ((diskTransfer?.progress?.completed ?? 0) > 0) return diskTransfer;
+  if ((diskAllocation?.progress?.completed ?? 0) > 0) return diskAllocation;
+
+  return diskTransfer ?? diskAllocation;
 };
 
 export const getVMDiskProgress = (obj: unknown) => {

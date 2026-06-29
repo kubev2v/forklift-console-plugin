@@ -15,11 +15,11 @@ const getConfigMapName = (): string => {
   return `user-settings-${username}`;
 };
 
-const patchLanguageConfigMap = async (page: Page, language: string): Promise<boolean> => {
+const patchLanguageConfigMap = async (language: string): Promise<boolean> => {
   const configMapName = getConfigMapName();
   const apiPath = `${API_PATHS.KUBERNETES_CORE}/namespaces/${USER_SETTINGS_NAMESPACE}/configmaps/${configMapName}`;
 
-  const result = await BaseResourceManager.apiPatch(page, apiPath, {
+  const result = await BaseResourceManager.apiPatch(apiPath, {
     data: { [LANGUAGE_KEY]: language },
   });
 
@@ -69,7 +69,7 @@ export const setConsoleLanguage = async (
   language: SupportedLanguage,
 ): Promise<void> => {
   await setLocalStorageLanguage(page, language);
-  await patchLanguageConfigMap(page, language);
+  await patchLanguageConfigMap(language);
 };
 
 /**
@@ -77,5 +77,5 @@ export const setConsoleLanguage = async (
  */
 export const restoreConsoleLanguage = async (page: Page): Promise<void> => {
   await setLocalStorageLanguage(page, 'en');
-  await patchLanguageConfigMap(page, 'en');
+  await patchLanguageConfigMap('en');
 };

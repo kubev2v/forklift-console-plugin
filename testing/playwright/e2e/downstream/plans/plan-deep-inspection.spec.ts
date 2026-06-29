@@ -3,25 +3,34 @@ import { expect, type Page } from '@playwright/test';
 import { createPlan } from '../../../fixtures/helpers/resourceCreationHelpers';
 import { sharedProviderFixtures } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import type { PlanTestData } from '../../../types/test-data';
+import { NetworkTargets, type PlanTestData, SourceNetworks } from '../../../types/test-data';
 import {
   ACTIVE_OR_COMPLETED_STATUSES,
   COMPLETED_STATUSES,
   inspectionStatusDisplayToFilterId,
   isCompletedInspectionStatus,
 } from '../../../utils/inspection-status';
+import { requireVddk } from '../../../utils/requireVddk';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
-// Deep inspection creates vSphere snapshots during the inspection process. A leftover
-// snapshot on mtv-func-rhel9 triggers VMHasSnapshots (Critical) on any subsequent warm
-// plan, keeping it in CannotStart. Using mtv-func-win2019 here keeps the two VMs isolated.
+// Deep inspection creates vSphere snapshots — keep mtv-func-win2022 isolated here to avoid
+// VMHasSnapshots conflicts with other suites (migration-happy-path, plan-migration-type).
 const test = sharedProviderFixtures.extend<{ testPlan: Awaited<ReturnType<typeof createPlan>> }>({
   testPlan: async ({ page, resourceManager, testProvider }, setValue) => {
     if (!testProvider) throw new Error('testPlan fixture requires testProvider');
     const plan = await createPlan(page, resourceManager, {
       sourceProvider: testProvider,
-      customPlanData: { virtualMachines: [{ folder: 'vm', sourceName: 'mtv-func-win2019' }] },
+      customPlanData: {
+        virtualMachines: [{ folder: 'vm', sourceName: 'mtv-func-win2022' }],
+        // mtv-func-win2022 has 2 NICs; explicit mappings avoid the duplicate-Default-Network validation error.
+        networkMap: {
+          mappings: [
+            { source: SourceNetworks.MGMT_NETWORK, target: NetworkTargets.DEFAULT },
+            { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.IGNORE },
+          ],
+        },
+      },
     });
     await setValue(plan);
   },
@@ -56,6 +65,7 @@ const setupPlanDetailsPage = async (
 test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
   test.describe.configure({ mode: 'serial' });
   requireVersion(test, V2_12_0);
+  requireVddk(test);
 
   test('should show Inspect VMs button for vSphere plans', async ({
     page,

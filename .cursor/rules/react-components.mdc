@@ -28,6 +28,32 @@ import Select from '@components/common/Select';
 // NOT: import { Select } from '@patternfly/react-core';
 ```
 
+### Use `PF_LABEL_STATUS` for Status Props
+Use the shared constants instead of string literals for PatternFly `status` props:
+```typescript
+import { PF_LABEL_STATUS, type PfLabelStatus } from '@utils/constants';
+
+// ✅ Good
+<Label status={PF_LABEL_STATUS.DANGER}>Error</Label>
+<Icon status={PF_LABEL_STATUS.WARNING}>...</Icon>
+
+// ❌ Bad
+<Label status="danger">Error</Label>
+```
+
+### Use `STATUS_ICONS` for Status Icons
+Use the shared status icon map instead of manually wrapping icons with hardcoded colors:
+```typescript
+import { STATUS_ICONS } from '@components/status/statusIcons';
+
+// ✅ Good - uses PF6 Icon status prop, respects theming
+{STATUS_ICONS.danger}
+{STATUS_ICONS.warning}
+
+// ❌ Bad - hardcoded hex colors break in dark mode
+<ExclamationCircleIcon color="#C9190B" />
+```
+
 ### Common PatternFly Patterns
 ```typescript
 import {

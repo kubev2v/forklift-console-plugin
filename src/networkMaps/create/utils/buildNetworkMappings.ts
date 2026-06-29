@@ -13,6 +13,8 @@ import { IgnoreNetwork } from '@utils/mappings/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { MappingValue } from '@utils/types';
 
+type NetworkMapSource = V1beta1NetworkMapSpecMapSource & { vlan?: string };
+
 const getDestination = (targetNetwork: MappingValue): V1beta1NetworkMapSpecMapDestination => {
   if (targetNetwork.name === DEFAULT_NETWORK) {
     return { type: POD };
@@ -68,12 +70,14 @@ export const buildNetworkMappings = (
     }
 
     if (!isOpenShiftProvider) {
+      const source: NetworkMapSource = {
+        id: sourceNetwork.id,
+        name: sourceNetwork.name,
+        ...(sourceNetwork.vlan ? { vlan: sourceNetwork.vlan } : {}),
+      };
       const baseMapping: V1beta1NetworkMapSpecMap = {
         destination,
-        source: {
-          id: sourceNetwork.id,
-          name: sourceNetwork.name,
-        },
+        source,
       };
       acc.push(baseMapping);
     }
@@ -128,12 +132,14 @@ export const getMappingValues = (
   return specMapping.map((mapping) => {
     const sourceNet = mapping.source;
     const destNet = mapping.destination;
+    const { vlan } = sourceNet as NetworkMapSource;
 
     const sourceNetwork: MappingValue = {
       id: isOpenShiftProvider
         ? (sourceNetworks.find((net) => net.name === sourceNet.name)?.id ?? '')
         : (sourceNet.id ?? ''),
       name: getSourceNetName(sourceNet, isOpenShiftProvider),
+      ...(vlan ? { vlan } : {}),
     };
 
     const targetNetwork: MappingValue = {

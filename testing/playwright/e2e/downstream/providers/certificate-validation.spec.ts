@@ -28,7 +28,7 @@ test.describe('vSphere Provider Certificate Validation', () => {
   const resourceManager = new ResourceManager();
 
   test.afterAll(async () => {
-    await resourceManager.instantCleanup();
+    await resourceManager.cleanupAll();
   });
 
   test(

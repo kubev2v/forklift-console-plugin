@@ -8,6 +8,7 @@ import {
   setConsoleLanguage,
   type SupportedLanguage,
 } from '../../fixtures/helpers/languageHelpers';
+import { AUTH_FILE } from '../../utils/constants';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { disableGuidedTour } from '../../utils/utils';
 import { V2_12_0 } from '../../utils/version/constants';
@@ -49,7 +50,6 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
   test.describe.configure({ mode: 'serial' });
 
   test.afterAll(async ({ browser }) => {
-    const AUTH_FILE = 'playwright/.auth/user.json';
     const context = await browser.newContext({
       ignoreHTTPSErrors: true,
       storageState: existsSync(AUTH_FILE) ? AUTH_FILE : undefined,

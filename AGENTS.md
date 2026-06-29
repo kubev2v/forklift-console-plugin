@@ -458,6 +458,16 @@ const ERROR_MESSAGES = {
 };
 ```
 
+**Important:** Call `t()` at **runtime** (inside functions), not at **module initialization** (top-level const). Module-level `t()` calls freeze translations and prevent updates on language change:
+
+```typescript
+// ✅ Good - t() called at runtime
+const getDisplayName = (key: string): string => t(DISPLAY_KEYS[key] ?? key);
+
+// ❌ Bad - t() called at module init (frozen)
+const DISPLAY_NAMES = { foo: t('Foo'), bar: t('Bar') };
+```
+
 ### Translation with Variables
 
 Use interpolation for dynamic values:
@@ -658,6 +668,35 @@ const [data, loaded, error] = useK8sWatchResource<Resource>({
 });
 ```
 
+### Actions Dropdown Convention
+Action dropdowns use `isDetailsPage` (not `isKebab`) to control behavior by context:
+- **List page** (default): kebab icon, "Edit" navigates to resource, "Delete"
+- **Details page** (`isDetailsPage`): "Actions" button, "Edit YAML" navigates to YAML tab, "Delete"
+
+### Build-Time Feature Hiding
+When a UI component is ready but the backend feature isn't, hide it at build time rather than deleting the code:
+1. Keep the component file intact
+2. Remove the import and JSX usage from the parent component
+3. Add the orphaned file to `knip.config.ts` `ignore` with a comment linking to the upstream issue
+4. Re-enable when the backend lands
+
+This avoids re-implementation work and keeps knip from flagging the file as unused.
+
+---
+
+## Dev-Helper Skill
+
+The [dev-helper](https://github.com/avivtur/dev-helper) Cursor AI skill automates
+the full ticket lifecycle from Jira triage to merged PR. Install it once:
+
+```bash
+git clone https://github.com/avivtur/dev-helper .cursor/skills/dev-helper
+cp .cursor/skills/dev-helper/examples/config.full.json .cursor/skills/dev-helper/dev-helper.config.json
+cp -r .cursor/skills/dev-helper/examples/phases-rules.example/ .cursor/skills/dev-helper/phases-rules/
+```
+
+See the [dev-helper SETUP.md](https://github.com/avivtur/dev-helper/blob/main/SETUP.md) for full instructions.
+
 ---
 
 ## Additional Resources
@@ -666,4 +705,5 @@ const [data, loaded, error] = useK8sWatchResource<Resource>({
 - [OpenShift Console](https://github.com/openshift/console)
 - [PatternFly Documentation](https://www.patternfly.org/)
 - [OpenShift Dynamic Plugin SDK](https://github.com/openshift/dynamic-plugin-sdk)
+- [Dev-Helper Skill](https://github.com/avivtur/dev-helper)
 

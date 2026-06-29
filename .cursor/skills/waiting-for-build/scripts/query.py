@@ -113,6 +113,7 @@ def get_waiting_for_build_issues(sprint_id: int, headers: dict, base: str) -> li
     """Return all MTV issues in the 'Waiting on build' column for the given sprint.
 
     Paginates automatically if the result set exceeds the page size.
+    Includes the numeric issue id so callers can query the dev-status API.
     """
     status_clause = ",".join(f'"{s}"' for s in WAITING_STATUSES)
     jql           = f'({QUICK_FILTER}) AND status in ({status_clause})'
@@ -139,6 +140,7 @@ def get_waiting_for_build_issues(sprint_id: int, headers: dict, base: str) -> li
     for issue in raw:
         f = issue.get("fields", {})
         result.append({
+            "id":          issue["id"],   # numeric id needed for dev-status API
             "key":         issue["key"],
             "status":      (f.get("status")   or {}).get("name", "?"),
             "priority":    (f.get("priority") or {}).get("name", "?"),
@@ -147,6 +149,51 @@ def get_waiting_for_build_issues(sprint_id: int, headers: dict, base: str) -> li
             "fixVersions": [v.get("name", "") for v in f.get("fixVersions", [])],
         })
     return result
+
+
+def get_prs_from_jira(issue_id: str, headers: dict, base: str) -> list[int]:
+    """Return merged GitHub PR numbers linked to the issue via Jira's dev-status API.
+
+    Falls back to an empty list on any error (permission denied, no links, etc.).
+    """
+    try:
+        r = requests.get(
+            f"{base}/rest/dev-status/1.0/issue/detail",
+            headers=headers,
+            params={"issueId": issue_id, "applicationType": "GitHub", "dataType": "pullrequest"},
+            timeout=20,
+        )
+        if not r.ok:
+            return []
+        prs = []
+        for detail in r.json().get("detail", []):
+            for pr in detail.get("pullRequests", []):
+                if pr.get("status") == "MERGED":
+                    pr_id = pr.get("id", "")          # e.g. "#2427"
+                    m = re.search(r'(\d+)', pr_id)
+                    if m:
+                        prs.append(int(m.group(1)))
+        return prs
+    except Exception:
+        return []
+
+
+def find_commit_by_pr(pr_number: int) -> Optional[dict]:
+    """Search git log for a merge commit that references a GitHub PR number.
+
+    Looks for the pattern (#<number>) that GitHub adds to merge commit subjects.
+    """
+    try:
+        out = _git([
+            "log", "--all", f"--grep=(#{pr_number})",
+            "--format=%H %ad %s", "--date=short",
+        ])
+        for line in out.splitlines():
+            if f"(#{pr_number})" in line:
+                return _parse_commit_line(line)
+        return None
+    except subprocess.CalledProcessError:
+        return None
 
 
 # ── Git queries ───────────────────────────────────────────────────────────────
@@ -259,7 +306,40 @@ def main() -> None:
 
     enriched = []
     for issue in issues:
-        commit_info = find_merge_commit(issue["key"], build_tips or None)
+        # Collect candidates from two independent sources and merge them.
+        #
+        # Source A — Jira dev-status API: PRs that a developer explicitly linked to
+        # the ticket in Jira's development panel. This is the authoritative signal;
+        # it works even when the commit message contains no ticket key.
+        #
+        # Source B — git grep: commits whose message (subject or body) mentions the
+        # ticket key. Covers the common "Resolves: MTV-XXXX" convention but can
+        # produce false positives when unrelated commits reference the key in passing.
+        #
+        # Jira candidates are placed first so they take priority in the preference
+        # logic below (in-build → most recent).
+        jira_candidates: list[dict] = []
+        for pr_num in get_prs_from_jira(issue["id"], headers, jira_base):
+            c = find_commit_by_pr(pr_num)
+            if c:
+                jira_candidates.append(c)
+
+        grep_candidate = find_merge_commit(issue["key"], build_tips or None)
+
+        # Prefer any Jira-linked commit over git-grep results.  When both agree
+        # (same PR number), deduplication via the build-preference loop is harmless.
+        candidates = jira_candidates + ([grep_candidate] if grep_candidate else [])
+
+        commit_info: Optional[dict] = None
+        if candidates:
+            if build_tips:
+                for c in candidates:
+                    if check_in_build(c["commit"], build_tips):
+                        commit_info = c
+                        break
+            if not commit_info:
+                commit_info = candidates[0]
+
         in_build: Optional[bool] = None
         if commit_info and build_tips:
             in_build = check_in_build(commit_info["commit"], build_tips)

@@ -174,22 +174,14 @@ export const getStorageMappingValues = (
       name: destination.storageClass,
     };
 
-    const storageMapping: StorageMapping = {
+    return {
       [StorageMapFieldId.AccessMode]: destination.accessMode ?? 'ReadWriteOnce',
+      [StorageMapFieldId.OffloadPlugin]: offloadPlugin ? OffloadPlugin.VSphereXcopyConfig : '',
       [StorageMapFieldId.SourceStorage]: sourceStorage,
+      [StorageMapFieldId.StorageProduct]:
+        offloadPlugin?.vsphereXcopyConfig?.storageVendorProduct ?? '',
+      [StorageMapFieldId.StorageSecret]: offloadPlugin?.vsphereXcopyConfig?.secretRef ?? '',
       [StorageMapFieldId.TargetStorage]: targetStorage,
     };
-
-    if (offloadPlugin) {
-      storageMapping[StorageMapFieldId.OffloadPlugin] = offloadPlugin
-        ? OffloadPlugin.VSphereXcopyConfig
-        : '';
-      storageMapping[StorageMapFieldId.StorageSecret] =
-        offloadPlugin?.vsphereXcopyConfig?.secretRef ?? '';
-      storageMapping[StorageMapFieldId.StorageProduct] =
-        offloadPlugin?.vsphereXcopyConfig?.storageVendorProduct ?? '';
-    }
-
-    return storageMapping;
   });
 };

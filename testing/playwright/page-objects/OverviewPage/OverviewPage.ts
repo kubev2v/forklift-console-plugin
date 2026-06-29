@@ -4,6 +4,7 @@ import { NavigationHelper } from '../../utils/NavigationHelper';
 import { LearningExperienceDrawer } from '../LearningExperienceDrawer';
 
 import { ThroughputCard } from './components/ThroughputCard';
+import { HealthTab } from './tabs/HealthTab';
 import { SettingsTab } from './tabs/SettingsTab';
 
 export type { TopicConfig } from '../LearningExperienceDrawer';
@@ -11,6 +12,7 @@ export type { TopicConfig } from '../LearningExperienceDrawer';
 export class OverviewPage {
   private readonly navigation: NavigationHelper;
   private readonly page: Page;
+  public readonly healthTab: HealthTab;
   public readonly learningExperience: LearningExperienceDrawer;
   public readonly networkThroughputCard: ThroughputCard;
   public readonly settingsTab: SettingsTab;
@@ -19,6 +21,7 @@ export class OverviewPage {
   constructor(page: Page) {
     this.page = page;
     this.navigation = new NavigationHelper(page);
+    this.healthTab = new HealthTab(page);
     this.learningExperience = new LearningExperienceDrawer(page);
     this.networkThroughputCard = new ThroughputCard(page, 'Network throughput');
     this.settingsTab = new SettingsTab(page);

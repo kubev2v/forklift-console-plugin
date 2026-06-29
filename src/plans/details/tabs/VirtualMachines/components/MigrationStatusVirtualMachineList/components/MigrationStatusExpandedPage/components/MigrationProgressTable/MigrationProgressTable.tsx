@@ -10,6 +10,7 @@ import type { V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@forklift-ui/ty
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Alert,
+  AlertVariant,
   Button,
   ButtonVariant,
   Split,
@@ -24,7 +25,13 @@ import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { CUTOVER_NAME, VIRTUAL_MACHINE_CREATION_NAME } from '../../../../utils/utils';
+import {
+  CUTOVER_NAME,
+  getPipelineStepDisplayName,
+  isVmInPostMigrationSetup,
+  VIRTUAL_MACHINE_CREATION_NAME,
+  WAIT_FOR_GUEST_REBOOTS_NAME,
+} from '../../../../utils/utils';
 import { getPipelineProgressIcon } from '../../../utils/icon';
 import { getPipelineTasks } from '../../../utils/utils';
 import PipelineTasksDrawer from '../PipelineTasksDrawer';
@@ -51,6 +58,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
   const launcher = useModal();
   const navigate = useNavigate();
   const pipeline = statusVM?.pipeline ?? [];
+  const inPostMigrationSetup = isVmInPostMigrationSetup(statusVM);
 
   return (
     <Table>
@@ -66,18 +74,25 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
           const isVMCreatedAndVMCreationPipeline =
             pipe?.name === VIRTUAL_MACHINE_CREATION_NAME && vmCreated;
           const isCutoverPipeline = pipe?.name === CUTOVER_NAME;
+          const isWaitForGuestRebootsPipeline = pipe?.name === WAIT_FOR_GUEST_REBOOTS_NAME;
+          const isWaitForGuestRebootsRunning =
+            isWaitForGuestRebootsPipeline && pipe?.phase === taskStatuses.running;
           const isTasksEmpty = isEmpty(pipe?.tasks);
+          const displayName = getPipelineStepDisplayName(pipe?.name);
 
           return (
             <Tr key={pipe?.name}>
               <Td modifier="nowrap">
                 <Split hasGutter>
                   <SplitItem>{getPipelineProgressIcon(pipe)}</SplitItem>
-                  <SplitItem>{pipe?.name}</SplitItem>
+                  <SplitItem>{displayName}</SplitItem>
                 </Split>
               </Td>
               <Td>
-                {!isVMCreatedAndVMCreationPipeline && isTasksEmpty && pipe?.description}
+                {!isVMCreatedAndVMCreationPipeline &&
+                  !isWaitForGuestRebootsRunning &&
+                  isTasksEmpty &&
+                  pipe?.description}
                 {!isTasksEmpty && !isCutoverPipeline && (
                   <>
                     {t('Completed ')}
@@ -85,9 +100,9 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                       variant={ButtonVariant.link}
                       onClick={() => {
                         openDrawer(
-                          <PipelineTasksDrawer name={pipe?.name} tasks={pipe.tasks} />,
+                          <PipelineTasksDrawer name={displayName} tasks={pipe.tasks} />,
                           <h3>
-                            {pipe?.name}
+                            {displayName}
                             <HelpText>{vmName}</HelpText>
                           </h3>,
                         );
@@ -99,7 +114,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                     {t(' tasks')}
                   </>
                 )}
-                {isVMCreatedAndVMCreationPipeline && (
+                {isVMCreatedAndVMCreationPipeline && !inPostMigrationSetup && (
                   <>
                     {t('Created ')}
                     <Button
@@ -118,6 +133,21 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                       {vmName}
                     </Button>
                   </>
+                )}
+                {isVMCreatedAndVMCreationPipeline && inPostMigrationSetup && (
+                  <>{t('Created {{vmName}}', { vmName })}</>
+                )}
+                {isWaitForGuestRebootsRunning && (
+                  <Alert
+                    variant={AlertVariant.warning}
+                    title={t('Do not access this VM')}
+                    isInline
+                    isPlain
+                  >
+                    {t(
+                      'Windows VM is installing drivers and completing post-migration setup. Multiple reboots are expected.',
+                    )}
+                  </Alert>
                 )}
                 {isCutoverPipeline && pipe?.phase === taskStatuses.completed && (
                   <>{pipe?.description}</>

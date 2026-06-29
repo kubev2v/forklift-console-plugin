@@ -56,8 +56,8 @@ describe('deriveSuggestedProduct', () => {
     expect(deriveSuggestedProduct(Ontap, Ontap)).toBe(Ontap);
   });
 
-  it('returns datastoreVendor when both defined but differ', () => {
-    expect(deriveSuggestedProduct(Ontap, PureFlashArray)).toBe(Ontap);
+  it('returns storageClassVendor when both defined but differ', () => {
+    expect(deriveSuggestedProduct(Ontap, PureFlashArray)).toBe(PureFlashArray);
   });
 
   it('returns datastoreVendor when only it is defined', () => {

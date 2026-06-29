@@ -13,6 +13,30 @@ import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 import { V2_11_0, V2_12_0 } from '../../utils/version/constants';
 import { isVersionAtLeast, requireVersion } from '../../utils/version/version';
 
+test.describe('Overview Page - Health Tab', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_11_0);
+
+  test('should navigate to Health tab and verify status cards render', async ({ page }) => {
+    const overviewPage = new OverviewPage(page);
+
+    await test.step('Navigate to the Overview page', async () => {
+      await overviewPage.navigateDirectly();
+    });
+
+    await test.step('Navigate to the Health tab', async () => {
+      await overviewPage.healthTab.navigateToHealthTab();
+    });
+
+    await test.step('Verify the Health tab is selected and URL contains /health', async () => {
+      await overviewPage.healthTab.verifyHealthTabSelected();
+    });
+
+    await test.step('Verify Health and Conditions cards render with expected content', async () => {
+      await overviewPage.healthTab.verifyCardsRender();
+    });
+  });
+});
+
 test.describe(
   'Overview Page - Settings',
   {
@@ -28,12 +52,12 @@ test.describe(
       const context = await browser.newContext({ ignoreHTTPSErrors: true });
       const page = await context.newPage();
 
-      await createTestNad(page, resourceManager, {
+      await createTestNad(resourceManager, {
         namespace: MTV_NAMESPACE,
       });
 
       await page.goto(process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS ?? '/');
-      originalSettings = await initializeForkliftSettings(page);
+      originalSettings = await initializeForkliftSettings();
 
       await context.close();
     });
@@ -43,10 +67,13 @@ test.describe(
         const context = await browser.newContext({ ignoreHTTPSErrors: true });
         const page = await context.newPage();
         await page.goto(process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS ?? '/');
-        await restoreForkliftSettings(page, originalSettings);
+        const restored = await restoreForkliftSettings(originalSettings);
+        if (!restored) {
+          throw new Error('Failed to restore Forklift settings in afterAll');
+        }
         await context.close();
       }
-      await resourceManager.instantCleanup();
+      await resourceManager.cleanupAll();
     });
 
     test('should navigate to settings tab, edit settings, and verify changes', async ({ page }) => {

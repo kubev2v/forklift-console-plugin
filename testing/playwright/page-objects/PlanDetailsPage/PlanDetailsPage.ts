@@ -2,7 +2,7 @@ import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
-import { K8S_RECONCILE_TIMEOUT } from '../../utils/resource-manager/constants';
+import { K8S_RECONCILE_TIMEOUT, PLAN_READY_TIMEOUT } from '../../utils/resource-manager/constants';
 import { disableGuidedTour, isEmpty } from '../../utils/utils';
 import { InspectVirtualMachinesModal } from '../InspectVirtualMachinesModal';
 
@@ -10,6 +10,7 @@ import { AutomationTab } from './tabs/AutomationTab';
 import { DetailsTab } from './tabs/DetailsTab';
 import { HooksTab } from './tabs/HooksTab';
 import { MappingsTab } from './tabs/MappingsTab';
+import { ResourcesTab } from './tabs/ResourcesTab';
 import { VirtualMachinesTab } from './tabs/VirtualMachinesTab';
 
 export class PlanDetailsPage {
@@ -19,6 +20,7 @@ export class PlanDetailsPage {
   public readonly hooksTab: HooksTab;
   public readonly mappingsTab: MappingsTab;
   protected readonly page: Page;
+  public readonly resourcesTab: ResourcesTab;
   public readonly virtualMachinesTab: VirtualMachinesTab;
 
   constructor(page: Page) {
@@ -28,6 +30,7 @@ export class PlanDetailsPage {
     this.hooksTab = new HooksTab(page);
     this.mappingsTab = new MappingsTab(page);
     this.navigation = new NavigationHelper(page);
+    this.resourcesTab = new ResourcesTab(page);
     this.virtualMachinesTab = new VirtualMachinesTab(page);
   }
 
@@ -229,6 +232,7 @@ export class PlanDetailsPage {
     await this.verifyNavigationTabs();
     await this.detailsTab.navigateToDetailsTab();
     await this.detailsTab.verifyDetailsTab(planData);
+    await this.waitForPlanEditable();
     await this.virtualMachinesTab.navigateToVirtualMachinesTab();
     await this.virtualMachinesTab.verifyVirtualMachinesTab(planData);
   }
@@ -323,6 +327,33 @@ export class PlanDetailsPage {
         clearInterval(progressInterval);
       }
     }
+  }
+
+  /**
+   * Waits until the plan reaches a status where VM/plan edits are allowed.
+   * New plans stay in Validating (VDDK check) until reconciliation finishes.
+   */
+  async waitForPlanEditable(): Promise<void> {
+    const statusLabel = this.page
+      .getByTestId('plan-status-container')
+      .getByTestId('plan-status-label');
+    await expect(statusLabel).toHaveText(
+      /Ready for migration|Cannot start|Incomplete|Canceled|Unknown/i,
+      { timeout: K8S_RECONCILE_TIMEOUT },
+    );
+  }
+
+  /**
+   * Waits until the plan reaches 'Ready for migration'.
+   * After creation, the controller runs VDDK validation which can transiently surface
+   * 'Cannot start' before clearing. Use this instead of a soft verifyPlanStatus when
+   * the test must block until the plan is genuinely ready to start.
+   */
+  async waitForPlanReady(timeoutMs = PLAN_READY_TIMEOUT): Promise<void> {
+    const statusLabel = this.page
+      .getByTestId('plan-status-container')
+      .getByTestId('plan-status-label');
+    await expect(statusLabel).toContainText('Ready for migration', { timeout: timeoutMs });
   }
 
   async waitForPlanStatus(expectedStatus: string): Promise<void> {

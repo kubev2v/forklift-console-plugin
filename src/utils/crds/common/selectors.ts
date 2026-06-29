@@ -17,8 +17,6 @@ export const getOwnerReference = (resource: K8sResourceCommon) =>
 
 export const getKind = (resource: K8sResourceCommon) => resource?.kind;
 
-export const getApiVersion = (resource: K8sResourceCommon) => resource?.apiVersion;
-
 const getSettings = (provider: V1beta1Provider) => provider?.spec?.settings;
 
 export const getVddkInitImage = (provider: V1beta1Provider) => getSettings(provider)?.vddkInitImage;
@@ -37,7 +35,8 @@ export const isApplianceManagementEnabled = (provider: V1beta1Provider) =>
 export const getAnnotation = (resource: K8sResourceCommon, key: string): string | undefined =>
   resource?.metadata?.annotations?.[key];
 
-export const getAnnotations = (provider: V1beta1Provider) => provider?.metadata?.annotations;
+export const getAnnotations = (resource: K8sResourceCommon | undefined) =>
+  resource?.metadata?.annotations;
 
 export const getUrl = (provider: V1beta1Provider) => provider?.spec?.url;
 

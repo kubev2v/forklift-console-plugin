@@ -39,8 +39,6 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
       });
 
       await customPlanTest.step('3. Verify concern badges (warning, info)', async () => {
-        // VMs in the 'vm' folder have Warning/Information VM-level concerns only.
-        // Plan-level critical conditions (DuplicateVM etc.) are tested in step 6.
         await planDetailsPage.virtualMachinesTab.concerns.verifyConcernBadgeExists('warning');
         await planDetailsPage.virtualMachinesTab.concerns.verifyConcernBadgeExists('information');
 
@@ -52,7 +50,7 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
         await planDetailsPage.virtualMachinesTab.concerns.closeConcernPopover();
       });
 
-      await customPlanTest.step('4. Test expandable VM row for concerns details', async () => {
+      await customPlanTest.step('4. Test expandable VM row shows inspections section', async () => {
         await planDetailsPage.virtualMachinesTab.expandFirstVMDetailsRow();
         await planDetailsPage.virtualMachinesTab.concerns.verifyExpandedRowHasConcernDetails();
         await planDetailsPage.virtualMachinesTab.collapseFirstVMDetailsRow();
@@ -87,12 +85,12 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
         const planNamespace = testPlan.metadata.namespace;
 
         // Add a duplicate VM to trigger Critical:DuplicateVM condition
-        const plan = await resourceManager.fetchPlan(page, planName, planNamespace);
+        const plan = await resourceManager.fetchPlan(planName, planNamespace);
         const vms = plan?.spec?.vms ?? [];
         expect(vms.length).toBeGreaterThan(0);
 
         const [firstVm] = vms;
-        const patchedPlan = await resourceManager.patchResource(page, {
+        const patchedPlan = await resourceManager.patchResource({
           kind: 'Plan',
           resourceName: planName,
           namespace: planNamespace,
@@ -103,11 +101,9 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
         });
         expect(patchedPlan).not.toBeNull();
 
-        // Navigate to plan details and wait for critical alert (controller needs time to reconcile)
         await planDetailsPage.navigate(planName, planNamespace);
         await planDetailsPage.verifyPlanTitle(planName);
 
-        // Poll for the critical alert - controller reconciliation can take 10-30s
         await expect(planDetailsPage.criticalConcernsAlert).toBeVisible({ timeout: 60000 });
         await expect(planDetailsPage.criticalConcernsAlert).toContainText(
           'critical concerns impacting your migration plan',
