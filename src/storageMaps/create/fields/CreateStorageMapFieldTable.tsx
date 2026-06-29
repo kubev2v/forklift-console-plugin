@@ -68,7 +68,7 @@ const CreateStorageMapFieldTable: FC = () => {
         {
           isRequired: true,
           label: storageMapFieldLabels[StorageMapFieldId.SourceStorage],
-          width: 35,
+          width: 30,
         },
         {
           isRequired: true,
@@ -77,7 +77,7 @@ const CreateStorageMapFieldTable: FC = () => {
         },
         {
           label: storageMapFieldLabels[StorageMapFieldId.AccessMode],
-          width: 20,
+          width: 30,
         },
       ]}
       fieldRows={storageMappingFields.map((field, index) => ({

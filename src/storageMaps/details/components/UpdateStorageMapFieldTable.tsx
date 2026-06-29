@@ -67,7 +67,7 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
       headers={[
         {
           label: storageMapFieldLabels[StorageMapFieldId.SourceStorage],
-          width: 35,
+          width: 30,
         },
         {
           label: storageMapFieldLabels[StorageMapFieldId.TargetStorage],
@@ -75,7 +75,7 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
         },
         {
           label: storageMapFieldLabels[StorageMapFieldId.AccessMode],
-          width: 20,
+          width: 30,
         },
       ]}
       fieldRows={storageMappingFields.map((field, index) => ({

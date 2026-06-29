@@ -50,7 +50,7 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
               </Th>
             ))}
             {/* Action column for remove buttons */}
-            <Th width={10} />
+            <Th className="field-builder-table__action-col" />
           </Tr>
         </Thead>
 
