@@ -5,6 +5,9 @@ import { isEmpty } from '../../../utils/utils';
 
 export class AdditionalSettingsStep {
   private readonly page: Page;
+  readonly existingSecretRadio: Locator;
+  readonly luksSecretSelect: Locator;
+  readonly newPassphrasesRadio: Locator;
   readonly powerStateOptionAuto: Locator;
   readonly powerStateOptionOff: Locator;
   readonly powerStateOptionOn: Locator;
@@ -18,6 +21,9 @@ export class AdditionalSettingsStep {
     this.powerStateOptionOn = page.getByTestId('power-state-option-on');
     this.powerStateOptionOff = page.getByTestId('power-state-option-off');
     this.useNbdeClevisCheckbox = page.getByTestId('use-nbde-clevis-checkbox');
+    this.existingSecretRadio = page.getByTestId('use-existing-luks-secret-radio');
+    this.newPassphrasesRadio = page.getByTestId('use-new-passphrases-radio');
+    this.luksSecretSelect = page.getByTestId('luks-secret-select');
   }
 
   async fillAndComplete(
@@ -29,6 +35,9 @@ export class AdditionalSettingsStep {
     }
     if (additionalPlanSettings?.useNbdeClevis) {
       await this.useNbdeClevisCheckbox.check();
+    }
+    if (additionalPlanSettings?.existingLUKSSecretName) {
+      await this.selectExistingLUKSSecret(additionalPlanSettings.existingLUKSSecretName);
     }
     if (additionalPlanSettings?.instanceTypes && !isEmpty(additionalPlanSettings.instanceTypes)) {
       for (const [vmName, label] of Object.entries(additionalPlanSettings.instanceTypes)) {
@@ -53,6 +62,12 @@ export class AdditionalSettingsStep {
 
   powerStateOption(state: 'on' | 'off' | 'auto'): Locator {
     return this.page.getByTestId(`power-state-option-${state}`);
+  }
+
+  async selectExistingLUKSSecret(secretName: string): Promise<void> {
+    await this.existingSecretRadio.click();
+    await this.luksSecretSelect.click();
+    await this.page.getByRole('option', { name: secretName, exact: true }).click();
   }
 
   async selectInstanceTypeByLabel(vmName: string, optionLabel: string): Promise<void> {

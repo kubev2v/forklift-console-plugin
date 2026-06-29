@@ -17,7 +17,11 @@ import {
   HooksFormFieldId,
   MigrationHookFieldId,
 } from '../steps/migration-hooks/constants';
-import { defaultDiskPassPhrase, OtherSettingsFormFieldId } from '../steps/other-settings/constants';
+import {
+  defaultDiskPassPhrase,
+  DiskDecryptionType,
+  OtherSettingsFormFieldId,
+} from '../steps/other-settings/constants';
 import { CreatePlanStorageMapFieldId, StorageMapType } from '../steps/storage-map/constants';
 import { defaultVms, VmFormFieldId } from '../steps/virtual-machines/constants';
 import type { CreatePlanFormData } from '../types';
@@ -52,6 +56,8 @@ export const getDefaultFormValues = (
     [NetworkMapFieldId.NetworkMap]: [defaultNetMapping],
     [NetworkMapFieldId.NetworkMapType]: NetworkMapType.Existing,
     [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [defaultDiskPassPhrase],
+    [OtherSettingsFormFieldId.DiskDecryptionType]: DiskDecryptionType.New,
+    [OtherSettingsFormFieldId.ExistingLUKSSecret]: undefined,
     [OtherSettingsFormFieldId.InstanceTypes]: {},
     [OtherSettingsFormFieldId.MigrateSharedDisks]: true,
     [OtherSettingsFormFieldId.PreserveStaticIps]: true,

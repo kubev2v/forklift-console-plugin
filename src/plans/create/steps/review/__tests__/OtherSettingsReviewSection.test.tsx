@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { GeneralFormFieldId } from '../../general-information/constants';
-import { OtherSettingsFormFieldId } from '../../other-settings/constants';
+import { DiskDecryptionType, OtherSettingsFormFieldId } from '../../other-settings/constants';
 import OtherSettingsReviewSection from '../OtherSettingsReviewSection';
 
 const mockUseCreatePlanFormContext = jest.fn();
@@ -23,16 +23,22 @@ const TestWrapper = ({
   sourceProvider,
   nbdeClevis = false,
   diskPassPhrases = [],
+  diskDecryptionType = DiskDecryptionType.New,
+  existingLUKSSecret,
 }: {
   sourceProvider: any;
   nbdeClevis?: boolean;
   diskPassPhrases?: any[];
+  diskDecryptionType?: DiskDecryptionType;
+  existingLUKSSecret?: any;
 }) => {
   const methods = useForm({
     defaultValues: {
       [GeneralFormFieldId.SourceProvider]: sourceProvider,
       [OtherSettingsFormFieldId.NBDEClevis]: nbdeClevis,
       [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: diskPassPhrases,
+      [OtherSettingsFormFieldId.DiskDecryptionType]: diskDecryptionType,
+      [OtherSettingsFormFieldId.ExistingLUKSSecret]: existingLUKSSecret,
       [OtherSettingsFormFieldId.TransferNetwork]: null,
       [OtherSettingsFormFieldId.PreserveStaticIps]: true,
       [OtherSettingsFormFieldId.RootDevice]: '',
@@ -72,12 +78,14 @@ describe('OtherSettingsReviewSection', () => {
     expect(screen.getByTestId('review-nbde-clevis')).toHaveTextContent('Enabled');
   });
 
-  it('shows passphrases when NBDE is disabled', () => {
+  it('shows passphrase count when NBDE is disabled', () => {
     const diskPassPhrases = [{ value: 'test-pass' }];
     render(<TestWrapper sourceProvider={vsphereProvider} diskPassPhrases={diskPassPhrases} />);
 
     expect(screen.getByText('Disk decryption passphrases')).toBeInTheDocument();
-    expect(screen.getByText('test-pass')).toBeInTheDocument();
+    expect(screen.getByTestId('review-disk-decryption-passphrases')).toHaveTextContent(
+      'passphrase configured',
+    );
   });
 
   it('hides passphrases when NBDE is enabled', () => {
@@ -105,5 +113,35 @@ describe('OtherSettingsReviewSection', () => {
     render(<TestWrapper sourceProvider={nonVsphereProvider} />);
 
     expect(screen.queryByText('Use NBDE/Clevis')).not.toBeInTheDocument();
+  });
+
+  it('shows existing secret name when diskDecryptionType is Existing', () => {
+    const existingSecret = { metadata: { name: 'my-luks-secret' } };
+    render(
+      <TestWrapper
+        sourceProvider={vsphereProvider}
+        diskDecryptionType={DiskDecryptionType.Existing}
+        existingLUKSSecret={existingSecret}
+      />,
+    );
+
+    expect(screen.getByTestId('review-existing-luks-secret')).toHaveTextContent('my-luks-secret');
+    expect(screen.queryByText('Disk decryption passphrases')).not.toBeInTheDocument();
+  });
+
+  it('shows passphrase count when diskDecryptionType is New', () => {
+    const diskPassPhrases = [{ value: 'pass-1' }];
+    render(
+      <TestWrapper
+        sourceProvider={vsphereProvider}
+        diskDecryptionType={DiskDecryptionType.New}
+        diskPassPhrases={diskPassPhrases}
+      />,
+    );
+
+    expect(screen.getByTestId('review-disk-decryption-passphrases')).toHaveTextContent(
+      'passphrase configured',
+    );
+    expect(screen.queryByTestId('review-existing-luks-secret')).not.toBeInTheDocument();
   });
 });
