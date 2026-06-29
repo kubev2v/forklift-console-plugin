@@ -120,6 +120,7 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
                 targetStorages[0]?.name ??
                 defaultStorageMapping[CreatePlanStorageMapFieldId.TargetStorage].name,
             },
+            [StorageMapFieldId.AccessMode]: defaultStorageMapping[StorageMapFieldId.AccessMode],
           });
         },
       }}
