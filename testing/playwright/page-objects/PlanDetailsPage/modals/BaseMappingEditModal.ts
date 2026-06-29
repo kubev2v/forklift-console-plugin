@@ -128,10 +128,34 @@ export abstract class BaseMappingEditModal extends BaseModal {
   async selectDifferentTargetAtIndex(index: number): Promise<string> {
     const currentTarget = await this.getTargetAtIndex(index);
     const targetSelect = this.targetSelectLocator(index);
-    await this.expandAndSelectNth(targetSelect, 1);
-    const newValue = await this.getTargetAtIndex(index);
-    expect(newValue).not.toBe(currentTarget);
-    return newValue;
+
+    for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
+      try {
+        const listbox = await this.openDropdown(targetSelect);
+        const options = listbox.locator('[role="option"]:enabled');
+        const count = await options.count();
+
+        for (let i = 0; i < count; i += 1) {
+          const option = options.nth(i);
+          const optionText = ((await option.textContent()) ?? '').trim();
+          if (optionText !== currentTarget) {
+            await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
+            await expect(targetSelect).toContainText(optionText);
+            return optionText;
+          }
+        }
+
+        throw new Error(
+          `selectDifferentTargetAtIndex: no alternative option found at row ${index} (current: "${currentTarget}")`,
+        );
+      } catch (err) {
+        if (attempt === MAX_DROPDOWN_ATTEMPTS - 1) {
+          throw err;
+        }
+      }
+    }
+
+    throw new Error(`selectDifferentTargetAtIndex: exhausted all attempts at row ${index}`);
   }
 
   async selectFirstAvailableSourceAtIndex(index: number): Promise<string> {
