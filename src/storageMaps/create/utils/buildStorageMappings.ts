@@ -65,10 +65,16 @@ export const buildStorageMappings = (
     const isEc2Provider = sourceProvider?.spec?.type === PROVIDER_TYPES.ec2;
     const isGlanceStorage = sourceStorage.name === STORAGE_NAMES.GLANCE;
 
+    const accessMode = mapping[StorageMapFieldId.AccessMode];
+    const destination = {
+      ...(accessMode && { accessMode }),
+      storageClass: targetStorage.name,
+    };
+
     // OpenShift provider: uses name-based mapping
     if (isOpenShiftProvider) {
       const baseMapping = {
-        destination: { storageClass: targetStorage.name },
+        destination,
         source: {
           name: sourceStorage.name.replace(/^\//gu, ''),
         },
@@ -79,7 +85,7 @@ export const buildStorageMappings = (
     // EC2 provider: backend FindStorageClass matches Source.Name against EBS volume type
     if (isEc2Provider) {
       const baseMapping = {
-        destination: { storageClass: targetStorage.name },
+        destination,
         source: {
           name: sourceStorage.name,
         },
@@ -90,7 +96,7 @@ export const buildStorageMappings = (
     // Glance storage: uses name-based mapping
     if (isGlanceStorage) {
       const baseMapping = {
-        destination: { storageClass: targetStorage.name },
+        destination,
         source: {
           name: STORAGE_NAMES.GLANCE,
         },
@@ -101,7 +107,7 @@ export const buildStorageMappings = (
     // Default storage mapping: uses id-based mapping
     if (!isOpenShiftProvider && !isEc2Provider && !isGlanceStorage) {
       const defaultBaseMapping = {
-        destination: { storageClass: targetStorage.name },
+        destination,
         source: {
           id: sourceStorage.id,
         },
@@ -169,6 +175,7 @@ export const getStorageMappingValues = (
     };
 
     const storageMapping: StorageMapping = {
+      [StorageMapFieldId.AccessMode]: destination.accessMode ?? 'ReadWriteOnce',
       [StorageMapFieldId.SourceStorage]: sourceStorage,
       [StorageMapFieldId.TargetStorage]: targetStorage,
     };

@@ -13,6 +13,7 @@ import {
   type TargetStorage,
 } from '@utils/storage/types';
 
+import AccessModeField from '../../components/AccessModeField';
 import OffloadStorageIndexedForm from '../../components/OffloadStorageIndexedForm/OffloadStorageIndexedForm';
 import SourceStorageField from '../../components/SourceStorageField';
 import TargetStorageField from '../../components/TargetStorageField';
@@ -66,11 +67,15 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
       headers={[
         {
           label: storageMapFieldLabels[StorageMapFieldId.SourceStorage],
-          width: 45,
+          width: 35,
         },
         {
           label: storageMapFieldLabels[StorageMapFieldId.TargetStorage],
-          width: 45,
+          width: 35,
+        },
+        {
+          label: storageMapFieldLabels[StorageMapFieldId.AccessMode],
+          width: 20,
         },
       ]}
       fieldRows={storageMappingFields.map((field, index) => ({
@@ -91,6 +96,11 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
             fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
             targetStorages={targetStorages}
             testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
+          />,
+          <AccessModeField
+            fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
+            targetStorages={targetStorages}
+            targetStorageFieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
           />,
         ],
       }))}

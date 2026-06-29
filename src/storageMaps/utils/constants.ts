@@ -4,6 +4,7 @@ import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 import { OffloadPlugin, StorageVendorProduct } from './types';
 
 export const defaultStorageMapping: StorageMapping = {
+  [StorageMapFieldId.AccessMode]: 'ReadWriteOnce',
   [StorageMapFieldId.OffloadPlugin]: '',
   [StorageMapFieldId.SourceStorage]: { name: '' },
   [StorageMapFieldId.StorageProduct]: '',
@@ -12,6 +13,7 @@ export const defaultStorageMapping: StorageMapping = {
 };
 
 export const storageMapFieldLabels: Partial<Record<StorageMapFieldId, ReturnType<typeof t>>> = {
+  [StorageMapFieldId.AccessMode]: t('Access mode'),
   [StorageMapFieldId.MapName]: t('Storage map name'),
   [StorageMapFieldId.OffloadPlugin]: t('Offload plugin'),
   [StorageMapFieldId.Project]: t('Project'),

@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useFieldArray, useWatch } from 'react-hook-form';
+import AccessModeField from 'src/storageMaps/components/AccessModeField';
 import GroupedSourceStorageField from 'src/storageMaps/components/GroupedSourceStorageField';
 import OffloadStorageRow from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageRow';
 import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
@@ -13,13 +14,40 @@ import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import type { InventoryStorage } from '@utils/hooks/useStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
-import type { TargetStorage } from '@utils/storage/types';
+import { StorageMapFieldId, type TargetStorage } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { CreatePlanStorageMapFieldId, createPlanStorageMapFieldLabels } from './constants';
 import { validatePlanStorageMaps } from './utils';
+
+const getHeaders = (isIscsi?: boolean) =>
+  isIscsi
+    ? [
+        {
+          label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.TargetStorage],
+          width: 45 as const,
+        },
+        {
+          label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.AccessMode],
+          width: 45 as const,
+        },
+      ]
+    : [
+        {
+          label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.SourceStorage],
+          width: 30 as const,
+        },
+        {
+          label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.TargetStorage],
+          width: 30 as const,
+        },
+        {
+          label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.AccessMode],
+          width: 30 as const,
+        },
+      ];
 
 type CreatePlanStorageMapFieldTableProps = {
   targetStorages: TargetStorage[];
@@ -67,27 +95,9 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
     },
   });
 
-  const headers = isIscsi
-    ? [
-        {
-          label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.TargetStorage],
-          width: 90 as const,
-        },
-      ]
-    : [
-        {
-          label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.SourceStorage],
-          width: 45 as const,
-        },
-        {
-          label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.TargetStorage],
-          width: 45 as const,
-        },
-      ];
-
   return (
     <FieldBuilderTable
-      headers={headers}
+      headers={getHeaders(isIscsi)}
       fieldRows={storageMappingFields.map((field, index) => ({
         ...field,
         ...(sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere &&
@@ -108,6 +118,15 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
                 key={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
                 targetStorages={targetStorages}
                 testId="target-storage-select"
+              />,
+              <AccessModeField
+                fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
+                key={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
+                targetStorages={targetStorages}
+                targetStorageFieldId={getStorageMapFieldId(
+                  CreatePlanStorageMapFieldId.TargetStorage,
+                  index,
+                )}
               />,
             ]
           : [
@@ -135,6 +154,15 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
                   testId="target-storage-select"
                 />
               ),
+              <AccessModeField
+                fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
+                key={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
+                targetStorages={targetStorages}
+                targetStorageFieldId={getStorageMapFieldId(
+                  CreatePlanStorageMapFieldId.TargetStorage,
+                  index,
+                )}
+              />,
             ],
       }))}
       addButton={{
@@ -153,6 +181,7 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
                 targetStorages[0]?.name ??
                 defaultStorageMapping[CreatePlanStorageMapFieldId.TargetStorage].name,
             },
+            [StorageMapFieldId.AccessMode]: defaultStorageMapping[StorageMapFieldId.AccessMode],
           });
         },
       }}
