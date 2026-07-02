@@ -1,4 +1,4 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useMemo } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { networkMapFieldLabels } from 'src/networkMaps/utils/constants';
 import { getNetworkMapFieldId } from 'src/networkMaps/utils/getNetworkMapFieldId';
@@ -9,9 +9,12 @@ import type { MappingValue } from 'src/plans/create/types';
 import { hasPodNetworkMappings } from 'src/plans/create/utils/hasMultiplePodNetworkMappings';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
+import MultiNicInfoAlert from '@components/mappings/network-mappings/MultiNicInfoAlert';
 import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
-import { isSameSourceNetwork } from '@components/mappings/network-mappings/utils/utils';
+import { getMultiNicSourceNetworks } from '@components/mappings/network-mappings/utils/getMultiNicSourceNetworks';
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
+import { Stack } from '@patternfly/react-core';
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { PlanNetworkEditFormValues } from '../utils/types';
@@ -70,94 +73,87 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
     }, 0);
   }, [trigger]);
 
+  const vmsList = Object.values(vms);
+  const networkNames = useMemo(
+    () =>
+      new Map(
+        [...usedSourceNetworks, ...otherSourceNetworks]
+          .filter((net) => net.id)
+          .map((net) => [net.id!, net.name]),
+      ),
+    [usedSourceNetworks, otherSourceNetworks],
+  );
+  const multiNicNetworkIds = useMemo(() => {
+    const multiNicMap = getMultiNicSourceNetworks(vmsList, oVirtNicProfiles);
+    return new Set(multiNicMap.keys());
+  }, [vmsList, oVirtNicProfiles]);
+
   return (
-    <FieldBuilderTable
-      headers={[
-        {
-          label: networkMapFieldLabels[NetworkMapFieldId.SourceNetwork],
-          width: 45,
-        },
-        {
-          label: networkMapFieldLabels[NetworkMapFieldId.TargetNetwork],
-          width: 45,
-        },
-      ]}
-      fieldRows={networkMappingFields.map((field, index) => ({
-        ...field,
-        inputs: [
-          <SourceNetworkField
-            fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
-            key={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
-            usedSourceNetworks={usedSourceNetworks}
-            otherSourceNetworks={otherSourceNetworks}
-          />,
-          <TargetNetworkField
-            fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-            key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-            targetNetworks={targetNetworks}
-            showIgnoreNetworkOption
-          />,
-        ],
-      }))}
-      addButton={{
-        isDisabled:
-          [...usedSourceNetworks, ...otherSourceNetworks].length === networkMappingFields.length ||
-          isLoading ||
-          Boolean(loadError),
-        label: t('Add mapping'),
-        onClick: async () => {
-          const missingNetwork = usedSourceNetworks.find(
-            (sourceNetwork) =>
-              !networkMappingFields.some((netMapping) =>
-                isSameSourceNetwork(netMapping.sourceNetwork, sourceNetwork),
-              ),
-          );
+    <Stack hasGutter>
+      <MultiNicInfoAlert
+        vms={vmsList}
+        oVirtNicProfiles={oVirtNicProfiles}
+        networkNames={networkNames}
+      />
+      <FieldBuilderTable
+        headers={[
+          {
+            label: networkMapFieldLabels[NetworkMapFieldId.SourceNetwork],
+            width: 45,
+          },
+          {
+            label: networkMapFieldLabels[NetworkMapFieldId.TargetNetwork],
+            width: 45,
+          },
+        ]}
+        fieldRows={networkMappingFields.map((field, index) => ({
+          ...field,
+          inputs: [
+            <SourceNetworkField
+              fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
+              key={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
+              usedSourceNetworks={usedSourceNetworks}
+              otherSourceNetworks={otherSourceNetworks}
+            />,
+            <TargetNetworkField
+              fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
+              key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
+              targetNetworks={targetNetworks}
+              showIgnoreNetworkOption
+              hideNonNadTargets={multiNicNetworkIds.has(field.sourceNetwork?.id ?? '')}
+            />,
+          ],
+        }))}
+        addButton={{
+          isDisabled: isLoading || Boolean(loadError),
+          label: t('Add mapping'),
+          onClick: async () => {
+            append({
+              [NetworkMapFieldId.SourceNetwork]: defaultNetMapping[NetworkMapFieldId.SourceNetwork],
+              [NetworkMapFieldId.TargetNetwork]: hasPodNetworkMappings(networkMappings)
+                ? ignoreNetMapping[NetworkMapFieldId.TargetNetwork]
+                : defaultNetMapping[NetworkMapFieldId.TargetNetwork],
+            });
 
-          append({
-            [NetworkMapFieldId.SourceNetwork]:
-              missingNetwork ?? defaultNetMapping[NetworkMapFieldId.SourceNetwork],
-            [NetworkMapFieldId.TargetNetwork]: hasPodNetworkMappings(networkMappings)
-              ? ignoreNetMapping[NetworkMapFieldId.TargetNetwork]
-              : defaultNetMapping[NetworkMapFieldId.TargetNetwork],
-          });
-
-          await trigger();
-        },
-      }}
-      removeButton={{
-        isDisabled: (index) => {
-          if (networkMappingFields.length <= 1) {
-            return true;
-          }
-          return usedSourceNetworks.some((network) =>
-            isSameSourceNetwork(network, networkMappingFields[index].sourceNetwork),
-          );
-        },
-        onClick: (index) => {
-          if (
-            networkMappingFields.length > 1 &&
-            !usedSourceNetworks.some((network) =>
-              isSameSourceNetwork(network, networkMappingFields[index].sourceNetwork),
-            )
-          ) {
-            remove(index);
-          }
-        },
-        tooltip: (index) => {
-          if (networkMappingFields.length <= 1) {
-            return t('At least one network mapping must be provided.');
-          }
-          if (
-            usedSourceNetworks.some((network) =>
-              isSameSourceNetwork(network, networkMappingFields[index].sourceNetwork),
-            )
-          ) {
-            return t('All networks detected on the selected VMs require a mapping.');
-          }
-          return undefined;
-        },
-      }}
-    />
+            await trigger();
+          },
+        }}
+        removeButton={{
+          isDisabled: () => networkMappingFields.length <= 1,
+          onClick: (index) => {
+            if (networkMappingFields.length > 1) {
+              remove(index);
+            }
+          },
+          tooltip: (index) => {
+            if (networkMappingFields.length <= 1) {
+              return t('At least one network mapping must be provided.');
+            }
+            return undefined;
+          },
+        }}
+      />
+    </Stack>
   );
 };
 

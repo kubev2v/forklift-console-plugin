@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import type { InventoryNetwork } from 'src/utils/hooks/useNetworks';
 
@@ -21,6 +21,10 @@ import type { CreateNetworkMapFormData } from '../types';
  * conflicts (multiple NICs on the same switch with different VLANs) are only
  * detected in the plan wizard flow where selected VMs are known.
  * See getHypervVlanQualifiedNetworks() in plans/create/steps/network-map/utils.ts.
+ *
+ * Duplicate source network selection is allowed to support NAD pool mapping
+ * (MTV-5511): multiple mapping rows with the same source network, each
+ * pointing to a different destination NAD.
  */
 type InventorySourceNetworkFieldProps = {
   fieldId: string;
@@ -37,7 +41,6 @@ const InventorySourceNetworkField: FC<InventorySourceNetworkFieldProps> = ({
     trigger,
   } = useFormContext<CreateNetworkMapFormData>();
   const { t } = useForkliftTranslation();
-  const networkMappings = useWatch({ control, name: NetworkMapFieldId.NetworkMap });
 
   const duplicateLabels = getDuplicateValues(sourceNetworks, (network) =>
     getMapResourceLabel(network),
@@ -79,10 +82,6 @@ const InventorySourceNetworkField: FC<InventorySourceNetworkFieldProps> = ({
                       key={network.id}
                       value={networkValue}
                       description={duplicateLabels.has(networkLabel) ? network.id : undefined}
-                      isDisabled={networkMappings?.some(
-                        (mapping: NetworkMapping) =>
-                          mapping[NetworkMapFieldId.SourceNetwork].id === network.id,
-                      )}
                     >
                       {networkLabel}
                     </SelectOption>

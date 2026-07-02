@@ -1,6 +1,4 @@
-import { NetworkMapFieldId } from 'src/networkMaps/utils/types';
-
-import { isNetworkMappingDisabled, isSameSourceNetwork } from '../utils';
+import { isSameSourceNetwork } from '../utils';
 
 describe('isSameSourceNetwork', () => {
   it('matches entries with same id and no vlan', () => {
@@ -49,41 +47,5 @@ describe('isSameSourceNetwork', () => {
         { id: 'net-1', name: 'Net (VLAN 100)', vlan: '100' },
       ),
     ).toBe(false);
-  });
-});
-
-describe('isNetworkMappingDisabled', () => {
-  it('returns true when the network is already mapped (no vlan)', () => {
-    const mappings = [
-      {
-        [NetworkMapFieldId.SourceNetwork]: { id: 'net-1', name: 'Net' },
-        [NetworkMapFieldId.TargetNetwork]: { id: 'target', name: 'Target' },
-      },
-    ];
-    expect(isNetworkMappingDisabled(mappings, { id: 'net-1', name: 'Net' })).toBe(true);
-  });
-
-  it('returns false when a different vlan of same network is mapped', () => {
-    const mappings = [
-      {
-        [NetworkMapFieldId.SourceNetwork]: { id: 'net-1', name: 'Net (VLAN 100)', vlan: '100' },
-        [NetworkMapFieldId.TargetNetwork]: { id: 'target', name: 'Target' },
-      },
-    ];
-    expect(
-      isNetworkMappingDisabled(mappings, { id: 'net-1', name: 'Net (VLAN 200)', vlan: '200' }),
-    ).toBe(false);
-  });
-
-  it('returns true when the same vlan of same network is mapped', () => {
-    const mappings = [
-      {
-        [NetworkMapFieldId.SourceNetwork]: { id: 'net-1', name: 'Net (VLAN 100)', vlan: '100' },
-        [NetworkMapFieldId.TargetNetwork]: { id: 'target', name: 'Target' },
-      },
-    ];
-    expect(
-      isNetworkMappingDisabled(mappings, { id: 'net-1', name: 'Net (VLAN 100)', vlan: '100' }),
-    ).toBe(true);
   });
 });

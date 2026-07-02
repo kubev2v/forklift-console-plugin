@@ -78,11 +78,7 @@ const CreateNetworkMapFieldTable: FC = () => {
       }))}
       addButton={{
         isDisabled:
-          isEmpty(sourceNetworks) ||
-          sourceNetworks.length === networkMappingFields.length ||
-          sourceNetworksLoading ||
-          isSubmitting ||
-          Boolean(loadError),
+          isEmpty(sourceNetworks) || sourceNetworksLoading || isSubmitting || Boolean(loadError),
         label: t('Add mapping'),
         onClick: () => {
           append(defaultNetworkMapping);

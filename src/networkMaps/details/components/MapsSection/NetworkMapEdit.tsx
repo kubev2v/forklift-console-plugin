@@ -132,7 +132,6 @@ const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
           addButton={{
             isDisabled:
               isEmpty(sourceNetworks) ||
-              sourceNetworks.length === networkMappingFields.length ||
               sourceNetworksLoading ||
               targetNetworksLoading ||
               isSubmitting ||
