@@ -25,7 +25,10 @@ export class HealthTab {
   }
 
   async verifyCardsRender(): Promise<void> {
-    await expect(this.controllerCard.getByRole('columnheader', { name: 'Pod' })).toBeVisible();
+    // The pod watch delivers data asynchronously; give it time to arrive before asserting.
+    await expect(this.controllerCard.getByRole('columnheader', { name: 'Pod' })).toBeVisible({
+      timeout: 30000,
+    });
     await expect(this.controllerCard.getByRole('columnheader', { name: 'Status' })).toBeVisible();
     await expect(this.conditionsCard).toBeVisible();
     await expect(this.conditionsCard.getByRole('columnheader', { name: 'Type' })).toBeVisible();

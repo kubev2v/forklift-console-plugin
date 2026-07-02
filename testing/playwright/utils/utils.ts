@@ -1,15 +1,18 @@
 import type { Page } from '@playwright/test';
 
-export const disableGuidedTour = async (page: Page) => {
-  const skipButton = page.getByRole('button', { name: /skip tour/i });
+export const disableGuidedTour = async (page: Page): Promise<void> => {
+  // Use .first() to avoid strict-mode crashes if two skip buttons are briefly in the DOM.
+  const skipButton = page.getByRole('button', { name: /skip tour/i }).first();
 
   try {
-    // Wait for button to appear, click it, then wait for modal to close
-    await skipButton.waitFor({ state: 'visible', timeout: 5000 });
-    await skipButton.click();
-    await skipButton.waitFor({ state: 'hidden' });
+    // Short timeout: the tour either shows quickly or not at all.
+    await skipButton.waitFor({ state: 'visible', timeout: 2000 });
+    // force: true bypasses animation-stability checks that cause the default
+    // actionTimeout (15 s) to be consumed when the button is mid-animation.
+    await skipButton.click({ force: true, timeout: 3000 });
+    await skipButton.waitFor({ state: 'hidden', timeout: 3000 });
   } catch {
-    // Modal not showing
+    // Tour modal not present on this build — nothing to dismiss.
   }
 };
 

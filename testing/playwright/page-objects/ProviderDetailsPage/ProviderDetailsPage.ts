@@ -151,7 +151,11 @@ export class ProviderDetailsPage {
       await expect(this.page.getByTestId('product-detail-item')).toContainText('');
     }
 
-    if (providerData.type !== ProviderType.OVA && providerData.type !== ProviderType.EC2) {
+    if (
+      providerData.type !== ProviderType.OVA &&
+      providerData.type !== ProviderType.EC2 &&
+      providerData.type !== ProviderType.HYPERV
+    ) {
       await expect(this.page.getByTestId('credentials-detail-item')).toContainText('');
     }
 

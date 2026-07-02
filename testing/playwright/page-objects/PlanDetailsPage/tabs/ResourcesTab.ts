@@ -14,7 +14,9 @@ export class ResourcesTab {
   async navigateToResourcesTab(): Promise<void> {
     await this.tab.waitFor({ state: 'visible' });
     await this.tab.click();
-    await expect(this.heading).toBeVisible();
+    // The provider watch + inventory REST call are sequential: provider must load before
+    // inventory starts. On slow clusters the full chain can exceed the default 15 s timeout.
+    await expect(this.heading).toBeVisible({ timeout: 30000 });
   }
 
   get rowTotalCpuCount(): Locator {

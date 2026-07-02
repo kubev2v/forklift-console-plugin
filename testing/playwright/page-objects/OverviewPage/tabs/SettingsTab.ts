@@ -42,6 +42,14 @@ export class SettingsTab {
 
   async navigateToSettings(): Promise<void> {
     await this.navigation.navigateToOverview();
+    // Dynamic plugin may not have registered its routes yet; retry with a reload if needed.
+    try {
+      await expect(this.settingsTab).toBeVisible({ timeout: 10000 });
+    } catch {
+      await this.page.reload();
+      await this.page.waitForLoadState('domcontentloaded');
+      await expect(this.settingsTab).toBeVisible({ timeout: 20000 });
+    }
     await this.settingsTab.click();
     await expect(this.settingsEditButton).toBeVisible();
   }

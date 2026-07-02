@@ -4,6 +4,8 @@ import type { JsonPatchOperation } from '../../utils/resource-manager/ResourceMa
 import { ResourcePatcher } from '../../utils/resource-manager/ResourcePatcher';
 
 const FIELD_MAP = {
+  aapTokenSecretName: 'aap_token_secret_name',
+  aapUrl: 'aap_url',
   controllerMemoryLimit: 'controller_container_limits_memory',
   cpuLimit: 'controller_container_limits_cpu',
   inventoryMemoryLimit: 'inventory_container_limits_memory',
@@ -13,6 +15,8 @@ const FIELD_MAP = {
 } as const;
 
 export const KNOWN_SETTINGS = {
+  aapTokenSecretName: '',
+  aapUrl: '',
   controllerMemoryLimit: '800Mi',
   cpuLimit: '500m',
   inventoryMemoryLimit: '1000Mi',

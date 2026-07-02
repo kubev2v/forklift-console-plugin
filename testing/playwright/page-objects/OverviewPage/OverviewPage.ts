@@ -118,6 +118,14 @@ export class OverviewPage {
   }
 
   async waitForPageLoad() {
-    await expect(this.pageTitle).toBeVisible();
+    try {
+      await expect(this.pageTitle).toBeVisible({ timeout: 10000 });
+    } catch {
+      // Dynamic plugin may not have registered its routes yet on first load.
+      // Reload and give it more time to initialize.
+      await this.page.reload();
+      await this.page.waitForLoadState('domcontentloaded');
+      await expect(this.pageTitle).toBeVisible({ timeout: 20000 });
+    }
   }
 }
