@@ -109,6 +109,7 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
         });
         await page.waitForSelector('h1', { timeout: PAGE_LOAD_TIMEOUT_MS });
 
+        // toContainText is the actual i18n assertion; toBeVisible alone wouldn't check the translated label.
         const createButton = page.getByTestId('add-provider-button');
         await expect(createButton).toBeVisible({ timeout: ELEMENT_VISIBLE_TIMEOUT_MS });
         await expect(createButton).toContainText(locale['Create provider']);
