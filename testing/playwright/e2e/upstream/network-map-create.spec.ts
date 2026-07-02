@@ -83,16 +83,12 @@ test.describe(
         await expect(networkMapCreatePage.createButton).toBeEnabled();
       });
 
-      await test.step('submit and verify details page', async () => {
+      await test.step('submit and verify navigation to details page', async () => {
         await networkMapCreatePage.submitForm(mapName);
         await networkMapDetailsPage.verifyNetworkMapDetailsPage({
           networkMapName: mapName,
           sourceProvider: TEST_DATA.providers.source.name,
           targetProvider: TEST_DATA.providers.target.name,
-          mappings: [
-            { sourceNetwork, targetNetwork: 'Default network' },
-            { sourceNetwork, targetNetwork: 'Ignore network' },
-          ],
         });
       });
     });

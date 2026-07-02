@@ -1,7 +1,7 @@
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
-export type MultiNicNetwork = { name: string; maxNicCount: number };
+export type MultiNicNetwork = { maxNicCount: number; name: string };
 
 type VmWithNics = ProviderVirtualMachine & {
   nics?: { network?: { id?: string }; profile?: string }[];
@@ -22,6 +22,7 @@ const getVmNicNetworkIds = (
 ): string[] => {
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere:
+    case PROVIDER_TYPES.hyperv:
       return (
         (vm as VmWithNics)?.nics
           ?.map((nic) => nic?.network?.id)
@@ -36,15 +37,13 @@ const getVmNicNetworkIds = (
           return profileNetwork ?? nic?.profile;
         }) ?? []
       ).filter((id): id is string => Boolean(id));
-    case PROVIDER_TYPES.hyperv:
-      return (
-        (vm as VmWithNics)?.nics
-          ?.map((nic) => nic?.network?.id)
-          .filter((id): id is string => Boolean(id)) ?? []
-      );
     case PROVIDER_TYPES.openstack:
     case PROVIDER_TYPES.openshift:
     case PROVIDER_TYPES.ova:
+      // These providers either can't have duplicate NICs on the same network
+      // (OpenStack uses a map keyed by network name) or use a different data
+      // model (OCP, OVA). EC2 is excluded because same-subnet multi-ENI is
+      // uncommon and the provider uses a separate code path.
       return [];
     default:
       return [];

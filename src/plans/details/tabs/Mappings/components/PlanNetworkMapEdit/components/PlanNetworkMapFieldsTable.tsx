@@ -72,7 +72,7 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
     }, 0);
   }, [trigger]);
 
-  const vmsList = Object.values(vms);
+  const vmsList = useMemo(() => Object.values(vms), [vms]);
   const networkNames = useMemo(
     () =>
       new Map(

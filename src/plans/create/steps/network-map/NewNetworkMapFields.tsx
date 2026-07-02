@@ -1,4 +1,4 @@
-import { type FC, useEffect, useMemo, useRef } from 'react';
+import { type FC, useEffect, useMemo } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
@@ -27,7 +27,7 @@ import { filterTargetNetworksByProject, getSourceNetworkValues } from './utils';
 
 const NewNetworkMapFields: FC = () => {
   const { t } = useForkliftTranslation();
-  const { control, getFieldState } = useCreatePlanFormContext();
+  const { control, getFieldState, setValue } = useCreatePlanFormContext();
   const { network } = useCreatePlanWizardContext();
   const [targetProject, vms, networkMap] = useWatch({
     control,
@@ -64,9 +64,6 @@ const NewNetworkMapFields: FC = () => {
     usedSources: usedSourceNetworks,
   });
 
-  const { setValue } = useCreatePlanFormContext();
-  const clearedMultiNicRef = useRef(new Set<string>());
-
   useEffect(() => {
     if (isLoading || !networkMap?.length) return;
 
@@ -75,17 +72,11 @@ const NewNetworkMapFields: FC = () => {
     if (multiNicIds.size === 0) return;
 
     let updated = false;
-    const updatedMap = networkMap.map((mapping, index) => {
+    const updatedMap = networkMap.map((mapping) => {
       const sourceId = mapping[NetworkMapFieldId.SourceNetwork]?.id ?? '';
       const targetName = mapping[NetworkMapFieldId.TargetNetwork]?.name;
-      const key = `${index}-${sourceId}`;
 
-      if (
-        multiNicIds.has(sourceId) &&
-        targetName === DEFAULT_NETWORK &&
-        !clearedMultiNicRef.current.has(key)
-      ) {
-        clearedMultiNicRef.current.add(key);
+      if (multiNicIds.has(sourceId) && targetName === DEFAULT_NETWORK) {
         updated = true;
         return { ...mapping, [NetworkMapFieldId.TargetNetwork]: { name: '' } };
       }
