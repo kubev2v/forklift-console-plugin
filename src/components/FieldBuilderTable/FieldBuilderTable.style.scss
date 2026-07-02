@@ -33,6 +33,11 @@
     padding-left: 0;
   }
 
+  // Fixed-width action column for the remove button
+  .field-builder-table__action-col {
+    width: 40px;
+  }
+
   // Vertically center the remove button with field inputs
   .pf-v6-c-table__tbody .pf-v6-c-table__action {
     vertical-align: middle;
