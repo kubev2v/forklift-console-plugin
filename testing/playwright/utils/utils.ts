@@ -2,8 +2,7 @@ import type { Page } from '@playwright/test';
 
 // Short timeout: the tour either shows quickly or not at all.
 const GUIDED_TOUR_VISIBLE_TIMEOUT_MS = 2000;
-// force:true bypasses animation-stability checks that cause the default
-// actionTimeout (15s) to be consumed when the button is mid-animation.
+// force:true bypasses animation-stability checks; keep timeout short.
 const GUIDED_TOUR_CLICK_TIMEOUT_MS = 3000;
 const GUIDED_TOUR_HIDDEN_TIMEOUT_MS = 3000;
 
