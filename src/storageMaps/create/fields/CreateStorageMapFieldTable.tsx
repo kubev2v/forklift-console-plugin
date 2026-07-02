@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import AccessModeField from 'src/storageMaps/components/AccessModeField';
 import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
 import TargetStorageWithSuggestion from 'src/storageMaps/components/TargetStorageWithSuggestion';
 import { defaultStorageMapping, storageMapFieldLabels } from 'src/storageMaps/utils/constants';
@@ -67,12 +68,16 @@ const CreateStorageMapFieldTable: FC = () => {
         {
           isRequired: true,
           label: storageMapFieldLabels[StorageMapFieldId.SourceStorage],
-          width: 45,
+          width: 30,
         },
         {
           isRequired: true,
           label: storageMapFieldLabels[StorageMapFieldId.TargetStorage],
-          width: 45,
+          width: 35,
+        },
+        {
+          label: storageMapFieldLabels[StorageMapFieldId.AccessMode],
+          width: 30,
         },
       ]}
       fieldRows={storageMappingFields.map((field, index) => ({
@@ -108,6 +113,11 @@ const CreateStorageMapFieldTable: FC = () => {
               testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
             />
           ),
+          <AccessModeField
+            fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
+            targetStorages={targetStorages}
+            targetStorageFieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+          />,
         ],
       }))}
       addButton={{

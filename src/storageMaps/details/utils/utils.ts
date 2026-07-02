@@ -31,6 +31,7 @@ export const transformFormValuesToK8sSpec = (
 
       const baseMapping: CustomV1beta1StorageMapSpecMap = {
         destination: {
+          ...(mapping.accessMode && { accessMode: mapping.accessMode }),
           storageClass: mapping.targetStorage.name,
         },
         source: {
@@ -90,6 +91,7 @@ export const transformStorageMapToFormValues = (
         : sourceName;
 
       return {
+        accessMode: mapping.destination?.accessMode ?? 'ReadWriteOnce',
         offloadPlugin: mapping.offloadPlugin ? OffloadPlugin.VSphereXcopyConfig : '',
         sourceStorage: {
           id: sourceId,
