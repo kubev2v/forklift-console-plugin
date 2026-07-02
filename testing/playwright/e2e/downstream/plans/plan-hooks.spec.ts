@@ -189,7 +189,12 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
         await hookEditModal.cancel();
       } finally {
         if (originalSettings) {
-          await restoreForkliftSettings(originalSettings);
+          const restored = await restoreForkliftSettings(originalSettings);
+          if (!restored) {
+            console.error(
+              'Failed to restore ForkliftController settings — subsequent tests may inherit incorrect state',
+            );
+          }
         }
       }
     });
