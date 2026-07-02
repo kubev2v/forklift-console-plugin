@@ -1,4 +1,3 @@
-import { NetworkMapFieldId, type NetworkMapping } from '@utils/mappings/networkMap';
 import type { MappingValue } from '@utils/types';
 
 /**
@@ -10,14 +9,4 @@ export const isSameSourceNetwork = (a: MappingValue, b: MappingValue): boolean =
     return a.id === b.id && a.vlan === b.vlan;
   }
   return a.id === b.id;
-};
-
-export const isNetworkMappingDisabled = (
-  networkMappings: NetworkMapping[],
-  usedNetwork: MappingValue,
-): boolean => {
-  return networkMappings?.some((mapping: NetworkMapping) => {
-    const source = mapping[NetworkMapFieldId.SourceNetwork];
-    return isSameSourceNetwork(source, usedNetwork);
-  });
 };

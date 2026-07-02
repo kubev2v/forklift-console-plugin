@@ -1,9 +1,12 @@
-import { type FC, useMemo } from 'react';
+import { type FC, useEffect, useMemo, useRef } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
+import { getMultiNicSourceNetworks } from '@components/mappings/network-mappings/utils/getMultiNicSourceNetworks';
+import type { ProviderVirtualMachine as TypesProviderVirtualMachine } from '@forklift-ui/types';
 import { Alert, AlertVariant, Stack, StackItem, TextInput } from '@patternfly/react-core';
+import { DEFAULT_NETWORK } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import {
@@ -60,6 +63,42 @@ const NewNetworkMapFields: FC = () => {
     isLoading,
     usedSources: usedSourceNetworks,
   });
+
+  const { setValue } = useCreatePlanFormContext();
+  const clearedMultiNicRef = useRef(new Set<string>());
+
+  useEffect(() => {
+    if (isLoading || !networkMap?.length) return;
+
+    const vmsList = Object.values(vms) as TypesProviderVirtualMachine[];
+    const multiNicIds = getMultiNicSourceNetworks(vmsList, oVirtNicProfiles);
+    if (multiNicIds.size === 0) return;
+
+    let updated = false;
+    const updatedMap = networkMap.map((mapping, index) => {
+      const sourceId = mapping[NetworkMapFieldId.SourceNetwork]?.id ?? '';
+      const targetName = mapping[NetworkMapFieldId.TargetNetwork]?.name;
+      const key = `${index}-${sourceId}`;
+
+      if (
+        multiNicIds.has(sourceId) &&
+        targetName === DEFAULT_NETWORK &&
+        !clearedMultiNicRef.current.has(key)
+      ) {
+        clearedMultiNicRef.current.add(key);
+        updated = true;
+        return { ...mapping, [NetworkMapFieldId.TargetNetwork]: { name: '' } };
+      }
+      return mapping;
+    });
+
+    if (updated) {
+      setValue(NetworkMapFieldId.NetworkMap, updatedMap, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+  }, [isLoading, networkMap, vms, oVirtNicProfiles, setValue]);
 
   return (
     <Stack hasGutter className="pf-v6-u-ml-lg">
