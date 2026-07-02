@@ -5,7 +5,6 @@ import {
   type FieldValues,
   type Path,
   type UseFormTrigger,
-  useWatch,
 } from 'react-hook-form';
 
 import EmptyCategorySelectOption from '@components/common/EmptyCategorySelectOption/EmptyCategorySelectOption';
@@ -13,10 +12,7 @@ import Select from '@components/common/Select';
 import { SelectGroup, SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import { NetworkMapFieldId, type NetworkMapping } from '@utils/mappings/networkMap';
 import type { MappingValue } from '@utils/types';
-
-import { isNetworkMappingDisabled } from './utils/utils';
 
 type SourceNetworkFieldProps<T extends FieldValues> = {
   fieldId: Path<T>;
@@ -34,10 +30,6 @@ const SourceNetworkField = <T extends FieldValues>({
   usedSourceNetworks,
 }: SourceNetworkFieldProps<T>) => {
   const { t } = useForkliftTranslation();
-  const networkMappings: NetworkMapping[] = useWatch({
-    control,
-    name: NetworkMapFieldId.NetworkMap as Path<T>,
-  });
 
   const allNetworks = useMemo(
     () => [...usedSourceNetworks, ...otherSourceNetworks],
@@ -74,7 +66,6 @@ const SourceNetworkField = <T extends FieldValues>({
                     key={usedNetwork.name}
                     value={usedNetwork}
                     description={duplicateNames.has(usedNetwork.name) ? usedNetwork.id : null}
-                    isDisabled={isNetworkMappingDisabled(networkMappings, usedNetwork)}
                   >
                     {usedNetwork.name}
                   </SelectOption>
@@ -93,7 +84,6 @@ const SourceNetworkField = <T extends FieldValues>({
                     key={otherNetwork.name}
                     value={otherNetwork}
                     description={duplicateNames.has(otherNetwork.name) ? otherNetwork.id : null}
-                    isDisabled={isNetworkMappingDisabled(networkMappings, otherNetwork)}
                   >
                     {otherNetwork.name}
                   </SelectOption>
