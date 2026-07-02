@@ -1,5 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+const PAGE_LOAD_INITIAL_TIMEOUT_MS = 10_000;
+const PAGE_LOAD_RETRY_TIMEOUT_MS = 20_000;
+
 import { NavigationHelper } from '../../../utils/NavigationHelper';
 import { SettingsEditModal } from '../modals/SettingsEditModal';
 
@@ -44,11 +47,11 @@ export class SettingsTab {
     await this.navigation.navigateToOverview();
     // Dynamic plugin may not have registered its routes yet; retry with a reload if needed.
     try {
-      await expect(this.settingsTab).toBeVisible({ timeout: 10000 });
+      await expect(this.settingsTab).toBeVisible({ timeout: PAGE_LOAD_INITIAL_TIMEOUT_MS });
     } catch {
       await this.page.reload();
       await this.page.waitForLoadState('domcontentloaded');
-      await expect(this.settingsTab).toBeVisible({ timeout: 20000 });
+      await expect(this.settingsTab).toBeVisible({ timeout: PAGE_LOAD_RETRY_TIMEOUT_MS });
     }
     await this.settingsTab.click();
     await expect(this.settingsEditButton).toBeVisible();

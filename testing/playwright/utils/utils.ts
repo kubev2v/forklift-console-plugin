@@ -10,12 +10,17 @@ export const disableGuidedTour = async (page: Page): Promise<void> => {
   // Use .first() to avoid strict-mode crashes if two skip buttons are briefly in the DOM.
   const skipButton = page.getByRole('button', { name: /skip tour/i }).first();
 
+  let isVisible = false;
   try {
     await skipButton.waitFor({ state: 'visible', timeout: GUIDED_TOUR_VISIBLE_TIMEOUT_MS });
+    isVisible = true;
+  } catch {
+    // Tour not present on this build — nothing to dismiss.
+  }
+
+  if (isVisible) {
     await skipButton.click({ force: true, timeout: GUIDED_TOUR_CLICK_TIMEOUT_MS });
     await skipButton.waitFor({ state: 'hidden', timeout: GUIDED_TOUR_HIDDEN_TIMEOUT_MS });
-  } catch {
-    // Tour modal not present on this build — nothing to dismiss.
   }
 };
 

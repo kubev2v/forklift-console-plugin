@@ -1,5 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+const PAGE_LOAD_INITIAL_TIMEOUT_MS = 10_000;
+const PAGE_LOAD_RETRY_TIMEOUT_MS = 20_000;
+
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { LearningExperienceDrawer } from '../LearningExperienceDrawer';
 
@@ -119,13 +122,13 @@ export class OverviewPage {
 
   async waitForPageLoad() {
     try {
-      await expect(this.pageTitle).toBeVisible({ timeout: 10000 });
+      await expect(this.pageTitle).toBeVisible({ timeout: PAGE_LOAD_INITIAL_TIMEOUT_MS });
     } catch {
       // Dynamic plugin may not have registered its routes yet on first load.
       // Reload and give it more time to initialize.
       await this.page.reload();
       await this.page.waitForLoadState('domcontentloaded');
-      await expect(this.pageTitle).toBeVisible({ timeout: 20000 });
+      await expect(this.pageTitle).toBeVisible({ timeout: PAGE_LOAD_RETRY_TIMEOUT_MS });
     }
   }
 }
