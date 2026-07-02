@@ -60,7 +60,7 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
     },
   });
 
-  const vmsList = Object.values(vms) as TypesProviderVirtualMachine[];
+  const vmsList = useMemo(() => Object.values(vms) as TypesProviderVirtualMachine[], [vms]);
   const networkNames = useMemo(
     () =>
       new Map(

@@ -7,9 +7,9 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { getMultiNicSourceNetworks, type MultiNicNetwork } from './utils/getMultiNicSourceNetworks';
 
 type MultiNicInfoAlertProps = {
-  vms: ProviderVirtualMachine[];
-  oVirtNicProfiles?: OVirtNicProfile[];
   networkNames?: Map<string, string>;
+  oVirtNicProfiles?: OVirtNicProfile[];
+  vms: ProviderVirtualMachine[];
 };
 
 const MultiNicInfoAlert: FC<MultiNicInfoAlertProps> = ({ networkNames, oVirtNicProfiles, vms }) => {
