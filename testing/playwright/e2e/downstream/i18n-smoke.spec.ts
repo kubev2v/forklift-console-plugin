@@ -99,11 +99,13 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
         const welcomeHeading = page.getByRole('heading', { name: locale.Welcome });
         await expect(welcomeHeading).toBeVisible({ timeout: LOCALE_LOAD_TIMEOUT_MS });
 
+        // Scope to .forklift-title (project-specific CardTitle class) to avoid
+        // matching the nav sidebar item or any table row containing this text.
         const mainContent = page.locator('main');
-        const migrationPlansCard = mainContent.getByText(locale['Migration plans']);
-        await expect(migrationPlansCard.first()).toBeVisible({
-          timeout: ELEMENT_VISIBLE_TIMEOUT_MS,
+        const migrationPlansCard = mainContent.locator('.forklift-title', {
+          hasText: locale['Migration plans'],
         });
+        await expect(migrationPlansCard).toBeVisible({ timeout: ELEMENT_VISIBLE_TIMEOUT_MS });
       });
 
       await test.step('Verify Providers page translations', async () => {

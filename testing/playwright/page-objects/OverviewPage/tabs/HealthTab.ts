@@ -1,5 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+// Pod watch data arrives asynchronously; give it time to settle before asserting.
+const POD_WATCH_TIMEOUT_MS = 30_000;
+
 export class HealthTab {
   protected readonly page: Page;
 
@@ -25,9 +28,8 @@ export class HealthTab {
   }
 
   async verifyCardsRender(): Promise<void> {
-    // The pod watch delivers data asynchronously; give it time to arrive before asserting.
     await expect(this.controllerCard.getByRole('columnheader', { name: 'Pod' })).toBeVisible({
-      timeout: 30000,
+      timeout: POD_WATCH_TIMEOUT_MS,
     });
     await expect(this.controllerCard.getByRole('columnheader', { name: 'Status' })).toBeVisible();
     await expect(this.conditionsCard).toBeVisible();
