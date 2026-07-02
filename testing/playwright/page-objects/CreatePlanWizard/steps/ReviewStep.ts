@@ -218,6 +218,12 @@ export class ReviewStep {
       await expect(this.page.getByTestId('review-target-power-state')).toHaveText(expectedLabel);
     }
 
+    if (additionalPlanSettings?.existingLUKSSecretName) {
+      await expect(this.page.getByTestId('review-existing-luks-secret')).toHaveText(
+        additionalPlanSettings.existingLUKSSecretName,
+      );
+    }
+
     const instanceTypes = additionalPlanSettings?.instanceTypes;
     if (instanceTypes && !isEmpty(Object.keys(instanceTypes))) {
       const reviewBlock = this.page.getByTestId('review-instance-types');

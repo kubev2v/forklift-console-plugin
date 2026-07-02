@@ -77,25 +77,57 @@ const getLUKSSecret = async ({
 };
 
 export const onDiskDecryptionConfirm = async ({
+  existingSecretName,
+  isCurrentSecretPlanOwned,
   nbdeClevis,
   newValue,
   resource,
 }: {
-  resource: V1beta1Plan;
-  newValue: string;
+  existingSecretName?: string;
+  isCurrentSecretPlanOwned?: boolean;
   nbdeClevis: boolean;
+  newValue: string;
+  resource: V1beta1Plan;
 }) => {
-  const secretName = getLUKSSecretName(resource);
+  const currentSecretName = getLUKSSecretName(resource);
   const secretNamespace = getNamespace(resource);
   const planName = getName(resource);
   const planVirtualMachines = getPlanVirtualMachines(resource);
+
+  if (existingSecretName) {
+    if (currentSecretName && currentSecretName !== existingSecretName && isCurrentSecretPlanOwned) {
+      await k8sDelete({
+        model: SecretModel,
+        resource: { metadata: { name: currentSecretName, namespace: secretNamespace } },
+      }).catch(() => undefined);
+    }
+
+    const updatedVMs = planVirtualMachines.map((vm) => ({
+      ...vm,
+      luks: { name: existingSecretName },
+      nbdeClevis: false,
+    }));
+
+    return k8sPatch({
+      data: [
+        {
+          op: planVirtualMachines ? REPLACE : ADD,
+          path: '/spec/vms',
+          value: updatedVMs,
+        },
+      ],
+      model: PlanModel,
+      resource,
+    });
+  }
+
   const newData = nbdeClevis ? undefined : createIndexedBase64Object(newValue);
 
   const secret = await getLUKSSecret({
     newData,
     planName,
     planUID: getUID(resource),
-    secretName,
+    secretName: currentSecretName,
     secretNamespace,
   });
 

@@ -21,6 +21,8 @@ import { MigrationTypeFieldId, MigrationTypeValue } from '../migration-type/cons
 import { otherFormFieldLabels, OtherSettingsFormFieldId } from '../other-settings/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
+import DiskDecryptionReviewItem from './DiskDecryptionReviewItem';
+
 const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
   isLiveMigrationFeatureEnabled,
 }) => {
@@ -30,6 +32,8 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
   const [
     sourceProvider,
     diskPassPhrases,
+    diskDecryptionType,
+    existingLUKSSecret,
     nbdeClevis,
     transferNetwork,
     preserveStaticIps,
@@ -44,6 +48,8 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
     name: [
       GeneralFormFieldId.SourceProvider,
       OtherSettingsFormFieldId.DiskDecryptionPassPhrases,
+      OtherSettingsFormFieldId.DiskDecryptionType,
+      OtherSettingsFormFieldId.ExistingLUKSSecret,
       OtherSettingsFormFieldId.NBDEClevis,
       OtherSettingsFormFieldId.TransferNetwork,
       OtherSettingsFormFieldId.PreserveStaticIps,
@@ -60,8 +66,6 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
     Boolean(value),
   );
   const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
-  const hasNoDiskPassPhrases =
-    isEmpty(diskPassPhrases) || (diskPassPhrases.length === 1 && !diskPassPhrases[0].value);
 
   const isTransferNetworkVisible =
     !hasLiveMigrationProviderType(sourceProvider) ||
@@ -87,28 +91,12 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
               </DescriptionListDescription>
             </DescriptionListGroup>
 
-            {!nbdeClevis && (
-              <DescriptionListGroup>
-                <DescriptionListTerm>
-                  {otherFormFieldLabels[OtherSettingsFormFieldId.DiskDecryptionPassPhrases]}
-                </DescriptionListTerm>
-
-                {hasNoDiskPassPhrases ? (
-                  <DescriptionListDescription data-testid="review-disk-decryption-passphrases">
-                    {t('None')}
-                  </DescriptionListDescription>
-                ) : (
-                  diskPassPhrases.map((diskPassPhrase) => (
-                    <DescriptionListDescription
-                      key={diskPassPhrase.value}
-                      data-testid="review-disk-decryption-passphrases"
-                    >
-                      {diskPassPhrase.value}
-                    </DescriptionListDescription>
-                  ))
-                )}
-              </DescriptionListGroup>
-            )}
+            <DiskDecryptionReviewItem
+              diskDecryptionType={diskDecryptionType}
+              diskPassPhrases={diskPassPhrases}
+              existingLUKSSecret={existingLUKSSecret}
+              nbdeClevis={nbdeClevis}
+            />
           </>
         )}
 
