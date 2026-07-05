@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import AccessModeField from 'src/storageMaps/components/AccessModeField';
 import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
 import TargetStorageWithSuggestion from 'src/storageMaps/components/TargetStorageWithSuggestion';
 import { defaultStorageMapping, storageMapFieldLabels } from 'src/storageMaps/utils/constants';
@@ -7,6 +8,7 @@ import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId
 import { useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
+import { Stack, StackItem } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
@@ -77,17 +79,27 @@ const CreateStorageMapFieldTable: FC = () => {
       ]}
       fieldRows={storageMappingFields.map((field, index) => ({
         ...field,
-        ...(sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere &&
-          isCopyOffloadEnabled && {
-            additionalOptions: (
-              <OffloadStorageRow
-                index={index}
-                sourceProvider={sourceProvider}
-                sourceStorages={sourceStorages}
+        additionalOptions: (
+          <Stack hasGutter>
+            <StackItem>
+              <AccessModeField
+                fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
                 targetStorages={targetStorages}
+                targetStorageFieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
               />
-            ),
-          }),
+            </StackItem>
+            {isVsphereOffload && (
+              <StackItem>
+                <OffloadStorageRow
+                  index={index}
+                  sourceProvider={sourceProvider}
+                  sourceStorages={sourceStorages}
+                  targetStorages={targetStorages}
+                />
+              </StackItem>
+            )}
+          </Stack>
+        ),
         inputs: [
           <InventorySourceStorageField
             fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}

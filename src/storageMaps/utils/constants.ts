@@ -1,7 +1,24 @@
 import { t } from '@utils/i18n';
-import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
+import {
+  ACCESS_MODE,
+  type AccessMode,
+  StorageMapFieldId,
+  type StorageMapping,
+} from '@utils/storage/types';
 
 import { OffloadPlugin, StorageVendorProduct } from './types';
+
+export const ACCESS_MODE_OPTIONS: { label: string; value: AccessMode | '' }[] = [
+  { label: 'Default', value: '' },
+  { label: ACCESS_MODE.ReadWriteOnce, value: ACCESS_MODE.ReadWriteOnce },
+  { label: ACCESS_MODE.ReadWriteMany, value: ACCESS_MODE.ReadWriteMany },
+  { label: ACCESS_MODE.ReadOnlyMany, value: ACCESS_MODE.ReadOnlyMany },
+];
+
+const RWX_CAPABLE_PROVISIONER_PATTERNS = ['rbd.csi.ceph.com', 'cephfs.csi.ceph.com'];
+
+export const isRwxCapableProvisioner = (provisioner: string): boolean =>
+  RWX_CAPABLE_PROVISIONER_PATTERNS.some((pattern) => provisioner.includes(pattern));
 
 export const defaultStorageMapping: StorageMapping = {
   [StorageMapFieldId.OffloadPlugin]: '',
@@ -12,6 +29,7 @@ export const defaultStorageMapping: StorageMapping = {
 };
 
 export const storageMapFieldLabels: Partial<Record<StorageMapFieldId, ReturnType<typeof t>>> = {
+  [StorageMapFieldId.AccessMode]: t('Access mode'),
   [StorageMapFieldId.MapName]: t('Storage map name'),
   [StorageMapFieldId.OffloadPlugin]: t('Offload plugin'),
   [StorageMapFieldId.Project]: t('Project'),

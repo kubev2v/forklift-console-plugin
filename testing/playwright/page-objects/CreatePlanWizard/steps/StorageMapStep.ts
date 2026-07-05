@@ -4,14 +4,17 @@ import { getMappingWizardFieldRows } from '../../../utils/mappingWizardFieldRows
 import { isEmpty } from '../../../utils/utils';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
+import { AccessModeOptions } from '../../common/AccessModeOptions';
 import { OffloadOptions } from '../../common/OffloadOptions';
 
 export class StorageMapStep {
   private readonly page: Page;
+  readonly accessMode: AccessModeOptions;
   readonly offload: OffloadOptions;
 
   constructor(page: Page) {
     this.page = page;
+    this.accessMode = new AccessModeOptions(page);
     this.offload = new OffloadOptions(page);
   }
 
@@ -28,7 +31,7 @@ export class StorageMapStep {
     if (isVersionAtLeast(V2_11_0)) {
       return {
         rows: getMappingWizardFieldRows(this.page),
-        getSourceText: async (row: Locator) => await row.locator('td').first().textContent(),
+        getSourceText: async (row: Locator) => row.locator('td').first().textContent(),
         getTargetSelect: (row: Locator) => row.getByTestId('target-storage-select'),
       };
     }
@@ -37,7 +40,7 @@ export class StorageMapStep {
     const bodyRowGroup = grid.getByRole('rowgroup').nth(1);
     return {
       rows: bodyRowGroup.getByRole('row'),
-      getSourceText: async (row: Locator) => await row.getByRole('gridcell').first().textContent(),
+      getSourceText: async (row: Locator) => row.getByRole('gridcell').first().textContent(),
       getTargetSelect: (row: Locator) => row.getByRole('gridcell').nth(1).getByRole('button'),
     };
   }

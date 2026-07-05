@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 
+import { AccessModeOptions } from '../../common/AccessModeOptions';
 import { OffloadOptions } from '../../common/OffloadOptions';
 
 import { BaseMappingEditModal, type MappingModalConfig } from './BaseMappingEditModal';
@@ -11,17 +12,19 @@ const MODAL_TEST_ID = 'edit-storage-map-modal';
  * Extends BaseMappingEditModal with storage-specific configuration.
  */
 export class StorageMapEditModal extends BaseMappingEditModal {
+  readonly accessMode: AccessModeOptions;
+
   protected readonly config: MappingModalConfig = {
     modalTestId: MODAL_TEST_ID,
     modalTitle: 'Edit storage map',
     sourceTestIdPattern: (index: number) => `source-storage-storageMap.${index}.sourceStorage`,
     targetTestIdPattern: (index: number) => `target-storage-storageMap.${index}.targetStorage`,
   };
-
   readonly offload: OffloadOptions;
 
   constructor(page: Page) {
     super(page, MODAL_TEST_ID);
+    this.accessMode = new AccessModeOptions(page, this.modal);
     this.offload = new OffloadOptions(page, this.modal);
   }
 

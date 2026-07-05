@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useFieldArray, useWatch } from 'react-hook-form';
+import AccessModeField from 'src/storageMaps/components/AccessModeField';
 import GroupedSourceStorageField from 'src/storageMaps/components/GroupedSourceStorageField';
 import OffloadStorageRow from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageRow';
 import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
@@ -8,12 +9,13 @@ import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
+import { Stack, StackItem } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import type { InventoryStorage } from '@utils/hooks/useStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
-import type { TargetStorage } from '@utils/storage/types';
+import { StorageMapFieldId, type TargetStorage } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -90,17 +92,31 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
       headers={headers}
       fieldRows={storageMappingFields.map((field, index) => ({
         ...field,
-        ...(sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere &&
-          isCopyOffloadEnabled && {
-            additionalOptions: (
-              <OffloadStorageRow
-                index={index}
-                sourceProvider={sourceProvider}
-                sourceStorages={sourceStorageInventory ?? []}
+        additionalOptions: (
+          <Stack hasGutter>
+            <StackItem>
+              <AccessModeField
+                fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
+                key={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
                 targetStorages={targetStorages}
+                targetStorageFieldId={getStorageMapFieldId(
+                  CreatePlanStorageMapFieldId.TargetStorage,
+                  index,
+                )}
               />
-            ),
-          }),
+            </StackItem>
+            {isVsphereOffload && (
+              <StackItem>
+                <OffloadStorageRow
+                  index={index}
+                  sourceProvider={sourceProvider}
+                  sourceStorages={sourceStorageInventory ?? []}
+                  targetStorages={targetStorages}
+                />
+              </StackItem>
+            )}
+          </Stack>
+        ),
         inputs: isIscsi
           ? [
               <TargetStorageField
