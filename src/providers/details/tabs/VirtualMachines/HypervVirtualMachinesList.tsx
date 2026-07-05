@@ -29,6 +29,29 @@ const hypervVmFieldsMetadataFactory: ResourceField[] = [
   getConcernsResourceField(),
   {
     filter: {
+      placeholderLabel: t('Filter by host'),
+      type: 'freetext',
+    },
+    isIdentity: false,
+    isVisible: true,
+    jsonPath: '$.vm.host',
+    label: t('Host'),
+    resourceFieldId: 'host',
+    sortable: true,
+  },
+  {
+    filter: {
+      placeholderLabel: t('Filter by guest OS'),
+      type: 'freetext',
+    },
+    isVisible: true,
+    jsonPath: (data: unknown) => getVmGuestOS((data as VmData)?.vm),
+    label: t('Guest OS'),
+    resourceFieldId: 'guestOS',
+    sortable: true,
+  },
+  {
+    filter: {
       placeholderLabel: t('Filter by status'),
       type: 'enum',
       values: enumToTuple({ off: 'Off', on: 'On', unknown: 'Unknown' }),

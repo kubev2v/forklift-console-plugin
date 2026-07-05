@@ -5,6 +5,7 @@ import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 
 import {
   CertificateValidationMode,
+  HypervManagementType,
   HypervTransferMethod,
   ProviderFormFieldId,
 } from '../fields/constants';
@@ -34,10 +35,14 @@ export const buildHypervProviderResources = (formData: HypervFormData): Provider
   const skipCertValidation = certificateValidation === CertificateValidationMode.Skip;
   const providerUrl = hypervHost;
   const isIscsi = transferMethod === HypervTransferMethod.ISCSI;
+  const managementType = formData[ProviderFormFieldId.MgmtType] ?? HypervManagementType.Standalone;
 
   const settings: Record<string, string> = {};
   if (isIscsi) {
     settings.hyperVTransferMethod = HypervTransferMethod.ISCSI;
+  }
+  if (managementType === HypervManagementType.Cluster) {
+    settings.managementType = HypervManagementType.Cluster;
   }
 
   const provider = buildProviderObject({
