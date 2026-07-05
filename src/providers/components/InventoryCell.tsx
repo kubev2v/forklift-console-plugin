@@ -3,6 +3,7 @@ import { getResourceFieldValue } from 'src/components/common/FilterGroup/matcher
 import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
 import { TableIconCell } from 'src/components/TableCell/TableIconCell';
 import type { CellProps } from 'src/providers/list/components/CellProps';
+import { isHypervClusterProvider } from 'src/providers/utils/helpers/isHypervClusterProvider';
 
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
@@ -38,7 +39,7 @@ const InventoryCell: FC<InventoryCellProps> = ({ data, fieldId, fields, icon, in
   }
 
   if (
-    type === PROVIDER_TYPES.vsphere &&
+    (type === PROVIDER_TYPES.vsphere || isHypervClusterProvider(provider)) &&
     (fieldId as ProvidersResourceFieldId) === ProvidersResourceFieldId.HostCount
   ) {
     return (

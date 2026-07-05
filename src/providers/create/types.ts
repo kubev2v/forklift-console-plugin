@@ -7,6 +7,7 @@ import type {
 
 import type {
   CertificateValidationMode,
+  HypervManagementType,
   HypervTransferMethod,
   ProviderFormFieldId,
 } from './fields/constants';
@@ -34,6 +35,7 @@ type HypervFields = {
   [ProviderFormFieldId.CaCertificate]?: string;
   [ProviderFormFieldId.CertificateValidation]?: CertificateValidationMode;
   [ProviderFormFieldId.HypervHost]?: string;
+  [ProviderFormFieldId.MgmtType]?: HypervManagementType;
   [ProviderFormFieldId.TransferMethod]?: HypervTransferMethod;
   [ProviderFormFieldId.HypervUsername]?: string;
   [ProviderFormFieldId.HypervPassword]?: string;

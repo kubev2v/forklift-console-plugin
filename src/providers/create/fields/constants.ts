@@ -65,8 +65,14 @@ export enum HypervTransferMethod {
   ISCSI = 'iscsi',
 }
 
+export enum HypervManagementType {
+  Standalone = 'standalone',
+  Cluster = 'cluster',
+}
+
 enum HypervProviderFormFieldId {
   HypervHost = 'hypervHost',
+  MgmtType = 'hypervManagementType',
   TransferMethod = 'hypervTransferMethod',
   HypervUsername = 'hypervUsername',
   HypervPassword = 'hypervPassword',

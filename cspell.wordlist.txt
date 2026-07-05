@@ -78,6 +78,7 @@ linkify
 macspoofchk
 masq
 metav
+mgmt
 milli
 millicores
 moref
