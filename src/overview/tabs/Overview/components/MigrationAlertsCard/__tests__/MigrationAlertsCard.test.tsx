@@ -113,8 +113,8 @@ describe('MigrationAlertsCard', () => {
 
     renderCard();
 
-    expect(screen.getByText('Failed')).toBeInTheDocument();
-    expect(screen.getByText('Succeeded')).toBeInTheDocument();
+    expect(screen.getByText('Failed', { exact: true })).toBeInTheDocument();
+    expect(screen.getByText('Succeeded', { exact: true })).toBeInTheDocument();
 
     const counts = document.querySelectorAll('.migration-alerts-card__summary-count');
     expect(counts[0]?.textContent).toBe('1');
