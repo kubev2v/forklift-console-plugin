@@ -235,7 +235,6 @@ export const submitMigrationPlan = async (
   await addPlanResourceOwnerRefs(
     {
       hooks: createdHooks,
-      isExistingSecret: decryptionResult.isExistingSecret,
       networkMap: planNetworkMap,
       scriptsConfigMap,
       secret: decryptionResult.secret,

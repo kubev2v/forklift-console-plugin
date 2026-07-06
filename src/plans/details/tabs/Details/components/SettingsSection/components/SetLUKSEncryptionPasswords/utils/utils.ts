@@ -1,3 +1,5 @@
+import { SOURCE_SECRET_LABEL } from 'src/plans/create/utils/copyDecryptionSecret';
+
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import {
   type IoK8sApiCoreV1Secret,
@@ -12,14 +14,14 @@ import { isEmpty } from '@utils/helpers';
 
 const createIndexedBase64Object = (encodedString: string): Record<number, string> | undefined => {
   const list: string[] = JSON.parse(encodedString || '[]');
-  if (isEmpty(list) || list.every((item) => !item)) return {};
+  if (isEmpty(list) || list.every((item) => !item)) return undefined;
 
   const result = list.reduce<Record<number, string>>((acc, item, index) => {
     if (item) acc[index] = btoa(item);
     return acc;
   }, {});
 
-  return result;
+  return isEmpty(result) ? undefined : result;
 };
 
 type LUKSSecret = {
@@ -76,35 +78,77 @@ const getLUKSSecret = async ({
   return undefined;
 };
 
+const copySecretForPlan = async (
+  existingSecret: IoK8sApiCoreV1Secret,
+  planName: string,
+  planUID: string,
+  namespace: string,
+): Promise<IoK8sApiCoreV1Secret> => {
+  const newSecret: IoK8sApiCoreV1Secret = {
+    data: existingSecret.data,
+    metadata: {
+      generateName: `${planName}-`,
+      labels: {
+        [SOURCE_SECRET_LABEL]: existingSecret.metadata?.name ?? '',
+      },
+      namespace,
+      ownerReferences: [
+        {
+          apiVersion: 'forklift.konveyor.io/v1beta1',
+          kind: 'Plan',
+          name: planName,
+          uid: planUID,
+        },
+      ],
+    },
+    type: existingSecret.type ?? 'Opaque',
+  };
+
+  return k8sCreate({ data: newSecret, model: SecretModel });
+};
+
+const deleteCurrentSecret = async (
+  secretName: string | undefined,
+  namespace: string | undefined,
+): Promise<void> => {
+  if (!secretName) return;
+
+  await k8sDelete({
+    model: SecretModel,
+    resource: { metadata: { name: secretName, namespace } },
+  }).catch(() => undefined);
+};
+
 export const onDiskDecryptionConfirm = async ({
-  existingSecretName,
-  isCurrentSecretPlanOwned,
+  existingSecret,
   nbdeClevis,
   newValue,
   resource,
 }: {
-  existingSecretName?: string;
-  isCurrentSecretPlanOwned?: boolean;
+  existingSecret?: IoK8sApiCoreV1Secret;
   nbdeClevis: boolean;
   newValue: string;
   resource: V1beta1Plan;
-}) => {
+}): Promise<unknown> => {
   const currentSecretName = getLUKSSecretName(resource);
   const secretNamespace = getNamespace(resource);
   const planName = getName(resource);
+  const planUID = getUID(resource);
   const planVirtualMachines = getPlanVirtualMachines(resource);
 
-  if (existingSecretName) {
-    if (currentSecretName && currentSecretName !== existingSecretName && isCurrentSecretPlanOwned) {
-      await k8sDelete({
-        model: SecretModel,
-        resource: { metadata: { name: currentSecretName, namespace: secretNamespace } },
-      }).catch(() => undefined);
-    }
+  if (existingSecret) {
+    const copiedSecret = await copySecretForPlan(
+      existingSecret,
+      planName!,
+      planUID!,
+      secretNamespace!,
+    );
+
+    await deleteCurrentSecret(currentSecretName, secretNamespace);
 
     const updatedVMs = planVirtualMachines.map((vm) => ({
       ...vm,
-      luks: { name: existingSecretName },
+      luks: { name: getName(copiedSecret) },
       nbdeClevis: false,
     }));
 
@@ -126,7 +170,7 @@ export const onDiskDecryptionConfirm = async ({
   const secret = await getLUKSSecret({
     newData,
     planName,
-    planUID: getUID(resource),
+    planUID,
     secretName: currentSecretName,
     secretNamespace,
   });
