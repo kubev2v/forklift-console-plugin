@@ -1,5 +1,6 @@
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
+
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
-import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 export type MultiNicNetwork = { maxNicCount: number; name: string };
 
@@ -30,7 +31,7 @@ const getVmNicNetworkIds = (
       );
     case PROVIDER_TYPES.ovirt:
       return (
-        vm?.nics?.map((nic) => {
+        (vm as VmWithNics)?.nics?.map((nic) => {
           const profileNetwork = nicProfiles?.find(
             (profile) => profile?.id === nic?.profile,
           )?.network;

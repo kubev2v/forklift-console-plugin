@@ -7,11 +7,6 @@ import {
   type UseFormTrigger,
 } from 'react-hook-form';
 import EmptyCategorySelectOption from 'src/plans/components/EmptyCategorySelectOption';
-import {
-  NetworkMapFieldId,
-  type NetworkMapping,
-} from 'src/plans/create/steps/network-map/constants';
-import type { MappingValue } from 'src/plans/create/types';
 
 import Select from '@components/common/Select';
 import { SelectGroup, SelectList, SelectOption } from '@patternfly/react-core';

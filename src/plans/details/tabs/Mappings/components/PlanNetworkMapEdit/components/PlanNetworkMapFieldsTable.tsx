@@ -14,7 +14,6 @@ import TargetNetworkField from '@components/mappings/network-mappings/TargetNetw
 import { getMultiNicSourceNetworks } from '@components/mappings/network-mappings/utils/getMultiNicSourceNetworks';
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
 import { Stack } from '@patternfly/react-core';
-import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { PlanNetworkEditFormValues } from '../utils/types';

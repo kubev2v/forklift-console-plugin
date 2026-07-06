@@ -10,7 +10,6 @@ import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import type { MappingValue } from '@utils/types';
 
-import { NetworkMapFieldId, type NetworkMapping } from '../../utils/types';
 import type { CreateNetworkMapFormData } from '../types';
 
 /**
