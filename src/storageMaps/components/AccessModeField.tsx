@@ -87,6 +87,7 @@ const AccessModeField: FC<AccessModeFieldProps> = ({
                         await trigger();
                       }}
                       placeholder={t('Select access mode')}
+                      testId={fieldId}
                       isDisabled={isSubmitting}
                       value={(field.value as AccessMode | undefined) ?? ''}
                     />

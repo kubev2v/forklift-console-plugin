@@ -232,9 +232,10 @@ sharedProviderStorageMapFixtures.describe(
         await modal.accessMode.expandAdvancedOptions(0);
 
         await sharedProviderStorageMapFixtures.step(
-          'Select ReadWriteOnce and check for RWO warning',
+          'Select ReadWriteOnce and verify RWO warning appears',
           async () => {
             await modal.accessMode.selectAccessMode(0, 'ReadWriteOnce');
+            await modal.accessMode.verifyRwoWarningVisible();
           },
         );
 
