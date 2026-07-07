@@ -53,10 +53,10 @@ providerOnlyFixtures.describe('Access Mode - Create Storage Map', { tag: '@downs
         },
       );
 
-      await providerOnlyFixtures.step('Select ReadWriteMany and verify', async () => {
-        await createPage.accessMode.selectAccessMode(0, 'ReadWriteMany');
+      await providerOnlyFixtures.step('Select ReadWriteMany (RWX) and verify', async () => {
+        await createPage.accessMode.selectAccessMode(0, 'ReadWriteMany (RWX)');
         const text = await createPage.accessMode.getAccessModeText(0);
-        expect(text).toBe('ReadWriteMany');
+        expect(text).toBe('ReadWriteMany (RWX)');
       });
 
       await providerOnlyFixtures.step('Select Default and verify it reverts', async () => {
@@ -102,6 +102,17 @@ sharedProviderStorageMapFixtures.describe(
         await detailsPage.navigate(testStorageMap.name);
 
         await sharedProviderStorageMapFixtures.step(
+          'Select source and target storage for the mapping',
+          async () => {
+            const modal = await detailsPage.openEditModal();
+            await modal.selectFirstAvailableSourceAtIndex(0);
+            await modal.selectFirstAvailableTargetAtIndex(0);
+            await modal.verifySaveButtonEnabled();
+            await modal.save();
+          },
+        );
+
+        await sharedProviderStorageMapFixtures.step(
           'Expand advanced options and verify initial state is Default',
           async () => {
             const modal = await detailsPage.openEditModal();
@@ -117,19 +128,19 @@ sharedProviderStorageMapFixtures.describe(
           async () => {
             const modal = await detailsPage.openEditModal();
             await modal.accessMode.expandAdvancedOptions(0);
-            await modal.accessMode.selectAccessMode(0, 'ReadWriteMany');
+            await modal.accessMode.selectAccessMode(0, 'ReadWriteMany (RWX)');
             await modal.verifySaveButtonEnabled();
             await modal.save();
           },
         );
 
         await sharedProviderStorageMapFixtures.step(
-          'Re-open modal and verify ReadWriteMany persisted',
+          'Re-open modal and verify ReadWriteMany (RWX) persisted',
           async () => {
             const modal = await detailsPage.openEditModal();
             await modal.accessMode.expandAdvancedOptions(0);
             const text = await modal.accessMode.getAccessModeText(0);
-            expect(text).toBe('ReadWriteMany');
+            expect(text).toBe('ReadWriteMany (RWX)');
             await modal.cancel();
           },
         );
@@ -190,23 +201,23 @@ sharedProviderFixtures.describe('Access Mode - Plan Details Edit', { tag: '@down
       await planDetailsPage.mappingsTab.navigateToMappingsTab();
 
       await sharedProviderFixtures.step(
-        'Open storage map edit modal and set ReadWriteMany',
+        'Open storage map edit modal and set ReadWriteMany (RWX)',
         async () => {
           const modal = await planDetailsPage.mappingsTab.openStorageMapEditModal();
           await modal.accessMode.expandAdvancedOptions(0);
-          await modal.accessMode.selectAccessMode(0, 'ReadWriteMany');
+          await modal.accessMode.selectAccessMode(0, 'ReadWriteMany (RWX)');
           await modal.verifySaveButtonEnabled();
           await modal.save();
         },
       );
 
       await sharedProviderFixtures.step(
-        'Re-open modal and verify ReadWriteMany persisted',
+        'Re-open modal and verify ReadWriteMany (RWX) persisted',
         async () => {
           const modal = await planDetailsPage.mappingsTab.openStorageMapEditModal();
           await modal.accessMode.expandAdvancedOptions(0);
           const text = await modal.accessMode.getAccessModeText(0);
-          expect(text).toBe('ReadWriteMany');
+          expect(text).toBe('ReadWriteMany (RWX)');
           await modal.cancel();
         },
       );
@@ -228,21 +239,32 @@ sharedProviderStorageMapFixtures.describe(
         const detailsPage = new StorageMapDetailsPage(page);
         await detailsPage.navigate(testStorageMap.name);
 
+        await sharedProviderStorageMapFixtures.step(
+          'Select source and Ceph-backed target storage',
+          async () => {
+            const modal = await detailsPage.openEditModal();
+            await modal.selectFirstAvailableSourceAtIndex(0);
+            await modal.selectFirstAvailableTargetAtIndex(0);
+            await modal.verifySaveButtonEnabled();
+            await modal.save();
+          },
+        );
+
         const modal = await detailsPage.openEditModal();
         await modal.accessMode.expandAdvancedOptions(0);
 
         await sharedProviderStorageMapFixtures.step(
-          'Select ReadWriteOnce and verify RWO warning appears',
+          'Select ReadWriteOnce (RWO) and verify RWO warning appears',
           async () => {
-            await modal.accessMode.selectAccessMode(0, 'ReadWriteOnce');
+            await modal.accessMode.selectAccessMode(0, 'ReadWriteOnce (RWO)');
             await modal.accessMode.verifyRwoWarningVisible();
           },
         );
 
         await sharedProviderStorageMapFixtures.step(
-          'Switch to ReadWriteMany and verify warning disappears',
+          'Switch to ReadWriteMany (RWX) and verify warning disappears',
           async () => {
-            await modal.accessMode.selectAccessMode(0, 'ReadWriteMany');
+            await modal.accessMode.selectAccessMode(0, 'ReadWriteMany (RWX)');
             await modal.accessMode.verifyRwoWarningNotVisible();
           },
         );

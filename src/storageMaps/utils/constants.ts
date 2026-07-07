@@ -1,3 +1,5 @@
+import type { TFunction } from 'react-i18next';
+
 import { t } from '@utils/i18n';
 import {
   ACCESS_MODE,
@@ -8,11 +10,13 @@ import {
 
 import { OffloadPlugin, StorageVendorProduct } from './types';
 
-export const ACCESS_MODE_OPTIONS: { label: string; value: AccessMode | '' }[] = [
-  { label: 'Default', value: '' },
-  { label: ACCESS_MODE.ReadWriteOnce, value: ACCESS_MODE.ReadWriteOnce },
-  { label: ACCESS_MODE.ReadWriteMany, value: ACCESS_MODE.ReadWriteMany },
-  { label: ACCESS_MODE.ReadOnlyMany, value: ACCESS_MODE.ReadOnlyMany },
+export const getAccessModeOptions = (
+  tFn: TFunction<'plugin__forklift-console-plugin'>,
+): { label: string; value: AccessMode | '' }[] => [
+  { label: tFn('Default'), value: '' },
+  { label: tFn('ReadWriteOnce (RWO)'), value: ACCESS_MODE.ReadWriteOnce },
+  { label: tFn('ReadWriteMany (RWX)'), value: ACCESS_MODE.ReadWriteMany },
+  { label: tFn('ReadOnlyMany (ROX)'), value: ACCESS_MODE.ReadOnlyMany },
 ];
 
 const RWX_CAPABLE_PROVISIONER_PATTERNS = ['rbd.csi.ceph.com', 'cephfs.csi.ceph.com'];

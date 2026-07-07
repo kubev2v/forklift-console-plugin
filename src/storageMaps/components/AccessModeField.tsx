@@ -1,11 +1,12 @@
 import { type FC, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
+import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import Select from '@components/common/Select';
 import {
   ExpandableSection,
   Form,
-  FormGroup,
   FormHelperText,
   HelperText,
   HelperTextItem,
@@ -15,7 +16,7 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 import { ACCESS_MODE, type AccessMode, type TargetStorage } from '@utils/storage/types';
 
-import { ACCESS_MODE_OPTIONS, isRwxCapableProvisioner } from '../utils/constants';
+import { getAccessModeOptions, isRwxCapableProvisioner } from '../utils/constants';
 
 import './OffloadStorageIndexedForm/OffloadStorageIndexedForm.style.scss';
 
@@ -65,10 +66,19 @@ const AccessModeField: FC<AccessModeFieldProps> = ({
               setIsExpanded(expanded);
             }}
             isExpanded={isExpanded}
-            isIndented
           >
             <Form className="offload-storage__form">
-              <FormGroup fieldId={fieldId} label={t('Access mode')}>
+              <FormGroupWithHelpText
+                fieldId={fieldId}
+                label={t('Access mode')}
+                labelHelp={
+                  <HelpIconPopover>
+                    {t(
+                      'ReadWriteOnce (RWO): A volume can be mounted as read-write by a single node. This does not support live migration. ReadWriteMany (RWX): A volume can be mounted as read-write by many nodes. This is required for live migration of OpenShift Virtualization VMs, as it allows the disk to be accessed concurrently by both the source and target nodes during the migration process. Ensure your chosen StorageClass supports RWX if live migration is desired.',
+                    )}
+                  </HelpIconPopover>
+                }
+              >
                 <Controller
                   name={fieldId}
                   control={control}
@@ -76,10 +86,7 @@ const AccessModeField: FC<AccessModeFieldProps> = ({
                     <Select
                       ref={field.ref}
                       id={fieldId}
-                      options={ACCESS_MODE_OPTIONS.map(({ label, value }) => ({
-                        label: t(label),
-                        value,
-                      }))}
+                      options={getAccessModeOptions(t)}
                       onSelect={async (_, value) => {
                         field.onChange(
                           (value as string) === '' ? undefined : (value as AccessMode),
@@ -104,7 +111,7 @@ const AccessModeField: FC<AccessModeFieldProps> = ({
                     </HelperText>
                   </FormHelperText>
                 )}
-              </FormGroup>
+              </FormGroupWithHelpText>
             </Form>
           </ExpandableSection>
         </SplitItem>
