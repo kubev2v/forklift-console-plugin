@@ -1,7 +1,4 @@
-import {
-  initializeForkliftSettings,
-  restoreForkliftSettings,
-} from '../../../fixtures/helpers/settingsHelpers';
+import { withTemporaryForkliftSettings } from '../../../fixtures/helpers/settingsHelpers';
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { HookSource } from '../../../types/enums';
@@ -58,10 +55,8 @@ test.describe('Plan AAP Hooks', { tag: '@downstream' }, () => {
     });
 
     // Clear AAP settings so the wizard renders the "AAP is not configured" alert.
-    // Restored in the finally block regardless of test outcome.
-    const originalSettings = await initializeForkliftSettings();
-
-    try {
+    // Restored regardless of test outcome.
+    await withTemporaryForkliftSettings(async () => {
       await test.step('Switch to "AAP" and verify AAP section appears', async () => {
         await wizard.hooks.selectHookSource(HookSource.AAP);
 
@@ -90,15 +85,6 @@ test.describe('Plan AAP Hooks', { tag: '@downstream' }, () => {
         await wizard.review.verifyStepVisible();
         await wizard.review.verifyHooksSection(HookSource.AAP);
       });
-    } finally {
-      if (originalSettings) {
-        const restored = await restoreForkliftSettings(originalSettings);
-        if (!restored) {
-          console.error(
-            'Failed to restore ForkliftController AAP settings — subsequent tests may inherit incorrect state',
-          );
-        }
-      }
-    }
+    });
   });
 });

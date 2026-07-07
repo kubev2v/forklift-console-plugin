@@ -1,5 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+const RESOURCES_HEADING_TIMEOUT_MS = 30_000;
+
 export class ResourcesTab {
   protected readonly page: Page;
 
@@ -16,7 +18,7 @@ export class ResourcesTab {
     await this.tab.click();
     // The provider watch + inventory REST call are sequential: provider must load before
     // inventory starts. On slow clusters the full chain can exceed the default 15 s timeout.
-    await expect(this.heading).toBeVisible({ timeout: 30000 });
+    await expect(this.heading).toBeVisible({ timeout: RESOURCES_HEADING_TIMEOUT_MS });
   }
 
   get rowTotalCpuCount(): Locator {

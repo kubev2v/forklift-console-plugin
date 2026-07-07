@@ -1,10 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import {
-  initializeForkliftSettings,
-  restoreForkliftSettings,
-} from '../../../fixtures/helpers/settingsHelpers';
+import { withTemporaryForkliftSettings } from '../../../fixtures/helpers/settingsHelpers';
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
@@ -169,9 +166,7 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
     await test.step('Verify edit modal shows AAP radio with three-way switching', async () => {
       // Clear AAP settings so the modal renders the "AAP is not configured" alert,
       // then restore original values when the step is done.
-      const originalSettings = await initializeForkliftSettings();
-
-      try {
+      await withTemporaryForkliftSettings(async () => {
         await planDetailsPage.hooksTab.openPreMigrationHookEditModal();
 
         const { hookEditModal } = planDetailsPage.hooksTab;
@@ -187,16 +182,7 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
         await hookEditModal.verifyLocalFieldsHidden();
 
         await hookEditModal.cancel();
-      } finally {
-        if (originalSettings) {
-          const restored = await restoreForkliftSettings(originalSettings);
-          if (!restored) {
-            console.error(
-              'Failed to restore ForkliftController settings — subsequent tests may inherit incorrect state',
-            );
-          }
-        }
-      }
+      });
     });
   });
 });

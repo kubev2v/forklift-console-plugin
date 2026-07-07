@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 // Short timeout: the tour either shows quickly or not at all.
 const GUIDED_TOUR_VISIBLE_TIMEOUT_MS = 2000;
@@ -21,6 +21,22 @@ export const disableGuidedTour = async (page: Page): Promise<void> => {
   if (isVisible) {
     await skipButton.click({ force: true, timeout: GUIDED_TOUR_CLICK_TIMEOUT_MS });
     await skipButton.waitFor({ state: 'hidden', timeout: GUIDED_TOUR_HIDDEN_TIMEOUT_MS });
+  }
+};
+
+// Dynamic plugin may not have registered its routes yet on first load; reload and retry once.
+export const waitForVisibleWithReload = async (
+  page: Page,
+  locator: Locator,
+  initialTimeoutMs: number,
+  retryTimeoutMs: number,
+): Promise<void> => {
+  try {
+    await expect(locator).toBeVisible({ timeout: initialTimeoutMs });
+  } catch {
+    await page.reload();
+    await page.waitForLoadState('domcontentloaded');
+    await expect(locator).toBeVisible({ timeout: retryTimeoutMs });
   }
 };
 

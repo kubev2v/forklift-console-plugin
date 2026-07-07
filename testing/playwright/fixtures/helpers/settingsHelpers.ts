@@ -103,3 +103,25 @@ export const restoreForkliftSettings = async (
 
   return result !== null;
 };
+
+// Clears known ForkliftController settings for the duration of fn, then restores the
+// original values regardless of outcome, logging if the restore itself fails.
+export const withTemporaryForkliftSettings = async (
+  fn: () => Promise<void>,
+  namespace = MTV_NAMESPACE,
+): Promise<void> => {
+  const originalSettings = await initializeForkliftSettings(namespace);
+
+  try {
+    await fn();
+  } finally {
+    if (originalSettings) {
+      const restored = await restoreForkliftSettings(originalSettings, namespace);
+      if (!restored) {
+        console.error(
+          'Failed to restore ForkliftController settings — subsequent tests may inherit incorrect state',
+        );
+      }
+    }
+  }
+};

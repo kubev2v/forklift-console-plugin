@@ -85,7 +85,9 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
         await navigation.navigateToOverview();
         // Let the locale file finish loading. catch() is mandatory — K8s watch streams
         // prevent networkidle from ever firing on busy clusters.
-        await page.waitForLoadState('networkidle', { timeout: 30_000 }).catch(() => undefined);
+        await page
+          .waitForLoadState('networkidle', { timeout: LOCALE_LOAD_TIMEOUT_MS })
+          .catch(() => undefined);
       });
 
       await test.step('Verify Overview page translations', async () => {
