@@ -41,8 +41,6 @@ const MigrationAlertsCard: FC = () => {
     [alerts],
   );
 
-  const totalCount = alerts.length;
-
   const renderAlertList = (): JSX.Element => {
     if (!loaded) {
       return (
@@ -83,10 +81,7 @@ const MigrationAlertsCard: FC = () => {
           hasNoOffset: false,
         }}
       >
-        <CardTitle className="migration-alerts-card__title">
-          {t('Migration plan alerts')}
-          <span className="migration-alerts-card__total-count">{totalCount}</span>
-        </CardTitle>
+        <CardTitle className="migration-alerts-card__title">{t('Migration plan alerts')}</CardTitle>
       </CardHeader>
 
       <CardBody className="migration-alerts-card__summary">
