@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import { POD_WATCH_TIMEOUT_MS } from '../../../utils/timeouts';
-import { V2_13_0 } from '../../../utils/version/constants';
+import { V5_0_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
 
 export class HealthTab {
@@ -12,14 +12,14 @@ export class HealthTab {
   }
 
   get conditionsCard(): Locator {
-    return isVersionAtLeast(V2_13_0)
+    return isVersionAtLeast(V5_0_0)
       ? this.page.getByTestId('health-conditions-card')
       : // nth(1) targets the second Expandable table — conditions follow controller (nth(0)).
         this.page.getByRole('grid', { name: 'Expandable table' }).nth(1);
   }
 
   get controllerCard(): Locator {
-    return isVersionAtLeast(V2_13_0)
+    return isVersionAtLeast(V5_0_0)
       ? this.page.getByTestId('health-controller-card')
       : this.page.getByRole('grid', { name: 'Expandable table' }).first();
   }

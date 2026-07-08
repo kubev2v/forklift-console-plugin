@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import { RESOURCES_HEADING_TIMEOUT_MS } from '../../../utils/timeouts';
-import { V2_13_0 } from '../../../utils/version/constants';
+import { V5_0_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
 
 export class ResourcesTab {
@@ -12,7 +12,7 @@ export class ResourcesTab {
   }
 
   get heading(): Locator {
-    return isVersionAtLeast(V2_13_0)
+    return isVersionAtLeast(V5_0_0)
       ? this.page.getByTestId('plan-resources-heading')
       : this.page.getByRole('heading', { level: 2, name: 'Resources' });
   }
@@ -40,13 +40,13 @@ export class ResourcesTab {
   }
 
   get table(): Locator {
-    return isVersionAtLeast(V2_13_0)
+    return isVersionAtLeast(V5_0_0)
       ? this.page.getByTestId('plan-resources-table')
       : this.page.getByRole('grid');
   }
 
   async verifyAggregateCells(): Promise<void> {
-    if (isVersionAtLeast(V2_13_0)) {
+    if (isVersionAtLeast(V5_0_0)) {
       for (const testId of [
         'resources-vms-total',
         'resources-cpu-total',
