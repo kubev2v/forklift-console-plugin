@@ -23,15 +23,14 @@ export const createMockPersistedState = (
   ...overrides,
 });
 
-export const createMockTopic = (id: string): LearningExperienceTopic =>
-  ({
-    id,
-    title: `Test Topic ${id}`,
-    description: `Description for ${id}`,
-    icon: jest.fn(),
-    subTopics: jest.fn(() => []),
-    trackingEventTopic: `test-${id}`,
-  }) as unknown as LearningExperienceTopic;
+export const createMockTopic = (id: string): LearningExperienceTopic => ({
+  id,
+  title: `Test Topic ${id}`,
+  description: `Description for ${id}`,
+  icon: jest.fn(),
+  subTopics: jest.fn(() => []),
+  trackingEventTopic: `test-${id}`,
+});
 
 export const setupMocks = (
   persistedState: PersistedState = {},

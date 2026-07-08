@@ -4,15 +4,14 @@ import { CATEGORY_TYPES, CONDITION_STATUS, PHASES, taskStatuses } from '@utils/c
 
 import { getJobPhase } from '../utils';
 
-const createJob = (overrides: Partial<IoK8sApiBatchV1Job['status']> = {}): IoK8sApiBatchV1Job =>
-  ({
-    status: {
-      conditions: [],
-      failed: undefined,
-      succeeded: undefined,
-      ...overrides,
-    },
-  }) as unknown as IoK8sApiBatchV1Job;
+const createJob = (overrides: Partial<IoK8sApiBatchV1Job['status']> = {}): IoK8sApiBatchV1Job => ({
+  status: {
+    conditions: [],
+    failed: undefined,
+    succeeded: undefined,
+    ...overrides,
+  },
+});
 
 describe('getJobPhase', () => {
   it('returns Error when failed > 0', () => {

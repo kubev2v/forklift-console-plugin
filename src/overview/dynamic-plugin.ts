@@ -1,9 +1,4 @@
 import type {
-  ContextProvider,
-  HrefNavItem,
-  RoutePage,
-} from '@openshift-console/dynamic-plugin-sdk';
-import type {
   ConsolePluginBuildMetadata,
   EncodedExtension,
 } from '@openshift-console/dynamic-plugin-sdk-webpack';
@@ -21,7 +16,7 @@ export const extensions: EncodedExtension[] = [
       useValueHook: { $codeRef: 'useOverviewContext.useOverviewContext' },
     },
     type: 'console.context-provider',
-  } as EncodedExtension<ContextProvider>,
+  },
   {
     flags: {
       required: ['CAN_LIST_NS'],
@@ -34,7 +29,7 @@ export const extensions: EncodedExtension[] = [
       path: ['/mtv/overview'],
     },
     type: 'console.page/route',
-  } as EncodedExtension<RoutePage>,
+  },
   {
     flags: {
       required: ['CAN_LIST_NS'],
@@ -54,7 +49,7 @@ export const extensions: EncodedExtension[] = [
       section: 'migration',
     },
     type: 'console.navigation/href',
-  } as EncodedExtension<HrefNavItem>,
+  },
   {
     flags: {
       required: ['CAN_LIST_NS'],
@@ -73,5 +68,5 @@ export const extensions: EncodedExtension[] = [
       section: 'migration-virt-perspective',
     },
     type: 'console.navigation/href',
-  } as EncodedExtension<HrefNavItem>,
+  },
 ];

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import { TableCell } from 'src/components/TableCell/TableCell';
 
 import { Button, ButtonVariant } from '@patternfly/react-core';
@@ -36,8 +36,10 @@ const ResourceTableCell: FC<ResourceTableCellProps> = ({ fieldsData }) => {
           variant={ButtonVariant.link}
           onClick={() => {
             const filterParams = getFilterParams(condition?.source, condition?.type);
-            navigate(fieldsData?.planUrl);
-            navigate(`${fieldsData?.planUrl}/vms?${filterParams}`, { replace: true });
+            navigate(fieldsData?.planUrl)?.catch(() => undefined);
+            navigate(`${fieldsData?.planUrl}/vms?${filterParams}`, { replace: true })?.catch(
+              () => undefined,
+            );
           }}
         >
           {`${condition?.vmsNum} ${t('VMs')}`}

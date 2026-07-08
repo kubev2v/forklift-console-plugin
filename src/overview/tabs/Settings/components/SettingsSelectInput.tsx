@@ -151,7 +151,7 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
 
       onChange(key === BLANK_OPTION_KEY ? '' : key);
 
-      setSelected(showKeyAsSelected && key !== BLANK_OPTION_KEY ? key : (selectedValue as string));
+      setSelected(showKeyAsSelected && key !== BLANK_OPTION_KEY ? key : selectedValue);
       setIsOpen(false);
     },
     [nameToKey, onChange, showKeyAsSelected],

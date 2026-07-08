@@ -24,7 +24,7 @@ const OpenShiftUrlField: FC = () => {
       helperText={t('The URL of the API endpoint, for example: https://example.com:6443.')}
       fieldRules={{
         validate: {
-          validUrl: async (val: string | undefined) => {
+          validUrl: (val: string | undefined) => {
             const trimmedValue = val?.trim() ?? '';
 
             if (!trimmedValue) {

@@ -49,10 +49,10 @@ export default {
     'playwright',
   ],
   ignoreDependencies: [
+    'ajv', // Required for copy-webpack-plugin → schema-utils → ajv-keywords peer dep resolution
     'ts-node',
     '@types/i18next', // Provides TypeScript types for i18next
     'monaco-editor', // Required peer dependency for @patternfly/react-code-editor
     'ocp-plugin-i18n-scripts', // Provides ocp-i18n-* CLI binaries for i18n workflow
-    'react-redux', // Provided by OpenShift Console host at runtime
   ],
 } satisfies KnipConfig;

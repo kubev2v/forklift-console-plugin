@@ -14,7 +14,7 @@ const ServiceAccountTokenField: FC = () => {
       fieldId={ProviderFormFieldId.ServiceAccountToken}
       fieldRules={{
         validate: {
-          validToken: async (val: string | undefined) => {
+          validToken: (val: string | undefined) => {
             const trimmedValue = val?.trim() ?? '';
             if (!trimmedValue) {
               return undefined;

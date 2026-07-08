@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import { Link } from 'react-router-dom-v5-compat';
+import { Link } from 'react-router';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import SmartLinkify from '@components/common/SmartLinkify';

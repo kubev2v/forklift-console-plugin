@@ -69,11 +69,7 @@ type VsphereVirtualMachine = VSphereVM & {
 };
 
 export type ProviderVirtualMachine =
-  | VsphereVirtualMachine
-  | OpenshiftVM
-  | OVirtVM
-  | OpenstackVM
-  | OvaVM;
+  VsphereVirtualMachine | OpenshiftVM | OVirtVM | OpenstackVM | OvaVM;
 
 export type CreatePlanFormData = FieldValues & {
   [GeneralFormFieldId.PlanName]: string;

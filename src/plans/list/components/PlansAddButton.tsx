@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -35,7 +35,7 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, namespace, testId 
       reference: PlanModelRef,
     });
 
-    navigate(`${planResourceUrl}/~new`);
+    navigate(`${planResourceUrl}/~new`)?.catch(() => undefined);
   };
 
   const button = (

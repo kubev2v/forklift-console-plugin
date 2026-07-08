@@ -30,7 +30,7 @@ describe('groupConcernsByCategory', () => {
   });
 
   it('handles undefined input without crashing', () => {
-    const grouped = groupConcernsByCategory(undefined as unknown as Concern[]);
+    const grouped = groupConcernsByCategory(undefined);
 
     for (const category of orderedConcernCategories) {
       expect(grouped[category]).toBeDefined();
@@ -59,9 +59,7 @@ describe('groupConditionsByCategory', () => {
   });
 
   it('handles undefined input without crashing', () => {
-    const grouped = groupConditionsByCategory(
-      undefined as unknown as V1beta1PlanStatusConditions[],
-    );
+    const grouped = groupConditionsByCategory(undefined);
 
     for (const category of orderedConcernCategories) {
       expect(grouped[category]).toBeDefined();

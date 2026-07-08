@@ -1,5 +1,5 @@
 import { type FC, type Ref, useState } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModelRef } from '@forklift-ui/types';
@@ -62,7 +62,7 @@ const StorageMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
               creationMethod: CreationMethod.Form,
               namespace,
             });
-            navigate(`/k8s/storageMaps/create/form`);
+            navigate(`/k8s/storageMaps/create/form`)?.catch(() => undefined);
           }}
         >
           {t('Create with form')}
@@ -75,7 +75,7 @@ const StorageMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
               creationMethod: CreationMethod.YamlEditor,
               namespace,
             });
-            navigate(`${storageMapsListUrl}/~new`);
+            navigate(`${storageMapsListUrl}/~new`)?.catch(() => undefined);
           }}
         >
           {t('Create with YAML')}

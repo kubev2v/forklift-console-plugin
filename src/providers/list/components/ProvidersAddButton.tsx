@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 
 import { ProviderModelRef } from '@forklift-ui/types';
 import { Button, ButtonVariant } from '@patternfly/react-core';
@@ -32,7 +32,7 @@ const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, namespace,
       namespace,
     });
 
-    navigate(`${providersListURL}/~new`);
+    navigate(`${providersListURL}/~new`)?.catch(() => undefined);
   };
 
   return (

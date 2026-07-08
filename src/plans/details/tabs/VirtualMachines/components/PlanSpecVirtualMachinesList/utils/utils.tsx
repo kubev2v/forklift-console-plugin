@@ -71,13 +71,11 @@ export const specVirtualMachineFields: ResourceField[] = [
       placeholderLabel: t('Filter by concerns (severity)'),
       primary: false,
       type: CustomFilterType.ConcernsSeverityOrType,
-      values: orderedConcernCategories.map(
-        (category): EnumValue => ({
-          icon: getCategoryIcon(category),
-          id: category,
-          label: category,
-        }),
-      ),
+      values: orderedConcernCategories.map((category): EnumValue => ({
+        icon: getCategoryIcon(category),
+        id: category,
+        label: category,
+      })),
     },
     info: {
       ariaLabel: 'More information on concerns',

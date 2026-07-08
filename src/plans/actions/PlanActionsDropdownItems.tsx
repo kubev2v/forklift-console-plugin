@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -89,7 +89,7 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
         value={0}
         key="edit"
         onClick={() => {
-          navigate(isDetailsPage ? `${planURL}/yaml` : planURL);
+          navigate(isDetailsPage ? `${planURL}/yaml` : planURL)?.catch(() => undefined);
         }}
         description={isDetailsPage ? undefined : getEditDescription(planStatus)}
         isDisabled={

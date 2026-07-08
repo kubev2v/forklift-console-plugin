@@ -1,5 +1,5 @@
 import { type FC, type Ref, useState } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModelRef } from '@forklift-ui/types';
@@ -63,7 +63,7 @@ const NetworkMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
               creationMethod: CreationMethod.Form,
               namespace,
             });
-            navigate(`/k8s/networkMaps/create/form`);
+            navigate(`/k8s/networkMaps/create/form`)?.catch(() => undefined);
           }}
         >
           {t('Create with form')}
@@ -77,7 +77,7 @@ const NetworkMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
               creationMethod: CreationMethod.YamlEditor,
               namespace,
             });
-            navigate(`${networkMapsListUrl}/~new`);
+            navigate(`${networkMapsListUrl}/~new`)?.catch(() => undefined);
           }}
         >
           {t('Create with YAML')}

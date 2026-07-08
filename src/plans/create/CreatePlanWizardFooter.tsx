@@ -1,5 +1,5 @@
 import { type FC, type MouseEvent, useCallback, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom-v5-compat';
+import { useLocation, useNavigate } from 'react-router';
 
 import { PlanModelRef } from '@forklift-ui/types';
 import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
@@ -80,7 +80,7 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
 
   const onCancel = useCallback(() => {
     if (hasSourceProvider) {
-      navigate(-1);
+      navigate(-1)?.catch(() => undefined);
       return;
     }
 
@@ -89,7 +89,7 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
       reference: PlanModelRef,
     });
 
-    navigate(plansListUrl);
+    navigate(plansListUrl)?.catch(() => undefined);
   }, [hasSourceProvider, navigate, activeNamespace]);
 
   return (

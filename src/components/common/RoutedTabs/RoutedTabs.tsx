@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom-v5-compat';
+import { useLocation, useNavigate } from 'react-router';
 
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 
@@ -25,7 +25,7 @@ const RoutedTabs: FC<RoutedTabsProps> = ({ tabs }) => {
         const selectedTab = tabs.find((tab) => tab.to === eventKey);
 
         if (selectedTab) {
-          navigate(selectedTab.to);
+          navigate(selectedTab.to)?.catch(() => undefined);
           selectedTab.onClick?.();
         }
       }}

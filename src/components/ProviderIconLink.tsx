@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 
 import { Button, ButtonVariant, Split, SplitItem, Truncate } from '@patternfly/react-core';
 
@@ -28,7 +28,7 @@ const ProviderIconLink: FC<ProviderIconLinkProps> = ({
           isInline
           variant={ButtonVariant.link}
           onClick={() => {
-            navigate(href);
+            navigate(href)?.catch(() => undefined);
           }}
         >
           <Truncate content={providerName ?? ''} />

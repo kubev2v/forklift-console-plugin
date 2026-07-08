@@ -1,5 +1,5 @@
 import { type FC, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import { OverviewContext } from 'src/overview/context/OverviewContext';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

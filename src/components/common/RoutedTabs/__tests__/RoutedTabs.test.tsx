@@ -1,4 +1,4 @@
-import { MemoryRouter } from 'react-router-dom-v5-compat';
+import { MemoryRouter } from 'react-router';
 
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
@@ -8,8 +8,8 @@ import RoutedTabs from '../RoutedTabs';
 
 const mockNavigate = jest.fn();
 
-jest.mock('react-router-dom-v5-compat', () => ({
-  ...jest.requireActual('react-router-dom-v5-compat'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: () => mockNavigate,
 }));
 

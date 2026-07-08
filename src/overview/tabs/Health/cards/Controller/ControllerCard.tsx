@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Link } from 'react-router-dom-v5-compat';
+import { Link } from 'react-router';
 import TabTitle from 'src/overview/components/TabTitle';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

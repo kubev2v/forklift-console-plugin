@@ -1,4 +1,3 @@
-import type { NavSection } from '@openshift-console/dynamic-plugin-sdk';
 import type { EncodedExtension } from '@openshift-console/dynamic-plugin-sdk-webpack';
 
 import { extensions as networkMapExtensions } from './src/networkMaps/dynamic-plugin';
@@ -22,7 +21,7 @@ const extensions: EncodedExtension[] = [
       perspective: 'admin',
     },
     type: 'console.navigation/section',
-  } as EncodedExtension<NavSection>,
+  },
   {
     properties: {
       dataAttributes: {
@@ -36,7 +35,7 @@ const extensions: EncodedExtension[] = [
       perspective: 'virtualization-perspective',
     },
     type: 'console.navigation/section',
-  } as EncodedExtension<NavSection>,
+  },
   ...onlineHelpExtensions,
   ...overviewExtensions,
   ...providerExtensions,

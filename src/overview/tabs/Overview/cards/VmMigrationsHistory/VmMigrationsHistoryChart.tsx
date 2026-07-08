@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import type { Interval } from 'luxon';
 import { TimeRangeOptions } from 'src/overview/tabs/Overview/utils/timeRangeOptions';
 
@@ -124,7 +124,7 @@ const VmMigrationsHistoryChart = ({
             variant={ButtonVariant.primary}
             onClick={() => {
               trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_FROM_OVERVIEW_CLICKED);
-              navigate(`${plansListURL}/~new`);
+              navigate(`${plansListURL}/~new`)?.catch(() => undefined);
             }}
           >
             {t('Create migration plan')}

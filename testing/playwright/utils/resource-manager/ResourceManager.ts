@@ -102,20 +102,20 @@ export class ResourceManager {
 
   addProject(projectName: string, isOpenShift = true): void {
     const project: OpenshiftProject | IoK8sApiCoreV1Namespace = isOpenShift
-      ? ({
+      ? {
           kind: OPENSHIFT_PROJECT_KIND,
           apiVersion: OPENSHIFT_PROJECT_API_VERSION,
           metadata: {
             name: projectName,
           },
-        } as OpenshiftProject)
-      : ({
+        }
+      : {
           kind: NAMESPACE_KIND,
           apiVersion: NAMESPACE_API_VERSION,
           metadata: {
             name: projectName,
           },
-        } as IoK8sApiCoreV1Namespace);
+        };
 
     this.addResource(project);
   }

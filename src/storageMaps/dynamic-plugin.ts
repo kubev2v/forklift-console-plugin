@@ -1,11 +1,5 @@
 import { StorageMapModel, StorageMapModelGroupVersionKind } from '@forklift-ui/types';
 import type {
-  ModelMetadata,
-  ResourceDetailsPage,
-  ResourceListPage,
-  ResourceNSNavItem,
-} from '@openshift-console/dynamic-plugin-sdk';
-import type {
   ConsolePluginBuildMetadata,
   EncodedExtension,
 } from '@openshift-console/dynamic-plugin-sdk-webpack';
@@ -33,7 +27,7 @@ export const extensions: EncodedExtension[] = [
       section: 'migration',
     },
     type: 'console.navigation/resource-ns',
-  } as EncodedExtension<ResourceNSNavItem>,
+  },
   {
     properties: {
       dataAttributes: {
@@ -49,7 +43,7 @@ export const extensions: EncodedExtension[] = [
       section: 'migration-virt-perspective',
     },
     type: 'console.navigation/resource-ns',
-  } as EncodedExtension<ResourceNSNavItem>,
+  },
 
   {
     properties: {
@@ -59,7 +53,7 @@ export const extensions: EncodedExtension[] = [
       model: StorageMapModelGroupVersionKind,
     },
     type: 'console.page/resource/list',
-  } as EncodedExtension<ResourceListPage>,
+  },
 
   {
     properties: {
@@ -69,12 +63,11 @@ export const extensions: EncodedExtension[] = [
       model: StorageMapModelGroupVersionKind,
     },
     type: 'console.page/resource/details',
-  } as EncodedExtension<ResourceDetailsPage>,
+  },
 
   {
     properties: {
       component: { $codeRef: 'StorageMapCreatePage' },
-      exact: true,
       path: `/k8s/storageMaps/create/form`,
     },
     type: 'console.page/route',
@@ -86,7 +79,7 @@ export const extensions: EncodedExtension[] = [
       ...StorageMapModel,
     },
     type: 'console.model-metadata',
-  } as EncodedExtension<ModelMetadata>,
+  },
 
   {
     properties: {

@@ -118,7 +118,7 @@ const config: Configuration = {
     new ConsoleRemotePlugin({
       extensions,
       pluginMetadata,
-    }) as unknown as WebpackPluginInstance,
+    }),
     new CopyPlugin({
       patterns: [{ from: '../locales', to: '../dist/locales' }],
     }),

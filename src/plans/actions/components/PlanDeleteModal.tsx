@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import { ItemIsOwnedAlert } from 'src/components/modals/ItemIsOwnedAlert';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/utils';
@@ -27,7 +27,7 @@ const PlanDeleteModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
     const deleted = k8sDelete({ model: PlanModel, resource: plan });
     navigate(
       getResourceUrl({ groupVersionKind: getGroupVersionKindForModel(PlanModel), namespace }),
-    );
+    )?.catch(() => undefined);
 
     return deleted;
   }, [namespace, navigate, plan]);

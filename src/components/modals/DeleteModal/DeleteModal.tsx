@@ -1,5 +1,5 @@
 import { type ReactNode, useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import useToggle from 'src/utils/hooks/useToggle';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -79,9 +79,9 @@ export const DeleteModal: ModalComponent<DeleteModalProps> = ({
     try {
       await k8sDelete({ model, resource });
       if (redirectTo) {
-        navigate(redirectTo);
+        navigate(redirectTo)?.catch(() => undefined);
       } else if (isOnResourcePage()) {
-        navigate(getResourceUrl({ groupVersionKind, namespace }));
+        navigate(getResourceUrl({ groupVersionKind, namespace }))?.catch(() => undefined);
       }
 
       closeModal();

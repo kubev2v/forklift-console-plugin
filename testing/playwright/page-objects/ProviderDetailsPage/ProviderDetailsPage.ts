@@ -80,7 +80,7 @@ export class ProviderDetailsPage {
   }
 
   async isInspectVmsButtonVisible(): Promise<boolean> {
-    return await this.inspectVmsButton.isVisible();
+    return this.inspectVmsButton.isVisible();
   }
 
   async navigate(providerName: string, namespace: string): Promise<void> {
