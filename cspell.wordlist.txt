@@ -33,6 +33,7 @@ btrfs
 cacerts
 casttype
 cdroms
+cephfs
 chunkhash
 clusterversion
 clusterversions
@@ -112,6 +113,7 @@ promisc
 protobuf
 pvc
 pvcs
+rbd
 quickstarts
 snapshotting
 storageclass

@@ -2,6 +2,7 @@ import { type FC, useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { createPlanStorageMapFieldLabels } from 'src/plans/create/steps/storage-map/constants';
 import { validatePlanStorageMaps } from 'src/plans/create/steps/storage-map/utils';
+import AccessModeField from 'src/storageMaps/components/AccessModeField';
 import GroupedSourceStorageField from 'src/storageMaps/components/GroupedSourceStorageField';
 import OffloadStorageRow from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageRow';
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
@@ -9,6 +10,7 @@ import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import type { V1beta1Provider } from '@forklift-ui/types';
+import { Stack, StackItem } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import type { InventoryStorage } from '@utils/hooks/useStorages';
@@ -39,6 +41,42 @@ const getStorageMapHeaders = (isIscsi?: boolean) =>
           width: 45 as const,
         },
       ];
+
+type StorageMappingOptionsProps = {
+  index: number;
+  isVsphereOffload: boolean;
+  sourceProvider: V1beta1Provider;
+  sourceStorages: InventoryStorage[];
+  targetStorages: TargetStorage[];
+};
+
+const StorageMappingOptions: FC<StorageMappingOptionsProps> = ({
+  index,
+  isVsphereOffload,
+  sourceProvider,
+  sourceStorages,
+  targetStorages,
+}) => (
+  <Stack hasGutter>
+    <StackItem>
+      <AccessModeField
+        fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
+        targetStorages={targetStorages}
+        targetStorageFieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+      />
+    </StackItem>
+    {isVsphereOffload && (
+      <StackItem>
+        <OffloadStorageRow
+          index={index}
+          sourceProvider={sourceProvider}
+          sourceStorages={sourceStorages}
+          targetStorages={targetStorages}
+        />
+      </StackItem>
+    )}
+  </Stack>
+);
 
 type PlanStorageMapFieldsTableProps = {
   sourceProvider: V1beta1Provider;
@@ -96,16 +134,15 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
       headers={getStorageMapHeaders(isIscsi)}
       fieldRows={storageMappingFields.map((field, index) => ({
         ...field,
-        ...(isVsphereOffload && {
-          additionalOptions: (
-            <OffloadStorageRow
-              index={index}
-              sourceProvider={sourceProvider}
-              sourceStorages={sourceStorages ?? []}
-              targetStorages={targetStorages}
-            />
-          ),
-        }),
+        additionalOptions: (
+          <StorageMappingOptions
+            index={index}
+            isVsphereOffload={isVsphereOffload}
+            sourceProvider={sourceProvider}
+            sourceStorages={sourceStorages ?? []}
+            targetStorages={targetStorages}
+          />
+        ),
         inputs: isIscsi
           ? [
               <TargetStorageInputField

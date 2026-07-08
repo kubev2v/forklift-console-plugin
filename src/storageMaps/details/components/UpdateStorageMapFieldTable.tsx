@@ -4,6 +4,7 @@ import { CreatePlanStorageMapFieldId } from 'src/plans/create/steps/storage-map/
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import type { V1beta1Provider } from '@forklift-ui/types';
+import { Stack, StackItem } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -13,6 +14,7 @@ import {
   type TargetStorage,
 } from '@utils/storage/types';
 
+import AccessModeField from '../../components/AccessModeField';
 import OffloadStorageIndexedForm from '../../components/OffloadStorageIndexedForm/OffloadStorageIndexedForm';
 import SourceStorageField from '../../components/SourceStorageField';
 import TargetStorageField from '../../components/TargetStorageField';
@@ -75,12 +77,22 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
       ]}
       fieldRows={storageMappingFields.map((field, index) => ({
         ...field,
-        ...(isVsphere &&
-          isCopyOffloadEnabled && {
-            additionalOptions: (
-              <OffloadStorageIndexedForm index={index} sourceProvider={sourceProvider} />
-            ),
-          }),
+        additionalOptions: (
+          <Stack hasGutter>
+            <StackItem>
+              <AccessModeField
+                fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
+                targetStorages={targetStorages}
+                targetStorageFieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              />
+            </StackItem>
+            {isVsphere && isCopyOffloadEnabled && (
+              <StackItem>
+                <OffloadStorageIndexedForm index={index} sourceProvider={sourceProvider} />
+              </StackItem>
+            )}
+          </Stack>
+        ),
         inputs: [
           <SourceStorageField
             fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
