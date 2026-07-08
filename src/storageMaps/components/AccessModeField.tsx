@@ -86,7 +86,7 @@ const AccessModeField: FC<AccessModeFieldProps> = ({
                     <Select
                       ref={field.ref}
                       id={fieldId}
-                      options={getAccessModeOptions(t)}
+                      options={getAccessModeOptions()}
                       onSelect={async (_, value) => {
                         field.onChange(
                           (value as string) === '' ? undefined : (value as AccessMode),
