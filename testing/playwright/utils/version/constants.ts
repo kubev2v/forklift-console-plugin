@@ -18,6 +18,7 @@ export const V2_11_0: VersionTuple = [2, 11, 0];
 export const V2_11_3: VersionTuple = [2, 11, 3];
 export const V2_12_0: VersionTuple = [2, 12, 0];
 export const V2_13_0: VersionTuple = [2, 13, 0];
+export const V5_0_0: VersionTuple = [5, 0, 0];
 
 /** Pre-parsed CNV (OpenShift Virtualization) version constants. */
 export const CNV_4_17_0: VersionTuple = [4, 17, 0];

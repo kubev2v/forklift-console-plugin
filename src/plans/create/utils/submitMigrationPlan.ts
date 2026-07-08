@@ -2,12 +2,10 @@ import { createStorageMap } from 'src/storageMaps/create/utils/createStorageMap'
 
 import type {
   IoK8sApiCoreV1ConfigMap,
-  IoK8sApiCoreV1Secret,
   V1beta1NetworkMap,
   V1beta1StorageMap,
 } from '@forklift-ui/types';
 import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
-import { isEmpty } from '@utils/helpers';
 import type { TargetStorage } from '@utils/storage/types';
 
 import {
@@ -22,7 +20,6 @@ import type { CreatePlanFormData } from '../types';
 import { addPlanResourceOwnerRefs } from './addPlanResourceOwnerRefs';
 import { copyNetworkMap } from './copyNetworkMap';
 import { copyStorageMap } from './copyStorageMap';
-import { createDecryptionSecret } from './createDecryptionSecret';
 import {
   createAapMigrationHooks,
   type CreatedHooks,
@@ -30,6 +27,7 @@ import {
 } from './createMigrationHooks';
 import { createNetworkMap } from './createNetworkMap';
 import { createPlan } from './createPlan';
+import { resolveDecryptionSecret } from './resolveDecryptionSecret';
 import { resolveScriptsConfigMap } from './resolveScriptsConfigMap';
 
 type ResolveHooksParams = {
@@ -100,7 +98,9 @@ export const submitMigrationPlan = async (
     customScripts,
     customScriptsType,
     diskDecryptionPassPhrases,
+    diskDecryptionType,
     existingCustomScriptsConfigMap,
+    existingLUKSSecret,
     existingNetworkMap,
     existingStorageMap,
     instanceTypes,
@@ -147,7 +147,7 @@ export const submitMigrationPlan = async (
   const createResourceRequests: [
     Promise<V1beta1NetworkMap>,
     Promise<V1beta1StorageMap>,
-    Promise<IoK8sApiCoreV1Secret | undefined>,
+    ReturnType<typeof resolveDecryptionSecret>,
     Promise<CreatedHooks>,
     Promise<IoK8sApiCoreV1ConfigMap | undefined>,
   ] = [
@@ -175,10 +175,13 @@ export const submitMigrationPlan = async (
           trackEvent,
         }),
 
-    isEmpty(diskDecryptionPassPhrases) ||
-    diskDecryptionPassPhrases.every((diskPhrase) => diskPhrase.value === '')
-      ? Promise.resolve(undefined)
-      : createDecryptionSecret(diskDecryptionPassPhrases, planName, planProject),
+    resolveDecryptionSecret({
+      diskDecryptionPassPhrases,
+      diskDecryptionType,
+      existingLUKSSecret,
+      planName,
+      planProject,
+    }),
 
     resolveHooksCreation({
       hasAapHooks,
@@ -202,13 +205,13 @@ export const submitMigrationPlan = async (
     }),
   ];
 
-  const [planNetworkMap, planStorageMap, createdSecret, createdHooks, scriptsConfigMap] =
+  const [planNetworkMap, planStorageMap, decryptionResult, createdHooks, scriptsConfigMap] =
     await Promise.all(createResourceRequests);
 
   const createdPlanRef = await createPlan({
     customScriptsConfigMap: scriptsConfigMap,
     instanceTypes,
-    luks: createdSecret ? { name: createdSecret.metadata?.name } : undefined,
+    luks: decryptionResult.secret ? { name: decryptionResult.secret.metadata?.name } : undefined,
     migrateSharedDisks,
     migrationType,
     nbdeClevis,
@@ -234,7 +237,7 @@ export const submitMigrationPlan = async (
       hooks: createdHooks,
       networkMap: planNetworkMap,
       scriptsConfigMap,
-      secret: createdSecret,
+      secret: decryptionResult.secret,
       storageMap: planStorageMap,
     },
     createdPlanRef,

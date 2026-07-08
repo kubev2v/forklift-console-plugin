@@ -29,6 +29,14 @@ export type OVirtVMWithDisks = OVirtVM & {
   }[];
 };
 
+export type AccessMode = 'ReadWriteOnce' | 'ReadWriteMany' | 'ReadOnlyMany';
+
+export const ACCESS_MODE = {
+  ReadOnlyMany: 'ReadOnlyMany',
+  ReadWriteMany: 'ReadWriteMany',
+  ReadWriteOnce: 'ReadWriteOnce',
+} as const satisfies Record<string, AccessMode>;
+
 export enum StorageMapFieldId {
   MapName = 'mapName',
   Project = 'project',
@@ -37,6 +45,7 @@ export enum StorageMapFieldId {
   TargetProvider = 'targetProvider',
   SourceStorage = 'sourceStorage',
   TargetStorage = 'targetStorage',
+  AccessMode = 'accessMode',
   OffloadPlugin = 'offloadPlugin',
   StorageSecret = 'storageSecret',
   StorageProduct = 'storageProduct',
@@ -45,6 +54,7 @@ export enum StorageMapFieldId {
 export type StorageMapping = {
   [StorageMapFieldId.SourceStorage]: StorageMappingValue;
   [StorageMapFieldId.TargetStorage]: StorageMappingValue;
+  [StorageMapFieldId.AccessMode]?: AccessMode;
   [StorageMapFieldId.OffloadPlugin]?: string;
   [StorageMapFieldId.StorageSecret]?: string;
   [StorageMapFieldId.StorageProduct]?: string;

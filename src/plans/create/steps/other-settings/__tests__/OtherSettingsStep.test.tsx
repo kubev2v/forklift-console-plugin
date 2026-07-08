@@ -6,7 +6,7 @@ import { userEvent } from '@testing-library/user-event';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { GeneralFormFieldId } from '../../general-information/constants';
-import { OtherSettingsFormFieldId } from '../constants';
+import { DiskDecryptionType, OtherSettingsFormFieldId } from '../constants';
 import OtherSettingsStep from '../OtherSettingsStep';
 
 const mockUseCreatePlanFormContext = jest.fn();
@@ -17,6 +17,7 @@ jest.mock('../../../hooks/useCreatePlanFormContext', () => ({
 jest.mock('../InstanceTypeField', () => () => <div data-testid="instance-type-field" />);
 jest.mock('../NBDEClevisField', () => () => <div data-testid="nbde-field" />);
 jest.mock('../DiskPassPhraseFieldTable', () => () => <div data-testid="passphrase-field" />);
+jest.mock('../ExistingLUKSSecretField', () => () => <div data-testid="existing-luks-field" />);
 jest.mock('../TransferNetworkField', () => () => <div data-testid="transfer-field" />);
 jest.mock('../PreserveStaticIpsField', () => () => <div data-testid="static-ips-field" />);
 jest.mock('../RootDeviceField', () => () => <div data-testid="root-device-field" />);
@@ -34,6 +35,7 @@ const TestWrapper = ({
     defaultValues: {
       [GeneralFormFieldId.SourceProvider]: sourceProvider,
       [OtherSettingsFormFieldId.NBDEClevis]: nbdeClevis,
+      [OtherSettingsFormFieldId.DiskDecryptionType]: DiskDecryptionType.New,
     },
   });
 
@@ -83,6 +85,7 @@ describe('OtherSettingsStep', () => {
         defaultValues: {
           [GeneralFormFieldId.SourceProvider]: vsphereProvider,
           [OtherSettingsFormFieldId.NBDEClevis]: false,
+          [OtherSettingsFormFieldId.DiskDecryptionType]: DiskDecryptionType.New,
         },
       });
 

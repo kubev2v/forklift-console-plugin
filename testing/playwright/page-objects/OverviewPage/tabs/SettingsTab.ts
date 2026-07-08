@@ -1,9 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-const PAGE_LOAD_INITIAL_TIMEOUT_MS = 10_000;
-const PAGE_LOAD_RETRY_TIMEOUT_MS = 20_000;
-
 import { NavigationHelper } from '../../../utils/NavigationHelper';
+import { PAGE_LOAD_INITIAL_TIMEOUT_MS, PAGE_LOAD_RETRY_TIMEOUT_MS } from '../../../utils/timeouts';
 import { waitForVisibleWithReload } from '../../../utils/utils';
 import { SettingsEditModal } from '../modals/SettingsEditModal';
 

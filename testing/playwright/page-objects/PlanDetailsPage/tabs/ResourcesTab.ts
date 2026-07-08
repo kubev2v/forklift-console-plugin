@@ -1,11 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { RESOURCES_HEADING_TIMEOUT_MS } from '../../../utils/timeouts';
 import { V2_13_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
-
-// The provider watch + inventory REST call are sequential: provider must load before
-// inventory starts. On slow clusters the full chain can exceed the default 15 s timeout.
-const RESOURCES_HEADING_TIMEOUT_MS = 30_000;
 
 export class ResourcesTab {
   protected readonly page: Page;

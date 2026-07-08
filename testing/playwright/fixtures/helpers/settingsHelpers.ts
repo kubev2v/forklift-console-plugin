@@ -104,10 +104,10 @@ export const restoreForkliftSettings = async (
   return result !== null;
 };
 
-// Clears known ForkliftController settings for the duration of fn, then restores the
+// Clears known ForkliftController settings for the duration of testCallback, then restores the
 // original values regardless of outcome, logging if the restore itself fails.
 export const withTemporaryForkliftSettings = async (
-  fn: () => Promise<void>,
+  testCallback: () => Promise<void>,
   namespace = MTV_NAMESPACE,
 ): Promise<void> => {
   const originalSettings = await initializeForkliftSettings(namespace);
@@ -117,7 +117,7 @@ export const withTemporaryForkliftSettings = async (
   }
 
   try {
-    await fn();
+    await testCallback();
   } finally {
     const restored = await restoreForkliftSettings(originalSettings, namespace);
     if (!restored) {

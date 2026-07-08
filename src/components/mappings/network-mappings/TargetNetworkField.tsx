@@ -3,6 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import Select from '@components/common/Select';
 import { Divider, SelectList, SelectOption } from '@patternfly/react-core';
+import { DEFAULT_NETWORK } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import { IgnoreNetwork } from '@utils/mappings/constants';
@@ -11,6 +12,7 @@ import type { MappingValue } from '@utils/types';
 type TargetNetworkFieldProps = {
   fieldId: string;
   targetNetworks: MappingValue[] | Record<string, MappingValue>;
+  hideNonNadTargets?: boolean;
   showIgnoreNetworkOption?: boolean;
   emptyStateMessage?: string;
   isDisabled?: boolean;
@@ -21,6 +23,7 @@ type TargetNetworkFieldProps = {
 const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
   emptyStateMessage,
   fieldId,
+  hideNonNadTargets,
   isDisabled,
   showIgnoreNetworkOption,
   targetNetworks,
@@ -30,16 +33,26 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
   const { control, trigger } = useFormContext();
   const { t } = useForkliftTranslation();
 
-  // Normalize targetNetworks to an array of [key, MappingValue] tuples
-  const networksEntries = useMemo(
-    () =>
-      Array.isArray(targetNetworks)
-        ? targetNetworks.map((network) => [network.id ?? network.name, network] as const)
-        : Object.entries(targetNetworks),
-    [targetNetworks],
-  );
+  const networksEntries = useMemo(() => {
+    const entries = Array.isArray(targetNetworks)
+      ? targetNetworks.map((network) => [network.id ?? network.name, network] as const)
+      : Object.entries(targetNetworks);
+
+    if (hideNonNadTargets) {
+      return entries.filter(
+        ([key, network]) => key !== 'podNetwork' && network.name !== DEFAULT_NETWORK,
+      );
+    }
+
+    return entries;
+  }, [targetNetworks, hideNonNadTargets]);
 
   const hasNetworks = useMemo(() => !isEmpty(networksEntries), [networksEntries]);
+  const showIgnore = showIgnoreNetworkOption && !hideNonNadTargets;
+
+  const noNadMessage = t(
+    'No network attachment definitions (NADs) found in the target namespace. Multi-NIC source networks require at least 2 distinct NADs.',
+  );
 
   return (
     <Controller
@@ -64,18 +77,14 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
           isDisabled={isDisabled}
         >
           <SelectList>
-            {!hasNetworks && emptyStateMessage ? (
-              <SelectOption key="empty" isDisabled>
-                {emptyStateMessage}
-              </SelectOption>
-            ) : (
+            {hasNetworks ? (
               <>
                 {networksEntries.map(([key, network]) => (
                   <SelectOption key={key} value={network}>
                     {network.name}
                   </SelectOption>
                 ))}
-                {showIgnoreNetworkOption && (
+                {showIgnore && (
                   <>
                     <Divider />
                     <SelectOption
@@ -87,6 +96,12 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
                   </>
                 )}
               </>
+            ) : (
+              <SelectOption key="empty" isDisabled>
+                {hideNonNadTargets
+                  ? noNadMessage
+                  : (emptyStateMessage ?? t('No networks available'))}
+              </SelectOption>
             )}
           </SelectList>
         </Select>

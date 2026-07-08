@@ -1,13 +1,16 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { AccessModeOptions } from './common/AccessModeOptions';
 import { OffloadOptions } from './common/OffloadOptions';
 
 export class StorageMapCreatePage {
+  readonly accessMode: AccessModeOptions;
   readonly offload: OffloadOptions;
   protected readonly page: Page;
 
   constructor(page: Page) {
     this.page = page;
+    this.accessMode = new AccessModeOptions(page);
     this.offload = new OffloadOptions(page);
   }
 

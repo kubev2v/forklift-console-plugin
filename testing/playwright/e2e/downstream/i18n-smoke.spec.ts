@@ -10,14 +10,15 @@ import {
 } from '../../fixtures/helpers/languageHelpers';
 import { AUTH_FILE } from '../../utils/constants';
 import { NavigationHelper } from '../../utils/NavigationHelper';
+import {
+  ELEMENT_VISIBLE_TIMEOUT_MS,
+  LOCALE_LOAD_TIMEOUT_MS,
+  PAGE_LOAD_TIMEOUT_MS,
+} from '../../utils/timeouts';
 import { V2_12_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const LOCALE_NAMESPACE = 'plugin__forklift-console-plugin';
-const PAGE_LOAD_TIMEOUT_MS = 15_000;
-const ELEMENT_VISIBLE_TIMEOUT_MS = 10_000;
-// Locale JSON is fetched after load; slow clusters need extra time for useTranslation to receive it.
-const LOCALE_LOAD_TIMEOUT_MS = 30_000;
 
 const LOCALE_SEARCH_PATHS = [
   resolve(__dirname, '../../../../locales'),
