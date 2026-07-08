@@ -112,16 +112,18 @@ export const withTemporaryForkliftSettings = async (
 ): Promise<void> => {
   const originalSettings = await initializeForkliftSettings(namespace);
 
+  if (!originalSettings) {
+    throw new Error('Failed to initialize ForkliftController settings for temporary override');
+  }
+
   try {
     await fn();
   } finally {
-    if (originalSettings) {
-      const restored = await restoreForkliftSettings(originalSettings, namespace);
-      if (!restored) {
-        console.error(
-          'Failed to restore ForkliftController settings — subsequent tests may inherit incorrect state',
-        );
-      }
+    const restored = await restoreForkliftSettings(originalSettings, namespace);
+    if (!restored) {
+      console.error(
+        'Failed to restore ForkliftController settings — subsequent tests may inherit incorrect state',
+      );
     }
   }
 };
