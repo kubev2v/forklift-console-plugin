@@ -1,5 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { V2_13_0 } from '../../../utils/version/constants';
+import { isVersionAtLeast } from '../../../utils/version/version';
+
 // Pod watch data arrives asynchronously; give it time to settle before asserting.
 const POD_WATCH_TIMEOUT_MS = 30_000;
 
@@ -11,11 +14,15 @@ export class HealthTab {
   }
 
   get conditionsCard(): Locator {
-    return this.page.getByTestId('health-conditions-card');
+    return isVersionAtLeast(V2_13_0)
+      ? this.page.getByTestId('health-conditions-card')
+      : this.page.getByRole('grid', { name: 'Expandable table' }).nth(1);
   }
 
   get controllerCard(): Locator {
-    return this.page.getByTestId('health-controller-card');
+    return isVersionAtLeast(V2_13_0)
+      ? this.page.getByTestId('health-controller-card')
+      : this.page.getByRole('grid', { name: 'Expandable table' }).first();
   }
 
   async navigateToHealthTab(): Promise<void> {
