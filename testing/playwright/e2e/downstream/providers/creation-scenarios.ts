@@ -18,6 +18,8 @@ export type ProviderTestScenario = {
   providerKey: string;
   providerDataOverrides?: Partial<ProviderData>;
   minVersion?: VersionTuple;
+  /** When true, the test also deletes the just-created provider via the details page Actions menu. */
+  verifyDelete?: boolean;
 };
 
 export const createProviderData = (
@@ -83,6 +85,7 @@ export const providerTestScenarios: ProviderTestScenario[] = [
     providerType: ProviderType.VSPHERE,
     providerKey: VSPHERE_KEY,
     providerDataOverrides: { useVddkAioOptimization: false },
+    verifyDelete: true,
   },
   {
     scenarioName: 'OVA provider',

@@ -26,7 +26,14 @@ test.describe('Provider Creation Tests', () => {
   const resourceManager = new ResourceManager();
 
   providerTestScenarios.forEach(
-    ({ scenarioName, providerType, providerKey, providerDataOverrides, minVersion }) => {
+    ({
+      scenarioName,
+      providerType,
+      providerKey,
+      providerDataOverrides,
+      minVersion,
+      verifyDelete,
+    }) => {
       test(
         `should create a new ${providerType} provider: ${scenarioName}`,
         {
@@ -53,8 +60,8 @@ test.describe('Provider Creation Tests', () => {
             await createProvider.navigate();
           });
 
-          await test.step('Create provider', async () => {
-            await createProvider.create(testProviderData, true);
+          const providerDetailsPage = await test.step('Create provider', async () => {
+            return createProvider.create(testProviderData, true);
           });
 
           await test.step('Verify provider resource', async () => {
@@ -70,6 +77,18 @@ test.describe('Provider Creation Tests', () => {
               expect(aioValue === undefined || aioValue === 'false').toBe(true);
             }
           });
+
+          if (verifyDelete) {
+            await test.step('Delete provider and verify it is removed from the list', async () => {
+              await providerDetailsPage.deleteProvider(testProviderData.name);
+              await expect(
+                page.getByRole('link', { name: testProviderData.name, exact: true }),
+              ).not.toBeVisible();
+
+              const providerResource = await resourceManager.fetchProvider(testProviderData.name);
+              expect(providerResource).toBeNull();
+            });
+          }
         },
       );
     },
