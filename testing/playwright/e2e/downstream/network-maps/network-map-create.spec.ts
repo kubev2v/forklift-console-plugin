@@ -96,5 +96,13 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
         { sourceNetwork: 'Mgmt Network', targetNetwork: 'Ignore network' },
       ],
     });
+
+    // Delete the network map via the Actions menu and verify it redirects back to the list,
+    // with the deleted map no longer present
+    await networkMapDetailsPage.deleteMap(newMapName);
+    await expect(page).toHaveURL(
+      new RegExp(`/k8s/ns/${MTV_NAMESPACE}/forklift\\.konveyor\\.io~v1beta1~NetworkMap$`),
+    );
+    await expect(page.getByRole('link', { name: newMapName, exact: true })).not.toBeVisible();
   });
 });
