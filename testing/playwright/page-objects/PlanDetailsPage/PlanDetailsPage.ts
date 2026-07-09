@@ -77,10 +77,7 @@ export class PlanDetailsPage {
     return this.page.getByTestId('plan-critical-alert');
   }
 
-  /**
-   * Deletes the plan via the details page "Actions" menu, confirming in the plan-specific
-   * PlanDeleteModal (src/plans/actions/components/PlanDeleteModal.tsx).
-   */
+  /** Deletes the plan via the details page Actions menu, confirming in the plan-specific PlanDeleteModal. */
   async deletePlan(): Promise<void> {
     await this.page.getByTestId('plan-actions-dropdown-button').click();
     await this.page.getByRole('menuitem', { name: 'Delete', exact: true }).click();
