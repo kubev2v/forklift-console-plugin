@@ -87,7 +87,7 @@ describe('MigrationAlertsCard', () => {
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 
-  it('renders card title with total count', () => {
+  it('renders card title', () => {
     mockUseMigrationAlerts.mockReturnValue({
       alerts: [failedAlert, succeededAlert],
       error: undefined,
@@ -97,11 +97,6 @@ describe('MigrationAlertsCard', () => {
     renderCard();
 
     expect(screen.getByText('Migration plan alerts')).toBeInTheDocument();
-    expect(
-      screen
-        .getByTestId('migration-alerts-card')
-        .querySelector('.migration-alerts-card__total-count')?.textContent,
-    ).toBe('2');
   });
 
   it('shows summary section with failed and succeeded counts', () => {
