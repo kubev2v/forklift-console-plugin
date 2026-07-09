@@ -64,6 +64,7 @@ DEFAULT_WORKSPACE  = "redhat"
 DEFAULT_DAYS       = 30
 
 IIB_TITLE_RE    = re.compile(r'IIB\s+[\d.]+[-\w]*\s*\|', re.IGNORECASE)
+IIB_VERSION_RE  = re.compile(r'IIB\s+([\d]+\.[\d]+\.[\d]+)', re.IGNORECASE)
 CONTAINER_RE    = re.compile(r'mtv-console-plugin-container:\s*([0-9a-f]{40})', re.IGNORECASE)
 COMMIT_SHORT_RE = re.compile(r'\b([0-9a-f]{7,40})\b')
 
@@ -244,8 +245,10 @@ def _extract_build_data(db_path: Path) -> list[dict]:
                     if reply_data:
                         plugin_commits = _parse_block_table_commits(reply_data)
 
+            ver_match = IIB_VERSION_RE.search(title)
             results.append({
                 "build_label":                  title,
+                "build_version":                ver_match.group(1) if ver_match else "",
                 "ts":                           ts,
                 "console_plugin_commits":       plugin_commits,
                 "mtv_console_plugin_container": container_sha,
