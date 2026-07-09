@@ -1,6 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import { NavigationHelper } from '../../../utils/NavigationHelper';
+import { PAGE_LOAD_INITIAL_TIMEOUT_MS, PAGE_LOAD_RETRY_TIMEOUT_MS } from '../../../utils/timeouts';
+import { waitForVisibleWithReload } from '../../../utils/utils';
 import { SettingsEditModal } from '../modals/SettingsEditModal';
 
 export class SettingsTab {
@@ -42,6 +44,12 @@ export class SettingsTab {
 
   async navigateToSettings(): Promise<void> {
     await this.navigation.navigateToOverview();
+    await waitForVisibleWithReload(
+      this.page,
+      this.settingsTab,
+      PAGE_LOAD_INITIAL_TIMEOUT_MS,
+      PAGE_LOAD_RETRY_TIMEOUT_MS,
+    );
     await this.settingsTab.click();
     await expect(this.settingsEditButton).toBeVisible();
   }

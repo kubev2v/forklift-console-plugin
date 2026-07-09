@@ -1,6 +1,8 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 
 import { NavigationHelper } from '../../utils/NavigationHelper';
+import { PAGE_LOAD_INITIAL_TIMEOUT_MS, PAGE_LOAD_RETRY_TIMEOUT_MS } from '../../utils/timeouts';
+import { waitForVisibleWithReload } from '../../utils/utils';
 import { LearningExperienceDrawer } from '../LearningExperienceDrawer';
 
 import { ThroughputCard } from './components/ThroughputCard';
@@ -118,6 +120,11 @@ export class OverviewPage {
   }
 
   async waitForPageLoad() {
-    await expect(this.pageTitle).toBeVisible();
+    await waitForVisibleWithReload(
+      this.page,
+      this.pageTitle,
+      PAGE_LOAD_INITIAL_TIMEOUT_MS,
+      PAGE_LOAD_RETRY_TIMEOUT_MS,
+    );
   }
 }

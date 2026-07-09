@@ -1,3 +1,4 @@
+import { withTemporaryForkliftSettings } from '../../../fixtures/helpers/settingsHelpers';
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { HookSource } from '../../../types/enums';
@@ -53,29 +54,37 @@ test.describe('Plan AAP Hooks', { tag: '@downstream' }, () => {
       await test.expect(page.getByTestId('postMigrationHook.enableHook-checkbox')).toBeVisible();
     });
 
-    await test.step('Switch to "AAP" and verify AAP section appears', async () => {
-      await wizard.hooks.selectHookSource(HookSource.AAP);
+    // Clear AAP settings so the wizard renders the "AAP is not configured" alert.
+    // Restored regardless of test outcome.
+    await withTemporaryForkliftSettings(async () => {
+      await test.step('Switch to "AAP" and verify AAP section appears', async () => {
+        await wizard.hooks.selectHookSource(HookSource.AAP);
 
-      await test.expect(page.getByTestId('preMigrationHook.enableHook-checkbox')).not.toBeVisible();
-      await test.expect(page.getByText('AAP is not configured')).toBeVisible();
-    });
+        await test
+          .expect(page.getByTestId('preMigrationHook.enableHook-checkbox'))
+          .not.toBeVisible();
+        await test.expect(page.getByText('AAP is not configured')).toBeVisible();
+      });
 
-    await test.step('Verify Technology Preview badge on AAP option', async () => {
-      await test.expect(page.getByText('Technology Preview')).toBeVisible();
-    });
+      await test.step('Verify Technology Preview badge on AAP option', async () => {
+        await test.expect(page.getByText('Technology Preview')).toBeVisible();
+      });
 
-    await test.step('Switch back to "No hooks" and verify fields are hidden', async () => {
-      await wizard.hooks.selectHookSource(HookSource.NONE);
+      await test.step('Switch back to "No hooks" and verify fields are hidden', async () => {
+        await wizard.hooks.selectHookSource(HookSource.NONE);
 
-      await test.expect(page.getByTestId('preMigrationHook.enableHook-checkbox')).not.toBeVisible();
-      await test.expect(page.getByText('AAP is not configured')).not.toBeVisible();
-    });
+        await test
+          .expect(page.getByTestId('preMigrationHook.enableHook-checkbox'))
+          .not.toBeVisible();
+        await test.expect(page.getByText('AAP is not configured')).not.toBeVisible();
+      });
 
-    await test.step('Verify review step shows AAP hook source', async () => {
-      await wizard.hooks.selectHookSource(HookSource.AAP);
-      await wizard.clickNext();
-      await wizard.review.verifyStepVisible();
-      await wizard.review.verifyHooksSection(HookSource.AAP);
+      await test.step('Verify review step shows AAP hook source', async () => {
+        await wizard.hooks.selectHookSource(HookSource.AAP);
+        await wizard.clickNext();
+        await wizard.review.verifyStepVisible();
+        await wizard.review.verifyHooksSection(HookSource.AAP);
+      });
     });
   });
 });

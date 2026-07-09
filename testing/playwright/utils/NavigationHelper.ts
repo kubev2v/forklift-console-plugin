@@ -74,18 +74,14 @@ export class NavigationHelper {
   }
 
   async navigateToOverview(): Promise<void> {
-    await disableGuidedTour(this.page);
     await this.page.goto('/mtv/overview');
     await this.page.waitForLoadState('domcontentloaded');
-
     await disableGuidedTour(this.page);
   }
 
   async navigateToOverviewSettings(): Promise<void> {
-    await disableGuidedTour(this.page);
     await this.page.goto('/mtv/overview/settings');
     await this.page.waitForLoadState('domcontentloaded');
-
     await disableGuidedTour(this.page);
   }
 

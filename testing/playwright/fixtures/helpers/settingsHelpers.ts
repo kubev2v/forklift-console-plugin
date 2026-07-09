@@ -4,6 +4,8 @@ import type { JsonPatchOperation } from '../../utils/resource-manager/ResourceMa
 import { ResourcePatcher } from '../../utils/resource-manager/ResourcePatcher';
 
 const FIELD_MAP = {
+  aapTokenSecretName: 'aap_token_secret_name',
+  aapUrl: 'aap_url',
   controllerMemoryLimit: 'controller_container_limits_memory',
   cpuLimit: 'controller_container_limits_cpu',
   inventoryMemoryLimit: 'inventory_container_limits_memory',
@@ -13,6 +15,8 @@ const FIELD_MAP = {
 } as const;
 
 export const KNOWN_SETTINGS = {
+  aapTokenSecretName: '',
+  aapUrl: '',
   controllerMemoryLimit: '800Mi',
   cpuLimit: '500m',
   inventoryMemoryLimit: '1000Mi',
@@ -98,4 +102,28 @@ export const restoreForkliftSettings = async (
   );
 
   return result !== null;
+};
+
+// Clears known ForkliftController settings for the duration of testCallback, then restores the
+// original values regardless of outcome, logging if the restore itself fails.
+export const withTemporaryForkliftSettings = async (
+  testCallback: () => Promise<void>,
+  namespace = MTV_NAMESPACE,
+): Promise<void> => {
+  const originalSettings = await initializeForkliftSettings(namespace);
+
+  if (!originalSettings) {
+    throw new Error('Failed to initialize ForkliftController settings for temporary override');
+  }
+
+  try {
+    await testCallback();
+  } finally {
+    const restored = await restoreForkliftSettings(originalSettings, namespace);
+    if (!restored) {
+      console.error(
+        'Failed to restore ForkliftController settings — subsequent tests may inherit incorrect state',
+      );
+    }
+  }
 };

@@ -10,13 +10,15 @@ import {
 } from '../../fixtures/helpers/languageHelpers';
 import { AUTH_FILE } from '../../utils/constants';
 import { NavigationHelper } from '../../utils/NavigationHelper';
-import { disableGuidedTour } from '../../utils/utils';
+import {
+  ELEMENT_VISIBLE_TIMEOUT_MS,
+  LOCALE_LOAD_TIMEOUT_MS,
+  PAGE_LOAD_TIMEOUT_MS,
+} from '../../utils/timeouts';
 import { V2_12_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const LOCALE_NAMESPACE = 'plugin__forklift-console-plugin';
-const PAGE_LOAD_TIMEOUT_MS = 15_000;
-const ELEMENT_VISIBLE_TIMEOUT_MS = 10_000;
 
 const LOCALE_SEARCH_PATHS = [
   resolve(__dirname, '../../../../locales'),
@@ -82,20 +84,25 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
         await navigation.navigateToConsole();
         await setConsoleLanguage(page, lang);
         await navigation.navigateToOverview();
-        await disableGuidedTour(page);
+        // Let the locale file finish loading. catch() is mandatory — K8s watch streams
+        // prevent networkidle from ever firing on busy clusters.
+        await page
+          .waitForLoadState('networkidle', { timeout: LOCALE_LOAD_TIMEOUT_MS })
+          .catch(() => undefined);
       });
 
       await test.step('Verify Overview page translations', async () => {
         await page.waitForSelector('h1', { timeout: PAGE_LOAD_TIMEOUT_MS });
 
         const welcomeHeading = page.getByRole('heading', { name: locale.Welcome });
-        await expect(welcomeHeading).toBeVisible({ timeout: ELEMENT_VISIBLE_TIMEOUT_MS });
+        await expect(welcomeHeading).toBeVisible({ timeout: LOCALE_LOAD_TIMEOUT_MS });
 
+        // .forklift-title scopes to the CardTitle, avoiding sidebar/table-row matches.
         const mainContent = page.locator('main');
-        const migrationPlansCard = mainContent.getByText(locale['Migration plans']);
-        await expect(migrationPlansCard.first()).toBeVisible({
-          timeout: ELEMENT_VISIBLE_TIMEOUT_MS,
+        const migrationPlansCard = mainContent.locator('.forklift-title', {
+          hasText: locale['Migration plans'],
         });
+        await expect(migrationPlansCard).toBeVisible({ timeout: ELEMENT_VISIBLE_TIMEOUT_MS });
       });
 
       await test.step('Verify Providers page translations', async () => {
@@ -105,10 +112,10 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
         });
         await page.waitForSelector('h1', { timeout: PAGE_LOAD_TIMEOUT_MS });
 
-        const createButton = page.getByRole('button', {
-          name: locale['Create provider'],
-        });
+        // toContainText is the actual i18n assertion; toBeVisible alone wouldn't check the translated label.
+        const createButton = page.getByTestId('add-provider-button');
         await expect(createButton).toBeVisible({ timeout: ELEMENT_VISIBLE_TIMEOUT_MS });
+        await expect(createButton).toContainText(locale['Create provider']);
       });
 
       await test.step('No unexpected missing i18n keys for forklift plugin', () => {

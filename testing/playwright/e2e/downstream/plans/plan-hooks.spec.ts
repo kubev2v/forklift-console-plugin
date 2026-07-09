@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
+import { withTemporaryForkliftSettings } from '../../../fixtures/helpers/settingsHelpers';
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
@@ -163,21 +164,25 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
     });
 
     await test.step('Verify edit modal shows AAP radio with three-way switching', async () => {
-      await planDetailsPage.hooksTab.openPreMigrationHookEditModal();
+      // Clear AAP settings so the modal renders the "AAP is not configured" alert,
+      // then restore original values when the step is done.
+      await withTemporaryForkliftSettings(async () => {
+        await planDetailsPage.hooksTab.openPreMigrationHookEditModal();
 
-      const { hookEditModal } = planDetailsPage.hooksTab;
-      await hookEditModal.verifyAapRadioVisible();
-      await hookEditModal.verifyHookIsEnabled();
-      await hookEditModal.verifyLocalFieldsVisible();
+        const { hookEditModal } = planDetailsPage.hooksTab;
+        await hookEditModal.verifyAapRadioVisible();
+        await hookEditModal.verifyHookIsEnabled();
+        await hookEditModal.verifyLocalFieldsVisible();
 
-      await hookEditModal.selectAap();
-      await hookEditModal.verifyLocalFieldsHidden();
-      await hookEditModal.verifyAapNotConfiguredAlert();
+        await hookEditModal.selectAap();
+        await hookEditModal.verifyLocalFieldsHidden();
+        await hookEditModal.verifyAapNotConfiguredAlert();
 
-      await hookEditModal.disableHook();
-      await hookEditModal.verifyLocalFieldsHidden();
+        await hookEditModal.disableHook();
+        await hookEditModal.verifyLocalFieldsHidden();
 
-      await hookEditModal.cancel();
+        await hookEditModal.cancel();
+      });
     });
   });
 });

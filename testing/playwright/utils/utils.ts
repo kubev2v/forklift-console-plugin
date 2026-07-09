@@ -1,15 +1,42 @@
-import type { Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
-export const disableGuidedTour = async (page: Page) => {
-  const skipButton = page.getByRole('button', { name: /skip tour/i });
+import {
+  GUIDED_TOUR_CLICK_TIMEOUT_MS,
+  GUIDED_TOUR_HIDDEN_TIMEOUT_MS,
+  GUIDED_TOUR_VISIBLE_TIMEOUT_MS,
+} from './timeouts';
 
+export const disableGuidedTour = async (page: Page): Promise<void> => {
+  // Use .first() to avoid strict-mode crashes if two skip buttons are briefly in the DOM.
+  const skipButton = page.getByRole('button', { name: /skip tour/i }).first();
+
+  let isVisible = false;
   try {
-    // Wait for button to appear, click it, then wait for modal to close
-    await skipButton.waitFor({ state: 'visible', timeout: 5000 });
-    await skipButton.click();
-    await skipButton.waitFor({ state: 'hidden' });
+    await skipButton.waitFor({ state: 'visible', timeout: GUIDED_TOUR_VISIBLE_TIMEOUT_MS });
+    isVisible = true;
   } catch {
-    // Modal not showing
+    // Tour not present on this build — nothing to dismiss.
+  }
+
+  if (isVisible) {
+    await skipButton.click({ force: true, timeout: GUIDED_TOUR_CLICK_TIMEOUT_MS });
+    await skipButton.waitFor({ state: 'hidden', timeout: GUIDED_TOUR_HIDDEN_TIMEOUT_MS });
+  }
+};
+
+// Dynamic plugin may not have registered its routes yet on first load; reload and retry once.
+export const waitForVisibleWithReload = async (
+  page: Page,
+  locator: Locator,
+  initialTimeoutMs: number,
+  retryTimeoutMs: number,
+): Promise<void> => {
+  try {
+    await expect(locator).toBeVisible({ timeout: initialTimeoutMs });
+  } catch {
+    await page.reload();
+    await page.waitForLoadState('domcontentloaded');
+    await expect(locator).toBeVisible({ timeout: retryTimeoutMs });
   }
 };
 
