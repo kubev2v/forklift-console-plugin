@@ -1,12 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 /**
- * Wraps the generic `DeleteModal` component (src/components/modals/DeleteModal/DeleteModal.tsx),
- * shared by the Provider, NetworkMap, and StorageMap delete actions.
- *
- * Unlike `BaseModal`-based modals (which use `ModalForm` and expose `modal-confirm-button` /
- * `modal-cancel-button` test-ids), this modal's buttons carry no test-ids, so it locates them
- * by role/name scoped to the dialog.
+ * Wraps the generic `DeleteModal` component, shared by Provider/NetworkMap/StorageMap delete.
+ * Its buttons carry no test-ids, so they're located by role/name within the dialog.
  */
 export class DeleteResourceModal {
   private readonly dialog: Locator;

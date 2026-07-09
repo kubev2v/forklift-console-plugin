@@ -63,11 +63,7 @@ export abstract class BaseMapDetailsPage {
     return this.page.getByTestId(this.config.editButtonTestId);
   }
 
-  /**
-   * Deletes the map via the details page "Actions" menu, confirming in the shared DeleteModal.
-   * Mirrors the app's own delete code path (NetworkMapActionsDropdownItems /
-   * StorageMapActionsDropdownItems), which both launch the same generic DeleteModal component.
-   */
+  /** Deletes the map via the details page Actions menu, confirming in the shared DeleteModal. */
   async deleteMap(mapName: string): Promise<void> {
     await this.verifyOnDetailsPage();
     await this.actionsMenuToggleLocator().click();
