@@ -266,5 +266,51 @@ describe('StandardPageWithSelection', () => {
       expect(checkboxes[2]).toBeDisabled(); // Item 2 - should be disabled
       expect(checkboxes[3]).not.toBeDisabled(); // Item 3
     });
+
+    it('should only select eligible items when Select All is used', async () => {
+      const user = userEvent.setup();
+      const onSelect = jest.fn();
+      const canSelect = (item: { id: string }) => item.id !== '2';
+
+      renderWithRouter(
+        <StandardPageWithSelection
+          dataSource={[mockData, true, null]}
+          fieldsMetadata={fieldsMetadata}
+          namespace="test-ns"
+          toId={toId}
+          onSelect={onSelect}
+          selectedIds={[]}
+          canSelect={canSelect}
+        />,
+      );
+
+      const checkboxes = screen.getAllByRole('checkbox');
+      await user.click(checkboxes[0]); // Header checkbox — select page
+
+      expect(onSelect).toHaveBeenCalledWith(['1', '3']);
+    });
+
+    it('should not include non-selectable items when deselecting all', async () => {
+      const user = userEvent.setup();
+      const onSelect = jest.fn();
+      const canSelect = (item: { id: string }) => item.id !== '2';
+
+      renderWithRouter(
+        <StandardPageWithSelection
+          dataSource={[mockData, true, null]}
+          fieldsMetadata={fieldsMetadata}
+          namespace="test-ns"
+          toId={toId}
+          onSelect={onSelect}
+          selectedIds={['1', '3']}
+          canSelect={canSelect}
+        />,
+      );
+
+      const checkboxes = screen.getAllByRole('checkbox');
+      await user.click(checkboxes[0]); // Header checkbox — deselect all
+
+      expect(onSelect).toHaveBeenCalledWith([]);
+    });
   });
 });

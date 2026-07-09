@@ -28,6 +28,7 @@ const StandardPageInner = <T,>({
   activeSort,
   addButton,
   alerts,
+  canSelect,
   cell,
   className,
   compareFn,
@@ -110,11 +111,17 @@ const StandardPageInner = <T,>({
   );
 
   const dataIds = useMemo(
-    () => finalFilteredData?.map((data) => toId?.(data) ?? ''),
-    [finalFilteredData, toId],
+    () =>
+      finalFilteredData
+        ?.filter((item) => canSelect?.(item) ?? true)
+        .map((data) => toId?.(data) ?? ''),
+    [finalFilteredData, toId, canSelect],
   );
 
-  const pageDataIds = useMemo(() => pageData?.map((data) => toId?.(data) ?? ''), [pageData, toId]);
+  const pageDataIds = useMemo(
+    () => pageData?.filter((item) => canSelect?.(item) ?? true).map((data) => toId?.(data) ?? ''),
+    [pageData, toId, canSelect],
+  );
 
   const renderedGlobalActions = useMemo(
     () =>

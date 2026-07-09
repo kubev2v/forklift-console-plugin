@@ -1444,6 +1444,7 @@
   "This resource is managed by <2></2> and any modifications might be overwritten. Edit the managing resource to preserve changes.": "该资源由<2></2>管理，对它做的任何更改都可能会被覆盖。编辑管理资源以保留更改。",
   "This secret must be created in your project beforehand, typically using details provided by your storage administrator.": "此 secret 必须事先在项目中创建，通常使用您的存储管理员提供的详细信息。",
   "This significantly speeds up the migration process and frees up network and host resources by avoiding the need to pull data through the source host.": "这将不需要通过源主机拉取数据，因此可以显著地加快迁移、释放网络以及主机资源的速度。",
+  "This VM is already being inspected.": "This VM is already being inspected.",
   "Tips and tricks": "提示和技巧",
   "To create a network mapping:": "创建网络映射：",
   "To create a storage mapping:": "创建存储映射：",
