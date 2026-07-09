@@ -70,11 +70,7 @@ export class ProviderDetailsPage {
     await this.inspectVmsButton.click();
   }
 
-  /**
-   * Deletes the provider via the details page "Actions" menu, confirming in the shared
-   * DeleteModal (src/components/modals/DeleteModal/DeleteModal.tsx) — the same generic modal
-   * used by the NetworkMap/StorageMap delete actions (see DeleteResourceModal).
-   */
+  /** Deletes the provider via the details page Actions menu, confirming in the shared DeleteModal. */
   async deleteProvider(providerName: string): Promise<void> {
     await this.page.getByRole('button', { name: 'Actions', exact: true }).click();
     await this.page.getByRole('menuitem', { name: 'Delete provider', exact: true }).click();

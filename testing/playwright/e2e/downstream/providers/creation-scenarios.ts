@@ -18,7 +18,7 @@ export type ProviderTestScenario = {
   providerKey: string;
   providerDataOverrides?: Partial<ProviderData>;
   minVersion?: VersionTuple;
-  /** When true, the test also deletes the just-created provider via the details page Actions menu. */
+  /** When true, also deletes the just-created provider via the Actions menu. */
   verifyDelete?: boolean;
 };
 
