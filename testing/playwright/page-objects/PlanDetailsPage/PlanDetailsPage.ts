@@ -77,6 +77,17 @@ export class PlanDetailsPage {
     return this.page.getByTestId('plan-critical-alert');
   }
 
+  /** Deletes the plan via the details page Actions menu, confirming in the plan-specific PlanDeleteModal. */
+  async deletePlan(): Promise<void> {
+    await this.page.getByTestId('plan-actions-dropdown-button').click();
+    await this.page.getByRole('menuitem', { name: 'Delete', exact: true }).click();
+
+    const deleteModal = this.page.getByRole('dialog', { name: 'Delete plan' });
+    await expect(deleteModal).toBeVisible();
+    await deleteModal.getByTestId('modal-confirm-button').click();
+    await expect(deleteModal).not.toBeVisible();
+  }
+
   async duplicatePlan(newPlanName: string, namespace: string): Promise<void> {
     await this.page.getByTestId('plan-actions-dropdown-button').click();
     const duplicateItem = this.page.getByRole('menuitem', { name: 'Duplicate' });
