@@ -1,5 +1,5 @@
 import { HypervTransferMethod } from 'src/providers/create/fields/constants';
-import { PROVIDER_TYPES } from 'src/utils/providers/constants';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
 

@@ -13,8 +13,6 @@ import { VMNameCellRenderer } from './components/VMNameCellRenderer';
 
 const cellRenderers: Record<string, FC<VMCellProps>> = {
   concerns: VMConcernsCellRenderer,
-  guestOS: GuestOSCellRenderer,
-  // Cast pending upstream types adding `host` to HypervVM
   host: ({ data }) => <TableCell>{(data?.vm as unknown as { host?: string })?.host}</TableCell>,
   name: VMNameCellRenderer,
   status: PowerStateCellRenderer,

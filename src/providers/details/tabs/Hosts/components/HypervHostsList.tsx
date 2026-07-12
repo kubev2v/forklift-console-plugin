@@ -1,12 +1,12 @@
 import { type FC, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
+import type { ProviderData } from 'src/providers/utils/types/ProviderData';
 import useProviderInventory from 'src/utils/hooks/useProviderInventory';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { Bullseye } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
-import type { ProviderData } from '@utils/providers/types';
 
 import type { HypervHost } from '../types';
 
