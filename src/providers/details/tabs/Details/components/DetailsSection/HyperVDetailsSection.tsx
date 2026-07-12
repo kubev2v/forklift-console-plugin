@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { TypeDetailsItem } from 'src/providers/details/components/DetailsSection/components/TypeDetailsItem';
 import { URLDetailsItem } from 'src/providers/details/components/DetailsSection/components/URLDetailsItem';
+import { isHypervClusterProvider } from 'src/providers/utils/helpers/isHypervClusterProvider';
 import { isHypervIscsiProvider } from 'src/providers/utils/helpers/isHypervIscsiProvider';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -20,6 +21,7 @@ const HyperVDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   if (!provider || !permissions) return null;
 
   const isIscsi = isHypervIscsiProvider(provider);
+  const isCluster = isHypervClusterProvider(provider);
 
   return (
     <DescriptionList
@@ -30,6 +32,19 @@ const HyperVDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
       <TypeDetailsItem resource={provider} />
       <NameDetailsItem resource={provider} />
       <NamespaceDetailsItem resource={provider} />
+      <DetailsItem
+        testId="management-type-detail-item"
+        title={t('Management type')}
+        content={
+          <Label isCompact color={isCluster ? 'blue' : 'grey'}>
+            {isCluster ? t('Failover Cluster') : t('Standalone')}
+          </Label>
+        }
+        helpContent={t(
+          'Whether this provider manages a single Hyper-V host or a Windows Failover Cluster with multiple nodes.',
+        )}
+        crumbs={['Provider', 'spec', 'settings', 'managementType']}
+      />
       <DetailsItem
         testId="transfer-method-detail-item"
         title={t('Transfer method')}
@@ -46,7 +61,11 @@ const HyperVDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
       <URLDetailsItem
         resource={provider}
         canPatch={permissions.canPatch}
-        helpContent={t('IP address or hostname of the Hyper-V server')}
+        helpContent={
+          isCluster
+            ? t('IP address or hostname of the cluster entry point (CNO or node)')
+            : t('IP address or hostname of the Hyper-V server')
+        }
       />
       <CreatedAtDetailsItem resource={provider} />
       <OwnerDetailsItem resource={provider} />
