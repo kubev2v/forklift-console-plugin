@@ -6,6 +6,8 @@ import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { isEmpty } from '../../utils/utils';
 import { YamlEditorPage } from '../YamlEditorPage';
 
+import { DeleteResourceModal } from './DeleteResourceModal';
+
 /**
  * Configuration for a map details page.
  */
@@ -43,16 +45,33 @@ export abstract class BaseMapDetailsPage {
   protected readonly navigationHelper: NavigationHelper;
   protected readonly page: Page;
 
+  private readonly deleteModal: DeleteResourceModal;
   private readonly yamlEditor: YamlEditorPage;
 
   constructor(page: Page) {
     this.page = page;
     this.navigationHelper = new NavigationHelper(page);
     this.yamlEditor = new YamlEditorPage(page);
+    this.deleteModal = new DeleteResourceModal(page);
+  }
+
+  protected actionsMenuToggleLocator(): Locator {
+    return this.page.getByRole('button', { name: 'Actions', exact: true });
   }
 
   protected editButtonLocator(): Locator {
     return this.page.getByTestId(this.config.editButtonTestId);
+  }
+
+  /** Deletes the map via the details page Actions menu, confirming in the shared DeleteModal. */
+  async deleteMap(mapName: string): Promise<void> {
+    await this.verifyOnDetailsPage();
+    await this.actionsMenuToggleLocator().click();
+    await this.page
+      .getByRole('menuitem', { name: `Delete ${this.config.mapTypeDisplay.toLowerCase()}` })
+      .click();
+    await this.deleteModal.verifyOpen(mapName);
+    await this.deleteModal.confirm();
   }
 
   protected detailsHeadingLocator(): Locator {
