@@ -124,7 +124,7 @@ export const getMigrationVMsStatusCounts = (
 };
 
 export const getVmTargetPowerState = (vm: V1beta1PlanSpecVms): TargetPowerStateValue =>
-  vm?.targetPowerState as TargetPowerStateValue;
+  vm?.targetPowerState;
 
 const getConditions = (plan: V1beta1Plan) =>
   (plan?.status?.conditions ?? [])

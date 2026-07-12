@@ -1,5 +1,5 @@
 import { type FC, useContext, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom-v5-compat';
+import { Link, useNavigate } from 'react-router';
 import migrationIcon from 'src/components/images/resources/migration.svg';
 import { OverviewContext } from 'src/overview/context/OverviewContext';
 import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
@@ -58,7 +58,7 @@ const WelcomeCard: FC = () => {
     });
     navigate(`${providersCreateUrl}?providerType=${type}`, {
       state: { providerType: type as keyof typeof providerItems },
-    });
+    })?.catch(() => undefined);
   };
   const [activeNamespace] = useActiveNamespace();
   const kubevirtInstalled = useFlag('KUBEVIRT_DYNAMIC');

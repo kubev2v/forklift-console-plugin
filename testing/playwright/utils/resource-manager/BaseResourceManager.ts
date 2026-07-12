@@ -16,8 +16,7 @@ const PROXY_PREFIX = '/api/kubernetes' as const;
 const API_REQUEST_TIMEOUT_MS = 30_000;
 
 type ApiResult<T> =
-  | { data: T; status: number; success: true }
-  | { error: string; status: number; success: false };
+  { data: T; status: number; success: true } | { error: string; status: number; success: false };
 
 type ApiRequestOptions = {
   body?: unknown;

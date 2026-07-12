@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom-v5-compat';
+import { useLocation, useNavigate } from 'react-router';
 
 import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
@@ -79,7 +79,7 @@ const CreatePlanWizard: FC = () => {
     try {
       await submitMigrationPlan(formData, trackPlanWizardEvent, targetStorages);
 
-      navigate(getCreatedPlanPath(planName, planProject));
+      await navigate(getCreatedPlanPath(planName, planProject));
     } catch (error) {
       trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_FAILED, {
         creationMethod: CreationMethod.PlanWizard,

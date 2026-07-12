@@ -20,6 +20,8 @@ import { getAccessModeOptions, isRwxCapableProvisioner } from '../utils/constant
 
 import './OffloadStorageIndexedForm/OffloadStorageIndexedForm.style.scss';
 
+type TargetStorageValue = { name?: string } | string | undefined;
+
 type AccessModeFieldProps = {
   fieldId: string;
   targetStorages: TargetStorage[];
@@ -40,10 +42,10 @@ const AccessModeField: FC<AccessModeFieldProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
 
   const accessMode = useWatch({ control, name: fieldId }) as AccessMode | undefined;
-  const targetStorageValue = useWatch({ control, name: targetStorageFieldId }) as
-    | { name?: string }
-    | string
-    | undefined;
+  const targetStorageValue = useWatch({
+    control,
+    name: targetStorageFieldId,
+  }) as TargetStorageValue;
 
   const selectedProvisioner = targetStorages.find(
     (storage) =>

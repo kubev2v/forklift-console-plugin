@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import { DeleteModal, type DeleteModalProps } from 'src/components/modals/DeleteModal/DeleteModal';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -41,7 +41,7 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({
         value={0}
         key="EditProvider"
         onClick={() => {
-          navigate(isDetailsPage ? `${providerURL}/yaml` : providerURL);
+          navigate(isDetailsPage ? `${providerURL}/yaml` : providerURL)?.catch(() => undefined);
         }}
       >
         {isDetailsPage ? t('Edit YAML') : t('Edit')}
@@ -52,7 +52,7 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({
           key="EditCredentials"
           href={`${providerURL}/credentials`}
           onClick={() => {
-            navigate(`${providerURL}/credentials`);
+            navigate(`${providerURL}/credentials`)?.catch(() => undefined);
           }}
         >
           {t('Edit provider credentials')}

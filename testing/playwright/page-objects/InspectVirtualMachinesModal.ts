@@ -36,11 +36,11 @@ export class InspectVirtualMachinesModal {
 
   async getVmRowCount(): Promise<number> {
     const body = this.vmTable.getByRole('rowgroup').nth(1);
-    return await body.getByRole('row').count();
+    return body.getByRole('row').count();
   }
 
   async isConfirmDisabled(): Promise<boolean> {
-    return await this.confirmButton.isDisabled();
+    return this.confirmButton.isDisabled();
   }
 
   get modal(): Locator {

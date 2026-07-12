@@ -63,11 +63,11 @@ export const setupLightspeedIntercepts = async (
 
   // Block WebSocket watches for subscriptions and services so the SDK
   // relies on the intercepted HTTP responses below.
-  await page.routeWebSocket('**/operators.coreos.com/v1alpha1/subscriptions**', (ws) => {
-    ws.close();
+  await page.routeWebSocket('**/operators.coreos.com/v1alpha1/subscriptions**', async (ws) => {
+    await ws.close();
   });
-  await page.routeWebSocket(`**/api/v1/namespaces/${MTV_NAMESPACE}/services**`, (ws) => {
-    ws.close();
+  await page.routeWebSocket(`**/api/v1/namespaces/${MTV_NAMESPACE}/services**`, async (ws) => {
+    await ws.close();
   });
 
   await page.route('**/operators.coreos.com/v1alpha1/subscriptions**', async (route) => {

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
 import type { PlanModalProps } from 'src/plans/actions/components/types';
 
@@ -48,7 +48,7 @@ const StatusPopover: FC<StatusPopoverProps> = ({ count, plan, status, vms }) => 
 
   const navigateToVMsTab = () => {
     const url = `${getResourceUrl({ name: getName(plan), namespace: getNamespace(plan), reference: PlanModelRef })}/vms`;
-    navigate(url);
+    navigate(url)?.catch(() => undefined);
   };
   return (
     <Popover

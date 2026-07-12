@@ -33,7 +33,7 @@ const CACertificateField: FC = () => {
     name: ProviderFormFieldId.CaCertificate,
     rules: {
       validate: {
-        validCertificate: async (val: string | undefined) => {
+        validCertificate: (val: string | undefined) => {
           if (certificateValidation !== CertificateValidationMode.Configure) {
             return undefined;
           }

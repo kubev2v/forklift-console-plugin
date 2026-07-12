@@ -1,5 +1,5 @@
 import { type FC, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom-v5-compat';
+import { Link, useNavigate } from 'react-router';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -95,7 +95,7 @@ const MigrationPlansDonutCard: FC<MigrationPlansDonutCardProps> = () => {
                     const params = new URLSearchParams({
                       phase: JSON.stringify([phase]),
                     });
-                    navigate(`${plansListURL}?${params.toString()}`);
+                    navigate(`${plansListURL}?${params.toString()}`)?.catch(() => undefined);
                     return null;
                   },
                   onMouseOut: () => {

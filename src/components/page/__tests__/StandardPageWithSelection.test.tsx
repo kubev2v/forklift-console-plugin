@@ -1,4 +1,4 @@
-import { MemoryRouter } from 'react-router-dom-v5-compat';
+import { MemoryRouter } from 'react-router';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';

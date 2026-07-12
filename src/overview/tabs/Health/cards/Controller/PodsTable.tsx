@@ -1,5 +1,5 @@
 import { type FC, type KeyboardEvent, type MouseEvent, useState } from 'react';
-import { Link } from 'react-router-dom-v5-compat';
+import { Link } from 'react-router';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
 import StatusIcon from 'src/components/status/StatusIcon';
 import { useForkliftTranslation } from 'src/utils/i18n';

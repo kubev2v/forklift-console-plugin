@@ -5,8 +5,6 @@ import {
   type Block,
   BlockKind,
   COLUMN_IDS,
-  type FolderBlock,
-  type RootBlock,
   ROW_TYPE,
   type RowNode,
   type SortColumn,
@@ -54,18 +52,18 @@ const useTreeSortBlocks: UseTreeSortBlocks = ({ columns, conversions, filteredRo
     const blocks: Block[] = [];
     let current: Block | null = null;
 
-    for (let idx = 0; idx < filteredRows.length; ) {
+    for (let idx = 0; idx < filteredRows.length;) {
       const row = filteredRows[idx];
 
       if (row.type === ROW_TYPE.Folder) {
-        current = { folder: row, items: [], kind: BlockKind.Folder } as FolderBlock;
+        current = { folder: row, items: [], kind: BlockKind.Folder };
         blocks.push(current);
         idx += 1;
       }
 
       if (row.type === ROW_TYPE.Vm) {
         if (!current || (current.kind === BlockKind.Folder && row.parentFolderKey === NO_FOLDER)) {
-          current = { items: [], kind: BlockKind.Root } as RootBlock;
+          current = { items: [], kind: BlockKind.Root };
           blocks.push(current);
         }
 

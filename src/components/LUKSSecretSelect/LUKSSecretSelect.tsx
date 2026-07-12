@@ -2,7 +2,7 @@ import { type FC, useMemo } from 'react';
 
 import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import type { IoK8sApiCoreV1Secret } from '@forklift-ui/types';
-import { type K8sResourceCommon, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName } from '@utils/crds/common/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -31,7 +31,7 @@ const LUKSSecretSelect: FC<LUKSSecretSelectProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const [allSecrets, loaded, error] = useK8sWatchResource<K8sResourceCommon[]>({
+  const [allSecrets, loaded, error] = useK8sWatchResource<IoK8sApiCoreV1Secret[]>({
     groupVersionKind: SECRET_GVK,
     isList: true,
     namespace,
@@ -42,9 +42,7 @@ const LUKSSecretSelect: FC<LUKSSecretSelectProps> = ({
       return [];
     }
 
-    return allSecrets.filter(
-      (secret) => (secret as IoK8sApiCoreV1Secret).type === 'Opaque',
-    ) as IoK8sApiCoreV1Secret[];
+    return allSecrets.filter((secret) => secret.type === 'Opaque');
   }, [allSecrets]);
 
   const options: TypeaheadSelectOption[] = useMemo(

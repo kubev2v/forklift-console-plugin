@@ -14,9 +14,7 @@ export const HOOK_SOURCE_LOCAL = 'local' as const;
 export const HOOK_SOURCE_AAP = 'aap' as const;
 
 export type HookSource =
-  | typeof HOOK_SOURCE_AAP
-  | typeof HOOK_SOURCE_LOCAL
-  | typeof HOOK_SOURCE_NONE;
+  typeof HOOK_SOURCE_AAP | typeof HOOK_SOURCE_LOCAL | typeof HOOK_SOURCE_NONE;
 
 export enum AapFormFieldId {
   AapPostHookJobTemplateId = 'aapPostHookJobTemplateId',

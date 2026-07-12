@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import { TELEMETRY_EVENTS } from 'src/utils/analytics/constants';
 import { useForkliftAnalytics } from 'src/utils/analytics/hooks/useForkliftAnalytics';
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
@@ -57,7 +57,7 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
 
     const query = searchParams.toString();
     const queryString = query ? `?${query}` : '';
-    navigate(`${planResourceUrl}/~new${queryString}`);
+    navigate(`${planResourceUrl}/~new${queryString}`)?.catch(() => undefined);
   };
 
   if (isEc2OnNonAwsCluster) {

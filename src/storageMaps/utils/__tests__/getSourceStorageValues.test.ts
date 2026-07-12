@@ -1,4 +1,4 @@
-import type { TypedOvaResource, V1beta1Provider } from '@forklift-ui/types';
+import type { V1beta1Provider } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
@@ -8,14 +8,13 @@ import { getSourceStorageValuesForSelectedVms } from '../getSourceStorageValues'
 const makeOvaProvider = (): V1beta1Provider =>
   ({ spec: { type: PROVIDER_TYPES.ova } }) as unknown as V1beta1Provider;
 
-const makeOvaStorage = (id: string, name: string): InventoryStorage =>
-  ({
-    id,
-    name,
-    providerType: PROVIDER_TYPES.ova,
-    revision: 1,
-    selfLink: '',
-  }) as TypedOvaResource;
+const makeOvaStorage = (id: string, name: string): InventoryStorage => ({
+  id,
+  name,
+  providerType: PROVIDER_TYPES.ova,
+  revision: 1,
+  selfLink: '',
+});
 
 /**
  * Simulates the actual OVA API response for a VM with disks.

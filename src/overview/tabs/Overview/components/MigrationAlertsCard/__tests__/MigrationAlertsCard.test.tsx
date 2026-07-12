@@ -1,4 +1,4 @@
-import { MemoryRouter } from 'react-router-dom-v5-compat';
+import { MemoryRouter } from 'react-router';
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { render, screen } from '@testing-library/react';

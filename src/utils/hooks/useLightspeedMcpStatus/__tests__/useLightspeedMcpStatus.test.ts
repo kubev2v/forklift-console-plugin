@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { LIGHTSPEED_OPERATOR_PACKAGE, SubscriptionModelGroupVersionKind } from '../constants';
 import { useLightspeedMcpStatus } from '../useLightspeedMcpStatus';

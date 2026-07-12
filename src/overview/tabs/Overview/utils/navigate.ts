@@ -1,4 +1,4 @@
-import type { NavigateFunction } from 'react-router-dom-v5-compat';
+import type { NavigateFunction } from 'react-router';
 import { DateTime, type Interval } from 'luxon';
 
 import { isEmpty } from '@utils/helpers';
@@ -33,6 +33,6 @@ export const navigateToHistoryTab = ({
   if (!isEmpty(migrations)) {
     params.push(`name=${encodeURIComponent(JSON.stringify(migrations))}`);
   }
-  navigate(`/mtv/overview/history?${params.join('&')}`);
+  navigate(`/mtv/overview/history?${params.join('&')}`)?.catch(() => undefined);
   return null;
 };

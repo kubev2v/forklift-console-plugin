@@ -168,7 +168,7 @@ export class PlanDetailsPage {
    * Checks if the critical concerns alert is visible.
    */
   async hasCriticalConcernsAlert(): Promise<boolean> {
-    return await this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
+    return this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
   }
 
   get inspectVmsButton() {
@@ -176,7 +176,7 @@ export class PlanDetailsPage {
   }
 
   async isInspectVmsButtonDisabled(): Promise<boolean> {
-    return await this.inspectVmsButton.isDisabled();
+    return this.inspectVmsButton.isDisabled();
   }
 
   async navigate(planName: string, namespace: string, tab?: string): Promise<void> {
