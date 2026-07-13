@@ -1,5 +1,5 @@
 import { type FC, type ReactNode, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 
 import {
   type K8sGroupVersionKind,
@@ -41,7 +41,7 @@ const LabelButton: FC<LabelButtonProps> = ({
   const onClick = useCallback(() => {
     const navigationTarget = getNavigationTarget(href, isCreateForm, url);
     if (navigationTarget) {
-      navigate(navigationTarget);
+      navigate(navigationTarget)?.catch(() => undefined);
     }
   }, [navigate, href, isCreateForm, url]);
   return (

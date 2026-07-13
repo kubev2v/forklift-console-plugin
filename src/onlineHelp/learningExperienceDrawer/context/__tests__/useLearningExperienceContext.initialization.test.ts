@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { DEFAULT_DATA, DEFAULT_DRAWER_WIDTH } from '../../utils/constants';
 import { useLearningExperienceContext } from '../useLearningExperienceContext';

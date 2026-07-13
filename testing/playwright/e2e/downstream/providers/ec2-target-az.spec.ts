@@ -33,7 +33,7 @@ const fetchProviderSettings = async (
 ): Promise<Record<string, string> | undefined> => {
   const providerResource = await resourceManager.fetchProvider(providerName);
   expect(providerResource).not.toBeNull();
-  return providerResource?.spec?.settings as Record<string, string> | undefined;
+  return providerResource?.spec?.settings;
 };
 
 test.describe('EC2 Provider target-az CR Verification', () => {

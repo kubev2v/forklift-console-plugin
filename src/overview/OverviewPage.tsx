@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Route, Routes } from 'react-router-dom-v5-compat';
+import { Route, Routes } from 'react-router';
 import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 import InventoryNotReachable from 'src/providers/list/components/InventoryNotReachable';

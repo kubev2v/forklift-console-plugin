@@ -142,7 +142,7 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
         break;
 
       case PROVIDER_TYPES.ovirt:
-        storageIds = getOvirtStorageIds(vm as OVirtVMWithDisks);
+        storageIds = getOvirtStorageIds(vm);
         break;
 
       case PROVIDER_TYPES.openshift:

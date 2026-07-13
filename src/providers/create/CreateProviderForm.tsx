@@ -1,6 +1,6 @@
 import { type FC, useCallback, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useNavigate, useSearchParams } from 'react-router-dom-v5-compat';
+import { useNavigate, useSearchParams } from 'react-router';
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
 
 import {
@@ -85,7 +85,7 @@ const CreateProviderForm: FC = () => {
         });
 
         const providerURL = getProviderDetailsPageUrl(provider);
-        navigate(providerURL);
+        navigate(providerURL)?.catch(() => undefined);
       } catch (err) {
         trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_FAILED, {
           error: err instanceof Error ? err.message : 'Unknown error',
@@ -139,7 +139,7 @@ const CreateProviderForm: FC = () => {
               <Button
                 variant={ButtonVariant.secondary}
                 onClick={() => {
-                  navigate(-1);
+                  navigate(-1)?.catch(() => undefined);
                 }}
                 data-testid="provider-cancel-button"
               >

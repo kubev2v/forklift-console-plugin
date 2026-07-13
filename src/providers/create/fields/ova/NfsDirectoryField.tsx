@@ -14,7 +14,7 @@ const NfsDirectoryField: FC = () => {
       fieldId={ProviderFormFieldId.NfsDirectory}
       fieldRules={{
         validate: {
-          pattern: async (val: string | undefined) => {
+          pattern: (val: string | undefined) => {
             if (!val || !NFS_PATH_REGEX.test(val)) {
               return t('NFS path must be in format: host:/path (e.g., 10.10.0.10:/ova)');
             }

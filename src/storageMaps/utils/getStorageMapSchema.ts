@@ -15,9 +15,7 @@ export const getStorageMapSchema = (
     return null;
   }
 
-  const schema = crd?.spec?.versions?.[0]?.schema?.openAPIV3Schema?.properties as
-    | Record<string, JSONSchemaProperty>
-    | undefined;
+  const schema = crd?.spec?.versions?.[0]?.schema?.openAPIV3Schema?.properties;
 
   return schema ?? null;
 };

@@ -91,7 +91,7 @@ export const useOpenShiftStorages = (
   const typedStorages = useMemo(
     () =>
       Array.isArray(storages)
-        ? storages.map((st) => ({ ...st, providerType: 'openshift' }) as OpenShiftStorageClass)
+        ? storages.map((st) => ({ ...st, providerType: 'openshift' as const }))
         : [],
     [storages],
   );

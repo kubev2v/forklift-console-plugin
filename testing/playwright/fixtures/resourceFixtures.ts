@@ -21,7 +21,7 @@ import {
 } from './helpers/resourceCreationHelpers';
 
 const createAuthenticatedContext = async (browser: Browser): Promise<BrowserContext> => {
-  return await browser.newContext({
+  return browser.newContext({
     ignoreHTTPSErrors: true,
     storageState: existsSync(AUTH_FILE) ? AUTH_FILE : undefined,
   });

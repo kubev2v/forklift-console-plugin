@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import { NetworkMapModelRef } from '@forklift-ui/types';
@@ -95,7 +95,7 @@ const CreateNetworkMapForm: React.FC = () => {
         reference: NetworkMapModelRef,
       });
 
-      navigate(createdNetworkMapUrl);
+      navigate(createdNetworkMapUrl)?.catch(() => undefined);
     } catch (err) {
       setCreateError(err as Error);
     }
@@ -149,7 +149,7 @@ const CreateNetworkMapForm: React.FC = () => {
               <Button
                 variant={ButtonVariant.secondary}
                 onClick={() => {
-                  navigate(networkMapsListUrl);
+                  navigate(networkMapsListUrl)?.catch(() => undefined);
                 }}
               >
                 {t('Cancel')}

@@ -18,7 +18,7 @@ import {
  * useOpenOLS hook directly, which would violate rules of hooks when called from event handlers.
  */
 export const useLightspeed = (): UseLightspeedResult => {
-  const dispatch = useDispatch();
+  const dispatch: (action: { payload?: unknown; type: string }) => void = useDispatch();
   const [extensions, resolved] = useResolvedExtensions<OLSReducerExtension>(isOLSReducer);
 
   const isAvailable = resolved && !isEmpty(extensions);

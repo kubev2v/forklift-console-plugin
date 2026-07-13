@@ -71,7 +71,7 @@ spec:
             secretName: console-serving-cert
       containers:
         - name: console
-          image: quay.io/openshift/origin-console:4.19
+          image: quay.io/openshift/origin-console:4.22
           volumeMounts:
             - name: console-serving-cert
               mountPath: /var/run/secrets/console-serving-cert

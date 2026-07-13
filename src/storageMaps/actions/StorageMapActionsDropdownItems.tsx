@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import { DeleteModal, type DeleteModalProps } from 'src/components/modals/DeleteModal/DeleteModal';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -39,7 +39,7 @@ export const StorageMapActionsDropdownItems = ({
       value={0}
       key="edit"
       onClick={() => {
-        navigate(isDetailsPage ? `${storageMapURL}/yaml` : storageMapURL);
+        navigate(isDetailsPage ? `${storageMapURL}/yaml` : storageMapURL)?.catch(() => undefined);
       }}
     >
       {isDetailsPage ? t('Edit YAML') : t('Edit')}

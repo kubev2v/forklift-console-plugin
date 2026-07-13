@@ -7,7 +7,6 @@ import { getSourceStorageValuesForSelectedVms } from 'src/storageMaps/utils/getS
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import type { ProviderVirtualMachine } from '@forklift-ui/types';
 import { Alert, AlertVariant, Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 import type { StorageMapping } from '@utils/storage/types';
@@ -39,11 +38,7 @@ const NewStorageMapFields: FC = () => {
   const isLoading = sourceStoragesLoading || vmsWithDisksLoading;
 
   const { other: otherSourceStorages, used: usedSourceStorages } =
-    getSourceStorageValuesForSelectedVms(
-      sourceProvider,
-      availableSourceStorages,
-      vmsWithDisks as ProviderVirtualMachine[],
-    );
+    getSourceStorageValuesForSelectedVms(sourceProvider, availableSourceStorages, vmsWithDisks);
   const defaultTargetStorageName = availableTargetStorages?.[0]?.name;
 
   useInitializeMappings<StorageMapping>({

@@ -1,4 +1,3 @@
-import type { ContextProvider } from '@openshift-console/dynamic-plugin-sdk';
 import type {
   ConsolePluginBuildMetadata,
   EncodedExtension,
@@ -19,5 +18,5 @@ export const extensions: EncodedExtension[] = [
       },
     },
     type: 'console.context-provider',
-  } as EncodedExtension<ContextProvider>,
+  },
 ];

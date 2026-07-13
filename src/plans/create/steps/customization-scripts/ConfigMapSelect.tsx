@@ -36,9 +36,7 @@ const ConfigMapSelect = (
       return [];
     }
 
-    return allConfigMaps.filter((cm) =>
-      isScriptConfigMap((cm as IoK8sApiCoreV1ConfigMap).data),
-    ) as IoK8sApiCoreV1ConfigMap[];
+    return allConfigMaps.filter((cm) => isScriptConfigMap((cm as IoK8sApiCoreV1ConfigMap).data));
   }, [allConfigMaps]);
 
   const hasNoScriptConfigMaps = isEmpty(scriptConfigMaps);

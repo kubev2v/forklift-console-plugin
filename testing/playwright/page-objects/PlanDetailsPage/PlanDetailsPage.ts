@@ -77,6 +77,17 @@ export class PlanDetailsPage {
     return this.page.getByTestId('plan-critical-alert');
   }
 
+  /** Deletes the plan via the details page Actions menu, confirming in the plan-specific PlanDeleteModal. */
+  async deletePlan(): Promise<void> {
+    await this.page.getByTestId('plan-actions-dropdown-button').click();
+    await this.page.getByRole('menuitem', { name: 'Delete', exact: true }).click();
+
+    const deleteModal = this.page.getByRole('dialog', { name: 'Delete plan' });
+    await expect(deleteModal).toBeVisible();
+    await deleteModal.getByTestId('modal-confirm-button').click();
+    await expect(deleteModal).not.toBeVisible();
+  }
+
   async duplicatePlan(newPlanName: string, namespace: string): Promise<void> {
     await this.page.getByTestId('plan-actions-dropdown-button').click();
     const duplicateItem = this.page.getByRole('menuitem', { name: 'Duplicate' });
@@ -168,7 +179,7 @@ export class PlanDetailsPage {
    * Checks if the critical concerns alert is visible.
    */
   async hasCriticalConcernsAlert(): Promise<boolean> {
-    return await this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
+    return this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
   }
 
   get inspectVmsButton() {
@@ -176,7 +187,7 @@ export class PlanDetailsPage {
   }
 
   async isInspectVmsButtonDisabled(): Promise<boolean> {
-    return await this.inspectVmsButton.isDisabled();
+    return this.inspectVmsButton.isDisabled();
   }
 
   async navigate(planName: string, namespace: string, tab?: string): Promise<void> {

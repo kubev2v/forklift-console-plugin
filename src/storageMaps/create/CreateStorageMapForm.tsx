@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import { StorageMapModelRef } from '@forklift-ui/types';
@@ -92,7 +92,7 @@ const CreateStorageMapForm: React.FC = () => {
       });
 
       // Navigate to the created storage map
-      navigate(createdStorageMapUrl);
+      navigate(createdStorageMapUrl)?.catch(() => undefined);
     } catch (err) {
       setCreateError(err as Error);
     }
@@ -152,7 +152,7 @@ const CreateStorageMapForm: React.FC = () => {
               <Button
                 variant={ButtonVariant.secondary}
                 onClick={() => {
-                  navigate(storageMapsListUrl);
+                  navigate(storageMapsListUrl)?.catch(() => undefined);
                 }}
               >
                 {t('Cancel')}

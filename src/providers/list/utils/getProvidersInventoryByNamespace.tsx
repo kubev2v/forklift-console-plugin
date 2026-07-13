@@ -81,7 +81,7 @@ export const getProvidersInventoryByNamespace = async (
               case PROVIDER_TYPES.ec2: {
                 const extended = newInventory as ProvidersInventoryList &
                   Record<string, ProviderInventory[]>;
-                extended.ec2 = [...(extended.ec2 ?? []), newInventoryProvider as ProviderInventory];
+                extended.ec2 = [...(extended.ec2 ?? []), newInventoryProvider];
                 break;
               }
               default:

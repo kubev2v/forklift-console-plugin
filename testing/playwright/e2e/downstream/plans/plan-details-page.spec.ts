@@ -19,6 +19,25 @@ test.describe('Plan Details Navigation', { tag: '@downstream' }, () => {
   });
 });
 
+test.describe('Plan Details - Delete', { tag: '@downstream' }, () => {
+  requireVersion(test, V2_10_5);
+
+  test('should delete the plan from the details page and return to the list', async ({
+    page,
+    testPlan,
+    testProvider: _testProvider,
+  }) => {
+    const { namespace, planDetailsPage, planName } = await setupPlanDetailsPage(page, testPlan);
+
+    await planDetailsPage.deletePlan();
+
+    await expect(page).toHaveURL(
+      new RegExp(`/k8s/ns/${namespace}/forklift\\.konveyor\\.io~v1beta1~Plan$`),
+    );
+    await expect(page.getByRole('link', { name: planName, exact: true })).not.toBeVisible();
+  });
+});
+
 test.describe('Plan Details - VM Rename Validation', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
 

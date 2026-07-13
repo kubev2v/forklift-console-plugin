@@ -5,14 +5,13 @@ import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { ProviderNetwork } from '../../../types';
 import { getSourceNetworkValues } from '../utils';
 
-const makeEc2Network = (id: string, name: string): ProviderNetwork =>
-  ({
-    id,
-    name,
-    providerType: PROVIDER_TYPES.ec2,
-    revision: 1,
-    selfLink: `/providers/ec2/uid/networks/${id}`,
-  }) as ProviderNetwork;
+const makeEc2Network = (id: string, name: string): ProviderNetwork => ({
+  id,
+  name,
+  providerType: PROVIDER_TYPES.ec2,
+  revision: 1,
+  selfLink: `/providers/ec2/uid/networks/${id}`,
+});
 
 const makeEc2Vm = (
   subnetId: string | undefined,

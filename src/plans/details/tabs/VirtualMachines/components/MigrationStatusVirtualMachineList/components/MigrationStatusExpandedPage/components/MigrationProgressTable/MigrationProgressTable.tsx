@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate } from 'react-router';
 import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal/PlanCutoverMigrationModal';
 import type { PlanModalProps } from 'src/plans/actions/components/types';
 
@@ -126,7 +126,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                             name: vmName,
                             namespace: targetNamespace,
                           }),
-                        );
+                        )?.catch(() => undefined);
                       }}
                       isInline
                     >

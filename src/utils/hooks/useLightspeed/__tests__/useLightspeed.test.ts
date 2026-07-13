@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { useResolvedExtensions } from '@openshift-console/dynamic-plugin-sdk';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 
 import { useLightspeed } from '../useLightspeed';
 import { clickOLSSubmitButton } from '../utils';

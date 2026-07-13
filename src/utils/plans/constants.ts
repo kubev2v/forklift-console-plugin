@@ -5,5 +5,4 @@ export const TargetPowerStates = {
 } as const;
 
 export type TargetPowerStateValue =
-  | (typeof TargetPowerStates)[keyof typeof TargetPowerStates]
-  | undefined;
+  (typeof TargetPowerStates)[keyof typeof TargetPowerStates] | undefined;

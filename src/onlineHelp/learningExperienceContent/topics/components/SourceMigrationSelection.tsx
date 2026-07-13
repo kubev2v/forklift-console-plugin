@@ -19,7 +19,7 @@ const SourceMigrationSelection: FC = () => {
 
   const onSelect = (_event: React.MouseEvent | undefined, value: string | number | undefined) => {
     setIsOpen(false);
-    setData('providerType', value as ProviderTypes);
+    setData('providerType', value);
   };
 
   return (
