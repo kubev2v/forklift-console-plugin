@@ -45,7 +45,6 @@ const Ec2TargetSettingsFields: FC = () => {
         <div className="pf-v6-u-ml-lg">
           <ProviderFormTextInput
             fieldId={ProviderFormFieldId.Ec2TargetAz}
-            isRequired={false}
             label={t('Target availability zone')}
             helperText={t('Target availability zone for migrations. EBS volumes are AZ-specific.')}
             testId="ec2-target-az-input"
