@@ -1,8 +1,7 @@
-import type { FC } from 'react';
+import { type FC, useRef } from 'react';
 
 import { Tooltip } from '@patternfly/react-core';
 import { Td } from '@patternfly/react-table';
-import { isEmpty } from '@utils/helpers';
 
 import type { RowProps } from '../../common/TableView/types';
 
@@ -30,21 +29,9 @@ export const createRowWithSelection = <T,>({
     const itemId = toId?.(props.resourceData) ?? '';
     const isExpanded = expandedIds?.includes(itemId) ?? false;
     const isSelected = selectedIds?.includes(itemId) ?? false;
-    const isDisabled = !canSelect?.(props.resourceData);
+    const isDisabled = !(canSelect?.(props.resourceData) ?? true);
     const disabledReason = isDisabled ? getSelectDisabledReason?.(props.resourceData) : undefined;
-
-    const selectTd = isEmpty(selectedIds) ? undefined : (
-      <Td
-        select={{
-          isDisabled,
-          isSelected,
-          onSelect: () => {
-            toggleSelectFor([props.resourceData]);
-          },
-          rowIndex: props.resourceIndex,
-        }}
-      />
-    );
+    const selectRef = useRef<HTMLTableCellElement>(null);
 
     return (
       <>
@@ -59,8 +46,20 @@ export const createRowWithSelection = <T,>({
             }}
           />
         )}
-        {selectTd &&
-          (disabledReason ? <Tooltip content={disabledReason}>{selectTd}</Tooltip> : selectTd)}
+        {selectedIds !== undefined && (
+          <Td
+            ref={selectRef}
+            select={{
+              isDisabled,
+              isSelected,
+              onSelect: () => {
+                toggleSelectFor([props.resourceData]);
+              },
+              rowIndex: props.resourceIndex,
+            }}
+          />
+        )}
+        {disabledReason && <Tooltip triggerRef={selectRef} content={disabledReason} />}
         {CellComponent && <CellComponent {...props} />}
       </>
     );
