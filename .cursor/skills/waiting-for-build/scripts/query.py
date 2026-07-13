@@ -5,25 +5,36 @@ find their merge commits in the local git repo, and check which are included in
 one or more build tip commits.
 
 Usage:
-  python query.py [build_hash1] [build_hash2] ...
+  python query.py [--sprint SPRINT_ID] [--build-version X.Y.Z] [build_hash1] ...
 
   Build hashes are optional. When omitted, the script prints the ticket/commit
   table without build-inclusion status.
 
+  --build-version X.Y.Z
+      Version of the build being checked (e.g. "2.12.2" from "IIB 2.12.2-6").
+      When supplied, `in_build` also requires the ticket's fixVersion to match
+      the build's major.minor stream (e.g. stream "2.12" matches fixVersions
+      "2.12.1", "2.12.2"; does NOT match "5.0.0"). This prevents backport merge
+      commits from falsely marking a mainline-targeted ticket as "in build".
+
 Output (JSON to stdout):
   {
-    "sprint": { "id": ..., "name": ..., "end": ... },
-    "build_tips": ["8e059c6", "cfc05ae"],
+    "sprint":        { "id": ..., "name": ..., "end": ... },
+    "build_tips":    ["8e059c6", "cfc05ae"],
+    "build_version": "2.12.2",   // null if not supplied
+    "build_stream":  "2.12",     // null if not supplied
     "issues": [
       {
-        "key": "MTV-5388",
-        "status": "MODIFIED",
-        "priority": "Major",
-        "summary": "...",
-        "commit": "22da1d1",        # null if not found
-        "pr": 2427,                  # null if not found
-        "merge_date": "2026-05-20",  # null if not found
-        "in_build": false            # null if no build tips supplied
+        "key":          "MTV-5388",
+        "status":       "MODIFIED",
+        "priority":     "Major",
+        "summary":      "...",
+        "fixVersions":  ["2.12.2"],
+        "commit":       "22da1d1",   // null if not found
+        "pr":           2427,        // null if not found
+        "merge_date":   "2026-05-20",
+        "version_match": true,       // null if no --build-version supplied
+        "in_build":     false        // null if no build tips supplied
       },
       ...
     ]
@@ -98,49 +109,116 @@ def jira_get(path: str, headers: dict, base: str) -> dict:
     return r.json()
 
 
+def jira_search(jql: str, fields: str, headers: dict, base: str, max_results: int = 100) -> list[dict]:
+    """Run a JQL search using the current REST API endpoint (POST /rest/api/3/search/jql).
+
+    Paginates automatically via nextPageToken. Falls back to the legacy GET
+    endpoint (no pagination) for older instances. Returns the raw list of
+    issue dicts with a `fields` sub-dict.
+    """
+    field_list = fields.split(",")
+    raw: list[dict] = []
+    next_page_token: Optional[str] = None
+    while True:
+        payload: dict = {"jql": jql, "fields": field_list, "maxResults": max_results}
+        if next_page_token:
+            payload["nextPageToken"] = next_page_token
+        r = requests.post(f"{base}/rest/api/3/search/jql", headers={**headers, "Content-Type": "application/json"},
+                          json=payload, timeout=20)
+        if r.ok:
+            data = r.json()
+            page = data.get("issues", [])
+            raw.extend(page)
+            next_page_token = data.get("nextPageToken")
+            if not next_page_token or not page:
+                return raw
+            continue
+        # 404 = new endpoint not yet available on this instance — try legacy GET
+        if r.status_code == 404:
+            encoded = urllib.parse.quote(jql)
+            r2 = requests.get(
+                f"{base}/rest/api/3/search?jql={encoded}&fields={fields}&maxResults={max_results}",
+                headers=headers, timeout=20)
+            r2.raise_for_status()
+            return r2.json().get("issues", [])
+        r.raise_for_status()
+        return raw
+
+
 # ── Jira queries ──────────────────────────────────────────────────────────────
 
 def get_active_sprint(board_id: int, headers: dict, base: str) -> dict:
-    """Return the first active sprint for the given Agile board."""
-    data = jira_get(f"/rest/agile/1.0/board/{board_id}/sprint?state=active", headers, base)
-    sprints = data.get("values", [])
-    if not sprints:
-        raise RuntimeError(f"No active sprint found on board {board_id}")
-    return sprints[0]
+    """Return the first active sprint for the given Agile board.
+
+    Tries the Agile API first. If the Agile API returns 401 (common in SSO-
+    enforced Jira Cloud instances like Red Hat's), falls back to fetching a
+    recent MTV issue and extracting the sprint field from it.
+    """
+    try:
+        r = requests.get(
+            f"{base}/rest/agile/1.0/board/{board_id}/sprint?state=active",
+            headers=headers, timeout=20)
+        if r.ok:
+            sprints = r.json().get("values", [])
+            if sprints:
+                return sprints[0]
+        # 401 / 403 on SSO instances: fall through to JQL fallback
+    except Exception:
+        pass
+
+    # Fallback: extract sprint info from an issue's sprint field via JQL
+    status_clause = ",".join(f'"{s}"' for s in WAITING_STATUSES)
+    jql = f'({QUICK_FILTER}) AND sprint in openSprints() AND status in ({status_clause})'
+    issues = jira_search(jql, "summary,status,priority,sprint", headers, base, max_results=1)
+    if issues:
+        # Jira Cloud returns the sprint field as a list of sprint objects (an
+        # issue can carry current + past sprints), not a single dict.
+        sprints = (issues[0].get("fields") or {}).get("sprint") or []
+        if isinstance(sprints, dict):
+            sprints = [sprints]
+        active = next((s for s in sprints if s.get("state") == "active"), None)
+        sprint_data = active or (sprints[0] if sprints else {})
+        if sprint_data:
+            return {
+                "id":        sprint_data.get("id"),
+                "name":      sprint_data.get("name", ""),
+                "state":     sprint_data.get("state", "active"),
+                "endDate":   sprint_data.get("endDate", ""),
+            }
+
+    # Last resort: search without sprint filter and synthesise a placeholder
+    issues_all = jira_search(
+        f'({QUICK_FILTER}) AND status in ({status_clause})',
+        "summary,status,priority", headers, base, max_results=1)
+    if issues_all:
+        return {"id": None, "name": "(unknown sprint)", "state": "active", "endDate": ""}
+
+    raise RuntimeError(
+        f"No active sprint found on board {board_id} and JQL fallback returned no issues.")
 
 
-def get_waiting_for_build_issues(sprint_id: int, headers: dict, base: str) -> list[dict]:
+def get_waiting_for_build_issues(sprint_id: Optional[int], headers: dict, base: str) -> list[dict]:
     """Return all MTV issues in the 'Waiting on build' column for the given sprint.
 
-    Paginates automatically if the result set exceeds the page size.
-    Includes the numeric issue id so callers can query the dev-status API.
+    If sprint_id is None (Agile API unavailable) searches without a sprint
+    constraint (all open issues in the waiting statuses for this project).
+    Paginates automatically. Includes the numeric issue id for dev-status API.
     """
     status_clause = ",".join(f'"{s}"' for s in WAITING_STATUSES)
-    jql           = f'({QUICK_FILTER}) AND status in ({status_clause})'
-    encoded_jql   = urllib.parse.quote(jql)
-    fields        = "summary,status,assignee,priority,fixVersions"
 
-    page_size = 100
-    start_at  = 0
-    raw: list[dict] = []
-    while True:
-        path = (
-            f"/rest/agile/1.0/sprint/{sprint_id}/issue"
-            f"?jql={encoded_jql}&fields={fields}&maxResults={page_size}&startAt={start_at}"
-        )
-        data  = jira_get(path, headers, base)
-        page  = data.get("issues", [])
-        raw.extend(page)
-        total    = data.get("total", len(raw))
-        start_at += len(page)
-        if start_at >= total or not page:
-            break
+    if sprint_id is not None:
+        jql = f'({QUICK_FILTER}) AND sprint = {sprint_id} AND status in ({status_clause})'
+    else:
+        jql = f'({QUICK_FILTER}) AND sprint in openSprints() AND status in ({status_clause})'
+
+    fields = "summary,status,assignee,priority,fixVersions"
+    raw = jira_search(jql, fields, headers, base, max_results=100)
 
     result = []
     for issue in raw:
         f = issue.get("fields", {})
         result.append({
-            "id":          issue["id"],   # numeric id needed for dev-status API
+            "id":          issue["id"],
             "key":         issue["key"],
             "status":      (f.get("status")   or {}).get("name", "?"),
             "priority":    (f.get("priority") or {}).get("name", "?"),
@@ -293,15 +371,90 @@ def check_in_build(commit: str, build_tips: list[str]) -> bool:
     return any(is_ancestor(commit, tip) for tip in build_tips)
 
 
+# ── Version stream helpers ─────────────────────────────────────────────────────
+
+def parse_stream(version: str) -> str:
+    """Return the 'major.minor' stream from a version string.
+
+    Examples:
+        "2.12.2"  → "2.12"
+        "5.0.0"   → "5.0"
+        "2.12"    → "2.12"
+    """
+    parts = version.split(".")
+    if len(parts) >= 2:
+        return f"{parts[0]}.{parts[1]}"
+    return version
+
+
+def version_matches_stream(fix_versions: list[str], build_stream: str) -> bool:
+    """Return True if any fixVersion has the same major.minor as build_stream.
+
+    A ticket targeting "5.0.0" does NOT match a "2.12" z-stream build.
+    A ticket targeting "2.12.2" or "2.12.1" DOES match a "2.12" build.
+    When fix_versions is empty the result is False (unknown → no match).
+    """
+    return any(parse_stream(fv) == build_stream for fv in fix_versions)
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
-    """Entry point: query Jira + git and print JSON to stdout."""
-    build_tips = sys.argv[1:]  # optional positional args
+    """Entry point: query Jira + git and print JSON to stdout.
+
+    Usage:
+        python query.py [--sprint SPRINT_ID] [--build-version X.Y.Z] [hash ...]
+
+    --sprint SPRINT_ID      Override the active sprint ID (Agile API blocked by SSO).
+    --build-version X.Y.Z   Version string from the build label (e.g. "2.12.2").
+                            When supplied, in_build also requires the ticket's
+                            fixVersion to match the build's major.minor stream.
+    """
+    args = sys.argv[1:]
+    sprint_override: Optional[int] = None
+    build_version: Optional[str] = None
+
+    if "--sprint" in args:
+        idx = args.index("--sprint")
+        if idx + 1 >= len(args):
+            raise SystemExit("error: --sprint requires a value")
+        try:
+            sprint_override = int(args[idx + 1])
+        except ValueError:
+            raise SystemExit(f"error: --sprint value must be an integer, got {args[idx + 1]!r}")
+        args = args[:idx] + args[idx + 2:]
+
+    if "--build-version" in args:
+        idx = args.index("--build-version")
+        if idx + 1 >= len(args):
+            raise SystemExit("error: --build-version requires a value")
+        build_version = args[idx + 1]
+        args = args[:idx] + args[idx + 2:]
+
+    build_stream: Optional[str] = parse_stream(build_version) if build_version else None
+    build_tips = args
 
     jira_base, headers = get_auth_config()
 
-    sprint = get_active_sprint(BOARD_ID, headers, jira_base)
+    if sprint_override is not None:
+        # Build a minimal sprint dict from a direct REST lookup
+        sprint_info = {}
+        try:
+            r = requests.get(
+                f"{jira_base}/rest/agile/1.0/sprint/{sprint_override}",
+                headers=headers, timeout=20)
+            if r.ok:
+                sprint_info = r.json()
+        except Exception:
+            pass
+        sprint = {
+            "id":      sprint_override,
+            "name":    sprint_info.get("name", f"Sprint {sprint_override}"),
+            "state":   sprint_info.get("state", "active"),
+            "endDate": sprint_info.get("endDate", ""),
+        }
+    else:
+        sprint = get_active_sprint(BOARD_ID, headers, jira_base)
     issues = get_waiting_for_build_issues(sprint["id"], headers, jira_base)
 
     enriched = []
@@ -340,33 +493,51 @@ def main() -> None:
             if not commit_info:
                 commit_info = candidates[0]
 
+        # Version-stream check: does any fixVersion target the build's stream?
+        # Null when no --build-version was supplied (can't evaluate).
+        version_match: Optional[bool] = None
+        if build_stream is not None:
+            version_match = version_matches_stream(issue["fixVersions"], build_stream)
+
+        # in_build requires the commit to be a git ancestor of the build tip
+        # AND (when known) the ticket's fixVersion to target the same stream.
+        # A 5.0.0 ticket found via a backport commit must NOT be marked in_build
+        # against a 2.12.x build.
         in_build: Optional[bool] = None
         if commit_info and build_tips:
-            in_build = check_in_build(commit_info["commit"], build_tips)
+            commit_in_build = check_in_build(commit_info["commit"], build_tips)
+            if version_match is not None:
+                in_build = commit_in_build and version_match
+            else:
+                in_build = commit_in_build
+
         enriched.append({
-            "key":         issue["key"],
-            "status":      issue["status"],
-            "priority":    issue["priority"],
-            "assignee":    issue["assignee"],
-            "summary":     issue["summary"],
-            "fixVersions": issue["fixVersions"],
-            "commit":      commit_info["commit"]     if commit_info else None,
-            "pr":          commit_info["pr"]         if commit_info else None,
-            "merge_date":  commit_info["merge_date"] if commit_info else None,
-            "subject":     commit_info["subject"]    if commit_info else None,
-            "in_build":    in_build,
+            "key":           issue["key"],
+            "status":        issue["status"],
+            "priority":      issue["priority"],
+            "assignee":      issue["assignee"],
+            "summary":       issue["summary"],
+            "fixVersions":   issue["fixVersions"],
+            "commit":        commit_info["commit"]     if commit_info else None,
+            "pr":            commit_info["pr"]         if commit_info else None,
+            "merge_date":    commit_info["merge_date"] if commit_info else None,
+            "subject":       commit_info["subject"]    if commit_info else None,
+            "version_match": version_match,
+            "in_build":      in_build,
         })
 
     output = {
-        "board_id": BOARD_ID,
+        "board_id":      BOARD_ID,
         "sprint": {
             "id":    sprint["id"],
             "name":  sprint["name"],
             "state": sprint["state"],
             "end":   sprint.get("endDate", "")[:10],
         },
-        "build_tips": build_tips,
-        "issues":     enriched,
+        "build_tips":    build_tips,
+        "build_version": build_version,
+        "build_stream":  build_stream,
+        "issues":        enriched,
     }
     print(json.dumps(output, indent=2))
 

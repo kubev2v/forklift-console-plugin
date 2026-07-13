@@ -38,12 +38,15 @@ Output example:
 ```json
 {
   "build_label": "IIB 2.12.0-44 | 02.06.2026 19:04 UTC",
+  "build_version": "2.12.0",
   "console_plugin_commits": ["8e059c6", "cfc05ae"],
   "mtv_console_plugin_container": "8e059c6f48a7715179038e9bd12151c88c5f9bf1"
 }
 ```
 
-Pass `console_plugin_commits` as arguments to `query.py` (Step 1).
+Pass `build_version` as `--build-version` and `console_plugin_commits` as positional
+arguments to `query.py` (Step 1). If `console_plugin_commits` is empty, fall back to
+the first 7 chars of `mtv_console_plugin_container` as the build tip.
 
 **How it works:** Uses `slackdump` to archive channel `C09DS44AQ65` (#mtv-builds),
 then queries the SQLite database for the latest IIB build thread.
@@ -111,7 +114,8 @@ python3 .cursor/skills/waiting-for-build/scripts/fetch-build.py
 ## Step 1 — Run the query script
 
 ```bash
-python3 .cursor/skills/waiting-for-build/scripts/query.py [hash1] [hash2] ...
+python3 .cursor/skills/waiting-for-build/scripts/query.py \
+  [--sprint SPRINT_ID] [--build-version X.Y.Z] [hash1] [hash2] ...
 ```
 
 - Pass **one or more build tip commit hashes** as positional arguments.
@@ -119,43 +123,65 @@ python3 .cursor/skills/waiting-for-build/scripts/query.py [hash1] [hash2] ...
 - The script reads Jira credentials from `.mcp.json` automatically (no extra setup).
 - Output is JSON printed to stdout.
 
+**`--sprint SPRINT_ID` flag (required on Red Hat Jira):** The Agile API (`/rest/agile/1.0/`) is
+blocked by SSO on Red Hat's Jira instance. Pass the active sprint ID directly to bypass it.
+Get the sprint ID via the Jira MCP: `jira_get_sprints_from_board(board_id="11806", state="active")`.
+
+**`--build-version X.Y.Z` flag (strongly recommended):** Version of the build being tested,
+taken from `build_version` in `fetch-build.py` output (e.g. `"2.12.2"` from label
+`"IIB 2.12.2-6 | ..."`). When supplied the script computes the major.minor **stream**
+(e.g. `"2.12"`) and requires each ticket's `fixVersion` to match that stream before
+setting `in_build: true`. This prevents a backport merge commit landing in a 2.12.x
+build from falsely marking a `fixVersion: 5.0.0` mainline ticket as "in build".
+
 **Example:**
 ```bash
-python3 .cursor/skills/waiting-for-build/scripts/query.py 8e059c6 cfc05ae
+python3 .cursor/skills/waiting-for-build/scripts/query.py \
+  --sprint 67465 --build-version 2.12.0 8e059c6 cfc05ae
 ```
 
 If `requests` is missing: `pip3 install requests`
+
+> **API note:** The script uses `POST /rest/api/3/search/jql` (the current Jira Cloud search API).
+> The old `GET /rest/api/3/search` endpoint returns 410 Gone on updated instances.
 
 ## Step 2 — Interpret the JSON output
 
 The output shape:
 ```json
 {
-  "sprint":     { "id": 66444, "name": "...", "end": "2026-06-04" },
-  "build_tips": ["8e059c6", "cfc05ae"],
+  "sprint":        { "id": 66444, "name": "...", "end": "2026-06-04" },
+  "build_tips":    ["8e059c6", "cfc05ae"],
+  "build_version": "2.12.0",
+  "build_stream":  "2.12",
   "issues": [
     {
-      "key":        "MTV-5388",
-      "status":     "MODIFIED",
-      "priority":   "Major",
-      "summary":    "...",
-      "commit":     "22da1d1",   // null if no commit found in git log
-      "pr":         2427,        // null if PR # not in commit subject
-      "merge_date": "2026-05-20",
-      "in_build":   false        // null if no build tips supplied
+      "key":           "MTV-5388",
+      "status":        "MODIFIED",
+      "priority":      "Major",
+      "summary":       "...",
+      "fixVersions":   ["2.12.0"],
+      "commit":        "22da1d1",   // null if no commit found in git log
+      "pr":            2427,        // null if PR # not in commit subject
+      "merge_date":    "2026-05-20",
+      "version_match": true,        // null if no --build-version supplied
+      "in_build":      false        // null if no build tips supplied
     }
   ]
 }
 ```
 
 Key fields:
-- `in_build: true`  → fix is in the deployed build, ready to verify
-- `in_build: false` → fix was merged after the build was cut, needs next build
-- `commit: null`    → no merge commit found; ticket may be missing `Resolves:` line
+- `in_build: true`       → commit is in the build AND fixVersion targets the same stream → ready to verify; transition to ON_QA
+- `in_build: false`      → either merged after build cut, OR fixVersion targets a different stream (wrong build)
+- `version_match: false` → ticket targets a different version stream (e.g. `5.0.0` vs a `2.12` build); do NOT transition
+- `version_match: null`  → `--build-version` was not supplied; version check skipped
+- `commit: null`         → no merge commit found; ticket may be missing `Resolves:` line
 
 ## Step 2b — Transition in-build tickets to ON_QA
 
-For every issue where `in_build: true`, call the Jira transitions API:
+For every issue where `in_build: true` (which already implies `version_match: true`
+when `--build-version` was supplied), call the Jira transitions API:
 
 ```bash
 # Read credentials from .mcp.json first:
