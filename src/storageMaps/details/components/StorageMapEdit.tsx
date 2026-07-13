@@ -120,12 +120,13 @@ const StorageMapEdit: ModalComponent<StorageMapEditProps> = ({
         testId="edit-storage-map-modal"
       >
         <UpdateStorageMapFieldTable
-          targetStorages={targetStorages}
-          sourceStorages={allSourceStorages}
+          inventorySourceStorages={sourceStorages ?? []}
           isLoading={isLoading}
-          loadError={loadError}
           isVsphere={sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere}
+          loadError={loadError}
           sourceProvider={sourceProvider}
+          sourceStorages={allSourceStorages}
+          targetStorages={targetStorages}
         />
         {error?.root && <FormErrorHelperText error={error.root} />}
       </ModalForm>

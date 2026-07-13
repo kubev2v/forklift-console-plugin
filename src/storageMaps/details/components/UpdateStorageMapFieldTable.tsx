@@ -7,6 +7,7 @@ import type { V1beta1Provider } from '@forklift-ui/types';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
+import type { InventoryStorage } from '@utils/hooks/useStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 import {
   StorageMapFieldId,
@@ -15,24 +16,27 @@ import {
 } from '@utils/storage/types';
 
 import AccessModeField from '../../components/AccessModeField';
-import OffloadStorageIndexedForm from '../../components/OffloadStorageIndexedForm/OffloadStorageIndexedForm';
+import OffloadStorageRow from '../../components/OffloadStorageIndexedForm/OffloadStorageRow';
 import SourceStorageField from '../../components/SourceStorageField';
 import TargetStorageField from '../../components/TargetStorageField';
+import TargetStorageWithSuggestion from '../../components/TargetStorageWithSuggestion';
 import { defaultStorageMapping, storageMapFieldLabels } from '../../utils/constants';
 import { getStorageMapFieldId } from '../../utils/getStorageMapFieldId';
 import type { UpdateMappingsFormData } from '../utils/types';
 import { validateUpdatedStorageMaps } from '../utils/utils';
 
 type UpdateStorageMapFieldTableProps = {
-  targetStorages: TargetStorage[];
-  sourceStorages: StorageMappingValue[];
+  inventorySourceStorages: InventoryStorage[];
   isLoading: boolean;
-  loadError: Error | null;
   isVsphere: boolean;
+  loadError: Error | null;
   sourceProvider: V1beta1Provider | undefined;
+  sourceStorages: StorageMappingValue[];
+  targetStorages: TargetStorage[];
 };
 
 const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
+  inventorySourceStorages,
   isLoading,
   isVsphere,
   loadError,
@@ -43,6 +47,7 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
   const { t } = useForkliftTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
   const isCopyOffloadEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_OFFLOAD);
+  const isVsphereOffload = isVsphere && isCopyOffloadEnabled;
   const {
     control,
     formState: { isSubmitting },
@@ -86,9 +91,14 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
                 targetStorageFieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
               />
             </StackItem>
-            {isVsphere && isCopyOffloadEnabled && (
+            {isVsphereOffload && (
               <StackItem>
-                <OffloadStorageIndexedForm index={index} sourceProvider={sourceProvider} />
+                <OffloadStorageRow
+                  index={index}
+                  sourceProvider={sourceProvider}
+                  sourceStorages={inventorySourceStorages}
+                  targetStorages={targetStorages}
+                />
               </StackItem>
             )}
           </Stack>
@@ -99,11 +109,21 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
             storageMappings={storageMap}
             sourceStorages={sourceStorages}
           />,
-          <TargetStorageField
-            fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-            targetStorages={targetStorages}
-            testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
-          />,
+          isVsphereOffload ? (
+            <TargetStorageWithSuggestion
+              fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              index={index}
+              sourceStorages={inventorySourceStorages}
+              targetStorages={targetStorages}
+              testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
+            />
+          ) : (
+            <TargetStorageField
+              fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              targetStorages={targetStorages}
+              testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
+            />
+          ),
         ],
       }))}
       addButton={{
