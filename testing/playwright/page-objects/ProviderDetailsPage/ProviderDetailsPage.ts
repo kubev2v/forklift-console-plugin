@@ -6,6 +6,7 @@ import { NavigationHelper } from '../../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { V2_12_0 } from '../../utils/version/constants';
 import { isVersionAtLeast } from '../../utils/version/version';
+import { DeleteResourceModal } from '../common/DeleteResourceModal';
 
 import { CredentialsTab } from './tabs/CredentialsTab';
 import { DetailsTab } from './tabs/DetailsTab';
@@ -15,6 +16,7 @@ import { VirtualMachinesTab } from './tabs/VirtualMachinesTab';
 const PROVIDER_CREATION_TIMEOUT_MS = 60_000;
 
 export class ProviderDetailsPage {
+  private readonly deleteModal: DeleteResourceModal;
   private readonly navigation: NavigationHelper;
   public readonly credentialsTab: CredentialsTab;
   public readonly detailsTab: DetailsTab;
@@ -27,6 +29,7 @@ export class ProviderDetailsPage {
     this.credentialsTab = new CredentialsTab(page);
     this.detailsTab = new DetailsTab(page);
     this.virtualMachinesTab = new VirtualMachinesTab(page);
+    this.deleteModal = new DeleteResourceModal(page);
   }
 
   private getProviderTypeDisplayName(type: string): string {
@@ -65,6 +68,14 @@ export class ProviderDetailsPage {
   async clickInspectVmsButton(): Promise<void> {
     await this.verifyInspectVmsButtonVisible();
     await this.inspectVmsButton.click();
+  }
+
+  /** Deletes the provider via the details page Actions menu, confirming in the shared DeleteModal. */
+  async deleteProvider(providerName: string): Promise<void> {
+    await this.page.getByRole('button', { name: 'Actions', exact: true }).click();
+    await this.page.getByRole('menuitem', { name: 'Delete provider', exact: true }).click();
+    await this.deleteModal.verifyOpen(providerName);
+    await this.deleteModal.confirm();
   }
 
   get inspectVmsButton() {
