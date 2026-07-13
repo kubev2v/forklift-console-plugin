@@ -145,9 +145,25 @@ fi
 # Look for forklift routes
 if oc_available_loggedin && { [ -z "${INVENTORY_SERVER_HOST+x}" ] && [ -z "${SERVICES_API_SERVER_HOST+x}" ]; }; then
     routes=$(oc get routes -A -o template --template='{{range .items}}{{.spec.host}}{{"\n"}}{{end}}' 2>/dev/null || true)
-    INVENTORY_SERVER_HOST="https://$(echo "$routes" | grep forklift-inventory)"
-    SERVICES_API_SERVER_HOST="https://$(echo "$routes" | grep forklift-services)"
-    OVA_PROXY_SERVER_HOST="https://$(echo "$routes" | grep forklift-ova-proxy || true)"
+
+    inventory_route=$(echo "$routes" | grep forklift-inventory || true)
+    services_route=$(echo "$routes" | grep forklift-services || true)
+    ova_route=$(echo "$routes" | grep forklift-ova-proxy || true)
+
+    if [[ -z "$inventory_route" || -z "$services_route" ]]; then
+        echo "Error: Required Forklift routes not found on the cluster."
+        echo ""
+        [[ -z "$inventory_route" ]] && echo "  - Missing: forklift-inventory route"
+        [[ -z "$services_route" ]] && echo "  - Missing: forklift-services route"
+        echo ""
+        echo "Make sure Forklift is installed and the operator has finished reconciling."
+        echo "You can also set INVENTORY_SERVER_HOST and SERVICES_API_SERVER_HOST manually."
+        exit 1
+    fi
+
+    INVENTORY_SERVER_HOST="https://${inventory_route}"
+    SERVICES_API_SERVER_HOST="https://${services_route}"
+    OVA_PROXY_SERVER_HOST="https://${ova_route}"
 fi
 
 # Default API server hosts
