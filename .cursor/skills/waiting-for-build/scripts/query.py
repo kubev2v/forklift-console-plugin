@@ -112,24 +112,37 @@ def jira_get(path: str, headers: dict, base: str) -> dict:
 def jira_search(jql: str, fields: str, headers: dict, base: str, max_results: int = 100) -> list[dict]:
     """Run a JQL search using the current REST API endpoint (POST /rest/api/3/search/jql).
 
-    Falls back to the legacy GET endpoint for older instances. Returns the raw
-    list of issue dicts with a `fields` sub-dict.
+    Paginates automatically via nextPageToken. Falls back to the legacy GET
+    endpoint (no pagination) for older instances. Returns the raw list of
+    issue dicts with a `fields` sub-dict.
     """
-    payload = {"jql": jql, "fields": fields.split(","), "maxResults": max_results}
-    r = requests.post(f"{base}/rest/api/3/search/jql", headers={**headers, "Content-Type": "application/json"},
-                      json=payload, timeout=20)
-    if r.ok:
-        return r.json().get("issues", [])
-    # 404 = new endpoint not yet available on this instance — try legacy GET
-    if r.status_code == 404:
-        encoded = urllib.parse.quote(jql)
-        r2 = requests.get(
-            f"{base}/rest/api/3/search?jql={encoded}&fields={fields}&maxResults={max_results}",
-            headers=headers, timeout=20)
-        r2.raise_for_status()
-        return r2.json().get("issues", [])
-    r.raise_for_status()
-    return []
+    field_list = fields.split(",")
+    raw: list[dict] = []
+    next_page_token: Optional[str] = None
+    while True:
+        payload: dict = {"jql": jql, "fields": field_list, "maxResults": max_results}
+        if next_page_token:
+            payload["nextPageToken"] = next_page_token
+        r = requests.post(f"{base}/rest/api/3/search/jql", headers={**headers, "Content-Type": "application/json"},
+                          json=payload, timeout=20)
+        if r.ok:
+            data = r.json()
+            page = data.get("issues", [])
+            raw.extend(page)
+            next_page_token = data.get("nextPageToken")
+            if not next_page_token or not page:
+                return raw
+            continue
+        # 404 = new endpoint not yet available on this instance — try legacy GET
+        if r.status_code == 404:
+            encoded = urllib.parse.quote(jql)
+            r2 = requests.get(
+                f"{base}/rest/api/3/search?jql={encoded}&fields={fields}&maxResults={max_results}",
+                headers=headers, timeout=20)
+            r2.raise_for_status()
+            return r2.json().get("issues", [])
+        r.raise_for_status()
+        return raw
 
 
 # ── Jira queries ──────────────────────────────────────────────────────────────
@@ -158,7 +171,13 @@ def get_active_sprint(board_id: int, headers: dict, base: str) -> dict:
     jql = f'({QUICK_FILTER}) AND sprint in openSprints() AND status in ({status_clause})'
     issues = jira_search(jql, "summary,status,priority,sprint", headers, base, max_results=1)
     if issues:
-        sprint_data = (issues[0].get("fields") or {}).get("sprint") or {}
+        # Jira Cloud returns the sprint field as a list of sprint objects (an
+        # issue can carry current + past sprints), not a single dict.
+        sprints = (issues[0].get("fields") or {}).get("sprint") or []
+        if isinstance(sprints, dict):
+            sprints = [sprints]
+        active = next((s for s in sprints if s.get("state") == "active"), None)
+        sprint_data = active or (sprints[0] if sprints else {})
         if sprint_data:
             return {
                 "id":        sprint_data.get("id"),
@@ -193,23 +212,7 @@ def get_waiting_for_build_issues(sprint_id: Optional[int], headers: dict, base: 
         jql = f'({QUICK_FILTER}) AND sprint in openSprints() AND status in ({status_clause})'
 
     fields = "summary,status,assignee,priority,fixVersions"
-    raw: list[dict] = []
-    next_page_token: Optional[str] = None
-    while True:
-        payload: dict = {"jql": jql, "fields": fields.split(","), "maxResults": 100}
-        if next_page_token:
-            payload["nextPageToken"] = next_page_token
-        r = requests.post(
-            f"{base}/rest/api/3/search/jql",
-            headers={**headers, "Content-Type": "application/json"},
-            json=payload, timeout=20)
-        r.raise_for_status()
-        data = r.json()
-        page = data.get("issues", [])
-        raw.extend(page)
-        next_page_token = data.get("nextPageToken")
-        if not next_page_token or not page:
-            break
+    raw = jira_search(jql, fields, headers, base, max_results=100)
 
     result = []
     for issue in raw:
@@ -413,11 +416,18 @@ def main() -> None:
 
     if "--sprint" in args:
         idx = args.index("--sprint")
-        sprint_override = int(args[idx + 1])
+        if idx + 1 >= len(args):
+            raise SystemExit("error: --sprint requires a value")
+        try:
+            sprint_override = int(args[idx + 1])
+        except ValueError:
+            raise SystemExit(f"error: --sprint value must be an integer, got {args[idx + 1]!r}")
         args = args[:idx] + args[idx + 2:]
 
     if "--build-version" in args:
         idx = args.index("--build-version")
+        if idx + 1 >= len(args):
+            raise SystemExit("error: --build-version requires a value")
         build_version = args[idx + 1]
         args = args[:idx] + args[idx + 2:]
 
