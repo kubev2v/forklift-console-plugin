@@ -14,7 +14,7 @@ export class ResourcesTab {
   get heading(): Locator {
     return isVersionAtLeast(V5_0_0)
       ? this.page.getByTestId('plan-resources-heading')
-      : this.page.getByRole('heading', { level: 2, name: 'Resources' });
+      : this.page.getByRole('heading', { level: 2, name: 'Utilization' });
   }
 
   async navigateToResourcesTab(): Promise<void> {
@@ -36,7 +36,7 @@ export class ResourcesTab {
   }
 
   get tab(): Locator {
-    return this.page.getByRole('tab', { exact: true, name: 'Resources' });
+    return this.page.getByRole('tab', { exact: true, name: 'Utilization' });
   }
 
   get table(): Locator {
