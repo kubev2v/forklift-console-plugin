@@ -176,6 +176,16 @@ test.describe(
 
         await modal.cancel();
       });
+
+      await test.step('Delete storage map and verify it is removed from the list', async () => {
+        await detailsPage.deleteMap(storageMapName);
+        await expect(page).toHaveURL(
+          new RegExp(`/k8s/ns/${MTV_NAMESPACE}/forklift\\.konveyor\\.io~v1beta1~StorageMap$`),
+        );
+        await expect(
+          page.getByRole('link', { name: storageMapName, exact: true }),
+        ).not.toBeVisible();
+      });
     });
 
     test('should hide offload options for non-vSphere providers', async ({
