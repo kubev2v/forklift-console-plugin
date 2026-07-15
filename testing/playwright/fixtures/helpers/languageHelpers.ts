@@ -63,13 +63,19 @@ const setLocalStorageLanguage = async (page: Page, language: string): Promise<vo
  *
  * After calling this, do a full `page.goto()` to a target page — the Console
  * will initialize in the requested language.
+ *
+ * Returns whether the ConfigMap patch succeeded. The localStorage write always
+ * happens regardless (it's what makes auth-disabled clusters work), so this is
+ * informational rather than something every caller needs to check — but tests
+ * that rely on the ConfigMap actually being updated should assert on it instead
+ * of only discovering the failure much later via an unrelated UI assertion.
  */
 export const setConsoleLanguage = async (
   page: Page,
   language: SupportedLanguage,
-): Promise<void> => {
+): Promise<boolean> => {
   await setLocalStorageLanguage(page, language);
-  await patchLanguageConfigMap(language);
+  return patchLanguageConfigMap(language);
 };
 
 /**

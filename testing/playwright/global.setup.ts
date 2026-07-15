@@ -53,6 +53,32 @@ const OC_BINARY_LOCATIONS = ['/usr/local/bin/oc', '/usr/bin/oc', '/opt/homebrew/
 
 const findOcBinary = (): string | null => OC_BINARY_LOCATIONS.find(existsSync) ?? null;
 
+const DEFAULT_CLUSTER_API_PORT = '6443';
+const CONSOLE_ROUTE_HOST_PREFIX = 'console-openshift-console.apps.';
+
+/**
+ * Best-effort fallback for when the cookie-authenticated infrastructure lookup
+ * (`fetchClusterApiUrl`) fails: derives the cluster API server URL from the
+ * console's own address. Only works for OpenShift's default DNS layout, where
+ * the console route host is `console-openshift-console.apps.<cluster-domain>`
+ * and the API server is reachable at `api.<cluster-domain>:6443` — clusters
+ * with custom console routes will not match and this returns null.
+ */
+const deriveClusterApiUrlFromConsoleAddress = (): string | null => {
+  const consoleAddress = process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS;
+  if (!consoleAddress) return null;
+
+  try {
+    const { hostname } = new URL(consoleAddress);
+    if (!hostname.startsWith(CONSOLE_ROUTE_HOST_PREFIX)) return null;
+
+    const clusterDomain = hostname.slice(CONSOLE_ROUTE_HOST_PREFIX.length);
+    return `https://api.${clusterDomain}:${DEFAULT_CLUSTER_API_PORT}`;
+  } catch {
+    return null;
+  }
+};
+
 /**
  * Runs `oc login` to generate a kubeconfig at KUBECONFIG_FILE.
  * Writes KUBECONFIG_PATH into process.env so subsequent Node.js HTTP calls in
@@ -64,13 +90,28 @@ const findOcBinary = (): string | null => OC_BINARY_LOCATIONS.find(existsSync) ?
  *  - The `oc` binary is not available
  */
 const generateKubeconfig = async (username: string, password: string): Promise<void> => {
-  const clusterApiUrl =
-    process.env.CLUSTER_API_URL?.replace(/\/$/, '') ?? (await fetchClusterApiUrl());
+  let clusterApiUrl = process.env.CLUSTER_API_URL?.replace(/\/$/, '') ?? null;
+
+  if (!clusterApiUrl) {
+    clusterApiUrl = await fetchClusterApiUrl();
+
+    if (!clusterApiUrl) {
+      console.error(
+        '⚠️ Cookie-authenticated infrastructure lookup could not determine the cluster API ' +
+          'URL — falling back to deriving it from the console address.',
+      );
+      clusterApiUrl = deriveClusterApiUrlFromConsoleAddress();
+      if (clusterApiUrl) {
+        console.error(`📌 Derived cluster API URL from console address: ${clusterApiUrl}`);
+      }
+    }
+  }
 
   if (!clusterApiUrl) {
     console.error(
-      '⚠️ Could not determine cluster API URL — skipping kubeconfig generation. ' +
-        'Set CLUSTER_API_URL env var to enable kubeconfig-based auth.',
+      '⚠️ Could not determine cluster API URL by any method (infrastructure lookup and ' +
+        'console-address fallback both failed) — skipping kubeconfig generation. Set ' +
+        'CLUSTER_API_URL env var to enable kubeconfig-based auth.',
     );
     return;
   }
