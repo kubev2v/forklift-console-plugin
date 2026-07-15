@@ -9,21 +9,12 @@ import {
 /**
  * Dismisses the guided tour modal.
  *
- * The console persists tour completion per-user server-side (the
- * `console.guidedTour` key in the user-settings ConfigMap). Once a prior test
- * run has dismissed the tour, that flag is `completed: true`, so on every
- * subsequent load the console optimistically mounts the tour modal before
- * its settings fetch resolves, then immediately unmounts it once it reads
- * `completed: true` back. Our own `waitFor('visible')` can catch that
- * optimistic render right before the unmount, so the click that follows can
- * fire into an element that's already being torn down — a deterministic
- * race once the flag is set, not occasional flakiness.
- *
- * The click itself is just a means to an end: what actually matters is that
- * the tour is gone before tests proceed. So a click failure isn't treated as
- * fatal on its own — we still assert the tour ends up hidden (whether we
- * dismissed it or the console's own settings sync did), and only fail if it
- * doesn't.
+ * Once the tour has been dismissed before (completion is persisted per-user
+ * server-side), the console briefly mounts the modal on every load before
+ * unmounting it once its settings fetch resolves. `waitFor('visible')` can
+ * catch that optimistic render right before teardown, so the click can race
+ * an element that's already disappearing. The click is a means to an end,
+ * not the success criterion — only the final `waitFor('hidden')` is.
  */
 export const disableGuidedTour = async (page: Page): Promise<void> => {
   // Use .first() to avoid strict-mode crashes if two skip buttons are briefly in the DOM.
@@ -39,9 +30,8 @@ export const disableGuidedTour = async (page: Page): Promise<void> => {
   try {
     await skipButton.click({ force: true, timeout: GUIDED_TOUR_CLICK_TIMEOUT_MS });
   } catch {
-    // Click may race the console's own dismissal once the tour is already
-    // marked completed server-side; fall through to the hidden-state check,
-    // which is the real success criterion.
+    // May race the console's own dismissal; the hidden-state check below is
+    // the real success criterion, so a click failure alone isn't fatal.
   }
   await skipButton.waitFor({ state: 'hidden', timeout: GUIDED_TOUR_HIDDEN_TIMEOUT_MS });
 };
