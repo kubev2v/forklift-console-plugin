@@ -166,8 +166,12 @@ export class LearningExperienceDrawer {
 
       await toggleButton.scrollIntoViewIfNeeded();
       await expect(toggleButton).toBeVisible();
+
       await toggleButton.click();
+      await expect(toggleButton).toHaveAttribute('aria-expanded', 'true');
+
       await toggleButton.click();
+      await expect(toggleButton).toHaveAttribute('aria-expanded', 'false');
     }
   }
 
