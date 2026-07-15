@@ -85,10 +85,8 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
         const configMapPatched = await setConsoleLanguage(page, lang);
         expect(
           configMapPatched,
-          'Language ConfigMap patch failed — the Console will not have switched language ' +
-            'server-side, so the translated-heading assertion below is expected to fail too. ' +
-            'Check the API PATCH error logged above (a 401 usually means the auth path used ' +
-            'by BaseResourceManager is broken, not that the translation is missing).',
+          'Language ConfigMap patch failed — check the API PATCH error logged above, not the ' +
+            'translated-heading assertion below.',
         ).toBe(true);
         await navigation.navigateToOverview();
         // Let the locale file finish loading. catch() is mandatory — K8s watch streams
