@@ -156,27 +156,30 @@ The output shape:
   "build_stream":  "2.12",
   "issues": [
     {
-      "key":           "MTV-5388",
-      "status":        "MODIFIED",
-      "priority":      "Major",
-      "summary":       "...",
-      "fixVersions":   ["2.12.0"],
-      "commit":        "22da1d1",   // null if no commit found in git log
-      "pr":            2427,        // null if PR # not in commit subject
-      "merge_date":    "2026-05-20",
-      "version_match": true,        // null if no --build-version supplied
-      "in_build":      false        // null if no build tips supplied
+      "key":                 "MTV-5388",
+      "status":              "MODIFIED",
+      "priority":            "Major",
+      "summary":             "...",
+      "fixVersions":         ["2.12.0"],
+      "commit":              "22da1d1",   // null if no commit found in git log
+      "pr":                  2427,        // null if PR # not in commit subject
+      "merge_date":          "2026-05-20",
+      "version_match":       true,        // null if no --build-version supplied
+      "fix_version_missing": false,       // true if ticket has no fixVersion set at all
+      "in_build":            false        // null if no build tips supplied
     }
   ]
 }
 ```
 
 Key fields:
-- `in_build: true`       → commit is in the build AND fixVersion targets the same stream → ready to verify; transition to ON_QA
-- `in_build: false`      → either merged after build cut, OR fixVersion targets a different stream (wrong build)
-- `version_match: false` → ticket targets a different version stream (e.g. `5.0.0` vs a `2.12` build); do NOT transition
-- `version_match: null`  → `--build-version` was not supplied; version check skipped
-- `commit: null`         → no merge commit found; ticket may be missing `Resolves:` line
+- `in_build: true`             → commit is in the build AND fixVersion targets the same stream → ready to verify; transition to ON_QA
+- `in_build: false`            → either merged after build cut, OR fixVersion targets a different stream (wrong build)
+- `version_match: false`       → ticket targets a different version stream (e.g. `5.0.0` vs a `2.12` build); do NOT transition
+- `version_match: null`        → `--build-version` was not supplied; version check skipped
+- `fix_version_missing: true`  → ticket has no fixVersion set — `in_build` is conservatively `false`, but this is
+  *not* a confirmed wrong-stream mismatch; worth a manual check rather than treating it like the tickets above
+- `commit: null`               → no merge commit found; ticket may be missing `Resolves:` line
 
 ## Step 2b — Transition in-build tickets to ON_QA
 
@@ -250,8 +253,8 @@ path for the current workspace automatically.
 | QuickFilter ID | `91499` (name: "MTV") |
 | QuickFilter JQL | `project = "Migration Toolkit for Virtualization"` |
 | "Waiting on build" statuses | `MODIFIED` (ID 10284), `Dev Complete` (ID 10155) |
-| Sprint endpoint | `GET /rest/agile/1.0/board/11806/sprint?state=active` |
-| Issues endpoint | `GET /rest/agile/1.0/sprint/{id}/issue?jql=...` |
+| Sprint endpoint | `GET /rest/agile/1.0/board/11806/sprint?state=active` (SSO-blocked on Red Hat Jira — use `--sprint`) |
+| Issues endpoint | `POST /rest/api/3/search/jql` with `sprint = <id>` in the JQL |
 
 ## Credentials
 
@@ -262,20 +265,28 @@ The script reads from `.mcp.json` → `mcpServers.jira-mcp.env`:
 
 ## Commit-search heuristic
 
-The script uses a three-stage search for each ticket's merge commit:
+The script always queries **two independent sources** for each ticket's merge
+commit and merges the results (neither is a fallback that only runs if the
+other fails):
 
-**Stage 1 — git grep (subject + body):** Runs `git log --all --grep=<KEY> -i`,
+**Source A — Jira dev-status API:** Queries `/rest/dev-status/1.0/issue/detail`
+for GitHub PRs directly linked to the ticket in Jira's development panel. For
+each MERGED PR returned, searches git log for `(#<number>)` to find the merge
+commit. This catches PRs whose commit messages contain no ticket key at all,
+and is treated as the more authoritative signal (a developer explicitly linked it).
+
+**Source B — git grep (subject + body):** Runs `git log --all --grep=<KEY> -i`,
 post-filters to **whole-word matches** (`\b` boundary) so `MTV-5` cannot match
 `MTV-50` or `MTV-500`. Checks both the subject line and the full commit body, so
-commits with `Resolves: MTV-XXXX` only in the body are correctly found.
+commits with `Resolves: MTV-XXXX` only in the body are correctly found. Can produce
+false positives when an unrelated commit mentions the key in passing.
 
-**Stage 2 — Jira dev-status API (fallback):** If git grep finds nothing, queries
-`/rest/dev-status/1.0/issue/detail` for GitHub PRs directly linked to the ticket
-in Jira. For each MERGED PR returned, searches git log for `(#<number>)` to find
-the merge commit. This catches PRs whose commit messages contain no ticket key at all.
+Candidates from both sources are merged (Jira-linked commits first), then the
+first candidate reachable from a build tip is preferred; if none are build-reachable,
+the first candidate overall (Jira-linked, if any) is used.
 
 Most commits follow `Resolves: MTV-XXXX | title (#PR)` or `MTV-XXXX | title (#PR)`.
-If a ticket still has no match after both stages, `commit` is `null` — investigate
+If a ticket still has no match from either source, `commit` is `null` — investigate
 manually with:
 
 ```bash
@@ -288,7 +299,7 @@ git log --all --oneline | grep -i "keyword from summary"
 |---------|-----|
 | `ModuleNotFoundError: requests` | `pip3 install requests` |
 | `Jira credentials missing` | Check `.mcp.json` has `JIRA_USERNAME` + `JIRA_API_TOKEN` |
-| `No active sprint` | Sprint may have just ended; query `/sprint?state=closed` to see last sprint |
+| `Could not fetch the active sprint...` | Agile API is SSO-blocked on Red Hat Jira — pass `--sprint SPRINT_ID` (see Step 1) |
 | `commit: null` for a ticket | Ticket key not in any commit message; search git log manually |
 | Wrong ticket count | Board filter or sprint may have changed; re-run script to refresh |
 | `slackdump not found` | `brew install slackdump` |
