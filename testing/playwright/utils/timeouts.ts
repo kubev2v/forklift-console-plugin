@@ -3,6 +3,10 @@ export const GUIDED_TOUR_VISIBLE_TIMEOUT_MS = 2_000;
 /** force:true bypasses animation-stability checks; keep timeout short. */
 export const GUIDED_TOUR_CLICK_TIMEOUT_MS = 3_000;
 export const GUIDED_TOUR_HIDDEN_TIMEOUT_MS = 3_000;
+/** Total attempts before giving up on dismissing the guided tour. */
+export const GUIDED_TOUR_MAX_ATTEMPTS = 3;
+/** Backoff between attempts, letting an in-flight tour re-render settle. */
+export const GUIDED_TOUR_RETRY_BACKOFF_MS = 500;
 
 /** Initial check before reloading when the dynamic plugin may not have registered its routes yet. */
 export const PAGE_LOAD_INITIAL_TIMEOUT_MS = 10_000;
