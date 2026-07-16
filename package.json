@@ -160,6 +160,7 @@
   "overrides": {
     "dompurify": ">=3.3.2",
     "electron-to-chromium": "1.5.387",
+    "linkify-it": "5.0.2",
     "lodash": "4.18.1",
     "monaco-editor": "^0.52.2",
     "node-forge": "^1.3.2",
