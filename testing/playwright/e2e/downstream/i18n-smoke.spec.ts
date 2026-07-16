@@ -82,7 +82,12 @@ test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => 
 
       await test.step('Set language via API then navigate to overview', async () => {
         await navigation.navigateToConsole();
-        await setConsoleLanguage(page, lang);
+        const configMapPatched = await setConsoleLanguage(page, lang);
+        expect(
+          configMapPatched,
+          'Language ConfigMap patch failed — check the API PATCH error logged above, not the ' +
+            'translated-heading assertion below.',
+        ).toBe(true);
         await navigation.navigateToOverview();
         // Let the locale file finish loading. catch() is mandatory — K8s watch streams
         // prevent networkidle from ever firing on busy clusters.

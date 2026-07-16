@@ -63,13 +63,16 @@ const setLocalStorageLanguage = async (page: Page, language: string): Promise<vo
  *
  * After calling this, do a full `page.goto()` to a target page — the Console
  * will initialize in the requested language.
+ *
+ * Returns whether the ConfigMap patch succeeded, so callers can assert on it
+ * directly instead of discovering the failure later via an unrelated UI check.
  */
 export const setConsoleLanguage = async (
   page: Page,
   language: SupportedLanguage,
-): Promise<void> => {
+): Promise<boolean> => {
   await setLocalStorageLanguage(page, language);
-  await patchLanguageConfigMap(language);
+  return patchLanguageConfigMap(language);
 };
 
 /**
