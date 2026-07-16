@@ -30,7 +30,9 @@ export default defineConfig({
   retries: process.env.GITHUB_ACTIONS ? 3 : 0,
 
   reporter: [
-    ['list'],
+    // printFailuresInline keeps failure causes visible even if a CI run is interrupted
+    // or times out mid-suite before the end-of-run report is written.
+    ['list', { printFailuresInline: true }],
     ['html', { open: 'never' }],
     ['junit', { outputFile: 'test-results/junit.xml' }],
   ],
