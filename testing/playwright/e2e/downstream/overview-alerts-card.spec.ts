@@ -26,8 +26,8 @@ test.describe(
 
       await test.step('verify summary counts are displayed', async () => {
         const alertsCard = page.getByTestId('migration-alerts-card');
-        await expect(alertsCard.getByText('Failed')).toBeVisible();
-        await expect(alertsCard.getByText('Succeeded')).toBeVisible();
+        await expect(alertsCard.getByText('Failed', { exact: true })).toBeVisible();
+        await expect(alertsCard.getByText('Succeeded', { exact: true })).toBeVisible();
       });
     });
 
