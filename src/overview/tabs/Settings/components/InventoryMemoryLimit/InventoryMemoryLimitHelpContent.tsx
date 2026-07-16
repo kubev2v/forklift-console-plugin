@@ -13,11 +13,13 @@ const InventoryMemoryLimitHelpContent: FC = () => {
           'Sets the memory limits allocated to the inventory container in the controller pod. The default value is 1000Mi.',
         )}
       </StackItem>
-      <StackItem>
-        <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
-          Learn more
-        </a>
-      </StackItem>
+      {MTV_SETTINGS && (
+        <StackItem>
+          <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
+            {t('Learn more')}
+          </a>
+        </StackItem>
+      )}
     </Stack>
   );
 };

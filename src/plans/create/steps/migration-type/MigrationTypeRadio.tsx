@@ -58,11 +58,13 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
                   <HelpIconWithLabel label={migrationTypeLabels[migrationType]}>
                     <Stack hasGutter>
                       <StackItem>{helpBody}</StackItem>
-                      <StackItem>
-                        <ExternalLink isInline href={helpLink!}>
-                          {t('Learn more')}
-                        </ExternalLink>
-                      </StackItem>
+                      {helpLink && (
+                        <StackItem>
+                          <ExternalLink isInline href={helpLink}>
+                            {t('Learn more')}
+                          </ExternalLink>
+                        </StackItem>
+                      )}
                     </Stack>
                   </HelpIconWithLabel>
                 </SplitItem>

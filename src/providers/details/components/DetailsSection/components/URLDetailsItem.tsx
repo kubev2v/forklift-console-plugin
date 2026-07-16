@@ -27,8 +27,8 @@ export const URLDetailsItem: FC<ProviderDetailsItemProps> = ({
     namespaced: true,
   });
 
-  const defaultMoreInfoLink =
-    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.10/html-single/planning_your_migration_to_red_hat_openshift_virtualization/index#adding-source-provider_cnv';
+  // TODO: Update URL when AEM documentation migration to new platform is complete
+  const defaultMoreInfoLink = ''; // was: 'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.10/html-single/planning_your_migration_to_red_hat_openshift_virtualization/index#adding-source-provider_cnv'
   const defaultHelpContent =
     t(`URL of the providers API endpoint. The URL must be a valid endpoint for the provider type, see
       the documentation for each provider type to learn more about the URL format.`);

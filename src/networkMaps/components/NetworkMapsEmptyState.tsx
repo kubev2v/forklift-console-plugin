@@ -16,7 +16,6 @@ import {
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { getResourceUrl } from '@utils/getResourceUrl';
-import { FORKLIFT_DOCS_URL } from '@utils/links';
 
 import NetworkMapsAddButton from './NetworkMapsAddButton';
 
@@ -59,11 +58,7 @@ const NetworkMapsEmptyState: FC<NetworkMapsEmptyStateProps> = ({ namespace }) =>
                   <ForkliftTrans>
                     Migration network maps are used to map network interfaces between source and
                     target virtualization providers. At least one source and one target provider
-                    must be available in order to create a migration network map.{' '}
-                    <ExternalLink href={FORKLIFT_DOCS_URL} isInline>
-                      Learn more
-                    </ExternalLink>
-                    .
+                    must be available in order to create a migration network map.
                   </ForkliftTrans>
                 </Content>
               </Bullseye>

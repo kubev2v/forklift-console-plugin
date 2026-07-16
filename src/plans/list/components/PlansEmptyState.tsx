@@ -74,7 +74,7 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
             </ExternalLink>
           )}
         </EmptyStateActions>
-        {!hasSufficientProviders && (
+        {!hasSufficientProviders && FORKLIFT_DOCS_URL && (
           <EmptyStateActions>
             <ExternalLink href={FORKLIFT_DOCS_URL} isInline>
               {t('Learn more about migration plans')}

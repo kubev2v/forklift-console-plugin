@@ -20,9 +20,11 @@ const PlanVddkForWarmWarningAlert: FC = () => {
           'To do a warm migration, you must set up VDDK for the selected VMware provider. If VDDK is not set up before starting the migration plan, the migration will fail.',
         )}
 
-        <ExternalLink isInline hideIcon href={CREATE_VDDK_HELP_LINK}>
-          {t('Learn more about VDDK')}
-        </ExternalLink>
+        {CREATE_VDDK_HELP_LINK && (
+          <ExternalLink isInline hideIcon href={CREATE_VDDK_HELP_LINK}>
+            {t('Learn more about VDDK')}
+          </ExternalLink>
+        )}
       </Stack>
     </Alert>
   );

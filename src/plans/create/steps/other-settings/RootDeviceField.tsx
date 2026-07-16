@@ -1,12 +1,10 @@
 import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
 
-import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
-import { VIRT_V2V_HELP_LINK } from '@utils/links';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
@@ -35,12 +33,6 @@ const RootDeviceField: FC = () => {
                 If you do not provide a root device, the first root device will be used. If the
                 named root device does not exist or is not detected as a root device, the migration
                 will fail.
-              </StackItem>
-
-              <StackItem>
-                <ExternalLink isInline href={VIRT_V2V_HELP_LINK}>
-                  Learn more
-                </ExternalLink>
               </StackItem>
             </Stack>
           </ForkliftTrans>

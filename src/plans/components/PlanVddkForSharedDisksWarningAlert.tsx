@@ -20,9 +20,11 @@ const PlanVddkForSharedDisksWarningAlert: FC = () => {
           'Disabling shared disk migration requires VDDK to be configured on the VMware provider. Without VDDK, the migration will stall. Either enable VDDK on the provider or keep shared disk migration enabled.',
         )}
 
-        <ExternalLink isInline hideIcon href={CREATE_VDDK_HELP_LINK}>
-          {t('Learn more about VDDK')}
-        </ExternalLink>
+        {CREATE_VDDK_HELP_LINK && (
+          <ExternalLink isInline hideIcon href={CREATE_VDDK_HELP_LINK}>
+            {t('Learn more about VDDK')}
+          </ExternalLink>
+        )}
       </Stack>
     </Alert>
   );

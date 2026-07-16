@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
-import { DOC_MAIN_HELP_LINK } from 'src/utils/links';
 
 import {
   Bullseye,
@@ -13,8 +12,6 @@ import {
   LevelItem,
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
-
-import { ExternalLink } from '../../../components/common/ExternalLink/ExternalLink';
 
 import ProvidersAddButton from './ProvidersAddButton';
 
@@ -47,11 +44,7 @@ const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ canCreate, namespac
               <Content>
                 <Content component="p">
                   <ForkliftTrans>
-                    Migrating virtualization workloads is a multi-step process.{' '}
-                    <ExternalLink href={DOC_MAIN_HELP_LINK} isInline>
-                      Learn more
-                    </ExternalLink>
-                    .
+                    Migrating virtualization workloads is a multi-step process.
                   </ForkliftTrans>
                 </Content>
                 <Content component="ul" isPlainList>
