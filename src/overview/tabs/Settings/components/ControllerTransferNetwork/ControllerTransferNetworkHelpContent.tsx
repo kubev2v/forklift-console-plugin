@@ -13,11 +13,13 @@ const ControllerTransferNetworkHelpContent: FC = () => {
           'Choose a NetworkAttachmentDefinition for data transfer by the main controller pod. If you do not select a NetworkAttachmentDefinition, the default network will be used.',
         )}
       </StackItem>
-      <StackItem>
-        <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
-          Learn more
-        </a>
-      </StackItem>
+      {MTV_SETTINGS && (
+        <StackItem>
+          <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
+            {t('Learn more')}
+          </a>
+        </StackItem>
+      )}
     </Stack>
   );
 };

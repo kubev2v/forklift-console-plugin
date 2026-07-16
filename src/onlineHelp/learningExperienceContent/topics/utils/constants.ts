@@ -31,8 +31,8 @@ export const learningExperienceTopics: LearningExperienceTopic[] = [
   troubleShootingTopic,
 ];
 
-export const LEARN_MORE_MIGRATION_TYPE_DOCS_URL =
-  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html/installing_and_using_the_migration_toolkit_for_virtualization/mtv-cold-warm-migration_mtv';
+// TODO: Update URL when AEM documentation migration to new platform is complete
+export const LEARN_MORE_MIGRATION_TYPE_DOCS_URL = ''; // was: 'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html/installing_and_using_the_migration_toolkit_for_virtualization/mtv-cold-warm-migration_mtv'
 
 export const GUEST_OPERATING_SYSTEMS_URL = 'https://access.redhat.com/articles/4234591';
 
@@ -47,5 +47,5 @@ export const MUST_GATHER_EXAMPLE_URL =
 
 export const SUPPORT_URL = 'https://access.redhat.com/support/';
 
-export const LEARN_MORE_MIGRATING_VMS_DOCS_URL =
-  'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.0/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-virtual-machines-to-virt_mtv';
+// TODO: Update URL when AEM documentation migration to new platform is complete
+export const LEARN_MORE_MIGRATING_VMS_DOCS_URL = ''; // was: 'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.0/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-virtual-machines-to-virt_mtv'

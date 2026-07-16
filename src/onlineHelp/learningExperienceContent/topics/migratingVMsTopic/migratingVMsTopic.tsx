@@ -49,14 +49,18 @@ const migratingVMsSubTopics = (providerType?: ProviderTypes): LearningExperience
       ),
     },
     ...helpTopics(),
-    {
-      id: 'migration-learn-more-link',
-      title: (
-        <ExternalLink href={LEARN_MORE_MIGRATING_VMS_DOCS_URL} isInline>
-          {t('Learn more about migrating VMs')}
-        </ExternalLink>
-      ),
-    },
+    ...(LEARN_MORE_MIGRATING_VMS_DOCS_URL
+      ? [
+          {
+            id: 'migration-learn-more-link',
+            title: (
+              <ExternalLink href={LEARN_MORE_MIGRATING_VMS_DOCS_URL} isInline>
+                {t('Learn more about migrating VMs')}
+              </ExternalLink>
+            ),
+          },
+        ]
+      : []),
   ];
 };
 

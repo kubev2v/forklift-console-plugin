@@ -6,12 +6,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import LearningExperienceFooterSection from '../../learningExperienceStructure/LearningExperiencePanel/components/LearningExperienceFooterSection';
 
-import {
-  DOCUMENTATION_HREF,
-  OCV_ADMIN_I_COURSE_HREF,
-  PERFORMANCE_HREF,
-  SUPPORT_HREF,
-} from './utils/constants';
+import { MTV_PRODUCT_PAGE_HREF, OCV_ADMIN_I_COURSE_HREF, SUPPORT_HREF } from './utils/constants';
 
 const ExternalLinksSection: FC = () => {
   const { t } = useForkliftTranslation();
@@ -19,14 +14,25 @@ const ExternalLinksSection: FC = () => {
   return (
     <LearningExperienceFooterSection title={t('External links')}>
       <Flex direction={{ default: 'column' }} spacer={{ default: 'spacerMd' }}>
+        {/* TODO: Restore when AEM documentation migration is complete
+        {DOCUMENTATION_HREF && (
+          <FlexItem>
+            <ExternalLink href={DOCUMENTATION_HREF} iconPosition="start" isInline>
+              {t('Documentation')}
+            </ExternalLink>
+          </FlexItem>
+        )}
+        {PERFORMANCE_HREF && (
+          <FlexItem>
+            <ExternalLink href={PERFORMANCE_HREF} iconPosition="start" isInline>
+              {t('MTV performance recommendations')}
+            </ExternalLink>
+          </FlexItem>
+        )}
+        */}
         <FlexItem>
-          <ExternalLink href={DOCUMENTATION_HREF} iconPosition="start" isInline>
+          <ExternalLink href={MTV_PRODUCT_PAGE_HREF} iconPosition="start" isInline>
             {t('Documentation')}
-          </ExternalLink>
-        </FlexItem>
-        <FlexItem>
-          <ExternalLink href={PERFORMANCE_HREF} iconPosition="start" isInline>
-            {t('MTV performance recommendations')}
           </ExternalLink>
         </FlexItem>
         <FlexItem>

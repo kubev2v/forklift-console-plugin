@@ -13,11 +13,13 @@ const ControllerCPULimitHelpContent: FC = () => {
           'Defines the CPU limits allocated to the main container in the controller pod. The default value is 500 milliCPU.',
         )}
       </StackItem>
-      <StackItem>
-        <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
-          Learn more
-        </a>
-      </StackItem>
+      {MTV_SETTINGS && (
+        <StackItem>
+          <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
+            {t('Learn more')}
+          </a>
+        </StackItem>
+      )}
     </Stack>
   );
 };

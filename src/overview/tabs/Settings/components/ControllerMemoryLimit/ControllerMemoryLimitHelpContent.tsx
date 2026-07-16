@@ -13,11 +13,13 @@ const ControllerCPULimitHelpContent: FC = () => {
           'Sets the memory limits allocated to the main container in the controller pod. The default value is 800Mi.',
         )}
       </StackItem>
-      <StackItem>
-        <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
-          Learn more
-        </a>
-      </StackItem>
+      {MTV_SETTINGS && (
+        <StackItem>
+          <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
+            {t('Learn more')}
+          </a>
+        </StackItem>
+      )}
     </Stack>
   );
 };

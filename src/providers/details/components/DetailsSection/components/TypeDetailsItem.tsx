@@ -18,8 +18,8 @@ export const TypeDetailsItem: FC<ProviderDetailsItemProps> = ({
   const providerType = provider?.spec?.type as ProviderType;
   const type = PROVIDERS[providerType];
 
-  const defaultMoreInfoLink =
-    'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.10/html-single/planning_your_migration_to_red_hat_openshift_virtualization/index#adding-source-provider_cnv';
+  // TODO: Update URL when AEM documentation migration to new platform is complete
+  const defaultMoreInfoLink = ''; // was: 'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.10/html-single/planning_your_migration_to_red_hat_openshift_virtualization/index#adding-source-provider_cnv'
   const defaultHelpContent = t(
     `Specify the type of source provider. Allowed values are ova, ovirt, vsphere,
       openshift, and openstack. This label is needed to verify the credentials are correct when the remote system is accessible and, for RHV, to retrieve the Manager CA certificate when

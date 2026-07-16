@@ -26,14 +26,14 @@ export const getMigrationTypeConfig = (migrationType: MigrationTypeValue): Migra
         helpBody: t(
           'Warm migration copies most VM data while it is still running; at cut-over the VM is paused and the rest of the data is copied.',
         ),
-        helpLink: WARM_MIGRATION_HELP_LINK,
+        helpLink: WARM_MIGRATION_HELP_LINK || undefined,
       };
     case MigrationTypeValue.Live: {
       const liveDesc = t('A live migration moves an active VM between hosts with zero downtime.');
       return {
         description: liveDesc,
         helpBody: liveDesc,
-        helpLink: LIVE_MIGRATION_HELP_LINK,
+        helpLink: LIVE_MIGRATION_HELP_LINK || undefined,
       };
     }
     case MigrationTypeValue.Conversion:

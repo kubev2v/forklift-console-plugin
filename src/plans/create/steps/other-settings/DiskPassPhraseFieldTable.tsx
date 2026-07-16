@@ -50,11 +50,13 @@ const DiskPassPhraseFieldTable = () => {
                   )}
                 </StackItem>
 
-                <StackItem>
-                  <ExternalLink isInline href={VIRT_V2V_HELP_LINK}>
-                    {t('Learn more')}
-                  </ExternalLink>
-                </StackItem>
+                {VIRT_V2V_HELP_LINK && (
+                  <StackItem>
+                    <ExternalLink isInline href={VIRT_V2V_HELP_LINK}>
+                      {t('Learn more')}
+                    </ExternalLink>
+                  </StackItem>
+                )}
               </Stack>
             </HelpIconPopover>
           ),

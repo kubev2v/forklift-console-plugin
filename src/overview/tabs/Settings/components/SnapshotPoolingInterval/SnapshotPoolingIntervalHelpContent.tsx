@@ -13,11 +13,13 @@ const SnapshotPoolingIntervalHelpContent: FC = () => {
           'Determines the frequency with which the system checks the status of snapshot creation or removal during oVirt warm migration. The default value is 10 seconds.',
         )}
       </StackItem>
-      <StackItem>
-        <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
-          Learn more
-        </a>
-      </StackItem>
+      {MTV_SETTINGS && (
+        <StackItem>
+          <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
+            {t('Learn more')}
+          </a>
+        </StackItem>
+      )}
     </Stack>
   );
 };

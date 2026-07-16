@@ -16,7 +16,6 @@ import {
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { getResourceUrl } from '@utils/getResourceUrl';
-import { FORKLIFT_DOCS_URL } from '@utils/links';
 
 import StorageMapsAddButton from './StorageMapsAddButton';
 
@@ -59,11 +58,7 @@ const StorageMapsEmptyState: FC<StorageMapsEmptyStateProps> = ({ namespace }) =>
                   <ForkliftTrans>
                     Migration storage maps are used to map source storages to OpenShift
                     Virtualization storage classes. At least one source and one target provider must
-                    be available in order to create a migration storage map.{' '}
-                    <ExternalLink href={FORKLIFT_DOCS_URL} isInline>
-                      Learn more
-                    </ExternalLink>
-                    .
+                    be available in order to create a migration storage map.
                   </ForkliftTrans>
                 </Content>
               </Bullseye>

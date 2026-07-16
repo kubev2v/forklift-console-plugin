@@ -119,14 +119,18 @@ const migrationTypeSubTopics = (): LearningExperienceSubTopic[] => [
         ],
         title: t('Warm migration'),
       },
-      {
-        id: 'migration-types-learn-more',
-        title: (
-          <ExternalLink href={LEARN_MORE_MIGRATION_TYPE_DOCS_URL} isInline>
-            {t('Learn more about migration types')}
-          </ExternalLink>
-        ),
-      },
+      ...(LEARN_MORE_MIGRATION_TYPE_DOCS_URL
+        ? [
+            {
+              id: 'migration-types-learn-more',
+              title: (
+                <ExternalLink href={LEARN_MORE_MIGRATION_TYPE_DOCS_URL} isInline>
+                  {t('Learn more about migration types')}
+                </ExternalLink>
+              ),
+            },
+          ]
+        : []),
     ],
   },
 ];

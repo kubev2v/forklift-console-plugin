@@ -1,8 +1,5 @@
 import type { FC } from 'react';
-import { ExternalLink } from 'src/components/common/ExternalLink/ExternalLink';
 import { ForkliftTrans } from 'src/utils/i18n';
-
-import { CREATE_VDDK_HELP_LINK } from '@utils/constants';
 
 const VDDKHelperText: FC = () => (
   <ForkliftTrans>
@@ -18,11 +15,7 @@ const VDDKHelperText: FC = () => (
 
     <p>
       To accelerate migration and reduce the risk of a plan failing, it is strongly recommended to
-      create a VDDK init image. Learn more about{' '}
-      <ExternalLink isInline href={CREATE_VDDK_HELP_LINK}>
-        Creating a VDDK image
-      </ExternalLink>
-      .
+      create a VDDK init image.
     </p>
   </ForkliftTrans>
 );
