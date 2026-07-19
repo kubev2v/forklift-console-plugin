@@ -15,6 +15,9 @@ export const INSPECTION_STATUS_LABEL = {
 /** Terminal inspection statuses shown in the VMs table. */
 export const COMPLETED_STATUSES = /Inspection passed|Issues found|Inspection error|Canceled/;
 
+/** Pending or Running — VM checkbox is disabled / excluded from Select All. */
+export const ACTIVE_STATUSES = /Pending|Running/;
+
 /** Running or any terminal status except Canceled. */
 export const ACTIVE_OR_COMPLETED_STATUSES =
   /Running|Inspection passed|Issues found|Inspection error/;
