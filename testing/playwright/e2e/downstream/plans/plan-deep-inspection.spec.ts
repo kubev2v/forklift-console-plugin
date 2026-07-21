@@ -6,6 +6,7 @@ import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetai
 import { NetworkTargets, type PlanTestData, SourceNetworks } from '../../../types/test-data';
 import {
   ACTIVE_OR_COMPLETED_STATUSES,
+  ACTIVE_STATUSES,
   COMPLETED_STATUSES,
   inspectionStatusDisplayToFilterId,
   isCompletedInspectionStatus,
@@ -14,15 +15,22 @@ import { requireVddk } from '../../../utils/requireVddk';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
-// Deep inspection creates vSphere snapshots — keep mtv-func-win2022 isolated here to avoid
-// VMHasSnapshots conflicts with other suites (migration-happy-path, plan-migration-type).
+// Deep inspection creates vSphere snapshots — only inspect mtv-func-win2022 here.
+// mtv-func-rhel9 is a Select All peer and must never be submitted for inspection
+// (avoids VMHasSnapshots conflicts with migration-happy-path / plan-migration-type).
+const INSPECTED_VM = 'mtv-func-win2022';
+const SELECT_ALL_PEER_VM = 'mtv-func-rhel9';
+
 const test = sharedProviderFixtures.extend<{ testPlan: Awaited<ReturnType<typeof createPlan>> }>({
   testPlan: async ({ page, resourceManager, testProvider }, setValue) => {
     if (!testProvider) throw new Error('testPlan fixture requires testProvider');
     const plan = await createPlan(page, resourceManager, {
       sourceProvider: testProvider,
       customPlanData: {
-        virtualMachines: [{ folder: 'vm', sourceName: 'mtv-func-win2022' }],
+        virtualMachines: [
+          { folder: 'vm', sourceName: INSPECTED_VM },
+          { folder: 'vm', sourceName: SELECT_ALL_PEER_VM },
+        ],
         // mtv-func-win2022 has 2 NICs; explicit mappings avoid the duplicate-Default-Network validation error.
         networkMap: {
           mappings: [
@@ -43,6 +51,7 @@ type SetupResult = {
   namespace: string;
   planDetailsPage: PlanDetailsPage;
   planName: string;
+  secondVmName: string;
 };
 
 const setupPlanDetailsPage = async (
@@ -53,13 +62,16 @@ const setupPlanDetailsPage = async (
   const planDetailsPage = new PlanDetailsPage(page);
   const { name: planName, namespace } = testPlan.metadata;
   const firstVmName = testPlan.testData.virtualMachines?.[0]?.sourceName;
-  if (!firstVmName) throw new Error('No source VM found in plan test data');
+  const secondVmName = testPlan.testData.virtualMachines?.[1]?.sourceName;
+  if (!firstVmName || !secondVmName) {
+    throw new Error('Expected two source VMs in plan test data');
+  }
 
   await planDetailsPage.navigate(planName, namespace);
   await planDetailsPage.verifyPlanTitle(planName);
   await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
 
-  return { firstVmName, namespace, planDetailsPage, planName };
+  return { firstVmName, namespace, planDetailsPage, planName, secondVmName };
 };
 
 test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
@@ -246,6 +258,49 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
     });
   });
 
+  test('should exclude VMs with active inspections from Select All', async ({
+    page,
+    testPlan,
+    testProvider: _testProvider,
+  }) => {
+    const { firstVmName, planDetailsPage, secondVmName } = await setupPlanDetailsPage(
+      page,
+      testPlan,
+    );
+    const activeVmRow = planDetailsPage.virtualMachinesTab.getVmRow(firstVmName);
+
+    await test.step('ensure first VM has an active inspection', async () => {
+      const status = await planDetailsPage.virtualMachinesTab.getVmInspectionStatus(firstVmName);
+      if (!ACTIVE_STATUSES.test(status)) {
+        const inspectModal = await planDetailsPage.openInspectModal();
+        await inspectModal.selectVmByName(firstVmName);
+        await inspectModal.clickInspect();
+      }
+      await expect(activeVmRow.getByText(ACTIVE_STATUSES)).toBeVisible({ timeout: 30_000 });
+    });
+
+    await test.step('Select All includes only eligible VMs', async () => {
+      const inspectModal = await planDetailsPage.openInspectModal();
+      await inspectModal.waitForVmTableLoaded();
+
+      expect(await inspectModal.getVmRowCount()).toBe(2);
+      expect(await inspectModal.isVmCheckboxDisabled(firstVmName)).toBe(true);
+      expect(await inspectModal.isVmCheckboxDisabled(secondVmName)).toBe(false);
+
+      await inspectModal.selectAllVms();
+
+      const eligibleCount = await inspectModal.getEligibleVmCount();
+      expect(eligibleCount).toBe(1);
+      const buttonText = await inspectModal.getConfirmButtonText();
+      expect(buttonText).toContain(`Inspect ${eligibleCount} VM`);
+
+      expect(await inspectModal.isVmCheckboxChecked(firstVmName)).toBe(false);
+      expect(await inspectModal.isVmCheckboxChecked(secondVmName)).toBe(true);
+
+      await inspectModal.close();
+    });
+  });
+
   test('should select all VMs and update confirm button text', async ({
     page,
     testPlan,
@@ -253,13 +308,15 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
   }) => {
     const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
 
-    await test.step('open modal and select all VMs', async () => {
+    await test.step('open modal and select all eligible VMs', async () => {
       const inspectModal = await planDetailsPage.openInspectModal();
+      await inspectModal.waitForVmTableLoaded();
       await inspectModal.selectAllVms();
 
-      const vmCount = await inspectModal.getVmRowCount();
+      const eligibleCount = await inspectModal.getEligibleVmCount();
+      expect(eligibleCount).toBeGreaterThan(0);
       const buttonText = await inspectModal.getConfirmButtonText();
-      expect(buttonText).toContain(`Inspect ${vmCount} VM`);
+      expect(buttonText).toContain(`Inspect ${eligibleCount} VM`);
       await inspectModal.close();
     });
   });

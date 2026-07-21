@@ -1,6 +1,7 @@
 import { type FC, useCallback, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DISK_ENCRYPTION_TYPE } from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
@@ -41,6 +42,7 @@ const InspectionVmTable: FC<InspectionVmTableProps> = ({
   vmOverrides = {},
   vmRows,
 }) => {
+  const { t } = useForkliftTranslation();
   const userSettings = useMemo(() => loadUserSettings({ pageId: INSPECTION_VM_TABLE_ID }), []);
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
 
@@ -68,6 +70,12 @@ const InspectionVmTable: FC<InspectionVmTableProps> = ({
     [isProviderFlow, vmOverrides, onVmOverrideChange],
   );
 
+  const getSelectDisabledReason = useCallback(
+    (item: InspectionVmRowData): string | undefined =>
+      item.isActive ? t('This VM is already being inspected.') : undefined,
+    [t],
+  );
+
   return (
     <StandardPageWithSelection<InspectionVmRowData>
       dataSource={[enrichedRows, !isLoading, null]}
@@ -76,6 +84,7 @@ const InspectionVmTable: FC<InspectionVmTableProps> = ({
       userSettings={userSettings}
       toId={toId}
       canSelect={canSelect}
+      getSelectDisabledReason={getSelectDisabledReason}
       onSelect={onSelect}
       selectedIds={selectedIds}
       {...(isProviderFlow && {

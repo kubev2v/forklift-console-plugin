@@ -25,6 +25,7 @@ type StandardPageWithSelectionProps<T> = ComponentProps<typeof StandardPage<T>> 
         toId: (item: T) => string;
         selectedIds: string[];
         canSelect?: (item: T) => boolean;
+        getSelectDisabledReason?: (item: T) => string | undefined;
         onExpand?: (expandedIds: string[]) => void;
         expandedIds?: string[];
       }
@@ -34,6 +35,7 @@ type StandardPageWithSelectionProps<T> = ComponentProps<typeof StandardPage<T>> 
         toId: (item: T) => string;
         selectedIds?: never;
         canSelect?: never;
+        getSelectDisabledReason?: never;
         onExpand: (expandedIds: string[]) => void;
         expandedIds: string[];
       }
@@ -43,6 +45,7 @@ type StandardPageWithSelectionProps<T> = ComponentProps<typeof StandardPage<T>> 
         toId?: never;
         selectedIds?: never;
         canSelect?: never;
+        getSelectDisabledReason?: never;
         onExpand?: never;
         expandedIds?: never;
       }
@@ -54,6 +57,7 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
     cell,
     expanded,
     expandedIds,
+    getSelectDisabledReason,
     GlobalActionToolbarItems,
     header,
     onExpand,
@@ -85,6 +89,7 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
       canSelect,
       cell,
       expandedIds: internalExpandedIds,
+      getSelectDisabledReason,
       selectedIds: internalSelectedIds,
       toggleExpandFor,
       toggleSelectFor,
@@ -92,14 +97,15 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
     });
     return withTr(RowWithSelection, expanded);
   }, [
+    canSelect,
     cell,
     expanded,
+    getSelectDisabledReason,
     internalExpandedIds,
     internalSelectedIds,
     toggleExpandFor,
     toggleSelectFor,
     toId,
-    canSelect,
   ]);
 
   const finalHeader = useMemo(() => {
@@ -140,6 +146,7 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
     <StandardPage
       {...rest}
       pageRef={pageRef}
+      canSelect={canSelect}
       expandedIds={internalExpandedIds}
       selectedIds={internalSelectedIds}
       onSelect={onSelectCallback}

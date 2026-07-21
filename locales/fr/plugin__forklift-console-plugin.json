@@ -1457,6 +1457,7 @@
   "This resource is managed by <2></2> and any modifications might be overwritten. Edit the managing resource to preserve changes.": "Cette ressource est gérée par <2></2> et toute modification peut être remplacée. Modifiez la ressource de gestion pour conserver les modifications.",
   "This secret must be created in your project beforehand, typically using details provided by your storage administrator.": "Ce secret doit être créé au préalable dans votre projet, généralement à l'aide des informations fournies par votre administrateur de stockage.",
   "This significantly speeds up the migration process and frees up network and host resources by avoiding the need to pull data through the source host.": "Cela accélère considérablement le processus de migration et libère des ressources réseau et hôte en évitant la nécessité de faire transiter les données par l'hôte source.",
+  "This VM is already being inspected.": "This VM is already being inspected.",
   "Tips and tricks": "Conseils et astuces",
   "To create a network mapping:": "Pour créer un mappage réseau\u00a0:",
   "To create a storage mapping:": "Pour créer un mappage de stockage\u00a0:",

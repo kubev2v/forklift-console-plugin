@@ -7,6 +7,15 @@ export class InspectVirtualMachinesModal {
     this.page = page;
   }
 
+  private vmCheckbox(vmName: string): Locator {
+    const row = this.vmTable.getByRole('row', { exact: false, name: vmName });
+    return row.getByRole('checkbox');
+  }
+
+  private get vmTableBodyRows(): Locator {
+    return this.vmTable.getByRole('rowgroup').nth(1).getByRole('row');
+  }
+
   get cancelButton(): Locator {
     return this.page.getByTestId('modal-cancel-button');
   }
@@ -28,6 +37,21 @@ export class InspectVirtualMachinesModal {
     return (await this.confirmButton.textContent()) ?? '';
   }
 
+  async getEligibleVmCount(): Promise<number> {
+    const rows = this.vmTableBodyRows;
+    const rowCount = await rows.count();
+    let eligibleCount = 0;
+
+    for (let i = 0; i < rowCount; i += 1) {
+      const checkbox = rows.nth(i).getByRole('checkbox');
+      if (!(await checkbox.isDisabled())) {
+        eligibleCount += 1;
+      }
+    }
+
+    return eligibleCount;
+  }
+
   async getVmInspectionStatus(vmName: string): Promise<string> {
     const row = this.vmTable.getByRole('row', { exact: false, name: vmName });
     const statusCell = row.getByRole('gridcell').last();
@@ -35,12 +59,19 @@ export class InspectVirtualMachinesModal {
   }
 
   async getVmRowCount(): Promise<number> {
-    const body = this.vmTable.getByRole('rowgroup').nth(1);
-    return body.getByRole('row').count();
+    return this.vmTableBodyRows.count();
   }
 
   async isConfirmDisabled(): Promise<boolean> {
     return this.confirmButton.isDisabled();
+  }
+
+  async isVmCheckboxChecked(vmName: string): Promise<boolean> {
+    return this.vmCheckbox(vmName).isChecked();
+  }
+
+  async isVmCheckboxDisabled(vmName: string): Promise<boolean> {
+    return this.vmCheckbox(vmName).isDisabled();
   }
 
   get modal(): Locator {
@@ -57,7 +88,7 @@ export class InspectVirtualMachinesModal {
    * Useful when the test does not know VM names upfront (e.g. dynamically created plans).
    */
   async selectFirstEligibleVm(): Promise<string> {
-    const rows = this.vmTable.getByRole('rowgroup').nth(1).getByRole('row');
+    const rows = this.vmTableBodyRows;
     const rowCount = await rows.count();
 
     for (let i = 0; i < rowCount; i += 1) {
@@ -74,8 +105,7 @@ export class InspectVirtualMachinesModal {
   }
 
   async selectVmByName(vmName: string): Promise<void> {
-    const row = this.vmTable.getByRole('row', { exact: false, name: vmName });
-    await row.getByRole('checkbox').check();
+    await this.vmCheckbox(vmName).check();
   }
 
   get techPreviewLabel(): Locator {
@@ -92,6 +122,6 @@ export class InspectVirtualMachinesModal {
 
   async waitForVmTableLoaded(): Promise<void> {
     await expect(this.vmTable).toBeVisible();
-    await expect(this.vmTable.locator('tbody tr').first()).toBeVisible({ timeout: 30_000 });
+    await expect(this.vmTableBodyRows.first()).toBeVisible({ timeout: 30_000 });
   }
 }

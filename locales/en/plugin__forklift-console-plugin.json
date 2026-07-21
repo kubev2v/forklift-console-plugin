@@ -1447,6 +1447,7 @@
   "This resource is managed by <2></2> and any modifications might be overwritten. Edit the managing resource to preserve changes.": "This resource is managed by <2></2> and any modifications might be overwritten. Edit the managing resource to preserve changes.",
   "This secret must be created in your project beforehand, typically using details provided by your storage administrator.": "This secret must be created in your project beforehand, typically using details provided by your storage administrator.",
   "This significantly speeds up the migration process and frees up network and host resources by avoiding the need to pull data through the source host.": "This significantly speeds up the migration process and frees up network and host resources by avoiding the need to pull data through the source host.",
+  "This VM is already being inspected.": "This VM is already being inspected.",
   "Tips and tricks": "Tips and tricks",
   "To create a network mapping:": "To create a network mapping:",
   "To create a storage mapping:": "To create a storage mapping:",
