@@ -33,7 +33,7 @@ const usePlanPages = (name: string, namespace: string) => {
       {
         component: () => <PlanResourcesPage name={name} namespace={namespace} />,
         href: 'resources',
-        name: t('Resources'),
+        name: t('Utilization'),
       },
       {
         component: () => <PlanMappingsPage name={name} namespace={namespace} />,

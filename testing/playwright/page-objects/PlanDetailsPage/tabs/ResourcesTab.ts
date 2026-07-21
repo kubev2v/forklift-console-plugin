@@ -36,7 +36,8 @@ export class ResourcesTab {
   }
 
   get tab(): Locator {
-    return this.page.getByRole('tab', { exact: true, name: 'Resources' });
+    const name = isVersionAtLeast(V5_0_0) ? 'Utilization' : 'Resources';
+    return this.page.getByRole('tab', { exact: true, name });
   }
 
   get table(): Locator {
