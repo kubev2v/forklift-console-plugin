@@ -12,6 +12,7 @@ export type CreateStorageMapFormData = FieldValues & {
 };
 
 type VSphereXcopyConfig = {
+  dedicatedMigrationHosts?: string[];
   secretRef: string;
   storageVendorProduct: string;
 };

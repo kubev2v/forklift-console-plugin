@@ -1,5 +1,6 @@
 import { OffloadPlugin } from 'src/storageMaps/utils/types';
 
+import { isEmpty } from '@utils/helpers';
 import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 
 import type { OffloadPluginConfig } from '../types';
@@ -22,10 +23,13 @@ export const createOffloadPluginConfig = (
     return undefined;
   }
 
+  const dedicatedMigrationHosts = mapping[StorageMapFieldId.DedicatedMigrationHosts];
+
   switch (offloadPlugin) {
     case OffloadPlugin.VSphereXcopyConfig:
       return {
         vsphereXcopyConfig: {
+          ...(!isEmpty(dedicatedMigrationHosts) && { dedicatedMigrationHosts }),
           secretRef: storageSecret,
           storageVendorProduct,
         },

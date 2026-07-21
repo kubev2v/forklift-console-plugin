@@ -19,6 +19,19 @@ export const setupHostsIntercepts = async (page: Page, sourceProviderType = 'vsp
       networks: ['test-network-1', 'test-network-2'],
       datastores: ['test-datastore-1', 'test-datastore-2'],
     },
+    {
+      id: 'test-host-2',
+      parent: { kind: 'Cluster', id: 'test-cluster-1' },
+      path: '/test/host/test-host-2.example.com/test-host-2.example.com',
+      revision: 2,
+      name: 'test-host-2.example.com',
+      selfLink: `providers/${sourceProviderType}/test-source-uid-1/hosts/test-host-2`,
+      cluster: 'test-cluster-1',
+      status: 'green',
+      inMaintenance: false,
+      networks: ['test-network-1', 'test-network-2'],
+      datastores: ['test-datastore-1', 'test-datastore-2'],
+    },
   ]);
 
   await page.route(endpoint, async (route) => {

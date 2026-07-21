@@ -51,6 +51,7 @@ export enum StorageMapFieldId {
   OffloadPlugin = 'offloadPlugin',
   StorageSecret = 'storageSecret',
   StorageProduct = 'storageProduct',
+  DedicatedMigrationHosts = 'dedicatedMigrationHosts',
 }
 
 export type StorageMapping = {
@@ -60,4 +61,5 @@ export type StorageMapping = {
   [StorageMapFieldId.OffloadPlugin]?: string;
   [StorageMapFieldId.StorageSecret]?: string;
   [StorageMapFieldId.StorageProduct]?: string;
+  [StorageMapFieldId.DedicatedMigrationHosts]?: string[];
 };
