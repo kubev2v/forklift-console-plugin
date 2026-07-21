@@ -59,7 +59,7 @@ jobs:
         run: yarn e2e:pre-test
 
       - name: Run cypress
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7.4.1
         with:
           wait-on: "http://localhost:30080"
           browser: chrome
