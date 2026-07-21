@@ -123,7 +123,7 @@ export const planFields: ResourceField[] = [
   },
   {
     filter: {
-      isHidden: true,
+      placeholderLabel: t('Filter by status'),
       type: FilterDefType.Enum,
       values: planPhases,
     },
@@ -135,7 +135,7 @@ export const planFields: ResourceField[] = [
   },
   {
     filter: {
-      isHidden: true,
+      placeholderLabel: t('Filter by type'),
       type: FilterDefType.Enum,
       values: migrationTypes,
     },
