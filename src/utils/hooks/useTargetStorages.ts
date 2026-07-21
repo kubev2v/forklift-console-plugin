@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { useOpenShiftStorages } from 'src/utils/hooks/useStorages';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
-import { isNetAppShiftStorageClassAnnotations } from '@utils/storage/netAppShift';
-import { StorageClassAnnotation, type TargetStorage } from '@utils/storage/types';
+import { mapTargetStorages } from '@utils/storage/mapTargetStorages';
+import type { TargetStorage } from '@utils/storage/types';
 
 const useTargetStorages = (
   targetProvider: V1beta1Provider | undefined,
@@ -13,27 +13,7 @@ const useTargetStorages = (
     useOpenShiftStorages(targetProvider);
 
   const targetStorages = useMemo(
-    () =>
-      availableTargetStorages?.reduce((acc: TargetStorage[], storage) => {
-        if (storage.namespace === targetProject || !storage.namespace) {
-          const scAnnotations = storage?.object?.metadata?.annotations;
-          const isDefault = scAnnotations?.[StorageClassAnnotation.IsDefault] === 'true';
-          const targetStorage: TargetStorage = {
-            id: storage.uid,
-            isDefault,
-            isNetAppShift: isNetAppShiftStorageClassAnnotations(scAnnotations),
-            name: storage.name,
-            provisioner: storage?.object?.provisioner,
-          };
-
-          if (isDefault) {
-            return [targetStorage, ...acc];
-          }
-          return [...acc, targetStorage];
-        }
-
-        return acc;
-      }, []),
+    () => mapTargetStorages(availableTargetStorages, targetProject),
     [availableTargetStorages, targetProject],
   );
 
