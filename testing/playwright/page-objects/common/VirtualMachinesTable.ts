@@ -47,6 +47,14 @@ export class VirtualMachinesTable {
     await this.table.clearAllFilters();
   }
 
+  async clickShowAllVms(): Promise<void> {
+    await this.selectionToggleAll.click();
+  }
+
+  async clickShowSelectedVms(): Promise<void> {
+    await this.selectionToggleSelected.click();
+  }
+
   async collapseFolder(folder: string): Promise<void> {
     const folderRow = this.page.getByTestId(`folder-${folder}`);
 
@@ -270,6 +278,14 @@ export class VirtualMachinesTable {
     await this.table.search(value);
   }
 
+  get selectionToggleAll() {
+    return this.rootLocator.getByTestId('vm-selection-toggle-all');
+  }
+
+  get selectionToggleSelected() {
+    return this.rootLocator.getByTestId('vm-selection-toggle-selected');
+  }
+
   /**
    * Clicks a column header to sort by that column
    * @param columnName - Name of the column to sort by
@@ -353,6 +369,19 @@ export class VirtualMachinesTable {
 
   async verifyRowIsVisible(options: Record<string, string>): Promise<void> {
     await this.table.verifyRowIsVisible(options);
+  }
+
+  async verifySelectedToggleDisabled(): Promise<void> {
+    await expect(this.selectionToggleSelected).toBeDisabled();
+  }
+
+  async verifySelectedToggleEnabled(): Promise<void> {
+    await expect(this.selectionToggleSelected).toBeEnabled();
+  }
+
+  async verifySelectionToggleVisible(): Promise<void> {
+    await expect(this.selectionToggleAll).toBeVisible();
+    await expect(this.selectionToggleSelected).toBeVisible();
   }
 
   async verifyTableLoaded(): Promise<void> {

@@ -21,6 +21,7 @@ const SelectedToggle: FC<SelectedToggleProps> = ({ selectedVmKeys, setShowAll, s
         onChange={() => {
           setShowAll(true);
         }}
+        data-testid="vm-selection-toggle-all"
       />
       <ToggleGroupItem
         text={t('Selected')}
@@ -29,6 +30,7 @@ const SelectedToggle: FC<SelectedToggleProps> = ({ selectedVmKeys, setShowAll, s
           setShowAll(false);
         }}
         isDisabled={isEmpty(selectedVmKeys)}
+        data-testid="vm-selection-toggle-selected"
       />
     </ToggleGroup>
   );

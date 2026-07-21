@@ -28,7 +28,7 @@ const createAuthenticatedContext = async (browser: Browser): Promise<BrowserCont
 };
 
 export type FixtureConfig = {
-  providerScope?: 'test' | 'worker';
+  providerScope?: 'test' | 'worker' | 'none';
   planScope?: 'test' | 'none';
   networkMapScope?: 'test' | 'none';
   storageMapScope?: 'test' | 'none';
@@ -52,6 +52,71 @@ export type ConfigurableResourceFixtures = {
   createCustomStorageMap: (options?: Partial<CreateStorageMapOptions>) => Promise<TestStorageMap>;
 };
 
+const buildTestProviderFixture = (
+  providerScope: NonNullable<FixtureConfig['providerScope']>,
+  providerPrefix: string,
+  skipProviderReadyWait: boolean,
+) => {
+  if (providerScope === 'none') {
+    return undefined;
+  }
+
+  if (providerScope === 'worker') {
+    return [
+      async ({ browser }: { browser: Browser }, use: (provider: TestProvider) => Promise<void>) => {
+        const context = await createAuthenticatedContext(browser);
+        const page = await context.newPage();
+        const tempResourceManager = new ResourceManager();
+
+        // Promise chaining keeps `use` outside any try block (SonarCloud S6440
+        // treats any `use()` call inside try as a React Hook violation). On
+        // creation failure the .catch() handler cleans up and rethrows so
+        // `use` is never reached. On success, Playwright worker fixtures
+        // return from `use` normally once all worker tests complete — test
+        // failures are handled by the runner, not propagated here as
+        // exceptions — so sequential cleanup after `use` is safe.
+        const created = await createProvider(page, tempResourceManager, {
+          namePrefix: providerPrefix,
+          skipProviderReadyWait,
+        })
+          .then((result) => {
+            if (!result) throw new Error('Failed to create provider');
+            return result;
+          })
+          .catch(async (error: unknown) => {
+            await context.close().catch(() => undefined);
+            await tempResourceManager.cleanupAll().catch(console.error);
+            throw new Error(`Failed to create provider: ${String(error)}`, {
+              cause: error,
+            });
+          });
+
+        await use(created);
+        await context.close().catch(() => undefined);
+        await tempResourceManager.cleanupAll().catch(console.error);
+      },
+      { scope: 'worker' },
+    ] as any;
+  }
+
+  return async (
+    {
+      page,
+      resourceManager,
+    }: {
+      page: Awaited<ReturnType<Browser['newPage']>>;
+      resourceManager: ResourceManager;
+    },
+    use: (provider: TestProvider) => Promise<void>,
+  ) => {
+    const provider = await createProvider(page, resourceManager, {
+      namePrefix: providerPrefix,
+      skipProviderReadyWait,
+    });
+    await use(provider);
+  };
+};
+
 export const createResourceFixtures = (
   config: FixtureConfig = {},
 ): ReturnType<typeof base.extend<ConfigurableResourceFixtures>> => {
@@ -73,51 +138,7 @@ export const createResourceFixtures = (
       await manager.cleanupAll();
     },
 
-    testProvider:
-      providerScope === 'worker'
-        ? ([
-            async (
-              { browser }: { browser: Browser },
-              use: (provider: TestProvider) => Promise<void>,
-            ) => {
-              const context = await createAuthenticatedContext(browser);
-              const page = await context.newPage();
-              const tempResourceManager = new ResourceManager();
-
-              // Promise chaining keeps `use` outside any try block (SonarCloud S6440
-              // treats any `use()` call inside try as a React Hook violation). On
-              // creation failure the .catch() handler cleans up and rethrows so
-              // `use` is never reached. On success, Playwright worker fixtures
-              // return from `use` normally once all worker tests complete — test
-              // failures are handled by the runner, not propagated here as
-              // exceptions — so sequential cleanup after `use` is safe.
-              const created = await createProvider(page, tempResourceManager, {
-                namePrefix: providerPrefix,
-                skipProviderReadyWait,
-              })
-                .then((result) => {
-                  if (!result) throw new Error('Failed to create provider');
-                  return result;
-                })
-                .catch(async (error: unknown) => {
-                  await context.close().catch(() => undefined);
-                  await tempResourceManager.cleanupAll().catch(console.error);
-                  throw new Error(`Failed to create provider: ${String(error)}`, { cause: error });
-                });
-
-              await use(created);
-              await context.close().catch(() => undefined);
-              await tempResourceManager.cleanupAll().catch(console.error);
-            },
-            { scope: 'worker' },
-          ] as any)
-        : async ({ page, resourceManager }, use) => {
-            const provider = await createProvider(page, resourceManager, {
-              namePrefix: providerPrefix,
-              skipProviderReadyWait,
-            });
-            await use(provider);
-          },
+    testProvider: buildTestProviderFixture(providerScope, providerPrefix, skipProviderReadyWait),
 
     testPlan:
       planScope === 'none'
@@ -239,6 +260,11 @@ export const providerOnlyFixtures = createResourceFixtures({
   providerScope: 'test',
   planScope: 'none',
   providerPrefix: 'test-provider-only',
+});
+
+export const customProviderOnlyFixtures = createResourceFixtures({
+  providerScope: 'none',
+  planScope: 'none',
 });
 
 export const sharedProviderNetworkMapFixtures = createResourceFixtures({

@@ -74,6 +74,11 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     return selectedVMNames;
   }
 
+  async getVisibleVmRowCount(): Promise<number> {
+    const grid = await this.getVmGrid();
+    return grid.locator('tbody tr').count();
+  }
+
   async handleCriticalIssuesModal(action: 'confirm' | 'deselect'): Promise<void> {
     const buttonName = action === 'confirm' ? 'Confirm selections' : 'Deselect critical issue VMs';
     const button = this.page.getByRole('button', { name: buttonName });
@@ -112,11 +117,7 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
   }
 
   async selectFirstVirtualMachine() {
-    const grid = await this.getVmGrid();
-    const firstRow = grid.locator('tbody tr').first();
-    const checkbox = firstRow.locator('input[type="checkbox"]');
-    await expect(checkbox).toBeVisible();
-    await checkbox.check();
+    await this.selectVirtualMachineAtIndex(0);
   }
 
   async selectFolder(folder: string): Promise<void> {
@@ -138,6 +139,18 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
 
   async selectVirtualMachine(vmName: string) {
     await this.table.selectRow({ Name: vmName });
+  }
+
+  async selectVirtualMachineAtIndex(index: number): Promise<string> {
+    const grid = await this.getVmGrid();
+    const row = grid.locator('tbody tr').nth(index);
+    const checkbox = row.locator('input[type="checkbox"]');
+    await expect(checkbox).toBeVisible();
+    await checkbox.check();
+
+    const nameCell = row.locator('[data-label="Name"], td').nth(1);
+    const name = (await nameCell.textContent())?.trim() ?? '';
+    return name;
   }
 
   async verifyStepVisible() {
