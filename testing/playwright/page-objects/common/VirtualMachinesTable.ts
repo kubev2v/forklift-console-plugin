@@ -279,11 +279,11 @@ export class VirtualMachinesTable {
   }
 
   get selectionToggleAll() {
-    return this.rootLocator.getByTestId('vm-selection-toggle-all');
+    return this.rootLocator.getByTestId('vm-selection-toggle-all').getByRole('button');
   }
 
   get selectionToggleSelected() {
-    return this.rootLocator.getByTestId('vm-selection-toggle-selected');
+    return this.rootLocator.getByTestId('vm-selection-toggle-selected').getByRole('button');
   }
 
   /**

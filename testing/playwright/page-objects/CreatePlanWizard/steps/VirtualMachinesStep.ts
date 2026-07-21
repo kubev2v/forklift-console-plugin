@@ -76,7 +76,11 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
 
   async getVisibleVmRowCount(): Promise<number> {
     const grid = await this.getVmGrid();
-    return grid.locator('tbody tr').count();
+    // Count only selectable VM rows (excludes expanded detail rows).
+    return grid
+      .locator('tbody tr')
+      .filter({ has: this.page.locator('input[type="checkbox"]') })
+      .count();
   }
 
   async handleCriticalIssuesModal(action: 'confirm' | 'deselect'): Promise<void> {
@@ -148,9 +152,22 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     await expect(checkbox).toBeVisible();
     await checkbox.check();
 
-    const nameCell = row.locator('[data-label="Name"], td').nth(1);
-    const name = (await nameCell.textContent())?.trim() ?? '';
-    return name;
+    const namedCell = row.locator('[data-label="Name"]');
+    if ((await namedCell.count()) > 0) {
+      return ((await namedCell.first().textContent()) ?? '').trim();
+    }
+
+    // Selectable tables include checkbox + expand columns before Name.
+    const cells = row.locator('[role="gridcell"], td');
+    const cellCount = await cells.count();
+    for (let cellIndex = 1; cellIndex < cellCount; cellIndex += 1) {
+      const text = ((await cells.nth(cellIndex).textContent()) ?? '').trim();
+      if (text) {
+        return text;
+      }
+    }
+
+    return '';
   }
 
   async verifyStepVisible() {
