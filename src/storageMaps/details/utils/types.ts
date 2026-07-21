@@ -8,6 +8,7 @@ import type { StorageMapping } from '@utils/storage/types';
 export type CustomV1beta1StorageMapSpecMap = Omit<V1beta1StorageMapSpecMap, 'offloadPlugin'> & {
   offloadPlugin?: {
     vsphereXcopyConfig?: {
+      dedicatedMigrationHosts?: string[];
       secretRef?: string;
       storageVendorProduct?: string;
     };

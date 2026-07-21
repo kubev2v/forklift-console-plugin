@@ -176,6 +176,8 @@ export const getStorageMappingValues = (
 
     return {
       [StorageMapFieldId.AccessMode]: destination.accessMode,
+      [StorageMapFieldId.DedicatedMigrationHosts]:
+        offloadPlugin?.vsphereXcopyConfig?.dedicatedMigrationHosts ?? [],
       [StorageMapFieldId.OffloadPlugin]: offloadPlugin ? OffloadPlugin.VSphereXcopyConfig : '',
       [StorageMapFieldId.SourceStorage]: sourceStorage,
       [StorageMapFieldId.StorageProduct]:

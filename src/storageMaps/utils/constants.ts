@@ -21,6 +21,7 @@ export const isRwxCapableProvisioner = (provisioner: string): boolean =>
   RWX_CAPABLE_PROVISIONER_PATTERNS.some((pattern) => provisioner.includes(pattern));
 
 export const defaultStorageMapping: StorageMapping = {
+  [StorageMapFieldId.DedicatedMigrationHosts]: [],
   [StorageMapFieldId.OffloadPlugin]: '',
   [StorageMapFieldId.SourceStorage]: { name: '' },
   [StorageMapFieldId.StorageProduct]: '',
@@ -30,6 +31,7 @@ export const defaultStorageMapping: StorageMapping = {
 
 export const storageMapFieldLabels: Partial<Record<StorageMapFieldId, ReturnType<typeof t>>> = {
   [StorageMapFieldId.AccessMode]: t('Access mode'),
+  [StorageMapFieldId.DedicatedMigrationHosts]: t('Dedicated migration hosts'),
   [StorageMapFieldId.MapName]: t('Storage map name'),
   [StorageMapFieldId.OffloadPlugin]: t('Offload plugin'),
   [StorageMapFieldId.Project]: t('Project'),
