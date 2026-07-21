@@ -4,7 +4,7 @@ import type { RowProps } from 'src/components/common/TableView/types';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ResourceField } from '@components/common/utils/types';
+import type { GlobalActionToolbarProps, ResourceField } from '@components/common/utils/types';
 import ConcernsAndConditionsTable from '@components/ConcernsAndConditionsTable/ConcernsAndConditionsTable';
 import { EmptyState, EmptyStateVariant, Spinner, Title } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
@@ -29,12 +29,14 @@ type ProviderVirtualMachinesListProps = {
   initialSelectedIds?: string[];
   showActions: boolean;
   className?: string;
+  GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<VmData>>[];
 };
 
 export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
   cellMapper,
   className,
   fieldsMetadata,
+  GlobalActionToolbarItems,
   initialSelectedIds = [],
   obj,
   onSelect,
@@ -77,6 +79,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
     if (handleSelectedIds) {
       return {
         ...(ec2 ? {} : { expandedIds: [] }),
+        ...(GlobalActionToolbarItems ? { GlobalActionToolbarItems } : {}),
         onSelect: handleSelectedIds,
         selectedIds: initialSelectedIds,
         toId: getVmId,

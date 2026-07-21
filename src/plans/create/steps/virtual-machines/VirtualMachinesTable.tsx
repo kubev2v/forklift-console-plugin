@@ -11,6 +11,7 @@ import { OVirtVirtualMachinesList } from 'src/providers/details/tabs/VirtualMach
 import { VSphereVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/VSphereVirtualMachinesList';
 import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 
+import useShowSelectedVmsToggle from '@components/SelectedToggle/useShowSelectedVmsToggle';
 import type { ProviderVirtualMachine } from '@forklift-ui/types';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
@@ -35,7 +36,7 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
   initialSelectedIds,
   isSelectable,
   onChange,
-  showSelectedOnly,
+  showSelectedOnly: showSelectedOnlyProp,
   value,
   vmData: customVmData,
 }) => {
@@ -43,8 +44,18 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
   const sourceProvider = useWatch({ control, name: GeneralFormFieldId.SourceProvider });
   const [providerVmData, isVmDataLoading] = useInventoryVms({ provider: sourceProvider });
 
+  const selectedIds = useMemo(
+    () => (value ? Object.keys(value) : (initialSelectedIds ?? [])),
+    [value, initialSelectedIds],
+  );
+  const isFlatListSelectable =
+    Boolean(isSelectable) && sourceProvider?.spec?.type !== PROVIDER_TYPES.vsphere;
+  const { GlobalActionToolbarItems, showSelectedOnly: showSelectedOnlyFromToggle } =
+    useShowSelectedVmsToggle(isFlatListSelectable, selectedIds);
+
   // Use custom VM data if provided, otherwise use fetched VM data
   const availableVmData = customVmData ?? providerVmData;
+  const showSelectedOnly = showSelectedOnlyProp ?? showSelectedOnlyFromToggle;
 
   const displayedVmData = useMemo(
     () =>
@@ -57,7 +68,7 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
   const tableProps: ProviderVirtualMachinesListProps = useMemo(
     () => ({
       ...(isSelectable && {
-        initialSelectedIds: value ? Object.keys(value) : (initialSelectedIds ?? []),
+        initialSelectedIds: selectedIds,
         onSelect: (selectedVmData: VmData[] | undefined) => {
           const selectedVms = selectedVmData?.reduce(
             (acc: Record<string, ProviderVirtualMachine>, data) => ({
@@ -70,6 +81,7 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
           onChange?.(selectedVms);
         },
       }),
+      ...(GlobalActionToolbarItems && { GlobalActionToolbarItems }),
       hasCriticalConcernFilter,
       obj: {
         provider: sourceProvider,
@@ -81,8 +93,8 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
     }),
     [
       isSelectable,
-      value,
-      initialSelectedIds,
+      selectedIds,
+      GlobalActionToolbarItems,
       hasCriticalConcernFilter,
       sourceProvider,
       displayedVmData,
