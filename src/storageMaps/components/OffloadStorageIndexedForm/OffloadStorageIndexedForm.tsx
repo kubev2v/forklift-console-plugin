@@ -19,7 +19,11 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 
-import type { OffloadMatchStatus, StorageVendorProduct } from '../../utils/types';
+import {
+  type OffloadMatchStatus,
+  OffloadPlugin,
+  type StorageVendorProduct,
+} from '../../utils/types';
 
 import DedicatedMigrationHostsField from './DedicatedMigrationHostsField';
 import OffloadOptimalityHint from './OffloadOptimalityHint';
@@ -114,7 +118,7 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
               <OffloadPluginField fieldId={pluginFieldId} />
               <StorageSecretField fieldId={secretFieldId} sourceProvider={sourceProvider} />
               <StorageProductField fieldId={productFieldId} suggestedProduct={suggestedProduct} />
-              {offloadPlugin && (
+              {offloadPlugin === OffloadPlugin.VSphereXcopyConfig && (
                 <DedicatedMigrationHostsField
                   fieldId={hostsFieldId}
                   sourceProvider={sourceProvider}

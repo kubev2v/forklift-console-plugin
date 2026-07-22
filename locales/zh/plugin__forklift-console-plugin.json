@@ -1490,6 +1490,7 @@
   "True": "真",
   "Type": "类型",
   "Unable to fetch job templates from AAP. Verify the AAP URL and token secret are configured correctly in the ForkliftController settings.": "无法从 AAP 获取作业模板。验证 AAP URL 和令牌 secret 是否在 ForkliftController 设置中正确配置。",
+  "Unable to load hosts from the source provider.": "Unable to load hosts from the source provider.",
   "Unable to load throughput data": "无法加载吞吐量数据",
   "Unable to retrieve data": "无法检索数据",
   "Unable to retrieve data.": "无法检索数据。",

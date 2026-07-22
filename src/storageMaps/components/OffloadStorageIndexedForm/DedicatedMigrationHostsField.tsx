@@ -25,19 +25,28 @@ const DedicatedMigrationHostsField: FC<DedicatedMigrationHostsFieldProps> = ({
     formState: { isSubmitting },
   } = useFormContext();
 
-  const { inventory: inventoryHosts } = useProviderInventory<VSphereHostInventory[]>({
+  const {
+    error: inventoryError,
+    inventory: inventoryHosts,
+    loading: inventoryLoading,
+  } = useProviderInventory<VSphereHostInventory[]>({
+    disabled: !sourceProvider,
     provider: sourceProvider,
     subPath: 'hosts?detail=4',
   });
 
   const options: TypeaheadSelectOption[] = useMemo(
     () =>
-      (inventoryHosts ?? []).map((host: VSphereHostInventory) => ({
-        content: host.name,
-        value: host.id,
-      })),
-    [inventoryHosts],
+      inventoryLoading
+        ? []
+        : (inventoryHosts ?? []).map((host: VSphereHostInventory) => ({
+            content: host.name,
+            value: host.id,
+          })),
+    [inventoryHosts, inventoryLoading],
   );
+
+  const isInventoryUnavailable = inventoryLoading || Boolean(inventoryError) || !sourceProvider;
 
   return (
     <FormGroup
@@ -54,18 +63,24 @@ const DedicatedMigrationHostsField: FC<DedicatedMigrationHostsFieldProps> = ({
             onChange={(values) => {
               field.onChange(values);
             }}
-            isDisabled={isSubmitting || !sourceProvider}
+            isDisabled={isSubmitting || isInventoryUnavailable}
             placeholder={t('Select dedicated migration hosts')}
             testId={fieldId}
           />
         )}
       />
       <HelperText>
-        <HelperTextItem variant="indeterminate">
-          {t(
-            "When no hosts are selected, each VM's registered ESXi host is used for the XCOPY operation.",
-          )}
-        </HelperTextItem>
+        {inventoryError ? (
+          <HelperTextItem variant="error">
+            {t('Unable to load hosts from the source provider.')}
+          </HelperTextItem>
+        ) : (
+          <HelperTextItem variant="indeterminate">
+            {t(
+              "When no hosts are selected, each VM's registered ESXi host is used for the XCOPY operation.",
+            )}
+          </HelperTextItem>
+        )}
       </HelperText>
     </FormGroup>
   );

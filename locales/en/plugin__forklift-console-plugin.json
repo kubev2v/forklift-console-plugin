@@ -1493,6 +1493,7 @@
   "True": "True",
   "Type": "Type",
   "Unable to fetch job templates from AAP. Verify the AAP URL and token secret are configured correctly in the ForkliftController settings.": "Unable to fetch job templates from AAP. Verify the AAP URL and token secret are configured correctly in the ForkliftController settings.",
+  "Unable to load hosts from the source provider.": "Unable to load hosts from the source provider.",
   "Unable to load throughput data": "Unable to load throughput data",
   "Unable to retrieve data": "Unable to retrieve data",
   "Unable to retrieve data.": "Unable to retrieve data.",

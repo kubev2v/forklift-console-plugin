@@ -1490,6 +1490,7 @@
   "True": "True",
   "Type": "유형",
   "Unable to fetch job templates from AAP. Verify the AAP URL and token secret are configured correctly in the ForkliftController settings.": "AAP에서 작업 템플릿을 가져올 수 없습니다. ForkliftController 설정에서 AAP URL 및 토큰 시크릿이 올바르게 구성되었는지 확인합니다.",
+  "Unable to load hosts from the source provider.": "Unable to load hosts from the source provider.",
   "Unable to load throughput data": "처리량 데이터를 로드할 수 없음",
   "Unable to retrieve data": "데이터를 가져올 수 없습니다",
   "Unable to retrieve data.": "데이터를 가져올 수 없습니다.",
