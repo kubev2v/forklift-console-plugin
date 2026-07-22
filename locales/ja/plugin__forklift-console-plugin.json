@@ -1490,6 +1490,7 @@
   "True": "True",
   "Type": "タイプ",
   "Unable to fetch job templates from AAP. Verify the AAP URL and token secret are configured correctly in the ForkliftController settings.": "AAP からジョブテンプレートを取得できません。ForkliftController の設定で、AAP の URL とトークンシークレットが正しく設定されていることを確認してください。",
+  "Unable to load hosts from the source provider.": "Unable to load hosts from the source provider.",
   "Unable to load throughput data": "スループットデータを読み込めません",
   "Unable to retrieve data": "データを取得できません",
   "Unable to retrieve data.": "データを取得できません。",

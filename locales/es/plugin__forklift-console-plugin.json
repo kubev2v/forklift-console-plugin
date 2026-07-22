@@ -1503,6 +1503,7 @@
   "True": "Verdadero",
   "Type": "Tipo",
   "Unable to fetch job templates from AAP. Verify the AAP URL and token secret are configured correctly in the ForkliftController settings.": "No se pueden obtener las plantillas de trabajo de AAP. Verifique que la URL de AAP y el token secreto estén configurados correctamente en la configuración de ForkliftController.",
+  "Unable to load hosts from the source provider.": "Unable to load hosts from the source provider.",
   "Unable to load throughput data": "No se pudieron cargar los datos de rendimiento",
   "Unable to retrieve data": "No se pueden recuperar los datos",
   "Unable to retrieve data.": "No se pueden recuperar los datos.",

@@ -6,25 +6,36 @@ import { StorageMapCreatePage } from '../../page-objects/StorageMapCreatePage';
 import { StorageMapsListPage } from '../../page-objects/StorageMapsListPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
+const FORKLIFT_CONTROLLER_RESPONSE = {
+  apiVersion: 'forklift.konveyor.io/v1beta1',
+  kind: 'ForkliftControllerList',
+  metadata: { continue: '', remainingItemCount: 0, resourceVersion: '1000' },
+  items: [
+    {
+      apiVersion: 'forklift.konveyor.io/v1beta1',
+      kind: 'ForkliftController',
+      metadata: {
+        name: 'forklift-controller',
+        namespace: 'konveyor-forklift',
+        uid: 'fc-uid-1',
+        resourceVersion: '999',
+      },
+      // eslint-disable-next-line camelcase
+      spec: { feature_copy_offload: true },
+    },
+  ],
+};
+
 const setupForkliftControllerIntercept = async (page: Page): Promise<void> => {
+  // useFeatureFlags watches getDefaultNamespace() which returns konveyor-forklift
+  // on OKD (CI) and openshift-mtv downstream. Use glob with wildcard namespace.
   await page.route(
-    `**/apis/forklift.konveyor.io/v1beta1/namespaces/${MTV_NAMESPACE}/forkliftcontrollers?limit=250`,
+    '**/apis/forklift.konveyor.io/v1beta1/namespaces/*/forkliftcontrollers*',
     async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({
-          apiVersion: 'forklift.konveyor.io/v1beta1',
-          items: [
-            {
-              apiVersion: 'forklift.konveyor.io/v1beta1',
-              kind: 'ForkliftController',
-              metadata: { name: 'forklift-controller', namespace: MTV_NAMESPACE },
-              // eslint-disable-next-line camelcase
-              spec: { feature_copy_offload: true },
-            },
-          ],
-        }),
+        body: JSON.stringify(FORKLIFT_CONTROLLER_RESPONSE),
       });
     },
   );
