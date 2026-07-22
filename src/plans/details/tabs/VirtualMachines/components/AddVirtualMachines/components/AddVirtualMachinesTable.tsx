@@ -30,7 +30,7 @@ const AddVirtualMachinesTable = memo<AddVirtualMachinesTableProps>(
     const [inventoryVmData, isVmDataLoading] = useInventoryVms({ provider: sourceProvider });
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const isFlatListSelectable = sourceProvider?.spec?.type !== PROVIDER_TYPES.vsphere;
-    const { GlobalActionToolbarItems, showSelectedOnly } = useShowSelectedVmsToggle(
+    const { GlobalActionToolbarItems, showSelectedOnly } = useShowSelectedVmsToggle<VmData>(
       isFlatListSelectable,
       selectedIds,
     );

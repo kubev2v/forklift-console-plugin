@@ -51,7 +51,7 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
   const isFlatListSelectable =
     Boolean(isSelectable) && sourceProvider?.spec?.type !== PROVIDER_TYPES.vsphere;
   const { GlobalActionToolbarItems, showSelectedOnly: showSelectedOnlyFromToggle } =
-    useShowSelectedVmsToggle(isFlatListSelectable, selectedIds);
+    useShowSelectedVmsToggle<VmData>(isFlatListSelectable, selectedIds);
 
   // Use custom VM data if provided, otherwise use fetched VM data
   const availableVmData = customVmData ?? providerVmData;
@@ -60,9 +60,9 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
   const displayedVmData = useMemo(
     () =>
       showSelectedOnly
-        ? availableVmData?.filter((data) => Boolean(value?.[data.vm.id]))
+        ? availableVmData?.filter((data) => selectedIds.includes(data.vm.id))
         : availableVmData,
-    [availableVmData, showSelectedOnly, value],
+    [availableVmData, selectedIds, showSelectedOnly],
   );
 
   const tableProps: ProviderVirtualMachinesListProps = useMemo(

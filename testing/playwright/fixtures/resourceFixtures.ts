@@ -52,18 +52,33 @@ export type ConfigurableResourceFixtures = {
   createCustomStorageMap: (options?: Partial<CreateStorageMapOptions>) => Promise<TestStorageMap>;
 };
 
+type TestProviderFixtureFn = (
+  args: {
+    page: Awaited<ReturnType<Browser['newPage']>>;
+    resourceManager: ResourceManager;
+  },
+  use: (provider: TestProvider) => Promise<void>,
+) => Promise<void>;
+
+type TestProviderWorkerFixture = [
+  (args: { browser: Browser }, use: (provider: TestProvider) => Promise<void>) => Promise<void>,
+  { scope: 'worker' },
+];
+
+type TestProviderFixtureResult = undefined | TestProviderWorkerFixture | TestProviderFixtureFn;
+
 const buildTestProviderFixture = (
   providerScope: NonNullable<FixtureConfig['providerScope']>,
   providerPrefix: string,
   skipProviderReadyWait: boolean,
-) => {
+): TestProviderFixtureResult => {
   if (providerScope === 'none') {
     return undefined;
   }
 
   if (providerScope === 'worker') {
-    return [
-      async ({ browser }: { browser: Browser }, use: (provider: TestProvider) => Promise<void>) => {
+    const workerFixture: TestProviderWorkerFixture = [
+      async ({ browser }, use) => {
         const context = await createAuthenticatedContext(browser);
         const page = await context.newPage();
         const tempResourceManager = new ResourceManager();
@@ -96,19 +111,12 @@ const buildTestProviderFixture = (
         await tempResourceManager.cleanupAll().catch(console.error);
       },
       { scope: 'worker' },
-    ] as any;
+    ];
+
+    return workerFixture;
   }
 
-  return async (
-    {
-      page,
-      resourceManager,
-    }: {
-      page: Awaited<ReturnType<Browser['newPage']>>;
-      resourceManager: ResourceManager;
-    },
-    use: (provider: TestProvider) => Promise<void>,
-  ) => {
+  return async ({ page, resourceManager }, use) => {
     const provider = await createProvider(page, resourceManager, {
       namePrefix: providerPrefix,
       skipProviderReadyWait,
