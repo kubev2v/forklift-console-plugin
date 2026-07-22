@@ -156,7 +156,7 @@ export const API_ENDPOINTS = {
   networks: (providerType: string, uid: string) =>
     `**/forklift-inventory/providers/${providerType}/${uid}/networks`,
   datastores: (providerType: string, uid: string) =>
-    `**/forklift-inventory/providers/${providerType}/${uid}/datastores`,
+    `**/forklift-inventory/providers/${providerType}/${uid}/datastores?detail=1`,
   hosts: (providerType: string, uid: string) =>
     `**/forklift-inventory/providers/${providerType}/${uid}/hosts?detail=4`,
   folders: (providerType: string, uid: string) =>
