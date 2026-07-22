@@ -25,7 +25,7 @@ For detailed architecture documentation, see [docs/architecture.md](docs/archite
 
 - [**Forklift Operator**](https://github.com/kubev2v/forklift/) installed on an OpenShift cluster
 - [**OpenShift Console**](https://github.com/openshift/console/) (v4.19+)
-- **Node.js** 20+ and **npm** for local development
+- **Node.js** 22+ and **npm** for local development
 
 ## Quick Start
 

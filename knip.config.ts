@@ -30,7 +30,7 @@ export default {
     'src/storageMaps/create/StorageMapCreatePage.tsx',
   ],
   ignore: [
-    'i18next-parser.config.ts',
+    'i18next.config.ts',
     'testing/**',
     'eslint.ide.config.ts',
     'src/providers/create/fields/hyperv/HypervTransferMethodField.tsx', // hidden until backend iSCSI support lands (kubev2v/forklift#6014)
