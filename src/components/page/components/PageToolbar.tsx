@@ -21,6 +21,7 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { ManageColumnsToolbar } from '../ManageColumnsToolbar';
+import { isSecondaryAttributeFilter } from '../utils/utils';
 
 type PageToolbarProps<T> = {
   fields: ResourceField[];
@@ -79,10 +80,7 @@ export const PageToolbar = <T,>({
   );
 
   const secondaryFilters = useMemo(
-    () =>
-      fieldsMetadata
-        .filter(({ filter }) => filter && !filter.primary && !filter.standalone)
-        .map(toFieldFilter(flatData)),
+    () => fieldsMetadata.filter(isSecondaryAttributeFilter).map(toFieldFilter(flatData)),
     [fieldsMetadata, flatData],
   );
 
