@@ -9,6 +9,7 @@ import {
   ec2CredentialsFields,
   esxiCredentialsFields,
   hypervCredentialsFields,
+  nutanixCredentialsFields,
   openshiftCredentialsFields,
   ovirtCredentialsFields,
   vCenterCredentialsFields,
@@ -51,6 +52,9 @@ const CredentialsContent: FC<CredentialsContentProps> = ({ provider, reveal, sec
 
     case PROVIDER_TYPES.hyperv:
       return <CredentialFields fields={hypervCredentialsFields} secret={secret} reveal={reveal} />;
+
+    case PROVIDER_TYPES.nutanix:
+      return <CredentialFields fields={nutanixCredentialsFields} secret={secret} reveal={reveal} />;
 
     case PROVIDER_TYPES.ova:
     case undefined:

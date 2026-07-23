@@ -14,6 +14,7 @@ import { troubleShootingTopic } from '../troubleShootingTopic/troubleShootingTop
 export const MigrationSourceTypeLabels = {
   [PROVIDER_TYPES.ec2]: t('Amazon EC2'),
   [PROVIDER_TYPES.hyperv]: t('Microsoft Hyper-V'),
+  [PROVIDER_TYPES.nutanix]: t('Nutanix AHV'),
   [PROVIDER_TYPES.openshift]: t('OpenShift Virtualization'),
   [PROVIDER_TYPES.openstack]: t('OpenStack'),
   [PROVIDER_TYPES.ova]: t('Open Virtual Appliances'),

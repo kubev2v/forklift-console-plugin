@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
+import DevPreviewLabel from 'src/components/PreviewLabels/DevPreviewLabel';
 import TechPreviewLabel from 'src/components/PreviewLabels/TechPreviewLabel';
 import { TableLabelCell } from 'src/components/TableCell/TableLabelCell';
 import type { CellProps } from 'src/providers/list/components/CellProps';
@@ -7,7 +8,11 @@ import { getIsOnlySource } from 'src/providers/utils/helpers/getIsTarget';
 import { PROVIDERS } from 'src/utils/enums';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { isTechPreviewProvider, type PROVIDER_TYPES } from '@utils/providers/constants';
+import {
+  isDevPreviewProvider,
+  isTechPreviewProvider,
+  type PROVIDER_TYPES,
+} from '@utils/providers/constants';
 
 import { SOURCE_LABEL_COLOR, SOURCE_LABEL_TEXT } from './utils/constants';
 
@@ -18,6 +23,7 @@ export const TypeCell: FC<CellProps> = ({ data, fields }) => {
   const type = getResourceFieldValue(data, 'type', fields);
   const isSource = getIsOnlySource(provider);
   const isTechPreview = isTechPreviewProvider(type as string);
+  const isDevPreview = isDevPreviewProvider(type as string);
 
   return (
     <TableLabelCell
@@ -27,6 +33,7 @@ export const TypeCell: FC<CellProps> = ({ data, fields }) => {
     >
       {PROVIDERS?.[type as keyof typeof PROVIDER_TYPES] ?? ''}
       {isTechPreview && <TechPreviewLabel />}
+      {isDevPreview && <DevPreviewLabel />}
     </TableLabelCell>
   );
 };

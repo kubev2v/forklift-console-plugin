@@ -20,6 +20,14 @@ const getVmNicNetworkIds = (
   vm: ProviderVirtualMachine,
   nicProfiles?: OVirtNicProfile[],
 ): string[] => {
+  if (vm.providerType === (PROVIDER_TYPES.nutanix as string)) {
+    return (
+      (vm as ProviderVirtualMachine & { nics?: { subnetUuid?: string }[] })?.nics
+        ?.map((nic) => nic?.subnetUuid)
+        .filter((id): id is string => Boolean(id)) ?? []
+    );
+  }
+
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere:
     case PROVIDER_TYPES.hyperv:

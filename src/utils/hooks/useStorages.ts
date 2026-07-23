@@ -30,6 +30,7 @@ const glanceStorage: InventoryStorage = {
 const subPath: Record<string, string> = {
   [PROVIDER_TYPES.ec2]: 'storages',
   [PROVIDER_TYPES.hyperv]: 'storages?detail=1',
+  [PROVIDER_TYPES.nutanix]: 'storagecontainers?detail=1',
   [PROVIDER_TYPES.openshift]: 'storageclasses?detail=1',
   [PROVIDER_TYPES.openstack]: 'volumetypes',
   [PROVIDER_TYPES.ova]: 'storages?detail=1',

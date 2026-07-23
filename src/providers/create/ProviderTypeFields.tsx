@@ -13,6 +13,9 @@ import Ec2RegionField from './fields/ec2/Ec2RegionField';
 import Ec2TargetSettingsFields from './fields/ec2/Ec2TargetSettingsFields';
 import HypervCredentialsFields from './fields/hyperv/HypervCredentialsFields';
 import HypervManagementTypeField from './fields/hyperv/HypervManagementTypeField';
+import NutanixCredentialsFields from './fields/nutanix/NutanixCredentialsFields';
+import NutanixPrismTypeField from './fields/nutanix/NutanixPrismTypeField';
+import NutanixUrlField from './fields/nutanix/NutanixUrlField';
 import OpenShiftUrlField from './fields/openshift/OpenShiftUrlField';
 import ServiceAccountTokenField from './fields/openshift/ServiceAccountTokenField';
 import OpenStackAuthenticationTypeField from './fields/openstack/OpenStackAuthenticationTypeField';
@@ -34,11 +37,12 @@ const ProviderTypeFields: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useFormContext<CreateProviderFormData>();
 
-  const [selectedProviderType, openshiftUrl, ovirtUrl, vsphereUrl] = useWatch({
+  const [selectedProviderType, openshiftUrl, nutanixUrl, ovirtUrl, vsphereUrl] = useWatch({
     control,
     name: [
       ProviderFormFieldId.ProviderType,
       ProviderFormFieldId.OpenshiftUrl,
+      ProviderFormFieldId.NutanixUrl,
       ProviderFormFieldId.OvirtUrl,
       ProviderFormFieldId.VsphereUrl,
     ],
@@ -112,6 +116,16 @@ const ProviderTypeFields: FC = () => {
           <HypervManagementTypeField />
           <SectionHeading text={t('Provider credentials')} />
           <HypervCredentialsFields />
+          <CertificateValidationField />
+        </>
+      )}
+
+      {selectedProviderType === PROVIDER_TYPES.nutanix && (
+        <>
+          <NutanixPrismTypeField />
+          <NutanixUrlField />
+          <SectionHeading text={t('Provider credentials')} />
+          {nutanixUrl?.trim() && <NutanixCredentialsFields />}
           <CertificateValidationField />
         </>
       )}

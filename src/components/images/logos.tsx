@@ -73,4 +73,6 @@ const vmLogoDark = (
   />
 );
 
+export const nutanixLogo = null;
+
 export const getVmwareLogo = (isDarkTheme: boolean) => (isDarkTheme ? vmLogoLight : vmLogoDark);
