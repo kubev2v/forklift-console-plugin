@@ -1,6 +1,7 @@
 export const POWERED_ON = 'poweredOn';
 export const UP = 'up';
 export const ACTIVE = 'ACTIVE';
+export const NUTANIX_POWERED_ON = 'ON';
 export const EMPTY_CPU = '0';
 export const EMPTY_MEMORY = '0Mi';
 

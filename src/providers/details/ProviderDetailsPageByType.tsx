@@ -6,6 +6,7 @@ import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import Ec2ProviderDetailsPage from './Ec2ProviderDetailsPage';
 import HypervProviderDetailsPage from './HypervProviderDetailsPage';
+import NutanixProviderDetailsPage from './NutanixProviderDetailsPage';
 import OpenshiftProviderDetailsPage from './OpenshiftProviderDetailsPage';
 import OpenStackProviderDetailsPage from './OpenStackProviderDetailsPage';
 import OvaProviderDetailsPage from './OvaProviderDetailsPage';
@@ -42,6 +43,8 @@ const ProviderDetailsPageByType: FC<ProviderDetailsPageByTypeProps> = ({
       return <OvaProviderDetailsPage name={name} namespace={namespace} />;
     case PROVIDER_TYPES.hyperv:
       return <HypervProviderDetailsPage name={name} namespace={namespace} />;
+    case PROVIDER_TYPES.nutanix:
+      return <NutanixProviderDetailsPage name={name} namespace={namespace} />;
     case undefined:
     default:
       return <ErrorState title={t('Unsupported provider type')} />;

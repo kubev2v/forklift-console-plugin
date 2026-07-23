@@ -43,6 +43,11 @@ const addProviderToInventory = (
       extended.ec2 = [...(extended.ec2 ?? []), provider];
       break;
     }
+    case PROVIDER_TYPES.nutanix: {
+      const extended = newInventory as ProvidersInventoryList & Record<string, ProviderInventory[]>;
+      extended.nutanix = [...(extended.nutanix ?? []), provider];
+      break;
+    }
     default:
       break;
   }

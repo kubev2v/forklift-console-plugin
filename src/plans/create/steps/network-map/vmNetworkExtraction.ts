@@ -2,12 +2,17 @@ import type { OVirtNicProfile, OVirtVM, ProviderVirtualMachine } from '@forklift
 import { DEFAULT_NETWORK } from '@utils/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { getEc2SubnetIds, isEc2Vm } from '@utils/types/ec2Inventory';
+import { getNutanixSubnetIds, isNutanixVm } from '@utils/types/nutanixInventory';
 
 import type { ProviderNetwork } from '../../types';
 
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
   if (isEc2Vm(vm)) {
     return getEc2SubnetIds(vm);
+  }
+
+  if (isNutanixVm(vm)) {
+    return getNutanixSubnetIds(vm);
   }
 
   switch (vm.providerType) {
