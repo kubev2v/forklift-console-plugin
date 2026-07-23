@@ -44,10 +44,12 @@ export const transformFormValuesToK8sSpec = (
 
       // Add offload plugin data if all required fields are present
       if (mapping.offloadPlugin && mapping.storageProduct && mapping.storageSecret) {
+        const { dedicatedMigrationHosts } = mapping;
         acc.push({
           ...baseMapping,
           offloadPlugin: {
             vsphereXcopyConfig: {
+              ...(!isEmpty(dedicatedMigrationHosts) && { dedicatedMigrationHosts }),
               secretRef: mapping.storageSecret,
               storageVendorProduct: mapping.storageProduct,
             },
@@ -92,6 +94,8 @@ export const transformStorageMapToFormValues = (
 
       return {
         accessMode: mapping.destination?.accessMode,
+        dedicatedMigrationHosts:
+          mapping.offloadPlugin?.vsphereXcopyConfig?.dedicatedMigrationHosts ?? [],
         offloadPlugin: mapping.offloadPlugin ? OffloadPlugin.VSphereXcopyConfig : '',
         sourceStorage: {
           id: sourceId,

@@ -6,6 +6,7 @@ import { expect, type Locator, type Page } from '@playwright/test';
  * these as its `id` attribute.
  */
 const OFFLOAD_FIELD = {
+  dedicatedMigrationHosts: (index: number): string => `storageMap.${index}.dedicatedMigrationHosts`,
   offloadPlugin: (index: number): string => `storageMap.${index}.offloadPlugin`,
   storageProduct: (index: number): string => `storageMap.${index}.storageProduct`,
   storageSecret: (index: number): string => `storageMap.${index}.storageSecret`,
@@ -98,6 +99,21 @@ export class OffloadOptions {
     return ((await btn.textContent()) ?? '').trim();
   }
 
+  async selectDedicatedMigrationHost(mappingIndex: number, hostName: string): Promise<void> {
+    const toggle = this.fieldToggleButton(OFFLOAD_FIELD.dedicatedMigrationHosts(mappingIndex));
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+
+    const listbox = this.page.getByRole('listbox');
+    await expect(listbox).toBeVisible();
+
+    const option = listbox.getByRole('option', { name: hostName, exact: true });
+    await expect(option).toBeVisible();
+    await option.click();
+
+    await toggle.click();
+  }
+
   async selectOffloadPlugin(mappingIndex: number, optionText: string): Promise<void> {
     await this.selectFromDropdown(OFFLOAD_FIELD.offloadPlugin(mappingIndex), optionText);
   }
@@ -130,6 +146,16 @@ export class OffloadOptions {
     const btn = this.container.getByRole('button', { name: CLEAR_BUTTON_TEXT }).nth(mappingIndex);
     await expect(btn).toBeVisible();
     await expect(btn).toBeEnabled();
+  }
+
+  async verifyDedicatedMigrationHostsNotVisible(mappingIndex: number): Promise<void> {
+    const field = this.fieldToggleButton(OFFLOAD_FIELD.dedicatedMigrationHosts(mappingIndex));
+    await expect(field).not.toBeVisible();
+  }
+
+  async verifyDedicatedMigrationHostsVisible(mappingIndex: number): Promise<void> {
+    const field = this.fieldToggleButton(OFFLOAD_FIELD.dedicatedMigrationHosts(mappingIndex));
+    await expect(field).toBeVisible();
   }
 
   async verifyDropdownOptions(

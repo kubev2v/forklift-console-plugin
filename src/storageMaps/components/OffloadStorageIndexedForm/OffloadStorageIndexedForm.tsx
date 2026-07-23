@@ -19,8 +19,13 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 
-import type { OffloadMatchStatus, StorageVendorProduct } from '../../utils/types';
+import {
+  type OffloadMatchStatus,
+  OffloadPlugin,
+  type StorageVendorProduct,
+} from '../../utils/types';
 
+import DedicatedMigrationHostsField from './DedicatedMigrationHostsField';
 import OffloadOptimalityHint from './OffloadOptimalityHint';
 import OffloadPluginField from './OffloadPluginField';
 import StorageProductField from './StorageProductField';
@@ -48,6 +53,7 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
   const pluginFieldId = getStorageMapFieldId(StorageMapFieldId.OffloadPlugin, index);
   const secretFieldId = getStorageMapFieldId(StorageMapFieldId.StorageSecret, index);
   const productFieldId = getStorageMapFieldId(StorageMapFieldId.StorageProduct, index);
+  const hostsFieldId = getStorageMapFieldId(StorageMapFieldId.DedicatedMigrationHosts, index);
 
   const [offloadPlugin, storageSecret, storageProduct] = useWatch({
     control,
@@ -93,7 +99,8 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
     setValue(pluginFieldId, '', { shouldDirty: true, shouldValidate: true });
     setValue(secretFieldId, '', { shouldDirty: true, shouldValidate: true });
     setValue(productFieldId, '', { shouldDirty: true, shouldValidate: true });
-  }, [pluginFieldId, productFieldId, secretFieldId, setValue]);
+    setValue(hostsFieldId, [], { shouldDirty: true, shouldValidate: true });
+  }, [hostsFieldId, pluginFieldId, productFieldId, secretFieldId, setValue]);
 
   return (
     <div className="offload-storage">
@@ -111,6 +118,12 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
               <OffloadPluginField fieldId={pluginFieldId} />
               <StorageSecretField fieldId={secretFieldId} sourceProvider={sourceProvider} />
               <StorageProductField fieldId={productFieldId} suggestedProduct={suggestedProduct} />
+              {offloadPlugin === OffloadPlugin.VSphereXcopyConfig && (
+                <DedicatedMigrationHostsField
+                  fieldId={hostsFieldId}
+                  sourceProvider={sourceProvider}
+                />
+              )}
               {offloadError && (
                 <HelperText>
                   <HelperTextItem data-testid="offload-validation-error" variant="error">
