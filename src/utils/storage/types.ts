@@ -10,12 +10,14 @@ export type TargetStorage = {
   id: string;
   name: string;
   isDefault: boolean;
+  isDefaultVirt: boolean;
   isNetAppShift?: boolean;
   provisioner?: string;
 };
 
 export enum StorageClassAnnotation {
   IsDefault = 'storageclass.kubernetes.io/is-default-class',
+  IsDefaultVirtClass = 'storageclass.kubevirt.io/is-default-virt-class',
   NetAppShiftStorageClassType = 'shift.netapp.io/storage-class-type',
 }
 

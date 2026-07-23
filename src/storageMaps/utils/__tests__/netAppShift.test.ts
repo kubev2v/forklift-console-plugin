@@ -32,6 +32,7 @@ describe('getNetAppShiftLabels', () => {
   const shiftStorage: TargetStorage = {
     id: 'sc-1',
     isDefault: false,
+    isDefaultVirt: false,
     isNetAppShift: true,
     name: 'netapp-sc',
   };
@@ -39,6 +40,7 @@ describe('getNetAppShiftLabels', () => {
   const regularStorage: TargetStorage = {
     id: 'sc-2',
     isDefault: true,
+    isDefaultVirt: false,
     name: 'standard-sc',
   };
 

@@ -133,7 +133,7 @@ Used in: list row actions + details page header.
 | `useOpenShiftNetworks` | NADs on OpenShift target |
 | `useTargetNetworks` | Target network select options |
 | `useSourceStorages` | Source datastores/storage domains (provider-type-specific) |
-| `useTargetStorages` | Target StorageClasses (+ default ordering, NetApp Shift) |
+| `useTargetStorages` | Target StorageClasses (virt-default → k8s-default ordering, NetApp Shift) |
 | `useProviderInventory` | Low-level Forklift inventory REST client |
 | `useStorageMapCrd` | CRD schema for enum discovery |
 | `useOffloadPlugins` | Offload plugin names from CRD + constants |

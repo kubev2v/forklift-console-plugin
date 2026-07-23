@@ -28,9 +28,19 @@ type TargetStorageFieldProps = {
   suggestedVendorProduct?: StorageVendorProduct;
 };
 
+const shouldShowDefaultLabel = (storage: TargetStorage): boolean =>
+  storage.isDefaultVirt || storage.isDefault;
+
 const renderStorageOption = (storage: TargetStorage, t: (k: string) => string) => (
   <Split hasGutter>
     <SplitItem isFilled>{storage.name}</SplitItem>
+    {shouldShowDefaultLabel(storage) && (
+      <SplitItem>
+        <Label isCompact color="green">
+          {t('Default')}
+        </Label>
+      </SplitItem>
+    )}
     {storage.isNetAppShift && (
       <SplitItem>
         <Label isCompact color="blue">
