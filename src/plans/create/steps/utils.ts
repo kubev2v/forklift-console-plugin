@@ -18,6 +18,10 @@ export const getMapResourceLabel = (
     return '';
   }
 
+  if (resource.providerType === (PROVIDER_TYPES.nutanix as string)) {
+    return resource.name ?? '';
+  }
+
   switch (resource.providerType) {
     case PROVIDER_TYPES.openshift: {
       if (resource.namespace) {

@@ -138,6 +138,19 @@ export class CreateProviderPage {
     }
   }
 
+  private async fillNutanixFields(testData: ProviderData) {
+    if (testData.prismType === 'central') {
+      await this.page.getByText('Prism Central').click();
+    }
+
+    await this.page.getByTestId('nutanix-url-input').fill(testData.hostname ?? '');
+    await this.page
+      .getByTestId('nutanix-username-input')
+      .waitFor({ state: 'visible', timeout: 10000 });
+    await this.page.getByTestId('nutanix-username-input').fill(testData.username ?? '');
+    await this.page.getByTestId('nutanix-password-input').fill(testData.password ?? '');
+  }
+
   private async fillOpenStackFields(testData: ProviderData) {
     await this.page.getByTestId('openstack-url-input').fill(testData.hostname ?? '');
     await this.page.getByTestId('openstack-username-input').fill(testData.username ?? '');
@@ -256,6 +269,9 @@ export class CreateProviderPage {
         break;
       case ProviderType.HYPERV:
         await this.fillHypervFields(testData);
+        break;
+      case ProviderType.NUTANIX:
+        await this.fillNutanixFields(testData);
         break;
       case ProviderType.OPENSTACK:
         await this.fillOpenStackFields(testData);

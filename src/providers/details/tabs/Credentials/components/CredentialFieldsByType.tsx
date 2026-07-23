@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import Ec2CredentialsFields from 'src/providers/create/fields/ec2/Ec2CredentialsFields';
 import HypervCredentialsFields from 'src/providers/create/fields/hyperv/HypervCredentialsFields';
+import NutanixCredentialsFields from 'src/providers/create/fields/nutanix/NutanixCredentialsFields';
 import ServiceAccountTokenField from 'src/providers/create/fields/openshift/ServiceAccountTokenField';
 import OpenStackAuthenticationTypeField from 'src/providers/create/fields/openstack/OpenStackAuthenticationTypeField';
 import OvirtCredentialsFields from 'src/providers/create/fields/ovirt/OvirtCredentialsFields';
@@ -27,6 +28,9 @@ const CredentialFieldsByType: FC<{ providerType: string | undefined }> = ({ prov
 
     case PROVIDER_TYPES.hyperv:
       return <HypervCredentialsFields />;
+
+    case PROVIDER_TYPES.nutanix:
+      return <NutanixCredentialsFields />;
 
     case PROVIDER_TYPES.ova:
     case undefined:

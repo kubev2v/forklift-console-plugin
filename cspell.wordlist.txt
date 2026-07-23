@@ -90,6 +90,7 @@ multus
 nads
 nbde
 netapp
+nutanix
 networkattachmentdefinitions
 networkmaps
 nicprofiles
@@ -119,6 +120,7 @@ quickstarts
 snapshotting
 storageclass
 storageclasses
+storagecontainers
 storagedomains
 storagemaps
 switchfilter
@@ -128,6 +130,7 @@ tolerations
 trident
 typeahead
 vVol
+vcpus
 vddk
 veth
 virt

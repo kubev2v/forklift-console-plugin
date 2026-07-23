@@ -3,6 +3,7 @@ import {
   ec2Logo,
   getVmwareLogo,
   hypervLogo,
+  nutanixLogo,
   openshiftLogo,
   openstackLogo,
   ovaLogo,
@@ -15,6 +16,7 @@ import { t } from '@utils/i18n';
 const providerTypeLabels: Record<string, string> = {
   ec2: t('Amazon EC2'),
   hyperv: t('Microsoft Hyper-V'),
+  nutanix: t('Nutanix AHV'),
   openshift: t('OpenShift Virtualization'),
   openstack: t('OpenStack'),
   ova: t('Open Virtual Appliance'),
@@ -22,9 +24,10 @@ const providerTypeLabels: Record<string, string> = {
   vsphere: t('VMware vSphere'),
 };
 
-const providerTypeIcons = (isDarkTheme: boolean): Record<string, ReactNode> => ({
+const providerTypeIcons = (isDarkTheme: boolean): Record<string, ReactNode | null> => ({
   ec2: ec2Logo,
   hyperv: hypervLogo,
+  nutanix: nutanixLogo,
   openshift: openshiftLogo,
   openstack: openstackLogo,
   ova: ovaLogo,

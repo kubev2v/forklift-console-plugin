@@ -54,6 +54,15 @@ const getHypervVmPowerState = (vm: HypervVM): PowerState => {
   return 'unknown';
 };
 
+const getNutanixVmPowerState = (vm: ProviderVirtualMachine): PowerState => {
+  const powerState = (
+    vm as ProviderVirtualMachine & { powerState?: string }
+  )?.powerState?.toUpperCase();
+  if (powerState === 'ON') return 'on';
+  if (powerState === 'OFF') return 'off';
+  return 'unknown';
+};
+
 const getEc2VmPowerState = (vm: Ec2VM): PowerState => {
   const state = vm?.object?.State?.Name?.toLowerCase();
 
@@ -70,6 +79,10 @@ const getEc2VmPowerState = (vm: Ec2VM): PowerState => {
 
 export const getVmPowerState = (vm: ProviderVirtualMachine | Ec2VM | undefined): PowerState => {
   if (!vm) return 'unknown';
+
+  if ((vm?.providerType as string) === 'nutanix') {
+    return getNutanixVmPowerState(vm as ProviderVirtualMachine);
+  }
 
   switch (vm?.providerType) {
     case 'ovirt':

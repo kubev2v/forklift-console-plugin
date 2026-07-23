@@ -37,4 +37,13 @@ describe('getProviderTypeOptions', () => {
       expect(nonAwsOptions.find((option) => option.value === type)).toBeDefined();
     }
   });
+
+  it('should include Nutanix AHV option with devPreview flag', () => {
+    const options = getProviderTypeOptions(false, false);
+    const nutanixOption = options.find((option) => option.value === PROVIDER_TYPES.nutanix);
+
+    expect(nutanixOption).toBeDefined();
+    expect(nutanixOption?.devPreview).toBe(true);
+    expect(nutanixOption?.label).toBe('Nutanix AHV');
+  });
 });

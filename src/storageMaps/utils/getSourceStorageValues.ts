@@ -128,6 +128,17 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
   const storageIdSet = selectedVMs.reduce<Set<string>>((acc, vm) => {
     let storageIds: string[] = [];
 
+    if (vm.providerType === (PROVIDER_TYPES.nutanix as string)) {
+      storageIds =
+        (
+          vm as ProviderVirtualMachine & {
+            disks?: { storageContainerUuid?: string }[];
+          }
+        )?.disks
+          ?.map((disk) => disk?.storageContainerUuid)
+          .filter((id): id is string => Boolean(id)) ?? [];
+    }
+
     switch (vm.providerType) {
       case PROVIDER_TYPES.vsphere:
         storageIds = getVSphereStorageIds(vm);

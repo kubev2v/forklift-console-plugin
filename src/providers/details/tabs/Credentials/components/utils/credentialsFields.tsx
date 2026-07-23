@@ -271,3 +271,24 @@ export const hypervCredentialsFields: Fields = {
     label: t('Username'),
   },
 };
+
+export const nutanixCredentialsFields: Fields = {
+  cacert: {
+    ...cacertField,
+    description: t(
+      'A CA certificate to be trusted when connecting to the Nutanix Prism API endpoint. Ensure the CA certificate format is in a PEM encoded X.509 format. To use a CA certificate, drag the file to the text box or browse for it. To use the system CA certificate, leave the field empty.',
+    ),
+  },
+  insecureSkipVerify: {
+    ...insecureSkipVerifyField,
+    description: t("If true, the Prism endpoint's TLS certificate won't be validated."),
+  },
+  password: {
+    description: t('A password for connecting to the Nutanix Prism API endpoint.'),
+    label: t('Password'),
+  },
+  user: {
+    description: t('A username for connecting to the Nutanix Prism API endpoint.'),
+    label: t('Username'),
+  },
+};

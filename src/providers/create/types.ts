@@ -9,6 +9,7 @@ import type {
   CertificateValidationMode,
   HypervManagementType,
   HypervTransferMethod,
+  NutanixPrismType,
   ProviderFormFieldId,
 } from './fields/constants';
 
@@ -84,6 +85,15 @@ type VsphereFields = {
   [ProviderFormFieldId.VsphereUseVddkAioOptimization]?: boolean;
 };
 
+type NutanixFields = {
+  [ProviderFormFieldId.CaCertificate]?: string;
+  [ProviderFormFieldId.CertificateValidation]?: CertificateValidationMode;
+  [ProviderFormFieldId.NutanixPassword]?: string;
+  [ProviderFormFieldId.NutanixPrismType]?: NutanixPrismType;
+  [ProviderFormFieldId.NutanixUrl]?: string;
+  [ProviderFormFieldId.NutanixUsername]?: string;
+};
+
 type Ec2Fields = {
   [ProviderFormFieldId.Ec2AccessKeyId]?: string;
   [ProviderFormFieldId.Ec2AutoTargetCredentials]?: boolean;
@@ -97,6 +107,7 @@ type Ec2Fields = {
 };
 
 export type Ec2FormData = BaseFormData & Ec2Fields;
+export type NutanixFormData = BaseFormData & NutanixFields;
 export type OpenshiftFormData = BaseFormData & OpenshiftFields;
 export type OvaFormData = BaseFormData & OvaFields;
 export type OpenstackFormData = BaseFormData & OpenstackFields;
@@ -107,6 +118,7 @@ export type HypervFormData = BaseFormData & HypervFields;
 export type CreateProviderFormData = FieldValues &
   BaseFormData &
   Ec2Fields &
+  NutanixFields &
   OpenshiftFields &
   OvaFields &
   OpenstackFields &

@@ -6,6 +6,7 @@ import type { CreateProviderFormData } from '../types';
 
 import { buildEc2ProviderResources } from './buildEc2ProviderResources';
 import { buildHypervProviderResources } from './buildHypervProviderResources';
+import { buildNutanixProviderResources } from './buildNutanixProviderResources';
 import { buildOpenshiftProviderResources } from './buildOpenshiftProviderResources';
 import { buildOpenstackProviderResources } from './buildOpenstackProviderResources';
 import { buildOvaProviderResources } from './buildOvaProviderResources';
@@ -27,6 +28,8 @@ export const buildProviderResources = (formData: CreateProviderFormData): Provid
       return buildOvaProviderResources(formData);
     case PROVIDER_TYPES.hyperv:
       return buildHypervProviderResources(formData);
+    case PROVIDER_TYPES.nutanix:
+      return buildNutanixProviderResources(formData);
     case PROVIDER_TYPES.openshift:
       return buildOpenshiftProviderResources(formData);
     case PROVIDER_TYPES.openstack:

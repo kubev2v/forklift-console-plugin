@@ -21,6 +21,11 @@ export const providerTypes = (isDarkTheme: boolean) => ({
     logo: hypervLogo,
     title: 'Microsoft Hyper-V',
   },
+  nutanix: {
+    key: PROVIDER_TYPES.nutanix,
+    logo: null,
+    title: 'Nutanix AHV',
+  },
   openshift: {
     key: PROVIDER_TYPES.openshift,
     logo: openshiftLogo,
