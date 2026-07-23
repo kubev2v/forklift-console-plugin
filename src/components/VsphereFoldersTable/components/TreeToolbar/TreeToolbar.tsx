@@ -2,6 +2,7 @@ import type { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { ManageColumnsToolbar } from '@components/page/ManageColumnsToolbar';
+import SelectedToggle from '@components/SelectedToggle/SelectedToggle';
 import TableBulkSelect from '@components/TableBulkSelect';
 import { defaultColumns } from '@components/VsphereFoldersTable/utils/constants';
 import type { VmRow } from '@components/VsphereFoldersTable/utils/types';
@@ -11,7 +12,6 @@ import { isEmpty } from '@utils/helpers';
 import { AttributeFiltersToolbar } from '../AttributeFilter/AttributeFilter';
 import type { AttributeFilters } from '../AttributeFilter/hooks/useAttributeFilters';
 import type { AttributeConfig } from '../AttributeFilter/utils/types';
-import SelectedToggle from '../SelectedToggle/SelectedToggle';
 
 type TreeToolbarProps = {
   attributes: AttributeConfig<VmRow>[];

@@ -12,6 +12,7 @@ import { VSphereVirtualMachinesList } from 'src/providers/details/tabs/VirtualMa
 import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import useShowSelectedVmsToggle from '@components/SelectedToggle/useShowSelectedVmsToggle';
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
 import { EmptyState, EmptyStateVariant, Spinner, Title } from '@patternfly/react-core';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
@@ -28,6 +29,11 @@ const AddVirtualMachinesTable = memo<AddVirtualMachinesTableProps>(
     const { t } = useForkliftTranslation();
     const [inventoryVmData, isVmDataLoading] = useInventoryVms({ provider: sourceProvider });
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const isFlatListSelectable = sourceProvider?.spec?.type !== PROVIDER_TYPES.vsphere;
+    const { GlobalActionToolbarItems, showSelectedOnly } = useShowSelectedVmsToggle<VmData>(
+      isFlatListSelectable,
+      selectedIds,
+    );
 
     const existingVmIds = useMemo((): Set<string> => {
       const planVms = getPlanVirtualMachines(plan);
@@ -37,6 +43,14 @@ const AddVirtualMachinesTable = memo<AddVirtualMachinesTableProps>(
     const availableVmData = useMemo(
       () => inventoryVmData.filter((vmData) => !existingVmIds.has(vmData.vm.id)),
       [inventoryVmData, existingVmIds],
+    );
+
+    const displayedVmData = useMemo(
+      () =>
+        showSelectedOnly
+          ? availableVmData.filter((vmData) => selectedIds.includes(getVmId(vmData)))
+          : availableVmData,
+      [availableVmData, selectedIds, showSelectedOnly],
     );
 
     const handleSelect = useCallback(
@@ -50,18 +64,26 @@ const AddVirtualMachinesTable = memo<AddVirtualMachinesTableProps>(
 
     const tableProps: ProviderVirtualMachinesListProps = useMemo(
       () => ({
+        ...(GlobalActionToolbarItems && { GlobalActionToolbarItems }),
         hasCriticalConcernFilter: true,
         initialSelectedIds: selectedIds,
         obj: {
           provider: sourceProvider,
-          vmData: availableVmData,
+          vmData: displayedVmData,
           vmDataLoading: isVmDataLoading,
         },
         onSelect: handleSelect,
         showActions: false,
         title: '',
       }),
-      [selectedIds, sourceProvider, availableVmData, isVmDataLoading, handleSelect],
+      [
+        GlobalActionToolbarItems,
+        selectedIds,
+        sourceProvider,
+        displayedVmData,
+        isVmDataLoading,
+        handleSelect,
+      ],
     );
 
     switch (sourceProvider?.spec?.type) {

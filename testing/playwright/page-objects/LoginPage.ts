@@ -21,7 +21,20 @@ export class LoginPage {
 
   async login(baseURL: string, username: string, password?: string): Promise<void> {
     await this.page.goto(baseURL);
-    await this.page.waitForSelector('#co-login-form', { timeout: 30000 });
+
+    // Local `npm run console` often runs with auth disabled — the console loads
+    // already authenticated and never shows #co-login-form.
+    const loginForm = this.page.locator('#co-login-form');
+    const alreadyAuthenticated = await Promise.race([
+      loginForm.waitFor({ state: 'visible', timeout: 30_000 }).then(() => false),
+      this.page.waitForURL(POST_LOGIN_URL_PATTERN, { timeout: 30_000 }).then(() => true),
+    ]).catch(() => false);
+
+    if (alreadyAuthenticated) {
+      return;
+    }
+
+    await loginForm.waitFor({ state: 'visible', timeout: 5000 });
     await this.page.fill('#inputUsername', username);
 
     if (password) {
