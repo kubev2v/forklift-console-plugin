@@ -102,11 +102,17 @@ const isStepActive = (pipe: V1beta1PlanStatusMigrationVmsPipeline): boolean =>
   pipe.phase !== taskStatuses.pending &&
   pipe.phase !== taskStatuses.completed;
 
+const hasPipelineBlockingFailure = (pipeline: V1beta1PlanStatusMigrationVmsPipeline[]): boolean =>
+  pipeline.some((pipe) => Boolean(pipe?.error));
+
 /**
  * Returns the pipeline step representing disk transfer progress.
  * For copy-offload migrations, actual transfer happens in DiskAllocation
  * while DiskTransferV2v runs instantly with no per-task progress.
- * Prefers the currently active step; falls back to the one with more progress.
+ * Prefers the currently active step; falls back to the one with more progress
+ * only when the pipeline has no blocking failures (a failed earlier step would
+ * leave DiskTransferV2v at 0 while DiskAllocation already shows 100% from PVC
+ * binding, producing a misleading "transfer complete" in the row cell).
  */
 export const getVMDiskTransferPipeline = (
   statusVM: V1beta1PlanStatusMigrationVms | undefined,
@@ -123,8 +129,10 @@ export const getVMDiskTransferPipeline = (
   const diskTransfer = diskSteps.find((pipe) => pipe.name.startsWith(DISK_TRANSFER_PREFIX));
   const diskAllocation = diskSteps.find((pipe) => pipe.name === DISK_ALLOCATION_NAME);
 
-  if ((diskTransfer?.progress?.completed ?? 0) > 0) return diskTransfer;
-  if ((diskAllocation?.progress?.completed ?? 0) > 0) return diskAllocation;
+  if (!hasPipelineBlockingFailure(pipeline)) {
+    if ((diskTransfer?.progress?.completed ?? 0) > 0) return diskTransfer;
+    if ((diskAllocation?.progress?.completed ?? 0) > 0) return diskAllocation;
+  }
 
   return diskTransfer ?? diskAllocation;
 };

@@ -47,12 +47,14 @@ export const planMigrationVirtualMachinesFields: ResourceField[] = [
     jsonPath: getVMDiskProgress,
     label: t('Disk transfer'),
     resourceFieldId: MigrationStatusVirtualMachinesTableResourceId.Transfer,
+    sortable: true,
   },
   {
     isVisible: true,
     jsonPath: getVMDiskProgress,
     label: t('Disk counter'),
     resourceFieldId: MigrationStatusVirtualMachinesTableResourceId.DiskCounter,
+    sortable: true,
   },
   {
     filter: {
