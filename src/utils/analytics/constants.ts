@@ -1,7 +1,3 @@
-import type { ProviderType } from '@forklift-ui/types';
-
-export type { ProviderType };
-
 export const ConsoleConfigMap = {
   ConfigKey: 'console-config.yaml',
   Name: 'console-config',

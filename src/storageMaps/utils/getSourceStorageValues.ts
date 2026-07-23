@@ -1,6 +1,7 @@
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import type { CategorizedSourceMappings } from 'src/plans/create/types';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
+import { getNutanixStorageContainerIds, isNutanixVm } from 'src/utils/types/nutanixInventory';
 
 import type {
   HypervVM,
@@ -127,6 +128,10 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
 
   const storageIdSet = selectedVMs.reduce<Set<string>>((acc, vm) => {
     let storageIds: string[] = [];
+
+    if (isNutanixVm(vm)) {
+      storageIds = getNutanixStorageContainerIds(vm);
+    }
 
     switch (vm.providerType) {
       case PROVIDER_TYPES.vsphere:

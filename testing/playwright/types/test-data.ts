@@ -229,6 +229,7 @@ export interface ProviderConfig {
   auto_target_credentials?: boolean;
   endpoint_type?: EndpointType;
   password?: string;
+  prism_type?: string;
   project_name?: string;
   region?: string;
   region_name?: string;
@@ -254,6 +255,7 @@ export interface ProviderData {
   name: string;
   openstackProjectName?: string;
   password?: string;
+  prismType?: string;
   projectName: string;
   regionName?: string;
   secretAccessKey?: string;

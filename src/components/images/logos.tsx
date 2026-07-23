@@ -1,5 +1,7 @@
 import ec2Img from './resources/aws-ec2.svg';
 import hypervImg from './resources/hyperv.svg';
+import nutanixImgDark from './resources/nutanix-dark.svg';
+import nutanixImgLight from './resources/nutanix-light.svg';
 import ovaImg from './resources/open-virtual-appliance.png';
 import openshiftImg from './resources/openshift-virtualization.svg';
 import openstackImg from './resources/openstack2.svg';
@@ -72,5 +74,24 @@ const vmLogoDark = (
     alt="PatternFly logo"
   />
 );
+
+const nutanixLogoLight = (
+  <img
+    className="forklift--create-provider-edit-card-title-logo"
+    src={nutanixImgLight}
+    alt="Nutanix AHV logo"
+  />
+);
+
+const nutanixLogoDark = (
+  <img
+    className="forklift--create-provider-edit-card-title-logo"
+    src={nutanixImgDark}
+    alt="Nutanix AHV logo"
+  />
+);
+
+export const getNutanixLogo = (isDarkTheme: boolean) =>
+  isDarkTheme ? nutanixLogoLight : nutanixLogoDark;
 
 export const getVmwareLogo = (isDarkTheme: boolean) => (isDarkTheme ? vmLogoLight : vmLogoDark);

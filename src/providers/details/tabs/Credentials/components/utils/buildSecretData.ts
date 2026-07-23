@@ -117,6 +117,13 @@ export const buildSecretData = (
       return hypervData;
     }
 
+    case PROVIDER_TYPES.nutanix:
+      return {
+        ...baseData,
+        password: encode(formData[ProviderFormFieldId.NutanixPassword] ?? ''),
+        user: encode(formData[ProviderFormFieldId.NutanixUsername] ?? ''),
+      };
+
     case PROVIDER_TYPES.ec2: {
       const ec2Region = provider?.spec?.settings?.ec2Region ?? '';
 

@@ -12,6 +12,7 @@ import type {
 import { STORAGE_NAMES } from '@utils/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { Ec2Storage } from '@utils/types/ec2Inventory';
+import type { NutanixStorageContainer } from '@utils/types/nutanixInventory';
 
 import useProviderInventory from './useProviderInventory';
 
@@ -30,6 +31,7 @@ const glanceStorage: InventoryStorage = {
 const subPath: Record<string, string> = {
   [PROVIDER_TYPES.ec2]: 'storages',
   [PROVIDER_TYPES.hyperv]: 'storages?detail=1',
+  [PROVIDER_TYPES.nutanix]: 'storagecontainers?detail=1',
   [PROVIDER_TYPES.openshift]: 'storageclasses?detail=1',
   [PROVIDER_TYPES.openstack]: 'volumetypes',
   [PROVIDER_TYPES.ova]: 'storages?detail=1',
@@ -43,7 +45,8 @@ export type InventoryStorage =
   | OpenstackVolumeType
   | OpenShiftStorageClass
   | TypedOvaResource
-  | Ec2Storage;
+  | Ec2Storage
+  | NutanixStorageContainer;
 
 export const useSourceStorages = (
   provider: V1beta1Provider | undefined,
