@@ -6,6 +6,7 @@ import type {
   ProviderVirtualMachine,
   VSphereVM,
 } from '@forklift-ui/types';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { Ec2VM } from '@utils/types/ec2VM';
 
 export type PowerState = 'on' | 'off' | 'unknown';
@@ -58,6 +59,15 @@ const getHypervVmPowerState = (vm: HypervVM): PowerState => {
   return 'unknown';
 };
 
+const getNutanixVmPowerState = (vm: ProviderVirtualMachine): PowerState => {
+  const powerState = (
+    vm as ProviderVirtualMachine & { powerState?: string }
+  )?.powerState?.toLowerCase();
+  if (powerState === 'on') return 'on';
+  if (powerState === 'off') return 'off';
+  return 'unknown';
+};
+
 const getEc2VmPowerState = (vm: Ec2VM): PowerState => {
   const state = vm?.object?.State?.Name?.toLowerCase();
 
@@ -75,6 +85,10 @@ const getEc2VmPowerState = (vm: Ec2VM): PowerState => {
 export const getVmPowerState = (vm: ProviderVirtualMachine | Ec2VM | undefined): PowerState => {
   if (!vm) {
     return 'unknown';
+  }
+
+  if ((vm?.providerType as string) === PROVIDER_TYPES.nutanix) {
+    return getNutanixVmPowerState(vm as ProviderVirtualMachine);
   }
 
   switch (vm?.providerType) {

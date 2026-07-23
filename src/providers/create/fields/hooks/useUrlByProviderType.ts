@@ -9,14 +9,16 @@ const WIN_RM_PORT = 5986;
 export const useUrlByProviderType = (): string => {
   const { watch } = useCreateProviderFormContext();
 
-  const [openshiftUrl, openstackUrl, ovirtUrl, vsphereUrl, hypervHost, providerType] = watch([
-    ProviderFormFieldId.OpenshiftUrl,
-    ProviderFormFieldId.OpenstackUrl,
-    ProviderFormFieldId.OvirtUrl,
-    ProviderFormFieldId.VsphereUrl,
-    ProviderFormFieldId.HypervHost,
-    ProviderFormFieldId.ProviderType,
-  ]);
+  const [openshiftUrl, openstackUrl, ovirtUrl, vsphereUrl, hypervHost, nutanixUrl, providerType] =
+    watch([
+      ProviderFormFieldId.OpenshiftUrl,
+      ProviderFormFieldId.OpenstackUrl,
+      ProviderFormFieldId.OvirtUrl,
+      ProviderFormFieldId.VsphereUrl,
+      ProviderFormFieldId.HypervHost,
+      ProviderFormFieldId.NutanixUrl,
+      ProviderFormFieldId.ProviderType,
+    ]);
 
   if (providerType === PROVIDER_TYPES.ec2) {
     return '';
@@ -36,6 +38,9 @@ export const useUrlByProviderType = (): string => {
   if (providerType === PROVIDER_TYPES.hyperv) {
     const host = (hypervHost as string)?.trim();
     return host ? `https://${host}:${WIN_RM_PORT}` : '';
+  }
+  if (providerType === PROVIDER_TYPES.nutanix) {
+    return nutanixUrl ?? '';
   }
 
   return '';

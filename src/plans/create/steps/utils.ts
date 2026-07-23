@@ -27,6 +27,7 @@ export const getMapResourceLabel = (
     }
     case PROVIDER_TYPES.ec2:
     case PROVIDER_TYPES.hyperv:
+    case PROVIDER_TYPES.nutanix:
     case PROVIDER_TYPES.ova:
     case PROVIDER_TYPES.vsphere:
     case PROVIDER_TYPES.openstack: {

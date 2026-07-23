@@ -95,6 +95,13 @@ export const getDefaultFormValues = (
       };
     }
 
+    case PROVIDER_TYPES.nutanix:
+      return {
+        ...baseValues,
+        [ProviderFormFieldId.NutanixPassword]: getDecodedValue(secret?.data?.password) ?? '',
+        [ProviderFormFieldId.NutanixUsername]: getDecodedValue(secret?.data?.user) ?? '',
+      };
+
     case PROVIDER_TYPES.ec2:
       return {
         ...baseValues,
