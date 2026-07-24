@@ -298,6 +298,20 @@ export class VirtualMachinesTable {
   }
 
   /**
+   * Switches the active filter attribute in the VsphereFolderTreeTable toolbar.
+   * Applies to the Provider VM tab and Plan Wizard VM step (both use VsphereFolderTreeTable).
+   * For the Plan Details VM list (StandardPageWithSelection), use the plan tab's own filter
+   * helpers (e.g. `verifyFilterOptionExists`, `applyFilter`) instead.
+   *
+   * @param attributeLabel - Visible label of the filter option (e.g. 'Guest OS', 'VM name')
+   */
+  async switchFilterAttribute(attributeLabel: string): Promise<void> {
+    const filterToggle = this.rootLocator.getByTestId('filter-attribute-toggle');
+    await filterToggle.click();
+    await this.page.getByRole('option', { name: attributeLabel, exact: true }).click();
+  }
+
+  /**
    * Tests concern button functionality by clicking the first concern button
    * and verifying the popover opens and can be closed
    * @returns true if a concern button was found and tested, false otherwise

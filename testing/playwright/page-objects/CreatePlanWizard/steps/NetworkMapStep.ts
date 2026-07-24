@@ -55,6 +55,34 @@ export class NetworkMapStep {
     };
   }
 
+  private async mapRemainingDefaultRowsToIgnore(alreadyConfiguredSources: string[]): Promise<void> {
+    const { rows, getRowText, getTargetSelect } = this.getMappingRowLocators();
+    const rowCount = await rows.count();
+
+    for (let i = 0; i < rowCount; i += 1) {
+      const row = rows.nth(i);
+      const rowText = await getRowText(row);
+
+      const alreadyConfigured = alreadyConfiguredSources.some((source) =>
+        rowText?.includes(source),
+      );
+      if (!alreadyConfigured) {
+        const targetSelect = getTargetSelect(row);
+        const currentText = await targetSelect.textContent();
+        if (currentText?.includes('Default network')) {
+          await targetSelect.click();
+          await this.waitForNetworkOptions();
+          await this.page.getByRole('option', { name: 'Ignore network' }).click();
+        }
+      }
+    }
+  }
+
+  private async waitForAtLeastOneRow(): Promise<void> {
+    const { rows } = this.getMappingRowLocators();
+    await expect(rows.first()).toBeVisible({ timeout: 15_000 });
+  }
+
   async configureMappings(mappings: { source: string; target: string }[]): Promise<void> {
     for (const mapping of mappings) {
       await this.selectTargetNetworkForSource(mapping.source, mapping.target);
@@ -89,9 +117,18 @@ export class NetworkMapStep {
         await this.page.getByRole('textbox').fill(networkMap.name);
       }
 
+      // Wait for auto-detected rows to load before configuring or mapping
+      await this.waitForAtLeastOneRow();
+
       if (!isEmpty(networkMap.mappings)) {
         await this.configureMappings(networkMap.mappings!);
       }
+
+      // Map any rows still on "Default network" to "Ignore network" to
+      // prevent the "more than one interface mapped to Default" wizard error.
+      // Rows already handled by the caller's explicit mappings are skipped.
+      const configuredSources = networkMap.mappings?.map((mapping) => mapping.source) ?? [];
+      await this.mapRemainingDefaultRowsToIgnore(configuredSources);
     }
   }
 
