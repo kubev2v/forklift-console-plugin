@@ -111,6 +111,17 @@ export const TEST_DATA = {
       productName: 'VMware ESXi',
       productVersion: '7.0.0',
     },
+    {
+      id: 'test-host-2',
+      name: 'test-host-2.example.com',
+      cluster: 'test-cluster-1',
+      status: 'green',
+      cpuSockets: 1,
+      cpuCores: 16,
+      totalMemory: 274877906944,
+      productName: 'VMware ESXi',
+      productVersion: '7.0.0',
+    },
   ],
 
   // Folder Data
@@ -145,7 +156,7 @@ export const API_ENDPOINTS = {
   networks: (providerType: string, uid: string) =>
     `**/forklift-inventory/providers/${providerType}/${uid}/networks`,
   datastores: (providerType: string, uid: string) =>
-    `**/forklift-inventory/providers/${providerType}/${uid}/datastores`,
+    `**/forklift-inventory/providers/${providerType}/${uid}/datastores?detail=1`,
   hosts: (providerType: string, uid: string) =>
     `**/forklift-inventory/providers/${providerType}/${uid}/hosts?detail=4`,
   folders: (providerType: string, uid: string) =>
