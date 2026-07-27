@@ -14,6 +14,7 @@ import { isEmpty } from '@utils/helpers';
 import { PlanStatuses } from '../details/components/PlanStatus/utils/types';
 import {
   canPlanReStart,
+  canPlanResumeConversion,
   canPlanStart,
   getPlanStatus,
   isPlanArchived,
@@ -25,6 +26,9 @@ import ArchiveModal from './components/ArchiveModal';
 import PlanCutoverMigrationModal from './components/CutoverModal/PlanCutoverMigrationModal';
 import DuplicateModal from './components/DuplicateModal/DuplicateModal';
 import PlanDeleteModal from './components/PlanDeleteModal';
+import PlanResumeConversionModal, {
+  type PlanResumeConversionModalProps,
+} from './components/ResumeConversionModal/PlanResumeConversionModal';
 import PlanStartMigrationModal, {
   type PlanStartMigrationModalProps,
 } from './components/StartPlanModal/PlanStartMigrationModal';
@@ -51,13 +55,14 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
 
   const canStart = canPlanStart(plan);
   const canReStart = canPlanReStart(plan);
+  const canResume = canPlanResumeConversion(plan);
   const isWarmAndExecuting = getPlanIsWarm(plan) && isPlanExecuting(plan);
   const isArchived = isPlanArchived(plan);
   const buttonStartLabel = canReStart ? t('Restart') : t('Start');
   const canScheduleCutover =
     isWarmAndExecuting && !isArchived && planStatus !== PlanStatuses.Pending;
 
-  const [activeMigration] = usePlanMigration(plan);
+  const [activeMigration, migrationLoaded] = usePlanMigration(plan);
   const hasCutover = canScheduleCutover && Boolean(activeMigration?.spec?.cutover);
 
   const onClickPlanStart = () => {
@@ -65,6 +70,10 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
       plan,
       title: buttonStartLabel,
     });
+  };
+
+  const onClickResumeConversion = () => {
+    launcher<PlanResumeConversionModalProps>(PlanResumeConversionModal, { plan });
   };
 
   const onClickPlanCutover = () => {
@@ -120,6 +129,16 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
       </DropdownItem>
       <DropdownItem
         value={2}
+        key="resume-conversion"
+        isDisabled={!migrationLoaded || !canResume || !isEmpty(activeMigration)}
+        onClick={onClickResumeConversion}
+        description={t('Re-run conversion using previously copied disks')}
+        data-testid="plan-actions-resume-conversion-menuitem"
+      >
+        {t('Resume conversion')}
+      </DropdownItem>
+      <DropdownItem
+        value={3}
         key="cutover"
         isDisabled={!canScheduleCutover}
         onClick={onClickPlanCutover}
@@ -127,7 +146,7 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
         {hasCutover ? t('Edit cutover') : t('Schedule cutover')}
       </DropdownItem>
       <DropdownItem
-        value={3}
+        value={4}
         key="duplicate"
         isDisabled={planStatus === PlanStatuses.CannotStart}
         onClick={onClickDuplicate}
@@ -136,14 +155,14 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
         {t('Duplicate')}
       </DropdownItem>
       <DropdownItem
-        value={4}
+        value={5}
         key="archive"
         isDisabled={!canDelete || planStatus === PlanStatuses.Archived}
         onClick={onClickArchive}
       >
         {t('Archive')}
       </DropdownItem>
-      <DropdownItem value={5} key="delete" isDisabled={!canDelete} onClick={onClickPlanDelete}>
+      <DropdownItem value={6} key="delete" isDisabled={!canDelete} onClick={onClickPlanDelete}>
         {t('Delete')}
       </DropdownItem>
     </DropdownList>

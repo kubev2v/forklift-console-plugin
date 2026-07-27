@@ -2,3 +2,4 @@ export const STATUS_POPOVER_VMS_COUNT_THRESHOLD = 5;
 
 export const PLAN_CONDITION_VALIDATING_VDDK = 'ValidatingVDDK';
 export const PLAN_CONDITION_VDDK_INIT_IMAGE_NOT_READY = 'VDDKInitImageNotReady';
+export const PLAN_CONDITION_CONVERSION_RESUMABLE = 'ConversionResumable';

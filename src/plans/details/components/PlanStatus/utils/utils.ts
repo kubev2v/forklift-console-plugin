@@ -13,6 +13,7 @@ import { t } from '@utils/i18n';
 import type { TargetPowerStateValue } from '@utils/plans/constants';
 
 import {
+  PLAN_CONDITION_CONVERSION_RESUMABLE,
   PLAN_CONDITION_VALIDATING_VDDK,
   PLAN_CONDITION_VDDK_INIT_IMAGE_NOT_READY,
   STATUS_POPOVER_VMS_COUNT_THRESHOLD,
@@ -236,6 +237,16 @@ export const canPlanReStart = (plan: V1beta1Plan) => {
 
   return (
     conditions?.includes(CATEGORY_TYPES.FAILED) ?? conditions?.includes(CATEGORY_TYPES.CANCELED)
+  );
+};
+
+export const canPlanResumeConversion = (plan: V1beta1Plan): boolean => {
+  return (
+    plan?.status?.conditions?.some(
+      (condition) =>
+        condition.type === PLAN_CONDITION_CONVERSION_RESUMABLE &&
+        condition.status === CONDITION_STATUS.TRUE,
+    ) ?? false
   );
 };
 
