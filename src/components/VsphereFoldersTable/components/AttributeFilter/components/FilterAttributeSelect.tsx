@@ -46,6 +46,7 @@ const FilterAttributeSelect = <T,>({
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
           ref={toggleRef}
+          data-testid="filter-attribute-toggle"
           onClick={() => {
             setOpen((open) => !open);
           }}
