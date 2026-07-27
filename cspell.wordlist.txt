@@ -74,9 +74,11 @@ konveyor
 kubeadm
 kubev2v
 kubevirt
+libguestfs
 linkify
 macspoofchk
 masq
+memsize
 metav
 mgmt
 milli
@@ -116,6 +118,7 @@ pvc
 pvcs
 rbd
 quickstarts
+smp
 snapshotting
 storageclass
 storageclasses

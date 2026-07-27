@@ -56,4 +56,6 @@ export const defaultValuesMap: Record<SettingsFields, string | number> = {
   [SettingsFields.MaxVMInFlight]: 20,
   [SettingsFields.PrecopyInterval]: 60,
   [SettingsFields.SnapshotStatusCheckRate]: 10,
+  [SettingsFields.VirtV2vMemsize]: 0,
+  [SettingsFields.VirtV2vSmp]: 0,
 };
