@@ -7,6 +7,7 @@ const FIELD_MAP = {
   aapTokenSecretName: 'aap_token_secret_name',
   aapUrl: 'aap_url',
   controllerMemoryLimit: 'controller_container_limits_memory',
+  controllerTransferNetwork: 'controller_transfer_network',
   cpuLimit: 'controller_container_limits_cpu',
   inventoryMemoryLimit: 'inventory_container_limits_memory',
   maxVmInFlight: 'controller_max_vm_inflight',
@@ -14,10 +15,17 @@ const FIELD_MAP = {
   snapshotPollingInterval: 'controller_snapshot_status_check_rate_seconds',
 } as const;
 
+// Empty string is the "None" baseline for controllerTransferNetwork (matches the
+// UI's blank-option behavior in EditControllerTransferNetwork.tsx). Tracking it here
+// ensures any NetworkAttachmentDefinition reference set during a test is cleared
+// before resourceManager.cleanupAll() deletes the NAD -- otherwise the ForkliftController
+// is left pointing at a deleted NAD, which makes every reconcile (including finalizer
+// teardown on delete) fail permanently.
 export const KNOWN_SETTINGS = {
   aapTokenSecretName: '',
   aapUrl: '',
   controllerMemoryLimit: '800Mi',
+  controllerTransferNetwork: '',
   cpuLimit: '500m',
   inventoryMemoryLimit: '1000Mi',
   maxVmInFlight: 10,
