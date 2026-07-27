@@ -3,7 +3,7 @@ import { defineConfig } from 'i18next-cli';
 export default defineConfig({
   extract: {
     defaultNS: 'plugin__forklift-console-plugin',
-    defaultValue: (key: string): string => key,
+    defaultValue: (key: string, _namespace: string, _language: string): string => key,
     extractFromComments: true,
     functions: ['t', '*.t'],
     input: ['src/**/*.{js,jsx,ts,tsx}', 'plugin-extensions.ts'],
