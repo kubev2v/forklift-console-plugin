@@ -19,10 +19,20 @@ import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
 const WINDOWS_VM_ID = 'vm-win-1';
 const WINDOWS_VM_NAME = 'test-windows-vm';
+const LINUX_VM_ID = 'vm-linux-1';
+const LINUX_VM_NAME = 'test-linux-vm';
 
-const buildMockPlan = () => {
-  const started = new Date(Date.now() - 12 * 60_000).toISOString();
-  const vmCreatedAt = new Date(Date.now() - 3 * 60_000).toISOString();
+const MILLISECONDS_PER_MINUTE = 60_000;
+const MIGRATION_STARTED_MINUTES_AGO = 12;
+const VM_CREATED_MINUTES_AGO = 3;
+
+const buildMockPlan = (): object => {
+  const started = new Date(
+    Date.now() - MIGRATION_STARTED_MINUTES_AGO * MILLISECONDS_PER_MINUTE,
+  ).toISOString();
+  const vmCreatedAt = new Date(
+    Date.now() - VM_CREATED_MINUTES_AGO * MILLISECONDS_PER_MINUTE,
+  ).toISOString();
 
   return {
     apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -43,7 +53,10 @@ const buildMockPlan = () => {
       pvcNameTemplateUseGenerateName: true,
       skipGuestConversion: false,
       targetNamespace: TEST_DATA.targetProject,
-      vms: [{ id: WINDOWS_VM_ID, name: WINDOWS_VM_NAME }],
+      vms: [
+        { id: WINDOWS_VM_ID, name: WINDOWS_VM_NAME },
+        { id: LINUX_VM_ID, name: LINUX_VM_NAME },
+      ],
       warm: false,
     },
     status: {
@@ -72,6 +85,18 @@ const buildMockPlan = () => {
                 phase: 'Running',
               },
               { name: 'PostHook', phase: 'Pending' },
+            ],
+            started,
+          },
+          {
+            // A second, unrelated VM ("Running", not post-migration setup) so the
+            // "Pipeline status" filter test can prove real filtering by asserting
+            // this VM is excluded, rather than the filter being a no-op.
+            id: LINUX_VM_ID,
+            name: LINUX_VM_NAME,
+            pipeline: [
+              { completed: started, name: 'Initialize', phase: 'Completed' },
+              { name: 'DiskTransfer', phase: 'Running' },
             ],
             started,
           },
@@ -158,14 +183,23 @@ test.describe('Plan Virtual Machines — Post-Migration Setup status', { tag: '@
       await expect(page.getByText(WINDOWS_VM_NAME, { exact: true })).toBeVisible();
     });
 
-    await test.step('"Pipeline status" filter offers "Post-migration setup" and filtering keeps the VM visible', async () => {
+    await test.step('"Pipeline status" filter offers "Post-migration setup" and filtering excludes non-matching VMs', async () => {
+      await virtualMachinesTab.verifyRowIsVisible({ Name: LINUX_VM_NAME });
+
       await virtualMachinesTab.verifyPrimaryFilterValues('status', ['Post-migration setup']);
       await virtualMachinesTab.applyPrimaryFilter('status', 'Post-migration setup');
+
       await virtualMachinesTab.verifyRowIsVisible({ Name: WINDOWS_VM_NAME });
+      await expect(page.getByText(LINUX_VM_NAME, { exact: true })).toHaveCount(0);
+
       await virtualMachinesTab.clearFilters();
+      await virtualMachinesTab.verifyRowIsVisible({ Name: LINUX_VM_NAME });
     });
 
     await test.step('Expanded pipeline table shows the "Post-migration setup" step and warning alert', async () => {
+      // Narrow to the Windows VM so "first" row is unambiguous now that the fixture
+      // has two VMs.
+      await virtualMachinesTab.search(WINDOWS_VM_NAME);
       await virtualMachinesTab.expandFirstVMDetailsRow();
       await expect(page.getByText('Post-migration setup', { exact: true })).toBeVisible();
       await expect(page.getByText('Do not access this VM')).toBeVisible();

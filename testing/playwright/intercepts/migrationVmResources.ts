@@ -1,5 +1,12 @@
 import type { Page } from '@playwright/test';
 
+type EmptyListPayload = {
+  apiVersion: string;
+  kind: string;
+  metadata: Record<string, never>;
+  items: never[];
+};
+
 /**
  * Mocks the Pod/Job/PVC/DataVolume list watches that
  * `useMigrationResources` (Plan > Virtual machines tab, migration-in-progress view) issues
@@ -8,7 +15,7 @@ import type { Page } from '@playwright/test';
  * workload resources.
  */
 export const setupMigrationVmResourceIntercepts = async (page: Page): Promise<void> => {
-  const emptyList = (kind: string, apiVersion: string) => ({
+  const emptyList = (kind: string, apiVersion: string): EmptyListPayload => ({
     apiVersion,
     kind: `${kind}List`,
     metadata: {},
