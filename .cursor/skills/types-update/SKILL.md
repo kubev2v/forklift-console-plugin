@@ -22,6 +22,7 @@ For conflict resolution rules, Jira payload template, CRD verification, and edge
 - `~/.jira-creds` configured (see `~/.cursor/rules/jira-api.mdc`)
 - `curl`, `jq`, `npm`, `node >= 20` installed
 - Java runtime (required by `openapi-generator-cli` in the types repo)
+- Types package depends on `@openshift/api-types` (installed via `npm ci` in the types repo). After every generation update, run `npm run align:k8s-base` (see Phase 3e / MTV-6057).
 
 ## Permissions — Cross-Project File Access
 
@@ -46,6 +47,7 @@ Types Update Progress:
 - [ ] Phase 2: Create Jira ticket
 - [ ] Phase 2.5: Update inventory types from Go source
 - [ ] Phase 3: Update generated types in forked repo
+- [ ] Phase 3e: Run `npm run align:k8s-base` (mandatory after generation)
 - [ ] GATE 1: User approves conflict resolution (if any)
 - [ ] Phase 4: Version bump, tracking update, and PR
 - [ ] GATE 2: User confirms types PR is merged
@@ -150,7 +152,7 @@ The hand-written inventory types in `$TYPES_REPO_DIR/src/types/` mirror Go struc
 
 > **Permissions reminder:** This phase edits files in the types repo (outside workspace). Use Shell with `required_permissions: ["all"]` for all commands and file writes. See the **Permissions** section above.
 
-**Scope**: `src/types/provider/` (per-provider types) and `src/types/provider/base/` (shared model types). The `src/types/secret/` and `src/types/k8s/` directories are NOT derivable from Go and remain manual.
+**Scope**: `src/types/provider/` (per-provider types) and `src/types/provider/base/` (shared model types). The `src/types/secret/` directory is NOT derivable from Go and remains manual. `src/types/k8s/` re-exports `K8sResourceCommon` / `ObjectMetadata` / `ManagedFieldsEntry` / `FieldsV1` from `@openshift/api-types` (plus a few local helpers) — do **not** regenerate those from Go or reintroduce a local `FieldsV1` clone.
 
 See [reference.md](reference.md) for the complete Go source file map, type mapping table, and edge cases.
 
@@ -287,31 +289,23 @@ Use AskQuestion:
 
 If no conflicts were found, skip this gate.
 
-### 3e. Fix ObjectMeta timestamp types
+### 3e. Align K8s base types with `@openshift/api-types`
 
-The `openapi-generator` maps OpenAPI `date-time` fields to TypeScript `Date`, but the Kubernetes API returns ISO 8601 strings and `@openshift-console/dynamic-plugin-sdk` expects `creationTimestamp` and `deletionTimestamp` as `string`. After running the update scripts, this **must** be fixed.
+After running the update scripts, align generated ObjectMeta / ManagedFieldsEntry models and remaining Date timestamps with `@openshift/api-types` / Console SDK expectations.
 
-Run the post-generation fix script (if it exists):
 ```bash
-npm run fix:timestamps
+npm run align:k8s-base
+# → node ./scripts/align-k8s-base/align.mjs
 ```
 
-If the script does not exist, manually fix all ObjectMeta types:
-```bash
-for f in $(grep -rl "Timestamp?: Date" src/generated/); do
-  sed -i '' \
-    -e 's/creationTimestamp?: Date;/creationTimestamp?: string;/' \
-    -e 's/deletionTimestamp?: Date;/deletionTimestamp?: string;/' \
-    -e "s/(new Date(json\['creationTimestamp'\]))/json['creationTimestamp']/" \
-    -e "s/(new Date(json\['deletionTimestamp'\]))/json['deletionTimestamp']/" \
-    -e "s/((value\['creationTimestamp'\]).toISOString())/value['creationTimestamp']/" \
-    -e "s/((value\['deletionTimestamp'\]).toISOString())/value['deletionTimestamp']/" \
-    "$f"
-  echo "Fixed: $f"
-done
-```
+This Node script (templates under `scripts/align-k8s-base/templates/`):
 
-**This step is mandatory.** Skipping it causes ~370 TypeScript errors in the consumer project where Forklift CRD types become incompatible with the Console SDK's `K8sResourceCommon`.
+1. Overwrites the six generated ObjectMeta / ManagedFieldsEntry model files with thin shims that alias to `ObjectMetadata` / `ManagedFieldsEntry` from `@openshift/api-types` (keeping FromJSON/ToJSON stubs)
+2. Converts remaining `Date` timestamp fields under `src/generated/**/*.ts` to `string`
+
+**This step is mandatory.** Skipping it regenerates full ObjectMeta models that drift from the Console SDK's `K8sResourceCommon` / `ObjectMetadata` and causes widespread TypeScript errors in the consumer project.
+
+See MTV-6057 / types repo `MAINTENANCE.md` (Post-Generation Fixes).
 
 ### 3f. Build verification
 

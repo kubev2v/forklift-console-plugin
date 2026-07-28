@@ -338,7 +338,7 @@ If a new provider is added upstream (e.g., `ec2`), add it to all union types and
 ### Files to leave untouched
 
 - `src/types/secret/` -- K8s Secret data shapes, not derivable from Go inventory structs
-- `src/types/k8s/` -- small K8s helper types (`K8sResourceCommon`, `K8sResourceCondition`, `V1NetworkAttachmentDefinition`)
+- `src/types/k8s/` -- re-exports `K8sResourceCommon`, `ObjectMetadata`, `ManagedFieldsEntry`, `FieldsV1` from `@openshift/api-types`; also local helpers (`K8sResourceCondition`, `V1NetworkAttachmentDefinition`). Do not hand-clone FieldsV1/ObjectMeta here.
 - `src/types/Modify.ts` -- utility type
 - `src/types/MustGatherResponse.ts` -- must-gather API response, not from inventory
 - `src/types/constants/` -- UI constants
@@ -371,18 +371,15 @@ Common patterns:
 - **Field type changed**: compare the old and new model file for the specific type. Common changes: `string | undefined` becoming `string`, optional fields becoming required, enum values changing.
 - **New type conflicts in consumer**: if the consumer defines a local type with the same name as a new export, rename the local type.
 
-### ObjectMeta `creationTimestamp: Date` breaks SDK compatibility
+### ObjectMeta / ManagedFieldsEntry drift from `@openshift/api-types`
 
-**Root cause**: The `openapi-generator` maps OpenAPI `date-time` format to TypeScript `Date`. Kubernetes ObjectMeta fields `creationTimestamp` and `deletionTimestamp` are `date-time` in the spec, so the generator produces `Date`. However, the Kubernetes API returns ISO 8601 strings, and `@openshift-console/dynamic-plugin-sdk` types these as `string` in its `ObjectMetadata`.
+**Root cause**: OpenAPI generation produces separate ObjectMeta / ManagedFieldsEntry models (and `Date` timestamps) that drift from Console SDK expectations (`ObjectMetadata`, recursive `FieldsV1`, string timestamps from `@openshift/api-types`).
 
-**Symptom**: ~370 TS errors like `Type 'Date | undefined' is not assignable to type 'string | undefined'` on every `useK8sWatchResource`, `k8sPatch`, `getName`, etc. call that touches a Forklift CRD type.
+**Symptom**: Widespread TS errors on `useK8sWatchResource`, `k8sPatch`, `getName`, etc. when Forklift CRD types no longer match the SDK's `K8sResourceCommon` / `ObjectMetadata`.
 
-**Affected files**: All `ObjectMeta` types across Kubernetes, KubeVirt, and CDI:
-- `src/generated/kubernetes/models/IoK8sApimachineryPkgApisMetaV1ObjectMeta.ts`
-- `src/generated/kubevirt/models/K8sIoApimachineryPkgApisMetaV1ObjectMeta.ts`
-- `src/generated/containerized-data-importer/models/V1ObjectMeta.ts`
+**Affected files**: ObjectMeta / ManagedFieldsEntry models across Kubernetes, KubeVirt, and CDI (shimmed by align script), plus any remaining `Date` timestamp fields under `src/generated/`.
 
-**Fix**: Run `npm run fix:timestamps` after every update script run. See Phase 3 step 3e in the skill. This was introduced after the Kubernetes v1.36.0 update (types repo PR #26).
+**Fix**: Run `npm run align:k8s-base` after every update script run. See Phase 3 step 3e in the skill. Introduced by MTV-6057 (supersedes older `fix:timestamps` / `fix:fields-v1` scripts and types repo PR #26).
 
 ### Inventory type field casing changes
 
