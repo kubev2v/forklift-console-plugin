@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 import { DeleteModal, type DeleteModalProps } from 'src/components/modals/DeleteModal/DeleteModal';
+import { useOwnerPlanActionGate } from 'src/plans/hooks/useOwnerPlanActionGate';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModel, StorageMapModelRef } from '@forklift-ui/types';
@@ -22,6 +23,7 @@ export const StorageMapActionsDropdownItems = ({
   const navigate = useNavigate();
 
   const { obj: storageMap } = data;
+  const { disabledReason, isBlocked } = useOwnerPlanActionGate(storageMap);
 
   const storageMapURL = getResourceUrl({
     name: storageMap?.metadata?.name,
@@ -40,6 +42,8 @@ export const StorageMapActionsDropdownItems = ({
     <DropdownItem
       value={0}
       key="edit"
+      isDisabled={isBlocked}
+      description={disabledReason}
       onClick={() => {
         navigate(isDetailsPage ? `${storageMapURL}/yaml` : storageMapURL)?.catch(() => undefined);
       }}
@@ -50,7 +54,8 @@ export const StorageMapActionsDropdownItems = ({
     <DropdownItem
       value={1}
       key="delete"
-      isDisabled={!data?.permissions?.canDelete || !storageMap}
+      isDisabled={isBlocked || !data?.permissions?.canDelete || !storageMap}
+      description={disabledReason}
       onClick={onDelete}
     >
       {t('Delete storage map')}
