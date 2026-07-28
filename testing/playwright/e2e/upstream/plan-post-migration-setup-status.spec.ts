@@ -212,14 +212,10 @@ test.describe('Plan Virtual Machines — Post-Migration Setup status', { tag: '@
   test('[Known bug] "Pipeline status" column text should read "Post-migration setup" while WaitForGuestReboots is running', async ({
     page,
   }) => {
-    // MigrationStatusLabel (rendered in this column via fields.tsx) sources its text from a
-    // stale, duplicated getVMMigrationStatus in
-    // src/plans/details/tabs/Details/components/MigrationsSection/components/utils/utils.ts,
-    // which lacks the isPostMigrationSetup branch present in the canonical implementation
-    // (MigrationStatusVirtualMachineList/utils/utils.ts). It currently falls through to
-    // "Running". Remove test.fail() once the duplicate is consolidated and this passes for
-    // real -- see docs/test-report-mtv-5509-post-migration-setup.md.
-    test.fail(true, 'Known bug — filed as a follow-up to MTV-5509/MTV-5507');
+    // MTV-6278: MigrationStatusLabel reads a stale duplicate of getVMMigrationStatus that lacks
+    // the isPostMigrationSetup branch, so it falls through to "Running". Remove test.fail() once
+    // MTV-6278 lands.
+    test.fail(true, 'Known bug MTV-6278 — filed as a follow-up to MTV-5509/MTV-5507');
 
     const planDetailsPage = new PlanDetailsPage(page);
     const { virtualMachinesTab } = planDetailsPage;
