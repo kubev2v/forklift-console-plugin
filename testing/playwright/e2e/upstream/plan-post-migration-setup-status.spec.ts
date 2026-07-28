@@ -5,17 +5,9 @@ import { setupForkliftIntercepts, setupMigrationVmResourceIntercepts } from '../
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
-/**
- * MTV-5509 / MTV-5507 — "Post-Migration Setup" phase in the migration progress UI.
- *
- * Fixture-driven (no live cluster / real Windows VM needed): mocks a Plan whose
- * `status.migration.vms[0].pipeline` has the backend's `WaitForGuestReboots` step
- * `Running`, which is what the UI renders while a migrated Windows VM is still
- * rebooting to finish driver installation.
- *
- * See docs/test-report-mtv-5509-post-migration-setup.md for the live-cluster
- * exploration this spec formalizes into a fast, repeatable regression test.
- */
+// MTV-5509 / MTV-5507 — mocks a Plan with the `WaitForGuestReboots` pipeline step
+// `Running`: the phase where a migrated Windows VM is still rebooting to finish
+// driver installation.
 
 const WINDOWS_VM_ID = 'vm-win-1';
 const WINDOWS_VM_NAME = 'test-windows-vm';
