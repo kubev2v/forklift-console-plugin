@@ -1,10 +1,10 @@
-import { type FC, useContext } from 'react';
+import { type FC, memo, useContext } from 'react';
 import { type LearningExperienceSubTopic, ListStyleType } from 'src/onlineHelp/utils/types';
 
 import { ExpandableSection } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
 
-import { LearningExperienceContext } from '../../learningExperienceDrawer/context/LearningExperienceContext';
+import { AccordionContext } from '../../learningExperienceDrawer/context/AccordionContext';
 
 import SubTopicsContent from './components/SubTopicsContent';
 import TopicTitle from './components/TopicTitle';
@@ -17,7 +17,7 @@ type HelpTopicSectionProps = {
 
 const HelpTopicSection: FC<HelpTopicSectionProps> = ({ index, listStyleType, topic }) => {
   const { closeExpansionItem, openExpansionItem, openExpansionItems } =
-    useContext(LearningExperienceContext);
+    useContext(AccordionContext);
 
   const isExpanded = openExpansionItems.includes(topic.id);
   const hasSubTopics = Boolean(topic.subTopics);
@@ -43,6 +43,8 @@ const HelpTopicSection: FC<HelpTopicSectionProps> = ({ index, listStyleType, top
         !hasSubTopics && 'm-non-expandable',
         topic.subListStyleType === ListStyleType.DESCRIPTIONS && 'm-has-descriptions',
       )}
+      contentId={`help-topic-content-${topic.id}`}
+      toggleId={`help-topic-toggle-${topic.id}`}
       toggleContent={
         <div className="pf-v6-u-ml-sm">
           <TopicTitle title={topic.title} listStyleType={listStyleType} prefix={prefix} />
@@ -56,4 +58,4 @@ const HelpTopicSection: FC<HelpTopicSectionProps> = ({ index, listStyleType, top
   );
 };
 
-export default HelpTopicSection;
+export default memo(HelpTopicSection);

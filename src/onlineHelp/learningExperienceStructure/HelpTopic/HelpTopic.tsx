@@ -1,4 +1,4 @@
-import { type FC, useContext } from 'react';
+import { type FC, memo, useContext } from 'react';
 import { ListStyleType } from 'src/onlineHelp/utils/types';
 
 import { Content } from '@patternfly/react-core';
@@ -51,4 +51,4 @@ const HelpTopic: FC = () => {
   );
 };
 
-export default HelpTopic;
+export default memo(HelpTopic);

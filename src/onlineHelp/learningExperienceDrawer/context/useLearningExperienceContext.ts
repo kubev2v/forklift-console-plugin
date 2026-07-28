@@ -13,9 +13,6 @@ export const useLearningExperienceContext = (): LearningExperienceContextType =>
   const [isLearningExperienceOpen, setIsLearningExperienceOpen] = useState(
     persistedState.isLearningExperienceOpen ?? false,
   );
-  const [openExpansionItems, setOpenExpansionItems] = useState<string[]>(
-    persistedState.openExpansionItems ?? [],
-  );
   const [scrollPosition, setScrollPosition] = useState(persistedState.scrollPosition ?? 0);
   const [referenceScrollPositions, setReferenceScrollPositions] = useState<Record<string, number>>(
     persistedState.referenceScrollPositions ?? {},
@@ -36,28 +33,6 @@ export const useLearningExperienceContext = (): LearningExperienceContextType =>
   const closeLearningExperience = useCallback(() => {
     setIsLearningExperienceOpen(false);
     persistValue('isLearningExperienceOpen', false);
-  }, []);
-
-  const openExpansionItem = useCallback((itemId: string) => {
-    setOpenExpansionItems((prev) => {
-      if (prev.includes(itemId)) {
-        return prev;
-      }
-      const newItems = [...prev, itemId];
-      persistValue('openExpansionItems', newItems);
-      return newItems;
-    });
-  }, []);
-
-  const closeExpansionItem = useCallback((itemId: string) => {
-    setOpenExpansionItems((prev) => {
-      if (prev.includes(itemId)) {
-        const newItems = prev.filter((openId) => openId !== itemId);
-        persistValue('openExpansionItems', newItems);
-        return newItems;
-      }
-      return prev;
-    });
   }, []);
 
   const setDataItem = useCallback((dataItem: string, value: unknown): void => {
@@ -106,13 +81,10 @@ export const useLearningExperienceContext = (): LearningExperienceContextType =>
   return useMemo(
     () => ({
       clearData,
-      closeExpansionItem,
       closeLearningExperience,
       data,
       drawerWidth,
       isLearningExperienceOpen,
-      openExpansionItem,
-      openExpansionItems,
       openLearningExperience,
       referenceScrollPositions,
       scrollPosition,
@@ -125,13 +97,10 @@ export const useLearningExperienceContext = (): LearningExperienceContextType =>
     }),
     [
       clearData,
-      closeExpansionItem,
       closeLearningExperience,
       data,
       drawerWidth,
       isLearningExperienceOpen,
-      openExpansionItem,
-      openExpansionItems,
       openLearningExperience,
       referenceScrollPositions,
       scrollPosition,
