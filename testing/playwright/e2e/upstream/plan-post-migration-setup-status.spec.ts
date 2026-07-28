@@ -171,8 +171,7 @@ test.describe('Plan Virtual Machines — Post-Migration Setup status', { tag: '@
 
     await test.step('VM row is visible but its name is not a navigable link', async () => {
       await virtualMachinesTab.verifyRowIsVisible({ Name: WINDOWS_VM_NAME });
-      await expect(page.getByRole('link', { name: WINDOWS_VM_NAME, exact: true })).toHaveCount(0);
-      await expect(page.getByText(WINDOWS_VM_NAME, { exact: true })).toBeVisible();
+      await virtualMachinesTab.postMigrationSetup.verifyVMNameIsNotLink(WINDOWS_VM_NAME);
     });
 
     await test.step('"Pipeline status" filter offers "Post-migration setup" and filtering excludes non-matching VMs', async () => {
@@ -182,7 +181,7 @@ test.describe('Plan Virtual Machines — Post-Migration Setup status', { tag: '@
       await virtualMachinesTab.applyPrimaryFilter('status', 'Post-migration setup');
 
       await virtualMachinesTab.verifyRowIsVisible({ Name: WINDOWS_VM_NAME });
-      await expect(page.getByText(LINUX_VM_NAME, { exact: true })).toHaveCount(0);
+      await virtualMachinesTab.verifyVMNotVisible(LINUX_VM_NAME);
 
       await virtualMachinesTab.clearFilters();
       await virtualMachinesTab.verifyRowIsVisible({ Name: LINUX_VM_NAME });
@@ -193,11 +192,7 @@ test.describe('Plan Virtual Machines — Post-Migration Setup status', { tag: '@
       // has two VMs.
       await virtualMachinesTab.search(WINDOWS_VM_NAME);
       await virtualMachinesTab.expandFirstVMDetailsRow();
-      await expect(page.getByText('Post-migration setup', { exact: true })).toBeVisible();
-      await expect(page.getByText('Do not access this VM')).toBeVisible();
-      await expect(
-        page.getByText(/installing drivers and completing post-migration setup/iu),
-      ).toBeVisible();
+      await virtualMachinesTab.postMigrationSetup.verifyDetailsVisible();
     });
   });
 

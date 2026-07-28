@@ -6,16 +6,19 @@ import { AddVirtualMachinesModal } from '../modals/AddVirtualMachinesModal';
 
 import { ConcernsHelpers } from './ConcernsHelpers';
 import { PlanVmInstanceTypeModal } from './PlanVmInstanceTypeModal';
+import { PostMigrationSetupHelpers } from './PostMigrationSetupHelpers';
 
 /** VirtualMachines tab for Plan Details page (flat grid, no folder hierarchy). */
 export class VirtualMachinesTab extends VirtualMachinesTable {
   readonly concerns: ConcernsHelpers;
   readonly editVmInstanceTypeModal: PlanVmInstanceTypeModal;
+  readonly postMigrationSetup: PostMigrationSetupHelpers;
 
   constructor(page: Page) {
     super(page, page.locator('main'));
     this.concerns = new ConcernsHelpers(page);
     this.editVmInstanceTypeModal = new PlanVmInstanceTypeModal(page);
+    this.postMigrationSetup = new PostMigrationSetupHelpers(page);
   }
 
   private async dismissOpenModals(): Promise<void> {
@@ -219,19 +222,21 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   get powerStateOptionAuto() {
     return this.page.getByRole('option', { name: 'Retain source VM power state', exact: true });
   }
+
   get powerStateOptionInherit() {
     return this.page.getByTestId('power-state-option-inherit');
   }
+
   get powerStateOptionOff() {
     return this.page.getByRole('option', { name: 'Powered off', exact: true });
   }
+
   get powerStateOptionOn() {
     return this.page.getByRole('option', { name: 'Powered on', exact: true });
   }
   get renameTargetNameInput() {
     return this.page.getByTestId('vm-target-name-input');
   }
-
   async renameVM(sourceName: string, targetName: string): Promise<void> {
     await this.search(sourceName);
     const vmRow = this.table.getRow({ Name: sourceName });
@@ -253,11 +258,9 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.cancelButton.click();
     await this.clearAllFilters();
   }
-
   get saveButton() {
     return this.page.getByRole('button', { name: /save|confirm/iu });
   }
-
   async selectVirtualMachine(vmName: string): Promise<void> {
     await this.table.selectRow({ Name: vmName });
   }
@@ -265,9 +268,11 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   get sharedDisksModalSaveButton() {
     return this.editSharedDisksModal.getByTestId('modal-confirm-button');
   }
+
   get sharedDisksOptionDisabled() {
     return this.editSharedDisksModal.getByTestId('shared-disks-option-disabled');
   }
+
   get sharedDisksOptionEnabled() {
     return this.editSharedDisksModal.getByTestId('shared-disks-option-enabled');
   }
@@ -275,7 +280,6 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   get sharedDisksOptionInherit() {
     return this.editSharedDisksModal.getByTestId('shared-disks-option-inherit');
   }
-
   override async sortByColumn(columnName: string): Promise<void> {
     const columnHeader = this.vmTable
       .getByRole('columnheader')
@@ -285,7 +289,6 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
       .toBeVisible()
       .catch(() => undefined);
   }
-
   async sortByConcerns(): Promise<void> {
     await this.page.getByTestId('concerns-column-header').click();
   }
