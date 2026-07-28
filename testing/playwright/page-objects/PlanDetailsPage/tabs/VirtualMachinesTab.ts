@@ -38,6 +38,18 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.page.keyboard.press('Escape');
   }
 
+  /**
+   * Applies a "primary" enum filter (e.g. "Pipeline status") which renders its own
+   * always-visible toggle in the toolbar, unlike secondary filters that live behind
+   * the "attribute-filter-toggle" attribute selector. `filterId` is the field's
+   * `resourceFieldId` (e.g. `'status'`), matching the `filter-toggle-${filterId}` testid.
+   */
+  async applyPrimaryFilter(filterId: string, value: string): Promise<void> {
+    await this.page.getByTestId(`filter-toggle-${filterId}`).click();
+    await this.page.getByTestId(`filter-value-${value}`).click();
+    await this.page.keyboard.press('Escape');
+  }
+
   get cancelButton() {
     return this.page.getByTestId('modal-cancel-button');
   }
@@ -319,6 +331,15 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
       }
     } else {
       expect(await this.page.getByRole('menuitem').count()).toBeGreaterThan(0);
+    }
+    await this.page.keyboard.press('Escape');
+  }
+
+  /** See `applyPrimaryFilter` for why primary filters need their own verification helper. */
+  async verifyPrimaryFilterValues(filterId: string, expectedValues: string[]): Promise<void> {
+    await this.page.getByTestId(`filter-toggle-${filterId}`).click();
+    for (const value of expectedValues) {
+      await expect(this.page.getByTestId(`filter-value-${value}`)).toBeVisible();
     }
     await this.page.keyboard.press('Escape');
   }
