@@ -17,7 +17,9 @@ export const hasMultiplePodNetworkMappings = (
 
   return Object.values(vms).some((vm) => {
     const networks = getVMNetworksOrProfiles(vm, oVirtNicProfiles);
-    if (!networks || !Array.isArray(networks)) return false;
+    if (!networks || !Array.isArray(networks)) {
+      return false;
+    }
 
     const uniqueNetworks = networks.filter((value, index, array) => array.indexOf(value) === index);
     const mappedNetworks = uniqueNetworks.filter((id) => netIdsMappedToPodNet.has(id as string));

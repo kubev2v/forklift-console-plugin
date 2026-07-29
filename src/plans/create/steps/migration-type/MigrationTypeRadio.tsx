@@ -38,7 +38,9 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
 
   const isVddkInitImageNotSet = isEmpty(sourceProvider?.spec?.settings?.vddkInitImage);
 
-  if (!canRender) return null;
+  if (!canRender) {
+    return null;
+  }
 
   const { description, helpBody, helpLink, PreviewLabel } = getMigrationTypeConfig(migrationType);
   const isWarmOptionSelected =

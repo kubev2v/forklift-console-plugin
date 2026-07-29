@@ -9,7 +9,9 @@ import type { HypervHost } from '../types';
 const BYTES_PER_GIB = 1024 ** 3;
 
 const formatBytes = (bytes: number): string => {
-  if (!bytes) return '0 GiB';
+  if (!bytes) {
+    return '0 GiB';
+  }
   const gb = bytes / BYTES_PER_GIB;
   return `${gb.toFixed(1)} GiB`;
 };

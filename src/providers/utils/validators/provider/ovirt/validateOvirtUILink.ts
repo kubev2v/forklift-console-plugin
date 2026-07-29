@@ -36,11 +36,12 @@ export const validateOvirtUILink = (uiLink: string | number): ValidationMsg => {
     };
   }
 
-  if (!trimmedUrl.endsWith('ovirt-engine') && !trimmedUrl.endsWith('ovirt-engine/'))
+  if (!trimmedUrl.endsWith('ovirt-engine') && !trimmedUrl.endsWith('ovirt-engine/')) {
     return {
       msg: 'The link for the Red Hat Virtualization Manager landing page does not end with a /ovirt-engine path, for example: https://rhv-host-example.com/ovirt-engine.',
       type: ValidationState.Warning,
     };
+  }
 
   return {
     msg: 'The link for the Red Hat Virtualization Manager landing page. For example, https://rhv-host-example.com/ovirt-engine.',

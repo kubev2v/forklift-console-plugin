@@ -95,7 +95,9 @@ const VmMigrationsHistoryChart = ({
       {
         eventHandlers: {
           onClick: () => {
-            if (!activeInterval) return;
+            if (!activeInterval) {
+              return;
+            }
             navigateToHistoryTab({
               interval: activeInterval,
               navigate,

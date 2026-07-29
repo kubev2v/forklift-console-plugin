@@ -96,7 +96,7 @@ export const createEslintConfig = () =>
         '@typescript-eslint/naming-convention': 'off',
         '@typescript-eslint/no-deprecated': 'off',
         '@typescript-eslint/no-dynamic-delete': 'off',
-        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-explicit-any': 'error',
         '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
         '@typescript-eslint/no-magic-numbers': 'off',
         '@typescript-eslint/no-misused-promises': [
@@ -120,6 +120,14 @@ export const createEslintConfig = () =>
             enforceForJSX: true,
           },
         ],
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          {
+            argsIgnorePattern: '^_',
+            caughtErrorsIgnorePattern: '^_',
+            varsIgnorePattern: '^_',
+          },
+        ],
         '@typescript-eslint/prefer-readonly-parameter-types': 'off',
         '@typescript-eslint/strict-boolean-expressions': 'off',
         '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
@@ -127,6 +135,7 @@ export const createEslintConfig = () =>
         camelcase: ['error', { allow: ['required_'] }],
         'capitalized-comments': 'off',
         complexity: 'off',
+        curly: 'error',
         'id-length': ['error', { exceptions: ['t', 'e', 'x', 'y', 'a', 'b', '_', 'i'] }],
         'import/no-named-as-default-member': 'off',
         'import/no-unresolved': 'off',
@@ -205,7 +214,7 @@ export const createEslintConfig = () =>
         ],
         'no-ternary': 'off',
         'no-undefined': 'off',
-        'no-warning-comments': 'off',
+        'no-warning-comments': 'warn',
         'one-var': 'off',
         'perfectionist/sort-classes': [
           'error',
@@ -267,7 +276,6 @@ export const createEslintConfig = () =>
 
         // Rules redundant with TypeScript compiler + IDE
         '@typescript-eslint/no-redeclare': 'off',
-        '@typescript-eslint/no-unused-vars': 'off',
         'import/default': 'off',
         'import/named': 'off',
         'import/namespace': 'off',
@@ -325,13 +333,16 @@ export const createEslintConfig = () =>
         '@typescript-eslint/no-unsafe-call': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
         '@typescript-eslint/no-unsafe-return': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
         // Many page-object getter methods are async for API consistency but call
         // Playwright locator APIs that return Promises without needing await.
         // TODO: audit and fix each site, then remove this override.
         '@typescript-eslint/require-await': 'off',
+        'max-lines': 'off',
         'max-lines-per-function': 'off',
         'no-await-in-loop': 'off',
         'no-console': 'off',
+        'no-warning-comments': 'off',
         'perfectionist/sort-objects': 'off',
         'react-refresh/only-export-components': 'off',
         'require-unicode-regexp': 'off',

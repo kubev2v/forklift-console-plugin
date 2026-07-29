@@ -20,7 +20,9 @@ const OpenshiftDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { permissions, provider } = data;
 
-  if (!provider || !permissions) return null;
+  if (!provider || !permissions) {
+    return null;
+  }
 
   return (
     <DescriptionList

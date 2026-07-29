@@ -123,7 +123,7 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
               remove(index);
             }
           },
-          tooltip: (index) => {
+          tooltip: (_index) => {
             if (netMappingFields.length <= 1) {
               return t('At least one network mapping must be provided.');
             }

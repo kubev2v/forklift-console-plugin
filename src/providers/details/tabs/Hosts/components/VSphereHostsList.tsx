@@ -46,8 +46,9 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  if (!provider || !namespace || !permissions || !inventoryHosts)
+  if (!provider || !namespace || !permissions || !inventoryHosts) {
     return <Bullseye className="text-muted">{t('No data available.')}</Bullseye>;
+  }
 
   const hostsData = matchHostsToInventory(inventoryHosts, hosts, provider);
 

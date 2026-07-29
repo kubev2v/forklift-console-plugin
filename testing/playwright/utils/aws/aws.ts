@@ -12,7 +12,9 @@ const SKIP_MESSAGE = 'Skipped: no EC2 provider in .providers.json (non-AWS clust
  * The presence of such an entry indicates the cluster is running on AWS.
  */
 const isAwsPlatform = (): boolean => {
-  if (!existsSync(PROVIDERS_FILE)) return false;
+  if (!existsSync(PROVIDERS_FILE)) {
+    return false;
+  }
 
   try {
     const providers = JSON.parse(readFileSync(PROVIDERS_FILE, 'utf-8')) as Record<

@@ -17,7 +17,9 @@ const RootDiskDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, sho
   const { t } = useForkliftTranslation();
   const launcher = useModal();
 
-  if (!shouldRender) return null;
+  if (!shouldRender) {
+    return null;
+  }
 
   const rootDisk = getRootDisk(plan);
 

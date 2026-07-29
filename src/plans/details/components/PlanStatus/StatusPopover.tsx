@@ -60,7 +60,9 @@ const StatusPopover: FC<StatusPopoverProps> = ({ count, plan, status, vms }) => 
           <StackItem>
             <List>
               {vms.map(({ failedTaskName, name }, idx) => {
-                if (idx >= STATUS_POPOVER_VMS_COUNT_THRESHOLD) return null; // show only first items
+                if (idx >= STATUS_POPOVER_VMS_COUNT_THRESHOLD) {
+                  return null;
+                } // show only first items
                 return (
                   <ListItem key={name}>
                     {name}

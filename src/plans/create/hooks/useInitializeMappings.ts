@@ -31,7 +31,9 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
   const autoMappedSourcesRef = useRef(new Set<string>());
 
   const mappedSourceNames = useMemo(() => {
-    if (!currentMap?.length) return new Set<string>();
+    if (!currentMap?.length) {
+      return new Set<string>();
+    }
 
     return new Set(
       currentMap

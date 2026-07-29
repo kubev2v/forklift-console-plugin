@@ -14,10 +14,14 @@ import { isEmpty } from '@utils/helpers';
 
 const createIndexedBase64Object = (encodedString: string): Record<number, string> | undefined => {
   const list: string[] = JSON.parse(encodedString || '[]');
-  if (isEmpty(list) || list.every((item) => !item)) return undefined;
+  if (isEmpty(list) || list.every((item) => !item)) {
+    return undefined;
+  }
 
   const result = list.reduce<Record<number, string>>((acc, item, index) => {
-    if (item) acc[index] = btoa(item);
+    if (item) {
+      acc[index] = btoa(item);
+    }
     return acc;
   }, {});
 
@@ -111,7 +115,9 @@ const deleteCurrentSecret = async (
   secretName: string | undefined,
   namespace: string | undefined,
 ): Promise<void> => {
-  if (!secretName) return;
+  if (!secretName) {
+    return;
+  }
 
   await k8sDelete({
     model: SecretModel,

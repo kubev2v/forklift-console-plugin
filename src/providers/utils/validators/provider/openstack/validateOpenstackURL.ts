@@ -33,11 +33,12 @@ export const validateOpenstackURL = (url: string | number | undefined): Validati
     };
   }
 
-  if (!trimmedUrl.endsWith('v3'))
+  if (!trimmedUrl.endsWith('v3')) {
     return {
       msg: 'The URL does not end with a /v3 path, for example a URL with v3 path: https://identity_service.com:5000/v3 .',
       type: ValidationState.Warning,
     };
+  }
 
   return {
     msg: 'The URL of the OpenStack Identity (Keystone) API endpoint, for example: https://identity_service.com:5000/v3 .',

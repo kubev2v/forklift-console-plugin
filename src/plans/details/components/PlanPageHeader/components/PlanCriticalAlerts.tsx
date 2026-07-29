@@ -27,7 +27,9 @@ const PlanCriticalAlerts: FC<PlanCriticalAlertsProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  if (isEmpty(conditions) && isEmpty(concerns)) return null;
+  if (isEmpty(conditions) && isEmpty(concerns)) {
+    return null;
+  }
 
   return (
     <Alert

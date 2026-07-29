@@ -7,7 +7,7 @@ export type LearningExperienceContextType = {
   referenceScrollPositions: Record<string, number>;
   openExpansionItems: string[];
   drawerWidth: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   openLearningExperience: () => void;
   closeLearningExperience: () => void;
   setSelectedTopic: (topic: LearningExperienceTopic | null) => void;
@@ -16,7 +16,7 @@ export type LearningExperienceContextType = {
   setDrawerWidth: (width: string) => void;
   openExpansionItem: (itemId: string) => void;
   closeExpansionItem: (itemId: string) => void;
-  setData: (dataItem: string, dataValue: any) => void;
+  setData: (dataItem: string, dataValue: unknown) => void;
   clearData: (dataItem?: string) => void;
 };
 
@@ -27,5 +27,5 @@ export type PersistedState = {
   referenceScrollPositions?: Record<string, number>;
   selectedTopicId?: string | null;
   drawerWidth?: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 };

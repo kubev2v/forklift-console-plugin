@@ -6,10 +6,14 @@ import { TimeRangeOptions, TimeRangeOptionsDictionary } from './timeRangeOptions
 
 // Helper function to process 'True' vm conditions
 const processVmConditions = (vm: V1beta1MigrationStatusVms) => {
-  if (!('conditions' in vm)) return [];
+  if (!('conditions' in vm)) {
+    return [];
+  }
 
   return (vm.conditions ?? []).reduce((acc: string[], condition) => {
-    if (condition.status === 'True') acc.push(condition.type);
+    if (condition.status === 'True') {
+      acc.push(condition.type);
+    }
     return acc;
   }, []);
 };
@@ -32,7 +36,9 @@ const incrementCounts = (
 
   if (isCompleted) {
     conditions.forEach((condition) => {
-      if (condition in vmCounts) vmCounts[condition] += 1;
+      if (condition in vmCounts) {
+        vmCounts[condition] += 1;
+      }
     });
   }
 };

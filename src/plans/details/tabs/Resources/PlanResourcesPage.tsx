@@ -43,7 +43,9 @@ const PlanResourcesPage: FC<PlanPageProps> = ({ name, namespace }) => {
 
   const planResourcesTableProps = getPlanResourcesTableProps(planInventory, provider?.spec?.type);
 
-  if (!planResourcesTableProps) return <LoadingSuspend />;
+  if (!planResourcesTableProps) {
+    return <LoadingSuspend />;
+  }
 
   return (
     <LoadingSuspend obj={plan} loaded={!inventoryLoading} loadError={inventoryLoadError}>

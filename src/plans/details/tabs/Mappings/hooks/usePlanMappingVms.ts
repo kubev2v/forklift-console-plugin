@@ -20,7 +20,9 @@ export const usePlanMappingVms = (
       return {};
     }
     return providerVmData?.reduce((acc: Record<string, ProviderVirtualMachine>, data) => {
-      if (!planVmIds.includes(data.vm.id)) return acc;
+      if (!planVmIds.includes(data.vm.id)) {
+        return acc;
+      }
 
       return {
         ...acc,

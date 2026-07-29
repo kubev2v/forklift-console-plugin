@@ -21,7 +21,9 @@ const VisibleTableData: FC<VisibleTableDataProps> = ({
     [fieldId, resourceFields],
   );
 
-  if (!isVisible) return null;
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <Td className={className} dataLabel={fieldId}>

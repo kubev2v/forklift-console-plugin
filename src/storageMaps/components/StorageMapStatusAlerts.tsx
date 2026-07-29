@@ -18,7 +18,9 @@ const StorageMapStatusAlerts: FC<StorageMapStatusAlertsProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return null;
+  }
 
   if (isIscsi) {
     return (

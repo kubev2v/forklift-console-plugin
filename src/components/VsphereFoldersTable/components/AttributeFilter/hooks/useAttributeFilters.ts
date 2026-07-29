@@ -71,7 +71,9 @@ export const useAttributeFilters = <T>(attributes: AttributeConfig<T>[]): Attrib
               }
             };
             const match = attr.match ?? def;
-            if (!match(needle, hay)) return false;
+            if (!match(needle, hay)) {
+              return false;
+            }
           }
         } else {
           const sel = checks[attr.id];
@@ -83,7 +85,9 @@ export const useAttributeFilters = <T>(attributes: AttributeConfig<T>[]): Attrib
             } else if (value) {
               arr = [value];
             }
-            if (!arr.some((element) => sel.has(element))) return false;
+            if (!arr.some((element) => sel.has(element))) {
+              return false;
+            }
           }
         }
       }
@@ -112,13 +116,17 @@ export const useAttributeFilters = <T>(attributes: AttributeConfig<T>[]): Attrib
   const deleteChip = useCallback(
     (attrId: string, chipLabel: string) => {
       const attr = attributes.find((attribute) => attribute.id === attrId);
-      if (!attr) return;
+      if (!attr) {
+        return;
+      }
       if (attr.kind === AttributeKind.Text) {
         clearText(attrId);
         return;
       }
       const opt = attr.options.find((option) => (option.label ?? option.id) === chipLabel);
-      if (opt) toggleCheck(attrId, opt.id);
+      if (opt) {
+        toggleCheck(attrId, opt.id);
+      }
     },
     [attributes, clearText, toggleCheck],
   );
@@ -126,7 +134,9 @@ export const useAttributeFilters = <T>(attributes: AttributeConfig<T>[]): Attrib
   const deleteChipGroup = useCallback(
     (attrId: string) => {
       const attr = attributes.find((attribute) => attribute.id === attrId);
-      if (!attr) return;
+      if (!attr) {
+        return;
+      }
       if (attr.kind === AttributeKind.Text) {
         clearText(attrId);
         return;

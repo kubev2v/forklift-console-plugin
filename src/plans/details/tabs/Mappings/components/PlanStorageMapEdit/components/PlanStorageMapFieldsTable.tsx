@@ -200,7 +200,9 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
       }}
       removeButton={{
         isDisabled: (index) => {
-          if (Boolean(isIscsi) || storageMappingFields.length <= 1) return true;
+          if (Boolean(isIscsi) || storageMappingFields.length <= 1) {
+            return true;
+          }
           return usedSourceStorages.some(
             (storage) =>
               storage.id === storageMappingFields[index][StorageMapFieldId.SourceStorage].id,

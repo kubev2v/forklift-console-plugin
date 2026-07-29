@@ -13,7 +13,11 @@ type UniqueMaps = ReturnType<typeof createInitialUniqueMaps>;
 
 export const getUniqueMapByCategory = (acc: UniqueMaps, category: string) => {
   const label = getCategoryLabel(category);
-  if (label === ConcernCategory.Critical) return acc.critical;
-  if (label === ConcernCategory.Warning) return acc.warning;
+  if (label === ConcernCategory.Critical) {
+    return acc.critical;
+  }
+  if (label === ConcernCategory.Warning) {
+    return acc.warning;
+  }
   return acc.information;
 };

@@ -36,11 +36,12 @@ export const validateVSphereUILink = (uiLink: string | number): ValidationMsg =>
     };
   }
 
-  if (!trimmedUrl.endsWith('ui') && !trimmedUrl.endsWith('ui/'))
+  if (!trimmedUrl.endsWith('ui') && !trimmedUrl.endsWith('ui/')) {
     return {
       msg: 'The link for the VMware vSphere UI does not end with a /ui path, for example: https://vSphere-host-example.com/ui.',
       type: ValidationState.Warning,
     };
+  }
 
   return {
     msg: 'The link of the VMware vSphere UI. For example, https://vSphere-host-example.com/ui.',

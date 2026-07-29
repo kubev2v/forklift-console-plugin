@@ -51,7 +51,9 @@ export const getVmConcernCategories = (row: VmRow): ConcernCategory[] => {
   // Try the most likely locations first; adjust if your app stores concerns differently.
   const rawConcerns: Concern[] = (row.vmData.vm as VirtualMachineWithConcerns)?.concerns ?? [];
 
-  if (!Array.isArray(rawConcerns)) return [];
+  if (!Array.isArray(rawConcerns)) {
+    return [];
+  }
 
   const out = new Set<ConcernCategory>();
   for (const concern of rawConcerns) {
@@ -88,9 +90,15 @@ const getConcernCounts = (row: VmRow): Counts => {
 
 const cmpCountsQuantityAsc = (first: Counts, second: Counts) => {
   // Desc by Critical, then Warning, then Information
-  if (first.Critical !== second.Critical) return second.Critical - first.Critical;
-  if (first.Warning !== second.Warning) return second.Warning - first.Warning;
-  if (first.Information !== second.Information) return second.Information - first.Information;
+  if (first.Critical !== second.Critical) {
+    return second.Critical - first.Critical;
+  }
+  if (first.Warning !== second.Warning) {
+    return second.Warning - first.Warning;
+  }
+  if (first.Information !== second.Information) {
+    return second.Information - first.Information;
+  }
   return 0;
 };
 
@@ -118,7 +126,9 @@ export const buildVmComparator = (
         const ca = getConcernCounts(a);
         const cb = getConcernCounts(b);
         const base = cmpCountsQuantityAsc(ca, cb);
-        if (base !== 0) return base * dir;
+        if (base !== 0) {
+          return base * dir;
+        }
         return cmpStr(getVmName(a), getVmName(b)) * dir;
       };
     case COLUMN_IDS.InspectionStatus:
@@ -131,7 +141,9 @@ export const buildVmComparator = (
           INSPECTION_STATUS.NOT_INSPECTED;
         const rankDiff =
           INSPECTION_STATUS_SEVERITY_RANK[statusA] - INSPECTION_STATUS_SEVERITY_RANK[statusB];
-        if (rankDiff !== 0) return rankDiff * dir;
+        if (rankDiff !== 0) {
+          return rankDiff * dir;
+        }
         return cmpStr(getVmName(first), getVmName(second)) * dir;
       };
     default:
@@ -148,7 +160,9 @@ export const getVmConcernLabels = (
 } => {
   const vm = row?.vmData?.vm as VirtualMachineWithConcerns | undefined;
   const concerns: Concern[] = vm?.concerns ?? [];
-  if (!Array.isArray(concerns)) return { categoryMapper: {}, labelIconMapper: {}, labels: [] };
+  if (!Array.isArray(concerns)) {
+    return { categoryMapper: {}, labelIconMapper: {}, labels: [] };
+  }
 
   const out = new Set<string>();
   const outIcons: Record<string, ReactNode> = {};

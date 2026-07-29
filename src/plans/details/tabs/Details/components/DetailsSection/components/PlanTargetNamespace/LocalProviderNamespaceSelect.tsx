@@ -10,7 +10,9 @@ import TargetNamespaceSelect from './TargetNamespaceSelect';
 const LocalProviderNamespaceSelect: FC<TargetNamespaceSelectInputProps> = ({ onChange, value }) => {
   const [projectNames, loaded, loadError] = useWatchProjectNames();
 
-  if (!loaded && isEmpty(loadError)) return <Loading />;
+  if (!loaded && isEmpty(loadError)) {
+    return <Loading />;
+  }
 
   return (
     <TargetNamespaceSelect

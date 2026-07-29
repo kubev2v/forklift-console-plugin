@@ -11,7 +11,9 @@ import type { PersistedState } from './types';
 export const findTopicById = (
   topicId: string | null | undefined,
 ): LearningExperienceTopic | null => {
-  if (!topicId) return null;
+  if (!topicId) {
+    return null;
+  }
   return learningExperienceTopics.find((topic) => topic.id === topicId) ?? null;
 };
 
@@ -21,7 +23,9 @@ let writeTimeout: ReturnType<typeof setTimeout> | null = null;
 const DEBOUNCE_MS = 200;
 
 const flushToStorage = (): void => {
-  if (isEmpty(Object.keys(pendingWrites))) return;
+  if (isEmpty(Object.keys(pendingWrites))) {
+    return;
+  }
 
   const current = parseOrClean<PersistedState>(STORAGE_KEY);
   saveToLocalStorage(STORAGE_KEY, JSON.stringify({ ...current, ...pendingWrites }));

@@ -45,8 +45,9 @@ const useProvidersInventoryList = (
           ? await consoleFetchJSON(getInventoryApiUrl(`providers?detail=1`))
           : await getProvidersInventoryByNamespace(namespace);
 
-        if (inventoryHasChanged(newInventory, oldDataRef, DEFAULT_FIELDS_TO_AVOID_COMPARING))
+        if (inventoryHasChanged(newInventory, oldDataRef, DEFAULT_FIELDS_TO_AVOID_COMPARING)) {
           updateInventory(newInventory, setInventory, oldDataRef);
+        }
         setLoading(false);
       } catch (e) {
         handleError(e as Error);

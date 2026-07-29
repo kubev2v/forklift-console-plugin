@@ -9,7 +9,9 @@ import { getServicesApiUrl } from '@utils/api/getApiUrl';
  * @returns parsed certificate or undefined if parsing failed
  */
 const parseToX509 = (value: string) => {
-  if (!value) return undefined;
+  if (!value) {
+    return undefined;
+  }
   try {
     const cert = new X509();
     cert.readCertPEM(value);

@@ -12,7 +12,9 @@ const EditRootDiskModalAlert: FC<EditRootDiskModalAlertProps> = ({ vms }) => {
   const { t } = useForkliftTranslation();
   const rootDisk = vms?.[0]?.rootDisk;
   const allVMsMatch = vms.every((vm) => vm.rootDisk === rootDisk);
-  if (allVMsMatch) return null;
+  if (allVMsMatch) {
+    return null;
+  }
 
   return (
     <AlertMessageForModals

@@ -52,7 +52,9 @@ const AffinityModal: ModalComponent<AffinityModalProps> = ({
   const onAffinityChange = (updatedAffinity: AffinityRowData) => {
     setAffinities((prevAffinities) =>
       prevAffinities.map((affinity) => {
-        if (affinity.id === updatedAffinity.id) return { ...affinity, ...updatedAffinity };
+        if (affinity.id === updatedAffinity.id) {
+          return { ...affinity, ...updatedAffinity };
+        }
         return affinity;
       }),
     );

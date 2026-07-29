@@ -57,7 +57,9 @@ const useTreeFilters = ({ filters, rows, showAll }: UseTreeFilters): UseTreeFilt
   }, [rows, filters, showAll]);
 
   const filteredRows: RowNode[] = useMemo(() => {
-    if (!filters.hasAttrFilters && showAll) return rows;
+    if (!filters.hasAttrFilters && showAll) {
+      return rows;
+    }
 
     const isVisibleFolder = (row: FolderRow) => visibleFolderKeySet.has(row.key);
 
@@ -82,7 +84,9 @@ const useTreeFilters = ({ filters, rows, showAll }: UseTreeFilters): UseTreeFilt
         }
 
         case ROW_TYPE.Vm: {
-          if (!isVisibleVm(row)) break;
+          if (!isVisibleVm(row)) {
+            break;
+          }
           out.push(row);
 
           const folderName = getFolderNameFromKey(row.parentFolderKey);

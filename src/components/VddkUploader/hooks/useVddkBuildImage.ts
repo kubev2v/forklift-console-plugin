@@ -25,7 +25,9 @@ export const useVddkBuildImage = (buildName: string) => {
       : null,
   );
 
-  if (isEmpty(vddkBuild)) return null;
+  if (isEmpty(vddkBuild)) {
+    return null;
+  }
 
   const buildImageResponse = getVddkImageBuildResponse(vddkBuild?.status);
 

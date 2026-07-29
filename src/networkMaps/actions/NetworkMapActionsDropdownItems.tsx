@@ -30,7 +30,9 @@ export const NetworkMapActionsDropdownItems = ({
   });
 
   const onDelete = () => {
-    if (!networkMap) return;
+    if (!networkMap) {
+      return;
+    }
     launcher<DeleteModalProps>(DeleteModal, { model: NetworkMapModel, resource: networkMap });
   };
 

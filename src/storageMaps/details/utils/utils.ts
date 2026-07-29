@@ -121,7 +121,9 @@ export const transformStorageMapToFormValues = (
  * @returns Translation key string for validation error or undefined if valid
  */
 export const validateUpdatedStorageMaps = (values: StorageMapping[]) => {
-  if (!Array.isArray(values)) return t('Invalid mappings');
+  if (!Array.isArray(values)) {
+    return t('Invalid mappings');
+  }
 
   let emptyCount = 0;
   let validCount = 0;

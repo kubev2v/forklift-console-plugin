@@ -16,7 +16,9 @@ const ConcernPopover: FC<{
 }> = ({ category, concerns, conditions }) => {
   const { t } = useForkliftTranslation();
 
-  if (isEmpty(concerns) && isEmpty(conditions)) return null;
+  if (isEmpty(concerns) && isEmpty(conditions)) {
+    return null;
+  }
 
   const totalLength = concerns.length + conditions.length;
 

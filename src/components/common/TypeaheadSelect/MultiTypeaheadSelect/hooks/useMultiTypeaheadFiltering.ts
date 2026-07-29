@@ -70,7 +70,9 @@ export const useMultiTypeaheadFiltering = ({
   );
 
   const displayOptions = useMemo(() => {
-    if (isFiltering) return filteredOptions;
+    if (isFiltering) {
+      return filteredOptions;
+    }
     if (isEmpty(options)) {
       return [
         {

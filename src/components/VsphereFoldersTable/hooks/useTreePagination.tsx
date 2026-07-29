@@ -44,7 +44,9 @@ const useTreePagination = ({
       Number.isFinite(perPage) && perPage > 0 ? perPage : paginationInitialState.perPage;
     const safePage = Number.isFinite(page) && page > 0 ? page : paginationInitialState.page;
 
-    if (!hasBlocks) return { itemCount: 0, pagedRows: [] };
+    if (!hasBlocks) {
+      return { itemCount: 0, pagedRows: [] };
+    }
 
     const descriptors: PageDescriptor[] = [];
 
@@ -70,7 +72,9 @@ const useTreePagination = ({
     }
 
     const itemCount = descriptors.length;
-    if (itemCount === 0) return { itemCount: 0, pagedRows: [] };
+    if (itemCount === 0) {
+      return { itemCount: 0, pagedRows: [] };
+    }
 
     const pageStartIndex = (safePage - 1) * safePerPage;
     const pageEndIndex = Math.min(pageStartIndex + safePerPage, itemCount);

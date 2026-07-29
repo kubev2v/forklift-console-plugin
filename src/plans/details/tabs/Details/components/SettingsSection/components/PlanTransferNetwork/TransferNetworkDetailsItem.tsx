@@ -22,7 +22,9 @@ const TransferNetworkDetailItem: FC<EditableDetailsItemProps> = ({
   const { t } = useForkliftTranslation();
   const launcher = useModal();
 
-  if (!shouldRender) return null;
+  if (!shouldRender) {
+    return null;
+  }
 
   const networkName = getNetworkName(getPlanTransferNetwork(plan)!);
 

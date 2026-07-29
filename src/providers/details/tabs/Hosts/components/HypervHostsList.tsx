@@ -73,7 +73,9 @@ const HypervHostsList: FC<HypervHostsListProps> = ({ data }) => {
     subPath: 'hosts?detail=4',
   });
 
-  if (!provider) return <Bullseye className="text-muted">{t('No data available.')}</Bullseye>;
+  if (!provider) {
+    return <Bullseye className="text-muted">{t('No data available.')}</Bullseye>;
+  }
 
   return (
     <StandardPageWithSelection<HypervHost>

@@ -19,7 +19,9 @@ export class NetworkMapStep {
       .isVisible({ timeout: 1_000 })
       .catch(() => false);
 
-    if (!hasAlert) return;
+    if (!hasAlert) {
+      return;
+    }
 
     const rows = getMappingWizardFieldRows(this.page);
     const count = await rows.count();

@@ -19,7 +19,9 @@ const RemoteProviderNamespaceSelect: FC<RemoteProviderNamespaceSelectProps> = ({
 }) => {
   const [projectNames, loaded, loadError] = useTargetNamespaces(targetProvider);
 
-  if (!loaded && isEmpty(loadError)) return <Loading />;
+  if (!loaded && isEmpty(loadError)) {
+    return <Loading />;
+  }
 
   return (
     <TargetNamespaceSelect

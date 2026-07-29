@@ -28,8 +28,12 @@ const DEFAULT_GENERATE_NAME_PREFIX = 'vm';
 const sanitizeForK8sName = (value: string): string => {
   const sanitized = Array.from(value.toLowerCase()).reduce((acc, char) => {
     const isValid = (char >= 'a' && char <= 'z') || (char >= '0' && char <= '9');
-    if (isValid) return acc + char;
-    if (!isEmpty(acc) && !acc.endsWith('-')) return `${acc}-`;
+    if (isValid) {
+      return acc + char;
+    }
+    if (!isEmpty(acc) && !acc.endsWith('-')) {
+      return `${acc}-`;
+    }
     return acc;
   }, '');
 

@@ -8,6 +8,16 @@ import type { ResourceField, SortDirection } from '../utils/types';
 
 import type { SortType } from './types';
 
+const toSortKey = (value: unknown): string => {
+  if (value === null || value === undefined) {
+    return '';
+  }
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+  return JSON.stringify(value) ?? '';
+};
+
 /**
  * Compares all types by converting them to string.
  * Nullish entities are converted to empty string.
@@ -16,8 +26,8 @@ import type { SortType } from './types';
  * @param b
  * @param locale to be used by string compareFn
  */
-export const universalComparator = (a: any, b: any, locale: string) => {
-  return localeCompare(String(a ?? ''), String(b ?? ''), locale);
+export const universalComparator = (a: unknown, b: unknown, locale: string): number => {
+  return localeCompare(toSortKey(a), toSortKey(b), locale);
 };
 
 /**
@@ -36,7 +46,7 @@ export const compareWith = <
 >(
   currentSort: SortType,
   locale: string | undefined,
-  fieldComparator: ((a: any, b: any, locale: string) => number) | undefined,
+  fieldComparator: ((a: string, b: string, locale: string) => number) | undefined,
   fields: ResourceField[],
 ): ((a?: T | null, b?: T | null) => number) => {
   return (a, b) => {
@@ -45,8 +55,8 @@ export const compareWith = <
     }
     const compareFn = fieldComparator ?? universalComparator;
     const compareValue = compareFn(
-      getResourceFieldValue<T>(a, currentSort.resourceFieldId, fields, true),
-      getResourceFieldValue<T>(b, currentSort.resourceFieldId, fields, true),
+      String(getResourceFieldValue<T>(a, currentSort.resourceFieldId, fields, true) ?? ''),
+      String(getResourceFieldValue<T>(b, currentSort.resourceFieldId, fields, true) ?? ''),
       locale ?? 'en',
     );
     return currentSort.isAsc ? compareValue : -compareValue;
@@ -67,7 +77,7 @@ export const useSort = (
   fields: ResourceField[],
   resolvedLanguage = 'en',
   defaultSort?: { resourceFieldId: string; direction: SortDirection },
-): [SortType, (sort: SortType) => void, (a: any, b: any) => number] => {
+): [SortType, (sort: SortType) => void, (a: unknown, b: unknown) => number] => {
   // by default sort by the first identity column (if any)
   const [firstField] = [...fields].sort(
     (a, b) => Number(Boolean(b.isIdentity)) - Number(Boolean(a.isIdentity)),
@@ -100,7 +110,7 @@ export const useSort = (
     [activeSort, resolvedLanguage, fields],
   );
 
-  return [activeSort, setActiveSort, compareFn];
+  return [activeSort, setActiveSort, compareFn as (a: unknown, b: unknown) => number];
 };
 
 /**

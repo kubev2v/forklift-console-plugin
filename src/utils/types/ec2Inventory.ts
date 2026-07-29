@@ -50,7 +50,9 @@ export const getEc2SubnetIds = (vm: Ec2VmLike): string[] => {
       (acc, nic) => (nic.SubnetId ? [...acc, nic.SubnetId] : acc),
       [],
     );
-    if (!isEmpty(subnetIds)) return subnetIds;
+    if (!isEmpty(subnetIds)) {
+      return subnetIds;
+    }
   }
 
   return vm.object?.SubnetId ? [vm.object.SubnetId] : [];

@@ -41,7 +41,9 @@ const processChunk = async (
   offset: number,
   plan?: V1beta1Plan,
 ): Promise<void> => {
-  if (offset >= vms.length) return;
+  if (offset >= vms.length) {
+    return;
+  }
 
   const chunk = vms.slice(offset, offset + CONCURRENCY_LIMIT);
   await Promise.allSettled(

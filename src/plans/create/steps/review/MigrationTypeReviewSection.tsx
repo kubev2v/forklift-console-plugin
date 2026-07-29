@@ -33,7 +33,9 @@ const MigrationTypeReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
     hasWarmMigrationProviderType(sourceProvider) ||
     (hasLiveMigrationProviderType(sourceProvider) && isLiveMigrationFeatureEnabled);
 
-  if (!planSupportMigrationTypes) return null;
+  if (!planSupportMigrationTypes) {
+    return null;
+  }
 
   return (
     <ExpandableReviewSection

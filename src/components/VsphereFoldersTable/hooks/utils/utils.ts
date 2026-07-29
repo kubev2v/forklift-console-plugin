@@ -70,13 +70,17 @@ export const isFolderChecked = (
   selectedSet: Set<string>,
 ): boolean | null => {
   const total = vmIdsInFolder.length;
-  if (total === 0) return false;
+  if (total === 0) {
+    return false;
+  }
   let selected = 0;
 
   for (const id of vmIdsInFolder) {
     if (selectedSet.has(id)) {
       selected += 1;
-      if (selected === total) return true;
+      if (selected === total) {
+        return true;
+      }
     }
   }
   return selected > 0 ? null : false;

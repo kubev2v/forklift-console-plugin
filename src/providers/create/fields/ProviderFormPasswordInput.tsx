@@ -7,18 +7,12 @@ import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
 import { getInputValidated } from '@utils/form';
 
 import { useCreateProviderFormContext } from '../hooks/useCreateProviderFormContext';
-import type { CreateProviderFormData } from '../types';
 
 import type { ProviderFormFieldIdType } from './constants';
 
 type ProviderFormPasswordInputProps = {
   fieldId: ProviderFormFieldIdType;
-  fieldRules:
-    | Omit<
-        RegisterOptions<CreateProviderFormData, any>,
-        'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-      >
-    | undefined;
+  fieldRules?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
   label: string;
   isRequired?: boolean;
   testId?: string;

@@ -54,7 +54,9 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
 
   const onNextClick = useCallback(
     async (event: MouseEvent<HTMLButtonElement>) => {
-      if (onSubmit) return onSubmit(event);
+      if (onSubmit) {
+        return onSubmit(event);
+      }
 
       const isValid = await validateStep(activeStep.id as PlanWizardStepId);
       if (isValid) {

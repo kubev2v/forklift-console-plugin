@@ -4,11 +4,12 @@ import { type ValidationMsg, ValidationState } from '@utils/validation/Validatio
 
 export const validateVDDKImage = (vddkImage?: string | number): ValidationMsg => {
   // For a newly opened form where the field is not set yet, set the validation type to default.
-  if (vddkImage === undefined)
+  if (vddkImage === undefined) {
     return {
       msg: 'The VDDK image is empty. It is strongly recommended to provide an image using the following format: <registry_route_or_server_path>/vddk:<tag> .',
       type: ValidationState.Default,
     };
+  }
 
   // Sanity check
   if (typeof vddkImage !== 'string') {
@@ -18,11 +19,12 @@ export const validateVDDKImage = (vddkImage?: string | number): ValidationMsg =>
   const trimmedVddkImage: string = vddkImage.trim();
   const isValidTrimmedVddkImage = validateContainerImage(trimmedVddkImage);
 
-  if (trimmedVddkImage === '')
+  if (trimmedVddkImage === '') {
     return {
       msg: 'The VDDK image is empty. It is strongly recommended to provide an image using the following format: <registry_route_or_server_path>/vddk:<tag> .',
       type: ValidationState.Error,
     };
+  }
 
   if (!isValidTrimmedVddkImage) {
     return {

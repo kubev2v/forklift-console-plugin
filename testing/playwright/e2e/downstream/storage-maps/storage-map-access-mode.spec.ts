@@ -19,7 +19,9 @@ providerOnlyFixtures.describe('Access Mode - Create Storage Map', { tag: '@downs
   providerOnlyFixtures(
     'should create storage map with access mode selection',
     async ({ page, resourceManager, testProvider }) => {
-      if (!testProvider) throw new Error('testProvider is required');
+      if (!testProvider) {
+        throw new Error('testProvider is required');
+      }
 
       const storageMapName = `access-mode-sm-${crypto.randomUUID().slice(0, 8)}`;
       const listPage = new StorageMapsListPage(page);
@@ -96,7 +98,9 @@ sharedProviderStorageMapFixtures.describe(
     sharedProviderStorageMapFixtures(
       'should persist access mode through edit flow',
       async ({ page, testStorageMap, testProvider: _testProvider }) => {
-        if (!testStorageMap) throw new Error('testStorageMap is required');
+        if (!testStorageMap) {
+          throw new Error('testStorageMap is required');
+        }
 
         const detailsPage = new StorageMapDetailsPage(page);
         await detailsPage.navigate(testStorageMap.name);
@@ -172,7 +176,9 @@ sharedProviderFixtures.describe('Access Mode - Plan Wizard Review', { tag: '@dow
   sharedProviderFixtures(
     'should display access mode in plan wizard review step',
     async ({ page, testPlan, testProvider: _testProvider }) => {
-      if (!testPlan) throw new Error('testPlan is required');
+      if (!testPlan) {
+        throw new Error('testPlan is required');
+      }
 
       const planDetailsPage = new PlanDetailsPage(page);
 
@@ -195,7 +201,9 @@ sharedProviderFixtures.describe('Access Mode - Plan Details Edit', { tag: '@down
   sharedProviderFixtures(
     'should persist access mode through plan details storage map edit',
     async ({ page, testPlan, testProvider: _testProvider }) => {
-      if (!testPlan) throw new Error('testPlan is required');
+      if (!testPlan) {
+        throw new Error('testPlan is required');
+      }
 
       const planDetailsPage = new PlanDetailsPage(page);
       await planDetailsPage.mappingsTab.navigateToMappingsTab();
@@ -234,7 +242,9 @@ sharedProviderStorageMapFixtures.describe(
     sharedProviderStorageMapFixtures(
       'should show RWO warning for Ceph-backed storage classes',
       async ({ page, testStorageMap, testProvider: _testProvider }) => {
-        if (!testStorageMap) throw new Error('testStorageMap is required');
+        if (!testStorageMap) {
+          throw new Error('testStorageMap is required');
+        }
 
         const detailsPage = new StorageMapDetailsPage(page);
         await detailsPage.navigate(testStorageMap.name);

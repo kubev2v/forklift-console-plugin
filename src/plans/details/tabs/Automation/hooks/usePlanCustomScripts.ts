@@ -36,7 +36,9 @@ export const usePlanCustomScripts = (plan: V1beta1Plan): UsePlanCustomScriptsRes
   const configMapDataJson = JSON.stringify(configMap?.data ?? null);
 
   const scripts = useMemo((): CustomScript[] => {
-    if (!hasRef) return [];
+    if (!hasRef) {
+      return [];
+    }
     const parsed = JSON.parse(configMapDataJson) as Record<string, string> | null;
     return parseConfigMapScripts(parsed ?? undefined);
   }, [configMapDataJson, hasRef]);

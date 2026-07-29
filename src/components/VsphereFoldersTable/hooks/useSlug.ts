@@ -4,7 +4,9 @@ export const useSlug = () => {
   const cacheRef = useRef(new Map<string, string>());
   return useCallback((value: string) => {
     const cached = cacheRef.current.get(value);
-    if (cached) return cached;
+    if (cached) {
+      return cached;
+    }
     const slugged = value
       .toLowerCase()
       .replace(/\s+/gu, '_')

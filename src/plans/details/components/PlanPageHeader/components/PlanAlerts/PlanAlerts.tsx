@@ -49,7 +49,9 @@ const PlanAlerts: FC<Props> = ({ plan, setIsDrawerOpen }) => {
     [status],
   );
 
-  if (alertsNotRelevant || !showCriticalConditions) return null;
+  if (alertsNotRelevant || !showCriticalConditions) {
+    return null;
+  }
 
   return (
     <PageSection hasBodyWrapper={false} className="plan-header-alerts">

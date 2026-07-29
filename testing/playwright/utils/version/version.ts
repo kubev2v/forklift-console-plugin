@@ -29,8 +29,12 @@ const resolveTuple = (version: VersionTuple | string): VersionTuple | null =>
   Array.isArray(version) ? version : parseVersion(version);
 
 const compareTuples = (a: VersionTuple, b: VersionTuple): number => {
-  if (a[0] !== b[0]) return a[0] - b[0];
-  if (a[1] !== b[1]) return a[1] - b[1];
+  if (a[0] !== b[0]) {
+    return a[0] - b[0];
+  }
+  if (a[1] !== b[1]) {
+    return a[1] - b[1];
+  }
   return a[2] - b[2];
 };
 
@@ -60,12 +64,20 @@ const versionAtLeast = (
   whenUnset: boolean,
 ): boolean => {
   const versionString = getVersionString(envVar);
-  if (!versionString) return whenUnset;
-  if (isLatest(versionString)) return true;
+  if (!versionString) {
+    return whenUnset;
+  }
+  if (isLatest(versionString)) {
+    return true;
+  }
   const currentVersion = getVersionTuple(envVar);
-  if (!currentVersion) return false;
+  if (!currentVersion) {
+    return false;
+  }
   const resolvedMinimum = resolveTuple(minimumVersion);
-  if (!resolvedMinimum) return false;
+  if (!resolvedMinimum) {
+    return false;
+  }
   return compareTuples(currentVersion, resolvedMinimum) >= 0;
 };
 
@@ -83,7 +95,9 @@ const versionInStreams = (
 
   if (!currentVersion) {
     const versionString = getVersionString(envVar);
-    if (!versionString) return whenUnset;
+    if (!versionString) {
+      return whenUnset;
+    }
     return isLatest(versionString);
   }
 
@@ -91,7 +105,9 @@ const versionInStreams = (
     .map(resolveTuple)
     .filter((tuple): tuple is VersionTuple => tuple !== null);
 
-  if (parsedMinimums.length === 0) return false;
+  if (parsedMinimums.length === 0) {
+    return false;
+  }
 
   const matchingStreamMinimum = parsedMinimums.find(
     ([major, minor]) => currentVersion[0] === major && currentVersion[1] === minor,

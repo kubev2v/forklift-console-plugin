@@ -65,11 +65,15 @@ const NewNetworkMapFields: FC = () => {
   });
 
   useEffect(() => {
-    if (isLoading || !networkMap?.length) return;
+    if (isLoading || !networkMap?.length) {
+      return;
+    }
 
     const vmsList = Object.values(vms) as TypesProviderVirtualMachine[];
     const multiNicIds = getMultiNicSourceNetworks(vmsList, oVirtNicProfiles);
-    if (multiNicIds.size === 0) return;
+    if (multiNicIds.size === 0) {
+      return;
+    }
 
     let updated = false;
     const updatedMap = networkMap.map((mapping) => {

@@ -27,7 +27,9 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({
 
   const { provider } = data;
 
-  if (!provider || !getName(provider) || !getNamespace(provider)) return null;
+  if (!provider || !getName(provider) || !getNamespace(provider)) {
+    return null;
+  }
 
   const providerURL = getProviderDetailsPageUrl(provider);
 

@@ -13,7 +13,9 @@ const setupProviderDetailsPage = async (
   page: Page,
   testProvider: TestProvider | undefined,
 ): Promise<ProviderDetailsPage> => {
-  if (!testProvider) throw new Error('testProvider is required');
+  if (!testProvider) {
+    throw new Error('testProvider is required');
+  }
   const providerDetailsPage = new ProviderDetailsPage(page);
   await providerDetailsPage.navigate(testProvider.metadata.name, testProvider.metadata.namespace);
   await providerDetailsPage.waitForInventoryReady();

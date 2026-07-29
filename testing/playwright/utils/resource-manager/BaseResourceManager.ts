@@ -46,14 +46,18 @@ type StorageState = {
  */
 const tryKubeconfigAuth = (): AuthConfig | null => {
   const kubeconfigPath = process.env.KUBECONFIG_PATH;
-  if (!kubeconfigPath || !existsSync(kubeconfigPath)) return null;
+  if (!kubeconfigPath || !existsSync(kubeconfigPath)) {
+    return null;
+  }
 
   try {
     const kc = new KubeConfig();
     kc.loadFromFile(kubeconfigPath);
     const cluster = kc.getCurrentCluster();
     const user = kc.getCurrentUser();
-    if (!cluster?.server || !user?.token) return null;
+    if (!cluster?.server || !user?.token) {
+      return null;
+    }
 
     return {
       baseUrl: cluster.server.replace(/\/$/, ''),
@@ -112,7 +116,9 @@ const getConsoleBaseUrl = (): string =>
  */
 const getAuthConfig = (): AuthConfig => {
   const kubeconfigAuth = tryKubeconfigAuth();
-  if (kubeconfigAuth) return kubeconfigAuth;
+  if (kubeconfigAuth) {
+    return kubeconfigAuth;
+  }
 
   const { cookieHeader, csrfToken } = getSessionCookies();
   return {
@@ -147,7 +153,9 @@ export abstract class BaseResourceManager {
   static async apiDelete<R>(apiPath: string): Promise<R | null> {
     const result = await BaseResourceManager.apiRequest<R>(apiPath, { method: 'DELETE' });
 
-    if (result.success) return result.data;
+    if (result.success) {
+      return result.data;
+    }
 
     const HTTP_NOT_FOUND = 404;
 
@@ -162,7 +170,9 @@ export abstract class BaseResourceManager {
   static async apiGet<R>(apiPath: string): Promise<R | null> {
     const result = await BaseResourceManager.apiRequest<R>(apiPath, { method: 'GET' });
 
-    if (result.success) return result.data;
+    if (result.success) {
+      return result.data;
+    }
 
     console.error(`API GET ${apiPath} failed: ${result.error}`);
     return null;
@@ -179,7 +189,9 @@ export abstract class BaseResourceManager {
       method: 'PATCH',
     });
 
-    if (result.success) return result.data;
+    if (result.success) {
+      return result.data;
+    }
 
     console.error(`API PATCH ${apiPath} failed: ${result.error}`);
     return null;
@@ -191,7 +203,9 @@ export abstract class BaseResourceManager {
       method: 'POST',
     });
 
-    if (result.success) return result.data;
+    if (result.success) {
+      return result.data;
+    }
 
     const HTTP_CONFLICT = 409;
 
@@ -265,7 +279,9 @@ export abstract class BaseResourceManager {
         resolve({ error: err.message, status: 0, success: false });
       });
 
-      if (body) req.write(body);
+      if (body) {
+        req.write(body);
+      }
       req.end();
     });
   }

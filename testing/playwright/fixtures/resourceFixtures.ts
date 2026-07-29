@@ -95,7 +95,9 @@ const buildTestProviderFixture = (
           skipProviderReadyWait,
         })
           .then((result) => {
-            if (!result) throw new Error('Failed to create provider');
+            if (!result) {
+              throw new Error('Failed to create provider');
+            }
             return result;
           })
           .catch(async (error: unknown) => {

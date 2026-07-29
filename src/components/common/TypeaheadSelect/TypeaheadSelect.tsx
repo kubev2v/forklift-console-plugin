@@ -31,6 +31,15 @@ import TypeaheadMenuToggle from './TypeaheadMenuToggle';
 
 import './TypeaheadSelect.scss';
 
+const closeSelectWhenBlurred = (
+  open: boolean,
+  setIsOpen: (value: boolean | ((prev: boolean) => boolean)) => void,
+): void => {
+  if (!open) {
+    setIsOpen(false);
+  }
+};
+
 type TypeaheadSelectProps = {
   options: TypeaheadSelectOption[];
   value?: string | number;
@@ -127,7 +136,9 @@ const TypeaheadSelect = (
   }, [options, filteredOptions, noOptionsMessage]);
 
   const handleSelect = (selectedValue: string | number | undefined): void => {
-    if (isPlaceholderValue(selectedValue)) return;
+    if (isPlaceholderValue(selectedValue)) {
+      return;
+    }
 
     const existingOption = options.find((option) => option.value === selectedValue);
     if (existingOption || isCreatable) {
@@ -156,10 +167,6 @@ const TypeaheadSelect = (
     setIsFiltering(newIsFiltering);
   };
 
-  const handleOpenChange = (open: boolean): void => {
-    if (!open) setIsOpen(false);
-  };
-
   const handleFooterClick = (): void => {
     setIsOpen(false);
   };
@@ -170,7 +177,9 @@ const TypeaheadSelect = (
       onSelect={(_, selectedValue: string | number | undefined) => {
         handleSelect(selectedValue);
       }}
-      onOpenChange={handleOpenChange}
+      onOpenChange={(open) => {
+        closeSelectWhenBlurred(open, setIsOpen);
+      }}
       toggle={(toggleRef) => (
         <TypeaheadMenuToggle
           toggleRef={toggleRef}

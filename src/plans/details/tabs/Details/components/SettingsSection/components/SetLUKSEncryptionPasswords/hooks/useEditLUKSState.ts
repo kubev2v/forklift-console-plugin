@@ -58,7 +58,9 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
   }, [resource]);
 
   useEffect(() => {
-    if (modeInitialized || !secret?.metadata) return;
+    if (modeInitialized || !secret?.metadata) {
+      return;
+    }
 
     const isFromExisting = Boolean(secret.metadata.labels?.[SOURCE_SECRET_LABEL]);
     if (isFromExisting) {

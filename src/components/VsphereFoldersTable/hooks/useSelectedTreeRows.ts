@@ -49,15 +49,21 @@ const useSelectedTreeRows: UseSelectedTreeRows = (controls) => {
       setSelectedVmKeys((prev) => {
         const next = new Set(prev);
         if (Array.isArray(keys)) {
-          if (isChecked) keys.forEach((id) => next.add(id));
-          else keys.forEach((id) => next.delete(id));
+          if (isChecked) {
+            keys.forEach((id) => next.add(id));
+          } else {
+            keys.forEach((id) => next.delete(id));
+          }
 
           return Array.from(next);
         }
 
         if (typeof keys === 'string') {
-          if (isChecked) next.add(keys);
-          else next.delete(keys);
+          if (isChecked) {
+            next.add(keys);
+          } else {
+            next.delete(keys);
+          }
         }
 
         return Array.from(next);

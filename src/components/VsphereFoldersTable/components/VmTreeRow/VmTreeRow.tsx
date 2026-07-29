@@ -62,9 +62,13 @@ const VmTreeRow: FC<VmTreeRowProps> = ({ columns, conversions, row }) => {
         {row.vmData.name}
       </Td>
       {columns.map((col) => {
-        if (!col.isVisible) return null;
+        if (!col.isVisible) {
+          return null;
+        }
         const Component = VmCells[col.resourceFieldId!];
-        if (!Component) return null;
+        if (!Component) {
+          return null;
+        }
         return (
           <Td
             key={col.resourceFieldId}

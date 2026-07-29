@@ -20,7 +20,9 @@ const SmbUrlField: FC = () => {
         required: t('SMB share URL is required'),
         validate: {
           pattern: (val): string | undefined => {
-            if (!val) return undefined;
+            if (!val) {
+              return undefined;
+            }
             if (!isValidSmbPath(val as string)) {
               return t('SMB path must be in format: //server/share or \\\\server\\share');
             }

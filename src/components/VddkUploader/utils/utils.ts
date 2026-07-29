@@ -52,7 +52,11 @@ export const getVddkImageBuildResponse = (status: VddkBuild['status']): VddkBuil
 };
 
 export const getUploadButtonText = (uploading: boolean, buildingImage?: boolean) => {
-  if (uploading) return t('Uploading...');
-  if (buildingImage) return t('Building image...');
+  if (uploading) {
+    return t('Uploading...');
+  }
+  if (buildingImage) {
+    return t('Building image...');
+  }
   return t('Upload');
 };

@@ -164,10 +164,14 @@ const getK8sVMMemory = (vm: V1VirtualMachine): string =>
 
 const k8sMemoryToBytes = (quantity: string, fallback: number | null = null): number | null => {
   const input = quantity.trim();
-  if (!input) return fallback;
+  if (!input) {
+    return fallback;
+  }
 
   const numericPart = parseFloat(input);
-  if (Number.isNaN(numericPart)) return fallback;
+  if (Number.isNaN(numericPart)) {
+    return fallback;
+  }
 
   const numericPartLength = numericPart.toString().length;
   const unitPart = input.slice(numericPartLength).toUpperCase() as K8sUnit;

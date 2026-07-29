@@ -17,7 +17,10 @@ export const DefaultRow = <T,>({ resourceData, resourceFields }: RowProps<T>) =>
           acc.push(
             <Td key={resourceFieldId} dataLabel={label ?? undefined}>
               {(getResourceFieldValue(
-                resourceData as any,
+                resourceData as Record<
+                  string,
+                  object | string | boolean | ((data: unknown) => unknown)
+                >,
                 resourceFieldId ?? '',
                 resourceFields,
               ) as string) ?? ''}

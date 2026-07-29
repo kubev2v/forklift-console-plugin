@@ -16,7 +16,9 @@ export const useStepValidation = () => {
   const validateStep = useCallback(
     async (stepId: PlanWizardStepId): Promise<boolean> => {
       const fieldIds = stepFieldMap[stepId];
-      if (!fieldIds?.length) return true;
+      if (!fieldIds?.length) {
+        return true;
+      }
 
       return trigger(fieldIds, { shouldFocus: true });
     },

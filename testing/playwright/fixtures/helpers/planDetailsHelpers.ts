@@ -17,7 +17,9 @@ export const setupPlanDetailsPage = async (
   page: Page,
   testPlan: TestPlan | undefined,
 ): Promise<PlanDetailsSetup> => {
-  if (!testPlan) throw new Error('testPlan is required');
+  if (!testPlan) {
+    throw new Error('testPlan is required');
+  }
   const planDetailsPage = new PlanDetailsPage(page);
   const { name: planName, namespace } = testPlan.metadata;
   await planDetailsPage.navigate(planName, namespace);

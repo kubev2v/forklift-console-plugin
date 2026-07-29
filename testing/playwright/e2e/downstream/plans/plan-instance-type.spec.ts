@@ -63,7 +63,9 @@ const pickAndSaveNonNoneInstanceType = async (
   await expect(listbox).toBeVisible();
   const nonNoneOption = listbox.getByRole('option').filter({ hasNotText: /^None/ }).first();
   const picked = (await nonNoneOption.innerText()).split('\n')[0]?.trim() ?? '';
-  if (!picked) throw new Error('pickAndSaveNonNoneInstanceType: no non-None option available');
+  if (!picked) {
+    throw new Error('pickAndSaveNonNoneInstanceType: no non-None option available');
+  }
   await nonNoneOption.click();
   await virtualMachinesTab.instanceTypeModalSaveButton.click();
   await expect(virtualMachinesTab.editInstanceTypeModal).not.toBeVisible();

@@ -14,8 +14,12 @@ import VmConfigForm from './VmConfigForm';
 const INSPECTION_VM_TABLE_ID = 'inspection-vm-table';
 
 const getDiskEncryptionLabel = (overrides?: VmOverrides): string | undefined => {
-  if (overrides?.nbdeClevis) return DISK_ENCRYPTION_TYPE.CLEVIS;
-  if (overrides?.passphrases?.some((phrase) => !isEmpty(phrase))) return DISK_ENCRYPTION_TYPE.LUKS;
+  if (overrides?.nbdeClevis) {
+    return DISK_ENCRYPTION_TYPE.CLEVIS;
+  }
+  if (overrides?.passphrases?.some((phrase) => !isEmpty(phrase))) {
+    return DISK_ENCRYPTION_TYPE.LUKS;
+  }
   return undefined;
 };
 
@@ -57,7 +61,9 @@ const InspectionVmTable: FC<InspectionVmTableProps> = ({
 
   const expanded = useCallback(
     (props: { resourceData: InspectionVmRowData }) => {
-      if (!isProviderFlow || !onVmOverrideChange) return null;
+      if (!isProviderFlow || !onVmOverrideChange) {
+        return null;
+      }
       const vmId = props.resourceData.id;
       return (
         <VmConfigForm

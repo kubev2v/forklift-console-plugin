@@ -52,7 +52,9 @@ export const usePlanMappingData = ({
   );
 
   const sourceStorages = useMemo(() => {
-    if (!isEmpty(providerStorages)) return providerStorages;
+    if (!isEmpty(providerStorages)) {
+      return providerStorages;
+    }
 
     return (planStorageMap?.status?.references ?? []).map((ref) => ({
       id: ref.id ?? '',
@@ -62,7 +64,9 @@ export const usePlanMappingData = ({
   }, [providerStorages, planStorageMap, sourceProvider]);
 
   const sourceNetworks = useMemo(() => {
-    if (!isEmpty(providerNetworks)) return providerNetworks;
+    if (!isEmpty(providerNetworks)) {
+      return providerNetworks;
+    }
 
     return (planNetworkMap?.status?.references ?? []).map((ref) => ({
       id: ref.id ?? '',

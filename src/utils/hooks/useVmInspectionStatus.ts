@@ -27,8 +27,12 @@ const shouldReplace = (existing: V1beta1Conversion, candidate: V1beta1Conversion
   const candidateActive = isConversionActive(candidate);
   const existingActive = isConversionActive(existing);
 
-  if (candidateActive && !existingActive) return true;
-  if (!candidateActive && existingActive) return false;
+  if (candidateActive && !existingActive) {
+    return true;
+  }
+  if (!candidateActive && existingActive) {
+    return false;
+  }
 
   return (getCreatedAt(candidate) ?? '') > (getCreatedAt(existing) ?? '');
 };
@@ -56,7 +60,9 @@ export const useVmInspectionStatus = (
   return useCallback(
     (vmId: string): VmInspectionStatus | undefined => {
       const conversion = vmStatusMap.get(vmId);
-      if (!conversion) return undefined;
+      if (!conversion) {
+        return undefined;
+      }
 
       const phase = getConversionPhase(conversion);
       const inspectionPassed = hasInspectionPassed(getInspectionResult(conversion));
