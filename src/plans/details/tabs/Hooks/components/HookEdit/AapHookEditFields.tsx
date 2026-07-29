@@ -37,16 +37,20 @@ const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
 
     let cancelled = false;
 
-    connect().then(
-      (result) => {
-        if (!cancelled && result?.status === AAP_CONNECTION_STATUS_CONNECTED) {
-          setTemplates(result.templates);
-        }
-      },
-      () => {
+    connect()
+      .then(
+        (result) => {
+          if (!cancelled && result?.status === AAP_CONNECTION_STATUS_CONNECTED) {
+            setTemplates(result.templates);
+          }
+        },
+        () => {
+          // errors handled inside useAapConnection
+        },
+      )
+      .catch(() => {
         // errors handled inside useAapConnection
-      },
-    );
+      });
 
     return () => {
       cancelled = true;

@@ -64,10 +64,12 @@ const CreateNetworkMapFieldTable: FC = () => {
         ...field,
         inputs: [
           <InventorySourceNetworkField
+            key={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
             fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
             sourceNetworks={sourceNetworks}
           />,
           <TargetNetworkField
+            key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
             fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
             targetNetworks={targetNetworks}
             showIgnoreNetworkOption

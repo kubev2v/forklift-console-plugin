@@ -1,4 +1,7 @@
 /* eslint-disable @cspell/spellchecker */
+declare module 'eslint-plugin-barrel-files';
+declare module 'eslint-plugin-promise';
+
 declare module '*.svg' {
   export default ReactComponent;
 }

@@ -1,10 +1,7 @@
 import { NAME } from '@components/common/utils/constants';
-import { cleanup } from '@testing-library/react';
 import { renderHook } from '@testing-library/react';
 
 import { useSort } from '../sort';
-
-afterEach(cleanup);
 
 describe('useSort hook', () => {
   const NameColumn = { isIdentity: true, label: NAME, resourceFieldId: NAME };

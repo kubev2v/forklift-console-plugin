@@ -2,7 +2,7 @@
 // Check "moduleNameMapper" in jest.config.ts
 
 // re-export React components that require tsx syntax
-export * from './console_components';
+export { ActionService, ActionServiceProvider, ResourceLink } from './console_components';
 
 // mocks for non-React code (standard ts syntax)
 export class Dummy extends Error {

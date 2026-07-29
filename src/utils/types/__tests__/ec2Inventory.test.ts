@@ -52,7 +52,7 @@ describe('getEc2SubnetIds', () => {
   });
 
   it('returns empty array when object is undefined', () => {
-    const vm = makeEc2Vm(undefined);
+    const vm = makeEc2Vm();
     expect(getEc2SubnetIds(vm)).toEqual([]);
   });
 

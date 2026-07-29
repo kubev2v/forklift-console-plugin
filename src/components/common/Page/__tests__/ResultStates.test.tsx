@@ -1,17 +1,15 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { NoResultsMatchFilter } from '../PageStates';
 
-afterEach(cleanup);
-
 test('NoResultsMatchFilter', () => {
   const clear = jest.fn();
-  const { asFragment, getByRole } = render(<NoResultsMatchFilter clearAllFilters={clear} />);
+  const { asFragment } = render(<NoResultsMatchFilter clearAllFilters={clear} />);
   const firstRender = asFragment();
 
   expect(firstRender).toMatchSnapshot();
 
-  fireEvent.click(getByRole('button'));
+  fireEvent.click(screen.getByRole('button'));
 
   expect(clear).toBeCalledTimes(1);
 });

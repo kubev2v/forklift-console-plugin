@@ -47,7 +47,8 @@ export const getRootDiskLabelByKey = (diskKey: string | number | undefined): str
     ][diskIndex];
     const partitionPosition = partitionNumber ? `${partitionNumber} partition` : '';
 
-    return `${diskPosition} HD${partitionPosition ? ` ${partitionPosition}` : ''} (${key})`;
+    const partitionSuffix = partitionPosition ? ` ${partitionPosition}` : '';
+    return `${diskPosition} HD${partitionSuffix} (${key})`;
   }
   // If format is unrecognized, just return the key as label
   return key;

@@ -69,7 +69,7 @@ export const useTreeRows: UseTreeRows = ({
     const isVmSelected = (id: string) => selectedSet.has(id);
     const result: RowNode[] = [];
 
-    realFolderEntries.forEach(([folderName, vmIdsInFolder], folderIdx) => {
+    for (const [folderIdx, [folderName, vmIdsInFolder]] of realFolderEntries.entries()) {
       const isExpanded = expandedFolders.has(folderName);
 
       const getVisibleVmsInFolder = () => {
@@ -106,15 +106,42 @@ export const useTreeRows: UseTreeRows = ({
 
       result.push(folderRow);
 
-      vmIdsInFolder.forEach((vmKey, vmIdx) => {
+      for (const [vmIdx, vmKey] of vmIdsInFolder.entries()) {
         const vmChecked = isVmSelected(vmKey);
         const isVmExpanded = expandedVMs.has(vmKey);
         const vmData = vmByKey.get(vmKey);
 
-        if (!vmData) {
-          return;
-        }
+        if (vmData) {
+          const { concernsRow, vmRow } = makeVmAndConcernsRows({
+            canSelect,
+            checkboxId: canSelect ? `checkbox_id_vm_${slug(vmKey)}` : undefined,
+            isVmExpanded,
+            level1SetSize,
+            onCheckChange: canSelect ? onCheckChange(vmKey) : undefined,
+            onToggle: () => {
+              toggleSet(setExpandedVMs, vmKey);
+            },
+            parentExpanded: isExpanded,
+            parentFolderKey: folderKey,
+            parentSize: vmIdsInFolder.length,
+            rowIndex: result.length,
+            vmChecked,
+            vmData,
+            vmIdx,
+            vmKey,
+          });
 
+          result.push(vmRow, concernsRow);
+        }
+      }
+    }
+
+    for (const [idx, vmKey] of rootVmKeys.entries()) {
+      const vmChecked = isVmSelected(vmKey);
+      const isVmExpanded = expandedVMs.has(vmKey);
+      const vmData = vmByKey.get(vmKey);
+
+      if (vmData) {
         const { concernsRow, vmRow } = makeVmAndConcernsRows({
           canSelect,
           checkboxId: canSelect ? `checkbox_id_vm_${slug(vmKey)}` : undefined,
@@ -124,50 +151,19 @@ export const useTreeRows: UseTreeRows = ({
           onToggle: () => {
             toggleSet(setExpandedVMs, vmKey);
           },
-          parentExpanded: isExpanded,
-          parentFolderKey: folderKey,
-          parentSize: vmIdsInFolder.length,
+          parentExpanded: true,
+          parentFolderKey: NO_FOLDER,
+          parentSize: level1SetSize,
           rowIndex: result.length,
           vmChecked,
           vmData,
-          vmIdx,
+          vmIdx: idx,
           vmKey,
         });
 
         result.push(vmRow, concernsRow);
-      });
-    });
-
-    rootVmKeys.forEach((vmKey, idx) => {
-      const vmChecked = isVmSelected(vmKey);
-      const isVmExpanded = expandedVMs.has(vmKey);
-      const vmData = vmByKey.get(vmKey);
-
-      if (!vmData) {
-        return;
       }
-
-      const { concernsRow, vmRow } = makeVmAndConcernsRows({
-        canSelect,
-        checkboxId: canSelect ? `checkbox_id_vm_${slug(vmKey)}` : undefined,
-        isVmExpanded,
-        level1SetSize,
-        onCheckChange: canSelect ? onCheckChange(vmKey) : undefined,
-        onToggle: () => {
-          toggleSet(setExpandedVMs, vmKey);
-        },
-        parentExpanded: true,
-        parentFolderKey: NO_FOLDER,
-        parentSize: level1SetSize,
-        rowIndex: result.length,
-        vmChecked,
-        vmData,
-        vmIdx: idx,
-        vmKey,
-      });
-
-      result.push(vmRow, concernsRow);
-    });
+    }
 
     return result;
   }, [

@@ -14,7 +14,7 @@ const makeEc2Network = (id: string, name: string): ProviderNetwork => ({
 });
 
 const makeEc2Vm = (
-  subnetId: string | undefined,
+  subnetId?: string,
   networkInterfaces?: { SubnetId?: string }[],
 ): ProviderVirtualMachine =>
   ({
@@ -44,7 +44,7 @@ describe('getSourceNetworkValues - EC2', () => {
   });
 
   it('returns all subnets as other when EC2 VM has no subnet data', () => {
-    const vm = makeEc2Vm(undefined, undefined);
+    const vm = makeEc2Vm();
     const { other, used } = getSourceNetworkValues(subnets, [vm], []);
 
     expect(used).toHaveLength(0);

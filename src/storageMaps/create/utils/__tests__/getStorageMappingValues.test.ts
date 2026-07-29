@@ -105,8 +105,8 @@ describe('getStorageMappingValues', () => {
         emptySourceStorages,
       );
 
-      const keysWithOffload = Object.keys(results[0]).sort();
-      const keysWithoutOffload = Object.keys(results[1]).sort();
+      const keysWithOffload = Object.keys(results[0]).sort((a, b) => a.localeCompare(b));
+      const keysWithoutOffload = Object.keys(results[1]).sort((a, b) => a.localeCompare(b));
 
       expect(keysWithOffload).toEqual(keysWithoutOffload);
     });

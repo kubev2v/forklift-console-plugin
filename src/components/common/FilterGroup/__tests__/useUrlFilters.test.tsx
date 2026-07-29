@@ -1,10 +1,8 @@
 import { NAME } from '@components/common/utils/constants';
-import { cleanup } from '@testing-library/react';
 import { act, renderHook } from '@testing-library/react';
 
 import { useUrlFilters } from '../useUrlFilters';
 
-afterEach(cleanup);
 beforeEach(() => {
   Object.defineProperty(window, 'location', {
     value: { assign: jest.fn() },
@@ -23,7 +21,7 @@ describe('parse filters from the URL on initialization', () => {
     ['ignores corrupted data', '?name=%5B%foo', undefined],
   ];
 
-  cases.forEach(([description, search, output]) => {
+  for (const [description, search, output] of cases) {
     it(description, () => {
       window.location.search = search;
       const {
@@ -37,7 +35,7 @@ describe('parse filters from the URL on initialization', () => {
       );
       expect(selectedFilters[NAME]).toStrictEqual(output);
     });
-  });
+  }
 
   it('ignores unknown field', () => {
     window.location.search = '?ready=%5B"True"%5D';

@@ -40,7 +40,7 @@ describe('getDefaultValues', () => {
   });
 
   it('returns defaults for all fields when no controller is provided', () => {
-    const result = getDefaultValues(undefined);
+    const result = getDefaultValues();
     expect(result[SettingsFields.VirtV2vMemsize]).toBe(0);
     expect(result[SettingsFields.VirtV2vSmp]).toBe(0);
     expect(result[SettingsFields.MaxVMInFlight]).toBe(20);

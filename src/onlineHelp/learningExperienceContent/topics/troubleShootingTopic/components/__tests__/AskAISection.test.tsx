@@ -25,9 +25,9 @@ describe('AskAISection', () => {
       openLightspeed: mockOpenLightspeed,
     });
 
-    const { container } = render(<AskAISection />);
+    render(<AskAISection />);
 
-    expect(container.firstChild).toBeNull();
+    expect(screen.queryByText('Ask AI assistant')).not.toBeInTheDocument();
   });
 
   it('renders nothing when unavailable', () => {
@@ -37,9 +37,9 @@ describe('AskAISection', () => {
       openLightspeed: mockOpenLightspeed,
     });
 
-    const { container } = render(<AskAISection />);
+    render(<AskAISection />);
 
-    expect(container.firstChild).toBeNull();
+    expect(screen.queryByText('Ask AI assistant')).not.toBeInTheDocument();
   });
 
   it('renders the card with title when available', () => {

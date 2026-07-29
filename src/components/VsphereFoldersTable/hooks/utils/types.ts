@@ -2,9 +2,6 @@ import type { ProviderVmData } from 'src/utils/types';
 
 import type { Concern } from '@forklift-ui/types';
 
-export type VmKey = string;
-export type FolderKey = string;
-
 export type VmLookups = {
   name?: string;
   path?: string;
@@ -14,9 +11,9 @@ export type VmLookups = {
 };
 
 export type Indexes = {
-  vmByKey: Map<VmKey, ProviderVmData>;
-  folderToVmKeys: Map<FolderKey, VmKey[]>;
-  tokensByVmKey: Map<VmKey, VmLookups>;
+  folderToVmKeys: Map<string, string[]>;
+  tokensByVmKey: Map<string, VmLookups>;
+  vmByKey: Map<string, ProviderVmData>;
 };
 
 export type UseTreeRowsControls = {

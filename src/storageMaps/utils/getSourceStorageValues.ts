@@ -154,9 +154,9 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
       // Use empty array
     }
 
-    storageIds.forEach((id) => {
+    for (const id of storageIds) {
       acc.add(id);
-    });
+    }
     return acc;
   }, new Set());
 

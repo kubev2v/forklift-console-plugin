@@ -110,8 +110,7 @@ export const GroupedEnumFilter = ({
     );
   };
 
-  const hasFilter = (id: string): boolean =>
-    Boolean(id2enum[id]) && Boolean(selectedEnumIds.find((enumId) => enumId === id));
+  const hasFilter = (id: string): boolean => Boolean(id2enum[id]) && selectedEnumIds.includes(id);
 
   const addFilter = (id: string): void => {
     if (hasMultipleResources) {

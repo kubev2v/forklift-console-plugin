@@ -4,16 +4,16 @@ import type { ProviderHost, VSphereResource, VSphereVM } from '@forklift-ui/type
 import { getVmPowerState } from '@utils/virtual-machines/getVmPowerState';
 
 import { FOLDER_PREFIX, NO_FOLDER } from './constants';
-import type { FolderKey, Indexes, VmKey, VmLookups } from './types';
+import type { Indexes, VmLookups } from './types';
 
 export const buildIndexes = (
   vmDataArr: ProviderVmData[] | undefined,
   foldersDict: Record<string, VSphereResource>,
   hostsDict: Record<string, ProviderHost>,
 ): Indexes => {
-  const vmByKey = new Map<VmKey, ProviderVmData>();
-  const folderToVmKeys = new Map<FolderKey, VmKey[]>();
-  const tokensByVmKey = new Map<VmKey, VmLookups>();
+  const vmByKey = new Map<string, ProviderVmData>();
+  const folderToVmKeys = new Map<string, string[]>();
+  const tokensByVmKey = new Map<string, VmLookups>();
 
   if (!vmDataArr?.length) {
     return { folderToVmKeys, tokensByVmKey, vmByKey };
@@ -21,7 +21,7 @@ export const buildIndexes = (
 
   for (const vmData of vmDataArr) {
     const vm = vmData.vm as VSphereVM;
-    const key: VmKey = vm?.id;
+    const key = vm?.id;
     const folder = foldersDict[vm.parent?.id];
     const folderName = folder?.name ?? NO_FOLDER;
     const host = hostsDict[vm.host] as { name: string } | undefined;

@@ -181,7 +181,7 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
             ref={null}
           />
         ))}
-        {canCreate && !selectOptions.find((option) => option.itemId === filterValue) && (
+        {canCreate && !selectOptions.some((option) => option.itemId === filterValue) && (
           <>
             <Divider />
             <SelectOption

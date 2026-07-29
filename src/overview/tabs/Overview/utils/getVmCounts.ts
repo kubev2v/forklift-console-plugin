@@ -35,11 +35,11 @@ const incrementCounts = (
   }
 
   if (isCompleted) {
-    conditions.forEach((condition) => {
+    for (const condition of conditions) {
       if (condition in vmCounts) {
         vmCounts[condition] += 1;
       }
-    });
+    }
   }
 };
 

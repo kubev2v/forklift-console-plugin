@@ -67,6 +67,7 @@ const DiskPassPhraseFieldTable = () => {
         ...fieldRow,
         inputs: [
           <Controller
+            key={getDiskPassPhraseFieldId(index)}
             name={getDiskPassPhraseFieldId(index)}
             control={control}
             render={({ field }) => <TextInput {...field} />}

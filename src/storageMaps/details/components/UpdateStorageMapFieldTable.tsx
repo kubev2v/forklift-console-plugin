@@ -105,6 +105,7 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
         ),
         inputs: [
           <SourceStorageField
+            key={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
             fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
             storageMappings={storageMap}
             sourceStorages={sourceStorages}

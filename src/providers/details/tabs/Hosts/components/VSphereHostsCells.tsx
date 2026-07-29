@@ -12,6 +12,7 @@ const VSphereHostsCells: FC<RowProps<InventoryHostNetworkTriple>> = ({
     <>
       {resourceFields?.map(({ resourceFieldId }) => (
         <RenderTd
+          key={resourceFieldId}
           resourceData={resourceData}
           resourceFieldId={resourceFieldId}
           resourceFields={resourceFields}

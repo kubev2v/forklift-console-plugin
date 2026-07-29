@@ -111,9 +111,8 @@ describe('MigrationAlertsCard', () => {
     expect(screen.getByText('Failed', { exact: true })).toBeInTheDocument();
     expect(screen.getByText('Succeeded', { exact: true })).toBeInTheDocument();
 
-    const counts = document.querySelectorAll('.migration-alerts-card__summary-count');
-    expect(counts[0]?.textContent).toBe('1');
-    expect(counts[1]?.textContent).toBe('1');
+    const summaryCounts = screen.getAllByText('1');
+    expect(summaryCounts).toHaveLength(2);
   });
 
   it('renders alert list items with titles', () => {
@@ -154,11 +153,9 @@ describe('MigrationAlertsCard', () => {
 
     renderCard();
 
-    const detailLinks = screen.getAllByText('View details');
+    const detailLinks = screen.getAllByRole('link', { name: 'View details' });
     expect(detailLinks).toHaveLength(2);
-    expect(detailLinks[0].closest('a')?.getAttribute('href')).toBe(
-      '/monitoring/alerts?alertname=MigrationFailed',
-    );
+    expect(detailLinks[0]).toHaveAttribute('href', '/monitoring/alerts?alertname=MigrationFailed');
   });
 
   it('renders "View alerts" link in header', () => {
@@ -170,7 +167,9 @@ describe('MigrationAlertsCard', () => {
 
     renderCard();
 
-    const viewAlertsLink = screen.getByText('View alerts');
-    expect(viewAlertsLink.closest('a')?.getAttribute('href')).toBe('/monitoring/alerts');
+    expect(screen.getByRole('link', { name: 'View alerts' })).toHaveAttribute(
+      'href',
+      '/monitoring/alerts',
+    );
   });
 });

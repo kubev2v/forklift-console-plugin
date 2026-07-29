@@ -25,16 +25,15 @@ export const createOffloadPluginConfig = (
 
   const dedicatedMigrationHosts = mapping[StorageMapFieldId.DedicatedMigrationHosts];
 
-  switch (offloadPlugin) {
-    case OffloadPlugin.VSphereXcopyConfig:
-      return {
-        vsphereXcopyConfig: {
-          ...(!isEmpty(dedicatedMigrationHosts) && { dedicatedMigrationHosts }),
-          secretRef: storageSecret,
-          storageVendorProduct,
-        },
-      };
-    default:
-      return undefined;
+  if (offloadPlugin === OffloadPlugin.VSphereXcopyConfig) {
+    return {
+      vsphereXcopyConfig: {
+        ...(!isEmpty(dedicatedMigrationHosts) && { dedicatedMigrationHosts }),
+        secretRef: storageSecret,
+        storageVendorProduct,
+      },
+    };
   }
+
+  return undefined;
 };

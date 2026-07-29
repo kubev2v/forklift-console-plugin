@@ -108,7 +108,7 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
             PlanStatuses.Paused,
             PlanStatuses.Pending,
             PlanStatuses.Archived,
-          ].some((status) => status === planStatus)
+          ].includes(planStatus)
         }
       >
         {isDetailsPage ? t('Edit YAML') : t('Edit')}

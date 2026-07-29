@@ -29,16 +29,20 @@ const AapConnectionSection: FC<AapConnectionSectionProps> = ({ onConnected }) =>
 
     let cancelled = false;
 
-    connect().then(
-      (result) => {
-        if (!cancelled && result?.status === AAP_CONNECTION_STATUS_CONNECTED) {
-          onConnectedRef.current(result.templates);
-        }
-      },
-      () => {
+    connect()
+      .then(
+        (result) => {
+          if (!cancelled && result?.status === AAP_CONNECTION_STATUS_CONNECTED) {
+            onConnectedRef.current(result.templates);
+          }
+        },
+        () => {
+          // errors are handled inside useAapConnection
+        },
+      )
+      .catch(() => {
         // errors are handled inside useAapConnection
-      },
-    );
+      });
 
     return () => {
       cancelled = true;

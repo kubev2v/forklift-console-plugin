@@ -1,4 +1,4 @@
-import { type FormEvent, type FunctionComponent, type KeyboardEvent, useState } from 'react';
+import { type FunctionComponent, type KeyboardEvent, useState } from 'react';
 
 import { TextInput } from '@patternfly/react-core';
 
@@ -44,14 +44,12 @@ export const LazyTextInput: FunctionComponent<LazyTextInputProps> = ({
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      if (value !== propValue) {
-        onChange(value);
-      }
+    if (event.key === 'Enter' && value !== propValue) {
+      onChange(value);
     }
   };
 
-  const onChangeText: (value: string, event: FormEvent<HTMLInputElement>) => void = (newValue) => {
+  const onChangeText = (newValue: string): void => {
     setValue(newValue);
   };
 
@@ -60,8 +58,8 @@ export const LazyTextInput: FunctionComponent<LazyTextInputProps> = ({
       spellCheck="false"
       value={value}
       type={type}
-      onChange={(e, val) => {
-        onChangeText(val, e);
+      onChange={(_event, val) => {
+        onChangeText(val);
       }}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}

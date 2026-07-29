@@ -20,29 +20,31 @@ export const concernSeverityOrTypeFilter = (): FilterDef => {
 
         const conditions = item?.conditions;
 
-        concerns?.forEach((concern) => {
-          const key = concern?.label;
-          const map = getUniqueMapByCategory(acc, concern?.category);
-          if (!map.has(key)) {
-            map.set(key, {
-              icon: getCategoryIcon(concern.category),
-              id: concern.label,
-              label: concern.label,
-            });
+        if (concerns)
+          for (const concern of concerns) {
+            const key = concern?.label;
+            const map = getUniqueMapByCategory(acc, concern?.category);
+            if (!map.has(key)) {
+              map.set(key, {
+                icon: getCategoryIcon(concern.category),
+                id: concern.label,
+                label: concern.label,
+              });
+            }
           }
-        });
 
-        conditions?.forEach((condition) => {
-          const key = condition?.type;
-          const map = getUniqueMapByCategory(acc, condition?.category);
-          if (!map.has(key)) {
-            map.set(key, {
-              icon: getCategoryIcon(condition.category),
-              id: condition.type,
-              label: condition.type,
-            });
+        if (conditions)
+          for (const condition of conditions) {
+            const key = condition?.type;
+            const map = getUniqueMapByCategory(acc, condition?.category);
+            if (!map.has(key)) {
+              map.set(key, {
+                icon: getCategoryIcon(condition.category),
+                id: condition.type,
+                label: condition.type,
+              });
+            }
           }
-        });
 
         return acc;
       }, createInitialUniqueMaps());

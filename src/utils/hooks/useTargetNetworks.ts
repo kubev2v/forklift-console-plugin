@@ -19,12 +19,13 @@ const useTargetNetworks = (
       },
     ];
 
-    availableTargetNetworks?.forEach((network) => {
-      networksList.push({
-        id: network.uid,
-        name: `${network.namespace}/${network.name}`,
-      });
-    });
+    if (availableTargetNetworks)
+      for (const network of availableTargetNetworks) {
+        networksList.push({
+          id: network.uid,
+          name: `${network.namespace}/${network.name}`,
+        });
+      }
 
     return networksList;
   }, [availableTargetNetworks]);

@@ -20,14 +20,16 @@ export const isEmpty = (value: object | unknown[] | string | undefined | null): 
 
 /**
  * Returns a Set of values that appear more than once in an array.
+ * @param items
+ * @param getValue
  */
 export const getDuplicateValues = <T>(items: T[], getValue: (item: T) => string): Set<string> => {
   const counts = new Map<string, number>();
 
-  items.forEach((item) => {
+  for (const item of items) {
     const value = getValue(item);
     counts.set(value, (counts.get(value) ?? 0) + 1);
-  });
+  }
 
   return new Set(
     Array.from(counts.entries())

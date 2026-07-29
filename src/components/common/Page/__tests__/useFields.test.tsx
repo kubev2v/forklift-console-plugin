@@ -1,10 +1,7 @@
 import { NAME, NAMESPACE } from '@components/common/utils/constants';
-import { cleanup } from '@testing-library/react';
 import { act, renderHook } from '@testing-library/react';
 
 import { useFields } from '../useFields';
-
-afterEach(cleanup);
 
 describe('manage fields', () => {
   it('gets initialized from the defaults', () => {

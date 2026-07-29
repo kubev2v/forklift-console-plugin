@@ -92,11 +92,13 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
           ...field,
           inputs: [
             <SourceNetworkField
+              key={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
               fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
               usedSourceNetworks={usedSourceNetworks}
               otherSourceNetworks={otherSourceNetworks}
             />,
             <TargetNetworkField
+              key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
               fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
               targetNetworks={targetNetworks}
               showIgnoreNetworkOption

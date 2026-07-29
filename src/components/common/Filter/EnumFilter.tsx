@@ -54,8 +54,7 @@ export const EnumFilter = ({
     onUniqueFilterUpdate(selectedUniqueEnumLabels.filter((filterLabel) => filterLabel !== label));
   };
 
-  const hasFilter = (label: string): boolean =>
-    Boolean(selectedUniqueEnumLabels.find((filterLabel) => filterLabel === label));
+  const hasFilter = (label: string): boolean => selectedUniqueEnumLabels.includes(label);
 
   const addFilter = (label: string): void => {
     if (typeof label === 'string') {

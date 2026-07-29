@@ -164,9 +164,9 @@ BAYTAkFVMRMwEQYDVQQIDApTb21lLVN 0YXRlMSEwHwYDVQQKDBhJ=
         'my-nfs-server.com:/exports',
       ];
 
-      validNFSPaths.forEach((nfsPath) => {
+      for (const nfsPath of validNFSPaths) {
         expect(validateNFSMount(nfsPath)).toBe(true);
-      });
+      }
     });
 
     it('should not validate incorrect NFS paths', () => {
@@ -178,9 +178,9 @@ BAYTAkFVMRMwEQYDVQQIDApTb21lLVN 0YXRlMSEwHwYDVQQKDBhJ=
         'http://10.10.0.10:/backups', // NOSONAR
       ];
 
-      invalidNFSPaths.forEach((nfsPath) => {
+      for (const nfsPath of invalidNFSPaths) {
         expect(validateNFSMount(nfsPath)).toBe(false);
-      });
+      }
     });
   });
 });
