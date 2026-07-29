@@ -4,6 +4,7 @@ export { setupCoreKubernetesIntercepts } from './core';
 export { setupDatastoresIntercepts } from './datastores';
 export { setupHostsIntercepts } from './hosts';
 export { setupLightspeedIntercepts } from './lightspeed';
+export { setupMigrationVmResourceIntercepts } from './migrationVmResources';
 export { setupNetworkMapsIntercepts } from './networkMaps';
 export { setupPlanDetailsIntercepts } from './planDetails';
 export { setupPlansIntercepts } from './plans';
