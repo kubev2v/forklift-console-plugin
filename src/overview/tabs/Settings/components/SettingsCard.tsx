@@ -29,6 +29,8 @@ import InventoryMemoryLimitHelpContent from './InventoryMemoryLimit/InventoryMem
 import MaxVMInFlightHelpContent from './MaxVMInFlight/MaxVMInFlightHelpContent';
 import PreCopyIntervalHelpContent from './PreCopyInterval/PreCopyIntervalHelpContent';
 import SnapshotPoolingIntervalHelpContent from './SnapshotPoolingInterval/SnapshotPoolingIntervalHelpContent';
+import VirtV2vMemsizeHelpContent from './VirtV2vMemsize/VirtV2vMemsizeHelpContent';
+import VirtV2vSmpHelpContent from './VirtV2vSmp/VirtV2vSmpHelpContent';
 import SettingsEdit from './SettingsEdit';
 
 type SettingsCardProps = {
@@ -45,6 +47,11 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
 
   const controller = obj as EnhancedForkliftController;
   const spec = controller.spec ?? {};
+
+  const formatVirtV2vValue = (value: number | undefined): string => {
+    if (!value) return t('Default (virt-v2v chooses)');
+    return String(value);
+  };
 
   return (
     <>
@@ -109,6 +116,18 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
           }
           title={t('Snapshot polling interval')}
           helpContent={<SnapshotPoolingIntervalHelpContent />}
+        />
+        <DetailsItem
+          testId="settings-virt-v2v-memsize"
+          content={formatVirtV2vValue(spec?.[SettingsFields.VirtV2vMemsize])}
+          title={t('Conversion appliance memory (MB)')}
+          helpContent={<VirtV2vMemsizeHelpContent />}
+        />
+        <DetailsItem
+          testId="settings-virt-v2v-smp"
+          content={formatVirtV2vValue(spec?.[SettingsFields.VirtV2vSmp])}
+          title={t('Conversion appliance vCPUs')}
+          helpContent={<VirtV2vSmpHelpContent />}
         />
         <DetailsItem
           testId="settings-controller-transfer-network"

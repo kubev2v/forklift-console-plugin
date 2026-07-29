@@ -84,7 +84,7 @@ ForkliftControllerSettingsTab → SettingsCard
         └── 10 field editors → k8sPatch on ForkliftControllerModel
 ```
 
-**Configurable settings** (10 fields from `SettingsFields` enum):
+**Configurable settings** (12 fields from `SettingsFields` enum):
 
 | Setting | Spec field | Default |
 |---------|-----------|---------|
@@ -94,6 +94,8 @@ ForkliftControllerSettingsTab → SettingsCard
 | Inventory memory limit | `inventory_container_limits_memory` | 1000Mi |
 | Precopy interval | `controller_precopy_interval` | 60 min |
 | Snapshot polling interval | `controller_snapshot_status_check_rate_seconds` | 10s |
+| Conversion appliance memory (MB) | `virt_v2v_memsize` | 0 (virt-v2v chooses) |
+| Conversion appliance vCPUs | `virt_v2v_smp` | 0 (virt-v2v chooses) |
 | Controller transfer network | `controller_transfer_network` | None |
 | AAP URL | `aap_url` | Not configured |
 | AAP token secret | `aap_token_secret_name` | Not configured |

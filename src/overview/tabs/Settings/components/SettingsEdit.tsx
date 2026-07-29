@@ -27,6 +27,8 @@ import EditInventoryMemoryLimit from './InventoryMemoryLimit/EditInventoryMemory
 import EditMaxVMInFlight from './MaxVMInFlight/EditMaxVMInFlight';
 import EditPreCopyInterval from './PreCopyInterval/EditPreCopyInterval';
 import EditSnapshotPoolingInterval from './SnapshotPoolingInterval/EditSnapshotPoolingInterval';
+import EditVirtV2vMemsize from './VirtV2vMemsize/EditVirtV2vMemsize';
+import EditVirtV2vSmp from './VirtV2vSmp/EditVirtV2vSmp';
 const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controller }) => {
   const { t } = useForkliftTranslation();
 
@@ -91,6 +93,8 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
           <EditInventoryMemoryLimit />
           <EditPreCopyInterval />
           <EditSnapshotPoolingInterval />
+          <EditVirtV2vMemsize />
+          <EditVirtV2vSmp />
           <EditControllerTransferNetwork />
           <EditAapUrl />
           <EditAapTokenSecret namespace={getNamespace(controller)!} />

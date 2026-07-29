@@ -11,6 +11,8 @@ export enum SettingsFields {
   MaxVMInFlight = 'controller_max_vm_inflight',
   PrecopyInterval = 'controller_precopy_interval',
   SnapshotStatusCheckRate = 'controller_snapshot_status_check_rate_seconds',
+  VirtV2vMemsize = 'virt_v2v_memsize',
+  VirtV2vSmp = 'virt_v2v_smp',
 }
 
 export type ForkliftSettingsValues = {
@@ -24,6 +26,8 @@ export type ForkliftSettingsValues = {
   [SettingsFields.MaxVMInFlight]?: number;
   [SettingsFields.PrecopyInterval]?: number;
   [SettingsFields.SnapshotStatusCheckRate]?: number;
+  [SettingsFields.VirtV2vMemsize]?: number;
+  [SettingsFields.VirtV2vSmp]?: number;
 };
 
 export type EnhancedForkliftController = V1beta1ForkliftController & {
@@ -38,6 +42,8 @@ export type EnhancedForkliftController = V1beta1ForkliftController & {
     [SettingsFields.MaxVMInFlight]?: number;
     [SettingsFields.PrecopyInterval]?: number;
     [SettingsFields.SnapshotStatusCheckRate]?: number;
+    [SettingsFields.VirtV2vMemsize]?: number;
+    [SettingsFields.VirtV2vSmp]?: number;
   } & Record<string, string | number>;
 };
 
