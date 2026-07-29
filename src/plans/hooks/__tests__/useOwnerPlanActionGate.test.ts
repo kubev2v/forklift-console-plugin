@@ -1,16 +1,15 @@
 import { describe, expect, it } from '@jest/globals';
+import { mockI18n } from '@test-utils/mockI18n';
 import { renderHook } from '@testing-library/react';
 
 import { useOwnerPlanActionGate } from '../useOwnerPlanActionGate';
+
+mockI18n();
 
 const mockUseK8sWatchResource = jest.fn();
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   useK8sWatchResource: (...args: unknown[]) => mockUseK8sWatchResource(...args),
-}));
-
-jest.mock('src/utils/i18n', () => ({
-  useForkliftTranslation: () => ({ t: (key: string) => key }),
 }));
 
 const mockIsPlanEditable = jest.fn();
@@ -183,6 +182,115 @@ describe('useOwnerPlanActionGate', () => {
 
     expect(result.current.isBlocked).toBe(true);
     expect(result.current.disabledReason).toBe('Owning plan has completed');
+  });
+
+  it('returns blocked with reason when Plan is Paused', () => {
+    const plan = { metadata: { name: 'plan-1', namespace: 'ns1' } };
+    mockUseK8sWatchResource.mockReturnValue([plan, true]);
+    mockIsPlanEditable.mockReturnValue(false);
+    mockGetPlanStatus.mockReturnValue('Paused');
+
+    const resource = {
+      metadata: {
+        name: 'map1',
+        namespace: 'ns1',
+        ownerReferences: [
+          {
+            apiVersion: 'forklift.konveyor.io/v1beta1',
+            kind: 'Plan',
+            name: 'plan-1',
+            uid: 'uid-1',
+          },
+        ],
+      },
+    };
+    const { result } = renderHook(() => useOwnerPlanActionGate(resource));
+
+    expect(result.current.isBlocked).toBe(true);
+    expect(result.current.disabledReason).toBe('Owning plan is currently migrating');
+  });
+
+  it('returns blocked with reason when Plan is Pending', () => {
+    const plan = { metadata: { name: 'plan-1', namespace: 'ns1' } };
+    mockUseK8sWatchResource.mockReturnValue([plan, true]);
+    mockIsPlanEditable.mockReturnValue(false);
+    mockGetPlanStatus.mockReturnValue('Pending');
+
+    const resource = {
+      metadata: {
+        name: 'map1',
+        namespace: 'ns1',
+        ownerReferences: [
+          {
+            apiVersion: 'forklift.konveyor.io/v1beta1',
+            kind: 'Plan',
+            name: 'plan-1',
+            uid: 'uid-1',
+          },
+        ],
+      },
+    };
+    const { result } = renderHook(() => useOwnerPlanActionGate(resource));
+
+    expect(result.current.isBlocked).toBe(true);
+    expect(result.current.disabledReason).toBe('Owning plan is currently migrating');
+  });
+
+  it('returns generic blocked reason for other non-editable statuses', () => {
+    const plan = { metadata: { name: 'plan-1', namespace: 'ns1' } };
+    mockUseK8sWatchResource.mockReturnValue([plan, true]);
+    mockIsPlanEditable.mockReturnValue(false);
+    mockGetPlanStatus.mockReturnValue('CannotStart');
+
+    const resource = {
+      metadata: {
+        name: 'map1',
+        namespace: 'ns1',
+        ownerReferences: [
+          {
+            apiVersion: 'forklift.konveyor.io/v1beta1',
+            kind: 'Plan',
+            name: 'plan-1',
+            uid: 'uid-1',
+          },
+        ],
+      },
+    };
+    const { result } = renderHook(() => useOwnerPlanActionGate(resource));
+
+    expect(result.current.isBlocked).toBe(true);
+    expect(result.current.disabledReason).toBe('Owning plan cannot be modified');
+  });
+
+  it('finds Plan owner even when not at index 0', () => {
+    mockUseK8sWatchResource.mockReturnValue([undefined, false]);
+
+    const resource = {
+      metadata: {
+        name: 'map1',
+        namespace: 'ns1',
+        ownerReferences: [
+          {
+            apiVersion: 'forklift.konveyor.io/v1beta1',
+            kind: 'Migration',
+            name: 'mig-1',
+            uid: 'uid-0',
+          },
+          {
+            apiVersion: 'forklift.konveyor.io/v1beta1',
+            kind: 'Plan',
+            name: 'plan-2',
+            uid: 'uid-1',
+          },
+        ],
+      },
+    };
+    const { result } = renderHook(() => useOwnerPlanActionGate(resource));
+
+    expect(result.current.isBlocked).toBe(true);
+    expect(mockUseK8sWatchResource).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'plan-2', namespace: 'ns1' }),
+    );
   });
 
   it('returns unblocked when resource is undefined', () => {
