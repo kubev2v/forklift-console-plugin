@@ -12,7 +12,9 @@ type ProviderEntry = {
 export const isVddkConfigured = (): boolean => {
   const providersFile = join(__dirname, '../../.providers.json');
 
-  if (!existsSync(providersFile)) return false;
+  if (!existsSync(providersFile)) {
+    return false;
+  }
 
   const providers = JSON.parse(readFileSync(providersFile, 'utf8')) as Record<
     string,

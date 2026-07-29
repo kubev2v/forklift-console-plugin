@@ -19,7 +19,9 @@ export const selectProviderProject = async (page: Page, projectName: string): Pr
   await projectSelect.waitFor({ state: 'visible', timeout: 10000 });
   const textInput = projectSelect.locator('input');
   const currentValue = await textInput.inputValue();
-  if (currentValue === projectName) return;
+  if (currentValue === projectName) {
+    return;
+  }
   await textInput.click();
   await textInput.clear();
   await textInput.fill(projectName);

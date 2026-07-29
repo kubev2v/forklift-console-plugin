@@ -37,9 +37,13 @@ export const getSelectedOption = (
   value: string | undefined,
   allowInherit: boolean,
 ): NameTemplateOptions => {
-  if (value) return NameTemplateOptions.customNameTemplate;
+  if (value) {
+    return NameTemplateOptions.customNameTemplate;
+  }
 
-  if (allowInherit) return NameTemplateOptions.inheritPlanWideSetting;
+  if (allowInherit) {
+    return NameTemplateOptions.inheritPlanWideSetting;
+  }
 
   return NameTemplateOptions.defaultNameTemplate;
 };

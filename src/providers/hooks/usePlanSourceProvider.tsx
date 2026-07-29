@@ -10,7 +10,7 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 const usePlanSourceProvider = (
   plan: V1beta1Plan,
   namespace: string,
-): [V1beta1Provider | undefined, boolean, any] => {
+): [V1beta1Provider | undefined, boolean, unknown] => {
   const planSourceProviderName = plan?.spec?.provider?.source?.name;
 
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({

@@ -26,7 +26,7 @@ export const useLearningExperienceContext = (): LearningExperienceContextType =>
   const [drawerWidth, setDrawerWidth] = useState(
     persistedState.drawerWidth ?? DEFAULT_DRAWER_WIDTH,
   );
-  const [data, setData] = useState<Record<string, any>>(persistedState.data ?? DEFAULT_DATA);
+  const [data, setData] = useState<Record<string, unknown>>(persistedState.data ?? DEFAULT_DATA);
 
   const openLearningExperience = useCallback(() => {
     setIsLearningExperienceOpen(true);
@@ -60,7 +60,7 @@ export const useLearningExperienceContext = (): LearningExperienceContextType =>
     });
   }, []);
 
-  const setDataItem = useCallback((dataItem: string, value: any): void => {
+  const setDataItem = useCallback((dataItem: string, value: unknown): void => {
     setData((prev) => {
       const newData = { ...prev, [dataItem]: value };
       persistValue('data', newData);

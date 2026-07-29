@@ -29,7 +29,9 @@ type ValidateNetworkMapParams = {
 };
 
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
-  if (isEc2Vm(vm)) return getEc2SubnetIds(vm);
+  if (isEc2Vm(vm)) {
+    return getEc2SubnetIds(vm);
+  }
 
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere: {
@@ -163,7 +165,9 @@ const collectDistinctVlansByNetwork = (nics: HypervNic[]): Map<string, Set<numbe
   for (const nic of nics) {
     const netId = nic.network?.id;
     if (netId) {
-      if (!vlansByNetwork.has(netId)) vlansByNetwork.set(netId, new Set<number>());
+      if (!vlansByNetwork.has(netId)) {
+        vlansByNetwork.set(netId, new Set<number>());
+      }
       vlansByNetwork.get(netId)!.add(nic.vlanId ?? 0);
     }
   }
@@ -177,7 +181,9 @@ const upsertVlanEntry = (
   vlanId: number,
 ): void => {
   const key = vlanId === 0 ? `${networkId}/untagged` : `${networkId}/${vlanId}`;
-  if (vlanEntries.has(key)) return;
+  if (vlanEntries.has(key)) {
+    return;
+  }
   vlanEntries.set(
     key,
     vlanId === 0
@@ -284,13 +290,16 @@ export const validateNetworkMap = (validateNetworkMapParams: ValidateNetworkMapP
   const hasUnmappedNetwork = !usedSourceNetworks.every((sourceNetwork) =>
     mappedNetworkNames.has(sourceNetwork.name),
   );
-  if (hasUnmappedNetwork) return t('All networks detected on the selected VMs require a mapping.');
+  if (hasUnmappedNetwork) {
+    return t('All networks detected on the selected VMs require a mapping.');
+  }
 
   const hasMultiplePodNetwork = hasMultiplePodNetworkMappings(values, vms, oVirtNicProfiles);
-  if (hasMultiplePodNetwork)
+  if (hasMultiplePodNetwork) {
     return t(
       'At least one VM is detected with more than one interface mapped to Default Network. This is not allowed.',
     );
+  }
 
   return undefined;
 };

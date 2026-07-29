@@ -21,7 +21,9 @@ export const useCbtDisabledVms = (
   const planVmIds = useMemo(() => new Set(getPlanVirtualMachines(plan).map((vm) => vm.id)), [plan]);
 
   const cbtDisabledVms = useMemo((): ProviderVirtualMachine[] => {
-    if (isVmDataLoading || !isVsphere || isEmpty(providerVmData)) return [];
+    if (isVmDataLoading || !isVsphere || isEmpty(providerVmData)) {
+      return [];
+    }
 
     return providerVmData
       .filter((data) => planVmIds.has(data.vm.id))

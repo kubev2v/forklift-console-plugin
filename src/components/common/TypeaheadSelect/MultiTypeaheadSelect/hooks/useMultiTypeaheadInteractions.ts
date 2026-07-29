@@ -83,7 +83,9 @@ export const useMultiTypeaheadInteractions = ({
 
   const handleSelect = useCallback(
     (selectedValue: string | number | undefined) => {
-      if (isPlaceholderValue(selectedValue) || selectedValue === undefined) return;
+      if (isPlaceholderValue(selectedValue) || selectedValue === undefined) {
+        return;
+      }
 
       const existsInOptions = options.some((opt) => opt.value === selectedValue);
       const isCreatePick = !existsInOptions && isCreatable;
@@ -109,13 +111,19 @@ export const useMultiTypeaheadInteractions = ({
           if (isOpen && currentFocused && !currentFocused.optionProps?.isAriaDisabled) {
             handleSelect(currentFocused.value);
           }
-          if (!isOpen) setIsOpen(true);
+          if (!isOpen) {
+            setIsOpen(true);
+          }
           return;
         }
         case 'ArrowUp': {
           event.preventDefault();
-          if (!isOpen) setIsOpen(true);
-          if (isEmpty(displayOptions)) return;
+          if (!isOpen) {
+            setIsOpen(true);
+          }
+          if (isEmpty(displayOptions)) {
+            return;
+          }
 
           const startIndex =
             focusedItemIndex === null ? displayOptions.length - 1 : focusedItemIndex - 1;
@@ -125,8 +133,12 @@ export const useMultiTypeaheadInteractions = ({
         }
         case 'ArrowDown': {
           event.preventDefault();
-          if (!isOpen) setIsOpen(true);
-          if (isEmpty(displayOptions)) return;
+          if (!isOpen) {
+            setIsOpen(true);
+          }
+          if (isEmpty(displayOptions)) {
+            return;
+          }
 
           const startIndex = focusedItemIndex === null ? 0 : focusedItemIndex + 1;
           const nextIndex = getNextEnabledIndex(displayOptions, startIndex);

@@ -66,11 +66,15 @@ const CONSOLE_ROUTE_HOST_PREFIX = 'console-openshift-console.apps.';
  */
 const deriveClusterApiUrlFromConsoleAddress = (): string | null => {
   const consoleAddress = process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS;
-  if (!consoleAddress) return null;
+  if (!consoleAddress) {
+    return null;
+  }
 
   try {
     const { hostname } = new URL(consoleAddress);
-    if (!hostname.startsWith(CONSOLE_ROUTE_HOST_PREFIX)) return null;
+    if (!hostname.startsWith(CONSOLE_ROUTE_HOST_PREFIX)) {
+      return null;
+    }
 
     const clusterDomain = hostname.slice(CONSOLE_ROUTE_HOST_PREFIX.length);
     return `https://api.${clusterDomain}:${DEFAULT_CLUSTER_API_PORT}`;

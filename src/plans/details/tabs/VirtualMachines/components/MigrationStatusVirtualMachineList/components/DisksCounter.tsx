@@ -12,7 +12,9 @@ type DisksCounterProps = {
 const DisksCounter: FC<DisksCounterProps> = ({ diskTransferPipeline }) => {
   const { completedTasks, totalTasks } = countTasks(diskTransferPipeline);
 
-  if (!diskTransferPipeline || !totalTasks) return <>{EMPTY_MSG}</>;
+  if (!diskTransferPipeline || !totalTasks) {
+    return <>{EMPTY_MSG}</>;
+  }
 
   return (
     <>

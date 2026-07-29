@@ -23,7 +23,9 @@ const SELECT_ALL_PEER_VM = 'mtv-func-rhel9';
 
 const test = sharedProviderFixtures.extend<{ testPlan: Awaited<ReturnType<typeof createPlan>> }>({
   testPlan: async ({ page, resourceManager, testProvider }, setValue) => {
-    if (!testProvider) throw new Error('testPlan fixture requires testProvider');
+    if (!testProvider) {
+      throw new Error('testPlan fixture requires testProvider');
+    }
     const plan = await createPlan(page, resourceManager, {
       sourceProvider: testProvider,
       customPlanData: {
@@ -58,7 +60,9 @@ const setupPlanDetailsPage = async (
   page: Page,
   testPlan: TestPlan | undefined,
 ): Promise<SetupResult> => {
-  if (!testPlan) throw new Error('testPlan is required');
+  if (!testPlan) {
+    throw new Error('testPlan is required');
+  }
   const planDetailsPage = new PlanDetailsPage(page);
   const { name: planName, namespace } = testPlan.metadata;
   const firstVmName = testPlan.testData.virtualMachines?.[0]?.sourceName;

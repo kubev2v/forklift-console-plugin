@@ -6,16 +6,12 @@ import { type FormGroupProps, TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
 
 import { useCreateProviderFormContext } from '../hooks/useCreateProviderFormContext';
-import type { CreateProviderFormData } from '../types';
 
 import type { ProviderFormFieldIdType } from './constants';
 
 type ProviderFormTextInputProps = {
   fieldId: ProviderFormFieldIdType;
-  fieldRules?: Omit<
-    RegisterOptions<CreateProviderFormData, any>,
-    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-  >;
+  fieldRules?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
   label: string;
   labelHelp?: FormGroupProps['labelHelp'];
   testId?: string;

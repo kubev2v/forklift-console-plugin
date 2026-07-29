@@ -22,7 +22,9 @@ export const inventoryHasChanged = (
   const newTotalLength = totalNumOfProviders(newInventoryList);
 
   const hasInventorySizeChanged = oldTotalLength !== newTotalLength;
-  if (hasInventorySizeChanged) return true;
+  if (hasInventorySizeChanged) {
+    return true;
+  }
 
   if (!hasInventorySizeChanged && oldTotalLength !== 0) {
     return inventoryContentHasChanged(newInventoryList, oldDataRef, fieldsToAvoidComparing);

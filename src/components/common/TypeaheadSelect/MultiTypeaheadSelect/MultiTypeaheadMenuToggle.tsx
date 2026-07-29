@@ -76,13 +76,19 @@ const MultiTypeaheadMenuToggle: FC<MultiTypeaheadMenuToggleProps> = ({
   }, [allowClear, selectedOptions, isFiltering, inputValue, isFocused, isHovered]);
 
   const handleToggleClick = (): void => {
-    if (isDisabled) return;
+    if (isDisabled) {
+      return;
+    }
     onToggleClick();
-    if (!isOpen) setTimeout(() => inputRef.current?.focus(), 0);
+    if (!isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 0);
+    }
   };
 
   const handleInputChange = (event: FormEvent<HTMLInputElement>, newValue: string): void => {
-    if (isDisabled) return;
+    if (isDisabled) {
+      return;
+    }
     onInputValueChange(newValue, true);
     onInputChange?.(newValue);
 

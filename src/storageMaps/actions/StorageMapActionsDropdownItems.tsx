@@ -30,7 +30,9 @@ export const StorageMapActionsDropdownItems = ({
   });
 
   const onDelete = () => {
-    if (!storageMap) return;
+    if (!storageMap) {
+      return;
+    }
     launcher<DeleteModalProps>(DeleteModal, { model: StorageMapModel, resource: storageMap });
   };
 

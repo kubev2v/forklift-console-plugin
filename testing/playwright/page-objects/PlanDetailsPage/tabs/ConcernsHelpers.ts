@@ -38,7 +38,9 @@ export class ConcernsHelpers {
           break;
         }
       }
-      if (!clicked) return false;
+      if (!clicked) {
+        return false;
+      }
     }
     await expect(popover).toBeVisible();
     return true;

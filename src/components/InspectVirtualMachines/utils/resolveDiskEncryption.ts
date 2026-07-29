@@ -10,7 +10,9 @@ export const resolveDiskEncryption = async (
   vmName: string,
   namespace: string,
 ): Promise<DiskEncryptionParam | undefined> => {
-  if (!overrides) return undefined;
+  if (!overrides) {
+    return undefined;
+  }
 
   if (overrides.nbdeClevis) {
     return { type: DISK_ENCRYPTION_TYPE.CLEVIS };

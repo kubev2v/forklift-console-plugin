@@ -19,8 +19,9 @@ export const useSourceProviderFromSearchParams = (
   const hasSetProvider = useRef(false);
 
   useEffect(() => {
-    if (!sourceProviderName || hasSetProvider.current || !loaded || !provider?.metadata?.name)
+    if (!sourceProviderName || hasSetProvider.current || !loaded || !provider?.metadata?.name) {
       return;
+    }
 
     setValue(GeneralFormFieldId.SourceProvider, provider);
     hasSetProvider.current = true;

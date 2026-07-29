@@ -44,7 +44,9 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
 
   async clearFilters(): Promise<void> {
     const btn = this.page.getByRole('button', { name: 'Clear all filters' });
-    if (await btn.isVisible().catch(() => false)) await btn.click();
+    if (await btn.isVisible().catch(() => false)) {
+      await btn.click();
+    }
   }
 
   async clickAddVirtualMachines(): Promise<AddVirtualMachinesModal> {
@@ -77,7 +79,9 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
 
   async expandFilters(): Promise<void> {
     const btn = this.page.getByRole('button', { name: 'Show Filters' });
-    if (await btn.isVisible()) await btn.click();
+    if (await btn.isVisible()) {
+      await btn.click();
+    }
   }
 
   async expandFirstVMDetailsRow(): Promise<void> {
@@ -322,7 +326,9 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   async verifyVirtualMachinesTab(planData: PlanTestData): Promise<void> {
     await this.table.waitForTableLoad();
     for (const vm of planData.virtualMachines ?? []) {
-      if (vm.sourceName) await this.verifyRowIsVisible({ Name: vm.sourceName });
+      if (vm.sourceName) {
+        await this.verifyRowIsVisible({ Name: vm.sourceName });
+      }
     }
   }
 

@@ -10,7 +10,9 @@ import { getPlanTransferNetwork } from '@utils/crds/plans/selectors';
 import { PROVIDER_DEFAULTS } from './constants';
 
 export const getNetworkName = (value: V1beta1PlanSpecTransferNetwork | null): string => {
-  if (!value || typeof value === 'string') return PROVIDER_DEFAULTS;
+  if (!value || typeof value === 'string') {
+    return PROVIDER_DEFAULTS;
+  }
   return `${value?.namespace}/${value?.name}`;
 };
 

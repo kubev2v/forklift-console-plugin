@@ -43,8 +43,11 @@ export const useOverviewContext = (): OverviewContextType => {
       data,
       setData: (newState: OverviewContextData) => {
         // Save/clear the user settings stored in local storage
-        if (newState.hideWelcomeCardByContext) userSettings?.welcome?.save(true);
-        else userSettings?.welcome?.clear();
+        if (newState.hideWelcomeCardByContext) {
+          userSettings?.welcome?.save(true);
+        } else {
+          userSettings?.welcome?.clear();
+        }
 
         saveOverviewSelectedRanges({
           vmMigrationsDonutSelectedRange: newState.vmMigrationsDonutSelectedRange,

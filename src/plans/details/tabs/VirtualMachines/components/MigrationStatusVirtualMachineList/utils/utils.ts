@@ -120,18 +120,28 @@ export const getVMDiskTransferPipeline = (
   const pipeline = statusVM?.pipeline ?? [];
   const diskSteps = pipeline.filter(isDiskTransferStep);
 
-  if (isEmpty(diskSteps)) return undefined;
-  if (diskSteps.length === 1) return diskSteps[0];
+  if (isEmpty(diskSteps)) {
+    return undefined;
+  }
+  if (diskSteps.length === 1) {
+    return diskSteps[0];
+  }
 
   const running = diskSteps.find(isStepActive);
-  if (running) return running;
+  if (running) {
+    return running;
+  }
 
   const diskTransfer = diskSteps.find((pipe) => pipe.name.startsWith(DISK_TRANSFER_PREFIX));
   const diskAllocation = diskSteps.find((pipe) => pipe.name === DISK_ALLOCATION_NAME);
 
   if (!hasPipelineBlockingFailure(pipeline)) {
-    if ((diskTransfer?.progress?.completed ?? 0) > 0) return diskTransfer;
-    if ((diskAllocation?.progress?.completed ?? 0) > 0) return diskAllocation;
+    if ((diskTransfer?.progress?.completed ?? 0) > 0) {
+      return diskTransfer;
+    }
+    if ((diskAllocation?.progress?.completed ?? 0) > 0) {
+      return diskAllocation;
+    }
   }
 
   return diskTransfer ?? diskAllocation;
@@ -150,7 +160,9 @@ export const groupByVmId = <T extends K8sResourceCommon>(items: T[]) =>
   items.reduce<Record<string, T[]>>((acc, item) => {
     const vmID = item?.metadata?.labels?.vmID;
     if (vmID) {
-      if (!acc[vmID]) acc[vmID] = [];
+      if (!acc[vmID]) {
+        acc[vmID] = [];
+      }
 
       acc[vmID].push(item);
     }

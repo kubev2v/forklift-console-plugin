@@ -47,7 +47,9 @@ const useTreeSortBlocks: UseTreeSortBlocks = ({ columns, conversions, filteredRo
   const getVmInspectionStatus = useVmInspectionStatus(conversions);
 
   const sortedBlocks = useMemo(() => {
-    if (isEmpty(filteredRows)) return [];
+    if (isEmpty(filteredRows)) {
+      return [];
+    }
 
     const blocks: Block[] = [];
     let current: Block | null = null;
@@ -88,14 +90,20 @@ const useTreeSortBlocks: UseTreeSortBlocks = ({ columns, conversions, filteredRo
     const cmpVm = buildVmComparator(sort, getVmInspectionStatus);
     for (const block of blocks) {
       const { items } = block;
-      if (items.length > 1) items.sort((first, second) => cmpVm(first.vm, second.vm));
+      if (items.length > 1) {
+        items.sort((first, second) => cmpVm(first.vm, second.vm));
+      }
     }
 
     if (sort.column === COLUMN_IDS.Name && blocks.length > 1) {
       const dir = sort.direction === 'asc' ? 1 : -1;
       blocks.sort((a, b) => {
-        if (a.kind === BlockKind.Root && b.kind === BlockKind.Folder) return -1 * dir;
-        if (a.kind === BlockKind.Folder && b.kind === BlockKind.Root) return dir;
+        if (a.kind === BlockKind.Root && b.kind === BlockKind.Folder) {
+          return -1 * dir;
+        }
+        if (a.kind === BlockKind.Folder && b.kind === BlockKind.Root) {
+          return dir;
+        }
 
         if (a.kind === BlockKind.Folder && b.kind === BlockKind.Folder) {
           const fa = getFolderNameFromFolderRow(a.folder);
@@ -138,7 +146,9 @@ const useTreeSortBlocks: UseTreeSortBlocks = ({ columns, conversions, filteredRo
     newDirection,
   ) => {
     const col = visibleCols[columnIndex];
-    if (!col?.sortable) return;
+    if (!col?.sortable) {
+      return;
+    }
     const nextDir = columnIndex === activeIndex ? newDirection : 'asc';
     setSort({ column: col.id as SortColumn, direction: nextDir });
   };

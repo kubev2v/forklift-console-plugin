@@ -23,7 +23,9 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
   const { t } = useForkliftTranslation();
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
-  if (!storageMap) return null;
+  if (!storageMap) {
+    return null;
+  }
 
   const hasValidMappings = storageMap.some(
     (mapping) =>

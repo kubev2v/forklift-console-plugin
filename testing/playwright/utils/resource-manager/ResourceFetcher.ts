@@ -69,7 +69,9 @@ export class ResourceFetcher extends BaseResourceManager {
     const apiPath = `${API_PATHS.OLM_CSV}/namespaces/${namespace}/clusterserviceversions`;
     const data = await ResourceFetcher.apiGet<CsvList>(apiPath);
 
-    if (!data?.items) return null;
+    if (!data?.items) {
+      return null;
+    }
 
     const csv = data.items.find((item) =>
       prefixes.some((prefix) => item.metadata?.name?.startsWith(prefix)),

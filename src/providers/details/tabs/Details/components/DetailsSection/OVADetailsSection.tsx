@@ -16,7 +16,9 @@ const OVADetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { permissions, provider } = data;
 
-  if (!provider) return null;
+  if (!provider) {
+    return null;
+  }
 
   const canPatch = permissions?.canPatch ?? false;
 

@@ -4,23 +4,25 @@ import { CheckIcon, ResourcesEmptyIcon, TimesIcon } from '@patternfly/react-icon
 import { PF_LABEL_STATUS, taskStatuses } from '@utils/constants';
 
 export const getPipelineProgressIcon = (pipeline: V1beta1PlanStatusMigrationVmsPipeline) => {
-  if (pipeline?.error)
+  if (pipeline?.error) {
     return (
       <Icon status={PF_LABEL_STATUS.DANGER}>
         <TimesIcon />
       </Icon>
     );
+  }
 
   const isCompleted =
     pipeline?.phase === taskStatuses.completed ||
     (pipeline?.progress !== undefined && pipeline.progress.completed === pipeline.progress.total);
 
-  if (isCompleted)
+  if (isCompleted) {
     return (
       <Icon status={PF_LABEL_STATUS.SUCCESS}>
         <CheckIcon />
       </Icon>
     );
+  }
 
   return <ResourcesEmptyIcon />;
 };

@@ -15,11 +15,16 @@ const UploadFilesSection: FC<DetailsSectionProps> = ({ data }) => {
 
   const { permissions, provider } = data;
 
-  if (isEmpty(provider) || isEmpty(permissions))
+  if (isEmpty(provider) || isEmpty(permissions)) {
     return <span className="text-muted">{t('No provider data available.')}</span>;
+  }
 
-  if (provider?.spec?.type !== PROVIDER_TYPES.ova) return null;
-  if (!isApplianceManagementEnabled(provider)) return null;
+  if (provider?.spec?.type !== PROVIDER_TYPES.ova) {
+    return null;
+  }
+  if (!isApplianceManagementEnabled(provider)) {
+    return null;
+  }
 
   return (
     <PageSection hasBodyWrapper={false} className="forklift-page-section--details">

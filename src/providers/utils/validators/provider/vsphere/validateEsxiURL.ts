@@ -33,11 +33,12 @@ export const validateEsxiURL = (url: string | number | undefined): ValidationMsg
     };
   }
 
-  if (!trimmedUrl.endsWith('sdk'))
+  if (!trimmedUrl.endsWith('sdk')) {
     return {
       msg: 'The URL does not end with a /sdk path, for example a URL with sdk path: https://host-example.com/sdk.',
       type: ValidationState.Warning,
     };
+  }
 
   return {
     msg: 'The URL of the ESXi API endpoint for example: https://host-example.com/sdk.',

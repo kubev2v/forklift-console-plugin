@@ -36,11 +36,12 @@ export const validateOpenstackUILink = (uiLink: string | number): ValidationMsg 
     };
   }
 
-  if (!trimmedUrl.endsWith('dashboard'))
+  if (!trimmedUrl.endsWith('dashboard')) {
     return {
       msg: 'The link for the OpenStack dashboard does not end with /dashboard path, for example: https://identity_service.com/dashboard.',
       type: ValidationState.Warning,
     };
+  }
 
   return {
     msg: 'The link for the OpenStack dashboard. For example, https://identity_service.com/dashboard.',

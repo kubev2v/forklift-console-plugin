@@ -21,7 +21,9 @@ test.describe(
       resourceManager,
       testProvider,
     }) => {
-      if (!testProvider) throw new Error('testProvider is required');
+      if (!testProvider) {
+        throw new Error('testProvider is required');
+      }
 
       const storageMapName = `offload-sm-${crypto.randomUUID().slice(0, 8)}`;
       const listPage = new StorageMapsListPage(page);

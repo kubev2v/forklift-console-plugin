@@ -22,7 +22,9 @@ export const startDescription: StartDescriptionMap = Object.values(PlanStatuses)
 );
 
 export const getDuplicateDescription = (planStatus: PlanStatuses): string | null => {
-  if (planStatus === PlanStatuses.CannotStart) return t('The plan cannot be duplicated');
+  if (planStatus === PlanStatuses.CannotStart) {
+    return t('The plan cannot be duplicated');
+  }
   return null;
 };
 
@@ -31,8 +33,11 @@ export const getEditDescription = (planStatus: PlanStatuses): string | null => {
     planStatus === PlanStatuses.Executing ||
     planStatus === PlanStatuses.Paused ||
     planStatus === PlanStatuses.Pending
-  )
+  ) {
     return t('Plans cannot be modified during migration');
-  if (planStatus === PlanStatuses.Archived) return t('Archived plans cannot be edited');
+  }
+  if (planStatus === PlanStatuses.Archived) {
+    return t('Archived plans cannot be edited');
+  }
   return null;
 };

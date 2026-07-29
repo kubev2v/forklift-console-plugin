@@ -55,7 +55,9 @@ const ThroughputCard: FC<ThroughputCardProps> = ({ metricName, title }) => {
   );
 
   useEffect(() => {
-    if (!loaded || error) return;
+    if (!loaded || error) {
+      return;
+    }
 
     const currentIds = data.map((series) => series.planId);
     const currentIdSet = new Set(currentIds);

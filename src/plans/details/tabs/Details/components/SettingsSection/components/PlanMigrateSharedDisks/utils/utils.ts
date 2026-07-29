@@ -54,7 +54,9 @@ export const onConfirmVmMigrateSharedDisks =
     const path = `/spec/vms/${vmIndex}/migrateSharedDisks`;
 
     if (newValue === undefined) {
-      if (current === undefined) return resource;
+      if (current === undefined) {
+        return resource;
+      }
 
       return k8sPatch({
         data: [{ op: REMOVE, path }],

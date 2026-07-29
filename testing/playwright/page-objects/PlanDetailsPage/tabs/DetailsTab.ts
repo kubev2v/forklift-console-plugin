@@ -278,7 +278,9 @@ export class DetailsTab {
   }
 
   async verifyGuestConversionModeTexts(texts: string[]): Promise<void> {
-    for (const text of texts) await this.verifyGuestConversionModeText(text);
+    for (const text of texts) {
+      await this.verifyGuestConversionModeText(text);
+    }
   }
 
   async verifyMigrationType(type: MigrationType): Promise<void> {
@@ -301,7 +303,9 @@ export class DetailsTab {
     );
     await expect(this.page.getByTestId('created-at-detail-item')).toBeVisible();
     await expect(this.page.getByTestId('owner-detail-item')).toContainText('No owner');
-    if (isVersionAtLeast(V2_11_0)) await this.verifyDescriptionText(planData.description ?? 'None');
+    if (isVersionAtLeast(V2_11_0)) {
+      await this.verifyDescriptionText(planData.description ?? 'None');
+    }
     if (planData.additionalPlanSettings?.targetPowerState) {
       const labels = { auto: 'Retain source VM power state', off: 'Powered off', on: 'Powered on' };
       await expect(

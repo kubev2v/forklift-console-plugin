@@ -111,7 +111,9 @@ export const useTreeRows: UseTreeRows = ({
         const isVmExpanded = expandedVMs.has(vmKey);
         const vmData = vmByKey.get(vmKey);
 
-        if (!vmData) return;
+        if (!vmData) {
+          return;
+        }
 
         const { concernsRow, vmRow } = makeVmAndConcernsRows({
           canSelect,
@@ -141,7 +143,9 @@ export const useTreeRows: UseTreeRows = ({
       const isVmExpanded = expandedVMs.has(vmKey);
       const vmData = vmByKey.get(vmKey);
 
-      if (!vmData) return;
+      if (!vmData) {
+        return;
+      }
 
       const { concernsRow, vmRow } = makeVmAndConcernsRows({
         canSelect,

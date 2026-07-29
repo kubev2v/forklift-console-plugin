@@ -11,7 +11,9 @@ type EditLUKSModalAlertProps = {
 const EditLUKSModalAlert: FC<EditLUKSModalAlertProps> = ({ shouldRender }) => {
   const { t } = useForkliftTranslation();
 
-  if (!shouldRender) return null;
+  if (!shouldRender) {
+    return null;
+  }
   return (
     <AlertMessageForModals
       variant="warning"

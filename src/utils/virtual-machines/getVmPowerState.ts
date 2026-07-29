@@ -49,8 +49,12 @@ const getOpenShiftVmPowerState = (vm: OpenshiftVM): PowerState =>
 const getHypervVmPowerState = (vm: HypervVM): PowerState => {
   // Backend returns powerState as 'On' or 'Off' (capitalized)
   const powerState = (vm as HypervVM & { powerState?: string })?.powerState?.toLowerCase();
-  if (powerState === 'on') return 'on';
-  if (powerState === 'off') return 'off';
+  if (powerState === 'on') {
+    return 'on';
+  }
+  if (powerState === 'off') {
+    return 'off';
+  }
   return 'unknown';
 };
 
@@ -69,7 +73,9 @@ const getEc2VmPowerState = (vm: Ec2VM): PowerState => {
 };
 
 export const getVmPowerState = (vm: ProviderVirtualMachine | Ec2VM | undefined): PowerState => {
-  if (!vm) return 'unknown';
+  if (!vm) {
+    return 'unknown';
+  }
 
   switch (vm?.providerType) {
     case 'ovirt':

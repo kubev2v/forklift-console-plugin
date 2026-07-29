@@ -31,7 +31,9 @@ const cellRenderers: Record<string, FC<HostCellProps>> = {
  * and there's no inventory data, it won't render the cell.
  */
 export const RenderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
-  if (!resourceFieldId) return <Td></Td>;
+  if (!resourceFieldId) {
+    return <Td></Td>;
+  }
 
   const CellRenderer = cellRenderers?.[resourceFieldId] ?? null;
 

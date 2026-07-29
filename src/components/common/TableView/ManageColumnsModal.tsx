@@ -82,7 +82,7 @@ export const ManageColumnsModal = ({
   description = 'Selected columns will be displayed in the table.',
   onChange,
   onClose,
-  reorderLabel = 'Reorder',
+  reorderLabel: _reorderLabel = 'Reorder',
   resourceFields,
   restoreLabel = 'Restore default columns',
   saveLabel = 'Save',

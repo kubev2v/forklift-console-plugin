@@ -51,7 +51,9 @@ const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...re
     date,
   ) => {
     setIsDateValid(Boolean(date));
-    if (!date) return;
+    if (!date) {
+      return;
+    }
 
     const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
 
@@ -77,7 +79,9 @@ const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...re
     setTime(timeInput);
     setIsTimeValid(Boolean(timeValid) && Boolean(timeInput));
 
-    if (!timeValid) return;
+    if (!timeValid) {
+      return;
+    }
 
     const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
 

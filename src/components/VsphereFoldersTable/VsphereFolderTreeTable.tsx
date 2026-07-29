@@ -6,6 +6,7 @@ import SectionHeading from '@components/headers/SectionHeading';
 import InspectVirtualMachinesButton from '@components/InspectVirtualMachines/InspectVirtualMachinesButton';
 import type { ProviderHost, V1beta1Provider, VSphereResource } from '@forklift-ui/types';
 import {
+  type OnSetPage,
   PageSection,
   Pagination,
   Toolbar,
@@ -41,6 +42,18 @@ type VsphereFolderTreeTableProps = {
   providerNamespace?: string;
   providerUid?: string;
   vmData: ProviderVmData[] | undefined;
+};
+
+const snapPageToValidRange = (
+  itemCount: number,
+  onSetPage: OnSetPage,
+  page: number,
+  perPage: number,
+): void => {
+  const maxPage = Math.max(1, Math.ceil(itemCount / perPage));
+  if (page > maxPage) {
+    onSetPage({} as MouseEvent, 1);
+  }
 };
 
 const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
@@ -132,9 +145,7 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
   const { itemCount, pagedRows } = useTreePagination({ blocks: sortedBlocks, page, perPage });
 
   useEffect(() => {
-    // if page > max pages after filter/sort, snap back
-    const maxPage = Math.max(1, Math.ceil(itemCount / perPage));
-    if (page > maxPage) onSetPage({} as MouseEvent, 1);
+    snapPageToValidRange(itemCount, onSetPage, page, perPage);
   }, [itemCount, onSetPage, page, perPage]);
 
   const pagination = (

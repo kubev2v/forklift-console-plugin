@@ -28,15 +28,21 @@ const EditControllerTransferNetwork: FC = () => {
   });
 
   const controllerTransferNetworkOptions = useMemo(() => {
-    if (!loaded || loadError) return [];
+    if (!loaded || loadError) {
+      return [];
+    }
 
-    if (!Array.isArray(nads) || isEmpty(nads)) return [];
+    if (!Array.isArray(nads) || isEmpty(nads)) {
+      return [];
+    }
 
     return nads.reduce<Option[]>((acc, nad) => {
       const name = getName(nad) ?? '';
       const namespace = getNamespace(nad) ?? '';
       const key = `${namespace}/${name}`;
-      if (!name || !namespace) return acc;
+      if (!name || !namespace) {
+        return acc;
+      }
       return [
         ...acc,
         {

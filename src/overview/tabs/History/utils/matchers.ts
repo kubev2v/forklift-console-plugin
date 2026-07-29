@@ -8,13 +8,17 @@ import type { V1beta1Migration } from '@forklift-ui/types';
 export const dateRangeObjectMatcher: ValueMatcher = {
   filterType: FilterDefType.DateRange,
   matchValue: (value: unknown) => (filter: string) => {
-    if (!value || typeof value !== 'object') return false;
+    if (!value || typeof value !== 'object') {
+      return false;
+    }
     const obj = value as { started?: string; completed?: string };
     const [from, to] = filter.split('/');
     const fromDate = DateTime.fromISO(from);
     const toDate = DateTime.fromISO(to);
     const inRange = (dateStr?: string) => {
-      if (!dateStr) return false;
+      if (!dateStr) {
+        return false;
+      }
       const date = DateTime.fromISO(dateStr);
       return date >= fromDate && date <= toDate;
     };

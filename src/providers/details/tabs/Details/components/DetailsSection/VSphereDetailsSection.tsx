@@ -20,7 +20,9 @@ const VSphereDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { inventory, permissions, provider } = data;
 
-  if (!provider || !permissions) return null;
+  if (!provider || !permissions) {
+    return null;
+  }
 
   return (
     <DescriptionList

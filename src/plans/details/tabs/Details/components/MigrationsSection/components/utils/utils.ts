@@ -12,14 +12,18 @@ export const getMigrationStatusLabel = (
   vmStatuses: MigrationVirtualMachinesStatusesCounts,
   migrationVMsCounts: number | undefined,
 ): MigrationVirtualMachineStatus | null => {
-  if (vmStatuses[MigrationVirtualMachineStatus.InProgress].count > 0)
+  if (vmStatuses[MigrationVirtualMachineStatus.InProgress].count > 0) {
     return MigrationVirtualMachineStatus.InProgress;
-  if (vmStatuses[MigrationVirtualMachineStatus.Failed].count > 0)
+  }
+  if (vmStatuses[MigrationVirtualMachineStatus.Failed].count > 0) {
     return MigrationVirtualMachineStatus.Failed;
-  if (vmStatuses[MigrationVirtualMachineStatus.Paused].count > 0)
+  }
+  if (vmStatuses[MigrationVirtualMachineStatus.Paused].count > 0) {
     return MigrationVirtualMachineStatus.Paused;
-  if (vmStatuses[MigrationVirtualMachineStatus.Succeeded].count === migrationVMsCounts)
+  }
+  if (vmStatuses[MigrationVirtualMachineStatus.Succeeded].count === migrationVMsCounts) {
     return MigrationVirtualMachineStatus.Succeeded;
+  }
 
   return null;
 };

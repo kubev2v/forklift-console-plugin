@@ -8,7 +8,9 @@ const isProvider = (obj: unknown): obj is V1beta1Provider =>
   (obj as V1beta1Provider).kind === 'Provider';
 
 export const extractProviders = (value: unknown): V1beta1Provider[] => {
-  if (!value) return [];
+  if (!value) {
+    return [];
+  }
 
   if (Array.isArray(value) && (isEmpty(value) || isProvider(value[0]))) {
     return value as V1beta1Provider[];

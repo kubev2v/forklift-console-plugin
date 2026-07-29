@@ -8,12 +8,18 @@ export const getPrevEnabledIndex = (
   startIndex: number,
 ): number => {
   let index = startIndex;
-  if (index < 0) index = options.length - 1;
+  if (index < 0) {
+    index = options.length - 1;
+  }
 
   for (const option of options) {
-    if (!option?.optionProps?.isDisabled) return index;
+    if (!option?.optionProps?.isDisabled) {
+      return index;
+    }
     index -= 1;
-    if (index < 0) index = options.length - 1;
+    if (index < 0) {
+      index = options.length - 1;
+    }
   }
   return startIndex;
 };
@@ -23,12 +29,18 @@ export const getNextEnabledIndex = (
   startIndex: number,
 ): number => {
   let index = startIndex;
-  if (index >= options.length) index = 0;
+  if (index >= options.length) {
+    index = 0;
+  }
 
   for (const option of options) {
-    if (!option?.optionProps?.isDisabled) return index;
+    if (!option?.optionProps?.isDisabled) {
+      return index;
+    }
     index += 1;
-    if (index >= options.length) index = 0;
+    if (index >= options.length) {
+      index = 0;
+    }
   }
   return startIndex;
 };

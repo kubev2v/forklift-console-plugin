@@ -13,7 +13,9 @@ test.describe('Storage Map Details - Editing', { tag: '@downstream' }, () => {
     testStorageMap,
     testProvider: _testProvider,
   }) => {
-    if (!testStorageMap) throw new Error('testStorageMap is required');
+    if (!testStorageMap) {
+      throw new Error('testStorageMap is required');
+    }
 
     const storageMapDetailsPage = new StorageMapDetailsPage(page);
     await storageMapDetailsPage.navigate(testStorageMap.name);

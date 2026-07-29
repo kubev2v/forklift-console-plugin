@@ -50,7 +50,9 @@ export const extraSupportedMatchers: ValueMatcher[] = [
   {
     filterType: CustomFilterType.Features,
     matchValue: (value: unknown) => (filter: string) => {
-      if (!value || typeof value !== 'object') return false;
+      if (!value || typeof value !== 'object') {
+        return false;
+      }
       const features = value as Record<string, boolean>;
       return features?.[filter] ?? false;
     },

@@ -18,7 +18,9 @@ const formatTemplateDisplay = (
   fallback: string,
   translate: (key: string, options?: Record<string, unknown>) => string,
 ): string => {
-  if (id === undefined) return fallback;
+  if (id === undefined) {
+    return fallback;
+  }
   return name ? translate('{{name}} (ID: {{id}})', { id: String(id), name }) : String(id);
 };
 

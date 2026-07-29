@@ -14,7 +14,9 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
     testNetworkMap,
     testProvider: _testProvider,
   }) => {
-    if (!testNetworkMap) throw new Error('testNetworkMap is required');
+    if (!testNetworkMap) {
+      throw new Error('testNetworkMap is required');
+    }
 
     const networkMapDetailsPage = new NetworkMapDetailsPage(page);
     await networkMapDetailsPage.navigate(testNetworkMap.name);

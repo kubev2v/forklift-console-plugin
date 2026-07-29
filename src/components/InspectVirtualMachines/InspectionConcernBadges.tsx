@@ -32,7 +32,9 @@ const InspectionConcernBadges: FC<InspectionConcernBadgesProps> = ({ concerns })
     <Split hasGutter>
       {ORDERED_INSPECTION_CONCERN_CATEGORIES.map((category) => {
         const items = grouped.get(category) ?? [];
-        if (isEmpty(items)) return null;
+        if (isEmpty(items)) {
+          return null;
+        }
 
         return (
           <SplitItem key={category}>

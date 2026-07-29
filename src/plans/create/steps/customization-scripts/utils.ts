@@ -48,7 +48,9 @@ export const validateUniqueScriptKey = (
   allScripts: CustomScript[],
 ): string | undefined => {
   const nameError = validateScriptName(script.name);
-  if (nameError) return nameError;
+  if (nameError) {
+    return nameError;
+  }
 
   const currentKey = buildConfigMapKey(script);
   const isDuplicate = allScripts.some(

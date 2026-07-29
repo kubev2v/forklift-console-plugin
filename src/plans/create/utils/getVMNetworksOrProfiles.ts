@@ -4,7 +4,9 @@ import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { getEc2SubnetIds, isEc2Vm } from '@utils/types/ec2Inventory';
 
 const getNetworksForVM = (vm: ProviderVirtualMachine) => {
-  if (isEc2Vm(vm)) return getEc2SubnetIds(vm);
+  if (isEc2Vm(vm)) {
+    return getEc2SubnetIds(vm);
+  }
 
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere: {

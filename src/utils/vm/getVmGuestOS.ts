@@ -2,7 +2,9 @@ import type { ProviderVirtualMachine } from '@forklift-ui/types';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 export const getVmGuestOS = (vm: ProviderVirtualMachine | undefined): string => {
-  if (!vm) return '';
+  if (!vm) {
+    return '';
+  }
 
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere:

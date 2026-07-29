@@ -68,7 +68,9 @@ const TableBulkSelect: FC<TableBulkSelectProps> = ({
     </div>
   );
 
-  if (canPageSelect) return bulkSelect;
+  if (canPageSelect) {
+    return bulkSelect;
+  }
 
   return (
     <Popover

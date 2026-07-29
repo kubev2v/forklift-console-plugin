@@ -18,7 +18,9 @@ const HyperVDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { permissions, provider } = data;
 
-  if (!provider || !permissions) return null;
+  if (!provider || !permissions) {
+    return null;
+  }
 
   const isIscsi = isHypervIscsiProvider(provider);
   const isCluster = isHypervClusterProvider(provider);

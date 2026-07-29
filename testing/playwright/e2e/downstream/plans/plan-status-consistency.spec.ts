@@ -45,7 +45,9 @@ type MapVerifyOptions = {
 
 const verifyMapNotStale = async (opts: MapVerifyOptions): Promise<void> => {
   const { fallbackNamespace, mapKind, planConditions, ref, resourceManager } = opts;
-  if (!ref?.name) return;
+  if (!ref?.name) {
+    return;
+  }
 
   const fetchMethod = mapKind === 'network' ? 'fetchNetworkMap' : 'fetchStorageMap';
   const mapResource = await resourceManager[fetchMethod](
@@ -83,7 +85,9 @@ test.describe(
     }) => {
       test.setTimeout(120_000);
 
-      if (!testPlan) throw new Error('testPlan fixture is required');
+      if (!testPlan) {
+        throw new Error('testPlan fixture is required');
+      }
 
       const { name: planName, namespace: planNamespace } = testPlan.metadata;
       const planDetailsPage = new PlanDetailsPage(page);
@@ -148,7 +152,9 @@ test.describe(
     }, testInfo) => {
       test.setTimeout(120_000);
 
-      if (!testPlan) throw new Error('testPlan fixture is required');
+      if (!testPlan) {
+        throw new Error('testPlan fixture is required');
+      }
 
       const { name: planName, namespace: planNamespace } = testPlan.metadata;
       const planDetailsPage = new PlanDetailsPage(page);
@@ -172,7 +178,9 @@ test.describe(
 
       const networkMapRef = plan.spec?.map?.network;
       testInfo.skip(!networkMapRef?.name, 'Plan has no referenced NetworkMap');
-      if (!networkMapRef?.name) return;
+      if (!networkMapRef?.name) {
+        return;
+      }
 
       const nmNamespace = networkMapRef.namespace ?? planNamespace;
 
@@ -187,7 +195,9 @@ test.describe(
         !originalProvider?.source?.name,
         'NetworkMap has no source provider to restore',
       );
-      if (!originalProvider?.source?.name) return;
+      if (!originalProvider?.source?.name) {
+        return;
+      }
 
       const missingProviderName = `missing-provider-${Date.now()}`;
 

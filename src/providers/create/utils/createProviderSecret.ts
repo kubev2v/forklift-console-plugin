@@ -38,7 +38,9 @@ export const createProviderSecret = async (
 
   const newSecret: IoK8sApiCoreV1Secret = produce(secret, (draft) => {
     draft.data = cleanedData;
-    if (draft.data && url) draft.data.url = encode(url);
+    if (draft.data && url) {
+      draft.data.url = encode(url);
+    }
     if (draft.metadata) {
       draft.metadata.generateName = generateName;
       draft.metadata.labels = {

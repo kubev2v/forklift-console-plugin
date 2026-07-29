@@ -13,7 +13,9 @@ const DisksTransfer: FC<DisksTransferProps> = ({ diskTransferPipeline }) => {
   const annotations = diskTransferPipeline?.annotations ?? {};
   const { completed, total } = getTransferProgress(diskTransferPipeline);
 
-  if (!diskTransferPipeline || !annotations?.unit) return <>{EMPTY_MSG}</>;
+  if (!diskTransferPipeline || !annotations?.unit) {
+    return <>{EMPTY_MSG}</>;
+  }
 
   return (
     <>

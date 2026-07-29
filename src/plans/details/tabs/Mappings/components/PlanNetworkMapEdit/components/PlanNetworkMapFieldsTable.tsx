@@ -144,7 +144,7 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
               remove(index);
             }
           },
-          tooltip: (index) => {
+          tooltip: (_index) => {
             if (networkMappingFields.length <= 1) {
               return t('At least one network mapping must be provided.');
             }

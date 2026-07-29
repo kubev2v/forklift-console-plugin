@@ -56,7 +56,9 @@ export const getCategoryIcon = (category: string): ReactNode => {
 };
 
 export const getCategoryStatus = (category: string): PfLabelStatus | undefined => {
-  if (isConcernCategory(category)) return CATEGORY_STATUS[category];
+  if (isConcernCategory(category)) {
+    return CATEGORY_STATUS[category];
+  }
   return PF_LABEL_STATUS.WARNING;
 };
 
@@ -69,7 +71,9 @@ export const groupConcernsByCategory = (
 ): Record<ConcernCategory, Concern[]> => {
   return concerns.reduce<Record<string, Concern[]>>(
     (acc, concern) => {
-      if (isEmpty(concern)) return acc;
+      if (isEmpty(concern)) {
+        return acc;
+      }
       if (isEmpty(acc[concern?.category])) {
         acc[concern?.category] = [];
       }
@@ -92,7 +96,9 @@ export const groupConditionsByCategory = (
   return conditions.reduce<Record<string, V1beta1PlanStatusConditions[]>>(
     (acc, condition) => {
       const label = getCategoryLabel(condition?.category);
-      if (isEmpty(label)) return acc;
+      if (isEmpty(label)) {
+        return acc;
+      }
       if (isEmpty(acc[label])) {
         acc[label] = [];
       }

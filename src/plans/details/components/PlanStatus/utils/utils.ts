@@ -62,17 +62,25 @@ export const getMigrationVMStatus = (
     (condition) =>
       condition.type === CATEGORY_TYPES.CANCELED && condition.status === CONDITION_STATUS.TRUE,
   );
-  if (isCanceled) return MigrationVirtualMachineStatus.Canceled;
+  if (isCanceled) {
+    return MigrationVirtualMachineStatus.Canceled;
+  }
 
   const isSucceeded = conditions.some(
     (condition) =>
       condition.type === CATEGORY_TYPES.SUCCEEDED && condition.status === CONDITION_STATUS.TRUE,
   );
-  if (isSucceeded) return MigrationVirtualMachineStatus.Succeeded;
+  if (isSucceeded) {
+    return MigrationVirtualMachineStatus.Succeeded;
+  }
 
-  if (vm?.error) return MigrationVirtualMachineStatus.Failed;
+  if (vm?.error) {
+    return MigrationVirtualMachineStatus.Failed;
+  }
 
-  if (isMigrationVirtualMachinePaused(vm)) return MigrationVirtualMachineStatus.Paused;
+  if (isMigrationVirtualMachinePaused(vm)) {
+    return MigrationVirtualMachineStatus.Paused;
+  }
 
   if (vm?.started && !vm?.completed && !vm?.error) {
     return MigrationVirtualMachineStatus.InProgress;
@@ -144,7 +152,9 @@ const isPlanWaitingForCutover = (plan: V1beta1Plan) =>
   getPlanIsWarm(plan);
 
 const isPlanPendingExecution = (plan: V1beta1Plan): boolean => {
-  if (!isPlanExecuting(plan)) return false;
+  if (!isPlanExecuting(plan)) {
+    return false;
+  }
 
   const vms = getPlanVirtualMachinesMigrationStatus(plan);
 
@@ -160,7 +170,9 @@ export const isPlanArchived = (plan: V1beta1Plan) => {
 };
 
 export const getPlanStatus = (plan: V1beta1Plan): PlanStatuses => {
-  if (!plan) return PlanStatuses.Unknown;
+  if (!plan) {
+    return PlanStatuses.Unknown;
+  }
 
   const conditions = getConditions(plan);
 

@@ -32,11 +32,15 @@ const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
   const { body, isBuildFailed, isBuilding, isBuildSucceeded, title, variant } = vddkBuild ?? {};
 
   useEffect(() => {
-    if (isBuildSucceeded) onChangeVddk(body!);
+    if (isBuildSucceeded) {
+      onChangeVddk(body!);
+    }
   }, [body, isBuildSucceeded, onChangeVddk]);
 
   const handleUpload = async () => {
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
     setError(null);
     setUploading(true);

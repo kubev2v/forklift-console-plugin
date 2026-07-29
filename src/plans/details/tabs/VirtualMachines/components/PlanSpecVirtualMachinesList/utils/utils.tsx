@@ -168,7 +168,9 @@ export const getPlanConditionsDict = (
       condition?.items?.forEach((item) => {
         const { id: vmID } = extractIdAndNameFromConditionItem(item);
         if (vmID) {
-          if (!dict[vmID]) dict[vmID] = [];
+          if (!dict[vmID]) {
+            dict[vmID] = [];
+          }
 
           dict[vmID].push(condition);
         }

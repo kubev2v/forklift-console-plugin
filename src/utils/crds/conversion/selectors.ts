@@ -26,10 +26,16 @@ export const getInspectionResult = (conversion: V1beta1Conversion): InspectionRe
 
 /** Handles backend snake_case bug: reads both `allChecksPassed` and `all_checks_passed`. */
 export const hasInspectionPassed = (result: InspectionResult | undefined): boolean | undefined => {
-  if (!result) return undefined;
+  if (!result) {
+    return undefined;
+  }
   const value = result.allChecksPassed ?? result.all_checks_passed;
-  if (value !== undefined) return value;
-  if (!isEmpty(result.concerns)) return false;
+  if (value !== undefined) {
+    return value;
+  }
+  if (!isEmpty(result.concerns)) {
+    return false;
+  }
   return undefined;
 };
 
@@ -37,11 +43,15 @@ export const getInspectionStatus = (
   phase: ConversionPhase | undefined,
   inspectionPassed: boolean | undefined,
 ): InspectionStatus => {
-  if (!phase) return INSPECTION_STATUS.NOT_INSPECTED;
+  if (!phase) {
+    return INSPECTION_STATUS.NOT_INSPECTED;
+  }
 
   switch (phase) {
     case CONVERSION_PHASE.SUCCEEDED:
-      if (inspectionPassed === false) return INSPECTION_STATUS.ISSUES_FOUND;
+      if (inspectionPassed === false) {
+        return INSPECTION_STATUS.ISSUES_FOUND;
+      }
       return INSPECTION_STATUS.INSPECTION_PASSED;
     case CONVERSION_PHASE.FAILED:
       return INSPECTION_STATUS.FAILED;

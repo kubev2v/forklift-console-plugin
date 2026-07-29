@@ -29,7 +29,9 @@ const DiskDecryptionReviewItem: FC<DiskDecryptionReviewItemProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  if (nbdeClevis) return null;
+  if (nbdeClevis) {
+    return null;
+  }
 
   if (diskDecryptionType === DiskDecryptionType.Existing) {
     return (

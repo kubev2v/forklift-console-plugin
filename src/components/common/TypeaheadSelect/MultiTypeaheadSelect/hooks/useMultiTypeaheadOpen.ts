@@ -36,8 +36,11 @@ export const useMultiTypeaheadOpen = ({
   }, []);
 
   const onInputClick = useCallback(() => {
-    if (!isOpen) setIsOpen(true);
-    else if (!inputValue) setIsOpen(false);
+    if (!isOpen) {
+      setIsOpen(true);
+    } else if (!inputValue) {
+      setIsOpen(false);
+    }
   }, [inputValue, isOpen]);
 
   const onInputValueChange = useCallback(

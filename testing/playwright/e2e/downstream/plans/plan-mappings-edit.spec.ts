@@ -13,7 +13,9 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
     testPlan,
     testProvider: _testProvider,
   }, testInfo) => {
-    if (!testPlan) throw new Error('testPlan is required');
+    if (!testPlan) {
+      throw new Error('testPlan is required');
+    }
 
     const planDetailsPage = new PlanDetailsPage(page);
     await planDetailsPage.mappingsTab.navigateToMappingsTab();

@@ -29,7 +29,9 @@ const ProviderDataCell: FC<ProviderDataCellProps> = ({
     [resourceFieldId, hasInventoryData, isInventoryField],
   );
 
-  if (isEmptyCell) return <TableEmptyCell />;
+  if (isEmptyCell) {
+    return <TableEmptyCell />;
+  }
 
   const DataCellRenderer =
     ProviderDataCellRenderers?.[resourceFieldId! as ProvidersResourceFieldId];

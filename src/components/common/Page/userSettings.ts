@@ -9,13 +9,19 @@ import {
 
 import type { UserSettings } from './types';
 
-const parseOrClean = (key: string): Record<string, any> => {
+type StoredUserSettings = {
+  fields?: unknown;
+  filters?: Record<string, unknown>;
+  perPage?: unknown;
+};
+
+const parseOrClean = (key: string): StoredUserSettings => {
   try {
     const storedData = loadFromLocalStorage(key);
     if (!storedData) {
       return {};
     }
-    return (JSON.parse(storedData) ?? {}) as object;
+    return (JSON.parse(storedData) ?? {}) as StoredUserSettings;
   } catch (_e) {
     removeFromLocalStorage(key);
     // eslint-disable-next-line no-console
@@ -24,11 +30,11 @@ const parseOrClean = (key: string): Record<string, any> => {
   return {};
 };
 
-const saveRestOrRemoveKey = (key: string, { rest }: Record<string, Record<string, unknown>>) => {
+const saveRestOrRemoveKey = (key: string, rest: StoredUserSettings): void => {
   if (isEmpty(Object.keys(rest))) {
     removeFromLocalStorage(key);
   } else {
-    saveToLocalStorage(key, JSON.stringify({ ...rest }));
+    saveToLocalStorage(key, JSON.stringify(rest));
   }
 };
 
@@ -66,8 +72,8 @@ export const loadUserSettings = ({ pageId }: { pageId: string }): UserSettings =
   return {
     fields: {
       clear: () => {
-        const { fields: keyFields, ...rest } = parseOrClean(key);
-        saveRestOrRemoveKey(key, { fields: keyFields, rest });
+        const { fields: _keyFields, ...rest } = parseOrClean(key);
+        saveRestOrRemoveKey(key, rest);
       },
       data: sanitizeFields(fields),
       save: (newFields) => {
@@ -79,18 +85,18 @@ export const loadUserSettings = ({ pageId }: { pageId: string }): UserSettings =
     },
     filters: {
       clear: () => {
-        const { filters: keyFilters, ...rest } = parseOrClean(key);
-        saveRestOrRemoveKey(key, { filters: keyFilters, rest });
+        const { filters: _keyFilters, ...rest } = parseOrClean(key);
+        saveRestOrRemoveKey(key, rest);
       },
-      data: filters,
+      data: filters ?? {},
       save: (newFilters) => {
         saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), filters: newFilters }));
       },
     },
     pagination: {
       clear: () => {
-        const { perPage: keyPerPage, ...rest } = parseOrClean(key);
-        saveRestOrRemoveKey(key, { perPage: keyPerPage, rest });
+        const { perPage: _keyPerPage, ...rest } = parseOrClean(key);
+        saveRestOrRemoveKey(key, rest);
       },
       perPage: typeof perPage === 'number' ? perPage : DEFAULT_PER_PAGE,
       save: (newPerPage) => {

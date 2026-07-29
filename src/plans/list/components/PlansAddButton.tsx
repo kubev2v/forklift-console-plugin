@@ -51,7 +51,9 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, namespace, testId 
     </Button>
   );
 
-  if (hasSufficientProviders) return button;
+  if (hasSufficientProviders) {
+    return button;
+  }
 
   return (
     <Tooltip

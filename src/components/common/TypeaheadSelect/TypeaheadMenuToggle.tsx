@@ -58,7 +58,9 @@ const TypeaheadMenuToggle: FC<TypeaheadMenuToggleProps> = ({
   const displayValue = isFiltering ? inputValue : (selectedOption?.content?.toString() ?? '');
 
   const handleToggleClick = (): void => {
-    if (isDisabled) return;
+    if (isDisabled) {
+      return;
+    }
     onToggleClick();
 
     if (!isOpen) {

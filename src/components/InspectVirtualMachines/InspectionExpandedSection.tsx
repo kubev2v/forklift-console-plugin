@@ -42,8 +42,11 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({
   const toggleExpand = (uid: string): void => {
     onToggleExpand((prev) => {
       const next = new Set(prev);
-      if (next.has(uid)) next.delete(uid);
-      else next.add(uid);
+      if (next.has(uid)) {
+        next.delete(uid);
+      } else {
+        next.add(uid);
+      }
       return next;
     });
   };

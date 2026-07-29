@@ -11,7 +11,9 @@ const onUpdateApplianceManagement = async (
 ): Promise<V1beta1Provider> => {
   const currentValue = getApplianceManagement(provider);
 
-  if (currentValue === enabled.toString()) return provider;
+  if (currentValue === enabled.toString()) {
+    return provider;
+  }
 
   const obj = await k8sPatch({
     data: [
