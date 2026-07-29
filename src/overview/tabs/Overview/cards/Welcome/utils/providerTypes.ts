@@ -1,5 +1,6 @@
 import {
   ec2Logo,
+  getNutanixLogo,
   getVmwareLogo,
   hypervLogo,
   openshiftLogo,
@@ -20,6 +21,11 @@ export const providerTypes = (isDarkTheme: boolean) => ({
     key: PROVIDER_TYPES.hyperv,
     logo: hypervLogo,
     title: 'Microsoft Hyper-V',
+  },
+  nutanix: {
+    key: PROVIDER_TYPES.nutanix,
+    logo: getNutanixLogo(isDarkTheme),
+    title: 'Nutanix AHV',
   },
   openshift: {
     key: PROVIDER_TYPES.openshift,

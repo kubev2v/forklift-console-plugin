@@ -3,11 +3,12 @@ import type { ExtendedProviderType } from '@utils/enums';
 
 export const SOURCE_ONLY_PROVIDER_TYPES: ExtendedProviderType[] = [
   'ec2',
-  'ova',
   'hyperv',
-  'vsphere',
-  'ovirt',
+  'nutanix',
   'openstack',
+  'ova',
+  'ovirt',
+  'vsphere',
 ];
 const TARGET_PROVIDER_TYPES: ProviderType[] = ['openshift'];
 

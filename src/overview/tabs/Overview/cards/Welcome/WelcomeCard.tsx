@@ -16,7 +16,7 @@ import {
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
-import { type ProviderType, TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { Namespace } from '@utils/constants';
 import { getResourceUrl } from '@utils/getResourceUrl';
@@ -38,6 +38,7 @@ const WelcomeCard: FC = () => {
       { image: providerItems.ova.logo, provider: providerItems.ova },
       { image: providerItems.openstack.logo, provider: providerItems.openstack },
       { image: providerItems.hyperv.logo, provider: providerItems.hyperv },
+      { image: providerItems.nutanix.logo, provider: providerItems.nutanix },
       { image: providerItems.ovirt.logo, provider: providerItems.ovirt },
       { image: providerItems.openshift.logo, provider: providerItems.openshift },
     ],
@@ -52,7 +53,7 @@ const WelcomeCard: FC = () => {
   }, []);
   const providersCreateUrl = `${providersListUrl}/~new`;
 
-  const navigateToProvider = (type: ProviderType) => {
+  const navigateToProvider = (type: string) => {
     trackEvent(TELEMETRY_EVENTS.OVERVIEW_WELCOME_PROVIDER_CLICKED, {
       providerType: type,
     });

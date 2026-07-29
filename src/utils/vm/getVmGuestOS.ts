@@ -1,8 +1,13 @@
 import type { ProviderVirtualMachine } from '@forklift-ui/types';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
+import { isNutanixVm } from '@utils/types/nutanixInventory';
 
 export const getVmGuestOS = (vm: ProviderVirtualMachine | undefined): string => {
   if (!vm) return '';
+
+  if (isNutanixVm(vm)) {
+    return vm.guestOsId ?? '';
+  }
 
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere:
