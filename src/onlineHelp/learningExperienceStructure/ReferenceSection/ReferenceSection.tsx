@@ -1,7 +1,8 @@
-import { type FC, type ReactNode, useContext } from 'react';
+import { type FC, memo, type ReactNode, useContext } from 'react';
 
 import { Flex, FlexItem } from '@patternfly/react-core';
 
+import { AccordionContext } from '../../learningExperienceDrawer/context/AccordionContext';
 import { LearningExperienceContext } from '../../learningExperienceDrawer/context/LearningExperienceContext';
 import { useScrollPositionPersistence } from '../LearningExperiencePanel/hooks/useScrollPositionPersistence';
 
@@ -16,13 +17,10 @@ type ReferenceSectionProps = {
 };
 
 const ReferenceSection: FC<ReferenceSectionProps> = ({ children, icon, id, title }) => {
-  const {
-    closeExpansionItem,
-    openExpansionItem,
-    openExpansionItems,
-    referenceScrollPositions,
-    setReferenceScrollPosition,
-  } = useContext(LearningExperienceContext);
+  const { closeExpansionItem, openExpansionItem, openExpansionItems } =
+    useContext(AccordionContext);
+  const { referenceScrollPositions, setReferenceScrollPosition } =
+    useContext(LearningExperienceContext);
 
   const isExpanded = openExpansionItems.includes(id);
 
@@ -52,4 +50,4 @@ const ReferenceSection: FC<ReferenceSectionProps> = ({ children, icon, id, title
   );
 };
 
-export default ReferenceSection;
+export default memo(ReferenceSection);

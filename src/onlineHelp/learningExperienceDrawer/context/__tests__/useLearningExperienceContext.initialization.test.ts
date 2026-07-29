@@ -5,8 +5,6 @@ import { useLearningExperienceContext } from '../useLearningExperienceContext';
 
 import {
   testDrawerWidth,
-  testItemId,
-  testItemId2,
   testReferenceId,
   testScrollPosition,
   testStoredReferencePosition,
@@ -35,7 +33,6 @@ describe('useLearningExperienceContext - Initialization', () => {
     const { result } = renderHook(() => useLearningExperienceContext());
 
     expect(result.current.isLearningExperienceOpen).toBe(false);
-    expect(result.current.openExpansionItems).toEqual([]);
     expect(result.current.scrollPosition).toBe(0);
     expect(result.current.referenceScrollPositions).toEqual({});
     expect(result.current.selectedTopic).toBeNull();
@@ -49,15 +46,6 @@ describe('useLearningExperienceContext - Initialization', () => {
     const { result } = renderHook(() => useLearningExperienceContext());
 
     expect(result.current.isLearningExperienceOpen).toBe(true);
-  });
-
-  it('restores openExpansionItems from storage', () => {
-    const storedItems = [testItemId, testItemId2];
-    setupMocks(createMockPersistedState({ openExpansionItems: storedItems }));
-
-    const { result } = renderHook(() => useLearningExperienceContext());
-
-    expect(result.current.openExpansionItems).toEqual(storedItems);
   });
 
   it('restores scrollPosition from storage', () => {

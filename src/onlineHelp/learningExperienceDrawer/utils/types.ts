@@ -1,11 +1,16 @@
 import type { LearningExperienceTopic } from 'src/onlineHelp/utils/types';
 
+export type AccordionContextType = {
+  openExpansionItems: string[];
+  openExpansionItem: (itemId: string) => void;
+  closeExpansionItem: (itemId: string) => void;
+};
+
 export type LearningExperienceContextType = {
   isLearningExperienceOpen: boolean;
   selectedTopic: LearningExperienceTopic | null;
   scrollPosition: number;
   referenceScrollPositions: Record<string, number>;
-  openExpansionItems: string[];
   drawerWidth: string;
   data: Record<string, unknown>;
   openLearningExperience: () => void;
@@ -14,8 +19,6 @@ export type LearningExperienceContextType = {
   setScrollPosition: (scrollPosition: number) => void;
   setReferenceScrollPosition: (id: string, position: number) => void;
   setDrawerWidth: (width: string) => void;
-  openExpansionItem: (itemId: string) => void;
-  closeExpansionItem: (itemId: string) => void;
   setData: (dataItem: string, dataValue: unknown) => void;
   clearData: (dataItem?: string) => void;
 };

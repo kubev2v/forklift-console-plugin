@@ -12,6 +12,7 @@ import {
 } from '@patternfly/react-core';
 import { TIPS_AND_TRICKS_LABEL } from '@utils/constants';
 
+import AccordionContextProvider from '../../learningExperienceDrawer/context/AccordionContextProvider';
 import { LearningExperienceContext } from '../../learningExperienceDrawer/context/LearningExperienceContext';
 import HelpTopic from '../HelpTopic/HelpTopic';
 
@@ -48,33 +49,35 @@ const LearningExperiencePanel: FC = () => {
       }}
       className="pfext-quick-start__base forklift--learning"
     >
-      <div ref={panelContentRef} className="forklift--learning__panel">
-        <div className="pfext-quick-start-panel-content pfext-quick-start-panel-content__header pfext-quick-start-panel-content__header--blue-white forklift--learning__header">
-          <DrawerHead>
-            <div className="pfext-quick-start-panel-content__title" tabIndex={-1}>
-              <Title headingLevel="h2" size="xl">
-                {TIPS_AND_TRICKS_LABEL}
-              </Title>
-            </div>
-            <DrawerActions>
-              <DrawerCloseButton
-                className="pfext-quick-start-panel-content__close-button"
-                onClick={() => {
-                  closeLearningExperience();
-                  setSelectedTopic(null);
-                }}
-              />
-            </DrawerActions>
-            <LearningExperienceSelect />
-          </DrawerHead>
+      <AccordionContextProvider>
+        <div ref={panelContentRef} className="forklift--learning__panel">
+          <div className="pfext-quick-start-panel-content pfext-quick-start-panel-content__header pfext-quick-start-panel-content__header--blue-white forklift--learning__header">
+            <DrawerHead>
+              <div className="pfext-quick-start-panel-content__title" tabIndex={-1}>
+                <Title headingLevel="h2" size="xl">
+                  {TIPS_AND_TRICKS_LABEL}
+                </Title>
+              </div>
+              <DrawerActions>
+                <DrawerCloseButton
+                  className="pfext-quick-start-panel-content__close-button"
+                  onClick={() => {
+                    closeLearningExperience();
+                    setSelectedTopic(null);
+                  }}
+                />
+              </DrawerActions>
+              <LearningExperienceSelect />
+            </DrawerHead>
+          </div>
+          <DrawerPanelBody className="pfext-quick-start-panel-content__body">
+            <HelpTopic />
+            <LearningTopicsCards />
+            <QuickReferencesSection />
+            <ExternalLinksSection />
+          </DrawerPanelBody>
         </div>
-        <DrawerPanelBody className="pfext-quick-start-panel-content__body">
-          <HelpTopic />
-          <LearningTopicsCards />
-          <QuickReferencesSection />
-          <ExternalLinksSection />
-        </DrawerPanelBody>
-      </div>
+      </AccordionContextProvider>
     </DrawerPanelContent>
   );
 };

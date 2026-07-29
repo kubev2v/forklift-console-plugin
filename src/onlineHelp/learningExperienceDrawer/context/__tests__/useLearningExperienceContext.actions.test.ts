@@ -5,8 +5,6 @@ import { useLearningExperienceContext } from '../useLearningExperienceContext';
 import {
   testDrawerWidth,
   testExistingTopicId,
-  testItemId,
-  testItemId2,
   testReferenceId,
   testReferenceScrollPosition,
   testScrollPosition,
@@ -94,57 +92,6 @@ describe('useLearningExperienceContext - Actions', () => {
       expect(mockPersistValue).toHaveBeenCalledWith('referenceScrollPositions', {
         [testReferenceId]: testReferenceScrollPosition,
       });
-    });
-  });
-
-  describe('Expansion Items', () => {
-    it('openExpansionItem adds item and persists', () => {
-      const { result } = renderHook(() => useLearningExperienceContext());
-
-      act(() => {
-        result.current.openExpansionItem(testItemId);
-      });
-
-      expect(result.current.openExpansionItems).toContain(testItemId);
-      expect(mockPersistValue).toHaveBeenCalledWith('openExpansionItems', [testItemId]);
-    });
-
-    it('openExpansionItem does not duplicate existing item', () => {
-      setupMocks(createMockPersistedState({ openExpansionItems: [testItemId] }));
-
-      const { result } = renderHook(() => useLearningExperienceContext());
-
-      act(() => {
-        result.current.openExpansionItem(testItemId);
-      });
-
-      expect(result.current.openExpansionItems.filter((id) => id === testItemId)).toHaveLength(1);
-    });
-
-    it('closeExpansionItem removes item and persists', () => {
-      setupMocks(createMockPersistedState({ openExpansionItems: [testItemId, testItemId2] }));
-
-      const { result } = renderHook(() => useLearningExperienceContext());
-
-      act(() => {
-        result.current.closeExpansionItem(testItemId);
-      });
-
-      expect(result.current.openExpansionItems).not.toContain(testItemId);
-      expect(result.current.openExpansionItems).toContain(testItemId2);
-      expect(mockPersistValue).toHaveBeenCalledWith('openExpansionItems', [testItemId2]);
-    });
-
-    it('closeExpansionItem handles non-existent item gracefully', () => {
-      setupMocks(createMockPersistedState({ openExpansionItems: [testItemId] }));
-
-      const { result } = renderHook(() => useLearningExperienceContext());
-
-      act(() => {
-        result.current.closeExpansionItem('non-existent-id');
-      });
-
-      expect(result.current.openExpansionItems).toEqual([testItemId]);
     });
   });
 
