@@ -172,6 +172,7 @@ describe('EditLUKSEncryptionPasswords', () => {
 
     render(<EditLUKSEncryptionPasswords resource={mockPlan} closeModal={closeModal} />);
 
-    expect(screen.queryByTestId('luks-modal-body')).not.toBeInTheDocument();
+    expect(screen.getByTestId('luks-modal-body')).toBeInTheDocument();
+    expect(screen.getByTestId('luks-passphrase-input-list')).toHaveTextContent('Passphrases:');
   });
 });
