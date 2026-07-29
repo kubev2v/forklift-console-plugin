@@ -112,6 +112,7 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
           />,
           isVsphereOffload ? (
             <TargetStorageWithSuggestion
+              key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
               fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
               index={index}
               sourceStorages={inventorySourceStorages}
@@ -120,6 +121,7 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
             />
           ) : (
             <TargetStorageField
+              key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
               fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
               targetStorages={targetStorages}
               testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}

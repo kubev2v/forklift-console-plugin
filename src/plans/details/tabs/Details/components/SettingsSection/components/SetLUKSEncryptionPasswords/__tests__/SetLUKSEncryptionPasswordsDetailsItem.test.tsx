@@ -43,7 +43,7 @@ describe('SetLUKSEncryptionPasswordsDetailsItem', () => {
       />,
     );
 
-    expect(screen.queryByText('Disk decryption')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('disk-decryption-detail-item')).not.toBeInTheDocument();
   });
 
   it('shows disk decryption title and no decryption keys label when no LUKS or NBDE', () => {
