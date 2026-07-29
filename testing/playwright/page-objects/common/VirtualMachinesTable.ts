@@ -415,7 +415,7 @@ export class VirtualMachinesTable {
   }
 
   async verifyVMNotVisible(vmName: string): Promise<void> {
-    await expect(this.page.getByText(vmName, { exact: true })).toHaveCount(0);
+    await expect(this.table.getRow({ Name: vmName })).not.toBeVisible();
   }
 
   async verifyVMsExist(vmNames: string[]): Promise<void> {
