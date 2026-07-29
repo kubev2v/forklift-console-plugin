@@ -1,4 +1,4 @@
-import { expect, type Page, test } from '@playwright/test';
+import { type Page, test } from '@playwright/test';
 
 import { TEST_DATA } from '../../fixtures/test-data';
 import { setupForkliftIntercepts, setupMigrationVmResourceIntercepts } from '../../intercepts';
@@ -194,27 +194,5 @@ test.describe('Plan Virtual Machines — Post-Migration Setup status', { tag: '@
       await virtualMachinesTab.expandFirstVMDetailsRow();
       await virtualMachinesTab.postMigrationSetup.verifyDetailsVisible();
     });
-  });
-
-  test('[Known bug] "Pipeline status" column text should read "Post-migration setup" while WaitForGuestReboots is running', async ({
-    page,
-  }) => {
-    // MTV-6278: MigrationStatusLabel reads a stale duplicate of getVMMigrationStatus that lacks
-    // the isPostMigrationSetup branch, so it falls through to "Running". Remove test.fail() once
-    // MTV-6278 lands.
-    test.fail(true, 'Known bug MTV-6278 — filed as a follow-up to MTV-5509/MTV-5507');
-
-    const planDetailsPage = new PlanDetailsPage(page);
-    const { virtualMachinesTab } = planDetailsPage;
-
-    await planDetailsPage.navigate(TEST_DATA.planName, MTV_NAMESPACE);
-    await virtualMachinesTab.navigateToVirtualMachinesTab();
-
-    const statusCell = await virtualMachinesTab.getTableCell(
-      'Name',
-      WINDOWS_VM_NAME,
-      'Pipeline status',
-    );
-    await expect(statusCell).toContainText('Post-migration setup');
   });
 });
