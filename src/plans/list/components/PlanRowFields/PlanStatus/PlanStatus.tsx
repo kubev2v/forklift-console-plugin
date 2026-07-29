@@ -1,10 +1,14 @@
 import type { FC } from 'react';
+import PlanResumeConversionModal, {
+  type PlanResumeConversionModalProps,
+} from 'src/plans/actions/components/ResumeConversionModal/PlanResumeConversionModal';
 import PlanStartMigrationModal, {
   type PlanStartMigrationModalProps,
 } from 'src/plans/actions/components/StartPlanModal/PlanStartMigrationModal';
 import PlanStatusLabel from 'src/plans/details/components/PlanStatus/PlanStatusLabel';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import {
+  canPlanResumeConversion,
   getCantStartVMStatusCount,
   getMigrationVMsStatusCounts,
   getPlanStatus,
@@ -17,7 +21,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, Flex, FlexItem, Spinner, Split } from '@patternfly/react-core';
-import { PlayIcon as StartIcon } from '@patternfly/react-icons';
+import { PlayIcon as StartIcon, RedoIcon } from '@patternfly/react-icons';
 import {
   getPlanVirtualMachines,
   getPlanVirtualMachinesMigrationStatus,
@@ -93,6 +97,21 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
           <PlanStatusLabel plan={plan} />
         )}
       </FlexItem>
+      {canPlanResumeConversion(plan) && loaded && !hasActiveMigration && (
+        <FlexItem>
+          <Button
+            variant={ButtonVariant.link}
+            icon={<RedoIcon />}
+            onClick={() => {
+              launcher<PlanResumeConversionModalProps>(PlanResumeConversionModal, { plan });
+            }}
+            isInline
+            data-testid="plan-resume-button-status"
+          >
+            {t('Resume')}
+          </Button>
+        </FlexItem>
+      )}
       <FlexItem>
         <VMStatusIconsRow plan={plan} statuses={vmStatuses} />
       </FlexItem>
