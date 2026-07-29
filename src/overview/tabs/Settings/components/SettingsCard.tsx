@@ -49,7 +49,7 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
   const spec = controller.spec ?? {};
 
   const formatVirtV2vValue = (value: number | undefined): string => {
-    if (!value) return t('Default (virt-v2v chooses)');
+    if (!value) return t('Default');
     return String(value);
   };
 
