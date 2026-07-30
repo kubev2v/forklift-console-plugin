@@ -20,6 +20,7 @@ export const defaultNewAffinity = {
   fields: [],
   topologyKey: TOPOLOGY_KEY_DEFAULT,
   type: AffinityType.node,
+  weight: 1,
 } as unknown as AffinityRowData;
 
 export const AFFINITY_TYPE_LABELS = {

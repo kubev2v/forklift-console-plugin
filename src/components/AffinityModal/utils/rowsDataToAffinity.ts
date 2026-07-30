@@ -11,7 +11,23 @@ import { isEmpty } from '@utils/helpers';
 import { K8sIoApiCoreV1NodeSelectorRequirementOperatorEnum } from './constants';
 import { AffinityCondition, type AffinityLabel, type AffinityRowData, AffinityType } from './types';
 
-type PickRowsMapper<T> = (rowData: AffinityRowData) => T;
+const MIN_WEIGHT = 1;
+const MAX_WEIGHT = 100;
+
+const hasValidWeight = (row: AffinityRowData): row is AffinityRowData & { weight: number } =>
+  typeof row.weight === 'number' && row.weight >= MIN_WEIGHT && row.weight <= MAX_WEIGHT;
+
+const hasTopologyKey = (row: AffinityRowData): row is AffinityRowData & { topologyKey: string } =>
+  typeof row.topologyKey === 'string' && row.topologyKey.length > 0;
+
+type WithWeight = AffinityRowData & { weight: number };
+type WithTopologyKey = AffinityRowData & { topologyKey: string };
+type WithWeightAndTopologyKey = WithWeight & WithTopologyKey;
+
+const hasWeightAndTopologyKey = (row: AffinityRowData): row is WithWeightAndTopologyKey =>
+  hasValidWeight(row) && hasTopologyKey(row);
+
+type PickRowsMapper<T, R extends AffinityRowData = AffinityRowData> = (rowData: R) => T;
 
 const flattenExpressions = (
   affinityLabels: AffinityLabel[] | undefined,
@@ -43,36 +59,36 @@ const getPreferredNodeTermFromRowData = ({
   expressions,
   fields,
   weight,
-}: AffinityRowData): K8sIoApiCoreV1PreferredSchedulingTerm => ({
+}: WithWeight): K8sIoApiCoreV1PreferredSchedulingTerm => ({
   preference: {
     matchExpressions: flattenExpressions(expressions),
     matchFields: flattenExpressions(fields),
   },
-  weight: weight ?? 1,
+  weight,
 });
 
 const getRequiredPodTermFromRowData = ({
   expressions,
   topologyKey,
-}: AffinityRowData): K8sIoApiCoreV1PodAffinityTerm => ({
+}: WithTopologyKey): K8sIoApiCoreV1PodAffinityTerm => ({
   labelSelector: {
     matchExpressions: flattenExpressions(expressions),
   },
-  topologyKey: topologyKey ?? '',
+  topologyKey,
 });
 
 const getPreferredPodTermFromRowData = ({
   expressions,
   topologyKey,
   weight,
-}: AffinityRowData): K8sIoApiCoreV1WeightedPodAffinityTerm => ({
+}: WithWeightAndTopologyKey): K8sIoApiCoreV1WeightedPodAffinityTerm => ({
   podAffinityTerm: {
     labelSelector: {
       matchExpressions: flattenExpressions(expressions),
     },
-    topologyKey: topologyKey ?? '',
+    topologyKey,
   },
-  weight: weight ?? 1,
+  weight,
 });
 
 export const rowsDataToAffinity = (affinityRows: AffinityRowData[]) => {
@@ -80,14 +96,31 @@ export const rowsDataToAffinity = (affinityRows: AffinityRowData[]) => {
     return null;
   }
 
-  const pickRows = <T>(
+  function pickRows<T>(
     affinityType: AffinityType,
     condition: AffinityCondition,
     mapper: PickRowsMapper<T>,
-  ): T[] =>
-    affinityRows
-      .filter((row) => row.type === affinityType && row.condition === condition)
-      .map(mapper);
+  ): T[];
+  function pickRows<T, R extends AffinityRowData>(
+    affinityType: AffinityType,
+    condition: AffinityCondition,
+    mapper: PickRowsMapper<T, R>,
+    isComplete: (row: AffinityRowData) => row is R,
+  ): T[];
+  function pickRows<T, R extends AffinityRowData>(
+    affinityType: AffinityType,
+    condition: AffinityCondition,
+    mapper: PickRowsMapper<T, R>,
+    isComplete?: (row: AffinityRowData) => row is R,
+  ): T[] {
+    const matched = affinityRows.filter(
+      (row) => row.type === affinityType && row.condition === condition,
+    );
+    if (isComplete) {
+      return matched.filter(isComplete).map(mapper);
+    }
+    return (matched as R[]).map(mapper);
+  }
 
   const affinity = {} as K8sIoApiCoreV1Affinity;
 
@@ -101,30 +134,35 @@ export const rowsDataToAffinity = (affinityRows: AffinityRowData[]) => {
     AffinityType.node,
     AffinityCondition.preferred,
     getPreferredNodeTermFromRowData,
+    hasValidWeight,
   );
 
   const podAffinityTermsRequired = pickRows(
     AffinityType.pod,
     AffinityCondition.required,
     getRequiredPodTermFromRowData,
+    hasTopologyKey,
   );
 
   const podAffinityTermsPreferred = pickRows(
     AffinityType.pod,
     AffinityCondition.preferred,
     getPreferredPodTermFromRowData,
+    hasWeightAndTopologyKey,
   );
 
   const antiPodAffinityTermsRequired = pickRows(
     AffinityType.podAnti,
     AffinityCondition.required,
     getRequiredPodTermFromRowData,
+    hasTopologyKey,
   );
 
   const antiPodAffinityTermsPreferred = pickRows(
     AffinityType.podAnti,
     AffinityCondition.preferred,
     getPreferredPodTermFromRowData,
+    hasWeightAndTopologyKey,
   );
 
   if (!isEmpty(nodeSelectorTermsRequired)) {
