@@ -25,7 +25,7 @@ describe('useShowSelectedVmsToggle', () => {
   test('toggles to showSelectedOnly when Selected is clicked', async () => {
     const user = userEvent.setup();
     const { result } = renderHook(() => useShowSelectedVmsToggle(true, ['vm-1']));
-    const [Action] = result.current.GlobalActionToolbarItems!;
+    const [Action] = result.current.GlobalActionToolbarItems ?? [];
 
     render(<Action dataOnScreen={[]} selectedIds={['vm-1']} />);
     await user.click(screen.getByRole('button', { name: 'Selected' }));
@@ -40,7 +40,7 @@ describe('useShowSelectedVmsToggle', () => {
       { initialProps: { selectedIds: ['vm-1'] } },
     );
 
-    const [Action] = result.current.GlobalActionToolbarItems!;
+    const [Action] = result.current.GlobalActionToolbarItems ?? [];
     const { rerender: rerenderAction } = render(
       <Action dataOnScreen={[]} selectedIds={['vm-1']} />,
     );

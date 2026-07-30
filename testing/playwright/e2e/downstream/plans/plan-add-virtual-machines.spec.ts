@@ -92,7 +92,7 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
 
       await planDetailsPage.virtualMachinesTab.verifyTableLoaded();
       await planDetailsPage.virtualMachinesTab.search(removedVm.name);
-      await planDetailsPage.virtualMachinesTab.verifyRowIsVisible({ Name: removedVm.name! });
+      await planDetailsPage.virtualMachinesTab.verifyRowIsVisible({ Name: removedVm.name ?? '' });
 
       // API-level verification
       const updatedPlan = await resourceManager.fetchPlan(planName, planNamespace);

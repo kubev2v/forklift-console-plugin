@@ -24,7 +24,7 @@ jest.mock('@utils/crds/common/utils', () => ({
 
 const mockK8sCreate = k8sCreate as jest.MockedFunction<typeof k8sCreate>;
 
-const basePlan: V1beta1Plan = {
+const basePlan = {
   apiVersion: 'forklift.konveyor.io/v1beta1',
   kind: 'Plan',
   metadata: { name: 'original-plan', namespace: 'openshift-mtv', uid: 'plan-uid-1' },
@@ -53,7 +53,7 @@ const basePlan: V1beta1Plan = {
       },
     ],
   },
-};
+} satisfies V1beta1Plan;
 
 const baseNetworkMap: V1beta1NetworkMap = {
   apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -130,7 +130,7 @@ describe('createDuplicatePlanAndMapResources', () => {
     const planWithScripts: V1beta1Plan = {
       ...basePlan,
       spec: {
-        ...basePlan.spec!,
+        ...basePlan.spec,
         customizationScripts: { name: 'original-plan-scripts', namespace: 'openshift-mtv' },
         vms: [{ id: 'vm-1', name: 'test-vm' }],
       },
@@ -175,7 +175,7 @@ describe('createDuplicatePlanAndMapResources', () => {
     );
 
     expect(planCreate).toBeDefined();
-    const planData = (planCreate![0] as { data: V1beta1Plan }).data;
+    const planData = (planCreate?.[0] as { data: V1beta1Plan }).data;
     const vmHooks = planData.spec?.vms?.[0]?.hooks;
 
     expect(vmHooks).toHaveLength(2);
@@ -187,7 +187,7 @@ describe('createDuplicatePlanAndMapResources', () => {
     const planWithScripts: V1beta1Plan = {
       ...basePlan,
       spec: {
-        ...basePlan.spec!,
+        ...basePlan.spec,
         customizationScripts: { name: 'original-plan-scripts', namespace: 'openshift-mtv' },
         vms: [{ id: 'vm-1', name: 'test-vm' }],
       },
@@ -209,7 +209,7 @@ describe('createDuplicatePlanAndMapResources', () => {
     );
 
     expect(planCreate).toBeDefined();
-    const planData = (planCreate![0] as { data: V1beta1Plan }).data;
+    const planData = (planCreate?.[0] as { data: V1beta1Plan }).data;
     expect(planData.spec?.customizationScripts?.name).toBe('copy-of-plan-scripts-abcde');
     expect(planData.spec?.customizationScripts?.namespace).toBe('openshift-mtv');
   });
@@ -217,7 +217,7 @@ describe('createDuplicatePlanAndMapResources', () => {
   it('does not create hooks when plan has no hooks', async () => {
     const planNoHooks: V1beta1Plan = {
       ...basePlan,
-      spec: { ...basePlan.spec!, vms: [{ id: 'vm-1', name: 'test-vm' }] },
+      spec: { ...basePlan.spec, vms: [{ id: 'vm-1', name: 'test-vm' }] },
     };
 
     await createDuplicatePlanAndMapResources({
@@ -241,7 +241,7 @@ describe('createDuplicatePlanAndMapResources', () => {
   it('does not create ConfigMap when plan has no customization scripts', async () => {
     const planNoScripts: V1beta1Plan = {
       ...basePlan,
-      spec: { ...basePlan.spec!, vms: [{ id: 'vm-1', name: 'test-vm' }] },
+      spec: { ...basePlan.spec, vms: [{ id: 'vm-1', name: 'test-vm' }] },
     };
 
     await createDuplicatePlanAndMapResources({
@@ -265,7 +265,7 @@ describe('createDuplicatePlanAndMapResources', () => {
   it('always creates new NetworkMap and StorageMap', async () => {
     const planNoHooks: V1beta1Plan = {
       ...basePlan,
-      spec: { ...basePlan.spec!, vms: [{ id: 'vm-1', name: 'test-vm' }] },
+      spec: { ...basePlan.spec, vms: [{ id: 'vm-1', name: 'test-vm' }] },
     };
 
     await createDuplicatePlanAndMapResources({

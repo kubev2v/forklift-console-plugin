@@ -28,7 +28,7 @@ describe('buildHypervProviderResources', () => {
 
     expect(provider.spec?.settings).toBeUndefined();
     expect(secret.data?.smbUrl).toBeDefined();
-    expect(decode(secret.data!.smbUrl)).toBe('//server/share');
+    expect(decode(secret.data?.smbUrl ?? '')).toBe('//server/share');
   });
 
   it('builds iSCSI provider with settings and without SMB data in secret', () => {
@@ -70,8 +70,8 @@ describe('buildHypervProviderResources', () => {
 
     const { secret } = buildHypervProviderResources(formData);
 
-    expect(decode(secret.data!.smbUser)).toBe('smbuser');
-    expect(decode(secret.data!.smbPassword)).toBe('smbpass');
+    expect(decode(secret.data?.smbUser ?? '')).toBe('smbuser');
+    expect(decode(secret.data?.smbPassword ?? '')).toBe('smbpass');
   });
 
   it('excludes separate SMB credentials for iSCSI mode even when flag is set', () => {

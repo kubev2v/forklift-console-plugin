@@ -11,7 +11,8 @@ test.describe('Provider Credentials - Editing', { tag: '@downstream' }, () => {
 
   test('should test credential editing interactions', async ({ page, testProvider }) => {
     const providerDetailsPage = new ProviderDetailsPage(page);
-    await providerDetailsPage.navigate(testProvider!.metadata.name, MTV_NAMESPACE);
+    if (!testProvider) throw new Error('Expected testProvider to be defined');
+    await providerDetailsPage.navigate(testProvider.metadata.name, MTV_NAMESPACE);
     await providerDetailsPage.waitForReadyStatus();
 
     const { credentialsTab } = providerDetailsPage;

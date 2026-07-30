@@ -39,7 +39,7 @@ const usePlanAlerts = (plan: V1beta1Plan) => {
     namespaced: true,
   });
 
-  const [sourceProvider] = usePlanProviders(plan, namespace!);
+  const [sourceProvider] = usePlanProviders(plan, namespace ?? '');
   const [providerStorages] = useSourceStorages(sourceProvider);
   const [providerNetworks] = useSourceNetworks(sourceProvider);
 

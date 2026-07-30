@@ -30,7 +30,7 @@ export const getNameTemplateStateLabel = (
   allowInherit: boolean,
 ): string => {
   const found = getNameTemplateOptions(allowInherit).find((option) => option.value === value);
-  return found!.label;
+  return found?.label ?? '';
 };
 
 export const getSelectedOption = (

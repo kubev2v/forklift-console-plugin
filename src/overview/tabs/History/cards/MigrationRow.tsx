@@ -64,7 +64,7 @@ const MigrationRow: FC<MigrationRowProps> = ({
       {resourceFields.map(({ resourceFieldId }) => (
         <VisibleTableData
           key={resourceFieldId}
-          fieldId={resourceFieldId!}
+          fieldId={resourceFieldId ?? ''}
           resourceFields={resourceFields}
         >
           {rowFields[resourceFieldId as keyof typeof rowFields]}

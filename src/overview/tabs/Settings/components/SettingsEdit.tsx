@@ -97,7 +97,7 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
           <EditVirtV2vSmp />
           <EditControllerTransferNetwork />
           <EditAapUrl />
-          <EditAapTokenSecret namespace={getNamespace(controller)!} />
+          <EditAapTokenSecret namespace={getNamespace(controller) ?? ''} />
           <EditAapTimeout />
         </Form>
       </ModalForm>

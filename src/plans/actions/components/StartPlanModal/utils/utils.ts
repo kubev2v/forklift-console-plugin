@@ -25,8 +25,8 @@ export const startPlanMigration = async (
         {
           apiVersion: 'forklift.konveyor.io/v1beta1',
           kind: 'Plan',
-          name: name!,
-          uid: uid!,
+          name: name ?? '',
+          uid: uid ?? '',
         },
       ],
     },

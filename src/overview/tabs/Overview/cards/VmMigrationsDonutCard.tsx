@@ -101,7 +101,7 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
                   eventHandlers: {
                     onClick: () => {
                       const statusMap = ['Running', 'Failed', 'Succeeded', 'Canceled'];
-                      const status = statusMap[hoveredIndex!];
+                      const status = hoveredIndex === null ? undefined : statusMap[hoveredIndex];
                       navigateToHistoryTab({ navigate, selectedRange, status });
                     },
                     onMouseOut: () => {

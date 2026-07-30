@@ -93,7 +93,7 @@ const TypeaheadSelect = (
   const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useImperativeHandle(ref, () => inputRef.current!, []);
+  useImperativeHandle(ref, () => inputRef.current as HTMLInputElement, []);
 
   const selectedOption = useMemo(
     () => options.find((option) => option.value === value),

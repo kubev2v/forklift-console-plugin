@@ -22,7 +22,7 @@ const InspectionOsInfo: FC<InspectionOsInfoProps> = ({ filesystems, osInfo }) =>
       {!isEmpty(filesystems) && (
         <DetailsItem
           title={t('Filesystems')}
-          content={filesystems!.map((fs) => `${fs.device} (${fs.type})`).join(', ')}
+          content={filesystems?.map((fs) => `${fs.device} (${fs.type})`).join(', ')}
         />
       )}
       {osInfo?.arch && <DetailsItem title={t('Architecture')} content={osInfo.arch} />}

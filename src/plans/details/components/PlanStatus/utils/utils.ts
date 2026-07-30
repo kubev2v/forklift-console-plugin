@@ -114,20 +114,23 @@ export const getMigrationVMsStatusCounts = (
     };
   }
 
-  const counts = vms.reduce<MigrationVirtualMachinesStatusesCounts>((acc, vm) => {
-    const status = getMigrationVMStatus(vm);
-    if (status) {
-      acc[status].count += 1;
-      const vmObj: MigrationVirtualMachinesStatusCountObjectVM = {
-        name: String(vm.name),
-      };
-      if (status === MigrationVirtualMachineStatus.Failed) {
-        vmObj.failedTaskName = (vm.pipeline ?? []).find((pipe) => pipe?.error)?.name;
+  const counts = vms.reduce<MigrationVirtualMachinesStatusesCounts>(
+    (acc, vm) => {
+      const status = getMigrationVMStatus(vm);
+      if (status) {
+        acc[status].count += 1;
+        const vmObj: MigrationVirtualMachinesStatusCountObjectVM = {
+          name: String(vm.name),
+        };
+        if (status === MigrationVirtualMachineStatus.Failed) {
+          vmObj.failedTaskName = (vm.pipeline ?? []).find((pipe) => pipe?.error)?.name;
+        }
+        acc[status].vms.push(vmObj);
       }
-      acc[status].vms.push(vmObj);
-    }
-    return acc;
-  }, deepCopy<MigrationVirtualMachinesStatusesCounts>(emptyCount)!);
+      return acc;
+    },
+    deepCopy<MigrationVirtualMachinesStatusesCounts>(emptyCount) ?? emptyCount,
+  );
 
   return counts;
 };

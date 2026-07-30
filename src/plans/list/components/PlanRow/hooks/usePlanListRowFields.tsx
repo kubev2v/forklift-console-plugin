@@ -46,7 +46,7 @@ export const usePlanListRowFields = (plan: V1beta1Plan) => {
       <TableEmptyCell />
     ) : (
       <TableCell>
-        <Truncate content={planDescription!} />
+        <Truncate content={planDescription ?? ''} />
       </TableCell>
     ),
     [PlanTableResourceId.Destination]: (

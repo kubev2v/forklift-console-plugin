@@ -39,7 +39,9 @@ const PlanResumeConversionModal: ModalComponent<PlanResumeConversionModalProps> 
       metadata: {
         generateName: `${name}-resume-`,
         namespace,
-        ownerReferences: [{ apiVersion: plan.apiVersion, kind: plan.kind, name: name!, uid: uid! }],
+        ownerReferences: [
+          { apiVersion: plan.apiVersion, kind: plan.kind, name: name ?? '', uid: uid ?? '' },
+        ],
       },
       spec: {
         plan: { name, namespace, uid },

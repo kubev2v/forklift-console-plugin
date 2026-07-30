@@ -21,7 +21,7 @@ const PlanVMsDeleteModal: ModalComponent<DeleteVirtualMachineProps> = ({
   const handleSave = useCallback(async () => {
     const vms = getPlanVirtualMachines(plan);
     const op = vms ? REPLACE : ADD;
-    const filteredVMs = (vms ?? []).filter((vm) => !selectedIds.includes(vm.id!)) || [];
+    const filteredVMs = (vms ?? []).filter((vm) => !selectedIds.includes(vm.id ?? '')) || [];
 
     return k8sPatch({
       data: [{ op, path: '/spec/vms', value: filteredVMs }],

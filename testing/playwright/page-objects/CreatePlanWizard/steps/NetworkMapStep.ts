@@ -123,7 +123,7 @@ export class NetworkMapStep {
       await this.waitForAtLeastOneRow();
 
       if (!isEmpty(networkMap.mappings)) {
-        await this.configureMappings(networkMap.mappings!);
+        await this.configureMappings(networkMap.mappings);
       }
 
       // Map any rows still on "Default network" to "Ignore network" to

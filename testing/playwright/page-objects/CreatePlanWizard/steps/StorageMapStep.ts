@@ -76,7 +76,7 @@ export class StorageMapStep {
       await this.page.getByRole('textbox').fill(storageMap.name);
 
       if (!isEmpty(storageMap.mappings)) {
-        await this.configureMappings(storageMap.mappings!);
+        await this.configureMappings(storageMap.mappings);
       }
     }
   }

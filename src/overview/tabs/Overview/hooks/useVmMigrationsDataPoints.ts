@@ -63,7 +63,7 @@ const createBuckets = (intervals: Interval[], migrations: V1beta1Migration[]) =>
       if (
         !latestByPlan.has(planKey) ||
         DateTime.fromISO(started) >
-          DateTime.fromISO(getMigrationStarted(latestByPlan.get(planKey)!))
+          DateTime.fromISO(getMigrationStarted(latestByPlan.get(planKey) as V1beta1Migration))
       ) {
         latestByPlan.set(planKey, migration);
       }

@@ -33,7 +33,7 @@ const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
 
   useEffect(() => {
     if (isBuildSucceeded) {
-      onChangeVddk(body!);
+      onChangeVddk(body ?? '');
     }
   }, [body, isBuildSucceeded, onChangeVddk]);
 

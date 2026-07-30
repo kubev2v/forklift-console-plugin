@@ -79,9 +79,7 @@ const PlanDeleteModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
             </Alert>
           )}
         </StackItem>
-        <StackItem>
-          <ItemIsOwnedAlert owner={owner!} namespace={namespace} />
-        </StackItem>
+        <StackItem>{owner && <ItemIsOwnedAlert owner={owner} namespace={namespace} />}</StackItem>
       </Stack>
     </ModalForm>
   );

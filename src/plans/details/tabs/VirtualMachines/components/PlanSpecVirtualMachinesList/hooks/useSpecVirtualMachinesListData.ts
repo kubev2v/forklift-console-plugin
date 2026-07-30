@@ -53,16 +53,19 @@ export const useSpecVirtualMachinesListData = (
     for (const specVM of virtualMachines) {
       const id = specVM?.id ?? getInventoryVmIdByName(specVM?.name);
       if (id) {
-        out.push({
-          conditions: conditionsDict[id],
-          inventoryVmData: inventoryVmMap.get(id)!,
-          plan,
-          sourceProviderType: sourceProvider?.spec?.type as ProviderType,
-          specVM,
-          statusVM: vmDict[id],
-          targetNamespace: getPlanTargetNamespace(plan)!,
-          vmIndex,
-        });
+        const vmData = inventoryVmMap.get(id);
+        if (vmData) {
+          out.push({
+            conditions: conditionsDict[id],
+            inventoryVmData: vmData,
+            plan,
+            sourceProviderType: sourceProvider?.spec?.type as ProviderType,
+            specVM,
+            statusVM: vmDict[id],
+            targetNamespace: getPlanTargetNamespace(plan) ?? '',
+            vmIndex,
+          });
+        }
       }
       vmIndex += 1;
     }

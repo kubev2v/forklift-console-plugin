@@ -161,7 +161,7 @@ export class Table {
 
     return headerTexts
       .filter((text) => text?.trim() && !text.includes('Row select') && !text.includes('Details'))
-      .map((text) => text!.replaceAll(/\s+/g, ' ').trim())
+      .map((text) => (text ?? '').replaceAll(/\s+/g, ' ').trim())
       .filter((cleanText) => cleanText && cleanText !== 'More information on concerns');
   }
 

@@ -82,7 +82,7 @@ const buildUpdatedVmsWithHooks = (
       return vm;
     }
 
-    const updatedHooks = vm.hooks!.map((hookEntry) => {
+    const updatedHooks = (vm.hooks ?? []).map((hookEntry) => {
       if (hookEntry.step === 'PreHook' && newPreHook) {
         return {
           ...hookEntry,
@@ -211,6 +211,11 @@ export const createDuplicatePlanAndMapResources = async ({
 
   const vms = buildUpdatedVmsWithHooks(plan, newPreHook, newPostHook);
 
+  const planSpec = plan.spec;
+  if (!planSpec) {
+    throw new Error('Plan spec is required for duplication.');
+  }
+
   const newPlanData: V1beta1Plan = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Plan',
@@ -219,7 +224,7 @@ export const createDuplicatePlanAndMapResources = async ({
       namespace,
     },
     spec: {
-      ...plan.spec!,
+      ...planSpec,
       archived: false,
       customizationScripts: newConfigMap
         ? { name: getName(newConfigMap), namespace: getNamespace(newConfigMap) }
@@ -229,8 +234,8 @@ export const createDuplicatePlanAndMapResources = async ({
     },
   };
 
-  if (!newConfigMap) {
-    delete newPlanData.spec!.customizationScripts;
+  if (!newConfigMap && newPlanData.spec) {
+    delete newPlanData.spec.customizationScripts;
   }
 
   const createdPlan = await k8sCreate({ data: newPlanData, model: PlanModel });
@@ -238,9 +243,9 @@ export const createDuplicatePlanAndMapResources = async ({
   const planRef: ObjectRef = {
     apiVersion: createdPlan.apiVersion,
     kind: createdPlan.kind,
-    name: getName(createdPlan)!,
+    name: getName(createdPlan) ?? '',
     namespace: getNamespace(createdPlan),
-    uid: getUID(createdPlan)!,
+    uid: getUID(createdPlan) ?? '',
   };
 
   await addOwnerRefsToResources(planRef, {

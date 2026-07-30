@@ -21,7 +21,7 @@ const InspectionVmRow: FC<RowProps<InspectionVmRowData>> = ({ resourceData, reso
       {resourceFields.map(({ resourceFieldId }) => (
         <VisibleTableData
           key={resourceFieldId}
-          fieldId={resourceFieldId!}
+          fieldId={resourceFieldId ?? ''}
           resourceFields={resourceFields}
         >
           {rowFields[resourceFieldId as InspectionVmFieldId]}

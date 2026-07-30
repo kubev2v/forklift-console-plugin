@@ -65,7 +65,7 @@ const VmTreeRow: FC<VmTreeRowProps> = ({ columns, conversions, row }) => {
         if (!col.isVisible) {
           return null;
         }
-        const Component = VmCells[col.resourceFieldId!];
+        const Component = VmCells[col.resourceFieldId ?? ''];
         if (!Component) {
           return null;
         }

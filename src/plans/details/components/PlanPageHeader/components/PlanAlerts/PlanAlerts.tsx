@@ -33,7 +33,7 @@ const PlanAlerts: FC<Props> = ({ plan, setIsDrawerOpen }) => {
     selector: {
       matchLabels: {
         [CONVERSION_LABELS.CONVERSION_TYPE]: CONVERSION_TYPE.DEEP_INSPECTION,
-        ...(getUID(plan) ? { [CONVERSION_LABELS.PLAN]: getUID(plan)! } : {}),
+        ...(getUID(plan) ? { [CONVERSION_LABELS.PLAN]: getUID(plan) ?? '' } : {}),
       },
     },
   });

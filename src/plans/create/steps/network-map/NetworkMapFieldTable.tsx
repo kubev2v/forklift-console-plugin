@@ -67,7 +67,7 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
       new Map(
         [...usedSourceNetworks, ...otherSourceNetworks]
           .filter((net) => net.id)
-          .map((net) => [net.id!, net.name]),
+          .map((net) => [net.id ?? '', net.name]),
       ),
     [usedSourceNetworks, otherSourceNetworks],
   );

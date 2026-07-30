@@ -48,7 +48,7 @@ const getPreferredNodeTermFromRowData = ({
     matchExpressions: flattenExpressions(expressions),
     matchFields: flattenExpressions(fields),
   },
-  weight: weight!,
+  weight: weight ?? 1,
 });
 
 const getRequiredPodTermFromRowData = ({
@@ -58,7 +58,7 @@ const getRequiredPodTermFromRowData = ({
   labelSelector: {
     matchExpressions: flattenExpressions(expressions),
   },
-  topologyKey: topologyKey!,
+  topologyKey: topologyKey ?? '',
 });
 
 const getPreferredPodTermFromRowData = ({
@@ -70,9 +70,9 @@ const getPreferredPodTermFromRowData = ({
     labelSelector: {
       matchExpressions: flattenExpressions(expressions),
     },
-    topologyKey: topologyKey!,
+    topologyKey: topologyKey ?? '',
   },
-  weight: weight!,
+  weight: weight ?? 1,
 });
 
 export const rowsDataToAffinity = (affinityRows: AffinityRowData[]) => {

@@ -68,8 +68,8 @@ const getLUKSSecret = async ({
           {
             apiVersion: 'forklift.konveyor.io/v1beta1',
             kind: 'Plan',
-            name: planName!,
-            uid: planUID!,
+            name: planName ?? '',
+            uid: planUID ?? '',
           },
         ],
       },
@@ -145,9 +145,9 @@ export const onDiskDecryptionConfirm = async ({
   if (existingSecret) {
     const copiedSecret = await copySecretForPlan(
       existingSecret,
-      planName!,
-      planUID!,
-      secretNamespace!,
+      planName ?? '',
+      planUID ?? '',
+      secretNamespace ?? '',
     );
 
     await deleteCurrentSecret(currentSecretName, secretNamespace);

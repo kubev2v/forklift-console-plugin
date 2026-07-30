@@ -71,7 +71,7 @@ const OffloadDetailsRow: FC<OffloadDetailsRowProps> = ({ index, mapping }) => {
                 <DescriptionListDescription
                   data-testid={`review-dedicated-migration-hosts-${index}`}
                 >
-                  {isEmpty(dedicatedHosts) ? t('All hosts') : dedicatedHosts!.join(', ')}
+                  {isEmpty(dedicatedHosts) ? t('All hosts') : (dedicatedHosts ?? []).join(', ')}
                 </DescriptionListDescription>
               </DescriptionListGroup>
             </DescriptionList>

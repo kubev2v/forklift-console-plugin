@@ -99,7 +99,7 @@ const MultiTypeaheadSelect = (
     values,
   });
 
-  useImperativeHandle(ref, () => inputRef.current!, [inputRef]);
+  useImperativeHandle(ref, () => inputRef.current as HTMLInputElement, [inputRef]);
 
   return (
     <PfSelect

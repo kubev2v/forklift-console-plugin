@@ -6,7 +6,7 @@ export const getPlanVirtualMachinesDict = (plan: V1beta1Plan) => {
 
   const vmDict = migrationVirtualMachines.reduce<Record<string, V1beta1PlanStatusMigrationVms>>(
     (dict, migration) => {
-      dict[migration.id!] = migration;
+      dict[migration.id ?? ''] = migration;
       return dict;
     },
     {},

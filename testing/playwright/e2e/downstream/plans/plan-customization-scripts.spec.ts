@@ -91,13 +91,13 @@ test.describe('Plan Customization Scripts', { tag: '@downstream' }, () => {
       await planDetailsPage.automationTab.verifyConfigMapLink();
       await planDetailsPage.automationTab.verifyScriptDetails(
         LINUX_FIRSTBOOT_SCRIPT.name,
-        GUEST_TYPE_LABELS[LINUX_FIRSTBOOT_SCRIPT.guestType!],
-        SCRIPT_TYPE_LABELS[LINUX_FIRSTBOOT_SCRIPT.scriptType!],
+        GUEST_TYPE_LABELS[LINUX_FIRSTBOOT_SCRIPT.guestType ?? ''],
+        SCRIPT_TYPE_LABELS[LINUX_FIRSTBOOT_SCRIPT.scriptType ?? ''],
       );
       await planDetailsPage.automationTab.verifyScriptDetails(
         WINDOWS_FIRSTBOOT_SCRIPT.name,
-        GUEST_TYPE_LABELS[WINDOWS_FIRSTBOOT_SCRIPT.guestType!],
-        SCRIPT_TYPE_LABELS[WINDOWS_FIRSTBOOT_SCRIPT.scriptType!],
+        GUEST_TYPE_LABELS[WINDOWS_FIRSTBOOT_SCRIPT.guestType ?? ''],
+        SCRIPT_TYPE_LABELS[WINDOWS_FIRSTBOOT_SCRIPT.scriptType ?? ''],
       );
     });
 
@@ -109,8 +109,8 @@ test.describe('Plan Customization Scripts', { tag: '@downstream' }, () => {
     await test.step('Verify updated scripts on Automation tab', async () => {
       await planDetailsPage.automationTab.verifyScriptDetails(
         UPDATED_SCRIPT.name,
-        GUEST_TYPE_LABELS[UPDATED_SCRIPT.guestType!],
-        SCRIPT_TYPE_LABELS[UPDATED_SCRIPT.scriptType!],
+        GUEST_TYPE_LABELS[UPDATED_SCRIPT.guestType ?? ''],
+        SCRIPT_TYPE_LABELS[UPDATED_SCRIPT.scriptType ?? ''],
       );
     });
   });

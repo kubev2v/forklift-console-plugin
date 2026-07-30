@@ -55,8 +55,8 @@ const getLocalHookTemplate = ({
       {
         apiVersion: plan?.apiVersion,
         kind: plan?.kind,
-        name: getName(plan)!,
-        uid: getUID(plan)!,
+        name: getName(plan) ?? '',
+        uid: getUID(plan) ?? '',
       },
     ],
   },
@@ -85,8 +85,8 @@ const getAapHookTemplate = ({
         {
           apiVersion: plan?.apiVersion,
           kind: plan?.kind,
-          name: getName(plan)!,
-          uid: getUID(plan)!,
+          name: getName(plan) ?? '',
+          uid: getUID(plan) ?? '',
         },
       ],
     },

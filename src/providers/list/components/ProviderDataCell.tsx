@@ -33,12 +33,15 @@ const ProviderDataCell: FC<ProviderDataCellProps> = ({
     return <TableEmptyCell />;
   }
 
-  const DataCellRenderer =
-    ProviderDataCellRenderers?.[resourceFieldId! as ProvidersResourceFieldId];
+  const DataCellRenderer = ProviderDataCellRenderers?.[resourceFieldId as ProvidersResourceFieldId];
 
   return (
-    <Td key={resourceFieldId} dataLabel={resourceFieldId!}>
-      <DataCellRenderer data={resourceData} fieldId={resourceFieldId!} fields={resourceFields} />
+    <Td key={resourceFieldId} dataLabel={resourceFieldId ?? undefined}>
+      <DataCellRenderer
+        data={resourceData}
+        fieldId={resourceFieldId ?? ''}
+        fields={resourceFields}
+      />
     </Td>
   );
 };

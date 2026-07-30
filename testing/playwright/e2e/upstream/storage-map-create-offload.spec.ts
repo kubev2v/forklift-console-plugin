@@ -172,7 +172,8 @@ test.describe(
         await storageMapCreatePage.submit();
 
         expect(submittedBody).toBeDefined();
-        const spec = submittedBody!.spec as {
+        if (!submittedBody) throw new Error('Expected submittedBody to be defined');
+        const spec = submittedBody.spec as {
           map: {
             offloadPlugin?: {
               vsphereXcopyConfig?: { dedicatedMigrationHosts?: string[] };

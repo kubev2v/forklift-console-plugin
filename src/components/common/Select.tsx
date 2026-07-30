@@ -60,7 +60,7 @@ const Select = (
   const [isOpen, setIsOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>();
 
-  useImperativeHandle(ref, () => toggleRef.current!);
+  useImperativeHandle(ref, () => toggleRef.current as HTMLButtonElement);
 
   const selectedOption = useMemo(
     () =>

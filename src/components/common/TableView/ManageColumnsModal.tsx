@@ -97,7 +97,10 @@ export const ManageColumnsModal = ({
 
   const onDrop = (_event: unknown, newItems: DraggableObject[]) => {
     const columnsMap = new Map(editedColumns.map((col) => [col.resourceFieldId, col]));
-    const updatedColumns = newItems.map((item) => columnsMap.get(String(item.id))!);
+    const updatedColumns = newItems.flatMap((item) => {
+      const col = columnsMap.get(String(item.id));
+      return col ? [col] : [];
+    });
     setEditedColumns(updatedColumns);
   };
 
@@ -149,7 +152,7 @@ export const ManageColumnsModal = ({
           <DragDropSort
             variant="DataList"
             items={editedColumns.map(({ isIdentity, isVisible, label, resourceFieldId: id }) => {
-              const fieldId = id!;
+              const fieldId = id ?? '';
 
               return {
                 content: (

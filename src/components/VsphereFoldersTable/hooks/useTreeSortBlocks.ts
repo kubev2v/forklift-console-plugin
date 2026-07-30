@@ -124,7 +124,7 @@ const useTreeSortBlocks: UseTreeSortBlocks = ({ columns, conversions, filteredRo
       ...columns
         .filter((col) => col.isVisible)
         .map((col) => ({
-          id: col.resourceFieldId!,
+          id: col.resourceFieldId ?? '',
           info: col.info,
           label: col.label ?? '',
           sortable: col.sortable !== false,
