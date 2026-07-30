@@ -16,8 +16,8 @@ import { PlusCircleIcon } from '@patternfly/react-icons';
 import ProvidersAddButton from './ProvidersAddButton';
 
 type ProvidersEmptyStateProps = {
+  canCreate?: boolean;
   namespace?: string;
-  canCreate?: boolean | undefined;
 };
 
 const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ canCreate, namespace }) => {

@@ -170,10 +170,9 @@ describe('EditLUKSEncryptionPasswords', () => {
     mockGetLUKSSecretName.mockReturnValue('test-secret');
     mockUseK8sWatchResource.mockReturnValue([{ data: null }, false, null]);
 
-    const { container } = render(
-      <EditLUKSEncryptionPasswords resource={mockPlan} closeModal={closeModal} />,
-    );
+    render(<EditLUKSEncryptionPasswords resource={mockPlan} closeModal={closeModal} />);
 
-    expect(container.firstChild).toBeNull();
+    expect(screen.getByTestId('luks-modal-body')).toBeInTheDocument();
+    expect(screen.getByTestId('luks-passphrase-input-list')).toHaveTextContent('Passphrases:');
   });
 });

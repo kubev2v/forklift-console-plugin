@@ -1,15 +1,22 @@
+import barrelFiles from 'eslint-plugin-barrel-files';
 import importPlugin from 'eslint-plugin-import';
+import jsdoc from 'eslint-plugin-jsdoc';
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier/recommended';
+import promise from 'eslint-plugin-promise';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import sonarjs from 'eslint-plugin-sonarjs';
+import testingLibrary from 'eslint-plugin-testing-library';
+import unicorn from 'eslint-plugin-unicorn';
 import globals from 'globals';
 import { dirname, join } from 'path';
 import tseslint from 'typescript-eslint';
 import { fileURLToPath } from 'url';
 
+import eslintReact from '@eslint-react/eslint-plugin';
 import cspellConfigs from '@cspell/eslint-plugin/configs';
 import eslint from '@eslint/js';
 
@@ -64,12 +71,15 @@ export const createEslintConfig = () =>
       },
       plugins: {
         '@typescript-eslint': tseslint.plugin,
+        'barrel-files': barrelFiles,
         'import/parsers': tseslint.parser,
         perfectionist,
+        promise,
         react,
         'react-hooks': reactHooks,
         'react-refresh': reactRefresh,
         'simple-import-sort': simpleImportSort,
+        unicorn,
       },
       rules: {
         '@cspell/spellchecker': [
@@ -94,6 +104,7 @@ export const createEslintConfig = () =>
           },
         ],
         '@typescript-eslint/naming-convention': 'off',
+        // Deferred to MTV-6280 (useModal → useOverlay + other deprecated cleanups)
         '@typescript-eslint/no-deprecated': 'off',
         '@typescript-eslint/no-dynamic-delete': 'off',
         '@typescript-eslint/no-explicit-any': 'error',
@@ -132,6 +143,8 @@ export const createEslintConfig = () =>
         '@typescript-eslint/strict-boolean-expressions': 'off',
         '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
         'arrow-body-style': 'off',
+        'barrel-files/avoid-barrel-files': 'warn',
+        'barrel-files/avoid-re-export-all': 'error',
         camelcase: ['error', { allow: ['required_'] }],
         'capitalized-comments': 'off',
         complexity: 'off',
@@ -248,6 +261,10 @@ export const createEslintConfig = () =>
             endOfLine: 'auto',
           },
         ],
+        'promise/catch-or-return': ['error', { allowFinally: true }],
+        'promise/no-nesting': 'warn',
+        'promise/no-return-wrap': 'error',
+        'promise/param-names': 'error',
         'react-hooks/exhaustive-deps': ['error'],
         'react-refresh/only-export-components': 'error',
         'react/display-name': 'off',
@@ -273,6 +290,12 @@ export const createEslintConfig = () =>
         'sort-imports': 'off',
         'sort-keys': 'off',
         'sort-vars': ['error'],
+        'unicorn/no-array-for-each': 'error',
+        'unicorn/no-lonely-if': 'error',
+        'unicorn/no-useless-spread': 'error',
+        'unicorn/prefer-array-some': 'error',
+        'unicorn/prefer-includes': 'error',
+        'unicorn/throw-new-error': 'error',
 
         // Rules redundant with TypeScript compiler + IDE
         '@typescript-eslint/no-redeclare': 'off',
@@ -288,6 +311,70 @@ export const createEslintConfig = () =>
           version: 'detect',
         },
       },
+    },
+    {
+      ...(sonarjs.configs?.recommended as Linter.Config),
+      files: ['src/**/*.{js,jsx,ts,tsx}'],
+      rules: {
+        ...((sonarjs.configs?.recommended as Linter.Config).rules ?? {}),
+        // Overlap with max-lines-per-function / intentional complexity
+        'sonarjs/cognitive-complexity': 'off',
+        'sonarjs/deprecation': 'off',
+        // False positives with TypeScript narrowing / branded comparisons
+        'sonarjs/different-types-comparison': 'off',
+        'sonarjs/fixme-tag': 'off',
+        'sonarjs/function-return-type': 'off',
+        // Test fixtures, docs URLs, and URL validators use http:// and sample IPs
+        'sonarjs/no-clear-text-protocols': 'off',
+        // Intentional TODO stubs (e.g. docs URL placeholders)
+        'sonarjs/no-commented-code': 'off',
+        'sonarjs/no-globals-shadowing': 'off',
+        'sonarjs/no-hardcoded-ip': 'off',
+        // Form field names / test secrets trip this heuristic
+        'sonarjs/no-hardcoded-passwords': 'off',
+        // Intentional empty catch with cleanup (parseOrClean pattern)
+        'sonarjs/no-ignored-exceptions': 'off',
+        'sonarjs/no-unused-vars': 'off',
+        'sonarjs/todo-tag': 'off',
+        'sonarjs/unused-import': 'off',
+      },
+    },
+    {
+      ...eslintReact.configs['recommended-typescript'],
+      files: ['src/**/*.{ts,tsx}'],
+      rules: {
+        ...eslintReact.configs['recommended-typescript'].rules,
+        // setState-in-effect is common in this codebase; enable in a follow-up
+        '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'off',
+      },
+    },
+    {
+      files: ['src/utils/**/*.{js,ts,tsx}'],
+      plugins: { jsdoc },
+      rules: {
+        'jsdoc/require-jsdoc': [
+          'warn',
+          {
+            require: {
+              FunctionDeclaration: true,
+              FunctionExpression: true,
+              MethodDefinition: true,
+            },
+          },
+        ],
+        'jsdoc/require-param': 'warn',
+        'jsdoc/require-param-name': 'warn',
+        'jsdoc/require-param-type': 'off',
+        'jsdoc/require-property': 'warn',
+        'jsdoc/require-property-description': 'warn',
+        'jsdoc/require-property-name': 'warn',
+        'jsdoc/require-property-type': 'warn',
+      },
+    },
+    {
+      ...testingLibrary.configs['flat/react'],
+      // Unit tests only — do not apply RTL rules to Playwright specs under testing/
+      files: ['src/**/__tests__/**/*.{ts,tsx}', 'src/**/*.{test,spec}.{ts,tsx}'],
     },
     // TypeaheadSelect component specific rules
     {
@@ -322,6 +409,7 @@ export const createEslintConfig = () =>
       files: ['testing/**/*.{js,ts,jsx,tsx}', '**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}'],
       rules: {
         '@cspell/spellchecker': 'off',
+        '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'off',
         '@typescript-eslint/class-methods-use-this': 'off',
         '@typescript-eslint/consistent-type-definitions': 'off',
         '@typescript-eslint/explicit-member-accessibility': 'off',
@@ -338,6 +426,13 @@ export const createEslintConfig = () =>
         // Playwright locator APIs that return Promises without needing await.
         // TODO: audit and fix each site, then remove this override.
         '@typescript-eslint/require-await': 'off',
+        'jsdoc/require-jsdoc': 'off',
+        'jsdoc/require-param': 'off',
+        'jsdoc/require-param-name': 'off',
+        'jsdoc/require-property': 'off',
+        'jsdoc/require-property-description': 'off',
+        'jsdoc/require-property-name': 'off',
+        'jsdoc/require-property-type': 'off',
         'max-lines': 'off',
         'max-lines-per-function': 'off',
         'no-await-in-loop': 'off',
@@ -348,6 +443,18 @@ export const createEslintConfig = () =>
         'require-unicode-regexp': 'off',
         'no-restricted-syntax': 'off',
         '@typescript-eslint/strict-void-return': 'off',
+        'sonarjs/cognitive-complexity': 'off',
+        'sonarjs/no-duplicate-string': 'off',
+        'sonarjs/no-identical-functions': 'off',
+      },
+    },
+    {
+      files: ['**/*.{test,spec}.{js,jsx,ts,tsx}'],
+      rules: {
+        'jsdoc/require-jsdoc': 'off',
+        'sonarjs/cognitive-complexity': 'off',
+        'sonarjs/no-duplicate-string': 'off',
+        'sonarjs/no-identical-functions': 'off',
       },
     },
     prettier,

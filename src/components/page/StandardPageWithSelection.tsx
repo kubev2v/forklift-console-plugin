@@ -11,6 +11,17 @@ import { createHeaderWithSelection } from './utils/createHeaderWithSelection';
 import { createRowWithSelection } from './utils/createRowWithSelection';
 import StandardPage from './StandardPage';
 
+const wrapActionWithSelection = <T,>(
+  Action: FC<GlobalActionToolbarProps<T>>,
+  selectedIds: string[],
+): FC<GlobalActionToolbarProps<T>> => {
+  const ActionWithSelection = (actionProps: ComponentProps<typeof Action>) => (
+    <Action {...actionProps} selectedIds={selectedIds} />
+  );
+  ActionWithSelection.displayName = `${Action.displayName ?? 'Action'}WithSelection`;
+  return ActionWithSelection;
+};
+
 /**
  * Enforces prop combinations at compile-time via discriminated unions:
  * - Selection: requires onSelect + toId + selectedIds
@@ -118,13 +129,9 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
 
   const EnhancedGlobalActionToolbarItems = useMemo(
     () =>
-      GlobalActionToolbarItems?.map((Action: FC<GlobalActionToolbarProps<T>>) => {
-        const ActionWithSelection = (actionProps: ComponentProps<typeof Action>) => (
-          <Action {...actionProps} selectedIds={internalSelectedIds} />
-        );
-        ActionWithSelection.displayName = `${Action.displayName ?? 'Action'}WithSelection`;
-        return ActionWithSelection;
-      }),
+      GlobalActionToolbarItems?.map((Action: FC<GlobalActionToolbarProps<T>>) =>
+        wrapActionWithSelection(Action, internalSelectedIds ?? []),
+      ),
     [GlobalActionToolbarItems, internalSelectedIds],
   );
 

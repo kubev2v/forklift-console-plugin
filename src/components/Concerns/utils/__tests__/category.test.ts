@@ -30,7 +30,7 @@ describe('groupConcernsByCategory', () => {
   });
 
   it('handles undefined input without crashing', () => {
-    const grouped = groupConcernsByCategory(undefined);
+    const grouped = groupConcernsByCategory();
 
     for (const category of orderedConcernCategories) {
       expect(grouped[category]).toBeDefined();
@@ -59,7 +59,7 @@ describe('groupConditionsByCategory', () => {
   });
 
   it('handles undefined input without crashing', () => {
-    const grouped = groupConditionsByCategory(undefined);
+    const grouped = groupConditionsByCategory();
 
     for (const category of orderedConcernCategories) {
       expect(grouped[category]).toBeDefined();
@@ -73,9 +73,11 @@ describe('orderedConcernCategories iteration safety', () => {
     const groupedConditions = groupConditionsByCategory([]);
 
     expect(() => {
-      orderedConcernCategories.forEach(
-        (category) => groupedConcerns[category].length + groupedConditions[category].length,
-      );
+      for (const category of orderedConcernCategories) {
+        expect(
+          groupedConcerns[category].length + groupedConditions[category].length,
+        ).toBeGreaterThanOrEqual(0);
+      }
     }).not.toThrow();
   });
 });

@@ -57,7 +57,7 @@ const createBuckets = (intervals: Interval[], migrations: V1beta1Migration[]) =>
 
     // Group by plan, keep only the most recent (by migration started) per plan
     const latestByPlan = new Map<string, V1beta1Migration>();
-    inBucket.forEach((migration) => {
+    for (const migration of inBucket) {
       const planKey = getPlanKey(migration);
       const started = getMigrationStarted(migration);
       if (
@@ -67,7 +67,7 @@ const createBuckets = (intervals: Interval[], migrations: V1beta1Migration[]) =>
       ) {
         latestByPlan.set(planKey, migration);
       }
-    });
+    }
 
     return {
       interval,
@@ -128,7 +128,7 @@ export const useVmMigrationsDataPoints = (
   let totalSucceededCount = 0;
   let totalCanceledCount = 0;
 
-  buckets.forEach(({ interval, migrations: migrationsInBucket }) => {
+  for (const { interval, migrations: migrationsInBucket } of buckets) {
     let failedCount = 0;
     let runningCount = 0;
     let succeededCount = 0;
@@ -140,9 +140,9 @@ export const useVmMigrationsDataPoints = (
       succeeded: {},
     };
 
-    migrationsInBucket.forEach((migration) => {
+    for (const migration of migrationsInBucket) {
       const name = getName(migration) ?? '';
-      (migration?.status?.vms ?? []).forEach((vm) => {
+      for (const vm of migration?.status?.vms ?? []) {
         total += 1;
         if (isFailed(vm)) {
           failedCount += 1;
@@ -161,8 +161,8 @@ export const useVmMigrationsDataPoints = (
           totalCanceledCount += 1;
           countedMigrations.canceled[name] = true;
         }
-      });
-    });
+      }
+    }
 
     const dateLabel =
       selectedRange === TimeRangeOptions.Last24H
@@ -193,7 +193,7 @@ export const useVmMigrationsDataPoints = (
       migrations: Object.keys(countedMigrations.canceled),
       value: canceledCount,
     });
-  });
+  }
 
   return {
     canceled,

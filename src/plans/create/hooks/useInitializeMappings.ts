@@ -104,11 +104,11 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
         await trigger();
       }, 0);
 
-      unmappedSources.forEach((source) => {
+      for (const source of unmappedSources) {
         if (source.name) {
           autoMappedSourcesRef.current.add(source.name);
         }
-      });
+      }
     }
   }, [
     isLoading,

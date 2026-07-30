@@ -27,10 +27,11 @@ const VsphereUrlField: FC = () => {
         validate: (val: string | undefined) => {
           const isSkippingCertificate = certificateValidation === CertificateValidationMode.Skip;
 
+          const skipCertValue = isSkippingCertificate ? btoa('true') : btoa('false');
           const result =
             endpointType === VSphereEndpointType.ESXi
               ? validateEsxiURL(val)
-              : validateVCenterURL(val, isSkippingCertificate ? btoa('true') : btoa('false'));
+              : validateVCenterURL(val, skipCertValue);
 
           if (result.type === ValidationState.Error && typeof result.msg === 'string') {
             return result.msg;

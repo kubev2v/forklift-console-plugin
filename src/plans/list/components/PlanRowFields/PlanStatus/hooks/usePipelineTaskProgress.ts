@@ -12,13 +12,13 @@ const usePipelineTaskProgress = (plan: V1beta1Plan) => {
   const vmPipelineTasks = useMemo(
     () =>
       activeMigration?.status?.vms?.reduce((acc: VirtualMachinePipelineTask[], migrationVm) => {
-        migrationVm.pipeline.forEach((pipelineStep) => {
+        for (const pipelineStep of migrationVm.pipeline) {
           acc.push({
             status: pipelineStep.phase!,
             task: pipelineStep.name,
             vmName: migrationVm.name!,
           });
-        });
+        }
 
         return acc;
       }, []),

@@ -14,6 +14,11 @@ import type { ResourceField } from '../utils/types';
 import { CustomFilterType } from './constants';
 import type { FilterRenderer, ValueMatcher } from './types';
 
+type ResourceDataRecord = Record<
+  string,
+  object | string | boolean | ((resourceData: unknown) => unknown)
+>;
+
 /**
  * Get the field value of a given field id, using resourceData and resourceFields
  * definition struct.
@@ -23,9 +28,7 @@ import type { FilterRenderer, ValueMatcher } from './types';
  * @param resourceFields the resourceData fields table
  * @returns the value of the fields based on the field jsonPath
  */
-export const getResourceFieldValue = <
-  T extends Record<string, object | string | boolean | ((resourceData: unknown) => unknown)>,
->(
+export const getResourceFieldValue = <T extends ResourceDataRecord>(
   resourceData: T | null | undefined,
   resourceFieldId: keyof T | string,
   resourceFields: ResourceField[],
@@ -80,12 +83,7 @@ export const createMatcher =
     matchValue: (value: string) => (filterValue: string) => boolean;
     resourceFields: ResourceField[];
   }) =>
-  (
-    resourceData?: Record<
-      string,
-      object | string | boolean | ((resourceData: unknown) => unknown)
-    > | null,
-  ): boolean =>
+  (resourceData?: ResourceDataRecord | null): boolean =>
     resourceFields
       .filter(({ filter }) => filter?.type === filterType)
       .filter(
@@ -187,12 +185,5 @@ export const createMetaMatcher =
       .map(({ filterType, matchValue }) =>
         createMatcher({ filterType, matchValue, resourceFields, selectedFilters }),
       )
-      .map((match) =>
-        match(
-          resourceData as Record<
-            string,
-            object | string | boolean | ((resourceData: unknown) => unknown)
-          >,
-        ),
-      )
+      .map((match) => match(resourceData as ResourceDataRecord))
       .every(Boolean);

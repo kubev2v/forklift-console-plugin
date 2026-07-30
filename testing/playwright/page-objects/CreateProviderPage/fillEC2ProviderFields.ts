@@ -14,10 +14,8 @@ export const fillEC2ProviderFields = async (page: Page, testData: ProviderData):
     }
     await page.getByTestId('ec2-target-az-input').fill(testData.targetAz ?? '');
     await page.getByTestId('ec2-target-region-input').fill(testData.targetRegion ?? '');
-  } else if (testData.autoTargetCredentials === true) {
-    if (!(await autoTargetCheckbox.isChecked())) {
-      await autoTargetCheckbox.click();
-    }
+  } else if (testData.autoTargetCredentials === true && !(await autoTargetCheckbox.isChecked())) {
+    await autoTargetCheckbox.click();
   }
 
   if (testData.crossAccountCredentials) {

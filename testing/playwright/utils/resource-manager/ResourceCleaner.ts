@@ -76,7 +76,7 @@ export class ResourceCleaner extends BaseResourceManager {
     // Delete in dependency order — each group waits for the previous to finish
     for (const group of CLEANUP_GROUPS) {
       const groupResources = group.flatMap((kind) => byKind.get(kind) ?? []);
-      group.forEach((kind) => byKind.delete(kind));
+      for (const kind of group) byKind.delete(kind);
 
       if (groupResources.length > 0) {
         const results = await Promise.allSettled(

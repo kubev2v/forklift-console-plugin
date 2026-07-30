@@ -79,7 +79,7 @@ export const buildSecretData = (
       const allowedFields = getOpenstackFieldsByAuthType(authType);
 
       // Add only the fields that are relevant for the selected auth type
-      Object.keys(allowedFields).forEach((secretKey) => {
+      for (const secretKey of Object.keys(allowedFields)) {
         const formFieldKey = secretKeyToFormFieldId[secretKey];
         if (formFieldKey) {
           const formFieldId = ProviderFormFieldId[formFieldKey];
@@ -88,7 +88,7 @@ export const buildSecretData = (
             data[secretKey] = encode(value as string);
           }
         }
-      });
+      }
 
       return data;
     }

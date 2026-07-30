@@ -27,13 +27,14 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
   const [perPage, setPerPage] = useState(10);
 
   // Sort pods to prioritize the one starting with 'forklift-controller-'
-  const sortedPods = pods.sort((a, b) => {
+  // Copy-then-sort: ES2022 target has no Array.prototype.toSorted (ES2023).
+  const sortedPods = [...pods].sort((a, b) => {
     const isForkliftControllerA = a?.metadata?.name?.startsWith('forklift-controller-') ? -1 : 0;
     const isForkliftControllerB = b?.metadata?.name?.startsWith('forklift-controller-') ? -1 : 0;
     return isForkliftControllerA - isForkliftControllerB;
   });
 
-  const limitedPods = sortedPods?.slice(0, limit);
+  const limitedPods = limit === undefined ? sortedPods : sortedPods.slice(0, limit);
 
   const startIndex = (currentPage - 1) * perPage;
   const endIndex = startIndex + perPage;

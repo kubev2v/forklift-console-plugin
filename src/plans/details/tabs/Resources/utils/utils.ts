@@ -85,7 +85,9 @@ const getOVirtPlanResources = (planInventory: EnhancedOVirtVM[]): PlanResourcesT
   };
 };
 
-const getOVAPlanResources = (planInventory: EnhancedOvaVM[]): PlanResourcesTableProps => {
+const getPoweredOnPlanResources = (
+  planInventory: { cpuCount: number; memoryMB: number; powerState: string }[],
+): PlanResourcesTableProps => {
   const planInventoryRunning = planInventory?.filter((vm) => vm.powerState === POWERED_ON);
 
   const totalResources = planInventory.reduce(
@@ -115,35 +117,11 @@ const getOVAPlanResources = (planInventory: EnhancedOvaVM[]): PlanResourcesTable
   };
 };
 
-const getHypervPlanResources = (planInventory: EnhancedHypervVM[]): PlanResourcesTableProps => {
-  const planInventoryRunning = planInventory?.filter((vm) => vm.powerState === POWERED_ON);
+const getOVAPlanResources = (planInventory: EnhancedOvaVM[]): PlanResourcesTableProps =>
+  getPoweredOnPlanResources(planInventory);
 
-  const totalResources = planInventory.reduce(
-    (accumulator, currentVM) => {
-      return {
-        cpuCount: accumulator.cpuCount + currentVM.cpuCount,
-        memoryMB: accumulator.memoryMB + currentVM.memoryMB,
-      };
-    },
-    { cpuCount: 0, memoryMB: 0 },
-  );
-
-  const totalResourcesRunning = planInventoryRunning.reduce(
-    (accumulator, currentVM) => {
-      return {
-        cpuCount: accumulator.cpuCount + currentVM.cpuCount,
-        memoryMB: accumulator.memoryMB + currentVM.memoryMB,
-      };
-    },
-    { cpuCount: 0, memoryMB: 0 },
-  );
-  return {
-    planInventoryRunningSize: planInventoryRunning?.length,
-    planInventorySize: planInventory?.length,
-    totalResources,
-    totalResourcesRunning,
-  };
-};
+const getHypervPlanResources = (planInventory: EnhancedHypervVM[]): PlanResourcesTableProps =>
+  getPoweredOnPlanResources(planInventory);
 
 const getOpenstackPlanResources = (planInventory: OpenstackVM[]): PlanResourcesTableProps => {
   const planInventoryRunning = planInventory?.filter((vm) => vm?.status === ACTIVE);
@@ -227,8 +205,8 @@ const getOpenshiftPlanResources = (planInventory: OpenshiftVM[]): PlanResourcesT
     { cpuCount: 0, memoryMB: 0 },
   );
 
-  const missingCPUInfo = planInventory.find(({ object }) => getK8sCPU(object) === EMPTY_CPU);
-  const missingMemoryInfo = planInventory.find(
+  const missingCPUInfo = planInventory.some(({ object }) => getK8sCPU(object) === EMPTY_CPU);
+  const missingMemoryInfo = planInventory.some(
     ({ object }) => getK8sVMMemory(object) === EMPTY_MEMORY,
   );
 

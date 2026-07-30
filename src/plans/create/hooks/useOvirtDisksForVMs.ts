@@ -35,9 +35,10 @@ export const useOvirtDisksForVMs = (
     }
 
     const diskMap = new Map<string, OVirtDisk>();
-    disks?.forEach((disk) => {
-      diskMap.set(disk.id, disk);
-    });
+    if (disks)
+      for (const disk of disks) {
+        diskMap.set(disk.id, disk);
+      }
 
     return vms.map((vm) => {
       const ovirtVm = vm as OVirtVM;

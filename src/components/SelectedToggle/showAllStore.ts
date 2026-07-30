@@ -15,9 +15,9 @@ export const createShowAllStore = (): ShowAllStore => {
         return;
       }
       showAll = nextShowAll;
-      listeners.forEach((listener) => {
+      for (const listener of listeners) {
         listener();
-      });
+      }
     },
     subscribe: (onStoreChange: () => void): (() => void) => {
       listeners.add(onStoreChange);

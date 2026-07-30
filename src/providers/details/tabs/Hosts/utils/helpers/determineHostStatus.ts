@@ -34,18 +34,14 @@ export const determineHostStatus = (host: V1beta1Host | undefined): StatusResult
   }
 
   for (const condition of host.status.conditions) {
-    if (condition.status === 'True') {
-      if (errorTypes.includes(condition.type)) {
-        return { message: condition.message ?? '', status: 'Error' };
-      }
+    if (condition.status === 'True' && errorTypes.includes(condition.type)) {
+      return { message: condition.message ?? '', status: 'Error' };
     }
   }
 
   for (const condition of host.status.conditions) {
-    if (condition.status === 'True') {
-      if (runningTypes.includes(condition.type)) {
-        return { message: condition.message ?? '', status: 'Running' };
-      }
+    if (condition.status === 'True' && runningTypes.includes(condition.type)) {
+      return { message: condition.message ?? '', status: 'Running' };
     }
   }
 

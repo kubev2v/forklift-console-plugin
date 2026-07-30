@@ -15,9 +15,9 @@ describe('computeTimeTicks', () => {
     const ticks = computeTimeTicks(domain, ThroughputTimeRange.Last30Min);
 
     expect(ticks.length).toBeGreaterThan(0);
-    ticks.forEach((tick) => {
+    for (const tick of ticks) {
       expect(tick % (5 * MS_PER_MINUTE)).toBe(0);
-    });
+    }
   });
 
   test('generates ticks aligned to 10-minute intervals for Last1H', () => {
@@ -27,9 +27,9 @@ describe('computeTimeTicks', () => {
     const ticks = computeTimeTicks(domain, ThroughputTimeRange.Last1H);
 
     expect(ticks.length).toBeGreaterThan(0);
-    ticks.forEach((tick) => {
+    for (const tick of ticks) {
       expect(tick % (10 * MS_PER_MINUTE)).toBe(0);
-    });
+    }
   });
 
   test('generates ticks aligned to 1-hour intervals for Last6H', () => {
@@ -39,9 +39,9 @@ describe('computeTimeTicks', () => {
     const ticks = computeTimeTicks(domain, ThroughputTimeRange.Last6H);
 
     expect(ticks.length).toBeGreaterThan(0);
-    ticks.forEach((tick) => {
+    for (const tick of ticks) {
       expect(tick % MS_PER_HOUR).toBe(0);
-    });
+    }
   });
 
   test('generates ticks aligned to 4-hour intervals for Last24H', () => {
@@ -51,9 +51,9 @@ describe('computeTimeTicks', () => {
     const ticks = computeTimeTicks(domain, ThroughputTimeRange.Last24H);
 
     expect(ticks.length).toBeGreaterThan(0);
-    ticks.forEach((tick) => {
+    for (const tick of ticks) {
       expect(tick % (4 * MS_PER_HOUR)).toBe(0);
-    });
+    }
   });
 
   test('generates ticks aligned to 12-hour intervals for Last2D', () => {
@@ -63,9 +63,9 @@ describe('computeTimeTicks', () => {
     const ticks = computeTimeTicks(domain, ThroughputTimeRange.Last2D);
 
     expect(ticks.length).toBeGreaterThan(0);
-    ticks.forEach((tick) => {
+    for (const tick of ticks) {
       expect(tick % (12 * MS_PER_HOUR)).toBe(0);
-    });
+    }
   });
 
   test('generates ticks aligned to 24-hour intervals for Last7D', () => {
@@ -75,9 +75,9 @@ describe('computeTimeTicks', () => {
     const ticks = computeTimeTicks(domain, ThroughputTimeRange.Last7D);
 
     expect(ticks.length).toBeGreaterThan(0);
-    ticks.forEach((tick) => {
+    for (const tick of ticks) {
       expect(tick % (24 * MS_PER_HOUR)).toBe(0);
-    });
+    }
   });
 
   test('all ticks fall within the domain boundaries', () => {
@@ -85,10 +85,10 @@ describe('computeTimeTicks', () => {
 
     const ticks = computeTimeTicks(domain, ThroughputTimeRange.Last6H);
 
-    ticks.forEach((tick) => {
+    for (const tick of ticks) {
       expect(tick).toBeGreaterThanOrEqual(domain[0]);
       expect(tick).toBeLessThanOrEqual(domain[1]);
-    });
+    }
   });
 
   test('returns empty array when domain is smaller than one interval', () => {
@@ -152,9 +152,9 @@ describe('computeNiceTicks', () => {
     const ticks = computeNiceTicks(data);
 
     expect(ticks.length).toBeGreaterThan(1);
-    ticks.forEach((tick) => {
+    for (const tick of ticks) {
       expect(tick % BYTES_PER_KB).toBe(0);
-    });
+    }
   });
 
   test('produces round tick values for MB-range data', () => {
@@ -163,9 +163,9 @@ describe('computeNiceTicks', () => {
     const ticks = computeNiceTicks(data);
 
     expect(ticks.length).toBeGreaterThan(1);
-    ticks.forEach((tick) => {
+    for (const tick of ticks) {
       expect(tick % BYTES_PER_MB).toBe(0);
-    });
+    }
   });
 
   test('produces round tick values for GB-range data', () => {
@@ -174,9 +174,9 @@ describe('computeNiceTicks', () => {
     const ticks = computeNiceTicks(data);
 
     expect(ticks.length).toBeGreaterThan(1);
-    ticks.forEach((tick) => {
+    for (const tick of ticks) {
       expect(tick % BYTES_PER_GB).toBe(0);
-    });
+    }
   });
 
   test('first tick is always 0', () => {
@@ -287,10 +287,10 @@ describe('computeStepSeconds', () => {
   test('all step values are positive integers', () => {
     const ranges = Object.values(ThroughputTimeRange);
 
-    ranges.forEach((range) => {
+    for (const range of ranges) {
       const step = computeStepSeconds(range);
       expect(step).toBeGreaterThan(0);
       expect(Number.isInteger(step)).toBe(true);
-    });
+    }
   });
 });

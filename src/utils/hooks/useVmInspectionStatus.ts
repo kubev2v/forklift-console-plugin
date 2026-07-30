@@ -43,16 +43,16 @@ export const useVmInspectionStatus = (
   const vmStatusMap = useMemo(() => {
     const map = new Map<string, V1beta1Conversion>();
 
-    conversions
-      .filter((conversion) => getLabels(conversion)?.[CONVERSION_LABELS.VM_ID])
-      .forEach((conversion) => {
-        const vmId = getLabels(conversion)?.[CONVERSION_LABELS.VM_ID] ?? '';
-        const existing = map.get(vmId);
+    for (const conversionItem of conversions.filter(
+      (item) => getLabels(item)?.[CONVERSION_LABELS.VM_ID],
+    )) {
+      const vmId = getLabels(conversionItem)?.[CONVERSION_LABELS.VM_ID] ?? '';
+      const existing = map.get(vmId);
 
-        if (!existing || shouldReplace(existing, conversion)) {
-          map.set(vmId, conversion);
-        }
-      });
+      if (!existing || shouldReplace(existing, conversionItem)) {
+        map.set(vmId, conversionItem);
+      }
+    }
 
     return map;
   }, [conversions]);

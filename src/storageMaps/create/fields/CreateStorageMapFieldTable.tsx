@@ -102,6 +102,7 @@ const CreateStorageMapFieldTable: FC = () => {
         ),
         inputs: [
           <InventorySourceStorageField
+            key={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
             fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
             sourceStorages={sourceStorages}
           />,

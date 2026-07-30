@@ -35,7 +35,7 @@ describe('SetLUKSEncryptionPasswordsDetailsItem', () => {
   });
 
   it('renders nothing when shouldRender is false', () => {
-    const { container } = render(
+    render(
       <SetLUKSEncryptionPasswordsDetailsItem
         canPatch={true}
         plan={mockPlan}
@@ -43,7 +43,7 @@ describe('SetLUKSEncryptionPasswordsDetailsItem', () => {
       />,
     );
 
-    expect(container.firstChild).toBeNull();
+    expect(screen.queryByTestId('disk-decryption-detail-item')).not.toBeInTheDocument();
   });
 
   it('shows disk decryption title and no decryption keys label when no LUKS or NBDE', () => {

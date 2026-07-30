@@ -54,6 +54,7 @@ type UseProviderInventoryResult<T> = {
  * @param {number} [useProviderInventoryParams.interval=10000] Interval (in milliseconds) to fetch new data at
  * @param {boolean} [useProviderInventoryParams.disabled=false] Prevent query execution.
  *
+ * @param useProviderInventoryParams.fetchTimeout
  * @returns {Object} useProviderInventoryResult Contains the inventory data (or null if loading, not fetched yet, or error),
  * the loading state, and the error state (or null if no errors)
  *
@@ -120,10 +121,9 @@ const useProviderInventory = <T>({
       }
 
       try {
+        const subPathSuffix = subPath ? `/${subPath}` : '';
         const newInventory = (await consoleFetchJSON(
-          getInventoryApiUrl(
-            `providers/${providerType}/${providerUid}${subPath ? `/${subPath}` : ''}`,
-          ),
+          getInventoryApiUrl(`providers/${providerType}/${providerUid}${subPathSuffix}`),
           'GET',
           {},
           fetchTimeout,

@@ -1,9 +1,6 @@
-import { cleanup } from '@testing-library/react';
 import { renderHook } from '@testing-library/react';
 
 import { useUniqueEnums } from '../useUniqueEnums';
-
-afterEach(cleanup);
 
 const testEnumValues = [
   { id: 'True', label: 'TrueTranslated' },

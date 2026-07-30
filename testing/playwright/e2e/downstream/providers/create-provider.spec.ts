@@ -25,74 +25,72 @@ test.describe('Provider Creation Tests', () => {
 
   const resourceManager = new ResourceManager();
 
-  providerTestScenarios.forEach(
-    ({
-      scenarioName,
-      providerType,
-      providerKey,
-      providerDataOverrides,
-      minVersion,
-      verifyDelete,
-    }) => {
-      test(
-        `should create a new ${providerType} provider: ${scenarioName}`,
-        {
-          tag: '@downstream',
-        },
-        async ({ page }) => {
-          test.setTimeout(240_000);
-          if (minVersion) {
-            requireVersion(test, minVersion);
+  for (const {
+    scenarioName,
+    providerType,
+    providerKey,
+    providerDataOverrides,
+    minVersion,
+    verifyDelete,
+  } of providerTestScenarios) {
+    test(
+      `should create a new ${providerType} provider: ${scenarioName}`,
+      {
+        tag: '@downstream',
+      },
+      async ({ page }) => {
+        test.setTimeout(240_000);
+        if (minVersion) {
+          requireVersion(test, minVersion);
+        }
+        test.skip(
+          !hasProviderConfig(providerKey),
+          `Provider config '${providerKey}' not found in .providers.json`,
+        );
+        test.setTimeout(240000);
+        const createProvider = new CreateProviderPage(page, resourceManager);
+        const testProviderData = createProviderData(
+          providerType,
+          providerKey,
+          providerDataOverrides,
+        );
+
+        await test.step('Navigate to provider creation page', async () => {
+          await createProvider.navigate();
+        });
+
+        const providerDetailsPage = await test.step('Create provider', async () => {
+          return createProvider.create(testProviderData, true);
+        });
+
+        await test.step('Verify provider resource', async () => {
+          const providerResource = await resourceManager.fetchProvider(testProviderData.name);
+          expect(providerResource).not.toBeNull();
+          expect(providerResource?.spec?.type).toBe(providerType);
+
+          if (testProviderData.useVddkAioOptimization) {
+            expect(providerResource?.spec?.settings?.useVddkAioOptimization).toBe('true');
           }
-          test.skip(
-            !hasProviderConfig(providerKey),
-            `Provider config '${providerKey}' not found in .providers.json`,
-          );
-          test.setTimeout(240000);
-          const createProvider = new CreateProviderPage(page, resourceManager);
-          const testProviderData = createProviderData(
-            providerType,
-            providerKey,
-            providerDataOverrides,
-          );
+          if (!testProviderData.useVddkAioOptimization) {
+            const aioValue = providerResource?.spec?.settings?.useVddkAioOptimization;
+            expect(aioValue === undefined || aioValue === 'false').toBe(true);
+          }
+        });
 
-          await test.step('Navigate to provider creation page', async () => {
-            await createProvider.navigate();
-          });
+        if (verifyDelete) {
+          await test.step('Delete provider and verify it is removed from the list', async () => {
+            await providerDetailsPage.deleteProvider(testProviderData.name);
+            await expect(
+              page.getByRole('link', { name: testProviderData.name, exact: true }),
+            ).not.toBeVisible();
 
-          const providerDetailsPage = await test.step('Create provider', async () => {
-            return createProvider.create(testProviderData, true);
-          });
-
-          await test.step('Verify provider resource', async () => {
             const providerResource = await resourceManager.fetchProvider(testProviderData.name);
-            expect(providerResource).not.toBeNull();
-            expect(providerResource?.spec?.type).toBe(providerType);
-
-            if (testProviderData.useVddkAioOptimization) {
-              expect(providerResource?.spec?.settings?.useVddkAioOptimization).toBe('true');
-            }
-            if (!testProviderData.useVddkAioOptimization) {
-              const aioValue = providerResource?.spec?.settings?.useVddkAioOptimization;
-              expect(aioValue === undefined || aioValue === 'false').toBe(true);
-            }
+            expect(providerResource).toBeNull();
           });
-
-          if (verifyDelete) {
-            await test.step('Delete provider and verify it is removed from the list', async () => {
-              await providerDetailsPage.deleteProvider(testProviderData.name);
-              await expect(
-                page.getByRole('link', { name: testProviderData.name, exact: true }),
-              ).not.toBeVisible();
-
-              const providerResource = await resourceManager.fetchProvider(testProviderData.name);
-              expect(providerResource).toBeNull();
-            });
-          }
-        },
-      );
-    },
-  );
+        }
+      },
+    );
+  }
 
   test.afterAll(async () => {
     await resourceManager.cleanupAll();

@@ -123,7 +123,7 @@ export const PageToolbar = <T,>({
                 supportedFilterTypes={supportedFilters}
               />
             )}
-            {Boolean(fields.find((field) => field.filter?.standalone)) && (
+            {fields.some((field) => field.filter?.standalone) && (
               <FilterGroup
                 fieldFilters={standaloneFilters}
                 onFilterUpdate={setSelectedFilters}

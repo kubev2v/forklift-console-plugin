@@ -19,7 +19,7 @@ const CancelMigrationVirtualMachinesModal: ModalComponent<CancelMigrationVirtual
 
   const handleSave = useCallback(async () => {
     const vms = migration?.spec?.cancel ?? [];
-    selectedIds.forEach((id) => vms.push({ id }));
+    for (const id of selectedIds) vms.push({ id });
     const op = migration?.spec?.cancel ? REPLACE : ADD;
 
     return k8sPatch({

@@ -1,4 +1,4 @@
-import type { FC, FormEvent } from 'react';
+import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import {
@@ -35,7 +35,7 @@ const VerifyCertificate: FC<VerifyCertificateProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const onChange: (checked: boolean, event: FormEvent<HTMLInputElement>) => void = (checked) => {
+  const onChange = (checked: boolean): void => {
     setIsTrusted(checked);
   };
 
@@ -73,8 +73,8 @@ const VerifyCertificate: FC<VerifyCertificateProps> = ({
             id="certificate-check"
             name="certificateCheck"
             isChecked={isTrusted}
-            onChange={(event, value) => {
-              onChange(value, event);
+            onChange={(_event, value) => {
+              onChange(value);
             }}
           />
         </FlexItem>

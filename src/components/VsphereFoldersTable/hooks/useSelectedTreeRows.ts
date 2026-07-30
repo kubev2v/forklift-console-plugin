@@ -50,9 +50,9 @@ const useSelectedTreeRows: UseSelectedTreeRows = (controls) => {
         const next = new Set(prev);
         if (Array.isArray(keys)) {
           if (isChecked) {
-            keys.forEach((id) => next.add(id));
+            for (const id of keys) next.add(id);
           } else {
-            keys.forEach((id) => next.delete(id));
+            for (const id of keys) next.delete(id);
           }
 
           return Array.from(next);

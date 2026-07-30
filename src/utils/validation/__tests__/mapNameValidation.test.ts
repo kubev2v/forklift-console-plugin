@@ -42,19 +42,19 @@ describe('validateMapName', () => {
     it('should return error for names starting with invalid characters', () => {
       const invalidNames = ['-network-map', '.network-map'];
 
-      invalidNames.forEach((name) => {
+      for (const name of invalidNames) {
         const result = validateMapName(name, mapType);
         expect(result).toContain('must be a valid DNS subdomain name');
-      });
+      }
     });
 
     it('should return error for names ending with invalid characters', () => {
       const invalidNames = ['network-map-', 'network-map.'];
 
-      invalidNames.forEach((name) => {
+      for (const name of invalidNames) {
         const result = validateMapName(name, mapType);
         expect(result).toContain('must be a valid DNS subdomain name');
-      });
+      }
     });
 
     it('should return error for names that are too long', () => {
@@ -66,10 +66,10 @@ describe('validateMapName', () => {
     it('should return error for consecutive dots or hyphens in invalid positions', () => {
       const invalidNames = ['network..map', 'network.-map', 'network-.map'];
 
-      invalidNames.forEach((name) => {
+      for (const name of invalidNames) {
         const result = validateMapName(name, mapType);
         expect(result).toContain('must be a valid DNS subdomain name');
-      });
+      }
     });
   });
 

@@ -10,6 +10,6 @@ const environmentDefaults = {
   NODE_ENV: 'test',
 };
 
-Object.entries(environmentDefaults).forEach(([key, value]) => {
+for (const [key, value] of Object.entries(environmentDefaults)) {
   process.env[key] = value;
-});
+}

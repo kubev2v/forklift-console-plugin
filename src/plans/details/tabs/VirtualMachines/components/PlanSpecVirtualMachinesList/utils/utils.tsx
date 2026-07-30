@@ -165,16 +165,19 @@ export const getPlanConditionsDict = (
   const conditions = plan?.status?.conditions?.filter((condition) => !isEmpty(condition?.items));
   const conditionsDict = conditions?.reduce<Record<string, V1beta1PlanStatusConditions[]>>(
     (dict, condition) => {
-      condition?.items?.forEach((item) => {
-        const { id: vmID } = extractIdAndNameFromConditionItem(item);
-        if (vmID) {
-          if (!dict[vmID]) {
-            dict[vmID] = [];
-          }
+      const items = condition?.items;
+      if (items) {
+        for (const item of items) {
+          const { id: vmID } = extractIdAndNameFromConditionItem(item);
+          if (vmID) {
+            if (!dict[vmID]) {
+              dict[vmID] = [];
+            }
 
-          dict[vmID].push(condition);
+            dict[vmID].push(condition);
+          }
         }
-      });
+      }
       return dict;
     },
     {},
