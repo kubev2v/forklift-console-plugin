@@ -174,8 +174,8 @@ describe('createDuplicatePlanAndMapResources', () => {
       ([args]) => (args as { data: { kind: string } }).data.kind === 'Plan',
     );
 
-    expect(planCreate).toBeDefined();
-    const planData = (planCreate?.[0] as { data: V1beta1Plan }).data;
+    if (!planCreate) throw new Error('Expected Plan k8sCreate call not found');
+    const planData = (planCreate[0] as { data: V1beta1Plan }).data;
     const vmHooks = planData.spec?.vms?.[0]?.hooks;
 
     expect(vmHooks).toHaveLength(2);
@@ -208,8 +208,8 @@ describe('createDuplicatePlanAndMapResources', () => {
       ([args]) => (args as { data: { kind: string } }).data.kind === 'Plan',
     );
 
-    expect(planCreate).toBeDefined();
-    const planData = (planCreate?.[0] as { data: V1beta1Plan }).data;
+    if (!planCreate) throw new Error('Expected Plan k8sCreate call not found');
+    const planData = (planCreate[0] as { data: V1beta1Plan }).data;
     expect(planData.spec?.customizationScripts?.name).toBe('copy-of-plan-scripts-abcde');
     expect(planData.spec?.customizationScripts?.namespace).toBe('openshift-mtv');
   });
