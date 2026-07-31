@@ -20,12 +20,12 @@ type TimeRangeOptionsProperties = {
   filter: (date: DateTime) => boolean;
 };
 
-export const valueToLabel = {
+export const getValueToLabel = (): Record<TimeRangeOptions, string> => ({
   [TimeRangeOptions.All]: t('All'),
   [TimeRangeOptions.Last10Days]: t('Last 10 days'),
   [TimeRangeOptions.Last24H]: t('Last 24 hours'),
   [TimeRangeOptions.Last31Days]: t('Last 31 days'),
-};
+});
 
 export const TimeRangeOptionsDictionary: {
   Last10Days: TimeRangeOptionsProperties;

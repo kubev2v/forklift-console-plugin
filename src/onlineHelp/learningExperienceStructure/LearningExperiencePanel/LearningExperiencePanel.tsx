@@ -10,7 +10,7 @@ import {
   DrawerPanelContent,
   Title,
 } from '@patternfly/react-core';
-import { TIPS_AND_TRICKS_LABEL } from '@utils/constants';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import AccordionContextProvider from '../../learningExperienceDrawer/context/AccordionContextProvider';
 import { LearningExperienceContext } from '../../learningExperienceDrawer/context/LearningExperienceContext';
@@ -24,6 +24,7 @@ import '@patternfly/quickstarts/dist/quickstarts.css';
 import './LearningExperiencePanel.scss';
 
 const LearningExperiencePanel: FC = () => {
+  const { t } = useForkliftTranslation();
   const {
     closeLearningExperience,
     drawerWidth,
@@ -55,7 +56,7 @@ const LearningExperiencePanel: FC = () => {
             <DrawerHead>
               <div className="pfext-quick-start-panel-content__title" tabIndex={-1}>
                 <Title headingLevel="h2" size="xl">
-                  {TIPS_AND_TRICKS_LABEL}
+                  {t('Tips and tricks')}
                 </Title>
               </div>
               <DrawerActions>

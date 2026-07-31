@@ -1,9 +1,9 @@
 import { type MouseEvent, type Ref, useState } from 'react';
 
 import { MenuToggle, type MenuToggleElement, Select, SelectOption } from '@patternfly/react-core';
-import { t } from '@utils/i18n';
+import { useForkliftTranslation } from '@utils/i18n';
 
-import { TimeRangeOptions, valueToLabel } from '../utils/timeRangeOptions';
+import { getValueToLabel, TimeRangeOptions } from '../utils/timeRangeOptions';
 
 const HeaderActions = ({
   selectedTimeRange,
@@ -14,7 +14,9 @@ const HeaderActions = ({
   setSelectedTimeRange: (range: TimeRangeOptions) => void;
   showAll?: boolean;
 }) => {
+  const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const valueToLabel = getValueToLabel();
 
   const onSelect = (_event: MouseEvent | undefined, value: string | number | undefined) => {
     setSelectedTimeRange(value as TimeRangeOptions);
