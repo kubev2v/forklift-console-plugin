@@ -15,10 +15,13 @@ const MIN_WEIGHT = 1;
 const MAX_WEIGHT = 100;
 
 const hasValidWeight = (row: AffinityRowData): row is AffinityRowData & { weight: number } =>
-  typeof row.weight === 'number' && row.weight >= MIN_WEIGHT && row.weight <= MAX_WEIGHT;
+  typeof row.weight === 'number' &&
+  Number.isInteger(row.weight) &&
+  row.weight >= MIN_WEIGHT &&
+  row.weight <= MAX_WEIGHT;
 
 const hasTopologyKey = (row: AffinityRowData): row is AffinityRowData & { topologyKey: string } =>
-  typeof row.topologyKey === 'string' && row.topologyKey.length > 0;
+  typeof row.topologyKey === 'string' && !isEmpty(row.topologyKey.trim());
 
 type WithWeight = AffinityRowData & { weight: number };
 type WithTopologyKey = AffinityRowData & { topologyKey: string };

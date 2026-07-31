@@ -35,6 +35,10 @@ const ProviderDataCell: FC<ProviderDataCellProps> = ({
 
   const DataCellRenderer = ProviderDataCellRenderers?.[resourceFieldId as ProvidersResourceFieldId];
 
+  if (!DataCellRenderer) {
+    return <TableEmptyCell />;
+  }
+
   return (
     <Td key={resourceFieldId} dataLabel={resourceFieldId ?? undefined}>
       <DataCellRenderer

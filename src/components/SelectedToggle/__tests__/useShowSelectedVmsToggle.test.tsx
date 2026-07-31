@@ -26,6 +26,8 @@ describe('useShowSelectedVmsToggle', () => {
     const user = userEvent.setup();
     const { result } = renderHook(() => useShowSelectedVmsToggle(true, ['vm-1']));
     const [Action] = result.current.GlobalActionToolbarItems ?? [];
+    expect(Action).toBeDefined();
+    if (!Action) return;
 
     render(<Action dataOnScreen={[]} selectedIds={['vm-1']} />);
     await user.click(screen.getByRole('button', { name: 'Selected' }));
@@ -41,6 +43,9 @@ describe('useShowSelectedVmsToggle', () => {
     );
 
     const [Action] = result.current.GlobalActionToolbarItems ?? [];
+    expect(Action).toBeDefined();
+    if (!Action) return;
+
     const { rerender: rerenderAction } = render(
       <Action dataOnScreen={[]} selectedIds={['vm-1']} />,
     );
