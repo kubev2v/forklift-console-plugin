@@ -3,20 +3,24 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, ButtonVariant, ToolbarItem, Tooltip } from '@patternfly/react-core';
+import { DropdownItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
 import BulkDeletePlansModal, { type BulkDeletePlansModalProps } from './BulkDeletePlansModal';
-import { getSelectedPlans } from './utils';
+import {
+  getPlansEligibleForDelete,
+  getSelectedPlans,
+  isPlanRunningOrPending,
+} from './utils';
 
-type BulkDeletePlansButtonProps = {
+type BulkDeletePlansDropdownItemProps = {
   plans: V1beta1Plan[];
   selectedIds: string[];
   canDelete: boolean;
   onComplete?: () => void;
 };
 
-const BulkDeletePlansButton: FC<BulkDeletePlansButtonProps> = ({
+const BulkDeletePlansDropdownItem: FC<BulkDeletePlansDropdownItemProps> = ({
   canDelete,
   onComplete,
   plans,
@@ -26,6 +30,11 @@ const BulkDeletePlansButton: FC<BulkDeletePlansButtonProps> = ({
   const launcher = useModal();
 
   const selectedPlans = useMemo(() => getSelectedPlans(plans, selectedIds), [plans, selectedIds]);
+  const eligiblePlans = useMemo(() => getPlansEligibleForDelete(selectedPlans), [selectedPlans]);
+  const hasRunningOrPending = useMemo(
+    () => selectedPlans.some((plan) => isPlanRunningOrPending(plan)),
+    [selectedPlans],
+  );
 
   const disabledReason = useMemo(() => {
     if (!canDelete) {
@@ -34,8 +43,14 @@ const BulkDeletePlansButton: FC<BulkDeletePlansButtonProps> = ({
     if (isEmpty(selectedIds)) {
       return t('Select at least one migration plan.');
     }
-    return null;
-  }, [canDelete, selectedIds, t]);
+    if (hasRunningOrPending) {
+      return t('Running or pending plans cannot be deleted. Clear them from the selection.');
+    }
+    if (isEmpty(eligiblePlans)) {
+      return t('No selected plans can be deleted.');
+    }
+    return undefined;
+  }, [canDelete, eligiblePlans, hasRunningOrPending, selectedIds, t]);
 
   const onClick = useCallback(() => {
     if (disabledReason) {
@@ -44,26 +59,21 @@ const BulkDeletePlansButton: FC<BulkDeletePlansButtonProps> = ({
 
     launcher<BulkDeletePlansModalProps>(BulkDeletePlansModal, {
       onComplete,
-      plans: selectedPlans,
+      plans: eligiblePlans,
     });
-  }, [disabledReason, launcher, onComplete, selectedPlans]);
-
-  const button = (
-    <Button
-      variant={ButtonVariant.secondary}
-      onClick={onClick}
-      isAriaDisabled={Boolean(disabledReason)}
-      data-testid="bulk-delete-plans-button"
-    >
-      {t('Delete')}
-    </Button>
-  );
+  }, [disabledReason, eligiblePlans, launcher, onComplete]);
 
   return (
-    <ToolbarItem>
-      {disabledReason ? <Tooltip content={disabledReason}>{button}</Tooltip> : button}
-    </ToolbarItem>
+    <DropdownItem
+      key="bulk-delete"
+      isDisabled={Boolean(disabledReason)}
+      description={disabledReason}
+      onClick={onClick}
+      data-testid="bulk-delete-plans-menuitem"
+    >
+      {t('Delete')}
+    </DropdownItem>
   );
 };
 
-export default BulkDeletePlansButton;
+export default BulkDeletePlansDropdownItem;

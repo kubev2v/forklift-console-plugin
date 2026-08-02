@@ -3,21 +3,21 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { useModal } from '@openshift-console/dynamic-plugin-sdk';
-import { Button, ButtonVariant, ToolbarItem, Tooltip } from '@patternfly/react-core';
+import { DropdownItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
 import BulkArchivePlansModal, { type BulkArchivePlansModalProps } from './BulkArchivePlansModal';
 import { getPlansEligibleForArchive, getSelectedPlans } from './utils';
 
-type BulkArchivePlansButtonProps = {
+type BulkArchivePlansDropdownItemProps = {
   plans: V1beta1Plan[];
   selectedIds: string[];
-  canDelete: boolean;
+  canPatch: boolean;
   onComplete?: () => void;
 };
 
-const BulkArchivePlansButton: FC<BulkArchivePlansButtonProps> = ({
-  canDelete,
+const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
+  canPatch,
   onComplete,
   plans,
   selectedIds,
@@ -29,7 +29,7 @@ const BulkArchivePlansButton: FC<BulkArchivePlansButtonProps> = ({
   const eligiblePlans = useMemo(() => getPlansEligibleForArchive(selectedPlans), [selectedPlans]);
 
   const disabledReason = useMemo(() => {
-    if (!canDelete) {
+    if (!canPatch) {
       return t('You do not have permission to archive migration plans.');
     }
     if (isEmpty(selectedIds)) {
@@ -38,8 +38,11 @@ const BulkArchivePlansButton: FC<BulkArchivePlansButtonProps> = ({
     if (isEmpty(eligiblePlans)) {
       return t('All selected plans are already archived.');
     }
-    return null;
-  }, [canDelete, eligiblePlans, selectedIds, t]);
+    if (eligiblePlans.length !== selectedPlans.length) {
+      return t('Archived plans cannot be archived again. Clear archived plans from the selection.');
+    }
+    return undefined;
+  }, [canPatch, eligiblePlans, selectedIds, selectedPlans.length, t]);
 
   const onClick = useCallback(() => {
     if (disabledReason) {
@@ -48,26 +51,21 @@ const BulkArchivePlansButton: FC<BulkArchivePlansButtonProps> = ({
 
     launcher<BulkArchivePlansModalProps>(BulkArchivePlansModal, {
       onComplete,
-      plans: selectedPlans,
+      plans: eligiblePlans,
     });
-  }, [disabledReason, launcher, onComplete, selectedPlans]);
-
-  const button = (
-    <Button
-      variant={ButtonVariant.secondary}
-      onClick={onClick}
-      isAriaDisabled={Boolean(disabledReason)}
-      data-testid="bulk-archive-plans-button"
-    >
-      {t('Archive')}
-    </Button>
-  );
+  }, [disabledReason, eligiblePlans, launcher, onComplete]);
 
   return (
-    <ToolbarItem>
-      {disabledReason ? <Tooltip content={disabledReason}>{button}</Tooltip> : button}
-    </ToolbarItem>
+    <DropdownItem
+      key="bulk-archive"
+      isDisabled={Boolean(disabledReason)}
+      description={disabledReason}
+      onClick={onClick}
+      data-testid="bulk-archive-plans-menuitem"
+    >
+      {t('Archive')}
+    </DropdownItem>
   );
 };
 
-export default BulkArchivePlansButton;
+export default BulkArchivePlansDropdownItem;

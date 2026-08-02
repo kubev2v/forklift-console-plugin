@@ -5,14 +5,17 @@ import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/Le
 import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { getPlanRowId } from './components/BulkPlanActions/utils';
+import { PlansBulkActionsContext } from './components/BulkPlanActions/PlansBulkActionsContext';
+import PlansBulkActionsDropdown from './components/BulkPlanActions/PlansBulkActionsDropdown';
 import {
-  PLANS_BULK_TOOLBAR_ACTIONS,
-  PlansBulkToolbarContext,
-} from './components/BulkPlanActions/PlansBulkToolbarActions';
+  canSelectPlanForBulkActions,
+  getPlanRowId,
+  isPlanRunningOrPending,
+} from './components/BulkPlanActions/utils';
 import PlanRow from './components/PlanRow/PlanRow';
 import PlansAddButton from './components/PlansAddButton';
 import PlansEmptyState from './components/PlansEmptyState';
@@ -38,7 +41,7 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
     namespaced: true,
   });
 
-  const { canCreate, canDelete } = useGetDeleteAndEditAccessReview({
+  const { canCreate, canDelete, canPatch } = useGetDeleteAndEditAccessReview({
     model: PlanModel,
     namespace,
   });
@@ -47,18 +50,34 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
     setSelectedIds([]);
   }, []);
 
-  const bulkToolbarContextValue = useMemo(
+  const bulkActionsContextValue = useMemo(
     () => ({
       canDelete,
+      canPatch,
       onComplete: clearSelection,
       plans: plans ?? [],
     }),
-    [canDelete, clearSelection, plans],
+    [canDelete, canPatch, clearSelection, plans],
+  );
+
+  const GlobalActionToolbarItems = useMemo<FC<GlobalActionToolbarProps<V1beta1Plan>>[]>(
+    () => [PlansBulkActionsDropdown],
+    [],
+  );
+
+  const getSelectDisabledReason = useCallback(
+    (plan: V1beta1Plan) => {
+      if (isPlanRunningOrPending(plan)) {
+        return t('Running or pending plans cannot be selected for bulk archive or delete.');
+      }
+      return undefined;
+    },
+    [t],
   );
 
   return (
     <LearningExperienceDrawer>
-      <PlansBulkToolbarContext.Provider value={bulkToolbarContextValue}>
+      <PlansBulkActionsContext.Provider value={bulkActionsContextValue}>
         <StandardPageWithSelection
           data-testid="plans-list"
           addButton={
@@ -83,9 +102,11 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
           toId={getPlanRowId}
           selectedIds={selectedIds}
           onSelect={setSelectedIds}
-          GlobalActionToolbarItems={PLANS_BULK_TOOLBAR_ACTIONS}
+          canSelect={canSelectPlanForBulkActions}
+          getSelectDisabledReason={getSelectDisabledReason}
+          GlobalActionToolbarItems={GlobalActionToolbarItems}
         />
-      </PlansBulkToolbarContext.Provider>
+      </PlansBulkActionsContext.Provider>
     </LearningExperienceDrawer>
   );
 };

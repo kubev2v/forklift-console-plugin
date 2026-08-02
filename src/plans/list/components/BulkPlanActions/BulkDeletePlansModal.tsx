@@ -1,5 +1,4 @@
-import { useCallback, useMemo } from 'react';
-import { ItemIsOwnedAlert } from 'src/components/modals/ItemIsOwnedAlert';
+import { useCallback, useState } from 'react';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -15,15 +14,15 @@ import {
   Stack,
   StackItem,
 } from '@patternfly/react-core';
-import { getName, getNamespace, getOwnerReference } from '@utils/crds/common/selectors';
+import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 
 import { MAX_PLANS_TO_LIST } from './constants';
 import {
+  type BulkPlanActionFailure,
+  getBulkActionFailure,
   getOwnedPlans,
   getPlanRowId,
-  hasOwnedSelectedPlans,
-  hasRunningSelectedPlans,
   hasUnarchivedSelectedPlans,
   runSettledInBatches,
 } from './utils';
@@ -39,26 +38,31 @@ const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({
   ...rest
 }) => {
   const { t } = useForkliftTranslation();
+  const [actionFailures, setActionFailures] = useState<BulkPlanActionFailure[]>([]);
 
-  const hasRunning = useMemo(() => hasRunningSelectedPlans(plans), [plans]);
-  const hasUnarchived = useMemo(() => hasUnarchivedSelectedPlans(plans), [plans]);
-  const hasOwned = useMemo(() => hasOwnedSelectedPlans(plans), [plans]);
-  const ownedPlans = useMemo(() => getOwnedPlans(plans), [plans]);
+  const hasUnarchived = hasUnarchivedSelectedPlans(plans);
+  const ownedPlans = getOwnedPlans(plans);
 
   const onDelete = useCallback(async () => {
-    if (isEmpty(plans)) {
-      throw new Error(t('Select at least one migration plan.'));
-    }
+    setActionFailures([]);
 
     const results = await runSettledInBatches(plans, async (plan) =>
       k8sDelete({ model: PlanModel, resource: plan }),
     );
 
-    const failed = results.filter((result) => result.status === 'rejected');
-    if (!isEmpty(failed)) {
+    const failures = results.flatMap((result, index) => {
+      if (result.status === 'fulfilled') {
+        return [];
+      }
+
+      return [getBulkActionFailure(plans[index], result.reason)];
+    });
+
+    if (!isEmpty(failures)) {
+      setActionFailures(failures);
       throw new Error(
         t('Failed to delete {{count}} of {{total}} selected plans.', {
-          count: failed.length,
+          count: failures.length,
           total: plans.length,
         }),
       );
@@ -84,15 +88,6 @@ const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({
             plans?
           </ForkliftTrans>
         </StackItem>
-        {hasRunning && (
-          <StackItem>
-            <Alert
-              variant={AlertVariant.danger}
-              isInline
-              title={t('Some selected plans are currently running')}
-            />
-          </StackItem>
-        )}
         {hasUnarchived && (
           <StackItem>
             <Alert
@@ -108,34 +103,35 @@ const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({
             </Alert>
           </StackItem>
         )}
-        {hasOwned && (
+        {!isEmpty(ownedPlans) && (
           <StackItem>
             <Alert
               variant={AlertVariant.warning}
               isInline
               title={t('Some selected plans are managed resources')}
             >
-              <ForkliftTrans>
-                Some selected plans are managed by other resources and any modifications might be
-                overwritten. Edit the managing resource to preserve changes.
-              </ForkliftTrans>
+              {t(
+                'Some selected plans are managed by other resources and any modifications might be overwritten. Edit the managing resource to preserve changes.',
+              )}
             </Alert>
           </StackItem>
         )}
-        {ownedPlans.length > 0 &&
-          ownedPlans.length <= MAX_PLANS_TO_LIST &&
-          ownedPlans.map((plan) => {
-            const owner = getOwnerReference(plan);
-            if (!owner) {
-              return null;
-            }
-
-            return (
-              <StackItem key={getPlanRowId(plan)}>
-                <ItemIsOwnedAlert owner={owner} namespace={getNamespace(plan)} />
-              </StackItem>
-            );
-          })}
+        {!isEmpty(actionFailures) && (
+          <StackItem>
+            <Alert variant={AlertVariant.danger} isInline title={t('Some plans failed to delete')}>
+              <List>
+                {actionFailures.map((failure) => (
+                  <ListItem key={failure.name}>
+                    {t('{{name}}: {{message}}', {
+                      message: failure.message,
+                      name: failure.name,
+                    })}
+                  </ListItem>
+                ))}
+              </List>
+            </Alert>
+          </StackItem>
+        )}
         {!isEmpty(plans) && plans.length <= MAX_PLANS_TO_LIST && (
           <StackItem>
             <List>

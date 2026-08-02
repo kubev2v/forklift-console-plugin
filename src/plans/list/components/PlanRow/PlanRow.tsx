@@ -8,6 +8,10 @@ import type { PlanTableResourceId } from '../../utils/constants';
 
 import { usePlanListRowFields } from './hooks/usePlanListRowFields';
 
+/**
+ * Cell renderer for the plans list. The surrounding `<Tr>` is provided by
+ * `StandardPageWithSelection` / `withTr` when checkboxes are injected.
+ */
 const PlanRow: FC<RowProps<V1beta1Plan>> = ({ resourceData: plan, resourceFields }) => {
   const rowFields = usePlanListRowFields(plan);
   return (

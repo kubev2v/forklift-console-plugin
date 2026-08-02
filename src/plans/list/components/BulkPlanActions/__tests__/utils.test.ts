@@ -3,19 +3,21 @@ import { mockI18n } from '@test-utils/mockI18n';
 mockI18n();
 
 import { describe, expect, it } from '@jest/globals';
+import { ADD, REPLACE } from 'src/components/ModalForm/utils/constants';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
 
 import {
   buildArchivePlanPatch,
+  canSelectPlanForBulkActions,
   getOwnedPlans,
   getPlanRowId,
   getPlansEligibleForArchive,
+  getPlansEligibleForDelete,
   getSelectedPlans,
-  hasOwnedSelectedPlans,
-  hasRunningSelectedPlans,
   hasUnarchivedSelectedPlans,
+  isPlanRunningOrPending,
   runSettledInBatches,
 } from '../utils';
 
@@ -48,7 +50,11 @@ const createPlan = ({
       name,
       namespace,
       ...(ownerName
-        ? { ownerReferences: [{ apiVersion: 'v1', kind: 'ConfigMap', name: ownerName, uid: 'owner-1' }] }
+        ? {
+            ownerReferences: [
+              { apiVersion: 'v1', kind: 'ConfigMap', name: ownerName, uid: 'owner-1' },
+            ],
+          }
         : {}),
       uid,
     },
@@ -85,16 +91,31 @@ describe('BulkPlanActions utils', () => {
     ]);
   });
 
-  it('excludes archived plans from archive eligibility', () => {
+  it('excludes archived and running/pending plans from archive eligibility', () => {
     const plans = [
       createPlan({ archived: true, name: 'archived', status: PlanStatuses.Archived }),
       createPlan({ name: 'ready', status: PlanStatuses.Ready }),
+      createPlan({ name: 'pending', status: PlanStatuses.Pending }),
+      createPlan({ name: 'executing', startedVm: true, status: PlanStatuses.Executing }),
     ];
 
     expect(getPlansEligibleForArchive(plans).map((plan) => plan.metadata?.name)).toEqual(['ready']);
   });
 
-  it('detects executing and pending selected plans as running', () => {
+  it('excludes running/pending plans from delete eligibility', () => {
+    const plans = [
+      createPlan({ archived: true, name: 'archived', status: PlanStatuses.Archived }),
+      createPlan({ name: 'ready', status: PlanStatuses.Ready }),
+      createPlan({ name: 'pending', status: PlanStatuses.Pending }),
+    ];
+
+    expect(getPlansEligibleForDelete(plans).map((plan) => plan.metadata?.name)).toEqual([
+      'archived',
+      'ready',
+    ]);
+  });
+
+  it('detects executing and pending plans for MTV-6297', () => {
     const executing = createPlan({
       name: 'executing',
       startedVm: true,
@@ -107,32 +128,34 @@ describe('BulkPlanActions utils', () => {
       status: PlanStatuses.Archived,
     });
 
-    expect(hasRunningSelectedPlans([executing])).toBe(true);
-    expect(hasRunningSelectedPlans([pending])).toBe(true);
-    expect(hasRunningSelectedPlans([archived])).toBe(false);
+    expect(isPlanRunningOrPending(executing)).toBe(true);
+    expect(isPlanRunningOrPending(pending)).toBe(true);
+    expect(isPlanRunningOrPending(archived)).toBe(false);
+    expect(canSelectPlanForBulkActions(executing)).toBe(false);
+    expect(canSelectPlanForBulkActions(pending)).toBe(false);
+    expect(canSelectPlanForBulkActions(archived)).toBe(true);
     expect(hasUnarchivedSelectedPlans([executing, archived])).toBe(true);
     expect(hasUnarchivedSelectedPlans([archived])).toBe(false);
   });
 
-  it('detects owned selected plans', () => {
+  it('detects owned selected plans via getOwnedPlans', () => {
     const owned = createPlan({ name: 'owned', ownerName: 'manager' });
     const unowned = createPlan({ name: 'unowned' });
 
-    expect(hasOwnedSelectedPlans([owned, unowned])).toBe(true);
-    expect(hasOwnedSelectedPlans([unowned])).toBe(false);
     expect(getOwnedPlans([owned, unowned]).map((plan) => plan.metadata?.name)).toEqual(['owned']);
+    expect(getOwnedPlans([unowned])).toEqual([]);
   });
 
-  it('builds archive patch with add or replace', () => {
+  it('builds archive patch with project ADD/REPLACE constants', () => {
     expect(buildArchivePlanPatch(createPlan({ name: 'new' }))).toEqual([
-      { op: 'add', path: '/spec/archived', value: true },
+      { op: ADD, path: '/spec/archived', value: true },
     ]);
     expect(buildArchivePlanPatch(createPlan({ archived: true, name: 'existing' }))).toEqual([
-      { op: 'replace', path: '/spec/archived', value: true },
+      { op: REPLACE, path: '/spec/archived', value: true },
     ]);
   });
 
-  it('runs workers in bounded batches', async () => {
+  it('runs workers in bounded batches without await-in-loop', async () => {
     const activeCounts: number[] = [];
     let active = 0;
 
