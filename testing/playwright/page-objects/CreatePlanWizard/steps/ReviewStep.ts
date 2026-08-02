@@ -254,6 +254,18 @@ export class ReviewStep {
     await expect(this.page.getByRole('heading', { name: /Review and create/i })).toBeVisible();
   }
 
+  async verifyStorageMapAccessMode(
+    mappingIndex: number,
+    expectedAccessMode: string,
+  ): Promise<void> {
+    const reviewTable = this.page.getByTestId('storage-map-review-table');
+    await expect(reviewTable).toBeVisible();
+    await expect(reviewTable.getByText('Access mode')).toBeVisible();
+
+    const rows = reviewTable.locator('tbody tr');
+    await expect(rows.nth(mappingIndex)).toContainText(expectedAccessMode);
+  }
+
   async verifyStorageMapOffloadDetails(
     mappingIndex: number,
     expectedOffload: {
