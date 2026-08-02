@@ -29,6 +29,7 @@ import TargetAffinityDetailsItem from './components/TargetAffinity/TargetAffinit
 import TargetLabelsDetailsItem from './components/TargetLabels/TargetLabelsDetailsItem';
 import TargetNodeSelectorDetailsItem from './components/TargetNodeSelector/TargetNodeSelectorDetailsItem';
 import TargetPowerStateDetailsItem from './components/TargetPowerState/TargetPowerStateDetailsItem';
+import TimezoneDetailsItem from './components/Timezone/TimezoneDetailsItem';
 import VolumeNameTemplateDetailsItem from './components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
 import XfsCompatibilityDetailsItem from './components/XfsCompatibility/XfsCompatibilityDetailsItem';
 
@@ -86,6 +87,7 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
       <XfsCompatibilityDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
       <GuestConversionDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
       <TargetPowerStateDetailsItem plan={plan} canPatch={canPatch} />
+      <TimezoneDetailsItem plan={plan} canPatch={canPatch} />
       <TargetLabelsDetailsItem plan={plan} canPatch={canPatch} />
       <TargetNodeSelectorDetailsItem plan={plan} canPatch={canPatch} />
       <TargetAffinityDetailsItem plan={plan} canPatch={canPatch} />

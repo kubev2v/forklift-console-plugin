@@ -11,6 +11,7 @@ export enum OtherSettingsFormFieldId {
   RootDevice = 'rootDevice',
   MigrateSharedDisks = 'migrateSharedDisks',
   TargetPowerState = 'targetPowerState',
+  Timezone = 'timezone',
 }
 
 export enum DiskDecryptionType {
@@ -33,6 +34,7 @@ export const otherFormFieldLabels: Record<OtherSettingsFormFieldId, ReturnType<t
   [OtherSettingsFormFieldId.PreserveStaticIps]: t('Preserve static IPs'),
   [OtherSettingsFormFieldId.RootDevice]: t('Root device'),
   [OtherSettingsFormFieldId.TargetPowerState]: t('VM target power state'),
+  [OtherSettingsFormFieldId.Timezone]: t('VM timezone'),
   [OtherSettingsFormFieldId.TransferNetwork]: t('Transfer network'),
 };
 
