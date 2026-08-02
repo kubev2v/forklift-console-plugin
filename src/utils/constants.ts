@@ -93,8 +93,6 @@ export const FEATURE_FLAG_DEFAULTS: Record<string, boolean> = {
 
 export const DEFAULT_NETWORK = t('Default network');
 
-export const TIPS_AND_TRICKS_LABEL = t('Tips and tricks');
-
 export const POD = 'pod';
 export const MULTUS = 'multus';
 export const IGNORED = 'ignored';

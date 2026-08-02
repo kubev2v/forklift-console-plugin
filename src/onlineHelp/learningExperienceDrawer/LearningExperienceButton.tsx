@@ -3,11 +3,12 @@ import { type FC, useContext } from 'react';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
-import { TIPS_AND_TRICKS_LABEL } from '@utils/constants';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import { LearningExperienceContext } from './context/LearningExperienceContext';
 
 const LearningExperienceButton: FC = () => {
+  const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
   const { isLearningExperienceOpen, openLearningExperience } =
     useContext(LearningExperienceContext);
@@ -25,7 +26,7 @@ const LearningExperienceButton: FC = () => {
         openLearningExperience();
       }}
     >
-      {TIPS_AND_TRICKS_LABEL}
+      {t('Tips and tricks')}
     </Button>
   );
 };
