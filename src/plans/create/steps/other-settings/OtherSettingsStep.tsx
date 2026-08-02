@@ -25,6 +25,7 @@ import PreserveStaticIpsField from './PreserveStaticIpsField';
 import RootDeviceField from './RootDeviceField';
 import SharedDisksField from './SharedDisksField';
 import TargetPowerStateField from './TargetPowerStateField';
+import TimezoneField from './TimezoneField';
 import TransferNetworkField from './TransferNetworkField';
 
 const OtherSettingsStep: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
@@ -122,6 +123,8 @@ const OtherSettingsStep: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
         )}
 
         <TargetPowerStateField />
+
+        <TimezoneField />
 
         <InstanceTypeField />
       </Form>

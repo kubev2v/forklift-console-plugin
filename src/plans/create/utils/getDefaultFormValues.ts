@@ -62,6 +62,7 @@ export const getDefaultFormValues = (
     [OtherSettingsFormFieldId.MigrateSharedDisks]: true,
     [OtherSettingsFormFieldId.PreserveStaticIps]: true,
     [OtherSettingsFormFieldId.TargetPowerState]: defaultTargetPowerStateOption,
+    [OtherSettingsFormFieldId.Timezone]: '',
     [StorageMapFieldId.StorageMap]: [defaultStorageMapping],
     [VmFormFieldId.Vms]: defaultVms,
   };

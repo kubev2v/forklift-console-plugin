@@ -107,6 +107,7 @@ export type CreatePlanFormData = FieldValues & {
   [OtherSettingsFormFieldId.RootDevice]: string;
   [OtherSettingsFormFieldId.TransferNetwork]: V1beta1PlanSpecTransferNetwork;
   [OtherSettingsFormFieldId.TargetPowerState]: TargetPowerState;
+  [OtherSettingsFormFieldId.Timezone]: string;
 };
 
 export type MappingFieldIds = {
@@ -142,6 +143,7 @@ export type CreatePlanParams = {
   preHook?: V1beta1Hook;
   postHook?: V1beta1Hook;
   targetPowerState: TargetPowerStateValue;
+  timezone?: string;
 };
 
 type ResourceQueryResult<T> = [T, boolean, Error | null];
