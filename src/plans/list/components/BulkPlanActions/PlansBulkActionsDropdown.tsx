@@ -1,22 +1,28 @@
-import { type FC, type MouseEvent, type Ref, useContext, useState } from 'react';
+import { type FC, type MouseEvent, type Ref, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 import type { V1beta1Plan } from '@forklift-ui/types';
-import {
-  Dropdown,
-  DropdownList,
-  MenuToggle,
-  type MenuToggleElement,
-} from '@patternfly/react-core';
+import { Dropdown, DropdownList, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
 
 import BulkArchivePlansDropdownItem from './BulkArchivePlansDropdownItem';
 import BulkDeletePlansDropdownItem from './BulkDeletePlansDropdownItem';
-import { PlansBulkActionsContext } from './PlansBulkActionsContext';
 
-const PlansBulkActionsDropdown: FC<GlobalActionToolbarProps<V1beta1Plan>> = ({ selectedIds }) => {
+type PlansBulkActionsDropdownProps = GlobalActionToolbarProps<V1beta1Plan> & {
+  plans: V1beta1Plan[];
+  canPatch: boolean;
+  canDelete: boolean;
+  onComplete?: () => void;
+};
+
+const PlansBulkActionsDropdown: FC<PlansBulkActionsDropdownProps> = ({
+  canDelete,
+  canPatch,
+  onComplete,
+  plans,
+  selectedIds,
+}) => {
   const { t } = useForkliftTranslation();
-  const { canDelete, canPatch, onComplete, plans } = useContext(PlansBulkActionsContext);
   const [isOpen, setIsOpen] = useState(false);
 
   const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {

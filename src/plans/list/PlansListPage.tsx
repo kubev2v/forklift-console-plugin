@@ -9,7 +9,6 @@ import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 
-import { PlansBulkActionsContext } from './components/BulkPlanActions/PlansBulkActionsContext';
 import PlansBulkActionsDropdown from './components/BulkPlanActions/PlansBulkActionsDropdown';
 import {
   canSelectPlanForBulkActions,
@@ -50,19 +49,19 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
     setSelectedIds([]);
   }, []);
 
-  const bulkActionsContextValue = useMemo(
-    () => ({
-      canDelete,
-      canPatch,
-      onComplete: clearSelection,
-      plans: plans ?? [],
-    }),
-    [canDelete, canPatch, clearSelection, plans],
-  );
-
   const GlobalActionToolbarItems = useMemo<FC<GlobalActionToolbarProps<V1beta1Plan>>[]>(
-    () => [PlansBulkActionsDropdown],
-    [],
+    () => [
+      (props) => (
+        <PlansBulkActionsDropdown
+          {...props}
+          plans={plans ?? []}
+          canPatch={canPatch}
+          canDelete={canDelete}
+          onComplete={clearSelection}
+        />
+      ),
+    ],
+    [canDelete, canPatch, clearSelection, plans],
   );
 
   const getSelectDisabledReason = useCallback(
@@ -77,36 +76,34 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
 
   return (
     <LearningExperienceDrawer>
-      <PlansBulkActionsContext.Provider value={bulkActionsContextValue}>
-        <StandardPageWithSelection
-          data-testid="plans-list"
-          addButton={
-            <PlansAddButton testId="create-plan-button" namespace={namespace} canCreate={canCreate} />
-          }
-          dataSource={[plans || [], plansLoaded, plansLoadError]}
-          cell={PlanRow}
-          fieldsMetadata={planFields}
-          namespace={namespace}
-          title={t('Migration plans')}
-          titleHelpContent={t(
-            'A migration plan is a strategy for moving VMs from 1 environment to OpenShift Virtualization. It lets you group VMs to be migrated together or with the same migration configuration.',
-          )}
-          userSettings={userSettings}
-          customNoResultsFound={<PlansEmptyState namespace={namespace} />}
-          postFilterData={(data, selectedFilters) =>
-            selectedFilters[PlanTableResourceId.Archived]?.[0] === 'true'
-              ? data
-              : data.filter((plan) => !plan?.spec?.archived)
-          }
-          shouldShowLearningExperienceButton
-          toId={getPlanRowId}
-          selectedIds={selectedIds}
-          onSelect={setSelectedIds}
-          canSelect={canSelectPlanForBulkActions}
-          getSelectDisabledReason={getSelectDisabledReason}
-          GlobalActionToolbarItems={GlobalActionToolbarItems}
-        />
-      </PlansBulkActionsContext.Provider>
+      <StandardPageWithSelection
+        data-testid="plans-list"
+        addButton={
+          <PlansAddButton testId="create-plan-button" namespace={namespace} canCreate={canCreate} />
+        }
+        dataSource={[plans || [], plansLoaded, plansLoadError]}
+        cell={PlanRow}
+        fieldsMetadata={planFields}
+        namespace={namespace}
+        title={t('Migration plans')}
+        titleHelpContent={t(
+          'A migration plan is a strategy for moving VMs from 1 environment to OpenShift Virtualization. It lets you group VMs to be migrated together or with the same migration configuration.',
+        )}
+        userSettings={userSettings}
+        customNoResultsFound={<PlansEmptyState namespace={namespace} />}
+        postFilterData={(data, selectedFilters) =>
+          selectedFilters[PlanTableResourceId.Archived]?.[0] === 'true'
+            ? data
+            : data.filter((plan) => !plan?.spec?.archived)
+        }
+        shouldShowLearningExperienceButton
+        toId={getPlanRowId}
+        selectedIds={selectedIds}
+        onSelect={setSelectedIds}
+        canSelect={canSelectPlanForBulkActions}
+        getSelectDisabledReason={getSelectDisabledReason}
+        GlobalActionToolbarItems={GlobalActionToolbarItems}
+      />
     </LearningExperienceDrawer>
   );
 };

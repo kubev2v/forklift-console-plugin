@@ -9,6 +9,8 @@ import {
   Alert,
   AlertVariant,
   ButtonVariant,
+  HelperText,
+  HelperTextItem,
   List,
   ListItem,
   Stack,
@@ -19,8 +21,8 @@ import { isEmpty } from '@utils/helpers';
 
 import { MAX_PLANS_TO_LIST } from './constants';
 import {
-  type BulkPlanActionFailure,
   buildArchivePlanPatch,
+  type BulkPlanActionFailure,
   getBulkActionFailure,
   getPlanRowId,
   runSettledInBatches,
@@ -28,12 +30,14 @@ import {
 
 export type BulkArchivePlansModalProps = {
   plans: V1beta1Plan[];
+  skippedArchivedCount?: number;
   onComplete?: () => void;
 };
 
 const BulkArchivePlansModal: ModalComponent<BulkArchivePlansModalProps> = ({
   onComplete,
   plans,
+  skippedArchivedCount = 0,
   ...rest
 }) => {
   const { t } = useForkliftTranslation();
@@ -91,6 +95,15 @@ const BulkArchivePlansModal: ModalComponent<BulkArchivePlansModalProps> = ({
               'When a plan is archived, its history, metadata, and logs are deleted. The plan cannot be edited or restarted but it can be viewed.',
             )}
           </p>
+          {skippedArchivedCount > 0 && (
+            <HelperText>
+              <HelperTextItem>
+                {t('{{count}} selected plans are already archived and will not be changed.', {
+                  count: skippedArchivedCount,
+                })}
+              </HelperTextItem>
+            </HelperText>
+          )}
         </StackItem>
         {!isEmpty(actionFailures) && (
           <StackItem>

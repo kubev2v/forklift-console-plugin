@@ -2,11 +2,11 @@ import { mockI18n } from '@test-utils/mockI18n';
 
 mockI18n();
 
-import { describe, expect, it } from '@jest/globals';
 import { ADD, REPLACE } from 'src/components/ModalForm/utils/constants';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
+import { describe, expect, it } from '@jest/globals';
 
 import {
   buildArchivePlanPatch,
@@ -16,7 +16,7 @@ import {
   getPlansEligibleForArchive,
   getPlansEligibleForDelete,
   getSelectedPlans,
-  hasUnarchivedSelectedPlans,
+  hasNonArchivedSelectedPlans,
   isPlanRunningOrPending,
   runSettledInBatches,
 } from '../utils';
@@ -38,12 +38,21 @@ const createPlan = ({
   status?: PlanStatuses;
   uid?: string;
 }): V1beta1Plan => {
-  const conditionType =
-    status === PlanStatuses.Completed
-      ? 'Succeeded'
-      : status === PlanStatuses.Pending || status === PlanStatuses.Executing
-        ? PlanStatuses.Executing
-        : status;
+  let conditionType: string | undefined = status;
+  if (status === PlanStatuses.Completed) {
+    conditionType = 'Succeeded';
+  } else if (status === PlanStatuses.Pending || status === PlanStatuses.Executing) {
+    conditionType = PlanStatuses.Executing;
+  }
+
+  const hasStartedMigration =
+    status === PlanStatuses.Executing || status === PlanStatuses.Pending
+      ? {
+          migration: {
+            vms: startedVm ? [{ id: 'vm-1', name: 'vm-1', started: '2024-01-01T00:00:00Z' }] : [],
+          },
+        }
+      : {};
 
   return {
     metadata: {
@@ -61,13 +70,7 @@ const createPlan = ({
     spec: { archived },
     status: {
       conditions: conditionType ? [{ status: 'True', type: conditionType }] : [],
-      ...(status === PlanStatuses.Executing || status === PlanStatuses.Pending
-        ? {
-            migration: {
-              vms: startedVm ? [{ id: 'vm-1', name: 'vm-1', started: '2024-01-01T00:00:00Z' }] : [],
-            },
-          }
-        : {}),
+      ...hasStartedMigration,
     },
   } as V1beta1Plan;
 };
@@ -134,8 +137,8 @@ describe('BulkPlanActions utils', () => {
     expect(canSelectPlanForBulkActions(executing)).toBe(false);
     expect(canSelectPlanForBulkActions(pending)).toBe(false);
     expect(canSelectPlanForBulkActions(archived)).toBe(true);
-    expect(hasUnarchivedSelectedPlans([executing, archived])).toBe(true);
-    expect(hasUnarchivedSelectedPlans([archived])).toBe(false);
+    expect(hasNonArchivedSelectedPlans([executing, archived])).toBe(true);
+    expect(hasNonArchivedSelectedPlans([archived])).toBe(false);
   });
 
   it('detects owned selected plans via getOwnedPlans', () => {

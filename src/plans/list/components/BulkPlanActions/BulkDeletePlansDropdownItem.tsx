@@ -7,11 +7,7 @@ import { DropdownItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
 import BulkDeletePlansModal, { type BulkDeletePlansModalProps } from './BulkDeletePlansModal';
-import {
-  getPlansEligibleForDelete,
-  getSelectedPlans,
-  isPlanRunningOrPending,
-} from './utils';
+import { getPlansEligibleForDelete, getSelectedPlans, isPlanRunningOrPending } from './utils';
 
 type BulkDeletePlansDropdownItemProps = {
   plans: V1beta1Plan[];

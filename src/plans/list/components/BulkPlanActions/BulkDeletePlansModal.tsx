@@ -23,7 +23,7 @@ import {
   getBulkActionFailure,
   getOwnedPlans,
   getPlanRowId,
-  hasUnarchivedSelectedPlans,
+  hasNonArchivedSelectedPlans,
   runSettledInBatches,
 } from './utils';
 
@@ -40,7 +40,7 @@ const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({
   const { t } = useForkliftTranslation();
   const [actionFailures, setActionFailures] = useState<BulkPlanActionFailure[]>([]);
 
-  const hasUnarchived = hasUnarchivedSelectedPlans(plans);
+  const hasNonArchived = hasNonArchivedSelectedPlans(plans);
   const ownedPlans = getOwnedPlans(plans);
 
   const onDelete = useCallback(async () => {
@@ -88,7 +88,7 @@ const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({
             plans?
           </ForkliftTrans>
         </StackItem>
-        {hasUnarchived && (
+        {hasNonArchived && (
           <StackItem>
             <Alert
               variant={AlertVariant.info}

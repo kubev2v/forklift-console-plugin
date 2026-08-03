@@ -44,7 +44,7 @@ export const getPlansEligibleForArchive = (plans: V1beta1Plan[]): V1beta1Plan[] 
 export const getPlansEligibleForDelete = (plans: V1beta1Plan[]): V1beta1Plan[] =>
   plans.filter((plan) => !isPlanRunningOrPending(plan));
 
-export const hasUnarchivedSelectedPlans = (plans: V1beta1Plan[]): boolean =>
+export const hasNonArchivedSelectedPlans = (plans: V1beta1Plan[]): boolean =>
   plans.some((plan) => getPlanStatus(plan) !== PlanStatuses.Archived);
 
 export const getOwnedPlans = (plans: V1beta1Plan[]): V1beta1Plan[] =>
@@ -58,10 +58,7 @@ export const buildArchivePlanPatch = (plan: V1beta1Plan): JsonPatchOp[] => [
   },
 ];
 
-export const getBulkActionFailure = (
-  plan: V1beta1Plan,
-  reason: unknown,
-): BulkPlanActionFailure => {
+export const getBulkActionFailure = (plan: V1beta1Plan, reason: unknown): BulkPlanActionFailure => {
   const error = reason as { message?: string; code?: number | string };
   const messageParts = [error?.message ?? String(reason)];
   if (error?.code !== undefined && error?.code !== null && error?.code !== '') {

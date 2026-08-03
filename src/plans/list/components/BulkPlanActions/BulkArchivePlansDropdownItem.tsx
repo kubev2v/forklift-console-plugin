@@ -27,6 +27,7 @@ const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
 
   const selectedPlans = useMemo(() => getSelectedPlans(plans, selectedIds), [plans, selectedIds]);
   const eligiblePlans = useMemo(() => getPlansEligibleForArchive(selectedPlans), [selectedPlans]);
+  const skippedArchivedCount = selectedPlans.length - eligiblePlans.length;
 
   const disabledReason = useMemo(() => {
     if (!canPatch) {
@@ -38,11 +39,8 @@ const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
     if (isEmpty(eligiblePlans)) {
       return t('All selected plans are already archived.');
     }
-    if (eligiblePlans.length !== selectedPlans.length) {
-      return t('Archived plans cannot be archived again. Clear archived plans from the selection.');
-    }
     return undefined;
-  }, [canPatch, eligiblePlans, selectedIds, selectedPlans.length, t]);
+  }, [canPatch, eligiblePlans, selectedIds, t]);
 
   const onClick = useCallback(() => {
     if (disabledReason) {
@@ -52,8 +50,9 @@ const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
     launcher<BulkArchivePlansModalProps>(BulkArchivePlansModal, {
       onComplete,
       plans: eligiblePlans,
+      skippedArchivedCount,
     });
-  }, [disabledReason, eligiblePlans, launcher, onComplete]);
+  }, [disabledReason, eligiblePlans, launcher, onComplete, skippedArchivedCount]);
 
   return (
     <DropdownItem
