@@ -1,6 +1,13 @@
 import type { V1beta1Migration, V1beta1Plan } from '@forklift-ui/types';
+import { ButtonVariant } from '@patternfly/react-core';
+import { mockI18n } from '@test-utils/mockI18n';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+
+import PlanCutoverMigrationModal from '../components/CutoverModal/PlanCutoverMigrationModal';
+import PlanEditCutoverButton from '../PlanEditCutoverButton';
+
+mockI18n();
 
 const mockUsePlanMigration = jest.fn();
 jest.mock('src/plans/hooks/usePlanMigration', () => ({
@@ -11,19 +18,6 @@ const mockLauncher = jest.fn();
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   useModal: () => mockLauncher,
 }));
-
-const mockT = (key: string): string => key;
-jest.mock('@utils/i18n', () => ({
-  ForkliftTrans: ({ children }: { children: unknown }) => children,
-  t: mockT,
-  useForkliftTranslation: () => ({ t: mockT }),
-}));
-
-// eslint-disable-next-line import/first
-import { ButtonVariant } from '@patternfly/react-core';
-
-// eslint-disable-next-line import/first
-import PlanEditCutoverButton from '../PlanEditCutoverButton';
 
 const buildPlan = (
   specOverrides: Partial<V1beta1Plan['spec']> = {},
@@ -83,6 +77,16 @@ describe('PlanEditCutoverButton', () => {
     expect(container).toBeEmptyDOMElement();
   });
 
+  it('renders nothing when the plan status is Pending', () => {
+    // Executing condition but no VM has started yet → getPlanStatus() returns Pending
+    const plan = buildPlan({}, { migration: { vms: [{ started: false }] } });
+    const { container } = render(
+      <PlanEditCutoverButton plan={plan} variant={ButtonVariant.primary} />,
+    );
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
   it('renders "Schedule cutover" when there is a running migration without an existing cutover', () => {
     render(<PlanEditCutoverButton plan={buildPlan()} variant={ButtonVariant.primary} />);
 
@@ -98,10 +102,11 @@ describe('PlanEditCutoverButton', () => {
 
   it('opens the cutover modal on click', async () => {
     const user = userEvent.setup();
-    render(<PlanEditCutoverButton plan={buildPlan()} variant={ButtonVariant.primary} />);
+    const plan = buildPlan();
+    render(<PlanEditCutoverButton plan={plan} variant={ButtonVariant.primary} />);
 
     await user.click(screen.getByRole('button', { name: 'Schedule cutover' }));
 
-    expect(mockLauncher).toHaveBeenCalledTimes(1);
+    expect(mockLauncher).toHaveBeenCalledWith(PlanCutoverMigrationModal, { plan });
   });
 });

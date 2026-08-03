@@ -1,18 +1,18 @@
 import type { V1beta1Migration, V1beta1Plan } from '@forklift-ui/types';
 import { renderHook } from '@testing-library/react';
 
+import { usePlanMigration } from '../usePlanMigration';
+
 const mockUseK8sWatchResource = jest.fn();
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   useK8sWatchResource: jest.fn((...args: unknown[]) => mockUseK8sWatchResource(...args)),
 }));
 
-// eslint-disable-next-line import/first
-import { usePlanMigration } from '../usePlanMigration';
-
 const PLAN_UID = 'plan-uid-123';
+const TEST_NAMESPACE = 'test-ns';
 
 const mockPlan = {
-  metadata: { name: 'test-plan', namespace: 'test-ns', uid: PLAN_UID },
+  metadata: { name: 'test-plan', namespace: TEST_NAMESPACE, uid: PLAN_UID },
 } as unknown as V1beta1Plan;
 
 const buildMigration = (overrides: Partial<V1beta1Migration> = {}): V1beta1Migration =>
@@ -20,7 +20,7 @@ const buildMigration = (overrides: Partial<V1beta1Migration> = {}): V1beta1Migra
     ...overrides,
     metadata: {
       name: 'test-migration',
-      namespace: 'test-ns',
+      namespace: TEST_NAMESPACE,
       ownerReferences: [{ uid: PLAN_UID }],
       ...overrides.metadata,
     },
@@ -58,7 +58,7 @@ describe('usePlanMigration', () => {
     const otherPlansMigration = buildMigration({
       metadata: {
         name: 'other',
-        namespace: 'test-ns',
+        namespace: TEST_NAMESPACE,
         ownerReferences: [{ uid: 'some-other-uid' }],
       },
     });
@@ -95,14 +95,14 @@ describe('usePlanMigration', () => {
     const otherPlansMigration = buildMigration({
       metadata: {
         name: 'other',
-        namespace: 'test-ns',
+        namespace: TEST_NAMESPACE,
         ownerReferences: [{ uid: 'some-other-uid' }],
       },
     });
     const ownedButNotRunning = buildMigration({
       metadata: {
         name: 'owned-not-running',
-        namespace: 'test-ns',
+        namespace: TEST_NAMESPACE,
         ownerReferences: [{ uid: PLAN_UID }],
       },
       status: { conditions: [{ status: 'False', type: 'Running' }] },
@@ -110,7 +110,7 @@ describe('usePlanMigration', () => {
     const ownedAndRunning = buildMigration({
       metadata: {
         name: 'owned-running',
-        namespace: 'test-ns',
+        namespace: TEST_NAMESPACE,
         ownerReferences: [{ uid: PLAN_UID }],
       },
     });
