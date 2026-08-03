@@ -8,7 +8,7 @@ import { getPlanArchived } from '@utils/crds/plans/selectors';
 
 import { BULK_PLAN_ACTION_CONCURRENCY, INITIAL_BATCH_OFFSET } from './constants';
 
-export type JsonPatchOp = {
+type JsonPatchOp = {
   op: typeof ADD | typeof REPLACE;
   path: string;
   value: boolean;
