@@ -19,10 +19,10 @@ type MigrationTestOverrides = {
   metadata?: {
     name?: string;
     namespace?: string;
-    ownerReferences?: Array<{ uid: string }>;
+    ownerReferences?: { uid: string }[];
   };
   status?: {
-    conditions?: Array<{ status: string; type: string }>;
+    conditions?: { status: string; type: string }[];
   };
 };
 
