@@ -78,8 +78,8 @@ describe('PlanEditCutoverButton', () => {
   });
 
   it('renders nothing when the plan status is Pending', () => {
-    // Executing condition but no VM has started yet → getPlanStatus() returns Pending
-    const plan = buildPlan({}, { migration: { vms: [{ started: false }] } });
+    // Executing condition but no VM status yet → getPlanStatus() returns Pending
+    const plan = buildPlan({}, { migration: { vms: [] } });
     const { container } = render(
       <PlanEditCutoverButton plan={plan} variant={ButtonVariant.primary} />,
     );

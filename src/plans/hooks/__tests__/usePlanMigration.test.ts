@@ -15,7 +15,18 @@ const mockPlan = {
   metadata: { name: 'test-plan', namespace: TEST_NAMESPACE, uid: PLAN_UID },
 } as unknown as V1beta1Plan;
 
-const buildMigration = (overrides: Partial<V1beta1Migration> = {}): V1beta1Migration =>
+type MigrationTestOverrides = {
+  metadata?: {
+    name?: string;
+    namespace?: string;
+    ownerReferences?: Array<{ uid: string }>;
+  };
+  status?: {
+    conditions?: Array<{ status: string; type: string }>;
+  };
+};
+
+const buildMigration = (overrides: MigrationTestOverrides = {}): V1beta1Migration =>
   ({
     ...overrides,
     metadata: {
