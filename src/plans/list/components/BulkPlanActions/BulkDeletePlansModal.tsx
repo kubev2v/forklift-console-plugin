@@ -60,16 +60,11 @@ const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({
 
     if (!isEmpty(failures)) {
       setActionFailures(failures);
-      throw new Error(
-        t('Failed to delete {{count}} of {{total}} selected plans.', {
-          count: failures.length,
-          total: plans.length,
-        }),
-      );
+      throw new Error('');
     }
 
     onComplete?.();
-  }, [onComplete, plans, t]);
+  }, [onComplete, plans]);
 
   return (
     <ModalForm

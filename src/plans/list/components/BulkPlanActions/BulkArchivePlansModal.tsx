@@ -64,16 +64,11 @@ const BulkArchivePlansModal: ModalComponent<BulkArchivePlansModalProps> = ({
 
     if (!isEmpty(failures)) {
       setActionFailures(failures);
-      throw new Error(
-        t('Failed to archive {{count}} of {{total}} selected plans.', {
-          count: failures.length,
-          total: plans.length,
-        }),
-      );
+      throw new Error('');
     }
 
     onComplete?.();
-  }, [onComplete, plans, t]);
+  }, [onComplete, plans]);
 
   return (
     <ModalForm
@@ -98,9 +93,7 @@ const BulkArchivePlansModal: ModalComponent<BulkArchivePlansModalProps> = ({
           {skippedArchivedCount > 0 && (
             <HelperText>
               <HelperTextItem>
-                {t('{{count}} selected plans are already archived and will not be changed.', {
-                  count: skippedArchivedCount,
-                })}
+                {t('Some selected plans are already archived and will be skipped.')}
               </HelperTextItem>
             </HelperText>
           )}

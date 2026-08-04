@@ -1,4 +1,4 @@
-import { type FC, useCallback, useMemo, useState } from 'react';
+import { type FC, useCallback, useMemo, useRef, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
@@ -49,19 +49,22 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
     setSelectedIds([]);
   }, []);
 
+  const bulkActionsRef = useRef({
+    canDelete,
+    canPatch,
+    onComplete: clearSelection,
+    plans: plans ?? [],
+  });
+  bulkActionsRef.current = {
+    canDelete,
+    canPatch,
+    onComplete: clearSelection,
+    plans: plans ?? [],
+  };
+
   const GlobalActionToolbarItems = useMemo<FC<GlobalActionToolbarProps<V1beta1Plan>>[]>(
-    () => [
-      (props) => (
-        <PlansBulkActionsDropdown
-          {...props}
-          plans={plans ?? []}
-          canPatch={canPatch}
-          canDelete={canDelete}
-          onComplete={clearSelection}
-        />
-      ),
-    ],
-    [canDelete, canPatch, clearSelection, plans],
+    () => [(props) => <PlansBulkActionsDropdown {...props} {...bulkActionsRef.current} />],
+    [],
   );
 
   const getSelectDisabledReason = useCallback(
