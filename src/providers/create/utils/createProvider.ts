@@ -31,7 +31,7 @@ export const createProvider = async (
   // Remove empty settings (replace empty str with undefined)
   for (const key in newProvider?.spec?.settings) {
     if (newProvider.spec.settings[key] === '') {
-      newProvider.spec.settings[key] = undefined!;
+      delete newProvider.spec.settings[key];
     }
   }
 

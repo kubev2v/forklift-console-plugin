@@ -85,8 +85,8 @@ const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...re
 
     const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
 
-    updatedFromDate.setHours(hour!);
-    updatedFromDate.setMinutes(minute!);
+    updatedFromDate.setHours(hour ?? 0);
+    updatedFromDate.setMinutes(minute ?? 0);
 
     setCutoverDate(updatedFromDate.toISOString());
   };
@@ -111,8 +111,8 @@ const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...re
     cutoverMode === CUTOVER_MODE_SCHEDULED &&
     isDateValid &&
     isTimeValid &&
-    Boolean(cutoverDate) &&
-    new Date(cutoverDate!) < new Date();
+    cutoverDate !== undefined &&
+    new Date(cutoverDate) < new Date();
 
   const additionalAction = useMemo(
     () =>

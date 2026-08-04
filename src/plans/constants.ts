@@ -30,5 +30,5 @@ export const getTargetPowerStateLabel = (value: TargetPowerStateValue): string =
   const found = targetPowerStateOptions.find(
     (option) => option.value === (value ?? TargetPowerStates.AUTO),
   );
-  return found!.label;
+  return found?.label ?? '';
 };

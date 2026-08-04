@@ -12,7 +12,7 @@ type BreadCrumbsProps = {
 };
 
 const BreadCrumbs: FC<BreadCrumbsProps> = ({ model, namespace }) => {
-  const breadcrumbs = breadcrumbsForModel(model, namespace!);
+  const breadcrumbs = breadcrumbsForModel(model, namespace ?? '');
 
   return (
     <Breadcrumb className="co-breadcrumb">
@@ -31,7 +31,7 @@ const BreadCrumbs: FC<BreadCrumbsProps> = ({ model, namespace }) => {
           <BreadcrumbItem key={crumb.name}>
             <Link
               className="pf-c-breadcrumb__link"
-              to={crumb.path!}
+              to={crumb.path ?? ''}
               data-testid={`breadcrumb-link-${index}`}
             >
               {crumb.name}

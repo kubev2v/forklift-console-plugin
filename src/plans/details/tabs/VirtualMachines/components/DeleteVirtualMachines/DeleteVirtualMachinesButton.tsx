@@ -29,7 +29,7 @@ const DeleteVirtualMachinesButton: FC<DeleteVirtualMachineProps> = ({ plan, sele
       return t('Select at least one virtual machine.');
     }
 
-    const remainingVms = (plan?.spec?.vms ?? []).filter((vm) => !selectedIds.includes(vm.id!));
+    const remainingVms = (plan?.spec?.vms ?? []).filter((vm) => !selectedIds.includes(vm.id ?? ''));
     if (!remainingVms?.length) {
       return t(
         'All virtual machines planned for migration are selected for deletion, deleting all virtual machines from a migration plan is not allowed.',

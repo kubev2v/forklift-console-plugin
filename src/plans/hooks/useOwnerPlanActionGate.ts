@@ -38,7 +38,7 @@ export const useOwnerPlanActionGate = (
     hasPlanOwner
       ? {
           groupVersionKind: PlanModelGroupVersionKind,
-          name: planOwner!.name,
+          name: planOwner?.name ?? '',
           namespace: getNamespace(resource),
           namespaced: true,
         }

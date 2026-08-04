@@ -60,11 +60,8 @@ const createBuckets = (intervals: Interval[], migrations: V1beta1Migration[]) =>
     for (const migration of inBucket) {
       const planKey = getPlanKey(migration);
       const started = getMigrationStarted(migration);
-      if (
-        !latestByPlan.has(planKey) ||
-        DateTime.fromISO(started) >
-          DateTime.fromISO(getMigrationStarted(latestByPlan.get(planKey)!))
-      ) {
+      const prev = latestByPlan.get(planKey);
+      if (!prev || DateTime.fromISO(started) > DateTime.fromISO(getMigrationStarted(prev))) {
         latestByPlan.set(planKey, migration);
       }
     }

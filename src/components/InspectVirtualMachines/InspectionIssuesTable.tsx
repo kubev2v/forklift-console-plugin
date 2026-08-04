@@ -32,7 +32,7 @@ const InspectionIssuesTable: FC<InspectionIssuesTableProps> = ({ concerns }) => 
                 </Tr>
               </Thead>
               <Tbody>
-                {concerns!.map((concern) => (
+                {concerns?.map((concern) => (
                   <Tr key={concern.id}>
                     <Td>{concern.label}</Td>
                     <Td>

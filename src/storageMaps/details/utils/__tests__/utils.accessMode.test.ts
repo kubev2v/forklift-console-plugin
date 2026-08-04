@@ -96,7 +96,8 @@ describe('accessMode round-trip', () => {
     const baseStorageMap = makeStorageMap([{ sourceId: 'ds-1', storageClass: 'ceph-rbd' }]);
 
     const k8sResult = transformFormValuesToK8sSpec(formValues, baseStorageMap);
-    const roundTripped = transformStorageMapToFormValues(k8sResult!);
+    if (!k8sResult) throw new Error('Expected k8sResult to be defined');
+    const roundTripped = transformStorageMapToFormValues(k8sResult);
 
     expect(roundTripped.storageMap[0].accessMode).toBe('ReadWriteMany');
   });
@@ -115,7 +116,8 @@ describe('accessMode round-trip', () => {
     const baseStorageMap = makeStorageMap([{ sourceId: 'ds-1', storageClass: 'nfs-sc' }]);
 
     const k8sResult = transformFormValuesToK8sSpec(formValues, baseStorageMap);
-    const roundTripped = transformStorageMapToFormValues(k8sResult!);
+    if (!k8sResult) throw new Error('Expected k8sResult to be defined');
+    const roundTripped = transformStorageMapToFormValues(k8sResult);
 
     expect(roundTripped.storageMap[0].accessMode).toBe('ReadOnlyMany');
   });

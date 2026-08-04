@@ -14,9 +14,9 @@ const usePipelineTaskProgress = (plan: V1beta1Plan) => {
       activeMigration?.status?.vms?.reduce((acc: VirtualMachinePipelineTask[], migrationVm) => {
         for (const pipelineStep of migrationVm.pipeline) {
           acc.push({
-            status: pipelineStep.phase!,
+            status: pipelineStep.phase ?? '',
             task: pipelineStep.name,
-            vmName: migrationVm.name!,
+            vmName: migrationVm.name ?? '',
           });
         }
 

@@ -43,7 +43,7 @@ export class LoginPage {
 
     await this.page.waitForFunction(
       () => {
-        const button = document.querySelector('#co-login-button')!;
+        const button = document.querySelector('#co-login-button');
         return button && !(button as HTMLButtonElement).disabled;
       },
       { timeout: 10000 },

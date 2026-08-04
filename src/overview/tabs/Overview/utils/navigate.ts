@@ -22,7 +22,8 @@ export const navigateToHistoryTab = ({
 }) => {
   const dateEnd = interval?.end ?? DateTime.now().toUTC();
   const dateStart =
-    interval?.start ?? dateEnd.minus(TimeRangeOptionsDictionary[selectedRange!].span);
+    interval?.start ??
+    (selectedRange ? dateEnd.minus(TimeRangeOptionsDictionary[selectedRange].span) : dateEnd);
   const rangeString = `${dateStart.toLocal().toFormat(DATE_TIME_FORMAT)}/${dateEnd.toLocal().toFormat(DATE_TIME_FORMAT)}`;
   const param = encodeURIComponent(JSON.stringify([rangeString]));
   const params = [`range=${param}`, `recent=${encodeURIComponent(JSON.stringify(['true']))}`];

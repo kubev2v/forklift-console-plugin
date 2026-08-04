@@ -26,7 +26,7 @@ const TransferNetworkDetailItem: FC<EditableDetailsItemProps> = ({
     return null;
   }
 
-  const networkName = getNetworkName(getPlanTransferNetwork(plan)!);
+  const networkName = getNetworkName(getPlanTransferNetwork(plan) ?? null);
 
   return (
     <DetailsItem

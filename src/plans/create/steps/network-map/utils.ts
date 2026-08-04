@@ -165,10 +165,9 @@ const collectDistinctVlansByNetwork = (nics: HypervNic[]): Map<string, Set<numbe
   for (const nic of nics) {
     const netId = nic.network?.id;
     if (netId) {
-      if (!vlansByNetwork.has(netId)) {
-        vlansByNetwork.set(netId, new Set<number>());
-      }
-      vlansByNetwork.get(netId)!.add(nic.vlanId ?? 0);
+      const set = vlansByNetwork.get(netId) ?? new Set<number>();
+      set.add(nic.vlanId ?? 0);
+      vlansByNetwork.set(netId, set);
     }
   }
   return vlansByNetwork;
@@ -222,7 +221,7 @@ export const getHypervVlanQualifiedNetworks = (
     );
 
     for (const nic of conflictNics) {
-      const networkId = nic.network!.id!;
+      const networkId = nic.network?.id ?? '';
       const networkName = networkNameById.get(networkId) ?? networkId;
       upsertVlanEntry(vlanEntries, networkId, networkName, nic.vlanId ?? 0);
     }

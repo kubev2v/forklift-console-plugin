@@ -37,7 +37,7 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
     isList: true,
     namespace: getPlanTargetNamespace(plan),
     namespaced: true,
-    selector: { matchLabels: { plan: getUID(plan)! } },
+    selector: { matchLabels: { plan: getUID(plan) ?? '' } },
   };
 
   const [pods, podsLoaded, podsError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
@@ -86,14 +86,14 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
     return virtualMachines.map((specVM) => {
       const id = specVM?.id ?? getPlanVirtualMachineIdByName(plan, specVM?.name);
       return {
-        dvs: dvsDict[id!],
+        dvs: dvsDict[id ?? ''],
         isWarm: getPlanIsWarm(plan),
-        jobs: jobsDict[id!],
+        jobs: jobsDict[id ?? ''],
         plan,
-        pods: podsDict[id!],
-        pvcs: pvcsDict[id!],
+        pods: podsDict[id ?? ''],
+        pvcs: pvcsDict[id ?? ''],
         specVM,
-        statusVM: vmDict[id!],
+        statusVM: vmDict[id ?? ''],
         targetNamespace: getPlanTargetNamespace(plan),
       };
     }) as MigrationStatusVirtualMachinePageData[];

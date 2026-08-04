@@ -51,10 +51,10 @@ export const buildIndexes = (
 
   for (const [_, keys] of folderToVmKeys) {
     keys.sort((first, second) => {
-      const ta = tokensByVmKey.get(first)!;
-      const tb = tokensByVmKey.get(second)!;
+      const ta = tokensByVmKey.get(first);
+      const tb = tokensByVmKey.get(second);
 
-      return ta.name!.localeCompare(tb.name!);
+      return (ta?.name ?? '').localeCompare(tb?.name ?? '');
     });
   }
 

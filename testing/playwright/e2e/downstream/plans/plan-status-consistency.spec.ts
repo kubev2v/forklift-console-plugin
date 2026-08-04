@@ -99,8 +99,8 @@ test.describe(
 
       const plan = await test.step('Fetch Plan CR via API', async () => {
         const fetched = await resourceManager.fetchPlan(planName, planNamespace);
-        expect(fetched).not.toBeNull();
-        return fetched!;
+        if (!fetched) throw new Error('Expected fetched plan to be defined');
+        return fetched;
       });
 
       const planConditions = (plan.status?.conditions ?? []) as Condition[];
@@ -161,8 +161,8 @@ test.describe(
 
       const plan = await test.step('Fetch Plan CR', async () => {
         const fetched = await resourceManager.fetchPlan(planName, planNamespace);
-        expect(fetched).not.toBeNull();
-        return fetched!;
+        if (!fetched) throw new Error('Expected fetched plan to be defined');
+        return fetched;
       });
 
       const planHasCriticalCondition =
@@ -205,7 +205,7 @@ test.describe(
         await test.step('Break NetworkMap by pointing to non-existent provider', async () => {
           const patched = await resourceManager.patchResource({
             kind: 'NetworkMap',
-            resourceName: networkMapRef.name!,
+            resourceName: networkMapRef.name ?? '',
             namespace: nmNamespace,
             patch: {
               spec: {
@@ -224,7 +224,7 @@ test.describe(
         await test.step('Restore NetworkMap to original provider', async () => {
           await resourceManager.patchResource({
             kind: 'NetworkMap',
-            resourceName: networkMapRef.name!,
+            resourceName: networkMapRef.name ?? '',
             namespace: nmNamespace,
             patch: {
               spec: { provider: originalProvider },
@@ -240,7 +240,8 @@ test.describe(
         const refreshed = await resourceManager.fetchPlan(planName, planNamespace);
         expect(refreshed).not.toBeNull();
 
-        const conditions = (refreshed!.status?.conditions ?? []) as Condition[];
+        if (!refreshed) throw new Error('Expected refreshed plan to be defined');
+        const conditions = (refreshed.status?.conditions ?? []) as Condition[];
         expect(hasReady(conditions)).toBe(true);
         expect(hasCritical(conditions)).toBe(false);
       });

@@ -15,7 +15,7 @@ const MigrationStatusLabel: FC<MigrationStatusLabelProps> = ({ statusVM }) => {
   const status = getMigrationVMStatus(statusVM);
   return (
     <Flex gap={{ default: 'gapSm' }} direction={{ default: 'row' }}>
-      {migrationStatusIconMap[status!]}
+      {status && migrationStatusIconMap[status]}
       {getVMMigrationStatus(statusVM)}
     </Flex>
   );
