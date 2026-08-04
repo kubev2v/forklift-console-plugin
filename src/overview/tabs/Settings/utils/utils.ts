@@ -23,7 +23,7 @@ export const getDefaultValues = (controller?: EnhancedForkliftController): Forkl
   );
 
 type SettingsPatch = {
-  op: string;
+  op: typeof ADD | typeof REMOVE | typeof REPLACE;
   path: string;
   value?: string | number;
 };

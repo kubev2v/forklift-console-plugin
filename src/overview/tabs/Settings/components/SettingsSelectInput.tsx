@@ -95,11 +95,11 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
 
   const selected = useMemo(() => {
     if (showKeyAsSelected) {
-      return value;
+      return blankOption && value === '' ? blankOption.name : value;
     }
 
     return keyToName?.[value] ?? value;
-  }, [keyToName, showKeyAsSelected, value]);
+  }, [blankOption, keyToName, showKeyAsSelected, value]);
 
   const onToggleClick = () => {
     setIsOpen((open) => !open);
@@ -153,7 +153,7 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
         return;
       }
 
-      const key = nameToKey[selectedValue] || selectedValue;
+      const key = nameToKey[selectedValue] ?? selectedValue;
       onChange(key === BLANK_OPTION_KEY ? '' : key);
       setIsOpen(false);
     },

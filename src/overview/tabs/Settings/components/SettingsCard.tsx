@@ -132,8 +132,9 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
         <DetailsItem
           testId="settings-controller-transfer-network"
           content={
-            spec?.[SettingsFields.ControllerTransferNetwork] ??
-            defaultValuesMap[SettingsFields.ControllerTransferNetwork]
+            spec?.[SettingsFields.ControllerTransferNetwork]?.trim()
+              ? spec[SettingsFields.ControllerTransferNetwork]
+              : t('None')
           }
           title={t('Controller transfer network')}
           helpContent={<ControllerTransferNetworkHelpContent />}

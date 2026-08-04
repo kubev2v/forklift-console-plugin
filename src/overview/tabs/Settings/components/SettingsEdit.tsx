@@ -73,7 +73,9 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
         additionalAction={{
           children: t('Reset to defaults'),
           onClick: () => {
-            reset(defaultValuesMap as ForkliftSettingsValues);
+            reset(defaultValuesMap as ForkliftSettingsValues, {
+              keepDefaultValues: true,
+            });
           },
           variant: ButtonVariant.secondary,
         }}

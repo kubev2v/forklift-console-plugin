@@ -51,7 +51,7 @@ export const defaultValuesMap: Record<SettingsFields, string | number> = {
   [SettingsFields.AapUrl]: '',
   [SettingsFields.ControllerCPULimit]: '500m',
   [SettingsFields.ControllerMemoryLimit]: '800Mi',
-  [SettingsFields.ControllerTransferNetwork]: t('None'),
+  [SettingsFields.ControllerTransferNetwork]: '',
   [SettingsFields.InventoryMemoryLimit]: '1000Mi',
   [SettingsFields.MaxVMInFlight]: 20,
   [SettingsFields.PrecopyInterval]: 60,
