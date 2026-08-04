@@ -1,21 +1,20 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import { ADD, REMOVE, REPLACE } from '@components/ModalForm/utils/constants';
 import { ForkliftControllerModel, type V1beta1ForkliftController } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { Form, ModalVariant } from '@patternfly/react-core';
+import { ButtonVariant, Form, ModalVariant } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
-import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { defaultValuesMap } from '../utils/constants';
 import type {
   EnhancedForkliftController,
   ForkliftSettingsValues,
   SettingsEditProps,
 } from '../utils/types';
-import { getDefaultValues } from '../utils/utils';
+import { buildSettingsPatches, getDefaultValues } from '../utils/utils';
 
 import EditAapTimeout from './AapTimeout/EditAapTimeout';
 import EditAapTokenSecret from './AapTokenSecret/EditAapTokenSecret';
@@ -29,6 +28,7 @@ import EditPreCopyInterval from './PreCopyInterval/EditPreCopyInterval';
 import EditSnapshotPoolingInterval from './SnapshotPoolingInterval/EditSnapshotPoolingInterval';
 import EditVirtV2vMemsize from './VirtV2vMemsize/EditVirtV2vMemsize';
 import EditVirtV2vSmp from './VirtV2vSmp/EditVirtV2vSmp';
+
 const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controller }) => {
   const { t } = useForkliftTranslation();
 
@@ -39,6 +39,7 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
   const {
     formState: { dirtyFields, isDirty },
     handleSubmit,
+    reset,
   } = methods;
 
   const onSubmit = async (formData: ForkliftSettingsValues) => {
@@ -47,24 +48,11 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
       return;
     }
 
-    const patches = Object.keys(dirtyFields).map((key) => {
-      const fieldKey = key as keyof ForkliftSettingsValues;
-      const currentValue = (controller?.spec as Record<string, string | number>)?.[fieldKey];
-      const newValue = formData[fieldKey];
-
-      if (newValue === undefined || isEmpty(String(newValue))) {
-        return {
-          op: REMOVE,
-          path: `/spec/${fieldKey}`,
-        };
-      }
-
-      return {
-        op: currentValue === undefined ? ADD : REPLACE,
-        path: `/spec/${fieldKey}`,
-        value: newValue,
-      };
-    });
+    const patches = buildSettingsPatches(
+      dirtyFields,
+      formData,
+      controller?.spec as Record<string, unknown>,
+    );
 
     await k8sPatch<V1beta1ForkliftController>({
       data: patches,
@@ -82,6 +70,15 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
         variant={ModalVariant.medium}
         isDisabled={!isDirty}
         testId="settings-edit-modal"
+        additionalAction={{
+          children: t('Reset to defaults'),
+          onClick: () => {
+            reset(defaultValuesMap as ForkliftSettingsValues, {
+              keepDefaultValues: true,
+            });
+          },
+          variant: ButtonVariant.secondary,
+        }}
       >
         <Form>
           {t(

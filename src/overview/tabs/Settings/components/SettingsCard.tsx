@@ -49,7 +49,7 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
   const spec = controller.spec ?? {};
 
   const formatVirtV2vValue = (value: number | undefined): string => {
-    if (!value) return t('Default (virt-v2v chooses)');
+    if (!value) return t('Default');
     return String(value);
   };
 
@@ -132,8 +132,9 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
         <DetailsItem
           testId="settings-controller-transfer-network"
           content={
-            spec?.[SettingsFields.ControllerTransferNetwork] ??
-            defaultValuesMap[SettingsFields.ControllerTransferNetwork]
+            spec?.[SettingsFields.ControllerTransferNetwork]?.trim()
+              ? spec[SettingsFields.ControllerTransferNetwork]
+              : t('None')
           }
           title={t('Controller transfer network')}
           helpContent={<ControllerTransferNetworkHelpContent />}

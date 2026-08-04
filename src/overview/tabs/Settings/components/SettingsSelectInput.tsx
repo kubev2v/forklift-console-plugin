@@ -93,7 +93,13 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
     return dict;
   }, [options, blankOption]);
 
-  const [selected, setSelected] = useState<string | number>(keyToName?.[value] ?? value);
+  const selected = useMemo(() => {
+    if (showKeyAsSelected) {
+      return blankOption && value === '' ? blankOption.name : value;
+    }
+
+    return keyToName?.[value] ?? value;
+  }, [blankOption, keyToName, showKeyAsSelected, value]);
 
   const onToggleClick = () => {
     setIsOpen((open) => !open);
@@ -146,15 +152,12 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
         setIsOpen(false);
         return;
       }
-      // Use the dictionary to find the key corresponding to the selected name
-      const key = nameToKey[selectedValue] || selectedValue;
 
+      const key = nameToKey[selectedValue] ?? selectedValue;
       onChange(key === BLANK_OPTION_KEY ? '' : key);
-
-      setSelected(showKeyAsSelected && key !== BLANK_OPTION_KEY ? key : selectedValue);
       setIsOpen(false);
     },
-    [nameToKey, onChange, showKeyAsSelected],
+    [nameToKey, onChange],
   );
 
   return (
