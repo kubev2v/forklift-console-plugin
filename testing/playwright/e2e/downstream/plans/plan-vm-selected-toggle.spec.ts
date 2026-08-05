@@ -18,7 +18,7 @@ test.describe('Plan Creation Wizard - Selected VMs toggle', { tag: '@downstream'
   }) => {
     test.setTimeout(300_000);
 
-    const provider = await test.step('Create oVirt source provider', async () => {
+    const provider = await test.step('Create oVirt source provider', () => {
       return createCustomProvider({
         namePrefix: 'ovirt-selected-toggle',
         providerKey: OVIRT_PROVIDER_KEY,

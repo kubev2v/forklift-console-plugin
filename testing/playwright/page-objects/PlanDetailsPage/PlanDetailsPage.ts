@@ -178,7 +178,7 @@ export class PlanDetailsPage {
   /**
    * Checks if the critical concerns alert is visible.
    */
-  async hasCriticalConcernsAlert(): Promise<boolean> {
+  hasCriticalConcernsAlert(): Promise<boolean> {
     return this.criticalConcernsAlert.isVisible({ timeout: 3000 }).catch(() => false);
   }
 
@@ -186,7 +186,7 @@ export class PlanDetailsPage {
     return this.page.getByTestId('plan-inspect-vms-button');
   }
 
-  async isInspectVmsButtonDisabled(): Promise<boolean> {
+  isInspectVmsButtonDisabled(): Promise<boolean> {
     return this.inspectVmsButton.isDisabled();
   }
 
