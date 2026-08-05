@@ -148,9 +148,11 @@ const id = (disk as unknown as { ID?: string }).ID ?? disk.id;
 - **Do:** Use GVK constants, useK8sWatchResource, k8s* for operations
 - **Do:** Check provider phase before plan creation; handle async statuses
 - **Do:** Verify actual API responses when investigating field-name bugs — type analysis alone is insufficient
+- **Do:** Scope Plan "Migration resources" watches by both `plan` and `migration` labels (`useMigrationResources` + `useLatestPlanMigration`) — plan-only matching mixes resources across restarts (MTV-6091)
 - **Don't:** Import from feature code in shared (`components/`, `utils/`)
 - **Don't:** Assume resources are always loaded — handle loading/error/empty
 - **Don't:** Assume `@forklift-ui/types` field names match API field names for OVA embedded objects
+- **Don't:** Reuse `usePlanMigration` to scope migration resources — it only returns `Running=True`; use `useLatestPlanMigration` for Failed/Succeeded/restartable views
 
 ---
 
