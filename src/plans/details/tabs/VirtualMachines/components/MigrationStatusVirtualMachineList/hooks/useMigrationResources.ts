@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useLatestPlanMigration } from 'src/plans/hooks/useLatestPlanMigration';
 
 import type {
   IoK8sApiBatchV1Job,
@@ -7,7 +8,7 @@ import type {
   V1beta1DataVolume,
   V1beta1Plan,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource, type WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   DataVolumeModelGroupVersionKind,
   JobModelGroupVersionKind,
@@ -33,75 +34,95 @@ type MigrationResources = {
 };
 
 export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => {
-  const watchOptions = {
-    isList: true,
-    namespace: getPlanTargetNamespace(plan),
-    namespaced: true,
-    selector: { matchLabels: { plan: getUID(plan) ?? '' } },
-  };
+  const [latestMigration, migrationLoaded, migrationError] = useLatestPlanMigration(plan);
+  const migrationUid = getUID(latestMigration);
+  const planUid = getUID(plan);
 
-  const [pods, podsLoaded, podsError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
-    ...watchOptions,
-    groupVersionKind: PodModelGroupVersionKind,
-  });
+  const watchOptions = useMemo((): WatchK8sResource | null => {
+    if (!migrationUid || !planUid) {
+      return null;
+    }
 
-  const [jobs, jobsLoaded, jobsError] = useK8sWatchResource<IoK8sApiBatchV1Job[]>({
-    ...watchOptions,
-    groupVersionKind: JobModelGroupVersionKind,
-    namespace: getNamespace(plan),
-  });
+    return {
+      isList: true,
+      namespace: getPlanTargetNamespace(plan),
+      namespaced: true,
+      selector: {
+        matchLabels: {
+          migration: migrationUid,
+          plan: planUid,
+        },
+      },
+    };
+  }, [migrationUid, plan, planUid]);
 
-  const [pvcs, pvcsLoaded, pvcsError] = useK8sWatchResource<IoK8sApiCoreV1PersistentVolumeClaim[]>({
-    ...watchOptions,
-    groupVersionKind: PersistentVolumeClaimModelGroupVersionKind,
-  });
+  const [pods, podsLoaded, podsError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>(
+    watchOptions ? { ...watchOptions, groupVersionKind: PodModelGroupVersionKind } : null,
+  );
 
-  const [dvs, dvsLoaded, dvsError] = useK8sWatchResource<V1beta1DataVolume[]>({
-    ...watchOptions,
-    groupVersionKind: DataVolumeModelGroupVersionKind,
-  });
+  const [jobs, jobsLoaded, jobsError] = useK8sWatchResource<IoK8sApiBatchV1Job[]>(
+    watchOptions
+      ? {
+          ...watchOptions,
+          groupVersionKind: JobModelGroupVersionKind,
+          namespace: getNamespace(plan),
+        }
+      : null,
+  );
+
+  const [pvcs, pvcsLoaded, pvcsError] = useK8sWatchResource<IoK8sApiCoreV1PersistentVolumeClaim[]>(
+    watchOptions
+      ? { ...watchOptions, groupVersionKind: PersistentVolumeClaimModelGroupVersionKind }
+      : null,
+  );
+
+  const [dvs, dvsLoaded, dvsError] = useK8sWatchResource<V1beta1DataVolume[]>(
+    watchOptions ? { ...watchOptions, groupVersionKind: DataVolumeModelGroupVersionKind } : null,
+  );
 
   const virtualMachines = getPlanVirtualMachines(plan);
+  const resourcesReady = Boolean(migrationUid && planUid);
+  const resourcesLoaded = !resourcesReady || (podsLoaded && jobsLoaded && pvcsLoaded && dvsLoaded);
 
   const dvsDict = useMemo(
-    () => (dvsLoaded && !dvsError ? groupByVmId(dvs) : {}),
-    [dvs, dvsLoaded, dvsError],
+    () => (resourcesReady && dvsLoaded && !dvsError ? groupByVmId(dvs) : {}),
+    [resourcesReady, dvs, dvsLoaded, dvsError],
   );
   const jobsDict = useMemo(
-    () => (jobsLoaded && !jobsError ? groupByVmId(jobs) : {}),
-    [jobs, jobsLoaded, jobsError],
+    () => (resourcesReady && jobsLoaded && !jobsError ? groupByVmId(jobs) : {}),
+    [resourcesReady, jobs, jobsLoaded, jobsError],
   );
   const podsDict = useMemo(
-    () => (podsLoaded && !podsError ? groupByVmId(pods) : {}),
-    [pods, podsLoaded, podsError],
+    () => (resourcesReady && podsLoaded && !podsError ? groupByVmId(pods) : {}),
+    [resourcesReady, pods, podsLoaded, podsError],
   );
   const pvcsDict = useMemo(
-    () => (pvcsLoaded && !pvcsError ? groupByVmId(pvcs) : {}),
-    [pvcs, pvcsLoaded, pvcsError],
+    () => (resourcesReady && pvcsLoaded && !pvcsError ? groupByVmId(pvcs) : {}),
+    [resourcesReady, pvcs, pvcsLoaded, pvcsError],
   );
 
   const vmDict = getPlanVirtualMachinesDict(plan);
 
   const migrationListData = useMemo(() => {
     return virtualMachines.map((specVM) => {
-      const id = specVM?.id ?? getPlanVirtualMachineIdByName(plan, specVM?.name);
+      const id = specVM?.id ?? getPlanVirtualMachineIdByName(plan, specVM?.name) ?? '';
       return {
-        dvs: dvsDict[id ?? ''],
+        dvs: dvsDict[id],
         isWarm: getPlanIsWarm(plan),
-        jobs: jobsDict[id ?? ''],
+        jobs: jobsDict[id],
         plan,
-        pods: podsDict[id ?? ''],
-        pvcs: pvcsDict[id ?? ''],
+        pods: podsDict[id],
+        pvcs: pvcsDict[id],
         specVM,
-        statusVM: vmDict[id ?? ''],
+        statusVM: vmDict[id],
         targetNamespace: getPlanTargetNamespace(plan),
       };
     }) as MigrationStatusVirtualMachinePageData[];
   }, [virtualMachines, dvsDict, jobsDict, podsDict, pvcsDict, vmDict, plan]);
 
   return {
-    error: podsError ?? jobsError ?? pvcsError ?? dvsError,
-    loaded: podsLoaded && jobsLoaded && pvcsLoaded && dvsLoaded,
+    error: migrationError ?? podsError ?? jobsError ?? pvcsError ?? dvsError,
+    loaded: migrationLoaded && resourcesLoaded,
     migrationListData,
   };
 };
