@@ -137,6 +137,35 @@ npm run lint        # check for issues
 npm run lint:fix    # auto-fix
 ```
 
+## ESLint Configuration Architecture
+
+Our `eslint.config.ts` uses an **allowlist-by-disabling** model:
+
+1. We spread `eslint.configs.all` and `tseslint.configs.all` at the top, which enables **hundreds of rules** at `error` severity.
+2. The main rules block then **explicitly turns off** rules we reject and **tunes** rules we keep.
+3. Plugin-specific blocks (sonarjs, @eslint-react, jsdoc, testing-library) add scoped rules for specific file patterns.
+4. Test override blocks relax rules that are low-signal in test/fixture code.
+5. Prettier runs last to win formatting conflicts.
+
+### Important: Do not delete `'off'` entries
+
+Rules marked `'off'` in the config are **not dead code**. They are the only mechanism preventing `.all` presets from enforcing those rules. Deleting an `'off'` line re-enables the rule from the base preset and will break CI.
+
+Example: if you remove `'no-ternary': 'off'`, the rule activates from `eslint.configs.all` and every ternary in the codebase becomes a lint error.
+
+### Categories
+
+- **Permanently off (Category 3/4):** Rules intentionally rejected for this project (e.g., `no-ternary`, `prefer-readonly-parameter-types`, `strict-boolean-expressions`). Do not enable without team consensus.
+- **Deferred (has a Jira story):** Rules currently off with a plan to enable later (e.g., `explicit-function-return-type`, `naming-convention`, `no-deprecated`). Check the parent epic MTV-6268 for status.
+- **Inherited from `.all` (no explicit entry):** If a rule isn't listed in the config, it's **on** from `.all`. To turn it off, add an explicit `'off'` entry.
+
+### Adding a new rule
+
+1. Add the rule in **alphabetical order** within the appropriate `@typescript-eslint/*` or plugin section.
+2. Check for **companion/conflicting rules** that may need to be disabled (e.g., enabling `no-non-null-assertion` required disabling `non-nullable-type-assertion-style`).
+3. Fix all violations in the same PR.
+4. State whether the rule applies to tests or not.
+
 ## Getting Help
 
 - **Jira project**: MTV (tickets are `MTV-XXXX`)
