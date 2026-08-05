@@ -345,8 +345,7 @@ export const createEslintConfig = () =>
       files: ['src/**/*.{ts,tsx}'],
       rules: {
         ...eslintReact.configs['recommended-typescript'].rules,
-        // setState-in-effect is common in this codebase; enable in a follow-up
-        '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'off',
+        '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'error',
       },
     },
     {
@@ -410,7 +409,6 @@ export const createEslintConfig = () =>
       files: ['testing/**/*.{js,ts,jsx,tsx}', '**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}'],
       rules: {
         '@cspell/spellchecker': 'off',
-        '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'off',
         '@typescript-eslint/class-methods-use-this': 'off',
         '@typescript-eslint/consistent-type-definitions': 'off',
         '@typescript-eslint/explicit-member-accessibility': 'off',

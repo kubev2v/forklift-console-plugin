@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { SOURCE_SECRET_LABEL } from 'src/plans/create/utils/copyDecryptionSecret';
 
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
@@ -23,6 +23,30 @@ export type DecryptionMode = typeof DECRYPTION_MODE_EXISTING | typeof DECRYPTION
 
 export { DECRYPTION_MODE_EXISTING, DECRYPTION_MODE_PASSPHRASES };
 
+const getNbdeClevisFromResource = (resource: EditLUKSState['resource']): boolean => {
+  const vms = getPlanVirtualMachines(resource) as EnhancedPlanSpecVms[];
+  if (isEmpty(vms)) {
+    return false;
+  }
+  return vms[0]?.nbdeClevis ?? false;
+};
+
+const decodeSecretPassphrases = (secretData: Record<string, string> | undefined): string[] => {
+  if (!secretData) {
+    return [];
+  }
+
+  return Object.values(secretData)
+    .map((secretValue) => {
+      try {
+        return atob(secretValue);
+      } catch {
+        return '';
+      }
+    })
+    .filter(Boolean);
+};
+
 export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSState => {
   const secretName = getLUKSSecretName(resource);
   const secretNamespace = getNamespace(resource);
@@ -44,52 +68,38 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
 
   const [secret] = useK8sWatchResource<IoK8sApiCoreV1Secret>(watchResource);
 
+  const derivedNbdeClevis = getNbdeClevisFromResource(resource);
   const [value, setValue] = useState<string[]>([]);
-  const [nbdeClevis, setNbdeClevis] = useState<boolean>(false);
+  const [nbdeClevis, setNbdeClevis] = useState<boolean>(derivedNbdeClevis);
   const [decryptionMode, setDecryptionMode] = useState<DecryptionMode>(DECRYPTION_MODE_PASSPHRASES);
   const [selectedSecret, setSelectedSecret] = useState<IoK8sApiCoreV1Secret | undefined>();
-  const [modeInitialized, setModeInitialized] = useState(false);
+  const [prevResource, setPrevResource] = useState(resource);
+  const [prevSecretDataKey, setPrevSecretDataKey] = useState<string | undefined>();
+  const modeInitializedRef = useRef(false);
 
-  useEffect(() => {
-    const vms = getPlanVirtualMachines(resource) as EnhancedPlanSpecVms[];
-    if (!isEmpty(vms)) {
-      setNbdeClevis(vms[0]?.nbdeClevis ?? false);
-    }
-  }, [resource]);
+  if (resource !== prevResource) {
+    setPrevResource(resource);
+    setNbdeClevis(getNbdeClevisFromResource(resource));
+  }
 
-  useEffect(() => {
-    if (modeInitialized || !secret?.metadata) {
-      return;
-    }
+  if (nbdeClevis && !isEmpty(value)) {
+    setValue([]);
+  }
 
-    const isFromExisting = Boolean(secret.metadata.labels?.[SOURCE_SECRET_LABEL]);
-    if (isFromExisting) {
+  if (!modeInitializedRef.current && secret?.metadata) {
+    modeInitializedRef.current = true;
+    if (secret.metadata.labels?.[SOURCE_SECRET_LABEL]) {
       setDecryptionMode(DECRYPTION_MODE_EXISTING);
     }
-    setModeInitialized(true);
-  }, [modeInitialized, secret?.metadata]);
+  }
 
-  useEffect(() => {
+  const secretDataKey = secretName && secret?.data ? JSON.stringify(secret.data) : undefined;
+  if (secretDataKey !== prevSecretDataKey) {
+    setPrevSecretDataKey(secretDataKey);
     if (secretName && secret?.data && !nbdeClevis) {
-      const decoded = Object.values(secret.data)
-        .map((secretData) => {
-          try {
-            return atob(secretData);
-          } catch {
-            return '';
-          }
-        })
-        .filter(Boolean);
-
-      setValue(decoded);
+      setValue(decodeSecretPassphrases(secret.data));
     }
-  }, [secretName, secret?.data, nbdeClevis]);
-
-  useEffect(() => {
-    if (nbdeClevis) {
-      setValue([]);
-    }
-  }, [nbdeClevis]);
+  }
 
   const handleConfirm = useCallback(async (): Promise<unknown> => {
     if (decryptionMode === DECRYPTION_MODE_EXISTING && selectedSecret) {

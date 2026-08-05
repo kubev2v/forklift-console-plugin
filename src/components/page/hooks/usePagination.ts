@@ -1,4 +1,4 @@
-import { type MutableRefObject, useCallback, useEffect, useMemo, useState } from 'react';
+import { type MutableRefObject, useCallback, useMemo, useState } from 'react';
 
 import type { PaginationSettings } from '@components/common/Page/types';
 import {
@@ -46,7 +46,17 @@ export const usePagination = <T>({
   sortedDataLength,
   userSettings,
 }: UsePaginationProps<T>): UsePaginationResult<T> => {
-  const [page, setPageState] = useState(initialPage);
+  const [page, setPageState] = useState(() =>
+    pageRef.current === initialPage ? initialPage : pageRef.current,
+  );
+  const [prevInitialPage, setPrevInitialPage] = useState(initialPage);
+
+  if (initialPage !== prevInitialPage) {
+    setPrevInitialPage(initialPage);
+    if (pageRef.current !== initialPage) {
+      setPageState(pageRef.current);
+    }
+  }
 
   const setPage = useCallback(
     (newPage: number) => {
@@ -56,26 +66,17 @@ export const usePagination = <T>({
     [pageRef],
   );
 
-  useEffect(() => {
-    if (pageRef.current !== initialPage) {
-      setPageState(pageRef.current);
-    }
-  }, [initialPage, pageRef]);
+  const itemsPerPageValue =
+    typeof pagination === 'number' ? pagination : (userSettings?.perPage ?? DEFAULT_PER_PAGE);
+  const hasActiveFilters = Object.values(selectedFilters).some((filter) => !isEmpty(filter));
+  const maxPage = Math.ceil(finalFilteredData.length / itemsPerPageValue);
+  const fallbackPage = maxPage > 0 ? maxPage : INITIAL_PAGE;
+  const clampedPage = hasActiveFilters && page > maxPage ? fallbackPage : page;
 
-  useEffect(() => {
-    const hasActiveFilters = Object.values(selectedFilters).some((filter) => !isEmpty(filter));
-    if (!hasActiveFilters) {
-      return;
-    }
-
-    const itemsPerPageValue =
-      typeof pagination === 'number' ? pagination : (userSettings?.perPage ?? DEFAULT_PER_PAGE);
-    const maxPage = Math.ceil(finalFilteredData.length / itemsPerPageValue);
-
-    if (page > maxPage) {
-      setPage(maxPage > 0 ? maxPage : INITIAL_PAGE);
-    }
-  }, [selectedFilters, finalFilteredData.length, pagination, userSettings?.perPage, page, setPage]);
+  if (clampedPage !== page) {
+    pageRef.current = clampedPage;
+    setPageState(clampedPage);
+  }
 
   const showPagination = useMemo(
     () => pagination === 'on' || (typeof pagination === 'number' && sortedDataLength > pagination),
@@ -88,8 +89,8 @@ export const usePagination = <T>({
   });
 
   const pageData = useMemo(
-    () => finalFilteredData.slice((page - 1) * itemsPerPage, page * itemsPerPage),
-    [finalFilteredData, page, itemsPerPage],
+    () => finalFilteredData.slice((clampedPage - 1) * itemsPerPage, clampedPage * itemsPerPage),
+    [finalFilteredData, clampedPage, itemsPerPage],
   );
 
   const onSetPage = useCallback<OnSetPage>(
@@ -111,7 +112,7 @@ export const usePagination = <T>({
     itemsPerPage,
     onPerPageSelect,
     onSetPage,
-    page,
+    page: clampedPage,
     pageData,
     setPage,
     setPerPage,
