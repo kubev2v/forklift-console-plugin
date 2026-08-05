@@ -35,12 +35,13 @@ const ProjectSelectField: FC = () => {
 
   const defaultProject = useDefaultProject(projectNames);
   const [showDefaultProjects, setShowDefaultProjects] = useState<boolean>(false);
+  const effectiveShowDefaultProjects =
+    showDefaultProjects || Boolean(defaultProject && isSystemNamespace(defaultProject));
 
   // Automatically set the default project once it's resolved
   useEffect(() => {
     if (defaultProject) {
       setValue(NetworkMapFieldId.Project, defaultProject);
-      setShowDefaultProjects((prev) => prev || isSystemNamespace(defaultProject));
     }
   }, [defaultProject, setValue]);
 
@@ -66,7 +67,7 @@ const ProjectSelectField: FC = () => {
         render={({ field }) => (
           <div ref={field.ref}>
             <ProjectSelect
-              showDefaultProjects={showDefaultProjects}
+              showDefaultProjects={effectiveShowDefaultProjects}
               setShowDefaultProjects={setShowDefaultProjects}
               isDisabled={isSubmitting}
               placeholder={t('Select project')}

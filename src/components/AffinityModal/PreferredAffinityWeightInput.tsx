@@ -1,11 +1,4 @@
-import {
-  type Dispatch,
-  type FC,
-  type FormEvent,
-  type SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { type Dispatch, type FC, type FormEvent, type SetStateAction, useEffect } from 'react';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { FormGroup, TextInput, ValidatedOptions } from '@patternfly/react-core';
@@ -26,22 +19,17 @@ const PreferredAffinityWeightInput: FC<PreferredAffinityWeightInputProps> = ({
   setSubmitDisabled,
 }) => {
   const { t } = useForkliftTranslation();
-  const [validated, setValidated] = useState<ValidatedOptions>(ValidatedOptions.default);
   const { weight } = focusedAffinity || {};
+  const isInvalid = !weight || weight < 1 || weight > 100;
+  const validated = isInvalid ? ValidatedOptions.error : ValidatedOptions.default;
 
   const onChange = (_event: FormEvent<HTMLInputElement>, value: string) => {
     setFocusedAffinity({ ...focusedAffinity, weight: Number(value) });
   };
 
   useEffect(() => {
-    if (!weight || weight < 1 || weight > 100) {
-      setValidated(ValidatedOptions.error);
-      setSubmitDisabled(true);
-    } else {
-      setValidated(ValidatedOptions.default);
-      setSubmitDisabled(false);
-    }
-  }, [weight, setSubmitDisabled]);
+    setSubmitDisabled(isInvalid);
+  }, [isInvalid, setSubmitDisabled]);
 
   return (
     <FormGroup fieldId="weight" isRequired label={t('Weight')}>

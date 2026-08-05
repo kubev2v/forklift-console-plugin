@@ -1,5 +1,5 @@
 // Ignoring above eslint rule as onTimeChange signature from PF has 6 params
-import { type FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { type FormEvent, useCallback, useMemo, useState } from 'react';
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -11,21 +11,19 @@ import { getName } from '@utils/crds/common/selectors';
 
 import type { PlanModalProps } from '../types';
 
-import { formatDateTo12Hours, patchMigrationCutover } from './utils/utils';
+import {
+  CUTOVER_MODE_ASAP,
+  CUTOVER_MODE_SCHEDULED,
+  useCutoverFormState,
+} from './hooks/useCutoverFormState';
+import { patchMigrationCutover } from './utils/utils';
 import ScheduledCutoverFields from './ScheduledCutoverFields';
 
 import './PlanCutoverMigrationModal.scss';
 
-const CUTOVER_MODE_ASAP = 'asap' as const;
-const CUTOVER_MODE_SCHEDULED = 'scheduled' as const;
-
-type CutoverMode = typeof CUTOVER_MODE_ASAP | typeof CUTOVER_MODE_SCHEDULED;
-
 const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
   const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
-  const [cutoverDate, setCutoverDate] = useState<string>();
-  const [time, setTime] = useState<string>();
   const [isDateValid, setIsDateValid] = useState<boolean>(true);
   const [isTimeValid, setIsTimeValid] = useState<boolean>(true);
 
@@ -33,17 +31,8 @@ const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...re
 
   const existingCutoverValue = activeMigration?.spec?.cutover;
   const hasExistingCutover = Boolean(existingCutoverValue);
-  const [cutoverMode, setCutoverMode] = useState<CutoverMode>(
-    hasExistingCutover ? CUTOVER_MODE_SCHEDULED : CUTOVER_MODE_ASAP,
-  );
-
-  useEffect(() => {
-    const migrationCutoverDate = existingCutoverValue ?? new Date().toISOString();
-
-    setCutoverDate(migrationCutoverDate);
-    setTime(formatDateTo12Hours(new Date(migrationCutoverDate)));
-    setCutoverMode(existingCutoverValue ? CUTOVER_MODE_SCHEDULED : CUTOVER_MODE_ASAP);
-  }, [existingCutoverValue]);
+  const { cutoverDate, cutoverMode, setCutoverDate, setCutoverMode, setTime, time } =
+    useCutoverFormState(existingCutoverValue);
 
   const onDateChange: (event: FormEvent<HTMLInputElement>, value: string, date?: Date) => void = (
     _event,

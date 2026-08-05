@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { isEmpty } from '@utils/helpers';
@@ -40,38 +40,34 @@ export const usePageData = <T>({
   postFilterData,
   selectedFilters,
 }: UsePageDataProps<T>): UsePageDataResult<T> => {
-  const [sortedData, setSortedData] = useState<T[]>([]);
-  const [filteredData, setFilteredData] = useState<T[]>([]);
-  const [finalFilteredData, setFinalFilteredData] = useState<T[]>([]);
-
-  useEffect(() => {
+  const sortedData = useMemo(() => {
     if (flatData && loaded && !error) {
-      setSortedData([...flatData].sort(compareFn));
+      return [...flatData].sort(compareFn);
     }
+    return [];
   }, [flatData, compareFn, loaded, error]);
 
-  useEffect(() => {
+  const filteredData = useMemo(() => {
     if (sortedData && loaded && !error) {
-      setFilteredData(sortedData.filter(metaMatcher));
+      return sortedData.filter(metaMatcher);
     }
+    return [];
   }, [sortedData, metaMatcher, loaded, error]);
 
-  useEffect(() => {
+  const finalFilteredData = useMemo(() => {
     if (!loaded || error) {
-      return;
+      return [];
     }
 
     if (!filteredData || isEmpty(filteredData)) {
-      setFinalFilteredData([]);
-      return;
+      return [];
     }
 
     if (!postFilterData) {
-      setFinalFilteredData(filteredData);
-      return;
+      return filteredData;
     }
 
-    setFinalFilteredData(postFilterData(filteredData, selectedFilters, fields));
+    return postFilterData(filteredData, selectedFilters, fields);
   }, [filteredData, postFilterData, selectedFilters, fields, loaded, error]);
 
   return {

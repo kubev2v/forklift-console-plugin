@@ -1,4 +1,4 @@
-import { type Ref, useEffect, useMemo, useState } from 'react';
+import { type Ref, useMemo, useState } from 'react';
 
 import {
   Badge,
@@ -32,11 +32,12 @@ const FilterValueMultiSelect = <T,>({
 }: FilterValueMultiSelectProps<T>) => {
   const { t } = useForkliftTranslation();
   const [isOpen, setOpen] = useState(false);
+  const [prevCloseKey, setPrevCloseKey] = useState(closeKey);
 
-  // Close when switching active attribute (preserves your old behavior)
-  useEffect(() => {
+  if (closeKey !== prevCloseKey) {
+    setPrevCloseKey(closeKey);
     setOpen(false);
-  }, [closeKey]);
+  }
 
   const selectedValues = useMemo(() => Array.from(selected ?? new Set<string>()), [selected]);
 
