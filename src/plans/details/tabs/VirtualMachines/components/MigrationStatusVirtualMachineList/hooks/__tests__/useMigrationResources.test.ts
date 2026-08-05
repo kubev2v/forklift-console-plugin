@@ -66,7 +66,7 @@ describe('useMigrationResources', () => {
     const watchCalls = mockUseK8sWatchResource.mock.calls.map((call) => call[0]);
     const nonNullWatches = watchCalls.filter(Boolean);
 
-    expect(nonNullWatches.length).toBe(4);
+    expect(nonNullWatches).toHaveLength(4);
     for (const watch of nonNullWatches) {
       expect(watch.selector.matchLabels).toEqual({
         migration: MIGRATION_UID,
@@ -92,5 +92,59 @@ describe('useMigrationResources', () => {
       namespace: 'openshift-mtv',
       selector: { matchLabels: { migration: MIGRATION_UID, plan: PLAN_UID } },
     });
+  });
+
+  it('stays unloaded while the latest migration watch is still loading', () => {
+    mockUseLatestPlanMigration.mockReturnValue([undefined, false, undefined]);
+
+    const { result } = renderHook(() => useMigrationResources(mockPlan));
+
+    expect(result.current.loaded).toBe(false);
+  });
+
+  it('stays unloaded until every enabled resource watch has loaded', () => {
+    mockUseLatestPlanMigration.mockReturnValue([
+      { metadata: { uid: MIGRATION_UID } },
+      true,
+      undefined,
+    ]);
+    mockUseK8sWatchResource
+      .mockReturnValueOnce([[], true, undefined])
+      .mockReturnValueOnce([[], true, undefined])
+      .mockReturnValueOnce([[], false, undefined])
+      .mockReturnValueOnce([[], true, undefined]);
+
+    const { result } = renderHook(() => useMigrationResources(mockPlan));
+
+    expect(result.current.loaded).toBe(false);
+  });
+
+  it('propagates errors from useLatestPlanMigration', () => {
+    const migrationError = new Error('migration watch failed');
+    mockUseLatestPlanMigration.mockReturnValue([undefined, true, migrationError]);
+
+    const { result } = renderHook(() => useMigrationResources(mockPlan));
+
+    expect(result.current.error).toBe(migrationError);
+    expect(result.current.loaded).toBe(true);
+  });
+
+  it('propagates errors from an enabled resource watch', () => {
+    const podsError = new Error('pods watch failed');
+    mockUseLatestPlanMigration.mockReturnValue([
+      { metadata: { uid: MIGRATION_UID } },
+      true,
+      undefined,
+    ]);
+    mockUseK8sWatchResource
+      .mockReturnValueOnce([[], true, podsError])
+      .mockReturnValueOnce([[], true, undefined])
+      .mockReturnValueOnce([[], true, undefined])
+      .mockReturnValueOnce([[], true, undefined]);
+
+    const { result } = renderHook(() => useMigrationResources(mockPlan));
+
+    expect(result.current.error).toBe(podsError);
+    expect(result.current.loaded).toBe(true);
   });
 });
