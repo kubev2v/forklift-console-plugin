@@ -425,10 +425,7 @@ export const createEslintConfig = () =>
         '@typescript-eslint/no-unsafe-member-access': 'off',
         '@typescript-eslint/no-unsafe-return': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
-        // Many page-object getter methods are async for API consistency but call
-        // Playwright locator APIs that return Promises without needing await.
-        // TODO: audit and fix each site, then remove this override.
-        '@typescript-eslint/require-await': 'off',
+        '@typescript-eslint/promise-function-async': 'off',
         'jsdoc/require-jsdoc': 'off',
         'jsdoc/require-param': 'off',
         'jsdoc/require-param-name': 'off',

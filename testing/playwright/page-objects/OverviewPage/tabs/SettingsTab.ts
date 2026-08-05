@@ -38,7 +38,7 @@ export class SettingsTab {
     await this.settingsEditModal.save();
   }
 
-  async getTransferNetworkCurrentValue(): Promise<string | null> {
+  getTransferNetworkCurrentValue(): Promise<string | null> {
     return this.controllerTransferNetworkField.textContent();
   }
 

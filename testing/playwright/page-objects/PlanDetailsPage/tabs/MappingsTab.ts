@@ -121,12 +121,11 @@ export class MappingsTab {
     return (await this.networkMapNameItem.getByRole('link').textContent()) ?? '';
   }
 
-  // eslint-disable-next-line @typescript-eslint/promise-function-async
   getNetworkMappingCount(): Promise<number> {
     return this.page.locator('[data-testid^="network-mapping-row-"]').count();
   }
 
-  async getNetworkMappingCountFromReviewTable(): Promise<number> {
+  getNetworkMappingCountFromReviewTable(): Promise<number> {
     return this.networkMapReviewTable.locator('tbody tr').count();
   }
 
@@ -134,7 +133,6 @@ export class MappingsTab {
     return (await this.storageMapNameItem.getByRole('link').textContent()) ?? '';
   }
 
-  // eslint-disable-next-line @typescript-eslint/promise-function-async
   getStorageMappingCount(): Promise<number> {
     return this.page.locator('[data-testid^="storage-mapping-row-"]').count();
   }

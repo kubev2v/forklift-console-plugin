@@ -82,7 +82,7 @@ export class CredentialEditModal extends BaseModal {
     return (await this.usernameInput.inputValue()) ?? '';
   }
 
-  async isConfigureCertificateSelected(): Promise<boolean> {
+  isConfigureCertificateSelected(): Promise<boolean> {
     return this.configureCertificateRadio.isChecked();
   }
 
@@ -91,7 +91,7 @@ export class CredentialEditModal extends BaseModal {
     return type === 'text';
   }
 
-  async isSkipCertificateSelected(): Promise<boolean> {
+  isSkipCertificateSelected(): Promise<boolean> {
     return this.skipCertificateRadio.isChecked();
   }
 

@@ -58,19 +58,19 @@ export class InspectVirtualMachinesModal {
     return (await statusCell.textContent())?.trim() ?? '';
   }
 
-  async getVmRowCount(): Promise<number> {
+  getVmRowCount(): Promise<number> {
     return this.vmTableBodyRows.count();
   }
 
-  async isConfirmDisabled(): Promise<boolean> {
+  isConfirmDisabled(): Promise<boolean> {
     return this.confirmButton.isDisabled();
   }
 
-  async isVmCheckboxChecked(vmName: string): Promise<boolean> {
+  isVmCheckboxChecked(vmName: string): Promise<boolean> {
     return this.vmCheckbox(vmName).isChecked();
   }
 
-  async isVmCheckboxDisabled(vmName: string): Promise<boolean> {
+  isVmCheckboxDisabled(vmName: string): Promise<boolean> {
     return this.vmCheckbox(vmName).isDisabled();
   }
 
