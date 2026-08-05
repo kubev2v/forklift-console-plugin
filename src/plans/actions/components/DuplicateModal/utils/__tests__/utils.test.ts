@@ -15,7 +15,7 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
 }));
 
 jest.mock('src/plans/create/utils/addOwnerRefs', () => ({
-  addOwnerRefs: jest.fn().mockResolvedValue(undefined),
+  addOwnerRefs: jest.fn(() => Promise.resolve()),
 }));
 
 jest.mock('@utils/crds/common/utils', () => ({
