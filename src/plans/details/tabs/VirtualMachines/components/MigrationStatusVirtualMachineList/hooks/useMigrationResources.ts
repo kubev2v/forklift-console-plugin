@@ -35,7 +35,7 @@ type MigrationResources = {
 
 export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => {
   const [latestMigration, migrationLoaded, migrationError] = useLatestPlanMigration(plan);
-  const migrationUid = getUID(latestMigration);
+  const migrationUid = latestMigration ? getUID(latestMigration) : undefined;
   const planUid = getUID(plan);
 
   const watchOptions = useMemo((): WatchK8sResource | null => {
