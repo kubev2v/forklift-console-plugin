@@ -229,7 +229,7 @@ export const submitMigrationPlan = async (
     targetPowerState: targetPowerState.value,
     targetProject,
     targetProvider,
-    timezone: timezone || undefined,
+    timezone,
     transferNetwork,
     vms: Object.values(vms),
   });

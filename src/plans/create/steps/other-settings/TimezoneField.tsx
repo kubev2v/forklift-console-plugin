@@ -1,9 +1,10 @@
-import { type FC, useMemo } from 'react';
+import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
 
 import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { FormGroup, FormHelperText, Stack } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { timezoneOptions } from '@utils/timezoneOptions';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
@@ -12,15 +13,6 @@ import { otherFormFieldLabels, OtherSettingsFormFieldId } from './constants';
 const TimezoneField: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useCreatePlanFormContext();
-
-  const timezoneOptions = useMemo(
-    () =>
-      Intl.supportedValuesOf('timeZone').map((tz) => ({
-        content: tz,
-        value: tz,
-      })),
-    [],
-  );
 
   return (
     <FormGroup
@@ -41,9 +33,9 @@ const TimezoneField: FC = () => {
             <TypeaheadSelect
               ref={field.ref}
               options={timezoneOptions}
-              value={field.value || undefined}
+              value={field.value ?? undefined}
               onChange={(value) => {
-                field.onChange(value ?? '');
+                field.onChange(value ?? undefined);
               }}
               allowClear
               placeholder={t('Use source provider default')}

@@ -1,7 +1,8 @@
-import { type FC, useMemo } from 'react';
+import type { FC } from 'react';
 
 import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import { useForkliftTranslation } from '@utils/i18n';
+import { timezoneOptions } from '@utils/timezoneOptions';
 
 type TimezoneDropdownProps = {
   value: string;
@@ -11,21 +12,12 @@ type TimezoneDropdownProps = {
 const TimezoneDropdown: FC<TimezoneDropdownProps> = ({ onChange, value }) => {
   const { t } = useForkliftTranslation();
 
-  const timezoneOptions = useMemo(
-    () =>
-      Intl.supportedValuesOf('timeZone').map((tz) => ({
-        content: tz,
-        value: tz,
-      })),
-    [],
-  );
-
   return (
     <TypeaheadSelect
       options={timezoneOptions}
-      value={value || undefined}
+      value={value ?? undefined}
       onChange={(val) => {
-        onChange((val as string) ?? '');
+        onChange(typeof val === 'string' ? val : '');
       }}
       allowClear
       placeholder={t('Use source provider default')}

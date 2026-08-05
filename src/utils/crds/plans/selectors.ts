@@ -63,8 +63,10 @@ export const getRootDisk = (plan: V1beta1Plan) => plan?.spec?.vms?.[0]?.rootDisk
 export const getPlanTargetPowerState = (plan: V1beta1Plan): TargetPowerStateValue =>
   plan?.spec?.targetPowerState;
 
-export const getPlanTimezone = (plan: V1beta1Plan): string | undefined =>
-  (plan?.spec as unknown as Record<string, unknown>)?.timezone as string | undefined;
+export const getPlanTimezone = (plan: V1beta1Plan): string | undefined => {
+  const tz = (plan?.spec as unknown as Record<string, unknown>)?.timezone;
+  return typeof tz === 'string' ? tz : undefined;
+};
 
 export const getPlanDescription = (plan: V1beta1Plan): string | undefined =>
   plan?.spec?.description;
