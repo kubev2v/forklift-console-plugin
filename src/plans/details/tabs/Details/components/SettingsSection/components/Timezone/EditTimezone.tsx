@@ -9,18 +9,19 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import type { EditPlanProps } from '../../utils/types';
 
-import TimezoneDropdown from './TimezoneDropdown';
 import { onConfirmTimezone } from './utils/utils';
+import TimezoneDropdown from './TimezoneDropdown';
 
 const EditTimezone: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
   const { t } = useForkliftTranslation();
-  const [value, setValue] = useState<string>(getPlanTimezone(resource) ?? '');
+  const currentTimezone = getPlanTimezone(resource) ?? '';
+  const [value, setValue] = useState<string>(currentTimezone);
 
   return (
     <ModalForm
-      title={t('Edit VM timezone')}
+      title={t('Edit timezone')}
       confirmLabel={t('Save timezone')}
-      isDisabled={value === (getPlanTimezone(resource) ?? '')}
+      isDisabled={value === currentTimezone}
       onConfirm={async () => onConfirmTimezone({ newValue: value, resource })}
       testId="edit-timezone-modal"
       {...rest}
@@ -30,7 +31,7 @@ const EditTimezone: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
           'Set the timezone for all VMs in this plan. When set, this overrides any timezone detected from the source provider.',
         )}
         <Form>
-          <FormGroupWithHelpText label={t('VM timezone')}>
+          <FormGroupWithHelpText label={t('Timezone')}>
             <TimezoneDropdown value={value} onChange={setValue} />
           </FormGroupWithHelpText>
         </Form>

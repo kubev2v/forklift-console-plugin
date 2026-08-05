@@ -34,7 +34,7 @@ export const otherFormFieldLabels: Record<OtherSettingsFormFieldId, ReturnType<t
   [OtherSettingsFormFieldId.PreserveStaticIps]: t('Preserve static IPs'),
   [OtherSettingsFormFieldId.RootDevice]: t('Root device'),
   [OtherSettingsFormFieldId.TargetPowerState]: t('VM target power state'),
-  [OtherSettingsFormFieldId.Timezone]: t('VM timezone'),
+  [OtherSettingsFormFieldId.Timezone]: t('Timezone'),
   [OtherSettingsFormFieldId.TransferNetwork]: t('Transfer network'),
 };
 

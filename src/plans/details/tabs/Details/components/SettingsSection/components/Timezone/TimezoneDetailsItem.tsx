@@ -20,10 +20,10 @@ const TimezoneDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan }) =
   return (
     <DetailsItem
       testId="timezone-detail-item"
-      title={t('VM timezone')}
+      title={t('Timezone')}
       content={
         <Label isCompact color="grey">
-          {timezone || t('Source provider default')}
+          {timezone ?? t('Source provider default')}
         </Label>
       }
       helpContent={t(
