@@ -1,29 +1,37 @@
 import { type FC, type MouseEvent, type Ref, useState } from 'react';
+import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
-import type { V1beta1Plan } from '@forklift-ui/types';
+import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Dropdown, DropdownList, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
 
 import BulkArchivePlansDropdownItem from './BulkArchivePlansDropdownItem';
 import BulkDeletePlansDropdownItem from './BulkDeletePlansDropdownItem';
 
 type PlansBulkActionsDropdownProps = GlobalActionToolbarProps<V1beta1Plan> & {
-  plans: V1beta1Plan[];
-  canPatch: boolean;
-  canDelete: boolean;
-  onComplete?: () => void;
+  namespace: string;
 };
 
 const PlansBulkActionsDropdown: FC<PlansBulkActionsDropdownProps> = ({
-  canDelete,
-  canPatch,
-  onComplete,
-  plans,
+  namespace,
   selectedIds,
 }) => {
   const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
+
+  const [plans] = useK8sWatchResource<V1beta1Plan[]>({
+    groupVersionKind: PlanModelGroupVersionKind,
+    isList: true,
+    namespace,
+    namespaced: true,
+  });
+
+  const { canDelete, canPatch } = useGetDeleteAndEditAccessReview({
+    model: PlanModel,
+    namespace,
+  });
 
   const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
     setIsOpen(false);
@@ -50,16 +58,14 @@ const PlansBulkActionsDropdown: FC<PlansBulkActionsDropdownProps> = ({
     >
       <DropdownList>
         <BulkArchivePlansDropdownItem
-          plans={plans}
+          plans={plans ?? []}
           selectedIds={selectedIds ?? []}
           canPatch={canPatch}
-          onComplete={onComplete}
         />
         <BulkDeletePlansDropdownItem
-          plans={plans}
+          plans={plans ?? []}
           selectedIds={selectedIds ?? []}
           canDelete={canDelete}
-          onComplete={onComplete}
         />
       </DropdownList>
     </Dropdown>

@@ -1,4 +1,4 @@
-import { type FC, useCallback, useMemo, useRef, useState } from 'react';
+import { type FC, useCallback, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
@@ -27,9 +27,12 @@ type PlansListPageProps = {
   namespace: string;
 };
 
+const selectedIds: string[] = [];
+
+const onSelect = () => undefined;
+
 const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const userSettings = useMemo(() => loadUserSettings({ pageId: 'Plans' }), []);
 
@@ -40,31 +43,11 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
     namespaced: true,
   });
 
-  const { canCreate, canDelete, canPatch } = useGetDeleteAndEditAccessReview({
-    model: PlanModel,
-    namespace,
-  });
-
-  const clearSelection = useCallback(() => {
-    setSelectedIds([]);
-  }, []);
-
-  const bulkActionsRef = useRef({
-    canDelete,
-    canPatch,
-    onComplete: clearSelection,
-    plans: plans ?? [],
-  });
-  bulkActionsRef.current = {
-    canDelete,
-    canPatch,
-    onComplete: clearSelection,
-    plans: plans ?? [],
-  };
+  const { canCreate } = useGetDeleteAndEditAccessReview({ model: PlanModel, namespace });
 
   const GlobalActionToolbarItems = useMemo<FC<GlobalActionToolbarProps<V1beta1Plan>>[]>(
-    () => [(props) => <PlansBulkActionsDropdown {...props} {...bulkActionsRef.current} />],
-    [],
+    () => [(props) => <PlansBulkActionsDropdown {...props} namespace={namespace} />],
+    [namespace],
   );
 
   const getSelectDisabledReason = useCallback(
@@ -75,6 +58,14 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
       return undefined;
     },
     [t],
+  );
+
+  const postFilterData = useCallback(
+    (data: V1beta1Plan[], selectedFilters: Record<string, string[]>) =>
+      selectedFilters[PlanTableResourceId.Archived]?.[0] === 'true'
+        ? data
+        : data.filter((plan) => !plan?.spec?.archived),
+    [],
   );
 
   return (
@@ -94,15 +85,11 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
         )}
         userSettings={userSettings}
         customNoResultsFound={<PlansEmptyState namespace={namespace} />}
-        postFilterData={(data, selectedFilters) =>
-          selectedFilters[PlanTableResourceId.Archived]?.[0] === 'true'
-            ? data
-            : data.filter((plan) => !plan?.spec?.archived)
-        }
+        postFilterData={postFilterData}
         shouldShowLearningExperienceButton
         toId={getPlanRowId}
         selectedIds={selectedIds}
-        onSelect={setSelectedIds}
+        onSelect={onSelect}
         canSelect={canSelectPlanForBulkActions}
         getSelectDisabledReason={getSelectDisabledReason}
         GlobalActionToolbarItems={GlobalActionToolbarItems}

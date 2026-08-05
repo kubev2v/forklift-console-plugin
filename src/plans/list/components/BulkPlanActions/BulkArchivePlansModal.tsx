@@ -31,11 +31,9 @@ import {
 export type BulkArchivePlansModalProps = {
   plans: V1beta1Plan[];
   skippedArchivedCount?: number;
-  onComplete?: () => void;
 };
 
 const BulkArchivePlansModal: ModalComponent<BulkArchivePlansModalProps> = ({
-  onComplete,
   plans,
   skippedArchivedCount = 0,
   ...rest
@@ -66,9 +64,7 @@ const BulkArchivePlansModal: ModalComponent<BulkArchivePlansModalProps> = ({
       setActionFailures(failures);
       throw new Error('');
     }
-
-    onComplete?.();
-  }, [onComplete, plans]);
+  }, [plans]);
 
   return (
     <ModalForm

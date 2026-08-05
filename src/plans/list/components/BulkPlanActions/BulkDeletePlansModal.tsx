@@ -29,14 +29,9 @@ import {
 
 export type BulkDeletePlansModalProps = {
   plans: V1beta1Plan[];
-  onComplete?: () => void;
 };
 
-const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({
-  onComplete,
-  plans,
-  ...rest
-}) => {
+const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({ plans, ...rest }) => {
   const { t } = useForkliftTranslation();
   const [actionFailures, setActionFailures] = useState<BulkPlanActionFailure[]>([]);
 
@@ -62,9 +57,7 @@ const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({
       setActionFailures(failures);
       throw new Error('');
     }
-
-    onComplete?.();
-  }, [onComplete, plans]);
+  }, [plans]);
 
   return (
     <ModalForm

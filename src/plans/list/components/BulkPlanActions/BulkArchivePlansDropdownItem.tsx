@@ -13,12 +13,10 @@ type BulkArchivePlansDropdownItemProps = {
   plans: V1beta1Plan[];
   selectedIds: string[];
   canPatch: boolean;
-  onComplete?: () => void;
 };
 
 const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
   canPatch,
-  onComplete,
   plans,
   selectedIds,
 }) => {
@@ -48,11 +46,10 @@ const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
     }
 
     launcher<BulkArchivePlansModalProps>(BulkArchivePlansModal, {
-      onComplete,
       plans: eligiblePlans,
       skippedArchivedCount,
     });
-  }, [disabledReason, eligiblePlans, launcher, onComplete, skippedArchivedCount]);
+  }, [disabledReason, eligiblePlans, launcher, skippedArchivedCount]);
 
   return (
     <DropdownItem

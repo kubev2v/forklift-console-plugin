@@ -13,12 +13,10 @@ type BulkDeletePlansDropdownItemProps = {
   plans: V1beta1Plan[];
   selectedIds: string[];
   canDelete: boolean;
-  onComplete?: () => void;
 };
 
 const BulkDeletePlansDropdownItem: FC<BulkDeletePlansDropdownItemProps> = ({
   canDelete,
-  onComplete,
   plans,
   selectedIds,
 }) => {
@@ -54,10 +52,9 @@ const BulkDeletePlansDropdownItem: FC<BulkDeletePlansDropdownItemProps> = ({
     }
 
     launcher<BulkDeletePlansModalProps>(BulkDeletePlansModal, {
-      onComplete,
       plans: eligiblePlans,
     });
-  }, [disabledReason, eligiblePlans, launcher, onComplete]);
+  }, [disabledReason, eligiblePlans, launcher]);
 
   return (
     <DropdownItem
