@@ -36,10 +36,21 @@ t('{{count}} of {{total}} VMs running', { count: running, total })
 ### Pluralization
 ```typescript
 t('{{count}} plan', { count: planCount })
-// Requires locale file entries:
-// "{{count}} plan": "{{count}} plan"
-// "{{count}} plan_plural": "{{count}} plans"
+// Requires locale file entries (i18next v4 / CLDR suffixes):
+// "{{count}} plan_one": "{{count}} plan"
+// "{{count}} plan_other": "{{count}} plans"
+// Keys carry _one/_other/_many; VALUES must NOT include those suffixes.
 ```
+
+### Extractor `defaultValue` (i18next-cli)
+
+In `i18next.config.ts`, return the 4th argument (`value` = unsuffixed source string), not `key`:
+
+```typescript
+defaultValue: (_key, _namespace, _language, value) => value
+```
+
+For plurals, `key` is already suffixed (`…_one`). Returning `key` leaks CLDR suffixes into secondary-locale placeholder values. English is cleaned by `ocp-i18n-defaults`; secondary locales are not.
 
 ---
 
