@@ -10,6 +10,9 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
 
 const PLAN_UID = 'plan-uid-123';
 const TEST_NAMESPACE = 'test-ns';
+const DEFAULT_CREATION_TIMESTAMP = '2026-08-05T17:00:00Z';
+const STARTED_NEWER = '2026-08-05T17:51:00Z';
+const STARTED_OLDER = '2026-08-05T17:49:00Z';
 
 const mockPlan = {
   metadata: { name: 'test-plan', namespace: TEST_NAMESPACE, uid: PLAN_UID },
@@ -32,7 +35,7 @@ const buildMigration = (overrides: MigrationTestOverrides = {}): V1beta1Migratio
   ({
     ...overrides,
     metadata: {
-      creationTimestamp: '2026-08-05T17:00:00Z',
+      creationTimestamp: DEFAULT_CREATION_TIMESTAMP,
       name: 'test-migration',
       namespace: TEST_NAMESPACE,
       ownerReferences: [{ uid: PLAN_UID }],
@@ -87,7 +90,7 @@ describe('useLatestPlanMigration', () => {
     const failedMigration = buildMigration({
       status: {
         conditions: [{ status: 'True', type: 'Failed' }],
-        started: '2026-08-05T17:49:00Z',
+        started: STARTED_OLDER,
       },
     });
     mockUseK8sWatchResource.mockReturnValue([[failedMigration], true, undefined]);
@@ -100,11 +103,11 @@ describe('useLatestPlanMigration', () => {
   it('picks the newest owned migration by status.started', () => {
     const older = buildMigration({
       metadata: { name: 'older', namespace: TEST_NAMESPACE, ownerReferences: [{ uid: PLAN_UID }] },
-      status: { started: '2026-08-05T17:49:00Z' },
+      status: { started: STARTED_OLDER },
     });
     const newer = buildMigration({
       metadata: { name: 'newer', namespace: TEST_NAMESPACE, ownerReferences: [{ uid: PLAN_UID }] },
-      status: { started: '2026-08-05T17:51:00Z' },
+      status: { started: STARTED_NEWER },
     });
     mockUseK8sWatchResource.mockReturnValue([[older, newer], true, undefined]);
 
@@ -116,7 +119,7 @@ describe('useLatestPlanMigration', () => {
   it('falls back to creationTimestamp when status.started is missing', () => {
     const olderByCreation = buildMigration({
       metadata: {
-        creationTimestamp: '2026-08-05T17:49:00Z',
+        creationTimestamp: STARTED_OLDER,
         name: 'older-creation',
         namespace: TEST_NAMESPACE,
         ownerReferences: [{ uid: PLAN_UID }],
@@ -125,7 +128,7 @@ describe('useLatestPlanMigration', () => {
     });
     const newerByCreation = buildMigration({
       metadata: {
-        creationTimestamp: '2026-08-05T17:51:00Z',
+        creationTimestamp: STARTED_NEWER,
         name: 'newer-creation',
         namespace: TEST_NAMESPACE,
         ownerReferences: [{ uid: PLAN_UID }],

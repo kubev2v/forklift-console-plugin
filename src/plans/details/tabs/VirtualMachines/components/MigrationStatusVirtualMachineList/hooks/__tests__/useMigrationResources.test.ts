@@ -28,12 +28,12 @@ jest.mock('../../utils/utils', () => ({
 
 const PLAN_UID = 'plan-uid-abc';
 const MIGRATION_UID = 'migration-uid-xyz';
-const TARGET_NS = 'openshift-mtv';
+const OPENSHIFT_MTV_NS = 'openshift-mtv';
 
 const mockPlan = {
-  metadata: { name: 'mtv-6091-offload', namespace: 'openshift-mtv', uid: PLAN_UID },
+  metadata: { name: 'mtv-6091-offload', namespace: OPENSHIFT_MTV_NS, uid: PLAN_UID },
   spec: {
-    targetNamespace: TARGET_NS,
+    targetNamespace: OPENSHIFT_MTV_NS,
     vms: [{ id: 'vm-1008', name: 'mtv-tests-rhel8' }],
   },
 } as unknown as V1beta1Plan;
@@ -89,7 +89,7 @@ describe('useMigrationResources', () => {
       .find((watch) => watch?.groupVersionKind?.kind === 'Job');
 
     expect(jobWatch).toMatchObject({
-      namespace: 'openshift-mtv',
+      namespace: OPENSHIFT_MTV_NS,
       selector: { matchLabels: { migration: MIGRATION_UID, plan: PLAN_UID } },
     });
   });
