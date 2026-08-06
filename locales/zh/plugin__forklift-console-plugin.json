@@ -1172,7 +1172,7 @@
   "Restore default columns": "恢复默认列",
   "Resume": "Resume",
   "Resume conversion": "Resume conversion",
-  "Resume conversion for plan {{name}}? {{count}} VM with copied disks will be processed._other": "Resume conversion for plan {{name}}? {{count}} VM with copied disks will be processed._other",
+  "Resume conversion for plan {{name}}? {{count}} VM with copied disks will be processed._other": "Resume conversion for plan {{name}}? {{count}} VM with copied disks will be processed.",
   "Retain source VM power state": "保留源虚拟机电源状态",
   "Reveal values": "显示值",
   "Review all the configured settings for your migration plan.": "查看迁移计划的所有配置设置。",
