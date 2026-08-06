@@ -81,24 +81,24 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
   );
 
   const virtualMachines = getPlanVirtualMachines(plan);
-  const resourcesReady = Boolean(migrationUid && planUid);
-  const resourcesLoaded = !resourcesReady || (podsLoaded && jobsLoaded && pvcsLoaded && dvsLoaded);
+  const hasWatchScope = Boolean(migrationUid && planUid);
+  const resourcesLoaded = !hasWatchScope || (podsLoaded && jobsLoaded && pvcsLoaded && dvsLoaded);
 
   const dvsDict = useMemo(
-    () => (resourcesReady && dvsLoaded && !dvsError ? groupByVmId(dvs) : {}),
-    [resourcesReady, dvs, dvsLoaded, dvsError],
+    () => (hasWatchScope && dvsLoaded && !dvsError ? groupByVmId(dvs) : {}),
+    [hasWatchScope, dvs, dvsLoaded, dvsError],
   );
   const jobsDict = useMemo(
-    () => (resourcesReady && jobsLoaded && !jobsError ? groupByVmId(jobs) : {}),
-    [resourcesReady, jobs, jobsLoaded, jobsError],
+    () => (hasWatchScope && jobsLoaded && !jobsError ? groupByVmId(jobs) : {}),
+    [hasWatchScope, jobs, jobsLoaded, jobsError],
   );
   const podsDict = useMemo(
-    () => (resourcesReady && podsLoaded && !podsError ? groupByVmId(pods) : {}),
-    [resourcesReady, pods, podsLoaded, podsError],
+    () => (hasWatchScope && podsLoaded && !podsError ? groupByVmId(pods) : {}),
+    [hasWatchScope, pods, podsLoaded, podsError],
   );
   const pvcsDict = useMemo(
-    () => (resourcesReady && pvcsLoaded && !pvcsError ? groupByVmId(pvcs) : {}),
-    [resourcesReady, pvcs, pvcsLoaded, pvcsError],
+    () => (hasWatchScope && pvcsLoaded && !pvcsError ? groupByVmId(pvcs) : {}),
+    [hasWatchScope, pvcs, pvcsLoaded, pvcsError],
   );
 
   const vmDict = getPlanVirtualMachinesDict(plan);
