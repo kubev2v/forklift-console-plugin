@@ -1,0 +1,75 @@
+import { type FC, type MouseEvent, type Ref, useState } from 'react';
+import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEditAccessReview';
+import { useForkliftTranslation } from 'src/utils/i18n';
+
+import type { GlobalActionToolbarProps } from '@components/common/utils/types';
+import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { Dropdown, DropdownList, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
+
+import BulkArchivePlansDropdownItem from './BulkArchivePlansDropdownItem';
+import BulkDeletePlansDropdownItem from './BulkDeletePlansDropdownItem';
+
+type PlansBulkActionsDropdownProps = GlobalActionToolbarProps<V1beta1Plan> & {
+  namespace: string;
+};
+
+const PlansBulkActionsDropdown: FC<PlansBulkActionsDropdownProps> = ({
+  namespace,
+  selectedIds,
+}) => {
+  const { t } = useForkliftTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [plans] = useK8sWatchResource<V1beta1Plan[]>({
+    groupVersionKind: PlanModelGroupVersionKind,
+    isList: true,
+    namespace,
+    namespaced: true,
+  });
+
+  const { canDelete, canPatch } = useGetDeleteAndEditAccessReview({
+    model: PlanModel,
+    namespace,
+  });
+
+  const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
+    setIsOpen(false);
+  };
+
+  return (
+    <Dropdown
+      isOpen={isOpen}
+      onOpenChange={setIsOpen}
+      onSelect={onSelect}
+      data-testid="plans-bulk-actions-dropdown"
+      toggle={(toggleRef: Ref<MenuToggleElement>) => (
+        <MenuToggle
+          ref={toggleRef}
+          onClick={() => {
+            setIsOpen((open) => !open);
+          }}
+          isExpanded={isOpen}
+        >
+          {t('Actions')}
+        </MenuToggle>
+      )}
+      shouldFocusFirstItemOnOpen={false}
+    >
+      <DropdownList>
+        <BulkArchivePlansDropdownItem
+          plans={plans ?? []}
+          selectedIds={selectedIds ?? []}
+          canPatch={canPatch}
+        />
+        <BulkDeletePlansDropdownItem
+          plans={plans ?? []}
+          selectedIds={selectedIds ?? []}
+          canDelete={canDelete}
+        />
+      </DropdownList>
+    </Dropdown>
+  );
+};
+
+export default PlansBulkActionsDropdown;
