@@ -97,21 +97,3 @@ declare module 'eslint-plugin-import' {
   };
   export { flatConfigs };
 }
-
-type LinkifyProps = {
-  children: React.ReactNode;
-  componentDecorator?: (
-    decoratedHref: string,
-    decoratedText: string,
-    key: number,
-  ) => React.ReactNode;
-  hrefDecorator?: (href: string) => string;
-  matchDecorator?: (text: string) => object[];
-  textDecorator?: (text: string) => string;
-};
-
-declare module 'react-linkify' {
-  import { Component } from 'react';
-
-  export default class Linkify extends Component<LinkifyProps> {}
-}

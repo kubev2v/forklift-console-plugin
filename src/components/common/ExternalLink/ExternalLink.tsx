@@ -2,6 +2,7 @@ import type { FC, ReactNode } from 'react';
 
 import { Button, type ButtonProps, ButtonVariant } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
+import { isSafeHttpUrl } from '@utils/validation/common';
 
 type ExternalLinkProps = {
   href: string;
@@ -21,17 +22,23 @@ export const ExternalLink: FC<ExternalLinkProps> = ({
   isInline = false,
   onClick,
   text = null,
-}) => (
-  <Button
-    variant={ButtonVariant.link}
-    icon={hideIcon ? undefined : <ExternalLinkAltIcon />}
-    iconPosition={iconPosition}
-    component="a"
-    href={href}
-    target="_blank"
-    isInline={isInline}
-    onClick={onClick}
-  >
-    {text ?? children}{' '}
-  </Button>
-);
+}) => {
+  const safeHref = isSafeHttpUrl(href) ? href : undefined;
+
+  return (
+    <Button
+      variant={ButtonVariant.link}
+      icon={hideIcon ? undefined : <ExternalLinkAltIcon />}
+      iconPosition={iconPosition}
+      component="a"
+      href={safeHref}
+      target="_blank"
+      rel="noopener noreferrer"
+      isInline={isInline}
+      onClick={onClick}
+      isDisabled={!safeHref}
+    >
+      {text ?? children}{' '}
+    </Button>
+  );
+};
