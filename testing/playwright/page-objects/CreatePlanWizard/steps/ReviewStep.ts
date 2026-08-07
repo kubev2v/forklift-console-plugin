@@ -272,6 +272,8 @@ export class ReviewStep {
       offloadPlugin?: string;
       storageSecret?: string;
       storageProduct?: string;
+      /** When true, review must show selected host ID(s), not the empty "All hosts" label. */
+      hasDedicatedMigrationHosts?: boolean;
     },
   ): Promise<void> {
     const reviewTable = this.page.getByTestId('storage-map-review-table');
@@ -300,6 +302,14 @@ export class ReviewStep {
       await expect(this.page.getByTestId(`review-storage-product-${mappingIndex}`)).toContainText(
         expectedOffload.storageProduct,
       );
+    }
+
+    if (expectedOffload.hasDedicatedMigrationHosts) {
+      const dedicatedHosts = this.page.getByTestId(
+        `review-dedicated-migration-hosts-${mappingIndex}`,
+      );
+      await expect(dedicatedHosts).toBeVisible();
+      await expect(dedicatedHosts).not.toHaveText('All hosts');
     }
   }
 

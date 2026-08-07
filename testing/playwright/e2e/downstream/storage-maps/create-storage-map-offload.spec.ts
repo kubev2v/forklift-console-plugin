@@ -5,7 +5,10 @@ import { StorageMapCreatePage } from '../../../page-objects/StorageMapCreatePage
 import { StorageMapDetailsPage } from '../../../page-objects/StorageMapDetailsPage';
 import { StorageMapsListPage } from '../../../page-objects/StorageMapsListPage';
 import { ALL_STORAGE_PRODUCTS, OffloadPlugins, StorageProducts } from '../../../types/test-data';
-import { createOffloadTestSecret } from '../../../utils/offload-helpers';
+import {
+  createOffloadTestSecret,
+  storageMapCrdSupportsDedicatedMigrationHosts,
+} from '../../../utils/offload-helpers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
@@ -25,12 +28,24 @@ test.describe(
         throw new Error('testProvider is required');
       }
 
+      const crdSupportsDedicatedHosts = await storageMapCrdSupportsDedicatedMigrationHosts();
       const storageMapName = `offload-sm-${crypto.randomUUID().slice(0, 8)}`;
       const listPage = new StorageMapsListPage(page);
       const createPage = new StorageMapCreatePage(page);
       const detailsPage = new StorageMapDetailsPage(page);
       const secretName = await createOffloadTestSecret(resourceManager);
+      let dedicatedHostName = '';
+      let createBody: Record<string, unknown> | undefined;
 
+      await page.route(
+        /\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/storagemaps$/,
+        async (route) => {
+          if (route.request().method() === 'POST') {
+            createBody = JSON.parse(route.request().postData() ?? '{}') as Record<string, unknown>;
+          }
+          await route.continue();
+        },
+      );
       await test.step('Navigate to Create Storage Map form', async () => {
         await listPage.navigate(MTV_NAMESPACE);
         await listPage.clickCreateWithFormButton();
@@ -70,6 +85,7 @@ test.describe(
 
       await test.step('Set only offload plugin and verify validation error', async () => {
         await createPage.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
+        await createPage.offload.verifyDedicatedMigrationHostsVisible(0);
         await createPage.offload.verifyValidationError('must be set when configuring offload');
       });
 
@@ -85,6 +101,7 @@ test.describe(
 
         await createPage.offload.verifyClearButtonDisabled(0);
         await createPage.offload.verifyNoValidationError();
+        await createPage.offload.verifyDedicatedMigrationHostsNotVisible(0);
 
         const pluginText = await createPage.offload.getOffloadPluginText(0);
         expect(pluginText).not.toContain(OffloadPlugins.VSPHERE_XCOPY);
@@ -102,6 +119,8 @@ test.describe(
         await createPage.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
         const productText = await createPage.offload.getStorageProductText(0);
         expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
+
+        dedicatedHostName = await createPage.offload.selectFirstDedicatedMigrationHost(0);
       });
 
       await test.step('Add second mapping and verify independent offload state', async () => {
@@ -124,6 +143,8 @@ test.describe(
 
         const productText = await createPage.offload.getStorageProductText(0);
         expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
+
+        await createPage.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
       });
 
       await test.step('Select source/target storage and submit form', async () => {
@@ -131,6 +152,20 @@ test.describe(
         await createPage.selectFirstAvailableTargetAtIndex(0);
         await createPage.submit();
         resourceManager.addStorageMap(storageMapName, MTV_NAMESPACE);
+      });
+
+      await test.step('Verify create request included dedicated migration hosts', async () => {
+        expect(createBody).toBeTruthy();
+        const map0 = (createBody?.spec as { map?: Record<string, unknown>[] } | undefined)
+          ?.map?.[0];
+        const vsphereXcopy = (
+          map0?.offloadPlugin as
+            | {
+                vsphereXcopyConfig?: { dedicatedMigrationHosts?: string[] };
+              }
+            | undefined
+        )?.vsphereXcopyConfig;
+        expect(vsphereXcopy?.dedicatedMigrationHosts?.length).toBeGreaterThan(0);
       });
 
       await test.step('Verify landed on storage map details page', async () => {
@@ -153,6 +188,14 @@ test.describe(
 
         const productText = await modal.offload.getStorageProductText(0);
         expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
+
+        // CR persistence requires dedicatedMigrationHosts in the StorageMap CRD (MTV-6163 backend).
+        // Older clusters strip the field on create — UI selection is still covered above.
+        if (crdSupportsDedicatedHosts) {
+          await modal.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
+        } else {
+          await modal.offload.verifyDedicatedMigrationHostsVisible(0);
+        }
 
         await modal.cancel();
       });
