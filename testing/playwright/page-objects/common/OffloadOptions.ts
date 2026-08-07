@@ -114,6 +114,32 @@ export class OffloadOptions {
     await toggle.click();
   }
 
+  /**
+   * Selects the first inventory host from the dedicated-hosts multi-select.
+   * Returns the host display name for later persistence assertions.
+   */
+  async selectFirstDedicatedMigrationHost(mappingIndex: number): Promise<string> {
+    const toggle = this.fieldToggleButton(OFFLOAD_FIELD.dedicatedMigrationHosts(mappingIndex));
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toBeEnabled({ timeout: 30_000 });
+    await toggle.click();
+
+    const listbox = this.page.getByRole('listbox');
+    await expect(listbox).toBeVisible();
+
+    const firstOption = listbox.getByRole('option').filter({ hasNotText: 'No results' }).first();
+    await expect(firstOption).toBeVisible({ timeout: 30_000 });
+    await expect(firstOption).toBeEnabled();
+    const hostName = ((await firstOption.textContent()) ?? '').trim();
+    expect(hostName).toBeTruthy();
+    await firstOption.click();
+
+    // Confirm the chip landed before closing — catches clicks that didn't update RHF state.
+    await expect(toggle.getByText(hostName, { exact: true })).toBeVisible();
+    await toggle.click();
+    return hostName;
+  }
+
   async selectOffloadPlugin(mappingIndex: number, optionText: string): Promise<void> {
     await this.selectFromDropdown(OFFLOAD_FIELD.offloadPlugin(mappingIndex), optionText);
   }
@@ -146,6 +172,17 @@ export class OffloadOptions {
     const btn = this.container.getByRole('button', { name: CLEAR_BUTTON_TEXT }).nth(mappingIndex);
     await expect(btn).toBeVisible();
     await expect(btn).toBeEnabled();
+  }
+
+  async verifyDedicatedMigrationHostSelected(
+    mappingIndex: number,
+    hostName: string,
+  ): Promise<void> {
+    const toggle = this.fieldToggleButton(OFFLOAD_FIELD.dedicatedMigrationHosts(mappingIndex));
+    await expect(toggle).toBeVisible();
+    // Wait for inventory to resolve IDs → names before asserting the chip label.
+    await expect(toggle).toBeEnabled({ timeout: 30_000 });
+    await expect(toggle.getByText(hostName, { exact: true })).toBeVisible({ timeout: 30_000 });
   }
 
   async verifyDedicatedMigrationHostsNotVisible(mappingIndex: number): Promise<void> {
