@@ -1,3 +1,9 @@
+# ============================================================================
+# DEV ONLY — do not apply to shared or production clusters.
+# This manifest is used exclusively for local KinD/CRC development via
+# ci/deploy-all.sh. The cluster-admin binding and disabled user-auth are
+# intentional dev conveniences.
+# ============================================================================
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -27,6 +33,20 @@ spec:
             - containerPort: 8080
               protocol: TCP
           imagePullPolicy: Always
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -34,6 +54,8 @@ metadata:
   name: console
   namespace: konveyor-forklift
 ---
+# DEV ONLY — cluster-admin grants the standalone console full API access for
+# local testing without auth. Never apply to a shared or production cluster.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -104,6 +126,20 @@ spec:
                       "endpoint":"http://must-gather-api.konveyor-forklift.svc.cluster.local:8080",
                       "authorize":true
                   }]}
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
 ---
 apiVersion: v1
 kind: Service

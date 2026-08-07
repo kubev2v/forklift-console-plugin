@@ -1,12 +1,32 @@
 name: Test
 on:
   pull_request:
+permissions:
+  contents: read
 env:
   CONTAINER_CMD: docker
   FORKLIFT_PLUGIN_IMAGE: localhost:5001/forklift-console-plugin:latest
   OKD_CONSOLE_YAML: ./ci/yaml/okd-console.yaml
 
 jobs:
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: npm audit
+        run: npm audit --omit=dev --audit-level=high
+
   linters:
     name: Run linters
     runs-on: ubuntu-latest
