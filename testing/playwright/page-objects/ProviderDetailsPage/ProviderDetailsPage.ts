@@ -90,7 +90,7 @@ export class ProviderDetailsPage {
     return this.page.getByTestId('provider-actions-inspect-menuitem');
   }
 
-  async isInspectVmsButtonVisible(): Promise<boolean> {
+  isInspectVmsButtonVisible(): Promise<boolean> {
     return this.inspectVmsButton.isVisible();
   }
 

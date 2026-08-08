@@ -29,7 +29,7 @@ export class AccessModeOptions {
     return this.container.getByTestId(fieldId);
   }
 
-  private async isExpanded(mappingIndex: number): Promise<boolean> {
+  private isExpanded(mappingIndex: number): Promise<boolean> {
     return this.fieldToggleButton(ACCESS_MODE_FIELD.accessMode(mappingIndex)).isVisible();
   }
 

@@ -41,7 +41,7 @@ export class OffloadOptions {
     return this.container.getByTestId(fieldId);
   }
 
-  private async isOffloadExpanded(mappingIndex: number): Promise<boolean> {
+  private isOffloadExpanded(mappingIndex: number): Promise<boolean> {
     return this.fieldToggleButton(OFFLOAD_FIELD.offloadPlugin(mappingIndex)).isVisible();
   }
 
