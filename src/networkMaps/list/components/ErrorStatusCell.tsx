@@ -1,8 +1,8 @@
 import type { FC, ReactNode } from 'react';
-import Linkify from 'react-linkify';
 import { Link } from 'react-router';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import SmartLinkify from '@components/common/SmartLinkify';
 import { NetworkMapModelRef } from '@forklift-ui/types';
 import { Button, ButtonVariant, Content, ContentVariants, Popover } from '@patternfly/react-core';
 import { getResourceUrl } from '@utils/getResourceUrl';
@@ -46,7 +46,7 @@ export const ErrorStatusCell: FC<CellProps & { children: ReactNode; phaseLabel: 
   return (
     <Popover
       headerContent={phaseLabel}
-      bodyContent={bodyContent && <Linkify>{bodyContent}</Linkify>}
+      bodyContent={bodyContent && <SmartLinkify>{bodyContent}</SmartLinkify>}
       footerContent={footerContent}
     >
       <Button

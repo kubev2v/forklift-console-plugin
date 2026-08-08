@@ -1,21 +1,47 @@
-import type { FC, PropsWithChildren } from 'react';
-import Linkify from 'react-linkify';
+import type { FC, PropsWithChildren, ReactNode } from 'react';
 
+const HTTP_URL_PATTERN = /\bhttps?:\/\/[^\s<>'")\]]+/giu;
+
+/**
+ * Renders children text with http(s) URLs converted to clickable links.
+ * Only http: and https: schemes are linkified — all others are left as plain text.
+ */
 const SmartLinkify: FC<PropsWithChildren> = ({ children }) => {
-  const linkifyDecorator = (decoratedHref: string, decoratedText: string, key: number) => {
-    // Only linkify if the original text actually contains http/https protocol
-    if (decoratedText.includes('http://') || decoratedText.includes('https://')) {
-      return (
-        <a href={decoratedHref} key={key} target="_blank" rel="noopener noreferrer">
-          {decoratedText}
-        </a>
-      );
+  if (typeof children !== 'string') {
+    return <>{children}</>;
+  }
+
+  const parts: ReactNode[] = [];
+  let lastIndex = 0;
+
+  HTTP_URL_PATTERN.lastIndex = 0;
+
+  for (
+    let match = HTTP_URL_PATTERN.exec(children);
+    match;
+    match = HTTP_URL_PATTERN.exec(children)
+  ) {
+    const { index: matchStart } = match;
+    const [url] = match;
+
+    if (matchStart > lastIndex) {
+      parts.push(children.slice(lastIndex, matchStart));
     }
 
-    return decoratedText;
-  };
+    parts.push(
+      <a href={url} key={`link-${matchStart}`} target="_blank" rel="noopener noreferrer">
+        {url}
+      </a>,
+    );
 
-  return <Linkify componentDecorator={linkifyDecorator}>{children}</Linkify>;
+    ({ lastIndex } = HTTP_URL_PATTERN);
+  }
+
+  if (lastIndex < children.length) {
+    parts.push(children.slice(lastIndex));
+  }
+
+  return <>{parts}</>;
 };
 
 export default SmartLinkify;

@@ -128,7 +128,7 @@ echo "  API Server: https://127.0.0.1:6443/"
 echo "  Web console: https://localhost:30443/"
 echo ""
 echo "  configuration file - '${config_path}' ( example: sudo cp ${config_path} ~/.kube/config )"
-echo "  admin token        - 'abcdef.0123456789abcdef'"
+echo "  admin token        - see ci/yaml/okd-console.yaml BRIDGE_K8S_AUTH_BEARER_TOKEN"
 echo ""
 
 mssgs[0]="Have a nice day !"

@@ -97,3 +97,19 @@ export const validateNoSpaces = (value: string) => {
   // any string without spaces
   return /^[^\s]+$/u.test(value);
 };
+
+/**
+ * Returns true only when the URL uses http: or https: scheme.
+ * Used as a render-time guard against javascript:/data: URIs in user-controlled href values.
+ * @param url
+ */
+export const isSafeHttpUrl = (url: string | undefined | null): boolean => {
+  if (!url) return false;
+
+  try {
+    const parsed = new URL(url, 'https://placeholder.invalid');
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};

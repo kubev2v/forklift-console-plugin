@@ -1,16 +1,26 @@
 {
-    "packageRules": [
-      {
-        "matchManagers": ["dockerfile", "yarn", "npm"],
-        "enabled": false
-      }
-    ],
-    "autoApprove": true,
-    "tekton": {
-        "automerge": true,
-        "automergeStrategy": "rebase",
-        "automergeType": "pr",
-        "enabled": true,
-        "platformAutomerge": true
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "vulnerabilityAlerts": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "npm non-major",
+      "schedule": ["before 6am on Monday"]
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "groupName": "container base images"
     }
+  ],
+  "tekton": {
+    "automerge": true,
+    "automergeStrategy": "rebase",
+    "automergeType": "pr",
+    "enabled": true,
+    "platformAutomerge": true
+  }
 }
