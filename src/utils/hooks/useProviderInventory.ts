@@ -77,6 +77,13 @@ const useProviderInventory = <T>({
   const providerType = provider?.spec?.type;
   const providerUid = provider?.metadata?.uid;
   const isValidProvider = providerType !== undefined && providerUid !== undefined;
+  const fetchKey = `${providerType ?? ''}:${providerUid ?? ''}:${subPath}:${String(disabled)}:${String(onRefresh)}`;
+  const [prevFetchKey, setPrevFetchKey] = useState(fetchKey);
+
+  if (fetchKey !== prevFetchKey) {
+    setPrevFetchKey(fetchKey);
+    setLoading(true);
+  }
 
   const forceRefresh = useCallback(() => {
     setOnRefresh((prev) => !prev);
@@ -107,8 +114,6 @@ const useProviderInventory = <T>({
 
   // Fetch data from API
   useEffect(() => {
-    setLoading(true);
-
     const fetchData = async () => {
       if (disabled) {
         return;

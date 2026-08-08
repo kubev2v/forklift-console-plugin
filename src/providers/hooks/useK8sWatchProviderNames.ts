@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
@@ -19,10 +19,6 @@ export const useK8sWatchProviderNames = ({
 }: {
   namespace: string;
 }): K8sProvidersWatchResult => {
-  const [names, setNames] = useState<string[] | undefined>(undefined);
-  const [namesLoaded, setLoaded] = useState(false);
-  const [namesLoadError, setLoadError] = useState<Error | null>(null);
-
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: true,
@@ -30,33 +26,18 @@ export const useK8sWatchProviderNames = ({
     namespaced: true,
   });
 
-  const handleLoadError = useCallback((error: Error | null) => {
-    setLoadError(error);
-    setLoaded(true);
-  }, []);
+  const names = useMemo(() => {
+    if (!providersLoaded || providersLoadError) {
+      return undefined;
+    }
 
-  const handleLoadedProviders = useCallback((loadedProviders: V1beta1Provider[] | null) => {
-    setLoaded(true);
-
-    const loadedNames: string[] = (loadedProviders ?? []).reduce<string[]>((acc, nextProvider) => {
+    return (providers ?? []).reduce<string[]>((acc, nextProvider) => {
       if (nextProvider.metadata?.name) {
         acc.push(nextProvider.metadata.name);
       }
       return acc;
     }, []);
+  }, [providers, providersLoaded, providersLoadError]);
 
-    setNames(loadedNames);
-  }, []);
-
-  useEffect(() => {
-    if (providersLoaded) {
-      if (providersLoadError) {
-        handleLoadError(providersLoadError as Error);
-        return;
-      }
-      handleLoadedProviders(providers);
-    }
-  }, [providers, providersLoaded, providersLoadError, handleLoadError, handleLoadedProviders]);
-
-  return [names, namesLoaded, namesLoadError];
+  return [names, providersLoaded, (providersLoadError as Error | null) ?? null];
 };
