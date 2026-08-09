@@ -114,11 +114,16 @@ const useProviderInventory = <T>({
 
   // Fetch data from API
   useEffect(() => {
+    let active = true;
+
     const fetchData = async () => {
       if (disabled) {
         return;
       }
       if (!isValidProvider) {
+        if (!active) {
+          return;
+        }
         const fetchError = new Error('Invalid provider data');
         handleError(fetchError);
 
@@ -134,19 +139,29 @@ const useProviderInventory = <T>({
           fetchTimeout,
         )) as T;
 
+        if (!active) {
+          return;
+        }
+
         updateInventoryIfChanged(
           newInventory,
           fieldsToAvoidComparing ?? DEFAULT_FIELDS_TO_AVOID_COMPARING,
         );
         setError(null);
       } catch (e) {
+        if (!active) {
+          return;
+        }
+
         updateInventoryIfChanged(null, []);
 
         if (e instanceof Error) {
           handleError(e);
         }
       } finally {
-        setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     };
 
@@ -156,6 +171,7 @@ const useProviderInventory = <T>({
 
     const intervalId = setInterval(fetchData, interval);
     return () => {
+      active = false;
       clearInterval(intervalId);
     };
   }, [

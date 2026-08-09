@@ -66,10 +66,15 @@ export const usePagination = <T>({
     [pageRef],
   );
 
-  const itemsPerPageValue =
-    typeof pagination === 'number' ? pagination : (userSettings?.perPage ?? DEFAULT_PER_PAGE);
+  const { itemsPerPage: perPageFromSettings, setPerPage } = usePerPagePagination({
+    filteredDataLength: finalFilteredData.length,
+    userSettings,
+  });
+
+  // Keep clamp and slice on the same effective page size (fixed `pagination` number wins).
+  const itemsPerPage = typeof pagination === 'number' ? pagination : perPageFromSettings;
   const hasActiveFilters = Object.values(selectedFilters).some((filter) => !isEmpty(filter));
-  const maxPage = Math.ceil(finalFilteredData.length / itemsPerPageValue);
+  const maxPage = Math.ceil(finalFilteredData.length / itemsPerPage);
   const fallbackPage = maxPage > 0 ? maxPage : INITIAL_PAGE;
   const clampedPage = hasActiveFilters && page > maxPage ? fallbackPage : page;
 
@@ -82,11 +87,6 @@ export const usePagination = <T>({
     () => pagination === 'on' || (typeof pagination === 'number' && sortedDataLength > pagination),
     [pagination, sortedDataLength],
   );
-
-  const { itemsPerPage, setPerPage } = usePerPagePagination({
-    filteredDataLength: finalFilteredData.length,
-    userSettings,
-  });
 
   const pageData = useMemo(
     () => finalFilteredData.slice((clampedPage - 1) * itemsPerPage, clampedPage * itemsPerPage),

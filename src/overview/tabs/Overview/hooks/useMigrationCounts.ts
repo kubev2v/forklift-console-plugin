@@ -7,7 +7,13 @@ import { getPlanMigrationCounts } from '../utils/getMigrationCounts';
 import { getVmCounts } from '../utils/getVmCounts';
 import { TimeRangeOptions } from '../utils/timeRangeOptions';
 
-type MigrationCounts = Record<string, number>;
+type MigrationCounts = {
+  Canceled: number;
+  Failure: number;
+  Running: number;
+  Successful: number;
+  Total: number;
+};
 
 type MigrationCountsHookResponse = {
   count: MigrationCounts;
@@ -17,11 +23,23 @@ type MigrationCountsHookResponse = {
 };
 
 const EMPTY_COUNTS: MigrationCounts = {
+  Canceled: 0,
   Failure: 0,
   Running: 0,
   Successful: 0,
   Total: 0,
 };
+
+/**
+ * Helpers use condition type names (Failed/Succeeded); consumers expect Failure/Successful.
+ */
+const normalizeCounts = (counts: Record<string, number>): MigrationCounts => ({
+  Canceled: counts.Canceled ?? 0,
+  Failure: counts.Failed ?? counts.Failure ?? 0,
+  Running: counts.Running ?? 0,
+  Successful: counts.Succeeded ?? counts.Successful ?? 0,
+  Total: counts.Total ?? 0,
+});
 
 /**
  * Custom hook to watch Kubernetes migrations and return their counts by phase.
@@ -46,8 +64,8 @@ const useMigrationCounts = (
     }
 
     return {
-      migrationCounts: getPlanMigrationCounts(migrations),
-      vmCounts: getVmCounts(migrations, range),
+      migrationCounts: normalizeCounts(getPlanMigrationCounts(migrations)),
+      vmCounts: normalizeCounts(getVmCounts(migrations, range)),
     };
   }, [migrations, loaded, loadError, range]);
 

@@ -1,4 +1,4 @@
-import { type FC, useMemo, useRef, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
 import {
   Bullseye,
@@ -37,7 +37,7 @@ const ThroughputCard: FC<ThroughputCardProps> = ({ metricName, title }) => {
     ThroughputTimeRange.Last1H,
   );
   const [selectedPlanIds, setSelectedPlanIds] = useState<string[]>([]);
-  const knownPlanIdsRef = useRef<Set<string>>(new Set());
+  const [knownPlanIds, setKnownPlanIds] = useState<Set<string>>(() => new Set());
   const [prevDataKey, setPrevDataKey] = useState('');
 
   const { data, error, loaded } = useThroughputQuery(metricName, selectedRange);
@@ -63,8 +63,8 @@ const ThroughputCard: FC<ThroughputCardProps> = ({ metricName, title }) => {
       setPrevDataKey(dataKey);
 
       const currentIdSet = new Set(currentIds);
-      const trulyNewIds = currentIds.filter((id) => !knownPlanIdsRef.current.has(id));
-      knownPlanIdsRef.current = currentIdSet;
+      const trulyNewIds = currentIds.filter((id) => !knownPlanIds.has(id));
+      setKnownPlanIds(currentIdSet);
 
       setSelectedPlanIds((prev) => {
         if (isEmpty(prev) && !isEmpty(currentIds)) {

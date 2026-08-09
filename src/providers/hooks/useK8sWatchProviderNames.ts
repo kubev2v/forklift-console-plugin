@@ -39,5 +39,13 @@ export const useK8sWatchProviderNames = ({
     }, []);
   }, [providers, providersLoaded, providersLoadError]);
 
-  return [names, providersLoaded, (providersLoadError as Error | null) ?? null];
+  let loadError: Error | null = null;
+  if (providersLoadError !== undefined && providersLoadError !== null) {
+    loadError =
+      providersLoadError instanceof Error
+        ? providersLoadError
+        : new Error(String(providersLoadError));
+  }
+
+  return [names, providersLoaded, loadError];
 };
