@@ -118,12 +118,12 @@ TOKEN_READER=$(kubectl get secret ${SERVICE_ACCOUNT}-reader -n ${NAMESPACE} -o=j
 
 TOKEN_FILE="${NAMESPACE}/.env.forklift-tokens"
 mkdir -p "${NAMESPACE}"
-cat > "${TOKEN_FILE}" <<EOF
+(umask 077; cat > "${TOKEN_FILE}" <<EOF
 export TOKEN_ADMIN=${TOKEN_ADMIN}
 export TOKEN_USER=${TOKEN_USER}
 export TOKEN_READER=${TOKEN_READER}
 EOF
-chmod 600 "${TOKEN_FILE}"
+)
 
 echo
 echo "Tokens written to: ${TOKEN_FILE} (mode 0600)"

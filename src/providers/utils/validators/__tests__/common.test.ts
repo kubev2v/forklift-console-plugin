@@ -219,8 +219,10 @@ BAYTAkFVMRMwEQYDVQQIDApTb21lLVN 0YXRlMSEwHwYDVQQKDBhJ=
       expect(isSafeHttpUrl('')).toBe(false);
     });
 
-    it('should return false for protocol-relative URLs parsed as path', () => {
-      expect(isSafeHttpUrl('//evil.com')).toBe(true);
+    it('should return false for relative and protocol-relative URLs', () => {
+      expect(isSafeHttpUrl('//evil.com')).toBe(false);
+      expect(isSafeHttpUrl('/path/to/resource')).toBe(false);
+      expect(isSafeHttpUrl('just-a-string')).toBe(false);
     });
   });
 });
