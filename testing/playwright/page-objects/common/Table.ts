@@ -156,7 +156,7 @@ export class Table {
     const count = await headers.count();
 
     const headerTexts = await Promise.all(
-      Array.from({ length: count }, async (_, i) => headers.nth(i).textContent()),
+      Array.from({ length: count }, (_, i) => headers.nth(i).textContent()),
     );
 
     return headerTexts
@@ -182,7 +182,7 @@ export class Table {
     return this.rootLocator.getByTestId(testId);
   }
 
-  async getRowCount(): Promise<number> {
+  getRowCount(): Promise<number> {
     const tableContainer = this.getTableContainer();
     return tableContainer.locator('tbody tr').count();
   }

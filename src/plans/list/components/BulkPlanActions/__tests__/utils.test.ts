@@ -181,10 +181,11 @@ describe('BulkPlanActions utils', () => {
   it('collects rejected results from batched workers', async () => {
     const results = await runSettledInBatches(
       [1, 2, 3],
-      async (value) => {
+      (value) => {
         if (value === 2) {
-          throw new Error('boom');
+          return Promise.reject(new Error('boom'));
         }
+        return Promise.resolve();
       },
       2,
     );

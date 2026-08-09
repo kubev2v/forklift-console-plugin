@@ -26,7 +26,7 @@ export class ScriptEditModal extends BaseModal {
     await fillScriptFields(this.page, index, config, MODAL_FIELD_TEST_IDS);
   }
 
-  async getScriptCount(): Promise<number> {
+  getScriptCount(): Promise<number> {
     return this.modal.locator('[data-testid^="field-row-"]').count();
   }
 
