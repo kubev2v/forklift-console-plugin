@@ -1,4 +1,4 @@
-import { type MutableRefObject, useCallback, useMemo, useState } from 'react';
+import { type MutableRefObject, useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { PaginationSettings } from '@components/common/Page/types';
 import {
@@ -79,9 +79,15 @@ export const usePagination = <T>({
   const clampedPage = hasActiveFilters && page > maxPage ? fallbackPage : page;
 
   if (clampedPage !== page) {
-    pageRef.current = clampedPage;
     setPageState(clampedPage);
   }
+
+  // Sync parent-owned pageRef after commit — avoid mutating the ref during render.
+  useEffect(() => {
+    if (pageRef.current !== clampedPage) {
+      pageRef.current = clampedPage;
+    }
+  }, [clampedPage, pageRef]);
 
   const showPagination = useMemo(
     () => pagination === 'on' || (typeof pagination === 'number' && sortedDataLength > pagination),
