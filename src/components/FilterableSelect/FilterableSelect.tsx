@@ -3,7 +3,7 @@ import {
   type MouseEvent,
   type ReactNode,
   type Ref,
-  useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -77,7 +77,6 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
    * This is typically synchronized with inputValue, but they can be different if needed.
    */
   const [filterValue, setFilterValue] = useState<string>('');
-  const [selectOptions, setSelectOptions] = useState<SelectOptionProps[]>(initialSelectOptions);
   const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
 
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -95,25 +94,20 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
     onSelect(newValue);
   };
 
-  /**
-   * Updates the select options based on the filter value.
-   */
-  useEffect(() => {
-    let newSelectOptions: SelectOptionProps[] = initialSelectOptions;
-
-    // Filter menu items based on the text input value when one exists
-    if (filterValue) {
-      newSelectOptions = initialSelectOptions.filter((menuItem) =>
-        String(menuItem.itemId).toLowerCase().includes(filterValue.toLowerCase()),
-      );
-
-      // When no options are found after filtering, display 'No results found'
-      if (isEmpty(newSelectOptions)) {
-        newSelectOptions = [{ children: noResultFoundLabel, isDisabled: true }];
-      }
+  const selectOptions = useMemo(() => {
+    if (!filterValue) {
+      return initialSelectOptions;
     }
 
-    setSelectOptions(newSelectOptions);
+    const filteredOptions = initialSelectOptions.filter((menuItem) =>
+      String(menuItem.itemId).toLowerCase().includes(filterValue.toLowerCase()),
+    );
+
+    if (isEmpty(filteredOptions)) {
+      return [{ children: noResultFoundLabel, isDisabled: true }];
+    }
+
+    return filteredOptions;
   }, [filterValue, initialSelectOptions, noResultFoundLabel]);
 
   /**

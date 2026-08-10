@@ -1,4 +1,4 @@
-import { type FC, useCallback, useEffect, useState } from 'react';
+import { type FC, useCallback, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
@@ -33,12 +33,14 @@ const HooksStep: FC = () => {
   });
 
   const [aapJobTemplates, setAapJobTemplates] = useState<AapJobTemplate[]>([]);
+  const [prevHookSource, setPrevHookSource] = useState(hookSource);
 
-  useEffect(() => {
+  if (hookSource !== prevHookSource) {
+    setPrevHookSource(hookSource);
     if (hookSource !== HOOK_SOURCE_AAP) {
       setAapJobTemplates([]);
     }
-  }, [hookSource]);
+  }
 
   const handleAapConnected = useCallback((templates: AapJobTemplate[]): void => {
     setAapJobTemplates(templates);

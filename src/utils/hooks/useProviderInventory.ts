@@ -77,6 +77,13 @@ const useProviderInventory = <T>({
   const providerType = provider?.spec?.type;
   const providerUid = provider?.metadata?.uid;
   const isValidProvider = providerType !== undefined && providerUid !== undefined;
+  const fetchKey = `${providerType ?? ''}:${providerUid ?? ''}:${subPath}:${String(disabled)}:${String(onRefresh)}`;
+  const [prevFetchKey, setPrevFetchKey] = useState(fetchKey);
+
+  if (fetchKey !== prevFetchKey) {
+    setPrevFetchKey(fetchKey);
+    setLoading(true);
+  }
 
   const forceRefresh = useCallback(() => {
     setOnRefresh((prev) => !prev);
@@ -107,13 +114,16 @@ const useProviderInventory = <T>({
 
   // Fetch data from API
   useEffect(() => {
-    setLoading(true);
+    let active = true;
 
     const fetchData = async () => {
       if (disabled) {
         return;
       }
       if (!isValidProvider) {
+        if (!active) {
+          return;
+        }
         const fetchError = new Error('Invalid provider data');
         handleError(fetchError);
 
@@ -129,19 +139,29 @@ const useProviderInventory = <T>({
           fetchTimeout,
         )) as T;
 
+        if (!active) {
+          return;
+        }
+
         updateInventoryIfChanged(
           newInventory,
           fieldsToAvoidComparing ?? DEFAULT_FIELDS_TO_AVOID_COMPARING,
         );
         setError(null);
       } catch (e) {
+        if (!active) {
+          return;
+        }
+
         updateInventoryIfChanged(null, []);
 
         if (e instanceof Error) {
           handleError(e);
         }
       } finally {
-        setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     };
 
@@ -151,6 +171,7 @@ const useProviderInventory = <T>({
 
     const intervalId = setInterval(fetchData, interval);
     return () => {
+      active = false;
       clearInterval(intervalId);
     };
   }, [

@@ -1,4 +1,4 @@
-import { type FC, useEffect, useMemo, useRef, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
 import {
   Bullseye,
@@ -37,7 +37,8 @@ const ThroughputCard: FC<ThroughputCardProps> = ({ metricName, title }) => {
     ThroughputTimeRange.Last1H,
   );
   const [selectedPlanIds, setSelectedPlanIds] = useState<string[]>([]);
-  const knownPlanIdsRef = useRef<Set<string>>(new Set());
+  const [knownPlanIds, setKnownPlanIds] = useState<Set<string>>(() => new Set());
+  const [prevDataKey, setPrevDataKey] = useState('');
 
   const { data, error, loaded } = useThroughputQuery(metricName, selectedRange);
 
@@ -54,26 +55,27 @@ const ThroughputCard: FC<ThroughputCardProps> = ({ metricName, title }) => {
     [data],
   );
 
-  useEffect(() => {
-    if (!loaded || error) {
-      return;
-    }
-
+  if (loaded && !error) {
     const currentIds = data.map((series) => series.planId);
-    const currentIdSet = new Set(currentIds);
-    const trulyNewIds = currentIds.filter((id) => !knownPlanIdsRef.current.has(id));
+    const dataKey = currentIds.join(',');
 
-    knownPlanIdsRef.current = currentIdSet;
+    if (dataKey !== prevDataKey) {
+      setPrevDataKey(dataKey);
 
-    setSelectedPlanIds((prev) => {
-      if (isEmpty(prev) && !isEmpty(currentIds)) {
-        return currentIds;
-      }
+      const currentIdSet = new Set(currentIds);
+      const trulyNewIds = currentIds.filter((id) => !knownPlanIds.has(id));
+      setKnownPlanIds(currentIdSet);
 
-      const validPrev = prev.filter((id) => currentIdSet.has(id));
-      return [...validPrev, ...trulyNewIds];
-    });
-  }, [data, loaded, error]);
+      setSelectedPlanIds((prev) => {
+        if (isEmpty(prev) && !isEmpty(currentIds)) {
+          return currentIds;
+        }
+
+        const validPrev = prev.filter((id) => currentIdSet.has(id));
+        return [...validPrev, ...trulyNewIds];
+      });
+    }
+  }
 
   const renderBody = (): JSX.Element => {
     if (!loaded && !error) {

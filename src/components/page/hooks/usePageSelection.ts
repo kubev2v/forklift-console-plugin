@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 type UsePageSelectionProps<T> = {
   toId?: (item: T) => string;
@@ -27,16 +27,20 @@ export const usePageSelection = <T>({
 }: UsePageSelectionProps<T>): UsePageSelectionResult<T> => {
   const [internalSelectedIds, setInternalSelectedIds] = useState(selectedIds);
   const [internalExpandedIds, setInternalExpandedIds] = useState(expandedIds);
+  const [prevSelectedIds, setPrevSelectedIds] = useState(selectedIds);
+  const [prevExpandedIds, setPrevExpandedIds] = useState(expandedIds);
+
+  if (selectedIds !== prevSelectedIds) {
+    setPrevSelectedIds(selectedIds);
+    setInternalSelectedIds(selectedIds);
+  }
+
+  if (expandedIds !== prevExpandedIds) {
+    setPrevExpandedIds(expandedIds);
+    setInternalExpandedIds(expandedIds);
+  }
 
   const itemToId = useCallback((item: T) => (toId ? toId(item) : ''), [toId]);
-
-  useEffect(() => {
-    setInternalSelectedIds(selectedIds);
-  }, [selectedIds]);
-
-  useEffect(() => {
-    setInternalExpandedIds(expandedIds);
-  }, [expandedIds]);
 
   const isExpanded = useMemo(
     () =>

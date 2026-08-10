@@ -46,7 +46,17 @@ export const usePagination = <T>({
   sortedDataLength,
   userSettings,
 }: UsePaginationProps<T>): UsePaginationResult<T> => {
-  const [page, setPageState] = useState(initialPage);
+  const [page, setPageState] = useState(() =>
+    pageRef.current === initialPage ? initialPage : pageRef.current,
+  );
+  const [prevInitialPage, setPrevInitialPage] = useState(initialPage);
+
+  if (initialPage !== prevInitialPage) {
+    setPrevInitialPage(initialPage);
+    if (pageRef.current !== initialPage) {
+      setPageState(pageRef.current);
+    }
+  }
 
   const setPage = useCallback(
     (newPage: number) => {
@@ -56,40 +66,37 @@ export const usePagination = <T>({
     [pageRef],
   );
 
+  const { itemsPerPage: perPageFromSettings, setPerPage } = usePerPagePagination({
+    filteredDataLength: finalFilteredData.length,
+    userSettings,
+  });
+
+  // Keep clamp and slice on the same effective page size (fixed `pagination` number wins).
+  const itemsPerPage = typeof pagination === 'number' ? pagination : perPageFromSettings;
+  const hasActiveFilters = Object.values(selectedFilters).some((filter) => !isEmpty(filter));
+  const maxPage = Math.ceil(finalFilteredData.length / itemsPerPage);
+  const fallbackPage = maxPage > 0 ? maxPage : INITIAL_PAGE;
+  const clampedPage = hasActiveFilters && page > maxPage ? fallbackPage : page;
+
+  if (clampedPage !== page) {
+    setPageState(clampedPage);
+  }
+
+  // Sync parent-owned pageRef after commit — avoid mutating the ref during render.
   useEffect(() => {
-    if (pageRef.current !== initialPage) {
-      setPageState(pageRef.current);
+    if (pageRef.current !== clampedPage) {
+      pageRef.current = clampedPage;
     }
-  }, [initialPage, pageRef]);
-
-  useEffect(() => {
-    const hasActiveFilters = Object.values(selectedFilters).some((filter) => !isEmpty(filter));
-    if (!hasActiveFilters) {
-      return;
-    }
-
-    const itemsPerPageValue =
-      typeof pagination === 'number' ? pagination : (userSettings?.perPage ?? DEFAULT_PER_PAGE);
-    const maxPage = Math.ceil(finalFilteredData.length / itemsPerPageValue);
-
-    if (page > maxPage) {
-      setPage(maxPage > 0 ? maxPage : INITIAL_PAGE);
-    }
-  }, [selectedFilters, finalFilteredData.length, pagination, userSettings?.perPage, page, setPage]);
+  }, [clampedPage, pageRef]);
 
   const showPagination = useMemo(
     () => pagination === 'on' || (typeof pagination === 'number' && sortedDataLength > pagination),
     [pagination, sortedDataLength],
   );
 
-  const { itemsPerPage, setPerPage } = usePerPagePagination({
-    filteredDataLength: finalFilteredData.length,
-    userSettings,
-  });
-
   const pageData = useMemo(
-    () => finalFilteredData.slice((page - 1) * itemsPerPage, page * itemsPerPage),
-    [finalFilteredData, page, itemsPerPage],
+    () => finalFilteredData.slice((clampedPage - 1) * itemsPerPage, clampedPage * itemsPerPage),
+    [finalFilteredData, clampedPage, itemsPerPage],
   );
 
   const onSetPage = useCallback<OnSetPage>(
@@ -111,7 +118,7 @@ export const usePagination = <T>({
     itemsPerPage,
     onPerPageSelect,
     onSetPage,
-    page,
+    page: clampedPage,
     pageData,
     setPage,
     setPerPage,
