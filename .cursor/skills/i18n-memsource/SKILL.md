@@ -26,34 +26,33 @@ fi
 export PATH="$(dirname "$MEMSOURCE_BIN"):$PATH"
 ```
 
-### Authentication
+### Authentication (credentials stay with the user)
 
-Credentials are stored in `~/.memsourcerc` (exports `MEMSOURCE_USERNAME` and
-`MEMSOURCE_PASSWORD`). The CLI also accepts a token via the `MEMSOURCE_TOKEN`
-environment variable.
+**Do not** read `~/.memsourcerc`, Memsource passwords, or long-lived tokens into
+the agent context. Phrase is a paid external service — treat credentials like
+any other secret.
 
-**Important:** The `memsource auth login` command returns a token but does not
-persist it for child processes (like those spawned by `npm run`). To make auth
-work inside npm scripts, you must capture the token and export it as
-`MEMSOURCE_TOKEN`:
+Preferred flow:
+
+1. Ask the user to authenticate in **their own terminal** and confirm
+   `memsource auth whoami` works (and that `MEMSOURCE_TOKEN` is exported in the
+   shell they will use for `npm run memsource-*`).
+2. The agent may run extract/export/validation without credentials
+   (`npm run i18n`, `npm run export-pos`, PO checks).
+3. For upload/download/status, either:
+   - the user runs the `memsource-*` / `memsource job list` commands themselves
+     after the agent prepares artifacts, or
+   - the user has already exported a **short-lived** `MEMSOURCE_TOKEN` in the
+     shared shell (never paste the password into chat).
+
+If a shared shell already has `MEMSOURCE_TOKEN`, verify with:
 
 ```bash
-source ~/.memsourcerc
-export MEMSOURCE_TOKEN=$(memsource auth login \
-  --user-name "$MEMSOURCE_USERNAME" \
-  --password "$MEMSOURCE_PASSWORD" \
-  -f json \
-  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
-
-if [ -z "$MEMSOURCE_TOKEN" ]; then
-  echo "ERROR: Memsource authentication failed. Check ~/.memsourcerc credentials."
-  return 1
-fi
+memsource auth whoami
 ```
 
-Run this **once** at the start of every action. All subsequent `memsource` and
-`npm run memsource-*` commands in the same shell session will inherit the token.
-Do not ask the user to authenticate manually.
+If auth fails, stop and ask the user to refresh the token outside the agent.
+Also ensure `jq` is installed (`brew install jq`) — upload scripts need it.
 
 ### Config
 
@@ -95,14 +94,16 @@ Read these files:
 
 ### Step 3: Authenticate
 
-Run the full authentication sequence from Prerequisites (export PATH, source
-credentials, capture MEMSOURCE_TOKEN). Verify with:
+Confirm Memsource auth is available without loading credentials into the agent
+(see Prerequisites). Prefer asking the user to auth in their terminal.
+
+If a shared shell already has `MEMSOURCE_TOKEN`, verify with:
 
 ```bash
 memsource auth whoami
 ```
 
-If it fails, tell the user their `~/.memsourcerc` may need updating.
+If it fails, stop and ask the user to refresh the token outside the agent.
 
 ### Step 4: Extract translation keys
 
@@ -160,11 +161,14 @@ Ask for explicit approval before proceeding. Use the AskQuestion tool:
 
 ### Step 8: Upload to Memsource
 
-Run the upload (MEMSOURCE_TOKEN must be exported from Step 3):
+Run the upload only when `MEMSOURCE_TOKEN` is already available in the shell
+(user-provided; never sourced by the agent from `~/.memsourcerc`):
 
 ```bash
 npm run memsource-upload -- -v VERSION -s SPRINT
 ```
+
+Alternatively, have the user run that command themselves after Steps 4–7.
 
 The script handles branch names with `/` and resolves language aliases
 automatically (fixed in `ocp-plugin-i18n-scripts@1.0.2`).
@@ -229,8 +233,9 @@ Read `.cursor/skills/i18n-memsource/state.json` for `lastProjectId`. Show it to 
 
 ### Step 2: Authenticate
 
-Run the full authentication sequence from Prerequisites (export PATH, source
-credentials, capture MEMSOURCE_TOKEN).
+Confirm Memsource auth is available without loading credentials into the agent
+(see Prerequisites). Prefer asking the user to auth in their terminal, or verify
+an already-exported `MEMSOURCE_TOKEN` with `memsource auth whoami`.
 
 ### Step 3: Check translation status
 
@@ -292,8 +297,9 @@ Trigger: user says "translation status", "memsource status", "check translations
 
 1. Read `.cursor/skills/i18n-memsource/state.json` for `lastProjectId`
 2. Ask user to confirm or provide a different PROJECT_ID
-3. Authenticate using the full sequence from Prerequisites (export PATH, source
-   credentials, capture MEMSOURCE_TOKEN).
+3. Confirm Memsource auth is available without loading credentials into the
+   agent (see Prerequisites). Prefer user-owned auth, or verify an already-
+   exported `MEMSOURCE_TOKEN` with `memsource auth whoami`.
 4. For each language in `i18n-scripts.config.json`, query:
    ```bash
    memsource job list --project-id PROJECT_ID --target-lang LANG -f json -c uid,status,targetLang
@@ -316,7 +322,7 @@ Trigger: user says "translation status", "memsource status", "check translations
 ## Important Notes
 
 - **CLI path:** The `memsource` binary is installed via pip3 and may not be on PATH. Use the discovery snippet from Prerequisites to locate it.
-- **Auth token:** Use `MEMSOURCE_TOKEN` env var (captured from `memsource auth login`) so child processes (npm scripts) inherit auth. Do not rely on `memsource auth login` alone -- the token is not persisted to disk.
+- **Auth token:** Never source `~/.memsourcerc` or read passwords into the agent. Upload/download need a user-exported short-lived `MEMSOURCE_TOKEN` in the shell (or the user runs `memsource-*` themselves).
 - **Language aliases and branch names:** Both are handled automatically since `ocp-plugin-i18n-scripts@1.0.2`. No symlinks or branch switching needed.
 - The `npm run memsource-upload` and `npm run memsource-download` scripts use the `ocp-plugin-i18n-scripts` npm package CLI commands under the hood.
 - PO files are temporary artifacts in `po-files/` -- they're cleaned up after upload.
