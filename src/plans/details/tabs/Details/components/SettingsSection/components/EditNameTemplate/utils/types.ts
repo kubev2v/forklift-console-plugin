@@ -1,7 +1,7 @@
 export enum NameTemplateOptions {
-  defaultNameTemplate = 'defaultNameTemplate',
-  customNameTemplate = 'customNameTemplate',
-  inheritPlanWideSetting = 'inheritPlanWideSetting',
+  DefaultNameTemplate = 'defaultNameTemplate',
+  CustomNameTemplate = 'customNameTemplate',
+  InheritPlanWideSetting = 'inheritPlanWideSetting',
 }
 
 export type NameTemplateOptionType = {

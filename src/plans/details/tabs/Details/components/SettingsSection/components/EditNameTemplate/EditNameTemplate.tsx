@@ -45,15 +45,15 @@ const EditNameTemplate: ModalComponent<EditNameTemplateProps> = ({
     <ModalForm
       title={title}
       onConfirm={async () => {
-        if (selected === NameTemplateOptions.customNameTemplate && isEmpty(inputValue.trim())) {
+        if (selected === NameTemplateOptions.CustomNameTemplate && isEmpty(inputValue.trim())) {
           throw new Error('Name template cannot be empty');
         }
-        return selected === NameTemplateOptions.customNameTemplate
+        return selected === NameTemplateOptions.CustomNameTemplate
           ? onConfirm(inputValue)
           : onConfirm(undefined);
       }}
       isDisabled={
-        selected === NameTemplateOptions.customNameTemplate &&
+        selected === NameTemplateOptions.CustomNameTemplate &&
         (inputValue === value || isEmpty(inputValue.trim()))
       }
       {...rest}
@@ -82,7 +82,7 @@ const EditNameTemplate: ModalComponent<EditNameTemplateProps> = ({
             </SelectList>
           </Select>
         </FormGroup>
-        {selected === NameTemplateOptions.customNameTemplate && (
+        {selected === NameTemplateOptions.CustomNameTemplate && (
           <FormGroup>
             <TextInput
               value={inputValue}

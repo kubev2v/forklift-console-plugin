@@ -9,7 +9,7 @@ import {
   AffinityCondition,
   type AffinityRowData,
   AffinityType,
-  type useIDEntitiesValue,
+  type UseIDEntitiesValue,
 } from './utils/types';
 import AffinityConditionSelect from './AffinityConditionSelect';
 import AffinityTypeSelect from './AffinityTypeSelect';
@@ -22,8 +22,8 @@ import TopologyKeyInput from './TopologyKeyInput';
 import WorkloadExpressionDescriptionText from './WorkloadExpressionDescriptionText';
 
 type AffinityFormProps = {
-  expressions: useIDEntitiesValue;
-  fields: useIDEntitiesValue;
+  expressions: UseIDEntitiesValue;
+  fields: UseIDEntitiesValue;
   focusedAffinity: AffinityRowData;
   setFocusedAffinity: Dispatch<SetStateAction<AffinityRowData>>;
   setSubmitDisabled: Dispatch<SetStateAction<boolean>>;
@@ -38,7 +38,7 @@ const AffinityForm: FC<AffinityFormProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const isNodeAffinity = focusedAffinity?.type === AffinityType.node;
+  const isNodeAffinity = focusedAffinity?.type === AffinityType.Node;
 
   useEffect(() => {
     setSubmitDisabled(
@@ -63,7 +63,7 @@ const AffinityForm: FC<AffinityFormProps> = ({
         focusedAffinity={focusedAffinity}
         setFocusedAffinity={setFocusedAffinity}
       />
-      {focusedAffinity?.condition === AffinityCondition.preferred && (
+      {focusedAffinity?.condition === AffinityCondition.Preferred && (
         <PreferredAffinityWeightInput
           focusedAffinity={focusedAffinity}
           setFocusedAffinity={setFocusedAffinity}

@@ -28,7 +28,7 @@ const ProviderVirtualMachinesTabPage: FC<ProviderDetailsPageProps> = ({ name, na
 
   return (
     <Controller
-      name={PROVIDER_DETAILS_VMS_TAB_FIELDS.vms}
+      name={PROVIDER_DETAILS_VMS_TAB_FIELDS.Vms}
       control={control}
       render={() => (
         <VirtualMachinesListSection providerData={{ provider, vmData, vmDataLoading }} />

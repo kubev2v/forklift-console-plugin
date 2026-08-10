@@ -9,7 +9,7 @@ import { getProvidersInventoryByNamespace } from '../utils/getProvidersInventory
 import { inventoryHasChanged } from '../utils/inventoryHasChanged';
 import { updateInventory } from '../utils/updateInventory';
 
-type useProvidersInventoryListResult = {
+type ProvidersInventoryListResult = {
   inventory: ProvidersInventoryList | null;
   loading: boolean;
   error: Error | null;
@@ -18,7 +18,7 @@ type useProvidersInventoryListResult = {
 const useProvidersInventoryList = (
   namespace?: string,
   interval = 20000,
-): useProvidersInventoryListResult => {
+): ProvidersInventoryListResult => {
   const [inventory, setInventory] = useState<ProvidersInventoryList | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);

@@ -10,18 +10,18 @@ export const getNameTemplateOptions = (allowInherit: boolean): NameTemplateOptio
           getInheritToDescription: (inheritValue: string | undefined) =>
             t(`Set to: ${isEmpty(inheritValue) ? t('default') : inheritValue}`),
           label: t('Inherit plan wide setting'),
-          value: NameTemplateOptions.inheritPlanWideSetting,
+          value: NameTemplateOptions.InheritPlanWideSetting,
         },
       ]
     : [
         {
           label: t('Default name template'),
-          value: NameTemplateOptions.defaultNameTemplate,
+          value: NameTemplateOptions.DefaultNameTemplate,
         },
       ]),
   {
     label: t('Custom name template'),
-    value: NameTemplateOptions.customNameTemplate,
+    value: NameTemplateOptions.CustomNameTemplate,
   },
 ];
 
@@ -38,12 +38,12 @@ export const getSelectedOption = (
   allowInherit: boolean,
 ): NameTemplateOptions => {
   if (value) {
-    return NameTemplateOptions.customNameTemplate;
+    return NameTemplateOptions.CustomNameTemplate;
   }
 
   if (allowInherit) {
-    return NameTemplateOptions.inheritPlanWideSetting;
+    return NameTemplateOptions.InheritPlanWideSetting;
   }
 
-  return NameTemplateOptions.defaultNameTemplate;
+  return NameTemplateOptions.DefaultNameTemplate;
 };

@@ -15,23 +15,23 @@ export const TOPOLOGY_KEY_FIELD_HELP_TEXT = t('Topology key must not be empty');
 const TOPOLOGY_KEY_DEFAULT = t('kubernetes.io/hostname');
 
 export const defaultNewAffinity = {
-  condition: AffinityCondition.required,
+  condition: AffinityCondition.Required,
   expressions: [],
   fields: [],
   topologyKey: TOPOLOGY_KEY_DEFAULT,
-  type: AffinityType.node,
+  type: AffinityType.Node,
   weight: 1,
 } as unknown as AffinityRowData;
 
 export const AFFINITY_TYPE_LABELS = {
-  [AffinityType.node]: t('Node affinity'),
-  [AffinityType.pod]: t('Workload (pod) affinity'),
-  [AffinityType.podAnti]: t('Workload (pod) anti-affinity'),
+  [AffinityType.Node]: t('Node affinity'),
+  [AffinityType.Pod]: t('Workload (pod) affinity'),
+  [AffinityType.PodAnti]: t('Workload (pod) anti-affinity'),
 };
 
 export const AFFINITY_CONDITION_LABELS = {
-  [AffinityCondition.preferred]: t('Preferred during scheduling'),
-  [AffinityCondition.required]: t('Required during scheduling'),
+  [AffinityCondition.Preferred]: t('Preferred during scheduling'),
+  [AffinityCondition.Required]: t('Required during scheduling'),
 };
 
 export const affinityColumns = () => {

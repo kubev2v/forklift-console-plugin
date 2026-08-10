@@ -26,7 +26,7 @@ export const providerUiAnnotation = 'forklift.konveyor.io/providerUI';
 
 export enum VSphereEndpointType {
   ESXi = 'esxi',
-  vCenter = 'vcenter',
+  VCenter = 'vcenter',
 }
 
 export enum OpenstackAuthType {

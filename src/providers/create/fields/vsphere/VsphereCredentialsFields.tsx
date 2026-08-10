@@ -24,7 +24,7 @@ const VsphereCredentialsFields: FC = () => {
         }}
         label={t('Username')}
         helperText={t(
-          `Username for connecting to the vSphere API endpoint. For example: ${endpointType === VSphereEndpointType.vCenter ? 'admin@vsphere.local' : 'user'}.`,
+          `Username for connecting to the vSphere API endpoint. For example: ${endpointType === VSphereEndpointType.VCenter ? 'admin@vsphere.local' : 'user'}.`,
         )}
         testId="vsphere-username-input"
       />

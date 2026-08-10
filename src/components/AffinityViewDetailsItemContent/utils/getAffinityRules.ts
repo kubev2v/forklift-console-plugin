@@ -10,16 +10,16 @@ import type {
 } from '@forklift-ui/types';
 
 enum AffinityCondition {
-  preferred = 'preferredDuringSchedulingIgnoredDuringExecution',
-  required = 'requiredDuringSchedulingIgnoredDuringExecution',
+  Preferred = 'preferredDuringSchedulingIgnoredDuringExecution',
+  Required = 'requiredDuringSchedulingIgnoredDuringExecution',
 }
 
 const getNodeAffinity = (
   nodeAffinity: K8sIoApiCoreV1NodeAffinity | undefined,
 ): (K8sIoApiCoreV1PreferredSchedulingTerm | K8sIoApiCoreV1NodeSelectorTerm)[] => {
   return [
-    ...(nodeAffinity?.[AffinityCondition.preferred] ?? []),
-    ...(nodeAffinity?.[AffinityCondition.required]?.nodeSelectorTerms ?? []),
+    ...(nodeAffinity?.[AffinityCondition.Preferred] ?? []),
+    ...(nodeAffinity?.[AffinityCondition.Required]?.nodeSelectorTerms ?? []),
   ];
 };
 
@@ -27,8 +27,8 @@ const getPodAffinity = (
   podAffinity: K8sIoApiCoreV1PodAffinity | K8sIoApiCoreV1PodAntiAffinity | undefined,
 ): (K8sIoApiCoreV1PodAffinityTerm | K8sIoApiCoreV1WeightedPodAffinityTerm)[] => {
   return [
-    ...(podAffinity?.[AffinityCondition.preferred] ?? []),
-    ...(podAffinity?.[AffinityCondition.required] ?? []),
+    ...(podAffinity?.[AffinityCondition.Preferred] ?? []),
+    ...(podAffinity?.[AffinityCondition.Required] ?? []),
   ];
 };
 
