@@ -27,7 +27,9 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: npm audit
-        run: npm audit --omit=dev --audit-level=high
+        # Filters Console SDK-constrained packages (react-router, immutable).
+        # See ci/npm-audit.sh for the allowlist and rationale.
+        run: bash ci/npm-audit.sh
 
   linters:
     name: Run linters
