@@ -115,6 +115,12 @@ export const createEslintConfig = () =>
           {
             format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
             leadingUnderscore: 'allow',
+            modifiers: ['const'],
+            selector: 'variable',
+          },
+          {
+            format: ['camelCase', 'PascalCase'],
+            leadingUnderscore: 'allow',
             selector: 'variable',
           },
           {
