@@ -9,7 +9,7 @@ import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetai
 import { ProviderDetailsPage } from '../../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { createPlanTestData } from '../../../types/test-data';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
-import { V2_11_0 } from '../../../utils/version/constants';
+import { V5_0_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 const GUEST_OS_COLUMN = 'Guest OS';
@@ -21,9 +21,11 @@ const FOLDER_NAME = 'vm';
  * Verifies the Guest OS column feature (DEV: MTV-5503, PR #2457) across the three
  * surfaces where VMs are displayed: Provider VM tab, Plan details VM list, and
  * Plan wizard VM selection step.
+ *
+ * Gated at MTV 5.0.0+: Guest OS ships on main / 5.0 and is not on release-2.12.
  */
 providerTest.describe('Guest OS Column - Provider VM Tab', { tag: '@downstream' }, () => {
-  requireVersion(providerTest, V2_11_0);
+  requireVersion(providerTest, V5_0_0);
 
   providerTest(
     'should display Guest OS column with values, filtering, and sorting',
@@ -103,7 +105,7 @@ providerTest.describe('Guest OS Column - Provider VM Tab', { tag: '@downstream' 
 });
 
 customPlanTest.describe('Guest OS Column - Plan Details VM List', { tag: '@downstream' }, () => {
-  requireVersion(customPlanTest, V2_11_0);
+  requireVersion(customPlanTest, V5_0_0);
 
   customPlanTest(
     'should display Guest OS column and filter in plan spec VM list',
@@ -151,7 +153,7 @@ customPlanTest.describe('Guest OS Column - Plan Details VM List', { tag: '@downs
 });
 
 providerTest.describe('Guest OS Column - Plan Wizard VM Step', { tag: '@downstream' }, () => {
-  requireVersion(providerTest, V2_11_0);
+  requireVersion(providerTest, V5_0_0);
 
   providerTest(
     'should display Guest OS column in plan wizard VM selection step',
