@@ -123,11 +123,11 @@ export const ManageColumnsModal = ({
     onClose();
   };
 
-  type onChangeFactoryType = (
+  type OnChangeFactoryType = (
     id: string,
   ) => (checked: boolean, event: FormEvent<HTMLInputElement>) => void;
 
-  const onChangeFactory: onChangeFactoryType = (id) => (checked) => {
+  const onChangeFactory: OnChangeFactoryType = (id) => (checked) => {
     onSelect(id, checked);
   };
 

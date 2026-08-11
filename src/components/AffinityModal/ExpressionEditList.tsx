@@ -5,13 +5,13 @@ import { FormGroup, HelperText } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { isTermsInvalid } from './utils/isTermsInvalid';
-import type { useIDEntitiesValue } from './utils/types';
+import type { UseIDEntitiesValue } from './utils/types';
 import AffinityEditList from './AffinityEditList';
 import ErrorHelperText from './ErrorHelperText';
 
 type ExpressionEditListProps = {
   errorHelperText: ReactNode;
-  expressions: useIDEntitiesValue;
+  expressions: UseIDEntitiesValue;
   helperText: ReactNode;
   label: string;
 };

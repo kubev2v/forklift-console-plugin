@@ -128,42 +128,42 @@ export const rowsDataToAffinity = (affinityRows: AffinityRowData[]) => {
   const affinity = {} as K8sIoApiCoreV1Affinity;
 
   const nodeSelectorTermsRequired = pickRows(
-    AffinityType.node,
-    AffinityCondition.required,
+    AffinityType.Node,
+    AffinityCondition.Required,
     getRequiredNodeTermFromRowData,
   );
 
   const nodeSelectorTermsPreferred = pickRows(
-    AffinityType.node,
-    AffinityCondition.preferred,
+    AffinityType.Node,
+    AffinityCondition.Preferred,
     getPreferredNodeTermFromRowData,
     hasValidWeight,
   );
 
   const podAffinityTermsRequired = pickRows(
-    AffinityType.pod,
-    AffinityCondition.required,
+    AffinityType.Pod,
+    AffinityCondition.Required,
     getRequiredPodTermFromRowData,
     hasTopologyKey,
   );
 
   const podAffinityTermsPreferred = pickRows(
-    AffinityType.pod,
-    AffinityCondition.preferred,
+    AffinityType.Pod,
+    AffinityCondition.Preferred,
     getPreferredPodTermFromRowData,
     hasWeightAndTopologyKey,
   );
 
   const antiPodAffinityTermsRequired = pickRows(
-    AffinityType.podAnti,
-    AffinityCondition.required,
+    AffinityType.PodAnti,
+    AffinityCondition.Required,
     getRequiredPodTermFromRowData,
     hasTopologyKey,
   );
 
   const antiPodAffinityTermsPreferred = pickRows(
-    AffinityType.podAnti,
-    AffinityCondition.preferred,
+    AffinityType.PodAnti,
+    AffinityCondition.Preferred,
     getPreferredPodTermFromRowData,
     hasWeightAndTopologyKey,
   );

@@ -7,14 +7,14 @@ export type IDEntity = {
 };
 
 export enum AffinityType {
-  node = 'nodeAffinity',
-  pod = 'podAffinity',
-  podAnti = 'podAntiAffinity',
+  Node = 'nodeAffinity',
+  Pod = 'podAffinity',
+  PodAnti = 'podAntiAffinity',
 }
 
 export enum AffinityCondition {
-  preferred = 'preferredDuringSchedulingIgnoredDuringExecution',
-  required = 'requiredDuringSchedulingIgnoredDuringExecution',
+  Preferred = 'preferredDuringSchedulingIgnoredDuringExecution',
+  Required = 'requiredDuringSchedulingIgnoredDuringExecution',
 }
 
 export type AffinityLabel = IDEntity & {
@@ -33,7 +33,7 @@ export type AffinityRowData = {
   weight?: number;
 };
 
-export type useIDEntitiesValue = {
+export type UseIDEntitiesValue = {
   entities: AffinityLabel[];
   initialEntitiesChanged: boolean;
   onEntityAdd: (newEntity: AffinityLabel) => void;

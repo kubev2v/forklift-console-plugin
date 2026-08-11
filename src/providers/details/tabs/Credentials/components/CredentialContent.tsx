@@ -25,7 +25,7 @@ type CredentialsContentProps = {
 const CredentialsContent: FC<CredentialsContentProps> = ({ provider, reveal, secret }) => {
   const providerType = getType(provider) as (typeof PROVIDER_TYPES)[keyof typeof PROVIDER_TYPES];
   const sdkEndpoint =
-    (getSdkEndpoint(provider) as VSphereEndpointType) ?? VSphereEndpointType.vCenter;
+    (getSdkEndpoint(provider) as VSphereEndpointType) ?? VSphereEndpointType.VCenter;
 
   switch (providerType) {
     case PROVIDER_TYPES.ec2:

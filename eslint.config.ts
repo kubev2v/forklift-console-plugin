@@ -105,7 +105,66 @@ export const createEslintConfig = () =>
             classes: ['field', 'constructor', 'private-instance-method', 'public-instance-method'],
           },
         ],
-        '@typescript-eslint/naming-convention': 'off',
+        '@typescript-eslint/naming-convention': [
+          'error',
+          {
+            format: ['camelCase'],
+            leadingUnderscore: 'allow',
+            selector: 'default',
+          },
+          {
+            format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+            leadingUnderscore: 'allow',
+            modifiers: ['const'],
+            selector: 'variable',
+          },
+          {
+            format: ['camelCase', 'PascalCase'],
+            leadingUnderscore: 'allow',
+            selector: 'variable',
+          },
+          {
+            format: ['camelCase', 'PascalCase'],
+            selector: 'function',
+          },
+          {
+            // React components passed as parameters (HOCs / render props)
+            format: ['camelCase', 'PascalCase'],
+            leadingUnderscore: 'allow',
+            selector: 'parameter',
+          },
+          {
+            format: ['PascalCase', 'UPPER_CASE'],
+            selector: 'enum',
+          },
+          {
+            format: ['PascalCase', 'UPPER_CASE'],
+            selector: 'enumMember',
+          },
+          {
+            format: ['PascalCase'],
+            selector: 'typeLike',
+          },
+          {
+            // CRD / API field names (e.g. required_) must stay unrestricted
+            format: null,
+            selector: 'property',
+          },
+          {
+            // Jest mocks of React components (e.g. ForkliftTrans, ResourceLink)
+            format: ['camelCase', 'PascalCase'],
+            selector: 'objectLiteralMethod',
+          },
+          {
+            // React component props typed as methods on props types (e.g. FilterType)
+            format: ['camelCase', 'PascalCase'],
+            selector: 'typeMethod',
+          },
+          {
+            format: null,
+            selector: 'import',
+          },
+        ],
         // Deferred to MTV-6280 (useModal → useOverlay + other deprecated cleanups)
         '@typescript-eslint/no-deprecated': 'off',
         '@typescript-eslint/no-dynamic-delete': 'off',

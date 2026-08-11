@@ -32,7 +32,7 @@ export const getDefaultFormValues = (
     case PROVIDER_TYPES.vsphere:
       return {
         ...baseValues,
-        [ProviderFormFieldId.VsphereEndpointType]: sdkEndpoint ?? VSphereEndpointType.vCenter,
+        [ProviderFormFieldId.VsphereEndpointType]: sdkEndpoint ?? VSphereEndpointType.VCenter,
         [ProviderFormFieldId.VspherePassword]: getDecodedValue(secret?.data?.password) ?? '',
         [ProviderFormFieldId.VsphereUsername]: getDecodedValue(secret?.data?.user) ?? '',
       };

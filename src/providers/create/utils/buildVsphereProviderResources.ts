@@ -28,7 +28,7 @@ export const buildVsphereProviderResources = (formData: VsphereFormData): Provid
   const vddkInitImage = formData[ProviderFormFieldId.VsphereVddkInitImage];
   const useVddkAioOptimization = formData[ProviderFormFieldId.VsphereUseVddkAioOptimization];
   const endpointType =
-    formData[ProviderFormFieldId.VsphereEndpointType] ?? VSphereEndpointType.vCenter;
+    formData[ProviderFormFieldId.VsphereEndpointType] ?? VSphereEndpointType.VCenter;
 
   const skipCertValidation = certificateValidation === CertificateValidationMode.Skip;
   const url = vsphereUrl?.trim() ?? '';
