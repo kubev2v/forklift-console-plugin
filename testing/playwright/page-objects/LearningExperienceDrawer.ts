@@ -159,9 +159,18 @@ export class LearningExperienceDrawer {
     const count = await accordions.count();
     expect(count).toBeGreaterThanOrEqual(minimumCount);
 
-    const testCount = Math.min(3, count);
-    for (let i = 0; i < testCount; i += 1) {
-      const accordion = accordions.nth(i);
+    // Leaf steps (e.g. "Go to Providers") use m-non-expandable and no-op onToggle.
+    const expandableIndexes: number[] = [];
+    for (let i = 0; i < count; i += 1) {
+      const className = (await accordions.nth(i).getAttribute('class')) ?? '';
+      if (!className.includes('m-non-expandable')) {
+        expandableIndexes.push(i);
+      }
+    }
+
+    const testCount = Math.min(3, expandableIndexes.length);
+    for (let t = 0; t < testCount; t += 1) {
+      const accordion = accordions.nth(expandableIndexes[t]);
       const toggleButton = accordion.locator('button').first();
 
       await toggleButton.scrollIntoViewIfNeeded();
