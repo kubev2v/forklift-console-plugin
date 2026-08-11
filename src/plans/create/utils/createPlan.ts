@@ -31,6 +31,7 @@ export const createPlan = async ({
   targetPowerState,
   targetProject,
   targetProvider,
+  timezone,
   transferNetwork,
   vms,
 }: CreatePlanParams) => {
@@ -62,6 +63,7 @@ export const createPlan = async ({
       targetNamespace: targetProject,
       ...(transferNetwork && { transferNetwork }),
       targetPowerState,
+      ...(timezone && { timezone }),
       type: migrationType,
       vms: buildPlanSpecVms({
         instanceTypes,
