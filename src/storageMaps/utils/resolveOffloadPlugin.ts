@@ -11,7 +11,7 @@ type OffloadPluginBlock = {
  * Generated `@forklift-ui/types` require non-optional fields; runtime CR data and
  * our local custom types use optional strings.
  */
-export type ResolvableOffloadPlugin = {
+type ResolvableOffloadPlugin = {
   csiVolumeImport?: OffloadPluginBlock;
   vsphereXcopyConfig?: OffloadPluginBlock;
 };
