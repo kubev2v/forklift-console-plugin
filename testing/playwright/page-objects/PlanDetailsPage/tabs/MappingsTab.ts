@@ -169,6 +169,8 @@ export class MappingsTab {
       timeout: 15000,
     });
     await expect(this.storageMapEditButton).toBeVisible({ timeout: 10000 });
+    // Edit is disabled while the plan is Validating (isPlanEditable).
+    await expect(this.storageMapEditButton).toBeEnabled({ timeout: 180_000 });
     await this.storageMapEditButton.click();
     await this.storageMapEditModal.waitForModalToOpen();
     return this.storageMapEditModal;

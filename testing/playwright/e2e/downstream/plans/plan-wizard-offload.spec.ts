@@ -31,11 +31,16 @@ test.describe(
         storageMap: {
           name: `${planName}-storage-map`,
           isPreexisting: false,
+          mappings: [],
         },
+        // vsphere-8.0.3 inventory has no mtv-func-rhel9 (default); use a VM that exists here.
+        virtualMachines: [{ folder: 'vm', sourceName: 'mtv-tests-rhel8' }],
+        criticalIssuesAction: 'confirm',
       });
 
       const wizard = new CreatePlanWizardPage(page, resourceManager);
       const secretName = await createOffloadTestSecret(resourceManager);
+      let dedicatedHostId = '';
 
       await test.step('Navigate to Storage Map step', async () => {
         await wizard.navigate();
@@ -58,6 +63,8 @@ test.describe(
         await wizard.storageMap.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
         await wizard.storageMap.offload.selectStorageSecret(0, secretName);
         await wizard.storageMap.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
+        ({ hostId: dedicatedHostId } =
+          await wizard.storageMap.offload.selectFirstDedicatedMigrationHost(0));
       });
 
       await test.step('Proceed past Storage Map and skip to review', async () => {
@@ -71,6 +78,7 @@ test.describe(
         await expect(wizard.review.storageMapSection).toBeVisible();
 
         await wizard.review.verifyStorageMapOffloadDetails(0, {
+          dedicatedMigrationHost: dedicatedHostId,
           offloadPlugin: OffloadPlugins.VSPHERE_XCOPY,
           storageProduct: StorageProducts.NETAPP_ONTAP,
           storageSecret: secretName,

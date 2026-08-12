@@ -1,9 +1,12 @@
 import { expect } from '@playwright/test';
 
-import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
+import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { OffloadPlugins, StorageProducts } from '../../../types/test-data';
-import { createOffloadTestSecret } from '../../../utils/offload-helpers';
+import {
+  createOffloadTestSecret,
+  storageMapCrdSupportsDedicatedMigrationHosts,
+} from '../../../utils/offload-helpers';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
@@ -13,15 +16,27 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
   test('should display storage mappings and allow editing offload from plan Mappings tab', async ({
     page,
     resourceManager,
-    testPlan,
-    testProvider: _testProvider,
+    createCustomPlan,
   }) => {
-    if (!testPlan) {
-      throw new Error('testPlan is required');
-    }
+    test.setTimeout(300_000);
+
+    const crdSupportsDedicatedHosts = await storageMapCrdSupportsDedicatedMigrationHosts();
+
+    // vsphere-8.0.3 inventory has no mtv-func-rhel9 (default); use a VM that exists here.
+    await createCustomPlan({
+      additionalPlanSettings: { preserveStaticIPs: false },
+      criticalIssuesAction: 'confirm',
+      storageMap: {
+        isPreexisting: false,
+        mappings: [],
+        name: `offload-details-sm-${crypto.randomUUID().slice(0, 8)}`,
+      },
+      virtualMachines: [{ folder: 'vm', sourceName: 'mtv-tests-rhel8' }],
+    });
 
     const planDetailsPage = new PlanDetailsPage(page);
     const secretName = await createOffloadTestSecret(resourceManager);
+    let dedicatedHostName = '';
 
     await test.step('Navigate to Mappings tab', async () => {
       await planDetailsPage.mappingsTab.navigateToMappingsTab();
@@ -77,6 +92,8 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
       await modal.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
       await modal.offload.selectStorageSecret(0, secretName);
       await modal.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
+      ({ hostName: dedicatedHostName } = await modal.offload.selectFirstDedicatedMigrationHost(0));
+      await modal.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
 
       await modal.verifySaveButtonEnabled();
       await modal.save();
@@ -102,6 +119,12 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
 
       const productText = await modal.offload.getStorageProductText(0);
       expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
+
+      if (crdSupportsDedicatedHosts) {
+        await modal.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
+      } else {
+        await modal.offload.verifyDedicatedMigrationHostsVisible(0);
+      }
 
       await modal.cancel();
     });

@@ -269,6 +269,8 @@ export class ReviewStep {
   async verifyStorageMapOffloadDetails(
     mappingIndex: number,
     expectedOffload: {
+      /** Inventory host ID shown in review (form value), not the chip display name. */
+      dedicatedMigrationHost?: string;
       offloadPlugin?: string;
       storageProduct?: string;
       storageSecret?: string;
@@ -300,6 +302,14 @@ export class ReviewStep {
       await expect(this.page.getByTestId(`review-storage-product-${mappingIndex}`)).toContainText(
         expectedOffload.storageProduct,
       );
+    }
+
+    if (expectedOffload.dedicatedMigrationHost) {
+      const dedicatedHosts = this.page.getByTestId(
+        `review-dedicated-migration-hosts-${mappingIndex}`,
+      );
+      await expect(dedicatedHosts).toBeVisible();
+      await expect(dedicatedHosts).toContainText(expectedOffload.dedicatedMigrationHost);
     }
   }
 

@@ -195,7 +195,19 @@ const buildPlanTestData = (
   customPlanData?: Partial<ReturnType<typeof createPlanTestData>>,
 ): ReturnType<typeof createPlanTestData> => {
   const defaultPlanData = createPlanTestData({ sourceProvider: sourceProviderName });
-  return customPlanData ? { ...defaultPlanData, ...customPlanData } : defaultPlanData;
+  if (!customPlanData) {
+    return defaultPlanData;
+  }
+
+  // Deep-merge nested map/project objects so partial overrides (e.g. mappings: [])
+  // do not wipe required fields like storageMap.name.
+  return {
+    ...defaultPlanData,
+    ...customPlanData,
+    networkMap: { ...defaultPlanData.networkMap, ...customPlanData.networkMap },
+    storageMap: { ...defaultPlanData.storageMap, ...customPlanData.storageMap },
+    targetProject: { ...defaultPlanData.targetProject, ...customPlanData.targetProject },
+  };
 };
 
 const buildTestPlanResult = (testPlanData: ReturnType<typeof createPlanTestData>): TestPlan => ({
