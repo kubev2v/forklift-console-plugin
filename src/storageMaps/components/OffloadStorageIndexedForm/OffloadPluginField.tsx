@@ -39,12 +39,12 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
           <Stack hasGutter>
             <StackItem>
               {t(
-                'Enables hardware-assisted copying by instructing the vSphere ESXi host to transfer data directly on the storage backend using technologies like XCOPY and VAAI.',
+                'Offload plugins accelerate disk copy by using storage-array capabilities instead of pulling data through the source host.',
               )}
             </StackItem>
             <StackItem>
               {t(
-                'This significantly speeds up the migration process and frees up network and host resources by avoiding the need to pull data through the source host.',
+                'vSphere XCOPY uses ESXi/VAAI to copy on the backend. CSI Volume Import creates a PVC with vendor import annotations so the CSI driver clones the source volume.',
               )}
             </StackItem>
           </Stack>

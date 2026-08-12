@@ -44,6 +44,7 @@ export const storageMapFieldLabels: Partial<Record<StorageMapFieldId, ReturnType
 };
 
 export const offloadPluginLabels: Record<OffloadPlugin, ReturnType<typeof t>> = {
+  [OffloadPlugin.CsiVolumeImport]: t('CSI Volume Import'),
   [OffloadPlugin.VSphereXcopyConfig]: t('vSphere XCOPY'),
 };
 

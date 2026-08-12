@@ -1,4 +1,5 @@
 export enum OffloadPlugin {
+  CsiVolumeImport = 'csiVolumeImport',
   VSphereXcopyConfig = 'vsphereXcopyConfig',
 }
 

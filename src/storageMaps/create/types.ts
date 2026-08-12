@@ -11,6 +11,11 @@ export type CreateStorageMapFormData = FieldValues & {
   [StorageMapFieldId.TargetProvider]: V1beta1Provider | undefined;
 };
 
+type CsiVolumeImportConfig = {
+  secretRef: string;
+  storageVendorProduct: string;
+};
+
 type VSphereXcopyConfig = {
   dedicatedMigrationHosts?: string[];
   secretRef: string;
@@ -18,7 +23,8 @@ type VSphereXcopyConfig = {
 };
 
 export type OffloadPluginConfig = {
-  vsphereXcopyConfig: VSphereXcopyConfig;
+  csiVolumeImport?: CsiVolumeImportConfig;
+  vsphereXcopyConfig?: VSphereXcopyConfig;
 };
 
 export type CustomStorageMapSpecMap = Omit<V1beta1StorageMapSpecMap, 'offloadPlugin'> & {

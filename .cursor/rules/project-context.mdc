@@ -63,7 +63,7 @@ Maps source networks to target networks. Referenced by Plans.
 ### StorageMap
 Maps source storage to target storage. Referenced by Plans.
 
-- Supports offload plugins (e.g., vSphere XCOPY)
+- Supports offload plugins: `vsphereXcopyConfig` (vSphere XCOPY) and `csiVolumeImport` (CSI Volume Import; MTV-5483). Form ↔ CR transforms must round-trip the selected plugin key — never hardcode XCOPY.
 - Integrates with storage vendors (IBM FlashSystem, NetApp ONTAP, Dell PowerFlex/PowerMax/PowerStore, HPE Primera/3PAR, Pure Storage, Hitachi, Infinidat)
 
 ### Conversion

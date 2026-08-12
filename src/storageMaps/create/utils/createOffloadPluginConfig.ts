@@ -25,6 +25,15 @@ export const createOffloadPluginConfig = (
 
   const dedicatedMigrationHosts = mapping[StorageMapFieldId.DedicatedMigrationHosts];
 
+  if (offloadPlugin === OffloadPlugin.CsiVolumeImport) {
+    return {
+      csiVolumeImport: {
+        secretRef: storageSecret,
+        storageVendorProduct,
+      },
+    };
+  }
+
   if (offloadPlugin === OffloadPlugin.VSphereXcopyConfig) {
     return {
       vsphereXcopyConfig: {

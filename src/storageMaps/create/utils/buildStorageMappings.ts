@@ -1,5 +1,8 @@
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
-import { OffloadPlugin } from 'src/storageMaps/utils/types';
+import {
+  getOffloadConfigFields,
+  resolveOffloadPlugin,
+} from 'src/storageMaps/utils/resolveOffloadPlugin';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
 import type {
@@ -167,15 +170,15 @@ export const getStorageMappingValues = (
       name: destination.storageClass,
     };
 
+    const offloadFields = getOffloadConfigFields(offloadPlugin);
+
     return {
       [StorageMapFieldId.AccessMode]: destination.accessMode,
-      [StorageMapFieldId.DedicatedMigrationHosts]:
-        offloadPlugin?.vsphereXcopyConfig?.dedicatedMigrationHosts ?? [],
-      [StorageMapFieldId.OffloadPlugin]: offloadPlugin ? OffloadPlugin.VSphereXcopyConfig : '',
+      [StorageMapFieldId.DedicatedMigrationHosts]: offloadFields.dedicatedMigrationHosts,
+      [StorageMapFieldId.OffloadPlugin]: resolveOffloadPlugin(offloadPlugin),
       [StorageMapFieldId.SourceStorage]: sourceStorage,
-      [StorageMapFieldId.StorageProduct]:
-        offloadPlugin?.vsphereXcopyConfig?.storageVendorProduct ?? '',
-      [StorageMapFieldId.StorageSecret]: offloadPlugin?.vsphereXcopyConfig?.secretRef ?? '',
+      [StorageMapFieldId.StorageProduct]: offloadFields.storageProduct,
+      [StorageMapFieldId.StorageSecret]: offloadFields.storageSecret,
       [StorageMapFieldId.TargetStorage]: targetStorage,
     };
   });

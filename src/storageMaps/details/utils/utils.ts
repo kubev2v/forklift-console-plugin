@@ -1,5 +1,9 @@
+import { createOffloadPluginConfig } from 'src/storageMaps/create/utils/createOffloadPluginConfig';
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
-import { OffloadPlugin } from 'src/storageMaps/utils/types';
+import {
+  getOffloadConfigFields,
+  resolveOffloadPlugin,
+} from 'src/storageMaps/utils/resolveOffloadPlugin';
 import { validateOffloadFields } from 'src/storageMaps/utils/validateOffloadFields';
 
 import type { V1beta1StorageMap, V1beta1StorageMapSpecMap } from '@forklift-ui/types';
@@ -42,18 +46,12 @@ export const transformFormValuesToK8sSpec = (
         },
       };
 
-      // Add offload plugin data if all required fields are present
-      if (mapping.offloadPlugin && mapping.storageProduct && mapping.storageSecret) {
-        const { dedicatedMigrationHosts } = mapping;
+      const offloadPluginConfig = createOffloadPluginConfig(mapping);
+
+      if (offloadPluginConfig) {
         acc.push({
           ...baseMapping,
-          offloadPlugin: {
-            vsphereXcopyConfig: {
-              ...(!isEmpty(dedicatedMigrationHosts) && { dedicatedMigrationHosts }),
-              secretRef: mapping.storageSecret,
-              storageVendorProduct: mapping.storageProduct,
-            },
-          },
+          offloadPlugin: offloadPluginConfig,
         });
       } else {
         acc.push(baseMapping);
@@ -91,18 +89,18 @@ export const transformStorageMapToFormValues = (
       const displayName = sourceId
         ? (storageMap.status?.references?.find((ref) => ref.id === sourceId)?.name ?? sourceName)
         : sourceName;
+      const offloadFields = getOffloadConfigFields(mapping.offloadPlugin);
 
       return {
         accessMode: mapping.destination?.accessMode,
-        dedicatedMigrationHosts:
-          mapping.offloadPlugin?.vsphereXcopyConfig?.dedicatedMigrationHosts ?? [],
-        offloadPlugin: mapping.offloadPlugin ? OffloadPlugin.VSphereXcopyConfig : '',
+        dedicatedMigrationHosts: offloadFields.dedicatedMigrationHosts,
+        offloadPlugin: resolveOffloadPlugin(mapping.offloadPlugin),
         sourceStorage: {
           id: sourceId,
           name: displayName,
         },
-        storageProduct: mapping.offloadPlugin?.vsphereXcopyConfig?.storageVendorProduct ?? '',
-        storageSecret: mapping.offloadPlugin?.vsphereXcopyConfig?.secretRef ?? '',
+        storageProduct: offloadFields.storageProduct,
+        storageSecret: offloadFields.storageSecret,
         targetStorage: {
           name: mapping.destination?.storageClass ?? '',
         },
