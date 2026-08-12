@@ -32,10 +32,11 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
 
   const methods = useForm<ForkliftSettingsValues>({
     defaultValues: getDefaultValues(controller as EnhancedForkliftController),
+    mode: 'onChange',
   });
 
   const {
-    formState: { dirtyFields, isDirty },
+    formState: { dirtyFields, isDirty, isValid },
     handleSubmit,
   } = methods;
 
@@ -74,6 +75,17 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
   return (
     <FormProvider {...methods}>
       <ModalForm
+        additionalAction={{
+          children: t('Reset to defaults'),
+          onClick: () => {
+            reset(defaultValuesMap as ForkliftSettingsValues, {
+              keepDefaultValues: true,
+            });
+          },
+          variant: ButtonVariant.secondary,
+        }}
+        closeOverlay={closeOverlay}
+        isDisabled={!isDirty || !isValid}
         onConfirm={handleSubmit(onSubmit)}
         title={t('Edit settings')}
         closeModal={closeModal}
