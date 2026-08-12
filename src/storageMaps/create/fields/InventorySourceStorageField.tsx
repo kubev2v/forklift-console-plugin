@@ -8,11 +8,8 @@ import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import {
-  StorageMapFieldId,
-  type StorageMapping,
-  type StorageMappingValue,
-} from '@utils/storage/types';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 import type { CreateStorageMapFormData } from '../types';
 
@@ -53,7 +50,7 @@ const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
             placeholder={t('Select source storage')}
             ref={field.ref}
             testId={`source-storage-${fieldId}`}
-            value={(field.value as StorageMappingValue).name}
+            value={(field.value as MappingValue).name}
           >
             <SelectList>
               {isEmpty(sourceStorages) ? (
@@ -63,7 +60,7 @@ const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
               ) : (
                 sourceStorages.map((storage) => {
                   const storageLabel = getMapResourceLabel(storage);
-                  const storageValue: StorageMappingValue = {
+                  const storageValue: MappingValue = {
                     id: storage.id,
                     name: storageLabel,
                   };

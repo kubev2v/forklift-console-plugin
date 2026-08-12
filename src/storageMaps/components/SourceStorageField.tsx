@@ -5,15 +5,12 @@ import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import {
-  StorageMapFieldId,
-  type StorageMapping,
-  type StorageMappingValue,
-} from '@utils/storage/types';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 type SourceStorageFieldProps = {
   fieldId: string;
-  sourceStorages: StorageMappingValue[];
+  sourceStorages: MappingValue[];
   storageMappings: StorageMapping[];
 };
 
@@ -50,7 +47,7 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({
           placeholder={t('Select source storage')}
           ref={field.ref}
           testId={`source-storage-${fieldId}`}
-          value={(field.value as StorageMappingValue).name}
+          value={(field.value as MappingValue).name}
         >
           <SelectList>
             {isEmpty(sourceStorages) ? (

@@ -9,11 +9,8 @@ import type {
 } from '@forklift-ui/types';
 import { STORAGE_NAMES } from '@utils/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
-import {
-  StorageMapFieldId,
-  type StorageMapping,
-  type StorageMappingValue,
-} from '@utils/storage/types';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 import type { CustomStorageMapSpecMap, OffloadPluginConfig } from '../types';
 
@@ -123,7 +120,7 @@ const getSourceStorage = (
   source: V1beta1StorageMapSpecMapSource,
   sourceProvider: V1beta1Provider | undefined,
   sourceStorages: Map<string, InventoryStorage>,
-): StorageMappingValue => {
+): MappingValue => {
   const isOpenShiftProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
   const isEc2Provider = sourceProvider?.spec?.type === PROVIDER_TYPES.ec2;
   const isGlanceStorage = source.name === STORAGE_NAMES.GLANCE;
@@ -164,13 +161,9 @@ export const getStorageMappingValues = (
   return specMappings.map((specMapping) => {
     const { destination, offloadPlugin, source } = specMapping;
 
-    const sourceStorage: StorageMappingValue = getSourceStorage(
-      source,
-      sourceProvider,
-      sourceStorages,
-    );
+    const sourceStorage: MappingValue = getSourceStorage(source, sourceProvider, sourceStorages);
 
-    const targetStorage: StorageMappingValue = {
+    const targetStorage: MappingValue = {
       name: destination.storageClass,
     };
 

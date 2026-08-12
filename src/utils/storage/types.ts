@@ -21,9 +21,6 @@ export enum StorageClassAnnotation {
   NetAppShiftStorageClassType = 'shift.netapp.io/storage-class-type',
 }
 
-/** @deprecated Use MappingValue from @utils/types instead */
-export type StorageMappingValue = MappingValue;
-
 export type OVirtVMWithDisks = OVirtVM & {
   disks?: {
     id: string;
@@ -58,8 +55,8 @@ export type StorageMapping = {
   [StorageMapFieldId.AccessMode]?: AccessMode;
   [StorageMapFieldId.DedicatedMigrationHosts]?: string[];
   [StorageMapFieldId.OffloadPlugin]?: string;
-  [StorageMapFieldId.SourceStorage]: StorageMappingValue;
+  [StorageMapFieldId.SourceStorage]: MappingValue;
   [StorageMapFieldId.StorageProduct]?: string;
   [StorageMapFieldId.StorageSecret]?: string;
-  [StorageMapFieldId.TargetStorage]: StorageMappingValue;
+  [StorageMapFieldId.TargetStorage]: MappingValue;
 };
