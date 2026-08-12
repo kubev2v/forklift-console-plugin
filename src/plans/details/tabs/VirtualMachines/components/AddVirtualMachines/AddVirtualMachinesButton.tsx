@@ -2,7 +2,7 @@ import { type FC, useMemo } from 'react';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { ToolbarItem } from '@patternfly/react-core';
 
 import VMsActionButton from '../VMsActionButton';
@@ -12,10 +12,10 @@ import AddVirtualMachinesModal from './AddVirtualMachinesModal';
 
 const AddVirtualMachinesButton: FC<AddVirtualMachineProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const onClick = (): void => {
-    launcher<AddVirtualMachineProps>(AddVirtualMachinesModal, { plan });
+    launchOverlay<AddVirtualMachineProps>(AddVirtualMachinesModal, { plan });
   };
 
   const reason = useMemo((): string | null => {

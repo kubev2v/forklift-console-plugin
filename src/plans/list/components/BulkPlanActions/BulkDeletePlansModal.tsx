@@ -4,7 +4,7 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import ModalForm from '@components/ModalForm/ModalForm';
 import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sDelete } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import {
   Alert,
   AlertVariant,
@@ -31,7 +31,11 @@ export type BulkDeletePlansModalProps = {
   plans: V1beta1Plan[];
 };
 
-const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({ plans, ...rest }) => {
+const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
+  closeOverlay,
+  plans,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const [actionFailures, setActionFailures] = useState<BulkPlanActionFailure[]>([]);
 
@@ -61,6 +65,7 @@ const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({ plans
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       confirmLabel={t('Delete')}
       confirmVariant={ButtonVariant.danger}
       isDisabled={isEmpty(plans)}

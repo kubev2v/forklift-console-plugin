@@ -13,7 +13,7 @@ import { useCbtDisabledVms } from 'src/plans/details/hooks/useCbtDisabledVms';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Flex, FlexItem, Radio } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -28,7 +28,8 @@ const VISIBLE_TYPES: MigrationTypeValue[] = [
   MigrationTypeValue.Live,
 ];
 
-const EditPlanMigrationType: ModalComponent<EditPlanProps> = ({
+const EditPlanMigrationType: OverlayComponent<EditPlanProps> = ({
+  closeOverlay,
   isVddkInitImageNotSet,
   resource,
   sourceProvider,
@@ -55,6 +56,7 @@ const EditPlanMigrationType: ModalComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       description={t('Set the migration type for your migration plan.')}
       onConfirm={async () => onConfirmMigrationType({ newValue: selected, resource })}
       testId="edit-migration-type-modal"

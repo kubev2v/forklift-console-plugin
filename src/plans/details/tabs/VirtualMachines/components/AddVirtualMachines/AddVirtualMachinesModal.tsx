@@ -7,7 +7,7 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import { REPLACE } from '@components/ModalForm/utils/constants';
 import { PlanModel, type V1beta1PlanSpecVms } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ModalVariant } from '@patternfly/react-core';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
@@ -16,7 +16,11 @@ import { PROVIDER_TYPES } from '@utils/providers/constants';
 import AddVirtualMachinesTable from './components/AddVirtualMachinesTable';
 import type { AddVirtualMachineProps } from './utils/types';
 
-const AddVirtualMachinesModal: ModalComponent<AddVirtualMachineProps> = ({ plan, ...rest }) => {
+const AddVirtualMachinesModal: OverlayComponent<AddVirtualMachineProps> = ({
+  closeOverlay,
+  plan,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const { sourceProvider } = usePlanSourceProvider(plan);
   const selectedVmsRef = useRef<VmData[]>([]);
@@ -50,6 +54,7 @@ const AddVirtualMachinesModal: ModalComponent<AddVirtualMachineProps> = ({ plan,
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       confirmLabel={t('Add virtual machines')}
       isDisabled={!hasSelection}
       onConfirm={handleSave}

@@ -5,13 +5,14 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { PlanModel } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ButtonVariant } from '@patternfly/react-core';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 
 import type { DeleteVirtualMachineProps } from './utils/types';
 
-const PlanVMsDeleteModal: ModalComponent<DeleteVirtualMachineProps> = ({
+const PlanVMsDeleteModal: OverlayComponent<DeleteVirtualMachineProps> = ({
+  closeOverlay,
   plan,
   selectedIds,
   ...rest
@@ -33,6 +34,7 @@ const PlanVMsDeleteModal: ModalComponent<DeleteVirtualMachineProps> = ({
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       confirmLabel={t('Delete')}
       confirmVariant={ButtonVariant.danger}
       onConfirm={handleSave}

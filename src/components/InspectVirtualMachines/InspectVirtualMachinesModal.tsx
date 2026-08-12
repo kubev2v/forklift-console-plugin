@@ -4,7 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Alert, AlertVariant, ModalVariant } from '@patternfly/react-core';
 import { getNamespace, getUID, getVddkInitImage } from '@utils/crds/common/selectors';
 import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
@@ -26,7 +26,8 @@ export type InspectVirtualMachinesModalProps = {
   provider: V1beta1Provider;
 };
 
-const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalProps> = ({
+const InspectVirtualMachinesModal: OverlayComponent<InspectVirtualMachinesModalProps> = ({
+  closeOverlay,
   plan,
   provider,
   ...rest
@@ -116,6 +117,7 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
   return (
     <ModalForm
       className="forklift-inspect-vms-modal"
+      closeModal={closeOverlay}
       confirmLabel={confirmLabel}
       isDisabled={isSubmitDisabled}
       label={<TechPreviewLabel />}

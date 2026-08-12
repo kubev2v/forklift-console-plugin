@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Stack } from '@patternfly/react-core';
 import { getPlanTargetNamespace } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -15,7 +15,11 @@ import { onConfirmTargetNamespace } from './utils/utils';
 import LocalProviderNamespaceSelect from './LocalProviderNamespaceSelect';
 import RemoteProviderNamespaceSelect from './RemoteProviderNamespaceSelect';
 
-const EditPlanTargetNamespace: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
+const EditPlanTargetNamespace: OverlayComponent<EditPlanProps> = ({
+  closeOverlay,
+  resource,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const { destinationProvider } = usePlanDestinationProvider(resource);
   const [value, setValue] = useState<string>(getPlanTargetNamespace(resource) ?? '');
@@ -24,6 +28,7 @@ const EditPlanTargetNamespace: ModalComponent<EditPlanProps> = ({ resource, ...r
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       onConfirm={async () => onConfirmTargetNamespace({ newValue: value, resource })}
       title={t('Edit migration plan target project')}
       {...rest}
