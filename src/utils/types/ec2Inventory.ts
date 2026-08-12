@@ -9,26 +9,26 @@ import { PROVIDER_TYPES } from '@utils/providers/constants';
 export type Ec2Network = {
   id: string;
   name: string;
+  providerType: typeof PROVIDER_TYPES.ec2;
   revision: number;
   selfLink: string;
-  providerType: typeof PROVIDER_TYPES.ec2;
 };
 
 // EC2 storage items are static EBS volume types (gp2, gp3, io1, io2, st1, sc1, standard).
 export type Ec2Storage = {
   id: string;
   name: string;
+  providerType: typeof PROVIDER_TYPES.ec2;
   revision: number;
   selfLink: string;
-  providerType: typeof PROVIDER_TYPES.ec2;
 };
 
 // Shape of the EC2 VM `object` field relevant for network/storage extraction.
 // Full type: Ec2InstanceDetails in src/providers/details/tabs/VirtualMachines/utils/types/Ec2VM.ts
 export type Ec2VmObject = {
-  SubnetId?: string;
-  NetworkInterfaces?: { SubnetId?: string }[];
   BlockDeviceMappings?: { Ebs?: { VolumeType?: string } }[];
+  NetworkInterfaces?: { SubnetId?: string }[];
+  SubnetId?: string;
 };
 
 export type Ec2VmLike = ProviderVirtualMachine & { object?: Ec2VmObject };
@@ -41,6 +41,7 @@ export const isEc2Vm = (vm: ProviderVirtualMachine): vm is Ec2VmLike =>
  * Extracts subnet IDs from an EC2 VM.
  * Prefers NetworkInterfaces entries; falls back to top-level SubnetId
  * when interfaces are absent or contain no subnet IDs.
+ * @param vm
  */
 export const getEc2SubnetIds = (vm: Ec2VmLike): string[] => {
   const interfaces = vm.object?.NetworkInterfaces;

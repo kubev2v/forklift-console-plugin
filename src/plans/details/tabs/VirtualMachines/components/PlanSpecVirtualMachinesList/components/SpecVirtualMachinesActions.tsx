@@ -7,8 +7,8 @@ import SpecVirtualMachinesActionsDropdown from './SpecVirtualMachinesActionsDrop
 
 type SpecVirtualMachinesActionsProps = {
   plan: V1beta1Plan;
-  vmIndex: number;
   providerType?: ProviderType;
+  vmIndex: number;
 };
 
 const SpecVirtualMachinesActions: FC<SpecVirtualMachinesActionsProps> = ({
@@ -23,8 +23,8 @@ const SpecVirtualMachinesActions: FC<SpecVirtualMachinesActionsProps> = ({
       <FlexItem align={{ default: 'alignRight' }}>
         <SpecVirtualMachinesActionsDropdown
           plan={plan}
-          vmIndex={vmIndex}
           providerType={providerType}
+          vmIndex={vmIndex}
         />
       </FlexItem>
     </Flex>

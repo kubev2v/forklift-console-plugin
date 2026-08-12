@@ -5,6 +5,8 @@ import { StorageClassAnnotation, type TargetStorage } from '@utils/storage/types
 /**
  * Maps OpenShift StorageClasses to TargetStorage entries, ordered so that
  * KubeVirt virt-default classes come first, then k8s default, then others.
+ * @param availableTargetStorages
+ * @param targetProject
  */
 export const mapTargetStorages = (
   availableTargetStorages: OpenShiftStorageClass[] | undefined,

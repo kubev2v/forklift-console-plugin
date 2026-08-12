@@ -101,9 +101,9 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
           <ActionListItem>
             <Button
               data-testid="wizard-back-button"
-              variant={ButtonVariant.secondary}
-              onClick={goToPrevStep}
               isDisabled={isBackDisabled}
+              onClick={goToPrevStep}
+              variant={ButtonVariant.secondary}
             >
               {t('Back')}
             </Button>
@@ -112,10 +112,10 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
           <ActionListItem>
             <Button
               data-testid="wizard-next-button"
-              variant={ButtonVariant.primary}
-              onClick={onNextClick}
               isDisabled={isNextDisabled}
               isLoading={isSubmitting}
+              onClick={onNextClick}
+              variant={ButtonVariant.primary}
             >
               {nextButtonText ?? t('Next')}
             </Button>
@@ -125,8 +125,8 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
             <ActionListItem>
               <Button
                 data-testid="wizard-review-button"
-                variant={ButtonVariant.tertiary}
                 onClick={onSkipToReviewClick}
+                variant={ButtonVariant.tertiary}
               >
                 {t('Skip to review')}
               </Button>
@@ -138,8 +138,8 @@ const CreatePlanWizardFooter: FC<CreatePlanWizardFooterProps> = ({
           <ActionListItem>
             <Button
               data-testid="wizard-cancel-button"
-              variant={ButtonVariant.link}
               onClick={onCancel}
+              variant={ButtonVariant.link}
             >
               {t('Cancel')}
             </Button>

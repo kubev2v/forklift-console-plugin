@@ -38,26 +38,26 @@ const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
   );
 
   return (
-    <FormGroupWithErrorText isRequired fieldId={fieldId}>
+    <FormGroupWithErrorText fieldId={fieldId} isRequired>
       <Controller
-        name={fieldId}
         control={control}
+        name={fieldId}
         render={({ field }) => (
           <Select
-            ref={field.ref}
             id={fieldId}
-            testId={`source-storage-${fieldId}`}
             isDisabled={isSubmitting}
-            value={(field.value as StorageMappingValue).name}
             onSelect={async (_event, value) => {
               field.onChange(value);
               await trigger(StorageMapFieldId.StorageMap);
             }}
             placeholder={t('Select source storage')}
+            ref={field.ref}
+            testId={`source-storage-${fieldId}`}
+            value={(field.value as StorageMappingValue).name}
           >
             <SelectList>
               {isEmpty(sourceStorages) ? (
-                <SelectOption key="empty" isDisabled>
+                <SelectOption isDisabled key="empty">
                   {t('Select a source provider to list available source storages')}
                 </SelectOption>
               ) : (
@@ -70,13 +70,13 @@ const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
 
                   return (
                     <SelectOption
-                      key={storage.id}
-                      value={storageValue}
                       description={duplicateLabels.has(storageLabel) ? storage.id : undefined}
                       isDisabled={storageMappings?.some(
                         (mapping: StorageMapping) =>
                           mapping[StorageMapFieldId.SourceStorage].id === storage.id,
                       )}
+                      key={storage.id}
+                      value={storageValue}
                     >
                       {storageLabel}
                     </SelectOption>

@@ -19,8 +19,8 @@ export const ProviderCard: FC<ProviderCardProps> = ({ children, image, onClick }
     />
     <CardBody>
       <Flex
-        justifyContent={{ default: 'justifyContentCenter' }}
         alignItems={{ default: 'alignItemsCenter' }}
+        justifyContent={{ default: 'justifyContentCenter' }}
         spaceItems={{ default: 'spaceItemsSm' }}
       >
         <FlexItem>{image}</FlexItem>

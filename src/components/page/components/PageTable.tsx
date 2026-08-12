@@ -15,21 +15,21 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type PageTableProps<T> = {
-  dataOnScreen: T[];
-  loaded: boolean;
-  error: unknown;
-  sortedData: T[];
-  finalFilteredData: T[];
-  visibleColumns: ResourceField[];
-  namespace: string;
-  title?: string;
-  RowComponent: FC<RowProps<T>>;
-  header: FC<TableViewHeaderProps<T>>;
-  toId?: (item: T) => string;
-  expandedIds?: string[];
+  clearAllFilters: () => void;
   customNoResultsFound?: JSX.Element;
   customNoResultsMatchFilter?: JSX.Element;
-  clearAllFilters: () => void;
+  dataOnScreen: T[];
+  error: unknown;
+  expandedIds?: string[];
+  finalFilteredData: T[];
+  header: FC<TableViewHeaderProps<T>>;
+  loaded: boolean;
+  namespace: string;
+  RowComponent: FC<RowProps<T>>;
+  sortedData: T[];
+  title?: string;
+  toId?: (item: T) => string;
+  visibleColumns: ResourceField[];
 } & TableSortContextProps;
 
 export const PageTable = <T,>({
@@ -67,16 +67,16 @@ export const PageTable = <T,>({
 
   return (
     <TableView<T>
-      entities={dataOnScreen}
-      visibleColumns={visibleColumns}
-      aria-label={title ?? t('Page table')}
-      Row={RowComponent}
-      Header={header}
       activeSort={activeSort}
-      setActiveSort={setActiveSort}
+      aria-label={title ?? t('Page table')}
       currentNamespace={namespace}
-      toId={toId}
+      entities={dataOnScreen}
       expandedIds={expandedIds}
+      Header={header}
+      Row={RowComponent}
+      setActiveSort={setActiveSort}
+      toId={toId}
+      visibleColumns={visibleColumns}
     >
       {!loaded && <Loading key="loading" title={t('Loading')} />}
 
@@ -90,13 +90,13 @@ export const PageTable = <T,>({
       {noMatchingResults &&
         (customNoResultsMatchFilter ?? (
           <NoResultsMatchFilter
-            key="no_match"
             clearAllFilters={clearAllFilters}
-            title={t('No results found')}
+            clearAllLabel={t('Clear all filters')}
             description={t(
               'No results match the filter criteria. Clear all filters and try again.',
             )}
-            clearAllLabel={t('Clear all filters')}
+            key="no_match"
+            title={t('No results found')}
           />
         ))}
     </TableView>

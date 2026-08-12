@@ -2,8 +2,8 @@ import { t } from '@utils/i18n';
 
 type MappingPageMessageProps = {
   loadingResources: boolean;
-  resourcesError?: Error | null;
   networkMapsEmpty: boolean;
+  resourcesError?: Error | null;
   storageMapsEmpty: boolean;
 };
 

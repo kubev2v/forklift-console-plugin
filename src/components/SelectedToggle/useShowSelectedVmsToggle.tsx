@@ -6,8 +6,8 @@ import { createShowAllStore, type ShowAllStore } from '@components/SelectedToggl
 import { isEmpty } from '@utils/helpers';
 
 type UseShowSelectedVmsToggleResult<T> = {
-  showSelectedOnly: boolean;
   GlobalActionToolbarItems: FC<GlobalActionToolbarProps<T>>[] | undefined;
+  showSelectedOnly: boolean;
 };
 
 const useShowSelectedVmsToggle = <T = unknown,>(

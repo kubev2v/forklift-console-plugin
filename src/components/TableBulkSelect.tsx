@@ -6,11 +6,11 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type TableBulkSelectProps = {
-  selectedIds: string[];
+  canPageSelect?: boolean;
+  dataIds: string[];
   onSelect: (selectedIds: string[]) => void;
   pageDataIds: string[];
-  dataIds: string[];
-  canPageSelect?: boolean;
+  selectedIds: string[];
 };
 
 const TOGGLE_CHECKBOX_ID = 'bulk-select-toggle-checkbox';
@@ -51,10 +51,10 @@ const TableBulkSelect: FC<TableBulkSelectProps> = ({
     <div className="pf-v6-u-text-nowrap">
       <BulkSelect
         canSelectAll
-        selectedCount={selectedIds.length}
-        pageCount={pageDataIds.length}
-        totalCount={dataIds.length}
         onSelect={onBulkSelect}
+        pageCount={pageDataIds.length}
+        selectedCount={selectedIds.length}
+        totalCount={dataIds.length}
         {...(!isEmpty(pageDataIds) && {
           pagePartiallySelected,
           pageSelected,
@@ -74,9 +74,9 @@ const TableBulkSelect: FC<TableBulkSelectProps> = ({
 
   return (
     <Popover
-      triggerAction="hover"
-      enableFlip
       bodyContent={t('Expand folders to show VMs on the current page, then you can select them.')}
+      enableFlip
+      triggerAction="hover"
     >
       {bulkSelect}
     </Popover>

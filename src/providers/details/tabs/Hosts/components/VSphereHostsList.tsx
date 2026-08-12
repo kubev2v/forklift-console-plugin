@@ -75,12 +75,12 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
   return (
     <StandardPageWithSelection<InventoryHostNetworkTriple>
       {...canPatchProps}
+      cell={VSphereHostsCells}
       dataSource={[hostsData || [], loaded, loadError]}
       fieldsMetadata={hostsFields}
       namespace={namespace}
       title={t('ESXi hosts')}
       userSettings={userSettings}
-      cell={VSphereHostsCells}
     />
   );
 };

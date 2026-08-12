@@ -19,16 +19,16 @@ const OpenstackInventorySection: FC<InventorySectionProps> = ({ data }) => {
 
   return (
     <DescriptionList
-      isHorizontal
-      horizontalTermWidthModifier={{ default: '15ch' }}
       columnModifier={{ default: '2Col' }}
+      horizontalTermWidthModifier={{ default: '15ch' }}
+      isHorizontal
     >
-      <NetworkCountDetailsItem resource={provider} inventory={inventory} />
-      <VolumeCountDetailsItem resource={provider} inventory={inventory} />
-      <VolumeTypeCountDetailsItem resource={provider} inventory={inventory} />
-      <VmCountDetailsItem resource={provider} inventory={inventory} />
-      <ProjectCountDetailsItem resource={provider} inventory={inventory} />
-      <RegionCountDetailsItem resource={provider} inventory={inventory} />
+      <NetworkCountDetailsItem inventory={inventory} resource={provider} />
+      <VolumeCountDetailsItem inventory={inventory} resource={provider} />
+      <VolumeTypeCountDetailsItem inventory={inventory} resource={provider} />
+      <VmCountDetailsItem inventory={inventory} resource={provider} />
+      <ProjectCountDetailsItem inventory={inventory} resource={provider} />
+      <RegionCountDetailsItem inventory={inventory} resource={provider} />
     </DescriptionList>
   );
 };

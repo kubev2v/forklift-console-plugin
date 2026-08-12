@@ -16,12 +16,12 @@ const NameDetailsItem: FC<ResourceDetailsItemProps> = ({ helpContent, moreInfoLi
 
   return (
     <DetailsItem
+      content={getName(resource)}
+      crumbs={['metadata', 'name']}
+      helpContent={helpContent ?? defaultHelpContent}
+      moreInfoLink={moreInfoLink ?? MORE_INFO_NAME_DETAIL_ITEM}
       testId="name-detail-item"
       title={t('Name')}
-      content={getName(resource)}
-      moreInfoLink={moreInfoLink ?? MORE_INFO_NAME_DETAIL_ITEM}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['metadata', 'name']}
     />
   );
 };

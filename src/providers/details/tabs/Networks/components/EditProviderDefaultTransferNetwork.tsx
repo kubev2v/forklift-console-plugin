@@ -12,8 +12,8 @@ import { onConfirmProviderDefaultTransferNetwork } from './utils/onConfirmProvid
 import ProviderDefaultTransferNetworkDropdown from './ProviderDefaultTransferNetworkDropdown';
 
 export type EditProviderDefaultTransferNetworkProps = {
-  resource: V1beta1Provider;
   defaultNetworkName: string | undefined;
+  resource: V1beta1Provider;
 };
 
 const EditProviderDefaultTransferNetwork: ModalComponent<
@@ -29,8 +29,8 @@ const EditProviderDefaultTransferNetwork: ModalComponent<
 
   return (
     <ModalForm
-      title={t('Set default Transfer Network')}
       onConfirm={async () => onConfirmProviderDefaultTransferNetwork({ resource, value })}
+      title={t('Set default Transfer Network')}
       {...rest}
     >
       <Stack hasGutter>
@@ -40,13 +40,13 @@ const EditProviderDefaultTransferNetwork: ModalComponent<
         the default migration network is the pod network, which might not be optimal for disk transfer.`,
         )}
         <FormGroupWithHelpText
-          label={t('Default transfer Network')}
           helperText={t('Please choose a NetworkAttachmentDefinition for default data transfer.')}
+          label={t('Default transfer Network')}
         >
           <ProviderDefaultTransferNetworkDropdown
+            onChange={setValue}
             provider={resource}
             value={value}
-            onChange={setValue}
           />
         </FormGroupWithHelpText>
       </Stack>

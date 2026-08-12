@@ -16,10 +16,10 @@ const LocalProviderNamespaceSelect: FC<TargetNamespaceSelectInputProps> = ({ onC
 
   return (
     <TargetNamespaceSelect
+      errorMessage={loadError?.message}
+      onChange={onChange}
       projectNames={projectNames}
       value={value}
-      onChange={onChange}
-      errorMessage={loadError?.message}
     />
   );
 };

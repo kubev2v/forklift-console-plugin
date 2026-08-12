@@ -17,27 +17,27 @@ import { useMultiTypeaheadSelect } from './hooks/useMultiTypeaheadSelect';
 import MultiTypeaheadMenuToggle from './MultiTypeaheadMenuToggle';
 
 type MultiTypeaheadSelectProps = {
-  options: TypeaheadSelectOption[];
-  values?: (string | number)[];
+  allowClear?: boolean;
+  createOptionMessage?: string | ((value: string) => string);
+  emptyState?: ReactNode;
+  filterControls?: ReactNode;
+  footer?: ReactNode;
+
+  isCreatable?: boolean;
+  isDisabled?: boolean;
+  listboxId?: string;
+  maxSelections?: number;
+  noOptionsMessage?: string;
+  noResultsMessage?: string | ((filter: string) => string);
   onChange: (values: (string | number)[]) => void;
   onCreateOption?: (createdValue: string) => void;
   onInputChange?: (inputValue: string) => void;
-
-  allowClear?: boolean;
+  options: TypeaheadSelectOption[];
   placeholder?: string;
-  isCreatable?: boolean;
-  createOptionMessage?: string | ((value: string) => string);
-  noOptionsMessage?: string;
-  emptyState?: ReactNode;
-  noResultsMessage?: string | ((filter: string) => string);
-  footer?: ReactNode;
-  isDisabled?: boolean;
-  toggleWidth?: string;
-  toggleProps?: Omit<MenuToggleProps, 'innerRef' | 'onClick' | 'isExpanded' | 'variant'>;
-  filterControls?: ReactNode;
-  maxSelections?: number;
   testId?: string;
-  listboxId?: string;
+  toggleProps?: Omit<MenuToggleProps, 'innerRef' | 'onClick' | 'isExpanded' | 'variant'>;
+  toggleWidth?: string;
+  values?: (string | number)[];
 } & Omit<SelectProps, 'toggle' | 'onSelect' | 'selected' | 'isOpen'>;
 
 const MultiTypeaheadSelect = (
@@ -105,37 +105,37 @@ const MultiTypeaheadSelect = (
     <PfSelect
       id="multi-create-typeahead-select"
       isOpen={isOpen}
-      selected={values}
+      onOpenChange={onOpenChange}
       onSelect={(_event, selection: string | number | undefined) => {
         handleSelect(selection);
       }}
-      onOpenChange={onOpenChange}
+      selected={values}
+      shouldFocusFirstItemOnOpen={false}
       toggle={(toggleRef) => (
         <MultiTypeaheadMenuToggle
-          toggleRef={toggleRef}
-          inputRef={inputRef}
-          placeholder={placeholder}
-          isDisabled={isDisabled}
-          isOpen={isOpen}
-          toggleWidth={toggleWidth}
+          activeItemId={activeItemId}
           allowClear={allowClear}
-          selectedOptions={selectedOptions}
-          isFiltering={isFiltering}
+          inputRef={inputRef}
           inputValue={inputValue}
-          onInputChange={onInputChange}
-          onClearAll={onClearAll}
-          onToggleClick={onToggleClick}
-          onInputValueChange={onInputValueChange}
+          isDisabled={isDisabled}
+          isFiltering={isFiltering}
+          isOpen={isOpen}
+          listboxId={listboxIdResolved}
           onChipRemove={onChipRemove}
-          toggleProps={toggleProps}
-          testId={testId}
+          onClearAll={onClearAll}
+          onInputChange={onInputChange}
           onInputClick={onInputClick}
           onInputKeyDown={onInputKeyDown}
-          activeItemId={activeItemId}
-          listboxId={listboxIdResolved}
+          onInputValueChange={onInputValueChange}
+          onToggleClick={onToggleClick}
+          placeholder={placeholder}
+          selectedOptions={selectedOptions}
+          testId={testId}
+          toggleProps={toggleProps}
+          toggleRef={toggleRef}
+          toggleWidth={toggleWidth}
         />
       )}
-      shouldFocusFirstItemOnOpen={false}
       {...selectProps}
     >
       {isEmpty(options) && emptyState ? (
@@ -148,11 +148,11 @@ const MultiTypeaheadSelect = (
               const { testId: optionTestId, ...restOptionProps } = option.optionProps ?? {};
               return (
                 <SelectOption
-                  key={String(option.value)}
+                  data-testid={optionTestId}
                   id={String(option.value)} // optional: createItemId if you want stable IDs
                   isFocused={focusedItemIndex === index}
+                  key={String(option.value)}
                   value={option.value}
-                  data-testid={optionTestId}
                   {...restOptionProps}
                 >
                   {option.content}

@@ -34,10 +34,10 @@ declare global {
 }
 
 export type LabelsModalProps = {
-  initialLabels?: Record<string, string>;
   description?: ReactNode;
-  title?: string;
+  initialLabels?: Record<string, string>;
   onConfirm: (labels: Record<string, string | null>) => Promise<K8sResourceCommon>;
+  title?: string;
 };
 
 const LabelsModal: ModalComponent<LabelsModalProps> = ({
@@ -110,9 +110,9 @@ const LabelsModal: ModalComponent<LabelsModalProps> = ({
 
   return (
     <ModalForm
+      onConfirm={async () => onConfirm(labelsArrayToObject(labels))}
       testId="labels-modal"
       title={title ?? t('Edit labels')}
-      onConfirm={async () => onConfirm(labelsArrayToObject(labels))}
       {...rest}
     >
       <Stack hasGutter>
@@ -122,11 +122,11 @@ const LabelsModal: ModalComponent<LabelsModalProps> = ({
             <tags-input>
               <TagsInput
                 addKeys={addKeys}
-                removeKeys={removeKeys}
                 addOnBlur
                 className="tags"
                 inputProps={inputProps}
                 onChange={handleLabelsChange}
+                removeKeys={removeKeys}
                 renderTag={renderTag}
                 value={labels}
               />

@@ -3,16 +3,16 @@ import type { createCancellableDebounce } from '@utils/debounce';
 import { defaultDebounceMs } from './constants';
 
 type MockScrollableElement = {
-  scrollTop: number;
   addEventListener: jest.Mock;
   removeEventListener: jest.Mock;
+  scrollTop: number;
 };
 
 type HookOptions = {
-  savedPosition: number;
-  onPositionChange: (position: number) => void;
-  isActive?: boolean;
   debounceMs?: number;
+  isActive?: boolean;
+  onPositionChange: (position: number) => void;
+  savedPosition: number;
 };
 
 export const createMockScrollableElement = (initialScrollTop = 0): MockScrollableElement => ({

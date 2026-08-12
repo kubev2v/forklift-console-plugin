@@ -44,10 +44,10 @@ const PlanStartMigrationModal: ModalComponent<PlanStartMigrationModalProps> = ({
 
   return (
     <ModalForm
-      title={t('{{title}} migration', { title })}
-      onConfirm={onStart}
       confirmLabel={t('{{title}}', { title })}
       isDisabled={!canPlanStart(plan) || Boolean(isMigrationStarted)}
+      onConfirm={onStart}
+      title={t('{{title}} migration', { title })}
       {...rest}
     >
       <Stack hasGutter>

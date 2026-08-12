@@ -60,9 +60,9 @@ const OffloadStorageRow: FC<OffloadStorageRowProps> = ({
 
   return (
     <OffloadStorageIndexedForm
+      datastoreVendor={datastoreVendor}
       index={index}
       sourceProvider={sourceProvider}
-      datastoreVendor={datastoreVendor}
       targetProvisioner={matchedTarget?.provisioner}
     />
   );

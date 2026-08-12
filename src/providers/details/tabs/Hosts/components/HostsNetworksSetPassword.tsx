@@ -35,25 +35,25 @@ const HostsNetworksSetPassword: FC<HostsNetworksSetPasswordProps> = ({ password,
 
   return (
     <FormGroupWithHelpText
-      label={t('ESXi host admin password')}
-      isRequired
       fieldId="password"
       helperText={t('The password for the ESXi host admin')}
       helperTextInvalid={t('Invalid password')}
+      isRequired
+      label={t('ESXi host admin password')}
       validated={passwordValidation}
     >
       <InputGroup>
         <TextInput
-          spellCheck="false"
+          aria-label="Password input"
           className="forklift-host-modal-input-secret"
           isRequired
-          type={passwordHidden ? 'password' : 'text'}
-          aria-label="Password input"
-          value={password}
           onChange={onChangePassword}
+          spellCheck="false"
+          type={passwordHidden ? 'password' : 'text'}
           validated={passwordValidation}
+          value={password}
         />
-        <Button variant={ButtonVariant.control} onClick={togglePasswordHidden}>
+        <Button onClick={togglePasswordHidden} variant={ButtonVariant.control}>
           {passwordHidden ? <EyeIcon /> : <EyeSlashIcon />}
         </Button>
       </InputGroup>

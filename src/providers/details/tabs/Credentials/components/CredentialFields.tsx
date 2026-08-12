@@ -10,8 +10,8 @@ import CredentialContentField from './CredentialFieldContent';
 
 type CredentialFieldsProps = {
   fields: Fields;
-  secret: IoK8sApiCoreV1Secret;
   reveal: boolean;
+  secret: IoK8sApiCoreV1Secret;
 };
 
 const CredentialFields: FC<CredentialFieldsProps> = ({ fields, reveal, secret }) => (
@@ -21,18 +21,18 @@ const CredentialFields: FC<CredentialFieldsProps> = ({ fields, reveal, secret })
 
       return (
         <DetailsItem
-          key={key}
-          testId={`credential-${key}`}
-          title={field.label}
-          helpContent={field.helperTextPopover}
-          showHelpIconNextToTitle={Boolean(field.helperTextPopover)}
           content={
             <CredentialContentField
-              value={value}
               fieldKey={key as SecretFieldsId}
               reveal={reveal}
+              value={value}
             />
           }
+          helpContent={field.helperTextPopover}
+          key={key}
+          showHelpIconNextToTitle={Boolean(field.helperTextPopover)}
+          testId={`credential-${key}`}
+          title={field.label}
         />
       );
     })}

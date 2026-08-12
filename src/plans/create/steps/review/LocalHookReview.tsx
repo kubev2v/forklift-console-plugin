@@ -30,7 +30,7 @@ const LocalHookReview: FC<LocalHookReviewProps> = ({ hookFieldId, hookLabel, tes
   const hookData = useWatch({ control, name: hookFieldId });
 
   return (
-    <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+    <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
       <Title headingLevel="h4">{hookLabel}</Title>
 
       {hookData[MigrationHookFieldId.EnableHook] ? (

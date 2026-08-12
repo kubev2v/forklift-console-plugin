@@ -15,10 +15,10 @@ import LabelsList from './LabelList';
 import LabelRow from './LabelRow';
 
 export type NodeSelectorModalProps = {
-  onConfirm: (labels: Record<string, string | null>) => Promise<K8sResourceCommon>;
-  title?: string;
   description?: ReactNode;
   initialLabels?: Record<string, string>;
+  onConfirm: (labels: Record<string, string | null>) => Promise<K8sResourceCommon>;
+  title?: string;
 };
 
 const NodeSelectorModal: ModalComponent<NodeSelectorModalProps> = ({
@@ -58,10 +58,10 @@ const NodeSelectorModal: ModalComponent<NodeSelectorModalProps> = ({
 
   return (
     <ModalForm
+      isDisabled={isNotValid}
+      onConfirm={async () => onConfirm(labelsArrayToObject(labels))}
       testId="node-selector-modal"
       title={title ?? t('Edit node selectors')}
-      onConfirm={async () => onConfirm(labelsArrayToObject(labels))}
-      isDisabled={isNotValid}
       {...rest}
     >
       <Form>
@@ -73,11 +73,11 @@ const NodeSelectorModal: ModalComponent<NodeSelectorModalProps> = ({
               <>
                 {labels.map((label, index) => (
                   <LabelRow
+                    isLabelsVisible={index === 0}
                     key={label.id}
                     label={label}
                     onChange={onLabelChange}
                     onDelete={onLabelDelete}
-                    isLabelsVisible={index === 0}
                   />
                 ))}
               </>

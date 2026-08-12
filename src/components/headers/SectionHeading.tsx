@@ -3,12 +3,12 @@ import type { FC, ReactNode } from 'react';
 import { Title, type TitleProps } from '@patternfly/react-core';
 
 export type SectionHeadingProps = {
-  text: ReactNode;
+  children?: ReactNode;
   className?: string;
+  headingLevel?: TitleProps['headingLevel'];
   id?: string;
   testId?: string;
-  children?: ReactNode;
-  headingLevel?: TitleProps['headingLevel'];
+  text: ReactNode;
 };
 
 /**
@@ -25,7 +25,7 @@ const SectionHeading: FC<SectionHeadingProps> = ({
   testId,
   text,
 }) => (
-  <Title headingLevel={headingLevel} className={className} data-testid={testId} id={id}>
+  <Title className={className} data-testid={testId} headingLevel={headingLevel} id={id}>
     {text}
     {children}
   </Title>

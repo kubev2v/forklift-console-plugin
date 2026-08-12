@@ -10,11 +10,11 @@ export const createStatusCell = <
   T extends Record<string, object | string | ((resourceData: unknown) => unknown)>,
 >(
   ErrorCell: FC<{
+    children: ReactNode;
     data: T;
     fieldId: string;
     fields: ResourceField[];
     phaseLabel: string;
-    children: ReactNode;
   }>,
 ): React.FC<{ data: T; fieldId: string; fields: ResourceField[] }> => {
   return ({ data, fieldId, fields }) => {

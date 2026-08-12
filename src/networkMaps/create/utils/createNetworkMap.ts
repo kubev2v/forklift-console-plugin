@@ -7,10 +7,10 @@ import { buildNetworkMappings } from './buildNetworkMappings';
 
 type CreateNetworkMapParams = {
   mappings: NetworkMapping[];
+  name?: string;
   project: string;
   sourceProvider: V1beta1Provider | undefined;
   targetProvider: V1beta1Provider | undefined;
-  name?: string;
   trackEvent?: (eventType: string, properties?: Record<string, unknown>) => void;
 };
 

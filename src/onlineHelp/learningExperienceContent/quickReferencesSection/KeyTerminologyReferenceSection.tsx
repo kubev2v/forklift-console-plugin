@@ -13,7 +13,7 @@ const KeyTerminologyReferenceSection: FC = () => {
   const { t } = useForkliftTranslation();
 
   return (
-    <ReferenceSection id="key-terminology" icon={<CatalogIcon />} title={t('Key terminology')}>
+    <ReferenceSection icon={<CatalogIcon />} id="key-terminology" title={t('Key terminology')}>
       <Flex
         className="pf-v6-u-ml-md"
         direction={{ default: 'column' }}
@@ -21,7 +21,7 @@ const KeyTerminologyReferenceSection: FC = () => {
       >
         {keyTerminologyItems.map((item) => (
           <FlexItem key={item.title}>
-            <HelpTitleDescription title={item.title} description={item.description} />
+            <HelpTitleDescription description={item.description} title={item.title} />
           </FlexItem>
         ))}
       </Flex>

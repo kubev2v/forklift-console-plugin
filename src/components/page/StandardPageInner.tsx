@@ -126,7 +126,7 @@ const StandardPageInner = <T,>({
   const renderedGlobalActions = useMemo(
     () =>
       GlobalActionToolbarItems.map((Action, index) => (
-        <Action key={`${Action.name}-${index}`} dataOnScreen={dataOnScreen} />
+        <Action dataOnScreen={dataOnScreen} key={`${Action.name}-${index}`} />
       )),
     [GlobalActionToolbarItems, dataOnScreen],
   );
@@ -134,68 +134,68 @@ const StandardPageInner = <T,>({
   return (
     <span className={className} data-testid={testId}>
       <PageHeader
-        title={title}
-        titleHelpContent={titleHelpContent}
         actionButton={addButton}
         shouldShowLearningExperienceButton={shouldShowLearningExperienceButton}
+        title={title}
+        titleHelpContent={titleHelpContent}
       />
 
       {alerts && <PageSection hasBodyWrapper={false}>{alerts}</PageSection>}
 
       <PageContent
+        itemsPerPage={itemsPerPage}
+        noPadding={noPadding}
+        onPerPageSelect={onPerPageSelect}
+        onSetPage={onSetPage}
+        page={page}
+        showPagination={showPagination}
         toolbar={
           <PageToolbar
-            fields={fields}
-            flatData={flatData}
-            sortedData={sortedData}
-            selectedFilters={selectedFilters}
-            setSelectedFilters={setSelectedFilters}
-            supportedFilters={supportedFilters}
             clearAllFilters={clearAllFilters}
-            fieldsMetadata={fieldsMetadata}
+            dataIds={dataIds}
             defaultFieldsWithoutFilters={defaultFieldsWithoutFilters}
+            fields={fields}
+            fieldsMetadata={fieldsMetadata}
+            flatData={flatData}
+            itemsPerPage={itemsPerPage}
+            onPerPageSelect={onPerPageSelect}
+            onSelect={onSelect}
+            onSetPage={onSetPage}
+            page={page}
+            pageDataIds={pageDataIds}
+            renderedGlobalActions={renderedGlobalActions}
+            selectedFilters={selectedFilters}
+            selectedIds={selectedIds}
             setFields={setFields}
+            setSelectedFilters={setSelectedFilters}
             showManageColumns={showManageColumns}
             showPagination={showPagination}
-            page={page}
-            itemsPerPage={itemsPerPage}
+            sortedData={sortedData}
+            supportedFilters={supportedFilters}
             totalItems={finalFilteredData.length}
-            onSetPage={onSetPage}
-            onPerPageSelect={onPerPageSelect}
-            selectedIds={selectedIds}
-            dataIds={dataIds}
-            pageDataIds={pageDataIds}
-            onSelect={onSelect}
-            renderedGlobalActions={renderedGlobalActions}
           />
         }
-        showPagination={showPagination}
-        page={page}
-        itemsPerPage={itemsPerPage}
         totalItems={finalFilteredData.length}
-        onSetPage={onSetPage}
-        onPerPageSelect={onPerPageSelect}
-        noPadding={noPadding}
       >
         <PageTable
-          dataOnScreen={dataOnScreen}
-          loaded={loaded}
-          error={error}
-          sortedData={sortedData}
-          finalFilteredData={finalFilteredData}
-          visibleColumns={visibleColumns}
-          namespace={namespace}
-          title={title}
-          RowComponent={RowComponent}
-          header={header}
-          toId={toId}
-          expandedIds={expandedIds}
+          activeSort={activeSort}
+          clearAllFilters={clearAllFilters}
+          compareFn={compareFn}
           customNoResultsFound={customNoResultsFound}
           customNoResultsMatchFilter={customNoResultsMatchFilter}
-          clearAllFilters={clearAllFilters}
-          activeSort={activeSort}
+          dataOnScreen={dataOnScreen}
+          error={error}
+          expandedIds={expandedIds}
+          finalFilteredData={finalFilteredData}
+          header={header}
+          loaded={loaded}
+          namespace={namespace}
+          RowComponent={RowComponent}
           setActiveSort={setActiveSort}
-          compareFn={compareFn}
+          sortedData={sortedData}
+          title={title}
+          toId={toId}
+          visibleColumns={visibleColumns}
         />
       </PageContent>
     </span>

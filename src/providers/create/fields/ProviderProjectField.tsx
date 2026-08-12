@@ -44,8 +44,8 @@ const ProviderProjectField: FC = () => {
 
   return (
     <FormGroupWithErrorText
-      isRequired
       fieldId={ProviderFormFieldId.ProviderProject}
+      isRequired
       label={providerFormFieldLabels[ProviderFormFieldId.ProviderProject]}
       labelHelp={
         <HelpIconPopover>
@@ -63,24 +63,24 @@ const ProviderProjectField: FC = () => {
       }
     >
       <Controller
-        name={ProviderFormFieldId.ProviderProject}
         control={control}
+        name={ProviderFormFieldId.ProviderProject}
         render={({ field }) => (
           <ProjectSelect
-            testId="provider-project-select"
-            showDefaultProjects={showDefaultProjects ?? false}
+            id={ProviderFormFieldId.ProviderProject}
+            onChange={field.onChange}
+            placeholder={t('Select provider project')}
+            projectNames={projectNames}
             setShowDefaultProjects={(value) => {
               setValue(ProviderFormFieldId.ShowDefaultProjects, value);
             }}
-            placeholder={t('Select provider project')}
-            id={ProviderFormFieldId.ProviderProject}
-            projectNames={projectNames}
-            value={field.value}
-            onChange={field.onChange}
+            showDefaultProjects={showDefaultProjects ?? false}
+            testId="provider-project-select"
             toggleProps={{
               id: 'provider-project-select',
               status: errors[ProviderFormFieldId.ProviderProject] && MenuToggleStatus.danger,
             }}
+            value={field.value}
           />
         )}
         rules={{ required: t('Provider project is required.') }}

@@ -96,11 +96,11 @@ const OverviewPage: FC = () => {
         <RoutedTabs tabs={tabs} />
         <div className="forklift-details-page-layout__content pf-v6-u-p-md">
           <Routes>
-            <Route index element={<ForkliftControllerOverviewTab />} />
-            <Route path={OverviewTabHref.YAML} element={<ForkliftControllerYAMLTab />} />
-            <Route path={OverviewTabHref.Health} element={<ForkliftControllerHealthTab />} />
-            <Route path={OverviewTabHref.History} element={<ForkliftControllerHistoryTab />} />
-            <Route path={OverviewTabHref.Settings} element={<ForkliftControllerSettingsTab />} />
+            <Route element={<ForkliftControllerOverviewTab />} index />
+            <Route element={<ForkliftControllerYAMLTab />} path={OverviewTabHref.YAML} />
+            <Route element={<ForkliftControllerHealthTab />} path={OverviewTabHref.Health} />
+            <Route element={<ForkliftControllerHistoryTab />} path={OverviewTabHref.History} />
+            <Route element={<ForkliftControllerSettingsTab />} path={OverviewTabHref.Settings} />
           </Routes>
         </div>
       </div>

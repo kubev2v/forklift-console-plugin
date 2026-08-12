@@ -10,10 +10,10 @@ import ExpandedContent from './components/ExpandedContent';
 import ToggleButton from './components/ToggleButton';
 
 type ReferenceSectionProps = {
-  id: string;
-  icon: ReactNode;
-  title: string;
   children?: ReactNode;
+  icon: ReactNode;
+  id: string;
+  title: string;
 };
 
 const ReferenceSection: FC<ReferenceSectionProps> = ({ children, icon, id, title }) => {
@@ -43,7 +43,7 @@ const ReferenceSection: FC<ReferenceSectionProps> = ({ children, icon, id, title
   return (
     <Flex direction={{ default: 'column' }} spacer={{ default: 'spacerMd' }}>
       <FlexItem>
-        <ToggleButton icon={icon} title={title} isExpanded={isExpanded} onToggle={handleToggle} />
+        <ToggleButton icon={icon} isExpanded={isExpanded} onToggle={handleToggle} title={title} />
       </FlexItem>
       {isExpanded && <ExpandedContent scrollableRef={scrollableRef}>{children}</ExpandedContent>}
     </Flex>

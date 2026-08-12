@@ -35,39 +35,39 @@ const HyperVDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
       <NameDetailsItem resource={provider} />
       <NamespaceDetailsItem resource={provider} />
       <DetailsItem
-        testId="management-type-detail-item"
-        title={t('Management type')}
         content={
-          <Label isCompact color={isCluster ? 'blue' : 'grey'}>
+          <Label color={isCluster ? 'blue' : 'grey'} isCompact>
             {isCluster ? t('Failover Cluster') : t('Standalone')}
           </Label>
         }
+        crumbs={['Provider', 'spec', 'settings', 'managementType']}
         helpContent={t(
           'Whether this provider manages a single Hyper-V host or a Windows Failover Cluster with multiple nodes.',
         )}
-        crumbs={['Provider', 'spec', 'settings', 'managementType']}
+        testId="management-type-detail-item"
+        title={t('Management type')}
       />
       <DetailsItem
-        testId="transfer-method-detail-item"
-        title={t('Transfer method')}
         content={
-          <Label isCompact color={isIscsi ? 'blue' : 'grey'}>
+          <Label color={isIscsi ? 'blue' : 'grey'} isCompact>
             {isIscsi ? t('iSCSI') : t('SMB')}
           </Label>
         }
+        crumbs={['Provider', 'spec', 'settings', 'hyperVTransferMethod']}
         helpContent={t(
           'The method used to transfer VM disk data from the Hyper-V host. SMB uses an SMB file share. iSCSI copies disks directly over iSCSI and is typically faster.',
         )}
-        crumbs={['Provider', 'spec', 'settings', 'hyperVTransferMethod']}
+        testId="transfer-method-detail-item"
+        title={t('Transfer method')}
       />
       <URLDetailsItem
-        resource={provider}
         canPatch={permissions.canPatch}
         helpContent={
           isCluster
             ? t('IP address or hostname of the cluster entry point (CNO or node)')
             : t('IP address or hostname of the Hyper-V server')
         }
+        resource={provider}
       />
       <CreatedAtDetailsItem resource={provider} />
       <OwnerDetailsItem resource={provider} />

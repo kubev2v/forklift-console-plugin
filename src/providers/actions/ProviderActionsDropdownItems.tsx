@@ -40,31 +40,31 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({
   return (
     <DropdownList>
       <DropdownItem
-        value={0}
         key="EditProvider"
         onClick={() => {
           navigate(isDetailsPage ? `${providerURL}/yaml` : providerURL)?.catch(() => undefined);
         }}
+        value={0}
       >
         {isDetailsPage ? t('Edit YAML') : t('Edit')}
       </DropdownItem>
       {provider?.spec?.type !== PROVIDER_TYPES.ova && (
         <DropdownItem
-          value={1}
-          key="EditCredentials"
           href={`${providerURL}/credentials`}
+          key="EditCredentials"
           onClick={() => {
             navigate(`${providerURL}/credentials`)?.catch(() => undefined);
           }}
+          value={1}
         >
           {t('Edit provider credentials')}
         </DropdownItem>
       )}
       <DropdownItem
-        value={2}
-        key="delete"
         isDisabled={!data?.permissions?.canDelete}
+        key="delete"
         onClick={onProviderDelete}
+        value={2}
       >
         {t('Delete provider')}
       </DropdownItem>

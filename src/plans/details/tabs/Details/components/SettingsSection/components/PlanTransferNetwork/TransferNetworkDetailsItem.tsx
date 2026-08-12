@@ -30,27 +30,27 @@ const TransferNetworkDetailItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Transfer network')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={
         networkName === PROVIDER_DEFAULTS ? (
-          <Label isCompact color="grey">
+          <Label color="grey" isCompact>
             {PROVIDER_DEFAULTS}
           </Label>
         ) : (
           networkName
         )
       }
+      crumbs={['spec', 'transferNetwork']}
       helpContent={t(
         `You can change the migration transfer network for this plan.
         If you defined a migration transfer network for the OpenShift Virtualization provider
         and if the network is in the target namespace, the network that you defined is the default
         network for all migration plans. Otherwise, the pod network is used.`,
       )}
-      crumbs={['spec', 'transferNetwork']}
       onEdit={() => {
         launcher<EditPlanProps>(EditPlanTransferNetwork, { resource: plan });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      title={t('Transfer network')}
     />
   );
 };

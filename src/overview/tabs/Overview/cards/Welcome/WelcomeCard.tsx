@@ -71,24 +71,24 @@ const WelcomeCard: FC = () => {
     <Card>
       <CardBody>
         <ExpandableSection
-          toggleContent={<Content component={ContentVariants.h3}>{t('Welcome')}</Content>}
           isExpanded={!hideWelcomeCardByContext}
           onToggle={(_ev, isExpanded) => {
             setData({ hideWelcomeCardByContext: !isExpanded });
           }}
+          toggleContent={<Content component={ContentVariants.h3}>{t('Welcome')}</Content>}
         >
           <Flex
+            alignItems={{ default: 'alignItemsCenter' }}
             direction={{ default: 'row' }}
             spaceItems={{ default: 'spaceItemsNone' }}
-            alignItems={{ default: 'alignItemsCenter' }}
           >
             <FlexItem className="forklift-overview__welcome-left">
               <img alt="" src={migrationIcon} />
             </FlexItem>
-            <FlexItem flex={{ default: 'flex_1' }} className="forklift-overview__welcome-right">
+            <FlexItem className="forklift-overview__welcome-right" flex={{ default: 'flex_1' }}>
               <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsMd' }}>
                 <FlexItem>
-                  <Content component="p" className="forklift-overview__welcome-text">
+                  <Content className="forklift-overview__welcome-text" component="p">
                     <ForkliftTrans>
                       Migration Toolkit for Virtualization (MTV) migrates virtual machines at scale
                       to{' '}
@@ -102,16 +102,16 @@ const WelcomeCard: FC = () => {
                 </FlexItem>
 
                 <FlexItem>
-                  <Content component="p" className="forklift-overview__welcome-text">
+                  <Content className="forklift-overview__welcome-text" component="p">
                     <ForkliftTrans>You can migrate virtual machines from:</ForkliftTrans>
                   </Content>
                 </FlexItem>
 
                 <FlexItem>
                   <Flex
+                    alignItems={{ default: 'alignItemsCenter' }}
                     className="forklift-overview__welcome-tiles"
                     spaceItems={{ default: 'spaceItemsSm' }}
-                    alignItems={{ default: 'alignItemsCenter' }}
                   >
                     {providerCardData.map(({ image, provider }) => (
                       <FlexItem key={provider.key}>

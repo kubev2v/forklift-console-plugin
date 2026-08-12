@@ -6,8 +6,8 @@ export const onConfirmPreserveCpuModel = async ({
   newValue,
   resource,
 }: {
-  resource: V1beta1Plan;
   newValue: boolean;
+  resource: V1beta1Plan;
 }): Promise<V1beta1Plan> => {
   const current = resource?.spec?.preserveClusterCpuModel;
   const op = current === undefined ? ADD : REPLACE;

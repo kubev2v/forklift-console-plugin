@@ -31,10 +31,10 @@ export class NetworkMapCreatePage {
   async fillRequiredFields(data: {
     mapName: string;
     project: string;
-    sourceProvider: string;
-    targetProvider: string;
     sourceNetwork: string;
+    sourceProvider: string;
     targetNetwork: string;
+    targetProvider: string;
   }) {
     const mapNameInput = this.page.getByTestId('network-map-name-input');
     await mapNameInput.clear();

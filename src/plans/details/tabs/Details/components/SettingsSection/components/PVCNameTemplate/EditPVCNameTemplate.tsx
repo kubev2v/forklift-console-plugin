@@ -9,13 +9,13 @@ import EditNameTemplate from '../EditNameTemplate/EditNameTemplate';
 import { pvcNameTemplateAllowedVariables, pvcNameTemplateHelperExamples } from './utils/constants';
 
 export type EditPVCNameTemplateProps = {
-  resource: V1beta1Plan;
-  onConfirmPVCNameTemplate: (options: {
-    resource: V1beta1Plan;
-    newValue: string | undefined;
-  }) => Promise<V1beta1Plan>;
-  value?: string;
   allowInherit?: boolean;
+  onConfirmPVCNameTemplate: (options: {
+    newValue: string | undefined;
+    resource: V1beta1Plan;
+  }) => Promise<V1beta1Plan>;
+  resource: V1beta1Plan;
+  value?: string;
 };
 
 const EditPVCNameTemplate: ModalComponent<EditPVCNameTemplateProps> = ({
@@ -30,20 +30,20 @@ const EditPVCNameTemplate: ModalComponent<EditPVCNameTemplateProps> = ({
   return (
     <EditNameTemplate
       allowInherit={allowInherit}
-      fieldName={allowInherit ? t('VM PVC name template') : t('Plan PVC name template')}
-      title={t('Edit PVC name template')}
-      value={value}
-      onConfirm={async (newValue) => onConfirmPVCNameTemplate({ newValue, resource })}
       body={
         <NameTemplateBody
+          allowedVariables={pvcNameTemplateAllowedVariables}
           bodyText={t(
             'PVC name template is a template for generating persistent volume claims (PVC) names for VM disks.',
           )}
-          allowedVariables={pvcNameTemplateAllowedVariables}
         />
       }
+      fieldName={allowInherit ? t('VM PVC name template') : t('Plan PVC name template')}
       helperText={<NameTemplateHelper examples={pvcNameTemplateHelperExamples} />}
       inheritValue={resource?.spec?.pvcNameTemplate}
+      onConfirm={async (newValue) => onConfirmPVCNameTemplate({ newValue, resource })}
+      title={t('Edit PVC name template')}
+      value={value}
       {...rest}
     />
   );

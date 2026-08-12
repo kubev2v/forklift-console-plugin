@@ -29,23 +29,23 @@ const ExpandableReviewSection: FC<ExpandableReviewSectionProps> = ({
   return (
     <div className="expandable-review-section-wrapper">
       <ExpandableSection
+        allowFullScreen
         className="expandable-review-section pf-v6-w-100"
         data-testid={testId}
-        toggleContent={<Title headingLevel="h3">{title}</Title>}
         isExpanded={isExpanded}
+        isIndented
         onToggle={(_, isSectionExpanded) => {
           setIsExpanded(isSectionExpanded);
         }}
-        isIndented
-        allowFullScreen
+        toggleContent={<Title headingLevel="h3">{title}</Title>}
       >
         <div className="pf-v6-u-pb-lg pf-v6-u-pt-md">{children}</div>
       </ExpandableSection>
       {onEditClick && (
         <Button
           className="expandable-review-section-wrapper__edit-button"
-          variant={ButtonVariant.link}
           onClick={onEditClick}
+          variant={ButtonVariant.link}
         >
           {t('Edit step')}
         </Button>

@@ -31,14 +31,14 @@ export class StorageMapDetailsPage extends BaseMapDetailsPage {
   }
 
   async verifyStorageMapDetailsPage(expectedData: {
-    storageMapName: string;
-    sourceProvider: string;
-    targetProvider: string;
     mappings?: {
       sourceStorage: string;
       targetStorage: string;
     }[];
+    sourceProvider: string;
     status?: 'Ready' | 'NotReady';
+    storageMapName: string;
+    targetProvider: string;
   }): Promise<void> {
     const normalizedData: MapDetailsExpectedData = {
       mapName: expectedData.storageMapName,

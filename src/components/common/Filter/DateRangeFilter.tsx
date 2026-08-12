@@ -93,46 +93,46 @@ export const DateRangeFilter = ({
 
   return (
     <ToolbarFilter
-      key={filterId}
-      labels={validFilters.map(rangeToOption)}
+      categoryName={title as unknown as string}
       deleteLabel={(category, option) => {
         clearSingleRange(option as ToolbarLabel);
       }}
       deleteLabelGroup={() => onFilterUpdate([])}
-      categoryName={title as unknown as string}
+      key={filterId}
+      labels={validFilters.map(rangeToOption)}
       showToolbarItem={showFilter}
     >
       <InputGroup>
         <DatePicker
-          value={from ? toISODate(from) : undefined}
-          dateFormat={(date: Date) => DateTime.fromJSDate(date).toISODate() ?? ''}
-          dateParse={(str: string) => DateTime.fromISO(str).toJSDate()}
-          onChange={onFromDateChange}
-          aria-label="Interval start"
-          placeholder={placeholderLabel}
-          // disable error text (no space in toolbar scenario)
-          invalidFormatText={''}
           // default value ("parent") creates collision with sticky table header
           appendTo={document.body}
-          popoverProps={{
-            footerContent: helperText,
-          }}
-        />
-        <DatePicker
-          value={to ? toISODate(to) : undefined}
+          aria-label="Interval start"
           dateFormat={(date: Date) => DateTime.fromJSDate(date).toISODate() ?? ''}
           dateParse={(str: string) => DateTime.fromISO(str).toJSDate()}
-          onChange={onToDateChange}
-          isDisabled={!isValidJSDate(from)}
           // disable error text (no space in toolbar scenario)
           invalidFormatText={''}
-          rangeStart={from}
-          aria-label="Interval end"
+          onChange={onFromDateChange}
           placeholder={placeholderLabel}
-          appendTo={document.body}
           popoverProps={{
             footerContent: helperText,
           }}
+          value={from ? toISODate(from) : undefined}
+        />
+        <DatePicker
+          appendTo={document.body}
+          aria-label="Interval end"
+          dateFormat={(date: Date) => DateTime.fromJSDate(date).toISODate() ?? ''}
+          dateParse={(str: string) => DateTime.fromISO(str).toJSDate()}
+          // disable error text (no space in toolbar scenario)
+          invalidFormatText={''}
+          isDisabled={!isValidJSDate(from)}
+          onChange={onToDateChange}
+          placeholder={placeholderLabel}
+          popoverProps={{
+            footerContent: helperText,
+          }}
+          rangeStart={from}
+          value={to ? toISODate(to) : undefined}
         />
       </InputGroup>
     </ToolbarFilter>

@@ -15,17 +15,17 @@ const InspectionOsInfo: FC<InspectionOsInfoProps> = ({ filesystems, osInfo }) =>
   const { t } = useForkliftTranslation();
 
   return (
-    <DescriptionList isCompact columnModifier={{ default: '2Col' }}>
-      {osInfo?.name && <DetailsItem title={t('OS')} content={osInfo.name} />}
-      {osInfo?.distro && <DetailsItem title={t('Distribution')} content={osInfo.distro} />}
-      {osInfo?.version && <DetailsItem title={t('Version')} content={osInfo.version} />}
+    <DescriptionList columnModifier={{ default: '2Col' }} isCompact>
+      {osInfo?.name && <DetailsItem content={osInfo.name} title={t('OS')} />}
+      {osInfo?.distro && <DetailsItem content={osInfo.distro} title={t('Distribution')} />}
+      {osInfo?.version && <DetailsItem content={osInfo.version} title={t('Version')} />}
       {!isEmpty(filesystems) && (
         <DetailsItem
-          title={t('Filesystems')}
           content={filesystems?.map((fs) => `${fs.device} (${fs.type})`).join(', ')}
+          title={t('Filesystems')}
         />
       )}
-      {osInfo?.arch && <DetailsItem title={t('Architecture')} content={osInfo.arch} />}
+      {osInfo?.arch && <DetailsItem content={osInfo.arch} title={t('Architecture')} />}
     </DescriptionList>
   );
 };

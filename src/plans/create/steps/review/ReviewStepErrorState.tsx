@@ -22,17 +22,17 @@ const ReviewStepErrorState: FC<ReviewStepErrorStateProps> = ({ error, onBackToRe
 
   return (
     <EmptyState
-      titleText={t('Failed to create plan')}
+      className="pf-v6-u-h-100"
       headingLevel="h4"
       icon={ExclamationCircleIcon}
-      className="pf-v6-u-h-100"
+      titleText={t('Failed to create plan')}
     >
       <EmptyStateBody>
         <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
           <FlexItem>{error}</FlexItem>
 
           <EmptyStateActions>
-            <Button variant={ButtonVariant.primary} onClick={onBackToReviewClick}>
+            <Button onClick={onBackToReviewClick} variant={ButtonVariant.primary}>
               {t('Go back to review step')}
             </Button>
           </EmptyStateActions>

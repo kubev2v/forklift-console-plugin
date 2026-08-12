@@ -33,21 +33,21 @@ const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = ({ data, isDet
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       onSelect={onSelect}
+      popperProps={{
+        position: 'right',
+        width: '200px',
+      }}
+      shouldFocusToggleOnSelect
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
-          ref={toggleRef}
-          onClick={onToggleClick}
           isExpanded={isOpen}
+          onClick={onToggleClick}
+          ref={toggleRef}
           variant={isDetailsPage ? 'default' : 'plain'}
         >
           {isDetailsPage ? t('Actions') : <EllipsisVIcon />}
         </MenuToggle>
       )}
-      shouldFocusToggleOnSelect
-      popperProps={{
-        position: 'right',
-        width: '200px',
-      }}
     >
       <ProviderActionsDropdownItems data={data} isDetailsPage={isDetailsPage} />
     </Dropdown>

@@ -20,12 +20,8 @@ const StorageClassCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Storage classes')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'storageClassCount']}
       content={
         <InventoryCell
-          icon={<DatabaseIcon />}
           data={{
             inventory,
             inventoryLoading: true,
@@ -33,9 +29,13 @@ const StorageClassCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           }}
           fieldId={ProvidersResourceFieldId.StorageCount}
           fields={[]}
+          icon={<DatabaseIcon />}
           inventoryValue={(inventory as OpenshiftProvider).storageClassCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'storageClassCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Storage classes')}
     />
   );
 };

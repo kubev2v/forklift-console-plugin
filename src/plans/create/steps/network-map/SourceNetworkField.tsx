@@ -6,8 +6,8 @@ import type { MappingValue } from '@utils/types';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 type SourceNetworkFieldProps = {
   fieldId: string;
-  usedSourceNetworks: MappingValue[];
   otherSourceNetworks: MappingValue[];
+  usedSourceNetworks: MappingValue[];
 };
 
 const SourceNetworkField: FC<SourceNetworkFieldProps> = ({
@@ -19,11 +19,11 @@ const SourceNetworkField: FC<SourceNetworkFieldProps> = ({
 
   return (
     <SharedSourceNetworkField
-      fieldId={fieldId}
       control={control}
+      fieldId={fieldId}
+      otherSourceNetworks={otherSourceNetworks}
       trigger={trigger}
       usedSourceNetworks={usedSourceNetworks}
-      otherSourceNetworks={otherSourceNetworks}
     />
   );
 };

@@ -42,6 +42,8 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
 
   return (
     <EmptyState
+      headingLevel="h4"
+      icon={PlusCircleIcon}
       titleText={
         namespace ? (
           <ForkliftTrans>
@@ -51,8 +53,6 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
           t('No plans found')
         )
       }
-      headingLevel="h4"
-      icon={PlusCircleIcon}
     >
       <EmptyStateBody className="plans-empty-state__body">
         {hasSufficientProviders
@@ -67,7 +67,7 @@ const PlansEmptyState: FC<PlansEmptyStateProps> = ({ namespace }) => {
       <EmptyStateFooter>
         <EmptyStateActions>
           {hasSufficientProviders ? (
-            <PlansAddButton namespace={namespace} canCreate={canCreate} />
+            <PlansAddButton canCreate={canCreate} namespace={namespace} />
           ) : (
             <ExternalLink href={providersListURL} isInline>
               {t('Go to the providers list page')}

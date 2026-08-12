@@ -72,85 +72,85 @@ export type ProviderVirtualMachine =
   VsphereVirtualMachine | OpenshiftVM | OVirtVM | OpenstackVM | OvaVM;
 
 export type CreatePlanFormData = FieldValues & {
-  [GeneralFormFieldId.PlanName]: string;
-  [GeneralFormFieldId.PlanProject]: string;
-  [GeneralFormFieldId.PlanDescription]: string | undefined;
-  [GeneralFormFieldId.SourceProvider]: V1beta1Provider | undefined;
-  [GeneralFormFieldId.TargetProvider]: V1beta1Provider | undefined;
-  [GeneralFormFieldId.TargetProject]: string;
-  [GeneralFormFieldId.ShowDefaultProjects]: boolean;
-  [VmFormFieldId.Vms]: Record<string, ProviderVirtualMachine>;
-  [NetworkMapFieldId.ExistingNetworkMap]: V1beta1NetworkMap | undefined;
-  [NetworkMapFieldId.NetworkMap]: NetworkMapping[];
-  [NetworkMapFieldId.NetworkMapName]: string;
-  [CreatePlanStorageMapFieldId.ExistingStorageMap]: V1beta1StorageMap | undefined;
-  [CreatePlanStorageMapFieldId.StorageMap]: StorageMapping[];
-  [CreatePlanStorageMapFieldId.StorageMapName]: string;
-  [MigrationTypeFieldId.MigrationType]: MigrationTypeValue;
-  [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: DiskPassPhrase[];
-  [OtherSettingsFormFieldId.DiskDecryptionType]: DiskDecryptionType;
-  [OtherSettingsFormFieldId.ExistingLUKSSecret]: IoK8sApiCoreV1Secret | undefined;
-  [OtherSettingsFormFieldId.InstanceTypes]: Record<string, string>;
-  [OtherSettingsFormFieldId.NBDEClevis]: boolean;
-  [OtherSettingsFormFieldId.PreserveStaticIps]: boolean;
-  [OtherSettingsFormFieldId.MigrateSharedDisks]: boolean;
-  [CustomScriptsFieldId.ScriptsType]: CustomScriptsType;
-  [CustomScriptsFieldId.ExistingConfigMap]: IoK8sApiCoreV1ConfigMap | undefined;
-  [CustomScriptsFieldId.Scripts]: CustomScript[];
   [AapFormFieldId.AapPostHookJobTemplateId]: number | undefined;
   [AapFormFieldId.AapPostHookJobTemplateName]: string | undefined;
   [AapFormFieldId.AapPreHookJobTemplateId]: number | undefined;
   [AapFormFieldId.AapPreHookJobTemplateName]: string | undefined;
   [AapFormFieldId.HookSource]: HookSource;
+  [CreatePlanStorageMapFieldId.ExistingStorageMap]: V1beta1StorageMap | undefined;
+  [CreatePlanStorageMapFieldId.StorageMap]: StorageMapping[];
+  [CreatePlanStorageMapFieldId.StorageMapName]: string;
+  [CustomScriptsFieldId.ExistingConfigMap]: IoK8sApiCoreV1ConfigMap | undefined;
+  [CustomScriptsFieldId.Scripts]: CustomScript[];
+  [CustomScriptsFieldId.ScriptsType]: CustomScriptsType;
+  [GeneralFormFieldId.PlanDescription]: string | undefined;
+  [GeneralFormFieldId.PlanName]: string;
+  [GeneralFormFieldId.PlanProject]: string;
+  [GeneralFormFieldId.ShowDefaultProjects]: boolean;
+  [GeneralFormFieldId.SourceProvider]: V1beta1Provider | undefined;
+  [GeneralFormFieldId.TargetProject]: string;
+  [GeneralFormFieldId.TargetProvider]: V1beta1Provider | undefined;
   [HooksFormFieldId.PostMigration]: MigrationHook;
   [HooksFormFieldId.PreMigration]: MigrationHook;
+  [MigrationTypeFieldId.MigrationType]: MigrationTypeValue;
+  [NetworkMapFieldId.ExistingNetworkMap]: V1beta1NetworkMap | undefined;
+  [NetworkMapFieldId.NetworkMap]: NetworkMapping[];
+  [NetworkMapFieldId.NetworkMapName]: string;
+  [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: DiskPassPhrase[];
+  [OtherSettingsFormFieldId.DiskDecryptionType]: DiskDecryptionType;
+  [OtherSettingsFormFieldId.ExistingLUKSSecret]: IoK8sApiCoreV1Secret | undefined;
+  [OtherSettingsFormFieldId.InstanceTypes]: Record<string, string>;
+  [OtherSettingsFormFieldId.MigrateSharedDisks]: boolean;
+  [OtherSettingsFormFieldId.NBDEClevis]: boolean;
+  [OtherSettingsFormFieldId.PreserveStaticIps]: boolean;
   [OtherSettingsFormFieldId.RootDevice]: string;
-  [OtherSettingsFormFieldId.TransferNetwork]: V1beta1PlanSpecTransferNetwork;
   [OtherSettingsFormFieldId.TargetPowerState]: TargetPowerState;
+  [OtherSettingsFormFieldId.TransferNetwork]: V1beta1PlanSpecTransferNetwork;
+  [VmFormFieldId.Vms]: Record<string, ProviderVirtualMachine>;
 };
 
 export type MappingFieldIds = {
+  mapField: string;
   sourceField: string;
   targetField: string;
-  mapField: string;
 };
 
 export type CategorizedSourceMappings = {
-  used: MappingValue[];
   other: MappingValue[];
+  used: MappingValue[];
 };
 
 export type CreatePlanParams = {
+  customScriptsConfigMap?: IoK8sApiCoreV1ConfigMap;
+  instanceTypes?: Record<string, string>;
+  luks?: V1beta1PlanSpecVmsLuks;
+  migrateSharedDisks?: boolean;
+  migrationType: MigrationTypeValue;
+  nbdeClevis?: boolean;
+  networkMap: V1beta1NetworkMap;
+  planDescription?: string;
   planName: string;
   planProject: string;
-  sourceProvider: V1beta1Provider | undefined;
-  targetProvider: V1beta1Provider | undefined;
-  targetProject: string;
-  networkMap: V1beta1NetworkMap;
-  storageMap: V1beta1StorageMap;
-  vms: ProviderVirtualMachine[];
-  migrationType: MigrationTypeValue;
-  planDescription?: string;
+  postHook?: V1beta1Hook;
+  preHook?: V1beta1Hook;
   preserveStaticIps?: boolean;
   rootDevice?: string;
-  transferNetwork?: V1beta1PlanSpecTransferNetwork;
-  instanceTypes?: Record<string, string>;
-  migrateSharedDisks?: boolean;
-  luks?: V1beta1PlanSpecVmsLuks;
-  nbdeClevis?: boolean;
-  customScriptsConfigMap?: IoK8sApiCoreV1ConfigMap;
-  preHook?: V1beta1Hook;
-  postHook?: V1beta1Hook;
+  sourceProvider: V1beta1Provider | undefined;
+  storageMap: V1beta1StorageMap;
   targetPowerState: TargetPowerStateValue;
+  targetProject: string;
+  targetProvider: V1beta1Provider | undefined;
+  transferNetwork?: V1beta1PlanSpecTransferNetwork;
+  vms: ProviderVirtualMachine[];
 };
 
 type ResourceQueryResult<T> = [T, boolean, Error | null];
 
 export type CreatePlanWizardContextProps = {
   network: {
+    oVirtNicProfiles: ResourceQueryResult<OVirtNicProfile[]>;
     sources: ResourceQueryResult<InventoryNetwork[]>;
     targets: ResourceQueryResult<OpenShiftNetworkAttachmentDefinition[]>;
-    oVirtNicProfiles: ResourceQueryResult<OVirtNicProfile[]>;
   };
   storage: {
     sources: ResourceQueryResult<InventoryStorage[]>;

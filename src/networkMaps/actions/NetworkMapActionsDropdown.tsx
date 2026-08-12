@@ -45,20 +45,20 @@ const NetworkMapActionsDropdown: FC<NetworkMapActionsDropdownProps> = ({ data, i
             setIsOpen(value);
           }}
           onSelect={onSelect}
+          popperProps={{
+            position: 'right',
+          }}
+          shouldFocusToggleOnSelect
           toggle={(toggleRef: Ref<MenuToggleElement>) => (
             <MenuToggle
-              ref={toggleRef}
-              onClick={onToggleClick}
               isExpanded={isOpen}
+              onClick={onToggleClick}
+              ref={toggleRef}
               variant={isDetailsPage ? 'default' : 'plain'}
             >
               {isDetailsPage ? t('Actions') : <EllipsisVIcon />}
             </MenuToggle>
           )}
-          shouldFocusToggleOnSelect
-          popperProps={{
-            position: 'right',
-          }}
         >
           <DropdownList>
             <NetworkMapActionsDropdownItems data={data} isDetailsPage={isDetailsPage} />

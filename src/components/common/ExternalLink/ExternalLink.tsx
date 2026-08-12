@@ -4,13 +4,13 @@ import { Button, type ButtonProps, ButtonVariant } from '@patternfly/react-core'
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 
 type ExternalLinkProps = {
-  href: string;
-  text?: string;
   children?: ReactNode;
-  isInline?: boolean;
   hideIcon?: boolean;
-  onClick?: () => void;
+  href: string;
   iconPosition?: ButtonProps['iconPosition'];
+  isInline?: boolean;
+  onClick?: () => void;
+  text?: string;
 };
 
 export const ExternalLink: FC<ExternalLinkProps> = ({
@@ -23,14 +23,14 @@ export const ExternalLink: FC<ExternalLinkProps> = ({
   text = null,
 }) => (
   <Button
-    variant={ButtonVariant.link}
-    icon={hideIcon ? undefined : <ExternalLinkAltIcon />}
-    iconPosition={iconPosition}
     component="a"
     href={href}
-    target="_blank"
+    icon={hideIcon ? undefined : <ExternalLinkAltIcon />}
+    iconPosition={iconPosition}
     isInline={isInline}
     onClick={onClick}
+    target="_blank"
+    variant={ButtonVariant.link}
   >
     {text ?? children}{' '}
   </Button>

@@ -44,10 +44,10 @@ const TopologyKeyInput: FC<TopologyKeyInputProps> = ({
         value={topologyKey}
       />
       <FormGroupWithHelpText
+        helperText={TOPOLOGY_KEY_FIELD_HELP_TEXT}
+        helperTextInvalid={TOPOLOGY_KEY_FIELD_HELP_TEXT}
         isRequired
         validated={validated}
-        helperTextInvalid={TOPOLOGY_KEY_FIELD_HELP_TEXT}
-        helperText={TOPOLOGY_KEY_FIELD_HELP_TEXT}
       />
     </FormGroup>
   );

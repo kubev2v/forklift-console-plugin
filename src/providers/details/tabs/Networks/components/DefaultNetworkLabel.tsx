@@ -7,7 +7,7 @@ const DefaultNetworkLabel: FC = (): ReactElement => {
   const { t } = useForkliftTranslation();
 
   return (
-    <Label isCompact color={'green'}>
+    <Label color={'green'} isCompact>
       {t('Default')}
     </Label>
   );

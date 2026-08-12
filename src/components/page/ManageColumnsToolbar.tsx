@@ -6,10 +6,10 @@ import { ManageColumnsToolbarItem } from '../common/TableView/ManageColumnsToolb
 import type { ResourceField } from '../common/utils/types';
 
 type ManageColumnsToolbarProps = {
-  /** Read only. State maintained by parent component. */
-  resourceFields: ResourceField[];
   /** Read only. The defaults used for initialization.*/
   defaultColumns: ResourceField[];
+  /** Read only. State maintained by parent component. */
+  resourceFields: ResourceField[];
   /** Setter to modify state in the parent.*/
   setColumns: (resourceFields: ResourceField[]) => void;
 };
@@ -26,25 +26,25 @@ export const ManageColumnsToolbar = ({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <ManageColumnsToolbarItem
+      ariaLabel={t('Manage columns')}
       showDialog={() => {
         setIsOpen(true);
       }}
-      ariaLabel={t('Manage columns')}
       tooltip={t('Manage columns')}
     >
       <ManageColumnsModal
-        showModal={isOpen}
+        cancelLabel={t('Cancel')}
+        defaultColumns={defaultColumns}
+        description={t('Selected columns will be displayed in the table.')}
+        onChange={setColumns}
         onClose={() => {
           setIsOpen(false);
         }}
-        description={t('Selected columns will be displayed in the table.')}
-        resourceFields={resourceFields}
-        onChange={setColumns}
-        defaultColumns={defaultColumns}
-        saveLabel={t('Save')}
-        cancelLabel={t('Cancel')}
         reorderLabel={t('Reorder')}
+        resourceFields={resourceFields}
         restoreLabel={t('Restore default columns')}
+        saveLabel={t('Save')}
+        showModal={isOpen}
         title={t('Manage columns')}
       />
     </ManageColumnsToolbarItem>

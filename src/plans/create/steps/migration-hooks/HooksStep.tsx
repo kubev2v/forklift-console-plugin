@@ -48,7 +48,6 @@ const HooksStep: FC = () => {
 
   return (
     <WizardStepContainer
-      title={planStepNames[PlanWizardStepId.Hooks]}
       description={
         <>
           <p>
@@ -59,6 +58,7 @@ const HooksStep: FC = () => {
           <p>{t('Hooks are applied to all virtual machines in the plan.')}</p>
         </>
       }
+      title={planStepNames[PlanWizardStepId.Hooks]}
     >
       <Form className="pf-v6-u-mt-md">
         <HookSourceRadio />
@@ -77,7 +77,7 @@ const HooksStep: FC = () => {
               )}
             </FormSection>
 
-            <FormSection title={t('Post-migration hook')} className="pf-v6-u-mt-md">
+            <FormSection className="pf-v6-u-mt-md" title={t('Post-migration hook')}>
               <EnableHookCheckbox fieldId={HooksFormFieldId.PostMigration} />
 
               {postMigrationHook?.enableHook && (

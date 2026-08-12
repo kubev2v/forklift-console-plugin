@@ -9,8 +9,8 @@ import type { PlanNetworkEditFormValues } from '../utils/types';
 
 type SourceNetworkFieldProps = {
   fieldId: NetworkMappingId;
-  usedSourceNetworks: MappingValue[];
   otherSourceNetworks: MappingValue[];
+  usedSourceNetworks: MappingValue[];
 };
 
 const SourceNetworkField: FC<SourceNetworkFieldProps> = ({
@@ -22,11 +22,11 @@ const SourceNetworkField: FC<SourceNetworkFieldProps> = ({
 
   return (
     <SharedSourceNetworkField
-      fieldId={fieldId}
       control={control}
+      fieldId={fieldId}
+      otherSourceNetworks={otherSourceNetworks}
       trigger={trigger}
       usedSourceNetworks={usedSourceNetworks}
-      otherSourceNetworks={otherSourceNetworks}
     />
   );
 };

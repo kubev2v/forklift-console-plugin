@@ -31,14 +31,14 @@ export class NetworkMapDetailsPage extends BaseMapDetailsPage {
   }
 
   async verifyNetworkMapDetailsPage(expectedData: {
-    networkMapName: string;
-    sourceProvider: string;
-    targetProvider: string;
     mappings?: {
       sourceNetwork: string;
       targetNetwork: string;
     }[];
+    networkMapName: string;
+    sourceProvider: string;
     status?: 'Ready' | 'NotReady';
+    targetProvider: string;
   }): Promise<void> {
     const normalizedData: MapDetailsExpectedData = {
       mapName: expectedData.networkMapName,

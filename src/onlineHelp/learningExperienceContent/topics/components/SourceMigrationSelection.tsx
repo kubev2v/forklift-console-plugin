@@ -26,24 +26,24 @@ const SourceMigrationSelection: FC = () => {
     <div className="pf-v6-u-ml-lg pf-v6-u-mt-md">
       <Dropdown
         isOpen={isOpen}
-        onSelect={onSelect}
         onOpenChange={(open: boolean) => {
           setIsOpen(open);
         }}
+        onSelect={onSelect}
+        ouiaId="sourceTypeDropdown"
+        selected={providerType}
+        shouldFocusToggleOnSelect
         toggle={(toggleRef: Ref<MenuToggleElement>) => (
           <MenuToggle
-            ref={toggleRef}
+            isExpanded={isOpen}
             onClick={() => {
               setIsOpen((prev) => !prev);
             }}
-            isExpanded={isOpen}
+            ref={toggleRef}
           >
             {MigrationSourceTypeLabels[providerType]}
           </MenuToggle>
         )}
-        ouiaId="sourceTypeDropdown"
-        shouldFocusToggleOnSelect
-        selected={providerType}
       >
         <DropdownList>
           {Object.values(PROVIDER_TYPES).map((type) => (

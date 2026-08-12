@@ -71,28 +71,28 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
   return (
     <LearningExperienceDrawer>
       <StandardPageWithSelection
-        data-testid="plans-list"
         addButton={
-          <PlansAddButton testId="create-plan-button" namespace={namespace} canCreate={canCreate} />
+          <PlansAddButton canCreate={canCreate} namespace={namespace} testId="create-plan-button" />
         }
-        dataSource={[plans || [], plansLoaded, plansLoadError]}
+        canSelect={canSelectPlanForBulkActions}
         cell={PlanRow}
+        customNoResultsFound={<PlansEmptyState namespace={namespace} />}
+        data-testid="plans-list"
+        dataSource={[plans || [], plansLoaded, plansLoadError]}
         fieldsMetadata={planFields}
+        getSelectDisabledReason={getSelectDisabledReason}
+        GlobalActionToolbarItems={GlobalActionToolbarItems}
         namespace={namespace}
+        onSelect={onSelect}
+        postFilterData={postFilterData}
+        selectedIds={selectedIds}
+        shouldShowLearningExperienceButton
         title={t('Migration plans')}
         titleHelpContent={t(
           'A migration plan is a strategy for moving VMs from 1 environment to OpenShift Virtualization. It lets you group VMs to be migrated together or with the same migration configuration.',
         )}
-        userSettings={userSettings}
-        customNoResultsFound={<PlansEmptyState namespace={namespace} />}
-        postFilterData={postFilterData}
-        shouldShowLearningExperienceButton
         toId={getPlanRowId}
-        selectedIds={selectedIds}
-        onSelect={onSelect}
-        canSelect={canSelectPlanForBulkActions}
-        getSelectDisabledReason={getSelectDisabledReason}
-        GlobalActionToolbarItems={GlobalActionToolbarItems}
+        userSettings={userSettings}
       />
     </LearningExperienceDrawer>
   );

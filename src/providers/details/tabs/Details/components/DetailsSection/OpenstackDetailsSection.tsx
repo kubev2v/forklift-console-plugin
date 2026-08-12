@@ -30,15 +30,14 @@ const OpenstackDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
     >
       <TypeDetailsItem resource={provider} />
       <ExternalManagementLinkDetailsItem
-        resource={provider}
         canPatch={permissions.canPatch}
-        webUILinkText={t(`OpenStack dashboard UI`)}
+        resource={provider}
         webUILink={getOpenstackProviderWebUILink(provider)}
+        webUILinkText={t(`OpenStack dashboard UI`)}
       />
       <NameDetailsItem resource={provider} />
       <NamespaceDetailsItem resource={provider} />
       <URLDetailsItem
-        resource={provider}
         canPatch={permissions.canPatch}
         helpContent={
           <ForkliftTrans>
@@ -46,6 +45,7 @@ const OpenstackDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
             <strong>https://identity_service.com:5000/v3</strong>.
           </ForkliftTrans>
         }
+        resource={provider}
       />
       <CredentialsDetailsItem resource={provider} />
       <CreatedAtDetailsItem resource={provider} />

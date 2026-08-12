@@ -38,13 +38,13 @@ const CustomScriptsReviewSection: FC = () => {
 
   return (
     <ExpandableReviewSection
-      title={planStepNames[PlanWizardStepId.Automation]}
-      testId="review-custom-scripts-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.Automation);
       }}
+      testId="review-custom-scripts-section"
+      title={planStepNames[PlanWizardStepId.Automation]}
     >
-      <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+      <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
         {scriptsType === CustomScriptsType.Existing ? (
           <DescriptionListGroup>
             <DescriptionListTerm>{t('ConfigMap')}</DescriptionListTerm>

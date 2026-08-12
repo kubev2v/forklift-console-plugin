@@ -43,11 +43,11 @@ const ScriptContentField: FC<ScriptContentFieldProps> = ({ guestType, onChange, 
   return (
     <>
       <input
-        ref={fileInputRef}
-        type="file"
+        accept={ACCEPTED_FILE_TYPES[guestType]}
         className="pf-v6-u-screen-reader"
         onChange={handleFileUpload}
-        accept={ACCEPTED_FILE_TYPES[guestType]}
+        ref={fileInputRef}
+        type="file"
       />
 
       <div className="pf-v6-c-code-editor">
@@ -56,10 +56,10 @@ const ScriptContentField: FC<ScriptContentFieldProps> = ({ guestType, onChange, 
             <div className="pf-v6-c-code-editor__controls">
               <Tooltip content={t('Upload file')}>
                 <Button
-                  variant={ButtonVariant.plain}
                   aria-label={t('Upload file')}
-                  onClick={() => fileInputRef.current?.click()}
                   icon={<UploadIcon />}
+                  onClick={() => fileInputRef.current?.click()}
+                  variant={ButtonVariant.plain}
                 />
               </Tooltip>
             </div>
@@ -75,11 +75,11 @@ const ScriptContentField: FC<ScriptContentFieldProps> = ({ guestType, onChange, 
         }
       >
         <CodeEditor
-          value={value}
           height="10rem"
           isDarkTheme={isDarkTheme}
           language={LANGUAGE_MAP[guestType] as Language}
           onChange={onChange}
+          value={value}
         />
       </Suspense>
     </>

@@ -17,15 +17,15 @@ const EditControllerCPULimit: FC = () => {
 
   return (
     <FormGroupWithHelpText
+      helperText={t(
+        'Enter the limit for CPU usage by the controller in milliCPU. If empty, the default value will be used.',
+      )}
       label={t('Controller main container CPU limit')}
       labelHelp={
         <HelpIconPopover header={t('Controller main container CPU limit')}>
           <ControllerCPULimitHelpContent />
         </HelpIconPopover>
       }
-      helperText={t(
-        'Enter the limit for CPU usage by the controller in milliCPU. If empty, the default value will be used.',
-      )}
     >
       <Controller
         control={control}
@@ -33,9 +33,9 @@ const EditControllerCPULimit: FC = () => {
         render={({ field: { onChange, value } }) => (
           <SettingsSelectInput
             onChange={onChange}
-            value={String(value)}
             options={controllerCpuLimitOptions}
             testId="controller-cpu-limit-select"
+            value={String(value)}
           />
         )}
       />

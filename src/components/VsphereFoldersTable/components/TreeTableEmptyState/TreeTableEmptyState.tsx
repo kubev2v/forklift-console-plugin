@@ -24,13 +24,13 @@ const TreeTableEmptyState: FC<TreeTableEmptyStateProps> = ({
         <Bullseye>
           {hasFiltersApplied ? (
             <NoResultsMatchFilter
-              key="no_match"
               clearAllFilters={clearAllFilters}
-              title={t('No results found')}
+              clearAllLabel={t('Clear all filters')}
               description={t(
                 'No results match the filter criteria. Clear all filters and try again.',
               )}
-              clearAllLabel={t('Clear all filters')}
+              key="no_match"
+              title={t('No results found')}
             />
           ) : (
             <NoResultsFound key="no_result" title={t('No results found')} />

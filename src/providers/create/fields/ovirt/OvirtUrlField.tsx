@@ -12,7 +12,6 @@ const OvirtUrlField: FC = () => {
 
   return (
     <ProviderFormTextInput
-      label={t('API endpoint URL')}
       fieldId={ProviderFormFieldId.OvirtUrl}
       fieldRules={{
         required: t(
@@ -31,6 +30,7 @@ const OvirtUrlField: FC = () => {
       helperText={t(
         'The URL of the Red Hat Virtualization Manager (RHVM) API endpoint, for example: https://rhv-host-example.com/ovirt-engine/api',
       )}
+      label={t('API endpoint URL')}
       testId="ovirt-url-input"
     />
   );

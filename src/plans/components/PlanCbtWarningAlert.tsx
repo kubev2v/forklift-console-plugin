@@ -14,10 +14,10 @@ const PlanCbtWarningAlert: FC<PlanCbtWarningAlertProps> = ({ cbtDisabledVmsCount
 
   return (
     <Alert
-      isInline
-      variant={AlertVariant.warning}
-      title={t('Must enable Changed Block Tracking (CBT) for warm migration')}
       className="pf-v6-u-ml-lg"
+      isInline
+      title={t('Must enable Changed Block Tracking (CBT) for warm migration')}
+      variant={AlertVariant.warning}
     >
       <Stack hasGutter>
         <p>
@@ -27,7 +27,7 @@ const PlanCbtWarningAlert: FC<PlanCbtWarningAlertProps> = ({ cbtDisabledVmsCount
             'Switch those VMs to cold migration or enable CBT in VMware before running the plan; otherwise the migration will fail.',
           )}
         </p>
-        <ExternalLink isInline href={CBT_HELP_LINK}>
+        <ExternalLink href={CBT_HELP_LINK} isInline>
           {t('Learn more')}
         </ExternalLink>
       </Stack>

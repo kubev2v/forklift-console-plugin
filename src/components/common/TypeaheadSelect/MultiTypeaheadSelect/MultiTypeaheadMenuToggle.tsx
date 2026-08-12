@@ -18,27 +18,27 @@ import { isEmpty } from '@utils/helpers';
 import type { TypeaheadSelectOption } from '../utils/types';
 
 type MultiTypeaheadMenuToggleProps = {
-  toggleRef: Ref<MenuToggleElement>;
-  inputRef: RefObject<HTMLInputElement>;
-  placeholder: string;
-  isDisabled: boolean;
-  isOpen: boolean;
-  toggleWidth?: string;
+  activeItemId: string | null;
   allowClear: boolean;
-  selectedOptions: TypeaheadSelectOption[];
-  isFiltering: boolean;
+  inputRef: RefObject<HTMLInputElement>;
   inputValue: string;
-  onInputChange?: (value: string) => void;
-  onClearAll: () => void;
-  onToggleClick: () => void;
-  onInputValueChange: (value: string, isFiltering: boolean) => void;
+  isDisabled: boolean;
+  isFiltering: boolean;
+  isOpen: boolean;
+  listboxId: string; // for aria-controls
   onChipRemove: (value: string | number) => void;
+  onClearAll: () => void;
+  onInputChange?: (value: string) => void;
   onInputClick: () => void;
   onInputKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  activeItemId: string | null;
-  toggleProps?: Omit<MenuToggleProps, 'innerRef' | 'onClick' | 'isExpanded' | 'variant'>;
+  onInputValueChange: (value: string, isFiltering: boolean) => void;
+  onToggleClick: () => void;
+  placeholder: string;
+  selectedOptions: TypeaheadSelectOption[];
   testId?: string;
-  listboxId: string; // for aria-controls
+  toggleProps?: Omit<MenuToggleProps, 'innerRef' | 'onClick' | 'isExpanded' | 'variant'>;
+  toggleRef: Ref<MenuToggleElement>;
+  toggleWidth?: string;
 };
 
 const MultiTypeaheadMenuToggle: FC<MultiTypeaheadMenuToggleProps> = ({
@@ -109,52 +109,52 @@ const MultiTypeaheadMenuToggle: FC<MultiTypeaheadMenuToggleProps> = ({
 
   return (
     <MenuToggle
-      variant="typeahead"
       aria-label="Multi typeahead creatable menu toggle"
-      onClick={handleToggleClick}
+      data-testid={testId}
       innerRef={toggleRef}
-      isExpanded={isOpen}
       isDisabled={isDisabled}
+      isExpanded={isOpen}
       isFullWidth
-      style={{ width: toggleWidth }}
+      onClick={handleToggleClick}
       onMouseEnter={() => {
         setIsHovered(true);
       }}
       onMouseLeave={() => {
         setIsHovered(false);
       }}
-      data-testid={testId}
+      style={{ width: toggleWidth }}
+      variant="typeahead"
       {...toggleProps}
     >
       <TextInputGroup isPlain>
         <TextInputGroupMain
-          value={inputValue}
-          onClick={onInputClick}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
           autoComplete="off"
           innerRef={inputRef}
+          onChange={handleInputChange}
+          onClick={onInputClick}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
+          value={inputValue}
           {...(activeItemId ? { 'aria-activedescendant': activeItemId } : {})}
-          role="combobox"
-          isExpanded={isOpen}
           aria-controls={listboxId}
-          onFocus={() => {
-            setIsFocused(true);
-          }}
+          isExpanded={isOpen}
           onBlur={() => {
             setIsFocused(false);
           }}
+          onFocus={() => {
+            setIsFocused(true);
+          }}
+          role="combobox"
         >
           <LabelGroup aria-label="Current selections">
             {selectedOptions.map((opt) => (
               <Label
-                variant="outline"
                 key={String(opt.value)}
                 onClose={(ev) => {
                   ev.stopPropagation();
                   onChipRemove(opt.value);
                 }}
+                variant="outline"
               >
                 {opt.content}
               </Label>
@@ -167,14 +167,14 @@ const MultiTypeaheadMenuToggle: FC<MultiTypeaheadMenuToggleProps> = ({
         >
           {showClearButton && (
             <Button
+              aria-label="Clear selections"
               icon={<TimesIcon />}
-              variant={ButtonVariant.plain}
               onClick={() => {
                 onInputValueChange('', false);
                 onClearAll();
                 inputRef.current?.focus();
               }}
-              aria-label="Clear selections"
+              variant={ButtonVariant.plain}
             />
           )}
         </TextInputGroupUtilities>

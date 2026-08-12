@@ -222,10 +222,10 @@ describe('StandardPage', () => {
       // Should render without errors when addButton is provided
       renderWithRouter(
         <StandardPage
+          addButton={addButton}
           dataSource={[mockData, true, null]}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          addButton={addButton}
         />,
       );
 

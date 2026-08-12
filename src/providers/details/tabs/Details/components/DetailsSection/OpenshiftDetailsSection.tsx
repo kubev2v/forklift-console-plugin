@@ -35,27 +35,27 @@ const OpenshiftDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
       {/* Avoid displaying the external web ui link for the local cluster */}
       {provider?.spec?.url ? (
         <ExternalManagementLinkDetailsItem
-          resource={provider}
           canPatch={permissions.canPatch}
-          webUILinkText={t(`OpenShift web console UI`)}
+          resource={provider}
           webUILink={getOpenshiftProviderWebUILink(provider)}
+          webUILinkText={t(`OpenShift web console UI`)}
         />
       ) : (
-        <DetailsItem title={''} content={''} />
+        <DetailsItem content={''} title={''} />
       )}
 
       <NameDetailsItem resource={provider} />
       <NamespaceDetailsItem resource={provider} />
       <URLDetailsItem
-        resource={provider}
         canPatch={permissions.canPatch}
         helpContent={t(
           'URL of the Openshift Virtualization API endpoint. Empty might be used for the host provider.',
         )}
+        resource={provider}
       />
       <CredentialsDetailsItem resource={provider} />
       <CreatedAtDetailsItem resource={provider} />
-      <TransferNetworkDetailsItem resource={provider} canPatch={permissions.canPatch} />
+      <TransferNetworkDetailsItem canPatch={permissions.canPatch} resource={provider} />
       <OwnerDetailsItem resource={provider} />
     </DescriptionList>
   );

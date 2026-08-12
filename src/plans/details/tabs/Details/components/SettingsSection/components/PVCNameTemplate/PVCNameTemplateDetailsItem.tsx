@@ -24,14 +24,14 @@ const PVCNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
   }
 
   const content = (
-    <Label isCompact color="grey">
+    <Label color="grey" isCompact>
       {plan?.spec?.pvcNameTemplate ? t('Use custom') : t('Use default')}
     </Label>
   );
 
   return (
     <DetailsItem
-      title={t('PVC name template')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={content}
       crumbs={['spec', 'pvcNameTemplate']}
       onEdit={() => {
@@ -42,7 +42,7 @@ const PVCNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
           value: plan?.spec?.pvcNameTemplate,
         });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      title={t('PVC name template')}
     />
   );
 };

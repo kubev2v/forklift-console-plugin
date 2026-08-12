@@ -73,14 +73,14 @@ const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
         }
       >
         <Checkbox
-          id={`nbde-clevis-${vmId}`}
           data-testid={`nbde-clevis-checkbox-${vmId}`}
-          isChecked={overrides.nbdeClevis ?? false}
-          onChange={handleNbdeClevisChange}
-          label={t('Use NBDE/Clevis')}
           description={t(
             'Use Tang servers for network-bound decryption instead of manual passphrases.',
           )}
+          id={`nbde-clevis-${vmId}`}
+          isChecked={overrides.nbdeClevis ?? false}
+          label={t('Use NBDE/Clevis')}
+          onChange={handleNbdeClevisChange}
         />
       </FormGroup>
 
@@ -93,22 +93,22 @@ const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
                   <Tr key={index}>
                     <Td>
                       <TextInput
-                        value={phrase}
+                        aria-label={t('Passphrase {{index}}', { index: index + 1 })}
+                        data-testid={`luks-passphrase-${vmId}-${index}`}
+                        onBlur={commitPassphrase}
                         onChange={(_event, value) => {
                           updateLocalPassphrase(index, value);
                         }}
-                        onBlur={commitPassphrase}
-                        aria-label={t('Passphrase {{index}}', { index: index + 1 })}
-                        data-testid={`luks-passphrase-${vmId}-${index}`}
+                        value={phrase}
                       />
                     </Td>
                     <Td isActionCell>
                       <Button
-                        variant={ButtonVariant.plain}
+                        aria-label={t('Remove passphrase')}
                         onClick={() => {
                           removePassphrase(index);
                         }}
-                        aria-label={t('Remove passphrase')}
+                        variant={ButtonVariant.plain}
                       >
                         <MinusCircleIcon />
                       </Button>
@@ -119,11 +119,11 @@ const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
             </Table>
           )}
           <Button
-            variant={ButtonVariant.link}
             icon={<PlusCircleIcon />}
             isDisabled={localPhrases.length >= MAX_PASSPHRASES}
             onClick={addPassphrase}
             size="sm"
+            variant={ButtonVariant.link}
           >
             {t('Add passphrase')}
           </Button>
@@ -132,16 +132,16 @@ const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
 
       <FormGroup label={t('XFS compatibility')}>
         <Checkbox
-          id={`xfs-compat-${vmId}`}
           data-testid={`xfs-compat-checkbox-${vmId}`}
-          isChecked={overrides.xfsCompatibility ?? false}
-          onChange={(_event, checked) => {
-            pushOverrides({ xfsCompatibility: checked });
-          }}
-          label={t('Enable XFS v4 compatibility')}
           description={t(
             'XFS v4 and BTRFS support are mutually exclusive. Enable for XFS v4 filesystems; leave disabled for BTRFS.',
           )}
+          id={`xfs-compat-${vmId}`}
+          isChecked={overrides.xfsCompatibility ?? false}
+          label={t('Enable XFS v4 compatibility')}
+          onChange={(_event, checked) => {
+            pushOverrides({ xfsCompatibility: checked });
+          }}
         />
       </FormGroup>
     </Form>

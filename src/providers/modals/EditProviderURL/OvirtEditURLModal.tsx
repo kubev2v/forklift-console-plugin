@@ -36,13 +36,13 @@ export const OvirtEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
   return (
     <TextInputEditModal
       {...rest}
-      title={t('Edit URL')}
-      label={t('URL')}
-      initialValue={provider?.spec?.url ?? ''}
       description={description}
       helperText={t('The URL of the Red Hat Virtualization Manager API endpoint.')}
-      validationHook={validateOvirtURL}
+      initialValue={provider?.spec?.url ?? ''}
+      label={t('URL')}
       onConfirm={onConfirm}
+      title={t('Edit URL')}
+      validationHook={validateOvirtURL}
     />
   );
 };

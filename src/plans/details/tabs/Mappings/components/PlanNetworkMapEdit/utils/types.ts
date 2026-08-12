@@ -12,15 +12,15 @@ export type PlanNetworkEditFormValues = {
 };
 
 export type PlanNetworkMapEditProps = {
-  sourceProvider: V1beta1Provider;
-  networkMap: V1beta1NetworkMap;
   initialMappings: NetworkMapping[];
   isLoading: boolean;
+  loadError: Error | null;
+  networkMap: V1beta1NetworkMap;
+  otherSourceNetworks: MappingValue[];
   oVirtNicProfiles: OVirtNicProfile[];
+  sourceNetworksLoading: boolean;
+  sourceProvider: V1beta1Provider;
+  targetNetworks: Record<string, MappingValue>;
   usedSourceNetworks: MappingValue[];
   vms: Record<string, ProviderVirtualMachine>;
-  otherSourceNetworks: MappingValue[];
-  sourceNetworksLoading: boolean;
-  targetNetworks: Record<string, MappingValue>;
-  loadError: Error | null;
 };

@@ -29,11 +29,11 @@ const createIndexedBase64Object = (encodedString: string): Record<number, string
 };
 
 type LUKSSecret = {
-  secretName: string | undefined;
-  secretNamespace: string | undefined;
+  newData: Record<number, string> | undefined;
   planName: string | undefined;
   planUID: string | undefined;
-  newData: Record<number, string> | undefined;
+  secretName: string | undefined;
+  secretNamespace: string | undefined;
 };
 
 const getLUKSSecret = async ({

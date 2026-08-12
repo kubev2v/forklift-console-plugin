@@ -61,12 +61,12 @@ const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({ plans
 
   return (
     <ModalForm
-      confirmVariant={ButtonVariant.danger}
       confirmLabel={t('Delete')}
+      confirmVariant={ButtonVariant.danger}
       isDisabled={isEmpty(plans)}
-      title={t('Delete migration plans')}
       onConfirm={onDelete}
       testId="bulk-delete-plans-modal"
+      title={t('Delete migration plans')}
       {...rest}
     >
       <Stack hasGutter>
@@ -79,9 +79,9 @@ const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({ plans
         {hasNonArchived && (
           <StackItem>
             <Alert
-              variant={AlertVariant.info}
               isInline
               title={t('Some selected plans are not archived')}
+              variant={AlertVariant.info}
             >
               <ForkliftTrans>
                 Deleting a migration plan does not remove temporary resources, it is recommended to{' '}
@@ -94,9 +94,9 @@ const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({ plans
         {!isEmpty(ownedPlans) && (
           <StackItem>
             <Alert
-              variant={AlertVariant.warning}
               isInline
               title={t('Some selected plans are managed resources')}
+              variant={AlertVariant.warning}
             >
               {t(
                 'Some selected plans are managed by other resources and any modifications might be overwritten. Edit the managing resource to preserve changes.',
@@ -106,7 +106,7 @@ const BulkDeletePlansModal: ModalComponent<BulkDeletePlansModalProps> = ({ plans
         )}
         {!isEmpty(actionFailures) && (
           <StackItem>
-            <Alert variant={AlertVariant.danger} isInline title={t('Some plans failed to delete')}>
+            <Alert isInline title={t('Some plans failed to delete')} variant={AlertVariant.danger}>
               <List>
                 {actionFailures.map((failure) => (
                   <ListItem key={failure.name}>

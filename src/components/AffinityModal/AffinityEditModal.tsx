@@ -32,8 +32,8 @@ const AffinityEditModal: ModalComponent<AffinityEditModalProps> = ({
 
   return (
     <Modal
-      data-testid="affinity-edit-modal"
       className="ocs-modal co-catalog-page__overlay"
+      data-testid="affinity-edit-modal"
       isOpen
       onClose={closeModal}
       position="top"
@@ -51,8 +51,9 @@ const AffinityEditModal: ModalComponent<AffinityEditModalProps> = ({
       </ModalBody>
       <ModalFooter>
         <Button
-          key="confirm"
           data-testid="save-affinity-rule-button"
+          isDisabled={isDisabled}
+          key="confirm"
           onClick={() => {
             onSubmit({
               ...focusedAffinity,
@@ -60,14 +61,13 @@ const AffinityEditModal: ModalComponent<AffinityEditModalProps> = ({
               fields: fields?.entities,
             });
           }}
-          isDisabled={isDisabled}
           variant={ButtonVariant.primary}
         >
           {t('Save affinity rule')}
         </Button>
         <Button
-          key="cancel"
           data-testid="cancel-affinity-rule-button"
+          key="cancel"
           onClick={onCancel}
           variant={ButtonVariant.link}
         >

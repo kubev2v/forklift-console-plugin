@@ -18,8 +18,8 @@ const MigrationStatusVirtualMachinesRow: FC<RowProps<MigrationStatusVirtualMachi
     <>
       {resourceFields.map(({ resourceFieldId }) => (
         <VisibleTableData
-          key={resourceFieldId}
           fieldId={resourceFieldId ?? ''}
+          key={resourceFieldId}
           resourceFields={resourceFields}
         >
           {rowFields[resourceFieldId as MigrationStatusVirtualMachinesTableResourceId]}

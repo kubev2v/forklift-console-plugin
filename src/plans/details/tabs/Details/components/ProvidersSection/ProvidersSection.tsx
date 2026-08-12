@@ -36,9 +36,9 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
 
   return (
     <LoadingSuspend
-      obj={sourceProvider}
       loaded={sourceProviderLoaded && destinationProviderLoaded}
       loadError={sourceProviderLoadError ?? destinationProviderLoadError}
+      obj={sourceProvider}
     >
       <DescriptionList
         columnModifier={{
@@ -46,7 +46,6 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
         }}
       >
         <DetailsItem
-          title={t('Source provider')}
           content={
             <ProviderIconLink
               href={getResourceUrl({
@@ -58,14 +57,14 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
               providerName={sourceProviderName}
             />
           }
+          crumbs={['spec', 'providers', 'source']}
           helpContent={t(
             'The repository or distribution channel you want to migrate your virtual machines from into the OpenShift cluster.',
           )}
-          crumbs={['spec', 'providers', 'source']}
+          title={t('Source provider')}
         />
 
         <DetailsItem
-          title={t('Target provider')}
           content={
             <ProviderIconLink
               href={getResourceUrl({
@@ -77,8 +76,9 @@ const ProvidersSection: FC<ProvidersSectionProps> = ({ plan }) => {
               providerName={destinationProviderName}
             />
           }
-          helpContent={t('The OpenShift cluster you want to migrate your virtual machines to.')}
           crumbs={['spec', 'providers', 'destination']}
+          helpContent={t('The OpenShift cluster you want to migrate your virtual machines to.')}
+          title={t('Target provider')}
         />
       </DescriptionList>
     </LoadingSuspend>

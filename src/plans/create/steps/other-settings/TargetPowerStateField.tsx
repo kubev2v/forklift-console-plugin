@@ -27,26 +27,26 @@ const TargetPowerStateField: FC = () => {
         </FormHelperText>
 
         <Controller
-          name={OtherSettingsFormFieldId.TargetPowerState}
           control={control}
+          name={OtherSettingsFormFieldId.TargetPowerState}
           render={({ field }) => (
             <Select
-              ref={field.ref}
               id={field.name}
-              value={field.value?.label}
-              testId="target-power-state-select"
               onSelect={(_event, value) => {
                 field.onChange(value);
               }}
               placeholder={defaultTargetPowerStateOption.label}
+              ref={field.ref}
+              testId="target-power-state-select"
+              value={field.value?.label}
             >
               <SelectList>
                 {targetPowerStateOptions.map((option) => (
                   <SelectOption
+                    data-testid={`power-state-option-${option.value}`}
+                    description={option.description}
                     key={option.value}
                     value={option}
-                    description={option.description}
-                    data-testid={`power-state-option-${option.value}`}
                   >
                     {option.label}
                   </SelectOption>

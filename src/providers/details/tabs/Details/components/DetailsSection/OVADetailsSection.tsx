@@ -32,13 +32,13 @@ const OVADetailsSection: FC<DetailsSectionProps> = ({ data }) => {
       <NameDetailsItem resource={provider} />
       <NamespaceDetailsItem resource={provider} />
       <URLDetailsItem
-        resource={provider}
         canPatch={false}
         helpContent={t(
           `URL of the NFS file share that serves the OVA., for example, 10.10.0.10:/ova`,
         )}
+        resource={provider}
       />
-      <ApplianceManagementDetailsItem resource={provider} canPatch={canPatch} />
+      <ApplianceManagementDetailsItem canPatch={canPatch} resource={provider} />
       <CreatedAtDetailsItem resource={provider} />
       <OwnerDetailsItem resource={provider} />
     </DescriptionList>

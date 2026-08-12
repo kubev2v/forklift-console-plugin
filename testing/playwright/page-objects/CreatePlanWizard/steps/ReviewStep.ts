@@ -270,8 +270,8 @@ export class ReviewStep {
     mappingIndex: number,
     expectedOffload: {
       offloadPlugin?: string;
-      storageSecret?: string;
       storageProduct?: string;
+      storageSecret?: string;
     },
   ): Promise<void> {
     const reviewTable = this.page.getByTestId('storage-map-review-table');

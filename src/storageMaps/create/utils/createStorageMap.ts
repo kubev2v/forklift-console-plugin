@@ -14,10 +14,10 @@ import { buildStorageMappings } from './buildStorageMappings';
 
 type CreateStorageMapParams = {
   mappings: StorageMapping[];
+  name?: string;
   project: string;
   sourceProvider: V1beta1Provider | undefined;
   targetProvider: V1beta1Provider | undefined;
-  name?: string;
   targetStorages?: TargetStorage[];
   trackEvent?: (eventType: string, properties?: Record<string, unknown>) => void;
 };

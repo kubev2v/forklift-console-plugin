@@ -4,15 +4,15 @@ import type { OnPerPageSelect, OnSetPage } from '@patternfly/react-core';
 import { PageSection, Pagination } from '@patternfly/react-core';
 
 type PageContentProps = {
-  toolbar: ReactNode;
   children: ReactNode;
-  showPagination: boolean;
-  page: number;
   itemsPerPage: number;
-  totalItems: number;
-  onSetPage: OnSetPage;
-  onPerPageSelect: OnPerPageSelect;
   noPadding?: boolean;
+  onPerPageSelect: OnPerPageSelect;
+  onSetPage: OnSetPage;
+  page: number;
+  showPagination: boolean;
+  toolbar: ReactNode;
+  totalItems: number;
 };
 
 export const PageContent = ({
@@ -31,12 +31,12 @@ export const PageContent = ({
     {children}
     {showPagination && (
       <Pagination
-        variant="bottom"
-        perPage={itemsPerPage}
-        page={page}
         itemCount={totalItems}
-        onSetPage={onSetPage}
         onPerPageSelect={onPerPageSelect}
+        onSetPage={onSetPage}
+        page={page}
+        perPage={itemsPerPage}
+        variant="bottom"
       />
     )}
   </PageSection>

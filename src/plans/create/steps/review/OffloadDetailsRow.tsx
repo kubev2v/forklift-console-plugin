@@ -31,9 +31,9 @@ const OffloadDetailsRow: FC<OffloadDetailsRowProps> = ({ index, mapping }) => {
     <Tr isExpanded>
       <Td />
       <Td colSpan={3} data-testid={`review-offload-details-${index}`}>
-        <Stack hasGutter className="pf-v6-u-pt-md pf-v6-u-pb-md">
+        <Stack className="pf-v6-u-pt-md pf-v6-u-pb-md" hasGutter>
           <StackItem>
-            <DescriptionList isHorizontal isCompact>
+            <DescriptionList isCompact isHorizontal>
               <DescriptionListGroup>
                 <DescriptionListTerm>
                   {storageMapFieldLabels[CreatePlanStorageMapFieldId.OffloadPlugin]}

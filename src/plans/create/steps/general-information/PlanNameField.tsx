@@ -24,13 +24,13 @@ const PlanNameField: FC = () => {
 
   return (
     <FormGroupWithErrorText
-      isRequired
       fieldId={GeneralFormFieldId.PlanName}
+      isRequired
       label={generalFormFieldLabels[GeneralFormFieldId.PlanName]}
     >
       <Controller
-        name={GeneralFormFieldId.PlanName}
         control={control}
+        name={GeneralFormFieldId.PlanName}
         render={({ field }) => (
           <TextInput
             {...field}

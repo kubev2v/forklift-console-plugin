@@ -41,13 +41,13 @@ const ScriptsSection: FC<ScriptsSectionProps> = ({ configMap, plan, scripts }) =
       <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsSm' }}>
         <FlexItem>
           <SectionHeadingWithEdit
+            data-testid="scripts-section-edit-button"
             editable={planEditable}
-            title={t('Customization scripts')}
+            headingLevel="h3"
             onClick={() => {
               launchOverlay(ScriptEdit, { configMap, plan, scripts });
             }}
-            data-testid="scripts-section-edit-button"
-            headingLevel="h3"
+            title={t('Customization scripts')}
           />
         </FlexItem>
         <FlexItem>
@@ -58,8 +58,6 @@ const ScriptsSection: FC<ScriptsSectionProps> = ({ configMap, plan, scripts }) =
         <>
           <DescriptionList>
             <DetailsItem
-              testId="scripts-configmap"
-              title={t('ConfigMap')}
               content={
                 <ResourceLink
                   groupVersionKind={getGroupVersionKindForModel(ConfigMapModel)}
@@ -67,6 +65,8 @@ const ScriptsSection: FC<ScriptsSectionProps> = ({ configMap, plan, scripts }) =
                   namespace={configMapNamespace}
                 />
               }
+              testId="scripts-configmap"
+              title={t('ConfigMap')}
             />
           </DescriptionList>
           {scripts.map((script) => (
@@ -74,7 +74,7 @@ const ScriptsSection: FC<ScriptsSectionProps> = ({ configMap, plan, scripts }) =
           ))}
         </>
       ) : (
-        <Content component="p" className="pf-v6-u-color-200" data-testid="scripts-none">
+        <Content className="pf-v6-u-color-200" component="p" data-testid="scripts-none">
           {t('No customization scripts are configured.')}
         </Content>
       )}

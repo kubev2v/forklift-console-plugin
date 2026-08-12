@@ -38,7 +38,7 @@ jest.mock('../components/EditLUKSModalBody', () => () => <div data-testid="luks-
 jest.mock(
   '../LUKSPassphraseInputList',
   () =>
-    ({ value, onChange }: { value: any; onChange: any }) => (
+    ({ value, onChange }: { onChange: any; value: any }) => (
       <div data-testid="luks-passphrase-input-list">
         <div>Passphrases: {value.join(', ')}</div>
         <button data-testid="add-passphrase" onClick={() => onChange([...value, 'new-passphrase'])}>
@@ -67,7 +67,7 @@ describe('EditLUKSEncryptionPasswords', () => {
   it('initializes NBDE state from VM data', () => {
     mockGetPlanVirtualMachines.mockReturnValue([{ nbdeClevis: true }]);
 
-    render(<EditLUKSEncryptionPasswords resource={mockPlan} closeModal={closeModal} />);
+    render(<EditLUKSEncryptionPasswords closeModal={closeModal} resource={mockPlan} />);
 
     const checkbox = screen.getByLabelText('Use network-bound disk encryption (NBDE/Clevis)');
     expect(checkbox).toBeChecked();
@@ -75,7 +75,7 @@ describe('EditLUKSEncryptionPasswords', () => {
 
   it('toggles NBDE checkbox', async () => {
     const user = userEvent.setup();
-    render(<EditLUKSEncryptionPasswords resource={mockPlan} closeModal={closeModal} />);
+    render(<EditLUKSEncryptionPasswords closeModal={closeModal} resource={mockPlan} />);
 
     const checkbox = screen.getByLabelText('Use network-bound disk encryption (NBDE/Clevis)');
     expect(checkbox).not.toBeChecked();
@@ -87,7 +87,7 @@ describe('EditLUKSEncryptionPasswords', () => {
   it('shows passphrase fields when NBDE is disabled', () => {
     mockGetPlanVirtualMachines.mockReturnValue([{ nbdeClevis: false }]);
 
-    render(<EditLUKSEncryptionPasswords resource={mockPlan} closeModal={closeModal} />);
+    render(<EditLUKSEncryptionPasswords closeModal={closeModal} resource={mockPlan} />);
 
     expect(screen.getByText('Passphrases for LUKS encrypted devices')).toBeInTheDocument();
     expect(screen.getByTestId('luks-passphrase-input-list')).toBeInTheDocument();
@@ -95,7 +95,7 @@ describe('EditLUKSEncryptionPasswords', () => {
 
   it('hides passphrase fields when NBDE is enabled', async () => {
     const user = userEvent.setup();
-    render(<EditLUKSEncryptionPasswords resource={mockPlan} closeModal={closeModal} />);
+    render(<EditLUKSEncryptionPasswords closeModal={closeModal} resource={mockPlan} />);
 
     const checkbox = screen.getByLabelText('Use network-bound disk encryption (NBDE/Clevis)');
     await user.click(checkbox);
@@ -111,7 +111,7 @@ describe('EditLUKSEncryptionPasswords', () => {
       null,
     ]);
 
-    render(<EditLUKSEncryptionPasswords resource={mockPlan} closeModal={closeModal} />);
+    render(<EditLUKSEncryptionPasswords closeModal={closeModal} resource={mockPlan} />);
 
     await waitFor(() => {
       expect(screen.getByText('Passphrases: test-pass-1, test-pass-2')).toBeInTheDocument();
@@ -122,7 +122,7 @@ describe('EditLUKSEncryptionPasswords', () => {
     const user = userEvent.setup();
     mockUseK8sWatchResource.mockReturnValue([{ data: { pass1: btoa('test-pass') } }, false, null]);
 
-    render(<EditLUKSEncryptionPasswords resource={mockPlan} closeModal={closeModal} />);
+    render(<EditLUKSEncryptionPasswords closeModal={closeModal} resource={mockPlan} />);
 
     await waitFor(() => {
       expect(screen.getByText('Passphrases: test-pass')).toBeInTheDocument();
@@ -137,7 +137,7 @@ describe('EditLUKSEncryptionPasswords', () => {
 
   it('submits form with correct NBDE state', async () => {
     const user = userEvent.setup();
-    render(<EditLUKSEncryptionPasswords resource={mockPlan} closeModal={closeModal} />);
+    render(<EditLUKSEncryptionPasswords closeModal={closeModal} resource={mockPlan} />);
 
     const checkbox = screen.getByLabelText('Use network-bound disk encryption (NBDE/Clevis)');
     await user.click(checkbox);
@@ -161,7 +161,7 @@ describe('EditLUKSEncryptionPasswords', () => {
       { luks: { name: 'secret-2' } },
     ]);
 
-    render(<EditLUKSEncryptionPasswords resource={mockPlan} closeModal={closeModal} />);
+    render(<EditLUKSEncryptionPasswords closeModal={closeModal} resource={mockPlan} />);
 
     expect(screen.getByTestId('luks-modal-alert')).toBeInTheDocument();
   });
@@ -170,7 +170,7 @@ describe('EditLUKSEncryptionPasswords', () => {
     mockGetLUKSSecretName.mockReturnValue('test-secret');
     mockUseK8sWatchResource.mockReturnValue([{ data: null }, false, null]);
 
-    render(<EditLUKSEncryptionPasswords resource={mockPlan} closeModal={closeModal} />);
+    render(<EditLUKSEncryptionPasswords closeModal={closeModal} resource={mockPlan} />);
 
     expect(screen.getByTestId('luks-modal-body')).toBeInTheDocument();
     expect(screen.getByTestId('luks-passphrase-input-list')).toHaveTextContent('Passphrases:');

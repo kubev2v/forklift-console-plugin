@@ -75,9 +75,9 @@ export type TestPlan = V1beta1Plan & {
 };
 
 export type CreateProviderOptions = {
-  providerKey?: string;
-  namePrefix?: string;
   customProviderData?: Partial<ProviderData>;
+  namePrefix?: string;
+  providerKey?: string;
   skipProviderReadyWait?: boolean;
 };
 
@@ -186,8 +186,8 @@ export const createProvider = async (
 };
 
 export type CreatePlanOptions = {
-  sourceProvider: V1beta1Provider;
   customPlanData?: Partial<ReturnType<typeof createPlanTestData>>;
+  sourceProvider: V1beta1Provider;
 };
 
 const buildPlanTestData = (

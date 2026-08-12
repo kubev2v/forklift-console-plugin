@@ -5,7 +5,7 @@ export type SetVMTargetName = ({
   resource,
   vmIndex,
 }: {
-  resource: V1beta1Plan;
   newValue: string | undefined;
+  resource: V1beta1Plan;
   vmIndex: number;
 }) => Promise<V1beta1Plan>;

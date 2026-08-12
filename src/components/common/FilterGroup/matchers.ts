@@ -78,10 +78,10 @@ export const createMatcher =
     resourceFields,
     selectedFilters,
   }: {
-    selectedFilters: Record<string, string[]>;
     filterType: string;
     matchValue: (value: string) => (filterValue: string) => boolean;
     resourceFields: ResourceField[];
+    selectedFilters: Record<string, string[]>;
   }) =>
   (resourceData?: ResourceDataRecord | null): boolean =>
     resourceFields

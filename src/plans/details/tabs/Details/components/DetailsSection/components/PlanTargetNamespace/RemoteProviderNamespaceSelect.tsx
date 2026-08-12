@@ -25,10 +25,10 @@ const RemoteProviderNamespaceSelect: FC<RemoteProviderNamespaceSelectProps> = ({
 
   return (
     <TargetNamespaceSelect
+      errorMessage={loadError?.message}
+      onChange={onChange}
       projectNames={projectNames}
       value={value}
-      onChange={onChange}
-      errorMessage={loadError?.message}
     />
   );
 };

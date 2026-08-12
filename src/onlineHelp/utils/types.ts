@@ -15,22 +15,22 @@ export enum ListStyleType {
 }
 
 export type LearningExperienceSubTopic = {
-  id: string;
-  title?: ReactNode;
   className?: string;
   expandable?: boolean;
+  id: string;
   subListStyleType?: ListStyleType;
   subTopics?: () => LearningExperienceSubTopic[];
+  title?: ReactNode;
 };
 
 export type LearningExperienceTopic = {
   description: ReactNode;
+  expandable?: boolean;
   icon: ComponentClass<SVGIconProps>;
   id: string;
-  title: ReactNode;
-  expandable?: boolean;
   subListStyleType?: ListStyleType;
   subTopics: (providerType?: ProviderTypes) => LearningExperienceSubTopic[];
   subTopicsIndexed?: boolean;
+  title: ReactNode;
   trackingEventTopic: string;
 };

@@ -20,11 +20,11 @@ const PlanAutomationPage: FC<PlanPageProps> = ({ name, namespace }) => {
 
   return (
     <LoadingSuspend
-      obj={plan}
       loaded={loadedPlan && loadedScripts}
       loadError={planError ?? scriptsError}
+      obj={plan}
     >
-      <PageSection hasBodyWrapper={false} className="pf-v6-u-h-100">
+      <PageSection className="pf-v6-u-h-100" hasBodyWrapper={false}>
         <Flex direction={{ default: 'column' }}>
           <ScriptsSection configMap={configMap} plan={plan} scripts={scripts} />
         </Flex>

@@ -36,15 +36,15 @@ export const VSphereEditUIModal: ModalComponent<EditProviderUIModalProps> = ({
   return (
     <TextInputEditModal
       {...rest}
-      title={t('Edit provider web UI link')}
-      label={t('Provider web UI link')}
-      initialValue={provider?.metadata?.annotations?.[providerUiAnnotation] ?? ''}
       description={description}
       helperText={t(
         'Link for the VMware vSphere UI. For example, https://vSphere-host-example.com/ui.',
       )}
-      validationHook={validateVSphereUILink}
+      initialValue={provider?.metadata?.annotations?.[providerUiAnnotation] ?? ''}
+      label={t('Provider web UI link')}
       onConfirm={onConfirm}
+      title={t('Edit provider web UI link')}
+      validationHook={validateVSphereUILink}
     />
   );
 };

@@ -12,11 +12,11 @@ import type { ProviderFormFieldIdType } from './constants';
 type ProviderFormTextInputProps = {
   fieldId: ProviderFormFieldIdType;
   fieldRules?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+  helperText?: string;
+  isRequired?: boolean;
   label: string;
   labelHelp?: FormGroupProps['labelHelp'];
   testId?: string;
-  isRequired?: boolean;
-  helperText?: string;
 };
 
 const ProviderFormTextInput: FC<ProviderFormTextInputProps> = ({
@@ -44,24 +44,24 @@ const ProviderFormTextInput: FC<ProviderFormTextInputProps> = ({
 
   return (
     <FormGroupWithHelpText
-      label={label}
-      labelHelp={labelHelp}
-      isRequired={isRequired}
       fieldId={fieldId}
-      validated={getInputValidated(error)}
       helperText={helperText}
       helperTextInvalid={error?.message}
+      isRequired={isRequired}
+      label={label}
+      labelHelp={labelHelp}
       testId={testId ? `${testId}-helper` : undefined}
+      validated={getInputValidated(error)}
     >
       <TextInput
-        type="text"
+        data-testid={testId}
         id={fieldId}
-        value={(fieldValue as string) ?? ''}
         onChange={(_event, val) => {
           onChange(val);
         }}
+        type="text"
         validated={getInputValidated(error)}
-        data-testid={testId}
+        value={(fieldValue as string) ?? ''}
       />
     </FormGroupWithHelpText>
   );

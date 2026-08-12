@@ -3,10 +3,10 @@ import type { FC, FormEvent, MouseEvent } from 'react';
 import { NumberInput } from '@patternfly/react-core';
 
 type SettingsNumberInputProps = {
-  value: string | number;
-  onChange: (value: string | number) => void;
   defaultValue: number;
+  onChange: (value: string | number) => void;
   testId?: string;
+  value: string | number;
 };
 
 const SettingsNumberInput: FC<SettingsNumberInputProps> = ({
@@ -41,15 +41,15 @@ const SettingsNumberInput: FC<SettingsNumberInputProps> = ({
 
   return (
     <NumberInput
-      value={Number(value)}
-      onMinus={onUserMinus}
-      onChange={onUserChange}
-      onPlus={onUserPlus}
-      inputName="input"
-      inputAriaLabel="number input"
-      minusBtnAriaLabel="minus"
-      plusBtnAriaLabel="plus"
       data-testid={testId}
+      inputAriaLabel="number input"
+      inputName="input"
+      minusBtnAriaLabel="minus"
+      onChange={onUserChange}
+      onMinus={onUserMinus}
+      onPlus={onUserPlus}
+      plusBtnAriaLabel="plus"
+      value={Number(value)}
     />
   );
 };

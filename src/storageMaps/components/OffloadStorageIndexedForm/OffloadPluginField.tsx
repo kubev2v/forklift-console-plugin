@@ -52,20 +52,20 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
       }
     >
       <Controller
-        name={fieldId}
         control={control}
+        name={fieldId}
         render={({ field }) => (
           <Select
-            ref={field.ref}
             id={fieldId}
-            testId={fieldId}
             isDisabled={isSubmitting || loading}
-            value={field.value}
-            options={options}
             onSelect={(_event, value) => {
               field.onChange(value);
             }}
+            options={options}
             placeholder={t('Select offload plugin')}
+            ref={field.ref}
+            testId={fieldId}
+            value={field.value}
           />
         )}
       />

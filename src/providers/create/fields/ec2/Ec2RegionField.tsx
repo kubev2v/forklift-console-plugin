@@ -12,8 +12,8 @@ const Ec2RegionField: FC = () => {
     <ProviderFormTextInput
       fieldId={ProviderFormFieldId.Ec2Region}
       fieldRules={{ required: t('AWS region is required') }}
-      label={t('AWS region')}
       helperText={t('The AWS region where EC2 instances are located, for example: us-east-1')}
+      label={t('AWS region')}
       testId="ec2-region-input"
     />
   );

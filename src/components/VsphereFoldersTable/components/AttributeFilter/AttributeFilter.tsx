@@ -39,11 +39,11 @@ export const AttributeFiltersToolbar = <T,>({
     active?.kind === AttributeKind.Checkbox ? (
       <FilterValueMultiSelect
         attribute={active}
-        selected={checks[active.id] ?? new Set<string>()}
+        closeKey={active.id}
         onToggle={(optId) => {
           toggleCheck(active.id, optId);
         }}
-        closeKey={active.id}
+        selected={checks[active.id] ?? new Set<string>()}
       />
     ) : null;
 
@@ -51,9 +51,7 @@ export const AttributeFiltersToolbar = <T,>({
     const chips = chipsByAttr[attr.id] ?? [];
     return (
       <ToolbarFilter
-        key={attr.id}
         categoryName={attr.label}
-        labels={chips}
         deleteLabel={(_c: unknown, chip: string | ToolbarLabel) => {
           if (typeof chip === 'string') {
             deleteChip(attr.id, chip);
@@ -64,21 +62,23 @@ export const AttributeFiltersToolbar = <T,>({
         deleteLabelGroup={() => {
           deleteChipGroup(attr.id);
         }}
+        key={attr.id}
+        labels={chips}
         showToolbarItem={activeId === attr.id}
       >
         {attr.kind === AttributeKind.Text ? (
           <SearchInput
-            placeholder={t('Filter by {{activeFilterLabel}}', {
-              activeFilterLabel:
-                active.id === COLUMN_IDS.Name ? active.label : active.label.toLocaleLowerCase(),
-            })}
-            value={text[attr.id] ?? ''}
             onChange={(_e, value) => {
               setTextValue(attr.id, value);
             }}
             onClear={() => {
               clearText(attr.id);
             }}
+            placeholder={t('Filter by {{activeFilterLabel}}', {
+              activeFilterLabel:
+                active.id === COLUMN_IDS.Name ? active.label : active.label.toLocaleLowerCase(),
+            })}
+            value={text[attr.id] ?? ''}
           />
         ) : (
           checkboxSelect
@@ -88,12 +88,12 @@ export const AttributeFiltersToolbar = <T,>({
   });
 
   return (
-    <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
+    <ToolbarToggleGroup breakpoint="xl" toggleIcon={<FilterIcon />}>
       <ToolbarGroup variant="filter-group">
         <ToolbarItem>
           <FilterAttributeSelect
-            attributes={attributes}
             activeId={activeId}
+            attributes={attributes}
             onChange={setActiveId}
           />
         </ToolbarItem>

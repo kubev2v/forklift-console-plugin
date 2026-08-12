@@ -9,9 +9,9 @@ import { getStorageMapSchema } from '../utils/getStorageMapSchema';
 import { useStorageMapCrd } from './useStorageMapCrd';
 
 type UseOffloadPluginsResult = {
-  offloadPlugins: string[];
-  loading: boolean;
   error: Error | null;
+  loading: boolean;
+  offloadPlugins: string[];
 };
 
 /**

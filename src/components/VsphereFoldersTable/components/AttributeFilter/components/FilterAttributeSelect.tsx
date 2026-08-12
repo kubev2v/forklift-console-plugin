@@ -13,8 +13,8 @@ import { useForkliftTranslation } from '@utils/i18n';
 import type { AttributeConfig } from '../utils/types';
 
 type FilterAttributeSelectProps<T> = {
-  attributes: AttributeConfig<T>[];
   activeId?: string;
+  attributes: AttributeConfig<T>[];
   onChange: (id: string) => void;
 };
 
@@ -35,28 +35,28 @@ const FilterAttributeSelect = <T,>({
     <PfSelect
       id="filter-attribute-select"
       isOpen={isOpen}
-      selected={active?.id}
+      onOpenChange={(open) => {
+        setOpen(open);
+      }}
       onSelect={(_e, value) => {
         onChange(String(value));
         setOpen(false);
       }}
-      onOpenChange={(open) => {
-        setOpen(open);
-      }}
+      selected={active?.id}
+      shouldFocusToggleOnSelect
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
-          ref={toggleRef}
           data-testid="filter-attribute-toggle"
+          icon={<FilterIcon />}
+          isExpanded={isOpen}
           onClick={() => {
             setOpen((open) => !open);
           }}
-          isExpanded={isOpen}
-          icon={<FilterIcon />}
+          ref={toggleRef}
         >
           {active?.label ?? t('Select filter type')}
         </MenuToggle>
       )}
-      shouldFocusToggleOnSelect
     >
       <SelectList>
         {attributes.map((attr) => (

@@ -20,8 +20,8 @@ const PasswordCredentialsFields: FC = () => {
         fieldRules={{
           validate: validateOpenstackField(OpenstackSecretFieldsId.Username),
         }}
-        label={t('Username')}
         helperText={t('Username for connecting to OpenStack Identity (Keystone)')}
+        label={t('Username')}
         testId="openstack-username-input"
       />
 

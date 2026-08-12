@@ -7,9 +7,9 @@ import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanSourceProvider } from '@utils/crds/plans/selectors';
 
 type UsePlanSourceProvider = (plan: V1beta1Plan) => {
-  sourceProvider: V1beta1Provider;
   loaded: boolean;
   loadError: Error;
+  sourceProvider: V1beta1Provider;
 };
 
 const usePlanSourceProvider: UsePlanSourceProvider = (plan) => {

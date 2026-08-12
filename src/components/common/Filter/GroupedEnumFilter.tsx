@@ -29,9 +29,9 @@ const renderOptions = (
           .map(({ icon, id, label: itemLabel }) => (
             <SelectOption
               hasCheckbox
+              isSelected={selectedEnumIds.includes(id)}
               key={id}
               value={itemLabel}
-              isSelected={selectedEnumIds.includes(id)}
             >
               {icon} {itemLabel}
             </SelectOption>
@@ -149,15 +149,15 @@ export const GroupedEnumFilter = ({
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
     <MenuToggle
-      ref={toggleRef}
-      onClick={onToggleClick}
       isExpanded={isOpen}
       isFullWidth
+      onClick={onToggleClick}
+      ref={toggleRef}
       {...(showFilterIcon && { icon: <FilterIcon /> })}
     >
       {placeholderLabel}
       {!isEmpty(selectedEnumIds) && (
-        <Badge isRead className="pf-v6-u-ml-sm">
+        <Badge className="pf-v6-u-ml-sm" isRead>
           {selectedEnumIds.length}
         </Badge>
       )}
@@ -174,11 +174,7 @@ export const GroupedEnumFilter = ({
       {supportedGroups.reduce(
         (acc, { groupId, label }) => (
           <ToolbarFilter
-            labels={selectedEnumIds
-              .filter((id) => id2enum[id])
-              .map((id) => id2enum[id])
-              .filter((enumVal) => enumVal.groupId === groupId)
-              .map(({ id, label: enumLabel }) => ({ key: id, node: enumLabel }))}
+            categoryName={{ key: groupId, name: label }}
             deleteLabel={(category, option) => {
               // values are one enum so id is enough to identify (category is not needed)
               const id = typeof option === 'string' ? option : option.key;
@@ -188,7 +184,11 @@ export const GroupedEnumFilter = ({
               const categoryId = typeof category === 'string' ? category : category.key;
               deleteGroup(categoryId);
             }}
-            categoryName={{ key: groupId, name: label }}
+            labels={selectedEnumIds
+              .filter((id) => id2enum[id])
+              .map((id) => id2enum[id])
+              .filter((enumVal) => enumVal.groupId === groupId)
+              .map(({ id, label: enumLabel }) => ({ key: id, node: enumLabel }))}
             showToolbarItem={showFilter}
           >
             {acc}
@@ -197,22 +197,22 @@ export const GroupedEnumFilter = ({
         // This select is different from most and cannot use the common Select
         // eslint-disable-next-line no-restricted-syntax
         <Select
-          role="menu"
           aria-label={placeholderLabel}
           isOpen={isOpen}
-          selected={supportedEnumValues.filter(({ id }) => selectedEnumIds.includes(id))}
-          onSelect={onSelect}
           onOpenChange={(nextOpen: boolean) => {
             setIsOpen(nextOpen);
           }}
-          toggle={toggle}
-          shouldFocusToggleOnSelect
-          shouldFocusFirstItemOnOpen={false}
+          onSelect={onSelect}
           popperProps={{
             appendTo: document.body,
             direction: 'down',
             enableFlip: true,
           }}
+          role="menu"
+          selected={supportedEnumValues.filter(({ id }) => selectedEnumIds.includes(id))}
+          shouldFocusFirstItemOnOpen={false}
+          shouldFocusToggleOnSelect
+          toggle={toggle}
         >
           <SelectList>
             {renderOptions(supportedGroups, supportedEnumValues, selectedEnumIds)}

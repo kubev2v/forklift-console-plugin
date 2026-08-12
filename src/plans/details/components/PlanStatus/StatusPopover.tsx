@@ -30,10 +30,10 @@ import {
 import { getPopoverMessageByStatus } from './utils/utils';
 
 type StatusPopoverProps = {
-  status: MigrationVirtualMachineStatus;
   count: number;
-  vms: MigrationVirtualMachinesStatusCountObjectVM[];
   plan: V1beta1Plan;
+  status: MigrationVirtualMachineStatus;
+  vms: MigrationVirtualMachinesStatusCountObjectVM[];
 };
 
 const StatusPopover: FC<StatusPopoverProps> = ({ count, plan, status, vms }) => {
@@ -52,8 +52,6 @@ const StatusPopover: FC<StatusPopoverProps> = ({ count, plan, status, vms }) => 
   };
   return (
     <Popover
-      triggerAction="hover"
-      headerContent={header}
       bodyContent={
         <Stack hasGutter>
           {body && <StackItem>{body}</StackItem>}
@@ -85,7 +83,7 @@ const StatusPopover: FC<StatusPopoverProps> = ({ count, plan, status, vms }) => 
 
           <StackItem>
             <Button
-              variant={ButtonVariant.link}
+              isInline
               onClick={() => {
                 if (status === MigrationVirtualMachineStatus.Paused) {
                   openScheduleCutoverModal();
@@ -94,17 +92,19 @@ const StatusPopover: FC<StatusPopoverProps> = ({ count, plan, status, vms }) => 
 
                 navigateToVMsTab();
               }}
-              isInline
+              variant={ButtonVariant.link}
             >
               {actionLabel}
             </Button>
           </StackItem>
         </Stack>
       }
+      headerContent={header}
+      triggerAction="hover"
     >
-      <Flex gap={{ default: 'gapXs' }} flexWrap={{ default: 'nowrap' }}>
+      <Flex flexWrap={{ default: 'nowrap' }} gap={{ default: 'gapXs' }}>
         {migrationStatusIconMap[status]}
-        <Button isInline variant={ButtonVariant.link} onClick={navigateToVMsTab}>
+        <Button isInline onClick={navigateToVMsTab} variant={ButtonVariant.link}>
           {count}
         </Button>
       </Flex>

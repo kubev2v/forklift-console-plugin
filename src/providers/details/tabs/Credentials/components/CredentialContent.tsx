@@ -18,8 +18,8 @@ import OpenstackCredentialsContent from './OpenstackCredentialsContent';
 
 type CredentialsContentProps = {
   provider: V1beta1Provider;
-  secret: IoK8sApiCoreV1Secret;
   reveal: boolean;
+  secret: IoK8sApiCoreV1Secret;
 };
 
 const CredentialsContent: FC<CredentialsContentProps> = ({ provider, reveal, secret }) => {
@@ -29,28 +29,28 @@ const CredentialsContent: FC<CredentialsContentProps> = ({ provider, reveal, sec
 
   switch (providerType) {
     case PROVIDER_TYPES.ec2:
-      return <CredentialFields fields={ec2CredentialsFields} secret={secret} reveal={reveal} />;
+      return <CredentialFields fields={ec2CredentialsFields} reveal={reveal} secret={secret} />;
 
     case PROVIDER_TYPES.vsphere:
       if (sdkEndpoint === VSphereEndpointType.ESXi) {
-        return <CredentialFields fields={esxiCredentialsFields} secret={secret} reveal={reveal} />;
+        return <CredentialFields fields={esxiCredentialsFields} reveal={reveal} secret={secret} />;
       }
 
-      return <CredentialFields fields={vCenterCredentialsFields} secret={secret} reveal={reveal} />;
+      return <CredentialFields fields={vCenterCredentialsFields} reveal={reveal} secret={secret} />;
 
     case PROVIDER_TYPES.ovirt:
-      return <CredentialFields fields={ovirtCredentialsFields} secret={secret} reveal={reveal} />;
+      return <CredentialFields fields={ovirtCredentialsFields} reveal={reveal} secret={secret} />;
 
     case PROVIDER_TYPES.openshift:
       return (
-        <CredentialFields fields={openshiftCredentialsFields} secret={secret} reveal={reveal} />
+        <CredentialFields fields={openshiftCredentialsFields} reveal={reveal} secret={secret} />
       );
 
     case PROVIDER_TYPES.openstack:
-      return <OpenstackCredentialsContent secret={secret} reveal={reveal} />;
+      return <OpenstackCredentialsContent reveal={reveal} secret={secret} />;
 
     case PROVIDER_TYPES.hyperv:
-      return <CredentialFields fields={hypervCredentialsFields} secret={secret} reveal={reveal} />;
+      return <CredentialFields fields={hypervCredentialsFields} reveal={reveal} secret={secret} />;
 
     case PROVIDER_TYPES.ova:
     case undefined:

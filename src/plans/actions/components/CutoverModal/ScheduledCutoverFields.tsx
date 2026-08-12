@@ -41,16 +41,16 @@ const ScheduledCutoverFields: FC<ScheduledCutoverFieldsProps> = ({
       <FlexItem>
         <InputGroup>
           <DatePicker
-            onChange={onDateChange}
-            aria-label={t('Cutover date')}
-            placeholder="YYYY-MM-DD"
             appendTo={document.body}
+            aria-label={t('Cutover date')}
+            onChange={onDateChange}
+            placeholder="YYYY-MM-DD"
             value={yyyyMMddFormat(cutoverDate ? new Date(cutoverDate) : new Date())}
           />
           <TimePicker
             aria-label={t('Cutover time')}
-            onChange={onTimeChange}
             menuAppendTo={document.body}
+            onChange={onTimeChange}
             time={time}
           />
         </InputGroup>
@@ -58,12 +58,12 @@ const ScheduledCutoverFields: FC<ScheduledCutoverFieldsProps> = ({
       {isScheduledInPast && (
         <FlexItem>
           <Alert
-            variant={AlertVariant.info}
             isInline
             isPlain
             title={t(
               'The selected time is in the past. Cutover will begin immediately, equivalent to the ASAP option.',
             )}
+            variant={AlertVariant.info}
           />
         </FlexItem>
       )}

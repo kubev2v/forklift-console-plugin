@@ -134,17 +134,17 @@ const NetworkMapsListPage: FC<{
         {...(permissions.canCreate && {
           addButton: <NetworkMapsAddButton namespace={namespace} testId="add-network-map-button" />,
         })}
+        customNoResultsFound={<NetworkMapsEmptyState namespace={namespace} />}
         dataSource={[data || [], networkMapsLoaded, networkMapsLoadError]}
-        row={NetworkMapRow}
         fieldsMetadata={fieldsMetadata}
         namespace={namespace}
+        row={NetworkMapRow}
+        shouldShowLearningExperienceButton
         title={t('Network maps')}
         titleHelpContent={t(
           'Network maps ensure that the network configurations of your migrating virtual machines (VMs) are correctly translated and applied in the target environment.',
         )}
         userSettings={userSettings}
-        customNoResultsFound={<NetworkMapsEmptyState namespace={namespace} />}
-        shouldShowLearningExperienceButton
       />
     </LearningExperienceDrawer>
   );

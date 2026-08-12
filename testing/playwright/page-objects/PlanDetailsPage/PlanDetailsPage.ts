@@ -131,10 +131,10 @@ export class PlanDetailsPage {
   }
 
   async getMigrationStatus(): Promise<{
-    status: string;
-    percentage: string;
-    isTerminal: boolean;
     isSuccess: boolean;
+    isTerminal: boolean;
+    percentage: string;
+    status: string;
   }> {
     const statusContainer = this.page.getByTestId('plan-status-container');
     const statusElement = statusContainer.locator('[data-testid^="plan-status-"]').first();
@@ -153,7 +153,7 @@ export class PlanDetailsPage {
       // Percentage not available
     }
 
-    const terminalStates: Record<string, { isTerminal: boolean; isSuccess: boolean }> = {
+    const terminalStates: Record<string, { isSuccess: boolean; isTerminal: boolean }> = {
       complete: { isTerminal: true, isSuccess: true },
       incomplete: { isTerminal: true, isSuccess: false },
       canceled: { isTerminal: true, isSuccess: false },

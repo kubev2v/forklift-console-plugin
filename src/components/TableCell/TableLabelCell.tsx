@@ -27,10 +27,10 @@ export const TableLabelCell: FC<TableLabelCellProps> = ({
       {hasLabel &&
         labels.map((_, i) => (
           <Label
-            key={i}
-            isCompact
-            color={labelColors[i] as LabelProps['color']}
             className="forklift-table__flex-cell-label"
+            color={labelColors[i] as LabelProps['color']}
+            isCompact
+            key={i}
           >
             {labels[i]}
           </Label>
@@ -42,7 +42,7 @@ export const TableLabelCell: FC<TableLabelCellProps> = ({
 type Colors = 'blue' | 'cyan' | 'green' | 'orange' | 'purple' | 'red' | 'grey';
 export type TableLabelCellProps = {
   hasLabel?: boolean;
+  isWrap?: boolean;
   label?: ReactNode | ReactNode[];
   labelColor?: Colors | Colors[];
-  isWrap?: boolean;
 } & TableCellProps;

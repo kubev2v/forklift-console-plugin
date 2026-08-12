@@ -59,7 +59,7 @@ export const createRowWithSelection = <T,>({
             }}
           />
         )}
-        {disabledReason && <Tooltip triggerRef={selectRef} content={disabledReason} />}
+        {disabledReason && <Tooltip content={disabledReason} triggerRef={selectRef} />}
         {CellComponent && <CellComponent {...props} />}
       </>
     );

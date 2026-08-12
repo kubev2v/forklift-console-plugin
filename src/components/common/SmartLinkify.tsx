@@ -6,7 +6,7 @@ const SmartLinkify: FC<PropsWithChildren> = ({ children }) => {
     // Only linkify if the original text actually contains http/https protocol
     if (decoratedText.includes('http://') || decoratedText.includes('https://')) {
       return (
-        <a href={decoratedHref} key={key} target="_blank" rel="noopener noreferrer">
+        <a href={decoratedHref} key={key} rel="noopener noreferrer" target="_blank">
           {decoratedText}
         </a>
       );

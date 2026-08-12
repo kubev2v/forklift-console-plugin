@@ -23,27 +23,27 @@ const TargetProviderField: FC = () => {
 
   return (
     <FormGroupWithErrorText
-      isRequired
       fieldId={NetworkMapFieldId.TargetProvider}
+      isRequired
       label={networkMapFieldLabels[NetworkMapFieldId.TargetProvider]}
     >
       <Controller
-        name={NetworkMapFieldId.TargetProvider}
         control={control}
+        name={NetworkMapFieldId.TargetProvider}
         render={({ field }) => (
           <ProviderSelect
-            ref={field.ref}
-            isDisabled={isSubmitting}
-            placeholder={t('Select target provider')}
             id={NetworkMapFieldId.TargetProvider}
-            testId="network-map-target-provider-select"
+            isDisabled={isSubmitting}
             namespace={project}
-            value={field.value?.metadata?.name ?? ''}
             onSelect={(_, value) => {
               field.onChange(value);
               setValue(NetworkMapFieldId.NetworkMap, [defaultNetworkMapping]);
             }}
+            placeholder={t('Select target provider')}
+            ref={field.ref}
             status={error && MenuToggleStatus.danger}
+            testId="network-map-target-provider-select"
+            value={field.value?.metadata?.name ?? ''}
           />
         )}
         rules={{ required: t('Target provider is required.') }}

@@ -16,11 +16,11 @@ const PlanMigrationTypeLabel: FC<PlanMigrationTypeLabelProps> = ({ migrationType
   const color = getLabelColor(migrationType);
   return (
     <Popover
-      headerContent={t('{{type}} migration', { type: typeLabel(migrationType) })}
       bodyContent={bodyContent(migrationType)}
+      headerContent={t('{{type}} migration', { type: typeLabel(migrationType) })}
       triggerAction="hover"
     >
-      <Label isCompact color={color}>
+      <Label color={color} isCompact>
         {t('{{label}}', { label: typeLabel(migrationType) })}
       </Label>
     </Popover>

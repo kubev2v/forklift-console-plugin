@@ -12,11 +12,11 @@ export class NavigationHelper {
   }
 
   private buildK8sUrl(options: {
-    resource: string;
-    name?: string;
-    namespace?: string;
     action?: 'new' | 'edit';
     allNamespaces?: boolean;
+    name?: string;
+    namespace?: string;
+    resource: string;
     tab?: string;
   }): string {
     const { resource, name, namespace, action, allNamespaces = false, tab } = options;
@@ -55,11 +55,11 @@ export class NavigationHelper {
   }
 
   async navigateToK8sResource(options: {
-    resource: string;
-    name?: string;
-    namespace?: string;
     action?: 'new' | 'edit';
     allNamespaces?: boolean;
+    name?: string;
+    namespace?: string;
+    resource: string;
     tab?: string;
   }): Promise<void> {
     const url = this.buildK8sUrl(options);

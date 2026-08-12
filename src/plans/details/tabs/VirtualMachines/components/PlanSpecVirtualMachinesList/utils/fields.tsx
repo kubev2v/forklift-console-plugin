@@ -25,10 +25,10 @@ export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePa
   } = fieldsData;
   return {
     [PlanSpecVirtualMachinesTableResourceId.Actions]: (
-      <SpecVirtualMachinesActions plan={plan} vmIndex={vmIndex} providerType={sourceProviderType} />
+      <SpecVirtualMachinesActions plan={plan} providerType={sourceProviderType} vmIndex={vmIndex} />
     ),
     [PlanSpecVirtualMachinesTableResourceId.Concerns]: (
-      <VirtualMachineConcernsCell vmData={inventoryVmData} conditions={conditions} />
+      <VirtualMachineConcernsCell conditions={conditions} vmData={inventoryVmData} />
     ),
     [PlanSpecVirtualMachinesTableResourceId.GuestOS]: (
       <>{getVmGuestOS(inventoryVmData?.vm) || EMPTY_MSG}</>
@@ -41,8 +41,8 @@ export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePa
     ),
     [PlanSpecVirtualMachinesTableResourceId.MigrateSharedDisks]: (
       <VMMigrateSharedDisksCellRenderer
-        plan={plan}
         migrateSharedDisks={(specVM as EnhancedPlanSpecVms)?.migrateSharedDisks}
+        plan={plan}
       />
     ),
     [PlanSpecVirtualMachinesTableResourceId.Name]: <>{specVM?.name ?? inventoryVmData?.vm?.name}</>,

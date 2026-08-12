@@ -12,16 +12,7 @@ const OpenShiftUrlField: FC = () => {
 
   return (
     <ProviderFormTextInput
-      label={t('API endpoint URL')}
-      isRequired={false}
-      testId="openshift-url-input"
       fieldId={ProviderFormFieldId.OpenshiftUrl}
-      labelHelp={
-        <HelpIconPopover header={t('API endpoint URL')}>
-          {t('When the URL field is left empty, the local OpenShift cluster is used.')}
-        </HelpIconPopover>
-      }
-      helperText={t('The URL of the API endpoint, for example: https://example.com:6443.')}
       fieldRules={{
         validate: {
           validUrl: (val: string | undefined) => {
@@ -41,6 +32,15 @@ const OpenShiftUrlField: FC = () => {
           },
         },
       }}
+      helperText={t('The URL of the API endpoint, for example: https://example.com:6443.')}
+      isRequired={false}
+      label={t('API endpoint URL')}
+      labelHelp={
+        <HelpIconPopover header={t('API endpoint URL')}>
+          {t('When the URL field is left empty, the local OpenShift cluster is used.')}
+        </HelpIconPopover>
+      }
+      testId="openshift-url-input"
     />
   );
 };

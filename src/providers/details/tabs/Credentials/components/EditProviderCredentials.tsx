@@ -58,11 +58,11 @@ const EditProviderCredentials: ModalComponent<EditProviderCredentialsProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
+        closeModal={closeModal}
+        isDisabled={!isEmpty(errors) || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         title={t('Edit provider credentials')}
-        closeModal={closeModal}
         variant={ModalVariant.medium}
-        isDisabled={!isEmpty(errors) || !isDirty}
       >
         <Form>
           <CredentialFieldsByType providerType={providerType} />

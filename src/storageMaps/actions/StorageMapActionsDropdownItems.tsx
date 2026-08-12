@@ -40,23 +40,23 @@ export const StorageMapActionsDropdownItems = ({
 
   return [
     <DropdownItem
-      value={0}
-      key="edit"
-      isDisabled={isBlocked}
       description={disabledReason}
+      isDisabled={isBlocked}
+      key="edit"
       onClick={() => {
         navigate(isDetailsPage ? `${storageMapURL}/yaml` : storageMapURL)?.catch(() => undefined);
       }}
+      value={0}
     >
       {isDetailsPage ? t('Edit YAML') : t('Edit')}
     </DropdownItem>,
 
     <DropdownItem
-      value={1}
-      key="delete"
-      isDisabled={isBlocked || !data?.permissions?.canDelete || !storageMap}
       description={disabledReason}
+      isDisabled={isBlocked || !data?.permissions?.canDelete || !storageMap}
+      key="delete"
       onClick={onDelete}
+      value={1}
     >
       {t('Delete storage map')}
     </DropdownItem>,

@@ -18,7 +18,7 @@ const InventorySection: FC<InventorySectionProps> = ({ data }) => {
   const hasInventory = !isEmpty(provider) && !isEmpty(inventory);
 
   return (
-    <PageSection hasBodyWrapper={false} className="forklift-page-section">
+    <PageSection className="forklift-page-section" hasBodyWrapper={false}>
       <SectionHeading text={t('Provider inventory')} />
       {!hasInventory && <span className="text-muted">{t('No inventory data available.')}</span>}
       {hasInventory && InventorySectionByType && <InventorySectionByType data={data} />}

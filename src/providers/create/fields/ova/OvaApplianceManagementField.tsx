@@ -23,15 +23,15 @@ const OvaApplianceManagementField: FC = () => {
   return (
     <FormGroup fieldId={ProviderFormFieldId.OvaApplianceManagement}>
       <Checkbox
-        label={OVA_APPLIANCE_MANAGEMENT_LABEL}
+        data-testid="ova-appliance-management-checkbox"
+        description={OVA_APPLIANCE_MANAGEMENT_DESCRIPTION}
+        id={ProviderFormFieldId.OvaApplianceManagement}
         isChecked={value ?? false}
+        label={OVA_APPLIANCE_MANAGEMENT_LABEL}
+        name={ProviderFormFieldId.OvaApplianceManagement}
         onChange={(_event, checked) => {
           onChange(checked);
         }}
-        id={ProviderFormFieldId.OvaApplianceManagement}
-        name={ProviderFormFieldId.OvaApplianceManagement}
-        data-testid="ova-appliance-management-checkbox"
-        description={OVA_APPLIANCE_MANAGEMENT_DESCRIPTION}
       />
     </FormGroup>
   );

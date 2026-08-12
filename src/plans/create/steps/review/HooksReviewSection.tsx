@@ -35,14 +35,14 @@ const HooksReviewSection: FC = () => {
 
   return (
     <ExpandableReviewSection
-      title={planStepNames[PlanWizardStepId.Hooks]}
-      testId="review-hooks-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.Hooks);
       }}
+      testId="review-hooks-section"
+      title={planStepNames[PlanWizardStepId.Hooks]}
     >
       {hookSource === HOOK_SOURCE_NONE && (
-        <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+        <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
           <DescriptionListGroup>
             <DescriptionListTerm>{t('Hook source')}</DescriptionListTerm>
             <DescriptionListDescription data-testid="review-hook-source">

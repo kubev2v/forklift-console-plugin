@@ -97,10 +97,10 @@ const CreatePlanWizard: FC = () => {
     <FormProvider {...form}>
       <CreatePlanWizardContextProvider>
         <CreatePlanWizardInner
-          onSubmit={handleSubmit(onSubmit)}
           isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled}
-          sourceProvider={sourceProvider}
           isSubmitting={isSubmitting}
+          onSubmit={handleSubmit(onSubmit)}
+          sourceProvider={sourceProvider}
         />
       </CreatePlanWizardContextProvider>
     </FormProvider>

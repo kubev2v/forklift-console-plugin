@@ -50,9 +50,9 @@ const TargetStorageWithSuggestion: FC<TargetStorageWithSuggestionProps> = ({
   return (
     <TargetStorageField
       fieldId={fieldId}
+      suggestedVendorProduct={datastoreVendor}
       targetStorages={targetStorages}
       testId={testId}
-      suggestedVendorProduct={datastoreVendor}
     />
   );
 };

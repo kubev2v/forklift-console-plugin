@@ -13,9 +13,9 @@ import HeaderActions from '../CardHeaderActions';
 import VmMigrationsHistoryChart from './VmMigrationsHistoryChart';
 
 type MigrationsCardProps = {
-  obj?: V1beta1ForkliftController;
   loaded?: boolean;
   loadError?: unknown;
+  obj?: V1beta1ForkliftController;
 };
 
 const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
@@ -46,7 +46,7 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
         <CardTitle className="forklift-title">{t('Migration history')}</CardTitle>
       </CardHeader>
       <CardBody className="forklift-overview__status-migration-chart">
-        <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
+        <LoadingSuspend loaded={loaded} loadError={loadError} obj={obj}>
           <VmMigrationsHistoryChart
             selectedRange={selectedRange}
             vmMigrationsDataPoints={{

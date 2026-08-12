@@ -51,19 +51,13 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
 
   return (
     <Form>
-      <FormGroup label={t('Upload local OVA file')} isRequired={false}>
+      <FormGroup isRequired={false} label={t('Upload local OVA file')}>
         <FileUpload
-          id="ova-file"
+          className="pf-v6-u-p-0"
           data-testid="ova-file-upload-input"
           filename={filename}
-          onFileInputChange={(_, newFile) => {
-            if (newFile) {
-              setFile(newFile);
-              setFilename(newFile.name);
-              setValidation(validateOvaFileName(newFile.name));
-            }
-          }}
           hideDefaultPreview
+          id="ova-file"
           isRequired
           onClearClick={() => {
             setFile(undefined);
@@ -72,7 +66,13 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
             setResponse(null);
             setError(null);
           }}
-          className="pf-v6-u-p-0"
+          onFileInputChange={(_, newFile) => {
+            if (newFile) {
+              setFile(newFile);
+              setFilename(newFile.name);
+              setValidation(validateOvaFileName(newFile.name));
+            }
+          }}
         />
         <HelperText>
           <HelperTextItem variant={validation}>
@@ -89,9 +89,9 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
         <StackItem>
           <Button
             data-testid="ova-upload-button"
+            isDisabled={!file || validation === OvaValidationVariant.Error || uploading}
             isLoading={uploading}
             onClick={handleUpload}
-            isDisabled={!file || validation === OvaValidationVariant.Error || uploading}
           >
             {getUploadButtonLabel(uploading)}
           </Button>
@@ -99,7 +99,7 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
 
         {error && (
           <StackItem>
-            <Alert variant="danger" title={t('Error')} data-testid="ova-upload-error-alert">
+            <Alert data-testid="ova-upload-error-alert" title={t('Error')} variant="danger">
               {error}
               {response?.message}
             </Alert>
@@ -109,9 +109,9 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
         {response && isEmpty(error) && (
           <StackItem>
             <Alert
-              variant="success"
-              title={t('File uploaded')}
               data-testid="ova-upload-success-alert"
+              title={t('File uploaded')}
+              variant="success"
             />
           </StackItem>
         )}

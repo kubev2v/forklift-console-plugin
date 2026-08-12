@@ -28,14 +28,10 @@ const ProviderPageHeader: FC<ProviderDetailsPageProps> = ({ name, namespace }) =
 
   return (
     <PageHeadings
-      model={ProviderModel}
-      obj={provider}
-      namespace={namespace}
-      testId="resource-details-title"
       actions={
         <Flex
-          direction={{ default: 'row' }}
           alignItems={{ default: 'alignItemsCenter' }}
+          direction={{ default: 'row' }}
           spaceItems={{ default: 'spaceItemsSm' }}
         >
           <FlexItem>
@@ -49,11 +45,15 @@ const ProviderPageHeader: FC<ProviderDetailsPageProps> = ({ name, namespace }) =
           </FlexItem>
         </Flex>
       }
+      model={ProviderModel}
+      namespace={namespace}
+      obj={provider}
+      testId="resource-details-title"
     >
       <ProviderPageHeaderAlerts
-        provider={provider}
-        inventoryLoading={inventoryLoading}
         inventoryError={inventoryError}
+        inventoryLoading={inventoryLoading}
+        provider={provider}
       />
     </PageHeadings>
   );

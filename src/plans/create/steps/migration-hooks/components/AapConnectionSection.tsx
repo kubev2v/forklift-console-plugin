@@ -55,7 +55,7 @@ const AapConnectionSection: FC<AapConnectionSectionProps> = ({ onConnected }) =>
 
   if (configError) {
     return (
-      <Alert variant={AlertVariant.danger} isInline title={t('Failed to load AAP configuration')}>
+      <Alert isInline title={t('Failed to load AAP configuration')} variant={AlertVariant.danger}>
         {configError.message}
       </Alert>
     );
@@ -63,7 +63,7 @@ const AapConnectionSection: FC<AapConnectionSectionProps> = ({ onConnected }) =>
 
   if (!isConfigured) {
     return (
-      <Alert variant={AlertVariant.info} isInline title={t('AAP is not configured')}>
+      <Alert isInline title={t('AAP is not configured')} variant={AlertVariant.info}>
         {t(
           'An administrator must set the AAP URL and token secret in the ForkliftController settings before AAP hooks can be used.',
         )}
@@ -75,14 +75,14 @@ const AapConnectionSection: FC<AapConnectionSectionProps> = ({ onConnected }) =>
     <>
       {aapUrl && !isConnecting && status !== AAP_CONNECTION_STATUS_CONNECTED && (
         <Alert
-          variant={AlertVariant.info}
           isInline
           isPlain
           title={t('AAP: {{url}}', { url: aapUrl })}
+          variant={AlertVariant.info}
         />
       )}
 
-      <ConnectionStatusAlert status={status} error={error} templateCount={jobTemplates.length} />
+      <ConnectionStatusAlert error={error} status={status} templateCount={jobTemplates.length} />
     </>
   );
 };

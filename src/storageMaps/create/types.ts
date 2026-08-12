@@ -7,8 +7,8 @@ export type CreateStorageMapFormData = FieldValues & {
   [StorageMapFieldId.MapName]: string;
   [StorageMapFieldId.Project]: string;
   [StorageMapFieldId.SourceProvider]: V1beta1Provider | undefined;
-  [StorageMapFieldId.TargetProvider]: V1beta1Provider | undefined;
   [StorageMapFieldId.StorageMap]: StorageMapping[];
+  [StorageMapFieldId.TargetProvider]: V1beta1Provider | undefined;
 };
 
 type VSphereXcopyConfig = {

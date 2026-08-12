@@ -9,10 +9,10 @@ import type { SupportedResource } from './ResourceManager';
  * Export for use by consumers who need to build patch operations.
  */
 export type JsonPatchOperation = {
+  from?: string;
   op: 'add' | 'remove' | 'replace' | 'move' | 'copy' | 'test';
   path: string;
   value?: unknown;
-  from?: string;
 };
 
 /**
@@ -57,10 +57,10 @@ export class ResourcePatcher extends BaseResourceManager {
 
   static async patchResource<T extends SupportedResource>(options: {
     kind: string;
-    resourceName: string;
     namespace: string;
     patch: Record<string, unknown> | JsonPatchOperation[];
     patchType?: PatchType;
+    resourceName: string;
   }): Promise<T | null> {
     const { kind, resourceName, namespace, patch, patchType = 'merge' } = options;
     const resourceType = ResourcePatcher.getResourceTypeFromKind(kind);

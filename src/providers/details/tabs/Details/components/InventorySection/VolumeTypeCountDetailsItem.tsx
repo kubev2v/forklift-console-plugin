@@ -28,9 +28,6 @@ const VolumeTypeCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Volume types')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'volumeTypeCount']}
       content={
         <InventoryCell
           data={{
@@ -43,6 +40,9 @@ const VolumeTypeCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           inventoryValue={volumeTypeCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'volumeTypeCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Volume types')}
     />
   );
 };

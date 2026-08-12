@@ -14,11 +14,11 @@ import { GeneralFormFieldId } from './constants';
 import TargetProjectEmptyState from './TargetProjectEmptyState';
 
 type TargetProjectSelectProps = {
-  testId?: string;
-  loaded?: boolean;
   error?: Error | null;
-  targetProjectNames: string[];
   field: ControllerRenderProps<CreatePlanFormData, GeneralFormFieldId.TargetProject>;
+  loaded?: boolean;
+  targetProjectNames: string[];
+  testId?: string;
 };
 
 const TargetProjectSelect: FC<TargetProjectSelectProps> = ({
@@ -46,22 +46,18 @@ const TargetProjectSelect: FC<TargetProjectSelectProps> = ({
 
   return (
     <ProjectSelect
-      testId={testId}
-      isDisabled={!targetProvider}
-      loading={!loaded}
-      placeholder={
-        targetProvider
-          ? t('Select target project')
-          : t('Must choose a target provider to see available target projects')
-      }
-      id={GeneralFormFieldId.TargetProject}
-      projectNames={targetProjectNames}
       emptyStateMessage={
         targetProviderName ? (
-          <TargetProjectEmptyState targetProviderName={targetProviderName} error={error} />
+          <TargetProjectEmptyState error={error} targetProviderName={targetProviderName} />
         ) : null
       }
-      value={field.value}
+      errorLoading={error}
+      id={GeneralFormFieldId.TargetProject}
+      isDisabled={!targetProvider}
+      loading={!loaded}
+      noOptionsMessage={
+        targetProvider ? undefined : t('Select a target provider to list available target projects')
+      }
       onChange={field.onChange}
       onNewValue={
         isLocalOpenshift
@@ -70,18 +66,22 @@ const TargetProjectSelect: FC<TargetProjectSelectProps> = ({
             }
           : undefined
       }
-      showDefaultProjects={showDefaultProjects}
+      placeholder={
+        targetProvider
+          ? t('Select target project')
+          : t('Must choose a target provider to see available target projects')
+      }
+      projectNames={targetProjectNames}
       setShowDefaultProjects={(value) => {
         setValue(GeneralFormFieldId.ShowDefaultProjects, value);
       }}
-      noOptionsMessage={
-        targetProvider ? undefined : t('Select a target provider to list available target projects')
-      }
+      showDefaultProjects={showDefaultProjects}
+      testId={testId}
       toggleProps={{
         id: 'target-project-select',
         status: errors[GeneralFormFieldId.TargetProject] && MenuToggleStatus.danger,
       }}
-      errorLoading={error}
+      value={field.value}
     />
   );
 };

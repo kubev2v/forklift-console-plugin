@@ -23,9 +23,9 @@ import { transformFormValuesToK8sSpec, transformStorageMapToFormValues } from '.
 import UpdateStorageMapFieldTable from './UpdateStorageMapFieldTable';
 
 export type StorageMapEditProps = {
-  storageMap: V1beta1StorageMap;
-  sourceProvider: V1beta1Provider;
   destinationProvider: V1beta1Provider;
+  sourceProvider: V1beta1Provider;
+  storageMap: V1beta1StorageMap;
 };
 
 const StorageMapEdit: ModalComponent<StorageMapEditProps> = ({
@@ -112,12 +112,12 @@ const StorageMapEdit: ModalComponent<StorageMapEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        onConfirm={handleSubmit(onSubmit)}
-        title={t('Edit storage map')}
         closeModal={closeModal}
-        variant={ModalVariant.medium}
         isDisabled={!isValid || !isDirty}
+        onConfirm={handleSubmit(onSubmit)}
         testId="edit-storage-map-modal"
+        title={t('Edit storage map')}
+        variant={ModalVariant.medium}
       >
         <UpdateStorageMapFieldTable
           inventorySourceStorages={sourceStorages ?? []}

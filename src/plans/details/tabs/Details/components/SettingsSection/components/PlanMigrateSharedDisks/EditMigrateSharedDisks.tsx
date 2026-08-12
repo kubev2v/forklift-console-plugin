@@ -21,7 +21,6 @@ const EditMigrateSharedDisks: ModalComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
-      title={t('Edit shared disks')}
       description={t('Choose whether to migrate shared disks with your migration.')}
       headerHelp={
         <HelpIconPopover header={t('Migrate shared disks')}>
@@ -31,15 +30,16 @@ const EditMigrateSharedDisks: ModalComponent<EditPlanProps> = ({
         </HelpIconPopover>
       }
       onConfirm={async () => onConfirmMigrateSharedDisks({ newValue: value, resource })}
+      title={t('Edit shared disks')}
       {...rest}
     >
       <Stack hasGutter>
         <StackItem>
           <Checkbox
-            id="migrate-shared-disks-checkbox"
             data-testid="migrate-shared-disks-checkbox"
-            label={t('Migrate shared disks')}
+            id="migrate-shared-disks-checkbox"
             isChecked={value}
+            label={t('Migrate shared disks')}
             onChange={(_, checked) => {
               setValue(checked);
             }}
@@ -48,10 +48,10 @@ const EditMigrateSharedDisks: ModalComponent<EditPlanProps> = ({
         {value && (
           <StackItem className="pf-v6-u-ml-lg">
             <Alert
-              isPlain
               isInline
-              variant={AlertVariant.info}
+              isPlain
               title={t('This may slow down the migration process')}
+              variant={AlertVariant.info}
             />
           </StackItem>
         )}

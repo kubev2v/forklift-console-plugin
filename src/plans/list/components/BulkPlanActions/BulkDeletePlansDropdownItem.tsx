@@ -10,9 +10,9 @@ import BulkDeletePlansModal, { type BulkDeletePlansModalProps } from './BulkDele
 import { getPlansEligibleForDelete, getSelectedPlans, isPlanRunningOrPending } from './utils';
 
 type BulkDeletePlansDropdownItemProps = {
+  canDelete: boolean;
   plans: V1beta1Plan[];
   selectedIds: string[];
-  canDelete: boolean;
 };
 
 const BulkDeletePlansDropdownItem: FC<BulkDeletePlansDropdownItemProps> = ({
@@ -58,11 +58,11 @@ const BulkDeletePlansDropdownItem: FC<BulkDeletePlansDropdownItemProps> = ({
 
   return (
     <DropdownItem
-      key="bulk-delete"
-      isDisabled={Boolean(disabledReason)}
-      description={disabledReason}
-      onClick={onClick}
       data-testid="bulk-delete-plans-menuitem"
+      description={disabledReason}
+      isDisabled={Boolean(disabledReason)}
+      key="bulk-delete"
+      onClick={onClick}
     >
       {t('Delete')}
     </DropdownItem>

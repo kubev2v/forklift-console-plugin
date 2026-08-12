@@ -32,25 +32,24 @@ const VSphereDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
     >
       <TypeDetailsItem resource={provider} />
       <DetailsItem
-        testId="product-detail-item"
-        title={t('Product')}
         content={
           (inventory as VSphereProvider)?.product || (
             <span className="text-muted">{t('Empty')}</span>
           )
         }
-        helpContent={t(`VMware only: vSphere product name.`)}
         crumbs={['Inventory', 'providers', provider.spec?.type ?? '', '[UID]']}
+        helpContent={t(`VMware only: vSphere product name.`)}
+        testId="product-detail-item"
+        title={t('Product')}
       />
       <NameDetailsItem resource={provider} />
       <ExternalManagementLinkDetailsItem
-        resource={provider}
         canPatch={permissions.canPatch}
-        webUILinkText={t(`VMware vSphere UI`)}
+        resource={provider}
         webUILink={getVSphereProviderWebUILink(provider)}
+        webUILinkText={t(`VMware vSphere UI`)}
       />
       <URLDetailsItem
-        resource={provider}
         canPatch={permissions.canPatch}
         helpContent={
           <ForkliftTrans>
@@ -63,12 +62,13 @@ const VSphereDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
             in the certificate.
           </ForkliftTrans>
         }
+        resource={provider}
       />
       <NamespaceDetailsItem resource={provider} />
       <CredentialsDetailsItem resource={provider} />
       <CreatedAtDetailsItem resource={provider} />
       <OwnerDetailsItem resource={provider} />
-      <VDDKDetailsItem resource={provider} canPatch={permissions.canPatch} />
+      <VDDKDetailsItem canPatch={permissions.canPatch} resource={provider} />
     </DescriptionList>
   );
 };

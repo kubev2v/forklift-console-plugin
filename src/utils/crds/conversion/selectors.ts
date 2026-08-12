@@ -24,7 +24,10 @@ export const getConversionPodRef = (conversion: V1beta1Conversion): ConversionSt
 export const getInspectionResult = (conversion: V1beta1Conversion): InspectionResult | undefined =>
   conversion?.status?.inspectionResult;
 
-/** Handles backend snake_case bug: reads both `allChecksPassed` and `all_checks_passed`. */
+/**
+ * Handles backend snake_case bug: reads both `allChecksPassed` and `all_checks_passed`.
+ * @param result
+ */
 export const hasInspectionPassed = (result: InspectionResult | undefined): boolean | undefined => {
   if (!result) {
     return undefined;

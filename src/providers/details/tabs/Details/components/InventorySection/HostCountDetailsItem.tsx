@@ -20,12 +20,8 @@ const HostCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Hosts')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'hostCount']}
       content={
         <InventoryCell
-          icon={<OutlinedHddIcon />}
           data={{
             inventory,
             inventoryLoading: true,
@@ -33,9 +29,13 @@ const HostCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           }}
           fieldId={ProvidersResourceFieldId.HostCount}
           fields={[]}
+          icon={<OutlinedHddIcon />}
           inventoryValue={(inventory as VSphereProvider).hostCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'hostCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Hosts')}
     />
   );
 };

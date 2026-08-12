@@ -23,15 +23,10 @@ const PlanPageHeader: FC<PlanPageHeaderProps> = ({ name, namespace, setShowPlanC
 
   return (
     <PageHeadings
-      model={PlanModel}
-      obj={plan}
-      namespace={namespace}
-      testId="resource-details-title"
-      status={<PlanStatusLabel plan={plan} />}
       actions={
         <Flex
-          direction={{ default: 'row' }}
           alignItems={{ default: 'alignItemsCenter' }}
+          direction={{ default: 'row' }}
           spaceItems={{ default: 'spaceItemsSm' }}
         >
           <FlexItem>
@@ -45,6 +40,11 @@ const PlanPageHeader: FC<PlanPageHeaderProps> = ({ name, namespace, setShowPlanC
           </FlexItem>
         </Flex>
       }
+      model={PlanModel}
+      namespace={namespace}
+      obj={plan}
+      status={<PlanStatusLabel plan={plan} />}
+      testId="resource-details-title"
     >
       <PlanAlerts plan={plan} setIsDrawerOpen={setShowPlanConcernsPanel} />
     </PageHeadings>

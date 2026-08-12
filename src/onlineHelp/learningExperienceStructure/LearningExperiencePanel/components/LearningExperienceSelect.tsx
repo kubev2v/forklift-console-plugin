@@ -28,11 +28,11 @@ const LearningExperienceSelect: FC = () => {
     return (
       <MenuToggle
         className="pf-v6-u-mt-md"
-        ref={toggleRef}
+        isExpanded={isSelectOpen}
         onClick={() => {
           setIsSelectOpen((prev) => !prev);
         }}
-        isExpanded={isSelectOpen}
+        ref={toggleRef}
         style={{ width: '100%' }}
       >
         <Flex flexWrap={{ default: 'nowrap' }} spacer={{ default: 'spacerSm' }}>
@@ -47,8 +47,6 @@ const LearningExperienceSelect: FC = () => {
 
   return (
     <PfSelect
-      selected={selectedTopic?.id}
-      toggle={toggle}
       isOpen={isSelectOpen}
       onOpenChange={(isOpen) => {
         setIsSelectOpen(isOpen);
@@ -64,10 +62,12 @@ const LearningExperienceSelect: FC = () => {
         }
         setIsSelectOpen(false);
       }}
+      selected={selectedTopic?.id}
+      toggle={toggle}
     >
       <SelectList>
         {learningExperienceTopics.map((topic) => (
-          <SelectOption value={topic.id} key={topic.id}>
+          <SelectOption key={topic.id} value={topic.id}>
             {topic.title}
           </SelectOption>
         ))}

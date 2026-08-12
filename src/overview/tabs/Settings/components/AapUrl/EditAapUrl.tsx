@@ -16,27 +16,27 @@ const EditAapUrl: FC = () => {
 
   return (
     <FormGroupWithHelpText
+      helperText={t(
+        'Base URL of the Ansible Automation Platform instance (e.g. https://aap.example.com).',
+      )}
       label={t('AAP URL')}
       labelHelp={
         <HelpIconPopover header={t('AAP URL')}>
           <AapUrlHelpContent />
         </HelpIconPopover>
       }
-      helperText={t(
-        'Base URL of the Ansible Automation Platform instance (e.g. https://aap.example.com).',
-      )}
     >
       <Controller
         control={control}
         name={SettingsFields.AapUrl}
         render={({ field: { onChange, value } }) => (
           <TextInput
-            value={value ?? ''}
+            data-testid="aap-url-settings-input"
             onChange={(_event, val) => {
               onChange(val);
             }}
             placeholder="https://aap.example.com"
-            data-testid="aap-url-settings-input"
+            value={value ?? ''}
           />
         )}
       />

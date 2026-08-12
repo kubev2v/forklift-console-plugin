@@ -12,10 +12,10 @@ import { useForkliftTranslation } from '@utils/i18n';
 import type { TargetPowerStateValue } from '@utils/plans/constants';
 
 type TargetPowerStateDropdownProps = {
-  value: TargetPowerStateValue;
   allowInherit?: boolean;
-  planState?: TargetPowerStateValue;
   onChange: (val: TargetPowerStateValue) => void;
+  planState?: TargetPowerStateValue;
+  value: TargetPowerStateValue;
 };
 
 const TargetPowerStateDropdown: FC<TargetPowerStateDropdownProps> = ({
@@ -30,32 +30,32 @@ const TargetPowerStateDropdown: FC<TargetPowerStateDropdownProps> = ({
   return (
     <Select
       id="targetPowerState"
-      testId="target-power-state-select"
-      value={allowInherit && !value ? inheritValue : getTargetPowerStateLabel(value)}
       onSelect={(_event, val) => {
         onChange(val === inheritValue ? undefined : (val as unknown as TargetPowerState)?.value);
       }}
       placeholder={defaultTargetPowerStateOption.label}
+      testId="target-power-state-select"
+      value={allowInherit && !value ? inheritValue : getTargetPowerStateLabel(value)}
     >
       <SelectList>
         {allowInherit ? (
           <SelectOption
-            key="inherit"
-            value={inheritValue}
+            data-testid="power-state-option-inherit"
             description={`${t('Set to:')} ${getTargetPowerStateLabel(planState)}`}
             isSelected={!value}
-            data-testid="power-state-option-inherit"
+            key="inherit"
+            value={inheritValue}
           >
             {inheritValue}
           </SelectOption>
         ) : null}
         {targetPowerStateOptions.map((option) => (
           <SelectOption
-            key={option.value}
-            value={option}
+            data-testid={`power-state-option-${option.value}`}
             description={option.description}
             isSelected={value === option.value}
-            data-testid={`power-state-option-${option.value}`}
+            key={option.value}
+            value={option}
           >
             {option.label}
           </SelectOption>

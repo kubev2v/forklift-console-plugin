@@ -28,9 +28,9 @@ import type { MigrationStatusVirtualMachinePageData } from '../utils/types';
 import { groupByVmId } from '../utils/utils';
 
 type MigrationResources = {
-  migrationListData: MigrationStatusVirtualMachinePageData[];
-  loaded: boolean;
   error: unknown;
+  loaded: boolean;
+  migrationListData: MigrationStatusVirtualMachinePageData[];
 };
 
 export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => {

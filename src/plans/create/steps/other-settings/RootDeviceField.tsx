@@ -18,6 +18,9 @@ const RootDeviceField: FC = () => {
   return (
     <FormGroupWithHelpText
       fieldId={fieldId}
+      helperText={t(
+        'Provide the storage device or partition that contains the root filesystem. If left blank, the first root device will be used.',
+      )}
       label={otherFormFieldLabels[fieldId]}
       labelHelp={
         <HelpIconPopover header={otherFormFieldLabels[fieldId]}>
@@ -38,20 +41,17 @@ const RootDeviceField: FC = () => {
           </ForkliftTrans>
         </HelpIconPopover>
       }
-      helperText={t(
-        'Provide the storage device or partition that contains the root filesystem. If left blank, the first root device will be used.',
-      )}
     >
       <Controller
-        name={fieldId}
         control={control}
+        name={fieldId}
         render={({ field }) => (
           <TextInput
             id={field.name}
-            value={field.value}
             onChange={(_event, value) => {
               field.onChange(value);
             }}
+            value={field.value}
           />
         )}
       />

@@ -24,14 +24,14 @@ const VolumeNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
   }
 
   const content = (
-    <Label isCompact color="grey">
+    <Label color="grey" isCompact>
       {plan?.spec?.volumeNameTemplate ? t('Use custom') : t('Use default')}
     </Label>
   );
 
   return (
     <DetailsItem
-      title={t('Volume name template')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={content}
       crumbs={['spec', 'volumeNameTemplate']}
       onEdit={() => {
@@ -42,7 +42,7 @@ const VolumeNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
           value: plan?.spec?.volumeNameTemplate,
         });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      title={t('Volume name template')}
     />
   );
 };

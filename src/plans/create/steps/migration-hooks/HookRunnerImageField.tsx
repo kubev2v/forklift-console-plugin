@@ -36,23 +36,20 @@ const HookRunnerImageField: FC<HookRunnerImageFieldProps> = ({ fieldId }) => {
 
   return (
     <FormGroupWithErrorText
-      label={hooksFormFieldLabels[MigrationHookFieldId.HookRunnerImage]}
-      isRequired
       fieldId={hookRunnerImageFieldId}
+      isRequired
+      label={hooksFormFieldLabels[MigrationHookFieldId.HookRunnerImage]}
     >
       <Controller
         control={control}
         name={hookRunnerImageFieldId}
-        rules={{
-          validate: validateHookRunnerImage,
-        }}
         render={({ field }) => (
           <>
             <TextInput
               {...field}
-              id={hookRunnerImageFieldId}
-              data-testid={`${hookRunnerImageFieldId}-input`}
               aria-describedby={`${hookRunnerImageFieldId}-helper`}
+              data-testid={`${hookRunnerImageFieldId}-input`}
+              id={hookRunnerImageFieldId}
               name={hookRunnerImageFieldId}
               validated={getInputValidated(error)}
             />
@@ -63,6 +60,9 @@ const HookRunnerImageField: FC<HookRunnerImageFieldProps> = ({ fieldId }) => {
             />
           </>
         )}
+        rules={{
+          validate: validateHookRunnerImage,
+        }}
       />
     </FormGroupWithErrorText>
   );

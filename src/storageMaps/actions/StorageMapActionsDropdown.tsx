@@ -38,20 +38,20 @@ const StorageMapActionsKebabDropdown: FC<StorageMapActionsDropdownProps> = ({
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       onSelect={onSelect}
+      popperProps={{
+        position: 'right',
+      }}
+      shouldFocusToggleOnSelect
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
-          ref={toggleRef}
-          onClick={onToggleClick}
           isExpanded={isOpen}
+          onClick={onToggleClick}
+          ref={toggleRef}
           variant={isDetailsPage ? 'default' : 'plain'}
         >
           {isDetailsPage ? t('Actions') : <EllipsisVIcon />}
         </MenuToggle>
       )}
-      shouldFocusToggleOnSelect
-      popperProps={{
-        position: 'right',
-      }}
     >
       <DropdownList>
         <StorageMapActionsDropdownItems data={data} isDetailsPage={isDetailsPage} />

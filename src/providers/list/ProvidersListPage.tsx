@@ -61,32 +61,32 @@ const ProvidersListPage: FC<{
   return (
     <LearningExperienceDrawer>
       <StandardPage<ProviderData>
-        data-testid="providers-list"
         addButton={
           <ProvidersAddButton
-            testId="add-provider-button"
-            namespace={namespace}
             canCreate={permissions.canCreate}
+            namespace={namespace}
+            testId="add-provider-button"
           />
         }
-        dataSource={[data || [], providersLoaded, providersLoadError]}
-        row={ProviderRow}
-        fieldsMetadata={providerFields}
-        namespace={namespace}
-        title={t('Providers')}
-        titleHelpContent={t(
-          'Providers refer to environments where the virtual machines originate from or are moved to during the migration process.',
-        )}
-        userSettings={userSettings}
         alerts={
           !inventoryLoading && inventoryError
             ? [<InventoryNotReachable key={'inventoryNotReachable'} />]
             : undefined
         }
         customNoResultsFound={
-          <ProvidersEmptyState namespace={namespace} canCreate={permissions.canCreate} />
+          <ProvidersEmptyState canCreate={permissions.canCreate} namespace={namespace} />
         }
+        data-testid="providers-list"
+        dataSource={[data || [], providersLoaded, providersLoadError]}
+        fieldsMetadata={providerFields}
+        namespace={namespace}
+        row={ProviderRow}
         shouldShowLearningExperienceButton
+        title={t('Providers')}
+        titleHelpContent={t(
+          'Providers refer to environments where the virtual machines originate from or are moved to during the migration process.',
+        )}
+        userSettings={userSettings}
       />
     </LearningExperienceDrawer>
   );

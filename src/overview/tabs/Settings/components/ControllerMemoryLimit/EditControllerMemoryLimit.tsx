@@ -18,15 +18,15 @@ const EditControllerMemoryLimit: FC = () => {
 
   return (
     <FormGroupWithHelpText
+      helperText={t(
+        'Enter the limit for memory usage by the controller in Mi. If empty, the default value will be used.',
+      )}
       label={t('Controller main container memory limit')}
       labelHelp={
         <HelpIconPopover header={t('Controller main container memory limit')}>
           <ControllerMemoryLimitHelpContent />
         </HelpIconPopover>
       }
-      helperText={t(
-        'Enter the limit for memory usage by the controller in Mi. If empty, the default value will be used.',
-      )}
     >
       <Controller
         control={control}
@@ -34,9 +34,9 @@ const EditControllerMemoryLimit: FC = () => {
         render={({ field: { onChange, value } }) => (
           <SettingsSelectInput
             onChange={onChange}
-            value={String(value)}
             options={controllerMemoryLimitOptions}
             testId="controller-memory-limit-select"
+            value={String(value)}
           />
         )}
       />

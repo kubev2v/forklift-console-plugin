@@ -81,16 +81,16 @@ const InstanceTypeField: FC = () => {
                   <FlexItem className="instance-type-field__vm-name">{vm.name}</FlexItem>
                   <FlexItem grow={{ default: 'grow' }}>
                     <TypeaheadSelect
+                      allowClear
                       id={`instance-type-${vmId}`}
-                      testId={`instance-type-select-${vmId}`}
-                      value={selectedValue ?? NO_INSTANCE_TYPE}
-                      options={options}
+                      isDisabled={!loaded}
                       onChange={(val) => {
                         handleInstanceTypeChange(vmId, val);
                       }}
-                      allowClear
+                      options={options}
                       placeholder={t('Select instance type')}
-                      isDisabled={!loaded}
+                      testId={`instance-type-select-${vmId}`}
+                      value={selectedValue ?? NO_INSTANCE_TYPE}
                     />
                   </FlexItem>
                 </Flex>

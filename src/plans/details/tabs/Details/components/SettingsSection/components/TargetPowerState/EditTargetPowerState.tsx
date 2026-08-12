@@ -21,18 +21,18 @@ const EditTargetPowerState: ModalComponent<EditPlanProps> = ({ resource, ...rest
 
   return (
     <ModalForm
-      title={t('Edit target power state')}
       confirmLabel={t('Save target power state')}
       isDisabled={value === getPlanTargetPowerState(resource)}
       onConfirm={async () => onConfirmTargetPowerState({ newValue: value, resource })}
       testId="edit-target-power-state-modal"
+      title={t('Edit target power state')}
       {...rest}
     >
       <Stack hasGutter>
         {t(`Choose what state you'd like the VMs in your plan to be powered to after migration.`)}
         <Form>
-          <FormGroupWithHelpText label={t('VM target power state')} isRequired>
-            <TargetPowerStateDropdown value={value} onChange={setValue} />
+          <FormGroupWithHelpText isRequired label={t('VM target power state')}>
+            <TargetPowerStateDropdown onChange={setValue} value={value} />
           </FormGroupWithHelpText>
         </Form>
       </Stack>

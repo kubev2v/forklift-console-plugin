@@ -17,25 +17,25 @@ const EditVirtV2vMemsize: FC = () => {
 
   return (
     <Controller
-      name={SettingsFields.VirtV2vMemsize}
       control={control}
+      name={SettingsFields.VirtV2vMemsize}
       render={({ field: { onChange, value } }) => (
         <FormGroupWithHelpText
+          fieldId={SettingsFields.VirtV2vMemsize}
           label={t('Conversion appliance memory (MB)')}
           labelHelp={
             <HelpIconPopover header={t('Conversion appliance memory')}>
               <VirtV2vMemsizeHelpContent />
             </HelpIconPopover>
           }
-          fieldId={SettingsFields.VirtV2vMemsize}
         >
           <SettingsNumberInput
-            value={value ?? 0}
+            defaultValue={Number(defaultValuesMap[SettingsFields.VirtV2vMemsize])}
             onChange={(newValue: number | string) => {
               onChange(Math.max(0, Number(newValue)));
             }}
-            defaultValue={Number(defaultValuesMap[SettingsFields.VirtV2vMemsize])}
             testId="settings-virt-v2v-memsize-input"
+            value={value ?? 0}
           />
         </FormGroupWithHelpText>
       )}

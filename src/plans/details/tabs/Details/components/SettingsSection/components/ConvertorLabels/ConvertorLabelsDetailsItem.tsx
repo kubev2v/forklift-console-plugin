@@ -39,11 +39,10 @@ const ConvertorLabelsDetailsItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="convertor-labels-detail-item"
-      title={t('Convertor pod labels')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={<LabelsViewDetailsItemContent labels={plan?.spec?.convertorLabels} />}
-      helpContent={description}
       crumbs={['spec', 'convertorLabels']}
+      helpContent={description}
       moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
         launcher<LabelsModalProps>(LabelsModal, {
@@ -62,7 +61,8 @@ const ConvertorLabelsDetailsItem: FC<EditableDetailsItemProps> = ({
           title: t('Edit convertor pod labels'),
         });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="convertor-labels-detail-item"
+      title={t('Convertor pod labels')}
     />
   );
 };

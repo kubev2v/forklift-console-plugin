@@ -54,9 +54,9 @@ const PlanResumeConversionModal: ModalComponent<PlanResumeConversionModalProps> 
 
   return (
     <ModalForm
-      title={t('Resume conversion')}
-      onConfirm={onConfirm}
       confirmLabel={t('Resume')}
+      onConfirm={onConfirm}
+      title={t('Resume conversion')}
       {...rest}
     >
       <Stack hasGutter>
@@ -68,10 +68,10 @@ const PlanResumeConversionModal: ModalComponent<PlanResumeConversionModalProps> 
         </StackItem>
         <StackItem>
           <Alert
-            isPlain
             isInline
-            variant={AlertVariant.info}
+            isPlain
             title={t('Disk copy will be skipped')}
+            variant={AlertVariant.info}
           >
             <Content component={ContentVariants.p}>
               {t(

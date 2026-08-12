@@ -16,13 +16,13 @@ import {
 
 type EditNameTemplateProps = {
   allowInherit?: boolean;
+  body?: ReactNode;
+  fieldName: string;
+  helperText?: ReactNode;
   inheritValue?: string;
+  onConfirm: (value: string | undefined) => Promise<V1beta1Plan>;
   title: string;
   value: string | undefined;
-  onConfirm: (value: string | undefined) => Promise<V1beta1Plan>;
-  body?: ReactNode;
-  helperText?: ReactNode;
-  fieldName: string;
 };
 
 const EditNameTemplate: ModalComponent<EditNameTemplateProps> = ({
@@ -43,7 +43,10 @@ const EditNameTemplate: ModalComponent<EditNameTemplateProps> = ({
 
   return (
     <ModalForm
-      title={title}
+      isDisabled={
+        selected === NameTemplateOptions.CustomNameTemplate &&
+        (inputValue === value || isEmpty(inputValue.trim()))
+      }
       onConfirm={async () => {
         if (selected === NameTemplateOptions.CustomNameTemplate && isEmpty(inputValue.trim())) {
           throw new Error('Name template cannot be empty');
@@ -52,29 +55,26 @@ const EditNameTemplate: ModalComponent<EditNameTemplateProps> = ({
           ? onConfirm(inputValue)
           : onConfirm(undefined);
       }}
-      isDisabled={
-        selected === NameTemplateOptions.CustomNameTemplate &&
-        (inputValue === value || isEmpty(inputValue.trim()))
-      }
+      title={title}
       {...rest}
     >
       {body}
       <Form>
-        <FormGroup label={fieldName} fieldId="nameTemplate" isRequired>
+        <FormGroup fieldId="nameTemplate" isRequired label={fieldName}>
           <Select
             id="nameTemplate"
-            value={getNameTemplateStateLabel(selected, allowInherit)}
             onSelect={(_event, val) => {
               setSelected((val as unknown as NameTemplateOptionType)?.value);
             }}
+            value={getNameTemplateStateLabel(selected, allowInherit)}
           >
             <SelectList>
               {getNameTemplateOptions(allowInherit).map((option) => (
                 <SelectOption
+                  description={option.getInheritToDescription?.(inheritValue)}
+                  isSelected={selected === option.value}
                   key={option.value}
                   value={option}
-                  isSelected={selected === option.value}
-                  description={option.getInheritToDescription?.(inheritValue)}
                 >
                   {option?.label}
                 </SelectOption>
@@ -85,10 +85,10 @@ const EditNameTemplate: ModalComponent<EditNameTemplateProps> = ({
         {selected === NameTemplateOptions.CustomNameTemplate && (
           <FormGroup>
             <TextInput
-              value={inputValue}
               onChange={(_, val) => {
                 setInputValue(val);
               }}
+              value={inputValue}
             />
             {helperText}
           </FormGroup>

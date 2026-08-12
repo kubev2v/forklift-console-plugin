@@ -62,36 +62,36 @@ const SettingsSection: FC<SettingsSectionProps> = ({ plan }) => {
       }}
     >
       <SetLUKSEncryptionPasswordsDetailsItem
-        plan={plan}
         canPatch={canPatch}
+        plan={plan}
         shouldRender={isVsphere}
       />
-      <RootDiskDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+      <RootDiskDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
       <SharedDisksDetailsItem
-        plan={plan}
         canPatch={canPatch}
-        shouldRender={isVsphere}
         isVddkInitImageNotSet={isVddkInitImageNotSet}
-      />
-      <PVCNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-      <TransferNetworkDetailsItem
         plan={plan}
+        shouldRender={isVsphere}
+      />
+      <PVCNameTemplateDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
+      <TransferNetworkDetailsItem
         canPatch={canPatch}
+        plan={plan}
         shouldRender={isTransferNetworkVisible}
       />
-      <VolumeNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-      <PreserveStaticIPsDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-      <NetworkNameTemplateDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-      <PreserveClusterCpuModelDetailsItem plan={plan} canPatch={canPatch} shouldRender={isOvirt} />
-      <XfsCompatibilityDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-      <GuestConversionDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-      <TargetPowerStateDetailsItem plan={plan} canPatch={canPatch} />
-      <TargetLabelsDetailsItem plan={plan} canPatch={canPatch} />
-      <TargetNodeSelectorDetailsItem plan={plan} canPatch={canPatch} />
-      <TargetAffinityDetailsItem plan={plan} canPatch={canPatch} />
-      <ConvertorLabelsDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-      <ConvertorNodeSelectorDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
-      <ConvertorAffinityDetailsItem plan={plan} canPatch={canPatch} shouldRender={isVsphere} />
+      <VolumeNameTemplateDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
+      <PreserveStaticIPsDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
+      <NetworkNameTemplateDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
+      <PreserveClusterCpuModelDetailsItem canPatch={canPatch} plan={plan} shouldRender={isOvirt} />
+      <XfsCompatibilityDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
+      <GuestConversionDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
+      <TargetPowerStateDetailsItem canPatch={canPatch} plan={plan} />
+      <TargetLabelsDetailsItem canPatch={canPatch} plan={plan} />
+      <TargetNodeSelectorDetailsItem canPatch={canPatch} plan={plan} />
+      <TargetAffinityDetailsItem canPatch={canPatch} plan={plan} />
+      <ConvertorLabelsDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
+      <ConvertorNodeSelectorDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
+      <ConvertorAffinityDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
     </DescriptionList>
   );
 };

@@ -18,15 +18,15 @@ const EditSnapshotPoolingInterval: FC = () => {
 
   return (
     <FormGroupWithHelpText
+      helperText={t(
+        'Enter the interval in seconds for snapshot pooling. If empty, the default value will be used.',
+      )}
       label={t('Snapshot polling interval')}
       labelHelp={
         <HelpIconPopover header={t('Snapshot polling interval')}>
           <SnapshotPoolingIntervalHelpContent />
         </HelpIconPopover>
       }
-      helperText={t(
-        'Enter the interval in seconds for snapshot pooling. If empty, the default value will be used.',
-      )}
     >
       <Controller
         control={control}
@@ -34,9 +34,9 @@ const EditSnapshotPoolingInterval: FC = () => {
         render={({ field: { onChange, value } }) => (
           <SettingsSelectInput
             onChange={onChange}
-            value={String(value)}
             options={snapshotPoolingIntervalOptions}
             testId="snapshot-status-check-rate-select"
+            value={String(value)}
           />
         )}
       />

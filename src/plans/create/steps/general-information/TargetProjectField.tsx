@@ -29,8 +29,8 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
 
   return (
     <FormGroupWithErrorText
-      isRequired
       fieldId={GeneralFormFieldId.TargetProject}
+      isRequired
       label={generalFormFieldLabels[GeneralFormFieldId.TargetProject]}
       labelHelp={
         <HelpIconPopover>
@@ -48,8 +48,8 @@ const TargetProjectField: FC<TargetProjectFieldProps> = ({ testId = 'target-proj
       }
     >
       <Controller
-        name={GeneralFormFieldId.TargetProject}
         control={control}
+        name={GeneralFormFieldId.TargetProject}
         render={({ field }) =>
           isLocalProvider ? (
             <LocalProviderTargetProjectSelect field={field} testId={testId} />

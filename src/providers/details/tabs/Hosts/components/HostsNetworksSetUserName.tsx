@@ -7,8 +7,8 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { ValidationState, type ValidationStateType } from '@utils/validation/Validation';
 
 type HostsNetworksSetUserNameProps = {
-  username: string;
   setUsername: Dispatch<SetStateAction<string>>;
+  username: string;
 };
 
 const HostsNetworksSetUserName: FC<HostsNetworksSetUserNameProps> = ({ setUsername, username }) => {
@@ -29,21 +29,21 @@ const HostsNetworksSetUserName: FC<HostsNetworksSetUserNameProps> = ({ setUserna
 
   return (
     <FormGroupWithHelpText
-      label={t('ESXi host admin username')}
-      isRequired
       fieldId="username"
       helperText={t('The username for the ESXi host admin')}
       helperTextInvalid={t('Invalid username')}
+      isRequired
+      label={t('ESXi host admin username')}
       validated={usernameValidation}
     >
       <TextInput
-        spellCheck="false"
-        isRequired
-        type="text"
         id="username"
-        value={username}
+        isRequired
         onChange={onChangeUser}
+        spellCheck="false"
+        type="text"
         validated={usernameValidation}
+        value={username}
       />
     </FormGroupWithHelpText>
   );

@@ -8,9 +8,9 @@ import { PageSection } from '@patternfly/react-core';
 import './ProviderPageHeaderAlerts.style.scss';
 
 type ProviderPageHeaderAlertsProps = {
-  provider: V1beta1Provider;
-  inventoryLoading: boolean;
   inventoryError: Error | null;
+  inventoryLoading: boolean;
+  provider: V1beta1Provider;
 };
 
 const ProviderPageHeaderAlerts: FC<ProviderPageHeaderAlertsProps> = ({
@@ -35,16 +35,16 @@ const ProviderPageHeaderAlerts: FC<ProviderPageHeaderAlertsProps> = ({
   return (
     <>
       {isInventoryNotReachable && (
-        <PageSection hasBodyWrapper={false} className="forklift-page-header-alerts">
+        <PageSection className="forklift-page-header-alerts" hasBodyWrapper={false}>
           <InventoryNotReachable key={'inventoryNotReachable'} />
         </PageSection>
       )}
       {criticalCondition && (
-        <PageSection hasBodyWrapper={false} className="forklift-page-header-alerts">
+        <PageSection className="forklift-page-header-alerts" hasBodyWrapper={false}>
           <ProviderCriticalCondition
-            type={criticalCondition?.type}
-            message={criticalCondition?.message ?? ''}
             key={'providerCriticalCondition'}
+            message={criticalCondition?.message ?? ''}
+            type={criticalCondition?.type}
           />
         </PageSection>
       )}

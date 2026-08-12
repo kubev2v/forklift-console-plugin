@@ -5,8 +5,8 @@ import ListItemWrapper from './components/ListItemWrapper';
 import NestedSubTopics from './components/NestedSubTopics';
 
 type HelpSubTopicProps = {
-  topic: LearningExperienceSubTopic;
   noListItem?: boolean;
+  topic: LearningExperienceSubTopic;
 };
 
 const HelpSubTopic: FC<HelpSubTopicProps> = ({ noListItem = false, topic }) => {

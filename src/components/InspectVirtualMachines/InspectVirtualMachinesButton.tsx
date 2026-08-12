@@ -38,10 +38,10 @@ const InspectVirtualMachinesButton: FC<InspectVirtualMachinesButtonProps> = ({
   return (
     <Tooltip content={disabledReason} trigger={disabledReason ? undefined : TOOLTIP_TRIGGER_MANUAL}>
       <Button
-        variant={ButtonVariant.secondary}
+        data-testid={testId}
         isDisabled={!canInspect}
         onClick={onClickInspectVms}
-        data-testid={testId}
+        variant={ButtonVariant.secondary}
       >
         {t('Inspect VMs')}
       </Button>

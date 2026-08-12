@@ -38,19 +38,19 @@ export const URLDetailsItem: FC<ProviderDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="url-detail-item"
-      title={t('URL')}
+      canEdit={Boolean(provider?.spec?.url) && canPatch}
       content={isEmpty ? <span className="text-muted">{t('Empty')}</span> : url}
-      moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
-      helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'spec', 'url']}
+      helpContent={helpContent ?? defaultHelpContent}
+      moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
       onEdit={() => {
         launcher<EditProviderURLModalProps>(EditProviderURLModal, {
           insecureSkipVerify: secret?.data?.insecureSkipVerify,
           resource: provider,
         });
       }}
-      canEdit={Boolean(provider?.spec?.url) && canPatch}
+      testId="url-detail-item"
+      title={t('URL')}
     />
   );
 };

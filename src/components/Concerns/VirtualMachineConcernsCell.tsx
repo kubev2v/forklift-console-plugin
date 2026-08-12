@@ -17,8 +17,8 @@ import {
 import { orderedConcernCategories } from './utils/constants';
 
 type VirtualMachineConcernsCellProps = {
-  vmData: ProviderVmData;
   conditions?: V1beta1PlanStatusConditions[];
+  vmData: ProviderVmData;
 };
 
 const VirtualMachineConcernsCell: FC<VirtualMachineConcernsCellProps> = ({

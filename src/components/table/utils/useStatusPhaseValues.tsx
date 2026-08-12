@@ -9,7 +9,7 @@ const progressIcon = () => <Spinner size="sm" />;
 
 export const useStatusPhaseValues = (
   phase?: string,
-): { phaseLabel: string; phaseIcon: ReactNode } => {
+): { phaseIcon: ReactNode; phaseLabel: string } => {
   const { t } = useForkliftTranslation();
 
   return useMemo(() => {

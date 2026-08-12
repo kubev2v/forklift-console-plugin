@@ -104,7 +104,7 @@ export class ResourceCleaner extends BaseResourceManager {
 
   private static async deleteResource(
     resource: SupportedResource,
-  ): Promise<{ skipped: boolean; reason?: string }> {
+  ): Promise<{ reason?: string; skipped: boolean }> {
     const resourceName = resource.metadata?.name;
     const namespace = resource.metadata?.namespace ?? MTV_NAMESPACE;
 

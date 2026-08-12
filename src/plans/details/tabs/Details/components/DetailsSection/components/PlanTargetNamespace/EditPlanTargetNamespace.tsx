@@ -24,23 +24,23 @@ const EditPlanTargetNamespace: ModalComponent<EditPlanProps> = ({ resource, ...r
 
   return (
     <ModalForm
-      title={t('Edit migration plan target project')}
       onConfirm={async () => onConfirmTargetNamespace({ newValue: value, resource })}
+      title={t('Edit migration plan target project')}
       {...rest}
     >
       <Stack hasGutter>
         {t(`You can select a migration target project for the migration virtual machines.`)}
         <FormGroupWithHelpText
-          label={t('Target project')}
           helperText={t('Please choose a target project for the migrated virtual machines.')}
+          label={t('Target project')}
         >
           {isLocalProvider ? (
-            <LocalProviderNamespaceSelect value={value} onChange={setValue} />
+            <LocalProviderNamespaceSelect onChange={setValue} value={value} />
           ) : (
             <RemoteProviderNamespaceSelect
+              onChange={setValue}
               targetProvider={destinationProvider}
               value={value}
-              onChange={setValue}
             />
           )}
         </FormGroupWithHelpText>

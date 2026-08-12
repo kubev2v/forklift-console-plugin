@@ -15,11 +15,11 @@ import { useForkliftTranslation } from '@utils/i18n';
 import type { MappingValue } from '@utils/types';
 
 type SourceNetworkFieldProps<T extends FieldValues> = {
-  fieldId: Path<T>;
   control: Control<T>;
+  fieldId: Path<T>;
+  otherSourceNetworks: MappingValue[];
   trigger: UseFormTrigger<T>;
   usedSourceNetworks: MappingValue[];
-  otherSourceNetworks: MappingValue[];
 };
 
 const SourceNetworkField = <T extends FieldValues>({
@@ -42,19 +42,19 @@ const SourceNetworkField = <T extends FieldValues>({
 
   return (
     <Controller
-      name={fieldId}
       control={control}
+      name={fieldId}
       render={({ field }) => (
         <Select
-          ref={field.ref}
           id={fieldId}
-          testId={`source-network-${fieldId}`}
-          value={(field.value as MappingValue).name}
           onSelect={async (_event, value) => {
             field.onChange(value);
             await trigger(fieldId);
           }}
           placeholder={t('Select source network')}
+          ref={field.ref}
+          testId={`source-network-${fieldId}`}
+          value={(field.value as MappingValue).name}
         >
           <SelectGroup label={t('Networks used by the selected VMs')}>
             <SelectList>
@@ -63,9 +63,9 @@ const SourceNetworkField = <T extends FieldValues>({
               ) : (
                 usedSourceNetworks.map((usedNetwork) => (
                   <SelectOption
+                    description={duplicateNames.has(usedNetwork.name) ? usedNetwork.id : null}
                     key={usedNetwork.name}
                     value={usedNetwork}
-                    description={duplicateNames.has(usedNetwork.name) ? usedNetwork.id : null}
                   >
                     {usedNetwork.name}
                   </SelectOption>
@@ -81,9 +81,9 @@ const SourceNetworkField = <T extends FieldValues>({
               ) : (
                 otherSourceNetworks?.map((otherNetwork) => (
                   <SelectOption
+                    description={duplicateNames.has(otherNetwork.name) ? otherNetwork.id : null}
                     key={otherNetwork.name}
                     value={otherNetwork}
-                    description={duplicateNames.has(otherNetwork.name) ? otherNetwork.id : null}
                   >
                     {otherNetwork.name}
                   </SelectOption>

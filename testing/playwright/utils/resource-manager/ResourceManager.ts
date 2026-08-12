@@ -36,8 +36,8 @@ export type { V1NetworkAttachmentDefinition } from './ResourceCreator';
 export type { JsonPatchOperation, PatchType } from './ResourcePatcher';
 
 export type OpenshiftProject = IoK8sApiCoreV1Namespace & {
-  kind: typeof OPENSHIFT_PROJECT_KIND;
   apiVersion: typeof OPENSHIFT_PROJECT_API_VERSION;
+  kind: typeof OPENSHIFT_PROJECT_KIND;
 };
 
 export type SupportedResource =
@@ -270,10 +270,10 @@ export class ResourceManager {
 
   async patchResource<T extends SupportedResource>(options: {
     kind: string;
-    resourceName: string;
     namespace: string;
     patch: Record<string, unknown> | JsonPatchOperation[];
     patchType?: PatchType;
+    resourceName: string;
   }): Promise<T | null> {
     return ResourcePatcher.patchResource<T>(options);
   }

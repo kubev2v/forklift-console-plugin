@@ -24,10 +24,10 @@ const NetworkMapCreatePage: FC = () => {
       </PageSection>
 
       <PageSection
+        className="pf-v6-u-flex-grow-1"
         hasBodyWrapper={false}
         hasOverflowScroll
         type={PageSectionTypes.default}
-        className="pf-v6-u-flex-grow-1"
       >
         <CreateNetworkMapForm />
       </PageSection>

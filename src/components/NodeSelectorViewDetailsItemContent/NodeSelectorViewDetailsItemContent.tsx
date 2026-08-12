@@ -16,7 +16,7 @@ const NodeSelectorViewDetailsItemContent: FC<NodeSelectorViewDetailsItemContentP
   return (
     <div className="node-selector-view-details-item">
       {isEmpty(labels) ? (
-        <Label isCompact color="grey">
+        <Label color="grey" isCompact>
           {t('No node selectors defined')}
         </Label>
       ) : (
@@ -25,7 +25,7 @@ const NodeSelectorViewDetailsItemContent: FC<NodeSelectorViewDetailsItemContentP
           const isLast = index === entries.length - 1;
 
           return (
-            <span key={key} className="co-text-node">
+            <span className="co-text-node" key={key}>
               <StackItem>{isLast ? labelText : `${labelText},`}</StackItem>
             </span>
           );

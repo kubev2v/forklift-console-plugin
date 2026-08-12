@@ -54,11 +54,11 @@ const HookSourceRadio: FC<HookSourceRadioProps> = ({ onChange }) => {
           <Split hasGutter>
             <SplitItem>
               <Radio
-                id="hook-source-none"
-                name="hookSource"
                 data-testid="hook-source-none"
-                label={t('No hooks')}
+                id="hook-source-none"
                 isChecked={field.value === HOOK_SOURCE_NONE}
+                label={t('No hooks')}
+                name="hookSource"
                 onChange={() => {
                   unregisterLocalFields();
                   unregisterAapFields();
@@ -69,11 +69,11 @@ const HookSourceRadio: FC<HookSourceRadioProps> = ({ onChange }) => {
             </SplitItem>
             <SplitItem>
               <Radio
-                id="hook-source-local"
-                name="hookSource"
                 data-testid="hook-source-local"
-                label={t('Local playbook')}
+                id="hook-source-local"
                 isChecked={field.value === HOOK_SOURCE_LOCAL}
+                label={t('Local playbook')}
+                name="hookSource"
                 onChange={() => {
                   unregisterAapFields();
                   field.onChange(HOOK_SOURCE_LOCAL);
@@ -83,16 +83,16 @@ const HookSourceRadio: FC<HookSourceRadioProps> = ({ onChange }) => {
             </SplitItem>
             <SplitItem>
               <Flex
-                spaceItems={{ default: 'spaceItemsSm' }}
                 alignItems={{ default: 'alignItemsCenter' }}
+                spaceItems={{ default: 'spaceItemsSm' }}
               >
                 <FlexItem>
                   <Radio
-                    id="hook-source-aap"
-                    name="hookSource"
                     data-testid="hook-source-aap"
-                    label={t('Ansible Automation Platform')}
+                    id="hook-source-aap"
                     isChecked={field.value === HOOK_SOURCE_AAP}
+                    label={t('Ansible Automation Platform')}
+                    name="hookSource"
                     onChange={() => {
                       unregisterLocalFields();
                       field.onChange(HOOK_SOURCE_AAP);

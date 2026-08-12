@@ -23,9 +23,9 @@ import { resolveProductFromCsiProvisioner } from '../utils/vendorLookupTables';
 
 type TargetStorageFieldProps = {
   fieldId: string;
+  suggestedVendorProduct?: StorageVendorProduct;
   targetStorages: TargetStorage[];
   testId?: string;
-  suggestedVendorProduct?: StorageVendorProduct;
 };
 
 const shouldShowDefaultLabel = (storage: TargetStorage): boolean =>
@@ -36,14 +36,14 @@ const renderStorageOption = (storage: TargetStorage, t: (k: string) => string) =
     <SplitItem isFilled>{storage.name}</SplitItem>
     {shouldShowDefaultLabel(storage) && (
       <SplitItem>
-        <Label isCompact color="green">
+        <Label color="green" isCompact>
           {t('Default')}
         </Label>
       </SplitItem>
     )}
     {storage.isNetAppShift && (
       <SplitItem>
-        <Label isCompact color="blue">
+        <Label color="blue" isCompact>
           {t('NetApp Shift')}
         </Label>
       </SplitItem>
@@ -92,19 +92,19 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({
   return (
     <div>
       <Controller
-        name={fieldId}
         control={control}
+        name={fieldId}
         render={({ field }) => (
           <Select
-            ref={field.ref}
             id={fieldId}
-            testId={testId}
+            isDisabled={isSubmitting}
             onSelect={async (_, value) => {
               field.onChange(value);
               await trigger();
             }}
             placeholder={t('Select target storage')}
-            isDisabled={isSubmitting}
+            ref={field.ref}
+            testId={testId}
             value={(field.value as StorageMappingValue).name}
           >
             {hasRecommended ? (
@@ -122,7 +122,7 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({
                 <SelectGroup label={t('Other options')}>
                   <SelectList>
                     {isEmpty(others) ? (
-                      <SelectOption key="empty-other" isDisabled>
+                      <SelectOption isDisabled key="empty-other">
                         {t('No other storage classes available')}
                       </SelectOption>
                     ) : (
@@ -138,7 +138,7 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({
             ) : (
               <SelectList>
                 {isEmpty(targetStorages) ? (
-                  <SelectOption key="empty" isDisabled>
+                  <SelectOption isDisabled key="empty">
                     {t('Select a target provider and project to list available target storages')}
                   </SelectOption>
                 ) : (

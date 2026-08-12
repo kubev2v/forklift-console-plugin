@@ -3,8 +3,8 @@ import type { FC, ReactNode } from 'react';
 import { Content } from '@patternfly/react-core';
 
 type ListItemWrapperProps = {
-  noListItem: boolean;
   children: ReactNode;
+  noListItem: boolean;
 };
 
 const ListItemWrapper: FC<ListItemWrapperProps> = ({ children, noListItem }) => {

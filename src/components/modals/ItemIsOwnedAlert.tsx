@@ -12,9 +12,9 @@ import { isEmpty } from '@utils/helpers';
 import './alerts.style.css';
 
 type ItemIsOwnedAlertProps = {
-  owner: OwnerReference;
-  namespace?: string;
   className?: string;
+  namespace?: string;
+  owner: OwnerReference;
 };
 
 export const ItemIsOwnedAlert: FC<ItemIsOwnedAlertProps> = ({ className, namespace, owner }) => {
@@ -27,15 +27,15 @@ export const ItemIsOwnedAlert: FC<ItemIsOwnedAlertProps> = ({ className, namespa
     <Alert
       className={className ?? 'co-alert forklift-alert--margin-top'}
       isInline
-      variant="warning"
       title={t('Managed resource')}
+      variant="warning"
     >
       <ForkliftTrans>
         This resource is managed by{' '}
         <ResourceLink
           className="modal__inline-resource-link"
-          inline
           groupVersionKind={getGroupVersionKindForResource(owner)}
+          inline
           name={owner.name}
           // Note: owner must be on the same namespace as resource:
           // https://kubernetes.io/docs/concepts/overview/working-with-objects/owners-dependents/

@@ -95,11 +95,6 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
   return (
     <DropdownList>
       <DropdownItem
-        value={0}
-        key="edit"
-        onClick={() => {
-          navigate(isDetailsPage ? `${planURL}/yaml` : planURL)?.catch(() => undefined);
-        }}
         description={isDetailsPage ? undefined : getEditDescription(planStatus)}
         isDisabled={
           !isDetailsPage &&
@@ -110,59 +105,64 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
             PlanStatuses.Archived,
           ].includes(planStatus)
         }
+        key="edit"
+        onClick={() => {
+          navigate(isDetailsPage ? `${planURL}/yaml` : planURL)?.catch(() => undefined);
+        }}
+        value={0}
       >
         {isDetailsPage ? t('Edit YAML') : t('Edit')}
       </DropdownItem>
       <DropdownItem
-        value={1}
-        key="start"
+        data-testid="plan-actions-start-menuitem"
+        description={startDescription[planStatus]}
         isDisabled={
           (!canStart && !canReStart) ||
           !isEmpty(activeMigration) ||
           PlanStatuses.CannotStart === planStatus
         }
+        key="start"
         onClick={isEmpty(activeMigration) ? onClickPlanStart : undefined}
-        description={startDescription[planStatus]}
-        data-testid="plan-actions-start-menuitem"
+        value={1}
       >
         {buttonStartLabel}
       </DropdownItem>
       <DropdownItem
-        value={2}
-        key="resume-conversion"
-        isDisabled={!migrationLoaded || !canResume || !isEmpty(activeMigration)}
-        onClick={onClickResumeConversion}
-        description={t('Re-run conversion using previously copied disks')}
         data-testid="plan-actions-resume-conversion-menuitem"
+        description={t('Re-run conversion using previously copied disks')}
+        isDisabled={!migrationLoaded || !canResume || !isEmpty(activeMigration)}
+        key="resume-conversion"
+        onClick={onClickResumeConversion}
+        value={2}
       >
         {t('Resume conversion')}
       </DropdownItem>
       <DropdownItem
-        value={3}
-        key="cutover"
         isDisabled={!canScheduleCutover}
+        key="cutover"
         onClick={onClickPlanCutover}
+        value={3}
       >
         {hasCutover ? t('Edit cutover') : t('Schedule cutover')}
       </DropdownItem>
       <DropdownItem
-        value={4}
-        key="duplicate"
-        isDisabled={planStatus === PlanStatuses.CannotStart}
-        onClick={onClickDuplicate}
         description={getDuplicateDescription(planStatus)}
+        isDisabled={planStatus === PlanStatuses.CannotStart}
+        key="duplicate"
+        onClick={onClickDuplicate}
+        value={4}
       >
         {t('Duplicate')}
       </DropdownItem>
       <DropdownItem
-        value={5}
-        key="archive"
         isDisabled={!canDelete || planStatus === PlanStatuses.Archived}
+        key="archive"
         onClick={onClickArchive}
+        value={5}
       >
         {t('Archive')}
       </DropdownItem>
-      <DropdownItem value={6} key="delete" isDisabled={!canDelete} onClick={onClickPlanDelete}>
+      <DropdownItem isDisabled={!canDelete} key="delete" onClick={onClickPlanDelete} value={6}>
         {t('Delete')}
       </DropdownItem>
     </DropdownList>

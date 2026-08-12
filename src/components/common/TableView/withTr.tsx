@@ -19,7 +19,7 @@ export const withTr = <T,>(
           </Tr>
           <Tr isExpanded={isExpanded}>
             <Td />
-            <Td noPadding colSpan={length}>
+            <Td colSpan={length} noPadding>
               {isExpanded && (
                 <ExpandableRowContent>
                   <ExpandedComponent {...props} />

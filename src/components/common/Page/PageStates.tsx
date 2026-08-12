@@ -17,8 +17,8 @@ import { ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
  * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Page/PageStates.tsx)
  */
-const BaseState = ({ icon, title }: { title?: string; icon?: ComponentType }) => {
-  return <EmptyState titleText={title} icon={icon} headingLevel="h4"></EmptyState>;
+const BaseState = ({ icon, title }: { icon?: ComponentType; title?: string }) => {
+  return <EmptyState headingLevel="h4" icon={icon} titleText={title}></EmptyState>;
 };
 
 export const ErrorState = ({ title }: { title: string }) => (
@@ -44,16 +44,16 @@ export const NoResultsMatchFilter = ({
   title = 'No results found',
 }: {
   clearAllFilters: () => void;
-  title?: string;
-  description?: string;
   clearAllLabel?: string;
+  description?: string;
+  title?: string;
 }) => {
   return (
-    <EmptyState titleText={title} icon={SearchIcon} headingLevel="h4">
+    <EmptyState headingLevel="h4" icon={SearchIcon} titleText={title}>
       <EmptyStateBody>{description}</EmptyStateBody>
       <EmptyStateFooter>
         <EmptyStateActions>
-          <Button variant={ButtonVariant.link} onClick={clearAllFilters}>
+          <Button onClick={clearAllFilters} variant={ButtonVariant.link}>
             {clearAllLabel}
           </Button>
         </EmptyStateActions>

@@ -36,9 +36,9 @@ export class NetworkMapStep {
   }
 
   private getMappingRowLocators(): {
-    rows: Locator;
     getRowText: (row: Locator) => Promise<string | null>;
     getTargetSelect: (row: Locator) => Locator;
+    rows: Locator;
   } {
     if (isVersionAtLeast(V2_11_0)) {
       return {
@@ -92,9 +92,9 @@ export class NetworkMapStep {
   }
 
   async fillAndComplete(networkMap: {
-    name: string;
     isPreexisting: boolean;
     mappings?: { source: string; target: string }[];
+    name: string;
   }): Promise<void> {
     await this.verifyStepVisible();
     await this.waitForData();
@@ -103,9 +103,9 @@ export class NetworkMapStep {
   }
 
   async selectNetworkMap(networkMap: {
-    name: string;
     isPreexisting: boolean;
     mappings?: { source: string; target: string }[];
+    name: string;
   }): Promise<void> {
     const selectElement = this.page.getByTestId('network-map-select');
     if (networkMap.isPreexisting) {

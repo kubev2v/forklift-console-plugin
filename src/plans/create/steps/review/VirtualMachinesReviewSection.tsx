@@ -36,23 +36,23 @@ const VirtualMachinesReviewSection: FC = () => {
 
   return (
     <ExpandableReviewSection
-      title={planStepNames[PlanWizardStepId.VirtualMachines]}
-      testId="review-virtual-machines-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.VirtualMachines);
       }}
+      testId="review-virtual-machines-section"
+      title={planStepNames[PlanWizardStepId.VirtualMachines]}
     >
-      <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+      <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
         <DescriptionListGroup>
           <DescriptionListTerm>{t('Selected VMs')}</DescriptionListTerm>
 
           <DescriptionListDescription data-testid="review-vm-count">
             <Button
               isInline
-              variant={ButtonVariant.link}
               onClick={() => {
                 setIsModalOpen(true);
               }}
+              variant={ButtonVariant.link}
             >
               {t('{{count}} virtual machine selected', { count: vmCount })}
             </Button>
@@ -63,14 +63,14 @@ const VirtualMachinesReviewSection: FC = () => {
       {isModalOpen && (
         <Modal
           isOpen
-          variant={ModalVariant.large}
           onClose={() => {
             setIsModalOpen(false);
           }}
+          variant={ModalVariant.large}
         >
           <ModalHeader title={t('Selected VMs')} />
           <ModalBody>
-            <VirtualMachinesTable value={vms} showSelectedOnly />
+            <VirtualMachinesTable showSelectedOnly value={vms} />
           </ModalBody>
           <ModalFooter>
             <Button

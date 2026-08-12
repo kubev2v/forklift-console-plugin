@@ -23,10 +23,10 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 type StorageMapSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'status'> & {
   id: string;
-  value: string;
-  namespace: string;
   includeOwnerReferenced?: boolean;
+  namespace: string;
   testId?: string;
+  value: string;
 };
 
 const StorageMapSelect = (
@@ -87,12 +87,12 @@ const StorageMapSelect = (
   return (
     <Select
       id={id}
-      ref={ref}
-      value={value}
-      status={status}
       onSelect={onSelect}
       placeholder={t('Select storage map')}
+      ref={ref}
+      status={status}
       testId={testId}
+      value={value}
     >
       <SelectList>
         {isEmpty(storageMaps)

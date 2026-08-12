@@ -12,14 +12,14 @@ import { isEmpty } from '@utils/helpers';
 import type { UseTreeRowsControls } from './utils/types';
 
 type UseSelectedTreeRows = (controls?: UseTreeRowsControls) => {
-  showAll: boolean;
-  setShowAll: Dispatch<SetStateAction<boolean>>;
-  setSelectedVmKeys: (updater: SetStateAction<string[]>) => void;
-  selectedSet: Set<string>;
-  selectedVmKeys: string[];
   onCheckChange: (
     keys: string | string[],
   ) => (_event: FormEvent<HTMLInputElement>, isChecked: boolean) => void;
+  selectedSet: Set<string>;
+  selectedVmKeys: string[];
+  setSelectedVmKeys: (updater: SetStateAction<string[]>) => void;
+  setShowAll: Dispatch<SetStateAction<boolean>>;
+  showAll: boolean;
 };
 
 const useSelectedTreeRows: UseSelectedTreeRows = (controls) => {

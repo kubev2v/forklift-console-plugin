@@ -21,8 +21,8 @@ const LearningTopicsCards: FC = () => {
         return (
           <FlexItem key={learningExperienceTopic.id}>
             <Card
-              id={learningExperienceTopic.id}
               data-testid="topic-card"
+              id={learningExperienceTopic.id}
               isClickable
               onClick={() => {
                 trackEvent(TELEMETRY_EVENTS.TIPS_AND_TRICKS_VISITED, {

@@ -40,23 +40,23 @@ export const NetworkMapActionsDropdownItems = ({
 
   return [
     <DropdownItem
-      value={0}
-      key="edit"
-      isDisabled={isBlocked}
       description={disabledReason}
+      isDisabled={isBlocked}
+      key="edit"
       onClick={() => {
         navigate(isDetailsPage ? `${networkMapURL}/yaml` : networkMapURL)?.catch(() => undefined);
       }}
+      value={0}
     >
       {isDetailsPage ? t('Edit YAML') : t('Edit')}
     </DropdownItem>,
 
     <DropdownItem
-      value={1}
-      key="delete"
-      isDisabled={isBlocked || !data?.permissions?.canDelete || !networkMap}
       description={disabledReason}
+      isDisabled={isBlocked || !data?.permissions?.canDelete || !networkMap}
+      key="delete"
       onClick={onDelete}
+      value={1}
     >
       {t('Delete network map')}
     </DropdownItem>,

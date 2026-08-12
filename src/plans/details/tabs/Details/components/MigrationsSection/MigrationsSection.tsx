@@ -32,7 +32,7 @@ const MigrationsSection: FC<MigrationsSectionProps> = ({ plan }) => {
   }, [migrations, plan]);
 
   return (
-    <LoadingSuspend obj={planMigrations} loaded={loaded} loadError={loadError}>
+    <LoadingSuspend loaded={loaded} loadError={loadError} obj={planMigrations}>
       <MigrationsTable migrations={planMigrations} plan={plan} />
     </LoadingSuspend>
   );

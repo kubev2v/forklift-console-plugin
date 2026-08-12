@@ -19,25 +19,25 @@ const ExistingNetworkMapField: FC = () => {
 
   return (
     <FormGroupWithErrorText
-      isRequired
-      fieldId={NetworkMapFieldId.ExistingNetworkMap}
-      label={netMapFieldLabels[NetworkMapFieldId.ExistingNetworkMap]}
       className="pf-v6-u-ml-lg"
+      fieldId={NetworkMapFieldId.ExistingNetworkMap}
+      isRequired
+      label={netMapFieldLabels[NetworkMapFieldId.ExistingNetworkMap]}
     >
       <Controller
-        name={NetworkMapFieldId.ExistingNetworkMap}
         control={control}
+        name={NetworkMapFieldId.ExistingNetworkMap}
         render={({ field }) => (
           <NetworkMapSelect
-            ref={field.ref}
-            testId="network-map-select"
             id={NetworkMapFieldId.ExistingNetworkMap}
-            value={field.value?.metadata?.name ?? ''}
-            status={error && MenuToggleStatus.danger}
+            namespace={planProject}
             onSelect={(_, value) => {
               field.onChange(value);
             }}
-            namespace={planProject}
+            ref={field.ref}
+            status={error && MenuToggleStatus.danger}
+            testId="network-map-select"
+            value={field.value?.metadata?.name ?? ''}
           />
         )}
         rules={{

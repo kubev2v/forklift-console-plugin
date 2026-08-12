@@ -4,8 +4,8 @@ import { Switch } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type PreserveCpuModelSwitchProps = {
-  value: boolean;
   onChange: (checked: boolean) => void;
+  value: boolean;
 };
 
 const PreserveCpuModelSwitch: FC<PreserveCpuModelSwitchProps> = ({ onChange, value }) => {
@@ -18,8 +18,8 @@ const PreserveCpuModelSwitch: FC<PreserveCpuModelSwitchProps> = ({ onChange, val
   return (
     <Switch
       id="preserve-cluster-cpu-switch"
-      label={t('Preserve the CPU model and flags the VM runs with in its oVirt cluster.')}
       isChecked={value}
+      label={t('Preserve the CPU model and flags the VM runs with in its oVirt cluster.')}
       onChange={handleChange}
     />
   );

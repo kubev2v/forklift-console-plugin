@@ -19,10 +19,10 @@ const OvirtCredentialsFields: FC = () => {
           required: t('Username is required'),
           validate: validateOvirtUsername,
         }}
-        label={t('Username')}
         helperText={t(
           'A username for connecting to the Red Hat Virtualization Manager (RHVM) API endpoint, for example: name@internal',
         )}
+        label={t('Username')}
         testId="ovirt-username-input"
       />
 

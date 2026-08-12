@@ -74,7 +74,7 @@ const ProviderNetworksTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace
         <SectionHeading text={t('NetworkAttachmentDefinitions')} />
         {permissions.canPatch && (
           <div>
-            <Button key="editTransferNetwork" variant={ButtonVariant.secondary} onClick={onClick}>
+            <Button key="editTransferNetwork" onClick={onClick} variant={ButtonVariant.secondary}>
               {t('Set provider default transfer network')}
             </Button>
           </div>

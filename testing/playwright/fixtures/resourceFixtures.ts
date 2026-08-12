@@ -28,28 +28,28 @@ const createAuthenticatedContext = (browser: Browser): Promise<BrowserContext> =
 };
 
 export type FixtureConfig = {
-  providerScope?: 'test' | 'worker' | 'none';
-  planScope?: 'test' | 'none';
-  networkMapScope?: 'test' | 'none';
-  storageMapScope?: 'test' | 'none';
-  providerPrefix?: string;
   networkMapPrefix?: string;
-  storageMapPrefix?: string;
+  networkMapScope?: 'test' | 'none';
+  planScope?: 'test' | 'none';
+  providerPrefix?: string;
+  providerScope?: 'test' | 'worker' | 'none';
   skipProviderReadyWait?: boolean;
+  storageMapPrefix?: string;
+  storageMapScope?: 'test' | 'none';
 };
 
 export type ConfigurableResourceFixtures = {
-  resourceManager: ResourceManager;
-  testProvider: TestProvider | undefined;
-  testPlan: TestPlan | undefined;
-  testNetworkMap: TestNetworkMap | undefined;
-  testStorageMap: TestStorageMap | undefined;
+  createCustomNetworkMap: (options?: Partial<CreateNetworkMapOptions>) => Promise<TestNetworkMap>;
   createCustomPlan: (
     customPlanData?: Partial<ReturnType<typeof createPlanTestData>>,
   ) => Promise<TestPlan>;
   createCustomProvider: (options?: CreateProviderOptions) => Promise<TestProvider>;
-  createCustomNetworkMap: (options?: Partial<CreateNetworkMapOptions>) => Promise<TestNetworkMap>;
   createCustomStorageMap: (options?: Partial<CreateStorageMapOptions>) => Promise<TestStorageMap>;
+  resourceManager: ResourceManager;
+  testNetworkMap: TestNetworkMap | undefined;
+  testPlan: TestPlan | undefined;
+  testProvider: TestProvider | undefined;
+  testStorageMap: TestStorageMap | undefined;
 };
 
 type TestProviderFixtureFn = (

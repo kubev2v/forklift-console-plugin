@@ -10,9 +10,9 @@ import { useForkliftAnalytics } from '../../../utils/analytics/hooks/useForklift
 import { useForkliftTranslation } from '../../../utils/i18n';
 
 type ProvidersAddButtonProps = {
+  canCreate?: boolean;
   namespace?: string;
   testId?: string;
-  canCreate?: boolean;
 };
 
 const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, namespace, testId }) => {
@@ -38,9 +38,9 @@ const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, namespace,
   return (
     <Button
       data-testid={testId}
-      variant={ButtonVariant.primary}
-      onClick={onClick}
       isDisabled={!canCreate}
+      onClick={onClick}
+      variant={ButtonVariant.primary}
     >
       {t('Create provider')}
     </Button>

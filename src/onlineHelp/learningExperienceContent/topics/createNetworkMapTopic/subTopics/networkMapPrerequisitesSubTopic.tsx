@@ -13,10 +13,10 @@ export const networkMapPrerequisitesSubTopic: LearningExperienceSubTopic = {
       id: `${NETWORK_MAP_PREREQUISITES_SUB_TOPIC_ID}-a`,
       title: (
         <HelpTitledContent
-          title={t('Ensure providers are connected')}
           content={t(
             'Ensure that both source and target providers are correctly added. Without the source and target providers properly connected and configured, MTV cannot see the networks on either side to map them.',
           )}
+          title={t('Ensure providers are connected')}
         />
       ),
     },
@@ -24,10 +24,10 @@ export const networkMapPrerequisitesSubTopic: LearningExperienceSubTopic = {
       id: `${NETWORK_MAP_PREREQUISITES_SUB_TOPIC_ID}-b`,
       title: (
         <HelpTitledContent
-          title={t('Network attachment definitions')}
           content={t(
             'If you map more than 1 source and target network, each additional OpenShift Virtualization network requires its own network attachment definition.',
           )}
+          title={t('Network attachment definitions')}
         />
       ),
     },

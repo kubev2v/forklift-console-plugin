@@ -32,13 +32,13 @@ const GeneralInfoReviewSection: FC = () => {
 
   return (
     <ExpandableReviewSection
-      title={planStepNames[PlanWizardStepId.General]}
-      testId="review-general-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.General);
       }}
+      testId="review-general-section"
+      title={planStepNames[PlanWizardStepId.General]}
     >
-      <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+      <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
         <DescriptionListGroup>
           <DescriptionListTerm>
             {generalFormFieldLabels[GeneralFormFieldId.PlanName]}

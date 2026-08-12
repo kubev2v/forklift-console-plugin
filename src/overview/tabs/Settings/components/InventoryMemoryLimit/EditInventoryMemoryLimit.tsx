@@ -18,15 +18,15 @@ const EditInventoryMemoryLimit: FC = () => {
 
   return (
     <FormGroupWithHelpText
+      helperText={t(
+        'Enter the limit for memory usage by the inventory container in Mi. If empty, the default value will be used.',
+      )}
       label={t('Controller inventory container memory limit')}
       labelHelp={
         <HelpIconPopover header={t('Controller inventory container memory limit')}>
           <InventoryMemoryLimitHelpContent />
         </HelpIconPopover>
       }
-      helperText={t(
-        'Enter the limit for memory usage by the inventory container in Mi. If empty, the default value will be used.',
-      )}
     >
       <Controller
         control={control}
@@ -34,9 +34,9 @@ const EditInventoryMemoryLimit: FC = () => {
         render={({ field: { onChange, value } }) => (
           <SettingsSelectInput
             onChange={onChange}
-            value={String(value)}
             options={inventoryMemoryLimitOptions}
             testId="inventory-memory-limit-select"
+            value={String(value)}
           />
         )}
       />

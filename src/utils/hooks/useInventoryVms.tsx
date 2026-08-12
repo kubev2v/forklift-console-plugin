@@ -11,6 +11,7 @@ import useProviderInventory, { type UseProviderInventoryParams } from './useProv
  * Adds providerType property to each VM.
  *
  * @param providerData provider that is the source of the data
+ * @param providerData.provider
  * @param providerLoaded loading status of the parent provider
  * @param providerLoadError load error of the parent provider (if any)
  * @returns {Array} tuple containing: the data, loading status and load error (if any)

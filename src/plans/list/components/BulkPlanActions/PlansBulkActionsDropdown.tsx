@@ -39,33 +39,33 @@ const PlansBulkActionsDropdown: FC<PlansBulkActionsDropdownProps> = ({
 
   return (
     <Dropdown
+      data-testid="plans-bulk-actions-dropdown"
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       onSelect={onSelect}
-      data-testid="plans-bulk-actions-dropdown"
+      shouldFocusFirstItemOnOpen={false}
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
-          ref={toggleRef}
+          isExpanded={isOpen}
           onClick={() => {
             setIsOpen((open) => !open);
           }}
-          isExpanded={isOpen}
+          ref={toggleRef}
         >
           {t('Actions')}
         </MenuToggle>
       )}
-      shouldFocusFirstItemOnOpen={false}
     >
       <DropdownList>
         <BulkArchivePlansDropdownItem
+          canPatch={canPatch}
           plans={plans ?? []}
           selectedIds={selectedIds ?? []}
-          canPatch={canPatch}
         />
         <BulkDeletePlansDropdownItem
+          canDelete={canDelete}
           plans={plans ?? []}
           selectedIds={selectedIds ?? []}
-          canDelete={canDelete}
         />
       </DropdownList>
     </Dropdown>

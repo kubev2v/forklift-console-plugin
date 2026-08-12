@@ -20,12 +20,10 @@ const AapHookDetails: FC<AapHookDetailsProps> = ({ aap, hook }) => {
   return (
     <>
       <DetailsItem
-        testId="hook-type-detail-item"
-        title={t('Hook type')}
         content={
           <Flex
-            spaceItems={{ default: 'spaceItemsSm' }}
             alignItems={{ default: 'alignItemsCenter' }}
+            spaceItems={{ default: 'spaceItemsSm' }}
           >
             <FlexItem>{t('Ansible Automation Platform')}</FlexItem>
             <FlexItem>
@@ -33,17 +31,19 @@ const AapHookDetails: FC<AapHookDetailsProps> = ({ aap, hook }) => {
             </FlexItem>
           </Flex>
         }
+        testId="hook-type-detail-item"
+        title={t('Hook type')}
       />
       <DetailsItem
+        content={String(aap.jobTemplateId)}
         testId="aap-job-template-id-detail-item"
         title={t('Job template ID')}
-        content={String(aap.jobTemplateId)}
       />
       {templateName && (
         <DetailsItem
+          content={templateName}
           testId="aap-job-template-name-detail-item"
           title={t('Job template name')}
-          content={templateName}
         />
       )}
     </>

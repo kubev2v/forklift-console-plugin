@@ -9,9 +9,9 @@ import type { ProviderData } from '@utils/providers/types';
 import { ProviderDataCellRenderers, ProvidersInventoryFields } from './utils/constants';
 
 type ProviderDataCellProps = {
+  resourceData: ProviderData;
   resourceFieldId: string | null;
   resourceFields: ResourceField[];
-  resourceData: ProviderData;
 };
 
 const ProviderDataCell: FC<ProviderDataCellProps> = ({
@@ -40,7 +40,7 @@ const ProviderDataCell: FC<ProviderDataCellProps> = ({
   }
 
   return (
-    <Td key={resourceFieldId} dataLabel={resourceFieldId ?? undefined}>
+    <Td dataLabel={resourceFieldId ?? undefined} key={resourceFieldId}>
       <DataCellRenderer
         data={resourceData}
         fieldId={resourceFieldId ?? ''}

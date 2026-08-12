@@ -2,9 +2,9 @@ import type { Page } from '@playwright/test';
 
 type EmptyListPayload = {
   apiVersion: string;
+  items: never[];
   kind: string;
   metadata: Record<string, never>;
-  items: never[];
 };
 
 /**

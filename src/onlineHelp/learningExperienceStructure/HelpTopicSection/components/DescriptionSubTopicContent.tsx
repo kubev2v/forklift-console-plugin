@@ -10,7 +10,7 @@ type DescriptionSubTopicContentProps = {
 const DescriptionSubTopicContent: FC<DescriptionSubTopicContentProps> = ({ topic }) => (
   <>
     {topic.subTopics?.().map((subTopic) => (
-      <HelpSubTopic key={subTopic.id} topic={subTopic} noListItem />
+      <HelpSubTopic key={subTopic.id} noListItem topic={subTopic} />
     ))}
   </>
 );

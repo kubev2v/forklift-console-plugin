@@ -13,8 +13,8 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 type ProjectSelectEmptyStateProps = {
   emptyStateMessage?: ReactNode;
-  onCreate?: () => void;
   errorLoading?: Error | null;
+  onCreate?: () => void;
 };
 
 const ProjectSelectEmptyState: FC<ProjectSelectEmptyStateProps> = ({
@@ -35,9 +35,9 @@ const ProjectSelectEmptyState: FC<ProjectSelectEmptyStateProps> = ({
         <EmptyStateFooter>
           <EmptyStateActions>
             <Button
-              variant={ButtonVariant.link}
-              onClick={onCreate}
               data-testid="create-project-button"
+              onClick={onCreate}
+              variant={ButtonVariant.link}
             >
               {t('Create project')}
             </Button>

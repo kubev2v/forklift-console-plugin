@@ -56,27 +56,27 @@ const EditControllerTransferNetwork: FC = () => {
 
   return (
     <FormGroupWithHelpText
+      helperText={t('Please choose a NetworkAttachmentDefinition for data transfer.')}
       label={t('Controller transfer network')}
       labelHelp={
         <HelpIconPopover header={t('Controller transfer network')}>
           <ControllerTransferNetworkHelpContent />
         </HelpIconPopover>
       }
-      helperText={t('Please choose a NetworkAttachmentDefinition for data transfer.')}
     >
       <Controller
         control={control}
         name={SettingsFields.ControllerTransferNetwork}
         render={({ field: { onChange, value } }) => (
           <SettingsSelectInput
-            onChange={onChange}
-            value={String(value)}
-            options={controllerTransferNetworkOptions}
-            showKeyAsSelected
             blankOption={{
               name: t('None'),
             }}
+            onChange={onChange}
+            options={controllerTransferNetworkOptions}
+            showKeyAsSelected
             testId="controller-transfer-network-select"
+            value={String(value)}
           />
         )}
       />

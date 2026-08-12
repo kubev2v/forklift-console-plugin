@@ -65,7 +65,7 @@ const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
 
   if (configError) {
     return (
-      <Alert variant={AlertVariant.danger} isInline title={t('Failed to load AAP configuration')}>
+      <Alert isInline title={t('Failed to load AAP configuration')} variant={AlertVariant.danger}>
         {configError.message}
       </Alert>
     );
@@ -73,7 +73,7 @@ const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
 
   if (!isConfigured) {
     return (
-      <Alert variant={AlertVariant.info} isInline title={t('AAP is not configured')}>
+      <Alert isInline title={t('AAP is not configured')} variant={AlertVariant.info}>
         {t(
           'An administrator must set the AAP URL and token secret in the ForkliftController settings.',
         )}
@@ -85,24 +85,24 @@ const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
     <>
       {aapUrl && (
         <Alert
-          variant={AlertVariant.info}
           isInline
           isPlain
           title={t('AAP: {{url}}', { url: aapUrl })}
+          variant={AlertVariant.info}
         />
       )}
 
-      <ConnectionStatusAlert status={status} error={error} templateCount={templates.length} />
+      <ConnectionStatusAlert error={error} status={status} templateCount={templates.length} />
 
       {status === AAP_CONNECTION_STATUS_CONNECTED && (
         <Controller
           control={control}
           name={HookField.AapJobTemplateId}
           render={({ field }) => (
-            <FormGroup label={t('Job template')} fieldId={HookField.AapJobTemplateId}>
+            <FormGroup fieldId={HookField.AapJobTemplateId} label={t('Job template')}>
               <TypeaheadSelect
-                options={templateOptions}
-                value={field.value}
+                allowClear
+                maxMenuHeight={AAP_SELECT_MAX_MENU_HEIGHT}
                 onChange={(selected) => {
                   const numericId =
                     selected !== undefined && selected !== '' ? Number(selected) : undefined;
@@ -114,11 +114,11 @@ const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
                       : templates.find((tpl) => tpl.id === numericId)?.name,
                   );
                 }}
-                allowClear
+                options={templateOptions}
                 placeholder={t('Select a job template...')}
-                testId="hook-edit-aap-template-select"
-                maxMenuHeight={AAP_SELECT_MAX_MENU_HEIGHT}
                 popperProps={AAP_SELECT_POPPER_PROPS}
+                testId="hook-edit-aap-template-select"
+                value={field.value}
               />
             </FormGroup>
           )}

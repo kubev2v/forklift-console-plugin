@@ -127,11 +127,12 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
   }
 
   return (
-    <PageSection hasBodyWrapper={false} data-testid="plan-mappings-section">
-      <SectionHeading text={t('Mappings')} testId="mappings-section-heading" />
+    <PageSection data-testid="plan-mappings-section" hasBodyWrapper={false}>
+      <SectionHeading testId="mappings-section-heading" text={t('Mappings')} />
 
       <SectionHeadingWithEdit
-        title={t('Network map')}
+        data-testid="network-map-edit-button"
+        editable={isPlanEditable(plan)}
         onClick={() => {
           launcher<PlanNetworkMapEditProps>(PlanNetworkMapEdit, {
             initialMappings: networkMappings,
@@ -147,8 +148,7 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
             vms,
           });
         }}
-        data-testid="network-map-edit-button"
-        editable={isPlanEditable(plan)}
+        title={t('Network map')}
       />
 
       <DescriptionList>
@@ -167,7 +167,8 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
       <NetworkMapReviewTable networkMap={networkMappings} />
 
       <SectionHeadingWithEdit
-        title={t('Storage map')}
+        data-testid="storage-map-edit-button"
+        editable={isPlanEditable(plan)}
         onClick={() => {
           launcher<PlanStorageMapEditProps>(PlanStorageMapEdit, {
             isLoading: sourceStoragesLoading || targetStoragesLoading,
@@ -181,8 +182,7 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
             usedSourceStorages,
           });
         }}
-        data-testid="storage-map-edit-button"
-        editable={isPlanEditable(plan)}
+        title={t('Storage map')}
       />
       <DescriptionList>
         <DetailsItem

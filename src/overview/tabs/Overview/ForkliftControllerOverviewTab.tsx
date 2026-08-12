@@ -30,14 +30,14 @@ const ForkliftControllerOverviewTab: FC = () => {
         </FlexItem>
         <FlexItem>
           <Flex
-            direction={{ default: 'row' }}
             alignItems={{ default: 'alignItemsStretch' }}
+            direction={{ default: 'row' }}
             spaceItems={{ default: 'spaceItemsMd' }}
           >
             <FlexItem className="forklift-overview__donut-card">
               <VmMigrationsDonutCard obj={forkliftController} />
             </FlexItem>
-            <FlexItem flex={{ default: 'flex_1' }} className="forklift-overview__vms">
+            <FlexItem className="forklift-overview__vms" flex={{ default: 'flex_1' }}>
               <VmMigrationsHistoryCard obj={forkliftController} />
             </FlexItem>
           </Flex>
@@ -45,35 +45,35 @@ const ForkliftControllerOverviewTab: FC = () => {
 
         <FlexItem>
           <Flex
-            direction={{ default: 'row' }}
             alignItems={{ default: 'alignItemsStretch' }}
+            direction={{ default: 'row' }}
             spaceItems={{ default: 'spaceItemsMd' }}
           >
             <FlexItem className="forklift-overview__donut-card">
               <MigrationPlansDonutCard obj={forkliftController} />
             </FlexItem>
             <FlexItem
-              flex={{ default: 'flex_1' }}
               className="forklift-overview__migration-alerts-card"
+              flex={{ default: 'flex_1' }}
             >
               <MigrationAlertsCard />
             </FlexItem>
-            <FlexItem flex={{ default: 'flex_1' }} className="forklift-overview__pods">
-              <ControllerCard obj={forkliftController} limit={6} />
+            <FlexItem className="forklift-overview__pods" flex={{ default: 'flex_1' }}>
+              <ControllerCard limit={6} obj={forkliftController} />
             </FlexItem>
           </Flex>
         </FlexItem>
 
         <FlexItem>
           <Flex
-            direction={{ default: 'column', lg: 'row' }}
             alignItems={{ default: 'alignItemsStretch' }}
+            direction={{ default: 'column', lg: 'row' }}
             spaceItems={{ default: 'spaceItemsMd' }}
           >
-            <FlexItem flex={{ default: 'flex_1' }} className="forklift-overview__throughput-card">
+            <FlexItem className="forklift-overview__throughput-card" flex={{ default: 'flex_1' }}>
               <ThroughputCard metricName={NET_THROUGHPUT_METRIC} title={t('Network throughput')} />
             </FlexItem>
-            <FlexItem flex={{ default: 'flex_1' }} className="forklift-overview__throughput-card">
+            <FlexItem className="forklift-overview__throughput-card" flex={{ default: 'flex_1' }}>
               <ThroughputCard
                 metricName={STORAGE_THROUGHPUT_METRIC}
                 title={t('Storage throughput')}

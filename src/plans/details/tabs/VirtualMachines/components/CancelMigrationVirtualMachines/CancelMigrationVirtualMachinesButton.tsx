@@ -26,7 +26,7 @@ const CancelMigrationVirtualMachinesButton: FC<CancelMigrationVirtualMachinesPro
 
   return (
     <ToolbarItem>
-      <VMsActionButton onClick={onClick} disabledReason={reason}>
+      <VMsActionButton disabledReason={reason} onClick={onClick}>
         {t('Cancel virtual machines')}
       </VMsActionButton>
     </ToolbarItem>

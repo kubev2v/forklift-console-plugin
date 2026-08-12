@@ -25,11 +25,11 @@ const StorageMapStatusAlerts: FC<StorageMapStatusAlertsProps> = ({
   if (isIscsi) {
     return (
       <Alert
-        variant={AlertVariant.info}
         isInline
         title={t(
           'iSCSI transfers do not require source storage mapping. Select a target storage class for the migrated disks.',
         )}
+        variant={AlertVariant.info}
       />
     );
   }
@@ -37,9 +37,9 @@ const StorageMapStatusAlerts: FC<StorageMapStatusAlertsProps> = ({
   if (isEmpty(usedSourceStorages)) {
     return (
       <Alert
-        variant={AlertVariant.warning}
         isInline
         title={t('No source storages are available for the selected VMs.')}
+        variant={AlertVariant.warning}
       />
     );
   }

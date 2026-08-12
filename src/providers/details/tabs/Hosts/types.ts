@@ -1,15 +1,15 @@
 export type HypervHost = {
+  cluster: string;
+  cpuCores: number;
+  cpuSockets: number;
   id: string;
+  memoryBytes: number;
   name: string;
+  networks: { id: string; kind: string }[];
+  path?: string;
   revision: number;
   selfLink: string;
-  variant?: string;
-  path?: string;
-  cluster: string;
   state: string;
-  cpuSockets: number;
-  cpuCores: number;
-  memoryBytes: number;
-  networks: { kind: string; id: string }[];
-  vms?: { kind: string; id: string }[];
+  variant?: string;
+  vms?: { id: string; kind: string }[];
 };

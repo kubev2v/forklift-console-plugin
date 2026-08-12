@@ -3,11 +3,11 @@ import type { ProviderVmData } from 'src/utils/types';
 import type { Concern } from '@forklift-ui/types';
 
 export type VmLookups = {
+  concerns?: Concern[];
+  host?: string;
   name?: string;
   path?: string;
-  host?: string;
   power?: string;
-  concerns?: Concern[];
 };
 
 export type Indexes = {

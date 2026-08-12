@@ -117,11 +117,11 @@ const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...re
 
   return (
     <ModalForm
-      title={hasExistingCutover ? t('Edit cutover') : t('Schedule cutover')}
-      onConfirm={onCutover}
-      confirmLabel={t('Set cutover')}
       additionalAction={additionalAction}
+      confirmLabel={t('Set cutover')}
       isDisabled={isScheduledInvalid}
+      onConfirm={onCutover}
+      title={hasExistingCutover ? t('Edit cutover') : t('Schedule cutover')}
       {...rest}
     >
       <ForkliftTrans>
@@ -136,18 +136,18 @@ const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...re
         </Stack>
       </ForkliftTrans>
       <Flex
+        className="forklift-plan-cutover-migration-inputgroup"
         direction={{ default: 'column' }}
         spaceItems={{ default: 'spaceItemsMd' }}
-        className="forklift-plan-cutover-migration-inputgroup"
       >
         <FlexItem>
           <Radio
-            id="cutover-mode-asap"
-            name="cutoverMode"
             data-testid="cutover-mode-asap"
-            label={t('Cutover as soon as possible')}
             description={t('Migration will begin final cutover immediately.')}
+            id="cutover-mode-asap"
             isChecked={cutoverMode === CUTOVER_MODE_ASAP}
+            label={t('Cutover as soon as possible')}
+            name="cutoverMode"
             onChange={() => {
               setCutoverMode(CUTOVER_MODE_ASAP);
             }}
@@ -155,12 +155,12 @@ const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...re
         </FlexItem>
         <FlexItem>
           <Radio
-            id="cutover-mode-scheduled"
-            name="cutoverMode"
             data-testid="cutover-mode-scheduled"
-            label={t('Cutover at a specific time')}
             description={t('Schedule cutover for a future date and time.')}
+            id="cutover-mode-scheduled"
             isChecked={cutoverMode === CUTOVER_MODE_SCHEDULED}
+            label={t('Cutover at a specific time')}
+            name="cutoverMode"
             onChange={() => {
               setCutoverMode(CUTOVER_MODE_SCHEDULED);
             }}

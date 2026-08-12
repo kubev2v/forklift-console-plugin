@@ -35,10 +35,10 @@ import { ItemIsOwnedAlert } from '../ItemIsOwnedAlert';
  * @property {string} [redirectTo] - Optional redirect URL after deletion
  */
 export type DeleteModalProps = {
-  resource: K8sResourceCommon;
   model: K8sModel;
-  title?: string;
   redirectTo?: string;
+  resource: K8sResourceCommon;
+  title?: string;
 };
 
 /**
@@ -89,15 +89,15 @@ export const DeleteModal: ModalComponent<DeleteModalProps> = ({
       toggleIsLoading();
 
       if (err instanceof Error) {
-        setAlertMessage(<AlertMessageForModals title={t('Error')} message={err.toString()} />);
+        setAlertMessage(<AlertMessageForModals message={err.toString()} title={t('Error')} />);
       } else {
-        setAlertMessage(<AlertMessageForModals title={t('Error')} message={t('Unknown error')} />);
+        setAlertMessage(<AlertMessageForModals message={t('Unknown error')} title={t('Error')} />);
       }
     }
   }, [resource, model, name, namespace, navigate, redirectTo, t, toggleIsLoading, closeModal]);
 
   return (
-    <Modal position="top" variant={ModalVariant.small} isOpen={true} onClose={closeModal}>
+    <Modal isOpen={true} onClose={closeModal} position="top" variant={ModalVariant.small}>
       <ModalHeader
         title={title ?? t('Delete {{model.label}}', { model })}
         titleIconVariant="warning"
@@ -118,7 +118,7 @@ export const DeleteModal: ModalComponent<DeleteModalProps> = ({
           </StackItem>
           {typeof owner === 'object' && (
             <StackItem>
-              <ItemIsOwnedAlert owner={owner} namespace={namespace} />
+              <ItemIsOwnedAlert namespace={namespace} owner={owner} />
             </StackItem>
           )}
           {alertMessage && <StackItem>{alertMessage}</StackItem>}
@@ -126,14 +126,14 @@ export const DeleteModal: ModalComponent<DeleteModalProps> = ({
       </ModalBody>
       <ModalFooter>
         <Button
-          key="confirm"
-          variant={ButtonVariant.danger}
-          onClick={onDelete}
           isLoading={isLoading}
+          key="confirm"
+          onClick={onDelete}
+          variant={ButtonVariant.danger}
         >
           {t('Delete')}
         </Button>
-        <Button key="cancel" variant={ButtonVariant.secondary} onClick={closeModal}>
+        <Button key="cancel" onClick={closeModal} variant={ButtonVariant.secondary}>
           {t('Cancel')}
         </Button>
       </ModalFooter>

@@ -55,17 +55,17 @@ const CertificateUpload: FC<CertificateUploadProps> = ({
 
   return (
     <FileUpload
-      id={id}
-      type={type ?? 'text'}
+      browseButtonText={browseButtonText ?? t('Upload')}
+      className="pf-v6-u-p-0"
       filenamePlaceholder={filenamePlaceholder ?? t('Drag and drop a file or upload one')}
-      value={value}
-      validated={validated}
+      id={id}
+      isDisabled={isDisabled}
+      onClearClick={onClearClick}
       onDataChange={onDataChange}
       onTextChange={onTextChange}
-      onClearClick={onClearClick}
-      browseButtonText={browseButtonText ?? t('Upload')}
-      isDisabled={isDisabled}
-      className="pf-v6-u-p-0"
+      type={type ?? 'text'}
+      validated={validated}
+      value={value}
     >
       {url && isText && (
         <Flex>
@@ -73,8 +73,8 @@ const CertificateUpload: FC<CertificateUploadProps> = ({
             <Button
               className="pf-v6-u-mt-sm"
               isDisabled={isDisabled ?? !url?.trim().startsWith('https://')}
-              variant={ButtonVariant.secondary}
               onClick={onClick}
+              variant={ButtonVariant.secondary}
             >
               {t('Fetch certificate from URL')}
             </Button>

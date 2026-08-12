@@ -29,10 +29,10 @@ export const getMigrationStatusVirtualMachinesRowFields = (
       <DisksCounter diskTransferPipeline={diskTransferPipeline} />
     ),
     [MigrationStatusVirtualMachinesTableResourceId.MigrationCompleted]: (
-      <ConsoleTimestamp timestamp={statusVM?.completed ?? null} showGlobalIcon={false} />
+      <ConsoleTimestamp showGlobalIcon={false} timestamp={statusVM?.completed ?? null} />
     ),
     [MigrationStatusVirtualMachinesTableResourceId.MigrationStarted]: (
-      <ConsoleTimestamp timestamp={statusVM?.started ?? null} showGlobalIcon={false} />
+      <ConsoleTimestamp showGlobalIcon={false} timestamp={statusVM?.started ?? null} />
     ),
     [MigrationStatusVirtualMachinesTableResourceId.Name]:
       vmCreated && !isVmInPostMigrationSetup(statusVM) ? (

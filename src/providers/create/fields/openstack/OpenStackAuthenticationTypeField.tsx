@@ -29,10 +29,10 @@ const OpenStackAuthenticationTypeField: FC = () => {
 
   return (
     <FormGroupWithHelpText
-      role="radiogroup"
       fieldId={ProviderFormFieldId.OpenstackAuthType}
-      label={t('Authentication type')}
       isRequired
+      label={t('Authentication type')}
+      role="radiogroup"
     >
       <Stack hasGutter>
         <HelperText>
@@ -44,68 +44,68 @@ const OpenStackAuthenticationTypeField: FC = () => {
         </HelperText>
 
         <Radio
-          name={ProviderFormFieldId.OpenstackAuthType}
-          label={openstackAuthTypeLabels.password}
+          body={value === OpenstackAuthType.Password && <PasswordCredentialsFields />}
           id="password"
           isChecked={value === OpenstackAuthType.Password}
+          label={openstackAuthTypeLabels.password}
+          name={ProviderFormFieldId.OpenstackAuthType}
           onChange={() => {
             onChange(OpenstackAuthType.Password);
           }}
-          body={value === OpenstackAuthType.Password && <PasswordCredentialsFields />}
         />
 
         <Radio
-          name={ProviderFormFieldId.OpenstackAuthType}
-          label={openstackAuthTypeLabels.tokenWithUserID}
+          body={value === OpenstackAuthType.TokenWithUserId && <TokenWithUserIDCredentialsFields />}
           id="tokenWithUserId"
           isChecked={value === OpenstackAuthType.TokenWithUserId}
+          label={openstackAuthTypeLabels.tokenWithUserID}
+          name={ProviderFormFieldId.OpenstackAuthType}
           onChange={() => {
             onChange(OpenstackAuthType.TokenWithUserId);
           }}
-          body={value === OpenstackAuthType.TokenWithUserId && <TokenWithUserIDCredentialsFields />}
         />
 
         <Radio
-          name={ProviderFormFieldId.OpenstackAuthType}
-          label={openstackAuthTypeLabels.tokenWithUsername}
-          id="tokenWithUsername"
-          isChecked={value === OpenstackAuthType.TokenWithUsername}
-          onChange={() => {
-            onChange(OpenstackAuthType.TokenWithUsername);
-          }}
           body={
             value === OpenstackAuthType.TokenWithUsername && <TokenWithUsernameCredentialsFields />
           }
+          id="tokenWithUsername"
+          isChecked={value === OpenstackAuthType.TokenWithUsername}
+          label={openstackAuthTypeLabels.tokenWithUsername}
+          name={ProviderFormFieldId.OpenstackAuthType}
+          onChange={() => {
+            onChange(OpenstackAuthType.TokenWithUsername);
+          }}
         />
 
         <Radio
-          name={ProviderFormFieldId.OpenstackAuthType}
-          label={openstackAuthTypeLabels.applicationCredentialId}
-          id="applicationCredentialId"
-          isChecked={value === OpenstackAuthType.ApplicationCredentialId}
-          onChange={() => {
-            onChange(OpenstackAuthType.ApplicationCredentialId);
-          }}
           body={
             value === OpenstackAuthType.ApplicationCredentialId && (
               <ApplicationCredentialIdCredentialsFields />
             )
           }
+          id="applicationCredentialId"
+          isChecked={value === OpenstackAuthType.ApplicationCredentialId}
+          label={openstackAuthTypeLabels.applicationCredentialId}
+          name={ProviderFormFieldId.OpenstackAuthType}
+          onChange={() => {
+            onChange(OpenstackAuthType.ApplicationCredentialId);
+          }}
         />
 
         <Radio
-          name={ProviderFormFieldId.OpenstackAuthType}
-          label={openstackAuthTypeLabels.applicationCredentialName}
-          id="applicationCredentialName"
-          isChecked={value === OpenstackAuthType.ApplicationCredentialName}
-          onChange={() => {
-            onChange(OpenstackAuthType.ApplicationCredentialName);
-          }}
           body={
             value === OpenstackAuthType.ApplicationCredentialName && (
               <ApplicationCredentialNameCredentialsFields />
             )
           }
+          id="applicationCredentialName"
+          isChecked={value === OpenstackAuthType.ApplicationCredentialName}
+          label={openstackAuthTypeLabels.applicationCredentialName}
+          name={ProviderFormFieldId.OpenstackAuthType}
+          onChange={() => {
+            onChange(OpenstackAuthType.ApplicationCredentialName);
+          }}
         />
       </Stack>
     </FormGroupWithHelpText>

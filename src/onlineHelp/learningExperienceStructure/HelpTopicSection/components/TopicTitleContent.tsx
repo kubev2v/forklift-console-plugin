@@ -4,9 +4,9 @@ import { ListStyleType } from 'src/onlineHelp/utils/types';
 import { Content } from '@patternfly/react-core';
 
 export type TopicTitleProps = {
-  title: ReactNode;
   listStyleType?: ListStyleType;
   prefix?: string;
+  title: ReactNode;
 };
 
 export const TopicTitleContent: FC<TopicTitleProps> = ({ listStyleType, prefix, title }) => {

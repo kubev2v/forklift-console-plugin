@@ -20,15 +20,15 @@ const TargetNamespaceSelect: FC<TargetNamespaceSelectProps> = ({
 
   return (
     <FilterableSelect
-      selectOptions={dropdownItems}
-      value={value}
+      canCreate={false}
+      isScrollable
+      noResultFoundLabel={errorMessage}
       onSelect={(selected) => {
         onChange(selected.toString());
       }}
-      canCreate={false}
-      isScrollable
       placeholder={t('No namespace selected')}
-      noResultFoundLabel={errorMessage}
+      selectOptions={dropdownItems}
+      value={value}
     />
   );
 };

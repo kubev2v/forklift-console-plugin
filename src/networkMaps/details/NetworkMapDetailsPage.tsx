@@ -13,7 +13,7 @@ import './NetworkMapDetailsPage.scss';
 type NetworkMapDetailsPageProps = {
   kind: string;
   kindObj: K8sModel;
-  match: { path: string; url: string; isExact: boolean; params: unknown };
+  match: { isExact: boolean; params: unknown; path: string; url: string };
   name: string;
   namespace: string;
 };

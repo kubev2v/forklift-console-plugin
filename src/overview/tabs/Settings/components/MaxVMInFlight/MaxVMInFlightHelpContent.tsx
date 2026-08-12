@@ -16,7 +16,7 @@ const MaxVMInFlightHelpContent: FC = () => {
       <StackItem>{t('The default value is 20 virtual machines or disks.')}</StackItem>
       {MAX_CONCURRENT_VIRTUAL_MACHINE_MIGRATIONS && (
         <StackItem>
-          <a href={MAX_CONCURRENT_VIRTUAL_MACHINE_MIGRATIONS} target="_blank" rel="noreferrer">
+          <a href={MAX_CONCURRENT_VIRTUAL_MACHINE_MIGRATIONS} rel="noreferrer" target="_blank">
             {t('Learn more')}
           </a>
         </StackItem>

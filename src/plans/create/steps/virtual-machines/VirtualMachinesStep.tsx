@@ -21,9 +21,9 @@ const VirtualMachinesStep: FC = () => {
 
   return (
     <WizardStepContainer
-      title={planStepNames[PlanWizardStepId.VirtualMachines]}
       isFullWidth
       testId="create-plan-vm-step"
+      title={planStepNames[PlanWizardStepId.VirtualMachines]}
     >
       <Stack hasGutter>
         <p>
@@ -32,23 +32,23 @@ const VirtualMachinesStep: FC = () => {
           )}
         </p>
 
-        {error && <Alert variant={AlertVariant.danger} isInline title={error.message} />}
+        {error && <Alert isInline title={error.message} variant={AlertVariant.danger} />}
 
         <Controller
-          name={VmFormFieldId.Vms}
           control={control}
-          rules={{ validate: validateVmSelection }}
           defaultValue={defaultVms}
+          name={VmFormFieldId.Vms}
           render={({ field }) => (
             <VirtualMachinesTable
               isSelectable
-              value={field.value}
               onChange={(value) => {
                 field.onChange(value);
                 unregister([NetworkMapFieldId.NetworkMap, CreatePlanStorageMapFieldId.StorageMap]);
               }}
+              value={field.value}
             />
           )}
+          rules={{ validate: validateVmSelection }}
         />
       </Stack>
     </WizardStepContainer>

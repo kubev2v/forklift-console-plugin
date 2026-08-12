@@ -9,15 +9,15 @@ import type {
 } from '@forklift-ui/types';
 
 export type MigrationStatusVirtualMachinePageData = {
-  pods: IoK8sApiCoreV1Pod[];
-  jobs: IoK8sApiBatchV1Job[];
-  pvcs: IoK8sApiCoreV1PersistentVolumeClaim[];
   dvs: V1beta1DataVolume[];
-  vmIndex?: number;
+  jobs: IoK8sApiBatchV1Job[];
+  plan: V1beta1Plan;
+  pods: IoK8sApiCoreV1Pod[];
+  pvcs: IoK8sApiCoreV1PersistentVolumeClaim[];
   specVM: V1beta1PlanSpecVms;
   statusVM?: V1beta1PlanStatusMigrationVms;
   targetNamespace: string;
-  plan: V1beta1Plan;
+  vmIndex?: number;
 };
 
 export enum MigrationStatusVirtualMachinesTableResourceId {

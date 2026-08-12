@@ -16,6 +16,8 @@ export const isNetAppShiftStorageClassAnnotations = (
 /**
  * Returns labels to apply to a StorageMap when any mapped target storage class
  * carries the NetApp Shift annotation.
+ * @param mappings
+ * @param targetStorages
  */
 export const getNetAppShiftLabels = (
   mappings: StorageMapping[],

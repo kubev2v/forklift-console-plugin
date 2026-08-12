@@ -7,12 +7,12 @@ import type { MappingValue } from '@utils/types';
 import type { MappingFieldIds } from '../types';
 import { fillUnmappedSources } from '../utils/fillUnmappedSources';
 type UseInitializeMappingsParams<T extends Record<string, unknown>> = {
-  isLoading: boolean;
   currentMap: T[] | undefined;
-  usedSources: MappingValue[];
   defaultTarget: MappingValue;
-  fieldIds: MappingFieldIds;
   defaultTargetName?: string;
+  fieldIds: MappingFieldIds;
+  isLoading: boolean;
+  usedSources: MappingValue[];
 };
 
 /**

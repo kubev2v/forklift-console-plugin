@@ -1,10 +1,10 @@
 import { Label } from '@patternfly/react-core';
 
 export const renderTag = (props: {
-  tag: string;
+  getTagDisplayValue: (tag: string) => string;
   key: number;
   onRemove: (key: number) => void;
-  getTagDisplayValue: (tag: string) => string;
+  tag: string;
 }) => {
   const { getTagDisplayValue, key, onRemove, tag } = props;
 

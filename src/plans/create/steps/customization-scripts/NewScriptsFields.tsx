@@ -47,11 +47,12 @@ const NewScriptsFields: FC = () => {
   return (
     <div className="pf-v6-u-ml-lg">
       <FieldBuilderTable
-        headers={[
-          { label: ScriptsFieldLabels.name, width: 35 },
-          { label: ScriptsFieldLabels.guestType, width: 25 },
-          { label: ScriptsFieldLabels.scriptType, width: 25 },
-        ]}
+        addButton={{
+          label: t('Add script'),
+          onClick: () => {
+            append({ ...DefaultScript });
+          },
+        }}
         fieldRows={scripts.map((fieldRow, index) => {
           const guestType = watchedScripts?.[index]?.guestType ?? GuestType.Linux;
           const isWindows = guestType === GuestType.Windows;
@@ -59,23 +60,22 @@ const NewScriptsFields: FC = () => {
             ...fieldRow,
             additionalOptions: (
               <Controller
-                name={getScriptFieldId(index, 'content')}
                 control={control}
+                name={getScriptFieldId(index, 'content')}
                 render={({ field }) => (
                   <ScriptContentField
-                    value={field.value ?? ''}
-                    onChange={field.onChange}
                     guestType={guestType}
+                    onChange={field.onChange}
+                    value={field.value ?? ''}
                   />
                 )}
               />
             ),
             inputs: [
               <Controller
+                control={control}
                 key="name"
                 name={getScriptFieldId(index, 'name')}
-                control={control}
-                rules={{ deps: nameDeps(scripts.length), validate: validateName(index) }}
                 render={({ field, fieldState: { error } }) => (
                   <>
                     <TextInput
@@ -87,15 +87,15 @@ const NewScriptsFields: FC = () => {
                     <FormErrorHelperText error={error} />
                   </>
                 )}
+                rules={{ deps: nameDeps(scripts.length), validate: validateName(index) }}
               />,
               <Controller
+                control={control}
                 key="guestType"
                 name={getScriptFieldId(index, 'guestType')}
-                control={control}
                 render={({ field: guestTypeField }) => (
                   <Select
                     id={getScriptFieldId(index, 'guestType')}
-                    value={GuestTypeLabels[guestTypeField.value as GuestType]}
                     onSelect={async (_event, value) => {
                       guestTypeField.onChange(value);
                       if (value === GuestType.Windows) {
@@ -104,6 +104,7 @@ const NewScriptsFields: FC = () => {
                       await triggerAllNames(scripts.length);
                     }}
                     testId={`script-guest-type-${index}`}
+                    value={GuestTypeLabels[guestTypeField.value as GuestType]}
                   >
                     <SelectList>
                       {Object.values(GuestType).map((gt) => (
@@ -116,30 +117,30 @@ const NewScriptsFields: FC = () => {
                 )}
               />,
               <Controller
+                control={control}
                 key="scriptType"
                 name={getScriptFieldId(index, 'scriptType')}
-                control={control}
                 render={({ field: scriptTypeField }) => (
                   <Select
                     id={getScriptFieldId(index, 'scriptType')}
-                    value={ScriptTypeLabels[scriptTypeField.value as ScriptType]}
                     onSelect={async (_event, value) => {
                       scriptTypeField.onChange(value);
                       await triggerAllNames(scripts.length);
                     }}
                     testId={`script-type-${index}`}
+                    value={ScriptTypeLabels[scriptTypeField.value as ScriptType]}
                   >
                     <SelectList>
                       {Object.values(ScriptType).map((st) => (
                         <SelectOption
-                          key={st}
-                          value={st}
-                          isDisabled={isWindows && st === ScriptType.Run}
                           description={
                             isWindows && st === ScriptType.Run
                               ? t('Run scripts are only available for Linux')
                               : undefined
                           }
+                          isDisabled={isWindows && st === ScriptType.Run}
+                          key={st}
+                          value={st}
                         >
                           {ScriptTypeLabels[st]}
                         </SelectOption>
@@ -151,12 +152,11 @@ const NewScriptsFields: FC = () => {
             ],
           };
         })}
-        addButton={{
-          label: t('Add script'),
-          onClick: () => {
-            append({ ...DefaultScript });
-          },
-        }}
+        headers={[
+          { label: ScriptsFieldLabels.name, width: 35 },
+          { label: ScriptsFieldLabels.guestType, width: 25 },
+          { label: ScriptsFieldLabels.scriptType, width: 25 },
+        ]}
         removeButton={{
           onClick: (index) => {
             if (scripts.length > 1) {

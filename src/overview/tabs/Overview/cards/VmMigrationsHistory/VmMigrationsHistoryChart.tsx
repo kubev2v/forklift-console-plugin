@@ -33,8 +33,8 @@ const VmMigrationsHistoryChart = ({
 }: {
   selectedRange: TimeRangeOptions;
   vmMigrationsDataPoints: {
-    running: MigrationDataPoint[];
     failed: MigrationDataPoint[];
+    running: MigrationDataPoint[];
     succeeded: MigrationDataPoint[];
   };
 }) => {
@@ -119,15 +119,15 @@ const VmMigrationsHistoryChart = ({
   });
 
   return (
-    <div ref={chartContainerRef} className="pf-v6-u-h-100 pf-v6-u-w-100">
+    <div className="pf-v6-u-h-100 pf-v6-u-w-100" ref={chartContainerRef}>
       {count.Total === 0 && (
         <div className="forklift-overview__create-plan-btn">
           <Button
-            variant={ButtonVariant.primary}
             onClick={() => {
               trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_FROM_OVERVIEW_CLICKED);
               navigate(`${plansListURL}/~new`)?.catch(() => undefined);
             }}
+            variant={ButtonVariant.primary}
           >
             {t('Create migration plan')}
           </Button>
@@ -137,12 +137,12 @@ const VmMigrationsHistoryChart = ({
         ariaDesc={t('Area chart with VM migration history')}
         containerComponent={
           <ChartVoronoiContainer
+            constrainToVisibleArea
             labels={({ datum }: { datum: ChartDatumWithName }) => {
               return datum.y === 0 || !datum.name
                 ? (undefined as unknown as string)
                 : `${t('{{count}} VM migration', { count: datum.y })} ${datum.name.toLowerCase()}`;
             }}
-            constrainToVisibleArea
             onActivated={(points: ChartDatumWithName[]) => {
               const activePoint = points.find((pt) => pt.y > 0);
               if (!activePoint) {
@@ -155,12 +155,12 @@ const VmMigrationsHistoryChart = ({
             }}
           />
         }
+        height={chartDimensions.height}
         legendData={legendData}
         legendPosition="bottom"
         maxDomain={{ y: maxVmMigrationValue ? undefined : MAX_DOMAIN_Y }}
         padding={{ bottom: 55, left: 50, right: 50, top: 20 }}
         width={chartDimensions.width}
-        height={chartDimensions.height}
       >
         <ChartAxis
           tickCount={6}

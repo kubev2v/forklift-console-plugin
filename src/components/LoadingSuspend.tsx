@@ -3,10 +3,10 @@ import type { FC, ReactNode } from 'react';
 import { Bullseye, Spinner } from '@patternfly/react-core';
 
 type LoadingSuspendProps = {
-  obj?: object;
+  children?: ReactNode;
   loaded?: boolean;
   loadError?: unknown;
-  children?: ReactNode;
+  obj?: object;
 };
 
 /**

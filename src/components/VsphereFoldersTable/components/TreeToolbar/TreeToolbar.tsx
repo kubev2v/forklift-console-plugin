@@ -17,15 +17,15 @@ type TreeToolbarProps = {
   attributes: AttributeConfig<VmRow>[];
   canSelect: boolean;
   columns: ResourceField[];
-  filters: AttributeFilters<VmRow>;
-  selectedVmKeys: string[];
-  pageDataIds: string[];
   dataIds: string[];
+  filters: AttributeFilters<VmRow>;
   onSelect: (selectedIds: string[]) => void;
+  pageDataIds: string[];
+  pagination: ReactNode;
+  selectedVmKeys: string[];
   setColumns: Dispatch<SetStateAction<ResourceField[]>>;
   setShowAll: Dispatch<SetStateAction<boolean>>;
   showAll: boolean;
-  pagination: ReactNode;
   toolbarActions?: ReactNode;
 };
 
@@ -45,16 +45,16 @@ const TreeToolbar: FC<TreeToolbarProps> = ({
   toolbarActions,
 }) => {
   return (
-    <Toolbar clearAllFilters={filters.clearAll} id="vm-list-toolbar" className="pf-v6-u-pb-0">
+    <Toolbar className="pf-v6-u-pb-0" clearAllFilters={filters.clearAll} id="vm-list-toolbar">
       <ToolbarContent>
         {canSelect && (
           <ToolbarItem>
             <TableBulkSelect
+              canPageSelect={!isEmpty(pageDataIds)}
               dataIds={dataIds}
               onSelect={onSelect}
               pageDataIds={pageDataIds}
               selectedIds={selectedVmKeys}
-              canPageSelect={!isEmpty(pageDataIds)}
             />
           </ToolbarItem>
         )}
@@ -70,9 +70,9 @@ const TreeToolbar: FC<TreeToolbarProps> = ({
         {canSelect && (
           <ToolbarItem>
             <SelectedToggle
-              showAll={showAll}
-              setShowAll={setShowAll}
               selectedVmKeys={selectedVmKeys}
+              setShowAll={setShowAll}
+              showAll={showAll}
             />
           </ToolbarItem>
         )}

@@ -111,19 +111,17 @@ const ThroughputLineChart: FC<ThroughputLineChartProps> = ({
 
   if (isEmpty(visibleSeries)) {
     return (
-      <div ref={chartContainerRef} className="pf-v6-u-h-100 pf-v6-u-w-100">
+      <div className="pf-v6-u-h-100 pf-v6-u-w-100" ref={chartContainerRef}>
         <Bullseye>{t('No active migration data available')}</Bullseye>
       </div>
     );
   }
 
   return (
-    <div ref={chartContainerRef} className="pf-v6-u-h-100 pf-v6-u-w-100">
+    <div className="pf-v6-u-h-100 pf-v6-u-w-100" ref={chartContainerRef}>
       <Chart
         ariaDesc={t('Line chart showing throughput over time')}
         ariaTitle={title}
-        domain={{ x: xDomain }}
-        themeColor={ChartThemeColor.multiUnordered}
         containerComponent={
           <ChartVoronoiContainer
             constrainToVisibleArea
@@ -132,18 +130,20 @@ const ThroughputLineChart: FC<ThroughputLineChartProps> = ({
             }
           />
         }
+        domain={{ x: xDomain }}
         height={chartDimensions.height}
         legendData={legendData}
         legendPosition="bottom"
         minDomain={{ y: 0 }}
         padding={{ bottom: 75, left: 85, right: 20, top: 10 }}
+        themeColor={ChartThemeColor.multiUnordered}
         width={chartDimensions.width}
       >
         <ChartAxis
           fixLabelOverlap
+          style={{ tickLabels: { padding: 0 } }}
           tickFormat={(ts: number) => formatTimestamp(ts, timeRange)}
           tickValues={timeTicks}
-          style={{ tickLabels: { padding: 0 } }}
         />
         <ChartAxis
           dependentAxis
@@ -154,13 +154,13 @@ const ThroughputLineChart: FC<ThroughputLineChartProps> = ({
           {chartData
             .filter((cd) => cd.data.length > 1)
             .map((cd) => (
-              <ChartLine key={cd.planId} data={cd.data} name={cd.name} />
+              <ChartLine data={cd.data} key={cd.planId} name={cd.name} />
             ))}
         </ChartGroup>
         {chartData
           .filter((cd) => cd.data.length === 1)
           .map((cd) => (
-            <ChartScatter key={cd.planId} data={cd.data} name={cd.name} />
+            <ChartScatter data={cd.data} key={cd.planId} name={cd.name} />
           ))}
       </Chart>
     </div>

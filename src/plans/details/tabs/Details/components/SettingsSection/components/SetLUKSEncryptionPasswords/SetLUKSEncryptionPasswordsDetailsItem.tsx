@@ -26,18 +26,18 @@ const SetLUKSEncryptionPasswordsDetailsItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="disk-decryption-detail-item"
-      title={t('Disk decryption')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={<LUKSSecretLink plan={plan} />}
+      crumbs={['spec', 'vms', 'luks']}
       helpContent={t(
         'Configure disk decryption settings including passphrases for LUKS-encrypted devices or network-bound disk encryption (NBDE/Clevis) for the VMs you want to migrate.',
       )}
       moreInfoLink={VIRT_V2V_HELP_LINK}
-      crumbs={['spec', 'vms', 'luks']}
       onEdit={() => {
         launcher<EditPlanProps>(EditLUKSEncryptionPasswords, { resource: plan });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="disk-decryption-detail-item"
+      title={t('Disk decryption')}
     />
   );
 };

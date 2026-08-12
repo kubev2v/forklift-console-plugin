@@ -65,18 +65,18 @@ const CreateStorageMapFieldTable: FC = () => {
 
   return (
     <FieldBuilderTable
-      headers={[
-        {
-          isRequired: true,
-          label: storageMapFieldLabels[StorageMapFieldId.SourceStorage],
-          width: 45,
+      addButton={{
+        isDisabled:
+          isEmpty([...sourceStorages, ...targetStorages]) ||
+          sourceStorages.length === storageMappingFields.length ||
+          sourceStoragesLoading ||
+          isSubmitting ||
+          Boolean(loadError),
+        label: t('Add mapping'),
+        onClick: () => {
+          append(defaultStorageMapping);
         },
-        {
-          isRequired: true,
-          label: storageMapFieldLabels[StorageMapFieldId.TargetStorage],
-          width: 45,
-        },
-      ]}
+      }}
       fieldRows={storageMappingFields.map((field, index) => ({
         ...field,
         additionalOptions: (
@@ -84,8 +84,8 @@ const CreateStorageMapFieldTable: FC = () => {
             <StackItem>
               <AccessModeField
                 fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
-                targetStorages={targetStorages}
                 targetStorageFieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+                targetStorages={targetStorages}
               />
             </StackItem>
             {isVsphereOffload && (
@@ -102,8 +102,8 @@ const CreateStorageMapFieldTable: FC = () => {
         ),
         inputs: [
           <InventorySourceStorageField
-            key={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
             fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
+            key={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
             sourceStorages={sourceStorages}
           />,
           isVsphereOffload ? (
@@ -123,18 +123,18 @@ const CreateStorageMapFieldTable: FC = () => {
           ),
         ],
       }))}
-      addButton={{
-        isDisabled:
-          isEmpty([...sourceStorages, ...targetStorages]) ||
-          sourceStorages.length === storageMappingFields.length ||
-          sourceStoragesLoading ||
-          isSubmitting ||
-          Boolean(loadError),
-        label: t('Add mapping'),
-        onClick: () => {
-          append(defaultStorageMapping);
+      headers={[
+        {
+          isRequired: true,
+          label: storageMapFieldLabels[StorageMapFieldId.SourceStorage],
+          width: 45,
         },
-      }}
+        {
+          isRequired: true,
+          label: storageMapFieldLabels[StorageMapFieldId.TargetStorage],
+          width: 45,
+        },
+      ]}
       removeButton={{
         isDisabled: () => isSubmitting,
         onClick: (index) => {

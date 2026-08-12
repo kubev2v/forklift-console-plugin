@@ -50,12 +50,12 @@ const JobTemplateAssignment: FC<JobTemplateAssignmentProps> = ({ jobTemplates })
         name={AapFormFieldId.AapPreHookJobTemplateId}
         render={({ field }) => (
           <FormGroup
-            label={t('Pre-migration hook job template')}
             fieldId={AapFormFieldId.AapPreHookJobTemplateId}
+            label={t('Pre-migration hook job template')}
           >
             <TypeaheadSelect
-              options={preHookOptions}
-              value={field.value}
+              allowClear
+              maxMenuHeight={AAP_SELECT_MAX_MENU_HEIGHT}
               onChange={(selected) => {
                 const numericValue =
                   selected !== undefined && selected !== '' ? Number(selected) : undefined;
@@ -65,11 +65,11 @@ const JobTemplateAssignment: FC<JobTemplateAssignmentProps> = ({ jobTemplates })
                   findTemplateName(jobTemplates, numericValue),
                 );
               }}
-              allowClear
+              options={preHookOptions}
               placeholder={t('Select a job template...')}
-              testId="aap-pre-hook-template-select"
-              maxMenuHeight={AAP_SELECT_MAX_MENU_HEIGHT}
               popperProps={AAP_SELECT_POPPER_PROPS}
+              testId="aap-pre-hook-template-select"
+              value={field.value}
             />
           </FormGroup>
         )}
@@ -80,12 +80,12 @@ const JobTemplateAssignment: FC<JobTemplateAssignmentProps> = ({ jobTemplates })
         name={AapFormFieldId.AapPostHookJobTemplateId}
         render={({ field }) => (
           <FormGroup
-            label={t('Post-migration hook job template')}
             fieldId={AapFormFieldId.AapPostHookJobTemplateId}
+            label={t('Post-migration hook job template')}
           >
             <TypeaheadSelect
-              options={postHookOptions}
-              value={field.value}
+              allowClear
+              maxMenuHeight={AAP_SELECT_MAX_MENU_HEIGHT}
               onChange={(selected) => {
                 const numericValue =
                   selected !== undefined && selected !== '' ? Number(selected) : undefined;
@@ -95,11 +95,11 @@ const JobTemplateAssignment: FC<JobTemplateAssignmentProps> = ({ jobTemplates })
                   findTemplateName(jobTemplates, numericValue),
                 );
               }}
-              allowClear
+              options={postHookOptions}
               placeholder={t('Select a job template...')}
-              testId="aap-post-hook-template-select"
-              maxMenuHeight={AAP_SELECT_MAX_MENU_HEIGHT}
               popperProps={AAP_SELECT_POPPER_PROPS}
+              testId="aap-post-hook-template-select"
+              value={field.value}
             />
           </FormGroup>
         )}

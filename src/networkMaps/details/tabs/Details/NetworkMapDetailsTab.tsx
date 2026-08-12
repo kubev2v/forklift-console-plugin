@@ -79,15 +79,14 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
   );
 
   return (
-    <LoadingSuspend obj={networkMap} loaded={loaded} loadError={loadError}>
-      <PageSection hasBodyWrapper={false} className="forklift-page-section--details">
+    <LoadingSuspend loaded={loaded} loadError={loadError} obj={networkMap}>
+      <PageSection className="forklift-page-section--details" hasBodyWrapper={false}>
         <SectionHeading text={t('Network map details')} />
         <DetailsSection obj={networkMap} />
       </PageSection>
 
-      <PageSection hasBodyWrapper={false} className="forklift-page-section">
+      <PageSection className="forklift-page-section" hasBodyWrapper={false}>
         <SectionHeadingWithEdit
-          title={t('Providers')}
           onClick={() => {
             launcher<MapProvidersEditProps>(MapProvidersEdit, {
               destinationProvider,
@@ -97,13 +96,14 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
               sourceProvider,
             });
           }}
+          title={t('Providers')}
         />
         <MapProvidersDetails obj={networkMap} />
       </PageSection>
 
-      <PageSection hasBodyWrapper={false} className="forklift-page-section">
+      <PageSection className="forklift-page-section" hasBodyWrapper={false}>
         <SectionHeadingWithEdit
-          title={t('Map')}
+          data-testid="network-map-edit-button"
           onClick={() => {
             launcher<NetworkMapEditProps>(NetworkMapEdit, {
               destinationProvider,
@@ -112,12 +112,12 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
               sourceProvider,
             });
           }}
-          data-testid="network-map-edit-button"
+          title={t('Map')}
         />
         <NetworkMapReviewTable networkMap={currentMappings} />
       </PageSection>
 
-      <PageSection hasBodyWrapper={false} className="forklift-page-section">
+      <PageSection className="forklift-page-section" hasBodyWrapper={false}>
         <SectionHeading text={t('Conditions')} />
         <ConditionsSection conditions={networkMap?.status?.conditions ?? []} />
       </PageSection>

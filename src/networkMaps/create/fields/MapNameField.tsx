@@ -22,18 +22,18 @@ const MapNameField: FC = () => {
 
   return (
     <FormGroupWithErrorText
-      isRequired
       fieldId={NetworkMapFieldId.MapName}
+      isRequired
       label={networkMapFieldLabels[NetworkMapFieldId.MapName]}
     >
       <Controller
-        name={NetworkMapFieldId.MapName}
         control={control}
+        name={NetworkMapFieldId.MapName}
         render={({ field }) => (
           <TextInput
             {...field}
-            id={NetworkMapFieldId.MapName}
             data-testid="network-map-name-input"
+            id={NetworkMapFieldId.MapName}
             isDisabled={isSubmitting}
             validated={getInputValidated(error)}
           />

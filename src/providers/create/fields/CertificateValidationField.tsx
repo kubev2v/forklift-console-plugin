@@ -36,12 +36,12 @@ const CertificateValidationField: FC = () => {
 
   return (
     <FormGroupWithHelpText
+      fieldId={ProviderFormFieldId.CertificateValidation}
+      helperTextInvalid={error?.message}
       isRequired
       label={t('Certificate validation')}
-      fieldId={ProviderFormFieldId.CertificateValidation}
       role="radiogroup"
       validated={getInputValidated(error)}
-      helperTextInvalid={error?.message}
     >
       <Stack hasGutter>
         <HelperText>
@@ -53,24 +53,25 @@ const CertificateValidationField: FC = () => {
         </HelperText>
 
         <Radio
+          body={value === CertificateValidationMode.Configure && <CACertificateField />}
+          data-testid="certificate-validation-configure"
           id="certificate-validation-configure"
-          name={ProviderFormFieldId.CertificateValidation}
-          label={t('Configure certificate validation')}
           isChecked={value === CertificateValidationMode.Configure}
+          label={t('Configure certificate validation')}
+          name={ProviderFormFieldId.CertificateValidation}
           onChange={() => {
             onChange(CertificateValidationMode.Configure);
           }}
-          data-testid="certificate-validation-configure"
-          body={value === CertificateValidationMode.Configure && <CACertificateField />}
         />
 
         <Radio
+          data-testid="certificate-validation-skip"
           id="certificate-validation-skip"
-          name={ProviderFormFieldId.CertificateValidation}
+          isChecked={value === CertificateValidationMode.Skip}
           label={
             <Flex
-              spaceItems={{ default: 'spaceItemsXs' }}
               alignItems={{ default: 'alignItemsCenter' }}
+              spaceItems={{ default: 'spaceItemsXs' }}
             >
               <FlexItem>{t('Skip certificate validation')}</FlexItem>
 
@@ -90,11 +91,10 @@ const CertificateValidationField: FC = () => {
               </HelpIconPopover>
             </Flex>
           }
-          isChecked={value === CertificateValidationMode.Skip}
+          name={ProviderFormFieldId.CertificateValidation}
           onChange={() => {
             onChange(CertificateValidationMode.Skip);
           }}
-          data-testid="certificate-validation-skip"
         />
       </Stack>
     </FormGroupWithHelpText>

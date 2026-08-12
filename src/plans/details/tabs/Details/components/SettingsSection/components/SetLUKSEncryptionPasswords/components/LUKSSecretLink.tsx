@@ -19,7 +19,7 @@ const LUKSSecretLink: FC<LUKSSecretLinkProps> = ({ plan }) => {
 
   if (hasNBDEClevis) {
     return (
-      <Label isCompact data-testid="nbde-clevis-enabled-label">
+      <Label data-testid="nbde-clevis-enabled-label" isCompact>
         {t('NBDE/Clevis enabled')}
       </Label>
     );
@@ -36,7 +36,7 @@ const LUKSSecretLink: FC<LUKSSecretLinkProps> = ({ plan }) => {
   }
 
   return (
-    <Label isCompact data-testid="no-decryption-keys-label">
+    <Label data-testid="no-decryption-keys-label" isCompact>
       {t('No decryption defined')}
     </Label>
   );

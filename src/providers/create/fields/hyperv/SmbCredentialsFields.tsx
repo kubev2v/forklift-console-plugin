@@ -32,13 +32,13 @@ const SmbCredentialsFields: FC = () => {
     <>
       <FormGroup fieldId={ProviderFormFieldId.UseDifferentSmbCredentials}>
         <Checkbox
-          id={ProviderFormFieldId.UseDifferentSmbCredentials}
-          label={t('Use different credentials for SMB share')}
-          isChecked={useDifferentSmbCredentials ?? false}
-          onChange={handleCheckboxChange}
           description={t(
             'Check this if the SMB share requires different credentials than the Hyper-V server',
           )}
+          id={ProviderFormFieldId.UseDifferentSmbCredentials}
+          isChecked={useDifferentSmbCredentials ?? false}
+          label={t('Use different credentials for SMB share')}
+          onChange={handleCheckboxChange}
         />
       </FormGroup>
 
@@ -49,8 +49,8 @@ const SmbCredentialsFields: FC = () => {
             fieldRules={{
               required: t('SMB username is required when using different credentials'),
             }}
-            label={t('SMB username')}
             helperText={t('Username for accessing the SMB share, for example: DOMAIN\\username')}
+            label={t('SMB username')}
             testId="smb-user-input"
           />
 
@@ -59,8 +59,8 @@ const SmbCredentialsFields: FC = () => {
             fieldRules={{
               required: t('SMB password is required when using different credentials'),
             }}
-            label={t('SMB password')}
             helperText={t('Password for accessing the SMB share')}
+            label={t('SMB password')}
             testId="smb-password-input"
           />
         </>

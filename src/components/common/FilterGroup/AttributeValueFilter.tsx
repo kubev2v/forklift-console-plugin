@@ -43,11 +43,11 @@ export const AttributeValueFilter = ({
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
     <MenuToggle
-      ref={toggleRef}
-      onClick={onToggleClick}
+      data-testid="attribute-filter-toggle"
       isExpanded={isOpen}
       isFullWidth
-      data-testid="attribute-filter-toggle"
+      onClick={onToggleClick}
+      ref={toggleRef}
     >
       {currentFilter?.filterDef?.fieldLabel ?? currentFilter?.label}
     </MenuToggle>
@@ -63,9 +63,9 @@ export const AttributeValueFilter = ({
   const renderOptions = () => {
     return fieldFilters.map(({ filterDef, label, resourceFieldId }) => (
       <SelectOption
+        data-testid={`filter-option-${resourceFieldId}`}
         key={resourceFieldId}
         value={filterDef?.fieldLabel ?? label}
-        data-testid={`filter-option-${resourceFieldId}`}
       >
         {filterDef?.fieldLabel ?? label}
       </SelectOption>
@@ -78,25 +78,25 @@ export const AttributeValueFilter = ({
         {/* This select is different from most and cannot use the common Select */}
         {/* eslint-disable-next-line no-restricted-syntax */}
         <Select
-          role="menu"
           aria-label={'Select Filter'}
           isOpen={isOpen}
-          selected={currentFilter?.filterDef?.fieldLabel ?? currentFilter?.label}
-          onSelect={(_ev, value) => {
-            onSelect(String(value));
-          }}
+          isScrollable
           onOpenChange={(nextOpen: boolean) => {
             setIsOpen(nextOpen);
           }}
-          toggle={toggle}
-          shouldFocusToggleOnSelect
-          shouldFocusFirstItemOnOpen={false}
-          isScrollable
+          onSelect={(_ev, value) => {
+            onSelect(String(value));
+          }}
           popperProps={{
             appendTo: document.body,
             direction: 'down',
             enableFlip: true,
           }}
+          role="menu"
+          selected={currentFilter?.filterDef?.fieldLabel ?? currentFilter?.label}
+          shouldFocusFirstItemOnOpen={false}
+          shouldFocusToggleOnSelect
+          toggle={toggle}
         >
           <SelectList>{renderOptions()}</SelectList>
         </Select>

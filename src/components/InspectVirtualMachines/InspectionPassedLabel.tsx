@@ -15,13 +15,13 @@ const InspectionPassedLabel: FC<InspectionPassedLabelProps> = ({ passed }) => {
   if (passed) {
     return (
       <Label
-        variant="filled"
-        status={PF_LABEL_STATUS.SUCCESS}
         icon={
           <Icon isInline>
             <CheckCircleIcon />
           </Icon>
         }
+        status={PF_LABEL_STATUS.SUCCESS}
+        variant="filled"
       >
         {t('Inspection passed')}
       </Label>
@@ -30,13 +30,13 @@ const InspectionPassedLabel: FC<InspectionPassedLabelProps> = ({ passed }) => {
 
   return (
     <Label
-      variant="filled"
-      status={PF_LABEL_STATUS.WARNING}
       icon={
         <Icon isInline>
           <ExclamationTriangleIcon />
         </Icon>
       }
+      status={PF_LABEL_STATUS.WARNING}
+      variant="filled"
     >
       {t('Issues found')}
     </Label>

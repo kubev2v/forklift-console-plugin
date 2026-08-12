@@ -23,8 +23,8 @@ const NfsDirectoryField: FC = () => {
           },
         },
       }}
-      label={t('NFS shared directory')}
       helperText={t('For example: 10.10.0.10:/ova')}
+      label={t('NFS shared directory')}
       testId="nfs-directory-input"
     />
   );

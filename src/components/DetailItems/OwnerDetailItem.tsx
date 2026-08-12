@@ -23,12 +23,12 @@ const OwnerDetailsItem: FC<ResourceDetailsItemProps> = ({
 
   return (
     <DetailsItem
+      content={<OwnerReferencesItem resource={resource} />}
+      crumbs={['metadata', 'ownerReferences']}
+      helpContent={helpContent ?? defaultHelpContent}
+      moreInfoLink={moreInfoLink ?? MORE_INFO_OWNER_DETAIL_ITEM}
       testId="owner-detail-item"
       title={t('Owner')}
-      content={<OwnerReferencesItem resource={resource} />}
-      moreInfoLink={moreInfoLink ?? MORE_INFO_OWNER_DETAIL_ITEM}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['metadata', 'ownerReferences']}
     />
   );
 };

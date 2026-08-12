@@ -22,32 +22,32 @@ export const COLUMN_IDS = {
 } as const;
 
 export type FolderRow = {
-  type: typeof ROW_TYPE.Folder;
+  folderName: string;
+  isHidden: false;
+  isSelected?: boolean;
   key: string;
   treeRow: TdProps['treeRow'];
-  folderName: string;
-  isSelected?: boolean;
-  isHidden: false;
+  type: typeof ROW_TYPE.Folder;
 };
 
 export type VmRow = {
-  type: typeof ROW_TYPE.Vm;
-  key: string;
-  treeRow: TdProps['treeRow'];
-  vmData: ProviderVmData;
   isHidden: boolean;
   isSelected?: boolean;
+  key: string;
   parentFolderKey: string;
+  treeRow: TdProps['treeRow'];
+  type: typeof ROW_TYPE.Vm;
+  vmData: ProviderVmData;
 };
 
 export type ConcernsRow = {
-  type: typeof ROW_TYPE.Concerns;
-  key: string;
   isHidden: boolean;
-  vmData: ProviderVmData;
   /** this prop is a flag to the show selected toggle */
   isSelected?: boolean;
+  key: string;
   parentFolderKey: string;
+  type: typeof ROW_TYPE.Concerns;
+  vmData: ProviderVmData;
 };
 
 export type SortColumn = (typeof COLUMN_IDS)[keyof typeof COLUMN_IDS];
@@ -55,7 +55,7 @@ export type SortState = { column: SortColumn; direction: SortDirection };
 
 export type RowNode = FolderRow | VmRow | ConcernsRow;
 
-type BlockItem = { vm: VmRow; concerns?: ConcernsRow };
+type BlockItem = { concerns?: ConcernsRow; vm: VmRow };
 
 export enum BlockKind {
   Folder = 'folder',
@@ -63,14 +63,14 @@ export enum BlockKind {
 }
 
 export type FolderBlock = {
-  kind: BlockKind.Folder;
   folder: FolderRow;
   items: BlockItem[];
+  kind: BlockKind.Folder;
 };
 
 export type RootBlock = {
-  kind: BlockKind.Root;
   items: BlockItem[];
+  kind: BlockKind.Root;
 };
 
 export type Block = FolderBlock | RootBlock;

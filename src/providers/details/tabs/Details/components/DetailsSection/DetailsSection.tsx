@@ -23,7 +23,7 @@ const DetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   }
 
   return (
-    <PageSection hasBodyWrapper={false} className="forklift-page-section--details">
+    <PageSection className="forklift-page-section--details" hasBodyWrapper={false}>
       <SectionHeading text={t('Provider details')} />
       <DetailsSectionByType data={data} />
     </PageSection>

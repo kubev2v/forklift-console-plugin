@@ -16,8 +16,8 @@ const SubTopicsContent: FC<SubTopicsContentProps> = ({ topic }) => {
   return (
     <div className="pf-v6-u-ml-lg pf-v6-u-mb-md">
       <div
-        id={`${topic.id}: ${topic.subListStyleType}`}
         className={getClassForListStyle(topic.subListStyleType)}
+        id={`${topic.id}: ${topic.subListStyleType}`}
       >
         {isDescriptionList ? (
           <DescriptionSubTopicContent topic={topic} />

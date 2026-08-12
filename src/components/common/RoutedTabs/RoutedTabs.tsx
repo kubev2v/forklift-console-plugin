@@ -5,8 +5,8 @@ import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 
 type RoutedTab = {
   name: string;
-  to: string;
   onClick?: () => void;
+  to: string;
 };
 
 type RoutedTabsProps = {
@@ -31,7 +31,7 @@ const RoutedTabs: FC<RoutedTabsProps> = ({ tabs }) => {
       }}
     >
       {tabs.map((tab) => (
-        <Tab key={tab.to} eventKey={tab.to} title={<TabTitleText>{tab.name}</TabTitleText>} />
+        <Tab eventKey={tab.to} key={tab.to} title={<TabTitleText>{tab.name}</TabTitleText>} />
       ))}
     </Tabs>
   );

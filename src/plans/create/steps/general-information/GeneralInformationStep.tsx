@@ -56,8 +56,8 @@ const GeneralInformationStep: FC = () => {
 
   return (
     <WizardStepContainer
-      title={planStepNames[PlanWizardStepId.General]}
       testId="create-plan-general-step"
+      title={planStepNames[PlanWizardStepId.General]}
     >
       <Form>
         <FormSection title={t('Plan information')}>
@@ -76,21 +76,17 @@ const GeneralInformationStep: FC = () => {
           </p>
 
           <FormGroupWithErrorText
-            isRequired
             fieldId={GeneralFormFieldId.SourceProvider}
+            isRequired
             label={generalFormFieldLabels[GeneralFormFieldId.SourceProvider]}
           >
             <Controller
-              name={GeneralFormFieldId.SourceProvider}
               control={control}
+              name={GeneralFormFieldId.SourceProvider}
               render={({ field }) => (
                 <ProviderSelect
-                  ref={field.ref}
-                  testId="source-provider-select"
-                  placeholder={t('Select source provider')}
                   id={GeneralFormFieldId.SourceProvider}
                   namespace={planProject}
-                  value={field.value?.metadata?.name ?? ''}
                   onSelect={(_, value) => {
                     const previousProvider = field.value;
                     field.onChange(value);
@@ -100,7 +96,11 @@ const GeneralInformationStep: FC = () => {
                       handleSourceProviderChange();
                     }
                   }}
+                  placeholder={t('Select source provider')}
+                  ref={field.ref}
                   status={errors[GeneralFormFieldId.SourceProvider] && MenuToggleStatus.danger}
+                  testId="source-provider-select"
+                  value={field.value?.metadata?.name ?? ''}
                 />
               )}
               rules={{ required: t('Source provider is required.') }}
@@ -108,22 +108,18 @@ const GeneralInformationStep: FC = () => {
           </FormGroupWithErrorText>
 
           <FormGroupWithErrorText
-            isRequired
             fieldId={GeneralFormFieldId.TargetProvider}
+            isRequired
             label={generalFormFieldLabels[GeneralFormFieldId.TargetProvider]}
           >
             <Controller
-              name={GeneralFormFieldId.TargetProvider}
               control={control}
+              name={GeneralFormFieldId.TargetProvider}
               render={({ field }) => (
                 <ProviderSelect
-                  ref={field.ref}
-                  testId="target-provider-select"
-                  isTarget
-                  placeholder={t('Select target provider')}
                   id={GeneralFormFieldId.TargetProvider}
+                  isTarget
                   namespace={planProject}
-                  value={field.value?.metadata?.name ?? ''}
                   onSelect={(_, value) => {
                     field.onChange(value);
 
@@ -131,7 +127,11 @@ const GeneralInformationStep: FC = () => {
                       setValue(GeneralFormFieldId.TargetProject, '', { shouldValidate: true });
                     }
                   }}
+                  placeholder={t('Select target provider')}
+                  ref={field.ref}
                   status={errors[GeneralFormFieldId.TargetProvider] && MenuToggleStatus.danger}
+                  testId="target-provider-select"
+                  value={field.value?.metadata?.name ?? ''}
                 />
               )}
               rules={{ required: t('Target provider is required.') }}

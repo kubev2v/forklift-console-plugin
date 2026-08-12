@@ -22,10 +22,10 @@ import { getMapResourceLabel } from '../utils';
 type NetworkMappingId = `${NetworkMapFieldId.NetworkMap}.${number}.${keyof NetworkMapping}`;
 
 type ValidateNetworkMapParams = {
-  values: NetworkMapping[];
-  usedSourceNetworks: MappingValue[];
-  vms: Record<string, ProviderVirtualMachine>;
   oVirtNicProfiles: OVirtNicProfile[];
+  usedSourceNetworks: MappingValue[];
+  values: NetworkMapping[];
+  vms: Record<string, ProviderVirtualMachine>;
 };
 
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {

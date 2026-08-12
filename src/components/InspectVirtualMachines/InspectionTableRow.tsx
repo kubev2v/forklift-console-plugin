@@ -66,13 +66,13 @@ const InspectionTableRow: FC<InspectionTableRowProps> = ({
           )}
         </Td>
         <Td>
-          <ConsoleTimestamp timestamp={getCreatedAt(conversion)} showGlobalIcon={false} />
+          <ConsoleTimestamp showGlobalIcon={false} timestamp={getCreatedAt(conversion)} />
         </Td>
       </Tr>
       <Tr isExpanded={isExpanded}>
         {/* Spacer cell aligns content with the expand toggle column */}
         <Td />
-        <Td noPadding colSpan={columnCount - 1}>
+        <Td colSpan={columnCount - 1} noPadding>
           {isExpanded && (
             <ExpandableRowContent>
               <InspectionRowExpandedContent

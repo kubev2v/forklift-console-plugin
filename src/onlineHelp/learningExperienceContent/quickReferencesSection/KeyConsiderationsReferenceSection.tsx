@@ -14,8 +14,8 @@ const KeyConsiderationsReferenceSection: FC = () => {
 
   return (
     <ReferenceSection
-      id="key-considerations"
       icon={<CatalogIcon />}
+      id="key-considerations"
       title={t('Key considerations')}
     >
       <Flex
@@ -25,7 +25,7 @@ const KeyConsiderationsReferenceSection: FC = () => {
       >
         {keyConsiderationsItems.map((item) => (
           <FlexItem key={item.title}>
-            <HelpTitleDescription title={item.title} description={item.description} />
+            <HelpTitleDescription description={item.description} title={item.title} />
           </FlexItem>
         ))}
       </Flex>

@@ -40,22 +40,19 @@ const HookServiceAccountField: FC<HookServiceAccountFieldProps> = ({ fieldId }) 
 
   return (
     <FormGroupWithErrorText
-      label={hooksFormFieldLabels[MigrationHookFieldId.ServiceAccount]}
       fieldId={hookServiceAccountFieldId}
+      label={hooksFormFieldLabels[MigrationHookFieldId.ServiceAccount]}
     >
       <Controller
         control={control}
         name={hookServiceAccountFieldId}
-        rules={{
-          validate: validateHookServiceAccount,
-        }}
         render={({ field }) => (
           <>
             <TextInput
               {...field}
-              id={hookServiceAccountFieldId}
-              data-testid={`${hookServiceAccountFieldId}-input`}
               aria-describedby={`${hookServiceAccountFieldId}-helper`}
+              data-testid={`${hookServiceAccountFieldId}-input`}
+              id={hookServiceAccountFieldId}
               name={hookServiceAccountFieldId}
               validated={getInputValidated(error)}
             />
@@ -64,6 +61,9 @@ const HookServiceAccountField: FC<HookServiceAccountFieldProps> = ({ fieldId }) 
             />
           </>
         )}
+        rules={{
+          validate: validateHookServiceAccount,
+        }}
       />
     </FormGroupWithErrorText>
   );

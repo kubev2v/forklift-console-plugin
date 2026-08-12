@@ -46,7 +46,7 @@ const toField = ({
   resourceFieldId: string;
 }) => ({ isVisible, resourceFieldId });
 
-const sanitizeFields = (fields: unknown): { resourceFieldId: string; isVisible?: boolean }[] =>
+const sanitizeFields = (fields: unknown): { isVisible?: boolean; resourceFieldId: string }[] =>
   Array.isArray(fields)
     ? fields
         // array should contain objects

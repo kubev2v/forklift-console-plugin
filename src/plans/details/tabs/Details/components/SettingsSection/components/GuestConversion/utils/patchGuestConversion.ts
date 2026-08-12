@@ -10,8 +10,8 @@ enum PlanSpecPaths {
 }
 
 type GuestConversionPatchParams = {
-  resource: V1beta1Plan;
   newValue: boolean;
+  resource: V1beta1Plan;
   useCompatibilityMode?: boolean;
 };
 

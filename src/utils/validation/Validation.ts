@@ -10,7 +10,7 @@ export const ValidationState = {
 export type ValidationStateType = (typeof ValidationState)[keyof typeof ValidationState];
 
 export type ValidationMsg = {
-  type: ValidationStateType;
-  msg?: string | ReactNode;
   description?: string | ReactNode;
+  msg?: string | ReactNode;
+  type: ValidationStateType;
 };

@@ -27,25 +27,25 @@ const PlanHooksPage: FC<PlanPageProps> = ({ name, namespace }) => {
 
   return (
     <LoadingSuspend
-      obj={plan}
       loaded={loadedPlan && loadedHooks}
       loadError={planError ?? hooksError}
+      obj={plan}
     >
-      <PageSection hasBodyWrapper={false} className="pf-v6-u-h-100">
+      <PageSection className="pf-v6-u-h-100" hasBodyWrapper={false}>
         <Flex direction={{ default: 'column' }}>
           <SectionHeading
+            className="pf-v6-u-mb-0"
             text={
               <TabTitle
-                title={t('Hooks')}
                 helpContent={t(
                   'Hooks are contained in Ansible playbooks that can be run before or after the migration. Hooks are applied to all virtual machines in the plan.',
                 )}
+                title={t('Hooks')}
               />
             }
-            className="pf-v6-u-mb-0"
           />
           {warning && (
-            <Alert variant="warning" title={t('The plan hooks were manually configured')}>
+            <Alert title={t('The plan hooks were manually configured')} variant="warning">
               <p>
                 {t('Warning:')} {warning},
               </p>
@@ -54,15 +54,15 @@ const PlanHooksPage: FC<PlanPageProps> = ({ name, namespace }) => {
           )}
           <HookSection
             hook={preHookResource}
-            title={t('Pre-migration hook')}
             plan={plan}
             step={hookTypes.PreHook}
+            title={t('Pre-migration hook')}
           />
           <HookSection
             hook={postHookResource}
-            title={t('Post-migration hook')}
             plan={plan}
             step={hookTypes.PostHook}
+            title={t('Post-migration hook')}
           />
         </Flex>
       </PageSection>

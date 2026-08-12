@@ -63,9 +63,9 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
           <StackItem className="forklift-inspection-expanded-section">
             <InspectionExpandedSection
               conversions={conversions}
-              vmId={vmId}
               expandedRows={inspectionExpandedRows}
               onToggleExpand={setInspectionExpandedRows}
+              vmId={vmId}
             />
           </StackItem>
         </Stack>
@@ -76,21 +76,21 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
 
   return (
     <StandardPageWithSelection<SpecVirtualMachinePageData>
-      title={t('Virtual machines')}
+      canSelect={canSelect}
+      cell={PlanSpecVirtualMachinesRow}
       data-testid="plan-spec-virtual-machines-list"
       dataSource={[enrichedData, !loading, inventoryError]}
-      cell={PlanSpecVirtualMachinesRow}
-      fieldsMetadata={specVirtualMachineFields}
-      userSettings={userSettings}
-      toId={vmDataToId}
-      canSelect={canSelect}
-      onSelect={onSelect}
-      selectedIds={selectedIds}
-      GlobalActionToolbarItems={actions}
       expanded={expanded}
       expandedIds={expandedIds}
-      extraSupportedMatchers={extraSupportedMatchers}
       extraSupportedFilters={extraSupportedFilters}
+      extraSupportedMatchers={extraSupportedMatchers}
+      fieldsMetadata={specVirtualMachineFields}
+      GlobalActionToolbarItems={actions}
+      onSelect={onSelect}
+      selectedIds={selectedIds}
+      title={t('Virtual machines')}
+      toId={vmDataToId}
+      userSettings={userSettings}
     />
   );
 };

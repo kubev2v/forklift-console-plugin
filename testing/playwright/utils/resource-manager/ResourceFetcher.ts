@@ -106,8 +106,8 @@ export class ResourceFetcher extends BaseResourceManager {
 
   static async fetchResource<T extends SupportedResource>(options: {
     kind: string;
-    resourceName: string;
     namespace: string;
+    resourceName: string;
   }): Promise<T | null> {
     const { kind, namespace, resourceName } = options;
     const resourceType = ResourceFetcher.getResourceTypeFromKind(kind);

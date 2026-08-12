@@ -8,10 +8,10 @@ import { AngleDownIcon, AngleRightIcon, HelpIcon } from '@patternfly/react-icons
 import './ExpandableSectionHeading.scss';
 
 type ExpandableSectionHeadingProps = {
-  section: ReactNode;
-  sectionTitle: ReactNode;
-  sectionHelpTip?: ReactNode;
   initialExpanded?: boolean;
+  section: ReactNode;
+  sectionHelpTip?: ReactNode;
+  sectionTitle: ReactNode;
 };
 
 const ExpandableSectionHeading: FC<ExpandableSectionHeadingProps> = ({
@@ -26,12 +26,13 @@ const ExpandableSectionHeading: FC<ExpandableSectionHeadingProps> = ({
       <Flex alignItems={{ default: 'alignItemsCenter' }} gap={{ default: 'gapSm' }}>
         <FlexItem>
           <Button
+            className="expandable-section-heading"
             icon={
               <SectionHeading
                 text={
                   <Flex
-                    className="expandable-section-heading__title"
                     alignItems={{ default: 'alignItemsCenter' }}
+                    className="expandable-section-heading__title"
                     gap={{ default: 'gapSm' }}
                   >
                     <FlexItem>{showSection ? <AngleDownIcon /> : <AngleRightIcon />}</FlexItem>
@@ -40,10 +41,9 @@ const ExpandableSectionHeading: FC<ExpandableSectionHeadingProps> = ({
                 }
               />
             }
-            className="expandable-section-heading"
             isInline
-            variant={ButtonVariant.plain}
             onClick={setShowSection}
+            variant={ButtonVariant.plain}
           />
         </FlexItem>
         {sectionHelpTip ? (

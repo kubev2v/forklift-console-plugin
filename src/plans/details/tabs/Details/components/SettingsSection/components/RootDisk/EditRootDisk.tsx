@@ -23,24 +23,24 @@ const EditRootDisk: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
 
   return (
     <ModalForm
-      title={t('Edit root device')}
       onConfirm={async () => onConfirmRootDisk(resource, value)}
+      title={t('Edit root device')}
       {...rest}
     >
       <Stack hasGutter>
         <EditRootDiskModalBody />
         <EditRootDiskModalAlert vms={vms} />
         <FormGroupWithHelpText
-          label={t('Root device')}
           helperText={t(
             'Provide the storage device or partition that contains the root filesystem. If left blank, the first root device will be used.',
           )}
+          label={t('Root device')}
         >
           <TextInput
-            value={value}
             onChange={(_event, newValue) => {
               setValue(newValue);
             }}
+            value={value}
           />
         </FormGroupWithHelpText>
       </Stack>

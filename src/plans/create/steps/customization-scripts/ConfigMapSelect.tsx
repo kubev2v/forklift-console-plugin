@@ -52,17 +52,17 @@ const ConfigMapSelect = (
   return (
     <Select
       id={id}
-      ref={ref}
-      value={value}
-      status={status}
-      onSelect={handleSelect}
       isDisabled={hasNoScriptConfigMaps}
+      onSelect={handleSelect}
       placeholder={
         hasNoScriptConfigMaps
           ? t('No ConfigMaps with customization scripts found in this project.')
           : t('Select a ConfigMap')
       }
+      ref={ref}
+      status={status}
       testId={testId}
+      value={value}
     >
       <SelectList>
         {scriptConfigMaps.map((configMap) => {

@@ -39,10 +39,10 @@ const HelpTopic: FC = () => {
 
           return (
             <HelpTopicSection
-              key={subTopic.id}
               index={index}
-              topic={subTopic}
+              key={subTopic.id}
               listStyleType={selectedTopic.subListStyleType}
+              topic={subTopic}
             />
           );
         })}

@@ -6,8 +6,8 @@ export type VMResources = {
 };
 
 export type PlanResourcesTableProps = {
-  planInventorySize: number;
   planInventoryRunningSize: number;
+  planInventorySize: number;
   totalResources: VMResources;
   totalResourcesRunning: VMResources;
 };

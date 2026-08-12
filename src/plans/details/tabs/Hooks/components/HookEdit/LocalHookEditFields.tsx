@@ -34,11 +34,8 @@ const LocalHookEditFields: FC<LocalHookEditFieldsProps> = ({ control, plan, step
       <Controller
         control={control}
         name={HookField.Image}
-        rules={{ validate: validateHookRunnerImage }}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
           <FormGroupWithErrorText
-            label={t('Hook runner image')}
-            isRequired
             fieldId={HookField.Image}
             helperText={
               isEmpty(error) ? (
@@ -49,25 +46,26 @@ const LocalHookEditFields: FC<LocalHookEditFieldsProps> = ({ control, plan, step
                 <FormErrorHelperText error={error} showIcon />
               )
             }
+            isRequired
+            label={t('Hook runner image')}
           >
             <TextInput
-              onChange={onChange}
-              value={value}
-              spellCheck="false"
-              validated={getInputValidated(error)}
-              type="text"
               data-testid="hook-runner-image-input"
+              onChange={onChange}
+              spellCheck="false"
+              type="text"
+              validated={getInputValidated(error)}
+              value={value}
             />
           </FormGroupWithErrorText>
         )}
+        rules={{ validate: validateHookRunnerImage }}
       />
       <Controller
         control={control}
         name={HookField.ServiceAccount}
-        rules={{ validate: validateHookServiceAccount }}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
           <FormGroupWithErrorText
-            label={t('Service account')}
             fieldId={HookField.ServiceAccount}
             helperText={
               isEmpty(error) ? (
@@ -76,30 +74,32 @@ const LocalHookEditFields: FC<LocalHookEditFieldsProps> = ({ control, plan, step
                 <FormErrorHelperText error={error} showIcon />
               )
             }
+            label={t('Service account')}
           >
             <TextInput
-              onChange={onChange}
-              value={value}
-              spellCheck="false"
-              validated={getInputValidated(error)}
-              type="text"
               data-testid="hook-service-account-input"
+              onChange={onChange}
+              spellCheck="false"
+              type="text"
+              validated={getInputValidated(error)}
+              value={value}
             />
           </FormGroupWithErrorText>
         )}
+        rules={{ validate: validateHookServiceAccount }}
       />
       <FormGroupWithErrorText
-        label={t('Ansible playbook')}
         fieldId={HookField.Playbook}
         helperText={t(
           'Ansible playbook. If you specify a playbook, the image must be hook-runner.',
         )}
+        label={t('Ansible playbook')}
       >
         <Controller
           control={control}
           name={HookField.Playbook}
           render={({ field: { onChange, value } }) => (
-            <SdkYamlEditor value={value ?? ''} onChange={onChange} />
+            <SdkYamlEditor onChange={onChange} value={value ?? ''} />
           )}
         />
       </FormGroupWithErrorText>

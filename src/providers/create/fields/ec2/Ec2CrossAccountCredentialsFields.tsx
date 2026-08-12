@@ -32,14 +32,14 @@ const Ec2CrossAccountCredentialsFields: FC = () => {
     <>
       <FormGroup fieldId={ProviderFormFieldId.Ec2UseCrossAccountCredentials}>
         <Checkbox
-          id={ProviderFormFieldId.Ec2UseCrossAccountCredentials}
-          label={t('Use cross-account credentials')}
-          isChecked={useCrossAccount ?? false}
-          onChange={handleCheckboxChange}
+          data-testid="ec2-cross-account-credentials-checkbox"
           description={t(
             'Enable this if the target AWS account is different from the source account',
           )}
-          data-testid="ec2-cross-account-credentials-checkbox"
+          id={ProviderFormFieldId.Ec2UseCrossAccountCredentials}
+          isChecked={useCrossAccount ?? false}
+          label={t('Use cross-account credentials')}
+          onChange={handleCheckboxChange}
         />
       </FormGroup>
 
@@ -50,8 +50,8 @@ const Ec2CrossAccountCredentialsFields: FC = () => {
             fieldRules={{
               required: t('Target access key ID is required when using cross-account credentials'),
             }}
-            label={t('Target access key ID')}
             helperText={t('AWS access key ID for the target account')}
+            label={t('Target access key ID')}
             testId="ec2-target-access-key-id-input"
           />
 
@@ -62,8 +62,8 @@ const Ec2CrossAccountCredentialsFields: FC = () => {
                 'Target secret access key is required when using cross-account credentials',
               ),
             }}
-            label={t('Target secret access key')}
             helperText={t('AWS secret access key for the target account')}
+            label={t('Target secret access key')}
             testId="ec2-target-secret-access-key-input"
           />
         </div>

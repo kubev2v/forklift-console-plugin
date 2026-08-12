@@ -24,11 +24,11 @@ export const useMigrationVirtualMachineActions = (plan: V1beta1Plan): PageGlobal
     ({ selectedIds }) =>
       isExecuting && !isArchived && activeMigration ? (
         <CancelMigrationVirtualMachinesButton
-          selectedIds={selectedIds ?? []}
           migration={activeMigration}
+          selectedIds={selectedIds ?? []}
         />
       ) : (
-        <DeleteVirtualMachinesButton selectedIds={selectedIds ?? []} plan={plan} />
+        <DeleteVirtualMachinesButton plan={plan} selectedIds={selectedIds ?? []} />
       ),
   ];
 };

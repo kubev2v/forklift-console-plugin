@@ -17,25 +17,25 @@ const EditVirtV2vSmp: FC = () => {
 
   return (
     <Controller
-      name={SettingsFields.VirtV2vSmp}
       control={control}
+      name={SettingsFields.VirtV2vSmp}
       render={({ field: { onChange, value } }) => (
         <FormGroupWithHelpText
+          fieldId={SettingsFields.VirtV2vSmp}
           label={t('Conversion appliance vCPUs')}
           labelHelp={
             <HelpIconPopover header={t('Conversion appliance vCPUs')}>
               <VirtV2vSmpHelpContent />
             </HelpIconPopover>
           }
-          fieldId={SettingsFields.VirtV2vSmp}
         >
           <SettingsNumberInput
-            value={value ?? 0}
+            defaultValue={Number(defaultValuesMap[SettingsFields.VirtV2vSmp])}
             onChange={(newValue: number | string) => {
               onChange(Math.max(0, Number(newValue)));
             }}
-            defaultValue={Number(defaultValuesMap[SettingsFields.VirtV2vSmp])}
             testId="settings-virt-v2v-smp-input"
+            value={value ?? 0}
           />
         </FormGroupWithHelpText>
       )}

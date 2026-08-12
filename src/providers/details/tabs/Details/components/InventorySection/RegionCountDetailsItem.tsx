@@ -19,9 +19,6 @@ const RegionCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Regions')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'regionCount']}
       content={
         <InventoryCell
           data={{
@@ -34,6 +31,9 @@ const RegionCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           inventoryValue={(inventory as OpenstackProvider).regionCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'regionCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Regions')}
     />
   );
 };

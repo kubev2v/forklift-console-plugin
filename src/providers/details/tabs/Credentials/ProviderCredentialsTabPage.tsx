@@ -48,17 +48,13 @@ const ProviderCredentialsTabPage: FC<ProviderDetailsPageProps> = ({ name, namesp
 
   return (
     <LoadingSuspend
-      obj={provider ?? secret}
       loaded={loaded ?? secretLoaded}
       loadError={loadError ?? secretLoadError}
+      obj={provider ?? secret}
     >
       <PageSection hasBodyWrapper={false}>
         <Stack hasGutter>
           <SectionHeadingWithEdit
-            data-testid="credentials-edit-button"
-            onClick={() => {
-              launcher<EditProviderCredentialsProps>(EditProviderCredentials, { provider, secret });
-            }}
             additionalActions={[
               {
                 children: reveal ? t('Hide values') : t('Reveal values'),
@@ -70,10 +66,14 @@ const ProviderCredentialsTabPage: FC<ProviderDetailsPageProps> = ({ name, namesp
                 },
               },
             ]}
+            data-testid="credentials-edit-button"
             editable={canPatch}
+            onClick={() => {
+              launcher<EditProviderCredentialsProps>(EditProviderCredentials, { provider, secret });
+            }}
             title={t('Credentials')}
           />
-          <CredentialsSection provider={provider} secret={secret} reveal={reveal} />
+          <CredentialsSection provider={provider} reveal={reveal} secret={secret} />
         </Stack>
       </PageSection>
     </LoadingSuspend>

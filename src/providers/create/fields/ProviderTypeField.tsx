@@ -44,34 +44,34 @@ const ProviderTypeField: FC = () => {
 
   return (
     <FormGroupWithHelpText
-      label={t('Provider type')}
-      isRequired
       fieldId={ProviderFormFieldId.ProviderType}
-      validated={getInputValidated(error)}
       helperTextInvalid={error?.message}
+      isRequired
+      label={t('Provider type')}
+      validated={getInputValidated(error)}
     >
       <Select
         className="provider-type-select"
         id="provider-type-select"
-        value={value}
-        options={providerTypeOptions}
         onSelect={onSelect}
+        options={providerTypeOptions}
         placeholder={t('Select a provider type')}
         testId="provider-type-toggle"
+        value={value}
       >
         <SelectList data-testid="provider-type-menu">
           {providerTypeOptions.map((option) => (
             <SelectOption
-              key={option.value}
-              value={option.value}
+              data-testid={`provider-type-option-${option.value}`}
               description={option.description}
               icon={option.icon}
-              data-testid={`provider-type-option-${option.value}`}
+              key={option.value}
+              value={option.value}
             >
               {option.techPreview ? (
                 <Flex
-                  spaceItems={{ default: 'spaceItemsSm' }}
                   alignItems={{ default: 'alignItemsCenter' }}
+                  spaceItems={{ default: 'spaceItemsSm' }}
                 >
                   <FlexItem>{option.label}</FlexItem>
                   <FlexItem>

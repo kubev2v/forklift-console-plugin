@@ -19,9 +19,9 @@ export const FormErrorHelperText: FC<FormErrorHelperTextProps> = ({ error, showI
     <FormHelperText>
       <HelperText>
         <HelperTextItem
+          data-testid="form-validation-error"
           icon={showIcon ? <ExclamationCircleIcon /> : null}
           variant="error"
-          data-testid="form-validation-error"
         >
           {error?.message?.toString()}
         </HelperTextItem>

@@ -26,14 +26,14 @@ import SourceNetworkField from './SourceNetworkField';
 import { getNetworkMapFieldId, validateNetworkMap } from './utils';
 
 type NetworkMapFieldTableProps = {
+  isLoading: boolean;
+  loadError: Error | null;
   networkMap: NetworkMapping[];
-  vms: Record<string, ProviderVirtualMachine>;
+  otherSourceNetworks: MappingValue[];
   oVirtNicProfiles: OVirtNicProfile[];
   targetNetworks: Record<string, MappingValue>;
   usedSourceNetworks: MappingValue[];
-  otherSourceNetworks: MappingValue[];
-  isLoading: boolean;
-  loadError: Error | null;
+  vms: Record<string, ProviderVirtualMachine>;
 };
 
 const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
@@ -79,35 +79,11 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
   return (
     <Stack hasGutter>
       <MultiNicInfoAlert
-        vms={vmsList}
-        oVirtNicProfiles={oVirtNicProfiles}
         networkNames={networkNames}
+        oVirtNicProfiles={oVirtNicProfiles}
+        vms={vmsList}
       />
       <FieldBuilderTable
-        headers={[
-          { label: netMapFieldLabels[NetworkMapFieldId.SourceNetwork], width: 45 },
-          { label: netMapFieldLabels[NetworkMapFieldId.TargetNetwork], width: 45 },
-        ]}
-        fieldRows={netMappingFields.map((field, index) => ({
-          ...field,
-          inputs: [
-            <SourceNetworkField
-              key={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
-              fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
-              usedSourceNetworks={usedSourceNetworks}
-              otherSourceNetworks={otherSourceNetworks}
-            />,
-            <TargetNetworkField
-              key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-              fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-              targetNetworks={targetNetworks}
-              showIgnoreNetworkOption
-              hideNonNadTargets={multiNicNetworkIds.has(field.sourceNetwork?.id ?? '')}
-              triggerFieldId={NetworkMapFieldId.NetworkMap}
-              testId="network-map-target-network-select"
-            />,
-          ],
-        }))}
         addButton={{
           isDisabled: isLoading || Boolean(loadError),
           label: t('Add mapping'),
@@ -118,6 +94,30 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
             });
           },
         }}
+        fieldRows={netMappingFields.map((field, index) => ({
+          ...field,
+          inputs: [
+            <SourceNetworkField
+              fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
+              key={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
+              otherSourceNetworks={otherSourceNetworks}
+              usedSourceNetworks={usedSourceNetworks}
+            />,
+            <TargetNetworkField
+              fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
+              hideNonNadTargets={multiNicNetworkIds.has(field.sourceNetwork?.id ?? '')}
+              key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
+              showIgnoreNetworkOption
+              targetNetworks={targetNetworks}
+              testId="network-map-target-network-select"
+              triggerFieldId={NetworkMapFieldId.NetworkMap}
+            />,
+          ],
+        }))}
+        headers={[
+          { label: netMapFieldLabels[NetworkMapFieldId.SourceNetwork], width: 45 },
+          { label: netMapFieldLabels[NetworkMapFieldId.TargetNetwork], width: 45 },
+        ]}
         removeButton={{
           isDisabled: () => netMappingFields.length <= 1,
           onClick: (index) => {

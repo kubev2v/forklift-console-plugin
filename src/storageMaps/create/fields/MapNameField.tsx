@@ -22,13 +22,13 @@ const MapNameField: FC = () => {
 
   return (
     <FormGroupWithErrorText
-      isRequired
       fieldId={StorageMapFieldId.MapName}
+      isRequired
       label={storageMapFieldLabels[StorageMapFieldId.MapName]}
     >
       <Controller
-        name={StorageMapFieldId.MapName}
         control={control}
+        name={StorageMapFieldId.MapName}
         render={({ field }) => (
           <TextInput {...field} isDisabled={isSubmitting} validated={getInputValidated(error)} />
         )}

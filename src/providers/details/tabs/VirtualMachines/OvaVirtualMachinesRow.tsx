@@ -24,7 +24,7 @@ const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdPro
 
   const CellRenderer = cellRenderers?.[fieldId] ?? (() => <></>);
   return (
-    <Td key={fieldId} dataLabel={fieldId}>
+    <Td dataLabel={fieldId} key={fieldId}>
       <CellRenderer data={resourceData} fieldId={fieldId} fields={resourceFields} />
     </Td>
   );

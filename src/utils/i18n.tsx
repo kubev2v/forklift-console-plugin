@@ -11,7 +11,7 @@ export const ForkliftTrans: FC<{ children?: ReactNode }> = ({ children }) => {
   const { t } = useForkliftTranslation();
 
   return (
-    <Trans t={t} ns="plugin__forklift-console-plugin">
+    <Trans ns="plugin__forklift-console-plugin" t={t}>
       {children}
     </Trans>
   );

@@ -12,8 +12,8 @@ const PlanConcernsRow: FC<RowProps<PlanConcernsPanelData>> = ({ resourceData, re
     <>
       {resourceFields.map(({ resourceFieldId }) => (
         <VisibleTableData
-          key={resourceFieldId}
           fieldId={resourceFieldId ?? ''}
+          key={resourceFieldId}
           resourceFields={resourceFields}
         >
           {rowFields[resourceFieldId as MigrationPlanConcernsTableResourceId]}

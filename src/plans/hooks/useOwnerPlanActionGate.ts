@@ -8,8 +8,8 @@ import { PlanStatuses } from '../details/components/PlanStatus/utils/types';
 import { getPlanStatus, isPlanEditable } from '../details/components/PlanStatus/utils/utils';
 
 type OwnerPlanActionGate = {
-  isBlocked: boolean;
   disabledReason: string | undefined;
+  isBlocked: boolean;
 };
 
 const getMapDisabledReason = (

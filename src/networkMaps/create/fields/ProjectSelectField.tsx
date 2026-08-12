@@ -47,8 +47,8 @@ const ProjectSelectField: FC = () => {
 
   return (
     <FormGroupWithErrorText
-      isRequired
       fieldId={NetworkMapFieldId.Project}
+      isRequired
       label={networkMapFieldLabels[NetworkMapFieldId.Project]}
       labelHelp={
         <HelpIconPopover>
@@ -62,19 +62,13 @@ const ProjectSelectField: FC = () => {
       }
     >
       <Controller
-        name={NetworkMapFieldId.Project}
         control={control}
+        name={NetworkMapFieldId.Project}
         render={({ field }) => (
           <div ref={field.ref}>
             <ProjectSelect
-              showDefaultProjects={effectiveShowDefaultProjects}
-              setShowDefaultProjects={setShowDefaultProjects}
-              isDisabled={isSubmitting}
-              placeholder={t('Select project')}
               id={NetworkMapFieldId.Project}
-              testId="network-map-project-select"
-              projectNames={projectNames}
-              value={field.value}
+              isDisabled={isSubmitting}
               onChange={(value) => {
                 field.onChange(value);
 
@@ -89,9 +83,15 @@ const ProjectSelectField: FC = () => {
                   });
                 }
               }}
+              placeholder={t('Select project')}
+              projectNames={projectNames}
+              setShowDefaultProjects={setShowDefaultProjects}
+              showDefaultProjects={effectiveShowDefaultProjects}
+              testId="network-map-project-select"
               toggleProps={{
                 status: errors[NetworkMapFieldId.Project] && MenuToggleStatus.danger,
               }}
+              value={field.value}
             />
           </div>
         )}

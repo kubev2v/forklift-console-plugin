@@ -28,7 +28,7 @@ export const mockCreateProviderTypeField = (
     return (
       <div>
         <label htmlFor="provider-type-select">Provider type</label>
-        <select id="provider-type-select" data-testid="provider-type-select" {...field}>
+        <select data-testid="provider-type-select" id="provider-type-select" {...field}>
           <option value="">Select a provider type</option>
           <option value={optionValue}>{optionLabel}</option>
         </select>

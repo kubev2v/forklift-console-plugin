@@ -20,9 +20,9 @@ import './FieldBuilderTable.style.scss';
 type FieldBuilderHeader = Omit<ThProps, 'label'> & FormGroupProps;
 
 type FieldBuilderTableProps<FormData extends FieldValues> = {
-  headers: FieldBuilderHeader[];
-  fieldRows: FieldRow<FormData>[];
   addButton: AddButtonType;
+  fieldRows: FieldRow<FormData>[];
+  headers: FieldBuilderHeader[];
   removeButton: RemoveButtonType;
 };
 
@@ -66,17 +66,17 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
                     <MinusCircleIcon />
                   </Icon>
                 }
-                isInline
-                variant={ButtonVariant.plain}
                 isDisabled={removeButton.isDisabled?.(rowIndex)}
+                isInline
                 onClick={() => {
                   removeButton.onClick(rowIndex);
                 }}
+                variant={ButtonVariant.plain}
               />
             );
 
             acc.push(
-              <Tr key={fieldRow.id} data-testid={`field-row-${rowIndex}`}>
+              <Tr data-testid={`field-row-${rowIndex}`} key={fieldRow.id}>
                 {fieldRow.inputs.map((fieldInput) => (
                   <Td key={fieldInput.key}>{fieldInput}</Td>
                 ))}
@@ -109,12 +109,12 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
       </Table>
 
       <Button
-        isInline
-        variant={ButtonVariant.link}
+        data-testid="add-mapping-button"
         icon={<PlusCircleIcon />}
         isDisabled={addButton.isDisabled}
+        isInline
         onClick={addButton.onClick}
-        data-testid="add-mapping-button"
+        variant={ButtonVariant.link}
       >
         {addButton.label}
       </Button>

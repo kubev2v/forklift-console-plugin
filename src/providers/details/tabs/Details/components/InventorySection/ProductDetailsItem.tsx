@@ -19,10 +19,6 @@ const ProductDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="inventory-product-detail-item"
-      title={t('Product')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'product']}
       content={
         <InventoryCell
           data={{
@@ -35,6 +31,10 @@ const ProductDetailsItem: FC<InventoryDetailsItemProps> = ({
           inventoryValue={(inventory as VSphereProvider).product}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'product']}
+      helpContent={helpContent ?? defaultHelpContent}
+      testId="inventory-product-detail-item"
+      title={t('Product')}
     />
   );
 };

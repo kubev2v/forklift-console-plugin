@@ -16,14 +16,14 @@ import BreadCrumbs from '../BreadCrumb/BreadCrumb';
 import './PageHeadings.scss';
 
 type PageHeadingsProps = {
+  actions?: ReactNode;
+  children?: ReactNode;
   model: K8sModel;
   namespace?: string;
   obj?: K8sResourceKind;
-  title?: ReactNode;
-  actions?: ReactNode;
   status?: string | ReactNode;
-  children?: ReactNode;
   testId?: string;
+  title?: ReactNode;
 };
 
 export const PageHeadings: FC<PageHeadingsProps> = ({
@@ -46,8 +46,8 @@ export const PageHeadings: FC<PageHeadingsProps> = ({
           <Split hasGutter>
             <SplitItem>
               <ResourceIcon
-                groupVersionKind={groupVersionKind as K8sGroupVersionKind}
                 className="co-m-resource-icon--lg"
+                groupVersionKind={groupVersionKind as K8sGroupVersionKind}
               />{' '}
               {data?.metadata?.name}
               {typeof dataStatus === 'string' && (

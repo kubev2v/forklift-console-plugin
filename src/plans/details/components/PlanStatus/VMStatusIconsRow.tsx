@@ -11,17 +11,17 @@ import {
 import StatusPopover from './StatusPopover';
 
 type VMStatusIconsRowProps = {
-  statuses: Record<MigrationVirtualMachineStatus, MigrationVirtualMachinesStatusCountObject>;
   plan: V1beta1Plan;
+  statuses: Record<MigrationVirtualMachineStatus, MigrationVirtualMachinesStatusCountObject>;
 };
 
 const VMStatusIconsRow: FC<VMStatusIconsRowProps> = ({ plan, statuses }) => {
   return (
     <Flex
       alignItems={{ default: 'alignItemsCenter' }}
-      gap={{ default: 'gapSm' }}
       direction={{ default: 'row' }}
       flexWrap={{ default: 'nowrap' }}
+      gap={{ default: 'gapSm' }}
     >
       {(
         Object.entries(statuses) as [
@@ -33,7 +33,7 @@ const VMStatusIconsRow: FC<VMStatusIconsRowProps> = ({ plan, statuses }) => {
         .sort(([statusA], [statusB]) => statusPriority[statusA] - statusPriority[statusB])
         .map(([status, { count, vms }]) => {
           return (
-            <Flex gap={{ default: 'gapXs' }} key={status} flexWrap={{ default: 'nowrap' }}>
+            <Flex flexWrap={{ default: 'nowrap' }} gap={{ default: 'gapXs' }} key={status}>
               <StatusPopover count={count} plan={plan} status={status} vms={vms} />
             </Flex>
           );

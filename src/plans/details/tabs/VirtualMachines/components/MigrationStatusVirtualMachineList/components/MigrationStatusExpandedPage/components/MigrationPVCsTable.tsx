@@ -24,9 +24,9 @@ const MigrationPVCsTable: FC<MigrationPVCsTableProps> = ({ pvcs }) => {
   return (
     <>
       <SectionHeading
-        text={t('PersistentVolumeClaims')}
-        headingLevel="h3"
         className="migration-status-expanded-page__resource-list-header"
+        headingLevel="h3"
+        text={t('PersistentVolumeClaims')}
       />
       <Table>
         <Thead>
@@ -49,8 +49,8 @@ const MigrationPVCsTable: FC<MigrationPVCsTableProps> = ({ pvcs }) => {
               <Td width={20}>{pvc?.status?.phase ?? EMPTY_MSG}</Td>
               <Td>
                 <ConsoleTimestamp
-                  timestamp={pvc?.metadata?.creationTimestamp}
                   showGlobalIcon={false}
+                  timestamp={pvc?.metadata?.creationTimestamp}
                 />
               </Td>
             </Tr>

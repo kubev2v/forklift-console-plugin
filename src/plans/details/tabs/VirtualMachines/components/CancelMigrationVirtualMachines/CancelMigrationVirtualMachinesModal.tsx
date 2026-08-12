@@ -30,7 +30,7 @@ const CancelMigrationVirtualMachinesModal: ModalComponent<CancelMigrationVirtual
   }, [migration, selectedIds]);
 
   return (
-    <ModalForm title={t('Cancel virtual machines migration?')} onConfirm={handleSave} {...rest}>
+    <ModalForm onConfirm={handleSave} title={t('Cancel virtual machines migration?')} {...rest}>
       <Stack hasGutter>
         {t('You can cancel the migration of virtual machines in a running migration plan.')}
       </Stack>

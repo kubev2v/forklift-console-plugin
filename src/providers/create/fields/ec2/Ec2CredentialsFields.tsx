@@ -14,16 +14,16 @@ const Ec2CredentialsFields: FC = () => {
       <ProviderFormTextInput
         fieldId={ProviderFormFieldId.Ec2AccessKeyId}
         fieldRules={{ required: t('Access key ID is required') }}
-        label={t('Access key ID')}
         helperText={t('AWS access key ID for authenticating to the EC2 API')}
+        label={t('Access key ID')}
         testId="ec2-access-key-id-input"
       />
 
       <ProviderFormPasswordInput
         fieldId={ProviderFormFieldId.Ec2SecretAccessKey}
         fieldRules={{ required: t('Secret access key is required') }}
-        label={t('Secret access key')}
         helperText={t('AWS secret access key for authenticating to the EC2 API')}
+        label={t('Secret access key')}
         testId="ec2-secret-access-key-input"
       />
     </>

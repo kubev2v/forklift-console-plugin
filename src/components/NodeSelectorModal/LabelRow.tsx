@@ -14,10 +14,10 @@ import { useForkliftTranslation } from '@utils/i18n';
 import type { LabelFields } from './utils/types';
 
 type LabelRowProps = {
+  isLabelsVisible: boolean;
   label: LabelFields;
   onChange: (label: LabelFields) => void;
   onDelete: (id: number) => void;
-  isLabelsVisible: boolean;
 };
 
 const LabelRow: FC<LabelRowProps> = ({ isLabelsVisible, label, onChange, onDelete }) => {

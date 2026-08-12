@@ -6,9 +6,9 @@ import { EMPTY_MSG } from '@utils/constants';
 import './AlignedDecimel.scss';
 
 type AlignedDecimalProps = {
-  value: number;
-  unit?: string;
   fractionalPrecision?: number;
+  unit?: string;
+  value: number;
 };
 
 const AlignedDecimal: FC<AlignedDecimalProps> = ({ fractionalPrecision = 2, unit = '', value }) => {

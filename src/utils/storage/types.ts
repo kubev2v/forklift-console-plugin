@@ -8,10 +8,10 @@ export type StorageMapData = {
 
 export type TargetStorage = {
   id: string;
-  name: string;
   isDefault: boolean;
   isDefaultVirt: boolean;
   isNetAppShift?: boolean;
+  name: string;
   provisioner?: string;
 };
 
@@ -55,11 +55,11 @@ export enum StorageMapFieldId {
 }
 
 export type StorageMapping = {
-  [StorageMapFieldId.SourceStorage]: StorageMappingValue;
-  [StorageMapFieldId.TargetStorage]: StorageMappingValue;
   [StorageMapFieldId.AccessMode]?: AccessMode;
-  [StorageMapFieldId.OffloadPlugin]?: string;
-  [StorageMapFieldId.StorageSecret]?: string;
-  [StorageMapFieldId.StorageProduct]?: string;
   [StorageMapFieldId.DedicatedMigrationHosts]?: string[];
+  [StorageMapFieldId.OffloadPlugin]?: string;
+  [StorageMapFieldId.SourceStorage]: StorageMappingValue;
+  [StorageMapFieldId.StorageProduct]?: string;
+  [StorageMapFieldId.StorageSecret]?: string;
+  [StorageMapFieldId.TargetStorage]: StorageMappingValue;
 };

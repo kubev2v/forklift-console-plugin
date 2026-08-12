@@ -14,8 +14,8 @@ export const onConfirmVirtualMachineNetworkNameTemplate =
     newValue,
     resource,
   }: {
-    resource: V1beta1Plan;
     newValue: string | undefined;
+    resource: V1beta1Plan;
   }): Promise<V1beta1Plan> => {
     const current = (resource?.spec?.vms as EnhancedPlanSpecVms[])?.[vmIndex]?.networkNameTemplate;
     const op = current === undefined ? ADD : REPLACE;
@@ -41,8 +41,8 @@ export const onConfirmVirtualMachineVolumeNameTemplate =
     newValue,
     resource,
   }: {
-    resource: V1beta1Plan;
     newValue: string | undefined;
+    resource: V1beta1Plan;
   }): Promise<V1beta1Plan> => {
     const current = (resource?.spec?.vms as EnhancedPlanSpecVms[])?.[vmIndex]?.volumeNameTemplate;
     const op = current === undefined ? ADD : REPLACE;
@@ -68,8 +68,8 @@ export const onConfirmVirtualMachinePVCNameTemplate =
     newValue,
     resource,
   }: {
-    resource: V1beta1Plan;
     newValue: string | undefined;
+    resource: V1beta1Plan;
   }): Promise<V1beta1Plan> => {
     const current = (resource?.spec?.vms as EnhancedPlanSpecVms[])?.[vmIndex]?.pvcNameTemplate;
     const op = current === undefined ? ADD : REPLACE;

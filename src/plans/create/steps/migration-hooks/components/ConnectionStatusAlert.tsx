@@ -36,33 +36,33 @@ const ConnectionStatusAlert: FC<ConnectionStatusAlertProps> = ({
     case AAP_CONNECTION_STATUS_CONNECTING:
       return (
         <Alert
-          variant={AlertVariant.info}
+          customIcon={<Spinner size="md" />}
+          data-testid="aap-connection-status-connecting"
           isInline
           isPlain
           title={t('Loading AAP job templates...')}
-          customIcon={<Spinner size="md" />}
-          data-testid="aap-connection-status-connecting"
+          variant={AlertVariant.info}
         />
       );
     case AAP_CONNECTION_STATUS_CONNECTED:
       return (
         <Alert
-          variant={AlertVariant.success}
+          data-testid="aap-connection-status-connected"
           isInline
           isPlain
           title={t('Connected to AAP -- {{count}} job templates available', {
             count: templateCount,
           })}
-          data-testid="aap-connection-status-connected"
+          variant={AlertVariant.success}
         />
       );
     case AAP_CONNECTION_STATUS_CONNECTION_FAILED:
       return (
         <Alert
-          variant={AlertVariant.warning}
+          data-testid="aap-connection-status-failed"
           isInline
           title={t('Failed to load AAP job templates')}
-          data-testid="aap-connection-status-failed"
+          variant={AlertVariant.warning}
         >
           {t(
             'Unable to fetch job templates from AAP. Verify the AAP URL and token secret are configured correctly in the ForkliftController settings.',

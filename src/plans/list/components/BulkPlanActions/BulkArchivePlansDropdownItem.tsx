@@ -10,9 +10,9 @@ import BulkArchivePlansModal, { type BulkArchivePlansModalProps } from './BulkAr
 import { getPlansEligibleForArchive, getSelectedPlans } from './utils';
 
 type BulkArchivePlansDropdownItemProps = {
+  canPatch: boolean;
   plans: V1beta1Plan[];
   selectedIds: string[];
-  canPatch: boolean;
 };
 
 const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
@@ -53,11 +53,11 @@ const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
 
   return (
     <DropdownItem
-      key="bulk-archive"
-      isDisabled={Boolean(disabledReason)}
-      description={disabledReason}
-      onClick={onClick}
       data-testid="bulk-archive-plans-menuitem"
+      description={disabledReason}
+      isDisabled={Boolean(disabledReason)}
+      key="bulk-archive"
+      onClick={onClick}
     >
       {t('Archive')}
     </DropdownItem>

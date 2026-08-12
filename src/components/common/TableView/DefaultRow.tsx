@@ -15,7 +15,7 @@ export const DefaultRow = <T,>({ resourceData, resourceFields }: RowProps<T>) =>
       {resourceFields?.reduce<ReactNode[]>((acc, { label, resourceFieldId }) => {
         if (resourceFieldId) {
           acc.push(
-            <Td key={resourceFieldId} dataLabel={label ?? undefined}>
+            <Td dataLabel={label ?? undefined} key={resourceFieldId}>
               {(getResourceFieldValue(
                 resourceData as Record<
                   string,

@@ -91,44 +91,14 @@ const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        onConfirm={handleSubmit(onSubmit)}
-        title={t('Edit network map')}
         closeModal={closeModal}
-        variant={ModalVariant.medium}
         isDisabled={!isValid || !isDirty}
+        onConfirm={handleSubmit(onSubmit)}
         testId="edit-network-map-modal"
+        title={t('Edit network map')}
+        variant={ModalVariant.medium}
       >
         <FieldBuilderTable
-          headers={[
-            {
-              isRequired: true,
-              label: networkMapFieldLabels[NetworkMapFieldId.SourceNetwork],
-              width: 45,
-            },
-            {
-              isRequired: true,
-              label: networkMapFieldLabels[NetworkMapFieldId.TargetNetwork],
-              width: 45,
-            },
-          ]}
-          fieldRows={networkMappingFields.map((field, index) => ({
-            ...field,
-            inputs: [
-              <InventorySourceNetworkField
-                key={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
-                fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
-                sourceNetworks={sourceNetworks}
-              />,
-              <TargetNetworkField
-                key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-                fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-                targetNetworks={targetNetworks}
-                showIgnoreNetworkOption
-                emptyStateMessage={t('Select a target provider to list available target networks')}
-                isDisabled={isSubmitting}
-              />,
-            ],
-          }))}
           addButton={{
             isDisabled:
               isEmpty(sourceNetworks) ||
@@ -146,6 +116,36 @@ const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
               });
             },
           }}
+          fieldRows={networkMappingFields.map((field, index) => ({
+            ...field,
+            inputs: [
+              <InventorySourceNetworkField
+                fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
+                key={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
+                sourceNetworks={sourceNetworks}
+              />,
+              <TargetNetworkField
+                emptyStateMessage={t('Select a target provider to list available target networks')}
+                fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
+                isDisabled={isSubmitting}
+                key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
+                showIgnoreNetworkOption
+                targetNetworks={targetNetworks}
+              />,
+            ],
+          }))}
+          headers={[
+            {
+              isRequired: true,
+              label: networkMapFieldLabels[NetworkMapFieldId.SourceNetwork],
+              width: 45,
+            },
+            {
+              isRequired: true,
+              label: networkMapFieldLabels[NetworkMapFieldId.TargetNetwork],
+              width: 45,
+            },
+          ]}
           removeButton={{
             isDisabled: () => isSubmitting,
             onClick: (index) => {

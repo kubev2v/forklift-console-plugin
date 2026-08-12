@@ -19,25 +19,25 @@ const ExistingStorageMapField: FC = () => {
 
   return (
     <FormGroupWithErrorText
-      isRequired
-      fieldId={CreatePlanStorageMapFieldId.ExistingStorageMap}
-      label={createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.ExistingStorageMap]}
       className="pf-v6-u-ml-lg"
+      fieldId={CreatePlanStorageMapFieldId.ExistingStorageMap}
+      isRequired
+      label={createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.ExistingStorageMap]}
     >
       <Controller
-        name={CreatePlanStorageMapFieldId.ExistingStorageMap}
         control={control}
+        name={CreatePlanStorageMapFieldId.ExistingStorageMap}
         render={({ field }) => (
           <StorageMapSelect
-            ref={field.ref}
-            testId="storage-map-select"
             id={CreatePlanStorageMapFieldId.ExistingStorageMap}
-            value={field.value?.metadata?.name ?? ''}
-            status={error && MenuToggleStatus.danger}
+            namespace={planProject}
             onSelect={(_, value) => {
               field.onChange(value);
             }}
-            namespace={planProject}
+            ref={field.ref}
+            status={error && MenuToggleStatus.danger}
+            testId="storage-map-select"
+            value={field.value?.metadata?.name ?? ''}
           />
         )}
         rules={{

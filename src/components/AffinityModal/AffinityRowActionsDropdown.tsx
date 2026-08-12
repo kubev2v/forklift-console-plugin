@@ -47,16 +47,16 @@ const AffinityRowActionsDropdown: FC<AffinityRowActionsDropdownProps> = ({
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       onSelect={onSelect}
-      toggle={(toggleRef: Ref<MenuToggleElement>) => (
-        <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} variant="plain">
-          <EllipsisVIcon />
-        </MenuToggle>
-      )}
-      shouldFocusToggleOnSelect
       popperProps={{
         position: 'right',
         width: '200px',
       }}
+      shouldFocusToggleOnSelect
+      toggle={(toggleRef: Ref<MenuToggleElement>) => (
+        <MenuToggle isExpanded={isOpen} onClick={onToggleClick} ref={toggleRef} variant="plain">
+          <EllipsisVIcon />
+        </MenuToggle>
+      )}
     >
       <DropdownList>
         <DropdownItem

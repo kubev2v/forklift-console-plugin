@@ -20,20 +20,20 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 
 type ModalFormProps = {
-  title: ReactNode;
-  children: ReactNode;
-  onConfirm: () => Promise<unknown>;
-  variant?: ModalVariant;
-  confirmLabel?: string;
-  cancelLabel?: string;
-  className?: string;
-  confirmVariant?: ButtonVariant;
-  isDisabled?: boolean;
   additionalAction?: ButtonProps;
-  testId?: string;
+  cancelLabel?: string;
+  children: ReactNode;
+  className?: string;
+  confirmLabel?: string;
+  confirmVariant?: ButtonVariant;
   description?: ReactNode;
   headerHelp?: ReactNode;
+  isDisabled?: boolean;
   label?: ReactNode;
+  onConfirm: () => Promise<unknown>;
+  testId?: string;
+  title: ReactNode;
+  variant?: ModalVariant;
 };
 
 const ModalForm: ModalComponent<ModalFormProps> = ({
@@ -74,22 +74,22 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
   const headerTitle = label ? (
     <Flex alignItems={{ default: 'alignItemsBaseline' }} gap={{ default: 'gapXs' }}>
       <FlexItem>
-        <ModalHeader title={title} description={description} help={headerHelp} />
+        <ModalHeader description={description} help={headerHelp} title={title} />
       </FlexItem>
       <FlexItem>{label}</FlexItem>
     </Flex>
   ) : (
-    <ModalHeader title={title} description={description} help={headerHelp} />
+    <ModalHeader description={description} help={headerHelp} title={title} />
   );
 
   return (
     <Modal
-      variant={variant}
-      isOpen
-      position="top"
-      onClose={closeModal}
-      data-testid={testId}
       className={className}
+      data-testid={testId}
+      isOpen
+      onClose={closeModal}
+      position="top"
+      variant={variant}
     >
       {headerTitle}
       <ModalBody>
@@ -97,7 +97,7 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
           <StackItem>{children}</StackItem>
           {error && (
             <StackItem>
-              <Alert title={t('Error')} variant={AlertVariant.danger} isInline>
+              <Alert isInline title={t('Error')} variant={AlertVariant.danger}>
                 {t('{{errorMessage}}', { errorMessage: error })}
               </Alert>
             </StackItem>
@@ -106,12 +106,12 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
       </ModalBody>
       <ModalFooter>
         <Button
-          key="confirm"
-          variant={confirmVariant ?? ButtonVariant.primary}
-          onClick={handleConfirm}
-          isLoading={isLoading}
-          isDisabled={isLoading || isDisabled}
           data-testid="modal-confirm-button"
+          isDisabled={isLoading || isDisabled}
+          isLoading={isLoading}
+          key="confirm"
+          onClick={handleConfirm}
+          variant={confirmVariant ?? ButtonVariant.primary}
         >
           {confirmLabel ?? t('Save')}
         </Button>
@@ -121,10 +121,10 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
           </Button>
         )}
         <Button
-          key="cancel"
-          variant={ButtonVariant.secondary}
-          onClick={closeModal}
           data-testid="modal-cancel-button"
+          key="cancel"
+          onClick={closeModal}
+          variant={ButtonVariant.secondary}
         >
           {cancelLabel ?? t('Cancel')}
         </Button>

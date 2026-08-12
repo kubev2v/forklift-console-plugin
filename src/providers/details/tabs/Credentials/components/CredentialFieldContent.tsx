@@ -8,9 +8,9 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { MASKED_MSG } from './utils/constants';
 
 type CredentialContentFieldProps = {
-  value: string | undefined;
   fieldKey?: SecretFieldsId;
   reveal: boolean;
+  value: string | undefined;
 };
 
 const CredentialContentField: FC<CredentialContentFieldProps> = ({ fieldKey, reveal, value }) => {
@@ -29,10 +29,10 @@ const CredentialContentField: FC<CredentialContentFieldProps> = ({ fieldKey, rev
 
     return (
       <ClipboardCopy
-        variant={isCaCert ? ClipboardCopyVariant.expansion : ClipboardCopyVariant.inlineCompact}
-        isReadOnly={isCaCert}
-        hoverTip={t('Copy to clipboard')}
         clickTip={t('Copied')}
+        hoverTip={t('Copy to clipboard')}
+        isReadOnly={isCaCert}
+        variant={isCaCert ? ClipboardCopyVariant.expansion : ClipboardCopyVariant.inlineCompact}
       >
         {value}
       </ClipboardCopy>

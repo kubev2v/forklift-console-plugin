@@ -44,10 +44,10 @@ const PreferredAffinityWeightInput: FC<PreferredAffinityWeightInputProps> = ({
       />
 
       <FormGroupWithHelpText
+        helperText={WEIGHT_FIELD_HELP_TEXT}
+        helperTextInvalid={WEIGHT_FIELD_HELP_TEXT}
         isRequired
         validated={validated}
-        helperTextInvalid={WEIGHT_FIELD_HELP_TEXT}
-        helperText={WEIGHT_FIELD_HELP_TEXT}
       />
     </FormGroup>
   );

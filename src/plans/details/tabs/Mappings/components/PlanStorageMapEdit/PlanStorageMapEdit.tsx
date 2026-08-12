@@ -53,16 +53,16 @@ const PlanStorageMapEdit: ModalComponent<PlanStorageMapEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        onConfirm={handleSubmit(onSubmit)}
-        title={t('Edit storage map')}
         closeModal={closeModal}
-        variant={ModalVariant.medium}
         isDisabled={!isValid || !isDirty}
+        onConfirm={handleSubmit(onSubmit)}
         testId="edit-storage-map-modal"
+        title={t('Edit storage map')}
+        variant={ModalVariant.medium}
       >
         <Stack hasGutter>
           {error?.root && (
-            <Alert variant={AlertVariant.danger} isInline title={error.root.message} />
+            <Alert isInline title={error.root.message} variant={AlertVariant.danger} />
           )}
 
           <StorageMapStatusAlerts
@@ -71,6 +71,7 @@ const PlanStorageMapEdit: ModalComponent<PlanStorageMapEditProps> = ({
             usedSourceStorages={usedSourceStorages}
           />
           <PlanStorageMapFieldsTable
+            isIscsi={isIscsi}
             isLoading={isLoading}
             loadError={loadError}
             otherSourceStorages={otherSourceStorages}
@@ -78,7 +79,6 @@ const PlanStorageMapEdit: ModalComponent<PlanStorageMapEditProps> = ({
             sourceStorages={sourceStorages}
             targetStorages={targetStorages}
             usedSourceStorages={usedSourceStorages}
-            isIscsi={isIscsi}
           />
         </Stack>
       </ModalForm>

@@ -44,7 +44,7 @@ export const TableView = <T,>({
 
   return (
     <InnerScrollContainer>
-      <Table aria-label={ariaLabel} variant="compact" isStickyHeader className="table-view">
+      <Table aria-label={ariaLabel} className="table-view" isStickyHeader variant="compact">
         <Thead>
           <Tr>
             <Header {...{ activeSort, dataOnScreen: entities, setActiveSort, visibleColumns }} />
@@ -61,13 +61,13 @@ export const TableView = <T,>({
           {!hasChildren &&
             entities.map((resourceData: T, index) => (
               <Row
+                isExpanded={expandedIds?.includes(toId ? toId(resourceData) : '')}
                 key={`${columnSignature}_${String(resourceData?.[uidFieldId as keyof T] ?? index)}`}
+                length={visibleColumns.length}
+                namespace={currentNamespace}
                 resourceData={resourceData}
                 resourceFields={visibleColumns}
-                namespace={currentNamespace}
                 resourceIndex={index}
-                length={visibleColumns.length}
-                isExpanded={expandedIds?.includes(toId ? toId(resourceData) : '')}
               />
             ))}
         </Tbody>
@@ -78,65 +78,40 @@ export const TableView = <T,>({
 
 type TableViewProps<T> = {
   /**
-   * List of visible columns and their properties
+   * Specify which column is currently used for sorting the table
+   * and is it ascending or descending order.
    */
-  visibleColumns: ResourceField[];
-  /**
-   * List of rows content
-   */
-  entities: T[];
+  activeSort: SortType;
   'aria-label': string;
   /**
-   * resourceData[uidFieldId] is used to uniquely identify a row. Defaults to UID column.
+   * @returns true if items can be selected, false otherwise
    */
-  uidFieldId?: string;
-  /**
-   * Maps entities to table rows.
-   */
-  Row: FC<RowProps<T>>;
+  canSelect?: (item: T) => boolean;
   /**
    * Nodes to be displayed instead of the entities.
    * Extension point to handle empty state and related cases.
    */
   children?: ReactNode[];
   /**
-   * Specify which column is currently used for sorting the table
-   * and is it ascending or descending order.
-   */
-  activeSort: SortType;
-  /**
-   * A handler for applying the sorting
-   */
-  setActiveSort: (sort: SortType) => void;
-  /**
    * The current Namespace
    */
   currentNamespace: string;
-
+  /**
+   * colSpan of empty state
+   */
+  emptyStateColSpan?: number | string;
+  /**
+   * List of rows content
+   */
+  entities: T[];
+  /**
+   * Expanded ids
+   */
+  expandedIds?: string[];
   /**
    * Maps resourceFields to header rows.
    */
   Header: FC<TableViewHeaderProps<T>>;
-
-  /**
-   * @returns string that can be used as an unique identifier
-   */
-  toId?: (item: T) => string;
-
-  /**
-   * @returns true if items can be selected, false otherwise
-   */
-  canSelect?: (item: T) => boolean;
-
-  /**
-   * onSelect is called when selection changes
-   */
-  onSelect?: (selectedIds: string[]) => void;
-
-  /**
-   * Selected ids
-   */
-  selectedIds?: string[];
 
   /**
    * onExpand is called when expand changes
@@ -144,12 +119,37 @@ type TableViewProps<T> = {
   onExpand?: (expandedIds: string[]) => void;
 
   /**
-   * Expanded ids
+   * onSelect is called when selection changes
    */
-  expandedIds?: string[];
+  onSelect?: (selectedIds: string[]) => void;
 
   /**
-   * colSpan of empty state
+   * Maps entities to table rows.
    */
-  emptyStateColSpan?: number | string;
+  Row: FC<RowProps<T>>;
+
+  /**
+   * Selected ids
+   */
+  selectedIds?: string[];
+
+  /**
+   * A handler for applying the sorting
+   */
+  setActiveSort: (sort: SortType) => void;
+
+  /**
+   * @returns string that can be used as an unique identifier
+   */
+  toId?: (item: T) => string;
+
+  /**
+   * resourceData[uidFieldId] is used to uniquely identify a row. Defaults to UID column.
+   */
+  uidFieldId?: string;
+
+  /**
+   * List of visible columns and their properties
+   */
+  visibleColumns: ResourceField[];
 };

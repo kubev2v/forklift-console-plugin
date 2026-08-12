@@ -80,65 +80,65 @@ const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModa
       `${window.SERVER_FLAGS?.documentationBaseURL ?? ''}${workingWithProjectsURLs.downstream}`;
 
   return (
-    <Modal variant={ModalVariant.small} isOpen onClose={closeModal}>
+    <Modal isOpen onClose={closeModal} variant={ModalVariant.small}>
       <ModalHeader title={t('Create project')} />
       <ModalBody>
-        <Form onSubmit={submit} name="form">
+        <Form name="form" onSubmit={submit}>
           <Content>
             <Content component={ContentVariants.p}>
               {t(
                 'A project, also known as a namespace, separates resources within clusters. It is an alternative representation of a Kubernetes namespace.',
               )}{' '}
-              <ExternalLink href={projectsURL} isInline hideIcon>
+              <ExternalLink hideIcon href={projectsURL} isInline>
                 {t('Learn more about projects.')}
               </ExternalLink>
             </Content>
           </Content>
           <FormGroup
             fieldId="input-name"
-            label={t('Name')}
             isRequired
+            label={t('Name')}
             labelHelp={<ProjectNameHelp />}
           >
             <TextInput
+              data-testid="project-name-input"
               id="input-name"
               name="name"
               onChange={(_ev, value) => {
                 setName(value);
               }}
-              value={name ?? ''}
               required
-              data-testid="project-name-input"
+              value={name ?? ''}
             />
           </FormGroup>
           <FormGroup fieldId="input-display-name" label={t('Display name')}>
             <TextInput
+              data-testid="project-display-name-input"
               id="input-display-name"
               name="displayName"
               onChange={(_ev, value) => {
                 setDisplayName(value);
               }}
               value={displayName ?? ''}
-              data-testid="project-display-name-input"
             />
           </FormGroup>
           <FormGroup fieldId="input-description" label={t('Description')}>
             <TextArea
               id="input-description"
               name="description"
-              resizeOrientation="vertical"
               onChange={(_ev, value) => {
                 setDescription(value);
               }}
+              resizeOrientation="vertical"
               value={description ?? ''}
             />
           </FormGroup>
           {errorMessage && (
             <Alert
-              isInline
-              variant={AlertVariant.danger}
-              title={t('An error occurred')}
               data-testid="create-project-modal-error-alert"
+              isInline
+              title={t('An error occurred')}
+              variant={AlertVariant.danger}
             >
               <div className="create-project-modal__alert-text">{errorMessage}</div>
             </Alert>
@@ -147,21 +147,21 @@ const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModa
       </ModalBody>
       <ModalFooter>
         <Button
-          type="submit"
-          variant={ButtonVariant.primary}
+          data-testid="create-project-modal-create-button"
+          id="confirm-action"
           isLoading={inProgress}
           onClick={submit}
-          id="confirm-action"
-          data-testid="create-project-modal-create-button"
+          type="submit"
+          variant={ButtonVariant.primary}
         >
           {t('Create project')}
         </Button>
         <Button
-          type="button"
-          variant={ButtonVariant.secondary}
+          data-testid="create-project-modal-cancel-button"
           isDisabled={inProgress}
           onClick={closeModal}
-          data-testid="create-project-modal-cancel-button"
+          type="button"
+          variant={ButtonVariant.secondary}
         >
           {t('Cancel')}
         </Button>

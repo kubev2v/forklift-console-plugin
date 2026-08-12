@@ -13,8 +13,8 @@ import {
 
 type SourceStorageFieldProps = {
   fieldId: string;
-  storageMappings: StorageMapping[];
   sourceStorages: StorageMappingValue[];
+  storageMappings: StorageMapping[];
 };
 
 /**
@@ -37,36 +37,36 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({
 
   return (
     <Controller
-      name={fieldId}
       control={control}
+      name={fieldId}
       render={({ field }) => (
         <Select
-          ref={field.ref}
           id={fieldId}
-          testId={`source-storage-${fieldId}`}
           isDisabled={isSubmitting}
-          value={(field.value as StorageMappingValue).name}
           onSelect={async (_event, value) => {
             field.onChange(value);
             await trigger();
           }}
           placeholder={t('Select source storage')}
+          ref={field.ref}
+          testId={`source-storage-${fieldId}`}
+          value={(field.value as StorageMappingValue).name}
         >
           <SelectList>
             {isEmpty(sourceStorages) ? (
-              <SelectOption value="" isDisabled>
+              <SelectOption isDisabled value="">
                 {t('No storages available')}
               </SelectOption>
             ) : (
               sourceStorages.map((storage) => (
                 <SelectOption
-                  key={storage.name}
-                  value={storage}
                   description={duplicateNames.has(storage.name) ? storage.id : undefined}
                   isDisabled={storageMappings?.some(
                     (mapping: StorageMapping) =>
                       mapping[StorageMapFieldId.SourceStorage].id === storage.id,
                   )}
+                  key={storage.name}
+                  value={storage}
                 >
                   {storage.name}
                 </SelectOption>

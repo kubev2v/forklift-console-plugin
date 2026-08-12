@@ -55,19 +55,19 @@ const TreeTableBody: FC<TreeTableBodyProps> = ({
         .map((row) => {
           if (row.type === ROW_TYPE.Folder) {
             return (
-              <FolderTreeRow key={row.key} row={row} groupVMCountByFolder={groupVMCountByFolder} />
+              <FolderTreeRow groupVMCountByFolder={groupVMCountByFolder} key={row.key} row={row} />
             );
           }
 
           if (row.type === ROW_TYPE.Vm) {
             return (
-              <VmTreeRow key={row.key} row={row} columns={columns} conversions={conversions} />
+              <VmTreeRow columns={columns} conversions={conversions} key={row.key} row={row} />
             );
           }
 
           if (row.type === ROW_TYPE.Concerns) {
             return (
-              <Tr key={row.key} isHidden={row.isHidden}>
+              <Tr isHidden={row.isHidden} key={row.key}>
                 <Td colSpan={colSpan}>
                   <Stack hasGutter>
                     <StackItem>
@@ -76,9 +76,9 @@ const TreeTableBody: FC<TreeTableBodyProps> = ({
                     <StackItem>
                       <InspectionExpandedSection
                         conversions={conversions}
-                        vmId={row.vmData.vm?.id ?? ''}
                         expandedRows={inspectionExpandedRows}
                         onToggleExpand={onToggleInspectionExpand}
+                        vmId={row.vmData.vm?.id ?? ''}
                       />
                     </StackItem>
                   </Stack>

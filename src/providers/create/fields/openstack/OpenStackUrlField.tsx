@@ -12,10 +12,7 @@ const OpenStackUrlField: FC = () => {
 
   return (
     <ProviderFormTextInput
-      label={t('OpenStack Identity (Keystone) API endpoint URL')}
-      isRequired
       fieldId={ProviderFormFieldId.OpenstackUrl}
-      testId="openstack-url-input"
       fieldRules={{
         validate: (val: string | undefined) => {
           const result = validateOpenstackURL(val);
@@ -27,6 +24,9 @@ const OpenStackUrlField: FC = () => {
       helperText={t(
         'The URL of the OpenStack Identity (Keystone) API endpoint, for example: https://identity_service.com:5000/v3.',
       )}
+      isRequired
+      label={t('OpenStack Identity (Keystone) API endpoint URL')}
+      testId="openstack-url-input"
     />
   );
 };

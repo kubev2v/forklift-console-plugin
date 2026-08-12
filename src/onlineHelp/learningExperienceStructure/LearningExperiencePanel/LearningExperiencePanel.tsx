@@ -43,15 +43,15 @@ const LearningExperiencePanel: FC = () => {
 
   return (
     <DrawerPanelContent
-      isResizable
+      className="pfext-quick-start__base forklift--learning"
       defaultSize={drawerWidth}
+      isResizable
       onResize={(_event, width) => {
         setDrawerWidth(`${width}px`);
       }}
-      className="pfext-quick-start__base forklift--learning"
     >
       <AccordionContextProvider>
-        <div ref={panelContentRef} className="forklift--learning__panel">
+        <div className="forklift--learning__panel" ref={panelContentRef}>
           <div className="pfext-quick-start-panel-content pfext-quick-start-panel-content__header pfext-quick-start-panel-content__header--blue-white forklift--learning__header">
             <DrawerHead>
               <div className="pfext-quick-start-panel-content__title" tabIndex={-1}>

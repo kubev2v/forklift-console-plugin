@@ -15,8 +15,8 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type PlanCriticalAlertsProps = PropsWithChildren & {
-  conditions: V1beta1PlanStatusConditions[] | undefined;
   concerns: Map<string, number>;
+  conditions: V1beta1PlanStatusConditions[] | undefined;
   setIsDrawerOpen?: (isOpen: boolean) => void;
 };
 
@@ -45,11 +45,11 @@ const PlanCriticalAlerts: FC<PlanCriticalAlertsProps> = ({
           <StackItem>
             <Button
               data-testid="view-all-critical-concerns-button"
-              variant={ButtonVariant.link}
               isInline
               onClick={() => {
                 setIsDrawerOpen?.(true);
               }}
+              variant={ButtonVariant.link}
             >
               {t('View all critical concerns')}
             </Button>

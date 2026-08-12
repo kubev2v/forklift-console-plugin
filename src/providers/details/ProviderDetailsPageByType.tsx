@@ -15,9 +15,9 @@ import VSphereProviderDetailsPage from './VSphereProviderDetailsPage';
 import './ProviderDetailsPage.style.scss';
 
 type ProviderDetailsPageByTypeProps = {
-  type?: string;
   name: string;
   namespace: string;
+  type?: string;
 };
 
 const ProviderDetailsPageByType: FC<ProviderDetailsPageByTypeProps> = ({

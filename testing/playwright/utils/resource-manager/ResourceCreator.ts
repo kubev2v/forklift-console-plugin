@@ -12,9 +12,9 @@ export type V1NetworkAttachmentDefinition = {
   apiVersion: 'k8s.cni.cncf.io/v1';
   kind: 'NetworkAttachmentDefinition';
   metadata: {
+    annotations?: Record<string, string>;
     name: string;
     namespace: string;
-    annotations?: Record<string, string>;
   };
   spec: {
     config: string;

@@ -30,19 +30,19 @@ const EditApplianceManagement: ModalComponent<EditApplianceManagementProps> = ({
   };
 
   return (
-    <ModalForm closeModal={closeModal} title={t('Edit appliance management')} onConfirm={onSubmit}>
+    <ModalForm closeModal={closeModal} onConfirm={onSubmit} title={t('Edit appliance management')}>
       <Form>
         <FormGroup fieldId="appliance-management">
           <Checkbox
-            label={OVA_APPLIANCE_MANAGEMENT_LABEL}
+            data-testid="edit-appliance-management-checkbox"
+            description={OVA_APPLIANCE_MANAGEMENT_DESCRIPTION}
+            id="appliance-management-checkbox"
             isChecked={enabled}
+            label={OVA_APPLIANCE_MANAGEMENT_LABEL}
+            name="appliance-management"
             onChange={(_event, checked) => {
               setEnabled(checked);
             }}
-            id="appliance-management-checkbox"
-            name="appliance-management"
-            data-testid="edit-appliance-management-checkbox"
-            description={OVA_APPLIANCE_MANAGEMENT_DESCRIPTION}
           />
         </FormGroup>
       </Form>

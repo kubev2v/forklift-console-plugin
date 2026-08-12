@@ -50,9 +50,9 @@ describe('StandardPageWithSelection', () => {
           dataSource={[mockData, true, null]}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          toId={toId}
           onSelect={onSelect}
           selectedIds={[]}
+          toId={toId}
         />,
       );
 
@@ -70,9 +70,9 @@ describe('StandardPageWithSelection', () => {
           dataSource={[mockData, true, null]}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          toId={toId}
           onSelect={onSelect}
           selectedIds={[]}
+          toId={toId}
         />,
       );
 
@@ -91,9 +91,9 @@ describe('StandardPageWithSelection', () => {
           dataSource={[mockData, true, null]}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          toId={toId}
           onSelect={onSelect}
           selectedIds={['1', '3']}
+          toId={toId}
         />,
       );
 
@@ -113,9 +113,9 @@ describe('StandardPageWithSelection', () => {
           dataSource={[mockData, true, null]}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          toId={toId}
           onSelect={onSelect}
           selectedIds={[]}
+          toId={toId}
         />,
       );
 
@@ -135,9 +135,9 @@ describe('StandardPageWithSelection', () => {
           dataSource={[mockData, true, null]}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          toId={toId}
           onSelect={onSelect}
           selectedIds={['1', '2', '3']}
+          toId={toId}
         />,
       );
 
@@ -156,14 +156,14 @@ describe('StandardPageWithSelection', () => {
       renderWithRouter(
         <StandardPageWithSelection
           dataSource={[mockData, true, null]}
+          expanded={ExpandedContent}
+          expandedIds={[]}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          toId={toId}
+          onExpand={jest.fn()}
           onSelect={jest.fn()}
           selectedIds={[]}
-          onExpand={jest.fn()}
-          expandedIds={[]}
-          expanded={ExpandedContent}
+          toId={toId}
         />,
       );
 
@@ -179,14 +179,14 @@ describe('StandardPageWithSelection', () => {
       renderWithRouter(
         <StandardPageWithSelection
           dataSource={[mockData, true, null]}
+          expanded={ExpandedContent}
+          expandedIds={[]}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          toId={toId}
+          onExpand={onExpand}
           onSelect={jest.fn()}
           selectedIds={[]}
-          onExpand={onExpand}
-          expandedIds={[]}
-          expanded={ExpandedContent}
+          toId={toId}
         />,
       );
 
@@ -201,14 +201,14 @@ describe('StandardPageWithSelection', () => {
       renderWithRouter(
         <StandardPageWithSelection
           dataSource={[mockData, true, null]}
+          expanded={ExpandedContent}
+          expandedIds={['1']}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          toId={toId}
+          onExpand={jest.fn()}
           onSelect={jest.fn()}
           selectedIds={[]}
-          onExpand={jest.fn()}
-          expandedIds={['1']}
-          expanded={ExpandedContent}
+          toId={toId}
         />,
       );
 
@@ -223,14 +223,14 @@ describe('StandardPageWithSelection', () => {
       renderWithRouter(
         <StandardPageWithSelection
           dataSource={[mockData, true, null]}
+          expanded={ExpandedContent}
+          expandedIds={[]}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          toId={toId}
+          onExpand={jest.fn()}
           onSelect={jest.fn()}
           selectedIds={[]}
-          onExpand={jest.fn()}
-          expandedIds={[]}
-          expanded={ExpandedContent}
+          toId={toId}
         />,
       );
 
@@ -251,13 +251,13 @@ describe('StandardPageWithSelection', () => {
 
       renderWithRouter(
         <StandardPageWithSelection
+          canSelect={canSelect}
           dataSource={[mockData, true, null]}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          toId={toId}
           onSelect={onSelect}
           selectedIds={[]}
-          canSelect={canSelect}
+          toId={toId}
         />,
       );
 
@@ -274,13 +274,13 @@ describe('StandardPageWithSelection', () => {
 
       renderWithRouter(
         <StandardPageWithSelection
+          canSelect={canSelect}
           dataSource={[mockData, true, null]}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          toId={toId}
           onSelect={onSelect}
           selectedIds={[]}
-          canSelect={canSelect}
+          toId={toId}
         />,
       );
 
@@ -297,13 +297,13 @@ describe('StandardPageWithSelection', () => {
 
       renderWithRouter(
         <StandardPageWithSelection
+          canSelect={canSelect}
           dataSource={[mockData, true, null]}
           fieldsMetadata={fieldsMetadata}
           namespace="test-ns"
-          toId={toId}
           onSelect={onSelect}
           selectedIds={['1', '3']}
-          canSelect={canSelect}
+          toId={toId}
         />,
       );
 

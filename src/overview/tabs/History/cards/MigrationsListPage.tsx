@@ -124,22 +124,22 @@ const MigrationsListPage: FC = () => {
   ];
 
   return (
-    <LoadingSuspend obj={plans} loaded={plansLoaded} loadError={plansLoadError}>
+    <LoadingSuspend loaded={plansLoaded} loadError={plansLoadError} obj={plans}>
       <StandardPage
         data-testid="migrations-list"
         dataSource={[migrations ?? [], migrationsLoaded, migrationsLoadError]}
-        row={(props) => <MigrationRow {...props} plans={plans} />}
-        fieldsMetadata={migrationFields}
-        namespace={Namespace.AllProjects}
-        showManageColumns={false}
-        noPadding
-        extraSupportedMatchers={[dateRangeObjectMatcher]}
-        postFilterData={(data, selectedFilters) =>
-          selectedFilters.recent?.[0] === 'true' ? filterMostRecentMigrations(data) : data
-        }
         extraSupportedFilters={{
           recent: SwitchFilter,
         }}
+        extraSupportedMatchers={[dateRangeObjectMatcher]}
+        fieldsMetadata={migrationFields}
+        namespace={Namespace.AllProjects}
+        noPadding
+        postFilterData={(data, selectedFilters) =>
+          selectedFilters.recent?.[0] === 'true' ? filterMostRecentMigrations(data) : data
+        }
+        row={(props) => <MigrationRow {...props} plans={plans} />}
+        showManageColumns={false}
       />
     </LoadingSuspend>
   );

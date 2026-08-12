@@ -23,12 +23,12 @@ const CreatedAtDetailsItem: FC<ResourceDetailsItemProps> = ({
 
   return (
     <DetailsItem
+      content={<ConsoleTimestamp timestamp={getCreatedAt(resource)} />}
+      crumbs={['metadata', 'creationTimestamp']}
+      helpContent={helpContent ?? defaultHelpContent}
+      moreInfoLink={moreInfoLink ?? MORE_INFO_CREATED_AT_DETAIL_ITEM}
       testId="created-at-detail-item"
       title={t('Created at')}
-      content={<ConsoleTimestamp timestamp={getCreatedAt(resource)} />}
-      moreInfoLink={moreInfoLink ?? MORE_INFO_CREATED_AT_DETAIL_ITEM}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['metadata', 'creationTimestamp']}
     />
   );
 };

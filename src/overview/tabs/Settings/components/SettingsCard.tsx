@@ -56,46 +56,46 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
   return (
     <>
       <SectionHeadingWithEdit
+        className="pf-v6-u-mb-md"
+        data-testid="settings-edit-button"
         editable={canPatch}
-        title={t('Settings')}
+        headingLevel="h3"
         onClick={() => {
           launcher<SettingsEditProps>(SettingsEdit, { controller });
         }}
-        className="pf-v6-u-mb-md"
-        headingLevel="h3"
-        data-testid="settings-edit-button"
+        title={t('Settings')}
       />
       <DescriptionList>
         <DetailsItem
           content={
             spec?.[SettingsFields.MaxVMInFlight] ?? defaultValuesMap[SettingsFields.MaxVMInFlight]
           }
-          title={t('Maximum concurrent VM migrations')}
           helpContent={<MaxVMInFlightHelpContent />}
+          title={t('Maximum concurrent VM migrations')}
         />
         <DetailsItem
           content={
             spec?.[SettingsFields.ControllerCPULimit] ??
             defaultValuesMap[SettingsFields.ControllerCPULimit]
           }
-          title={t('Controller main container CPU limit')}
           helpContent={<ControllerCPULimitHelpContent />}
+          title={t('Controller main container CPU limit')}
         />
         <DetailsItem
           content={
             spec?.[SettingsFields.ControllerMemoryLimit] ??
             defaultValuesMap[SettingsFields.ControllerMemoryLimit]
           }
-          title={t('Controller main container memory limit')}
           helpContent={<ControllerMemoryLimitHelpContent />}
+          title={t('Controller main container memory limit')}
         />
         <DetailsItem
           content={
             spec?.[SettingsFields.InventoryMemoryLimit] ??
             defaultValuesMap[SettingsFields.InventoryMemoryLimit]
           }
-          title={t('Controller inventory container memory limit')}
           helpContent={<InventoryMemoryLimitHelpContent />}
+          title={t('Controller inventory container memory limit')}
         />
         <DetailsItem
           content={
@@ -104,8 +104,8 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
                 defaultValuesMap[SettingsFields.PrecopyInterval]
             ]
           }
-          title={t('Precopy interval')}
           helpContent={<PreCopyIntervalHelpContent />}
+          title={t('Precopy interval')}
         />
         <DetailsItem
           content={
@@ -114,56 +114,56 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
                 defaultValuesMap[SettingsFields.SnapshotStatusCheckRate]
             ]
           }
-          title={t('Snapshot polling interval')}
           helpContent={<SnapshotPoolingIntervalHelpContent />}
+          title={t('Snapshot polling interval')}
         />
         <DetailsItem
-          testId="settings-virt-v2v-memsize"
           content={formatVirtV2vValue(spec?.[SettingsFields.VirtV2vMemsize])}
-          title={t('Conversion appliance memory (MB)')}
           helpContent={<VirtV2vMemsizeHelpContent />}
+          testId="settings-virt-v2v-memsize"
+          title={t('Conversion appliance memory (MB)')}
         />
         <DetailsItem
-          testId="settings-virt-v2v-smp"
           content={formatVirtV2vValue(spec?.[SettingsFields.VirtV2vSmp])}
-          title={t('Conversion appliance vCPUs')}
           helpContent={<VirtV2vSmpHelpContent />}
+          testId="settings-virt-v2v-smp"
+          title={t('Conversion appliance vCPUs')}
         />
         <DetailsItem
-          testId="settings-controller-transfer-network"
           content={
             spec?.[SettingsFields.ControllerTransferNetwork]?.trim()
               ? spec[SettingsFields.ControllerTransferNetwork]
               : t('None')
           }
-          title={t('Controller transfer network')}
           helpContent={<ControllerTransferNetworkHelpContent />}
+          testId="settings-controller-transfer-network"
+          title={t('Controller transfer network')}
         />
         <DetailsItem
-          testId="settings-aap-url"
           content={
             spec?.[SettingsFields.AapUrl]?.trim()
               ? spec[SettingsFields.AapUrl]
               : t('Not configured')
           }
-          title={t('AAP URL')}
           helpContent={<AapUrlHelpContent />}
+          testId="settings-aap-url"
+          title={t('AAP URL')}
         />
         <DetailsItem
-          testId="settings-aap-token-secret"
           content={
             spec?.[SettingsFields.AapTokenSecretName]?.trim()
               ? spec[SettingsFields.AapTokenSecretName]
               : t('Not configured')
           }
-          title={t('AAP token secret')}
           helpContent={<AapTokenSecretHelpContent />}
+          testId="settings-aap-token-secret"
+          title={t('AAP token secret')}
         />
         <DetailsItem
-          testId="settings-aap-timeout"
           content={spec?.[SettingsFields.AapTimeout] ?? defaultValuesMap[SettingsFields.AapTimeout]}
-          title={t('AAP timeout (seconds)')}
           helpContent={<AapTimeoutHelpContent />}
+          testId="settings-aap-timeout"
+          title={t('AAP timeout (seconds)')}
         />
       </DescriptionList>
     </>

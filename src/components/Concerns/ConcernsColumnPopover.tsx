@@ -15,7 +15,7 @@ const ConcernsColumnPopover: FC = () => {
         )}
       </p>
 
-      <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>
+      <Flex alignItems={{ default: 'alignItemsCenter' }} flexWrap={{ default: 'nowrap' }}>
         <FlexItem className="pf-v6-u-mr-sm">{STATUS_ICONS.info}</FlexItem>
 
         <FlexItem>
@@ -25,7 +25,7 @@ const ConcernsColumnPopover: FC = () => {
         </FlexItem>
       </Flex>
 
-      <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>
+      <Flex alignItems={{ default: 'alignItemsCenter' }} flexWrap={{ default: 'nowrap' }}>
         <FlexItem className="pf-v6-u-mr-sm">{STATUS_ICONS.warning}</FlexItem>
 
         <FlexItem>
@@ -36,7 +36,7 @@ const ConcernsColumnPopover: FC = () => {
         </FlexItem>
       </Flex>
 
-      <Flex flexWrap={{ default: 'nowrap' }} alignItems={{ default: 'alignItemsCenter' }}>
+      <Flex alignItems={{ default: 'alignItemsCenter' }} flexWrap={{ default: 'nowrap' }}>
         <FlexItem className="pf-v6-u-mr-sm">{STATUS_ICONS.danger}</FlexItem>
 
         <FlexItem>

@@ -17,14 +17,25 @@ const ExistingLUKSSecretField: FC = () => {
 
   return (
     <FormGroupWithErrorText
-      fieldId={OtherSettingsFormFieldId.ExistingLUKSSecret}
-      label={otherFormFieldLabels[OtherSettingsFormFieldId.ExistingLUKSSecret]}
       className="pf-v6-u-ml-lg"
+      fieldId={OtherSettingsFormFieldId.ExistingLUKSSecret}
       isRequired
+      label={otherFormFieldLabels[OtherSettingsFormFieldId.ExistingLUKSSecret]}
     >
       <Controller
-        name={OtherSettingsFormFieldId.ExistingLUKSSecret}
         control={control}
+        name={OtherSettingsFormFieldId.ExistingLUKSSecret}
+        render={({ field }) => (
+          <LUKSSecretSelect
+            id={OtherSettingsFormFieldId.ExistingLUKSSecret}
+            namespace={planProject}
+            onSelect={(_, value) => {
+              field.onChange(value);
+            }}
+            testId="luks-secret-select"
+            value={field.value?.metadata?.name ?? ''}
+          />
+        )}
         rules={{
           deps: [OtherSettingsFormFieldId.DiskDecryptionType],
           validate: (value): string | true => {
@@ -37,17 +48,6 @@ const ExistingLUKSSecretField: FC = () => {
             return true;
           },
         }}
-        render={({ field }) => (
-          <LUKSSecretSelect
-            testId="luks-secret-select"
-            id={OtherSettingsFormFieldId.ExistingLUKSSecret}
-            value={field.value?.metadata?.name ?? ''}
-            onSelect={(_, value) => {
-              field.onChange(value);
-            }}
-            namespace={planProject}
-          />
-        )}
       />
     </FormGroupWithErrorText>
   );

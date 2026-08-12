@@ -3,8 +3,8 @@ import type { FC, ReactNode } from 'react';
 import { Content, ContentVariants, Flex, FlexItem } from '@patternfly/react-core';
 
 type LearningExperienceFooterSectionProps = {
-  title: string;
   children: ReactNode;
+  title: string;
 };
 
 const LearningExperienceFooterSection: FC<LearningExperienceFooterSectionProps> = ({

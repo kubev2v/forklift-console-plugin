@@ -20,12 +20,8 @@ const StorageDomainCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Storage domains')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'storageDomainCount']}
       content={
         <InventoryCell
-          icon={<DatabaseIcon />}
           data={{
             inventory,
             inventoryLoading: true,
@@ -33,9 +29,13 @@ const StorageDomainCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           }}
           fieldId={ProvidersResourceFieldId.StorageCount}
           fields={[]}
+          icon={<DatabaseIcon />}
           inventoryValue={(inventory as OVirtProvider).storageDomainCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'storageDomainCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Storage domains')}
     />
   );
 };

@@ -15,8 +15,8 @@ type JsonPatchOp = {
 };
 
 export type BulkPlanActionFailure = {
-  name: string;
   message: string;
+  name: string;
 };
 
 export const getPlanRowId = (plan: V1beta1Plan): string =>
@@ -59,7 +59,7 @@ export const buildArchivePlanPatch = (plan: V1beta1Plan): JsonPatchOp[] => [
 ];
 
 export const getBulkActionFailure = (plan: V1beta1Plan, reason: unknown): BulkPlanActionFailure => {
-  const error = reason as { message?: string; code?: number | string };
+  const error = reason as { code?: number | string; message?: string };
   const messageParts = [error?.message ?? String(reason)];
   if (error?.code !== undefined && error?.code !== null && error?.code !== '') {
     messageParts.push(`(${String(error.code)})`);

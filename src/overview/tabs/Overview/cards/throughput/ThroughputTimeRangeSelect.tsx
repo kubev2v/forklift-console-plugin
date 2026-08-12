@@ -37,10 +37,10 @@ const ThroughputTimeRangeSelect: FC<ThroughputTimeRangeSelectProps> = ({
 
   const toggle = (toggleRef: Ref<MenuToggleElement>): JSX.Element => (
     <MenuToggle
-      ref={toggleRef}
-      onClick={onToggleClick}
-      isExpanded={isOpen}
       className="forklift-overview__cards-select"
+      isExpanded={isOpen}
+      onClick={onToggleClick}
+      ref={toggleRef}
     >
       {throughputTimeRangeToLabel[selectedRange]}
     </MenuToggle>
@@ -49,12 +49,12 @@ const ThroughputTimeRangeSelect: FC<ThroughputTimeRangeSelectProps> = ({
   return (
     // eslint-disable-next-line no-restricted-syntax
     <Select
+      aria-label={t('Select time range')}
       isOpen={isOpen}
+      onOpenChange={setIsOpen}
       onSelect={onSelect}
       selected={selectedRange}
-      aria-label={t('Select time range')}
       toggle={toggle}
-      onOpenChange={setIsOpen}
     >
       {ORDERED_RANGES.map((range) => (
         <SelectOption key={range} value={range}>

@@ -5,7 +5,7 @@ export enum NameTemplateOptions {
 }
 
 export type NameTemplateOptionType = {
-  value: NameTemplateOptions;
-  label: string;
   getInheritToDescription?: (inheritValue: string | undefined) => string;
+  label: string;
+  value: NameTemplateOptions;
 };

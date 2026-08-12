@@ -40,7 +40,7 @@ const DeleteVirtualMachinesButton: FC<DeleteVirtualMachineProps> = ({ plan, sele
 
   return (
     <ToolbarItem>
-      <VMsActionButton onClick={onClick} disabledReason={reason}>
+      <VMsActionButton disabledReason={reason} onClick={onClick}>
         {t('Delete VMs')}
       </VMsActionButton>
     </ToolbarItem>

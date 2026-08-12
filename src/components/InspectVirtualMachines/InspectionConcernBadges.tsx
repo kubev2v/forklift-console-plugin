@@ -40,7 +40,6 @@ const InspectionConcernBadges: FC<InspectionConcernBadgesProps> = ({ concerns })
           <SplitItem key={category}>
             <Popover
               aria-label={`${category} inspection concerns`}
-              headerContent={t('{{category}} inspection concerns', { category })}
               bodyContent={
                 <Stack>
                   {items.map((concern) => (
@@ -49,6 +48,7 @@ const InspectionConcernBadges: FC<InspectionConcernBadgesProps> = ({ concerns })
                 </Stack>
               }
               footerContent={t('Total: {{length}}', { length: items.length })}
+              headerContent={t('{{category}} inspection concerns', { category })}
             >
               <Button isInline variant={ButtonVariant.link}>
                 <Label status={getCategoryStatus(category)}>{items.length}</Label>

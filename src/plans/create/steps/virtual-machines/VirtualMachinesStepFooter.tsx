@@ -128,32 +128,32 @@ const VirtualMachinesStepFooter: FC = () => {
       <CreatePlanWizardFooter onNext={handleNextStep} />
 
       {isModalOpen && (
-        <Modal isOpen variant={ModalVariant.large} onClose={closeModal}>
+        <Modal isOpen onClose={closeModal} variant={ModalVariant.large}>
           <ModalHeader
-            title={t('Confirm selections with critical issues')}
-            titleIconVariant="danger"
             description={t(
               'Critical issues detected in your selected VMs will cause the migration to fail. Resolve these issues or remove the VMs from the plan before starting the migration.',
             )}
+            title={t('Confirm selections with critical issues')}
+            titleIconVariant="danger"
           />
           <ModalBody>
             <VirtualMachinesTable
-              vmData={criticalVmData}
+              hasCriticalConcernFilter
               initialSelectedIds={Object.keys(vmsWithCriticalIssues)}
-              value={pendingVms}
               isSelectable
               onChange={handleVmSelectionChange}
-              hasCriticalConcernFilter
+              value={pendingVms}
+              vmData={criticalVmData}
             />
           </ModalBody>
           <ModalFooter>
             <Button key="confirm" onClick={confirmSelection}>
               {t('Confirm selections')}
             </Button>
-            <Button key="deselect" variant={ButtonVariant.secondary} onClick={deselectCriticalVms}>
+            <Button key="deselect" onClick={deselectCriticalVms} variant={ButtonVariant.secondary}>
               {t('Deselect critical issue VMs')}
             </Button>
-            <Button key="cancel" variant={ButtonVariant.secondary} onClick={closeModal}>
+            <Button key="cancel" onClick={closeModal} variant={ButtonVariant.secondary}>
               {t('Cancel')}
             </Button>
           </ModalFooter>

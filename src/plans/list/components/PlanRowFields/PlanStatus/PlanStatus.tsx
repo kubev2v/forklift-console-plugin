@@ -47,17 +47,17 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
     return (
       <Split hasGutter>
         <Button
-          variant={ButtonVariant.secondary}
+          data-testid="plan-start-button-status"
           icon={<StartIcon />}
+          isDisabled={hasActiveMigration}
+          isInline
           onClick={() => {
             launcher<PlanStartMigrationModalProps>(PlanStartMigrationModal, {
               plan,
               title: t('Start'),
             });
           }}
-          isDisabled={hasActiveMigration}
-          isInline
-          data-testid="plan-start-button-status"
+          variant={ButtonVariant.secondary}
         >
           {t('Start')}
         </Button>
@@ -78,17 +78,17 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
 
   return (
     <Flex
-      direction={{ default: 'row' }}
       alignItems={{ default: 'alignItemsCenter' }}
-      spaceItems={{ default: 'spaceItemsSm' }}
+      direction={{ default: 'row' }}
       flexWrap={{ default: 'nowrap' }}
+      spaceItems={{ default: 'spaceItemsSm' }}
     >
       <FlexItem className="plan-status-cell-label-section">
         {isPlanRunning &&
         PlanStatuses.Paused !== planStatus &&
         PlanStatuses.Pending !== planStatus ? (
           <Split hasGutter>
-            <Spinner size="md" data-testid="plan-progress-spinner" />
+            <Spinner data-testid="plan-progress-spinner" size="md" />
             <span className="pf-v6-u-font-size-sm" data-testid="plan-progress-percentage">
               {Math.trunc(pipelinesProgressPercentage)}%
             </span>
@@ -100,13 +100,13 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
       {canPlanResumeConversion(plan) && loaded && !hasActiveMigration && (
         <FlexItem>
           <Button
-            variant={ButtonVariant.link}
+            data-testid="plan-resume-button-status"
             icon={<RedoIcon />}
+            isInline
             onClick={() => {
               launcher<PlanResumeConversionModalProps>(PlanResumeConversionModal, { plan });
             }}
-            isInline
-            data-testid="plan-resume-button-status"
+            variant={ButtonVariant.link}
           >
             {t('Resume')}
           </Button>

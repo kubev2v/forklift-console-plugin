@@ -115,33 +115,33 @@ const InspectVirtualMachinesModal: ModalComponent<InspectVirtualMachinesModalPro
 
   return (
     <ModalForm
-      title={t('Inspect virtual machines')}
-      label={<TechPreviewLabel />}
-      onConfirm={handleConfirm}
+      className="forklift-inspect-vms-modal"
       confirmLabel={confirmLabel}
       isDisabled={isSubmitDisabled}
-      variant={ModalVariant.large}
-      className="forklift-inspect-vms-modal"
+      label={<TechPreviewLabel />}
+      onConfirm={handleConfirm}
       testId="inspect-vms-modal"
+      title={t('Inspect virtual machines')}
+      variant={ModalVariant.large}
       {...rest}
     >
       {!isVddkConfigured && (
         <Alert
-          variant={AlertVariant.warning}
           isInline
           title={t(
             'VDDK image is required for deep inspection. Configure it in the provider settings.',
           )}
+          variant={AlertVariant.warning}
         />
       )}
       <InspectionVmTable
-        vmRows={vmRows}
-        selectedIds={selectedIds}
-        onSelect={setSelectedIds}
         isLoading={!plan && inventoryLoading}
         isProviderFlow={isProviderFlow}
-        vmOverrides={vmOverrides}
+        onSelect={setSelectedIds}
         onVmOverrideChange={handleVmOverrideChange}
+        selectedIds={selectedIds}
+        vmOverrides={vmOverrides}
+        vmRows={vmRows}
       />
     </ModalForm>
   );

@@ -10,9 +10,9 @@ import type { InventoryHostNetworkTriple } from './utils/types';
 import VSphereNetworkModal, { type VSphereNetworkModalProps } from './VSphereNetworkModal';
 
 const SelectNetworkForHostButton: FC<{
-  selectedIds: string[];
-  provider: V1beta1Provider;
   hostsData: InventoryHostNetworkTriple[];
+  provider: V1beta1Provider;
+  selectedIds: string[];
 }> = ({ hostsData, provider, selectedIds }) => {
   const { t } = useForkliftTranslation();
   const launcher = useModal();
@@ -27,7 +27,7 @@ const SelectNetworkForHostButton: FC<{
 
   return (
     <ToolbarItem>
-      <Button variant={ButtonVariant.secondary} onClick={onClick} isDisabled={isEmpty(selectedIds)}>
+      <Button isDisabled={isEmpty(selectedIds)} onClick={onClick} variant={ButtonVariant.secondary}>
         {t('Select migration network')}
       </Button>
     </ToolbarItem>

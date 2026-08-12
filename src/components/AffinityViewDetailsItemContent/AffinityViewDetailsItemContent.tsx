@@ -17,7 +17,7 @@ const AffinityViewDetailsItemContent: FC<AffinityViewDetailsItemContentProps> = 
   const content = t('{{count}} affinity rule', { count: rulesCount });
 
   return rulesCount === 0 ? (
-    <Label isCompact color="grey">
+    <Label color="grey" isCompact>
       {content}
     </Label>
   ) : (

@@ -17,19 +17,19 @@ const Ec2InventorySection: FC<InventorySectionProps> = ({ data }) => {
 
   return (
     <DescriptionList
-      isHorizontal
-      horizontalTermWidthModifier={{ default: '15ch' }}
       columnModifier={{ default: '2Col' }}
+      horizontalTermWidthModifier={{ default: '15ch' }}
+      isHorizontal
     >
       <VmCountDetailsItem
-        resource={provider}
-        inventory={inventory}
         helpContent={t('Number of EC2 instances discovered from the provider')}
+        inventory={inventory}
+        resource={provider}
       />
       <NetworkCountDetailsItem
-        resource={provider}
-        inventory={inventory}
         helpContent={t('Number of VPC networks discovered from the provider')}
+        inventory={inventory}
+        resource={provider}
       />
     </DescriptionList>
   );

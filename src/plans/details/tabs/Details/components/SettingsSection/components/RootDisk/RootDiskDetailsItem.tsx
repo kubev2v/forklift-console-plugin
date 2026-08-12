@@ -25,15 +25,15 @@ const RootDiskDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, sho
 
   return (
     <DetailsItem
-      title={t('Root device')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={<DiskLabel diskKey={rootDisk} />}
+      crumbs={['spec', 'vms', 'rootDisk']}
       helpContent={t(`Choose the root filesystem to be converted.`)}
       moreInfoLink={VIRT_V2V_HELP_LINK}
-      crumbs={['spec', 'vms', 'rootDisk']}
       onEdit={() => {
         launcher<EditPlanProps>(EditRootDisk, { resource: plan });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      title={t('Root device')}
     />
   );
 };

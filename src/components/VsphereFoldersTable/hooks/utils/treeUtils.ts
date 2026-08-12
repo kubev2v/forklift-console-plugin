@@ -33,7 +33,7 @@ const INSPECTION_STATUS_SEVERITY_RANK: Record<InspectionStatus, number> = {
   [INSPECTION_STATUS.RUNNING]: 2,
 };
 
-type Counts = { Critical: number; Warning: number; Information: number };
+type Counts = { Critical: number; Information: number; Warning: number };
 
 export const getVmName = (row: VmRow) => row.vmData.name ?? '';
 export const getVmGuestOSValue = (row: VmRow) => getVmGuestOS(row.vmData.vm);
@@ -154,9 +154,9 @@ export const buildVmComparator = (
 export const getVmConcernLabels = (
   row: VmRow,
 ): {
-  labels: string[];
-  labelIconMapper: Record<string, ReactNode>;
   categoryMapper: Record<string, ConcernCategory>;
+  labelIconMapper: Record<string, ReactNode>;
+  labels: string[];
 } => {
   const vm = row?.vmData?.vm as VirtualMachineWithConcerns | undefined;
   const concerns: Concern[] = vm?.concerns ?? [];

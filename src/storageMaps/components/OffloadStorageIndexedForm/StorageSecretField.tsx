@@ -56,23 +56,23 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
       }
     >
       <Controller
-        name={fieldId}
         control={control}
+        name={fieldId}
         render={({ field }) => (
           <Select
-            ref={field.ref}
             id={fieldId}
-            testId={fieldId}
             isDisabled={isSubmitting}
-            value={field.value}
             onSelect={(_e, value) => {
               field.onChange(value);
             }}
             placeholder={t('Select storage secret')}
+            ref={field.ref}
+            testId={fieldId}
+            value={field.value}
           >
             <SelectList>
               {isEmpty(secrets) ? (
-                <SelectOption key="empty" isDisabled>
+                <SelectOption isDisabled key="empty">
                   {t('No secrets available for this provider')}
                 </SelectOption>
               ) : (

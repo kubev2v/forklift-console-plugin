@@ -18,8 +18,6 @@ const EditRootDiskModalAlert: FC<EditRootDiskModalAlertProps> = ({ vms }) => {
 
   return (
     <AlertMessageForModals
-      variant="warning"
-      title={t('The plan rootDisk keys was manually configured')}
       message={
         <>
           <p>
@@ -28,6 +26,8 @@ const EditRootDiskModalAlert: FC<EditRootDiskModalAlertProps> = ({ vms }) => {
           <p>{t('updating the root disk number will override the current configuration.')}</p>
         </>
       }
+      title={t('The plan rootDisk keys was manually configured')}
+      variant="warning"
     />
   );
 };

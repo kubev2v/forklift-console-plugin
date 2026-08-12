@@ -11,11 +11,7 @@ const SmbUrlField: FC = () => {
 
   return (
     <ProviderFormTextInput
-      label={t('SMB share URL')}
       fieldId={ProviderFormFieldId.SmbUrl}
-      helperText={t(
-        'SMB share containing exported Hyper-V VMs, for example: //192.168.1.100/hyperv-share',
-      )}
       fieldRules={{
         required: t('SMB share URL is required'),
         validate: {
@@ -30,6 +26,10 @@ const SmbUrlField: FC = () => {
           },
         },
       }}
+      helperText={t(
+        'SMB share containing exported Hyper-V VMs, for example: //192.168.1.100/hyperv-share',
+      )}
+      label={t('SMB share URL')}
     />
   );
 };

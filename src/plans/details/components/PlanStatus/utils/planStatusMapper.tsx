@@ -10,9 +10,9 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
   [PlanStatuses.Archived]: (
     <Label
       className="forklift-plan-status__dark-label"
+      data-testid="plan-status-label"
       isCompact
       variant="filled"
-      data-testid="plan-status-label"
     >
       {t('Archived')}
     </Label>
@@ -20,19 +20,19 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
   [PlanStatuses.Canceled]: (
     <Label
       className="forklift-plan-status__dark-label"
+      data-testid="plan-status-label"
       isCompact
       variant="filled"
-      data-testid="plan-status-label"
     >
       {t('Canceled')}
     </Label>
   ),
   [PlanStatuses.CannotStart]: (
     <Label
-      status={PF_LABEL_STATUS.DANGER}
-      isCompact
-      variant="filled"
       data-testid="plan-status-label"
+      isCompact
+      status={PF_LABEL_STATUS.DANGER}
+      variant="filled"
     >
       {t('Cannot start')}
     </Label>
@@ -40,9 +40,9 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
   [PlanStatuses.Completed]: (
     <Label
       className="forklift-plan-status__dark-label"
+      data-testid="plan-status-label"
       isCompact
       variant="filled"
-      data-testid="plan-status-label"
     >
       {t('Complete')}
     </Label>
@@ -50,9 +50,9 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
   [PlanStatuses.Executing]: (
     <Label
       className="forklift-plan-status__grey-label"
+      data-testid="plan-status-label"
       isCompact
       variant="filled"
-      data-testid="plan-status-label"
     >
       {t('Migration running')}
     </Label>
@@ -60,9 +60,9 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
   [PlanStatuses.Incomplete]: (
     <Label
       className="forklift-plan-status__grey-label"
+      data-testid="plan-status-label"
       isCompact
       variant="filled"
-      data-testid="plan-status-label"
     >
       {t('Incomplete')}
     </Label>
@@ -70,35 +70,35 @@ export const planStatusLabelMapper: Record<PlanStatuses, ReactNode> = {
   [PlanStatuses.Paused]: (
     <Label
       className="forklift-plan-status__gold-label"
+      data-testid="plan-status-label"
       isCompact
       variant="filled"
-      data-testid="plan-status-label"
     >
       {t('Paused')}
     </Label>
   ),
   [PlanStatuses.Pending]: (
-    <Label color="yellow" isCompact variant="filled" data-testid="plan-status-label">
+    <Label color="yellow" data-testid="plan-status-label" isCompact variant="filled">
       {t('Pending')}
     </Label>
   ),
   [PlanStatuses.Ready]: (
     <Label
       className="forklift-plan-status__grey-label"
+      data-testid="plan-status-label"
       isCompact
       variant="filled"
-      data-testid="plan-status-label"
     >
       {t('Ready for migration')}
     </Label>
   ),
   [PlanStatuses.Unknown]: (
-    <Label isCompact variant="filled" data-testid="plan-status-label">
+    <Label data-testid="plan-status-label" isCompact variant="filled">
       {t('Unknown')}
     </Label>
   ),
   [PlanStatuses.Validating]: (
-    <Label status="info" isCompact variant="filled" data-testid="plan-status-label">
+    <Label data-testid="plan-status-label" isCompact status="info" variant="filled">
       {t('Validating')}
     </Label>
   ),

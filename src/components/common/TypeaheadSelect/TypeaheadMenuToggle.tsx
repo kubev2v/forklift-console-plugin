@@ -15,22 +15,22 @@ import { TimesIcon } from '@patternfly/react-icons';
 import type { TypeaheadSelectOption } from './utils/types';
 
 type TypeaheadMenuToggleProps = {
-  toggleRef: Ref<MenuToggleElement>;
-  inputRef: RefObject<HTMLInputElement>;
-  placeholder: string;
-  isDisabled: boolean;
-  isOpen: boolean;
-  toggleWidth?: string;
   allowClear: boolean;
-  selectedOption?: TypeaheadSelectOption;
-  isFiltering: boolean;
+  inputRef: RefObject<HTMLInputElement>;
   inputValue: string;
+  isDisabled: boolean;
+  isFiltering: boolean;
+  isOpen: boolean;
   onInputChange?: (value: string) => void;
+  onInputValueChange: (value: string, isFiltering: boolean) => void;
   onSelectionClear: () => void;
   onToggleClick: () => void;
-  onInputValueChange: (value: string, isFiltering: boolean) => void;
-  toggleProps?: Omit<MenuToggleProps, 'ref' | 'onClick' | 'isExpanded'>;
+  placeholder: string;
+  selectedOption?: TypeaheadSelectOption;
   testId?: string;
+  toggleProps?: Omit<MenuToggleProps, 'ref' | 'onClick' | 'isExpanded'>;
+  toggleRef: Ref<MenuToggleElement>;
+  toggleWidth?: string;
 };
 
 const TypeaheadMenuToggle: FC<TypeaheadMenuToggleProps> = ({
@@ -101,47 +101,47 @@ const TypeaheadMenuToggle: FC<TypeaheadMenuToggleProps> = ({
 
   return (
     <MenuToggle
-      ref={toggleRef}
-      variant="typeahead"
-      onClick={handleToggleClick}
-      isExpanded={isOpen}
+      data-testid={testId}
       isDisabled={isDisabled}
+      isExpanded={isOpen}
       isFullWidth
-      style={{ width: toggleWidth }}
+      onClick={handleToggleClick}
       onMouseEnter={() => {
         setIsHovered(true);
       }}
       onMouseLeave={() => {
         setIsHovered(false);
       }}
-      data-testid={testId}
+      ref={toggleRef}
+      style={{ width: toggleWidth }}
+      variant="typeahead"
       {...toggleProps}
     >
       <TextInputGroup isPlain>
         <TextInputGroupMain
-          value={displayValue}
-          onClick={handleInputClick}
-          onChange={handleInputChange}
-          onFocus={() => {
-            setIsFocused(true);
-          }}
+          aria-controls="typeahead-listbox"
+          autoComplete="off"
+          isExpanded={isOpen}
           onBlur={() => {
             setIsFocused(false);
           }}
-          autoComplete="off"
-          ref={inputRef}
+          onChange={handleInputChange}
+          onClick={handleInputClick}
+          onFocus={() => {
+            setIsFocused(true);
+          }}
           placeholder={placeholder}
+          ref={inputRef}
           role="combobox"
-          isExpanded={isOpen}
-          aria-controls="typeahead-listbox"
+          value={displayValue}
         />
         {showClearButton && (
           <TextInputGroupUtilities>
             <Button
-              icon={<TimesIcon />}
-              variant={ButtonVariant.plain}
-              onClick={handleClear}
               aria-label="Clear selection"
+              icon={<TimesIcon />}
+              onClick={handleClear}
+              variant={ButtonVariant.plain}
             />
           </TextInputGroupUtilities>
         )}

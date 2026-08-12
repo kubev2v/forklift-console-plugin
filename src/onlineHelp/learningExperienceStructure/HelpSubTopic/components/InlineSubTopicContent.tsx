@@ -15,7 +15,7 @@ const InlineSubTopicContent: FC<InlineSubTopicContentProps> = ({ topic }) => (
   <div className={css('pf-v6-u-mt-sm', getClassForListStyle(topic.subListStyleType))}>
     <Content component={getTextListComponentForListStyle(topic.subListStyleType)}>
       {topic.subTopics?.().map((subTopic) => (
-        <HelpSubTopic topic={subTopic} key={subTopic.id} />
+        <HelpSubTopic key={subTopic.id} topic={subTopic} />
       ))}
     </Content>
   </div>
