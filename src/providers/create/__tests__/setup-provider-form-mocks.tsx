@@ -55,7 +55,7 @@ jest.mock('../CreateProviderFormContextProvider', () => {
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   useActiveNamespace: () => ['test-namespace', jest.fn()],
   useK8sWatchResource: () => [[], true, null],
-  useModal: () => ({ isOpen: false, showModal: jest.fn(), hideModal: jest.fn() }),
+  useOverlay: () => ({ isOpen: false, showModal: jest.fn(), hideModal: jest.fn() }),
   useAccessReview: () => [true, false],
   ProjectModel: {
     apiGroup: 'project.openshift.io',

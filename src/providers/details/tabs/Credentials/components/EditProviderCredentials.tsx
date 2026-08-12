@@ -2,7 +2,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, ModalVariant } from '@patternfly/react-core';
 import { getType } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
@@ -21,8 +21,8 @@ export type EditProviderCredentialsProps = {
   secret: IoK8sApiCoreV1Secret;
 };
 
-const EditProviderCredentials: ModalComponent<EditProviderCredentialsProps> = ({
-  closeModal,
+const EditProviderCredentials: OverlayComponent<EditProviderCredentialsProps> = ({
+  closeOverlay,
   provider,
   secret,
 }) => {
@@ -58,7 +58,7 @@ const EditProviderCredentials: ModalComponent<EditProviderCredentialsProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeModal}
+        closeModal={closeOverlay}
         isDisabled={!isEmpty(errors) || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         title={t('Edit provider credentials')}

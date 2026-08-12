@@ -1,14 +1,15 @@
 import TextInputEditModal from 'src/components/ModalForm/TextInputEditModal';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 
 import { validateOvirtURL } from '../../utils/validators/provider/ovirt/validateOvirtURL';
 
 import { patchProviderURL } from './utils/patchProviderURL';
 import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
-export const OvirtEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
+export const OvirtEditURLModal: OverlayComponent<EditProviderURLModalProps> = ({
+  closeOverlay,
   resource: provider,
   ...rest
 }) => {
@@ -35,6 +36,7 @@ export const OvirtEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
 
   return (
     <TextInputEditModal
+      closeOverlay={closeOverlay}
       {...rest}
       description={description}
       helperText={t('The URL of the Red Hat Virtualization Manager API endpoint.')}

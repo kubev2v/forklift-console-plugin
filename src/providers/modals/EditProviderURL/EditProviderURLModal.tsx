@@ -1,5 +1,5 @@
 import type { V1beta1Provider } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 
 import { OpenshiftEditURLModal } from './OpenshiftEditURLModal';
 import { OpenstackEditURLModal } from './OpenstackEditURLModal';
@@ -11,7 +11,7 @@ export type EditProviderURLModalProps = {
   resource: V1beta1Provider;
 };
 
-export const EditProviderURLModal: ModalComponent<EditProviderURLModalProps> = (props) => {
+export const EditProviderURLModal: OverlayComponent<EditProviderURLModalProps> = (props) => {
   switch (props.resource?.spec?.type) {
     case 'ovirt':
       return <OvirtEditURLModal {...props} />;

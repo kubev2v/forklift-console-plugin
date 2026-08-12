@@ -10,7 +10,7 @@ import {
   type OpenShiftNetworkAttachmentDefinition,
   ProviderModel,
 } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, PageSection } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { DEFAULT_NETWORK, EMPTY_MSG } from '@utils/constants';
@@ -27,7 +27,7 @@ const ProviderNetworksTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace
   const { t } = useForkliftTranslation();
   const { provider } = useProvider(name, namespace);
 
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const {
     error,
@@ -62,7 +62,7 @@ const ProviderNetworksTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace
   );
 
   const onClick = () => {
-    launcher<EditProviderDefaultTransferNetworkProps>(EditProviderDefaultTransferNetwork, {
+    launchOverlay<EditProviderDefaultTransferNetworkProps>(EditProviderDefaultTransferNetwork, {
       defaultNetworkName,
       resource: provider,
     });

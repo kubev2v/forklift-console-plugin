@@ -2,14 +2,15 @@ import TextInputEditModal from 'src/components/ModalForm/TextInputEditModal';
 import { providerUiAnnotation } from 'src/providers/utils/constants';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 
 import { validateOpenshiftUILink } from '../../utils/validators/provider/openshift/validateOpenshiftUILink';
 
 import { patchProviderUI } from './utils/patchProviderUI';
 import type { EditProviderUIModalProps } from './EditProviderUIModal';
 
-export const OpenshiftEditUIModal: ModalComponent<EditProviderUIModalProps> = ({
+export const OpenshiftEditUIModal: OverlayComponent<EditProviderUIModalProps> = ({
+  closeOverlay,
   resource: provider,
   ...rest
 }) => {
@@ -35,6 +36,7 @@ export const OpenshiftEditUIModal: ModalComponent<EditProviderUIModalProps> = ({
 
   return (
     <TextInputEditModal
+      closeOverlay={closeOverlay}
       {...rest}
       description={description}
       helperText={t(

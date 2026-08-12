@@ -8,7 +8,7 @@ import {
   getGroupVersionKindForModel,
   useAccessReview,
   useK8sWatchResource,
-  useModal,
+  useOverlay,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection, Stack } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
@@ -23,7 +23,7 @@ import EditProviderCredentials, {
 const ProviderCredentialsTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
   const [reveal, setReveal] = useState(false);
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const { loaded, loadError, provider } = useProvider(name, namespace);
 
@@ -69,7 +69,10 @@ const ProviderCredentialsTabPage: FC<ProviderDetailsPageProps> = ({ name, namesp
             data-testid="credentials-edit-button"
             editable={canPatch}
             onClick={() => {
-              launcher<EditProviderCredentialsProps>(EditProviderCredentials, { provider, secret });
+              launchOverlay<EditProviderCredentialsProps>(EditProviderCredentials, {
+                provider,
+                secret,
+              });
             }}
             title={t('Credentials')}
           />
