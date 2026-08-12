@@ -58,7 +58,7 @@ const VmTreeRow: FC<VmTreeRowProps> = ({ columns, conversions, row }) => {
 
   return (
     <TreeRowWrapper data-testid={row.key} key={row.key} row={{ props: row?.treeRow?.props }}>
-      <Td treeRow={row.treeRow} dataLabel={nameColumn.label} data-testid={`${row.key}-name-cell`}>
+      <Td data-testid={`${row.key}-name-cell`} dataLabel={nameColumn.label} treeRow={row.treeRow}>
         {row.vmData.name}
       </Td>
       {columns.map((col) => {
@@ -71,11 +71,11 @@ const VmTreeRow: FC<VmTreeRowProps> = ({ columns, conversions, row }) => {
         }
         return (
           <Td
-            key={col.resourceFieldId}
-            dataLabel={col.label ?? ''}
             data-testid={`${row.key}-${col.resourceFieldId}-cell`}
+            dataLabel={col.label ?? ''}
+            key={col.resourceFieldId}
           >
-            <Component row={row} inspectionStatus={inspectionStatus} />
+            <Component inspectionStatus={inspectionStatus} row={row} />
           </Td>
         );
       })}

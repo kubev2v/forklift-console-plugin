@@ -23,27 +23,27 @@ const SourceProviderField: FC = () => {
 
   return (
     <FormGroupWithErrorText
-      isRequired
       fieldId={StorageMapFieldId.SourceProvider}
+      isRequired
       label={storageMapFieldLabels[StorageMapFieldId.SourceProvider]}
     >
       <Controller
-        name={StorageMapFieldId.SourceProvider}
         control={control}
+        name={StorageMapFieldId.SourceProvider}
         render={({ field }) => (
           <ProviderSelect
-            ref={field.ref}
-            isDisabled={isSubmitting}
-            placeholder={t('Select source provider')}
             id={StorageMapFieldId.SourceProvider}
-            testId="source-provider-select"
+            isDisabled={isSubmitting}
             namespace={project}
-            value={field.value?.metadata?.name ?? ''}
             onSelect={(_, value) => {
               field.onChange(value);
               setValue(StorageMapFieldId.StorageMap, [defaultStorageMapping]);
             }}
+            placeholder={t('Select source provider')}
+            ref={field.ref}
             status={error && MenuToggleStatus.danger}
+            testId="source-provider-select"
+            value={field.value?.metadata?.name ?? ''}
           />
         )}
         rules={{ required: t('Source provider is required.') }}

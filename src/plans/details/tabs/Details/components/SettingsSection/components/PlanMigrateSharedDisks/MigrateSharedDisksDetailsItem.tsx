@@ -29,10 +29,9 @@ const SharedDisksDetailsItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="shared-disks-detail-item"
-      title={t('Shared disks')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={
-        <Label isCompact color="grey">
+        <Label color="grey" isCompact>
           {migrateSharedDisks ? t('Migrate shared disks') : t('Do not migrate shared disks')}
         </Label>
       }
@@ -40,7 +39,8 @@ const SharedDisksDetailsItem: FC<EditableDetailsItemProps> = ({
       onEdit={() => {
         launcher<EditPlanProps>(EditMigrateSharedDisks, { isVddkInitImageNotSet, resource: plan });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="shared-disks-detail-item"
+      title={t('Shared disks')}
     />
   );
 };

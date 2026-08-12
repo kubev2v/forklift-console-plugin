@@ -20,6 +20,7 @@ const VsphereVddkField: FC = () => {
     <Controller
       control={control}
       name={ProviderFormFieldId.VsphereVddkSetupMode}
+      render={() => <VDDKRadioSelection />}
       rules={{
         required: t('VDDK setup selection is required'),
         validate: {
@@ -34,7 +35,6 @@ const VsphereVddkField: FC = () => {
           },
         },
       }}
-      render={() => <VDDKRadioSelection />}
     />
   );
 };

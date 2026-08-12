@@ -30,11 +30,11 @@ const EditVmTargetPowerState: ModalComponent<EditVmTargetPowerStateProps> = ({
 
   return (
     <ModalForm
-      title={t('Edit target power state')}
       confirmLabel={t('Save target power state')}
-      onConfirm={async () => onConfirmVmTargetPowerState(index)({ newValue: value, resource })}
       isDisabled={value === getVmTargetPowerState(vm)}
+      onConfirm={async () => onConfirmVmTargetPowerState(index)({ newValue: value, resource })}
       testId="edit-target-power-state-modal"
+      title={t('Edit target power state')}
       {...rest}
     >
       <Stack hasGutter>
@@ -43,12 +43,12 @@ const EditVmTargetPowerState: ModalComponent<EditVmTargetPowerStateProps> = ({
           { vmName: vm?.name ?? t('selected') },
         )}
         <Form>
-          <FormGroupWithHelpText label={t('VM target power state')} isRequired>
+          <FormGroupWithHelpText isRequired label={t('VM target power state')}>
             <TargetPowerStateDropdown
-              value={value}
-              onChange={setValue}
               allowInherit
+              onChange={setValue}
               planState={planTargetPowerState}
+              value={value}
             />
           </FormGroupWithHelpText>
         </Form>

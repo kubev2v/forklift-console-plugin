@@ -39,8 +39,8 @@ import PlanConcernsRow from './PlanConcernsRow';
 type PlanConcernsPanelProps = {
   name: string;
   namespace: string;
-  showPlanConcernsPanel: boolean;
   setShowPlanConcernsPanel: (isOpen: boolean) => void;
+  showPlanConcernsPanel: boolean;
 };
 
 const PlanConcernsPanel: FC<PlanConcernsPanelProps> = ({
@@ -111,15 +111,15 @@ const PlanConcernsPanel: FC<PlanConcernsPanelProps> = ({
   ]);
 
   return (
-    <DrawerPanelContent isResizable className="pfext-quick-start__base plan-concerns-panel">
+    <DrawerPanelContent className="pfext-quick-start__base plan-concerns-panel" isResizable>
       <DrawerHead>
         <div className="pfext-quick-start-panel-content__title" tabIndex={-1}>
           <Stack hasGutter>
             <StackItem>
               <Title
+                className="pfext-quick-start-panel-content__name plan-concerns-panel__content__title "
                 headingLevel="h2"
                 size="xl"
-                className="pfext-quick-start-panel-content__name plan-concerns-panel__content__title "
               >
                 {MIGRATION_PLAN_CONCERNS_TITLE_LABEL}
               </Title>
@@ -140,12 +140,12 @@ const PlanConcernsPanel: FC<PlanConcernsPanelProps> = ({
         </DrawerActions>
       </DrawerHead>
       <StandardPage
+        cell={PlanConcernsRow}
         dataSource={[planConcernsConditionsPanelData ?? [], loaded, loadError]}
         fieldsMetadata={planConcernsPanelFields}
         namespace={namespace}
-        userSettings={userSettings}
-        cell={PlanConcernsRow}
         showManageColumns={false}
+        userSettings={userSettings}
       />
     </DrawerPanelContent>
   );

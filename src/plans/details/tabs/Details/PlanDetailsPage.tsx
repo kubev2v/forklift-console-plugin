@@ -45,10 +45,10 @@ const PlanDetailsPage: FC<PlanPageProps> = ({ name, namespace }) => {
       <PageSection hasBodyWrapper={false}>
         <ExpandableSectionHeading
           section={<MigrationsSection plan={plan} />}
-          sectionTitle={t('Migration history')}
           sectionHelpTip={t(
             `All past migration runs for this plan. This includes both successful and failed attempts, but detailed logs and other data are not available after the migration pods are deleted. If you retry an incomplete migration, only the failed VMs will migrate again.`,
           )}
+          sectionTitle={t('Migration history')}
         />
       </PageSection>
       <Divider />

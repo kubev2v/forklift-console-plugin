@@ -68,9 +68,9 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
     <ToolbarItem>
       <Button
         data-testid="create-plan-from-provider-button"
-        variant={ButtonVariant.primary}
-        onClick={handleCreatePlan}
         isDisabled={!canCreate}
+        onClick={handleCreatePlan}
+        variant={ButtonVariant.primary}
       >
         {t('Create migration plan')}
       </Button>

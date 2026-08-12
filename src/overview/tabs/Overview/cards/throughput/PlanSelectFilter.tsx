@@ -70,18 +70,18 @@ const PlanSelectFilter: FC<PlanSelectFilterProps> = ({
 
   const toggle = (toggleRef: Ref<MenuToggleElement>): JSX.Element => (
     <MenuToggle
-      ref={toggleRef}
-      onClick={onToggleClick}
-      isExpanded={isOpen}
-      isDisabled={disabled}
-      className="forklift-overview__throughput-plan-select"
       badge={
         disabled ? undefined : (
-          <Badge isRead data-testid="plan-badge-count">
+          <Badge data-testid="plan-badge-count" isRead>
             {selectedPlanIds.length}
           </Badge>
         )
       }
+      className="forklift-overview__throughput-plan-select"
+      isDisabled={disabled}
+      isExpanded={isOpen}
+      onClick={onToggleClick}
+      ref={toggleRef}
     >
       {t('Plans')}
     </MenuToggle>
@@ -90,34 +90,34 @@ const PlanSelectFilter: FC<PlanSelectFilterProps> = ({
   return (
     // eslint-disable-next-line no-restricted-syntax
     <Select
-      isScrollable
-      isOpen={isOpen}
-      onSelect={onSelect}
       aria-label={t('Filter by plan')}
-      toggle={toggle}
+      isOpen={isOpen}
+      isScrollable
       onOpenChange={onOpenChange}
+      onSelect={onSelect}
+      toggle={toggle}
     >
       <div className="forklift-overview__throughput-plan-search">
         <SearchInput
-          placeholder={t('Filter plans...')}
-          value={filterText}
+          aria-label={t('Search plans')}
           onChange={(_event, value) => {
             setFilterText(value);
           }}
           onClear={() => {
             setFilterText('');
           }}
-          aria-label={t('Search plans')}
+          placeholder={t('Filter plans...')}
+          value={filterText}
         />
       </div>
       <SelectList>
         {filteredPlans.map((plan) => (
           <SelectOption
-            key={plan.id}
-            value={plan.id}
+            description={plan.description}
             hasCheckbox
             isSelected={selectedPlanIds.includes(plan.id)}
-            description={plan.description}
+            key={plan.id}
+            value={plan.id}
           >
             {plan.name}
           </SelectOption>
@@ -131,23 +131,23 @@ const PlanSelectFilter: FC<PlanSelectFilterProps> = ({
       {!isEmpty(plans) && (
         <MenuFooter>
           <Button
-            variant={ButtonVariant.link}
+            isDisabled={selectedPlanIds.length === plans.length}
             isInline
             onClick={() => {
               setSelectedPlanIds(plans.map((plan) => plan.id));
             }}
-            isDisabled={selectedPlanIds.length === plans.length}
+            variant={ButtonVariant.link}
           >
             {t('Select all')}
           </Button>
           {' | '}
           <Button
-            variant={ButtonVariant.link}
+            isDisabled={isEmpty(selectedPlanIds)}
             isInline
             onClick={() => {
               setSelectedPlanIds([]);
             }}
-            isDisabled={isEmpty(selectedPlanIds)}
+            variant={ButtonVariant.link}
           >
             {t('Clear selection')}
           </Button>

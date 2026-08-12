@@ -19,8 +19,8 @@ export const onConfirmMigrateSharedDisks = async ({
   newValue,
   resource,
 }: {
-  resource: V1beta1Plan;
   newValue: boolean;
+  resource: V1beta1Plan;
 }): Promise<V1beta1Plan> => {
   const current = getMigrateSharedDisks(resource);
   const op = current === undefined ? ADD : REPLACE;

@@ -20,9 +20,9 @@ import useTargetStorages from '@utils/hooks/useTargetStorages';
 import type { StorageMapping, TargetStorage } from '@utils/storage/types';
 
 type UsePlanStorageMapResourcesParams = {
+  plan: V1beta1Plan;
   sourceProvider: V1beta1Provider;
   targetProvider: V1beta1Provider;
-  plan: V1beta1Plan;
   vms: Record<string, ProviderVirtualMachine>;
 };
 
@@ -31,11 +31,11 @@ type UsePlanStorageMapResources = ({
   sourceProvider,
   targetProvider,
 }: UsePlanStorageMapResourcesParams) => {
+  sourceStoragesResult: [InventoryStorage[], boolean, Error | null];
   storageMappings: StorageMapping[];
   storageMapResult: WatchK8sResult<V1beta1StorageMap>;
-  vmsWithDisksResult: [ProviderVirtualMachine[], boolean, Error | null];
-  sourceStoragesResult: [InventoryStorage[], boolean, Error | null];
   targetStoragesResult: [TargetStorage[], boolean, Error | null];
+  vmsWithDisksResult: [ProviderVirtualMachine[], boolean, Error | null];
 };
 
 export const usePlanStorageMapResources: UsePlanStorageMapResources = ({

@@ -22,13 +22,13 @@ import { GeneralFormFieldId } from '../general-information/constants';
 import type { VmFormFieldId } from './constants';
 
 type VirtualMachinesTableProps = {
-  vmData?: VmData[];
-  initialSelectedIds?: string[];
-  value: Record<string, ProviderVirtualMachine> | undefined;
-  onChange?: ControllerRenderProps<CreatePlanFormData, VmFormFieldId>['onChange'];
-  isSelectable?: boolean;
-  showSelectedOnly?: boolean;
   hasCriticalConcernFilter?: boolean;
+  initialSelectedIds?: string[];
+  isSelectable?: boolean;
+  onChange?: ControllerRenderProps<CreatePlanFormData, VmFormFieldId>['onChange'];
+  showSelectedOnly?: boolean;
+  value: Record<string, ProviderVirtualMachine> | undefined;
+  vmData?: VmData[];
 };
 
 const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({

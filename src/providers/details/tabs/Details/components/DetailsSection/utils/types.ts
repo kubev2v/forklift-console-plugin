@@ -20,14 +20,14 @@ export type DetailsSectionProps = {
  * @property {string} [moreInfoLink] - An external link to more content for displaying in the help popover (e.g., documentation link).
  **/
 export type ProviderDetailsItemProps = {
-  resource: V1beta1Provider;
   canPatch?: boolean;
-  moreInfoLink?: string;
   helpContent?: ReactNode;
+  moreInfoLink?: string;
+  resource: V1beta1Provider;
 };
 
 export type EditProviderVDDKImageFormData = {
-  [ProviderFormFieldId.VsphereVddkSetupMode]: VddkSetupMode;
-  [ProviderFormFieldId.VsphereVddkInitImage]: string | undefined;
   [ProviderFormFieldId.VsphereUseVddkAioOptimization]: string | undefined;
+  [ProviderFormFieldId.VsphereVddkInitImage]: string | undefined;
+  [ProviderFormFieldId.VsphereVddkSetupMode]: VddkSetupMode;
 };

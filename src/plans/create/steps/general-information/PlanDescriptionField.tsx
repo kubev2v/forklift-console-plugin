@@ -16,8 +16,8 @@ const PlanDescriptionField: FC = () => {
       label={generalFormFieldLabels[GeneralFormFieldId.PlanDescription]}
     >
       <Controller
-        name={GeneralFormFieldId.PlanDescription}
         control={control}
+        name={GeneralFormFieldId.PlanDescription}
         render={({ field }) => <TextInput {...field} data-testid="plan-description-input" />}
       />
     </FormGroup>

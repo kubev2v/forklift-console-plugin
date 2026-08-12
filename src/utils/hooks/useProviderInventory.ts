@@ -18,12 +18,12 @@ import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from '@utils/inventory/constants';
  * @param {boolean} [disabled] - Prevent query execution.
  */
 export type UseProviderInventoryParams = {
-  provider: V1beta1Provider | undefined;
-  subPath?: string;
+  disabled?: boolean;
+  fetchTimeout?: number;
   fieldsToAvoidComparing?: string[];
   interval?: number;
-  fetchTimeout?: number;
-  disabled?: boolean;
+  provider: V1beta1Provider | undefined;
+  subPath?: string;
 };
 
 /**
@@ -35,10 +35,10 @@ export type UseProviderInventoryParams = {
  * @property {() -> void} forceRefresh - Function to force a data re-fetch
  */
 type UseProviderInventoryResult<T> = {
-  inventory: T | null;
-  loading: boolean;
   error: Error | null;
   forceRefresh: () => void;
+  inventory: T | null;
+  loading: boolean;
 };
 
 /**

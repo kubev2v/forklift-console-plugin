@@ -14,10 +14,10 @@ import {
 import { HelpIcon } from '@patternfly/react-icons';
 
 type PageHeaderProps = {
-  title?: string;
-  titleHelpContent?: ReactNode;
   actionButton?: JSX.Element;
   shouldShowLearningExperienceButton?: boolean;
+  title?: string;
+  titleHelpContent?: ReactNode;
 };
 
 export const PageHeader = ({
@@ -31,7 +31,7 @@ export const PageHeader = ({
   }
 
   return (
-    <PageSection hasBodyWrapper={false} className="forklift-page__main-title">
+    <PageSection className="forklift-page__main-title" hasBodyWrapper={false}>
       <Level>
         <LevelItem>
           <Flex

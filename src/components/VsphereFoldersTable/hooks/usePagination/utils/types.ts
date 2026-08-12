@@ -9,9 +9,9 @@ export type PaginationState = {
 
 type UsePaginationValues = {
   onPaginationChange: (newPagination: PaginationState) => void;
-  pagination: PaginationState;
-  onSetPage: OnSetPage;
   onPerPageSelect: OnPerPageSelect;
+  onSetPage: OnSetPage;
+  pagination: PaginationState;
 };
 
 export type UsePagination = () => UsePaginationValues;

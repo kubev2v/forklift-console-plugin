@@ -41,27 +41,27 @@ const closeSelectWhenBlurred = (
 };
 
 type TypeaheadSelectProps = {
-  options: TypeaheadSelectOption[];
-  value?: string | number;
-  onChange: (value: string | number | undefined) => void;
-  onInputChange?: (inputValue: string) => void;
+  allowClear?: boolean;
+  createOptionMessage?: string | ((value: string) => string);
+  emptyState?: ReactNode;
+  filterControls?: ReactNode;
   filterFunction?: (
     filterValue: string,
     options: TypeaheadSelectOption[],
   ) => TypeaheadSelectOption[];
-  allowClear?: boolean;
-  placeholder?: string;
-  isCreatable?: boolean;
-  createOptionMessage?: string | ((value: string) => string);
-  noOptionsMessage?: string;
-  emptyState?: ReactNode;
-  noResultsMessage?: string | ((filter: string) => string);
   footer?: ReactNode;
+  isCreatable?: boolean;
   isDisabled?: boolean;
-  toggleWidth?: string;
-  toggleProps?: Omit<MenuToggleProps, 'ref' | 'onClick' | 'isExpanded'>;
-  filterControls?: ReactNode;
+  noOptionsMessage?: string;
+  noResultsMessage?: string | ((filter: string) => string);
+  onChange: (value: string | number | undefined) => void;
+  onInputChange?: (inputValue: string) => void;
+  options: TypeaheadSelectOption[];
+  placeholder?: string;
   testId?: string;
+  toggleProps?: Omit<MenuToggleProps, 'ref' | 'onClick' | 'isExpanded'>;
+  toggleWidth?: string;
+  value?: string | number;
 } & Omit<SelectProps, 'toggle' | 'onSelect' | 'selected' | 'onChange'>;
 
 const TypeaheadSelect = (
@@ -174,33 +174,33 @@ const TypeaheadSelect = (
   return (
     <Select
       isOpen={isOpen}
-      onSelect={(_, selectedValue: string | number | undefined) => {
-        handleSelect(selectedValue);
-      }}
       onOpenChange={(open) => {
         closeSelectWhenBlurred(open, setIsOpen);
       }}
+      onSelect={(_, selectedValue: string | number | undefined) => {
+        handleSelect(selectedValue);
+      }}
+      shouldFocusFirstItemOnOpen={false}
       toggle={(toggleRef) => (
         <TypeaheadMenuToggle
-          toggleRef={toggleRef}
-          inputRef={inputRef}
-          placeholder={placeholder}
-          isDisabled={isDisabled}
-          isOpen={isOpen}
-          toggleWidth={toggleWidth}
           allowClear={allowClear}
-          selectedOption={selectedOption}
-          isFiltering={isFiltering}
+          inputRef={inputRef}
           inputValue={inputValue}
+          isDisabled={isDisabled}
+          isFiltering={isFiltering}
+          isOpen={isOpen}
           onInputChange={onInputChange}
+          onInputValueChange={handleInputValueChange}
           onSelectionClear={handleSelectionClear}
           onToggleClick={handleToggleClick}
-          onInputValueChange={handleInputValueChange}
-          toggleProps={toggleProps}
+          placeholder={placeholder}
+          selectedOption={selectedOption}
           testId={testId}
+          toggleProps={toggleProps}
+          toggleRef={toggleRef}
+          toggleWidth={toggleWidth}
         />
       )}
-      shouldFocusFirstItemOnOpen={false}
       {...selectProps}
     >
       {isEmpty(options) && emptyState ? (

@@ -17,9 +17,9 @@ import { useForkliftTranslation } from '@utils/i18n';
  * @property {string} description
  */
 export type Option = {
+  description?: string;
   key: number | string;
   name: string;
-  description?: string;
 };
 
 /**
@@ -28,8 +28,8 @@ export type Option = {
  * @property {string} [description] - Optional description for the blank option
  */
 type BlankOption = {
-  name: string;
   description?: string;
+  name: string;
 };
 
 /**
@@ -41,13 +41,13 @@ type BlankOption = {
  * @property {string} [testId] - Test ID for the select component
  */
 type SettingsSelectInputProps = {
-  value: number | string;
+  blankOption?: BlankOption;
+  isScrollable?: boolean;
   onChange: (value: number | string) => void;
   options: Option[];
-  blankOption?: BlankOption;
   showKeyAsSelected?: boolean; // a flag to show selected value that's based on option key and not name
   testId?: string;
-  isScrollable?: boolean;
+  value: number | string;
 };
 
 const BLANK_OPTION_KEY = '__blank__';
@@ -107,11 +107,11 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
     <MenuToggle
-      ref={toggleRef}
-      onClick={onToggleClick}
-      isExpanded={isOpen}
       className="forklift-overview__settings-select"
       data-testid={testId}
+      isExpanded={isOpen}
+      onClick={onToggleClick}
+      ref={toggleRef}
     >
       <Truncate content={String(selected) || t('Select an option')} />
     </MenuToggle>
@@ -120,10 +120,10 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
   const renderOptions = () => {
     const optionElements = options?.map(({ description, key, name }) => (
       <SelectOption
+        data-testid={testId ? `${testId}-option-${key}` : undefined}
+        description={description}
         key={key}
         value={showKeyAsSelected ? key : name}
-        description={description}
-        data-testid={testId ? `${testId}-option-${key}` : undefined}
       >
         {name}
       </SelectOption>
@@ -132,10 +132,10 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
     if (blankOption) {
       return [
         <SelectOption
+          data-testid={testId ? `${testId}-option-none` : undefined}
+          description={blankOption.description}
           key={BLANK_OPTION_KEY}
           value={blankOption.name}
-          description={blankOption.description}
-          data-testid={testId ? `${testId}-option-none` : undefined}
         >
           {blankOption.name}
         </SelectOption>,
@@ -162,23 +162,23 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
 
   return (
     <PfSelect
-      role="menu"
       aria-label="Select Input with descriptions"
       aria-labelledby="exampleSelect"
       isOpen={isOpen}
-      selected={selected}
-      onSelect={onSelect}
+      isScrollable={isScrollable}
       onOpenChange={(nextOpen: boolean) => {
         setIsOpen(nextOpen);
       }}
-      toggle={toggle}
-      shouldFocusToggleOnSelect
-      shouldFocusFirstItemOnOpen={false}
-      isScrollable={isScrollable}
+      onSelect={onSelect}
       popperProps={{
         direction: 'down',
         enableFlip: true,
       }}
+      role="menu"
+      selected={selected}
+      shouldFocusFirstItemOnOpen={false}
+      shouldFocusToggleOnSelect
+      toggle={toggle}
     >
       <SelectList>{renderOptions()}</SelectList>
     </PfSelect>

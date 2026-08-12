@@ -19,8 +19,8 @@ import HostsNetworksSetUserName from './HostsNetworksSetUserName';
 import './VSphereNetworkModal.style.css';
 
 export type VSphereNetworkModalProps = {
-  provider: V1beta1Provider;
   data: InventoryHostNetworkTriple[];
+  provider: V1beta1Provider;
   selectedIds: string[];
 };
 
@@ -69,10 +69,10 @@ const VSphereNetworkModal: ModalComponent<VSphereNetworkModalProps> = ({
 
   return (
     <ModalForm
+      isDisabled={shouldDisableSave}
+      onConfirm={handleSave}
       title={t('Select migration network')}
       variant={ModalVariant.small}
-      onConfirm={handleSave}
-      isDisabled={shouldDisableSave}
       {...rest}
     >
       <Stack hasGutter>
@@ -89,14 +89,14 @@ const VSphereNetworkModal: ModalComponent<VSphereNetworkModalProps> = ({
         <Form>
           <HostsNetworksSelect
             data={data}
+            onChange={setNetwork}
             selectedIds={selectedIds}
             value={network}
-            onChange={setNetwork}
           />
 
           {endpointType !== VSphereEndpointType.ESXi.valueOf() && (
             <>
-              <HostsNetworksSetUserName username={username} setUsername={setUsername} />
+              <HostsNetworksSetUserName setUsername={setUsername} username={username} />
               <HostsNetworksSetPassword password={password} setPassword={setPassword} />
             </>
           )}

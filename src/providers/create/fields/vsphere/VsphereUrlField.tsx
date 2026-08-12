@@ -40,8 +40,8 @@ const VsphereUrlField: FC = () => {
           return true;
         },
       }}
-      label={t('API endpoint URL')}
       helperText={t('For example: https://host-example.com/sdk.')}
+      label={t('API endpoint URL')}
       testId="vsphere-url-input"
     />
   );

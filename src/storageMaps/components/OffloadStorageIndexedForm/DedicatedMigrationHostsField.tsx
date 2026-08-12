@@ -54,18 +54,18 @@ const DedicatedMigrationHostsField: FC<DedicatedMigrationHostsFieldProps> = ({
       label={storageMapFieldLabels[StorageMapFieldId.DedicatedMigrationHosts]}
     >
       <Controller
-        name={fieldId}
         control={control}
+        name={fieldId}
         render={({ field }) => (
           <MultiTypeaheadSelect
-            options={options}
-            values={field.value ?? []}
+            isDisabled={isSubmitting || isInventoryUnavailable}
             onChange={(values) => {
               field.onChange(values);
             }}
-            isDisabled={isSubmitting || isInventoryUnavailable}
+            options={options}
             placeholder={t('Select dedicated migration hosts')}
             testId={fieldId}
+            values={field.value ?? []}
           />
         )}
       />

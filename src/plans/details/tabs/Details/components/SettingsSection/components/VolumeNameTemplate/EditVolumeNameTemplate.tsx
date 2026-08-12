@@ -12,13 +12,13 @@ import {
 } from './utils/constants';
 
 export type EditVolumeNameTemplateProps = {
-  resource: V1beta1Plan;
-  onConfirmVolumeNameTemplate: (options: {
-    resource: V1beta1Plan;
-    newValue: string | undefined;
-  }) => Promise<V1beta1Plan>;
-  value?: string;
   allowInherit?: boolean;
+  onConfirmVolumeNameTemplate: (options: {
+    newValue: string | undefined;
+    resource: V1beta1Plan;
+  }) => Promise<V1beta1Plan>;
+  resource: V1beta1Plan;
+  value?: string;
 };
 
 const EditVolumeNameTemplate: ModalComponent<EditVolumeNameTemplateProps> = ({
@@ -33,20 +33,20 @@ const EditVolumeNameTemplate: ModalComponent<EditVolumeNameTemplateProps> = ({
   return (
     <EditNameTemplate
       allowInherit={allowInherit}
-      fieldName={allowInherit ? t('VM volume name template') : t('Plan volume name template')}
-      title={t('Edit volume name template')}
-      value={value}
-      onConfirm={async (newValue) => onConfirmVolumeNameTemplate({ newValue, resource })}
       body={
         <NameTemplateBody
+          allowedVariables={volumeNameTemplateAllowedVariables}
           bodyText={t(
             'Volume name template is a template for generating volume interface names in the target virtual machine.',
           )}
-          allowedVariables={volumeNameTemplateAllowedVariables}
         />
       }
+      fieldName={allowInherit ? t('VM volume name template') : t('Plan volume name template')}
       helperText={<NameTemplateHelper examples={volumeNameTemplateHelperExamples} />}
       inheritValue={resource?.spec?.volumeNameTemplate}
+      onConfirm={async (newValue) => onConfirmVolumeNameTemplate({ newValue, resource })}
+      title={t('Edit volume name template')}
+      value={value}
       {...rest}
     />
   );

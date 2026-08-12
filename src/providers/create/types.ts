@@ -35,53 +35,53 @@ type HypervFields = {
   [ProviderFormFieldId.CaCertificate]?: string;
   [ProviderFormFieldId.CertificateValidation]?: CertificateValidationMode;
   [ProviderFormFieldId.HypervHost]?: string;
-  [ProviderFormFieldId.MgmtType]?: HypervManagementType;
-  [ProviderFormFieldId.TransferMethod]?: HypervTransferMethod;
-  [ProviderFormFieldId.HypervUsername]?: string;
   [ProviderFormFieldId.HypervPassword]?: string;
-  [ProviderFormFieldId.SmbUrl]?: string;
-  [ProviderFormFieldId.UseDifferentSmbCredentials]?: boolean;
-  [ProviderFormFieldId.SmbUser]?: string;
+  [ProviderFormFieldId.HypervUsername]?: string;
+  [ProviderFormFieldId.MgmtType]?: HypervManagementType;
   [ProviderFormFieldId.SmbPassword]?: string;
+  [ProviderFormFieldId.SmbUrl]?: string;
+  [ProviderFormFieldId.SmbUser]?: string;
+  [ProviderFormFieldId.TransferMethod]?: HypervTransferMethod;
+  [ProviderFormFieldId.UseDifferentSmbCredentials]?: boolean;
 };
 
 type OpenstackFields = {
   [ProviderFormFieldId.CaCertificate]?: string;
   [ProviderFormFieldId.CertificateValidation]?: CertificateValidationMode;
-  [ProviderFormFieldId.OpenstackUrl]?: string;
-  [ProviderFormFieldId.OpenstackAuthType]?: OpenstackAuthType;
-  [ProviderFormFieldId.OpenstackUsername]?: string;
-  [ProviderFormFieldId.OpenstackPassword]?: string;
-  [ProviderFormFieldId.OpenstackToken]?: string;
-  [ProviderFormFieldId.OpenstackRegionName]?: string;
-  [ProviderFormFieldId.OpenstackProjectName]?: string;
-  [ProviderFormFieldId.OpenstackDomainName]?: string;
-  [ProviderFormFieldId.OpenstackUserId]?: string;
-  [ProviderFormFieldId.OpenstackProjectId]?: string;
+  [ProviderFormFieldId.OpenstackApplicationCredentialId]?: string;
   [ProviderFormFieldId.OpenstackApplicationCredentialName]?: string;
   [ProviderFormFieldId.OpenstackApplicationCredentialSecret]?: string;
-  [ProviderFormFieldId.OpenstackApplicationCredentialId]?: string;
+  [ProviderFormFieldId.OpenstackAuthType]?: OpenstackAuthType;
+  [ProviderFormFieldId.OpenstackDomainName]?: string;
+  [ProviderFormFieldId.OpenstackPassword]?: string;
+  [ProviderFormFieldId.OpenstackProjectId]?: string;
+  [ProviderFormFieldId.OpenstackProjectName]?: string;
+  [ProviderFormFieldId.OpenstackRegionName]?: string;
+  [ProviderFormFieldId.OpenstackToken]?: string;
+  [ProviderFormFieldId.OpenstackUrl]?: string;
+  [ProviderFormFieldId.OpenstackUserId]?: string;
+  [ProviderFormFieldId.OpenstackUsername]?: string;
 };
 
 type OvirtFields = {
   [ProviderFormFieldId.CaCertificate]?: string;
   [ProviderFormFieldId.CertificateValidation]?: CertificateValidationMode;
+  [ProviderFormFieldId.OvirtPassword]?: string;
   [ProviderFormFieldId.OvirtUrl]?: string;
   [ProviderFormFieldId.OvirtUsername]?: string;
-  [ProviderFormFieldId.OvirtPassword]?: string;
 };
 
 type VsphereFields = {
   [ProviderFormFieldId.CaCertificate]?: string;
   [ProviderFormFieldId.CertificateValidation]?: CertificateValidationMode;
   [ProviderFormFieldId.VsphereEndpointType]?: VSphereEndpointType;
+  [ProviderFormFieldId.VspherePassword]?: string;
+  [ProviderFormFieldId.VsphereSkipVddk]?: boolean;
   [ProviderFormFieldId.VsphereUrl]?: string;
   [ProviderFormFieldId.VsphereUsername]?: string;
-  [ProviderFormFieldId.VspherePassword]?: string;
+  [ProviderFormFieldId.VsphereUseVddkAioOptimization]?: boolean;
   [ProviderFormFieldId.VsphereVddkInitImage]?: string;
   [ProviderFormFieldId.VsphereVddkSetupMode]?: VddkSetupMode;
-  [ProviderFormFieldId.VsphereSkipVddk]?: boolean;
-  [ProviderFormFieldId.VsphereUseVddkAioOptimization]?: boolean;
 };
 
 type Ec2Fields = {

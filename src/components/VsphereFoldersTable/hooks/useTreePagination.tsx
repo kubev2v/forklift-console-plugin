@@ -22,8 +22,8 @@ type UseTreePaginationReturn = {
 };
 
 type PageDescriptor =
-  | { kind: 'collapsedFolder'; blockIndex: number }
-  | { kind: 'vm'; blockIndex: number; vmIndex: number };
+  | { blockIndex: number; kind: 'collapsedFolder' }
+  | { blockIndex: number; kind: 'vm'; vmIndex: number };
 
 /**
  * Pagination that counts only user-visible items (VMs + collapsed folders).

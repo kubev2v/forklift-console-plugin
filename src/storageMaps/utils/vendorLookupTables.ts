@@ -37,9 +37,9 @@ const CSI_PROVISIONER_ENTRIES: [string, StorageVendorProduct][] = [
 
 type HostScsiDisk = {
   canonicalName: string;
-  vendor: string;
-  model?: string;
   key?: string;
+  model?: string;
+  vendor: string;
 };
 
 type DatastoreWithBacking = VSphereDataStore & {

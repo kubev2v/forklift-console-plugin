@@ -4,15 +4,15 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { ExpandableSection, List, ListItem, Stack, StackItem } from '@patternfly/react-core';
 
 type NameTemplateBodyProps = {
-  bodyText: string;
   allowedVariables: string[];
+  bodyText: string;
 };
 
 const NameTemplateBody: FC<NameTemplateBodyProps> = ({ allowedVariables, bodyText }) => {
   const { t } = useForkliftTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <Stack hasGutter className="pf-v6-u-mb-md">
+    <Stack className="pf-v6-u-mb-md" hasGutter>
       <StackItem>
         <div>{bodyText}</div>
       </StackItem>
@@ -23,13 +23,13 @@ const NameTemplateBody: FC<NameTemplateBodyProps> = ({ allowedVariables, bodyTex
       </StackItem>
       <StackItem>
         <ExpandableSection
-          toggleText={t('Show variables')}
-          toggleTextExpanded={t('Hide variables')}
           isExpanded={isExpanded}
+          isIndented
           onToggle={(_, expand) => {
             setIsExpanded(expand);
           }}
-          isIndented
+          toggleText={t('Show variables')}
+          toggleTextExpanded={t('Hide variables')}
         >
           <List>
             {allowedVariables.map((allowedVariable) => (

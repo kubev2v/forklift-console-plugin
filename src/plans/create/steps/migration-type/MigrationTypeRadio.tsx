@@ -15,11 +15,11 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { migrationTypeLabels, MigrationTypeValue } from './constants';
 
 type MigrationTypeRadioProps = {
+  cbtDisabledVms?: ProviderVirtualMachine[];
   migrationType: MigrationTypeValue;
-  value: MigrationTypeValue;
   onChange: (val: MigrationTypeValue) => void;
   sourceProvider?: V1beta1Provider;
-  cbtDisabledVms?: ProviderVirtualMachine[];
+  value: MigrationTypeValue;
 };
 
 const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
@@ -50,9 +50,10 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
     <>
       <FlexItem>
         <Radio
-          id={migrationType}
-          name={migrationType}
           data-testid={`migration-type-${migrationType}`}
+          description={description}
+          id={migrationType}
+          isChecked={value === migrationType}
           label={
             helpBody ? (
               <Split hasGutter>
@@ -62,7 +63,7 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
                       <StackItem>{helpBody}</StackItem>
                       {helpLink && (
                         <StackItem>
-                          <ExternalLink isInline href={helpLink}>
+                          <ExternalLink href={helpLink} isInline>
                             {t('Learn more')}
                           </ExternalLink>
                         </StackItem>
@@ -80,8 +81,7 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
               migrationTypeLabels[migrationType]
             )
           }
-          description={description}
-          isChecked={value === migrationType}
+          name={migrationType}
           onChange={() => {
             onChange(migrationType);
           }}

@@ -7,8 +7,8 @@ import PlanConcernsPanel from './PlanConcernsPanel';
 type PlanConcernsDrawerProps = PropsWithChildren & {
   name: string;
   namespace: string;
-  showPlanConcernsPanel: boolean;
   setShowPlanConcernsPanel: (isOpen: boolean) => void;
+  showPlanConcernsPanel: boolean;
 };
 
 const PlanConcernsDrawer: FC<PlanConcernsDrawerProps> = ({
@@ -19,7 +19,7 @@ const PlanConcernsDrawer: FC<PlanConcernsDrawerProps> = ({
   showPlanConcernsPanel,
 }) => {
   return (
-    <Drawer isInline isExpanded={showPlanConcernsPanel} position="right">
+    <Drawer isExpanded={showPlanConcernsPanel} isInline position="right">
       <DrawerContent
         panelContent={
           <PlanConcernsPanel

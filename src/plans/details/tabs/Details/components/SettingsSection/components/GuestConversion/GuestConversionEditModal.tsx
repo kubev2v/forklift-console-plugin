@@ -32,8 +32,6 @@ const GuestConversionEditModal: ModalComponent<EditPlanProps> = ({ resource, ...
 
   return (
     <ModalForm
-      title={t('Guest conversion mode')}
-      testId="guest-conversion-mode-modal"
       onConfirm={async () =>
         patchGuestConversion({
           newValue: skipGuestConversion,
@@ -41,11 +39,13 @@ const GuestConversionEditModal: ModalComponent<EditPlanProps> = ({ resource, ...
           useCompatibilityMode,
         })
       }
+      testId="guest-conversion-mode-modal"
+      title={t('Guest conversion mode')}
       {...rest}
     >
       <Stack hasGutter>
         <StackItem>
-          <Content component={ContentVariants.p} className="pf-v6-u-color-200">
+          <Content className="pf-v6-u-color-200" component={ContentVariants.p}>
             {t(
               'Guest conversion uses the virt-v2v tool to modify all of the internal configurations of the VMs in the plan to make them compatible with Red Hat OpenShift Virtualization.',
             )}
@@ -53,12 +53,12 @@ const GuestConversionEditModal: ModalComponent<EditPlanProps> = ({ resource, ...
         </StackItem>
 
         <StackItem>
-          <FormGroup fieldId="skip-guest-conversion" className="checkbox-form-group">
+          <FormGroup className="checkbox-form-group" fieldId="skip-guest-conversion">
             <Checkbox
-              id="skip-guest-conversion-checkbox"
               data-testid="skip-guest-conversion-checkbox"
-              label={t('Skip guest conversion')}
+              id="skip-guest-conversion-checkbox"
               isChecked={skipGuestConversion}
+              label={t('Skip guest conversion')}
               onChange={(_, checked) => {
                 setSkipGuestConversion(checked);
               }}
@@ -67,29 +67,29 @@ const GuestConversionEditModal: ModalComponent<EditPlanProps> = ({ resource, ...
 
           {skipGuestConversion && (
             <Alert
-              isPlain
-              isInline
-              variant={AlertVariant.info}
               className="pf-v6-u-mt-xs pf-v6-u-ml-lg"
+              isInline
+              isPlain
               title={t(
                 "If skipped, the VMs' disk data will be duplicated byte-for-byte, allowing for faster conversions. However, there is a risk that the VMs might not function properly and it is not recommended.",
               )}
+              variant={AlertVariant.info}
             />
           )}
         </StackItem>
 
         {skipGuestConversion && (
           <StackItem>
-            <FormGroup fieldId="use-compatibility-mode" className="checkbox-form-group">
+            <FormGroup className="checkbox-form-group" fieldId="use-compatibility-mode">
               <Flex
                 alignItems={{ default: 'alignItemsBaseline' }}
                 spaceItems={{ default: 'spaceItemsNone' }}
               >
                 <Checkbox
-                  id="use-compatibility-mode-checkbox"
                   data-testid="use-compatibility-mode-checkbox"
-                  label={t('Use compatibility mode')}
+                  id="use-compatibility-mode-checkbox"
                   isChecked={useCompatibilityMode}
+                  label={t('Use compatibility mode')}
                   onChange={(_, checked) => {
                     setUseCompatibilityMode(checked);
                   }}
@@ -115,13 +115,13 @@ const GuestConversionEditModal: ModalComponent<EditPlanProps> = ({ resource, ...
 
             {!useCompatibilityMode && (
               <Alert
-                isPlain
-                isInline
-                variant={AlertVariant.warning}
                 className="pf-v6-u-mt-xs pf-v6-u-ml-lg"
+                isInline
+                isPlain
                 title={t(
                   "If you don't use compatibility mode, you must have VirtIO drivers already installed in the source VM.",
                 )}
+                variant={AlertVariant.warning}
               />
             )}
           </StackItem>

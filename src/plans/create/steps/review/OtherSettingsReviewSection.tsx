@@ -74,13 +74,13 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
 
   return (
     <ExpandableReviewSection
-      title={planStepNames[PlanWizardStepId.OtherSettings]}
-      testId="review-other-settings-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.OtherSettings);
       }}
+      testId="review-other-settings-section"
+      title={planStepNames[PlanWizardStepId.OtherSettings]}
     >
-      <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+      <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
         {isVsphere && (
           <>
             <DescriptionListGroup>

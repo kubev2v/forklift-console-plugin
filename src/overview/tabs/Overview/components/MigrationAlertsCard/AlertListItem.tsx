@@ -32,8 +32,8 @@ const AlertListItem: FC<AlertListItemProps> = ({ alert }) => {
             <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsNone' }}>
               <FlexItem>
                 <Content
-                  component={ContentVariants.p}
                   className="migration-alerts-card__alert-title"
+                  component={ContentVariants.p}
                 >
                   {alert.alertName}
                 </Content>
@@ -51,8 +51,8 @@ const AlertListItem: FC<AlertListItemProps> = ({ alert }) => {
         </Split>
         {alert.description && (
           <Content
-            component={ContentVariants.p}
             className="migration-alerts-card__alert-description"
+            component={ContentVariants.p}
           >
             {alert.description}
           </Content>

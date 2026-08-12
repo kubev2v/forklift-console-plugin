@@ -12,21 +12,12 @@ export type FilterRenderer = (props: FilterTypeProps) => JSX.Element;
  * Field ID to filter definition mapping.
  */
 export type FieldFilter = {
-  resourceFieldId: string;
-  label: string;
   filterDef: FilterDef;
+  label: string;
+  resourceFieldId: string;
 };
 
 export type MetaFilterProps = {
-  /**
-   * List of the selected values for the filter.
-   * Field-to-filter values mapping where:
-   * 1) key: ID of the field that the filter should apply to.
-   * 2) value: a string array with filter-specific interpretation.
-   * i.e. { NAME: ["foo", "bar"]}
-   */
-  selectedFilters: GlobalFilters;
-
   /**
    * List of filters included in this filter group
    * and for each filter, list of its supported values and groups (if limited)
@@ -41,14 +32,23 @@ export type MetaFilterProps = {
   onFilterUpdate: (filters: GlobalFilters) => void;
 
   /**
+   * Language to be used for locale sensitive sorting/filtering. Defaults to 'en'.
+   */
+  resolvedLanguage?: string;
+
+  /**
+   * List of the selected values for the filter.
+   * Field-to-filter values mapping where:
+   * 1) key: ID of the field that the filter should apply to.
+   * 2) value: a string array with filter-specific interpretation.
+   * i.e. { NAME: ["foo", "bar"]}
+   */
+  selectedFilters: GlobalFilters;
+  /**
    * The supported filter types that will be included in this filter group
    * (e.g. EnumFilter, FreetextFilter, GroupedEnumFilter, SwitchFilter)
    */
   supportedFilterTypes: Record<string, FilterRenderer>;
-  /**
-   * Language to be used for locale sensitive sorting/filtering. Defaults to 'en'.
-   */
-  resolvedLanguage?: string;
 };
 
 export type GlobalFilters = Record<string, string[]>;

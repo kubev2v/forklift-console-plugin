@@ -16,31 +16,31 @@ const VsphereEndpointTypeField: FC = () => {
   return (
     <Controller
       control={control}
-      name={ProviderFormFieldId.VsphereEndpointType}
       defaultValue={VSphereEndpointType.VCenter}
+      name={ProviderFormFieldId.VsphereEndpointType}
       render={({ field: { onChange, value } }) => (
         <FormGroupWithHelpText
-          role="radiogroup"
           fieldId={ProviderFormFieldId.VsphereEndpointType}
-          label={t('vSphere endpoint')}
           isRequired
+          label={t('vSphere endpoint')}
+          role="radiogroup"
         >
           <Radio
-            name={ProviderFormFieldId.VsphereEndpointType}
-            label={t('vCenter')}
-            id="vsphere-endpoint-vcenter"
             data-testid="vsphere-endpoint-vcenter-radio"
+            id="vsphere-endpoint-vcenter"
             isChecked={value === VSphereEndpointType.VCenter}
+            label={t('vCenter')}
+            name={ProviderFormFieldId.VsphereEndpointType}
             onChange={() => {
               onChange(VSphereEndpointType.VCenter);
             }}
           />
           <Radio
-            name={ProviderFormFieldId.VsphereEndpointType}
-            label={t('ESXi')}
-            id="vsphere-endpoint-esxi"
             data-testid="vsphere-endpoint-esxi-radio"
+            id="vsphere-endpoint-esxi"
             isChecked={value === VSphereEndpointType.ESXi}
+            label={t('ESXi')}
+            name={ProviderFormFieldId.VsphereEndpointType}
             onChange={() => {
               onChange(VSphereEndpointType.ESXi);
             }}

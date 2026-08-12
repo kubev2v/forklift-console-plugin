@@ -41,9 +41,9 @@ export const StorageMapPageHeadings: FC<{ name: string; namespace?: string }> = 
   if (criticalCondition) {
     alerts.push(
       <StorageMapCriticalConditions
-        type={criticalCondition?.type}
-        message={criticalCondition?.message ?? ''}
         key={'mapCriticalCondition'}
+        message={criticalCondition?.message ?? ''}
+        type={criticalCondition?.type}
       />,
     );
   }
@@ -51,13 +51,10 @@ export const StorageMapPageHeadings: FC<{ name: string; namespace?: string }> = 
   return (
     <>
       <PageHeadings
-        model={StorageMapModel}
-        obj={obj}
-        namespace={namespace}
         actions={
           <Flex
-            direction={{ default: 'row' }}
             alignItems={{ default: 'alignItemsCenter' }}
+            direction={{ default: 'row' }}
             spaceItems={{ default: 'spaceItemsSm' }}
           >
             <FlexItem>
@@ -73,9 +70,12 @@ export const StorageMapPageHeadings: FC<{ name: string; namespace?: string }> = 
             </FlexItem>
           </Flex>
         }
+        model={StorageMapModel}
+        namespace={namespace}
+        obj={obj}
       >
         {!isEmpty(alerts) && (
-          <PageSection hasBodyWrapper={false} className="forklift-page-headings-alerts">
+          <PageSection className="forklift-page-headings-alerts" hasBodyWrapper={false}>
             {alerts}
           </PageSection>
         )}

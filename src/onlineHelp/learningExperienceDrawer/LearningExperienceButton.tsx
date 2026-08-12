@@ -19,12 +19,12 @@ const LearningExperienceButton: FC = () => {
 
   return (
     <Button
-      variant={ButtonVariant.link}
       isInline
       onClick={() => {
         trackEvent(TELEMETRY_EVENTS.TIPS_AND_TRICKS_CLICKED);
         openLearningExperience();
       }}
+      variant={ButtonVariant.link}
     >
       {t('Tips and tricks')}
     </Button>

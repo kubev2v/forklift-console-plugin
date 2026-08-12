@@ -26,11 +26,11 @@ const ServiceAccountTokenField: FC = () => {
           },
         },
       }}
-      label={t('Service account bearer token')}
-      testId="service-account-token-input"
       helperText={t(
         'A service account token used for authenticating the connection to the API server.',
       )}
+      label={t('Service account bearer token')}
+      testId="service-account-token-input"
     />
   );
 };

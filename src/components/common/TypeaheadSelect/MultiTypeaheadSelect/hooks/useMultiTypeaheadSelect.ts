@@ -13,39 +13,39 @@ import { useMultiTypeaheadInteractions } from './useMultiTypeaheadInteractions';
 import { useMultiTypeaheadOpen } from './useMultiTypeaheadOpen';
 
 type UseMultiTypeaheadArgs = {
-  options: TypeaheadSelectOption[];
-  values: (string | number)[];
+  createOptionMessage?: string | ((value: string) => string);
+  filterFunction?: (filterValue: string, opts: TypeaheadSelectOption[]) => TypeaheadSelectOption[];
+  isCreatable?: boolean;
+  listboxId?: string;
+  maxSelections?: number;
+  noOptionsMessage?: string;
+  noResultsMessage?: string | ((filter: string) => string);
   onChange: (values: (string | number)[]) => void;
   onCreateOption?: (createdValue: string) => void;
   onInputChange?: (inputValue: string) => void;
-  isCreatable?: boolean;
-  filterFunction?: (filterValue: string, opts: TypeaheadSelectOption[]) => TypeaheadSelectOption[];
-  createOptionMessage?: string | ((value: string) => string);
-  noResultsMessage?: string | ((filter: string) => string);
-  noOptionsMessage?: string;
-  maxSelections?: number;
-  listboxId?: string;
+  options: TypeaheadSelectOption[];
+  values: (string | number)[];
 };
 
 type UseMultiTypeaheadReturn = {
-  isOpen: boolean;
-  isFiltering: boolean;
-  inputValue: string;
-  inputRef: RefObject<HTMLInputElement>;
-  selectedOptions: TypeaheadSelectOption[];
+  activeItemId: string | null;
   displayOptions: TypeaheadSelectOption[];
   focusedItemIndex: number | null;
-  activeItemId: string | null;
+  handleSelect: (selectedValue: string | number | undefined) => void;
+  inputRef: RefObject<HTMLInputElement>;
+  inputValue: string;
+  isFiltering: boolean;
+  isOpen: boolean;
   listboxId: string;
-  setIsOpen: (open: boolean) => void;
-  onToggleClick: () => void;
-  onInputClick: () => void;
-  onInputValueChange: (newValue: string, filtering: boolean) => void;
-  onInputKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   onChipRemove: (value: string | number) => void;
   onClearAll: () => void;
-  handleSelect: (selectedValue: string | number | undefined) => void;
+  onInputClick: () => void;
+  onInputKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  onInputValueChange: (newValue: string, filtering: boolean) => void;
   onOpenChange: (open: boolean) => void;
+  onToggleClick: () => void;
+  selectedOptions: TypeaheadSelectOption[];
+  setIsOpen: (open: boolean) => void;
 };
 
 export const useMultiTypeaheadSelect = ({

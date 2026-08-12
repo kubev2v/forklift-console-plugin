@@ -16,6 +16,7 @@ const PreserveStaticIpsField: FC = () => {
 
   return (
     <FormGroup
+      className="checkbox-form-group"
       fieldId={OtherSettingsFormFieldId.PreserveStaticIps}
       label={label}
       labelHelp={
@@ -25,7 +26,6 @@ const PreserveStaticIpsField: FC = () => {
           )}
         </HelpIconPopover>
       }
-      className="checkbox-form-group"
     >
       <Stack hasGutter>
         <FormHelperText>
@@ -33,14 +33,14 @@ const PreserveStaticIpsField: FC = () => {
         </FormHelperText>
 
         <Controller
-          name={OtherSettingsFormFieldId.PreserveStaticIps}
           control={control}
           defaultValue={true}
+          name={OtherSettingsFormFieldId.PreserveStaticIps}
           render={({ field }) => (
             <Checkbox
               id={OtherSettingsFormFieldId.PreserveStaticIps}
-              label={label}
               isChecked={field.value}
+              label={label}
               onChange={field.onChange}
             />
           )}

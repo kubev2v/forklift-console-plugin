@@ -41,9 +41,9 @@ import './MigrationProgressTable.scss';
 type MigrationProgressTableProps = {
   plan: V1beta1Plan;
   statusVM: V1beta1PlanStatusMigrationVms | undefined;
+  targetNamespace?: string;
   vmCreated?: boolean;
   vmName?: string;
-  targetNamespace?: string;
 };
 
 const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
@@ -97,7 +97,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                   <>
                     {t('Completed ')}
                     <Button
-                      variant={ButtonVariant.link}
+                      isInline
                       onClick={() => {
                         openDrawer(
                           <PipelineTasksDrawer name={displayName} tasks={pipe.tasks} />,
@@ -107,7 +107,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                           </h3>,
                         );
                       }}
-                      isInline
+                      variant={ButtonVariant.link}
                     >
                       {t('{{completed}} of {{total}} {{name}}', getPipelineTasks(pipe))}
                     </Button>
@@ -118,7 +118,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                   <>
                     {t('Created ')}
                     <Button
-                      variant={ButtonVariant.link}
+                      isInline
                       onClick={() => {
                         navigate(
                           getResourceUrl({
@@ -128,7 +128,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                           }),
                         )?.catch(() => undefined);
                       }}
-                      isInline
+                      variant={ButtonVariant.link}
                     >
                       {vmName}
                     </Button>
@@ -139,10 +139,10 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                 )}
                 {isWaitForGuestRebootsRunning && (
                   <Alert
-                    variant={AlertVariant.warning}
-                    title={t('Do not access this VM')}
                     isInline
                     isPlain
+                    title={t('Do not access this VM')}
+                    variant={AlertVariant.warning}
                   >
                     {t(
                       'Windows VM is installing drivers and completing post-migration setup. Multiple reboots are expected.',
@@ -157,11 +157,11 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                     <StackItem>{t('Paused')}</StackItem>
                     <StackItem>
                       <Button
+                        className="forklift-progress-table__schedule-cutover"
                         onClick={() => {
                           launcher<PlanModalProps>(PlanCutoverMigrationModal, { plan });
                         }}
                         variant={ButtonVariant.link}
-                        className="forklift-progress-table__schedule-cutover"
                       >
                         {t('Schedule cutover')}
                       </Button>
@@ -170,7 +170,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                 )}
                 {pipe?.error?.reasons && !isEmpty(pipe?.error?.reasons) && (
                   <div className="pf-v6-u-mt-sm">
-                    <Alert variant="danger" title={t('Error details')} isInline isPlain>
+                    <Alert isInline isPlain title={t('Error details')} variant="danger">
                       <ul>
                         {pipe.error.reasons.map((reason: string, idx: number) => (
                           <li key={idx}>{reason}</li>
@@ -181,7 +181,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                 )}
               </Td>
               <Td>
-                <ConsoleTimestamp timestamp={pipe?.completed ?? null} showGlobalIcon={false} />
+                <ConsoleTimestamp showGlobalIcon={false} timestamp={pipe?.completed ?? null} />
               </Td>
             </Tr>
           );

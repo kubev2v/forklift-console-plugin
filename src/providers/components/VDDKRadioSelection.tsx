@@ -39,17 +39,17 @@ const VDDKRadioSelection: FC = () => {
 
   return (
     <FormGroupWithHelpText
-      role="radiogroup"
       fieldId={ProviderFormFieldId.VsphereVddkSetupMode}
-      label={t('Virtual Disk Development Kit (VDDK) setup')}
+      helperTextInvalid={error?.message}
       isRequired
+      label={t('Virtual Disk Development Kit (VDDK) setup')}
       labelHelp={
         <HelpIconPopover header={t('VDDK init image')}>
           <VDDKHelperText />
         </HelpIconPopover>
       }
+      role="radiogroup"
       validated={getInputValidated(error)}
-      helperTextInvalid={error?.message}
     >
       <Stack hasGutter>
         <HelperText>
@@ -61,14 +61,6 @@ const VDDKRadioSelection: FC = () => {
         </HelperText>
 
         <Radio
-          name={ProviderFormFieldId.VsphereVddkSetupMode}
-          label={t('Upload a VDDK archive to generate the image URL')}
-          id="vddk-setup-upload"
-          data-testid="vddk-setup-upload-radio"
-          isChecked={vddkMode === VddkSetupMode.Upload}
-          onChange={() => {
-            onChangeVddkMode(VddkSetupMode.Upload);
-          }}
           body={
             vddkMode === VddkSetupMode.Upload && (
               <>
@@ -83,56 +75,64 @@ const VDDKRadioSelection: FC = () => {
               </>
             )
           }
+          data-testid="vddk-setup-upload-radio"
+          id="vddk-setup-upload"
+          isChecked={vddkMode === VddkSetupMode.Upload}
+          label={t('Upload a VDDK archive to generate the image URL')}
+          name={ProviderFormFieldId.VsphereVddkSetupMode}
+          onChange={() => {
+            onChangeVddkMode(VddkSetupMode.Upload);
+          }}
         />
 
         <Radio
-          name={ProviderFormFieldId.VsphereVddkSetupMode}
-          label={t('Manually specify the VDDK image URL')}
-          id="vddk-setup-manual"
-          data-testid="vddk-setup-manual-radio"
-          isChecked={vddkMode === VddkSetupMode.Manual}
-          onChange={() => {
-            onChangeVddkMode(VddkSetupMode.Manual);
-          }}
           body={
             vddkMode === VddkSetupMode.Manual && (
               <>
                 <FormGroupWithHelpText
-                  label={t('VDDK init image')}
-                  isRequired
                   fieldId={ProviderFormFieldId.VsphereVddkInitImage}
-                  validated={getInputValidated(vddkImageError)}
                   helperText={t('VMware Virtual Disk Development Kit (VDDK) image.')}
                   helperTextInvalid={vddkImageError?.message}
+                  isRequired
+                  label={t('VDDK init image')}
+                  validated={getInputValidated(vddkImageError)}
                 >
                   <TextInput
+                    data-testid="vsphere-vddk-image-input"
                     id={ProviderFormFieldId.VsphereVddkInitImage}
-                    type="text"
-                    value={vddkImage ?? ''}
                     onChange={(_event, val) => {
                       onVddkImageChange(val);
                     }}
-                    validated={getInputValidated(vddkImageError)}
-                    data-testid="vsphere-vddk-image-input"
                     spellCheck="false"
+                    type="text"
+                    validated={getInputValidated(vddkImageError)}
+                    value={vddkImage ?? ''}
                   />
                 </FormGroupWithHelpText>
                 <VDDKAioOptimizationCheckbox />
               </>
             )
           }
+          data-testid="vddk-setup-manual-radio"
+          id="vddk-setup-manual"
+          isChecked={vddkMode === VddkSetupMode.Manual}
+          label={t('Manually specify the VDDK image URL')}
+          name={ProviderFormFieldId.VsphereVddkSetupMode}
+          onChange={() => {
+            onChangeVddkMode(VddkSetupMode.Manual);
+          }}
         />
 
         <Radio
-          name={ProviderFormFieldId.VsphereVddkSetupMode}
-          label={t('Skip VDDK setup (not recommended)')}
-          id="vddk-setup-skip"
+          body={vddkMode === VddkSetupMode.Skip && <SkipVddkAlert />}
           data-testid="vddk-setup-skip-radio"
+          id="vddk-setup-skip"
           isChecked={vddkMode === VddkSetupMode.Skip}
+          label={t('Skip VDDK setup (not recommended)')}
+          name={ProviderFormFieldId.VsphereVddkSetupMode}
           onChange={() => {
             onChangeVddkMode(VddkSetupMode.Skip);
           }}
-          body={vddkMode === VddkSetupMode.Skip && <SkipVddkAlert />}
         />
       </Stack>
     </FormGroupWithHelpText>

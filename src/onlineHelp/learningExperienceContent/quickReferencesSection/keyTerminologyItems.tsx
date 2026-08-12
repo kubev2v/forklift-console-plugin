@@ -5,8 +5,8 @@ import { Content, ContentVariants, Flex, FlexItem } from '@patternfly/react-core
 import { t } from '@utils/i18n';
 
 type KeyTerminologyItem = {
-  title: string;
   description: ReactNode;
+  title: string;
 };
 
 export const keyTerminologyItems: KeyTerminologyItem[] = [
@@ -95,18 +95,18 @@ export const keyTerminologyItems: KeyTerminologyItem[] = [
           <Content component={ContentVariants.ul}>
             <Content component={ContentVariants.li}>
               <HelpSubTopicTitle
-                title={t('Plan project')}
                 content={t(
                   'The project, within your selected target provider, in which your virtual machines will be migrated.',
                 )}
+                title={t('Plan project')}
               />
             </Content>
             <Content component={ContentVariants.li}>
               <HelpSubTopicTitle
-                title={t('Target project')}
                 content={t(
                   'The project, within your selected target provider, in which your virtual machines will be migrated.',
                 )}
+                title={t('Target project')}
               />
             </Content>
           </Content>
@@ -120,16 +120,16 @@ export const keyTerminologyItems: KeyTerminologyItem[] = [
       <Content component={ContentVariants.ul}>
         <Content component={ContentVariants.li}>
           <HelpSubTopicTitle
-            title={t('Source provider:')}
             content={t(
               'The repository or virtualization platform you want to migrate your virtual machines from into the OpenShift cluster.',
             )}
+            title={t('Source provider:')}
           />
         </Content>
         <Content component={ContentVariants.li}>
           <HelpSubTopicTitle
-            title={t('Target provider:')}
             content={t('The cluster to which you want to migrate your virtual machines to.')}
+            title={t('Target provider:')}
           />
         </Content>
       </Content>

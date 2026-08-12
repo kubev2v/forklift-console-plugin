@@ -5,8 +5,8 @@ import { LazyTextInput } from '@components/InputList/LazyTextInput';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type Props = {
-  value: string[];
   onChange: (list: string[]) => void;
+  value: string[];
 };
 
 const LUKSPassphraseInputList: FC<Props> = ({ onChange, value }) => {
@@ -14,10 +14,10 @@ const LUKSPassphraseInputList: FC<Props> = ({ onChange, value }) => {
 
   return (
     <InputList
+      addButtonText={t('Add passphrase')}
+      InputRow={LazyTextInput}
       items={value}
       onChange={onChange}
-      InputRow={LazyTextInput}
-      addButtonText={t('Add passphrase')}
     />
   );
 };

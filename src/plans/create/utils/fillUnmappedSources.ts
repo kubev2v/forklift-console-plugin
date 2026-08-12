@@ -4,9 +4,9 @@ import type { MappingFieldIds } from '../types';
 
 type FillMappingsOptions<T> = {
   existingMappings: T[];
-  unmappedSources: MappingValue[];
-  targetValue: MappingValue;
   fieldIds: MappingFieldIds;
+  targetValue: MappingValue;
+  unmappedSources: MappingValue[];
 };
 
 /**

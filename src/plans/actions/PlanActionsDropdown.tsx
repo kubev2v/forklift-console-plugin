@@ -33,22 +33,22 @@ const PlanActionsDropdown: FC<PlanActionsDropdownProps> = ({ isDetailsPage, plan
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       onSelect={onSelect}
-      toggle={(toggleRef: Ref<MenuToggleElement>) => (
-        <MenuToggle
-          ref={toggleRef}
-          onClick={onToggleClick}
-          isExpanded={isOpen}
-          variant={isDetailsPage ? 'default' : 'plain'}
-          data-testid={isDetailsPage ? 'plan-actions-dropdown-button' : 'plan-kebab-actions-button'}
-        >
-          {isDetailsPage ? t('Actions') : <EllipsisVIcon />}
-        </MenuToggle>
-      )}
-      shouldFocusToggleOnSelect
       popperProps={{
         position: 'right',
         width: '200px',
       }}
+      shouldFocusToggleOnSelect
+      toggle={(toggleRef: Ref<MenuToggleElement>) => (
+        <MenuToggle
+          data-testid={isDetailsPage ? 'plan-actions-dropdown-button' : 'plan-kebab-actions-button'}
+          isExpanded={isOpen}
+          onClick={onToggleClick}
+          ref={toggleRef}
+          variant={isDetailsPage ? 'default' : 'plain'}
+        >
+          {isDetailsPage ? t('Actions') : <EllipsisVIcon />}
+        </MenuToggle>
+      )}
     >
       <PlanActionsDropdownItems isDetailsPage={isDetailsPage} plan={plan} />
     </Dropdown>

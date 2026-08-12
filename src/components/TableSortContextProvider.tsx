@@ -6,8 +6,8 @@ import { useSort } from './common/TableView/sort';
 import type { ResourceField, SortDirection } from './common/utils/types';
 
 type TableSortContextProviderProps = PropsWithChildren & {
+  defaultSort?: { direction: SortDirection; resourceFieldId: string };
   fields: ResourceField[];
-  defaultSort?: { resourceFieldId: string; direction: SortDirection };
 };
 
 export const TableSortContextProvider: FC<TableSortContextProviderProps> = ({

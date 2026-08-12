@@ -28,37 +28,37 @@ const MigrationTypeStep: FC = () => {
 
   return (
     <WizardStepContainer title={planStepNames[PlanWizardStepId.MigrationType]}>
-      <FormGroupWithErrorText isRequired fieldId={MigrationTypeFieldId.MigrationType}>
+      <FormGroupWithErrorText fieldId={MigrationTypeFieldId.MigrationType} isRequired>
         <Controller
-          name={MigrationTypeFieldId.MigrationType}
-          defaultValue={MigrationTypeValue.Cold}
           control={control}
-          rules={{
-            required: t('Migration type is required.'),
-          }}
+          defaultValue={MigrationTypeValue.Cold}
+          name={MigrationTypeFieldId.MigrationType}
           render={({ field: migrationTypeField }) => (
             <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
               <MigrationTypeRadio
                 migrationType={MigrationTypeValue.Cold}
-                value={migrationTypeField.value}
                 onChange={migrationTypeField.onChange}
                 sourceProvider={sourceProvider}
+                value={migrationTypeField.value}
               />
               <MigrationTypeRadio
+                cbtDisabledVms={cbtDisabledVms}
                 migrationType={MigrationTypeValue.Warm}
-                value={migrationTypeField.value}
                 onChange={migrationTypeField.onChange}
                 sourceProvider={sourceProvider}
-                cbtDisabledVms={cbtDisabledVms}
+                value={migrationTypeField.value}
               />
               <MigrationTypeRadio
                 migrationType={MigrationTypeValue.Live}
-                value={migrationTypeField.value}
                 onChange={migrationTypeField.onChange}
                 sourceProvider={sourceProvider}
+                value={migrationTypeField.value}
               />
             </Flex>
           )}
+          rules={{
+            required: t('Migration type is required.'),
+          }}
         />
       </FormGroupWithErrorText>
     </WizardStepContainer>

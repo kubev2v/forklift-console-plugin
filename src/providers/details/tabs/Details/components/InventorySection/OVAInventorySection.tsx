@@ -18,15 +18,15 @@ const OVAInventorySection: FC<InventorySectionProps> = ({ data }) => {
 
   return (
     <DescriptionList
-      isHorizontal
-      horizontalTermWidthModifier={{ default: '15ch' }}
       columnModifier={{ default: '2Col' }}
+      horizontalTermWidthModifier={{ default: '15ch' }}
+      isHorizontal
     >
-      <StorageCountDetailsItem resource={provider} inventory={inventory} />
+      <StorageCountDetailsItem inventory={inventory} resource={provider} />
       <VmCountDetailsItem
-        resource={provider}
-        inventory={inventory}
         helpContent={t('Number of virtual machines in OVA files')}
+        inventory={inventory}
+        resource={provider}
       />
     </DescriptionList>
   );

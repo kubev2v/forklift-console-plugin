@@ -19,9 +19,9 @@ import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 type AddVirtualMachinesTableProps = {
+  onSelect: (selectedVms: VmData[]) => void;
   plan: V1beta1Plan;
   sourceProvider: V1beta1Provider;
-  onSelect: (selectedVms: VmData[]) => void;
 };
 
 const AddVirtualMachinesTable = memo<AddVirtualMachinesTableProps>(

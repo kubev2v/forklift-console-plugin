@@ -17,8 +17,8 @@ export const statusPriority: Record<MigrationVirtualMachineStatus, number> = {
 };
 
 export type MigrationVirtualMachinesStatusCountObjectVM = {
-  name: string;
   failedTaskName?: string;
+  name: string;
 };
 
 export type MigrationVirtualMachinesStatusCountObject = {
@@ -53,4 +53,4 @@ export const planMigrationVirtualMachineStatuses = {
   CopyingPaused: 'CopyingPaused',
 } as const;
 
-export type StatusPopoverLabels = { header: string; body?: string; actionLabel?: string };
+export type StatusPopoverLabels = { actionLabel?: string; body?: string; header: string };

@@ -16,8 +16,8 @@ import { isEmpty } from '@utils/helpers';
 
 import './InputList.style.css';
 
-type InputListRow<T> = FC<{ value: T; onChange: (value: T) => void }>;
-type InputListItem<T> = { id: string; content: T };
+type InputListRow<T> = FC<{ onChange: (value: T) => void; value: T }>;
+type InputListItem<T> = { content: T; id: string };
 
 let idCounter = 0;
 
@@ -38,7 +38,7 @@ const generateUniqueId = () => {
  * @param {Array<{ id: string, content: T }>} items - Items with id and content.
  * @returns {T[]} List of content from items.
  */
-const extractContent = <T,>(items: { id: string; content: T }[]): T[] =>
+const extractContent = <T,>(items: { content: T; id: string }[]): T[] =>
   items.map(({ content }) => content);
 
 /**
@@ -66,11 +66,11 @@ const assignIdsToItems = <T,>(items: T[]): InputListItem<T>[] =>
  * @property {string} [addButtonText] - Text for the add button.
  */
 type InputListProps<T> = {
-  items: T[];
+  addButtonText?: string;
   InputRow: InputListRow<T>;
+  items: T[];
   onChange: (newList: T[]) => void;
   removeIconContent?: string;
-  addButtonText?: string;
 };
 
 /**
@@ -123,35 +123,35 @@ export const InputList = <T,>({
     <>
       <DataList aria-label={'input data list'} isCompact>
         {localItems.map(({ content, id }) => (
-          <DataListItem key={id} id={id}>
+          <DataListItem id={id} key={id}>
             <DataListItemRow>
               <DataListItemCells
                 dataListCells={[
                   <DataListCell key="primary content">
                     <InputRow
-                      value={content}
                       onChange={(newValue) => {
                         handleItemChange(id, newValue);
                       }}
+                      value={content}
                     />
                   </DataListCell>,
                 ]}
               />
               <DataListAction
-                id={`mapping_list_item_${id}`}
                 aria-label={'Actions'}
                 aria-labelledby=""
+                id={`mapping_list_item_${id}`}
               >
                 <Tooltip content={removeIconContent}>
                   <Button
+                    aria-label={removeIconContent}
+                    icon={<MinusCircleIcon />}
+                    isDisabled={isDeleteDisabled}
+                    key="delete-action"
                     onClick={() => {
                       handleItemDelete(id);
                     }}
                     variant={ButtonVariant.plain}
-                    aria-label={removeIconContent}
-                    key="delete-action"
-                    icon={<MinusCircleIcon />}
-                    isDisabled={isDeleteDisabled}
                   />
                 </Tooltip>
               </DataListAction>
@@ -161,9 +161,9 @@ export const InputList = <T,>({
       </DataList>
       <Button
         className="forklift--input-list-icon"
-        variant={ButtonVariant.link}
         icon={<PlusCircleIcon />}
         onClick={handleAddItem}
+        variant={ButtonVariant.link}
       >
         {addButtonText}
       </Button>

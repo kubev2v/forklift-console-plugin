@@ -22,18 +22,18 @@ import { TimesIcon } from '@patternfly/react-icons';
  * Props for the FilterableSelect component.
  */
 type FilterableSelectMenuToggleProps = {
-  toggleRef: Ref<MenuToggleElement>;
-  placeholder?: string;
-  isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
-  selectOptions: SelectOptionProps[];
-  inputValue: string;
-  setInputValue: (value: string) => void;
-  setSelectedValue: (value: string) => void;
   filterValue: string;
-  setFilterValue: (value: string) => void;
   focusedItemIndex: number | null;
+  inputValue: string;
+  isOpen: boolean;
+  placeholder?: string;
+  selectOptions: SelectOptionProps[];
+  setFilterValue: (value: string) => void;
   setFocusedItemIndex: (value: number | null) => void;
+  setInputValue: (value: string) => void;
+  setIsOpen: (value: boolean) => void;
+  setSelectedValue: (value: string) => void;
+  toggleRef: Ref<MenuToggleElement>;
 };
 
 const FilterableSelectMenuToggle: FunctionComponent<FilterableSelectMenuToggleProps> = ({
@@ -132,36 +132,36 @@ const FilterableSelectMenuToggle: FunctionComponent<FilterableSelectMenuTogglePr
    */
   return (
     <MenuToggle
-      ref={toggleRef}
-      variant="typeahead"
-      onClick={onToggleClick}
       isExpanded={isOpen}
       isFullWidth
+      onClick={onToggleClick}
+      ref={toggleRef}
+      variant="typeahead"
     >
       <TextInputGroup isPlain>
         <TextInputGroupMain
+          autoComplete="off"
+          id="typeahead-select-input"
+          innerRef={textInputRef}
+          onChange={onTextInputChange}
+          onClick={onToggleClick}
+          onKeyDown={onInputKeyDown}
+          placeholder={placeholder}
           spellCheck="false"
           value={inputValue}
-          onClick={onToggleClick}
-          onChange={onTextInputChange}
-          onKeyDown={onInputKeyDown}
-          id="typeahead-select-input"
-          autoComplete="off"
-          innerRef={textInputRef}
-          placeholder={placeholder}
         />
 
         <TextInputGroupUtilities>
           {Boolean(inputValue) && (
             <Button
+              aria-label="Clear input value"
               icon={<TimesIcon aria-hidden />}
-              variant={ButtonVariant.plain}
               onClick={() => {
                 setSelectedValue('');
                 setInputValue('');
                 setFilterValue('');
               }}
-              aria-label="Clear input value"
+              variant={ButtonVariant.plain}
             />
           )}
         </TextInputGroupUtilities>

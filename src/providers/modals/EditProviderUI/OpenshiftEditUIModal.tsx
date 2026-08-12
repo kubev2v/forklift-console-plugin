@@ -36,15 +36,15 @@ export const OpenshiftEditUIModal: ModalComponent<EditProviderUIModalProps> = ({
   return (
     <TextInputEditModal
       {...rest}
-      title={t('Edit provider web UI link')}
-      label={t('Provider web UI link')}
-      initialValue={provider?.metadata?.annotations?.[providerUiAnnotation] ?? ''}
       description={description}
       helperText={t(
         'Link for OpenShift Virtualization web console UI. For example, https://console-openshift-console.apps.openshift-domain.com.',
       )}
-      validationHook={validateOpenshiftUILink}
+      initialValue={provider?.metadata?.annotations?.[providerUiAnnotation] ?? ''}
+      label={t('Provider web UI link')}
       onConfirm={onConfirm}
+      title={t('Edit provider web UI link')}
+      validationHook={validateOpenshiftUILink}
     />
   );
 };

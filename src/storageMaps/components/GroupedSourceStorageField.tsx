@@ -14,9 +14,9 @@ import {
 
 type GroupedSourceStorageFieldProps = {
   fieldId: string;
+  otherSourceStorages: StorageMappingValue[];
   storageMappings: StorageMapping[];
   usedSourceStorages: StorageMappingValue[];
-  otherSourceStorages: StorageMappingValue[];
 };
 
 /**
@@ -42,20 +42,20 @@ const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
 
   return (
     <Controller
-      name={fieldId}
       control={control}
+      name={fieldId}
       render={({ field }) => (
         <Select
-          ref={field.ref}
           id={fieldId}
-          testId={`source-storage-${fieldId}`}
           isDisabled={isSubmitting}
-          value={(field.value as StorageMappingValue).name}
           onSelect={async (_event, value) => {
             field.onChange(value);
             await trigger(StorageMapFieldId.StorageMap);
           }}
           placeholder={t('Select source storage')}
+          ref={field.ref}
+          testId={`source-storage-${fieldId}`}
+          value={(field.value as StorageMappingValue).name}
         >
           <SelectGroup label={t('Storages used by the selected VMs')}>
             <SelectList>
@@ -64,13 +64,13 @@ const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
               ) : (
                 usedSourceStorages.map((usedStorage) => (
                   <SelectOption
-                    key={usedStorage.name}
-                    value={usedStorage}
                     description={duplicateNames.has(usedStorage.name) ? usedStorage.id : undefined}
                     isDisabled={storageMappings?.some(
                       (mapping: StorageMapping) =>
                         mapping[StorageMapFieldId.SourceStorage].id === usedStorage.id,
                     )}
+                    key={usedStorage.name}
+                    value={usedStorage}
                   >
                     {usedStorage.name}
                   </SelectOption>
@@ -86,8 +86,6 @@ const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
               ) : (
                 otherSourceStorages?.map((otherStorage) => (
                   <SelectOption
-                    key={otherStorage.name}
-                    value={otherStorage}
                     description={
                       duplicateNames.has(otherStorage.name) ? otherStorage.id : undefined
                     }
@@ -95,6 +93,8 @@ const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
                       (mapping: StorageMapping) =>
                         mapping[StorageMapFieldId.SourceStorage].id === otherStorage.id,
                     )}
+                    key={otherStorage.name}
+                    value={otherStorage}
                   >
                     {otherStorage.name}
                   </SelectOption>

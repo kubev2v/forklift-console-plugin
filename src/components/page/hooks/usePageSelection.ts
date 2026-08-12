@@ -1,20 +1,20 @@
 import { useCallback, useMemo, useState } from 'react';
 
 type UsePageSelectionProps<T> = {
-  toId?: (item: T) => string;
+  expandedIds?: string[];
+  onExpand?: (expandedIds: string[]) => void;
   onSelect?: (selectedIds: string[]) => void;
   selectedIds?: string[];
-  onExpand?: (expandedIds: string[]) => void;
-  expandedIds?: string[];
+  toId?: (item: T) => string;
 };
 
 type UsePageSelectionResult<T> = {
-  internalSelectedIds: string[] | undefined;
   internalExpandedIds: string[] | undefined;
+  internalSelectedIds: string[] | undefined;
   isExpanded: ((item: T) => boolean) | undefined;
-  toggleSelectFor: (items: T[]) => void;
-  toggleExpandFor: (items: T[]) => void;
   onSelectCallback: (ids: string[]) => void;
+  toggleExpandFor: (items: T[]) => void;
+  toggleSelectFor: (items: T[]) => void;
 };
 
 /** Manages selection/expansion state with toggle functions and callback handling. */

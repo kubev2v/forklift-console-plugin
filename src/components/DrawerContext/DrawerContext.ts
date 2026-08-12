@@ -1,9 +1,9 @@
 import { createContext, type ReactNode } from 'react';
 
 type DrawerContextType = {
+  closeDrawer: () => void;
   isOpen: boolean;
   openDrawer: (content: ReactNode, title?: ReactNode) => void;
-  closeDrawer: () => void;
 };
 
 const defaultContext: DrawerContextType = {

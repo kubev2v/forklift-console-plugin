@@ -28,18 +28,18 @@ const PreserveStaticIPsDetailsItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Preserve static IPs')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={
-        <Label isCompact color="grey">
+        <Label color="grey" isCompact>
           {preserveStaticIPs ? t('Preserve static IPs') : t('Do not preserve static IPs')}
         </Label>
       }
-      helpContent={t(`Preserve the static IPs of virtual machines migrated from vSphere.`)}
       crumbs={['spec', 'preserveStaticIPs']}
+      helpContent={t(`Preserve the static IPs of virtual machines migrated from vSphere.`)}
       onEdit={() => {
         launcher<EditPlanProps>(EditPlanPreserveStaticIPs, { resource: plan });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      title={t('Preserve static IPs')}
     />
   );
 };

@@ -3,14 +3,14 @@ import { type RefCallback, useCallback, useEffect, useLayoutEffect, useRef, useS
 import { createCancellableDebounce } from '@utils/debounce';
 
 type UseScrollPositionPersistenceOptions = {
-  /** The current saved scroll position to restore */
-  savedPosition: number;
-  /** Callback to save the new scroll position */
-  onPositionChange: (position: number) => void;
-  /** Whether scroll tracking is active (useful for conditionally rendered elements) */
-  isActive?: boolean;
   /** Debounce delay in milliseconds (default: 100ms) */
   debounceMs?: number;
+  /** Whether scroll tracking is active (useful for conditionally rendered elements) */
+  isActive?: boolean;
+  /** Callback to save the new scroll position */
+  onPositionChange: (position: number) => void;
+  /** The current saved scroll position to restore */
+  savedPosition: number;
 };
 
 /**

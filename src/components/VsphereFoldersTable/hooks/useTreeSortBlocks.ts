@@ -25,18 +25,18 @@ type UseTreeSortBlocks = (args: {
   conversions: V1beta1Conversion[];
   filteredRows: RowNode[];
 }) => {
-  sortedBlocks: Block[];
+  handleOnSort: OnSort | undefined;
   sortBy: {
     direction: SortDirection;
     index: number;
   };
+  sortedBlocks: Block[];
   visibleCols: {
     id: string;
     info?: ResourceField['info'];
     label: string;
     sortable: boolean;
   }[];
-  handleOnSort: OnSort | undefined;
 };
 
 /**

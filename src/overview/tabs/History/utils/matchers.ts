@@ -11,7 +11,7 @@ export const dateRangeObjectMatcher: ValueMatcher = {
     if (!value || typeof value !== 'object') {
       return false;
     }
-    const obj = value as { started?: string; completed?: string };
+    const obj = value as { completed?: string; started?: string };
     const [from, to] = filter.split('/');
     const fromDate = DateTime.fromISO(from);
     const toDate = DateTime.fromISO(to);

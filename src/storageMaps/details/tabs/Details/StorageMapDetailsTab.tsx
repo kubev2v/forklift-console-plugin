@@ -68,15 +68,14 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
   const sourceStoragesMap = new Map(sourceStorages.map((storage) => [storage.id, storage]));
 
   return (
-    <LoadingSuspend obj={storageMap} loaded={storageMapLoaded} loadError={storageMapLoadError}>
-      <PageSection hasBodyWrapper={false} className="forklift-page-section--details">
+    <LoadingSuspend loaded={storageMapLoaded} loadError={storageMapLoadError} obj={storageMap}>
+      <PageSection className="forklift-page-section--details" hasBodyWrapper={false}>
         <SectionHeading text={t('Storage map details')} />
         <DetailsSection obj={storageMap} />
       </PageSection>
 
-      <PageSection hasBodyWrapper={false} className="forklift-page-section">
+      <PageSection className="forklift-page-section" hasBodyWrapper={false}>
         <SectionHeadingWithEdit
-          title={t('Providers')}
           onClick={() => {
             launcher<MapProvidersEditProps>(MapProvidersEdit, {
               destinationProvider,
@@ -86,13 +85,13 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
               sourceProvider,
             });
           }}
+          title={t('Providers')}
         />
         <MapProvidersDetails obj={storageMap} />
       </PageSection>
 
-      <PageSection hasBodyWrapper={false} className="forklift-page-section">
+      <PageSection className="forklift-page-section" hasBodyWrapper={false}>
         <SectionHeadingWithEdit
-          title={t('Map')}
           data-testid="storage-map-edit-button"
           onClick={() => {
             launcher<StorageMapEditProps>(StorageMapEdit, {
@@ -101,6 +100,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
               storageMap,
             });
           }}
+          title={t('Map')}
         />
         <StorageMapReviewTable
           storageMap={
@@ -109,7 +109,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
         />
       </PageSection>
 
-      <PageSection hasBodyWrapper={false} className="forklift-page-section">
+      <PageSection className="forklift-page-section" hasBodyWrapper={false}>
         <SectionHeading text={t('Conditions')} />
         <ConditionsSection conditions={storageMap?.status?.conditions ?? []} />
       </PageSection>

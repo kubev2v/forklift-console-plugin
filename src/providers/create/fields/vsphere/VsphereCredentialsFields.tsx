@@ -24,11 +24,11 @@ const VsphereCredentialsFields: FC = () => {
         fieldRules={{
           validate: validateVsphereUsername,
         }}
-        label={t('Username')}
         helperText={t(
           'Username for connecting to the vSphere API endpoint. For example: {{username}}.',
           { username: usernameExample },
         )}
+        label={t('Username')}
         testId="vsphere-username-input"
       />
 
@@ -37,8 +37,8 @@ const VsphereCredentialsFields: FC = () => {
         fieldRules={{
           validate: validateVspherePassword,
         }}
-        label={t('Password')}
         helperText={t('Password for connecting to the vSphere API endpoint.')}
+        label={t('Password')}
         testId="vsphere-password-input"
       />
     </>

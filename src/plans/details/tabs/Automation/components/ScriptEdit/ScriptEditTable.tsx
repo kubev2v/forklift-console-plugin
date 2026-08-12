@@ -44,11 +44,12 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove }) =
 
   return (
     <FieldBuilderTable
-      headers={[
-        { label: ScriptsFieldLabels.name, width: 35 },
-        { label: ScriptsFieldLabels.guestType, width: 25 },
-        { label: ScriptsFieldLabels.scriptType, width: 25 },
-      ]}
+      addButton={{
+        label: t('Add script'),
+        onClick: () => {
+          append(DefaultScript);
+        },
+      }}
       fieldRows={fields.map((fieldRow, index) => {
         const guestType = watchedScripts?.[index]?.guestType ?? GuestType.Linux;
         const isWindows = guestType === GuestType.Windows;
@@ -59,21 +60,17 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove }) =
             <Controller
               control={control}
               name={`scripts.${index}.content`}
-              rules={{ validate: (value) => validateScriptContent(value) }}
               render={({ field: { onChange, value } }) => (
                 <ScriptContentField guestType={guestType} onChange={onChange} value={value} />
               )}
+              rules={{ validate: (value) => validateScriptContent(value) }}
             />
           ),
           inputs: [
             <Controller
-              key="name"
               control={control}
+              key="name"
               name={`scripts.${index}.name`}
-              rules={{
-                deps: nameDeps(fields.length) as `scripts.${number}.name`[],
-                validate: validateName(index),
-              }}
               render={({ field, fieldState: { error } }) => (
                 <>
                   <TextInput
@@ -85,15 +82,18 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove }) =
                   <FormErrorHelperText error={error} />
                 </>
               )}
+              rules={{
+                deps: nameDeps(fields.length) as `scripts.${number}.name`[],
+                validate: validateName(index),
+              }}
             />,
             <Controller
-              key="guestType"
               control={control}
+              key="guestType"
               name={`scripts.${index}.guestType`}
               render={({ field: guestTypeField }) => (
                 <Select
                   id={`scripts.${index}.guestType`}
-                  value={GuestTypeLabels[guestTypeField.value]}
                   onSelect={async (_event, value) => {
                     guestTypeField.onChange(value);
 
@@ -104,6 +104,7 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove }) =
                     await triggerAllNames(fields.length);
                   }}
                   testId={`script-guest-type-select-${index}`}
+                  value={GuestTypeLabels[guestTypeField.value]}
                 >
                   <SelectList>
                     {Object.values(GuestType).map((gt) => (
@@ -116,30 +117,30 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove }) =
               )}
             />,
             <Controller
-              key="scriptType"
               control={control}
+              key="scriptType"
               name={`scripts.${index}.scriptType`}
               render={({ field: scriptTypeField }) => (
                 <Select
                   id={`scripts.${index}.scriptType`}
-                  value={ScriptTypeLabels[scriptTypeField.value]}
                   onSelect={async (_event, value) => {
                     scriptTypeField.onChange(value);
                     await triggerAllNames(fields.length);
                   }}
                   testId={`script-type-select-${index}`}
+                  value={ScriptTypeLabels[scriptTypeField.value]}
                 >
                   <SelectList>
                     {Object.values(ScriptType).map((st) => (
                       <SelectOption
-                        key={st}
-                        value={st}
-                        isDisabled={isWindows && st === ScriptType.Run}
                         description={
                           isWindows && st === ScriptType.Run
                             ? t('Run scripts are only available for Linux')
                             : undefined
                         }
+                        isDisabled={isWindows && st === ScriptType.Run}
+                        key={st}
+                        value={st}
                       >
                         {ScriptTypeLabels[st]}
                       </SelectOption>
@@ -151,12 +152,11 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove }) =
           ],
         };
       })}
-      addButton={{
-        label: t('Add script'),
-        onClick: () => {
-          append(DefaultScript);
-        },
-      }}
+      headers={[
+        { label: ScriptsFieldLabels.name, width: 35 },
+        { label: ScriptsFieldLabels.guestType, width: 25 },
+        { label: ScriptsFieldLabels.scriptType, width: 25 },
+      ]}
       removeButton={{
         onClick: (index) => {
           remove(index);

@@ -56,9 +56,9 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
     <Card>
       <Table
         aria-label="Storage map review table"
-        variant={TableVariant.compact}
         borders
         data-testid="storage-map-review-table"
+        variant={TableVariant.compact}
       >
         <Thead>
           <Tr>

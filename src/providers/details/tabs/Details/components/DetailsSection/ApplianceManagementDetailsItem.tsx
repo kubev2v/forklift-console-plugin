@@ -25,8 +25,7 @@ const ApplianceManagementDetailsItem: FC<ProviderDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="appliance-management-detail-item"
-      title={t('Appliance management')}
+      canEdit={canPatch}
       content={
         isEnabled ? (
           <Label isCompact status={PF_LABEL_STATUS.SUCCESS}>
@@ -36,12 +35,13 @@ const ApplianceManagementDetailsItem: FC<ProviderDetailsItemProps> = ({
           <Label isCompact>{t('Disabled')}</Label>
         )
       }
-      helpContent={helpContent ?? OVA_APPLIANCE_MANAGEMENT_DESCRIPTION}
       crumbs={['Provider', 'spec', 'settings', 'applianceManagement']}
+      helpContent={helpContent ?? OVA_APPLIANCE_MANAGEMENT_DESCRIPTION}
       onEdit={() => {
         launcher<EditApplianceManagementProps>(EditApplianceManagement, { provider });
       }}
-      canEdit={canPatch}
+      testId="appliance-management-detail-item"
+      title={t('Appliance management')}
     />
   );
 };

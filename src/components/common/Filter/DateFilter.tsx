@@ -52,26 +52,26 @@ export const DateFilter = ({
 
   return (
     <ToolbarFilter
-      key={filterId}
-      labels={validFilters}
+      categoryName={title ?? ''}
       deleteLabel={(_category, option) => {
         clearSingleDate(option as string);
       }}
       deleteLabelGroup={() => onFilterUpdate([])}
-      categoryName={title ?? ''}
+      key={filterId}
+      labels={validFilters}
       showToolbarItem={showFilter}
     >
       <InputGroup>
         <DatePicker
-          value={date}
-          dateFormat={(newDate: Date) => toISODate(newDate) ?? ''}
-          dateParse={(value: string) => parseISOtoJSDate(value) ?? new Date()}
-          onChange={onDateChange}
-          aria-label={title}
-          placeholder={placeholderLabel}
-          invalidFormatText={placeholderLabel}
           // default value ("parent") creates collision with sticky table header
           appendTo={document.body}
+          aria-label={title}
+          dateFormat={(newDate: Date) => toISODate(newDate) ?? ''}
+          dateParse={(value: string) => parseISOtoJSDate(value) ?? new Date()}
+          invalidFormatText={placeholderLabel}
+          onChange={onDateChange}
+          placeholder={placeholderLabel}
+          value={date}
         />
       </InputGroup>
     </ToolbarFilter>

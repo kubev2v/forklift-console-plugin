@@ -13,9 +13,9 @@ import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
 
 type PodsTableProps = {
+  limit?: number;
   pods: IoK8sApiCoreV1Pod[];
   showOwner?: boolean;
-  limit?: number;
 };
 
 const PAGINATION_THRESHOLD = 10;
@@ -72,10 +72,10 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
       {limitedPods.length > PAGINATION_THRESHOLD && (
         <Pagination
           itemCount={limitedPods.length}
-          perPage={perPage}
-          page={currentPage}
-          onSetPage={onSetPage}
           onPerPageSelect={onPerPageSelect}
+          onSetPage={onSetPage}
+          page={currentPage}
+          perPage={perPage}
           variant="top"
         />
       )}
@@ -134,10 +134,10 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
       {limitedPods.length > PAGINATION_THRESHOLD && (
         <Pagination
           itemCount={limitedPods.length}
-          perPage={perPage}
-          page={currentPage}
-          onSetPage={onSetPage}
           onPerPageSelect={onPerPageSelect}
+          onSetPage={onSetPage}
+          page={currentPage}
+          perPage={perPage}
           variant="bottom"
         />
       )}

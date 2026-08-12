@@ -8,8 +8,8 @@ import SpecVirtualMachinesActionsDropdownItems from './SpecVirtualMachinesAction
 
 type SpecVirtualMachinesActionsDropdownProps = {
   plan: V1beta1Plan;
-  vmIndex: number;
   providerType?: ProviderType;
+  vmIndex: number;
 };
 
 const SpecVirtualMachinesActionsDropdown: FC<SpecVirtualMachinesActionsDropdownProps> = ({
@@ -33,26 +33,26 @@ const SpecVirtualMachinesActionsDropdown: FC<SpecVirtualMachinesActionsDropdownP
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       onSelect={onSelect}
+      popperProps={{
+        position: 'right',
+      }}
+      shouldFocusToggleOnSelect
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
-          ref={toggleRef}
-          onClick={onToggleClick}
-          isExpanded={isOpen}
-          variant="plain"
           data-testid="vm-actions-menu-toggle"
+          isExpanded={isOpen}
+          onClick={onToggleClick}
+          ref={toggleRef}
+          variant="plain"
         >
           <EllipsisVIcon />
         </MenuToggle>
       )}
-      shouldFocusToggleOnSelect
-      popperProps={{
-        position: 'right',
-      }}
     >
       <SpecVirtualMachinesActionsDropdownItems
         plan={plan}
-        vmIndex={vmIndex}
         providerType={providerType}
+        vmIndex={vmIndex}
       />
     </Dropdown>
   );

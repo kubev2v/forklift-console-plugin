@@ -116,9 +116,9 @@ export class LearningExperienceDrawer {
   }
 
   async openAndVerify(): Promise<{
+    closeDrawerButton: Locator;
     drawerTitle: Locator;
     selectTopicButton: Locator;
-    closeDrawerButton: Locator;
   }> {
     await this.open();
 

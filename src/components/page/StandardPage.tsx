@@ -10,43 +10,43 @@ import { useTableSortContext } from '@components/useTableSortContext';
 
 import StandardPageInner from './StandardPageInner';
 type StandardPageProps<T> = {
-  dataSource: [data: T[], loaded: boolean, error: unknown];
-  fieldsMetadata: ResourceField[];
-  namespace?: string;
-  page?: number;
-
   addButton?: JSX.Element;
-  row?: FC<RowProps<T>>;
+  alerts?: ReactNode;
+  canSelect?: (item: T) => boolean;
   cell?: FC<RowProps<T>>;
+
+  className?: string;
+  customNoResultsFound?: JSX.Element;
+  customNoResultsMatchFilter?: JSX.Element;
+  dataSource: [data: T[], loaded: boolean, error: unknown];
   expanded?: FC<RowProps<T>>;
-  header?: FC<TableViewHeaderProps<T>>;
+  expandedIds?: string[];
   extraSupportedFilters?: Record<string, FilterRenderer>;
   extraSupportedMatchers?: ValueMatcher[];
+  fieldsMetadata: ResourceField[];
+  GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<T>>[];
+  header?: FC<TableViewHeaderProps<T>>;
+  namespace?: string;
+  noPadding?: boolean;
+  onExpand?: (expandedIds: string[]) => void;
+  onSelect?: (selectedIds: string[]) => void;
+  page?: number;
+  pageRef?: MutableRefObject<number>;
+  pagination?: number | 'on' | 'off';
   postFilterData?: (
     data: T[],
     selectedFilters: Record<string, string[]>,
     fields: ResourceField[],
   ) => T[];
-  customNoResultsFound?: JSX.Element;
-  customNoResultsMatchFilter?: JSX.Element;
-  pagination?: number | 'on' | 'off';
-  userSettings?: UserSettings;
-  alerts?: ReactNode;
-  GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<T>>[];
-  className?: string;
-  toId?: (item: T) => string;
-  canSelect?: (item: T) => boolean;
-  onSelect?: (selectedIds: string[]) => void;
+  row?: FC<RowProps<T>>;
   selectedIds?: string[];
-  onExpand?: (expandedIds: string[]) => void;
-  expandedIds?: string[];
-  pageRef?: MutableRefObject<number>;
+  shouldShowLearningExperienceButton?: boolean;
   showManageColumns?: boolean;
+  testId?: string;
   title?: string;
   titleHelpContent?: ReactNode;
-  noPadding?: boolean;
-  testId?: string;
-  shouldShowLearningExperienceButton?: boolean;
+  toId?: (item: T) => string;
+  userSettings?: UserSettings;
 };
 
 const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
@@ -73,7 +73,7 @@ const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
   }
 
   return (
-    <TableSortContextProvider fields={defaultFieldsWithoutFilters} defaultSort={defaultSort}>
+    <TableSortContextProvider defaultSort={defaultSort} fields={defaultFieldsWithoutFilters}>
       <TableSortContext.Consumer>
         {(sortProps) => <StandardPageInner {...pageProps} {...sortProps} pageRef={pageRef} />}
       </TableSortContext.Consumer>

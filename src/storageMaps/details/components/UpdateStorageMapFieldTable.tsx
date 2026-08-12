@@ -70,65 +70,6 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
 
   return (
     <FieldBuilderTable
-      headers={[
-        {
-          label: storageMapFieldLabels[StorageMapFieldId.SourceStorage],
-          width: 45,
-        },
-        {
-          label: storageMapFieldLabels[StorageMapFieldId.TargetStorage],
-          width: 45,
-        },
-      ]}
-      fieldRows={storageMappingFields.map((field, index) => ({
-        ...field,
-        additionalOptions: (
-          <Stack hasGutter>
-            <StackItem>
-              <AccessModeField
-                fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
-                targetStorages={targetStorages}
-                targetStorageFieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-              />
-            </StackItem>
-            {isVsphereOffload && (
-              <StackItem>
-                <OffloadStorageRow
-                  index={index}
-                  sourceProvider={sourceProvider}
-                  sourceStorages={inventorySourceStorages}
-                  targetStorages={targetStorages}
-                />
-              </StackItem>
-            )}
-          </Stack>
-        ),
-        inputs: [
-          <SourceStorageField
-            key={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
-            fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
-            storageMappings={storageMap}
-            sourceStorages={sourceStorages}
-          />,
-          isVsphereOffload ? (
-            <TargetStorageWithSuggestion
-              key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-              fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-              index={index}
-              sourceStorages={inventorySourceStorages}
-              targetStorages={targetStorages}
-              testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
-            />
-          ) : (
-            <TargetStorageField
-              key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-              fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-              targetStorages={targetStorages}
-              testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
-            />
-          ),
-        ],
-      }))}
       addButton={{
         isDisabled:
           sourceStorages.length === storageMappingFields.length ||
@@ -148,6 +89,65 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
           });
         },
       }}
+      fieldRows={storageMappingFields.map((field, index) => ({
+        ...field,
+        additionalOptions: (
+          <Stack hasGutter>
+            <StackItem>
+              <AccessModeField
+                fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
+                targetStorageFieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+                targetStorages={targetStorages}
+              />
+            </StackItem>
+            {isVsphereOffload && (
+              <StackItem>
+                <OffloadStorageRow
+                  index={index}
+                  sourceProvider={sourceProvider}
+                  sourceStorages={inventorySourceStorages}
+                  targetStorages={targetStorages}
+                />
+              </StackItem>
+            )}
+          </Stack>
+        ),
+        inputs: [
+          <SourceStorageField
+            fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
+            key={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
+            sourceStorages={sourceStorages}
+            storageMappings={storageMap}
+          />,
+          isVsphereOffload ? (
+            <TargetStorageWithSuggestion
+              fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              index={index}
+              key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              sourceStorages={inventorySourceStorages}
+              targetStorages={targetStorages}
+              testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
+            />
+          ) : (
+            <TargetStorageField
+              fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+              targetStorages={targetStorages}
+              testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
+            />
+          ),
+        ],
+      }))}
+      headers={[
+        {
+          label: storageMapFieldLabels[StorageMapFieldId.SourceStorage],
+          width: 45,
+        },
+        {
+          label: storageMapFieldLabels[StorageMapFieldId.TargetStorage],
+          width: 45,
+        },
+      ]}
       removeButton={{
         isDisabled: () => isSubmitting,
         onClick: (index) => {

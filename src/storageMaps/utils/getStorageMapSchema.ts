@@ -1,11 +1,11 @@
 import type { IoK8sApiextensionsApiserverPkgApisApiextensionsV1CustomResourceDefinition as CustomResourceDefinition } from '@forklift-ui/types';
 
 type JSONSchemaProperty = {
-  type?: string;
   description?: string;
   enum?: string[];
-  properties?: Record<string, JSONSchemaProperty>;
   items?: JSONSchemaProperty;
+  properties?: Record<string, JSONSchemaProperty>;
+  type?: string;
 };
 
 export const getStorageMapSchema = (

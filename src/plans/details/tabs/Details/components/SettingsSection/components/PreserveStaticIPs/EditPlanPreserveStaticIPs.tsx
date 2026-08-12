@@ -17,7 +17,6 @@ const EditPlanPreserveStaticIPs: ModalComponent<EditPlanProps> = ({ resource, ..
 
   return (
     <ModalForm
-      title={t('Edit static IPs')}
       description={t('Use when VMs have static IPs that must remain unchanged after migration.')}
       headerHelp={
         <HelpIconPopover header={t('Preserve static IPs')}>
@@ -27,13 +26,14 @@ const EditPlanPreserveStaticIPs: ModalComponent<EditPlanProps> = ({ resource, ..
         </HelpIconPopover>
       }
       onConfirm={async () => onConfirmPreserveStaticIPs({ newValue: value, resource })}
+      title={t('Edit static IPs')}
       {...rest}
     >
       <Checkbox
-        id="preserve-static-ips-checkbox"
         data-testid="preserve-static-ips-checkbox"
-        label={t('Preserve static IPs')}
+        id="preserve-static-ips-checkbox"
         isChecked={value}
+        label={t('Preserve static IPs')}
         onChange={(_, checked) => {
           setValue(checked);
         }}

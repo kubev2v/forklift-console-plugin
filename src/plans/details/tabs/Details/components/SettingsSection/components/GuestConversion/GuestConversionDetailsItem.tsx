@@ -29,8 +29,7 @@ const GuestConversionDetailsItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="guest-conversion-mode-detail-item"
-      title={t('Guest conversion mode')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={
         <Stack>
           <StackItem>
@@ -54,7 +53,8 @@ const GuestConversionDetailsItem: FC<EditableDetailsItemProps> = ({
       onEdit={() => {
         launcher<EditPlanProps>(GuestConversionEditModal, { resource: plan });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="guest-conversion-mode-detail-item"
+      title={t('Guest conversion mode')}
     />
   );
 };

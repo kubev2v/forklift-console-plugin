@@ -13,10 +13,10 @@ export const planDetailsSubTopic = (sourceProviderText: string): LearningExperie
       id: `${PLAN_DETAILS_SUB_TOPIC_ID}-a`,
       title: (
         <HelpTitledContent
-          title={t('Plan name:')}
           content={t(
             'Enter a unique and descriptive name for your migration plan (e.g., "VMware to OpenShift_Prod_AppX").',
           )}
+          title={t('Plan name:')}
         />
       ),
     },
@@ -24,21 +24,21 @@ export const planDetailsSubTopic = (sourceProviderText: string): LearningExperie
       id: `${PLAN_DETAILS_SUB_TOPIC_ID}-b`,
       title: (
         <HelpTitledContent
-          title={t('Plan project:')}
           content={t('Select the project (namespace) containing providers.')}
+          title={t('Plan project:')}
         />
       ),
     },
     {
       id: `${PLAN_DETAILS_SUB_TOPIC_ID}-c`,
-      title: <HelpTitledContent title={t('Source provider:')} content={sourceProviderText} />,
+      title: <HelpTitledContent content={sourceProviderText} title={t('Source provider:')} />,
     },
     {
       id: `${PLAN_DETAILS_SUB_TOPIC_ID}-d`,
       title: (
         <HelpTitledContent
-          title={t('Target provider:')}
           content={t(`Choose the OpenShift Virtualization provider.`)}
+          title={t('Target provider:')}
         />
       ),
     },
@@ -46,8 +46,8 @@ export const planDetailsSubTopic = (sourceProviderText: string): LearningExperie
       id: `${PLAN_DETAILS_SUB_TOPIC_ID}-e`,
       title: (
         <HelpTitledContent
-          title={t('Target project:')}
           content={t(`Select the target project (namespace) for migrated VMs.`)}
+          title={t('Target project:')}
         />
       ),
     },

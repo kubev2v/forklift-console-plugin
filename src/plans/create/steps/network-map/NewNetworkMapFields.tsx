@@ -96,31 +96,31 @@ const NewNetworkMapFields: FC = () => {
   }, [isLoading, networkMap, vms, oVirtNicProfiles, setValue]);
 
   return (
-    <Stack hasGutter className="pf-v6-u-ml-lg">
-      {error?.root && <Alert variant={AlertVariant.danger} isInline title={error.root.message} />}
+    <Stack className="pf-v6-u-ml-lg" hasGutter>
+      {error?.root && <Alert isInline title={error.root.message} variant={AlertVariant.danger} />}
 
       {isEmpty(availableSourceNetworks) && !sourceNetworksLoading && (
         <Alert
-          variant={AlertVariant.warning}
           isInline
           title={t('No source networks are available for the selected VMs.')}
+          variant={AlertVariant.warning}
         />
       )}
 
       <NetworkMapFieldTable
+        isLoading={isLoading}
+        loadError={sourceNetworksError ?? targetNetworksError ?? oVirtNicProfilesError}
         networkMap={networkMap}
-        vms={vms}
+        otherSourceNetworks={otherSourceNetworks}
         oVirtNicProfiles={oVirtNicProfiles}
         targetNetworks={targetNetworkMap}
         usedSourceNetworks={usedSourceNetworks}
-        otherSourceNetworks={otherSourceNetworks}
-        isLoading={isLoading}
-        loadError={sourceNetworksError ?? targetNetworksError ?? oVirtNicProfilesError}
+        vms={vms}
       />
 
       <FormGroupWithHelpText
-        label={netMapFieldLabels[NetworkMapFieldId.NetworkMapName]}
         helperText={t("Provide a name now, or we'll generate one when the map is created.")}
+        label={netMapFieldLabels[NetworkMapFieldId.NetworkMapName]}
         labelHelp={
           <HelpIconPopover>
             <Stack hasGutter>
@@ -139,8 +139,8 @@ const NewNetworkMapFields: FC = () => {
         }
       >
         <Controller
-          name={NetworkMapFieldId.NetworkMapName}
           control={control}
+          name={NetworkMapFieldId.NetworkMapName}
           render={({ field }) => <TextInput {...field} />}
         />
       </FormGroupWithHelpText>

@@ -64,12 +64,6 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
   return (
     <FormProvider {...methods}>
       <ModalForm
-        onConfirm={handleSubmit(onSubmit)}
-        title={t('Edit settings')}
-        closeModal={closeModal}
-        variant={ModalVariant.medium}
-        isDisabled={!isDirty}
-        testId="settings-edit-modal"
         additionalAction={{
           children: t('Reset to defaults'),
           onClick: () => {
@@ -79,6 +73,12 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
           },
           variant: ButtonVariant.secondary,
         }}
+        closeModal={closeModal}
+        isDisabled={!isDirty}
+        onConfirm={handleSubmit(onSubmit)}
+        testId="settings-edit-modal"
+        title={t('Edit settings')}
+        variant={ModalVariant.medium}
       >
         <Form>
           {t(

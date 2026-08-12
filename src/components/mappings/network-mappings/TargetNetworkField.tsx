@@ -10,14 +10,14 @@ import { IgnoreNetwork } from '@utils/mappings/constants';
 import type { MappingValue } from '@utils/types';
 
 type TargetNetworkFieldProps = {
-  fieldId: string;
-  targetNetworks: MappingValue[] | Record<string, MappingValue>;
-  hideNonNadTargets?: boolean;
-  showIgnoreNetworkOption?: boolean;
   emptyStateMessage?: string;
+  fieldId: string;
+  hideNonNadTargets?: boolean;
   isDisabled?: boolean;
-  triggerFieldId?: string;
+  showIgnoreNetworkOption?: boolean;
+  targetNetworks: MappingValue[] | Record<string, MappingValue>;
   testId?: string;
+  triggerFieldId?: string;
 };
 
 const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
@@ -56,14 +56,12 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
 
   return (
     <Controller
-      name={fieldId}
       control={control}
+      name={fieldId}
       render={({ field }) => (
         <Select
-          ref={field.ref}
           id={fieldId}
-          testId={testId ?? `target-network-${fieldId}`}
-          value={(field.value as MappingValue)?.name}
+          isDisabled={isDisabled}
           onSelect={async (_event, value) => {
             field.onChange(value);
             if (triggerFieldId) {
@@ -74,7 +72,9 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
             await trigger();
           }}
           placeholder={t('Select target network')}
-          isDisabled={isDisabled}
+          ref={field.ref}
+          testId={testId ?? `target-network-${fieldId}`}
+          value={(field.value as MappingValue)?.name}
         >
           <SelectList>
             {hasNetworks ? (
@@ -97,7 +97,7 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
                 )}
               </>
             ) : (
-              <SelectOption key="empty" isDisabled>
+              <SelectOption isDisabled key="empty">
                 {hideNonNadTargets
                   ? noNadMessage
                   : (emptyStateMessage ?? t('No networks available'))}

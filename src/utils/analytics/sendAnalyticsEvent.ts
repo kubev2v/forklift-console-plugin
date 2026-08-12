@@ -3,6 +3,9 @@ import type { AnalyticsConfig } from './types';
 
 /**
  * Sends analytics event to Segment with cluster configuration
+ * @param eventType
+ * @param properties
+ * @param config
  */
 export const sendAnalyticsEvent = (
   eventType: string,

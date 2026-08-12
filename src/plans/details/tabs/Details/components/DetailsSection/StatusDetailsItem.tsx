@@ -14,10 +14,10 @@ const StatusDetailsItem: FC<StatusDetailsItemProps> = ({ plan }) => {
 
   return (
     <DetailsItem
+      content={<PlanStatus plan={plan} />}
+      helpContent={t('Migration plan state information and progress')}
       testId="status-detail-item"
       title={t('Status')}
-      helpContent={t('Migration plan state information and progress')}
-      content={<PlanStatus plan={plan} />}
     />
   );
 };

@@ -47,8 +47,6 @@ const AffinityEditRow: FC<AffinityEditRowProps> = ({ expression, onChange, onDel
       <GridItem span={2}>
         <Select
           id={`affinity-operator-${id}`}
-          value={operator}
-          options={operatorSelectOptions}
           onSelect={(_ev, selected) => {
             const nextOp = String(selected);
             // Optional: clear values if switching to unary op to avoid stale state
@@ -58,16 +56,15 @@ const AffinityEditRow: FC<AffinityEditRowProps> = ({ expression, onChange, onDel
                 : values;
             onChange({ ...expression, operator: nextOp, values: nextValues });
           }}
+          options={operatorSelectOptions}
+          value={operator}
         />
       </GridItem>
       <GridItem span={5}>
         <MultiTypeaheadSelect
           className="affinity-edit-row__values-chips"
-          options={valueOptions}
-          values={enableValueField ? values : []}
           isCreatable
           isDisabled={!enableValueField}
-          placeholder={enableValueField ? t('Enter value') : ''}
           // Toggle membership on select
           onChange={(nextValues) => {
             onChange({ ...expression, values: nextValues as string[] });
@@ -78,6 +75,9 @@ const AffinityEditRow: FC<AffinityEditRowProps> = ({ expression, onChange, onDel
               onChange({ ...expression, values: [...values, created] });
             }
           }}
+          options={valueOptions}
+          placeholder={enableValueField ? t('Enter value') : ''}
+          values={enableValueField ? values : []}
         />
       </GridItem>
       <GridItem span={1}>

@@ -33,11 +33,10 @@ const TargetNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch,
 
   return (
     <DetailsItem
-      testId="vm-target-node-selector-detail-item"
-      title={t('VM target node selector')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={<NodeSelectorViewDetailsItemContent labels={plan?.spec?.targetNodeSelector} />}
-      helpContent={TARGET_NODE_SELECTOR_DETAILS_ITEM_DESCRIPTION}
       crumbs={['spec', 'targetNodeSelector']}
+      helpContent={TARGET_NODE_SELECTOR_DETAILS_ITEM_DESCRIPTION}
       onEdit={() => {
         launcher<NodeSelectorModalProps>(NodeSelectorModal, {
           description: (
@@ -57,7 +56,8 @@ const TargetNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch,
           title: t('Edit VM target node selector'),
         });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="vm-target-node-selector-detail-item"
+      title={t('VM target node selector')}
     />
   );
 };

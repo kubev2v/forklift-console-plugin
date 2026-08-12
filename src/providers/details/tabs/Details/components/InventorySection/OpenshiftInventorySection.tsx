@@ -16,13 +16,13 @@ const OpenshiftInventorySection: FC<InventorySectionProps> = ({ data }) => {
 
   return (
     <DescriptionList
-      isHorizontal
-      horizontalTermWidthModifier={{ default: '15ch' }}
       columnModifier={{ default: '2Col' }}
+      horizontalTermWidthModifier={{ default: '15ch' }}
+      isHorizontal
     >
-      <NetworkCountDetailsItem resource={provider} inventory={inventory} />
-      <StorageClassCountDetailsItem resource={provider} inventory={inventory} />
-      <VmCountDetailsItem resource={provider} inventory={inventory} />
+      <NetworkCountDetailsItem inventory={inventory} resource={provider} />
+      <StorageClassCountDetailsItem inventory={inventory} resource={provider} />
+      <VmCountDetailsItem inventory={inventory} resource={provider} />
     </DescriptionList>
   );
 };

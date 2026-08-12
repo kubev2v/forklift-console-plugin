@@ -14,17 +14,17 @@ export const useUniqueEnums = ({
   selectedEnumIds,
   supportedEnumValues,
 }: {
+  onSelectedEnumIdsChange: (values: string[]) => void;
+  resolvedLanguage: string;
+  selectedEnumIds: string[];
   supportedEnumValues: {
     id: string;
     label: string;
   }[];
-  onSelectedEnumIdsChange: (values: string[]) => void;
-  selectedEnumIds: string[];
-  resolvedLanguage: string;
 }): {
-  uniqueEnumLabels: string[];
   onUniqueFilterUpdate: (selectedEnumLabels: string[]) => void;
   selectedUniqueEnumLabels: string[];
+  uniqueEnumLabels: string[];
 } => {
   const translatedEnums = useMemo(
     () =>

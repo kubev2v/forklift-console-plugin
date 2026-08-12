@@ -45,14 +45,14 @@ export const ErrorStatusCell: FC<CellProps & { children: ReactNode; phaseLabel: 
 
   return (
     <Popover
-      headerContent={phaseLabel}
       bodyContent={bodyContent && <SmartLinkify>{bodyContent}</SmartLinkify>}
       footerContent={footerContent}
+      headerContent={phaseLabel}
     >
       <Button
-        variant={ButtonVariant.link}
-        isInline
         data-testid="popover-status-button-providers-list"
+        isInline
+        variant={ButtonVariant.link}
       >
         {children}
       </Button>

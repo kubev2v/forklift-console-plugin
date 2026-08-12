@@ -11,24 +11,24 @@ import { isEmpty } from '@utils/helpers';
 import { INITIAL_PAGE } from '../utils/constants';
 
 type UsePaginationProps<T> = {
+  finalFilteredData: T[];
   initialPage: number;
   pageRef: MutableRefObject<number>;
-  finalFilteredData: T[];
+  pagination?: number | 'on' | 'off';
   selectedFilters: Record<string, string[]>;
   sortedDataLength: number;
-  pagination?: number | 'on' | 'off';
   userSettings?: PaginationSettings;
 };
 
 type UsePaginationResult<T> = {
-  page: number;
-  setPage: (page: number) => void;
   itemsPerPage: number;
-  setPerPage: (perPage: number) => void;
-  pageData: T[];
-  showPagination: boolean;
-  onSetPage: OnSetPage;
   onPerPageSelect: OnPerPageSelect;
+  onSetPage: OnSetPage;
+  page: number;
+  pageData: T[];
+  setPage: (page: number) => void;
+  setPerPage: (perPage: number) => void;
+  showPagination: boolean;
 };
 
 /**

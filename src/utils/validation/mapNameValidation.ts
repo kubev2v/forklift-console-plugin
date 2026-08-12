@@ -4,6 +4,8 @@ import { t } from '@utils/i18n';
 
 /**
  * Validator for map names (storage, network) according to Kubernetes DNS subdomain requirements
+ * @param value
+ * @param mapType
  */
 export const validateMapName = (value: string, mapType: string): string | undefined => {
   if (!value || value.trim() === '') {

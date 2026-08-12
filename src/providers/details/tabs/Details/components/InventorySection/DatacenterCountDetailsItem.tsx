@@ -19,9 +19,6 @@ const DatacenterCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Data centers')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'datacenterCount']}
       content={
         <InventoryCell
           data={{
@@ -34,6 +31,9 @@ const DatacenterCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           inventoryValue={(inventory as VSphereProvider).datacenterCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'datacenterCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Data centers')}
     />
   );
 };

@@ -26,14 +26,14 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
   }
 
   const content = (
-    <Label isCompact color="grey">
+    <Label color="grey" isCompact>
       {plan?.spec?.networkNameTemplate ? t('Use custom') : t('Use default')}
     </Label>
   );
 
   return (
     <DetailsItem
-      title={t('Network name template')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={content}
       crumbs={['spec', 'networkNameTemplate']}
       onEdit={() => {
@@ -44,7 +44,7 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
           value: plan?.spec?.networkNameTemplate,
         });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      title={t('Network name template')}
     />
   );
 };

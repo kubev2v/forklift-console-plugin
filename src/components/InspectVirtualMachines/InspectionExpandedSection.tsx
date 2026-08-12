@@ -70,8 +70,8 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({
       <PageSection hasBodyWrapper={false}>
         <Table
           aria-label={t('Inspections')}
-          variant={TableVariant.compact}
           className="forklift-inspections-table"
+          variant={TableVariant.compact}
         >
           <Thead>
             <Tr>
@@ -86,10 +86,10 @@ const InspectionExpandedSection: FC<InspectionExpandedSectionProps> = ({
             const uid = getUID(conversion) ?? getName(conversion) ?? '';
             return (
               <InspectionTableRow
-                key={uid}
                 columnCount={INSPECTION_TABLE_COLUMN_COUNT}
                 conversion={conversion}
                 isExpanded={expandedRows.has(uid)}
+                key={uid}
                 onToggle={() => {
                   toggleExpand(uid);
                 }}

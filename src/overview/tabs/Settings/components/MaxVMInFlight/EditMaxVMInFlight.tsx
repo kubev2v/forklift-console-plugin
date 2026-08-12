@@ -18,27 +18,27 @@ const EditMaxVMInFlight: FC = () => {
 
   return (
     <FormGroupWithHelpText
+      helperText={t(
+        'Enter the maximum number of concurrent VM migrations. If empty, the default value will be used.',
+      )}
       label={t('Maximum concurrent VM migrations')}
       labelHelp={
         <HelpIconPopover header={t('Maximum concurrent VM migrations')}>
           <MaxVMInFlightHelpContent />
         </HelpIconPopover>
       }
-      helperText={t(
-        'Enter the maximum number of concurrent VM migrations. If empty, the default value will be used.',
-      )}
     >
       <Controller
         control={control}
         name={SettingsFields.MaxVMInFlight}
         render={({ field: { onChange, value } }) => (
           <SettingsNumberInput
+            defaultValue={defaultValuesMap[SettingsFields.MaxVMInFlight] as number}
             onChange={(val) => {
               onChange(Number(val));
             }}
-            value={Number(value)}
-            defaultValue={defaultValuesMap[SettingsFields.MaxVMInFlight] as number}
             testId="max-vm-inflight-input"
+            value={Number(value)}
           />
         )}
       />

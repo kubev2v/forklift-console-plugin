@@ -36,20 +36,20 @@ const HookSection: FC<HookSectionProps> = ({ hook, plan, step, title }) => {
   return (
     <>
       <SectionHeadingWithEdit
+        className="pf-v6-u-mt-md"
+        data-testid={`${step}-hook-edit-button`}
         editable={planEditable}
-        title={title}
+        headingLevel="h3"
         onClick={() => {
           launcher<HookEditProps>(HookEdit, { hook, plan, step });
         }}
-        className="pf-v6-u-mt-md"
-        headingLevel="h3"
-        data-testid={`${step}-hook-edit-button`}
+        title={title}
       />
       <DescriptionList>
         <DetailsItem
+          content={hookExists ? t('True') : t('False')}
           testId="hook-enabled-detail-item"
           title={t('Enabled')}
-          content={hookExists ? t('True') : t('False')}
         />
         {hookExists && aapConfig && hook && <AapHookDetails aap={aapConfig} hook={hook} />}
         {hookExists && !aapConfig && hook && <LocalHookDetails hook={hook} />}

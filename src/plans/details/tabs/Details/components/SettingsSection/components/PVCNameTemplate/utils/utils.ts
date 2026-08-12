@@ -6,8 +6,8 @@ export const onConfirmPVCNameTemplate = async ({
   newValue,
   resource,
 }: {
-  resource: V1beta1Plan;
   newValue: string | undefined;
+  resource: V1beta1Plan;
 }): Promise<V1beta1Plan> => {
   const current = resource?.spec?.pvcNameTemplate;
   const op = current === undefined ? ADD : REPLACE;

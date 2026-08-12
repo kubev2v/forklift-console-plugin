@@ -20,12 +20,8 @@ const StorageCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Storage')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'storageCount']}
       content={
         <InventoryCell
-          icon={<DatabaseIcon />}
           data={{
             inventory,
             inventoryLoading: true,
@@ -33,9 +29,13 @@ const StorageCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           }}
           fieldId={ProvidersResourceFieldId.StorageCount}
           fields={[]}
+          icon={<DatabaseIcon />}
           inventoryValue={(inventory as OvaProvider).storageCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'storageCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Storage')}
     />
   );
 };

@@ -16,17 +16,17 @@ const EditPlanDescription: ModalComponent<EditPlanProps> = ({ resource, ...rest 
 
   return (
     <ModalForm
-      title={t('Edit description')}
       onConfirm={async () => onConfirmDescription({ newValue: value, resource })}
+      title={t('Edit description')}
       {...rest}
     >
       <Form>
         <FormGroup label={t('Description')}>
           <TextInput
-            value={value}
             onChange={(_ev, newValue: string) => {
               setValue(newValue);
             }}
+            value={value}
           />
         </FormGroup>
       </Form>

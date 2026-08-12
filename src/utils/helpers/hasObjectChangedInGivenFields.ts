@@ -57,9 +57,9 @@ const isEqual = (obj1: unknown, obj2: unknown, fieldsToAvoidComparing: string[])
 };
 
 type FieldsComparisonArgs<T> = {
-  oldObject?: T;
-  newObject?: T;
   fieldsToAvoidComparing: string[];
+  newObject?: T;
+  oldObject?: T;
 };
 
 /**

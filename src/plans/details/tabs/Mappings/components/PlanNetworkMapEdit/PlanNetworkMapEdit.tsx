@@ -53,36 +53,36 @@ const PlanNetworkMapEdit: ModalComponent<PlanNetworkMapEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        onConfirm={handleSubmit(onSubmit)}
-        title={t('Edit network map')}
         closeModal={closeModal}
-        variant={ModalVariant.medium}
         isDisabled={!isValid || !isDirty}
+        onConfirm={handleSubmit(onSubmit)}
         testId="edit-network-map-modal"
+        title={t('Edit network map')}
+        variant={ModalVariant.medium}
       >
         <Stack hasGutter>
           {error?.root && (
-            <Alert variant={AlertVariant.danger} isInline title={error.root.message} />
+            <Alert isInline title={error.root.message} variant={AlertVariant.danger} />
           )}
 
           {isEmpty(usedSourceNetworks) &&
             isEmpty(otherSourceNetworks) &&
             !sourceNetworksLoading && (
               <Alert
-                variant={AlertVariant.warning}
                 isInline
                 title={t('No source networks are available for the selected VMs.')}
+                variant={AlertVariant.warning}
               />
             )}
 
           <PlanNetworkMapFieldsTable
-            oVirtNicProfiles={oVirtNicProfiles}
-            usedSourceNetworks={usedSourceNetworks}
-            otherSourceNetworks={otherSourceNetworks}
-            vms={vms}
             isLoading={isLoading}
             loadError={loadError}
+            otherSourceNetworks={otherSourceNetworks}
+            oVirtNicProfiles={oVirtNicProfiles}
             targetNetworks={targetNetworks}
+            usedSourceNetworks={usedSourceNetworks}
+            vms={vms}
           />
         </Stack>
       </ModalForm>

@@ -33,11 +33,11 @@ export const findNetworkAdapterByNameAndIp = (
 };
 
 type OnSaveHostParams = {
-  provider: V1beta1Provider;
   hostPairs: InventoryHostNetworkTriple[];
   network: NetworkAdapters;
-  user?: string;
   passwd?: string;
+  provider: V1beta1Provider;
+  user?: string;
 };
 
 const processHostSecretPair = async (

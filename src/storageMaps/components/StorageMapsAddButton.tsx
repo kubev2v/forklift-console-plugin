@@ -32,27 +32,27 @@ const StorageMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
 
   return (
     <Dropdown
+      data-testid={testId}
       isOpen={isMenuOpen}
       onOpenChange={(isOpen: boolean) => {
         setIsMenuOpen(isOpen);
       }}
-      data-testid={testId}
+      popperProps={{
+        position: 'right',
+      }}
+      shouldFocusFirstItemOnOpen={false}
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
-          ref={toggleRef}
+          isExpanded={isMenuOpen}
           onClick={() => {
             setIsMenuOpen(!isMenuOpen);
           }}
-          isExpanded={isMenuOpen}
+          ref={toggleRef}
           variant={ButtonVariant.primary}
         >
           {t('Create storage map')}
         </MenuToggle>
       )}
-      shouldFocusFirstItemOnOpen={false}
-      popperProps={{
-        position: 'right',
-      }}
     >
       <DropdownList>
         <DropdownItem

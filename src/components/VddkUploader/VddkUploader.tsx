@@ -58,23 +58,23 @@ const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
 
   return (
     <Form>
-      <FormGroup label={t('VDDK init image archive')} isRequired={false}>
+      <FormGroup isRequired={false} label={t('VDDK init image archive')}>
         <FileUpload
-          id="vddk-file"
+          className="pf-v6-u-p-0"
           filename={filename}
+          hideDefaultPreview
+          id="vddk-file"
+          isRequired
+          onClearClick={() => {
+            setFile(undefined);
+            setFilename('');
+          }}
           onFileInputChange={(_, newFile) => {
             if (newFile) {
               setFile(newFile);
               setFilename(newFile.name);
             }
           }}
-          hideDefaultPreview
-          isRequired
-          onClearClick={() => {
-            setFile(undefined);
-            setFilename('');
-          }}
-          className="pf-v6-u-p-0"
         />
         <HelperText>
           <HelperTextItem>
@@ -86,9 +86,9 @@ const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
       <Stack hasGutter>
         <StackItem>
           <Button
+            isDisabled={!file || uploading || isBuilding}
             isLoading={uploading || isBuilding}
             onClick={handleUpload}
-            isDisabled={!file || uploading || isBuilding}
           >
             {getUploadButtonText(uploading, isBuilding)}
           </Button>
@@ -96,14 +96,14 @@ const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
 
         {error && (
           <StackItem>
-            <Alert variant="danger" title={t('Error')}>
+            <Alert title={t('Error')} variant="danger">
               {error}
             </Alert>
           </StackItem>
         )}
 
         {isBuildFailed && (
-          <Alert variant={variant} title={title}>
+          <Alert title={title} variant={variant}>
             {body}
           </Alert>
         )}

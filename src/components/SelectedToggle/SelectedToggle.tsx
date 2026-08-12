@@ -5,9 +5,9 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type SelectedToggleProps = {
-  showAll: boolean;
-  setShowAll: (showAll: boolean) => void;
   selectedVmKeys: string[];
+  setShowAll: (showAll: boolean) => void;
+  showAll: boolean;
 };
 
 const SelectedToggle: FC<SelectedToggleProps> = ({ selectedVmKeys, setShowAll, showAll }) => {
@@ -16,27 +16,27 @@ const SelectedToggle: FC<SelectedToggleProps> = ({ selectedVmKeys, setShowAll, s
   const toggleGroup = (
     <ToggleGroup>
       <ToggleGroupItem
-        text={t('All')}
+        data-testid="vm-selection-toggle-all"
         isSelected={showAll}
         onChange={() => {
           setShowAll(true);
         }}
-        data-testid="vm-selection-toggle-all"
+        text={t('All')}
       />
       <ToggleGroupItem
-        text={t('Selected')}
+        data-testid="vm-selection-toggle-selected"
+        isDisabled={isEmpty(selectedVmKeys)}
         isSelected={!showAll}
         onChange={() => {
           setShowAll(false);
         }}
-        isDisabled={isEmpty(selectedVmKeys)}
-        data-testid="vm-selection-toggle-selected"
+        text={t('Selected')}
       />
     </ToggleGroup>
   );
 
   return isEmpty(selectedVmKeys) ? (
-    <Popover triggerAction="hover" bodyContent={t('No VMs have been selected')}>
+    <Popover bodyContent={t('No VMs have been selected')} triggerAction="hover">
       <div>{toggleGroup}</div>
     </Popover>
   ) : (

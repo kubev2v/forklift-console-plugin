@@ -16,7 +16,7 @@ const SecretsSection: FC<SecretsSectionProps> = ({ data }) => {
   const { provider } = data;
 
   return (
-    <PageSection hasBodyWrapper={false} className="forklift-page-section">
+    <PageSection className="forklift-page-section" hasBodyWrapper={false}>
       <SectionHeading text={t('Secrets')} />
       <DescriptionList>
         <SecretDetailsItem resource={provider} />

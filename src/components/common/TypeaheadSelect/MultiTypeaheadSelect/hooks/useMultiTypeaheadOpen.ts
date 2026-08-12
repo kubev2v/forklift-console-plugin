@@ -5,16 +5,16 @@ type UseMultiTypeaheadOpenArgs = {
 };
 
 type UseMultiTypeaheadOpenReturn = {
-  isOpen: boolean;
-  isFiltering: boolean;
-  inputValue: string;
   inputRef: React.RefObject<HTMLInputElement>;
-  setIsOpen: (open: boolean) => void;
-  resetFilter: () => void;
-  onToggleClick: () => void;
+  inputValue: string;
+  isFiltering: boolean;
+  isOpen: boolean;
   onInputClick: () => void;
   onInputValueChange: (newValue: string, filtering: boolean) => void;
   onOpenChange: (open: boolean) => void;
+  onToggleClick: () => void;
+  resetFilter: () => void;
+  setIsOpen: (open: boolean) => void;
 };
 
 export const useMultiTypeaheadOpen = ({

@@ -40,13 +40,13 @@ export const PlanOwnerAlert: FC<PlanOwnerAlertProps> = ({ networkMap }) => {
 
   return (
     <Alert
-      variant={AlertVariant.info}
+      className="pf-v6-u-mt-sm"
       isInline
       isPlain
       title={t(
         "This network map is used by a plan. Target networks must be in the plan's target namespace or the default namespace.",
       )}
-      className="pf-v6-u-mt-sm"
+      variant={AlertVariant.info}
     />
   );
 };

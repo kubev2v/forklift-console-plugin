@@ -82,10 +82,10 @@ const AffinityForm: FC<AffinityFormProps> = ({
         errorHelperText={t('Missing fields in {{kind}} labels', {
           kind: isNodeAffinity ? 'node' : 'workload',
         })}
+        expressions={expressions}
         helperText={
           isNodeAffinity ? <NodeExpressionDescriptionText /> : <WorkloadExpressionDescriptionText />
         }
-        expressions={expressions}
         label={isNodeAffinity ? t('Node labels') : t('Workload labels')}
       />
       {isNodeAffinity && (

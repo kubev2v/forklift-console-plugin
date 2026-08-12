@@ -29,10 +29,10 @@ const HeaderActions = ({
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
     <MenuToggle
-      ref={toggleRef}
-      onClick={onToggleClick}
-      isExpanded={isOpen}
       className="forklift-overview__cards-select"
+      isExpanded={isOpen}
+      onClick={onToggleClick}
+      ref={toggleRef}
     >
       {valueToLabel[selectedTimeRange]}
     </MenuToggle>
@@ -42,12 +42,12 @@ const HeaderActions = ({
     // Custom select does not support the complex toggle being used here
     // eslint-disable-next-line no-restricted-syntax
     <Select
+      aria-label={t('Select time range')}
       isOpen={isOpen}
+      onOpenChange={setIsOpen}
       onSelect={onSelect}
       selected={selectedTimeRange}
-      aria-label={t('Select time range')}
       toggle={toggle}
-      onOpenChange={setIsOpen}
     >
       <SelectOption value={TimeRangeOptions.Last24H}>
         {valueToLabel[TimeRangeOptions.Last24H]}

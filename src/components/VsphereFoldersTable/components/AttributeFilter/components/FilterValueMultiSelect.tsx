@@ -16,10 +16,10 @@ import type { CheckboxAttr } from '../utils/types';
 
 type FilterValueMultiSelectProps<T> = {
   attribute: CheckboxAttr<T>;
-  selected: Set<string>;
-  onToggle: (optId: string) => void;
   /** When this key changes (e.g., active attribute id), the dropdown closes */
   closeKey?: string;
+  onToggle: (optId: string) => void;
+  selected: Set<string>;
   width?: number;
 };
 
@@ -43,23 +43,25 @@ const FilterValueMultiSelect = <T,>({
 
   return (
     <PfSelect
-      role="menu"
       id={`filter-checks-${attribute.id}`}
       isOpen={isOpen}
-      selected={selectedValues}
-      onSelect={(_e, value) => {
-        onToggle(String(value));
-      }}
+      isScrollable
       onOpenChange={(open) => {
         setOpen(open);
       }}
+      onSelect={(_e, value) => {
+        onToggle(String(value));
+      }}
+      role="menu"
+      selected={selectedValues}
+      shouldFocusToggleOnSelect
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
-          ref={toggleRef}
+          isExpanded={isOpen}
           onClick={() => {
             setOpen((open) => !open);
           }}
-          isExpanded={isOpen}
+          ref={toggleRef}
           style={{ width }}
         >
           {t('Filter by {{activeFilterLabel}}', {
@@ -68,16 +70,14 @@ const FilterValueMultiSelect = <T,>({
           {selected.size ? <Badge isRead>{selected.size}</Badge> : null}
         </MenuToggle>
       )}
-      shouldFocusToggleOnSelect
-      isScrollable
     >
       <SelectList isAriaMultiselectable>
         {attribute.options.map((option) => (
           <SelectOption
-            key={option.id}
-            value={option.id}
             hasCheckbox
             isSelected={selected.has(option.id)}
+            key={option.id}
+            value={option.id}
           >
             <Split>
               {option.icon ? <SplitItem className="pf-v6-u-mr-sm">{option.icon}</SplitItem> : null}

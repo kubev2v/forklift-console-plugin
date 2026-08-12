@@ -10,7 +10,7 @@ const FolderNameCell: FC<FolderNameCellProps> = ({ row, vmCount }) => {
     <Split hasGutter>
       <SplitItem>{row.folderName}</SplitItem>
       <SplitItem>
-        <Label isCompact data-testid={`folder-${row.folderName}-vm-count`}>
+        <Label data-testid={`folder-${row.folderName}-vm-count`} isCompact>
           {vmCount} VMs
         </Label>
       </SplitItem>

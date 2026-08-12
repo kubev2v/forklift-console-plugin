@@ -17,9 +17,9 @@ const RemoteProviderTargetProjectSelect: FC<RemoteProviderTargetProjectSelectPro
   const [targetProjectNames, loaded, error] = useTargetNamespaces(targetProvider);
   return (
     <TargetProjectSelect
-      targetProjectNames={targetProjectNames}
-      loaded={loaded}
       error={error}
+      loaded={loaded}
+      targetProjectNames={targetProjectNames}
       {...rest}
     />
   );

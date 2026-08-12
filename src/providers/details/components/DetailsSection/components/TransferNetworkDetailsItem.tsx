@@ -32,24 +32,24 @@ export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="transfer-network-detail-item"
-      title={t('Default transfer network')}
+      canEdit={canPatch}
       content={
         provider?.metadata?.annotations?.[DEFAULT_TRANSFER_NETWORK_ANNOTATION] ?? (
-          <Label isCompact color="grey">
+          <Label color="grey" isCompact>
             {DEFAULT_NETWORK}
           </Label>
         )
       }
-      moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
-      helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'metadata', 'annotations', DEFAULT_TRANSFER_NETWORK_ANNOTATION]}
+      helpContent={helpContent ?? defaultHelpContent}
+      moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
       onEdit={() => {
         launcher<EditProviderDefaultTransferNetworkProps>(EditProviderDefaultTransferNetwork, {
           resource: provider,
         });
       }}
-      canEdit={canPatch}
+      testId="transfer-network-detail-item"
+      title={t('Default transfer network')}
     />
   );
 };

@@ -19,12 +19,8 @@ const NetworkCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Network interfaces')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'networkCount']}
       content={
         <InventoryCell
-          icon={<NetworkIcon />}
           data={{
             inventory,
             inventoryLoading: true,
@@ -32,9 +28,13 @@ const NetworkCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           }}
           fieldId={ProvidersResourceFieldId.NetworkCount}
           fields={[]}
+          icon={<NetworkIcon />}
           inventoryValue={inventory.networkCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'networkCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Network interfaces')}
     />
   );
 };

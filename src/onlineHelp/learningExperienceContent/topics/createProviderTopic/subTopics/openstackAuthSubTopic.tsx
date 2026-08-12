@@ -13,10 +13,10 @@ export const openstackAuthSubTopic = (): LearningExperienceSubTopic => ({
       id: `${OPENSTACK_AUTH_SUB_TOPIC_ID}-a`,
       title: (
         <HelpTitledContent
-          title={t('Password:')}
           content={t(
             'Enter the username, password, Region where your source VMs reside, project that the migration will take place (for example, migration-project), and OpenStack domain name (for example, Default).',
           )}
+          title={t('Password:')}
         />
       ),
     },
@@ -24,8 +24,8 @@ export const openstackAuthSubTopic = (): LearningExperienceSubTopic => ({
       id: `${OPENSTACK_AUTH_SUB_TOPIC_ID}-b`,
       title: (
         <HelpTitledContent
-          title={t('Token with user ID:')}
           content={t('Enter the authentication token and the user ID.')}
+          title={t('Token with user ID:')}
         />
       ),
     },
@@ -33,8 +33,8 @@ export const openstackAuthSubTopic = (): LearningExperienceSubTopic => ({
       id: `${OPENSTACK_AUTH_SUB_TOPIC_ID}-c`,
       title: (
         <HelpTitledContent
-          title={t('Token with username:')}
           content={t('Enter the authentication token and the username.')}
+          title={t('Token with username:')}
         />
       ),
     },
@@ -42,8 +42,8 @@ export const openstackAuthSubTopic = (): LearningExperienceSubTopic => ({
       id: `${OPENSTACK_AUTH_SUB_TOPIC_ID}-d`,
       title: (
         <HelpTitledContent
-          title={t('Application credential ID:')}
           content={t('Enter the application credential ID and the secret.')}
+          title={t('Application credential ID:')}
         />
       ),
     },
@@ -51,8 +51,8 @@ export const openstackAuthSubTopic = (): LearningExperienceSubTopic => ({
       id: `${OPENSTACK_AUTH_SUB_TOPIC_ID}-e`,
       title: (
         <HelpTitledContent
-          title={t('Application credential name:')}
           content={t('Enter the application credential name and the secret.')}
+          title={t('Application credential name:')}
         />
       ),
     },

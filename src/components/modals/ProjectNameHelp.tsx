@@ -24,9 +24,9 @@ const ProjectNameHelp: FC = () => {
       }
     >
       <Button
+        aria-label="View naming information"
         icon={<OutlinedQuestionCircleIcon />}
         variant={ButtonVariant.plain}
-        aria-label="View naming information"
       />
     </Popover>
   );

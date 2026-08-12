@@ -11,9 +11,9 @@ const ProviderRow: FC<RowProps<ProviderData>> = ({ resourceData, resourceFields 
     {resourceFields.map(({ resourceFieldId }) => (
       <ProviderDataCell
         key={resourceFieldId}
+        resourceData={resourceData}
         resourceFieldId={resourceFieldId}
         resourceFields={resourceFields}
-        resourceData={resourceData}
       />
     ))}
   </Tr>

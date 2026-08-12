@@ -28,20 +28,20 @@ const XfsCompatibilityDetailsItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('XFS v4 compatibility')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={
-        <Label isCompact color="grey">
+        <Label color="grey" isCompact>
           {xfsCompatibility ? t('Enabled') : t('Disabled')}
         </Label>
       }
+      crumbs={['spec', 'xfsCompatibility']}
       helpContent={t(
         'XFS v4 and BTRFS support are mutually exclusive. Enable for XFS v4 filesystems; leave disabled for BTRFS.',
       )}
-      crumbs={['spec', 'xfsCompatibility']}
       onEdit={() => {
         launcher<EditPlanProps>(EditPlanXfsCompatibility, { resource: plan });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      title={t('XFS v4 compatibility')}
     />
   );
 };

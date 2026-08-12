@@ -28,10 +28,10 @@ const HypervCredentialsFields: FC = () => {
             fieldRules={{
               required: t('Hyper-V host is required'),
             }}
-            label={t('Hyper-V host')}
             helperText={t(
               'IP address or hostname of the Hyper-V server, for example: 192.168.1.100',
             )}
+            label={t('Hyper-V host')}
             testId="hyperv-host-input"
           />
 
@@ -40,10 +40,10 @@ const HypervCredentialsFields: FC = () => {
             fieldRules={{
               required: t('Username is required'),
             }}
-            label={t('Username')}
             helperText={t(
               'Username for connecting to the Hyper-V server, for example: Administrator',
             )}
+            label={t('Username')}
             testId="hyperv-username-input"
           />
 
@@ -52,8 +52,8 @@ const HypervCredentialsFields: FC = () => {
             fieldRules={{
               required: t('Password is required'),
             }}
-            label={t('Password')}
             helperText={t('Password for connecting to the Hyper-V server')}
+            label={t('Password')}
             testId="hyperv-password-input"
           />
         </>

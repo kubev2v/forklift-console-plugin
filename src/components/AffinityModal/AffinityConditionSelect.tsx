@@ -39,15 +39,15 @@ const AffinityConditionSelect: FC<AffinityConditionSelectProps> = ({
   return (
     <FormGroup fieldId="condition" isRequired label={t('Condition')}>
       <PfSelect
+        isOpen={isOpen}
+        onSelect={handleChange}
+        selected={focusedAffinity?.condition}
         toggle={selectToggle({
           isExpanded: isOpen,
           onClick: onToggle,
           selected: AFFINITY_CONDITION_LABELS[focusedAffinity?.condition],
           testId: 'affinity-condition-select',
         })}
-        isOpen={isOpen}
-        onSelect={handleChange}
-        selected={focusedAffinity?.condition}
       >
         {Object.entries(AFFINITY_CONDITION_LABELS).map(([key, value]) => (
           <SelectOption key={key} value={key}>

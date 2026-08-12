@@ -25,6 +25,8 @@ const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ canCreate, namespac
 
   return (
     <EmptyState
+      headingLevel="h4"
+      icon={PlusCircleIcon}
       titleText={
         namespace ? (
           <ForkliftTrans>
@@ -34,8 +36,6 @@ const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ canCreate, namespac
           t('No providers found')
         )
       }
-      headingLevel="h4"
-      icon={PlusCircleIcon}
     >
       <EmptyStateBody>
         <Level hasGutter>
@@ -71,9 +71,9 @@ const ProvidersEmptyState: FC<ProvidersEmptyStateProps> = ({ canCreate, namespac
       <EmptyStateFooter>
         <EmptyStateActions>
           <ProvidersAddButton
-            testId="add-provider-button-empty-state"
-            namespace={namespace}
             canCreate={canCreate}
+            namespace={namespace}
+            testId="add-provider-button-empty-state"
           />
         </EmptyStateActions>
       </EmptyStateFooter>

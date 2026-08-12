@@ -36,13 +36,13 @@ export const OpenshiftEditURLModal: ModalComponent<EditProviderURLModalProps> = 
   return (
     <TextInputEditModal
       {...rest}
-      title={t('Edit URL')}
-      label={t('URL')}
-      initialValue={provider?.spec?.url ?? ''}
       description={description}
       helperText={t('URL of the Openshift Virtualization API endpoint.')}
-      validationHook={validateOpenshiftURL}
+      initialValue={provider?.spec?.url ?? ''}
+      label={t('URL')}
       onConfirm={onConfirm}
+      title={t('Edit URL')}
+      validationHook={validateOpenshiftURL}
     />
   );
 };

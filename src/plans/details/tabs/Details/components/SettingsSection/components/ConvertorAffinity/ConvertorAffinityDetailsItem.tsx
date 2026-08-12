@@ -40,11 +40,10 @@ const ConvertorAffinityDetailsItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="convertor-affinity-rules-detail-item"
-      title={t('Convertor pod affinity rules')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={<AffinityViewDetailsItemContent affinity={initialAffinity} />}
-      helpContent={description}
       crumbs={['spec', 'convertorAffinity']}
+      helpContent={description}
       moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
         launcher<AffinityModalProps>(AffinityModal, {
@@ -53,7 +52,8 @@ const ConvertorAffinityDetailsItem: FC<EditableDetailsItemProps> = ({
           title: t('Edit convertor pod affinity rules'),
         });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="convertor-affinity-rules-detail-item"
+      title={t('Convertor pod affinity rules')}
     />
   );
 };

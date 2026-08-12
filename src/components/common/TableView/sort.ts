@@ -76,7 +76,7 @@ export const compareWith = <
 export const useSort = (
   fields: ResourceField[],
   resolvedLanguage = 'en',
-  defaultSort?: { resourceFieldId: string; direction: SortDirection },
+  defaultSort?: { direction: SortDirection; resourceFieldId: string },
 ): [SortType, (sort: SortType) => void, (a: unknown, b: unknown) => number] => {
   // by default sort by the first identity column (if any)
   const [firstField] = [...fields].sort(
@@ -122,9 +122,9 @@ export const buildSort = ({
   resourceFields,
   setActiveSort,
 }: {
+  activeSort: SortType;
   columnIndex: number;
   resourceFields: ResourceField[];
-  activeSort: SortType;
   setActiveSort: (sort: SortType) => void;
 }): ThProps['sort'] => ({
   columnIndex,

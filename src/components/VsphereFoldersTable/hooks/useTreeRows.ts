@@ -17,13 +17,13 @@ import useSelectedTreeRows from './useSelectedTreeRows';
 import { useSlug } from './useSlug';
 import useToggleTreeRows from './useToggleTreeRows';
 type UseTreeRowsReturnValue = {
-  rows: RowNode[];
+  folderToVmKeys: Map<string, string[]>;
   groupVMCountByFolder: Map<string, number>;
+  rows: RowNode[];
   selectedVmKeys: string[];
   setSelectedVmKeys: Dispatch<SetStateAction<string[]>>;
-  showAll: boolean;
   setShowAll: Dispatch<SetStateAction<boolean>>;
-  folderToVmKeys: Map<string, string[]>;
+  showAll: boolean;
 };
 
 type UseTreeRows = (args: {
@@ -31,8 +31,8 @@ type UseTreeRows = (args: {
   controls?: UseTreeRowsControls;
   foldersDict: Record<string, VSphereResource>;
   hostsDict: Record<string, ProviderHost>;
-  vmDataArr: ProviderVmData[] | undefined;
   visibleVmIdsRef?: MutableRefObject<Set<string> | undefined>;
+  vmDataArr: ProviderVmData[] | undefined;
 }) => UseTreeRowsReturnValue;
 
 export const useTreeRows: UseTreeRows = ({

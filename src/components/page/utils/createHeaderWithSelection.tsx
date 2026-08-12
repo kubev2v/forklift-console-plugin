@@ -10,9 +10,9 @@ export const createHeaderWithSelection = <T,>({
   header: HeaderComponent,
   isExpanded,
 }: {
+  canSelect?: boolean;
   header?: FC<TableViewHeaderProps<T>>;
   isExpanded?: (item: T) => boolean;
-  canSelect?: boolean;
 }) => {
   const HeaderWithSelection = ({ dataOnScreen, ...other }: TableViewHeaderProps<T>) => {
     return (

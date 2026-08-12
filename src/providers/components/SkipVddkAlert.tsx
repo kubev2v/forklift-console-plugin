@@ -8,9 +8,9 @@ const SkipVddkAlert: FC = () => {
 
   return (
     <Alert
-      variant={AlertVariant.warning}
       isInline
       title={t('It is highly recommended to use a VDDK image.')}
+      variant={AlertVariant.warning}
     >
       <ForkliftTrans>
         <p>

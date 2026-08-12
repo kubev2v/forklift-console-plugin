@@ -43,16 +43,16 @@ const EditVmMigrateSharedDisks: ModalComponent<EditVmMigrateSharedDisksProps> = 
   const sharedDisksSlowdownAlert = (
     <Alert
       className="pf-v6-u-mt-sm pf-v6-u-ml-lg"
-      isPlain
       isInline
-      variant={AlertVariant.info}
+      isPlain
       title={t('This may slow down the migration process')}
+      variant={AlertVariant.info}
     />
   );
 
   return (
     <ModalForm
-      title={t('Edit shared disks')}
+      confirmLabel={t('Save shared disks setting')}
       description={t(
         'Choose whether to migrate shared disks for {{vmName}}. Changing this will override the plan wide setting for only this VM.',
         { vmName: vm?.name ?? t('selected') },
@@ -64,28 +64,28 @@ const EditVmMigrateSharedDisks: ModalComponent<EditVmMigrateSharedDisksProps> = 
           )}
         </HelpIconPopover>
       }
-      confirmLabel={t('Save shared disks setting')}
-      onConfirm={async () => onConfirmVmMigrateSharedDisks(index)({ newValue: value, resource })}
       isDisabled={value === currentVmValue}
+      onConfirm={async () => onConfirmVmMigrateSharedDisks(index)({ newValue: value, resource })}
       testId="edit-vm-shared-disks-modal"
+      title={t('Edit shared disks')}
       {...rest}
     >
       <Stack hasGutter>
         <StackItem>
           <Radio
-            id="shared-disks-inherit"
-            name="shared-disks-option"
-            label={t('Inherit plan wide setting')}
+            data-testid="shared-disks-option-inherit"
             description={
               planValue
                 ? t('Set to: Migrate shared disks')
                 : t('Set to: Do not migrate shared disks')
             }
+            id="shared-disks-inherit"
             isChecked={isInherit}
+            label={t('Inherit plan wide setting')}
+            name="shared-disks-option"
             onChange={() => {
               setValue(undefined);
             }}
-            data-testid="shared-disks-option-inherit"
           />
           {isInherit && planValue && sharedDisksSlowdownAlert}
           {isInherit && !planValue && isVddkInitImageNotSet && (
@@ -94,27 +94,27 @@ const EditVmMigrateSharedDisks: ModalComponent<EditVmMigrateSharedDisksProps> = 
         </StackItem>
         <StackItem>
           <Radio
+            data-testid="shared-disks-option-enabled"
             id="shared-disks-enabled"
-            name="shared-disks-option"
-            label={t('Migrate shared disks')}
             isChecked={!isInherit && resolvedValue}
+            label={t('Migrate shared disks')}
+            name="shared-disks-option"
             onChange={() => {
               setValue(true);
             }}
-            data-testid="shared-disks-option-enabled"
           />
           {!isInherit && resolvedValue && sharedDisksSlowdownAlert}
         </StackItem>
         <StackItem>
           <Radio
+            data-testid="shared-disks-option-disabled"
             id="shared-disks-disabled"
-            name="shared-disks-option"
-            label={t('Do not migrate shared disks')}
             isChecked={!isInherit && !resolvedValue}
+            label={t('Do not migrate shared disks')}
+            name="shared-disks-option"
             onChange={() => {
               setValue(false);
             }}
-            data-testid="shared-disks-option-disabled"
           />
           {!isInherit && !resolvedValue && isVddkInitImageNotSet && (
             <PlanVddkForSharedDisksWarningAlert />

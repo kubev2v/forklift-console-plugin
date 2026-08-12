@@ -3,11 +3,11 @@ import { Namespace } from 'src/utils/constants';
 import type { K8sGroupVersionKind } from '@openshift-console/dynamic-plugin-sdk';
 
 type GetResourceUrlProps = {
-  reference?: string;
   groupVersionKind?: K8sGroupVersionKind;
-  namespaced?: boolean;
-  namespace?: string;
   name?: string;
+  namespace?: string;
+  namespaced?: boolean;
+  reference?: string;
 };
 
 /**

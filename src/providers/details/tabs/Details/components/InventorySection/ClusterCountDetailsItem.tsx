@@ -19,9 +19,6 @@ const ClusterCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Clusters')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'clusterCount']}
       content={
         <InventoryCell
           data={{
@@ -34,6 +31,9 @@ const ClusterCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           inventoryValue={(inventory as VSphereProvider).clusterCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'clusterCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Clusters')}
     />
   );
 };

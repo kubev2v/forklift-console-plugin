@@ -24,9 +24,9 @@ export class StorageMapStep {
    * <2.11: uses grid > rowgroup (body) > row with gridcell elements.
    */
   private getMappingRowLocators(): {
-    rows: Locator;
     getSourceText: (row: Locator) => Promise<string | null>;
     getTargetSelect: (row: Locator) => Locator;
+    rows: Locator;
   } {
     if (isVersionAtLeast(V2_11_0)) {
       return {
@@ -52,9 +52,9 @@ export class StorageMapStep {
   }
 
   async fillAndComplete(storageMap: {
-    name: string;
     isPreexisting: boolean;
     mappings?: { source: string; target: string }[];
+    name: string;
   }): Promise<void> {
     await this.verifyStepVisible();
     await this.waitForData();
@@ -62,9 +62,9 @@ export class StorageMapStep {
   }
 
   async selectStorageMap(storageMap: {
-    name: string;
     isPreexisting: boolean;
     mappings?: { source: string; target: string }[];
+    name: string;
   }): Promise<void> {
     const selectElement = this.page.getByTestId('storage-map-select');
     if (storageMap.isPreexisting) {

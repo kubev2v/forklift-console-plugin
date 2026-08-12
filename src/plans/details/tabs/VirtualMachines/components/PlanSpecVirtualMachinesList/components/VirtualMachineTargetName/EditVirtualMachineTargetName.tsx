@@ -35,13 +35,13 @@ const EditVirtualMachineTargetName: ModalComponent<EditVirtualMachineTargetNameP
 
   return (
     <ModalForm
-      title={t('Edit target name')}
-      onConfirm={async () => patchVMTargetName({ newValue: inputValue, resource: plan, vmIndex })}
       isDisabled={
         Boolean(validateVMTargetName(inputValue, vms ?? [])) ||
         (isEmpty(vm.targetName) && isEmpty(inputValue)) ||
         vm.targetName === inputValue
       }
+      onConfirm={async () => patchVMTargetName({ newValue: inputValue, resource: plan, vmIndex })}
+      title={t('Edit target name')}
       {...rest}
     >
       <Stack hasGutter>
@@ -52,15 +52,12 @@ const EditVirtualMachineTargetName: ModalComponent<EditVirtualMachineTargetNameP
         </StackItem>
         <StackItem>
           <FormGroupWithHelpText
-            validated={validated}
             helperTextInvalid={errorMessage}
             label={t('VM target name')}
+            validated={validated}
           >
             <TextInput
-              value={inputValue}
-              onChange={(_, val) => {
-                setInputValue(val);
-              }}
+              data-testid="vm-target-name-input"
               onBlur={() => {
                 setErrorMessage(
                   validateVMTargetName(
@@ -69,11 +66,14 @@ const EditVirtualMachineTargetName: ModalComponent<EditVirtualMachineTargetNameP
                   ),
                 );
               }}
+              onChange={(_, val) => {
+                setInputValue(val);
+              }}
               onFocus={() => {
                 setErrorMessage(null);
               }}
               validated={validated}
-              data-testid="vm-target-name-input"
+              value={inputValue}
             />
           </FormGroupWithHelpText>
         </StackItem>

@@ -31,12 +31,13 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
     <>
       <PageSection hasBodyWrapper={false}>
         <ExpandableSectionHeading
+          initialExpanded
           section={
             <MigrationProgressTable
               plan={plan}
               statusVM={statusVM}
-              vmCreated={vmCreated}
               targetNamespace={targetNamespace}
+              vmCreated={vmCreated}
               vmName={statusVM?.newName ?? statusVM?.name}
             />
           }
@@ -46,7 +47,6 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
               <PlanMigrationTypeLabel migrationType={getPlanMigrationType(plan)} />
             </>
           }
-          initialExpanded
         />
       </PageSection>
       <PageSection hasBodyWrapper={false}>
@@ -54,9 +54,9 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
           section={
             <Stack hasGutter>
               <MigrationVirtualMachineTable
-                vmCreated={vmCreated}
                 statusVM={statusVM}
                 targetNamespace={targetNamespace}
+                vmCreated={vmCreated}
               />
               <MigrationPodsTable pods={pods} />
               <MigrationPVCsTable pvcs={pvcs} />

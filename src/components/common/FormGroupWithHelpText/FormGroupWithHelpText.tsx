@@ -11,12 +11,6 @@ import {
 
 type FormGroupWithHelpTextProps = {
   /**
-   * Sets the FormGroup validated. If you set to success, text color of helper text will be modified to indicate valid state.
-   * If set to error, text color of helper text will be modified to indicate error state.
-   * If set to warning, text color of helper text will be modified to indicate warning state.
-   */
-  validated?: 'success' | 'warning' | 'error' | 'default';
-  /**
    * Helper text regarding the field. It can be a simple text or an object.
    */
   helperText?: ReactNode;
@@ -29,6 +23,12 @@ type FormGroupWithHelpTextProps = {
    * `${testId}-error` and regular helper text will use the testId as-is.
    */
   testId?: string;
+  /**
+   * Sets the FormGroup validated. If you set to success, text color of helper text will be modified to indicate valid state.
+   * If set to error, text color of helper text will be modified to indicate error state.
+   * If set to warning, text color of helper text will be modified to indicate warning state.
+   */
+  validated?: 'success' | 'warning' | 'error' | 'default';
 } & FormGroupProps;
 
 /**
@@ -77,16 +77,16 @@ export const FormGroupWithHelpText: FC<FormGroupWithHelpTextProps> = ({
 
   return (
     <FormGroup
-      label={label}
-      isRequired={isRequired}
       fieldId={fieldId}
+      isRequired={isRequired}
+      label={label}
       labelHelp={labelHelp}
       role={role}
     >
       {children}
       <FormHelperText hidden={false}>
         <HelperText>
-          <HelperTextItem variant={variant} data-testid={helperTextTestId}>
+          <HelperTextItem data-testid={helperTextTestId} variant={variant}>
             {helperTextMsg}
           </HelperTextItem>
         </HelperText>

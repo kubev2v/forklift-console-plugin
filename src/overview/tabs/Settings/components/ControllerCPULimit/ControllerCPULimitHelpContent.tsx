@@ -15,7 +15,7 @@ const ControllerCPULimitHelpContent: FC = () => {
       </StackItem>
       {MTV_SETTINGS && (
         <StackItem>
-          <a href={MTV_SETTINGS} target="_blank" rel="noreferrer">
+          <a href={MTV_SETTINGS} rel="noreferrer" target="_blank">
             {t('Learn more')}
           </a>
         </StackItem>

@@ -27,8 +27,8 @@ const UploadFilesSection: FC<DetailsSectionProps> = ({ data }) => {
   }
 
   return (
-    <PageSection hasBodyWrapper={false} className="forklift-page-section--details">
-      <SectionHeading text={t('Upload local OVA file')} testId="ova-upload-section-heading" />
+    <PageSection className="forklift-page-section--details" hasBodyWrapper={false}>
+      <SectionHeading testId="ova-upload-section-heading" text={t('Upload local OVA file')} />
       <OvaFileUploader provider={provider} />
     </PageSection>
   );

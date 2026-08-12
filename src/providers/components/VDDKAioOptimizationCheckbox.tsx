@@ -20,13 +20,13 @@ const VDDKAioOptimizationCheckbox: FC = () => {
 
   return (
     <Checkbox
-      label={t('Use VMware Virtual Disk Development Kit (VDDK) async IO Optimization.')}
-      isChecked={value}
-      onChange={onChange}
-      id={ProviderFormFieldId.VsphereUseVddkAioOptimization}
-      name={ProviderFormFieldId.VsphereUseVddkAioOptimization}
-      data-testid="vddk-aio-optimization-checkbox"
       className="pf-v6-u-mt-xs"
+      data-testid="vddk-aio-optimization-checkbox"
+      id={ProviderFormFieldId.VsphereUseVddkAioOptimization}
+      isChecked={value}
+      label={t('Use VMware Virtual Disk Development Kit (VDDK) async IO Optimization.')}
+      name={ProviderFormFieldId.VsphereUseVddkAioOptimization}
+      onChange={onChange}
     />
   );
 };

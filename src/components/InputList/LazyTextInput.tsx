@@ -3,7 +3,7 @@ import { type FunctionComponent, type KeyboardEvent, useState } from 'react';
 import { TextInput } from '@patternfly/react-core';
 
 type LazyTextInputProps = {
-  value: string;
+  ariaLabel?: string;
   onChange: (value: string) => void;
   type?:
     | 'text'
@@ -17,7 +17,7 @@ type LazyTextInputProps = {
     | 'tel'
     | 'time'
     | 'url';
-  ariaLabel?: string;
+  value: string;
 };
 
 /**
@@ -55,15 +55,15 @@ export const LazyTextInput: FunctionComponent<LazyTextInputProps> = ({
 
   return (
     <TextInput
-      spellCheck="false"
-      value={value}
-      type={type}
+      aria-label={ariaLabel}
+      onBlur={handleBlur}
       onChange={(_event, val) => {
         onChangeText(val);
       }}
-      onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      aria-label={ariaLabel}
+      spellCheck="false"
+      type={type}
+      value={value}
     />
   );
 };

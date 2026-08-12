@@ -16,7 +16,7 @@ export const VmFeaturesCell: FC<VMCellProps> = ({ data }) => {
       {Object.entries(getOpenShiftFeatureMap(data?.vm))
         .filter(([, value]) => value)
         .map(([key]) => (
-          <Label key={key} isCompact>
+          <Label isCompact key={key}>
             {featureToLabel[key as keyof VmFeatures]}
           </Label>
         ))}

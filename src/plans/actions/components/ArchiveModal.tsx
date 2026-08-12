@@ -33,8 +33,8 @@ const ArchiveModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
     <ModalForm
       confirmLabel={t('Archive')}
       confirmVariant={isPlanRunning ? ButtonVariant.danger : ButtonVariant.primary}
-      title={t('Archive migration plan')}
       onConfirm={onArchive}
+      title={t('Archive migration plan')}
       {...rest}
     >
       <ForkliftTrans>

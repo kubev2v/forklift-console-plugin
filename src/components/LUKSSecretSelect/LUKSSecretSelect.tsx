@@ -58,9 +58,10 @@ const LUKSSecretSelect: FC<LUKSSecretSelectProps> = ({
   return (
     <TypeaheadSelect
       id={id}
-      testId={testId}
-      options={options}
-      value={value}
+      isDisabled={!loaded || Boolean(error)}
+      noOptionsMessage={
+        error ? t('Failed to load secrets.') : t('No Opaque secrets found in this project.')
+      }
       onChange={(selectedName) => {
         const match = opaqueSecrets.find((secret) => getName(secret) === selectedName);
 
@@ -68,11 +69,10 @@ const LUKSSecretSelect: FC<LUKSSecretSelectProps> = ({
           onSelect(undefined, match);
         }
       }}
-      isDisabled={!loaded || Boolean(error)}
+      options={options}
       placeholder={loaded ? t('Select a secret') : t('Loading secrets...')}
-      noOptionsMessage={
-        error ? t('Failed to load secrets.') : t('No Opaque secrets found in this project.')
-      }
+      testId={testId}
+      value={value}
     />
   );
 };

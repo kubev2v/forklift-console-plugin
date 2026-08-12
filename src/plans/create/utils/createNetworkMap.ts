@@ -15,11 +15,11 @@ import type { MappingValue } from '@utils/types';
 
 type CreateNetworkMapParams = {
   mappings: NetworkMapping[];
+  name?: string;
   project: string;
   sourceProvider?: V1beta1Provider;
-  targetProvider?: V1beta1Provider;
-  name?: string;
   targetNamespace: string;
+  targetProvider?: V1beta1Provider;
   trackEvent?: (eventType: string, properties?: Record<string, unknown>) => void;
 };
 

@@ -8,13 +8,13 @@ export type PlanStorageEditFormValues = {
 };
 
 export type PlanStorageMapEditProps = {
-  storageMap: V1beta1StorageMap;
-  sourceProvider: V1beta1Provider;
-  sourceStorages?: InventoryStorage[];
-  storageMappings: StorageMapping[];
-  otherSourceStorages: MappingValue[];
-  usedSourceStorages: MappingValue[];
-  targetStorages: TargetStorage[];
   isLoading: boolean;
   loadError: Error | null;
+  otherSourceStorages: MappingValue[];
+  sourceProvider: V1beta1Provider;
+  sourceStorages?: InventoryStorage[];
+  storageMap: V1beta1StorageMap;
+  storageMappings: StorageMapping[];
+  targetStorages: TargetStorage[];
+  usedSourceStorages: MappingValue[];
 };

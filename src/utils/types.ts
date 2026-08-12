@@ -3,12 +3,12 @@ import type { ProviderVirtualMachine } from '@forklift-ui/types';
 import type { FEATURE_NAMES } from './constants';
 
 export type ProviderVmData = {
-  vm: ProviderVirtualMachine;
-  name: string;
-  namespace: string;
-  isProviderLocalOpenshift?: boolean;
   folderName?: string;
   hostName?: string;
+  isProviderLocalOpenshift?: boolean;
+  name: string;
+  namespace: string;
+  vm: ProviderVirtualMachine;
 };
 
 export enum ProviderStatus {
@@ -21,10 +21,10 @@ export enum ProviderStatus {
 }
 
 export type VmFeatures = {
-  numa?: boolean;
-  gpusHostDevices?: boolean;
-  persistentTpmEfi?: boolean;
   dedicatedCpu?: boolean;
+  gpusHostDevices?: boolean;
+  numa?: boolean;
+  persistentTpmEfi?: boolean;
 };
 
 export type FeatureName = (typeof FEATURE_NAMES)[keyof typeof FEATURE_NAMES];
@@ -43,8 +43,8 @@ export type MappingValue = { id?: string; name: string; vlan?: string };
  */
 export type PermissionStatus = {
   canCreate: boolean;
-  canPatch: boolean;
   canDelete: boolean;
   canGet: boolean;
+  canPatch: boolean;
   loading: boolean;
 };

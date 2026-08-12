@@ -15,18 +15,18 @@ const EditPlanXfsCompatibility: ModalComponent<EditPlanProps> = ({ resource, ...
 
   return (
     <ModalForm
-      title={t('Edit XFS v4 compatibility')}
       description={t(
         'XFS v4 and BTRFS support are mutually exclusive. Enable for XFS v4 filesystems; leave disabled for BTRFS.',
       )}
       onConfirm={async () => onConfirmXfsCompatibility({ newValue: value, resource })}
+      title={t('Edit XFS v4 compatibility')}
       {...rest}
     >
       <Checkbox
-        id="xfs-compatibility-checkbox"
         data-testid="xfs-compatibility-checkbox"
-        label={t('Enable XFS v4 compatibility')}
+        id="xfs-compatibility-checkbox"
         isChecked={value}
+        label={t('Enable XFS v4 compatibility')}
         onChange={(_, checked) => {
           setValue(checked);
         }}

@@ -107,9 +107,9 @@ const ThroughputCard: FC<ThroughputCardProps> = ({ metricName, title }) => {
     return (
       <ThroughputLineChart
         series={data}
-        visiblePlanIds={selectedPlanIds}
         timeRange={selectedRange}
         title={title}
+        visiblePlanIds={selectedPlanIds}
       />
     );
   };
@@ -122,10 +122,10 @@ const ThroughputCard: FC<ThroughputCardProps> = ({ metricName, title }) => {
             <Flex spaceItems={{ default: 'spaceItemsSm' }}>
               <FlexItem>
                 <PlanSelectFilter
+                  isDisabled={noResults}
                   plans={planOptions}
                   selectedPlanIds={selectedPlanIds}
                   setSelectedPlanIds={setSelectedPlanIds}
-                  isDisabled={noResults}
                 />
               </FlexItem>
               <FlexItem>

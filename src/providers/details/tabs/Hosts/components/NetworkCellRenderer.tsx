@@ -44,19 +44,19 @@ const NetworkCellRenderer: FC<HostCellProps> = (props) => {
   if (hostStatus.status === 'Running' || hostStatus.status === 'Error') {
     cellContent = (
       <Popover
-        showClose={false}
         aria-label="Host status details"
+        bodyContent={<div>{hostStatus.message}</div>}
         headerContent={
           <div>
             {statusIcon} {hostStatus.status}
           </div>
         }
-        bodyContent={<div>{hostStatus.message}</div>}
+        showClose={false}
       >
         <Button
-          variant={ButtonVariant.link}
-          isInline
           data-testid="popover-status-button-host-network"
+          isInline
+          variant={ButtonVariant.link}
         >
           {cellContent}
         </Button>

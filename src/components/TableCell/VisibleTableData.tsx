@@ -4,10 +4,10 @@ import type { ResourceField } from '@components/common/utils/types';
 import { Td } from '@patternfly/react-table';
 
 type VisibleTableDataProps = {
-  fieldId: string;
-  resourceFields: ResourceField[];
   children: ReactNode;
   className?: string;
+  fieldId: string;
+  resourceFields: ResourceField[];
 };
 
 const VisibleTableData: FC<VisibleTableDataProps> = ({

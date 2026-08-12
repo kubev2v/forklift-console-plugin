@@ -26,11 +26,11 @@ const TestWrapper = ({
   diskDecryptionType = DiskDecryptionType.New,
   existingLUKSSecret,
 }: {
-  sourceProvider: any;
-  nbdeClevis?: boolean;
-  diskPassPhrases?: any[];
   diskDecryptionType?: DiskDecryptionType;
+  diskPassPhrases?: any[];
   existingLUKSSecret?: any;
+  nbdeClevis?: boolean;
+  sourceProvider: any;
 }) => {
   const methods = useForm({
     defaultValues: {
@@ -69,18 +69,18 @@ describe('OtherSettingsReviewSection', () => {
   });
 
   it('shows Enabled/Disabled status for NBDE', () => {
-    render(<TestWrapper sourceProvider={vsphereProvider} nbdeClevis={false} />);
+    render(<TestWrapper nbdeClevis={false} sourceProvider={vsphereProvider} />);
     expect(screen.getByTestId('review-nbde-clevis')).toHaveTextContent('Disabled');
   });
 
   it('shows Enabled status when NBDE is true', () => {
-    render(<TestWrapper sourceProvider={vsphereProvider} nbdeClevis={true} />);
+    render(<TestWrapper nbdeClevis={true} sourceProvider={vsphereProvider} />);
     expect(screen.getByTestId('review-nbde-clevis')).toHaveTextContent('Enabled');
   });
 
   it('shows passphrase count when NBDE is disabled', () => {
     const diskPassPhrases = [{ value: 'test-pass' }];
-    render(<TestWrapper sourceProvider={vsphereProvider} diskPassPhrases={diskPassPhrases} />);
+    render(<TestWrapper diskPassPhrases={diskPassPhrases} sourceProvider={vsphereProvider} />);
 
     expect(screen.getByText('Disk decryption passphrases')).toBeInTheDocument();
     expect(screen.getByTestId('review-disk-decryption-passphrases')).toHaveTextContent(
@@ -92,9 +92,9 @@ describe('OtherSettingsReviewSection', () => {
     const diskPassPhrases = [{ value: 'test-pass' }];
     render(
       <TestWrapper
-        sourceProvider={vsphereProvider}
-        nbdeClevis={true}
         diskPassPhrases={diskPassPhrases}
+        nbdeClevis={true}
+        sourceProvider={vsphereProvider}
       />,
     );
 
@@ -103,7 +103,7 @@ describe('OtherSettingsReviewSection', () => {
   });
 
   it('shows "None" when no passphrases and NBDE disabled', () => {
-    render(<TestWrapper sourceProvider={vsphereProvider} diskPassPhrases={[]} />);
+    render(<TestWrapper diskPassPhrases={[]} sourceProvider={vsphereProvider} />);
 
     expect(screen.getByTestId('review-disk-decryption-passphrases')).toHaveTextContent('None');
   });
@@ -119,9 +119,9 @@ describe('OtherSettingsReviewSection', () => {
     const existingSecret = { metadata: { name: 'my-luks-secret' } };
     render(
       <TestWrapper
-        sourceProvider={vsphereProvider}
         diskDecryptionType={DiskDecryptionType.Existing}
         existingLUKSSecret={existingSecret}
+        sourceProvider={vsphereProvider}
       />,
     );
 
@@ -133,9 +133,9 @@ describe('OtherSettingsReviewSection', () => {
     const diskPassPhrases = [{ value: 'pass-1' }];
     render(
       <TestWrapper
-        sourceProvider={vsphereProvider}
         diskDecryptionType={DiskDecryptionType.New}
         diskPassPhrases={diskPassPhrases}
+        sourceProvider={vsphereProvider}
       />,
     );
 

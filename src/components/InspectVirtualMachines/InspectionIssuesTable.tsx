@@ -16,9 +16,8 @@ const InspectionIssuesTable: FC<InspectionIssuesTableProps> = ({ concerns }) => 
   const { t } = useForkliftTranslation();
 
   return (
-    <DescriptionList isCompact columnModifier={{ default: '1Col' }}>
+    <DescriptionList columnModifier={{ default: '1Col' }} isCompact>
       <DetailsItem
-        title={t('Issues found')}
         content={
           isEmpty(concerns) ? (
             <>{t('None')}</>
@@ -45,6 +44,7 @@ const InspectionIssuesTable: FC<InspectionIssuesTableProps> = ({ concerns }) => 
             </Table>
           )
         }
+        title={t('Issues found')}
       />
     </DescriptionList>
   );

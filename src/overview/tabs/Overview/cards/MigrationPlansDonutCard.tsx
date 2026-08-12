@@ -13,9 +13,9 @@ import { ChartColors } from '../utils/colors';
 import type { ChartDatum } from '../utils/types';
 
 type MigrationPlansDonutCardProps = {
-  obj?: V1beta1ForkliftController;
   loaded?: boolean;
   loadError?: unknown;
+  obj?: V1beta1ForkliftController;
 };
 
 const MigrationPlansDonutCard: FC<MigrationPlansDonutCardProps> = () => {
@@ -76,15 +76,6 @@ const MigrationPlansDonutCard: FC<MigrationPlansDonutCardProps> = () => {
             colorScale={colorScale}
             constrainToVisibleArea
             data={data}
-            labels={({ datum }: { datum: ChartDatum }) =>
-              count.Total === 0
-                ? (undefined as unknown as string)
-                : `${t('{{count}} plan', { count: datum.y })}
-            ${datum.x}`
-            }
-            title={`${count?.Total ?? '0'}`}
-            subTitle={t('Plans')}
-            innerRadius={88}
             events={[
               {
                 eventHandlers: {
@@ -120,6 +111,13 @@ const MigrationPlansDonutCard: FC<MigrationPlansDonutCardProps> = () => {
                 target: 'data',
               },
             ]}
+            innerRadius={88}
+            labels={({ datum }: { datum: ChartDatum }) =>
+              count.Total === 0
+                ? (undefined as unknown as string)
+                : `${t('{{count}} plan', { count: datum.y })}
+            ${datum.x}`
+            }
             style={{
               data: {
                 cursor: 'pointer',
@@ -127,6 +125,8 @@ const MigrationPlansDonutCard: FC<MigrationPlansDonutCardProps> = () => {
                 strokeWidth: ({ index }) => (hoveredIndex === index ? 2 : 1),
               },
             }}
+            subTitle={t('Plans')}
+            title={`${count?.Total ?? '0'}`}
           />
         </div>
         <div>

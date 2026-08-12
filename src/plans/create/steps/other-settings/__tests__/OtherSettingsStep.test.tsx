@@ -28,8 +28,8 @@ const TestWrapper = ({
   sourceProvider,
   nbdeClevis = false,
 }: {
-  sourceProvider: any;
   nbdeClevis?: boolean;
+  sourceProvider: any;
 }) => {
   const methods = useForm({
     defaultValues: {
@@ -55,7 +55,7 @@ describe('OtherSettingsStep', () => {
 
   it('shows passphrase field when NBDE is disabled', () => {
     const vsphereProvider = { spec: { type: PROVIDER_TYPES.vsphere } };
-    render(<TestWrapper sourceProvider={vsphereProvider} nbdeClevis={false} />);
+    render(<TestWrapper nbdeClevis={false} sourceProvider={vsphereProvider} />);
 
     expect(screen.getByTestId('nbde-field')).toBeInTheDocument();
     expect(screen.getByTestId('passphrase-field')).toBeInTheDocument();
@@ -63,7 +63,7 @@ describe('OtherSettingsStep', () => {
 
   it('hides passphrase field when NBDE is enabled', () => {
     const vsphereProvider = { spec: { type: PROVIDER_TYPES.vsphere } };
-    render(<TestWrapper sourceProvider={vsphereProvider} nbdeClevis={true} />);
+    render(<TestWrapper nbdeClevis={true} sourceProvider={vsphereProvider} />);
 
     expect(screen.getByTestId('nbde-field')).toBeInTheDocument();
     expect(screen.queryByTestId('passphrase-field')).not.toBeInTheDocument();

@@ -40,22 +40,19 @@ export const NetworkMapPageHeadings: FC<{ name: string; namespace?: string }> = 
   if (criticalCondition) {
     alerts.push(
       <NetworkMapCriticalConditions
-        type={criticalCondition?.type}
-        message={criticalCondition?.message ?? ''}
         key={'mapCriticalCondition'}
+        message={criticalCondition?.message ?? ''}
+        type={criticalCondition?.type}
       />,
     );
   }
 
   return (
     <PageHeadings
-      model={{ ...NetworkMapModel, label: 'Network map' }}
-      obj={obj}
-      namespace={namespace}
       actions={
         <Flex
-          direction={{ default: 'row' }}
           alignItems={{ default: 'alignItemsCenter' }}
+          direction={{ default: 'row' }}
           spaceItems={{ default: 'spaceItemsMd' }}
         >
           <FlexItem>
@@ -71,9 +68,12 @@ export const NetworkMapPageHeadings: FC<{ name: string; namespace?: string }> = 
           </FlexItem>
         </Flex>
       }
+      model={{ ...NetworkMapModel, label: 'Network map' }}
+      namespace={namespace}
+      obj={obj}
     >
       {!isEmpty(alerts) && (
-        <PageSection hasBodyWrapper={false} className="forklift-page-headings-alerts">
+        <PageSection className="forklift-page-headings-alerts" hasBodyWrapper={false}>
           {alerts}
         </PageSection>
       )}

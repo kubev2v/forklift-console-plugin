@@ -15,7 +15,7 @@ const ConditionsSection: FC<ConditionsSectionProps> = ({ conditions }): ReactEle
   const { t } = useForkliftTranslation();
 
   return (
-    <PageSection hasBodyWrapper={false} className="forklift-page-section">
+    <PageSection className="forklift-page-section" hasBodyWrapper={false}>
       <SectionHeading text={t('Conditions')} />
 
       {conditions ? (

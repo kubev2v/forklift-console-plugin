@@ -24,13 +24,13 @@ import { CreatePlanStorageMapFieldId, createPlanStorageMapFieldLabels } from './
 import { validatePlanStorageMaps } from './utils';
 
 type CreatePlanStorageMapFieldTableProps = {
-  targetStorages: TargetStorage[];
-  usedSourceStorages: MappingValue[];
-  otherSourceStorages: MappingValue[];
-  sourceStorageInventory?: InventoryStorage[];
+  isIscsi?: boolean;
   isLoading: boolean;
   loadError: Error | null;
-  isIscsi?: boolean;
+  otherSourceStorages: MappingValue[];
+  sourceStorageInventory?: InventoryStorage[];
+  targetStorages: TargetStorage[];
+  usedSourceStorages: MappingValue[];
 };
 
 const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = ({
@@ -89,7 +89,25 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
 
   return (
     <FieldBuilderTable
-      headers={headers}
+      addButton={{
+        isDisabled:
+          Boolean(isIscsi) ||
+          [...usedSourceStorages, ...otherSourceStorages].length === storageMappingFields.length ||
+          isLoading ||
+          Boolean(loadError),
+        label: t('Add mapping'),
+        onClick: () => {
+          append({
+            [CreatePlanStorageMapFieldId.SourceStorage]:
+              defaultStorageMapping[CreatePlanStorageMapFieldId.SourceStorage],
+            [CreatePlanStorageMapFieldId.TargetStorage]: {
+              name:
+                targetStorages[0]?.name ??
+                defaultStorageMapping[CreatePlanStorageMapFieldId.TargetStorage].name,
+            },
+          });
+        },
+      }}
       fieldRows={storageMappingFields.map((field, index) => ({
         ...field,
         additionalOptions: (
@@ -98,11 +116,11 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
               <AccessModeField
                 fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
                 key={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
-                targetStorages={targetStorages}
                 targetStorageFieldId={getStorageMapFieldId(
                   CreatePlanStorageMapFieldId.TargetStorage,
                   index,
                 )}
+                targetStorages={targetStorages}
               />
             </StackItem>
             {isVsphereOffload && (
@@ -130,15 +148,15 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
               <GroupedSourceStorageField
                 fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.SourceStorage, index)}
                 key={getStorageMapFieldId(CreatePlanStorageMapFieldId.SourceStorage, index)}
+                otherSourceStorages={otherSourceStorages}
                 storageMappings={storageMappings}
                 usedSourceStorages={usedSourceStorages}
-                otherSourceStorages={otherSourceStorages}
               />,
               isVsphereOffload ? (
                 <TargetStorageWithSuggestion
                   fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
-                  key={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
                   index={index}
+                  key={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
                   sourceStorages={sourceStorageInventory ?? []}
                   targetStorages={targetStorages}
                   testId="target-storage-select"
@@ -153,25 +171,7 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
               ),
             ],
       }))}
-      addButton={{
-        isDisabled:
-          Boolean(isIscsi) ||
-          [...usedSourceStorages, ...otherSourceStorages].length === storageMappingFields.length ||
-          isLoading ||
-          Boolean(loadError),
-        label: t('Add mapping'),
-        onClick: () => {
-          append({
-            [CreatePlanStorageMapFieldId.SourceStorage]:
-              defaultStorageMapping[CreatePlanStorageMapFieldId.SourceStorage],
-            [CreatePlanStorageMapFieldId.TargetStorage]: {
-              name:
-                targetStorages[0]?.name ??
-                defaultStorageMapping[CreatePlanStorageMapFieldId.TargetStorage].name,
-            },
-          });
-        },
-      }}
+      headers={headers}
       removeButton={{
         isDisabled: () => Boolean(isIscsi) || storageMappingFields.length <= 1,
         onClick: (index) => {

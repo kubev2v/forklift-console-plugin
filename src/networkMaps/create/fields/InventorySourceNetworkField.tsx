@@ -46,26 +46,26 @@ const InventorySourceNetworkField: FC<InventorySourceNetworkFieldProps> = ({
   );
 
   return (
-    <FormGroupWithErrorText isRequired fieldId={fieldId}>
+    <FormGroupWithErrorText fieldId={fieldId} isRequired>
       <Controller
-        name={fieldId}
         control={control}
+        name={fieldId}
         render={({ field }) => (
           <Select
-            ref={field.ref}
             id={fieldId}
-            testId={`source-network-${fieldId}`}
             isDisabled={isSubmitting}
-            value={(field.value as MappingValue).name}
             onSelect={async (_event, value) => {
               field.onChange(value);
               await trigger();
             }}
             placeholder={t('Select source network')}
+            ref={field.ref}
+            testId={`source-network-${fieldId}`}
+            value={(field.value as MappingValue).name}
           >
             <SelectList>
               {isEmpty(sourceNetworks) ? (
-                <SelectOption key="empty" isDisabled>
+                <SelectOption isDisabled key="empty">
                   {t('Select a source provider to list available source networks')}
                 </SelectOption>
               ) : (
@@ -78,9 +78,9 @@ const InventorySourceNetworkField: FC<InventorySourceNetworkFieldProps> = ({
 
                   return (
                     <SelectOption
+                      description={duplicateLabels.has(networkLabel) ? network.id : undefined}
                       key={network.id}
                       value={networkValue}
-                      description={duplicateLabels.has(networkLabel) ? network.id : undefined}
                     >
                       {networkLabel}
                     </SelectOption>

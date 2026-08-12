@@ -14,9 +14,9 @@ import { DEFAULT_NETWORK } from '@utils/constants';
 import { getNetworkName } from './utils/getNetworkName';
 
 type ProviderDefaultTransferNetworkDropdownProps = {
-  value: string | number;
   onChange: (arg0: string) => void;
   provider: V1beta1Provider;
+  value: string | number;
 };
 
 const ProviderDefaultTransferNetworkDropdown: FC<ProviderDefaultTransferNetworkDropdownProps> = ({
@@ -41,23 +41,23 @@ const ProviderDefaultTransferNetworkDropdown: FC<ProviderDefaultTransferNetworkD
 
   const dropdownItems = [
     <DropdownItem
-      value={0}
-      key={DEFAULT_NETWORK}
       description={DEFAULT_NETWORK}
+      key={DEFAULT_NETWORK}
       onClick={() => {
         onChange('');
       }}
+      value={0}
     >
       {DEFAULT_NETWORK}
     </DropdownItem>,
     ...(networks ?? []).map((network) => (
       <DropdownItem
-        value={1}
-        key={network.name}
         description={network.namespace}
+        key={network.name}
         onClick={() => {
           onChange(`${network.namespace}/${network.name}`);
         }}
+        value={1}
       >
         {network.name}
       </DropdownItem>
@@ -67,18 +67,18 @@ const ProviderDefaultTransferNetworkDropdown: FC<ProviderDefaultTransferNetworkD
   return (
     <Dropdown
       isOpen={isOpen}
+      isScrollable={true}
       onOpenChange={setIsOpen}
       onSelect={onSelect}
-      toggle={(toggleRef: Ref<MenuToggleElement>) => (
-        <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} variant={'default'}>
-          {currentSelectedName}
-        </MenuToggle>
-      )}
-      shouldFocusToggleOnSelect
       popperProps={{
         position: 'right',
       }}
-      isScrollable={true}
+      shouldFocusToggleOnSelect
+      toggle={(toggleRef: Ref<MenuToggleElement>) => (
+        <MenuToggle isExpanded={isOpen} onClick={onToggleClick} ref={toggleRef} variant={'default'}>
+          {currentSelectedName}
+        </MenuToggle>
+      )}
     >
       <DropdownList>{dropdownItems}</DropdownList>
     </Dropdown>

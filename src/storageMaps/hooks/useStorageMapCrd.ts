@@ -5,8 +5,8 @@ import { CrdGroupVersionKind, CrdK8sResourceName } from './constants';
 
 type UseStorageMapCrdResult = {
   crd: CustomResourceDefinition | null;
-  loading: boolean;
   error: Error | null;
+  loading: boolean;
 };
 
 export const useStorageMapCrd = (): UseStorageMapCrdResult => {

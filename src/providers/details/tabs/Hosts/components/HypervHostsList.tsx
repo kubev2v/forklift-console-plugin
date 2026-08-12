@@ -79,12 +79,12 @@ const HypervHostsList: FC<HypervHostsListProps> = ({ data }) => {
 
   return (
     <StandardPageWithSelection<HypervHost>
+      cell={HypervHostsCells}
       dataSource={[inventoryHosts ?? [], !loading, error]}
       fieldsMetadata={hypervHostsFields}
       namespace={provider?.metadata?.namespace ?? undefined}
       title={t('Cluster hosts')}
       userSettings={userSettings}
-      cell={HypervHostsCells}
     />
   );
 };

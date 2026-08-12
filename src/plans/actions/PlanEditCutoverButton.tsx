@@ -46,14 +46,14 @@ const PlanEditCutoverButton: FC<PlanEditCutoverButtonProps> = ({ plan, variant }
   return (
     <>
       <Button
-        ref={cutoverButtonRef}
+        icon={<CalendarAltIcon />}
+        iconPosition="left"
         isInline
-        variant={variant}
         onClick={() => {
           launcher<PlanModalProps>(PlanCutoverMigrationModal, { plan });
         }}
-        icon={<CalendarAltIcon />}
-        iconPosition="left"
+        ref={cutoverButtonRef}
+        variant={variant}
       >
         {cutoverDateTime ? t('Edit cutover') : t('Schedule cutover')}
       </Button>

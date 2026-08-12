@@ -12,10 +12,10 @@ const ExpandableDescriptionContent: FC<ExpandableDescriptionContentProps> = ({ s
     <>
       {subTopic.subTopics?.().map((nextSubTopic, subIndex) => (
         <HelpTopicSection
-          key={nextSubTopic.id}
-          topic={nextSubTopic}
           index={subIndex}
+          key={nextSubTopic.id}
           listStyleType={subTopic.subListStyleType}
+          topic={nextSubTopic}
         />
       ))}
     </>

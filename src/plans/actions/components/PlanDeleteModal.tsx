@@ -36,8 +36,8 @@ const PlanDeleteModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
 
   return (
     <ModalForm
-      confirmVariant={ButtonVariant.danger}
       confirmLabel={t('Delete')}
+      confirmVariant={ButtonVariant.danger}
       onConfirm={onDelete}
       title={t('Delete plan')}
       {...rest}
@@ -58,18 +58,18 @@ const PlanDeleteModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
         <StackItem>
           {(status === PlanStatuses.Executing || status === PlanStatuses.Pending) && (
             <Alert
-              variant="danger"
-              title={t('Plan is currently running')}
               className="forklift-delete-modal__alert"
+              title={t('Plan is currently running')}
+              variant="danger"
             />
           )}
         </StackItem>
         <StackItem>
           {status !== PlanStatuses.Archived && (
             <Alert
-              variant="info"
-              title={t('Plan is not archived')}
               className="forklift-delete-modal__alert"
+              title={t('Plan is not archived')}
+              variant="info"
             >
               <ForkliftTrans>
                 Deleting a migration plan does not remove temporary resources, it is recommended to{' '}
@@ -79,7 +79,7 @@ const PlanDeleteModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
             </Alert>
           )}
         </StackItem>
-        <StackItem>{owner && <ItemIsOwnedAlert owner={owner} namespace={namespace} />}</StackItem>
+        <StackItem>{owner && <ItemIsOwnedAlert namespace={namespace} owner={owner} />}</StackItem>
       </Stack>
     </ModalForm>
   );

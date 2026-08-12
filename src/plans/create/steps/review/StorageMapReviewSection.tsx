@@ -50,7 +50,7 @@ const StorageMapReviewSectionInner: FC = () => {
 
   if (storageMapType === StorageMapType.Existing) {
     return (
-      <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+      <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
         <DescriptionListGroup>
           <DescriptionListTerm>{t('Storage map')}</DescriptionListTerm>
           <DescriptionListDescription data-testid="review-storage-map">
@@ -68,7 +68,7 @@ const StorageMapReviewSectionInner: FC = () => {
   if (netMapName) {
     return (
       <Stack hasGutter>
-        <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+        <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
           <DescriptionListGroup>
             <DescriptionListTerm>{t('Storage map name')}</DescriptionListTerm>
             <DescriptionListDescription>{netMapName}</DescriptionListDescription>
@@ -88,11 +88,11 @@ const StorageMapReviewSection: FC = () => {
 
   return (
     <ExpandableReviewSection
-      title={planStepNames[PlanWizardStepId.StorageMap]}
-      testId="review-storage-map-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.StorageMap);
       }}
+      testId="review-storage-map-section"
+      title={planStepNames[PlanWizardStepId.StorageMap]}
     >
       <StorageMapReviewSectionInner />
     </ExpandableReviewSection>

@@ -6,10 +6,10 @@ import { HelpIcon } from '@patternfly/react-icons';
 
 type HelpIconPopoverProps = {
   children: ReactNode;
-  header?: ReactNode;
-  popoverProps?: Omit<PopoverProps, 'bodyContent' | 'titleContent'>;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
+  header?: ReactNode;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  popoverProps?: Omit<PopoverProps, 'bodyContent' | 'titleContent'>;
 };
 
 export const HelpIconPopover: FC<HelpIconPopoverProps> = ({
@@ -19,14 +19,14 @@ export const HelpIconPopover: FC<HelpIconPopoverProps> = ({
   onClick,
   popoverProps,
 }) => (
-  <Popover position="right" bodyContent={children} headerContent={header} {...popoverProps}>
+  <Popover bodyContent={children} headerContent={header} position="right" {...popoverProps}>
     <Button
-      size="sm"
-      isInline
-      variant={ButtonVariant.plain}
-      icon={<HelpIcon />}
-      onClick={onClick}
       className={classNames('pf-v6-u-align-items-center', 'pf-v6-u-p-0', className)}
+      icon={<HelpIcon />}
+      isInline
+      onClick={onClick}
+      size="sm"
+      variant={ButtonVariant.plain}
     />
   </Popover>
 );

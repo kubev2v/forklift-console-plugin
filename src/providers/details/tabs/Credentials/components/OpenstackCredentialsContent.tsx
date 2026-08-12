@@ -15,8 +15,8 @@ import CredentialContentField from './CredentialFieldContent';
 import CredentialFields from './CredentialFields';
 
 type OpenstackCredentialsContentProps = {
-  secret: IoK8sApiCoreV1Secret;
   reveal: boolean;
+  secret: IoK8sApiCoreV1Secret;
 };
 
 const OpenstackCredentialsContent: FC<OpenstackCredentialsContentProps> = ({ reveal, secret }) => {
@@ -28,24 +28,24 @@ const OpenstackCredentialsContent: FC<OpenstackCredentialsContentProps> = ({ rev
   return (
     <>
       <DetailsItem
+        content={<CredentialContentField reveal={reveal} value={decodedAuthType} />}
         testId={`credential-${OpenstackSecretFieldsId.AuthType}`}
         title={openstackAuthTypeField.label}
-        content={<CredentialContentField value={decodedAuthType} reveal={reveal} />}
       />
-      <CredentialFields fields={openstackFields} secret={secret} reveal={reveal} />
+      <CredentialFields fields={openstackFields} reveal={reveal} secret={secret} />
       <DetailsItem
-        testId={`credential-${OpenstackSecretFieldsId.InsecureSkipVerify}`}
-        title={openstackInsecureSkipVerifyField.label}
+        content={<CredentialContentField reveal={reveal} value={decodedInsecureSkipVerify} />}
         helpContent={openstackInsecureSkipVerifyField.helperTextPopover}
         showHelpIconNextToTitle
-        content={<CredentialContentField value={decodedInsecureSkipVerify} reveal={reveal} />}
+        testId={`credential-${OpenstackSecretFieldsId.InsecureSkipVerify}`}
+        title={openstackInsecureSkipVerifyField.label}
       />
       <DetailsItem
-        testId={`credential-${OpenstackSecretFieldsId.CaCert}`}
-        title={openstackCacertField.label}
+        content={<CredentialContentField reveal={reveal} value={decodedCacert} />}
         helpContent={openstackCacertField.helperTextPopover}
         showHelpIconNextToTitle
-        content={<CredentialContentField value={decodedCacert} reveal={reveal} />}
+        testId={`credential-${OpenstackSecretFieldsId.CaCert}`}
+        title={openstackCacertField.label}
       />
     </>
   );

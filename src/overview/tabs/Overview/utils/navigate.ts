@@ -14,11 +14,11 @@ export const navigateToHistoryTab = ({
   selectedRange,
   status,
 }: {
+  interval?: Interval<true> | Interval<false>;
+  migrations?: string[] | null;
   navigate: NavigateFunction;
   selectedRange?: TimeRangeOptions;
   status?: string;
-  interval?: Interval<true> | Interval<false>;
-  migrations?: string[] | null;
 }) => {
   const dateEnd = interval?.end ?? DateTime.now().toUTC();
   const dateStart =

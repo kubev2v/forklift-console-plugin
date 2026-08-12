@@ -11,8 +11,8 @@ export const createPlanSubTopic = (): LearningExperienceSubTopic => {
     title: (
       <LabelButton
         groupVersionKind={PlanModelGroupVersionKind}
-        label={t('Create plan')}
         isCreateForm
+        label={t('Create plan')}
         preText={t('Click on')}
       />
     ),

@@ -134,17 +134,17 @@ const StorageMapsListPage: FC<{
         {...(permissions.canCreate && {
           addButton: <StorageMapsAddButton namespace={namespace} testId="add-storage-map-button" />,
         })}
+        customNoResultsFound={<StorageMapsEmptyState namespace={namespace} />}
         dataSource={[data || [], StorageMapsLoaded, StorageMapsLoadError]}
-        row={StorageMapRow}
         fieldsMetadata={fieldsMetadata}
         namespace={namespace}
+        row={StorageMapRow}
+        shouldShowLearningExperienceButton
         title={t('Storage maps')}
         titleHelpContent={t(
           'Storage maps define how the storage of source VMs will be provisioned on the target cluster by linking source storage entities to target storage classes.',
         )}
         userSettings={userSettings}
-        customNoResultsFound={<StorageMapsEmptyState namespace={namespace} />}
-        shouldShowLearningExperienceButton
       />
     </LearningExperienceDrawer>
   );

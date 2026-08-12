@@ -32,26 +32,28 @@ const StorageMapStep = () => {
 
   return (
     <WizardStepContainer
-      title={planStepNames[PlanWizardStepId.StorageMap]}
       description={t('Select an existing storage map or use a new storage map.')}
       testId="create-plan-storage-map-step"
+      title={planStepNames[PlanWizardStepId.StorageMap]}
     >
       <Form>
         <Controller
-          name={CreatePlanStorageMapFieldId.StorageMapType}
           control={control}
+          name={CreatePlanStorageMapFieldId.StorageMapType}
           render={({ field: storageTypeField }) => (
             <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
               <FlexItem>
                 <Stack hasGutter>
                   <Radio
-                    data-testid="use-existing-storage-map-radio"
-                    id={StorageMapType.Existing}
-                    name={StorageMapType.Existing}
-                    label={storageMapTypeLabels[StorageMapType.Existing]}
                     checked={storageTypeField.value === StorageMapType.Existing}
-                    value={storageTypeField.value}
+                    data-testid="use-existing-storage-map-radio"
+                    description={t(
+                      'Existing storage map options are limited to those without an owner reference. Upon creation of this plan, a new storage map will be created with this plan as its owner.',
+                    )}
+                    id={StorageMapType.Existing}
                     isChecked={storageTypeField.value === StorageMapType.Existing}
+                    label={storageMapTypeLabels[StorageMapType.Existing]}
+                    name={StorageMapType.Existing}
                     onChange={() => {
                       storageTypeField.onChange(StorageMapType.Existing);
                       unregister([
@@ -60,9 +62,7 @@ const StorageMapStep = () => {
                       ]);
                       handleStorageMapTypeChange(StorageMapType.Existing);
                     }}
-                    description={t(
-                      'Existing storage map options are limited to those without an owner reference. Upon creation of this plan, a new storage map will be created with this plan as its owner.',
-                    )}
+                    value={storageTypeField.value}
                   />
 
                   {storageTypeField.value === StorageMapType.Existing && (
@@ -74,21 +74,21 @@ const StorageMapStep = () => {
               <FlexItem>
                 <Stack hasGutter>
                   <Radio
+                    checked={storageTypeField.value === StorageMapType.New}
                     data-testid="use-new-storage-map-radio"
-                    id={StorageMapType.New}
-                    name={StorageMapType.New}
-                    label={storageMapTypeLabels[StorageMapType.New]}
                     description={t(
                       'Use the suggested storage mapping and add mappings to it, or create a brand new one as needed. A new map, with this plan as its owner, will be automatically created based on your selected mappings.',
                     )}
-                    checked={storageTypeField.value === StorageMapType.New}
-                    value={storageTypeField.value}
+                    id={StorageMapType.New}
                     isChecked={storageTypeField.value === StorageMapType.New}
+                    label={storageMapTypeLabels[StorageMapType.New]}
+                    name={StorageMapType.New}
                     onChange={() => {
                       storageTypeField.onChange(StorageMapType.New);
                       unregister(CreatePlanStorageMapFieldId.ExistingStorageMap);
                       handleStorageMapTypeChange(StorageMapType.New);
                     }}
+                    value={storageTypeField.value}
                   />
 
                   {storageTypeField.value === StorageMapType.New && <NewStorageMapFields />}

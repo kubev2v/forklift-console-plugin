@@ -30,21 +30,21 @@ const ProviderNameField: FC = () => {
 
   return (
     <FormGroupWithHelpText
-      label={t('Provider name')}
-      isRequired
       fieldId={ProviderFormFieldId.ProviderName}
-      validated={getInputValidated(error)}
       helperTextInvalid={error?.message}
+      isRequired
+      label={t('Provider name')}
+      validated={getInputValidated(error)}
     >
       <TextInput
+        data-testid="provider-name-input"
         id={ProviderFormFieldId.ProviderName}
-        type="text"
-        value={value}
         onChange={(_event, val) => {
           onChange(val);
         }}
+        type="text"
         validated={getInputValidated(error)}
-        data-testid="provider-name-input"
+        value={value}
       />
     </FormGroupWithHelpText>
   );

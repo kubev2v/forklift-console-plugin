@@ -28,8 +28,6 @@ export const CredentialsDetailsItem: FC<ProviderDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="credentials-detail-item"
-      title={t('Credentials')}
       content={
         provider?.spec?.secret.name ? (
           <Link to={`${providerURL}/credentials`}>{t('Provider credentials')}</Link>
@@ -37,8 +35,10 @@ export const CredentialsDetailsItem: FC<ProviderDetailsItemProps> = ({
           <span className="text-muted">{t('No secret')}</span>
         )
       }
-      moreInfoLink={moreInfoLink}
       helpContent={helpContent ?? defaultHelpContent}
+      moreInfoLink={moreInfoLink}
+      testId="credentials-detail-item"
+      title={t('Credentials')}
     />
   );
 };

@@ -18,15 +18,15 @@ const EditPreCopyInterval: FC = () => {
 
   return (
     <FormGroupWithHelpText
+      helperText={t(
+        'Enter the interval in minutes for precopy. If empty, the default value will be used.',
+      )}
       label={t('Precopy interval')}
       labelHelp={
         <HelpIconPopover header={t('Precopy interval')}>
           <PreCopyIntervalHelpContent />
         </HelpIconPopover>
       }
-      helperText={t(
-        'Enter the interval in minutes for precopy. If empty, the default value will be used.',
-      )}
     >
       <Controller
         control={control}
@@ -34,9 +34,9 @@ const EditPreCopyInterval: FC = () => {
         render={({ field: { onChange, value } }) => (
           <SettingsSelectInput
             onChange={onChange}
-            value={String(value)}
             options={preCopyIntervalOptions}
             testId="precopy-interval-select"
+            value={String(value)}
           />
         )}
       />

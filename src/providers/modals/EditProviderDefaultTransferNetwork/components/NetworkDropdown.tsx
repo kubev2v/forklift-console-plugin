@@ -15,9 +15,9 @@ import { isEmpty } from '@utils/helpers';
 import { getNetworkName } from '../utils/getNetworkName';
 
 type NetworkDropdownProps = {
+  onChange: (value: string) => void;
   provider: V1beta1Provider;
   value: string;
-  onChange: (value: string) => void;
 };
 
 const NetworkDropdown: FC<NetworkDropdownProps> = ({ onChange, provider, value }) => {
@@ -41,25 +41,25 @@ const NetworkDropdown: FC<NetworkDropdownProps> = ({ onChange, provider, value }
   const dropdownItems = useMemo(
     () => [
       <DropdownItem
-        value={0}
-        key={DEFAULT_NETWORK}
         description={DEFAULT_NETWORK}
+        isSelected={isEmpty(value)}
+        key={DEFAULT_NETWORK}
         onClick={() => {
           onChange('');
         }}
-        isSelected={isEmpty(value)}
+        value={0}
       >
         {DEFAULT_NETWORK}
       </DropdownItem>,
       ...(networks ?? []).map((network, index) => (
         <DropdownItem
-          value={index}
-          key={network.name}
           description={network.namespace}
+          isSelected={value === `${network.namespace}/${network.name}`}
+          key={network.name}
           onClick={() => {
             onChange(`${network.namespace}/${network.name}`);
           }}
-          isSelected={value === `${network.namespace}/${network.name}`}
+          value={index}
         >
           {network.name}
         </DropdownItem>
@@ -71,18 +71,18 @@ const NetworkDropdown: FC<NetworkDropdownProps> = ({ onChange, provider, value }
   return (
     <Dropdown
       isOpen={isOpen}
+      isScrollable
       onOpenChange={setIsOpen}
       onSelect={onSelect}
-      toggle={(toggleRef: Ref<MenuToggleElement>) => (
-        <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} variant="default">
-          {name}
-        </MenuToggle>
-      )}
-      shouldFocusToggleOnSelect
       popperProps={{
         position: 'right',
       }}
-      isScrollable
+      shouldFocusToggleOnSelect
+      toggle={(toggleRef: Ref<MenuToggleElement>) => (
+        <MenuToggle isExpanded={isOpen} onClick={onToggleClick} ref={toggleRef} variant="default">
+          {name}
+        </MenuToggle>
+      )}
     >
       <DropdownList>{dropdownItems}</DropdownList>
     </Dropdown>

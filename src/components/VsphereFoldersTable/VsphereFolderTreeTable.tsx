@@ -151,10 +151,10 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
   const pagination = (
     <ToolbarItem variant="pagination">
       <Pagination
-        page={page}
-        onSetPage={onSetPage}
-        onPerPageSelect={onPerPageSelect}
         itemCount={itemCount}
+        onPerPageSelect={onPerPageSelect}
+        onSetPage={onSetPage}
+        page={page}
         perPage={perPage}
       />
     </ToolbarItem>
@@ -168,6 +168,7 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
         canSelect={canSelect}
         columns={columns}
         dataIds={getVmRowsId(rows)}
+        filters={filters}
         onSelect={(selectIds) => {
           setSelectedVmKeys(selectIds);
           if (!showAll && isEmpty(selectIds)) {
@@ -175,22 +176,21 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
           }
         }}
         pageDataIds={getVmRowsId(pagedRows)}
-        selectedVmKeys={selectedVmKeys}
-        filters={filters}
         pagination={pagination}
+        selectedVmKeys={selectedVmKeys}
         setColumns={setColumns}
         setShowAll={setShowAll}
         showAll={showAll}
         toolbarActions={inspectToolbarAction}
       />
-      <Table isTreeTable data-testid="vsphere-tree-table">
+      <Table data-testid="vsphere-tree-table" isTreeTable>
         <Thead>
           <Tr>
             {visibleCols.map((col, idx) => (
               <Th
+                info={col.info}
                 key={col.id}
                 sort={col.sortable ? { columnIndex: idx, onSort: handleOnSort, sortBy } : undefined}
-                info={col.info}
               >
                 {col.label}
               </Th>

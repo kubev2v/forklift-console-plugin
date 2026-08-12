@@ -13,11 +13,11 @@ const HYPERV_KEY = process.env.HYPERV_PROVIDER ?? 'hyperv-smb';
 const EC2_KEY = process.env.EC2_PROVIDER ?? 'ec2';
 
 export type ProviderTestScenario = {
-  scenarioName: string;
-  providerType: ProviderType;
-  providerKey: string;
-  providerDataOverrides?: Partial<ProviderData>;
   minVersion?: VersionTuple;
+  providerDataOverrides?: Partial<ProviderData>;
+  providerKey: string;
+  providerType: ProviderType;
+  scenarioName: string;
   /** When true, also deletes the just-created provider via the Actions menu. */
   verifyDelete?: boolean;
 };

@@ -54,15 +54,15 @@ const DetailsSection: FC<DetailsSectionProps> = ({ plan }) => {
       >
         <NameDetailsItem resource={plan} />
         <MigrationTypeDetailsItem
-          plan={plan}
-          isVddkInitImageNotSet={isVddkInitImageNotSet}
           canPatch={canPatch}
+          isVddkInitImageNotSet={isVddkInitImageNotSet}
+          plan={plan}
           shouldRender={isOvirt || isVsphere || isLiveMigrationEnabled}
           sourceProvider={sourceProvider}
         />
-        <NamespaceDetailsItem title={t('Plan project')} resource={plan} />
-        <TargetNamespaceDetailsItem plan={plan} canPatch={canPatch} />
-        <DescriptionDetailItem plan={plan} canPatch={canPatch} />
+        <NamespaceDetailsItem resource={plan} title={t('Plan project')} />
+        <TargetNamespaceDetailsItem canPatch={canPatch} plan={plan} />
+        <DescriptionDetailItem canPatch={canPatch} plan={plan} />
         <CreatedAtDetailsItem resource={plan} />
         <OwnerDetailsItem resource={plan} />
       </DescriptionList>

@@ -17,14 +17,14 @@ const EditPlanPreserveClusterCpuModel: ModalComponent<EditPlanProps> = ({ resour
 
   return (
     <ModalForm
-      title={t('Set to preserve the CPU model')}
       onConfirm={async () => onConfirmPreserveCpuModel({ newValue: value, resource })}
+      title={t('Set to preserve the CPU model')}
       {...rest}
     >
       <Stack hasGutter>
         {t(`Preserve the CPU model and flags the VM runs with in its oVirt cluster.`)}
         <FormGroup label={t('Whether to preserve the CPU model')} />
-        <PreserveCpuModelSwitch value={value} onChange={setValue} />
+        <PreserveCpuModelSwitch onChange={setValue} value={value} />
       </Stack>
     </ModalForm>
   );

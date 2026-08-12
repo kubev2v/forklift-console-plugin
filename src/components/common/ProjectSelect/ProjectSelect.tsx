@@ -77,32 +77,8 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
 
   return (
     <TypeaheadSelect
-      testId={testId}
-      ref={inputRef}
-      isScrollable
-      isDisabled={isDisabled}
       allowClear
-      placeholder={placeholder ?? t('Select a project')}
-      id={id}
-      options={projectOptions}
       defaultValue={defaultProject}
-      value={value ?? ''}
-      onChange={onChange}
-      footer={
-        createAllowed ? (
-          <Button
-            variant={ButtonVariant.link}
-            isInline
-            icon={<PlusCircleIcon />}
-            onClick={onNewProject}
-            data-testid="create-project-button"
-          >
-            {t('Create project')}
-          </Button>
-        ) : undefined
-      }
-      noOptionsMessage={noOptionsMessage}
-      toggleProps={toggleProps}
       emptyState={
         loading ? (
           <Bullseye className="pf-v6-u-my-lg">
@@ -111,8 +87,8 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
         ) : (
           <ProjectSelectEmptyState
             emptyStateMessage={emptyStateMessage}
-            onCreate={createAllowed ? onNewProject : undefined}
             errorLoading={errorLoading}
+            onCreate={createAllowed ? onNewProject : undefined}
           />
         )
       }
@@ -120,10 +96,10 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
         <>
           <div className="pf-v6-u-px-md pf-v6-u-py-md">
             <Switch
-              id={showDefaultTargetsSwitchTestId}
               data-testid={showDefaultTargetsSwitchTestId}
-              label={t('Show default projects')}
+              id={showDefaultTargetsSwitchTestId}
               isChecked={showDefaultProjects}
+              label={t('Show default projects')}
               onChange={(_event, checked) => {
                 setShowDefaultProjects(checked);
                 // Delay here so that the list is repopulated before attempting to re-focus
@@ -134,6 +110,30 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
           <Divider />
         </>
       }
+      footer={
+        createAllowed ? (
+          <Button
+            data-testid="create-project-button"
+            icon={<PlusCircleIcon />}
+            isInline
+            onClick={onNewProject}
+            variant={ButtonVariant.link}
+          >
+            {t('Create project')}
+          </Button>
+        ) : undefined
+      }
+      id={id}
+      isDisabled={isDisabled}
+      isScrollable
+      noOptionsMessage={noOptionsMessage}
+      onChange={onChange}
+      options={projectOptions}
+      placeholder={placeholder ?? t('Select a project')}
+      ref={inputRef}
+      testId={testId}
+      toggleProps={toggleProps}
+      value={value ?? ''}
     />
   );
 };

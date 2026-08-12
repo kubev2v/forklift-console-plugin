@@ -12,13 +12,13 @@ import {
 } from './utils/constants';
 
 export type EditNetworkNameTemplateProps = {
-  resource: V1beta1Plan;
-  onConfirmNetworkNameTemplate: (options: {
-    resource: V1beta1Plan;
-    newValue: string | undefined;
-  }) => Promise<V1beta1Plan>;
-  value?: string;
   allowInherit?: boolean;
+  onConfirmNetworkNameTemplate: (options: {
+    newValue: string | undefined;
+    resource: V1beta1Plan;
+  }) => Promise<V1beta1Plan>;
+  resource: V1beta1Plan;
+  value?: string;
 };
 
 const EditNetworkNameTemplate: ModalComponent<EditNetworkNameTemplateProps> = ({
@@ -33,20 +33,20 @@ const EditNetworkNameTemplate: ModalComponent<EditNetworkNameTemplateProps> = ({
   return (
     <EditNameTemplate
       allowInherit={allowInherit}
-      fieldName={allowInherit ? t('VM network name template') : t('Plan network name template')}
-      title={t('Edit network name template')}
-      value={value}
-      onConfirm={async (newValue) => onConfirmNetworkNameTemplate({ newValue, resource })}
       body={
         <NameTemplateBody
+          allowedVariables={networkNameTemplateAllowedVariables}
           bodyText={t(
             'Network name template is a template for generating network interface names in the target virtual machine.',
           )}
-          allowedVariables={networkNameTemplateAllowedVariables}
         />
       }
+      fieldName={allowInherit ? t('VM network name template') : t('Plan network name template')}
       helperText={<NameTemplateHelper examples={networkNameTemplateHelperExamples} />}
       inheritValue={resource?.spec?.networkNameTemplate}
+      onConfirm={async (newValue) => onConfirmNetworkNameTemplate({ newValue, resource })}
+      title={t('Edit network name template')}
+      value={value}
       {...rest}
     />
   );

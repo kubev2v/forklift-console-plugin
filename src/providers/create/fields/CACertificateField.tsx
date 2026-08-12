@@ -57,10 +57,13 @@ const CACertificateField: FC = () => {
 
   return (
     <FormGroupWithHelpText
+      fieldId={ProviderFormFieldId.CaCertificate}
+      helperText={t(
+        'Upload a CA certificate to be trusted when connecting to Openshift API endpoint, or leave empty to use the system CA certificate.',
+      )}
+      helperTextInvalid={error?.message}
       isRequired
       label={t('CA certificate')}
-      fieldId={ProviderFormFieldId.CaCertificate}
-      validated={getInputValidated(error)}
       labelHelp={
         <HelpIconPopover header={t('CA certificate')}>
           <Stack hasGutter>
@@ -78,31 +81,28 @@ const CACertificateField: FC = () => {
           </Stack>
         </HelpIconPopover>
       }
-      helperText={t(
-        'Upload a CA certificate to be trusted when connecting to Openshift API endpoint, or leave empty to use the system CA certificate.',
-      )}
-      helperTextInvalid={error?.message}
       testId="ca-certificate-helper"
+      validated={getInputValidated(error)}
     >
       <CertificateUpload
-        id={ProviderFormFieldId.CaCertificate}
-        type="text"
-        value={value}
-        url={url}
+        browseButtonText={t('Upload')}
         className="pf-v6-u-p-0"
         filenamePlaceholder={t('Drag and drop a file or upload one')}
+        id={ProviderFormFieldId.CaCertificate}
+        isDisabled={isDisabled}
+        onClearClick={() => {
+          onChange('');
+        }}
         onDataChange={(_event, val) => {
           onChange(val);
         }}
         onTextChange={(_event, val) => {
           onChange(val);
         }}
-        onClearClick={() => {
-          onChange('');
-        }}
-        browseButtonText={t('Upload')}
+        type="text"
+        url={url}
         validated={getInputValidated(error)}
-        isDisabled={isDisabled}
+        value={value}
       />
     </FormGroupWithHelpText>
   );

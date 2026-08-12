@@ -24,37 +24,37 @@ const HypervHostsCells: FC<RowProps<HypervHost>> = ({ resourceData, resourceFiel
         switch (fieldId) {
           case 'name':
             return (
-              <Td key={fieldId} dataLabel={fieldId}>
+              <Td dataLabel={fieldId} key={fieldId}>
                 <TableCell>{resourceData.name}</TableCell>
               </Td>
             );
           case 'state':
             return (
-              <Td key={fieldId} dataLabel={fieldId}>
+              <Td dataLabel={fieldId} key={fieldId}>
                 <TableCell>{resourceData.state}</TableCell>
               </Td>
             );
           case 'cpuSockets':
             return (
-              <Td key={fieldId} dataLabel={fieldId}>
+              <Td dataLabel={fieldId} key={fieldId}>
                 <TableCell>{resourceData.cpuSockets}</TableCell>
               </Td>
             );
           case 'cpuCores':
             return (
-              <Td key={fieldId} dataLabel={fieldId}>
+              <Td dataLabel={fieldId} key={fieldId}>
                 <TableCell>{resourceData.cpuCores}</TableCell>
               </Td>
             );
           case 'memoryBytes':
             return (
-              <Td key={fieldId} dataLabel={fieldId}>
+              <Td dataLabel={fieldId} key={fieldId}>
                 <TableCell>{formatBytes(resourceData.memoryBytes)}</TableCell>
               </Td>
             );
           default:
             return (
-              <Td key={fieldId} dataLabel={fieldId}>
+              <Td dataLabel={fieldId} key={fieldId}>
                 <TableCell />
               </Td>
             );

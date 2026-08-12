@@ -39,7 +39,7 @@ const AapReviewContent: FC = () => {
   });
 
   return (
-    <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+    <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
       <DescriptionListGroup>
         <DescriptionListTerm>{t('Hook source')}</DescriptionListTerm>
         <DescriptionListDescription data-testid="review-hook-source">

@@ -55,25 +55,25 @@ const OtherSettingsStep: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
             <NBDEClevisField />
             {!nbdeClevis && (
               <Controller
-                name={OtherSettingsFormFieldId.DiskDecryptionType}
                 control={control}
+                name={OtherSettingsFormFieldId.DiskDecryptionType}
                 render={({ field: diskDecryptionTypeField }) => (
                   <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
                     <FlexItem>
                       <Stack hasGutter>
                         <Radio
                           data-testid="use-existing-luks-secret-radio"
-                          id={DiskDecryptionType.Existing}
-                          name={OtherSettingsFormFieldId.DiskDecryptionType}
-                          label={DiskDecryptionTypeLabels[DiskDecryptionType.Existing]}
-                          value={DiskDecryptionType.Existing}
-                          isChecked={diskDecryptionTypeField.value === DiskDecryptionType.Existing}
-                          onChange={() => {
-                            diskDecryptionTypeField.onChange(DiskDecryptionType.Existing);
-                          }}
                           description={t(
                             'Select a pre-existing secret containing LUKS decryption keys.',
                           )}
+                          id={DiskDecryptionType.Existing}
+                          isChecked={diskDecryptionTypeField.value === DiskDecryptionType.Existing}
+                          label={DiskDecryptionTypeLabels[DiskDecryptionType.Existing]}
+                          name={OtherSettingsFormFieldId.DiskDecryptionType}
+                          onChange={() => {
+                            diskDecryptionTypeField.onChange(DiskDecryptionType.Existing);
+                          }}
+                          value={DiskDecryptionType.Existing}
                         />
 
                         {diskDecryptionTypeField.value === DiskDecryptionType.Existing && (
@@ -86,17 +86,17 @@ const OtherSettingsStep: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
                       <Stack hasGutter>
                         <Radio
                           data-testid="use-new-passphrases-radio"
-                          id={DiskDecryptionType.New}
-                          name={OtherSettingsFormFieldId.DiskDecryptionType}
-                          label={DiskDecryptionTypeLabels[DiskDecryptionType.New]}
                           description={t(
                             'Provide passphrases that will be stored in a new secret owned by this plan.',
                           )}
-                          value={DiskDecryptionType.New}
+                          id={DiskDecryptionType.New}
                           isChecked={diskDecryptionTypeField.value === DiskDecryptionType.New}
+                          label={DiskDecryptionTypeLabels[DiskDecryptionType.New]}
+                          name={OtherSettingsFormFieldId.DiskDecryptionType}
                           onChange={() => {
                             diskDecryptionTypeField.onChange(DiskDecryptionType.New);
                           }}
+                          value={DiskDecryptionType.New}
                         />
 
                         {diskDecryptionTypeField.value === DiskDecryptionType.New && (

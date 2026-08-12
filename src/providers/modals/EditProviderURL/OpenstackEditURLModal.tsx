@@ -36,13 +36,13 @@ export const OpenstackEditURLModal: ModalComponent<EditProviderURLModalProps> = 
   return (
     <TextInputEditModal
       {...rest}
-      title={t('Edit URL')}
-      label={t('URL')}
-      initialValue={provider?.spec?.url ?? ''}
       description={description}
       helperText={t('The URL of the OpenStack Identity endpoint.')}
-      validationHook={validateOpenstackURL}
+      initialValue={provider?.spec?.url ?? ''}
+      label={t('URL')}
       onConfirm={onConfirm}
+      title={t('Edit URL')}
+      validationHook={validateOpenstackURL}
     />
   );
 };

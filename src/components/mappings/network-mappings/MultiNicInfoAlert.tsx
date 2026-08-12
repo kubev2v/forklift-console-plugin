@@ -27,18 +27,18 @@ const MultiNicInfoAlert: FC<MultiNicInfoAlertProps> = ({ networkNames, oVirtNicP
 
   return (
     <Alert
-      variant={AlertVariant.warning}
       isInline
       title={t(
         'Some selected VMs have multiple NICs on the same source network. Each NIC must be mapped to a distinct network attachment definition (NAD). Add one mapping row per NIC, each pointing to a different NAD.',
       )}
+      variant={AlertVariant.warning}
     >
       <ExpandableSection
-        toggleText={isExpanded ? t('Hide details') : t('Show details')}
         isExpanded={isExpanded}
         onToggle={(_event, expanded) => {
           setIsExpanded(expanded);
         }}
+        toggleText={isExpanded ? t('Hide details') : t('Show details')}
       >
         <List>
           {Array.from(multiNicNetworks.entries()).map(([networkId, network]) => (

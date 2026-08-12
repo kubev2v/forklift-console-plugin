@@ -30,11 +30,10 @@ const MigrationTypeDetailsItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="migration-type-detail-item"
-      title={t('Migration type')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={<PlanMigrationTypeLabel migrationType={migrationType} />}
-      helpContent={t('The migration strategy used for this plan.')}
       crumbs={['spec', 'type']}
+      helpContent={t('The migration strategy used for this plan.')}
       onEdit={() => {
         launcher<EditPlanProps>(EditPlanMigrationType, {
           isVddkInitImageNotSet,
@@ -42,7 +41,8 @@ const MigrationTypeDetailsItem: FC<EditableDetailsItemProps> = ({
           sourceProvider,
         });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="migration-type-detail-item"
+      title={t('Migration type')}
     />
   );
 };

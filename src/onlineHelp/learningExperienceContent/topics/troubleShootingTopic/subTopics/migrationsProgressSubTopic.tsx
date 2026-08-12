@@ -29,8 +29,8 @@ export const migrationProgressSubTopic = (): LearningExperienceSubTopic => ({
           id: 'migration-migrated-warm',
           title: (
             <HelpTitledContent
-              title={t('Warm migration:')}
               content={t('VMs included in warm migrations migrate with minimal downtime.')}
+              title={t('Warm migration:')}
             />
           ),
         },
@@ -38,8 +38,8 @@ export const migrationProgressSubTopic = (): LearningExperienceSubTopic => ({
           id: 'migration-migrated-cold',
           title: (
             <HelpTitledContent
-              title={t('Cold migration:')}
               content={t('VMs included in cold migrations are shut down during migration.')}
+              title={t('Cold migration:')}
             />
           ),
         },

@@ -12,10 +12,10 @@ import { getSelectedInventoryHostNetworkTriples } from './utils/getSelectedInven
 import type { InventoryHostNetworkTriple } from './utils/types';
 
 type HostsNetworksSelectProps = {
-  value?: NetworkAdapters;
-  onChange: Dispatch<SetStateAction<NetworkAdapters | undefined>>;
   data: InventoryHostNetworkTriple[];
+  onChange: Dispatch<SetStateAction<NetworkAdapters | undefined>>;
   selectedIds: string[];
+  value?: NetworkAdapters;
 };
 
 const HostsNetworksSelect: FC<HostsNetworksSelectProps> = ({
@@ -58,14 +58,13 @@ const HostsNetworksSelect: FC<HostsNetworksSelectProps> = ({
   };
 
   return (
-    <FormGroupWithHelpText label="Network" isRequired>
+    <FormGroupWithHelpText isRequired label="Network">
       <FilterableSelect
-        placeholder={t('Select a network')}
         aria-label={t('Select a network')}
         onSelect={(selected) => {
           onSelect(selected);
         }}
-        value={value ? `${value?.name} - ${value?.ipAddress}` : ''}
+        placeholder={t('Select a network')}
         selectOptions={
           networkOptions?.map((option) => ({
             children: (
@@ -82,6 +81,7 @@ const HostsNetworksSelect: FC<HostsNetworksSelectProps> = ({
             itemId: option.label,
           })) ?? []
         }
+        value={value ? `${value?.name} - ${value?.ipAddress}` : ''}
       />
     </FormGroupWithHelpText>
   );

@@ -38,15 +38,15 @@ const AffinityTypeSelect: FC<AffinityTypeSelectProps> = ({
   return (
     <FormGroup fieldId="type" isRequired label={t('Type')}>
       <PfSelect
+        isOpen={isOpen}
+        onSelect={handleChange}
+        selected={focusedAffinity?.type}
         toggle={selectToggle({
           isExpanded: isOpen,
           onClick: onToggle,
           selected: AFFINITY_TYPE_LABELS[focusedAffinity?.type],
           testId: 'affinity-type-select',
         })}
-        isOpen={isOpen}
-        onSelect={handleChange}
-        selected={focusedAffinity?.type}
       >
         {Object.entries(AFFINITY_TYPE_LABELS).map(([key, value]) => (
           <SelectOption key={key} value={key}>

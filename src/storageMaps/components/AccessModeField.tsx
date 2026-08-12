@@ -24,8 +24,8 @@ type TargetStorageValue = { name?: string } | string | undefined;
 
 type AccessModeFieldProps = {
   fieldId: string;
-  targetStorages: TargetStorage[];
   targetStorageFieldId: string;
+  targetStorages: TargetStorage[];
 };
 
 const AccessModeField: FC<AccessModeFieldProps> = ({
@@ -63,11 +63,11 @@ const AccessModeField: FC<AccessModeFieldProps> = ({
       <Split className="offload-storage__header">
         <SplitItem isFilled>
           <ExpandableSection
-            toggleText={t('Advanced options (optional)')}
+            isExpanded={isExpanded}
             onToggle={(_e, expanded) => {
               setIsExpanded(expanded);
             }}
-            isExpanded={isExpanded}
+            toggleText={t('Advanced options (optional)')}
           >
             <Form className="offload-storage__form">
               <FormGroupWithHelpText
@@ -82,22 +82,22 @@ const AccessModeField: FC<AccessModeFieldProps> = ({
                 }
               >
                 <Controller
-                  name={fieldId}
                   control={control}
+                  name={fieldId}
                   render={({ field }) => (
                     <Select
-                      ref={field.ref}
                       id={fieldId}
-                      options={getAccessModeOptions()}
+                      isDisabled={isSubmitting}
                       onSelect={async (_, value) => {
                         field.onChange(
                           (value as string) === '' ? undefined : (value as AccessMode),
                         );
                         await trigger();
                       }}
+                      options={getAccessModeOptions()}
                       placeholder={t('Select access mode')}
+                      ref={field.ref}
                       testId={fieldId}
-                      isDisabled={isSubmitting}
                       value={(field.value as AccessMode | undefined) ?? ''}
                     />
                   )}
@@ -118,9 +118,9 @@ const AccessModeField: FC<AccessModeFieldProps> = ({
           </ExpandableSection>
         </SplitItem>
         <SplitItem
+          aria-hidden="true"
           className="offload-storage__clear-button-container"
           style={{ visibility: 'hidden' }}
-          aria-hidden="true"
         >
           {t('Clear offload options')}
         </SplitItem>

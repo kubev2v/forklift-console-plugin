@@ -11,11 +11,11 @@ type AdditionalActionProps = ButtonProps & { 'data-testid'?: string };
 
 type SectionHeadingWithEditProps = Omit<
   {
-    onClick: () => void;
-    title: string;
-    editable?: boolean;
     additionalActions?: AdditionalActionProps[];
     'data-testid'?: string;
+    editable?: boolean;
+    onClick: () => void;
+    title: string;
   } & SectionHeadingProps,
   'text'
 >;
@@ -37,11 +37,11 @@ const SectionHeadingWithEdit: FC<SectionHeadingWithEditProps> = ({
         <Flex direction={{ default: 'row' }} gap={{ default: 'gapSm' }}>
           {title}
           <Button
-            icon={<PencilAltIcon />}
-            variant={ButtonVariant.link}
-            onClick={onClick}
-            isDisabled={!editable}
             data-testid={dataTestId}
+            icon={<PencilAltIcon />}
+            isDisabled={!editable}
+            onClick={onClick}
+            variant={ButtonVariant.link}
           >
             {t('Edit')}
           </Button>

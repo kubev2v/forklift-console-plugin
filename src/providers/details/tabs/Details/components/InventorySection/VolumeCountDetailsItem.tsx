@@ -20,12 +20,8 @@ const VolumeCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Volumes')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'volumeCount']}
       content={
         <InventoryCell
-          icon={<DatabaseIcon />}
           data={{
             inventory,
             inventoryLoading: true,
@@ -33,9 +29,13 @@ const VolumeCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           }}
           fieldId={ProvidersResourceFieldId.StorageCount}
           fields={[]}
+          icon={<DatabaseIcon />}
           inventoryValue={(inventory as OpenstackProvider).volumeCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'volumeCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Volumes')}
     />
   );
 };

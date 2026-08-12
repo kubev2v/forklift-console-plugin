@@ -13,12 +13,12 @@ import { getPlanNetworkMapName, getPlanStorageMapName } from '@utils/crds/plans/
 import { isEmpty } from '@utils/helpers';
 
 type UsePlanMappingDataOptions = {
-  plan: V1beta1Plan;
   networkMaps: V1beta1NetworkMap[];
-  storageMaps: V1beta1StorageMap[];
-  providerStorages: InventoryStorage[];
+  plan: V1beta1Plan;
   providerNetworks: InventoryNetwork[];
+  providerStorages: InventoryStorage[];
   sourceProvider?: V1beta1Provider;
+  storageMaps: V1beta1StorageMap[];
 };
 
 /**

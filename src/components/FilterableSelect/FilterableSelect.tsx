@@ -24,18 +24,8 @@ import { isEmpty } from '@utils/helpers';
  * Props for the FilterableSelect component.
  */
 type FilterableSelectProps = {
-  /** Array of options to display in the select dropdown */
-  selectOptions: SelectOptionProps[];
-  /** The currently selected value */
-  value: string;
-  /** Callback function when an option is selected */
-  onSelect: (value: string | number) => void;
   /** Whether the user can create new options */
   canCreate?: boolean;
-  /** Placeholder text for the input field */
-  placeholder?: string;
-  /** Label to display when no results are found */
-  noResultFoundLabel?: ReactNode;
   /** Label to display for the option to create a new item */
   createNewOptionLabel?: ReactNode;
   /** Indicates that the element is perceivable but disabled, so it is not editable or otherwise operable. */
@@ -44,6 +34,16 @@ type FilterableSelectProps = {
   isPlain?: boolean;
   /** Indicates if the menu should be scrollable */
   isScrollable?: boolean;
+  /** Label to display when no results are found */
+  noResultFoundLabel?: ReactNode;
+  /** Callback function when an option is selected */
+  onSelect: (value: string | number) => void;
+  /** Placeholder text for the input field */
+  placeholder?: string;
+  /** Array of options to display in the select dropdown */
+  selectOptions: SelectOptionProps[];
+  /** The currently selected value */
+  value: string;
 };
 
 /**
@@ -128,18 +128,18 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
     <FilterableSelectMenuToggle
-      toggleRef={toggleRef}
-      placeholder={placeholder}
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-      selectOptions={selectOptions}
-      inputValue={inputValue}
-      setInputValue={setInputValue}
-      setSelectedValue={setSelected}
       filterValue={filterValue}
-      setFilterValue={setFilterValue}
       focusedItemIndex={focusedItemIndex}
+      inputValue={inputValue}
+      isOpen={isOpen}
+      placeholder={placeholder}
+      selectOptions={selectOptions}
+      setFilterValue={setFilterValue}
       setFocusedItemIndex={setFocusedItemIndex}
+      setInputValue={setInputValue}
+      setIsOpen={setIsOpen}
+      setSelectedValue={setSelected}
+      toggleRef={toggleRef}
     />
   );
 
@@ -147,27 +147,27 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
     // Custom select does not support the complex toggle being used here
     /* eslint-disable-next-line no-restricted-syntax */
     <Select
+      aria-disabled={isDisabled}
       id="typeahead-select"
-      ref={menuRef}
       isOpen={isOpen}
-      selected={selectedItem}
-      onSelect={onItemSelect}
+      isPlain={isPlain}
+      isScrollable={isScrollable}
       onOpenChange={() => {
         setIsOpen(false);
         setFilterValue('');
         setInputValue(selectedItem);
       }}
+      onSelect={onItemSelect}
+      ref={menuRef}
+      selected={selectedItem}
       toggle={toggle}
-      aria-disabled={isDisabled}
-      isPlain={isPlain}
-      isScrollable={isScrollable}
     >
       <SelectList>
         {selectOptions.map((option, index) => (
           <SelectOption
-            key={option.itemId}
-            isFocused={focusedItemIndex === index}
             className={option.className}
+            isFocused={focusedItemIndex === index}
+            key={option.itemId}
             onClick={() => {
               setSelected(String(option.itemId));
             }}

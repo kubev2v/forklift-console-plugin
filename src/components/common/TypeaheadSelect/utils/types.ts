@@ -2,21 +2,21 @@ import type { SelectOptionProps } from '@patternfly/react-core';
 
 export type TypeaheadSelectOption = {
   content: string | number;
-  value: string | number;
   optionProps?: Omit<SelectOptionProps, 'content' | 'value'> & {
     testId?: string;
   };
+  value: string | number;
 };
 
 export type FilterOptionsConfig = {
-  isFiltering: boolean;
-  inputValue: string;
-  options: TypeaheadSelectOption[];
+  createOptionMessage: string | ((value: string) => string);
   filterFunction: (
     filterValue: string,
     options: TypeaheadSelectOption[],
   ) => TypeaheadSelectOption[];
+  inputValue: string;
   isCreatable: boolean;
-  createOptionMessage: string | ((value: string) => string);
+  isFiltering: boolean;
   noResultsMessage: string | ((filter: string) => string);
+  options: TypeaheadSelectOption[];
 };

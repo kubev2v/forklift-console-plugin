@@ -20,9 +20,9 @@ import { getPlanNetworkMapName, getPlanNetworkMapNamespace } from '@utils/crds/p
 import type { NetworkMapping } from '@utils/mappings/networkMap';
 
 type UsePlanNetworkMapResourcesParams = {
+  plan: V1beta1Plan;
   sourceProvider: V1beta1Provider;
   targetProvider: V1beta1Provider;
-  plan: V1beta1Plan;
 };
 
 type UsePlanNetworkMapResources = ({

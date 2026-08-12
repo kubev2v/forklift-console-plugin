@@ -18,8 +18,8 @@ const PlanRow: FC<RowProps<V1beta1Plan>> = ({ resourceData: plan, resourceFields
     <>
       {resourceFields.map(({ resourceFieldId }) => (
         <VisibleTableData
-          key={resourceFieldId}
           fieldId={resourceFieldId ?? ''}
+          key={resourceFieldId}
           resourceFields={resourceFields}
         >
           {rowFields[resourceFieldId as PlanTableResourceId]}

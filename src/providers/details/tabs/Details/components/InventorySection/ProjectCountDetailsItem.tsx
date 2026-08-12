@@ -19,9 +19,6 @@ const ProjectCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Projects')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'projectCount']}
       content={
         <InventoryCell
           data={{
@@ -34,6 +31,9 @@ const ProjectCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           inventoryValue={(inventory as OpenstackProvider).projectCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'projectCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Projects')}
     />
   );
 };

@@ -23,27 +23,27 @@ const SourceProviderField: FC = () => {
 
   return (
     <FormGroupWithErrorText
-      isRequired
       fieldId={NetworkMapFieldId.SourceProvider}
+      isRequired
       label={networkMapFieldLabels[NetworkMapFieldId.SourceProvider]}
     >
       <Controller
-        name={NetworkMapFieldId.SourceProvider}
         control={control}
+        name={NetworkMapFieldId.SourceProvider}
         render={({ field }) => (
           <ProviderSelect
-            ref={field.ref}
-            isDisabled={isSubmitting}
-            placeholder={t('Select source provider')}
             id={NetworkMapFieldId.SourceProvider}
-            testId="network-map-source-provider-select"
+            isDisabled={isSubmitting}
             namespace={project}
-            value={field.value?.metadata?.name ?? ''}
             onSelect={(_, value) => {
               field.onChange(value);
               setValue(NetworkMapFieldId.NetworkMap, [defaultNetworkMapping]);
             }}
+            placeholder={t('Select source provider')}
+            ref={field.ref}
             status={error && MenuToggleStatus.danger}
+            testId="network-map-source-provider-select"
+            value={field.value?.metadata?.name ?? ''}
           />
         )}
         rules={{ required: t('Source provider is required.') }}

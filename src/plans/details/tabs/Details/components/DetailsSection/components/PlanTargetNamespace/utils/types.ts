@@ -1,9 +1,9 @@
 export type TargetNamespaceSelectInputProps = {
-  value: string;
   onChange: (val: string) => void;
+  value: string;
 };
 
 export type TargetNamespaceSelectProps = {
-  projectNames: string[];
   errorMessage?: string;
+  projectNames: string[];
 } & TargetNamespaceSelectInputProps;

@@ -75,20 +75,20 @@ const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId, suggestedP
       }
     >
       <Controller
-        name={fieldId}
         control={control}
+        name={fieldId}
         render={({ field }) => (
           <Select
-            ref={field.ref}
             id={fieldId}
-            testId={fieldId}
             isDisabled={isSubmitting || loading}
-            value={field.value}
-            options={allOptions}
             onSelect={(_event, value) => {
               field.onChange(value);
             }}
+            options={allOptions}
             placeholder={t('Select storage product')}
+            ref={field.ref}
+            testId={fieldId}
+            value={field.value}
           >
             {suggestedProduct ? (
               <>

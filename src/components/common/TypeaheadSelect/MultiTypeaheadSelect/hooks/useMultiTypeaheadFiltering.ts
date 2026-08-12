@@ -12,20 +12,20 @@ import {
 } from '../../utils/utils';
 
 type UseMultiTypeaheadFilteringArgs = {
-  options: TypeaheadSelectOption[];
-  values: (string | number)[];
+  createOptionMessage?: string | ((value: string) => string);
+  filterFunction?: (filterValue: string, opts: TypeaheadSelectOption[]) => TypeaheadSelectOption[];
+  inputValue: string;
   isCreatable?: boolean;
   isFiltering: boolean;
-  inputValue: string;
-  filterFunction?: (filterValue: string, opts: TypeaheadSelectOption[]) => TypeaheadSelectOption[];
-  createOptionMessage?: string | ((value: string) => string);
-  noResultsMessage?: string | ((filter: string) => string);
   noOptionsMessage?: string;
+  noResultsMessage?: string | ((filter: string) => string);
+  options: TypeaheadSelectOption[];
+  values: (string | number)[];
 };
 
 type UseMultiTypeaheadFilteringReturn = {
-  selectedOptions: TypeaheadSelectOption[];
   displayOptions: TypeaheadSelectOption[];
+  selectedOptions: TypeaheadSelectOption[];
 };
 
 export const useMultiTypeaheadFiltering = ({

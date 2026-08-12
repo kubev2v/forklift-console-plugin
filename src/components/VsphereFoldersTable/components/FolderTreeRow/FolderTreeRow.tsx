@@ -7,14 +7,14 @@ import { Td, TreeRowWrapper } from '@patternfly/react-table';
 import FolderNameCell from './FolderNameCell';
 
 type FolderTreeRowProps = {
-  row: FolderRow;
   groupVMCountByFolder: Map<string, number>;
+  row: FolderRow;
 };
 
 const FolderTreeRow: FC<FolderTreeRowProps> = ({ groupVMCountByFolder, row }) => {
   return (
     <TreeRowWrapper data-testid={row.key} key={row.key} row={{ props: row?.treeRow?.props }}>
-      <Td treeRow={row.treeRow} dataLabel={nameColumn.label} data-testid={`${row.key}-expand-cell`}>
+      <Td data-testid={`${row.key}-expand-cell`} dataLabel={nameColumn.label} treeRow={row.treeRow}>
         <FolderNameCell row={row} vmCount={groupVMCountByFolder.get(row.folderName) ?? 0} />
       </Td>
     </TreeRowWrapper>

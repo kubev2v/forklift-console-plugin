@@ -69,57 +69,57 @@ const MapProvidersEdit: ModalComponent<MapProvidersEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
+        closeModal={closeModal}
+        isDisabled={!isEmpty(errors) || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         title={t('Edit providers')}
-        closeModal={closeModal}
         variant={ModalVariant.medium}
-        isDisabled={!isEmpty(errors) || !isDirty}
       >
         <Form>
           <FormGroup
+            fieldId={MapProviderEditFormFields.Source}
             isRequired
             label={t('Source provider')}
-            fieldId={MapProviderEditFormFields.Source}
           >
             <Controller
-              name={MapProviderEditFormFields.Source}
               control={control}
+              name={MapProviderEditFormFields.Source}
               render={({ field }) => (
                 <ProviderSelect
-                  ref={field.ref}
-                  placeholder={t('Select source provider')}
                   id={MapProviderEditFormFields.Source}
-                  testId="map-source-provider-select"
                   namespace={namespace}
-                  value={field.value?.metadata?.name ?? ''}
                   onSelect={(_, value) => {
                     field.onChange(value);
                   }}
+                  placeholder={t('Select source provider')}
+                  ref={field.ref}
+                  testId="map-source-provider-select"
+                  value={field.value?.metadata?.name ?? ''}
                 />
               )}
               rules={{ required: t('Source provider is required.') }}
             />
           </FormGroup>
           <FormGroup
+            fieldId={MapProviderEditFormFields.Destination}
             isRequired
             label={t('Target provider')}
-            fieldId={MapProviderEditFormFields.Destination}
           >
             <Controller
-              name={MapProviderEditFormFields.Destination}
               control={control}
+              name={MapProviderEditFormFields.Destination}
               render={({ field }) => (
                 <ProviderSelect
-                  ref={field.ref}
-                  placeholder={t('Select target provider')}
                   id={MapProviderEditFormFields.Destination}
-                  testId="map-target-provider-select"
+                  isTarget
                   namespace={namespace}
-                  value={field.value?.metadata?.name ?? ''}
                   onSelect={(_, value) => {
                     field.onChange(value);
                   }}
-                  isTarget
+                  placeholder={t('Select target provider')}
+                  ref={field.ref}
+                  testId="map-target-provider-select"
+                  value={field.value?.metadata?.name ?? ''}
                 />
               )}
               rules={{ required: t('Target provider is required.') }}

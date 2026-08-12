@@ -55,7 +55,7 @@ const MigrationRow: FC<MigrationRowProps> = ({
     vms: (
       <Split hasGutter>
         {getMigrationStatusLabel(vmStatuses, migrationVMs?.length)}
-        {plan ? <VMStatusIconsRow statuses={vmStatuses} plan={plan} /> : null}
+        {plan ? <VMStatusIconsRow plan={plan} statuses={vmStatuses} /> : null}
       </Split>
     ),
   };
@@ -63,8 +63,8 @@ const MigrationRow: FC<MigrationRowProps> = ({
     <Tr>
       {resourceFields.map(({ resourceFieldId }) => (
         <VisibleTableData
-          key={resourceFieldId}
           fieldId={resourceFieldId ?? ''}
+          key={resourceFieldId}
           resourceFields={resourceFields}
         >
           {rowFields[resourceFieldId as keyof typeof rowFields]}

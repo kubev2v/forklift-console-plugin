@@ -48,25 +48,25 @@ const EditAapTokenSecret: FC<EditAapTokenSecretProps> = ({ namespace }) => {
 
   return (
     <FormGroupWithHelpText
+      helperText={t('Select a Secret containing the AAP API Bearer token (key: "token").')}
       label={t('AAP token secret')}
       labelHelp={
         <HelpIconPopover header={t('AAP token secret')}>
           <AapTokenSecretHelpContent />
         </HelpIconPopover>
       }
-      helperText={t('Select a Secret containing the AAP API Bearer token (key: "token").')}
     >
       <Controller
         control={control}
         name={SettingsFields.AapTokenSecretName}
         render={({ field: { onChange, value } }) => (
           <SettingsSelectInput
-            onChange={onChange}
-            value={value ?? ''}
-            options={secretOptions}
             blankOption={{ name: t('None') }}
-            testId="aap-token-secret-settings-select"
             isScrollable
+            onChange={onChange}
+            options={secretOptions}
+            testId="aap-token-secret-settings-select"
+            value={value ?? ''}
           />
         )}
       />

@@ -21,13 +21,13 @@ const DescriptionDetailItem: FC<EditableDetailsItemProps> = ({ canPatch, plan })
   const content = isEmpty(description) ? t('None') : description;
   return (
     <DetailsItem
-      testId="description-detail-item"
-      title={t('Description')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={<Truncate content={content} />}
       onEdit={() => {
         launcher<EditPlanProps>(EditPlanDescription, { resource: plan });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="description-detail-item"
+      title={t('Description')}
     />
   );
 };

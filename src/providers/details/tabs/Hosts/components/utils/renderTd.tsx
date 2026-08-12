@@ -38,7 +38,7 @@ export const RenderTd = ({ resourceData, resourceFieldId, resourceFields }: Rend
   const CellRenderer = cellRenderers?.[resourceFieldId] ?? null;
 
   return (
-    <Td key={resourceFieldId} dataLabel={resourceFieldId}>
+    <Td dataLabel={resourceFieldId} key={resourceFieldId}>
       <CellRenderer data={resourceData} fieldId={resourceFieldId} fields={resourceFields} />
     </Td>
   );

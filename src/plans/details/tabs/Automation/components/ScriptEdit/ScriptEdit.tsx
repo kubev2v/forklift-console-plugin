@@ -41,27 +41,27 @@ const ScriptEdit: OverlayComponent<ScriptEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        onConfirm={handleSubmit(onSubmit)}
-        title={t('Edit customization scripts')}
         closeModal={closeOverlay}
-        variant={ModalVariant.medium}
         isDisabled={!isValid || !isDirty}
+        onConfirm={handleSubmit(onSubmit)}
         testId="script-edit-modal"
+        title={t('Edit customization scripts')}
+        variant={ModalVariant.medium}
       >
         <Form>
           {isEmpty(fields) ? (
             <>
-              <Content component="p" className="pf-v6-u-color-200">
+              <Content className="pf-v6-u-color-200" component="p">
                 {t('No customization scripts are configured.')}
               </Content>
               <Button
-                variant={ButtonVariant.link}
-                isInline
+                data-testid="add-script-button"
                 icon={<PlusCircleIcon />}
+                isInline
                 onClick={() => {
                   append(DefaultScript);
                 }}
-                data-testid="add-script-button"
+                variant={ButtonVariant.link}
               >
                 {t('Add script')}
               </Button>

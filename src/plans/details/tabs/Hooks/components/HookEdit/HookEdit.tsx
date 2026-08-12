@@ -87,11 +87,11 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
   return (
     <FormProvider {...methods}>
       <ModalForm
+        closeModal={closeModal}
+        isDisabled={!isEmpty(errors) || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         title={title}
-        closeModal={closeModal}
         variant={ModalVariant.medium}
-        isDisabled={!isEmpty(errors) || !isDirty}
       >
         <Form>
           {t(
@@ -105,11 +105,11 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
                 <Split hasGutter>
                   <SplitItem>
                     <Radio
-                      id="hook-edit-source-none"
-                      name="hookSource"
                       data-testid="hook-edit-source-none"
-                      label={t('No hook')}
+                      id="hook-edit-source-none"
                       isChecked={value === HOOK_SOURCE_NONE}
+                      label={t('No hook')}
+                      name="hookSource"
                       onChange={() => {
                         onChange(HOOK_SOURCE_NONE);
                       }}
@@ -117,11 +117,11 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
                   </SplitItem>
                   <SplitItem>
                     <Radio
-                      id="hook-edit-source-local"
-                      name="hookSource"
                       data-testid="hook-edit-source-local"
-                      label={t('Local playbook')}
+                      id="hook-edit-source-local"
                       isChecked={value === HOOK_SOURCE_LOCAL}
+                      label={t('Local playbook')}
+                      name="hookSource"
                       onChange={() => {
                         onChange(HOOK_SOURCE_LOCAL);
                       }}
@@ -129,16 +129,16 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
                   </SplitItem>
                   <SplitItem>
                     <Flex
-                      spaceItems={{ default: 'spaceItemsSm' }}
                       alignItems={{ default: 'alignItemsCenter' }}
+                      spaceItems={{ default: 'spaceItemsSm' }}
                     >
                       <FlexItem>
                         <Radio
-                          id="hook-edit-source-aap"
-                          name="hookSource"
                           data-testid="hook-edit-source-aap"
-                          label={t('Ansible Automation Platform')}
+                          id="hook-edit-source-aap"
                           isChecked={value === HOOK_SOURCE_AAP}
+                          label={t('Ansible Automation Platform')}
+                          name="hookSource"
                           onChange={() => {
                             onChange(HOOK_SOURCE_AAP);
                           }}

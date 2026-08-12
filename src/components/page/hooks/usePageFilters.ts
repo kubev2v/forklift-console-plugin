@@ -13,10 +13,10 @@ import type { ResourceField } from '@components/common/utils/types';
 import { reduceValueFilters } from '../utils/reduceValueFilters';
 
 type UsePageFiltersProps = {
-  fieldsMetadata: ResourceField[];
-  userSettings?: UserSettings;
   extraSupportedFilters?: Record<string, FilterRenderer>;
   extraSupportedMatchers?: ValueMatcher[];
+  fieldsMetadata: ResourceField[];
+  userSettings?: UserSettings;
 };
 
 /**

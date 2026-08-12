@@ -34,8 +34,7 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
   const vddkInitImage = getVddkInitImage(provider);
   return (
     <DetailsItem
-      testId="vddk-detail-item"
-      title={t('VDDK init image')}
+      canEdit={canPatch}
       content={
         isEmpty(vddkInitImage) ? (
           <Label isCompact status={PF_LABEL_STATUS.WARNING}>
@@ -45,13 +44,14 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
           vddkInitImage
         )
       }
-      moreInfoLink={moreInfoLink ?? CREATE_VDDK_HELP_LINK}
-      helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'spec', 'settings', 'vddkInitImage']}
+      helpContent={helpContent ?? defaultHelpContent}
+      moreInfoLink={moreInfoLink ?? CREATE_VDDK_HELP_LINK}
       onEdit={() => {
         launcher<EditProviderVDDKImageProps>(EditProviderVDDKImage, { provider });
       }}
-      canEdit={canPatch}
+      testId="vddk-detail-item"
+      title={t('VDDK init image')}
     />
   );
 };

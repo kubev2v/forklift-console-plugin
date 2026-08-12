@@ -37,25 +37,23 @@ const ScriptDetails: FC<ScriptDetailsProps> = ({ script }) => {
       <CardBody>
         <DescriptionList columnModifier={{ default: '3Col' }}>
           <DetailsItem
+            content={script.name}
             testId={`script-name-${script.name}`}
             title={t('Name')}
-            content={script.name}
           />
           <DetailsItem
+            content={GuestTypeLabels[script.guestType]}
             testId={`script-guest-type-${script.name}`}
             title={t('Guest type')}
-            content={GuestTypeLabels[script.guestType]}
           />
           <DetailsItem
+            content={ScriptTypeLabels[script.scriptType]}
             testId={`script-type-${script.name}`}
             title={t('Script type')}
-            content={ScriptTypeLabels[script.scriptType]}
           />
         </DescriptionList>
         <DescriptionList className="pf-v6-u-mt-md">
           <DetailsItem
-            testId={`script-content-${script.name}`}
-            title={t('Content')}
             content={
               <>
                 <CodeBlock>
@@ -63,18 +61,20 @@ const ScriptDetails: FC<ScriptDetailsProps> = ({ script }) => {
                 </CodeBlock>
                 {isLongContent && (
                   <Button
-                    variant={ButtonVariant.link}
+                    className="pf-v6-u-mt-sm"
                     isInline
                     onClick={() => {
                       setIsExpanded((prev) => !prev);
                     }}
-                    className="pf-v6-u-mt-sm"
+                    variant={ButtonVariant.link}
                   >
                     {isExpanded ? t('Show less') : t('Show more')}
                   </Button>
                 )}
               </>
             }
+            testId={`script-content-${script.name}`}
+            title={t('Content')}
           />
         </DescriptionList>
       </CardBody>

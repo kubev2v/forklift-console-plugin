@@ -10,9 +10,9 @@ import { inventoryHasChanged } from '../utils/inventoryHasChanged';
 import { updateInventory } from '../utils/updateInventory';
 
 type ProvidersInventoryListResult = {
+  error: Error | null;
   inventory: ProvidersInventoryList | null;
   loading: boolean;
-  error: Error | null;
 };
 
 const useProvidersInventoryList = (

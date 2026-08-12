@@ -18,9 +18,9 @@ type UseTreeFilters = {
 };
 
 type UseTreeFiltersReturn = {
+  filteredGroupVMCountByFolder: Map<string, number>;
   filteredRows: RowNode[];
   visibleVmIds: Set<string>;
-  filteredGroupVMCountByFolder: Map<string, number>;
 };
 
 const useTreeFilters = ({ filters, rows, showAll }: UseTreeFilters): UseTreeFiltersReturn => {

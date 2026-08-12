@@ -36,27 +36,27 @@ const HypervTransferMethodField: FC = () => {
   };
 
   return (
-    <FormGroup fieldId={ProviderFormFieldId.TransferMethod} label={t('Transfer method')} isRequired>
+    <FormGroup fieldId={ProviderFormFieldId.TransferMethod} isRequired label={t('Transfer method')}>
       <Radio
-        id="hyperv-transfer-smb"
-        name="hypervTransferMethod"
-        label={t('SMB (default)')}
         description={t(
           'Uses an SMB share to access VM disks. Requires an SMB share URL and optionally separate SMB credentials.',
         )}
+        id="hyperv-transfer-smb"
         isChecked={currentMethod === HypervTransferMethod.SMB}
+        label={t('SMB (default)')}
+        name="hypervTransferMethod"
         onChange={() => {
           handleChange(HypervTransferMethod.SMB);
         }}
       />
       <Radio
-        id="hyperv-transfer-iscsi"
-        name="hypervTransferMethod"
-        label={t('iSCSI')}
         description={t(
           'Copies VM disks directly over iSCSI. Requires the iSCSI Target Server feature installed on the Hyper-V host. Typically faster than SMB.',
         )}
+        id="hyperv-transfer-iscsi"
         isChecked={currentMethod === HypervTransferMethod.ISCSI}
+        label={t('iSCSI')}
+        name="hypervTransferMethod"
         onChange={() => {
           handleChange(HypervTransferMethod.ISCSI);
         }}

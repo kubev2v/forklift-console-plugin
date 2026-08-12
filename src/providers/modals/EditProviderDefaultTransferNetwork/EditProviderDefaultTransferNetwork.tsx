@@ -55,8 +55,8 @@ const EditProviderDefaultTransferNetwork: ModalComponent<
   return (
     <ModalForm
       closeModal={closeModal}
-      title={t('Edit default transfer network')}
       onConfirm={onConfirm}
+      title={t('Edit default transfer network')}
     >
       <Stack hasGutter>
         <StackItem>
@@ -69,13 +69,13 @@ const EditProviderDefaultTransferNetwork: ModalComponent<
         <StackItem>
           <Form>
             <FormGroupWithHelpText
-              label={t('Default transfer network')}
               fieldId="transfer-network-input"
               helperText={t(
                 'Please choose a NetworkAttachmentDefinition for default data transfer.',
               )}
+              label={t('Default transfer network')}
             >
-              <NetworkDropdown provider={provider} value={value} onChange={setValue} />
+              <NetworkDropdown onChange={setValue} provider={provider} value={value} />
             </FormGroupWithHelpText>
           </Form>
         </StackItem>

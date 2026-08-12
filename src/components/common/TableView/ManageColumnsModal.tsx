@@ -18,21 +18,9 @@ import type { ResourceField } from '../utils/types';
 
 type ManagedColumnsProps = {
   /**
-   * To flag an open or a closed modal.
+   * A label for the ``Cancel`` button to be displayed in the modal.
    */
-  showModal: boolean;
-  /**
-   * A callback for when the ``close`` button is clicked.
-   */
-  onClose: () => void;
-  /**
-   * A callback for when the ``Save`` button is clicked. A setter to modify state in the parent
-   */
-  onChange: (columns: ResourceField[]) => void;
-  /**
-   * The list of fields to manage by the modal. This is the state maintained by parent component. Read only.
-   */
-  resourceFields: ResourceField[];
+  cancelLabel?: string;
   /**
    * The defaults used for initialization and for the restore option. Read only.
    */
@@ -42,21 +30,33 @@ type ManagedColumnsProps = {
    */
   description?: string;
   /**
-   * A label for the ``Save`` button to be displayed in the modal.
+   * A callback for when the ``Save`` button is clicked. A setter to modify state in the parent
    */
-  saveLabel?: string;
+  onChange: (columns: ResourceField[]) => void;
   /**
-   * A label for the ``Cancel`` button to be displayed in the modal.
+   * A callback for when the ``close`` button is clicked.
    */
-  cancelLabel?: string;
+  onClose: () => void;
   /**
    * An aria label for the reorder draggable option to be displayed in the modal.
    */
   reorderLabel?: string;
   /**
+   * The list of fields to manage by the modal. This is the state maintained by parent component. Read only.
+   */
+  resourceFields: ResourceField[];
+  /**
    * A label for the ``Restore`` button to be displayed in the modal.
    */
   restoreLabel?: string;
+  /**
+   * A label for the ``Save`` button to be displayed in the modal.
+   */
+  saveLabel?: string;
+  /**
+   * To flag an open or a closed modal.
+   */
+  showModal: boolean;
   /**
    * A Simple text content of the modal header.
    */
@@ -135,22 +135,21 @@ export const ManageColumnsModal = ({
     <>
       <div id="root" />
       <Modal
-        isOpen={showModal}
-        variant="small"
-        onClose={onClose}
         data-testid="manage-columns-modal"
+        isOpen={showModal}
+        onClose={onClose}
+        variant="small"
       >
         <ModalHeader
-          title={title}
           description={
             <Content>
               <Content component={ContentVariants.p}>{description}</Content>
             </Content>
           }
+          title={title}
         />
         <ModalBody>
           <DragDropSort
-            variant="DataList"
             items={editedColumns.map(({ isIdentity, isVisible, label, resourceFieldId: id }) => {
               const fieldId = id ?? '';
 
@@ -159,9 +158,8 @@ export const ManageColumnsModal = ({
                   <>
                     <DataListControl>
                       <DataListCheck
-                        id={`check-${fieldId}`}
                         aria-labelledby={`item-${fieldId}`}
-                        name={`item-${fieldId}`}
+                        id={`check-${fieldId}`}
                         isChecked={
                           isIdentity
                             ? resourceFields.find(
@@ -170,6 +168,7 @@ export const ManageColumnsModal = ({
                             : isVisible
                         }
                         isDisabled={isIdentity}
+                        name={`item-${fieldId}`}
                         onChange={(event, checked) => {
                           onChangeFactory(fieldId)(checked, event);
                         }}
@@ -190,29 +189,30 @@ export const ManageColumnsModal = ({
             })}
             onDrop={onDrop}
             overlayProps={{ isCompact: true }}
+            variant="DataList"
           >
-            <DataList aria-label={title} isCompact data-testid="manage-columns-list" />
+            <DataList aria-label={title} data-testid="manage-columns-list" isCompact />
           </DragDropSort>
         </ModalBody>
         <ModalFooter>
           <Button
-            key="save"
-            variant={ButtonVariant.primary}
-            isDisabled={resourceFields === editedColumns}
-            onClick={onSave}
             data-testid="manage-columns-save-button"
+            isDisabled={resourceFields === editedColumns}
+            key="save"
+            onClick={onSave}
+            variant={ButtonVariant.primary}
           >
             {saveLabel}
           </Button>
           <Button
-            key="cancel"
-            variant={ButtonVariant.secondary}
-            onClick={onClose}
             data-testid="manage-columns-cancel-button"
+            key="cancel"
+            onClick={onClose}
+            variant={ButtonVariant.secondary}
           >
             {cancelLabel}
           </Button>
-          <Button key="restore" variant={ButtonVariant.link} onClick={restoreDefaults}>
+          <Button key="restore" onClick={restoreDefaults} variant={ButtonVariant.link}>
             {restoreLabel}
           </Button>
         </ModalFooter>

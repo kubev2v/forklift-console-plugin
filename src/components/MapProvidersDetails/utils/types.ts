@@ -7,14 +7,14 @@ export enum MapProviderEditFormFields {
 }
 
 export type MapProvidersEditFormValues = {
-  [MapProviderEditFormFields.Source]: V1beta1Provider;
   [MapProviderEditFormFields.Destination]: V1beta1Provider;
+  [MapProviderEditFormFields.Source]: V1beta1Provider;
 };
 
 export type MapProvidersEditProps = {
-  obj: V1beta1NetworkMap | V1beta1StorageMap;
+  destinationProvider: V1beta1Provider;
   model: K8sModel;
   namespace: string;
+  obj: V1beta1NetworkMap | V1beta1StorageMap;
   sourceProvider: V1beta1Provider;
-  destinationProvider: V1beta1Provider;
 };

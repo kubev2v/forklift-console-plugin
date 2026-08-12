@@ -4,8 +4,8 @@ import { Stack, StackItem } from '@patternfly/react-core';
 import { ForkliftTrans } from '@utils/i18n';
 
 type TargetProjectEmptyStateProps = {
-  targetProviderName: string;
   error?: Error | null;
+  targetProviderName: string;
 };
 const TargetProjectEmptyState: FC<TargetProjectEmptyStateProps> = ({
   error,

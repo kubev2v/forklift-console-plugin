@@ -48,6 +48,32 @@ const CreateNetworkMapFieldTable: FC = () => {
 
   return (
     <FieldBuilderTable
+      addButton={{
+        isDisabled:
+          isEmpty(sourceNetworks) || sourceNetworksLoading || isSubmitting || Boolean(loadError),
+        label: t('Add mapping'),
+        onClick: () => {
+          append(defaultNetworkMapping);
+        },
+      }}
+      fieldRows={networkMappingFields.map((field, index) => ({
+        ...field,
+        inputs: [
+          <InventorySourceNetworkField
+            fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
+            key={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
+            sourceNetworks={sourceNetworks}
+          />,
+          <TargetNetworkField
+            emptyStateMessage={t('Select a target provider to list available target networks')}
+            fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
+            isDisabled={isSubmitting}
+            key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
+            showIgnoreNetworkOption
+            targetNetworks={targetNetworks}
+          />,
+        ],
+      }))}
       headers={[
         {
           isRequired: true,
@@ -60,32 +86,6 @@ const CreateNetworkMapFieldTable: FC = () => {
           width: 50,
         },
       ]}
-      fieldRows={networkMappingFields.map((field, index) => ({
-        ...field,
-        inputs: [
-          <InventorySourceNetworkField
-            key={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
-            fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
-            sourceNetworks={sourceNetworks}
-          />,
-          <TargetNetworkField
-            key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-            fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-            targetNetworks={targetNetworks}
-            showIgnoreNetworkOption
-            emptyStateMessage={t('Select a target provider to list available target networks')}
-            isDisabled={isSubmitting}
-          />,
-        ],
-      }))}
-      addButton={{
-        isDisabled:
-          isEmpty(sourceNetworks) || sourceNetworksLoading || isSubmitting || Boolean(loadError),
-        label: t('Add mapping'),
-        onClick: () => {
-          append(defaultNetworkMapping);
-        },
-      }}
       removeButton={{
         isDisabled: () => isSubmitting,
         onClick: (index) => {

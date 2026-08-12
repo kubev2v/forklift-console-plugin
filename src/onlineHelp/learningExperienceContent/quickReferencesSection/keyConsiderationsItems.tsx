@@ -4,8 +4,8 @@ import { Content, ContentVariants, Flex, FlexItem } from '@patternfly/react-core
 import { t } from '@utils/i18n';
 
 type KeyConsiderationsItem = {
-  title: string;
   description: ReactNode;
+  title: string;
 };
 
 export const keyConsiderationsItems: KeyConsiderationsItem[] = [

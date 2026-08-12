@@ -30,9 +30,9 @@ const NetworkMapReviewTable: FC<NetworkMapReviewTableProps> = ({ networkMap }) =
     <Card>
       <Table
         aria-label="Network map review table"
-        variant={TableVariant.compact}
         borders
         data-testid="network-map-review-table"
+        variant={TableVariant.compact}
       >
         <Thead>
           <Tr>

@@ -29,6 +29,7 @@ const SharedDisksField: FC = () => {
 
   return (
     <FormGroup
+      className="checkbox-form-group"
       fieldId={fieldId}
       label={label}
       labelHelp={
@@ -38,7 +39,6 @@ const SharedDisksField: FC = () => {
           )}
         </HelpIconPopover>
       }
-      className="checkbox-form-group"
     >
       <Stack hasGutter>
         <FormHelperText>
@@ -46,13 +46,13 @@ const SharedDisksField: FC = () => {
         </FormHelperText>
 
         <Controller
-          name={fieldId}
           control={control}
+          name={fieldId}
           render={({ field }) => (
             <Checkbox
               id={fieldId}
-              label={label}
               isChecked={field.value}
+              label={label}
               onChange={field.onChange}
             />
           )}

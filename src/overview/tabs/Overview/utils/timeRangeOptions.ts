@@ -14,10 +14,10 @@ export enum TimeRangeOptions {
 }
 
 type TimeRangeOptionsProperties = {
-  span: { days: number } | { hours: number };
   bucket: { day: number } | { hour: number };
-  unit: 'day' | 'hour';
   filter: (date: DateTime) => boolean;
+  span: { days: number } | { hours: number };
+  unit: 'day' | 'hour';
 };
 
 export const getValueToLabel = (): Record<TimeRangeOptions, string> => ({
@@ -28,10 +28,10 @@ export const getValueToLabel = (): Record<TimeRangeOptions, string> => ({
 });
 
 export const TimeRangeOptionsDictionary: {
-  Last10Days: TimeRangeOptionsProperties;
-  Last31Days: TimeRangeOptionsProperties;
-  Last24H: TimeRangeOptionsProperties;
   All: TimeRangeOptionsProperties;
+  Last10Days: TimeRangeOptionsProperties;
+  Last24H: TimeRangeOptionsProperties;
+  Last31Days: TimeRangeOptionsProperties;
 } = {
   All: {
     bucket: { day: 1 },

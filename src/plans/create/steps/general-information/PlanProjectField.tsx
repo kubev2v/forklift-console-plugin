@@ -56,8 +56,8 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
 
   return (
     <FormGroupWithErrorText
-      isRequired
       fieldId={GeneralFormFieldId.PlanProject}
+      isRequired
       label={generalFormFieldLabels[GeneralFormFieldId.PlanProject]}
       labelHelp={
         <HelpIconPopover>
@@ -75,19 +75,11 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
       }
     >
       <Controller
-        name={GeneralFormFieldId.PlanProject}
         control={control}
+        name={GeneralFormFieldId.PlanProject}
         render={({ field }) => (
           <ProjectSelect
-            testId={testId}
-            showDefaultProjects={showDefaultProjects}
-            setShowDefaultProjects={(value) => {
-              setValue(GeneralFormFieldId.ShowDefaultProjects, value);
-            }}
-            placeholder={t('Select plan project')}
             id={GeneralFormFieldId.PlanProject}
-            projectNames={projectNames}
-            value={field.value}
             onChange={(value) => {
               field.onChange(value);
 
@@ -105,10 +97,18 @@ const PlanProjectField: FC<PlanProjectFieldProps> = ({ testId = 'plan-project-se
                 setValue(GeneralFormFieldId.TargetProject, '', { shouldValidate: true });
               }
             }}
+            placeholder={t('Select plan project')}
+            projectNames={projectNames}
+            setShowDefaultProjects={(value) => {
+              setValue(GeneralFormFieldId.ShowDefaultProjects, value);
+            }}
+            showDefaultProjects={showDefaultProjects}
+            testId={testId}
             toggleProps={{
               id: 'plan-project-select',
               status: errors[GeneralFormFieldId.PlanProject] && MenuToggleStatus.danger,
             }}
+            value={field.value}
           />
         )}
         rules={{ required: t('Plan project is required.') }}

@@ -67,9 +67,9 @@ const InspectionVmTable: FC<InspectionVmTableProps> = ({
       const vmId = props.resourceData.id;
       return (
         <VmConfigForm
-          vmId={vmId}
-          overrides={vmOverrides[vmId] ?? {}}
           onChange={onVmOverrideChange}
+          overrides={vmOverrides[vmId] ?? {}}
+          vmId={vmId}
         />
       );
     },
@@ -84,15 +84,15 @@ const InspectionVmTable: FC<InspectionVmTableProps> = ({
 
   return (
     <StandardPageWithSelection<InspectionVmRowData>
-      dataSource={[enrichedRows, !isLoading, null]}
-      cell={InspectionVmRow}
-      fieldsMetadata={inspectionVmFields}
-      userSettings={userSettings}
-      toId={toId}
       canSelect={canSelect}
+      cell={InspectionVmRow}
+      dataSource={[enrichedRows, !isLoading, null]}
+      fieldsMetadata={inspectionVmFields}
       getSelectDisabledReason={getSelectDisabledReason}
       onSelect={onSelect}
       selectedIds={selectedIds}
+      toId={toId}
+      userSettings={userSettings}
       {...(isProviderFlow && {
         expanded,
         expandedIds,

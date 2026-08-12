@@ -12,11 +12,11 @@ import { getResourceUrl } from '@utils/getResourceUrl';
 import { getNavigationTarget } from './utils';
 
 type LabelButtonProps = {
+  groupVersionKind?: K8sGroupVersionKind;
   href?: string;
   isCreateForm?: boolean;
   label: ReactNode;
   preText?: ReactNode;
-  groupVersionKind?: K8sGroupVersionKind;
 };
 
 const LabelButton: FC<LabelButtonProps> = ({
@@ -47,7 +47,7 @@ const LabelButton: FC<LabelButtonProps> = ({
   return (
     <>
       {preText}
-      <Label color="blue" className="pf-v6-u-ml-sm" onClick={onClick}>
+      <Label className="pf-v6-u-ml-sm" color="blue" onClick={onClick}>
         {label}
       </Label>
     </>

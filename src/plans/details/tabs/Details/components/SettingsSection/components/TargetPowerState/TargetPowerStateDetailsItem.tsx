@@ -19,21 +19,21 @@ const TargetPowerStateDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, p
 
   return (
     <DetailsItem
-      testId="target-vm-power-state-detail-item"
-      title={t('VM target power state')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={
-        <Label isCompact color="grey">
+        <Label color="grey" isCompact>
           {getTargetPowerStateLabel(getPlanTargetPowerState(plan))}
         </Label>
       }
+      crumbs={['spec', 'targetPowerState']}
       helpContent={t(
         `Choose what state you'd like all of the VMs in your plan to be powered to after migration. You can change this setting for specific VMs in the Virtual machines tab.`,
       )}
-      crumbs={['spec', 'targetPowerState']}
       onEdit={() => {
         launcher<EditPlanProps>(EditTargetPowerState, { resource: plan });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="target-vm-power-state-detail-item"
+      title={t('VM target power state')}
     />
   );
 };

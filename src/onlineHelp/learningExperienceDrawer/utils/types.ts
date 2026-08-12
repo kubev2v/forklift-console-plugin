@@ -1,34 +1,34 @@
 import type { LearningExperienceTopic } from 'src/onlineHelp/utils/types';
 
 export type AccordionContextType = {
-  openExpansionItems: string[];
-  openExpansionItem: (itemId: string) => void;
   closeExpansionItem: (itemId: string) => void;
+  openExpansionItem: (itemId: string) => void;
+  openExpansionItems: string[];
 };
 
 export type LearningExperienceContextType = {
-  isLearningExperienceOpen: boolean;
-  selectedTopic: LearningExperienceTopic | null;
-  scrollPosition: number;
-  referenceScrollPositions: Record<string, number>;
-  drawerWidth: string;
-  data: Record<string, unknown>;
-  openLearningExperience: () => void;
-  closeLearningExperience: () => void;
-  setSelectedTopic: (topic: LearningExperienceTopic | null) => void;
-  setScrollPosition: (scrollPosition: number) => void;
-  setReferenceScrollPosition: (id: string, position: number) => void;
-  setDrawerWidth: (width: string) => void;
-  setData: (dataItem: string, dataValue: unknown) => void;
   clearData: (dataItem?: string) => void;
+  closeLearningExperience: () => void;
+  data: Record<string, unknown>;
+  drawerWidth: string;
+  isLearningExperienceOpen: boolean;
+  openLearningExperience: () => void;
+  referenceScrollPositions: Record<string, number>;
+  scrollPosition: number;
+  selectedTopic: LearningExperienceTopic | null;
+  setData: (dataItem: string, dataValue: unknown) => void;
+  setDrawerWidth: (width: string) => void;
+  setReferenceScrollPosition: (id: string, position: number) => void;
+  setScrollPosition: (scrollPosition: number) => void;
+  setSelectedTopic: (topic: LearningExperienceTopic | null) => void;
 };
 
 export type PersistedState = {
+  data?: Record<string, unknown>;
+  drawerWidth?: string;
   isLearningExperienceOpen?: boolean;
   openExpansionItems?: string[];
-  scrollPosition?: number;
   referenceScrollPositions?: Record<string, number>;
+  scrollPosition?: number;
   selectedTopicId?: string | null;
-  drawerWidth?: string;
-  data?: Record<string, unknown>;
 };

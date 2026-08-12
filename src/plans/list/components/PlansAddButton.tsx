@@ -10,9 +10,9 @@ import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytic
 import { getResourceUrl } from '@utils/getResourceUrl';
 
 type PlansAddButtonProps = {
+  canCreate?: boolean;
   namespace?: string;
   testId?: string;
-  canCreate?: boolean;
 };
 
 const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, namespace, testId }) => {
@@ -42,10 +42,10 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, namespace, testId 
     <Button
       data-testid={testId}
       id="plans-add-button"
-      variant={ButtonVariant.primary}
       isAriaDisabled={!hasSufficientProviders}
-      onClick={onClick}
       isDisabled={!canCreate}
+      onClick={onClick}
+      variant={ButtonVariant.primary}
     >
       {t('Create plan')}
     </Button>

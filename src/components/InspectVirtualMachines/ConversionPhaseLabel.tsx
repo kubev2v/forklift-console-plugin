@@ -52,7 +52,7 @@ const ConversionPhaseLabel: FC<ConversionPhaseLabelProps> = ({ phase }) => {
   const config = getPhaseConfig(phase, t);
 
   return (
-    <Label variant="filled" status={config.labelStatus} icon={<Icon isInline>{config.icon}</Icon>}>
+    <Label icon={<Icon isInline>{config.icon}</Icon>} status={config.labelStatus} variant="filled">
       {config.label}
     </Label>
   );

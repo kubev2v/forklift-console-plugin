@@ -20,12 +20,12 @@ export const OwnerReferencesItem: FC<OwnerReferencesProps> = ({ resource }) => {
   const owners = (resource?.metadata?.ownerReferences ?? []).map(
     (ownerReference: OwnerReference) => (
       <ResourceLink
-        key={ownerReference.uid}
         groupVersionKind={{
           group: ownerReference.apiVersion.split('/')[0],
           kind: ownerReference.kind,
           version: ownerReference.apiVersion.split('/')[1],
         }}
+        key={ownerReference.uid}
         name={ownerReference.name}
         namespace={resource.metadata?.namespace}
       />

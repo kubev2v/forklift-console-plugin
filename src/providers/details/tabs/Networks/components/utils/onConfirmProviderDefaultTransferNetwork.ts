@@ -8,8 +8,8 @@ export const onConfirmProviderDefaultTransferNetwork = async ({
   resource,
   value,
 }: {
-  value: string | number;
   resource: V1beta1Provider;
+  value: string | number;
 }): Promise<V1beta1Provider> => {
   const currentAnnotations = resource?.metadata?.annotations;
   const newAnnotations = {

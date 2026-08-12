@@ -14,8 +14,8 @@ import { GlobeAmericasIcon } from '@patternfly/react-icons';
 import './ConsoleTimestamp.style.css';
 
 type TimestampProps = {
-  timestamp: string | number | Date | null | undefined;
   showGlobalIcon?: boolean;
+  timestamp: string | number | Date | null | undefined;
 };
 
 /**
@@ -39,7 +39,6 @@ export const ConsoleTimestamp: FC<TimestampProps> = ({ showGlobalIcon = true, ti
       {showGlobalIcon && <GlobeAmericasIcon className="co-icon-and-text__icon" />}
       <Timestamp
         className="forklift-table__console-timestamp"
-        date={currentDate}
         customFormat={{
           day: 'numeric',
           hour: 'numeric',
@@ -47,6 +46,7 @@ export const ConsoleTimestamp: FC<TimestampProps> = ({ showGlobalIcon = true, ti
           month: 'short',
           year: 'numeric',
         }}
+        date={currentDate}
         tooltip={{ variant: TimestampTooltipVariant.default }}
       />
     </div>

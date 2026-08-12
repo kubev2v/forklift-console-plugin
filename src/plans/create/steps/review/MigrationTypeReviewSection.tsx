@@ -39,13 +39,13 @@ const MigrationTypeReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
 
   return (
     <ExpandableReviewSection
-      title={planStepNames[PlanWizardStepId.MigrationType]}
-      testId="review-migration-type-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.MigrationType);
       }}
+      testId="review-migration-type-section"
+      title={planStepNames[PlanWizardStepId.MigrationType]}
     >
-      <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+      <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
         <DescriptionListGroup>
           <DescriptionListTerm>{t('Migration type')}</DescriptionListTerm>
           <DescriptionListDescription data-testid="review-migration-type">

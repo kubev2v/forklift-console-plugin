@@ -1,23 +1,23 @@
 export type UserSettings = {
   fields?: FieldSettings;
-  pagination?: PaginationSettings;
   filters?: FiltersSettings;
+  pagination?: PaginationSettings;
 };
 
 export type FieldSettings = {
-  data: { resourceFieldId: string; isVisible?: boolean }[];
-  save: (fields: { resourceFieldId: string; isVisible?: boolean }[]) => void;
   clear: () => void;
+  data: { isVisible?: boolean; resourceFieldId: string }[];
+  save: (fields: { isVisible?: boolean; resourceFieldId: string }[]) => void;
 };
 
 export type PaginationSettings = {
+  clear: () => void;
   perPage: number;
   save: (perPage: number) => void;
-  clear: () => void;
 };
 
 type FiltersSettings = {
+  clear: () => void;
   data: Record<string, unknown>;
   save: (filters: Record<string, unknown>) => void;
-  clear: () => void;
 };

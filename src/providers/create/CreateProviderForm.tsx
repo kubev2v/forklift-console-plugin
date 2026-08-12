@@ -103,22 +103,22 @@ const CreateProviderForm: FC = () => {
     <FormProvider {...form}>
       <CreateProviderFormContextProvider namespace={selectedProject || ''}>
         <Flex
-          direction={{ default: 'column' }}
-          justifyContent={{ default: 'justifyContentSpaceBetween' }}
           alignItems={{ default: 'alignItemsStretch' }}
-          flexWrap={{ default: 'nowrap' }}
-          spaceItems={{ default: 'spaceItemsLg' }}
           className="create-provider-form pf-v6-u-h-100"
+          direction={{ default: 'column' }}
+          flexWrap={{ default: 'nowrap' }}
+          justifyContent={{ default: 'justifyContentSpaceBetween' }}
+          spaceItems={{ default: 'spaceItemsLg' }}
         >
           <Form>
             <ProviderTypeFields />
 
             {apiError && (
               <Alert
-                variant={AlertVariant.danger}
-                title={t('Error creating provider')}
-                isInline
                 className="pf-v6-u-mt-md"
+                isInline
+                title={t('Error creating provider')}
+                variant={AlertVariant.danger}
               >
                 {apiError.message}
               </Alert>
@@ -129,19 +129,19 @@ const CreateProviderForm: FC = () => {
             <Split hasGutter>
               <Button
                 data-testid="provider-create-button"
-                onClick={handleSubmit(onSubmit)}
                 isDisabled={!isValid || isSubmitting}
                 isLoading={isSubmitting}
+                onClick={handleSubmit(onSubmit)}
               >
                 {t('Create provider')}
               </Button>
 
               <Button
-                variant={ButtonVariant.secondary}
+                data-testid="provider-cancel-button"
                 onClick={() => {
                   navigate(-1)?.catch(() => undefined);
                 }}
-                data-testid="provider-cancel-button"
+                variant={ButtonVariant.secondary}
               >
                 {t('Cancel')}
               </Button>

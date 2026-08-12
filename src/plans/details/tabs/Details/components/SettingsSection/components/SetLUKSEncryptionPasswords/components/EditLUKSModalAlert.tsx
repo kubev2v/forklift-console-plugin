@@ -16,8 +16,6 @@ const EditLUKSModalAlert: FC<EditLUKSModalAlertProps> = ({ shouldRender }) => {
   }
   return (
     <AlertMessageForModals
-      variant="warning"
-      title={t('The plan LUKS decryption keys were manually configured')}
       message={
         <Stack hasGutter>
           <StackItem>
@@ -28,6 +26,8 @@ const EditLUKSModalAlert: FC<EditLUKSModalAlertProps> = ({ shouldRender }) => {
           </StackItem>
         </Stack>
       }
+      title={t('The plan LUKS decryption keys were manually configured')}
+      variant="warning"
     />
   );
 };

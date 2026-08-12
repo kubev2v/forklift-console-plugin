@@ -13,13 +13,13 @@ type FormValues = {
 };
 
 type TextInputEditModalProps = {
-  title: string;
-  label: string;
-  initialValue: string;
   description?: ReactNode;
   helperText?: string;
-  validationHook?: (value: string) => ValidationMsg;
+  initialValue: string;
+  label: string;
   onConfirm: (value: string) => Promise<void>;
+  title: string;
+  validationHook?: (value: string) => ValidationMsg;
 };
 
 const TextInputEditModal: ModalComponent<TextInputEditModalProps> = ({
@@ -52,23 +52,23 @@ const TextInputEditModal: ModalComponent<TextInputEditModalProps> = ({
   return (
     <ModalForm
       closeModal={closeModal}
-      title={title}
-      onConfirm={handleConfirm}
-      variant={ModalVariant.large}
       isDisabled={!isValid || hasError}
+      onConfirm={handleConfirm}
+      title={title}
+      variant={ModalVariant.large}
     >
       {description && <>{description}</>}
       <Form>
         <FormGroupWithHelpText
-          label={label}
           fieldId="text-input-edit-modal"
           helperText={validation.msg ?? helperText}
           helperTextInvalid={validation.msg}
+          label={label}
           validated={validation.type}
         >
           <TextInput
-            id="text-input-edit-modal"
             data-testid="text-input-edit-modal"
+            id="text-input-edit-modal"
             validated={validation.type}
             {...register('value')}
           />

@@ -1,8 +1,8 @@
 import type { V1beta1Host } from '@forklift-ui/types';
 
 type StatusResult = {
-  status: string;
   message: string;
+  status: string;
 };
 
 /**

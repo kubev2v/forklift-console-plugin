@@ -13,8 +13,8 @@ export const storageMapPrerequisitesSubTopic: LearningExperienceSubTopic = {
       id: `${STORAGE_MAP_PREREQUISITES_SUB_TOPIC_ID}-a`,
       title: (
         <HelpTitledContent
-          title={t('Ensure providers are connected')}
           content={t('Ensure that both source and target providers are correctly added.')}
+          title={t('Ensure providers are connected')}
         />
       ),
     },
@@ -22,8 +22,8 @@ export const storageMapPrerequisitesSubTopic: LearningExperienceSubTopic = {
       id: `${STORAGE_MAP_PREREQUISITES_SUB_TOPIC_ID}-b`,
       title: (
         <HelpTitledContent
-          title={t('Storage support')}
           content={t('Make sure your local and shared persistent storage support VM migration.')}
+          title={t('Storage support')}
         />
       ),
     },

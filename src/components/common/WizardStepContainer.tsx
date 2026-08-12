@@ -5,10 +5,10 @@ import { Flex, FlexItem, Title } from '@patternfly/react-core';
 import './WizardStepContainer.style.scss';
 
 type WizardStepContainerProps = PropsWithChildren & {
-  title: ReactNode;
   description?: ReactNode;
   isFullWidth?: boolean;
   testId?: string;
+  title: ReactNode;
 };
 
 const WizardStepContainer: FC<WizardStepContainerProps> = ({

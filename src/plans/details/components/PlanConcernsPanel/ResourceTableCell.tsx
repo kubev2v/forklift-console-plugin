@@ -33,7 +33,6 @@ const ResourceTableCell: FC<ResourceTableCellProps> = ({ fieldsData }) => {
       {condition?.vmsNum ? (
         <Button
           isInline
-          variant={ButtonVariant.link}
           onClick={() => {
             const filterParams = getFilterParams(condition?.source, condition?.type);
             navigate(fieldsData?.planUrl)?.catch(() => undefined);
@@ -41,6 +40,7 @@ const ResourceTableCell: FC<ResourceTableCellProps> = ({ fieldsData }) => {
               () => undefined,
             );
           }}
+          variant={ButtonVariant.link}
         >
           {`${condition?.vmsNum} ${t('VMs')}`}
         </Button>

@@ -9,9 +9,9 @@ import { getStorageMapSchema } from '../utils/getStorageMapSchema';
 import { useStorageMapCrd } from './useStorageMapCrd';
 
 type UseStorageVendorProductsResult = {
-  storageVendorProducts: string[];
-  loading: boolean;
   error: Error | null;
+  loading: boolean;
+  storageVendorProducts: string[];
 };
 
 /**

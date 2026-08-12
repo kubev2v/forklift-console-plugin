@@ -42,11 +42,10 @@ const ConvertorNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="convertor-node-selector-detail-item"
-      title={t('Convertor pod node selector')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={<NodeSelectorViewDetailsItemContent labels={plan?.spec?.convertorNodeSelector} />}
-      helpContent={description}
       crumbs={['spec', 'convertorNodeSelector']}
+      helpContent={description}
       moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
         launcher<NodeSelectorModalProps>(NodeSelectorModal, {
@@ -67,7 +66,8 @@ const ConvertorNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({
           title: t('Edit convertor pod node selector'),
         });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="convertor-node-selector-detail-item"
+      title={t('Convertor pod node selector')}
     />
   );
 };

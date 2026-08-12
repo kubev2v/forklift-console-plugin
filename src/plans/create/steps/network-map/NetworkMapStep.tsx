@@ -36,34 +36,34 @@ const NetworkMapStep = () => {
 
   return (
     <WizardStepContainer
-      title={planStepNames[PlanWizardStepId.NetworkMap]}
       description={t('Select an existing network map or use a new network map.')}
       testId="create-plan-network-map-step"
+      title={planStepNames[PlanWizardStepId.NetworkMap]}
     >
       <Form>
         <Controller
-          name={NetworkMapFieldId.NetworkMapType}
           control={control}
+          name={NetworkMapFieldId.NetworkMapType}
           render={({ field: networkTypeField }) => (
             <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
               <FlexItem>
                 <Stack hasGutter>
                   <Radio
-                    data-testid="use-existing-network-map-radio"
-                    id={NetworkMapType.Existing}
-                    name={NetworkMapType.Existing}
-                    label={networkMapTypeLabels[NetworkMapType.Existing]}
                     checked={networkTypeField.value === NetworkMapType.Existing}
-                    value={networkTypeField.value}
+                    data-testid="use-existing-network-map-radio"
+                    description={t(
+                      'Existing network map options are limited to those without an owner reference. Upon creation of this plan, a new network map will be created with this plan as its owner.',
+                    )}
+                    id={NetworkMapType.Existing}
                     isChecked={networkTypeField.value === NetworkMapType.Existing}
+                    label={networkMapTypeLabels[NetworkMapType.Existing]}
+                    name={NetworkMapType.Existing}
                     onChange={() => {
                       networkTypeField.onChange(NetworkMapType.Existing);
                       unregister([NetworkMapFieldId.NetworkMap, NetworkMapFieldId.NetworkMapName]);
                       handleNetworkMapTypeChange(NetworkMapType.Existing);
                     }}
-                    description={t(
-                      'Existing network map options are limited to those without an owner reference. Upon creation of this plan, a new network map will be created with this plan as its owner.',
-                    )}
+                    value={networkTypeField.value}
                   />
 
                   {networkTypeField.value === NetworkMapType.Existing && (
@@ -75,21 +75,21 @@ const NetworkMapStep = () => {
               <FlexItem>
                 <Stack hasGutter>
                   <Radio
+                    checked={networkTypeField.value === NetworkMapType.New}
                     data-testid="use-new-network-map-radio"
-                    id={NetworkMapType.New}
-                    name={NetworkMapType.New}
-                    label={networkMapTypeLabels[NetworkMapType.New]}
                     description={t(
                       'Use the suggested network mapping and add mappings to it, or create a brand new one as needed. A new map, with this plan as its owner, will be automatically created based on your selected mappings.',
                     )}
-                    checked={networkTypeField.value === NetworkMapType.New}
-                    value={networkTypeField.value}
+                    id={NetworkMapType.New}
                     isChecked={networkTypeField.value === NetworkMapType.New}
+                    label={networkMapTypeLabels[NetworkMapType.New]}
+                    name={NetworkMapType.New}
                     onChange={() => {
                       networkTypeField.onChange(NetworkMapType.New);
                       unregister(NetworkMapFieldId.ExistingNetworkMap);
                       handleNetworkMapTypeChange(NetworkMapType.New);
                     }}
+                    value={networkTypeField.value}
                   />
 
                   {networkTypeField.value === NetworkMapType.New && <NewNetworkMapFields />}

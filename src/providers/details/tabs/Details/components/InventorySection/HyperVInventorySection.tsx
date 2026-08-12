@@ -23,29 +23,29 @@ const HyperVInventorySection: FC<InventorySectionProps> = ({ data }) => {
 
   return (
     <DescriptionList
-      isHorizontal
-      horizontalTermWidthModifier={{ default: '15ch' }}
       columnModifier={{ default: '2Col' }}
+      horizontalTermWidthModifier={{ default: '15ch' }}
+      isHorizontal
     >
       {isCluster && (
         <>
           <ClusterCountDetailsItem
-            resource={provider}
-            inventory={inventory}
             helpContent={t('Number of Failover Clusters')}
+            inventory={inventory}
+            resource={provider}
           />
           <HostCountDetailsItem
-            resource={provider}
-            inventory={inventory}
             helpContent={t('Number of cluster nodes')}
+            inventory={inventory}
+            resource={provider}
           />
         </>
       )}
-      <StorageCountDetailsItem resource={provider} inventory={inventory} />
+      <StorageCountDetailsItem inventory={inventory} resource={provider} />
       <VmCountDetailsItem
-        resource={provider}
-        inventory={inventory}
         helpContent={t('Number of virtual machines exported from Hyper-V')}
+        inventory={inventory}
+        resource={provider}
       />
     </DescriptionList>
   );

@@ -9,11 +9,11 @@ export type EnumGroup = {
 };
 
 export type EnumValue = {
-  id: string;
   groupId?: string;
+  icon?: ReactNode;
+  id: string;
   label: string;
   resourceFieldId?: string;
-  icon?: ReactNode;
 };
 
 export enum FilterDefType {
@@ -25,21 +25,21 @@ export enum FilterDefType {
 }
 
 export type FilterDef = {
-  type: string;
-  placeholderLabel?: string;
-  values?: EnumValue[];
-  fieldLabel?: string;
-  primary?: boolean;
-  standalone?: boolean;
-  excludeFromClearFilters?: boolean;
-  groups?: EnumGroup[];
   // override default behavior if there are no filters provided by the user
   // by default missing/empty filters result in positive match (vacuous truth)
   defaultValues?: string[];
-  helperText?: string | ReactNode;
   dynamicFilter?: (items: unknown[]) => Partial<FilterDef>;
+  excludeFromClearFilters?: boolean;
+  fieldLabel?: string;
+  groups?: EnumGroup[];
+  helperText?: string | ReactNode;
   isHidden?: boolean;
+  placeholderLabel?: string;
+  primary?: boolean;
   showFilterIcon?: boolean;
+  standalone?: boolean;
+  type: string;
+  values?: EnumValue[];
 };
 
 type OpenApiJsonPath = string | string[] | ((resourceData: unknown) => string);
@@ -54,24 +54,24 @@ type OpenApiJsonResourcePath =
     ) => unknown);
 
 export type ResourceField = {
-  resourceFieldId: string | null;
-  jsonPath?: OpenApiJsonResourcePath;
-  label: string | null;
-  // visibility status, can change in time
-  isVisible?: boolean;
-  isIdentity?: boolean;
-  // if true,  it is used for adding another standalone filter to the same field.
-  isForFilterOnly?: boolean;
-  isAction?: boolean;
-  // if true then the field should be never visible in the UI
-  isHidden?: boolean;
-  sortable?: boolean;
-  filter?: FilterDef | null;
-  // if true then the field filters state should persist between sessions
-  isPersistent?: boolean;
-  info?: ThProps['info'];
   compareFn?: (a: string, b: string, locale: string) => number;
   defaultSortDirection?: SortDirection;
+  filter?: FilterDef | null;
+  info?: ThProps['info'];
+  isAction?: boolean;
+  // if true,  it is used for adding another standalone filter to the same field.
+  isForFilterOnly?: boolean;
+  // if true then the field should be never visible in the UI
+  isHidden?: boolean;
+  isIdentity?: boolean;
+  // if true then the field filters state should persist between sessions
+  isPersistent?: boolean;
+  // visibility status, can change in time
+  isVisible?: boolean;
+  jsonPath?: OpenApiJsonResourcePath;
+  label: string | null;
+  resourceFieldId: string | null;
+  sortable?: boolean;
   // data-testid for the column header (for e2e testing)
   testId?: string;
   // column width as a percentage (PatternFly Th width prop)

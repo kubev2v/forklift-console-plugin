@@ -39,8 +39,8 @@ import EditVirtualMachineTargetName, {
 
 type SpecVirtualMachinesActionsDropdownItemsProps = {
   plan: V1beta1Plan;
-  vmIndex: number;
   providerType?: ProviderType;
+  vmIndex: number;
 };
 
 const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDropdownItemsProps> = ({
@@ -65,23 +65,23 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
   return (
     <DropdownList>
       <DropdownItem
-        key="edit-vm-target-name"
+        data-testid="edit-vm-target-name-menu-item"
         isDisabled={!canEdit}
+        key="edit-vm-target-name"
         onClick={() => {
           launcher<EditVirtualMachineTargetNameProps>(EditVirtualMachineTargetName, {
             plan,
             vmIndex,
           });
         }}
-        data-testid="edit-vm-target-name-menu-item"
       >
         {t('Edit target name')}
       </DropdownItem>
       {isVsphere && (
         <>
           <DropdownItem
-            key="edit-pvc-name-template"
             isDisabled={!canEdit}
+            key="edit-pvc-name-template"
             onClick={() => {
               launcher<EditPVCNameTemplateProps>(EditPVCNameTemplate, {
                 onConfirmPVCNameTemplate: onConfirmVirtualMachinePVCNameTemplate(vmIndex),
@@ -93,8 +93,8 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
             {t('Edit PVC name template')}
           </DropdownItem>
           <DropdownItem
-            key="edit-volume-name-template"
             isDisabled={!canEdit}
+            key="edit-volume-name-template"
             onClick={() => {
               launcher<EditVolumeNameTemplateProps>(EditVolumeNameTemplate, {
                 onConfirmVolumeNameTemplate: onConfirmVirtualMachineVolumeNameTemplate(vmIndex),
@@ -106,8 +106,8 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
             {t('Edit volume name template')}
           </DropdownItem>
           <DropdownItem
-            key="edit-network-name-template"
             isDisabled={!canEdit}
+            key="edit-network-name-template"
             onClick={() => {
               launcher<EditNetworkNameTemplateProps>(EditNetworkNameTemplate, {
                 onConfirmNetworkNameTemplate: onConfirmVirtualMachineNetworkNameTemplate(vmIndex),
@@ -119,44 +119,44 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
             {t('Edit network name template')}
           </DropdownItem>
           <DropdownItem
-            key="edit-vm-shared-disks"
+            data-testid="edit-vm-shared-disks-menu-item"
             isDisabled={!canEdit}
+            key="edit-vm-shared-disks"
             onClick={() => {
               launcher<EditVmMigrateSharedDisksProps>(EditVmMigrateSharedDisks, {
                 index: vmIndex,
                 resource: plan,
               });
             }}
-            data-testid="edit-vm-shared-disks-menu-item"
           >
             {t('Edit shared disks')}
           </DropdownItem>
         </>
       )}
       <DropdownItem
-        value={4}
-        key="edit-target-power-state"
+        data-testid="edit-vm-target-power-state-menu-item"
         isDisabled={!canEdit}
+        key="edit-target-power-state"
         onClick={() => {
           launcher<EditVmTargetPowerStateProps>(EditVmTargetPowerState, {
             index: vmIndex,
             resource: plan,
           });
         }}
-        data-testid="edit-vm-target-power-state-menu-item"
+        value={4}
       >
         {t('Edit target power state')}
       </DropdownItem>
       <DropdownItem
-        key="edit-instance-type"
+        data-testid="edit-vm-instance-type-menu-item"
         isDisabled={!canEdit}
+        key="edit-instance-type"
         onClick={() => {
           launchOverlay<EditVmInstanceTypeProps>(EditVmInstanceType, {
             index: vmIndex,
             resource: plan,
           });
         }}
-        data-testid="edit-vm-instance-type-menu-item"
       >
         {t('Edit instance type')}
       </DropdownItem>

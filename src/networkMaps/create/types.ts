@@ -5,8 +5,8 @@ import type { NetworkMapFieldId, NetworkMapping } from '@utils/crds/maps/types';
 
 export type CreateNetworkMapFormData = FieldValues & {
   [NetworkMapFieldId.MapName]: string;
+  [NetworkMapFieldId.NetworkMap]: NetworkMapping[];
   [NetworkMapFieldId.Project]: string;
   [NetworkMapFieldId.SourceProvider]: V1beta1Provider | undefined;
   [NetworkMapFieldId.TargetProvider]: V1beta1Provider | undefined;
-  [NetworkMapFieldId.NetworkMap]: NetworkMapping[];
 };

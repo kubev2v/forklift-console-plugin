@@ -19,9 +19,9 @@ import { PROVIDER_DEFAULTS } from './utils/constants';
 import { getNetworkName } from './utils/utils';
 
 type TransferNetworkDropdownProps = {
+  onChange: (val: V1beta1PlanSpecTransferNetwork | null) => void;
   provider: V1beta1Provider;
   value: V1beta1PlanSpecTransferNetwork | null;
-  onChange: (val: V1beta1PlanSpecTransferNetwork | null) => void;
 };
 
 const TransferNetworkDropdown: FC<TransferNetworkDropdownProps> = ({
@@ -50,8 +50,8 @@ const TransferNetworkDropdown: FC<TransferNetworkDropdownProps> = ({
 
   const dropdownItems = [
     <DropdownItem
-      key="default"
       description={t("Use the provider's default transfer network")}
+      key="default"
       onClick={() => {
         onChange(null);
       }}
@@ -60,8 +60,8 @@ const TransferNetworkDropdown: FC<TransferNetworkDropdownProps> = ({
     </DropdownItem>,
     ...transferNetworks.map((network) => (
       <DropdownItem
-        key={`${network.namespace}/${network.name}`}
         description={network.namespace}
+        key={`${network.namespace}/${network.name}`}
         onClick={() => {
           onChange(network);
         }}
@@ -74,25 +74,25 @@ const TransferNetworkDropdown: FC<TransferNetworkDropdownProps> = ({
   return (
     <Dropdown
       isOpen={isOpen}
+      isScrollable
       onOpenChange={setIsOpen}
       onSelect={() => {
         setIsOpen(false);
       }}
+      popperProps={{ position: 'right' }}
+      shouldFocusToggleOnSelect
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
-          ref={toggleRef}
+          isExpanded={isOpen}
           onClick={() => {
             setIsOpen(!isOpen);
           }}
-          isExpanded={isOpen}
+          ref={toggleRef}
           variant="default"
         >
           {getNetworkName(value)}
         </MenuToggle>
       )}
-      shouldFocusToggleOnSelect
-      popperProps={{ position: 'right' }}
-      isScrollable
     >
       <DropdownList>{dropdownItems}</DropdownList>
     </Dropdown>

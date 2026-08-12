@@ -55,10 +55,10 @@ const EditPlanMigrationType: ModalComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
-      testId="edit-migration-type-modal"
-      title={t('Edit migration type')}
       description={t('Set the migration type for your migration plan.')}
       onConfirm={async () => onConfirmMigrationType({ newValue: selected, resource })}
+      testId="edit-migration-type-modal"
+      title={t('Edit migration type')}
       {...rest}
     >
       <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
@@ -69,14 +69,14 @@ const EditPlanMigrationType: ModalComponent<EditPlanProps> = ({
           return (
             <FlexItem key={type}>
               <Radio
-                id={`migration-type-${type}`}
-                name="migrationType"
                 data-testid={`migration-type-${type}`}
+                description={description}
+                id={`migration-type-${type}`}
+                isChecked={selected === type}
                 label={
                   helpBody ? <HelpIconWithLabel label={label}>{helpBody}</HelpIconWithLabel> : label
                 }
-                description={description}
-                isChecked={selected === type}
+                name="migrationType"
                 onChange={() => {
                   setSelected(type);
                 }}

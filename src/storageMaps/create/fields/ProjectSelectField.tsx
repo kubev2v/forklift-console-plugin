@@ -47,8 +47,8 @@ const ProjectSelectField: FC = () => {
 
   return (
     <FormGroupWithErrorText
-      isRequired
       fieldId={StorageMapFieldId.Project}
+      isRequired
       label={storageMapFieldLabels[StorageMapFieldId.Project]}
       labelHelp={
         <HelpIconPopover>
@@ -62,19 +62,13 @@ const ProjectSelectField: FC = () => {
       }
     >
       <Controller
-        name={StorageMapFieldId.Project}
         control={control}
+        name={StorageMapFieldId.Project}
         render={({ field }) => (
           <div ref={field.ref}>
             <ProjectSelect
-              showDefaultProjects={effectiveShowDefaultProjects}
-              setShowDefaultProjects={setShowDefaultProjects}
-              isDisabled={isSubmitting}
-              placeholder={t('Select project')}
               id={StorageMapFieldId.Project}
-              testId="project-select"
-              projectNames={projectNames}
-              value={field.value}
+              isDisabled={isSubmitting}
               onChange={(value) => {
                 field.onChange(value);
 
@@ -89,9 +83,15 @@ const ProjectSelectField: FC = () => {
                   });
                 }
               }}
+              placeholder={t('Select project')}
+              projectNames={projectNames}
+              setShowDefaultProjects={setShowDefaultProjects}
+              showDefaultProjects={effectiveShowDefaultProjects}
+              testId="project-select"
               toggleProps={{
                 status: errors[StorageMapFieldId.Project] && MenuToggleStatus.danger,
               }}
+              value={field.value}
             />
           </div>
         )}

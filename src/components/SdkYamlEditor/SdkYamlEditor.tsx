@@ -9,9 +9,9 @@ import { Bullseye } from '@patternfly/react-core';
 import './SdkYamlEditor.scss';
 
 type SdkYamlEditorProps = {
-  value: string | undefined;
-  onChange: (encodedValue: string) => void;
   minHeight?: string;
+  onChange: (encodedValue: string) => void;
+  value: string | undefined;
 };
 
 const SdkYamlEditor: FC<SdkYamlEditorProps> = ({ minHeight = '20rem', onChange, value }) => {
@@ -27,13 +27,13 @@ const SdkYamlEditor: FC<SdkYamlEditorProps> = ({ minHeight = '20rem', onChange, 
     >
       <div className="code-editor-container">
         <CodeEditor
+          isMinimapVisible={false}
           language={Language.yaml}
-          value={decodedValue}
+          minHeight={minHeight}
           onChange={(val: string) => {
             onChange(Base64.encode(val));
           }}
-          minHeight={minHeight}
-          isMinimapVisible={false}
+          value={decodedValue}
         />
       </div>
     </Suspense>

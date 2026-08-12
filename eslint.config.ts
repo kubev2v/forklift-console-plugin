@@ -310,7 +310,19 @@ export const createEslintConfig = () =>
           },
         ],
         'perfectionist/sort-imports': 'off',
+        'perfectionist/sort-jsx-props': [
+          'error',
+          {
+            type: 'alphabetical',
+          },
+        ],
         'perfectionist/sort-named-imports': 'off',
+        'perfectionist/sort-object-types': [
+          'error',
+          {
+            type: 'alphabetical',
+          },
+        ],
         'perfectionist/sort-objects': [
           'error',
           {

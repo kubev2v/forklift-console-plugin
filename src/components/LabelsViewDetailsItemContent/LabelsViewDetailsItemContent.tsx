@@ -13,7 +13,7 @@ type LabelsViewDetailsItemContentProps = {
 const LabelsViewDetailsItemContent: FC<LabelsViewDetailsItemContentProps> = ({ labels }) => {
   if (isEmpty(labels)) {
     return (
-      <Label isCompact color="grey">
+      <Label color="grey" isCompact>
         {t('No labels defined')}
       </Label>
     );

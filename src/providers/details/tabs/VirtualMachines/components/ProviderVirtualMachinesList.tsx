@@ -17,19 +17,19 @@ import { extraSupportedFilters, extraSupportedMatchers } from './constants';
 import type { VmData } from './VMCellProps';
 
 type ProviderVirtualMachinesListProps = {
-  title?: string;
-  obj: ProviderData;
-  ns?: string;
+  cellMapper: FC<RowProps<VmData>>;
+  className?: string;
+  fieldsMetadata: ResourceField[];
+  GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<VmData>>[];
+  initialSelectedIds?: string[];
   loaded?: boolean;
   loadError?: unknown;
-  cellMapper: FC<RowProps<VmData>>;
-  fieldsMetadata: ResourceField[];
-  pageId: string;
+  ns?: string;
+  obj: ProviderData;
   onSelect?: (selectedVMs: VmData[] | undefined) => void;
-  initialSelectedIds?: string[];
+  pageId: string;
   showActions: boolean;
-  className?: string;
-  GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<VmData>>[];
+  title?: string;
 };
 
 export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
@@ -99,16 +99,16 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
 
   return (
     <StandardPageWithSelection
+      cell={cellMapper}
       className={className}
       data-testid="vm-list"
       dataSource={[vmData ?? [], !vmDataLoading, null]}
-      cell={cellMapper}
+      extraSupportedFilters={extraSupportedFilters}
+      extraSupportedMatchers={extraSupportedMatchers}
       fieldsMetadata={fieldsMetadata}
       namespace={namespace}
       title={title ?? t('Virtual machines')}
       userSettings={userSettings}
-      extraSupportedFilters={extraSupportedFilters}
-      extraSupportedMatchers={extraSupportedMatchers}
       {...getStandardPageProps()}
       expanded={
         isProviderOpenshift(provider) || isProviderEc2(provider)

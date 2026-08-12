@@ -9,9 +9,9 @@ const LocalProviderTargetProjectSelect: FC<ProviderTargetProjectSelectProps> = (
   const [localProviderProjectNames, loaded, error] = useWatchProjectNames();
   return (
     <TargetProjectSelect
-      targetProjectNames={localProviderProjectNames}
-      loaded={loaded}
       error={error}
+      loaded={loaded}
+      targetProjectNames={localProviderProjectNames}
       {...props}
     />
   );

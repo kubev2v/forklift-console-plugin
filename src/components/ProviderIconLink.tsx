@@ -6,10 +6,10 @@ import { Button, ButtonVariant, Split, SplitItem, Truncate } from '@patternfly/r
 import './ProviderIconLink.scss';
 
 type ProviderIconLinkProps = {
-  providerName?: string;
+  className?: string;
   href: string;
   providerIcon: ReactNode;
-  className?: string;
+  providerName?: string;
 };
 
 const ProviderIconLink: FC<ProviderIconLinkProps> = ({
@@ -24,12 +24,12 @@ const ProviderIconLink: FC<ProviderIconLinkProps> = ({
       <SplitItem className="forklift-provider-icon-link">{providerIcon}</SplitItem>
       <SplitItem className="forklift-provider-icon-link__name">
         <Button
-          type="button"
           isInline
-          variant={ButtonVariant.link}
           onClick={() => {
             navigate(href)?.catch(() => undefined);
           }}
+          type="button"
+          variant={ButtonVariant.link}
         >
           <Truncate content={providerName ?? ''} />
         </Button>

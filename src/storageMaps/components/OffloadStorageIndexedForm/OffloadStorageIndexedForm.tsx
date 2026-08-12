@@ -34,9 +34,9 @@ import StorageSecretField from './StorageSecretField';
 import './OffloadStorageIndexedForm.style.scss';
 
 type OffloadStorageIndexedFormProps = {
+  datastoreVendor?: StorageVendorProduct;
   index: number;
   sourceProvider: V1beta1Provider | undefined;
-  datastoreVendor?: StorageVendorProduct;
   targetProvisioner?: string;
 };
 
@@ -107,12 +107,12 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
       <Split className="offload-storage__header">
         <SplitItem isFilled>
           <ExpandableSection
-            toggleText={t('Offload options (optional)')}
+            isExpanded={isExpanded}
+            isIndented
             onToggle={(_e, expanded) => {
               setIsExpanded(expanded);
             }}
-            isExpanded={isExpanded}
-            isIndented
+            toggleText={t('Offload options (optional)')}
           >
             <Form className="offload-storage__form">
               <OffloadPluginField fieldId={pluginFieldId} />
@@ -140,10 +140,10 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
         <SplitItem className="offload-storage__clear-button-container">
           <Button
             className="offload-storage__clear-button"
-            isInline
-            variant={ButtonVariant.link}
             isDisabled={!hasAnyOffloadValue}
+            isInline
             onClick={clearOffloadFields}
+            variant={ButtonVariant.link}
           >
             {t('Clear offload options')}
           </Button>

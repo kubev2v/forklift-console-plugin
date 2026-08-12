@@ -24,28 +24,28 @@ import { ManageColumnsToolbar } from '../ManageColumnsToolbar';
 import { isSecondaryAttributeFilter } from '../utils/utils';
 
 type PageToolbarProps<T> = {
-  fields: ResourceField[];
-  flatData: T[];
-  sortedData: T[];
-  selectedFilters: Record<string, string[]>;
-  setSelectedFilters: (filters: Record<string, string[]>) => void;
-  supportedFilters: Record<string, FilterRenderer>;
   clearAllFilters: () => void;
-  fieldsMetadata: ResourceField[];
+  dataIds?: string[];
   defaultFieldsWithoutFilters: ResourceField[];
+  fields: ResourceField[];
+  fieldsMetadata: ResourceField[];
+  flatData: T[];
+  itemsPerPage: number;
+  onPerPageSelect: OnPerPageSelect;
+  onSelect?: (selectedIds: string[]) => void;
+  onSetPage: OnSetPage;
+  page: number;
+  pageDataIds?: string[];
+  renderedGlobalActions?: ReactNode[];
+  selectedFilters: Record<string, string[]>;
+  selectedIds?: string[];
   setFields: (fields: ResourceField[]) => void;
+  setSelectedFilters: (filters: Record<string, string[]>) => void;
   showManageColumns?: boolean;
   showPagination: boolean;
-  page: number;
-  itemsPerPage: number;
+  sortedData: T[];
+  supportedFilters: Record<string, FilterRenderer>;
   totalItems: number;
-  onSetPage: OnSetPage;
-  onPerPageSelect: OnPerPageSelect;
-  selectedIds?: string[];
-  dataIds?: string[];
-  pageDataIds?: string[];
-  onSelect?: (selectedIds: string[]) => void;
-  renderedGlobalActions?: ReactNode[];
 };
 
 export const PageToolbar = <T,>({
@@ -95,17 +95,17 @@ export const PageToolbar = <T,>({
         <Split hasGutter>
           {selectedIds && onSelect && dataIds && pageDataIds && (
             <TableBulkSelect
-              selectedIds={selectedIds}
               dataIds={dataIds}
-              pageDataIds={pageDataIds}
               onSelect={onSelect}
+              pageDataIds={pageDataIds}
+              selectedIds={selectedIds}
             />
           )}
 
           <ToolbarToggleGroup
+            breakpoint="xl"
             className="forklift-page-toolbar__toggle-group"
             toggleIcon={<FilterIcon />}
-            breakpoint="xl"
           >
             {!isEmpty(primaryFilters) && (
               <FilterGroup
@@ -133,8 +133,8 @@ export const PageToolbar = <T,>({
             )}
             {showManageColumns && (
               <ManageColumnsToolbar
-                resourceFields={fields}
                 defaultColumns={defaultFieldsWithoutFilters}
+                resourceFields={fields}
                 setColumns={setFields}
               />
             )}
@@ -145,12 +145,12 @@ export const PageToolbar = <T,>({
         {showPagination && (
           <ToolbarItem variant="pagination">
             <Pagination
-              variant="top"
-              perPage={itemsPerPage}
-              page={page}
               itemCount={totalItems}
-              onSetPage={onSetPage}
               onPerPageSelect={onPerPageSelect}
+              onSetPage={onSetPage}
+              page={page}
+              perPage={itemsPerPage}
+              variant="top"
             />
           </ToolbarItem>
         )}

@@ -54,10 +54,10 @@ const PlanAlerts: FC<Props> = ({ plan, setIsDrawerOpen }) => {
   }
 
   return (
-    <PageSection hasBodyWrapper={false} className="plan-header-alerts">
+    <PageSection className="plan-header-alerts" hasBodyWrapper={false}>
       <PlanCriticalAlerts
-        conditions={criticalConditions}
         concerns={mergedConcerns}
+        conditions={criticalConditions}
         setIsDrawerOpen={setIsDrawerOpen}
       />
     </PageSection>

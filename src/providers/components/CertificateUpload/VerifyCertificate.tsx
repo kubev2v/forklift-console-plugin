@@ -17,12 +17,12 @@ import {
  * @link https://github.com/kubev2v/forklift-ui/blob/c347020d3162b891636c3109e426343911b6c498/pkg/web/src/app/Providers/components/AddEditProviderModal/AddEditProviderModal.tsx#L399
  */
 type VerifyCertificateProps = {
-  thumbprint: string;
-  issuer: string;
-  validTo?: Date;
   hasThumbprintChanged: boolean;
+  issuer: string;
   isTrusted: boolean;
   setIsTrusted: (flag: boolean) => void;
+  thumbprint: string;
+  validTo?: Date;
 };
 
 const VerifyCertificate: FC<VerifyCertificateProps> = ({
@@ -42,7 +42,7 @@ const VerifyCertificate: FC<VerifyCertificateProps> = ({
   return (
     <>
       {hasThumbprintChanged && (
-        <Alert variant="warning" isInline title={t('Certificate change detected')}>
+        <Alert isInline title={t('Certificate change detected')} variant="warning">
           {t(
             'The current certificate does not match the certificate fetched from URL. Manually validate the fingerprint before proceeding.',
           )}
@@ -69,10 +69,10 @@ const VerifyCertificate: FC<VerifyCertificateProps> = ({
         </FlexItem>
         <FlexItem>
           <Checkbox
-            label={t('I trust the authenticity of this certificate')}
             id="certificate-check"
-            name="certificateCheck"
             isChecked={isTrusted}
+            label={t('I trust the authenticity of this certificate')}
+            name="certificateCheck"
             onChange={(_event, value) => {
               onChange(value);
             }}

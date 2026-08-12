@@ -17,9 +17,6 @@ const VmCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Virtual machines')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'vmCount']}
       content={
         <VirtualMachinesCell
           data={{
@@ -32,6 +29,9 @@ const VmCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           inventoryValue={inventory.vmCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'vmCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Virtual machines')}
     />
   );
 };

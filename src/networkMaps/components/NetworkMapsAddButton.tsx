@@ -32,32 +32,32 @@ const NetworkMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
 
   return (
     <Dropdown
+      data-testid={testId}
       isOpen={isMenuOpen}
       onOpenChange={(isOpen: boolean) => {
         setIsMenuOpen(isOpen);
       }}
-      data-testid={testId}
+      popperProps={{
+        position: 'right',
+      }}
+      shouldFocusFirstItemOnOpen={false}
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
-          ref={toggleRef}
+          isExpanded={isMenuOpen}
           onClick={() => {
             setIsMenuOpen(!isMenuOpen);
           }}
-          isExpanded={isMenuOpen}
+          ref={toggleRef}
           variant={ButtonVariant.primary}
         >
           {t('Create network map')}
         </MenuToggle>
       )}
-      shouldFocusFirstItemOnOpen={false}
-      popperProps={{
-        position: 'right',
-      }}
     >
       <DropdownList>
         <DropdownItem
-          key="form"
           data-testid="create-network-map-dropdown-item-form"
+          key="form"
           onClick={() => {
             trackEvent(TELEMETRY_EVENTS.NETWORK_MAP_CREATE_STARTED, {
               creationMethod: CreationMethod.Form,
@@ -70,8 +70,8 @@ const NetworkMapsAddButton: FC<{ namespace?: string; testId?: string }> = ({
         </DropdownItem>
 
         <DropdownItem
-          key="yaml"
           data-testid="create-network-map-dropdown-item-yaml"
+          key="yaml"
           onClick={() => {
             trackEvent(TELEMETRY_EVENTS.NETWORK_MAP_CREATE_STARTED, {
               creationMethod: CreationMethod.YamlEditor,

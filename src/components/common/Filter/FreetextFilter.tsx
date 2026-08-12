@@ -48,22 +48,22 @@ export const FreetextFilter = ({
 
   return (
     <ToolbarFilter
-      key={filterId}
-      labels={selectedFilters ?? []}
+      categoryName={title ?? ''}
       deleteLabel={(category, option) =>
         onFilterUpdate(selectedFilters?.filter((value) => value !== option) ?? [])
       }
       deleteLabelGroup={() => onFilterUpdate([])}
-      categoryName={title ?? ''}
+      key={filterId}
+      labels={selectedFilters ?? []}
       showToolbarItem={showFilter}
     >
       <InputGroup>
         <SearchInput
+          onChange={onChange}
+          onClear={onClear}
+          onSearch={onTextInput}
           placeholder={placeholderLabel}
           value={inputValue}
-          onChange={onChange}
-          onSearch={onTextInput}
-          onClear={onClear}
         />
       </InputGroup>
     </ToolbarFilter>

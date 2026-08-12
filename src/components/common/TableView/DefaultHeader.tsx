@@ -19,7 +19,8 @@ export const DefaultHeader = <T,>({
       {visibleColumns.map(
         ({ info, label, resourceFieldId, sortable, testId, width }, columnIndex) => (
           <Th
-            width={width}
+            data-testid={testId}
+            info={info}
             key={resourceFieldId}
             sort={
               sortable
@@ -31,8 +32,7 @@ export const DefaultHeader = <T,>({
                   })
                 : undefined
             }
-            info={info}
-            data-testid={testId}
+            width={width}
           >
             {label}
           </Th>

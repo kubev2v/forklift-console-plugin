@@ -17,25 +17,25 @@ const EditAapTimeout: FC = () => {
 
   return (
     <Controller
-      name={SettingsFields.AapTimeout}
       control={control}
+      name={SettingsFields.AapTimeout}
       render={({ field: { onChange, value } }) => (
         <FormGroupWithHelpText
+          fieldId={SettingsFields.AapTimeout}
           label={t('AAP timeout (seconds)')}
           labelHelp={
             <HelpIconPopover header={t('AAP timeout')}>
               <AapTimeoutHelpContent />
             </HelpIconPopover>
           }
-          fieldId={SettingsFields.AapTimeout}
         >
           <SettingsNumberInput
-            value={value ?? 0}
+            defaultValue={Number(defaultValuesMap[SettingsFields.AapTimeout])}
             onChange={(newValue: number | string) => {
               onChange(Math.max(0, Number(newValue)));
             }}
-            defaultValue={Number(defaultValuesMap[SettingsFields.AapTimeout])}
             testId="settings-aap-timeout-input"
+            value={value ?? 0}
           />
         </FormGroupWithHelpText>
       )}

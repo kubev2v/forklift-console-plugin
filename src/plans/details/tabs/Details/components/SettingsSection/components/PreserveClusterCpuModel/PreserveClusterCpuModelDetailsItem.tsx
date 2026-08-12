@@ -28,18 +28,18 @@ const PreserveClusterCpuModelDetailsItem: FC<EditableDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Preserve CPU model')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={
-        <Label isCompact color="grey">
+        <Label color="grey" isCompact>
           {preserveClusterCpuModel ? t('Preserve CPU model') : t('Use system default')}
         </Label>
       }
-      helpContent={t(`Preserve the CPU model and flags the VM runs with in its oVirt cluster.`)}
       crumbs={['spec', 'preserveClusterCpuModel']}
+      helpContent={t(`Preserve the CPU model and flags the VM runs with in its oVirt cluster.`)}
       onEdit={() => {
         launcher<EditPlanProps>(EditPlanPreserveClusterCpuModel, { resource: plan });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      title={t('Preserve CPU model')}
     />
   );
 };

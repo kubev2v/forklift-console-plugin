@@ -50,7 +50,7 @@ const NetworkMapReviewSectionInner: FC = () => {
 
   if (netMapType === NetworkMapType.Existing) {
     return (
-      <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+      <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
         <DescriptionListGroup>
           <DescriptionListTerm>{t('Network map')}</DescriptionListTerm>
           <DescriptionListDescription data-testid="review-network-map">
@@ -68,7 +68,7 @@ const NetworkMapReviewSectionInner: FC = () => {
   if (netMapName) {
     return (
       <Stack hasGutter>
-        <DescriptionList isHorizontal horizontalTermWidthModifier={{ default: '18ch' }}>
+        <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
           <DescriptionListGroup>
             <DescriptionListTerm>{t('Network map name')}</DescriptionListTerm>
             <DescriptionListDescription data-testid="review-network-map-name">
@@ -90,11 +90,11 @@ const NetworkMapReviewSection: FC = () => {
 
   return (
     <ExpandableReviewSection
-      title={planStepNames[PlanWizardStepId.NetworkMap]}
-      testId="review-network-map-section"
       onEditClick={() => {
         goToStepById(PlanWizardStepId.NetworkMap);
       }}
+      testId="review-network-map-section"
+      title={planStepNames[PlanWizardStepId.NetworkMap]}
     >
       <NetworkMapReviewSectionInner />
     </ExpandableReviewSection>

@@ -20,12 +20,8 @@ const DatastoreCountCountDetailsItem: FC<InventoryDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Data stores')}
-      helpContent={helpContent ?? defaultHelpContent}
-      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'datastoreCount']}
       content={
         <InventoryCell
-          icon={<DatabaseIcon />}
           data={{
             inventory,
             inventoryLoading: true,
@@ -33,9 +29,13 @@ const DatastoreCountCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           }}
           fieldId={ProvidersResourceFieldId.StorageCount}
           fields={[]}
+          icon={<DatabaseIcon />}
           inventoryValue={(inventory as VSphereProvider).datastoreCount}
         />
       }
+      crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'datastoreCount']}
+      helpContent={helpContent ?? defaultHelpContent}
+      title={t('Data stores')}
     />
   );
 };

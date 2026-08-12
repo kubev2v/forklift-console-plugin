@@ -38,7 +38,7 @@ const ProviderDetailsPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) 
 
   return (
     <LearningExperienceDrawer>
-      <ProviderDetailsPageByType type={provider?.spec?.type} name={name} namespace={namespace} />
+      <ProviderDetailsPageByType name={name} namespace={namespace} type={provider?.spec?.type} />
     </LearningExperienceDrawer>
   );
 };

@@ -17,18 +17,16 @@ const LocalHookDetails: FC<LocalHookDetailsProps> = ({ hook }) => {
   return (
     <>
       <DetailsItem
+        content={hook?.spec?.image ?? t('None')}
         testId="hook-runner-image-detail-item"
         title={t('Hook runner image')}
-        content={hook?.spec?.image ?? t('None')}
       />
       <DetailsItem
+        content={isEmpty(hook?.spec?.serviceAccount) ? t('None') : hook?.spec?.serviceAccount}
         testId="service-account-detail-item"
         title={t('Service account')}
-        content={isEmpty(hook?.spec?.serviceAccount) ? t('None') : hook?.spec?.serviceAccount}
       />
       <DetailsItem
-        testId="playbook-detail-item"
-        title={t('Ansible playbook')}
         content={
           hook?.spec?.playbook ? (
             <CodeBlock>
@@ -40,6 +38,8 @@ const LocalHookDetails: FC<LocalHookDetailsProps> = ({ hook }) => {
             t('None')
           )
         }
+        testId="playbook-detail-item"
+        title={t('Ansible playbook')}
       />
     </>
   );

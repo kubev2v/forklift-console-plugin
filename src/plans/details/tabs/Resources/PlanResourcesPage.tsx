@@ -48,7 +48,7 @@ const PlanResourcesPage: FC<PlanPageProps> = ({ name, namespace }) => {
   }
 
   return (
-    <LoadingSuspend obj={plan} loaded={!inventoryLoading} loadError={inventoryLoadError}>
+    <LoadingSuspend loaded={!inventoryLoading} loadError={inventoryLoadError} obj={plan}>
       <PlanResourcesTable {...planResourcesTableProps} />
     </LoadingSuspend>
   );

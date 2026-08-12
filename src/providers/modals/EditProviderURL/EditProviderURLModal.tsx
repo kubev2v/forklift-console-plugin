@@ -7,8 +7,8 @@ import { OvirtEditURLModal } from './OvirtEditURLModal';
 import { VSphereEditURLModal } from './VSphereEditURLModal';
 
 export type EditProviderURLModalProps = {
-  resource: V1beta1Provider;
   insecureSkipVerify?: string;
+  resource: V1beta1Provider;
 };
 
 export const EditProviderURLModal: ModalComponent<EditProviderURLModalProps> = (props) => {

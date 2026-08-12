@@ -23,8 +23,8 @@ const EditPlanTransferNetwork: ModalComponent<EditPlanProps> = ({ resource, ...r
 
   return (
     <ModalForm
-      title={t('Edit migration plan transfer network')}
       onConfirm={async () => onConfirmTransferNetwork({ newValue: value, resource })}
+      title={t('Edit migration plan transfer network')}
       {...rest}
     >
       <Stack hasGutter>
@@ -33,13 +33,13 @@ const EditPlanTransferNetwork: ModalComponent<EditPlanProps> = ({ resource, ...r
             the default migration network is set to the providers default transfer network.`,
         )}
         <FormGroupWithHelpText
-          label={t('Transfer network')}
           helperText={t('Please choose a NetworkAttachmentDefinition for data transfer.')}
+          label={t('Transfer network')}
         >
           <TransferNetworkDropdown
+            onChange={setValue}
             provider={destinationProvider}
             value={value}
-            onChange={setValue}
           />
         </FormGroupWithHelpText>
       </Stack>

@@ -104,12 +104,12 @@ const CreateNetworkMapForm: React.FC = () => {
   return (
     <FormProvider {...form}>
       <Flex
-        direction={{ default: 'column' }}
-        justifyContent={{ default: 'justifyContentSpaceBetween' }}
         alignItems={{ default: 'alignItemsStretch' }}
-        flexWrap={{ default: 'nowrap' }}
-        spaceItems={{ default: 'spaceItemsLg' }}
         className="pf-v6-u-h-100"
+        direction={{ default: 'column' }}
+        flexWrap={{ default: 'nowrap' }}
+        justifyContent={{ default: 'justifyContentSpaceBetween' }}
+        spaceItems={{ default: 'spaceItemsLg' }}
       >
         <Form className="create-network-map-form">
           <MapNameField />
@@ -128,9 +128,9 @@ const CreateNetworkMapForm: React.FC = () => {
           <Stack hasGutter>
             {createError?.message && (
               <Alert
-                variant={AlertVariant.danger}
-                title={t('Error creating network map')}
                 actionClose={<AlertActionCloseButton onClose={clearError} />}
+                title={t('Error creating network map')}
+                variant={AlertVariant.danger}
               >
                 {createError.message}
               </Alert>
@@ -139,18 +139,18 @@ const CreateNetworkMapForm: React.FC = () => {
             <Split hasGutter>
               <Button
                 data-testid="network-map-create-button"
-                onClick={handleSubmit(onSubmit)}
                 isDisabled={!isValid || isSubmitting}
                 isLoading={isSubmitting}
+                onClick={handleSubmit(onSubmit)}
               >
                 {t('Create')}
               </Button>
 
               <Button
-                variant={ButtonVariant.secondary}
                 onClick={() => {
                   navigate(networkMapsListUrl)?.catch(() => undefined);
                 }}
+                variant={ButtonVariant.secondary}
               >
                 {t('Cancel')}
               </Button>

@@ -21,8 +21,8 @@ import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
  * @property {string} [webUILink] - provider's management system external link.
  */
 type ExternalManagementLinkDetailsItemProps = {
-  webUILinkText?: string;
   webUILink?: string;
+  webUILinkText?: string;
 } & ProviderDetailsItemProps;
 
 /**
@@ -51,7 +51,7 @@ export const ExternalManagementLinkDetailsItem: FC<ExternalManagementLinkDetails
   );
 
   const webUILinkContent = webUILink ? (
-    <ExternalLink text={webUILinkText} href={webUILink} isInline={true}>
+    <ExternalLink href={webUILink} isInline={true} text={webUILinkText}>
       {webUILink}
     </ExternalLink>
   ) : (
@@ -65,17 +65,17 @@ export const ExternalManagementLinkDetailsItem: FC<ExternalManagementLinkDetails
   return (
     <DescriptionListDescription>
       <DetailsItem
-        title={t('External web UI link')}
-        moreInfoLink={moreInfoLink}
-        helpContent={helpContent ?? defaultHelpContent}
-        crumbs={['metadata', 'annotations', providerUiAnnotation]}
+        canEdit={canEdit}
         content={webUILinkContent}
+        crumbs={['metadata', 'annotations', providerUiAnnotation]}
+        helpContent={helpContent ?? defaultHelpContent}
+        moreInfoLink={moreInfoLink}
         onEdit={() => {
           launcher<EditProviderUIModalProps>(EditProviderUIModal, {
             resource: provider,
           });
         }}
-        canEdit={canEdit}
+        title={t('External web UI link')}
       />
     </DescriptionListDescription>
   );

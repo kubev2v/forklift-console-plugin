@@ -115,7 +115,7 @@ describe('TypeaheadSelect', () => {
   describe('Selection Clearing', () => {
     test('shows clear button when allowClear is true and value is selected', async () => {
       const user = userEvent.setup();
-      render(<TypeaheadSelect {...defaultProps} value="option2" allowClear />);
+      render(<TypeaheadSelect {...defaultProps} allowClear value="option2" />);
 
       const input = screen.getByRole('combobox');
       expect(input).toHaveValue('Option 2');
@@ -129,7 +129,7 @@ describe('TypeaheadSelect', () => {
 
     test('clears selected value when clear button is clicked', async () => {
       const user = userEvent.setup();
-      render(<TypeaheadSelect {...defaultProps} value="option2" allowClear />);
+      render(<TypeaheadSelect {...defaultProps} allowClear value="option2" />);
 
       const input = screen.getByRole('combobox');
       await user.click(input);
@@ -152,7 +152,7 @@ describe('TypeaheadSelect', () => {
       expect(mockOnChange).toHaveBeenCalledWith('option1');
 
       // Re-render with selected value
-      rerender(<TypeaheadSelect {...defaultProps} value="option1" allowClear />);
+      rerender(<TypeaheadSelect {...defaultProps} allowClear value="option1" />);
 
       // Clear the selection
       await user.click(input);
@@ -266,7 +266,7 @@ describe('TypeaheadSelect', () => {
     test('shows custom create option message when provided', async () => {
       const user = userEvent.setup();
       const customMessage = (value: string) => `Add new: ${value}`;
-      render(<TypeaheadSelect {...defaultProps} isCreatable createOptionMessage={customMessage} />);
+      render(<TypeaheadSelect {...defaultProps} createOptionMessage={customMessage} isCreatable />);
 
       const input = screen.getByRole('combobox');
       await user.click(input);
@@ -297,7 +297,7 @@ describe('TypeaheadSelect', () => {
       const user = userEvent.setup();
       const customMessage = 'Custom no options message';
       render(
-        <TypeaheadSelect options={[]} onChange={mockOnChange} noOptionsMessage={customMessage} />,
+        <TypeaheadSelect noOptionsMessage={customMessage} onChange={mockOnChange} options={[]} />,
       );
 
       const input = screen.getByRole('combobox');

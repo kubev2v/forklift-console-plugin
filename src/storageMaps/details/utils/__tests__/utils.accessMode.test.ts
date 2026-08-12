@@ -5,7 +5,7 @@ import type { AccessMode } from '@utils/storage/types';
 import { transformFormValuesToK8sSpec, transformStorageMapToFormValues } from '../utils';
 
 const makeStorageMap = (
-  mappings: { accessMode?: AccessMode; storageClass: string; sourceId: string }[],
+  mappings: { accessMode?: AccessMode; sourceId: string; storageClass: string }[],
 ): V1beta1StorageMap =>
   ({
     spec: {

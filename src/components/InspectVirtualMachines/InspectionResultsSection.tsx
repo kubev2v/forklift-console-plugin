@@ -18,7 +18,7 @@ const InspectionResultsSection: FC<InspectionResultsSectionProps> = ({ result })
   const passed = hasInspectionPassed(result);
 
   return (
-    <Stack hasGutter className="pf-v6-u-mb-md">
+    <Stack className="pf-v6-u-mb-md" hasGutter>
       <StackItem className="pf-v6-u-mt-md">
         <Flex alignItems={{ default: 'alignItemsCenter' }} gap={{ default: 'gapSm' }}>
           <FlexItem>

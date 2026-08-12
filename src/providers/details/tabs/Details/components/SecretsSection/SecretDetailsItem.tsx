@@ -7,9 +7,9 @@ import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { MORE_INFO_SECRET_DETAIL_ITEM } from '@utils/links';
 
 type SecretDetailsItemProps = {
-  resource: V1beta1Provider | undefined;
-  moreInfoLink?: string;
   helpContent?: ReactNode;
+  moreInfoLink?: string;
+  resource: V1beta1Provider | undefined;
 };
 
 export const SecretDetailsItem: FC<SecretDetailsItemProps> = ({
@@ -25,7 +25,6 @@ export const SecretDetailsItem: FC<SecretDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      title={t('Secret')}
       content={
         provider?.spec?.secret.name ? (
           <ResourceLink
@@ -37,9 +36,10 @@ export const SecretDetailsItem: FC<SecretDetailsItemProps> = ({
           <span className="text-muted">{t('No secret')}</span>
         )
       }
-      moreInfoLink={moreInfoLink ?? MORE_INFO_SECRET_DETAIL_ITEM}
-      helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'spec', 'secret']}
+      helpContent={helpContent ?? defaultHelpContent}
+      moreInfoLink={moreInfoLink ?? MORE_INFO_SECRET_DETAIL_ITEM}
+      title={t('Secret')}
     />
   );
 };

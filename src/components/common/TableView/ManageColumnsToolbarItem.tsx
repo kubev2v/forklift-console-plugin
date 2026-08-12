@@ -12,6 +12,10 @@ import { ColumnsIcon } from '@patternfly/react-icons';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type ManageColumnsToolbarItemProps = {
+  /**
+   * A text describing the button.
+   */
+  ariaLabel?: string;
   children: ReactNode;
   /**
    * A handler for clicking the button.
@@ -21,10 +25,6 @@ type ManageColumnsToolbarItemProps = {
    * A tooltip content.
    */
   tooltip?: string;
-  /**
-   * A text describing the button.
-   */
-  ariaLabel?: string;
 };
 
 export const ManageColumnsToolbarItem = ({
@@ -39,6 +39,8 @@ export const ManageColumnsToolbarItem = ({
     <ToolbarItem>
       <Tooltip content={tooltip ?? manageColumnsText}>
         <Button
+          aria-label={ariaLabel ?? manageColumnsText}
+          data-testid="manage-columns-button"
           icon={
             <Split hasGutter>
               <SplitItem>
@@ -47,10 +49,8 @@ export const ManageColumnsToolbarItem = ({
               <SplitItem>{manageColumnsText}</SplitItem>
             </Split>
           }
-          variant={ButtonVariant.plain}
           onClick={showDialog}
-          aria-label={ariaLabel ?? manageColumnsText}
-          data-testid="manage-columns-button"
+          variant={ButtonVariant.plain}
         />
       </Tooltip>
       {children}

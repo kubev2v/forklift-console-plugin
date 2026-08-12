@@ -35,24 +35,24 @@ const EditLUKSEncryptionPasswords: ModalComponent<EditPlanProps> = ({ resource, 
 
   return (
     <ModalForm
-      title={t('Disk decryption')}
-      testId="edit-disk-decryption-modal"
-      onConfirm={handleConfirm}
       isDisabled={isDisabled}
+      onConfirm={handleConfirm}
+      testId="edit-disk-decryption-modal"
+      title={t('Disk decryption')}
       {...rest}
     >
       <Stack hasGutter>
         <EditLUKSModalBody />
 
         <Checkbox
-          id="nbde-clevis-checkbox-modal"
+          className="pf-v6-u-mt-lg"
           data-testid="use-nbde-clevis-checkbox"
+          id="nbde-clevis-checkbox-modal"
           isChecked={nbdeClevis}
+          label={t('Use network-bound disk encryption (NBDE/Clevis)')}
           onChange={(_event, checked) => {
             setNbdeClevis(checked);
           }}
-          label={t('Use network-bound disk encryption (NBDE/Clevis)')}
-          className="pf-v6-u-mt-lg"
         />
 
         {!nbdeClevis && (
@@ -61,26 +61,26 @@ const EditLUKSEncryptionPasswords: ModalComponent<EditPlanProps> = ({ resource, 
               <Stack hasGutter>
                 <Radio
                   data-testid="edit-use-existing-secret-radio"
+                  description={t('Select a pre-existing secret containing LUKS decryption keys.')}
                   id={DECRYPTION_MODE_EXISTING}
-                  name="diskDecryptionMode"
-                  label={t('Use an existing secret')}
-                  value={DECRYPTION_MODE_EXISTING}
                   isChecked={decryptionMode === DECRYPTION_MODE_EXISTING}
+                  label={t('Use an existing secret')}
+                  name="diskDecryptionMode"
                   onChange={() => {
                     setDecryptionMode(DECRYPTION_MODE_EXISTING);
                   }}
-                  description={t('Select a pre-existing secret containing LUKS decryption keys.')}
+                  value={DECRYPTION_MODE_EXISTING}
                 />
 
                 {decryptionMode === DECRYPTION_MODE_EXISTING && secretNamespace && (
                   <LUKSSecretSelect
                     id="edit-existing-luks-secret"
-                    testId="edit-luks-secret-select"
-                    value={selectedSecret?.metadata?.name ?? ''}
+                    namespace={secretNamespace}
                     onSelect={(_, selected) => {
                       setSelectedSecret(selected);
                     }}
-                    namespace={secretNamespace}
+                    testId="edit-luks-secret-select"
+                    value={selectedSecret?.metadata?.name ?? ''}
                   />
                 )}
               </Stack>
@@ -90,23 +90,23 @@ const EditLUKSEncryptionPasswords: ModalComponent<EditPlanProps> = ({ resource, 
               <Stack hasGutter>
                 <Radio
                   data-testid="edit-use-passphrases-radio"
-                  id={DECRYPTION_MODE_PASSPHRASES}
-                  name="diskDecryptionMode"
-                  label={t('Enter passphrases')}
                   description={t(
                     'Provide passphrases that will be stored in a secret owned by this plan.',
                   )}
-                  value={DECRYPTION_MODE_PASSPHRASES}
+                  id={DECRYPTION_MODE_PASSPHRASES}
                   isChecked={decryptionMode === DECRYPTION_MODE_PASSPHRASES}
+                  label={t('Enter passphrases')}
+                  name="diskDecryptionMode"
                   onChange={() => {
                     setDecryptionMode(DECRYPTION_MODE_PASSPHRASES);
                   }}
+                  value={DECRYPTION_MODE_PASSPHRASES}
                 />
 
                 {decryptionMode === DECRYPTION_MODE_PASSPHRASES && (
                   <>
                     <FormGroup label={t('Passphrases for LUKS encrypted devices')} />
-                    <LUKSPassphraseInputList value={value} onChange={setValue} />
+                    <LUKSPassphraseInputList onChange={setValue} value={value} />
                   </>
                 )}
               </Stack>

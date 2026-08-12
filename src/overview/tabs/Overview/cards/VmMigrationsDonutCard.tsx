@@ -17,9 +17,9 @@ import type { ChartDatum } from '../utils/types';
 import HeaderActions from './CardHeaderActions';
 
 type VmMigrationsDonutCardProps = {
-  obj?: V1beta1ForkliftController;
   loaded?: boolean;
   loadError?: unknown;
+  obj?: V1beta1ForkliftController;
 };
 
 const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
@@ -72,7 +72,7 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
       </CardHeader>
       <CardBody className="forklift-overview__status-migration pf-v6-u-display-flex pf-v6-u-align-items-center pf-v6-u-flex-direction-column">
         <div className="forklift-overview__status-migration-donut">
-          <LoadingSuspend obj={obj} loaded={loaded} loadError={loadError}>
+          <LoadingSuspend loaded={loaded} loadError={loadError} obj={obj}>
             <ChartDonut
               ariaDesc={t('Donut chart with VM migration statistics')}
               colorScale={colorScale}
@@ -87,15 +87,6 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
                       { x: t('canceled'), y: totalCanceledCount },
                     ] as ChartDatum[])
               }
-              labels={({ datum }: { datum: ChartDatum }) =>
-                total === 0
-                  ? (undefined as unknown as string)
-                  : `${t('{{count}} VM migration', { count: datum.y })}
-                        ${datum.x}`
-              }
-              title={`${totalSucceededCount ?? '0'}`}
-              subTitle={t('Migrated')}
-              innerRadius={88}
               events={[
                 {
                   eventHandlers: {
@@ -127,6 +118,13 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
                   target: 'data',
                 },
               ]}
+              innerRadius={88}
+              labels={({ datum }: { datum: ChartDatum }) =>
+                total === 0
+                  ? (undefined as unknown as string)
+                  : `${t('{{count}} VM migration', { count: datum.y })}
+                        ${datum.x}`
+              }
               style={{
                 data: {
                   cursor: 'pointer',
@@ -134,6 +132,8 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
                   strokeWidth: ({ index }) => (hoveredIndex === index ? 2 : 1),
                 },
               }}
+              subTitle={t('Migrated')}
+              title={`${totalSucceededCount ?? '0'}`}
             />
           </LoadingSuspend>
         </div>

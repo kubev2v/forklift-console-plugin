@@ -33,17 +33,17 @@ const NBDEClevisField = () => {
       }
     >
       <Controller
-        name={OtherSettingsFormFieldId.NBDEClevis}
         control={control}
+        name={OtherSettingsFormFieldId.NBDEClevis}
         render={({ field }) => (
           <Checkbox
-            id="nbde-clevis-checkbox"
             data-testid="use-nbde-clevis-checkbox"
+            id="nbde-clevis-checkbox"
             isChecked={field.value || false}
+            label={t('Use NBDE/Clevis')}
             onChange={(_event, checked) => {
               field.onChange(checked);
             }}
-            label={t('Use NBDE/Clevis')}
           />
         )}
       />

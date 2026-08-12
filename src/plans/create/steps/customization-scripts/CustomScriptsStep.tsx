@@ -19,9 +19,8 @@ const CustomScriptsStep: FC = () => {
 
   return (
     <WizardStepContainer
-      title={planStepNames[PlanWizardStepId.Automation]}
       description={
-        <Flex spaceItems={{ default: 'spaceItemsSm' }} alignItems={{ default: 'alignItemsCenter' }}>
+        <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsSm' }}>
           <FlexItem>
             {t(
               'Specify customization scripts to run during guest conversion. Scripts are injected via virt-customize and executed on the VM.',
@@ -33,28 +32,29 @@ const CustomScriptsStep: FC = () => {
         </Flex>
       }
       testId="create-plan-custom-scripts-step"
+      title={planStepNames[PlanWizardStepId.Automation]}
     >
       <Form>
         <Controller
-          name={CustomScriptsFieldId.ScriptsType}
           control={control}
+          name={CustomScriptsFieldId.ScriptsType}
           render={({ field: scriptsTypeField }) => (
             <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
               <FlexItem>
                 <Stack hasGutter>
                   <Radio
                     data-testid="use-existing-configmap-radio"
-                    id={CustomScriptsType.Existing}
-                    name={CustomScriptsFieldId.ScriptsType}
-                    label={ScriptsTypeLabels[CustomScriptsType.Existing]}
-                    value={CustomScriptsType.Existing}
-                    isChecked={scriptsTypeField.value === CustomScriptsType.Existing}
-                    onChange={() => {
-                      scriptsTypeField.onChange(CustomScriptsType.Existing);
-                    }}
                     description={t(
                       'Select a ConfigMap containing customization scripts. ConfigMaps must use the required naming convention.',
                     )}
+                    id={CustomScriptsType.Existing}
+                    isChecked={scriptsTypeField.value === CustomScriptsType.Existing}
+                    label={ScriptsTypeLabels[CustomScriptsType.Existing]}
+                    name={CustomScriptsFieldId.ScriptsType}
+                    onChange={() => {
+                      scriptsTypeField.onChange(CustomScriptsType.Existing);
+                    }}
+                    value={CustomScriptsType.Existing}
                   />
 
                   {scriptsTypeField.value === CustomScriptsType.Existing && (
@@ -67,17 +67,17 @@ const CustomScriptsStep: FC = () => {
                 <Stack hasGutter>
                   <Radio
                     data-testid="use-new-scripts-radio"
-                    id={CustomScriptsType.New}
-                    name={CustomScriptsFieldId.ScriptsType}
-                    label={ScriptsTypeLabels[CustomScriptsType.New]}
                     description={t(
                       'Define scripts that will be stored in a new ConfigMap. A new ConfigMap, with this plan as its owner, will be automatically created.',
                     )}
-                    value={CustomScriptsType.New}
+                    id={CustomScriptsType.New}
                     isChecked={scriptsTypeField.value === CustomScriptsType.New}
+                    label={ScriptsTypeLabels[CustomScriptsType.New]}
+                    name={CustomScriptsFieldId.ScriptsType}
                     onChange={() => {
                       scriptsTypeField.onChange(CustomScriptsType.New);
                     }}
+                    value={CustomScriptsType.New}
                   />
 
                   {scriptsTypeField.value === CustomScriptsType.New && <NewScriptsFields />}

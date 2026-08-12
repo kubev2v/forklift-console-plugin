@@ -25,15 +25,15 @@ const ConcernPopover: FC<{
   return (
     <Popover
       aria-label={`${category} popover`}
-      headerContent={getCategoryTitle(category)}
       bodyContent={<ConcernList concerns={concerns} conditions={conditions} />}
-      footerContent={t('Total: {{length}}', { length: totalLength })}
       data-testid="concerns-popover"
+      footerContent={t('Total: {{length}}', { length: totalLength })}
+      headerContent={getCategoryTitle(category)}
     >
       <Button
+        data-testid={`concern-badge-${category.toLowerCase()}`}
         isInline
         variant={ButtonVariant.link}
-        data-testid={`concern-badge-${category.toLowerCase()}`}
       >
         <Label status={getCategoryStatus(category)}>{totalLength}</Label>
       </Button>

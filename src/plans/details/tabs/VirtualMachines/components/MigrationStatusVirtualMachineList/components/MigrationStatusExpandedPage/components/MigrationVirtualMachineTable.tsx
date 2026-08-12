@@ -9,9 +9,9 @@ import { VirtualMachineModelGroupVersionKind } from '@utils/crds/common/models';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type MigrationVirtualMachineTableProps = {
-  vmCreated: boolean;
   statusVM: V1beta1PlanStatusMigrationVms | undefined;
   targetNamespace: string;
+  vmCreated: boolean;
 };
 
 const MigrationVirtualMachineTable: FC<MigrationVirtualMachineTableProps> = ({
@@ -27,9 +27,9 @@ const MigrationVirtualMachineTable: FC<MigrationVirtualMachineTableProps> = ({
   return (
     <>
       <SectionHeading
-        text={t('Virtual machine')}
-        headingLevel="h3"
         className="migration-status-expanded-page__resource-list-header"
+        headingLevel="h3"
+        text={t('Virtual machine')}
       />
       <Table>
         <Thead>

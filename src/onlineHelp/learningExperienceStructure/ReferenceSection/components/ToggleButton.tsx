@@ -5,29 +5,29 @@ import { AngleDownIcon, AngleUpIcon } from '@patternfly/react-icons';
 
 type ToggleButtonProps = {
   icon: ReactNode;
-  title: string;
   isExpanded: boolean;
   onToggle: () => void;
+  title: string;
 };
 
 const ToggleButton: FC<ToggleButtonProps> = ({ icon, isExpanded, onToggle, title }) => {
   const ExpandIcon = isExpanded ? AngleUpIcon : AngleDownIcon;
 
   return (
-    <Button variant={ButtonVariant.link} isInline onClick={onToggle} style={{ width: '100%' }}>
+    <Button isInline onClick={onToggle} style={{ width: '100%' }} variant={ButtonVariant.link}>
       <Flex
-        direction={{ default: 'row' }}
-        justifyContent={{ default: 'justifyContentSpaceBetween' }}
         alignItems={{ default: 'alignItemsCenter' }}
-        spacer={{ default: 'spacerMd' }}
+        direction={{ default: 'row' }}
         flexWrap={{ default: 'nowrap' }}
+        justifyContent={{ default: 'justifyContentSpaceBetween' }}
+        spacer={{ default: 'spacerMd' }}
       >
         <FlexItem>
           <Flex
-            direction={{ default: 'row' }}
             alignItems={{ default: 'alignItemsCenter' }}
-            spacer={{ default: 'spacerNone' }}
+            direction={{ default: 'row' }}
             flexWrap={{ default: 'nowrap' }}
+            spacer={{ default: 'spacerNone' }}
           >
             <FlexItem>{icon}</FlexItem>
             <FlexItem>{title}</FlexItem>

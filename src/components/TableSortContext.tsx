@@ -4,8 +4,8 @@ import type { SortType } from './common/TableView/types';
 
 export type TableSortContextProps = {
   activeSort: SortType;
-  setActiveSort: (activeSort: SortType) => void;
   compareFn: (a: unknown, b: unknown) => number;
+  setActiveSort: (activeSort: SortType) => void;
 };
 
 const defaultTableSortContext = {

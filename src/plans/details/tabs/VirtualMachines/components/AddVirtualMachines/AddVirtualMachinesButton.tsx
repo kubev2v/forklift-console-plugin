@@ -27,7 +27,7 @@ const AddVirtualMachinesButton: FC<AddVirtualMachineProps> = ({ plan }) => {
 
   return (
     <ToolbarItem>
-      <VMsActionButton onClick={onClick} disabledReason={reason}>
+      <VMsActionButton disabledReason={reason} onClick={onClick}>
         {t('Add VMs')}
       </VMsActionButton>
     </ToolbarItem>

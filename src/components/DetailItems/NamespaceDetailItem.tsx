@@ -26,8 +26,6 @@ const NamespaceDetailsItem: FC<ResourceDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="project-detail-item"
-      title={title ?? t('Project')}
       content={
         <ResourceLink
           groupVersionKind={{ kind: 'Project', version: 'v1' }}
@@ -35,9 +33,11 @@ const NamespaceDetailsItem: FC<ResourceDetailsItemProps> = ({
           namespace={namespace}
         />
       }
-      moreInfoLink={moreInfoLink ?? MORE_INFO_NAMESPACE_DETAIL_ITEM}
-      helpContent={helpContent ?? defaultHelpContent}
       crumbs={['metadata', 'namespace']}
+      helpContent={helpContent ?? defaultHelpContent}
+      moreInfoLink={moreInfoLink ?? MORE_INFO_NAMESPACE_DETAIL_ITEM}
+      testId="project-detail-item"
+      title={title ?? t('Project')}
     />
   );
 };

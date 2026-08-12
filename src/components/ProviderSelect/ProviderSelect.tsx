@@ -33,13 +33,13 @@ type ProviderSelectProps = Pick<
   ComponentProps<typeof Select>,
   'onSelect' | 'status' | 'isDisabled'
 > & {
+  emptyState?: ReactNode;
   id: string;
-  value: string;
+  isTarget?: boolean;
   namespace: string | undefined;
   placeholder?: string;
-  emptyState?: ReactNode;
-  isTarget?: boolean;
   testId?: string;
+  value: string;
 };
 
 const ProviderSelect = (
@@ -103,13 +103,13 @@ const ProviderSelect = (
   return (
     <Select
       id={id}
-      value={value}
-      status={status}
+      isDisabled={isDisabled}
       onSelect={onSelect}
       placeholder={placeholder}
-      isDisabled={isDisabled}
-      testId={testId}
       ref={ref}
+      status={status}
+      testId={testId}
+      value={value}
     >
       <SelectList>
         {isEmpty(filteredProviders)

@@ -10,13 +10,13 @@ import { isEmpty } from '@utils/helpers';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 type PlanSpecVmsParams = {
-  vms: ProviderVirtualMachine[];
-  preHook?: V1beta1Hook;
-  postHook?: V1beta1Hook;
   instanceTypes?: Record<string, string>;
   luks?: V1beta1PlanSpecVmsLuks;
-  rootDevice?: string;
   nbdeClevis?: boolean;
+  postHook?: V1beta1Hook;
+  preHook?: V1beta1Hook;
+  rootDevice?: string;
+  vms: ProviderVirtualMachine[];
 };
 
 /**

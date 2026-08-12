@@ -19,23 +19,23 @@ const TargetNamespaceDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, pl
 
   return (
     <DetailsItem
-      testId="target-project-detail-item"
-      title={t('Target project')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={
         getPlanTargetNamespace(plan) ?? (
-          <Label isCompact color="grey">
+          <Label color="grey" isCompact>
             {PROVIDER_DEFAULTS}
           </Label>
         )
       }
+      crumbs={['spec', 'targetNamespace']}
       helpContent={t(
         'Projects, also known as namespaces, separate resources within clusters. The target project is the project, within your selected target provider, that your virtual machines will be migrated to. This is different from the project that your migration plan will be created in and where your provider was created.',
       )}
-      crumbs={['spec', 'targetNamespace']}
       onEdit={() => {
         launcher<EditPlanProps>(EditPlanTargetNamespace, { resource: plan });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="target-project-detail-item"
+      title={t('Target project')}
     />
   );
 };

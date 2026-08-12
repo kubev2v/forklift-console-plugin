@@ -17,7 +17,6 @@ const DiskLabel: FC<DiskLabelProps> = ({ diskKey }) => {
 
   return (
     <Label
-      isCompact
       color="grey"
       icon={
         isNotFirstKeyOrRootFilesystem(diskKey) && (
@@ -32,6 +31,7 @@ const DiskLabel: FC<DiskLabelProps> = ({ diskKey }) => {
           </Tooltip>
         )
       }
+      isCompact
     >
       {diskLabel}
     </Label>

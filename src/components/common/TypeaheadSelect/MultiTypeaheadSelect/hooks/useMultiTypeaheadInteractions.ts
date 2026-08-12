@@ -8,28 +8,28 @@ import { createItemElementId, getNextEnabledIndex, getPrevEnabledIndex } from '.
 
 type UseMultiTypeaheadInteractionsArgs = {
   displayOptions: TypeaheadSelectOption[];
+  inputRef: RefObject<HTMLInputElement>;
+  isCreatable?: boolean;
   isOpen: boolean;
+  maxSelections?: number;
+  onChange: (nextValues: (string | number)[]) => void;
+  onCreateOption?: (createdValue: string) => void;
+  options: TypeaheadSelectOption[];
+  resetFilter: () => void;
   setIsOpen: (open: boolean) => void;
   values: (string | number)[];
-  options: TypeaheadSelectOption[];
-  onChange: (nextValues: (string | number)[]) => void;
-  maxSelections?: number;
-  isCreatable?: boolean;
-  onCreateOption?: (createdValue: string) => void;
-  inputRef: RefObject<HTMLInputElement>;
-  resetFilter: () => void;
 };
 
 type UseMultiTypeaheadInteractionsReturn = {
-  focusedItemIndex: number | null;
   activeItemId: string | null;
+  focusedItemIndex: number | null;
+  handleSelect: (selectedValue: string | number | undefined) => void;
+  onChipRemove: (value: string | number) => void;
+  onClearAll: () => void;
   onInputKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   resetFocus: () => void;
   setActiveAndFocusedItem: (index: number) => void;
-  handleSelect: (selectedValue: string | number | undefined) => void;
   toggleSelectValue: (value: string | number) => void;
-  onChipRemove: (value: string | number) => void;
-  onClearAll: () => void;
 };
 
 export const useMultiTypeaheadInteractions = ({

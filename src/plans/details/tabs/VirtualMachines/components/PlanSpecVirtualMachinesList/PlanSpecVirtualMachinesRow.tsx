@@ -19,8 +19,8 @@ const PlanSpecVirtualMachinesRow: FC<RowProps<SpecVirtualMachinePageData>> = ({
     <>
       {resourceFields.map(({ resourceFieldId }) => (
         <VisibleTableData
-          key={resourceFieldId}
           fieldId={resourceFieldId ?? ''}
+          key={resourceFieldId}
           resourceFields={resourceFields}
         >
           {rowFields[resourceFieldId as PlanSpecVirtualMachinesTableResourceId]}

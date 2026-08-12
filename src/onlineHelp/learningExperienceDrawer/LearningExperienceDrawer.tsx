@@ -26,7 +26,7 @@ const LearningExperienceDrawer: FC<{ children: ReactNode }> = ({ children }) => 
   }, []);
 
   return (
-    <Drawer isInline isExpanded={isLearningExperienceOpen} position="right">
+    <Drawer isExpanded={isLearningExperienceOpen} isInline position="right">
       <DrawerContent panelContent={<LearningExperiencePanel />}>
         <DrawerContentBody>{children}</DrawerContentBody>
       </DrawerContent>

@@ -69,7 +69,7 @@ const MigrationsTable: FC<MigrationTableProps> = ({ migrations, plan }) => {
               <Td>
                 <Split hasGutter>
                   {getMigrationStatusLabel(vmStatuses, migrationVMs?.length)}
-                  <VMStatusIconsRow statuses={vmStatuses} plan={plan} />
+                  <VMStatusIconsRow plan={plan} statuses={vmStatuses} />
                 </Split>
               </Td>
               <Td>

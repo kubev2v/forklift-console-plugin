@@ -10,6 +10,10 @@ import type { EnumGroup, EnumValue } from '../utils/types';
  */
 export type FilterTypeProps = {
   filterId: string;
+  /** Used for grouped enum filters that deal with groups pointing to different resources. */
+  hasMultipleResources?: boolean;
+  /** Text that explains how to use the filter. */
+  helperText?: string | ReactNode;
   /**
    * Filter apply handler. Implementation of filter values is filter specific.
    * @param values list of selected filter values
@@ -20,6 +24,10 @@ export type FilterTypeProps = {
    */
   placeholderLabel?: string;
   /**
+   * Language to be used for locale sensitive sorting/filtering. Defaults to 'en'.
+   */
+  resolvedLanguage: string;
+  /**
    * List of selected values for the filter (filter specific).
    */
   selectedFilters?: string[];
@@ -27,26 +35,18 @@ export type FilterTypeProps = {
    * Display or hide the filter component.
    */
   showFilter?: boolean;
-  /**
-   * A title for the category appears in filter chips.
-   */
-  title?: string;
-  /**
-   * List of filter supported values (if limited)
-   */
-  supportedValues?: EnumValue[];
+  /** Toggles visibility of FilterIcon within the Select input field. */
+  showFilterIcon?: boolean;
   /**
    * groups for supported values (if exists or required by a specific filter)
    */
   supportedGroups: EnumGroup[];
   /**
-   * Language to be used for locale sensitive sorting/filtering. Defaults to 'en'.
+   * List of filter supported values (if limited)
    */
-  resolvedLanguage: string;
-  /** Text that explains how to use the filter. */
-  helperText?: string | ReactNode;
-  /** Toggles visibility of FilterIcon within the Select input field. */
-  showFilterIcon?: boolean;
-  /** Used for grouped enum filters that deal with groups pointing to different resources. */
-  hasMultipleResources?: boolean;
+  supportedValues?: EnumValue[];
+  /**
+   * A title for the category appears in filter chips.
+   */
+  title?: string;
 };

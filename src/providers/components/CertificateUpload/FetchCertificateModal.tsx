@@ -11,9 +11,9 @@ import { isEmpty } from '@utils/helpers';
 import VerifyCertificate from './VerifyCertificate';
 
 export type FetchCertificateModalProps = {
-  url: string;
   existingCert: string;
   handleSave: (cert: string) => void;
+  url: string;
 };
 
 const FetchCertificateModal: ModalComponent<FetchCertificateModalProps> = ({
@@ -37,10 +37,10 @@ const FetchCertificateModal: ModalComponent<FetchCertificateModalProps> = ({
 
   return (
     <ModalForm
+      isDisabled={!isTrusted}
+      onConfirm={onConfirm}
       title={t('Verify certificate')}
       variant={ModalVariant.small}
-      onConfirm={onConfirm}
-      isDisabled={!isTrusted}
       {...rest}
     >
       {loading && <Loading title={t('Loading...')} />}

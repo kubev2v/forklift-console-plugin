@@ -25,10 +25,10 @@ const AnsiblePlaybookField: FC<AnsiblePlaybookFieldProps> = ({ fieldId }) => {
       label={hooksFormFieldLabels[MigrationHookFieldId.AnsiblePlaybook]}
     >
       <Controller
-        name={subFieldId}
         control={control}
+        name={subFieldId}
         render={({ field }) => (
-          <SdkYamlEditor value={field.value ?? ''} onChange={field.onChange} />
+          <SdkYamlEditor onChange={field.onChange} value={field.value ?? ''} />
         )}
       />
 

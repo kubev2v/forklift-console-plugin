@@ -17,9 +17,9 @@ import AffinityEmptyState from './AffinityEmptyState';
 import AffinityList from './AffinityList';
 
 export type AffinityModalProps = {
-  title?: string;
-  onConfirm: (updatedAffinity: K8sIoApiCoreV1Affinity) => Promise<K8sResourceCommon>;
   initialAffinity: K8sIoApiCoreV1Affinity | undefined;
+  onConfirm: (updatedAffinity: K8sIoApiCoreV1Affinity) => Promise<K8sResourceCommon>;
+  title?: string;
 };
 
 const AffinityModal: ModalComponent<AffinityModalProps> = ({
@@ -98,10 +98,10 @@ const AffinityModal: ModalComponent<AffinityModalProps> = ({
     />
   ) : (
     <ModalForm
+      confirmLabel={t('Apply rules')}
+      onConfirm={async () => onConfirm(rowsDataToAffinity(affinities) ?? {})}
       testId="affinity-modal"
       title={title ?? t('Affinity rules')}
-      onConfirm={async () => onConfirm(rowsDataToAffinity(affinities) ?? {})}
-      confirmLabel={t('Apply rules')}
       variant={ModalVariant.medium}
       {...rest}
     >

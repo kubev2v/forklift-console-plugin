@@ -20,8 +20,8 @@ const TokenWithUsernameCredentialsFields: FC = () => {
         fieldRules={{
           validate: validateOpenstackField(OpenstackSecretFieldsId.Token),
         }}
-        label={t('Token')}
         helperText={t('Authentication token for OpenStack')}
+        label={t('Token')}
         testId="openstack-token-input"
       />
 
@@ -30,8 +30,8 @@ const TokenWithUsernameCredentialsFields: FC = () => {
         fieldRules={{
           validate: validateOpenstackField(OpenstackSecretFieldsId.Username),
         }}
-        label={t('Username')}
         helperText={t('Username for connecting to OpenStack Identity (Keystone)')}
+        label={t('Username')}
         testId="openstack-username-input"
       />
 

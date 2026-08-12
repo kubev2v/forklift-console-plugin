@@ -35,6 +35,8 @@ const NetworkMapsEmptyState: FC<NetworkMapsEmptyStateProps> = ({ namespace }) =>
 
   return (
     <EmptyState
+      headingLevel="h4"
+      icon={PlusCircleIcon}
       titleText={
         namespace ? (
           <ForkliftTrans>
@@ -44,8 +46,6 @@ const NetworkMapsEmptyState: FC<NetworkMapsEmptyStateProps> = ({ namespace }) =>
           t('No network maps found')
         )
       }
-      headingLevel="h4"
-      icon={PlusCircleIcon}
     >
       <EmptyStateBody>
         {hasSufficientProviders ? (

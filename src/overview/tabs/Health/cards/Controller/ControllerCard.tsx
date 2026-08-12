@@ -11,8 +11,8 @@ import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
 import { PodsTable } from './PodsTable';
 
 type ControllerCardProps = {
-  obj?: V1beta1ForkliftController;
   limit?: number;
+  obj?: V1beta1ForkliftController;
 };
 
 const ControllerCard: FC<ControllerCardProps> = ({ limit, obj }) => {
@@ -36,17 +36,17 @@ const ControllerCard: FC<ControllerCardProps> = ({ limit, obj }) => {
       >
         <CardTitle className="forklift-title">
           <TabTitle
-            title={t('Health')}
             helpContent={t(
               'Health indicates the current status of the pods related to the migration toolkit for virtualization, including whether any have failed. For more details, refer to the logs.',
             )}
+            title={t('Health')}
           />
         </CardTitle>
       </CardHeader>
-      <LoadingSuspend obj={pods} loaded={loaded} loadError={loadError}>
+      <LoadingSuspend loaded={loaded} loadError={loadError} obj={pods}>
         <CardBody>
           <div className="forklift-overview__pods-table">
-            <PodsTable pods={pods} limit={limit} />
+            <PodsTable limit={limit} pods={pods} />
           </div>
         </CardBody>
       </LoadingSuspend>

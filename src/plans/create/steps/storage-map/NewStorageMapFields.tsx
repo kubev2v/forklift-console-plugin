@@ -55,8 +55,8 @@ const NewStorageMapFields: FC = () => {
   });
 
   return (
-    <Stack hasGutter className="pf-v6-u-ml-lg">
-      {error?.root && <Alert variant={AlertVariant.danger} isInline title={error.root.message} />}
+    <Stack className="pf-v6-u-ml-lg" hasGutter>
+      {error?.root && <Alert isInline title={error.root.message} variant={AlertVariant.danger} />}
 
       <StorageMapStatusAlerts
         isIscsi={isIscsi}
@@ -65,18 +65,18 @@ const NewStorageMapFields: FC = () => {
       />
 
       <CreatePlanStorageMapFieldTable
-        targetStorages={availableTargetStorages}
-        usedSourceStorages={usedSourceStorages}
-        otherSourceStorages={otherSourceStorages}
-        sourceStorageInventory={availableSourceStorages}
+        isIscsi={isIscsi}
         isLoading={isLoading}
         loadError={sourceStoragesError ?? targetStoragesError}
-        isIscsi={isIscsi}
+        otherSourceStorages={otherSourceStorages}
+        sourceStorageInventory={availableSourceStorages}
+        targetStorages={availableTargetStorages}
+        usedSourceStorages={usedSourceStorages}
       />
 
       <FormGroupWithHelpText
-        label={createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.StorageMapName]}
         helperText={t("Provide a name now, or we'll generate one when the map is created.")}
+        label={createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.StorageMapName]}
         labelHelp={
           <HelpIconPopover>
             <Stack hasGutter>
@@ -95,8 +95,8 @@ const NewStorageMapFields: FC = () => {
         }
       >
         <Controller
-          name={CreatePlanStorageMapFieldId.StorageMapName}
           control={control}
+          name={CreatePlanStorageMapFieldId.StorageMapName}
           render={({ field }) => <TextInput {...field} />}
         />
       </FormGroupWithHelpText>

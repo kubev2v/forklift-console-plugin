@@ -19,14 +19,14 @@ export const TableCell: FC<TableCellProps> = ({ children, className, isWrap = fa
 
   return (
     <Flex
-      spaceItems={{ default: 'spaceItemsXs' }}
-      display={{ default: 'inlineFlex' }}
-      flexWrap={isWrap ? {} : { default: 'nowrap' }}
       alignItems={{ default: 'alignItemsCenter' }}
       className={cellClass || undefined}
+      display={{ default: 'inlineFlex' }}
+      flexWrap={isWrap ? {} : { default: 'nowrap' }}
+      spaceItems={{ default: 'spaceItemsXs' }}
     >
       {Children.map(arrayChildren, (child, index) => (
-        <FlexItem key={index} flex={{ default: 'flexNone' }}>
+        <FlexItem flex={{ default: 'flexNone' }} key={index}>
           {child}
         </FlexItem>
       ))}

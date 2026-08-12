@@ -53,7 +53,7 @@ const MigrationAlertsCard: FC = () => {
     if (isEmpty(alerts)) {
       return (
         <Bullseye>
-          <Content component={ContentVariants.p} className="migration-alerts-card__empty-text">
+          <Content className="migration-alerts-card__empty-text" component={ContentVariants.p}>
             {t('No migrations have completed or failed yet.')}
           </Content>
         </Bullseye>

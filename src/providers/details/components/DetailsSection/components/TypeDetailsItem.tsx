@@ -28,31 +28,31 @@ export const TypeDetailsItem: FC<ProviderDetailsItemProps> = ({
 
   return (
     <DetailsItem
-      testId="type-detail-item"
-      title={t('Type')}
       content={
         <>
           {type}{' '}
           {isProviderLocalOpenshift(provider) && (
-            <Label isCompact color={'grey'} className="forklift-table__flex-cell-label">
+            <Label className="forklift-table__flex-cell-label" color={'grey'} isCompact>
               {t('Host cluster')}
             </Label>
           )}
           {provider?.spec?.type === 'vsphere' &&
             (provider?.spec?.settings?.sdkEndpoint === 'esxi' ? (
-              <Label isCompact color={'grey'} className="forklift-table__flex-cell-label">
+              <Label className="forklift-table__flex-cell-label" color={'grey'} isCompact>
                 {t('ESXi')}
               </Label>
             ) : (
-              <Label isCompact color={'grey'} className="forklift-table__flex-cell-label">
+              <Label className="forklift-table__flex-cell-label" color={'grey'} isCompact>
                 {t('vCenter')}
               </Label>
             ))}
         </>
       }
-      moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
-      helpContent={helpContent ?? defaultHelpContent}
       crumbs={['Provider', 'spec', 'type']}
+      helpContent={helpContent ?? defaultHelpContent}
+      moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
+      testId="type-detail-item"
+      title={t('Type')}
     />
   );
 };

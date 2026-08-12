@@ -36,12 +36,12 @@ const EditVmInstanceType: OverlayComponent<EditVmInstanceTypeProps> = ({
 
   return (
     <ModalForm
-      title={t('Edit instance type')}
-      confirmLabel={t('Save instance type')}
-      onConfirm={async () => onConfirmVmInstanceType(index)({ newValue: value, resource })}
-      isDisabled={value === vm?.instanceType}
-      testId="edit-instance-type-modal"
       closeModal={closeOverlay}
+      confirmLabel={t('Save instance type')}
+      isDisabled={value === vm?.instanceType}
+      onConfirm={async () => onConfirmVmInstanceType(index)({ newValue: value, resource })}
+      testId="edit-instance-type-modal"
+      title={t('Edit instance type')}
       {...rest}
     >
       <Stack hasGutter>
@@ -50,16 +50,16 @@ const EditVmInstanceType: OverlayComponent<EditVmInstanceTypeProps> = ({
           { vmName: vm?.name ?? t('the selected VM') },
         )}
         <Form>
-          <FormGroupWithHelpText label={t('Instance type')} isRequired={false}>
+          <FormGroupWithHelpText isRequired={false} label={t('Instance type')}>
             <TypeaheadSelect
+              allowClear
               id="instanceType"
+              isDisabled={!loaded}
+              onChange={handleChange}
+              options={options}
+              placeholder={t('Select instance type')}
               testId="instance-type-select"
               value={value ?? NO_INSTANCE_TYPE}
-              options={options}
-              onChange={handleChange}
-              allowClear
-              placeholder={t('Select instance type')}
-              isDisabled={!loaded}
             />
           </FormGroupWithHelpText>
         </Form>

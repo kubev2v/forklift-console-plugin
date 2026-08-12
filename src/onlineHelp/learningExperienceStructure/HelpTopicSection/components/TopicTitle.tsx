@@ -10,7 +10,7 @@ import { TopicTitleContent, type TopicTitleProps } from './TopicTitleContent';
 
 const TopicTitle: FC<TopicTitleProps> = ({ listStyleType, prefix, title }) => {
   const titleContent = (
-    <TopicTitleContent title={title} listStyleType={listStyleType} prefix={prefix} />
+    <TopicTitleContent listStyleType={listStyleType} prefix={prefix} title={title} />
   );
 
   const hasNoListStyle = isEmpty(listStyleType);

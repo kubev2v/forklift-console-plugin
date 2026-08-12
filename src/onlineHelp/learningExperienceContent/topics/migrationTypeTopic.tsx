@@ -34,33 +34,33 @@ const migrationTypeSubTopics = (): LearningExperienceSubTopic[] => [
                   <br />
                 </ForkliftTrans>
                 <HelpTitledContent
-                  title={t('Downtime is acceptable.')}
                   content={t(
                     "Cold migration requires the VM to be powered off for the entire duration of the data transfer. This is the simplest and most straightforward method. It's the default migration type in MTV.",
                   )}
+                  title={t('Downtime is acceptable.')}
                 />
                 <br />
                 <HelpTitledContent
-                  title={t('The VM is not a critical production workload.')}
                   content={t(
                     'For VMs used for development, testing, or other non-essential tasks, the downtime is unlikely to have a major business impact.',
                   )}
+                  title={t('The VM is not a critical production workload.')}
                 />
                 <br />
                 <HelpTitledContent
-                  title={t(
-                    'You are moving a VM with a large amount of data, but on a slow network connection.',
-                  )}
                   content={t(
                     'Since the VM is offline, there are no live changes to track, making the data copy a one-time, full-disk transfer.',
                   )}
+                  title={t(
+                    'You are moving a VM with a large amount of data, but on a slow network connection.',
+                  )}
                 />
                 <br />
                 <HelpTitledContent
-                  title={t('You need to ensure a clean state.')}
                   content={t(
                     "Because the VM is fully shut down, there's no risk of data changes or I/O operations during the migration.",
                   )}
+                  title={t('You need to ensure a clean state.')}
                 />
               </>
             ),
@@ -87,31 +87,31 @@ const migrationTypeSubTopics = (): LearningExperienceSubTopic[] => [
                   <br />
                 </ForkliftTrans>
                 <HelpTitledContent
-                  title={t('You must minimize downtime for a critical workload.')}
                   content={t(
                     'The process is designed to reduce the service interruption to a few minutes, or even just seconds, during the final "cutover" phase.',
                   )}
+                  title={t('You must minimize downtime for a critical workload.')}
                 />
                 <br />
                 <HelpTitledContent
-                  title={t('The VM is a production server or a business-critical application.')}
                   content={t(
                     'For applications that need to be available 24/7, warm migration is the preferred choice to ensure business continuity.',
                   )}
+                  title={t('The VM is a production server or a business-critical application.')}
                 />
                 <br />
                 <HelpTitledContent
-                  title={t('You need to stage the migration over a period of time.')}
                   content={t(
                     'Warm migration works by copying the majority of the VM data (the "pre-copy" stage) while the VM is still running. It uses Change Block Tracking (CBT) to incrementally copy only the data that has changed since the last copy. This allows you to perform the bulk of the data transfer during business hours without impacting users.',
                   )}
+                  title={t('You need to stage the migration over a period of time.')}
                 />
                 <br />
                 <HelpTitledContent
-                  title={t('You have a pre-planned maintenance window for the final cutover.')}
                   content={t(
                     'Even with warm migration, there is a brief period of downtime when the VM is shut down to perform the final data synchronization and bring it up on the new platform. You can schedule this cutover for a time with the least impact.',
                   )}
+                  title={t('You have a pre-planned maintenance window for the final cutover.')}
                 />
               </>
             ),

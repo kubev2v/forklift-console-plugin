@@ -8,14 +8,14 @@ import type { FilterDef } from '../utils/types';
 import type { GlobalFilters } from './types';
 
 type FilterFromDefProps = {
-  resourceFieldId: string;
-  label: string;
   filterDef: FilterDef;
-  selectedFilters: GlobalFilters;
-  onFilterUpdate: (filters: GlobalFilters) => void;
   FilterType: (props: FilterTypeProps) => JSX.Element;
-  showFilter?: boolean;
+  label: string;
+  onFilterUpdate: (filters: GlobalFilters) => void;
   resolvedLanguage: string;
+  resourceFieldId: string;
+  selectedFilters: GlobalFilters;
+  showFilter?: boolean;
 };
 
 export const FilterFromDef = ({
@@ -63,17 +63,17 @@ export const FilterFromDef = ({
   return !def.isHidden && FilterType ? (
     <FilterType
       filterId={filterId}
+      hasMultipleResources={!resourceFieldId && !isEmpty(def.groups)}
+      helperText={def.helperText}
       onFilterUpdate={setSelectedFilters}
       placeholderLabel={def.placeholderLabel}
-      selectedFilters={selectedFilterValues}
-      title={def?.fieldLabel ?? label}
-      showFilter={showFilter}
-      supportedValues={def.values}
-      supportedGroups={def.groups ?? []}
       resolvedLanguage={resolvedLanguage}
-      helperText={def.helperText}
+      selectedFilters={selectedFilterValues}
+      showFilter={showFilter}
       showFilterIcon={def.showFilterIcon}
-      hasMultipleResources={!resourceFieldId && !isEmpty(def.groups)}
+      supportedGroups={def.groups ?? []}
+      supportedValues={def.values}
+      title={def?.fieldLabel ?? label}
     />
   ) : null;
 };

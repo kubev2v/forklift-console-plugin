@@ -6,16 +6,16 @@ import { type ConcernsRow, type FolderRow, ROW_TYPE, type VmRow } from '../../ut
 import { NO_FOLDER } from '../utils/constants';
 
 type MakeFolderRowArgs = {
-  folderName: string;
-  folderIdx: number;
-  level1SetSize: number;
-  isExpanded: boolean;
-  folderChecked: boolean | null;
-  rowIndex: number;
   canSelect: boolean;
   checkboxId: string | undefined;
+  folderChecked: boolean | null;
+  folderIdx: number;
+  folderName: string;
+  isExpanded: boolean;
+  level1SetSize: number;
   onCheckChange?: (_event: FormEvent<HTMLInputElement>, isChecked: boolean) => void;
   onToggle: () => void;
+  rowIndex: number;
 };
 
 export const makeFolderRow = ({
@@ -29,7 +29,7 @@ export const makeFolderRow = ({
   onCheckChange,
   onToggle,
   rowIndex,
-}: MakeFolderRowArgs): { row: FolderRow; folderKey: string } => {
+}: MakeFolderRowArgs): { folderKey: string; row: FolderRow } => {
   const folderKey = `folder-${folderName}`;
   const row: FolderRow = {
     folderName,
@@ -55,20 +55,20 @@ export const makeFolderRow = ({
 };
 
 type MakeVmAndConcernsArgs = {
-  vmKey: string;
-  vmIdx: number;
-  parentFolderKey: string;
-  parentExpanded: boolean;
-  parentSize: number;
-  level1SetSize: number;
-  vmChecked: boolean;
-  isVmExpanded: boolean;
-  rowIndex: number;
   canSelect: boolean;
   checkboxId: string | undefined;
+  isVmExpanded: boolean;
+  level1SetSize: number;
   onCheckChange?: (_event: FormEvent<HTMLInputElement>, isChecked: boolean) => void;
   onToggle: () => void;
+  parentExpanded: boolean;
+  parentFolderKey: string;
+  parentSize: number;
+  rowIndex: number;
+  vmChecked: boolean;
   vmData: VmRow['vmData'];
+  vmIdx: number;
+  vmKey: string;
 };
 
 export const makeVmAndConcernsRows = ({
@@ -86,7 +86,7 @@ export const makeVmAndConcernsRows = ({
   vmData,
   vmIdx,
   vmKey,
-}: MakeVmAndConcernsArgs): { vmRow: VmRow; concernsRow: ConcernsRow } => {
+}: MakeVmAndConcernsArgs): { concernsRow: ConcernsRow; vmRow: VmRow } => {
   const topLevel = parentFolderKey === NO_FOLDER;
 
   const vmRow: VmRow = {
@@ -127,9 +127,9 @@ export const makeVmAndConcernsRows = ({
 export const partitionFolderEntries = (
   folderToVmKeys: Map<string, string[]>,
 ): {
+  level1SetSize: number;
   realFolderEntries: [string, string[]][];
   rootVmKeys: string[];
-  level1SetSize: number;
 } => {
   const entries = Array.from(folderToVmKeys.entries());
   const realFolderEntries = entries.filter(([name]) => name !== NO_FOLDER);

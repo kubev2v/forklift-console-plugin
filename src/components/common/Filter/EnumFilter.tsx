@@ -76,15 +76,15 @@ export const EnumFilter = ({
 
   const toggle = (toggleRef: Ref<MenuToggleElement>) => (
     <MenuToggle
-      ref={toggleRef}
-      onClick={onToggleClick}
+      data-testid={`filter-toggle-${filterId}`}
       isExpanded={isOpen}
       isFullWidth
-      data-testid={`filter-toggle-${filterId}`}
+      onClick={onToggleClick}
+      ref={toggleRef}
     >
       <>{placeholderLabel}</>
       {!isEmpty(selectedUniqueEnumLabels) && (
-        <Badge isRead className="pf-v6-u-ml-sm">
+        <Badge className="pf-v6-u-ml-sm" isRead>
           {selectedUniqueEnumLabels.length}
         </Badge>
       )}
@@ -94,11 +94,11 @@ export const EnumFilter = ({
   const renderOptions = () => {
     return supportedEnumValues.map((label) => (
       <SelectOption
+        data-testid={`filter-value-${label.id}`}
         hasCheckbox
+        isSelected={selectedUniqueEnumLabels.includes(label.label)}
         key={label.id}
         value={label.label}
-        isSelected={selectedUniqueEnumLabels.includes(label.label)}
-        data-testid={`filter-value-${label.id}`}
       >
         {label?.icon} {label.label}
       </SelectOption>
@@ -107,37 +107,37 @@ export const EnumFilter = ({
 
   return (
     <ToolbarFilter
-      key={filterId}
-      labels={selectedUniqueEnumLabels}
+      categoryName={title}
       deleteLabel={(category, option) => {
         deleteFilter(option);
       }}
       deleteLabelGroup={() => {
         onUniqueFilterUpdate([]);
       }}
-      categoryName={title}
+      key={filterId}
+      labels={selectedUniqueEnumLabels}
       showToolbarItem={showFilter}
     >
       {/* This select is different from most and cannot use the common Select */}
       {/* eslint-disable-next-line no-restricted-syntax */}
       <Select
-        role="menu"
         aria-label={placeholderLabel}
         isOpen={isOpen}
-        selected={selectedUniqueEnumLabels}
-        onSelect={onSelect}
+        isScrollable
         onOpenChange={(nextOpen: boolean) => {
           setIsOpen(nextOpen);
         }}
-        toggle={toggle}
-        shouldFocusToggleOnSelect
-        shouldFocusFirstItemOnOpen={false}
-        isScrollable
+        onSelect={onSelect}
         popperProps={{
           appendTo: document.body,
           direction: 'down',
           enableFlip: true,
         }}
+        role="menu"
+        selected={selectedUniqueEnumLabels}
+        shouldFocusFirstItemOnOpen={false}
+        shouldFocusToggleOnSelect
+        toggle={toggle}
       >
         <SelectList>{renderOptions()}</SelectList>
       </Select>

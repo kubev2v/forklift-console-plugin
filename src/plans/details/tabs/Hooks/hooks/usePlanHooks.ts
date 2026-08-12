@@ -12,11 +12,11 @@ import { hookTypes } from '../utils/constants';
 import { validateHooks } from '../utils/utils';
 
 type UsePlanHooks = (plan: V1beta1Plan) => {
-  preHookResource: V1beta1Hook | undefined;
-  postHookResource: V1beta1Hook | undefined;
-  warning: string;
-  loaded?: boolean;
   error?: Error;
+  loaded?: boolean;
+  postHookResource: V1beta1Hook | undefined;
+  preHookResource: V1beta1Hook | undefined;
+  warning: string;
 };
 
 export const usePlanHooks: UsePlanHooks = (plan) => {

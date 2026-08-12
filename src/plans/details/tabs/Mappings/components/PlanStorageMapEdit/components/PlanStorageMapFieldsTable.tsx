@@ -61,8 +61,8 @@ const StorageMappingOptions: FC<StorageMappingOptionsProps> = ({
     <StackItem>
       <AccessModeField
         fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
-        targetStorages={targetStorages}
         targetStorageFieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+        targetStorages={targetStorages}
       />
     </StackItem>
     {isVsphereOffload && (
@@ -79,14 +79,14 @@ const StorageMappingOptions: FC<StorageMappingOptionsProps> = ({
 );
 
 type PlanStorageMapFieldsTableProps = {
+  isIscsi?: boolean;
+  isLoading: boolean;
+  loadError: Error | null;
+  otherSourceStorages: MappingValue[];
   sourceProvider: V1beta1Provider;
   sourceStorages?: InventoryStorage[];
   targetStorages: TargetStorage[];
   usedSourceStorages: MappingValue[];
-  otherSourceStorages: MappingValue[];
-  isLoading: boolean;
-  loadError: Error | null;
-  isIscsi?: boolean;
 };
 
 const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
@@ -131,45 +131,6 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
 
   return (
     <FieldBuilderTable
-      headers={getStorageMapHeaders(isIscsi)}
-      fieldRows={storageMappingFields.map((field, index) => ({
-        ...field,
-        additionalOptions: (
-          <StorageMappingOptions
-            index={index}
-            isVsphereOffload={isVsphereOffload}
-            sourceProvider={sourceProvider}
-            sourceStorages={sourceStorages ?? []}
-            targetStorages={targetStorages}
-          />
-        ),
-        inputs: isIscsi
-          ? [
-              <TargetStorageInputField
-                key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-                index={index}
-                isVsphereOffload={false}
-                sourceStorages={[]}
-                targetStorages={targetStorages}
-              />,
-            ]
-          : [
-              <GroupedSourceStorageField
-                fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
-                key={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
-                storageMappings={storageMappings}
-                usedSourceStorages={usedSourceStorages}
-                otherSourceStorages={otherSourceStorages}
-              />,
-              <TargetStorageInputField
-                key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-                index={index}
-                isVsphereOffload={isVsphereOffload}
-                sourceStorages={sourceStorages ?? []}
-                targetStorages={targetStorages}
-              />,
-            ],
-      }))}
       addButton={{
         isDisabled:
           Boolean(isIscsi) ||
@@ -198,6 +159,45 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
           await trigger();
         },
       }}
+      fieldRows={storageMappingFields.map((field, index) => ({
+        ...field,
+        additionalOptions: (
+          <StorageMappingOptions
+            index={index}
+            isVsphereOffload={isVsphereOffload}
+            sourceProvider={sourceProvider}
+            sourceStorages={sourceStorages ?? []}
+            targetStorages={targetStorages}
+          />
+        ),
+        inputs: isIscsi
+          ? [
+              <TargetStorageInputField
+                index={index}
+                isVsphereOffload={false}
+                key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+                sourceStorages={[]}
+                targetStorages={targetStorages}
+              />,
+            ]
+          : [
+              <GroupedSourceStorageField
+                fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
+                key={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
+                otherSourceStorages={otherSourceStorages}
+                storageMappings={storageMappings}
+                usedSourceStorages={usedSourceStorages}
+              />,
+              <TargetStorageInputField
+                index={index}
+                isVsphereOffload={isVsphereOffload}
+                key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
+                sourceStorages={sourceStorages ?? []}
+                targetStorages={targetStorages}
+              />,
+            ],
+      }))}
+      headers={getStorageMapHeaders(isIscsi)}
       removeButton={{
         isDisabled: (index) => {
           if (Boolean(isIscsi) || storageMappingFields.length <= 1) {

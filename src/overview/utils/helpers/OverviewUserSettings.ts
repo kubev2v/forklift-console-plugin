@@ -4,15 +4,15 @@ import { saveToLocalStorage } from '@components/common/utils/localStorage';
 import { parseOrClean, saveRestOrRemoveKey } from '@utils/userSettingsHelpers';
 
 type OverviewUserSettings = {
-  welcome?: WelcomeSettings;
   vmMigrationsDonutSelectedRange?: string;
   vmMigrationsHistorySelectedRange?: string;
+  welcome?: WelcomeSettings;
 };
 
 type WelcomeSettings = {
+  clear: () => void;
   hideWelcome?: boolean;
   save: (showWelcome: boolean) => void;
-  clear: () => void;
 };
 
 const getOverviewKey = () => `${process.env.PLUGIN_NAME}/Overview`;

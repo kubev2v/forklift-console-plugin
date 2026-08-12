@@ -5,14 +5,14 @@ import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 import type { ProviderData } from '@utils/providers/types';
 
 export type ProviderVirtualMachinesListProps = {
-  title?: string;
-  obj: ProviderData;
+  className?: string;
+  GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<VmData>>[];
+  hasCriticalConcernFilter?: boolean;
+  initialSelectedIds?: string[];
   loaded?: boolean;
   loadError?: unknown;
+  obj: ProviderData;
   onSelect?: (selectedVMs: VmData[] | undefined) => void;
-  initialSelectedIds?: string[];
   showActions: boolean;
-  className?: string;
-  hasCriticalConcernFilter?: boolean;
-  GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<VmData>>[];
+  title?: string;
 };

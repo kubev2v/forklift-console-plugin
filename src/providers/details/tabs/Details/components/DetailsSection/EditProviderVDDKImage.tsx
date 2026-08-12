@@ -47,13 +47,14 @@ const EditProviderVDDKImage: ModalComponent<EditProviderVDDKImageProps> = ({
     <FormProvider {...methods}>
       <ModalForm
         closeModal={closeModal}
-        title={t('Edit VDDK image')}
         onConfirm={handleSubmit(onSubmit)}
+        title={t('Edit VDDK image')}
       >
         <Form>
           <Controller
             control={control}
             name={ProviderFormFieldId.VsphereVddkSetupMode}
+            render={() => <VDDKRadioSelection />}
             rules={{
               required: t('VDDK setup selection is required'),
               validate: {
@@ -68,7 +69,6 @@ const EditProviderVDDKImage: ModalComponent<EditProviderVDDKImageProps> = ({
                 },
               },
             }}
-            render={() => <VDDKRadioSelection />}
           />
         </Form>
       </ModalForm>

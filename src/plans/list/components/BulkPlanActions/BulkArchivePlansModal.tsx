@@ -71,9 +71,9 @@ const BulkArchivePlansModal: ModalComponent<BulkArchivePlansModalProps> = ({
       confirmLabel={t('Archive')}
       confirmVariant={ButtonVariant.primary}
       isDisabled={isEmpty(plans)}
-      title={t('Archive migration plans')}
       onConfirm={onArchive}
       testId="bulk-archive-plans-modal"
+      title={t('Archive migration plans')}
       {...rest}
     >
       <Stack hasGutter>
@@ -96,7 +96,7 @@ const BulkArchivePlansModal: ModalComponent<BulkArchivePlansModalProps> = ({
         </StackItem>
         {!isEmpty(actionFailures) && (
           <StackItem>
-            <Alert variant={AlertVariant.danger} isInline title={t('Some plans failed to archive')}>
+            <Alert isInline title={t('Some plans failed to archive')} variant={AlertVariant.danger}>
               <List>
                 {actionFailures.map((failure) => (
                   <ListItem key={failure.name}>

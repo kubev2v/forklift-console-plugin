@@ -30,19 +30,19 @@ const OvirtDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
     >
       <TypeDetailsItem resource={provider} />
       <ExternalManagementLinkDetailsItem
-        resource={provider}
         canPatch={permissions.canPatch}
-        webUILinkText={t(`Red Hat Virtualization Manager UI`)}
+        resource={provider}
         webUILink={getOvirtProviderWebUILink(provider)}
+        webUILinkText={t(`Red Hat Virtualization Manager UI`)}
       />
       <NameDetailsItem resource={provider} />
       <NamespaceDetailsItem resource={provider} />
       <URLDetailsItem
-        resource={provider}
         canPatch={permissions.canPatch}
         helpContent={t(
           `URL of the API endpoint of the Red Hat Virtualization Manager (RHVM) on which the source VM is mounted. Ensure that the URL includes the path leading to the RHVM API server, usually /ovirt-engine/api. For example, https://rhv-host-example.com/ovirt-engine/api.`,
         )}
+        resource={provider}
       />
       <CredentialsDetailsItem resource={provider} />
       <CreatedAtDetailsItem resource={provider} />

@@ -22,10 +22,10 @@ import { planStepNames, planStepOrder, PlanWizardStepId } from './constants';
 import CreatePlanWizardFooter from './CreatePlanWizardFooter';
 
 type CreatePlanWizardInnerProps = {
-  onSubmit: () => Promise<void>;
   isLiveMigrationFeatureEnabled: boolean;
-  sourceProvider: V1beta1Provider | undefined;
   isSubmitting: boolean;
+  onSubmit: () => Promise<void>;
+  sourceProvider: V1beta1Provider | undefined;
 };
 
 const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
@@ -61,12 +61,12 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
 
   return (
     <Wizard
+      className="create-plan-wizard"
       data-testid="create-plan-wizard"
+      footer={<CreatePlanWizardFooter />}
       isVisitRequired
       nav={{ isExpanded: true }}
-      footer={<CreatePlanWizardFooter />}
       onStepChange={handleStepChange}
-      className="create-plan-wizard"
     >
       <WizardStep
         {...getStepProps(PlanWizardStepId.BasicSetup)}
@@ -76,8 +76,8 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
             <GeneralInformationStep />
           </WizardStep>,
           <WizardStep
-            key={PlanWizardStepId.VirtualMachines}
             footer={<VirtualMachinesStepFooter />}
+            key={PlanWizardStepId.VirtualMachines}
             {...getStepProps(PlanWizardStepId.VirtualMachines)}
           >
             <VirtualMachinesStep />
@@ -132,16 +132,16 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
       <WizardStep
         footer={
           <CreatePlanWizardFooter
+            hasError={hasCreatePlanError}
             nextButtonText={t('Create plan')}
             onNext={handleSubmit}
-            hasError={hasCreatePlanError}
           />
         }
         {...getStepProps(PlanWizardStepId.ReviewAndCreate)}
       >
         <ReviewStep
-          isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled}
           error={createPlanError}
+          isLiveMigrationFeatureEnabled={isLiveMigrationFeatureEnabled}
           onBackToReviewClick={() => {
             setCreatePlanError(undefined);
           }}

@@ -11,65 +11,65 @@ import './logos.scss';
 
 export const ec2Logo = (
   <img
+    alt="Amazon EC2 logo"
     className="forklift--create-provider-edit-card-title-logo"
     src={ec2Img}
-    alt="Amazon EC2 logo"
   />
 );
 
 export const openshiftLogo = (
   <img
+    alt="PatternFly logo"
     className="forklift--create-provider-edit-card-title-logo"
     src={openshiftImg}
-    alt="PatternFly logo"
   />
 );
 
 export const openstackLogo = (
   <img
+    alt="PatternFly logo"
     className="forklift--create-provider-edit-card-title-logo"
     src={openstackImg}
-    alt="PatternFly logo"
   />
 );
 
 export const redhatLogo = (
   <img
+    alt="PatternFly logo"
     className="forklift--create-provider-edit-card-title-logo"
     src={redhatImg}
-    alt="PatternFly logo"
   />
 );
 
 export const ovaLogo = (
   <img
+    alt="PatternFly logo"
     className="forklift--create-provider-edit-card-title-logo"
     src={ovaImg}
-    alt="PatternFly logo"
   />
 );
 
 export const hypervLogo = (
   <img
+    alt="Microsoft Hyper-V logo"
     className="forklift--create-provider-edit-card-title-logo"
     src={hypervImg}
-    alt="Microsoft Hyper-V logo"
   />
 );
 
 const vmLogoLight = (
   <img
+    alt="PatternFly logo"
     className="forklift--create-provider-edit-card-title-logo"
     src={vmwareImgLight}
-    alt="PatternFly logo"
   />
 );
 
 const vmLogoDark = (
   <img
+    alt="PatternFly logo"
     className="forklift--create-provider-edit-card-title-logo"
     src={vmwareImgDark}
-    alt="PatternFly logo"
   />
 );
 

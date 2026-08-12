@@ -44,13 +44,13 @@ export const VSphereEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
   return (
     <TextInputEditModal
       {...rest}
-      title={t('Edit URL')}
-      label={t('URL')}
-      initialValue={provider?.spec?.url ?? ''}
       description={description}
       helperText={t('The URL of the vCenter API endpoint.')}
-      validationHook={validationHook}
+      initialValue={provider?.spec?.url ?? ''}
+      label={t('URL')}
       onConfirm={onConfirm}
+      title={t('Edit URL')}
+      validationHook={validationHook}
     />
   );
 };

@@ -67,7 +67,7 @@ describe('PlanCutoverMigrationModal', () => {
     });
 
     it('renders with ASAP radio selected by default', () => {
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       const asapRadio = screen.getByTestId('cutover-mode-asap');
       const scheduledRadio = screen.getByTestId('cutover-mode-scheduled');
@@ -77,7 +77,7 @@ describe('PlanCutoverMigrationModal', () => {
     });
 
     it('hides date/time pickers when ASAP is selected', () => {
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       expect(screen.queryByLabelText('Cutover date')).not.toBeInTheDocument();
       expect(screen.queryByLabelText('Cutover time')).not.toBeInTheDocument();
@@ -85,7 +85,7 @@ describe('PlanCutoverMigrationModal', () => {
 
     it('shows date/time pickers when scheduled is selected', async () => {
       const user = userEvent.setup();
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       await user.click(screen.getByTestId('cutover-mode-scheduled'));
 
@@ -98,7 +98,7 @@ describe('PlanCutoverMigrationModal', () => {
       const now = '2026-07-06T10:00:00.000Z';
       jest.spyOn(Date.prototype, 'toISOString').mockReturnValue(now);
 
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       const confirmButton = screen.getByRole('button', { name: /set cutover/i });
       await user.click(confirmButton);
@@ -113,7 +113,7 @@ describe('PlanCutoverMigrationModal', () => {
     });
 
     it('does not show Remove cutover action when ASAP is selected', () => {
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       expect(screen.queryByRole('button', { name: /remove cutover/i })).not.toBeInTheDocument();
     });
@@ -125,7 +125,7 @@ describe('PlanCutoverMigrationModal', () => {
     });
 
     it('defaults to scheduled mode when cutover already exists', () => {
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       const asapRadio = screen.getByTestId('cutover-mode-asap');
       const scheduledRadio = screen.getByTestId('cutover-mode-scheduled');
@@ -135,21 +135,21 @@ describe('PlanCutoverMigrationModal', () => {
     });
 
     it('shows date/time pickers pre-filled in edit mode', () => {
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       expect(screen.getByLabelText('Cutover date')).toBeInTheDocument();
       expect(screen.getByLabelText('Cutover time')).toBeInTheDocument();
     });
 
     it('shows Remove cutover action in scheduled mode', () => {
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       expect(screen.getByRole('button', { name: /remove cutover/i })).toBeInTheDocument();
     });
 
     it('hides Remove cutover action when switching to ASAP', async () => {
       const user = userEvent.setup();
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       await user.click(screen.getByTestId('cutover-mode-asap'));
 
@@ -157,7 +157,7 @@ describe('PlanCutoverMigrationModal', () => {
     });
 
     it('shows Edit cutover as title when cutover exists', () => {
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       expect(screen.getByText('Edit cutover')).toBeInTheDocument();
     });
@@ -172,7 +172,7 @@ describe('PlanCutoverMigrationModal', () => {
     it('shows info alert when scheduled date is in the past', () => {
       mockUsePlanMigration.mockReturnValue([mockMigrationWithPastCutover, true, null]);
 
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       expect(
         screen.getByText(
@@ -184,7 +184,7 @@ describe('PlanCutoverMigrationModal', () => {
     it('does not show info alert when scheduled date is in the future', () => {
       mockUsePlanMigration.mockReturnValue([mockMigrationWithCutover, true, null]);
 
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       expect(
         screen.queryByText(
@@ -201,7 +201,7 @@ describe('PlanCutoverMigrationModal', () => {
 
     it('toggles between ASAP and scheduled modes', async () => {
       const user = userEvent.setup();
-      render(<PlanCutoverMigrationModal plan={mockPlan} closeModal={closeModal} />);
+      render(<PlanCutoverMigrationModal closeModal={closeModal} plan={mockPlan} />);
 
       expect(screen.getByTestId('cutover-mode-asap')).toBeChecked();
       expect(screen.queryByLabelText('Cutover date')).not.toBeInTheDocument();

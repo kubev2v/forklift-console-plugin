@@ -8,13 +8,13 @@ export type UploadTarballResponse = {
 
 export type VddkBuild = K8sResourceKind & {
   status: K8sResourceKind['status'] & {
-    outputDockerImageReference: string;
+    logSnippet?: string;
     output: {
       to?: {
         imageDigest: string;
       };
     };
-    logSnippet?: string;
+    outputDockerImageReference: string;
   };
 };
 
@@ -28,10 +28,10 @@ type VddkBuildResponseVariant =
   (typeof vddkBuildResponseVariant)[keyof typeof vddkBuildResponseVariant];
 
 export type VddkBuildResponse = {
-  variant: VddkBuildResponseVariant;
-  title?: string;
   body: string;
-  isBuildSucceeded?: boolean;
   isBuildFailed?: boolean;
   isBuilding?: boolean;
+  isBuildSucceeded?: boolean;
+  title?: string;
+  variant: VddkBuildResponseVariant;
 };

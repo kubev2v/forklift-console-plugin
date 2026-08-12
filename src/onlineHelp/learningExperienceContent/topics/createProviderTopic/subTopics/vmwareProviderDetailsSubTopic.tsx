@@ -13,10 +13,10 @@ export const vmwareProviderDetailsSubTopic = (): LearningExperienceSubTopic => (
       id: `${VMWARE_PROVIDER_DETAILS_SUB_TOPIC_ID}-a`,
       title: (
         <HelpTitledContent
-          title={t('Choose the project (like openshift-mtv).')}
           content={t(
             'A project is a way to organize clusters into virtual sub-clusters. They can be helpful when different teams share a Kubernetes cluster. Namespace is a Kubernetes term, but it is also called a project in OpenShift.',
           )}
+          title={t('Choose the project (like openshift-mtv).')}
         />
       ),
     },
@@ -46,20 +46,20 @@ export const vmwareProviderDetailsSubTopic = (): LearningExperienceSubTopic => (
           id: `${VMWARE_PROVIDER_DETAILS_SUB_TOPIC_ID}-f-i`,
           title: (
             <HelpTitledContent
-              title={t('Easiest Way:')}
               content={t(
                 'Click Upload next to VDDK min-image archive and select the archive file from your computer.',
               )}
+              title={t('Easiest Way:')}
             />
           ),
         },
       ],
       title: (
         <HelpTitledContent
-          title={t('Select how you want to set up the Virtual Disk Development Kit (VDDK).')}
           content={t(
             'It is recommended to use VDDK setup because it helps enhance migration performance. If you are using a warm migration, VDDK is required.',
           )}
+          title={t('Select how you want to set up the Virtual Disk Development Kit (VDDK).')}
         />
       ),
     },

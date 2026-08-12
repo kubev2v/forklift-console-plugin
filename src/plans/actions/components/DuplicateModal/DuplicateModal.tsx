@@ -136,8 +136,8 @@ const DuplicateModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
   return (
     <ModalForm
       confirmLabel={t('Duplicate')}
-      title={t('Duplicate migration plan')}
       onConfirm={onDuplicate}
+      title={t('Duplicate migration plan')}
       {...rest}
     >
       <ForkliftTrans>
@@ -146,17 +146,17 @@ const DuplicateModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
             Duplicate plan <strong className="co-break-word">{name}</strong>?
           </StackItem>
           <FormGroupWithHelpText
-            label={t('New migration plan name')}
             fieldId="name"
             helperText={t('Kubernetes name of the new migration Plan resource')}
+            label={t('New migration plan name')}
           >
             <TextInput
-              spellCheck="false"
-              value={newName}
               id="name"
               onChange={(_, value) => {
                 onChange(value);
               }}
+              spellCheck="false"
+              value={newName}
             />
           </FormGroupWithHelpText>
           <StackItem>

@@ -30,14 +30,14 @@ const Ec2TargetSettingsFields: FC = () => {
     <>
       <FormGroup fieldId={ProviderFormFieldId.Ec2AutoTargetCredentials}>
         <Checkbox
-          id={ProviderFormFieldId.Ec2AutoTargetCredentials}
-          label={t('Auto-detect target settings')}
-          isChecked={autoTargetCredentials ?? false}
-          onChange={handleAutoTargetChange}
+          data-testid="ec2-auto-target-credentials-checkbox"
           description={t(
             'Automatically fetch target AWS credentials from the cluster and detect the target availability zone from worker nodes',
           )}
-          data-testid="ec2-auto-target-credentials-checkbox"
+          id={ProviderFormFieldId.Ec2AutoTargetCredentials}
+          isChecked={autoTargetCredentials ?? false}
+          label={t('Auto-detect target settings')}
+          onChange={handleAutoTargetChange}
         />
       </FormGroup>
 
@@ -45,18 +45,18 @@ const Ec2TargetSettingsFields: FC = () => {
         <div className="pf-v6-u-ml-lg">
           <ProviderFormTextInput
             fieldId={ProviderFormFieldId.Ec2TargetAz}
-            label={t('Target availability zone')}
             helperText={t('Target availability zone for migrations. EBS volumes are AZ-specific.')}
+            label={t('Target availability zone')}
             testId="ec2-target-az-input"
           />
 
           <ProviderFormTextInput
             fieldId={ProviderFormFieldId.Ec2TargetRegion}
-            isRequired={false}
-            label={t('Target region')}
             helperText={t(
               'Target region for migrations. Defaults to the provider region if not specified.',
             )}
+            isRequired={false}
+            label={t('Target region')}
             testId="ec2-target-region-input"
           />
         </div>

@@ -4,24 +4,24 @@ import type { ResourceField } from '@components/common/utils/types';
 import { isEmpty } from '@utils/helpers';
 
 type UsePageDataProps<T> = {
+  compareFn: (a: T, b: T) => number;
+  error: unknown;
+  fields: ResourceField[];
   flatData: T[];
   loaded: boolean;
-  error: unknown;
-  compareFn: (a: T, b: T) => number;
   metaMatcher: (item: T) => boolean;
-  selectedFilters: Record<string, string[]>;
-  fields: ResourceField[];
   postFilterData?: (
     data: T[],
     selectedFilters: Record<string, string[]>,
     fields: ResourceField[],
   ) => T[];
+  selectedFilters: Record<string, string[]>;
 };
 
 type UsePageDataResult<T> = {
-  sortedData: T[];
   filteredData: T[];
   finalFilteredData: T[];
+  sortedData: T[];
 };
 
 /**

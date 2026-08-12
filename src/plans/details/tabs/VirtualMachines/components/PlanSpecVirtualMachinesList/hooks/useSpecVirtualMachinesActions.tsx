@@ -31,7 +31,7 @@ export const useSpecVirtualMachinesActions = (plan: V1beta1Plan): PageGlobalActi
     ...inspectButton,
     () => <AddVirtualMachinesButton plan={plan} />,
     ({ selectedIds }) => (
-      <DeleteVirtualMachinesButton selectedIds={selectedIds ?? []} plan={plan} />
+      <DeleteVirtualMachinesButton plan={plan} selectedIds={selectedIds ?? []} />
     ),
   ];
 };

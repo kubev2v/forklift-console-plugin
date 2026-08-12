@@ -32,6 +32,24 @@ const DiskPassPhraseFieldTable = () => {
 
   return (
     <FieldBuilderTable
+      addButton={{
+        isDisabled: diskPassPhrases.length === maxDiskPassPhrases,
+        label: t('Add passphrase'),
+        onClick: () => {
+          append(defaultDiskPassPhrase);
+        },
+      }}
+      fieldRows={diskPassPhrases.map((fieldRow, index) => ({
+        ...fieldRow,
+        inputs: [
+          <Controller
+            control={control}
+            key={getDiskPassPhraseFieldId(index)}
+            name={getDiskPassPhraseFieldId(index)}
+            render={({ field }) => <TextInput {...field} />}
+          />,
+        ],
+      }))}
       headers={[
         {
           label: otherFormFieldLabels[OtherSettingsFormFieldId.DiskDecryptionPassPhrases],
@@ -52,7 +70,7 @@ const DiskPassPhraseFieldTable = () => {
 
                 {VIRT_V2V_HELP_LINK && (
                   <StackItem>
-                    <ExternalLink isInline href={VIRT_V2V_HELP_LINK}>
+                    <ExternalLink href={VIRT_V2V_HELP_LINK} isInline>
                       {t('Learn more')}
                     </ExternalLink>
                   </StackItem>
@@ -63,24 +81,6 @@ const DiskPassPhraseFieldTable = () => {
           width: 90,
         },
       ]}
-      fieldRows={diskPassPhrases.map((fieldRow, index) => ({
-        ...fieldRow,
-        inputs: [
-          <Controller
-            key={getDiskPassPhraseFieldId(index)}
-            name={getDiskPassPhraseFieldId(index)}
-            control={control}
-            render={({ field }) => <TextInput {...field} />}
-          />,
-        ],
-      }))}
-      addButton={{
-        isDisabled: diskPassPhrases.length === maxDiskPassPhrases,
-        label: t('Add passphrase'),
-        onClick: () => {
-          append(defaultDiskPassPhrase);
-        },
-      }}
       removeButton={{
         onClick: (index) => {
           if (diskPassPhrases.length > 1) {

@@ -17,9 +17,9 @@ type MigrationCounts = {
 
 type MigrationCountsHookResponse = {
   count: MigrationCounts;
-  vmCount: MigrationCounts;
   loaded: boolean;
   loadError: Error | null;
+  vmCount: MigrationCounts;
 };
 
 const EMPTY_COUNTS: MigrationCounts = {

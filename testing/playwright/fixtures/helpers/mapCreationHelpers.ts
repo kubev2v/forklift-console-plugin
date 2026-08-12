@@ -18,9 +18,9 @@ import type { ResourceManager } from '../../utils/resource-manager/ResourceManag
 export const createTestNad = async (
   resourceManager: ResourceManager,
   options: {
+    bridgeName?: string;
     name?: string;
     namespace: string;
-    bridgeName?: string;
   },
 ): Promise<V1NetworkAttachmentDefinition> => {
   const { namespace, bridgeName = 'br0' } = options;
@@ -55,18 +55,18 @@ export const createTestNad = async (
 
 // Network Map types and creation
 export type TestNetworkMap = {
+  mappings: Mapping[];
   name: string;
   namespace: string;
   sourceProvider: string;
   targetProvider: string;
-  mappings: Mapping[];
 };
 
 export type CreateNetworkMapOptions = {
+  mappings?: Mapping[];
+  namePrefix?: string;
   sourceProvider: V1beta1Provider;
   targetProvider?: string;
-  namePrefix?: string;
-  mappings?: Mapping[];
 };
 
 export const createNetworkMap = async (
@@ -123,18 +123,18 @@ export const createNetworkMap = async (
 
 // Storage Map types and creation
 export type TestStorageMap = {
+  mappings: Mapping[];
   name: string;
   namespace: string;
   sourceProvider: string;
   targetProvider: string;
-  mappings: Mapping[];
 };
 
 export type CreateStorageMapOptions = {
+  mappings?: Mapping[];
+  namePrefix?: string;
   sourceProvider: V1beta1Provider;
   targetProvider?: string;
-  namePrefix?: string;
-  mappings?: Mapping[];
 };
 
 export const createStorageMap = async (

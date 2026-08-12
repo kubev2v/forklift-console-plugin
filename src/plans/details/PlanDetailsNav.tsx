@@ -19,8 +19,8 @@ const PlanDetailsNav: FC<PlanPageProps> = ({ name, namespace }) => {
       <PlanConcernsDrawer
         name={name}
         namespace={namespace}
-        showPlanConcernsPanel={showPlanConcernsPanel}
         setShowPlanConcernsPanel={setShowPlanConcernsPanel}
+        showPlanConcernsPanel={showPlanConcernsPanel}
       >
         <div className="forklift-details-page-layout">
           <PlanPageHeader

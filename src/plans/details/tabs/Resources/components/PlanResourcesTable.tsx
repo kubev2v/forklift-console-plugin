@@ -18,10 +18,10 @@ const PlanResourcesTable: FC<PlanResourcesTableProps> = ({
   const { t } = useForkliftTranslation();
   return (
     <PageSection hasBodyWrapper={false}>
-      <SectionHeading text={t('Utilization')} testId="plan-resources-heading" />
+      <SectionHeading testId="plan-resources-heading" text={t('Utilization')} />
 
       <Card>
-        <Table variant="compact" borders data-testid="plan-resources-table">
+        <Table borders data-testid="plan-resources-table" variant="compact">
           <Thead>
             <Tr>
               <Th>{t('Resource')}</Th>
@@ -33,28 +33,28 @@ const PlanResourcesTable: FC<PlanResourcesTableProps> = ({
             <Tr>
               <Td>{t('Virtual machines')}</Td>
               <Td data-testid="resources-vms-total">
-                <AlignedDecimal value={planInventorySize} fractionalPrecision={0} />
+                <AlignedDecimal fractionalPrecision={0} value={planInventorySize} />
               </Td>
               <Td data-testid="resources-vms-running">
-                <AlignedDecimal value={planInventoryRunningSize} fractionalPrecision={0} />
+                <AlignedDecimal fractionalPrecision={0} value={planInventoryRunningSize} />
               </Td>
             </Tr>
             <Tr>
               <Td>{t('Total CPU count')}</Td>
               <Td data-testid="resources-cpu-total">
-                <AlignedDecimal value={totalResources.cpuCount} unit={t('Cores')} />
+                <AlignedDecimal unit={t('Cores')} value={totalResources.cpuCount} />
               </Td>
               <Td data-testid="resources-cpu-running">
-                <AlignedDecimal value={totalResourcesRunning.cpuCount} unit={t('Cores')} />
+                <AlignedDecimal unit={t('Cores')} value={totalResourcesRunning.cpuCount} />
               </Td>
             </Tr>
             <Tr>
               <Td>{t('Total memory')}</Td>
               <Td data-testid="resources-memory-total">
-                <AlignedDecimal value={totalResources.memoryMB} unit={'MB'} />
+                <AlignedDecimal unit={'MB'} value={totalResources.memoryMB} />
               </Td>
               <Td data-testid="resources-memory-running">
-                <AlignedDecimal value={totalResourcesRunning.memoryMB} unit={'MB'} />
+                <AlignedDecimal unit={'MB'} value={totalResourcesRunning.memoryMB} />
               </Td>
             </Tr>
           </Tbody>

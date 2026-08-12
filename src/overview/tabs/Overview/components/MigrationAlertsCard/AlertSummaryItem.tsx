@@ -14,7 +14,7 @@ const AlertSummaryItem: FC<AlertSummaryItemProps> = ({ count, icon, label }) => 
       <Content component={ContentVariants.small}>{label}</Content>
     </FlexItem>
     <FlexItem>
-      <Flex spaceItems={{ default: 'spaceItemsXs' }} alignItems={{ default: 'alignItemsCenter' }}>
+      <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsXs' }}>
         <FlexItem>{icon}</FlexItem>
         <FlexItem>
           <span className="migration-alerts-card__summary-count">{count}</span>

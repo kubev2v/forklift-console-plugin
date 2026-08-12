@@ -51,8 +51,8 @@ const MigrationJobsTable: FC<MigrationJobsTableProps> = ({ jobs }) => {
               <Td width={20}>{getJobPhase(job)}</Td>
               <Td>
                 <ConsoleTimestamp
-                  timestamp={job?.status?.completionTime ?? null}
                   showGlobalIcon={false}
+                  timestamp={job?.status?.completionTime ?? null}
                 />
               </Td>
             </Tr>

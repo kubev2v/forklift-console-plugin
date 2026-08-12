@@ -19,16 +19,16 @@ const OvirtInventorySection: FC<InventorySectionProps> = ({ data }) => {
 
   return (
     <DescriptionList
-      isHorizontal
-      horizontalTermWidthModifier={{ default: '15ch' }}
       columnModifier={{ default: '2Col' }}
+      horizontalTermWidthModifier={{ default: '15ch' }}
+      isHorizontal
     >
-      <NetworkCountDetailsItem resource={provider} inventory={inventory} />
-      <StorageDomainCountDetailsItem resource={provider} inventory={inventory} />
-      <VmCountDetailsItem resource={provider} inventory={inventory} />
-      <HostCountDetailsItem resource={provider} inventory={inventory} />
-      <ClusterCountDetailsItem resource={provider} inventory={inventory} />
-      <DatacenterCountDetailsItem resource={provider} inventory={inventory} />
+      <NetworkCountDetailsItem inventory={inventory} resource={provider} />
+      <StorageDomainCountDetailsItem inventory={inventory} resource={provider} />
+      <VmCountDetailsItem inventory={inventory} resource={provider} />
+      <HostCountDetailsItem inventory={inventory} resource={provider} />
+      <ClusterCountDetailsItem inventory={inventory} resource={provider} />
+      <DatacenterCountDetailsItem inventory={inventory} resource={provider} />
     </DescriptionList>
   );
 };

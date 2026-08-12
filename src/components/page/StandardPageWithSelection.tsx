@@ -31,34 +31,34 @@ const wrapActionWithSelection = <T,>(
 type StandardPageWithSelectionProps<T> = ComponentProps<typeof StandardPage<T>> &
   (
     | {
-        // Selection enabled - all selection props required
-        onSelect: (selectedIds: string[]) => void;
-        toId: (item: T) => string;
-        selectedIds: string[];
         canSelect?: (item: T) => boolean;
+        expandedIds?: string[];
         getSelectDisabledReason?: (item: T) => string | undefined;
         onExpand?: (expandedIds: string[]) => void;
-        expandedIds?: string[];
+        // Selection enabled - all selection props required
+        onSelect: (selectedIds: string[]) => void;
+        selectedIds: string[];
+        toId: (item: T) => string;
       }
     | {
-        // Expansion only (no selection) - requires toId and expansion props
-        onSelect?: never;
-        toId: (item: T) => string;
-        selectedIds?: never;
         canSelect?: never;
+        expandedIds: string[];
         getSelectDisabledReason?: never;
         onExpand: (expandedIds: string[]) => void;
-        expandedIds: string[];
+        // Expansion only (no selection) - requires toId and expansion props
+        onSelect?: never;
+        selectedIds?: never;
+        toId: (item: T) => string;
       }
     | {
-        // No selection or expansion - all optional
-        onSelect?: never;
-        toId?: never;
-        selectedIds?: never;
         canSelect?: never;
+        expandedIds?: never;
         getSelectDisabledReason?: never;
         onExpand?: never;
-        expandedIds?: never;
+        // No selection or expansion - all optional
+        onSelect?: never;
+        selectedIds?: never;
+        toId?: never;
       }
   );
 
@@ -143,8 +143,8 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
         {...restWithoutCell}
         expandedIds={internalExpandedIds}
         header={finalHeader}
-        row={row}
         pageRef={pageRef}
+        row={row}
       />
     );
   }
@@ -152,15 +152,15 @@ export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionPr
   return (
     <StandardPage
       {...rest}
-      pageRef={pageRef}
       canSelect={canSelect}
       expandedIds={internalExpandedIds}
-      selectedIds={internalSelectedIds}
-      onSelect={onSelectCallback}
-      toId={toId}
-      row={row}
-      header={finalHeader}
       GlobalActionToolbarItems={EnhancedGlobalActionToolbarItems}
+      header={finalHeader}
+      onSelect={onSelectCallback}
+      pageRef={pageRef}
+      row={row}
+      selectedIds={internalSelectedIds}
+      toId={toId}
     />
   );
 };

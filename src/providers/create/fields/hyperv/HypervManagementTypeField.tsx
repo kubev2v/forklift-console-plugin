@@ -14,34 +14,34 @@ const HypervManagementTypeField: FC = () => {
   return (
     <Controller
       control={control}
-      name={ProviderFormFieldId.MgmtType}
       defaultValue={HypervManagementType.Standalone}
+      name={ProviderFormFieldId.MgmtType}
       render={({ field: { onChange, value } }) => (
         <FormGroup
-          role="radiogroup"
           fieldId={ProviderFormFieldId.MgmtType}
-          label={t('Management type')}
           isRequired
+          label={t('Management type')}
+          role="radiogroup"
         >
           <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsMd' }}>
             <Radio
-              name={ProviderFormFieldId.MgmtType}
-              label={t('Standalone')}
+              data-testid="hyperv-management-standalone-radio"
               description={t('Single Hyper-V host')}
               id="hyperv-management-standalone"
-              data-testid="hyperv-management-standalone-radio"
               isChecked={value === HypervManagementType.Standalone}
+              label={t('Standalone')}
+              name={ProviderFormFieldId.MgmtType}
               onChange={() => {
                 onChange(HypervManagementType.Standalone);
               }}
             />
             <Radio
-              name={ProviderFormFieldId.MgmtType}
-              label={t('Failover Cluster')}
+              data-testid="hyperv-management-cluster-radio"
               description={t('Windows Failover Cluster with multiple nodes')}
               id="hyperv-management-cluster"
-              data-testid="hyperv-management-cluster-radio"
               isChecked={value === HypervManagementType.Cluster}
+              label={t('Failover Cluster')}
+              name={ProviderFormFieldId.MgmtType}
               onChange={() => {
                 onChange(HypervManagementType.Cluster);
               }}

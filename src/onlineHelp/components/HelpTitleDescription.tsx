@@ -3,8 +3,8 @@ import type { FC, ReactNode } from 'react';
 import { Content, ContentVariants } from '@patternfly/react-core';
 
 type HelpTitleDescriptionProps = {
-  title: string;
   description: ReactNode;
+  title: string;
 };
 
 const HelpTitleDescription: FC<HelpTitleDescriptionProps> = ({ description, title }) => (

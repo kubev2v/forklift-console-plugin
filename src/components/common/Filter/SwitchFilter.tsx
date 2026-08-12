@@ -26,8 +26,8 @@ export const SwitchFilter = ({
   return (
     <ToolbarItem>
       <Switch
-        label={placeholderLabel}
         isChecked={!isEmpty(selectedFilters) && selectedFilters?.[0] === 'true'}
+        label={placeholderLabel}
         onChange={(_event, value) => {
           onChange(value);
         }}

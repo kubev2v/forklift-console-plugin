@@ -31,11 +31,10 @@ const TargetLabelsDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan 
 
   return (
     <DetailsItem
-      testId="vm-target-labels-detail-item"
-      title={t('VM target labels')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={<LabelsViewDetailsItemContent labels={plan?.spec?.targetLabels} />}
-      helpContent={TARGET_LABELS_DETAILS_ITEM_DESCRIPTION}
       crumbs={['spec', 'targetLabels']}
+      helpContent={TARGET_LABELS_DETAILS_ITEM_DESCRIPTION}
       moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
         launcher<LabelsModalProps>(LabelsModal, {
@@ -54,7 +53,8 @@ const TargetLabelsDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan 
           title: t('Edit VM target labels'),
         });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="vm-target-labels-detail-item"
+      title={t('VM target labels')}
     />
   );
 };

@@ -34,9 +34,9 @@ const MigrationPodsTable: FC<MigrationPodsTableProps> = ({ pods }) => {
   return (
     <>
       <SectionHeading
-        text={t('Pods')}
-        headingLevel="h3"
         className="migration-status-expanded-page__resource-list-header"
+        headingLevel="h3"
+        text={t('Pods')}
       />
       <Table>
         <Thead>
@@ -64,8 +64,8 @@ const MigrationPodsTable: FC<MigrationPodsTableProps> = ({ pods }) => {
               </Td>
               <Td>
                 <ConsoleTimestamp
-                  timestamp={pod?.metadata?.creationTimestamp ?? null}
                   showGlobalIcon={false}
+                  timestamp={pod?.metadata?.creationTimestamp ?? null}
                 />
               </Td>
             </Tr>

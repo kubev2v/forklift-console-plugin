@@ -36,10 +36,10 @@ const ReviewStep: FC<ReviewStepProps> = ({
   if (isSubmitting) {
     return (
       <EmptyState
-        titleText={t('Creating plan')}
+        className="pf-v6-u-h-100"
         headingLevel="h4"
         icon={Spinner}
-        className="pf-v6-u-h-100"
+        titleText={t('Creating plan')}
       />
     );
   }
@@ -50,11 +50,11 @@ const ReviewStep: FC<ReviewStepProps> = ({
 
   return (
     <WizardStepContainer
-      title={planStepNames[PlanWizardStepId.ReviewAndCreate]}
       description={t(
         'Make sure your migration plan looks correct. To make any changes, click directly on the step you want to go to or press the back button.',
       )}
       testId="create-plan-review-step"
+      title={planStepNames[PlanWizardStepId.ReviewAndCreate]}
     >
       <GeneralInfoReviewSection />
       <VirtualMachinesReviewSection />

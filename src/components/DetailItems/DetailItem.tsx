@@ -28,12 +28,12 @@ import { ensureArray } from '../../utils/ensureArray';
  * @component
  */
 const DescriptionTitleWithHelp: FC<{
-  title: string;
+  crumbs?: string[];
   helpContent: ReactNode;
-  showHelpIconNextToTitle: boolean;
   moreInfoLabel?: string;
   moreInfoLink?: string;
-  crumbs?: string[];
+  showHelpIconNextToTitle: boolean;
+  title: string;
 }> = ({
   crumbs,
   helpContent,
@@ -50,7 +50,6 @@ const DescriptionTitleWithHelp: FC<{
     <DescriptionListTermHelpText className="pf-v6-u-align-items-center">
       {showHelpIconNextToTitle ? <div>{title} &nbsp;</div> : null}
       <Popover
-        headerContent={<div>{title}</div>}
         bodyContent={
           <Flex direction={{ default: 'column' }}>
             <FlexItem>{helpContent}</FlexItem>
@@ -58,7 +57,7 @@ const DescriptionTitleWithHelp: FC<{
             {moreInfoLink && (
               <FlexItem>
                 {moreInfoLabel}{' '}
-                <ExternalLink href={moreInfoLink} isInline hideIcon>
+                <ExternalLink hideIcon href={moreInfoLink} isInline>
                   <Truncate content={moreInfoLink} />
                 </ExternalLink>
               </FlexItem>
@@ -77,17 +76,18 @@ const DescriptionTitleWithHelp: FC<{
             )}
           </Flex>
         }
+        headerContent={<div>{title}</div>}
       >
         {showHelpIconNextToTitle ? (
           <Button
+            className="pf-v6-u-p-0"
             icon={
               <Icon size="sm">
                 <HelpIcon />
               </Icon>
             }
-            variant={ButtonVariant.plain}
-            className="pf-v6-u-p-0"
             onClick={onClick}
+            variant={ButtonVariant.plain}
           />
         ) : (
           <DescriptionListTermHelpTextButton> {title} </DescriptionListTermHelpTextButton>
@@ -112,12 +112,12 @@ const DescriptionTitle: FC<{ title: string }> = ({ title }) => (
  * @component
  */
 const DisplayTitle: FC<{
-  title: string;
+  crumbs?: string[];
   helpContent?: ReactNode;
-  showHelpIconNextToTitle?: boolean;
   moreInfoLabel?: string;
   moreInfoLink?: string;
-  crumbs?: string[];
+  showHelpIconNextToTitle?: boolean;
+  title: string;
 }> = ({
   crumbs,
   helpContent,
@@ -128,12 +128,12 @@ const DisplayTitle: FC<{
 }) =>
   helpContent ? (
     <DescriptionTitleWithHelp
-      title={title}
+      crumbs={crumbs}
       helpContent={helpContent}
-      showHelpIconNextToTitle={showHelpIconNextToTitle}
       moreInfoLabel={moreInfoLabel}
       moreInfoLink={moreInfoLink}
-      crumbs={crumbs}
+      showHelpIconNextToTitle={showHelpIconNextToTitle}
+      title={title}
     />
   ) : (
     <DescriptionTitle title={title} />
@@ -150,9 +150,9 @@ const DisplayTitle: FC<{
  */
 
 const ContentField: FC<{
+  canEdit?: boolean;
   content: ReactNode;
   onEdit: () => void;
-  canEdit?: boolean;
 }> = ({ canEdit = true, content, onEdit }) =>
   canEdit && onEdit ? (
     <DescriptionListDescription>
@@ -160,11 +160,11 @@ const ContentField: FC<{
         <FlexItem>{content}</FlexItem>
         <FlexItem>
           <Button
-            variant={ButtonVariant.link}
-            isInline
-            onClick={onEdit}
             icon={<Pencil />}
             iconPosition="right"
+            isInline
+            onClick={onEdit}
+            variant={ButtonVariant.link}
           />
         </FlexItem>
       </Flex>
@@ -195,16 +195,16 @@ const ContentField: FC<{
  * @property {boolean} [showEditButton] - If true, show the edit button next to the content field, when missing falling back to onEdit existence.
  */
 type DetailsItemProps = {
-  title: string;
-  testId?: string;
+  canEdit?: boolean;
+  content: ReactNode | ReactNode[];
+  crumbs?: string[];
   helpContent?: ReactNode;
-  showHelpIconNextToTitle?: boolean;
   moreInfoLabel?: string;
   moreInfoLink?: string;
-  crumbs?: string[];
-  content: ReactNode | ReactNode[];
   onEdit?: (() => void) | (() => void)[];
-  canEdit?: boolean;
+  showHelpIconNextToTitle?: boolean;
+  testId?: string;
+  title: string;
 };
 
 export const DetailsItem: FC<DetailsItemProps> = ({
@@ -225,20 +225,20 @@ export const DetailsItem: FC<DetailsItemProps> = ({
   return (
     <DescriptionListGroup data-testid={testId}>
       <DisplayTitle
-        title={title}
+        crumbs={crumbs}
         helpContent={helpContent}
-        showHelpIconNextToTitle={showHelpIconNextToTitle}
         moreInfoLabel={moreInfoLabel}
         moreInfoLink={moreInfoLink}
-        crumbs={crumbs}
+        showHelpIconNextToTitle={showHelpIconNextToTitle}
+        title={title}
       />
       <DescriptionListDescription>
         {contents?.map((value, index) => (
           <ContentField
-            key={`content-field-${index}`}
-            content={value as ReactNode}
-            onEdit={onEdits?.[index] as () => void}
             canEdit={canEdit}
+            content={value as ReactNode}
+            key={`content-field-${index}`}
+            onEdit={onEdits?.[index] as () => void}
           />
         ))}
       </DescriptionListDescription>

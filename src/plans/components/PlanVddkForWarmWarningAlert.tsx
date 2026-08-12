@@ -10,10 +10,10 @@ const PlanVddkForWarmWarningAlert: FC = () => {
 
   return (
     <Alert
+      className="pf-v6-u-ml-lg"
       isInline
       title={t('Must enable VMware Virtual Disk Development Kit')}
       variant={AlertVariant.warning}
-      className="pf-v6-u-ml-lg"
     >
       <Stack hasGutter>
         {t(
@@ -21,7 +21,7 @@ const PlanVddkForWarmWarningAlert: FC = () => {
         )}
 
         {CREATE_VDDK_HELP_LINK && (
-          <ExternalLink isInline hideIcon href={CREATE_VDDK_HELP_LINK}>
+          <ExternalLink hideIcon href={CREATE_VDDK_HELP_LINK} isInline>
             {t('Learn more about VDDK')}
           </ExternalLink>
         )}

@@ -33,11 +33,10 @@ const TargetAffinityDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, pla
 
   return (
     <DetailsItem
-      testId="vm-target-affinity-rules-detail-item"
-      title={t('VM target affinity rules')}
+      canEdit={canPatch && isPlanEditable(plan)}
       content={<AffinityViewDetailsItemContent affinity={initialAffinity} />}
-      helpContent={TARGET_AFFINITY_DETAILS_ITEM_DESCRIPTION}
       crumbs={['spec', 'targetAffinity']}
+      helpContent={TARGET_AFFINITY_DETAILS_ITEM_DESCRIPTION}
       moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
         launcher<AffinityModalProps>(AffinityModal, {
@@ -46,7 +45,8 @@ const TargetAffinityDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, pla
           title: t('Edit VM target affinity rules'),
         });
       }}
-      canEdit={canPatch && isPlanEditable(plan)}
+      testId="vm-target-affinity-rules-detail-item"
+      title={t('VM target affinity rules')}
     />
   );
 };

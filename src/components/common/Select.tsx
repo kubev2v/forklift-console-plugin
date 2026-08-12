@@ -19,21 +19,21 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 
 type SelectOption = {
-  key?: number | string;
-  value: string;
-  label: string;
   description?: string;
   disabled?: boolean;
+  key?: number | string;
+  label: string;
+  value: string;
 };
 
 type SelectProps = Pick<PfSelectProps, 'onSelect' | 'className' | 'children'> & {
   id: string;
-  value: string | undefined;
-  options?: SelectOption[];
-  status?: MenuToggleStatus;
-  placeholder?: string;
   isDisabled?: boolean;
+  options?: SelectOption[];
+  placeholder?: string;
+  status?: MenuToggleStatus;
   testId?: string;
+  value: string | undefined;
 };
 
 /**
@@ -72,36 +72,10 @@ const Select = (
 
   return (
     <PfSelect
-      isScrollable
-      shouldFocusToggleOnSelect
+      className={className}
       id={id}
       isOpen={isOpen}
-      selected={value}
-      className={className}
-      toggle={(pfToggleRef: MutableRefObject<HTMLButtonElement>) => (
-        <MenuToggle
-          isFullWidth
-          ref={(element: HTMLButtonElement) => {
-            if (pfToggleRef) {
-              pfToggleRef.current = element;
-            }
-
-            toggleRef.current = element;
-          }}
-          data-testid={testId}
-          isDisabled={isDisabled}
-          isExpanded={isOpen}
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-          aria-label="Select menu toggle"
-          status={status}
-        >
-          {selectedOption?.label?.trim()
-            ? selectedOption.label
-            : (placeholder ?? t('Select an option'))}
-        </MenuToggle>
-      )}
+      isScrollable
       onOpenChange={(changedIsOpen) => {
         setIsOpen(changedIsOpen);
       }}
@@ -109,15 +83,41 @@ const Select = (
         onSelect?.(event, selectedValue);
         setIsOpen(false);
       }}
+      selected={value}
+      shouldFocusToggleOnSelect
+      toggle={(pfToggleRef: MutableRefObject<HTMLButtonElement>) => (
+        <MenuToggle
+          aria-label="Select menu toggle"
+          data-testid={testId}
+          isDisabled={isDisabled}
+          isExpanded={isOpen}
+          isFullWidth
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
+          ref={(element: HTMLButtonElement) => {
+            if (pfToggleRef) {
+              pfToggleRef.current = element;
+            }
+
+            toggleRef.current = element;
+          }}
+          status={status}
+        >
+          {selectedOption?.label?.trim()
+            ? selectedOption.label
+            : (placeholder ?? t('Select an option'))}
+        </MenuToggle>
+      )}
     >
       {children ?? (
         <SelectList>
           {(options ?? []).map((option) => (
             <PfSelectOption
+              description={option.description}
+              isDisabled={option.disabled}
               key={option.key ?? option.value}
               value={option.value}
-              isDisabled={option.disabled}
-              description={option.description}
             >
               {option.label}
             </PfSelectOption>

@@ -29,9 +29,9 @@ const Ec2DetailsSection: FC<DetailsSectionProps> = ({ data }) => {
       <NameDetailsItem resource={provider} />
       <NamespaceDetailsItem resource={provider} />
       <URLDetailsItem
-        resource={provider}
         canPatch={permissions.canPatch}
         helpContent={t('EC2 API endpoint URL derived from the selected AWS region')}
+        resource={provider}
       />
       <CreatedAtDetailsItem resource={provider} />
       <OwnerDetailsItem resource={provider} />
