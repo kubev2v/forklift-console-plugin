@@ -70,10 +70,10 @@ export VSPHERE_PROVIDER=${VSPHERE_PROVIDER}
 # Only export when non-empty so Playwright global.setup can auto-detect from the
 # cluster. `export VAR=${VAR}` with VAR unset exports an empty string, which the
 # suite treats as user-set and disables version auto-detect / gating.
-if [ -n "${FORKLIFT_VERSION:-}" ]; then
+if [[ -n "${FORKLIFT_VERSION:-}" ]]; then
   export FORKLIFT_VERSION
 fi
-if [ -n "${CNV_VERSION:-}" ]; then
+if [[ -n "${CNV_VERSION:-}" ]]; then
   export CNV_VERSION
 fi
 
