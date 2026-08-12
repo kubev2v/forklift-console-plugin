@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
 
@@ -14,6 +14,8 @@ import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import { StorageMapFieldId } from '@utils/storage/types';
+
+const OPAQUE_SECRET_TYPE = 'Opaque';
 
 type StorageSecretFieldProps = {
   fieldId: string;
@@ -33,6 +35,11 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
     namespace: getNamespace(sourceProvider),
     namespaced: true,
   });
+
+  const opaqueSecrets = useMemo(
+    () => (secrets ?? []).filter((secret) => secret.type === OPAQUE_SECRET_TYPE),
+    [secrets],
+  );
 
   return (
     <FormGroup
@@ -71,12 +78,12 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
             value={field.value}
           >
             <SelectList>
-              {isEmpty(secrets) ? (
+              {isEmpty(opaqueSecrets) ? (
                 <SelectOption isDisabled key="empty">
                   {t('No secrets available for this provider')}
                 </SelectOption>
               ) : (
-                secrets.map((secret) => {
+                opaqueSecrets.map((secret) => {
                   const secretName = getName(secret);
 
                   return (
