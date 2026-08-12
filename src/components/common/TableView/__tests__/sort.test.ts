@@ -93,7 +93,7 @@ describe('buildSort factory', () => {
     expect(columnIndex).toBe(0);
     expect(sortBy).toStrictEqual({ direction: 'asc', index: 0 });
     onSort?.({} as React.MouseEvent, 1, SortByDirection.asc, {});
-    expect(setActiveSort).toBeCalledWith({
+    expect(setActiveSort).toHaveBeenCalledWith({
       isAsc: true,
       label: NamespaceColumn.label,
       resourceFieldId: NAMESPACE,
@@ -116,7 +116,7 @@ describe('buildSort factory', () => {
     expect(columnIndex).toBe(1);
     expect(sortBy).toStrictEqual({ direction: 'desc', index: 0 });
     onSort?.({} as React.MouseEvent, 1, SortByDirection.desc, {});
-    expect(setActiveSort).toBeCalledWith({
+    expect(setActiveSort).toHaveBeenCalledWith({
       isAsc: false,
       label: NamespaceColumn.label,
       resourceFieldId: NAMESPACE,
@@ -153,6 +153,6 @@ describe('buildSort factory', () => {
         setActiveSort,
       }) ?? {};
     onSort?.({} as React.MouseEvent, 100, SortByDirection.desc, {});
-    expect(setActiveSort).toBeCalledTimes(0);
+    expect(setActiveSort).toHaveBeenCalledTimes(0);
   });
 });
