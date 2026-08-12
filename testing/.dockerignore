@@ -8,6 +8,16 @@ e2e*.env
 playwright/.env-relay.json
 playwright/.auth/
 
+# Local-only / experimental specs (often listed in developers' .git/info/exclude).
+# Without these entries, `podman build … ./testing` COPY-bakes them into CI images
+# and Jenkins --grep=@downstream may run them (e.g. plan-cutover-asap on #391).
+**/plan-cutover-asap.spec.ts
+**/warm-migration-example.spec.ts
+**/plan-deep-inspection-seed.spec.ts
+**/seed-*.spec.ts
+**/temp-log-providers.spec.ts
+**/testdocs.txt
+
 # Test artifacts
 playwright-report/
 test-results/
