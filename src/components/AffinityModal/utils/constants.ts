@@ -1,5 +1,4 @@
-import { Operator, type TableColumn } from '@openshift-console/dynamic-plugin-sdk';
-import { sortable } from '@patternfly/react-table';
+import { Operator } from '@openshift-console/dynamic-plugin-sdk';
 import { t } from '@utils/i18n';
 
 import { AffinityCondition, type AffinityRowData, AffinityType } from './types';
@@ -32,39 +31,6 @@ export const AFFINITY_TYPE_LABELS = {
 export const AFFINITY_CONDITION_LABELS = {
   [AffinityCondition.Preferred]: t('Preferred during scheduling'),
   [AffinityCondition.Required]: t('Required during scheduling'),
-};
-
-export const affinityColumns = () => {
-  const columns: TableColumn<AffinityRowData>[] = [
-    {
-      id: 'type',
-      sort: 'type',
-      title: t('Type'),
-      transforms: [sortable],
-    },
-    {
-      id: 'condition',
-      sort: 'condition',
-      title: t('Condition'),
-      transforms: [sortable],
-    },
-    {
-      id: 'weight',
-      sort: 'weight',
-      title: t('Weight'),
-      transforms: [sortable],
-    },
-    {
-      id: 'terms',
-      title: t('Terms'),
-    },
-    {
-      id: '',
-      props: { className: 'dropdown-kebab-pf pf-v6-c-table__action' },
-      title: '',
-    },
-  ];
-  return columns;
 };
 
 export const operatorSelectOptions = [

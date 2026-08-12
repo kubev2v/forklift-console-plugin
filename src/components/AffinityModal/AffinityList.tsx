@@ -1,13 +1,13 @@
 import type { FC } from 'react';
 
-import { VirtualizedTable } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
+import { Table, Tbody, Th, Thead, Tr } from '@patternfly/react-table';
+import { useForkliftTranslation } from '@utils/i18n';
 
-import { affinityColumns } from './utils/constants';
 import type { AffinityRowData } from './utils/types';
 import AddAffinityRuleButton from './AddAffinityRuleButton';
 import AffinityDescriptionText from './AffinityDescriptionText';
-import AffinityRow, { type AffinityRowDataProps } from './AffinityRow';
+import AffinityRow from './AffinityRow';
 
 type AffinityListProps = {
   affinities: AffinityRowData[];
@@ -22,22 +22,35 @@ const AffinityList: FC<AffinityListProps> = ({
   onDelete,
   onEdit,
 }) => {
-  const columns = affinityColumns();
+  const { t } = useForkliftTranslation();
+
   return (
     <Stack hasGutter>
       <StackItem>
         <AffinityDescriptionText />
       </StackItem>
       <StackItem data-testid="affinity-rules-list">
-        <VirtualizedTable<AffinityRowData, AffinityRowDataProps>
-          columns={columns}
-          data={affinities ?? []}
-          loaded
-          loadError={false}
-          Row={AffinityRow}
-          rowData={{ onDelete, onEdit }}
-          unfilteredData={affinities || []}
-        />
+        <Table aria-label={t('Affinity rules')} variant="compact">
+          <Thead>
+            <Tr>
+              <Th>{t('Type')}</Th>
+              <Th>{t('Condition')}</Th>
+              <Th>{t('Weight')}</Th>
+              <Th>{t('Terms')}</Th>
+              <Th className="pf-v6-c-table__action" />
+            </Tr>
+          </Thead>
+          <Tbody>
+            {(affinities ?? []).map((affinity) => (
+              <AffinityRow
+                affinity={affinity}
+                key={affinity.id}
+                onDelete={onDelete}
+                onEdit={onEdit}
+              />
+            ))}
+          </Tbody>
+        </Table>
       </StackItem>
       <StackItem>
         <AddAffinityRuleButton isLinkButton onAffinityClickAdd={onAffinityClickAdd} />
@@ -45,4 +58,5 @@ const AffinityList: FC<AffinityListProps> = ({
     </Stack>
   );
 };
+
 export default AffinityList;

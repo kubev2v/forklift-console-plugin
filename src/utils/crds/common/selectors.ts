@@ -15,8 +15,6 @@ export const getLabels = (resource: K8sResourceCommon) => resource?.metadata?.la
 export const getOwnerReference = (resource: K8sResourceCommon) =>
   resource?.metadata?.ownerReferences?.[0];
 
-export const getKind = (resource: K8sResourceCommon) => resource?.kind;
-
 const getSettings = (provider: V1beta1Provider) => provider?.spec?.settings;
 
 export const getVddkInitImage = (provider: V1beta1Provider) => getSettings(provider)?.vddkInitImage;
