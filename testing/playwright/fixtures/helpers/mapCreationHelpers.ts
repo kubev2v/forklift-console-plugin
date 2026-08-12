@@ -53,6 +53,35 @@ export const createTestNad = async (
   };
 };
 
+const E2E_PLAN_NAD_COUNT = 3;
+const E2E_PLAN_NAD_PREFIX = 'e2e-plan-nad';
+
+/**
+ * Multi-NIC source networks hide Default/Ignore targets and require distinct NADs
+ * in the plan target namespace. Creates a fixed set when missing so plan-wizard
+ * network map steps can complete on empty target projects.
+ */
+export const ensurePlanTargetNads = async (
+  resourceManager: ResourceManager,
+  namespace: string,
+  count = E2E_PLAN_NAD_COUNT,
+): Promise<string[]> => {
+  const createdNames: string[] = [];
+
+  for (let index = 0; index < count; index += 1) {
+    const name = `${E2E_PLAN_NAD_PREFIX}-${index}`;
+    try {
+      await createTestNad(resourceManager, { name, namespace });
+    } catch {
+      // Already present from a prior run or parallel setup — still track for cleanup.
+      resourceManager.addNad(name, namespace);
+    }
+    createdNames.push(name);
+  }
+
+  return createdNames;
+};
+
 // Network Map types and creation
 export type TestNetworkMap = {
   mappings: Mapping[];

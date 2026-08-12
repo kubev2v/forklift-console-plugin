@@ -1,5 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
+import { ensurePlanTargetNads } from '../../../fixtures/helpers/mapCreationHelpers';
 import type { PlanTestData, TargetProject } from '../../../types/test-data';
 import type { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
 import { V2_11_0, V2_12_0 } from '../../../utils/version/constants';
@@ -118,6 +119,7 @@ export class GeneralInformationStep {
 
       if (this.resourceManager) {
         this.resourceManager.addProject(targetProject.name, true);
+        await ensurePlanTargetNads(this.resourceManager, targetProject.name);
       }
     }
   }
