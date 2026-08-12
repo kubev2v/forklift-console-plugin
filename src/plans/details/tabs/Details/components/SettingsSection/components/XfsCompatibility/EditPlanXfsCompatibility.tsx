@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Checkbox } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -9,12 +9,17 @@ import type { EditPlanProps } from '../../utils/types';
 
 import { getPlanXfsCompatibility, onConfirmXfsCompatibility } from './utils/utils';
 
-const EditPlanXfsCompatibility: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
+const EditPlanXfsCompatibility: OverlayComponent<EditPlanProps> = ({
+  closeOverlay,
+  resource,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<boolean>(Boolean(getPlanXfsCompatibility(resource)));
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       description={t(
         'XFS v4 and BTRFS support are mutually exclusive. Enable for XFS v4 filesystems; leave disabled for BTRFS.',
       )}

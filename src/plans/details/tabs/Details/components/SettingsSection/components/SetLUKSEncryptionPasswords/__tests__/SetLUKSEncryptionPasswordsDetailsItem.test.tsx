@@ -17,7 +17,7 @@ const mockShowModal = jest.fn();
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   getGroupVersionKindForModel: jest.fn(),
   ResourceLink: ({ name }: { name: string }) => <span data-testid="resource-link">{name}</span>,
-  useModal: jest.fn(() => mockShowModal),
+  useOverlay: jest.fn(() => mockShowModal),
 }));
 
 jest.mock('../EditLUKSEncryptionPasswords', () => ({ resource }: { resource: V1beta1Plan }) => (

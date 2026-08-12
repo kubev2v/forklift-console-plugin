@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Checkbox } from '@patternfly/react-core';
 import { getPlanPreserveIP } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -11,12 +11,17 @@ import type { EditPlanProps } from '../../utils/types';
 
 import { onConfirmPreserveStaticIPs } from './utils/utils';
 
-const EditPlanPreserveStaticIPs: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
+const EditPlanPreserveStaticIPs: OverlayComponent<EditPlanProps> = ({
+  closeOverlay,
+  resource,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<boolean>(Boolean(getPlanPreserveIP(resource)));
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       description={t('Use when VMs have static IPs that must remain unchanged after migration.')}
       headerHelp={
         <HelpIconPopover header={t('Preserve static IPs')}>

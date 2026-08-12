@@ -4,7 +4,7 @@ import { getTargetPowerStateLabel } from 'src/plans/constants';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 import { getPlanTargetPowerState } from '@utils/crds/plans/selectors';
 
@@ -15,7 +15,7 @@ import EditTargetPowerState from './EditTargetPowerState';
 
 const TargetPowerStateDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   return (
     <DetailsItem
@@ -30,7 +30,7 @@ const TargetPowerStateDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, p
         `Choose what state you'd like all of the VMs in your plan to be powered to after migration. You can change this setting for specific VMs in the Virtual machines tab.`,
       )}
       onEdit={() => {
-        launcher<EditPlanProps>(EditTargetPowerState, { resource: plan });
+        launchOverlay<EditPlanProps>(EditTargetPowerState, { resource: plan });
       }}
       testId="target-vm-power-state-detail-item"
       title={t('VM target power state')}

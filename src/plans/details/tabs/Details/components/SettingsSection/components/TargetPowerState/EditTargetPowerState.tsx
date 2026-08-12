@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, Stack } from '@patternfly/react-core';
 import { getPlanTargetPowerState } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -13,7 +13,11 @@ import type { EditPlanProps } from '../../utils/types';
 import { onConfirmTargetPowerState } from './utils/utils';
 import TargetPowerStateDropdown from './TargetPowerStateDropdown';
 
-const EditTargetPowerState: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
+const EditTargetPowerState: OverlayComponent<EditPlanProps> = ({
+  closeOverlay,
+  resource,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<TargetPowerStateValue>(
     getPlanTargetPowerState(resource) ?? TargetPowerStates.AUTO,
@@ -21,6 +25,7 @@ const EditTargetPowerState: ModalComponent<EditPlanProps> = ({ resource, ...rest
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       confirmLabel={t('Save target power state')}
       isDisabled={value === getPlanTargetPowerState(resource)}
       onConfirm={async () => onConfirmTargetPowerState({ newValue: value, resource })}

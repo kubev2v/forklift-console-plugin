@@ -1,6 +1,6 @@
 import LUKSSecretSelect from '@components/LUKSSecretSelect/LUKSSecretSelect';
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Checkbox, Flex, FlexItem, FormGroup, Radio, Stack } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -15,7 +15,11 @@ import {
 } from './hooks/useEditLUKSState';
 import LUKSPassphraseInputList from './LUKSPassphraseInputList';
 
-const EditLUKSEncryptionPasswords: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
+const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
+  closeOverlay,
+  resource,
+  ...rest
+}) => {
   const { t } = useForkliftTranslation();
 
   const {
@@ -35,6 +39,7 @@ const EditLUKSEncryptionPasswords: ModalComponent<EditPlanProps> = ({ resource, 
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       isDisabled={isDisabled}
       onConfirm={handleConfirm}
       testId="edit-disk-decryption-modal"
