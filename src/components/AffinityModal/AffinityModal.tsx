@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { K8sIoApiCoreV1Affinity, K8sResourceCommon } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ModalVariant } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -22,7 +22,8 @@ export type AffinityModalProps = {
   title?: string;
 };
 
-const AffinityModal: ModalComponent<AffinityModalProps> = ({
+const AffinityModal: OverlayComponent<AffinityModalProps> = ({
+  closeOverlay,
   initialAffinity,
   onConfirm,
   title,
@@ -89,15 +90,16 @@ const AffinityModal: ModalComponent<AffinityModalProps> = ({
 
   return isEditing ? (
     <AffinityEditModal
+      closeOverlay={closeOverlay}
       focusedAffinity={focusedAffinity}
       onCancel={onCancel}
       onSubmit={onSaveAffinity}
       setFocusedAffinity={setFocusedAffinity}
       title={isCreating ? t('Add affinity rule') : t('Edit affinity rule')}
-      {...rest}
     />
   ) : (
     <ModalForm
+      closeModal={closeOverlay}
       confirmLabel={t('Apply rules')}
       onConfirm={async () => onConfirm(rowsDataToAffinity(affinities) ?? {})}
       testId="affinity-modal"

@@ -3,7 +3,7 @@ import { type ReactNode, useState } from 'react';
 import Select from '@components/common/Select';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Plan } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, FormGroup, SelectList, SelectOption, TextInput } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
@@ -25,9 +25,10 @@ type EditNameTemplateProps = {
   value: string | undefined;
 };
 
-const EditNameTemplate: ModalComponent<EditNameTemplateProps> = ({
+const EditNameTemplate: OverlayComponent<EditNameTemplateProps> = ({
   allowInherit = true,
   body,
+  closeOverlay,
   fieldName,
   helperText,
   inheritValue,
@@ -43,6 +44,7 @@ const EditNameTemplate: ModalComponent<EditNameTemplateProps> = ({
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       isDisabled={
         selected === NameTemplateOptions.CustomNameTemplate &&
         (inputValue === value || isEmpty(inputValue.trim()))

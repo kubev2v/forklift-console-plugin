@@ -4,7 +4,7 @@ import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Alert, AlertVariant, Radio, Stack, StackItem } from '@patternfly/react-core';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
@@ -23,7 +23,8 @@ export type EditVmMigrateSharedDisksProps = EditPlanProps & {
   index: number;
 };
 
-const EditVmMigrateSharedDisks: ModalComponent<EditVmMigrateSharedDisksProps> = ({
+const EditVmMigrateSharedDisks: OverlayComponent<EditVmMigrateSharedDisksProps> = ({
+  closeOverlay,
   index,
   resource,
   ...rest
@@ -52,6 +53,7 @@ const EditVmMigrateSharedDisks: ModalComponent<EditVmMigrateSharedDisksProps> = 
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       confirmLabel={t('Save shared disks setting')}
       description={t(
         'Choose whether to migrate shared disks for {{vmName}}. Changing this will override the plan wide setting for only this VM.',

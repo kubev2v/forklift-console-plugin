@@ -2,7 +2,7 @@ import { type ReactNode, useMemo, useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -21,7 +21,8 @@ export type NodeSelectorModalProps = {
   title?: string;
 };
 
-const NodeSelectorModal: ModalComponent<NodeSelectorModalProps> = ({
+const NodeSelectorModal: OverlayComponent<NodeSelectorModalProps> = ({
+  closeOverlay,
   description,
   initialLabels,
   onConfirm,
@@ -58,6 +59,7 @@ const NodeSelectorModal: ModalComponent<NodeSelectorModalProps> = ({
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       isDisabled={isNotValid}
       onConfirm={async () => onConfirm(labelsArrayToObject(labels))}
       testId="node-selector-modal"

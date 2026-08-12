@@ -6,7 +6,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import AffinityModal, { type AffinityModalProps } from '@components/AffinityModal/AffinityModal';
 import AffinityViewDetailsItemContent from '@components/AffinityViewDetailsItemContent/AffinityViewDetailsItemContent';
 import type { K8sIoApiCoreV1Affinity, V1beta1Plan } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DOC_MAIN_HELP_LINK } from '@utils/links';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
@@ -14,7 +14,7 @@ import { patchPlanSpec } from '../../utils/patchPlanSpec';
 
 const TargetAffinityDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const TARGET_AFFINITY_DETAILS_ITEM_DESCRIPTION = t(
     `Specify affinity rules that will be applied after migration to all target virtual machines of the migration plan.
@@ -39,7 +39,7 @@ const TargetAffinityDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, pla
       helpContent={TARGET_AFFINITY_DETAILS_ITEM_DESCRIPTION}
       moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
-        launcher<AffinityModalProps>(AffinityModal, {
+        launchOverlay<AffinityModalProps>(AffinityModal, {
           initialAffinity,
           onConfirm,
           title: t('Edit VM target affinity rules'),

@@ -1,5 +1,5 @@
 import type { V1beta1Plan } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import NameTemplateBody from '../EditNameTemplate/components/NameTemplateBody';
@@ -18,8 +18,9 @@ export type EditPVCNameTemplateProps = {
   value?: string;
 };
 
-const EditPVCNameTemplate: ModalComponent<EditPVCNameTemplateProps> = ({
+const EditPVCNameTemplate: OverlayComponent<EditPVCNameTemplateProps> = ({
   allowInherit = true,
+  closeOverlay,
   onConfirmPVCNameTemplate,
   resource,
   value,
@@ -38,6 +39,7 @@ const EditPVCNameTemplate: ModalComponent<EditPVCNameTemplateProps> = ({
           )}
         />
       }
+      closeOverlay={closeOverlay}
       fieldName={allowInherit ? t('VM PVC name template') : t('Plan PVC name template')}
       helperText={<NameTemplateHelper examples={pvcNameTemplateHelperExamples} />}
       inheritValue={resource?.spec?.pvcNameTemplate}

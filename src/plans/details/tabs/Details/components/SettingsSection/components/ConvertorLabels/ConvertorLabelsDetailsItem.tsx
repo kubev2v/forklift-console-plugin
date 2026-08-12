@@ -5,7 +5,7 @@ import { DetailsItem } from '@components/DetailItems/DetailItem';
 import LabelsModal, { type LabelsModalProps } from '@components/LabelsModal/LabelsModal';
 import LabelsViewDetailsItemContent from '@components/LabelsViewDetailsItemContent/LabelsViewDetailsItemContent';
 import type { V1beta1Plan } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 import { DOC_MAIN_HELP_LINK } from '@utils/links';
@@ -19,7 +19,7 @@ const ConvertorLabelsDetailsItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   if (!shouldRender) {
     return null;
@@ -45,7 +45,7 @@ const ConvertorLabelsDetailsItem: FC<EditableDetailsItemProps> = ({
       helpContent={description}
       moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
-        launcher<LabelsModalProps>(LabelsModal, {
+        launchOverlay<LabelsModalProps>(LabelsModal, {
           description: (
             <ForkliftTrans>
               <Stack hasGutter>

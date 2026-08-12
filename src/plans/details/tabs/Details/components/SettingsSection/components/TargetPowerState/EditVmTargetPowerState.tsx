@@ -3,7 +3,7 @@ import { getVmTargetPowerState } from 'src/plans/details/components/PlanStatus/u
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, Stack } from '@patternfly/react-core';
 import { getPlanTargetPowerState, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -18,7 +18,8 @@ export type EditVmTargetPowerStateProps = EditPlanProps & {
   index: number;
 };
 
-const EditVmTargetPowerState: ModalComponent<EditVmTargetPowerStateProps> = ({
+const EditVmTargetPowerState: OverlayComponent<EditVmTargetPowerStateProps> = ({
+  closeOverlay,
   index,
   resource,
   ...rest
@@ -30,6 +31,7 @@ const EditVmTargetPowerState: ModalComponent<EditVmTargetPowerStateProps> = ({
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       confirmLabel={t('Save target power state')}
       isDisabled={value === getVmTargetPowerState(vm)}
       onConfirm={async () => onConfirmVmTargetPowerState(index)({ newValue: value, resource })}

@@ -3,7 +3,7 @@ import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
@@ -19,7 +19,7 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   if (!shouldRender) {
     return null;
@@ -37,7 +37,7 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
       content={content}
       crumbs={['spec', 'networkNameTemplate']}
       onEdit={() => {
-        launcher<EditNetworkNameTemplateProps>(EditNetworkNameTemplate, {
+        launchOverlay<EditNetworkNameTemplateProps>(EditNetworkNameTemplate, {
           allowInherit: false,
           onConfirmNetworkNameTemplate: onConfirmPlanNetworkNameTemplate,
           resource: plan,
