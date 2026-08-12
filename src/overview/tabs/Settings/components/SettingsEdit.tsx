@@ -3,7 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import ModalForm from '@components/ModalForm/ModalForm';
 import { ForkliftControllerModel, type V1beta1ForkliftController } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ButtonVariant, Form, ModalVariant } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -29,7 +29,7 @@ import EditSnapshotPoolingInterval from './SnapshotPoolingInterval/EditSnapshotP
 import EditVirtV2vMemsize from './VirtV2vMemsize/EditVirtV2vMemsize';
 import EditVirtV2vSmp from './VirtV2vSmp/EditVirtV2vSmp';
 
-const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controller }) => {
+const SettingsEdit: OverlayComponent<SettingsEditProps> = ({ closeOverlay, controller }) => {
   const { t } = useForkliftTranslation();
 
   const methods = useForm<ForkliftSettingsValues>({
@@ -44,7 +44,7 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
 
   const onSubmit = async (formData: ForkliftSettingsValues) => {
     if (!isDirty) {
-      closeModal();
+      closeOverlay();
       return;
     }
 
@@ -73,7 +73,7 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
           },
           variant: ButtonVariant.secondary,
         }}
-        closeModal={closeModal}
+        closeModal={closeOverlay}
         isDisabled={!isDirty}
         onConfirm={handleSubmit(onSubmit)}
         testId="settings-edit-modal"

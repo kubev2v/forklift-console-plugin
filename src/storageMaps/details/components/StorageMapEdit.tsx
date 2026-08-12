@@ -8,7 +8,7 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { StorageMapModel, type V1beta1Provider, type V1beta1StorageMap } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ModalVariant } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
@@ -28,8 +28,8 @@ export type StorageMapEditProps = {
   storageMap: V1beta1StorageMap;
 };
 
-const StorageMapEdit: ModalComponent<StorageMapEditProps> = ({
-  closeModal,
+const StorageMapEdit: OverlayComponent<StorageMapEditProps> = ({
+  closeOverlay,
   destinationProvider,
   sourceProvider,
   storageMap,
@@ -112,7 +112,7 @@ const StorageMapEdit: ModalComponent<StorageMapEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeModal}
+        closeModal={closeOverlay}
         isDisabled={!isValid || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         testId="edit-storage-map-modal"

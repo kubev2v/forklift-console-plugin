@@ -14,7 +14,7 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { NetworkMapModel } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ModalVariant } from '@patternfly/react-core';
 import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { isEmpty } from '@utils/helpers';
@@ -24,8 +24,8 @@ import { defaultNetMapping } from '@utils/mappings/networkMap';
 import { PlanOwnerAlert } from './utils/PlanOwnerAlert';
 import type { NetworkEditFormValues, NetworkMapEditProps } from './utils/types';
 
-const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
-  closeModal,
+const NetworkMapEdit: OverlayComponent<NetworkMapEditProps> = ({
+  closeOverlay,
   destinationProvider,
   initialMappings,
   networkMap,
@@ -69,7 +69,7 @@ const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
 
   const onSubmit = async (formData: NetworkEditFormValues) => {
     if (!isDirty) {
-      closeModal();
+      closeOverlay();
       return;
     }
 
@@ -91,7 +91,7 @@ const NetworkMapEdit: ModalComponent<NetworkMapEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeModal}
+        closeModal={closeOverlay}
         isDisabled={!isValid || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         testId="edit-network-map-modal"

@@ -18,7 +18,7 @@ import {
   type V1beta1Provider,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource, useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 import {
   getMapDestinationProviderName,
@@ -37,7 +37,7 @@ type StorageMapDetailsTabProps = {
 
 export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const [storageMap, storageMapLoaded, storageMapLoadError] =
     useK8sWatchResource<V1beta1StorageMap>({
@@ -77,7 +77,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
       <PageSection className="forklift-page-section" hasBodyWrapper={false}>
         <SectionHeadingWithEdit
           onClick={() => {
-            launcher<MapProvidersEditProps>(MapProvidersEdit, {
+            launchOverlay<MapProvidersEditProps>(MapProvidersEdit, {
               destinationProvider,
               model: StorageMapModel,
               namespace,
@@ -94,7 +94,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
         <SectionHeadingWithEdit
           data-testid="storage-map-edit-button"
           onClick={() => {
-            launcher<StorageMapEditProps>(StorageMapEdit, {
+            launchOverlay<StorageMapEditProps>(StorageMapEdit, {
               destinationProvider,
               sourceProvider,
               storageMap,

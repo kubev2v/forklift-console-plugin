@@ -5,7 +5,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { DetailsItem } from '@components/DetailItems/DetailItem';
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
 import { ForkliftControllerModel, type V1beta1ForkliftController } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionList } from '@patternfly/react-core';
 
 import {
@@ -39,7 +39,7 @@ type SettingsCardProps = {
 
 const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const { canPatch } = useGetDeleteAndEditAccessReview({
     model: ForkliftControllerModel,
@@ -61,7 +61,7 @@ const SettingsCard: FC<SettingsCardProps> = ({ obj }) => {
         editable={canPatch}
         headingLevel="h3"
         onClick={() => {
-          launcher<SettingsEditProps>(SettingsEdit, { controller });
+          launchOverlay<SettingsEditProps>(SettingsEdit, { controller });
         }}
         title={t('Settings')}
       />

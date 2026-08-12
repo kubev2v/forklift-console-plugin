@@ -9,7 +9,7 @@ import CreateProjectModal, {
 import {
   type K8sResourceCommon,
   useAccessReview,
-  useModal,
+  useOverlay,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { ProjectModel } from '@openshift-console/dynamic-plugin-sdk/lib/models';
 import { Bullseye, Button, ButtonVariant, Divider, Spinner, Switch } from '@patternfly/react-core';
@@ -40,7 +40,7 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
   value,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [canCreate, loadingCreate] = useAccessReview({
     group: ProjectModel.apiGroup,
@@ -72,7 +72,7 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
   };
 
   const onNewProject = () => {
-    launcher<CreateProjectModalProps>(CreateProjectModal, { onCreated: onProjectCreated });
+    launchOverlay<CreateProjectModalProps>(CreateProjectModal, { onCreated: onProjectCreated });
   };
 
   return (
