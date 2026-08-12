@@ -9,7 +9,12 @@ import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem, Pagination, Tooltip } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { PodModelGroupVersionKind } from '@utils/crds/common/models';
-import { getName, getNamespace, getOwnerReference } from '@utils/crds/common/selectors';
+import {
+  getGroupVersionKindFromOwnerReference,
+  getName,
+  getNamespace,
+  getOwnerReference,
+} from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
 
@@ -93,10 +98,6 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
         <Tbody>
           {paginatedPods.map((pod) => {
             const ownerReference = getOwnerReference(pod);
-            const ownerApiVersion = ownerReference?.apiVersion ?? '';
-            const [ownerGroup, ownerVersion] = ownerApiVersion.includes('/')
-              ? ownerApiVersion.split('/')
-              : [undefined, ownerApiVersion];
 
             return (
               <Tr key={pod?.metadata?.uid}>
@@ -111,11 +112,7 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
                   <Td modifier="fitContent">
                     {ownerReference ? (
                       <ResourceLink
-                        groupVersionKind={{
-                          group: ownerGroup,
-                          kind: ownerReference.kind,
-                          version: ownerVersion,
-                        }}
+                        groupVersionKind={getGroupVersionKindFromOwnerReference(ownerReference)}
                         name={ownerReference.name}
                         namespace={getNamespace(pod)}
                       />

@@ -73,7 +73,7 @@ const SettingsEdit: OverlayComponent<SettingsEditProps> = ({ closeOverlay, contr
           },
           variant: ButtonVariant.secondary,
         }}
-        closeModal={closeOverlay}
+        closeOverlay={closeOverlay}
         isDisabled={!isDirty}
         onConfirm={handleSubmit(onSubmit)}
         testId="settings-edit-modal"

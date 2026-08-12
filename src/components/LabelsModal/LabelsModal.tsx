@@ -111,7 +111,7 @@ const LabelsModal: OverlayComponent<LabelsModalProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       onConfirm={async () => onConfirm(labelsArrayToObject(labels))}
       testId="labels-modal"
       title={title ?? t('Edit labels')}

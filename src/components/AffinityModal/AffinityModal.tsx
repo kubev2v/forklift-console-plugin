@@ -90,7 +90,6 @@ const AffinityModal: OverlayComponent<AffinityModalProps> = ({
 
   return isEditing ? (
     <AffinityEditModal
-      closeOverlay={closeOverlay}
       focusedAffinity={focusedAffinity}
       onCancel={onCancel}
       onSubmit={onSaveAffinity}
@@ -99,7 +98,7 @@ const AffinityModal: OverlayComponent<AffinityModalProps> = ({
     />
   ) : (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Apply rules')}
       onConfirm={async () => onConfirm(rowsDataToAffinity(affinities) ?? {})}
       testId="affinity-modal"

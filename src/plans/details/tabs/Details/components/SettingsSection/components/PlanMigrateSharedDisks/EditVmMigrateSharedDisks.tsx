@@ -53,7 +53,7 @@ const EditVmMigrateSharedDisks: OverlayComponent<EditVmMigrateSharedDisksProps> 
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Save shared disks setting')}
       description={t(
         'Choose whether to migrate shared disks for {{vmName}}. Changing this will override the plan wide setting for only this VM.',

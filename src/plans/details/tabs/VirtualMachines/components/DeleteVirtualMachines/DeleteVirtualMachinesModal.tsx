@@ -34,7 +34,7 @@ const PlanVMsDeleteModal: OverlayComponent<DeleteVirtualMachineProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Delete')}
       confirmVariant={ButtonVariant.danger}
       onConfirm={handleSave}

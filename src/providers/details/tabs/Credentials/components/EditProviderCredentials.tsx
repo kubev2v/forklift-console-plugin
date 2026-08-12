@@ -58,7 +58,7 @@ const EditProviderCredentials: OverlayComponent<EditProviderCredentialsProps> = 
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeOverlay}
+        closeOverlay={closeOverlay}
         isDisabled={!isEmpty(errors) || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         title={t('Edit provider credentials')}

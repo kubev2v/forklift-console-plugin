@@ -21,7 +21,7 @@ const EditPlanPreserveClusterCpuModel: OverlayComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       onConfirm={async () => onConfirmPreserveCpuModel({ newValue: value, resource })}
       title={t('Set to preserve the CPU model')}
       {...rest}

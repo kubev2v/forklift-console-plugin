@@ -55,7 +55,7 @@ const PlanResumeConversionModal: OverlayComponent<PlanResumeConversionModalProps
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Resume')}
       onConfirm={onConfirm}
       title={t('Resume conversion')}

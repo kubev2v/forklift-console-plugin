@@ -135,7 +135,7 @@ const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan, 
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Duplicate')}
       onConfirm={onDuplicate}
       title={t('Duplicate migration plan')}

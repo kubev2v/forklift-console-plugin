@@ -22,7 +22,7 @@ const EditMigrateSharedDisks: OverlayComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       description={t('Choose whether to migrate shared disks with your migration.')}
       headerHelp={
         <HelpIconPopover header={t('Migrate shared disks')}>

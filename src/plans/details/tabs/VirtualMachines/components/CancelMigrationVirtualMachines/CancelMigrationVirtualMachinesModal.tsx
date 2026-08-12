@@ -29,7 +29,7 @@ const CancelMigrationVirtualMachinesModal: OverlayComponent<
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       onConfirm={handleSave}
       title={t('Cancel virtual machines migration?')}
       {...rest}

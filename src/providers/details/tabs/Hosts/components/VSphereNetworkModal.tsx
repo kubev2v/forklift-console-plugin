@@ -70,7 +70,7 @@ const VSphereNetworkModal: OverlayComponent<VSphereNetworkModalProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       isDisabled={shouldDisableSave}
       onConfirm={handleSave}
       title={t('Select migration network')}

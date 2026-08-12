@@ -44,7 +44,7 @@ const EditNameTemplate: OverlayComponent<EditNameTemplateProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       isDisabled={
         selected === NameTemplateOptions.CustomNameTemplate &&
         (inputValue === value || isEmpty(inputValue.trim()))

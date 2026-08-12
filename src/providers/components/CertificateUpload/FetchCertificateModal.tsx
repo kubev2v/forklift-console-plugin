@@ -38,7 +38,7 @@ const FetchCertificateModal: OverlayComponent<FetchCertificateModalProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       isDisabled={!isTrusted}
       onConfirm={onConfirm}
       title={t('Verify certificate')}

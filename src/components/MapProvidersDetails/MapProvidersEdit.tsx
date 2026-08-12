@@ -69,7 +69,7 @@ const MapProvidersEdit: OverlayComponent<MapProvidersEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeOverlay}
+        closeOverlay={closeOverlay}
         isDisabled={!isEmpty(errors) || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         title={t('Edit providers')}

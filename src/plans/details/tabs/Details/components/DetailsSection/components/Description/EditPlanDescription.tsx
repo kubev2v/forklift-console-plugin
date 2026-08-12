@@ -20,7 +20,7 @@ const EditPlanDescription: OverlayComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       onConfirm={async () => onConfirmDescription({ newValue: value, resource })}
       title={t('Edit description')}
       {...rest}

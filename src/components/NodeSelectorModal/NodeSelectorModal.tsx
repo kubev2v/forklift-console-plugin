@@ -59,7 +59,7 @@ const NodeSelectorModal: OverlayComponent<NodeSelectorModalProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       isDisabled={isNotValid}
       onConfirm={async () => onConfirm(labelsArrayToObject(labels))}
       testId="node-selector-modal"

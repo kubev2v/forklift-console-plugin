@@ -28,7 +28,7 @@ const EditPlanTargetNamespace: OverlayComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       onConfirm={async () => onConfirmTargetNamespace({ newValue: value, resource })}
       title={t('Edit migration plan target project')}
       {...rest}

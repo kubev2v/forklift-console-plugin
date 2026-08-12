@@ -39,7 +39,7 @@ const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       isDisabled={isDisabled}
       onConfirm={handleConfirm}
       testId="edit-disk-decryption-modal"

@@ -53,7 +53,7 @@ const PlanStorageMapEdit: OverlayComponent<PlanStorageMapEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeOverlay}
+        closeOverlay={closeOverlay}
         isDisabled={!isValid || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         testId="edit-storage-map-modal"

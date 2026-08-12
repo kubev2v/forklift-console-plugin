@@ -87,7 +87,7 @@ const HookEdit: OverlayComponent<HookEditProps> = ({ closeOverlay, hook, plan, s
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeOverlay}
+        closeOverlay={closeOverlay}
         isDisabled={!isEmpty(errors) || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         title={title}

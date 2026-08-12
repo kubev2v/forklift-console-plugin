@@ -204,7 +204,7 @@ Uses `useProviderInventory` with `subPath: 'networkattachmentdefinitions?detail=
 |---|---|
 | **Edit** / **Edit YAML** | Navigates to details page (list) or YAML tab (details) |
 | **Edit provider credentials** | Navigates to `/credentials` tab (hidden for `ova`) |
-| **Delete provider** | Opens `DeleteModal` (shared component) via `useModal` |
+| **Delete provider** | Opens `DeleteModal` (shared component) via `useOverlay` |
 
 ---
 
@@ -300,7 +300,7 @@ OpenShift-only. Patches `forklift.konveyor.io/defaultTransferNetwork` annotation
 
 ### Changing provider actions
 1. Edit `ProviderActionsDropdownItems.tsx` — single file for all action items
-2. If adding a modal action, use `useModal` launcher from Console SDK
+2. If adding a modal action, use `useOverlay` launcher from Console SDK
 
 ### Modifying list columns
 1. Edit `src/providers/list/utils/providerFields.ts` for field definitions

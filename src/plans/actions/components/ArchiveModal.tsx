@@ -31,7 +31,7 @@ const ArchiveModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan, ..
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Archive')}
       confirmVariant={isPlanRunning ? ButtonVariant.danger : ButtonVariant.primary}
       onConfirm={onArchive}

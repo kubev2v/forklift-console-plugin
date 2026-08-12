@@ -51,7 +51,7 @@ const TextInputEditModal: OverlayComponent<TextInputEditModalProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       isDisabled={!isValid || hasError}
       onConfirm={handleConfirm}
       title={title}

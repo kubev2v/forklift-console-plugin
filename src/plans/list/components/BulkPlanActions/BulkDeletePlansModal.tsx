@@ -65,7 +65,7 @@ const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Delete')}
       confirmVariant={ButtonVariant.danger}
       isDisabled={isEmpty(plans)}

@@ -23,7 +23,7 @@ const EditRootDisk: OverlayComponent<EditPlanProps> = ({ closeOverlay, resource,
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       onConfirm={async () => onConfirmRootDisk(resource, value)}
       title={t('Edit root device')}
       {...rest}

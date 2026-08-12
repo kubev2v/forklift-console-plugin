@@ -117,7 +117,7 @@ const InspectVirtualMachinesModal: OverlayComponent<InspectVirtualMachinesModalP
   return (
     <ModalForm
       className="forklift-inspect-vms-modal"
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={confirmLabel}
       isDisabled={isSubmitDisabled}
       label={<TechPreviewLabel />}

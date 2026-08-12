@@ -45,7 +45,7 @@ const PlanStartMigrationModal: OverlayComponent<PlanStartMigrationModalProps> = 
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('{{title}}', { title })}
       isDisabled={!canPlanStart(plan) || Boolean(isMigrationStarted)}
       onConfirm={onStart}

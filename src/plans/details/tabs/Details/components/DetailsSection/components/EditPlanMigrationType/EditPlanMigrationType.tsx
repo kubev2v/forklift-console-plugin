@@ -56,7 +56,7 @@ const EditPlanMigrationType: OverlayComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       description={t('Set the migration type for your migration plan.')}
       onConfirm={async () => onConfirmMigrationType({ newValue: selected, resource })}
       testId="edit-migration-type-modal"

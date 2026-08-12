@@ -36,7 +36,7 @@ const EditVirtualMachineTargetName: OverlayComponent<EditVirtualMachineTargetNam
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       isDisabled={
         Boolean(validateVMTargetName(inputValue, vms ?? [])) ||
         (isEmpty(vm.targetName) && isEmpty(inputValue)) ||

@@ -1,5 +1,9 @@
 import type { V1beta1Provider } from '@forklift-ui/types';
-import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import type {
+  K8sGroupVersionKind,
+  K8sResourceCommon,
+  OwnerReference,
+} from '@openshift-console/dynamic-plugin-sdk';
 
 export const getName = (resource: K8sResourceCommon | undefined) => resource?.metadata?.name;
 
@@ -14,6 +18,21 @@ export const getLabels = (resource: K8sResourceCommon) => resource?.metadata?.la
 
 export const getOwnerReference = (resource: K8sResourceCommon) =>
   resource?.metadata?.ownerReferences?.[0];
+
+export const getGroupVersionKindFromOwnerReference = (
+  ownerReference: OwnerReference,
+): K8sGroupVersionKind => {
+  const apiVersion = ownerReference.apiVersion ?? '';
+  const [group, version] = apiVersion.includes('/')
+    ? apiVersion.split('/')
+    : [undefined, apiVersion];
+
+  return {
+    group,
+    kind: ownerReference.kind,
+    version,
+  };
+};
 
 const getSettings = (provider: V1beta1Provider) => provider?.spec?.settings;
 

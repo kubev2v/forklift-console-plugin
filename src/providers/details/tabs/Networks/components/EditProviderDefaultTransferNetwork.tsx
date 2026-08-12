@@ -29,7 +29,7 @@ const EditProviderDefaultTransferNetwork: OverlayComponent<
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       onConfirm={async () => onConfirmProviderDefaultTransferNetwork({ resource, value })}
       title={t('Set default Transfer Network')}
       {...rest}

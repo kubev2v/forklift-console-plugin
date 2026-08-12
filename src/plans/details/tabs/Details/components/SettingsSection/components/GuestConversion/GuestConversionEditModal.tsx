@@ -36,7 +36,7 @@ const GuestConversionEditModal: OverlayComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       onConfirm={async () =>
         patchGuestConversion({
           newValue: skipGuestConversion,

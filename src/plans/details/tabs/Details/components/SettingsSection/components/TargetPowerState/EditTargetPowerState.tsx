@@ -25,7 +25,7 @@ const EditTargetPowerState: OverlayComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Save target power state')}
       isDisabled={value === getPlanTargetPowerState(resource)}
       onConfirm={async () => onConfirmTargetPowerState({ newValue: value, resource })}

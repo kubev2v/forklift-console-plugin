@@ -150,12 +150,16 @@ Always use the shared `ModalForm` component (`@components/ModalForm/ModalForm`) 
 - Loading state on confirm button
 - Error display (catches thrown errors automatically)
 - Confirm/Cancel buttons with proper variants
-- `closeModal` on success
+- `closeOverlay` on success
+
+Launch modals with Console SDK `useOverlay` and type them as `OverlayComponent`. Pass `closeOverlay` through to `ModalForm`:
 
 ```typescript
 import ModalForm from '@components/ModalForm/ModalForm';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 
-const MyModal: ModalComponent<MyModalProps> = ({ myData, ...rest }) => {
+const MyModal: OverlayComponent<MyModalProps> = ({ closeOverlay, myData, ...rest }) => {
   const handleConfirm = useCallback(async () => {
     await doSomething(myData);
     // throw new Error('message') on failure -- ModalForm catches and displays it
@@ -163,6 +167,7 @@ const MyModal: ModalComponent<MyModalProps> = ({ myData, ...rest }) => {
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       title={t('My title')}
       onConfirm={handleConfirm}
       confirmLabel={t('Confirm')}
@@ -174,9 +179,14 @@ const MyModal: ModalComponent<MyModalProps> = ({ myData, ...rest }) => {
     </ModalForm>
   );
 };
+
+// Launcher:
+const launchOverlay = useOverlay();
+launchOverlay(MyModal, { myData });
 ```
 
 Do NOT use raw `Modal` + `ModalHeader` + `ModalBody` + `ModalFooter` + manual error/loading state.
+Do NOT use deprecated `useModal` / `ModalComponent`.
 
 ---
 

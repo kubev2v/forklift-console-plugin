@@ -1,6 +1,5 @@
-import { type Dispatch, type SetStateAction, useState } from 'react';
+import { type Dispatch, type FC, type SetStateAction, useState } from 'react';
 
-import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { Modal, ModalBody, ModalFooter, ModalHeader, ModalVariant } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -17,8 +16,7 @@ type AffinityEditModalProps = {
   title: string;
 };
 
-const AffinityEditModal: OverlayComponent<AffinityEditModalProps> = ({
-  closeOverlay,
+const AffinityEditModal: FC<AffinityEditModalProps> = ({
   focusedAffinity,
   onCancel,
   onSubmit,
@@ -35,7 +33,7 @@ const AffinityEditModal: OverlayComponent<AffinityEditModalProps> = ({
       className="ocs-modal co-catalog-page__overlay"
       data-testid="affinity-edit-modal"
       isOpen
-      onClose={closeOverlay}
+      onClose={onCancel}
       position="top"
       variant={ModalVariant.medium}
     >

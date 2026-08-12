@@ -122,7 +122,7 @@ const PlanCutoverMigrationModal: OverlayComponent<PlanModalProps> = ({
   return (
     <ModalForm
       additionalAction={additionalAction}
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Set cutover')}
       isDisabled={isScheduledInvalid}
       onConfirm={onCutover}

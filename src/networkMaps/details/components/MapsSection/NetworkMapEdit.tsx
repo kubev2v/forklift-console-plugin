@@ -91,7 +91,7 @@ const NetworkMapEdit: OverlayComponent<NetworkMapEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeOverlay}
+        closeOverlay={closeOverlay}
         isDisabled={!isValid || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         testId="edit-network-map-modal"

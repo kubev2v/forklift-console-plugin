@@ -36,7 +36,7 @@ const PlanDeleteModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan,
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Delete')}
       confirmVariant={ButtonVariant.danger}
       onConfirm={onDelete}

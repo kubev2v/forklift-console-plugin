@@ -21,7 +21,7 @@ const EditPlanPreserveStaticIPs: OverlayComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       description={t('Use when VMs have static IPs that must remain unchanged after migration.')}
       headerHelp={
         <HelpIconPopover header={t('Preserve static IPs')}>

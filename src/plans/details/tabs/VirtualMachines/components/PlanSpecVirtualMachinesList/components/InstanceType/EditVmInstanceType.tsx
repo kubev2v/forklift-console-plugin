@@ -36,7 +36,7 @@ const EditVmInstanceType: OverlayComponent<EditVmInstanceTypeProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Save instance type')}
       isDisabled={value === vm?.instanceType}
       onConfirm={async () => onConfirmVmInstanceType(index)({ newValue: value, resource })}

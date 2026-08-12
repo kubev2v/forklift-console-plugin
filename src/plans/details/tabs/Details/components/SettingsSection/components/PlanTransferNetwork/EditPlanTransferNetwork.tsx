@@ -27,7 +27,7 @@ const EditPlanTransferNetwork: OverlayComponent<EditPlanProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       onConfirm={async () => onConfirmTransferNetwork({ newValue: value, resource })}
       title={t('Edit migration plan transfer network')}
       {...rest}

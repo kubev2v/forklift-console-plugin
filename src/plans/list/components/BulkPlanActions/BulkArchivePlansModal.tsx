@@ -69,7 +69,7 @@ const BulkArchivePlansModal: OverlayComponent<BulkArchivePlansModalProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Archive')}
       confirmVariant={ButtonVariant.primary}
       isDisabled={isEmpty(plans)}

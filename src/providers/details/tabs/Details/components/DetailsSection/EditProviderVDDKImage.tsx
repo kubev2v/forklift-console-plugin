@@ -46,7 +46,7 @@ const EditProviderVDDKImage: OverlayComponent<EditProviderVDDKImageProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeOverlay}
+        closeOverlay={closeOverlay}
         onConfirm={handleSubmit(onSubmit)}
         title={t('Edit VDDK image')}
       >

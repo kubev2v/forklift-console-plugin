@@ -54,7 +54,7 @@ const AddVirtualMachinesModal: OverlayComponent<AddVirtualMachineProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Add virtual machines')}
       isDisabled={!hasSelection}
       onConfirm={handleSave}

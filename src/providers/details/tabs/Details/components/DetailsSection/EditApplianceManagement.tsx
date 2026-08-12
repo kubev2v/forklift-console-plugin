@@ -31,7 +31,7 @@ const EditApplianceManagement: OverlayComponent<EditApplianceManagementProps> = 
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       onConfirm={onSubmit}
       title={t('Edit appliance management')}
     >

@@ -31,7 +31,7 @@ const EditVmTargetPowerState: OverlayComponent<EditVmTargetPowerStateProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Save target power state')}
       isDisabled={value === getVmTargetPowerState(vm)}
       onConfirm={async () => onConfirmVmTargetPowerState(index)({ newValue: value, resource })}
