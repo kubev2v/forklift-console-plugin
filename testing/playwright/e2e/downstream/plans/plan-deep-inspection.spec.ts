@@ -12,7 +12,7 @@ import {
   isCompletedInspectionStatus,
 } from '../../../utils/inspection-status';
 import { requireVddk } from '../../../utils/requireVddk';
-import { V2_12_0 } from '../../../utils/version/constants';
+import { V2_12_0, V5_0_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 // Deep inspection creates vSphere snapshots — only inspect mtv-func-win2022 here.
@@ -262,46 +262,51 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
     });
   });
 
-  test('should exclude VMs with active inspections from Select All', async ({
-    page,
-    testPlan,
-    testProvider: _testProvider,
-  }) => {
-    const { firstVmName, planDetailsPage, secondVmName } = await setupPlanDetailsPage(
+  // MTV-5569 Select All exclusion shipped on main / MTV 5.0.0+; still broken on 2.12.x.
+  test.describe('Select All excludes active inspections', () => {
+    requireVersion(test, V5_0_0);
+
+    test('should exclude VMs with active inspections from Select All', async ({
       page,
       testPlan,
-    );
-    const activeVmRow = planDetailsPage.virtualMachinesTab.getVmRow(firstVmName);
+      testProvider: _testProvider,
+    }) => {
+      const { firstVmName, planDetailsPage, secondVmName } = await setupPlanDetailsPage(
+        page,
+        testPlan,
+      );
+      const activeVmRow = planDetailsPage.virtualMachinesTab.getVmRow(firstVmName);
 
-    await test.step('ensure first VM has an active inspection', async () => {
-      const status = await planDetailsPage.virtualMachinesTab.getVmInspectionStatus(firstVmName);
-      if (!ACTIVE_STATUSES.test(status)) {
+      await test.step('ensure first VM has an active inspection', async () => {
+        const status = await planDetailsPage.virtualMachinesTab.getVmInspectionStatus(firstVmName);
+        if (!ACTIVE_STATUSES.test(status)) {
+          const inspectModal = await planDetailsPage.openInspectModal();
+          await inspectModal.selectVmByName(firstVmName);
+          await inspectModal.clickInspect();
+        }
+        await expect(activeVmRow.getByText(ACTIVE_STATUSES)).toBeVisible({ timeout: 30_000 });
+      });
+
+      await test.step('Select All includes only eligible VMs', async () => {
         const inspectModal = await planDetailsPage.openInspectModal();
-        await inspectModal.selectVmByName(firstVmName);
-        await inspectModal.clickInspect();
-      }
-      await expect(activeVmRow.getByText(ACTIVE_STATUSES)).toBeVisible({ timeout: 30_000 });
-    });
+        await inspectModal.waitForVmTableLoaded();
 
-    await test.step('Select All includes only eligible VMs', async () => {
-      const inspectModal = await planDetailsPage.openInspectModal();
-      await inspectModal.waitForVmTableLoaded();
+        expect(await inspectModal.getVmRowCount()).toBe(2);
+        expect(await inspectModal.isVmCheckboxDisabled(firstVmName)).toBe(true);
+        expect(await inspectModal.isVmCheckboxDisabled(secondVmName)).toBe(false);
 
-      expect(await inspectModal.getVmRowCount()).toBe(2);
-      expect(await inspectModal.isVmCheckboxDisabled(firstVmName)).toBe(true);
-      expect(await inspectModal.isVmCheckboxDisabled(secondVmName)).toBe(false);
+        await inspectModal.selectAllVms();
 
-      await inspectModal.selectAllVms();
+        const eligibleCount = await inspectModal.getEligibleVmCount();
+        expect(eligibleCount).toBe(1);
+        const buttonText = await inspectModal.getConfirmButtonText();
+        expect(buttonText).toContain(`Inspect ${eligibleCount} VM`);
 
-      const eligibleCount = await inspectModal.getEligibleVmCount();
-      expect(eligibleCount).toBe(1);
-      const buttonText = await inspectModal.getConfirmButtonText();
-      expect(buttonText).toContain(`Inspect ${eligibleCount} VM`);
+        expect(await inspectModal.isVmCheckboxChecked(firstVmName)).toBe(false);
+        expect(await inspectModal.isVmCheckboxChecked(secondVmName)).toBe(true);
 
-      expect(await inspectModal.isVmCheckboxChecked(firstVmName)).toBe(false);
-      expect(await inspectModal.isVmCheckboxChecked(secondVmName)).toBe(true);
-
-      await inspectModal.close();
+        await inspectModal.close();
+      });
     });
   });
 
