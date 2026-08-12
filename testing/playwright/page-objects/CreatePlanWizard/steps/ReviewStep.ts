@@ -269,11 +269,11 @@ export class ReviewStep {
   async verifyStorageMapOffloadDetails(
     mappingIndex: number,
     expectedOffload: {
+      /** Inventory host ID shown in review (form value), not the chip display name. */
+      dedicatedMigrationHost?: string;
       offloadPlugin?: string;
-      storageSecret?: string;
       storageProduct?: string;
-      /** When true, review must show selected host ID(s), not the empty "All hosts" label. */
-      hasDedicatedMigrationHosts?: boolean;
+      storageSecret?: string;
     },
   ): Promise<void> {
     const reviewTable = this.page.getByTestId('storage-map-review-table');
@@ -304,12 +304,12 @@ export class ReviewStep {
       );
     }
 
-    if (expectedOffload.hasDedicatedMigrationHosts) {
+    if (expectedOffload.dedicatedMigrationHost) {
       const dedicatedHosts = this.page.getByTestId(
         `review-dedicated-migration-hosts-${mappingIndex}`,
       );
       await expect(dedicatedHosts).toBeVisible();
-      await expect(dedicatedHosts).not.toHaveText('All hosts');
+      await expect(dedicatedHosts).toContainText(expectedOffload.dedicatedMigrationHost);
     }
   }
 

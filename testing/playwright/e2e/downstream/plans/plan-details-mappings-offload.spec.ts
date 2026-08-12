@@ -92,7 +92,7 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
       await modal.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
       await modal.offload.selectStorageSecret(0, secretName);
       await modal.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
-      dedicatedHostName = await modal.offload.selectFirstDedicatedMigrationHost(0);
+      ({ hostName: dedicatedHostName } = await modal.offload.selectFirstDedicatedMigrationHost(0));
       await modal.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
 
       await modal.verifySaveButtonEnabled();

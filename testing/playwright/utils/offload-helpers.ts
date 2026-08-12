@@ -7,28 +7,72 @@ import type { ResourceManager } from './resource-manager/ResourceManager';
 
 const execFileAsync = promisify(execFile);
 
+const STORAGE_MAP_CRD_QUERY_TIMEOUT_MS = 30_000;
+
+type StorageMapCrdVersion = {
+  schema?: {
+    openAPIV3Schema?: {
+      properties?: {
+        spec?: {
+          properties?: {
+            map?: {
+              items?: {
+                properties?: {
+                  offloadPlugin?: {
+                    properties?: {
+                      vsphereXcopyConfig?: {
+                        properties?: Record<string, unknown>;
+                      };
+                    };
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+  storage?: boolean;
+};
+
+type StorageMapCrd = {
+  spec?: {
+    versions?: StorageMapCrdVersion[];
+  };
+};
+
 /**
  * True when the StorageMap CRD schema includes
  * spec.map[].offloadPlugin.vsphereXcopyConfig.dedicatedMigrationHosts
  * (backend support for MTV-6163). Older MTV builds strip the field on create.
+ *
+ * Uses the CRD version with `storage: true` (falls back to versions[0]).
+ * Throws when the CRD query itself fails so broken cluster context is not
+ * mistaken for an older schema.
  */
 export const storageMapCrdSupportsDedicatedMigrationHosts = async (): Promise<boolean> => {
+  let stdout: string;
   try {
-    const { stdout } = await execFileAsync(
+    ({ stdout } = await execFileAsync(
       'oc',
-      [
-        'get',
-        'crd',
-        'storagemaps.forklift.konveyor.io',
-        '-o',
-        'jsonpath={.spec.versions[0].schema.openAPIV3Schema.properties.spec.properties.map.items.properties.offloadPlugin.properties.vsphereXcopyConfig.properties}',
-      ],
-      { timeout: 30_000 },
-    );
-    return stdout.includes('dedicatedMigrationHosts');
-  } catch {
-    return false;
+      ['get', 'crd', 'storagemaps.forklift.konveyor.io', '-o', 'json'],
+      { timeout: STORAGE_MAP_CRD_QUERY_TIMEOUT_MS },
+    ));
+  } catch (error) {
+    throw new Error('Cannot determine StorageMap CRD support for dedicated migration hosts', {
+      cause: error,
+    });
   }
+
+  const crd = JSON.parse(stdout) as StorageMapCrd;
+  const storedVersion =
+    crd.spec?.versions?.find((version) => version.storage === true) ?? crd.spec?.versions?.[0];
+  const properties =
+    storedVersion?.schema?.openAPIV3Schema?.properties?.spec?.properties?.map?.items?.properties
+      ?.offloadPlugin?.properties?.vsphereXcopyConfig?.properties;
+
+  return Boolean(properties && 'dedicatedMigrationHosts' in properties);
 };
 
 /**

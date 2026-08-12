@@ -34,14 +34,15 @@ test.describe(
       const createPage = new StorageMapCreatePage(page);
       const detailsPage = new StorageMapDetailsPage(page);
       const secretName = await createOffloadTestSecret(resourceManager);
+      let dedicatedHostId = '';
       let dedicatedHostName = '';
-      let createBody: Record<string, unknown> | undefined;
+      let createBody: unknown;
 
       await page.route(
         /\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/storagemaps$/,
-        async (route) => {
+        async (route): Promise<void> => {
           if (route.request().method() === 'POST') {
-            createBody = JSON.parse(route.request().postData() ?? '{}') as Record<string, unknown>;
+            createBody = JSON.parse(route.request().postData() ?? '{}') as unknown;
           }
           await route.continue();
         },
@@ -120,7 +121,8 @@ test.describe(
         const productText = await createPage.offload.getStorageProductText(0);
         expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
 
-        dedicatedHostName = await createPage.offload.selectFirstDedicatedMigrationHost(0);
+        ({ hostId: dedicatedHostId, hostName: dedicatedHostName } =
+          await createPage.offload.selectFirstDedicatedMigrationHost(0));
       });
 
       await test.step('Add second mapping and verify independent offload state', async () => {
@@ -154,18 +156,20 @@ test.describe(
         resourceManager.addStorageMap(storageMapName, MTV_NAMESPACE);
       });
 
-      await test.step('Verify create request included dedicated migration hosts', async () => {
+      await test.step('Verify create request included dedicated migration hosts', () => {
         expect(createBody).toBeTruthy();
-        const map0 = (createBody?.spec as { map?: Record<string, unknown>[] } | undefined)
-          ?.map?.[0];
-        const vsphereXcopy = (
-          map0?.offloadPlugin as
-            | {
+        const body = createBody as {
+          spec?: {
+            map?: {
+              offloadPlugin?: {
                 vsphereXcopyConfig?: { dedicatedMigrationHosts?: string[] };
-              }
-            | undefined
-        )?.vsphereXcopyConfig;
-        expect(vsphereXcopy?.dedicatedMigrationHosts?.length).toBeGreaterThan(0);
+              };
+            }[];
+          };
+        };
+        const dedicatedMigrationHosts =
+          body.spec?.map?.[0]?.offloadPlugin?.vsphereXcopyConfig?.dedicatedMigrationHosts;
+        expect(dedicatedMigrationHosts).toEqual(expect.arrayContaining([dedicatedHostId]));
       });
 
       await test.step('Verify landed on storage map details page', async () => {
