@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import type { PfLabelStatus } from '@utils/constants';
 import type { InspectionStatus } from '@utils/crds/conversion/constants';
 import type { ObjectReference, V1beta1Conversion } from '@utils/crds/conversion/types';
@@ -37,7 +39,7 @@ export type VmOverrides = {
 export type CreateInspectionsFn = (vms: VmInspectionRef[]) => Promise<InspectionCreateResult>;
 
 export type PhaseConfig = {
-  icon: JSX.Element;
+  icon: ReactElement;
   label: string;
   labelStatus?: PfLabelStatus;
 };

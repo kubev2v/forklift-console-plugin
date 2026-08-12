@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 
 import {
@@ -14,7 +14,7 @@ import {
 import { HelpIcon } from '@patternfly/react-icons';
 
 type PageHeaderProps = {
-  actionButton?: JSX.Element;
+  actionButton?: ReactElement;
   shouldShowLearningExperienceButton?: boolean;
   title?: string;
   titleHelpContent?: ReactNode;

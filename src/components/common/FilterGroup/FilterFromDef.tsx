@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { type ReactElement, useMemo, useState } from 'react';
 
 import { isEmpty } from '@utils/helpers';
 
@@ -9,7 +9,7 @@ import type { GlobalFilters } from './types';
 
 type FilterFromDefProps = {
   filterDef: FilterDef;
-  FilterType: (props: FilterTypeProps) => JSX.Element;
+  FilterType: (props: FilterTypeProps) => ReactElement;
   label: string;
   onFilterUpdate: (filters: GlobalFilters) => void;
   resolvedLanguage: string;

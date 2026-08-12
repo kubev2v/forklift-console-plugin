@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import { TableIconCell } from 'src/components/TableCell/TableIconCell';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -11,7 +11,7 @@ import type { VMCellProps } from './VMCellProps';
 export const PowerStateCellRenderer: FC<VMCellProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const powerState = getVmPowerState(data?.vm);
-  const states: Record<PowerState, [JSX.Element, string, string]> = {
+  const states: Record<PowerState, [ReactElement, string, string]> = {
     off: [<OffIcon color="grey" key="off" />, t('Powered off'), t('Off')],
     on: [<PowerOffIcon color="green" key="on" />, t('Powered on'), t('On')],
     unknown: [<UnknownIcon key="unknown" />, t('Unknown power state'), t('Unknown')],
