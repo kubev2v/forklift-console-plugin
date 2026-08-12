@@ -34,10 +34,11 @@ const SettingsEdit: OverlayComponent<SettingsEditProps> = ({ closeOverlay, contr
 
   const methods = useForm<ForkliftSettingsValues>({
     defaultValues: getDefaultValues(controller as EnhancedForkliftController),
+    mode: 'onChange',
   });
 
   const {
-    formState: { dirtyFields, isDirty },
+    formState: { dirtyFields, isDirty, isValid },
     handleSubmit,
     reset,
   } = methods;
@@ -74,7 +75,7 @@ const SettingsEdit: OverlayComponent<SettingsEditProps> = ({ closeOverlay, contr
           variant: ButtonVariant.secondary,
         }}
         closeOverlay={closeOverlay}
-        isDisabled={!isDirty}
+        isDisabled={!isDirty || !isValid}
         onConfirm={handleSubmit(onSubmit)}
         testId="settings-edit-modal"
         title={t('Edit settings')}
