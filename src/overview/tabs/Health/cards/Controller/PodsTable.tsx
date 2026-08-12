@@ -8,7 +8,8 @@ import type { IoK8sApiCoreV1Pod } from '@forklift-ui/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { HelperText, HelperTextItem, Pagination, Tooltip } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { getKind, getName, getNamespace, getOwnerReference } from '@utils/crds/common/selectors';
+import { PodModelGroupVersionKind } from '@utils/crds/common/models';
+import { getName, getNamespace, getOwnerReference } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
 
@@ -90,45 +91,57 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
           </Tr>
         </Thead>
         <Tbody>
-          {paginatedPods.map((pod) => (
-            <Tr key={pod?.metadata?.uid}>
-              <Td modifier="fitContent">
-                <ResourceLink
-                  kind={getKind(pod)}
-                  name={getName(pod)}
-                  namespace={getNamespace(pod)}
-                />
-              </Td>
-              {showOwner && (
+          {paginatedPods.map((pod) => {
+            const ownerReference = getOwnerReference(pod);
+            const ownerApiVersion = ownerReference?.apiVersion ?? '';
+            const [ownerGroup, ownerVersion] = ownerApiVersion.includes('/')
+              ? ownerApiVersion.split('/')
+              : [undefined, ownerApiVersion];
+
+            return (
+              <Tr key={pod?.metadata?.uid}>
                 <Td modifier="fitContent">
-                  {getOwnerReference(pod) ? (
-                    <ResourceLink
-                      kind={getOwnerReference(pod)?.kind}
-                      name={getOwnerReference(pod)?.name}
-                      namespace={getNamespace(pod)}
-                    />
+                  <ResourceLink
+                    groupVersionKind={PodModelGroupVersionKind}
+                    name={getName(pod)}
+                    namespace={getNamespace(pod)}
+                  />
+                </Td>
+                {showOwner && (
+                  <Td modifier="fitContent">
+                    {ownerReference ? (
+                      <ResourceLink
+                        groupVersionKind={{
+                          group: ownerGroup,
+                          kind: ownerReference.kind,
+                          version: ownerVersion,
+                        }}
+                        name={ownerReference.name}
+                        namespace={getNamespace(pod)}
+                      />
+                    ) : (
+                      ''
+                    )}
+                  </Td>
+                )}
+                <Td modifier="fitContent">
+                  {pod?.status?.phase ? (
+                    <Tooltip content={pod.status.phase}>
+                      <StatusIcon phase={pod.status.phase} />
+                    </Tooltip>
                   ) : (
                     ''
                   )}
                 </Td>
-              )}
-              <Td modifier="fitContent">
-                {pod?.status?.phase ? (
-                  <Tooltip content={pod.status.phase}>
-                    <StatusIcon phase={pod.status.phase} />
-                  </Tooltip>
-                ) : (
-                  ''
-                )}
-              </Td>
-              <Td modifier="fitContent">
-                <Link to={`${getPodLogsLink(pod)}/logs`}>{t('Logs')}</Link>
-              </Td>
-              <Td modifier="fitContent">
-                <ConsoleTimestamp timestamp={pod?.metadata?.creationTimestamp ?? ''} />
-              </Td>
-            </Tr>
-          ))}
+                <Td modifier="fitContent">
+                  <Link to={`${getPodLogsLink(pod)}/logs`}>{t('Logs')}</Link>
+                </Td>
+                <Td modifier="fitContent">
+                  <ConsoleTimestamp timestamp={pod?.metadata?.creationTimestamp ?? ''} />
+                </Td>
+              </Tr>
+            );
+          })}
         </Tbody>
       </Table>
       {limitedPods.length > PAGINATION_THRESHOLD && (
