@@ -14,7 +14,7 @@ import {
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
 import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import {
@@ -44,7 +44,7 @@ const getPlanHookNames = (plan: V1beta1Plan): { postHookName?: string; preHookNa
   return { postHookName, preHookName };
 };
 
-const DuplicateModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
+const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan, ...rest }) => {
   const { t } = useForkliftTranslation();
   const name = getName(plan);
   const [newName, setNewName] = useState<string>(`copy-of-${name}`);
@@ -135,6 +135,7 @@ const DuplicateModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       confirmLabel={t('Duplicate')}
       onConfirm={onDuplicate}
       title={t('Duplicate migration plan')}

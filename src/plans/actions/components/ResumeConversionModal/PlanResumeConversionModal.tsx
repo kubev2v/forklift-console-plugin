@@ -4,7 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import ModalForm from '@components/ModalForm/ModalForm';
 import { MigrationModel, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import {
   Alert,
   AlertVariant,
@@ -20,7 +20,8 @@ export type PlanResumeConversionModalProps = {
   plan: V1beta1Plan;
 };
 
-const PlanResumeConversionModal: ModalComponent<PlanResumeConversionModalProps> = ({
+const PlanResumeConversionModal: OverlayComponent<PlanResumeConversionModalProps> = ({
+  closeOverlay,
   plan,
   ...rest
 }) => {
@@ -54,6 +55,7 @@ const PlanResumeConversionModal: ModalComponent<PlanResumeConversionModalProps> 
 
   return (
     <ModalForm
+      closeModal={closeOverlay}
       confirmLabel={t('Resume')}
       onConfirm={onConfirm}
       title={t('Resume conversion')}

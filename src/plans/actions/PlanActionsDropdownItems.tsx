@@ -4,7 +4,7 @@ import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEdit
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
@@ -42,7 +42,7 @@ type PlanActionsDropdownItemsProps = {
 
 const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetailsPage, plan }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
   const navigate = useNavigate();
 
   const { canDelete } = useGetDeleteAndEditAccessReview({
@@ -66,30 +66,30 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
   const hasCutover = canScheduleCutover && Boolean(activeMigration?.spec?.cutover);
 
   const onClickPlanStart = () => {
-    launcher<PlanStartMigrationModalProps>(PlanStartMigrationModal, {
+    launchOverlay<PlanStartMigrationModalProps>(PlanStartMigrationModal, {
       plan,
       title: buttonStartLabel,
     });
   };
 
   const onClickResumeConversion = () => {
-    launcher<PlanResumeConversionModalProps>(PlanResumeConversionModal, { plan });
+    launchOverlay<PlanResumeConversionModalProps>(PlanResumeConversionModal, { plan });
   };
 
   const onClickPlanCutover = () => {
-    launcher<PlanModalProps>(PlanCutoverMigrationModal, { plan });
+    launchOverlay<PlanModalProps>(PlanCutoverMigrationModal, { plan });
   };
 
   const onClickDuplicate = () => {
-    launcher<PlanModalProps>(DuplicateModal, { plan });
+    launchOverlay<PlanModalProps>(DuplicateModal, { plan });
   };
 
   const onClickArchive = () => {
-    launcher<PlanModalProps>(ArchiveModal, { plan });
+    launchOverlay<PlanModalProps>(ArchiveModal, { plan });
   };
 
   const onClickPlanDelete = () => {
-    launcher<PlanModalProps>(PlanDeleteModal, { plan });
+    launchOverlay<PlanModalProps>(PlanDeleteModal, { plan });
   };
 
   return (

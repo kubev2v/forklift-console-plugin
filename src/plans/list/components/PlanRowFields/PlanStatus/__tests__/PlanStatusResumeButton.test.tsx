@@ -5,7 +5,7 @@ mockI18n();
 
 const mockLauncher = jest.fn();
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  useModal: () => mockLauncher,
+  useOverlay: () => mockLauncher,
 }));
 
 const mockUsePlanMigration = jest.fn();

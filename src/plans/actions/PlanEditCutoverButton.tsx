@@ -4,7 +4,7 @@ import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, type ButtonVariant, Tooltip } from '@patternfly/react-core';
 import { CalendarAltIcon } from '@patternfly/react-icons';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
@@ -26,7 +26,7 @@ type PlanEditCutoverButtonProps = {
 
 const PlanEditCutoverButton: FC<PlanEditCutoverButtonProps> = ({ plan, variant }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
   const cutoverButtonRef = useRef<HTMLButtonElement>(null);
   const [activeMigration] = usePlanMigration(plan);
 
@@ -50,7 +50,7 @@ const PlanEditCutoverButton: FC<PlanEditCutoverButtonProps> = ({ plan, variant }
         iconPosition="left"
         isInline
         onClick={() => {
-          launcher<PlanModalProps>(PlanCutoverMigrationModal, { plan });
+          launchOverlay<PlanModalProps>(PlanCutoverMigrationModal, { plan });
         }}
         ref={cutoverButtonRef}
         variant={variant}

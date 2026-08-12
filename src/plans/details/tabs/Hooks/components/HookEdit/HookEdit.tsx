@@ -9,7 +9,7 @@ import {
 import ModalForm from '@components/ModalForm/ModalForm';
 import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
 import type { V1beta1Hook, V1beta1Plan } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import {
   Flex,
   FlexItem,
@@ -37,7 +37,7 @@ export type HookEditProps = {
   step: HookType;
 };
 
-const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step }) => {
+const HookEdit: OverlayComponent<HookEditProps> = ({ closeOverlay, hook, plan, step }) => {
   const { t } = useForkliftTranslation();
 
   const methods = useForm<HookEditFormValues>({
@@ -87,7 +87,7 @@ const HookEdit: ModalComponent<HookEditProps> = ({ closeModal, hook, plan, step 
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeModal}
+        closeModal={closeOverlay}
         isDisabled={!isEmpty(errors) || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         title={title}

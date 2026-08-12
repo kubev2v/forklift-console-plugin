@@ -19,7 +19,7 @@ import useGetDeleteAndEditAccessReview from 'src/utils/hooks/useGetDeleteAndEdit
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PlanModel, type ProviderType, type V1beta1Plan } from '@forklift-ui/types';
-import { useModal, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
@@ -49,7 +49,6 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
   vmIndex,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
   const launchOverlay = useOverlay();
 
   const { canPatch } = useGetDeleteAndEditAccessReview({
@@ -69,7 +68,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
         isDisabled={!canEdit}
         key="edit-vm-target-name"
         onClick={() => {
-          launcher<EditVirtualMachineTargetNameProps>(EditVirtualMachineTargetName, {
+          launchOverlay<EditVirtualMachineTargetNameProps>(EditVirtualMachineTargetName, {
             plan,
             vmIndex,
           });
@@ -83,7 +82,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
             isDisabled={!canEdit}
             key="edit-pvc-name-template"
             onClick={() => {
-              launcher<EditPVCNameTemplateProps>(EditPVCNameTemplate, {
+              launchOverlay<EditPVCNameTemplateProps>(EditPVCNameTemplate, {
                 onConfirmPVCNameTemplate: onConfirmVirtualMachinePVCNameTemplate(vmIndex),
                 resource: plan,
                 value: vm?.pvcNameTemplate,
@@ -96,7 +95,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
             isDisabled={!canEdit}
             key="edit-volume-name-template"
             onClick={() => {
-              launcher<EditVolumeNameTemplateProps>(EditVolumeNameTemplate, {
+              launchOverlay<EditVolumeNameTemplateProps>(EditVolumeNameTemplate, {
                 onConfirmVolumeNameTemplate: onConfirmVirtualMachineVolumeNameTemplate(vmIndex),
                 resource: plan,
                 value: vm?.volumeNameTemplate,
@@ -109,7 +108,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
             isDisabled={!canEdit}
             key="edit-network-name-template"
             onClick={() => {
-              launcher<EditNetworkNameTemplateProps>(EditNetworkNameTemplate, {
+              launchOverlay<EditNetworkNameTemplateProps>(EditNetworkNameTemplate, {
                 onConfirmNetworkNameTemplate: onConfirmVirtualMachineNetworkNameTemplate(vmIndex),
                 resource: plan,
                 value: vm?.networkNameTemplate,
@@ -123,7 +122,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
             isDisabled={!canEdit}
             key="edit-vm-shared-disks"
             onClick={() => {
-              launcher<EditVmMigrateSharedDisksProps>(EditVmMigrateSharedDisks, {
+              launchOverlay<EditVmMigrateSharedDisksProps>(EditVmMigrateSharedDisks, {
                 index: vmIndex,
                 resource: plan,
               });
@@ -138,7 +137,7 @@ const SpecVirtualMachinesActionsDropdownItems: FC<SpecVirtualMachinesActionsDrop
         isDisabled={!canEdit}
         key="edit-target-power-state"
         onClick={() => {
-          launcher<EditVmTargetPowerStateProps>(EditVmTargetPowerState, {
+          launchOverlay<EditVmTargetPowerStateProps>(EditVmTargetPowerState, {
             index: vmIndex,
             resource: plan,
           });

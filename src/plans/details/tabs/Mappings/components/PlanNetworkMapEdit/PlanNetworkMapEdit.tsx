@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Alert, AlertVariant, ModalVariant, Stack } from '@patternfly/react-core';
 import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { isEmpty } from '@utils/helpers';
@@ -11,8 +11,8 @@ import PlanNetworkMapFieldsTable from './components/PlanNetworkMapFieldsTable';
 import type { PlanNetworkEditFormValues, PlanNetworkMapEditProps } from './utils/types';
 import { patchNetworkMappingValues } from './utils/utils';
 
-const PlanNetworkMapEdit: ModalComponent<PlanNetworkMapEditProps> = ({
-  closeModal,
+const PlanNetworkMapEdit: OverlayComponent<PlanNetworkMapEditProps> = ({
+  closeOverlay,
   initialMappings,
   isLoading,
   loadError,
@@ -43,7 +43,7 @@ const PlanNetworkMapEdit: ModalComponent<PlanNetworkMapEditProps> = ({
 
   const onSubmit = async (formData: PlanNetworkEditFormValues) => {
     if (!isDirty) {
-      closeModal();
+      closeOverlay();
       return;
     }
 
@@ -53,7 +53,7 @@ const PlanNetworkMapEdit: ModalComponent<PlanNetworkMapEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeModal}
+        closeModal={closeOverlay}
         isDisabled={!isValid || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         testId="edit-network-map-modal"
