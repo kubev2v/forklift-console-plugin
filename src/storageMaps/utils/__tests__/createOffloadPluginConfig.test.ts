@@ -1,9 +1,8 @@
+import { createOffloadPluginConfig } from 'src/storageMaps/utils/createOffloadPluginConfig';
 import { OffloadPlugin } from 'src/storageMaps/utils/types';
 
 import { describe, expect, it } from '@jest/globals';
 import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
-
-import { createOffloadPluginConfig } from '../createOffloadPluginConfig';
 
 const baseMapping: StorageMapping = {
   [StorageMapFieldId.SourceStorage]: { id: 'ds-1', name: 'datastore-1' },
@@ -16,6 +15,28 @@ describe('createOffloadPluginConfig', () => {
       createOffloadPluginConfig({
         ...baseMapping,
         [StorageMapFieldId.OffloadPlugin]: OffloadPlugin.CsiVolumeImport,
+      }),
+    ).toBeUndefined();
+  });
+
+  it('returns undefined for an unknown offload plugin', () => {
+    expect(
+      createOffloadPluginConfig({
+        ...baseMapping,
+        [StorageMapFieldId.OffloadPlugin]: 'unknownPlugin',
+        [StorageMapFieldId.StorageProduct]: 'primera3par',
+        [StorageMapFieldId.StorageSecret]: 'hpe-secret',
+      }),
+    ).toBeUndefined();
+  });
+
+  it('returns undefined for CSI with a non-CRD-allowed vendor product', () => {
+    expect(
+      createOffloadPluginConfig({
+        ...baseMapping,
+        [StorageMapFieldId.OffloadPlugin]: OffloadPlugin.CsiVolumeImport,
+        [StorageMapFieldId.StorageProduct]: 'ontap',
+        [StorageMapFieldId.StorageSecret]: 'netapp-secret',
       }),
     ).toBeUndefined();
   });

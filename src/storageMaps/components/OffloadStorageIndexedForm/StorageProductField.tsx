@@ -1,7 +1,7 @@
 import { type FC, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
-import type { StorageVendorProduct } from 'src/storageMaps/utils/types';
+import type { OffloadPlugin, StorageVendorProduct } from 'src/storageMaps/utils/types';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import Select from '@components/common/Select';
@@ -23,16 +23,21 @@ import { getVendorProductLabel } from '../../utils/labelHelpers';
 
 type StorageProductFieldProps = {
   fieldId: string;
+  offloadPlugin?: OffloadPlugin | string;
   suggestedProduct?: StorageVendorProduct;
 };
 
-const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId, suggestedProduct }) => {
+const StorageProductField: FC<StorageProductFieldProps> = ({
+  fieldId,
+  offloadPlugin,
+  suggestedProduct,
+}) => {
   const { t } = useForkliftTranslation();
   const {
     control,
     formState: { isSubmitting },
   } = useFormContext();
-  const { loading, storageVendorProducts } = useStorageVendorProducts();
+  const { loading, storageVendorProducts } = useStorageVendorProducts(offloadPlugin);
 
   const allOptions = useMemo(
     () =>

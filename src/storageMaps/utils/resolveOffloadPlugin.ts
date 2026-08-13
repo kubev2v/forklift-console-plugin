@@ -1,3 +1,5 @@
+import { isEmpty } from '@utils/helpers';
+
 import { OffloadPlugin } from './types';
 
 type OffloadPluginBlock = {
@@ -23,16 +25,29 @@ type OffloadPluginConfigFields = {
 };
 
 /**
+ * Empty `{}` plugin blocks are truthy in JS but are not a configured plugin.
+ * Treat a block as configured when it has secretRef and/or storageVendorProduct.
+ */
+const isConfiguredPluginBlock = (block: OffloadPluginBlock | undefined): boolean => {
+  if (!block) {
+    return false;
+  }
+
+  return !isEmpty(block.secretRef) || !isEmpty(block.storageVendorProduct);
+};
+
+/**
  * Resolves which offload plugin key is set on a StorageMap mapping.
+ * CSI Volume Import takes priority when both plugins are configured.
  */
 export const resolveOffloadPlugin = (
   offloadPlugin: ResolvableOffloadPlugin | undefined,
 ): OffloadPlugin | '' => {
-  if (offloadPlugin?.csiVolumeImport) {
+  if (isConfiguredPluginBlock(offloadPlugin?.csiVolumeImport)) {
     return OffloadPlugin.CsiVolumeImport;
   }
 
-  if (offloadPlugin?.vsphereXcopyConfig) {
+  if (isConfiguredPluginBlock(offloadPlugin?.vsphereXcopyConfig)) {
     return OffloadPlugin.VSphereXcopyConfig;
   }
 

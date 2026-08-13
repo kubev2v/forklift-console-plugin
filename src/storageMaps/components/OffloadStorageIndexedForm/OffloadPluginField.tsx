@@ -44,7 +44,7 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
             </StackItem>
             <StackItem>
               {t(
-                'vSphere XCOPY uses ESXi/VAAI to copy on the backend. CSI Volume Import creates a PVC with vendor import annotations so the CSI driver clones the source volume.',
+                'vSphere XCOPY copies disks on the storage array using ESXi. CSI Volume Import uses the destination storage system to import the source volume directly.',
               )}
             </StackItem>
           </Stack>

@@ -21,3 +21,19 @@ export enum StorageVendorProduct {
   PureFlashArray = 'pureFlashArray',
   Infinibox = 'infinibox',
 }
+
+export type CsiVolumeImportConfig = {
+  secretRef: string;
+  storageVendorProduct: string;
+};
+
+export type VSphereXcopyConfig = {
+  dedicatedMigrationHosts?: string[];
+  secretRef: string;
+  storageVendorProduct: string;
+};
+
+export type OffloadPluginConfig = {
+  csiVolumeImport?: CsiVolumeImportConfig;
+  vsphereXcopyConfig?: VSphereXcopyConfig;
+};

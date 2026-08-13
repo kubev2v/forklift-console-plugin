@@ -1,5 +1,5 @@
-import { createOffloadPluginConfig } from 'src/storageMaps/create/utils/createOffloadPluginConfig';
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
+import { createOffloadPluginConfig } from 'src/storageMaps/utils/createOffloadPluginConfig';
 import {
   getOffloadConfigFields,
   resolveOffloadPlugin,

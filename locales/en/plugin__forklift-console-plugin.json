@@ -1674,7 +1674,7 @@
   "vSphere endpoint": "vSphere endpoint",
   "vSphere product name.": "vSphere product name.",
   "vSphere XCOPY": "vSphere XCOPY",
-  "vSphere XCOPY uses ESXi/VAAI to copy on the backend. CSI Volume Import creates a PVC with vendor import annotations so the CSI driver clones the source volume.": "vSphere XCOPY uses ESXi/VAAI to copy on the backend. CSI Volume Import creates a PVC with vendor import annotations so the CSI driver clones the source volume.",
+  "vSphere XCOPY copies disks on the storage array using ESXi. CSI Volume Import uses the destination storage system to import the source volume directly.": "vSphere XCOPY copies disks on the storage array using ESXi. CSI Volume Import uses the destination storage system to import the source volume directly.",
   "Waiting": "Waiting",
   "Warm": "Warm",
   "Warm migration": "Warm migration",

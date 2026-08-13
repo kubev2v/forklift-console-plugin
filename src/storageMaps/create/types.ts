@@ -3,6 +3,8 @@ import type { FieldValues } from 'react-hook-form';
 import type { V1beta1Provider, V1beta1StorageMapSpecMap } from '@forklift-ui/types';
 import type { StorageMapFieldId, StorageMapping } from '@utils/storage/types';
 
+import type { OffloadPluginConfig } from '../utils/types';
+
 export type CreateStorageMapFormData = FieldValues & {
   [StorageMapFieldId.MapName]: string;
   [StorageMapFieldId.Project]: string;
@@ -11,21 +13,7 @@ export type CreateStorageMapFormData = FieldValues & {
   [StorageMapFieldId.TargetProvider]: V1beta1Provider | undefined;
 };
 
-type CsiVolumeImportConfig = {
-  secretRef: string;
-  storageVendorProduct: string;
-};
-
-type VSphereXcopyConfig = {
-  dedicatedMigrationHosts?: string[];
-  secretRef: string;
-  storageVendorProduct: string;
-};
-
-export type OffloadPluginConfig = {
-  csiVolumeImport?: CsiVolumeImportConfig;
-  vsphereXcopyConfig?: VSphereXcopyConfig;
-};
+export type { OffloadPluginConfig };
 
 export type CustomStorageMapSpecMap = Omit<V1beta1StorageMapSpecMap, 'offloadPlugin'> & {
   offloadPlugin?: OffloadPluginConfig;

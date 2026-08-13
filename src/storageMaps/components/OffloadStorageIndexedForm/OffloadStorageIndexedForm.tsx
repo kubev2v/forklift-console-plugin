@@ -117,7 +117,11 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
             <Form className="offload-storage__form">
               <OffloadPluginField fieldId={pluginFieldId} />
               <StorageSecretField fieldId={secretFieldId} sourceProvider={sourceProvider} />
-              <StorageProductField fieldId={productFieldId} suggestedProduct={suggestedProduct} />
+              <StorageProductField
+                fieldId={productFieldId}
+                offloadPlugin={offloadPlugin}
+                suggestedProduct={suggestedProduct}
+              />
               {offloadPlugin === OffloadPlugin.VSphereXcopyConfig && (
                 <DedicatedMigrationHostsField
                   fieldId={hostsFieldId}
