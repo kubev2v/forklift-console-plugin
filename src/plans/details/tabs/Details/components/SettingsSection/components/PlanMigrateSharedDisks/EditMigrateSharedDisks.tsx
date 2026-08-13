@@ -15,7 +15,6 @@ const EditMigrateSharedDisks: OverlayComponent<EditPlanProps> = ({
   closeOverlay,
   isVddkInitImageNotSet,
   resource,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<boolean>(getMigrateSharedDisksValue(resource));
@@ -33,7 +32,6 @@ const EditMigrateSharedDisks: OverlayComponent<EditPlanProps> = ({
       }
       onConfirm={async () => onConfirmMigrateSharedDisks({ newValue: value, resource })}
       title={t('Edit shared disks')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

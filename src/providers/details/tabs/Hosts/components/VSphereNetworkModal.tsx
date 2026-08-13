@@ -29,7 +29,6 @@ const VSphereNetworkModal: OverlayComponent<VSphereNetworkModalProps> = ({
   data,
   provider,
   selectedIds,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [network, setNetwork] = useState<NetworkAdapters | undefined>();
@@ -75,7 +74,6 @@ const VSphereNetworkModal: OverlayComponent<VSphereNetworkModalProps> = ({
       onConfirm={handleSave}
       title={t('Select migration network')}
       variant={ModalVariant.small}
-      {...rest}
     >
       <Stack hasGutter>
         <div className="forklift-edit-modal-body">

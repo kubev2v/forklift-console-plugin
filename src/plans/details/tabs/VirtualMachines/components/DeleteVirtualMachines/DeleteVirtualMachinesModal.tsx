@@ -15,7 +15,6 @@ const PlanVMsDeleteModal: OverlayComponent<DeleteVirtualMachineProps> = ({
   closeOverlay,
   plan,
   selectedIds,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -39,7 +38,6 @@ const PlanVMsDeleteModal: OverlayComponent<DeleteVirtualMachineProps> = ({
       confirmVariant={ButtonVariant.danger}
       onConfirm={handleSave}
       title={t('Delete virtual machines from migration plan?')}
-      {...rest}
     >
       {t('The virtual machines will be permanently deleted from your migration plan.')}
     </ModalForm>

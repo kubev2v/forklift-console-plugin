@@ -159,7 +159,7 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 
-const MyModal: OverlayComponent<MyModalProps> = ({ closeOverlay, myData, ...rest }) => {
+const MyModal: OverlayComponent<MyModalProps> = ({ closeOverlay, myData }) => {
   const handleConfirm = useCallback(async () => {
     await doSomething(myData);
     // throw new Error('message') on failure -- ModalForm catches and displays it
@@ -173,7 +173,6 @@ const MyModal: OverlayComponent<MyModalProps> = ({ closeOverlay, myData, ...rest
       confirmLabel={t('Confirm')}
       isDisabled={!isValid}
       variant={ModalVariant.large}
-      {...rest}
     >
       {/* Modal body content */}
     </ModalForm>
@@ -187,6 +186,8 @@ launchOverlay(MyModal, { myData });
 
 Do NOT use raw `Modal` + `ModalHeader` + `ModalBody` + `ModalFooter` + manual error/loading state.
 Do NOT use deprecated `useModal` / `ModalComponent`.
+
+**Exception — nested sub-views:** A modal may render a nested raw PatternFly `Modal` when Esc/close must mean “back to the parent view” rather than dismiss the overlay (e.g. `AffinityEditModal` inside `AffinityModal`). Pass `onCancel` to that nested modal’s `onClose`; do not wire it to `closeOverlay`.
 
 ---
 

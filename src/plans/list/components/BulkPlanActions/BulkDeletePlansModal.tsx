@@ -34,7 +34,6 @@ export type BulkDeletePlansModalProps = {
 const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
   closeOverlay,
   plans,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [actionFailures, setActionFailures] = useState<BulkPlanActionFailure[]>([]);
@@ -72,7 +71,6 @@ const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
       onConfirm={onDelete}
       testId="bulk-delete-plans-modal"
       title={t('Delete migration plans')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

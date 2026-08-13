@@ -27,7 +27,6 @@ const AffinityModal: OverlayComponent<AffinityModalProps> = ({
   initialAffinity,
   onConfirm,
   title,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -104,7 +103,6 @@ const AffinityModal: OverlayComponent<AffinityModalProps> = ({
       testId="affinity-modal"
       title={title ?? t('Affinity rules')}
       variant={ModalVariant.medium}
-      {...rest}
     >
       {list}
     </ModalForm>

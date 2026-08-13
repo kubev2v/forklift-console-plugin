@@ -13,7 +13,7 @@ import EditRootDiskModalAlert from './components/EditRootDiskModalAlert';
 import EditRootDiskModalBody from './components/EditRootDiskModalBody';
 import { onConfirmRootDisk } from './utils/utils';
 
-const EditRootDisk: OverlayComponent<EditPlanProps> = ({ closeOverlay, resource, ...rest }) => {
+const EditRootDisk: OverlayComponent<EditPlanProps> = ({ closeOverlay, resource }) => {
   const { t } = useForkliftTranslation();
 
   const vms = getPlanVirtualMachines(resource);
@@ -26,7 +26,6 @@ const EditRootDisk: OverlayComponent<EditPlanProps> = ({ closeOverlay, resource,
       closeOverlay={closeOverlay}
       onConfirm={async () => onConfirmRootDisk(resource, value)}
       title={t('Edit root device')}
-      {...rest}
     >
       <Stack hasGutter>
         <EditRootDiskModalBody />

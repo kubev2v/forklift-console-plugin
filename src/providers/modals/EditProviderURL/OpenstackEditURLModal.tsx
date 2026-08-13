@@ -11,7 +11,6 @@ import type { EditProviderURLModalProps } from './EditProviderURLModal';
 export const OpenstackEditURLModal: OverlayComponent<EditProviderURLModalProps> = ({
   closeOverlay,
   resource: provider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -37,7 +36,6 @@ export const OpenstackEditURLModal: OverlayComponent<EditProviderURLModalProps> 
   return (
     <TextInputEditModal
       closeOverlay={closeOverlay}
-      {...rest}
       description={description}
       helperText={t('The URL of the OpenStack Identity endpoint.')}
       initialValue={provider?.spec?.url ?? ''}

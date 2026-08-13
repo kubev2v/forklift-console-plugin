@@ -14,7 +14,6 @@ import PreserveCpuModelSwitch from './PreserveCpuModelSwitch';
 const EditPlanPreserveClusterCpuModel: OverlayComponent<EditPlanProps> = ({
   closeOverlay,
   resource,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<boolean>(Boolean(getPlanPreserveClusterCpuModel(resource)));
@@ -24,7 +23,6 @@ const EditPlanPreserveClusterCpuModel: OverlayComponent<EditPlanProps> = ({
       closeOverlay={closeOverlay}
       onConfirm={async () => onConfirmPreserveCpuModel({ newValue: value, resource })}
       title={t('Set to preserve the CPU model')}
-      {...rest}
     >
       <Stack hasGutter>
         {t(`Preserve the CPU model and flags the VM runs with in its oVirt cluster.`)}

@@ -18,7 +18,6 @@ import LUKSPassphraseInputList from './LUKSPassphraseInputList';
 const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
   closeOverlay,
   resource,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -44,7 +43,6 @@ const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
       onConfirm={handleConfirm}
       testId="edit-disk-decryption-modal"
       title={t('Disk decryption')}
-      {...rest}
     >
       <Stack hasGutter>
         <EditLUKSModalBody />

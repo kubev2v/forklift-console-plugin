@@ -12,7 +12,6 @@ import type { EditProviderUIModalProps } from './EditProviderUIModal';
 export const OvirtEditUIModal: OverlayComponent<EditProviderUIModalProps> = ({
   closeOverlay,
   resource: provider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -37,7 +36,6 @@ export const OvirtEditUIModal: OverlayComponent<EditProviderUIModalProps> = ({
   return (
     <TextInputEditModal
       closeOverlay={closeOverlay}
-      {...rest}
       description={description}
       helperText={t(
         'Link for the Red Hat Virtualization Manager landing page. For example, https://rhv-host-example.com/ovirt-engine.',

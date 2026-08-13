@@ -11,7 +11,6 @@ import type { EditProviderURLModalProps } from './EditProviderURLModal';
 export const OvirtEditURLModal: OverlayComponent<EditProviderURLModalProps> = ({
   closeOverlay,
   resource: provider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -37,7 +36,6 @@ export const OvirtEditURLModal: OverlayComponent<EditProviderURLModalProps> = ({
   return (
     <TextInputEditModal
       closeOverlay={closeOverlay}
-      {...rest}
       description={description}
       helperText={t('The URL of the Red Hat Virtualization Manager API endpoint.')}
       initialValue={provider?.spec?.url ?? ''}

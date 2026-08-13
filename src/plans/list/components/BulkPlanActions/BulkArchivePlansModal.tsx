@@ -37,7 +37,6 @@ const BulkArchivePlansModal: OverlayComponent<BulkArchivePlansModalProps> = ({
   closeOverlay,
   plans,
   skippedArchivedCount = 0,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [actionFailures, setActionFailures] = useState<BulkPlanActionFailure[]>([]);
@@ -76,7 +75,6 @@ const BulkArchivePlansModal: OverlayComponent<BulkArchivePlansModalProps> = ({
       onConfirm={onArchive}
       testId="bulk-archive-plans-modal"
       title={t('Archive migration plans')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

@@ -21,7 +21,6 @@ const EditVirtualMachineTargetName: OverlayComponent<EditVirtualMachineTargetNam
   closeOverlay,
   plan,
   vmIndex,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const vms = getPlanVirtualMachines(plan);
@@ -44,7 +43,6 @@ const EditVirtualMachineTargetName: OverlayComponent<EditVirtualMachineTargetNam
       }
       onConfirm={async () => patchVMTargetName({ newValue: inputValue, resource: plan, vmIndex })}
       title={t('Edit target name')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

@@ -18,7 +18,7 @@ export type EditProviderDefaultTransferNetworkProps = {
 
 const EditProviderDefaultTransferNetwork: OverlayComponent<
   EditProviderDefaultTransferNetworkProps
-> = ({ closeOverlay, defaultNetworkName, resource, ...rest }) => {
+> = ({ closeOverlay, defaultNetworkName, resource }) => {
   const { t } = useForkliftTranslation();
 
   const [value, setValue] = useState<string | number>(defaultNetworkName ?? 0);
@@ -32,7 +32,6 @@ const EditProviderDefaultTransferNetwork: OverlayComponent<
       closeOverlay={closeOverlay}
       onConfirm={async () => onConfirmProviderDefaultTransferNetwork({ resource, value })}
       title={t('Set default Transfer Network')}
-      {...rest}
     >
       <Stack hasGutter>
         {t(

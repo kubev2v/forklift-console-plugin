@@ -35,7 +35,6 @@ const EditNameTemplate: OverlayComponent<EditNameTemplateProps> = ({
   onConfirm,
   title,
   value,
-  ...rest
 }) => {
   const [selected, setSelected] = useState<NameTemplateOptions>(
     getSelectedOption(value, allowInherit),
@@ -58,7 +57,6 @@ const EditNameTemplate: OverlayComponent<EditNameTemplateProps> = ({
           : onConfirm(undefined);
       }}
       title={title}
-      {...rest}
     >
       {body}
       <Form>

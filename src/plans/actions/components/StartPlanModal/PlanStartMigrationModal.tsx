@@ -24,7 +24,6 @@ const PlanStartMigrationModal: OverlayComponent<PlanStartMigrationModalProps> = 
   closeOverlay,
   plan,
   title,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
@@ -50,7 +49,6 @@ const PlanStartMigrationModal: OverlayComponent<PlanStartMigrationModalProps> = 
       isDisabled={!canPlanStart(plan) || Boolean(isMigrationStarted)}
       onConfirm={onStart}
       title={t('{{title}} migration', { title })}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

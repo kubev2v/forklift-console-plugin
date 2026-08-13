@@ -19,7 +19,6 @@ import type { AddVirtualMachineProps } from './utils/types';
 const AddVirtualMachinesModal: OverlayComponent<AddVirtualMachineProps> = ({
   closeOverlay,
   plan,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const { sourceProvider } = usePlanSourceProvider(plan);
@@ -60,7 +59,6 @@ const AddVirtualMachinesModal: OverlayComponent<AddVirtualMachineProps> = ({
       onConfirm={handleSave}
       title={t('Add virtual machines to migration plan')}
       variant={ModalVariant.large}
-      {...rest}
     >
       <AddVirtualMachinesTable
         onSelect={handleSelect}

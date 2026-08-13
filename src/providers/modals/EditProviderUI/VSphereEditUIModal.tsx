@@ -12,7 +12,6 @@ import type { EditProviderUIModalProps } from './EditProviderUIModal';
 export const VSphereEditUIModal: OverlayComponent<EditProviderUIModalProps> = ({
   closeOverlay,
   resource: provider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -37,7 +36,6 @@ export const VSphereEditUIModal: OverlayComponent<EditProviderUIModalProps> = ({
   return (
     <TextInputEditModal
       closeOverlay={closeOverlay}
-      {...rest}
       description={description}
       helperText={t(
         'Link for the VMware vSphere UI. For example, https://vSphere-host-example.com/ui.',

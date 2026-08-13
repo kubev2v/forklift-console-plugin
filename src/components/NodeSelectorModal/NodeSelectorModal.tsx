@@ -27,7 +27,6 @@ const NodeSelectorModal: OverlayComponent<NodeSelectorModalProps> = ({
   initialLabels,
   onConfirm,
   title,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [labels, setLabels] = useState<LabelFields[]>(labelsObjectToArray(initialLabels));
@@ -64,7 +63,6 @@ const NodeSelectorModal: OverlayComponent<NodeSelectorModalProps> = ({
       onConfirm={async () => onConfirm(labelsArrayToObject(labels))}
       testId="node-selector-modal"
       title={title ?? t('Edit node selectors')}
-      {...rest}
     >
       <Form>
         <Stack hasGutter>

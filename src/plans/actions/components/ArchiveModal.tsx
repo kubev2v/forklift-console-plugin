@@ -13,7 +13,7 @@ import { getPlanArchived } from '@utils/crds/plans/selectors';
 
 import type { PlanModalProps } from './types';
 
-const ArchiveModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan, ...rest }) => {
+const ArchiveModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }) => {
   const { t } = useForkliftTranslation();
 
   const onArchive = useCallback(async () => {
@@ -36,7 +36,6 @@ const ArchiveModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan, ..
       confirmVariant={isPlanRunning ? ButtonVariant.danger : ButtonVariant.primary}
       onConfirm={onArchive}
       title={t('Archive migration plan')}
-      {...rest}
     >
       <ForkliftTrans>
         <Stack hasGutter>

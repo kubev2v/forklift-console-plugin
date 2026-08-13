@@ -11,11 +11,7 @@ import type { EditPlanProps } from '../../utils/types';
 
 import { onConfirmPreserveStaticIPs } from './utils/utils';
 
-const EditPlanPreserveStaticIPs: OverlayComponent<EditPlanProps> = ({
-  closeOverlay,
-  resource,
-  ...rest
-}) => {
+const EditPlanPreserveStaticIPs: OverlayComponent<EditPlanProps> = ({ closeOverlay, resource }) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<boolean>(Boolean(getPlanPreserveIP(resource)));
 
@@ -32,7 +28,6 @@ const EditPlanPreserveStaticIPs: OverlayComponent<EditPlanProps> = ({
       }
       onConfirm={async () => onConfirmPreserveStaticIPs({ newValue: value, resource })}
       title={t('Edit static IPs')}
-      {...rest}
     >
       <Checkbox
         data-testid="preserve-static-ips-checkbox"

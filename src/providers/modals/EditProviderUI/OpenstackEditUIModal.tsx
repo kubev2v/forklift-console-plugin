@@ -12,7 +12,6 @@ import type { EditProviderUIModalProps } from './EditProviderUIModal';
 export const OpenstackEditUIModal: OverlayComponent<EditProviderUIModalProps> = ({
   closeOverlay,
   resource: provider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -37,7 +36,6 @@ export const OpenstackEditUIModal: OverlayComponent<EditProviderUIModalProps> = 
   return (
     <TextInputEditModal
       closeOverlay={closeOverlay}
-      {...rest}
       description={description}
       helperText={t(
         'Link for the OpenStack dashboard. For example, https://identity_service.com/dashboard.',

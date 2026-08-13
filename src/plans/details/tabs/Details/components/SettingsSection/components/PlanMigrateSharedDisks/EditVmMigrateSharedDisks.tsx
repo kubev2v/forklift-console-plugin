@@ -27,7 +27,6 @@ const EditVmMigrateSharedDisks: OverlayComponent<EditVmMigrateSharedDisksProps> 
   closeOverlay,
   index,
   resource,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const { sourceProvider } = usePlanSourceProvider(resource);
@@ -70,7 +69,6 @@ const EditVmMigrateSharedDisks: OverlayComponent<EditVmMigrateSharedDisksProps> 
       onConfirm={async () => onConfirmVmMigrateSharedDisks(index)({ newValue: value, resource })}
       testId="edit-vm-shared-disks-modal"
       title={t('Edit shared disks')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

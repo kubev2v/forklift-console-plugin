@@ -9,11 +9,7 @@ import type { EditPlanProps } from '../../utils/types';
 
 import { getPlanXfsCompatibility, onConfirmXfsCompatibility } from './utils/utils';
 
-const EditPlanXfsCompatibility: OverlayComponent<EditPlanProps> = ({
-  closeOverlay,
-  resource,
-  ...rest
-}) => {
+const EditPlanXfsCompatibility: OverlayComponent<EditPlanProps> = ({ closeOverlay, resource }) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<boolean>(Boolean(getPlanXfsCompatibility(resource)));
 
@@ -25,7 +21,6 @@ const EditPlanXfsCompatibility: OverlayComponent<EditPlanProps> = ({
       )}
       onConfirm={async () => onConfirmXfsCompatibility({ newValue: value, resource })}
       title={t('Edit XFS v4 compatibility')}
-      {...rest}
     >
       <Checkbox
         data-testid="xfs-compatibility-checkbox"

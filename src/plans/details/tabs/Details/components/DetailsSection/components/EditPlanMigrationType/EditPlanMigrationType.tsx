@@ -33,7 +33,6 @@ const EditPlanMigrationType: OverlayComponent<EditPlanProps> = ({
   isVddkInitImageNotSet,
   resource,
   sourceProvider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [selected, setSelected] = useState<MigrationTypeValue>(getPlanMigrationType(resource));
@@ -61,7 +60,6 @@ const EditPlanMigrationType: OverlayComponent<EditPlanProps> = ({
       onConfirm={async () => onConfirmMigrationType({ newValue: selected, resource })}
       testId="edit-migration-type-modal"
       title={t('Edit migration type')}
-      {...rest}
     >
       <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
         {VISIBLE_TYPES.filter(canShowType).map((type) => {

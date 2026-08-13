@@ -27,7 +27,6 @@ const EditVolumeNameTemplate: OverlayComponent<EditVolumeNameTemplateProps> = ({
   onConfirmVolumeNameTemplate,
   resource,
   value,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -49,7 +48,6 @@ const EditVolumeNameTemplate: OverlayComponent<EditVolumeNameTemplateProps> = ({
       onConfirm={async (newValue) => onConfirmVolumeNameTemplate({ newValue, resource })}
       title={t('Edit volume name template')}
       value={value}
-      {...rest}
     />
   );
 };

@@ -15,7 +15,7 @@ import { getResourceUrl } from '@utils/getResourceUrl';
 
 import type { PlanModalProps } from './types';
 
-const PlanDeleteModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan, ...rest }) => {
+const PlanDeleteModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
 
@@ -41,7 +41,6 @@ const PlanDeleteModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan,
       confirmVariant={ButtonVariant.danger}
       onConfirm={onDelete}
       title={t('Delete plan')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

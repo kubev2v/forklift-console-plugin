@@ -11,7 +11,6 @@ import type { EditProviderURLModalProps } from './EditProviderURLModal';
 export const OpenshiftEditURLModal: OverlayComponent<EditProviderURLModalProps> = ({
   closeOverlay,
   resource: provider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -37,7 +36,6 @@ export const OpenshiftEditURLModal: OverlayComponent<EditProviderURLModalProps> 
   return (
     <TextInputEditModal
       closeOverlay={closeOverlay}
-      {...rest}
       description={description}
       helperText={t('URL of the Openshift Virtualization API endpoint.')}
       initialValue={provider?.spec?.url ?? ''}

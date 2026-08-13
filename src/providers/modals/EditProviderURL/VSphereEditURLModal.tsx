@@ -13,7 +13,6 @@ export const VSphereEditURLModal: OverlayComponent<EditProviderURLModalProps> = 
   closeOverlay,
   insecureSkipVerify,
   resource: provider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -45,7 +44,6 @@ export const VSphereEditURLModal: OverlayComponent<EditProviderURLModalProps> = 
   return (
     <TextInputEditModal
       closeOverlay={closeOverlay}
-      {...rest}
       description={description}
       helperText={t('The URL of the vCenter API endpoint.')}
       initialValue={provider?.spec?.url ?? ''}

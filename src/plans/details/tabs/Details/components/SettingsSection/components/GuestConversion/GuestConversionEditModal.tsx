@@ -21,11 +21,7 @@ import type { EditPlanProps } from '../../utils/types';
 import { patchGuestConversion } from './utils/patchGuestConversion';
 import { getSkipGuestConversion, getUseCompatibilityMode } from './utils/utils';
 
-const GuestConversionEditModal: OverlayComponent<EditPlanProps> = ({
-  closeOverlay,
-  resource,
-  ...rest
-}) => {
+const GuestConversionEditModal: OverlayComponent<EditPlanProps> = ({ closeOverlay, resource }) => {
   const { t } = useForkliftTranslation();
   const [skipGuestConversion, setSkipGuestConversion] = useState<boolean>(
     Boolean(getSkipGuestConversion(resource)),
@@ -46,7 +42,6 @@ const GuestConversionEditModal: OverlayComponent<EditPlanProps> = ({
       }
       testId="guest-conversion-mode-modal"
       title={t('Guest conversion mode')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

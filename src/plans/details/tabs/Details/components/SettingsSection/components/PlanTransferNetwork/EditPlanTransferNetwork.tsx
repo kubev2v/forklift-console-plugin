@@ -14,11 +14,7 @@ import type { EditPlanProps } from '../../utils/types';
 import { onConfirmTransferNetwork } from './utils/utils';
 import TransferNetworkDropdown from './TransferNetworkDropdown';
 
-const EditPlanTransferNetwork: OverlayComponent<EditPlanProps> = ({
-  closeOverlay,
-  resource,
-  ...rest
-}) => {
+const EditPlanTransferNetwork: OverlayComponent<EditPlanProps> = ({ closeOverlay, resource }) => {
   const { t } = useForkliftTranslation();
   const { destinationProvider } = usePlanDestinationProvider(resource);
   const [value, setValue] = useState<V1beta1PlanSpecTransferNetwork | null>(
@@ -30,7 +26,6 @@ const EditPlanTransferNetwork: OverlayComponent<EditPlanProps> = ({
       closeOverlay={closeOverlay}
       onConfirm={async () => onConfirmTransferNetwork({ newValue: value, resource })}
       title={t('Edit migration plan transfer network')}
-      {...rest}
     >
       <Stack hasGutter>
         {t(

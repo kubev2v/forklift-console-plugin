@@ -21,11 +21,7 @@ import ScheduledCutoverFields from './ScheduledCutoverFields';
 
 import './PlanCutoverMigrationModal.scss';
 
-const PlanCutoverMigrationModal: OverlayComponent<PlanModalProps> = ({
-  closeOverlay,
-  plan,
-  ...rest
-}) => {
+const PlanCutoverMigrationModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }) => {
   const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
   const [isDateValid, setIsDateValid] = useState<boolean>(true);
@@ -127,7 +123,6 @@ const PlanCutoverMigrationModal: OverlayComponent<PlanModalProps> = ({
       isDisabled={isScheduledInvalid}
       onConfirm={onCutover}
       title={hasExistingCutover ? t('Edit cutover') : t('Schedule cutover')}
-      {...rest}
     >
       <ForkliftTrans>
         <Stack hasGutter>

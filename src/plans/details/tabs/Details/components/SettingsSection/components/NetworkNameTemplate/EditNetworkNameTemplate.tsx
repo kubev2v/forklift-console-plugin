@@ -27,7 +27,6 @@ const EditNetworkNameTemplate: OverlayComponent<EditNetworkNameTemplateProps> = 
   onConfirmNetworkNameTemplate,
   resource,
   value,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -49,7 +48,6 @@ const EditNetworkNameTemplate: OverlayComponent<EditNetworkNameTemplateProps> = 
       onConfirm={async (newValue) => onConfirmNetworkNameTemplate({ newValue, resource })}
       title={t('Edit network name template')}
       value={value}
-      {...rest}
     />
   );
 };

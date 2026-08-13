@@ -46,7 +46,6 @@ const LabelsModal: OverlayComponent<LabelsModalProps> = ({
   initialLabels,
   onConfirm,
   title,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [inputValue, setInputValue] = useState('');
@@ -115,7 +114,6 @@ const LabelsModal: OverlayComponent<LabelsModalProps> = ({
       onConfirm={async () => onConfirm(labelsArrayToObject(labels))}
       testId="labels-modal"
       title={title ?? t('Edit labels')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>{description ?? LABELS_MODAL_DESCRIPTION}</StackItem>

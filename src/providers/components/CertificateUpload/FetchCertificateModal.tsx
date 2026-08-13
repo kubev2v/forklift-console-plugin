@@ -21,7 +21,6 @@ const FetchCertificateModal: OverlayComponent<FetchCertificateModalProps> = ({
   existingCert,
   handleSave,
   url,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [isTrusted, setIsTrusted] = useState(false);
@@ -43,7 +42,6 @@ const FetchCertificateModal: OverlayComponent<FetchCertificateModalProps> = ({
       onConfirm={onConfirm}
       title={t('Verify certificate')}
       variant={ModalVariant.small}
-      {...rest}
     >
       {loading && <Loading title={t('Loading...')} />}
 

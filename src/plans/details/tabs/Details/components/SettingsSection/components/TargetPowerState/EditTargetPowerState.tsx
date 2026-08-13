@@ -13,11 +13,7 @@ import type { EditPlanProps } from '../../utils/types';
 import { onConfirmTargetPowerState } from './utils/utils';
 import TargetPowerStateDropdown from './TargetPowerStateDropdown';
 
-const EditTargetPowerState: OverlayComponent<EditPlanProps> = ({
-  closeOverlay,
-  resource,
-  ...rest
-}) => {
+const EditTargetPowerState: OverlayComponent<EditPlanProps> = ({ closeOverlay, resource }) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<TargetPowerStateValue>(
     getPlanTargetPowerState(resource) ?? TargetPowerStates.AUTO,
@@ -31,7 +27,6 @@ const EditTargetPowerState: OverlayComponent<EditPlanProps> = ({
       onConfirm={async () => onConfirmTargetPowerState({ newValue: value, resource })}
       testId="edit-target-power-state-modal"
       title={t('Edit target power state')}
-      {...rest}
     >
       <Stack hasGutter>
         {t(`Choose what state you'd like the VMs in your plan to be powered to after migration.`)}

@@ -12,7 +12,7 @@ import type { CancelMigrationVirtualMachinesProps } from './utils/types';
 
 const CancelMigrationVirtualMachinesModal: OverlayComponent<
   CancelMigrationVirtualMachinesProps
-> = ({ closeOverlay, migration, selectedIds, ...rest }) => {
+> = ({ closeOverlay, migration, selectedIds }) => {
   const { t } = useForkliftTranslation();
 
   const handleSave = useCallback(async () => {
@@ -32,7 +32,6 @@ const CancelMigrationVirtualMachinesModal: OverlayComponent<
       closeOverlay={closeOverlay}
       onConfirm={handleSave}
       title={t('Cancel virtual machines migration?')}
-      {...rest}
     >
       <Stack hasGutter>
         {t('You can cancel the migration of virtual machines in a running migration plan.')}

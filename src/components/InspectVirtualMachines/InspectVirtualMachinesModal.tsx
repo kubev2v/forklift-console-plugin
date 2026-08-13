@@ -30,7 +30,6 @@ const InspectVirtualMachinesModal: OverlayComponent<InspectVirtualMachinesModalP
   closeOverlay,
   plan,
   provider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -125,7 +124,6 @@ const InspectVirtualMachinesModal: OverlayComponent<InspectVirtualMachinesModalP
       testId="inspect-vms-modal"
       title={t('Inspect virtual machines')}
       variant={ModalVariant.large}
-      {...rest}
     >
       {!isVddkConfigured && (
         <Alert

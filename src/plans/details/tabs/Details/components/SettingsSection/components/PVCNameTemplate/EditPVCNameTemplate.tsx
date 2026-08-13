@@ -24,7 +24,6 @@ const EditPVCNameTemplate: OverlayComponent<EditPVCNameTemplateProps> = ({
   onConfirmPVCNameTemplate,
   resource,
   value,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -46,7 +45,6 @@ const EditPVCNameTemplate: OverlayComponent<EditPVCNameTemplateProps> = ({
       onConfirm={async (newValue) => onConfirmPVCNameTemplate({ newValue, resource })}
       title={t('Edit PVC name template')}
       value={value}
-      {...rest}
     />
   );
 };

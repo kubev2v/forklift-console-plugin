@@ -44,7 +44,7 @@ const getPlanHookNames = (plan: V1beta1Plan): { postHookName?: string; preHookNa
   return { postHookName, preHookName };
 };
 
-const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan, ...rest }) => {
+const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }) => {
   const { t } = useForkliftTranslation();
   const name = getName(plan);
   const [newName, setNewName] = useState<string>(`copy-of-${name}`);
@@ -139,7 +139,6 @@ const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan, 
       confirmLabel={t('Duplicate')}
       onConfirm={onDuplicate}
       title={t('Duplicate migration plan')}
-      {...rest}
     >
       <ForkliftTrans>
         <Stack hasGutter>

@@ -22,7 +22,6 @@ const EditVmTargetPowerState: OverlayComponent<EditVmTargetPowerStateProps> = ({
   closeOverlay,
   index,
   resource,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const vm = getPlanVirtualMachines(resource)[index];
@@ -37,7 +36,6 @@ const EditVmTargetPowerState: OverlayComponent<EditVmTargetPowerStateProps> = ({
       onConfirm={async () => onConfirmVmTargetPowerState(index)({ newValue: value, resource })}
       testId="edit-target-power-state-modal"
       title={t('Edit target power state')}
-      {...rest}
     >
       <Stack hasGutter>
         {t(

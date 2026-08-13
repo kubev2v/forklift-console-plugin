@@ -23,7 +23,6 @@ export type PlanResumeConversionModalProps = {
 const PlanResumeConversionModal: OverlayComponent<PlanResumeConversionModalProps> = ({
   closeOverlay,
   plan,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const { name, namespace, uid } = getObjectRef(plan);
@@ -59,7 +58,6 @@ const PlanResumeConversionModal: OverlayComponent<PlanResumeConversionModalProps
       confirmLabel={t('Resume')}
       onConfirm={onConfirm}
       title={t('Resume conversion')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

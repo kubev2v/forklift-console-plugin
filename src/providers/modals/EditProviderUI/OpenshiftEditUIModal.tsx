@@ -12,7 +12,6 @@ import type { EditProviderUIModalProps } from './EditProviderUIModal';
 export const OpenshiftEditUIModal: OverlayComponent<EditProviderUIModalProps> = ({
   closeOverlay,
   resource: provider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -37,7 +36,6 @@ export const OpenshiftEditUIModal: OverlayComponent<EditProviderUIModalProps> = 
   return (
     <TextInputEditModal
       closeOverlay={closeOverlay}
-      {...rest}
       description={description}
       helperText={t(
         'Link for OpenShift Virtualization web console UI. For example, https://console-openshift-console.apps.openshift-domain.com.',
