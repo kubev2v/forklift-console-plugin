@@ -5,6 +5,18 @@ import { BaseModal } from '../../common/BaseModal';
 const FORM_SETTLE_MS = 500;
 const MAX_DROPDOWN_ATTEMPTS = 3;
 const OPTION_CLICK_TIMEOUT_MS = 3_000;
+// Option textContent concatenates badge labels (TargetStorageField); MenuToggle shows name only.
+const STORAGE_OPTION_BADGE_SUFFIXES = ['Default', 'NetApp Shift'] as const;
+
+const stripStorageOptionBadges = (optionText: string): string => {
+  let name = optionText.trim();
+  for (const badge of STORAGE_OPTION_BADGE_SUFFIXES) {
+    if (name.endsWith(badge)) {
+      name = name.slice(0, -badge.length).trimEnd();
+    }
+  }
+  return name;
+};
 
 export interface MappingModalConfig {
   modalTestId: string;
@@ -138,10 +150,11 @@ export abstract class BaseMappingEditModal extends BaseModal {
         for (let i = 0; i < count; i += 1) {
           const option = options.nth(i);
           const optionText = ((await option.textContent()) ?? '').trim();
-          if (optionText !== currentTarget) {
+          const optionName = stripStorageOptionBadges(optionText);
+          if (optionName !== currentTarget) {
             await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
-            await expect(targetSelect).toContainText(optionText);
-            return optionText;
+            await expect(targetSelect).toContainText(optionName);
+            return optionName;
           }
         }
 

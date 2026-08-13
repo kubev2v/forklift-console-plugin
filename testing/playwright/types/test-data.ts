@@ -211,7 +211,8 @@ export const createPlanTestData = (
         },
       ],
     },
-    virtualMachines: [{ sourceName: 'mtv-func-rhel9', folder: 'vm' }],
+    // qemtv-09 vs8 inventory no longer has mtv-func-rhel9; use a present lab VM.
+    virtualMachines: [{ sourceName: 'mtv-rhel8-warm-sanity', folder: 'vm' }],
   };
 
   return {

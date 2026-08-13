@@ -34,6 +34,9 @@ test.describe(
     test('shows empty state when no alerts are firing', async ({ page }) => {
       await test.step('check for empty state or alert list', async () => {
         const alertsCard = page.getByTestId('migration-alerts-card');
+        // Prometheus query finishes asynchronously; asserting before loaded races empty vs list.
+        await expect(alertsCard.getByRole('progressbar')).toBeHidden({ timeout: 15_000 });
+
         const emptyText = alertsCard.getByText('No migrations have completed or failed yet.');
         const alertItem = alertsCard.locator('.migration-alerts-card__alert-item').first();
 
