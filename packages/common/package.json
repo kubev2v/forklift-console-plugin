@@ -43,7 +43,7 @@
     "react-router-dom": "5.3.x"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^2.0.2",
+    "@chromatic-com/storybook": "^5.0.0",
     "@openshift-console/dynamic-plugin-sdk": "1.6.0",
     "@storybook/addon-essentials": "^8.3.2",
     "@storybook/addon-interactions": "^8.3.2",
