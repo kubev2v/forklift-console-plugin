@@ -11,11 +11,10 @@ import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
+import { filterOpaqueSecrets } from '@utils/secrets/opaqueSecrets';
 import { StorageMapFieldId } from '@utils/storage/types';
 
 import { offloadNestedFieldRules } from '../../utils/offloadNestedFieldRules';
-
-const OPAQUE_SECRET_TYPE = 'Opaque';
 
 type StorageSecretFieldProps = {
   fieldId: string;
@@ -29,7 +28,7 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
     formState: { isSubmitting },
   } = useFormContext();
 
-  const [secrets] = useK8sWatchResource<IoK8sApiCoreV1Secret[]>({
+  const [secrets, loaded, error] = useK8sWatchResource<IoK8sApiCoreV1Secret[]>({
     groupVersionKind: getGroupVersionKindForModel(SecretModel),
     isList: true,
     namespace: getNamespace(sourceProvider),
@@ -37,9 +36,11 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
   });
 
   const opaqueSecrets = useMemo(
-    () => (secrets ?? []).filter((secret) => secret.type === OPAQUE_SECRET_TYPE),
+    (): IoK8sApiCoreV1Secret[] => filterOpaqueSecrets(secrets),
     [secrets],
   );
+
+  const isWatchPending = !loaded || Boolean(error);
 
   return (
     <FormGroup
@@ -68,11 +69,11 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
         render={({ field }) => (
           <Select
             id={fieldId}
-            isDisabled={isSubmitting}
+            isDisabled={isSubmitting || isWatchPending}
             onSelect={(_e, value) => {
               field.onChange(value);
             }}
-            placeholder={t('Select storage secret')}
+            placeholder={loaded ? t('Select storage secret') : t('Loading secrets...')}
             ref={field.ref}
             testId={fieldId}
             value={field.value as string | undefined}
@@ -80,7 +81,9 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
             <SelectList>
               {isEmpty(opaqueSecrets) ? (
                 <SelectOption isDisabled key="empty">
-                  {t('No secrets available for this provider')}
+                  {error
+                    ? t('Failed to load secrets.')
+                    : t('No Opaque secrets found in this project.')}
                 </SelectOption>
               ) : (
                 opaqueSecrets.map((secret) => {
