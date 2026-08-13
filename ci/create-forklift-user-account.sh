@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # check if forklift-user account exist
 export SERVICE_ACCOUNT=forklift
@@ -111,27 +112,36 @@ bind_service_accont_to_role ${SERVICE_ACCOUNT}-user forklift-user
 setup_servie_account ${SERVICE_ACCOUNT}-reader
 bind_service_accont_to_role ${SERVICE_ACCOUNT}-reader forklift-reader
 
-# Print out tokens
-export TOKEN_ADMIN=$(kubectl get secret ${SERVICE_ACCOUNT}-admin -n ${NAMESPACE} -o=jsonpath={.data.token} | base64 -d)
-export TOKEN_USER=$(kubectl get secret ${SERVICE_ACCOUNT}-user -n ${NAMESPACE} -o=jsonpath={.data.token} | base64 -d)
-export TOKEN_READER=$(kubectl get secret ${SERVICE_ACCOUNT}-reader -n ${NAMESPACE} -o=jsonpath={.data.token} | base64 -d)
+# Write tokens to a restricted file instead of stdout
+TOKEN_ADMIN=$(kubectl get secret "${SERVICE_ACCOUNT}-admin" -n "${NAMESPACE}" -o=jsonpath='{.data.token}' | base64 -d)
+TOKEN_USER=$(kubectl get secret "${SERVICE_ACCOUNT}-user" -n "${NAMESPACE}" -o=jsonpath='{.data.token}' | base64 -d)
+TOKEN_READER=$(kubectl get secret "${SERVICE_ACCOUNT}-reader" -n "${NAMESPACE}" -o=jsonpath='{.data.token}' | base64 -d)
+
+if [[ -z "${TOKEN_ADMIN}" || -z "${TOKEN_USER}" || -z "${TOKEN_READER}" ]]; then
+  echo "Error: one or more service-account tokens are empty" >&2
+  exit 1
+fi
+
+TOKEN_FILE="${NAMESPACE}/.env.forklift-tokens"
+mkdir -p "${NAMESPACE}"
+(
+  umask 077
+  tmp_file=$(mktemp "${TOKEN_FILE}.XXXXXX") || exit 1
+  chmod 600 "${tmp_file}" || exit 1
+  trap 'rm -f -- "${tmp_file}"' EXIT
+  cat > "${tmp_file}" <<EOF
+export TOKEN_ADMIN=${TOKEN_ADMIN}
+export TOKEN_USER=${TOKEN_USER}
+export TOKEN_READER=${TOKEN_READER}
+EOF
+  mv -f -- "${tmp_file}" "${TOKEN_FILE}"
+  trap - EXIT
+)
 
 echo
-echo Tokens:
-echo "-------"
-echo forklift-admin:
-echo export TOKEN_ADMIN=${TOKEN_ADMIN}
+echo "Tokens written to: ${TOKEN_FILE} (mode 0600)"
 echo
-echo forklift-user:
-echo export TOKEN_USER=${TOKEN_USER}
-echo
-echo forklift-reader:
-echo export TOKEN_READER=${TOKEN_READER}
-echo
-echo Note:
-echo to use he tokens set BRIDGE_K8S_AUTH_BEARER_TOKEN
-echo   export TOKEN_ADMIN=...
-echo   export BRIDGE_K8S_AUTH_BEARER_TOKEN=$\{TOKEN_ADMIN \| TOKEN_USER \| TOKEN_READER\}
-echo
-echo before starting the bridge
-echo   npm run console
+echo "Usage:"
+echo "  source ${TOKEN_FILE}"
+echo "  export BRIDGE_K8S_AUTH_BEARER_TOKEN=\${TOKEN_ADMIN}"
+echo "  npm run console"
