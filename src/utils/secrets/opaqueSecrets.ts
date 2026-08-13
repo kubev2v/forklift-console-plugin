@@ -4,7 +4,7 @@ export const OPAQUE_SECRET_TYPE = 'Opaque';
 
 /**
  * Kubernetes defaults Secret.type to Opaque when unset.
- * @param secret
+ * @param secret Secret-like object; missing `type` is treated as Opaque.
  */
 export const isOpaqueSecret = (secret: Pick<IoK8sApiCoreV1Secret, 'type'>): boolean =>
   (secret.type ?? OPAQUE_SECRET_TYPE) === OPAQUE_SECRET_TYPE;
