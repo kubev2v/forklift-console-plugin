@@ -1284,6 +1284,8 @@
   "selected": "selected",
   "Selected": "選択済み",
   "Selected columns will be displayed in the table.": "選択した列が表に表示されます。",
+  "Selected offload plugin is not supported": "Selected offload plugin is not supported",
+  "Selected storage product is not supported for this offload plugin": "Selected storage product is not supported for this offload plugin",
   "Selected VMs": "選択済みの仮想マシン",
   "selector key": "セレクターキー",
   "selector value": "セレクター値",

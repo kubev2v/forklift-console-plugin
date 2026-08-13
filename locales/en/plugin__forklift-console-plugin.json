@@ -1288,6 +1288,8 @@
   "selected": "selected",
   "Selected": "Selected",
   "Selected columns will be displayed in the table.": "Selected columns will be displayed in the table.",
+  "Selected offload plugin is not supported": "Selected offload plugin is not supported",
+  "Selected storage product is not supported for this offload plugin": "Selected storage product is not supported for this offload plugin",
   "Selected VMs": "Selected VMs",
   "selector key": "selector key",
   "selector value": "selector value",

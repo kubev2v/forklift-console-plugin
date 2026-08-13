@@ -1284,6 +1284,8 @@
   "selected": "selected",
   "Selected": "선택됨",
   "Selected columns will be displayed in the table.": "선택한 열이 표에 표시됩니다.",
+  "Selected offload plugin is not supported": "Selected offload plugin is not supported",
+  "Selected storage product is not supported for this offload plugin": "Selected storage product is not supported for this offload plugin",
   "Selected VMs": "선택된 VM",
   "selector key": "선택기 키",
   "selector value": "선택기 값",

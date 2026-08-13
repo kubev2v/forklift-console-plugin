@@ -15,6 +15,7 @@ import {
   SelectList,
   SelectOption,
 } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import { StorageMapFieldId } from '@utils/storage/types';
 
@@ -23,7 +24,7 @@ import { getVendorProductLabel } from '../../utils/labelHelpers';
 
 type StorageProductFieldProps = {
   fieldId: string;
-  offloadPlugin?: OffloadPlugin | string;
+  offloadPlugin?: OffloadPlugin | '';
   suggestedProduct?: StorageVendorProduct;
 };
 
@@ -39,6 +40,18 @@ const StorageProductField: FC<StorageProductFieldProps> = ({
   } = useFormContext();
   const { loading, storageVendorProducts } = useStorageVendorProducts(offloadPlugin);
 
+  const resolvedSuggestedProduct = useMemo(() => {
+    if (!suggestedProduct) {
+      return undefined;
+    }
+
+    if (!storageVendorProducts.includes(suggestedProduct)) {
+      return undefined;
+    }
+
+    return suggestedProduct;
+  }, [storageVendorProducts, suggestedProduct]);
+
   const allOptions = useMemo(
     () =>
       storageVendorProducts.map((product) => ({
@@ -49,7 +62,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({
   );
 
   const { otherProducts, recommendedProducts } = useMemo(() => {
-    if (!suggestedProduct) {
+    if (!resolvedSuggestedProduct) {
       return { otherProducts: storageVendorProducts, recommendedProducts: [] };
     }
 
@@ -57,7 +70,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({
     const others: string[] = [];
 
     for (const product of storageVendorProducts) {
-      if (product === (suggestedProduct as string)) {
+      if (product === (resolvedSuggestedProduct as string)) {
         recommended.push(product);
       } else {
         others.push(product);
@@ -65,7 +78,9 @@ const StorageProductField: FC<StorageProductFieldProps> = ({
     }
 
     return { otherProducts: others, recommendedProducts: recommended };
-  }, [storageVendorProducts, suggestedProduct]);
+  }, [resolvedSuggestedProduct, storageVendorProducts]);
+
+  const showRecommendedGroup = !isEmpty(recommendedProducts);
 
   return (
     <FormGroup
@@ -95,7 +110,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({
             testId={fieldId}
             value={field.value}
           >
-            {suggestedProduct ? (
+            {showRecommendedGroup ? (
               <>
                 <SelectGroup label={t('Recommended')}>
                   <SelectList>
@@ -129,7 +144,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({
           </Select>
         )}
       />
-      {suggestedProduct && (
+      {showRecommendedGroup && (
         <FormHelperText>
           <HelperText>
             <HelperTextItem>

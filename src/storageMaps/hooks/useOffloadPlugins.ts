@@ -28,7 +28,9 @@ const getOffloadPluginNames = (crd: CustomResourceDefinition): string[] | undefi
 };
 
 /**
- * Hook that fetches offload plugin names from CRD, extends with constants
+ * Hook that fetches offload plugin names from the StorageMap CRD when available.
+ * Falls back to local constants while loading, on error, or when the CRD has no plugins.
+ * Does not force-merge local constants over the CRD (CSI stays hidden until the CRD lists it).
  */
 export const useOffloadPlugins = (): UseOffloadPluginsResult => {
   const { crd, error, loading } = useStorageMapCrd();
@@ -45,7 +47,7 @@ export const useOffloadPlugins = (): UseOffloadPluginsResult => {
         return offloadPlugins;
       }
 
-      return Array.from(new Set([...crdPlugins, ...offloadPlugins]));
+      return crdPlugins;
     } catch {
       return offloadPlugins;
     }

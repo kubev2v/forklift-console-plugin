@@ -1,7 +1,7 @@
 import { isEmpty } from '@utils/helpers';
 import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 
-import { CSI_VOLUME_IMPORT_VENDOR_PRODUCTS } from './constants';
+import { isVendorProductAllowedForPlugin } from './getAllowedVendorProducts';
 import { OffloadPlugin, type OffloadPluginConfig } from './types';
 
 /**
@@ -12,7 +12,7 @@ import { OffloadPlugin, type OffloadPluginConfig } from './types';
 export const createOffloadPluginConfig = (
   mapping: StorageMapping,
 ): OffloadPluginConfig | undefined => {
-  const offloadPlugin = mapping[StorageMapFieldId.OffloadPlugin] as OffloadPlugin;
+  const offloadPlugin = mapping[StorageMapFieldId.OffloadPlugin] as OffloadPlugin | '';
   const storageSecret = mapping[StorageMapFieldId.StorageSecret];
   const storageVendorProduct = mapping[StorageMapFieldId.StorageProduct];
 
@@ -20,13 +20,13 @@ export const createOffloadPluginConfig = (
     return undefined;
   }
 
+  if (!isVendorProductAllowedForPlugin(offloadPlugin, storageVendorProduct)) {
+    return undefined;
+  }
+
   const dedicatedMigrationHosts = mapping[StorageMapFieldId.DedicatedMigrationHosts];
 
   if (offloadPlugin === OffloadPlugin.CsiVolumeImport) {
-    if (!(CSI_VOLUME_IMPORT_VENDOR_PRODUCTS as readonly string[]).includes(storageVendorProduct)) {
-      return undefined;
-    }
-
     return {
       csiVolumeImport: {
         secretRef: storageSecret,

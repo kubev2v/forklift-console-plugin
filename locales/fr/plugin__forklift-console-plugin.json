@@ -1299,6 +1299,8 @@
   "selected": "selected",
   "Selected": "Sélectionné",
   "Selected columns will be displayed in the table.": "Les colonnes sélectionnées seront affichées dans le tableau.",
+  "Selected offload plugin is not supported": "Selected offload plugin is not supported",
+  "Selected storage product is not supported for this offload plugin": "Selected storage product is not supported for this offload plugin",
   "Selected VMs": "Machines virtuelles sélectionnées",
   "selector key": "clé du sélecteur",
   "selector value": "valeur du sélecteur",

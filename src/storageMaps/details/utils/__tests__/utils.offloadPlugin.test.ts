@@ -2,9 +2,16 @@ import { OffloadPlugin } from 'src/storageMaps/utils/types';
 
 import type { V1beta1StorageMap } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
+import { mockI18n } from '@test-utils/mockI18n';
 import { StorageMapFieldId } from '@utils/storage/types';
 
-import { transformFormValuesToK8sSpec, transformStorageMapToFormValues } from '../utils';
+import {
+  transformFormValuesToK8sSpec,
+  transformStorageMapToFormValues,
+  validateUpdatedStorageMaps,
+} from '../utils';
+
+mockI18n();
 
 const baseStorageMap = {
   spec: {
@@ -66,6 +73,28 @@ describe('transformFormValuesToK8sSpec - offload plugins', () => {
         storageVendorProduct: 'ontap',
       },
     });
+  });
+
+  it('omits offloadPlugin for CSI + disallowed product (validation must reject before Save)', () => {
+    const formValues = {
+      storageMap: [
+        {
+          [StorageMapFieldId.OffloadPlugin]: OffloadPlugin.CsiVolumeImport,
+          [StorageMapFieldId.SourceStorage]: { id: 'ds-1', name: 'eco-iscsi-ds1' },
+          [StorageMapFieldId.StorageProduct]: 'ontap',
+          [StorageMapFieldId.StorageSecret]: 'netapp-secret',
+          [StorageMapFieldId.TargetStorage]: { name: 'hpe-3par' },
+        },
+      ],
+    };
+
+    expect(validateUpdatedStorageMaps(formValues.storageMap)).toBe(
+      'Selected storage product is not supported for this offload plugin',
+    );
+
+    const result = transformFormValuesToK8sSpec(formValues, baseStorageMap);
+
+    expect(result?.spec?.map?.[0].offloadPlugin).toBeUndefined();
   });
 });
 

@@ -1284,6 +1284,8 @@
   "selected": "selected",
   "Selected": "已选择",
   "Selected columns will be displayed in the table.": "所选列将显示在表中。",
+  "Selected offload plugin is not supported": "Selected offload plugin is not supported",
+  "Selected storage product is not supported for this offload plugin": "Selected storage product is not supported for this offload plugin",
   "Selected VMs": "选择的虚拟机",
   "selector key": "选择器键",
   "selector value": "选择器值",
