@@ -14,10 +14,16 @@ describe('validateAapUrl', () => {
   it('allows well-formed URLs', () => {
     expect(validateAapUrl('https://aap.example.com')).toBeUndefined();
     expect(validateAapUrl(' http://192.168.1.1:8000 ')).toBeUndefined();
+    expect(validateAapUrl('https://aap.example.com/api/v2')).toBeUndefined();
+    expect(validateAapUrl('HTTPS://aap.example.com')).toBeUndefined();
   });
 
   it('rejects garbage input', () => {
     expect(validateAapUrl('not a valid url !!!')).toMatch(/URL is invalid/);
     expect(validateAapUrl('http:/example.com')).toMatch(/URL is invalid/);
+  });
+
+  it('uses an AAP-shaped example in the error message', () => {
+    expect(validateAapUrl('not-a-url')).toMatch(/https:\/\/aap\.example\.com/);
   });
 });

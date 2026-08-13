@@ -1389,6 +1389,7 @@
   "The storage device or partition that contains the root filesystem. For example, naming a root device \"sdb2/boot/dev\" would mean to use the second partition on the first hard drive.": "包含根文件系统的存储设备或分区。例如，命名 root 设备 \"sdb2/boot/dev\" 意味着在第一个硬盘上使用第二个分区。",
   "The target project is the project, within your selected target provider, that your virtual machines will be migrated to. This is different from the project that your migration plan will be created in and where your provider was created.": "目标项目是所选目标供应商中的项目，您的虚拟机将迁移到其中。这与创建迁移计划的项目以及创建您的供应商的不同。",
   "The uploaded file name extension should be .ova": "上传的文件名扩展应该是 .ova",
+  "The URL is invalid. URL should include the schema, for example: https://aap.example.com.": "The URL is invalid. URL should include the schema, for example: https://aap.example.com.",
   "The URL is invalid. URL should include the schema, for example: https://example.com:6443.": "URL 无效。URL 应该包括 schema，例如： https://example.com:6443。",
   "The URL is required. URL should include the schema and path, for example: https://rhv-host-example.com/ovirt-engine/api": "URL 是必需的。URL 应该包括 schema 和路径，例如： https://rhv-host-example.com/ovirt-engine/api",
   "The URL of the API endpoint, for example: https://example.com:6443.": "API 端点的 URL，例如：https://example.com:6443。",
