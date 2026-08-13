@@ -253,6 +253,7 @@
   "Canceled": "キャンセル済み",
   "Cannot inspect VMs in an archived plan.": "アーカイブ済みの計画内の仮想マシンは検査できません。",
   "Cannot inspect VMs while migration is in progress.": "移行中は仮想マシンを検査できません。",
+  "Cannot remove the only mapping for a storage used by the selected VMs.": "Cannot remove the only mapping for a storage used by the selected VMs.",
   "Cannot retrieve certificate": "証明書を取得できません",
   "cannot start": "開始できません",
   "Cannot start": "開始できません",

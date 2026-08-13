@@ -5,9 +5,36 @@ import { StorageMapModel, type V1beta1Provider, type V1beta1StorageMap } from '@
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { isEmpty } from '@utils/helpers';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
-import { StorageMapFieldId } from '@utils/storage/types';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 import type { PlanStorageEditFormValues } from './types';
+
+/**
+ * True when this row is the only mapping that covers a used (VM-detected) source storage.
+ * Duplicate rows for the same used source may be removed while coverage remains (MTV-6324).
+ */
+export const isSoleMappingOfUsedSource = (
+  index: number,
+  storageMappings: StorageMapping[],
+  usedSourceStorages: MappingValue[],
+): boolean => {
+  const sourceId = storageMappings[index]?.[StorageMapFieldId.SourceStorage]?.id;
+  if (!sourceId) {
+    return false;
+  }
+
+  const isUsedSource = usedSourceStorages.some((storage) => storage.id === sourceId);
+  if (!isUsedSource) {
+    return false;
+  }
+
+  const mappingsOfSource = storageMappings.filter(
+    (mapping) => mapping[StorageMapFieldId.SourceStorage]?.id === sourceId,
+  );
+
+  return mappingsOfSource.length <= 1;
+};
 
 export const patchStorageMappingValues = async (
   formValues: PlanStorageEditFormValues,

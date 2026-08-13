@@ -119,6 +119,15 @@ export class StorageMapCreatePage {
     await this.createButton.click();
   }
 
+  async submitForm(expectedMapName: string): Promise<void> {
+    await this.submit();
+    await this.page.waitForURL(
+      new RegExp(
+        `/k8s/ns/[^/]+/forklift\\.konveyor\\.io~v1beta1~StorageMap/${expectedMapName}[^/]*$`,
+      ),
+    );
+  }
+
   async waitForMappingTableReady(): Promise<void> {
     await this.page.getByTestId('field-row-0').waitFor({ state: 'visible' });
   }

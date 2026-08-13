@@ -13,6 +13,13 @@ import type { MappingValue } from '@utils/types';
 
 import type { CreateStorageMapFormData } from '../types';
 
+/**
+ * Displays a flat list of source storages from provider inventory.
+ *
+ * Duplicate source storage selection is intentional to support multi-plugin
+ * offload mapping (MTV-6324): multiple rows with the same source storage, each
+ * pointing to a different target storage class and/or offload plugin config.
+ */
 type InventorySourceStorageFieldProps = {
   fieldId: string;
   sourceStorages: InventoryStorage[];

@@ -253,6 +253,7 @@
   "Canceled": "取消",
   "Cannot inspect VMs in an archived plan.": "无法检查存档计划中的虚拟机。",
   "Cannot inspect VMs while migration is in progress.": "迁移进行时无法检查虚拟机。",
+  "Cannot remove the only mapping for a storage used by the selected VMs.": "Cannot remove the only mapping for a storage used by the selected VMs.",
   "Cannot retrieve certificate": "无法检索证书",
   "cannot start": "无法启动",
   "Cannot start": "无法启动",
