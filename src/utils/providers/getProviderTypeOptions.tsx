@@ -12,7 +12,7 @@ import {
 import { t } from '@utils/i18n';
 import { PROVIDER_TYPES, type ProviderTypes } from '@utils/providers/constants';
 
-export type ProviderTypeOption = {
+type ProviderTypeOption = {
   description: string;
   icon: ReactElement;
   label: string;
