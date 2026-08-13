@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react';
+import { type FC, useEffect, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
 
@@ -26,6 +26,8 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
   const {
     control,
     formState: { isSubmitting },
+    setValue,
+    watch,
   } = useFormContext();
 
   const [secrets, loaded, error] = useK8sWatchResource<IoK8sApiCoreV1Secret[]>({
@@ -40,7 +42,27 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
     [secrets],
   );
 
-  const isWatchPending = !loaded || Boolean(error);
+  const selectedSecret = watch(fieldId) as string | undefined;
+  const isWatchUnavailable = !loaded || Boolean(error);
+
+  useEffect(() => {
+    if (isWatchUnavailable || !selectedSecret) {
+      return;
+    }
+
+    const isSelectedOpaque = opaqueSecrets.some((secret) => getName(secret) === selectedSecret);
+
+    if (!isSelectedOpaque) {
+      setValue(fieldId, '', { shouldDirty: true, shouldValidate: true });
+    }
+  }, [fieldId, isWatchUnavailable, opaqueSecrets, selectedSecret, setValue]);
+
+  let placeholder = t('Loading secrets...');
+  if (error) {
+    placeholder = t('Failed to load secrets.');
+  } else if (loaded) {
+    placeholder = t('Select storage secret');
+  }
 
   return (
     <FormGroup
@@ -69,11 +91,11 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
         render={({ field }) => (
           <Select
             id={fieldId}
-            isDisabled={isSubmitting || isWatchPending}
+            isDisabled={isSubmitting || isWatchUnavailable}
             onSelect={(_e, value) => {
               field.onChange(value);
             }}
-            placeholder={loaded ? t('Select storage secret') : t('Loading secrets...')}
+            placeholder={placeholder}
             ref={field.ref}
             testId={fieldId}
             value={field.value as string | undefined}
