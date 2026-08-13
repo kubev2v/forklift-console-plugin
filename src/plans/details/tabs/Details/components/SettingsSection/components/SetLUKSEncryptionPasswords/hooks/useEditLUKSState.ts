@@ -84,7 +84,7 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     [secretName, secretNamespace],
   );
 
-  const [secret] = useK8sWatchResource<IoK8sApiCoreV1Secret>(watchResource);
+  const [secret, secretLoaded] = useK8sWatchResource<IoK8sApiCoreV1Secret>(watchResource);
 
   const sourceSecretName = secret ? getLabels(secret)?.[SOURCE_SECRET_LABEL] : undefined;
   const sourceWatchResource: WatchK8sResource | null = useMemo(
@@ -178,10 +178,10 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     }
 
     return onDiskDecryptionConfirm({
+      currentSecret: secret,
       nbdeClevis,
       newValue: JSON.stringify(value),
       resource,
-      stripSourceSecretLabel: Boolean(secret && getLabels(secret)?.[SOURCE_SECRET_LABEL]),
     });
   }, [decryptionMode, nbdeClevis, resource, secret, selectedSecret, sourceSecretName, value]);
 
@@ -189,7 +189,9 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     allVMsHasMatchingLuks,
     decryptionMode,
     handleConfirm,
-    isDisabled: decryptionMode === DECRYPTION_MODE_EXISTING && !selectedSecret,
+    isDisabled:
+      (Boolean(secretName) && !secretLoaded) ||
+      (decryptionMode === DECRYPTION_MODE_EXISTING && !selectedSecret),
     isSourceSecretUnavailable,
     nbdeClevis,
     resource,

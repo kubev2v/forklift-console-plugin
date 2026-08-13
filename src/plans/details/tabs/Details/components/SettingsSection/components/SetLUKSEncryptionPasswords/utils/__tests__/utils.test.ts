@@ -1,7 +1,7 @@
 import { SOURCE_SECRET_LABEL } from 'src/plans/create/utils/copyDecryptionSecret';
 
 import { REMOVE, REPLACE } from '@components/ModalForm/utils/constants';
-import type { V1beta1Plan } from '@forklift-ui/types';
+import type { IoK8sApiCoreV1Secret, V1beta1Plan } from '@forklift-ui/types';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 
 import { onDiskDecryptionConfirm } from '../utils';
@@ -23,11 +23,30 @@ const plan = {
   },
 } as unknown as V1beta1Plan;
 
+const labeledSecret = {
+  data: { 0: btoa('old-passphrase') },
+  metadata: {
+    labels: { [SOURCE_SECRET_LABEL]: 'luks-test-secret' },
+    name: 'plan-owned-luks',
+    namespace: 'test-ns',
+  },
+} as unknown as IoK8sApiCoreV1Secret;
+
+const unlabeledSecret = {
+  data: { 0: btoa('old-passphrase') },
+  metadata: {
+    name: 'plan-owned-luks',
+    namespace: 'test-ns',
+  },
+} as unknown as IoK8sApiCoreV1Secret;
+
 const findSecretDataPatch = ():
   { data: { op: string; path: string; value?: unknown }[] } | undefined =>
   mockK8sPatch.mock.calls
     .map(([arg]) => arg)
     .find((arg) => arg?.data?.some((op: { path?: string }) => op.path === '/data'));
+
+const sourceSecretLabelPatchPath = `/metadata/labels/${SOURCE_SECRET_LABEL.replaceAll('~', '~0').replaceAll('/', '~1')}`;
 
 describe('onDiskDecryptionConfirm', () => {
   beforeEach(() => {
@@ -37,7 +56,6 @@ describe('onDiskDecryptionConfirm', () => {
         return Promise.resolve({
           data: data[0].value,
           metadata: {
-            labels: { [SOURCE_SECRET_LABEL]: 'luks-test-secret' },
             name: 'plan-owned-luks',
             namespace: 'test-ns',
           },
@@ -49,31 +67,26 @@ describe('onDiskDecryptionConfirm', () => {
 
   it('removes source-secret label when updating existing secret with passphrases', async () => {
     await onDiskDecryptionConfirm({
+      currentSecret: labeledSecret,
       nbdeClevis: false,
       newValue: JSON.stringify(['new-passphrase']),
       resource: plan,
-      stripSourceSecretLabel: true,
     });
 
     const secretPatchCall = findSecretDataPatch();
     expect(secretPatchCall).toBeDefined();
-    expect(secretPatchCall?.data).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ op: REPLACE, path: '/data' }),
-        expect.objectContaining({
-          op: REMOVE,
-          path: `/metadata/labels/${SOURCE_SECRET_LABEL.replaceAll('/', '~1')}`,
-        }),
-      ]),
-    );
+    expect(secretPatchCall?.data).toEqual([
+      { op: REPLACE, path: '/data', value: { 0: btoa('new-passphrase') } },
+      { op: REMOVE, path: sourceSecretLabelPatchPath },
+    ]);
   });
 
   it('does not remove source-secret label when secret was never a copy', async () => {
     await onDiskDecryptionConfirm({
+      currentSecret: unlabeledSecret,
       nbdeClevis: false,
       newValue: JSON.stringify(['new-passphrase']),
       resource: plan,
-      stripSourceSecretLabel: false,
     });
 
     const secretPatchCall = findSecretDataPatch();

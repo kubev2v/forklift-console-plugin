@@ -32,6 +32,9 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   useK8sWatchResource: jest.fn((...args) => mockUseK8sWatchResource(...args)),
 }));
 
+jest.mock('@components/LUKSSecretSelect/LUKSSecretSelect', () => (): ReactElement => (
+  <div data-testid="edit-luks-secret-select" />
+));
 jest.mock(
   '../components/EditLUKSModalAlert',
   () =>
@@ -113,7 +116,7 @@ describe('EditLUKSEncryptionPasswords', () => {
     mockGetLUKSSecretName.mockReturnValue('test-secret');
     mockGetNamespace.mockReturnValue('test-namespace');
     mockGetPlanVirtualMachines.mockReturnValue([]);
-    mockUseK8sWatchResource.mockReturnValue([{ data: {} }, false, null]);
+    mockUseK8sWatchResource.mockReturnValue([{ data: {} }, true, null]);
   });
 
   it('initializes NBDE state from VM data', () => {
@@ -159,7 +162,7 @@ describe('EditLUKSEncryptionPasswords', () => {
     mockGetPlanVirtualMachines.mockReturnValue([{ nbdeClevis: false }]);
     mockUseK8sWatchResource.mockReturnValue([
       { data: { pass1: btoa('test-pass-1'), pass2: btoa('test-pass-2') } },
-      false,
+      true,
       null,
     ]);
 
@@ -172,7 +175,7 @@ describe('EditLUKSEncryptionPasswords', () => {
 
   it('clears passphrases when NBDE is enabled', async () => {
     const user = userEvent.setup();
-    mockUseK8sWatchResource.mockReturnValue([{ data: { pass1: btoa('test-pass') } }, false, null]);
+    mockUseK8sWatchResource.mockReturnValue([{ data: { pass1: btoa('test-pass') } }, true, null]);
 
     render(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
 
@@ -189,6 +192,9 @@ describe('EditLUKSEncryptionPasswords', () => {
 
   it('submits form with correct NBDE state', async () => {
     const user = userEvent.setup();
+    const watchedSecret = { data: {} } as IoK8sApiCoreV1Secret;
+    mockUseK8sWatchResource.mockReturnValue([watchedSecret, true, null]);
+
     render(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
 
     const checkbox = screen.getByLabelText('Use network-bound disk encryption (NBDE/Clevis)');
@@ -199,10 +205,46 @@ describe('EditLUKSEncryptionPasswords', () => {
 
     await waitFor(() => {
       expect(mockOnDiskDecryptionConfirm).toHaveBeenCalledWith({
+        currentSecret: watchedSecret,
         nbdeClevis: true,
         newValue: JSON.stringify([]),
         resource: mockPlan,
-        stripSourceSecretLabel: false,
+      });
+    });
+  });
+
+  it('passes labeled current secret when saving passphrases after source-secret copy', async () => {
+    const user = userEvent.setup();
+    const labeledSecret = {
+      data: { 0: btoa('copied-pass') },
+      metadata: {
+        labels: { [SOURCE_SECRET_LABEL]: 'source-luks-secret' },
+        name: 'test-secret',
+      },
+    } as unknown as IoK8sApiCoreV1Secret;
+    mockGetPlanVirtualMachines.mockReturnValue([{ nbdeClevis: false }]);
+    mockUseK8sWatchResource.mockReturnValue([labeledSecret, true, null]);
+
+    render(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Use an existing secret')).toBeChecked();
+    });
+
+    await user.click(screen.getByLabelText('Enter passphrases'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Passphrases: copied-pass')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(mockOnDiskDecryptionConfirm).toHaveBeenCalledWith({
+        currentSecret: labeledSecret,
+        nbdeClevis: false,
+        newValue: JSON.stringify(['copied-pass']),
+        resource: mockPlan,
       });
     });
   });
@@ -221,7 +263,7 @@ describe('EditLUKSEncryptionPasswords', () => {
 
   it('handles missing secret data gracefully', () => {
     mockGetLUKSSecretName.mockReturnValue('test-secret');
-    mockUseK8sWatchResource.mockReturnValue([{ data: null }, false, null]);
+    mockUseK8sWatchResource.mockReturnValue([{ data: null }, true, null]);
 
     render(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
 
