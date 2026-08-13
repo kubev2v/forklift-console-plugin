@@ -101,4 +101,33 @@ describe('StorageSecretField', () => {
     expect(screen.getByRole('button', { name: 'Select menu toggle' })).toBeDisabled();
     expect(screen.getByText('Loading secrets...')).toBeInTheDocument();
   });
+
+  it('disables the select and shows failure copy when watch errors', () => {
+    mockUseK8sWatchResource.mockReturnValue([[], true, new Error('watch failed')]);
+
+    renderWithForm(<StorageSecretField fieldId="storageSecret" sourceProvider={sourceProvider} />);
+
+    expect(screen.getByRole('button', { name: 'Select menu toggle' })).toBeDisabled();
+    expect(screen.getByText('Failed to load secrets.')).toBeInTheDocument();
+  });
+
+  it('clears a stale non-Opaque secret value from the form', () => {
+    mockUseK8sWatchResource.mockReturnValue([
+      [
+        { metadata: { name: 'storage-creds', uid: 'uid-1' }, type: 'Opaque' },
+        { metadata: { name: 'tls-secret', uid: 'uid-2' }, type: 'kubernetes.io/tls' },
+      ],
+      true,
+      null,
+    ]);
+
+    renderWithForm(<StorageSecretField fieldId="storageSecret" sourceProvider={sourceProvider} />, {
+      defaultValues: { storageSecret: 'tls-secret' },
+    });
+
+    expect(screen.getByRole('button', { name: 'Select menu toggle' })).toHaveTextContent(
+      'Select storage secret',
+    );
+    expect(screen.queryByText('tls-secret')).not.toBeInTheDocument();
+  });
 });

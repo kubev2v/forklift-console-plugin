@@ -26,6 +26,25 @@ describe('LUKSSecretSelect', () => {
     expect(screen.getByPlaceholderText('Select a secret')).toBeInTheDocument();
   });
 
+  it('includes secrets with missing type (K8s default Opaque)', () => {
+    mockUseK8sWatchResource.mockReturnValue([
+      [{ metadata: { name: 'default-type-secret' } }],
+      true,
+      null,
+    ]);
+
+    render(
+      <LUKSSecretSelect
+        id="test"
+        namespace="test-ns"
+        onSelect={onSelect}
+        value="default-type-secret"
+      />,
+    );
+
+    expect(screen.getByDisplayValue('default-type-secret')).toBeInTheDocument();
+  });
+
   it('renders no-options message when no Opaque secrets exist', () => {
     mockUseK8sWatchResource.mockReturnValue([
       [{ metadata: { name: 'tls-secret' }, type: 'kubernetes.io/tls' }],
