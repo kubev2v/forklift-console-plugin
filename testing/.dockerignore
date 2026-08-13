@@ -1,4 +1,22 @@
+# Local credentials and provider config (injected at runtime via PROVIDERS_JSON)
 .providers.json
+
+# Local env files — baking these pins FORKLIFT_VERSION/CNV_VERSION and breaks
+# cluster auto-detect in Jenkins (e.g. FORKLIFT_VERSION=latest skips no gates)
+e2e.env
+e2e*.env
+playwright/.env-relay.json
+playwright/.auth/
+
+# Local-only / experimental specs (often listed in developers' .git/info/exclude).
+# Without these entries, `podman build … ./testing` COPY-bakes them into CI images
+# and Jenkins --grep=@downstream may run them (e.g. plan-cutover-asap on #391).
+**/plan-cutover-asap.spec.ts
+**/warm-migration-example.spec.ts
+**/plan-deep-inspection-seed.spec.ts
+**/seed-*.spec.ts
+**/temp-log-providers.spec.ts
+**/testdocs.txt
 
 # Test artifacts
 playwright-report/

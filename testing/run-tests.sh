@@ -66,8 +66,16 @@ export NODE_TLS_REJECT_UNAUTHORIZED=0
 export CLUSTER_USERNAME="kubeadmin"
 export CLUSTER_PASSWORD=${CLUSTER_PASSWORD}
 export VSPHERE_PROVIDER=${VSPHERE_PROVIDER}
-export FORKLIFT_VERSION=${FORKLIFT_VERSION}
-export CNV_VERSION=${CNV_VERSION}
+
+# Only export when non-empty so Playwright global.setup can auto-detect from the
+# cluster. `export VAR=${VAR}` with VAR unset exports an empty string, which the
+# suite treats as user-set and disables version auto-detect / gating.
+if [[ -n "${FORKLIFT_VERSION:-}" ]]; then
+  export FORKLIFT_VERSION
+fi
+if [[ -n "${CNV_VERSION:-}" ]]; then
+  export CNV_VERSION
+fi
 
 log "Running Playwright tests..."
 echo "  Cluster: ${CLUSTER_NAME}"
