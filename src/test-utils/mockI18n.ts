@@ -14,10 +14,14 @@ const createMockT = () => (key: string, params?: Record<string, unknown>) => {
 export const mockI18n = () => {
   const mockT = createMockT();
 
-  jest.mock('@utils/i18n', () => ({
+  const i18nMock = {
+    ForkliftTrans: ({ children }: { children: unknown }) => children,
     t: mockT,
     useForkliftTranslation: () => ({
       t: mockT,
     }),
-  }));
+  };
+
+  jest.mock('@utils/i18n', () => i18nMock);
+  jest.mock('src/utils/i18n', () => i18nMock);
 };

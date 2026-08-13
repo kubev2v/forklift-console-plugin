@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router';
 import migrationIcon from 'src/components/images/resources/migration.svg';
 import { OverviewContext } from 'src/overview/context/OverviewContext';
 import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelRef } from '@forklift-ui/types';
 import { useActiveNamespace, useFlag } from '@openshift-console/dynamic-plugin-sdk';
@@ -21,6 +20,7 @@ import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytic
 import { Namespace } from '@utils/constants';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
+import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 import type { ProviderTypes } from '@utils/providers/constants';
 
 import { providerTypes } from './utils/providerTypes';

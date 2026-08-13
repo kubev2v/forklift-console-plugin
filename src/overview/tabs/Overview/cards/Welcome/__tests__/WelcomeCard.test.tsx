@@ -1,8 +1,14 @@
+import { mockI18n } from '@test-utils/mockI18n';
+
+mockI18n();
+
 import { MemoryRouter } from 'react-router';
 import { OverviewContextProvider } from 'src/overview/context/OverviewContext';
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
+
+import WelcomeCard from '../WelcomeCard';
 
 const mockUseClusterIsAwsPlatform = jest.fn<() => boolean>();
 
@@ -18,27 +24,10 @@ jest.mock('@utils/analytics/hooks/useForkliftAnalytics', () => ({
   useForkliftAnalytics: () => ({ trackEvent: jest.fn() }),
 }));
 
-const mockT = (key: string): string => key;
-
-jest.mock('src/utils/i18n', () => ({
-  ForkliftTrans: ({ children }: { children: unknown }) => children,
-  t: mockT,
-  useForkliftTranslation: () => ({ t: mockT }),
-}));
-
-jest.mock('@utils/i18n', () => ({
-  ForkliftTrans: ({ children }: { children: unknown }) => children,
-  t: mockT,
-  useForkliftTranslation: () => ({ t: mockT }),
-}));
-
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   useActiveNamespace: () => ['test-ns'],
   useFlag: () => true,
 }));
-
-// eslint-disable-next-line import/first
-import WelcomeCard from '../WelcomeCard';
 
 const renderWelcomeCard = (): ReturnType<typeof render> =>
   render(
