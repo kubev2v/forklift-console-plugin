@@ -181,8 +181,9 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
       nbdeClevis,
       newValue: JSON.stringify(value),
       resource,
+      stripSourceSecretLabel: Boolean(secret && getLabels(secret)?.[SOURCE_SECRET_LABEL]),
     });
-  }, [decryptionMode, nbdeClevis, resource, selectedSecret, sourceSecretName, value]);
+  }, [decryptionMode, nbdeClevis, resource, secret, selectedSecret, sourceSecretName, value]);
 
   return {
     allVMsHasMatchingLuks,

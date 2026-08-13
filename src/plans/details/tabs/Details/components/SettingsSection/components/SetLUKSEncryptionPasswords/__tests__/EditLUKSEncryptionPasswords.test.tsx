@@ -202,6 +202,7 @@ describe('EditLUKSEncryptionPasswords', () => {
         nbdeClevis: true,
         newValue: JSON.stringify([]),
         resource: mockPlan,
+        stripSourceSecretLabel: false,
       });
     });
   });

@@ -1,6 +1,6 @@
 import { SOURCE_SECRET_LABEL } from 'src/plans/create/utils/copyDecryptionSecret';
 
-import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
+import { ADD, REMOVE, REPLACE } from '@components/ModalForm/utils/constants';
 import {
   type IoK8sApiCoreV1Secret,
   PlanModel,
@@ -11,6 +11,8 @@ import { k8sCreate, k8sDelete, k8sPatch } from '@openshift-console/dynamic-plugi
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { getLUKSSecretName, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
+
+const SOURCE_SECRET_LABEL_PATCH_PATH = `/metadata/labels/${SOURCE_SECRET_LABEL.replaceAll('/', '~1')}`;
 
 const createIndexedBase64Object = (encodedString: string): Record<number, string> | undefined => {
   const list = JSON.parse(encodedString || '[]') as string[];
@@ -34,6 +36,7 @@ type LUKSSecret = {
   planUID: string | undefined;
   secretName: string | undefined;
   secretNamespace: string | undefined;
+  stripSourceSecretLabel?: boolean;
 };
 
 const getLUKSSecret = async ({
@@ -42,6 +45,7 @@ const getLUKSSecret = async ({
   planUID,
   secretName,
   secretNamespace,
+  stripSourceSecretLabel = false,
 }: LUKSSecret): Promise<IoK8sApiCoreV1Secret | undefined> => {
   if (secretName && !newData) {
     return k8sDelete({
@@ -51,8 +55,15 @@ const getLUKSSecret = async ({
   }
 
   if (secretName && newData) {
+    const data: { op: string; path: string; value?: Record<number, string> }[] = [
+      { op: REPLACE, path: '/data', value: newData },
+    ];
+    if (stripSourceSecretLabel) {
+      data.push({ op: REMOVE, path: SOURCE_SECRET_LABEL_PATCH_PATH });
+    }
+
     return k8sPatch({
-      data: [{ op: REPLACE, path: '/data', value: newData }],
+      data,
       model: SecretModel,
       resource: { metadata: { name: secretName, namespace: secretNamespace } },
     });
@@ -131,12 +142,14 @@ export const onDiskDecryptionConfirm = async ({
   nbdeClevis,
   newValue,
   resource,
+  stripSourceSecretLabel = false,
 }: {
   existingSecret?: IoK8sApiCoreV1Secret;
   labeledSourceSecretName?: string;
   nbdeClevis: boolean;
   newValue: string;
   resource: V1beta1Plan;
+  stripSourceSecretLabel?: boolean;
 }): Promise<unknown> => {
   const currentSecretName = getLUKSSecretName(resource);
   const secretNamespace = getNamespace(resource);
@@ -188,6 +201,7 @@ export const onDiskDecryptionConfirm = async ({
     planUID,
     secretName: currentSecretName,
     secretNamespace,
+    stripSourceSecretLabel,
   });
 
   const updatedVMs = planVirtualMachines.map((vm) => ({
