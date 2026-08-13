@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
+import { SOURCE_SECRET_LABEL } from 'src/plans/create/utils/copyDecryptionSecret';
 
-import type { V1beta1Plan } from '@forklift-ui/types';
+import type { IoK8sApiCoreV1Secret, V1beta1Plan } from '@forklift-ui/types';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -54,12 +55,10 @@ jest.mock(
 
 jest.mock('@components/LUKSSecretSelect/LUKSSecretSelect', () => ({
   __esModule: true,
-  default: ({ testId, value }: { testId?: string; value: string }) => (
+  default: ({ testId, value }: { testId?: string; value: string }): ReactElement => (
     <div data-testid={testId ?? 'luks-secret-select'}>Selected: {value || 'none'}</div>
   ),
 }));
-
-const SOURCE_SECRET_LABEL = 'forklift.konveyor.io/source-secret';
 
 const mockPlan = {
   metadata: { name: 'test-plan', namespace: 'test-namespace' },
@@ -67,6 +66,22 @@ const mockPlan = {
 } as unknown as V1beta1Plan;
 
 const closeOverlay = jest.fn();
+
+const planOwnedSecretWithSourceLabel = {
+  data: { '0': btoa('copied') },
+  metadata: {
+    labels: { [SOURCE_SECRET_LABEL]: 'luks-source' },
+    name: 'test-secret',
+    namespace: 'test-namespace',
+  },
+  type: 'Opaque',
+} as IoK8sApiCoreV1Secret;
+
+const sourceSecret = {
+  data: { '0': btoa('original') },
+  metadata: { name: 'luks-source', namespace: 'test-namespace' },
+  type: 'Opaque',
+} as IoK8sApiCoreV1Secret;
 
 describe('EditLUKSEncryptionPasswords', () => {
   beforeEach(() => {
@@ -190,24 +205,10 @@ describe('EditLUKSEncryptionPasswords', () => {
   });
 
   it('pre-populates existing secret from source-secret label and enables Save', async () => {
+    const user = userEvent.setup();
     mockGetPlanVirtualMachines.mockReturnValue([
       { luks: { name: 'test-secret' }, nbdeClevis: false },
     ]);
-
-    const planOwnedSecret = {
-      data: { '0': btoa('copied') },
-      metadata: {
-        labels: { [SOURCE_SECRET_LABEL]: 'luks-source' },
-        name: 'test-secret',
-        namespace: 'test-namespace',
-      },
-      type: 'Opaque',
-    };
-    const sourceSecret = {
-      data: { '0': btoa('original') },
-      metadata: { name: 'luks-source', namespace: 'test-namespace' },
-      type: 'Opaque',
-    };
 
     mockUseK8sWatchResource.mockImplementation((resource) => {
       if (!resource) {
@@ -215,7 +216,7 @@ describe('EditLUKSEncryptionPasswords', () => {
       }
 
       if (resource.name === 'test-secret') {
-        return [planOwnedSecret, true, null];
+        return [planOwnedSecretWithSourceLabel, true, null];
       }
 
       if (resource.name === 'luks-source') {
@@ -225,7 +226,7 @@ describe('EditLUKSEncryptionPasswords', () => {
       return [undefined, true, null];
     });
 
-    render(<EditLUKSEncryptionPasswords closeModal={closeModal} resource={mockPlan} />);
+    render(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
 
     await waitFor(() => {
       expect(screen.getByTestId('edit-use-existing-secret-radio')).toBeChecked();
@@ -234,6 +235,49 @@ describe('EditLUKSEncryptionPasswords', () => {
     expect(screen.getByTestId('edit-luks-secret-select')).toHaveTextContent(
       'Selected: luks-source',
     );
+    expect(screen.getByRole('button', { name: /save/i })).toBeEnabled();
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(mockOnDiskDecryptionConfirm).toHaveBeenCalledWith({
+        existingSecret: sourceSecret,
+        labeledSourceSecretName: 'luks-source',
+        nbdeClevis: false,
+        newValue: JSON.stringify([]),
+        resource: mockPlan,
+      });
+    });
+  });
+
+  it('falls back to passphrases when labeled source secret is missing', async () => {
+    mockGetPlanVirtualMachines.mockReturnValue([
+      { luks: { name: 'test-secret' }, nbdeClevis: false },
+    ]);
+
+    mockUseK8sWatchResource.mockImplementation((resource) => {
+      if (!resource) {
+        return [undefined, true, null];
+      }
+
+      if (resource.name === 'test-secret') {
+        return [planOwnedSecretWithSourceLabel, true, null];
+      }
+
+      if (resource.name === 'luks-source') {
+        return [undefined, true, { message: 'NotFound', code: 404 }];
+      }
+
+      return [undefined, true, null];
+    });
+
+    render(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('edit-use-passphrases-radio')).toBeChecked();
+    });
+
+    expect(screen.getByTestId('luks-passphrase-input-list')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /save/i })).toBeEnabled();
   });
 });

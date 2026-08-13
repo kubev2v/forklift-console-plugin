@@ -127,11 +127,13 @@ const deleteCurrentSecret = async (
 
 export const onDiskDecryptionConfirm = async ({
   existingSecret,
+  labeledSourceSecretName,
   nbdeClevis,
   newValue,
   resource,
 }: {
   existingSecret?: IoK8sApiCoreV1Secret;
+  labeledSourceSecretName?: string;
   nbdeClevis: boolean;
   newValue: string;
   resource: V1beta1Plan;
@@ -143,6 +145,11 @@ export const onDiskDecryptionConfirm = async ({
   const planVirtualMachines = getPlanVirtualMachines(resource);
 
   if (existingSecret) {
+    // Selected secret is already the plan's labeled source — skip re-copy/delete
+    if (labeledSourceSecretName && getName(existingSecret) === labeledSourceSecretName) {
+      return undefined;
+    }
+
     const copiedSecret = await copySecretForPlan(
       existingSecret,
       planName ?? '',

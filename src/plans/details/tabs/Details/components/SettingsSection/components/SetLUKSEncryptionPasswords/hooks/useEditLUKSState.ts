@@ -81,7 +81,8 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     [sourceSecretName, secretNamespace],
   );
 
-  const [sourceSecret] = useK8sWatchResource<IoK8sApiCoreV1Secret>(sourceWatchResource);
+  const [sourceSecret, sourceSecretLoaded, sourceSecretLoadError] =
+    useK8sWatchResource<IoK8sApiCoreV1Secret>(sourceWatchResource);
 
   const derivedNbdeClevis = getNbdeClevisFromResource(resource);
   const [value, setValue] = useState<string[]>([]);
@@ -109,9 +110,15 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     }
   }
 
-  if (!selectedSecretInitializedRef.current && sourceSecret?.metadata?.name) {
-    selectedSecretInitializedRef.current = true;
-    setSelectedSecret(sourceSecret);
+  if (!selectedSecretInitializedRef.current && sourceSecretName) {
+    if (sourceSecret?.metadata?.name) {
+      selectedSecretInitializedRef.current = true;
+      setSelectedSecret((prev) => prev ?? sourceSecret);
+    } else if (sourceSecretLoaded || sourceSecretLoadError) {
+      // Labeled source missing (deleted/404) — fall back so the modal stays usable
+      selectedSecretInitializedRef.current = true;
+      setDecryptionMode(DECRYPTION_MODE_PASSPHRASES);
+    }
   }
 
   const secretDataKey = secretName && secret?.data ? JSON.stringify(secret.data) : undefined;
@@ -126,6 +133,7 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     if (decryptionMode === DECRYPTION_MODE_EXISTING && selectedSecret) {
       return onDiskDecryptionConfirm({
         existingSecret: selectedSecret,
+        labeledSourceSecretName: sourceSecretName,
         nbdeClevis: false,
         newValue: JSON.stringify([]),
         resource,
@@ -137,7 +145,7 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
       newValue: JSON.stringify(value),
       resource,
     });
-  }, [decryptionMode, nbdeClevis, resource, selectedSecret, value]);
+  }, [decryptionMode, nbdeClevis, resource, selectedSecret, sourceSecretName, value]);
 
   return {
     allVMsHasMatchingLuks,
