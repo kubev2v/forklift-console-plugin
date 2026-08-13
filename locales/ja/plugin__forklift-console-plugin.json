@@ -942,7 +942,6 @@
   "No results found": "結果が見つかりません",
   "No results match the filter criteria. Clear all filters and try again.": "フィルター条件に一致する結果が見つかりません。すべてのフィルターをクリアして再試行してください。",
   "No secret": "シークレットがありません",
-  "No secrets available for this provider": "このプロバイダーにはシークレットがありません",
   "No selected plans can be deleted.": "No selected plans can be deleted.",
   "No source networks are available for the selected VMs.": "選択した仮想マシンに使用できるソースネットワークがありません。",
   "No source storages are available for the selected VMs.": "選択した仮想マシンに使用できるソースストレージがありません。",

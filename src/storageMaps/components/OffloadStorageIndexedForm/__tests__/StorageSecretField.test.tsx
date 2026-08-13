@@ -52,6 +52,21 @@ describe('StorageSecretField', () => {
     expect(screen.queryByRole('option', { name: 'sa-token' })).not.toBeInTheDocument();
   });
 
+  it('includes secrets with missing type (K8s default Opaque)', async () => {
+    const user = userEvent.setup();
+    mockUseK8sWatchResource.mockReturnValue([
+      [{ metadata: { name: 'default-type-secret', uid: 'uid-5' } }],
+      true,
+      null,
+    ]);
+
+    renderWithForm(<StorageSecretField fieldId="storageSecret" sourceProvider={sourceProvider} />);
+
+    await user.click(screen.getByRole('button', { name: 'Select menu toggle' }));
+
+    expect(screen.getByRole('option', { name: 'default-type-secret' })).toBeInTheDocument();
+  });
+
   it('shows empty message when only non-Opaque secrets exist', async () => {
     const user = userEvent.setup();
     mockUseK8sWatchResource.mockReturnValue([
@@ -64,6 +79,26 @@ describe('StorageSecretField', () => {
 
     await user.click(screen.getByRole('button', { name: 'Select menu toggle' }));
 
-    expect(screen.getByText('No secrets available for this provider')).toBeInTheDocument();
+    expect(screen.getByText('No Opaque secrets found in this project.')).toBeInTheDocument();
+  });
+
+  it('shows empty message when secrets list is empty', async () => {
+    const user = userEvent.setup();
+    mockUseK8sWatchResource.mockReturnValue([[], true, null]);
+
+    renderWithForm(<StorageSecretField fieldId="storageSecret" sourceProvider={sourceProvider} />);
+
+    await user.click(screen.getByRole('button', { name: 'Select menu toggle' }));
+
+    expect(screen.getByText('No Opaque secrets found in this project.')).toBeInTheDocument();
+  });
+
+  it('disables the select while secrets are loading', () => {
+    mockUseK8sWatchResource.mockReturnValue([undefined, false, null]);
+
+    renderWithForm(<StorageSecretField fieldId="storageSecret" sourceProvider={sourceProvider} />);
+
+    expect(screen.getByRole('button', { name: 'Select menu toggle' })).toBeDisabled();
+    expect(screen.getByText('Loading secrets...')).toBeInTheDocument();
   });
 });

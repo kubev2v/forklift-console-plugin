@@ -942,7 +942,6 @@
   "No results found": "未找到结果",
   "No results match the filter criteria. Clear all filters and try again.": "没有与过滤条件匹配的结果。清除所有过滤并重试。",
   "No secret": "没有 Secret",
-  "No secrets available for this provider": "此提供程序没有可用的 secret",
   "No selected plans can be deleted.": "No selected plans can be deleted.",
   "No source networks are available for the selected VMs.": "所选虚拟机没有可用的源网络。",
   "No source storages are available for the selected VMs.": "所选虚拟机没有源存储。",
