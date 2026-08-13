@@ -5,6 +5,14 @@ import { isEmpty } from '../../../utils/utils';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
 
+const EMPTY_NAD_OPTION_PREFIX = 'No network attachment definitions';
+const NAD_OPTION_INVENTORY_TIMEOUT_MS = 60_000;
+
+type TargetOption = {
+  disabled: boolean;
+  name: string;
+};
+
 export class NetworkMapStep {
   private readonly page: Page;
 
@@ -57,7 +65,26 @@ export class NetworkMapStep {
     };
   }
 
-  private async mapRemainingDefaultRowsToIgnore(alreadyConfiguredSources: string[]): Promise<void> {
+  private async listTargetOptions(): Promise<TargetOption[]> {
+    const listbox = this.page.getByRole('listbox');
+    const options = listbox.getByRole('option');
+    const count = await options.count();
+    const available: TargetOption[] = [];
+
+    for (let i = 0; i < count; i += 1) {
+      const option = options.nth(i);
+      const name = ((await option.textContent()) ?? '').trim();
+      const disabled = await option.isDisabled();
+      available.push({ disabled, name });
+    }
+
+    return available;
+  }
+
+  private async mapRemainingDefaultRowsToIgnore(
+    alreadyConfiguredSources: string[],
+    usedTargets: Set<string>,
+  ): Promise<void> {
     const { rows, getRowText, getTargetSelect } = this.getMappingRowLocators();
     const rowCount = await rows.count();
 
@@ -71,13 +98,59 @@ export class NetworkMapStep {
       if (!alreadyConfigured) {
         const targetSelect = getTargetSelect(row);
         const currentText = await targetSelect.textContent();
-        if (currentText?.includes('Default network')) {
+        const needsRemap =
+          Boolean(currentText?.includes('Default network')) ||
+          Boolean(currentText?.includes('Select target network'));
+
+        if (needsRemap) {
           await targetSelect.click();
-          await this.waitForNetworkOptions();
-          await this.page.getByRole('option', { name: 'Ignore network' }).click();
+          await this.selectTargetNetworkOption('Ignore network', usedTargets);
         }
       }
     }
+  }
+
+  /**
+   * Prefer the requested target; when multi-NIC rows hide Default/Ignore, fall
+   * back to the next unused enabled NAD (`namespace/name`).
+   */
+  private async selectTargetNetworkOption(
+    preferredName: string,
+    usedTargets: Set<string>,
+  ): Promise<void> {
+    await this.waitForSelectableNetworkOptions();
+    const available = await this.listTargetOptions();
+
+    const preferred = available.find(
+      (option) =>
+        !option.disabled &&
+        (option.name === preferredName || option.name.endsWith(`/${preferredName}`)),
+    );
+    if (preferred) {
+      await this.page.getByRole('option', { name: preferred.name, exact: true }).click();
+      usedTargets.add(preferred.name);
+      return;
+    }
+
+    const fallback = available.find(
+      (option) =>
+        !option.disabled &&
+        !option.name.startsWith(EMPTY_NAD_OPTION_PREFIX) &&
+        option.name.includes('/') &&
+        !usedTargets.has(option.name),
+    );
+    if (fallback) {
+      await this.page.getByRole('option', { name: fallback.name, exact: true }).click();
+      usedTargets.add(fallback.name);
+      return;
+    }
+
+    const optionsList = available
+      .map((option) => `  - ${option.name}${option.disabled ? ' (disabled)' : ''}`)
+      .join('\n');
+    throw new Error(
+      `Could not select target network "${preferredName}". Available options:\n${optionsList}`,
+    );
   }
 
   private async waitForAtLeastOneRow(): Promise<void> {
@@ -85,10 +158,34 @@ export class NetworkMapStep {
     await expect(rows.first()).toBeVisible({ timeout: 15_000 });
   }
 
-  async configureMappings(mappings: { source: string; target: string }[]): Promise<void> {
+  private async waitForSelectableNetworkOptions(): Promise<void> {
+    await this.waitForNetworkOptions();
+
+    await expect
+      .poll(
+        async () => {
+          const available = await this.listTargetOptions();
+          return available.some(
+            (option) => !option.disabled && !option.name.startsWith(EMPTY_NAD_OPTION_PREFIX),
+          );
+        },
+        {
+          timeout: NAD_OPTION_INVENTORY_TIMEOUT_MS,
+          message:
+            'Timed out waiting for selectable target networks (NADs). Multi-NIC rows hide Default/Ignore until NADs exist in the target namespace.',
+        },
+      )
+      .toBe(true);
+  }
+
+  async configureMappings(
+    mappings: { source: string; target: string }[],
+    usedTargets: Set<string> = new Set<string>(),
+  ): Promise<Set<string>> {
     for (const mapping of mappings) {
-      await this.selectTargetNetworkForSource(mapping.source, mapping.target);
+      await this.selectTargetNetworkForSource(mapping.source, mapping.target, usedTargets);
     }
+    return usedTargets;
   }
 
   async fillAndComplete(networkMap: {
@@ -122,19 +219,24 @@ export class NetworkMapStep {
       // Wait for auto-detected rows to load before configuring or mapping
       await this.waitForAtLeastOneRow();
 
+      const usedTargets = new Set<string>();
       if (!isEmpty(networkMap.mappings)) {
-        await this.configureMappings(networkMap.mappings);
+        await this.configureMappings(networkMap.mappings, usedTargets);
       }
 
-      // Map any rows still on "Default network" to "Ignore network" to
-      // prevent the "more than one interface mapped to Default" wizard error.
-      // Rows already handled by the caller's explicit mappings are skipped.
+      // Map any rows still on "Default network" (or unselected) away from Default
+      // to prevent the "more than one interface mapped to Default" wizard error.
+      // Prefer Ignore; fall back to distinct NADs when multi-NIC hides Ignore.
       const configuredSources = networkMap.mappings?.map((mapping) => mapping.source) ?? [];
-      await this.mapRemainingDefaultRowsToIgnore(configuredSources);
+      await this.mapRemainingDefaultRowsToIgnore(configuredSources, usedTargets);
     }
   }
 
-  async selectTargetNetworkForSource(sourceNetwork: string, targetNetwork: string): Promise<void> {
+  async selectTargetNetworkForSource(
+    sourceNetwork: string,
+    targetNetwork: string,
+    usedTargets: Set<string> = new Set<string>(),
+  ): Promise<void> {
     const { rows, getRowText, getTargetSelect } = this.getMappingRowLocators();
     const rowCount = await rows.count();
 
@@ -169,8 +271,7 @@ export class NetworkMapStep {
     await expect(targetNetworkSelect).toBeVisible();
     await targetNetworkSelect.click();
 
-    await this.waitForNetworkOptions();
-    await this.page.getByRole('option', { name: targetNetwork }).click();
+    await this.selectTargetNetworkOption(targetNetwork, usedTargets);
   }
 
   async verifyStepVisible(): Promise<void> {

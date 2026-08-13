@@ -14,6 +14,8 @@ import {
 } from '../../utils/resource-manager/ResourceCreator';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 
+import { ensurePlanTargetNads } from './mapCreationHelpers';
+
 // Re-export map creation helpers
 export type {
   CreateNetworkMapOptions,
@@ -21,7 +23,12 @@ export type {
   TestNetworkMap,
   TestStorageMap,
 } from './mapCreationHelpers';
-export { createNetworkMap, createStorageMap, createTestNad } from './mapCreationHelpers';
+export {
+  createNetworkMap,
+  createStorageMap,
+  createTestNad,
+  ensurePlanTargetNads,
+} from './mapCreationHelpers';
 
 export const createSecretObject = (
   name: string,
@@ -233,6 +240,12 @@ export const createPlan = async (
   }
 
   const testPlanData = buildPlanTestData(sourceName, customPlanData);
+
+  // Preexisting targets need NADs before the wizard; new projects get them in
+  // GeneralInformationStep after the Create Project modal succeeds.
+  if (testPlanData.targetProject.isPreexisting && !testPlanData.networkMap.isPreexisting) {
+    await ensurePlanTargetNads(resourceManager, testPlanData.targetProject.name);
+  }
 
   const createWizard = new CreatePlanWizardPage(page, resourceManager);
   const planDetailsPage = new PlanDetailsPage(page);
