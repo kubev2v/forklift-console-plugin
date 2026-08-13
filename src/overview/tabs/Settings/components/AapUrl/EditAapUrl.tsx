@@ -22,6 +22,7 @@ const EditAapUrl: FC = () => {
       name={SettingsFields.AapUrl}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <FormGroupWithHelpText
+          fieldId={SettingsFields.AapUrl}
           helperText={t(
             'Base URL of the Ansible Automation Platform instance (e.g. https://aap.example.com).',
           )}
@@ -36,8 +37,9 @@ const EditAapUrl: FC = () => {
         >
           <TextInput
             data-testid="aap-url-settings-input"
+            id={SettingsFields.AapUrl}
             onChange={(_event, val) => {
-              onChange(val);
+              onChange(val.trim());
             }}
             placeholder="https://aap.example.com"
             validated={getInputValidated(error)}

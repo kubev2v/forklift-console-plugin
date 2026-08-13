@@ -1473,6 +1473,7 @@
   "The storage device or partition that contains the root filesystem. For example, naming a root device \"sdb2/boot/dev\" would mean to use the second partition on the first hard drive.": "루트 파일 시스템이 포함된 스토리지 장치 또는 파티션입니다. 예를 들어, 루트 장치의 이름을 \"sdb2/boot/dev\"로 지정하면 첫 번째 하드 드라이브의 두 번째 파티션을 사용하게 됩니다.",
   "The target project is the project, within your selected target provider, that your virtual machines will be migrated to. This is different from the project that your migration plan will be created in and where your provider was created.": "대상 프로젝트는 선택한 대상 공급자 내에서 가상 머신이 마이그레이션될 프로젝트입니다. 이는 마이그레이션 계획이 생성되는 프로젝트 및 공급자가 생성된 프로젝트와는 다릅니다.",
   "The uploaded file name extension should be .ova": "업로드된 파일의 확장자는 .ova여야 합니다.",
+  "The URL is invalid. URL should include the schema, for example: https://aap.example.com.": "The URL is invalid. URL should include the schema, for example: https://aap.example.com.",
   "The URL is invalid. URL should include the schema, for example: https://example.com:6443.": "URL이 유효하지 않습니다. URL에는 스키마가 포함되어야 합니다. 예: https://example.com:6443.",
   "The URL is required. URL should include the schema and path, for example: https://rhv-host-example.com/ovirt-engine/api": "URL은 필수 입력 사항입니다. URL에는 스키마와 경로가 포함되어야 합니다. 예: https://rhv-host-example.com/ovirt-engine/api",
   "The URL of the API endpoint, for example: https://example.com:6443.": "API 엔드포인트의 URL입니다. 예: https://example.com:6443",
