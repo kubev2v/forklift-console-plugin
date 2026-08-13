@@ -9,7 +9,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { type ForkliftSettingsValues, SettingsFields } from '../../utils/types';
 
-import { validateAapUrl } from './utils/validateAapUrl';
+import { normalizeAapUrl, validateAapUrl } from './utils/validateAapUrl';
 import AapUrlHelpContent from './AapUrlHelpContent';
 
 const EditAapUrl: FC = () => {
@@ -39,7 +39,7 @@ const EditAapUrl: FC = () => {
             data-testid="aap-url-settings-input"
             id={SettingsFields.AapUrl}
             onChange={(_event, val) => {
-              onChange(val.trim());
+              onChange(normalizeAapUrl(val));
             }}
             placeholder="https://aap.example.com"
             validated={getInputValidated(error)}

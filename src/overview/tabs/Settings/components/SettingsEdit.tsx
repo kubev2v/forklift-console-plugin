@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -9,10 +10,11 @@ import { getNamespace } from '@utils/crds/common/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { defaultValuesMap } from '../utils/constants';
-import type {
-  EnhancedForkliftController,
-  ForkliftSettingsValues,
-  SettingsEditProps,
+import {
+  type EnhancedForkliftController,
+  type ForkliftSettingsValues,
+  type SettingsEditProps,
+  SettingsFields,
 } from '../utils/types';
 import { buildSettingsPatches, getDefaultValues } from '../utils/utils';
 
@@ -41,7 +43,14 @@ const SettingsEdit: OverlayComponent<SettingsEditProps> = ({ closeOverlay, contr
     formState: { dirtyFields, isDirty, isValid },
     handleSubmit,
     reset,
+    trigger,
   } = methods;
+
+  // mode: 'onChange' skips defaultValues until edited; surface a pre-existing invalid aap_url
+  // so admins see why Save stays blocked when other settings are dirty.
+  useEffect(() => {
+    trigger(SettingsFields.AapUrl).catch(() => undefined);
+  }, [trigger]);
 
   const onSubmit = async (formData: ForkliftSettingsValues) => {
     if (!isDirty) {

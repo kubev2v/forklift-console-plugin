@@ -83,6 +83,30 @@ describe('SettingsEdit', () => {
     });
   });
 
+  it('keeps Save disabled and shows AAP URL error when a garbage CR URL blocks other edits', async () => {
+    const user = userEvent.setup();
+    const controllerWithGarbageUrl = {
+      ...controller,
+      spec: { [SettingsFields.AapUrl]: 'not a valid url !!!' },
+    } as unknown as V1beta1ForkliftController;
+
+    render(<SettingsEdit closeModal={closeModal} controller={controllerWithGarbageUrl} />);
+
+    const confirmButton = screen.getByTestId('modal-confirm-button');
+
+    await waitFor(() => {
+      expect(screen.getByText(/URL is invalid/)).toBeInTheDocument();
+    });
+
+    // MaxVMInFlight is the first NumberInput; plus dirties another setting.
+    await user.click(screen.getAllByLabelText('plus')[0]);
+
+    await waitFor(() => {
+      expect(confirmButton).toBeDisabled();
+    });
+    expect(screen.getByText(/URL is invalid/)).toBeInTheDocument();
+  });
+
   it('associates the AAP URL label with the input', async () => {
     render(<SettingsEdit closeModal={closeModal} controller={controller} />);
 
