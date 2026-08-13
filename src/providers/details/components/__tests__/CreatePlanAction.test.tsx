@@ -43,7 +43,7 @@ describe('CreatePlanAction', () => {
   });
 
   it('should render the button for a non-EC2 provider', () => {
-    mockUseClusterIsAwsPlatform.mockReturnValue(false);
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: true });
 
     render(<CreatePlanAction namespace="test-ns" provider={createProvider('vsphere')} />);
 
@@ -51,7 +51,7 @@ describe('CreatePlanAction', () => {
   });
 
   it('should render the button for an EC2 provider on an AWS cluster', () => {
-    mockUseClusterIsAwsPlatform.mockReturnValue(true);
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: true, loaded: true });
 
     render(<CreatePlanAction namespace="test-ns" provider={createProvider('ec2')} />);
 
@@ -59,7 +59,7 @@ describe('CreatePlanAction', () => {
   });
 
   it('should hide the button for an EC2 provider on a non-AWS cluster', () => {
-    mockUseClusterIsAwsPlatform.mockReturnValue(false);
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: true });
 
     const { container } = render(
       <CreatePlanAction namespace="test-ns" provider={createProvider('ec2')} />,
@@ -70,7 +70,7 @@ describe('CreatePlanAction', () => {
 
   it('should navigate to plan creation on click', async () => {
     const user = userEvent.setup();
-    mockUseClusterIsAwsPlatform.mockReturnValue(true);
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: true, loaded: true });
 
     render(<CreatePlanAction namespace="test-ns" provider={createProvider('ec2')} />);
 

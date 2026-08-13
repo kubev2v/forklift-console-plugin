@@ -252,7 +252,8 @@ OpenShift-only. Patches `forklift.konveyor.io/defaultTransferNetwork` annotation
 | `useGetDeleteAndEditAccessReview` | Custom RBAC hook | List page, Details tab, Hosts tab, Header |
 | `useAccessReview` | Console SDK | Credentials tab (Secret patch) |
 | `useK8sWatchProviderNames` | Custom hook | Create form context |
-| `useClusterIsAwsPlatform` | Custom hook | CreatePlanAction (gate EC2) |
+| `useClusterIsAwsPlatform` | Custom hook (`{ isAwsPlatform, loaded }`) | CreatePlanAction, ProviderTypeField, ProviderSelect, WelcomeCard (gate EC2) |
+| `getProviderTypeOptions` | Shared util (`@utils/providers`) | ProviderTypeField, WelcomeCard (ordered + AWS-gated options) |
 
 ---
 

@@ -7,10 +7,18 @@ import { OverviewContextProvider } from 'src/overview/context/OverviewContext';
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import WelcomeCard from '../WelcomeCard';
 
-const mockUseClusterIsAwsPlatform = jest.fn<() => boolean>();
+const mockNavigate = jest.fn();
+const mockUseClusterIsAwsPlatform = jest.fn<() => { isAwsPlatform: boolean; loaded: boolean }>();
+
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useNavigate: () => mockNavigate,
+}));
 
 jest.mock('@utils/hooks/useClusterIsAwsPlatform', () => ({
   useClusterIsAwsPlatform: () => mockUseClusterIsAwsPlatform(),
@@ -29,6 +37,15 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   useFlag: () => true,
 }));
 
+const CORE_PROVIDER_TITLES = [
+  'OpenShift Virtualization',
+  'OpenStack',
+  'Open Virtual Appliance',
+  'Microsoft Hyper-V',
+  'Red Hat Virtualization',
+  'VMware vSphere',
+] as const;
+
 const renderWelcomeCard = (): ReturnType<typeof render> =>
   render(
     <MemoryRouter>
@@ -43,16 +60,19 @@ describe('WelcomeCard', () => {
     jest.clearAllMocks();
   });
 
-  it('shows Amazon EC2 provider tile on AWS-platform clusters', () => {
-    mockUseClusterIsAwsPlatform.mockReturnValue(true);
+  it('shows Amazon EC2 and all core provider tiles on AWS-platform clusters', () => {
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: true, loaded: true });
 
     renderWelcomeCard();
 
     expect(screen.getByText('Amazon EC2')).toBeVisible();
+    for (const title of CORE_PROVIDER_TITLES) {
+      expect(screen.getByText(title)).toBeVisible();
+    }
   });
 
   it('hides Amazon EC2 provider tile on non-AWS clusters', () => {
-    mockUseClusterIsAwsPlatform.mockReturnValue(false);
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: true });
 
     renderWelcomeCard();
 
@@ -60,15 +80,38 @@ describe('WelcomeCard', () => {
   });
 
   it('always shows the core provider tiles', () => {
-    mockUseClusterIsAwsPlatform.mockReturnValue(false);
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: true });
 
     renderWelcomeCard();
 
-    expect(screen.getByText('VMware')).toBeVisible();
-    expect(screen.getByText('Open Virtual Appliance')).toBeVisible();
-    expect(screen.getByText('OpenStack')).toBeVisible();
-    expect(screen.getByText('Microsoft Hyper-V')).toBeVisible();
-    expect(screen.getByText('Red Hat Virtualization')).toBeVisible();
-    expect(screen.getByText('OpenShift Virtualization')).toBeVisible();
+    for (const title of CORE_PROVIDER_TITLES) {
+      expect(screen.getByText(title)).toBeVisible();
+    }
+  });
+
+  it('does not render provider tiles until AWS platform status is loaded', () => {
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: false });
+
+    renderWelcomeCard();
+
+    expect(screen.queryByText('Amazon EC2')).not.toBeInTheDocument();
+    for (const title of CORE_PROVIDER_TITLES) {
+      expect(screen.queryByText(title)).not.toBeInTheDocument();
+    }
+  });
+
+  it('navigates to create provider with EC2 type when the EC2 tile is clicked', async () => {
+    const user = userEvent.setup();
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: true, loaded: true });
+    mockNavigate.mockResolvedValue(undefined);
+
+    renderWelcomeCard();
+
+    await user.click(screen.getByRole('button', { name: 'Amazon EC2' }));
+
+    expect(mockNavigate).toHaveBeenCalledWith(
+      expect.stringContaining(`?providerType=${PROVIDER_TYPES.ec2}`),
+      expect.objectContaining({ state: { providerType: PROVIDER_TYPES.ec2 } }),
+    );
   });
 });

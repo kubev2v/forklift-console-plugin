@@ -21,7 +21,7 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
   const { trackEvent } = useForkliftAnalytics();
-  const isAwsPlatform = useClusterIsAwsPlatform();
+  const { isAwsPlatform } = useClusterIsAwsPlatform();
   const isEc2OnNonAwsCluster = provider?.spec?.type === PROVIDER_TYPES.ec2 && !isAwsPlatform;
 
   const { canCreate } = useGetDeleteAndEditAccessReview({

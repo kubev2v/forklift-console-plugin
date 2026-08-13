@@ -58,7 +58,7 @@ const ProviderSelect = (
   ref: ForwardedRef<HTMLButtonElement>,
 ) => {
   const isDarkTheme = useIsDarkTheme();
-  const isAwsPlatform = useClusterIsAwsPlatform();
+  const { isAwsPlatform } = useClusterIsAwsPlatform();
   const { trackEvent } = useForkliftAnalytics();
   const [rawProviders, loaded] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,

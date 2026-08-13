@@ -2,7 +2,6 @@ import { type FC, useContext, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router';
 import migrationIcon from 'src/components/images/resources/migration.svg';
 import { OverviewContext } from 'src/overview/context/OverviewContext';
-import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
 
 import { ProviderModelRef } from '@forklift-ui/types';
 import { useActiveNamespace, useFlag } from '@openshift-console/dynamic-plugin-sdk';
@@ -20,10 +19,11 @@ import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytic
 import { Namespace } from '@utils/constants';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 import type { ProviderTypes } from '@utils/providers/constants';
+import { getProviderTypeOptions } from '@utils/providers/getProviderTypeOptions';
 
-import { providerTypes } from './utils/providerTypes';
 import { ProviderCard } from './ProviderCard';
 
 const WelcomeCard: FC = () => {
@@ -31,21 +31,12 @@ const WelcomeCard: FC = () => {
   const { trackEvent } = useForkliftAnalytics();
   const navigate = useNavigate();
   const isDarkTheme = useIsDarkTheme();
-  const isAwsPlatform = useClusterIsAwsPlatform();
+  const { isAwsPlatform, loaded: isAwsPlatformLoaded } = useClusterIsAwsPlatform();
   const { data: { hideWelcomeCardByContext } = {}, setData } = useContext(OverviewContext);
-  const providerItems = providerTypes(isDarkTheme);
 
-  const providerCardData = useMemo(
-    () => [
-      { image: providerItems.vsphere.logo, provider: providerItems.vsphere },
-      { image: providerItems.ova.logo, provider: providerItems.ova },
-      { image: providerItems.openstack.logo, provider: providerItems.openstack },
-      { image: providerItems.hyperv.logo, provider: providerItems.hyperv },
-      { image: providerItems.ovirt.logo, provider: providerItems.ovirt },
-      { image: providerItems.openshift.logo, provider: providerItems.openshift },
-      ...(isAwsPlatform ? [{ image: providerItems.ec2.logo, provider: providerItems.ec2 }] : []),
-    ],
-    [isAwsPlatform, providerItems],
+  const providerTypeOptions = useMemo(
+    () => getProviderTypeOptions(isDarkTheme, isAwsPlatform),
+    [isAwsPlatform, isDarkTheme],
   );
 
   const providersListUrl = useMemo(() => {
@@ -117,18 +108,18 @@ const WelcomeCard: FC = () => {
                     className="forklift-overview__welcome-tiles"
                     spaceItems={{ default: 'spaceItemsSm' }}
                   >
-                    {providerCardData.map(({ image, provider }) => (
-                      <FlexItem key={provider.key}>
-                        <ProviderCard
-                          image={image}
-                          onClick={() => {
-                            navigateToProvider(provider.key);
-                          }}
-                        >
-                          {provider.title}
-                        </ProviderCard>
-                      </FlexItem>
-                    ))}
+                    {isAwsPlatformLoaded &&
+                      providerTypeOptions.map((option) => (
+                        <FlexItem key={option.value}>
+                          <ProviderCard
+                            image={option.icon}
+                            onClick={() => {
+                              navigateToProvider(option.value);
+                            }}
+                            title={option.label}
+                          />
+                        </FlexItem>
+                      ))}
                   </Flex>
                 </FlexItem>
               </Flex>
