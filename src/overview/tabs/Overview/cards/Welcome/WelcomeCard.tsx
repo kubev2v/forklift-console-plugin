@@ -16,10 +16,12 @@ import {
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
-import { type ProviderType, TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { Namespace } from '@utils/constants';
 import { getResourceUrl } from '@utils/getResourceUrl';
+import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
+import type { ProviderTypes } from '@utils/providers/constants';
 
 import { providerTypes } from './utils/providerTypes';
 import { ProviderCard } from './ProviderCard';
@@ -29,6 +31,7 @@ const WelcomeCard: FC = () => {
   const { trackEvent } = useForkliftAnalytics();
   const navigate = useNavigate();
   const isDarkTheme = useIsDarkTheme();
+  const isAwsPlatform = useClusterIsAwsPlatform();
   const { data: { hideWelcomeCardByContext } = {}, setData } = useContext(OverviewContext);
   const providerItems = providerTypes(isDarkTheme);
 
@@ -40,8 +43,9 @@ const WelcomeCard: FC = () => {
       { image: providerItems.hyperv.logo, provider: providerItems.hyperv },
       { image: providerItems.ovirt.logo, provider: providerItems.ovirt },
       { image: providerItems.openshift.logo, provider: providerItems.openshift },
+      ...(isAwsPlatform ? [{ image: providerItems.ec2.logo, provider: providerItems.ec2 }] : []),
     ],
-    [providerItems],
+    [isAwsPlatform, providerItems],
   );
 
   const providersListUrl = useMemo(() => {
@@ -52,12 +56,12 @@ const WelcomeCard: FC = () => {
   }, []);
   const providersCreateUrl = `${providersListUrl}/~new`;
 
-  const navigateToProvider = (type: ProviderType) => {
+  const navigateToProvider = (type: ProviderTypes) => {
     trackEvent(TELEMETRY_EVENTS.OVERVIEW_WELCOME_PROVIDER_CLICKED, {
       providerType: type,
     });
     navigate(`${providersCreateUrl}?providerType=${type}`, {
-      state: { providerType: type as keyof typeof providerItems },
+      state: { providerType: type },
     })?.catch(() => undefined);
   };
   const [activeNamespace] = useActiveNamespace();
