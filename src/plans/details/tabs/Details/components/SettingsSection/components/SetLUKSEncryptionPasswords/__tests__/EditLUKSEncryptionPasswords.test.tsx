@@ -52,6 +52,15 @@ jest.mock(
     ),
 );
 
+jest.mock('@components/LUKSSecretSelect/LUKSSecretSelect', () => ({
+  __esModule: true,
+  default: ({ testId, value }: { testId?: string; value: string }) => (
+    <div data-testid={testId ?? 'luks-secret-select'}>Selected: {value || 'none'}</div>
+  ),
+}));
+
+const SOURCE_SECRET_LABEL = 'forklift.konveyor.io/source-secret';
+
 const mockPlan = {
   metadata: { name: 'test-plan', namespace: 'test-namespace' },
   spec: { vms: [] },
@@ -178,5 +187,53 @@ describe('EditLUKSEncryptionPasswords', () => {
 
     expect(screen.getByTestId('luks-modal-body')).toBeInTheDocument();
     expect(screen.getByTestId('luks-passphrase-input-list')).toHaveTextContent('Passphrases:');
+  });
+
+  it('pre-populates existing secret from source-secret label and enables Save', async () => {
+    mockGetPlanVirtualMachines.mockReturnValue([
+      { luks: { name: 'test-secret' }, nbdeClevis: false },
+    ]);
+
+    const planOwnedSecret = {
+      data: { '0': btoa('copied') },
+      metadata: {
+        labels: { [SOURCE_SECRET_LABEL]: 'luks-source' },
+        name: 'test-secret',
+        namespace: 'test-namespace',
+      },
+      type: 'Opaque',
+    };
+    const sourceSecret = {
+      data: { '0': btoa('original') },
+      metadata: { name: 'luks-source', namespace: 'test-namespace' },
+      type: 'Opaque',
+    };
+
+    mockUseK8sWatchResource.mockImplementation((resource) => {
+      if (!resource) {
+        return [undefined, true, null];
+      }
+
+      if (resource.name === 'test-secret') {
+        return [planOwnedSecret, true, null];
+      }
+
+      if (resource.name === 'luks-source') {
+        return [sourceSecret, true, null];
+      }
+
+      return [undefined, true, null];
+    });
+
+    render(<EditLUKSEncryptionPasswords closeModal={closeModal} resource={mockPlan} />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('edit-use-existing-secret-radio')).toBeChecked();
+    });
+
+    expect(screen.getByTestId('edit-luks-secret-select')).toHaveTextContent(
+      'Selected: luks-source',
+    );
+    expect(screen.getByRole('button', { name: /save/i })).toBeEnabled();
   });
 });

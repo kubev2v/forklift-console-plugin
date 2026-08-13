@@ -68,6 +68,21 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
 
   const [secret] = useK8sWatchResource<IoK8sApiCoreV1Secret>(watchResource);
 
+  const sourceSecretName = secret?.metadata?.labels?.[SOURCE_SECRET_LABEL];
+  const sourceWatchResource: WatchK8sResource | null = useMemo(
+    () =>
+      sourceSecretName && secretNamespace
+        ? {
+            groupVersionKind: getGroupVersionKindForModel(SecretModel),
+            name: sourceSecretName,
+            namespace: secretNamespace,
+          }
+        : null,
+    [sourceSecretName, secretNamespace],
+  );
+
+  const [sourceSecret] = useK8sWatchResource<IoK8sApiCoreV1Secret>(sourceWatchResource);
+
   const derivedNbdeClevis = getNbdeClevisFromResource(resource);
   const [value, setValue] = useState<string[]>([]);
   const [nbdeClevis, setNbdeClevis] = useState<boolean>(derivedNbdeClevis);
@@ -76,6 +91,7 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
   const [prevResource, setPrevResource] = useState(resource);
   const [prevSecretDataKey, setPrevSecretDataKey] = useState<string | undefined>();
   const modeInitializedRef = useRef(false);
+  const selectedSecretInitializedRef = useRef(false);
 
   if (resource !== prevResource) {
     setPrevResource(resource);
@@ -91,6 +107,11 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     if (secret.metadata.labels?.[SOURCE_SECRET_LABEL]) {
       setDecryptionMode(DECRYPTION_MODE_EXISTING);
     }
+  }
+
+  if (!selectedSecretInitializedRef.current && sourceSecret?.metadata?.name) {
+    selectedSecretInitializedRef.current = true;
+    setSelectedSecret(sourceSecret);
   }
 
   const secretDataKey = secretName && secret?.data ? JSON.stringify(secret.data) : undefined;
