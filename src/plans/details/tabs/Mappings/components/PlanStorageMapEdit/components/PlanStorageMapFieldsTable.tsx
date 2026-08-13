@@ -108,9 +108,7 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
   const isVsphereOffload =
     sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere && isCopyOffloadEnabled;
 
-  const { control, trigger, watch } = useFormContext<PlanStorageEditFormValues>();
-
-  const [storageMappings] = watch([StorageMapFieldId.StorageMap]);
+  const { control, trigger } = useFormContext<PlanStorageEditFormValues>();
 
   const {
     append,
@@ -134,11 +132,7 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
   return (
     <FieldBuilderTable
       addButton={{
-        isDisabled:
-          Boolean(isIscsi) ||
-          [...usedSourceStorages, ...otherSourceStorages].length === storageMappingFields.length ||
-          isLoading ||
-          Boolean(loadError),
+        isDisabled: Boolean(isIscsi) || isLoading || Boolean(loadError),
         label: t('Add mapping'),
         onClick: async () => {
           const missingStorage = usedSourceStorages.find(
@@ -187,7 +181,6 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
                 fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
                 key={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
                 otherSourceStorages={otherSourceStorages}
-                storageMappings={storageMappings}
                 usedSourceStorages={usedSourceStorages}
               />,
               <TargetStorageInputField

@@ -47,9 +47,9 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
   const isCopyOffloadEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_OFFLOAD);
   const { control } = useCreatePlanFormContext();
 
-  const [storageMappings, sourceProvider] = useWatch({
+  const [sourceProvider] = useWatch({
     control,
-    name: [CreatePlanStorageMapFieldId.StorageMap, CreatePlanStorageMapFieldId.SourceProvider],
+    name: [CreatePlanStorageMapFieldId.SourceProvider],
   });
 
   const isOpenshift = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
@@ -90,11 +90,7 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
   return (
     <FieldBuilderTable
       addButton={{
-        isDisabled:
-          Boolean(isIscsi) ||
-          [...usedSourceStorages, ...otherSourceStorages].length === storageMappingFields.length ||
-          isLoading ||
-          Boolean(loadError),
+        isDisabled: Boolean(isIscsi) || isLoading || Boolean(loadError),
         label: t('Add mapping'),
         onClick: () => {
           append({
@@ -149,7 +145,6 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
                 fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.SourceStorage, index)}
                 key={getStorageMapFieldId(CreatePlanStorageMapFieldId.SourceStorage, index)}
                 otherSourceStorages={otherSourceStorages}
-                storageMappings={storageMappings}
                 usedSourceStorages={usedSourceStorages}
               />,
               isVsphereOffload ? (

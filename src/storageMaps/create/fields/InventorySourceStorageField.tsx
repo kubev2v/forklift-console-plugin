@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
@@ -8,7 +8,7 @@ import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
+import { StorageMapFieldId } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
 
 import type { CreateStorageMapFormData } from '../types';
@@ -28,7 +28,6 @@ const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
     trigger,
   } = useFormContext<CreateStorageMapFormData>();
   const { t } = useForkliftTranslation();
-  const storageMappings = useWatch({ control, name: StorageMapFieldId.StorageMap });
 
   const duplicateLabels = getDuplicateValues(sourceStorages, (storage) =>
     getMapResourceLabel(storage),
@@ -68,10 +67,6 @@ const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
                   return (
                     <SelectOption
                       description={duplicateLabels.has(storageLabel) ? storage.id : undefined}
-                      isDisabled={storageMappings?.some(
-                        (mapping: StorageMapping) =>
-                          mapping[StorageMapFieldId.SourceStorage].id === storage.id,
-                      )}
                       key={storage.id}
                       value={storageValue}
                     >

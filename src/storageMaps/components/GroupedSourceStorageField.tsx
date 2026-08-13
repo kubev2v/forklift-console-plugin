@@ -6,13 +6,12 @@ import Select from '@components/common/Select';
 import { SelectGroup, SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
+import { StorageMapFieldId } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
 
 type GroupedSourceStorageFieldProps = {
   fieldId: string;
   otherSourceStorages: MappingValue[];
-  storageMappings: StorageMapping[];
   usedSourceStorages: MappingValue[];
 };
 
@@ -24,7 +23,6 @@ type GroupedSourceStorageFieldProps = {
 const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
   fieldId,
   otherSourceStorages,
-  storageMappings,
   usedSourceStorages,
 }) => {
   const {
@@ -62,10 +60,6 @@ const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
                 usedSourceStorages.map((usedStorage) => (
                   <SelectOption
                     description={duplicateNames.has(usedStorage.name) ? usedStorage.id : undefined}
-                    isDisabled={storageMappings?.some(
-                      (mapping: StorageMapping) =>
-                        mapping[StorageMapFieldId.SourceStorage].id === usedStorage.id,
-                    )}
                     key={usedStorage.name}
                     value={usedStorage}
                   >
@@ -86,10 +80,6 @@ const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
                     description={
                       duplicateNames.has(otherStorage.name) ? otherStorage.id : undefined
                     }
-                    isDisabled={storageMappings.some(
-                      (mapping: StorageMapping) =>
-                        mapping[StorageMapFieldId.SourceStorage].id === otherStorage.id,
-                    )}
                     key={otherStorage.name}
                     value={otherStorage}
                   >

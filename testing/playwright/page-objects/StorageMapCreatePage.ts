@@ -58,6 +58,18 @@ export class StorageMapCreatePage {
     return this.page.getByTestId('create-storage-map-button');
   }
 
+  async expectSourceStorageOptionEnabled(index: number, sourceName: string): Promise<void> {
+    const dropdown = this.page.getByTestId(this.sourceStorageTestId(index));
+    await expect(dropdown).toBeVisible();
+    await expect(dropdown).toBeEnabled();
+    await dropdown.click();
+    const option = this.page.getByRole('listbox').getByRole('option', { name: sourceName });
+    await expect(option).toBeVisible();
+    await expect(option).toBeEnabled();
+    // Close without selecting so callers can assert and then select explicitly.
+    await this.page.keyboard.press('Escape');
+  }
+
   async fillMapName(name: string): Promise<void> {
     const input = this.page.locator('[name="mapName"]');
     await input.clear();
