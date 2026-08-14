@@ -116,13 +116,20 @@ export class StorageMapStep {
     }
 
     if (!found) {
-      const storagesList = availableStorages
-        .map((storage, i) => `  ${i + 1}. ${storage}`)
-        .join('\n');
-      throw new Error(
-        `Could not find row with source storage: "${sourceStorage}"\n` +
-          `Available source storages (${availableStorages.length}):\n${storagesList}`,
-      );
+      // Wizard only lists storages used by the selected VMs; lab NFS names differ by VM
+      // (e.g. mtv-nfs-rhos-v8 vs mtv-nfs-psi-rdu2-v8). When a single source is present,
+      // map that row instead of requiring an exact fixture name match.
+      if (availableStorages.length === 1) {
+        matchedRow = rows.first();
+      } else {
+        const storagesList = availableStorages
+          .map((storage, i) => `  ${i + 1}. ${storage}`)
+          .join('\n');
+        throw new Error(
+          `Could not find row with source storage: "${sourceStorage}"\n` +
+            `Available source storages (${availableStorages.length}):\n${storagesList}`,
+        );
+      }
     }
 
     const targetStorageSelect = getTargetSelect(matchedRow);
