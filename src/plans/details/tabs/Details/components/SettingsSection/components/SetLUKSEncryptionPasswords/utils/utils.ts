@@ -8,7 +8,7 @@ import {
   type V1beta1Plan,
 } from '@forklift-ui/types';
 import { k8sCreate, k8sDelete, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
+import { getLabels, getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { getLUKSSecretName, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 
@@ -77,7 +77,7 @@ const getLUKSSecret = async ({
     });
 
     // Best-effort: label REMOVE must not fail the passphrase REPLACE (422 if already gone).
-    if (currentSecret?.metadata?.labels?.[SOURCE_SECRET_LABEL]) {
+    if (getLabels(currentSecret)?.[SOURCE_SECRET_LABEL]) {
       await k8sPatch({
         data: [
           { op: REMOVE, path: SOURCE_SECRET_LABEL_PATCH_PATH },
