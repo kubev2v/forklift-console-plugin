@@ -9,7 +9,7 @@ const mockNavigate = jest.fn();
 const mockUseClusterIsAwsPlatform = jest.fn();
 
 jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
+  ...jest.requireActual<Record<string, unknown>>('react-router'),
   useNavigate: () => mockNavigate,
 }));
 
