@@ -89,14 +89,14 @@ describe('WelcomeCard', () => {
     }
   });
 
-  it('does not render provider tiles until AWS platform status is loaded', () => {
+  it('shows core provider tiles while AWS platform status is loading and hides EC2', () => {
     mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: false });
 
     renderWelcomeCard();
 
     expect(screen.queryByText('Amazon EC2')).not.toBeInTheDocument();
     for (const title of CORE_PROVIDER_TITLES) {
-      expect(screen.queryByText(title)).not.toBeInTheDocument();
+      expect(screen.getByText(title)).toBeVisible();
     }
   });
 
@@ -111,7 +111,6 @@ describe('WelcomeCard', () => {
 
     expect(mockNavigate).toHaveBeenCalledWith(
       expect.stringContaining(`?providerType=${PROVIDER_TYPES.ec2}`),
-      expect.objectContaining({ state: { providerType: PROVIDER_TYPES.ec2 } }),
     );
   });
 });

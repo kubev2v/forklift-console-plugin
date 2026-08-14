@@ -34,9 +34,10 @@ const WelcomeCard: FC = () => {
   const { isAwsPlatform, loaded: isAwsPlatformLoaded } = useClusterIsAwsPlatform();
   const { data: { hideWelcomeCardByContext } = {}, setData } = useContext(OverviewContext);
 
+  // Same order as create-provider (OpenShift first); EC2 only when AWS status is known and true.
   const providerTypeOptions = useMemo(
-    () => getProviderTypeOptions(isDarkTheme, isAwsPlatform),
-    [isAwsPlatform, isDarkTheme],
+    () => getProviderTypeOptions(isDarkTheme, isAwsPlatformLoaded && isAwsPlatform),
+    [isAwsPlatform, isAwsPlatformLoaded, isDarkTheme],
   );
 
   const providersListUrl = useMemo(() => {
@@ -51,9 +52,7 @@ const WelcomeCard: FC = () => {
     trackEvent(TELEMETRY_EVENTS.OVERVIEW_WELCOME_PROVIDER_CLICKED, {
       providerType: type,
     });
-    navigate(`${providersCreateUrl}?providerType=${type}`, {
-      state: { providerType: type },
-    })?.catch(() => undefined);
+    navigate(`${providersCreateUrl}?providerType=${type}`)?.catch(() => undefined);
   };
   const [activeNamespace] = useActiveNamespace();
   const kubevirtInstalled = useFlag('KUBEVIRT_DYNAMIC');
@@ -108,18 +107,17 @@ const WelcomeCard: FC = () => {
                     className="forklift-overview__welcome-tiles"
                     spaceItems={{ default: 'spaceItemsSm' }}
                   >
-                    {isAwsPlatformLoaded &&
-                      providerTypeOptions.map((option) => (
-                        <FlexItem key={option.value}>
-                          <ProviderCard
-                            image={option.icon}
-                            onClick={() => {
-                              navigateToProvider(option.value);
-                            }}
-                            title={option.label}
-                          />
-                        </FlexItem>
-                      ))}
+                    {providerTypeOptions.map((option) => (
+                      <FlexItem key={option.value}>
+                        <ProviderCard
+                          image={option.icon}
+                          onClick={() => {
+                            navigateToProvider(option.value);
+                          }}
+                          title={option.label}
+                        />
+                      </FlexItem>
+                    ))}
                   </Flex>
                 </FlexItem>
               </Flex>
