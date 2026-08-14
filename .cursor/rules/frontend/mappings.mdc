@@ -191,7 +191,7 @@ Used in: list row actions + details page header.
 | Target field | Shared `@components/mappings/` | Feature-local `TargetStorageField` etc. |
 | CRD schema hooks | None | `useStorageMapCrd`, offload/product enum discovery |
 | Plan create util | Duplicated in plans | Reused from storageMaps |
-| Feature flags | None | `FEATURE_NAMES.COPY_OFFLOAD` for vSphere offload (`vsphereXcopyConfig`, `csiVolumeImport`) |
+| Feature flags | None | `FEATURE_NAMES.COPY_OFFLOAD` for copy offload (`vsphereXcopyConfig`, `csiVolumeImport`) |
 | Extra hooks | None | `storageMaps/hooks/` (5 hooks) |
 
 ## Blast Radius Notes

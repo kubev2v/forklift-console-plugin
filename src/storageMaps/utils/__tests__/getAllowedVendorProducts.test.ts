@@ -40,4 +40,16 @@ describe('isVendorProductAllowedForPlugin', () => {
       isVendorProductAllowedForPlugin(OffloadPlugin.VSphereXcopyConfig, StorageVendorProduct.Ontap),
     ).toBe(true);
   });
+
+  it('allows CRD-discovered XCOPY products beyond the static allowlist', () => {
+    expect(isVendorProductAllowedForPlugin(OffloadPlugin.VSphereXcopyConfig, 'customVendor')).toBe(
+      true,
+    );
+  });
+
+  it('rejects CSI products outside the write-path allowlist', () => {
+    expect(isVendorProductAllowedForPlugin(OffloadPlugin.CsiVolumeImport, 'customVendor')).toBe(
+      false,
+    );
+  });
 });

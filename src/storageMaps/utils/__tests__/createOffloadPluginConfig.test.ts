@@ -76,4 +76,20 @@ describe('createOffloadPluginConfig', () => {
       },
     });
   });
+
+  it('creates vsphereXcopyConfig for a CRD-discovered product outside static constants', () => {
+    const result = createOffloadPluginConfig({
+      ...baseMapping,
+      [StorageMapFieldId.OffloadPlugin]: OffloadPlugin.VSphereXcopyConfig,
+      [StorageMapFieldId.StorageProduct]: 'customVendor',
+      [StorageMapFieldId.StorageSecret]: 'vendor-secret',
+    });
+
+    expect(result).toEqual({
+      vsphereXcopyConfig: {
+        secretRef: 'vendor-secret',
+        storageVendorProduct: 'customVendor',
+      },
+    });
+  });
 });

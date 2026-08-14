@@ -84,4 +84,17 @@ describe('useOffloadPlugins', () => {
       OffloadPlugin.CsiVolumeImport,
     ]);
   });
+
+  it('excludes unknown CRD plugins that the client does not support', () => {
+    mockUseStorageMapCrd.mockReturnValue({
+      crd: makeCrd([OffloadPlugin.VSphereXcopyConfig, 'futureUnsupportedPlugin']),
+      error: null,
+      loading: false,
+    });
+
+    const { result } = renderHook(() => useOffloadPlugins());
+
+    expect(result.current.offloadPlugins).toEqual([OffloadPlugin.VSphereXcopyConfig]);
+    expect(result.current.offloadPlugins).not.toContain('futureUnsupportedPlugin');
+  });
 });

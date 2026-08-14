@@ -33,10 +33,10 @@ spec:
         volumeMode: "Filesystem" | "Block"        # optional
         accessMode: "ReadWriteOnce" | "ReadWriteMany" | "ReadOnlyMany"  # optional
       offloadPlugin:                    # optional — per-pair offload config
-        vsphereXcopyConfig:             # XOR with csiVolumeImport
+        vsphereXcopyConfig:             # prefer a single plugin; if both populated, UI resolves CSI first
           secretRef: "<secret-name>"
           storageVendorProduct: "<vendor>"
-        # csiVolumeImport:              # CSI Volume Import (MTV-5483)
+        # csiVolumeImport:              # CSI Volume Import (MTV-5483); takes precedence when both are set
         #   secretRef: "<secret-name>"
         #   storageVendorProduct: "primera3par"
 ```
