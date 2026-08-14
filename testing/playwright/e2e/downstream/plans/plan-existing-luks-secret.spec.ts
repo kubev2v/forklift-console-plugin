@@ -19,6 +19,8 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
     testProvider,
     resourceManager,
   }) => {
+    // Wizard path creates provider resources then walks General→…→Additional settings.
+    test.setTimeout(300_000);
     const testData: PlanTestData = createPlanTestData({
       sourceProvider: testProvider?.metadata?.name ?? '',
       additionalPlanSettings: {

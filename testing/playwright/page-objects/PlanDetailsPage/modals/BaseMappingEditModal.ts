@@ -58,21 +58,36 @@ export abstract class BaseMappingEditModal extends BaseModal {
     await this.page.waitForTimeout(FORM_SETTLE_MS);
     await selectLocator.click();
     await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
-    const listbox = this.page.locator('[role="listbox"]:visible').last();
-    await expect(listbox).toBeVisible();
-    return listbox;
+    // Network source selects render two listboxes (used-by-VMs + other networks).
+    // Return a locator that spans every visible listbox so callers can search both.
+    const listboxes = this.page.locator('[role="listbox"]:visible');
+    await expect(listboxes.first()).toBeVisible();
+    return listboxes;
   }
 
   private async selectFromDropdown(selectLocator: Locator, optionText: string): Promise<void> {
     await expect(selectLocator).toBeVisible();
     await expect(selectLocator).toBeEnabled();
 
+    const wantedName = stripStorageOptionBadges(optionText);
+
     for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
       try {
-        const listbox = await this.openDropdown(selectLocator);
-        const option = listbox.getByRole('option', { name: optionText, exact: true }).first();
-        await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
-        return;
+        const listboxes = await this.openDropdown(selectLocator);
+        const options = listboxes.getByRole('option');
+        const count = await options.count();
+
+        for (let i = 0; i < count; i += 1) {
+          const option = options.nth(i);
+          const rawText = ((await option.textContent()) ?? '').trim();
+          const optionName = stripStorageOptionBadges(rawText);
+          if (optionName === wantedName || rawText === optionText.trim()) {
+            await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
+            return;
+          }
+        }
+
+        throw new Error(`Option "${wantedName}" not found (tried exact and badge-stripped match)`);
       } catch {
         if (attempt === MAX_DROPDOWN_ATTEMPTS - 1) {
           throw new Error(
@@ -179,6 +194,52 @@ export abstract class BaseMappingEditModal extends BaseModal {
   async selectFirstAvailableTargetAtIndex(index: number): Promise<string> {
     await this.expandAndSelectNth(this.targetSelectLocator(index), 0);
     return this.getTargetAtIndex(index);
+  }
+
+  /**
+   * Picks the first enabled source option that is not already used by another row.
+   * Network source dropdowns include both "used by VMs" and "other" listboxes.
+   */
+  async selectFirstUnusedSourceAtIndex(index: number): Promise<string> {
+    const used = new Set<string>();
+    const rowCount = await this.getMappingCount();
+    for (let i = 0; i < rowCount; i += 1) {
+      if (i !== index) {
+        used.add(await this.getSourceAtIndex(i));
+      }
+    }
+
+    const sourceSelect = this.sourceSelectLocator(index);
+    await expect(sourceSelect).toBeVisible();
+    await expect(sourceSelect).toBeEnabled();
+
+    for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
+      try {
+        const listboxes = await this.openDropdown(sourceSelect);
+        const options = listboxes.locator('[role="option"]:enabled');
+        const count = await options.count();
+
+        for (let i = 0; i < count; i += 1) {
+          const option = options.nth(i);
+          const name = ((await option.textContent()) ?? '').trim();
+          if (!used.has(name)) {
+            await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
+            await expect(sourceSelect).toContainText(name);
+            return name;
+          }
+        }
+
+        throw new Error(
+          `selectFirstUnusedSourceAtIndex: no unused source at row ${index} (used: ${[...used].join(', ')})`,
+        );
+      } catch (err) {
+        if (attempt === MAX_DROPDOWN_ATTEMPTS - 1) {
+          throw err;
+        }
+      }
+    }
+
+    throw new Error(`selectFirstUnusedSourceAtIndex: exhausted attempts at row ${index}`);
   }
 
   async selectSourceAtIndex(index: number, sourceValue: string): Promise<void> {

@@ -2,7 +2,7 @@ import { expect } from '@playwright/test';
 
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
-import { NetworkTargets, SourceNetworks, SourceStorages } from '../../../types/test-data';
+import { NetworkTargets } from '../../../types/test-data';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
@@ -17,8 +17,12 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       throw new Error('testPlan is required');
     }
 
+    test.setTimeout(300_000);
+
     const planDetailsPage = new PlanDetailsPage(page);
     await planDetailsPage.mappingsTab.navigateToMappingsTab();
+    // Fresh plans stay Validating (VDDK) until editable — edit buttons stay disabled.
+    await planDetailsPage.waitForPlanEditable();
 
     await test.step('Verify mappings tab and review tables', async () => {
       await planDetailsPage.mappingsTab.verifyMappingsTab();
@@ -121,7 +125,6 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       await modalAfterCancel.cancel();
     });
 
-    const addedNetworkSource = SourceNetworks.VM_NETWORK;
     const addedNetworkTarget = NetworkTargets.IGNORE;
 
     await test.step('Add and remove network mapping', async () => {
@@ -130,7 +133,9 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
 
       const newRowIndex = await modal.addMapping();
       expect(newRowIndex).toBe(initialCount);
-      await modal.selectSourceNetworkAtIndex(newRowIndex, addedNetworkSource);
+      // Prefer an unused source from inventory; VM Network may already be mapped.
+      const addedNetworkSource = await modal.selectFirstUnusedSourceAtIndex(newRowIndex);
+      expect(addedNetworkSource).toBeTruthy();
       await modal.selectTargetNetworkAtIndex(newRowIndex, addedNetworkTarget);
       await modal.verifySaveButtonEnabled();
       await modal.save();
@@ -155,15 +160,14 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       await modalAfterRemove.cancel();
     });
 
-    const addedStorageSource = SourceStorages.MTV_NFS_US_V8;
-
     await test.step('Add and remove storage mapping', async () => {
       const modal = await planDetailsPage.mappingsTab.openStorageMapEditModal();
       const initialCount = await modal.getMappingCount();
 
       const newRowIndex = await modal.addMapping();
       expect(newRowIndex).toBe(initialCount);
-      await modal.selectSourceStorageAtIndex(newRowIndex, addedStorageSource);
+      // Lab NFS names vary by VM datastore; pick whatever inventory exposes.
+      await modal.selectFirstUnusedSourceAtIndex(newRowIndex);
       await modal.selectFirstAvailableTargetAtIndex(newRowIndex);
       await modal.verifySaveButtonEnabled();
       await modal.save();

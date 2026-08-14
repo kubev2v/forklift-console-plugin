@@ -103,7 +103,9 @@ export class NetworkMapStep {
           Boolean(currentText?.includes('Select target network'));
 
         if (needsRemap) {
-          await targetSelect.click();
+          // force: local runs can leave the map-name TextInput focused / re-rendering,
+          // which blocks Playwright actionability on the MenuToggle.
+          await targetSelect.click({ force: true });
           await this.selectTargetNetworkOption('Ignore network', usedTargets);
         }
       }
@@ -212,8 +214,12 @@ export class NetworkMapStep {
       await this.page.getByTestId('use-new-network-map-radio').check();
 
       if (networkMap.name) {
-        await this.page.getByRole('textbox').click();
-        await this.page.getByRole('textbox').fill(networkMap.name);
+        const nameInput = this.page
+          .getByTestId('create-plan-network-map-step')
+          .getByRole('textbox')
+          .last();
+        await nameInput.fill(networkMap.name);
+        await nameInput.blur();
       }
 
       // Wait for auto-detected rows to load before configuring or mapping

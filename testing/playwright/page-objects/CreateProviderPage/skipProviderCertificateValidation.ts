@@ -10,5 +10,13 @@ export const skipProviderCertificateValidation = async (page: Page): Promise<voi
       .check({ force: true });
     return;
   }
+
   await page.getByTestId('certificate-validation-skip').click();
+
+  // MTV 5.0+ opens a confirm modal; without accepting it the form stays on
+  // Configure (empty CA) and Create provider remains disabled.
+  const confirmSkip = page.getByTestId('confirm-skip-certificate-validation');
+  if (await confirmSkip.isVisible({ timeout: 5000 }).catch(() => false)) {
+    await confirmSkip.click();
+  }
 };
