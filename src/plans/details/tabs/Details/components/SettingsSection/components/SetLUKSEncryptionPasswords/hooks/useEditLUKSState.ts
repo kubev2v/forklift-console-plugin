@@ -84,7 +84,8 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     [secretName, secretNamespace],
   );
 
-  const [secret, secretLoaded] = useK8sWatchResource<IoK8sApiCoreV1Secret>(watchResource);
+  const [secret, secretLoaded, secretLoadError] =
+    useK8sWatchResource<IoK8sApiCoreV1Secret>(watchResource);
 
   const sourceSecretName = secret ? getLabels(secret)?.[SOURCE_SECRET_LABEL] : undefined;
   const sourceWatchResource: WatchK8sResource | null = useMemo(
@@ -190,11 +191,13 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     decryptionMode,
     handleConfirm,
     isDisabled:
-      (Boolean(secretName) && !secretLoaded) ||
+      (Boolean(secretName) && (!secretLoaded || Boolean(secretLoadError))) ||
       (decryptionMode === DECRYPTION_MODE_EXISTING && !selectedSecret),
+    isSecretWatchPending: Boolean(secretName) && !secretLoaded && !secretLoadError,
     isSourceSecretUnavailable,
     nbdeClevis,
     resource,
+    secretLoadError: secretName ? secretLoadError : null,
     secretNamespace,
     selectedSecret,
     setDecryptionMode,

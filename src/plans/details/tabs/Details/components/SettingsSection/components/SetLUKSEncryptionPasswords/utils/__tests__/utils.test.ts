@@ -46,6 +46,16 @@ const findSecretDataPatch = ():
     .map(([arg]) => arg)
     .find((arg) => arg?.data?.some((op: { path?: string }) => op.path === '/data'));
 
+const findSecretLabelRemovePatch = ():
+  { data: { op: string; path: string; value?: unknown }[] } | undefined =>
+  mockK8sPatch.mock.calls
+    .map(([arg]) => arg)
+    .find((arg) =>
+      arg?.data?.some(
+        (op: { op?: string; path?: string }) => op.op === REMOVE && op.path !== '/data',
+      ),
+    );
+
 const sourceSecretLabelPatchPath = `/metadata/labels/${SOURCE_SECRET_LABEL.replaceAll('~', '~0').replaceAll('/', '~1')}`;
 
 describe('onDiskDecryptionConfirm', () => {
@@ -65,7 +75,7 @@ describe('onDiskDecryptionConfirm', () => {
     });
   });
 
-  it('removes source-secret label when updating existing secret with passphrases', async () => {
+  it('replaces secret data then best-effort removes source-secret label', async () => {
     await onDiskDecryptionConfirm({
       currentSecret: labeledSecret,
       nbdeClevis: false,
@@ -77,7 +87,49 @@ describe('onDiskDecryptionConfirm', () => {
     expect(secretPatchCall).toBeDefined();
     expect(secretPatchCall?.data).toEqual([
       { op: REPLACE, path: '/data', value: { 0: btoa('new-passphrase') } },
-      { op: REMOVE, path: sourceSecretLabelPatchPath },
+    ]);
+
+    const labelRemovePatch = findSecretLabelRemovePatch();
+    expect(labelRemovePatch?.data).toEqual([{ op: REMOVE, path: sourceSecretLabelPatchPath }]);
+
+    const dataPatchIndex = mockK8sPatch.mock.calls.findIndex(([arg]) =>
+      arg?.data?.some((op: { path?: string }) => op.path === '/data'),
+    );
+    const labelPatchIndex = mockK8sPatch.mock.calls.findIndex(([arg]) =>
+      arg?.data?.some((op: { op?: string }) => op.op === REMOVE),
+    );
+    expect(dataPatchIndex).toBeGreaterThanOrEqual(0);
+    expect(labelPatchIndex).toBeGreaterThan(dataPatchIndex);
+  });
+
+  it('still updates passphrases when label REMOVE fails', async () => {
+    mockK8sPatch.mockImplementation(({ data }) => {
+      if (data?.[0]?.op === REMOVE) {
+        return Promise.reject(new Error('422 Unprocessable Entity'));
+      }
+      if (data?.[0]?.path === '/data') {
+        return Promise.resolve({
+          data: data[0].value,
+          metadata: {
+            name: 'plan-owned-luks',
+            namespace: 'test-ns',
+          },
+        });
+      }
+      return Promise.resolve(plan);
+    });
+
+    await expect(
+      onDiskDecryptionConfirm({
+        currentSecret: labeledSecret,
+        nbdeClevis: false,
+        newValue: JSON.stringify(['new-passphrase']),
+        resource: plan,
+      }),
+    ).resolves.toBeDefined();
+
+    expect(findSecretDataPatch()?.data).toEqual([
+      { op: REPLACE, path: '/data', value: { 0: btoa('new-passphrase') } },
     ]);
   });
 
@@ -94,5 +146,21 @@ describe('onDiskDecryptionConfirm', () => {
     expect(secretPatchCall?.data).toEqual([
       { op: REPLACE, path: '/data', value: { 0: btoa('new-passphrase') } },
     ]);
+    expect(findSecretLabelRemovePatch()).toBeUndefined();
+  });
+
+  it('does not remove source-secret label when currentSecret is omitted', async () => {
+    await onDiskDecryptionConfirm({
+      nbdeClevis: false,
+      newValue: JSON.stringify(['new-passphrase']),
+      resource: plan,
+    });
+
+    const secretPatchCall = findSecretDataPatch();
+    expect(secretPatchCall).toBeDefined();
+    expect(secretPatchCall?.data).toEqual([
+      { op: REPLACE, path: '/data', value: { 0: btoa('new-passphrase') } },
+    ]);
+    expect(findSecretLabelRemovePatch()).toBeUndefined();
   });
 });

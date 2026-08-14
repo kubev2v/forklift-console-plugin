@@ -44,8 +44,6 @@ type SecretLabelRemovePatch = {
   path: string;
 };
 
-type SecretPatchEntry = SecretDataReplacePatch | SecretLabelRemovePatch;
-
 type LUKSSecret = {
   currentSecret?: IoK8sApiCoreV1Secret;
   newData: Record<number, string> | undefined;
@@ -71,16 +69,25 @@ const getLUKSSecret = async ({
   }
 
   if (secretName && newData) {
-    const data: SecretPatchEntry[] = [{ op: REPLACE, path: '/data', value: newData }];
+    const secretResource = { metadata: { name: secretName, namespace: secretNamespace } };
+    const updatedSecret = await k8sPatch({
+      data: [{ op: REPLACE, path: '/data', value: newData }] satisfies SecretDataReplacePatch[],
+      model: SecretModel,
+      resource: secretResource,
+    });
+
+    // Best-effort: label REMOVE must not fail the passphrase REPLACE (422 if already gone).
     if (currentSecret?.metadata?.labels?.[SOURCE_SECRET_LABEL]) {
-      data.push({ op: REMOVE, path: SOURCE_SECRET_LABEL_PATCH_PATH });
+      await k8sPatch({
+        data: [
+          { op: REMOVE, path: SOURCE_SECRET_LABEL_PATCH_PATH },
+        ] satisfies SecretLabelRemovePatch[],
+        model: SecretModel,
+        resource: secretResource,
+      }).catch(() => undefined);
     }
 
-    return k8sPatch({
-      data,
-      model: SecretModel,
-      resource: { metadata: { name: secretName, namespace: secretNamespace } },
-    });
+    return updatedSecret;
   }
 
   if (!secretName && newData) {

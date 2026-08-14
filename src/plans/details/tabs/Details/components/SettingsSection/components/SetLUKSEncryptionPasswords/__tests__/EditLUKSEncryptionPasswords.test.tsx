@@ -32,9 +32,6 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   useK8sWatchResource: jest.fn((...args) => mockUseK8sWatchResource(...args)),
 }));
 
-jest.mock('@components/LUKSSecretSelect/LUKSSecretSelect', () => (): ReactElement => (
-  <div data-testid="edit-luks-secret-select" />
-));
 jest.mock(
   '../components/EditLUKSModalAlert',
   () =>
@@ -50,7 +47,11 @@ jest.mock(
     ({ value, onChange }: { onChange: any; value: any }): ReactElement => (
       <div data-testid="luks-passphrase-input-list">
         <div>Passphrases: {value.join(', ')}</div>
-        <button data-testid="add-passphrase" onClick={() => onChange([...value, 'new-passphrase'])}>
+        <button
+          data-testid="add-passphrase"
+          onClick={() => onChange([...value, 'new-passphrase'])}
+          type="button"
+        >
           Add
         </button>
       </div>
@@ -269,6 +270,35 @@ describe('EditLUKSEncryptionPasswords', () => {
 
     expect(screen.getByTestId('luks-modal-body')).toBeInTheDocument();
     expect(screen.getByTestId('luks-passphrase-input-list')).toHaveTextContent('Passphrases:');
+  });
+
+  it('disables Save while secret watch is loading, then enables when loaded', () => {
+    mockGetPlanVirtualMachines.mockReturnValue([{ nbdeClevis: false }]);
+    mockUseK8sWatchResource.mockReturnValue([{}, false, null]);
+
+    const { rerender } = render(
+      <EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />,
+    );
+
+    expect(screen.getByRole('button', { name: /save/i })).toBeDisabled();
+    expect(screen.getByTestId('edit-luks-secret-loading')).toBeInTheDocument();
+
+    mockUseK8sWatchResource.mockReturnValue([{ data: {} }, true, null]);
+    rerender(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
+
+    expect(screen.getByRole('button', { name: /save/i })).toBeEnabled();
+    expect(screen.queryByTestId('edit-luks-secret-loading')).not.toBeInTheDocument();
+  });
+
+  it('disables Save and shows error when secret watch fails', () => {
+    mockGetPlanVirtualMachines.mockReturnValue([{ nbdeClevis: false }]);
+    mockUseK8sWatchResource.mockReturnValue([{}, true, new Error('Forbidden')]);
+
+    render(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
+
+    expect(screen.getByRole('button', { name: /save/i })).toBeDisabled();
+    expect(screen.getByTestId('edit-luks-secret-load-error')).toBeInTheDocument();
+    expect(screen.getByText('Forbidden')).toBeInTheDocument();
   });
 
   it('pre-populates existing secret from source-secret label and enables Save', async () => {
