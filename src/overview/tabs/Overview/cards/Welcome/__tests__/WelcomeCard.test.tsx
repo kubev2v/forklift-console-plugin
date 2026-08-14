@@ -103,7 +103,6 @@ describe('WelcomeCard', () => {
   it('navigates to create provider with EC2 type when the EC2 tile is clicked', async () => {
     const user = userEvent.setup();
     mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: true, loaded: true });
-    mockNavigate.mockResolvedValue(undefined);
 
     renderWelcomeCard();
 
