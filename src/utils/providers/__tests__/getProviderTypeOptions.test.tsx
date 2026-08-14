@@ -1,7 +1,10 @@
 import { describe, expect, it } from '@jest/globals';
+import { mockI18n } from '@test-utils/mockI18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { getProviderTypeOptions } from '../getProviderTypeOptions';
+
+mockI18n();
 
 describe('getProviderTypeOptions', () => {
   it('should place EC2 first when the cluster is on AWS platform', () => {

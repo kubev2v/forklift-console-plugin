@@ -15,9 +15,9 @@ export const mockI18n = () => {
   const mockT = createMockT();
 
   const i18nMock = {
-    ForkliftTrans: ({ children }: { children: unknown }) => children,
+    ForkliftTrans: ({ children }: { children: unknown }): unknown => children,
     t: mockT,
-    useForkliftTranslation: () => ({
+    useForkliftTranslation: (): { t: typeof mockT } => ({
       t: mockT,
     }),
   };

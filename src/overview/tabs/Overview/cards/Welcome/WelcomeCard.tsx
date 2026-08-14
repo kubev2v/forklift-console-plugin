@@ -34,7 +34,7 @@ const WelcomeCard: FC = () => {
   const { isAwsPlatform, loaded: isAwsPlatformLoaded } = useClusterIsAwsPlatform();
   const { data: { hideWelcomeCardByContext } = {}, setData } = useContext(OverviewContext);
 
-  // Same order as create-provider (OpenShift first); EC2 only when AWS status is known and true.
+  // Include EC2 only after the platform check confirms AWS.
   const providerTypeOptions = useMemo(
     () => getProviderTypeOptions(isDarkTheme, isAwsPlatformLoaded && isAwsPlatform),
     [isAwsPlatform, isAwsPlatformLoaded, isDarkTheme],
@@ -48,7 +48,7 @@ const WelcomeCard: FC = () => {
   }, []);
   const providersCreateUrl = `${providersListUrl}/~new`;
 
-  const navigateToProvider = (type: ProviderTypes) => {
+  const navigateToProvider = (type: ProviderTypes): void => {
     trackEvent(TELEMETRY_EVENTS.OVERVIEW_WELCOME_PROVIDER_CLICKED, {
       providerType: type,
     });
