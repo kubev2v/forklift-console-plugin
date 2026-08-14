@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 import { mockI18n } from '@test-utils/mockI18n';
 import { renderWithForm } from '@test-utils/renderWithForm';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { StorageMapFieldId } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
@@ -44,7 +44,11 @@ describe('GroupedSourceStorageField', () => {
 
     await user.click(screen.getByRole('button', { name: 'Select menu toggle' }));
 
-    const reusedSourceOption = screen.getByRole('option', { name: 'eco-iscsi-ds3' });
+    // Grouped select renders one listbox per SelectGroup (used VMs + other).
+    const [usedStoragesListbox] = screen.getAllByRole('listbox');
+    const reusedSourceOption = within(usedStoragesListbox).getByRole('option', {
+      name: 'eco-iscsi-ds3',
+    });
 
     expect(reusedSourceOption).toBeEnabled();
     expect(reusedSourceOption).not.toHaveAttribute('aria-disabled', 'true');

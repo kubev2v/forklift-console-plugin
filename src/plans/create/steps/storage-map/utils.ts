@@ -7,6 +7,32 @@ import type { MappingValue } from '@utils/types';
 import { CreatePlanStorageMapFieldId } from './constants';
 
 /**
+ * True when this row is the only mapping that covers a used (VM-detected) source storage.
+ * Duplicate rows for the same used source may be removed while coverage remains (MTV-6324).
+ */
+export const isSoleMappingOfUsedSource = (
+  index: number,
+  storageMappings: StorageMapping[],
+  usedSourceStorages: MappingValue[],
+): boolean => {
+  const sourceId = storageMappings[index]?.[CreatePlanStorageMapFieldId.SourceStorage]?.id;
+  if (!sourceId) {
+    return false;
+  }
+
+  const isUsedSource = usedSourceStorages.some((storage) => storage.id === sourceId);
+  if (!isUsedSource) {
+    return false;
+  }
+
+  const mappingsOfSource = storageMappings.filter(
+    (mapping) => mapping[CreatePlanStorageMapFieldId.SourceStorage]?.id === sourceId,
+  );
+
+  return mappingsOfSource.length <= 1;
+};
+
+/**
  * Validates storage mappings by ensuring all storage devices detected on source VMs
  * have corresponding mappings in the provided values, and that offload fields are
  * either all filled or all empty.

@@ -1,7 +1,10 @@
 import { type FC, useEffect } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { createPlanStorageMapFieldLabels } from 'src/plans/create/steps/storage-map/constants';
-import { validatePlanStorageMaps } from 'src/plans/create/steps/storage-map/utils';
+import {
+  isSoleMappingOfUsedSource,
+  validatePlanStorageMaps,
+} from 'src/plans/create/steps/storage-map/utils';
 import AccessModeField from 'src/storageMaps/components/AccessModeField';
 import GroupedSourceStorageField from 'src/storageMaps/components/GroupedSourceStorageField';
 import OffloadStorageRow from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageRow';
@@ -20,7 +23,6 @@ import { StorageMapFieldId, type TargetStorage } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
 
 import type { PlanStorageEditFormValues } from '../utils/types';
-import { isSoleMappingOfUsedSource } from '../utils/utils';
 
 import TargetStorageInputField from './TargetStorageInputField';
 
@@ -144,7 +146,8 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
           const missingStorage = usedSourceStorages.find(
             (sourceStorage) =>
               !storageMappings?.some(
-                (storageMapping) => storageMapping.sourceStorage.id === sourceStorage.id,
+                (storageMapping) =>
+                  storageMapping[StorageMapFieldId.SourceStorage]?.id === sourceStorage.id,
               ),
           );
 

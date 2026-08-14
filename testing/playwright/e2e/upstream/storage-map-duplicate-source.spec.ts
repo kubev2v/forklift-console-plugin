@@ -1,44 +1,11 @@
 import { expect, type Page, test } from '@playwright/test';
 
 import { TEST_DATA } from '../../fixtures/test-data';
-import { setupForkliftIntercepts } from '../../intercepts';
+import { setupForkliftControllerIntercept, setupForkliftIntercepts } from '../../intercepts';
 import { StorageMapCreatePage } from '../../page-objects/StorageMapCreatePage';
 import { StorageMapDetailsPage } from '../../page-objects/StorageMapDetailsPage';
 import { StorageMapsListPage } from '../../page-objects/StorageMapsListPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
-
-const FORKLIFT_CONTROLLER_RESPONSE = {
-  apiVersion: 'forklift.konveyor.io/v1beta1',
-  kind: 'ForkliftControllerList',
-  metadata: { continue: '', remainingItemCount: 0, resourceVersion: '1000' },
-  items: [
-    {
-      apiVersion: 'forklift.konveyor.io/v1beta1',
-      kind: 'ForkliftController',
-      metadata: {
-        name: 'forklift-controller',
-        namespace: 'konveyor-forklift',
-        uid: 'fc-uid-1',
-        resourceVersion: '999',
-      },
-      // eslint-disable-next-line camelcase
-      spec: { feature_copy_offload: true },
-    },
-  ],
-};
-
-const setupForkliftControllerIntercept = async (page: Page): Promise<void> => {
-  await page.route(
-    '**/apis/forklift.konveyor.io/v1beta1/namespaces/*/forkliftcontrollers*',
-    async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(FORKLIFT_CONTROLLER_RESPONSE),
-      });
-    },
-  );
-};
 
 type CreatedStorageMap = {
   apiVersion: string;
