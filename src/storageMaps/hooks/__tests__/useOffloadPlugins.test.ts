@@ -38,7 +38,7 @@ const makeCrd = (pluginNames: string[]) =>
         },
       ],
     },
-  }) as ReturnType<typeof useStorageMapCrd>['crd'];
+  }) as unknown as ReturnType<typeof useStorageMapCrd>['crd'];
 
 describe('useOffloadPlugins', () => {
   beforeEach(() => {

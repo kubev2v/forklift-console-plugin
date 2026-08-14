@@ -50,11 +50,11 @@ export const validateOffloadFields = (mapping: StorageMapping): string | undefin
     });
   }
 
-  if (!isKnownOffloadPlugin(offloadPlugin)) {
+  if (!offloadPlugin || !isKnownOffloadPlugin(offloadPlugin)) {
     return t('Selected offload plugin is not supported');
   }
 
-  if (!isVendorProductAllowedForPlugin(offloadPlugin, storageProduct)) {
+  if (!storageProduct || !isVendorProductAllowedForPlugin(offloadPlugin, storageProduct)) {
     return t('Selected storage product is not supported for this offload plugin');
   }
 

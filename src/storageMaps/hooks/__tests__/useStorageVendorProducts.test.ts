@@ -45,7 +45,7 @@ const makeCrd = (pluginEnums: Record<string, string[]>) =>
         },
       ],
     },
-  }) as ReturnType<typeof useStorageMapCrd>['crd'];
+  }) as unknown as ReturnType<typeof useStorageMapCrd>['crd'];
 
 describe('useStorageVendorProducts', () => {
   beforeEach(() => {
