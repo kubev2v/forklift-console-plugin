@@ -134,7 +134,7 @@ test.describe('Provider Creation Tests', () => {
       });
 
       await test.step('Click Skip certificate validation and verify CA certificate section is hidden', async () => {
-        await createProvider.certificateSkipRadio.click();
+        await createProvider.skipCertificateValidation();
         await expect(createProvider.certificateSkipRadio).toBeChecked();
         await expect(createProvider.certificateUploadInput).not.toBeVisible();
       });
@@ -217,7 +217,7 @@ test.describe('Provider Creation Tests', () => {
 
       await test.step('Select Hyper-V provider type and skip certificate', async () => {
         await createProvider.selectProviderType(ProviderType.HYPERV);
-        await createProvider.certificateSkipRadio.click();
+        await createProvider.skipCertificateValidation();
       });
 
       await test.step('Verify create button is disabled when fields are empty', async () => {
@@ -295,7 +295,7 @@ test.describe('Provider Creation Tests', () => {
       });
 
       await test.step('Switch to skip and verify upload hidden', async () => {
-        await createProvider.certificateSkipRadio.click();
+        await createProvider.skipCertificateValidation();
         await expect(createProvider.certificateSkipRadio).toBeChecked();
         await expect(createProvider.certificateUploadInput).not.toBeVisible();
       });
@@ -328,7 +328,7 @@ test.describe('Provider Creation Tests', () => {
         await page.getByTestId('hyperv-host-input').fill(DUMMY_HOST);
         await page.getByTestId('hyperv-username-input').fill('admin');
         await page.getByTestId('hyperv-password-input').fill('password');
-        await createProvider.certificateSkipRadio.click();
+        await createProvider.skipCertificateValidation();
       });
 
       await test.step('Verify button is enabled without separate SMB creds', async () => {

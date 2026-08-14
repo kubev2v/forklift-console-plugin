@@ -239,7 +239,7 @@ export class CreateProviderPage {
     await this.fillProviderFields(testData);
 
     if (testData.type !== ProviderType.OVA && testData.type !== ProviderType.EC2) {
-      await skipProviderCertificateValidation(this.page);
+      await this.skipCertificateValidation();
     }
 
     await this.submitForm(testData);
@@ -320,6 +320,14 @@ export class CreateProviderPage {
     const typeToggle = this.page.getByTestId('provider-type-toggle');
     await typeToggle.click();
     await this.page.getByTestId(`provider-type-option-${providerType}`).click();
+  }
+
+  /**
+   * Select Skip certificate validation and accept the MTV 5.0+ confirm modal.
+   * A bare click on the skip radio does not change form state until confirmed.
+   */
+  async skipCertificateValidation(): Promise<void> {
+    await skipProviderCertificateValidation(this.page);
   }
 
   async submitCreateForm(providerName?: string, projectName?: string): Promise<void> {
