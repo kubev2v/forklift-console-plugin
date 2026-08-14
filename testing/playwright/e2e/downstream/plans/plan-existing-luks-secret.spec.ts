@@ -66,7 +66,9 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
       const { detailsTab } = new PlanDetailsPage(page);
       await detailsTab.navigateToDetailsTab();
       await expect(detailsTab.diskDecryptionDetailItem()).toBeVisible();
-      await expect(detailsTab.diskDecryptionDetailItem()).toContainText(LUKS_TEST_SECRET_NAME);
+      // Product copies the selected secret via generateName `${planName}-` and
+      // labels it with forklift.konveyor.io/source-secret — details show the copy.
+      await expect(detailsTab.diskDecryptionDetailItem()).toContainText(`${testData.planName}-`);
     });
 
     await test.step('Open edit modal and verify radio toggle', async () => {
