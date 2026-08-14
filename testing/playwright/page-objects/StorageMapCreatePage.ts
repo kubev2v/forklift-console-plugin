@@ -121,11 +121,8 @@ export class StorageMapCreatePage {
 
   async submitForm(expectedMapName: string): Promise<void> {
     await this.submit();
-    await this.page.waitForURL(
-      new RegExp(
-        `/k8s/ns/[^/]+/forklift\\.konveyor\\.io~v1beta1~StorageMap/${expectedMapName}[^/]*$`,
-      ),
-    );
+    const expectedPathSuffix = `/forklift.konveyor.io~v1beta1~StorageMap/${expectedMapName}`;
+    await this.page.waitForURL((url) => new URL(url).pathname.endsWith(expectedPathSuffix));
   }
 
   async waitForMappingTableReady(): Promise<void> {

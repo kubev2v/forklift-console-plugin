@@ -11,20 +11,28 @@ import InventorySourceStorageField from '../InventorySourceStorageField';
 
 mockI18n();
 
+const createVSphereStorage = (
+  id: string,
+  name: string,
+): Extract<InventoryStorage, { providerType: 'vsphere' }> => ({
+  backingDevicesNames: [],
+  capacity: 0,
+  free: 0,
+  id,
+  maintenance: '',
+  name,
+  parent: { id: 'datacenter-1', kind: 'Datacenter' },
+  path: `/${name}`,
+  providerType: PROVIDER_TYPES.vsphere,
+  revision: 1,
+  selfLink: `/providers/vsphere/uid/datastores/${id}`,
+  type: 'VMFS',
+});
+
 const sourceStorages = [
-  {
-    id: 'eco-iscsi-ds3',
-    name: 'eco-iscsi-ds3',
-    path: '/eco-iscsi-ds3',
-    providerType: PROVIDER_TYPES.vsphere,
-  },
-  {
-    id: 'eco-iscsi-ds1',
-    name: 'eco-iscsi-ds1',
-    path: '/eco-iscsi-ds1',
-    providerType: PROVIDER_TYPES.vsphere,
-  },
-] as InventoryStorage[];
+  createVSphereStorage('eco-iscsi-ds3', 'eco-iscsi-ds3'),
+  createVSphereStorage('eco-iscsi-ds1', 'eco-iscsi-ds1'),
+] satisfies InventoryStorage[];
 
 describe('InventorySourceStorageField', () => {
   it('keeps an already-mapped source storage selectable for another mapping row', async () => {
