@@ -77,7 +77,7 @@ const getLUKSSecret = async ({
     });
 
     // Best-effort: label REMOVE must not fail the passphrase REPLACE (422 if already gone).
-    if (getLabels(currentSecret)?.[SOURCE_SECRET_LABEL]) {
+    if (currentSecret && getLabels(currentSecret)?.[SOURCE_SECRET_LABEL]) {
       await k8sPatch({
         data: [
           { op: REMOVE, path: SOURCE_SECRET_LABEL_PATCH_PATH },
