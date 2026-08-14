@@ -1,7 +1,16 @@
 import LUKSSecretSelect from '@components/LUKSSecretSelect/LUKSSecretSelect';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
-import { Checkbox, Flex, FlexItem, FormGroup, Radio, Stack } from '@patternfly/react-core';
+import {
+  Alert,
+  AlertVariant,
+  Checkbox,
+  Flex,
+  FlexItem,
+  FormGroup,
+  Radio,
+  Stack,
+} from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { EditPlanProps } from '../../utils/types';
@@ -26,6 +35,7 @@ const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
     decryptionMode,
     handleConfirm,
     isDisabled,
+    isSourceSecretUnavailable,
     nbdeClevis,
     secretNamespace,
     selectedSecret,
@@ -46,6 +56,19 @@ const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
     >
       <Stack hasGutter>
         <EditLUKSModalBody />
+
+        {isSourceSecretUnavailable && (
+          <Alert
+            data-testid="edit-luks-source-secret-unavailable-alert"
+            isInline
+            title={t('Referenced secret unavailable')}
+            variant={AlertVariant.warning}
+          >
+            {t(
+              'The secret previously selected for disk decryption could not be found. Enter passphrases or choose another secret.',
+            )}
+          </Alert>
+        )}
 
         <Checkbox
           className="pf-v6-u-mt-lg"

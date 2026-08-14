@@ -145,7 +145,9 @@ export const onDiskDecryptionConfirm = async ({
   const planVirtualMachines = getPlanVirtualMachines(resource);
 
   if (existingSecret) {
-    // Selected secret is already the plan's labeled source — skip re-copy/delete
+    // Intentional name-only no-op: the source-secret label stores the name, not
+    // uid/resourceVersion. If source data changed under the same name, re-select
+    // another secret then the source to force a re-copy.
     if (labeledSourceSecretName && getName(existingSecret) === labeledSourceSecretName) {
       return undefined;
     }

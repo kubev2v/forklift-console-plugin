@@ -55,8 +55,31 @@ jest.mock(
 
 jest.mock('@components/LUKSSecretSelect/LUKSSecretSelect', () => ({
   __esModule: true,
-  default: ({ testId, value }: { testId?: string; value: string }): ReactElement => (
-    <div data-testid={testId ?? 'luks-secret-select'}>Selected: {value || 'none'}</div>
+  default: ({
+    onSelect,
+    testId,
+    value,
+  }: {
+    onSelect: (event: unknown, secret: IoK8sApiCoreV1Secret) => void;
+    testId?: string;
+    value: string;
+  }): ReactElement => (
+    <div data-testid={testId ?? 'luks-secret-select'}>
+      Selected: {value || 'none'}
+      <button
+        data-testid="select-manual-luks-secret"
+        onClick={() => {
+          onSelect(undefined, {
+            data: { '0': btoa('manual') },
+            metadata: { name: 'manual-luks', namespace: 'test-namespace' },
+            type: 'Opaque',
+          });
+        }}
+        type="button"
+      >
+        Select manual
+      </button>
+    </div>
   ),
 }));
 
@@ -277,7 +300,69 @@ describe('EditLUKSEncryptionPasswords', () => {
       expect(screen.getByTestId('edit-use-passphrases-radio')).toBeChecked();
     });
 
+    expect(screen.getByTestId('edit-luks-source-secret-unavailable-alert')).toBeInTheDocument();
     expect(screen.getByTestId('luks-passphrase-input-list')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /save/i })).toBeEnabled();
+  });
+
+  it('does not overwrite a manual secret pick when the source watch resolves later', async () => {
+    const user = userEvent.setup();
+    mockGetPlanVirtualMachines.mockReturnValue([
+      { luks: { name: 'test-secret' }, nbdeClevis: false },
+    ]);
+
+    let sourceWatchResult: [IoK8sApiCoreV1Secret | undefined, boolean, unknown] = [
+      undefined,
+      false,
+      null,
+    ];
+
+    mockUseK8sWatchResource.mockImplementation((resource) => {
+      if (!resource) {
+        return [undefined, true, null];
+      }
+
+      if (resource.name === 'test-secret') {
+        return [planOwnedSecretWithSourceLabel, true, null];
+      }
+
+      if (resource.name === 'luks-source') {
+        return sourceWatchResult;
+      }
+
+      return [undefined, true, null];
+    });
+
+    const { rerender } = render(
+      <EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('edit-use-existing-secret-radio')).toBeChecked();
+    });
+
+    expect(screen.getByTestId('edit-luks-secret-select')).toHaveTextContent('Selected: none');
+
+    await user.click(screen.getByTestId('select-manual-luks-secret'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('edit-luks-secret-select')).toHaveTextContent(
+        'Selected: manual-luks',
+      );
+    });
+
+    sourceWatchResult = [sourceSecret, true, null];
+    rerender(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('edit-luks-secret-select')).toHaveTextContent(
+        'Selected: manual-luks',
+      );
+    });
+
+    expect(screen.getByTestId('edit-use-existing-secret-radio')).toBeChecked();
+    expect(
+      screen.queryByTestId('edit-luks-source-secret-unavailable-alert'),
+    ).not.toBeInTheDocument();
   });
 });

@@ -89,6 +89,7 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
   const [nbdeClevis, setNbdeClevis] = useState<boolean>(derivedNbdeClevis);
   const [decryptionMode, setDecryptionMode] = useState<DecryptionMode>(DECRYPTION_MODE_PASSPHRASES);
   const [selectedSecret, setSelectedSecret] = useState<IoK8sApiCoreV1Secret | undefined>();
+  const [isSourceSecretUnavailable, setIsSourceSecretUnavailable] = useState(false);
   const [prevResource, setPrevResource] = useState(resource);
   const [prevSecretDataKey, setPrevSecretDataKey] = useState<string | undefined>();
   const modeInitializedRef = useRef(false);
@@ -117,7 +118,11 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     } else if (sourceSecretLoaded || sourceSecretLoadError) {
       // Labeled source missing (deleted/404) — fall back so the modal stays usable
       selectedSecretInitializedRef.current = true;
-      setDecryptionMode(DECRYPTION_MODE_PASSPHRASES);
+      // Preserve a manual pick made while the source watch was in flight
+      if (!selectedSecret) {
+        setDecryptionMode(DECRYPTION_MODE_PASSPHRASES);
+        setIsSourceSecretUnavailable(true);
+      }
     }
   }
 
@@ -152,6 +157,7 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     decryptionMode,
     handleConfirm,
     isDisabled: decryptionMode === DECRYPTION_MODE_EXISTING && !selectedSecret,
+    isSourceSecretUnavailable,
     nbdeClevis,
     resource,
     secretNamespace,
