@@ -102,13 +102,32 @@ describe('StorageSecretField', () => {
     expect(screen.getByText('Loading secrets...')).toBeInTheDocument();
   });
 
-  it('disables the select and shows failure copy when watch errors', () => {
+  it('disables the select and shows failure copy when watch errors with no secrets', () => {
     mockUseK8sWatchResource.mockReturnValue([[], true, new Error('watch failed')]);
 
     renderWithForm(<StorageSecretField fieldId="storageSecret" sourceProvider={sourceProvider} />);
 
     expect(screen.getByRole('button', { name: 'Select menu toggle' })).toBeDisabled();
     expect(screen.getByText('Failed to load secrets.')).toBeInTheDocument();
+  });
+
+  it('keeps the select enabled when Opaque secrets loaded despite watch error', async () => {
+    const user = userEvent.setup();
+    mockUseK8sWatchResource.mockReturnValue([
+      [{ metadata: { name: 'storage-creds', uid: 'uid-1' }, type: 'Opaque' }],
+      true,
+      new Error('watch stream failed'),
+    ]);
+
+    renderWithForm(<StorageSecretField fieldId="storageSecret" sourceProvider={sourceProvider} />);
+
+    const toggle = screen.getByRole('button', { name: 'Select menu toggle' });
+    expect(toggle).toBeEnabled();
+    expect(toggle).toHaveTextContent('Select storage secret');
+
+    await user.click(toggle);
+
+    expect(screen.getByRole('option', { name: 'storage-creds' })).toBeInTheDocument();
   });
 
   it('clears a stale non-Opaque secret value from the form', () => {
