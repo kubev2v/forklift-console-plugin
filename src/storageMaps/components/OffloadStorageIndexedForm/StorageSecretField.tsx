@@ -30,12 +30,17 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
     watch,
   } = useFormContext();
 
-  const [secrets, loaded, error] = useK8sWatchResource<IoK8sApiCoreV1Secret[]>({
-    groupVersionKind: getGroupVersionKindForModel(SecretModel),
-    isList: true,
-    namespace: getNamespace(sourceProvider),
-    namespaced: true,
-  });
+  const namespace = getNamespace(sourceProvider);
+  const [secrets, loaded, error] = useK8sWatchResource<IoK8sApiCoreV1Secret[]>(
+    namespace
+      ? {
+          groupVersionKind: getGroupVersionKindForModel(SecretModel),
+          isList: true,
+          namespace,
+          namespaced: true,
+        }
+      : null,
+  );
 
   const opaqueSecrets = useMemo(
     (): IoK8sApiCoreV1Secret[] => filterOpaqueSecrets(secrets),
@@ -43,10 +48,13 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
   );
 
   const selectedSecret = watch(fieldId) as string | undefined;
-  const isWatchUnavailable = !loaded || Boolean(error);
+  const hasOpaqueSecrets = !isEmpty(opaqueSecrets);
+  // Keep the select usable when the list returned Opaque secrets even if a later
+  // watch/stream error is set (common in e2e mocks without a secrets watch WS).
+  const isSelectDisabled = isSubmitting || !loaded || (Boolean(error) && !hasOpaqueSecrets);
 
   useEffect(() => {
-    if (isWatchUnavailable || !selectedSecret) {
+    if (!loaded || !selectedSecret || !hasOpaqueSecrets) {
       return;
     }
 
@@ -55,10 +63,12 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
     if (!isSelectedOpaque) {
       setValue(fieldId, '', { shouldDirty: true, shouldValidate: true });
     }
-  }, [fieldId, isWatchUnavailable, opaqueSecrets, selectedSecret, setValue]);
+  }, [fieldId, hasOpaqueSecrets, loaded, opaqueSecrets, selectedSecret, setValue]);
 
   let placeholder = t('Loading secrets...');
-  if (error) {
+  if (loaded && hasOpaqueSecrets) {
+    placeholder = t('Select storage secret');
+  } else if (loaded && error) {
     placeholder = t('Failed to load secrets.');
   } else if (loaded) {
     placeholder = t('Select storage secret');
@@ -91,7 +101,7 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
         render={({ field }) => (
           <Select
             id={fieldId}
-            isDisabled={isSubmitting || isWatchUnavailable}
+            isDisabled={isSelectDisabled}
             onSelect={(_e, value) => {
               field.onChange(value);
             }}

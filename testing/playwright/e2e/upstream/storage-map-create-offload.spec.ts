@@ -47,7 +47,11 @@ const setupSecretsIntercept = async (page: Page): Promise<void> => {
   await page.route(
     new RegExp(`/api/(?:kubernetes/)?api/v1/namespaces/${MTV_NAMESPACE}/secrets(?:\\?.*)?$`),
     async (route) => {
-      if (route.request().method() !== 'GET') {
+      const request = route.request();
+      const url = request.url();
+      // Only mock the list call. Watch/stream requests fail without a WS mock; the UI
+      // must remain usable when Opaque secrets were already returned by list.
+      if (request.method() !== 'GET' || url.includes('watch=true')) {
         await route.continue();
         return;
       }
@@ -64,12 +68,18 @@ const setupSecretsIntercept = async (page: Page): Promise<void> => {
               metadata: {
                 name: 'test-storage-secret',
                 namespace: MTV_NAMESPACE,
+                resourceVersion: '1',
                 uid: 'test-secret-uid-1',
               },
               type: 'Opaque',
             },
           ],
           kind: 'SecretList',
+          metadata: {
+            continue: '',
+            remainingItemCount: 0,
+            resourceVersion: '1',
+          },
         }),
       });
     },
