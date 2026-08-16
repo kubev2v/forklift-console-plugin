@@ -16,7 +16,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@kubernetes/client-node": "^1.4.0",
+    "@kubernetes/client-node": "^2.0.0",
     "@playwright/test": "^1.62.1",
     "@types/node": "^20.0.0",
     "playwright": "^1.62.1",
