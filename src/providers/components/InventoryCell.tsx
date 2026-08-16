@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import { getResourceFieldValue } from 'src/components/common/FilterGroup/matchers';
 import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
 import { TableIconCell } from 'src/components/TableCell/TableIconCell';
@@ -13,7 +13,7 @@ import OpenshiftNetworkCell from './OpenshiftNetworkCell';
 import VSphereHostCell from './VSphereHostCell';
 
 type InventoryCellProps = {
-  icon?: JSX.Element;
+  icon?: ReactElement;
   inventoryValue?: number | string;
 } & CellProps;
 

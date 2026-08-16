@@ -4,7 +4,7 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import ProviderSelect from '@components/ProviderSelect/ProviderSelect';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, FormGroup, ModalVariant } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { getObjectRef } from '@utils/helpers/getObjectRef';
@@ -16,8 +16,8 @@ import {
   type MapProvidersEditProps,
 } from './utils/types';
 
-const MapProvidersEdit: ModalComponent<MapProvidersEditProps> = ({
-  closeModal,
+const MapProvidersEdit: OverlayComponent<MapProvidersEditProps> = ({
+  closeOverlay,
   destinationProvider,
   model,
   namespace,
@@ -42,7 +42,7 @@ const MapProvidersEdit: ModalComponent<MapProvidersEditProps> = ({
 
   const onSubmit = async (formData: MapProvidersEditFormValues) => {
     if (!isDirty) {
-      closeModal();
+      closeOverlay();
       return;
     }
     const { destination, source } = formData;
@@ -69,7 +69,7 @@ const MapProvidersEdit: ModalComponent<MapProvidersEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeModal}
+        closeOverlay={closeOverlay}
         isDisabled={!isEmpty(errors) || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         title={t('Edit providers')}

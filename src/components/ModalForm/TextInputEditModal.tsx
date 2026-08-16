@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { type ValidationMsg, ValidationState } from 'src/utils/validation/Validation';
 
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, ModalVariant, TextInput } from '@patternfly/react-core';
 
 import ModalForm from './ModalForm';
@@ -22,8 +22,8 @@ type TextInputEditModalProps = {
   validationHook?: (value: string) => ValidationMsg;
 };
 
-const TextInputEditModal: ModalComponent<TextInputEditModalProps> = ({
-  closeModal,
+const TextInputEditModal: OverlayComponent<TextInputEditModalProps> = ({
+  closeOverlay,
   description,
   helperText,
   initialValue,
@@ -51,7 +51,7 @@ const TextInputEditModal: ModalComponent<TextInputEditModalProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeModal}
+      closeOverlay={closeOverlay}
       isDisabled={!isValid || hasError}
       onConfirm={handleConfirm}
       title={title}

@@ -6,17 +6,14 @@ import Select from '@components/common/Select';
 import { SelectGroup, SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import {
-  StorageMapFieldId,
-  type StorageMapping,
-  type StorageMappingValue,
-} from '@utils/storage/types';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 type GroupedSourceStorageFieldProps = {
   fieldId: string;
-  otherSourceStorages: StorageMappingValue[];
+  otherSourceStorages: MappingValue[];
   storageMappings: StorageMapping[];
-  usedSourceStorages: StorageMappingValue[];
+  usedSourceStorages: MappingValue[];
 };
 
 /**
@@ -55,7 +52,7 @@ const GroupedSourceStorageField: FC<GroupedSourceStorageFieldProps> = ({
           placeholder={t('Select source storage')}
           ref={field.ref}
           testId={`source-storage-${fieldId}`}
-          value={(field.value as StorageMappingValue).name}
+          value={(field.value as MappingValue).name}
         >
           <SelectGroup label={t('Storages used by the selected VMs')}>
             <SelectList>

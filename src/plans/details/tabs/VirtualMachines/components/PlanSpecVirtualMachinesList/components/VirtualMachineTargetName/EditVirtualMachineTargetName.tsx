@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Plan } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Stack, StackItem, TextInput, ValidatedOptions } from '@patternfly/react-core';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
@@ -17,10 +17,10 @@ export type EditVirtualMachineTargetNameProps = {
   vmIndex: number;
 };
 
-const EditVirtualMachineTargetName: ModalComponent<EditVirtualMachineTargetNameProps> = ({
+const EditVirtualMachineTargetName: OverlayComponent<EditVirtualMachineTargetNameProps> = ({
+  closeOverlay,
   plan,
   vmIndex,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const vms = getPlanVirtualMachines(plan);
@@ -35,6 +35,7 @@ const EditVirtualMachineTargetName: ModalComponent<EditVirtualMachineTargetNameP
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       isDisabled={
         Boolean(validateVMTargetName(inputValue, vms ?? [])) ||
         (isEmpty(vm.targetName) && isEmpty(inputValue)) ||
@@ -42,7 +43,6 @@ const EditVirtualMachineTargetName: ModalComponent<EditVirtualMachineTargetNameP
       }
       onConfirm={async () => patchVMTargetName({ newValue: inputValue, resource: plan, vmIndex })}
       title={t('Edit target name')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

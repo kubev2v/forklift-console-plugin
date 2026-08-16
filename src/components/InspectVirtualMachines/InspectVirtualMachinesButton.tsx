@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, Tooltip } from '@patternfly/react-core';
 import { TOOLTIP_TRIGGER_MANUAL } from '@utils/constants';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -26,10 +26,10 @@ const InspectVirtualMachinesButton: FC<InspectVirtualMachinesButtonProps> = ({
   testId = 'plan-inspect-vms-button',
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const onClickInspectVms = (): void => {
-    launcher<InspectVirtualMachinesModalProps>(InspectVirtualMachinesModal, {
+    launchOverlay<InspectVirtualMachinesModalProps>(InspectVirtualMachinesModal, {
       plan,
       provider,
     });

@@ -4,7 +4,7 @@ import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/ut
 import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
@@ -19,7 +19,7 @@ const SharedDisksDetailsItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   if (!shouldRender) {
     return null;
@@ -37,7 +37,10 @@ const SharedDisksDetailsItem: FC<EditableDetailsItemProps> = ({
       }
       crumbs={['spec', 'migrateSharedDisks']}
       onEdit={() => {
-        launcher<EditPlanProps>(EditMigrateSharedDisks, { isVddkInitImageNotSet, resource: plan });
+        launchOverlay<EditPlanProps>(EditMigrateSharedDisks, {
+          isVddkInitImageNotSet,
+          resource: plan,
+        });
       }}
       testId="shared-disks-detail-item"
       title={t('Shared disks')}

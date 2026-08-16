@@ -3,7 +3,7 @@ import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Label, Stack, StackItem } from '@patternfly/react-core';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
@@ -18,7 +18,7 @@ const GuestConversionDetailsItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   if (!shouldRender) {
     return null;
@@ -51,7 +51,7 @@ const GuestConversionDetailsItem: FC<EditableDetailsItemProps> = ({
       }
       crumbs={['spec', 'skipGuestConversion']}
       onEdit={() => {
-        launcher<EditPlanProps>(GuestConversionEditModal, { resource: plan });
+        launchOverlay<EditPlanProps>(GuestConversionEditModal, { resource: plan });
       }}
       testId="guest-conversion-mode-detail-item"
       title={t('Guest conversion mode')}

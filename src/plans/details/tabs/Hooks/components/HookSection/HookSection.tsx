@@ -4,7 +4,7 @@ import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/ut
 import { DetailsItem } from '@components/DetailItems/DetailItem';
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
 import type { V1beta1Hook, V1beta1Plan } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionList } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -27,7 +27,7 @@ type HookSectionProps = {
 
 const HookSection: FC<HookSectionProps> = ({ hook, plan, step, title }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const planEditable = isPlanEditable(plan);
   const hookExists = !isEmpty(hook);
@@ -41,7 +41,7 @@ const HookSection: FC<HookSectionProps> = ({ hook, plan, step, title }) => {
         editable={planEditable}
         headingLevel="h3"
         onClick={() => {
-          launcher<HookEditProps>(HookEdit, { hook, plan, step });
+          launchOverlay<HookEditProps>(HookEdit, { hook, plan, step });
         }}
         title={title}
       />

@@ -3,7 +3,7 @@ import { isHypervIscsiProvider } from 'src/providers/utils/helpers/isHypervIscsi
 import StorageMapStatusAlerts from 'src/storageMaps/components/StorageMapStatusAlerts';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Alert, AlertVariant, ModalVariant, Stack } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 import { StorageMapFieldId } from '@utils/storage/types';
@@ -12,8 +12,8 @@ import PlanStorageMapFieldsTable from './components/PlanStorageMapFieldsTable';
 import type { PlanStorageEditFormValues, PlanStorageMapEditProps } from './utils/types';
 import { patchStorageMappingValues } from './utils/utils';
 
-const PlanStorageMapEdit: ModalComponent<PlanStorageMapEditProps> = ({
-  closeModal,
+const PlanStorageMapEdit: OverlayComponent<PlanStorageMapEditProps> = ({
+  closeOverlay,
   isLoading,
   loadError,
   otherSourceStorages,
@@ -53,7 +53,7 @@ const PlanStorageMapEdit: ModalComponent<PlanStorageMapEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeModal}
+        closeOverlay={closeOverlay}
         isDisabled={!isValid || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         testId="edit-storage-map-modal"

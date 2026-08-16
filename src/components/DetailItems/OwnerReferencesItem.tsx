@@ -6,6 +6,8 @@ import {
   type OwnerReference,
   ResourceLink,
 } from '@openshift-console/dynamic-plugin-sdk';
+import { getGroupVersionKindFromOwnerReference } from '@utils/crds/common/selectors';
+import { isEmpty } from '@utils/helpers';
 
 /**
  * React Component to display a list of owner references for a given Kubernetes resource.
@@ -17,21 +19,24 @@ import {
  */
 export const OwnerReferencesItem: FC<OwnerReferencesProps> = ({ resource }) => {
   const { t } = useForkliftTranslation();
-  const owners = (resource?.metadata?.ownerReferences ?? []).map(
-    (ownerReference: OwnerReference) => (
-      <ResourceLink
-        groupVersionKind={{
-          group: ownerReference.apiVersion.split('/')[0],
-          kind: ownerReference.kind,
-          version: ownerReference.apiVersion.split('/')[1],
-        }}
-        key={ownerReference.uid}
-        name={ownerReference.name}
-        namespace={resource.metadata?.namespace}
-      />
-    ),
+  const ownerReferences = resource?.metadata?.ownerReferences ?? [];
+
+  if (isEmpty(ownerReferences)) {
+    return <span className="text-muted">{t('No owner')}</span>;
+  }
+
+  return (
+    <>
+      {ownerReferences.map((ownerReference: OwnerReference) => (
+        <ResourceLink
+          groupVersionKind={getGroupVersionKindFromOwnerReference(ownerReference)}
+          key={ownerReference.uid}
+          name={ownerReference.name}
+          namespace={resource.metadata?.namespace}
+        />
+      ))}
+    </>
   );
-  return owners.length ? <>{owners}</> : <span className="text-muted">{t('No owner')}</span>;
 };
 
 /**

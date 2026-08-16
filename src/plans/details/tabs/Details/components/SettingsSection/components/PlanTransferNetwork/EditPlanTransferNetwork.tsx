@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1PlanSpecTransferNetwork } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Stack } from '@patternfly/react-core';
 import { getPlanTransferNetwork } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -14,7 +14,7 @@ import type { EditPlanProps } from '../../utils/types';
 import { onConfirmTransferNetwork } from './utils/utils';
 import TransferNetworkDropdown from './TransferNetworkDropdown';
 
-const EditPlanTransferNetwork: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
+const EditPlanTransferNetwork: OverlayComponent<EditPlanProps> = ({ closeOverlay, resource }) => {
   const { t } = useForkliftTranslation();
   const { destinationProvider } = usePlanDestinationProvider(resource);
   const [value, setValue] = useState<V1beta1PlanSpecTransferNetwork | null>(
@@ -23,9 +23,9 @@ const EditPlanTransferNetwork: ModalComponent<EditPlanProps> = ({ resource, ...r
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       onConfirm={async () => onConfirmTransferNetwork({ newValue: value, resource })}
       title={t('Edit migration plan transfer network')}
-      {...rest}
     >
       <Stack hasGutter>
         {t(

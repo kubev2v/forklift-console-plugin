@@ -7,7 +7,7 @@ import NodeSelectorModal, {
 } from '@components/NodeSelectorModal/NodeSelectorModal';
 import NodeSelectorViewDetailsItemContent from '@components/NodeSelectorViewDetailsItemContent/NodeSelectorViewDetailsItemContent';
 import type { V1beta1Plan } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
@@ -22,7 +22,7 @@ const ConvertorNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   if (!shouldRender) {
     return null;
@@ -48,7 +48,7 @@ const ConvertorNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({
       helpContent={description}
       moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
-        launcher<NodeSelectorModalProps>(NodeSelectorModal, {
+        launchOverlay<NodeSelectorModalProps>(NodeSelectorModal, {
           description: (
             <ForkliftTrans>
               <Stack hasGutter>

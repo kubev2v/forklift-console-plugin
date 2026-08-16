@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { OVA_APPLIANCE_MANAGEMENT_DESCRIPTION } from 'src/providers/utils/constants';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 import { PF_LABEL_STATUS } from '@utils/constants';
 import { isApplianceManagementEnabled } from '@utils/crds/common/selectors';
@@ -19,7 +19,7 @@ const ApplianceManagementDetailsItem: FC<ProviderDetailsItemProps> = ({
   resource: provider,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const isEnabled = isApplianceManagementEnabled(provider);
 
@@ -38,7 +38,7 @@ const ApplianceManagementDetailsItem: FC<ProviderDetailsItemProps> = ({
       crumbs={['Provider', 'spec', 'settings', 'applianceManagement']}
       helpContent={helpContent ?? OVA_APPLIANCE_MANAGEMENT_DESCRIPTION}
       onEdit={() => {
-        launcher<EditApplianceManagementProps>(EditApplianceManagement, { provider });
+        launchOverlay<EditApplianceManagementProps>(EditApplianceManagement, { provider });
       }}
       testId="appliance-management-detail-item"
       title={t('Appliance management')}

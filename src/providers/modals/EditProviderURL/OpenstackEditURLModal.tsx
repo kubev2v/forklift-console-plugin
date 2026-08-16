@@ -1,16 +1,16 @@
 import TextInputEditModal from 'src/components/ModalForm/TextInputEditModal';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 
 import { validateOpenstackURL } from '../../utils/validators/provider/openstack/validateOpenstackURL';
 
 import { patchProviderURL } from './utils/patchProviderURL';
 import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
-export const OpenstackEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
+export const OpenstackEditURLModal: OverlayComponent<EditProviderURLModalProps> = ({
+  closeOverlay,
   resource: provider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -35,7 +35,7 @@ export const OpenstackEditURLModal: ModalComponent<EditProviderURLModalProps> = 
 
   return (
     <TextInputEditModal
-      {...rest}
+      closeOverlay={closeOverlay}
       description={description}
       helperText={t('The URL of the OpenStack Identity endpoint.')}
       initialValue={provider?.spec?.url ?? ''}

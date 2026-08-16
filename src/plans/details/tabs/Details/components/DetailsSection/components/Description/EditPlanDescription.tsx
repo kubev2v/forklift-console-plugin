@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, FormGroup, TextInput } from '@patternfly/react-core';
 import { getPlanDescription } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -10,15 +10,15 @@ import type { EditPlanProps } from '../../../SettingsSection/utils/types';
 
 import { onConfirmDescription } from './utils/utils';
 
-const EditPlanDescription: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
+const EditPlanDescription: OverlayComponent<EditPlanProps> = ({ closeOverlay, resource }) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<string | undefined>(getPlanDescription(resource));
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       onConfirm={async () => onConfirmDescription({ newValue: value, resource })}
       title={t('Edit description')}
-      {...rest}
     >
       <Form>
         <FormGroup label={t('Description')}>

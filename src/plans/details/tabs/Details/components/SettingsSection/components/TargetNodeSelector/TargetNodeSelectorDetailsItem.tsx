@@ -8,7 +8,7 @@ import NodeSelectorModal, {
 } from '@components/NodeSelectorModal/NodeSelectorModal';
 import NodeSelectorViewDetailsItemContent from '@components/NodeSelectorViewDetailsItemContent/NodeSelectorViewDetailsItemContent';
 import type { V1beta1Plan } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
@@ -17,7 +17,7 @@ import { patchPlanSpec } from '../../utils/patchPlanSpec';
 
 const TargetNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const TARGET_NODE_SELECTOR_DETAILS_ITEM_DESCRIPTION = t(
     'Specify node labels that will be applied after migration to all target virtual machines of the migration plan for constraining virtual machines scheduling to specific nodes, based on node labels. This will ensure that the migrated virtual machines will run on nodes with required capabilities (GPU, storage type, CPU architecture).',
@@ -38,7 +38,7 @@ const TargetNodeSelectorDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch,
       crumbs={['spec', 'targetNodeSelector']}
       helpContent={TARGET_NODE_SELECTOR_DETAILS_ITEM_DESCRIPTION}
       onEdit={() => {
-        launcher<NodeSelectorModalProps>(NodeSelectorModal, {
+        launchOverlay<NodeSelectorModalProps>(NodeSelectorModal, {
           description: (
             <ForkliftTrans>
               <Stack hasGutter>

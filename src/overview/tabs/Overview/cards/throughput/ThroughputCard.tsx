@@ -1,4 +1,4 @@
-import { type FC, useMemo, useState } from 'react';
+import { type FC, type ReactElement, useMemo, useState } from 'react';
 
 import {
   Bullseye,
@@ -77,7 +77,7 @@ const ThroughputCard: FC<ThroughputCardProps> = ({ metricName, title }) => {
     }
   }
 
-  const renderBody = (): JSX.Element => {
+  const renderBody = (): ReactElement => {
     if (!loaded && !error) {
       return (
         <Bullseye>

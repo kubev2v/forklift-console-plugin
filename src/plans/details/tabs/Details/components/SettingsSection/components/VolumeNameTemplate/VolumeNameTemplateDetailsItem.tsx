@@ -3,7 +3,7 @@ import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
@@ -17,7 +17,7 @@ const VolumeNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   if (!shouldRender) {
     return null;
@@ -35,7 +35,7 @@ const VolumeNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
       content={content}
       crumbs={['spec', 'volumeNameTemplate']}
       onEdit={() => {
-        launcher<EditVolumeNameTemplateProps>(EditVolumeNameTemplate, {
+        launchOverlay<EditVolumeNameTemplateProps>(EditVolumeNameTemplate, {
           allowInherit: false,
           onConfirmVolumeNameTemplate,
           resource: plan,

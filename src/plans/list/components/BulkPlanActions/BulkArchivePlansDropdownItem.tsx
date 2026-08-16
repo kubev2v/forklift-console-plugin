@@ -2,7 +2,7 @@ import { type FC, useCallback, useMemo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
@@ -21,7 +21,7 @@ const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
   selectedIds,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const selectedPlans = useMemo(() => getSelectedPlans(plans, selectedIds), [plans, selectedIds]);
   const eligiblePlans = useMemo(() => getPlansEligibleForArchive(selectedPlans), [selectedPlans]);
@@ -45,11 +45,11 @@ const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
       return;
     }
 
-    launcher<BulkArchivePlansModalProps>(BulkArchivePlansModal, {
+    launchOverlay<BulkArchivePlansModalProps>(BulkArchivePlansModal, {
       plans: eligiblePlans,
       skippedArchivedCount,
     });
-  }, [disabledReason, eligiblePlans, launcher, skippedArchivedCount]);
+  }, [disabledReason, eligiblePlans, launchOverlay, skippedArchivedCount]);
 
   return (
     <DropdownItem

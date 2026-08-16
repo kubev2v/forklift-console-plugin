@@ -7,7 +7,7 @@ import {
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { IoK8sApiCoreV1Secret } from '@forklift-ui/types';
-import { useK8sWatchResource, useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
@@ -18,7 +18,7 @@ export const URLDetailsItem: FC<ProviderDetailsItemProps> = ({
   resource: provider,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const [secret] = useK8sWatchResource<IoK8sApiCoreV1Secret>({
     groupVersionKind: { kind: 'Secret', version: 'v1' },
@@ -44,7 +44,7 @@ export const URLDetailsItem: FC<ProviderDetailsItemProps> = ({
       helpContent={helpContent ?? defaultHelpContent}
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
       onEdit={() => {
-        launcher<EditProviderURLModalProps>(EditProviderURLModal, {
+        launchOverlay<EditProviderURLModalProps>(EditProviderURLModal, {
           insecureSkipVerify: secret?.data?.insecureSkipVerify,
           resource: provider,
         });

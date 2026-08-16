@@ -3,7 +3,7 @@ import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { VIRT_V2V_HELP_LINK } from '@utils/links';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
@@ -18,7 +18,7 @@ const SetLUKSEncryptionPasswordsDetailsItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   if (!shouldRender) {
     return null;
@@ -34,7 +34,7 @@ const SetLUKSEncryptionPasswordsDetailsItem: FC<EditableDetailsItemProps> = ({
       )}
       moreInfoLink={VIRT_V2V_HELP_LINK}
       onEdit={() => {
-        launcher<EditPlanProps>(EditLUKSEncryptionPasswords, { resource: plan });
+        launchOverlay<EditPlanProps>(EditLUKSEncryptionPasswords, { resource: plan });
       }}
       testId="disk-decryption-detail-item"
       title={t('Disk decryption')}

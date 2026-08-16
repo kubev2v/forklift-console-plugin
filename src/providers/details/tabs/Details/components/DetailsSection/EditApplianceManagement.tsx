@@ -7,7 +7,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Provider } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Checkbox, Form, FormGroup } from '@patternfly/react-core';
 import { isApplianceManagementEnabled } from '@utils/crds/common/selectors';
 
@@ -17,8 +17,8 @@ export type EditApplianceManagementProps = {
   provider: V1beta1Provider;
 };
 
-const EditApplianceManagement: ModalComponent<EditApplianceManagementProps> = ({
-  closeModal,
+const EditApplianceManagement: OverlayComponent<EditApplianceManagementProps> = ({
+  closeOverlay,
   provider,
 }) => {
   const { t } = useForkliftTranslation();
@@ -30,7 +30,11 @@ const EditApplianceManagement: ModalComponent<EditApplianceManagementProps> = ({
   };
 
   return (
-    <ModalForm closeModal={closeModal} onConfirm={onSubmit} title={t('Edit appliance management')}>
+    <ModalForm
+      closeOverlay={closeOverlay}
+      onConfirm={onSubmit}
+      title={t('Edit appliance management')}
+    >
       <Form>
         <FormGroup fieldId="appliance-management">
           <Checkbox

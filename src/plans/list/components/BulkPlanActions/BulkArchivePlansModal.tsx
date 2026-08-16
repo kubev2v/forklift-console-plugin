@@ -4,7 +4,7 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import ModalForm from '@components/ModalForm/ModalForm';
 import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import {
   Alert,
   AlertVariant,
@@ -33,10 +33,10 @@ export type BulkArchivePlansModalProps = {
   skippedArchivedCount?: number;
 };
 
-const BulkArchivePlansModal: ModalComponent<BulkArchivePlansModalProps> = ({
+const BulkArchivePlansModal: OverlayComponent<BulkArchivePlansModalProps> = ({
+  closeOverlay,
   plans,
   skippedArchivedCount = 0,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [actionFailures, setActionFailures] = useState<BulkPlanActionFailure[]>([]);
@@ -68,13 +68,13 @@ const BulkArchivePlansModal: ModalComponent<BulkArchivePlansModalProps> = ({
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       confirmLabel={t('Archive')}
       confirmVariant={ButtonVariant.primary}
       isDisabled={isEmpty(plans)}
       onConfirm={onArchive}
       testId="bulk-archive-plans-modal"
       title={t('Archive migration plans')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

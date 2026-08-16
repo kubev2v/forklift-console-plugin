@@ -4,7 +4,7 @@ import { calculateThumbprint, useTlsCertificate } from 'src/providers/hooks/useT
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Alert, ModalVariant } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
@@ -16,11 +16,11 @@ export type FetchCertificateModalProps = {
   url: string;
 };
 
-const FetchCertificateModal: ModalComponent<FetchCertificateModalProps> = ({
+const FetchCertificateModal: OverlayComponent<FetchCertificateModalProps> = ({
+  closeOverlay,
   existingCert,
   handleSave,
   url,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [isTrusted, setIsTrusted] = useState(false);
@@ -37,11 +37,11 @@ const FetchCertificateModal: ModalComponent<FetchCertificateModalProps> = ({
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       isDisabled={!isTrusted}
       onConfirm={onConfirm}
       title={t('Verify certificate')}
       variant={ModalVariant.small}
-      {...rest}
     >
       {loading && <Loading title={t('Loading...')} />}
 

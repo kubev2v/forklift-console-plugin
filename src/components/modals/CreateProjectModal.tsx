@@ -3,7 +3,7 @@ import { type FormEvent, type MouseEvent, useState } from 'react';
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import ProjectNameHelp from '@components/modals/ProjectNameHelp';
 import { k8sCreate, type K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ProjectModel } from '@openshift-console/dynamic-plugin-sdk/lib/models';
 import {
   Alert,
@@ -37,7 +37,10 @@ export type CreateProjectModalProps = {
   onCreated: (project: K8sResourceCommon) => void;
 };
 
-const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModal, onCreated }) => {
+const CreateProjectModal: OverlayComponent<CreateProjectModalProps> = ({
+  closeOverlay,
+  onCreated,
+}) => {
   const [inProgress, setInProgress] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [name, setName] = useState('');
@@ -63,7 +66,7 @@ const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModa
       .then((obj) => {
         setErrorMessage('');
         onCreated(obj);
-        closeModal();
+        closeOverlay();
       })
       .catch((error: Error) => {
         const err = error.message || t('An error occurred. Please try again.');
@@ -80,7 +83,7 @@ const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModa
       `${window.SERVER_FLAGS?.documentationBaseURL ?? ''}${workingWithProjectsURLs.downstream}`;
 
   return (
-    <Modal isOpen onClose={closeModal} variant={ModalVariant.small}>
+    <Modal isOpen onClose={closeOverlay} variant={ModalVariant.small}>
       <ModalHeader title={t('Create project')} />
       <ModalBody>
         <Form name="form" onSubmit={submit}>
@@ -159,7 +162,7 @@ const CreateProjectModal: ModalComponent<CreateProjectModalProps> = ({ closeModa
         <Button
           data-testid="create-project-modal-cancel-button"
           isDisabled={inProgress}
-          onClick={closeModal}
+          onClick={closeOverlay}
           type="button"
           variant={ButtonVariant.secondary}
         >

@@ -7,7 +7,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Provider } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form } from '@patternfly/react-core';
 import { getUseVddkAioOptimization, getVddkInitImage } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
@@ -18,8 +18,8 @@ export type EditProviderVDDKImageProps = {
   provider: V1beta1Provider;
 };
 
-const EditProviderVDDKImage: ModalComponent<EditProviderVDDKImageProps> = ({
-  closeModal,
+const EditProviderVDDKImage: OverlayComponent<EditProviderVDDKImageProps> = ({
+  closeOverlay,
   provider,
 }) => {
   const { t } = useForkliftTranslation();
@@ -40,13 +40,13 @@ const EditProviderVDDKImage: ModalComponent<EditProviderVDDKImageProps> = ({
 
   const onSubmit = async (data: EditProviderVDDKImageFormData) => {
     await onUpdateVddkImageSettings(provider, data);
-    closeModal();
+    closeOverlay();
   };
 
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeModal}
+        closeOverlay={closeOverlay}
         onConfirm={handleSubmit(onSubmit)}
         title={t('Edit VDDK image')}
       >

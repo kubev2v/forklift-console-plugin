@@ -4,7 +4,7 @@ import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/ut
 import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { getRootDisk } from '@utils/crds/plans/selectors';
 import { VIRT_V2V_HELP_LINK } from '@utils/links';
 
@@ -15,7 +15,7 @@ import EditRootDisk from './EditRootDisk';
 
 const RootDiskDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, shouldRender }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   if (!shouldRender) {
     return null;
@@ -31,7 +31,7 @@ const RootDiskDetailsItem: FC<EditableDetailsItemProps> = ({ canPatch, plan, sho
       helpContent={t(`Choose the root filesystem to be converted.`)}
       moreInfoLink={VIRT_V2V_HELP_LINK}
       onEdit={() => {
-        launcher<EditPlanProps>(EditRootDisk, { resource: plan });
+        launchOverlay<EditPlanProps>(EditRootDisk, { resource: plan });
       }}
       title={t('Root device')}
     />

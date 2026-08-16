@@ -9,7 +9,7 @@ import {
   type K8sModel,
   type K8sResourceCommon,
 } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import {
   Button,
   ButtonVariant,
@@ -47,8 +47,8 @@ export type DeleteModalProps = {
  * @param {DeleteModalProps} props - Props for DeleteModal
  * @returns {Element} The DeleteModal component
  */
-export const DeleteModal: ModalComponent<DeleteModalProps> = ({
-  closeModal,
+export const DeleteModal: OverlayComponent<DeleteModalProps> = ({
+  closeOverlay,
   model,
   redirectTo,
   resource,
@@ -84,7 +84,7 @@ export const DeleteModal: ModalComponent<DeleteModalProps> = ({
         navigate(getResourceUrl({ groupVersionKind, namespace }))?.catch(() => undefined);
       }
 
-      closeModal();
+      closeOverlay();
     } catch (err) {
       toggleIsLoading();
 
@@ -94,10 +94,10 @@ export const DeleteModal: ModalComponent<DeleteModalProps> = ({
         setAlertMessage(<AlertMessageForModals message={t('Unknown error')} title={t('Error')} />);
       }
     }
-  }, [resource, model, name, namespace, navigate, redirectTo, t, toggleIsLoading, closeModal]);
+  }, [resource, model, name, namespace, navigate, redirectTo, t, toggleIsLoading, closeOverlay]);
 
   return (
-    <Modal isOpen={true} onClose={closeModal} position="top" variant={ModalVariant.small}>
+    <Modal isOpen={true} onClose={closeOverlay} position="top" variant={ModalVariant.small}>
       <ModalHeader
         title={title ?? t('Delete {{model.label}}', { model })}
         titleIconVariant="warning"
@@ -133,7 +133,7 @@ export const DeleteModal: ModalComponent<DeleteModalProps> = ({
         >
           {t('Delete')}
         </Button>
-        <Button key="cancel" onClick={closeModal} variant={ButtonVariant.secondary}>
+        <Button key="cancel" onClick={closeOverlay} variant={ButtonVariant.secondary}>
           {t('Cancel')}
         </Button>
       </ModalFooter>

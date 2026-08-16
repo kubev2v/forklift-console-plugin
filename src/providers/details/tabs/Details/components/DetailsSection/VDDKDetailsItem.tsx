@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 import { CREATE_VDDK_HELP_LINK, PF_LABEL_STATUS } from '@utils/constants';
 import { getVddkInitImage } from '@utils/crds/common/selectors';
@@ -18,7 +18,7 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
   resource: provider,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const defaultHelpContent = (
     <ForkliftTrans>
@@ -48,7 +48,7 @@ export const VDDKDetailsItem: FC<ProviderDetailsItemProps> = ({
       helpContent={helpContent ?? defaultHelpContent}
       moreInfoLink={moreInfoLink ?? CREATE_VDDK_HELP_LINK}
       onEdit={() => {
-        launcher<EditProviderVDDKImageProps>(EditProviderVDDKImage, { provider });
+        launchOverlay<EditProviderVDDKImageProps>(EditProviderVDDKImage, { provider });
       }}
       testId="vddk-detail-item"
       title={t('VDDK init image')}

@@ -1,4 +1,11 @@
-import { type FC, type MutableRefObject, type ReactNode, useMemo, useRef } from 'react';
+import {
+  type FC,
+  type MutableRefObject,
+  type ReactElement,
+  type ReactNode,
+  useMemo,
+  useRef,
+} from 'react';
 
 import type { FilterRenderer, ValueMatcher } from '@components/common/FilterGroup/types';
 import type { UserSettings } from '@components/common/Page/types';
@@ -10,14 +17,14 @@ import { useTableSortContext } from '@components/useTableSortContext';
 
 import StandardPageInner from './StandardPageInner';
 type StandardPageProps<T> = {
-  addButton?: JSX.Element;
+  addButton?: ReactElement;
   alerts?: ReactNode;
   canSelect?: (item: T) => boolean;
   cell?: FC<RowProps<T>>;
 
   className?: string;
-  customNoResultsFound?: JSX.Element;
-  customNoResultsMatchFilter?: JSX.Element;
+  customNoResultsFound?: ReactElement;
+  customNoResultsMatchFilter?: ReactElement;
   dataSource: [data: T[], loaded: boolean, error: unknown];
   expanded?: FC<RowProps<T>>;
   expandedIds?: string[];

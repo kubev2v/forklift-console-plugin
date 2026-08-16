@@ -5,16 +5,16 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { PlanModel } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ButtonVariant } from '@patternfly/react-core';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 
 import type { DeleteVirtualMachineProps } from './utils/types';
 
-const PlanVMsDeleteModal: ModalComponent<DeleteVirtualMachineProps> = ({
+const PlanVMsDeleteModal: OverlayComponent<DeleteVirtualMachineProps> = ({
+  closeOverlay,
   plan,
   selectedIds,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -33,11 +33,11 @@ const PlanVMsDeleteModal: ModalComponent<DeleteVirtualMachineProps> = ({
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       confirmLabel={t('Delete')}
       confirmVariant={ButtonVariant.danger}
       onConfirm={handleSave}
       title={t('Delete virtual machines from migration plan?')}
-      {...rest}
     >
       {t('The virtual machines will be permanently deleted from your migration plan.')}
     </ModalForm>

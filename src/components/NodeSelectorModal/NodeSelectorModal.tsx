@@ -2,7 +2,7 @@ import { type ReactNode, useMemo, useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -21,12 +21,12 @@ export type NodeSelectorModalProps = {
   title?: string;
 };
 
-const NodeSelectorModal: ModalComponent<NodeSelectorModalProps> = ({
+const NodeSelectorModal: OverlayComponent<NodeSelectorModalProps> = ({
+  closeOverlay,
   description,
   initialLabels,
   onConfirm,
   title,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [labels, setLabels] = useState<LabelFields[]>(labelsObjectToArray(initialLabels));
@@ -58,11 +58,11 @@ const NodeSelectorModal: ModalComponent<NodeSelectorModalProps> = ({
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       isDisabled={isNotValid}
       onConfirm={async () => onConfirm(labelsArrayToObject(labels))}
       testId="node-selector-modal"
       title={title ?? t('Edit node selectors')}
-      {...rest}
     >
       <Form>
         <Stack hasGutter>

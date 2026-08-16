@@ -1,5 +1,4 @@
-import type { FC } from 'react';
-import { useMemo } from 'react';
+import { type FC, type ReactElement, useMemo } from 'react';
 
 import {
   ErrorState,
@@ -16,8 +15,8 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 type PageTableProps<T> = {
   clearAllFilters: () => void;
-  customNoResultsFound?: JSX.Element;
-  customNoResultsMatchFilter?: JSX.Element;
+  customNoResultsFound?: ReactElement;
+  customNoResultsMatchFilter?: ReactElement;
   dataOnScreen: T[];
   error: unknown;
   expandedIds?: string[];

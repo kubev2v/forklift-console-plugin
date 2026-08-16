@@ -2,7 +2,7 @@ import { type FC, useCallback } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, ToolbarItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
@@ -15,15 +15,15 @@ const SelectNetworkForHostButton: FC<{
   selectedIds: string[];
 }> = ({ hostsData, provider, selectedIds }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const onClick = useCallback(() => {
-    launcher<VSphereNetworkModalProps>(VSphereNetworkModal, {
+    launchOverlay<VSphereNetworkModalProps>(VSphereNetworkModal, {
       data: hostsData,
       provider,
       selectedIds,
     });
-  }, [hostsData, provider, selectedIds, launcher]);
+  }, [hostsData, provider, selectedIds, launchOverlay]);
 
   return (
     <ToolbarItem>

@@ -7,7 +7,7 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Plan } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getName } from '@utils/crds/common/selectors';
@@ -20,10 +20,10 @@ export type PlanStartMigrationModalProps = {
   title: string;
 };
 
-const PlanStartMigrationModal: ModalComponent<PlanStartMigrationModalProps> = ({
+const PlanStartMigrationModal: OverlayComponent<PlanStartMigrationModalProps> = ({
+  closeOverlay,
   plan,
   title,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
@@ -44,11 +44,11 @@ const PlanStartMigrationModal: ModalComponent<PlanStartMigrationModalProps> = ({
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       confirmLabel={t('{{title}}', { title })}
       isDisabled={!canPlanStart(plan) || Boolean(isMigrationStarted)}
       onConfirm={onStart}
       title={t('{{title}} migration', { title })}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

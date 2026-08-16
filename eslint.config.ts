@@ -165,8 +165,7 @@ export const createEslintConfig = () =>
             selector: 'import',
           },
         ],
-        // Deferred to MTV-6280 (useModal → useOverlay + other deprecated cleanups)
-        '@typescript-eslint/no-deprecated': 'off',
+        '@typescript-eslint/no-deprecated': 'error',
         '@typescript-eslint/no-dynamic-delete': 'off',
         '@typescript-eslint/no-explicit-any': 'error',
         '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],

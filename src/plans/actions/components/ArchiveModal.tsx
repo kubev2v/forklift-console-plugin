@@ -6,14 +6,14 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import ModalForm from '@components/ModalForm/ModalForm';
 import { PlanModel } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ButtonVariant, Stack, StackItem } from '@patternfly/react-core';
 import { getName } from '@utils/crds/common/selectors';
 import { getPlanArchived } from '@utils/crds/plans/selectors';
 
 import type { PlanModalProps } from './types';
 
-const ArchiveModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
+const ArchiveModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }) => {
   const { t } = useForkliftTranslation();
 
   const onArchive = useCallback(async () => {
@@ -31,11 +31,11 @@ const ArchiveModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       confirmLabel={t('Archive')}
       confirmVariant={isPlanRunning ? ButtonVariant.danger : ButtonVariant.primary}
       onConfirm={onArchive}
       title={t('Archive migration plan')}
-      {...rest}
     >
       <ForkliftTrans>
         <Stack hasGutter>

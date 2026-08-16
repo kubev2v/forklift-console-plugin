@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import type { FilterTypeProps } from '../Filter/types';
 import type { FilterDef } from '../utils/types';
 
@@ -6,7 +8,7 @@ import type { FilterDef } from '../utils/types';
  *
  * Get the filter type, and render a top bar widget that match the filter.
  */
-export type FilterRenderer = (props: FilterTypeProps) => JSX.Element;
+export type FilterRenderer = (props: FilterTypeProps) => ReactElement;
 
 /**
  * Field ID to filter definition mapping.
