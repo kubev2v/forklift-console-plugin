@@ -11,8 +11,8 @@ import {
   type V1beta1Migration,
   type V1beta1Plan,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Namespace } from '@utils/constants';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 
 import { dateRangeObjectMatcher, filterMostRecentMigrations } from '../utils/matchers';
 import { getMigrationStatusFromVMs } from '../utils/migrationStatus';
@@ -22,7 +22,7 @@ import MigrationRow from './MigrationRow';
 const MigrationsListPage: FC = () => {
   const { t } = useForkliftTranslation();
 
-  const [migrations, migrationsLoaded, migrationsLoadError] = useK8sWatchResource<
+  const [migrations, migrationsLoaded, migrationsLoadError] = useTypedK8sWatchResource<
     V1beta1Migration[]
   >({
     groupVersionKind: MigrationModelGroupVersionKind,
@@ -30,7 +30,7 @@ const MigrationsListPage: FC = () => {
     namespaced: true,
   });
 
-  const [plans, plansLoaded, plansLoadError] = useK8sWatchResource<V1beta1Plan[]>({
+  const [plans, plansLoaded, plansLoadError] = useTypedK8sWatchResource<V1beta1Plan[]>({
     groupVersionKind: PlanModelGroupVersionKind,
     isList: true,
     namespaced: true,

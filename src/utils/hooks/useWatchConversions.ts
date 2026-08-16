@@ -1,5 +1,5 @@
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { ConversionModelGroupVersionKind } from '@utils/crds/common/models';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 
 import type { V1beta1Conversion } from '../crds/conversion/types';
 
@@ -16,7 +16,7 @@ export const useWatchConversions = ({
   namespace,
   selector,
 }: UseWatchConversionsOptions): UseWatchConversionsResult => {
-  const [conversions, loaded, error] = useK8sWatchResource<V1beta1Conversion[]>({
+  const [conversions, loaded, error] = useTypedK8sWatchResource<V1beta1Conversion[]>({
     groupVersionKind: ConversionModelGroupVersionKind,
     isList: true,
     namespace,

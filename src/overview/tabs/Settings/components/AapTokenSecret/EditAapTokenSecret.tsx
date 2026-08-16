@@ -4,12 +4,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
-import {
-  getGroupVersionKindForModel,
-  useK8sWatchResource,
-} from '@openshift-console/dynamic-plugin-sdk';
+import { getGroupVersionKindForModel } from '@openshift-console/dynamic-plugin-sdk';
 import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { type ForkliftSettingsValues, SettingsFields } from '../../utils/types';
@@ -25,7 +23,7 @@ const EditAapTokenSecret: FC<EditAapTokenSecretProps> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
   const { control } = useFormContext<ForkliftSettingsValues>();
 
-  const [secrets, loaded, loadError] = useK8sWatchResource<IoK8sApiCoreV1Secret[]>({
+  const [secrets, loaded, loadError] = useTypedK8sWatchResource<IoK8sApiCoreV1Secret[]>({
     groupVersionKind: getGroupVersionKindForModel(SecretModel),
     isList: true,
     namespace,

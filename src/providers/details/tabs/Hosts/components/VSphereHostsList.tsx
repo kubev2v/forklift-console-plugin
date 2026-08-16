@@ -10,9 +10,9 @@ import {
   type V1beta1Host,
   type VSphereHostInventory,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 import type { ProviderData } from '@utils/providers/types';
 
 import { hostsFields } from './utils/constants';
@@ -37,7 +37,7 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
     subPath: 'hosts?detail=4',
   });
 
-  const [hosts, loaded, loadError] = useK8sWatchResource<V1beta1Host[]>({
+  const [hosts, loaded, loadError] = useTypedK8sWatchResource<V1beta1Host[]>({
     groupVersionKind: HostModelGroupVersionKind,
     isList: true,
     namespace,

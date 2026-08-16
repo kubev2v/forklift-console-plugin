@@ -13,7 +13,6 @@ import {
   type V1beta1Plan,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
@@ -25,6 +24,7 @@ import {
   getPlanVirtualMachines,
 } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
 import type { PlanModalProps } from '../types';
@@ -50,7 +50,7 @@ const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }
   const [newName, setNewName] = useState<string>(`copy-of-${name}`);
 
   const networkMapName = getPlanNetworkMapName(plan);
-  const [networkMap] = useK8sWatchResource<V1beta1NetworkMap>(
+  const [networkMap] = useTypedK8sWatchResource<V1beta1NetworkMap>(
     networkMapName
       ? {
           groupVersionKind: NetworkMapModelGroupVersionKind,
@@ -63,7 +63,7 @@ const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }
   );
 
   const storageMapName = getPlanStorageMapName(plan);
-  const [storageMap] = useK8sWatchResource<V1beta1StorageMap>(
+  const [storageMap] = useTypedK8sWatchResource<V1beta1StorageMap>(
     storageMapName
       ? {
           groupVersionKind: StorageMapModelGroupVersionKind,
@@ -78,7 +78,7 @@ const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }
   const { postHookName, preHookName } = getPlanHookNames(plan);
   const planNamespace = getNamespace(plan);
 
-  const [preHook] = useK8sWatchResource<V1beta1Hook>(
+  const [preHook] = useTypedK8sWatchResource<V1beta1Hook>(
     preHookName
       ? {
           groupVersionKind: HookModelGroupVersionKind,
@@ -90,7 +90,7 @@ const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }
       : null,
   );
 
-  const [postHook] = useK8sWatchResource<V1beta1Hook>(
+  const [postHook] = useTypedK8sWatchResource<V1beta1Hook>(
     postHookName
       ? {
           groupVersionKind: HookModelGroupVersionKind,
@@ -103,7 +103,7 @@ const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }
   );
 
   const scriptsRef = plan?.spec?.customizationScripts;
-  const [configMap] = useK8sWatchResource<IoK8sApiCoreV1ConfigMap>(
+  const [configMap] = useTypedK8sWatchResource<IoK8sApiCoreV1ConfigMap>(
     scriptsRef?.name
       ? {
           groupVersionKind: CONFIG_MAP_GVK,

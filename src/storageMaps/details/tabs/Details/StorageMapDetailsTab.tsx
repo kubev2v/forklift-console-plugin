@@ -18,7 +18,7 @@ import {
   type V1beta1Provider,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 import {
   getMapDestinationProviderName,
@@ -26,6 +26,7 @@ import {
   getMapSourceProviderName,
   getMapSourceProviderNamespace,
 } from '@utils/crds/maps/selectors';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 
 import DetailsSection from '../../components/DetailsSection/DetailsSection';
 import StorageMapEdit, { type StorageMapEditProps } from '../../components/StorageMapEdit';
@@ -40,7 +41,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
   const launchOverlay = useOverlay();
 
   const [storageMap, storageMapLoaded, storageMapLoadError] =
-    useK8sWatchResource<V1beta1StorageMap>({
+    useTypedK8sWatchResource<V1beta1StorageMap>({
       groupVersionKind: StorageMapModelGroupVersionKind,
       isList: false,
       name,
@@ -48,7 +49,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
       namespaced: true,
     });
 
-  const [sourceProvider] = useK8sWatchResource<V1beta1Provider>({
+  const [sourceProvider] = useTypedK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: false,
     name: getMapSourceProviderName(storageMap),
@@ -57,7 +58,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
   });
   const [sourceStorages] = useSourceStorages(sourceProvider);
 
-  const [destinationProvider] = useK8sWatchResource<V1beta1Provider>({
+  const [destinationProvider] = useTypedK8sWatchResource<V1beta1Provider>({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: false,
     name: getMapDestinationProviderName(storageMap),

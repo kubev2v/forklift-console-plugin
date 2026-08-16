@@ -12,8 +12,9 @@ import SmbUrlField from './SmbDirectoryField';
 
 const HypervCredentialsFields: FC = () => {
   const { t } = useForkliftTranslation();
-  const transferMethod = useWatch({ name: ProviderFormFieldId.TransferMethod });
-  const smbUrl: string | undefined = useWatch({ name: ProviderFormFieldId.SmbUrl });
+  const transferMethod = useWatch({ name: ProviderFormFieldId.TransferMethod }) as
+    HypervTransferMethod | undefined;
+  const smbUrl = useWatch({ name: ProviderFormFieldId.SmbUrl }) as string | undefined;
   const isSMB = transferMethod !== HypervTransferMethod.ISCSI;
   const showCredentials = !isSMB || smbUrl?.trim();
 

@@ -15,10 +15,10 @@ type PlanOwnerAlertProps = {
 export const PlanOwnerAlert: FC<PlanOwnerAlertProps> = ({ networkMap }) => {
   const { t } = useForkliftTranslation();
   const { control } = useFormContext();
-  const watchedMappings: NetworkMapping[] = useWatch({
+  const watchedMappings = useWatch({
     control,
     name: NetworkMapFieldId.NetworkMap,
-  });
+  }) as NetworkMapping[] | undefined;
 
   const isOwnedByPlan = useMemo(
     () => networkMap?.metadata?.ownerReferences?.some((ref) => ref.kind === 'Plan'),

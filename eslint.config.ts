@@ -184,7 +184,7 @@ export const createEslintConfig = () =>
         '@typescript-eslint/non-nullable-type-assertion-style': 'off',
         '@typescript-eslint/no-shadow': 'error',
         '@typescript-eslint/no-unnecessary-condition': 'off',
-        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'error',
         '@typescript-eslint/no-unsafe-type-assertion': 'off',
         '@typescript-eslint/no-unused-expressions': [
           'error',

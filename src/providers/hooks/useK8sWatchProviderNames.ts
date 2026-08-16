@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 
 /**
  * Type for the return value of the useK8sWatchProviderNames hook.
@@ -19,7 +19,9 @@ export const useK8sWatchProviderNames = ({
 }: {
   namespace: string;
 }): K8sProvidersWatchResult => {
-  const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
+  const [providers, providersLoaded, providersLoadError] = useTypedK8sWatchResource<
+    V1beta1Provider[]
+  >({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: true,
     namespace,

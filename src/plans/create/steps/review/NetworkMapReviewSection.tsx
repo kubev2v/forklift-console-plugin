@@ -12,7 +12,7 @@ import {
 } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import { NetworkMapFieldId, NetworkMapType } from '@utils/mappings/networkMap';
+import { NetworkMapFieldId, type NetworkMapping, NetworkMapType } from '@utils/mappings/networkMap';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -31,7 +31,12 @@ const NetworkMapReviewSectionInner: FC = () => {
       NetworkMapFieldId.ExistingNetworkMap,
       NetworkMapFieldId.NetworkMapName,
     ],
-  });
+  }) as [
+    NetworkMapType | undefined,
+    NetworkMapping[] | undefined,
+    { metadata?: { name?: string } } | undefined,
+    string | undefined,
+  ];
 
   const noMappingsSelected = useMemo(() => {
     if (!networkMap || isEmpty(networkMap)) {
@@ -77,12 +82,12 @@ const NetworkMapReviewSectionInner: FC = () => {
           </DescriptionListGroup>
         </DescriptionList>
 
-        <NetworkMapReviewTable networkMap={networkMap} />
+        <NetworkMapReviewTable networkMap={networkMap ?? []} />
       </Stack>
     );
   }
 
-  return <NetworkMapReviewTable networkMap={networkMap} />;
+  return <NetworkMapReviewTable networkMap={networkMap ?? []} />;
 };
 
 const NetworkMapReviewSection: FC = () => {

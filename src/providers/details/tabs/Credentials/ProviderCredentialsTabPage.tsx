@@ -7,11 +7,11 @@ import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
 import {
   getGroupVersionKindForModel,
   useAccessReview,
-  useK8sWatchResource,
   useOverlay,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection, Stack } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 
 import { useProvider } from '../../hooks/useProvider';
 import type { ProviderDetailsPageProps } from '../../utils/types';
@@ -32,7 +32,7 @@ const ProviderCredentialsTabPage: FC<ProviderDetailsPageProps> = ({ name, namesp
     [provider?.spec?.secret],
   );
 
-  const [secret, secretLoaded, secretLoadError] = useK8sWatchResource<IoK8sApiCoreV1Secret>({
+  const [secret, secretLoaded, secretLoadError] = useTypedK8sWatchResource<IoK8sApiCoreV1Secret>({
     groupVersionKind: getGroupVersionKindForModel(SecretModel),
     name: providerSecretName,
     namespace: providerSecretNamespace,

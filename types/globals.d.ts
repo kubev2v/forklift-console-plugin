@@ -3,7 +3,8 @@ declare module 'eslint-plugin-barrel-files';
 declare module 'eslint-plugin-promise';
 
 declare module '*.svg' {
-  export default ReactComponent;
+  const content: string;
+  export default content;
 }
 declare module '*.jpg' {
   const content: string;
@@ -24,16 +25,30 @@ declare module '*.json' {
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 interface Window {
   SERVER_FLAGS: {
-    copiedCSVsDisabled: boolean;
+    addPage: string; // JSON encoded configuration
     alertManagerBaseURL: string;
     alertmanagerUserWorkloadBaseURL: string;
     authDisabled: boolean;
     basePath: string;
     branding: string;
+    capabilities: Record<string, string>[];
+    clusterID?: string;
+    consolePlugins: string[]; // Console dynamic plugins enabled on the cluster
     consoleVersion: string;
+    controlPlaneTopology: string;
+    copiedCSVsDisabled: boolean;
     customLogoURL: string;
     customProductName: string;
+    developerCatalogCategories: string;
+    developerCatalogTypes: string;
     documentationBaseURL: string;
+    GOARCH: string;
+    GOOS: string;
+    graphqlBaseURL: string;
+    hubConsoleURL: string;
+    i18nNamespaces: string[]; // Available i18n namespaces
+    inactivityTimeout: number;
+    k8sMode: string;
     kubeAPIServerURL: string;
     loadTestFactor: number;
     loginErrorURL: string;
@@ -41,54 +56,42 @@ interface Window {
     loginURL: string;
     logoutRedirect: string;
     logoutURL: string;
+    nodeArchitectures: string[];
+    nodeOperatingSystems: string[];
+    perspectives: string;
+    projectAccessClusterRoles: string;
     prometheusBaseURL: string;
     prometheusTenancyBaseURL: string;
     quickStarts: string;
     releaseVersion: string;
-    inactivityTimeout: number;
     statuspageID: string;
-    GOARCH: string;
-    GOOS: string;
-    graphqlBaseURL: string;
-    developerCatalogCategories: string;
-    perspectives: string;
-    developerCatalogTypes: string;
-    userSettingsLocation: string;
-    addPage: string; // JSON encoded configuration
-    consolePlugins: string[]; // Console dynamic plugins enabled on the cluster
-    i18nNamespaces: string[]; // Available i18n namespaces
-    projectAccessClusterRoles: string;
-    controlPlaneTopology: string;
     telemetry: Record<string, string>;
-    nodeArchitectures: string[];
-    nodeOperatingSystems: string[];
-    hubConsoleURL: string;
-    k8sMode: string;
-    capabilities: Record<string, string>[];
-    clusterID?: string;
+    userSettingsLocation: string;
   };
   analytics?: SegmentAnalytics;
 }
 
 // Based on Segment Analytics.js 2.0 snippet v5.2.0
 // Reference: https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/quickstart/
+// Index signature must come first (member-ordering); keep alphabetical otherwise conflicts with perfectionist.
 type SegmentAnalytics = {
+  _loadOptions?: Record<string, unknown>;
+  _writeKey?: string;
+  // eslint-disable-next-line @typescript-eslint/member-ordering -- index signature required first
   [key: string]: unknown;
-  initialized?: boolean;
-  track: (
-    event: string,
-    properties?: Record<string, unknown>,
-    options?: Record<string, unknown>,
-  ) => void;
   factory: (method: string) => (...args: unknown[]) => SegmentAnalytics;
+  initialized?: boolean;
   invoked?: boolean;
   load: (key: string, options?: Record<string, unknown>) => void;
   methods?: string[];
   page: () => void;
   push: (args: unknown[]) => number;
   SNIPPET_VERSION?: string;
-  _loadOptions?: Record<string, unknown>;
-  _writeKey?: string;
+  track: (
+    event: string,
+    properties?: Record<string, unknown>,
+    options?: Record<string, unknown>,
+  ) => void;
 };
 
 declare module 'eslint-plugin-import' {

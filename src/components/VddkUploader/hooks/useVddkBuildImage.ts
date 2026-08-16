@@ -1,6 +1,7 @@
-import { useActiveNamespace, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
 import { Namespace } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 import { getDefaultNamespace } from '@utils/namespaces';
 
 import type { VddkBuild } from '../utils/types';
@@ -11,7 +12,7 @@ export const useVddkBuildImage = (buildName: string) => {
   const namespace =
     activeNamespace === Namespace.AllProjects ? getDefaultNamespace() : activeNamespace;
 
-  const [vddkBuild] = useK8sWatchResource<VddkBuild>(
+  const [vddkBuild] = useTypedK8sWatchResource<VddkBuild>(
     buildName
       ? {
           groupVersionKind: {

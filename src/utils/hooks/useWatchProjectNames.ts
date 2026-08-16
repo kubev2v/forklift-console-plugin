@@ -1,12 +1,14 @@
 import { useMemo } from 'react';
 
 import type { K8sResourceCommon } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName } from '@utils/crds/common/selectors';
 import { isUpstream } from '@utils/env';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 
 const useWatchProjectNames = (): [string[], boolean, Error | null] => {
-  const [projects, projectsLoaded, projectsLoadError] = useK8sWatchResource<K8sResourceCommon[]>({
+  const [projects, projectsLoaded, projectsLoadError] = useTypedK8sWatchResource<
+    K8sResourceCommon[]
+  >({
     isList: true,
     kind: isUpstream() ? 'Namespace' : 'Project',
   });
@@ -27,7 +29,7 @@ const useWatchProjectNames = (): [string[], boolean, Error | null] => {
     [projectsLoaded, projectsLoadError, projects],
   );
 
-  return [projectNames, projectsLoaded, projectsLoadError as Error | null];
+  return [projectNames, projectsLoaded, projectsLoadError];
 };
 
 export default useWatchProjectNames;

@@ -8,7 +8,7 @@ import type {
   V1beta1DataVolume,
   V1beta1Plan,
 } from '@forklift-ui/types';
-import { useK8sWatchResource, type WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
+import type { WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   DataVolumeModelGroupVersionKind,
   JobModelGroupVersionKind,
@@ -21,6 +21,7 @@ import {
   getPlanTargetNamespace,
   getPlanVirtualMachines,
 } from '@utils/crds/plans/selectors';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 
 import { getPlanVirtualMachineIdByName } from '../../utils/getPlanVirtualMachineIdByName';
 import { getPlanVirtualMachinesDict } from '../../utils/utils';
@@ -56,11 +57,11 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
     };
   }, [migrationUid, plan, planUid]);
 
-  const [pods, podsLoaded, podsError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>(
+  const [pods, podsLoaded, podsError] = useTypedK8sWatchResource<IoK8sApiCoreV1Pod[]>(
     watchOptions ? { ...watchOptions, groupVersionKind: PodModelGroupVersionKind } : null,
   );
 
-  const [jobs, jobsLoaded, jobsError] = useK8sWatchResource<IoK8sApiBatchV1Job[]>(
+  const [jobs, jobsLoaded, jobsError] = useTypedK8sWatchResource<IoK8sApiBatchV1Job[]>(
     watchOptions
       ? {
           ...watchOptions,
@@ -70,13 +71,15 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
       : null,
   );
 
-  const [pvcs, pvcsLoaded, pvcsError] = useK8sWatchResource<IoK8sApiCoreV1PersistentVolumeClaim[]>(
+  const [pvcs, pvcsLoaded, pvcsError] = useTypedK8sWatchResource<
+    IoK8sApiCoreV1PersistentVolumeClaim[]
+  >(
     watchOptions
       ? { ...watchOptions, groupVersionKind: PersistentVolumeClaimModelGroupVersionKind }
       : null,
   );
 
-  const [dvs, dvsLoaded, dvsError] = useK8sWatchResource<V1beta1DataVolume[]>(
+  const [dvs, dvsLoaded, dvsError] = useTypedK8sWatchResource<V1beta1DataVolume[]>(
     watchOptions ? { ...watchOptions, groupVersionKind: DataVolumeModelGroupVersionKind } : null,
   );
 

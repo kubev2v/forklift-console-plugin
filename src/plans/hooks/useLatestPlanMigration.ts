@@ -6,9 +6,9 @@ import {
   type V1beta1Migration,
   type V1beta1Plan,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getNamespace, getOwnerReference, getUID } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 
 /**
  * Returns the most recent Migration CR owned by the plan (by status.started,
@@ -18,14 +18,14 @@ import { isEmpty } from '@utils/helpers';
 export const useLatestPlanMigration = (
   plan: V1beta1Plan,
 ): [V1beta1Migration | undefined, boolean, Error | undefined] => {
-  const [migrations, migrationLoaded, migrationLoadError] = useK8sWatchResource<V1beta1Migration[]>(
-    {
-      groupVersionKind: MigrationModelGroupVersionKind,
-      isList: true,
-      namespace: getNamespace(plan),
-      namespaced: true,
-    },
-  );
+  const [migrations, migrationLoaded, migrationLoadError] = useTypedK8sWatchResource<
+    V1beta1Migration[]
+  >({
+    groupVersionKind: MigrationModelGroupVersionKind,
+    isList: true,
+    namespace: getNamespace(plan),
+    namespaced: true,
+  });
 
   const latestMigration = useMemo(() => {
     if (!migrationLoaded || migrationLoadError || isEmpty(migrations)) {

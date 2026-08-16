@@ -1,5 +1,5 @@
 import { type FC, useCallback, useState } from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
@@ -22,18 +22,17 @@ import {
 import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { useCreateProviderFormContext } from '../hooks/useCreateProviderFormContext';
+
 import CACertificateField from './CACertificateField';
 import { CertificateValidationMode, ProviderFormFieldId } from './constants';
 
 const CertificateValidationField: FC = () => {
   const { t } = useForkliftTranslation();
-  const { control } = useFormContext();
+  const { control } = useCreateProviderFormContext();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
-  const {
-    field: { onChange, value },
-    fieldState: { error },
-  } = useController({
+  const certificateController = useController({
     control,
     defaultValue: CertificateValidationMode.Configure,
     name: ProviderFormFieldId.CertificateValidation,
@@ -41,6 +40,9 @@ const CertificateValidationField: FC = () => {
       required: t('Certificate validation method is required'),
     },
   });
+  const value = certificateController.field.value as CertificateValidationMode;
+  const { onChange } = certificateController.field;
+  const { error } = certificateController.fieldState;
 
   const handleSkipRequest = useCallback(() => {
     setIsConfirmOpen(true);

@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 
 import { ForkliftControllerModelGroupVersionKind } from '@forklift-ui/types';
-import { type K8sResourceKind, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import type { K8sResourceKind } from '@openshift-console/dynamic-plugin-sdk';
 import { FEATURE_FLAG_DEFAULTS } from '@utils/constants';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 import { getDefaultNamespace } from '@utils/namespaces';
 
 type FeatureFlagsResult = {
@@ -20,7 +21,7 @@ type FeatureFlagsResult = {
  * @param namespace - Namespace to watch for the ForkliftController. Defaults to the default namespace of forklift (openshift-mtv for DS/ konveyor-forklift for US).
  */
 export const useFeatureFlags = (namespace?: string): FeatureFlagsResult => {
-  const [forkliftControllers, loaded, error] = useK8sWatchResource<K8sResourceKind[]>({
+  const [forkliftControllers, loaded, error] = useTypedK8sWatchResource<K8sResourceKind[]>({
     groupVersionKind: ForkliftControllerModelGroupVersionKind,
     isList: true,
     namespace: namespace ?? getDefaultNamespace(),
@@ -38,7 +39,7 @@ export const useFeatureFlags = (namespace?: string): FeatureFlagsResult => {
       }
 
       // Feature flags are stored as fields in the controller's `spec`
-      const spec = forkliftController.spec ?? {};
+      const spec = (forkliftController.spec ?? {}) as Record<string, unknown>;
       const featureValue = spec[featureName];
 
       // If feature is explicitly set in the CR, use that value

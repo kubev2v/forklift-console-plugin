@@ -2,10 +2,11 @@ import { type ComponentProps, type ForwardedRef, forwardRef, useMemo } from 'rea
 
 import Select from '@components/common/Select';
 import type { IoK8sApiCoreV1ConfigMap } from '@forklift-ui/types';
-import { type K8sResourceCommon, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { CONFIG_MAP_GVK } from './constants';
@@ -25,7 +26,7 @@ const ConfigMapSelect = (
 ) => {
   const { t } = useForkliftTranslation();
 
-  const [allConfigMaps] = useK8sWatchResource<K8sResourceCommon[]>({
+  const [allConfigMaps] = useTypedK8sWatchResource<K8sResourceCommon[]>({
     groupVersionKind: CONFIG_MAP_GVK,
     isList: true,
     namespace,

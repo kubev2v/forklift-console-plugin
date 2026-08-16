@@ -66,7 +66,7 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
             placeholder={t('Select offload plugin')}
             ref={field.ref}
             testId={fieldId}
-            value={field.value}
+            value={field.value as string | undefined}
           />
         )}
         rules={offloadNestedFieldRules}

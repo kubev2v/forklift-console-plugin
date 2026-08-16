@@ -7,7 +7,8 @@ import {
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { IoK8sApiCoreV1Secret } from '@forklift-ui/types';
-import { useK8sWatchResource, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
@@ -20,7 +21,7 @@ export const URLDetailsItem: FC<ProviderDetailsItemProps> = ({
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
 
-  const [secret] = useK8sWatchResource<IoK8sApiCoreV1Secret>({
+  const [secret] = useTypedK8sWatchResource<IoK8sApiCoreV1Secret>({
     groupVersionKind: { kind: 'Secret', version: 'v1' },
     name: provider?.spec?.secret?.name,
     namespace: provider?.spec?.secret?.namespace,

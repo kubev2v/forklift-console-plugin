@@ -10,13 +10,16 @@ import {
   type V1beta1Provider,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource, type WatchK8sResult } from '@openshift-console/dynamic-plugin-sdk';
 import {
   getPlanStorageMapName,
   getPlanStorageMapNamespace,
   getPlanTargetNamespace,
 } from '@utils/crds/plans/selectors';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
+import {
+  type TypedWatchK8sResult,
+  useTypedK8sWatchResource,
+} from '@utils/hooks/useTypedK8sWatchResource';
 import type { StorageMapping, TargetStorage } from '@utils/storage/types';
 
 type UsePlanStorageMapResourcesParams = {
@@ -33,7 +36,7 @@ type UsePlanStorageMapResources = ({
 }: UsePlanStorageMapResourcesParams) => {
   sourceStoragesResult: [InventoryStorage[], boolean, Error | null];
   storageMappings: StorageMapping[];
-  storageMapResult: WatchK8sResult<V1beta1StorageMap>;
+  storageMapResult: TypedWatchK8sResult<V1beta1StorageMap>;
   targetStoragesResult: [TargetStorage[], boolean, Error | null];
   vmsWithDisksResult: [ProviderVirtualMachine[], boolean, Error | null];
 };
@@ -45,7 +48,7 @@ export const usePlanStorageMapResources: UsePlanStorageMapResources = ({
   vms,
 }) => {
   const storageMapName = getPlanStorageMapName(plan);
-  const storageMapResult = useK8sWatchResource<V1beta1StorageMap>(
+  const storageMapResult = useTypedK8sWatchResource<V1beta1StorageMap>(
     storageMapName
       ? {
           groupVersionKind: StorageMapModelGroupVersionKind,

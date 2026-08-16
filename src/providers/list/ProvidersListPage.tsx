@@ -8,7 +8,7 @@ import {
   ProviderModelGroupVersionKind,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 import type { ProviderData } from '@utils/providers/types';
 
 import { loadUserSettings } from '../../components/common/Page/userSettings';
@@ -30,7 +30,9 @@ const ProvidersListPage: FC<{
 
   const userSettings = useMemo(() => loadUserSettings({ pageId: 'Providers' }), []);
 
-  const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({
+  const [providers, providersLoaded, providersLoadError] = useTypedK8sWatchResource<
+    V1beta1Provider[]
+  >({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: true,
     namespace,

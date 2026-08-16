@@ -167,9 +167,9 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
           <SelectOption
             className={option.className}
             isFocused={focusedItemIndex === index}
-            key={option.itemId}
+            key={String(option.itemId ?? index)}
             onClick={() => {
-              setSelected(String(option.itemId));
+              setSelected(String(option.itemId ?? ''));
             }}
             {...option}
             ref={null}

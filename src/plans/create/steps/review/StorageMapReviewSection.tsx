@@ -12,6 +12,7 @@ import {
 } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import type { StorageMapping } from '@utils/storage/types';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -31,7 +32,12 @@ const StorageMapReviewSectionInner: FC = () => {
       CreatePlanStorageMapFieldId.ExistingStorageMap,
       CreatePlanStorageMapFieldId.StorageMapName,
     ],
-  });
+  }) as [
+    StorageMapType | undefined,
+    StorageMapping[] | undefined,
+    { metadata?: { name?: string } } | undefined,
+    string | undefined,
+  ];
 
   const noMappingsSelected = useMemo(() => {
     if (!storageMap || isEmpty(storageMap)) {
@@ -75,12 +81,12 @@ const StorageMapReviewSectionInner: FC = () => {
           </DescriptionListGroup>
         </DescriptionList>
 
-        <StorageMapReviewTable storageMap={storageMap} />
+        <StorageMapReviewTable storageMap={storageMap ?? []} />
       </Stack>
     );
   }
 
-  return <StorageMapReviewTable storageMap={storageMap} />;
+  return <StorageMapReviewTable storageMap={storageMap ?? []} />;
 };
 
 const StorageMapReviewSection: FC = () => {

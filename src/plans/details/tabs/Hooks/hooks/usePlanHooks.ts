@@ -4,15 +4,15 @@ import {
   type V1beta1Plan,
   type V1beta1PlanSpecVmsHooks,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 
 import { hookTypes } from '../utils/constants';
 import { validateHooks } from '../utils/utils';
 
 type UsePlanHooks = (plan: V1beta1Plan) => {
-  error?: Error;
+  error?: Error | null;
   loaded?: boolean;
   postHookResource: V1beta1Hook | undefined;
   preHookResource: V1beta1Hook | undefined;
@@ -24,7 +24,7 @@ export const usePlanHooks: UsePlanHooks = (plan) => {
   const postHook = hooks.find((hook) => hook.step === hookTypes.PostHook);
   const preHook = hooks.find((hook) => hook.step === hookTypes.PreHook);
 
-  const [hookRecourses, loaded, error] = useK8sWatchResource<V1beta1Hook[]>({
+  const [hookRecourses, loaded, error] = useTypedK8sWatchResource<V1beta1Hook[]>({
     groupVersionKind: HookModelGroupVersionKind,
     isList: true,
     namespace: getNamespace(plan),

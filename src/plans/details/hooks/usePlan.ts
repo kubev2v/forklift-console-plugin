@@ -1,5 +1,5 @@
 import { PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
 
 type UsePlan = (
   name: string,
@@ -11,7 +11,7 @@ type UsePlan = (
 };
 
 export const usePlan: UsePlan = (name, namespace) => {
-  const [plan, loaded, loadError] = useK8sWatchResource<V1beta1Plan>({
+  const [plan, loaded, loadError] = useTypedK8sWatchResource<V1beta1Plan>({
     groupVersionKind: PlanModelGroupVersionKind,
     name,
     namespace,

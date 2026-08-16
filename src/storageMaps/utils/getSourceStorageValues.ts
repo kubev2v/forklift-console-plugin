@@ -92,11 +92,11 @@ const getOvirtStorageIds = (vm: OVirtVMWithDisks): string[] => {
       }
 
       return map;
-    }, new Map()) ?? new Map();
+    }, new Map<string, string>()) ?? new Map<string, string>();
 
   // Extract storage IDs from disk attachments using the mapping
   const storageFromAttachments = vm.diskAttachments?.reduce<string[]>((acc, attachment) => {
-    const storageId: string = diskToStorageMap.get(attachment.disk);
+    const storageId = diskToStorageMap.get(attachment.disk);
     return storageId ? [...acc, storageId] : acc;
   }, []);
 

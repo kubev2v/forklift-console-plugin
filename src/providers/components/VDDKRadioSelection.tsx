@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 import SkipVddkAlert from 'src/providers/components/SkipVddkAlert';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
@@ -11,6 +11,7 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { ProviderFormFieldId } from '../create/fields/constants';
+import { useCreateProviderFormContext } from '../create/hooks/useCreateProviderFormContext';
 import { VddkSetupMode } from '../utils/constants';
 
 import VDDKAioOptimizationCheckbox from './VDDKAioOptimizationCheckbox';
@@ -19,23 +20,21 @@ import VDDKHelperText from './VDDKHelperText';
 const VDDKRadioSelection: FC = () => {
   const { t } = useForkliftTranslation();
 
-  const { control } = useFormContext();
+  const { control } = useCreateProviderFormContext();
 
-  const {
-    field: { onChange: onChangeVddkMode, value: vddkMode },
-    fieldState: { error },
-  } = useController({
+  const vddkModeController = useController({
     control,
     name: ProviderFormFieldId.VsphereVddkSetupMode,
   });
+  const vddkMode = vddkModeController.field.value;
+  const { error } = vddkModeController.fieldState;
 
-  const {
-    field: { onChange: onVddkImageChange, value: vddkImage },
-    fieldState: { error: vddkImageError },
-  } = useController({
+  const vddkImageController = useController({
     control,
     name: ProviderFormFieldId.VsphereVddkInitImage,
   });
+  const vddkImage = vddkImageController.field.value ?? '';
+  const vddkImageError = vddkImageController.fieldState.error;
 
   return (
     <FormGroupWithHelpText
@@ -67,7 +66,7 @@ const VDDKRadioSelection: FC = () => {
                 <VddkUploader
                   onChangeVddk={(val) => {
                     if (isEmpty(val) || val !== vddkImage) {
-                      onVddkImageChange(val);
+                      vddkImageController.field.onChange(val);
                     }
                   }}
                 />
@@ -81,7 +80,7 @@ const VDDKRadioSelection: FC = () => {
           label={t('Upload a VDDK archive to generate the image URL')}
           name={ProviderFormFieldId.VsphereVddkSetupMode}
           onChange={() => {
-            onChangeVddkMode(VddkSetupMode.Upload);
+            vddkModeController.field.onChange(VddkSetupMode.Upload);
           }}
         />
 
@@ -101,12 +100,12 @@ const VDDKRadioSelection: FC = () => {
                     data-testid="vsphere-vddk-image-input"
                     id={ProviderFormFieldId.VsphereVddkInitImage}
                     onChange={(_event, val) => {
-                      onVddkImageChange(val);
+                      vddkImageController.field.onChange(val);
                     }}
                     spellCheck="false"
                     type="text"
                     validated={getInputValidated(vddkImageError)}
-                    value={vddkImage ?? ''}
+                    value={vddkImage}
                   />
                 </FormGroupWithHelpText>
                 <VDDKAioOptimizationCheckbox />
@@ -119,7 +118,7 @@ const VDDKRadioSelection: FC = () => {
           label={t('Manually specify the VDDK image URL')}
           name={ProviderFormFieldId.VsphereVddkSetupMode}
           onChange={() => {
-            onChangeVddkMode(VddkSetupMode.Manual);
+            vddkModeController.field.onChange(VddkSetupMode.Manual);
           }}
         />
 
@@ -131,7 +130,7 @@ const VDDKRadioSelection: FC = () => {
           label={t('Skip VDDK setup (not recommended)')}
           name={ProviderFormFieldId.VsphereVddkSetupMode}
           onChange={() => {
-            onChangeVddkMode(VddkSetupMode.Skip);
+            vddkModeController.field.onChange(VddkSetupMode.Skip);
           }}
         />
       </Stack>
