@@ -49,9 +49,11 @@ const mockMigrationWithoutCutover = {
   spec: {},
 } as unknown as V1beta1Migration;
 
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
 const mockMigrationWithCutover = {
   metadata: { name: 'test-migration', namespace: 'test-ns' },
-  spec: { cutover: '2026-08-15T10:00:00.000Z' },
+  spec: { cutover: new Date(Date.now() + ONE_DAY_MS).toISOString() },
 } as unknown as V1beta1Migration;
 
 const closeOverlay = jest.fn();
