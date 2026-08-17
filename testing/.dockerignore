@@ -21,6 +21,7 @@ playwright/.auth/
 # Test artifacts
 playwright-report/
 test-results/
+node_modules/
 
 # IDE and local config
 .cursor/
