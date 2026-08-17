@@ -73,8 +73,8 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
     ],
     networkMap: {
       mappings: [
-        { source: SourceNetworks.MGMT_NETWORK, target: NetworkTargets.DEFAULT },
-        { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.IGNORE },
+        // Selected lab VMs (mtv-rhel8-warm-sanity, mtv-win2019-79) only attach "VM Network".
+        { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.DEFAULT },
       ],
     },
     targetProject: {

@@ -264,13 +264,20 @@ export class NetworkMapStep {
     }
 
     if (!found) {
-      const networksList = availableNetworks
-        .map((network, i) => `  ${i + 1}. ${network}`)
-        .join('\n');
-      throw new Error(
-        `Could not find row with source network: "${sourceNetwork}"\n` +
-          `Available source networks (${availableNetworks.length}):\n${networksList}`,
-      );
+      // Wizard only lists networks used by the selected VMs. Lab VMs often have only
+      // "VM Network" (no "Mgmt Network"). When a single source row is present, map that
+      // row instead of requiring an exact fixture name match.
+      if (availableNetworks.length === 1) {
+        matchedRow = rows.first();
+      } else {
+        const networksList = availableNetworks
+          .map((network, i) => `  ${i + 1}. ${network}`)
+          .join('\n');
+        throw new Error(
+          `Could not find row with source network: "${sourceNetwork}"\n` +
+            `Available source networks (${availableNetworks.length}):\n${networksList}`,
+        );
+      }
     }
 
     const targetNetworkSelect = getTargetSelect(matchedRow);
