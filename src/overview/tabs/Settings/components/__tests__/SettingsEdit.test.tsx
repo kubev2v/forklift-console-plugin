@@ -26,7 +26,7 @@ const controller = {
   spec: {},
 } as unknown as V1beta1ForkliftController;
 
-const closeModal = jest.fn();
+const closeOverlay = jest.fn();
 
 describe('SettingsEdit', () => {
   beforeEach(() => {
@@ -35,7 +35,7 @@ describe('SettingsEdit', () => {
 
   it('keeps Save disabled until the form is dirty and valid', async () => {
     const user = userEvent.setup();
-    render(<SettingsEdit closeModal={closeModal} controller={controller} />);
+    render(<SettingsEdit closeOverlay={closeOverlay} controller={controller} />);
 
     const confirmButton = screen.getByTestId('modal-confirm-button');
     expect(confirmButton).toBeDisabled();
@@ -64,6 +64,39 @@ describe('SettingsEdit', () => {
     });
   });
 
+  it('normalizes an uppercase AAP URL scheme on Save', async () => {
+    const user = userEvent.setup();
+    render(<SettingsEdit closeOverlay={closeOverlay} controller={controller} />);
+
+    const confirmButton = screen.getByTestId('modal-confirm-button');
+    const aapUrlInput = screen.getByTestId('aap-url-settings-input');
+
+    await user.click(aapUrlInput);
+    await user.clear(aapUrlInput);
+    await user.paste('HTTPS://aap.example.com');
+
+    await waitFor(() => {
+      expect(aapUrlInput).toHaveValue('https://aap.example.com');
+      expect(confirmButton).toBeEnabled();
+    });
+
+    await user.click(confirmButton);
+
+    await waitFor(() => {
+      expect(mockK8sPatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.arrayContaining([
+            expect.objectContaining({
+              op: 'add',
+              path: `/spec/${SettingsFields.AapUrl}`,
+              value: 'https://aap.example.com',
+            }),
+          ]),
+        }),
+      );
+    });
+  });
+
   it('enables Save when clearing a pre-existing AAP URL', async () => {
     const user = userEvent.setup();
     const controllerWithUrl = {
@@ -71,7 +104,7 @@ describe('SettingsEdit', () => {
       spec: { [SettingsFields.AapUrl]: 'https://old.example.com' },
     } as unknown as V1beta1ForkliftController;
 
-    render(<SettingsEdit closeModal={closeModal} controller={controllerWithUrl} />);
+    render(<SettingsEdit closeOverlay={closeOverlay} controller={controllerWithUrl} />);
 
     const confirmButton = screen.getByTestId('modal-confirm-button');
     const aapUrlInput = screen.getByTestId('aap-url-settings-input');
@@ -90,7 +123,7 @@ describe('SettingsEdit', () => {
       spec: { [SettingsFields.AapUrl]: 'not a valid url !!!' },
     } as unknown as V1beta1ForkliftController;
 
-    render(<SettingsEdit closeModal={closeModal} controller={controllerWithGarbageUrl} />);
+    render(<SettingsEdit closeOverlay={closeOverlay} controller={controllerWithGarbageUrl} />);
 
     const confirmButton = screen.getByTestId('modal-confirm-button');
 
@@ -108,7 +141,7 @@ describe('SettingsEdit', () => {
   });
 
   it('associates the AAP URL label with the input', async () => {
-    render(<SettingsEdit closeModal={closeModal} controller={controller} />);
+    render(<SettingsEdit closeOverlay={closeOverlay} controller={controller} />);
 
     await waitFor(() => {
       expect(screen.getByLabelText('AAP URL')).toHaveAttribute('id', SettingsFields.AapUrl);
