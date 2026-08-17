@@ -137,7 +137,7 @@ export class PlanDetailsPage {
     status: string;
   }> {
     const statusContainer = this.page.getByTestId('plan-status-container');
-    const statusElement = statusContainer.locator('[data-testid^="plan-status-"]').first();
+    const statusElement = statusContainer.getByTestId('plan-status-label');
     const statusText = (await statusElement.textContent())?.trim() ?? '';
     let percentage = 'N/A';
     try {

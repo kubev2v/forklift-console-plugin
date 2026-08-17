@@ -110,6 +110,15 @@ export class CredentialEditModal extends BaseModal {
 
   async selectSkipCertificate(): Promise<void> {
     await this.skipCertificateRadio.click();
+
+    // MTV 5.0+ opens a confirm modal (shared CertificateValidationField);
+    // without accepting it the form stays on Configure and CA upload stays visible.
+    const confirmSkip = this.page.getByTestId('confirm-skip-certificate-validation');
+    if (await confirmSkip.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await confirmSkip.click();
+    }
+
+    await expect(this.skipCertificateRadio).toBeChecked();
   }
 
   async togglePasswordVisibility(): Promise<void> {

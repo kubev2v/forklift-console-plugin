@@ -54,18 +54,20 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   const providerName = `test-vsphere-provider-${Date.now()}`;
   const planName = `${providerName}-plan`;
 
+  // qemtv-09 vs8 inventory no longer has mtv-func-rhel9 / mtv-func-win2019.
+  // Use present lab VMs with no Critical concerns (Warning: missing IP only).
   const testPlanData = createPlanTestData({
     planName,
     sourceProvider: providerName,
     virtualMachines: [
       {
-        sourceName: 'mtv-func-rhel9',
-        targetName: `mtv-func-rhel9-renamed-${Date.now()}`,
+        sourceName: 'mtv-rhel8-warm-sanity',
+        targetName: `mtv-rhel8-warm-sanity-renamed-${Date.now()}`,
         folder: 'vm',
       },
       {
-        sourceName: 'mtv-func-win2019',
-        targetName: `mtv-func-win2019-renamed-${Date.now()}`,
+        sourceName: 'mtv-feature-win2019',
+        targetName: `mtv-feature-win2019-renamed-${Date.now()}`,
         folder: 'vm',
       },
     ],
@@ -183,7 +185,22 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       await planDetailsPage.verifyMigrationInProgress();
 
       console.log('⏳ Waiting for migration to complete...');
-      await planDetailsPage.waitForMigrationCompletion(MIGRATION_TIMEOUT_MS, true);
+      try {
+        await planDetailsPage.waitForMigrationCompletion(MIGRATION_TIMEOUT_MS, true);
+      } catch (error) {
+        const plan = await resourceManager.fetchPlan(planName);
+        const conditions = (plan?.status?.conditions ?? [])
+          .filter((condition) => condition.status === 'True')
+          .map(
+            (condition) =>
+              `${condition.type}/${condition.reason ?? ''}: ${condition.message ?? ''}`,
+          );
+        const detail = conditions.join('\n') || '(none)';
+        throw new Error(
+          `${error instanceof Error ? error.message : String(error)}\nPlan conditions:\n${detail}`,
+          { cause: error },
+        );
+      }
 
       for (const vm of testPlanData.virtualMachines ?? []) {
         const migratedVMName = vm.targetName ?? vm.sourceName;
