@@ -29,9 +29,9 @@
   },
   "dependencies": {
     "@kubev2v/common": "*",
-    "@kubev2v/types": "0.0.20",
+    "@kubev2v/types": "0.0.24",
     "@openshift-console/dynamic-plugin-sdk": "1.8.0",
-    "@patternfly/react-charts": "7.4.1",
+    "@patternfly/react-charts": "7.4.9",
     "@patternfly/react-core": "^5.1.1",
     "@patternfly/react-icons": "^5.1.1",
     "@patternfly/react-table": "^5.1.1",
@@ -39,7 +39,7 @@
     "immer": "^10.1.1",
     "js-base64": "^3.7.7",
     "jsonpath": "^1.1.1",
-    "jsrsasign": "11.1.0",
+    "jsrsasign": "11.1.3",
     "luxon": "^3.5.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -47,7 +47,7 @@
     "react-linkify": "^1.0.0-alpha",
     "react-router": "5.3.x",
     "react-router-dom": "5.3.x",
-    "use-immer": "^0.10.0"
+    "use-immer": "^0.11.0"
   },
   "devDependencies": {
     "@openshift-console/dynamic-plugin-sdk-webpack": "1.3.0",
@@ -67,7 +67,7 @@
     "ts-loader": "^9.3.1",
     "tsconfig-paths-webpack-plugin": "^4.0.0",
     "typescript": "^4.7.4",
-    "webpack": "5.98.0",
+    "webpack": "5.109.2",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
   }
