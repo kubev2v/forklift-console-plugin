@@ -89,7 +89,7 @@
     "@types/webpack-bundle-analyzer": "^4.7.0",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^7.1.2",
-    "eslint": "^9.23.0",
+    "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-define-config": "^2.1.0",
     "eslint-interactive": "^11.1.0",
