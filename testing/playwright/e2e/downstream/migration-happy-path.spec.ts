@@ -54,8 +54,8 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   const providerName = `test-vsphere-provider-${Date.now()}`;
   const planName = `${providerName}-plan`;
 
-  // qemtv-09 vs8 inventory no longer has mtv-func-rhel9 / mtv-func-win2019.
-  // Use present lab VMs with no Critical concerns (Warning: missing IP only).
+  // Jenkins uses vsphere-8.0.1 (10.6.46.250): mtv-feature-win2019 is absent there.
+  // Prefer VMs present on both 8.0.1 and 8.0.3 with no Critical concerns.
   const testPlanData = createPlanTestData({
     planName,
     sourceProvider: providerName,
@@ -66,8 +66,8 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
         folder: 'vm',
       },
       {
-        sourceName: 'mtv-feature-win2019',
-        targetName: `mtv-feature-win2019-renamed-${Date.now()}`,
+        sourceName: 'mtv-win2019-79',
+        targetName: `mtv-win2019-79-renamed-${Date.now()}`,
         folder: 'vm',
       },
     ],
