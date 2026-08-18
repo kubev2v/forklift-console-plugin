@@ -92,8 +92,13 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
       await modal.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
       await modal.offload.selectStorageSecret(0, secretName);
       await modal.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
-      ({ hostName: dedicatedHostName } = await modal.offload.selectFirstDedicatedMigrationHost(0));
-      await modal.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
+      if (crdSupportsDedicatedHosts) {
+        ({ hostName: dedicatedHostName } =
+          await modal.offload.selectFirstDedicatedMigrationHost(0));
+        await modal.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
+      } else {
+        await modal.offload.verifyDedicatedMigrationHostsNotVisible(0);
+      }
 
       await modal.verifySaveButtonEnabled();
       await modal.save();
@@ -123,7 +128,7 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
       if (crdSupportsDedicatedHosts) {
         await modal.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
       } else {
-        await modal.offload.verifyDedicatedMigrationHostsVisible(0);
+        await modal.offload.verifyDedicatedMigrationHostsNotVisible(0);
       }
 
       await modal.cancel();

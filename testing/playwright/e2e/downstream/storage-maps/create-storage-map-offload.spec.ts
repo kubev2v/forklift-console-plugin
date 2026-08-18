@@ -86,7 +86,12 @@ test.describe(
 
       await test.step('Set only offload plugin and verify validation error', async () => {
         await createPage.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
-        await createPage.offload.verifyDedicatedMigrationHostsVisible(0);
+        // Dedicated hosts UI/CRD landed with MTV-6163 (not on 2.12 z-stream).
+        if (crdSupportsDedicatedHosts) {
+          await createPage.offload.verifyDedicatedMigrationHostsVisible(0);
+        } else {
+          await createPage.offload.verifyDedicatedMigrationHostsNotVisible(0);
+        }
         await createPage.offload.verifyValidationError('must be set when configuring offload');
       });
 
@@ -121,8 +126,10 @@ test.describe(
         const productText = await createPage.offload.getStorageProductText(0);
         expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
 
-        ({ hostId: dedicatedHostId, hostName: dedicatedHostName } =
-          await createPage.offload.selectFirstDedicatedMigrationHost(0));
+        if (crdSupportsDedicatedHosts) {
+          ({ hostId: dedicatedHostId, hostName: dedicatedHostName } =
+            await createPage.offload.selectFirstDedicatedMigrationHost(0));
+        }
       });
 
       await test.step('Add second mapping and verify independent offload state', async () => {
@@ -146,7 +153,9 @@ test.describe(
         const productText = await createPage.offload.getStorageProductText(0);
         expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
 
-        await createPage.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
+        if (crdSupportsDedicatedHosts) {
+          await createPage.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
+        }
       });
 
       await test.step('Select source/target storage and submit form', async () => {
@@ -157,6 +166,9 @@ test.describe(
       });
 
       await test.step('Verify create request included dedicated migration hosts', () => {
+        if (!crdSupportsDedicatedHosts) {
+          return;
+        }
         expect(createBody).toBeTruthy();
         const body = createBody as {
           spec?: {
@@ -193,12 +205,11 @@ test.describe(
         const productText = await modal.offload.getStorageProductText(0);
         expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
 
-        // CR persistence requires dedicatedMigrationHosts in the StorageMap CRD (MTV-6163 backend).
-        // Older clusters strip the field on create — UI selection is still covered above.
+        // MTV-6163: dedicated hosts only when CRD schema includes the field (not on 2.12 z-stream).
         if (crdSupportsDedicatedHosts) {
           await modal.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
         } else {
-          await modal.offload.verifyDedicatedMigrationHostsVisible(0);
+          await modal.offload.verifyDedicatedMigrationHostsNotVisible(0);
         }
 
         await modal.cancel();
