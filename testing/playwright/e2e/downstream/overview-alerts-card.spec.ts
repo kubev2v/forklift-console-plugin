@@ -1,8 +1,16 @@
-import { expect, test } from '@playwright/test';
+import { expect, type Locator, test } from '@playwright/test';
 
 import { OverviewPage } from '../../page-objects/OverviewPage';
 import { V5_0_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
+
+const ALERTS_CARD_LOADING_TIMEOUT_MS = 15_000;
+
+const waitForAlertsCardLoaded = async (alertsCard: Locator): Promise<void> => {
+  await expect(alertsCard.getByRole('progressbar')).toBeHidden({
+    timeout: ALERTS_CARD_LOADING_TIMEOUT_MS,
+  });
+};
 
 test.describe(
   'Overview Page - Migration Alerts Card',
@@ -34,8 +42,7 @@ test.describe(
     test('shows empty state when no alerts are firing', async ({ page }) => {
       await test.step('check for empty state or alert list', async () => {
         const alertsCard = page.getByTestId('migration-alerts-card');
-        // Prometheus query finishes asynchronously; asserting before loaded races empty vs list.
-        await expect(alertsCard.getByRole('progressbar')).toBeHidden({ timeout: 15_000 });
+        await waitForAlertsCardLoaded(alertsCard);
 
         const emptyText = alertsCard.getByText('No migrations have completed or failed yet.');
         const alertItem = alertsCard.locator('.migration-alerts-card__alert-item').first();
@@ -59,6 +66,8 @@ test.describe(
     test('alert list items show details when alerts are firing', async ({ page }) => {
       await test.step('check for alert items', async () => {
         const alertsCard = page.getByTestId('migration-alerts-card');
+        await waitForAlertsCardLoaded(alertsCard);
+
         const alertItem = alertsCard.locator('.migration-alerts-card__alert-item').first();
         const hasAlerts = await alertItem.isVisible().catch(() => false);
 

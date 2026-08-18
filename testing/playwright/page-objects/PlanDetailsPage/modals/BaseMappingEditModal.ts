@@ -56,13 +56,25 @@ export abstract class BaseMappingEditModal extends BaseModal {
 
   private async openDropdown(selectLocator: Locator): Promise<Locator> {
     await this.page.waitForTimeout(FORM_SETTLE_MS);
+
+    const listboxes = this.page.getByRole('listbox');
+    const listboxesBefore = await listboxes.count();
+
     await selectLocator.click();
     await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
-    // Network source selects render two listboxes (used-by-VMs + other networks).
-    // Return a locator that spans every visible listbox so callers can search both.
-    const listboxes = this.page.locator('[role="listbox"]:visible');
-    await expect(listboxes.first()).toBeVisible();
-    return listboxes;
+
+    // Newly opened menus append listboxes. Network source selects render two
+    // (used-by-VMs + other networks); ignore stale listboxes from other controls.
+    await expect.poll(() => listboxes.count()).toBeGreaterThan(listboxesBefore);
+
+    const listboxesAfter = await listboxes.count();
+    let opened = listboxes.nth(listboxesBefore);
+    for (let index = listboxesBefore + 1; index < listboxesAfter; index += 1) {
+      opened = opened.or(listboxes.nth(index));
+    }
+
+    await expect(opened.first()).toBeVisible();
+    return opened;
   }
 
   private async selectFromDropdown(selectLocator: Locator, optionText: string): Promise<void> {

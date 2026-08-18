@@ -4,6 +4,7 @@ import { getMappingWizardFieldRows } from '../../../utils/mappingWizardFieldRows
 import { isEmpty } from '../../../utils/utils';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
+import { waitForMappingSourceRows } from '../../../utils/waitForMappingSourceRows';
 import { AccessModeOptions } from '../../common/AccessModeOptions';
 import { OffloadOptions } from '../../common/OffloadOptions';
 
@@ -76,7 +77,7 @@ export class StorageMapStep {
       await this.page.getByRole('textbox').fill(storageMap.name);
 
       if (!isEmpty(storageMap.mappings)) {
-        await this.configureMappings(storageMap.mappings);
+        await this.configureMappings(storageMap.mappings ?? []);
       }
     }
   }
@@ -96,19 +97,16 @@ export class StorageMapStep {
    */
   async selectTargetStorageForSource(sourceStorage: string, targetStorage: string): Promise<void> {
     const { rows, getSourceText, getTargetSelect } = this.getMappingRowLocators();
+    const availableStorages = await waitForMappingSourceRows(rows, getSourceText);
     const rowCount = await rows.count();
 
     let matchedRow = rows.first();
     let found = false;
-    const availableStorages: string[] = [];
 
     for (let i = 0; i < rowCount; i += 1) {
       const row = rows.nth(i);
-      const text = await getSourceText(row);
-      if (text) {
-        availableStorages.push(text.trim());
-      }
-      if (text?.trim() === sourceStorage) {
+      const text = ((await getSourceText(row)) ?? '').trim();
+      if (text === sourceStorage) {
         matchedRow = row;
         found = true;
         break;
@@ -120,7 +118,14 @@ export class StorageMapStep {
       // (e.g. mtv-nfs-rhos-v8 vs mtv-nfs-psi-rdu2-v8). When a single source is present,
       // map that row instead of requiring an exact fixture name match.
       if (availableStorages.length === 1) {
-        matchedRow = rows.first();
+        const [soleSource] = availableStorages;
+        for (let i = 0; i < rowCount; i += 1) {
+          const row = rows.nth(i);
+          if (((await getSourceText(row)) ?? '').trim() === soleSource) {
+            matchedRow = row;
+            break;
+          }
+        }
       } else {
         const storagesList = availableStorages
           .map((storage, i) => `  ${i + 1}. ${storage}`)

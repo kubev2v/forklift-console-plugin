@@ -4,6 +4,7 @@ import { getMappingWizardFieldRows } from '../../../utils/mappingWizardFieldRows
 import { isEmpty } from '../../../utils/utils';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
+import { waitForMappingSourceRows } from '../../../utils/waitForMappingSourceRows';
 
 const EMPTY_NAD_OPTION_PREFIX = 'No network attachment definitions';
 const NAD_OPTION_INVENTORY_TIMEOUT_MS = 60_000;
@@ -18,6 +19,16 @@ export class NetworkMapStep {
 
   constructor(page: Page) {
     this.page = page;
+  }
+
+  private async blurNetworkMapNameInput(): Promise<void> {
+    const nameInput = this.page
+      .getByTestId('create-plan-network-map-step')
+      .getByRole('textbox')
+      .last();
+    if (await nameInput.isVisible()) {
+      await nameInput.blur();
+    }
   }
 
   private async fixDuplicateDefaultNetworkRows(): Promise<void> {
@@ -103,9 +114,9 @@ export class NetworkMapStep {
           Boolean(currentText?.includes('Select target network'));
 
         if (needsRemap) {
-          // force: local runs can leave the map-name TextInput focused / re-rendering,
-          // which blocks Playwright actionability on the MenuToggle.
-          await targetSelect.click({ force: true });
+          await this.blurNetworkMapNameInput();
+          await expect(targetSelect).toBeEnabled();
+          await targetSelect.click();
           await this.selectTargetNetworkOption('Ignore network', usedTargets);
         }
       }
@@ -244,18 +255,15 @@ export class NetworkMapStep {
     usedTargets: Set<string> = new Set<string>(),
   ): Promise<void> {
     const { rows, getRowText, getTargetSelect } = this.getMappingRowLocators();
+    const availableNetworks = await waitForMappingSourceRows(rows, getRowText);
     const rowCount = await rows.count();
 
     let matchedRow = rows.first();
     let found = false;
-    const availableNetworks: string[] = [];
 
     for (let i = 0; i < rowCount; i += 1) {
       const row = rows.nth(i);
       const text = await getRowText(row);
-      if (text) {
-        availableNetworks.push(text.trim());
-      }
       if (text?.includes(sourceNetwork)) {
         matchedRow = row;
         found = true;
@@ -268,7 +276,14 @@ export class NetworkMapStep {
       // "VM Network" (no "Mgmt Network"). When a single source row is present, map that
       // row instead of requiring an exact fixture name match.
       if (availableNetworks.length === 1) {
-        matchedRow = rows.first();
+        const [soleSource] = availableNetworks;
+        for (let i = 0; i < rowCount; i += 1) {
+          const row = rows.nth(i);
+          if (((await getRowText(row)) ?? '').trim() === soleSource) {
+            matchedRow = row;
+            break;
+          }
+        }
       } else {
         const networksList = availableNetworks
           .map((network, i) => `  ${i + 1}. ${network}`)

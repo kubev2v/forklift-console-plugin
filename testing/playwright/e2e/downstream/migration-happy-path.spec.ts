@@ -188,14 +188,21 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       try {
         await planDetailsPage.waitForMigrationCompletion(MIGRATION_TIMEOUT_MS, true);
       } catch (error) {
-        const plan = await resourceManager.fetchPlan(planName);
-        const conditions = (plan?.status?.conditions ?? [])
-          .filter((condition) => condition.status === 'True')
-          .map(
-            (condition) =>
-              `${condition.type}/${condition.reason ?? ''}: ${condition.message ?? ''}`,
-          );
-        const detail = conditions.join('\n') || '(none)';
+        let detail: string;
+        try {
+          const plan = await resourceManager.fetchPlan(planName);
+          const conditions = (plan?.status?.conditions ?? [])
+            .filter((condition) => condition.status === 'True')
+            .map(
+              (condition) =>
+                `${condition.type}/${condition.reason ?? ''}: ${condition.message ?? ''}`,
+            );
+          detail = conditions.join('\n') || '(none)';
+        } catch (diagnosticError) {
+          detail = `Unable to fetch plan conditions: ${
+            diagnosticError instanceof Error ? diagnosticError.message : String(diagnosticError)
+          }`;
+        }
         throw new Error(
           `${error instanceof Error ? error.message : String(error)}\nPlan conditions:\n${detail}`,
           { cause: error },

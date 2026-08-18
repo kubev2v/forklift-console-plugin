@@ -145,7 +145,7 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       expect(countAfterAdd).toBe(initialCount + 1);
       const sourceValue = await modalAfterAdd.getSourceNetworkAtIndex(initialCount);
       const targetValue = await modalAfterAdd.getTargetNetworkAtIndex(initialCount);
-      expect(sourceValue).toBeTruthy();
+      expect(sourceValue).toContain(addedNetworkSource);
       expect(targetValue).toContain(addedNetworkTarget.split(' ')[0]);
 
       await modalAfterAdd.removeMapping(countAfterAdd - 1);
@@ -167,7 +167,7 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       const newRowIndex = await modal.addMapping();
       expect(newRowIndex).toBe(initialCount);
       // Lab NFS names vary by VM datastore; pick whatever inventory exposes.
-      await modal.selectFirstUnusedSourceAtIndex(newRowIndex);
+      const addedStorageSource = await modal.selectFirstUnusedSourceAtIndex(newRowIndex);
       await modal.selectFirstAvailableTargetAtIndex(newRowIndex);
       await modal.verifySaveButtonEnabled();
       await modal.save();
@@ -177,7 +177,7 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
       expect(countAfterAdd).toBe(initialCount + 1);
       const sourceValue = await modalAfterAdd.getSourceStorageAtIndex(initialCount);
       const targetValue = await modalAfterAdd.getTargetStorageAtIndex(initialCount);
-      expect(sourceValue).toBeTruthy();
+      expect(sourceValue).toContain(addedStorageSource);
       expect(targetValue).toBeTruthy();
 
       await modalAfterAdd.removeMapping(countAfterAdd - 1);

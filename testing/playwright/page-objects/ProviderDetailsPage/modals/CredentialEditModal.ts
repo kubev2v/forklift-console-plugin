@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import { BaseModal } from '../../common/BaseModal';
+import { skipProviderCertificateValidation } from '../../CreateProviderPage/skipProviderCertificateValidation';
 
 /**
  * Page object for the Edit Provider Credentials modal.
@@ -109,16 +110,7 @@ export class CredentialEditModal extends BaseModal {
   }
 
   async selectSkipCertificate(): Promise<void> {
-    await this.skipCertificateRadio.click();
-
-    // MTV 5.0+ opens a confirm modal (shared CertificateValidationField);
-    // without accepting it the form stays on Configure and CA upload stays visible.
-    const confirmSkip = this.page.getByTestId('confirm-skip-certificate-validation');
-    if (await confirmSkip.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await confirmSkip.click();
-    }
-
-    await expect(this.skipCertificateRadio).toBeChecked();
+    await skipProviderCertificateValidation(this.page);
   }
 
   async togglePasswordVisibility(): Promise<void> {

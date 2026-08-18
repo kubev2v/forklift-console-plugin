@@ -6,6 +6,8 @@ import type { ResourceManager } from '../../../utils/resource-manager/ResourceMa
 import { V2_11_0, V2_12_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
 
+const ALREADY_SELECTED_PROJECT_TIMEOUT_MS = 15_000;
+
 export class GeneralInformationStep {
   private readonly page: Page;
   private readonly resourceManager?: ResourceManager;
@@ -78,15 +80,16 @@ export class GeneralInformationStep {
     await projectSelect.waitFor({ state: 'visible', timeout: 10000 });
 
     // useDefaultProject often pre-selects openshift-mtv after projects load.
-    // Wait briefly for that before deciding whether to open the menu — reopening
+    // Wait for that before deciding whether to open the menu — reopening
     // can hide system namespaces and hang on a missing option.
-    const alreadySelected = await projectSelect
-      .getByText(projectName, { exact: true })
-      .waitFor({ state: 'visible', timeout: 15_000 })
-      .then(() => true)
-      .catch(() => false);
-    if (alreadySelected) {
+    const alreadySelectedLabel = projectSelect.getByText(projectName, { exact: true });
+    try {
+      await expect(alreadySelectedLabel).toBeVisible({
+        timeout: ALREADY_SELECTED_PROJECT_TIMEOUT_MS,
+      });
       return;
+    } catch {
+      // Not pre-selected; open the menu and choose the project.
     }
 
     await projectSelect.getByRole('button').click();
