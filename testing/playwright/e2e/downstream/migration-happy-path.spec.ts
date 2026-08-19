@@ -119,7 +119,8 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream'],
     },
     async ({ page }) => {
-      test.setTimeout(120_000);
+      // Wizard fill + Validating/VDDK can use PLAN_READY_TIMEOUT (5m) in waitForPlanEditable.
+      test.setTimeout(10 * 60_000);
       const providerDetailsPage = new ProviderDetailsPage(page);
       const createWizard = new CreatePlanWizardPage(page, resourceManager);
       const planDetailsPage = new PlanDetailsPage(page);
