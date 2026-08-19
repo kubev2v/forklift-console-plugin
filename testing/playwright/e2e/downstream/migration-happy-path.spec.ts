@@ -26,7 +26,11 @@ import {
   SourceNetworks,
 } from '../../types/test-data';
 import { requireVddk } from '../../utils/requireVddk';
-import { ELEMENT_TIMEOUT, MTV_NAMESPACE } from '../../utils/resource-manager/constants';
+import {
+  ELEMENT_TIMEOUT,
+  MTV_NAMESPACE,
+  PLAN_READY_TIMEOUT,
+} from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 import { CNV_4_21_0, V2_10_5, V2_12_0 } from '../../utils/version/constants';
 import { isVersionInStreams, requireCNVVersion, requireVersion } from '../../utils/version/version';
@@ -119,8 +123,9 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream'],
     },
     async ({ page }) => {
-      // Wizard fill + Validating/VDDK can use PLAN_READY_TIMEOUT (5m) in waitForPlanEditable.
-      test.setTimeout(10 * 60_000);
+      // waitForPlanEditable uses PLAN_READY_TIMEOUT for Validating/VDDK.
+      const CREATE_PLAN_OVERHEAD_MS = 5 * 60_000; // navigate + wizard + rename
+      test.setTimeout(PLAN_READY_TIMEOUT + CREATE_PLAN_OVERHEAD_MS);
       const providerDetailsPage = new ProviderDetailsPage(page);
       const createWizard = new CreatePlanWizardPage(page, resourceManager);
       const planDetailsPage = new PlanDetailsPage(page);
