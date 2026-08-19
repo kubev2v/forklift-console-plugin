@@ -113,9 +113,10 @@ const buildTestProviderFixture = (
         await context.close().catch(() => undefined);
         // DeepInspection may still be RemovingSnapshot after the UI shows completed;
         // deleting the provider Secret first fails the Conversion (secret not found).
+        // Fail hard if Conversions never go terminal — do not soft-skip into cleanup.
         const providerName = created.metadata?.name;
         if (providerName) {
-          await waitForProviderDeepInspectionsTerminal(providerName).catch(console.error);
+          await waitForProviderDeepInspectionsTerminal(providerName);
         }
         await tempResourceManager.cleanupAll().catch(console.error);
       },

@@ -67,10 +67,9 @@ const pollUntilTerminal = async (
     }
 
     if (Date.now() >= deadline) {
-      console.warn(
+      throw new Error(
         `Timed out waiting for ${describe} Conversions to reach a terminal phase: ${formatNonTerminal(active)}`,
       );
-      return;
     }
 
     await new Promise((resolve) => {
