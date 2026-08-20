@@ -1,6 +1,6 @@
 import { CustomFilterType } from 'src/components/common/FilterGroup/constants';
 
-import type { EnumValue } from '@components/common/utils/types';
+import type { EnumValue, FilterDef } from '@components/common/utils/types';
 import { t } from '@utils/i18n';
 
 const labelToFilterItem = (label: string): EnumValue =>
@@ -10,9 +10,9 @@ const labelToFilterItem = (label: string): EnumValue =>
  * This component enables filtering the oVirt virtual machines
  * by the hostname that they are running on.
  */
-export const ovirtHostFilter = () => {
+export const ovirtHostFilter = (): FilterDef => {
   return {
-    dynamicFilter: (filterItems: unknown[]) => {
+    dynamicFilter: (filterItems: unknown[]): Partial<FilterDef> => {
       const items = filterItems as { vm: { host: string } }[];
       return {
         values: [

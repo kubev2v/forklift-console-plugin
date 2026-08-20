@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/components/TableCell/TableCell';
 
@@ -19,10 +19,14 @@ const cellRenderers: Record<string, FC<VMCellProps>> = {
   ovaPath: ({ data }) => <TableCell>{(data?.vm as OvaVM)?.ovfPath}</TableCell>,
 };
 
-const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
+const renderTd = ({
+  resourceData,
+  resourceFieldId,
+  resourceFields,
+}: RenderTdProps): ReactElement => {
   const fieldId = resourceFieldId;
 
-  const CellRenderer = cellRenderers?.[fieldId] ?? (() => <></>);
+  const CellRenderer = cellRenderers?.[fieldId] ?? ((): ReactElement => <></>);
   return (
     <Td dataLabel={fieldId} key={fieldId}>
       <CellRenderer data={resourceData} fieldId={fieldId} fields={resourceFields} />

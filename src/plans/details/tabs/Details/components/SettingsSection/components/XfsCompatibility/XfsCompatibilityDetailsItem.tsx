@@ -4,7 +4,7 @@ import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/ut
 import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
@@ -18,7 +18,7 @@ const XfsCompatibilityDetailsItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   if (!shouldRender) {
     return null;
@@ -39,7 +39,7 @@ const XfsCompatibilityDetailsItem: FC<EditableDetailsItemProps> = ({
         'XFS v4 and BTRFS support are mutually exclusive. Enable for XFS v4 filesystems; leave disabled for BTRFS.',
       )}
       onEdit={() => {
-        launcher<EditPlanProps>(EditPlanXfsCompatibility, { resource: plan });
+        launchOverlay<EditPlanProps>(EditPlanXfsCompatibility, { resource: plan });
       }}
       title={t('XFS v4 compatibility')}
     />

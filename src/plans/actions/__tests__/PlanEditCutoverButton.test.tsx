@@ -16,7 +16,7 @@ jest.mock('src/plans/hooks/usePlanMigration', () => ({
 
 const mockLauncher = jest.fn();
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  useModal: () => mockLauncher,
+  useOverlay: (): typeof mockLauncher => mockLauncher,
 }));
 
 const buildPlan = (

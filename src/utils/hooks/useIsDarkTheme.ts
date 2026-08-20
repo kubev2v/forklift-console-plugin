@@ -13,7 +13,7 @@ export const useIsDarkTheme = (): boolean => {
 
     observer.observe(document.documentElement, { attributeFilter: ['class'], attributes: true });
 
-    return () => {
+    return (): void => {
       observer.disconnect();
     };
   }, []);

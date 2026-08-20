@@ -18,7 +18,7 @@ import {
   type V1beta1NetworkMap,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useK8sWatchResource, useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 import {
   getMapDestinationProviderName,
@@ -26,6 +26,7 @@ import {
   getMapSourceProviderName,
   getMapSourceProviderNamespace,
 } from '@utils/crds/maps/selectors';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import DetailsSection from '../../components/DetailsSection/DetailsSection';
 import NetworkMapEdit from '../../components/MapsSection/NetworkMapEdit';
@@ -38,7 +39,7 @@ type NetworkMapDetailsTabProps = {
 
 const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const [networkMap, loaded, loadError] = useK8sWatchResource<V1beta1NetworkMap>({
     groupVersionKind: NetworkMapModelGroupVersionKind,
@@ -88,7 +89,7 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
       <PageSection className="forklift-page-section" hasBodyWrapper={false}>
         <SectionHeadingWithEdit
           onClick={() => {
-            launcher<MapProvidersEditProps>(MapProvidersEdit, {
+            launchOverlay<MapProvidersEditProps>(MapProvidersEdit, {
               destinationProvider,
               model: NetworkMapModel,
               namespace,
@@ -105,7 +106,7 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
         <SectionHeadingWithEdit
           data-testid="network-map-edit-button"
           onClick={() => {
-            launcher<NetworkMapEditProps>(NetworkMapEdit, {
+            launchOverlay<NetworkMapEditProps>(NetworkMapEdit, {
               destinationProvider,
               initialMappings: currentMappings,
               networkMap,

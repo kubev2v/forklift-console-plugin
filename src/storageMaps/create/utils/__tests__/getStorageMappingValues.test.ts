@@ -65,6 +65,30 @@ describe('getStorageMappingValues', () => {
       expect(result[0][StorageMapFieldId.StorageProduct]).toBe('powermax');
     });
 
+    it('includes csiVolumeImport fields when CSI offload plugin exists in spec', () => {
+      const vsphereProvider = makeProvider(PROVIDER_TYPES.vsphere);
+      const specMappings: V1beta1StorageMapSpecMap[] = [
+        {
+          destination: { storageClass: 'hpe-3par' },
+          offloadPlugin: {
+            csiVolumeImport: {
+              secretRef: 'hpe-3par-secret',
+              storageVendorProduct: 'primera3par',
+            },
+          },
+          source: { id: 'ds-1' },
+        },
+      ];
+
+      const result = getStorageMappingValues(specMappings, vsphereProvider, emptySourceStorages);
+
+      expect(result).toHaveLength(1);
+      expect(result[0][StorageMapFieldId.OffloadPlugin]).toBe('csiVolumeImport');
+      expect(result[0][StorageMapFieldId.StorageSecret]).toBe('hpe-3par-secret');
+      expect(result[0][StorageMapFieldId.StorageProduct]).toBe('primera3par');
+      expect(result[0][StorageMapFieldId.DedicatedMigrationHosts]).toEqual([]);
+    });
+
     it('includes empty offload fields for non-vSphere providers', () => {
       const ovirtProvider = makeProvider(PROVIDER_TYPES.ovirt);
       const specMappings = [makeSpecMapping('sd-1', 'ceph-rbd')];

@@ -5,16 +5,14 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { MigrationModel } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Stack } from '@patternfly/react-core';
 
 import type { CancelMigrationVirtualMachinesProps } from './utils/types';
 
-const CancelMigrationVirtualMachinesModal: ModalComponent<CancelMigrationVirtualMachinesProps> = ({
-  migration,
-  selectedIds,
-  ...rest
-}) => {
+const CancelMigrationVirtualMachinesModal: OverlayComponent<
+  CancelMigrationVirtualMachinesProps
+> = ({ closeOverlay, migration, selectedIds }) => {
   const { t } = useForkliftTranslation();
 
   const handleSave = useCallback(async () => {
@@ -30,7 +28,11 @@ const CancelMigrationVirtualMachinesModal: ModalComponent<CancelMigrationVirtual
   }, [migration, selectedIds]);
 
   return (
-    <ModalForm onConfirm={handleSave} title={t('Cancel virtual machines migration?')} {...rest}>
+    <ModalForm
+      closeOverlay={closeOverlay}
+      onConfirm={handleSave}
+      title={t('Cancel virtual machines migration?')}
+    >
       <Stack hasGutter>
         {t('You can cancel the migration of virtual machines in a running migration plan.')}
       </Stack>

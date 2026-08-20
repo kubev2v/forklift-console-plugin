@@ -72,7 +72,7 @@ import {
 
 ### Watching Resources
 ```typescript
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 const [providers, loaded, error] = useK8sWatchResource<V1beta1Provider[]>({
   groupVersionKind: ProviderModelGroupVersionKind,
@@ -150,12 +150,16 @@ Always use the shared `ModalForm` component (`@components/ModalForm/ModalForm`) 
 - Loading state on confirm button
 - Error display (catches thrown errors automatically)
 - Confirm/Cancel buttons with proper variants
-- `closeModal` on success
+- `closeOverlay` on success
+
+Launch modals with Console SDK `useOverlay` and type them as `OverlayComponent`. Pass `closeOverlay` through to `ModalForm`:
 
 ```typescript
 import ModalForm from '@components/ModalForm/ModalForm';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 
-const MyModal: ModalComponent<MyModalProps> = ({ myData, ...rest }) => {
+const MyModal: OverlayComponent<MyModalProps> = ({ closeOverlay, myData }) => {
   const handleConfirm = useCallback(async () => {
     await doSomething(myData);
     // throw new Error('message') on failure -- ModalForm catches and displays it
@@ -163,20 +167,27 @@ const MyModal: ModalComponent<MyModalProps> = ({ myData, ...rest }) => {
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       title={t('My title')}
       onConfirm={handleConfirm}
       confirmLabel={t('Confirm')}
       isDisabled={!isValid}
       variant={ModalVariant.large}
-      {...rest}
     >
       {/* Modal body content */}
     </ModalForm>
   );
 };
+
+// Launcher:
+const launchOverlay = useOverlay();
+launchOverlay(MyModal, { myData });
 ```
 
 Do NOT use raw `Modal` + `ModalHeader` + `ModalBody` + `ModalFooter` + manual error/loading state.
+Do NOT use deprecated `useModal` / `ModalComponent`.
+
+**Exception — nested sub-views:** A modal may render a nested raw PatternFly `Modal` when Esc/close must mean “back to the parent view” rather than dismiss the overlay (e.g. `AffinityEditModal` inside `AffinityModal`). Pass `onCancel` to that nested modal’s `onClose`; do not wire it to `closeOverlay`.
 
 ---
 

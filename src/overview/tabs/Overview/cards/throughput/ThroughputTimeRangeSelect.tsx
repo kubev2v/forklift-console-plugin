@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent, type Ref, useState } from 'react';
+import { type FC, type MouseEvent, type ReactElement, type Ref, useState } from 'react';
 
 import { MenuToggle, type MenuToggleElement, Select, SelectOption } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -35,7 +35,7 @@ const ThroughputTimeRangeSelect: FC<ThroughputTimeRangeSelectProps> = ({
     setIsOpen(!isOpen);
   };
 
-  const toggle = (toggleRef: Ref<MenuToggleElement>): JSX.Element => (
+  const toggle = (toggleRef: Ref<MenuToggleElement>): ReactElement => (
     <MenuToggle
       className="forklift-overview__cards-select"
       isExpanded={isOpen}

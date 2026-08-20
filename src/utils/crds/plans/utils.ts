@@ -3,7 +3,7 @@ import { getResourceUrl } from '@utils/getResourceUrl';
 
 import { getName, getNamespace } from '../common/selectors';
 
-export const getPlanURL = (plan: V1beta1Plan) =>
+export const getPlanURL = (plan: V1beta1Plan): string =>
   getResourceUrl({
     name: getName(plan),
     namespace: getNamespace(plan),

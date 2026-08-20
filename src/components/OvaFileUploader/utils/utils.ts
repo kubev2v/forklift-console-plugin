@@ -25,7 +25,7 @@ export const uploadOva = async (
   return response.json() as Promise<UploadOvaResponse>;
 };
 
-export const getUploadButtonLabel = (uploading: boolean) =>
+export const getUploadButtonLabel = (uploading: boolean): string =>
   uploading ? t('Uploading...') : t('Upload');
 
 export const validateOvaFileName = (fileName: string): OvaValidationVariant => {

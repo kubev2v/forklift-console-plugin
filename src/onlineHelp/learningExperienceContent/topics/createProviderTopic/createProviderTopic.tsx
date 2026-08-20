@@ -20,7 +20,7 @@ import { rhvCreateProviderSubTopics } from './subTopics/rhvCreateProviderSubTopi
 import { vmwareCreateProviderSubTopics } from './subTopics/vmwareCreateProviderSubTopics';
 
 const createProviderSubTopics = (providerType?: ProviderTypes): LearningExperienceSubTopic[] => {
-  const helpTopics = () => {
+  const helpTopics = (): ReturnType<typeof vmwareCreateProviderSubTopics> => {
     switch (providerType) {
       case PROVIDER_TYPES.vsphere:
         return vmwareCreateProviderSubTopics();

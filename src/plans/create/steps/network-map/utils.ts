@@ -280,7 +280,9 @@ export const getSourceNetworkValues = (
  * @param usedSourceNetworks - Networks that need to be mapped
  * @returns Error message if mapping is not valid, undefined otherwise
  */
-export const validateNetworkMap = (validateNetworkMapParams: ValidateNetworkMapParams) => {
+export const validateNetworkMap = (
+  validateNetworkMapParams: ValidateNetworkMapParams,
+): string | undefined => {
   const { oVirtNicProfiles, usedSourceNetworks, values, vms } = validateNetworkMapParams;
   const mappedNetworkNames = new Set(
     values.map((value) => value[NetworkMapFieldId.SourceNetwork].name),
@@ -313,7 +315,7 @@ export const validateNetworkMap = (validateNetworkMapParams: ValidateNetworkMapP
 export const filterTargetNetworksByProject = (
   availableTargetNetworks: OpenShiftNetworkAttachmentDefinition[],
   targetProject: string,
-) => {
+): Record<string, MappingValue> => {
   if (isEmpty(availableTargetNetworks) || !targetProject) {
     return { podNetwork: defaultNetMapping[NetworkMapFieldId.TargetNetwork] };
   }

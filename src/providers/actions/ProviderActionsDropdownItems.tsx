@@ -4,7 +4,7 @@ import { DeleteModal, type DeleteModalProps } from 'src/components/modals/Delete
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModel } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem, DropdownList } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
@@ -22,7 +22,7 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({
   isDetailsPage,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
   const navigate = useNavigate();
 
   const { provider } = data;
@@ -33,8 +33,8 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({
 
   const providerURL = getProviderDetailsPageUrl(provider);
 
-  const onProviderDelete = () => {
-    launcher<DeleteModalProps>(DeleteModal, { model: ProviderModel, resource: provider });
+  const onProviderDelete = (): void => {
+    launchOverlay<DeleteModalProps>(DeleteModal, { model: ProviderModel, resource: provider });
   };
 
   return (

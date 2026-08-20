@@ -5,7 +5,7 @@ import { getResizeObserver } from '@patternfly/react-core';
 export const useResizeObserver = (
   ref: RefObject<HTMLElement>,
   initialDimensions = { height: 400, width: 800 },
-) => {
+): { height: number; width: number } => {
   const [dimensions, setDimensions] = useState(initialDimensions);
 
   const handleResize = useCallback(() => {
@@ -20,7 +20,7 @@ export const useResizeObserver = (
       const resizeObserver = getResizeObserver(ref.current, handleResize, true);
       handleResize();
 
-      return () => {
+      return (): void => {
         resizeObserver();
       };
     }

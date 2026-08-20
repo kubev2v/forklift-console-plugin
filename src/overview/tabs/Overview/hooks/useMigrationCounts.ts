@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { MigrationModelGroupVersionKind, type V1beta1Migration } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { getPlanMigrationCounts } from '../utils/getMigrationCounts';
 import { getVmCounts } from '../utils/getVmCounts';

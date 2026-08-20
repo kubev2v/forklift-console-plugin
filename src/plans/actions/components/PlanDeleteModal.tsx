@@ -8,14 +8,14 @@ import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 import ModalForm from '@components/ModalForm/ModalForm';
 import { PlanModel } from '@forklift-ui/types';
 import { getGroupVersionKindForModel, k8sDelete } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Alert, ButtonVariant, Stack, StackItem } from '@patternfly/react-core';
 import { getName, getNamespace, getOwnerReference } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 
 import type { PlanModalProps } from './types';
 
-const PlanDeleteModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
+const PlanDeleteModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
 
@@ -36,11 +36,11 @@ const PlanDeleteModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       confirmLabel={t('Delete')}
       confirmVariant={ButtonVariant.danger}
       onConfirm={onDelete}
       title={t('Delete plan')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

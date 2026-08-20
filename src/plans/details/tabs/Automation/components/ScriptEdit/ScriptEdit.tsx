@@ -41,7 +41,7 @@ const ScriptEdit: OverlayComponent<ScriptEditProps> = ({
   return (
     <FormProvider {...methods}>
       <ModalForm
-        closeModal={closeOverlay}
+        closeOverlay={closeOverlay}
         isDisabled={!isValid || !isDirty}
         onConfirm={handleSubmit(onSubmit)}
         testId="script-edit-modal"

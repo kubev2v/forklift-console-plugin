@@ -10,6 +10,7 @@ import { V5_0_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 const LUKS_TEST_SECRET_NAME = 'luks-test-secret';
+const LUKS_TEST_TIMEOUT_MS = 300_000;
 
 test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
   requireVersion(test, V5_0_0);
@@ -20,7 +21,7 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
     resourceManager,
   }) => {
     // Wizard path creates provider resources then walks General→…→Additional settings.
-    test.setTimeout(300_000);
+    test.setTimeout(LUKS_TEST_TIMEOUT_MS);
     const testData: PlanTestData = createPlanTestData({
       sourceProvider: testProvider?.metadata?.name ?? '',
       additionalPlanSettings: {
@@ -68,17 +69,23 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
       const { detailsTab } = new PlanDetailsPage(page);
       await detailsTab.navigateToDetailsTab();
       await expect(detailsTab.diskDecryptionDetailItem()).toBeVisible();
-      // Product copies the selected secret via generateName `${planName}-` and
-      // labels it with forklift.konveyor.io/source-secret — details show the copy.
-      await expect(detailsTab.diskDecryptionDetailItem()).toContainText(`${testData.planName}-`);
+      // Product copies the selected secret via generateName `${planName}-`.
+      await expect(detailsTab.diskDecryptionDetailItem().getByRole('link')).toContainText(
+        testData.planName,
+      );
     });
 
-    await test.step('Open edit modal and verify radio toggle', async () => {
+    await test.step('Open edit modal and verify existing secret is pre-selected', async () => {
       const { detailsTab } = new PlanDetailsPage(page);
       await detailsTab.clickEditDiskDecryption();
       await expect(detailsTab.editDiskDecryptionModal).toBeVisible();
-      await expect(page.getByTestId('edit-use-existing-secret-radio')).toBeVisible();
+      await expect(page.getByTestId('edit-use-existing-secret-radio')).toBeChecked();
       await expect(page.getByTestId('edit-use-passphrases-radio')).toBeVisible();
+      await expect(page.getByTestId('edit-luks-secret-select')).toBeVisible();
+      await expect(page.getByTestId('edit-luks-secret-select').getByRole('combobox')).toHaveValue(
+        LUKS_TEST_SECRET_NAME,
+      );
+      await expect(detailsTab.saveDiskDecryptionButton).toBeEnabled();
     });
 
     await test.step('Toggle between modes and verify state preservation', async () => {
@@ -90,10 +97,18 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
       await expect(page.getByTestId('edit-luks-secret-select')).toBeVisible();
     });
 
-    await test.step('Close modal without saving', async () => {
+    await test.step('Save passphrases and reopen to confirm existing-secret mode is cleared', async () => {
       const { detailsTab } = new PlanDetailsPage(page);
-      await detailsTab.editDiskDecryptionModal.getByTestId('modal-cancel-button').click();
+      await page.getByTestId('edit-use-passphrases-radio').click();
+      await expect(page.getByTestId('edit-luks-secret-select')).not.toBeVisible();
+      await expect(detailsTab.saveDiskDecryptionButton).toBeEnabled();
+      await detailsTab.saveDiskDecryptionButton.click();
       await expect(detailsTab.editDiskDecryptionModal).not.toBeVisible();
+
+      await detailsTab.clickEditDiskDecryption();
+      await expect(detailsTab.editDiskDecryptionModal).toBeVisible();
+      await expect(page.getByTestId('edit-use-passphrases-radio')).toBeChecked();
+      await expect(page.getByTestId('edit-luks-secret-select')).not.toBeVisible();
     });
   });
 });

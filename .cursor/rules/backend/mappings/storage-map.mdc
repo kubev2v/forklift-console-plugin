@@ -33,9 +33,12 @@ spec:
         volumeMode: "Filesystem" | "Block"        # optional
         accessMode: "ReadWriteOnce" | "ReadWriteMany" | "ReadOnlyMany"  # optional
       offloadPlugin:                    # optional — per-pair offload config
-        vsphereXcopyConfig:
+        vsphereXcopyConfig:             # prefer a single plugin; if both populated, UI resolves CSI first
           secretRef: "<secret-name>"
           storageVendorProduct: "<vendor>"
+        # csiVolumeImport:              # CSI Volume Import (MTV-5483); takes precedence when both are set
+        #   secretRef: "<secret-name>"
+        #   storageVendorProduct: "primera3par"
 ```
 
 ### Destination Fields
@@ -151,26 +154,38 @@ Buffered channel (size 10) receives events from per-provider inventory watchers.
 
 ---
 
-## Storage Offload Plugin (XCOPY)
+## Storage Offload Plugins
 
-Each `StoragePair` in the map can optionally specify an `offloadPlugin` for hardware-accelerated copy. Currently only vSphere XCOPY is supported.
+Each `StoragePair` in the map can optionally specify an `offloadPlugin` for hardware-accelerated copy. Supported plugins:
+
+| Plugin key | Purpose |
+|---|---|
+| `vsphereXcopyConfig` | vSphere XCOPY / VAAI backend copy via volume populator |
+| `csiVolumeImport` | CSI Volume Import — destination CSI driver imports/clones the source volume (MTV-5483) |
 
 ### OffloadPlugin Structure
 
 ```go
 type OffloadPlugin struct {
     VSphereXcopyPluginConfig *VSphereXcopyPluginConfig
+    CsiImportPluginConfig    *CsiImportPluginConfig
 }
 
 type VSphereXcopyPluginConfig struct {
     SecretRef            string               // secret with storage array credentials
     StorageVendorProduct StorageVendorProduct  // identifies the storage array type
+    DedicatedMigrationHosts []string           // optional ESXi host filter
+}
+
+type CsiImportPluginConfig struct {
+    SecretRef            string               // secret with storage array credentials
+    StorageVendorProduct StorageVendorProduct  // CRD-gated; currently primera3par only
 }
 ```
 
-The `VSphereXcopyVolumePopulator` CR works with the plugin to offload disk copy to vSphere + the storage array, bypassing standard CDI data transfer.
+The `VSphereXcopyVolumePopulator` CR works with XCOPY to offload disk copy to vSphere + the storage array, bypassing standard CDI data transfer. CSI Volume Import delegates clone/import to the destination CSI driver instead of a populator pod.
 
-### Supported Storage Vendors
+### Supported Storage Vendors (XCOPY)
 
 | Enum Value | Vendor / Product |
 |---|---|
@@ -184,13 +199,15 @@ The `VSphereXcopyVolumePopulator` CR works with the plugin to offload disk copy 
 | `powerstore` | Dell PowerStore |
 | `infinibox` | Infinidat InfiniBox |
 
+CSI Volume Import currently allows only `primera3par` in the StorageMap CRD enum.
+
 ### How It Works
 
-1. User configures `offloadPlugin.vsphereXcopyConfig` on a storage pair
+1. User configures `offloadPlugin.vsphereXcopyConfig` or `offloadPlugin.csiVolumeImport` on a storage pair
 2. `secretRef` points to a Secret with storage array credentials (must be in source provider's namespace)
-3. `storageVendorProduct` selects the correct storage driver
-4. During migration, the plan controller detects `IsUsingOffloadPlugin()` and creates `VSphereXcopyVolumePopulator` CRs instead of standard CDI DataVolumes
-5. The volume populator handles the XCOPY transfer at the storage array level
+3. `storageVendorProduct` selects the correct storage driver (must match the plugin's CRD-allowed values)
+4. During migration, the plan controller detects `IsUsingOffloadPlugin()` and uses XCOPY populators or CSI import PVCs instead of standard CDI DataVolumes
+5. Frontend resolution prefers a configured `csiVolumeImport` block over `vsphereXcopyConfig` when both are present; empty `{}` blocks are ignored
 
 ### Feature Gate
 
@@ -214,8 +231,9 @@ Copy offload requires `feature_copy_offload` to be enabled in the `ForkliftContr
 |---|---|
 | `StoragePair` | Source ref + destination StorageClass + optional offload plugin |
 | `DestinationStorage` | StorageClass name, volumeMode, accessMode |
-| `OffloadPlugin` | Container for offload plugin configs |
-| `VSphereXcopyPluginConfig` | Secret ref + vendor product identifier |
+| `OffloadPlugin` | Container for offload plugin configs (`vsphereXcopyConfig`, `csiVolumeImport`) |
+| `VSphereXcopyPluginConfig` | Secret ref + vendor product identifier (+ optional dedicated hosts) |
+| `CsiImportPluginConfig` | Secret ref + vendor product (`primera3par` in CRD) |
 | `StorageVendorProduct` | Enum of supported storage vendors |
 
 ---
@@ -227,7 +245,7 @@ Copy offload requires `feature_copy_offload` to be enabled in the `ForkliftContr
 | Destination type | `pod` / `multus` / `ignored` | StorageClass name |
 | Destination validation | Skips pod/ignored; checks NAD for multus | Always checks StorageClass exists |
 | Ambiguous destination | Yes (missing namespace for multus) | No (exact name lookup) |
-| Offload plugin | N/A | Per-pair XCOPY offload config |
+| Offload plugin | N/A | Per-pair XCOPY or CSI Volume Import offload config |
 | Hyper-V watch | Watches `hyperv.Network` | No-op (single SMB share) |
 | Source inventory type | Network | Datastore (vSphere), StorageDomain (oVirt), VolumeType (OpenStack), Disk (OVA) |
 

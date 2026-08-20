@@ -1,4 +1,4 @@
-import { type MouseEvent as ReactMouseEvent, type Ref, useState } from 'react';
+import { type MouseEvent as ReactMouseEvent, type ReactElement, type Ref, useState } from 'react';
 
 import { useUniqueEnums } from '@components/common/Filter/useUniqueEnums';
 import {
@@ -41,7 +41,7 @@ export const EnumFilter = ({
   showFilter = true,
   supportedValues: supportedEnumValues = [],
   title = '',
-}: FilterTypeProps) => {
+}: FilterTypeProps): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const { onUniqueFilterUpdate, selectedUniqueEnumLabels } = useUniqueEnums({
     onSelectedEnumIdsChange,
@@ -62,11 +62,14 @@ export const EnumFilter = ({
     }
   };
 
-  const onToggleClick = () => {
+  const onToggleClick = (): void => {
     setIsOpen((prev) => !prev);
   };
 
-  const onSelect = (_event: ReactMouseEvent | undefined, value: string | number | undefined) => {
+  const onSelect = (
+    _event: ReactMouseEvent | undefined,
+    value: string | number | undefined,
+  ): void => {
     if (hasFilter(value as string)) {
       deleteFilter(value as string);
       return;
@@ -74,7 +77,7 @@ export const EnumFilter = ({
     addFilter(value as string);
   };
 
-  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
+  const toggle = (toggleRef: Ref<MenuToggleElement>): ReactElement => (
     <MenuToggle
       data-testid={`filter-toggle-${filterId}`}
       isExpanded={isOpen}
@@ -91,7 +94,7 @@ export const EnumFilter = ({
     </MenuToggle>
   );
 
-  const renderOptions = () => {
+  const renderOptions = (): ReactElement[] => {
     return supportedEnumValues.map((label) => (
       <SelectOption
         data-testid={`filter-value-${label.id}`}

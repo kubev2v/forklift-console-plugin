@@ -11,10 +11,10 @@ import {
   NetworkMapModelGroupVersionKind,
   type V1beta1NetworkMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { MAP_STATUS } from '@utils/constants';
 import { getMapPhase } from '@utils/crds/maps/shared';
 import type { NetworkMapData } from '@utils/crds/maps/types';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { t } from '@utils/i18n';
 
 import NetworkMapsAddButton from '../components/NetworkMapsAddButton';

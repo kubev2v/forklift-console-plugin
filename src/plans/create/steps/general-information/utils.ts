@@ -10,7 +10,7 @@ import { t } from '@utils/i18n';
  * @param plans - Array of existing plans to check for uniqueness
  * @returns Error message string if invalid, undefined if valid
  */
-export const validatePlanName = (value: string, plans: V1beta1Plan[]) => {
+export const validatePlanName = (value: string, plans: V1beta1Plan[]): string | undefined => {
   if (!value) {
     return t('Plan name is required.');
   }

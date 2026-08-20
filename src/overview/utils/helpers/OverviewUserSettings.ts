@@ -15,12 +15,12 @@ type WelcomeSettings = {
   save: (showWelcome: boolean) => void;
 };
 
-const getOverviewKey = () => `${process.env.PLUGIN_NAME}/Overview`;
+const getOverviewKey = (): string => `${process.env.PLUGIN_NAME}/Overview`;
 
 export const saveOverviewSelectedRanges = (ranges: {
   vmMigrationsDonutSelectedRange?: TimeRangeOptions;
   vmMigrationsHistorySelectedRange?: TimeRangeOptions;
-}) => {
+}): void => {
   const key = getOverviewKey();
   const current = parseOrClean<OverviewUserSettings>(key);
   saveToLocalStorage(
@@ -56,11 +56,11 @@ export const loadUserSettings = (userSettingsKeySuffix: string): OverviewUserSet
 
   return {
     welcome: {
-      clear: () => {
+      clear: (): void => {
         saveRestOrRemoveKey(key, { hideWelcome: { hideWelcome }, rest });
       },
       hideWelcome: typeof hideWelcome === 'boolean' ? hideWelcome : undefined,
-      save: (hide) => {
+      save: (hide): void => {
         saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), hideWelcome: hide }));
       },
     },

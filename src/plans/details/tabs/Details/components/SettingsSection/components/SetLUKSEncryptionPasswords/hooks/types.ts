@@ -9,8 +9,11 @@ export type EditLUKSState = {
   decryptionMode: DecryptionMode;
   handleConfirm: () => Promise<unknown>;
   isDisabled: boolean;
+  isSecretWatchPending: boolean;
+  isSourceSecretUnavailable: boolean;
   nbdeClevis: boolean;
   resource: V1beta1Plan;
+  secretLoadError: unknown;
   secretNamespace: string | undefined;
   selectedSecret: IoK8sApiCoreV1Secret | undefined;
   setDecryptionMode: Dispatch<SetStateAction<DecryptionMode>>;

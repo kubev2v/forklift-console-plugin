@@ -6,7 +6,7 @@ import { useClusterIsAwsPlatform } from '../useClusterIsAwsPlatform';
 const mockUseK8sWatchResource = jest.fn();
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  useK8sWatchResource: (...args: unknown[]) => mockUseK8sWatchResource(...args),
+  useK8sWatchResource: (...args: unknown[]): unknown => mockUseK8sWatchResource(...args),
 }));
 
 describe('useClusterIsAwsPlatform', () => {
@@ -18,7 +18,7 @@ describe('useClusterIsAwsPlatform', () => {
 
     const { result } = renderHook(() => useClusterIsAwsPlatform());
 
-    expect(result.current).toBe(true);
+    expect(result.current).toEqual({ isAwsPlatform: true, loaded: true });
   });
 
   it('should return false when platform type is not AWS', () => {
@@ -29,15 +29,15 @@ describe('useClusterIsAwsPlatform', () => {
 
     const { result } = renderHook(() => useClusterIsAwsPlatform());
 
-    expect(result.current).toBe(false);
+    expect(result.current).toEqual({ isAwsPlatform: false, loaded: true });
   });
 
-  it('should return false when infrastructure is not loaded', () => {
+  it('should return not loaded when infrastructure is not loaded', () => {
     mockUseK8sWatchResource.mockReturnValue([{}, false]);
 
     const { result } = renderHook(() => useClusterIsAwsPlatform());
 
-    expect(result.current).toBe(false);
+    expect(result.current).toEqual({ isAwsPlatform: false, loaded: false });
   });
 
   it('should return false when platformStatus is missing', () => {
@@ -45,6 +45,6 @@ describe('useClusterIsAwsPlatform', () => {
 
     const { result } = renderHook(() => useClusterIsAwsPlatform());
 
-    expect(result.current).toBe(false);
+    expect(result.current).toEqual({ isAwsPlatform: false, loaded: true });
   });
 });

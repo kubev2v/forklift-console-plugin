@@ -9,9 +9,9 @@ import { getInputValidated } from '@utils/form';
 import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useForkliftTranslation } from '@utils/i18n';
+import { getProviderTypeOptions } from '@utils/providers/getProviderTypeOptions';
 
 import { useCreateProviderFormContext } from '../hooks/useCreateProviderFormContext';
-import { getProviderTypeOptions } from '../utils/getProviderTypeOptions';
 
 import { ProviderFormFieldId } from './constants';
 
@@ -20,7 +20,7 @@ import './ProviderTypeField.style.scss';
 const ProviderTypeField: FC = () => {
   const { t } = useForkliftTranslation();
   const isDarkTheme = useIsDarkTheme();
-  const isAwsPlatform = useClusterIsAwsPlatform();
+  const { isAwsPlatform } = useClusterIsAwsPlatform();
   const { control } = useCreateProviderFormContext();
 
   const {
@@ -36,7 +36,10 @@ const ProviderTypeField: FC = () => {
 
   const providerTypeOptions = getProviderTypeOptions(isDarkTheme, isAwsPlatform);
 
-  const onSelect = (_event: React.MouseEvent | undefined, itemId: string | number | undefined) => {
+  const onSelect = (
+    _event: React.MouseEvent | undefined,
+    itemId: string | number | undefined,
+  ): void => {
     if (typeof itemId === 'string') {
       onChange(itemId);
     }

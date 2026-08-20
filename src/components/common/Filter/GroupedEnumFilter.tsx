@@ -1,4 +1,4 @@
-import { type MouseEvent as ReactMouseEvent, type Ref, useState } from 'react';
+import { type MouseEvent as ReactMouseEvent, type ReactElement, type Ref, useState } from 'react';
 
 import type { EnumGroup, EnumValue } from '@components/common/utils/types';
 import {
@@ -20,7 +20,7 @@ const renderOptions = (
   supportedGroups: EnumGroup[],
   supportedEnumValues: EnumValue[],
   selectedEnumIds: string[],
-) =>
+): ReactElement[] =>
   supportedGroups.map(({ groupId, label }) => (
     <SelectGroup key={groupId} label={label}>
       <SelectList>
@@ -69,7 +69,7 @@ export const GroupedEnumFilter = ({
   showFilterIcon,
   supportedGroups,
   supportedValues: supportedEnumValues = [],
-}: FilterTypeProps) => {
+}: FilterTypeProps): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
 
   // simplify lookup
@@ -131,7 +131,10 @@ export const GroupedEnumFilter = ({
     );
   };
 
-  const onSelect = (_event: ReactMouseEvent | undefined, value: string | number | undefined) => {
+  const onSelect = (
+    _event: ReactMouseEvent | undefined,
+    value: string | number | undefined,
+  ): void => {
     const label = value?.toString();
     if (label) {
       const labelId = label2enum?.[label] ? label2enum[label]?.id : label;
@@ -143,11 +146,11 @@ export const GroupedEnumFilter = ({
     }
   };
 
-  const onToggleClick = () => {
+  const onToggleClick = (): void => {
     setIsOpen((prev) => !prev);
   };
 
-  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
+  const toggle = (toggleRef: Ref<MenuToggleElement>): ReactElement => (
     <MenuToggle
       isExpanded={isOpen}
       isFullWidth

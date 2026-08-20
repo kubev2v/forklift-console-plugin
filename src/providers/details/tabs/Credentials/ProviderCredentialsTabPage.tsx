@@ -7,11 +7,11 @@ import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
 import {
   getGroupVersionKindForModel,
   useAccessReview,
-  useK8sWatchResource,
-  useModal,
+  useOverlay,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection, Stack } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { useProvider } from '../../hooks/useProvider';
 import type { ProviderDetailsPageProps } from '../../utils/types';
@@ -23,7 +23,7 @@ import EditProviderCredentials, {
 const ProviderCredentialsTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
   const [reveal, setReveal] = useState(false);
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const { loaded, loadError, provider } = useProvider(name, namespace);
 
@@ -61,7 +61,7 @@ const ProviderCredentialsTabPage: FC<ProviderDetailsPageProps> = ({ name, namesp
                 'data-testid': 'credentials-reveal-button',
                 icon: reveal ? <EyeSlashIcon /> : <EyeIcon />,
                 key: 'reveal-values-button',
-                onClick: () => {
+                onClick: (): void => {
                   setReveal((prev) => !prev);
                 },
               },
@@ -69,7 +69,10 @@ const ProviderCredentialsTabPage: FC<ProviderDetailsPageProps> = ({ name, namesp
             data-testid="credentials-edit-button"
             editable={canPatch}
             onClick={() => {
-              launcher<EditProviderCredentialsProps>(EditProviderCredentials, { provider, secret });
+              launchOverlay<EditProviderCredentialsProps>(EditProviderCredentials, {
+                provider,
+                secret,
+              });
             }}
             title={t('Credentials')}
           />

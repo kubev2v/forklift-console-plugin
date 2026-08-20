@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 
-export const useSlug = () => {
+export const useSlug = (): ((value: string) => string) => {
   const cacheRef = useRef(new Map<string, string>());
   return useCallback((value: string) => {
     const cached = cacheRef.current.get(value);

@@ -26,7 +26,7 @@ export const ConditionsSection: FC<ConditionsSectionProps> = ({ conditions }) =>
     );
   }
 
-  const getStatusLabel = (status: string) => {
+  const getStatusLabel = (status: string): string => {
     switch (status) {
       case 'True':
         return t('True');

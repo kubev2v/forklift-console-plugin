@@ -1,4 +1,4 @@
-import { type Ref, useMemo, useState } from 'react';
+import { type ReactElement, type Ref, useMemo, useState } from 'react';
 
 import {
   Badge,
@@ -29,7 +29,7 @@ const FilterValueMultiSelect = <T,>({
   onToggle,
   selected,
   width = 220,
-}: FilterValueMultiSelectProps<T>) => {
+}: FilterValueMultiSelectProps<T>): ReactElement => {
   const { t } = useForkliftTranslation();
   const [isOpen, setOpen] = useState(false);
   const [prevCloseKey, setPrevCloseKey] = useState(closeKey);

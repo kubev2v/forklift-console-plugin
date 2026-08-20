@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react';
+import { type FC, type ReactElement, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Select from '@components/common/Select';
@@ -16,7 +16,8 @@ import {
 } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import type { StorageMappingValue, TargetStorage } from '@utils/storage/types';
+import type { TargetStorage } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 import type { StorageVendorProduct } from '../utils/types';
 import { resolveProductFromCsiProvisioner } from '../utils/vendorLookupTables';
@@ -31,7 +32,7 @@ type TargetStorageFieldProps = {
 const shouldShowDefaultLabel = (storage: TargetStorage): boolean =>
   storage.isDefaultVirt || storage.isDefault;
 
-const renderStorageOption = (storage: TargetStorage, t: (k: string) => string) => (
+const renderStorageOption = (storage: TargetStorage, t: (k: string) => string): ReactElement => (
   <Split hasGutter>
     <SplitItem isFilled>{storage.name}</SplitItem>
     {shouldShowDefaultLabel(storage) && (
@@ -105,7 +106,7 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({
             placeholder={t('Select target storage')}
             ref={field.ref}
             testId={testId}
-            value={(field.value as StorageMappingValue).name}
+            value={(field.value as MappingValue).name}
           >
             {hasRecommended ? (
               <>

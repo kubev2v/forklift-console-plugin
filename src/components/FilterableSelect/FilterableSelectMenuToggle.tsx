@@ -52,7 +52,7 @@ const FilterableSelectMenuToggle: FunctionComponent<FilterableSelectMenuTogglePr
 }) => {
   const textInputRef = useRef<HTMLInputElement>();
 
-  const onToggleClick = () => {
+  const onToggleClick = (): void => {
     setIsOpen(!isOpen);
   };
 
@@ -64,7 +64,7 @@ const FilterableSelectMenuToggle: FunctionComponent<FilterableSelectMenuTogglePr
     setFilterValue(value);
   };
 
-  const handleMenuArrowKeys = (key: string) => {
+  const handleMenuArrowKeys = (key: string): void => {
     let indexToFocus = null;
 
     if (isOpen) {

@@ -7,7 +7,10 @@ import { useCreatePlanFormContext } from './useCreatePlanFormContext';
 /**
  * Validates wizard form steps and checks for step-specific errors.
  */
-export const useStepValidation = () => {
+export const useStepValidation = (): {
+  hasStepErrors: (stepId: PlanWizardStepId) => boolean;
+  validateStep: (stepId: PlanWizardStepId) => Promise<boolean>;
+} => {
   const {
     formState: { errors },
     trigger,

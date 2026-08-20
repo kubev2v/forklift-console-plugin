@@ -10,6 +10,7 @@ import { StorageMapFieldId } from '@utils/storage/types';
 
 import { useOffloadPlugins } from '../../hooks/useOffloadPlugins';
 import { getPluginLabel } from '../../utils/labelHelpers';
+import { offloadNestedFieldRules } from '../../utils/offloadNestedFieldRules';
 
 type OffloadPluginFieldProps = { fieldId: string };
 
@@ -39,12 +40,12 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
           <Stack hasGutter>
             <StackItem>
               {t(
-                'Enables hardware-assisted copying by instructing the vSphere ESXi host to transfer data directly on the storage backend using technologies like XCOPY and VAAI.',
+                'Offload plugins accelerate disk copy by using storage-array capabilities instead of pulling data through the source host.',
               )}
             </StackItem>
             <StackItem>
               {t(
-                'This significantly speeds up the migration process and frees up network and host resources by avoiding the need to pull data through the source host.',
+                'vSphere XCOPY copies disks on the storage array using ESXi. CSI Volume Import uses the destination storage system to import the source volume directly.',
               )}
             </StackItem>
           </Stack>
@@ -65,9 +66,10 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
             placeholder={t('Select offload plugin')}
             ref={field.ref}
             testId={fieldId}
-            value={field.value}
+            value={field.value as string | undefined}
           />
         )}
+        rules={offloadNestedFieldRules}
       />
     </FormGroup>
   );

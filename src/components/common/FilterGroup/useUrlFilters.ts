@@ -35,8 +35,13 @@ const getValidFilters = (
     const { resourceFieldId } = nextField;
     const params = safeParse(searchParams[`${resourceFieldId}`]);
 
-    // Valid filter values are arrays
-    if (resourceFieldId && Array.isArray(params) && params.length) {
+    // Valid filter values are arrays of strings
+    if (
+      resourceFieldId &&
+      Array.isArray(params) &&
+      params.length &&
+      params.every((item): item is string => typeof item === 'string')
+    ) {
       acc[resourceFieldId] = params;
     }
     return acc;
@@ -88,8 +93,8 @@ const createSetStateAndUrl = (
   updateUserSettings: ((filters: GlobalFilters) => void) | undefined,
   persistentFieldIds: string[],
   fields: { resourceFieldId: string | null }[],
-) => {
-  return (filters: Record<string, string[]>) => {
+): ((filters: Record<string, string[]>) => void) => {
+  return (filters: Record<string, string[]>): void => {
     if (updateUserSettings) {
       const persistentFilters: GlobalFilters = Object.fromEntries(
         Object.entries(filters || {}).filter(([key]) => persistentFieldIds.includes(key)),
@@ -101,7 +106,7 @@ const createSetStateAndUrl = (
   };
 };
 
-const getIdsFromFields = (fields: ResourceField[]) =>
+const getIdsFromFields = (fields: ResourceField[]): string[] =>
   fields.reduce<string[]>((acc, nextField) => {
     if (nextField?.isPersistent && nextField.resourceFieldId) {
       acc.push(nextField.resourceFieldId);
@@ -113,7 +118,7 @@ const getInitialFilters = (
   fields: ResourceField[],
   searchParams: Record<string, string>,
   userSettings?: UserSettings,
-) => {
+): GlobalFilters => {
   const initialFieldIds = getIdsFromFields(fields);
 
   const persistentFilters = Object.fromEntries(

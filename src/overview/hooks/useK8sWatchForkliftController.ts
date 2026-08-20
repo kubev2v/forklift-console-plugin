@@ -4,7 +4,7 @@ import {
   ForkliftControllerModelGroupVersionKind,
   type V1beta1ForkliftController,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 /**
  * Type for the return value of the useK8sWatchForkliftController hook.
@@ -32,5 +32,5 @@ export const useK8sWatchForkliftController = (): K8sForkliftControllerWatchResul
     return firstController;
   }, [controllers]);
 
-  return [controller, loaded, (loadError as Error | null) ?? null];
+  return [controller, loaded, loadError ?? null];
 };

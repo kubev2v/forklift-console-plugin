@@ -1,6 +1,6 @@
 import type { AffinityRowData } from './types';
 
-export const getAvailableAffinityID = (affinities: AffinityRowData[]) => {
+export const getAvailableAffinityID = (affinities: AffinityRowData[]): string => {
   const idSet = new Set(affinities.map((aff) => aff.id));
   let id = 1;
   while (idSet.has(id.toString())) {

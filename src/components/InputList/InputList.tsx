@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { type FC, type ReactElement, useState } from 'react';
 
 import {
   Button,
@@ -26,7 +26,7 @@ let idCounter = 0;
  *
  * @returns {string} New unique ID.
  */
-const generateUniqueId = () => {
+const generateUniqueId = (): string => {
   idCounter += 1;
   return `item-${idCounter}`;
 };
@@ -52,6 +52,16 @@ const assignIdsToItems = <T,>(items: T[]): InputListItem<T>[] =>
     const id = generateUniqueId();
     return { content, id };
   });
+
+const shouldHydrateFromItems = <T,>(localItems: InputListItem<T>[], items: T[]): boolean => {
+  if (isEmpty(items) || localItems.length !== 1) {
+    return false;
+  }
+
+  const currentContent = localItems[0].content;
+
+  return currentContent === null || currentContent === undefined || currentContent === '';
+};
 
 /**
  * Props for InputList component.
@@ -86,13 +96,22 @@ export const InputList = <T,>({
   items,
   onChange,
   removeIconContent = 'Remove',
-}: InputListProps<T>) => {
+}: InputListProps<T>): ReactElement => {
   const initialStateItems = isEmpty(items) ? [null as unknown as T] : items;
-  const [localItems, setLocalItems] = useState<InputListItem<T>[]>(
+  const [localItems, setLocalItems] = useState<InputListItem<T>[]>(() =>
     assignIdsToItems(initialStateItems),
   );
+  const [prevItems, setPrevItems] = useState(items);
 
-  const handleItemChange = (id: string, newContent: T) => {
+  if (items !== prevItems) {
+    setPrevItems(items);
+
+    if (shouldHydrateFromItems(localItems, items)) {
+      setLocalItems(assignIdsToItems(items));
+    }
+  }
+
+  const handleItemChange = (id: string, newContent: T): void => {
     const updatedItems = localItems.map(({ content, id: itemId }) => ({
       content: id === itemId ? newContent : content,
       id: itemId,
@@ -102,14 +121,14 @@ export const InputList = <T,>({
     onChange(extractContent<T>(updatedItems));
   };
 
-  const handleItemDelete = (id: string) => {
+  const handleItemDelete = (id: string): void => {
     const updatedItems = localItems.filter(({ id: itemId }) => id !== itemId);
 
     setLocalItems(updatedItems);
     onChange(extractContent<T>(updatedItems));
   };
 
-  const handleAddItem = () => {
+  const handleAddItem = (): void => {
     const newItem: InputListItem<T> = { content: null as unknown as T, id: generateUniqueId() };
     const updatedItems = [...localItems, newItem];
 

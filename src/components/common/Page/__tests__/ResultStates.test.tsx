@@ -11,5 +11,5 @@ test('NoResultsMatchFilter', () => {
 
   fireEvent.click(screen.getByRole('button'));
 
-  expect(clear).toBeCalledTimes(1);
+  expect(clear).toHaveBeenCalledTimes(1);
 });

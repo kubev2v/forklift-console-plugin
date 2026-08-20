@@ -10,10 +10,10 @@ import {
   StorageMapModelGroupVersionKind,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Flex, FlexItem, PageSection } from '@patternfly/react-core';
 import { CATEGORY_TYPES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 export const StorageMapPageHeadings: FC<{ name: string; namespace?: string }> = ({
   name,

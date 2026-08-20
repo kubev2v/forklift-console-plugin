@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import { ToolbarGroup } from '@patternfly/react-core';
 
 import { FilterFromDef } from './FilterFromDef';
@@ -18,7 +20,7 @@ export const FilterGroup = ({
   resolvedLanguage = 'en',
   selectedFilters,
   supportedFilterTypes,
-}: MetaFilterProps) => (
+}: MetaFilterProps): ReactElement => (
   <ToolbarGroup variant="filter-group">
     {fieldFilters.map(({ filterDef, label, resourceFieldId }) => (
       <FilterFromDef

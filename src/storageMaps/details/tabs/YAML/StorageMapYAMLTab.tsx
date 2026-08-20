@@ -4,7 +4,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import LoadingSuspend from '@components/LoadingSuspend';
 import { ResourceYAMLEditorWrapper } from '@components/ResourceYAMLEditorWrapper/ResourceYAMLEditorWrapper';
 import { StorageMapModelGroupVersionKind, type V1beta1StorageMap } from '@forklift-ui/types';
-import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 type StorageMapYAMLTabProps = {
   name: string;

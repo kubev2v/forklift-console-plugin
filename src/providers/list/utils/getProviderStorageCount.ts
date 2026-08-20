@@ -9,7 +9,7 @@ import type {
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { ProviderData } from '@utils/providers/types';
 
-export const getProviderStorageCount = (provider: ProviderData) => {
+export const getProviderStorageCount = (provider: ProviderData): number | undefined => {
   const { inventory } = provider;
 
   switch (inventory?.type) {

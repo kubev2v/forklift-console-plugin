@@ -1,7 +1,7 @@
 import TextInputEditModal from 'src/components/ModalForm/TextInputEditModal';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 
 import { validateEsxiURL } from '../../utils/validators/provider/vsphere/validateEsxiURL';
 import { validateVCenterURL } from '../../utils/validators/provider/vsphere/validateVCenterURL';
@@ -9,10 +9,10 @@ import { validateVCenterURL } from '../../utils/validators/provider/vsphere/vali
 import { patchProviderURL } from './utils/patchProviderURL';
 import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
-export const VSphereEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
+export const VSphereEditURLModal: OverlayComponent<EditProviderURLModalProps> = ({
+  closeOverlay,
   insecureSkipVerify,
   resource: provider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -20,7 +20,8 @@ export const VSphereEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
   const validationHook =
     sdkEndpoint === 'esxi'
       ? validateEsxiURL
-      : (url: string) => validateVCenterURL(url, insecureSkipVerify);
+      : (url: string): ReturnType<typeof validateVCenterURL> =>
+          validateVCenterURL(url, insecureSkipVerify);
 
   const description = (
     <ForkliftTrans>
@@ -43,7 +44,7 @@ export const VSphereEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
 
   return (
     <TextInputEditModal
-      {...rest}
+      closeOverlay={closeOverlay}
       description={description}
       helperText={t('The URL of the vCenter API endpoint.')}
       initialValue={provider?.spec?.url ?? ''}

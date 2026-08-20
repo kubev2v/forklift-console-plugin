@@ -1,5 +1,9 @@
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
-import { OffloadPlugin } from 'src/storageMaps/utils/types';
+import { createOffloadPluginConfig } from 'src/storageMaps/utils/createOffloadPluginConfig';
+import {
+  getOffloadConfigFields,
+  resolveOffloadPlugin,
+} from 'src/storageMaps/utils/resolveOffloadPlugin';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
 import type {
@@ -9,15 +13,10 @@ import type {
 } from '@forklift-ui/types';
 import { STORAGE_NAMES } from '@utils/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
-import {
-  StorageMapFieldId,
-  type StorageMapping,
-  type StorageMappingValue,
-} from '@utils/storage/types';
+import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 import type { CustomStorageMapSpecMap, OffloadPluginConfig } from '../types';
-
-import { createOffloadPluginConfig } from './createOffloadPluginConfig';
 
 /**
  * Creates a storage mapping with optional offload plugin configuration
@@ -123,7 +122,7 @@ const getSourceStorage = (
   source: V1beta1StorageMapSpecMapSource,
   sourceProvider: V1beta1Provider | undefined,
   sourceStorages: Map<string, InventoryStorage>,
-): StorageMappingValue => {
+): MappingValue => {
   const isOpenShiftProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
   const isEc2Provider = sourceProvider?.spec?.type === PROVIDER_TYPES.ec2;
   const isGlanceStorage = source.name === STORAGE_NAMES.GLANCE;
@@ -164,25 +163,21 @@ export const getStorageMappingValues = (
   return specMappings.map((specMapping) => {
     const { destination, offloadPlugin, source } = specMapping;
 
-    const sourceStorage: StorageMappingValue = getSourceStorage(
-      source,
-      sourceProvider,
-      sourceStorages,
-    );
+    const sourceStorage: MappingValue = getSourceStorage(source, sourceProvider, sourceStorages);
 
-    const targetStorage: StorageMappingValue = {
+    const targetStorage: MappingValue = {
       name: destination.storageClass,
     };
 
+    const offloadFields = getOffloadConfigFields(offloadPlugin);
+
     return {
       [StorageMapFieldId.AccessMode]: destination.accessMode,
-      [StorageMapFieldId.DedicatedMigrationHosts]:
-        offloadPlugin?.vsphereXcopyConfig?.dedicatedMigrationHosts ?? [],
-      [StorageMapFieldId.OffloadPlugin]: offloadPlugin ? OffloadPlugin.VSphereXcopyConfig : '',
+      [StorageMapFieldId.DedicatedMigrationHosts]: offloadFields.dedicatedMigrationHosts,
+      [StorageMapFieldId.OffloadPlugin]: resolveOffloadPlugin(offloadPlugin),
       [StorageMapFieldId.SourceStorage]: sourceStorage,
-      [StorageMapFieldId.StorageProduct]:
-        offloadPlugin?.vsphereXcopyConfig?.storageVendorProduct ?? '',
-      [StorageMapFieldId.StorageSecret]: offloadPlugin?.vsphereXcopyConfig?.secretRef ?? '',
+      [StorageMapFieldId.StorageProduct]: offloadFields.storageProduct,
+      [StorageMapFieldId.StorageSecret]: offloadFields.storageSecret,
       [StorageMapFieldId.TargetStorage]: targetStorage,
     };
   });

@@ -5,7 +5,7 @@ import AffinityModal, { type AffinityModalProps } from '@components/AffinityModa
 import AffinityViewDetailsItemContent from '@components/AffinityViewDetailsItemContent/AffinityViewDetailsItemContent';
 import { DetailsItem } from '@components/DetailItems/DetailItem';
 import type { K8sIoApiCoreV1Affinity, V1beta1Plan } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { useForkliftTranslation } from '@utils/i18n';
 import { DOC_MAIN_HELP_LINK } from '@utils/links';
 
@@ -18,7 +18,7 @@ const ConvertorAffinityDetailsItem: FC<EditableDetailsItemProps> = ({
   shouldRender,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   if (!shouldRender) {
     return null;
@@ -46,7 +46,7 @@ const ConvertorAffinityDetailsItem: FC<EditableDetailsItemProps> = ({
       helpContent={description}
       moreInfoLink={DOC_MAIN_HELP_LINK}
       onEdit={() => {
-        launcher<AffinityModalProps>(AffinityModal, {
+        launchOverlay<AffinityModalProps>(AffinityModal, {
           initialAffinity,
           onConfirm,
           title: t('Edit convertor pod affinity rules'),

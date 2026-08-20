@@ -5,12 +5,12 @@ import {
   type V1beta1Plan,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 const usePlanSourceProvider = (
   plan: V1beta1Plan,
   namespace: string,
-): [V1beta1Provider | undefined, boolean, unknown] => {
+): [V1beta1Provider | undefined, boolean, Error | null] => {
   const planSourceProviderName = plan?.spec?.provider?.source?.name;
 
   const [providers, providersLoaded, providersLoadError] = useK8sWatchResource<V1beta1Provider[]>({

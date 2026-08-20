@@ -1,7 +1,7 @@
 import type { ChangeEvent, FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
   ButtonVariant,
@@ -36,15 +36,15 @@ const CertificateUpload: FC<CertificateUploadProps> = ({
   validated,
   value,
 }) => {
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
   const { t } = useForkliftTranslation();
   const isText = !type || type === 'text';
-  const onClick = () => {
+  const onClick = (): void => {
     const syntheticEvent = {
       target: { value },
     } as ChangeEvent<HTMLTextAreaElement>;
 
-    launcher<FetchCertificateModalProps>(FetchCertificateModal, {
+    launchOverlay<FetchCertificateModalProps>(FetchCertificateModal, {
       existingCert: (value as string) ?? '',
       handleSave: (saved) => {
         onTextChange?.(syntheticEvent, saved);

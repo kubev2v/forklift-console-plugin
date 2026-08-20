@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 export const mockNavigate = jest.fn();
 export const mockCreateProvider = jest.fn();
 export const mockCreateProviderSecret = jest.fn();
@@ -15,13 +17,13 @@ export const clearAllProviderMocks = (): void => {
 export const mockCreateProviderTypeField = (
   optionValue: string,
   optionLabel: string,
-): { __esModule: true; default: () => JSX.Element } => {
+): { __esModule: true; default: () => ReactElement } => {
   const { useController } = jest.requireActual('react-hook-form');
   const { useCreateProviderFormContext } = jest.requireActual(
     '../hooks/useCreateProviderFormContext',
   );
 
-  const ProviderTypeField = () => {
+  const ProviderTypeField = (): ReactElement => {
     const { control } = useCreateProviderFormContext();
     const { field } = useController({ control, name: 'providerType' });
 

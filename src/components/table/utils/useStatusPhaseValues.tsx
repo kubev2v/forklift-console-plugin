@@ -1,11 +1,11 @@
-import { type ReactNode, useMemo } from 'react';
+import { type ReactElement, type ReactNode, useMemo } from 'react';
 
 import { STATUS_ICONS } from '@components/status/statusIcons';
 import { Spinner } from '@patternfly/react-core';
 import { CATEGORY_TYPES } from '@utils/constants';
 import { useForkliftTranslation } from '@utils/i18n';
 
-const progressIcon = () => <Spinner size="sm" />;
+const progressIcon = (): ReactElement => <Spinner size="sm" />;
 
 export const useStatusPhaseValues = (
   phase?: string,

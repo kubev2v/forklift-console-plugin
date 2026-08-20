@@ -5,7 +5,7 @@ import type { V1beta1Migration, V1beta1MigrationStatusVms } from '@forklift-ui/t
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from './timeRangeOptions';
 
 // Helper function to process 'True' vm conditions
-const processVmConditions = (vm: V1beta1MigrationStatusVms) => {
+const processVmConditions = (vm: V1beta1MigrationStatusVms): string[] => {
   if (!('conditions' in vm)) {
     return [];
   }
@@ -23,7 +23,7 @@ const incrementCounts = (
   conditions: string[],
   vm: V1beta1MigrationStatusVms,
   vmCounts: Record<string, number>,
-) => {
+): void => {
   vmCounts.Total += 1;
 
   const isRunning =

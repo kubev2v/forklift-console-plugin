@@ -1,5 +1,5 @@
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { ConversionModelGroupVersionKind } from '@utils/crds/common/models';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import type { V1beta1Conversion } from '../crds/conversion/types';
 

@@ -4,15 +4,15 @@ import {
   type V1beta1Plan,
   type V1beta1PlanSpecVmsHooks,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { hookTypes } from '../utils/constants';
 import { validateHooks } from '../utils/utils';
 
 type UsePlanHooks = (plan: V1beta1Plan) => {
-  error?: Error;
+  error?: Error | null;
   loaded?: boolean;
   postHookResource: V1beta1Hook | undefined;
   preHookResource: V1beta1Hook | undefined;
@@ -31,8 +31,12 @@ export const usePlanHooks: UsePlanHooks = (plan) => {
     namespaced: true,
   });
 
-  const postHookResource = hookRecourses.find((hook) => getName(hook) === postHook?.hook?.name);
-  const preHookResource = hookRecourses.find((hook) => getName(hook) === preHook?.hook?.name);
+  const postHookResource = (hookRecourses ?? []).find(
+    (hook) => getName(hook) === postHook?.hook?.name,
+  );
+  const preHookResource = (hookRecourses ?? []).find(
+    (hook) => getName(hook) === preHook?.hook?.name,
+  );
 
   // Check for unsupported hooks
   const warning = validateHooks(plan);

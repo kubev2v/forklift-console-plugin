@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, type ReactElement, useState } from 'react';
 
 import {
   Button,
@@ -63,7 +63,7 @@ type ManagedColumnsProps = {
   title?: string;
 };
 
-const filterActionsAndHidden = (resourceFields: ResourceField[]) =>
+const filterActionsAndHidden = (resourceFields: ResourceField[]): ResourceField[] =>
   resourceFields.filter((col) => !col.isAction && !col.isHidden && col.resourceFieldId !== null);
 
 /**
@@ -88,14 +88,14 @@ export const ManageColumnsModal = ({
   saveLabel = 'Save',
   showModal,
   title = 'Manage columns',
-}: ManagedColumnsProps) => {
+}: ManagedColumnsProps): ReactElement => {
   const [editedColumns, setEditedColumns] = useState(filterActionsAndHidden(resourceFields));
 
-  const restoreDefaults = () => {
+  const restoreDefaults = (): void => {
     setEditedColumns([...filterActionsAndHidden(defaultColumns)]);
   };
 
-  const onDrop = (_event: unknown, newItems: DraggableObject[]) => {
+  const onDrop = (_event: unknown, newItems: DraggableObject[]): void => {
     const columnsMap = new Map(editedColumns.map((col) => [col.resourceFieldId, col]));
     const updatedColumns = newItems.flatMap((item) => {
       const col = columnsMap.get(String(item.id));
@@ -114,7 +114,7 @@ export const ManageColumnsModal = ({
     );
   };
 
-  const onSave = () => {
+  const onSave = (): void => {
     // assume that action resourceFields are always at the end
     onChange([
       ...editedColumns,

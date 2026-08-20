@@ -19,7 +19,7 @@ import VMStatusIconsRow from 'src/plans/details/components/PlanStatus/VMStatusIc
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, Flex, FlexItem, Spinner, Split } from '@patternfly/react-core';
 import { PlayIcon as StartIcon, RedoIcon } from '@patternfly/react-icons';
 import {
@@ -36,7 +36,7 @@ import './PlanStatus.style.scss';
 
 const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
   const pipelinesProgressPercentage = usePipelineTaskProgress(plan);
   const planStatus = getPlanStatus(plan);
   const [activeMigration, loaded] = usePlanMigration(plan);
@@ -52,7 +52,7 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
           isDisabled={hasActiveMigration}
           isInline
           onClick={() => {
-            launcher<PlanStartMigrationModalProps>(PlanStartMigrationModal, {
+            launchOverlay<PlanStartMigrationModalProps>(PlanStartMigrationModal, {
               plan,
               title: t('Start'),
             });
@@ -104,7 +104,7 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
             icon={<RedoIcon />}
             isInline
             onClick={() => {
-              launcher<PlanResumeConversionModalProps>(PlanResumeConversionModal, { plan });
+              launchOverlay<PlanResumeConversionModalProps>(PlanResumeConversionModal, { plan });
             }}
             variant={ButtonVariant.link}
           >

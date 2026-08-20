@@ -39,12 +39,12 @@ export const getDetailsSectionByType = (
   }
 };
 
-const getConditions = (provider: V1beta1Provider) =>
+const getConditions = (provider: V1beta1Provider): string[] =>
   (provider?.status?.conditions ?? [])
     ?.filter((condition) => condition.status === CONDITION_STATUS.TRUE)
     .map((condition) => condition.type);
 
-export const isApplianceManagementEnabled = (provider: V1beta1Provider) => {
+export const isApplianceManagementEnabled = (provider: V1beta1Provider): boolean => {
   const conditions = getConditions(provider);
 
   return conditions?.includes(ProviderStatus.ApplianceManagementEnabled);

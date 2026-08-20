@@ -35,7 +35,7 @@ export const PageHeadings: FC<PageHeadingsProps> = ({
   status,
   testId,
 }) => {
-  const dataStatus = status ?? data?.status?.phase;
+  const dataStatus = status ?? (data?.status as { phase?: string } | undefined)?.phase;
   const groupVersionKind = data?.kind && getGroupVersionKindForResource(data);
 
   return (

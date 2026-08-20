@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { GuestType, ScriptType } from 'src/plans/create/steps/customization-scripts/constants';
 import type { CustomScript } from 'src/plans/create/steps/customization-scripts/types';
 
@@ -16,7 +17,9 @@ jest.mock('src/plans/details/components/PlanStatus/utils/utils', () => ({
 const mockLaunchOverlay = jest.fn();
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   getGroupVersionKindForModel: jest.fn(() => ({ group: '', kind: 'ConfigMap', version: 'v1' })),
-  ResourceLink: ({ name }: { name: string }) => <span data-testid="resource-link">{name}</span>,
+  ResourceLink: ({ name }: { name: string }): ReactElement => (
+    <span data-testid="resource-link">{name}</span>
+  ),
   useOverlay: jest.fn(() => mockLaunchOverlay),
 }));
 

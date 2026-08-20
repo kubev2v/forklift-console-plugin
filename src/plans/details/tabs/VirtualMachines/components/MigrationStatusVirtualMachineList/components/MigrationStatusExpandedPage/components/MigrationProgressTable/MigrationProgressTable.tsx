@@ -7,7 +7,7 @@ import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp'
 import { useDrawer } from '@components/DrawerContext/useDrawer';
 import HelpText from '@components/HelpText';
 import type { V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Alert,
   AlertVariant,
@@ -55,7 +55,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { openDrawer } = useDrawer();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
   const navigate = useNavigate();
   const pipeline = statusVM?.pipeline ?? [];
   const inPostMigrationSetup = isVmInPostMigrationSetup(statusVM);
@@ -159,7 +159,7 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
                       <Button
                         className="forklift-progress-table__schedule-cutover"
                         onClick={() => {
-                          launcher<PlanModalProps>(PlanCutoverMigrationModal, { plan });
+                          launchOverlay<PlanModalProps>(PlanCutoverMigrationModal, { plan });
                         }}
                         variant={ButtonVariant.link}
                       >

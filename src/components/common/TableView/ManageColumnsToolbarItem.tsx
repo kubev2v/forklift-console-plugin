@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import {
   Button,
@@ -32,7 +32,7 @@ export const ManageColumnsToolbarItem = ({
   children,
   showDialog,
   tooltip,
-}: ManageColumnsToolbarItemProps) => {
+}: ManageColumnsToolbarItemProps): ReactElement => {
   const { t } = useForkliftTranslation();
   const manageColumnsText = t('Manage columns');
   return (

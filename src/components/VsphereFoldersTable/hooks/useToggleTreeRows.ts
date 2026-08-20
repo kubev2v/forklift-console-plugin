@@ -1,6 +1,14 @@
 import { type Dispatch, type SetStateAction, useCallback, useState } from 'react';
 
-const useToggleTreeRows = () => {
+type UseToggleTreeRowsReturn = {
+  expandedFolders: Set<string>;
+  expandedVMs: Set<string>;
+  setExpandedFolders: Dispatch<SetStateAction<Set<string>>>;
+  setExpandedVMs: Dispatch<SetStateAction<Set<string>>>;
+  toggleSet: <T extends string>(setFn: Dispatch<SetStateAction<Set<T>>>, id: T) => void;
+};
+
+const useToggleTreeRows = (): UseToggleTreeRowsReturn => {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
   const [expandedVMs, setExpandedVMs] = useState<Set<string>>(new Set());
 

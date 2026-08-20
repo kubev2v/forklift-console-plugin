@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 /**
  * Type for the return value of the useK8sWatchProviderNames hook.

@@ -65,12 +65,12 @@ const CreateStorageMapForm: React.FC = () => {
     reference: StorageMapModelRef,
   });
 
-  const onSubmit = async () => {
+  const onSubmit = async (): Promise<void> => {
     setCreateError(undefined);
 
     const { mapName, sourceProvider, storageMap } = getValues();
 
-    const trackStorageMapEvent = (eventType: string, properties = {}) => {
+    const trackStorageMapEvent = (eventType: string, properties = {}): void => {
       trackEvent(eventType, { ...properties, creationMethod: CreationMethod.Form });
     };
 

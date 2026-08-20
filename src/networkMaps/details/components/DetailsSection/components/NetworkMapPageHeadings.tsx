@@ -10,9 +10,9 @@ import {
   NetworkMapModelGroupVersionKind,
   type V1beta1NetworkMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Flex, FlexItem, PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 export const NetworkMapPageHeadings: FC<{ name: string; namespace?: string }> = ({
   name,

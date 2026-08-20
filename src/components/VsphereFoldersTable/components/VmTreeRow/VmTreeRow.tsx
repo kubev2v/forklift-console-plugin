@@ -57,7 +57,11 @@ const VmTreeRow: FC<VmTreeRowProps> = ({ columns, conversions, row }) => {
   const inspectionStatus = getInspectionStatus(row.vmData.vm?.id ?? '');
 
   return (
-    <TreeRowWrapper data-testid={row.key} key={row.key} row={{ props: row?.treeRow?.props }}>
+    <TreeRowWrapper
+      data-testid={row.key}
+      key={row.key}
+      row={{ props: row.treeRow?.props as object | undefined }}
+    >
       <Td data-testid={`${row.key}-name-cell`} dataLabel={nameColumn.label} treeRow={row.treeRow}>
         {row.vmData.name}
       </Td>

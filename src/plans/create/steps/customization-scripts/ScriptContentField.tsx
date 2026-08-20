@@ -29,7 +29,7 @@ const ScriptContentField: FC<ScriptContentFieldProps> = ({ guestType, onChange, 
     }
 
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = (ev): void => {
       const content = ev.target?.result;
 
       if (typeof content === 'string') {

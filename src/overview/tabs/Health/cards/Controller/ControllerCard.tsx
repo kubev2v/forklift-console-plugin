@@ -5,8 +5,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import type { IoK8sApiCoreV1Pod, V1beta1ForkliftController } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { PodsTable } from './PodsTable';
 

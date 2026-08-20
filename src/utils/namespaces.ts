@@ -15,7 +15,7 @@ export const getDefaultNamespace = (): string => {
   return Namespace.OpenshiftMtv;
 };
 
-export const isSystemNamespace = (option: string) => {
+export const isSystemNamespace = (option: string): boolean => {
   const startsWithNamespace = SYSTEM_NAMESPACES_PREFIX.some((ns) => option.startsWith(ns));
   const isNamespace = SYSTEM_NAMESPACES.includes(option);
 

@@ -12,7 +12,7 @@ import {
   validateNetworkMap,
 } from '../utils';
 
-const makeHypervVm = (name: string, nics: { networkId: string; vlanId?: number }[]) =>
+const makeHypervVm = (name: string, nics: { networkId: string; vlanId?: number }[]): never =>
   ({
     name,
     providerType: PROVIDER_TYPES.hyperv,

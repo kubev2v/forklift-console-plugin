@@ -26,13 +26,16 @@ const AffinityConditionSelect: FC<AffinityConditionSelectProps> = ({
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleChange = (event: ReactMouseEvent | undefined, value: string | number | undefined) => {
+  const handleChange = (
+    event: ReactMouseEvent | undefined,
+    value: string | number | undefined,
+  ): void => {
     event?.preventDefault();
     setFocusedAffinity({ ...focusedAffinity, condition: value as AffinityCondition });
     setIsOpen(false);
   };
 
-  const onToggle = () => {
+  const onToggle = (): void => {
     setIsOpen((prevIsOpen) => !prevIsOpen);
   };
 

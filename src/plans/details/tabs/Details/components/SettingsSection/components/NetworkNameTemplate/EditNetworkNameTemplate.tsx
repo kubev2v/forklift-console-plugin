@@ -1,5 +1,5 @@
 import type { V1beta1Plan } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import NameTemplateBody from '../EditNameTemplate/components/NameTemplateBody';
@@ -21,12 +21,12 @@ export type EditNetworkNameTemplateProps = {
   value?: string;
 };
 
-const EditNetworkNameTemplate: ModalComponent<EditNetworkNameTemplateProps> = ({
+const EditNetworkNameTemplate: OverlayComponent<EditNetworkNameTemplateProps> = ({
   allowInherit = true,
+  closeOverlay,
   onConfirmNetworkNameTemplate,
   resource,
   value,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -41,13 +41,13 @@ const EditNetworkNameTemplate: ModalComponent<EditNetworkNameTemplateProps> = ({
           )}
         />
       }
+      closeOverlay={closeOverlay}
       fieldName={allowInherit ? t('VM network name template') : t('Plan network name template')}
       helperText={<NameTemplateHelper examples={networkNameTemplateHelperExamples} />}
       inheritValue={resource?.spec?.networkNameTemplate}
       onConfirm={async (newValue) => onConfirmNetworkNameTemplate({ newValue, resource })}
       title={t('Edit network name template')}
       value={value}
-      {...rest}
     />
   );
 };

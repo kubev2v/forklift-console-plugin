@@ -116,7 +116,7 @@ const useProviderInventory = <T>({
   useEffect(() => {
     let active = true;
 
-    const fetchData = async () => {
+    const fetchData = async (): Promise<void> => {
       if (disabled) {
         return;
       }
@@ -165,12 +165,12 @@ const useProviderInventory = <T>({
       }
     };
 
-    (async () => {
+    (async (): Promise<void> => {
       await fetchData();
     })();
 
     const intervalId = setInterval(fetchData, interval);
-    return () => {
+    return (): void => {
       active = false;
       clearInterval(intervalId);
     };

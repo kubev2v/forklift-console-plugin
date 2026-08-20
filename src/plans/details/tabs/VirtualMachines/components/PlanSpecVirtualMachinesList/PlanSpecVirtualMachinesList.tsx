@@ -29,7 +29,7 @@ type PlanVirtualMachinesListProps = {
 
 const selectedIds: string[] = [];
 const expandedIds: string[] = [];
-const onSelect = () => undefined;
+const onSelect = (): void => undefined;
 
 const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan }) => {
   const { t } = useForkliftTranslation();

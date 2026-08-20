@@ -35,7 +35,7 @@ export const createMockTopic = (id: string): LearningExperienceTopic => ({
 export const setupMocks = (
   persistedState: PersistedState = {},
   topicToReturn: LearningExperienceTopic | null = null,
-) => {
+): void => {
   mockParseOrClean.mockReturnValue(persistedState);
   mockFindTopicById.mockReturnValue(topicToReturn);
 };

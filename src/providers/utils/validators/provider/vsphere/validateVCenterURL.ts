@@ -4,7 +4,7 @@ import { validateIpv4, validateURL } from 'src/utils/validation/common';
 import { MTVConsole } from '@utils/console';
 import { type ValidationMsg, ValidationState } from '@utils/validation/Validation';
 
-const getUrlObject = (url: string) => {
+const getUrlObject = (url: string): URL | undefined => {
   try {
     return new URL(url);
   } catch {

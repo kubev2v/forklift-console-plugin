@@ -5,10 +5,14 @@ import { sendAnalyticsEvent } from '../sendAnalyticsEvent';
 
 import { useAnalyticsConfig } from './useAnalyticsConfig';
 
+type UseForkliftAnalyticsResult = {
+  trackEvent: (eventType: string, properties?: Record<string, unknown>) => void;
+};
+
 /**
  * React hook for forklift telemetry with ConfigMap configuration
  */
-export const useForkliftAnalytics = () => {
+export const useForkliftAnalytics = (): UseForkliftAnalyticsResult => {
   const { clusterId, segmentKey } = useAnalyticsConfig();
   const initializationAttempted = useRef(false);
   const isTelemetryDisabled = window.SERVER_FLAGS?.telemetry?.TELEMETRY_DISABLED === 'true';
@@ -25,7 +29,7 @@ export const useForkliftAnalytics = () => {
     }
   }, [segmentKey, isTelemetryDisabled]);
 
-  const trackEvent = (eventType: string, properties: Record<string, unknown> = {}) => {
+  const trackEvent = (eventType: string, properties: Record<string, unknown> = {}): void => {
     if (!segmentKey || !clusterId || isTelemetryDisabled || !window.analytics?.track) {
       return;
     }

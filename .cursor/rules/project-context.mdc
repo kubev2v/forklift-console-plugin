@@ -63,7 +63,7 @@ Maps source networks to target networks. Referenced by Plans.
 ### StorageMap
 Maps source storage to target storage. Referenced by Plans.
 
-- Supports offload plugins (e.g., vSphere XCOPY)
+- Supports offload plugins: `vsphereXcopyConfig` (vSphere XCOPY) and `csiVolumeImport` (CSI Volume Import; MTV-5483). Form ↔ CR transforms must round-trip the selected plugin key — never hardcode XCOPY.
 - Integrates with storage vendors (IBM FlashSystem, NetApp ONTAP, Dell PowerFlex/PowerMax/PowerStore, HPE Primera/3PAR, Pure Storage, Hitachi, Infinidat)
 
 ### Conversion
@@ -122,7 +122,7 @@ src/
 ## Key Patterns
 
 - GVK constants: `ProviderModelGroupVersionKind`, `PlanModelGroupVersionKind`, etc.
-- Use `useK8sWatchResource` from Console SDK for resource watching
+- Use `useK8sWatchResource` from `@utils/hooks/useK8sWatchResource` for resource watching
 - Use `k8sCreate`, `k8sUpdate`, `k8sPatch`, `k8sDelete` for operations
 - Jira project: **MTV** (tickets are MTV-XXXX)
 

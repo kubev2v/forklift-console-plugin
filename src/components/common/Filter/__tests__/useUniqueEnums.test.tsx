@@ -26,7 +26,7 @@ describe('aggregate filters with the same labels', () => {
     expect(uniqueEnumLabels).toStrictEqual(['FalseTranslated', 'TrueTranslated']);
     expect(selectedUniqueEnumLabels).toStrictEqual([]);
     onUniqueFilterUpdate(['TrueTranslated']);
-    expect(onSelectedEnumIdsChange).toBeCalledWith(['True', 'AlsoTrue']);
+    expect(onSelectedEnumIdsChange).toHaveBeenCalledWith(['True', 'AlsoTrue']);
   });
 
   it('selects a standard filter(one filter already selected)', () => {
@@ -46,6 +46,6 @@ describe('aggregate filters with the same labels', () => {
     expect(uniqueEnumLabels).toStrictEqual(['FalseTranslated', 'TrueTranslated']);
     expect(selectedUniqueEnumLabels).toStrictEqual(['TrueTranslated']);
     onUniqueFilterUpdate(['TrueTranslated', 'FalseTranslated']);
-    expect(onSelectedEnumIdsChange).toBeCalledWith(['True', 'AlsoTrue', 'False']);
+    expect(onSelectedEnumIdsChange).toHaveBeenCalledWith(['True', 'AlsoTrue', 'False']);
   });
 });

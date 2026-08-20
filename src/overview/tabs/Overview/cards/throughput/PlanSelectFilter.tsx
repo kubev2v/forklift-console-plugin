@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent, type Ref, useMemo, useState } from 'react';
+import { type FC, type MouseEvent, type ReactElement, type Ref, useMemo, useState } from 'react';
 
 import {
   Badge,
@@ -68,7 +68,7 @@ const PlanSelectFilter: FC<PlanSelectFilterProps> = ({
     }
   };
 
-  const toggle = (toggleRef: Ref<MenuToggleElement>): JSX.Element => (
+  const toggle = (toggleRef: Ref<MenuToggleElement>): ReactElement => (
     <MenuToggle
       badge={
         disabled ? undefined : (

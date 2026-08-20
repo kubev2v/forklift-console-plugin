@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import { Th } from '@patternfly/react-table';
 
 import { buildSort } from './sort';
@@ -13,7 +15,7 @@ export const DefaultHeader = <T,>({
   activeSort,
   setActiveSort,
   visibleColumns,
-}: TableViewHeaderProps<T>) => {
+}: TableViewHeaderProps<T>): ReactElement => {
   return (
     <>
       {visibleColumns.map(

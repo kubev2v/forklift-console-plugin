@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import { NameCellRenderer } from 'src/providers/details/tabs/Hosts/components/NameCellRenderer';
 
 import type { ResourceField } from '@components/common/utils/types';
@@ -30,7 +30,11 @@ const cellRenderers: Record<string, FC<HostCellProps>> = {
  * If the cell is an inventory cell (NETWORK_COUNT, STORAGE_COUNT, VM_COUNT, or HOST_COUNT)
  * and there's no inventory data, it won't render the cell.
  */
-export const RenderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
+export const RenderTd = ({
+  resourceData,
+  resourceFieldId,
+  resourceFields,
+}: RenderTdProps): ReactElement => {
   if (!resourceFieldId) {
     return <Td></Td>;
   }

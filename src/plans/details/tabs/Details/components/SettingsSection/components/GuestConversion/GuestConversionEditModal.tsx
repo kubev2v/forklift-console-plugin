@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import {
   Alert,
   AlertVariant,
@@ -21,7 +21,7 @@ import type { EditPlanProps } from '../../utils/types';
 import { patchGuestConversion } from './utils/patchGuestConversion';
 import { getSkipGuestConversion, getUseCompatibilityMode } from './utils/utils';
 
-const GuestConversionEditModal: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
+const GuestConversionEditModal: OverlayComponent<EditPlanProps> = ({ closeOverlay, resource }) => {
   const { t } = useForkliftTranslation();
   const [skipGuestConversion, setSkipGuestConversion] = useState<boolean>(
     Boolean(getSkipGuestConversion(resource)),
@@ -32,6 +32,7 @@ const GuestConversionEditModal: ModalComponent<EditPlanProps> = ({ resource, ...
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       onConfirm={async () =>
         patchGuestConversion({
           newValue: skipGuestConversion,
@@ -41,7 +42,6 @@ const GuestConversionEditModal: ModalComponent<EditPlanProps> = ({ resource, ...
       }
       testId="guest-conversion-mode-modal"
       title={t('Guest conversion mode')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

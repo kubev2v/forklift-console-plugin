@@ -3,7 +3,17 @@ import { MODEL_KIND } from '@utils/constants';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { t } from '@utils/i18n';
 
-const getBreadcrumbLabels = (kind: string, model: K8sModel) => {
+type BreadcrumbLabels = {
+  detailsPage: string;
+  listPage: string;
+};
+
+type ModelBreadcrumb = {
+  name: string;
+  path?: string;
+};
+
+const getBreadcrumbLabels = (kind: string, model: K8sModel): BreadcrumbLabels => {
   switch (kind) {
     case MODEL_KIND.NETWORK_MAP:
       return {
@@ -33,7 +43,7 @@ const getBreadcrumbLabels = (kind: string, model: K8sModel) => {
   }
 };
 
-export const breadcrumbsForModel = (model: K8sModel, namespace: string) => {
+export const breadcrumbsForModel = (model: K8sModel, namespace: string): ModelBreadcrumb[] => {
   const groupVersionKind: K8sGroupVersionKind = {
     group: model.apiGroup,
     kind: model.kind,

@@ -83,9 +83,9 @@ export const buildSecretData = (
         const formFieldKey = secretKeyToFormFieldId[secretKey];
         if (formFieldKey) {
           const formFieldId = ProviderFormFieldId[formFieldKey];
-          const value = formData[formFieldId as keyof typeof formData];
-          if (value) {
-            data[secretKey] = encode(value as string);
+          const value = (formData as Record<string, unknown>)[formFieldId];
+          if (typeof value === 'string' && value) {
+            data[secretKey] = encode(value);
           }
         }
       }

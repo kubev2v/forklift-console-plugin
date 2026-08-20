@@ -61,7 +61,7 @@ const TargetProjectSelect: FC<TargetProjectSelectProps> = ({
       onChange={field.onChange}
       onNewValue={
         isLocalOpenshift
-          ? (newProjectName) => {
+          ? (newProjectName): void => {
               field.onChange(newProjectName);
             }
           : undefined

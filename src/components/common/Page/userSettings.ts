@@ -44,7 +44,7 @@ const toField = ({
 }: {
   isVisible?: boolean;
   resourceFieldId: string;
-}) => ({ isVisible, resourceFieldId });
+}): { isVisible?: boolean; resourceFieldId: string } => ({ isVisible, resourceFieldId });
 
 const sanitizeFields = (fields: unknown): { isVisible?: boolean; resourceFieldId: string }[] =>
   Array.isArray(fields)
@@ -71,12 +71,12 @@ export const loadUserSettings = ({ pageId }: { pageId: string }): UserSettings =
 
   return {
     fields: {
-      clear: () => {
+      clear: (): void => {
         const { fields: _keyFields, ...rest } = parseOrClean(key);
         saveRestOrRemoveKey(key, rest);
       },
       data: sanitizeFields(fields),
-      save: (newFields) => {
+      save: (newFields): void => {
         saveToLocalStorage(
           key,
           JSON.stringify({ ...parseOrClean(key), fields: newFields.map(toField) }),
@@ -84,22 +84,22 @@ export const loadUserSettings = ({ pageId }: { pageId: string }): UserSettings =
       },
     },
     filters: {
-      clear: () => {
+      clear: (): void => {
         const { filters: _keyFilters, ...rest } = parseOrClean(key);
         saveRestOrRemoveKey(key, rest);
       },
       data: filters ?? {},
-      save: (newFilters) => {
+      save: (newFilters): void => {
         saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), filters: newFilters }));
       },
     },
     pagination: {
-      clear: () => {
+      clear: (): void => {
         const { perPage: _keyPerPage, ...rest } = parseOrClean(key);
         saveRestOrRemoveKey(key, rest);
       },
       perPage: typeof perPage === 'number' ? perPage : DEFAULT_PER_PAGE,
-      save: (newPerPage) => {
+      save: (newPerPage): void => {
         saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), perPage: newPerPage }));
       },
     },

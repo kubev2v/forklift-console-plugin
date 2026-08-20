@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { type ComponentProps, useMemo } from 'react';
+import { type ComponentProps, type ReactElement, useMemo } from 'react';
 
 import { useFields } from '@components/common/Page/useFields';
 import { DefaultHeader } from '@components/common/TableView/DefaultHeader';
@@ -59,7 +59,7 @@ const StandardPageInner = <T,>({
   titleHelpContent,
   toId,
   userSettings,
-}: StandardPageInnerProps<T>) => {
+}: StandardPageInnerProps<T>): ReactElement => {
   const { clearAllFilters, metaMatcher, selectedFilters, setSelectedFilters, supportedFilters } =
     usePageFilters({
       extraSupportedFilters,

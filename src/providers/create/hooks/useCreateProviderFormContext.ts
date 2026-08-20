@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, type UseFormReturn } from 'react-hook-form';
 
 import type { CreateProviderFormData } from '../types';
 
@@ -6,4 +6,5 @@ import type { CreateProviderFormData } from '../types';
  * Custom wrapper around react-hook-form's useFormContext hook
  * Provides typed access to form context for the provider creation form
  */
-export const useCreateProviderFormContext = () => useFormContext<CreateProviderFormData>();
+export const useCreateProviderFormContext = (): UseFormReturn<CreateProviderFormData> =>
+  useFormContext<CreateProviderFormData>();

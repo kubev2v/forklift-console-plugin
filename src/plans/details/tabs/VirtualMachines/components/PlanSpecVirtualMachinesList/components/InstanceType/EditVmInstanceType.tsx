@@ -21,7 +21,6 @@ const EditVmInstanceType: OverlayComponent<EditVmInstanceTypeProps> = ({
   closeOverlay,
   index,
   resource,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const vm = getPlanVirtualMachines(resource)[index];
@@ -36,13 +35,12 @@ const EditVmInstanceType: OverlayComponent<EditVmInstanceTypeProps> = ({
 
   return (
     <ModalForm
-      closeModal={closeOverlay}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Save instance type')}
       isDisabled={value === vm?.instanceType}
       onConfirm={async () => onConfirmVmInstanceType(index)({ newValue: value, resource })}
       testId="edit-instance-type-modal"
       title={t('Edit instance type')}
-      {...rest}
     >
       <Stack hasGutter>
         {t(

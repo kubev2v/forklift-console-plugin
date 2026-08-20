@@ -1,4 +1,10 @@
-import { type ComponentProps, type ForwardedRef, forwardRef, useMemo } from 'react';
+import {
+  type ComponentProps,
+  type ForwardedRef,
+  forwardRef,
+  type ReactElement,
+  useMemo,
+} from 'react';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import Select from '@components/common/Select';
@@ -7,7 +13,6 @@ import {
   NetworkMapModelRef,
   type V1beta1NetworkMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   EmptyState,
   EmptyStateBody,
@@ -19,6 +24,7 @@ import {
 import { getName } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type NetworkMapSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'status'> & {
@@ -40,7 +46,7 @@ const NetworkMapSelect = (
     value,
   }: NetworkMapSelectProps,
   ref: ForwardedRef<HTMLButtonElement>,
-) => {
+): ReactElement => {
   const { t } = useForkliftTranslation();
   const [allNetworkMaps] = useK8sWatchResource<V1beta1NetworkMap[]>({
     groupVersionKind: NetworkMapModelGroupVersionKind,

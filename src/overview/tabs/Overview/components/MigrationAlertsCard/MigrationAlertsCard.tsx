@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react';
+import { type FC, type ReactElement, useMemo } from 'react';
 import { Link } from 'react-router';
 
 import { STATUS_ICONS } from '@components/status/statusIcons';
@@ -41,7 +41,7 @@ const MigrationAlertsCard: FC = () => {
     [alerts],
   );
 
-  const renderAlertList = (): JSX.Element => {
+  const renderAlertList = (): ReactElement => {
     if (!loaded) {
       return (
         <Bullseye>

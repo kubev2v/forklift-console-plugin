@@ -4,8 +4,8 @@ const isEqual = (obj1: unknown, obj2: unknown, fieldsToAvoidComparing: string[])
     return obj1 === obj2;
   }
 
-  const isFieldToCompare = (key: string) => !fieldsToAvoidComparing.includes(key);
-  const isFieldChanged = (key: string, keys2: string[], avoidedFields: string[]) =>
+  const isFieldToCompare = (key: string): boolean => !fieldsToAvoidComparing.includes(key);
+  const isFieldChanged = (key: string, keys2: string[], avoidedFields: string[]): boolean =>
     !keys2.includes(key) ||
     !isEqual(
       (obj1 as Record<string, unknown>)[key],

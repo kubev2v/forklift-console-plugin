@@ -45,30 +45,31 @@ const useSelectedTreeRows: UseSelectedTreeRows = (controls) => {
   );
 
   const onCheckChange = useCallback(
-    (keys: string | string[]) => (_event: FormEvent<HTMLInputElement>, isChecked: boolean) => {
-      setSelectedVmKeys((prev) => {
-        const next = new Set(prev);
-        if (Array.isArray(keys)) {
-          if (isChecked) {
-            for (const id of keys) next.add(id);
-          } else {
-            for (const id of keys) next.delete(id);
+    (keys: string | string[]) =>
+      (_event: FormEvent<HTMLInputElement>, isChecked: boolean): void => {
+        setSelectedVmKeys((prev) => {
+          const next = new Set(prev);
+          if (Array.isArray(keys)) {
+            if (isChecked) {
+              for (const id of keys) next.add(id);
+            } else {
+              for (const id of keys) next.delete(id);
+            }
+
+            return Array.from(next);
+          }
+
+          if (typeof keys === 'string') {
+            if (isChecked) {
+              next.add(keys);
+            } else {
+              next.delete(keys);
+            }
           }
 
           return Array.from(next);
-        }
-
-        if (typeof keys === 'string') {
-          if (isChecked) {
-            next.add(keys);
-          } else {
-            next.delete(keys);
-          }
-        }
-
-        return Array.from(next);
-      });
-    },
+        });
+      },
     [setSelectedVmKeys],
   );
 

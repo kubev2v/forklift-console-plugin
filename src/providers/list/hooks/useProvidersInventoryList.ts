@@ -39,11 +39,13 @@ const useProvidersInventoryList = (
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (): Promise<void> => {
       try {
-        const newInventory: ProvidersInventoryList = canList
-          ? await consoleFetchJSON(getInventoryApiUrl(`providers?detail=1`))
-          : await getProvidersInventoryByNamespace(namespace);
+        const newInventory = (
+          canList
+            ? await consoleFetchJSON(getInventoryApiUrl(`providers?detail=1`))
+            : await getProvidersInventoryByNamespace(namespace)
+        ) as ProvidersInventoryList;
 
         if (inventoryHasChanged(newInventory, oldDataRef, DEFAULT_FIELDS_TO_AVOID_COMPARING)) {
           updateInventory(newInventory, setInventory, oldDataRef);
@@ -59,7 +61,7 @@ const useProvidersInventoryList = (
     });
 
     const intervalId = setInterval(fetchData, interval);
-    return () => {
+    return (): void => {
       clearInterval(intervalId);
     };
   }, [canList, interval, namespace]);

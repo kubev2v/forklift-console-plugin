@@ -10,7 +10,7 @@ export const addOwnerRefs = async (
   model: K8sModel,
   resource: K8sResourceCommon,
   newOwnerReferences: ObjectRef[],
-) => {
+): ReturnType<typeof k8sPatch> => {
   const existingOwnerReferences = resource.metadata?.ownerReferences;
   const ownerReferences =
     existingOwnerReferences && !isEmpty(existingOwnerReferences)

@@ -6,7 +6,7 @@ import EditProviderDefaultTransferNetwork, {
 import { DEFAULT_TRANSFER_NETWORK_ANNOTATION } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
 import { DEFAULT_NETWORK } from '@utils/constants';
 
@@ -19,7 +19,7 @@ export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
   resource: provider,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   // TODO: Update URL when AEM documentation migration to new platform is complete
   const defaultMoreInfoLink = ''; // was: 'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.10/html-single/planning_your_migration_to_red_hat_openshift_virtualization/index#selecting-migration-network-for-virt-provider_dest_cnv'
@@ -44,7 +44,7 @@ export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
       helpContent={helpContent ?? defaultHelpContent}
       moreInfoLink={moreInfoLink ?? defaultMoreInfoLink}
       onEdit={() => {
-        launcher<EditProviderDefaultTransferNetworkProps>(EditProviderDefaultTransferNetwork, {
+        launchOverlay<EditProviderDefaultTransferNetworkProps>(EditProviderDefaultTransferNetwork, {
           resource: provider,
         });
       }}

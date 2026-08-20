@@ -5,7 +5,11 @@ import {
   defaultSupportedFilters,
   defaultValueMatchers,
 } from '@components/common/FilterGroup/matchers';
-import type { FilterRenderer, ValueMatcher } from '@components/common/FilterGroup/types';
+import type {
+  FilterRenderer,
+  GlobalFilters,
+  ValueMatcher,
+} from '@components/common/FilterGroup/types';
 import { useUrlFilters } from '@components/common/FilterGroup/useUrlFilters';
 import type { UserSettings } from '@components/common/Page/types';
 import type { ResourceField } from '@components/common/utils/types';
@@ -28,12 +32,22 @@ type UsePageFiltersProps = {
  * @param extraSupportedMatchers - Custom matching logic for filtering.
  *   Example: `[{ filterType: 'dateRange', matchValue: (value, filterValues) => ... }]`
  */
+type UsePageFiltersResult = {
+  clearAllFilters: () => void;
+  excludeFromClearFiltersIds: string[];
+  metaMatcher: ReturnType<typeof createMetaMatcher>;
+  selectedFilters: GlobalFilters;
+  setSelectedFilters: (filters: GlobalFilters) => void;
+  supportedFilters: Record<string, FilterRenderer>;
+  supportedMatchers: ValueMatcher<string>[];
+};
+
 export const usePageFilters = ({
   extraSupportedFilters,
   extraSupportedMatchers,
   fieldsMetadata,
   userSettings,
-}: UsePageFiltersProps) => {
+}: UsePageFiltersProps): UsePageFiltersResult => {
   const [selectedFilters, setSelectedFilters] = useUrlFilters({
     fields: fieldsMetadata,
     userSettings,

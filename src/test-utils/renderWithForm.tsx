@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { render, type RenderOptions } from '@testing-library/react';
@@ -10,8 +10,8 @@ type RenderWithFormOptions = {
 export const renderWithForm = (
   ui: ReactElement,
   { defaultValues = {}, ...renderOptions }: RenderWithFormOptions = {},
-) => {
-  const Wrapper = ({ children }: { children: React.ReactNode }) => {
+): ReturnType<typeof render> => {
+  const Wrapper = ({ children }: { children: ReactNode }): ReactElement => {
     const methods = useForm({ defaultValues });
     return <FormProvider {...methods}>{children}</FormProvider>;
   };

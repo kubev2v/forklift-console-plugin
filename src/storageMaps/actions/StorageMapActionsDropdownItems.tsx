@@ -1,10 +1,11 @@
+import type { ReactElement } from 'react';
 import { useNavigate } from 'react-router';
 import { DeleteModal, type DeleteModalProps } from 'src/components/modals/DeleteModal/DeleteModal';
 import { useOwnerPlanActionGate } from 'src/plans/hooks/useOwnerPlanActionGate';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { StorageMapModel, StorageMapModelRef } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem } from '@patternfly/react-core';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import type { StorageMapData } from '@utils/storage/types';
@@ -17,9 +18,9 @@ type StorageMapActionsDropdownItemsProps = {
 export const StorageMapActionsDropdownItems = ({
   data,
   isDetailsPage,
-}: StorageMapActionsDropdownItemsProps) => {
+}: StorageMapActionsDropdownItemsProps): ReactElement[] => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
   const navigate = useNavigate();
 
   const { obj: storageMap } = data;
@@ -31,11 +32,11 @@ export const StorageMapActionsDropdownItems = ({
     reference: StorageMapModelRef,
   });
 
-  const onDelete = () => {
+  const onDelete = (): void => {
     if (!storageMap) {
       return;
     }
-    launcher<DeleteModalProps>(DeleteModal, { model: StorageMapModel, resource: storageMap });
+    launchOverlay<DeleteModalProps>(DeleteModal, { model: StorageMapModel, resource: storageMap });
   };
 
   return [

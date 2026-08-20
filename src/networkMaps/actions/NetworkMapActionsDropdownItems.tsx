@@ -1,10 +1,11 @@
+import type { ReactElement } from 'react';
 import { useNavigate } from 'react-router';
 import { DeleteModal, type DeleteModalProps } from 'src/components/modals/DeleteModal/DeleteModal';
 import { useOwnerPlanActionGate } from 'src/plans/hooks/useOwnerPlanActionGate';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { NetworkMapModel, NetworkMapModelRef } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem } from '@patternfly/react-core';
 import type { NetworkMapData } from '@utils/crds/maps/types';
 import { getResourceUrl } from '@utils/getResourceUrl';
@@ -17,9 +18,9 @@ type NetworkMapActionsDropdownItemsProps = {
 export const NetworkMapActionsDropdownItems = ({
   data,
   isDetailsPage,
-}: NetworkMapActionsDropdownItemsProps) => {
+}: NetworkMapActionsDropdownItemsProps): ReactElement[] => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
   const navigate = useNavigate();
 
   const { obj: networkMap } = data;
@@ -31,11 +32,11 @@ export const NetworkMapActionsDropdownItems = ({
     reference: NetworkMapModelRef,
   });
 
-  const onDelete = () => {
+  const onDelete = (): void => {
     if (!networkMap) {
       return;
     }
-    launcher<DeleteModalProps>(DeleteModal, { model: NetworkMapModel, resource: networkMap });
+    launchOverlay<DeleteModalProps>(DeleteModal, { model: NetworkMapModel, resource: networkMap });
   };
 
   return [

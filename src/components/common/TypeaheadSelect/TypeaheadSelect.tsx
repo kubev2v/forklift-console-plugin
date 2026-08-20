@@ -1,6 +1,7 @@
 import {
   type ForwardedRef,
   forwardRef,
+  type ReactElement,
   type ReactNode,
   useImperativeHandle,
   useMemo,
@@ -87,7 +88,7 @@ const TypeaheadSelect = (
     ...selectProps
   }: TypeaheadSelectProps,
   ref: ForwardedRef<HTMLInputElement>,
-) => {
+): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
   const [inputValue, setInputValue] = useState('');

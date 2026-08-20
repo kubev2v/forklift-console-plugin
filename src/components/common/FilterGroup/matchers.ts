@@ -105,8 +105,10 @@ export const createMatcher =
  */
 export const freetextMatcher = {
   filterType: 'freetext',
-  matchValue: (value: string) => (filter: string) =>
-    value?.toLowerCase()?.includes(filter?.toLowerCase()?.trim()),
+  matchValue:
+    (value: string): ((filter: string) => boolean) =>
+    (filter: string) =>
+      value?.toLowerCase()?.includes(filter?.toLowerCase()?.trim()),
 };
 
 /**
@@ -114,7 +116,10 @@ export const freetextMatcher = {
  */
 const enumMatcher = {
   filterType: 'enum',
-  matchValue: (value: string) => (filter: string) => value === filter,
+  matchValue:
+    (value: string): ((filter: string) => boolean) =>
+    (filter: string) =>
+      value === filter,
 };
 
 const searchableEnumMatcher = {
@@ -134,17 +139,26 @@ const searchableGroupedEnumMatcher = {
 
 const dateMatcher = {
   filterType: 'date',
-  matchValue: (value: string) => (filter: string) => areSameDayInUTCZero(value, filter),
+  matchValue:
+    (value: string): ((filter: string) => boolean) =>
+    (filter: string) =>
+      areSameDayInUTCZero(value, filter),
 };
 
 const dateRangeMatcher = {
   filterType: 'dateRange',
-  matchValue: (value: string) => (filter: string) => isInClosedRange(filter, value),
+  matchValue:
+    (value: string): ((filter: string) => boolean) =>
+    (filter: string) =>
+      isInClosedRange(filter, value),
 };
 
 const sliderMatcher = {
   filterType: 'slider',
-  matchValue: (value: string) => (filter: string) => Boolean(value).toString() === filter || !value,
+  matchValue:
+    (value: string): ((filter: string) => boolean) =>
+    (filter: string) =>
+      Boolean(value).toString() === filter || !value,
 };
 
 export const defaultValueMatchers: ValueMatcher<string>[] = [

@@ -9,25 +9,25 @@ const mockNavigate = jest.fn();
 const mockUseClusterIsAwsPlatform = jest.fn();
 
 jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: () => mockNavigate,
+  ...jest.requireActual<Record<string, unknown>>('react-router'),
+  useNavigate: (): typeof mockNavigate => mockNavigate,
 }));
 
 jest.mock('@utils/hooks/useClusterIsAwsPlatform', () => ({
-  useClusterIsAwsPlatform: () => mockUseClusterIsAwsPlatform(),
+  useClusterIsAwsPlatform: (): unknown => mockUseClusterIsAwsPlatform(),
 }));
 
 jest.mock('@utils/analytics/hooks/useForkliftAnalytics', () => ({
-  useForkliftAnalytics: () => ({ trackEvent: jest.fn() }),
+  useForkliftAnalytics: (): { trackEvent: jest.Mock } => ({ trackEvent: jest.fn() }),
 }));
 
 jest.mock('src/utils/hooks/useGetDeleteAndEditAccessReview', () => ({
   __esModule: true,
-  default: () => ({ canCreate: true }),
+  default: (): { canCreate: boolean } => ({ canCreate: true }),
 }));
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  useAccessReview: () => [true, false],
+  useAccessReview: (): [boolean, boolean] => [true, false],
 }));
 
 const createProvider = (type: string): V1beta1Provider => ({
@@ -43,7 +43,7 @@ describe('CreatePlanAction', () => {
   });
 
   it('should render the button for a non-EC2 provider', () => {
-    mockUseClusterIsAwsPlatform.mockReturnValue(false);
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: true });
 
     render(<CreatePlanAction namespace="test-ns" provider={createProvider('vsphere')} />);
 
@@ -51,7 +51,7 @@ describe('CreatePlanAction', () => {
   });
 
   it('should render the button for an EC2 provider on an AWS cluster', () => {
-    mockUseClusterIsAwsPlatform.mockReturnValue(true);
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: true, loaded: true });
 
     render(<CreatePlanAction namespace="test-ns" provider={createProvider('ec2')} />);
 
@@ -59,7 +59,7 @@ describe('CreatePlanAction', () => {
   });
 
   it('should hide the button for an EC2 provider on a non-AWS cluster', () => {
-    mockUseClusterIsAwsPlatform.mockReturnValue(false);
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: true });
 
     const { container } = render(
       <CreatePlanAction namespace="test-ns" provider={createProvider('ec2')} />,
@@ -70,7 +70,7 @@ describe('CreatePlanAction', () => {
 
   it('should navigate to plan creation on click', async () => {
     const user = userEvent.setup();
-    mockUseClusterIsAwsPlatform.mockReturnValue(true);
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: true, loaded: true });
 
     render(<CreatePlanAction namespace="test-ns" provider={createProvider('ec2')} />);
 

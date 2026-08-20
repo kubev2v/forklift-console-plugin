@@ -23,7 +23,7 @@ type CreateNetworkMapParams = {
   trackEvent?: (eventType: string, properties?: Record<string, unknown>) => void;
 };
 
-const getNetworkType = (targetName: string) => {
+const getNetworkType = (targetName: string): string => {
   if (targetName === DefaultNetworkLabel.Source || targetName === '') {
     return POD;
   }
@@ -35,7 +35,10 @@ const getNetworkType = (targetName: string) => {
   return MULTUS;
 };
 
-const getSource = (sourceNetwork: MappingValue, sourceProvider?: V1beta1Provider) => {
+const getSource = (
+  sourceNetwork: MappingValue,
+  sourceProvider?: V1beta1Provider,
+): V1beta1NetworkMapSpecMap['source'] => {
   if (sourceNetwork.id === POD) {
     return { type: POD };
   }
@@ -81,7 +84,7 @@ export const createNetworkMap = async ({
   targetNamespace,
   targetProvider,
   trackEvent,
-}: CreateNetworkMapParams) => {
+}: CreateNetworkMapParams): Promise<V1beta1NetworkMap> => {
   const sourceProviderName = sourceProvider?.metadata?.name;
 
   trackEvent?.('Network map create started', {

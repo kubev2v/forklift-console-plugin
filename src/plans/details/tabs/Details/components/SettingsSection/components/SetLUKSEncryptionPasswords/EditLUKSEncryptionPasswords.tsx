@@ -1,7 +1,19 @@
 import LUKSSecretSelect from '@components/LUKSSecretSelect/LUKSSecretSelect';
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { Checkbox, Flex, FlexItem, FormGroup, Radio, Stack } from '@patternfly/react-core';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
+import {
+  Alert,
+  AlertVariant,
+  Checkbox,
+  Flex,
+  FlexItem,
+  FormGroup,
+  HelperText,
+  HelperTextItem,
+  Radio,
+  Spinner,
+  Stack,
+} from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { EditPlanProps } from '../../utils/types';
@@ -15,7 +27,31 @@ import {
 } from './hooks/useEditLUKSState';
 import LUKSPassphraseInputList from './LUKSPassphraseInputList';
 
-const EditLUKSEncryptionPasswords: ModalComponent<EditPlanProps> = ({ resource, ...rest }) => {
+const getSecretWatchErrorMessage = (secretLoadError: unknown): string | undefined => {
+  if (secretLoadError instanceof Error) {
+    return secretLoadError.message;
+  }
+
+  if (typeof secretLoadError === 'string') {
+    return secretLoadError;
+  }
+
+  if (
+    typeof secretLoadError === 'object' &&
+    secretLoadError !== null &&
+    'message' in secretLoadError &&
+    typeof secretLoadError.message === 'string'
+  ) {
+    return secretLoadError.message;
+  }
+
+  return undefined;
+};
+
+const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
+  closeOverlay,
+  resource,
+}) => {
   const { t } = useForkliftTranslation();
 
   const {
@@ -23,7 +59,10 @@ const EditLUKSEncryptionPasswords: ModalComponent<EditPlanProps> = ({ resource, 
     decryptionMode,
     handleConfirm,
     isDisabled,
+    isSecretWatchPending,
+    isSourceSecretUnavailable,
     nbdeClevis,
+    secretLoadError,
     secretNamespace,
     selectedSecret,
     setDecryptionMode,
@@ -33,16 +72,50 @@ const EditLUKSEncryptionPasswords: ModalComponent<EditPlanProps> = ({ resource, 
     value,
   } = useEditLUKSState(resource);
 
+  const secretWatchErrorMessage = getSecretWatchErrorMessage(secretLoadError);
+
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       isDisabled={isDisabled}
       onConfirm={handleConfirm}
       testId="edit-disk-decryption-modal"
       title={t('Disk decryption')}
-      {...rest}
     >
       <Stack hasGutter>
         <EditLUKSModalBody />
+
+        {isSecretWatchPending && (
+          <HelperText data-testid="edit-luks-secret-loading">
+            <HelperTextItem icon={<Spinner size="md" />}>
+              {t('Loading disk decryption secret...')}
+            </HelperTextItem>
+          </HelperText>
+        )}
+
+        {secretLoadError ? (
+          <Alert
+            data-testid="edit-luks-secret-load-error"
+            isInline
+            title={t('Unable to load disk decryption secret')}
+            variant={AlertVariant.danger}
+          >
+            {secretWatchErrorMessage}
+          </Alert>
+        ) : null}
+
+        {isSourceSecretUnavailable && (
+          <Alert
+            data-testid="edit-luks-source-secret-unavailable-alert"
+            isInline
+            title={t('Referenced secret unavailable')}
+            variant={AlertVariant.warning}
+          >
+            {t(
+              'The secret previously selected for disk decryption could not be found. Enter passphrases or choose another secret.',
+            )}
+          </Alert>
+        )}
 
         <Checkbox
           className="pf-v6-u-mt-lg"
@@ -103,7 +176,7 @@ const EditLUKSEncryptionPasswords: ModalComponent<EditPlanProps> = ({ resource, 
                   value={DECRYPTION_MODE_PASSPHRASES}
                 />
 
-                {decryptionMode === DECRYPTION_MODE_PASSPHRASES && (
+                {decryptionMode === DECRYPTION_MODE_PASSPHRASES && !isSecretWatchPending && (
                   <>
                     <FormGroup label={t('Passphrases for LUKS encrypted devices')} />
                     <LUKSPassphraseInputList onChange={setValue} value={value} />

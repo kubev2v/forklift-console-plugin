@@ -2,8 +2,8 @@ import { type FC, useMemo } from 'react';
 
 import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
 import type { IoK8sApiCoreV1Secret } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName } from '@utils/crds/common/selectors';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { TypeaheadSelectOption } from '../common/TypeaheadSelect/utils/types';

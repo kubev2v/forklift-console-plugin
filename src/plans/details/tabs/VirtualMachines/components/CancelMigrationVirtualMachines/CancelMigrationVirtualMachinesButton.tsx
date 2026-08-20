@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { ToolbarItem } from '@patternfly/react-core';
 
 import VMsActionButton from '../VMsActionButton';
@@ -14,9 +14,9 @@ const CancelMigrationVirtualMachinesButton: FC<CancelMigrationVirtualMachinesPro
   selectedIds,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
-  const onClick = () => {
-    launcher<CancelMigrationVirtualMachinesProps>(CancelMigrationVirtualMachinesModal, {
+  const launchOverlay = useOverlay();
+  const onClick = (): void => {
+    launchOverlay<CancelMigrationVirtualMachinesProps>(CancelMigrationVirtualMachinesModal, {
       migration,
       selectedIds,
     });

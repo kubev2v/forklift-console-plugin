@@ -1,9 +1,13 @@
+import type { ReactElement } from 'react';
+
 import type { V1beta1PlanStatusMigrationVmsPipeline } from '@forklift-ui/types';
 import { Icon } from '@patternfly/react-core';
 import { CheckIcon, ResourcesEmptyIcon, TimesIcon } from '@patternfly/react-icons';
 import { PF_LABEL_STATUS, taskStatuses } from '@utils/constants';
 
-export const getPipelineProgressIcon = (pipeline: V1beta1PlanStatusMigrationVmsPipeline) => {
+export const getPipelineProgressIcon = (
+  pipeline: V1beta1PlanStatusMigrationVmsPipeline,
+): ReactElement => {
   if (pipeline?.error) {
     return (
       <Icon status={PF_LABEL_STATUS.DANGER}>

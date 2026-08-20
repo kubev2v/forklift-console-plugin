@@ -9,7 +9,7 @@ import TagsInput from 'react-tagsinput';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -40,12 +40,12 @@ export type LabelsModalProps = {
   title?: string;
 };
 
-const LabelsModal: ModalComponent<LabelsModalProps> = ({
+const LabelsModal: OverlayComponent<LabelsModalProps> = ({
+  closeOverlay,
   description,
   initialLabels,
   onConfirm,
   title,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [inputValue, setInputValue] = useState('');
@@ -59,7 +59,7 @@ const LabelsModal: ModalComponent<LabelsModalProps> = ({
   // Backspace deletes tags, but not if there is text being edited in the input field
   const removeKeys = inputValue.length ? [] : [8];
 
-  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { value } = e.target;
 
     if (value === '') {
@@ -80,7 +80,7 @@ const LabelsModal: ModalComponent<LabelsModalProps> = ({
     value: inputValue,
   };
 
-  const handleLabelsChange = (newLabels: string[], changed: string[]) => {
+  const handleLabelsChange = (newLabels: string[], changed: string[]): void => {
     const { 0: newLabel } = changed;
 
     if (!isLabelValid(newLabel)) {
@@ -110,10 +110,10 @@ const LabelsModal: ModalComponent<LabelsModalProps> = ({
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       onConfirm={async () => onConfirm(labelsArrayToObject(labels))}
       testId="labels-modal"
       title={title ?? t('Edit labels')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>{description ?? LABELS_MODAL_DESCRIPTION}</StackItem>

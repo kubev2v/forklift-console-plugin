@@ -87,6 +87,6 @@ describe('display currently selected filters in the URL', () => {
       setSelectedFilters({ [NAME]: update });
     });
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(window.history.pushState).toBeCalledWith({}, '', pushedState);
+    expect(window.history.pushState).toHaveBeenCalledWith({}, '', pushedState);
   });
 });

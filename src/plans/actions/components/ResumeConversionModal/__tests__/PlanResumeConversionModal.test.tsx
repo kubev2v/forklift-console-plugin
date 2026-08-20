@@ -42,7 +42,7 @@ const makePlan = (disksCopiedVMs: string[] = ['vm-1']): V1beta1Plan =>
     },
   }) as unknown as V1beta1Plan;
 
-const closeModal = jest.fn();
+const closeOverlay = jest.fn();
 
 describe('PlanResumeConversionModal', () => {
   beforeEach(() => {
@@ -50,14 +50,14 @@ describe('PlanResumeConversionModal', () => {
   });
 
   it('renders the modal with the correct title and confirm label', () => {
-    render(<PlanResumeConversionModal closeModal={closeModal} plan={makePlan()} />);
+    render(<PlanResumeConversionModal closeOverlay={closeOverlay} plan={makePlan()} />);
 
     expect(screen.getByText('Resume conversion')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /resume/i })).toBeInTheDocument();
   });
 
   it('shows the info alert and safety warning', () => {
-    render(<PlanResumeConversionModal closeModal={closeModal} plan={makePlan()} />);
+    render(<PlanResumeConversionModal closeOverlay={closeOverlay} plan={makePlan()} />);
 
     expect(screen.getByText('Disk copy will be skipped')).toBeInTheDocument();
     expect(
@@ -68,7 +68,9 @@ describe('PlanResumeConversionModal', () => {
   });
 
   it('displays the interpolated VM count in the confirmation message', () => {
-    render(<PlanResumeConversionModal closeModal={closeModal} plan={makePlan(['vm-1', 'vm-2'])} />);
+    render(
+      <PlanResumeConversionModal closeOverlay={closeOverlay} plan={makePlan(['vm-1', 'vm-2'])} />,
+    );
 
     expect(
       screen.getByText(
@@ -78,7 +80,7 @@ describe('PlanResumeConversionModal', () => {
   });
 
   it('displays the correct count for a single VM', () => {
-    render(<PlanResumeConversionModal closeModal={closeModal} plan={makePlan(['vm-1'])} />);
+    render(<PlanResumeConversionModal closeOverlay={closeOverlay} plan={makePlan(['vm-1'])} />);
 
     expect(
       screen.getByText(
@@ -89,7 +91,7 @@ describe('PlanResumeConversionModal', () => {
 
   it('creates a Migration with resumeConversion: true on confirm', async () => {
     const user = userEvent.setup();
-    render(<PlanResumeConversionModal closeModal={closeModal} plan={makePlan()} />);
+    render(<PlanResumeConversionModal closeOverlay={closeOverlay} plan={makePlan()} />);
 
     const confirmButton = screen.getByRole('button', { name: /resume/i });
     await user.click(confirmButton);
@@ -107,7 +109,7 @@ describe('PlanResumeConversionModal', () => {
 
   it('sets the correct ownerReference on the Migration', async () => {
     const user = userEvent.setup();
-    render(<PlanResumeConversionModal closeModal={closeModal} plan={makePlan()} />);
+    render(<PlanResumeConversionModal closeOverlay={closeOverlay} plan={makePlan()} />);
 
     await user.click(screen.getByRole('button', { name: /resume/i }));
 
@@ -122,7 +124,7 @@ describe('PlanResumeConversionModal', () => {
 
   it('sets generateName with plan name prefix', async () => {
     const user = userEvent.setup();
-    render(<PlanResumeConversionModal closeModal={closeModal} plan={makePlan()} />);
+    render(<PlanResumeConversionModal closeOverlay={closeOverlay} plan={makePlan()} />);
 
     await user.click(screen.getByRole('button', { name: /resume/i }));
 
@@ -147,7 +149,7 @@ describe('PlanResumeConversionModal', () => {
       },
     } as unknown as V1beta1Plan;
 
-    render(<PlanResumeConversionModal closeModal={closeModal} plan={plan} />);
+    render(<PlanResumeConversionModal closeOverlay={closeOverlay} plan={plan} />);
 
     expect(
       screen.getByText(

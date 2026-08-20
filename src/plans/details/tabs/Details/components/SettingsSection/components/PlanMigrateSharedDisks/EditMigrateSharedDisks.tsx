@@ -3,7 +3,7 @@ import PlanVddkForSharedDisksWarningAlert from 'src/plans/components/PlanVddkFor
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Alert, AlertVariant, Checkbox, Stack, StackItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -11,16 +11,17 @@ import type { EditPlanProps } from '../../utils/types';
 
 import { getMigrateSharedDisksValue, onConfirmMigrateSharedDisks } from './utils/utils';
 
-const EditMigrateSharedDisks: ModalComponent<EditPlanProps> = ({
+const EditMigrateSharedDisks: OverlayComponent<EditPlanProps> = ({
+  closeOverlay,
   isVddkInitImageNotSet,
   resource,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState<boolean>(getMigrateSharedDisksValue(resource));
 
   return (
     <ModalForm
+      closeOverlay={closeOverlay}
       description={t('Choose whether to migrate shared disks with your migration.')}
       headerHelp={
         <HelpIconPopover header={t('Migrate shared disks')}>
@@ -31,7 +32,6 @@ const EditMigrateSharedDisks: ModalComponent<EditPlanProps> = ({
       }
       onConfirm={async () => onConfirmMigrateSharedDisks({ newValue: value, resource })}
       title={t('Edit shared disks')}
-      {...rest}
     >
       <Stack hasGutter>
         <StackItem>

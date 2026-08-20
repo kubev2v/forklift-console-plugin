@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { TableLinkCell } from 'src/components/TableCell/TableLinkCell';
 import MigrationStatusLabel from 'src/plans/details/tabs/Details/components/MigrationsSection/components/MigrationStatusLabel';
 
@@ -19,7 +20,7 @@ import {
 
 export const getMigrationStatusVirtualMachinesRowFields = (
   fieldsData: MigrationStatusVirtualMachinePageData,
-) => {
+): Record<MigrationStatusVirtualMachinesTableResourceId, ReactNode> => {
   const { specVM, statusVM, targetNamespace } = fieldsData;
   const vmCreated = isVirtualMachineCreationCompleted(statusVM);
   const diskTransferPipeline = getVMDiskTransferPipeline(statusVM);

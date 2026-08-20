@@ -61,9 +61,9 @@ const useTreeFilters = ({ filters, rows, showAll }: UseTreeFilters): UseTreeFilt
       return rows;
     }
 
-    const isVisibleFolder = (row: FolderRow) => visibleFolderKeySet.has(row.key);
+    const isVisibleFolder = (row: FolderRow): boolean => visibleFolderKeySet.has(row.key);
 
-    const isVisibleVm = (row: VmRow) => visibleVmKeySet.has(row.key);
+    const isVisibleVm = (row: VmRow): boolean => visibleVmKeySet.has(row.key);
 
     const shouldAttachConcerns = (vm: VmRow, next: RowNode): next is ConcernsRow =>
       next.type === ROW_TYPE.Concerns &&

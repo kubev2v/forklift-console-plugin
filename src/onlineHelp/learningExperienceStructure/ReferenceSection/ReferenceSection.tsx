@@ -32,7 +32,7 @@ const ReferenceSection: FC<ReferenceSectionProps> = ({ children, icon, id, title
     savedPosition: referenceScrollPositions[id] ?? 0,
   });
 
-  const handleToggle = () => {
+  const handleToggle = (): void => {
     if (isExpanded) {
       closeExpansionItem(id);
     } else {

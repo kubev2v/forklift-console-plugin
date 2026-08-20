@@ -1,4 +1,4 @@
-import { type FC, useMemo, useState } from 'react';
+import { type FC, type ReactElement, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import type { GlobalActionToolbarProps } from 'src/components/common/utils/types';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
@@ -10,9 +10,9 @@ import {
   type V1beta1Host,
   type VSphereHostInventory,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import type { ProviderData } from '@utils/providers/types';
 
 import { hostsFields } from './utils/constants';
@@ -53,7 +53,7 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
   const hostsData = matchHostsToInventory(inventoryHosts, hosts, provider);
 
   const actions: FC<GlobalActionToolbarProps<InventoryHostNetworkTriple>>[] = [
-    () => (
+    (): ReactElement => (
       <SelectNetworkForHostButton
         hostsData={hostsData}
         provider={provider}
@@ -64,11 +64,12 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
 
   const canPatchProps = permissions?.canPatch
     ? {
-        canSelect: (item: InventoryHostNetworkTriple) => !isEmpty(item?.inventory?.networkAdapters),
+        canSelect: (item: InventoryHostNetworkTriple): boolean =>
+          !isEmpty(item?.inventory?.networkAdapters),
         GlobalActionToolbarItems: actions,
         onSelect: setSelectedIds,
         selectedIds,
-        toId: (item: InventoryHostNetworkTriple) => item.inventory.id,
+        toId: (item: InventoryHostNetworkTriple): string => item.inventory.id,
       }
     : {};
 

@@ -9,11 +9,8 @@ import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import type { InventoryStorage } from '@utils/hooks/useStorages';
 import { useForkliftTranslation } from '@utils/i18n';
-import {
-  StorageMapFieldId,
-  type StorageMappingValue,
-  type TargetStorage,
-} from '@utils/storage/types';
+import { StorageMapFieldId, type TargetStorage } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 import AccessModeField from '../../components/AccessModeField';
 import OffloadStorageRow from '../../components/OffloadStorageIndexedForm/OffloadStorageRow';
@@ -31,7 +28,7 @@ type UpdateStorageMapFieldTableProps = {
   isVsphere: boolean;
   loadError: Error | null;
   sourceProvider: V1beta1Provider | undefined;
-  sourceStorages: StorageMappingValue[];
+  sourceStorages: MappingValue[];
   targetStorages: TargetStorage[];
 };
 

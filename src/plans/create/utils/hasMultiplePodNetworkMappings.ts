@@ -8,7 +8,7 @@ export const hasMultiplePodNetworkMappings = (
   networkMap: NetworkMapping[],
   vms: Record<string, ProviderVirtualMachine>,
   oVirtNicProfiles: OVirtNicProfile[],
-) => {
+): boolean => {
   const netIdsMappedToPodNet = new Set(
     networkMap
       ?.filter(({ targetNetwork }) => targetNetwork?.name === DefaultNetworkLabel.Source)
@@ -28,6 +28,6 @@ export const hasMultiplePodNetworkMappings = (
   });
 };
 
-export const hasPodNetworkMappings = (networkMap: NetworkMapping[]) => {
+export const hasPodNetworkMappings = (networkMap: NetworkMapping[]): boolean => {
   return networkMap.some(({ targetNetwork }) => targetNetwork?.name === DefaultNetworkLabel.Source);
 };

@@ -1,6 +1,5 @@
-import { type ReactNode, useCallback, useState } from 'react';
+import { type FC, type ReactNode, useCallback, useState } from 'react';
 
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
 import {
   Alert,
   AlertVariant,
@@ -24,6 +23,7 @@ type ModalFormProps = {
   cancelLabel?: string;
   children: ReactNode;
   className?: string;
+  closeOverlay: () => void;
   confirmLabel?: string;
   confirmVariant?: ButtonVariant;
   description?: ReactNode;
@@ -36,12 +36,12 @@ type ModalFormProps = {
   variant?: ModalVariant;
 };
 
-const ModalForm: ModalComponent<ModalFormProps> = ({
+const ModalForm: FC<ModalFormProps> = ({
   additionalAction,
   cancelLabel,
   children,
   className,
-  closeModal,
+  closeOverlay,
   confirmLabel,
   confirmVariant,
   description,
@@ -63,13 +63,13 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
 
     try {
       await onConfirm();
-      closeModal();
+      closeOverlay();
     } catch (err) {
       setError((err as Error)?.message ?? err?.toString());
     } finally {
       setIsLoading(false);
     }
-  }, [onConfirm, closeModal]);
+  }, [onConfirm, closeOverlay]);
 
   const headerTitle = label ? (
     <Flex alignItems={{ default: 'alignItemsBaseline' }} gap={{ default: 'gapXs' }}>
@@ -87,7 +87,7 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
       className={className}
       data-testid={testId}
       isOpen
-      onClose={closeModal}
+      onClose={closeOverlay}
       position="top"
       variant={variant}
     >
@@ -123,7 +123,7 @@ const ModalForm: ModalComponent<ModalFormProps> = ({
         <Button
           data-testid="modal-cancel-button"
           key="cancel"
-          onClick={closeModal}
+          onClick={closeOverlay}
           variant={ButtonVariant.secondary}
         >
           {cancelLabel ?? t('Cancel')}

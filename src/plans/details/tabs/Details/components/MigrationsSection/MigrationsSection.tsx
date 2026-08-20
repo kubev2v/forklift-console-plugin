@@ -6,8 +6,8 @@ import {
   type V1beta1Migration,
   type V1beta1Plan,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getNamespace, getOwnerReference, getUID } from '@utils/crds/common/selectors';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import MigrationsTable from './components/MigrationsTable';
 import { sortMigrationsByStartedAtDate } from './utils/utils';

@@ -3,12 +3,12 @@ import {
   type V1beta1Plan,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanSourceProvider } from '@utils/crds/plans/selectors';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 type UsePlanSourceProvider = (plan: V1beta1Plan) => {
   loaded: boolean;
-  loadError: Error;
+  loadError: Error | null;
   sourceProvider: V1beta1Provider;
 };
 

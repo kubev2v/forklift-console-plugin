@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { TableCell } from 'src/components/TableCell/TableCell';
 import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
 import { TableLinkCell } from 'src/components/TableCell/TableLinkCell';
@@ -29,7 +30,7 @@ import PlanMigrationType from '../../PlanRowFields/PlanMigrationType/PlanMigrati
 import PlanStatus from '../../PlanRowFields/PlanStatus/PlanStatus';
 import PlanVirtualMachines from '../../PlanRowFields/PlanVirtualMachines/PlanVirtualMachines';
 
-export const usePlanListRowFields = (plan: V1beta1Plan) => {
+export const usePlanListRowFields = (plan: V1beta1Plan): Record<PlanTableResourceId, ReactNode> => {
   const { sourceProvider } = usePlanSourceProvider(plan);
   const sourceProviderType = sourceProvider?.spec?.type;
   const planNamespace = getNamespace(plan);

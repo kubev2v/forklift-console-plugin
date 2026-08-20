@@ -165,8 +165,7 @@ export const createEslintConfig = () =>
             selector: 'import',
           },
         ],
-        // Deferred to MTV-6280 (useModal → useOverlay + other deprecated cleanups)
-        '@typescript-eslint/no-deprecated': 'off',
+        '@typescript-eslint/no-deprecated': 'error',
         '@typescript-eslint/no-dynamic-delete': 'off',
         '@typescript-eslint/no-explicit-any': 'error',
         '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
@@ -185,7 +184,7 @@ export const createEslintConfig = () =>
         '@typescript-eslint/non-nullable-type-assertion-style': 'off',
         '@typescript-eslint/no-shadow': 'error',
         '@typescript-eslint/no-unnecessary-condition': 'off',
-        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'error',
         '@typescript-eslint/no-unsafe-type-assertion': 'off',
         '@typescript-eslint/no-unused-expressions': [
           'error',
@@ -247,6 +246,12 @@ export const createEslintConfig = () =>
           'error',
           {
             paths: [
+              {
+                importNames: ['useK8sWatchResource'],
+                message:
+                  "Import useK8sWatchResource from '@utils/hooks/useK8sWatchResource'. The SDK hook types the error slot as any.",
+                name: '@openshift-console/dynamic-plugin-sdk',
+              },
               {
                 importNames: ['default', '*'],
                 message:
@@ -420,6 +425,14 @@ export const createEslintConfig = () =>
       rules: {
         ...eslintReact.configs['recommended-typescript'].rules,
         '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'error',
+        '@eslint-react/hooks-extra/prefer-use-state-lazy-initialization': 'off',
+      },
+    },
+    // MTV-6273: enforce explicit return types on src/
+    {
+      files: ['src/**/*.{ts,tsx}'],
+      rules: {
+        '@typescript-eslint/explicit-function-return-type': 'error',
       },
     },
     {
@@ -449,6 +462,24 @@ export const createEslintConfig = () =>
       ...testingLibrary.configs['flat/react'],
       // Unit tests only — do not apply RTL rules to Playwright specs under testing/
       files: ['src/**/__tests__/**/*.{ts,tsx}', 'src/**/*.{test,spec}.{ts,tsx}'],
+    },
+    {
+      files: ['src/utils/hooks/useK8sWatchResource.ts'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                importNames: ['default', '*'],
+                message:
+                  "Do not import React using default or star import. Import specific exports instead (e.g., `import { useState } from 'react'`).",
+                name: 'react',
+              },
+            ],
+          },
+        ],
+      },
     },
     // TypeaheadSelect component specific rules
     {
@@ -480,7 +511,11 @@ export const createEslintConfig = () =>
     },
     // Testing directory specific rules
     {
-      files: ['testing/**/*.{js,ts,jsx,tsx}', '**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}'],
+      files: [
+        'testing/**/*.{js,ts,jsx,tsx}',
+        '**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}',
+        'src/**/*.{test,spec}.{ts,tsx}',
+      ],
       rules: {
         '@cspell/spellchecker': 'off',
         '@typescript-eslint/class-methods-use-this': 'off',
@@ -506,6 +541,7 @@ export const createEslintConfig = () =>
         'max-lines-per-function': 'off',
         'no-await-in-loop': 'off',
         'no-console': 'off',
+        'no-restricted-imports': 'off',
         'no-warning-comments': 'off',
         'perfectionist/sort-objects': 'off',
         'react-refresh/only-export-components': 'off',

@@ -1,4 +1,4 @@
-import { type FC, useRef } from 'react';
+import { type FC, type ReactElement, useRef } from 'react';
 
 import { Tooltip } from '@patternfly/react-core';
 import { Td } from '@patternfly/react-table';
@@ -24,8 +24,8 @@ export const createRowWithSelection = <T,>({
   toggleExpandFor: (items: T[]) => void;
   toggleSelectFor: (items: T[]) => void;
   toId?: (item: T) => string;
-}) => {
-  const RowWithSelection = (props: RowProps<T>) => {
+}): FC<RowProps<T>> => {
+  const RowWithSelection = (props: RowProps<T>): ReactElement => {
     const itemId = toId?.(props.resourceData) ?? '';
     const isExpanded = expandedIds?.includes(itemId) ?? false;
     const isSelected = selectedIds?.includes(itemId) ?? false;

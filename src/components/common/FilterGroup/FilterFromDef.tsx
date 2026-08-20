@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { type ReactElement, useMemo, useState } from 'react';
 
 import { isEmpty } from '@utils/helpers';
 
@@ -9,7 +9,7 @@ import type { GlobalFilters } from './types';
 
 type FilterFromDefProps = {
   filterDef: FilterDef;
-  FilterType: (props: FilterTypeProps) => JSX.Element;
+  FilterType: (props: FilterTypeProps) => ReactElement;
   label: string;
   onFilterUpdate: (filters: GlobalFilters) => void;
   resolvedLanguage: string;
@@ -27,7 +27,7 @@ export const FilterFromDef = ({
   resourceFieldId,
   selectedFilters,
   showFilter = true,
-}: FilterFromDefProps) => {
+}: FilterFromDefProps): ReactElement | null => {
   const [filterId, setFilterId] = useState(resourceFieldId);
 
   const selectedFilterValues = useMemo(() => {
@@ -49,7 +49,7 @@ export const FilterFromDef = ({
     return selectedFilters[filterId] ?? [];
   }, [def.groups, filterId, resourceFieldId, selectedFilters]);
 
-  const setSelectedFilters = (values: string[], selectedResourceId?: string) => {
+  const setSelectedFilters = (values: string[], selectedResourceId?: string): void => {
     if (selectedResourceId) {
       setFilterId(selectedResourceId);
     }

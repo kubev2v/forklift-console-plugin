@@ -17,7 +17,7 @@ type MigrationPodsTableProps = {
   pods: IoK8sApiCoreV1Pod[];
 };
 
-const getPodLogsLink = (pod: IoK8sApiCoreV1Pod) =>
+const getPodLogsLink = (pod: IoK8sApiCoreV1Pod): string =>
   getResourceUrl({
     name: getName(pod),
     namespace: getNamespace(pod),

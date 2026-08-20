@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import {
   isPlanArchived,
   isPlanExecuting,
@@ -21,7 +21,7 @@ export const useMigrationVirtualMachineActions = (plan: V1beta1Plan): PageGlobal
   const isArchived = isPlanArchived(plan);
 
   return [
-    ({ selectedIds }) =>
+    ({ selectedIds }): ReactElement =>
       isExecuting && !isArchived && activeMigration ? (
         <CancelMigrationVirtualMachinesButton
           migration={activeMigration}

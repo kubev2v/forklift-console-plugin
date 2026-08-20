@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { K8sIoApiCoreV1Affinity, K8sResourceCommon } from '@forklift-ui/types';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ModalVariant } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -22,11 +22,11 @@ export type AffinityModalProps = {
   title?: string;
 };
 
-const AffinityModal: ModalComponent<AffinityModalProps> = ({
+const AffinityModal: OverlayComponent<AffinityModalProps> = ({
+  closeOverlay,
   initialAffinity,
   onConfirm,
   title,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -37,19 +37,19 @@ const AffinityModal: ModalComponent<AffinityModalProps> = ({
   const [isCreating, setIsCreating] = useState(false);
   const [focusedAffinity, setFocusedAffinity] = useState<AffinityRowData>(defaultNewAffinity);
 
-  const onAffinityClickAdd = () => {
+  const onAffinityClickAdd = (): void => {
     setIsEditing(true);
     setIsCreating(true);
     setFocusedAffinity({ ...defaultNewAffinity, id: getAvailableAffinityID(affinities) });
   };
 
-  const onAffinityAdd = (affinity: AffinityRowData) => {
+  const onAffinityAdd = (affinity: AffinityRowData): void => {
     setAffinities((prevAffinities) => [...(prevAffinities || []), affinity]);
     setIsEditing(false);
     setIsCreating(false);
   };
 
-  const onAffinityChange = (updatedAffinity: AffinityRowData) => {
+  const onAffinityChange = (updatedAffinity: AffinityRowData): void => {
     setAffinities((prevAffinities) =>
       prevAffinities.map((affinity) => {
         if (affinity.id === updatedAffinity.id) {
@@ -62,16 +62,16 @@ const AffinityModal: ModalComponent<AffinityModalProps> = ({
   };
   const onSaveAffinity = isCreating ? onAffinityAdd : onAffinityChange;
 
-  const onAffinityDelete = (affinity: AffinityRowData) => {
+  const onAffinityDelete = (affinity: AffinityRowData): void => {
     setAffinities((prevAffinities) => prevAffinities.filter(({ id }) => id !== affinity.id));
   };
 
-  const onAffinityClickEdit = (affinity: AffinityRowData) => {
+  const onAffinityClickEdit = (affinity: AffinityRowData): void => {
     setFocusedAffinity(affinity);
     setIsEditing(true);
   };
 
-  const onCancel = () => {
+  const onCancel = (): void => {
     setIsEditing(false);
     setIsCreating(false);
   };
@@ -94,16 +94,15 @@ const AffinityModal: ModalComponent<AffinityModalProps> = ({
       onSubmit={onSaveAffinity}
       setFocusedAffinity={setFocusedAffinity}
       title={isCreating ? t('Add affinity rule') : t('Edit affinity rule')}
-      {...rest}
     />
   ) : (
     <ModalForm
+      closeOverlay={closeOverlay}
       confirmLabel={t('Apply rules')}
       onConfirm={async () => onConfirm(rowsDataToAffinity(affinities) ?? {})}
       testId="affinity-modal"
       title={title ?? t('Affinity rules')}
       variant={ModalVariant.medium}
-      {...rest}
     >
       {list}
     </ModalForm>

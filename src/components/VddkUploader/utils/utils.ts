@@ -51,7 +51,7 @@ export const getVddkImageBuildResponse = (status: VddkBuild['status']): VddkBuil
   };
 };
 
-export const getUploadButtonText = (uploading: boolean, buildingImage?: boolean) => {
+export const getUploadButtonText = (uploading: boolean, buildingImage?: boolean): string => {
   if (uploading) {
     return t('Uploading...');
   }

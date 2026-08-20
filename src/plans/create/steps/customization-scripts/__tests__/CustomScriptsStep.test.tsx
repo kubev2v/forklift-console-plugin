@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { beforeEach, describe, expect, it } from '@jest/globals';
@@ -9,17 +10,22 @@ import CustomScriptsStep from '../CustomScriptsStep';
 
 const mockUseCreatePlanFormContext = jest.fn();
 jest.mock('../../../hooks/useCreatePlanFormContext', () => ({
-  useCreatePlanFormContext: () => mockUseCreatePlanFormContext(),
+  useCreatePlanFormContext: (): ReturnType<typeof mockUseCreatePlanFormContext> =>
+    mockUseCreatePlanFormContext(),
 }));
 
-jest.mock('../ExistingConfigMapField', () => () => <div data-testid="existing-configmap-field" />);
-jest.mock('../NewScriptsFields', () => () => <div data-testid="new-scripts-fields" />);
+jest.mock('../ExistingConfigMapField', () => (): ReactElement => (
+  <div data-testid="existing-configmap-field" />
+));
+jest.mock('../NewScriptsFields', () => (): ReactElement => (
+  <div data-testid="new-scripts-fields" />
+));
 
 const TestWrapper = ({
   scriptsType = CustomScriptsType.Existing,
 }: {
   scriptsType?: CustomScriptsType;
-}) => {
+}): ReactElement => {
   const methods = useForm({
     defaultValues: {
       [CustomScriptsFieldId.ScriptsType]: scriptsType,

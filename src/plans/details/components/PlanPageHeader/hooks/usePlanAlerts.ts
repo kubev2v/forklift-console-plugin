@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import usePlanProviders from 'src/providers/hooks/usePlanSourceProvider';
-import { useSourceNetworks } from 'src/utils/hooks/useNetworks';
-import { useSourceStorages } from 'src/utils/hooks/useStorages';
+import { type InventoryNetwork, useSourceNetworks } from 'src/utils/hooks/useNetworks';
+import { type InventoryStorage, useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import {
   NetworkMapModelGroupVersionKind,
@@ -11,15 +11,30 @@ import {
   type V1beta1PlanStatusConditions,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { CATEGORY_TYPES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { usePlanMappingData } from '../../../hooks/usePlanMappingData';
+import type { PlanStatuses } from '../../PlanStatus/utils/types';
 import { getPlanStatus } from '../../PlanStatus/utils/utils';
 
-const usePlanAlerts = (plan: V1beta1Plan) => {
+type UsePlanAlertsResult = {
+  criticalConditions: V1beta1PlanStatusConditions[] | undefined;
+  networkMaps: V1beta1NetworkMap[];
+  networkMapsError: Error | null;
+  networkMapsLoaded: boolean;
+  preserveIPWarningsConditions: V1beta1PlanStatusConditions[] | undefined;
+  showCriticalConditions: boolean;
+  showPreserveIPWarningsConditions: boolean;
+  sourceNetworks: InventoryNetwork[];
+  sourceStorages: InventoryStorage[];
+  status: PlanStatuses;
+  storageMaps: V1beta1StorageMap[];
+};
+
+const usePlanAlerts = (plan: V1beta1Plan): UsePlanAlertsResult => {
   const namespace = getNamespace(plan);
   const status = getPlanStatus(plan);
 

@@ -21,7 +21,7 @@ export enum ProvidersInventoryFields {
   ClusterCount = 'clusterCount',
 }
 
-const nullRenderer = () => null;
+const nullRenderer = (): null => null;
 
 export const ProviderDataCellRenderers: Record<ProvidersResourceFieldId, FC<CellProps>> = {
   actions: (props) => <ProviderActionsDropdown {...props} />,

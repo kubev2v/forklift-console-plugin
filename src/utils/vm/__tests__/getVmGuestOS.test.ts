@@ -3,7 +3,8 @@ import { describe, expect, it } from '@jest/globals';
 
 import { getVmGuestOS } from '../getVmGuestOS';
 
-const makeVm = (overrides: Partial<ProviderVirtualMachine>) => overrides as ProviderVirtualMachine;
+const makeVm = (overrides: Partial<ProviderVirtualMachine>): ProviderVirtualMachine =>
+  overrides as ProviderVirtualMachine;
 
 describe('getVmGuestOS', () => {
   it('returns empty string for undefined', () => {

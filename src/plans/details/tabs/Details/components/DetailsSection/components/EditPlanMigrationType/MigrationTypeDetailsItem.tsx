@@ -6,7 +6,7 @@ import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/Se
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
 
@@ -20,7 +20,7 @@ const MigrationTypeDetailsItem: FC<EditableDetailsItemProps> = ({
   sourceProvider,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   if (!shouldRender) {
     return null;
@@ -35,7 +35,7 @@ const MigrationTypeDetailsItem: FC<EditableDetailsItemProps> = ({
       crumbs={['spec', 'type']}
       helpContent={t('The migration strategy used for this plan.')}
       onEdit={() => {
-        launcher<EditPlanProps>(EditPlanMigrationType, {
+        launchOverlay<EditPlanProps>(EditPlanMigrationType, {
           isVddkInitImageNotSet,
           resource: plan,
           sourceProvider,

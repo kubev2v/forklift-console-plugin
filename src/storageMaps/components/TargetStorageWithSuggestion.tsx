@@ -3,11 +3,8 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 
 import type { InventoryStorage } from '@utils/hooks/useStorages';
-import {
-  StorageMapFieldId,
-  type StorageMappingValue,
-  type TargetStorage,
-} from '@utils/storage/types';
+import { StorageMapFieldId, type TargetStorage } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 import { resolveProductFromDatastoreName } from '../utils/vendorLookupTables';
 
@@ -36,7 +33,7 @@ const TargetStorageWithSuggestion: FC<TargetStorageWithSuggestionProps> = ({
   const { control } = useFormContext();
 
   const sourceFieldId = getStorageMapFieldId(StorageMapFieldId.SourceStorage, index);
-  const sourceValue = useWatch({ control, name: sourceFieldId }) as StorageMappingValue | undefined;
+  const sourceValue = useWatch({ control, name: sourceFieldId }) as MappingValue | undefined;
 
   const matchedDatastore = sourceStorages.find(
     (ds) => ds.id === sourceValue?.id || ds.name === sourceValue?.name,

@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { mockI18n } from '@test-utils/mockI18n';
 
@@ -5,47 +7,50 @@ mockI18n();
 
 const mockLauncher = jest.fn();
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  useModal: () => mockLauncher,
+  useOverlay: (): typeof mockLauncher => mockLauncher,
 }));
 
 const mockUsePlanMigration = jest.fn();
 jest.mock('src/plans/hooks/usePlanMigration', () => ({
-  usePlanMigration: (...args: unknown[]) => mockUsePlanMigration(...args),
+  usePlanMigration: (...args: unknown[]): ReturnType<typeof mockUsePlanMigration> =>
+    mockUsePlanMigration(...args),
 }));
 
 const mockCanPlanResumeConversion = jest.fn();
 const mockGetPlanStatus = jest.fn();
 jest.mock('src/plans/details/components/PlanStatus/utils/utils', () => ({
-  canPlanResumeConversion: (...args: unknown[]) => mockCanPlanResumeConversion(...args),
-  getCantStartVMStatusCount: jest.fn(() => ({})),
-  getMigrationVMsStatusCounts: jest.fn(() => ({})),
-  getPlanStatus: (...args: unknown[]) => mockGetPlanStatus(...args),
-  isPlanArchived: jest.fn(() => false),
-  isPlanExecuting: jest.fn(() => false),
+  canPlanResumeConversion: (...args: unknown[]): ReturnType<typeof mockCanPlanResumeConversion> =>
+    mockCanPlanResumeConversion(...args),
+  getCantStartVMStatusCount: jest.fn((): Record<string, never> => ({})),
+  getMigrationVMsStatusCounts: jest.fn((): Record<string, never> => ({})),
+  getPlanStatus: (...args: unknown[]): ReturnType<typeof mockGetPlanStatus> =>
+    mockGetPlanStatus(...args),
+  isPlanArchived: jest.fn((): boolean => false),
+  isPlanExecuting: jest.fn((): boolean => false),
 }));
 
 jest.mock('src/plans/details/components/PlanStatus/PlanStatusLabel', () => ({
   __esModule: true,
-  default: () => <span>StatusLabel</span>,
+  default: (): ReactElement => <span>StatusLabel</span>,
 }));
 
 jest.mock('src/plans/details/components/PlanStatus/VMStatusIconsRow', () => ({
   __esModule: true,
-  default: () => <span>VMIcons</span>,
+  default: (): ReactElement => <span>VMIcons</span>,
 }));
 
 jest.mock('../hooks/usePipelineTaskProgress', () => ({
   __esModule: true,
-  default: () => 0,
+  default: (): number => 0,
 }));
 
 jest.mock('@utils/crds/plans/selectors', () => ({
-  getPlanVirtualMachines: jest.fn(() => []),
-  getPlanVirtualMachinesMigrationStatus: jest.fn(() => []),
+  getPlanVirtualMachines: jest.fn((): unknown[] => []),
+  getPlanVirtualMachinesMigrationStatus: jest.fn((): unknown[] => []),
 }));
 
 jest.mock('@utils/helpers', () => ({
-  isEmpty: jest.fn((val: unknown) => !val),
+  isEmpty: jest.fn((val: unknown): boolean => !val),
 }));
 
 // eslint-disable-next-line import/first

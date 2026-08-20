@@ -1,16 +1,16 @@
 import TextInputEditModal from 'src/components/ModalForm/TextInputEditModal';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 
 import { validateOpenshiftURL } from '../../utils/validators/provider/openshift/validateOpenshiftURL';
 
 import { patchProviderURL } from './utils/patchProviderURL';
 import type { EditProviderURLModalProps } from './EditProviderURLModal';
 
-export const OpenshiftEditURLModal: ModalComponent<EditProviderURLModalProps> = ({
+export const OpenshiftEditURLModal: OverlayComponent<EditProviderURLModalProps> = ({
+  closeOverlay,
   resource: provider,
-  ...rest
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -35,7 +35,7 @@ export const OpenshiftEditURLModal: ModalComponent<EditProviderURLModalProps> = 
 
   return (
     <TextInputEditModal
-      {...rest}
+      closeOverlay={closeOverlay}
       description={description}
       helperText={t('URL of the Openshift Virtualization API endpoint.')}
       initialValue={provider?.spec?.url ?? ''}

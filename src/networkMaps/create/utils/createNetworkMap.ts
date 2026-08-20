@@ -33,7 +33,7 @@ export const createNetworkMap = async ({
   sourceProvider,
   targetProvider,
   trackEvent,
-}: CreateNetworkMapParams) => {
+}: CreateNetworkMapParams): Promise<V1beta1NetworkMap> => {
   const sourceProviderName = sourceProvider?.metadata?.name;
 
   trackEvent?.('Network map create started', {

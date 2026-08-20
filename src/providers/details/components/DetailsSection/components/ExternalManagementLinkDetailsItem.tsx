@@ -8,7 +8,7 @@ import {
 import { providerUiAnnotation } from 'src/providers/utils/constants';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DescriptionListDescription } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
@@ -40,7 +40,7 @@ export const ExternalManagementLinkDetailsItem: FC<ExternalManagementLinkDetails
   webUILinkText,
 }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const canEdit = !isEmpty(provider?.metadata) && canPatch;
   const defaultHelpContent = (
@@ -71,7 +71,7 @@ export const ExternalManagementLinkDetailsItem: FC<ExternalManagementLinkDetails
         helpContent={helpContent ?? defaultHelpContent}
         moreInfoLink={moreInfoLink}
         onEdit={() => {
-          launcher<EditProviderUIModalProps>(EditProviderUIModal, {
+          launchOverlay<EditProviderUIModalProps>(EditProviderUIModal, {
             resource: provider,
           });
         }}

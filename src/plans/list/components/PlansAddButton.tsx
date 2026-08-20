@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, MouseEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { useHasSufficientProviders } from 'src/utils/fetch';
 import { useForkliftTranslation } from 'src/utils/i18n';
@@ -21,7 +21,7 @@ const PlansAddButton: FC<PlansAddButtonProps> = ({ canCreate, namespace, testId 
   const { trackEvent } = useForkliftAnalytics();
   const hasSufficientProviders = useHasSufficientProviders(namespace);
 
-  const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const onClick = (event: MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     event.stopPropagation();
 

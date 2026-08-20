@@ -37,7 +37,7 @@ const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
     }
   }, [body, isBuildSucceeded, onChangeVddk]);
 
-  const handleUpload = async () => {
+  const handleUpload = async (): Promise<void> => {
     if (!file) {
       return;
     }

@@ -4,11 +4,8 @@ import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId
 
 import type { V1beta1Provider } from '@forklift-ui/types';
 import type { InventoryStorage } from '@utils/hooks/useStorages';
-import {
-  StorageMapFieldId,
-  type StorageMappingValue,
-  type TargetStorage,
-} from '@utils/storage/types';
+import { StorageMapFieldId, type TargetStorage } from '@utils/storage/types';
+import type { MappingValue } from '@utils/types';
 
 import { useDatastoreVendor } from '../../hooks/useDatastoreVendor';
 import type { DatastoreWithBacking } from '../../utils/vendorLookupTables';
@@ -41,11 +38,11 @@ const OffloadStorageRow: FC<OffloadStorageRowProps> = ({
   const [sourceValue, targetValue] = useWatch({
     control,
     name: [sourceFieldId, targetFieldId],
-  });
+  }) as [MappingValue | undefined, MappingValue | undefined];
 
-  const sourceId = (sourceValue as StorageMappingValue | undefined)?.id;
-  const sourceName = (sourceValue as StorageMappingValue | undefined)?.name;
-  const targetName = (targetValue as StorageMappingValue | undefined)?.name;
+  const sourceId = sourceValue?.id;
+  const sourceName = sourceValue?.name;
+  const targetName = targetValue?.name;
 
   const matchedDatastore = sourceStorages.find(
     (ds) => ds.id === sourceId || ds.name === sourceName,

@@ -7,7 +7,7 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { ProviderModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, Stack, StackItem } from '@patternfly/react-core';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
@@ -17,9 +17,9 @@ export type EditProviderDefaultTransferNetworkProps = {
   resource: V1beta1Provider;
 };
 
-const EditProviderDefaultTransferNetwork: ModalComponent<
+const EditProviderDefaultTransferNetwork: OverlayComponent<
   EditProviderDefaultTransferNetworkProps
-> = ({ closeModal, resource: provider }) => {
+> = ({ closeOverlay, resource: provider }) => {
   const { t } = useForkliftTranslation();
 
   const initialValue =
@@ -54,7 +54,7 @@ const EditProviderDefaultTransferNetwork: ModalComponent<
 
   return (
     <ModalForm
-      closeModal={closeModal}
+      closeOverlay={closeOverlay}
       onConfirm={onConfirm}
       title={t('Edit default transfer network')}
     >

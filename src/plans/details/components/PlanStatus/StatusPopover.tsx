@@ -4,7 +4,7 @@ import PlanCutoverMigrationModal from 'src/plans/actions/components/CutoverModal
 import type { PlanModalProps } from 'src/plans/actions/components/types';
 
 import { PlanModelRef, type V1beta1Plan } from '@forklift-ui/types';
-import { useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
   ButtonVariant,
@@ -37,16 +37,16 @@ type StatusPopoverProps = {
 };
 
 const StatusPopover: FC<StatusPopoverProps> = ({ count, plan, status, vms }) => {
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
   const navigate = useNavigate();
 
   const { actionLabel, body, header } = getPopoverMessageByStatus(status, count);
 
-  const openScheduleCutoverModal = () => {
-    launcher<PlanModalProps>(PlanCutoverMigrationModal, { plan });
+  const openScheduleCutoverModal = (): void => {
+    launchOverlay<PlanModalProps>(PlanCutoverMigrationModal, { plan });
   };
 
-  const navigateToVMsTab = () => {
+  const navigateToVMsTab = (): void => {
     const url = `${getResourceUrl({ name: getName(plan), namespace: getNamespace(plan), reference: PlanModelRef })}/vms`;
     navigate(url)?.catch(() => undefined);
   };

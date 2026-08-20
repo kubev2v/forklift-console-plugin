@@ -4,7 +4,7 @@ import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ButtonVariant, Flex, FlexItem, Radio, Stack, StackItem } from '@patternfly/react-core';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getName } from '@utils/crds/common/selectors';
@@ -21,7 +21,7 @@ import ScheduledCutoverFields from './ScheduledCutoverFields';
 
 import './PlanCutoverMigrationModal.scss';
 
-const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...rest }) => {
+const PlanCutoverMigrationModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }) => {
   const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
   const [isDateValid, setIsDateValid] = useState<boolean>(true);
@@ -118,11 +118,11 @@ const PlanCutoverMigrationModal: ModalComponent<PlanModalProps> = ({ plan, ...re
   return (
     <ModalForm
       additionalAction={additionalAction}
+      closeOverlay={closeOverlay}
       confirmLabel={t('Set cutover')}
       isDisabled={isScheduledInvalid}
       onConfirm={onCutover}
       title={hasExistingCutover ? t('Edit cutover') : t('Schedule cutover')}
-      {...rest}
     >
       <ForkliftTrans>
         <Stack hasGutter>

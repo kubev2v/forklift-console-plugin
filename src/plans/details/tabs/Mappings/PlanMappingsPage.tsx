@@ -14,7 +14,7 @@ import {
   NetworkMapModelGroupVersionKind,
   StorageMapModelGroupVersionKind,
 } from '@forklift-ui/types';
-import { ResourceLink, useModal } from '@openshift-console/dynamic-plugin-sdk';
+import { ResourceLink, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye, DescriptionList, PageSection } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { getPlanTargetNamespace } from '@utils/crds/plans/selectors';
@@ -38,7 +38,7 @@ import { getMappingPageMessage } from './utils/utils';
 // eslint-disable-next-line max-lines-per-function
 const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
-  const launcher = useModal();
+  const launchOverlay = useOverlay();
 
   const { plan } = usePlan(name, namespace);
   const { sourceProvider, targetProvider } = usePlanProviders(plan);
@@ -134,7 +134,7 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
         data-testid="network-map-edit-button"
         editable={isPlanEditable(plan)}
         onClick={() => {
-          launcher<PlanNetworkMapEditProps>(PlanNetworkMapEdit, {
+          launchOverlay<PlanNetworkMapEditProps>(PlanNetworkMapEdit, {
             initialMappings: networkMappings,
             isLoading,
             loadError: sourceNetworksError ?? targetNetworksError,
@@ -170,7 +170,7 @@ const PlanMappingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
         data-testid="storage-map-edit-button"
         editable={isPlanEditable(plan)}
         onClick={() => {
-          launcher<PlanStorageMapEditProps>(PlanStorageMapEdit, {
+          launchOverlay<PlanStorageMapEditProps>(PlanStorageMapEdit, {
             isLoading: sourceStoragesLoading || targetStoragesLoading,
             loadError: sourceStoragesLoadError ?? targetStoragesLoadError,
             otherSourceStorages,

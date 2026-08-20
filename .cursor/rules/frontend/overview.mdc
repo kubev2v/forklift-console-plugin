@@ -45,7 +45,7 @@ ForkliftControllerOverviewTab (vertical Flex)
 
 | Card | Data Shown |
 |------|-----------|
-| `WelcomeCard` | Expandable intro; clickable provider tiles → provider create |
+| `WelcomeCard` | Expandable intro; clickable provider tiles → provider create. Tiles from `getProviderTypeOptions` (same order as create-provider). EC2 is AWS-gated via `useClusterIsAwsPlatform` — core tiles always render; EC2 only when `loaded && isAwsPlatform`. |
 | `VmMigrationsDonutCard` | VM migration counts by status (Running/Failed/Succeeded/Canceled) + time-range filter |
 | `VmMigrationsHistoryCard` | Stacked area chart of VM migrations over time |
 | `MigrationPlansDonutCard` | Plan counts by UI status (9 statuses) |
@@ -168,7 +168,7 @@ Note: Feature flags (`feature_copy_offload`, `feature_ocp_live_migration`, `feat
 
 | From | To |
 |------|----|
-| WelcomeCard provider tiles | Provider create (`~new?providerType=...`) |
+| WelcomeCard provider tiles | Provider create (`~new?providerType=...`); EC2 tile only on AWS-platform clusters (`useClusterIsAwsPlatform`) |
 | MigrationPlansDonutCard slices | Plans list filtered by phase |
 | VM donut/history chart | History tab with filters |
 | History empty state | Plan create |
