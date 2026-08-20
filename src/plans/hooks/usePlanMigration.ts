@@ -9,7 +9,7 @@ import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 export const usePlanMigration = (
   plan: V1beta1Plan,
-): [V1beta1Migration | undefined, boolean, Error | undefined] => {
+): [V1beta1Migration | undefined, boolean, Error | null] => {
   const [migrations, migrationLoaded, migrationLoadError] = useK8sWatchResource<V1beta1Migration[]>(
     {
       groupVersionKind: MigrationModelGroupVersionKind,
@@ -29,5 +29,5 @@ export const usePlanMigration = (
     ),
   );
 
-  return [activeMigration, migrationLoaded, migrationLoadError as Error | undefined];
+  return [activeMigration, migrationLoaded, migrationLoadError];
 };
