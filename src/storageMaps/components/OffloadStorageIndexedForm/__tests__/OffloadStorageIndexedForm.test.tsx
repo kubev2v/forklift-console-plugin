@@ -12,7 +12,6 @@ import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 import { validateUpdatedStorageMaps } from '../../../details/utils/utils';
 import { useOffloadPlugins } from '../../../hooks/useOffloadPlugins';
 import { useStorageVendorProducts } from '../../../hooks/useStorageVendorProducts';
-import { getStorageMapFieldId } from '../../../utils/getStorageMapFieldId';
 import OffloadStorageIndexedForm from '../OffloadStorageIndexedForm';
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
@@ -58,16 +57,18 @@ const Harness: FC = () => {
     methods.formState.errors.storageMap?.root?.message ??
     methods.formState.errors.storageMap?.message;
 
+  const updateMapping = (patch: Partial<StorageMapping>): void => {
+    const [current] = methods.getValues(StorageMapFieldId.StorageMap);
+    methods.setValue(StorageMapFieldId.StorageMap, [{ ...current, ...patch }]);
+  };
+
   return (
     <FormProvider {...methods}>
       <OffloadStorageIndexedForm index={0} sourceProvider={undefined} />
       <button
         data-testid="set-incomplete-csi"
         onClick={() => {
-          methods.setValue(
-            getStorageMapFieldId(StorageMapFieldId.OffloadPlugin, 0),
-            OffloadPlugin.CsiVolumeImport,
-          );
+          updateMapping({ [StorageMapFieldId.OffloadPlugin]: OffloadPlugin.CsiVolumeImport });
         }}
         type="button"
       >
@@ -76,15 +77,11 @@ const Harness: FC = () => {
       <button
         data-testid="complete-offload"
         onClick={() => {
-          methods.setValue(
-            getStorageMapFieldId(StorageMapFieldId.OffloadPlugin, 0),
-            OffloadPlugin.CsiVolumeImport,
-          );
-          methods.setValue(getStorageMapFieldId(StorageMapFieldId.StorageSecret, 0), 'hpe-secret');
-          methods.setValue(
-            getStorageMapFieldId(StorageMapFieldId.StorageProduct, 0),
-            'primera3par',
-          );
+          updateMapping({
+            [StorageMapFieldId.OffloadPlugin]: OffloadPlugin.CsiVolumeImport,
+            [StorageMapFieldId.StorageProduct]: 'primera3par',
+            [StorageMapFieldId.StorageSecret]: 'hpe-secret',
+          });
         }}
         type="button"
       >

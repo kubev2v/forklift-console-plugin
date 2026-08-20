@@ -8,10 +8,15 @@ import { StorageMapFieldId } from '@utils/storage/types';
 
 import { useRevalidateStorageMap } from '../useRevalidateStorageMap';
 
-const createWrapper = (trigger: jest.Mock): FC<{ children: ReactNode }> => {
+type TriggerFn = () => Promise<boolean>;
+type HookProps = { plugin: string | undefined };
+
+const createTriggerMock = (): jest.Mock<TriggerFn> => jest.fn<TriggerFn>().mockResolvedValue(true);
+
+const createWrapper = (trigger: jest.Mock<TriggerFn>): FC<{ children: ReactNode }> => {
   const Wrapper: FC<{ children: ReactNode }> = ({ children }) => {
     const methods = useForm({ mode: 'onChange' });
-    methods.trigger = trigger as typeof methods.trigger;
+    methods.trigger = trigger;
 
     return <FormProvider {...methods}>{children}</FormProvider>;
   };
@@ -21,7 +26,7 @@ const createWrapper = (trigger: jest.Mock): FC<{ children: ReactNode }> => {
 
 describe('useRevalidateStorageMap', () => {
   it('does not trigger parent validation on mount', () => {
-    const trigger = jest.fn().mockResolvedValue(true);
+    const trigger = createTriggerMock();
 
     renderHook(
       () => {
@@ -36,14 +41,15 @@ describe('useRevalidateStorageMap', () => {
   });
 
   it('triggers storageMap validation when an offload field changes', () => {
-    const trigger = jest.fn().mockResolvedValue(true);
+    const trigger = createTriggerMock();
+    const initialProps: HookProps = { plugin: undefined };
 
     const { rerender } = renderHook(
-      ({ plugin }: { plugin: string | undefined }) => {
+      ({ plugin }: HookProps) => {
         useRevalidateStorageMap(plugin, undefined, undefined);
       },
       {
-        initialProps: { plugin: undefined },
+        initialProps,
         wrapper: createWrapper(trigger),
       },
     );
