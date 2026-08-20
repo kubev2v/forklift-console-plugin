@@ -10,9 +10,14 @@ const STORAGE_OPTION_BADGE_SUFFIXES = ['Default', 'NetApp Shift'] as const;
 
 const stripStorageOptionBadges = (optionText: string): string => {
   let name = optionText.trim();
-  for (const badge of STORAGE_OPTION_BADGE_SUFFIXES) {
-    if (name.endsWith(badge)) {
-      name = name.slice(0, -badge.length).trimEnd();
+  let stripped = true;
+  while (stripped) {
+    stripped = false;
+    for (const badge of STORAGE_OPTION_BADGE_SUFFIXES) {
+      if (name.endsWith(badge)) {
+        name = name.slice(0, -badge.length).trimEnd();
+        stripped = true;
+      }
     }
   }
   return name;
@@ -165,7 +170,7 @@ export abstract class BaseMappingEditModal extends BaseModal {
   }
 
   async selectDifferentTargetAtIndex(index: number): Promise<string> {
-    const currentTarget = await this.getTargetAtIndex(index);
+    const currentTarget = stripStorageOptionBadges(await this.getTargetAtIndex(index));
     const targetSelect = this.targetSelectLocator(index);
 
     for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {

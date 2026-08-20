@@ -1,22 +1,26 @@
 import { expect, type Locator } from '@playwright/test';
 
 const MAPPING_SOURCE_ROWS_TIMEOUT_MS = 15_000;
+const MAPPING_SOURCE_ROWS_POLL_MS = 1_000;
 
 /**
- * Wait until every mapping row has a source name, then return those names.
- * Avoids treating a partially loaded table as a single-source lab.
+ * Wait until mapping source rows have loaded and the named-row count is stable.
+ * A single named row can appear before remaining inventory rows mount; treating
+ * that as complete retriggers the sole-source fallback.
  */
 export const waitForMappingSourceRows = async (
   rows: Locator,
   getSourceText: (row: Locator) => Promise<string | null>,
 ): Promise<string[]> => {
   let available: string[] = [];
+  let previousNamedCount = -1;
 
   await expect
     .poll(
       async () => {
         const count = await rows.count();
         if (count === 0) {
+          previousNamedCount = -1;
           return 0;
         }
 
@@ -28,10 +32,21 @@ export const waitForMappingSourceRows = async (
           }
         }
 
-        return available.length === count ? count : 0;
+        if (available.length !== count) {
+          previousNamedCount = -1;
+          return 0;
+        }
+
+        if (previousNamedCount === count) {
+          return count;
+        }
+
+        previousNamedCount = count;
+        return 0;
       },
       {
-        message: 'Timed out waiting for every mapping row to show a source name',
+        intervals: [MAPPING_SOURCE_ROWS_POLL_MS],
+        message: 'Timed out waiting for mapping source rows to finish loading',
         timeout: MAPPING_SOURCE_ROWS_TIMEOUT_MS,
       },
     )
