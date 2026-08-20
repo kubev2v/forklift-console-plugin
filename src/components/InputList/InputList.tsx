@@ -53,6 +53,16 @@ const assignIdsToItems = <T,>(items: T[]): InputListItem<T>[] =>
     return { content, id };
   });
 
+const shouldHydrateFromItems = <T,>(localItems: InputListItem<T>[], items: T[]): boolean => {
+  if (isEmpty(items) || localItems.length !== 1) {
+    return false;
+  }
+
+  const currentContent = localItems[0].content;
+
+  return currentContent === null || currentContent === undefined || currentContent === '';
+};
+
 /**
  * Props for InputList component.
  *
@@ -88,9 +98,18 @@ export const InputList = <T,>({
   removeIconContent = 'Remove',
 }: InputListProps<T>): ReactElement => {
   const initialStateItems = isEmpty(items) ? [null as unknown as T] : items;
-  const [localItems, setLocalItems] = useState<InputListItem<T>[]>(
+  const [localItems, setLocalItems] = useState<InputListItem<T>[]>(() =>
     assignIdsToItems(initialStateItems),
   );
+  const [prevItems, setPrevItems] = useState(items);
+
+  if (items !== prevItems) {
+    setPrevItems(items);
+
+    if (shouldHydrateFromItems(localItems, items)) {
+      setLocalItems(assignIdsToItems(items));
+    }
+  }
 
   const handleItemChange = (id: string, newContent: T): void => {
     const updatedItems = localItems.map(({ content, id: itemId }) => ({

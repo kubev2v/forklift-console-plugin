@@ -8,7 +8,10 @@ import {
   Flex,
   FlexItem,
   FormGroup,
+  HelperText,
+  HelperTextItem,
   Radio,
+  Spinner,
   Stack,
 } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -24,6 +27,27 @@ import {
 } from './hooks/useEditLUKSState';
 import LUKSPassphraseInputList from './LUKSPassphraseInputList';
 
+const getSecretWatchErrorMessage = (secretLoadError: unknown): string | undefined => {
+  if (secretLoadError instanceof Error) {
+    return secretLoadError.message;
+  }
+
+  if (typeof secretLoadError === 'string') {
+    return secretLoadError;
+  }
+
+  if (
+    typeof secretLoadError === 'object' &&
+    secretLoadError !== null &&
+    'message' in secretLoadError &&
+    typeof secretLoadError.message === 'string'
+  ) {
+    return secretLoadError.message;
+  }
+
+  return undefined;
+};
+
 const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
   closeOverlay,
   resource,
@@ -35,8 +59,10 @@ const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
     decryptionMode,
     handleConfirm,
     isDisabled,
+    isSecretWatchPending,
     isSourceSecretUnavailable,
     nbdeClevis,
+    secretLoadError,
     secretNamespace,
     selectedSecret,
     setDecryptionMode,
@@ -45,6 +71,8 @@ const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
     setValue,
     value,
   } = useEditLUKSState(resource);
+
+  const secretWatchErrorMessage = getSecretWatchErrorMessage(secretLoadError);
 
   return (
     <ModalForm
@@ -56,6 +84,25 @@ const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
     >
       <Stack hasGutter>
         <EditLUKSModalBody />
+
+        {isSecretWatchPending && (
+          <HelperText data-testid="edit-luks-secret-loading">
+            <HelperTextItem icon={<Spinner size="md" />}>
+              {t('Loading disk decryption secret...')}
+            </HelperTextItem>
+          </HelperText>
+        )}
+
+        {secretLoadError ? (
+          <Alert
+            data-testid="edit-luks-secret-load-error"
+            isInline
+            title={t('Unable to load disk decryption secret')}
+            variant={AlertVariant.danger}
+          >
+            {secretWatchErrorMessage}
+          </Alert>
+        ) : null}
 
         {isSourceSecretUnavailable && (
           <Alert
@@ -129,7 +176,7 @@ const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
                   value={DECRYPTION_MODE_PASSPHRASES}
                 />
 
-                {decryptionMode === DECRYPTION_MODE_PASSPHRASES && (
+                {decryptionMode === DECRYPTION_MODE_PASSPHRASES && !isSecretWatchPending && (
                   <>
                     <FormGroup label={t('Passphrases for LUKS encrypted devices')} />
                     <LUKSPassphraseInputList onChange={setValue} value={value} />

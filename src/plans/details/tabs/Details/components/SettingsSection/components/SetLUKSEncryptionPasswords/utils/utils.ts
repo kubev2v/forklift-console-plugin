@@ -1,6 +1,6 @@
 import { SOURCE_SECRET_LABEL } from 'src/plans/create/utils/copyDecryptionSecret';
 
-import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
+import { ADD, REMOVE, REPLACE } from '@components/ModalForm/utils/constants';
 import {
   type IoK8sApiCoreV1Secret,
   PlanModel,
@@ -8,9 +8,14 @@ import {
   type V1beta1Plan,
 } from '@forklift-ui/types';
 import { k8sCreate, k8sDelete, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
+import { getLabels, getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { getLUKSSecretName, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
+
+const escapeJsonPointerToken = (token: string): string =>
+  token.replaceAll('~', '~0').replaceAll('/', '~1');
+
+const SOURCE_SECRET_LABEL_PATCH_PATH = `/metadata/labels/${escapeJsonPointerToken(SOURCE_SECRET_LABEL)}`;
 
 const createIndexedBase64Object = (encodedString: string): Record<number, string> | undefined => {
   const list = JSON.parse(encodedString || '[]') as string[];
@@ -28,7 +33,19 @@ const createIndexedBase64Object = (encodedString: string): Record<number, string
   return isEmpty(result) ? undefined : result;
 };
 
+type SecretDataReplacePatch = {
+  op: typeof REPLACE;
+  path: '/data';
+  value: Record<number, string>;
+};
+
+type SecretLabelRemovePatch = {
+  op: typeof REMOVE;
+  path: string;
+};
+
 type LUKSSecret = {
+  currentSecret?: IoK8sApiCoreV1Secret;
   newData: Record<number, string> | undefined;
   planName: string | undefined;
   planUID: string | undefined;
@@ -37,6 +54,7 @@ type LUKSSecret = {
 };
 
 const getLUKSSecret = async ({
+  currentSecret,
   newData,
   planName,
   planUID,
@@ -51,11 +69,25 @@ const getLUKSSecret = async ({
   }
 
   if (secretName && newData) {
-    return k8sPatch({
-      data: [{ op: REPLACE, path: '/data', value: newData }],
+    const secretResource = { metadata: { name: secretName, namespace: secretNamespace } };
+    const updatedSecret = await k8sPatch({
+      data: [{ op: REPLACE, path: '/data', value: newData }] satisfies SecretDataReplacePatch[],
       model: SecretModel,
-      resource: { metadata: { name: secretName, namespace: secretNamespace } },
+      resource: secretResource,
     });
+
+    // Best-effort: label REMOVE must not fail the passphrase REPLACE (422 if already gone).
+    if (currentSecret && getLabels(currentSecret)?.[SOURCE_SECRET_LABEL]) {
+      await k8sPatch({
+        data: [
+          { op: REMOVE, path: SOURCE_SECRET_LABEL_PATCH_PATH },
+        ] satisfies SecretLabelRemovePatch[],
+        model: SecretModel,
+        resource: secretResource,
+      }).catch(() => undefined);
+    }
+
+    return updatedSecret;
   }
 
   if (!secretName && newData) {
@@ -126,12 +158,14 @@ const deleteCurrentSecret = async (
 };
 
 export const onDiskDecryptionConfirm = async ({
+  currentSecret,
   existingSecret,
   labeledSourceSecretName,
   nbdeClevis,
   newValue,
   resource,
 }: {
+  currentSecret?: IoK8sApiCoreV1Secret;
   existingSecret?: IoK8sApiCoreV1Secret;
   labeledSourceSecretName?: string;
   nbdeClevis: boolean;
@@ -183,6 +217,7 @@ export const onDiskDecryptionConfirm = async ({
   const newData = nbdeClevis ? undefined : createIndexedBase64Object(newValue);
 
   const secret = await getLUKSSecret({
+    currentSecret,
     newData,
     planName,
     planUID,
