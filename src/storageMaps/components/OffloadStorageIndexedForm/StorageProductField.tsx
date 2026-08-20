@@ -1,7 +1,7 @@
 import { type FC, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
-import type { StorageVendorProduct } from 'src/storageMaps/utils/types';
+import type { OffloadPlugin, StorageVendorProduct } from 'src/storageMaps/utils/types';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import Select from '@components/common/Select';
@@ -15,24 +15,43 @@ import {
   SelectList,
   SelectOption,
 } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import { StorageMapFieldId } from '@utils/storage/types';
 
 import { useStorageVendorProducts } from '../../hooks/useStorageVendorProducts';
 import { getVendorProductLabel } from '../../utils/labelHelpers';
+import { offloadNestedFieldRules } from '../../utils/offloadNestedFieldRules';
 
 type StorageProductFieldProps = {
   fieldId: string;
+  offloadPlugin?: OffloadPlugin | '';
   suggestedProduct?: StorageVendorProduct;
 };
 
-const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId, suggestedProduct }) => {
+const StorageProductField: FC<StorageProductFieldProps> = ({
+  fieldId,
+  offloadPlugin,
+  suggestedProduct,
+}) => {
   const { t } = useForkliftTranslation();
   const {
     control,
     formState: { isSubmitting },
   } = useFormContext();
-  const { loading, storageVendorProducts } = useStorageVendorProducts();
+  const { loading, storageVendorProducts } = useStorageVendorProducts(offloadPlugin);
+
+  const resolvedSuggestedProduct = useMemo(() => {
+    if (!suggestedProduct) {
+      return undefined;
+    }
+
+    if (!storageVendorProducts.includes(suggestedProduct)) {
+      return undefined;
+    }
+
+    return suggestedProduct;
+  }, [storageVendorProducts, suggestedProduct]);
 
   const allOptions = useMemo(
     () =>
@@ -44,7 +63,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId, suggestedP
   );
 
   const { otherProducts, recommendedProducts } = useMemo(() => {
-    if (!suggestedProduct) {
+    if (!resolvedSuggestedProduct) {
       return { otherProducts: storageVendorProducts, recommendedProducts: [] };
     }
 
@@ -52,7 +71,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId, suggestedP
     const others: string[] = [];
 
     for (const product of storageVendorProducts) {
-      if (product === (suggestedProduct as string)) {
+      if (product === (resolvedSuggestedProduct as string)) {
         recommended.push(product);
       } else {
         others.push(product);
@@ -60,7 +79,9 @@ const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId, suggestedP
     }
 
     return { otherProducts: others, recommendedProducts: recommended };
-  }, [storageVendorProducts, suggestedProduct]);
+  }, [resolvedSuggestedProduct, storageVendorProducts]);
+
+  const showRecommendedGroup = !isEmpty(recommendedProducts);
 
   return (
     <FormGroup
@@ -90,7 +111,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId, suggestedP
             testId={fieldId}
             value={field.value}
           >
-            {suggestedProduct ? (
+            {showRecommendedGroup ? (
               <>
                 <SelectGroup label={t('Recommended')}>
                   <SelectList>
@@ -123,8 +144,9 @@ const StorageProductField: FC<StorageProductFieldProps> = ({ fieldId, suggestedP
             )}
           </Select>
         )}
+        rules={offloadNestedFieldRules}
       />
-      {suggestedProduct && (
+      {showRecommendedGroup && (
         <FormHelperText>
           <HelperText>
             <HelperTextItem>

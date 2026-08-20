@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
 import { getPluginLabel, getVendorProductLabel } from 'src/storageMaps/utils/labelHelpers';
+import { OffloadPlugin } from 'src/storageMaps/utils/types';
 
 import {
   DescriptionList,
@@ -26,6 +27,8 @@ type OffloadDetailsRowProps = {
 const OffloadDetailsRow: FC<OffloadDetailsRowProps> = ({ index, mapping }) => {
   const { t } = useForkliftTranslation();
   const dedicatedHosts = mapping[CreatePlanStorageMapFieldId.DedicatedMigrationHosts];
+  const offloadPlugin = mapping[CreatePlanStorageMapFieldId.OffloadPlugin];
+  const showDedicatedHosts = offloadPlugin === OffloadPlugin.VSphereXcopyConfig;
 
   return (
     <Tr isExpanded>
@@ -39,9 +42,7 @@ const OffloadDetailsRow: FC<OffloadDetailsRowProps> = ({ index, mapping }) => {
                   {storageMapFieldLabels[CreatePlanStorageMapFieldId.OffloadPlugin]}
                 </DescriptionListTerm>
                 <DescriptionListDescription data-testid={`review-offload-plugin-${index}`}>
-                  {mapping[CreatePlanStorageMapFieldId.OffloadPlugin]
-                    ? getPluginLabel(mapping[CreatePlanStorageMapFieldId.OffloadPlugin] ?? '')
-                    : EMPTY_MSG}
+                  {offloadPlugin ? getPluginLabel(offloadPlugin) : EMPTY_MSG}
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
@@ -64,16 +65,18 @@ const OffloadDetailsRow: FC<OffloadDetailsRowProps> = ({ index, mapping }) => {
                     : EMPTY_MSG}
                 </DescriptionListDescription>
               </DescriptionListGroup>
-              <DescriptionListGroup>
-                <DescriptionListTerm>
-                  {storageMapFieldLabels[CreatePlanStorageMapFieldId.DedicatedMigrationHosts]}
-                </DescriptionListTerm>
-                <DescriptionListDescription
-                  data-testid={`review-dedicated-migration-hosts-${index}`}
-                >
-                  {isEmpty(dedicatedHosts) ? t('All hosts') : (dedicatedHosts ?? []).join(', ')}
-                </DescriptionListDescription>
-              </DescriptionListGroup>
+              {showDedicatedHosts && (
+                <DescriptionListGroup>
+                  <DescriptionListTerm>
+                    {storageMapFieldLabels[CreatePlanStorageMapFieldId.DedicatedMigrationHosts]}
+                  </DescriptionListTerm>
+                  <DescriptionListDescription
+                    data-testid={`review-dedicated-migration-hosts-${index}`}
+                  >
+                    {isEmpty(dedicatedHosts) ? t('All hosts') : (dedicatedHosts ?? []).join(', ')}
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+              )}
             </DescriptionList>
           </StackItem>
         </Stack>

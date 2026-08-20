@@ -80,7 +80,7 @@ CreateNetworkMapForm (react-hook-form)
 ```
 
 **Network edit:** `NetworkMapEdit` modal patches `/spec/map` via `k8sPatch`.
-**Storage edit:** `StorageMapEdit` modal with offload support, transforms via `transformStorageMapToFormValues` / `transformFormValuesToK8sSpec`.
+**Storage edit:** `StorageMapEdit` modal with offload support, transforms via `transformStorageMapToFormValues` / `transformFormValuesToK8sSpec` (and shared `createOffloadPluginConfig` / `resolveOffloadPlugin` under `storageMaps/utils`). Offload plugin keys: `vsphereXcopyConfig`, `csiVolumeImport`. CSI vendor products are CRD-gated (`primera3par`).
 
 ### Actions
 
@@ -191,7 +191,7 @@ Used in: list row actions + details page header.
 | Target field | Shared `@components/mappings/` | Feature-local `TargetStorageField` etc. |
 | CRD schema hooks | None | `useStorageMapCrd`, offload/product enum discovery |
 | Plan create util | Duplicated in plans | Reused from storageMaps |
-| Feature flags | None | `FEATURE_NAMES.COPY_OFFLOAD` for vSphere XCOPY |
+| Feature flags | None | `FEATURE_NAMES.COPY_OFFLOAD` for copy offload (`vsphereXcopyConfig`, `csiVolumeImport`) |
 | Extra hooks | None | `storageMaps/hooks/` (5 hooks) |
 
 ## Blast Radius Notes
