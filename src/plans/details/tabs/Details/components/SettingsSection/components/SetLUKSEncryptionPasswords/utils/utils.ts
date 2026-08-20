@@ -145,9 +145,9 @@ export const onDiskDecryptionConfirm = async ({
   const planVirtualMachines = getPlanVirtualMachines(resource);
 
   if (existingSecret) {
-    // Intentional name-only no-op: the source-secret label stores the name, not
-    // uid/resourceVersion. If source data changed under the same name, re-select
-    // another secret then the source to force a re-copy.
+    // No-op only when useEditLUKSState auto-seeded the labeled source
+    // (labeledSourceSecretName is set). Manual re-selection omits the name so
+    // current source data is copied even if the names match.
     if (labeledSourceSecretName && getName(existingSecret) === labeledSourceSecretName) {
       return undefined;
     }

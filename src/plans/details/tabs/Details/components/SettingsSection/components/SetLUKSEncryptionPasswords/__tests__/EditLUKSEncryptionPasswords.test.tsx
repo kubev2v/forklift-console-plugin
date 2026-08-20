@@ -22,6 +22,7 @@ jest.mock('@utils/crds/plans/selectors', () => ({
 
 const mockGetNamespace = jest.fn();
 jest.mock('@utils/crds/common/selectors', () => ({
+  ...jest.requireActual('@utils/crds/common/selectors'),
   getNamespace: jest.fn((...args) => mockGetNamespace(...args)),
 }));
 
@@ -364,5 +365,67 @@ describe('EditLUKSEncryptionPasswords', () => {
     expect(
       screen.queryByTestId('edit-luks-source-secret-unavailable-alert'),
     ).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(mockOnDiskDecryptionConfirm).toHaveBeenCalledWith(
+        expect.objectContaining({
+          labeledSourceSecretName: undefined,
+        }),
+      );
+    });
+  });
+
+  it('does not treat a permission error as a missing source secret', async () => {
+    mockGetPlanVirtualMachines.mockReturnValue([
+      { luks: { name: 'test-secret' }, nbdeClevis: false },
+    ]);
+
+    let sourceWatchResult: [IoK8sApiCoreV1Secret | undefined, boolean, unknown] = [
+      undefined,
+      true,
+      { code: 403, message: 'Forbidden' },
+    ];
+
+    mockUseK8sWatchResource.mockImplementation((resource) => {
+      if (!resource) {
+        return [undefined, true, null];
+      }
+
+      if (resource.name === 'test-secret') {
+        return [planOwnedSecretWithSourceLabel, true, null];
+      }
+
+      if (resource.name === 'luks-source') {
+        return sourceWatchResult;
+      }
+
+      return [undefined, true, null];
+    });
+
+    const { rerender } = render(
+      <EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('edit-use-existing-secret-radio')).toBeChecked();
+    });
+
+    expect(
+      screen.queryByTestId('edit-luks-source-secret-unavailable-alert'),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /save/i })).toBeDisabled();
+
+    sourceWatchResult = [sourceSecret, true, null];
+    rerender(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('edit-luks-secret-select')).toHaveTextContent(
+        'Selected: luks-source',
+      );
+    });
+
+    expect(screen.getByRole('button', { name: /save/i })).toBeEnabled();
   });
 });

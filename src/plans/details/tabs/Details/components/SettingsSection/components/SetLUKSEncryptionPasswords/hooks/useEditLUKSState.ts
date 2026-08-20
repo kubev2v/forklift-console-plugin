@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { type Dispatch, type SetStateAction, useCallback, useMemo, useRef, useState } from 'react';
 import { SOURCE_SECRET_LABEL } from 'src/plans/create/utils/copyDecryptionSecret';
 
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
@@ -6,7 +6,7 @@ import {
   getGroupVersionKindForModel,
   type WatchK8sResource,
 } from '@openshift-console/dynamic-plugin-sdk';
-import { getNamespace } from '@utils/crds/common/selectors';
+import { getLabels, getName, getNamespace } from '@utils/crds/common/selectors';
 import { getLUKSSecretName, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
@@ -22,6 +22,24 @@ const DECRYPTION_MODE_PASSPHRASES = 'passphrases';
 export type DecryptionMode = typeof DECRYPTION_MODE_EXISTING | typeof DECRYPTION_MODE_PASSPHRASES;
 
 export { DECRYPTION_MODE_EXISTING, DECRYPTION_MODE_PASSPHRASES };
+
+const HTTP_NOT_FOUND = 404;
+
+type WatchError = Error & { code?: number; status?: number };
+
+const isNotFoundWatchError = (error: Error | null): boolean => {
+  if (!error) {
+    return false;
+  }
+
+  const watchError = error as WatchError;
+  if (watchError.code === HTTP_NOT_FOUND || watchError.status === HTTP_NOT_FOUND) {
+    return true;
+  }
+
+  const message = watchError.message ?? '';
+  return message.includes('NotFound') || message.toLowerCase().includes('not found');
+};
 
 const getNbdeClevisFromResource = (resource: EditLUKSState['resource']): boolean => {
   const vms = getPlanVirtualMachines(resource) as EnhancedPlanSpecVms[];
@@ -68,7 +86,7 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
 
   const [secret] = useK8sWatchResource<IoK8sApiCoreV1Secret>(watchResource);
 
-  const sourceSecretName = secret?.metadata?.labels?.[SOURCE_SECRET_LABEL];
+  const sourceSecretName = secret ? getLabels(secret)?.[SOURCE_SECRET_LABEL] : undefined;
   const sourceWatchResource: WatchK8sResource | null = useMemo(
     () =>
       sourceSecretName && secretNamespace
@@ -94,6 +112,7 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
   const [prevSecretDataKey, setPrevSecretDataKey] = useState<string | undefined>();
   const modeInitializedRef = useRef(false);
   const selectedSecretInitializedRef = useRef(false);
+  const selectedSecretWasAutoSeededRef = useRef(false);
 
   if (resource !== prevResource) {
     setPrevResource(resource);
@@ -104,21 +123,26 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     setValue([]);
   }
 
-  if (!modeInitializedRef.current && secret?.metadata) {
+  if (!modeInitializedRef.current && getName(secret)) {
     modeInitializedRef.current = true;
-    if (secret.metadata.labels?.[SOURCE_SECRET_LABEL]) {
+    if (secret && getLabels(secret)?.[SOURCE_SECRET_LABEL]) {
       setDecryptionMode(DECRYPTION_MODE_EXISTING);
     }
   }
 
   if (!selectedSecretInitializedRef.current && sourceSecretName) {
-    if (sourceSecret?.metadata?.name) {
+    if (getName(sourceSecret)) {
       selectedSecretInitializedRef.current = true;
-      setSelectedSecret((prev) => prev ?? sourceSecret);
-    } else if (sourceSecretLoaded || sourceSecretLoadError) {
-      // Labeled source missing (deleted/404) — fall back so the modal stays usable
+      if (!selectedSecret) {
+        selectedSecretWasAutoSeededRef.current = true;
+        setSelectedSecret(sourceSecret);
+      }
+    } else if (
+      isNotFoundWatchError(sourceSecretLoadError) ||
+      (sourceSecretLoaded && !sourceSecretLoadError)
+    ) {
+      // Confirmed missing source (404/NotFound or loaded empty) — keep the modal usable
       selectedSecretInitializedRef.current = true;
-      // Preserve a manual pick made while the source watch was in flight
       if (!selectedSecret) {
         setDecryptionMode(DECRYPTION_MODE_PASSPHRASES);
         setIsSourceSecretUnavailable(true);
@@ -134,11 +158,19 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     }
   }
 
+  const handleSetSelectedSecret: Dispatch<SetStateAction<IoK8sApiCoreV1Secret | undefined>> =
+    useCallback((next) => {
+      selectedSecretWasAutoSeededRef.current = false;
+      setSelectedSecret(next);
+    }, []);
+
   const handleConfirm = useCallback(async (): Promise<unknown> => {
     if (decryptionMode === DECRYPTION_MODE_EXISTING && selectedSecret) {
       return onDiskDecryptionConfirm({
         existingSecret: selectedSecret,
-        labeledSourceSecretName: sourceSecretName,
+        labeledSourceSecretName: selectedSecretWasAutoSeededRef.current
+          ? sourceSecretName
+          : undefined,
         nbdeClevis: false,
         newValue: JSON.stringify([]),
         resource,
@@ -164,7 +196,7 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     selectedSecret,
     setDecryptionMode,
     setNbdeClevis,
-    setSelectedSecret,
+    setSelectedSecret: handleSetSelectedSecret,
     setValue,
     value,
   };

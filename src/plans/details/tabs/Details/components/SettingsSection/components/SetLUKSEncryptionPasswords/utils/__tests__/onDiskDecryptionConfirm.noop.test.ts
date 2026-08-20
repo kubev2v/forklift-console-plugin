@@ -70,4 +70,23 @@ describe('onDiskDecryptionConfirm no-op existing secret', () => {
     expect(mockK8sDelete).toHaveBeenCalled();
     expect(mockK8sPatch).toHaveBeenCalled();
   });
+
+  it('copies when the labeled source is selected again after a manual pick', async () => {
+    mockK8sCreate.mockResolvedValue({
+      metadata: { name: 'test-plan-abc', namespace: 'test-ns' },
+    });
+    mockK8sDelete.mockResolvedValue(undefined);
+    mockK8sPatch.mockResolvedValue(plan);
+
+    await onDiskDecryptionConfirm({
+      existingSecret: labeledSource,
+      nbdeClevis: false,
+      newValue: JSON.stringify([]),
+      resource: plan,
+    });
+
+    expect(mockK8sCreate).toHaveBeenCalled();
+    expect(mockK8sDelete).toHaveBeenCalled();
+    expect(mockK8sPatch).toHaveBeenCalled();
+  });
 });
