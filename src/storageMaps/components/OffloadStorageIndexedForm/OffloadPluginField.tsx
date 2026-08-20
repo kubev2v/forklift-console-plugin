@@ -10,6 +10,7 @@ import { StorageMapFieldId } from '@utils/storage/types';
 
 import { useOffloadPlugins } from '../../hooks/useOffloadPlugins';
 import { getPluginLabel } from '../../utils/labelHelpers';
+import { offloadNestedFieldRules } from '../../utils/offloadNestedFieldRules';
 
 type OffloadPluginFieldProps = { fieldId: string };
 
@@ -68,6 +69,7 @@ const OffloadPluginField: FC<OffloadPluginFieldProps> = ({ fieldId }) => {
             value={field.value}
           />
         )}
+        rules={offloadNestedFieldRules}
       />
     </FormGroup>
   );

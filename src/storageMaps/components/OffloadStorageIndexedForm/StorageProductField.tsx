@@ -21,6 +21,7 @@ import { StorageMapFieldId } from '@utils/storage/types';
 
 import { useStorageVendorProducts } from '../../hooks/useStorageVendorProducts';
 import { getVendorProductLabel } from '../../utils/labelHelpers';
+import { offloadNestedFieldRules } from '../../utils/offloadNestedFieldRules';
 
 type StorageProductFieldProps = {
   fieldId: string;
@@ -143,6 +144,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({
             )}
           </Select>
         )}
+        rules={offloadNestedFieldRules}
       />
       {showRecommendedGroup && (
         <FormHelperText>

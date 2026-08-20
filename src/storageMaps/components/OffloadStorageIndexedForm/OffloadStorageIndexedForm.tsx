@@ -27,6 +27,7 @@ import {
 } from '../../utils/types';
 import { resolveProductFromCsiProvisioner } from '../../utils/vendorLookupTables';
 
+import { useRevalidateStorageMap } from './hooks/useRevalidateStorageMap';
 import DedicatedMigrationHostsField from './DedicatedMigrationHostsField';
 import OffloadOptimalityHint from './OffloadOptimalityHint';
 import OffloadPluginField from './OffloadPluginField';
@@ -115,6 +116,8 @@ const OffloadStorageIndexedForm: FC<OffloadStorageIndexedFormProps> = ({
 
     return validateOffloadFields(mapping);
   }, [offloadPlugin, storageProduct, storageSecret]);
+
+  useRevalidateStorageMap(offloadPlugin, storageSecret, storageProduct);
 
   useEffect(() => {
     if (

@@ -15,6 +15,8 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import { StorageMapFieldId } from '@utils/storage/types';
 
+import { offloadNestedFieldRules } from '../../utils/offloadNestedFieldRules';
+
 type StorageSecretFieldProps = {
   fieldId: string;
   sourceProvider: V1beta1Provider | undefined;
@@ -89,6 +91,7 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
             </SelectList>
           </Select>
         )}
+        rules={offloadNestedFieldRules}
       />
     </FormGroup>
   );
