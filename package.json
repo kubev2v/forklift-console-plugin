@@ -62,7 +62,7 @@
     "@patternfly/react-table": "6.4.0",
     "@patternfly/react-tokens": "6.4.0",
     "classnames": "^2.5.1",
-    "i18next": "^25.3.2",
+    "i18next": "^26.0.0",
     "immer": "^10.1.1",
     "immutable": "^5.1.5",
     "js-base64": "^3.7.7",
