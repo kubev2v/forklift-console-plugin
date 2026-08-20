@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 
 import { Th } from '@patternfly/react-table';
 
@@ -13,8 +13,11 @@ export const createHeaderWithSelection = <T,>({
   canSelect?: boolean;
   header?: FC<TableViewHeaderProps<T>>;
   isExpanded?: (item: T) => boolean;
-}) => {
-  const HeaderWithSelection = ({ dataOnScreen, ...other }: TableViewHeaderProps<T>) => {
+}): FC<TableViewHeaderProps<T>> => {
+  const HeaderWithSelection = ({
+    dataOnScreen,
+    ...other
+  }: TableViewHeaderProps<T>): ReactElement => {
     return (
       <>
         {isExpanded && <Th />}

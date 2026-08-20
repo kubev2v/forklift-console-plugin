@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
@@ -8,7 +9,7 @@ import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { otherFormFieldLabels, OtherSettingsFormFieldId } from './constants';
 
-const NBDEClevisField = () => {
+const NBDEClevisField = (): ReactElement => {
   const { t } = useForkliftTranslation();
   const { control } = useCreatePlanFormContext();
 

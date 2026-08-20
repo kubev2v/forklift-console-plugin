@@ -98,7 +98,7 @@ const MigrationsListPage: FC = () => {
         type: FilterDefType.DateRange,
       },
       isVisible: false,
-      jsonPath: (resourceData: unknown) => {
+      jsonPath: (resourceData: unknown): { completed?: string; started?: string } => {
         const migration = resourceData as V1beta1Migration;
         return {
           completed: migration?.status?.completed,

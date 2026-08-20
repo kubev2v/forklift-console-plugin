@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { FC, ReactElement, ReactNode } from 'react';
 
 import { Bullseye } from '@patternfly/react-core';
 import { InnerScrollContainer, Table, Tbody, Td, Thead, Tr } from '@patternfly/react-table';
@@ -38,7 +38,7 @@ export const TableView = <T,>({
   toId,
   uidFieldId = UID,
   visibleColumns,
-}: TableViewProps<T>) => {
+}: TableViewProps<T>): ReactElement => {
   const hasChildren = !isEmpty(children?.filter(Boolean));
   const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
 

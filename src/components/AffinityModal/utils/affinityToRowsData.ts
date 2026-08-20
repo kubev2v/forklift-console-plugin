@@ -6,11 +6,17 @@ import type {
   K8sIoApimachineryPkgApisMetaV1LabelSelectorRequirement,
 } from '@forklift-ui/types';
 
-import { AffinityCondition, type AffinityRowData, AffinityType } from './types';
+import { AffinityCondition, type AffinityLabel, type AffinityRowData, AffinityType } from './types';
 
 const setIDsToEntity = (
   entity: K8sIoApimachineryPkgApisMetaV1LabelSelectorRequirement[] | undefined,
-) => entity?.map((elm, index) => ({ ...elm, id: index }));
+): AffinityLabel[] | undefined =>
+  entity?.map((elm, index) => ({
+    id: index,
+    key: elm.key,
+    operator: elm.operator,
+    values: elm.values ?? [],
+  }));
 
 const getNodeAffinityRows = (
   nodeAffinity: K8sIoApiCoreV1NodeAffinity | undefined,

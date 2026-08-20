@@ -33,7 +33,7 @@ const PlansBulkActionsDropdown: FC<PlansBulkActionsDropdownProps> = ({
     namespace,
   });
 
-  const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
+  const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined): void => {
     setIsOpen(false);
   };
 

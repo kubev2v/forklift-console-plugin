@@ -3,7 +3,11 @@ import { ConcernCategory } from 'src/providers/details/tabs/VirtualMachines/cons
 import type { EnumValue } from '@components/common/utils/types';
 import { getCategoryLabel } from '@components/Concerns/utils/category';
 
-export const createInitialUniqueMaps = () => ({
+export const createInitialUniqueMaps = (): {
+  critical: Map<string, EnumValue>;
+  information: Map<string, EnumValue>;
+  warning: Map<string, EnumValue>;
+} => ({
   critical: new Map<string, EnumValue>(),
   information: new Map<string, EnumValue>(),
   warning: new Map<string, EnumValue>(),
@@ -11,7 +15,10 @@ export const createInitialUniqueMaps = () => ({
 
 type UniqueMaps = ReturnType<typeof createInitialUniqueMaps>;
 
-export const getUniqueMapByCategory = (acc: UniqueMaps, category: string) => {
+export const getUniqueMapByCategory = (
+  acc: UniqueMaps,
+  category: string,
+): Map<string, EnumValue> => {
   const label = getCategoryLabel(category);
   if (label === ConcernCategory.Critical) {
     return acc.critical;

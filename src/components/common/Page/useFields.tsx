@@ -40,9 +40,9 @@ export const useFields = (
   userSettings?: FieldSettings,
 ): [ResourceField[], (newFields: ResourceField[]) => void] => {
   const {
-    clear: clearSettings = () => undefined,
+    clear: clearSettings = (): void => undefined,
     data: fieldsFromSettings = [],
-    save: saveFieldsInSettings = () => undefined,
+    save: saveFieldsInSettings = (): void => undefined,
   } = userSettings ?? {};
 
   const [fields, setFields] = useState<ResourceField[]>(() => {
@@ -88,25 +88,26 @@ export const useFields = (
   );
 
   const setInternalStateAndSaveUserSettings = useMemo(
-    () => (newFields: ResourceField[]) => {
-      setFields(newFields);
-      if (sameOrderAndVisibility(newFields, defaultFields)) {
-        // don't store settings if equal to default settings
-        clearSettings();
-      } else {
-        saveFieldsInSettings(
-          newFields.reduce<{ isVisible: boolean | undefined; resourceFieldId: string }[]>(
-            (acc, { isVisible, resourceFieldId }) => {
-              if (resourceFieldId) {
-                acc.push({ isVisible, resourceFieldId });
-              }
-              return acc;
-            },
-            [],
-          ),
-        );
-      }
-    },
+    () =>
+      (newFields: ResourceField[]): void => {
+        setFields(newFields);
+        if (sameOrderAndVisibility(newFields, defaultFields)) {
+          // don't store settings if equal to default settings
+          clearSettings();
+        } else {
+          saveFieldsInSettings(
+            newFields.reduce<{ isVisible: boolean | undefined; resourceFieldId: string }[]>(
+              (acc, { isVisible, resourceFieldId }) => {
+                if (resourceFieldId) {
+                  acc.push({ isVisible, resourceFieldId });
+                }
+                return acc;
+              },
+              [],
+            ),
+          );
+        }
+      },
     [defaultFields, clearSettings, saveFieldsInSettings],
   );
 

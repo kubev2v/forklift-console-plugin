@@ -1,4 +1,10 @@
-import { type ForwardedRef, forwardRef, type ReactNode, useImperativeHandle } from 'react';
+import {
+  type ForwardedRef,
+  forwardRef,
+  type ReactElement,
+  type ReactNode,
+  useImperativeHandle,
+} from 'react';
 
 import {
   MenuFooter,
@@ -65,7 +71,7 @@ const MultiTypeaheadSelect = (
     ...selectProps
   }: MultiTypeaheadSelectProps,
   ref: ForwardedRef<HTMLInputElement>,
-) => {
+): ReactElement => {
   const {
     activeItemId,
     displayOptions,

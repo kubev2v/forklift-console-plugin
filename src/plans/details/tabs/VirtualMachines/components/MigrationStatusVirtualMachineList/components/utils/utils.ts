@@ -14,21 +14,22 @@ import {
 
 import type { DiskTransferMap, TaskCounterMap } from './types';
 
-const hasPipelineNotFailed = (pipeline: V1beta1PlanStatusMigrationVmsPipeline) => !pipeline?.error;
+const hasPipelineNotFailed = (pipeline: V1beta1PlanStatusMigrationVmsPipeline): boolean =>
+  !pipeline?.error;
 
-const hasPipelineCompleted = (pipeline: V1beta1PlanStatusMigrationVmsPipeline) =>
+const hasPipelineCompleted = (pipeline: V1beta1PlanStatusMigrationVmsPipeline): boolean =>
   hasPipelineNotFailed(pipeline) && pipeline?.phase === taskStatuses.completed;
 
 const hasPipelineOkAndTaskProgressCompleted = (
   taskProgress: V1beta1PlanStatusMigrationVmsPipelineTasksProgress,
   pipeline: V1beta1PlanStatusMigrationVmsPipeline,
-) => hasPipelineNotFailed(pipeline) && taskProgress.completed === taskProgress.total;
+): boolean => hasPipelineNotFailed(pipeline) && taskProgress.completed === taskProgress.total;
 
 const hasTaskCompleted = (
   taskPhase: string | undefined,
   taskProgress: V1beta1PlanStatusMigrationVmsPipelineTasksProgress,
   pipeline: V1beta1PlanStatusMigrationVmsPipeline,
-) =>
+): boolean =>
   taskPhase === taskStatuses.completed ||
   (taskPhase === undefined && hasPipelineCompleted(pipeline)) ||
   (taskPhase === undefined && hasPipelineOkAndTaskProgressCompleted(taskProgress, pipeline));
@@ -77,7 +78,9 @@ export const getTaskProgress = (task: V1beta1PlanStatusMigrationVmsPipelineTasks
   return `${completeString} / ${totalString} ${task.annotations?.unit ?? EMPTY_MSG}`;
 };
 
-export const getPipelineTasks = (pipeline: V1beta1PlanStatusMigrationVmsPipeline) => {
+export const getPipelineTasks = (
+  pipeline: V1beta1PlanStatusMigrationVmsPipeline,
+): { completed: number; name: string | undefined; total: number } => {
   const tasks = pipeline?.tasks ?? [];
 
   // search for all completed tasks (either tasks that completed successfully or ones that aren't finished but their pipeline step is).
@@ -88,7 +91,7 @@ export const getPipelineTasks = (pipeline: V1beta1PlanStatusMigrationVmsPipeline
   return { completed: tasksCompleted.length, name: pipeline.name, total: tasks.length };
 };
 
-export const getJobPhase = (job: IoK8sApiBatchV1Job) => {
+export const getJobPhase = (job: IoK8sApiBatchV1Job): string => {
   const status = job?.status;
 
   if (Number(status?.failed) > 0) {

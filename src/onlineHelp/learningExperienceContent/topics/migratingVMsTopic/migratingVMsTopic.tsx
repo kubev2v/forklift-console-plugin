@@ -16,7 +16,7 @@ import { LEARN_MORE_MIGRATING_VMS_DOCS_URL } from '../utils/constants';
 import { commonMigratingVMsSubTopics } from './subTopics/commonMigratingVMsSubTopics';
 
 const migratingVMsSubTopics = (providerType?: ProviderTypes): LearningExperienceSubTopic[] => {
-  const helpTopics = () => {
+  const helpTopics = (): ReturnType<typeof commonMigratingVMsSubTopics> => {
     switch (providerType) {
       case PROVIDER_TYPES.vsphere:
         return commonMigratingVMsSubTopics(t('Choose your VMware provider.'));

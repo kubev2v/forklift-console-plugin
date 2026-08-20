@@ -52,7 +52,7 @@ const SettingsEdit: OverlayComponent<SettingsEditProps> = ({ closeOverlay, contr
     trigger(SettingsFields.AapUrl).catch(() => undefined);
   }, [trigger]);
 
-  const onSubmit = async (formData: ForkliftSettingsValues) => {
+  const onSubmit = async (formData: ForkliftSettingsValues): Promise<void> => {
     if (!isDirty) {
       closeOverlay();
       return;

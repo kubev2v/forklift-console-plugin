@@ -15,7 +15,7 @@ const CancelMigrationVirtualMachinesButton: FC<CancelMigrationVirtualMachinesPro
 }) => {
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
-  const onClick = () => {
+  const onClick = (): void => {
     launchOverlay<CancelMigrationVirtualMachinesProps>(CancelMigrationVirtualMachinesModal, {
       migration,
       selectedIds,

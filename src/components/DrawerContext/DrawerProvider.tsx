@@ -20,13 +20,13 @@ export const DrawerProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [drawerTitle, setDrawerTitle] = useState<ReactNode>(null);
   const focusRef = useRef<HTMLDivElement>(null);
 
-  const openDrawer = (content: ReactNode, title?: ReactNode) => {
+  const openDrawer = (content: ReactNode, title?: ReactNode): void => {
     setDrawerContent(content);
     setDrawerTitle(title ?? null);
     setIsOpen(true);
   };
 
-  const closeDrawer = () => {
+  const closeDrawer = (): void => {
     setIsOpen(false);
   };
 

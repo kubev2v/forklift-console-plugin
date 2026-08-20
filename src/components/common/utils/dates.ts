@@ -33,7 +33,8 @@ export const toISODate = (date: Date): string | undefined => {
   return dt.isValid ? dt.toISODate() : undefined;
 };
 
-export const isValidDate = (isoDateString: string) => DateTime.fromISO(isoDateString).isValid;
+export const isValidDate = (isoDateString: string): boolean =>
+  DateTime.fromISO(isoDateString).isValid;
 
 /**
  *

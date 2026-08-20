@@ -11,7 +11,7 @@ export const patchNetworkMappingValues = async (
   formData: PlanNetworkEditFormValues,
   networkMap: V1beta1NetworkMap,
   sourceProvider: V1beta1Provider,
-) => {
+): Promise<void> => {
   const op = isEmpty(networkMap?.spec?.map) ? ADD : REPLACE;
 
   await k8sPatch({

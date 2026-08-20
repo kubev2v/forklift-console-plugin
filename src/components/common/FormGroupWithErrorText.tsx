@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
@@ -14,7 +14,7 @@ const FormGroupWithErrorText = ({
   fieldId,
   helperText,
   ...props
-}: FormGroupWithErrorTextProps) => {
+}: FormGroupWithErrorTextProps): ReactElement => {
   const { getFieldState } = useFormContext();
   const { error } = getFieldState(fieldId);
 

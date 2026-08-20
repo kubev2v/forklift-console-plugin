@@ -1,13 +1,14 @@
+import type { ReactElement } from 'react';
 import { MemoryRouter } from 'react-router';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { render, screen } from '@testing-library/react';
+import { render, type RenderResult, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { StandardPageWithSelection } from '../StandardPageWithSelection';
 
-const renderWithRouter = (component: React.ReactElement) =>
+const renderWithRouter = (component: ReactElement): RenderResult =>
   render(<MemoryRouter>{component}</MemoryRouter>);
 
 describe('StandardPageWithSelection', () => {
@@ -35,7 +36,7 @@ describe('StandardPageWithSelection', () => {
     },
   ];
 
-  const toId = (item: { id: string }) => item.id;
+  const toId = (item: { id: string }): string => item.id;
 
   beforeEach(() => {
     window.history.replaceState({}, '', '/');
@@ -150,7 +151,7 @@ describe('StandardPageWithSelection', () => {
   });
 
   describe('Expansion', () => {
-    const ExpandedContent = () => <div>Expanded details</div>;
+    const ExpandedContent = (): ReactElement => <div>Expanded details</div>;
 
     it('should render expansion toggle when expanded content is provided', () => {
       renderWithRouter(
@@ -217,7 +218,7 @@ describe('StandardPageWithSelection', () => {
   });
 
   describe('Combined Selection and Expansion', () => {
-    const ExpandedContent = () => <div>Expanded details</div>;
+    const ExpandedContent = (): ReactElement => <div>Expanded details</div>;
 
     it('should support both selection and expansion simultaneously', () => {
       renderWithRouter(
@@ -247,7 +248,7 @@ describe('StandardPageWithSelection', () => {
   describe('Conditional Selection with canSelect', () => {
     it('should disable selection for items that fail canSelect', () => {
       const onSelect = jest.fn();
-      const canSelect = (item: { id: string }) => item.id !== '2';
+      const canSelect = (item: { id: string }): boolean => item.id !== '2';
 
       renderWithRouter(
         <StandardPageWithSelection
@@ -270,7 +271,7 @@ describe('StandardPageWithSelection', () => {
     it('should only select eligible items when Select All is used', async () => {
       const user = userEvent.setup();
       const onSelect = jest.fn();
-      const canSelect = (item: { id: string }) => item.id !== '2';
+      const canSelect = (item: { id: string }): boolean => item.id !== '2';
 
       renderWithRouter(
         <StandardPageWithSelection
@@ -293,7 +294,7 @@ describe('StandardPageWithSelection', () => {
     it('should not include non-selectable items when deselecting all', async () => {
       const user = userEvent.setup();
       const onSelect = jest.fn();
-      const canSelect = (item: { id: string }) => item.id !== '2';
+      const canSelect = (item: { id: string }): boolean => item.id !== '2';
 
       renderWithRouter(
         <StandardPageWithSelection

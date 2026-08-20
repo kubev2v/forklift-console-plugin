@@ -41,7 +41,7 @@ const PlanNetworkMapEdit: OverlayComponent<PlanNetworkMapEditProps> = ({
 
   const { error } = getFieldState(NetworkMapFieldId.NetworkMap);
 
-  const onSubmit = async (formData: PlanNetworkEditFormValues) => {
+  const onSubmit = async (formData: PlanNetworkEditFormValues): Promise<void> => {
     if (!isDirty) {
       closeOverlay();
       return;

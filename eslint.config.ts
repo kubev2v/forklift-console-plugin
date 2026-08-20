@@ -425,6 +425,14 @@ export const createEslintConfig = () =>
       rules: {
         ...eslintReact.configs['recommended-typescript'].rules,
         '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'error',
+        '@eslint-react/hooks-extra/prefer-use-state-lazy-initialization': 'off',
+      },
+    },
+    // MTV-6273: enforce explicit return types on src/
+    {
+      files: ['src/**/*.{ts,tsx}'],
+      rules: {
+        '@typescript-eslint/explicit-function-return-type': 'error',
       },
     },
     {

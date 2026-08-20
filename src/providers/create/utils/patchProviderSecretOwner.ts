@@ -8,7 +8,7 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 export const patchProviderSecretOwner = async (
   provider: V1beta1Provider | undefined,
   secret: IoK8sApiCoreV1Secret | undefined,
-) => {
+): Promise<void> => {
   if (!secret || !provider) {
     return;
   }

@@ -1,4 +1,4 @@
-import { type FC, useMemo, useState } from 'react';
+import { type FC, type ReactElement, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import type { GlobalActionToolbarProps } from 'src/components/common/utils/types';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
@@ -53,7 +53,7 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
   const hostsData = matchHostsToInventory(inventoryHosts, hosts, provider);
 
   const actions: FC<GlobalActionToolbarProps<InventoryHostNetworkTriple>>[] = [
-    () => (
+    (): ReactElement => (
       <SelectNetworkForHostButton
         hostsData={hostsData}
         provider={provider}
@@ -64,11 +64,12 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
 
   const canPatchProps = permissions?.canPatch
     ? {
-        canSelect: (item: InventoryHostNetworkTriple) => !isEmpty(item?.inventory?.networkAdapters),
+        canSelect: (item: InventoryHostNetworkTriple): boolean =>
+          !isEmpty(item?.inventory?.networkAdapters),
         GlobalActionToolbarItems: actions,
         onSelect: setSelectedIds,
         selectedIds,
-        toId: (item: InventoryHostNetworkTriple) => item.inventory.id,
+        toId: (item: InventoryHostNetworkTriple): string => item.inventory.id,
       }
     : {};
 

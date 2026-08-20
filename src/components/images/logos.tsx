@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import ec2Img from './resources/aws-ec2.svg';
 import hypervImg from './resources/hyperv.svg';
 import ovaImg from './resources/open-virtual-appliance.png';
@@ -73,4 +75,5 @@ const vmLogoDark = (
   />
 );
 
-export const getVmwareLogo = (isDarkTheme: boolean) => (isDarkTheme ? vmLogoLight : vmLogoDark);
+export const getVmwareLogo = (isDarkTheme: boolean): ReactElement =>
+  isDarkTheme ? vmLogoLight : vmLogoDark;

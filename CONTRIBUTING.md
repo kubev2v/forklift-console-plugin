@@ -156,7 +156,7 @@ Example: if you remove `'no-ternary': 'off'`, the rule activates from `eslint.co
 ### Categories
 
 - **Permanently off (Category 3/4):** Rules intentionally rejected for this project (e.g., `no-ternary`, `prefer-readonly-parameter-types`, `strict-boolean-expressions`). Do not enable without team consensus.
-- **Deferred (has a Jira story):** Rules currently off with a plan to enable later (e.g., `explicit-function-return-type`, `naming-convention`). Check the parent epic MTV-6268 for status.
+- **Deferred (has a Jira story):** Rules currently off with a plan to enable later. Check the parent epic MTV-6268 for status.
 - **Inherited from `.all` (no explicit entry):** If a rule isn't listed in the config, it's **on** from `.all`. To turn it off, add an explicit `'off'` entry.
 
 ### Adding a new rule

@@ -77,7 +77,7 @@ const StorageMapEdit: OverlayComponent<StorageMapEditProps> = ({
     reset(initialFormValues);
   }, [initialFormValues, reset]);
 
-  const onSubmit = async (formValues: UpdateMappingsFormData) => {
+  const onSubmit = async (formValues: UpdateMappingsFormData): Promise<void> => {
     const filteredStorageMap = formValues.storageMap?.filter((mapping) => {
       const hasSource = Boolean(mapping[StorageMapFieldId.SourceStorage]?.name);
       const hasTarget = Boolean(mapping[StorageMapFieldId.TargetStorage]?.name);

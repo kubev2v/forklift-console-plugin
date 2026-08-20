@@ -12,14 +12,16 @@ import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import type { ProviderVirtualMachine } from '../../types';
 
-export const hasCriticalConcern = (vm: ProviderVirtualMachine | KubeProviderVirtualMachine) =>
+export const hasCriticalConcern = (
+  vm: ProviderVirtualMachine | KubeProviderVirtualMachine,
+): boolean =>
   vm.providerType !== PROVIDER_TYPES.openshift &&
   vm.concerns?.some((concern) => concern.category === ConcernCategory.Critical);
 
 type VmConcernsFilterItems = { vm: { concerns: Concern[] } };
 
 export const criticalConcernFilter = (): FilterDef => ({
-  dynamicFilter: (unknownItems: unknown[]) => {
+  dynamicFilter: (unknownItems: unknown[]): Partial<FilterDef> => {
     const items = unknownItems as VmConcernsFilterItems[];
     const uniqueLabels = new Set<string>();
 
@@ -44,5 +46,7 @@ export const criticalConcernFilter = (): FilterDef => ({
   type: CustomFilterType.CriticalConcerns,
 });
 
-export const getVmsWithCriticalConcerns = (vms: Record<string, ProviderVirtualMachine>) =>
+export const getVmsWithCriticalConcerns = (
+  vms: Record<string, ProviderVirtualMachine>,
+): Record<string, ProviderVirtualMachine> =>
   Object.fromEntries(Object.entries(vms ?? {}).filter(([_, vm]) => hasCriticalConcern(vm)));

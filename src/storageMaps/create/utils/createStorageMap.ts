@@ -42,7 +42,7 @@ export const createStorageMap = async ({
   targetProvider,
   targetStorages,
   trackEvent,
-}: CreateStorageMapParams) => {
+}: CreateStorageMapParams): Promise<V1beta1StorageMap> => {
   const sourceProviderName = sourceProvider?.metadata?.name;
 
   trackEvent?.(TELEMETRY_EVENTS.STORAGE_MAP_CREATE_STARTED, {

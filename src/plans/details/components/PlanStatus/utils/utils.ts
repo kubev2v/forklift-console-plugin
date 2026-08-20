@@ -89,7 +89,9 @@ export const getMigrationVMStatus = (
   return null;
 };
 
-export const getCantStartVMStatusCount = (vms: V1beta1PlanSpecVms[]) => {
+export const getCantStartVMStatusCount = (
+  vms: V1beta1PlanSpecVms[],
+): MigrationVirtualMachinesStatusesCounts => {
   return {
     ...emptyCount,
     [MigrationVirtualMachineStatus.CantStart]: {
@@ -138,21 +140,23 @@ export const getMigrationVMsStatusCounts = (
 export const getVmTargetPowerState = (vm: V1beta1PlanSpecVms): TargetPowerStateValue =>
   vm?.targetPowerState;
 
-const getConditions = (plan: V1beta1Plan) =>
+const getConditions = (plan: V1beta1Plan): string[] =>
   (plan?.status?.conditions ?? [])
     ?.filter((condition) => condition.status === CONDITION_STATUS.TRUE)
     .map((condition) => condition.type);
 
-export const isPlanExecuting = (plan: V1beta1Plan) => {
+export const isPlanExecuting = (plan: V1beta1Plan): boolean => {
   const conditions = getConditions(plan);
 
   return conditions?.includes(PlanStatuses.Executing);
 };
 
-const isPlanWaitingForCutover = (plan: V1beta1Plan) =>
-  getPlanVirtualMachinesMigrationStatus(plan).some(isMigrationVirtualMachinePaused) &&
-  isPlanExecuting(plan) &&
-  getPlanIsWarm(plan);
+const isPlanWaitingForCutover = (plan: V1beta1Plan): boolean =>
+  Boolean(
+    getPlanVirtualMachinesMigrationStatus(plan).some(isMigrationVirtualMachinePaused) &&
+    isPlanExecuting(plan) &&
+    getPlanIsWarm(plan),
+  );
 
 const isPlanPendingExecution = (plan: V1beta1Plan): boolean => {
   if (!isPlanExecuting(plan)) {
@@ -164,7 +168,7 @@ const isPlanPendingExecution = (plan: V1beta1Plan): boolean => {
   return isEmpty(vms) || vms.every((vm) => !vm?.started);
 };
 
-export const isPlanArchived = (plan: V1beta1Plan) => {
+export const isPlanArchived = (plan: V1beta1Plan): boolean => {
   const conditions = getConditions(plan);
   return (
     (plan?.spec?.archived && !conditions.includes(PlanStatuses.Archived)) ?? // Archiving
@@ -236,7 +240,7 @@ export const getPlanStatus = (plan: V1beta1Plan): PlanStatuses => {
   return PlanStatuses.Unknown;
 };
 
-export const canPlanStart = (plan: V1beta1Plan) => {
+export const canPlanStart = (plan: V1beta1Plan): boolean => {
   const conditions = getConditions(plan);
 
   return (
@@ -247,7 +251,7 @@ export const canPlanStart = (plan: V1beta1Plan) => {
   );
 };
 
-export const canPlanReStart = (plan: V1beta1Plan) => {
+export const canPlanReStart = (plan: V1beta1Plan): boolean => {
   const conditions = getConditions(plan);
 
   return (
@@ -265,13 +269,13 @@ export const canPlanResumeConversion = (plan: V1beta1Plan): boolean => {
   );
 };
 
-export const isPlanSucceeded = (plan: V1beta1Plan) => {
+export const isPlanSucceeded = (plan: V1beta1Plan): boolean => {
   const conditions = getConditions(plan);
 
   return conditions?.includes(CATEGORY_TYPES.SUCCEEDED);
 };
 
-export const isPlanEditable = (plan: V1beta1Plan) => {
+export const isPlanEditable = (plan: V1beta1Plan): boolean => {
   const status = getPlanStatus(plan);
   return (
     status === PlanStatuses.Ready ||

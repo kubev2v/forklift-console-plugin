@@ -1,4 +1,8 @@
-export const getNavigationTarget = (href?: string, isCreateForm?: boolean, url?: string) => {
+export const getNavigationTarget = (
+  href?: string,
+  isCreateForm?: boolean,
+  url?: string,
+): string | undefined => {
   if (href) {
     return href;
   }

@@ -6,7 +6,7 @@ import { useClusterIsAwsPlatform } from '../useClusterIsAwsPlatform';
 const mockUseK8sWatchResource = jest.fn();
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  useK8sWatchResource: (...args: unknown[]) => mockUseK8sWatchResource(...args),
+  useK8sWatchResource: (...args: unknown[]): unknown => mockUseK8sWatchResource(...args),
 }));
 
 describe('useClusterIsAwsPlatform', () => {

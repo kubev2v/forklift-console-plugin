@@ -42,7 +42,7 @@ const PlanStorageMapEdit: OverlayComponent<PlanStorageMapEditProps> = ({
 
   const { error } = getFieldState(StorageMapFieldId.StorageMap);
 
-  const onSubmit = async (formValues: PlanStorageEditFormValues) => {
+  const onSubmit = async (formValues: PlanStorageEditFormValues): Promise<void> => {
     if (!isValid) {
       return;
     }

@@ -4,7 +4,7 @@ import { SEGMENT_METHODS, SEGMENT_SNIPPET_VERSION } from './constants';
  * Initialize Segment analytics using official snippet v5.2.0
  * @param segmentKey
  */
-export const initializeAnalytics = (segmentKey: string) => {
+export const initializeAnalytics = (segmentKey: string): void => {
   if (window.analytics && typeof window.analytics.track === 'function') {
     return;
   }
@@ -26,8 +26,10 @@ export const initializeAnalytics = (segmentKey: string) => {
        *
        * @param method
        */
-      analytics.factory = function factory(method: string) {
-        return function analyticsMethodWrapper(...args: unknown[]) {
+      analytics.factory = function factory(
+        method: string,
+      ): (...args: unknown[]) => SegmentAnalytics {
+        return function analyticsMethodWrapper(...args: unknown[]): SegmentAnalytics {
           if (window.analytics?.initialized) {
             const analyticsMethod = window.analytics[method];
 
@@ -72,7 +74,7 @@ export const initializeAnalytics = (segmentKey: string) => {
        * @param key
        * @param options
        */
-      analytics.load = function load(key: string, options?: Record<string, unknown>) {
+      analytics.load = function load(key: string, options?: Record<string, unknown>): void {
         const script = document.createElement('script');
         script.type = 'text/javascript';
         script.async = true;

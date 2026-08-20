@@ -19,11 +19,11 @@ const ProviderActionsDropdown: FC<ProviderActionsDropdownProps> = ({ data, isDet
   const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
-  const onToggleClick = () => {
+  const onToggleClick = (): void => {
     setIsOpen((open) => !open);
   };
 
-  const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined) => {
+  const onSelect = (_event: MouseEvent | undefined, _value: string | number | undefined): void => {
     setIsOpen(false);
   };
 

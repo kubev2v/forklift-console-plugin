@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, type ReactElement, useState } from 'react';
 import { DateTime } from 'luxon';
 
 import {
@@ -37,16 +37,16 @@ export const DateRangeFilter = ({
   helperText,
   onFilterUpdate,
   placeholderLabel,
-  selectedFilters = [],
+  selectedFilters,
   showFilter = true,
   title,
-}: FilterTypeProps) => {
+}: FilterTypeProps): ReactElement => {
   const validFilters = selectedFilters?.filter(isValidInterval) ?? [];
 
   const [from, setFrom] = useState<Date>();
   const [to, setTo] = useState<Date>();
 
-  const rangeToOption = (range: string) => {
+  const rangeToOption = (range: string): { key: string; node: ReactElement } => {
     const formatted = localizeInterval(range);
     return {
       key: range,
@@ -59,7 +59,7 @@ export const DateRangeFilter = ({
   };
   const optionToRange = (option: ToolbarLabel): string => option?.key;
 
-  const clearSingleRange = (option: ToolbarLabel) => {
+  const clearSingleRange = (option: ToolbarLabel): void => {
     const target = optionToRange(option);
     onFilterUpdate([...validFilters.filter((range) => range !== target)]);
   };

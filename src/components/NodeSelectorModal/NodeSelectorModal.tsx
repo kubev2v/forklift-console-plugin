@@ -52,7 +52,7 @@ const NodeSelectorModal: OverlayComponent<NodeSelectorModalProps> = ({
     setLabels(labels.filter(({ id }) => id !== idToDelete));
   };
 
-  const onSelectorLabelAdd = () => {
+  const onSelectorLabelAdd = (): void => {
     onLabelAdd({ id: -1, key: '', value: '' });
   };
 

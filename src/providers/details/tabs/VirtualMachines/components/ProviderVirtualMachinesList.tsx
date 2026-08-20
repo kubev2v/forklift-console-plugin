@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react';
+import { type FC, type ReactElement, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
@@ -32,6 +32,21 @@ type ProviderVirtualMachinesListProps = {
   title?: string;
 };
 
+type StandardPageSelectionProps =
+  | {
+      expandedIds?: string[];
+      GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<VmData>>[];
+      onSelect: (selectedIds: string[]) => void;
+      selectedIds: string[];
+      toId: (item: VmData) => string;
+    }
+  | {
+      expandedIds: string[];
+      onExpand: () => void;
+      toId: (item: VmData) => string;
+    }
+  | Record<string, never>;
+
 export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> = ({
   cellMapper,
   className,
@@ -51,7 +66,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   const userSettings = useMemo(() => loadUserSettings({ pageId }), [pageId]);
 
   const handleSelectedIds = onSelect
-    ? (selectedIds: string[]) => {
+    ? (selectedIds: string[]): void => {
         const selectedVms = vmData?.filter((data) => selectedIds.includes(getVmId(data)));
         onSelect(selectedVms);
       }
@@ -73,7 +88,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
     );
   }
 
-  const getStandardPageProps = () => {
+  const getStandardPageProps = (): StandardPageSelectionProps => {
     const ec2 = isProviderEc2(provider);
 
     if (handleSelectedIds) {
@@ -89,7 +104,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
     if (!isProviderOpenshift(provider) && !ec2) {
       return {
         expandedIds: [],
-        onExpand: () => undefined,
+        onExpand: (): void => undefined,
         toId: getVmId,
       };
     }
@@ -113,7 +128,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       expanded={
         isProviderOpenshift(provider) || isProviderEc2(provider)
           ? undefined
-          : (props) => <ConcernsAndConditionsTable vmData={props.resourceData} />
+          : (props): ReactElement => <ConcernsAndConditionsTable vmData={props.resourceData} />
       }
     />
   );

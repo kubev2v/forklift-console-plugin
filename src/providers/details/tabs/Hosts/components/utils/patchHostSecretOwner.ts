@@ -11,7 +11,7 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 export const patchHostSecretOwner = async (
   secret: IoK8sApiCoreV1Secret,
   ownerRef: { name: string | undefined; uid: string | undefined },
-) => {
+): Promise<IoK8sApiCoreV1Secret> => {
   const patchedSecret = await k8sPatch({
     data: [
       {

@@ -69,7 +69,7 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
     () => ({
       ...(isSelectable && {
         initialSelectedIds: selectedIds,
-        onSelect: (selectedVmData: VmData[] | undefined) => {
+        onSelect: (selectedVmData: VmData[] | undefined): void => {
           const selectedVms = selectedVmData?.reduce(
             (acc: Record<string, ProviderVirtualMachine>, data) => ({
               ...acc,

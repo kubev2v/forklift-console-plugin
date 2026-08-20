@@ -13,7 +13,7 @@ export const withResourceLink = ({
   toGVK: (props: VMCellProps) => K8sGroupVersionKind;
   toName: (props: VMCellProps) => string;
   toNamespace: (props: VMCellProps) => string;
-}) => {
+}): FC<VMCellProps> => {
   const Enhanced: FC<VMCellProps> = (props: VMCellProps) => {
     const { isProviderLocalOpenshift } = props.data;
     return (

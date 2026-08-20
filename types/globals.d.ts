@@ -16,6 +16,9 @@ declare module '*.png' {
   export default content;
 }
 
+declare module '*.scss';
+declare module '*.css';
+
 declare module '*.json' {
   const content: string;
   export default content;

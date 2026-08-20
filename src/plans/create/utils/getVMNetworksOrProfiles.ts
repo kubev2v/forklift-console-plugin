@@ -3,7 +3,7 @@ import { DefaultNetworkLabel } from '@utils/mappings/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { getEc2SubnetIds, isEc2Vm } from '@utils/types/ec2Inventory';
 
-const getNetworksForVM = (vm: ProviderVirtualMachine) => {
+const getNetworksForVM = (vm: ProviderVirtualMachine): string[] => {
   if (isEc2Vm(vm)) {
     return getEc2SubnetIds(vm);
   }
@@ -49,8 +49,8 @@ const getNetworksForVM = (vm: ProviderVirtualMachine) => {
 export const getVMNetworksOrProfiles = (
   vm: ProviderVirtualMachine,
   nicProfiles?: OVirtNicProfile[],
-) =>
-  getNetworksForVM(vm).map((network: unknown) =>
+): (string | undefined)[] =>
+  getNetworksForVM(vm).map((network) =>
     vm.providerType === PROVIDER_TYPES.ovirt && nicProfiles
       ? nicProfiles.find((nicProfile) => nicProfile?.id === network)?.network
       : network,

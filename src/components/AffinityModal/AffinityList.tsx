@@ -58,7 +58,7 @@ const AffinityList: FC<AffinityListProps> = ({
 
   const getSortParams = (columnIndex: number): ThProps['sort'] => ({
     columnIndex,
-    onSort: (_event, index, direction) => {
+    onSort: (_event, index, direction): void => {
       setActiveSortIndex(index);
       setActiveSortDirection(direction);
     },

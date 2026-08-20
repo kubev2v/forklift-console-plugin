@@ -19,7 +19,7 @@ jest.mock('src/plans/create/utils/addOwnerRefs', () => ({
 }));
 
 jest.mock('@utils/crds/common/utils', () => ({
-  getRandomChars: () => 'abcde',
+  getRandomChars: (): string => 'abcde',
 }));
 
 const mockK8sCreate = k8sCreate as jest.MockedFunction<typeof k8sCreate>;

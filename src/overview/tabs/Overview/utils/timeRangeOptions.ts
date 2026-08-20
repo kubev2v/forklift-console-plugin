@@ -2,9 +2,12 @@ import { DateTime } from 'luxon';
 
 import { t } from '@utils/i18n';
 
-const isLast24H = (date: DateTime) => DateTime.now().toUTC().diff(date, 'hours').hours <= 24;
-const isLast10Days = (date: DateTime) => DateTime.now().toUTC().diff(date, 'days').days <= 10;
-const isLast31Days = (date: DateTime) => DateTime.now().toUTC().diff(date, 'days').days <= 31;
+const isLast24H = (date: DateTime): boolean =>
+  DateTime.now().toUTC().diff(date, 'hours').hours <= 24;
+const isLast10Days = (date: DateTime): boolean =>
+  DateTime.now().toUTC().diff(date, 'days').days <= 10;
+const isLast31Days = (date: DateTime): boolean =>
+  DateTime.now().toUTC().diff(date, 'days').days <= 31;
 
 export enum TimeRangeOptions {
   Last10Days = 'Last10Days',

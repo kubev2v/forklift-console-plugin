@@ -37,19 +37,19 @@ const AffinityModal: OverlayComponent<AffinityModalProps> = ({
   const [isCreating, setIsCreating] = useState(false);
   const [focusedAffinity, setFocusedAffinity] = useState<AffinityRowData>(defaultNewAffinity);
 
-  const onAffinityClickAdd = () => {
+  const onAffinityClickAdd = (): void => {
     setIsEditing(true);
     setIsCreating(true);
     setFocusedAffinity({ ...defaultNewAffinity, id: getAvailableAffinityID(affinities) });
   };
 
-  const onAffinityAdd = (affinity: AffinityRowData) => {
+  const onAffinityAdd = (affinity: AffinityRowData): void => {
     setAffinities((prevAffinities) => [...(prevAffinities || []), affinity]);
     setIsEditing(false);
     setIsCreating(false);
   };
 
-  const onAffinityChange = (updatedAffinity: AffinityRowData) => {
+  const onAffinityChange = (updatedAffinity: AffinityRowData): void => {
     setAffinities((prevAffinities) =>
       prevAffinities.map((affinity) => {
         if (affinity.id === updatedAffinity.id) {
@@ -62,16 +62,16 @@ const AffinityModal: OverlayComponent<AffinityModalProps> = ({
   };
   const onSaveAffinity = isCreating ? onAffinityAdd : onAffinityChange;
 
-  const onAffinityDelete = (affinity: AffinityRowData) => {
+  const onAffinityDelete = (affinity: AffinityRowData): void => {
     setAffinities((prevAffinities) => prevAffinities.filter(({ id }) => id !== affinity.id));
   };
 
-  const onAffinityClickEdit = (affinity: AffinityRowData) => {
+  const onAffinityClickEdit = (affinity: AffinityRowData): void => {
     setFocusedAffinity(affinity);
     setIsEditing(true);
   };
 
-  const onCancel = () => {
+  const onCancel = (): void => {
     setIsEditing(false);
     setIsCreating(false);
   };

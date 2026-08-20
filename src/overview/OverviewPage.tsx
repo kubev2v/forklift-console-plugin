@@ -33,35 +33,35 @@ const OverviewPage: FC = () => {
   const tabs = [
     {
       name: OverviewTabName.Overview,
-      onClick: () => {
+      onClick: (): void => {
         trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, { tabName: OverviewTabName.Overview });
       },
       to: getOverviewPath(),
     },
     {
       name: OverviewTabName.YAML,
-      onClick: () => {
+      onClick: (): void => {
         trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, { tabName: OverviewTabName.YAML });
       },
       to: getOverviewPath(OverviewTabHref.YAML),
     },
     {
       name: OverviewTabName.Health,
-      onClick: () => {
+      onClick: (): void => {
         trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, { tabName: OverviewTabName.Health });
       },
       to: getOverviewPath(OverviewTabHref.Health),
     },
     {
       name: OverviewTabName.History,
-      onClick: () => {
+      onClick: (): void => {
         trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, { tabName: OverviewTabName.History });
       },
       to: getOverviewPath(OverviewTabHref.History),
     },
     {
       name: OverviewTabName.Settings,
-      onClick: () => {
+      onClick: (): void => {
         trackEvent(TELEMETRY_EVENTS.OVERVIEW_TAB_CLICKED, { tabName: OverviewTabName.Settings });
       },
       to: getOverviewPath(OverviewTabHref.Settings),

@@ -1,7 +1,7 @@
 import { HostModel, type V1beta1Host } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
-export const patchHost = async (host: V1beta1Host, ipAddress: string) => {
+export const patchHost = async (host: V1beta1Host, ipAddress: string): Promise<void> => {
   await k8sPatch({
     data: [
       {

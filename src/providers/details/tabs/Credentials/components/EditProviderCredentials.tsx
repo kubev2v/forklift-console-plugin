@@ -40,7 +40,7 @@ const EditProviderCredentials: OverlayComponent<EditProviderCredentialsProps> = 
     reset,
   } = methods;
 
-  const onSubmit = async (formData: Partial<CreateProviderFormData>) => {
+  const onSubmit = async (formData: Partial<CreateProviderFormData>): Promise<void> => {
     const secretData = buildSecretData(formData, provider);
     const isOpenstack = providerType === PROVIDER_TYPES.openstack;
 

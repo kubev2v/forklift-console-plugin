@@ -26,7 +26,7 @@ export const useOverviewContext = (): OverviewContextType => {
 
   const mounted = useRef(true);
   useEffect(
-    () => () => {
+    () => (): void => {
       mounted.current = false;
     },
     [],
@@ -41,7 +41,7 @@ export const useOverviewContext = (): OverviewContextType => {
   return useMemo(
     () => ({
       data,
-      setData: (newState: OverviewContextData) => {
+      setData: (newState: OverviewContextData): void => {
         // Save/clear the user settings stored in local storage
         if (newState.hideWelcomeCardByContext) {
           userSettings?.welcome?.save(true);

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import { Td, Tr } from '@patternfly/react-table';
 
@@ -9,7 +9,7 @@ import type { RowProps } from './types';
 /**
  * Renders the value for each field as string.
  */
-export const DefaultRow = <T,>({ resourceData, resourceFields }: RowProps<T>) => {
+export const DefaultRow = <T,>({ resourceData, resourceFields }: RowProps<T>): ReactElement => {
   return (
     <Tr>
       {resourceFields?.reduce<ReactNode[]>((acc, { label, resourceFieldId }) => {

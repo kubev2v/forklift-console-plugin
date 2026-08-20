@@ -21,6 +21,13 @@ type UsePlanMappingDataOptions = {
   storageMaps: V1beta1StorageMap[];
 };
 
+type UsePlanMappingDataResult = {
+  planNetworkMap: V1beta1NetworkMap | undefined;
+  planStorageMap: V1beta1StorageMap | undefined;
+  sourceNetworks: InventoryNetwork[];
+  sourceStorages: InventoryStorage[];
+};
+
 /**
  * Returns source storage/network data with fallback to map references
  * when provider inventory is unavailable.
@@ -32,7 +39,7 @@ export const usePlanMappingData = ({
   providerStorages,
   sourceProvider,
   storageMaps,
-}: UsePlanMappingDataOptions) => {
+}: UsePlanMappingDataOptions): UsePlanMappingDataResult => {
   const planNetworkMapName = getPlanNetworkMapName(plan);
   const planNetworkMap = useMemo(
     () =>

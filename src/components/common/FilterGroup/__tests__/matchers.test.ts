@@ -9,7 +9,7 @@ const matchFreetext = (
     placeholderLabel: NAME,
     type: 'freetext',
   },
-) =>
+): ReturnType<typeof createMatcher> =>
   createMatcher({
     selectedFilters,
     ...freetextMatcher,
@@ -65,7 +65,7 @@ describe('standard matchers', () => {
   });
 });
 
-const matchBothFieldsFreetext = () =>
+const matchBothFieldsFreetext = (): ((resourceData: unknown) => boolean) =>
   createMetaMatcher(
     {
       [NAME]: ['oo'],

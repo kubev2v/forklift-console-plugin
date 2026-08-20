@@ -1,4 +1,12 @@
-import { type FC, type MouseEvent, type Ref, useCallback, useMemo, useState } from 'react';
+import {
+  type FC,
+  type MouseEvent,
+  type ReactElement,
+  type Ref,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 
 import {
   MenuToggle,
@@ -101,11 +109,11 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
     return keyToName?.[value] ?? value;
   }, [blankOption, keyToName, showKeyAsSelected, value]);
 
-  const onToggleClick = () => {
+  const onToggleClick = (): void => {
     setIsOpen((open) => !open);
   };
 
-  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
+  const toggle = (toggleRef: Ref<MenuToggleElement>): ReactElement => (
     <MenuToggle
       className="forklift-overview__settings-select"
       data-testid={testId}
@@ -117,7 +125,7 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
     </MenuToggle>
   );
 
-  const renderOptions = () => {
+  const renderOptions = (): ReactElement[] => {
     const optionElements = options?.map(({ description, key, name }) => (
       <SelectOption
         data-testid={testId ? `${testId}-option-${key}` : undefined}

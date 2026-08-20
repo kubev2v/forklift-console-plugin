@@ -18,7 +18,10 @@ const SmbCredentialsFields: FC = () => {
     name: ProviderFormFieldId.UseDifferentSmbCredentials,
   });
 
-  const handleCheckboxChange = (_event: React.FormEvent<HTMLInputElement>, checked: boolean) => {
+  const handleCheckboxChange = (
+    _event: React.FormEvent<HTMLInputElement>,
+    checked: boolean,
+  ): void => {
     setValue(ProviderFormFieldId.UseDifferentSmbCredentials, checked);
     if (!checked) {
       // Clear SMB credential fields when unchecking

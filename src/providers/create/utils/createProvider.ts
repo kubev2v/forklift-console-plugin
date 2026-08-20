@@ -14,7 +14,7 @@ import {
 export const createProvider = async (
   provider: V1beta1Provider,
   secret: IoK8sApiCoreV1Secret | undefined,
-) => {
+): Promise<V1beta1Provider | undefined> => {
   if (!provider) {
     return undefined;
   }

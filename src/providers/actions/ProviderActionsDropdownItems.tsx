@@ -33,7 +33,7 @@ const ProviderActionsDropdownItems: FC<ProviderActionsDropdownItemsProps> = ({
 
   const providerURL = getProviderDetailsPageUrl(provider);
 
-  const onProviderDelete = () => {
+  const onProviderDelete = (): void => {
     launchOverlay<DeleteModalProps>(DeleteModal, { model: ProviderModel, resource: provider });
   };
 

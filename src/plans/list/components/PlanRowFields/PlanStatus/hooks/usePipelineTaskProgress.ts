@@ -6,7 +6,7 @@ import { taskStatuses } from '@utils/constants';
 
 import type { VirtualMachinePipelineTask } from '../utils/types';
 
-const usePipelineTaskProgress = (plan: V1beta1Plan) => {
+const usePipelineTaskProgress = (plan: V1beta1Plan): number => {
   const [activeMigration] = usePlanMigration(plan);
 
   const vmPipelineTasks = useMemo(

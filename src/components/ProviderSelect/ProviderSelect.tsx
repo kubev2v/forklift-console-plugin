@@ -1,4 +1,11 @@
-import { type ComponentProps, type ForwardedRef, forwardRef, type ReactNode, useMemo } from 'react';
+import {
+  type ComponentProps,
+  type ForwardedRef,
+  forwardRef,
+  type ReactElement,
+  type ReactNode,
+  useMemo,
+} from 'react';
 import { getProviderTypeIcon } from 'src/utils/providers/getProviderTypeIcon';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
@@ -56,7 +63,7 @@ const ProviderSelect = (
     value,
   }: ProviderSelectProps,
   ref: ForwardedRef<HTMLButtonElement>,
-) => {
+): ReactElement => {
   const isDarkTheme = useIsDarkTheme();
   const { isAwsPlatform } = useClusterIsAwsPlatform();
   const { trackEvent } = useForkliftAnalytics();

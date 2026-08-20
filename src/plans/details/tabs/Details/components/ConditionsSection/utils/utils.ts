@@ -1,6 +1,6 @@
 import { t } from '@utils/i18n';
 
-export const getStatusLabel = (status: string) => {
+export const getStatusLabel = (status: string): string => {
   const statusLabels: Record<string, string> = {
     False: t('False'),
     True: t('True'),

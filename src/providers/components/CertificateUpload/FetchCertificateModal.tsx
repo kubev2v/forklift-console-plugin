@@ -30,7 +30,7 @@ const FetchCertificateModal: OverlayComponent<FetchCertificateModalProps> = ({
   const hasThumbprintChanged =
     !isEmpty(existingCert) && success && thumbprint !== calculateThumbprint(existingCert);
 
-  const onConfirm = async () => {
+  const onConfirm = async (): Promise<undefined> => {
     handleSave(certificate);
     return Promise.resolve(undefined);
   };

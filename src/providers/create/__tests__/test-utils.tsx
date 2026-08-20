@@ -23,7 +23,7 @@ export const mockCreateProviderTypeField = (
     '../hooks/useCreateProviderFormContext',
   );
 
-  const ProviderTypeField = () => {
+  const ProviderTypeField = (): ReactElement => {
     const { control } = useCreateProviderFormContext();
     const { field } = useController({ control, name: 'providerType' });
 

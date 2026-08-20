@@ -37,13 +37,13 @@ export const LazyTextInput: FunctionComponent<LazyTextInputProps> = ({
 }) => {
   const [value, setValue] = useState(propValue);
 
-  const handleBlur = () => {
+  const handleBlur = (): void => {
     if (value !== propValue) {
       onChange(value);
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === 'Enter' && value !== propValue) {
       onChange(value);
     }

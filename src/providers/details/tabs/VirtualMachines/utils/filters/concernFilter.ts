@@ -7,7 +7,7 @@ import { t } from '@utils/i18n';
 type VmConcernsFilterItems = { vm: { concerns: { label: string }[] } };
 
 export const concernFilter = (): FilterDef => ({
-  dynamicFilter: (unknownItems: unknown[]) => {
+  dynamicFilter: (unknownItems: unknown[]): Partial<FilterDef> => {
     const items = unknownItems as VmConcernsFilterItems[];
     return {
       values: [

@@ -38,7 +38,7 @@ const EditProviderVDDKImage: OverlayComponent<EditProviderVDDKImageProps> = ({
 
   const vddkInitImage = watch(ProviderFormFieldId.VsphereVddkInitImage);
 
-  const onSubmit = async (data: EditProviderVDDKImageFormData) => {
+  const onSubmit = async (data: EditProviderVDDKImageFormData): Promise<void> => {
     await onUpdateVddkImageSettings(provider, data);
     closeOverlay();
   };

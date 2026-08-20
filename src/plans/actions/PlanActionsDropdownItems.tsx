@@ -65,30 +65,30 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
   const [activeMigration, migrationLoaded] = usePlanMigration(plan);
   const hasCutover = canScheduleCutover && Boolean(activeMigration?.spec?.cutover);
 
-  const onClickPlanStart = () => {
+  const onClickPlanStart = (): void => {
     launchOverlay<PlanStartMigrationModalProps>(PlanStartMigrationModal, {
       plan,
       title: buttonStartLabel,
     });
   };
 
-  const onClickResumeConversion = () => {
+  const onClickResumeConversion = (): void => {
     launchOverlay<PlanResumeConversionModalProps>(PlanResumeConversionModal, { plan });
   };
 
-  const onClickPlanCutover = () => {
+  const onClickPlanCutover = (): void => {
     launchOverlay<PlanModalProps>(PlanCutoverMigrationModal, { plan });
   };
 
-  const onClickDuplicate = () => {
+  const onClickDuplicate = (): void => {
     launchOverlay<PlanModalProps>(DuplicateModal, { plan });
   };
 
-  const onClickArchive = () => {
+  const onClickArchive = (): void => {
     launchOverlay<PlanModalProps>(ArchiveModal, { plan });
   };
 
-  const onClickPlanDelete = () => {
+  const onClickPlanDelete = (): void => {
     launchOverlay<PlanModalProps>(PlanDeleteModal, { plan });
   };
 

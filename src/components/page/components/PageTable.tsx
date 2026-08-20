@@ -49,7 +49,7 @@ export const PageTable = <T,>({
   title,
   toId,
   visibleColumns,
-}: PageTableProps<T>) => {
+}: PageTableProps<T>): ReactElement => {
   const { t } = useForkliftTranslation();
 
   const errorFetchingData = useMemo(() => error, [error]);

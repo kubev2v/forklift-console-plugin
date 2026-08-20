@@ -22,9 +22,9 @@ type MigrationStatusVirtualMachinesListProps = {
 
 const selectedIds: string[] = [];
 
-const onSelect = () => undefined;
+const onSelect = (): void => undefined;
 
-const toId = (item: MigrationStatusVirtualMachinePageData) => item?.specVM?.id ?? '';
+const toId = (item: MigrationStatusVirtualMachinePageData): string => item?.specVM?.id ?? '';
 
 const MigrationStatusVirtualMachinesList: FC<MigrationStatusVirtualMachinesListProps> = ({
   plan,

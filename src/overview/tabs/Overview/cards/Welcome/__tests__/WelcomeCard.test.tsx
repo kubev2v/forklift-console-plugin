@@ -17,24 +17,25 @@ const mockUseClusterIsAwsPlatform = jest.fn<() => { isAwsPlatform: boolean; load
 
 jest.mock('react-router', () => ({
   ...jest.requireActual<Record<string, unknown>>('react-router'),
-  useNavigate: () => mockNavigate,
+  useNavigate: (): typeof mockNavigate => mockNavigate,
 }));
 
 jest.mock('@utils/hooks/useClusterIsAwsPlatform', () => ({
-  useClusterIsAwsPlatform: () => mockUseClusterIsAwsPlatform(),
+  useClusterIsAwsPlatform: (): ReturnType<typeof mockUseClusterIsAwsPlatform> =>
+    mockUseClusterIsAwsPlatform(),
 }));
 
 jest.mock('@utils/hooks/useIsDarkTheme', () => ({
-  useIsDarkTheme: () => false,
+  useIsDarkTheme: (): boolean => false,
 }));
 
 jest.mock('@utils/analytics/hooks/useForkliftAnalytics', () => ({
-  useForkliftAnalytics: () => ({ trackEvent: jest.fn() }),
+  useForkliftAnalytics: (): { trackEvent: jest.Mock } => ({ trackEvent: jest.fn() }),
 }));
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  useActiveNamespace: () => ['test-ns'],
-  useFlag: () => true,
+  useActiveNamespace: (): string[] => ['test-ns'],
+  useFlag: (): boolean => true,
 }));
 
 const CORE_PROVIDER_TITLES = [

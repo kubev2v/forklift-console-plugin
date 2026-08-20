@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import { COLUMN_IDS } from '@components/VsphereFoldersTable/utils/types';
 import {
   SearchInput,
@@ -31,7 +33,7 @@ export const AttributeFiltersToolbar = <T,>({
   setTextValue,
   text,
   toggleCheck,
-}: AttributeFiltersToolbarProps<T>) => {
+}: AttributeFiltersToolbarProps<T>): ReactElement => {
   const { t } = useForkliftTranslation();
   const active = attributes.find((attr) => attr.id === activeId) ?? attributes[0];
 

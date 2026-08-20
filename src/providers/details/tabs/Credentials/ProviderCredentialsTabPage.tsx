@@ -61,7 +61,7 @@ const ProviderCredentialsTabPage: FC<ProviderDetailsPageProps> = ({ name, namesp
                 'data-testid': 'credentials-reveal-button',
                 icon: reveal ? <EyeSlashIcon /> : <EyeIcon />,
                 key: 'reveal-values-button',
-                onClick: () => {
+                onClick: (): void => {
                   setReveal((prev) => !prev);
                 },
               },

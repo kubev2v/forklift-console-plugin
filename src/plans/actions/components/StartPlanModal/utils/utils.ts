@@ -11,7 +11,7 @@ export const startPlanMigration = async (
   plan: V1beta1Plan,
   trackEvent?: (event: string, data: Record<string, unknown>) => void,
   sourceProviderType?: string,
-) => {
+): Promise<void> => {
   const name = getName(plan);
   const namespace = getNamespace(plan);
   const uid = getUID(plan);

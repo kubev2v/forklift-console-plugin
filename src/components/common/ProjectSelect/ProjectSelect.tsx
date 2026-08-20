@@ -64,14 +64,14 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
     return defaultProject ? [{ content: defaultProject, value: defaultProject }] : [];
   }, [projectNames, defaultProject, showDefaultProjects, value]);
 
-  const onProjectCreated = (newProject: K8sResourceCommon) => {
+  const onProjectCreated = (newProject: K8sResourceCommon): void => {
     const projectName = getName(newProject);
     if (onNewValue && projectName) {
       onNewValue(projectName);
     }
   };
 
-  const onNewProject = () => {
+  const onNewProject = (): void => {
     launchOverlay<CreateProjectModalProps>(CreateProjectModal, { onCreated: onProjectCreated });
   };
 

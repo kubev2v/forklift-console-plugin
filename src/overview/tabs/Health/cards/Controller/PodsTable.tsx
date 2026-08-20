@@ -46,19 +46,22 @@ export const PodsTable: FC<PodsTableProps> = ({ limit, pods, showOwner }) => {
   const endIndex = startIndex + perPage;
   const paginatedPods = limitedPods.slice(startIndex, endIndex);
 
-  const onSetPage = (_event: MouseEvent | KeyboardEvent | globalThis.MouseEvent, page: number) => {
+  const onSetPage = (
+    _event: MouseEvent | KeyboardEvent | globalThis.MouseEvent,
+    page: number,
+  ): void => {
     setCurrentPage(page);
   };
 
   const onPerPageSelect = (
     _event: MouseEvent | KeyboardEvent | globalThis.MouseEvent,
     selectedPerPage: number,
-  ) => {
+  ): void => {
     setPerPage(selectedPerPage);
     setCurrentPage(1); // Reset to the first page
   };
 
-  const getPodLogsLink = (pod: IoK8sApiCoreV1Pod) =>
+  const getPodLogsLink = (pod: IoK8sApiCoreV1Pod): string =>
     getResourceUrl({
       name: pod.metadata?.name,
       namespace: pod.metadata?.namespace,

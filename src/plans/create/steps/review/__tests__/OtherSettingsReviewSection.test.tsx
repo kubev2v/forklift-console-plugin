@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { beforeEach, describe, expect, it } from '@jest/globals';
@@ -10,13 +11,16 @@ import OtherSettingsReviewSection from '../OtherSettingsReviewSection';
 
 const mockUseCreatePlanFormContext = jest.fn();
 jest.mock('../../../hooks/useCreatePlanFormContext', () => ({
-  useCreatePlanFormContext: () => mockUseCreatePlanFormContext(),
+  useCreatePlanFormContext: (): ReturnType<typeof mockUseCreatePlanFormContext> =>
+    mockUseCreatePlanFormContext(),
 }));
 
 const mockGoToStepById = jest.fn();
 jest.mock('@patternfly/react-core', () => ({
   ...jest.requireActual('@patternfly/react-core'),
-  useWizardContext: () => ({ goToStepById: mockGoToStepById }),
+  useWizardContext: (): { goToStepById: typeof mockGoToStepById } => ({
+    goToStepById: mockGoToStepById,
+  }),
 }));
 
 const TestWrapper = ({
@@ -31,7 +35,7 @@ const TestWrapper = ({
   existingLUKSSecret?: any;
   nbdeClevis?: boolean;
   sourceProvider: any;
-}) => {
+}): ReactElement => {
   const methods = useForm({
     defaultValues: {
       [GeneralFormFieldId.SourceProvider]: sourceProvider,

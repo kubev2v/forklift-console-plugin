@@ -13,7 +13,7 @@ export const patchStorageMappingValues = async (
   formValues: PlanStorageEditFormValues,
   storageMap: V1beta1StorageMap,
   sourceProvider: V1beta1Provider,
-) => {
+): Promise<void> => {
   const filteredStorageMap = formValues.storageMap?.filter((mapping) => {
     const hasSource = Boolean(mapping[StorageMapFieldId.SourceStorage]?.name);
     const hasTarget = Boolean(mapping[StorageMapFieldId.TargetStorage]?.name);

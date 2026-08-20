@@ -56,7 +56,7 @@ type StandardPageProps<T> = {
   userSettings?: UserSettings;
 };
 
-const StandardPage = <T,>(pageProps: StandardPageProps<T>) => {
+const StandardPage = <T,>(pageProps: StandardPageProps<T>): ReactElement => {
   const sortContext = useTableSortContext();
   const internalPageRef = useRef(pageProps.page ?? 1);
   const pageRef = pageProps.pageRef ?? internalPageRef;

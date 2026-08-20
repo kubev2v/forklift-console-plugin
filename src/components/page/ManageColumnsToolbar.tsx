@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactElement, useState } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ManageColumnsModal } from '../common/TableView/ManageColumnsModal';
@@ -21,7 +21,7 @@ export const ManageColumnsToolbar = ({
   defaultColumns,
   resourceFields,
   setColumns,
-}: ManageColumnsToolbarProps) => {
+}: ManageColumnsToolbarProps): ReactElement => {
   const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
   return (

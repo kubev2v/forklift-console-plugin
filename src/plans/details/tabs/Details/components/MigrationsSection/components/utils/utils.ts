@@ -28,7 +28,9 @@ export const getMigrationStatusLabel = (
   return null;
 };
 
-export const getVMMigrationStatus = (statusVM: V1beta1PlanStatusMigrationVms | undefined) => {
+export const getVMMigrationStatus = (
+  statusVM: V1beta1PlanStatusMigrationVms | undefined,
+): string => {
   const isError = statusVM?.conditions?.find(
     (condition) =>
       condition.type === CATEGORY_TYPES.FAILED && condition.status === CONDITION_STATUS.TRUE,

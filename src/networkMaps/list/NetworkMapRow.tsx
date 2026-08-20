@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { createStatusCell } from 'src/components/table/utils/createStatusCell';
 
@@ -32,10 +32,14 @@ type RenderTdProps = {
   resourceFields: ResourceField[];
 };
 
-const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
+const renderTd = ({
+  resourceData,
+  resourceFieldId,
+  resourceFields,
+}: RenderTdProps): ReactElement => {
   const fieldId = resourceFieldId;
 
-  const CellRenderer = cellRenderers?.[fieldId] ?? (() => <></>);
+  const CellRenderer = cellRenderers?.[fieldId] ?? ((): ReactElement => <></>);
   return (
     <Td dataLabel={fieldId} key={fieldId}>
       <CellRenderer data={resourceData} fieldId={fieldId} fields={resourceFields} />

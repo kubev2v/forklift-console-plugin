@@ -10,8 +10,8 @@ export type TableSortContextProps = {
 
 const defaultTableSortContext = {
   activeSort: { isAsc: true, label: '', resourceFieldId: '' },
-  compareFn: () => 0,
-  setActiveSort: () => undefined,
+  compareFn: (): number => 0,
+  setActiveSort: (): void => undefined,
 };
 
 export const TableSortContext = createContext<TableSortContextProps>(defaultTableSortContext);

@@ -39,7 +39,7 @@ const useProvidersInventoryList = (
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (): Promise<void> => {
       try {
         const newInventory = (
           canList
@@ -61,7 +61,7 @@ const useProvidersInventoryList = (
     });
 
     const intervalId = setInterval(fetchData, interval);
-    return () => {
+    return (): void => {
       clearInterval(intervalId);
     };
   }, [canList, interval, namespace]);

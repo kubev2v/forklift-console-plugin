@@ -29,15 +29,15 @@ const AffinityRowActionsDropdown: FC<AffinityRowActionsDropdownProps> = ({
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const onToggleClick = () => {
+  const onToggleClick = (): void => {
     setIsOpen((prevIsOpen) => !prevIsOpen);
   };
 
-  const onSelect = () => {
+  const onSelect = (): void => {
     setIsOpen(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (): void => {
     onDelete(affinity);
     setIsOpen(false);
   };

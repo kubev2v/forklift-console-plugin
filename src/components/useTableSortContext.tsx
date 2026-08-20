@@ -1,5 +1,5 @@
 import { useContext } from 'react';
 
-import { TableSortContext } from '@components/TableSortContext';
+import { TableSortContext, type TableSortContextProps } from '@components/TableSortContext';
 
-export const useTableSortContext = () => useContext(TableSortContext);
+export const useTableSortContext = (): TableSortContextProps => useContext(TableSortContext);

@@ -5,35 +5,37 @@ import { userEvent } from '@testing-library/user-event';
 
 const mockPatchMigrationCutover = jest.fn().mockResolvedValue(undefined);
 jest.mock('../utils/utils', () => ({
-  formatDateTo12Hours: jest.fn(() => '12:00 PM'),
-  patchMigrationCutover: jest.fn((...args) => mockPatchMigrationCutover(...args)),
+  formatDateTo12Hours: jest.fn((): string => '12:00 PM'),
+  patchMigrationCutover: jest.fn((...args: unknown[]): unknown =>
+    mockPatchMigrationCutover(...args),
+  ),
 }));
 
 const mockUsePlanMigration = jest.fn();
 jest.mock('src/plans/hooks/usePlanMigration', () => ({
-  usePlanMigration: jest.fn((...args) => mockUsePlanMigration(...args)),
+  usePlanMigration: jest.fn((...args: unknown[]): unknown => mockUsePlanMigration(...args)),
 }));
 
 const mockT = (key: string): string => key;
 
 jest.mock('src/utils/i18n', () => ({
-  ForkliftTrans: ({ children }: { children: unknown }) => children,
+  ForkliftTrans: ({ children }: { children: unknown }): unknown => children,
   t: mockT,
-  useForkliftTranslation: () => ({ t: mockT }),
+  useForkliftTranslation: (): { t: typeof mockT } => ({ t: mockT }),
 }));
 
 jest.mock('@utils/i18n', () => ({
-  ForkliftTrans: ({ children }: { children: unknown }) => children,
+  ForkliftTrans: ({ children }: { children: unknown }): unknown => children,
   t: mockT,
-  useForkliftTranslation: () => ({ t: mockT }),
+  useForkliftTranslation: (): { t: typeof mockT } => ({ t: mockT }),
 }));
 
 jest.mock('@utils/analytics/hooks/useForkliftAnalytics', () => ({
-  useForkliftAnalytics: () => ({ trackEvent: jest.fn() }),
+  useForkliftAnalytics: (): { trackEvent: jest.Mock } => ({ trackEvent: jest.fn() }),
 }));
 
 jest.mock('@utils/crds/common/selectors', () => ({
-  getName: jest.fn(() => 'test-plan'),
+  getName: jest.fn((): string => 'test-plan'),
 }));
 
 // eslint-disable-next-line import/first

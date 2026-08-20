@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { type ReactElement, useMemo } from 'react';
 
 import type { NavPage } from '@openshift-console/dynamic-plugin-sdk';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -10,43 +10,45 @@ import PlanMappingsPage from '../tabs/Mappings/PlanMappingsPage';
 import PlanResourcesPage from '../tabs/Resources/PlanResourcesPage';
 import PlanVirtualMachinesPage from '../tabs/VirtualMachines/PlanVirtualMachinesPage';
 import PlanYAMLPage from '../tabs/YAML/PlanYAMLPage';
-const usePlanPages = (name: string, namespace: string) => {
+const usePlanPages = (name: string, namespace: string): NavPage[] => {
   const { t } = useForkliftTranslation();
 
   const pages: NavPage[] = useMemo(
     () => [
       {
-        component: () => <PlanDetailsPage name={name} namespace={namespace} />,
+        component: (): ReactElement => <PlanDetailsPage name={name} namespace={namespace} />,
         href: '',
         name: t('Details'),
       },
       {
-        component: () => <PlanYAMLPage name={name} namespace={namespace} />,
+        component: (): ReactElement => <PlanYAMLPage name={name} namespace={namespace} />,
         href: 'yaml',
         name: t('YAML'),
       },
       {
-        component: () => <PlanVirtualMachinesPage name={name} namespace={namespace} />,
+        component: (): ReactElement => (
+          <PlanVirtualMachinesPage name={name} namespace={namespace} />
+        ),
         href: 'vms',
         name: t('Virtual machines'),
       },
       {
-        component: () => <PlanResourcesPage name={name} namespace={namespace} />,
+        component: (): ReactElement => <PlanResourcesPage name={name} namespace={namespace} />,
         href: 'resources',
         name: t('Utilization'),
       },
       {
-        component: () => <PlanMappingsPage name={name} namespace={namespace} />,
+        component: (): ReactElement => <PlanMappingsPage name={name} namespace={namespace} />,
         href: 'mappings',
         name: t('Mappings'),
       },
       {
-        component: () => <PlanAutomationPage name={name} namespace={namespace} />,
+        component: (): ReactElement => <PlanAutomationPage name={name} namespace={namespace} />,
         href: 'automation',
         name: t('Automation'),
       },
       {
-        component: () => <PlanHooksPage name={name} namespace={namespace} />,
+        component: (): ReactElement => <PlanHooksPage name={name} namespace={namespace} />,
         href: 'hooks',
         name: t('Hooks'),
       },

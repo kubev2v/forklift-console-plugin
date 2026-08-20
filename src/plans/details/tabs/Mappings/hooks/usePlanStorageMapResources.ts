@@ -77,7 +77,7 @@ export const usePlanStorageMapResources: UsePlanStorageMapResources = ({
   } = useOvirtDisksForVMs(sourceProvider, vmList);
 
   const vmsWithDisksResult: [ProviderVirtualMachine[], boolean, Error | null] = useMemo(
-    () => [vmsWithDisks as ProviderVirtualMachine[], vmsWithDisksLoading, vmsWithDisksError],
+    () => [vmsWithDisks, vmsWithDisksLoading, vmsWithDisksError],
     [vmsWithDisks, vmsWithDisksLoading, vmsWithDisksError],
   );
 

@@ -1,6 +1,7 @@
 import {
   type FunctionComponent,
   type MouseEvent,
+  type ReactElement,
   type ReactNode,
   type Ref,
   useMemo,
@@ -86,7 +87,7 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
    *
    * @param {string} newValue The value to set as selected.
    */
-  const setSelected = (newValue: string) => {
+  const setSelected = (newValue: string): void => {
     setSelectedItem(newValue);
     setFilterValue('');
 
@@ -116,7 +117,10 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
    * @param {MouseEvent<Element, MouseEvent> | undefined} _event The click event.
    * @param {string | number | undefined} itemId The id of the selected item.
    */
-  const onItemSelect = (_event: MouseEvent | undefined, itemId: string | number | undefined) => {
+  const onItemSelect = (
+    _event: MouseEvent | undefined,
+    itemId: string | number | undefined,
+  ): void => {
     if (itemId !== undefined) {
       setInputValue(itemId as string);
       setFilterValue(itemId as string);
@@ -126,7 +130,7 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
     setFocusedItemIndex(null);
   };
 
-  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
+  const toggle = (toggleRef: Ref<MenuToggleElement>): ReactElement => (
     <FilterableSelectMenuToggle
       filterValue={filterValue}
       focusedItemIndex={focusedItemIndex}

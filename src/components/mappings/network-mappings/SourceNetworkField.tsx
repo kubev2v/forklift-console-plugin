@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { type ReactElement, useMemo } from 'react';
 import {
   type Control,
   Controller,
@@ -28,7 +28,7 @@ const SourceNetworkField = <T extends FieldValues>({
   otherSourceNetworks,
   trigger,
   usedSourceNetworks,
-}: SourceNetworkFieldProps<T>) => {
+}: SourceNetworkFieldProps<T>): ReactElement => {
   const { t } = useForkliftTranslation();
 
   const allNetworks = useMemo(

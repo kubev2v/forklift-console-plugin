@@ -67,7 +67,7 @@ export const useScrollPositionPersistence = ({
   useEffect(() => {
     const debouncedSetPosition = debouncedSetPositionRef.current;
 
-    const handleScroll = (event: Event) => {
+    const handleScroll = (event: Event): void => {
       const target = event.currentTarget as HTMLDivElement;
       debouncedSetPositionRef.current(target?.scrollTop ?? 0);
     };
@@ -76,7 +76,7 @@ export const useScrollPositionPersistence = ({
       element.addEventListener('scroll', handleScroll);
     }
 
-    return () => {
+    return (): void => {
       if (element) {
         element.removeEventListener('scroll', handleScroll);
         debouncedSetPosition.cancel();

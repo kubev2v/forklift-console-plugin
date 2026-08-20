@@ -44,7 +44,7 @@ const AapConnectionSection: FC<AapConnectionSectionProps> = ({ onConnected }) =>
         // errors are handled inside useAapConnection
       });
 
-    return () => {
+    return (): void => {
       cancelled = true;
     };
   }, [configLoaded, isConfigured, connect]);

@@ -20,7 +20,8 @@ export const VSphereEditURLModal: OverlayComponent<EditProviderURLModalProps> = 
   const validationHook =
     sdkEndpoint === 'esxi'
       ? validateEsxiURL
-      : (url: string) => validateVCenterURL(url, insecureSkipVerify);
+      : (url: string): ReturnType<typeof validateVCenterURL> =>
+          validateVCenterURL(url, insecureSkipVerify);
 
   const description = (
     <ForkliftTrans>

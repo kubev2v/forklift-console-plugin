@@ -40,7 +40,7 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
 
   const hasCreatePlanError = Boolean(createPlanError?.message);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     setCreatePlanError(undefined);
     try {
       await onSubmit();
@@ -49,7 +49,9 @@ const CreatePlanWizardInner: FC<CreatePlanWizardInnerProps> = ({
     }
   };
 
-  const getStepProps = (id: PlanWizardStepId) => ({
+  const getStepProps = (
+    id: PlanWizardStepId,
+  ): { id: PlanWizardStepId; isDisabled: boolean; name: string } => ({
     id,
     isDisabled:
       isSubmitting ||

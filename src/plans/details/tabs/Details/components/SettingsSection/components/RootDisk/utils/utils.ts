@@ -54,7 +54,10 @@ export const getRootDiskLabelByKey = (diskKey: string | number | undefined): str
   return key;
 };
 
-export const onConfirmRootDisk = async (resource: V1beta1Plan, newValue: string) => {
+export const onConfirmRootDisk = async (
+  resource: V1beta1Plan,
+  newValue: string,
+): Promise<V1beta1Plan> => {
   const vms = getPlanVirtualMachines(resource);
   const op = vms ? REPLACE : ADD;
 

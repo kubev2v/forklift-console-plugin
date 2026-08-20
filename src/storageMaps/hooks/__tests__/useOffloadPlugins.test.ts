@@ -9,7 +9,7 @@ jest.mock('../useStorageMapCrd');
 
 const mockUseStorageMapCrd = useStorageMapCrd as jest.MockedFunction<typeof useStorageMapCrd>;
 
-const makeCrd = (pluginNames: string[]) =>
+const makeCrd = (pluginNames: string[]): ReturnType<typeof useStorageMapCrd>['crd'] =>
   ({
     spec: {
       versions: [

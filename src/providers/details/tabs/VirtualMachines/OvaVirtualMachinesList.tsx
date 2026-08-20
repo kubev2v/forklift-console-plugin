@@ -31,7 +31,7 @@ const ovaVmFieldsMetadataFactory = [
       type: 'freetext',
     },
     isVisible: true,
-    jsonPath: (data: unknown) => getVmGuestOS((data as VmData)?.vm),
+    jsonPath: (data: unknown): string => getVmGuestOS((data as VmData)?.vm),
     label: t('Guest OS'),
     resourceFieldId: 'guestOS',
     sortable: true,

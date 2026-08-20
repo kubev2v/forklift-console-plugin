@@ -8,7 +8,7 @@ import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
  * @param values - Array of storage mappings to validate
  * @returns Translation key string for validation error or true if valid
  */
-export const validateStorageMaps = (values: StorageMapping[]) => {
+export const validateStorageMaps = (values: StorageMapping[]): string | undefined => {
   if (!Array.isArray(values)) {
     return t('Invalid mappings');
   }

@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import InspectVirtualMachinesButton from 'src/components/InspectVirtualMachines/InspectVirtualMachinesButton';
 import { useCanInspectPlan } from 'src/plans/details/hooks/useCanInspectPlan';
 
@@ -16,7 +16,7 @@ export const useSpecVirtualMachinesActions = (plan: V1beta1Plan): PageGlobalActi
 
   const inspectButton: PageGlobalActions = isVsphere
     ? [
-        () => (
+        (): ReactElement => (
           <InspectVirtualMachinesButton
             canInspect={canInspect}
             disabledReason={disabledReason}
@@ -29,8 +29,8 @@ export const useSpecVirtualMachinesActions = (plan: V1beta1Plan): PageGlobalActi
 
   return [
     ...inspectButton,
-    () => <AddVirtualMachinesButton plan={plan} />,
-    ({ selectedIds }) => (
+    (): ReactElement => <AddVirtualMachinesButton plan={plan} />,
+    ({ selectedIds }): ReactElement => (
       <DeleteVirtualMachinesButton plan={plan} selectedIds={selectedIds ?? []} />
     ),
   ];

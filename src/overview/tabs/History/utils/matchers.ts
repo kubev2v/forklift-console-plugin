@@ -7,23 +7,25 @@ import type { V1beta1Migration } from '@forklift-ui/types';
 
 export const dateRangeObjectMatcher: ValueMatcher = {
   filterType: FilterDefType.DateRange,
-  matchValue: (value: unknown) => (filter: string) => {
-    if (!value || typeof value !== 'object') {
-      return false;
-    }
-    const obj = value as { completed?: string; started?: string };
-    const [from, to] = filter.split('/');
-    const fromDate = DateTime.fromISO(from);
-    const toDate = DateTime.fromISO(to);
-    const inRange = (dateStr?: string) => {
-      if (!dateStr) {
+  matchValue:
+    (value: unknown): ((filter: string) => boolean) =>
+    (filter: string) => {
+      if (!value || typeof value !== 'object') {
         return false;
       }
-      const date = DateTime.fromISO(dateStr);
-      return date >= fromDate && date <= toDate;
-    };
-    return inRange(obj.started);
-  },
+      const obj = value as { completed?: string; started?: string };
+      const [from, to] = filter.split('/');
+      const fromDate = DateTime.fromISO(from);
+      const toDate = DateTime.fromISO(to);
+      const inRange = (dateStr?: string): boolean => {
+        if (!dateStr) {
+          return false;
+        }
+        const date = DateTime.fromISO(dateStr);
+        return date >= fromDate && date <= toDate;
+      };
+      return inRange(obj.started);
+    },
 };
 
 export const filterMostRecentMigrations = (migrations: V1beta1Migration[]): V1beta1Migration[] => {

@@ -12,8 +12,9 @@ import type { SpecVirtualMachinePageData } from '@utils/types/specVirtualMachine
 
 import { planMigrationVirtualMachineStatuses } from '../components/PlanStatus/utils/types';
 
-export const isMigrationVirtualMachinePaused = (vm: V1beta1PlanStatusMigrationVms | undefined) =>
-  vm?.phase === planMigrationVirtualMachineStatuses.CopyingPaused;
+export const isMigrationVirtualMachinePaused = (
+  vm: V1beta1PlanStatusMigrationVms | undefined,
+): boolean => vm?.phase === planMigrationVirtualMachineStatuses.CopyingPaused;
 
 export const getPlanMigrationType = (plan: V1beta1Plan): MigrationTypeValue => {
   switch (plan?.spec?.type) {
@@ -33,7 +34,9 @@ export const getPlanMigrationType = (plan: V1beta1Plan): MigrationTypeValue => {
   }
 };
 
-export const getCriticalConcernsVmsMap = (vms: SpecVirtualMachinePageData[]) => {
+export const getCriticalConcernsVmsMap = (
+  vms: SpecVirtualMachinePageData[],
+): Map<string, number> => {
   const map = new Map<string, number>();
 
   for (const vmData of vms ?? []) {

@@ -22,7 +22,7 @@ const VmMigrationsHistoryCard: FC<MigrationsCardProps> = () => {
   const { t } = useForkliftTranslation();
   const { data, setData } = useContext(OverviewContext);
   const selectedRange = data?.vmMigrationsHistorySelectedRange ?? TimeRangeOptions.Last10Days;
-  const setSelectedRange = (range: TimeRangeOptions) => {
+  const setSelectedRange = (range: TimeRangeOptions): void => {
     setData({
       ...data,
       vmMigrationsHistorySelectedRange: range,

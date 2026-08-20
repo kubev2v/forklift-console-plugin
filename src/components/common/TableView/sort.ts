@@ -128,7 +128,7 @@ export const buildSort = ({
   setActiveSort: (sort: SortType) => void;
 }): ThProps['sort'] => ({
   columnIndex,
-  onSort: (_event, index, direction) => {
+  onSort: (_event, index, direction): void => {
     const { label, resourceFieldId } = resourceFields[index] ?? {};
     if (resourceFieldId) {
       setActiveSort({

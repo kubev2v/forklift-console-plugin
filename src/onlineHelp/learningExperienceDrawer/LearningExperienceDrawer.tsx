@@ -19,7 +19,7 @@ const LearningExperienceDrawer: FC<{ children: ReactNode }> = ({ children }) => 
       const originalOverflow = listWrapper.style.overflowY;
       listWrapper.style.overflowY = 'hidden';
 
-      return () => {
+      return (): void => {
         listWrapper.style.overflowY = originalOverflow;
       };
     }

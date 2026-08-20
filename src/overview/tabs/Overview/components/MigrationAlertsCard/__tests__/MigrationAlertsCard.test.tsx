@@ -9,21 +9,21 @@ const mockUseMigrationAlerts =
 
 jest.mock('@utils/hooks/useMigrationAlerts/useMigrationAlerts', () => ({
   __esModule: true,
-  default: () => mockUseMigrationAlerts(),
+  default: (): ReturnType<typeof mockUseMigrationAlerts> => mockUseMigrationAlerts(),
 }));
 
 const mockT = (key: string): string => key;
 
 jest.mock('src/utils/i18n', () => ({
-  ForkliftTrans: ({ children }: { children: unknown }) => children,
+  ForkliftTrans: ({ children }: { children: unknown }): unknown => children,
   t: mockT,
-  useForkliftTranslation: () => ({ t: mockT }),
+  useForkliftTranslation: (): { t: typeof mockT } => ({ t: mockT }),
 }));
 
 jest.mock('@utils/i18n', () => ({
-  ForkliftTrans: ({ children }: { children: unknown }) => children,
+  ForkliftTrans: ({ children }: { children: unknown }): unknown => children,
   t: mockT,
-  useForkliftTranslation: () => ({ t: mockT }),
+  useForkliftTranslation: (): { t: typeof mockT } => ({ t: mockT }),
 }));
 
 // Must import after mocks

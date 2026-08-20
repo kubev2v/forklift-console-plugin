@@ -14,7 +14,7 @@ export const patchMigrationCutover = async (
   migration: V1beta1Migration,
   cutover?: string,
   trackEvent?: (event: string, data: Record<string, unknown>) => void,
-) => {
+): Promise<V1beta1Migration> => {
   const op = migration?.spec?.cutover ? 'replace' : 'add';
 
   const result = await k8sPatch({

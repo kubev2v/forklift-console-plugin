@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 
@@ -8,7 +8,7 @@ export const withTr = <T,>(
   Component: FC<RowProps<T>>,
   ExpandedComponent?: FC<RowProps<T>>,
 ): FC<RowProps<T>> => {
-  const Enhanced = (props: RowProps<T>) => {
+  const Enhanced = (props: RowProps<T>): ReactElement => {
     const { isExpanded, length } = props;
 
     if (ExpandedComponent) {

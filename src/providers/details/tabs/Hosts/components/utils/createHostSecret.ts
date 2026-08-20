@@ -5,7 +5,7 @@ import { isEmpty } from '@utils/helpers';
 /**
  * Removes null or empty string values from an object.
  */
-const cleanObject = (obj: Record<string, string> | undefined) => {
+const cleanObject = (obj: Record<string, string> | undefined): Record<string, string> => {
   const result: Record<string, string> = {};
   for (const key in obj) {
     if (!isEmpty(obj[key])) {
@@ -22,7 +22,9 @@ const cleanObject = (obj: Record<string, string> | undefined) => {
  * @param {IoK8sApiCoreV1Secret} secret - The secret object containing the data to be created.
  * @returns {Promise<IoK8sApiCoreV1Secret>} A promise that resolves to the created secret.
  */
-export const createHostSecret = async (secret: IoK8sApiCoreV1Secret) => {
+export const createHostSecret = async (
+  secret: IoK8sApiCoreV1Secret,
+): Promise<IoK8sApiCoreV1Secret> => {
   const secretData = cleanObject(secret.data);
   const cleanedSecret = { ...secret, data: secretData };
 

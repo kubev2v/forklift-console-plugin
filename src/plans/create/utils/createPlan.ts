@@ -1,6 +1,6 @@
 import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
-import { getObjectRef } from '@utils/helpers/getObjectRef';
+import { getObjectRef, type ObjectRef } from '@utils/helpers/getObjectRef';
 
 import { MigrationTypeValue } from '../steps/migration-type/constants';
 import type { CreatePlanParams } from '../types';
@@ -33,7 +33,7 @@ export const createPlan = async ({
   targetProvider,
   transferNetwork,
   vms,
-}: CreatePlanParams) => {
+}: CreatePlanParams): Promise<ObjectRef> => {
   const plan: V1beta1Plan = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Plan',

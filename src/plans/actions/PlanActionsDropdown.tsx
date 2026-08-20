@@ -19,11 +19,11 @@ const PlanActionsDropdown: FC<PlanActionsDropdownProps> = ({ isDetailsPage, plan
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const onToggleClick = () => {
+  const onToggleClick = (): void => {
     setIsOpen((open) => !open);
   };
 
-  const onSelect = () => {
+  const onSelect = (): void => {
     setIsOpen(false);
   };
 

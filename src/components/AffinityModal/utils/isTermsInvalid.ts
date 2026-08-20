@@ -3,7 +3,7 @@ import { isEmpty } from '@utils/helpers';
 
 import type { AffinityLabel } from './types';
 
-export const isTermsInvalid = (terms: AffinityLabel[]) =>
+export const isTermsInvalid = (terms: AffinityLabel[]): boolean =>
   terms?.some(
     ({ key, operator, values }) =>
       !key ||

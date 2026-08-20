@@ -1,4 +1,4 @@
-import { type FC, memo } from 'react';
+import { type FC, memo, type ReactElement } from 'react';
 import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -23,12 +23,12 @@ const StorageMapDetailsPage: FC<StorageMapDetailsPageProps> = memo(({ name, name
 
   const pages = [
     {
-      component: () => <StorageMapDetailsTab name={name} namespace={namespace} />,
+      component: (): ReactElement => <StorageMapDetailsTab name={name} namespace={namespace} />,
       href: '',
       name: t('Details'),
     },
     {
-      component: () => <StorageMapYAMLTab name={name} namespace={namespace} />,
+      component: (): ReactElement => <StorageMapYAMLTab name={name} namespace={namespace} />,
       href: 'yaml',
       name: t('YAML'),
     },

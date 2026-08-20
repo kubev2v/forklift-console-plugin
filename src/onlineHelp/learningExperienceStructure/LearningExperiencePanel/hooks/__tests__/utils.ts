@@ -45,7 +45,10 @@ export const fireScrollEvent = (element: MockScrollableElement, scrollTop: numbe
 
 export const createMockDebouncedFn = (
   mockCreateCancellableDebounce: jest.MockedFunction<typeof createCancellableDebounce>,
-) => {
+): {
+  getCancel: () => jest.Mock | undefined;
+  getCapturedFn: () => ((position: number) => void) | null;
+} => {
   let capturedFn: ((position: number) => void) | null = null;
 
   mockCreateCancellableDebounce.mockImplementation((fn) => {
@@ -58,8 +61,8 @@ export const createMockDebouncedFn = (
   });
 
   return {
-    getCapturedFn: () => capturedFn,
-    getCancel: () => {
+    getCapturedFn: (): ((position: number) => void) | null => capturedFn,
+    getCancel: (): jest.Mock | undefined => {
       const [lastCall] = mockCreateCancellableDebounce.mock.results;
       return lastCall?.value?.cancel as jest.Mock | undefined;
     },

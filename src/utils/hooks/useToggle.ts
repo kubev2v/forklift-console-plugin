@@ -17,7 +17,7 @@ import { useState } from 'react';
 const useToggle = (initialValue = false): [boolean, () => void] => {
   const [value, setIsOpen] = useState(initialValue);
 
-  const toggle = () => {
+  const toggle = (): void => {
     setIsOpen((open) => !open);
   };
 

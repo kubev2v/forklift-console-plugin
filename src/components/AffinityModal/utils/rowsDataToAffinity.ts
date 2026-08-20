@@ -94,7 +94,9 @@ const getPreferredPodTermFromRowData = ({
   weight,
 });
 
-export const rowsDataToAffinity = (affinityRows: AffinityRowData[]) => {
+export const rowsDataToAffinity = (
+  affinityRows: AffinityRowData[],
+): K8sIoApiCoreV1Affinity | null => {
   if (isEmpty(affinityRows)) {
     return null;
   }

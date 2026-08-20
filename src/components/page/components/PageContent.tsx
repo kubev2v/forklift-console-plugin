@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import type { OnPerPageSelect, OnSetPage } from '@patternfly/react-core';
 import { PageSection, Pagination } from '@patternfly/react-core';
@@ -25,7 +25,7 @@ export const PageContent = ({
   showPagination,
   toolbar,
   totalItems,
-}: PageContentProps) => (
+}: PageContentProps): ReactElement => (
   <PageSection hasBodyWrapper={false} padding={{ default: noPadding ? 'noPadding' : 'padding' }}>
     {toolbar}
     {children}
