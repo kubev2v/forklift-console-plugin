@@ -1,3 +1,4 @@
+import type { RemoveButtonType } from '@components/FieldBuilderTable/types';
 import type { StorageMapping } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
 
@@ -19,7 +20,7 @@ export const getCreatePlanStorageMapRemoveButton = ({
   storageMappings,
   t,
   usedSourceStorages,
-}: CreatePlanStorageMapRemoveButtonArgs) => ({
+}: CreatePlanStorageMapRemoveButtonArgs): RemoveButtonType => ({
   isDisabled: (index: number): boolean => {
     if (Boolean(isIscsi) || storageMappingFieldsLength <= 1) {
       return true;
