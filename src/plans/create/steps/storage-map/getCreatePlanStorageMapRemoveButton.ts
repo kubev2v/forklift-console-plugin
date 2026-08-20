@@ -20,7 +20,7 @@ export const getCreatePlanStorageMapRemoveButton = ({
   storageMappings,
   t,
   usedSourceStorages,
-}: CreatePlanStorageMapRemoveButtonArgs): RemoveButtonType => ({
+}: CreatePlanStorageMapRemoveButtonArgs): Required<RemoveButtonType> => ({
   isDisabled: (index: number): boolean => {
     if (Boolean(isIscsi) || storageMappingFieldsLength <= 1) {
       return true;

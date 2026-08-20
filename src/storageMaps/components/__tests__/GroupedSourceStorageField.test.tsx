@@ -52,5 +52,11 @@ describe('GroupedSourceStorageField', () => {
 
     expect(reusedSourceOption).toBeEnabled();
     expect(reusedSourceOption).not.toHaveAttribute('aria-disabled', 'true');
+
+    await user.click(reusedSourceOption);
+
+    expect(screen.getByRole('button', { name: 'Select menu toggle' })).toHaveTextContent(
+      'eco-iscsi-ds3',
+    );
   });
 });
