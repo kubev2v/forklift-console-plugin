@@ -1,4 +1,4 @@
-import { type FormEvent, type SyntheticEvent, useState } from 'react';
+import { type FormEvent, type ReactElement, type SyntheticEvent, useState } from 'react';
 
 import { InputGroup, SearchInput, ToolbarFilter } from '@patternfly/react-core';
 
@@ -22,7 +22,7 @@ export const FreetextFilter = ({
   selectedFilters,
   showFilter = true,
   title,
-}: FilterTypeProps) => {
+}: FilterTypeProps): ReactElement => {
   const [inputValue, setInputValue] = useState('');
 
   const onTextInput: (

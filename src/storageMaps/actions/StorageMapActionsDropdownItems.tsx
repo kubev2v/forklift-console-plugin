@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { useNavigate } from 'react-router';
 import { DeleteModal, type DeleteModalProps } from 'src/components/modals/DeleteModal/DeleteModal';
 import { useOwnerPlanActionGate } from 'src/plans/hooks/useOwnerPlanActionGate';
@@ -17,7 +18,7 @@ type StorageMapActionsDropdownItemsProps = {
 export const StorageMapActionsDropdownItems = ({
   data,
   isDetailsPage,
-}: StorageMapActionsDropdownItemsProps) => {
+}: StorageMapActionsDropdownItemsProps): ReactElement[] => {
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export const StorageMapActionsDropdownItems = ({
     reference: StorageMapModelRef,
   });
 
-  const onDelete = () => {
+  const onDelete = (): void => {
     if (!storageMap) {
       return;
     }

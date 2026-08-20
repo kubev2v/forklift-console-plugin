@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { Controller, useFieldArray } from 'react-hook-form';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
@@ -17,7 +18,7 @@ import {
 } from './constants';
 import { getDiskPassPhraseFieldId } from './utils';
 
-const DiskPassPhraseFieldTable = () => {
+const DiskPassPhraseFieldTable = (): ReactElement => {
   const { t } = useForkliftTranslation();
   const { control, setValue } = useCreatePlanFormContext();
 

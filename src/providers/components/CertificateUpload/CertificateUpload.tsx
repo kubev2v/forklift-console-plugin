@@ -39,7 +39,7 @@ const CertificateUpload: FC<CertificateUploadProps> = ({
   const launchOverlay = useOverlay();
   const { t } = useForkliftTranslation();
   const isText = !type || type === 'text';
-  const onClick = () => {
+  const onClick = (): void => {
     const syntheticEvent = {
       target: { value },
     } as ChangeEvent<HTMLTextAreaElement>;

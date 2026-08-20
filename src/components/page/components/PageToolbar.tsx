@@ -1,5 +1,4 @@
-import type { ReactNode } from 'react';
-import { useMemo } from 'react';
+import { type ReactElement, type ReactNode, useMemo } from 'react';
 
 import { AttributeValueFilter } from '@components/common/FilterGroup/AttributeValueFilter';
 import { FilterGroup } from '@components/common/FilterGroup/FilterGroup';
@@ -71,7 +70,7 @@ export const PageToolbar = <T,>({
   sortedData,
   supportedFilters,
   totalItems,
-}: PageToolbarProps<T>) => {
+}: PageToolbarProps<T>): ReactElement => {
   const { t } = useForkliftTranslation();
 
   const primaryFilters = useMemo(

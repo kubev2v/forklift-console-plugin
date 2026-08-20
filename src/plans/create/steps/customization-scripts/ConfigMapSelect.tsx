@@ -1,4 +1,10 @@
-import { type ComponentProps, type ForwardedRef, forwardRef, useMemo } from 'react';
+import {
+  type ComponentProps,
+  type ForwardedRef,
+  forwardRef,
+  type ReactElement,
+  useMemo,
+} from 'react';
 
 import Select from '@components/common/Select';
 import type { IoK8sApiCoreV1ConfigMap } from '@forklift-ui/types';
@@ -23,7 +29,7 @@ type ConfigMapSelectProps = Pick<ComponentProps<typeof Select>, 'status'> & {
 const ConfigMapSelect = (
   { id, namespace, onSelect, status, testId, value }: ConfigMapSelectProps,
   ref: ForwardedRef<HTMLButtonElement>,
-) => {
+): ReactElement => {
   const { t } = useForkliftTranslation();
 
   const [allConfigMaps] = useK8sWatchResource<K8sResourceCommon[]>({

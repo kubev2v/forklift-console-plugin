@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, type ReactElement, useState } from 'react';
 
 import { DatePicker, InputGroup, ToolbarFilter } from '@patternfly/react-core';
 
@@ -23,14 +23,14 @@ export const DateFilter = ({
   selectedFilters = [],
   showFilter = true,
   title,
-}: FilterTypeProps) => {
+}: FilterTypeProps): ReactElement => {
   const isString = (value: string | undefined): value is string => value !== undefined;
   const validFilters = selectedFilters?.map(changeFormatToISODate)?.filter(isString) ?? [];
 
   // internal state - stored as ISO date string (no time)
   const [date, setDate] = useState<string | undefined>();
 
-  const clearSingleDate = (option: string) => {
+  const clearSingleDate = (option: string): void => {
     onFilterUpdate([...validFilters.filter((filter) => filter !== option)]);
   };
 

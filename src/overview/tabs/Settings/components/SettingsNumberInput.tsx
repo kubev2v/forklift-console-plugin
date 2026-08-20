@@ -15,7 +15,7 @@ const SettingsNumberInput: FC<SettingsNumberInputProps> = ({
   testId,
   value,
 }) => {
-  const normalize = (val: number | string) => {
+  const normalize = (val: number | string): number => {
     const num = typeof val === 'number' ? val : parseInt(val, 10);
     if (isNaN(num) || num < 1) {
       return defaultValue;

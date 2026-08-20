@@ -27,7 +27,7 @@ const cleanObject = (obj: Record<string, string> | undefined): Record<string, st
 export const createProviderSecret = async (
   provider: V1beta1Provider,
   secret: IoK8sApiCoreV1Secret,
-) => {
+): Promise<IoK8sApiCoreV1Secret | undefined> => {
   if (!secret || !provider) {
     return undefined;
   }

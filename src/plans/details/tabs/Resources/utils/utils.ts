@@ -134,7 +134,7 @@ const getOpenstackPlanResources = (planInventory: OpenstackVM[]): PlanResourcesT
   };
 };
 
-const getK8sCPU = (vm: V1VirtualMachine) =>
+const getK8sCPU = (vm: V1VirtualMachine): number | string =>
   vm?.spec?.template?.spec?.domain?.cpu?.cores ?? EMPTY_CPU;
 const getK8sVMMemory = (vm: V1VirtualMachine): string =>
   (vm?.spec?.template?.spec?.domain?.resources?.requests as unknown as Record<string, string>)

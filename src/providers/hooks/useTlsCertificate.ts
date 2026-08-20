@@ -8,7 +8,7 @@ import { getServicesApiUrl } from '@utils/api/getApiUrl';
  * @param value PEM encoded certificate
  * @returns parsed certificate or undefined if parsing failed
  */
-const parseToX509 = (value: string) => {
+const parseToX509 = (value: string): X509 | undefined => {
   if (!value) {
     return undefined;
   }
@@ -21,7 +21,7 @@ const parseToX509 = (value: string) => {
   }
 };
 
-export const toColonSeparatedHex = (hexString: string) =>
+export const toColonSeparatedHex = (hexString: string): string =>
   Array.from(hexString.toUpperCase())
     // [a,b,c,d] => [[c,d][a,b]]
     .reduce(
@@ -38,7 +38,7 @@ export const toColonSeparatedHex = (hexString: string) =>
  * @param pemEncodedCert valid PEM encoded certificate
  * @returns SHA1 thumbprint
  */
-export const calculateThumbprint = (pemEncodedCert: string) => {
+export const calculateThumbprint = (pemEncodedCert: string): string => {
   try {
     return toColonSeparatedHex(KJUR.crypto.Util.hashHex(pemtohex(pemEncodedCert), 'sha1'));
   } catch {
@@ -50,13 +50,23 @@ export const calculateThumbprint = (pemEncodedCert: string) => {
  * @param url URL param for the tls-certificate endpoint
  * @returns certificate and props calculated/parsed based on the certificate
  */
-export const useTlsCertificate = (url: string) => {
+export const useTlsCertificate = (
+  url: string,
+): {
+  certError: boolean;
+  certificate: string;
+  fetchError: Error | undefined;
+  issuer: string;
+  loading: boolean;
+  thumbprint: string;
+  validTo: Date | undefined;
+} => {
   const [certificate, setCertificate] = useState('');
   const [fetchError, setFetchError] = useState<Error>();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchCertificate = async () => {
+    const fetchCertificate = async (): Promise<void> => {
       try {
         const response = await consoleFetch(getServicesApiUrl(`tls-certificate?URL=${url}`), {
           method: 'GET',
@@ -70,7 +80,7 @@ export const useTlsCertificate = (url: string) => {
       }
     };
 
-    (async () => {
+    (async (): Promise<void> => {
       await fetchCertificate();
     })();
   }, [url]);

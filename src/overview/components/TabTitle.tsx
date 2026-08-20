@@ -1,7 +1,9 @@
+import type { ReactElement } from 'react';
+
 import { Button, ButtonVariant, Icon, Tooltip } from '@patternfly/react-core';
 import { HelpIcon } from '@patternfly/react-icons';
 
-const TabTitle = ({ helpContent, title }: { helpContent: string; title: string }) => (
+const TabTitle = ({ helpContent, title }: { helpContent: string; title: string }): ReactElement => (
   <>
     {title}{' '}
     <Tooltip content={helpContent}>

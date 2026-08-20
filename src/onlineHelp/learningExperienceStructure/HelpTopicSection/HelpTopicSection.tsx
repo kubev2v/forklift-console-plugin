@@ -1,4 +1,4 @@
-import { type FC, memo, useContext } from 'react';
+import { type FC, memo, type MouseEvent, useContext } from 'react';
 import { type LearningExperienceSubTopic, ListStyleType } from 'src/onlineHelp/utils/types';
 
 import { ExpandableSection } from '@patternfly/react-core';
@@ -23,7 +23,7 @@ const HelpTopicSection: FC<HelpTopicSectionProps> = ({ index, listStyleType, top
   const hasSubTopics = Boolean(topic.subTopics);
   const prefix = listStyleType === ListStyleType.DECIMAL ? `${index + 1}.` : undefined;
 
-  const handleToggle = (_ev: React.MouseEvent, expanded: boolean) => {
+  const handleToggle = (_ev: MouseEvent, expanded: boolean): void => {
     if (!hasSubTopics) {
       return;
     }

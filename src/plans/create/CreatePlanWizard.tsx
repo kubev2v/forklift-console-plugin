@@ -61,7 +61,7 @@ const CreatePlanWizard: FC = () => {
   });
   const [targetStorages] = useTargetStorages(targetProvider, targetProject);
 
-  const onSubmit = async () => {
+  const onSubmit = async (): Promise<void> => {
     const formData = getValues();
 
     trackEvent(TELEMETRY_EVENTS.PLAN_CREATE_STARTED, {
@@ -72,7 +72,7 @@ const CreatePlanWizard: FC = () => {
       targetProviderType: formData.targetProvider?.spec?.type,
     });
 
-    const trackPlanWizardEvent = (eventType: string, properties = {}) => {
+    const trackPlanWizardEvent = (eventType: string, properties = {}): void => {
       trackEvent(eventType, { ...properties, creationMethod: CreationMethod.PlanWizard });
     };
 

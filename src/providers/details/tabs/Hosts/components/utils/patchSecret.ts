@@ -6,7 +6,7 @@ export const patchSecret = async (
   encodedIpAddress: string,
   encodedUser?: string,
   encodedPassword?: string,
-) => {
+): Promise<void> => {
   await k8sPatch({
     data: [
       {

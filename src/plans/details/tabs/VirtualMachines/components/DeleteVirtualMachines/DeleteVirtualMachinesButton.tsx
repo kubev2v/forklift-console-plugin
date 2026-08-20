@@ -14,7 +14,7 @@ const DeleteVirtualMachinesButton: FC<DeleteVirtualMachineProps> = ({ plan, sele
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
 
-  const onClick = () => {
+  const onClick = (): void => {
     launchOverlay<DeleteVirtualMachineProps>(DeleteVirtualMachinesModal, { plan, selectedIds });
   };
 

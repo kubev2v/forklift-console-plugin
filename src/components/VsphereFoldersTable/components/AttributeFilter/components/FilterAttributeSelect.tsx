@@ -1,4 +1,4 @@
-import { type Ref, useMemo, useState } from 'react';
+import { type ReactElement, type Ref, useMemo, useState } from 'react';
 
 import {
   MenuToggle,
@@ -22,7 +22,7 @@ const FilterAttributeSelect = <T,>({
   activeId,
   attributes,
   onChange,
-}: FilterAttributeSelectProps<T>) => {
+}: FilterAttributeSelectProps<T>): ReactElement => {
   const { t } = useForkliftTranslation();
   const [isOpen, setOpen] = useState(false);
 

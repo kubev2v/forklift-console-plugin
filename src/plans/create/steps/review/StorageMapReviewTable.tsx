@@ -104,7 +104,7 @@ const StorageMapReviewTable: FC<StorageMapReviewTableProps> = ({ storageMap }) =
                       {...(hasOffloadData && {
                         expand: {
                           isExpanded,
-                          onToggle: () => {
+                          onToggle: (): void => {
                             handleToggleExpansion(rowKey);
                           },
                           rowIndex: index,

@@ -26,7 +26,7 @@ const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, namespace,
     reference: ProviderModelRef,
   });
 
-  const onClick = () => {
+  const onClick = (): void => {
     trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_CLICKED, {
       createSource: ProviderCreateSource.ProvidersPage,
       namespace,

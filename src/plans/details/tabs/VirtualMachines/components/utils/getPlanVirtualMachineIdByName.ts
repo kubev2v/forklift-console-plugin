@@ -1,7 +1,10 @@
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { getPlanVirtualMachinesMigrationStatus } from '@utils/crds/plans/selectors';
 
-export const getPlanVirtualMachineIdByName = (plan: V1beta1Plan, vmName: string | undefined) => {
+export const getPlanVirtualMachineIdByName = (
+  plan: V1beta1Plan,
+  vmName: string | undefined,
+): string | undefined => {
   const migrationVirtualMachines = getPlanVirtualMachinesMigrationStatus(plan);
 
   return migrationVirtualMachines.find((migrationVm) => migrationVm?.name === vmName)?.id;

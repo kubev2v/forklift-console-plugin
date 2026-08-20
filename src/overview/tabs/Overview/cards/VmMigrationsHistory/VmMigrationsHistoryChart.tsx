@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { type ReactElement, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import type { Interval } from 'luxon';
 import { TimeRangeOptions } from 'src/overview/tabs/Overview/utils/timeRangeOptions';
@@ -37,7 +37,7 @@ const VmMigrationsHistoryChart = ({
     running: MigrationDataPoint[];
     succeeded: MigrationDataPoint[];
   };
-}) => {
+}): ReactElement => {
   const { t } = useForkliftTranslation();
   const { trackEvent } = useForkliftAnalytics();
   const { count } = useMigrationCounts();
@@ -94,7 +94,7 @@ const VmMigrationsHistoryChart = ({
     events: [
       {
         eventHandlers: {
-          onClick: () => {
+          onClick: (): void => {
             if (!activeInterval) {
               return;
             }

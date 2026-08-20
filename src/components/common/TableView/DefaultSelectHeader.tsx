@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import { Th } from '@patternfly/react-table';
 
 import { buildSort } from './sort';
@@ -8,7 +10,7 @@ const DefaultSelectHeader = <T,>({
   canSelect,
   setActiveSort,
   visibleColumns,
-}: TableViewHeaderProps<T>) => {
+}: TableViewHeaderProps<T>): ReactElement => {
   return (
     <>
       {canSelect && <Th screenReaderText="Row select" />}

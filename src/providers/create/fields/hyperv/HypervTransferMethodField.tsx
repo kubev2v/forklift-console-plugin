@@ -20,7 +20,7 @@ const HypervTransferMethodField: FC = () => {
 
   const setValueOptions = { shouldDirty: true, shouldValidate: true };
 
-  const handleChange = (method: HypervTransferMethod) => {
+  const handleChange = (method: HypervTransferMethod): void => {
     setValue(ProviderFormFieldId.TransferMethod, method, setValueOptions);
     if (method === HypervTransferMethod.ISCSI) {
       setValue(ProviderFormFieldId.SmbUrl, '', setValueOptions);

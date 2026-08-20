@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
@@ -11,7 +12,7 @@ import { CreatePlanStorageMapFieldId, StorageMapType, storageMapTypeLabels } fro
 import ExistingStorageMapField from './ExistingStorageMapField';
 import NewStorageMapFields from './NewStorageMapFields';
 
-const StorageMapStep = () => {
+const StorageMapStep = (): ReactElement => {
   const { t } = useForkliftTranslation();
   const { control, trigger, unregister } = useCreatePlanFormContext();
 
@@ -20,7 +21,7 @@ const StorageMapStep = () => {
     name: [CreatePlanStorageMapFieldId.ExistingStorageMap, CreatePlanStorageMapFieldId.StorageMap],
   });
 
-  const handleStorageMapTypeChange = (newType: StorageMapType) => {
+  const handleStorageMapTypeChange = (newType: StorageMapType): void => {
     setTimeout(async () => {
       if (newType === StorageMapType.Existing && !existingStorageMap) {
         await trigger(CreatePlanStorageMapFieldId.ExistingStorageMap);

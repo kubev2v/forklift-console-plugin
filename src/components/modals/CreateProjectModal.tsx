@@ -48,7 +48,7 @@ const CreateProjectModal: OverlayComponent<CreateProjectModalProps> = ({
   const [description, setDescription] = useState('');
   const { t } = useForkliftTranslation();
 
-  const submit = (event: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>) => {
+  const submit = (event: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     setInProgress(true);
 

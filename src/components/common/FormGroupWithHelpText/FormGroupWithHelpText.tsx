@@ -36,7 +36,9 @@ type FormGroupWithHelpTextProps = {
  * If validated mode was not set or if it's the 'default', use 'default' variant which shows
  * plain text without icons for informational helper text
  */
-const validatedToVariant = (validated: 'success' | 'warning' | 'error' | 'default' | undefined) =>
+const validatedToVariant = (
+  validated: 'success' | 'warning' | 'error' | 'default' | undefined,
+): 'success' | 'warning' | 'error' | 'default' =>
   !validated || validated === 'default' ? 'default' : validated;
 
 /**
@@ -67,7 +69,7 @@ export const FormGroupWithHelpText: FC<FormGroupWithHelpTextProps> = ({
     validated === ValidationState.Error && helperTextInvalid ? helperTextInvalid : helperText;
   const variant = validatedToVariant(validated);
   const isError = validated === ValidationState.Error;
-  const getHelperTextTestId = () => {
+  const getHelperTextTestId = (): string => {
     if (testId) {
       return isError ? `${testId}-error` : testId;
     }

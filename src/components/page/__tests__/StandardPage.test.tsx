@@ -1,13 +1,14 @@
+import type { ReactElement } from 'react';
 import { MemoryRouter } from 'react-router';
 
 import type { ResourceField } from '@components/common/utils/types';
 import { beforeEach, describe, expect, it } from '@jest/globals';
-import { render, screen } from '@testing-library/react';
+import { render, type RenderResult, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import StandardPage from '../StandardPage';
 
-const renderWithRouter = (component: React.ReactElement) =>
+const renderWithRouter = (component: ReactElement): RenderResult =>
   render(<MemoryRouter>{component}</MemoryRouter>);
 
 describe('StandardPage', () => {

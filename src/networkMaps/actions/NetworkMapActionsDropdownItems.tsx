@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { useNavigate } from 'react-router';
 import { DeleteModal, type DeleteModalProps } from 'src/components/modals/DeleteModal/DeleteModal';
 import { useOwnerPlanActionGate } from 'src/plans/hooks/useOwnerPlanActionGate';
@@ -17,7 +18,7 @@ type NetworkMapActionsDropdownItemsProps = {
 export const NetworkMapActionsDropdownItems = ({
   data,
   isDetailsPage,
-}: NetworkMapActionsDropdownItemsProps) => {
+}: NetworkMapActionsDropdownItemsProps): ReactElement[] => {
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export const NetworkMapActionsDropdownItems = ({
     reference: NetworkMapModelRef,
   });
 
-  const onDelete = () => {
+  const onDelete = (): void => {
     if (!networkMap) {
       return;
     }

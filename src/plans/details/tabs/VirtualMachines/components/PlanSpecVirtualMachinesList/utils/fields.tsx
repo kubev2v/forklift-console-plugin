@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import VirtualMachineConcernsCell from '@components/Concerns/VirtualMachineConcernsCell';
 import { EMPTY_MSG } from '@utils/constants';
 import type { EnhancedPlanSpecVms } from '@utils/plans/types';
@@ -13,7 +15,9 @@ import SpecVirtualMachinesActions from '../components/SpecVirtualMachinesActions
 import { VMMigrateSharedDisksCellRenderer } from '../components/VMMigrateSharedDisksCellRenderer';
 import { VMTargetPowerStateCellRenderer } from '../components/VMTargetPowerStateCellRenderer';
 
-export const getSpecVirtualMachinesRowFields = (fieldsData: SpecVirtualMachinePageData) => {
+export const getSpecVirtualMachinesRowFields = (
+  fieldsData: SpecVirtualMachinePageData,
+): Record<PlanSpecVirtualMachinesTableResourceId, ReactNode> => {
   const {
     conditions,
     inspectionStatus,

@@ -52,7 +52,7 @@ const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
         // errors handled inside useAapConnection
       });
 
-    return () => {
+    return (): void => {
       cancelled = true;
     };
   }, [configLoaded, isConfigured, connect]);

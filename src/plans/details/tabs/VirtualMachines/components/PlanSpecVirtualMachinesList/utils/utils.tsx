@@ -185,7 +185,7 @@ export const getPlanConditionsDict = (
   return conditionsDict ?? {};
 };
 
-export const vmDataToId = (item: SpecVirtualMachinePageData) => item?.specVM?.id ?? '';
+export const vmDataToId = (item: SpecVirtualMachinePageData): string => item?.specVM?.id ?? '';
 
-export const canSelect = (item: SpecVirtualMachinePageData) =>
+export const canSelect = (item: SpecVirtualMachinePageData): boolean =>
   item?.statusVM?.started === undefined || item?.statusVM?.error !== undefined;

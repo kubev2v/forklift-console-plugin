@@ -26,7 +26,7 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
   const { t } = useForkliftTranslation();
   const { data, setData } = useContext(OverviewContext);
   const selectedRange = data?.vmMigrationsDonutSelectedRange ?? TimeRangeOptions.All;
-  const setSelectedRange = (range: TimeRangeOptions) => {
+  const setSelectedRange = (range: TimeRangeOptions): void => {
     setData({
       ...data,
       vmMigrationsDonutSelectedRange: range,
@@ -90,13 +90,13 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
               events={[
                 {
                   eventHandlers: {
-                    onClick: () => {
+                    onClick: (): void => {
                       if (total === 0) return;
                       const statusMap = ['Running', 'Failed', 'Succeeded', 'Canceled'];
                       const status = hoveredIndex === null ? undefined : statusMap[hoveredIndex];
                       navigateToHistoryTab({ navigate, selectedRange, status });
                     },
-                    onMouseOut: () => {
+                    onMouseOut: (): { mutation: () => { active: boolean }; target: string }[] => {
                       setHoveredIndex(null);
                       return [
                         {
@@ -105,7 +105,10 @@ const VmMigrationsDonutCard: FC<VmMigrationsDonutCardProps> = () => {
                         },
                       ];
                     },
-                    onMouseOver: (_, props: { index: number }) => {
+                    onMouseOver: (
+                      _: unknown,
+                      props: { index: number },
+                    ): { mutation: () => { active: boolean }; target: string }[] => {
                       setHoveredIndex(props.index);
                       return [
                         {

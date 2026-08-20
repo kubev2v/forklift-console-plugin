@@ -11,7 +11,7 @@ import { createInitialUniqueMaps, getUniqueMapByCategory } from './getUniqueMapB
 
 export const concernSeverityOrTypeFilter = (): FilterDef => {
   return {
-    dynamicFilter: (unknownItems: unknown[]) => {
+    dynamicFilter: (unknownItems: unknown[]): Partial<FilterDef> => {
       const items = unknownItems as SpecVirtualMachinePageData[];
 
       const result = items.reduce((acc, item) => {

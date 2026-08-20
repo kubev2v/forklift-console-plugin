@@ -61,39 +61,39 @@ const TMP_TOKEN_REGEX = /^sha256~[A-Za-z0-9+/=_-]{43}$/u;
 
 // helper methods
 
-export const validateContainerImage = (image: string) => {
+export const validateContainerImage = (image: string): boolean => {
   return IMAGE_REGEX.test(image);
 };
 
-export const validateURL = (url: string) => {
+export const validateURL = (url: string): boolean => {
   return URL_REGEX.test(url);
 };
 
-export const validateIpv4 = (value: string) => {
+export const validateIpv4 = (value: string): boolean => {
   return IPV4_REGEX.test(value);
 };
 
-export const validateNFSMount = (nfsPath: string) => {
+export const validateNFSMount = (nfsPath: string): boolean => {
   return NFS_REGEX.test(nfsPath);
 };
 
-export const validatePublicCert = (ca: string) => {
+export const validatePublicCert = (ca: string): boolean => {
   return CERTIFICATE_REGEX.test(ca);
 };
 
-export const validateFingerprint = (fingerprint: string) => {
+export const validateFingerprint = (fingerprint: string): boolean => {
   return FINGERPRINT_REGEX.test(fingerprint);
 };
 
-export const validateK8sName = (k8sName?: string) => {
+export const validateK8sName = (k8sName?: string): boolean | string | undefined => {
   return k8sName && DNS_SUBDOMAINS_NAME_REGEXP.test(k8sName);
 };
 
-export const validateK8sToken = (token: string) => {
+export const validateK8sToken = (token: string): boolean => {
   return JWT_TOKEN_REGEX.test(token) || K8S_TOKEN_REGEX.test(token) || TMP_TOKEN_REGEX.test(token);
 };
 
-export const validateNoSpaces = (value: string) => {
+export const validateNoSpaces = (value: string): boolean => {
   // any string without spaces
   return /^[^\s]+$/u.test(value);
 };

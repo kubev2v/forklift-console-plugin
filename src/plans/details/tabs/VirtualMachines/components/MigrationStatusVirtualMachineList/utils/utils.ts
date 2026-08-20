@@ -86,7 +86,7 @@ export const getVMMigrationStatus = (obj: unknown): string => {
 
 export const isVirtualMachineCreationCompleted = (
   statusVM: V1beta1PlanStatusMigrationVms | undefined,
-) => {
+): boolean => {
   const pipeline = statusVM?.pipeline ?? [];
   return pipeline.some(
     (pipe) =>
@@ -147,7 +147,7 @@ export const getVMDiskTransferPipeline = (
   return diskTransfer ?? diskAllocation;
 };
 
-export const getVMDiskProgress = (obj: unknown) => {
+export const getVMDiskProgress = (obj: unknown): number => {
   const vmMigrationStatusData = obj as MigrationStatusVirtualMachinePageData;
   const diskTransfer = getVMDiskTransferPipeline(vmMigrationStatusData.statusVM);
 
@@ -156,7 +156,7 @@ export const getVMDiskProgress = (obj: unknown) => {
     : 0;
 };
 
-export const groupByVmId = <T extends K8sResourceCommon>(items: T[]) =>
+export const groupByVmId = <T extends K8sResourceCommon>(items: T[]): Record<string, T[]> =>
   items.reduce<Record<string, T[]>>((acc, item) => {
     const vmID = item?.metadata?.labels?.vmID;
     if (vmID) {

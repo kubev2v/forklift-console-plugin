@@ -61,7 +61,7 @@ const ProviderNetworksTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace
     [defaultNetworkName, error, loading, networks],
   );
 
-  const onClick = () => {
+  const onClick = (): void => {
     launchOverlay<EditProviderDefaultTransferNetworkProps>(EditProviderDefaultTransferNetwork, {
       defaultNetworkName,
       resource: provider,

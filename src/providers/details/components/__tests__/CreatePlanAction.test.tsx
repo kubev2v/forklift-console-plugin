@@ -10,24 +10,24 @@ const mockUseClusterIsAwsPlatform = jest.fn();
 
 jest.mock('react-router', () => ({
   ...jest.requireActual<Record<string, unknown>>('react-router'),
-  useNavigate: () => mockNavigate,
+  useNavigate: (): typeof mockNavigate => mockNavigate,
 }));
 
 jest.mock('@utils/hooks/useClusterIsAwsPlatform', () => ({
-  useClusterIsAwsPlatform: () => mockUseClusterIsAwsPlatform(),
+  useClusterIsAwsPlatform: (): unknown => mockUseClusterIsAwsPlatform(),
 }));
 
 jest.mock('@utils/analytics/hooks/useForkliftAnalytics', () => ({
-  useForkliftAnalytics: () => ({ trackEvent: jest.fn() }),
+  useForkliftAnalytics: (): { trackEvent: jest.Mock } => ({ trackEvent: jest.fn() }),
 }));
 
 jest.mock('src/utils/hooks/useGetDeleteAndEditAccessReview', () => ({
   __esModule: true,
-  default: () => ({ canCreate: true }),
+  default: (): { canCreate: boolean } => ({ canCreate: true }),
 }));
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  useAccessReview: () => [true, false],
+  useAccessReview: (): [boolean, boolean] => [true, false],
 }));
 
 const createProvider = (type: string): V1beta1Provider => ({

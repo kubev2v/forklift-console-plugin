@@ -11,7 +11,7 @@ type PreserveCpuModelSwitchProps = {
 const PreserveCpuModelSwitch: FC<PreserveCpuModelSwitchProps> = ({ onChange, value }) => {
   const { t } = useForkliftTranslation();
 
-  const handleChange = (_event: FormEvent<HTMLInputElement>, checked: boolean) => {
+  const handleChange = (_event: FormEvent<HTMLInputElement>, checked: boolean): void => {
     onChange(checked);
   };
 

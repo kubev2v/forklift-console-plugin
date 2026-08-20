@@ -24,7 +24,7 @@ const TopologyKeyInput: FC<TopologyKeyInputProps> = ({
   const isInvalid = !topologyKey || isEmpty(topologyKey);
   const validated = isInvalid ? ValidatedOptions.error : ValidatedOptions.default;
 
-  const onChange = (value: string) => {
+  const onChange = (value: string): void => {
     setFocusedAffinity({ ...focusedAffinity, topologyKey: value });
   };
 

@@ -23,7 +23,28 @@ const makeOvaStorage = (id: string, name: string): InventoryStorage => ({
  * while @forklift-ui/types defines them as camelCase (e.g. id).
  * This factory uses PascalCase to match real API responses.
  */
-const makeOvaVm = (diskUppercaseID: string) => ({
+type OvaVmApiFixture = {
+  cpuCount: number;
+  disks: {
+    Capacity: number;
+    CapacityAllocationUnits: string;
+    DiskId: string;
+    FilePath: string;
+    FileRef: string;
+    Format: string;
+    ID: string;
+    Name: string;
+    PopulatedSize: number;
+    Revision: number;
+    Variant: string;
+  }[];
+  memoryMB: number;
+  networks: unknown[];
+  powerState: string;
+  providerType: string;
+};
+
+const makeOvaVm = (diskUppercaseID: string): OvaVmApiFixture => ({
   cpuCount: 1,
   // Simulates actual API response: disk uses PascalCase `ID`, not camelCase `id`
   disks: [

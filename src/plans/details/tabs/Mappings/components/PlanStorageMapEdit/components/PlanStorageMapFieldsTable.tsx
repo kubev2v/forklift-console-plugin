@@ -23,7 +23,9 @@ import type { PlanStorageEditFormValues } from '../utils/types';
 
 import TargetStorageInputField from './TargetStorageInputField';
 
-const getStorageMapHeaders = (isIscsi?: boolean) =>
+const getStorageMapHeaders = (
+  isIscsi?: boolean,
+): { label: string | undefined; width: 45 | 90 }[] =>
   isIscsi
     ? [
         {

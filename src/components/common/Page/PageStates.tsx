@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactElement } from 'react';
 
 import {
   Button,
@@ -17,17 +17,19 @@ import { ExclamationCircleIcon, SearchIcon } from '@patternfly/react-icons';
  * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github">
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Page/PageStates.tsx)
  */
-const BaseState = ({ icon, title }: { icon?: ComponentType; title?: string }) => {
+const BaseState = ({ icon, title }: { icon?: ComponentType; title?: string }): ReactElement => {
   return <EmptyState headingLevel="h4" icon={icon} titleText={title}></EmptyState>;
 };
 
-export const ErrorState = ({ title }: { title: string }) => (
+export const ErrorState = ({ title }: { title: string }): ReactElement => (
   <BaseState icon={ExclamationCircleIcon} title={title} />
 );
 
-export const Loading = ({ title }: { title: string }) => <BaseState icon={Spinner} title={title} />;
+export const Loading = ({ title }: { title: string }): ReactElement => (
+  <BaseState icon={Spinner} title={title} />
+);
 
-export const NoResultsFound = ({ title }: { title: string }) => (
+export const NoResultsFound = ({ title }: { title: string }): ReactElement => (
   <BaseState icon={SearchIcon} title={title} />
 );
 
@@ -47,7 +49,7 @@ export const NoResultsMatchFilter = ({
   clearAllLabel?: string;
   description?: string;
   title?: string;
-}) => {
+}): ReactElement => {
   return (
     <EmptyState headingLevel="h4" icon={SearchIcon} titleText={title}>
       <EmptyStateBody>{description}</EmptyStateBody>

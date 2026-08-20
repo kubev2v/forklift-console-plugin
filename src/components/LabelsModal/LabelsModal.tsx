@@ -59,7 +59,7 @@ const LabelsModal: OverlayComponent<LabelsModalProps> = ({
   // Backspace deletes tags, but not if there is text being edited in the input field
   const removeKeys = inputValue.length ? [] : [8];
 
-  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { value } = e.target;
 
     if (value === '') {
@@ -80,7 +80,7 @@ const LabelsModal: OverlayComponent<LabelsModalProps> = ({
     value: inputValue,
   };
 
-  const handleLabelsChange = (newLabels: string[], changed: string[]) => {
+  const handleLabelsChange = (newLabels: string[], changed: string[]): void => {
     const { 0: newLabel } = changed;
 
     if (!isLabelValid(newLabel)) {

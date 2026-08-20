@@ -36,7 +36,10 @@ const ProviderTypeField: FC = () => {
 
   const providerTypeOptions = getProviderTypeOptions(isDarkTheme, isAwsPlatform);
 
-  const onSelect = (_event: React.MouseEvent | undefined, itemId: string | number | undefined) => {
+  const onSelect = (
+    _event: React.MouseEvent | undefined,
+    itemId: string | number | undefined,
+  ): void => {
     if (typeof itemId === 'string') {
       onChange(itemId);
     }

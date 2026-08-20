@@ -63,7 +63,7 @@ export const useAttributeFilters = <T>(attributes: AttributeConfig<T>[]): Attrib
           const needle = (text[attr.id] ?? '').trim();
           if (needle) {
             const hay = attr.getValue(item) ?? '';
-            const def = (filter: string, data: string) => {
+            const def = (filter: string, data: string): boolean => {
               try {
                 return new RegExp(filter, 'iu').test(data);
               } catch {

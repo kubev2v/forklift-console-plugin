@@ -16,7 +16,11 @@ import { PROVIDER_TYPES } from '@utils/providers/constants';
 export const useOvirtDisksForVMs = (
   provider: V1beta1Provider | undefined,
   vms: ProviderVirtualMachine[],
-) => {
+): {
+  error: Error | null;
+  loading: boolean;
+  vmsWithDisks: ProviderVirtualMachine[];
+} => {
   const isOvirtProvider = provider?.spec?.type === PROVIDER_TYPES.ovirt;
 
   const {
@@ -29,7 +33,7 @@ export const useOvirtDisksForVMs = (
     subPath: 'disks?detail=10',
   });
 
-  const vmsWithDisks = useMemo(() => {
+  const vmsWithDisks = useMemo((): ProviderVirtualMachine[] => {
     if (!isOvirtProvider || disksLoading || isEmpty(vms) || isEmpty(disks)) {
       return vms;
     }
@@ -48,10 +52,10 @@ export const useOvirtDisksForVMs = (
             const disk = diskMap.get(attachment.disk);
             return disk ? { id: disk.id, storageDomain: disk.storageDomain } : null;
           })
-          .filter(Boolean) ?? [];
+          .filter((disk): disk is { id: string; storageDomain: string } => disk !== null) ?? [];
 
       return { ...vm, disks: vmDisks };
-    });
+    }) as ProviderVirtualMachine[];
   }, [isOvirtProvider, disksLoading, vms, disks]);
 
   return { error: disksError, loading: disksLoading, vmsWithDisks };

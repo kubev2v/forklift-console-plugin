@@ -1,4 +1,4 @@
-import { type Ref, useState } from 'react';
+import { type ReactElement, type Ref, useState } from 'react';
 
 import {
   MenuToggle,
@@ -11,7 +11,7 @@ import {
 } from '@patternfly/react-core';
 
 import { FilterFromDef } from './FilterFromDef';
-import type { MetaFilterProps } from './types';
+import type { FieldFilter, MetaFilterProps } from './types';
 
 /**
  * This is an implementation of [<font>``PatternFly 4`` attribute-value filter</font>](https://www.patternfly.org/v4/demos/filters/design-guidelines/#attribute-value-filter) pattern,
@@ -28,20 +28,20 @@ export const AttributeValueFilter = ({
   resolvedLanguage = 'en',
   selectedFilters,
   supportedFilterTypes,
-}: MetaFilterProps) => {
+}: MetaFilterProps): ReactElement => {
   const [currentFilter, setCurrentFilter] = useState(fieldFilters?.[0]);
   const [isOpen, setIsOpen] = useState(false);
 
-  const selectOptionToFilter = (selectedValue: string) =>
+  const selectOptionToFilter = (selectedValue: string): FieldFilter =>
     fieldFilters.find(
       ({ filterDef, label }) => filterDef.fieldLabel === selectedValue || label === selectedValue,
     ) ?? currentFilter;
 
-  const onToggleClick = () => {
+  const onToggleClick = (): void => {
     setIsOpen((prev) => !prev);
   };
 
-  const toggle = (toggleRef: Ref<MenuToggleElement>) => (
+  const toggle = (toggleRef: Ref<MenuToggleElement>): ReactElement => (
     <MenuToggle
       data-testid="attribute-filter-toggle"
       isExpanded={isOpen}
@@ -53,14 +53,14 @@ export const AttributeValueFilter = ({
     </MenuToggle>
   );
 
-  const onSelect = (value?: string) => {
+  const onSelect = (value?: string): void => {
     if (value) {
       setCurrentFilter(selectOptionToFilter(value));
     }
     setIsOpen((prev) => !prev);
   };
 
-  const renderOptions = () => {
+  const renderOptions = (): ReactElement[] => {
     return fieldFilters.map(({ filterDef, label, resourceFieldId }) => (
       <SelectOption
         data-testid={`filter-option-${resourceFieldId}`}

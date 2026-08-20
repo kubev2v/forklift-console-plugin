@@ -11,7 +11,7 @@ import { getDefaultNamespace } from '@utils/namespaces';
  * - Returns an empty string if no matching namespace is available.
  * @param projectNames
  */
-export const useDefaultProject = (projectNames: string[]) => {
+export const useDefaultProject = (projectNames: string[]): string => {
   const [activeNamespace] = useActiveNamespace();
   const defaultNamespace = getDefaultNamespace();
 

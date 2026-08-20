@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
@@ -16,13 +18,19 @@ const mockShowModal = jest.fn();
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   getGroupVersionKindForModel: jest.fn(),
-  ResourceLink: ({ name }: { name: string }) => <span data-testid="resource-link">{name}</span>,
-  useOverlay: jest.fn(() => mockShowModal),
+  ResourceLink: ({ name }: { name: string }): ReactElement => (
+    <span data-testid="resource-link">{name}</span>
+  ),
+  useOverlay: jest.fn((): typeof mockShowModal => mockShowModal),
 }));
 
-jest.mock('../EditLUKSEncryptionPasswords', () => ({ resource }: { resource: V1beta1Plan }) => (
-  <div data-testid="edit-luks-modal">Modal for {resource.metadata?.name}</div>
-));
+jest.mock(
+  '../EditLUKSEncryptionPasswords',
+  () =>
+    ({ resource }: { resource: V1beta1Plan }): ReactElement => (
+      <div data-testid="edit-luks-modal">Modal for {resource.metadata?.name}</div>
+    ),
+);
 
 const mockPlan = {
   metadata: { name: 'test-plan', namespace: 'test-namespace' },

@@ -46,7 +46,7 @@ const processHostSecretPair = async (
   ipAddress: string,
   encodedUser?: string,
   encodedPassword?: string,
-) => {
+): Promise<V1beta1Host> => {
   const { host } = hostPair;
   const inventory: VSphereHostInventory = hostPair.inventory;
 
@@ -143,11 +143,11 @@ export const onSaveHost = async ({
   passwd,
   provider,
   user,
-}: OnSaveHostParams) => {
+}: OnSaveHostParams): Promise<V1beta1Host> => {
   const encodedUser = user && encode(user);
   const encodedPassword = passwd && encode(passwd);
 
-  const promises = hostPairs.map(async (hostPair) => {
+  const promises = hostPairs.map(async (hostPair): Promise<V1beta1Host> => {
     const inventory: VSphereHostInventory = hostPair.inventory;
 
     const hostNetwork = findNetworkAdapterByNameAndIp(inventory?.networkAdapters ?? [], network);

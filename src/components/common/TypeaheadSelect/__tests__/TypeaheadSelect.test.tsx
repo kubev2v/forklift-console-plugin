@@ -216,7 +216,10 @@ describe('TypeaheadSelect', () => {
 
     test('applies custom filter function when provided', async () => {
       const user = userEvent.setup();
-      const customFilter = (filterValue: string, options: TypeaheadSelectOption[]) =>
+      const customFilter = (
+        filterValue: string,
+        options: TypeaheadSelectOption[],
+      ): TypeaheadSelectOption[] =>
         options.filter((option) => String(option.value).includes(filterValue));
 
       render(<TypeaheadSelect {...defaultProps} filterFunction={customFilter} />);
@@ -265,7 +268,7 @@ describe('TypeaheadSelect', () => {
 
     test('shows custom create option message when provided', async () => {
       const user = userEvent.setup();
-      const customMessage = (value: string) => `Add new: ${value}`;
+      const customMessage = (value: string): string => `Add new: ${value}`;
       render(<TypeaheadSelect {...defaultProps} createOptionMessage={customMessage} isCreatable />);
 
       const input = screen.getByRole('combobox');
@@ -310,7 +313,7 @@ describe('TypeaheadSelect', () => {
 
     test('shows custom no results message when filtering returns no results', async () => {
       const user = userEvent.setup();
-      const customMessage = (filter: string) => `Custom no results for "${filter}"`;
+      const customMessage = (filter: string): string => `Custom no results for "${filter}"`;
       render(<TypeaheadSelect {...defaultProps} noResultsMessage={customMessage} />);
 
       const input = screen.getByRole('combobox');

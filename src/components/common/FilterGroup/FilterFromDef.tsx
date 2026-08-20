@@ -27,7 +27,7 @@ export const FilterFromDef = ({
   resourceFieldId,
   selectedFilters,
   showFilter = true,
-}: FilterFromDefProps) => {
+}: FilterFromDefProps): ReactElement | null => {
   const [filterId, setFilterId] = useState(resourceFieldId);
 
   const selectedFilterValues = useMemo(() => {
@@ -49,7 +49,7 @@ export const FilterFromDef = ({
     return selectedFilters[filterId] ?? [];
   }, [def.groups, filterId, resourceFieldId, selectedFilters]);
 
-  const setSelectedFilters = (values: string[], selectedResourceId?: string) => {
+  const setSelectedFilters = (values: string[], selectedResourceId?: string): void => {
     if (selectedResourceId) {
       setFilterId(selectedResourceId);
     }

@@ -35,13 +35,13 @@ const INSPECTION_STATUS_SEVERITY_RANK: Record<InspectionStatus, number> = {
 
 type Counts = { Critical: number; Information: number; Warning: number };
 
-export const getVmName = (row: VmRow) => row.vmData.name ?? '';
-export const getVmGuestOSValue = (row: VmRow) => getVmGuestOS(row.vmData.vm);
-export const getVmHost = (row: VmRow) => row.vmData.hostName ?? '';
-export const getVmPath = (row: VmRow) => (row.vmData.vm as VSphereVM)?.path ?? '';
-export const getVmPower = (row: VmRow) => getVmPowerState(row?.vmData?.vm) ?? '';
+export const getVmName = (row: VmRow): string => row.vmData.name ?? '';
+export const getVmGuestOSValue = (row: VmRow): string => getVmGuestOS(row.vmData.vm);
+export const getVmHost = (row: VmRow): string => row.vmData.hostName ?? '';
+export const getVmPath = (row: VmRow): string => (row.vmData.vm as VSphereVM)?.path ?? '';
+export const getVmPower = (row: VmRow): string => getVmPowerState(row?.vmData?.vm) ?? '';
 
-export const getVmRowsId = (rows: RowNode[]) => {
+export const getVmRowsId = (rows: RowNode[]): string[] => {
   return rows
     .filter((row): row is VmRow => row.type === ROW_TYPE.Vm)
     .map((row) => row.vmData.vm.id);
@@ -70,10 +70,10 @@ export const getVmConcernCategories = (row: VmRow): ConcernCategory[] => {
   return Array.from(out);
 };
 
-export const cmpStr = (a: string, b: string) =>
+export const cmpStr = (a: string, b: string): number =>
   a.localeCompare(b, undefined, { sensitivity: 'base' });
 
-export const getFolderNameFromFolderRow = (row: RowNode) =>
+export const getFolderNameFromFolderRow = (row: RowNode): string =>
   row.type === ROW_TYPE.Folder ? (row.folderName ?? '') : '';
 
 const getConcernCounts = (row: VmRow): Counts => {
@@ -88,7 +88,7 @@ const getConcernCounts = (row: VmRow): Counts => {
   return counts;
 };
 
-const cmpCountsQuantityAsc = (first: Counts, second: Counts) => {
+const cmpCountsQuantityAsc = (first: Counts, second: Counts): number => {
   // Desc by Critical, then Warning, then Information
   if (first.Critical !== second.Critical) {
     return second.Critical - first.Critical;
@@ -104,25 +104,31 @@ const cmpCountsQuantityAsc = (first: Counts, second: Counts) => {
 
 type GetVmInspectionStatusFn = (vmId: string) => VmInspectionStatus | undefined;
 
+type VmComparator = (first: VmRow, second: VmRow) => number;
+
 export const buildVmComparator = (
   sort: SortState,
   getVmInspectionStatus?: GetVmInspectionStatusFn,
-) => {
+): VmComparator => {
   const dir = sort.direction === 'asc' ? 1 : -1;
   switch (sort.column) {
     case COLUMN_IDS.Name:
-      return (first: VmRow, second: VmRow) => dir * cmpStr(getVmName(first), getVmName(second));
+      return (first: VmRow, second: VmRow): number =>
+        dir * cmpStr(getVmName(first), getVmName(second));
     case COLUMN_IDS.GuestOS:
-      return (first: VmRow, second: VmRow) =>
+      return (first: VmRow, second: VmRow): number =>
         dir * cmpStr(getVmGuestOSValue(first), getVmGuestOSValue(second));
     case COLUMN_IDS.Host:
-      return (first: VmRow, second: VmRow) => dir * cmpStr(getVmHost(first), getVmHost(second));
+      return (first: VmRow, second: VmRow): number =>
+        dir * cmpStr(getVmHost(first), getVmHost(second));
     case COLUMN_IDS.Path:
-      return (first: VmRow, second: VmRow) => dir * cmpStr(getVmPath(first), getVmPath(second));
+      return (first: VmRow, second: VmRow): number =>
+        dir * cmpStr(getVmPath(first), getVmPath(second));
     case COLUMN_IDS.Power:
-      return (first: VmRow, second: VmRow) => dir * cmpStr(getVmPower(first), getVmPower(second));
+      return (first: VmRow, second: VmRow): number =>
+        dir * cmpStr(getVmPower(first), getVmPower(second));
     case COLUMN_IDS.Concerns:
-      return (a: VmRow, b: VmRow) => {
+      return (a: VmRow, b: VmRow): number => {
         const ca = getConcernCounts(a);
         const cb = getConcernCounts(b);
         const base = cmpCountsQuantityAsc(ca, cb);
@@ -132,7 +138,7 @@ export const buildVmComparator = (
         return cmpStr(getVmName(a), getVmName(b)) * dir;
       };
     case COLUMN_IDS.InspectionStatus:
-      return (first: VmRow, second: VmRow) => {
+      return (first: VmRow, second: VmRow): number => {
         const statusA =
           getVmInspectionStatus?.(first.vmData.vm?.id ?? '')?.status ??
           INSPECTION_STATUS.NOT_INSPECTED;
@@ -147,7 +153,7 @@ export const buildVmComparator = (
         return cmpStr(getVmName(first), getVmName(second)) * dir;
       };
     default:
-      return () => 0;
+      return (): number => 0;
   }
 };
 
@@ -179,7 +185,7 @@ export const getVmConcernLabels = (
   return { categoryMapper: outCategories, labelIconMapper: outIcons, labels: Array.from(out) };
 };
 
-export const getConcernLabelFilterOptions = (rows: RowNode[]) => {
+export const getConcernLabelFilterOptions = (rows: RowNode[]): CheckboxOption[] => {
   const seen = new Map<string, string>();
   const iconMapper: Record<string, ReactNode> = {};
   const catMapper: Record<string, ConcernCategory> = {};
@@ -208,7 +214,7 @@ export const getConcernLabelFilterOptions = (rows: RowNode[]) => {
   return opts;
 };
 
-export const getHostnameFilterOptions = (rows: RowNode[]) => {
+export const getHostnameFilterOptions = (rows: RowNode[]): CheckboxOption[] => {
   const seen = new Map<string, string>();
   for (const row of rows) {
     if (row.type === ROW_TYPE.Vm) {

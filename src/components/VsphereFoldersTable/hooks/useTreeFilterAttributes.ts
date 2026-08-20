@@ -36,7 +36,10 @@ const inspectionStatusFilterOptions = INSPECTION_STATUS_FILTER_VALUES.map((value
   label: value,
 }));
 
-export const useTreeFilterAttributes = (rows: RowNode[], conversions: V1beta1Conversion[]) => {
+export const useTreeFilterAttributes = (
+  rows: RowNode[],
+  conversions: V1beta1Conversion[],
+): AttributeConfig<VmRow>[] => {
   const { t } = useForkliftTranslation();
   const getVmInspectionStatus = useVmInspectionStatus(conversions);
 
@@ -70,7 +73,7 @@ export const useTreeFilterAttributes = (rows: RowNode[], conversions: V1beta1Con
         options: getConcernLabelFilterOptions(rows),
       },
       {
-        getValues: (row) => {
+        getValues: (row): string[] => {
           const vmStatus = getVmInspectionStatus(row.vmData.vm?.id ?? '');
           return [vmStatus?.status ?? INSPECTION_STATUS_NOT_INSPECTED];
         },

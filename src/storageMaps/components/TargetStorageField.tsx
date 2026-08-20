@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react';
+import { type FC, type ReactElement, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Select from '@components/common/Select';
@@ -32,7 +32,7 @@ type TargetStorageFieldProps = {
 const shouldShowDefaultLabel = (storage: TargetStorage): boolean =>
   storage.isDefaultVirt || storage.isDefault;
 
-const renderStorageOption = (storage: TargetStorage, t: (k: string) => string) => (
+const renderStorageOption = (storage: TargetStorage, t: (k: string) => string): ReactElement => (
   <Split hasGutter>
     <SplitItem isFilled>{storage.name}</SplitItem>
     {shouldShowDefaultLabel(storage) && (

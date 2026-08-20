@@ -4,7 +4,7 @@ import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
-const cleanObject = (obj: Record<string, string> | undefined) => {
+const cleanObject = (obj: Record<string, string> | undefined): Record<string, string> => {
   const result: Record<string, string> = {};
   for (const key in obj) {
     if (obj[key] !== null && obj[key] !== '') {
@@ -43,7 +43,10 @@ const emptyOpenstackCredentials = {
  * @param {boolean} clean - Clean old values from the secret before patching.
  * @returns {Promise<void>} A promise that resolves when the patch operation is complete.
  */
-export const patchSecretData = async (secret: IoK8sApiCoreV1Secret, clean?: boolean) => {
+export const patchSecretData = async (
+  secret: IoK8sApiCoreV1Secret,
+  clean?: boolean,
+): Promise<void> => {
   const op = secret?.data ? REPLACE : ADD;
 
   // Sanitize secret data

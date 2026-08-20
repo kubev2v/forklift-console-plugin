@@ -79,7 +79,7 @@ const MigrationPlansDonutCard: FC<MigrationPlansDonutCardProps> = () => {
             events={[
               {
                 eventHandlers: {
-                  onClick: (_, props: { index: number }) => {
+                  onClick: (_: unknown, props: { index: number }): null => {
                     // Get the phase from the clicked slice
                     const phase = data[props.index]?.phase;
                     // Build the URL with the phase param as a JSON array
@@ -89,7 +89,7 @@ const MigrationPlansDonutCard: FC<MigrationPlansDonutCardProps> = () => {
                     navigate(`${plansListURL}?${params.toString()}`)?.catch(() => undefined);
                     return null;
                   },
-                  onMouseOut: () => {
+                  onMouseOut: (): { mutation: () => { active: boolean }; target: string }[] => {
                     setHoveredIndex(null);
                     return [
                       {
@@ -98,7 +98,10 @@ const MigrationPlansDonutCard: FC<MigrationPlansDonutCardProps> = () => {
                       },
                     ];
                   },
-                  onMouseOver: (_, props: { index: number }) => {
+                  onMouseOver: (
+                    _: unknown,
+                    props: { index: number },
+                  ): { mutation: () => { active: boolean }; target: string }[] => {
                     setHoveredIndex(props.index);
                     return [
                       {

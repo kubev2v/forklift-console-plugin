@@ -2,7 +2,7 @@ import { CATEGORY_TYPES, CONDITION_STATUS } from '@utils/constants';
 import type { NetworkMapData } from '@utils/crds/maps/types';
 import type { StorageMapData } from '@utils/storage/types';
 
-export const getMapPhase = (data: NetworkMapData | StorageMapData) => {
+export const getMapPhase = (data: NetworkMapData | StorageMapData): string => {
   const conditions = data?.obj?.status?.conditions;
 
   const isCritical = conditions?.find(

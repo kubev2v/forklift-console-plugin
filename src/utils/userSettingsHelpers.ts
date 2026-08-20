@@ -21,7 +21,7 @@ export const parseOrClean = <T>(key: string): T => {
 export const saveRestOrRemoveKey = (
   key: string,
   { rest }: Record<string, Record<string, unknown>>,
-) => {
+): void => {
   if (isEmpty(Object.keys(rest))) {
     removeFromLocalStorage(key);
     return;

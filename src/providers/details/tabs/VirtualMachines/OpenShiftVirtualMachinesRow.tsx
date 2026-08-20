@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/components/TableCell/TableCell';
 
@@ -12,7 +12,7 @@ import { VmFeaturesCell } from './components/VmFeaturesCell';
 import { withResourceLink } from './components/VmResourceLinkRenderer';
 import { getVmTemplate } from './utils/helpers/vmProps';
 
-const toNamespace = ({ data }: VMCellProps) =>
+const toNamespace = ({ data }: VMCellProps): string =>
   data.vm.providerType === 'openshift' ? (data.vm.object?.metadata?.namespace ?? '') : '';
 
 const cellRenderers: Record<string, FC<VMCellProps>> = {
@@ -31,10 +31,14 @@ const cellRenderers: Record<string, FC<VMCellProps>> = {
   template: ({ data }) => <TableCell>{getVmTemplate(data?.vm)}</TableCell>,
 };
 
-const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
+const renderTd = ({
+  resourceData,
+  resourceFieldId,
+  resourceFields,
+}: RenderTdProps): ReactElement => {
   const fieldId = resourceFieldId;
 
-  const CellRenderer = cellRenderers?.[fieldId] ?? (() => <></>);
+  const CellRenderer = cellRenderers?.[fieldId] ?? ((): ReactElement => <></>);
   return (
     <Td dataLabel={fieldId} key={fieldId}>
       <CellRenderer data={resourceData} fieldId={fieldId} fields={resourceFields} />

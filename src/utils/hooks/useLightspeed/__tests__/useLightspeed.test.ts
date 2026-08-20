@@ -8,7 +8,7 @@ import { clickOLSSubmitButton } from '../utils';
 const mockDispatch = jest.fn();
 
 jest.mock('react-redux', () => ({
-  useDispatch: () => mockDispatch,
+  useDispatch: (): typeof mockDispatch => mockDispatch,
 }));
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({

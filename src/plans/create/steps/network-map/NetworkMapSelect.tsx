@@ -1,4 +1,10 @@
-import { type ComponentProps, type ForwardedRef, forwardRef, useMemo } from 'react';
+import {
+  type ComponentProps,
+  type ForwardedRef,
+  forwardRef,
+  type ReactElement,
+  useMemo,
+} from 'react';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import Select from '@components/common/Select';
@@ -40,7 +46,7 @@ const NetworkMapSelect = (
     value,
   }: NetworkMapSelectProps,
   ref: ForwardedRef<HTMLButtonElement>,
-) => {
+): ReactElement => {
   const { t } = useForkliftTranslation();
   const [allNetworkMaps] = useK8sWatchResource<V1beta1NetworkMap[]>({
     groupVersionKind: NetworkMapModelGroupVersionKind,

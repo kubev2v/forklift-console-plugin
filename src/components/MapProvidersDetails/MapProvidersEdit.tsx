@@ -40,7 +40,7 @@ const MapProvidersEdit: OverlayComponent<MapProvidersEditProps> = ({
     handleSubmit,
   } = methods;
 
-  const onSubmit = async (formData: MapProvidersEditFormValues) => {
+  const onSubmit = async (formData: MapProvidersEditFormValues): Promise<void> => {
     if (!isDirty) {
       closeOverlay();
       return;

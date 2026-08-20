@@ -29,7 +29,7 @@ const HostsNetworksSetPassword: FC<HostsNetworksSetPasswordProps> = ({ password,
     setPassword(value);
   };
 
-  const togglePasswordHidden = () => {
+  const togglePasswordHidden = (): void => {
     setPasswordHidden((isHidden) => !isHidden);
   };
 

@@ -11,7 +11,7 @@ export const sendAnalyticsEvent = (
   eventType: string,
   properties: Record<string, unknown>,
   config: AnalyticsConfig,
-) => {
+): void => {
   initializeAnalytics(config.segmentKey);
 
   const eventData = {

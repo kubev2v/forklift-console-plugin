@@ -26,7 +26,10 @@ const HostsNetworksSelect: FC<HostsNetworksSelectProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
 
-  const getNetworkAdapterByLabel = (networkAdapters: NetworkAdapters[], label: string) => {
+  const getNetworkAdapterByLabel = (
+    networkAdapters: NetworkAdapters[],
+    label: string,
+  ): NetworkAdapters | undefined => {
     const selectedAdapter = networkAdapters.find((adapter) => {
       const cidr = calculateCidrNotation(adapter?.ipAddress, adapter?.subnetMask);
       const adapterLabel = `${adapter.name} - ${cidr}`;
@@ -48,7 +51,7 @@ const HostsNetworksSelect: FC<HostsNetworksSelectProps> = ({
     };
   });
 
-  const onSelect = (selected: SelectValueType) => {
+  const onSelect = (selected: SelectValueType): void => {
     const selectedAdapter = getNetworkAdapterByLabel(
       firstInventoryHostPair?.inventory?.networkAdapters ?? [],
       selected.toString(),

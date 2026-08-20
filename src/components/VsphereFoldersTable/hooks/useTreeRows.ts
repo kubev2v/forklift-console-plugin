@@ -66,13 +66,13 @@ export const useTreeRows: UseTreeRows = ({
   const slug = useSlug();
 
   const rows = useMemo(() => {
-    const isVmSelected = (id: string) => selectedSet.has(id);
+    const isVmSelected = (id: string): boolean => selectedSet.has(id);
     const result: RowNode[] = [];
 
     for (const [folderIdx, [folderName, vmIdsInFolder]] of realFolderEntries.entries()) {
       const isExpanded = expandedFolders.has(folderName);
 
-      const getVisibleVmsInFolder = () => {
+      const getVisibleVmsInFolder = (): string[] => {
         const visibleSet = visibleVmIdsRef?.current;
         if (!visibleSet || visibleSet.size === 0) {
           return vmIdsInFolder;
@@ -93,7 +93,7 @@ export const useTreeRows: UseTreeRows = ({
         isExpanded,
         level1SetSize,
         onCheckChange: canSelect
-          ? (_event, isChecked) => {
+          ? (_event, isChecked): void => {
               const currentlyVisibleVms = getVisibleVmsInFolder();
               onCheckChange(currentlyVisibleVms)(_event, isChecked);
             }

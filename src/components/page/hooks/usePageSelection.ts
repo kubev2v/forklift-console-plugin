@@ -45,7 +45,7 @@ export const usePageSelection = <T>({
   const isExpanded = useMemo(
     () =>
       onExpand || internalExpandedIds
-        ? (item: T) => internalExpandedIds?.includes(itemToId(item)) ?? false
+        ? (item: T): boolean => internalExpandedIds?.includes(itemToId(item)) ?? false
         : undefined,
     [onExpand, internalExpandedIds, itemToId],
   );

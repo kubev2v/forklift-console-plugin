@@ -67,7 +67,7 @@ const NetworkMapEdit: OverlayComponent<NetworkMapEditProps> = ({
     useTargetNetworks(destinationProvider);
   const loadError = sourceNetworksError ?? targetNetworksError;
 
-  const onSubmit = async (formData: NetworkEditFormValues) => {
+  const onSubmit = async (formData: NetworkEditFormValues): Promise<void> => {
     if (!isDirty) {
       closeOverlay();
       return;

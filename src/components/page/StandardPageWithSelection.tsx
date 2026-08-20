@@ -1,5 +1,4 @@
-import type { ComponentProps, FC } from 'react';
-import { useMemo, useRef } from 'react';
+import { type ComponentProps, type FC, type ReactElement, useMemo, useRef } from 'react';
 
 import DefaultSelectHeader from '@components/common/TableView/DefaultSelectHeader';
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
@@ -15,7 +14,7 @@ const wrapActionWithSelection = <T,>(
   Action: FC<GlobalActionToolbarProps<T>>,
   selectedIds: string[],
 ): FC<GlobalActionToolbarProps<T>> => {
-  const ActionWithSelection = (actionProps: ComponentProps<typeof Action>) => (
+  const ActionWithSelection = (actionProps: ComponentProps<typeof Action>): ReactElement => (
     <Action {...actionProps} selectedIds={selectedIds} />
   );
   ActionWithSelection.displayName = `${Action.displayName ?? 'Action'}WithSelection`;
@@ -62,9 +61,11 @@ type StandardPageWithSelectionProps<T> = ComponentProps<typeof StandardPage<T>> 
       }
   );
 
-export const StandardPageWithSelection = <T,>(props: StandardPageWithSelectionProps<T>) => {
+export const StandardPageWithSelection = <T,>(
+  props: StandardPageWithSelectionProps<T>,
+): ReactElement => {
   const {
-    canSelect = () => true,
+    canSelect = (): boolean => true,
     cell,
     expanded,
     expandedIds,

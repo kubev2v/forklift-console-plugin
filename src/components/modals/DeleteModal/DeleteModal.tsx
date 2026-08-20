@@ -63,7 +63,7 @@ export const DeleteModal: OverlayComponent<DeleteModalProps> = ({
   const owner = resource?.metadata?.ownerReferences?.[0];
 
   const onDelete = useCallback(async () => {
-    const isOnResourcePage = () => {
+    const isOnResourcePage = (): boolean => {
       const re = new RegExp(`/${name}(/|$)`, 'u');
       return re.test(window.location.pathname);
     };

@@ -13,11 +13,15 @@ import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
 import type { MigrationDataPoint } from '../utils/types';
 
-const toHourLabel = (date: DateTime | null) =>
+const toHourLabel = (date: DateTime | null): string =>
   date ? date.toLocal().toFormat('LLL dd HH:mm') : '';
-const toDayLabel = (date: DateTime | null) => (date ? date.toLocal().toFormat('LLL dd') : '');
+const toDayLabel = (date: DateTime | null): string =>
+  date ? date.toLocal().toFormat('LLL dd') : '';
 
-const createTimeBuckets = (selectedTimeRange: TimeRangeOptions, singleBucket = false) => {
+const createTimeBuckets = (
+  selectedTimeRange: TimeRangeOptions,
+  singleBucket = false,
+): Interval[] => {
   const { bucket, span, unit } = TimeRangeOptionsDictionary[selectedTimeRange];
   const now = DateTime.now().endOf(unit).toUTC();
   const start = now.minus(span).startOf(unit);
@@ -46,7 +50,10 @@ const createTimeBuckets = (selectedTimeRange: TimeRangeOptions, singleBucket = f
   return intervals;
 };
 
-const createBuckets = (intervals: Interval[], migrations: V1beta1Migration[]) => {
+const createBuckets = (
+  intervals: Interval[],
+  migrations: V1beta1Migration[],
+): { interval: Interval; migrations: V1beta1Migration[] }[] => {
   return intervals.map((interval) => {
     // Find migrations that fit the bucket interval
     const inBucket = migrations.filter((migration) => {
@@ -73,19 +80,38 @@ const createBuckets = (intervals: Interval[], migrations: V1beta1Migration[]) =>
   });
 };
 
-const isCanceled = (vm: V1beta1MigrationStatusVms) =>
-  vm?.conditions?.some((cond: V1beta1MigrationStatusVmsConditions) => cond?.type === 'Canceled');
-const isFailed = (vm: V1beta1MigrationStatusVms) =>
-  vm?.conditions?.some((cond: V1beta1MigrationStatusVmsConditions) => cond?.type === 'Failed');
-const isSucceeded = (vm: V1beta1MigrationStatusVms) =>
-  vm?.conditions?.some((cond: V1beta1MigrationStatusVmsConditions) => cond?.type === 'Succeeded');
-const isRunning = (vm: V1beta1MigrationStatusVms) =>
+const isCanceled = (vm: V1beta1MigrationStatusVms): boolean =>
+  vm?.conditions?.some((cond: V1beta1MigrationStatusVmsConditions) => cond?.type === 'Canceled') ??
+  false;
+const isFailed = (vm: V1beta1MigrationStatusVms): boolean =>
+  vm?.conditions?.some((cond: V1beta1MigrationStatusVmsConditions) => cond?.type === 'Failed') ??
+  false;
+const isSucceeded = (vm: V1beta1MigrationStatusVms): boolean =>
+  vm?.conditions?.some((cond: V1beta1MigrationStatusVmsConditions) => cond?.type === 'Succeeded') ??
+  false;
+const isRunning = (vm: V1beta1MigrationStatusVms): boolean =>
   !isFailed(vm) && !isSucceeded(vm) && !isCanceled(vm) && vm?.phase !== 'Completed';
+
+type VmMigrationsDataPointsResult = {
+  canceled: MigrationDataPoint[];
+  failed: MigrationDataPoint[];
+  intervals?: Interval[];
+  loaded: boolean;
+  loadError: unknown;
+  obj?: V1beta1Migration[];
+  running: MigrationDataPoint[];
+  succeeded: MigrationDataPoint[];
+  total: number;
+  totalCanceledCount: number;
+  totalFailedCount: number;
+  totalRunningCount: number;
+  totalSucceededCount: number;
+};
 
 export const useVmMigrationsDataPoints = (
   selectedRange: TimeRangeOptions,
   singleBucket = false,
-) => {
+): VmMigrationsDataPointsResult => {
   const [migrations, loaded, loadError] = useK8sWatchResource<V1beta1Migration[]>({
     groupVersionKind: MigrationModelGroupVersionKind,
     isList: true,

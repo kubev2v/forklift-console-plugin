@@ -1,8 +1,19 @@
-import { useCallback, useState } from 'react';
+import { type Dispatch, type SetStateAction, useCallback, useState } from 'react';
 
 import type { IDEntity } from '../utils/types';
 
-export const useIDEntities = <T extends IDEntity = IDEntity>(initialEntities: T[] = []) => {
+type UseIDEntitiesReturn<T extends IDEntity> = {
+  entities: T[];
+  initialEntitiesChanged: boolean;
+  onEntityAdd: (newEntity: T) => void;
+  onEntityChange: (updatedEntity: T) => void;
+  onEntityDelete: (idToDelete: number) => void;
+  setEntities: Dispatch<SetStateAction<T[]>>;
+};
+
+export const useIDEntities = <T extends IDEntity = IDEntity>(
+  initialEntities: T[] = [],
+): UseIDEntitiesReturn<T> => {
   const [entities, setEntities] = useState<T[]>(initialEntities);
   const [initialEntitiesChanged, setInitialEntitiesChanged] = useState<boolean>(false);
 

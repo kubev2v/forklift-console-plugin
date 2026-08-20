@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import { Switch, ToolbarItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
@@ -18,7 +20,7 @@ export const SwitchFilter = ({
   onFilterUpdate,
   placeholderLabel,
   selectedFilters,
-}: FilterTypeProps) => {
+}: FilterTypeProps): ReactElement => {
   const onChange: (checked: boolean) => void = (checked) => {
     onFilterUpdate(checked ? [checked.toString()] : []);
   };

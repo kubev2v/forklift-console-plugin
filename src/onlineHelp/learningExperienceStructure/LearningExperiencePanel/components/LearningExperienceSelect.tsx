@@ -1,4 +1,4 @@
-import { type FC, type Ref, useContext, useState } from 'react';
+import { type FC, type ReactElement, type Ref, useContext, useState } from 'react';
 import { learningExperienceTopics } from 'src/onlineHelp/learningExperienceContent/topics/utils/constants';
 import { LearningExperienceContext } from 'src/onlineHelp/learningExperienceDrawer/context/LearningExperienceContext';
 
@@ -24,7 +24,7 @@ const LearningExperienceSelect: FC = () => {
   const { trackEvent } = useForkliftAnalytics();
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
-  const toggle = (toggleRef: Ref<MenuToggleElement>) => {
+  const toggle = (toggleRef: Ref<MenuToggleElement>): ReactElement => {
     return (
       <MenuToggle
         className="pf-v6-u-mt-md"

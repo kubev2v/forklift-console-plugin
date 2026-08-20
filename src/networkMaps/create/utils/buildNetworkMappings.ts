@@ -86,10 +86,14 @@ export const buildNetworkMappings = (
   }, []);
 };
 
-const openShiftNetworkAttachmentDefinitionToName = (net: OpenShiftNetworkAttachmentDefinition) =>
-  net?.namespace ? `${net?.namespace}/${net?.name}` : (net?.name ?? DEFAULT_NETWORK);
+const openShiftNetworkAttachmentDefinitionToName = (
+  net: OpenShiftNetworkAttachmentDefinition,
+): string => (net?.namespace ? `${net?.namespace}/${net?.name}` : (net?.name ?? DEFAULT_NETWORK));
 
-const getSourceNetName = (source: V1beta1NetworkMapSpecMapSource, isOpenShiftProvider: boolean) => {
+const getSourceNetName = (
+  source: V1beta1NetworkMapSpecMapSource,
+  isOpenShiftProvider: boolean,
+): string => {
   if (isOpenShiftProvider && source?.type === POD) {
     return DEFAULT_NETWORK;
   }
@@ -100,7 +104,7 @@ const getSourceNetName = (source: V1beta1NetworkMapSpecMapSource, isOpenShiftPro
 const getDestinationNetName = (
   networks: OpenShiftNetworkAttachmentDefinition[],
   destination: V1beta1NetworkMapSpecMapDestination,
-) => {
+): string => {
   const net = networks.find(
     (network) =>
       network?.name === destination?.name && network?.namespace === destination?.namespace,

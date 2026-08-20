@@ -1,4 +1,4 @@
-import { type FC, type Ref, useContext, useState } from 'react';
+import { type FC, type MouseEvent, type Ref, useContext, useState } from 'react';
 import { LearningExperienceContext } from 'src/onlineHelp/learningExperienceDrawer/context/LearningExperienceContext';
 
 import {
@@ -17,7 +17,7 @@ const SourceMigrationSelection: FC = () => {
   const { data, setData } = useContext(LearningExperienceContext);
   const providerType = (data?.providerType as ProviderTypes) ?? PROVIDER_TYPES.vsphere;
 
-  const onSelect = (_event: React.MouseEvent | undefined, value: string | number | undefined) => {
+  const onSelect = (_event: MouseEvent | undefined, value: string | number | undefined): void => {
     setIsOpen(false);
     setData('providerType', value);
   };

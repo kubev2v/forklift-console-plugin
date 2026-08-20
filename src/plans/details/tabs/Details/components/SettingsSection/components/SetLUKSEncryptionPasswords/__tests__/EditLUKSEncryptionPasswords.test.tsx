@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -31,14 +33,16 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
 jest.mock(
   '../components/EditLUKSModalAlert',
   () =>
-    ({ shouldRender }: { shouldRender: any }) =>
+    ({ shouldRender }: { shouldRender: any }): ReactElement | null =>
       shouldRender ? <div data-testid="luks-modal-alert" /> : null,
 );
-jest.mock('../components/EditLUKSModalBody', () => () => <div data-testid="luks-modal-body" />);
+jest.mock('../components/EditLUKSModalBody', () => (): ReactElement => (
+  <div data-testid="luks-modal-body" />
+));
 jest.mock(
   '../LUKSPassphraseInputList',
   () =>
-    ({ value, onChange }: { onChange: any; value: any }) => (
+    ({ value, onChange }: { onChange: any; value: any }): ReactElement => (
       <div data-testid="luks-passphrase-input-list">
         <div>Passphrases: {value.join(', ')}</div>
         <button data-testid="add-passphrase" onClick={() => onChange([...value, 'new-passphrase'])}>

@@ -36,7 +36,7 @@ export const useProvidersInventoryIsLive = ({
   const oldErrorRef = useRef<{ error?: string }>({ error: '' });
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (): Promise<void> => {
       try {
         await consoleFetchJSON(getInventoryApiUrl(`providers`));
 
@@ -54,13 +54,13 @@ export const useProvidersInventoryIsLive = ({
       }
     };
 
-    (async () => {
+    (async (): Promise<void> => {
       await fetchData();
     })();
 
     // Polling interval set by the passed parameter
     const intervalId = setInterval(fetchData, interval);
-    return () => {
+    return (): void => {
       clearInterval(intervalId);
     };
   }, [interval]);

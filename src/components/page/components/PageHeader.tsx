@@ -25,7 +25,7 @@ export const PageHeader = ({
   shouldShowLearningExperienceButton = false,
   title,
   titleHelpContent,
-}: PageHeaderProps) => {
+}: PageHeaderProps): ReactElement | null => {
   if (!title) {
     return null;
   }

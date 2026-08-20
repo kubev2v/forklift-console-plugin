@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
@@ -15,7 +16,7 @@ import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import ExistingNetworkMapField from './ExistingNetworkMapField';
 import NewNetworkMapFields from './NewNetworkMapFields';
 
-const NetworkMapStep = () => {
+const NetworkMapStep = (): ReactElement => {
   const { t } = useForkliftTranslation();
   const { control, trigger, unregister } = useCreatePlanFormContext();
 
@@ -24,7 +25,7 @@ const NetworkMapStep = () => {
     name: [NetworkMapFieldId.ExistingNetworkMap, NetworkMapFieldId.NetworkMap],
   });
 
-  const handleNetworkMapTypeChange = (newType: NetworkMapType) => {
+  const handleNetworkMapTypeChange = (newType: NetworkMapType): void => {
     setTimeout(async () => {
       if (newType === NetworkMapType.Existing && !existingNetworkMap) {
         await trigger(NetworkMapFieldId.ExistingNetworkMap);

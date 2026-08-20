@@ -30,7 +30,7 @@ const OvaFileUploader: FC<OvaFileUploaderProps> = ({ provider }) => {
   const [uploading, setUploading] = useState(false);
   const [validation, setValidation] = useState<OvaValidationVariant>(OvaValidationVariant.Default);
 
-  const handleUpload = async () => {
+  const handleUpload = async (): Promise<void> => {
     if (!file) {
       return;
     }

@@ -24,7 +24,7 @@ const useHasSourceAndTargetProviders = (
   return [hasSourceProviders, hasTargetProviders, providersLoaded, providersError];
 };
 
-export const useHasSufficientProviders = (namespace?: string) => {
+export const useHasSufficientProviders = (namespace?: string): boolean => {
   const [hasSourceProviders, hasTargetProviders, providersLoaded, providersError] =
     useHasSourceAndTargetProviders(namespace);
   const hasSufficientProviders =

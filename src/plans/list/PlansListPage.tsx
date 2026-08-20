@@ -1,4 +1,4 @@
-import { type FC, useCallback, useMemo } from 'react';
+import { type FC, type ReactElement, useCallback, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
@@ -29,7 +29,7 @@ type PlansListPageProps = {
 
 const selectedIds: string[] = [];
 
-const onSelect = () => undefined;
+const onSelect = (): void => undefined;
 
 const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
   const { t } = useForkliftTranslation();
@@ -46,7 +46,7 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
   const { canCreate } = useGetDeleteAndEditAccessReview({ model: PlanModel, namespace });
 
   const GlobalActionToolbarItems = useMemo<FC<GlobalActionToolbarProps<V1beta1Plan>>[]>(
-    () => [(props) => <PlansBulkActionsDropdown {...props} namespace={namespace} />],
+    () => [(props): ReactElement => <PlansBulkActionsDropdown {...props} namespace={namespace} />],
     [namespace],
   );
 

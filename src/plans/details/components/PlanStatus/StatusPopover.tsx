@@ -42,11 +42,11 @@ const StatusPopover: FC<StatusPopoverProps> = ({ count, plan, status, vms }) => 
 
   const { actionLabel, body, header } = getPopoverMessageByStatus(status, count);
 
-  const openScheduleCutoverModal = () => {
+  const openScheduleCutoverModal = (): void => {
     launchOverlay<PlanModalProps>(PlanCutoverMigrationModal, { plan });
   };
 
-  const navigateToVMsTab = () => {
+  const navigateToVMsTab = (): void => {
     const url = `${getResourceUrl({ name: getName(plan), namespace: getNamespace(plan), reference: PlanModelRef })}/vms`;
     navigate(url)?.catch(() => undefined);
   };

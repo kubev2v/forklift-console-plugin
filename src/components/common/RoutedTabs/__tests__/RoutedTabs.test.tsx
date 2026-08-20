@@ -1,7 +1,7 @@
 import { MemoryRouter } from 'react-router';
 
 import { beforeEach, describe, expect, it } from '@jest/globals';
-import { render, screen } from '@testing-library/react';
+import { render, type RenderResult, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import RoutedTabs from '../RoutedTabs';
@@ -10,10 +10,10 @@ const mockNavigate = jest.fn();
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useNavigate: () => mockNavigate,
+  useNavigate: (): typeof mockNavigate => mockNavigate,
 }));
 
-const renderWithRouter = (tabs: any[], initialPath = '/overview') =>
+const renderWithRouter = (tabs: any[], initialPath = '/overview'): RenderResult =>
   render(
     <MemoryRouter initialEntries={[initialPath]}>
       <RoutedTabs tabs={tabs} />

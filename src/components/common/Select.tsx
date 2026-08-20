@@ -2,6 +2,7 @@ import {
   type ForwardedRef,
   forwardRef,
   type MutableRefObject,
+  type ReactElement,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -55,7 +56,7 @@ const Select = (
     value,
   }: SelectProps,
   ref: ForwardedRef<HTMLButtonElement>,
-) => {
+): ReactElement => {
   const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>();

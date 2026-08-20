@@ -21,23 +21,24 @@ export const usePagination = ({
   userSettings,
 }: PaginationHookProps): PaginationHookResult => {
   const {
-    clear: clearSavedPerPage = () => undefined,
+    clear: clearSavedPerPage = (): void => undefined,
     perPage: defaultPerPage = DEFAULT_PER_PAGE,
-    save: savePerPage = () => undefined,
+    save: savePerPage = (): void => undefined,
   } = userSettings ?? {};
   const [perPage, setPerPage] = useState(defaultPerPage);
 
   const lastPage = Math.ceil(filteredDataLength / perPage);
 
   const setPerPageInStateAndSettings = useMemo(
-    () => (perPageArg: number) => {
-      setPerPage(perPageArg);
-      if (perPageArg === DEFAULT_PER_PAGE) {
-        clearSavedPerPage();
-      } else {
-        savePerPage(perPageArg);
-      }
-    },
+    () =>
+      (perPageArg: number): void => {
+        setPerPage(perPageArg);
+        if (perPageArg === DEFAULT_PER_PAGE) {
+          clearSavedPerPage();
+        } else {
+          savePerPage(perPageArg);
+        }
+      },
     [clearSavedPerPage, savePerPage],
   );
 

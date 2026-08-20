@@ -23,7 +23,7 @@ const PreferredAffinityWeightInput: FC<PreferredAffinityWeightInputProps> = ({
   const isInvalid = !weight || weight < 1 || weight > 100;
   const validated = isInvalid ? ValidatedOptions.error : ValidatedOptions.default;
 
-  const onChange = (_event: FormEvent<HTMLInputElement>, value: string) => {
+  const onChange = (_event: FormEvent<HTMLInputElement>, value: string): void => {
     setFocusedAffinity({ ...focusedAffinity, weight: Number(value) });
   };
 
