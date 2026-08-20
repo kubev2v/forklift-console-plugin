@@ -21,7 +21,8 @@ const CredentialContentField: FC<CredentialContentFieldProps> = ({ fieldKey, rev
   }
 
   if (fieldKey && fieldKey === SecretFieldsId.InsecureSkipVerify) {
-    return <>{value}</>;
+    if (value) return <>{value}</>;
+    return <>{EMPTY_MSG}</>;
   }
 
   if (value) {
