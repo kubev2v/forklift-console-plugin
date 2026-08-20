@@ -127,11 +127,13 @@ const deleteCurrentSecret = async (
 
 export const onDiskDecryptionConfirm = async ({
   existingSecret,
+  labeledSourceSecretName,
   nbdeClevis,
   newValue,
   resource,
 }: {
   existingSecret?: IoK8sApiCoreV1Secret;
+  labeledSourceSecretName?: string;
   nbdeClevis: boolean;
   newValue: string;
   resource: V1beta1Plan;
@@ -143,6 +145,13 @@ export const onDiskDecryptionConfirm = async ({
   const planVirtualMachines = getPlanVirtualMachines(resource);
 
   if (existingSecret) {
+    // No-op only when useEditLUKSState auto-seeded the labeled source
+    // (labeledSourceSecretName is set). Manual re-selection omits the name so
+    // current source data is copied even if the names match.
+    if (labeledSourceSecretName && getName(existingSecret) === labeledSourceSecretName) {
+      return undefined;
+    }
+
     const copiedSecret = await copySecretForPlan(
       existingSecret,
       planName ?? '',

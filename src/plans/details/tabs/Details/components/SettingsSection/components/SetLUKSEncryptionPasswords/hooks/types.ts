@@ -9,6 +9,7 @@ export type EditLUKSState = {
   decryptionMode: DecryptionMode;
   handleConfirm: () => Promise<unknown>;
   isDisabled: boolean;
+  isSourceSecretUnavailable: boolean;
   nbdeClevis: boolean;
   resource: V1beta1Plan;
   secretNamespace: string | undefined;
