@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 
 import { PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 import { getPlanStatusCounts } from '../utils/getPlanStatusCounts';
 
@@ -18,11 +19,13 @@ type PlanStatusCountsHookResponse = {
  * @return {PlanStatusCountsHookResponse} An object with 'count', 'loaded', and 'loadError' keys.
  */
 const usePlanStatusCounts = (): PlanStatusCountsHookResponse => {
-  const [plans, loaded, loadError] = useTypedK8sWatchResource<V1beta1Plan[]>({
-    groupVersionKind: PlanModelGroupVersionKind,
-    isList: true,
-    namespaced: true,
-  });
+  const [plans, loaded, loadError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1Plan[]>({
+      groupVersionKind: PlanModelGroupVersionKind,
+      isList: true,
+      namespaced: true,
+    }),
+  );
 
   const planStatusCounts = useMemo(() => {
     if (!loaded || loadError) {

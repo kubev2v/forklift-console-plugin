@@ -7,8 +7,9 @@ import {
   type V1beta1MigrationStatusVms,
   type V1beta1MigrationStatusVmsConditions,
 } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName } from '@utils/crds/common/selectors';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
 import type { MigrationDataPoint } from '../utils/types';
@@ -86,11 +87,13 @@ export const useVmMigrationsDataPoints = (
   selectedRange: TimeRangeOptions,
   singleBucket = false,
 ) => {
-  const [migrations, loaded, loadError] = useTypedK8sWatchResource<V1beta1Migration[]>({
-    groupVersionKind: MigrationModelGroupVersionKind,
-    isList: true,
-    namespaced: true,
-  });
+  const [migrations, loaded, loadError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1Migration[]>({
+      groupVersionKind: MigrationModelGroupVersionKind,
+      isList: true,
+      namespaced: true,
+    }),
+  );
 
   if (!loaded) {
     return {

@@ -4,7 +4,8 @@ import {
   ForkliftControllerModelGroupVersionKind,
   type V1beta1ForkliftController,
 } from '@forklift-ui/types';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 /**
  * Type for the return value of the useK8sWatchForkliftController hook.
@@ -21,11 +22,13 @@ type K8sForkliftControllerWatchResult = [
  * @returns {K8sProvidersWatchResult} - the first forklift controller CR found.
  */
 export const useK8sWatchForkliftController = (): K8sForkliftControllerWatchResult => {
-  const [controllers, loaded, loadError] = useTypedK8sWatchResource<V1beta1ForkliftController[]>({
-    groupVersionKind: ForkliftControllerModelGroupVersionKind,
-    isList: true,
-    namespaced: true,
-  });
+  const [controllers, loaded, loadError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1ForkliftController[]>({
+      groupVersionKind: ForkliftControllerModelGroupVersionKind,
+      isList: true,
+      namespaced: true,
+    }),
+  );
 
   const controller = useMemo(() => {
     const [firstController] = controllers ?? [];

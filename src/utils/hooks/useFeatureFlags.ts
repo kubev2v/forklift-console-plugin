@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
 import { ForkliftControllerModelGroupVersionKind } from '@forklift-ui/types';
-import type { K8sResourceKind } from '@openshift-console/dynamic-plugin-sdk';
+import { type K8sResourceKind, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { FEATURE_FLAG_DEFAULTS } from '@utils/constants';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 import { getDefaultNamespace } from '@utils/namespaces';
 
 type FeatureFlagsResult = {
@@ -21,12 +21,14 @@ type FeatureFlagsResult = {
  * @param namespace - Namespace to watch for the ForkliftController. Defaults to the default namespace of forklift (openshift-mtv for DS/ konveyor-forklift for US).
  */
 export const useFeatureFlags = (namespace?: string): FeatureFlagsResult => {
-  const [forkliftControllers, loaded, error] = useTypedK8sWatchResource<K8sResourceKind[]>({
-    groupVersionKind: ForkliftControllerModelGroupVersionKind,
-    isList: true,
-    namespace: namespace ?? getDefaultNamespace(),
-    namespaced: true,
-  });
+  const [forkliftControllers, loaded, error] = toTypedWatchResult(
+    useK8sWatchResource<K8sResourceKind[]>({
+      groupVersionKind: ForkliftControllerModelGroupVersionKind,
+      isList: true,
+      namespace: namespace ?? getDefaultNamespace(),
+      namespaced: true,
+    }),
+  );
 
   // Use the first available ForkliftController
   const forkliftController = useMemo(() => forkliftControllers?.[0], [forkliftControllers]);

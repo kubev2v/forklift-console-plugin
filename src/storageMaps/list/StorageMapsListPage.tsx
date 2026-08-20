@@ -11,9 +11,10 @@ import {
   StorageMapModelGroupVersionKind,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { MAP_STATUS } from '@utils/constants';
 import { getMapPhase } from '@utils/crds/maps/shared';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 import { t } from '@utils/i18n';
 import type { StorageMapData } from '@utils/storage/types';
 
@@ -108,14 +109,14 @@ const StorageMapsListPage: FC<{
 }> = ({ namespace }) => {
   const userSettings = useMemo(() => loadUserSettings({ pageId: 'StorageMaps' }), []);
 
-  const [StorageMaps, StorageMapsLoaded, StorageMapsLoadError] = useTypedK8sWatchResource<
-    V1beta1StorageMap[]
-  >({
-    groupVersionKind: StorageMapModelGroupVersionKind,
-    isList: true,
-    namespace,
-    namespaced: true,
-  });
+  const [StorageMaps, StorageMapsLoaded, StorageMapsLoadError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1StorageMap[]>({
+      groupVersionKind: StorageMapModelGroupVersionKind,
+      isList: true,
+      namespace,
+      namespaced: true,
+    }),
+  );
 
   const permissions = useGetDeleteAndEditAccessReview({
     model: StorageMapModel,

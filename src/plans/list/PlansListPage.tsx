@@ -7,7 +7,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 import PlansBulkActionsDropdown from './components/BulkPlanActions/PlansBulkActionsDropdown';
 import {
@@ -36,12 +37,14 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
 
   const userSettings = useMemo(() => loadUserSettings({ pageId: 'Plans' }), []);
 
-  const [plans, plansLoaded, plansLoadError] = useTypedK8sWatchResource<V1beta1Plan[]>({
-    groupVersionKind: PlanModelGroupVersionKind,
-    isList: true,
-    namespace,
-    namespaced: true,
-  });
+  const [plans, plansLoaded, plansLoadError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1Plan[]>({
+      groupVersionKind: PlanModelGroupVersionKind,
+      isList: true,
+      namespace,
+      namespaced: true,
+    }),
+  );
 
   const { canCreate } = useGetDeleteAndEditAccessReview({ model: PlanModel, namespace });
 

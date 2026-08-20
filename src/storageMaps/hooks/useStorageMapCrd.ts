@@ -1,5 +1,6 @@
 import type { IoK8sApiextensionsApiserverPkgApisApiextensionsV1CustomResourceDefinition as CustomResourceDefinition } from '@forklift-ui/types';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 import { CrdGroupVersionKind, CrdK8sResourceName } from './constants';
 
@@ -10,11 +11,13 @@ type UseStorageMapCrdResult = {
 };
 
 export const useStorageMapCrd = (): UseStorageMapCrdResult => {
-  const [crd, loaded, error] = useTypedK8sWatchResource<CustomResourceDefinition>({
-    groupVersionKind: CrdGroupVersionKind,
-    name: CrdK8sResourceName,
-    namespaced: false,
-  });
+  const [crd, loaded, error] = toTypedWatchResult(
+    useK8sWatchResource<CustomResourceDefinition>({
+      groupVersionKind: CrdGroupVersionKind,
+      name: CrdK8sResourceName,
+      namespaced: false,
+    }),
+  );
 
   return {
     crd: crd || null,

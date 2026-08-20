@@ -8,7 +8,7 @@ import type {
   V1beta1DataVolume,
   V1beta1Plan,
 } from '@forklift-ui/types';
-import type { WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource, type WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   DataVolumeModelGroupVersionKind,
   JobModelGroupVersionKind,
@@ -21,7 +21,7 @@ import {
   getPlanTargetNamespace,
   getPlanVirtualMachines,
 } from '@utils/crds/plans/selectors';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 import { getPlanVirtualMachineIdByName } from '../../utils/getPlanVirtualMachineIdByName';
 import { getPlanVirtualMachinesDict } from '../../utils/utils';
@@ -57,30 +57,36 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
     };
   }, [migrationUid, plan, planUid]);
 
-  const [pods, podsLoaded, podsError] = useTypedK8sWatchResource<IoK8sApiCoreV1Pod[]>(
-    watchOptions ? { ...watchOptions, groupVersionKind: PodModelGroupVersionKind } : null,
+  const [pods, podsLoaded, podsError] = toTypedWatchResult(
+    useK8sWatchResource<IoK8sApiCoreV1Pod[]>(
+      watchOptions ? { ...watchOptions, groupVersionKind: PodModelGroupVersionKind } : null,
+    ),
   );
 
-  const [jobs, jobsLoaded, jobsError] = useTypedK8sWatchResource<IoK8sApiBatchV1Job[]>(
-    watchOptions
-      ? {
-          ...watchOptions,
-          groupVersionKind: JobModelGroupVersionKind,
-          namespace: getNamespace(plan),
-        }
-      : null,
+  const [jobs, jobsLoaded, jobsError] = toTypedWatchResult(
+    useK8sWatchResource<IoK8sApiBatchV1Job[]>(
+      watchOptions
+        ? {
+            ...watchOptions,
+            groupVersionKind: JobModelGroupVersionKind,
+            namespace: getNamespace(plan),
+          }
+        : null,
+    ),
   );
 
-  const [pvcs, pvcsLoaded, pvcsError] = useTypedK8sWatchResource<
-    IoK8sApiCoreV1PersistentVolumeClaim[]
-  >(
-    watchOptions
-      ? { ...watchOptions, groupVersionKind: PersistentVolumeClaimModelGroupVersionKind }
-      : null,
+  const [pvcs, pvcsLoaded, pvcsError] = toTypedWatchResult(
+    useK8sWatchResource<IoK8sApiCoreV1PersistentVolumeClaim[]>(
+      watchOptions
+        ? { ...watchOptions, groupVersionKind: PersistentVolumeClaimModelGroupVersionKind }
+        : null,
+    ),
   );
 
-  const [dvs, dvsLoaded, dvsError] = useTypedK8sWatchResource<V1beta1DataVolume[]>(
-    watchOptions ? { ...watchOptions, groupVersionKind: DataVolumeModelGroupVersionKind } : null,
+  const [dvs, dvsLoaded, dvsError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1DataVolume[]>(
+      watchOptions ? { ...watchOptions, groupVersionKind: DataVolumeModelGroupVersionKind } : null,
+    ),
   );
 
   const virtualMachines = getPlanVirtualMachines(plan);

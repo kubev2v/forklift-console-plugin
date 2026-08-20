@@ -5,8 +5,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@forklift-ui/types';
-import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { type K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 import ProviderDetailsPageByType from './ProviderDetailsPageByType';
 
@@ -22,12 +22,14 @@ type ProviderDetailsPageProps = {
 const ProviderDetailsPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
-  const [provider, loaded, error] = useTypedK8sWatchResource<V1beta1Provider>({
-    groupVersionKind: ProviderModelGroupVersionKind,
-    name,
-    namespace,
-    namespaced: true,
-  });
+  const [provider, loaded, error] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1Provider>({
+      groupVersionKind: ProviderModelGroupVersionKind,
+      name,
+      namespace,
+      namespaced: true,
+    }),
+  );
 
   if (error) {
     return <ErrorState title={t('Unable to retrieve data.')} />;

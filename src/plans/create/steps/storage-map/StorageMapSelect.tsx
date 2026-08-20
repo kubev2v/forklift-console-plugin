@@ -7,6 +7,7 @@ import {
   StorageMapModelRef,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   EmptyState,
   EmptyStateBody,
@@ -18,7 +19,7 @@ import {
 import { getName } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type StorageMapSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'status'> & {
@@ -42,11 +43,13 @@ const StorageMapSelect = (
   ref: ForwardedRef<HTMLButtonElement>,
 ) => {
   const { t } = useForkliftTranslation();
-  const [allStorageMaps] = useTypedK8sWatchResource<V1beta1StorageMap[]>({
-    groupVersionKind: StorageMapModelGroupVersionKind,
-    isList: true,
-    namespace,
-  });
+  const [allStorageMaps] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1StorageMap[]>({
+      groupVersionKind: StorageMapModelGroupVersionKind,
+      isList: true,
+      namespace,
+    }),
+  );
 
   const storageMapsListUrl = getResourceUrl({
     namespace,

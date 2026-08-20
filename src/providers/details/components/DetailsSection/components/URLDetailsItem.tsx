@@ -7,8 +7,8 @@ import {
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { IoK8sApiCoreV1Secret } from '@forklift-ui/types';
-import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { useK8sWatchResource, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
@@ -21,12 +21,14 @@ export const URLDetailsItem: FC<ProviderDetailsItemProps> = ({
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
 
-  const [secret] = useTypedK8sWatchResource<IoK8sApiCoreV1Secret>({
-    groupVersionKind: { kind: 'Secret', version: 'v1' },
-    name: provider?.spec?.secret?.name,
-    namespace: provider?.spec?.secret?.namespace,
-    namespaced: true,
-  });
+  const [secret] = toTypedWatchResult(
+    useK8sWatchResource<IoK8sApiCoreV1Secret>({
+      groupVersionKind: { kind: 'Secret', version: 'v1' },
+      name: provider?.spec?.secret?.name,
+      namespace: provider?.spec?.secret?.namespace,
+      namespaced: true,
+    }),
+  );
 
   // TODO: Update URL when AEM documentation migration to new platform is complete
   const defaultMoreInfoLink = ''; // was: 'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.10/html-single/planning_your_migration_to_red_hat_openshift_virtualization/index#adding-source-provider_cnv'

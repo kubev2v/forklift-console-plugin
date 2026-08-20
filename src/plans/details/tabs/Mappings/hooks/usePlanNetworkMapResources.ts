@@ -15,11 +15,9 @@ import {
   type V1beta1Plan,
   type V1beta1Provider,
 } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanNetworkMapName, getPlanNetworkMapNamespace } from '@utils/crds/plans/selectors';
-import {
-  type TypedWatchK8sResult,
-  useTypedK8sWatchResource,
-} from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult, type TypedWatchK8sResult } from '@utils/hooks/toTypedWatchResult';
 import type { NetworkMapping } from '@utils/mappings/networkMap';
 
 type UsePlanNetworkMapResourcesParams = {
@@ -46,15 +44,17 @@ export const usePlanNetworkMapResources: UsePlanNetworkMapResources = ({
   targetProvider,
 }) => {
   const networkMapName = getPlanNetworkMapName(plan);
-  const networkMapResult = useTypedK8sWatchResource<V1beta1NetworkMap>(
-    networkMapName
-      ? {
-          groupVersionKind: NetworkMapModelGroupVersionKind,
-          isList: false,
-          name: networkMapName,
-          namespace: getPlanNetworkMapNamespace(plan),
-        }
-      : null,
+  const networkMapResult = toTypedWatchResult(
+    useK8sWatchResource<V1beta1NetworkMap>(
+      networkMapName
+        ? {
+            groupVersionKind: NetworkMapModelGroupVersionKind,
+            isList: false,
+            name: networkMapName,
+            namespace: getPlanNetworkMapNamespace(plan),
+          }
+        : null,
+    ),
   );
 
   const sourceNetworksResult = useSourceNetworks(sourceProvider);

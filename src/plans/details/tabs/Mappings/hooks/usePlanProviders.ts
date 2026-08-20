@@ -3,32 +3,35 @@ import {
   type V1beta1Plan,
   type V1beta1Provider,
 } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   getPlanDestinationProviderName,
   getPlanDestinationProviderNamespace,
   getPlanSourceProviderName,
   getPlanSourceProviderNamespace,
 } from '@utils/crds/plans/selectors';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 export const usePlanProviders = (plan: V1beta1Plan) => {
-  const [sourceProvider, sourceProviderLoaded, sourceProviderError] =
-    useTypedK8sWatchResource<V1beta1Provider>({
+  const [sourceProvider, sourceProviderLoaded, sourceProviderError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1Provider>({
       groupVersionKind: ProviderModelGroupVersionKind,
       isList: false,
       name: getPlanSourceProviderName(plan),
       namespace: getPlanSourceProviderNamespace(plan),
       namespaced: true,
-    });
+    }),
+  );
 
-  const [targetProvider, targetProviderLoaded, targetProviderError] =
-    useTypedK8sWatchResource<V1beta1Provider>({
+  const [targetProvider, targetProviderLoaded, targetProviderError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1Provider>({
       groupVersionKind: ProviderModelGroupVersionKind,
       isList: false,
       name: getPlanDestinationProviderName(plan),
       namespace: getPlanDestinationProviderNamespace(plan),
       namespaced: true,
-    });
+    }),
+  );
 
   return {
     error: targetProviderError ?? sourceProviderError,

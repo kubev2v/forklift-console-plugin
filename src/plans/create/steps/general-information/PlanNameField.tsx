@@ -3,9 +3,10 @@ import { Controller } from 'react-hook-form';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
@@ -17,10 +18,12 @@ const PlanNameField: FC = () => {
     control,
     formState: { errors },
   } = useCreatePlanFormContext();
-  const [plans] = useTypedK8sWatchResource<V1beta1Plan[]>({
-    groupVersionKind: PlanModelGroupVersionKind,
-    isList: true,
-  });
+  const [plans] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1Plan[]>({
+      groupVersionKind: PlanModelGroupVersionKind,
+      isList: true,
+    }),
+  );
 
   return (
     <FormGroupWithErrorText

@@ -4,8 +4,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import LoadingSuspend from '@components/LoadingSuspend';
 import { ResourceYAMLEditorWrapper } from '@components/ResourceYAMLEditorWrapper/ResourceYAMLEditorWrapper';
 import { StorageMapModelGroupVersionKind, type V1beta1StorageMap } from '@forklift-ui/types';
-import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 type StorageMapYAMLTabProps = {
   name: string;
@@ -15,13 +15,15 @@ type StorageMapYAMLTabProps = {
 export const StorageMapYAMLTab: FC<StorageMapYAMLTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
-  const [obj, loaded, loadError] = useTypedK8sWatchResource<V1beta1StorageMap>({
-    groupVersionKind: StorageMapModelGroupVersionKind,
-    isList: false,
-    name,
-    namespace,
-    namespaced: true,
-  });
+  const [obj, loaded, loadError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1StorageMap>({
+      groupVersionKind: StorageMapModelGroupVersionKind,
+      isList: false,
+      name,
+      namespace,
+      namespaced: true,
+    }),
+  );
 
   return (
     <LoadingSuspend loaded={loaded} loadError={loadError} obj={obj}>

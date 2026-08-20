@@ -4,9 +4,11 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import type { V1beta1NetworkMap } from '@forklift-ui/types';
 import { Alert, AlertVariant } from '@patternfly/react-core';
 import { DEFAULT_NETWORK } from '@utils/constants';
-import { NetworkMapFieldId, type NetworkMapping } from '@utils/crds/maps/types';
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { useForkliftTranslation } from '@utils/i18n';
 import { IgnoreNetwork } from '@utils/mappings/constants';
+
+import type { NetworkEditFormValues } from './types';
 
 type PlanOwnerAlertProps = {
   networkMap: V1beta1NetworkMap;
@@ -14,11 +16,11 @@ type PlanOwnerAlertProps = {
 
 export const PlanOwnerAlert: FC<PlanOwnerAlertProps> = ({ networkMap }) => {
   const { t } = useForkliftTranslation();
-  const { control } = useFormContext();
+  const { control } = useFormContext<NetworkEditFormValues>();
   const watchedMappings = useWatch({
     control,
     name: NetworkMapFieldId.NetworkMap,
-  }) as NetworkMapping[] | undefined;
+  });
 
   const isOwnedByPlan = useMemo(
     () => networkMap?.metadata?.ownerReferences?.some((ref) => ref.kind === 'Plan'),

@@ -10,21 +10,24 @@ import {
   StorageMapModelGroupVersionKind,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Flex, FlexItem, PageSection } from '@patternfly/react-core';
 import { CATEGORY_TYPES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 export const StorageMapPageHeadings: FC<{ name: string; namespace?: string }> = ({
   name,
   namespace,
 }) => {
-  const [obj, loaded, loadError] = useTypedK8sWatchResource<V1beta1StorageMap>({
-    groupVersionKind: StorageMapModelGroupVersionKind,
-    name,
-    namespace,
-    namespaced: true,
-  });
+  const [obj, loaded, loadError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1StorageMap>({
+      groupVersionKind: StorageMapModelGroupVersionKind,
+      name,
+      namespace,
+      namespaced: true,
+    }),
+  );
 
   const permissions = useGetDeleteAndEditAccessReview({
     model: StorageMapModel,

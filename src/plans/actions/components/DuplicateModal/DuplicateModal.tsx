@@ -13,6 +13,7 @@ import {
   type V1beta1Plan,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
@@ -24,7 +25,7 @@ import {
   getPlanVirtualMachines,
 } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
 import type { PlanModalProps } from '../types';
@@ -50,69 +51,79 @@ const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }
   const [newName, setNewName] = useState<string>(`copy-of-${name}`);
 
   const networkMapName = getPlanNetworkMapName(plan);
-  const [networkMap] = useTypedK8sWatchResource<V1beta1NetworkMap>(
-    networkMapName
-      ? {
-          groupVersionKind: NetworkMapModelGroupVersionKind,
-          isList: false,
-          name: networkMapName,
-          namespace: getPlanNetworkMapNamespace(plan),
-          namespaced: true,
-        }
-      : null,
+  const [networkMap] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1NetworkMap>(
+      networkMapName
+        ? {
+            groupVersionKind: NetworkMapModelGroupVersionKind,
+            isList: false,
+            name: networkMapName,
+            namespace: getPlanNetworkMapNamespace(plan),
+            namespaced: true,
+          }
+        : null,
+    ),
   );
 
   const storageMapName = getPlanStorageMapName(plan);
-  const [storageMap] = useTypedK8sWatchResource<V1beta1StorageMap>(
-    storageMapName
-      ? {
-          groupVersionKind: StorageMapModelGroupVersionKind,
-          isList: false,
-          name: storageMapName,
-          namespace: getPlanStorageMapNamespace(plan),
-          namespaced: true,
-        }
-      : null,
+  const [storageMap] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1StorageMap>(
+      storageMapName
+        ? {
+            groupVersionKind: StorageMapModelGroupVersionKind,
+            isList: false,
+            name: storageMapName,
+            namespace: getPlanStorageMapNamespace(plan),
+            namespaced: true,
+          }
+        : null,
+    ),
   );
 
   const { postHookName, preHookName } = getPlanHookNames(plan);
   const planNamespace = getNamespace(plan);
 
-  const [preHook] = useTypedK8sWatchResource<V1beta1Hook>(
-    preHookName
-      ? {
-          groupVersionKind: HookModelGroupVersionKind,
-          isList: false,
-          name: preHookName,
-          namespace: planNamespace,
-          namespaced: true,
-        }
-      : null,
+  const [preHook] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1Hook>(
+      preHookName
+        ? {
+            groupVersionKind: HookModelGroupVersionKind,
+            isList: false,
+            name: preHookName,
+            namespace: planNamespace,
+            namespaced: true,
+          }
+        : null,
+    ),
   );
 
-  const [postHook] = useTypedK8sWatchResource<V1beta1Hook>(
-    postHookName
-      ? {
-          groupVersionKind: HookModelGroupVersionKind,
-          isList: false,
-          name: postHookName,
-          namespace: planNamespace,
-          namespaced: true,
-        }
-      : null,
+  const [postHook] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1Hook>(
+      postHookName
+        ? {
+            groupVersionKind: HookModelGroupVersionKind,
+            isList: false,
+            name: postHookName,
+            namespace: planNamespace,
+            namespaced: true,
+          }
+        : null,
+    ),
   );
 
   const scriptsRef = plan?.spec?.customizationScripts;
-  const [configMap] = useTypedK8sWatchResource<IoK8sApiCoreV1ConfigMap>(
-    scriptsRef?.name
-      ? {
-          groupVersionKind: CONFIG_MAP_GVK,
-          isList: false,
-          name: scriptsRef.name,
-          namespace: scriptsRef.namespace,
-          namespaced: true,
-        }
-      : null,
+  const [configMap] = toTypedWatchResult(
+    useK8sWatchResource<IoK8sApiCoreV1ConfigMap>(
+      scriptsRef?.name
+        ? {
+            groupVersionKind: CONFIG_MAP_GVK,
+            isList: false,
+            name: scriptsRef.name,
+            namespace: scriptsRef.namespace,
+            namespaced: true,
+          }
+        : null,
+    ),
   );
 
   const onChange = (value: string): void => {

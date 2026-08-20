@@ -2,6 +2,7 @@ import { type FC, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 
 import ExpandableReviewSection from '@components/ExpandableReviewSection/ExpandableReviewSection';
+import type { V1beta1StorageMap } from '@forklift-ui/types';
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -10,6 +11,7 @@ import {
   Stack,
   useWizardContext,
 } from '@patternfly/react-core';
+import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import type { StorageMapping } from '@utils/storage/types';
@@ -24,7 +26,7 @@ const StorageMapReviewSectionInner: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useCreatePlanFormContext();
 
-  const [storageMapType, storageMap, existingNetMap, netMapName] = useWatch({
+  const [storageMapType, storageMap, existingStorageMap, storageMapName] = useWatch({
     control,
     name: [
       CreatePlanStorageMapFieldId.StorageMapType,
@@ -35,7 +37,7 @@ const StorageMapReviewSectionInner: FC = () => {
   }) as [
     StorageMapType | undefined,
     StorageMapping[] | undefined,
-    { metadata?: { name?: string } } | undefined,
+    V1beta1StorageMap | undefined,
     string | undefined,
   ];
 
@@ -60,7 +62,7 @@ const StorageMapReviewSectionInner: FC = () => {
         <DescriptionListGroup>
           <DescriptionListTerm>{t('Storage map')}</DescriptionListTerm>
           <DescriptionListDescription data-testid="review-storage-map">
-            {existingNetMap?.metadata?.name}
+            {existingStorageMap ? getName(existingStorageMap) : undefined}
           </DescriptionListDescription>
         </DescriptionListGroup>
       </DescriptionList>
@@ -71,13 +73,13 @@ const StorageMapReviewSectionInner: FC = () => {
     return <>{t('No storage mappings selected')}</>;
   }
 
-  if (netMapName) {
+  if (storageMapName) {
     return (
       <Stack hasGutter>
         <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
           <DescriptionListGroup>
             <DescriptionListTerm>{t('Storage map name')}</DescriptionListTerm>
-            <DescriptionListDescription>{netMapName}</DescriptionListDescription>
+            <DescriptionListDescription>{storageMapName}</DescriptionListDescription>
           </DescriptionListGroup>
         </DescriptionList>
 

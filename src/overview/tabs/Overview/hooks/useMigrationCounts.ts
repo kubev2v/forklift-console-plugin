@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 
 import { MigrationModelGroupVersionKind, type V1beta1Migration } from '@forklift-ui/types';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 import { getPlanMigrationCounts } from '../utils/getMigrationCounts';
 import { getVmCounts } from '../utils/getVmCounts';
@@ -49,11 +50,13 @@ const normalizeCounts = (counts: Record<string, number>): MigrationCounts => ({
 const useMigrationCounts = (
   range: TimeRangeOptions = TimeRangeOptions.Last10Days,
 ): MigrationCountsHookResponse => {
-  const [migrations, loaded, loadError] = useTypedK8sWatchResource<V1beta1Migration[]>({
-    groupVersionKind: MigrationModelGroupVersionKind,
-    isList: true,
-    namespaced: true,
-  });
+  const [migrations, loaded, loadError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1Migration[]>({
+      groupVersionKind: MigrationModelGroupVersionKind,
+      isList: true,
+      namespaced: true,
+    }),
+  );
 
   const counts = useMemo(() => {
     if (!loaded || loadError) {

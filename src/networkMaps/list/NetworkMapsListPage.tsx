@@ -11,10 +11,11 @@ import {
   NetworkMapModelGroupVersionKind,
   type V1beta1NetworkMap,
 } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { MAP_STATUS } from '@utils/constants';
 import { getMapPhase } from '@utils/crds/maps/shared';
 import type { NetworkMapData } from '@utils/crds/maps/types';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 import { t } from '@utils/i18n';
 
 import NetworkMapsAddButton from '../components/NetworkMapsAddButton';
@@ -108,14 +109,14 @@ const NetworkMapsListPage: FC<{
 }> = ({ namespace }) => {
   const userSettings = useMemo(() => loadUserSettings({ pageId: 'NetworkMaps' }), []);
 
-  const [networkMaps, networkMapsLoaded, networkMapsLoadError] = useTypedK8sWatchResource<
-    V1beta1NetworkMap[]
-  >({
-    groupVersionKind: NetworkMapModelGroupVersionKind,
-    isList: true,
-    namespace,
-    namespaced: true,
-  });
+  const [networkMaps, networkMapsLoaded, networkMapsLoadError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1NetworkMap[]>({
+      groupVersionKind: NetworkMapModelGroupVersionKind,
+      isList: true,
+      namespace,
+      namespaced: true,
+    }),
+  );
 
   const permissions = useGetDeleteAndEditAccessReview({
     model: NetworkMapModel,

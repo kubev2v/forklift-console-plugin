@@ -29,7 +29,7 @@ export const initializeAnalytics = (segmentKey: string) => {
       analytics.factory = function factory(method: string) {
         return function analyticsMethodWrapper(...args: unknown[]) {
           if (window.analytics?.initialized) {
-            const analyticsMethod = window.analytics[method as keyof SegmentAnalytics];
+            const analyticsMethod = window.analytics[method];
 
             if (typeof analyticsMethod === 'function') {
               return (analyticsMethod as (...args: unknown[]) => SegmentAnalytics).call(

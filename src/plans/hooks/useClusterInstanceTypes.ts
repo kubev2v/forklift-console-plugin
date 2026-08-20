@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 import {
   type ClusterInstanceType,
@@ -29,10 +30,12 @@ const buildDescription = (instanceType: ClusterInstanceType): string => {
 };
 
 export const useClusterInstanceTypes: UseClusterInstanceTypes = () => {
-  const [resources, loaded, loadError] = useTypedK8sWatchResource<ClusterInstanceType[]>({
-    groupVersionKind: INSTANCE_TYPE_GVK,
-    isList: true,
-  });
+  const [resources, loaded, loadError] = toTypedWatchResult(
+    useK8sWatchResource<ClusterInstanceType[]>({
+      groupVersionKind: INSTANCE_TYPE_GVK,
+      isList: true,
+    }),
+  );
 
   const instanceTypes = useMemo(
     () =>

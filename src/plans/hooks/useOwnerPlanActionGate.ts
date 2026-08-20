@@ -1,7 +1,7 @@
 import { PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
-import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import { type K8sResourceCommon, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getNamespace } from '@utils/crds/common/selectors';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { PlanStatuses } from '../details/components/PlanStatus/utils/types';
@@ -34,15 +34,17 @@ export const useOwnerPlanActionGate = (
   const planOwner = resource?.metadata?.ownerReferences?.find((ref) => ref.kind === 'Plan');
   const hasPlanOwner = Boolean(planOwner);
 
-  const [plan, loaded] = useTypedK8sWatchResource<V1beta1Plan>(
-    hasPlanOwner
-      ? {
-          groupVersionKind: PlanModelGroupVersionKind,
-          name: planOwner?.name ?? '',
-          namespace: getNamespace(resource),
-          namespaced: true,
-        }
-      : null,
+  const [plan, loaded] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1Plan>(
+      hasPlanOwner
+        ? {
+            groupVersionKind: PlanModelGroupVersionKind,
+            name: planOwner?.name ?? '',
+            namespace: getNamespace(resource),
+            namespaced: true,
+          }
+        : null,
+    ),
   );
 
   if (!hasPlanOwner) {

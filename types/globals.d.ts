@@ -73,12 +73,10 @@ interface Window {
 
 // Based on Segment Analytics.js 2.0 snippet v5.2.0
 // Reference: https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/quickstart/
-// Index signature must come first (member-ordering); keep alphabetical otherwise conflicts with perfectionist.
+// Intersection avoids index-signature vs field ordering conflicts between member-ordering and perfectionist.
 type SegmentAnalytics = {
   _loadOptions?: Record<string, unknown>;
   _writeKey?: string;
-  // eslint-disable-next-line @typescript-eslint/member-ordering -- index signature required first
-  [key: string]: unknown;
   factory: (method: string) => (...args: unknown[]) => SegmentAnalytics;
   initialized?: boolean;
   invoked?: boolean;
@@ -92,7 +90,7 @@ type SegmentAnalytics = {
     properties?: Record<string, unknown>,
     options?: Record<string, unknown>,
   ) => void;
-};
+} & Record<string, unknown>;
 
 declare module 'eslint-plugin-import' {
   const flatConfigs: {

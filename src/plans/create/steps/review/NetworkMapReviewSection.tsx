@@ -2,6 +2,7 @@ import { type FC, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 
 import ExpandableReviewSection from '@components/ExpandableReviewSection/ExpandableReviewSection';
+import type { V1beta1NetworkMap } from '@forklift-ui/types';
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -10,6 +11,7 @@ import {
   Stack,
   useWizardContext,
 } from '@patternfly/react-core';
+import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import { NetworkMapFieldId, type NetworkMapping, NetworkMapType } from '@utils/mappings/networkMap';
@@ -34,7 +36,7 @@ const NetworkMapReviewSectionInner: FC = () => {
   }) as [
     NetworkMapType | undefined,
     NetworkMapping[] | undefined,
-    { metadata?: { name?: string } } | undefined,
+    V1beta1NetworkMap | undefined,
     string | undefined,
   ];
 
@@ -59,7 +61,7 @@ const NetworkMapReviewSectionInner: FC = () => {
         <DescriptionListGroup>
           <DescriptionListTerm>{t('Network map')}</DescriptionListTerm>
           <DescriptionListDescription data-testid="review-network-map">
-            {existingNetMap?.metadata?.name}
+            {existingNetMap ? getName(existingNetMap) : undefined}
           </DescriptionListDescription>
         </DescriptionListGroup>
       </DescriptionList>

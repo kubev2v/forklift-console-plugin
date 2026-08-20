@@ -8,7 +8,8 @@ import {
   ProviderModelGroupVersionKind,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 import type { ProviderData } from '@utils/providers/types';
 
 import { loadUserSettings } from '../../components/common/Page/userSettings';
@@ -30,14 +31,14 @@ const ProvidersListPage: FC<{
 
   const userSettings = useMemo(() => loadUserSettings({ pageId: 'Providers' }), []);
 
-  const [providers, providersLoaded, providersLoadError] = useTypedK8sWatchResource<
-    V1beta1Provider[]
-  >({
-    groupVersionKind: ProviderModelGroupVersionKind,
-    isList: true,
-    namespace,
-    namespaced: true,
-  });
+  const [providers, providersLoaded, providersLoadError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1Provider[]>({
+      groupVersionKind: ProviderModelGroupVersionKind,
+      isList: true,
+      namespace,
+      namespaced: true,
+    }),
+  );
 
   const {
     error: inventoryError,

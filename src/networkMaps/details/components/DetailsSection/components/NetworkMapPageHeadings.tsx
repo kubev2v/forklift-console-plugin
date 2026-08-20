@@ -10,20 +10,23 @@ import {
   NetworkMapModelGroupVersionKind,
   type V1beta1NetworkMap,
 } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Flex, FlexItem, PageSection } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 export const NetworkMapPageHeadings: FC<{ name: string; namespace?: string }> = ({
   name,
   namespace,
 }) => {
-  const [obj, loaded, loadError] = useTypedK8sWatchResource<V1beta1NetworkMap>({
-    groupVersionKind: NetworkMapModelGroupVersionKind,
-    name,
-    namespace,
-    namespaced: true,
-  });
+  const [obj, loaded, loadError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1NetworkMap>({
+      groupVersionKind: NetworkMapModelGroupVersionKind,
+      name,
+      namespace,
+      namespaced: true,
+    }),
+  );
 
   const permissions = useGetDeleteAndEditAccessReview({
     model: NetworkMapModel,

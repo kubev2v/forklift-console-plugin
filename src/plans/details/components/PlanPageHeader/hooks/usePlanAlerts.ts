@@ -11,10 +11,11 @@ import {
   type V1beta1PlanStatusConditions,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
+import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { CATEGORY_TYPES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
-import { useTypedK8sWatchResource } from '@utils/hooks/useTypedK8sWatchResource';
+import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 
 import { usePlanMappingData } from '../../../hooks/usePlanMappingData';
 import { getPlanStatus } from '../../PlanStatus/utils/utils';
@@ -23,21 +24,23 @@ const usePlanAlerts = (plan: V1beta1Plan) => {
   const namespace = getNamespace(plan);
   const status = getPlanStatus(plan);
 
-  const [networkMaps, networkMapsLoaded, networkMapsError] = useTypedK8sWatchResource<
-    V1beta1NetworkMap[]
-  >({
-    groupVersionKind: NetworkMapModelGroupVersionKind,
-    isList: true,
-    namespace,
-    namespaced: true,
-  });
+  const [networkMaps, networkMapsLoaded, networkMapsError] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1NetworkMap[]>({
+      groupVersionKind: NetworkMapModelGroupVersionKind,
+      isList: true,
+      namespace,
+      namespaced: true,
+    }),
+  );
 
-  const [storageMaps] = useTypedK8sWatchResource<V1beta1StorageMap[]>({
-    groupVersionKind: StorageMapModelGroupVersionKind,
-    isList: true,
-    namespace,
-    namespaced: true,
-  });
+  const [storageMaps] = toTypedWatchResult(
+    useK8sWatchResource<V1beta1StorageMap[]>({
+      groupVersionKind: StorageMapModelGroupVersionKind,
+      isList: true,
+      namespace,
+      namespaced: true,
+    }),
+  );
 
   const [sourceProvider] = usePlanProviders(plan, namespace ?? '');
   const [providerStorages] = useSourceStorages(sourceProvider);
