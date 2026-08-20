@@ -7,7 +7,6 @@ import {
   NetworkMapModelRef,
   type V1beta1NetworkMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   EmptyState,
   EmptyStateBody,
@@ -19,7 +18,7 @@ import {
 import { getName } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type NetworkMapSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'status'> & {
@@ -43,13 +42,11 @@ const NetworkMapSelect = (
   ref: ForwardedRef<HTMLButtonElement>,
 ) => {
   const { t } = useForkliftTranslation();
-  const [allNetworkMaps] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1NetworkMap[]>({
-      groupVersionKind: NetworkMapModelGroupVersionKind,
-      isList: true,
-      namespace,
-    }),
-  );
+  const [allNetworkMaps] = useK8sWatchResource<V1beta1NetworkMap[]>({
+    groupVersionKind: NetworkMapModelGroupVersionKind,
+    isList: true,
+    namespace,
+  });
 
   const networkMapsListUrl = getResourceUrl({
     namespace,

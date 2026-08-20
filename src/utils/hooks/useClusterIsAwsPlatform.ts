@@ -1,6 +1,6 @@
-import { type K8sResourceKind, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import type { K8sResourceKind } from '@openshift-console/dynamic-plugin-sdk';
 import { AWS_PLATFORM, INFRASTRUCTURE_GVK } from '@utils/constants';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 type InfrastructureResource = K8sResourceKind & {
   status?: {
@@ -11,12 +11,10 @@ type InfrastructureResource = K8sResourceKind & {
 };
 
 export const useClusterIsAwsPlatform = (): boolean => {
-  const [infrastructure, loaded] = toTypedWatchResult(
-    useK8sWatchResource<InfrastructureResource>({
-      groupVersionKind: INFRASTRUCTURE_GVK,
-      name: 'cluster',
-    }),
-  );
+  const [infrastructure, loaded] = useK8sWatchResource<InfrastructureResource>({
+    groupVersionKind: INFRASTRUCTURE_GVK,
+    name: 'cluster',
+  });
 
   if (!loaded) {
     return false;

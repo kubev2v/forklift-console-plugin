@@ -1,6 +1,6 @@
-import { type K8sResourceKind, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import type { K8sResourceKind } from '@openshift-console/dynamic-plugin-sdk';
 import { Namespace } from '@utils/constants';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import {
   LIGHTSPEED_OPERATOR_PACKAGE,
@@ -15,21 +15,19 @@ type UseLightspeedMcpStatusResult = {
 };
 
 export const useLightspeedMcpStatus = (): UseLightspeedMcpStatusResult => {
-  const [subscriptions, subscriptionsLoaded, subscriptionsError] = toTypedWatchResult(
-    useK8sWatchResource<K8sResourceKind[]>({
-      groupVersionKind: SubscriptionModelGroupVersionKind,
-      isList: true,
-    }),
-  );
+  const [subscriptions, subscriptionsLoaded, subscriptionsError] = useK8sWatchResource<
+    K8sResourceKind[]
+  >({
+    groupVersionKind: SubscriptionModelGroupVersionKind,
+    isList: true,
+  });
 
-  const [mcpService, mcpServiceLoaded, mcpServiceError] = toTypedWatchResult(
-    useK8sWatchResource<K8sResourceKind>({
-      groupVersionKind: ServiceModelGroupVersionKind,
-      name: MTV_MCP_SERVICE_NAME,
-      namespace: Namespace.OpenshiftMtv,
-      namespaced: true,
-    }),
-  );
+  const [mcpService, mcpServiceLoaded, mcpServiceError] = useK8sWatchResource<K8sResourceKind>({
+    groupVersionKind: ServiceModelGroupVersionKind,
+    name: MTV_MCP_SERVICE_NAME,
+    namespace: Namespace.OpenshiftMtv,
+    namespaced: true,
+  });
 
   const loaded =
     (subscriptionsLoaded || Boolean(subscriptionsError)) &&

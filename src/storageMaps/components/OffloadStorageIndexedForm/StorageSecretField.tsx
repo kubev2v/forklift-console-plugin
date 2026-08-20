@@ -5,14 +5,11 @@ import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import Select from '@components/common/Select';
 import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@forklift-ui/types';
-import {
-  getGroupVersionKindForModel,
-  useK8sWatchResource,
-} from '@openshift-console/dynamic-plugin-sdk';
+import { getGroupVersionKindForModel } from '@openshift-console/dynamic-plugin-sdk';
 import { FormGroup, SelectList, SelectOption, Stack, StackItem } from '@patternfly/react-core';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 import { StorageMapFieldId } from '@utils/storage/types';
 
@@ -30,14 +27,12 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
     formState: { isSubmitting },
   } = useFormContext();
 
-  const [secrets] = toTypedWatchResult(
-    useK8sWatchResource<IoK8sApiCoreV1Secret[]>({
-      groupVersionKind: getGroupVersionKindForModel(SecretModel),
-      isList: true,
-      namespace: getNamespace(sourceProvider),
-      namespaced: true,
-    }),
-  );
+  const [secrets] = useK8sWatchResource<IoK8sApiCoreV1Secret[]>({
+    groupVersionKind: getGroupVersionKindForModel(SecretModel),
+    isList: true,
+    namespace: getNamespace(sourceProvider),
+    namespaced: true,
+  });
 
   return (
     <FormGroup

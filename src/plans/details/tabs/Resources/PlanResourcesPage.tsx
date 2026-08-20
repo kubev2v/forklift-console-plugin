@@ -7,8 +7,7 @@ import {
   type ProviderVirtualMachine,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { usePlan } from '../../hooks/usePlan';
 import type { PlanPageProps } from '../../utils/types';
@@ -18,14 +17,12 @@ import { getPlanResourcesTableProps } from './utils/utils';
 
 const PlanResourcesPage: FC<PlanPageProps> = ({ name, namespace }) => {
   const { plan } = usePlan(name, namespace);
-  const [provider, providerLoaded, providerLodeError] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1Provider>({
-      groupVersionKind: ProviderModelGroupVersionKind,
-      name: plan?.spec?.provider?.source?.name,
-      namespace: plan?.spec?.provider?.source?.namespace,
-      namespaced: true,
-    }),
-  );
+  const [provider, providerLoaded, providerLodeError] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    name: plan?.spec?.provider?.source?.name,
+    namespace: plan?.spec?.provider?.source?.namespace,
+    namespaced: true,
+  });
 
   const {
     error: inventoryLoadError,

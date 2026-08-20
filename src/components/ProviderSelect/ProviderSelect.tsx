@@ -8,7 +8,6 @@ import {
   ProviderModelRef,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   EmptyState,
   EmptyStateVariant,
@@ -21,9 +20,9 @@ import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytic
 import { getName } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
 import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { ForkliftTrans } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { ProviderStatus } from '@utils/types';
@@ -61,13 +60,11 @@ const ProviderSelect = (
   const isDarkTheme = useIsDarkTheme();
   const isAwsPlatform = useClusterIsAwsPlatform();
   const { trackEvent } = useForkliftAnalytics();
-  const [rawProviders, loaded] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1Provider[]>({
-      groupVersionKind: ProviderModelGroupVersionKind,
-      isList: true,
-      namespace,
-    }),
-  );
+  const [rawProviders, loaded] = useK8sWatchResource<V1beta1Provider[]>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    isList: true,
+    namespace,
+  });
 
   const providers = useMemo(
     () => (loaded && !isEmpty(rawProviders) ? extractProviders(rawProviders) : []),

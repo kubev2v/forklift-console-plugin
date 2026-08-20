@@ -247,6 +247,12 @@ export const createEslintConfig = () =>
           {
             paths: [
               {
+                importNames: ['useK8sWatchResource'],
+                message:
+                  "Import useK8sWatchResource from '@utils/hooks/useK8sWatchResource'. The SDK hook types the error slot as any.",
+                name: '@openshift-console/dynamic-plugin-sdk',
+              },
+              {
                 importNames: ['default', '*'],
                 message:
                   "Do not import React using default or star import. Import specific exports instead (e.g., `import { useState } from 'react'`).",
@@ -449,6 +455,24 @@ export const createEslintConfig = () =>
       // Unit tests only — do not apply RTL rules to Playwright specs under testing/
       files: ['src/**/__tests__/**/*.{ts,tsx}', 'src/**/*.{test,spec}.{ts,tsx}'],
     },
+    {
+      files: ['src/utils/hooks/useK8sWatchResource.ts'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                importNames: ['default', '*'],
+                message:
+                  "Do not import React using default or star import. Import specific exports instead (e.g., `import { useState } from 'react'`).",
+                name: 'react',
+              },
+            ],
+          },
+        ],
+      },
+    },
     // TypeaheadSelect component specific rules
     {
       files: ['**/TypeaheadSelect/*.tsx'],
@@ -479,7 +503,11 @@ export const createEslintConfig = () =>
     },
     // Testing directory specific rules
     {
-      files: ['testing/**/*.{js,ts,jsx,tsx}', '**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}'],
+      files: [
+        'testing/**/*.{js,ts,jsx,tsx}',
+        '**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}',
+        'src/**/*.{test,spec}.{ts,tsx}',
+      ],
       rules: {
         '@cspell/spellchecker': 'off',
         '@typescript-eslint/class-methods-use-this': 'off',
@@ -505,6 +533,7 @@ export const createEslintConfig = () =>
         'max-lines-per-function': 'off',
         'no-await-in-loop': 'off',
         'no-console': 'off',
+        'no-restricted-imports': 'off',
         'no-warning-comments': 'off',
         'perfectionist/sort-objects': 'off',
         'react-refresh/only-export-components': 'off',

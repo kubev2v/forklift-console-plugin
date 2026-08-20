@@ -72,7 +72,7 @@ import {
 
 ### Watching Resources
 ```typescript
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 const [providers, loaded, error] = useK8sWatchResource<V1beta1Provider[]>({
   groupVersionKind: ProviderModelGroupVersionKind,

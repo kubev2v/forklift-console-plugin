@@ -4,10 +4,9 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import type { V1NetworkAttachmentDefinition } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { type ForkliftSettingsValues, SettingsFields } from '../../utils/types';
@@ -19,16 +18,14 @@ const EditControllerTransferNetwork: FC = () => {
   const { t } = useForkliftTranslation();
   const { control } = useFormContext<ForkliftSettingsValues>();
 
-  const [nads, loaded, loadError] = toTypedWatchResult(
-    useK8sWatchResource<V1NetworkAttachmentDefinition[]>({
-      groupVersionKind: {
-        group: 'k8s.cni.cncf.io',
-        kind: 'NetworkAttachmentDefinition',
-        version: 'v1',
-      },
-      isList: true,
-    }),
-  );
+  const [nads, loaded, loadError] = useK8sWatchResource<V1NetworkAttachmentDefinition[]>({
+    groupVersionKind: {
+      group: 'k8s.cni.cncf.io',
+      kind: 'NetworkAttachmentDefinition',
+      version: 'v1',
+    },
+    isList: true,
+  });
 
   const controllerTransferNetworkOptions = useMemo(() => {
     if (!loaded || loadError) {

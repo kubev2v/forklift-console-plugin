@@ -122,7 +122,7 @@ src/
 ## Key Patterns
 
 - GVK constants: `ProviderModelGroupVersionKind`, `PlanModelGroupVersionKind`, etc.
-- Use `useK8sWatchResource` from Console SDK for resource watching
+- Use `useK8sWatchResource` from `@utils/hooks/useK8sWatchResource` for resource watching
 - Use `k8sCreate`, `k8sUpdate`, `k8sPatch`, `k8sDelete` for operations
 - Jira project: **MTV** (tickets are MTV-XXXX)
 

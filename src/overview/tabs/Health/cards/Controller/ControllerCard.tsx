@@ -5,9 +5,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import type { IoK8sApiCoreV1Pod, V1beta1ForkliftController } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Card, CardBody, CardHeader, CardTitle } from '@patternfly/react-core';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { PodsTable } from './PodsTable';
 
@@ -19,16 +18,14 @@ type ControllerCardProps = {
 const ControllerCard: FC<ControllerCardProps> = ({ limit, obj }) => {
   const { t } = useForkliftTranslation();
 
-  const [pods, loaded, loadError] = toTypedWatchResult(
-    useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
-      isList: true,
-      kind: 'Pod',
-      limit,
-      namespace: obj?.metadata?.namespace,
-      namespaced: true,
-      selector: { matchLabels: { app: 'forklift' } },
-    }),
-  );
+  const [pods, loaded, loadError] = useK8sWatchResource<IoK8sApiCoreV1Pod[]>({
+    isList: true,
+    kind: 'Pod',
+    limit,
+    namespace: obj?.metadata?.namespace,
+    namespaced: true,
+    selector: { matchLabels: { app: 'forklift' } },
+  });
 
   return (
     <Card className="pf-m-full-height" data-testid="health-controller-card">

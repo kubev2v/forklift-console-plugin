@@ -6,9 +6,8 @@ import {
   type V1beta1Migration,
   type V1beta1Plan,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getNamespace, getOwnerReference, getUID } from '@utils/crds/common/selectors';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import MigrationsTable from './components/MigrationsTable';
 import { sortMigrationsByStartedAtDate } from './utils/utils';
@@ -18,14 +17,12 @@ type MigrationsSectionProps = {
 };
 
 const MigrationsSection: FC<MigrationsSectionProps> = ({ plan }) => {
-  const [migrations, loaded, loadError] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1Migration[]>({
-      groupVersionKind: MigrationModelGroupVersionKind,
-      isList: true,
-      namespace: getNamespace(plan),
-      namespaced: true,
-    }),
-  );
+  const [migrations, loaded, loadError] = useK8sWatchResource<V1beta1Migration[]>({
+    groupVersionKind: MigrationModelGroupVersionKind,
+    isList: true,
+    namespace: getNamespace(plan),
+    namespaced: true,
+  });
 
   const planMigrations = useMemo(() => {
     const filtered = migrations.filter(

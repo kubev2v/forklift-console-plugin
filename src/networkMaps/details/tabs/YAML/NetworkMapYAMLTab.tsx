@@ -4,8 +4,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import LoadingSuspend from '@components/LoadingSuspend';
 import { ResourceYAMLEditorWrapper } from '@components/ResourceYAMLEditorWrapper/ResourceYAMLEditorWrapper';
 import { NetworkMapModelGroupVersionKind, type V1beta1NetworkMap } from '@forklift-ui/types';
-import { ResourceYAMLEditor, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { ResourceYAMLEditor } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 type NetworkMapYAMLTabProps = {
   name: string;
@@ -15,15 +15,13 @@ type NetworkMapYAMLTabProps = {
 const NetworkMapYAMLTab: FC<NetworkMapYAMLTabProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
 
-  const [obj, loaded, loadError] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1NetworkMap>({
-      groupVersionKind: NetworkMapModelGroupVersionKind,
-      isList: false,
-      name,
-      namespace,
-      namespaced: true,
-    }),
-  );
+  const [obj, loaded, loadError] = useK8sWatchResource<V1beta1NetworkMap>({
+    groupVersionKind: NetworkMapModelGroupVersionKind,
+    isList: false,
+    name,
+    namespace,
+    namespaced: true,
+  });
 
   return (
     <LoadingSuspend loaded={loaded} loadError={loadError} obj={obj}>

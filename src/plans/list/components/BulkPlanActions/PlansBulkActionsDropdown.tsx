@@ -4,9 +4,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Dropdown, DropdownList, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import BulkArchivePlansDropdownItem from './BulkArchivePlansDropdownItem';
 import BulkDeletePlansDropdownItem from './BulkDeletePlansDropdownItem';
@@ -22,14 +21,12 @@ const PlansBulkActionsDropdown: FC<PlansBulkActionsDropdownProps> = ({
   const { t } = useForkliftTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
-  const [plans] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1Plan[]>({
-      groupVersionKind: PlanModelGroupVersionKind,
-      isList: true,
-      namespace,
-      namespaced: true,
-    }),
-  );
+  const [plans] = useK8sWatchResource<V1beta1Plan[]>({
+    groupVersionKind: PlanModelGroupVersionKind,
+    isList: true,
+    namespace,
+    namespaced: true,
+  });
 
   const { canDelete, canPatch } = useGetDeleteAndEditAccessReview({
     model: PlanModel,

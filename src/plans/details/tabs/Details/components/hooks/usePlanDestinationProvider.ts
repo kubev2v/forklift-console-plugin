@@ -3,9 +3,8 @@ import {
   type V1beta1Plan,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanDestinationProvider } from '@utils/crds/plans/selectors';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 type UsePlanDestinationProvider = (plan: V1beta1Plan) => {
   destinationProvider: V1beta1Provider;
@@ -15,15 +14,13 @@ type UsePlanDestinationProvider = (plan: V1beta1Plan) => {
 const usePlanDestinationProvider: UsePlanDestinationProvider = (plan) => {
   const { name: destinationName, namespace: destinationNamespace } =
     getPlanDestinationProvider(plan);
-  const [destinationProvider, loaded, loadError] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1Provider>({
-      groupVersionKind: ProviderModelGroupVersionKind,
-      isList: false,
-      name: destinationName,
-      namespace: destinationNamespace,
-      namespaced: true,
-    }),
-  );
+  const [destinationProvider, loaded, loadError] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    isList: false,
+    name: destinationName,
+    namespace: destinationNamespace,
+    namespaced: true,
+  });
 
   return {
     destinationProvider,

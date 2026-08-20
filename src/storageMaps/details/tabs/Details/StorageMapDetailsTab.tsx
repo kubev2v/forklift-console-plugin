@@ -18,7 +18,7 @@ import {
   type V1beta1Provider,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 import {
   getMapDestinationProviderName,
@@ -26,7 +26,7 @@ import {
   getMapSourceProviderName,
   getMapSourceProviderNamespace,
 } from '@utils/crds/maps/selectors';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import DetailsSection from '../../components/DetailsSection/DetailsSection';
 import StorageMapEdit, { type StorageMapEditProps } from '../../components/StorageMapEdit';
@@ -40,36 +40,31 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
 
-  const [storageMap, storageMapLoaded, storageMapLoadError] = toTypedWatchResult(
+  const [storageMap, storageMapLoaded, storageMapLoadError] =
     useK8sWatchResource<V1beta1StorageMap>({
       groupVersionKind: StorageMapModelGroupVersionKind,
       isList: false,
       name,
       namespace,
       namespaced: true,
-    }),
-  );
+    });
 
-  const [sourceProvider] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1Provider>({
-      groupVersionKind: ProviderModelGroupVersionKind,
-      isList: false,
-      name: getMapSourceProviderName(storageMap),
-      namespace: getMapSourceProviderNamespace(storageMap),
-      namespaced: true,
-    }),
-  );
+  const [sourceProvider] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    isList: false,
+    name: getMapSourceProviderName(storageMap),
+    namespace: getMapSourceProviderNamespace(storageMap),
+    namespaced: true,
+  });
   const [sourceStorages] = useSourceStorages(sourceProvider);
 
-  const [destinationProvider] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1Provider>({
-      groupVersionKind: ProviderModelGroupVersionKind,
-      isList: false,
-      name: getMapDestinationProviderName(storageMap),
-      namespace: getMapDestinationProviderNamespace(storageMap),
-      namespaced: true,
-    }),
-  );
+  const [destinationProvider] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    isList: false,
+    name: getMapDestinationProviderName(storageMap),
+    namespace: getMapDestinationProviderNamespace(storageMap),
+    namespaced: true,
+  });
 
   const sourceStoragesMap = new Map(sourceStorages.map((storage) => [storage.id, storage]));
 

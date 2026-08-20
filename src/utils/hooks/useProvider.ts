@@ -1,6 +1,5 @@
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 type UseProvider = (
   name: string | undefined,
@@ -14,17 +13,15 @@ type UseProvider = (
 export const useProvider: UseProvider = (name, namespace) => {
   const shouldWatch = Boolean(name && namespace);
 
-  const [provider, loaded, loadError] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1Provider>(
-      shouldWatch
-        ? {
-            groupVersionKind: ProviderModelGroupVersionKind,
-            name,
-            namespace,
-            namespaced: true,
-          }
-        : null,
-    ),
+  const [provider, loaded, loadError] = useK8sWatchResource<V1beta1Provider>(
+    shouldWatch
+      ? {
+          groupVersionKind: ProviderModelGroupVersionKind,
+          name,
+          namespace,
+          namespaced: true,
+        }
+      : null,
   );
 
   return {

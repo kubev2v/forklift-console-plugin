@@ -18,7 +18,7 @@ import {
   type V1beta1NetworkMap,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useK8sWatchResource, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 import {
   getMapDestinationProviderName,
@@ -26,7 +26,7 @@ import {
   getMapSourceProviderName,
   getMapSourceProviderNamespace,
 } from '@utils/crds/maps/selectors';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import DetailsSection from '../../components/DetailsSection/DetailsSection';
 import NetworkMapEdit from '../../components/MapsSection/NetworkMapEdit';
@@ -41,37 +41,31 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
 
-  const [networkMap, loaded, loadError] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1NetworkMap>({
-      groupVersionKind: NetworkMapModelGroupVersionKind,
-      isList: false,
-      name,
-      namespace,
-      namespaced: true,
-    }),
-  );
+  const [networkMap, loaded, loadError] = useK8sWatchResource<V1beta1NetworkMap>({
+    groupVersionKind: NetworkMapModelGroupVersionKind,
+    isList: false,
+    name,
+    namespace,
+    namespaced: true,
+  });
 
-  const [sourceProvider] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1Provider>({
-      groupVersionKind: ProviderModelGroupVersionKind,
-      isList: false,
-      name: getMapSourceProviderName(networkMap),
-      namespace: getMapSourceProviderNamespace(networkMap),
-      namespaced: true,
-    }),
-  );
+  const [sourceProvider] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    isList: false,
+    name: getMapSourceProviderName(networkMap),
+    namespace: getMapSourceProviderNamespace(networkMap),
+    namespaced: true,
+  });
 
   const [sourceNetworks] = useSourceNetworks(sourceProvider);
 
-  const [destinationProvider] = toTypedWatchResult(
-    useK8sWatchResource<V1beta1Provider>({
-      groupVersionKind: ProviderModelGroupVersionKind,
-      isList: false,
-      name: getMapDestinationProviderName(networkMap),
-      namespace: getMapDestinationProviderNamespace(networkMap),
-      namespaced: true,
-    }),
-  );
+  const [destinationProvider] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    isList: false,
+    name: getMapDestinationProviderName(networkMap),
+    namespace: getMapDestinationProviderNamespace(networkMap),
+    namespaced: true,
+  });
   const [destinationNetworks] = useOpenShiftNetworks(destinationProvider);
 
   const currentMappings = useMemo(

@@ -4,13 +4,12 @@ import { SOURCE_SECRET_LABEL } from 'src/plans/create/utils/copyDecryptionSecret
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
 import {
   getGroupVersionKindForModel,
-  useK8sWatchResource,
   type WatchK8sResource,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getLUKSSecretName, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
-import { toTypedWatchResult } from '@utils/hooks/toTypedWatchResult';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 import { onDiskDecryptionConfirm } from '../utils/utils';
@@ -67,7 +66,7 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     [secretName, secretNamespace],
   );
 
-  const [secret] = toTypedWatchResult(useK8sWatchResource<IoK8sApiCoreV1Secret>(watchResource));
+  const [secret] = useK8sWatchResource<IoK8sApiCoreV1Secret>(watchResource);
 
   const derivedNbdeClevis = getNbdeClevisFromResource(resource);
   const [value, setValue] = useState<string[]>([]);
