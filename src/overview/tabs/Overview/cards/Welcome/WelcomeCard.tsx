@@ -2,8 +2,6 @@ import { type FC, useContext, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router';
 import migrationIcon from 'src/components/images/resources/migration.svg';
 import { OverviewContext } from 'src/overview/context/OverviewContext';
-import { useIsDarkTheme } from 'src/utils/hooks/useIsDarkTheme';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import { ProviderModelRef } from '@forklift-ui/types';
 import { useActiveNamespace, useFlag } from '@openshift-console/dynamic-plugin-sdk';
@@ -16,12 +14,16 @@ import {
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
-import { type ProviderType, TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { Namespace } from '@utils/constants';
 import { getResourceUrl } from '@utils/getResourceUrl';
+import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
+import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
+import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
+import type { ProviderTypes } from '@utils/providers/constants';
+import { getProviderTypeOptions } from '@utils/providers/getProviderTypeOptions';
 
-import { providerTypes } from './utils/providerTypes';
 import { ProviderCard } from './ProviderCard';
 
 const WelcomeCard: FC = () => {
@@ -29,19 +31,13 @@ const WelcomeCard: FC = () => {
   const { trackEvent } = useForkliftAnalytics();
   const navigate = useNavigate();
   const isDarkTheme = useIsDarkTheme();
+  const { isAwsPlatform, loaded: isAwsPlatformLoaded } = useClusterIsAwsPlatform();
   const { data: { hideWelcomeCardByContext } = {}, setData } = useContext(OverviewContext);
-  const providerItems = providerTypes(isDarkTheme);
 
-  const providerCardData = useMemo(
-    () => [
-      { image: providerItems.vsphere.logo, provider: providerItems.vsphere },
-      { image: providerItems.ova.logo, provider: providerItems.ova },
-      { image: providerItems.openstack.logo, provider: providerItems.openstack },
-      { image: providerItems.hyperv.logo, provider: providerItems.hyperv },
-      { image: providerItems.ovirt.logo, provider: providerItems.ovirt },
-      { image: providerItems.openshift.logo, provider: providerItems.openshift },
-    ],
-    [providerItems],
+  // Include EC2 only after the platform check confirms AWS.
+  const providerTypeOptions = useMemo(
+    () => getProviderTypeOptions(isDarkTheme, isAwsPlatformLoaded && isAwsPlatform),
+    [isAwsPlatform, isAwsPlatformLoaded, isDarkTheme],
   );
 
   const providersListUrl = useMemo(() => {
@@ -52,13 +48,11 @@ const WelcomeCard: FC = () => {
   }, []);
   const providersCreateUrl = `${providersListUrl}/~new`;
 
-  const navigateToProvider = (type: ProviderType) => {
+  const navigateToProvider = (type: ProviderTypes): void => {
     trackEvent(TELEMETRY_EVENTS.OVERVIEW_WELCOME_PROVIDER_CLICKED, {
       providerType: type,
     });
-    navigate(`${providersCreateUrl}?providerType=${type}`, {
-      state: { providerType: type as keyof typeof providerItems },
-    })?.catch(() => undefined);
+    navigate(`${providersCreateUrl}?providerType=${type}`)?.catch(() => undefined);
   };
   const [activeNamespace] = useActiveNamespace();
   const kubevirtInstalled = useFlag('KUBEVIRT_DYNAMIC');
@@ -113,16 +107,15 @@ const WelcomeCard: FC = () => {
                     className="forklift-overview__welcome-tiles"
                     spaceItems={{ default: 'spaceItemsSm' }}
                   >
-                    {providerCardData.map(({ image, provider }) => (
-                      <FlexItem key={provider.key}>
+                    {providerTypeOptions.map((option) => (
+                      <FlexItem key={option.value}>
                         <ProviderCard
-                          image={image}
+                          image={option.icon}
                           onClick={() => {
-                            navigateToProvider(provider.key);
+                            navigateToProvider(option.value);
                           }}
-                        >
-                          {provider.title}
-                        </ProviderCard>
+                          title={option.label}
+                        />
                       </FlexItem>
                     ))}
                   </Flex>

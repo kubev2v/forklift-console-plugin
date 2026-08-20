@@ -10,15 +10,19 @@ type InfrastructureResource = K8sResourceKind & {
   };
 };
 
-export const useClusterIsAwsPlatform = (): boolean => {
+type ClusterAwsPlatformState = {
+  isAwsPlatform: boolean;
+  loaded: boolean;
+};
+
+export const useClusterIsAwsPlatform = (): ClusterAwsPlatformState => {
   const [infrastructure, loaded] = useK8sWatchResource<InfrastructureResource>({
     groupVersionKind: INFRASTRUCTURE_GVK,
     name: 'cluster',
   });
 
-  if (!loaded) {
-    return false;
-  }
-
-  return infrastructure?.status?.platformStatus?.type === AWS_PLATFORM;
+  return {
+    isAwsPlatform: loaded && infrastructure?.status?.platformStatus?.type === AWS_PLATFORM,
+    loaded,
+  };
 };

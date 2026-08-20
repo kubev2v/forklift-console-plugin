@@ -10,14 +10,14 @@ import {
 } from 'src/components/images/logos';
 
 import { t } from '@utils/i18n';
-import { PROVIDER_TYPES } from '@utils/providers/constants';
+import { PROVIDER_TYPES, type ProviderTypes } from '@utils/providers/constants';
 
 type ProviderTypeOption = {
   description: string;
   icon: ReactElement;
   label: string;
   techPreview?: boolean;
-  value: string;
+  value: ProviderTypes;
 };
 
 export const getProviderTypeOptions = (
