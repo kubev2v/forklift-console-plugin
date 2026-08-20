@@ -202,11 +202,14 @@ This supports multi-plugin / multi-target offload: the same datastore can map to
 target StorageClasses and/or offload plugin configurations (e.g. XCOPY vs another plugin).
 
 Implications in the UI:
-- Storage map create and plan storage mapping tables do **not** disable an already-selected
-  source when adding another row (uncapped Add).
+- Storage map create, details edit, and plan storage mapping tables do **not** disable an
+  already-selected source when adding another row (uncapped Add).
 - Plan create/edit remove uses `isSoleMappingOfUsedSource` so a used VM storage stays covered:
   duplicate rows for the same used source may be removed; the last covering row cannot.
-- Network maps still treat source networks as unique per row (no equivalent rule).
+  Coverage is unit-tested (`isSoleMappingOfUsedSource` + `getCreatePlanStorageMapRemoveButton`).
+- Create and details Edit both require every row to be complete; extra empty/incomplete rows
+  block Create/Save (they are not stripped on submit).
+- Network maps already allow the same source network on multiple rows (MTV-5511 NAD pool mapping).
 
 ## Blast Radius Notes
 

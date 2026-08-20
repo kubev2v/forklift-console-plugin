@@ -132,7 +132,7 @@ test.describe(
         await expect(addMappingButton).toBeEnabled();
         await storageMapCreatePage.addMapping();
         await expect(page.getByTestId('field-row-2')).toBeVisible();
-        // Remove the empty third row before create so validation stays clean.
+        // Extra empty rows now fail validation (same as Edit); remove before submit.
         await page.getByTestId('remove-row-2').click();
         await expect(page.getByTestId('field-row-2')).toHaveCount(0);
       });
