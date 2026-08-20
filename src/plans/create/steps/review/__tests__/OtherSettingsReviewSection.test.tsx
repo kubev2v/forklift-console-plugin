@@ -23,10 +23,12 @@ jest.mock('@patternfly/react-core', () => ({
   }),
 }));
 
+const EMPTY_DISK_PASS_PHRASES: unknown[] = [];
+
 const TestWrapper = ({
   sourceProvider,
   nbdeClevis = false,
-  diskPassPhrases = [],
+  diskPassPhrases = EMPTY_DISK_PASS_PHRASES,
   diskDecryptionType = DiskDecryptionType.New,
   existingLUKSSecret,
 }: {

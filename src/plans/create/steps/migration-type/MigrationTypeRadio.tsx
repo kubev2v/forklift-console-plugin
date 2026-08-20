@@ -14,6 +14,8 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { migrationTypeLabels, MigrationTypeValue } from './constants';
 
+const EMPTY_CBT_DISABLED_VMS: ProviderVirtualMachine[] = [];
+
 type MigrationTypeRadioProps = {
   cbtDisabledVms?: ProviderVirtualMachine[];
   migrationType: MigrationTypeValue;
@@ -23,7 +25,7 @@ type MigrationTypeRadioProps = {
 };
 
 const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
-  cbtDisabledVms = [],
+  cbtDisabledVms = EMPTY_CBT_DISABLED_VMS,
   migrationType,
   onChange,
   sourceProvider,
