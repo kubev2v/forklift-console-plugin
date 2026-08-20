@@ -22,5 +22,5 @@ export const useK8sWatchResource = <R extends K8sResourceCommon | K8sResourceCom
 ): TypedWatchK8sResult<R> => {
   const result = useSdkK8sWatchResource<R>(initResource);
 
-  return [result.at(0) as R, result.at(1) as boolean, result.at(2) as Error | null];
+  return [result.at(0) as R, result.at(1) as boolean, (result.at(2) ?? null) as Error | null];
 };

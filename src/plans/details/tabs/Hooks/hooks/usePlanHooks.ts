@@ -31,8 +31,12 @@ export const usePlanHooks: UsePlanHooks = (plan) => {
     namespaced: true,
   });
 
-  const postHookResource = hookRecourses.find((hook) => getName(hook) === postHook?.hook?.name);
-  const preHookResource = hookRecourses.find((hook) => getName(hook) === preHook?.hook?.name);
+  const postHookResource = (hookRecourses ?? []).find(
+    (hook) => getName(hook) === postHook?.hook?.name,
+  );
+  const preHookResource = (hookRecourses ?? []).find(
+    (hook) => getName(hook) === preHook?.hook?.name,
+  );
 
   // Check for unsupported hooks
   const warning = validateHooks(plan);
