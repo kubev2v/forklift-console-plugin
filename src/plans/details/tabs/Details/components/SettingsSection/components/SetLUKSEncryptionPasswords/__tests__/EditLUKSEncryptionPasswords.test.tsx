@@ -282,12 +282,30 @@ describe('EditLUKSEncryptionPasswords', () => {
 
     expect(screen.getByRole('button', { name: /save/i })).toBeDisabled();
     expect(screen.getByTestId('edit-luks-secret-loading')).toBeInTheDocument();
+    expect(screen.queryByTestId('luks-passphrase-input-list')).not.toBeInTheDocument();
 
     mockUseK8sWatchResource.mockReturnValue([{ data: {} }, true, null]);
     rerender(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
 
     expect(screen.getByRole('button', { name: /save/i })).toBeEnabled();
     expect(screen.queryByTestId('edit-luks-secret-loading')).not.toBeInTheDocument();
+    expect(screen.getByTestId('luks-passphrase-input-list')).toBeInTheDocument();
+  });
+
+  it('shows decoded passphrases after the secret watch resolves', async () => {
+    mockGetPlanVirtualMachines.mockReturnValue([{ nbdeClevis: false }]);
+    mockUseK8sWatchResource.mockReturnValue([{}, false, null]);
+
+    const { rerender } = render(
+      <EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />,
+    );
+
+    expect(screen.queryByTestId('luks-passphrase-input-list')).not.toBeInTheDocument();
+
+    mockUseK8sWatchResource.mockReturnValue([{ data: { 0: btoa('asdasd') } }, true, null]);
+    rerender(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
+
+    expect(await screen.findByText('Passphrases: asdasd')).toBeInTheDocument();
   });
 
   it('disables Save and shows error when secret watch fails', () => {

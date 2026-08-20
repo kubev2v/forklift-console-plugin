@@ -176,7 +176,7 @@ const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
                   value={DECRYPTION_MODE_PASSPHRASES}
                 />
 
-                {decryptionMode === DECRYPTION_MODE_PASSPHRASES && (
+                {decryptionMode === DECRYPTION_MODE_PASSPHRASES && !isSecretWatchPending && (
                   <>
                     <FormGroup label={t('Passphrases for LUKS encrypted devices')} />
                     <LUKSPassphraseInputList onChange={setValue} value={value} />
