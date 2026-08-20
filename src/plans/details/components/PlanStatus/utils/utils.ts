@@ -166,10 +166,8 @@ const isPlanPendingExecution = (plan: V1beta1Plan): boolean => {
 
 export const isPlanArchived = (plan: V1beta1Plan) => {
   const conditions = getConditions(plan);
-  return (
-    (plan?.spec?.archived && !conditions.includes(PlanStatuses.Archived)) ?? // Archiving
-    conditions.includes(PlanStatuses.Archived)
-  );
+  const hasArchivedCondition = conditions.includes(PlanStatuses.Archived);
+  return Boolean(plan?.spec?.archived) || hasArchivedCondition;
 };
 
 export const getPlanStatus = (plan: V1beta1Plan): PlanStatuses => {
