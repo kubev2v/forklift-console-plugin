@@ -3,13 +3,13 @@ import {
   type V1beta1Plan,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanDestinationProvider } from '@utils/crds/plans/selectors';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 type UsePlanDestinationProvider = (plan: V1beta1Plan) => {
   destinationProvider: V1beta1Provider;
   loaded: boolean;
-  loadError: Error;
+  loadError: Error | null;
 };
 const usePlanDestinationProvider: UsePlanDestinationProvider = (plan) => {
   const { name: destinationName, namespace: destinationNamespace } =

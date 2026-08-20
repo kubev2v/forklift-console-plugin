@@ -63,7 +63,7 @@ const NetworkMapStep = () => {
                       unregister([NetworkMapFieldId.NetworkMap, NetworkMapFieldId.NetworkMapName]);
                       handleNetworkMapTypeChange(NetworkMapType.Existing);
                     }}
-                    value={networkTypeField.value}
+                    value={NetworkMapType.Existing}
                   />
 
                   {networkTypeField.value === NetworkMapType.Existing && (
@@ -89,7 +89,7 @@ const NetworkMapStep = () => {
                       unregister(NetworkMapFieldId.ExistingNetworkMap);
                       handleNetworkMapTypeChange(NetworkMapType.New);
                     }}
-                    value={networkTypeField.value}
+                    value={NetworkMapType.New}
                   />
 
                   {networkTypeField.value === NetworkMapType.New && <NewNetworkMapFields />}

@@ -18,7 +18,7 @@ import {
   type V1beta1Provider,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection } from '@patternfly/react-core';
 import {
   getMapDestinationProviderName,
@@ -26,6 +26,7 @@ import {
   getMapSourceProviderName,
   getMapSourceProviderNamespace,
 } from '@utils/crds/maps/selectors';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import DetailsSection from '../../components/DetailsSection/DetailsSection';
 import StorageMapEdit, { type StorageMapEditProps } from '../../components/StorageMapEdit';

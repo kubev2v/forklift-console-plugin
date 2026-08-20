@@ -1,5 +1,5 @@
 import type { IoK8sApiextensionsApiserverPkgApisApiextensionsV1CustomResourceDefinition as CustomResourceDefinition } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { CrdGroupVersionKind, CrdK8sResourceName } from './constants';
 

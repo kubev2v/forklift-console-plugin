@@ -38,11 +38,11 @@ const OffloadStorageRow: FC<OffloadStorageRowProps> = ({
   const [sourceValue, targetValue] = useWatch({
     control,
     name: [sourceFieldId, targetFieldId],
-  });
+  }) as [MappingValue | undefined, MappingValue | undefined];
 
-  const sourceId = (sourceValue as MappingValue | undefined)?.id;
-  const sourceName = (sourceValue as MappingValue | undefined)?.name;
-  const targetName = (targetValue as MappingValue | undefined)?.name;
+  const sourceId = sourceValue?.id;
+  const sourceName = sourceValue?.name;
+  const targetName = targetValue?.name;
 
   const matchedDatastore = sourceStorages.find(
     (ds) => ds.id === sourceId || ds.name === sourceName,

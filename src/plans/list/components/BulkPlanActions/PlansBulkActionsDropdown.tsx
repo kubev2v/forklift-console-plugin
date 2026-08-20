@@ -4,8 +4,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 import { PlanModel, PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Dropdown, DropdownList, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import BulkArchivePlansDropdownItem from './BulkArchivePlansDropdownItem';
 import BulkDeletePlansDropdownItem from './BulkDeletePlansDropdownItem';

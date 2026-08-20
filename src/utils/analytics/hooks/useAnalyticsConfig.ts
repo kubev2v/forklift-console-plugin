@@ -1,10 +1,8 @@
 import { useMemo } from 'react';
 
-import {
-  getGroupVersionKindForModel,
-  useK8sWatchResource,
-} from '@openshift-console/dynamic-plugin-sdk';
+import { getGroupVersionKindForModel } from '@openshift-console/dynamic-plugin-sdk';
 import { ConfigMapModel } from '@utils/constants';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { ConsoleConfigMap, TelemetryConfigField } from '../constants';
 import type { AnalyticsConfig, ConsoleConfigMap as ConsoleConfigMapType } from '../types';

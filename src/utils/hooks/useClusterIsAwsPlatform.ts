@@ -1,5 +1,6 @@
-import { type K8sResourceKind, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import type { K8sResourceKind } from '@openshift-console/dynamic-plugin-sdk';
 import { AWS_PLATFORM, INFRASTRUCTURE_GVK } from '@utils/constants';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 type InfrastructureResource = K8sResourceKind & {
   status?: {

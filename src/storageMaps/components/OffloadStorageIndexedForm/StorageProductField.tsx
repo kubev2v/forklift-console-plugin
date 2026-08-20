@@ -109,7 +109,7 @@ const StorageProductField: FC<StorageProductFieldProps> = ({
             placeholder={t('Select storage product')}
             ref={field.ref}
             testId={fieldId}
-            value={field.value}
+            value={field.value as string | undefined}
           >
             {showRecommendedGroup ? (
               <>

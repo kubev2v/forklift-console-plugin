@@ -658,9 +658,9 @@ const { control, getValues } = useForm<FormValues>();
 ```
 
 ### Kubernetes Resources
-Use hooks from `@openshift-console/dynamic-plugin-sdk`:
+Use `useK8sWatchResource` from `@utils/hooks/useK8sWatchResource` (typed error slot). Other k8s helpers (`k8sCreate`, `useOverlay`, …) still come from `@openshift-console/dynamic-plugin-sdk`:
 ```typescript
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 const [data, loaded, error] = useK8sWatchResource<Resource>({
   groupVersionKind: { group, version, kind },

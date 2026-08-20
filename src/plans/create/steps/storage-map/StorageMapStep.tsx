@@ -62,7 +62,7 @@ const StorageMapStep = () => {
                       ]);
                       handleStorageMapTypeChange(StorageMapType.Existing);
                     }}
-                    value={storageTypeField.value}
+                    value={StorageMapType.Existing}
                   />
 
                   {storageTypeField.value === StorageMapType.Existing && (
@@ -88,7 +88,7 @@ const StorageMapStep = () => {
                       unregister(CreatePlanStorageMapFieldId.ExistingStorageMap);
                       handleStorageMapTypeChange(StorageMapType.New);
                     }}
-                    value={storageTypeField.value}
+                    value={StorageMapType.New}
                   />
 
                   {storageTypeField.value === StorageMapType.New && <NewStorageMapFields />}

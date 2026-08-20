@@ -99,7 +99,7 @@ describe('usePlanMigration', () => {
 
     expect(result.current[0]).toBe(runningMigration);
     expect(result.current[1]).toBe(true);
-    expect(result.current[2]).toBeUndefined();
+    expect(result.current[2]).toBeNull();
   });
 
   it('picks the owned+Running migration out of several unrelated ones', () => {

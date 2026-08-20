@@ -13,7 +13,11 @@ type FolderTreeRowProps = {
 
 const FolderTreeRow: FC<FolderTreeRowProps> = ({ groupVMCountByFolder, row }) => {
   return (
-    <TreeRowWrapper data-testid={row.key} key={row.key} row={{ props: row?.treeRow?.props }}>
+    <TreeRowWrapper
+      data-testid={row.key}
+      key={row.key}
+      row={{ props: row.treeRow?.props as object | undefined }}
+    >
       <Td data-testid={`${row.key}-expand-cell`} dataLabel={nameColumn.label} treeRow={row.treeRow}>
         <FolderNameCell row={row} vmCount={groupVMCountByFolder.get(row.folderName) ?? 0} />
       </Td>

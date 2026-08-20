@@ -10,9 +10,9 @@ import {
   type V1beta1Host,
   type VSphereHostInventory,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Bullseye } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import type { ProviderData } from '@utils/providers/types';
 
 import { hostsFields } from './utils/constants';

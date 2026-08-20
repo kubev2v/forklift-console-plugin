@@ -65,7 +65,7 @@ const DedicatedMigrationHostsField: FC<DedicatedMigrationHostsFieldProps> = ({
             options={options}
             placeholder={t('Select dedicated migration hosts')}
             testId={fieldId}
-            values={field.value ?? []}
+            values={(field.value as string[] | undefined) ?? []}
           />
         )}
       />

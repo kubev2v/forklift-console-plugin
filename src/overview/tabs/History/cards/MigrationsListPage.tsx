@@ -11,8 +11,8 @@ import {
   type V1beta1Migration,
   type V1beta1Plan,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { Namespace } from '@utils/constants';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { dateRangeObjectMatcher, filterMostRecentMigrations } from '../utils/matchers';
 import { getMigrationStatusFromVMs } from '../utils/migrationStatus';

@@ -1,7 +1,7 @@
 import { PlanModelGroupVersionKind, type V1beta1Plan } from '@forklift-ui/types';
 import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getNamespace } from '@utils/crds/common/selectors';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { PlanStatuses } from '../details/components/PlanStatus/utils/types';

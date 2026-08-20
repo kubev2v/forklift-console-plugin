@@ -66,7 +66,7 @@ const NewScriptsFields: FC = () => {
                   <ScriptContentField
                     guestType={guestType}
                     onChange={field.onChange}
-                    value={field.value ?? ''}
+                    value={(field.value as string | undefined) ?? ''}
                   />
                 )}
               />

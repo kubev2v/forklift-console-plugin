@@ -7,7 +7,6 @@ import {
   StorageMapModelRef,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   EmptyState,
   EmptyStateBody,
@@ -19,6 +18,7 @@ import {
 import { getName } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type StorageMapSelectProps = Pick<ComponentProps<typeof Select>, 'onSelect' | 'status'> & {

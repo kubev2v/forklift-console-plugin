@@ -1,12 +1,9 @@
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@forklift-ui/types';
-import {
-  useK8sWatchResource,
-  type WatchK8sResource,
-  type WatchK8sResult,
-} from '@openshift-console/dynamic-plugin-sdk';
+import type { WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
 import { isEmpty } from '@utils/helpers';
+import { type TypedWatchK8sResult, useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
-const useProviders = ({ namespace }: WatchK8sResource): WatchK8sResult<V1beta1Provider[]> =>
+const useProviders = ({ namespace }: WatchK8sResource): TypedWatchK8sResult<V1beta1Provider[]> =>
   useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
     isList: true,

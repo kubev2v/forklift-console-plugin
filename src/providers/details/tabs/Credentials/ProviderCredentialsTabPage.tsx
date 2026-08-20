@@ -7,11 +7,11 @@ import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
 import {
   getGroupVersionKindForModel,
   useAccessReview,
-  useK8sWatchResource,
   useOverlay,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { PageSection, Stack } from '@patternfly/react-core';
 import { EyeIcon, EyeSlashIcon } from '@patternfly/react-icons';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { useProvider } from '../../hooks/useProvider';
 import type { ProviderDetailsPageProps } from '../../utils/types';

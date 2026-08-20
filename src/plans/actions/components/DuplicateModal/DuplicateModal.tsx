@@ -13,7 +13,6 @@ import {
   type V1beta1Plan,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Stack, StackItem, TextInput } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
@@ -25,6 +24,7 @@ import {
   getPlanVirtualMachines,
 } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
 import type { PlanModalProps } from '../types';

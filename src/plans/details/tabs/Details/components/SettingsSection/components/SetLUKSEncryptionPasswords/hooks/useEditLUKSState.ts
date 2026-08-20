@@ -4,12 +4,12 @@ import { SOURCE_SECRET_LABEL } from 'src/plans/create/utils/copyDecryptionSecret
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
 import {
   getGroupVersionKindForModel,
-  useK8sWatchResource,
   type WatchK8sResource,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getLUKSSecretName, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 import { onDiskDecryptionConfirm } from '../utils/utils';

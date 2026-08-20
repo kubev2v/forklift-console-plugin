@@ -7,7 +7,8 @@ import {
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { IoK8sApiCoreV1Secret } from '@forklift-ui/types';
-import { useK8sWatchResource, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 

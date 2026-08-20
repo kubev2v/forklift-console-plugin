@@ -5,7 +5,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import LoadingSuspend from '@components/LoadingSuspend';
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@forklift-ui/types';
-import { type K8sModel, useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import type { K8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import ProviderDetailsPageByType from './ProviderDetailsPageByType';
 

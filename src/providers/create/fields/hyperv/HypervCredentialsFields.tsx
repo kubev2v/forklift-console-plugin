@@ -3,6 +3,7 @@ import { useWatch } from 'react-hook-form';
 
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { useCreateProviderFormContext } from '../../hooks/useCreateProviderFormContext';
 import { HypervTransferMethod, ProviderFormFieldId } from '../constants';
 import ProviderFormPasswordInput from '../ProviderFormPasswordInput';
 import ProviderFormTextInput from '../ProviderFormTextInput';
@@ -12,10 +13,11 @@ import SmbUrlField from './SmbDirectoryField';
 
 const HypervCredentialsFields: FC = () => {
   const { t } = useForkliftTranslation();
-  const transferMethod = useWatch({ name: ProviderFormFieldId.TransferMethod });
-  const smbUrl: string | undefined = useWatch({ name: ProviderFormFieldId.SmbUrl });
+  const { control } = useCreateProviderFormContext();
+  const transferMethod = useWatch({ control, name: ProviderFormFieldId.TransferMethod });
+  const smbUrl = useWatch({ control, name: ProviderFormFieldId.SmbUrl });
   const isSMB = transferMethod !== HypervTransferMethod.ISCSI;
-  const showCredentials = !isSMB || smbUrl?.trim();
+  const showCredentials = !isSMB || Boolean(smbUrl?.trim());
 
   return (
     <>

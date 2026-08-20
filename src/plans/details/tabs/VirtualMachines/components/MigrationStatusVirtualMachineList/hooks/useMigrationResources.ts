@@ -8,7 +8,7 @@ import type {
   V1beta1DataVolume,
   V1beta1Plan,
 } from '@forklift-ui/types';
-import { useK8sWatchResource, type WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
+import type { WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   DataVolumeModelGroupVersionKind,
   JobModelGroupVersionKind,
@@ -21,6 +21,7 @@ import {
   getPlanTargetNamespace,
   getPlanVirtualMachines,
 } from '@utils/crds/plans/selectors';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { getPlanVirtualMachineIdByName } from '../../utils/getPlanVirtualMachineIdByName';
 import { getPlanVirtualMachinesDict } from '../../utils/utils';

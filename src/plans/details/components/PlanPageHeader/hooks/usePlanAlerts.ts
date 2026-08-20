@@ -11,10 +11,10 @@ import {
   type V1beta1PlanStatusConditions,
   type V1beta1StorageMap,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { CATEGORY_TYPES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { usePlanMappingData } from '../../../hooks/usePlanMappingData';
 import { getPlanStatus } from '../../PlanStatus/utils/utils';

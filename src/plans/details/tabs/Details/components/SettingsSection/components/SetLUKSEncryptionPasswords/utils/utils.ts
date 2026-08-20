@@ -13,7 +13,7 @@ import { getLUKSSecretName, getPlanVirtualMachines } from '@utils/crds/plans/sel
 import { isEmpty } from '@utils/helpers';
 
 const createIndexedBase64Object = (encodedString: string): Record<number, string> | undefined => {
-  const list: string[] = JSON.parse(encodedString || '[]');
+  const list = JSON.parse(encodedString || '[]') as string[];
   if (isEmpty(list) || list.every((item) => !item)) {
     return undefined;
   }

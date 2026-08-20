@@ -35,8 +35,13 @@ const getValidFilters = (
     const { resourceFieldId } = nextField;
     const params = safeParse(searchParams[`${resourceFieldId}`]);
 
-    // Valid filter values are arrays
-    if (resourceFieldId && Array.isArray(params) && params.length) {
+    // Valid filter values are arrays of strings
+    if (
+      resourceFieldId &&
+      Array.isArray(params) &&
+      params.length &&
+      params.every((item): item is string => typeof item === 'string')
+    ) {
       acc[resourceFieldId] = params;
     }
     return acc;

@@ -8,7 +8,6 @@ import {
   ProviderModelRef,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   EmptyState,
   EmptyStateVariant,
@@ -23,6 +22,7 @@ import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
 import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { ForkliftTrans } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { ProviderStatus } from '@utils/types';

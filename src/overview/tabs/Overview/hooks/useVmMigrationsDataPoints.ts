@@ -7,8 +7,8 @@ import {
   type V1beta1MigrationStatusVms,
   type V1beta1MigrationStatusVmsConditions,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
 import { getName } from '@utils/crds/common/selectors';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
 import type { MigrationDataPoint } from '../utils/types';

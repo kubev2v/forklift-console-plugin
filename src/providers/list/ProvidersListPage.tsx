@@ -8,7 +8,7 @@ import {
   ProviderModelGroupVersionKind,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import type { ProviderData } from '@utils/providers/types';
 
 import { loadUserSettings } from '../../components/common/Page/userSettings';

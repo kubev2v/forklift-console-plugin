@@ -4,12 +4,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
-import {
-  getGroupVersionKindForModel,
-  useK8sWatchResource,
-} from '@openshift-console/dynamic-plugin-sdk';
+import { getGroupVersionKindForModel } from '@openshift-console/dynamic-plugin-sdk';
 import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { type ForkliftSettingsValues, SettingsFields } from '../../utils/types';

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import {
   type ClusterInstanceType,

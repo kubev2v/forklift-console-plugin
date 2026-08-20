@@ -7,7 +7,7 @@ import {
   type ProviderVirtualMachine,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { useK8sWatchResource } from '@openshift-console/dynamic-plugin-sdk';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { usePlan } from '../../hooks/usePlan';
 import type { PlanPageProps } from '../../utils/types';

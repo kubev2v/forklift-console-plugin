@@ -2,6 +2,7 @@ import { type FC, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 
 import ExpandableReviewSection from '@components/ExpandableReviewSection/ExpandableReviewSection';
+import type { V1beta1NetworkMap } from '@forklift-ui/types';
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -10,9 +11,10 @@ import {
   Stack,
   useWizardContext,
 } from '@patternfly/react-core';
+import { getName } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import { NetworkMapFieldId, NetworkMapType } from '@utils/mappings/networkMap';
+import { NetworkMapFieldId, type NetworkMapping, NetworkMapType } from '@utils/mappings/networkMap';
 
 import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
@@ -31,7 +33,12 @@ const NetworkMapReviewSectionInner: FC = () => {
       NetworkMapFieldId.ExistingNetworkMap,
       NetworkMapFieldId.NetworkMapName,
     ],
-  });
+  }) as [
+    NetworkMapType | undefined,
+    NetworkMapping[] | undefined,
+    V1beta1NetworkMap | undefined,
+    string | undefined,
+  ];
 
   const noMappingsSelected = useMemo(() => {
     if (!networkMap || isEmpty(networkMap)) {
@@ -54,7 +61,7 @@ const NetworkMapReviewSectionInner: FC = () => {
         <DescriptionListGroup>
           <DescriptionListTerm>{t('Network map')}</DescriptionListTerm>
           <DescriptionListDescription data-testid="review-network-map">
-            {existingNetMap?.metadata?.name}
+            {existingNetMap ? getName(existingNetMap) : undefined}
           </DescriptionListDescription>
         </DescriptionListGroup>
       </DescriptionList>
@@ -77,12 +84,12 @@ const NetworkMapReviewSectionInner: FC = () => {
           </DescriptionListGroup>
         </DescriptionList>
 
-        <NetworkMapReviewTable networkMap={networkMap} />
+        <NetworkMapReviewTable networkMap={networkMap ?? []} />
       </Stack>
     );
   }
 
-  return <NetworkMapReviewTable networkMap={networkMap} />;
+  return <NetworkMapReviewTable networkMap={networkMap ?? []} />;
 };
 
 const NetworkMapReviewSection: FC = () => {
