@@ -1120,6 +1120,7 @@
   "Reorder": "Reordenar",
   "Requests persistent volume (PV) resources without having specific knowledge of the underlying storage infrastructure.": "Solicita recursos de volumen persistente (PV) sin tener conocimiento específico de la infraestructura de almacenamiento subyacente.",
   "Required during scheduling": "Requerido durante la programación",
+  "Reset to defaults": "Reset to defaults",
   "Resource": "Recurso",
   "Resources": "Recursos",
   "Restart": "Reiniciar",

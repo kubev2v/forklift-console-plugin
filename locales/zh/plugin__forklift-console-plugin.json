@@ -1111,6 +1111,7 @@
   "Reorder": "重新排序",
   "Requests persistent volume (PV) resources without having specific knowledge of the underlying storage infrastructure.": "在不了解底层存储基础架构的情况下，请求持久性卷 (PV) 资源。",
   "Required during scheduling": "调度过程中需要",
+  "Reset to defaults": "Reset to defaults",
   "Resource": "资源",
   "Resources": "资源",
   "Restart": "重启",

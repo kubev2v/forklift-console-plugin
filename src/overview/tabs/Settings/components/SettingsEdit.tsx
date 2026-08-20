@@ -6,7 +6,7 @@ import { ADD, REMOVE, REPLACE } from '@components/ModalForm/utils/constants';
 import { ForkliftControllerModel, type V1beta1ForkliftController } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { Form, ModalVariant } from '@patternfly/react-core';
+import { ButtonVariant, Form, ModalVariant } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -30,6 +30,7 @@ import EditInventoryMemoryLimit from './InventoryMemoryLimit/EditInventoryMemory
 import EditMaxVMInFlight from './MaxVMInFlight/EditMaxVMInFlight';
 import EditPreCopyInterval from './PreCopyInterval/EditPreCopyInterval';
 import EditSnapshotPoolingInterval from './SnapshotPoolingInterval/EditSnapshotPoolingInterval';
+
 const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controller }) => {
   const { t } = useForkliftTranslation();
 
@@ -95,14 +96,12 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
           },
           variant: ButtonVariant.secondary,
         }}
-        closeOverlay={closeOverlay}
+        closeModal={closeModal}
         isDisabled={!isDirty || !isValid}
         onConfirm={handleSubmit(onSubmit)}
-        title={t('Edit settings')}
-        closeModal={closeModal}
-        variant={ModalVariant.medium}
-        isDisabled={!isDirty}
         testId="settings-edit-modal"
+        title={t('Edit settings')}
+        variant={ModalVariant.medium}
       >
         <Form>
           {t(

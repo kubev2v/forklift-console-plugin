@@ -1112,6 +1112,7 @@
   "Reorder": "Reorder",
   "Requests persistent volume (PV) resources without having specific knowledge of the underlying storage infrastructure.": "Requests persistent volume (PV) resources without having specific knowledge of the underlying storage infrastructure.",
   "Required during scheduling": "Required during scheduling",
+  "Reset to defaults": "Reset to defaults",
   "Resource": "Resource",
   "Resources": "Resources",
   "Restart": "Restart",
