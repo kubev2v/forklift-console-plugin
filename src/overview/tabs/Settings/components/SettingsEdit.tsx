@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ModalForm from '@components/ModalForm/ModalForm';
@@ -5,15 +6,17 @@ import { ADD, REMOVE, REPLACE } from '@components/ModalForm/utils/constants';
 import { ForkliftControllerModel, type V1beta1ForkliftController } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { ModalComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/ModalProvider';
-import { Form, ModalVariant } from '@patternfly/react-core';
+import { ButtonVariant, Form, ModalVariant } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type {
-  EnhancedForkliftController,
-  ForkliftSettingsValues,
-  SettingsEditProps,
+import { defaultValuesMap } from '../utils/constants';
+import {
+  type EnhancedForkliftController,
+  type ForkliftSettingsValues,
+  type SettingsEditProps,
+  SettingsFields,
 } from '../utils/types';
 import { getDefaultValues } from '../utils/utils';
 
@@ -27,17 +30,27 @@ import EditInventoryMemoryLimit from './InventoryMemoryLimit/EditInventoryMemory
 import EditMaxVMInFlight from './MaxVMInFlight/EditMaxVMInFlight';
 import EditPreCopyInterval from './PreCopyInterval/EditPreCopyInterval';
 import EditSnapshotPoolingInterval from './SnapshotPoolingInterval/EditSnapshotPoolingInterval';
+
 const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controller }) => {
   const { t } = useForkliftTranslation();
 
   const methods = useForm<ForkliftSettingsValues>({
     defaultValues: getDefaultValues(controller as EnhancedForkliftController),
+    mode: 'onChange',
   });
 
   const {
-    formState: { dirtyFields, isDirty },
+    formState: { dirtyFields, isDirty, isValid },
     handleSubmit,
+    reset,
+    trigger,
   } = methods;
+
+  // mode: 'onChange' skips defaultValues until edited; surface a pre-existing invalid aap_url
+  // so admins see why Save stays blocked when other settings are dirty.
+  useEffect(() => {
+    trigger(SettingsFields.AapUrl).catch(() => undefined);
+  }, [trigger]);
 
   const onSubmit = async (formData: ForkliftSettingsValues) => {
     if (!isDirty) {
@@ -74,12 +87,21 @@ const SettingsEdit: ModalComponent<SettingsEditProps> = ({ closeModal, controlle
   return (
     <FormProvider {...methods}>
       <ModalForm
-        onConfirm={handleSubmit(onSubmit)}
-        title={t('Edit settings')}
+        additionalAction={{
+          children: t('Reset to defaults'),
+          onClick: () => {
+            reset(defaultValuesMap as ForkliftSettingsValues, {
+              keepDefaultValues: true,
+            });
+          },
+          variant: ButtonVariant.secondary,
+        }}
         closeModal={closeModal}
-        variant={ModalVariant.medium}
-        isDisabled={!isDirty}
+        isDisabled={!isDirty || !isValid}
+        onConfirm={handleSubmit(onSubmit)}
         testId="settings-edit-modal"
+        title={t('Edit settings')}
+        variant={ModalVariant.medium}
       >
         <Form>
           {t(

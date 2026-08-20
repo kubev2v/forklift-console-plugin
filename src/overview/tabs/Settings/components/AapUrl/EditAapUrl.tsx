@@ -4,10 +4,12 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import { TextInput } from '@patternfly/react-core';
+import { getInputValidated } from '@utils/form';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { type ForkliftSettingsValues, SettingsFields } from '../../utils/types';
 
+import { normalizeAapUrl, validateAapUrl } from './utils/validateAapUrl';
 import AapUrlHelpContent from './AapUrlHelpContent';
 
 const EditAapUrl: FC = () => {
@@ -15,32 +17,38 @@ const EditAapUrl: FC = () => {
   const { control } = useFormContext<ForkliftSettingsValues>();
 
   return (
-    <FormGroupWithHelpText
-      label={t('AAP URL')}
-      labelHelp={
-        <HelpIconPopover header={t('AAP URL')}>
-          <AapUrlHelpContent />
-        </HelpIconPopover>
-      }
-      helperText={t(
-        'Base URL of the Ansible Automation Platform instance (e.g. https://aap.example.com).',
-      )}
-    >
-      <Controller
-        control={control}
-        name={SettingsFields.AapUrl}
-        render={({ field: { onChange, value } }) => (
+    <Controller
+      control={control}
+      name={SettingsFields.AapUrl}
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
+        <FormGroupWithHelpText
+          fieldId={SettingsFields.AapUrl}
+          helperText={t(
+            'Base URL of the Ansible Automation Platform instance (e.g. https://aap.example.com).',
+          )}
+          helperTextInvalid={error?.message}
+          label={t('AAP URL')}
+          labelHelp={
+            <HelpIconPopover header={t('AAP URL')}>
+              <AapUrlHelpContent />
+            </HelpIconPopover>
+          }
+          validated={getInputValidated(error)}
+        >
           <TextInput
-            value={value ?? ''}
+            data-testid="aap-url-settings-input"
+            id={SettingsFields.AapUrl}
             onChange={(_event, val) => {
-              onChange(val);
+              onChange(normalizeAapUrl(val));
             }}
             placeholder="https://aap.example.com"
-            data-testid="aap-url-settings-input"
+            validated={getInputValidated(error)}
+            value={value ?? ''}
           />
-        )}
-      />
-    </FormGroupWithHelpText>
+        </FormGroupWithHelpText>
+      )}
+      rules={{ validate: validateAapUrl }}
+    />
   );
 };
 
