@@ -46,6 +46,8 @@ type MultiTypeaheadSelectProps = {
   values?: (string | number)[];
 } & Omit<SelectProps, 'toggle' | 'onSelect' | 'selected' | 'isOpen'>;
 
+const EMPTY_VALUES: (string | number)[] = [];
+
 const MultiTypeaheadSelect = (
   {
     allowClear = false,
@@ -67,7 +69,7 @@ const MultiTypeaheadSelect = (
     testId,
     toggleProps,
     toggleWidth,
-    values = [],
+    values = EMPTY_VALUES,
     ...selectProps
   }: MultiTypeaheadSelectProps,
   ref: ForwardedRef<HTMLInputElement>,

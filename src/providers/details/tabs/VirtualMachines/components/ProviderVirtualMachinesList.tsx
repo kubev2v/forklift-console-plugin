@@ -16,6 +16,8 @@ import { getVmId } from '../utils/helpers/vmProps';
 import { extraSupportedFilters, extraSupportedMatchers } from './constants';
 import type { VmData } from './VMCellProps';
 
+const EMPTY_SELECTED_IDS: string[] = [];
+
 type ProviderVirtualMachinesListProps = {
   cellMapper: FC<RowProps<VmData>>;
   className?: string;
@@ -52,7 +54,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   className,
   fieldsMetadata,
   GlobalActionToolbarItems,
-  initialSelectedIds = [],
+  initialSelectedIds = EMPTY_SELECTED_IDS,
   obj,
   onSelect,
   pageId,

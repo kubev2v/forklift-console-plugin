@@ -10,6 +10,8 @@ import { createHeaderWithSelection } from './utils/createHeaderWithSelection';
 import { createRowWithSelection } from './utils/createRowWithSelection';
 import StandardPage from './StandardPage';
 
+const defaultCanSelect = (_item: unknown): boolean => true;
+
 const wrapActionWithSelection = <T,>(
   Action: FC<GlobalActionToolbarProps<T>>,
   selectedIds: string[],
@@ -65,7 +67,7 @@ export const StandardPageWithSelection = <T,>(
   props: StandardPageWithSelectionProps<T>,
 ): ReactElement => {
   const {
-    canSelect = (): boolean => true,
+    canSelect: canSelectProp,
     cell,
     expanded,
     expandedIds,
@@ -78,6 +80,7 @@ export const StandardPageWithSelection = <T,>(
     toId,
     ...rest
   } = props;
+  const canSelect = canSelectProp ?? defaultCanSelect;
 
   const pageRef = useRef(rest.page ?? 1);
 
