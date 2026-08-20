@@ -49,9 +49,7 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
     control,
     formState: { isSubmitting },
     setValue,
-    watch,
   } = useFormContext<UpdateMappingsFormData>();
-  const { storageMap } = watch();
 
   const {
     append,
@@ -68,11 +66,7 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
   return (
     <FieldBuilderTable
       addButton={{
-        isDisabled:
-          sourceStorages.length === storageMappingFields.length ||
-          isLoading ||
-          isSubmitting ||
-          Boolean(loadError),
+        isDisabled: isLoading || isSubmitting || Boolean(loadError),
         label: t('Add mapping'),
         onClick: () => {
           append({
@@ -114,7 +108,6 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
             fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
             key={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
             sourceStorages={sourceStorages}
-            storageMappings={storageMap}
           />,
           isVsphereOffload ? (
             <TargetStorageWithSuggestion

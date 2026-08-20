@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 
 export { setupCoreKubernetesIntercepts } from './core';
 export { setupDatastoresIntercepts } from './datastores';
+export { setupForkliftControllerIntercept } from './forkliftController';
 export { setupHostsIntercepts } from './hosts';
 export { setupLightspeedIntercepts } from './lightspeed';
 export { setupMigrationVmResourceIntercepts } from './migrationVmResources';

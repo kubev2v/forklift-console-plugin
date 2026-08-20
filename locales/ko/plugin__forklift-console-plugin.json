@@ -253,6 +253,7 @@
   "Canceled": "취소됨",
   "Cannot inspect VMs in an archived plan.": "보관된 계획의 VM을 검사할 수 없습니다.",
   "Cannot inspect VMs while migration is in progress.": "마이그레이션이 진행되는 동안 VM을 검사할 수 없습니다.",
+  "Cannot remove the only mapping for a storage used by the selected VMs.": "Cannot remove the only mapping for a storage used by the selected VMs.",
   "Cannot retrieve certificate": "인증서를 가져올 수 없음",
   "cannot start": "시작할 수 없음",
   "Cannot start": "시작할 수 없음",

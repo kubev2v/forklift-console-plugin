@@ -82,6 +82,13 @@ export const TEST_DATA = {
       reclaimPolicy: 'Delete',
       allowVolumeExpansion: true,
     },
+    {
+      uid: 'test-storage-class-2-uid',
+      name: 'test-cephfs',
+      provisioner: 'test.csi.cephfs.com',
+      reclaimPolicy: 'Delete',
+      allowVolumeExpansion: true,
+    },
   ],
 
   // Projects/Namespaces

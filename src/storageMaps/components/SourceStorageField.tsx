@@ -5,24 +5,18 @@ import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
 
 type SourceStorageFieldProps = {
   fieldId: string;
   sourceStorages: MappingValue[];
-  storageMappings: StorageMapping[];
 };
 
 /**
  * Flat source storage selector without grouping.
  * Used in storage map details page where categorization by VM usage is not applicable.
  */
-const SourceStorageField: FC<SourceStorageFieldProps> = ({
-  fieldId,
-  sourceStorages,
-  storageMappings,
-}) => {
+const SourceStorageField: FC<SourceStorageFieldProps> = ({ fieldId, sourceStorages }) => {
   const {
     control,
     formState: { isSubmitting },
@@ -58,10 +52,6 @@ const SourceStorageField: FC<SourceStorageFieldProps> = ({
               sourceStorages.map((storage) => (
                 <SelectOption
                   description={duplicateNames.has(storage.name) ? storage.id : undefined}
-                  isDisabled={storageMappings?.some(
-                    (mapping: StorageMapping) =>
-                      mapping[StorageMapFieldId.SourceStorage].id === storage.id,
-                  )}
                   key={storage.name}
                   value={storage}
                 >

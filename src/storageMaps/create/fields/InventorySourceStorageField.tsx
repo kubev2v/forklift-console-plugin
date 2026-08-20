@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { getMapResourceLabel } from 'src/plans/create/steps/utils';
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
 
@@ -8,7 +8,7 @@ import Select from '@components/common/Select';
 import { SelectList, SelectOption } from '@patternfly/react-core';
 import { getDuplicateValues, isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
+import { StorageMapFieldId } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
 
 import type { CreateStorageMapFormData } from '../types';
@@ -18,6 +18,13 @@ type InventorySourceStorageFieldProps = {
   sourceStorages: InventoryStorage[];
 };
 
+/**
+ * Displays a flat list of source storages from provider inventory.
+ *
+ * Duplicate source storage selection is intentional to support multi-plugin
+ * offload mapping (MTV-6324): multiple rows with the same source storage, each
+ * pointing to a different target storage class and/or offload plugin config.
+ */
 const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
   fieldId,
   sourceStorages,
@@ -28,7 +35,6 @@ const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
     trigger,
   } = useFormContext<CreateStorageMapFormData>();
   const { t } = useForkliftTranslation();
-  const storageMappings = useWatch({ control, name: StorageMapFieldId.StorageMap });
 
   const duplicateLabels = getDuplicateValues(sourceStorages, (storage) =>
     getMapResourceLabel(storage),
@@ -68,10 +74,6 @@ const InventorySourceStorageField: FC<InventorySourceStorageFieldProps> = ({
                   return (
                     <SelectOption
                       description={duplicateLabels.has(storageLabel) ? storage.id : undefined}
-                      isDisabled={storageMappings?.some(
-                        (mapping: StorageMapping) =>
-                          mapping[StorageMapFieldId.SourceStorage].id === storage.id,
-                      )}
                       key={storage.id}
                       value={storageValue}
                     >

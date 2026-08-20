@@ -263,6 +263,7 @@
   "Canceled": "Cancelado",
   "Cannot inspect VMs in an archived plan.": "No se pueden inspeccionar las máquinas virtuales en un plan archivado.",
   "Cannot inspect VMs while migration is in progress.": "No se pueden inspeccionar las máquinas virtuales mientras se está realizando la migración.",
+  "Cannot remove the only mapping for a storage used by the selected VMs.": "Cannot remove the only mapping for a storage used by the selected VMs.",
   "Cannot retrieve certificate": "No se puede recuperar el certificado",
   "cannot start": "no se puede iniciar",
   "Cannot start": "No se puede iniciar",

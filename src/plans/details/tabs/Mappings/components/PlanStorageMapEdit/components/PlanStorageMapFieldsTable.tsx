@@ -1,7 +1,10 @@
 import { type FC, useEffect } from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { createPlanStorageMapFieldLabels } from 'src/plans/create/steps/storage-map/constants';
-import { validatePlanStorageMaps } from 'src/plans/create/steps/storage-map/utils';
+import {
+  isSoleMappingOfUsedSource,
+  validatePlanStorageMaps,
+} from 'src/plans/create/steps/storage-map/utils';
 import AccessModeField from 'src/storageMaps/components/AccessModeField';
 import GroupedSourceStorageField from 'src/storageMaps/components/GroupedSourceStorageField';
 import OffloadStorageRow from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageRow';
@@ -108,9 +111,12 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
   const isVsphereOffload =
     sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere && isCopyOffloadEnabled;
 
-  const { control, trigger, watch } = useFormContext<PlanStorageEditFormValues>();
+  const { control, trigger } = useFormContext<PlanStorageEditFormValues>();
 
-  const [storageMappings] = watch([StorageMapFieldId.StorageMap]);
+  const storageMappings = useWatch({
+    control,
+    name: StorageMapFieldId.StorageMap,
+  });
 
   const {
     append,
@@ -134,17 +140,14 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
   return (
     <FieldBuilderTable
       addButton={{
-        isDisabled:
-          Boolean(isIscsi) ||
-          [...usedSourceStorages, ...otherSourceStorages].length === storageMappingFields.length ||
-          isLoading ||
-          Boolean(loadError),
+        isDisabled: Boolean(isIscsi) || isLoading || Boolean(loadError),
         label: t('Add mapping'),
         onClick: async () => {
           const missingStorage = usedSourceStorages.find(
             (sourceStorage) =>
-              !storageMappingFields.some(
-                (storageMapping) => storageMapping.sourceStorage.id === sourceStorage.id,
+              !storageMappings?.some(
+                (storageMapping) =>
+                  storageMapping[StorageMapFieldId.SourceStorage]?.id === sourceStorage.id,
               ),
           );
 
@@ -187,7 +190,6 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
                 fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
                 key={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
                 otherSourceStorages={otherSourceStorages}
-                storageMappings={storageMappings}
                 usedSourceStorages={usedSourceStorages}
               />,
               <TargetStorageInputField
@@ -205,18 +207,13 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
           if (Boolean(isIscsi) || storageMappingFields.length <= 1) {
             return true;
           }
-          return usedSourceStorages.some(
-            (storage) =>
-              storage.id === storageMappingFields[index][StorageMapFieldId.SourceStorage].id,
-          );
+
+          return isSoleMappingOfUsedSource(index, storageMappings ?? [], usedSourceStorages);
         },
         onClick: (index) => {
           if (
             storageMappingFields.length > 1 &&
-            !usedSourceStorages.some(
-              (storage) =>
-                storage.id === storageMappingFields[index][StorageMapFieldId.SourceStorage].id,
-            )
+            !isSoleMappingOfUsedSource(index, storageMappings ?? [], usedSourceStorages)
           ) {
             remove(index);
           }
@@ -226,13 +223,8 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
             return t('At least one storage mapping must be provided.');
           }
 
-          if (
-            usedSourceStorages.some(
-              (storage) =>
-                storage.id === storageMappingFields[index][StorageMapFieldId.SourceStorage].id,
-            )
-          ) {
-            return t('All storages detected on the selected VMs require a mapping.');
+          if (isSoleMappingOfUsedSource(index, storageMappings ?? [], usedSourceStorages)) {
+            return t('Cannot remove the only mapping for a storage used by the selected VMs.');
           }
 
           return undefined;

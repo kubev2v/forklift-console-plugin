@@ -68,7 +68,6 @@ const CreateStorageMapFieldTable: FC = () => {
       addButton={{
         isDisabled:
           isEmpty([...sourceStorages, ...targetStorages]) ||
-          sourceStorages.length === storageMappingFields.length ||
           sourceStoragesLoading ||
           isSubmitting ||
           Boolean(loadError),

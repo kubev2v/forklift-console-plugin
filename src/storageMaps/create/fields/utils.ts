@@ -6,7 +6,7 @@ import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 /**
  * Validates storage mapping configurations to ensure complete and valid mappings
  * @param values - Array of storage mappings to validate
- * @returns Translation key string for validation error or true if valid
+ * @returns Translated validation error string or undefined if valid
  */
 export const validateStorageMaps = (values: StorageMapping[]): string | undefined => {
   if (!Array.isArray(values)) {
@@ -32,17 +32,14 @@ export const validateStorageMaps = (values: StorageMapping[]): string | undefine
     }
   }
 
-  // Single row
-  if (values.length === 1) {
-    if (emptyCount === 1) {
-      return t('You must select a source and target storage');
-    }
-    if (incompleteCount === 1) {
-      return t('Each row must have both source and target storage selected');
-    }
+  if (values.length === 1 && emptyCount === 1) {
+    return t('You must select a source and target storage');
   }
 
-  // No valid rows
+  if (emptyCount > 0 || incompleteCount > 0) {
+    return t('Each row must have both source and target storage selected');
+  }
+
   if (validCount === 0) {
     return t('At least one row must have both source and target storages');
   }

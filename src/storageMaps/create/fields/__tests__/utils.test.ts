@@ -86,4 +86,28 @@ describe('validateStorageMaps', () => {
       ]),
     ).toBeUndefined();
   });
+
+  it('returns an error for an extra empty row when another mapping is complete', () => {
+    expect(
+      validateStorageMaps([
+        validMapping(),
+        {
+          [StorageMapFieldId.SourceStorage]: { name: '' },
+          [StorageMapFieldId.TargetStorage]: { name: '' },
+        },
+      ]),
+    ).toBe('Each row must have both source and target storage selected');
+  });
+
+  it('returns an error for an extra incomplete row when another mapping is complete', () => {
+    expect(
+      validateStorageMaps([
+        validMapping(),
+        {
+          [StorageMapFieldId.SourceStorage]: { name: 'datastore-2' },
+          [StorageMapFieldId.TargetStorage]: { name: '' },
+        },
+      ]),
+    ).toBe('Each row must have both source and target storage selected');
+  });
 });

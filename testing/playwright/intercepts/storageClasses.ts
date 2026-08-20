@@ -24,6 +24,21 @@ export const setupStorageClassesIntercepts = async (page: Page, targetProviderUi
             volumeBindingMode: 'Immediate',
           },
         },
+        {
+          uid: 'test-storage-class-2-uid',
+          version: '12346',
+          namespace: '',
+          name: 'test-cephfs',
+          selfLink: `providers/openshift/${targetProviderUid}/storageclasses/test-storage-class-2-uid`,
+          id: 'test-storage-class-2-uid',
+          object: {
+            metadata: { name: 'test-cephfs', uid: 'test-storage-class-2-uid' },
+            provisioner: 'test.csi.cephfs.com',
+            reclaimPolicy: 'Delete',
+            allowVolumeExpansion: true,
+            volumeBindingMode: 'Immediate',
+          },
+        },
       ]),
     });
   });
