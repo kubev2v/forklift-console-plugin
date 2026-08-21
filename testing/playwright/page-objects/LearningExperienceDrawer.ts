@@ -28,6 +28,13 @@ export class LearningExperienceDrawer {
     this.navigation = new NavigationHelper(page);
   }
 
+  /** Scopes locators away from Overview Welcome tiles with the same provider aria-labels. */
+  private get drawerPanel(): Locator {
+    return this.page.locator('.pf-v6-c-drawer__panel').filter({
+      has: this.page.getByRole('heading', { name: 'Tips and tricks', level: 2 }),
+    });
+  }
+
   private async verifyQuickReferenceItems(items: readonly string[]): Promise<void> {
     for (const item of items) {
       await expect(this.getQuickReferenceItemHeading(item)).toBeVisible();
@@ -56,19 +63,19 @@ export class LearningExperienceDrawer {
   }
 
   getExternalLinksHeading(): Locator {
-    return this.page.getByRole('heading', { name: 'External links', level: 3 });
+    return this.drawerPanel.getByRole('heading', { name: 'External links', level: 3 });
   }
 
   getKeyConsiderationsButton(): Locator {
-    return this.page.getByRole('button', { name: 'Key considerations' });
+    return this.drawerPanel.getByRole('button', { name: 'Key considerations' });
   }
 
   getKeyTerminologyButton(): Locator {
-    return this.page.getByRole('button', { name: 'Key terminology' });
+    return this.drawerPanel.getByRole('button', { name: 'Key terminology' });
   }
 
   getProviderTypeDropdown(providerName: string): Locator {
-    return this.page.getByRole('button', { name: providerName });
+    return this.drawerPanel.getByRole('button', { name: providerName });
   }
 
   getProviderTypeMenuItem(providerName: string): Locator {
