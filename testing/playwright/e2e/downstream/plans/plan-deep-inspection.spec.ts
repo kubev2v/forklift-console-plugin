@@ -14,6 +14,7 @@ import {
 import { requireVddk } from '../../../utils/requireVddk';
 import { V2_12_0, V5_0_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
+import { waitForVmDeepInspectionsTerminal } from '../../../utils/waitForConversionsTerminal';
 
 // Deep inspection creates vSphere snapshots — only inspect mtv-func-win2022 here.
 // mtv-func-rhel9 is a Select All peer and must never be submitted for inspection
@@ -209,6 +210,11 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
     await test.step('wait for inspection to complete', async () => {
       await expect(vmRow.getByText(COMPLETED_STATUSES)).toBeVisible({ timeout: 600_000 });
     });
+
+    await test.step('wait for Conversion CR to finish cleanup', async () => {
+      // UI can show completed while Conversion is still RemovingSnapshot.
+      await waitForVmDeepInspectionsTerminal(firstVmName);
+    });
   });
 
   test('should allow re-inspection after completion', async ({
@@ -220,13 +226,15 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
     const vmRow = planDetailsPage.virtualMachinesTab.getVmRow(firstVmName);
 
     await test.step('ensure VM has a completed inspection status', async () => {
+      // Prefer a live expect over a one-shot read — status can lag after navigation.
       const status = await planDetailsPage.virtualMachinesTab.getVmInspectionStatus(firstVmName);
       if (!isCompletedInspectionStatus(status)) {
         const inspectModal = await planDetailsPage.openInspectModal();
         await inspectModal.selectVmByName(firstVmName);
         await inspectModal.clickInspect();
-        await expect(vmRow.getByText(COMPLETED_STATUSES)).toBeVisible({ timeout: 600_000 });
       }
+      await expect(vmRow.getByText(COMPLETED_STATUSES)).toBeVisible({ timeout: 600_000 });
+      await waitForVmDeepInspectionsTerminal(firstVmName);
     });
 
     await test.step('open inspect modal, verify status, and submit re-inspection', async () => {

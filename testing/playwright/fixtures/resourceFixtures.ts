@@ -5,6 +5,7 @@ import { type Browser, type BrowserContext, test as base } from '@playwright/tes
 import type { createPlanTestData } from '../types/test-data';
 import { AUTH_FILE } from '../utils/constants';
 import { ResourceManager } from '../utils/resource-manager/ResourceManager';
+import { waitForProviderDeepInspectionsTerminal } from '../utils/waitForConversionsTerminal';
 
 import {
   createNetworkMap,
@@ -110,6 +111,13 @@ const buildTestProviderFixture = (
 
         await use(created);
         await context.close().catch(() => undefined);
+        // DeepInspection may still be RemovingSnapshot after the UI shows completed;
+        // deleting the provider Secret first fails the Conversion (secret not found).
+        // Fail hard if Conversions never go terminal — do not soft-skip into cleanup.
+        const providerName = created.metadata?.name;
+        if (providerName) {
+          await waitForProviderDeepInspectionsTerminal(providerName);
+        }
         await tempResourceManager.cleanupAll().catch(console.error);
       },
       { scope: 'worker' },

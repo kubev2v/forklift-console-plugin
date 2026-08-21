@@ -47,6 +47,7 @@ export const StorageClasses = {
  * Common source datastores/storage available from VMware providers
  */
 export const SourceStorages = {
+  MTV_NFS_PSI_RDU2_V8: 'mtv-nfs-psi-rdu2-v8',
   MTV_NFS_RHOS_V8: 'mtv-nfs-rhos-v8',
   MTV_NFS_US_V8: 'mtv-nfs-us-v8',
 } as const;
@@ -206,12 +207,14 @@ export const createPlanTestData = (
       isPreexisting: false,
       mappings: [
         {
-          source: 'mtv-nfs-rhos-v8',
+          // qemtv-09 vs8 inventory exposes mtv-nfs-psi-rdu2-v8 (mtv-nfs-rhos-v8 removed).
+          source: SourceStorages.MTV_NFS_PSI_RDU2_V8,
           target: 'ocs-storagecluster-ceph-rbd-virtualization',
         },
       ],
     },
-    virtualMachines: [{ sourceName: 'mtv-func-rhel9', folder: 'vm' }],
+    // qemtv-09 vs8 inventory no longer has mtv-func-rhel9; use a present lab VM.
+    virtualMachines: [{ sourceName: 'mtv-rhel8-warm-sanity', folder: 'vm' }],
   };
 
   return {

@@ -26,7 +26,11 @@ import {
   SourceNetworks,
 } from '../../types/test-data';
 import { requireVddk } from '../../utils/requireVddk';
-import { ELEMENT_TIMEOUT, MTV_NAMESPACE } from '../../utils/resource-manager/constants';
+import {
+  ELEMENT_TIMEOUT,
+  MTV_NAMESPACE,
+  PLAN_READY_TIMEOUT,
+} from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 import { CNV_4_21_0, V2_10_5, V2_12_0 } from '../../utils/version/constants';
 import { isVersionInStreams, requireCNVVersion, requireVersion } from '../../utils/version/version';
@@ -54,25 +58,27 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   const providerName = `test-vsphere-provider-${Date.now()}`;
   const planName = `${providerName}-plan`;
 
+  // Jenkins uses vsphere-8.0.1 (10.6.46.250): mtv-feature-win2019 is absent there.
+  // Prefer VMs present on both 8.0.1 and 8.0.3 with no Critical concerns.
   const testPlanData = createPlanTestData({
     planName,
     sourceProvider: providerName,
     virtualMachines: [
       {
-        sourceName: 'mtv-func-rhel9',
-        targetName: `mtv-func-rhel9-renamed-${Date.now()}`,
+        sourceName: 'mtv-rhel8-warm-sanity',
+        targetName: `mtv-rhel8-warm-sanity-renamed-${Date.now()}`,
         folder: 'vm',
       },
       {
-        sourceName: 'mtv-func-win2019',
-        targetName: `mtv-func-win2019-renamed-${Date.now()}`,
+        sourceName: 'mtv-win2019-79',
+        targetName: `mtv-win2019-79-renamed-${Date.now()}`,
         folder: 'vm',
       },
     ],
     networkMap: {
       mappings: [
-        { source: SourceNetworks.MGMT_NETWORK, target: NetworkTargets.DEFAULT },
-        { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.IGNORE },
+        // Selected lab VMs (mtv-rhel8-warm-sanity, mtv-win2019-79) only attach "VM Network".
+        { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.DEFAULT },
       ],
     },
     targetProject: {
@@ -117,7 +123,9 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream'],
     },
     async ({ page }) => {
-      test.setTimeout(120_000);
+      // waitForPlanEditable uses PLAN_READY_TIMEOUT for Validating/VDDK.
+      const CREATE_PLAN_OVERHEAD_MS = 5 * 60_000; // navigate + wizard + rename
+      test.setTimeout(PLAN_READY_TIMEOUT + CREATE_PLAN_OVERHEAD_MS);
       const providerDetailsPage = new ProviderDetailsPage(page);
       const createWizard = new CreatePlanWizardPage(page, resourceManager);
       const planDetailsPage = new PlanDetailsPage(page);
@@ -183,7 +191,29 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       await planDetailsPage.verifyMigrationInProgress();
 
       console.log('⏳ Waiting for migration to complete...');
-      await planDetailsPage.waitForMigrationCompletion(MIGRATION_TIMEOUT_MS, true);
+      try {
+        await planDetailsPage.waitForMigrationCompletion(MIGRATION_TIMEOUT_MS, true);
+      } catch (error) {
+        let detail: string;
+        try {
+          const plan = await resourceManager.fetchPlan(planName);
+          const conditions = (plan?.status?.conditions ?? [])
+            .filter((condition) => condition.status === 'True')
+            .map(
+              (condition) =>
+                `${condition.type}/${condition.reason ?? ''}: ${condition.message ?? ''}`,
+            );
+          detail = conditions.join('\n') || '(none)';
+        } catch (diagnosticError) {
+          detail = `Unable to fetch plan conditions: ${
+            diagnosticError instanceof Error ? diagnosticError.message : String(diagnosticError)
+          }`;
+        }
+        throw new Error(
+          `${error instanceof Error ? error.message : String(error)}\nPlan conditions:\n${detail}`,
+          { cause: error },
+        );
+      }
 
       for (const vm of testPlanData.virtualMachines ?? []) {
         const migratedVMName = vm.targetName ?? vm.sourceName;

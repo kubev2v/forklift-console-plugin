@@ -3,7 +3,10 @@ import { expect } from '@playwright/test';
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { createPlanTestData, OffloadPlugins, StorageProducts } from '../../../types/test-data';
-import { createOffloadTestSecret } from '../../../utils/offload-helpers';
+import {
+  createOffloadTestSecret,
+  storageMapCrdSupportsDedicatedMigrationHosts,
+} from '../../../utils/offload-helpers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
@@ -23,6 +26,7 @@ test.describe(
         throw new Error('testProvider is required');
       }
 
+      const crdSupportsDedicatedHosts = await storageMapCrdSupportsDedicatedMigrationHosts();
       const planName = `offload-test-${crypto.randomUUID().slice(0, 8)}`;
       const testPlanData = createPlanTestData({
         planName,
@@ -63,8 +67,12 @@ test.describe(
         await wizard.storageMap.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
         await wizard.storageMap.offload.selectStorageSecret(0, secretName);
         await wizard.storageMap.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
-        ({ hostId: dedicatedHostId } =
-          await wizard.storageMap.offload.selectFirstDedicatedMigrationHost(0));
+        if (crdSupportsDedicatedHosts) {
+          ({ hostId: dedicatedHostId } =
+            await wizard.storageMap.offload.selectFirstDedicatedMigrationHost(0));
+        } else {
+          await wizard.storageMap.offload.verifyDedicatedMigrationHostsNotVisible(0);
+        }
       });
 
       await test.step('Proceed past Storage Map and skip to review', async () => {
@@ -78,7 +86,7 @@ test.describe(
         await expect(wizard.review.storageMapSection).toBeVisible();
 
         await wizard.review.verifyStorageMapOffloadDetails(0, {
-          dedicatedMigrationHost: dedicatedHostId,
+          ...(crdSupportsDedicatedHosts ? { dedicatedMigrationHost: dedicatedHostId } : {}),
           offloadPlugin: OffloadPlugins.VSPHERE_XCOPY,
           storageProduct: StorageProducts.NETAPP_ONTAP,
           storageSecret: secretName,

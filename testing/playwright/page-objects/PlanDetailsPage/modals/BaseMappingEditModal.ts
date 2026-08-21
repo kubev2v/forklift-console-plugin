@@ -5,6 +5,23 @@ import { BaseModal } from '../../common/BaseModal';
 const FORM_SETTLE_MS = 500;
 const MAX_DROPDOWN_ATTEMPTS = 3;
 const OPTION_CLICK_TIMEOUT_MS = 3_000;
+// Option textContent concatenates badge labels (TargetStorageField); MenuToggle shows name only.
+const STORAGE_OPTION_BADGE_SUFFIXES = ['Default', 'NetApp Shift'] as const;
+
+const stripStorageOptionBadges = (optionText: string): string => {
+  let name = optionText.trim();
+  let stripped = true;
+  while (stripped) {
+    stripped = false;
+    for (const badge of STORAGE_OPTION_BADGE_SUFFIXES) {
+      if (name.endsWith(badge)) {
+        name = name.slice(0, -badge.length).trimEnd();
+        stripped = true;
+      }
+    }
+  }
+  return name;
+};
 
 export interface MappingModalConfig {
   modalTestId: string;
@@ -44,23 +61,50 @@ export abstract class BaseMappingEditModal extends BaseModal {
 
   private async openDropdown(selectLocator: Locator): Promise<Locator> {
     await this.page.waitForTimeout(FORM_SETTLE_MS);
+
+    const listboxes = this.page.getByRole('listbox');
+    const listboxesBefore = await listboxes.count();
+
     await selectLocator.click();
     await expect(selectLocator).toHaveAttribute('aria-expanded', 'true');
-    const listbox = this.page.locator('[role="listbox"]:visible').last();
-    await expect(listbox).toBeVisible();
-    return listbox;
+
+    // Newly opened menus append listboxes. Network source selects render two
+    // (used-by-VMs + other networks); ignore stale listboxes from other controls.
+    await expect.poll(() => listboxes.count()).toBeGreaterThan(listboxesBefore);
+
+    const listboxesAfter = await listboxes.count();
+    let opened = listboxes.nth(listboxesBefore);
+    for (let index = listboxesBefore + 1; index < listboxesAfter; index += 1) {
+      opened = opened.or(listboxes.nth(index));
+    }
+
+    await expect(opened.first()).toBeVisible();
+    return opened;
   }
 
   private async selectFromDropdown(selectLocator: Locator, optionText: string): Promise<void> {
     await expect(selectLocator).toBeVisible();
     await expect(selectLocator).toBeEnabled();
 
+    const wantedName = stripStorageOptionBadges(optionText);
+
     for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
       try {
-        const listbox = await this.openDropdown(selectLocator);
-        const option = listbox.getByRole('option', { name: optionText, exact: true }).first();
-        await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
-        return;
+        const listboxes = await this.openDropdown(selectLocator);
+        const options = listboxes.getByRole('option');
+        const count = await options.count();
+
+        for (let i = 0; i < count; i += 1) {
+          const option = options.nth(i);
+          const rawText = ((await option.textContent()) ?? '').trim();
+          const optionName = stripStorageOptionBadges(rawText);
+          if (optionName === wantedName || rawText === optionText.trim()) {
+            await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
+            return;
+          }
+        }
+
+        throw new Error(`Option "${wantedName}" not found (tried exact and badge-stripped match)`);
       } catch {
         if (attempt === MAX_DROPDOWN_ATTEMPTS - 1) {
           throw new Error(
@@ -126,7 +170,7 @@ export abstract class BaseMappingEditModal extends BaseModal {
   }
 
   async selectDifferentTargetAtIndex(index: number): Promise<string> {
-    const currentTarget = await this.getTargetAtIndex(index);
+    const currentTarget = stripStorageOptionBadges(await this.getTargetAtIndex(index));
     const targetSelect = this.targetSelectLocator(index);
 
     for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
@@ -138,10 +182,11 @@ export abstract class BaseMappingEditModal extends BaseModal {
         for (let i = 0; i < count; i += 1) {
           const option = options.nth(i);
           const optionText = ((await option.textContent()) ?? '').trim();
-          if (optionText !== currentTarget) {
+          const optionName = stripStorageOptionBadges(optionText);
+          if (optionName !== currentTarget) {
             await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
-            await expect(targetSelect).toContainText(optionText);
-            return optionText;
+            await expect(targetSelect).toContainText(optionName);
+            return optionName;
           }
         }
 
@@ -166,6 +211,52 @@ export abstract class BaseMappingEditModal extends BaseModal {
   async selectFirstAvailableTargetAtIndex(index: number): Promise<string> {
     await this.expandAndSelectNth(this.targetSelectLocator(index), 0);
     return this.getTargetAtIndex(index);
+  }
+
+  /**
+   * Picks the first enabled source option that is not already used by another row.
+   * Network source dropdowns include both "used by VMs" and "other" listboxes.
+   */
+  async selectFirstUnusedSourceAtIndex(index: number): Promise<string> {
+    const used = new Set<string>();
+    const rowCount = await this.getMappingCount();
+    for (let i = 0; i < rowCount; i += 1) {
+      if (i !== index) {
+        used.add(await this.getSourceAtIndex(i));
+      }
+    }
+
+    const sourceSelect = this.sourceSelectLocator(index);
+    await expect(sourceSelect).toBeVisible();
+    await expect(sourceSelect).toBeEnabled();
+
+    for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
+      try {
+        const listboxes = await this.openDropdown(sourceSelect);
+        const options = listboxes.locator('[role="option"]:enabled');
+        const count = await options.count();
+
+        for (let i = 0; i < count; i += 1) {
+          const option = options.nth(i);
+          const name = ((await option.textContent()) ?? '').trim();
+          if (!used.has(name)) {
+            await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
+            await expect(sourceSelect).toContainText(name);
+            return name;
+          }
+        }
+
+        throw new Error(
+          `selectFirstUnusedSourceAtIndex: no unused source at row ${index} (used: ${[...used].join(', ')})`,
+        );
+      } catch (err) {
+        if (attempt === MAX_DROPDOWN_ATTEMPTS - 1) {
+          throw err;
+        }
+      }
+    }
+
+    throw new Error(`selectFirstUnusedSourceAtIndex: exhausted attempts at row ${index}`);
   }
 
   async selectSourceAtIndex(index: number, sourceValue: string): Promise<void> {

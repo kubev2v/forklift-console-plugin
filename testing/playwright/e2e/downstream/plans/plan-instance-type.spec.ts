@@ -9,8 +9,8 @@ import type { ResourceManager } from '../../../utils/resource-manager/ResourceMa
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
-const VM_RHEL = 'mtv-func-rhel9';
-const VM_WIN = 'mtv-func-win2019';
+const VM_RHEL = 'mtv-rhel8-warm-sanity';
+const VM_WIN = 'mtv-win2019-79';
 
 /**
  * Creates a plan via the wizard, waits for it to become editable, and navigates

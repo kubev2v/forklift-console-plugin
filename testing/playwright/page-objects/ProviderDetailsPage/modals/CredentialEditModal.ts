@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import { BaseModal } from '../../common/BaseModal';
+import { skipProviderCertificateValidation } from '../../CreateProviderPage/skipProviderCertificateValidation';
 
 /**
  * Page object for the Edit Provider Credentials modal.
@@ -109,7 +110,7 @@ export class CredentialEditModal extends BaseModal {
   }
 
   async selectSkipCertificate(): Promise<void> {
-    await this.skipCertificateRadio.click();
+    await skipProviderCertificateValidation(this.page);
   }
 
   async togglePasswordVisibility(): Promise<void> {

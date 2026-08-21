@@ -42,9 +42,10 @@ export const QUICK_REFERENCE = {
 } as const;
 
 // External links section data
+// Keep in sync with ExternalLinksSection.tsx — "MTV performance recommendations"
+// is commented out there pending AEM documentation migration.
 export const EXTERNAL_LINKS = [
   'Documentation',
-  'MTV performance recommendations',
   'Get support',
   'Red Hat OpenShift Virtualization Administration I course',
 ] as const;

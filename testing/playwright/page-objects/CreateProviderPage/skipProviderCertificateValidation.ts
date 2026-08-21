@@ -1,6 +1,6 @@
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
-import { V2_11_0 } from '../../utils/version/constants';
+import { V2_11_0, V5_0_0 } from '../../utils/version/constants';
 import { isVersionAtLeast } from '../../utils/version/version';
 
 export const skipProviderCertificateValidation = async (page: Page): Promise<void> => {
@@ -10,5 +10,17 @@ export const skipProviderCertificateValidation = async (page: Page): Promise<voi
       .check({ force: true });
     return;
   }
-  await page.getByTestId('certificate-validation-skip').click();
+
+  const skipRadio = page.getByTestId('certificate-validation-skip');
+  await skipRadio.click();
+
+  // MTV 5.0+ opens a confirm modal; without accepting it the form stays on
+  // Configure (empty CA) and Create provider remains disabled.
+  if (isVersionAtLeast(V5_0_0)) {
+    const confirmSkip = page.getByTestId('confirm-skip-certificate-validation');
+    await expect(confirmSkip).toBeVisible();
+    await confirmSkip.click();
+  }
+
+  await expect(skipRadio).toBeChecked();
 };

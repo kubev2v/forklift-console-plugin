@@ -6,6 +6,8 @@ import type { ResourceManager } from '../../../utils/resource-manager/ResourceMa
 import { V2_11_0, V2_12_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
 
+const ALREADY_SELECTED_PROJECT_TIMEOUT_MS = 15_000;
+
 export class GeneralInformationStep {
   private readonly page: Page;
   private readonly resourceManager?: ResourceManager;
@@ -30,7 +32,6 @@ export class GeneralInformationStep {
   }
 
   async fillAndComplete(testData: PlanTestData): Promise<void> {
-    await this.fillPlanName(testData.planName);
     await this.selectProject(testData.planProject, 'plan-project-select');
     if (testData.description) {
       await this.fillDescription(testData.description);
@@ -39,6 +40,9 @@ export class GeneralInformationStep {
     await this.selectTargetProvider(testData.targetProvider);
     await this.waitForTargetProviderNamespaces();
     await this.selectTargetProject(testData.targetProject);
+    // Fill plan name last: earlier fills can be wiped when provider/project
+    // selections remount PlanNameField (plans watch / form re-renders).
+    await this.fillPlanName(testData.planName);
   }
 
   async fillDescription(description: string) {
@@ -54,6 +58,7 @@ export class GeneralInformationStep {
     const nameInput = this.page.getByTestId('plan-name-input');
     await expect(nameInput).toBeVisible();
     await nameInput.fill(name);
+    await expect(nameInput).toHaveValue(name);
   }
 
   async fillProjectNameInModal(name: string) {
@@ -71,8 +76,23 @@ export class GeneralInformationStep {
   }
 
   async selectProject(projectName: string, testId: string, showDefaultProjects = false) {
-    await this.page.getByTestId(testId).waitFor({ state: 'visible', timeout: 10000 });
-    await this.page.getByTestId(testId).getByRole('button').click();
+    const projectSelect = this.page.getByTestId(testId);
+    await projectSelect.waitFor({ state: 'visible', timeout: 10000 });
+
+    // useDefaultProject often pre-selects openshift-mtv after projects load.
+    // Wait for that before deciding whether to open the menu — reopening
+    // can hide system namespaces and hang on a missing option.
+    const alreadySelectedLabel = projectSelect.getByText(projectName, { exact: true });
+    try {
+      await expect(alreadySelectedLabel).toBeVisible({
+        timeout: ALREADY_SELECTED_PROJECT_TIMEOUT_MS,
+      });
+      return;
+    } catch {
+      // Not pre-selected; open the menu and choose the project.
+    }
+
+    await projectSelect.getByRole('button').click();
 
     if (showDefaultProjects) {
       const switchElement = this.page.locator('#show-default-projects-switch');
@@ -83,7 +103,7 @@ export class GeneralInformationStep {
       }
     }
 
-    const searchBox = this.page.getByTestId(testId).getByRole('combobox');
+    const searchBox = projectSelect.getByRole('combobox');
     await searchBox.fill(projectName);
 
     const option = this.page.getByRole('option', { name: projectName });

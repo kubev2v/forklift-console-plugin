@@ -158,6 +158,8 @@ export class MappingsTab {
 
   async openNetworkMapEditModal(): Promise<NetworkMapEditModal> {
     await expect(this.networkMapEditButton).toBeVisible({ timeout: 10000 });
+    // Edit is disabled while the plan is Validating (isPlanEditable).
+    await expect(this.networkMapEditButton).toBeEnabled({ timeout: 180_000 });
     await this.networkMapEditButton.click();
     await this.networkMapEditModal.waitForModalToOpen();
     return this.networkMapEditModal;

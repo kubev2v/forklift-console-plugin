@@ -137,7 +137,7 @@ export class PlanDetailsPage {
     status: string;
   }> {
     const statusContainer = this.page.getByTestId('plan-status-container');
-    const statusElement = statusContainer.locator('[data-testid^="plan-status-"]').first();
+    const statusElement = statusContainer.getByTestId('plan-status-label');
     const statusText = (await statusElement.textContent())?.trim() ?? '';
     let percentage = 'N/A';
     try {
@@ -342,7 +342,8 @@ export class PlanDetailsPage {
 
   /**
    * Waits until the plan reaches a status where VM/plan edits are allowed.
-   * New plans stay in Validating (VDDK check) until reconciliation finishes.
+   * New plans stay in Validating (VDDK check) until reconciliation finishes —
+   * use PLAN_READY_TIMEOUT, not the short K8S reconcile budget.
    */
   async waitForPlanEditable(): Promise<void> {
     const statusLabel = this.page
@@ -350,7 +351,7 @@ export class PlanDetailsPage {
       .getByTestId('plan-status-label');
     await expect(statusLabel).toHaveText(
       /Ready for migration|Cannot start|Incomplete|Canceled|Unknown/i,
-      { timeout: K8S_RECONCILE_TIMEOUT },
+      { timeout: PLAN_READY_TIMEOUT },
     );
   }
 

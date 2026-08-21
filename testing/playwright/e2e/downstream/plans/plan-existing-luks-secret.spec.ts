@@ -1,11 +1,16 @@
 import { expect } from '@playwright/test';
 
+import { createSecretObject } from '../../../fixtures/helpers/resourceCreationHelpers';
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
+import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 import { V5_0_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
+
+const LUKS_TEST_SECRET_NAME = 'luks-test-secret';
+const LUKS_TEST_TIMEOUT_MS = 300_000;
 
 test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
   requireVersion(test, V5_0_0);
@@ -15,13 +20,25 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
     testProvider,
     resourceManager,
   }) => {
+    // Wizard path creates provider resources then walks General→…→Additional settings.
+    test.setTimeout(LUKS_TEST_TIMEOUT_MS);
     const testData: PlanTestData = createPlanTestData({
       sourceProvider: testProvider?.metadata?.name ?? '',
       additionalPlanSettings: {
-        existingLUKSSecretName: 'luks-test-secret',
+        existingLUKSSecretName: LUKS_TEST_SECRET_NAME,
       },
     });
     resourceManager.addPlan(testData.planName, testData.planProject);
+
+    await test.step('Ensure LUKS secret exists in plan namespace', async () => {
+      const secret = createSecretObject(LUKS_TEST_SECRET_NAME, MTV_NAMESPACE, {
+        '0': 'test-luks-passphrase',
+      });
+      const created = await resourceManager.createSecret(secret, MTV_NAMESPACE);
+      if (created) {
+        resourceManager.addSecret(LUKS_TEST_SECRET_NAME, MTV_NAMESPACE);
+      }
+    });
 
     const wizard = new CreatePlanWizardPage(page, resourceManager);
 
@@ -37,7 +54,7 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
       await additionalSettings.verifyStepVisible();
       await expect(additionalSettings.existingSecretRadio).toBeVisible();
       await expect(additionalSettings.newPassphrasesRadio).toBeVisible();
-      await additionalSettings.selectExistingLUKSSecret('luks-test-secret');
+      await additionalSettings.selectExistingLUKSSecret(LUKS_TEST_SECRET_NAME);
     });
 
     await test.step('Verify review step shows the secret name', async () => {
@@ -52,6 +69,7 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
       const { detailsTab } = new PlanDetailsPage(page);
       await detailsTab.navigateToDetailsTab();
       await expect(detailsTab.diskDecryptionDetailItem()).toBeVisible();
+      // Product copies the selected secret via generateName `${planName}-`.
       await expect(detailsTab.diskDecryptionDetailItem().getByRole('link')).toContainText(
         testData.planName,
       );
@@ -65,7 +83,7 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
       await expect(page.getByTestId('edit-use-passphrases-radio')).toBeVisible();
       await expect(page.getByTestId('edit-luks-secret-select')).toBeVisible();
       await expect(page.getByTestId('edit-luks-secret-select').getByRole('combobox')).toHaveValue(
-        'luks-test-secret',
+        LUKS_TEST_SECRET_NAME,
       );
       await expect(detailsTab.saveDiskDecryptionButton).toBeEnabled();
     });
