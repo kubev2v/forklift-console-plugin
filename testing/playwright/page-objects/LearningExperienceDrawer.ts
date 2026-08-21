@@ -28,11 +28,13 @@ export class LearningExperienceDrawer {
     this.navigation = new NavigationHelper(page);
   }
 
-  /** Scopes locators away from Overview Welcome tiles with the same provider aria-labels. */
+  /**
+   * Tips panel root. Uses the long-lived project class (not PatternFly drawer classes
+   * and not a new data-testid) so the same locator works on V2_11+ zstream and main.
+   * Scopes provider MenuToggle away from Overview Welcome tiles with the same aria-labels.
+   */
   private get drawerPanel(): Locator {
-    return this.page.locator('.pf-v6-c-drawer__panel').filter({
-      has: this.page.getByRole('heading', { name: 'Tips and tricks', level: 2 }),
-    });
+    return this.page.locator('.forklift--learning');
   }
 
   private async verifyQuickReferenceItems(items: readonly string[]): Promise<void> {
