@@ -5,6 +5,7 @@ import type { IoK8sApiCoreV1Secret } from '@forklift-ui/types';
 import { getName } from '@utils/crds/common/selectors';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
+import { filterOpaqueSecrets } from '@utils/secrets/opaqueSecrets';
 
 import type { TypeaheadSelectOption } from '../common/TypeaheadSelect/utils/types';
 
@@ -37,13 +38,10 @@ const LUKSSecretSelect: FC<LUKSSecretSelectProps> = ({
     namespace,
   });
 
-  const opaqueSecrets = useMemo((): IoK8sApiCoreV1Secret[] => {
-    if (!allSecrets) {
-      return [];
-    }
-
-    return allSecrets.filter((secret) => secret.type === 'Opaque');
-  }, [allSecrets]);
+  const opaqueSecrets = useMemo(
+    (): IoK8sApiCoreV1Secret[] => filterOpaqueSecrets(allSecrets),
+    [allSecrets],
+  );
 
   const options: TypeaheadSelectOption[] = useMemo(
     () =>

@@ -7,27 +7,48 @@ import { StorageMapsListPage } from '../../page-objects/StorageMapsListPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
 const setupSecretsIntercept = async (page: Page): Promise<void> => {
-  await page.route(`**/api/v1/namespaces/${MTV_NAMESPACE}/secrets?limit=250`, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        apiVersion: 'v1',
-        items: [
-          {
-            apiVersion: 'v1',
-            kind: 'Secret',
-            metadata: {
-              name: 'test-storage-secret',
-              namespace: MTV_NAMESPACE,
-              uid: 'test-secret-uid-1',
+  // Playwright globs treat "?" as a single-char wildcard, so avoid "?limit=250".
+  // Match list/watch secret requests under the provider project namespace.
+  await page.route(
+    new RegExp(`/api/(?:kubernetes/)?api/v1/namespaces/${MTV_NAMESPACE}/secrets(?:\\?.*)?$`),
+    async (route) => {
+      const request = route.request();
+      const url = request.url();
+      // Only mock the list call. Watch/stream requests fail without a WS mock; the UI
+      // must remain usable when Opaque secrets were already returned by list.
+      if (request.method() !== 'GET' || url.includes('watch=true')) {
+        await route.continue();
+        return;
+      }
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          apiVersion: 'v1',
+          items: [
+            {
+              apiVersion: 'v1',
+              kind: 'Secret',
+              metadata: {
+                name: 'test-storage-secret',
+                namespace: MTV_NAMESPACE,
+                resourceVersion: '1',
+                uid: 'test-secret-uid-1',
+              },
+              type: 'Opaque',
             },
-            type: 'Opaque',
+          ],
+          kind: 'SecretList',
+          metadata: {
+            continue: '',
+            remainingItemCount: 0,
+            resourceVersion: '1',
           },
-        ],
-      }),
-    });
-  });
+        }),
+      });
+    },
+  );
 };
 
 test.describe(
