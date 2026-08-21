@@ -39,7 +39,7 @@
     "@cspell/eslint-plugin": "^6.31.1",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-typescript": "^11.0.0",
+    "@rollup/plugin-typescript": "^12.0.0",
     "@rollup/plugin-url": "^8.0.2",
     "@rollup/pluginutils": "^5.0.2",
     "@testing-library/cypress": "^10.0.2",
