@@ -20,7 +20,7 @@ export const DateFilter = ({
   filterId,
   onFilterUpdate,
   placeholderLabel,
-  selectedFilters = [],
+  selectedFilters,
   showFilter = true,
   title,
 }: FilterTypeProps): ReactElement => {

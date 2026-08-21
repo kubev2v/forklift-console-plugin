@@ -12,6 +12,7 @@ import InspectionVmRow from './InspectionVmRow';
 import VmConfigForm from './VmConfigForm';
 
 const INSPECTION_VM_TABLE_ID = 'inspection-vm-table';
+const EMPTY_VM_OVERRIDES: Record<string, VmOverrides> = {};
 
 const getDiskEncryptionLabel = (overrides?: VmOverrides): string | undefined => {
   if (overrides?.nbdeClevis) {
@@ -43,7 +44,7 @@ const InspectionVmTable: FC<InspectionVmTableProps> = ({
   onSelect,
   onVmOverrideChange,
   selectedIds,
-  vmOverrides = {},
+  vmOverrides = EMPTY_VM_OVERRIDES,
   vmRows,
 }) => {
   const { t } = useForkliftTranslation();

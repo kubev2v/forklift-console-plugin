@@ -426,6 +426,8 @@ export const createEslintConfig = () =>
         ...eslintReact.configs['recommended-typescript'].rules,
         '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'error',
         '@eslint-react/hooks-extra/prefer-use-state-lazy-initialization': 'off',
+        // MTV-6463: stable module-level defaults instead of inline []/{}
+        '@eslint-react/no-unstable-default-props': 'error',
       },
     },
     // MTV-6273: enforce explicit return types on src/

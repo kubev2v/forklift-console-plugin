@@ -8,8 +8,10 @@ type SelectedToggleActionProps = GlobalActionToolbarProps<unknown> & {
   store: ShowAllStore;
 };
 
+const EMPTY_SELECTED_IDS: string[] = [];
+
 const SelectedToggleAction: FC<SelectedToggleActionProps> = ({
-  selectedIds: toolbarSelectedIds = [],
+  selectedIds: toolbarSelectedIds = EMPTY_SELECTED_IDS,
   store,
 }) => {
   const showAll = useSyncExternalStore(store.subscribe, store.getSnapshot);
