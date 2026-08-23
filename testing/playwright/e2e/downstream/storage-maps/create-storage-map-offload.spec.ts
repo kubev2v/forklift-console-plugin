@@ -159,6 +159,9 @@ test.describe(
       });
 
       await test.step('Select source/target storage and submit form', async () => {
+        // MTV-6324: create form rejects empty extra rows; remove the row added only for
+        // independent offload-state checks before submitting a single complete mapping.
+        await createPage.removeMapping(1);
         await createPage.selectFirstAvailableSourceAtIndex(0);
         await createPage.selectFirstAvailableTargetAtIndex(0);
         await createPage.submit();

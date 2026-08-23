@@ -76,6 +76,13 @@ export class StorageMapCreatePage {
     await input.fill(name);
   }
 
+  async removeMapping(index: number): Promise<void> {
+    const removeButton = this.page.getByTestId(`remove-row-${index}`);
+    await expect(removeButton).toBeVisible();
+    await expect(removeButton).toBeEnabled();
+    await removeButton.click();
+  }
+
   async selectFirstAvailableSourceAtIndex(index: number): Promise<string> {
     return this.selectFirstAvailableOptionFromDropdown(this.sourceStorageTestId(index));
   }
