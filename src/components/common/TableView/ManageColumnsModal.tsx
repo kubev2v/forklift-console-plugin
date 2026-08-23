@@ -1,81 +1,28 @@
-import { type FormEvent, type ReactElement, useState } from 'react';
+import { type ReactElement, useState } from 'react';
 
-import {
-  Button,
-  ButtonVariant,
-  Content,
-  ContentVariants,
-  DataList,
-  DataListCell,
-  DataListCheck,
-  DataListControl,
-  DataListItemCells,
-} from '@patternfly/react-core';
+import { Button, ButtonVariant, Content, ContentVariants } from '@patternfly/react-core';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from '@patternfly/react-core';
-import { DragDropSort, type DraggableObject } from '@patternfly/react-drag-drop';
+import type { DraggableObject } from '@patternfly/react-drag-drop';
 
 import type { ResourceField } from '../utils/types';
 
+import { ManageColumnsDragDropList } from './ManageColumnsDragDropList';
+import { filterActionsAndHidden } from './manageColumnsUtils';
+
 type ManagedColumnsProps = {
-  /**
-   * A label for the ``Cancel`` button to be displayed in the modal.
-   */
   cancelLabel?: string;
-  /**
-   * The defaults used for initialization and for the restore option. Read only.
-   */
   defaultColumns: ResourceField[];
-  /**
-   * A description title to be displayed in the modal.
-   */
   description?: string;
-  /**
-   * A callback for when the ``Save`` button is clicked. A setter to modify state in the parent
-   */
   onChange: (columns: ResourceField[]) => void;
-  /**
-   * A callback for when the ``close`` button is clicked.
-   */
   onClose: () => void;
-  /**
-   * An aria label for the reorder draggable option to be displayed in the modal.
-   */
   reorderLabel?: string;
-  /**
-   * The list of fields to manage by the modal. This is the state maintained by parent component. Read only.
-   */
   resourceFields: ResourceField[];
-  /**
-   * A label for the ``Restore`` button to be displayed in the modal.
-   */
   restoreLabel?: string;
-  /**
-   * A label for the ``Save`` button to be displayed in the modal.
-   */
   saveLabel?: string;
-  /**
-   * To flag an open or a closed modal.
-   */
   showModal: boolean;
-  /**
-   * A Simple text content of the modal header.
-   */
   title?: string;
 };
 
-const filterActionsAndHidden = (resourceFields: ResourceField[]): ResourceField[] =>
-  resourceFields.filter((col) => !col.isAction && !col.isHidden && col.resourceFieldId !== null);
-
-/**
- * Modal dialog for managing resourceFields.
- *
- * **Supported features:**
- * 1. toggle column visibility (disabled for identity resourceFields that should always be displayed to uniquely identify a row).
- * 2. re-order the resourceFields using drag and drop.
- *
- * [<img src="static/media/src/components-stories/assets/github-logo.svg"><i class="fi fi-brands-github"></i>
- * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/TableView/ManageColumnsModal.tsx)
- */
 export const ManageColumnsModal = ({
   cancelLabel = 'Cancel',
   defaultColumns,
@@ -115,20 +62,11 @@ export const ManageColumnsModal = ({
   };
 
   const onSave = (): void => {
-    // assume that action resourceFields are always at the end
     onChange([
       ...editedColumns,
       ...resourceFields.filter((col) => Boolean(col.isAction) || Boolean(col.isHidden)),
     ]);
     onClose();
-  };
-
-  type OnChangeFactoryType = (
-    id: string,
-  ) => (checked: boolean, event: FormEvent<HTMLInputElement>) => void;
-
-  const onChangeFactory: OnChangeFactoryType = (id) => (checked) => {
-    onSelect(id, checked);
   };
 
   return (
@@ -149,50 +87,13 @@ export const ManageColumnsModal = ({
           title={title}
         />
         <ModalBody>
-          <DragDropSort
-            items={editedColumns.map(({ isIdentity, isVisible, label, resourceFieldId: id }) => {
-              const fieldId = id ?? '';
-
-              return {
-                content: (
-                  <>
-                    <DataListControl>
-                      <DataListCheck
-                        aria-labelledby={`item-${fieldId}`}
-                        id={`check-${fieldId}`}
-                        isChecked={
-                          isIdentity
-                            ? resourceFields.find(
-                                (resourceField) => resourceField.resourceFieldId === fieldId,
-                              )?.isVisible
-                            : isVisible
-                        }
-                        isDisabled={isIdentity}
-                        name={`item-${fieldId}`}
-                        onChange={(event, checked) => {
-                          onChangeFactory(fieldId)(checked, event);
-                        }}
-                        otherControls
-                      />
-                    </DataListControl>
-                    <DataListItemCells
-                      dataListCells={[
-                        <DataListCell key={fieldId}>
-                          <span id={`item-${fieldId}`}>{label}</span>
-                        </DataListCell>,
-                      ]}
-                    />
-                  </>
-                ),
-                id: fieldId,
-              };
-            })}
+          <ManageColumnsDragDropList
+            editedColumns={editedColumns}
             onDrop={onDrop}
-            overlayProps={{ isCompact: true }}
-            variant="DataList"
-          >
-            <DataList aria-label={title} data-testid="manage-columns-list" isCompact />
-          </DragDropSort>
+            onSelect={onSelect}
+            resourceFields={resourceFields}
+            title={title}
+          />
         </ModalBody>
         <ModalFooter>
           <Button

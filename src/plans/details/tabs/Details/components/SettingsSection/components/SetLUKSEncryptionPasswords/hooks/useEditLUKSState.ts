@@ -1,76 +1,37 @@
 import { type Dispatch, type SetStateAction, useCallback, useMemo, useRef, useState } from 'react';
-import { SOURCE_SECRET_LABEL } from 'src/plans/create/utils/copyDecryptionSecret';
 
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
 import {
   getGroupVersionKindForModel,
   type WatchK8sResource,
 } from '@openshift-console/dynamic-plugin-sdk';
-import { getLabels, getName, getNamespace } from '@utils/crds/common/selectors';
-import { getLUKSSecretName, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
+import { getNamespace } from '@utils/crds/common/selectors';
+import { getLUKSSecretName } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
-import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
-import { onDiskDecryptionConfirm } from '../utils/utils';
-
+import { confirmLuksDecryption } from './confirmLuksDecryption';
+import {
+  allVMsHaveMatchingLuks,
+  decodeSecretPassphrases,
+  DECRYPTION_MODE_EXISTING,
+  DECRYPTION_MODE_PASSPHRASES,
+  type DecryptionMode,
+  getNbdeClevisFromResource,
+  getSecretDataKey,
+  getSourceSecretName,
+  isNotFoundWatchError,
+  isSecretNamed,
+} from './editLuksHelpers';
 import type { EditLUKSState } from './types';
 
-const DECRYPTION_MODE_EXISTING = 'existing';
-const DECRYPTION_MODE_PASSPHRASES = 'passphrases';
-
-export type DecryptionMode = typeof DECRYPTION_MODE_EXISTING | typeof DECRYPTION_MODE_PASSPHRASES;
-
 export { DECRYPTION_MODE_EXISTING, DECRYPTION_MODE_PASSPHRASES };
-
-const HTTP_NOT_FOUND = 404;
-
-type WatchError = Error & { code?: number; status?: number };
-
-const isNotFoundWatchError = (error: Error | null): boolean => {
-  if (!error) {
-    return false;
-  }
-
-  const watchError = error as WatchError;
-  if (watchError.code === HTTP_NOT_FOUND || watchError.status === HTTP_NOT_FOUND) {
-    return true;
-  }
-
-  const message = watchError.message ?? '';
-  return message.includes('NotFound') || message.toLowerCase().includes('not found');
-};
-
-const getNbdeClevisFromResource = (resource: EditLUKSState['resource']): boolean => {
-  const vms = getPlanVirtualMachines(resource) as EnhancedPlanSpecVms[];
-  if (isEmpty(vms)) {
-    return false;
-  }
-  return vms[0]?.nbdeClevis ?? false;
-};
-
-const decodeSecretPassphrases = (secretData: Record<string, string> | undefined): string[] => {
-  if (!secretData) {
-    return [];
-  }
-
-  return Object.values(secretData)
-    .map((secretValue) => {
-      try {
-        return atob(secretValue);
-      } catch {
-        return '';
-      }
-    })
-    .filter(Boolean);
-};
+export type { DecryptionMode };
 
 export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSState => {
   const secretName = getLUKSSecretName(resource);
   const secretNamespace = getNamespace(resource);
-  const allVMsHasMatchingLuks = getPlanVirtualMachines(resource).every(
-    (vm) => vm.luks?.name === secretName,
-  );
+  const allVMsHasMatchingLuks = allVMsHaveMatchingLuks(resource);
 
   const watchResource: WatchK8sResource | null = useMemo(
     () =>
@@ -87,7 +48,7 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
   const [secret, secretLoaded, secretLoadError] =
     useK8sWatchResource<IoK8sApiCoreV1Secret>(watchResource);
 
-  const sourceSecretName = secret ? getLabels(secret)?.[SOURCE_SECRET_LABEL] : undefined;
+  const sourceSecretName = getSourceSecretName(secret);
   const sourceWatchResource: WatchK8sResource | null = useMemo(
     () =>
       sourceSecretName && secretNamespace
@@ -124,15 +85,15 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     setValue([]);
   }
 
-  if (!modeInitializedRef.current && getName(secret)) {
+  if (!modeInitializedRef.current && isSecretNamed(secret)) {
     modeInitializedRef.current = true;
-    if (secret && getLabels(secret)?.[SOURCE_SECRET_LABEL]) {
+    if (secret && getSourceSecretName(secret)) {
       setDecryptionMode(DECRYPTION_MODE_EXISTING);
     }
   }
 
   if (!selectedSecretInitializedRef.current && sourceSecretName) {
-    if (getName(sourceSecret)) {
+    if (isSecretNamed(sourceSecret)) {
       selectedSecretInitializedRef.current = true;
       if (!selectedSecret) {
         selectedSecretWasAutoSeededRef.current = true;
@@ -142,7 +103,6 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
       isNotFoundWatchError(sourceSecretLoadError) ||
       (sourceSecretLoaded && !sourceSecretLoadError)
     ) {
-      // Confirmed missing source (404/NotFound or loaded empty) — keep the modal usable
       selectedSecretInitializedRef.current = true;
       if (!selectedSecret) {
         setDecryptionMode(DECRYPTION_MODE_PASSPHRASES);
@@ -151,7 +111,7 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
     }
   }
 
-  const secretDataKey = secretName && secret?.data ? JSON.stringify(secret.data) : undefined;
+  const secretDataKey = getSecretDataKey(secretName, secret);
   if (secretDataKey !== prevSecretDataKey) {
     setPrevSecretDataKey(secretDataKey);
     if (secretName && secret?.data && !nbdeClevis) {
@@ -165,26 +125,20 @@ export const useEditLUKSState = (resource: EditLUKSState['resource']): EditLUKSS
       setSelectedSecret(next);
     }, []);
 
-  const handleConfirm = useCallback(async (): Promise<unknown> => {
-    if (decryptionMode === DECRYPTION_MODE_EXISTING && selectedSecret) {
-      return onDiskDecryptionConfirm({
-        existingSecret: selectedSecret,
-        labeledSourceSecretName: selectedSecretWasAutoSeededRef.current
-          ? sourceSecretName
-          : undefined,
-        nbdeClevis: false,
-        newValue: JSON.stringify([]),
+  const handleConfirm = useCallback(
+    async (): Promise<unknown> =>
+      confirmLuksDecryption({
+        decryptionMode,
+        nbdeClevis,
         resource,
-      });
-    }
-
-    return onDiskDecryptionConfirm({
-      currentSecret: secret,
-      nbdeClevis,
-      newValue: JSON.stringify(value),
-      resource,
-    });
-  }, [decryptionMode, nbdeClevis, resource, secret, selectedSecret, sourceSecretName, value]);
+        secret,
+        selectedSecret,
+        selectedSecretWasAutoSeeded: selectedSecretWasAutoSeededRef.current,
+        sourceSecretName,
+        value,
+      }),
+    [decryptionMode, nbdeClevis, resource, secret, selectedSecret, sourceSecretName, value],
+  );
 
   return {
     allVMsHasMatchingLuks,

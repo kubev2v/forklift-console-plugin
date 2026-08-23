@@ -1,21 +1,15 @@
-/* eslint-disable max-lines-per-function */
 import { type ComponentProps, type ReactElement, useMemo } from 'react';
 
 import { useFields } from '@components/common/Page/useFields';
 import { DefaultHeader } from '@components/common/TableView/DefaultHeader';
 import { DefaultRow } from '@components/common/TableView/DefaultRow';
-import { withTr } from '@components/common/TableView/withTr';
 import type { TableSortContextProps } from '@components/TableSortContext';
-import { PageSection } from '@patternfly/react-core';
 
-import { PageContent } from './components/PageContent';
-import { PageHeader } from './components/PageHeader';
-import { PageTable } from './components/PageTable';
-import { PageToolbar } from './components/PageToolbar';
+import StandardPageInnerView from './components/StandardPageInnerView';
 import { usePageData } from './hooks/usePageData';
 import { usePageFilters } from './hooks/usePageFilters';
 import { usePagination } from './hooks/usePagination';
-import { getVisibleColumns } from './utils/utils';
+import { useStandardPageInnerData } from './hooks/useStandardPageInnerData';
 import type StandardPage from './StandardPage';
 
 import './StandardPage.style.css';
@@ -26,42 +20,27 @@ type StandardPageInnerProps<T> = Omit<ComponentProps<typeof StandardPage<T>>, 'p
 
 const EMPTY_GLOBAL_ACTION_TOOLBAR_ITEMS: never[] = [];
 
-const StandardPageInner = <T,>({
-  activeSort,
-  addButton,
-  alerts,
-  canSelect,
-  cell,
-  className,
-  compareFn,
-  customNoResultsFound,
-  customNoResultsMatchFilter,
-  dataSource: [flatData, loaded, error],
-  expanded,
-  expandedIds,
-  extraSupportedFilters,
-  extraSupportedMatchers,
-  fieldsMetadata,
-  GlobalActionToolbarItems = EMPTY_GLOBAL_ACTION_TOOLBAR_ITEMS,
-  header = DefaultHeader<T>,
-  namespace = '',
-  noPadding,
-  onSelect,
-  page: initialPage = 1,
-  pageRef,
-  pagination,
-  postFilterData,
-  row = DefaultRow<T>,
-  selectedIds,
-  setActiveSort,
-  shouldShowLearningExperienceButton = false,
-  showManageColumns = true,
-  testId,
-  title,
-  titleHelpContent,
-  toId,
-  userSettings,
-}: StandardPageInnerProps<T>): ReactElement => {
+const StandardPageInner = <T,>(props: StandardPageInnerProps<T>): ReactElement => {
+  const {
+    canSelect,
+    cell,
+    dataSource: [flatData, loaded, error],
+    expanded,
+    extraSupportedFilters,
+    extraSupportedMatchers,
+    fieldsMetadata,
+    GlobalActionToolbarItems = EMPTY_GLOBAL_ACTION_TOOLBAR_ITEMS,
+    header = DefaultHeader<T>,
+    namespace = '',
+    page: initialPage = 1,
+    pageRef,
+    pagination,
+    postFilterData,
+    row = DefaultRow<T>,
+    userSettings,
+    ...viewProps
+  } = props;
+
   const { clearAllFilters, metaMatcher, selectedFilters, setSelectedFilters, supportedFilters } =
     usePageFilters({
       extraSupportedFilters,
@@ -82,7 +61,7 @@ const StandardPageInner = <T,>({
   );
 
   const { finalFilteredData, sortedData } = usePageData({
-    compareFn,
+    compareFn: viewProps.compareFn,
     error,
     fields,
     flatData,
@@ -103,104 +82,44 @@ const StandardPageInner = <T,>({
       userSettings: userSettings?.pagination,
     });
 
-  const visibleColumns = useMemo(() => getVisibleColumns(fields), [fields]);
-
-  const RowComponent = cell ? withTr(cell, expanded) : row;
-
-  const dataOnScreen = useMemo(
-    () => (showPagination ? pageData : finalFilteredData),
-    [showPagination, pageData, finalFilteredData],
-  );
-
-  const dataIds = useMemo(
-    () =>
-      finalFilteredData
-        ?.filter((item) => canSelect?.(item) ?? true)
-        .map((data) => toId?.(data) ?? ''),
-    [finalFilteredData, toId, canSelect],
-  );
-
-  const pageDataIds = useMemo(
-    () => pageData?.filter((item) => canSelect?.(item) ?? true).map((data) => toId?.(data) ?? ''),
-    [pageData, toId, canSelect],
-  );
-
-  const renderedGlobalActions = useMemo(
-    () =>
-      GlobalActionToolbarItems.map((Action, index) => (
-        <Action dataOnScreen={dataOnScreen} key={`${Action.name}-${index}`} />
-      )),
-    [GlobalActionToolbarItems, dataOnScreen],
-  );
+  const innerData = useStandardPageInnerData({
+    canSelect,
+    cell,
+    expanded,
+    fields,
+    finalFilteredData,
+    GlobalActionToolbarItems,
+    pageData,
+    row,
+    showPagination,
+    toId: viewProps.toId,
+  });
 
   return (
-    <span className={className} data-testid={testId}>
-      <PageHeader
-        actionButton={addButton}
-        shouldShowLearningExperienceButton={shouldShowLearningExperienceButton}
-        title={title}
-        titleHelpContent={titleHelpContent}
-      />
-
-      {alerts && <PageSection hasBodyWrapper={false}>{alerts}</PageSection>}
-
-      <PageContent
-        itemsPerPage={itemsPerPage}
-        noPadding={noPadding}
-        onPerPageSelect={onPerPageSelect}
-        onSetPage={onSetPage}
-        page={page}
-        showPagination={showPagination}
-        toolbar={
-          <PageToolbar
-            clearAllFilters={clearAllFilters}
-            dataIds={dataIds}
-            defaultFieldsWithoutFilters={defaultFieldsWithoutFilters}
-            fields={fields}
-            fieldsMetadata={fieldsMetadata}
-            flatData={flatData}
-            itemsPerPage={itemsPerPage}
-            onPerPageSelect={onPerPageSelect}
-            onSelect={onSelect}
-            onSetPage={onSetPage}
-            page={page}
-            pageDataIds={pageDataIds}
-            renderedGlobalActions={renderedGlobalActions}
-            selectedFilters={selectedFilters}
-            selectedIds={selectedIds}
-            setFields={setFields}
-            setSelectedFilters={setSelectedFilters}
-            showManageColumns={showManageColumns}
-            showPagination={showPagination}
-            sortedData={sortedData}
-            supportedFilters={supportedFilters}
-            totalItems={finalFilteredData.length}
-          />
-        }
-        totalItems={finalFilteredData.length}
-      >
-        <PageTable
-          activeSort={activeSort}
-          clearAllFilters={clearAllFilters}
-          compareFn={compareFn}
-          customNoResultsFound={customNoResultsFound}
-          customNoResultsMatchFilter={customNoResultsMatchFilter}
-          dataOnScreen={dataOnScreen}
-          error={error}
-          expandedIds={expandedIds}
-          finalFilteredData={finalFilteredData}
-          header={header}
-          loaded={loaded}
-          namespace={namespace}
-          RowComponent={RowComponent}
-          setActiveSort={setActiveSort}
-          sortedData={sortedData}
-          title={title}
-          toId={toId}
-          visibleColumns={visibleColumns}
-        />
-      </PageContent>
-    </span>
+    <StandardPageInnerView
+      {...viewProps}
+      clearAllFilters={clearAllFilters}
+      defaultFieldsWithoutFilters={defaultFieldsWithoutFilters}
+      error={error}
+      fields={fields}
+      fieldsMetadata={fieldsMetadata}
+      finalFilteredData={finalFilteredData}
+      flatData={flatData}
+      header={header}
+      itemsPerPage={itemsPerPage}
+      loaded={loaded}
+      namespace={namespace}
+      onPerPageSelect={onPerPageSelect}
+      onSetPage={onSetPage}
+      page={page}
+      selectedFilters={selectedFilters}
+      setFields={setFields}
+      setSelectedFilters={setSelectedFilters}
+      showPagination={showPagination}
+      sortedData={sortedData}
+      supportedFilters={supportedFilters}
+      {...innerData}
+    />
   );
 };
 

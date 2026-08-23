@@ -1,4 +1,4 @@
-import { type FC, type ReactElement, useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Select from '@components/common/Select';
@@ -7,12 +7,9 @@ import {
   FormHelperText,
   HelperText,
   HelperTextItem,
-  Label,
   SelectGroup,
   SelectList,
   SelectOption,
-  Split,
-  SplitItem,
 } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -22,35 +19,14 @@ import type { MappingValue } from '@utils/types';
 import type { StorageVendorProduct } from '../utils/types';
 import { resolveProductFromCsiProvisioner } from '../utils/vendorLookupTables';
 
+import { partitionTargetStoragesByVendor, renderStorageOption } from './targetStorageFieldUtils';
+
 type TargetStorageFieldProps = {
   fieldId: string;
   suggestedVendorProduct?: StorageVendorProduct;
   targetStorages: TargetStorage[];
   testId?: string;
 };
-
-const shouldShowDefaultLabel = (storage: TargetStorage): boolean =>
-  storage.isDefaultVirt || storage.isDefault;
-
-const renderStorageOption = (storage: TargetStorage, t: (k: string) => string): ReactElement => (
-  <Split hasGutter>
-    <SplitItem isFilled>{storage.name}</SplitItem>
-    {shouldShowDefaultLabel(storage) && (
-      <SplitItem>
-        <Label color="green" isCompact>
-          {t('Default')}
-        </Label>
-      </SplitItem>
-    )}
-    {storage.isNetAppShift && (
-      <SplitItem>
-        <Label color="blue" isCompact>
-          {t('NetApp Shift')}
-        </Label>
-      </SplitItem>
-    )}
-  </Split>
-);
 
 const TargetStorageField: FC<TargetStorageFieldProps> = ({
   fieldId,
@@ -65,28 +41,15 @@ const TargetStorageField: FC<TargetStorageFieldProps> = ({
   } = useFormContext();
   const { t } = useForkliftTranslation();
 
-  const { others, recommended } = useMemo(() => {
-    if (!suggestedVendorProduct) {
-      return { others: targetStorages, recommended: [] };
-    }
-
-    const rec: TargetStorage[] = [];
-    const oth: TargetStorage[] = [];
-
-    for (const storage of targetStorages) {
-      const resolved = storage.provisioner
-        ? resolveProductFromCsiProvisioner(storage.provisioner)
-        : undefined;
-
-      if (resolved === suggestedVendorProduct) {
-        rec.push(storage);
-      } else {
-        oth.push(storage);
-      }
-    }
-
-    return { others: oth, recommended: rec };
-  }, [suggestedVendorProduct, targetStorages]);
+  const { others, recommended } = useMemo(
+    () =>
+      partitionTargetStoragesByVendor(
+        targetStorages,
+        suggestedVendorProduct,
+        resolveProductFromCsiProvisioner,
+      ),
+    [suggestedVendorProduct, targetStorages],
+  );
 
   const hasRecommended = !isEmpty(recommended);
 

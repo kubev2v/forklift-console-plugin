@@ -11,19 +11,13 @@ import {
 } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import type { CutoverTimeChangeArgs } from './hooks/useCutoverDateTimeHandlers';
+
 type ScheduledCutoverFieldsProps = {
   cutoverDate: string | undefined;
   isScheduledInPast: boolean;
   onDateChange: (event: FormEvent<HTMLInputElement>, value: string, date?: Date) => void;
-  // eslint-disable-next-line @typescript-eslint/max-params
-  onTimeChange: (
-    event: FormEvent<HTMLInputElement>,
-    timeInput: string,
-    hour?: number,
-    minute?: number,
-    seconds?: number,
-    timeValid?: boolean,
-  ) => void;
+  onTimeChange: (args: CutoverTimeChangeArgs) => void;
   time: string | undefined;
 };
 
@@ -35,6 +29,13 @@ const ScheduledCutoverFields: FC<ScheduledCutoverFieldsProps> = ({
   time,
 }) => {
   const { t } = useForkliftTranslation();
+
+  const handleTimePickerChange = (
+    ...args: [FormEvent<HTMLInputElement>, string, number?, number?, number?, boolean?]
+  ): void => {
+    const [, timeInput, hour, minute, , timeValid] = args;
+    onTimeChange({ hour, minute, timeInput, timeValid });
+  };
 
   return (
     <>
@@ -50,7 +51,7 @@ const ScheduledCutoverFields: FC<ScheduledCutoverFieldsProps> = ({
           <TimePicker
             aria-label={t('Cutover time')}
             menuAppendTo={document.body}
-            onChange={onTimeChange}
+            onChange={handleTimePickerChange}
             time={time}
           />
         </InputGroup>

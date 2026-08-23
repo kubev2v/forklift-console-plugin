@@ -215,10 +215,11 @@ export const createEslintConfig = () =>
         'import/no-named-as-default-member': 'off',
         'import/no-unresolved': 'off',
         'import/order': 'off',
+        // MTV-6276: align with AGENTS.md file size target
         'max-lines': [
           'error',
           {
-            max: 300,
+            max: 150,
             skipBlankLines: true,
             skipComments: true,
           },
@@ -511,7 +512,7 @@ export const createEslintConfig = () =>
         '@typescript-eslint/no-unsafe-return': 'off',
       },
     },
-    // Testing directory specific rules
+    // Testing directory specific rules (src unit tests inherit max-lines: 150)
     {
       files: [
         'testing/**/*.{js,ts,jsx,tsx}',
@@ -539,7 +540,6 @@ export const createEslintConfig = () =>
         'jsdoc/require-property-description': 'off',
         'jsdoc/require-property-name': 'off',
         'jsdoc/require-property-type': 'off',
-        'max-lines': 'off',
         'max-lines-per-function': 'off',
         'no-await-in-loop': 'off',
         'no-console': 'off',
@@ -553,6 +553,13 @@ export const createEslintConfig = () =>
         'sonarjs/cognitive-complexity': 'off',
         'sonarjs/no-duplicate-string': 'off',
         'sonarjs/no-identical-functions': 'off',
+      },
+    },
+    // MTV-6276: Playwright e2e/page-objects stay exempt from max-lines
+    {
+      files: ['testing/**/*.{js,ts,jsx,tsx}'],
+      rules: {
+        'max-lines': 'off',
       },
     },
     {

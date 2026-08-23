@@ -18,7 +18,8 @@ import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
 import { useInspectionData } from './hooks/useInspectionData';
 import { useSpecVirtualMachinesActions } from './hooks/useSpecVirtualMachinesActions';
 import { useSpecVirtualMachinesListData } from './hooks/useSpecVirtualMachinesListData';
-import { canSelect, specVirtualMachineFields, vmDataToId } from './utils/utils';
+import { specVirtualMachineFields } from './utils/specVirtualMachineFields';
+import { canSelect, vmDataToId } from './utils/utils';
 import PlanSpecVirtualMachinesRow from './PlanSpecVirtualMachinesRow';
 
 import 'src/components/InspectVirtualMachines/InspectionExpandedSection.scss';

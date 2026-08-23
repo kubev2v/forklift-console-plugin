@@ -1,5 +1,4 @@
-// Ignoring above eslint rule as onTimeChange signature from PF has 6 params
-import { type FormEvent, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
@@ -11,6 +10,7 @@ import { getName } from '@utils/crds/common/selectors';
 
 import type { PlanModalProps } from '../types';
 
+import { useCutoverDateTimeHandlers } from './hooks/useCutoverDateTimeHandlers';
 import {
   CUTOVER_MODE_ASAP,
   CUTOVER_MODE_SCHEDULED,
@@ -34,74 +34,27 @@ const PlanCutoverMigrationModal: OverlayComponent<PlanModalProps> = ({ closeOver
   const { cutoverDate, cutoverMode, setCutoverDate, setCutoverMode, setTime, time } =
     useCutoverFormState(existingCutoverValue);
 
-  const onDateChange: (event: FormEvent<HTMLInputElement>, value: string, date?: Date) => void = (
-    _event,
-    value,
-    date,
-  ) => {
-    setIsDateValid(Boolean(date));
-    if (!date) {
-      return;
-    }
-
-    const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
-
-    const [year, month, day] = value.split('-').map((num: string) => parseInt(num, 10));
-
-    updatedFromDate.setFullYear(year);
-    updatedFromDate.setMonth(month - 1);
-    updatedFromDate.setDate(day);
-
-    setCutoverDate(updatedFromDate.toISOString());
-  };
-
-  // eslint-disable-next-line @typescript-eslint/max-params
-  const onTimeChange: (
-    event: FormEvent<HTMLInputElement>,
-    timeInput: string,
-    hour?: number,
-    minute?: number,
-    seconds?: number,
-    timeValid?: boolean,
-    // eslint-disable-next-line @typescript-eslint/max-params
-  ) => void = (_event, timeInput, hour, minute, _seconds, timeValid) => {
-    setTime(timeInput);
-    setIsTimeValid(Boolean(timeValid) && Boolean(timeInput));
-
-    if (!timeValid) {
-      return;
-    }
-
-    const updatedFromDate = cutoverDate ? new Date(cutoverDate) : new Date();
-
-    updatedFromDate.setHours(hour ?? 0);
-    updatedFromDate.setMinutes(minute ?? 0);
-
-    setCutoverDate(updatedFromDate.toISOString());
-  };
+  const { getCutoverDateToSet, isScheduledInPast, isScheduledInvalid, onDateChange, onTimeChange } =
+    useCutoverDateTimeHandlers({
+      cutoverDate,
+      cutoverMode,
+      setCutoverDate,
+      setIsDateValid,
+      setIsTimeValid,
+      setTime,
+    });
 
   const onCutover = useCallback(async () => {
     if (activeMigration) {
-      const dateToSet = cutoverMode === CUTOVER_MODE_ASAP ? new Date().toISOString() : cutoverDate;
-      await patchMigrationCutover(activeMigration, dateToSet, trackEvent);
+      await patchMigrationCutover(activeMigration, getCutoverDateToSet(), trackEvent);
     }
-  }, [cutoverMode, cutoverDate, activeMigration, trackEvent]);
+  }, [activeMigration, getCutoverDateToSet, trackEvent]);
 
   const onDeleteCutover = useCallback(async () => {
     if (activeMigration) {
       await patchMigrationCutover(activeMigration, undefined, trackEvent);
     }
   }, [activeMigration, trackEvent]);
-
-  const isScheduledInvalid =
-    cutoverMode === CUTOVER_MODE_SCHEDULED && (!isTimeValid || !isDateValid);
-
-  const isScheduledInPast =
-    cutoverMode === CUTOVER_MODE_SCHEDULED &&
-    isDateValid &&
-    isTimeValid &&
-    cutoverDate !== undefined &&
-    new Date(cutoverDate) < new Date();
 
   const additionalAction = useMemo(
     () =>
@@ -120,7 +73,7 @@ const PlanCutoverMigrationModal: OverlayComponent<PlanModalProps> = ({ closeOver
       additionalAction={additionalAction}
       closeOverlay={closeOverlay}
       confirmLabel={t('Set cutover')}
-      isDisabled={isScheduledInvalid}
+      isDisabled={isScheduledInvalid(isTimeValid, isDateValid)}
       onConfirm={onCutover}
       title={hasExistingCutover ? t('Edit cutover') : t('Schedule cutover')}
     >
@@ -169,7 +122,7 @@ const PlanCutoverMigrationModal: OverlayComponent<PlanModalProps> = ({ closeOver
         {cutoverMode === CUTOVER_MODE_SCHEDULED && (
           <ScheduledCutoverFields
             cutoverDate={cutoverDate}
-            isScheduledInPast={isScheduledInPast}
+            isScheduledInPast={isScheduledInPast(isTimeValid, isDateValid)}
             onDateChange={onDateChange}
             onTimeChange={onTimeChange}
             time={time}

@@ -1,87 +1,23 @@
-import { type FC, useEffect } from 'react';
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
-import { createPlanStorageMapFieldLabels } from 'src/plans/create/steps/storage-map/constants';
-import {
-  isSoleMappingOfUsedSource,
-  validatePlanStorageMaps,
-} from 'src/plans/create/steps/storage-map/utils';
-import AccessModeField from 'src/storageMaps/components/AccessModeField';
+import type { FC } from 'react';
 import GroupedSourceStorageField from 'src/storageMaps/components/GroupedSourceStorageField';
-import OffloadStorageRow from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageRow';
-import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import type { V1beta1Provider } from '@forklift-ui/types';
-import { Stack, StackItem } from '@patternfly/react-core';
-import { FEATURE_NAMES } from '@utils/constants';
-import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import type { InventoryStorage } from '@utils/hooks/useStorages';
 import { useForkliftTranslation } from '@utils/i18n';
-import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { StorageMapFieldId, type TargetStorage } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
 
-import type { PlanStorageEditFormValues } from '../utils/types';
-
+import { getStorageMapHeaders } from './planStorageMapHeaders';
+import {
+  getDefaultAppendMapping,
+  getMissingUsedSourceStorage,
+  getPlanStorageMapRemoveButton,
+} from './planStorageMapRemoveButton';
+import StorageMappingOptions from './StorageMappingOptions';
 import TargetStorageInputField from './TargetStorageInputField';
-
-const getStorageMapHeaders = (
-  isIscsi?: boolean,
-): { label: string | undefined; width: 45 | 90 }[] =>
-  isIscsi
-    ? [
-        {
-          label: createPlanStorageMapFieldLabels[StorageMapFieldId.TargetStorage],
-          width: 90 as const,
-        },
-      ]
-    : [
-        {
-          label: createPlanStorageMapFieldLabels[StorageMapFieldId.SourceStorage],
-          width: 45 as const,
-        },
-        {
-          label: createPlanStorageMapFieldLabels[StorageMapFieldId.TargetStorage],
-          width: 45 as const,
-        },
-      ];
-
-type StorageMappingOptionsProps = {
-  index: number;
-  isVsphereOffload: boolean;
-  sourceProvider: V1beta1Provider;
-  sourceStorages: InventoryStorage[];
-  targetStorages: TargetStorage[];
-};
-
-const StorageMappingOptions: FC<StorageMappingOptionsProps> = ({
-  index,
-  isVsphereOffload,
-  sourceProvider,
-  sourceStorages,
-  targetStorages,
-}) => (
-  <Stack hasGutter>
-    <StackItem>
-      <AccessModeField
-        fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
-        targetStorageFieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-        targetStorages={targetStorages}
-      />
-    </StackItem>
-    {isVsphereOffload && (
-      <StackItem>
-        <OffloadStorageRow
-          index={index}
-          sourceProvider={sourceProvider}
-          sourceStorages={sourceStorages}
-          targetStorages={targetStorages}
-        />
-      </StackItem>
-    )}
-  </Stack>
-);
+import { usePlanStorageMapFieldsTable } from './usePlanStorageMapFieldsTable';
 
 type PlanStorageMapFieldsTableProps = {
   isIscsi?: boolean;
@@ -105,37 +41,14 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
   usedSourceStorages,
 }) => {
   const { t } = useForkliftTranslation();
-  const { isFeatureEnabled } = useFeatureFlags();
-  const isCopyOffloadEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_OFFLOAD);
-  const isOpenshift = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
-  const isVsphereOffload =
-    sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere && isCopyOffloadEnabled;
 
-  const { control, trigger } = useFormContext<PlanStorageEditFormValues>();
-
-  const storageMappings = useWatch({
-    control,
-    name: StorageMapFieldId.StorageMap,
+  const { fieldArray, isVsphereOffload, storageMappings, trigger } = usePlanStorageMapFieldsTable({
+    isIscsi,
+    sourceProvider,
+    usedSourceStorages,
   });
 
-  const {
-    append,
-    fields: storageMappingFields,
-    remove,
-  } = useFieldArray({
-    control,
-    name: StorageMapFieldId.StorageMap,
-    rules: {
-      validate: (values) =>
-        validatePlanStorageMaps(values, usedSourceStorages, isOpenshift, isIscsi),
-    },
-  });
-
-  useEffect(() => {
-    setTimeout(async () => {
-      await trigger();
-    }, 0);
-  }, [trigger]);
+  const { append, fields: storageMappingFields, remove } = fieldArray;
 
   return (
     <FieldBuilderTable
@@ -143,23 +56,9 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
         isDisabled: Boolean(isIscsi) || isLoading || Boolean(loadError),
         label: t('Add mapping'),
         onClick: async () => {
-          const missingStorage = usedSourceStorages.find(
-            (sourceStorage) =>
-              !storageMappings?.some(
-                (storageMapping) =>
-                  storageMapping[StorageMapFieldId.SourceStorage]?.id === sourceStorage.id,
-              ),
-          );
+          const missingStorage = getMissingUsedSourceStorage(storageMappings, usedSourceStorages);
 
-          append({
-            [StorageMapFieldId.SourceStorage]:
-              missingStorage ?? defaultStorageMapping[StorageMapFieldId.SourceStorage],
-            [StorageMapFieldId.TargetStorage]: {
-              name:
-                targetStorages[0]?.name ??
-                defaultStorageMapping[StorageMapFieldId.TargetStorage].name,
-            },
-          });
+          append(getDefaultAppendMapping(missingStorage, targetStorages[0]?.name ?? ''));
 
           await trigger();
         },
@@ -202,34 +101,14 @@ const PlanStorageMapFieldsTable: FC<PlanStorageMapFieldsTableProps> = ({
             ],
       }))}
       headers={getStorageMapHeaders(isIscsi)}
-      removeButton={{
-        isDisabled: (index) => {
-          if (Boolean(isIscsi) || storageMappingFields.length <= 1) {
-            return true;
-          }
-
-          return isSoleMappingOfUsedSource(index, storageMappings ?? [], usedSourceStorages);
-        },
-        onClick: (index) => {
-          if (
-            storageMappingFields.length > 1 &&
-            !isSoleMappingOfUsedSource(index, storageMappings ?? [], usedSourceStorages)
-          ) {
-            remove(index);
-          }
-        },
-        tooltip: (index) => {
-          if (storageMappingFields.length <= 1) {
-            return t('At least one storage mapping must be provided.');
-          }
-
-          if (isSoleMappingOfUsedSource(index, storageMappings ?? [], usedSourceStorages)) {
-            return t('Cannot remove the only mapping for a storage used by the selected VMs.');
-          }
-
-          return undefined;
-        },
-      }}
+      removeButton={getPlanStorageMapRemoveButton({
+        isIscsi,
+        remove,
+        storageMappingFields,
+        storageMappings,
+        t,
+        usedSourceStorages,
+      })}
     />
   );
 };

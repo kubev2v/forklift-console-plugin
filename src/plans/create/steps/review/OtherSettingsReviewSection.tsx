@@ -22,6 +22,7 @@ import { otherFormFieldLabels, OtherSettingsFormFieldId } from '../other-setting
 import { VmFormFieldId } from '../virtual-machines/constants';
 
 import DiskDecryptionReviewItem from './DiskDecryptionReviewItem';
+import VsphereOtherSettingsReviewItems from './VsphereOtherSettingsReviewItems';
 
 const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
   isLiveMigrationFeatureEnabled,
@@ -83,14 +84,12 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
       <DescriptionList horizontalTermWidthModifier={{ default: '18ch' }} isHorizontal>
         {isVsphere && (
           <>
-            <DescriptionListGroup>
-              <DescriptionListTerm>{t('Use NBDE/Clevis')}</DescriptionListTerm>
-
-              <DescriptionListDescription data-testid="review-nbde-clevis">
-                {nbdeClevis ? t('Enabled') : t('Disabled')}
-              </DescriptionListDescription>
-            </DescriptionListGroup>
-
+            <VsphereOtherSettingsReviewItems
+              nbdeClevis={nbdeClevis}
+              preserveStaticIps={preserveStaticIps}
+              rootDevice={rootDevice}
+              sharedDisks={sharedDisks}
+            />
             <DiskDecryptionReviewItem
               diskDecryptionType={diskDecryptionType}
               diskPassPhrases={diskPassPhrases}
@@ -105,52 +104,16 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
             <DescriptionListTerm>
               {otherFormFieldLabels[OtherSettingsFormFieldId.TransferNetwork]}
             </DescriptionListTerm>
-
             <DescriptionListDescription data-testid="review-transfer-network">
               {transferNetwork?.name ?? t('Target provider default')}
             </DescriptionListDescription>
           </DescriptionListGroup>
         )}
 
-        {isVsphere && (
-          <>
-            <DescriptionListGroup>
-              <DescriptionListTerm>
-                {otherFormFieldLabels[OtherSettingsFormFieldId.PreserveStaticIps]}
-              </DescriptionListTerm>
-
-              <DescriptionListDescription data-testid="review-preserve-static-ips">
-                {preserveStaticIps ? t('Enabled') : t('Disabled')}
-              </DescriptionListDescription>
-            </DescriptionListGroup>
-
-            <DescriptionListGroup>
-              <DescriptionListTerm>
-                {otherFormFieldLabels[OtherSettingsFormFieldId.RootDevice]}
-              </DescriptionListTerm>
-
-              <DescriptionListDescription data-testid="review-root-device">
-                {rootDevice ?? t('First root device')}
-              </DescriptionListDescription>
-            </DescriptionListGroup>
-
-            <DescriptionListGroup>
-              <DescriptionListTerm>
-                {otherFormFieldLabels[OtherSettingsFormFieldId.MigrateSharedDisks]}
-              </DescriptionListTerm>
-
-              <DescriptionListDescription data-testid="review-shared-disks">
-                {sharedDisks ? t('Enabled') : t('Disabled')}
-              </DescriptionListDescription>
-            </DescriptionListGroup>
-          </>
-        )}
-
         <DescriptionListGroup>
           <DescriptionListTerm>
             {otherFormFieldLabels[OtherSettingsFormFieldId.TargetPowerState]}
           </DescriptionListTerm>
-
           <DescriptionListDescription data-testid="review-target-power-state">
             {targetPowerState.label}
           </DescriptionListDescription>
@@ -160,7 +123,6 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
           <DescriptionListTerm>
             {otherFormFieldLabels[OtherSettingsFormFieldId.InstanceTypes]}
           </DescriptionListTerm>
-
           <DescriptionListDescription data-testid="review-instance-types">
             {isEmpty(instanceTypeEntries)
               ? t('None')

@@ -4,42 +4,18 @@ import {
   type ReactElement,
   type ReactNode,
   useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
 } from 'react';
 
-import {
-  MenuFooter,
-  type MenuToggleProps,
-  Select,
-  SelectList,
-  SelectOption,
-  type SelectProps,
-} from '@patternfly/react-core';
-import { isEmpty } from '@utils/helpers';
+import { type MenuToggleProps, Select, type SelectProps } from '@patternfly/react-core';
 
-import { DEFAULT_NO_OPTIONS, DEFAULT_PLACEHOLDER, PLACEHOLDER_VALUES } from './utils/constants';
+import { closeSelectWhenBlurred, useTypeaheadSelect } from './hooks/useTypeaheadSelect';
+import { DEFAULT_PLACEHOLDER } from './utils/constants';
 import type { TypeaheadSelectOption } from './utils/types';
-import {
-  defaultFilterFunction,
-  generateFilteredOptions,
-  getDefaultCreateMessage,
-  getDefaultNoResults,
-  isPlaceholderValue,
-} from './utils/utils';
+import { defaultFilterFunction, getDefaultCreateMessage, getDefaultNoResults } from './utils/utils';
 import TypeaheadMenuToggle from './TypeaheadMenuToggle';
+import TypeaheadSelectOptions from './TypeaheadSelectOptions';
 
 import './TypeaheadSelect.scss';
-
-const closeSelectWhenBlurred = (
-  open: boolean,
-  setIsOpen: (value: boolean | ((prev: boolean) => boolean)) => void,
-): void => {
-  if (!open) {
-    setIsOpen(false);
-  }
-};
 
 type TypeaheadSelectProps = {
   allowClear?: boolean;
@@ -75,7 +51,7 @@ const TypeaheadSelect = (
     footer,
     isCreatable = false,
     isDisabled = false,
-    noOptionsMessage = DEFAULT_NO_OPTIONS,
+    noOptionsMessage,
     noResultsMessage = getDefaultNoResults,
     onChange,
     onInputChange,
@@ -89,88 +65,31 @@ const TypeaheadSelect = (
   }: TypeaheadSelectProps,
   ref: ForwardedRef<HTMLInputElement>,
 ): ReactElement => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isFiltering, setIsFiltering] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
+  const {
+    displayOptions,
+    handleFooterClick,
+    handleInputValueChange,
+    handleSelect,
+    handleSelectionClear,
+    handleToggleClick,
+    inputRef,
+    inputValue,
+    isFiltering,
+    isOpen,
+    selectedOption,
+    setIsOpen,
+  } = useTypeaheadSelect({
+    createOptionMessage,
+    filterFunction,
+    isCreatable,
+    noOptionsMessage,
+    noResultsMessage,
+    onChange,
+    options,
+    value,
+  });
 
-  useImperativeHandle(ref, () => inputRef.current as HTMLInputElement, []);
-
-  const selectedOption = useMemo(
-    () => options.find((option) => option.value === value),
-    [options, value],
-  );
-
-  const filteredOptions = useMemo(
-    () =>
-      generateFilteredOptions({
-        createOptionMessage,
-        filterFunction,
-        inputValue,
-        isCreatable,
-        isFiltering,
-        noResultsMessage,
-        options,
-      }),
-    [
-      isFiltering,
-      inputValue,
-      options,
-      filterFunction,
-      isCreatable,
-      createOptionMessage,
-      noResultsMessage,
-    ],
-  );
-
-  const displayOptions = useMemo(() => {
-    if (isEmpty(options)) {
-      return [
-        {
-          content: noOptionsMessage,
-          optionProps: { isDisabled: true },
-          value: PLACEHOLDER_VALUES.NO_OPTIONS,
-        },
-      ];
-    }
-    return filteredOptions;
-  }, [options, filteredOptions, noOptionsMessage]);
-
-  const handleSelect = (selectedValue: string | number | undefined): void => {
-    if (isPlaceholderValue(selectedValue)) {
-      return;
-    }
-
-    const existingOption = options.find((option) => option.value === selectedValue);
-    if (existingOption || isCreatable) {
-      onChange(selectedValue);
-      setIsOpen(false);
-      setIsFiltering(false);
-      setInputValue(existingOption?.content?.toString() ?? selectedValue?.toString() ?? '');
-    }
-  };
-
-  const handleSelectionClear = (): void => {
-    setInputValue('');
-    onChange('');
-  };
-
-  const handleToggleClick = (): void => {
-    if (isOpen) {
-      setIsFiltering(false);
-      setInputValue(selectedOption?.content?.toString() ?? '');
-    }
-    setIsOpen((prev) => !prev);
-  };
-
-  const handleInputValueChange = (newInputValue: string, newIsFiltering: boolean): void => {
-    setInputValue(newInputValue);
-    setIsFiltering(newIsFiltering);
-  };
-
-  const handleFooterClick = (): void => {
-    setIsOpen(false);
-  };
+  useImperativeHandle(ref, () => inputRef.current as HTMLInputElement, [inputRef]);
 
   return (
     <Select
@@ -204,25 +123,14 @@ const TypeaheadSelect = (
       )}
       {...selectProps}
     >
-      {isEmpty(options) && emptyState ? (
-        emptyState
-      ) : (
-        <>
-          {filterControls}
-          <SelectList id="typeahead-listbox">
-            {displayOptions.map((option) => (
-              <SelectOption key={option.value} value={option.value} {...option.optionProps}>
-                {option.content}
-              </SelectOption>
-            ))}
-          </SelectList>
-          {footer && (
-            <MenuFooter className="pf-v6-u-pt-sm" onClick={handleFooterClick}>
-              {footer}
-            </MenuFooter>
-          )}
-        </>
-      )}
+      <TypeaheadSelectOptions
+        displayOptions={displayOptions}
+        emptyState={emptyState}
+        filterControls={filterControls}
+        footer={footer}
+        onFooterClick={handleFooterClick}
+        options={options}
+      />
     </Select>
   );
 };

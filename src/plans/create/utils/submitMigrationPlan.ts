@@ -1,89 +1,18 @@
-import { createStorageMap } from 'src/storageMaps/create/utils/createStorageMap';
-
-import type {
-  IoK8sApiCoreV1ConfigMap,
-  V1beta1NetworkMap,
-  V1beta1StorageMap,
-} from '@forklift-ui/types';
-import { CreationMethod, TELEMETRY_EVENTS } from '@utils/analytics/constants';
+import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import type { TargetStorage } from '@utils/storage/types';
 
 import {
   AapFormFieldId,
   HOOK_SOURCE_AAP,
   HOOK_SOURCE_LOCAL,
-  type MigrationHook,
   MigrationHookFieldId,
 } from '../steps/migration-hooks/constants';
 import type { CreatePlanFormData } from '../types';
 
 import { addPlanResourceOwnerRefs } from './addPlanResourceOwnerRefs';
-import { copyNetworkMap } from './copyNetworkMap';
-import { copyStorageMap } from './copyStorageMap';
-import {
-  createAapMigrationHooks,
-  type CreatedHooks,
-  createLocalMigrationHooks,
-} from './createMigrationHooks';
-import { createNetworkMap } from './createNetworkMap';
+import { buildMigrationPlanResourceRequests } from './buildMigrationPlanResourceRequests';
 import { createPlan } from './createPlan';
-import { resolveDecryptionSecret } from './resolveDecryptionSecret';
-import { resolveScriptsConfigMap } from './resolveScriptsConfigMap';
-
-type ResolveHooksParams = {
-  hasAapHooks: boolean;
-  hasLocalHooks: boolean;
-  planName: string;
-  planProject: string;
-  postHookJobTemplateId?: number;
-  postHookJobTemplateName?: string;
-  postMigrationHook: MigrationHook;
-  preHookJobTemplateId?: number;
-  preHookJobTemplateName?: string;
-  preMigrationHook: MigrationHook;
-};
-
-const resolveHooksCreation = async (params: ResolveHooksParams): Promise<CreatedHooks> => {
-  if (params.hasAapHooks) {
-    return createAapMigrationHooks({
-      planName: params.planName,
-      planProject: params.planProject,
-      postHookJobTemplateId: params.postHookJobTemplateId,
-      postHookJobTemplateName: params.postHookJobTemplateName,
-      preHookJobTemplateId: params.preHookJobTemplateId,
-      preHookJobTemplateName: params.preHookJobTemplateName,
-    });
-  }
-
-  if (params.hasLocalHooks) {
-    return createLocalMigrationHooks({
-      planName: params.planName,
-      planProject: params.planProject,
-      postMigrationHook: params.postMigrationHook,
-      preMigrationHook: params.preMigrationHook,
-    });
-  }
-
-  return Promise.resolve({});
-};
-
-const buildTelemetryProps = (
-  formData: CreatePlanFormData,
-  hasEnabledHooks: boolean,
-): Record<string, unknown> => ({
-  creationMethod: CreationMethod.PlanWizard,
-  hasCustomNetworkMap: !formData.existingNetworkMap,
-  hasCustomStorageMap: !formData.existingStorageMap,
-  hasEncryption: Boolean(formData.diskDecryptionPassPhrases?.length),
-  hasHooks: hasEnabledHooks,
-  hookSource: formData[AapFormFieldId.HookSource],
-  migrationType: formData.migrationType,
-  planNamespace: formData.planProject,
-  sourceProviderType: formData.sourceProvider?.spec?.type,
-  targetNamespace: formData.targetProject,
-  targetProviderType: formData.targetProvider?.spec?.type,
-  vmCount: Object.keys(formData.vms ?? {}).length,
-});
+import { buildTelemetryProps } from './submitMigrationPlanHelpers';
 
 /**
  * Handles the migration plan submission process including creation of network map,
@@ -95,20 +24,10 @@ export const submitMigrationPlan = async (
   targetStorages?: TargetStorage[],
 ): Promise<void> => {
   const {
-    customScripts,
-    customScriptsType,
-    diskDecryptionPassPhrases,
-    diskDecryptionType,
-    existingCustomScriptsConfigMap,
-    existingLUKSSecret,
-    existingNetworkMap,
-    existingStorageMap,
     instanceTypes,
     migrateSharedDisks,
     migrationType,
     nbdeClevis,
-    networkMap: newNetworkMap,
-    networkMapName,
     planDescription,
     planName,
     planProject,
@@ -117,8 +36,6 @@ export const submitMigrationPlan = async (
     preserveStaticIps,
     rootDevice,
     sourceProvider,
-    storageMap: newStorageMap,
-    storageMapName,
     targetPowerState,
     targetProject,
     targetProvider,
@@ -134,9 +51,7 @@ export const submitMigrationPlan = async (
       postMigrationHook[MigrationHookFieldId.EnableHook]);
 
   const aapPreHookJobTemplateId = formData[AapFormFieldId.AapPreHookJobTemplateId];
-  const aapPreHookJobTemplateName = formData[AapFormFieldId.AapPreHookJobTemplateName];
   const aapPostHookJobTemplateId = formData[AapFormFieldId.AapPostHookJobTemplateId];
-  const aapPostHookJobTemplateName = formData[AapFormFieldId.AapPostHookJobTemplateName];
 
   const hasAapHooks =
     hookSource === HOOK_SOURCE_AAP &&
@@ -144,69 +59,16 @@ export const submitMigrationPlan = async (
 
   const hasEnabledHooks = hasLocalHooks || hasAapHooks;
 
-  const createResourceRequests: [
-    Promise<V1beta1NetworkMap>,
-    Promise<V1beta1StorageMap>,
-    ReturnType<typeof resolveDecryptionSecret>,
-    Promise<CreatedHooks>,
-    Promise<IoK8sApiCoreV1ConfigMap | undefined>,
-  ] = [
-    existingNetworkMap
-      ? copyNetworkMap(existingNetworkMap, planName, planProject)
-      : createNetworkMap({
-          mappings: newNetworkMap,
-          name: networkMapName,
-          project: planProject,
-          sourceProvider,
-          targetNamespace: targetProject,
-          targetProvider,
-          trackEvent,
-        }),
-
-    existingStorageMap
-      ? copyStorageMap(existingStorageMap, planName, planProject)
-      : createStorageMap({
-          mappings: newStorageMap,
-          name: storageMapName,
-          project: planProject,
-          sourceProvider,
-          targetProvider,
-          targetStorages,
-          trackEvent,
-        }),
-
-    resolveDecryptionSecret({
-      diskDecryptionPassPhrases,
-      diskDecryptionType,
-      existingLUKSSecret,
-      planName,
-      planProject,
-    }),
-
-    resolveHooksCreation({
-      hasAapHooks,
-      hasLocalHooks,
-      planName,
-      planProject,
-      postHookJobTemplateId: aapPostHookJobTemplateId,
-      postHookJobTemplateName: aapPostHookJobTemplateName,
-      postMigrationHook,
-      preHookJobTemplateId: aapPreHookJobTemplateId,
-      preHookJobTemplateName: aapPreHookJobTemplateName,
-      preMigrationHook,
-    }),
-
-    resolveScriptsConfigMap({
-      customScripts,
-      customScriptsType,
-      existingCustomScriptsConfigMap,
-      planName,
-      planProject,
-    }),
-  ];
-
   const [planNetworkMap, planStorageMap, decryptionResult, createdHooks, scriptsConfigMap] =
-    await Promise.all(createResourceRequests);
+    await Promise.all(
+      buildMigrationPlanResourceRequests({
+        formData,
+        hasAapHooks,
+        hasLocalHooks,
+        targetStorages,
+        trackEvent,
+      }),
+    );
 
   const createdPlanRef = await createPlan({
     customScriptsConfigMap: scriptsConfigMap,

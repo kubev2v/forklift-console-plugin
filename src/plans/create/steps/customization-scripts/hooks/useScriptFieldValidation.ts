@@ -7,7 +7,7 @@ type GetScriptsFn = () => CustomScript[];
 type ScriptFieldValidation = {
   nameDeps: (fieldCount: number) => string[];
   triggerAllNames: (fieldCount: number) => Promise<boolean>;
-  validateName: (index: number) => (value: string) => string | undefined;
+  validateName: (index: number) => (value: string) => string | true;
 };
 
 export const useScriptFieldValidation = (
@@ -25,9 +25,11 @@ export const useScriptFieldValidation = (
 
   const validateName =
     (index: number) =>
-    (value: string): string | undefined => {
+    (value: string): string | true => {
       const allScripts = getScripts();
-      return validateUniqueScriptKey({ ...allScripts[index], name: value }, index, allScripts);
+      return (
+        validateUniqueScriptKey({ ...allScripts[index], name: value }, index, allScripts) ?? true
+      );
     };
 
   return { nameDeps, triggerAllNames, validateName };

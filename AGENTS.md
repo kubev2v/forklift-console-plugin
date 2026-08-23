@@ -350,7 +350,7 @@ Imports should be sorted in this order (auto-fixed by ESLint):
 
 ### File Size Limits
 - **Target:** Keep files under 150 lines when practical
-- **Hard limit:** 300 lines per file, 150 lines per function (excluding comments and blank lines)
+- **Hard limit:** 150 lines per file, 150 lines per function (excluding comments and blank lines; enforced by ESLint `max-lines` / `max-lines-per-function` on `src/`, including unit tests)
 - **Max 5 parameters per function**
 
 ### Directory Structure

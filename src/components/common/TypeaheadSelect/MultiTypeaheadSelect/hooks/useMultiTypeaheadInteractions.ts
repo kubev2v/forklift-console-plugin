@@ -1,10 +1,10 @@
 import { type RefObject, useCallback, useState } from 'react';
 
-import { isEmpty } from '@utils/helpers';
-
 import type { TypeaheadSelectOption } from '../../utils/types';
 import { isPlaceholderValue } from '../../utils/utils';
-import { createItemElementId, getNextEnabledIndex, getPrevEnabledIndex } from '../utils/utils';
+import { createItemElementId } from '../utils/utils';
+
+import { useMultiTypeaheadKeyboardNavigation } from './useMultiTypeaheadKeyboardNavigation';
 
 type UseMultiTypeaheadInteractionsArgs = {
   displayOptions: TypeaheadSelectOption[];
@@ -20,18 +20,6 @@ type UseMultiTypeaheadInteractionsArgs = {
   values: (string | number)[];
 };
 
-type UseMultiTypeaheadInteractionsReturn = {
-  activeItemId: string | null;
-  focusedItemIndex: number | null;
-  handleSelect: (selectedValue: string | number | undefined) => void;
-  onChipRemove: (value: string | number) => void;
-  onClearAll: () => void;
-  onInputKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-  resetFocus: () => void;
-  setActiveAndFocusedItem: (index: number) => void;
-  toggleSelectValue: (value: string | number) => void;
-};
-
 export const useMultiTypeaheadInteractions = ({
   displayOptions,
   inputRef,
@@ -44,7 +32,17 @@ export const useMultiTypeaheadInteractions = ({
   resetFilter,
   setIsOpen,
   values,
-}: UseMultiTypeaheadInteractionsArgs): UseMultiTypeaheadInteractionsReturn => {
+}: UseMultiTypeaheadInteractionsArgs): {
+  activeItemId: string | null;
+  focusedItemIndex: number | null;
+  handleSelect: (selectedValue: string | number | undefined) => void;
+  onChipRemove: (value: string | number) => void;
+  onClearAll: () => void;
+  onInputKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  resetFocus: () => void;
+  setActiveAndFocusedItem: (index: number) => void;
+  toggleSelectValue: (value: string | number) => void;
+} => {
   const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
   const [activeItemId, setActiveItemId] = useState<string | null>(null);
 
@@ -102,54 +100,14 @@ export const useMultiTypeaheadInteractions = ({
     [inputRef, isCreatable, onCreateOption, options, resetFilter, resetFocus, toggleSelectValue],
   );
 
-  const onInputKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      const currentFocused = focusedItemIndex === null ? null : displayOptions[focusedItemIndex];
-
-      switch (event.key) {
-        case 'Enter': {
-          if (isOpen && currentFocused && !currentFocused.optionProps?.isAriaDisabled) {
-            handleSelect(currentFocused.value);
-          }
-          if (!isOpen) {
-            setIsOpen(true);
-          }
-          return;
-        }
-        case 'ArrowUp': {
-          event.preventDefault();
-          if (!isOpen) {
-            setIsOpen(true);
-          }
-          if (isEmpty(displayOptions)) {
-            return;
-          }
-
-          const startIndex =
-            focusedItemIndex === null ? displayOptions.length - 1 : focusedItemIndex - 1;
-          const nextIndex = getPrevEnabledIndex(displayOptions, startIndex);
-          setActiveAndFocusedItem(nextIndex);
-          return;
-        }
-        case 'ArrowDown': {
-          event.preventDefault();
-          if (!isOpen) {
-            setIsOpen(true);
-          }
-          if (isEmpty(displayOptions)) {
-            return;
-          }
-
-          const startIndex = focusedItemIndex === null ? 0 : focusedItemIndex + 1;
-          const nextIndex = getNextEnabledIndex(displayOptions, startIndex);
-          setActiveAndFocusedItem(nextIndex);
-          break;
-        }
-        default:
-      }
-    },
-    [displayOptions, focusedItemIndex, handleSelect, isOpen, setActiveAndFocusedItem, setIsOpen],
-  );
+  const onInputKeyDown = useMultiTypeaheadKeyboardNavigation({
+    displayOptions,
+    focusedItemIndex,
+    handleSelect,
+    isOpen,
+    setActiveAndFocusedItem,
+    setIsOpen,
+  });
 
   const onChipRemove = useCallback(
     (value: string | number) => {
