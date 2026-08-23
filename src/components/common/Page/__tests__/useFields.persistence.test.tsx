@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react';
 import { useFields } from '../useFields';
 
 describe('useFields - persistence', () => {
-  it('saves re-order and hidden NAME field)', () => {
+  it('saves re-order and hidden NAME field', () => {
     const saveSettings = jest.fn();
     const {
       result: {
@@ -32,8 +32,9 @@ describe('useFields - persistence', () => {
     ]);
   });
 
-  it('clears settings if equal to defaults)', () => {
+  it('clears settings if equal to defaults', () => {
     const clearSettings = jest.fn();
+    const saveSettings = jest.fn();
     const {
       result: {
         current: [, setFields],
@@ -45,7 +46,7 @@ describe('useFields - persistence', () => {
           { isVisible: true, label: '', resourceFieldId: NAME },
           { isVisible: true, label: '', resourceFieldId: NAMESPACE },
         ],
-        { clear: clearSettings, data: [], save: () => undefined },
+        { clear: clearSettings, data: [], save: saveSettings },
       ),
     );
     act(() => {
@@ -55,5 +56,6 @@ describe('useFields - persistence', () => {
       ]);
     });
     expect(clearSettings).toHaveBeenCalled();
+    expect(saveSettings).not.toHaveBeenCalled();
   });
 });
