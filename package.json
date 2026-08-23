@@ -4,7 +4,7 @@
   "description": "UI for forklift as an openshift console dynamic plugin",
   "license": "Apache-2.0",
   "private": true,
-  "packageManager": "npm@10.9.2",
+  "packageManager": "npm@12.0.2",
   "repository": "https://github.com/kubev2v/forklift-console-plugin.git",
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": [
