@@ -47,14 +47,21 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
     [secrets],
   );
 
-  const selectedSecret = watch(fieldId) as string | undefined;
+  const selectedSecretValue = watch(fieldId);
+  const selectedSecret =
+    typeof selectedSecretValue === 'string' ? selectedSecretValue : undefined;
   const hasOpaqueSecrets = !isEmpty(opaqueSecrets);
   // Keep the select usable when the list returned Opaque secrets even if a later
   // watch/stream error is set (common in e2e mocks without a secrets watch WS).
   const isSelectDisabled = isSubmitting || !loaded || (Boolean(error) && !hasOpaqueSecrets);
 
   useEffect(() => {
-    if (!loaded || !selectedSecret || !hasOpaqueSecrets) {
+    if (!loaded || !selectedSecret) {
+      return;
+    }
+
+    // Preserve the selection only while loading failed and we have no Opaque list to trust.
+    if (error && !hasOpaqueSecrets) {
       return;
     }
 
@@ -63,7 +70,7 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
     if (!isSelectedOpaque) {
       setValue(fieldId, '', { shouldDirty: true, shouldValidate: true });
     }
-  }, [fieldId, hasOpaqueSecrets, loaded, opaqueSecrets, selectedSecret, setValue]);
+  }, [error, fieldId, hasOpaqueSecrets, loaded, opaqueSecrets, selectedSecret, setValue]);
 
   let placeholder = t('Loading secrets...');
   if (loaded && hasOpaqueSecrets) {

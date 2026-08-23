@@ -38,6 +38,39 @@ const setupSecretsIntercept = async (page: Page): Promise<void> => {
               },
               type: 'Opaque',
             },
+            {
+              apiVersion: 'v1',
+              kind: 'Secret',
+              metadata: {
+                name: 'tls-secret',
+                namespace: MTV_NAMESPACE,
+                resourceVersion: '1',
+                uid: 'test-secret-uid-2',
+              },
+              type: 'kubernetes.io/tls',
+            },
+            {
+              apiVersion: 'v1',
+              kind: 'Secret',
+              metadata: {
+                name: 'pull-secret',
+                namespace: MTV_NAMESPACE,
+                resourceVersion: '1',
+                uid: 'test-secret-uid-3',
+              },
+              type: 'kubernetes.io/dockercfg',
+            },
+            {
+              apiVersion: 'v1',
+              kind: 'Secret',
+              metadata: {
+                name: 'sa-token',
+                namespace: MTV_NAMESPACE,
+                resourceVersion: '1',
+                uid: 'test-secret-uid-4',
+              },
+              type: 'kubernetes.io/service-account-token',
+            },
           ],
           kind: 'SecretList',
           metadata: {
@@ -149,6 +182,11 @@ test.describe(
       await test.step('configure offload with dedicated hosts', async () => {
         await storageMapCreatePage.offload.expandOffloadOptions(0);
         await storageMapCreatePage.offload.selectOffloadPlugin(0, 'vSphere XCOPY');
+        await storageMapCreatePage.offload.verifyStorageSecretOptions(
+          0,
+          ['test-storage-secret'],
+          ['tls-secret', 'pull-secret', 'sa-token'],
+        );
         await storageMapCreatePage.offload.selectStorageSecret(0, 'test-storage-secret');
         await storageMapCreatePage.offload.selectStorageProduct(0, 'NetApp ONTAP');
         await storageMapCreatePage.offload.selectDedicatedMigrationHost(0, TEST_DATA.hosts[0].name);

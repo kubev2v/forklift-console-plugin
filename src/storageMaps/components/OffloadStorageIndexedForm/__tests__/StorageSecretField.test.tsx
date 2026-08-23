@@ -152,4 +152,21 @@ describe('StorageSecretField', () => {
     );
     expect(screen.queryByText('tls-secret')).not.toBeInTheDocument();
   });
+
+  it('clears a stale selection when the loaded list has no Opaque secrets', () => {
+    mockUseK8sWatchResource.mockReturnValue([
+      [{ metadata: { name: 'tls-secret', uid: 'uid-2' }, type: 'kubernetes.io/tls' }],
+      true,
+      null,
+    ]);
+
+    renderWithForm(<StorageSecretField fieldId="storageSecret" sourceProvider={sourceProvider} />, {
+      defaultValues: { storageSecret: 'tls-secret' },
+    });
+
+    expect(screen.getByRole('button', { name: 'Select menu toggle' })).toHaveTextContent(
+      'Select storage secret',
+    );
+    expect(screen.queryByText('tls-secret')).not.toBeInTheDocument();
+  });
 });

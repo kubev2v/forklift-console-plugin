@@ -162,6 +162,29 @@ export class OffloadOptions {
     await this.selectFromDropdown(OFFLOAD_FIELD.storageSecret(mappingIndex), secretName);
   }
 
+  async verifyStorageSecretOptions(
+    mappingIndex: number,
+    expected: string[],
+    unexpected: string[],
+  ): Promise<void> {
+    const toggle = this.fieldToggleButton(OFFLOAD_FIELD.storageSecret(mappingIndex));
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+
+    const listbox = this.page.getByRole('listbox');
+    await expect(listbox).toBeVisible();
+
+    for (const name of expected) {
+      await expect(listbox.getByRole('option', { name })).toBeVisible();
+    }
+    for (const name of unexpected) {
+      await expect(listbox.getByRole('option', { name })).toHaveCount(0);
+    }
+
+    // Close the dropdown without selecting.
+    await toggle.click();
+  }
+
   async verifyAllDropdownsVisible(mappingIndex: number): Promise<void> {
     const pluginBtn = this.fieldToggleButton(OFFLOAD_FIELD.offloadPlugin(mappingIndex));
     const secretBtn = this.fieldToggleButton(OFFLOAD_FIELD.storageSecret(mappingIndex));
