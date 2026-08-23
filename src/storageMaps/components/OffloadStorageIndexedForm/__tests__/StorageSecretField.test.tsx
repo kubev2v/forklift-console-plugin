@@ -12,6 +12,9 @@ const mockUseK8sWatchResource = jest.fn();
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   getGroupVersionKindForModel: jest.fn(() => ({ group: '', kind: 'Secret', version: 'v1' })),
+}));
+
+jest.mock('@utils/hooks/useK8sWatchResource', () => ({
   useK8sWatchResource: jest.fn((...args: unknown[]) => mockUseK8sWatchResource(...args)),
 }));
 

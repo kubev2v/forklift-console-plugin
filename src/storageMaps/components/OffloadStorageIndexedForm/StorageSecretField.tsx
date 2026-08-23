@@ -108,7 +108,7 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
             placeholder={placeholder}
             ref={field.ref}
             testId={fieldId}
-            value={field.value as string | undefined}
+            value={typeof field.value === 'string' ? field.value : undefined}
           >
             <SelectList>
               {isEmpty(opaqueSecrets) ? (
