@@ -24,6 +24,8 @@ type StandardPageInnerProps<T> = Omit<ComponentProps<typeof StandardPage<T>>, 'p
   TableSortContextProps &
   Required<Pick<ComponentProps<typeof StandardPage<T>>, 'pageRef'>>;
 
+const EMPTY_GLOBAL_ACTION_TOOLBAR_ITEMS: never[] = [];
+
 const StandardPageInner = <T,>({
   activeSort,
   addButton,
@@ -40,7 +42,7 @@ const StandardPageInner = <T,>({
   extraSupportedFilters,
   extraSupportedMatchers,
   fieldsMetadata,
-  GlobalActionToolbarItems = [],
+  GlobalActionToolbarItems = EMPTY_GLOBAL_ACTION_TOOLBAR_ITEMS,
   header = DefaultHeader<T>,
   namespace = '',
   noPadding,

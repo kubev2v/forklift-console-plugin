@@ -15,6 +15,9 @@ import { isEmpty } from '@utils/helpers';
 
 import type { FilterTypeProps } from './types';
 
+const EMPTY_ENUM_IDS: string[] = [];
+const EMPTY_ENUM_VALUES: NonNullable<FilterTypeProps['supportedValues']> = [];
+
 /**
  * This Filter type enables selecting one or many enum values from the list.
  *
@@ -37,9 +40,9 @@ export const EnumFilter = ({
   onFilterUpdate: onSelectedEnumIdsChange,
   placeholderLabel,
   resolvedLanguage,
-  selectedFilters: selectedEnumIds = [],
+  selectedFilters: selectedEnumIds = EMPTY_ENUM_IDS,
   showFilter = true,
-  supportedValues: supportedEnumValues = [],
+  supportedValues: supportedEnumValues = EMPTY_ENUM_VALUES,
   title = '',
 }: FilterTypeProps): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);

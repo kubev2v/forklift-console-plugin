@@ -16,6 +16,9 @@ import { isEmpty } from '@utils/helpers';
 
 import type { FilterTypeProps } from './types';
 
+const EMPTY_ENUM_IDS: string[] = [];
+const EMPTY_ENUM_VALUES: NonNullable<FilterTypeProps['supportedValues']> = [];
+
 const renderOptions = (
   supportedGroups: EnumGroup[],
   supportedEnumValues: EnumValue[],
@@ -64,11 +67,11 @@ export const GroupedEnumFilter = ({
   hasMultipleResources,
   onFilterUpdate: onSelectedEnumIdsChange,
   placeholderLabel,
-  selectedFilters: selectedEnumIds = [],
+  selectedFilters: selectedEnumIds = EMPTY_ENUM_IDS,
   showFilter = true,
   showFilterIcon,
   supportedGroups,
-  supportedValues: supportedEnumValues = [],
+  supportedValues: supportedEnumValues = EMPTY_ENUM_VALUES,
 }: FilterTypeProps): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
 
