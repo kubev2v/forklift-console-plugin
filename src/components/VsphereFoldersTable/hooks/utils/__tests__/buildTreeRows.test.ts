@@ -85,7 +85,9 @@ describe('buildTreeRows', () => {
     );
 
     const folderRow = rows.find((row) => row.type === ROW_TYPE.Folder);
-    folderRow?.treeRow?.onCheckChange?.({} as FormEvent<HTMLInputElement>, true);
+    const folderOnCheckChange = folderRow?.treeRow?.onCheckChange as
+      ((event: FormEvent<HTMLInputElement>, isChecked: boolean) => void) | undefined;
+    folderOnCheckChange?.({} as FormEvent<HTMLInputElement>, true);
 
     expect(onCheckChange).toHaveBeenCalledWith(['vm-1']);
   });

@@ -81,10 +81,15 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
       await expect(detailsTab.editDiskDecryptionModal).toBeVisible();
       await expect(page.getByTestId('edit-use-existing-secret-radio')).toBeChecked();
       await expect(page.getByTestId('edit-use-passphrases-radio')).toBeVisible();
-      await expect(page.getByTestId('edit-luks-secret-select')).toBeVisible();
-      await expect(page.getByTestId('edit-luks-secret-select').getByRole('combobox')).toHaveValue(
-        LUKS_TEST_SECRET_NAME,
-      );
+
+      const secretSelect = page.getByTestId('edit-luks-secret-select');
+      await expect(secretSelect).toBeVisible();
+      const combobox = secretSelect.getByRole('combobox');
+      // Namespace secret list + source-secret watch can take a while on busy clusters.
+      await expect(combobox).not.toHaveAttribute('placeholder', 'Loading secrets...', {
+        timeout: 60_000,
+      });
+      await expect(combobox).toHaveValue(LUKS_TEST_SECRET_NAME, { timeout: 60_000 });
       await expect(detailsTab.saveDiskDecryptionButton).toBeEnabled();
     });
 

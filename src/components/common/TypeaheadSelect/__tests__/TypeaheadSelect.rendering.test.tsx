@@ -34,6 +34,13 @@ describe('TypeaheadSelect - rendering', () => {
     expect(input).toHaveValue('Option 2');
   });
 
+  test('shows controlled value while options are still empty', () => {
+    render(<TypeaheadSelect {...defaultProps} options={[]} value="luks-test-secret" />);
+
+    const input = screen.getByRole('combobox');
+    expect(input).toHaveValue('luks-test-secret');
+  });
+
   test('renders as disabled when isDisabled is true', async () => {
     const user = userEvent.setup();
     render(<TypeaheadSelect {...defaultProps} isDisabled />);

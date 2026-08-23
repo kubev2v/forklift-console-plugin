@@ -13,6 +13,7 @@ import {
 import { TimesIcon } from '@patternfly/react-icons';
 
 import type { TypeaheadSelectOption } from './utils/types';
+import { getTypeaheadDisplayValue } from './utils/utils';
 
 type TypeaheadMenuToggleProps = {
   allowClear: boolean;
@@ -31,6 +32,7 @@ type TypeaheadMenuToggleProps = {
   toggleProps?: Omit<MenuToggleProps, 'ref' | 'onClick' | 'isExpanded'>;
   toggleRef: Ref<MenuToggleElement>;
   toggleWidth?: string;
+  value?: string | number;
 };
 
 const TypeaheadMenuToggle: FC<TypeaheadMenuToggleProps> = ({
@@ -50,12 +52,17 @@ const TypeaheadMenuToggle: FC<TypeaheadMenuToggleProps> = ({
   toggleProps,
   toggleRef,
   toggleWidth,
+  value,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Derive the display value: use input value when filtering, selected option content when not
-  const displayValue = isFiltering ? inputValue : (selectedOption?.content?.toString() ?? '');
+  const displayValue = getTypeaheadDisplayValue({
+    inputValue,
+    isFiltering,
+    selectedOption,
+    value,
+  });
 
   const handleToggleClick = (): void => {
     if (isDisabled) {

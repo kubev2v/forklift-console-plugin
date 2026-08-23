@@ -33,10 +33,17 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
       await modal.verifySaveButtonEnabled();
       await modal.save();
 
-      const modalAfterSave = await networkMapDetailsPage.openEditModal();
-      const mappingCount = await modalAfterSave.getMappingCount();
-      expect(mappingCount).toBe(1);
-      await modalAfterSave.cancel();
+      await expect
+        .poll(
+          async () => {
+            const modalAfterSave = await networkMapDetailsPage.openEditModal();
+            const mappingCount = await modalAfterSave.getMappingCount();
+            await modalAfterSave.cancel();
+            return mappingCount;
+          },
+          { timeout: 30_000 },
+        )
+        .toBe(1);
     });
 
     await test.step('Edit network mapping and verify save', async () => {

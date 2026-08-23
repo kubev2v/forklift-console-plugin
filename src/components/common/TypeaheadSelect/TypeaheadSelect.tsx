@@ -119,6 +119,7 @@ const TypeaheadSelect = (
           toggleProps={toggleProps}
           toggleRef={toggleRef}
           toggleWidth={toggleWidth}
+          value={value}
         />
       )}
       {...selectProps}
