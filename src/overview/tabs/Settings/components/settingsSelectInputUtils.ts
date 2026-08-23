@@ -11,6 +11,8 @@ export type BlankOption = {
 
 export const BLANK_OPTION_KEY = '__blank__';
 
+export type SettingsSelectHandler = (event?: unknown, selectedValue?: string | number) => void;
+
 export const buildNameToKeyMap = (
   options: Option[],
   blankOption?: { name: string },
@@ -67,8 +69,8 @@ export const createSettingsSelectHandler = (
   nameToKey: Record<string, string | number>,
   onChange: (value: number | string) => void,
   setIsOpen: (open: boolean) => void,
-): ((event?: MouseEvent, selectedValue?: string | number) => void) => {
-  return (_event?: MouseEvent, selectedValue?: string | number): void => {
+): SettingsSelectHandler => {
+  return (_event?: unknown, selectedValue?: string | number): void => {
     if (selectedValue === undefined) {
       setIsOpen(false);
       return;

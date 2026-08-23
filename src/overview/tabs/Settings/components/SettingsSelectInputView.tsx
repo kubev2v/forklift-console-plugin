@@ -1,4 +1,4 @@
-import type { FC, MouseEvent, ReactElement, Ref } from 'react';
+import type { FC, ReactElement, Ref } from 'react';
 
 import { type MenuToggleElement, Select as PfSelect } from '@patternfly/react-core';
 
@@ -7,6 +7,7 @@ import {
   buildKeyToNameMap,
   type Option,
   resolveSelectedValue,
+  type SettingsSelectHandler,
 } from './settingsSelectInputUtils';
 import SettingsSelectOptionsList from './SettingsSelectOptionsList';
 import SettingsSelectToggle from './SettingsSelectToggle';
@@ -16,7 +17,7 @@ type SettingsSelectInputProps = {
   isOpen: boolean;
   isScrollable?: boolean;
   onChange: (value: number | string) => void;
-  onSelect: (event?: MouseEvent, selectedValue?: string | number) => void;
+  onSelect: SettingsSelectHandler;
   options: Option[];
   setIsOpen: (open: boolean) => void;
   showKeyAsSelected?: boolean;
