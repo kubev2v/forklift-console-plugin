@@ -49,7 +49,7 @@
     "@storybook/addon-interactions": "^8.3.2",
     "@storybook/addon-links": "^8.3.2",
     "@storybook/addon-storysource": "^8.3.2",
-    "@storybook/addon-webpack5-compiler-swc": "^1.0.5",
+    "@storybook/addon-webpack5-compiler-swc": "^4.0.0",
     "@storybook/blocks": "^8.3.2",
     "@storybook/preset-scss": "^1.0.3",
     "@storybook/react": "^8.3.2",
