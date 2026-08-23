@@ -47,9 +47,8 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
     [secrets],
   );
 
-  const selectedSecretValue = watch(fieldId);
-  const selectedSecret =
-    typeof selectedSecretValue === 'string' ? selectedSecretValue : undefined;
+  const selectedSecretValue: unknown = watch(fieldId) as unknown;
+  const selectedSecret = typeof selectedSecretValue === 'string' ? selectedSecretValue : undefined;
   const hasOpaqueSecrets = !isEmpty(opaqueSecrets);
   // Keep the select usable when the list returned Opaque secrets even if a later
   // watch/stream error is set (common in e2e mocks without a secrets watch WS).
