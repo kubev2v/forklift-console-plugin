@@ -866,6 +866,7 @@
   "Missing fields in node fields": "Missing fields in node fields",
   "Moderate CPU limit": "Moderate CPU limit",
   "Moderate memory limit": "Moderate memory limit",
+  "More info:": "More info:",
   "MTU": "MTU",
   "MTV behavior is based on the Shared disks setting in the plan. If checked, the shared disks will be migrated, otherwise the shared disks will not be migrated.": "MTV behavior is based on the Shared disks setting in the plan. If checked, the shared disks will be migrated, otherwise the shared disks will not be migrated.",
   "MTV has limited support for the migration of dual-boot operating system VMs. In the case of a dual-boot operating system VM, MTV will try to convert the first boot disk it finds. Alternatively, the root device can be specified in the MTV UI.": "MTV has limited support for the migration of dual-boot operating system VMs. In the case of a dual-boot operating system VM, MTV will try to convert the first boot disk it finds. Alternatively, the root device can be specified in the MTV UI.",

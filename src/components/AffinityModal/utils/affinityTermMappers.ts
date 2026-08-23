@@ -31,7 +31,7 @@ type WithWeightAndTopologyKey = WithWeight & WithTopologyKey;
 export const hasWeightAndTopologyKey = (row: AffinityRowData): row is WithWeightAndTopologyKey =>
   hasValidWeight(row) && hasTopologyKey(row);
 
-export const flattenExpressions = (
+const flattenExpressions = (
   affinityLabels: AffinityLabel[] | undefined,
 ): K8sIoApiCoreV1NodeSelectorRequirement[] => {
   if (!affinityLabels) {

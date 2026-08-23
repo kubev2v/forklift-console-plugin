@@ -16,6 +16,7 @@ import {
 } from '@patternfly/react-core';
 import { HelpIcon } from '@patternfly/react-icons';
 import { isEmpty } from '@utils/helpers';
+import { useForkliftTranslation } from '@utils/i18n';
 
 type DescriptionTitleWithHelpProps = {
   crumbs?: string[];
@@ -29,11 +30,14 @@ type DescriptionTitleWithHelpProps = {
 const DescriptionTitleWithHelp: FC<DescriptionTitleWithHelpProps> = ({
   crumbs,
   helpContent,
-  moreInfoLabel = 'More info:',
+  moreInfoLabel,
   moreInfoLink,
   showHelpIconNextToTitle,
   title,
 }) => {
+  const { t } = useForkliftTranslation();
+  const resolvedMoreInfoLabel = moreInfoLabel ?? t('More info:');
+
   const onClick: (event: MouseEvent<HTMLButtonElement>) => void = (event) => {
     event.preventDefault();
   };
@@ -48,7 +52,7 @@ const DescriptionTitleWithHelp: FC<DescriptionTitleWithHelpProps> = ({
 
             {moreInfoLink && (
               <FlexItem>
-                {moreInfoLabel}{' '}
+                {resolvedMoreInfoLabel}{' '}
                 <ExternalLink hideIcon href={moreInfoLink} isInline>
                   <Truncate content={moreInfoLink} />
                 </ExternalLink>

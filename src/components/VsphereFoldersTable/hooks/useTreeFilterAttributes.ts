@@ -29,7 +29,7 @@ import {
   getVmName,
   getVmPath,
   getVmPower,
-} from './utils/treeUtils';
+} from './utils/vmRowAccessors';
 
 const inspectionStatusFilterOptions = INSPECTION_STATUS_FILTER_VALUES.map((value) => ({
   id: value,

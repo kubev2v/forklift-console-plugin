@@ -88,7 +88,7 @@ const getOvirtStorageIds = (vm: OVirtVMWithDisks): string[] => {
   return [];
 };
 
-export const getStorageIdsForVm = (vm: ProviderVirtualMachine): string[] => {
+const getStorageIdsForVm = (vm: ProviderVirtualMachine): string[] => {
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere:
       return getVSphereStorageIds(vm);

@@ -3,6 +3,7 @@ import { type MouseEvent as ReactMouseEvent, useMemo, useState } from 'react';
 import type { EnumValue } from '@components/common/utils/types';
 
 import type { FilterTypeProps } from '../types';
+import { EMPTY_ENUM_IDS, EMPTY_ENUM_VALUES } from '../utils/groupedEnumFilterConstants';
 
 type UseGroupedEnumFilterArgs = Pick<
   FilterTypeProps,
@@ -23,8 +24,8 @@ type UseGroupedEnumFilterReturn = {
 export const useGroupedEnumFilter = ({
   hasMultipleResources,
   onFilterUpdate: onSelectedEnumIdsChange,
-  selectedFilters: selectedEnumIds = [],
-  supportedValues: supportedEnumValues = [],
+  selectedFilters: selectedEnumIds = EMPTY_ENUM_IDS,
+  supportedValues: supportedEnumValues = EMPTY_ENUM_VALUES,
 }: UseGroupedEnumFilterArgs): UseGroupedEnumFilterReturn => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -62,6 +63,7 @@ export const useGroupedEnumFilter = ({
         ),
         id2enum[id].resourceFieldId,
       );
+      return;
     }
 
     onSelectedEnumIdsChange(
@@ -83,6 +85,7 @@ export const useGroupedEnumFilter = ({
         ],
         id2enum[id].resourceFieldId,
       );
+      return;
     }
 
     onSelectedEnumIdsChange(

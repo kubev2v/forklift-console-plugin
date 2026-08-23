@@ -9,17 +9,14 @@ import {
 } from './constants';
 import type { PlanResourcesTableProps, VMResources } from './types';
 
-export const getK8sCPU = (vm: V1VirtualMachine): number | string =>
+const getK8sCPU = (vm: V1VirtualMachine): number | string =>
   vm?.spec?.template?.spec?.domain?.cpu?.cores ?? EMPTY_CPU;
 
-export const getK8sVMMemory = (vm: V1VirtualMachine): string =>
+const getK8sVMMemory = (vm: V1VirtualMachine): string =>
   (vm?.spec?.template?.spec?.domain?.resources?.requests as unknown as Record<string, string>)
     ?.memory ?? EMPTY_MEMORY;
 
-export const k8sMemoryToBytes = (
-  quantity: string,
-  fallback: number | null = null,
-): number | null => {
+const k8sMemoryToBytes = (quantity: string, fallback: number | null = null): number | null => {
   const input = quantity.trim();
   if (!input) {
     return fallback;
@@ -41,7 +38,7 @@ export const k8sMemoryToBytes = (
   return numericPart * multiplier;
 };
 
-export const k8sCpuToCores = (cpuString?: number | string): number => {
+const k8sCpuToCores = (cpuString?: number | string): number => {
   if (cpuString === undefined) {
     return 1;
   }

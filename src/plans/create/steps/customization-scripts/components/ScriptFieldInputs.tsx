@@ -5,7 +5,6 @@ import Select from '@components/common/Select';
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import { SelectList, SelectOption, TextInput } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
-import { useForkliftTranslation } from '@utils/i18n';
 
 import { GuestType, GuestTypeLabels, ScriptType, ScriptTypeLabels } from '../constants';
 
@@ -115,11 +114,4 @@ export const getScriptFieldInputs = <T extends FieldValues>({
       )}
     />,
   ];
-};
-
-export const useScriptFieldInputs = (
-  args: Omit<GetScriptFieldInputsArgs<FieldValues>, 't'>,
-): ReturnType<typeof getScriptFieldInputs> => {
-  const { t } = useForkliftTranslation();
-  return getScriptFieldInputs({ ...args, t });
 };

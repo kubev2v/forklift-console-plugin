@@ -11,7 +11,7 @@ import {
   PlanStatuses,
 } from './types';
 
-export const emptyMigrationVmStatusCount: MigrationVirtualMachinesStatusesCounts = {
+const emptyMigrationVmStatusCount: MigrationVirtualMachinesStatusesCounts = {
   [MigrationVirtualMachineStatus.Canceled]: {
     count: 0,
     vms: [],

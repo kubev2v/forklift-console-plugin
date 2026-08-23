@@ -20,7 +20,7 @@ import TreeTableBody from './components/TreeTableBody/TreeTableBody';
 import TreeToolbar from './components/TreeToolbar/TreeToolbar';
 import VsphereFolderTreeTableHead from './components/VsphereFolderTreeTableHead';
 import { useVsphereFolderTreeTable } from './hooks/useVsphereFolderTreeTable';
-import { getVmRowsId } from './hooks/utils/treeUtils';
+import { getVmRowsId } from './hooks/utils/vmRowAccessors';
 
 type VsphereFolderTreeTableProps = {
   foldersDict: Record<string, VSphereResource>;

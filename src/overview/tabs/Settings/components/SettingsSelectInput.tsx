@@ -1,6 +1,6 @@
-import { type FC, type MouseEvent, useMemo, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
-import { BLANK_OPTION_KEY, buildNameToKeyMap } from './settingsSelectInputUtils';
+import { buildNameToKeyMap, createSettingsSelectHandler } from './settingsSelectInputUtils';
 import type { Option } from './SettingsSelectInputView';
 import { SettingsSelectInputView } from './SettingsSelectInputView';
 
@@ -32,16 +32,10 @@ const SettingsSelectInput: FC<SettingsSelectInputProps> = ({
 
   const nameToKey = useMemo(() => buildNameToKeyMap(options, blankOption), [options, blankOption]);
 
-  const onSelect = (event?: MouseEvent, selectedValue?: string | number): void => {
-    if (selectedValue === undefined) {
-      setIsOpen(false);
-      return;
-    }
-
-    const key = nameToKey[selectedValue] ?? selectedValue;
-    onChange(key === BLANK_OPTION_KEY ? '' : key);
-    setIsOpen(false);
-  };
+  const onSelect = useMemo(
+    () => createSettingsSelectHandler(nameToKey, onChange, setIsOpen),
+    [nameToKey, onChange],
+  );
 
   return (
     <SettingsSelectInputView

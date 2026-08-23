@@ -863,6 +863,7 @@
   "Missing fields in node fields": "节点字段中缺少字段",
   "Moderate CPU limit": "中等 CPU 限制",
   "Moderate memory limit": "中等内存限值",
+  "More info:": "More info:",
   "MTU": "MTU",
   "MTV behavior is based on the Shared disks setting in the plan. If checked, the shared disks will be migrated, otherwise the shared disks will not be migrated.": "MTV 行为基于计划中的共享磁盘设置。如果选中，则会迁移共享磁盘，否则不会迁移共享磁盘。",
   "MTV has limited support for the migration of dual-boot operating system VMs. In the case of a dual-boot operating system VM, MTV will try to convert the first boot disk it finds. Alternatively, the root device can be specified in the MTV UI.": "MTV 对双引导操作系统虚拟机的迁移有有限的支持。在双引导操作系统虚拟机中，MTV 会尝试转换它找到的第一个引导磁盘。或者，可以在 MTV UI 中指定根设备。",

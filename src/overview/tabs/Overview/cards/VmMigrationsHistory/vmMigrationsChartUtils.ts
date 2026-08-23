@@ -8,7 +8,7 @@ import type { ChartDatumWithName, MigrationDataPoint } from '../../utils/types';
 
 export const MAX_DOMAIN_Y = 5;
 
-export const mapDataPoints = (dataPoints: MigrationDataPoint[], name = ''): ChartDatumWithName[] =>
+const mapDataPoints = (dataPoints: MigrationDataPoint[], name = ''): ChartDatumWithName[] =>
   dataPoints.map(({ dateLabel, interval, migrations, value }) => ({
     interval,
     migrations,

@@ -3,7 +3,7 @@ import type { ReactElement } from 'react';
 import { Label, Split, SplitItem } from '@patternfly/react-core';
 import type { TargetStorage } from '@utils/storage/types';
 
-export const shouldShowDefaultLabel = (storage: TargetStorage): boolean =>
+const shouldShowDefaultLabel = (storage: TargetStorage): boolean =>
   storage.isDefaultVirt || storage.isDefault;
 
 export const renderStorageOption = (

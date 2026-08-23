@@ -22,7 +22,7 @@ export const mockSendAnalyticsEvent = sendAnalyticsEvent as jest.MockedFunction<
   typeof sendAnalyticsEvent
 >;
 
-export const defaultConfigMapData = {
+const defaultConfigMapData = {
   data: {
     [ConsoleConfigMap.ConfigKey]: `
             SEGMENT_PUBLIC_API_KEY: test-segment-key

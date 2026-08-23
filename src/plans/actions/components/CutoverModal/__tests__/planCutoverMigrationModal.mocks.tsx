@@ -47,7 +47,7 @@ export const mockMigrationWithoutCutover = {
   spec: {},
 } as unknown as V1beta1Migration;
 
-export const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 export const mockMigrationWithCutover = {
   metadata: { name: 'test-migration', namespace: 'test-ns' },

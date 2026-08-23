@@ -876,6 +876,7 @@
   "Missing fields in node fields": "Champs manquants dans les champs de nœud",
   "Moderate CPU limit": "Limite CPU modérée",
   "Moderate memory limit": "Limite de mémoire modérée",
+  "More info:": "More info:",
   "MTU": "MTU",
   "MTV behavior is based on the Shared disks setting in the plan. If checked, the shared disks will be migrated, otherwise the shared disks will not be migrated.": "Le comportement de MTV dépend du paramètre « Disques partagés » de votre abonnement. Si cette option est activée, les disques partagés seront migrés ; sinon, ils ne le seront pas.",
   "MTV has limited support for the migration of dual-boot operating system VMs. In the case of a dual-boot operating system VM, MTV will try to convert the first boot disk it finds. Alternatively, the root device can be specified in the MTV UI.": "MTV offre une prise en charge limitée de la migration des machines virtuelles à double démarrage. Dans ce cas, MTV tentera de convertir le premier disque de démarrage détecté. Il est également possible de spécifier le périphérique racine via l'interface utilisateur de MTV.",
