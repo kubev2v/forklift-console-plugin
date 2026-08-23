@@ -94,7 +94,7 @@
     "eslint-define-config": "^2.1.0",
     "eslint-interactive": "^11.1.0",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-perfectionist": "^4.10.1",
+    "eslint-plugin-perfectionist": "^5.0.0",
     "eslint-plugin-prettier": "^5.2.5",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.2.0",
