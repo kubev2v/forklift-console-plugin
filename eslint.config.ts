@@ -1,4 +1,5 @@
 import barrelFiles from 'eslint-plugin-barrel-files';
+import i18next from 'eslint-plugin-i18next';
 import importPlugin from 'eslint-plugin-import';
 import jsdoc from 'eslint-plugin-jsdoc';
 import perfectionist from 'eslint-plugin-perfectionist';
@@ -438,6 +439,22 @@ export const createEslintConfig = () =>
         '@typescript-eslint/explicit-function-return-type': 'error',
       },
     },
+    // MTV-6282: disallow untranslated JSX text in src/ (S4 deferred i18next here)
+    {
+      files: ['src/**/*.{js,jsx,ts,tsx}'],
+      plugins: { i18next },
+      rules: {
+        'i18next/no-literal-string': [
+          'error',
+          {
+            'jsx-components': {
+              exclude: ['ForkliftTrans', 'Trans'],
+            },
+            mode: 'jsx-text-only',
+          },
+        ],
+      },
+    },
     {
       files: ['src/utils/**/*.{js,ts,tsx}'],
       plugins: { jsdoc },
@@ -465,6 +482,13 @@ export const createEslintConfig = () =>
       ...testingLibrary.configs['flat/react'],
       // Unit tests only — do not apply RTL rules to Playwright specs under testing/
       files: ['src/**/__tests__/**/*.{ts,tsx}', 'src/**/*.{test,spec}.{ts,tsx}'],
+    },
+    // Unit-test fixtures often use literal JSX; Playwright stays under testing/**
+    {
+      files: ['src/**/__tests__/**/*.{ts,tsx}', 'src/**/*.{test,spec}.{ts,tsx}'],
+      rules: {
+        'i18next/no-literal-string': 'off',
+      },
     },
     {
       files: ['src/utils/hooks/useK8sWatchResource.ts'],

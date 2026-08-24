@@ -31,7 +31,7 @@ const ControllerCard: FC<ControllerCardProps> = ({ limit, obj }) => {
     <Card className="pf-m-full-height" data-testid="health-controller-card">
       <CardHeader
         actions={{
-          actions: limit ? <Link to={'health'}>View all</Link> : null,
+          actions: limit ? <Link to={'health'}>{t('View all')}</Link> : null,
         }}
       >
         <CardTitle className="forklift-title">

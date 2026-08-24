@@ -2,6 +2,7 @@ import type { FC } from 'react';
 
 import type { V1beta1PlanStatusMigrationVmsPipeline } from '@forklift-ui/types';
 import { EMPTY_MSG } from '@utils/constants';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import { countTasks } from './utils/utils';
 
@@ -10,6 +11,7 @@ type DisksCounterProps = {
 };
 
 const DisksCounter: FC<DisksCounterProps> = ({ diskTransferPipeline }) => {
+  const { t } = useForkliftTranslation();
   const { completedTasks, totalTasks } = countTasks(diskTransferPipeline);
 
   if (!diskTransferPipeline || !totalTasks) {
@@ -18,7 +20,10 @@ const DisksCounter: FC<DisksCounterProps> = ({ diskTransferPipeline }) => {
 
   return (
     <>
-      {completedTasks ?? EMPTY_MSG} / {totalTasks ?? EMPTY_MSG} Disks
+      {t('{{completed}} / {{total}} Disks', {
+        completed: completedTasks ?? EMPTY_MSG,
+        total: totalTasks ?? EMPTY_MSG,
+      })}
     </>
   );
 };
