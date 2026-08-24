@@ -98,6 +98,7 @@ The project follows strict conventions documented in [AGENTS.md](AGENTS.md). Her
 ## Internationalization
 
 All user-facing strings must be translatable. The project uses `react-i18next` with namespace `plugin__forklift-console-plugin`.
+ESLint enforces `i18next/no-literal-string` (jsx-text-only) on `src/`; wrap UI text with `t()` / `ForkliftTrans` (unit tests and `testing/` are exempt).
 
 - In components: `useForkliftTranslation` hook
 - For JSX interpolation: `<ForkliftTrans>` component
