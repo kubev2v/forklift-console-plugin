@@ -436,7 +436,8 @@ export const createEslintConfig = () =>
         '@eslint-react/dom/no-unsafe-iframe-sandbox': 'error',
         '@eslint-react/dom/no-unsafe-target-blank': 'error',
         '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'error',
-        '@eslint-react/hooks-extra/no-unnecessary-use-prefix': 'off',
+        // Real Hooks keep the use* name; helpers without Hook calls must not pretend to be Hooks
+        '@eslint-react/hooks-extra/no-unnecessary-use-prefix': 'error',
         '@eslint-react/hooks-extra/prefer-use-state-lazy-initialization': 'off',
         '@eslint-react/jsx-key-before-spread': 'error',
         '@eslint-react/naming-convention/context-name': 'error',
@@ -519,9 +520,16 @@ export const createEslintConfig = () =>
       files: ['src/**/__tests__/**/*.{ts,tsx}', 'src/**/*.{test,spec}.{ts,tsx}'],
     },
     // Unit-test fixtures often use literal JSX; Playwright stays under testing/**
+    // Jest mocks must keep use* export names to match the real Hook APIs they replace
     {
-      files: ['src/**/__tests__/**/*.{ts,tsx}', 'src/**/*.{test,spec}.{ts,tsx}'],
+      files: [
+        'src/**/__tests__/**/*.{ts,tsx}',
+        'src/**/*.{test,spec}.{ts,tsx}',
+        'src/__mocks__/**/*.{ts,tsx}',
+        'src/test-utils/**/*.{ts,tsx}',
+      ],
       rules: {
+        '@eslint-react/hooks-extra/no-unnecessary-use-prefix': 'off',
         'i18next/no-literal-string': 'off',
       },
     },

@@ -7,7 +7,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
 import { getScriptFieldInputs } from './components/ScriptFieldInputs';
-import { useScriptFieldValidation } from './hooks/useScriptFieldValidation';
+import { createScriptFieldValidation } from './hooks/createScriptFieldValidation';
 import {
   CustomScriptsFieldId,
   DefaultScript,
@@ -33,7 +33,7 @@ const NewScriptsFields: FC = () => {
   const watchedScripts = useWatch({ control, name: CustomScriptsFieldId.Scripts });
   const getScriptFieldId = (index: number, field: string): string =>
     `${CustomScriptsFieldId.Scripts}.${index}.${field}`;
-  const { nameDeps, triggerAllNames, validateName } = useScriptFieldValidation(
+  const { nameDeps, triggerAllNames, validateName } = createScriptFieldValidation(
     CustomScriptsFieldId.Scripts,
     trigger,
     () => getValues(CustomScriptsFieldId.Scripts),
