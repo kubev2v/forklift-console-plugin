@@ -8,6 +8,7 @@ import { getNetworkMapFieldId } from 'src/networkMaps/utils/getNetworkMapFieldId
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
 import { NetworkMapFieldId } from '@utils/crds/maps/types';
+import { isEmpty } from '@utils/helpers';
 import type { InventoryNetwork } from '@utils/hooks/useNetworks';
 import { useForkliftTranslation } from '@utils/i18n';
 import { defaultNetMapping } from '@utils/mappings/networkMap';
@@ -51,7 +52,7 @@ const NetworkMapEditFieldTable = ({
     <FieldBuilderTable
       addButton={{
         isDisabled:
-          sourceNetworks.length === 0 ||
+          isEmpty(sourceNetworks) ||
           sourceNetworksLoading ||
           targetNetworksLoading ||
           isSubmitting ||

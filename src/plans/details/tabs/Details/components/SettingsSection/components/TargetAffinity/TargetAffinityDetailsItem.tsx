@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import AffinityModal, { type AffinityModalProps } from '@components/AffinityModal/AffinityModal';

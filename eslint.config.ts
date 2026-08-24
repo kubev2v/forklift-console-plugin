@@ -84,7 +84,7 @@ export const createEslintConfig = () =>
       },
       rules: {
         '@cspell/spellchecker': [
-          'warn',
+          'error',
           {
             autoFix: false,
             customWordListFile: CSPELL_WORD_LIST,
@@ -206,13 +206,14 @@ export const createEslintConfig = () =>
         '@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }],
         '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
         'arrow-body-style': 'off',
-        'barrel-files/avoid-barrel-files': 'warn',
+        'barrel-files/avoid-barrel-files': 'error',
         'barrel-files/avoid-re-export-all': 'error',
         camelcase: ['error', { allow: ['required_'] }],
         'capitalized-comments': 'off',
         complexity: 'off',
         curly: 'error',
         'id-length': ['error', { exceptions: ['t', 'e', 'x', 'y', 'a', 'b', '_', 'i'] }],
+        'import/no-named-as-default': 'error',
         'import/no-named-as-default-member': 'off',
         'import/no-unresolved': 'off',
         'import/order': 'off',
@@ -264,7 +265,7 @@ export const createEslintConfig = () =>
           },
         ],
         'no-restricted-syntax': [
-          'warn',
+          'error',
           {
             message: "Use the custom Select from '@components/common/Select' for consistency.",
             selector:
@@ -297,7 +298,8 @@ export const createEslintConfig = () =>
         ],
         'no-ternary': 'off',
         'no-undefined': 'off',
-        'no-warning-comments': 'warn',
+        // MTV-6464: TODOs are intentional backlog markers (sonarjs/todo-tag also off)
+        'no-warning-comments': 'off',
         'one-var': 'off',
         'perfectionist/sort-classes': [
           'error',
@@ -344,7 +346,7 @@ export const createEslintConfig = () =>
           },
         ],
         'promise/catch-or-return': ['error', { allowFinally: true }],
-        'promise/no-nesting': 'warn',
+        'promise/no-nesting': 'error',
         'promise/no-return-wrap': 'error',
         'promise/param-names': 'error',
         'react-hooks/exhaustive-deps': ['error'],
@@ -354,7 +356,7 @@ export const createEslintConfig = () =>
         'react/react-in-jsx-scope': 'off',
         'simple-import-sort/exports': 'error',
         'simple-import-sort/imports': [
-          'warn',
+          'error',
           {
             groups: [
               [
@@ -426,10 +428,51 @@ export const createEslintConfig = () =>
       files: ['src/**/*.{ts,tsx}'],
       rules: {
         ...eslintReact.configs['recommended-typescript'].rules,
+        // MTV-6464: promote bug/security-relevant warn rules; turn off noise / React 19-only / class-component legacy
+        '@eslint-react/dom/no-dangerously-set-innerhtml': 'error',
+        '@eslint-react/dom/no-missing-button-type': 'error',
+        '@eslint-react/dom/no-missing-iframe-sandbox': 'error',
+        '@eslint-react/dom/no-script-url': 'error',
+        '@eslint-react/dom/no-unsafe-iframe-sandbox': 'error',
+        '@eslint-react/dom/no-unsafe-target-blank': 'error',
         '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'error',
+        '@eslint-react/hooks-extra/no-unnecessary-use-prefix': 'off',
         '@eslint-react/hooks-extra/prefer-use-state-lazy-initialization': 'off',
+        '@eslint-react/jsx-key-before-spread': 'error',
+        '@eslint-react/naming-convention/context-name': 'error',
+        '@eslint-react/no-array-index-key': 'error',
+        // Children.* helpers are used intentionally in shared TableCell wrappers
+        '@eslint-react/no-children-count': 'off',
+        '@eslint-react/no-children-for-each': 'off',
+        '@eslint-react/no-children-map': 'off',
+        '@eslint-react/no-children-only': 'off',
+        '@eslint-react/no-children-to-array': 'off',
+        '@eslint-react/no-clone-element': 'error',
+        '@eslint-react/no-comment-textnodes': 'error',
+        // React 19 API migration (Context.Provider / use / forwardRef) — stay on React 18 patterns
+        '@eslint-react/no-context-provider': 'off',
+        '@eslint-react/no-duplicate-key': 'error',
+        '@eslint-react/no-forward-ref': 'off',
+        '@eslint-react/no-implicit-key': 'error',
+        '@eslint-react/no-nested-lazy-component-declarations': 'error',
+        // No class components in this codebase
+        '@eslint-react/no-set-state-in-component-did-mount': 'off',
+        '@eslint-react/no-set-state-in-component-did-update': 'off',
+        '@eslint-react/no-set-state-in-component-will-update': 'off',
+        '@eslint-react/no-unsafe-component-will-mount': 'off',
+        '@eslint-react/no-unsafe-component-will-receive-props': 'off',
+        '@eslint-react/no-unsafe-component-will-update': 'off',
+        '@eslint-react/no-unused-class-component-members': 'off',
+        '@eslint-react/no-unused-state': 'off',
+        '@eslint-react/no-unstable-context-value': 'error',
         // MTV-6463: stable module-level defaults instead of inline []/{}
         '@eslint-react/no-unstable-default-props': 'error',
+        '@eslint-react/no-use-context': 'off',
+        '@eslint-react/no-useless-forward-ref': 'off',
+        '@eslint-react/web-api/no-leaked-event-listener': 'error',
+        '@eslint-react/web-api/no-leaked-interval': 'error',
+        '@eslint-react/web-api/no-leaked-resize-observer': 'error',
+        '@eslint-react/web-api/no-leaked-timeout': 'error',
       },
     },
     // MTV-6273: enforce explicit return types on src/
@@ -455,27 +498,19 @@ export const createEslintConfig = () =>
         ],
       },
     },
+    // MTV-6464: jsdoc warn rules were IDE noise without CI fail — keep off (docs optional)
     {
       files: ['src/utils/**/*.{js,ts,tsx}'],
       plugins: { jsdoc },
       rules: {
-        'jsdoc/require-jsdoc': [
-          'warn',
-          {
-            require: {
-              FunctionDeclaration: true,
-              FunctionExpression: true,
-              MethodDefinition: true,
-            },
-          },
-        ],
-        'jsdoc/require-param': 'warn',
-        'jsdoc/require-param-name': 'warn',
+        'jsdoc/require-jsdoc': 'off',
+        'jsdoc/require-param': 'off',
+        'jsdoc/require-param-name': 'off',
         'jsdoc/require-param-type': 'off',
-        'jsdoc/require-property': 'warn',
-        'jsdoc/require-property-description': 'warn',
-        'jsdoc/require-property-name': 'warn',
-        'jsdoc/require-property-type': 'warn',
+        'jsdoc/require-property': 'off',
+        'jsdoc/require-property-description': 'off',
+        'jsdoc/require-property-name': 'off',
+        'jsdoc/require-property-type': 'off',
       },
     },
     {

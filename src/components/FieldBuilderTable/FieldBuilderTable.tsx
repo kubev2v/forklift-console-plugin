@@ -44,8 +44,15 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
       >
         <Thead>
           <Tr>
-            {headers.map((header, headerIndex) => (
-              <Th key={headerIndex} width={header.width}>
+            {headers.map((header) => (
+              <Th
+                key={
+                  typeof header.label === 'string' || typeof header.label === 'number'
+                    ? header.label
+                    : 'field-header'
+                }
+                width={header.width}
+              >
                 <FormGroup {...header} hasNoPaddingTop />
               </Th>
             ))}

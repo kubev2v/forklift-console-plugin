@@ -23,11 +23,11 @@ import { getResourceUrl } from '@utils/getResourceUrl';
 
 import { STATUS_POPOVER_VMS_COUNT_THRESHOLD } from './utils/constants';
 import { migrationStatusIconMap } from './utils/statusIconMapper';
+import { getPopoverMessageByStatus } from './utils/statusPopoverMessages';
 import {
   type MigrationVirtualMachinesStatusCountObjectVM,
   MigrationVirtualMachineStatus,
 } from './utils/types';
-import { getPopoverMessageByStatus } from './utils/utils';
 
 type StatusPopoverProps = {
   count: number;

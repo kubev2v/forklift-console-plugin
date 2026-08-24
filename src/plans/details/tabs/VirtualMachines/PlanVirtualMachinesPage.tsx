@@ -4,9 +4,9 @@ import { DrawerProvider } from '@components/DrawerContext/DrawerProvider';
 
 import {
   canPlanReStart,
-  isPlanExecuting,
   isPlanSucceeded,
-} from '../../components/PlanStatus/utils/utils';
+} from '../../components/PlanStatus/utils/planStatusPermissions';
+import { isPlanExecuting } from '../../components/PlanStatus/utils/planStatusResolver';
 import { usePlan } from '../../hooks/usePlan';
 import type { PlanPageProps } from '../../utils/types';
 

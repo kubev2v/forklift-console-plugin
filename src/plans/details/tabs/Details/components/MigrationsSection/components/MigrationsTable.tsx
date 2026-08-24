@@ -1,9 +1,7 @@
 import type { FC } from 'react';
 import { ConsoleTimestamp } from 'src/components/ConsoleTimestamp/ConsoleTimestamp';
-import {
-  getMigrationVMsStatusCounts,
-  getPlanStatus,
-} from 'src/plans/details/components/PlanStatus/utils/utils';
+import { getMigrationVMsStatusCounts } from 'src/plans/details/components/PlanStatus/utils/migrationVmStatus';
+import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/planStatusResolver';
 import VMStatusIconsRow from 'src/plans/details/components/PlanStatus/VMStatusIconsRow';
 import { useForkliftTranslation } from 'src/utils/i18n';
 

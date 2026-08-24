@@ -1,4 +1,4 @@
-import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/planStatusResolver';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';

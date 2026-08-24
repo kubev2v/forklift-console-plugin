@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import PlanMigrationTypeLabel from 'src/plans/details/components/PlanMigrationTypeLabel/PlanMigrationTypeLabel';
-import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
 import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 import { useForkliftTranslation } from 'src/utils/i18n';

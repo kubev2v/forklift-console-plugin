@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
+import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/planStatusResolver';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
-import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/utils';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';

@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import { type FC, isValidElement, type ReactNode } from 'react';
 
 import { DescriptionListDescription, DescriptionListGroup } from '@patternfly/react-core';
 
@@ -20,6 +20,18 @@ type DetailsItemProps = {
   title: string;
 };
 
+const getContentKey = (value: ReactNode, title: string): string | number => {
+  if (isValidElement(value) && value.key !== null && value.key !== undefined) {
+    return value.key;
+  }
+
+  if (typeof value === 'string' || typeof value === 'number') {
+    return value;
+  }
+
+  return title;
+};
+
 export const DetailsItem: FC<DetailsItemProps> = ({
   canEdit,
   content,
@@ -32,7 +44,7 @@ export const DetailsItem: FC<DetailsItemProps> = ({
   testId,
   title,
 }) => {
-  const contents = ensureArray(content);
+  const contents = ensureArray(content) as ReactNode[];
   const onEdits = ensureArray(onEdit);
 
   return (
@@ -46,11 +58,11 @@ export const DetailsItem: FC<DetailsItemProps> = ({
         title={title}
       />
       <DescriptionListDescription>
-        {contents?.map((value, index) => (
+        {contents.map((value, index) => (
           <ContentField
             canEdit={canEdit}
-            content={value as ReactNode}
-            key={`content-field-${index}`}
+            content={value}
+            key={getContentKey(value, title)}
             onEdit={onEdits?.[index] as () => void}
           />
         ))}

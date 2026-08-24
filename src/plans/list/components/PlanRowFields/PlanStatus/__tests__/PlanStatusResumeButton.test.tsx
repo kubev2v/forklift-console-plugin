@@ -18,11 +18,15 @@ jest.mock('src/plans/hooks/usePlanMigration', () => ({
 
 const mockCanPlanResumeConversion = jest.fn();
 const mockGetPlanStatus = jest.fn();
-jest.mock('src/plans/details/components/PlanStatus/utils/utils', () => ({
-  canPlanResumeConversion: (...args: unknown[]): ReturnType<typeof mockCanPlanResumeConversion> =>
-    mockCanPlanResumeConversion(...args),
+jest.mock('src/plans/details/components/PlanStatus/utils/migrationVmStatus', () => ({
   getCantStartVMStatusCount: jest.fn((): Record<string, never> => ({})),
   getMigrationVMsStatusCounts: jest.fn((): Record<string, never> => ({})),
+}));
+jest.mock('src/plans/details/components/PlanStatus/utils/planStatusPermissions', () => ({
+  canPlanResumeConversion: (...args: unknown[]): ReturnType<typeof mockCanPlanResumeConversion> =>
+    mockCanPlanResumeConversion(...args),
+}));
+jest.mock('src/plans/details/components/PlanStatus/utils/planStatusResolver', () => ({
   getPlanStatus: (...args: unknown[]): ReturnType<typeof mockGetPlanStatus> =>
     mockGetPlanStatus(...args),
   isPlanArchived: jest.fn((): boolean => false),

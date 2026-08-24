@@ -12,7 +12,7 @@ import {
   openshiftCredentialsFields,
   ovirtCredentialsFields,
   vCenterCredentialsFields,
-} from './utils/credentialsFields';
+} from './utils/standardProviderCredentialsFields';
 import CredentialFields from './CredentialFields';
 import OpenstackCredentialsContent from './OpenstackCredentialsContent';
 

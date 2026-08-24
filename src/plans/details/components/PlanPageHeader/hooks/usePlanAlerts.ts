@@ -17,8 +17,8 @@ import { isEmpty } from '@utils/helpers';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { usePlanMappingData } from '../../../hooks/usePlanMappingData';
+import { getPlanStatus } from '../../PlanStatus/utils/planStatusResolver';
 import type { PlanStatuses } from '../../PlanStatus/utils/types';
-import { getPlanStatus } from '../../PlanStatus/utils/utils';
 
 type UsePlanAlertsResult = {
   criticalConditions: V1beta1PlanStatusConditions[] | undefined;

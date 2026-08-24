@@ -1,5 +1,5 @@
 import { type FC, useMemo } from 'react';
-import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';

@@ -159,12 +159,13 @@ Example: if you remove `'no-ternary': 'off'`, the rule activates from `eslint.co
 - **Permanently off (Category 3/4):** Rules intentionally rejected for this project (e.g., `no-ternary`, `prefer-readonly-parameter-types`, `strict-boolean-expressions`). Do not enable without team consensus.
 - **Deferred (has a Jira story):** Rules currently off with a plan to enable later. Check the parent epic MTV-6268 for status.
 - **Inherited from `.all` (no explicit entry):** If a rule isn't listed in the config, it's **on** from `.all`. To turn it off, add an explicit `'off'` entry.
+- **No long-lived `warn` (MTV-6464):** Rules are either `error` (CI-enforced) or `off` (with a short comment). Do not leave `warn` without a linked follow-up — IDE-only warnings are noise when CI ignores them.
 
 ### Adding a new rule
 
 1. Add the rule in **alphabetical order** within the appropriate `@typescript-eslint/*` or plugin section.
 2. Check for **companion/conflicting rules** that may need to be disabled (e.g., enabling `no-non-null-assertion` required disabling `non-nullable-type-assertion-style`).
-3. Fix all violations in the same PR.
+3. Fix all violations in the same PR (severity `error`, not `warn`).
 4. State whether the rule applies to tests or not.
 
 ## Getting Help

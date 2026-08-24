@@ -172,7 +172,7 @@ The details header also has a standalone `PlanEditCutoverButton` (primary varian
 
 ## Plan Statuses
 
-Computed by `getPlanStatus(plan)` in `PlanStatus/utils/utils.ts`. Evaluation order:
+Computed by `getPlanStatus(plan)` in `PlanStatus/utils/planStatusResolver.ts`. Evaluation order:
 
 1. `Archived` — `spec.archived` or Archived condition
 2. `Unknown` — no conditions
@@ -301,7 +301,7 @@ Computed by `getPlanStatus(plan)` in `PlanStatus/utils/utils.ts`. Evaluation ord
 
 - **`StandardPage` changes** affect all list pages (providers, plans, network maps, storage maps). Plans list adds custom `postFilterData` for archived plans.
 - **`ProviderSelect` changes** affect both the plan wizard (general step) and provider pages.
-- **`PlanStatus/utils/utils.ts`** is imported by: list page (field filters), actions dropdown (enable/disable logic), VM tab (rendering mode), Mappings tab (`isPlanEditable`). Changes here affect all plan views.
+- **`PlanStatus/utils/`** (`planStatusResolver`, `planStatusPermissions`, `migrationVmStatus`, `statusPopoverMessages`) is imported by: list page (field filters), actions dropdown (enable/disable logic), VM tab (rendering mode), Mappings tab (`isPlanEditable`). Changes here affect all plan views.
 - **`submitMigrationPlan`** orchestrates creation of 5+ K8s resources in parallel. Failures mid-submission can leave orphaned resources (NetworkMap, StorageMap, Hooks, Secret). Owner references are added in a second pass.
 - **Wizard step field IDs** (`constants.ts` in each step) are referenced by `stepFieldMap` for validation and by `submitMigrationPlan` for extraction. Renaming a field ID requires updating both.
 - **Mapping components** are shared between wizard review and detail Mappings tab (`NetworkMapReviewTable`, `StorageMapReviewTable`). Changes affect both contexts.

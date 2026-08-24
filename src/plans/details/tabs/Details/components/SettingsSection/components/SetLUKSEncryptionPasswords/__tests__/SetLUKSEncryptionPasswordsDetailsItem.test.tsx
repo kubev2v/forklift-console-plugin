@@ -8,7 +8,7 @@ import { userEvent } from '@testing-library/user-event';
 import SetLUKSEncryptionPasswordsDetailsItem from '../SetLUKSEncryptionPasswordsDetailsItem';
 
 const mockIsPlanEditable = jest.fn();
-jest.mock('src/plans/details/components/PlanStatus/utils/utils', () => ({
+jest.mock('src/plans/details/components/PlanStatus/utils/planStatusPermissions', () => ({
   isPlanEditable: jest.fn((...args) => mockIsPlanEditable(...args)),
 }));
 

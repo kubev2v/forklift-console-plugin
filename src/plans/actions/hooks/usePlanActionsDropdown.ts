@@ -7,15 +7,17 @@ import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 import { getPlanURL } from '@utils/crds/plans/utils';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { PlanStatuses } from '../../details/components/PlanStatus/utils/types';
 import {
   canPlanReStart,
   canPlanResumeConversion,
   canPlanStart,
+} from '../../details/components/PlanStatus/utils/planStatusPermissions';
+import {
   getPlanStatus,
   isPlanArchived,
   isPlanExecuting,
-} from '../../details/components/PlanStatus/utils/utils';
+} from '../../details/components/PlanStatus/utils/planStatusResolver';
+import { PlanStatuses } from '../../details/components/PlanStatus/utils/types';
 import { usePlanMigration } from '../../hooks/usePlanMigration';
 import ArchiveModal from '../components/ArchiveModal';
 import PlanCutoverMigrationModal from '../components/CutoverModal/PlanCutoverMigrationModal';

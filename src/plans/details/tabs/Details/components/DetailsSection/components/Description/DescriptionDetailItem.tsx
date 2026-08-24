@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
 
 import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Truncate } from '@patternfly/react-core';

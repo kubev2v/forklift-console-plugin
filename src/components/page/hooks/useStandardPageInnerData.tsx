@@ -64,8 +64,8 @@ export const useStandardPageInnerData = <T,>({
 
   const renderedGlobalActions = useMemo(
     () =>
-      GlobalActionToolbarItems.map((Action, index) => (
-        <Action dataOnScreen={dataOnScreen} key={`${Action.name}-${index}`} />
+      GlobalActionToolbarItems.map((Action) => (
+        <Action dataOnScreen={dataOnScreen} key={Action.displayName ?? Action.name} />
       )),
     [GlobalActionToolbarItems, dataOnScreen],
   );

@@ -25,14 +25,16 @@ export const TableLabelCell: FC<TableLabelCellProps> = ({
     <TableCell className={className} isWrap={isWrap}>
       {children}
       {hasLabel &&
-        labels.map((_, i) => (
+        labels.map((labelItem, labelIndex) => (
           <Label
             className="forklift-table__flex-cell-label"
-            color={labelColors[i] as LabelProps['color']}
+            color={labelColors[labelIndex] as LabelProps['color']}
             isCompact
-            key={i}
+            key={
+              typeof labelItem === 'string' || typeof labelItem === 'number' ? labelItem : 'label'
+            }
           >
-            {labels[i]}
+            {labelItem}
           </Label>
         ))}
     </TableCell>

@@ -2,7 +2,7 @@ import type { FC, ReactElement } from 'react';
 import {
   isPlanArchived,
   isPlanExecuting,
-} from 'src/plans/details/components/PlanStatus/utils/utils';
+} from 'src/plans/details/components/PlanStatus/utils/planStatusResolver';
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';

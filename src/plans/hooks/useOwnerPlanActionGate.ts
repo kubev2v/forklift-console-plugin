@@ -4,8 +4,9 @@ import { getNamespace } from '@utils/crds/common/selectors';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { isPlanEditable } from '../details/components/PlanStatus/utils/planStatusPermissions';
+import { getPlanStatus } from '../details/components/PlanStatus/utils/planStatusResolver';
 import { PlanStatuses } from '../details/components/PlanStatus/utils/types';
-import { getPlanStatus, isPlanEditable } from '../details/components/PlanStatus/utils/utils';
 
 type OwnerPlanActionGate = {
   disabledReason: string | undefined;

@@ -58,8 +58,8 @@ const CustomScriptsReviewSection: FC = () => {
             <DescriptionListDescription data-testid="review-custom-scripts-list">
               {isEmpty(scripts)
                 ? t('None')
-                : scripts.map((script, index) => (
-                    <div key={index}>
+                : scripts.map((script) => (
+                    <div key={`${script.guestType}-${script.scriptType}-${script.name}`}>
                       {script.name || t('Unnamed')} ({GuestTypeLabels[script.guestType]},{' '}
                       {ScriptTypeLabels[script.scriptType]})
                     </div>

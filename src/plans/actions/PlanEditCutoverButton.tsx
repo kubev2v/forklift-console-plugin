@@ -10,12 +10,12 @@ import { CalendarAltIcon } from '@patternfly/react-icons';
 import { getPlanIsWarm } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { PlanStatuses } from '../details/components/PlanStatus/utils/types';
 import {
   getPlanStatus,
   isPlanArchived,
   isPlanExecuting,
-} from '../details/components/PlanStatus/utils/utils';
+} from '../details/components/PlanStatus/utils/planStatusResolver';
+import { PlanStatuses } from '../details/components/PlanStatus/utils/types';
 
 import type { PlanModalProps } from './components/types';
 

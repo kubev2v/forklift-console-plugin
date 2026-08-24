@@ -10,7 +10,7 @@ import userEvent from '@testing-library/user-event';
 import ScriptsSection from '../components/ScriptsSection/ScriptsSection';
 
 const mockIsPlanEditable = jest.fn();
-jest.mock('src/plans/details/components/PlanStatus/utils/utils', () => ({
+jest.mock('src/plans/details/components/PlanStatus/utils/planStatusPermissions', () => ({
   isPlanEditable: jest.fn((...args) => mockIsPlanEditable(...args)),
 }));
 

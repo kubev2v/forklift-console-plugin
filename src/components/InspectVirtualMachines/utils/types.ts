@@ -36,6 +36,11 @@ export type VmOverrides = {
   xfsCompatibility?: boolean;
 };
 
+export type PassphraseEntry = {
+  id: string;
+  value: string;
+};
+
 export type CreateInspectionsFn = (vms: VmInspectionRef[]) => Promise<InspectionCreateResult>;
 
 export type PhaseConfig = {

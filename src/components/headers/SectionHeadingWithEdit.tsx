@@ -47,7 +47,7 @@ const SectionHeadingWithEdit: FC<SectionHeadingWithEditProps> = ({
           </Button>
           {!isEmpty(additionalActions) &&
             additionalActions?.map((action) => (
-              <Button {...action} key={action.key} variant={ButtonVariant.link} />
+              <Button key={action.key} {...action} variant={ButtonVariant.link} />
             ))}
         </Flex>
       }

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
 import EditVmTargetPowerState, {
   type EditVmTargetPowerStateProps,
 } from 'src/plans/details/tabs/Details/components/SettingsSection/components/TargetPowerState/EditVmTargetPowerState';

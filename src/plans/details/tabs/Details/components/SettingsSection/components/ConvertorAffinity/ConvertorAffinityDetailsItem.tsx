@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
 
 import AffinityModal, { type AffinityModalProps } from '@components/AffinityModal/AffinityModal';
 import AffinityViewDetailsItemContent from '@components/AffinityViewDetailsItemContent/AffinityViewDetailsItemContent';

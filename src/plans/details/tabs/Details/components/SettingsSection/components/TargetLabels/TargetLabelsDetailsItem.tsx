@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
-import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
 import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
 
 import LabelsModal, { type LabelsModalProps } from '@components/LabelsModal/LabelsModal';

@@ -1,4 +1,4 @@
-import type { FC, PropsWithChildren } from 'react';
+import { type FC, type PropsWithChildren, useMemo } from 'react';
 
 import { TableSortContext } from '@components/TableSortContext';
 
@@ -17,9 +17,12 @@ export const TableSortContextProvider: FC<TableSortContextProviderProps> = ({
 }) => {
   const [activeSort, setActiveSort, compareFn] = useSort(fields, 'en', defaultSort);
 
+  const tableSortContextValue = useMemo(
+    () => ({ activeSort, compareFn, setActiveSort }),
+    [activeSort, compareFn, setActiveSort],
+  );
+
   return (
-    <TableSortContext.Provider value={{ activeSort, compareFn, setActiveSort }}>
-      {children}
-    </TableSortContext.Provider>
+    <TableSortContext.Provider value={tableSortContextValue}>{children}</TableSortContext.Provider>
   );
 };
