@@ -608,10 +608,12 @@ export const createEslintConfig = () =>
         'jsdoc/require-property-name': 'off',
         'jsdoc/require-property-type': 'off',
         'max-lines-per-function': 'off',
+        'barrel-files/avoid-barrel-files': 'off', // MTV-6509 (S19): audit before enforcing on testing/
         'no-await-in-loop': 'off',
         'no-console': 'off',
         'no-restricted-imports': 'off',
         'no-warning-comments': 'off',
+        'promise/no-nesting': 'off', // MTV-6509 (S19)
         'perfectionist/sort-objects': 'off',
         'react-refresh/only-export-components': 'off',
         'require-unicode-regexp': 'off',
