@@ -242,6 +242,29 @@ export class OffloadOptions {
     await expect(toggle).toBeVisible();
   }
 
+  async verifyStorageSecretOptions(
+    mappingIndex: number,
+    expected: string[],
+    unexpected: string[],
+  ): Promise<void> {
+    const toggle = this.fieldToggleButton(OFFLOAD_FIELD.storageSecret(mappingIndex));
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+
+    const listbox = this.page.getByRole('listbox');
+    await expect(listbox).toBeVisible();
+
+    for (const name of expected) {
+      await expect(listbox.getByRole('option', { exact: true, name })).toBeVisible();
+    }
+    for (const name of unexpected) {
+      await expect(listbox.getByRole('option', { exact: true, name })).toHaveCount(0);
+    }
+
+    // Close the dropdown without selecting.
+    await toggle.click();
+  }
+
   async verifyValidationError(partialText: string): Promise<void> {
     const error = this.container
       .getByTestId('offload-validation-error')

@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useEffect, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { storageMapFieldLabels } from 'src/storageMaps/utils/constants';
 
@@ -11,6 +11,7 @@ import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
+import { filterOpaqueSecrets } from '@utils/secrets/opaqueSecrets';
 import { StorageMapFieldId } from '@utils/storage/types';
 
 import { offloadNestedFieldRules } from '../../utils/offloadNestedFieldRules';
@@ -25,14 +26,59 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
   const {
     control,
     formState: { isSubmitting },
+    setValue,
+    watch,
   } = useFormContext();
 
-  const [secrets] = useK8sWatchResource<IoK8sApiCoreV1Secret[]>({
-    groupVersionKind: getGroupVersionKindForModel(SecretModel),
-    isList: true,
-    namespace: getNamespace(sourceProvider),
-    namespaced: true,
-  });
+  const namespace = getNamespace(sourceProvider);
+  const [secrets, loaded, error] = useK8sWatchResource<IoK8sApiCoreV1Secret[]>(
+    namespace
+      ? {
+          groupVersionKind: getGroupVersionKindForModel(SecretModel),
+          isList: true,
+          namespace,
+          namespaced: true,
+        }
+      : null,
+  );
+
+  const opaqueSecrets = useMemo(
+    (): IoK8sApiCoreV1Secret[] => filterOpaqueSecrets(secrets),
+    [secrets],
+  );
+
+  const selectedSecretValue: unknown = watch(fieldId) as unknown;
+  const selectedSecret = typeof selectedSecretValue === 'string' ? selectedSecretValue : undefined;
+  const hasOpaqueSecrets = !isEmpty(opaqueSecrets);
+  // Keep the select usable when the list returned Opaque secrets even if a later
+  // watch/stream error is set (common in e2e mocks without a secrets watch WS).
+  const isSelectDisabled = isSubmitting || !loaded || (Boolean(error) && !hasOpaqueSecrets);
+
+  useEffect(() => {
+    if (!loaded || !selectedSecret) {
+      return;
+    }
+
+    // Preserve the selection only while loading failed and we have no Opaque list to trust.
+    if (error && !hasOpaqueSecrets) {
+      return;
+    }
+
+    const isSelectedOpaque = opaqueSecrets.some((secret) => getName(secret) === selectedSecret);
+
+    if (!isSelectedOpaque) {
+      setValue(fieldId, '', { shouldDirty: true, shouldValidate: true });
+    }
+  }, [error, fieldId, hasOpaqueSecrets, loaded, opaqueSecrets, selectedSecret, setValue]);
+
+  let placeholder = t('Loading secrets...');
+  if (loaded && hasOpaqueSecrets) {
+    placeholder = t('Select storage secret');
+  } else if (loaded && error) {
+    placeholder = t('Failed to load secrets.');
+  } else if (loaded) {
+    placeholder = t('Select storage secret');
+  }
 
   return (
     <FormGroup
@@ -61,22 +107,24 @@ const StorageSecretField: FC<StorageSecretFieldProps> = ({ fieldId, sourceProvid
         render={({ field }) => (
           <Select
             id={fieldId}
-            isDisabled={isSubmitting}
+            isDisabled={isSelectDisabled}
             onSelect={(_e, value) => {
               field.onChange(value);
             }}
-            placeholder={t('Select storage secret')}
+            placeholder={placeholder}
             ref={field.ref}
             testId={fieldId}
-            value={field.value as string | undefined}
+            value={typeof field.value === 'string' ? field.value : undefined}
           >
             <SelectList>
-              {isEmpty(secrets) ? (
+              {isEmpty(opaqueSecrets) ? (
                 <SelectOption isDisabled key="empty">
-                  {t('No secrets available for this provider')}
+                  {error
+                    ? t('Failed to load secrets.')
+                    : t('No Opaque secrets found in this project.')}
                 </SelectOption>
               ) : (
-                secrets.map((secret) => {
+                opaqueSecrets.map((secret) => {
                   const secretName = getName(secret);
 
                   return (
