@@ -20,16 +20,38 @@ type DetailsItemProps = {
   title: string;
 };
 
-const getContentKey = (value: ReactNode, title: string): string | number => {
-  if (isValidElement(value) && value.key !== null && value.key !== undefined) {
+const getContentBaseKey = (value: ReactNode, title: string): string => {
+  if (isValidElement(value) && typeof value.key === 'string') {
     return value.key;
   }
 
-  if (typeof value === 'string' || typeof value === 'number') {
+  if (typeof value === 'string') {
     return value;
   }
 
+  if (typeof value === 'number') {
+    return value.toString();
+  }
+
   return title;
+};
+
+const toContentEntries = (
+  contents: ReactNode[],
+  title: string,
+): { key: string; value: ReactNode }[] => {
+  const seen = new Map<string, number>();
+
+  return contents.map((value) => {
+    const base = getContentBaseKey(value, title);
+    const occurrence = seen.get(base) ?? 0;
+    seen.set(base, occurrence + 1);
+
+    return {
+      key: occurrence === 0 ? base : `${base}__${occurrence}`,
+      value,
+    };
+  });
 };
 
 export const DetailsItem: FC<DetailsItemProps> = ({
@@ -46,6 +68,7 @@ export const DetailsItem: FC<DetailsItemProps> = ({
 }) => {
   const contents = ensureArray(content) as ReactNode[];
   const onEdits = ensureArray(onEdit);
+  const contentEntries = toContentEntries(contents, title);
 
   return (
     <DescriptionListGroup data-testid={testId}>
@@ -58,11 +81,11 @@ export const DetailsItem: FC<DetailsItemProps> = ({
         title={title}
       />
       <DescriptionListDescription>
-        {contents.map((value, index) => (
+        {contentEntries.map(({ key, value }, index) => (
           <ContentField
             canEdit={canEdit}
             content={value}
-            key={getContentKey(value, title)}
+            key={key}
             onEdit={onEdits?.[index] as () => void}
           />
         ))}

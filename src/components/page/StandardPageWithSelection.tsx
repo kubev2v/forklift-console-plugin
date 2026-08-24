@@ -15,11 +15,12 @@ const defaultCanSelect = (_item: unknown): boolean => true;
 const wrapActionWithSelection = <T,>(
   Action: FC<GlobalActionToolbarProps<T>>,
   selectedIds: string[],
+  actionKey: string,
 ): FC<GlobalActionToolbarProps<T>> => {
   const ActionWithSelection = (actionProps: ComponentProps<typeof Action>): ReactElement => (
     <Action {...actionProps} selectedIds={selectedIds} />
   );
-  ActionWithSelection.displayName = `${Action.displayName ?? 'Action'}WithSelection`;
+  ActionWithSelection.displayName = `${actionKey}WithSelection`;
   return ActionWithSelection;
 };
 
@@ -131,13 +132,18 @@ export const StandardPageWithSelection = <T,>(
     });
   }, [header, isExpanded, onSelect]);
 
-  const EnhancedGlobalActionToolbarItems = useMemo(
-    () =>
-      GlobalActionToolbarItems?.map((Action: FC<GlobalActionToolbarProps<T>>) =>
-        wrapActionWithSelection(Action, internalSelectedIds ?? []),
-      ),
-    [GlobalActionToolbarItems, internalSelectedIds],
-  );
+  const EnhancedGlobalActionToolbarItems = useMemo(() => {
+    const seen = new Map<string, number>();
+
+    return GlobalActionToolbarItems?.map((Action: FC<GlobalActionToolbarProps<T>>) => {
+      const base = Action.displayName ?? Action.name ?? 'Action';
+      const occurrence = seen.get(base) ?? 0;
+      seen.set(base, occurrence + 1);
+      const actionKey = occurrence === 0 ? base : `${base}__${occurrence}`;
+
+      return wrapActionWithSelection(Action, internalSelectedIds ?? [], actionKey);
+    });
+  }, [GlobalActionToolbarItems, internalSelectedIds]);
 
   // When selection is disabled, render plain StandardPage (no checkboxes/selection logic)
   if (!onSelect) {

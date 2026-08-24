@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useWatch } from 'react-hook-form';
+import { useFieldArray, useWatch } from 'react-hook-form';
 
 import ExpandableReviewSection from '@components/ExpandableReviewSection/ExpandableReviewSection';
 import {
@@ -26,6 +26,10 @@ const CustomScriptsReviewSection: FC = () => {
   const { t } = useForkliftTranslation();
   const { goToStepById } = useWizardContext();
   const { control } = useCreatePlanFormContext();
+  const { fields: scriptFields } = useFieldArray({
+    control,
+    name: CustomScriptsFieldId.Scripts,
+  });
 
   const [scriptsType, existingConfigMap, scripts] = useWatch({
     control,
@@ -58,12 +62,19 @@ const CustomScriptsReviewSection: FC = () => {
             <DescriptionListDescription data-testid="review-custom-scripts-list">
               {isEmpty(scripts)
                 ? t('None')
-                : scripts.map((script) => (
-                    <div key={`${script.guestType}-${script.scriptType}-${script.name}`}>
-                      {script.name || t('Unnamed')} ({GuestTypeLabels[script.guestType]},{' '}
-                      {ScriptTypeLabels[script.scriptType]})
-                    </div>
-                  ))}
+                : scriptFields.map((field, index) => {
+                    const script = scripts[index];
+                    if (!script) {
+                      return null;
+                    }
+
+                    return (
+                      <div key={field.id}>
+                        {script.name || t('Unnamed')} ({GuestTypeLabels[script.guestType]},{' '}
+                        {ScriptTypeLabels[script.scriptType]})
+                      </div>
+                    );
+                  })}
             </DescriptionListDescription>
           </DescriptionListGroup>
         )}
