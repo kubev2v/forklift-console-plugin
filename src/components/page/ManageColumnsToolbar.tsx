@@ -32,21 +32,23 @@ export const ManageColumnsToolbar = ({
       }}
       tooltip={t('Manage columns')}
     >
-      <ManageColumnsModal
-        cancelLabel={t('Cancel')}
-        defaultColumns={defaultColumns}
-        description={t('Selected columns will be displayed in the table.')}
-        onChange={setColumns}
-        onClose={() => {
-          setIsOpen(false);
-        }}
-        reorderLabel={t('Reorder')}
-        resourceFields={resourceFields}
-        restoreLabel={t('Restore default columns')}
-        saveLabel={t('Save')}
-        showModal={isOpen}
-        title={t('Manage columns')}
-      />
+      {isOpen ? (
+        <ManageColumnsModal
+          cancelLabel={t('Cancel')}
+          defaultColumns={defaultColumns}
+          description={t('Selected columns will be displayed in the table.')}
+          onChange={setColumns}
+          onClose={() => {
+            setIsOpen(false);
+          }}
+          reorderLabel={t('Reorder')}
+          resourceFields={resourceFields}
+          restoreLabel={t('Restore default columns')}
+          saveLabel={t('Save')}
+          showModal
+          title={t('Manage columns')}
+        />
+      ) : null}
     </ManageColumnsToolbarItem>
   );
 };

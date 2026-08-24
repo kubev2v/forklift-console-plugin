@@ -54,43 +54,52 @@ export const useGroupedEnumFilter = ({
   };
 
   const deleteFilter = (id: string): void => {
+    const enumValue = id2enum[id];
+    if (!enumValue) {
+      return;
+    }
+
     if (hasMultipleResources) {
       onSelectedEnumIdsChange(
         selectedEnumIds.filter(
           (selectedId) =>
-            id2enum[selectedId]?.resourceFieldId === id2enum[id]?.resourceFieldId &&
-            selectedId !== id,
+            id2enum[selectedId]?.resourceFieldId === enumValue.resourceFieldId && selectedId !== id,
         ),
-        id2enum[id].resourceFieldId,
+        enumValue.resourceFieldId,
       );
       return;
     }
 
     onSelectedEnumIdsChange(
       selectedEnumIds.filter((enumId) => id2enum[enumId] && id !== enumId),
-      id2enum[id].resourceFieldId,
+      enumValue.resourceFieldId,
     );
   };
 
   const hasFilter = (id: string): boolean => Boolean(id2enum[id]) && selectedEnumIds.includes(id);
 
   const addFilter = (id: string): void => {
+    const enumValue = id2enum[id];
+    if (!enumValue) {
+      return;
+    }
+
     if (hasMultipleResources) {
       onSelectedEnumIdsChange(
         [
           ...selectedEnumIds.filter(
-            (selectedId) => id2enum[selectedId]?.resourceFieldId === id2enum[id]?.resourceFieldId,
+            (selectedId) => id2enum[selectedId]?.resourceFieldId === enumValue.resourceFieldId,
           ),
           id,
         ],
-        id2enum[id].resourceFieldId,
+        enumValue.resourceFieldId,
       );
       return;
     }
 
     onSelectedEnumIdsChange(
       [...selectedEnumIds.filter((selectedId) => id2enum[selectedId]), id],
-      id2enum[id].resourceFieldId,
+      enumValue.resourceFieldId,
     );
   };
 

@@ -6,7 +6,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from '@patternfly/react-co
 import type { ResourceField } from '../utils/types';
 
 import { ManageColumnsList } from './ManageColumnsList';
-import { filterActionsAndHidden } from './manageColumnsUtils';
+import { filterActionsAndHidden, sameOrderAndVisibility } from './manageColumnsUtils';
 
 type ManagedColumnsProps = {
   cancelLabel?: string;
@@ -35,6 +35,7 @@ export const ManageColumnsModal = ({
   showModal,
   title = 'Manage columns',
 }: ManagedColumnsProps): ReactElement => {
+  // Fresh state each open: ManageColumnsToolbar mounts this only while open.
   const [editedColumns, setEditedColumns] = useState(filterActionsAndHidden(resourceFields));
 
   const restoreDefaults = (): void => {
@@ -72,6 +73,8 @@ export const ManageColumnsModal = ({
     onClose();
   };
 
+  const visibleResourceFields = filterActionsAndHidden(resourceFields);
+
   return (
     <Modal data-testid="manage-columns-modal" isOpen={showModal} onClose={onClose} variant="small">
       <ModalHeader
@@ -94,7 +97,7 @@ export const ManageColumnsModal = ({
       <ModalFooter>
         <Button
           data-testid="manage-columns-save-button"
-          isDisabled={resourceFields === editedColumns}
+          isDisabled={sameOrderAndVisibility(visibleResourceFields, editedColumns)}
           key="save"
           onClick={onSave}
           variant={ButtonVariant.primary}

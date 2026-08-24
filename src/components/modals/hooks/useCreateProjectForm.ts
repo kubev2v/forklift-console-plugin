@@ -58,7 +58,7 @@ export const useCreateProjectForm = ({
         closeOverlay();
       })
       .catch((error: Error) => {
-        const err = error.message ?? t('An error occurred. Please try again.');
+        const err = error.message || t('An error occurred. Please try again.');
         setErrorMessage(err);
       })
       .finally(() => {
