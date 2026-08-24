@@ -28,7 +28,7 @@
   "{{count}} virtual machine selected_one": "{{count}} virtual machine selected",
   "{{count}} virtual machine selected_other": "{{count}} virtual machines selected",
   "{{count}} VM_one": "{{count}} VM",
-  "{{count}} VM_other": "{{count}} VMS",
+  "{{count}} VM_other": "{{count}} VMs",
   "{{count}} VM migration_one": "{{count}} VM migration",
   "{{count}} VM migration_other": "{{count}} VM migrations",
   "{{errorMessage}}": "{{errorMessage}}",
