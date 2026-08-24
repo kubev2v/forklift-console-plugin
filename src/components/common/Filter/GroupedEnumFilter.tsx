@@ -1,47 +1,12 @@
-import { type MouseEvent as ReactMouseEvent, type ReactElement, type Ref, useState } from 'react';
+import type { ReactElement, Ref } from 'react';
 
-import type { EnumGroup, EnumValue } from '@components/common/utils/types';
-import {
-  Badge,
-  MenuToggle,
-  type MenuToggleElement,
-  Select,
-  SelectGroup,
-  SelectList,
-  SelectOption,
-  ToolbarFilter,
-} from '@patternfly/react-core';
-import { FilterIcon } from '@patternfly/react-icons';
-import { isEmpty } from '@utils/helpers';
+import { type MenuToggleElement, Select, SelectList, ToolbarFilter } from '@patternfly/react-core';
 
+import { renderGroupedEnumOptions } from './components/GroupedEnumFilterOptions';
+import GroupedEnumFilterToggle from './components/GroupedEnumFilterToggle';
+import { useGroupedEnumFilter } from './hooks/useGroupedEnumFilter';
+import { EMPTY_ENUM_IDS, EMPTY_ENUM_VALUES } from './utils/groupedEnumFilterConstants';
 import type { FilterTypeProps } from './types';
-
-const EMPTY_ENUM_IDS: string[] = [];
-const EMPTY_ENUM_VALUES: NonNullable<FilterTypeProps['supportedValues']> = [];
-
-const renderOptions = (
-  supportedGroups: EnumGroup[],
-  supportedEnumValues: EnumValue[],
-  selectedEnumIds: string[],
-): ReactElement[] =>
-  supportedGroups.map(({ groupId, label }) => (
-    <SelectGroup key={groupId} label={label}>
-      <SelectList>
-        {supportedEnumValues
-          .filter((item) => item.groupId === groupId)
-          .map(({ icon, id, label: itemLabel }) => (
-            <SelectOption
-              hasCheckbox
-              isSelected={selectedEnumIds.includes(id)}
-              key={id}
-              value={itemLabel}
-            >
-              {icon} {itemLabel}
-            </SelectOption>
-          ))}
-      </SelectList>
-    </SelectGroup>
-  ));
 
 /**
  * This Filter type enables selecting one or many enum values that are separated by groups.
@@ -65,109 +30,39 @@ const renderOptions = (
  */
 export const GroupedEnumFilter = ({
   hasMultipleResources,
-  onFilterUpdate: onSelectedEnumIdsChange,
+  onFilterUpdate,
   placeholderLabel,
-  selectedFilters: selectedEnumIds = EMPTY_ENUM_IDS,
+  selectedFilters = EMPTY_ENUM_IDS,
   showFilter = true,
   showFilterIcon,
   supportedGroups,
   supportedValues: supportedEnumValues = EMPTY_ENUM_VALUES,
 }: FilterTypeProps): ReactElement => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  // simplify lookup
-  const id2enum = Object.fromEntries(
-    supportedEnumValues.map(({ id, ...rest }) => [id, { id, ...rest }]),
-  );
-
-  const label2enum = Object.fromEntries(
-    supportedEnumValues.map(({ label, ...rest }) => [label, { label, ...rest }]),
-  );
-
-  const deleteGroup = (groupId: string): void => {
-    if (hasMultipleResources) {
-      onSelectedEnumIdsChange([], groupId);
-      return;
-    }
-
-    onSelectedEnumIdsChange(
-      selectedEnumIds.filter((id) => id2enum[id] && id2enum[id].groupId !== groupId),
-    );
-  };
-
-  const deleteFilter = (id: string): void => {
-    if (hasMultipleResources) {
-      onSelectedEnumIdsChange(
-        selectedEnumIds.filter(
-          (selectedId) =>
-            id2enum[selectedId]?.resourceFieldId === id2enum[id]?.resourceFieldId &&
-            selectedId !== id,
-        ),
-        id2enum[id].resourceFieldId,
-      );
-    }
-
-    onSelectedEnumIdsChange(
-      selectedEnumIds.filter((enumId) => id2enum[enumId] && id !== enumId),
-      id2enum[id].resourceFieldId,
-    );
-  };
-
-  const hasFilter = (id: string): boolean => Boolean(id2enum[id]) && selectedEnumIds.includes(id);
-
-  const addFilter = (id: string): void => {
-    if (hasMultipleResources) {
-      onSelectedEnumIdsChange(
-        [
-          ...selectedEnumIds.filter(
-            (selectedId) => id2enum[selectedId]?.resourceFieldId === id2enum[id]?.resourceFieldId,
-          ),
-          id,
-        ],
-        id2enum[id].resourceFieldId,
-      );
-    }
-
-    onSelectedEnumIdsChange(
-      [...selectedEnumIds.filter((selectedId) => id2enum[selectedId]), id],
-      id2enum[id].resourceFieldId,
-    );
-  };
-
-  const onSelect = (
-    _event: ReactMouseEvent | undefined,
-    value: string | number | undefined,
-  ): void => {
-    const label = value?.toString();
-    if (label) {
-      const labelId = label2enum?.[label] ? label2enum[label]?.id : label;
-      if (hasFilter(labelId)) {
-        deleteFilter(labelId);
-      } else {
-        addFilter(labelId);
-      }
-    }
-  };
-
-  const onToggleClick = (): void => {
-    setIsOpen((prev) => !prev);
-  };
+  const {
+    deleteFilter,
+    deleteGroup,
+    id2enum,
+    isOpen,
+    onSelect,
+    onToggleClick,
+    selectedEnumIds,
+    setIsOpen,
+  } = useGroupedEnumFilter({
+    hasMultipleResources,
+    onFilterUpdate,
+    selectedFilters,
+    supportedValues: supportedEnumValues,
+  });
 
   const toggle = (toggleRef: Ref<MenuToggleElement>): ReactElement => (
-    <MenuToggle
-      isExpanded={isOpen}
-      isFullWidth
-      onClick={onToggleClick}
-      ref={toggleRef}
-      {...(showFilterIcon && { icon: <FilterIcon /> })}
-    >
-      {placeholderLabel}
-      {!isEmpty(selectedEnumIds) && (
-        <Badge className="pf-v6-u-ml-sm" isRead>
-          {selectedEnumIds.length}
-        </Badge>
-      )}
-    </MenuToggle>
+    <GroupedEnumFilterToggle
+      isOpen={isOpen}
+      onToggleClick={onToggleClick}
+      placeholderLabel={placeholderLabel}
+      selectedCount={selectedEnumIds.length}
+      showFilterIcon={showFilterIcon}
+      toggleRef={toggleRef}
+    />
   );
 
   return (
@@ -181,8 +76,7 @@ export const GroupedEnumFilter = ({
         (acc, { groupId, label }) => (
           <ToolbarFilter
             categoryName={{ key: groupId, name: label }}
-            deleteLabel={(category, option) => {
-              // values are one enum so id is enough to identify (category is not needed)
+            deleteLabel={(_category, option) => {
               const id = typeof option === 'string' ? option : option.key;
               deleteFilter(id);
             }}
@@ -221,7 +115,7 @@ export const GroupedEnumFilter = ({
           toggle={toggle}
         >
           <SelectList>
-            {renderOptions(supportedGroups, supportedEnumValues, selectedEnumIds)}
+            {renderGroupedEnumOptions(supportedGroups, supportedEnumValues, selectedEnumIds)}
           </SelectList>
         </Select>,
       )}

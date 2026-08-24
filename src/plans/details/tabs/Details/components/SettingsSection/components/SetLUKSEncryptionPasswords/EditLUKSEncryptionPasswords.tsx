@@ -1,16 +1,11 @@
-import LUKSSecretSelect from '@components/LUKSSecretSelect/LUKSSecretSelect';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import {
   Alert,
   AlertVariant,
   Checkbox,
-  Flex,
-  FlexItem,
-  FormGroup,
   HelperText,
   HelperTextItem,
-  Radio,
   Spinner,
   Stack,
 } from '@patternfly/react-core';
@@ -18,35 +13,11 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import type { EditPlanProps } from '../../utils/types';
 
+import EditLUKSDecryptionModeFields from './components/EditLUKSDecryptionModeFields';
 import EditLUKSModalAlert from './components/EditLUKSModalAlert';
 import EditLUKSModalBody from './components/EditLUKSModalBody';
-import {
-  DECRYPTION_MODE_EXISTING,
-  DECRYPTION_MODE_PASSPHRASES,
-  useEditLUKSState,
-} from './hooks/useEditLUKSState';
-import LUKSPassphraseInputList from './LUKSPassphraseInputList';
-
-const getSecretWatchErrorMessage = (secretLoadError: unknown): string | undefined => {
-  if (secretLoadError instanceof Error) {
-    return secretLoadError.message;
-  }
-
-  if (typeof secretLoadError === 'string') {
-    return secretLoadError;
-  }
-
-  if (
-    typeof secretLoadError === 'object' &&
-    secretLoadError !== null &&
-    'message' in secretLoadError &&
-    typeof secretLoadError.message === 'string'
-  ) {
-    return secretLoadError.message;
-  }
-
-  return undefined;
-};
+import { useEditLUKSState } from './hooks/useEditLUKSState';
+import { getSecretWatchErrorMessage } from './utils/secretWatchErrorMessage';
 
 const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
   closeOverlay,
@@ -128,64 +99,17 @@ const EditLUKSEncryptionPasswords: OverlayComponent<EditPlanProps> = ({
           }}
         />
 
-        {!nbdeClevis && (
-          <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsLg' }}>
-            <FlexItem>
-              <Stack hasGutter>
-                <Radio
-                  data-testid="edit-use-existing-secret-radio"
-                  description={t('Select a pre-existing secret containing LUKS decryption keys.')}
-                  id={DECRYPTION_MODE_EXISTING}
-                  isChecked={decryptionMode === DECRYPTION_MODE_EXISTING}
-                  label={t('Use an existing secret')}
-                  name="diskDecryptionMode"
-                  onChange={() => {
-                    setDecryptionMode(DECRYPTION_MODE_EXISTING);
-                  }}
-                  value={DECRYPTION_MODE_EXISTING}
-                />
-
-                {decryptionMode === DECRYPTION_MODE_EXISTING && secretNamespace && (
-                  <LUKSSecretSelect
-                    id="edit-existing-luks-secret"
-                    namespace={secretNamespace}
-                    onSelect={(_, selected) => {
-                      setSelectedSecret(selected);
-                    }}
-                    testId="edit-luks-secret-select"
-                    value={selectedSecret?.metadata?.name ?? ''}
-                  />
-                )}
-              </Stack>
-            </FlexItem>
-
-            <FlexItem>
-              <Stack hasGutter>
-                <Radio
-                  data-testid="edit-use-passphrases-radio"
-                  description={t(
-                    'Provide passphrases that will be stored in a secret owned by this plan.',
-                  )}
-                  id={DECRYPTION_MODE_PASSPHRASES}
-                  isChecked={decryptionMode === DECRYPTION_MODE_PASSPHRASES}
-                  label={t('Enter passphrases')}
-                  name="diskDecryptionMode"
-                  onChange={() => {
-                    setDecryptionMode(DECRYPTION_MODE_PASSPHRASES);
-                  }}
-                  value={DECRYPTION_MODE_PASSPHRASES}
-                />
-
-                {decryptionMode === DECRYPTION_MODE_PASSPHRASES && !isSecretWatchPending && (
-                  <>
-                    <FormGroup label={t('Passphrases for LUKS encrypted devices')} />
-                    <LUKSPassphraseInputList onChange={setValue} value={value} />
-                  </>
-                )}
-              </Stack>
-            </FlexItem>
-          </Flex>
-        )}
+        <EditLUKSDecryptionModeFields
+          decryptionMode={decryptionMode}
+          isSecretWatchPending={isSecretWatchPending}
+          nbdeClevis={nbdeClevis}
+          secretNamespace={secretNamespace}
+          selectedSecret={selectedSecret}
+          setDecryptionMode={setDecryptionMode}
+          setSelectedSecret={setSelectedSecret}
+          setValue={setValue}
+          value={value}
+        />
       </Stack>
       <EditLUKSModalAlert shouldRender={!allVMsHasMatchingLuks} />
     </ModalForm>

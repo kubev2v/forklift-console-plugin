@@ -863,6 +863,7 @@
   "Missing fields in node fields": "노드 필드에 누락된 필드",
   "Moderate CPU limit": "중간 CPU 제한",
   "Moderate memory limit": "중간 메모리 제한",
+  "More info:": "More info:",
   "MTU": "MTU",
   "MTV behavior is based on the Shared disks setting in the plan. If checked, the shared disks will be migrated, otherwise the shared disks will not be migrated.": "MTV 동작은 계획의 공유 디스크 설정에 따라 달라집니다. 이 설정이 선택된 경우 공유 디스크가 마이그레이션되고, 그렇지 않은 경우 마이그레이션되지 않습니다.",
   "MTV has limited support for the migration of dual-boot operating system VMs. In the case of a dual-boot operating system VM, MTV will try to convert the first boot disk it finds. Alternatively, the root device can be specified in the MTV UI.": "MTV는 듀얼 부팅 운영 체제 VM 마이그레이션을 제한적으로 지원합니다. 듀얼 부팅 운영 체제 VM의 경우, MTV는 처음 발견되는 부팅 디스크를 변환하려고 시도합니다. 또는 MTV UI에서 루트 장치를 지정할 수 있습니다.",

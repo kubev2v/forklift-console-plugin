@@ -1,37 +1,26 @@
-import { type FC, useCallback, useEffect, useRef, useState } from 'react';
+import type { FC } from 'react';
 import type { ProviderVmData } from 'src/utils/types';
 
-import type { ResourceField } from '@components/common/utils/types';
 import SectionHeading from '@components/headers/SectionHeading';
 import InspectVirtualMachinesButton from '@components/InspectVirtualMachines/InspectVirtualMachinesButton';
-import type { ProviderHost, V1beta1Provider, VSphereResource } from '@forklift-ui/types';
+import type { V1beta1Provider, VSphereResource } from '@forklift-ui/types';
+import type { ProviderHost } from '@forklift-ui/types';
 import {
-  type OnSetPage,
   PageSection,
   Pagination,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
 } from '@patternfly/react-core';
-import { Table, Th, Thead, Tr } from '@patternfly/react-table';
-import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
+import { Table } from '@patternfly/react-table';
 import { isEmpty } from '@utils/helpers';
-import { useCanInspectProvider } from '@utils/hooks/useCanInspectProvider';
-import { useWatchConversions } from '@utils/hooks/useWatchConversions';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { useAttributeFilters } from './components/AttributeFilter/hooks/useAttributeFilters';
 import TreeTableBody from './components/TreeTableBody/TreeTableBody';
 import TreeToolbar from './components/TreeToolbar/TreeToolbar';
-import usePagination from './hooks/usePagination/usePagination';
-import { useTreeFilterAttributes } from './hooks/useTreeFilterAttributes';
-import useTreePagination from './hooks/useTreePagination';
-import { useTreeRows } from './hooks/useTreeRows';
-import useTreeSortBlocks from './hooks/useTreeSortBlocks';
-import useTreeFilters from './hooks/useTreeVMFilters';
-import { getVmRowsId } from './hooks/utils/treeUtils';
-import { defaultColumns } from './utils/constants';
-import type { VmRow } from './utils/types';
+import VsphereFolderTreeTableHead from './components/VsphereFolderTreeTableHead';
+import { useVsphereFolderTreeTable } from './hooks/useVsphereFolderTreeTable';
+import { getVmRowsId } from './hooks/utils/vmRowAccessors';
 
 type VsphereFolderTreeTableProps = {
   foldersDict: Record<string, VSphereResource>;
@@ -44,53 +33,38 @@ type VsphereFolderTreeTableProps = {
   vmData: ProviderVmData[] | undefined;
 };
 
-const snapPageToValidRange = (
-  itemCount: number,
-  onSetPage: OnSetPage,
-  page: number,
-  perPage: number,
-): void => {
-  const maxPage = Math.max(1, Math.ceil(itemCount / perPage));
-  if (page > maxPage) {
-    onSetPage({} as MouseEvent, 1);
-  }
-};
-
-const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
-  foldersDict,
-  hostsDict,
-  initialSelectedIds,
-  onSelect,
-  provider,
-  providerNamespace,
-  providerUid,
-  vmData,
-}) => {
+const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = (props) => {
   const { t } = useForkliftTranslation();
-  const [columns, setColumns] = useState<ResourceField[]>(defaultColumns);
-  const [inspectionExpandedRows, setInspectionExpandedRows] = useState<Set<string>>(new Set());
+  const {
+    attributes,
+    canInspect,
+    canSelect,
+    columns,
+    conversions,
+    disabledReason,
+    filteredGroupVMCountByFolder,
+    filters,
+    groupVMCountByFolder,
+    handleOnSort,
+    inspectionExpandedRows,
+    itemCount,
+    onPerPageSelect,
+    onSetPage,
+    page,
+    pagedRows,
+    perPage,
+    provider,
+    rows,
+    selectedVmKeys,
+    setColumns,
+    setInspectionExpandedRows,
+    setSelectedVmKeys,
+    setShowAll,
+    showAll,
+    sortBy,
+    visibleCols,
+  } = useVsphereFolderTreeTable(props);
 
-  const [conversions] = useWatchConversions({
-    namespace: providerNamespace ?? '',
-    selector: {
-      matchLabels: {
-        [CONVERSION_LABELS.CONVERSION_TYPE]: CONVERSION_TYPE.DEEP_INSPECTION,
-        ...(providerUid ? { [CONVERSION_LABELS.PROVIDER]: providerUid } : {}),
-      },
-    },
-  });
-  const visibleVmIdsRef = useRef<Set<string> | undefined>(undefined);
-
-  const setSelectedVmKeysControlled = useCallback(
-    (ids: string[]) => {
-      const idsSet = new Set(ids);
-      onSelect?.(vmData?.filter(({ vm }) => idsSet.has(vm.id)));
-    },
-    [vmData, onSelect],
-  );
-
-  const canSelect = initialSelectedIds !== undefined;
-  const { canInspect, disabledReason } = useCanInspectProvider(provider);
   const inspectToolbarAction =
     !canSelect && provider ? (
       <ToolbarItem>
@@ -102,51 +76,6 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
         />
       </ToolbarItem>
     ) : undefined;
-  const { groupVMCountByFolder, rows, selectedVmKeys, setSelectedVmKeys, setShowAll, showAll } =
-    useTreeRows({
-      ...(initialSelectedIds
-        ? {
-            controls: {
-              selectedVmKeys: initialSelectedIds,
-              setSelectedVmKeys: setSelectedVmKeysControlled,
-            },
-          }
-        : undefined),
-      canSelect,
-      foldersDict,
-      hostsDict,
-      visibleVmIdsRef,
-      vmDataArr: vmData,
-    });
-
-  const {
-    onPerPageSelect,
-    onSetPage,
-    pagination: { page, perPage },
-  } = usePagination();
-
-  const attributes = useTreeFilterAttributes(rows, conversions);
-  const filters = useAttributeFilters<VmRow>(attributes);
-
-  const { filteredGroupVMCountByFolder, filteredRows, visibleVmIds } = useTreeFilters({
-    filters,
-    rows,
-    showAll,
-  });
-
-  visibleVmIdsRef.current = filters.hasAttrFilters || !showAll ? visibleVmIds : undefined;
-
-  const { handleOnSort, sortBy, sortedBlocks, visibleCols } = useTreeSortBlocks({
-    columns,
-    conversions,
-    filteredRows,
-  });
-
-  const { itemCount, pagedRows } = useTreePagination({ blocks: sortedBlocks, page, perPage });
-
-  useEffect(() => {
-    snapPageToValidRange(itemCount, onSetPage, page, perPage);
-  }, [itemCount, onSetPage, page, perPage]);
 
   const pagination = (
     <ToolbarItem variant="pagination">
@@ -184,19 +113,11 @@ const VsphereFolderTreeTable: FC<VsphereFolderTreeTableProps> = ({
         toolbarActions={inspectToolbarAction}
       />
       <Table data-testid="vsphere-tree-table" isTreeTable>
-        <Thead>
-          <Tr>
-            {visibleCols.map((col, idx) => (
-              <Th
-                info={col.info}
-                key={col.id}
-                sort={col.sortable ? { columnIndex: idx, onSort: handleOnSort, sortBy } : undefined}
-              >
-                {col.label}
-              </Th>
-            ))}
-          </Tr>
-        </Thead>
+        <VsphereFolderTreeTableHead
+          handleOnSort={handleOnSort}
+          sortBy={sortBy}
+          visibleCols={visibleCols}
+        />
         <TreeTableBody
           clearAllFilters={filters.clearAll}
           columns={columns}

@@ -1,142 +1,46 @@
 import { useCallback, useState } from 'react';
 import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { CONFIG_MAP_GVK } from 'src/plans/create/steps/customization-scripts/constants';
 
 import ModalForm from '@components/ModalForm/ModalForm';
-import {
-  HookModelGroupVersionKind,
-  type IoK8sApiCoreV1ConfigMap,
-  NetworkMapModelGroupVersionKind,
-  StorageMapModelGroupVersionKind,
-  type V1beta1Hook,
-  type V1beta1NetworkMap,
-  type V1beta1Plan,
-  type V1beta1StorageMap,
-} from '@forklift-ui/types';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Stack, StackItem, TextInput } from '@patternfly/react-core';
-import { getName, getNamespace } from '@utils/crds/common/selectors';
-import {
-  getPlanNetworkMapName,
-  getPlanNetworkMapNamespace,
-  getPlanStorageMapName,
-  getPlanStorageMapNamespace,
-  getPlanVirtualMachines,
-} from '@utils/crds/plans/selectors';
-import { isEmpty } from '@utils/helpers';
-import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
+import { getName } from '@utils/crds/common/selectors';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
 import type { PlanModalProps } from '../types';
 
+import { useDuplicateModalResources } from './hooks/useDuplicateModalResources';
 import { createDuplicatePlanAndMapResources } from './utils/utils';
-
-const getPlanHookNames = (plan: V1beta1Plan): { postHookName?: string; preHookName?: string } => {
-  const allHooks = getPlanVirtualMachines(plan).flatMap((vm) => vm.hooks ?? []);
-
-  if (isEmpty(allHooks)) {
-    return {};
-  }
-
-  const preHookName = allHooks.find((hook) => hook.step === 'PreHook')?.hook?.name;
-  const postHookName = allHooks.find((hook) => hook.step === 'PostHook')?.hook?.name;
-
-  return { postHookName, preHookName };
-};
 
 const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }) => {
   const { t } = useForkliftTranslation();
   const name = getName(plan);
   const [newName, setNewName] = useState<string>(`copy-of-${name}`);
 
-  const networkMapName = getPlanNetworkMapName(plan);
-  const [networkMap] = useK8sWatchResource<V1beta1NetworkMap>(
-    networkMapName
-      ? {
-          groupVersionKind: NetworkMapModelGroupVersionKind,
-          isList: false,
-          name: networkMapName,
-          namespace: getPlanNetworkMapNamespace(plan),
-          namespaced: true,
-        }
-      : null,
-  );
+  const { configMap, networkMap, postHook, preHook, storageMap } = useDuplicateModalResources(plan);
+  const isDuplicateDisabled = !networkMap || !storageMap;
 
-  const storageMapName = getPlanStorageMapName(plan);
-  const [storageMap] = useK8sWatchResource<V1beta1StorageMap>(
-    storageMapName
-      ? {
-          groupVersionKind: StorageMapModelGroupVersionKind,
-          isList: false,
-          name: storageMapName,
-          namespace: getPlanStorageMapNamespace(plan),
-          namespaced: true,
-        }
-      : null,
-  );
+  const onDuplicate = useCallback(async () => {
+    if (!networkMap || !storageMap) {
+      throw new Error('Required plan mappings are still loading.');
+    }
 
-  const { postHookName, preHookName } = getPlanHookNames(plan);
-  const planNamespace = getNamespace(plan);
-
-  const [preHook] = useK8sWatchResource<V1beta1Hook>(
-    preHookName
-      ? {
-          groupVersionKind: HookModelGroupVersionKind,
-          isList: false,
-          name: preHookName,
-          namespace: planNamespace,
-          namespaced: true,
-        }
-      : null,
-  );
-
-  const [postHook] = useK8sWatchResource<V1beta1Hook>(
-    postHookName
-      ? {
-          groupVersionKind: HookModelGroupVersionKind,
-          isList: false,
-          name: postHookName,
-          namespace: planNamespace,
-          namespaced: true,
-        }
-      : null,
-  );
-
-  const scriptsRef = plan?.spec?.customizationScripts;
-  const [configMap] = useK8sWatchResource<IoK8sApiCoreV1ConfigMap>(
-    scriptsRef?.name
-      ? {
-          groupVersionKind: CONFIG_MAP_GVK,
-          isList: false,
-          name: scriptsRef.name,
-          namespace: scriptsRef.namespace,
-          namespaced: true,
-        }
-      : null,
-  );
-
-  const onChange = (value: string): void => {
-    setNewName(value);
-  };
-
-  const onDuplicate = useCallback(
-    async () =>
-      createDuplicatePlanAndMapResources({
-        configMap,
-        networkMap,
-        newPlanName: newName,
-        plan,
-        postHook,
-        preHook,
-        storageMap,
-      }),
-    [configMap, networkMap, newName, plan, postHook, preHook, storageMap],
-  );
+    return createDuplicatePlanAndMapResources({
+      configMap,
+      networkMap,
+      newPlanName: newName,
+      plan,
+      postHook,
+      preHook,
+      storageMap,
+    });
+  }, [configMap, networkMap, newName, plan, postHook, preHook, storageMap]);
 
   return (
     <ModalForm
       closeOverlay={closeOverlay}
       confirmLabel={t('Duplicate')}
+      isDisabled={isDuplicateDisabled}
       onConfirm={onDuplicate}
       title={t('Duplicate migration plan')}
     >
@@ -153,7 +57,7 @@ const DuplicateModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }
             <TextInput
               id="name"
               onChange={(_, value) => {
-                onChange(value);
+                setNewName(value);
               }}
               spellCheck="false"
               value={newName}

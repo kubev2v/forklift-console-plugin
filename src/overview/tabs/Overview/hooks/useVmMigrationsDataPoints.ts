@@ -1,96 +1,14 @@
-import { DateTime, Interval } from 'luxon';
-import { getMigrationStarted, getPlanKey } from 'src/overview/utils/utils';
+import type { Interval } from 'luxon';
 
-import {
-  MigrationModelGroupVersionKind,
-  type V1beta1Migration,
-  type V1beta1MigrationStatusVms,
-  type V1beta1MigrationStatusVmsConditions,
-} from '@forklift-ui/types';
+import { MigrationModelGroupVersionKind, type V1beta1Migration } from '@forklift-ui/types';
 import { getName } from '@utils/crds/common/selectors';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
-import { TimeRangeOptions, TimeRangeOptionsDictionary } from '../utils/timeRangeOptions';
+import { TimeRangeOptions } from '../utils/timeRangeOptions';
 import type { MigrationDataPoint } from '../utils/types';
 
-const toHourLabel = (date: DateTime | null): string =>
-  date ? date.toLocal().toFormat('LLL dd HH:mm') : '';
-const toDayLabel = (date: DateTime | null): string =>
-  date ? date.toLocal().toFormat('LLL dd') : '';
-
-const createTimeBuckets = (
-  selectedTimeRange: TimeRangeOptions,
-  singleBucket = false,
-): Interval[] => {
-  const { bucket, span, unit } = TimeRangeOptionsDictionary[selectedTimeRange];
-  const now = DateTime.now().endOf(unit).toUTC();
-  const start = now.minus(span).startOf(unit);
-  let end = now;
-
-  if (singleBucket) {
-    // Return a single interval covering the whole selected range
-    return [Interval.fromDateTimes(start, end)];
-  }
-
-  const bucketUnit: 'hour' | 'day' = 'hour' in bucket ? 'hour' : 'day';
-  const bucketValue: number = 'hour' in bucket ? bucket.hour : bucket.day;
-
-  end = now.plus({ [bucketUnit]: bucketValue }).startOf(bucketUnit);
-  while (end <= now) {
-    end = end.plus({ [bucketUnit]: bucketValue });
-  }
-
-  const intervals: Interval[] = [];
-  let cursor = start;
-  while (cursor < end) {
-    const next = cursor.plus({ [bucketUnit]: bucketValue });
-    intervals.push(Interval.fromDateTimes(cursor, next));
-    cursor = next;
-  }
-  return intervals;
-};
-
-const createBuckets = (
-  intervals: Interval[],
-  migrations: V1beta1Migration[],
-): { interval: Interval; migrations: V1beta1Migration[] }[] => {
-  return intervals.map((interval) => {
-    // Find migrations that fit the bucket interval
-    const inBucket = migrations.filter((migration) => {
-      const started = getMigrationStarted(migration);
-      const dt = DateTime.fromISO(started).toUTC();
-      return interval.contains(dt);
-    });
-
-    // Group by plan, keep only the most recent (by migration started) per plan
-    const latestByPlan = new Map<string, V1beta1Migration>();
-    for (const migration of inBucket) {
-      const planKey = getPlanKey(migration);
-      const started = getMigrationStarted(migration);
-      const prev = latestByPlan.get(planKey);
-      if (!prev || DateTime.fromISO(started) > DateTime.fromISO(getMigrationStarted(prev))) {
-        latestByPlan.set(planKey, migration);
-      }
-    }
-
-    return {
-      interval,
-      migrations: Array.from(latestByPlan.values()),
-    };
-  });
-};
-
-const isCanceled = (vm: V1beta1MigrationStatusVms): boolean =>
-  vm?.conditions?.some((cond: V1beta1MigrationStatusVmsConditions) => cond?.type === 'Canceled') ??
-  false;
-const isFailed = (vm: V1beta1MigrationStatusVms): boolean =>
-  vm?.conditions?.some((cond: V1beta1MigrationStatusVmsConditions) => cond?.type === 'Failed') ??
-  false;
-const isSucceeded = (vm: V1beta1MigrationStatusVms): boolean =>
-  vm?.conditions?.some((cond: V1beta1MigrationStatusVmsConditions) => cond?.type === 'Succeeded') ??
-  false;
-const isRunning = (vm: V1beta1MigrationStatusVms): boolean =>
-  !isFailed(vm) && !isSucceeded(vm) && !isCanceled(vm) && vm?.phase !== 'Completed';
+import { createBuckets, createTimeBuckets, toDayLabel, toHourLabel } from './migrationTimeBuckets';
+import { isCanceled, isFailed, isRunning, isSucceeded } from './migrationVmStatusChecks';
 
 type VmMigrationsDataPointsResult = {
   canceled: MigrationDataPoint[];
@@ -134,13 +52,9 @@ export const useVmMigrationsDataPoints = (
     };
   }
 
-  // 1. Create interval buckets
   const intervals = createTimeBuckets(selectedRange, singleBucket);
-
-  // 2. Group migrations into interval buckets, keeping only the latest per plan in each bucket
   const buckets = createBuckets(intervals, migrations);
 
-  // 3. For each bucket, count failed/running/succeeded VMs
   const failed: MigrationDataPoint[] = [];
   const running: MigrationDataPoint[] = [];
   const succeeded: MigrationDataPoint[] = [];

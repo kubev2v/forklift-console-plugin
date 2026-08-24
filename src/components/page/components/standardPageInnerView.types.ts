@@ -1,0 +1,55 @@
+import type { ComponentProps, FC, ReactElement, ReactNode } from 'react';
+
+import type { RowProps, TableViewHeaderProps } from '@components/common/TableView/types';
+import type { ResourceField } from '@components/common/utils/types';
+import type { TableSortContextProps } from '@components/TableSortContext';
+
+import type { PageContent } from './PageContent';
+import type { PageToolbar } from './PageToolbar';
+
+export type StandardPageInnerViewProps<T> = {
+  activeSort: TableSortContextProps['activeSort'];
+  addButton?: ReactElement;
+  alerts?: ReactNode;
+  className?: string;
+  clearAllFilters: () => void;
+  compareFn?: (a: T, b: T) => number;
+  customNoResultsFound?: ReactElement;
+  customNoResultsMatchFilter?: ReactElement;
+  dataIds: string[];
+  dataOnScreen: T[];
+  defaultFieldsWithoutFilters: ResourceField[];
+  error?: unknown;
+  expandedIds?: string[];
+  fields: ResourceField[];
+  fieldsMetadata: ResourceField[];
+  finalFilteredData: T[];
+  flatData: T[];
+  header: FC<TableViewHeaderProps<T>>;
+  itemsPerPage: number;
+  loaded: boolean;
+  namespace: string;
+  noPadding?: boolean;
+  onPerPageSelect: ComponentProps<typeof PageContent>['onPerPageSelect'];
+  onSelect?: (ids: string[]) => void;
+  onSetPage: ComponentProps<typeof PageContent>['onSetPage'];
+  page: number;
+  pageDataIds: string[];
+  renderedGlobalActions: ReactElement[];
+  RowComponent: FC<RowProps<T>>;
+  selectedFilters: Record<string, string[]>;
+  selectedIds?: string[];
+  setActiveSort: TableSortContextProps['setActiveSort'];
+  setFields: (fields: ResourceField[]) => void;
+  setSelectedFilters: (filters: Record<string, string[]>) => void;
+  shouldShowLearningExperienceButton?: boolean;
+  showManageColumns?: boolean;
+  showPagination: boolean;
+  sortedData: T[];
+  supportedFilters: ComponentProps<typeof PageToolbar>['supportedFilters'];
+  testId?: string;
+  title?: string;
+  titleHelpContent?: ReactNode;
+  toId?: (item: T) => string;
+  visibleColumns: ResourceField[];
+};

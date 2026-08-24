@@ -1,26 +1,25 @@
 import type { FC } from 'react';
 import { useFieldArray, useWatch } from 'react-hook-form';
-import AccessModeField from 'src/storageMaps/components/AccessModeField';
-import GroupedSourceStorageField from 'src/storageMaps/components/GroupedSourceStorageField';
-import OffloadStorageRow from 'src/storageMaps/components/OffloadStorageIndexedForm/OffloadStorageRow';
-import TargetStorageField from 'src/storageMaps/components/TargetStorageField';
-import TargetStorageWithSuggestion from 'src/storageMaps/components/TargetStorageWithSuggestion';
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
-import { getStorageMapFieldId } from 'src/storageMaps/utils/getStorageMapFieldId';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
-import { Stack, StackItem } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import type { InventoryStorage } from '@utils/hooks/useStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
-import { StorageMapFieldId, type TargetStorage } from '@utils/storage/types';
+import type { TargetStorage } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 
-import { CreatePlanStorageMapFieldId, createPlanStorageMapFieldLabels } from './constants';
+import { CreatePlanStorageMapFieldId } from './constants';
+import { getCreatePlanStorageMapHeaders } from './createPlanStorageMapHeaders';
+import {
+  getCreatePlanStorageMapInputs,
+  getCreatePlanStorageMapIscsiInputs,
+} from './createPlanStorageMapInputs';
+import CreatePlanStorageMappingOptions from './CreatePlanStorageMappingOptions';
 import { getCreatePlanStorageMapRemoveButton } from './getCreatePlanStorageMapRemoveButton';
 import { validatePlanStorageMaps } from './utils';
 
@@ -70,24 +69,6 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
     },
   });
 
-  const headers = isIscsi
-    ? [
-        {
-          label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.TargetStorage],
-          width: 90 as const,
-        },
-      ]
-    : [
-        {
-          label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.SourceStorage],
-          width: 45 as const,
-        },
-        {
-          label: createPlanStorageMapFieldLabels[CreatePlanStorageMapFieldId.TargetStorage],
-          width: 45 as const,
-        },
-      ];
-
   return (
     <FieldBuilderTable
       addButton={{
@@ -108,66 +89,26 @@ const CreatePlanStorageMapFieldTable: FC<CreatePlanStorageMapFieldTableProps> = 
       fieldRows={storageMappingFields.map((field, index) => ({
         ...field,
         additionalOptions: (
-          <Stack hasGutter>
-            <StackItem>
-              <AccessModeField
-                fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
-                key={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
-                targetStorageFieldId={getStorageMapFieldId(
-                  CreatePlanStorageMapFieldId.TargetStorage,
-                  index,
-                )}
-                targetStorages={targetStorages}
-              />
-            </StackItem>
-            {isVsphereOffload && (
-              <StackItem>
-                <OffloadStorageRow
-                  index={index}
-                  sourceProvider={sourceProvider}
-                  sourceStorages={sourceStorageInventory ?? []}
-                  targetStorages={targetStorages}
-                />
-              </StackItem>
-            )}
-          </Stack>
+          <CreatePlanStorageMappingOptions
+            index={index}
+            isVsphereOffload={isVsphereOffload}
+            sourceProvider={sourceProvider}
+            sourceStorageInventory={sourceStorageInventory}
+            targetStorages={targetStorages}
+          />
         ),
         inputs: isIscsi
-          ? [
-              <TargetStorageField
-                fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
-                key={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
-                targetStorages={targetStorages}
-                testId="target-storage-select"
-              />,
-            ]
-          : [
-              <GroupedSourceStorageField
-                fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.SourceStorage, index)}
-                key={getStorageMapFieldId(CreatePlanStorageMapFieldId.SourceStorage, index)}
-                otherSourceStorages={otherSourceStorages}
-                usedSourceStorages={usedSourceStorages}
-              />,
-              isVsphereOffload ? (
-                <TargetStorageWithSuggestion
-                  fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
-                  index={index}
-                  key={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
-                  sourceStorages={sourceStorageInventory ?? []}
-                  targetStorages={targetStorages}
-                  testId="target-storage-select"
-                />
-              ) : (
-                <TargetStorageField
-                  fieldId={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
-                  key={getStorageMapFieldId(CreatePlanStorageMapFieldId.TargetStorage, index)}
-                  targetStorages={targetStorages}
-                  testId="target-storage-select"
-                />
-              ),
-            ],
+          ? getCreatePlanStorageMapIscsiInputs(index, targetStorages)
+          : getCreatePlanStorageMapInputs({
+              index,
+              isVsphereOffload,
+              otherSourceStorages,
+              sourceStorageInventory,
+              targetStorages,
+              usedSourceStorages,
+            }),
       }))}
-      headers={headers}
+      headers={getCreatePlanStorageMapHeaders(isIscsi)}
       removeButton={getCreatePlanStorageMapRemoveButton({
         isIscsi,
         remove,

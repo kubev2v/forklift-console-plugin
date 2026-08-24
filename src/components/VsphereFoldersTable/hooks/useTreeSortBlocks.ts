@@ -18,7 +18,8 @@ import { useVmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 import { nameColumn } from '../utils/constants';
 
 import { NO_FOLDER } from './utils/constants';
-import { buildVmComparator, cmpStr, getFolderNameFromFolderRow } from './utils/treeUtils';
+import { buildVmComparator } from './utils/vmComparator';
+import { cmpStr, getFolderNameFromFolderRow } from './utils/vmRowAccessors';
 
 type UseTreeSortBlocks = (args: {
   columns: ResourceField[];

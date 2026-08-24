@@ -8,12 +8,13 @@ import {
 } from '@components/common/Page/PageStates';
 import { TableView } from '@components/common/TableView/TableView';
 import type { RowProps, TableViewHeaderProps } from '@components/common/TableView/types';
+import type { SortType } from '@components/common/TableView/types';
 import type { ResourceField } from '@components/common/utils/types';
-import type { TableSortContextProps } from '@components/TableSortContext';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type PageTableProps<T> = {
+  activeSort: SortType;
   clearAllFilters: () => void;
   customNoResultsFound?: ReactElement;
   customNoResultsMatchFilter?: ReactElement;
@@ -25,11 +26,12 @@ type PageTableProps<T> = {
   loaded: boolean;
   namespace: string;
   RowComponent: FC<RowProps<T>>;
+  setActiveSort: (sort: SortType) => void;
   sortedData: T[];
   title?: string;
   toId?: (item: T) => string;
   visibleColumns: ResourceField[];
-} & TableSortContextProps;
+};
 
 export const PageTable = <T,>({
   activeSort,

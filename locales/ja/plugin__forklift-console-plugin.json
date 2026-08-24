@@ -863,6 +863,7 @@
   "Missing fields in node fields": "ノードフィールドに未入力のフィールドがあります",
   "Moderate CPU limit": "中程度の CPU 制限",
   "Moderate memory limit": "中程度のメモリー制限",
+  "More info:": "More info:",
   "MTU": "MTU",
   "MTV behavior is based on the Shared disks setting in the plan. If checked, the shared disks will be migrated, otherwise the shared disks will not be migrated.": "MTV の動作は、計画の共有ディスク設定に基づいています。チェックボックスがオンの場合は共有ディスクが移行され、オフの場合は移行されません。",
   "MTV has limited support for the migration of dual-boot operating system VMs. In the case of a dual-boot operating system VM, MTV will try to convert the first boot disk it finds. Alternatively, the root device can be specified in the MTV UI.": "MTV は、デュアルブート OS 仮想マシンの移行を限定的にサポートしています。デュアルブート OS 仮想マシンの場合、MTV は最初に検出したブートディスクの変換を試みます。または、MTV UI でルートデバイスを指定することもできます。",

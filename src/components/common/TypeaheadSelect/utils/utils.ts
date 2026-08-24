@@ -96,3 +96,30 @@ export const getDefaultCreateMessage = (value: string): string => t(`Create "${v
 
 export const getDefaultNoResults = (filter: string): string =>
   t(`No results found for "${filter}"`);
+
+export const getTypeaheadDisplayValue = ({
+  inputValue,
+  isFiltering,
+  selectedOption,
+  value,
+}: {
+  inputValue: string;
+  isFiltering: boolean;
+  selectedOption?: TypeaheadSelectOption;
+  value?: string | number;
+}): string => {
+  if (isFiltering) {
+    return inputValue;
+  }
+
+  const selectedContent = selectedOption?.content?.toString();
+  if (selectedContent) {
+    return selectedContent;
+  }
+
+  if (value !== undefined && value !== '') {
+    return String(value);
+  }
+
+  return '';
+};

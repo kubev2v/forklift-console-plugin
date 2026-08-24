@@ -1,4 +1,4 @@
-import { type FC, type FormEvent, type Ref, type RefObject, useMemo, useState } from 'react';
+import type { FC, Ref, RefObject } from 'react';
 
 import {
   Button,
@@ -17,6 +17,8 @@ import { isEmpty } from '@utils/helpers';
 
 import type { TypeaheadSelectOption } from '../utils/types';
 
+import { useMultiTypeaheadMenuToggleHandlers } from './hooks/useMultiTypeaheadMenuToggleHandlers';
+
 type MultiTypeaheadMenuToggleProps = {
   activeItemId: string | null;
   allowClear: boolean;
@@ -25,7 +27,7 @@ type MultiTypeaheadMenuToggleProps = {
   isDisabled: boolean;
   isFiltering: boolean;
   isOpen: boolean;
-  listboxId: string; // for aria-controls
+  listboxId: string;
   onChipRemove: (value: string | number) => void;
   onClearAll: () => void;
   onInputChange?: (value: string) => void;
@@ -41,71 +43,46 @@ type MultiTypeaheadMenuToggleProps = {
   toggleWidth?: string;
 };
 
-const MultiTypeaheadMenuToggle: FC<MultiTypeaheadMenuToggleProps> = ({
-  activeItemId,
-  allowClear,
-  inputRef,
-  inputValue,
-  isDisabled,
-  isFiltering,
-  isOpen,
-  listboxId,
-  onChipRemove,
-  onClearAll,
-  onInputChange,
-  onInputClick,
-  onInputKeyDown,
-  onInputValueChange,
-  onToggleClick,
-  placeholder,
-  selectedOptions,
-  testId,
-  toggleProps,
-  toggleRef,
-  toggleWidth,
-}) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+const MultiTypeaheadMenuToggle: FC<MultiTypeaheadMenuToggleProps> = (props) => {
+  const {
+    activeItemId,
+    allowClear,
+    inputRef,
+    inputValue,
+    isDisabled,
+    isFiltering,
+    isOpen,
+    listboxId,
+    onChipRemove,
+    onClearAll,
+    onInputChange,
+    onInputClick,
+    onInputKeyDown,
+    onInputValueChange,
+    onToggleClick,
+    placeholder,
+    selectedOptions,
+    testId,
+    toggleProps,
+    toggleRef,
+    toggleWidth,
+  } = props;
 
-  const showClearButton = useMemo(() => {
-    const hasAnySelection = !isEmpty(selectedOptions);
-    const hasTypedValue = isFiltering && !isEmpty(inputValue);
-    return (
-      allowClear && (hasAnySelection || hasTypedValue) && (isFocused || isHovered || isFiltering)
-    );
-  }, [allowClear, selectedOptions, isFiltering, inputValue, isFocused, isHovered]);
-
-  const handleToggleClick = (): void => {
-    if (isDisabled) {
-      return;
-    }
-    onToggleClick();
-    if (!isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 0);
-    }
-  };
-
-  const handleInputChange = (event: FormEvent<HTMLInputElement>, newValue: string): void => {
-    if (isDisabled) {
-      return;
-    }
-    onInputValueChange(newValue, true);
-    onInputChange?.(newValue);
-
-    if (!isDisabled && !isOpen && !isEmpty(newValue)) {
-      onToggleClick();
-    }
-  };
-
-  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    onInputKeyDown(e);
-    // Backspace removes last chip when input is empty
-    if (e.key === 'Backspace' && !inputValue && !isEmpty(selectedOptions)) {
-      e.preventDefault();
-      const last = selectedOptions[selectedOptions.length - 1];
-      onChipRemove(last.value);
-    }
-  };
+  const handlers = useMultiTypeaheadMenuToggleHandlers({
+    allowClear,
+    inputRef,
+    inputValue,
+    isDisabled,
+    isFiltering,
+    isOpen,
+    onChipRemove,
+    onClearAll,
+    onInputChange,
+    onInputKeyDown,
+    onInputValueChange,
+    onToggleClick,
+    selectedOptions,
+  });
 
   return (
     <MenuToggle
@@ -115,12 +92,12 @@ const MultiTypeaheadMenuToggle: FC<MultiTypeaheadMenuToggleProps> = ({
       isDisabled={isDisabled}
       isExpanded={isOpen}
       isFullWidth
-      onClick={handleToggleClick}
+      onClick={handlers.handleToggleClick}
       onMouseEnter={() => {
-        setIsHovered(true);
+        handlers.setIsHovered(true);
       }}
       onMouseLeave={() => {
-        setIsHovered(false);
+        handlers.setIsHovered(false);
       }}
       style={{ width: toggleWidth }}
       variant="typeahead"
@@ -130,19 +107,19 @@ const MultiTypeaheadMenuToggle: FC<MultiTypeaheadMenuToggleProps> = ({
         <TextInputGroupMain
           autoComplete="off"
           innerRef={inputRef}
-          onChange={handleInputChange}
+          onChange={handlers.handleInputChange}
           onClick={onInputClick}
-          onKeyDown={handleKeyDown}
+          onKeyDown={handlers.handleKeyDown}
           placeholder={placeholder}
           value={inputValue}
           {...(activeItemId ? { 'aria-activedescendant': activeItemId } : {})}
           aria-controls={listboxId}
           isExpanded={isOpen}
           onBlur={() => {
-            setIsFocused(false);
+            handlers.setIsFocused(false);
           }}
           onFocus={() => {
-            setIsFocused(true);
+            handlers.setIsFocused(true);
           }}
           role="combobox"
         >
@@ -161,19 +138,14 @@ const MultiTypeaheadMenuToggle: FC<MultiTypeaheadMenuToggleProps> = ({
             ))}
           </LabelGroup>
         </TextInputGroupMain>
-
         <TextInputGroupUtilities
           {...(isEmpty(selectedOptions) ? { style: { display: 'none' } } : {})}
         >
-          {showClearButton && (
+          {handlers.showClearButton && (
             <Button
               aria-label="Clear selections"
               icon={<TimesIcon />}
-              onClick={() => {
-                onInputValueChange('', false);
-                onClearAll();
-                inputRef.current?.focus();
-              }}
+              onClick={handlers.handleClearClick}
               variant={ButtonVariant.plain}
             />
           )}
