@@ -10,7 +10,7 @@ type ScriptFieldValidation = {
   validateName: (index: number) => (value: string) => string | true;
 };
 
-export const useScriptFieldValidation = (
+export const createScriptFieldValidation = (
   prefix: string,
   trigger: TriggerFn,
   getScripts: GetScriptsFn,

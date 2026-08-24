@@ -6,7 +6,7 @@ import {
   openstackPasswordFields,
   openstackTokenWithUserIdFields,
   openstackTokenWithUsernameFields,
-} from './credentialsFields';
+} from './openstackProviderCredentialsFields';
 import type { Fields } from './types';
 
 export const getOpenstackFieldsByAuthType = (decodedAuthType: string | undefined): Fields => {

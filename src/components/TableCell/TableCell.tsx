@@ -1,8 +1,20 @@
-import { Children, type FC, type ReactNode } from 'react';
+import { Children, type FC, isValidElement, type Key, type ReactNode } from 'react';
 
 import { Flex, FlexItem } from '@patternfly/react-core';
 
 import './TableCells.style.css';
+
+const getFlexItemKey = (child: ReactNode): Key => {
+  if (isValidElement(child) && (typeof child.key === 'string' || typeof child.key === 'number')) {
+    return child.key;
+  }
+
+  if (typeof child === 'string' || typeof child === 'number') {
+    return child;
+  }
+
+  return 'cell-item';
+};
 
 /**
  * A component that displays a table cell.
@@ -25,8 +37,8 @@ export const TableCell: FC<TableCellProps> = ({ children, className, isWrap = fa
       flexWrap={isWrap ? {} : { default: 'nowrap' }}
       spaceItems={{ default: 'spaceItemsXs' }}
     >
-      {Children.map(arrayChildren, (child, index) => (
-        <FlexItem flex={{ default: 'flexNone' }} key={index}>
+      {arrayChildren.map((child) => (
+        <FlexItem flex={{ default: 'flexNone' }} key={getFlexItemKey(child)}>
           {child}
         </FlexItem>
       ))}

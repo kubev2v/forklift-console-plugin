@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useRef, useState } from 'react';
+import { type FC, type ReactNode, useCallback, useMemo, useRef, useState } from 'react';
 
 import {
   Drawer,
@@ -20,15 +20,20 @@ export const DrawerProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [drawerTitle, setDrawerTitle] = useState<ReactNode>(null);
   const focusRef = useRef<HTMLDivElement>(null);
 
-  const openDrawer = (content: ReactNode, title?: ReactNode): void => {
+  const openDrawer = useCallback((content: ReactNode, title?: ReactNode): void => {
     setDrawerContent(content);
     setDrawerTitle(title ?? null);
     setIsOpen(true);
-  };
+  }, []);
 
-  const closeDrawer = (): void => {
+  const closeDrawer = useCallback((): void => {
     setIsOpen(false);
-  };
+  }, []);
+
+  const drawerContextValue = useMemo(
+    () => ({ closeDrawer, isOpen, openDrawer }),
+    [closeDrawer, isOpen, openDrawer],
+  );
 
   const panelContent = (
     <DrawerPanelContent>
@@ -45,7 +50,7 @@ export const DrawerProvider: FC<{ children: ReactNode }> = ({ children }) => {
   );
 
   return (
-    <DrawerContext.Provider value={{ closeDrawer, isOpen, openDrawer }}>
+    <DrawerContext.Provider value={drawerContextValue}>
       <Drawer isExpanded={isOpen} onExpand={() => focusRef.current?.focus()} position="right">
         <DrawerContent panelContent={panelContent}>
           <DrawerContentBody>{children}</DrawerContentBody>

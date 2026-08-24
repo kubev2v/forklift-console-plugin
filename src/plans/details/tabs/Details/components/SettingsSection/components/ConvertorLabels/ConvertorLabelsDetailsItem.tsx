@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
 
 import { DetailsItem } from '@components/DetailItems/DetailItem';
 import LabelsModal, { type LabelsModalProps } from '@components/LabelsModal/LabelsModal';

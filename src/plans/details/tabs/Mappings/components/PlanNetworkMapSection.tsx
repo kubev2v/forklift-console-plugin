@@ -18,7 +18,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import type { NetworkMapping } from '@utils/mappings/networkMap';
 import type { MappingValue } from '@utils/types';
 
-import { isPlanEditable } from '../../../components/PlanStatus/utils/utils';
+import { isPlanEditable } from '../../../components/PlanStatus/utils/planStatusPermissions';
 
 import PlanNetworkMapEdit from './PlanNetworkMapEdit/PlanNetworkMapEdit';
 import type { PlanNetworkMapEditProps } from './PlanNetworkMapEdit/utils/types';

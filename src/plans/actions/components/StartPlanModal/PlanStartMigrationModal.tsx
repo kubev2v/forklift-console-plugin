@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { canPlanStart } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { canPlanStart } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
 import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';

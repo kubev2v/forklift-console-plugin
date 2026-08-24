@@ -22,8 +22,12 @@ const InspectionRowExpandedContent: FC<InspectionRowExpandedContentProps> = ({
     <>
       {!isEmpty(criticalConditions) && (
         <Content className="pf-v6-u-py-sm pf-v6-u-pl-xl">
-          {criticalConditions.map((condition, index) => (
-            <Content key={`${condition.type}-${index}`}>{condition.message}</Content>
+          {criticalConditions.map((condition) => (
+            <Content
+              key={`${condition.type ?? ''}-${condition.reason ?? ''}-${condition.message ?? ''}`}
+            >
+              {condition.message}
+            </Content>
           ))}
         </Content>
       )}

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { CustomScript } from 'src/plans/create/steps/customization-scripts/types';
-import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
 
 import { DetailsItem } from '@components/DetailItems/DetailItem';
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';

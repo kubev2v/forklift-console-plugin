@@ -5,11 +5,8 @@ import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
-import {
-  isPlanArchived,
-  isPlanExecuting,
-  isPlanSucceeded,
-} from '../components/PlanStatus/utils/utils';
+import { isPlanSucceeded } from '../components/PlanStatus/utils/planStatusPermissions';
+import { isPlanArchived, isPlanExecuting } from '../components/PlanStatus/utils/planStatusResolver';
 
 import usePlanSourceProvider from './usePlanSourceProvider';
 

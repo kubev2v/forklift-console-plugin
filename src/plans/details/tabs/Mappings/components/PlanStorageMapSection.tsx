@@ -17,7 +17,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import type { StorageMapping, TargetStorage } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
 
-import { isPlanEditable } from '../../../components/PlanStatus/utils/utils';
+import { isPlanEditable } from '../../../components/PlanStatus/utils/planStatusPermissions';
 
 import PlanStorageMapEdit from './PlanStorageMapEdit/PlanStorageMapEdit';
 import type { PlanStorageMapEditProps } from './PlanStorageMapEdit/utils/types';

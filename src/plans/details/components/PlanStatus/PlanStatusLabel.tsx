@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import type { V1beta1Plan } from '@forklift-ui/types';
 
 import { planStatusLabelMapper } from './utils/planStatusMapper';
-import { getPlanStatus } from './utils/utils';
+import { getPlanStatus } from './utils/planStatusResolver';
 
 import './PlanStatusLabel.scss';
 

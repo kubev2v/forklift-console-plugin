@@ -62,13 +62,18 @@ export const useStandardPageInnerData = <T,>({
     [pageData, toId, canSelect],
   );
 
-  const renderedGlobalActions = useMemo(
-    () =>
-      GlobalActionToolbarItems.map((Action, index) => (
-        <Action dataOnScreen={dataOnScreen} key={`${Action.name}-${index}`} />
-      )),
-    [GlobalActionToolbarItems, dataOnScreen],
-  );
+  const renderedGlobalActions = useMemo(() => {
+    const seen = new Map<string, number>();
+
+    return GlobalActionToolbarItems.map((Action) => {
+      const base = Action.displayName ?? Action.name ?? 'Action';
+      const occurrence = seen.get(base) ?? 0;
+      seen.set(base, occurrence + 1);
+      const key = occurrence === 0 ? base : `${base}__${occurrence}`;
+
+      return <Action dataOnScreen={dataOnScreen} key={key} />;
+    });
+  }, [GlobalActionToolbarItems, dataOnScreen]);
 
   return {
     dataIds,

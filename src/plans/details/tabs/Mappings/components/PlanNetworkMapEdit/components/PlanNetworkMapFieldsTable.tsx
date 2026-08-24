@@ -67,9 +67,13 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
   });
 
   useEffect(() => {
-    setTimeout(async () => {
-      await trigger();
+    const timeoutId = setTimeout(() => {
+      trigger().catch(() => undefined);
     }, 0);
+
+    return (): void => {
+      clearTimeout(timeoutId);
+    };
   }, [trigger]);
 
   const vmsList = useMemo(() => Object.values(vms), [vms]);

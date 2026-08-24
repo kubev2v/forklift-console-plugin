@@ -2,7 +2,7 @@ import { type FC, useCallback, useMemo, useState } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import { TableSortContextProvider } from 'src/components/TableSortContextProvider';
-import { isPlanExecuting } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { isPlanExecuting } from 'src/plans/details/components/PlanStatus/utils/planStatusResolver';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Plan } from '@forklift-ui/types';

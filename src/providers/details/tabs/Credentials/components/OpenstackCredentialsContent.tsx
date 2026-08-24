@@ -8,7 +8,7 @@ import {
   openstackAuthTypeField,
   openstackCacertField,
   openstackInsecureSkipVerifyField,
-} from './utils/credentialsFields';
+} from './utils/commonCredentialsFields';
 import { getDecodedValue } from './utils/getDecodedValue';
 import { getOpenstackFieldsByAuthType } from './utils/getOpenstackFieldsByAuthType';
 import CredentialContentField from './CredentialFieldContent';

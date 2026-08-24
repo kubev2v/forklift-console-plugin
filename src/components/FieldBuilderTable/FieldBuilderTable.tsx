@@ -19,6 +19,26 @@ import './FieldBuilderTable.style.scss';
 
 type FieldBuilderHeader = Omit<ThProps, 'label'> & FormGroupProps;
 
+const toHeaderEntries = (
+  headers: FieldBuilderHeader[],
+): { header: FieldBuilderHeader; key: string }[] => {
+  const seen = new Map<string, number>();
+
+  return headers.map((header) => {
+    const base =
+      typeof header.label === 'string' || typeof header.label === 'number'
+        ? String(header.label)
+        : 'field-header';
+    const occurrence = seen.get(base) ?? 0;
+    seen.set(base, occurrence + 1);
+
+    return {
+      header,
+      key: occurrence === 0 ? base : `${base}__${occurrence}`,
+    };
+  });
+};
+
 type FieldBuilderTableProps<FormData extends FieldValues> = {
   addButton: AddButtonType;
   fieldRows: FieldRow<FormData>[];
@@ -44,8 +64,8 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
       >
         <Thead>
           <Tr>
-            {headers.map((header, headerIndex) => (
-              <Th key={headerIndex} width={header.width}>
+            {toHeaderEntries(headers).map(({ header, key }) => (
+              <Th key={key} width={header.width}>
                 <FormGroup {...header} hasNoPaddingTop />
               </Th>
             ))}

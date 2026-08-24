@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getVmTargetPowerState } from 'src/plans/details/components/PlanStatus/utils/utils';
+import { getVmTargetPowerState } from 'src/plans/details/components/PlanStatus/utils/planStatusResolver';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import ModalForm from '@components/ModalForm/ModalForm';

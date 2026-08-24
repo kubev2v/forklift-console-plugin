@@ -1,6 +1,6 @@
 import { ADD, REPLACE } from 'src/components/ModalForm/utils/constants';
+import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/planStatusResolver';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
-import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/utils';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { getName, getNamespace, getOwnerReference, getUID } from '@utils/crds/common/selectors';

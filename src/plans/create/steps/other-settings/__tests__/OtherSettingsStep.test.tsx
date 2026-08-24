@@ -114,6 +114,7 @@ describe('OtherSettingsStep', () => {
             onClick={() => {
               methods.setValue(OtherSettingsFormFieldId.NBDEClevis, true);
             }}
+            type="button"
           >
             Toggle
           </button>

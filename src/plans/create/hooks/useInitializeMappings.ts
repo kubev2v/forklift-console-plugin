@@ -67,8 +67,10 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
   );
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
     if (isLoading) {
-      return;
+      return undefined;
     }
 
     if (!currentMap?.length && !usedSources?.length && !hasInitializedRef.current) {
@@ -79,7 +81,7 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
 
       setValue(fieldIds.mapField, [emptyMapping], { shouldDirty: true, shouldValidate: true });
       hasInitializedRef.current = true;
-      return;
+      return undefined;
     }
 
     if (!hasInitializedRef.current) {
@@ -100,8 +102,8 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
       setValue(fieldIds.mapField, updatedMappings, { shouldDirty: true, shouldValidate: true });
 
       // Trigger validation to ensure form state is correct
-      setTimeout(async () => {
-        await trigger();
+      timeoutId = setTimeout(() => {
+        trigger().catch(() => undefined);
       }, 0);
 
       for (const source of unmappedSources) {
@@ -110,6 +112,12 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
         }
       }
     }
+
+    return (): void => {
+      if (timeoutId !== undefined) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [
     isLoading,
     unmappedSources,

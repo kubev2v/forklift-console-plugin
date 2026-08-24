@@ -1,21 +1,15 @@
-import { type FC, useCallback, useState } from 'react';
+import { type FC, useCallback, useId, useRef, useState } from 'react';
 
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import {
-  Button,
-  ButtonVariant,
-  Checkbox,
-  Form,
-  FormGroup,
-  TextInput,
-} from '@patternfly/react-core';
-import { MinusCircleIcon, PlusCircleIcon } from '@patternfly/react-icons';
-import { Table, TableVariant, Tbody, Td, Tr } from '@patternfly/react-table';
+import { Button, ButtonVariant, Checkbox, Form, FormGroup } from '@patternfly/react-core';
+import { PlusCircleIcon } from '@patternfly/react-icons';
 import { MAX_PASSPHRASES } from '@utils/crds/conversion/constants';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type { VmOverrides } from './utils/types';
+import { toPassphraseEntries } from './utils/toPassphraseEntries';
+import type { PassphraseEntry, VmOverrides } from './utils/types';
+import PassphraseTable from './PassphraseTable';
 
 type VmConfigFormProps = {
   onChange: (vmId: string, overrides: VmOverrides) => void;
@@ -25,7 +19,11 @@ type VmConfigFormProps = {
 
 const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
   const { t } = useForkliftTranslation();
-  const [localPhrases, setLocalPhrases] = useState<string[]>(overrides.passphrases ?? []);
+  const idPrefix = useId();
+  const nextIdRef = useRef((overrides.passphrases ?? []).length);
+  const [localPhrases, setLocalPhrases] = useState<PassphraseEntry[]>(() =>
+    toPassphraseEntries(overrides.passphrases, idPrefix),
+  );
 
   const pushOverrides = useCallback(
     (patch: Partial<VmOverrides>): void => {
@@ -35,29 +33,29 @@ const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
   );
 
   const handleNbdeClevisChange = (_event: unknown, checked: boolean): void => {
-    const cleared: string[] = [];
-    setLocalPhrases(cleared);
-    pushOverrides({ nbdeClevis: checked, passphrases: cleared });
+    setLocalPhrases([]);
+    pushOverrides({ nbdeClevis: checked, passphrases: [] });
   };
 
   const addPassphrase = (): void => {
-    const updated = [...localPhrases, ''];
+    const updated = [...localPhrases, { id: `${idPrefix}-${nextIdRef.current}`, value: '' }];
+    nextIdRef.current += 1;
     setLocalPhrases(updated);
-    pushOverrides({ passphrases: updated });
+    pushOverrides({ passphrases: updated.map((entry) => entry.value) });
   };
 
-  const removePassphrase = (index: number): void => {
-    const updated = localPhrases.filter((_, idx) => idx !== index);
+  const removePassphrase = (id: string): void => {
+    const updated = localPhrases.filter((entry) => entry.id !== id);
     setLocalPhrases(updated);
-    pushOverrides({ passphrases: updated });
+    pushOverrides({ passphrases: updated.map((entry) => entry.value) });
   };
 
-  const updateLocalPassphrase = (index: number, value: string): void => {
-    setLocalPhrases((prev) => prev.map((phrase, idx) => (idx === index ? value : phrase)));
+  const updateLocalPassphrase = (id: string, value: string): void => {
+    setLocalPhrases((prev) => prev.map((entry) => (entry.id === id ? { ...entry, value } : entry)));
   };
 
   const commitPassphrase = (): void => {
-    pushOverrides({ passphrases: localPhrases });
+    pushOverrides({ passphrases: localPhrases.map((entry) => entry.value) });
   };
 
   return (
@@ -87,36 +85,13 @@ const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
       {!overrides.nbdeClevis && (
         <FormGroup label={t('Disk decryption passphrases')}>
           {!isEmpty(localPhrases) && (
-            <Table borders={false} variant={TableVariant.compact}>
-              <Tbody>
-                {localPhrases.map((phrase, index) => (
-                  <Tr key={index}>
-                    <Td>
-                      <TextInput
-                        aria-label={t('Passphrase {{index}}', { index: index + 1 })}
-                        data-testid={`luks-passphrase-${vmId}-${index}`}
-                        onBlur={commitPassphrase}
-                        onChange={(_event, value) => {
-                          updateLocalPassphrase(index, value);
-                        }}
-                        value={phrase}
-                      />
-                    </Td>
-                    <Td isActionCell>
-                      <Button
-                        aria-label={t('Remove passphrase')}
-                        onClick={() => {
-                          removePassphrase(index);
-                        }}
-                        variant={ButtonVariant.plain}
-                      >
-                        <MinusCircleIcon />
-                      </Button>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
+            <PassphraseTable
+              onBlur={commitPassphrase}
+              onChange={updateLocalPassphrase}
+              onRemove={removePassphrase}
+              phrases={localPhrases}
+              vmId={vmId}
+            />
           )}
           <Button
             icon={<PlusCircleIcon />}

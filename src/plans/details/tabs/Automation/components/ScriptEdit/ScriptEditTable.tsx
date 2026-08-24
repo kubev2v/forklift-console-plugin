@@ -7,7 +7,7 @@ import {
   ScriptsFieldLabels,
   ScriptType,
 } from 'src/plans/create/steps/customization-scripts/constants';
-import { useScriptFieldValidation } from 'src/plans/create/steps/customization-scripts/hooks/useScriptFieldValidation';
+import { createScriptFieldValidation } from 'src/plans/create/steps/customization-scripts/hooks/createScriptFieldValidation';
 import ScriptContentField from 'src/plans/create/steps/customization-scripts/ScriptContentField';
 import type { CustomScript } from 'src/plans/create/steps/customization-scripts/types';
 
@@ -31,7 +31,7 @@ const ScriptEditTable: FC<ScriptEditTableProps> = ({ append, fields, remove }) =
   const watchedScripts = useWatch({ control, name: SCRIPTS_FIELD });
   const triggerByName = async (name?: string | string[]): Promise<boolean> =>
     trigger(name as Parameters<typeof trigger>[0]);
-  const { nameDeps, triggerAllNames, validateName } = useScriptFieldValidation(
+  const { nameDeps, triggerAllNames, validateName } = createScriptFieldValidation(
     SCRIPTS_FIELD,
     triggerByName,
     () => getValues(SCRIPTS_FIELD),

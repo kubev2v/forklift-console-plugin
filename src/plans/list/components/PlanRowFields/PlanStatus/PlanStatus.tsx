@@ -6,15 +6,17 @@ import PlanStartMigrationModal, {
   type PlanStartMigrationModalProps,
 } from 'src/plans/actions/components/StartPlanModal/PlanStartMigrationModal';
 import PlanStatusLabel from 'src/plans/details/components/PlanStatus/PlanStatusLabel';
-import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import {
-  canPlanResumeConversion,
   getCantStartVMStatusCount,
   getMigrationVMsStatusCounts,
+} from 'src/plans/details/components/PlanStatus/utils/migrationVmStatus';
+import { canPlanResumeConversion } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
+import {
   getPlanStatus,
   isPlanArchived,
   isPlanExecuting,
-} from 'src/plans/details/components/PlanStatus/utils/utils';
+} from 'src/plans/details/components/PlanStatus/utils/planStatusResolver';
+import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
 import VMStatusIconsRow from 'src/plans/details/components/PlanStatus/VMStatusIconsRow';
 import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 import { useForkliftTranslation } from 'src/utils/i18n';

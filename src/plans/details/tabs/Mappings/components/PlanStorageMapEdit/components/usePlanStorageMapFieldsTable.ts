@@ -52,9 +52,13 @@ export const usePlanStorageMapFieldsTable = ({
   });
 
   useEffect(() => {
-    setTimeout(async () => {
-      await trigger();
+    const timeoutId = setTimeout(() => {
+      trigger().catch(() => undefined);
     }, 0);
+
+    return (): void => {
+      clearTimeout(timeoutId);
+    };
   }, [trigger]);
 
   return {
