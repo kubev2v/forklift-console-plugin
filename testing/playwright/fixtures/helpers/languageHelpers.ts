@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-import { BaseResourceManager } from '../../utils/resource-manager/BaseResourceManager';
+import { apiRequest } from '../../utils/resource-manager/apiRequest';
 import { API_PATHS } from '../../utils/resource-manager/constants';
 
 const USER_SETTINGS_NAMESPACE = 'openshift-console-user-settings';
@@ -21,11 +21,15 @@ const patchLanguageConfigMap = async (language: string): Promise<boolean> => {
   const configMapName = getConfigMapName();
   const apiPath = `${API_PATHS.KUBERNETES_CORE}/namespaces/${USER_SETTINGS_NAMESPACE}/configmaps/${configMapName}`;
 
-  const result = await BaseResourceManager.apiPatch(apiPath, {
-    data: { [LANGUAGE_KEY]: language },
+  const result = await apiRequest(apiPath, {
+    body: {
+      data: { [LANGUAGE_KEY]: language },
+    },
+    contentType: 'application/merge-patch+json',
+    method: 'PATCH',
   });
 
-  return result !== null;
+  return result.success;
 };
 
 /**

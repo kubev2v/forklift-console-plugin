@@ -33,21 +33,14 @@ const UPDATED_SCRIPT: ScriptConfig = {
   scriptType: 'run',
 };
 
-const getGuestTypeLabel = (script: ScriptConfig): string => {
-  if (!script.guestType) {
-    throw new Error(`Script "${script.name}" is missing guestType`);
-  }
+const DEFAULT_GUEST_TYPE = 'linux' as const;
+const DEFAULT_SCRIPT_TYPE = 'firstboot' as const;
 
-  return GUEST_TYPE_LABELS[script.guestType];
-};
+const getGuestTypeLabel = (script: ScriptConfig): string =>
+  GUEST_TYPE_LABELS[script.guestType ?? DEFAULT_GUEST_TYPE];
 
-const getScriptTypeLabel = (script: ScriptConfig): string => {
-  if (!script.scriptType) {
-    throw new Error(`Script "${script.name}" is missing scriptType`);
-  }
-
-  return SCRIPT_TYPE_LABELS[script.scriptType];
-};
+const getScriptTypeLabel = (script: ScriptConfig): string =>
+  SCRIPT_TYPE_LABELS[script.scriptType ?? DEFAULT_SCRIPT_TYPE];
 
 test.describe('Plan Customization Scripts', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);
