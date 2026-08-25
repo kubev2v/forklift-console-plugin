@@ -2,7 +2,7 @@ import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { StorageMapModel, type V1beta1StorageMap } from '@forklift-ui/types';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sPatch = jest.fn<() => Promise<unknown>>();
+const mockK8sPatch = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   k8sPatch: jest.fn((...args: unknown[]) => mockK8sPatch(...args)),

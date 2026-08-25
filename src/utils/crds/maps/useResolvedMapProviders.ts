@@ -24,7 +24,7 @@ type ResolvedMapProviders = {
 };
 
 export const useResolvedMapProviders = (
-  mapResource: MapWithProviders | undefined,
+  mapResource: MapWithProviders,
   launchedSourceProvider?: V1beta1Provider,
   launchedDestinationProvider?: V1beta1Provider,
 ): ResolvedMapProviders => {
