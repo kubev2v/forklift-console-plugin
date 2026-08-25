@@ -2,14 +2,22 @@ import type { Locator, Page } from '@playwright/test';
 
 import type { ScriptConfig } from '../../../types/test-data';
 import { fillScriptFields } from '../../../utils/script-form-helpers';
+import { V5_0_0 } from '../../../utils/version/constants';
+import { isVersionAtLeast } from '../../../utils/version/version';
 import { BaseModal } from '../../common/BaseModal';
 
-// Details edit modal testIds differ from the plan-create wizard
-// (script-name-input-* vs script-name-*).
-const MODAL_FIELD_TEST_IDS = {
+/** 2.12 details modal uses distinct *-input / *-select test ids. */
+const V2_12_SCRIPT_FIELD_TEST_IDS = {
   guestTypeSelect: (i: number): string => `script-guest-type-select-${i}`,
   nameInput: (i: number): string => `script-name-input-${i}`,
   scriptTypeSelect: (i: number): string => `script-type-select-${i}`,
+};
+
+/** 5.0+ details edit shares getScriptFieldInputs with the plan-create wizard. */
+const V5_SCRIPT_FIELD_TEST_IDS = {
+  guestTypeSelect: (i: number): string => `script-guest-type-${i}`,
+  nameInput: (i: number): string => `script-name-${i}`,
+  scriptTypeSelect: (i: number): string => `script-type-${i}`,
 };
 
 export class ScriptEditModal extends BaseModal {
@@ -25,7 +33,12 @@ export class ScriptEditModal extends BaseModal {
   }
 
   async configureScript(index: number, config: ScriptConfig): Promise<void> {
-    await fillScriptFields(this.page, index, config, MODAL_FIELD_TEST_IDS);
+    await fillScriptFields(
+      this.page,
+      index,
+      config,
+      isVersionAtLeast(V5_0_0) ? V5_SCRIPT_FIELD_TEST_IDS : V2_12_SCRIPT_FIELD_TEST_IDS,
+    );
   }
 
   getScriptCount(): Promise<number> {

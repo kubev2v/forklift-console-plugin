@@ -124,7 +124,7 @@ providerTest.describe('VM folder list - Provider Details Page', { tag: '@downstr
         expect(columnsAfterAdd).toContain('Path');
       });
 
-      await test.step('6. Test column management - reorder columns via drag and drop', async () => {
+      await test.step('6. Test column management - reorder columns', async () => {
         const initialColumns = await vmTab.getColumns();
         const initialPowerIndex = initialColumns.indexOf('Power');
         const initialConcernsIndex = initialColumns.indexOf('Concerns');
