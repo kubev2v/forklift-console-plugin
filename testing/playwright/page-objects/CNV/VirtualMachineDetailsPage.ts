@@ -3,7 +3,7 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { PAGE_LOAD_TIMEOUT } from '../../utils/resource-manager/constants';
 import { disableGuidedTour } from '../../utils/utils';
 
-const CNV_VM_URL_PATTERN = /kubevirt\.io~v1~VirtualMachine/;
+const CNV_VM_URL_PATTERN = /kubevirt\.io~v1~VirtualMachine/u;
 
 /**
  * Page object for the kubevirt-enhanced VirtualMachine details page.
@@ -21,7 +21,7 @@ export class VirtualMachineDetailsPage {
   }
 
   get overviewTab(): Locator {
-    return this.main.getByRole('link', { name: 'Overview', exact: true });
+    return this.main.getByRole('link', { exact: true, name: 'Overview' });
   }
 
   async verifySmokeOverview(expectedName: string): Promise<void> {
@@ -30,24 +30,24 @@ export class VirtualMachineDetailsPage {
     await expect(
       this.main
         .locator('dt')
-        .filter({ hasText: /^Name$/ })
+        .filter({ hasText: /^Name$/u })
         .first(),
     ).toBeVisible();
     await expect(
       this.main
         .locator('dt')
-        .filter({ hasText: /^Status$/ })
+        .filter({ hasText: /^Status$/u })
         .first(),
     ).toBeVisible();
     await expect(
       this.main
         .locator('dt')
-        .filter({ hasText: /^CPU \| Memory$/ })
+        .filter({ hasText: /^CPU \| Memory$/u })
         .first(),
     ).toBeVisible();
 
-    await expect(this.main.getByRole('link', { name: /Network \(\d+\)/ })).toBeVisible();
-    await expect(this.main.getByRole('link', { name: /Storage \([1-9]\d*\)/ })).toBeVisible();
+    await expect(this.main.getByRole('link', { name: /Network \(\d+\)/u })).toBeVisible();
+    await expect(this.main.getByRole('link', { name: /Storage \([1-9]\d*\)/u })).toBeVisible();
   }
 
   async waitForPageLoad(vmName?: string): Promise<void> {

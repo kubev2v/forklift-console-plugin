@@ -23,15 +23,15 @@ export const createTestNad = async (
     namespace: string;
   },
 ): Promise<V1NetworkAttachmentDefinition> => {
-  const { namespace, bridgeName = 'br0' } = options;
+  const { bridgeName = 'br0', namespace } = options;
   const nadName = options.name ?? `nad-test-${crypto.randomUUID().slice(0, 8)}`;
 
   const nadConfig = {
+    bridge: bridgeName,
     cniVersion: '0.3.1',
+    ipam: {},
     name: nadName,
     type: 'bridge',
-    bridge: bridgeName,
-    ipam: {},
   };
 
   const nad: V1NetworkAttachmentDefinition = {
@@ -103,10 +103,10 @@ export const createNetworkMap = async (
   options: CreateNetworkMapOptions,
 ): Promise<TestNetworkMap> => {
   const {
+    mappings = [],
+    namePrefix = 'test-network-map',
     sourceProvider,
     targetProvider = 'host',
-    namePrefix = 'test-network-map',
-    mappings = [],
   } = options;
 
   const sourceName = sourceProvider.metadata?.name;
@@ -124,14 +124,14 @@ export const createNetworkMap = async (
     kind: RESOURCE_KINDS.NETWORK_MAP,
     metadata: { name, namespace: MTV_NAMESPACE },
     spec: {
+      map: [],
       provider: {
+        destination: { name: targetProvider, namespace: MTV_NAMESPACE },
         source: {
           name: sourceName,
           namespace: sourceNamespace,
         },
-        destination: { name: targetProvider, namespace: MTV_NAMESPACE },
       },
-      map: [],
     },
   };
 
@@ -142,11 +142,11 @@ export const createNetworkMap = async (
   resourceManager.addNetworkMap(name, MTV_NAMESPACE);
 
   return {
+    mappings,
     name,
     namespace: MTV_NAMESPACE,
     sourceProvider: sourceName,
     targetProvider,
-    mappings,
   };
 };
 
@@ -171,10 +171,10 @@ export const createStorageMap = async (
   options: CreateStorageMapOptions,
 ): Promise<TestStorageMap> => {
   const {
+    mappings = [],
+    namePrefix = 'test-storage-map',
     sourceProvider,
     targetProvider = 'host',
-    namePrefix = 'test-storage-map',
-    mappings = [],
   } = options;
 
   const sourceName = sourceProvider.metadata?.name;
@@ -192,14 +192,14 @@ export const createStorageMap = async (
     kind: RESOURCE_KINDS.STORAGE_MAP,
     metadata: { name, namespace: MTV_NAMESPACE },
     spec: {
+      map: [],
       provider: {
+        destination: { name: targetProvider, namespace: MTV_NAMESPACE },
         source: {
           name: sourceName,
           namespace: sourceNamespace,
         },
-        destination: { name: targetProvider, namespace: MTV_NAMESPACE },
       },
-      map: [],
     },
   };
 
@@ -210,10 +210,10 @@ export const createStorageMap = async (
   resourceManager.addStorageMap(name, MTV_NAMESPACE);
 
   return {
+    mappings,
     name,
     namespace: MTV_NAMESPACE,
     sourceProvider: sourceName,
     targetProvider,
-    mappings,
   };
 };

@@ -6,40 +6,40 @@ export const setupStorageClassesIntercepts = async (page: Page, targetProviderUi
   const endpoint = API_ENDPOINTS.storageClasses(targetProviderUid);
   await page.route(endpoint, async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: JSON.stringify([
         {
-          uid: 'test-storage-class-1-uid',
-          version: '12345',
-          namespace: '',
-          name: 'test-ceph-rbd',
-          selfLink: `providers/openshift/${targetProviderUid}/storageclasses/test-storage-class-1-uid`,
           id: 'test-storage-class-1-uid',
+          name: 'test-ceph-rbd',
+          namespace: '',
           object: {
+            allowVolumeExpansion: true,
             metadata: { name: 'test-ceph-rbd', uid: 'test-storage-class-1-uid' },
             provisioner: 'test.csi.ceph.com',
             reclaimPolicy: 'Delete',
-            allowVolumeExpansion: true,
             volumeBindingMode: 'Immediate',
           },
+          selfLink: `providers/openshift/${targetProviderUid}/storageclasses/test-storage-class-1-uid`,
+          uid: 'test-storage-class-1-uid',
+          version: '12345',
         },
         {
-          uid: 'test-storage-class-2-uid',
-          version: '12346',
-          namespace: '',
-          name: 'test-cephfs',
-          selfLink: `providers/openshift/${targetProviderUid}/storageclasses/test-storage-class-2-uid`,
           id: 'test-storage-class-2-uid',
+          name: 'test-cephfs',
+          namespace: '',
           object: {
+            allowVolumeExpansion: true,
             metadata: { name: 'test-cephfs', uid: 'test-storage-class-2-uid' },
             provisioner: 'test.csi.cephfs.com',
             reclaimPolicy: 'Delete',
-            allowVolumeExpansion: true,
             volumeBindingMode: 'Immediate',
           },
+          selfLink: `providers/openshift/${targetProviderUid}/storageclasses/test-storage-class-2-uid`,
+          uid: 'test-storage-class-2-uid',
+          version: '12346',
         },
       ]),
+      contentType: 'application/json',
+      status: 200,
     });
   });
 };

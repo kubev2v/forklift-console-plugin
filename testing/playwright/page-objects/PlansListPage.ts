@@ -28,7 +28,7 @@ export class PlansListPage {
   }
 
   async clickPlanByName(planName: string): Promise<void> {
-    const planLink = this.page.getByRole('link', { name: planName, exact: true });
+    const planLink = this.page.getByRole('link', { exact: true, name: planName });
     await planLink.click();
   }
 

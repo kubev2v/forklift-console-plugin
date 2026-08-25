@@ -17,16 +17,16 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
 
   test('should select existing LUKS secret in wizard and edit from details page', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     // Wizard path creates provider resources then walks General→…→Additional settings.
     test.setTimeout(LUKS_TEST_TIMEOUT_MS);
     const testData: PlanTestData = createPlanTestData({
-      sourceProvider: testProvider?.metadata?.name ?? '',
       additionalPlanSettings: {
         existingLUKSSecretName: LUKS_TEST_SECRET_NAME,
       },
+      sourceProvider: testProvider?.metadata?.name ?? '',
     });
     resourceManager.addPlan(testData.planName, testData.planProject);
 

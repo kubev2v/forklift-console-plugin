@@ -1,7 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 
+import { getMonacoEditorValue, setMonacoEditorValue } from '../utils/monaco';
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
-import { isEmpty } from '../utils/utils';
 
 export class YamlEditorPage {
   protected readonly page: Page;
@@ -17,28 +17,14 @@ export class YamlEditorPage {
   }
 
   async fillYamlContent(yamlContent: string): Promise<void> {
-    await this.page.evaluate((content) => {
-      const monacoInstance = (globalThis as any).monaco?.editor?.getModels?.()?.[0];
-      if (monacoInstance) {
-        monacoInstance.setValue(content);
-      } else {
-        const editors = (globalThis as any).monaco?.editor?.getEditors?.();
-        if (editors && Array.isArray(editors) && !isEmpty(editors)) {
-          editors[0].setValue(content);
-        }
-      }
-    }, yamlContent);
+    const success = await this.page.evaluate(setMonacoEditorValue, { content: yamlContent });
+    if (!success) {
+      throw new Error('Failed to set YAML content - Monaco editor not found');
+    }
   }
 
   async getYamlContent(): Promise<string> {
-    const yamlContent = await this.page.evaluate(() => {
-      const monacoInstance = (globalThis as any).monaco?.editor?.getModels?.()?.[0];
-      if (monacoInstance) {
-        return monacoInstance.getValue() as string;
-      }
-      return '';
-    });
-    return yamlContent;
+    return this.page.evaluate(getMonacoEditorValue);
   }
 
   async submitYamlForm(expectedName: string, resourceType: string): Promise<void> {
@@ -46,6 +32,7 @@ export class YamlEditorPage {
     await expect(this.page).toHaveURL(
       new RegExp(
         `/k8s/ns/${MTV_NAMESPACE}/forklift\\.konveyor\\.io~v1beta1~${resourceType}/${expectedName}`,
+        'u',
       ),
     );
   }

@@ -1,7 +1,8 @@
 import { expect, type Page, test } from '@playwright/test';
 
 import { TEST_DATA } from '../../fixtures/test-data';
-import { setupForkliftControllerIntercept, setupForkliftIntercepts } from '../../intercepts';
+import { setupForkliftControllerIntercept } from '../../intercepts/forkliftController';
+import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
 import { StorageMapCreatePage } from '../../page-objects/StorageMapCreatePage';
 import { StorageMapDetailsPage } from '../../page-objects/StorageMapDetailsPage';
 import { StorageMapsListPage } from '../../page-objects/StorageMapsListPage';
@@ -27,7 +28,7 @@ const setupCreatedStorageMapIntercepts = async (page: Page): Promise<void> => {
   let createdMap: CreatedStorageMap | undefined;
 
   await page.route(
-    /\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/storagemaps$/,
+    /\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/storagemaps$/u,
     async (route) => {
       if (route.request().method() === 'POST') {
         const requestBody = JSON.parse(route.request().postData() ?? '{}') as CreatedStorageMap;
@@ -49,9 +50,9 @@ const setupCreatedStorageMapIntercepts = async (page: Page): Promise<void> => {
           },
         };
         await route.fulfill({
-          status: 201,
-          contentType: 'application/json',
           body: JSON.stringify(createdMap),
+          contentType: 'application/json',
+          status: 201,
         });
         return;
       }
@@ -61,13 +62,13 @@ const setupCreatedStorageMapIntercepts = async (page: Page): Promise<void> => {
   );
 
   await page.route(
-    /\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/storagemaps\/[^/?]+$/,
+    /\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/storagemaps\/[^/?]+$/u,
     async (route) => {
       if (route.request().method() === 'GET' && createdMap) {
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify(createdMap),
+          contentType: 'application/json',
+          status: 200,
         });
         return;
       }

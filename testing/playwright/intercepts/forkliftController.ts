@@ -2,8 +2,6 @@ import type { Page } from '@playwright/test';
 
 const FORKLIFT_CONTROLLER_RESPONSE = {
   apiVersion: 'forklift.konveyor.io/v1beta1',
-  kind: 'ForkliftControllerList',
-  metadata: { continue: '', remainingItemCount: 0, resourceVersion: '1000' },
   items: [
     {
       apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -11,13 +9,15 @@ const FORKLIFT_CONTROLLER_RESPONSE = {
       metadata: {
         name: 'forklift-controller',
         namespace: 'konveyor-forklift',
-        uid: 'fc-uid-1',
         resourceVersion: '999',
+        uid: 'fc-uid-1',
       },
       // eslint-disable-next-line camelcase
       spec: { feature_copy_offload: true },
     },
   ],
+  kind: 'ForkliftControllerList',
+  metadata: { continue: '', remainingItemCount: 0, resourceVersion: '1000' },
 };
 
 /**
@@ -30,9 +30,9 @@ export const setupForkliftControllerIntercept = async (page: Page): Promise<void
     '**/apis/forklift.konveyor.io/v1beta1/namespaces/*/forkliftcontrollers*',
     async (route) => {
       await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
         body: JSON.stringify(FORKLIFT_CONTROLLER_RESPONSE),
+        contentType: 'application/json',
+        status: 200,
       });
     },
   );

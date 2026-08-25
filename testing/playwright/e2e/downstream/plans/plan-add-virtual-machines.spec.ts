@@ -9,13 +9,12 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
   requireVersion(test, V2_12_0);
 
   test('should add virtual machines to an existing plan via the modal', async ({
-    page,
     createCustomPlan,
+    page,
     resourceManager,
   }) => {
     test.setTimeout(180_000);
     const testPlan = await createCustomPlan({
-      virtualMachines: [{ folder: 'vm' }],
       criticalIssuesAction: 'confirm',
       networkMap: {
         isPreexisting: false,
@@ -25,6 +24,7 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
           { source: 'cnv-test', target: 'Ignore network' },
         ],
       },
+      virtualMachines: [{ folder: 'vm' }],
     });
 
     const planDetailsPage = new PlanDetailsPage(page);
@@ -41,10 +41,10 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
 
     const patchResult = await resourceManager.patchResource({
       kind: 'Plan',
-      resourceName: planName,
       namespace: planNamespace,
       patch: [{ op: 'replace', path: '/spec/vms', value: remainingVms }],
       patchType: 'json',
+      resourceName: planName,
     });
     expect(patchResult).not.toBeNull();
 
@@ -113,10 +113,10 @@ test.describe('Plan Details - Add Virtual Machines', { tag: '@downstream' }, () 
     await test.step('6. Verify button is disabled for non-editable plans (archived)', async () => {
       const archiveResult = await resourceManager.patchResource({
         kind: 'Plan',
-        resourceName: planName,
         namespace: planNamespace,
         patch: { spec: { archived: true } },
         patchType: 'merge',
+        resourceName: planName,
       });
       expect(archiveResult).not.toBeNull();
 

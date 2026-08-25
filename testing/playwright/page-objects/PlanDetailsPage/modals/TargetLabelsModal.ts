@@ -17,7 +17,7 @@ export class TargetLabelsModal extends BaseModal {
 
   async deleteLabelByKey(key: string): Promise<void> {
     const label = this.modal.locator('.pf-v6-c-label').filter({ hasText: key });
-    const closeButton = label.getByRole('button', { name: new RegExp(`Close ${key}`, 'i') });
+    const closeButton = label.getByRole('button', { name: new RegExp(`Close ${key}`, 'iu') });
     await closeButton.click();
   }
 

@@ -9,8 +9,8 @@ test.describe('Plan Details - Migration Type Provider Gating', { tag: '@downstre
   requireVersion(test, V2_12_0);
 
   test('should only show Cold and Warm options for vSphere provider', async ({
-    page,
     createCustomPlan,
+    page,
     testProvider: _testProvider,
   }) => {
     await createCustomPlan();

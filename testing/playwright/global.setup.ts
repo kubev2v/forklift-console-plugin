@@ -94,7 +94,7 @@ const deriveClusterApiUrlFromConsoleAddress = (): string | null => {
  *  - The `oc` binary is not available
  */
 const generateKubeconfig = async (username: string, password: string): Promise<void> => {
-  let clusterApiUrl = process.env.CLUSTER_API_URL?.replace(/\/$/, '') ?? null;
+  let clusterApiUrl = process.env.CLUSTER_API_URL?.replace(/\/$/u, '') ?? null;
 
   if (!clusterApiUrl) {
     clusterApiUrl = await fetchClusterApiUrl();
@@ -252,7 +252,7 @@ const globalSetup = async (config: FullConfig) => {
       await detectCnvVersion();
     } catch (error) {
       const screenshotPath = 'playwright/test-results/global-setup-login-failure.png';
-      await page.screenshot({ path: screenshotPath, fullPage: true }).catch(() => undefined);
+      await page.screenshot({ fullPage: true, path: screenshotPath }).catch(() => undefined);
       console.error(`📸 Login failure screenshot: ${screenshotPath} (URL: ${page.url()})`);
       console.error('❌ Login failed in global setup:', error);
       throw error;

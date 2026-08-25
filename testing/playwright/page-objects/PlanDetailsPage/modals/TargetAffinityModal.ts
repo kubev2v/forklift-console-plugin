@@ -69,7 +69,7 @@ export class TargetAffinityModal extends BaseModal {
   ): Promise<void> {
     const typeSelect = this.addRuleDialog.getByTestId('affinity-type-select');
     await typeSelect.click();
-    await this.page.getByRole('option', { name: type, exact: true }).click();
+    await this.page.getByRole('option', { exact: true, name: type }).click();
   }
 
   async selectExpressionOperator(
@@ -80,7 +80,7 @@ export class TargetAffinityModal extends BaseModal {
       .locator('button[aria-label="Options menu"]')
       .nth(index);
     await operatorButton.click();
-    await this.page.getByRole('option', { name: operator, exact: true }).click();
+    await this.page.getByRole('option', { exact: true, name: operator }).click();
   }
 
   async selectRuleType(
@@ -88,7 +88,7 @@ export class TargetAffinityModal extends BaseModal {
   ): Promise<void> {
     const conditionSelect = this.addRuleDialog.getByTestId('affinity-condition-select');
     await conditionSelect.click();
-    await this.page.getByRole('option', { name: ruleType, exact: true }).click();
+    await this.page.getByRole('option', { exact: true, name: ruleType }).click();
   }
 
   async verifyAffinityRuleExists(): Promise<void> {
@@ -103,7 +103,7 @@ export class TargetAffinityModal extends BaseModal {
     await typeSelect.click();
 
     for (const option of expectedOptions) {
-      await expect(this.page.getByRole('option', { name: option, exact: true })).toBeVisible();
+      await expect(this.page.getByRole('option', { exact: true, name: option })).toBeVisible();
     }
 
     await typeSelect.click();
@@ -116,7 +116,7 @@ export class TargetAffinityModal extends BaseModal {
     await conditionSelect.click();
 
     for (const option of expectedOptions) {
-      await expect(this.page.getByRole('option', { name: option, exact: true })).toBeVisible();
+      await expect(this.page.getByRole('option', { exact: true, name: option })).toBeVisible();
     }
 
     await conditionSelect.click();

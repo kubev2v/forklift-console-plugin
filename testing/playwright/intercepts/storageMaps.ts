@@ -10,15 +10,15 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
     metadata: {
       name: 'test-storage-map-1',
       namespace: MTV_NAMESPACE,
-      uid: 'test-storagemap-uid-1',
       ownerReferences: [],
+      uid: 'test-storagemap-uid-1',
     },
     spec: {
       map: [
         {
           destination: {
-            storageClass: 'test-ceph-rbd',
             accessMode: 'ReadWriteOnce',
+            storageClass: 'test-ceph-rbd',
           },
           source: {
             id: 'test-datastore-1',
@@ -39,9 +39,9 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
     status: {
       conditions: [
         {
-          type: 'Ready',
-          status: 'True',
           message: 'The storage map is ready.',
+          status: 'True',
+          type: 'Ready',
         },
       ],
     },
@@ -53,24 +53,24 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
     metadata: {
       name: 'test-storage-map-2',
       namespace: MTV_NAMESPACE,
-      uid: 'test-storagemap-uid-2',
       ownerReferences: [
         {
           apiVersion: 'forklift.konveyor.io/v1beta1',
+          blockOwnerDeletion: true,
+          controller: true,
           kind: 'Plan',
           name: 'test-plan-2',
           uid: 'test-plan-uid-2',
-          controller: true,
-          blockOwnerDeletion: true,
         },
       ],
+      uid: 'test-storagemap-uid-2',
     },
     spec: {
       map: [
         {
           destination: {
-            storageClass: 'test-ceph-rbd',
             accessMode: 'ReadWriteOnce',
+            storageClass: 'test-ceph-rbd',
           },
           source: {
             id: 'test-datastore-2',
@@ -91,9 +91,9 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
     status: {
       conditions: [
         {
-          type: 'Ready',
-          status: 'True',
           message: 'The storage map is ready.',
+          status: 'True',
+          type: 'Ready',
         },
       ],
     },
@@ -105,9 +105,9 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
     async (route) => {
       if (route.request().method() === 'GET') {
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify(storageMapData1),
+          contentType: 'application/json',
+          status: 200,
         });
       } else {
         await route.continue();
@@ -117,7 +117,7 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
 
   // StorageMap creation for copying (POST request with new name)
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps$/u,
     async (route) => {
       if (route.request().method() === 'POST') {
         const requestBody = JSON.parse(route.request().postData() ?? '{}') as {
@@ -126,8 +126,6 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
         const newName = requestBody.metadata?.name ?? 'test-create-plan-storagemap';
 
         await route.fulfill({
-          status: 201,
-          contentType: 'application/json',
           body: JSON.stringify({
             ...storageMapData1,
             metadata: {
@@ -136,6 +134,8 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
               uid: `test-storagemap-uid-${crypto.randomUUID().slice(0, 8)}`,
             },
           }),
+          contentType: 'application/json',
+          status: 201,
         });
       } else {
         await route.continue();
@@ -145,7 +145,7 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
 
   // StorageMap PATCH request for adding owner references
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps\/[^/?]*$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps\/[^/?]*$/u,
     async (route) => {
       if (route.request().method() === 'PATCH') {
         // Extract the name from URL
@@ -153,8 +153,6 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
         const name = url.split('/').pop();
 
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify({
             ...storageMapData1,
             metadata: {
@@ -170,6 +168,8 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
               ],
             },
           }),
+          contentType: 'application/json',
+          status: 200,
         });
       } else {
         await route.continue();
@@ -179,12 +179,12 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
 
   await page.route(API_ENDPOINTS.storageMaps, async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: JSON.stringify({
         apiVersion: 'forklift.konveyor.io/v1beta1',
         items: [storageMapData1, storageMapData2],
       }),
+      contentType: 'application/json',
+      status: 200,
     });
   });
 };

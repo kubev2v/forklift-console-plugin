@@ -14,54 +14,54 @@ export const setupVirtualMachinesIntercepts = async (
 
   const responseBody = JSON.stringify(
     TEST_DATA.virtualMachines.map((vm) => ({
-      id: vm.id,
-      revision: 1,
-      path: `L0_Group_Test/${vm.name}`,
-      name: vm.name,
-      selfLink: `providers/test/${vm.id}`,
       cluster: vm.cluster,
-      status: vm.status,
-      host: vm.host,
-      parent: {
-        kind: 'Folder',
-        id: 'test-folder-1',
-      },
-      isTemplate: false,
-      revisionValidated: 1,
-      nics: [
-        {
-          id: 'test-nic-1',
-          name: 'nic1',
-          interface: 'virtio',
-          plugged: true,
-          ipAddress: '',
-          mac: '00:12:4a:16:37:2d',
-        },
-      ],
+      concerns: [],
+      cpuCores: vm.cpuCores,
+      cpuSockets: vm.cpuSockets,
       diskAttachments: [
         {
+          bootable: true,
+          disk: 'test-disk-1',
           id: 'test-disk-1',
           interface: 'virtio_scsi',
           scsiReservation: false,
-          disk: 'test-disk-1',
-          bootable: true,
         },
       ],
-      concerns: [],
-      policyVersion: 6,
       guestName: `${vm.name} Guest`,
-      cpuSockets: vm.cpuSockets,
-      cpuCores: vm.cpuCores,
+      host: vm.host,
+      id: vm.id,
+      isTemplate: false,
       memory: vm.memory,
+      name: vm.name,
+      nics: [
+        {
+          id: 'test-nic-1',
+          interface: 'virtio',
+          ipAddress: '',
+          mac: '00:12:4a:16:37:2d',
+          name: 'nic1',
+          plugged: true,
+        },
+      ],
       osType: vm.osType,
+      parent: {
+        id: 'test-folder-1',
+        kind: 'Folder',
+      },
+      path: `L0_Group_Test/${vm.name}`,
+      policyVersion: 6,
+      revision: 1,
+      revisionValidated: 1,
+      selfLink: `providers/test/${vm.id}`,
+      status: vm.status,
     })),
   );
 
   await page.route(endpoint, async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: responseBody,
+      contentType: 'application/json',
+      status: 200,
     });
   });
 };

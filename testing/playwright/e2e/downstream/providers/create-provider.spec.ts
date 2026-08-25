@@ -26,11 +26,11 @@ test.describe('Provider Creation Tests', () => {
   const resourceManager = new ResourceManager();
 
   for (const {
-    scenarioName,
-    providerType,
-    providerKey,
-    providerDataOverrides,
     minVersion,
+    providerDataOverrides,
+    providerKey,
+    providerType,
+    scenarioName,
     verifyDelete,
   } of providerTestScenarios) {
     test(
@@ -81,7 +81,7 @@ test.describe('Provider Creation Tests', () => {
           await test.step('Delete provider and verify it is removed from the list', async () => {
             await providerDetailsPage.deleteProvider(testProviderData.name);
             await expect(
-              page.getByRole('link', { name: testProviderData.name, exact: true }),
+              page.getByRole('link', { exact: true, name: testProviderData.name }),
             ).not.toBeVisible();
 
             const providerResource = await resourceManager.fetchProvider(testProviderData.name);

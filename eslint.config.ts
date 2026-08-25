@@ -605,13 +605,9 @@ export const createEslintConfig = () =>
         '@typescript-eslint/no-unsafe-return': 'off',
       },
     },
-    // Testing directory specific rules (src unit tests inherit max-lines: 150)
+    // Unit tests under src/ — keep relaxed (separate from Playwright S19)
     {
-      files: [
-        'testing/**/*.{js,ts,jsx,tsx}',
-        '**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}',
-        'src/**/*.{test,spec}.{ts,tsx}',
-      ],
+      files: ['**/__{tests,mocks}__/**/*.{js,ts,jsx,tsx}', 'src/**/*.{test,spec}.{ts,tsx}'],
       rules: {
         '@cspell/spellchecker': 'off',
         '@typescript-eslint/class-methods-use-this': 'off',
@@ -626,6 +622,8 @@ export const createEslintConfig = () =>
         '@typescript-eslint/no-unsafe-return': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
         '@typescript-eslint/promise-function-async': 'off',
+        '@typescript-eslint/strict-void-return': 'off',
+        'barrel-files/avoid-barrel-files': 'off',
         'jsdoc/require-jsdoc': 'off',
         'jsdoc/require-param': 'off',
         'jsdoc/require-param-name': 'off',
@@ -634,27 +632,79 @@ export const createEslintConfig = () =>
         'jsdoc/require-property-name': 'off',
         'jsdoc/require-property-type': 'off',
         'max-lines-per-function': 'off',
-        'barrel-files/avoid-barrel-files': 'off', // MTV-6509 (S19): audit before enforcing on testing/
         'no-await-in-loop': 'off',
         'no-console': 'off',
         'no-restricted-imports': 'off',
+        'no-restricted-syntax': 'off',
         'no-warning-comments': 'off',
-        'promise/no-nesting': 'off', // MTV-6509 (S19)
         'perfectionist/sort-objects': 'off',
+        'promise/no-nesting': 'off',
         'react-refresh/only-export-components': 'off',
         'require-unicode-regexp': 'off',
-        'no-restricted-syntax': 'off',
-        '@typescript-eslint/strict-void-return': 'off',
         'sonarjs/cognitive-complexity': 'off',
         'sonarjs/no-duplicate-string': 'off',
         'sonarjs/no-identical-functions': 'off',
       },
     },
-    // MTV-6276: Playwright e2e/page-objects stay exempt from max-lines
+    // MTV-6509 (S19): Playwright testing/ — permanent offs only (enabled rules inherit base)
     {
       files: ['testing/**/*.{js,ts,jsx,tsx}'],
       rules: {
+        // Sequential UI / cleanup loops are intentional
+        'no-await-in-loop': 'off',
+        // Src React / PatternFly concerns — N/A for Playwright
+        'jsdoc/require-jsdoc': 'off',
+        'jsdoc/require-param': 'off',
+        'jsdoc/require-param-name': 'off',
+        'jsdoc/require-property': 'off',
+        'jsdoc/require-property-description': 'off',
+        'jsdoc/require-property-name': 'off',
+        'jsdoc/require-property-type': 'off',
+        'no-restricted-imports': 'off',
+        'no-restricted-syntax': 'off',
+        'no-warning-comments': 'off',
+        'react-refresh/only-export-components': 'off',
+        // Already off globally / unused in testing
+        '@typescript-eslint/no-magic-numbers': 'off',
+        '@typescript-eslint/no-namespace': 'off',
+        '@typescript-eslint/promise-function-async': 'off',
+        '@typescript-eslint/strict-void-return': 'off',
+        // sonarjs only applies to src/**; keep offs harmless if scope changes
+        'sonarjs/cognitive-complexity': 'off',
+        'sonarjs/no-duplicate-string': 'off',
+        'sonarjs/no-identical-functions': 'off',
+      },
+    },
+    // MTV-6276 / MTV-6509: e2e + page-objects stay exempt from file/function size limits
+    {
+      files: [
+        'testing/playwright/e2e/**/*.{ts,tsx}',
+        'testing/playwright/page-objects/**/*.{ts,tsx}',
+        'testing/playwright/intercepts/**/*.{ts,tsx}',
+        'testing/playwright/fixtures/**/*.{ts,tsx}',
+        'testing/playwright/types/**/*.{ts,tsx}',
+        'testing/playwright/global.setup.ts',
+        'testing/playwright/global.teardown.ts',
+        'testing/playwright.config.ts',
+      ],
+      rules: {
         'max-lines': 'off',
+        'max-lines-per-function': 'off',
+      },
+    },
+    // MTV-6509: utils/ enforces max-lines like src
+    {
+      files: ['testing/playwright/utils/**/*.{ts,tsx}'],
+      rules: {
+        'max-lines': ['error', { max: 150, skipBlankLines: true, skipComments: true }],
+        'max-lines-per-function': 'off',
+      },
+    },
+    // MTV-6509: lifecycle scripts may log
+    {
+      files: ['testing/playwright/global.setup.ts', 'testing/playwright/global.teardown.ts'],
+      rules: {
+        'no-console': 'off',
       },
     },
     {

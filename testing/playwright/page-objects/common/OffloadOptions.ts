@@ -112,7 +112,7 @@ export class OffloadOptions {
     const listbox = this.page.getByRole('listbox');
     await expect(listbox).toBeVisible();
 
-    const option = listbox.getByRole('option', { name: hostName, exact: true });
+    const option = listbox.getByRole('option', { exact: true, name: hostName });
     await expect(option).toBeVisible();
     await option.click();
 

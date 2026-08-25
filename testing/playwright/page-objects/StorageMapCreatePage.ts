@@ -3,6 +3,12 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { AccessModeOptions } from './common/AccessModeOptions';
 import { OffloadOptions } from './common/OffloadOptions';
 
+const sourceStorageTestId = (index: number): string =>
+  `source-storage-storageMap.${index}.sourceStorage`;
+
+const targetStorageTestId = (index: number): string =>
+  `target-storage-storageMap.${index}.targetStorage`;
+
 export class StorageMapCreatePage {
   readonly accessMode: AccessModeOptions;
   readonly offload: OffloadOptions;
@@ -40,14 +46,6 @@ export class StorageMapCreatePage {
     await listbox.getByRole('option', { name: optionName }).click({ timeout: OPTION_TIMEOUT });
   }
 
-  private sourceStorageTestId(index: number): string {
-    return `source-storage-storageMap.${index}.sourceStorage`;
-  }
-
-  private targetStorageTestId(index: number): string {
-    return `target-storage-storageMap.${index}.targetStorage`;
-  }
-
   async addMapping(): Promise<void> {
     const addButton = this.page.getByTestId('add-mapping-button');
     await expect(addButton).toBeEnabled();
@@ -59,7 +57,7 @@ export class StorageMapCreatePage {
   }
 
   async expectSourceStorageOptionEnabled(index: number, sourceName: string): Promise<void> {
-    const dropdown = this.page.getByTestId(this.sourceStorageTestId(index));
+    const dropdown = this.page.getByTestId(sourceStorageTestId(index));
     await expect(dropdown).toBeVisible();
     await expect(dropdown).toBeEnabled();
     await dropdown.click();
@@ -84,11 +82,11 @@ export class StorageMapCreatePage {
   }
 
   async selectFirstAvailableSourceAtIndex(index: number): Promise<string> {
-    return this.selectFirstAvailableOptionFromDropdown(this.sourceStorageTestId(index));
+    return this.selectFirstAvailableOptionFromDropdown(sourceStorageTestId(index));
   }
 
   async selectFirstAvailableTargetAtIndex(index: number): Promise<string> {
-    return this.selectFirstAvailableOptionFromDropdown(this.targetStorageTestId(index));
+    return this.selectFirstAvailableOptionFromDropdown(targetStorageTestId(index));
   }
 
   async selectProject(project: string): Promise<void> {
@@ -110,7 +108,7 @@ export class StorageMapCreatePage {
   }
 
   async selectSourceStorageAtIndex(index: number, sourceName: string): Promise<void> {
-    await this.selectOptionFromDropdown(this.sourceStorageTestId(index), sourceName);
+    await this.selectOptionFromDropdown(sourceStorageTestId(index), sourceName);
   }
 
   async selectTargetProvider(providerName: string): Promise<void> {
@@ -118,7 +116,7 @@ export class StorageMapCreatePage {
   }
 
   async selectTargetStorageAtIndex(index: number, storageName: string): Promise<void> {
-    await this.selectOptionFromDropdown(this.targetStorageTestId(index), storageName);
+    await this.selectOptionFromDropdown(targetStorageTestId(index), storageName);
   }
 
   async submit(): Promise<void> {

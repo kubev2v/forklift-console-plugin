@@ -17,24 +17,24 @@ type EmptyListPayload = {
 export const setupMigrationVmResourceIntercepts = async (page: Page): Promise<void> => {
   const emptyList = (kind: string, apiVersion: string): EmptyListPayload => ({
     apiVersion,
+    items: [],
     kind: `${kind}List`,
     metadata: {},
-    items: [],
   });
 
   await page.route('**/api/kubernetes/api/v1/namespaces/*/pods**', async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: JSON.stringify(emptyList('Pod', 'v1')),
+      contentType: 'application/json',
+      status: 200,
     });
   });
 
   await page.route('**/api/kubernetes/apis/batch/v1/namespaces/*/jobs**', async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: JSON.stringify(emptyList('Job', 'batch/v1')),
+      contentType: 'application/json',
+      status: 200,
     });
   });
 
@@ -42,9 +42,9 @@ export const setupMigrationVmResourceIntercepts = async (page: Page): Promise<vo
     '**/api/kubernetes/api/v1/namespaces/*/persistentvolumeclaims**',
     async (route) => {
       await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
         body: JSON.stringify(emptyList('PersistentVolumeClaim', 'v1')),
+        contentType: 'application/json',
+        status: 200,
       });
     },
   );
@@ -53,9 +53,9 @@ export const setupMigrationVmResourceIntercepts = async (page: Page): Promise<vo
     '**/api/kubernetes/apis/cdi.kubevirt.io/v1beta1/namespaces/*/datavolumes**',
     async (route) => {
       await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
         body: JSON.stringify(emptyList('DataVolume', 'cdi.kubevirt.io/v1beta1')),
+        contentType: 'application/json',
+        status: 200,
       });
     },
   );

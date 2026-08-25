@@ -4,42 +4,42 @@ import { isVersionAtLeast } from '../utils/version/version';
 
 import type { EndpointType, MigrationType, ProviderType } from './enums';
 
-export interface TargetProject {
-  name: string;
+export type TargetProject = {
   isPreexisting: boolean;
-}
+  name: string;
+};
 
-export interface Mapping<T = string> {
+export type Mapping = {
   source: string;
   target: string;
-}
+};
 
-export interface NetworkMap {
-  name?: string;
+export type NetworkMap = {
   isPreexisting?: boolean;
   mappings?: Mapping[];
-}
+  name?: string;
+};
 
-export interface StorageMap {
-  name: string;
+export type StorageMap = {
   isPreexisting: boolean;
   mappings?: Mapping[];
-}
+  name: string;
+};
 
-export interface VirtualMachine {
+export type VirtualMachine = {
+  folder?: string; // VM folder path (e.g., 'vm', '/Datacenter/vm/folder1')
   sourceName?: string;
   targetName?: string; // If null or different from sourceName, will be used for renaming
-  folder?: string; // VM folder path (e.g., 'vm', '/Datacenter/vm/folder1')
-}
+};
 
 /**
  * Common storage classes available in the cluster (target storage)
  */
 export const StorageClasses = {
-  OCS_RBD_VIRTUALIZATION: 'ocs-storagecluster-ceph-rbd-virtualization',
-  OCS_RBD: 'ocs-storagecluster-ceph-rbd',
-  OCS_CEPHFS: 'ocs-storagecluster-cephfs',
   HOSTPATH_BASIC: 'hostpath-csi-basic',
+  OCS_CEPHFS: 'ocs-storagecluster-cephfs',
+  OCS_RBD: 'ocs-storagecluster-ceph-rbd',
+  OCS_RBD_VIRTUALIZATION: 'ocs-storagecluster-ceph-rbd-virtualization',
   STANDARD_CSI: 'standard-csi',
 } as const;
 
@@ -108,16 +108,16 @@ export const NetworkTargets = {
  * Common source networks available from VMware providers
  */
 export const SourceNetworks = {
-  VM_NETWORK: 'VM Network',
   MGMT_NETWORK: 'Mgmt Network',
+  VM_NETWORK: 'VM Network',
 } as const;
 
-export interface HookConfig {
+export type HookConfig = {
+  ansiblePlaybook?: string;
   enabled: boolean;
   hookRunnerImage?: string;
   serviceAccount?: string;
-  ansiblePlaybook?: string;
-}
+};
 
 export type GuestType = 'linux' | 'windows';
 export type ScriptType = 'firstboot' | 'run';
@@ -149,18 +149,7 @@ export type CustomizationScriptsTestData =
       scripts: ScriptConfig[];
     };
 
-export interface PlanTestData {
-  planName: string;
-  planProject: string;
-  description?: string;
-  sourceProvider: string;
-  targetProvider: string;
-  targetProject: TargetProject;
-  networkMap: NetworkMap;
-  storageMap: StorageMap;
-  virtualMachines?: VirtualMachine[];
-  migrationType?: MigrationType;
-  criticalIssuesAction?: 'confirm' | 'deselect';
+export type PlanTestData = {
   additionalPlanSettings?: {
     existingLUKSSecretName?: string;
     /** VM display name → resolved instance type label */
@@ -174,10 +163,21 @@ export interface PlanTestData {
     targetPowerState?: 'on' | 'off' | 'auto';
     useNbdeClevis?: boolean;
   };
+  criticalIssuesAction?: 'confirm' | 'deselect';
   customizationScripts?: CustomizationScriptsTestData;
-  preMigrationHook?: HookConfig;
+  description?: string;
+  migrationType?: MigrationType;
+  networkMap: NetworkMap;
+  planName: string;
+  planProject: string;
   postMigrationHook?: HookConfig;
-}
+  preMigrationHook?: HookConfig;
+  sourceProvider: string;
+  storageMap: StorageMap;
+  targetProject: TargetProject;
+  targetProvider: string;
+  virtualMachines?: VirtualMachine[];
+};
 
 /**
  * Helper to create plan test data with proper typing
@@ -189,21 +189,15 @@ export const createPlanTestData = (
   const planName = `test-plan-${uniqueId}`;
 
   const defaults: PlanTestData = {
+    description: isVersionAtLeast(V2_11_0) ? 'Test plan for automated testing' : undefined,
+    networkMap: {
+      isPreexisting: false,
+      name: `${planName}-network-map`,
+    },
     planName,
     planProject: MTV_NAMESPACE,
-    description: isVersionAtLeast(V2_11_0) ? 'Test plan for automated testing' : undefined,
     sourceProvider: 'test-provider',
-    targetProvider: 'host',
-    targetProject: {
-      name: `test-project-${uniqueId}`,
-      isPreexisting: false,
-    },
-    networkMap: {
-      name: `${planName}-network-map`,
-      isPreexisting: false,
-    },
     storageMap: {
-      name: `${planName}-storage-map`,
       isPreexisting: false,
       mappings: [
         {
@@ -212,21 +206,27 @@ export const createPlanTestData = (
           target: 'ocs-storagecluster-ceph-rbd-virtualization',
         },
       ],
+      name: `${planName}-storage-map`,
     },
+    targetProject: {
+      isPreexisting: false,
+      name: `test-project-${uniqueId}`,
+    },
+    targetProvider: 'host',
     // qemtv-09 vs8 inventory no longer has mtv-func-rhel9; use a present lab VM.
-    virtualMachines: [{ sourceName: 'mtv-rhel8-warm-sanity', folder: 'vm' }],
+    virtualMachines: [{ folder: 'vm', sourceName: 'mtv-rhel8-warm-sanity' }],
   };
 
   return {
     ...defaults,
     ...overrides,
-    targetProject: { ...defaults.targetProject, ...overrides.targetProject },
     networkMap: { ...defaults.networkMap, ...overrides.networkMap },
     storageMap: { ...defaults.storageMap, ...overrides.storageMap },
+    targetProject: { ...defaults.targetProject, ...overrides.targetProject },
   };
 };
 
-export interface ProviderConfig {
+export type ProviderConfig = {
   access_key_id?: string;
   api_url: string;
   auto_target_credentials?: boolean;
@@ -243,8 +243,8 @@ export interface ProviderConfig {
   user_domain_name?: string;
   username?: string;
   vddk_init_image?: string;
-}
-export interface ProviderData {
+};
+export type ProviderData = {
   accessKeyId?: string;
   applianceManagement?: boolean;
   autoTargetCredentials?: boolean;
@@ -270,7 +270,7 @@ export interface ProviderData {
   targetSecretAccessKey?: string;
   type: ProviderType;
   useDifferentSmbCredentials?: boolean;
-  useVddkAioOptimization?: boolean;
   username?: string;
+  useVddkAioOptimization?: boolean;
   vddkInitImage?: string;
-}
+};

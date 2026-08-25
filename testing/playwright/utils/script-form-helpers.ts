@@ -2,6 +2,8 @@ import type { Page } from '@playwright/test';
 
 import { GUEST_TYPE_LABELS, SCRIPT_TYPE_LABELS, type ScriptConfig } from '../types/test-data';
 
+import { setMonacoEditorValue } from './monaco';
+
 type ScriptFieldTestIds = {
   guestTypeSelect: (index: number) => string;
   nameInput: (index: number) => string;
@@ -13,17 +15,7 @@ const setMonacoEditorContent = async (
   index: number,
   content: string,
 ): Promise<void> => {
-  const success = await page.evaluate(
-    ({ idx, scriptContent }) => {
-      const editors = (globalThis as any).monaco?.editor?.getEditors?.();
-      if (editors && Array.isArray(editors) && editors.length > idx) {
-        editors[idx].setValue(scriptContent);
-        return true;
-      }
-      return false;
-    },
-    { idx: index, scriptContent: content },
-  );
+  const success = await page.evaluate(setMonacoEditorValue, { content, index });
 
   if (!success) {
     throw new Error(`Failed to set script content at index ${index} - Monaco editor not found`);

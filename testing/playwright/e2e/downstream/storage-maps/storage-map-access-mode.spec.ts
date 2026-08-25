@@ -99,7 +99,7 @@ sharedProviderStorageMapFixtures.describe(
 
     sharedProviderStorageMapFixtures(
       'should persist access mode through edit flow',
-      async ({ page, testStorageMap, testProvider: _testProvider }) => {
+      async ({ page, testProvider: _testProvider, testStorageMap }) => {
         if (!testStorageMap) {
           throw new Error('testStorageMap is required');
         }
@@ -340,7 +340,7 @@ sharedProviderStorageMapFixtures.describe(
 
     sharedProviderStorageMapFixtures(
       'should show RWO warning for Ceph-backed storage classes',
-      async ({ page, testStorageMap, testProvider: _testProvider }) => {
+      async ({ page, testProvider: _testProvider, testStorageMap }) => {
         if (!testStorageMap) {
           throw new Error('testStorageMap is required');
         }

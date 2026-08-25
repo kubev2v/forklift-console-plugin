@@ -9,10 +9,10 @@ import { NetworkMapEditModal } from './PlanDetailsPage/modals/NetworkMapEditModa
 
 export class NetworkMapDetailsPage extends BaseMapDetailsPage {
   protected readonly config: MapDetailsPageConfig = {
-    resourceType: 'NetworkMap',
-    mapTypeDisplay: 'Network map',
     editButtonTestId: 'network-map-edit-button',
+    mapTypeDisplay: 'Network map',
     readyMessage: 'The network map is ready.',
+    resourceType: 'NetworkMap',
   };
 
   public readonly networkMapEditModal: NetworkMapEditModal;
@@ -42,13 +42,13 @@ export class NetworkMapDetailsPage extends BaseMapDetailsPage {
   }): Promise<void> {
     const normalizedData: MapDetailsExpectedData = {
       mapName: expectedData.networkMapName,
-      sourceProvider: expectedData.sourceProvider,
-      targetProvider: expectedData.targetProvider,
       mappings: expectedData.mappings?.map((mapping) => ({
         source: mapping.sourceNetwork,
         target: mapping.targetNetwork,
       })),
+      sourceProvider: expectedData.sourceProvider,
       status: expectedData.status,
+      targetProvider: expectedData.targetProvider,
     };
     await this.verifyMapDetailsPage(normalizedData);
   }

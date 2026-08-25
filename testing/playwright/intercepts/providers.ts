@@ -6,12 +6,6 @@ import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
 export const setupProvidersIntercepts = async (page: Page) => {
   const providersResponse = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
-    kind: 'ProviderList',
-    metadata: {
-      resourceVersion: '12345',
-      continue: '',
-      remainingItemCount: 0,
-    },
     items: [
       {
         apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -26,14 +20,14 @@ export const setupProvidersIntercepts = async (page: Page) => {
           url: TEST_DATA.providers.source.url,
         },
         status: {
-          phase: 'Ready',
           conditions: [
             {
-              type: 'Ready',
-              status: 'True',
               message: 'The provider is ready.',
+              status: 'True',
+              type: 'Ready',
             },
           ],
+          phase: 'Ready',
         },
       },
       {
@@ -49,40 +43,46 @@ export const setupProvidersIntercepts = async (page: Page) => {
           url: TEST_DATA.providers.target.url,
         },
         status: {
-          phase: 'Ready',
           conditions: [
             {
-              type: 'Ready',
-              status: 'True',
               message: 'The provider is ready.',
+              status: 'True',
+              type: 'Ready',
             },
           ],
+          phase: 'Ready',
         },
       },
     ],
+    kind: 'ProviderList',
+    metadata: {
+      continue: '',
+      remainingItemCount: 0,
+      resourceVersion: '12345',
+    },
   };
 
   // Kubernetes API for providers (use API_ENDPOINTS)
   await page.route(API_ENDPOINTS.providers, async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: JSON.stringify(providersResponse),
+      contentType: 'application/json',
+      status: 200,
     });
   });
 
   // Namespaced providers endpoint (handles ?limit=250)
   await page.route(API_ENDPOINTS.providers, async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: JSON.stringify(providersResponse),
+      contentType: 'application/json',
+      status: 200,
     });
   });
 
   // Individual Provider fetch endpoints
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/providers\/[^/?]+$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/providers\/[^/?]+$/u,
     async (route) => {
       if (route.request().method() === 'GET') {
         const url = route.request().url();
@@ -94,9 +94,9 @@ export const setupProvidersIntercepts = async (page: Page) => {
         );
 
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify(provider ?? providersResponse.items[0]),
+          contentType: 'application/json',
+          status: 200,
         });
       }
     },
@@ -105,9 +105,9 @@ export const setupProvidersIntercepts = async (page: Page) => {
   // Provider inventory connections - make sure each provider can be connected to
   await page.route('**/forklift-inventory/providers/*/test', async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: JSON.stringify({ connectionState: 'ok' }),
+      contentType: 'application/json',
+      status: 200,
     });
   });
 
@@ -116,23 +116,23 @@ export const setupProvidersIntercepts = async (page: Page) => {
     API_ENDPOINTS.networks('vsphere', TEST_DATA.providers.source.uid),
     async (route) => {
       await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
         body: JSON.stringify([
           {
-            uid: 'test-network-1-uid',
-            version: '12345',
-            namespace: '',
-            name: 'test-vm-network',
-            selfLink: 'providers/vsphere/test-source-uid-1/networks/test-network-1-uid',
             id: 'test-network-1-uid',
+            name: 'test-vm-network',
+            namespace: '',
             object: {
               name: 'test-vm-network',
               type: 'DistributedVirtualPortgroup',
               vlan: 100,
             },
+            selfLink: 'providers/vsphere/test-source-uid-1/networks/test-network-1-uid',
+            uid: 'test-network-1-uid',
+            version: '12345',
           },
         ]),
+        contentType: 'application/json',
+        status: 200,
       });
     },
   );
@@ -142,33 +142,33 @@ export const setupProvidersIntercepts = async (page: Page) => {
     `**/forklift-inventory/providers/openshift/${TEST_DATA.providers.target.uid}/networkattachmentdefinitions**`,
     async (route) => {
       await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
         body: JSON.stringify([
           {
-            uid: 'test-nad-1-uid',
-            version: '12345',
-            namespace: 'test-target-namespace',
-            name: 'test-multus-bridge',
-            selfLink: `providers/openshift/${TEST_DATA.providers.target.uid}/networkattachmentdefinitions/test-nad-1-uid`,
             id: 'test-nad-1-uid',
+            name: 'test-multus-bridge',
+            namespace: 'test-target-namespace',
             object: {
               apiVersion: 'k8s.cni.cncf.io/v1',
               kind: 'NetworkAttachmentDefinition',
               metadata: {
+                creationTimestamp: '2025-01-01T00:00:00Z',
                 name: 'test-multus-bridge',
                 namespace: 'test-target-namespace',
-                uid: 'test-nad-1-uid',
                 resourceVersion: '12345',
-                creationTimestamp: '2025-01-01T00:00:00Z',
+                uid: 'test-nad-1-uid',
               },
               spec: {
                 config:
                   '{"cniVersion":"0.3.1","name":"test-multus-bridge","type":"bridge","bridge":"br0"}',
               },
             },
+            selfLink: `providers/openshift/${TEST_DATA.providers.target.uid}/networkattachmentdefinitions/test-nad-1-uid`,
+            uid: 'test-nad-1-uid',
+            version: '12345',
           },
         ]),
+        contentType: 'application/json',
+        status: 200,
       });
     },
   );
@@ -176,9 +176,9 @@ export const setupProvidersIntercepts = async (page: Page) => {
   // Fallback catch-all for any missed provider calls (essential for GitHub Actions)
   await page.route('**/api/kubernetes/**/*providers*', async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: JSON.stringify(providersResponse),
+      contentType: 'application/json',
+      status: 200,
     });
   });
 };

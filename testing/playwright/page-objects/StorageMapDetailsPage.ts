@@ -9,10 +9,10 @@ import { StorageMapEditModal } from './PlanDetailsPage/modals/StorageMapEditModa
 
 export class StorageMapDetailsPage extends BaseMapDetailsPage {
   protected readonly config: MapDetailsPageConfig = {
-    resourceType: 'StorageMap',
-    mapTypeDisplay: 'Storage map',
     editButtonTestId: 'storage-map-edit-button',
+    mapTypeDisplay: 'Storage map',
     readyMessage: 'The storage map is ready.',
+    resourceType: 'StorageMap',
   };
 
   public readonly storageMapEditModal: StorageMapEditModal;
@@ -42,13 +42,13 @@ export class StorageMapDetailsPage extends BaseMapDetailsPage {
   }): Promise<void> {
     const normalizedData: MapDetailsExpectedData = {
       mapName: expectedData.storageMapName,
-      sourceProvider: expectedData.sourceProvider,
-      targetProvider: expectedData.targetProvider,
       mappings: expectedData.mappings?.map((mapping) => ({
         source: mapping.sourceStorage,
         target: mapping.targetStorage,
       })),
+      sourceProvider: expectedData.sourceProvider,
       status: expectedData.status,
+      targetProvider: expectedData.targetProvider,
     };
     await this.verifyMapDetailsPage(normalizedData);
   }

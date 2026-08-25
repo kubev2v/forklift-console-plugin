@@ -13,8 +13,8 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
 
   test('should create network map via form and YAML', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     const networkMapsListPage = new NetworkMapsListPage(page);
     const networkMapCreatePage = new NetworkMapCreatePage(page);
@@ -26,10 +26,10 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
     await networkMapCreatePage.fillRequiredFields({
       mapName,
       project: MTV_NAMESPACE,
-      sourceProvider: testProvider.metadata.name,
-      targetProvider: 'host',
       sourceNetwork: 'VM Network',
+      sourceProvider: testProvider.metadata.name,
       targetNetwork: 'Default network',
+      targetProvider: 'host',
     });
     await expect(networkMapCreatePage.createButton).toBeEnabled();
 
@@ -58,13 +58,13 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
 
     // Verify Network details page
     await networkMapDetailsPage.verifyNetworkMapDetailsPage({
-      networkMapName: mapName,
-      sourceProvider: testProvider.metadata.name,
-      targetProvider: 'host',
       mappings: [
         { sourceNetwork: 'VM Network', targetNetwork: 'Default network' },
         { sourceNetwork: 'Mgmt Network', targetNetwork: 'Ignore network' },
       ],
+      networkMapName: mapName,
+      sourceProvider: testProvider.metadata.name,
+      targetProvider: 'host',
     });
 
     // Navigate to YAML tab and copy YAML
@@ -88,19 +88,19 @@ test.describe('Network Maps', { tag: '@downstream' }, () => {
 
     // Verify Network details pagePage
     await networkMapDetailsPage.verifyNetworkMapDetailsPage({
-      networkMapName: newMapName,
-      sourceProvider: testProvider.metadata.name,
-      targetProvider: 'host',
       mappings: [
         { sourceNetwork: 'VM Network', targetNetwork: 'Default network' },
         { sourceNetwork: 'Mgmt Network', targetNetwork: 'Ignore network' },
       ],
+      networkMapName: newMapName,
+      sourceProvider: testProvider.metadata.name,
+      targetProvider: 'host',
     });
 
     await networkMapDetailsPage.deleteMap(newMapName);
     await expect(page).toHaveURL(
-      new RegExp(`/k8s/ns/${MTV_NAMESPACE}/forklift\\.konveyor\\.io~v1beta1~NetworkMap$`),
+      new RegExp(`/k8s/ns/${MTV_NAMESPACE}/forklift\\.konveyor\\.io~v1beta1~NetworkMap$`, 'u'),
     );
-    await expect(page.getByRole('link', { name: newMapName, exact: true })).not.toBeVisible();
+    await expect(page.getByRole('link', { exact: true, name: newMapName })).not.toBeVisible();
   });
 });

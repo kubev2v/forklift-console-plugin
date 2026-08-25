@@ -6,11 +6,19 @@ import type { Page } from '@playwright/test';
  * "console" or similar words cannot trigger a false-positive success match.
  */
 const POST_LOGIN_URL_PATTERN =
-  /^[^?#]*\/(?:dashboards|console|k8s|overview|monitoring|topology|dev-console)(?:\/|$)/;
+  /^[^?#]*\/(?:dashboards|console|k8s|overview|monitoring|topology|dev-console)(?:\/|$)/u;
 
-const OAUTH_ACCESS_DENIED_PATTERN = /reason=access_denied/;
+const OAUTH_ACCESS_DENIED_PATTERN = /reason=access_denied/u;
 
-const LOGIN_ERROR_TEXT = /invalid login or password/i;
+const LOGIN_ERROR_TEXT = /invalid login or password/iu;
+
+const isVisibleOrFalse = async (getVisibility: () => Promise<boolean>): Promise<boolean> => {
+  try {
+    return await getVisibility();
+  } catch {
+    return false;
+  }
+};
 
 export class LoginPage {
   private readonly page: Page;
@@ -64,11 +72,10 @@ export class LoginPage {
         .then(() => 'invalid_credentials' as const),
     ]).catch(async () => {
       const url = this.page.url();
-      const hasLoginError = await loginError.isVisible().catch(() => false);
-      const loginFormVisible = await this.page
-        .locator('#co-login-form')
-        .isVisible()
-        .catch(() => false);
+      const hasLoginError = await isVisibleOrFalse(() => loginError.isVisible());
+      const loginFormVisible = await isVisibleOrFalse(() =>
+        this.page.locator('#co-login-form').isVisible(),
+      );
 
       throw new Error(
         [

@@ -1,7 +1,9 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
+import { testLog } from '../testLog';
 import { isEmpty } from '../utils';
 
+import { apiRequest } from './apiRequest';
 import { BaseResourceManager } from './BaseResourceManager';
 import {
   API_PATHS,
@@ -10,7 +12,7 @@ import {
   RESOURCE_TYPES,
   RESOURCES_FILE,
 } from './constants';
-import type { SupportedResource } from './ResourceManager';
+import type { SupportedResource } from './types';
 
 /**
  * Deletion groups ordered by dependency: resources in later groups may reference
@@ -43,7 +45,7 @@ const CLEANUP_GROUPS = [
 export class ResourceCleaner extends BaseResourceManager {
   static async cleanupAll(resources: SupportedResource[]): Promise<void> {
     if (isEmpty(resources)) {
-      console.log('No resources to cleanup');
+      testLog('No resources to cleanup');
       return;
     }
 
@@ -96,9 +98,7 @@ export class ResourceCleaner extends BaseResourceManager {
     }
 
     if (failureCount > 0) {
-      console.log(
-        `Cleanup: ${deletedCount} deleted, ${skippedCount} skipped, ${failureCount} failed`,
-      );
+      testLog(`Cleanup: ${deletedCount} deleted, ${skippedCount} skipped, ${failureCount} failed`);
     }
   }
 
@@ -136,23 +136,23 @@ export class ResourceCleaner extends BaseResourceManager {
     const HTTP_NOT_FOUND = 404;
     const HTTP_FORBIDDEN = 403;
 
-    const result = await ResourceCleaner.apiRequest<unknown>(buildApiPath(), { method: 'DELETE' });
+    const result = await apiRequest<unknown>(buildApiPath(), { method: 'DELETE' });
 
     if (result.success || result.status === HTTP_NOT_FOUND) {
       return {
-        skipped: result.status === HTTP_NOT_FOUND,
         reason: result.status === HTTP_NOT_FOUND ? 'not found' : undefined,
+        skipped: result.status === HTTP_NOT_FOUND,
       };
     }
 
     if (result.status === HTTP_FORBIDDEN) {
-      console.warn(
+      testLog(
         `Cleanup: DELETE ${resourceName} (${resourceType}) returned 403 Forbidden — skipping`,
       );
-      return { skipped: true, reason: 'deletion forbidden' };
+      return { reason: 'deletion forbidden', skipped: true };
     }
 
-    console.error(`Cleanup: DELETE ${resourceName} (${resourceType}) failed: ${result.error}`);
+    testLog(`Cleanup: DELETE ${resourceName} (${resourceType}) failed: ${result.error}`);
     throw new Error(
       `DELETE ${resourceName} (${resourceType}) failed with HTTP ${result.status}: ${result.error}`,
     );

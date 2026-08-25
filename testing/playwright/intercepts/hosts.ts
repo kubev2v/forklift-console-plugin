@@ -7,38 +7,38 @@ export const setupHostsIntercepts = async (page: Page, sourceProviderType = 'vsp
 
   const responseBody = JSON.stringify([
     {
+      cluster: 'test-cluster-1',
+      datastores: ['test-datastore-1', 'test-datastore-2'],
       id: 'test-host-1',
-      parent: { kind: 'Cluster', id: 'test-cluster-1' },
+      inMaintenance: false,
+      name: 'test-host-1.example.com',
+      networks: ['test-network-1', 'test-network-2'],
+      parent: { id: 'test-cluster-1', kind: 'Cluster' },
       path: '/test/host/test-host-1.example.com/test-host-1.example.com',
       revision: 2,
-      name: 'test-host-1.example.com',
       selfLink: `providers/${sourceProviderType}/test-source-uid-1/hosts/test-host-1`,
-      cluster: 'test-cluster-1',
       status: 'green',
-      inMaintenance: false,
-      networks: ['test-network-1', 'test-network-2'],
-      datastores: ['test-datastore-1', 'test-datastore-2'],
     },
     {
+      cluster: 'test-cluster-1',
+      datastores: ['test-datastore-1', 'test-datastore-2'],
       id: 'test-host-2',
-      parent: { kind: 'Cluster', id: 'test-cluster-1' },
+      inMaintenance: false,
+      name: 'test-host-2.example.com',
+      networks: ['test-network-1', 'test-network-2'],
+      parent: { id: 'test-cluster-1', kind: 'Cluster' },
       path: '/test/host/test-host-2.example.com/test-host-2.example.com',
       revision: 2,
-      name: 'test-host-2.example.com',
       selfLink: `providers/${sourceProviderType}/test-source-uid-1/hosts/test-host-2`,
-      cluster: 'test-cluster-1',
       status: 'green',
-      inMaintenance: false,
-      networks: ['test-network-1', 'test-network-2'],
-      datastores: ['test-datastore-1', 'test-datastore-2'],
     },
   ]);
 
   await page.route(endpoint, async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: responseBody,
+      contentType: 'application/json',
+      status: 200,
     });
   });
 };

@@ -1,7 +1,8 @@
 import { expect, type Page, test } from '@playwright/test';
 
 import { TEST_DATA } from '../../fixtures/test-data';
-import { setupForkliftControllerIntercept, setupForkliftIntercepts } from '../../intercepts';
+import { setupForkliftControllerIntercept } from '../../intercepts/forkliftController';
+import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
 import { StorageMapCreatePage } from '../../page-objects/StorageMapCreatePage';
 import { StorageMapsListPage } from '../../page-objects/StorageMapsListPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
@@ -10,7 +11,7 @@ const setupSecretsIntercept = async (page: Page): Promise<void> => {
   // Playwright globs treat "?" as a single-char wildcard, so avoid "?limit=250".
   // Match list/watch secret requests under the provider project namespace.
   await page.route(
-    new RegExp(`/api/(?:kubernetes/)?api/v1/namespaces/${MTV_NAMESPACE}/secrets(?:\\?.*)?$`),
+    new RegExp(`/api/(?:kubernetes/)?api/v1/namespaces/${MTV_NAMESPACE}/secrets(?:\\?.*)?$`, 'u'),
     async (route) => {
       const request = route.request();
       const url = request.url();
@@ -22,8 +23,6 @@ const setupSecretsIntercept = async (page: Page): Promise<void> => {
       }
 
       await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
         body: JSON.stringify({
           apiVersion: 'v1',
           items: [
@@ -79,6 +78,8 @@ const setupSecretsIntercept = async (page: Page): Promise<void> => {
             resourceVersion: '1',
           },
         }),
+        contentType: 'application/json',
+        status: 200,
       });
     },
   );
@@ -143,7 +144,7 @@ test.describe(
       let submittedBody: Record<string, unknown> | undefined;
 
       await page.route(
-        /\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps$/,
+        /\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps$/u,
         async (route) => {
           if (route.request().method() === 'POST') {
             submittedBody = JSON.parse(route.request().postData() ?? '{}') as Record<
@@ -151,14 +152,14 @@ test.describe(
               unknown
             >;
             await route.fulfill({
-              status: 201,
-              contentType: 'application/json',
               body: JSON.stringify({
                 apiVersion: 'forklift.konveyor.io/v1beta1',
                 kind: 'StorageMap',
                 metadata: { name: mapName, namespace: MTV_NAMESPACE, uid: 'test-uid' },
                 spec: submittedBody.spec,
               }),
+              contentType: 'application/json',
+              status: 201,
             });
           } else {
             await route.continue();

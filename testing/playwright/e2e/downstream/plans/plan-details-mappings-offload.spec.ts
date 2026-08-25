@@ -14,9 +14,9 @@ test.describe('Storage Offloading - Plan Details Mappings Tab', { tag: '@downstr
   requireVersion(test, V2_12_0);
 
   test('should display storage mappings and allow editing offload from plan Mappings tab', async ({
+    createCustomPlan,
     page,
     resourceManager,
-    createCustomPlan,
   }) => {
     test.setTimeout(300_000);
 

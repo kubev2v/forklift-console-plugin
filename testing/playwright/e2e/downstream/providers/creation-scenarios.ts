@@ -31,10 +31,10 @@ export const createProviderData = (
   const uniqueId = crypto.randomUUID().slice(0, 8);
 
   const baseData: ProviderData = {
+    hostname: providerConfig.api_url,
     name: `test-${providerType}-provider-${uniqueId}`,
     projectName: MTV_NAMESPACE,
     type: providerConfig.type,
-    hostname: providerConfig.api_url,
   };
 
   if (providerType !== ProviderType.OVA) {
@@ -74,45 +74,45 @@ export const createProviderData = (
 
 export const providerTestScenarios: ProviderTestScenario[] = [
   {
-    scenarioName: 'vSphere with VDDK AIO optimization enabled',
-    providerType: ProviderType.VSPHERE,
-    providerKey: VSPHERE_KEY,
-    providerDataOverrides: { useVddkAioOptimization: true },
     minVersion: V2_11_0,
+    providerDataOverrides: { useVddkAioOptimization: true },
+    providerKey: VSPHERE_KEY,
+    providerType: ProviderType.VSPHERE,
+    scenarioName: 'vSphere with VDDK AIO optimization enabled',
   },
   {
-    scenarioName: 'vSphere with VDDK AIO optimization disabled',
-    providerType: ProviderType.VSPHERE,
-    providerKey: VSPHERE_KEY,
     providerDataOverrides: { useVddkAioOptimization: false },
+    providerKey: VSPHERE_KEY,
+    providerType: ProviderType.VSPHERE,
+    scenarioName: 'vSphere with VDDK AIO optimization disabled',
     verifyDelete: true,
   },
   {
-    scenarioName: 'OVA provider',
-    providerType: ProviderType.OVA,
-    providerKey: OVA_KEY,
     minVersion: V2_11_0,
+    providerKey: OVA_KEY,
+    providerType: ProviderType.OVA,
+    scenarioName: 'OVA provider',
   },
   {
-    scenarioName: 'oVirt provider',
-    providerType: ProviderType.OVIRT,
     providerKey: OVIRT_KEY,
+    providerType: ProviderType.OVIRT,
+    scenarioName: 'oVirt provider',
   },
   {
-    scenarioName: 'OpenStack provider with password authentication',
-    providerType: ProviderType.OPENSTACK,
     providerKey: OPENSTACK_KEY,
+    providerType: ProviderType.OPENSTACK,
+    scenarioName: 'OpenStack provider with password authentication',
   },
   {
-    scenarioName: 'Amazon EC2 provider with auto-detect target settings',
-    providerType: ProviderType.EC2,
+    minVersion: V2_12_0,
     providerKey: EC2_KEY,
-    minVersion: V2_12_0,
+    providerType: ProviderType.EC2,
+    scenarioName: 'Amazon EC2 provider with auto-detect target settings',
   },
   {
-    scenarioName: 'Hyper-V provider with SMB share',
-    providerType: ProviderType.HYPERV,
-    providerKey: HYPERV_KEY,
     minVersion: V2_12_0,
+    providerKey: HYPERV_KEY,
+    providerType: ProviderType.HYPERV,
+    scenarioName: 'Hyper-V provider with SMB share',
   },
 ];

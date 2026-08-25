@@ -6,22 +6,22 @@ export const setupFoldersIntercepts = async (page: Page, sourceProviderType = 'v
 
   const responseBody = JSON.stringify([
     {
+      children: 0,
+      datacenter: 'test-datacenter-1',
       id: 'test-folder-1',
-      parent: { kind: 'Datacenter', id: 'test-datacenter-1' },
+      name: 'Test Folder 1',
+      parent: { id: 'test-datacenter-1', kind: 'Datacenter' },
       path: '/test/folder/test-folder-1',
       revision: 1,
-      name: 'Test Folder 1',
       selfLink: `providers/${sourceProviderType}/test-source-uid-1/folders/test-folder-1`,
-      datacenter: 'test-datacenter-1',
-      children: 0,
     },
   ]);
 
   await page.route(endpoint, async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: responseBody,
+      contentType: 'application/json',
+      status: 200,
     });
   });
 };

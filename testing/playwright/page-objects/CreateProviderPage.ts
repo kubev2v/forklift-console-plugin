@@ -79,7 +79,7 @@ export class CreateProviderPage {
     this.vddkManualRadio = page.getByTestId('vddk-setup-manual-radio');
     this.vddkSkipRadio = page.getByTestId('vddk-setup-skip-radio');
     this.vddkSkipWarning = page.getByRole('heading', {
-      name: /It is highly recommended to use a VDDK image/,
+      name: /It is highly recommended to use a VDDK image/u,
     });
     this.vddkUploadRadio = page.getByTestId('vddk-setup-upload-radio');
   }
@@ -88,13 +88,13 @@ export class CreateProviderPage {
     if (!isVersionAtLeast(V2_11_0)) {
       if (testData.skipVddk) {
         await this.page
-          .getByRole('checkbox', { name: /Skip VMware Virtual Disk Development Kit/ })
+          .getByRole('checkbox', { name: /Skip VMware Virtual Disk Development Kit/u })
           .check();
         return;
       }
       if (testData.vddkInitImage) {
         await this.page
-          .getByRole('textbox', { name: /VDDK init image/i })
+          .getByRole('textbox', { name: /VDDK init image/iu })
           .fill(testData.vddkInitImage);
       }
       return;
@@ -289,9 +289,9 @@ export class CreateProviderPage {
   async navigate(namespace?: string): Promise<void> {
     await this.navigationHelper.navigateToConsole();
     await this.navigationHelper.navigateToK8sResource({
-      resource: 'Provider',
-      namespace,
       allNamespaces: true,
+      namespace,
+      resource: 'Provider',
     });
     await this.page.waitForLoadState('domcontentloaded');
 

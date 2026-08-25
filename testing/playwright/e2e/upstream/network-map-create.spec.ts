@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { TEST_DATA } from '../../fixtures/test-data';
-import { setupForkliftIntercepts } from '../../intercepts';
+import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
 import { NetworkMapCreatePage } from '../../page-objects/NetworkMapCreatePage';
 import { NetworkMapDetailsPage } from '../../page-objects/NetworkMapDetailsPage';
 import { NetworkMapsListPage } from '../../page-objects/NetworkMapsListPage';
@@ -31,10 +31,10 @@ test.describe(
       await networkMapCreatePage.fillRequiredFields({
         mapName,
         project: MTV_NAMESPACE,
-        sourceProvider: TEST_DATA.providers.source.name,
-        targetProvider: TEST_DATA.providers.target.name,
         sourceNetwork: TEST_DATA.networks[0].name,
+        sourceProvider: TEST_DATA.providers.source.name,
         targetNetwork: 'Default network',
+        targetProvider: TEST_DATA.providers.target.name,
       });
       await expect(networkMapCreatePage.createButton).toBeEnabled();
 
@@ -43,10 +43,10 @@ test.describe(
 
       // Verify Network details page
       await networkMapDetailsPage.verifyNetworkMapDetailsPage({
+        mappings: [{ sourceNetwork: TEST_DATA.networks[0].name, targetNetwork: 'Default network' }],
         networkMapName: mapName,
         sourceProvider: TEST_DATA.providers.source.name,
         targetProvider: TEST_DATA.providers.target.name,
-        mappings: [{ sourceNetwork: TEST_DATA.networks[0].name, targetNetwork: 'Default network' }],
       });
     });
 
@@ -69,10 +69,10 @@ test.describe(
         await networkMapCreatePage.fillRequiredFields({
           mapName,
           project: MTV_NAMESPACE,
-          sourceProvider: TEST_DATA.providers.source.name,
-          targetProvider: TEST_DATA.providers.target.name,
           sourceNetwork,
+          sourceProvider: TEST_DATA.providers.source.name,
           targetNetwork: 'Default network',
+          targetProvider: TEST_DATA.providers.target.name,
         });
         await expect(networkMapCreatePage.createButton).toBeEnabled();
       });

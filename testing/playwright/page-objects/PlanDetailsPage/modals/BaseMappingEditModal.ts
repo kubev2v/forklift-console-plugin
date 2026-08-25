@@ -23,12 +23,12 @@ const stripStorageOptionBadges = (optionText: string): string => {
   return name;
 };
 
-export interface MappingModalConfig {
+export type MappingModalConfig = {
   modalTestId: string;
   modalTitle: string;
   sourceTestIdPattern: (index: number) => string;
   targetTestIdPattern: (index: number) => string;
-}
+};
 
 export abstract class BaseMappingEditModal extends BaseModal {
   readonly addMappingButton: Locator;

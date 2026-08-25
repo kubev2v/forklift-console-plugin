@@ -1,7 +1,8 @@
 import { type Page, test } from '@playwright/test';
 
 import { TEST_DATA } from '../../fixtures/test-data';
-import { setupForkliftIntercepts, setupMigrationVmResourceIntercepts } from '../../intercepts';
+import { setupMigrationVmResourceIntercepts } from '../../intercepts/migrationVmResources';
+import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 

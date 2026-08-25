@@ -10,9 +10,8 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
 
   customPlanTest(
     'should verify VM concerns sorting, badges, filtering, and critical alerts',
-    async ({ page, createCustomPlan, resourceManager }) => {
+    async ({ createCustomPlan, page, resourceManager }) => {
       const testPlan = await createCustomPlan({
-        virtualMachines: [{ folder: 'vm' }],
         criticalIssuesAction: 'confirm',
         networkMap: {
           isPreexisting: false,
@@ -22,6 +21,7 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
             { source: 'cnv-test', target: 'Ignore network' },
           ],
         },
+        virtualMachines: [{ folder: 'vm' }],
       });
 
       const planDetailsPage = new PlanDetailsPage(page);
@@ -92,12 +92,12 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
         const [firstVm] = vms;
         const patchedPlan = await resourceManager.patchResource({
           kind: 'Plan',
-          resourceName: planName,
           namespace: planNamespace,
           patch: [
             { op: 'add', path: '/spec/vms/-', value: { id: firstVm.id, name: firstVm.name } },
           ],
           patchType: 'json',
+          resourceName: planName,
         });
         expect(patchedPlan).not.toBeNull();
 
@@ -114,7 +114,7 @@ customPlanTest.describe('Plan Details - VM Concerns', { tag: '@downstream' }, ()
 
         await expect(planDetailsPage.concernsDrawerPanel).toBeVisible();
         const drawerTitle = planDetailsPage.concernsDrawerPanel.getByRole('heading', { level: 2 });
-        await expect(drawerTitle).toContainText(/concerns/i);
+        await expect(drawerTitle).toContainText(/concerns/iu);
 
         await planDetailsPage.closeConcernsDrawer();
       });

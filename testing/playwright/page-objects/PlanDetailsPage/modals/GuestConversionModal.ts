@@ -32,7 +32,7 @@ export class GuestConversionModal extends BaseModal {
 
   async verifyCompatibilityWarningMessage(): Promise<void> {
     const compatibilityWarningMessage = this.modal.getByText(
-      /If you don't use compatibility mode, you must have VirtIO drivers already installed in the source VM./,
+      /If you don't use compatibility mode, you must have VirtIO drivers already installed in the source VM./u,
     );
     await expect(compatibilityWarningMessage).toBeVisible();
   }
@@ -48,7 +48,7 @@ export class GuestConversionModal extends BaseModal {
 
   async verifySkipWarningMessage(): Promise<void> {
     const skipWarningMessage = this.modal.getByText(
-      /If skipped, the VMs' disk data will be duplicated byte-for-byte, allowing for faster conversions. However, there is a risk that the VMs might not function properly and it is not recommended./,
+      /If skipped, the VMs' disk data will be duplicated byte-for-byte, allowing for faster conversions. However, there is a risk that the VMs might not function properly and it is not recommended./u,
     );
     await expect(skipWarningMessage).toBeVisible();
   }

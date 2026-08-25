@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 
-import { setupForkliftIntercepts } from '../../intercepts';
+import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
@@ -24,14 +24,14 @@ test.describe(
       const planDetailsPage = new PlanDetailsPage(page);
 
       const testData = createPlanTestData({
+        description: 'Test plan for automated testing',
+        networkMap: { isPreexisting: true, name: 'test-network-map-1' },
         planName: 'test-create-plan',
         planProject: MTV_NAMESPACE,
-        description: 'Test plan for automated testing',
         sourceProvider,
+        storageMap: { isPreexisting: true, name: 'test-storage-map-1' },
+        targetProject: { isPreexisting: true, name: 'test-target-project' },
         targetProvider: 'test-target-provider',
-        targetProject: { name: 'test-target-project', isPreexisting: true },
-        networkMap: { name: 'test-network-map-1', isPreexisting: true },
-        storageMap: { name: 'test-storage-map-1', isPreexisting: true },
         virtualMachines: [{ sourceName: 'test-virtual-machine-1' }],
       });
 

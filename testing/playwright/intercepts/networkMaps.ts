@@ -8,18 +8,18 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'NetworkMap',
     metadata: {
+      creationTimestamp: '2024-01-15T10:30:00Z',
       name: 'test-network-map-1',
       namespace: MTV_NAMESPACE,
-      uid: 'test-netmap-uid-1',
-      creationTimestamp: '2024-01-15T10:30:00Z',
       ownerReferences: [],
+      uid: 'test-netmap-uid-1',
     },
     spec: {
       map: [
         {
           destination: {
-            type: 'pod',
             name: 'Default network',
+            type: 'pod',
           },
           source: {
             id: 'test-network-1-uid',
@@ -41,9 +41,9 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     status: {
       conditions: [
         {
-          type: 'Ready',
-          status: 'True',
           message: 'The network map is ready.',
+          status: 'True',
+          type: 'Ready',
         },
       ],
     },
@@ -53,20 +53,20 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'NetworkMap',
     metadata: {
+      creationTimestamp: '2024-01-15T10:35:00Z',
       name: 'test-network-map-2',
       namespace: MTV_NAMESPACE,
-      uid: 'test-netmap-uid-2',
-      creationTimestamp: '2024-01-15T10:35:00Z',
       ownerReferences: [
         {
           apiVersion: 'forklift.konveyor.io/v1beta1',
+          blockOwnerDeletion: true,
+          controller: true,
           kind: 'Plan',
           name: 'test-plan-2',
           uid: 'test-plan-uid-2',
-          controller: true,
-          blockOwnerDeletion: true,
         },
       ],
+      uid: 'test-netmap-uid-2',
     },
     spec: {
       map: [
@@ -93,9 +93,9 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     status: {
       conditions: [
         {
-          type: 'Ready',
-          status: 'True',
           message: 'The network map is ready.',
+          status: 'True',
+          type: 'Ready',
         },
       ],
     },
@@ -107,9 +107,9 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     async (route) => {
       if (route.request().method() === 'GET') {
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify(networkMapData1),
+          contentType: 'application/json',
+          status: 200,
         });
       } else {
         await route.continue();
@@ -119,30 +119,30 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
 
   // NetworkMap creation (POST request)
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/(?:openshift-mtv|konveyor-forklift)\/networkmaps$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/(?:openshift-mtv|konveyor-forklift)\/networkmaps$/u,
     async (route) => {
       if (route.request().method() === 'POST') {
         const requestBody = JSON.parse(route.request().postData() ?? '{}') as {
           metadata?: { name?: string; namespace?: string };
-          spec?: any;
+          spec?: unknown;
         };
         const newName = requestBody.metadata?.name ?? 'test-create-network-map';
         const namespace = requestBody.metadata?.namespace ?? 'konveyor-forklift';
 
         await route.fulfill({
-          status: 201,
-          contentType: 'application/json',
           body: JSON.stringify({
             ...networkMapData1,
             metadata: {
               ...networkMapData1.metadata,
+              creationTimestamp: new Date().toISOString(),
               name: newName,
               namespace,
               uid: `test-networkmap-uid-${crypto.randomUUID().slice(0, 8)}`,
-              creationTimestamp: new Date().toISOString(),
             },
             spec: requestBody.spec ?? networkMapData1.spec,
           }),
+          contentType: 'application/json',
+          status: 201,
         });
       } else {
         await route.continue();
@@ -152,7 +152,7 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
 
   // NetworkMap GET/PATCH requests
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/(?:openshift-mtv|konveyor-forklift)\/networkmaps\/[^/?]*$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/(?:openshift-mtv|konveyor-forklift)\/networkmaps\/[^/?]*$/u,
     async (route) => {
       const parseUrl = (url: string) => {
         const urlParts = url.split('/');
@@ -166,32 +166,30 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
         const { name, namespace } = parseUrl(route.request().url());
 
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify({
             ...networkMapData1,
             metadata: {
               ...networkMapData1.metadata,
+              creationTimestamp: new Date().toISOString(),
               name,
               namespace,
               uid: `test-networkmap-uid-${name}`,
-              creationTimestamp: new Date().toISOString(),
             },
           }),
+          contentType: 'application/json',
+          status: 200,
         });
       } else if (route.request().method() === 'PATCH') {
         const { name, namespace } = parseUrl(route.request().url());
 
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify({
             ...networkMapData1,
             metadata: {
               ...networkMapData1.metadata,
+              creationTimestamp: new Date().toISOString(),
               name,
               namespace,
-              creationTimestamp: new Date().toISOString(),
               ownerReferences: [
                 {
                   apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -202,6 +200,8 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
               ],
             },
           }),
+          contentType: 'application/json',
+          status: 200,
         });
       } else {
         await route.continue();
@@ -211,12 +211,12 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
 
   await page.route(API_ENDPOINTS.networkMaps, async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: JSON.stringify({
         apiVersion: 'forklift.konveyor.io/v1beta1',
         items: [networkMapData1, networkMapData2],
       }),
+      contentType: 'application/json',
+      status: 200,
     });
   });
 };

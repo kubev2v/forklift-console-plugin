@@ -12,8 +12,8 @@ test.describe('Plan AAP Hooks', { tag: '@downstream' }, () => {
 
   test('should display hook source radio options and switch between modes', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     await disableGuidedTour(page);
 

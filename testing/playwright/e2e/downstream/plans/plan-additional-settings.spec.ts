@@ -13,14 +13,14 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
 
   test('should set power state on plan creation, plan details tab, and VMs tab', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     const testData: PlanTestData = createPlanTestData({
-      sourceProvider: testProvider?.metadata?.name ?? '',
       additionalPlanSettings: {
         targetPowerState: 'on',
       },
+      sourceProvider: testProvider?.metadata?.name ?? '',
     });
     resourceManager.addPlan(testData.planName, testData.planProject);
 
@@ -93,8 +93,8 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
 
   test('should edit shared disks on plan details and override per-VM', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }, testInfo) => {
     testInfo.skip(!isVersionAtLeast(V2_12_0), 'Shared disks requires Forklift 2.12.0+');
     const testData: PlanTestData = createPlanTestData({
@@ -154,14 +154,14 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
 
   test('should set NBDE/Clevis on plan creation and edit from details page', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     const testData: PlanTestData = createPlanTestData({
-      sourceProvider: testProvider?.metadata?.name ?? '',
       additionalPlanSettings: {
         useNbdeClevis: true,
       },
+      sourceProvider: testProvider?.metadata?.name ?? '',
     });
     resourceManager.addPlan(testData.planName, testData.planProject);
 
@@ -214,8 +214,8 @@ test.describe('Plan additional settings - PR #2292', { tag: '@downstream' }, () 
 
   test('should edit preserve static IPs and shared disks from details page', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     const testData: PlanTestData = createPlanTestData({
       sourceProvider: testProvider?.metadata?.name ?? '',
@@ -274,17 +274,17 @@ test.describe('Plan additional settings - PR #2292', { tag: '@downstream' }, () 
   });
 
   test('should show validation error when selecting warm migration with provider without VDDK', async ({
-    page,
     createCustomProvider,
+    page,
     resourceManager,
   }) => {
     // Create a provider without VDDK image
     const providerWithoutVddk = await createCustomProvider({
-      providerKey: 'vsphere-8.0.1',
-      namePrefix: 'vddk-validation-test',
       customProviderData: {
         skipVddk: true,
       },
+      namePrefix: 'vddk-validation-test',
+      providerKey: 'vsphere-8.0.1',
     });
 
     const testData: PlanTestData = createPlanTestData({

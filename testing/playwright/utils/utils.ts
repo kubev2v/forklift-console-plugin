@@ -18,7 +18,7 @@ import {
  */
 export const disableGuidedTour = async (page: Page): Promise<void> => {
   // Use .first() to avoid strict-mode crashes if two skip buttons are briefly in the DOM.
-  const skipButton = page.getByRole('button', { name: /skip tour/i }).first();
+  const skipButton = page.getByRole('button', { name: /skip tour/iu }).first();
 
   try {
     await skipButton.waitFor({ state: 'visible', timeout: GUIDED_TOUR_VISIBLE_TIMEOUT_MS });

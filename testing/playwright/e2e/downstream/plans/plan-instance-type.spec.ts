@@ -61,7 +61,7 @@ const pickAndSaveNonNoneInstanceType = async (
   await virtualMachinesTab.instanceTypeModalSelect.click();
   const listbox = page.getByRole('listbox');
   await expect(listbox).toBeVisible();
-  const nonNoneOption = listbox.getByRole('option').filter({ hasNotText: /^None/ }).first();
+  const nonNoneOption = listbox.getByRole('option').filter({ hasNotText: /^None/u }).first();
   const picked = (await nonNoneOption.innerText()).split('\n')[0]?.trim() ?? '';
   if (!picked) {
     throw new Error('pickAndSaveNonNoneInstanceType: no non-None option available');
@@ -78,8 +78,8 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
 
   test('should set instance types during plan creation and verify in review', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     const testData: PlanTestData = createPlanTestData({
       sourceProvider: testProvider?.metadata?.name ?? '',
@@ -125,8 +125,8 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
 
   test('should set instance type from plan details VM kebab menu', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     const { planDetailsPage, vmName } =
       await test.step('Create plan and navigate to VMs tab', async () =>
@@ -147,7 +147,7 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
       await virtualMachinesTab.instanceTypeModalSelect.click();
       const listbox = page.getByRole('listbox');
       await expect(listbox).toBeVisible();
-      const nonNoneOption = listbox.getByRole('option').filter({ hasNotText: /^None/ }).first();
+      const nonNoneOption = listbox.getByRole('option').filter({ hasNotText: /^None/u }).first();
       const picked = (await nonNoneOption.innerText()).split('\n')[0]?.trim() ?? '';
       await nonNoneOption.click();
       await virtualMachinesTab.instanceTypeModalSaveButton.click();
@@ -158,8 +158,8 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
 
   test('should cancel instance type modal without saving changes', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     const { planDetailsPage, vmName } =
       await test.step('Create plan and navigate to VMs tab', async () =>
@@ -171,14 +171,14 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
     await test.step('Cancel preserves the existing instance type', async () => {
       await virtualMachinesTab.openInstanceTypeDialog(vmName);
       await virtualMachinesTab.instanceTypeModalSelect.click();
-      await page.getByRole('option', { name: /^None/ }).click();
+      await page.getByRole('option', { name: /^None/u }).click();
       await page.getByTestId('modal-cancel-button').click();
       await expect(virtualMachinesTab.editInstanceTypeModal).not.toBeVisible();
       await virtualMachinesTab.waitForVMInstanceType(vmName, picked);
     });
   });
 
-  test('should clear instance type to None', async ({ page, testProvider, resourceManager }) => {
+  test('should clear instance type to None', async ({ page, resourceManager, testProvider }) => {
     const { planDetailsPage, vmName } =
       await test.step('Create plan and navigate to VMs tab', async () =>
         createReadyPlan(page, testProvider, resourceManager));
@@ -189,7 +189,7 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
     await test.step('Select None and save clears instance type', async () => {
       await virtualMachinesTab.openInstanceTypeDialog(vmName);
       await virtualMachinesTab.instanceTypeModalSelect.click();
-      await page.getByRole('option', { name: /^None/ }).click();
+      await page.getByRole('option', { name: /^None/u }).click();
       await virtualMachinesTab.instanceTypeModalSaveButton.click();
       await expect(virtualMachinesTab.editInstanceTypeModal).not.toBeVisible();
       await virtualMachinesTab.waitForVMInstanceType(vmName, '-');

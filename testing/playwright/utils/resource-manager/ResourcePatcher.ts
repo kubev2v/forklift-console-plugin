@@ -2,7 +2,7 @@ import type { V1beta1ForkliftController, V1beta1Provider } from '@forklift-ui/ty
 
 import { BaseResourceManager } from './BaseResourceManager';
 import { API_PATHS, MTV_NAMESPACE, RESOURCE_KINDS, RESOURCE_TYPES } from './constants';
-import type { SupportedResource } from './ResourceManager';
+import type { SupportedResource } from './types';
 
 /**
  * JSON Patch operation for RFC 6902.
@@ -35,10 +35,10 @@ export class ResourcePatcher extends BaseResourceManager {
   ): Promise<V1beta1ForkliftController | null> {
     return ResourcePatcher.patchResource<V1beta1ForkliftController>({
       kind: RESOURCE_KINDS.FORKLIFT_CONTROLLER,
-      resourceName: controllerName,
       namespace,
       patch,
       patchType: 'json',
+      resourceName: controllerName,
     });
   }
 
@@ -49,9 +49,9 @@ export class ResourcePatcher extends BaseResourceManager {
   ): Promise<V1beta1Provider | null> {
     return ResourcePatcher.patchResource<V1beta1Provider>({
       kind: RESOURCE_KINDS.PROVIDER,
-      resourceName: providerName,
       namespace,
       patch,
+      resourceName: providerName,
     });
   }
 
@@ -62,7 +62,7 @@ export class ResourcePatcher extends BaseResourceManager {
     patchType?: PatchType;
     resourceName: string;
   }): Promise<T | null> {
-    const { kind, resourceName, namespace, patch, patchType = 'merge' } = options;
+    const { kind, namespace, patch, patchType = 'merge', resourceName } = options;
     const resourceType = ResourcePatcher.getResourceTypeFromKind(kind);
     const contentType =
       patchType === 'json' ? 'application/json-patch+json' : 'application/merge-patch+json';

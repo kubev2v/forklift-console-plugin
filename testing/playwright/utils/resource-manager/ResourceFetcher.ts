@@ -7,6 +7,8 @@ import type {
   V1VirtualMachine,
 } from '@forklift-ui/types';
 
+import { testLog } from '../testLog';
+
 import { BaseResourceManager } from './BaseResourceManager';
 import {
   API_PATHS,
@@ -16,7 +18,7 @@ import {
   OPERATOR_CSV_PREFIXES,
   RESOURCE_KINDS,
 } from './constants';
-import type { SupportedResource } from './ResourceManager';
+import type { SupportedResource } from './types';
 
 /**
  * Handles fetching resources from Kubernetes APIs.
@@ -38,8 +40,8 @@ export class ResourceFetcher extends BaseResourceManager {
   ): Promise<V1beta1ForkliftController | null> {
     return ResourceFetcher.fetchResource<V1beta1ForkliftController>({
       kind: RESOURCE_KINDS.FORKLIFT_CONTROLLER,
-      resourceName: controllerName,
       namespace,
+      resourceName: controllerName,
     });
   }
 
@@ -53,8 +55,8 @@ export class ResourceFetcher extends BaseResourceManager {
   ): Promise<V1beta1NetworkMap | null> {
     return ResourceFetcher.fetchResource<V1beta1NetworkMap>({
       kind: RESOURCE_KINDS.NETWORK_MAP,
-      resourceName: networkMapName,
       namespace,
+      resourceName: networkMapName,
     });
   }
 
@@ -78,7 +80,7 @@ export class ResourceFetcher extends BaseResourceManager {
     );
 
     if (!csv?.spec?.version) {
-      console.error(`${operatorLabel} CSV not found among cluster service versions`);
+      testLog(`${operatorLabel} CSV not found among cluster service versions`);
       return null;
     }
 
@@ -88,8 +90,8 @@ export class ResourceFetcher extends BaseResourceManager {
   static async fetchPlan(planName: string, namespace = MTV_NAMESPACE): Promise<V1beta1Plan | null> {
     return ResourceFetcher.fetchResource<V1beta1Plan>({
       kind: RESOURCE_KINDS.PLAN,
-      resourceName: planName,
       namespace,
+      resourceName: planName,
     });
   }
 
@@ -99,8 +101,8 @@ export class ResourceFetcher extends BaseResourceManager {
   ): Promise<V1beta1Provider | null> {
     return ResourceFetcher.fetchResource<V1beta1Provider>({
       kind: RESOURCE_KINDS.PROVIDER,
-      resourceName: providerName,
       namespace,
+      resourceName: providerName,
     });
   }
 
@@ -125,8 +127,8 @@ export class ResourceFetcher extends BaseResourceManager {
   ): Promise<V1beta1StorageMap | null> {
     return ResourceFetcher.fetchResource<V1beta1StorageMap>({
       kind: RESOURCE_KINDS.STORAGE_MAP,
-      resourceName: storageMapName,
       namespace,
+      resourceName: storageMapName,
     });
   }
 
@@ -136,8 +138,8 @@ export class ResourceFetcher extends BaseResourceManager {
   ): Promise<V1VirtualMachine | null> {
     return ResourceFetcher.fetchResource<V1VirtualMachine>({
       kind: RESOURCE_KINDS.VIRTUAL_MACHINE,
-      resourceName: vmName,
       namespace,
+      resourceName: vmName,
     });
   }
 }

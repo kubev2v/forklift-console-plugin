@@ -24,7 +24,7 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     const folderRow = treegrid.getByRole('row').filter({
       has: this.page.getByText(folder, { exact: true }),
     });
-    const expandButton = folderRow.first().getByRole('button', { name: /Expand row/i });
+    const expandButton = folderRow.first().getByRole('button', { name: /Expand row/iu });
     if (await expandButton.isVisible().catch(() => false)) {
       const expanded = await expandButton.getAttribute('aria-expanded');
       if (expanded === 'false') {

@@ -3,7 +3,7 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { CredentialEditModal } from '../modals/CredentialEditModal';
 
 /** Pattern to match masked credential values (5+ asterisks) */
-const MASKED_PATTERN = /\*{5,}/;
+const MASKED_PATTERN = /\*{5,}/u;
 
 /**
  * Page object for the Provider Credentials tab.

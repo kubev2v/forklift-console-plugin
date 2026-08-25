@@ -24,15 +24,15 @@ export class ResourcesTab {
   }
 
   get rowTotalCpuCount(): Locator {
-    return this.table.locator('tbody').getByRole('row', { name: /Total CPU count/ });
+    return this.table.locator('tbody').getByRole('row', { name: /Total CPU count/u });
   }
 
   get rowTotalMemory(): Locator {
-    return this.table.locator('tbody').getByRole('row', { name: /Total memory/ });
+    return this.table.locator('tbody').getByRole('row', { name: /Total memory/u });
   }
 
   get rowVirtualMachines(): Locator {
-    return this.table.locator('tbody').getByRole('row', { name: /Virtual machines/ });
+    return this.table.locator('tbody').getByRole('row', { name: /Virtual machines/u });
   }
 
   get tab(): Locator {
@@ -53,25 +53,25 @@ export class ResourcesTab {
         'resources-cpu-total',
         'resources-memory-total',
       ]) {
-        await expect(this.page.getByTestId(testId)).toContainText(/\d/);
+        await expect(this.page.getByTestId(testId)).toContainText(/\d/u);
       }
       for (const testId of [
         'resources-vms-running',
         'resources-cpu-running',
         'resources-memory-running',
       ]) {
-        await expect(this.page.getByTestId(testId)).toContainText(/\d|-/);
+        await expect(this.page.getByTestId(testId)).toContainText(/\d|-/u);
       }
     } else {
-      await expect(this.rowVirtualMachines).toContainText(/\d/);
-      await expect(this.rowTotalCpuCount).toContainText(/\d/);
-      await expect(this.rowTotalMemory).toContainText(/\d/);
+      await expect(this.rowVirtualMachines).toContainText(/\d/u);
+      await expect(this.rowTotalCpuCount).toContainText(/\d/u);
+      await expect(this.rowTotalMemory).toContainText(/\d/u);
     }
   }
 
   async verifyResourcesTabSelected(): Promise<void> {
     await expect(this.tab).toHaveAttribute('aria-selected', 'true');
-    await expect(this.page).toHaveURL(/\/resources(?:\?|$)/);
+    await expect(this.page).toHaveURL(/\/resources(?:\?|$)/u);
   }
 
   async verifyTableStructure(): Promise<void> {

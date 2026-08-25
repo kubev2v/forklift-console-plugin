@@ -9,11 +9,11 @@ export const AI_PROMPT_QUESTIONS = [
   "Why aren't my VMs working after migration?",
 ] as const;
 
-export interface TopicConfig {
-  name: string;
+export type TopicConfig = {
   description: string;
   minimumAccordions?: number;
-}
+  name: string;
+};
 
 /**
  * Page object for the Learning Experience (Tips and tricks) drawer.
@@ -44,7 +44,7 @@ export class LearningExperienceDrawer {
   }
 
   get askAIHeading(): Locator {
-    return this.page.getByRole('heading', { name: 'Ask AI assistant', level: 4 });
+    return this.page.getByRole('heading', { level: 4, name: 'Ask AI assistant' });
   }
 
   async close(): Promise<void> {
@@ -61,11 +61,11 @@ export class LearningExperienceDrawer {
   }
 
   get drawerTitle(): Locator {
-    return this.page.getByRole('heading', { name: 'Tips and tricks', level: 2 });
+    return this.page.getByRole('heading', { level: 2, name: 'Tips and tricks' });
   }
 
   getExternalLinksHeading(): Locator {
-    return this.drawerPanel.getByRole('heading', { name: 'External links', level: 3 });
+    return this.drawerPanel.getByRole('heading', { level: 3, name: 'External links' });
   }
 
   getKeyConsiderationsButton(): Locator {
@@ -89,20 +89,20 @@ export class LearningExperienceDrawer {
   }
 
   getQuickReferenceHeading(): Locator {
-    return this.page.getByRole('heading', { name: 'Quick reference', level: 3 });
+    return this.page.getByRole('heading', { level: 3, name: 'Quick reference' });
   }
 
   getQuickReferenceItemHeading(itemName: string): Locator {
-    return this.page.getByRole('heading', { name: itemName, level: 4 });
+    return this.page.getByRole('heading', { level: 4, name: itemName });
   }
 
   getStepButton(stepNumber: number): Locator {
-    return this.page.getByRole('button', { name: new RegExp(String.raw`^${stepNumber}\.`) });
+    return this.page.getByRole('button', { name: new RegExp(String.raw`^${stepNumber}\.`, 'u') });
   }
 
   async navigateToResource(resource: string, expectedHeading: string): Promise<void> {
-    await this.navigation.navigateToK8sResource({ resource, allNamespaces: true });
-    await expect(this.page.getByRole('heading', { name: expectedHeading, level: 1 })).toBeVisible();
+    await this.navigation.navigateToK8sResource({ allNamespaces: true, resource });
+    await expect(this.page.getByRole('heading', { level: 1, name: expectedHeading })).toBeVisible();
   }
 
   async navigateToTopic(nextTopicName: string): Promise<void> {
@@ -135,9 +135,9 @@ export class LearningExperienceDrawer {
     await expect(this.closeDrawerButton).toBeVisible();
 
     return {
+      closeDrawerButton: this.closeDrawerButton,
       drawerTitle: this.drawerTitle,
       selectTopicButton: this.selectTopicButton,
-      closeDrawerButton: this.closeDrawerButton,
     };
   }
 
@@ -157,7 +157,7 @@ export class LearningExperienceDrawer {
   async selectTopicByCard(topicConfig: TopicConfig): Promise<void> {
     await this.page.getByTestId('topic-card').filter({ hasText: topicConfig.name }).click();
     await expect(
-      this.page.getByRole('heading', { name: topicConfig.name, level: 3 }),
+      this.page.getByRole('heading', { level: 3, name: topicConfig.name }),
     ).toBeVisible();
   }
 
@@ -254,7 +254,7 @@ export class LearningExperienceDrawer {
   }
 
   async verifyTopicHeading(topicName: string): Promise<void> {
-    await expect(this.page.getByRole('heading', { name: topicName, level: 3 })).toBeVisible();
+    await expect(this.page.getByRole('heading', { level: 3, name: topicName })).toBeVisible();
   }
 
   async verifyTopicNamesVisible(topics: TopicConfig[]): Promise<void> {

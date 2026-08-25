@@ -28,12 +28,7 @@ const test = sharedProviderFixtures.extend<{ testPlan: Awaited<ReturnType<typeof
       throw new Error('testPlan fixture requires testProvider');
     }
     const plan = await createPlan(page, resourceManager, {
-      sourceProvider: testProvider,
       customPlanData: {
-        virtualMachines: [
-          { folder: 'vm', sourceName: INSPECTED_VM },
-          { folder: 'vm', sourceName: SELECT_ALL_PEER_VM },
-        ],
         // mtv-func-win2022 has 2 NICs; explicit mappings avoid the duplicate-Default-Network validation error.
         networkMap: {
           mappings: [
@@ -41,7 +36,12 @@ const test = sharedProviderFixtures.extend<{ testPlan: Awaited<ReturnType<typeof
             { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.IGNORE },
           ],
         },
+        virtualMachines: [
+          { folder: 'vm', sourceName: INSPECTED_VM },
+          { folder: 'vm', sourceName: SELECT_ALL_PEER_VM },
+        ],
       },
+      sourceProvider: testProvider,
     });
     await setValue(plan);
   },

@@ -61,18 +61,18 @@ export class NetworkMapStep {
   } {
     if (isVersionAtLeast(V2_11_0)) {
       return {
-        rows: getMappingWizardFieldRows(this.page),
         getRowText: (row: Locator) => row.textContent(),
         getTargetSelect: (row: Locator) => row.getByTestId('network-map-target-network-select'),
+        rows: getMappingWizardFieldRows(this.page),
       };
     }
 
     const grid = this.page.getByRole('grid');
     const bodyRowGroup = grid.getByRole('rowgroup').nth(1);
     return {
-      rows: bodyRowGroup.getByRole('row'),
       getRowText: (row: Locator) => row.getByRole('gridcell').first().textContent(),
       getTargetSelect: (row: Locator) => row.getByRole('gridcell').nth(1).getByRole('button'),
+      rows: bodyRowGroup.getByRole('row'),
     };
   }
 
@@ -96,7 +96,7 @@ export class NetworkMapStep {
     alreadyConfiguredSources: string[],
     usedTargets: Set<string>,
   ): Promise<void> {
-    const { rows, getRowText, getTargetSelect } = this.getMappingRowLocators();
+    const { getRowText, getTargetSelect, rows } = this.getMappingRowLocators();
     const rowCount = await rows.count();
 
     for (let i = 0; i < rowCount; i += 1) {
@@ -140,7 +140,7 @@ export class NetworkMapStep {
         (option.name === preferredName || option.name.endsWith(`/${preferredName}`)),
     );
     if (preferred) {
-      await this.page.getByRole('option', { name: preferred.name, exact: true }).click();
+      await this.page.getByRole('option', { exact: true, name: preferred.name }).click();
       usedTargets.add(preferred.name);
       return;
     }
@@ -153,7 +153,7 @@ export class NetworkMapStep {
         !usedTargets.has(option.name),
     );
     if (fallback) {
-      await this.page.getByRole('option', { name: fallback.name, exact: true }).click();
+      await this.page.getByRole('option', { exact: true, name: fallback.name }).click();
       usedTargets.add(fallback.name);
       return;
     }
@@ -183,9 +183,9 @@ export class NetworkMapStep {
           );
         },
         {
-          timeout: NAD_OPTION_INVENTORY_TIMEOUT_MS,
           message:
             'Timed out waiting for selectable target networks (NADs). Multi-NIC rows hide Default/Ignore until NADs exist in the target namespace.',
+          timeout: NAD_OPTION_INVENTORY_TIMEOUT_MS,
         },
       )
       .toBe(true);
@@ -254,7 +254,7 @@ export class NetworkMapStep {
     targetNetwork: string,
     usedTargets: Set<string> = new Set<string>(),
   ): Promise<void> {
-    const { rows, getRowText, getTargetSelect } = this.getMappingRowLocators();
+    const { getRowText, getTargetSelect, rows } = this.getMappingRowLocators();
     const availableNetworks = await waitForMappingSourceRows(rows, getRowText);
     const rowCount = await rows.count();
 

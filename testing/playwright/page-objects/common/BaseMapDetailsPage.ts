@@ -11,30 +11,30 @@ import { DeleteResourceModal } from './DeleteResourceModal';
 /**
  * Configuration for a map details page.
  */
-export interface MapDetailsPageConfig {
-  /** The K8s resource type (e.g., 'StorageMap', 'NetworkMap') */
-  resourceType: 'StorageMap' | 'NetworkMap';
-  /** The display name for the map type (e.g., 'Storage map', 'Network map') */
-  mapTypeDisplay: string;
+export type MapDetailsPageConfig = {
   /** The data-testid for the edit button */
   editButtonTestId: string;
+  /** The display name for the map type (e.g., 'Storage map', 'Network map') */
+  mapTypeDisplay: string;
   /** The ready message text */
   readyMessage: string;
-}
+  /** The K8s resource type (e.g., 'StorageMap', 'NetworkMap') */
+  resourceType: 'StorageMap' | 'NetworkMap';
+};
 
 /**
  * Expected data for verifying a map details page.
  */
-export interface MapDetailsExpectedData {
+export type MapDetailsExpectedData = {
   mapName: string;
-  sourceProvider: string;
-  targetProvider: string;
   mappings?: {
     source: string;
     target: string;
   }[];
+  sourceProvider: string;
   status?: 'Ready' | 'NotReady';
-}
+  targetProvider: string;
+};
 
 /**
  * Base class for map details pages (Storage and Network).
@@ -56,7 +56,7 @@ export abstract class BaseMapDetailsPage {
   }
 
   protected actionsMenuToggleLocator(): Locator {
-    return this.page.getByRole('button', { name: 'Actions', exact: true });
+    return this.page.getByRole('button', { exact: true, name: 'Actions' });
   }
 
   protected editButtonLocator(): Locator {
@@ -89,9 +89,9 @@ export abstract class BaseMapDetailsPage {
 
   async navigate(mapName: string, namespace = MTV_NAMESPACE): Promise<void> {
     await this.navigationHelper.navigateToK8sResource({
-      resource: this.config.resourceType,
       name: mapName,
       namespace,
+      resource: this.config.resourceType,
     });
   }
 
@@ -103,15 +103,16 @@ export abstract class BaseMapDetailsPage {
   async verifyMapDetailsPage(expectedData: MapDetailsExpectedData): Promise<void> {
     const urlPattern = new RegExp(
       String.raw`/k8s/ns/[^/]+/forklift\.konveyor\.io~v1beta1~${this.config.resourceType}/${expectedData.mapName}$`,
+      'u',
     );
     await expect(this.page).toHaveURL(urlPattern);
 
     await expect(this.page).toHaveTitle(
-      new RegExp(`${expectedData.mapName}.*${this.config.mapTypeDisplay}.*Details`, 'i'),
+      new RegExp(`${expectedData.mapName}.*${this.config.mapTypeDisplay}.*Details`, 'iu'),
     );
     await expect(
       this.page.getByRole('heading', {
-        name: new RegExp(`${this.config.resourceType}.*${expectedData.mapName}`),
+        name: new RegExp(`${this.config.resourceType}.*${expectedData.mapName}`, 'u'),
       }),
     ).toBeVisible();
 

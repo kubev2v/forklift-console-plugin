@@ -31,18 +31,18 @@ export class StorageMapStep {
   } {
     if (isVersionAtLeast(V2_11_0)) {
       return {
-        rows: getMappingWizardFieldRows(this.page),
         getSourceText: (row: Locator) => row.locator('td').first().textContent(),
         getTargetSelect: (row: Locator) => row.getByTestId('target-storage-select'),
+        rows: getMappingWizardFieldRows(this.page),
       };
     }
 
     const grid = this.page.getByRole('grid');
     const bodyRowGroup = grid.getByRole('rowgroup').nth(1);
     return {
-      rows: bodyRowGroup.getByRole('row'),
       getSourceText: (row: Locator) => row.getByRole('gridcell').first().textContent(),
       getTargetSelect: (row: Locator) => row.getByRole('gridcell').nth(1).getByRole('button'),
+      rows: bodyRowGroup.getByRole('row'),
     };
   }
 
@@ -96,7 +96,7 @@ export class StorageMapStep {
    * Handles both 2.11+ (data-testid rows) and <2.11 (grid/gridcell rows).
    */
   async selectTargetStorageForSource(sourceStorage: string, targetStorage: string): Promise<void> {
-    const { rows, getSourceText, getTargetSelect } = this.getMappingRowLocators();
+    const { getSourceText, getTargetSelect, rows } = this.getMappingRowLocators();
     const availableStorages = await waitForMappingSourceRows(rows, getSourceText);
     const rowCount = await rows.count();
 

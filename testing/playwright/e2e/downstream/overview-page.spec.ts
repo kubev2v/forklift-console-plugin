@@ -7,7 +7,7 @@ import {
   type OriginalSettings,
   restoreForkliftSettings,
 } from '../../fixtures/helpers/settingsHelpers';
-import { OverviewPage } from '../../page-objects/OverviewPage';
+import { OverviewPage } from '../../page-objects/OverviewPage/OverviewPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 import { V2_11_0, V2_12_0 } from '../../utils/version/constants';

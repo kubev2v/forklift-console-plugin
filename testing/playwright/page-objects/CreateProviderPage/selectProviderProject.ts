@@ -25,7 +25,7 @@ export const selectProviderProject = async (page: Page, projectName: string): Pr
   await textInput.click();
   await textInput.clear();
   await textInput.fill(projectName);
-  const option = page.getByRole('option', { name: projectName, exact: true });
+  const option = page.getByRole('option', { exact: true, name: projectName });
   await option.waitFor({ state: 'visible', timeout: 10000 });
   await option.click();
 };

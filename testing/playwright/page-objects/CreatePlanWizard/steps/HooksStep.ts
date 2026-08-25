@@ -1,13 +1,14 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import { HookSource } from '../../../types/enums';
+import { setMonacoEditorValue } from '../../../utils/monaco';
 
-export interface HookConfig {
+export type HookConfig = {
+  ansiblePlaybook?: string;
   enabled: boolean;
   hookRunnerImage?: string;
   serviceAccount?: string;
-  ansiblePlaybook?: string;
-}
+};
 
 export class HooksStep {
   protected readonly page: Page;
@@ -116,15 +117,14 @@ export class HooksStep {
   }
 
   async fillYamlEditorContent(content: string, editorIndex = 0): Promise<void> {
-    await this.page.evaluate(
-      ({ yamlContent, index }) => {
-        const editors = (globalThis as any).monaco?.editor?.getEditors?.();
-        if (editors && Array.isArray(editors) && editors.length > index) {
-          editors[index].setValue(yamlContent);
-        }
-      },
-      { yamlContent: content, index: editorIndex },
-    );
+    const success = await this.page.evaluate(setMonacoEditorValue, {
+      content,
+      index: editorIndex,
+    });
+
+    if (!success) {
+      throw new Error(`Failed to set hook content at index ${editorIndex}`);
+    }
   }
 
   async selectHookSource(source: HookSource): Promise<void> {

@@ -1,135 +1,10 @@
-import { existsSync, readFileSync } from 'node:fs';
-import * as http from 'node:http';
-import * as https from 'node:https';
-import { URL } from 'node:url';
+import { testError, testWarn } from '../testLog';
 
-import { KubeConfig } from '@kubernetes/client-node';
+import { apiRequest } from './apiRequest';
+import { getResourceTypeFromKind } from './resourceType';
 
-import { AUTH_FILE } from '../constants';
-
-import { RESOURCE_KINDS, RESOURCE_TYPES } from './constants';
-
-// The console proxy strips this prefix before forwarding to the k8s API server.
-// When calling the API server directly we strip it ourselves so the path
-// reaches the correct endpoint (e.g. /apis/... instead of /api/kubernetes/apis/...).
-const PROXY_PREFIX = '/api/kubernetes' as const;
-const API_REQUEST_TIMEOUT_MS = 30_000;
-
-type ApiResult<T> =
-  { data: T; status: number; success: true } | { error: string; status: number; success: false };
-
-type ApiRequestOptions = {
-  body?: unknown;
-  contentType?: string;
-  method: string;
-};
-
-type AuthConfig = {
-  baseUrl: string;
-  headers: Record<string, string>;
-  /** true  → talking to console proxy (cookies); false → direct API server (bearer token) */
-  proxyMode: boolean;
-};
-
-type StorageCookie = {
-  name: string;
-  value: string;
-};
-
-type StorageState = {
-  cookies: StorageCookie[];
-};
-
-/**
- * Tries to load kubeconfig from KUBECONFIG_PATH (relayed from globalSetup via ENV_RELAY_FILE).
- * Returns null when the path is unset, the file is missing, or the config is invalid.
- */
-const tryKubeconfigAuth = (): AuthConfig | null => {
-  const kubeconfigPath = process.env.KUBECONFIG_PATH;
-  if (!kubeconfigPath || !existsSync(kubeconfigPath)) {
-    return null;
-  }
-
-  try {
-    const kc = new KubeConfig();
-    kc.loadFromFile(kubeconfigPath);
-    const cluster = kc.getCurrentCluster();
-    const user = kc.getCurrentUser();
-    if (!cluster?.server || !user?.token) {
-      return null;
-    }
-
-    return {
-      baseUrl: cluster.server.replace(/\/$/, ''),
-      headers: { Authorization: `Bearer ${user.token}` },
-      proxyMode: false,
-    };
-  } catch {
-    return null;
-  }
-};
-
-/**
- * Reads all session cookies from the saved Playwright storageState file and
- * builds the Cookie header string that Node.js HTTP requests will send.
- *
- * The OpenShift console uses a pod-specific suffix in the auth cookie name
- * (e.g. "openshift-session-token-console-769d4c7cf7-gqqk4"), so an exact-name
- * lookup is not reliable.  Forwarding ALL cookies mimics credentials:'include'
- * and works regardless of the pod suffix.
- */
-const getSessionCookies = (): { cookieHeader: string; csrfToken: string } => {
-  if (!existsSync(AUTH_FILE)) {
-    throw new Error(
-      `Auth file not found at "${AUTH_FILE}". ` +
-        'Run global setup (login) before resource operations.',
-    );
-  }
-
-  const state = JSON.parse(readFileSync(AUTH_FILE, 'utf8')) as StorageState;
-
-  if (!state.cookies.length) {
-    throw new Error(
-      `No cookies found in auth file "${AUTH_FILE}". ` +
-        'Re-run global setup to refresh the session.',
-    );
-  }
-
-  const cookieHeader = state.cookies.map((cookie) => `${cookie.name}=${cookie.value}`).join('; ');
-  const csrfCookie = state.cookies.find((cookie) => cookie.name === 'csrf-token');
-
-  return {
-    cookieHeader,
-    csrfToken: csrfCookie?.value ?? '',
-  };
-};
-
-const getConsoleBaseUrl = (): string =>
-  (process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS ?? 'http://localhost:9000').replace(
-    /\/$/,
-    '',
-  );
-
-/**
- * Returns the auth config to use for this request.
- * Priority: kubeconfig (direct API server) → session cookies (console proxy).
- */
-const getAuthConfig = (): AuthConfig => {
-  const kubeconfigAuth = tryKubeconfigAuth();
-  if (kubeconfigAuth) {
-    return kubeconfigAuth;
-  }
-
-  const { cookieHeader, csrfToken } = getSessionCookies();
-  return {
-    baseUrl: getConsoleBaseUrl(),
-    headers: {
-      Cookie: cookieHeader,
-      'X-CSRFToken': csrfToken,
-    },
-    proxyMode: true,
-  };
-};
+const HTTP_NOT_FOUND = 404;
+const HTTP_CONFLICT = 409;
 
 /**
  * Base class providing shared Node.js HTTP functionality for resource managers.
@@ -143,6 +18,9 @@ const getAuthConfig = (): AuthConfig => {
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class BaseResourceManager {
+  /** Exposed for subclasses that need status-code dispatch (e.g. ResourceCleaner). */
+  protected static apiRequest = apiRequest;
+
   /**
    * Convenience wrapper for DELETE requests.
    * `ResourceCleaner.deleteResource` calls `apiRequest` directly to inspect
@@ -151,30 +29,28 @@ export abstract class BaseResourceManager {
    * success/null response and do not need status-code dispatch.
    */
   static async apiDelete<R>(apiPath: string): Promise<R | null> {
-    const result = await BaseResourceManager.apiRequest<R>(apiPath, { method: 'DELETE' });
+    const result = await apiRequest<R>(apiPath, { method: 'DELETE' });
 
     if (result.success) {
       return result.data;
     }
-
-    const HTTP_NOT_FOUND = 404;
 
     if (result.status === HTTP_NOT_FOUND) {
       return null;
     }
 
-    console.error(`API DELETE ${apiPath} failed: ${result.error}`);
+    testError(`API DELETE ${apiPath} failed: ${result.error}`);
     return null;
   }
 
   static async apiGet<R>(apiPath: string): Promise<R | null> {
-    const result = await BaseResourceManager.apiRequest<R>(apiPath, { method: 'GET' });
+    const result = await apiRequest<R>(apiPath, { method: 'GET' });
 
     if (result.success) {
       return result.data;
     }
 
-    console.error(`API GET ${apiPath} failed: ${result.error}`);
+    testError(`API GET ${apiPath} failed: ${result.error}`);
     return null;
   }
 
@@ -183,7 +59,7 @@ export abstract class BaseResourceManager {
     data: unknown,
     contentType = 'application/merge-patch+json',
   ): Promise<R | null> {
-    const result = await BaseResourceManager.apiRequest<R>(apiPath, {
+    const result = await apiRequest<R>(apiPath, {
       body: data,
       contentType,
       method: 'PATCH',
@@ -193,12 +69,12 @@ export abstract class BaseResourceManager {
       return result.data;
     }
 
-    console.error(`API PATCH ${apiPath} failed: ${result.error}`);
+    testError(`API PATCH ${apiPath} failed: ${result.error}`);
     return null;
   }
 
   static async apiPost<R>(apiPath: string, data: unknown): Promise<R | null> {
-    const result = await BaseResourceManager.apiRequest<R>(apiPath, {
+    const result = await apiRequest<R>(apiPath, {
       body: data,
       method: 'POST',
     });
@@ -207,100 +83,16 @@ export abstract class BaseResourceManager {
       return result.data;
     }
 
-    const HTTP_CONFLICT = 409;
-
     if (result.status === HTTP_CONFLICT) {
-      console.warn(`API POST to ${apiPath}: resource already exists (409)`);
+      testWarn(`API POST to ${apiPath}: resource already exists (409)`);
     } else {
-      console.error(`API POST to ${apiPath} failed: ${result.error}`);
+      testError(`API POST to ${apiPath} failed: ${result.error}`);
     }
 
     return null;
   }
 
-  protected static async apiRequest<R>(
-    apiPath: string,
-    options: ApiRequestOptions,
-  ): Promise<ApiResult<R>> {
-    const { baseUrl, headers, proxyMode } = getAuthConfig();
-
-    // In direct (kubeconfig) mode the caller's path still carries the console proxy
-    // prefix — strip it so the request reaches the correct API server endpoint.
-    const adjustedPath =
-      proxyMode || !apiPath.startsWith(PROXY_PREFIX) ? apiPath : apiPath.slice(PROXY_PREFIX.length);
-
-    const fullUrl = new URL(adjustedPath || '/', baseUrl);
-    const isHttps = fullUrl.protocol === 'https:';
-    const transport = isHttps ? https : http;
-    const body = options.body === undefined ? undefined : JSON.stringify(options.body);
-
-    return new Promise((resolve) => {
-      const reqOptions: https.RequestOptions = {
-        hostname: fullUrl.hostname,
-        port: fullUrl.port || (isHttps ? 443 : 80),
-        path: fullUrl.pathname + fullUrl.search,
-        method: options.method,
-        rejectUnauthorized: false,
-        timeout: API_REQUEST_TIMEOUT_MS,
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': options.contentType ?? 'application/json',
-          ...headers,
-          ...(body ? { 'Content-Length': String(Buffer.byteLength(body)) } : {}),
-        },
-      };
-
-      const req = transport.request(reqOptions, (res) => {
-        let data = '';
-        res.on('data', (chunk: string) => {
-          data += chunk;
-        });
-        res.on('end', () => {
-          const status = res.statusCode ?? 0;
-          if (status >= 200 && status < 300) {
-            try {
-              resolve({ data: JSON.parse(data) as R, status, success: true });
-            } catch {
-              resolve({ data: data as unknown as R, status, success: true });
-            }
-          } else {
-            resolve({ error: data || `HTTP ${status}`, status, success: false });
-          }
-        });
-      });
-
-      req.on('timeout', () => {
-        req.destroy(
-          new Error(`API ${options.method} ${apiPath} timed out after ${API_REQUEST_TIMEOUT_MS}ms`),
-        );
-      });
-
-      req.on('error', (err: Error) => {
-        resolve({ error: err.message, status: 0, success: false });
-      });
-
-      if (body) {
-        req.write(body);
-      }
-      req.end();
-    });
-  }
-
   static getResourceTypeFromKind(kind: string): string {
-    const kindToType: Record<string, string> = {
-      [RESOURCE_KINDS.FORKLIFT_CONTROLLER]: RESOURCE_TYPES.FORKLIFT_CONTROLLERS,
-      [RESOURCE_KINDS.MIGRATION]: RESOURCE_TYPES.MIGRATIONS,
-      [RESOURCE_KINDS.NETWORK_MAP]: RESOURCE_TYPES.NETWORK_MAPS,
-      [RESOURCE_KINDS.NETWORK_ATTACHMENT_DEFINITION]: RESOURCE_TYPES.NETWORK_ATTACHMENT_DEFINITIONS,
-      [RESOURCE_KINDS.PLAN]: RESOURCE_TYPES.PLANS,
-      [RESOURCE_KINDS.PROVIDER]: RESOURCE_TYPES.PROVIDERS,
-      [RESOURCE_KINDS.SECRET]: RESOURCE_TYPES.SECRETS,
-      [RESOURCE_KINDS.STORAGE_MAP]: RESOURCE_TYPES.STORAGE_MAPS,
-      [RESOURCE_KINDS.VIRTUAL_MACHINE]: RESOURCE_TYPES.VIRTUAL_MACHINES,
-      [RESOURCE_KINDS.PROJECT]: RESOURCE_TYPES.PROJECTS,
-      [RESOURCE_KINDS.NAMESPACE]: RESOURCE_TYPES.NAMESPACES,
-    };
-
-    return kindToType[kind] ?? `${kind.toLowerCase()}s`;
+    return getResourceTypeFromKind(kind);
   }
 }

@@ -39,7 +39,7 @@ test.describe(
       let createBody: unknown;
 
       await page.route(
-        /\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/storagemaps$/,
+        /\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/storagemaps$/u,
         async (route): Promise<void> => {
           if (route.request().method() === 'POST') {
             createBody = JSON.parse(route.request().postData() ?? '{}') as unknown;
@@ -243,25 +243,25 @@ test.describe(
       await test.step('Delete storage map and verify it is removed from the list', async () => {
         await detailsPage.deleteMap(storageMapName);
         await expect(page).toHaveURL(
-          new RegExp(`/k8s/ns/${MTV_NAMESPACE}/forklift\\.konveyor\\.io~v1beta1~StorageMap$`),
+          new RegExp(`/k8s/ns/${MTV_NAMESPACE}/forklift\\.konveyor\\.io~v1beta1~StorageMap$`, 'u'),
         );
         await expect(
-          page.getByRole('link', { name: storageMapName, exact: true }),
+          page.getByRole('link', { exact: true, name: storageMapName }),
         ).not.toBeVisible();
       });
     });
 
     test('should hide offload options for non-vSphere providers', async ({
-      page,
       createCustomProvider,
+      page,
     }) => {
       const listPage = new StorageMapsListPage(page);
       const createPage = new StorageMapCreatePage(page);
 
       const ovaProviderKey = process.env.OVA_PROVIDER ?? 'ova';
       const ovaProvider = await createCustomProvider({
-        providerKey: ovaProviderKey,
         namePrefix: 'offload-ova',
+        providerKey: ovaProviderKey,
       });
 
       await test.step('Navigate to Create Storage Map form', async () => {

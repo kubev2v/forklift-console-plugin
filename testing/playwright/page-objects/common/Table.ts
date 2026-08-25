@@ -20,10 +20,10 @@ export class Table {
   async changeFilter(filterName: string): Promise<void> {
     const filterSelect = this.rootLocator
       .getByTestId('table-filter-select')
-      .or(this.rootLocator.getByRole('button').filter({ hasText: /^(?:Name|Concerns|Host)$/ }));
+      .or(this.rootLocator.getByRole('button').filter({ hasText: /^(?:Name|Concerns|Host)$/u }));
 
     await filterSelect.click();
-    await this.page.getByRole('menuitem', { name: filterName, exact: true }).click();
+    await this.page.getByRole('menuitem', { exact: true, name: filterName }).click();
   }
 
   async clearAllFilters(): Promise<void> {
@@ -60,7 +60,7 @@ export class Table {
     const columnList = modalBody.getByTestId('manage-columns-list');
     const targetListItem = columnList
       .getByRole('listitem')
-      .filter({ hasText: new RegExp(`^${columnName}$`) });
+      .filter({ hasText: new RegExp(`^${columnName}$`, 'u') });
 
     if ((await targetListItem.count()) === 0) {
       const cancelButton = this.page.getByTestId('manage-columns-cancel-button');
@@ -101,7 +101,7 @@ export class Table {
     const columnList = modalBody.getByTestId('manage-columns-list');
     const targetListItem = columnList
       .getByRole('listitem')
-      .filter({ hasText: new RegExp(`^${columnName}$`) });
+      .filter({ hasText: new RegExp(`^${columnName}$`, 'u') });
 
     if ((await targetListItem.count()) === 0) {
       const cancelButton = this.page.getByTestId('manage-columns-cancel-button');
@@ -161,7 +161,7 @@ export class Table {
 
     return headerTexts
       .filter((text) => text?.trim() && !text.includes('Row select') && !text.includes('Details'))
-      .map((text) => (text ?? '').replaceAll(/\s+/g, ' ').trim())
+      .map((text) => (text ?? '').replaceAll(/\s+/gu, ' ').trim())
       .filter((cleanText) => cleanText && cleanText !== 'More information on concerns');
   }
 
@@ -225,7 +225,7 @@ export class Table {
         .locator('tbody tr')
         .first()
         .or(this.rootLocator.getByText('No results found'))
-        .or(this.rootLocator.getByText(/No .* found/))
+        .or(this.rootLocator.getByText(/No .* found/u))
         .first(),
     ).toBeVisible();
   }

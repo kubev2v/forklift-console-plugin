@@ -19,7 +19,7 @@ export class NavigationHelper {
     resource: string;
     tab?: string;
   }): string {
-    const { resource, name, namespace, action, allNamespaces = false, tab } = options;
+    const { action, allNamespaces = false, name, namespace, resource, tab } = options;
 
     let url = '/k8s/';
 

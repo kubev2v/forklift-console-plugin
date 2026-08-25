@@ -3,6 +3,7 @@ import { expect, type Page } from '@playwright/test';
 import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { K8S_RECONCILE_TIMEOUT, PLAN_READY_TIMEOUT } from '../../utils/resource-manager/constants';
+import { testLog } from '../../utils/testLog';
 import { disableGuidedTour, isEmpty } from '../../utils/utils';
 import { InspectVirtualMachinesModal } from '../InspectVirtualMachinesModal';
 
@@ -58,7 +59,7 @@ export class PlanDetailsPage {
    * Closes the critical concerns drawer panel.
    */
   async closeConcernsDrawer(): Promise<void> {
-    const closeButton = this.page.getByRole('button', { name: /Close drawer panel/i });
+    const closeButton = this.page.getByRole('button', { name: /Close drawer panel/iu });
     await closeButton.click();
     await expect(this.concernsDrawerPanel).not.toBeVisible();
   }
@@ -80,7 +81,7 @@ export class PlanDetailsPage {
   /** Deletes the plan via the details page Actions menu, confirming in the plan-specific PlanDeleteModal. */
   async deletePlan(): Promise<void> {
     await this.page.getByTestId('plan-actions-dropdown-button').click();
-    await this.page.getByRole('menuitem', { name: 'Delete', exact: true }).click();
+    await this.page.getByRole('menuitem', { exact: true, name: 'Delete' }).click();
 
     const deleteModal = this.page.getByRole('dialog', { name: 'Delete plan' });
     await expect(deleteModal).toBeVisible();
@@ -154,24 +155,24 @@ export class PlanDetailsPage {
     }
 
     const terminalStates: Record<string, { isSuccess: boolean; isTerminal: boolean }> = {
-      complete: { isTerminal: true, isSuccess: true },
-      incomplete: { isTerminal: true, isSuccess: false },
-      canceled: { isTerminal: true, isSuccess: false },
-      'cannot start': { isTerminal: true, isSuccess: false },
-      archived: { isTerminal: true, isSuccess: false },
-      'migration running': { isTerminal: false, isSuccess: false },
-      'ready for migration': { isTerminal: false, isSuccess: false },
-      paused: { isTerminal: false, isSuccess: false },
-      unknown: { isTerminal: false, isSuccess: false },
+      archived: { isSuccess: false, isTerminal: true },
+      canceled: { isSuccess: false, isTerminal: true },
+      'cannot start': { isSuccess: false, isTerminal: true },
+      complete: { isSuccess: true, isTerminal: true },
+      incomplete: { isSuccess: false, isTerminal: true },
+      'migration running': { isSuccess: false, isTerminal: false },
+      paused: { isSuccess: false, isTerminal: false },
+      'ready for migration': { isSuccess: false, isTerminal: false },
+      unknown: { isSuccess: false, isTerminal: false },
     };
 
     const lowerStatus = statusText.toLowerCase();
-    const statusInfo = terminalStates[lowerStatus] ?? { isTerminal: false, isSuccess: false };
+    const statusInfo = terminalStates[lowerStatus] ?? { isSuccess: false, isTerminal: false };
     return {
-      status: statusText,
-      percentage,
-      isTerminal: statusInfo.isTerminal,
       isSuccess: statusInfo.isSuccess,
+      isTerminal: statusInfo.isTerminal,
+      percentage,
+      status: statusText,
     };
   }
 
@@ -192,9 +193,9 @@ export class PlanDetailsPage {
 
   async navigate(planName: string, namespace: string, tab?: string): Promise<void> {
     await this.navigation.navigateToK8sResource({
-      resource: 'Plan',
       name: planName,
       namespace,
+      resource: 'Plan',
       tab,
     });
     await disableGuidedTour(this.page);
@@ -307,7 +308,7 @@ export class PlanDetailsPage {
       const checkProgress = async () => {
         const progress = await this.getMigrationProgress();
         const elapsed = Math.round((Date.now() - startTime) / 1000);
-        console.log(`Migration progress: ${progress} (${elapsed}s elapsed)`);
+        testLog(`Migration progress: ${progress} (${elapsed}s elapsed)`);
       };
 
       progressInterval = setInterval(checkProgress, 30000);
@@ -320,7 +321,7 @@ export class PlanDetailsPage {
         const status = await this.getMigrationStatus();
 
         if (status.isTerminal) {
-          console.log(`Migration completed: ${status.status} (success: ${status.isSuccess})`);
+          testLog(`Migration completed: ${status.status} (success: ${status.isSuccess})`);
 
           if (status.isSuccess) {
             return;
@@ -350,7 +351,7 @@ export class PlanDetailsPage {
       .getByTestId('plan-status-container')
       .getByTestId('plan-status-label');
     await expect(statusLabel).toHaveText(
-      /Ready for migration|Cannot start|Incomplete|Canceled|Unknown/i,
+      /Ready for migration|Cannot start|Incomplete|Canceled|Unknown/iu,
       { timeout: PLAN_READY_TIMEOUT },
     );
   }

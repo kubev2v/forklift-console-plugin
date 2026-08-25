@@ -13,14 +13,14 @@ export const INSPECTION_STATUS_LABEL = {
 } as const;
 
 /** Terminal inspection statuses shown in the VMs table. */
-export const COMPLETED_STATUSES = /Inspection passed|Issues found|Inspection error|Canceled/;
+export const COMPLETED_STATUSES = /Inspection passed|Issues found|Inspection error|Canceled/u;
 
 /** Pending or Running — VM checkbox is disabled / excluded from Select All. */
-export const ACTIVE_STATUSES = /Pending|Running/;
+export const ACTIVE_STATUSES = /Pending|Running/u;
 
 /** Running or any terminal status except Canceled. */
 export const ACTIVE_OR_COMPLETED_STATUSES =
-  /Running|Inspection passed|Issues found|Inspection error/;
+  /Running|Inspection passed|Issues found|Inspection error/u;
 
 const DISPLAY_TO_FILTER_ID: Record<string, string> = {
   [INSPECTION_STATUS_LABEL.CANCELED]: 'Canceled',

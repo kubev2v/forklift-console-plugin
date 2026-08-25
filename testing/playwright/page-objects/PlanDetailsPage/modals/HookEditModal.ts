@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { setMonacoEditorValue } from '../../../utils/monaco';
 import { BaseModal } from '../../common/BaseModal';
 
 export class HookEditModal extends BaseModal {
@@ -34,19 +35,7 @@ export class HookEditModal extends BaseModal {
   }
 
   async setAnsiblePlaybook(playbook: string): Promise<void> {
-    const success = await this.page.evaluate((yamlContent) => {
-      const monacoInstance = (globalThis as any).monaco?.editor?.getModels?.()?.[0];
-      if (monacoInstance) {
-        monacoInstance.setValue(yamlContent);
-        return true;
-      }
-      const editors = (globalThis as any).monaco?.editor?.getEditors?.();
-      if (editors && Array.isArray(editors) && editors.length > 0) {
-        editors[0].setValue(yamlContent);
-        return true;
-      }
-      return false;
-    }, playbook);
+    const success = await this.page.evaluate(setMonacoEditorValue, { content: playbook });
 
     if (!success) {
       throw new Error('Failed to set playbook content - Monaco editor not found');

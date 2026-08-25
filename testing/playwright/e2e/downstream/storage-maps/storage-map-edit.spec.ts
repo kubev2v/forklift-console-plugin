@@ -10,8 +10,8 @@ test.describe('Storage Map Details - Editing', { tag: '@downstream' }, () => {
 
   test('should test storage map editing interactions', async ({
     page,
-    testStorageMap,
     testProvider: _testProvider,
+    testStorageMap,
   }) => {
     if (!testStorageMap) {
       throw new Error('testStorageMap is required');
