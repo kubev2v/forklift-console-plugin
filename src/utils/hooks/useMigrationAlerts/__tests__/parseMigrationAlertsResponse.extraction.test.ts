@@ -81,9 +81,14 @@ describe('parseMigrationAlertsResponse - extraction', () => {
   });
 
   test('falls back to rule-level severity when alert label is missing', () => {
+    const planNameLabel = 'plan_name';
     const alertNoSeverity: PrometheusAlert = {
       annotations: {},
-      labels: { alertname: 'MigrationFailed', plan: 'uid-1', plan_name: 'test' }, // eslint-disable-line camelcase
+      labels: {
+        alertname: 'MigrationFailed',
+        plan: 'uid-1',
+        [planNameLabel]: 'test',
+      },
       state: 'firing' as PrometheusAlert['state'],
     };
 

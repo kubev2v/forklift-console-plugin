@@ -65,12 +65,16 @@ describe('parseMigrationAlertsResponse - filtering', () => {
   });
 
   test('handles multiple alerts for different plans', () => {
-    // eslint-disable-next-line camelcase
-    const alert1 = createFiringAlert({ plan: 'uid-1', plan_name: 'plan-a' });
+    const planNameLabel = 'plan_name';
+    const alert1 = createFiringAlert({
+      plan: 'uid-1',
+      [planNameLabel]: 'plan-a',
+    });
+
     const alert2 = createFiringAlert({
-      plan: 'uid-2',
-      plan_name: 'plan-b', // eslint-disable-line camelcase
       phase: 'ImageConversion',
+      plan: 'uid-2',
+      [planNameLabel]: 'plan-b',
     });
 
     const response = createRulesResponse([

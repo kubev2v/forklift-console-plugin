@@ -1,4 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
 import { validatePublicCert } from 'src/utils/validation/common';
 
 describe('validatePublicCert', () => {

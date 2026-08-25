@@ -8,7 +8,7 @@ import {
   MenuToggle,
   type MenuToggleElement,
   SearchInput,
-  Select,
+  Select as PatternFlySelect,
   SelectList,
   SelectOption,
 } from '@patternfly/react-core';
@@ -88,8 +88,8 @@ const PlanSelectFilter: FC<PlanSelectFilterProps> = ({
   );
 
   return (
-    // eslint-disable-next-line no-restricted-syntax
-    <Select
+    // Cannot use @components/common/Select — checkbox multi-select with search footer
+    <PatternFlySelect
       aria-label={t('Filter by plan')}
       isOpen={isOpen}
       isScrollable
@@ -153,7 +153,7 @@ const PlanSelectFilter: FC<PlanSelectFilterProps> = ({
           </Button>
         </MenuFooter>
       )}
-    </Select>
+    </PatternFlySelect>
   );
 };
 

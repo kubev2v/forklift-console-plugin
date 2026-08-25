@@ -7,7 +7,7 @@ import type { AccordionContextType, PersistedState } from '../utils/types';
 import { persistValue } from '../utils/utils';
 
 export const useAccordionContext = (): AccordionContextType => {
-  const [persistedState] = useState(() => parseOrClean<PersistedState>(STORAGE_KEY));
+  const [persistedState] = useState(() => parseOrClean(STORAGE_KEY) as PersistedState);
   const [openExpansionItems, setOpenExpansionItems] = useState<string[]>(
     persistedState.openExpansionItems ?? [],
   );

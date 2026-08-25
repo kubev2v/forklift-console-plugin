@@ -16,12 +16,15 @@ const FALLBACK_PLAN_NAME = 'plan';
 const RESULT_TYPE_MATRIX = 'matrix' as const;
 const STATUS_SUCCESS = 'success';
 
-const createMetric = (planId: string, planName: string): Record<string, string> => ({
-  // eslint-disable-next-line camelcase
-  plan_id: planId,
-  // eslint-disable-next-line camelcase
-  plan_name: planName,
-});
+const PLAN_ID_METRIC = 'plan_id';
+const PLAN_NAME_METRIC = 'plan_name';
+
+const createMetric = (planId: string, planName: string): Record<string, string> => {
+  const metric: Record<string, string> = {};
+  metric[PLAN_ID_METRIC] = planId;
+  metric[PLAN_NAME_METRIC] = planName;
+  return metric;
+};
 
 const createSuccessResponse = (
   result: PrometheusResponse['data']['result'],

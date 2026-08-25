@@ -1,7 +1,28 @@
 import type { K8sResourceCommon, V1beta1Plan } from '@forklift-ui/types';
-import { mockI18n } from '@test-utils/mockI18n';
+import { beforeEach, describe, expect, it } from '@jest/globals';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
-mockI18n();
+import PlanResumeConversionModal from '../PlanResumeConversionModal';
+
+jest.mock('src/utils/i18n', () => {
+  const mockT = (key: string, params?: Record<string, unknown>): string => {
+    if (!params) {
+      return key;
+    }
+    return Object.entries(params).reduce(
+      (result, [paramName, paramValue]) =>
+        result.split(`{{${paramName}}}`).join(paramValue?.toString() ?? ''),
+      key,
+    );
+  };
+
+  return {
+    ForkliftTrans: ({ children }: { children: unknown }): unknown => children,
+    t: mockT,
+    useForkliftTranslation: (): { t: typeof mockT } => ({ t: mockT }),
+  };
+});
 
 const mockK8sCreate = jest.fn().mockResolvedValue(undefined);
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
@@ -19,13 +40,6 @@ jest.mock('@utils/helpers/getObjectRef', () => ({
     }),
   ),
 }));
-
-// eslint-disable-next-line import/first
-import { beforeEach, describe, expect, it } from '@jest/globals';
-import { render, screen } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-
-import PlanResumeConversionModal from '../PlanResumeConversionModal';
 
 const makePlan = (disksCopiedVMs: string[] = ['vm-1']): V1beta1Plan =>
   ({

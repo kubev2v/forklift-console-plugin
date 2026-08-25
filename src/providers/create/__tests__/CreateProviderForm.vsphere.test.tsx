@@ -8,10 +8,10 @@ import CreateProviderForm from '../CreateProviderForm';
 
 import { clearAllProviderMocks } from './test-utils';
 
-jest.mock('../fields/ProviderTypeField', () =>
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  require('./test-utils').mockCreateProviderTypeField('vsphere', 'VMware vSphere'),
-);
+jest.mock('../fields/ProviderTypeField', () => {
+  const { mockCreateProviderTypeField } = jest.requireActual('./test-utils');
+  return mockCreateProviderTypeField('vsphere', 'VMware vSphere');
+});
 
 describe('CreateProviderForm - vSphere Provider', () => {
   beforeEach(() => {

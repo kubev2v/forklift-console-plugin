@@ -89,10 +89,10 @@ export const specVirtualMachineFields: ResourceField[] = [
       popover: <InspectionStatusColumnPopover />,
     },
     isVisible: true,
-    jsonPath: (item: unknown) =>
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      (item as SpecVirtualMachinePageData).inspectionStatus?.status ??
-      INSPECTION_STATUS_NOT_INSPECTED,
+    jsonPath: (item: unknown): string => {
+      const { inspectionStatus } = item as SpecVirtualMachinePageData;
+      return inspectionStatus?.status ?? INSPECTION_STATUS_NOT_INSPECTED;
+    },
     label: t('Inspection status'),
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.InspectionStatus,
     sortable: true,

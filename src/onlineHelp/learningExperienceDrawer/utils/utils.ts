@@ -27,7 +27,7 @@ const flushToStorage = (): void => {
     return;
   }
 
-  const current = parseOrClean<PersistedState>(STORAGE_KEY);
+  const current = parseOrClean(STORAGE_KEY) as PersistedState;
   saveToLocalStorage(STORAGE_KEY, JSON.stringify({ ...current, ...pendingWrites }));
   pendingWrites = {};
 };

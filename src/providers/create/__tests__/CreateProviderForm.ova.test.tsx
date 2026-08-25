@@ -8,10 +8,10 @@ import CreateProviderForm from '../CreateProviderForm';
 
 import { clearAllProviderMocks } from './test-utils';
 
-jest.mock('../fields/ProviderTypeField', () =>
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  require('./test-utils').mockCreateProviderTypeField('ova', 'Open Virtual Appliance'),
-);
+jest.mock('../fields/ProviderTypeField', () => {
+  const { mockCreateProviderTypeField } = jest.requireActual('./test-utils');
+  return mockCreateProviderTypeField('ova', 'Open Virtual Appliance');
+});
 
 describe('CreateProviderForm - OVA Provider', () => {
   beforeEach(() => {

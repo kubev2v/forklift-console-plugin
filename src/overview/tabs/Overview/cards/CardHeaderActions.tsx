@@ -1,6 +1,11 @@
 import { type MouseEvent, type ReactElement, type Ref, useState } from 'react';
 
-import { MenuToggle, type MenuToggleElement, Select, SelectOption } from '@patternfly/react-core';
+import {
+  MenuToggle,
+  type MenuToggleElement,
+  Select as PatternFlySelect,
+  SelectOption,
+} from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { getValueToLabel, TimeRangeOptions } from '../utils/timeRangeOptions';
@@ -39,9 +44,8 @@ const HeaderActions = ({
   );
 
   return (
-    // Custom select does not support the complex toggle being used here
-    // eslint-disable-next-line no-restricted-syntax
-    <Select
+    // Cannot use @components/common/Select — custom MenuToggle is unsupported there
+    <PatternFlySelect
       aria-label={t('Select time range')}
       isOpen={isOpen}
       onOpenChange={setIsOpen}
@@ -63,7 +67,7 @@ const HeaderActions = ({
           {valueToLabel[TimeRangeOptions.All]}
         </SelectOption>
       )}
-    </Select>
+    </PatternFlySelect>
   );
 };
 

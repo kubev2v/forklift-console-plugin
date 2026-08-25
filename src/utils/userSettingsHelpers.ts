@@ -6,16 +6,15 @@ import {
 import { MTVConsole } from '@utils/console';
 import { isEmpty } from '@utils/helpers';
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-export const parseOrClean = <T>(key: string): T => {
+export const parseOrClean = (key: string): unknown => {
   try {
     const storedValue = loadFromLocalStorage(key) ?? '';
-    return JSON.parse(storedValue) as T;
+    return JSON.parse(storedValue) as unknown;
   } catch (_e) {
     removeFromLocalStorage(key);
     MTVConsole.error(`Removed invalid key [${key}] from local storage`);
   }
-  return {} as T;
+  return {};
 };
 
 export const saveRestOrRemoveKey = (

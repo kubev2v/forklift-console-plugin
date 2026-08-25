@@ -6,7 +6,6 @@ export const EMPTY_MEMORY = '0Mi';
 
 export const MILLICORES_TO_CORES_DIVIDER = 1000.0;
 
-/* eslint-disable id-length */
 export const K8S_UNIT_MULTIPLIERS = {
   E: 10 ** 18,
   Ei: 1024 ** 6,

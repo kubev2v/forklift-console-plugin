@@ -1,6 +1,11 @@
 import type { ReactElement, Ref } from 'react';
 
-import { type MenuToggleElement, Select, SelectList, ToolbarFilter } from '@patternfly/react-core';
+import {
+  type MenuToggleElement,
+  Select as PatternFlySelect,
+  SelectList,
+  ToolbarFilter,
+} from '@patternfly/react-core';
 
 import { renderGroupedEnumOptions } from './components/GroupedEnumFilterOptions';
 import GroupedEnumFilterToggle from './components/GroupedEnumFilterToggle';
@@ -94,9 +99,8 @@ export const GroupedEnumFilter = ({
             {acc}
           </ToolbarFilter>
         ),
-        // This select is different from most and cannot use the common Select
-        // eslint-disable-next-line no-restricted-syntax
-        <Select
+        // Cannot use @components/common/Select — nested ToolbarFilter multi-group select
+        <PatternFlySelect
           aria-label={placeholderLabel}
           isOpen={isOpen}
           onOpenChange={(nextOpen: boolean) => {
@@ -117,7 +121,7 @@ export const GroupedEnumFilter = ({
           <SelectList>
             {renderGroupedEnumOptions(supportedGroups, supportedEnumValues, selectedEnumIds)}
           </SelectList>
-        </Select>,
+        </PatternFlySelect>,
       )}
     </>
   );

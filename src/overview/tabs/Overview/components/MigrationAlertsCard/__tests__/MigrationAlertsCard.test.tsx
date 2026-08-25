@@ -4,6 +4,8 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
 import type { MigrationAlert } from '@utils/hooks/useMigrationAlerts/types';
 
+import MigrationAlertsCard from '../MigrationAlertsCard';
+
 const mockUseMigrationAlerts =
   jest.fn<() => { alerts: MigrationAlert[]; error: unknown; loaded: boolean }>();
 
@@ -12,23 +14,23 @@ jest.mock('@utils/hooks/useMigrationAlerts/useMigrationAlerts', () => ({
   default: (): ReturnType<typeof mockUseMigrationAlerts> => mockUseMigrationAlerts(),
 }));
 
-const mockT = (key: string): string => key;
+jest.mock('src/utils/i18n', () => {
+  const mockT = (key: string): string => key;
+  return {
+    ForkliftTrans: ({ children }: { children: unknown }): unknown => children,
+    t: mockT,
+    useForkliftTranslation: (): { t: typeof mockT } => ({ t: mockT }),
+  };
+});
 
-jest.mock('src/utils/i18n', () => ({
-  ForkliftTrans: ({ children }: { children: unknown }): unknown => children,
-  t: mockT,
-  useForkliftTranslation: (): { t: typeof mockT } => ({ t: mockT }),
-}));
-
-jest.mock('@utils/i18n', () => ({
-  ForkliftTrans: ({ children }: { children: unknown }): unknown => children,
-  t: mockT,
-  useForkliftTranslation: (): { t: typeof mockT } => ({ t: mockT }),
-}));
-
-// Must import after mocks
-// eslint-disable-next-line import/first
-import MigrationAlertsCard from '../MigrationAlertsCard';
+jest.mock('@utils/i18n', () => {
+  const mockT = (key: string): string => key;
+  return {
+    ForkliftTrans: ({ children }: { children: unknown }): unknown => children,
+    t: mockT,
+    useForkliftTranslation: (): { t: typeof mockT } => ({ t: mockT }),
+  };
+});
 
 const failedAlert: MigrationAlert = {
   activeAt: '2026-06-23T14:30:00Z',

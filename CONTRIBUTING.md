@@ -168,6 +168,21 @@ Example: if you remove `'no-ternary': 'off'`, the rule activates from `eslint.co
 3. Fix all violations in the same PR (severity `error`, not `warn`).
 4. State whether the rule applies to tests or not.
 
+### Inline `eslint-disable` policy (MTV-6461)
+
+Do **not** add drive-by `eslint-disable` / `eslint-disable-next-line` comments in PRs.
+
+Prefer, in order: fix the code, typed boundary/wrapper at an API edge, import alias, wordlist entry, or a scoped rule exception in `eslint.config.ts`.
+
+Inline suppressions are allowed only when an **unchangeable upstream/ambient API** leaves no better option. Every kept disable **must** include a one-line justification on the same comment:
+
+```ts
+// eslint-disable-next-line <rule> -- <API / why a cast or rewrite is insufficient>
+/* eslint-disable <rule> -- <same> */
+```
+
+Bare disables without `-- …` are not accepted.
+
 ## Getting Help
 
 - **Jira project**: MTV (tickets are `MTV-XXXX`)
