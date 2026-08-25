@@ -49,11 +49,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Playwright + k8s client types live under testing/ (separate package).
-      # Type-aware ESLint for testing/playwright requires them (MTV-6509).
-      - name: Install testing dependencies
-        run: npm --prefix testing ci
-
       - name: Lint, eslint and stylelint
         run: npm run lint
 
