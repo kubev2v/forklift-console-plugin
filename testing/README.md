@@ -59,6 +59,13 @@ Factory: `createResourceFixtures(config)` — prefer an existing export before i
 - Prefer `data-testid` locators via page-objects.
 - Do not add new barrel `index.ts` files under `testing/playwright` (ESLint `barrel-files`).
 
+**Root vs `testing/` dependencies (ESLint)**
+
+Root `package.json` pins `@playwright/test` and `@kubernetes/client-node` as
+devDependencies so type-aware ESLint can resolve Playwright/K8s types from a
+root `npm ci` only (CI lint does not install `testing/`). Keep those versions
+identical to `testing/package.json` whenever either side is bumped.
+
 ---
 
 This document outlines the steps to run the Playwright end-to-end tests for the Forklift Console Plugin.

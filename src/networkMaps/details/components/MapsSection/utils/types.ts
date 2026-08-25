@@ -6,8 +6,8 @@ export type NetworkEditFormValues = {
 };
 
 export type NetworkMapEditProps = {
-  destinationProvider: V1beta1Provider;
+  destinationProvider?: V1beta1Provider;
   initialMappings: NetworkMapping[];
   networkMap: V1beta1NetworkMap;
-  sourceProvider: V1beta1Provider;
+  sourceProvider?: V1beta1Provider;
 };

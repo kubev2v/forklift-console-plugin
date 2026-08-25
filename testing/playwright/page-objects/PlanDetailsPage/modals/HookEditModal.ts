@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { fillMonacoEditorViaKeyboard } from '../../../utils/fillMonacoEditorViaKeyboard';
 import { BaseModal } from '../../common/BaseModal';
 
 export class HookEditModal extends BaseModal {
@@ -34,13 +35,7 @@ export class HookEditModal extends BaseModal {
   }
 
   async setAnsiblePlaybook(playbook: string): Promise<void> {
-    // SdkYamlEditor only updates RHF via CodeEditor onChange — type via keyboard.
-    const editor = this.page.locator('.code-editor-container .monaco-editor').first();
-    await expect(editor).toBeVisible({ timeout: 30_000 });
-    await editor.click();
-    const selectAll = process.platform === 'darwin' ? 'Meta+A' : 'Control+A';
-    await this.page.keyboard.press(selectAll);
-    await this.page.keyboard.insertText(playbook);
+    await fillMonacoEditorViaKeyboard(this.page, playbook);
   }
 
   async setHookRunnerImage(image: string): Promise<void> {

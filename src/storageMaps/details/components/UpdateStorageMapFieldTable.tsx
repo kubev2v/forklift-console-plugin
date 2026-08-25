@@ -1,10 +1,11 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { CreatePlanStorageMapFieldId } from 'src/plans/create/steps/storage-map/constants';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
+import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import type { V1beta1Provider } from '@forklift-ui/types';
-import { Stack, StackItem } from '@patternfly/react-core';
+import { Spinner } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import type { InventoryStorage } from '@utils/hooks/useStorages';
@@ -12,21 +13,19 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { StorageMapFieldId, type TargetStorage } from '@utils/storage/types';
 import type { MappingValue } from '@utils/types';
 
-import AccessModeField from '../../components/AccessModeField';
-import OffloadStorageRow from '../../components/OffloadStorageIndexedForm/OffloadStorageRow';
-import SourceStorageField from '../../components/SourceStorageField';
-import TargetStorageField from '../../components/TargetStorageField';
-import TargetStorageWithSuggestion from '../../components/TargetStorageWithSuggestion';
 import { defaultStorageMapping, storageMapFieldLabels } from '../../utils/constants';
-import { getStorageMapFieldId } from '../../utils/getStorageMapFieldId';
 import type { UpdateMappingsFormData } from '../utils/types';
 import { validateUpdatedStorageMaps } from '../utils/utils';
+
+import { getStorageMapEditFieldRowContent } from './getStorageMapEditFieldRowContent';
 
 type UpdateStorageMapFieldTableProps = {
   inventorySourceStorages: InventoryStorage[];
   isLoading: boolean;
   isVsphere: boolean;
   loadError: Error | null;
+  providersLoadError: Error | null;
+  providersReady: boolean;
   sourceProvider: V1beta1Provider | undefined;
   sourceStorages: MappingValue[];
   targetStorages: TargetStorage[];
@@ -37,14 +36,15 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
   isLoading,
   isVsphere,
   loadError,
+  providersLoadError,
+  providersReady,
   sourceProvider,
   sourceStorages,
   targetStorages,
-}) => {
+}): ReactElement => {
   const { t } = useForkliftTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
-  const isCopyOffloadEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_OFFLOAD);
-  const isVsphereOffload = isVsphere && isCopyOffloadEnabled;
+  const isVsphereOffload = isVsphere && isFeatureEnabled(FEATURE_NAMES.COPY_OFFLOAD);
   const {
     control,
     formState: { isSubmitting },
@@ -62,6 +62,16 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
       validate: (values) => validateUpdatedStorageMaps(values),
     },
   });
+
+  if (!providersReady) {
+    if (providersLoadError) {
+      return (
+        <FormErrorHelperText error={{ message: providersLoadError.message, type: 'manual' }} />
+      );
+    }
+
+    return <Spinner aria-label={t('Loading providers')} size="lg" />;
+  }
 
   return (
     <FieldBuilderTable
@@ -82,51 +92,14 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
       }}
       fieldRows={storageMappingFields.map((field, index) => ({
         ...field,
-        additionalOptions: (
-          <Stack hasGutter>
-            <StackItem>
-              <AccessModeField
-                fieldId={getStorageMapFieldId(StorageMapFieldId.AccessMode, index)}
-                targetStorageFieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-                targetStorages={targetStorages}
-              />
-            </StackItem>
-            {isVsphereOffload && (
-              <StackItem>
-                <OffloadStorageRow
-                  index={index}
-                  sourceProvider={sourceProvider}
-                  sourceStorages={inventorySourceStorages}
-                  targetStorages={targetStorages}
-                />
-              </StackItem>
-            )}
-          </Stack>
-        ),
-        inputs: [
-          <SourceStorageField
-            fieldId={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
-            key={getStorageMapFieldId(StorageMapFieldId.SourceStorage, index)}
-            sourceStorages={sourceStorages}
-          />,
-          isVsphereOffload ? (
-            <TargetStorageWithSuggestion
-              fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-              index={index}
-              key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-              sourceStorages={inventorySourceStorages}
-              targetStorages={targetStorages}
-              testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
-            />
-          ) : (
-            <TargetStorageField
-              fieldId={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-              key={getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}
-              targetStorages={targetStorages}
-              testId={`target-storage-${getStorageMapFieldId(StorageMapFieldId.TargetStorage, index)}`}
-            />
-          ),
-        ],
+        ...getStorageMapEditFieldRowContent({
+          index,
+          inventorySourceStorages,
+          isVsphereOffload,
+          sourceProvider,
+          sourceStorages,
+          targetStorages,
+        }),
       }))}
       headers={[
         {

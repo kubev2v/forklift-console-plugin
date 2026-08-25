@@ -96,7 +96,7 @@ test.describe('EC2 Provider Form Validation', () => {
       });
 
       await test.step('Fill access key ID — button stays disabled', async () => {
-        await createProvider.ec2AccessKeyIdInput.fill('AKIA_TEST_KEY');
+        await createProvider.ec2AccessKeyIdInput.fill('example-access-key-id');
         await expect(createProvider.createButton).toBeDisabled();
       });
 

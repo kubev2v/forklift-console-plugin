@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 import {
   BaseMapDetailsPage,
@@ -24,7 +24,10 @@ export class NetworkMapDetailsPage extends BaseMapDetailsPage {
 
   async openEditModal(): Promise<NetworkMapEditModal> {
     await this.verifyOnDetailsPage();
-    await this.editButtonLocator().click();
+    const editButton = this.editButtonLocator();
+    // Edit stays disabled until source/destination providers resolve (uid present).
+    await expect(editButton).toBeEnabled({ timeout: 30_000 });
+    await editButton.click();
     await this.networkMapEditModal.waitForModalToOpen();
     await this.page.waitForLoadState('domcontentloaded');
     return this.networkMapEditModal;

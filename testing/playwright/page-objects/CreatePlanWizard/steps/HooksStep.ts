@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import { HookSource } from '../../../types/enums';
+import { fillMonacoEditorViaKeyboard } from '../../../utils/fillMonacoEditorViaKeyboard';
 
 export type HookConfig = {
   ansiblePlaybook?: string;
@@ -116,14 +117,7 @@ export class HooksStep {
   }
 
   async fillYamlEditorContent(content: string, editorIndex = 0): Promise<void> {
-    // SdkYamlEditor updates react-hook-form only through CodeEditor onChange.
-    // Programmatic Monaco setValue does not fire that path — type via the keyboard.
-    const editor = this.page.locator('.code-editor-container .monaco-editor').nth(editorIndex);
-    await expect(editor).toBeVisible({ timeout: 30_000 });
-    await editor.click();
-    const selectAll = process.platform === 'darwin' ? 'Meta+A' : 'Control+A';
-    await this.page.keyboard.press(selectAll);
-    await this.page.keyboard.insertText(content);
+    await fillMonacoEditorViaKeyboard(this.page, content, editorIndex);
   }
 
   async selectHookSource(source: HookSource): Promise<void> {

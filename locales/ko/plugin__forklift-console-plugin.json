@@ -804,6 +804,7 @@
   "Loading AAP job templates...": "AAP 작업 템플릿 로드 중...",
   "Loading disk decryption secret...": "Loading disk decryption secret...",
   "Loading migration alerts": "Loading migration alerts",
+  "Loading providers": "Loading providers",
   "Loading secrets...": "Loading secrets...",
   "Loading throughput data": "처리량 데이터 로드 중",
   "Loading virtual machines...": "가상 머신을 불러오는 중...",

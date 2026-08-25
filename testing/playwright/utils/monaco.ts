@@ -17,8 +17,8 @@ type MonacoGlobal = typeof globalThis & {
  * Playwright serializes only the function body, so nested helpers are not available
  * in the browser context.
  *
- * Prefer editors over models: `editor.setValue` notifies Monaco/React listeners used by
- * hook playbook fields; `model.setValue` alone can leave react-hook-form at "None".
+ * Prefer editors over models: `editor.setValue` notifies Monaco listeners when present.
+ * For CodeEditor/react-hook-form fields prefer `fillMonacoEditorViaKeyboard` instead.
  */
 export const setMonacoEditorValue = ({
   content,
@@ -47,6 +47,12 @@ export const setMonacoEditorValue = ({
 
 export const getMonacoEditorValue = ({ index = 0 }: { index?: number } = {}): string => {
   const monacoGlobal = globalThis as MonacoGlobal;
+  const editors = monacoGlobal.monaco?.editor?.getEditors?.() ?? [];
+  const editorValue = editors[index]?.getValue?.();
+  if (editorValue !== undefined) {
+    return editorValue;
+  }
+
   const models = monacoGlobal.monaco?.editor?.getModels?.() ?? [];
   return models[index]?.getValue?.() ?? '';
 };
