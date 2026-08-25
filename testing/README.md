@@ -26,6 +26,13 @@ testing/playwright/
 
 Upstream is the fast UI feedback loop. Downstream is the source of truth against a live MTV cluster.
 
+**Lint / types:** Playwright and `@kubernetes/client-node` are dependencies of `testing/package.json`, not the repo root. Install them before type-aware ESLint on this tree:
+
+```bash
+npm --prefix testing ci
+npm run lint
+```
+
 **How a test is structured**
 
 1. Spec under `e2e/` uses `test.step()` for narrative steps.
