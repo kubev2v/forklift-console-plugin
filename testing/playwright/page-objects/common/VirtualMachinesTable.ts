@@ -221,9 +221,9 @@ export class VirtualMachinesTable {
   }
 
   /**
-   * Reorders columns using move up/down controls in the Manage columns modal.
+   * Reorders columns using drag and drop in the Manage columns modal.
    * @param sourceColumn - Column to move
-   * @param targetColumn - Column to move before
+   * @param targetColumn - Column to move before/after
    */
   async reorderColumn(sourceColumn: string, targetColumn: string): Promise<void> {
     const manageColumnsBtn = this.page.getByTestId('manage-columns-button');
@@ -233,25 +233,37 @@ export class VirtualMachinesTable {
     await expect(modalBody).toBeVisible();
 
     const columnList = modalBody.getByTestId('manage-columns-list');
-    const sourceId = sourceColumn.toLowerCase();
-    const targetId = targetColumn.toLowerCase();
-    const sourceItem = columnList.locator(`#${sourceId}`);
-    const targetItem = columnList.locator(`#${targetId}`);
+    const sourceItem = columnList.locator(`#${sourceColumn.toLowerCase()}`);
+    const targetItem = columnList.locator(`#${targetColumn.toLowerCase()}`);
 
     await expect(sourceItem).toBeVisible();
     await expect(targetItem).toBeVisible();
 
-    const moveUpButton = columnList.getByTestId(`manage-columns-move-up-${sourceId}`);
+    const sourceDragHandle = sourceItem.getByRole('button').first();
+    const targetDragHandle = targetItem.getByRole('button').first();
 
-    // Move source up until it appears before the target column.
-    for (let attempt = 0; attempt < 20; attempt += 1) {
-      const sourceBox = await sourceItem.boundingBox();
-      const targetBox = await targetItem.boundingBox();
-      if (sourceBox && targetBox && sourceBox.y < targetBox.y) {
-        break;
-      }
-      await expect(moveUpButton).toBeEnabled();
-      await moveUpButton.click();
+    const sourceBox = await sourceDragHandle.boundingBox();
+    const targetBox = await targetDragHandle.boundingBox();
+
+    if (sourceBox && targetBox) {
+      await this.page.mouse.move(
+        sourceBox.x + sourceBox.width / 2,
+        sourceBox.y + sourceBox.height / 2,
+      );
+      await this.page.mouse.down();
+      await this.page.waitForTimeout(100);
+
+      await this.page.mouse.move(
+        targetBox.x + targetBox.width / 2,
+        targetBox.y + targetBox.height / 2,
+        {
+          steps: 10,
+        },
+      );
+      await this.page.waitForTimeout(100);
+
+      await this.page.mouse.up();
+      await this.page.waitForTimeout(500);
     }
 
     const saveBtn = this.page.getByTestId('manage-columns-save-button');
