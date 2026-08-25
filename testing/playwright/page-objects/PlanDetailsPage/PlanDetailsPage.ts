@@ -290,7 +290,8 @@ export class PlanDetailsPage {
 
   async verifyPlanTitle(planName: string): Promise<void> {
     const titleLocator = this.page.getByTestId('resource-details-title');
-    await expect(titleLocator).toContainText(planName);
+    // Empty plan watches render " Unknown" until the Plan CR loads.
+    await expect(titleLocator).toContainText(planName, { timeout: 30_000 });
   }
 
   /**

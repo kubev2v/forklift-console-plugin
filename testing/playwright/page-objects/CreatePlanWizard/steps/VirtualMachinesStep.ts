@@ -96,20 +96,28 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
   }
 
   async searchAndSelectVirtualMachine(vmName: string, folder?: string) {
-    await this.search(vmName);
+    const VM_ROW_TIMEOUT = 60_000;
 
-    if (folder) {
-      if (isVersionAtLeast(V2_11_0)) {
-        await this.expandFolder(folder);
-      } else {
-        await this.expandFolderForLegacy(folder);
-      }
-    }
+    // Name filter matches the parent folder while the VM stays collapsed.
+    // Expand the folder inside the poll so inventory lag + collapsed rows both resolve.
+    await expect
+      .poll(
+        async () => {
+          await this.search(vmName);
+          if (folder) {
+            if (isVersionAtLeast(V2_11_0)) {
+              await this.expandFolder(folder).catch(() => undefined);
+            } else {
+              await this.expandFolderForLegacy(folder).catch(() => undefined);
+            }
+          }
+          return this.table.getRow({ Name: vmName }).isVisible();
+        },
+        { message: `VM "${vmName}" not visible after search/expand`, timeout: VM_ROW_TIMEOUT },
+      )
+      .toBe(true);
 
     if (isVersionAtLeast(V2_11_0)) {
-      // Inventory API can be slow; 60s timeout prevents the default 15s firing before the row appears.
-      const VM_ROW_TIMEOUT = 60_000;
-      await expect(this.table.getRow({ Name: vmName })).toBeVisible({ timeout: VM_ROW_TIMEOUT });
       await this.table.selectRow({ Name: vmName });
     } else {
       const treegrid = this.rootLocator.getByRole('treegrid');
@@ -178,9 +186,14 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     const treegrid = this.rootLocator.getByRole('treegrid');
     const grid = this.rootLocator.getByRole('grid');
     const tableLocator = treegrid.or(grid);
-    await expect(tableLocator).toBeVisible({ timeout: 30000 });
+    await expect(tableLocator).toBeVisible({ timeout: 30_000 });
     if (isVersionAtLeast(V2_11_0)) {
       await this.table.waitForTableLoad();
+      // Empty table shell is not enough — wait for inventory folders/VMs.
+      const inventoryRow = this.rootLocator.locator(
+        'tbody tr[data-testid^="folder-"], tbody tr[data-testid^="vm-"]',
+      );
+      await expect(inventoryRow.first()).toBeVisible({ timeout: 60_000 });
     } else {
       await expect(tableLocator.getByRole('row').first()).toBeVisible();
     }

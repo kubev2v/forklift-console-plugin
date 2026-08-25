@@ -93,6 +93,8 @@ export abstract class BaseMapDetailsPage {
       namespace,
       resource: this.config.resourceType,
     });
+    // Concurrent creates can leave the watch spinning; wait for details content.
+    await this.waitForDetailsPageReady();
   }
 
   async navigateToYamlTab(): Promise<void> {

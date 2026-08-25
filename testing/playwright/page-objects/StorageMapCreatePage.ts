@@ -26,8 +26,11 @@ export class StorageMapCreatePage {
     await expect(dropdown).toBeEnabled();
     await dropdown.click();
 
-    const option = this.page.getByRole('listbox').getByRole('option').first();
-    await expect(option).toBeVisible();
+    const listbox = this.page.getByRole('listbox');
+    await expect(listbox).toBeVisible();
+    // Inventory can briefly show "No storages available" before options appear.
+    const option = listbox.locator('[role="option"]:enabled').first();
+    await expect(option).toBeVisible({ timeout: 30_000 });
     const value = ((await option.textContent()) ?? '').trim();
     await option.click();
     return value;
@@ -39,16 +42,19 @@ export class StorageMapCreatePage {
     await expect(dropdown).toBeVisible();
     await expect(dropdown).toBeEnabled();
     await dropdown.click();
-    // Wait for the listbox to open before looking for the specific option.
-    // Newly-created providers (or slow API responses) can delay option availability.
+
     const listbox = this.page.getByRole('listbox');
     await expect(listbox).toBeVisible();
-    await listbox.getByRole('option', { name: optionName }).click({ timeout: OPTION_TIMEOUT });
+
+    // ProviderSelect shows an empty-state until Ready providers appear in the watch.
+    const option = listbox.getByRole('option', { name: optionName });
+    await expect(option).toBeVisible({ timeout: OPTION_TIMEOUT });
+    await option.click();
   }
 
   async addMapping(): Promise<void> {
     const addButton = this.page.getByTestId('add-mapping-button');
-    await expect(addButton).toBeEnabled();
+    await expect(addButton).toBeEnabled({ timeout: 30_000 });
     await addButton.click();
   }
 

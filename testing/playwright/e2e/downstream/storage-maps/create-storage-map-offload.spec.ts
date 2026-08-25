@@ -86,12 +86,9 @@ test.describe(
 
       await test.step('Set only offload plugin and verify validation error', async () => {
         await createPage.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
-        // Dedicated hosts UI/CRD landed with MTV-6163 (not on 2.12 z-stream).
-        if (crdSupportsDedicatedHosts) {
-          await createPage.offload.verifyDedicatedMigrationHostsVisible(0);
-        } else {
-          await createPage.offload.verifyDedicatedMigrationHostsNotVisible(0);
-        }
+        // Dedicated hosts field is always shown for XCOPY in the UI; CRD support is
+        // checked separately when asserting the create payload (MTV-6163).
+        await createPage.offload.verifyDedicatedMigrationHostsVisible(0);
         await createPage.offload.verifyValidationError('must be set when configuring offload');
       });
 
@@ -164,6 +161,14 @@ test.describe(
         await createPage.removeMapping(1);
         await createPage.selectFirstAvailableSourceAtIndex(0);
         await createPage.selectFirstAvailableTargetAtIndex(0);
+        // Re-apply offload after storage selection so the submitted mapping keeps plugin values.
+        await createPage.offload.expandOffloadOptions(0);
+        await createPage.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
+        await createPage.offload.selectStorageSecret(0, secretName);
+        await createPage.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
+        if (crdSupportsDedicatedHosts && dedicatedHostName) {
+          await createPage.offload.selectDedicatedMigrationHost(0, dedicatedHostName);
+        }
         await createPage.submit();
         resourceManager.addStorageMap(storageMapName, MTV_NAMESPACE);
       });
@@ -208,11 +213,11 @@ test.describe(
         const productText = await modal.offload.getStorageProductText(0);
         expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
 
-        // MTV-6163: dedicated hosts only when CRD schema includes the field (not on 2.12 z-stream).
+        // Dedicated hosts field is always shown for XCOPY in the UI.
+        // Host selection/persistence is only asserted when the CRD schema includes the field.
+        await modal.offload.verifyDedicatedMigrationHostsVisible(0);
         if (crdSupportsDedicatedHosts) {
           await modal.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
-        } else {
-          await modal.offload.verifyDedicatedMigrationHostsNotVisible(0);
         }
 
         await modal.cancel();

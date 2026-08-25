@@ -5,41 +5,80 @@ import { useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import ModalForm from '@components/ModalForm/ModalForm';
-import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { StorageMapModel, type V1beta1Provider, type V1beta1StorageMap } from '@forklift-ui/types';
-import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import {
+  ProviderModelGroupVersionKind,
+  type V1beta1Provider,
+  type V1beta1StorageMap,
+} from '@forklift-ui/types';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
-import { ModalVariant } from '@patternfly/react-core';
+import { ModalVariant, Spinner } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
-import { isEmpty } from '@utils/helpers';
+import {
+  getMapDestinationProviderName,
+  getMapDestinationProviderNamespace,
+  getMapSourceProviderName,
+  getMapSourceProviderNamespace,
+} from '@utils/crds/maps/selectors';
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { StorageMapFieldId } from '@utils/storage/types';
 
+import { patchStorageMapMappings } from '../utils/patchStorageMapMappings';
+import { resolveProvider } from '../utils/resolveProvider';
 import type { UpdateMappingsFormData } from '../utils/types';
-import { transformFormValuesToK8sSpec, transformStorageMapToFormValues } from '../utils/utils';
+import { transformStorageMapToFormValues } from '../utils/utils';
 
 import UpdateStorageMapFieldTable from './UpdateStorageMapFieldTable';
 
 export type StorageMapEditProps = {
-  destinationProvider: V1beta1Provider;
-  sourceProvider: V1beta1Provider;
+  destinationProvider?: V1beta1Provider;
+  sourceProvider?: V1beta1Provider;
   storageMap: V1beta1StorageMap;
 };
 
 const StorageMapEdit: OverlayComponent<StorageMapEditProps> = ({
   closeOverlay,
-  destinationProvider,
-  sourceProvider,
+  destinationProvider: launchedDestinationProvider,
+  sourceProvider: launchedSourceProvider,
   storageMap,
 }) => {
   const { t } = useForkliftTranslation();
   const storageMapNamespace = getNamespace(storageMap);
 
+  const [watchedSourceProvider, sourceProviderLoaded] = useK8sWatchResource<V1beta1Provider>({
+    groupVersionKind: ProviderModelGroupVersionKind,
+    isList: false,
+    name: getMapSourceProviderName(storageMap),
+    namespace: getMapSourceProviderNamespace(storageMap),
+    namespaced: true,
+  });
+  const [watchedDestinationProvider, destinationProviderLoaded] =
+    useK8sWatchResource<V1beta1Provider>({
+      groupVersionKind: ProviderModelGroupVersionKind,
+      isList: false,
+      name: getMapDestinationProviderName(storageMap),
+      namespace: getMapDestinationProviderNamespace(storageMap),
+      namespaced: true,
+    });
+
+  const sourceProvider = resolveProvider(
+    watchedSourceProvider,
+    sourceProviderLoaded,
+    launchedSourceProvider,
+  );
+  const destinationProvider = resolveProvider(
+    watchedDestinationProvider,
+    destinationProviderLoaded,
+    launchedDestinationProvider,
+  );
+  const providersReady = Boolean(
+    sourceProvider?.metadata?.uid && destinationProvider?.metadata?.uid,
+  );
+
   const [sourceStorages, sourceStoragesLoading, sourceStoragesLoadError] =
     useSourceStorages(sourceProvider);
-
   const [targetStorages, targetStoragesLoading, targetStoragesLoadError] = useTargetStorages(
     destinationProvider,
     storageMapNamespace,
@@ -53,81 +92,54 @@ const StorageMapEdit: OverlayComponent<StorageMapEditProps> = ({
       })) ?? [],
     [sourceStorages],
   );
-
   const initialFormValues = useMemo(
     () => transformStorageMapToFormValues(storageMap),
     [storageMap],
   );
-
   const methods = useForm<UpdateMappingsFormData>({
     defaultValues: initialFormValues,
     mode: 'onChange',
   });
-
   const {
     formState: { isDirty, isValid },
     getFieldState,
     handleSubmit,
     reset,
   } = methods;
-
   const { error } = getFieldState(StorageMapFieldId.StorageMap);
-  // Reset form when storageMap changes
+
   useEffect(() => {
     reset(initialFormValues);
   }, [initialFormValues, reset]);
 
-  const onSubmit = async (formValues: UpdateMappingsFormData): Promise<void> => {
-    const filteredStorageMap = formValues.storageMap?.filter((mapping) => {
-      const hasSource = Boolean(mapping[StorageMapFieldId.SourceStorage]?.name);
-      const hasTarget = Boolean(mapping[StorageMapFieldId.TargetStorage]?.name);
-
-      return hasSource || hasTarget;
-    });
-
-    const updatedStorageMap = transformFormValuesToK8sSpec(
-      { storageMap: filteredStorageMap },
-      storageMap,
-      sourceProvider?.spec?.type === PROVIDER_TYPES.openshift,
-    );
-
-    if (updatedStorageMap) {
-      await k8sPatch({
-        data: [
-          {
-            op: isEmpty(storageMap?.spec?.map) ? ADD : REPLACE,
-            path: '/spec/map',
-            value: updatedStorageMap.spec?.map ?? [],
-          },
-        ],
-        model: StorageMapModel,
-        resource: storageMap,
-      });
-    }
-  };
-
-  const isLoading = sourceStoragesLoading || targetStoragesLoading;
+  const isLoading = !providersReady || sourceStoragesLoading || targetStoragesLoading;
   const loadError = sourceStoragesLoadError ?? targetStoragesLoadError;
 
   return (
     <FormProvider {...methods}>
       <ModalForm
         closeOverlay={closeOverlay}
-        isDisabled={!isValid || !isDirty}
-        onConfirm={handleSubmit(onSubmit)}
+        isDisabled={!isValid || !isDirty || !providersReady}
+        onConfirm={handleSubmit(async (formValues) => {
+          await patchStorageMapMappings(formValues, storageMap, sourceProvider);
+        })}
         testId="edit-storage-map-modal"
         title={t('Edit storage map')}
         variant={ModalVariant.medium}
       >
-        <UpdateStorageMapFieldTable
-          inventorySourceStorages={sourceStorages ?? []}
-          isLoading={isLoading}
-          isVsphere={sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere}
-          loadError={loadError}
-          sourceProvider={sourceProvider}
-          sourceStorages={allSourceStorages}
-          targetStorages={targetStorages}
-        />
+        {providersReady ? (
+          <UpdateStorageMapFieldTable
+            inventorySourceStorages={sourceStorages ?? []}
+            isLoading={isLoading}
+            isVsphere={sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere}
+            loadError={loadError}
+            sourceProvider={sourceProvider}
+            sourceStorages={allSourceStorages}
+            targetStorages={targetStorages}
+          />
+        ) : (
+          <Spinner size="lg" />
+        )}
         {error?.root && <FormErrorHelperText error={error.root} />}
       </ModalForm>
     </FormProvider>

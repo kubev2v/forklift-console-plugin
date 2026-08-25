@@ -18,7 +18,7 @@ export class NetworkMapCreatePage {
 
   async addMapping() {
     const addMappingButton = this.page.getByRole('button', { name: 'Add mapping' });
-    await expect(addMappingButton).toBeEnabled();
+    await expect(addMappingButton).toBeEnabled({ timeout: 30_000 });
     await addMappingButton.click();
   }
 

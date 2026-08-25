@@ -1,9 +1,9 @@
 import { expect } from '@playwright/test';
 
 import {
+  isolatedStorageMapFixtures,
   providerOnlyFixtures,
   sharedProviderFixtures,
-  sharedProviderStorageMapFixtures,
 } from '../../../fixtures/resourceFixtures';
 import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
@@ -72,14 +72,15 @@ providerOnlyFixtures.describe('Access Mode - Create Storage Map', { tag: '@downs
       await providerOnlyFixtures.step('Select source and target storage then submit', async () => {
         await createPage.selectFirstAvailableSourceAtIndex(0);
         await createPage.selectFirstAvailableTargetAtIndex(0);
-        await createPage.submit();
+        // Wait for create redirect — bare submit() races details navigation under load.
+        await createPage.submitForm(storageMapName);
         resourceManager.addStorageMap(storageMapName, MTV_NAMESPACE);
       });
 
       await providerOnlyFixtures.step(
         'Navigate to details and verify access mode is Default',
         async () => {
-          await detailsPage.navigate(storageMapName);
+          await detailsPage.waitForDetailsPageReady();
           const modal = await detailsPage.openEditModal();
           await modal.accessMode.expandAdvancedOptions(0);
           const text = await modal.accessMode.getAccessModeText(0);
@@ -91,15 +92,15 @@ providerOnlyFixtures.describe('Access Mode - Create Storage Map', { tag: '@downs
   );
 });
 
-sharedProviderStorageMapFixtures.describe(
+isolatedStorageMapFixtures.describe(
   'Access Mode - Edit Storage Map',
   { tag: '@downstream' },
   () => {
-    requireVersion(sharedProviderStorageMapFixtures, V5_0_0);
+    requireVersion(isolatedStorageMapFixtures, V5_0_0);
 
-    sharedProviderStorageMapFixtures(
+    isolatedStorageMapFixtures(
       'should persist access mode through edit flow',
-      async ({ page, testProvider: _testProvider, testStorageMap }) => {
+      async ({ page, testStorageMap }) => {
         if (!testStorageMap) {
           throw new Error('testStorageMap is required');
         }
@@ -107,7 +108,7 @@ sharedProviderStorageMapFixtures.describe(
         const detailsPage = new StorageMapDetailsPage(page);
         await detailsPage.navigate(testStorageMap.name);
 
-        await sharedProviderStorageMapFixtures.step(
+        await isolatedStorageMapFixtures.step(
           'Select source and target storage for the mapping',
           async () => {
             const modal = await detailsPage.openEditModal();
@@ -118,7 +119,7 @@ sharedProviderStorageMapFixtures.describe(
           },
         );
 
-        await sharedProviderStorageMapFixtures.step(
+        await isolatedStorageMapFixtures.step(
           'Expand advanced options and verify initial state is Default',
           async () => {
             const modal = await detailsPage.openEditModal();
@@ -129,7 +130,7 @@ sharedProviderStorageMapFixtures.describe(
           },
         );
 
-        await sharedProviderStorageMapFixtures.step(
+        await isolatedStorageMapFixtures.step(
           'Set access mode to ReadWriteMany and save',
           async () => {
             const modal = await detailsPage.openEditModal();
@@ -140,7 +141,7 @@ sharedProviderStorageMapFixtures.describe(
           },
         );
 
-        await sharedProviderStorageMapFixtures.step(
+        await isolatedStorageMapFixtures.step(
           'Re-open modal and verify ReadWriteMany (RWX) persisted',
           async () => {
             const modal = await detailsPage.openEditModal();
@@ -151,22 +152,19 @@ sharedProviderStorageMapFixtures.describe(
           },
         );
 
-        await sharedProviderStorageMapFixtures.step(
-          'Change back to Default and verify',
-          async () => {
-            const modal = await detailsPage.openEditModal();
-            await modal.accessMode.expandAdvancedOptions(0);
-            await modal.accessMode.selectAccessMode(0, 'Default');
-            await modal.verifySaveButtonEnabled();
-            await modal.save();
+        await isolatedStorageMapFixtures.step('Change back to Default and verify', async () => {
+          const modal = await detailsPage.openEditModal();
+          await modal.accessMode.expandAdvancedOptions(0);
+          await modal.accessMode.selectAccessMode(0, 'Default');
+          await modal.verifySaveButtonEnabled();
+          await modal.save();
 
-            const verifyModal = await detailsPage.openEditModal();
-            await verifyModal.accessMode.expandAdvancedOptions(0);
-            const text = await verifyModal.accessMode.getAccessModeText(0);
-            expect(text).toBe('Default');
-            await verifyModal.cancel();
-          },
-        );
+          const verifyModal = await detailsPage.openEditModal();
+          await verifyModal.accessMode.expandAdvancedOptions(0);
+          const text = await verifyModal.accessMode.getAccessModeText(0);
+          expect(text).toBe('Default');
+          await verifyModal.cancel();
+        });
       },
     );
   },
@@ -332,62 +330,55 @@ sharedProviderFixtures.describe('Access Mode - Plan Details Edit', { tag: '@down
   );
 });
 
-sharedProviderStorageMapFixtures.describe(
-  'Access Mode - RWO Warning',
-  { tag: '@downstream' },
-  () => {
-    requireVersion(sharedProviderStorageMapFixtures, V5_0_0);
+isolatedStorageMapFixtures.describe('Access Mode - RWO Warning', { tag: '@downstream' }, () => {
+  requireVersion(isolatedStorageMapFixtures, V5_0_0);
 
-    sharedProviderStorageMapFixtures(
-      'should show RWO warning for Ceph-backed storage classes',
-      async ({ page, testProvider: _testProvider, testStorageMap }) => {
-        if (!testStorageMap) {
-          throw new Error('testStorageMap is required');
-        }
+  isolatedStorageMapFixtures(
+    'should show RWO warning for Ceph-backed storage classes',
+    async ({ page, testStorageMap }) => {
+      if (!testStorageMap) {
+        throw new Error('testStorageMap is required');
+      }
 
-        const detailsPage = new StorageMapDetailsPage(page);
-        await detailsPage.navigate(testStorageMap.name);
+      const detailsPage = new StorageMapDetailsPage(page);
+      await detailsPage.navigate(testStorageMap.name);
 
-        await sharedProviderStorageMapFixtures.step(
-          'Select source and Ceph-backed target storage',
-          async () => {
-            const modal = await detailsPage.openEditModal();
-            await modal.selectFirstAvailableSourceAtIndex(0);
-            await modal.selectFirstAvailableTargetAtIndex(0);
-            await modal.verifySaveButtonEnabled();
-            await modal.save();
-          },
-        );
+      await isolatedStorageMapFixtures.step(
+        'Select source and Ceph-backed target storage',
+        async () => {
+          const modal = await detailsPage.openEditModal();
+          await modal.selectFirstAvailableSourceAtIndex(0);
+          await modal.selectFirstAvailableTargetAtIndex(0);
+          await modal.verifySaveButtonEnabled();
+          await modal.save();
+        },
+      );
 
-        const modal = await detailsPage.openEditModal();
-        await modal.accessMode.expandAdvancedOptions(0);
+      const modal = await detailsPage.openEditModal();
+      await modal.accessMode.expandAdvancedOptions(0);
 
-        await sharedProviderStorageMapFixtures.step(
-          'Select ReadWriteOnce (RWO) and verify RWO warning appears',
-          async () => {
-            await modal.accessMode.selectAccessMode(0, 'ReadWriteOnce (RWO)');
-            await modal.accessMode.verifyRwoWarningVisible();
-          },
-        );
+      await isolatedStorageMapFixtures.step(
+        'Select ReadWriteOnce (RWO) and verify RWO warning appears',
+        async () => {
+          await modal.accessMode.selectAccessMode(0, 'ReadWriteOnce (RWO)');
+          await modal.accessMode.verifyRwoWarningVisible();
+        },
+      );
 
-        await sharedProviderStorageMapFixtures.step(
-          'Switch to ReadWriteMany (RWX) and verify warning disappears',
-          async () => {
-            await modal.accessMode.selectAccessMode(0, 'ReadWriteMany (RWX)');
-            await modal.accessMode.verifyRwoWarningNotVisible();
-          },
-        );
+      await isolatedStorageMapFixtures.step(
+        'Switch to ReadWriteMany (RWX) and verify warning disappears',
+        async () => {
+          await modal.accessMode.selectAccessMode(0, 'ReadWriteMany (RWX)');
+          await modal.accessMode.verifyRwoWarningNotVisible();
+        },
+      );
 
-        await sharedProviderStorageMapFixtures.step(
-          'Switch to Default and verify no warning',
-          async () => {
-            await modal.accessMode.selectAccessMode(0, 'Default');
-            await modal.accessMode.verifyRwoWarningNotVisible();
-          },
-        );
+      await isolatedStorageMapFixtures.step('Switch to Default and verify no warning', async () => {
+        await modal.accessMode.selectAccessMode(0, 'Default');
+        await modal.accessMode.verifyRwoWarningNotVisible();
+      });
 
-        await modal.cancel();
-      },
-    );
-  },
-);
+      await modal.cancel();
+    },
+  );
+});

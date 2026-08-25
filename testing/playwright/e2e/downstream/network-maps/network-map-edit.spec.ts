@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 
-import { sharedProviderNetworkMapFixtures as test } from '../../../fixtures/resourceFixtures';
+import { isolatedNetworkMapFixtures as test } from '../../../fixtures/resourceFixtures';
 import { NetworkMapDetailsPage } from '../../../page-objects/NetworkMapDetailsPage';
 import { NetworkTargets, SourceNetworks } from '../../../types/test-data';
 import { V2_12_0 } from '../../../utils/version/constants';

@@ -1,6 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import { setMonacoEditorValue } from '../../../utils/monaco';
 import { BaseModal } from '../../common/BaseModal';
 
 export class HookEditModal extends BaseModal {
@@ -35,11 +34,13 @@ export class HookEditModal extends BaseModal {
   }
 
   async setAnsiblePlaybook(playbook: string): Promise<void> {
-    const success = await this.page.evaluate(setMonacoEditorValue, { content: playbook });
-
-    if (!success) {
-      throw new Error('Failed to set playbook content - Monaco editor not found');
-    }
+    // SdkYamlEditor only updates RHF via CodeEditor onChange — type via keyboard.
+    const editor = this.page.locator('.code-editor-container .monaco-editor').first();
+    await expect(editor).toBeVisible({ timeout: 30_000 });
+    await editor.click();
+    const selectAll = process.platform === 'darwin' ? 'Meta+A' : 'Control+A';
+    await this.page.keyboard.press(selectAll);
+    await this.page.keyboard.insertText(playbook);
   }
 
   async setHookRunnerImage(image: string): Promise<void> {

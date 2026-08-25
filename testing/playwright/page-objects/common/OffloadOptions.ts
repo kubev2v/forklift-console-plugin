@@ -238,8 +238,7 @@ export class OffloadOptions {
   }
 
   async verifyOffloadToggleVisible(mappingIndex: number): Promise<void> {
-    const toggle = this.expandableToggle(mappingIndex);
-    await expect(toggle).toBeVisible();
+    await expect(this.expandableToggle(mappingIndex)).toBeVisible();
   }
 
   async verifyStorageSecretOptions(

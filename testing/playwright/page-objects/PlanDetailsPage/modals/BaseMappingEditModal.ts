@@ -5,6 +5,8 @@ import { BaseModal } from '../../common/BaseModal';
 const FORM_SETTLE_MS = 500;
 const MAX_DROPDOWN_ATTEMPTS = 3;
 const OPTION_CLICK_TIMEOUT_MS = 3_000;
+const INVENTORY_READY_TIMEOUT_MS = 30_000;
+
 // Option textContent concatenates badge labels (TargetStorageField); MenuToggle shows name only.
 const STORAGE_OPTION_BADGE_SUFFIXES = ['Default', 'NetApp Shift'] as const;
 
@@ -46,13 +48,20 @@ export abstract class BaseMappingEditModal extends BaseModal {
     for (let attempt = 0; attempt < MAX_DROPDOWN_ATTEMPTS; attempt += 1) {
       try {
         const listbox = await this.openDropdown(selectLocator);
-        const option = listbox.locator('[role="option"]:enabled').nth(nth);
-        await option.click({ timeout: OPTION_CLICK_TIMEOUT_MS });
+        const emptyInventory = listbox.getByText('No storages available');
+        if (await emptyInventory.isVisible().catch(() => false)) {
+          await selectLocator.click(); // close
+          throw new Error('Storage inventory empty ("No storages available")');
+        }
+        const options = listbox.locator('[role="option"]:enabled');
+        await expect(options.first()).toBeVisible({ timeout: INVENTORY_READY_TIMEOUT_MS });
+        await options.nth(nth).click({ timeout: OPTION_CLICK_TIMEOUT_MS });
         return;
-      } catch {
+      } catch (error) {
         if (attempt === MAX_DROPDOWN_ATTEMPTS - 1) {
           throw new Error(
             `Failed to select option at index ${nth} after ${MAX_DROPDOWN_ATTEMPTS} attempts`,
+            { cause: error },
           );
         }
       }
@@ -117,6 +126,8 @@ export abstract class BaseMappingEditModal extends BaseModal {
 
   async addMapping(): Promise<number> {
     const countBefore = await this.getMappingCount();
+    // Disabled while source/target inventory is empty or still loading.
+    await expect(this.addMappingButton).toBeEnabled({ timeout: INVENTORY_READY_TIMEOUT_MS });
     await this.addMappingButton.click();
     await this.mappingRowLocator(countBefore).waitFor({ state: 'visible' });
     return countBefore;
