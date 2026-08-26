@@ -164,9 +164,6 @@ test.describe(
         await createPage.removeMapping(1);
         await createPage.selectFirstAvailableSourceAtIndex(0);
         await createPage.selectFirstAvailableTargetAtIndex(0);
-        // Second row was only for independent offload-state checks — remove it so Create
-        // is not blocked by an incomplete mapping.
-        await createPage.removeMapping(1);
         await createPage.submit();
         resourceManager.addStorageMap(storageMapName, MTV_NAMESPACE);
       });

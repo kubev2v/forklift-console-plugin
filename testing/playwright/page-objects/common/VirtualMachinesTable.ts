@@ -1,6 +1,14 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { V5_0_0 } from '../../utils/version/constants';
+import { isVersionAtLeast } from '../../utils/version/version';
+
 import { Table } from './Table';
+
+const DRAG_DROP_SETTLE_MS = 500;
+const DRAG_HOLD_MS = 100;
+const DRAG_MOVE_STEPS = 10;
+const MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS = 20;
 
 /**
  * Shared component for VM tables that appear in:
@@ -17,6 +25,65 @@ export class VirtualMachinesTable {
     this.page = page;
     this.rootLocator = rootLocator;
     this.table = new Table(page, rootLocator);
+  }
+
+  private async reorderColumnWithDrag(
+    sourceColumn: string,
+    targetColumn: string,
+    sourceItem: Locator,
+    targetItem: Locator,
+  ): Promise<void> {
+    const sourceDragHandle = sourceItem.getByRole('button').first();
+    const targetDragHandle = targetItem.getByRole('button').first();
+    const sourceBox = await sourceDragHandle.boundingBox();
+    const targetBox = await targetDragHandle.boundingBox();
+
+    if (!sourceBox || !targetBox) {
+      throw new Error(
+        `Cannot drag column "${sourceColumn}" onto "${targetColumn}": missing bounding box for a drag handle`,
+      );
+    }
+
+    // DragDropSort needs a short hold after mousedown before it treats the pointer as a drag.
+    await this.page.mouse.move(
+      sourceBox.x + sourceBox.width / 2,
+      sourceBox.y + sourceBox.height / 2,
+    );
+    await this.page.mouse.down();
+    await this.page.waitForTimeout(DRAG_HOLD_MS);
+
+    await this.page.mouse.move(
+      targetBox.x + targetBox.width / 2,
+      targetBox.y + targetBox.height / 2,
+      { steps: DRAG_MOVE_STEPS },
+    );
+    await this.page.waitForTimeout(DRAG_HOLD_MS);
+
+    await this.page.mouse.up();
+    await this.page.waitForTimeout(DRAG_DROP_SETTLE_MS);
+  }
+
+  private async reorderColumnWithMoveButtons(
+    columnList: Locator,
+    sourceId: string,
+    sourceItem: Locator,
+    targetItem: Locator,
+  ): Promise<void> {
+    const moveUpButton = columnList.getByTestId(`manage-columns-move-up-${sourceId}`);
+
+    for (let attempt = 0; attempt < MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS; attempt += 1) {
+      const sourceBox = await sourceItem.boundingBox();
+      const targetBox = await targetItem.boundingBox();
+      if (sourceBox && targetBox && sourceBox.y < targetBox.y) {
+        return;
+      }
+      await expect(moveUpButton).toBeEnabled();
+      await moveUpButton.click();
+    }
+
+    throw new Error(
+      `Failed to move column "${sourceId}" above the target after ${MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS} move-up clicks`,
+    );
   }
 
   /**
@@ -221,9 +288,8 @@ export class VirtualMachinesTable {
   }
 
   /**
-   * Reorders columns using move up/down controls in the Manage columns modal.
-   * @param sourceColumn - Column to move
-   * @param targetColumn - Column to move before
+   * Reorders columns in the Manage columns modal.
+   * 5.0+ uses move-up buttons; 2.12 uses DragDropSort handles.
    */
   async reorderColumn(sourceColumn: string, targetColumn: string): Promise<void> {
     const manageColumnsBtn = this.page.getByTestId('manage-columns-button');
@@ -241,17 +307,10 @@ export class VirtualMachinesTable {
     await expect(sourceItem).toBeVisible();
     await expect(targetItem).toBeVisible();
 
-    const moveUpButton = columnList.getByTestId(`manage-columns-move-up-${sourceId}`);
-
-    // Move source up until it appears before the target column.
-    for (let attempt = 0; attempt < 20; attempt += 1) {
-      const sourceBox = await sourceItem.boundingBox();
-      const targetBox = await targetItem.boundingBox();
-      if (sourceBox && targetBox && sourceBox.y < targetBox.y) {
-        break;
-      }
-      await expect(moveUpButton).toBeEnabled();
-      await moveUpButton.click();
+    if (isVersionAtLeast(V5_0_0)) {
+      await this.reorderColumnWithMoveButtons(columnList, sourceId, sourceItem, targetItem);
+    } else {
+      await this.reorderColumnWithDrag(sourceColumn, targetColumn, sourceItem, targetItem);
     }
 
     const saveBtn = this.page.getByTestId('manage-columns-save-button');
