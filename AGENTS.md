@@ -514,6 +514,20 @@ Translation files are located in `locales/en/plugin__forklift-console-plugin.jso
 - Use `@testing-library/react` for component tests
 - Mock i18n with utilities from `@test-utils/mockI18n`
 
+### Coverage targets and exclusions (MTV-6267)
+
+Coverage aims to reflect **defect-prone** code (utils, hooks, interactive UI), not inflate percentages by instrumenting low-risk noise.
+
+**Prioritize covering:**
+- Pure utils and hooks with branching logic
+- Shared UI islands with state/interaction matrices
+- Feature-page extracted utils/hooks (not full page/wizard JSX already owned by Playwright)
+
+**Excluded from the coverage denominator** (see `jest.config.ts` `collectCoverageFrom` / `coveragePathIgnorePatterns`):
+- `src/onlineHelp/learningExperienceContent/**` — static JSX help topics
+- `**/types.ts`, `**/*.types.ts`, `**/constants.ts` — pure type/constant modules
+- `**/dynamic-plugin.ts` — plugin registration boilerplate
+
 ### E2E Tests (Playwright)
 - Located in `testing/playwright/e2e/`
 - Use page objects from `testing/playwright/page-objects/`
