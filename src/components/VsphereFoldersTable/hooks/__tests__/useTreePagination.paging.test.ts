@@ -42,10 +42,11 @@ describe('useTreePagination - paging', () => {
 
   it('includes root VMs and skips hidden concerns', () => {
     const blocks = [rootBlock(['root-1'])];
-    blocks[0].items[0].concerns = {
-      ...blocks[0].items[0].concerns!,
-      isHidden: true,
-    };
+    const [block] = blocks;
+    const [item] = block.items;
+    if (item.concerns) {
+      item.concerns = { ...item.concerns, isHidden: true };
+    }
     const { result } = renderHook(() => useTreePagination({ blocks, page: 1, perPage: 10 }));
 
     expect(result.current.itemCount).toBe(1);

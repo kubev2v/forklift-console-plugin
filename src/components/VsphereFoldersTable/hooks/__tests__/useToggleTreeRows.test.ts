@@ -13,12 +13,12 @@ describe('useToggleTreeRows', () => {
     const { result } = renderHook(() => useToggleTreeRows());
 
     act(() => {
-      result.current.toggleSet(result.current.setExpandedFolders, 'folder-a');
+      result.current.toggleSet<string>(result.current.setExpandedFolders, 'folder-a');
     });
     expect(result.current.expandedFolders.has('folder-a')).toBe(true);
 
     act(() => {
-      result.current.toggleSet(result.current.setExpandedFolders, 'folder-a');
+      result.current.toggleSet<string>(result.current.setExpandedFolders, 'folder-a');
     });
     expect(result.current.expandedFolders.has('folder-a')).toBe(false);
   });
@@ -27,8 +27,8 @@ describe('useToggleTreeRows', () => {
     const { result } = renderHook(() => useToggleTreeRows());
 
     act(() => {
-      result.current.toggleSet(result.current.setExpandedFolders, 'folder-a');
-      result.current.toggleSet(result.current.setExpandedVMs, 'vm-1');
+      result.current.toggleSet<string>(result.current.setExpandedFolders, 'folder-a');
+      result.current.toggleSet<string>(result.current.setExpandedVMs, 'vm-1');
     });
 
     expect([...result.current.expandedFolders]).toEqual(['folder-a']);

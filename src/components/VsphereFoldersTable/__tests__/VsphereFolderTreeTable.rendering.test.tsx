@@ -1,9 +1,11 @@
+import type { ReactElement } from 'react';
+
 import { mockI18n } from '@test-utils/mockI18n';
 
 mockI18n();
 
 jest.mock('../hooks/useVsphereFolderTreeTable', () => ({
-  useVsphereFolderTreeTable: () => ({
+  useVsphereFolderTreeTable: (): Record<string, unknown> => ({
     attributes: [],
     canInspect: false,
     canSelect: true,
@@ -48,17 +50,17 @@ jest.mock('../hooks/useVsphereFolderTreeTable', () => ({
 
 jest.mock('../components/TreeToolbar/TreeToolbar', () => ({
   __esModule: true,
-  default: () => <div data-testid="tree-toolbar" />,
+  default: (): ReactElement => <div data-testid="tree-toolbar" />,
 }));
 
 jest.mock('../components/TreeTableBody/TreeTableBody', () => ({
   __esModule: true,
-  default: () => <div data-testid="tree-table-body" />,
+  default: (): ReactElement => <div data-testid="tree-table-body" />,
 }));
 
 jest.mock('../components/VsphereFolderTreeTableHead', () => ({
   __esModule: true,
-  default: () => <thead data-testid="tree-table-head" />,
+  default: (): ReactElement => <thead data-testid="tree-table-head" />,
 }));
 
 import { render, screen } from '@testing-library/react';

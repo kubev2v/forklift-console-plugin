@@ -1,5 +1,6 @@
 import {
   BlockKind,
+  type ConcernsRow,
   type FolderBlock,
   type FolderRow,
   type RootBlock,
@@ -23,18 +24,18 @@ const vm = (name: string, overrides: Partial<VmRow> = {}): VmRow =>
     parentFolderKey: 'folder-a',
     treeRow: { props: {} } as VmRow['treeRow'],
     type: ROW_TYPE.Vm,
-    vmData: { name, namespace: 'ns', vm: { id: name, name } },
+    vmData: { name, namespace: 'ns', vm: { id: name, name, providerType: 'vsphere' } },
     ...overrides,
   }) as VmRow;
 
-const concerns = (name: string, isHidden = false) =>
+const concerns = (name: string, isHidden = false): ConcernsRow =>
   ({
     isHidden,
     key: `concerns-${name}`,
     parentFolderKey: 'folder-a',
     type: ROW_TYPE.Concerns,
-    vmData: { name, namespace: 'ns', vm: { id: name, name } },
-  }) as const;
+    vmData: { name, namespace: 'ns', vm: { id: name, name, providerType: 'vsphere' } },
+  }) as ConcernsRow;
 
 export const folderBlock = (
   name: string,
@@ -66,4 +67,4 @@ export const rootBlock = (vmNames: string[]): RootBlock => ({
   kind: BlockKind.Root,
 });
 
-export { folder, vm, concerns };
+export { concerns, folder, vm };

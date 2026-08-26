@@ -26,7 +26,7 @@ describe('usePagination', () => {
       result.current.onSetPage(undefined as never, 4);
     });
     act(() => {
-      result.current.onPerPageSelect(undefined as never, 25);
+      result.current.onPerPageSelect(undefined as never, 25, 1);
     });
 
     expect(result.current.pagination).toMatchObject({ page: 1, perPage: 25 });

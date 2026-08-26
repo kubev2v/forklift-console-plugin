@@ -3,7 +3,7 @@ import { mockI18n } from '@test-utils/mockI18n';
 mockI18n();
 
 jest.mock('@utils/hooks/useVmInspectionStatus', () => ({
-  useVmInspectionStatus: () => () => undefined,
+  useVmInspectionStatus: (): (() => undefined) => (): undefined => undefined,
 }));
 
 import { renderHook } from '@testing-library/react';
@@ -69,10 +69,9 @@ describe('useTreeFilterAttributes', () => {
   });
 
   it('rebuilds attributes when rows change', () => {
-    const { result, rerender } = renderHook(
-      ({ rows }) => useTreeFilterAttributes(rows, []),
-      { initialProps: { rows: [] as VmRow[] } },
-    );
+    const { result, rerender } = renderHook(({ rows }) => useTreeFilterAttributes(rows, []), {
+      initialProps: { rows: [] as VmRow[] },
+    });
     const first = result.current;
     rerender({ rows: [makeVmRow()] });
     expect(result.current).not.toBe(first);
