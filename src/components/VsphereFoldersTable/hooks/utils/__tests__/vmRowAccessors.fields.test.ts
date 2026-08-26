@@ -49,7 +49,7 @@ describe('vmRowAccessors - fields', () => {
       folderName: 'f1',
       isHidden: false as const,
       key: 'folder-f1',
-      treeRow: { props: {}, rowIndex: 0 },
+      treeRow: { onCollapse: jest.fn(), props: {}, rowIndex: 0 },
       type: ROW_TYPE.Folder,
     };
 
@@ -62,7 +62,9 @@ describe('vmRowAccessors - fields', () => {
       concerns: [criticalConcern, warningConcern, infoConcern, { category: 'Bogus', label: 'x' }],
     });
 
-    expect(getVmConcernCategories(row).sort()).toEqual(['Critical', 'Information', 'Warning']);
+    expect(
+      getVmConcernCategories(row).toSorted((left, right) => left.localeCompare(right)),
+    ).toEqual(['Critical', 'Information', 'Warning']);
   });
 
   it('returns empty categories when concerns missing or not an array', () => {
@@ -83,7 +85,7 @@ describe('vmRowAccessors - fields', () => {
       folderName: 'Prod',
       isHidden: false as const,
       key: 'folder-Prod',
-      treeRow: { props: {}, rowIndex: 0 },
+      treeRow: { onCollapse: jest.fn(), props: {}, rowIndex: 0 },
       type: ROW_TYPE.Folder,
     };
     expect(getFolderNameFromFolderRow(folder)).toBe('Prod');

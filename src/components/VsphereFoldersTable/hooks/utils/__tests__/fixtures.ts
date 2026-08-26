@@ -46,7 +46,7 @@ export const makeVmRow = (overrides: MakeVmRowOverrides = {}): VmRow => {
     isSelected: false,
     key: `vm-${name}`,
     parentFolderKey: 'folder-folder',
-    treeRow: { props: {}, rowIndex: 0 },
+    treeRow: { onCollapse: jest.fn(), props: {}, rowIndex: 0 },
     type: ROW_TYPE.Vm,
     vmData,
     ...rowOverrides,

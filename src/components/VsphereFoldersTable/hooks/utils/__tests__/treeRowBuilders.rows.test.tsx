@@ -131,7 +131,11 @@ describe('treeRowBuilders - rows', () => {
       ['Dev', ['4']],
     ]);
     const result = partitionFolderEntries(map);
-    expect(result.realFolderEntries.map(([n]) => n).sort()).toEqual(['Dev', 'Prod']);
+    expect(
+      result.realFolderEntries
+        .map(([folderName]) => folderName)
+        .toSorted((left, right) => left.localeCompare(right)),
+    ).toEqual(['Dev', 'Prod']);
     expect(result.rootVmKeys).toEqual(['2', '3']);
     expect(result.level1SetSize).toBe(4);
   });
