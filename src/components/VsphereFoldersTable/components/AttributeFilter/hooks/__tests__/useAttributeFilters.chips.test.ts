@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 
 import { type AttributeConfig, AttributeKind } from '../../utils/types';
 import { useAttributeFilters } from '../useAttributeFilters';

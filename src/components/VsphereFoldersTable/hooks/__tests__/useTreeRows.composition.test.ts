@@ -1,10 +1,10 @@
 import type { ProviderVmData } from 'src/utils/types';
 
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 
 import { ROW_TYPE } from '../../utils/types';
-import { NO_FOLDER } from '../utils/constants';
 import { useTreeRows } from '../useTreeRows';
+import { NO_FOLDER } from '../utils/constants';
 
 const makeVm = (id: string, parentId?: string): ProviderVmData =>
   ({
@@ -39,7 +39,7 @@ describe('useTreeRows - composition', () => {
   it('builds folder and root rows from vm and folder dictionaries', () => {
     const foldersDict = {
       'folder-id-a': { id: 'folder-id-a', name: 'folder-a', path: '/folder-a' },
-    };
+    } as never;
     const { result } = renderHook(() =>
       useTreeRows({
         canSelect: true,

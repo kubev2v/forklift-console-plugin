@@ -1,9 +1,9 @@
-import { act, renderHook } from '@testing-library/react-hooks';
-
 import type { ResourceField } from '@components/common/utils/types';
+import { act, renderHook } from '@testing-library/react';
+
 import { BlockKind, COLUMN_IDS } from '../../utils/types';
-import { FOLDER_PREFIX, NO_FOLDER } from '../utils/constants';
 import useTreeSortBlocks from '../useTreeSortBlocks';
+import { FOLDER_PREFIX, NO_FOLDER } from '../utils/constants';
 
 import { concerns, folder, folderTreeRows, vm } from './rowFixtures';
 
@@ -92,7 +92,8 @@ describe('useTreeSortBlocks - blocks', () => {
       result.current.handleOnSort?.(
         {} as Parameters<NonNullable<typeof result.current.handleOnSort>>[0],
         2,
-        'desc',
+        'desc' as never,
+        {},
       );
     });
 
