@@ -1,8 +1,7 @@
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
-
 import { CONVERSION_LABELS, CONVERSION_TYPE } from '@utils/crds/conversion/constants';
 
-import { buildConversionCR } from '../buildConversionCR';
+import type { buildConversionCR } from '../buildConversionCR';
 
 export const provider = {
   metadata: { name: 'vsphere', namespace: 'openshift-mtv', uid: 'provider-uid' },

@@ -16,13 +16,13 @@ describe('groupInspectionConcernsByCategory', () => {
 
   it('groups concerns by category and preserves insertion order within category', () => {
     const grouped = groupInspectionConcernsByCategory([
-      { category: 'Warning', id: '1', label: 'w1' },
-      { category: 'Critical', id: '2', label: 'c1' },
-      { category: 'Warning', id: '3', label: 'w2' },
+      { category: 'Warning', id: '1', label: 'w1', message: 'warning one' },
+      { category: 'Critical', id: '2', label: 'c1', message: 'critical one' },
+      { category: 'Warning', id: '3', label: 'w2', message: 'warning two' },
     ]);
 
-    expect(grouped.get('Warning')?.map((c) => c.id)).toEqual(['1', '3']);
-    expect(grouped.get('Critical')?.map((c) => c.id)).toEqual(['2']);
+    expect(grouped.get('Warning')?.map((concern) => concern.id)).toEqual(['1', '3']);
+    expect(grouped.get('Critical')?.map((concern) => concern.id)).toEqual(['2']);
     expect(grouped.get('Error')).toBeUndefined();
   });
 

@@ -3,9 +3,11 @@ import { DISK_ENCRYPTION_TYPE } from '@utils/crds/conversion/constants';
 import { resolveDiskEncryption } from '../resolveDiskEncryption';
 
 jest.mock('../createInspectionSecret', () => ({
-  createInspectionSecret: jest.fn(async () => ({
-    metadata: { name: 'luks-secret', namespace: 'ns' },
-  })),
+  createInspectionSecret: jest.fn(() =>
+    Promise.resolve({
+      metadata: { name: 'luks-secret', namespace: 'ns' },
+    }),
+  ),
 }));
 
 import { createInspectionSecret } from '../createInspectionSecret';
@@ -20,9 +22,9 @@ describe('resolveDiskEncryption', () => {
   });
 
   it('returns Clevis when nbdeClevis is set', async () => {
-    await expect(
-      resolveDiskEncryption({ nbdeClevis: true }, 'vm', 'ns'),
-    ).resolves.toEqual({ type: DISK_ENCRYPTION_TYPE.CLEVIS });
+    await expect(resolveDiskEncryption({ nbdeClevis: true }, 'vm', 'ns')).resolves.toEqual({
+      type: DISK_ENCRYPTION_TYPE.CLEVIS,
+    });
     expect(createInspectionSecret).not.toHaveBeenCalled();
   });
 

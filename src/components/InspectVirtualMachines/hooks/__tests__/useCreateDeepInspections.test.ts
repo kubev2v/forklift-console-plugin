@@ -1,11 +1,10 @@
-import { renderHook } from '@testing-library/react';
-
 import type { V1beta1Provider } from '@forklift-ui/types';
+import { renderHook } from '@testing-library/react';
 
 import { useCreateDeepInspections } from '../useCreateDeepInspections';
 
 jest.mock('../../utils/createDeepInspections', () => ({
-  processDeepInspections: jest.fn(async () => ({ failed: [], succeeded: [] })),
+  processDeepInspections: jest.fn(() => Promise.resolve({ failed: [], succeeded: [] })),
 }));
 
 import { processDeepInspections } from '../../utils/createDeepInspections';
