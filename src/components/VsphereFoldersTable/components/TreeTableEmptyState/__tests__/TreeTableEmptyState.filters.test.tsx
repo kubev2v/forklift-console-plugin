@@ -2,9 +2,9 @@ import { mockI18n } from '@test-utils/mockI18n';
 
 mockI18n();
 
+import { Table, Tbody } from '@patternfly/react-table';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { Table, Tbody } from '@patternfly/react-table';
 
 import TreeTableEmptyState from '../TreeTableEmptyState';
 

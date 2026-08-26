@@ -2,10 +2,10 @@ import { mockI18n } from '@test-utils/mockI18n';
 
 mockI18n();
 
-import { render, screen } from '@testing-library/react';
 import { Table, Tbody } from '@patternfly/react-table';
+import { render, screen } from '@testing-library/react';
 
-import { ROW_TYPE, type FolderRow } from '../../../utils/types';
+import { type FolderRow, ROW_TYPE } from '../../../utils/types';
 import FolderTreeRow from '../FolderTreeRow';
 
 const folderRow = (folderName: string): FolderRow => ({
@@ -28,11 +28,8 @@ describe('FolderTreeRow', () => {
   it('renders folder row with count from the map', () => {
     render(
       <Table>
-        <Tbody isNestedHeader>
-          <FolderTreeRow
-            groupVMCountByFolder={new Map([['Prod', 5]])}
-            row={folderRow('Prod')}
-          />
+        <Tbody>
+          <FolderTreeRow groupVMCountByFolder={new Map([['Prod', 5]])} row={folderRow('Prod')} />
         </Tbody>
       </Table>,
     );
@@ -44,7 +41,7 @@ describe('FolderTreeRow', () => {
   it('defaults VM count to 0 when folder is missing from the map', () => {
     render(
       <Table>
-        <Tbody isNestedHeader>
+        <Tbody>
           <FolderTreeRow groupVMCountByFolder={new Map()} row={folderRow('Missing')} />
         </Tbody>
       </Table>,

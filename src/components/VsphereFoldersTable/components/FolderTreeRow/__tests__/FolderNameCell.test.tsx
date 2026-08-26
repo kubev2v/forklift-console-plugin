@@ -4,7 +4,7 @@ mockI18n();
 
 import { render, screen } from '@testing-library/react';
 
-import { ROW_TYPE, type FolderRow } from '../../../utils/types';
+import { type FolderRow, ROW_TYPE } from '../../../utils/types';
 import FolderNameCell from '../FolderNameCell';
 
 const folderRow = (folderName: string): FolderRow => ({

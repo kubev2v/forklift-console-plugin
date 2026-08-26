@@ -1,33 +1,32 @@
+import type { ReactElement } from 'react';
+
 import { mockI18n } from '@test-utils/mockI18n';
 
 mockI18n();
 
 import { render, screen } from '@testing-library/react';
 
-import type { AttributeFilters } from '../../AttributeFilter/hooks/useAttributeFilters';
-import {
-  AttributeKind,
-  type AttributeConfig,
-} from '../../AttributeFilter/utils/types';
 import type { VmRow } from '../../../utils/types';
+import type { AttributeFilters } from '../../AttributeFilter/hooks/useAttributeFilters';
+import { type AttributeConfig, AttributeKind } from '../../AttributeFilter/utils/types';
 import TreeToolbar from '../TreeToolbar';
 
 jest.mock('@components/page/ManageColumnsToolbar', () => ({
-  ManageColumnsToolbar: () => <div data-testid="manage-columns" />,
+  ManageColumnsToolbar: (): ReactElement => <div data-testid="manage-columns" />,
 }));
 
 jest.mock('@components/TableBulkSelect', () => ({
   __esModule: true,
-  default: () => <div data-testid="bulk-select" />,
+  default: (): ReactElement => <div data-testid="bulk-select" />,
 }));
 
 jest.mock('@components/SelectedToggle/SelectedToggle', () => ({
   __esModule: true,
-  default: () => <div data-testid="selected-toggle" />,
+  default: (): ReactElement => <div data-testid="selected-toggle" />,
 }));
 
 jest.mock('../../AttributeFilter/AttributeFilter', () => ({
-  AttributeFiltersToolbar: () => <div data-testid="attribute-filters" />,
+  AttributeFiltersToolbar: (): ReactElement => <div data-testid="attribute-filters" />,
 }));
 
 const filters = {

@@ -24,11 +24,7 @@ const attribute: CheckboxAttr<Row> = {
 describe('FilterValueMultiSelect', () => {
   it('shows filter label without badge when nothing is selected', () => {
     render(
-      <FilterValueMultiSelect
-        attribute={attribute}
-        onToggle={jest.fn()}
-        selected={new Set()}
-      />,
+      <FilterValueMultiSelect attribute={attribute} onToggle={jest.fn()} selected={new Set()} />,
     );
 
     expect(screen.getByRole('button')).toHaveTextContent(/Filter by power/i);

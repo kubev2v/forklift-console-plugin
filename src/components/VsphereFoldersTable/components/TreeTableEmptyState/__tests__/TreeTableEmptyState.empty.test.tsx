@@ -2,8 +2,8 @@ import { mockI18n } from '@test-utils/mockI18n';
 
 mockI18n();
 
-import { render, screen } from '@testing-library/react';
 import { Table, Tbody } from '@patternfly/react-table';
+import { render, screen } from '@testing-library/react';
 
 import TreeTableEmptyState from '../TreeTableEmptyState';
 
@@ -12,11 +12,7 @@ describe('TreeTableEmptyState - empty', () => {
     render(
       <Table>
         <Tbody>
-          <TreeTableEmptyState
-            clearAllFilters={jest.fn()}
-            colSpan={4}
-            hasFiltersApplied={false}
-          />
+          <TreeTableEmptyState clearAllFilters={jest.fn()} colSpan={4} hasFiltersApplied={false} />
         </Tbody>
       </Table>,
     );
