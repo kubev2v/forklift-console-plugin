@@ -1,9 +1,9 @@
-import { act, renderHook } from '@testing-library/react-hooks';
-
 import type { ResourceField } from '@components/common/utils/types';
+import { act, renderHook } from '@testing-library/react';
+
 import { BlockKind, COLUMN_IDS } from '../../utils/types';
-import { FOLDER_PREFIX, NO_FOLDER } from '../utils/constants';
 import useTreeSortBlocks from '../useTreeSortBlocks';
+import { FOLDER_PREFIX, NO_FOLDER } from '../utils/constants';
 
 import { folder, vm } from './rowFixtures';
 
@@ -15,20 +15,20 @@ const unsortedRows = [
   folder('b'),
   vm('zeta', {
     parentFolderKey: `${FOLDER_PREFIX}b`,
-    vmData: { name: 'zeta', namespace: 'ns', vm: { id: 'zeta', name: 'zeta' } },
+    vmData: { name: 'zeta', namespace: 'ns', vm: { id: 'zeta', name: 'zeta' } as never },
   }),
   vm('alpha', {
     parentFolderKey: `${FOLDER_PREFIX}b`,
-    vmData: { name: 'alpha', namespace: 'ns', vm: { id: 'alpha', name: 'alpha' } },
+    vmData: { name: 'alpha', namespace: 'ns', vm: { id: 'alpha', name: 'alpha' } as never },
   }),
   folder('a'),
   vm('mid', {
     parentFolderKey: `${FOLDER_PREFIX}a`,
-    vmData: { name: 'mid', namespace: 'ns', vm: { id: 'mid', name: 'mid' } },
+    vmData: { name: 'mid', namespace: 'ns', vm: { id: 'mid', name: 'mid' } as never },
   }),
   vm('root-z', {
     parentFolderKey: NO_FOLDER,
-    vmData: { name: 'root-z', namespace: 'ns', vm: { id: 'root-z', name: 'root-z' } },
+    vmData: { name: 'root-z', namespace: 'ns', vm: { id: 'root-z', name: 'root-z' } as never },
   }),
 ];
 
@@ -70,7 +70,8 @@ describe('useTreeSortBlocks - sort', () => {
       result.current.handleOnSort?.(
         {} as Parameters<NonNullable<typeof result.current.handleOnSort>>[0],
         0,
-        'desc',
+        'desc' as never,
+        {},
       );
     });
 
@@ -91,14 +92,16 @@ describe('useTreeSortBlocks - sort', () => {
       result.current.handleOnSort?.(
         {} as Parameters<NonNullable<typeof result.current.handleOnSort>>[0],
         0,
-        'desc',
+        'desc' as never,
+        {},
       );
     });
     act(() => {
       result.current.handleOnSort?.(
         {} as Parameters<NonNullable<typeof result.current.handleOnSort>>[0],
         1,
-        'desc',
+        'desc' as never,
+        {},
       );
     });
 

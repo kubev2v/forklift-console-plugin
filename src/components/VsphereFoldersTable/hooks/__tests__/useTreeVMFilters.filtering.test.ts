@@ -1,15 +1,13 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import type { AttributeFilters } from '../../components/AttributeFilter/hooks/useAttributeFilters';
 import type { VmRow } from '../../utils/types';
-import { FOLDER_PREFIX, NO_FOLDER } from '../utils/constants';
 import useTreeFilters from '../useTreeVMFilters';
+import { FOLDER_PREFIX, NO_FOLDER } from '../utils/constants';
 
 import { concerns, folder, folderTreeRows, vm } from './rowFixtures';
 
-const filtersStub = (
-  overrides: Partial<AttributeFilters<VmRow>> = {},
-): AttributeFilters<VmRow> =>
+const filtersStub = (overrides: Partial<AttributeFilters<VmRow>> = {}): AttributeFilters<VmRow> =>
   ({
     hasAttrFilters: false,
     predicate: () => true,

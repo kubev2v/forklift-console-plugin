@@ -1,41 +1,34 @@
-import {
-  type ConcernsRow,
-  type FolderRow,
-  ROW_TYPE,
-  type VmRow,
-} from '../../utils/types';
+import { type ConcernsRow, type FolderRow, ROW_TYPE, type VmRow } from '../../utils/types';
 import { FOLDER_PREFIX, NO_FOLDER } from '../utils/constants';
 
 export const folder = (name: string, overrides: Partial<FolderRow> = {}): FolderRow => ({
   folderName: name,
   isHidden: false,
   key: `${FOLDER_PREFIX}${name}`,
-  treeRow: { props: {} } as FolderRow['treeRow'],
+  treeRow: { onCollapse: jest.fn(), props: {}, rowIndex: 0 },
   type: ROW_TYPE.Folder,
   ...overrides,
 });
 
-export const vm = (name: string, overrides: Partial<VmRow> = {}): VmRow =>
-  ({
-    isHidden: false,
-    isSelected: false,
-    key: `vm-${name}`,
-    parentFolderKey: `${FOLDER_PREFIX}a`,
-    treeRow: { props: {} } as VmRow['treeRow'],
-    type: ROW_TYPE.Vm,
-    vmData: { name, namespace: 'ns', vm: { id: name, name } },
-    ...overrides,
-  }) as VmRow;
+export const vm = (name: string, overrides: Partial<VmRow> = {}): VmRow => ({
+  isHidden: false,
+  isSelected: false,
+  key: `vm-${name}`,
+  parentFolderKey: `${FOLDER_PREFIX}a`,
+  treeRow: { onCollapse: jest.fn(), props: {}, rowIndex: 0 },
+  type: ROW_TYPE.Vm,
+  vmData: { name, namespace: 'ns', vm: { id: name, name } as never },
+  ...overrides,
+});
 
-export const concerns = (name: string, overrides: Partial<ConcernsRow> = {}): ConcernsRow =>
-  ({
-    isHidden: false,
-    key: `concerns-${name}`,
-    parentFolderKey: `${FOLDER_PREFIX}a`,
-    type: ROW_TYPE.Concerns,
-    vmData: { name, namespace: 'ns', vm: { id: name, name } },
-    ...overrides,
-  }) as ConcernsRow;
+export const concerns = (name: string, overrides: Partial<ConcernsRow> = {}): ConcernsRow => ({
+  isHidden: false,
+  key: `concerns-${name}`,
+  parentFolderKey: `${FOLDER_PREFIX}a`,
+  type: ROW_TYPE.Concerns,
+  vmData: { name, namespace: 'ns', vm: { id: name, name } as never },
+  ...overrides,
+});
 
 export const folderTreeRows = [
   folder('a'),
