@@ -54,6 +54,6 @@ describe('useMultiTypeaheadFiltering', () => {
       }),
     );
 
-    expect(result.current.displayOptions.map((o) => o.value)).toEqual(['b']);
+    expect(result.current.displayOptions.map((option) => option.value)).toEqual(['b']);
   });
 });

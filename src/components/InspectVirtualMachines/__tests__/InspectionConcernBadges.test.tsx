@@ -9,8 +9,8 @@ import InspectionConcernBadges from '../InspectionConcernBadges';
 
 describe('InspectionConcernBadges', () => {
   it('renders nothing for empty concerns', () => {
-    const { container } = render(<InspectionConcernBadges concerns={[]} />);
-    expect(container.querySelectorAll('button')).toHaveLength(0);
+    render(<InspectionConcernBadges concerns={[]} />);
+    expect(screen.queryAllByRole('button')).toHaveLength(0);
   });
 
   it('renders category badges and popover content', async () => {
@@ -19,9 +19,9 @@ describe('InspectionConcernBadges', () => {
     render(
       <InspectionConcernBadges
         concerns={[
-          { category: 'Warning', id: '1', label: 'Shared disk' },
-          { category: 'Critical', id: '2', label: 'UEFI' },
-          { category: 'Warning', id: '3', label: 'CPU' },
+          { category: 'Warning', id: '1', label: 'Shared disk', message: 'Shared disk msg' },
+          { category: 'Critical', id: '2', label: 'UEFI', message: 'UEFI msg' },
+          { category: 'Warning', id: '3', label: 'CPU', message: 'CPU msg' },
         ]}
       />,
     );

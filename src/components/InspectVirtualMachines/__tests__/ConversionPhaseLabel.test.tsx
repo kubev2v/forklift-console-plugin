@@ -3,7 +3,6 @@ import { mockI18n } from '@test-utils/mockI18n';
 mockI18n();
 
 import { render, screen } from '@testing-library/react';
-
 import { CONVERSION_PHASE } from '@utils/crds/conversion/constants';
 
 import ConversionPhaseLabel from '../ConversionPhaseLabel';
