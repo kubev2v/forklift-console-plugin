@@ -1,6 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 
-const MONACO_EDITOR_SELECTOR = '.code-editor-container .monaco-editor';
+// Matches both SdkYamlEditor (wrapped) and ScriptContentField / CodeEditor (unwrapped).
+const MONACO_EDITOR_SELECTOR = '.monaco-editor';
 const MONACO_READY_TIMEOUT_MS = 30_000;
 
 /**

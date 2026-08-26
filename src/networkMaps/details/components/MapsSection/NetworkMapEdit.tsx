@@ -49,7 +49,9 @@ const NetworkMapEdit: OverlayComponent<NetworkMapEditProps> = ({
     useSourceNetworks(sourceProvider);
   const [targetNetworks, targetNetworksLoading, targetNetworksError] =
     useTargetNetworks(destinationProvider);
-  const loadError = providersLoadError ?? sourceNetworksError ?? targetNetworksError;
+  // Inventory errors only — providersLoadError must not block Confirm when launch-prop
+  // providers already resolved (providersReady). The table still surfaces the watch error.
+  const loadError = sourceNetworksError ?? targetNetworksError;
 
   const onSubmit = async (formData: NetworkEditFormValues): Promise<void> => {
     if (!isDirty) {
@@ -76,7 +78,7 @@ const NetworkMapEdit: OverlayComponent<NetworkMapEditProps> = ({
     <FormProvider {...methods}>
       <ModalForm
         closeOverlay={closeOverlay}
-        isDisabled={!isValid || !isDirty || !providersReady || Boolean(providersLoadError)}
+        isDisabled={!isValid || !isDirty || !providersReady}
         onConfirm={handleSubmit(onSubmit)}
         testId="edit-network-map-modal"
         title={t('Edit network map')}

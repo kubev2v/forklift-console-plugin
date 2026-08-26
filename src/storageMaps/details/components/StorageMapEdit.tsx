@@ -74,13 +74,15 @@ const StorageMapEdit: OverlayComponent<StorageMapEditProps> = ({
   }, [initialFormValues, reset]);
 
   const isLoading = !providersReady || sourceStoragesLoading || targetStoragesLoading;
-  const loadError = providersLoadError ?? sourceStoragesLoadError ?? targetStoragesLoadError;
+  // Inventory errors only — providersLoadError must not block Confirm when launch-prop
+  // providers already resolved (providersReady). The table still surfaces the watch error.
+  const loadError = sourceStoragesLoadError ?? targetStoragesLoadError;
 
   return (
     <FormProvider {...methods}>
       <ModalForm
         closeOverlay={closeOverlay}
-        isDisabled={!isValid || !isDirty || !providersReady || Boolean(providersLoadError)}
+        isDisabled={!isValid || !isDirty || !providersReady}
         onConfirm={handleSubmit(async (formValues) => {
           await patchStorageMapMappings(formValues, storageMap, sourceProvider);
         })}

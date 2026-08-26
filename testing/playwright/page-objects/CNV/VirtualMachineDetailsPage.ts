@@ -21,8 +21,16 @@ export class VirtualMachineDetailsPage {
     return this.page.locator('main');
   }
 
-  private get primaryTab(): Locator {
-    return this.overviewTab.or(this.detailsTab);
+  /**
+   * Wait for Overview first (kubevirt plugin). If it never appears, fall back to Details.
+   * Do not union the locators — CNV 4.22 can show both and strict mode fails on `.or()`.
+   */
+  private async waitForPrimaryTab(): Promise<void> {
+    try {
+      await this.overviewTab.waitFor({ state: 'visible', timeout: PAGE_LOAD_TIMEOUT });
+    } catch {
+      await expect(this.detailsTab).toBeVisible({ timeout: PAGE_LOAD_TIMEOUT });
+    }
   }
 
   get detailsTab(): Locator {
@@ -67,11 +75,12 @@ export class VirtualMachineDetailsPage {
     await disableGuidedTour(this.page);
 
     // The CNV "Welcome to OpenShift Virtualization" modal can appear at any point during page
-    // load (sometimes after guided-tour handling). Race it against the primary tab so we
-    // dismiss it regardless of when it shows up, without blocking if it never appears.
+    // load (sometimes after guided-tour handling). Race it against Overview so we dismiss it
+    // regardless of when it shows up, without blocking if it never appears.
     const welcomeDialog = this.page.getByRole('dialog', { name: 'Welcome modal' });
     await Promise.race([
-      this.primaryTab.waitFor({ state: 'visible', timeout: PAGE_LOAD_TIMEOUT }),
+      this.overviewTab.waitFor({ state: 'visible', timeout: PAGE_LOAD_TIMEOUT }),
+      this.detailsTab.waitFor({ state: 'visible', timeout: PAGE_LOAD_TIMEOUT }),
       welcomeDialog.waitFor({ state: 'visible', timeout: PAGE_LOAD_TIMEOUT }).then(async () => {
         await welcomeDialog.getByRole('button', { name: 'Close' }).click();
         await welcomeDialog.waitFor({ state: 'hidden' });
@@ -82,7 +91,7 @@ export class VirtualMachineDetailsPage {
       }
     });
 
-    await expect(this.primaryTab).toBeVisible({ timeout: PAGE_LOAD_TIMEOUT });
+    await this.waitForPrimaryTab();
     if (vmName) {
       await expect(this.main.getByText(vmName, { exact: true }).first()).toBeVisible({
         timeout: PAGE_LOAD_TIMEOUT,

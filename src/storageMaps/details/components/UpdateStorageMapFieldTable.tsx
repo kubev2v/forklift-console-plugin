@@ -74,55 +74,60 @@ const UpdateStorageMapFieldTable: FC<UpdateStorageMapFieldTableProps> = ({
   }
 
   return (
-    <FieldBuilderTable
-      addButton={{
-        isDisabled: isLoading || isSubmitting || Boolean(loadError),
-        label: t('Add mapping'),
-        onClick: () => {
-          append({
-            [CreatePlanStorageMapFieldId.SourceStorage]:
-              defaultStorageMapping[CreatePlanStorageMapFieldId.SourceStorage],
-            [CreatePlanStorageMapFieldId.TargetStorage]: {
-              name:
-                targetStorages[0]?.name ??
-                defaultStorageMapping[CreatePlanStorageMapFieldId.TargetStorage].name,
-            },
-          });
-        },
-      }}
-      fieldRows={storageMappingFields.map((field, index) => ({
-        ...field,
-        ...getStorageMapEditFieldRowContent({
-          index,
-          inventorySourceStorages,
-          isVsphereOffload,
-          sourceProvider,
-          sourceStorages,
-          targetStorages,
-        }),
-      }))}
-      headers={[
-        {
-          label: storageMapFieldLabels[StorageMapFieldId.SourceStorage],
-          width: 45,
-        },
-        {
-          label: storageMapFieldLabels[StorageMapFieldId.TargetStorage],
-          width: 45,
-        },
-      ]}
-      removeButton={{
-        isDisabled: () => isSubmitting,
-        onClick: (index) => {
-          if (storageMappingFields.length > 1) {
-            remove(index);
-            return;
-          }
+    <>
+      {providersLoadError ? (
+        <FormErrorHelperText error={{ message: providersLoadError.message, type: 'manual' }} />
+      ) : null}
+      <FieldBuilderTable
+        addButton={{
+          isDisabled: isLoading || isSubmitting || Boolean(loadError),
+          label: t('Add mapping'),
+          onClick: () => {
+            append({
+              [CreatePlanStorageMapFieldId.SourceStorage]:
+                defaultStorageMapping[CreatePlanStorageMapFieldId.SourceStorage],
+              [CreatePlanStorageMapFieldId.TargetStorage]: {
+                name:
+                  targetStorages[0]?.name ??
+                  defaultStorageMapping[CreatePlanStorageMapFieldId.TargetStorage].name,
+              },
+            });
+          },
+        }}
+        fieldRows={storageMappingFields.map((field, index) => ({
+          ...field,
+          ...getStorageMapEditFieldRowContent({
+            index,
+            inventorySourceStorages,
+            isVsphereOffload,
+            sourceProvider,
+            sourceStorages,
+            targetStorages,
+          }),
+        }))}
+        headers={[
+          {
+            label: storageMapFieldLabels[StorageMapFieldId.SourceStorage],
+            width: 45,
+          },
+          {
+            label: storageMapFieldLabels[StorageMapFieldId.TargetStorage],
+            width: 45,
+          },
+        ]}
+        removeButton={{
+          isDisabled: () => isSubmitting,
+          onClick: (index) => {
+            if (storageMappingFields.length > 1) {
+              remove(index);
+              return;
+            }
 
-          setValue(StorageMapFieldId.StorageMap, [defaultStorageMapping]);
-        },
-      }}
-    />
+            setValue(StorageMapFieldId.StorageMap, [defaultStorageMapping]);
+          },
+        }}
+      />
+    </>
   );
 };
 

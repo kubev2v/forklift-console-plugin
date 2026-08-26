@@ -65,64 +65,69 @@ const NetworkMapEditFieldTable = ({
   }
 
   return (
-    <FieldBuilderTable
-      addButton={{
-        isDisabled:
-          isEmpty(sourceNetworks) ||
-          sourceNetworksLoading ||
-          targetNetworksLoading ||
-          isSubmitting ||
-          Boolean(loadError),
-        label: t('Add mapping'),
-        onClick: () => {
-          append({
-            [NetworkMapFieldId.SourceNetwork]: defaultNetMapping[NetworkMapFieldId.SourceNetwork],
-            [NetworkMapFieldId.TargetNetwork]: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
-          });
-        },
-      }}
-      fieldRows={networkMappingFields.map((field, index) => ({
-        ...field,
-        inputs: [
-          <InventorySourceNetworkField
-            fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
-            key={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
-            sourceNetworks={sourceNetworks}
-          />,
-          <TargetNetworkField
-            emptyStateMessage={t('Select a target provider to list available target networks')}
-            fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-            isDisabled={isSubmitting}
-            key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-            showIgnoreNetworkOption
-            targetNetworks={targetNetworks}
-          />,
-        ],
-      }))}
-      headers={[
-        {
-          isRequired: true,
-          label: networkMapFieldLabels[NetworkMapFieldId.SourceNetwork],
-          width: 45,
-        },
-        {
-          isRequired: true,
-          label: networkMapFieldLabels[NetworkMapFieldId.TargetNetwork],
-          width: 45,
-        },
-      ]}
-      removeButton={{
-        isDisabled: () => isSubmitting,
-        onClick: (index) => {
-          if (networkMappingFields.length > 1) {
-            remove(index);
-            return;
-          }
+    <>
+      {providersLoadError ? (
+        <FormErrorHelperText error={{ message: providersLoadError.message, type: 'manual' }} />
+      ) : null}
+      <FieldBuilderTable
+        addButton={{
+          isDisabled:
+            isEmpty(sourceNetworks) ||
+            sourceNetworksLoading ||
+            targetNetworksLoading ||
+            isSubmitting ||
+            Boolean(loadError),
+          label: t('Add mapping'),
+          onClick: () => {
+            append({
+              [NetworkMapFieldId.SourceNetwork]: defaultNetMapping[NetworkMapFieldId.SourceNetwork],
+              [NetworkMapFieldId.TargetNetwork]: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
+            });
+          },
+        }}
+        fieldRows={networkMappingFields.map((field, index) => ({
+          ...field,
+          inputs: [
+            <InventorySourceNetworkField
+              fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
+              key={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
+              sourceNetworks={sourceNetworks}
+            />,
+            <TargetNetworkField
+              emptyStateMessage={t('Select a target provider to list available target networks')}
+              fieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
+              isDisabled={isSubmitting}
+              key={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
+              showIgnoreNetworkOption
+              targetNetworks={targetNetworks}
+            />,
+          ],
+        }))}
+        headers={[
+          {
+            isRequired: true,
+            label: networkMapFieldLabels[NetworkMapFieldId.SourceNetwork],
+            width: 45,
+          },
+          {
+            isRequired: true,
+            label: networkMapFieldLabels[NetworkMapFieldId.TargetNetwork],
+            width: 45,
+          },
+        ]}
+        removeButton={{
+          isDisabled: () => isSubmitting,
+          onClick: (index) => {
+            if (networkMappingFields.length > 1) {
+              remove(index);
+              return;
+            }
 
-          setValue(NetworkMapFieldId.NetworkMap, [defaultNetworkMapping]);
-        },
-      }}
-    />
+            setValue(NetworkMapFieldId.NetworkMap, [defaultNetworkMapping]);
+          },
+        }}
+      />
+    </>
   );
 };
 
