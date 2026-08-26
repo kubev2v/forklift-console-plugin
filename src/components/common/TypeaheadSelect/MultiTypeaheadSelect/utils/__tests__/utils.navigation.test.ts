@@ -1,9 +1,5 @@
 import type { TypeaheadSelectOption } from '../../../utils/types';
-import {
-  createItemElementId,
-  getNextEnabledIndex,
-  getPrevEnabledIndex,
-} from '../utils';
+import { createItemElementId, getNextEnabledIndex, getPrevEnabledIndex } from '../utils';
 
 const opts = (flags: boolean[]): TypeaheadSelectOption[] =>
   flags.map((disabled, index) => ({

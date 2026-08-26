@@ -21,9 +21,7 @@ describe('useMultiTypeaheadSelect', () => {
 
   it('opens on toggle and selects values through handleSelect', () => {
     const onChange = jest.fn();
-    const { result } = renderHook(() =>
-      useMultiTypeaheadSelect({ onChange, options, values: [] }),
-    );
+    const { result } = renderHook(() => useMultiTypeaheadSelect({ onChange, options, values: [] }));
 
     act(() => {
       result.current.onToggleClick();
