@@ -7,11 +7,7 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   },
 }));
 
-import {
-  hasTopologyKey,
-  hasValidWeight,
-  hasWeightAndTopologyKey,
-} from '../affinityTermMappers';
+import { hasTopologyKey, hasValidWeight, hasWeightAndTopologyKey } from '../affinityTermMappers';
 import { AffinityCondition, type AffinityRowData, AffinityType } from '../types';
 
 const baseRow = (overrides: Partial<AffinityRowData> = {}): AffinityRowData => ({
@@ -32,7 +28,7 @@ describe('affinityTermMappers - guards', () => {
       [1.5, false],
       [undefined, false],
     ])('weight %p → %p', (weight, expected) => {
-      expect(hasValidWeight(baseRow({ weight: weight as number | undefined }))).toBe(expected);
+      expect(hasValidWeight(baseRow({ weight }))).toBe(expected);
     });
   });
 
@@ -50,9 +46,7 @@ describe('affinityTermMappers - guards', () => {
 
   describe('hasWeightAndTopologyKey', () => {
     it('requires both valid weight and topology key', () => {
-      expect(
-        hasWeightAndTopologyKey(baseRow({ topologyKey: 'zone', weight: 10 })),
-      ).toBe(true);
+      expect(hasWeightAndTopologyKey(baseRow({ topologyKey: 'zone', weight: 10 }))).toBe(true);
       expect(hasWeightAndTopologyKey(baseRow({ topologyKey: 'zone', weight: 0 }))).toBe(false);
       expect(hasWeightAndTopologyKey(baseRow({ topologyKey: '', weight: 10 }))).toBe(false);
     });

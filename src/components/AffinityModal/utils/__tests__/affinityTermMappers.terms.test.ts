@@ -13,7 +13,12 @@ import {
   getRequiredNodeTermFromRowData,
   getRequiredPodTermFromRowData,
 } from '../affinityTermMappers';
-import { AffinityCondition, type AffinityLabel, type AffinityRowData, AffinityType } from '../types';
+import {
+  AffinityCondition,
+  type AffinityLabel,
+  type AffinityRowData,
+  AffinityType,
+} from '../types';
 
 const label = (overrides: Partial<AffinityLabel> = {}): AffinityLabel => ({
   id: 0,
@@ -61,7 +66,9 @@ describe('affinityTermMappers - terms', () => {
   });
 
   it('maps preferred node terms with weight', () => {
-    expect(getPreferredNodeTermFromRowData(row({ weight: 40 }))).toEqual({
+    expect(
+      getPreferredNodeTermFromRowData(row({ weight: 40 }) as AffinityRowData & { weight: number }),
+    ).toEqual({
       preference: {
         matchExpressions: [{ key: 'app', operator: 'In', values: ['api'] }],
         matchFields: [{ key: 'metadata.name', operator: 'In', values: ['n1'] }],
@@ -71,7 +78,11 @@ describe('affinityTermMappers - terms', () => {
   });
 
   it('maps required and preferred pod terms', () => {
-    expect(getRequiredPodTermFromRowData(row({ type: AffinityType.Pod }))).toEqual({
+    expect(
+      getRequiredPodTermFromRowData(
+        row({ type: AffinityType.Pod }) as AffinityRowData & { topologyKey: string },
+      ),
+    ).toEqual({
       labelSelector: {
         matchExpressions: [{ key: 'app', operator: 'In', values: ['api'] }],
       },

@@ -15,9 +15,7 @@ describe('affinityToRowsData - pod', () => {
       topologyKey: 'kubernetes.io/hostname',
       type: AffinityType.Pod,
     });
-    expect(rows[0].expressions).toEqual([
-      { id: 0, key: 'app', operator: 'In', values: ['api'] },
-    ]);
+    expect(rows[0].expressions).toEqual([{ id: 0, key: 'app', operator: 'In', values: ['api'] }]);
     expect(rows[1]).toMatchObject({
       condition: AffinityCondition.Preferred,
       id: 'pod-preferred-0',

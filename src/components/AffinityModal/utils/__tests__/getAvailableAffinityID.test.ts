@@ -1,5 +1,5 @@
-import { AffinityCondition, type AffinityRowData, AffinityType } from '../types';
 import { getAvailableAffinityID } from '../getAvailableAffinityID';
+import { AffinityCondition, type AffinityRowData, AffinityType } from '../types';
 
 const row = (id: string): AffinityRowData => ({
   condition: AffinityCondition.Required,
