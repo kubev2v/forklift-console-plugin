@@ -15,7 +15,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import TopologyKeyInput from '../TopologyKeyInput';
 import { TOPOLOGY_KEY_FIELD_HELP_TEXT } from '../utils/constants';
-import { AffinityCondition, AffinityType, type AffinityRowData } from '../utils/types';
+import { AffinityCondition, type AffinityRowData, AffinityType } from '../utils/types';
 
 const base: AffinityRowData = {
   condition: AffinityCondition.Required,

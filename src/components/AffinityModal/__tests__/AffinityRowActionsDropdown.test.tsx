@@ -6,7 +6,7 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import AffinityRowActionsDropdown from '../AffinityRowActionsDropdown';
-import { AffinityCondition, AffinityType, type AffinityRowData } from '../utils/types';
+import { AffinityCondition, type AffinityRowData, AffinityType } from '../utils/types';
 
 const affinity: AffinityRowData = {
   condition: AffinityCondition.Required,
@@ -19,9 +19,7 @@ describe('AffinityRowActionsDropdown', () => {
     const user = userEvent.setup();
     const onEdit = jest.fn();
 
-    render(
-      <AffinityRowActionsDropdown affinity={affinity} onDelete={jest.fn()} onEdit={onEdit} />,
-    );
+    render(<AffinityRowActionsDropdown affinity={affinity} onDelete={jest.fn()} onEdit={onEdit} />);
 
     await user.click(screen.getByRole('button'));
     await user.click(screen.getByRole('menuitem', { name: 'Edit' }));

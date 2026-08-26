@@ -15,7 +15,7 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import AffinityTypeSelect from '../AffinityTypeSelect';
-import { AffinityCondition, AffinityType, type AffinityRowData } from '../utils/types';
+import { AffinityCondition, type AffinityRowData, AffinityType } from '../utils/types';
 
 const focusedAffinity: AffinityRowData = {
   condition: AffinityCondition.Required,
@@ -25,12 +25,7 @@ const focusedAffinity: AffinityRowData = {
 
 describe('AffinityTypeSelect', () => {
   it('shows the current type label', () => {
-    render(
-      <AffinityTypeSelect
-        focusedAffinity={focusedAffinity}
-        setFocusedAffinity={jest.fn()}
-      />,
-    );
+    render(<AffinityTypeSelect focusedAffinity={focusedAffinity} setFocusedAffinity={jest.fn()} />);
 
     expect(screen.getByTestId('affinity-type-select')).toHaveTextContent('Node affinity');
   });
