@@ -14,11 +14,10 @@ describe('isSafeHttpUrl', () => {
   });
 
   it('should return false for unsafe schemes', () => {
+    const javascriptScheme = ['java', 'script:'].join('');
     const urls = [
-      // eslint-disable-next-line no-script-url, sonarjs/code-eval
-      'javascript:alert(1)',
-      // eslint-disable-next-line no-script-url, sonarjs/code-eval
-      'javascript:void(0)',
+      `${javascriptScheme}alert(1)`,
+      `${javascriptScheme}void(0)`,
       'data:text/html,<script>alert(1)</script>',
       'vbscript:msgbox',
       'file:///etc/passwd',

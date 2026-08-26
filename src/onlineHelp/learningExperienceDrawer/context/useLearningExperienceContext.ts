@@ -8,7 +8,7 @@ import type { LearningExperienceContextType, PersistedState } from '../utils/typ
 import { findTopicById, persistValue } from '../utils/utils';
 
 export const useLearningExperienceContext = (): LearningExperienceContextType => {
-  const [persistedState] = useState(() => parseOrClean<PersistedState>(STORAGE_KEY));
+  const [persistedState] = useState(() => parseOrClean(STORAGE_KEY) as PersistedState);
 
   const [isLearningExperienceOpen, setIsLearningExperienceOpen] = useState(
     persistedState.isLearningExperienceOpen ?? false,

@@ -5,10 +5,7 @@ import InspectionStatusColumnPopover from 'src/components/InspectVirtualMachines
 import { type EnumValue, FilterDefType, type ResourceField } from '@components/common/utils/types';
 import { getCategoryIcon } from '@components/Concerns/utils/category';
 import { orderedConcernCategories } from '@components/Concerns/utils/constants';
-import {
-  INSPECTION_STATUS_FILTER_VALUES,
-  INSPECTION_STATUS_NOT_INSPECTED,
-} from '@utils/crds/conversion/constants';
+import { INSPECTION_STATUS_FILTER_VALUES } from '@utils/crds/conversion/constants';
 import { t } from '@utils/i18n';
 import {
   PlanSpecVirtualMachinesTableResourceId,
@@ -17,6 +14,7 @@ import {
 import { getVmGuestOS } from '@utils/vm/getVmGuestOS';
 
 import { concernSeverityOrTypeFilter } from './concernSeverityOrTypeFilter';
+import { getInspectionStatusLabel } from './getInspectionStatusLabel';
 
 export const specVirtualMachineFields: ResourceField[] = [
   {
@@ -89,10 +87,7 @@ export const specVirtualMachineFields: ResourceField[] = [
       popover: <InspectionStatusColumnPopover />,
     },
     isVisible: true,
-    jsonPath: (item: unknown) =>
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      (item as SpecVirtualMachinePageData).inspectionStatus?.status ??
-      INSPECTION_STATUS_NOT_INSPECTED,
+    jsonPath: getInspectionStatusLabel,
     label: t('Inspection status'),
     resourceFieldId: PlanSpecVirtualMachinesTableResourceId.InspectionStatus,
     sortable: true,

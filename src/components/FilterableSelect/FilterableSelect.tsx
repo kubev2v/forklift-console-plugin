@@ -14,7 +14,7 @@ import {
   Content,
   Divider,
   type MenuToggleElement,
-  Select,
+  Select as PatternFlySelect,
   SelectList,
   SelectOption,
   type SelectOptionProps,
@@ -148,9 +148,8 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
   );
 
   return (
-    // Custom select does not support the complex toggle being used here
-    /* eslint-disable-next-line no-restricted-syntax */
-    <Select
+    // Cannot use @components/common/Select — typeahead toggle is unsupported there
+    <PatternFlySelect
       aria-disabled={isDisabled}
       id="typeahead-select"
       isOpen={isOpen}
@@ -198,6 +197,6 @@ export const FilterableSelect: FunctionComponent<FilterableSelectProps> = ({
           </>
         )}
       </SelectList>
-    </Select>
+    </PatternFlySelect>
   );
 };

@@ -9,20 +9,21 @@ import { LearningExperienceContext } from './context/LearningExperienceContext';
 const LearningExperienceDrawer: FC<{ children: ReactNode }> = ({ children }) => {
   const { isLearningExperienceOpen } = useContext(LearningExperienceContext);
 
-  // eslint-disable-next-line @typescript-eslint/consistent-return
   useEffect(() => {
     const listWrapper: HTMLElement | null = document.querySelector(
       '#content-scrollable .co-m-list',
     );
 
-    if (listWrapper) {
-      const originalOverflow = listWrapper.style.overflowY;
-      listWrapper.style.overflowY = 'hidden';
-
-      return (): void => {
-        listWrapper.style.overflowY = originalOverflow;
-      };
+    if (!listWrapper) {
+      return undefined;
     }
+
+    const originalOverflow = listWrapper.style.overflowY;
+    listWrapper.style.overflowY = 'hidden';
+
+    return (): void => {
+      listWrapper.style.overflowY = originalOverflow;
+    };
   }, []);
 
   return (

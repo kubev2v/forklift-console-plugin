@@ -1,4 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
 declare module 'eslint-plugin-barrel-files';
 declare module 'eslint-plugin-promise';
 
@@ -25,7 +24,7 @@ declare module '*.json' {
 }
 
 // Reference: https://github.com/openshift/console/blob/c126b66e62655eec01683b7419a6fbe835bc9ee1/frontend/%40types/console/index.d.ts#L15
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- ambient Window augmentation requires interface
 interface Window {
   SERVER_FLAGS: {
     addPage: string; // JSON encoded configuration

@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable react-refresh/only-export-components -- module intentionally exports hook + Trans + t for shared i18n API */
 import type { FC, ReactNode } from 'react';
 import { getI18n, Trans, useTranslation } from 'react-i18next';
 import type { TOptions } from 'i18next';

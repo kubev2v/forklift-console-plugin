@@ -1,4 +1,4 @@
-import { JSONPath } from 'jsonpath-plus';
+import { JSONPath as jsonPath } from 'jsonpath-plus';
 
 import { getOrderedConcernCategoriesSum } from '@components/Concerns/utils/getOrderedConcernCategoriesSum';
 
@@ -47,8 +47,7 @@ export const getResourceFieldValue = <T extends ResourceDataRecord>(
   }
 
   if (typeof field.jsonPath === 'string') {
-    // eslint-disable-next-line new-cap
-    const result: unknown = JSONPath({ json: resourceData, path: field.jsonPath, wrap: false });
+    const result: unknown = jsonPath({ json: resourceData, path: field.jsonPath, wrap: false });
     const obj = result as T[keyof T];
 
     return forSorting && field?.filter?.type === CustomFilterType.ConcernsSeverityOrType

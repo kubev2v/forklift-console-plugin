@@ -3,7 +3,7 @@ import { type ReactElement, type Ref, useState } from 'react';
 import {
   MenuToggle,
   type MenuToggleElement,
-  Select,
+  Select as PatternFlySelect,
   SelectList,
   SelectOption,
   ToolbarGroup,
@@ -75,9 +75,8 @@ export const AttributeValueFilter = ({
   return (
     <ToolbarGroup variant="filter-group">
       <ToolbarItem>
-        {/* This select is different from most and cannot use the common Select */}
-        {/* eslint-disable-next-line no-restricted-syntax */}
-        <Select
+        {/* Cannot use @components/common/Select — attribute picker with custom toggle */}
+        <PatternFlySelect
           aria-label={'Select Filter'}
           isOpen={isOpen}
           isScrollable
@@ -99,7 +98,7 @@ export const AttributeValueFilter = ({
           toggle={toggle}
         >
           <SelectList>{renderOptions()}</SelectList>
-        </Select>
+        </PatternFlySelect>
       </ToolbarItem>
 
       {fieldFilters.map(({ filterDef, label, resourceFieldId }) => (

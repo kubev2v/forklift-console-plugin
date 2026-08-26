@@ -6,16 +6,18 @@ import './setup-provider-form-mocks';
 
 import CreateProviderForm from '../CreateProviderForm';
 
-import { clearAllProviderMocks } from './test-utils';
+import { clearAllProviderMocks, mockCreateProviderTypeField } from './test-utils';
 
-jest.mock('../fields/ProviderTypeField', () =>
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  require('./test-utils').mockCreateProviderTypeField('vsphere', 'VMware vSphere'),
-);
+jest.mock('../fields/ProviderTypeField', () => {
+  const { mockCreateProviderTypeField: createMock } = jest.requireActual('./test-utils');
+  return createMock('vsphere', 'VMware vSphere');
+});
 
 describe('CreateProviderForm - vSphere Provider', () => {
   beforeEach(() => {
     clearAllProviderMocks();
+    // Static import kept so knip sees the helper; factory uses requireActual (jest hoist).
+    expect(mockCreateProviderTypeField).toEqual(expect.any(Function));
   });
 
   it('shows vSphere-specific fields after selecting vSphere type', async () => {

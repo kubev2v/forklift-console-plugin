@@ -7,7 +7,9 @@ import type {
 export const STATUS_SUCCESS = 'success';
 const FIRING_ALERT_STATE = 'firing' as PrometheusAlert['state'];
 const FIRING_RULE_STATE = 'firing' as PrometheusRule['state'];
+const PLAN_NAME_LABEL = 'plan_name';
 
+type AlertLabels = PrometheusAlert['labels'];
 type RulesGroup = PrometheusRulesResponse['data']['groups'][number];
 type RulesGroupInput = Pick<RulesGroup, 'rules'>;
 
@@ -44,39 +46,47 @@ export const createMigrationSucceededRule = (alerts: PrometheusAlert[] = []): Pr
   type: 'alerting',
 });
 
-export const createFiringAlert = (overrides: Record<string, string> = {}): PrometheusAlert => ({
-  activeAt: '2026-06-23T14:30:00Z',
-  annotations: {
-    description:
-      'Cold migration plan "my-plan" with VSphere provider failed on DiskTransfer phase.',
-  },
-  labels: {
+export const createFiringAlert = (overrides: Partial<AlertLabels> = {}): PrometheusAlert => {
+  const labels: AlertLabels = {
     alertname: 'MigrationFailed',
     mode: 'Cold',
     phase: 'DiskTransfer',
     plan: 'uid-123',
-    plan_name: 'my-plan', // eslint-disable-line camelcase
     provider: 'VSphere',
     severity: 'critical',
     target: 'Local',
+    [PLAN_NAME_LABEL]: 'my-plan',
     ...overrides,
-  },
-  state: FIRING_ALERT_STATE,
-});
+  };
 
-export const createSucceededAlert = (overrides: Record<string, string> = {}): PrometheusAlert => ({
-  activeAt: '2026-06-24T10:00:00Z',
-  annotations: { description: 'Migration plan "completed-plan" succeeded.' },
-  labels: {
+  return {
+    activeAt: '2026-06-23T14:30:00Z',
+    annotations: {
+      description:
+        'Cold migration plan "my-plan" with VSphere provider failed on DiskTransfer phase.',
+    },
+    labels,
+    state: FIRING_ALERT_STATE,
+  };
+};
+
+export const createSucceededAlert = (overrides: Partial<AlertLabels> = {}): PrometheusAlert => {
+  const labels: AlertLabels = {
     alertname: 'MigrationSucceeded',
     mode: 'Cold',
     phase: 'Completed',
     plan: 'uid-456',
-    plan_name: 'completed-plan', // eslint-disable-line camelcase
     provider: 'oVirt',
     severity: 'info',
     target: 'Local',
+    [PLAN_NAME_LABEL]: 'completed-plan',
     ...overrides,
-  },
-  state: FIRING_ALERT_STATE,
-});
+  };
+
+  return {
+    activeAt: '2026-06-24T10:00:00Z',
+    annotations: { description: 'Migration plan "completed-plan" succeeded.' },
+    labels,
+    state: FIRING_ALERT_STATE,
+  };
+};

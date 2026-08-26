@@ -1,7 +1,12 @@
 import type { ReactElement } from 'react';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import { mockI18n } from '@test-utils/mockI18n';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+
+import PlanStatus from '../PlanStatus';
 
 mockI18n();
 
@@ -56,13 +61,6 @@ jest.mock('@utils/crds/plans/selectors', () => ({
 jest.mock('@utils/helpers', () => ({
   isEmpty: jest.fn((val: unknown): boolean => !val),
 }));
-
-// eslint-disable-next-line import/first
-import { beforeEach, describe, expect, it } from '@jest/globals';
-import { render, screen } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-
-import PlanStatus from '../PlanStatus';
 
 const makePlan = (): V1beta1Plan =>
   ({

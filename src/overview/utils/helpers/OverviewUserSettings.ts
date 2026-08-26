@@ -22,7 +22,7 @@ export const saveOverviewSelectedRanges = (ranges: {
   vmMigrationsHistorySelectedRange?: TimeRangeOptions;
 }): void => {
   const key = getOverviewKey();
-  const current = parseOrClean<OverviewUserSettings>(key);
+  const current = parseOrClean(key) as OverviewUserSettings;
   saveToLocalStorage(
     key,
     JSON.stringify({
@@ -37,8 +37,9 @@ export const loadOverviewSelectedRanges = (): {
   vmMigrationsHistorySelectedRange?: string;
 } => {
   const key = getOverviewKey();
-  const { vmMigrationsDonutSelectedRange, vmMigrationsHistorySelectedRange } =
-    parseOrClean<OverviewUserSettings>(key);
+  const { vmMigrationsDonutSelectedRange, vmMigrationsHistorySelectedRange } = parseOrClean(
+    key,
+  ) as OverviewUserSettings;
   return { vmMigrationsDonutSelectedRange, vmMigrationsHistorySelectedRange };
 };
 
@@ -52,7 +53,7 @@ export const loadOverviewSelectedRanges = (): {
  */
 export const loadUserSettings = (userSettingsKeySuffix: string): OverviewUserSettings => {
   const key = `${process.env.PLUGIN_NAME}/${userSettingsKeySuffix}`;
-  const { hideWelcome, ...rest } = parseOrClean<WelcomeSettings>(key);
+  const { hideWelcome, ...rest } = parseOrClean(key) as WelcomeSettings;
 
   return {
     welcome: {
@@ -61,7 +62,10 @@ export const loadUserSettings = (userSettingsKeySuffix: string): OverviewUserSet
       },
       hideWelcome: typeof hideWelcome === 'boolean' ? hideWelcome : undefined,
       save: (hide): void => {
-        saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), hideWelcome: hide }));
+        saveToLocalStorage(
+          key,
+          JSON.stringify({ ...(parseOrClean(key) as OverviewUserSettings), hideWelcome: hide }),
+        );
       },
     },
   };

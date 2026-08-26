@@ -24,9 +24,9 @@ import './LabelsModal.scss';
 
 // console is declaring a new html element for some reason, we have to copy it for css reasons.
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
+  // eslint-disable-next-line @typescript-eslint/no-namespace -- Console tags-input custom element requires JSX namespace augmentation
   namespace JSX {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- ambient IntrinsicElements augmentation requires interface
     interface IntrinsicElements {
       'tags-input': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>;
     }

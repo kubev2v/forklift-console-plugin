@@ -1,4 +1,5 @@
 import { DEFAULT_PER_PAGE } from '@components/common/Page/usePagination';
+import { MTVConsole } from '@utils/console';
 import { isEmpty } from '@utils/helpers';
 
 import {
@@ -24,8 +25,7 @@ const parseOrClean = (key: string): StoredUserSettings => {
     return (JSON.parse(storedData) ?? {}) as StoredUserSettings;
   } catch (_e) {
     removeFromLocalStorage(key);
-    // eslint-disable-next-line no-console
-    console.error(`Removed invalid key [${key}] from local storage`);
+    MTVConsole.error(`Removed invalid key [${key}] from local storage`);
   }
   return {};
 };

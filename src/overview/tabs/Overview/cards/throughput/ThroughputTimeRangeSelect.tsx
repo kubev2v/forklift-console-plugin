@@ -1,6 +1,11 @@
 import { type FC, type MouseEvent, type ReactElement, type Ref, useState } from 'react';
 
-import { MenuToggle, type MenuToggleElement, Select, SelectOption } from '@patternfly/react-core';
+import {
+  MenuToggle,
+  type MenuToggleElement,
+  Select as PatternFlySelect,
+  SelectOption,
+} from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { ThroughputTimeRange, throughputTimeRangeToLabel } from '../../utils/throughputTimeRanges';
@@ -47,8 +52,8 @@ const ThroughputTimeRangeSelect: FC<ThroughputTimeRangeSelectProps> = ({
   );
 
   return (
-    // eslint-disable-next-line no-restricted-syntax
-    <Select
+    // Cannot use @components/common/Select — custom MenuToggle is unsupported there
+    <PatternFlySelect
       aria-label={t('Select time range')}
       isOpen={isOpen}
       onOpenChange={setIsOpen}
@@ -61,7 +66,7 @@ const ThroughputTimeRangeSelect: FC<ThroughputTimeRangeSelectProps> = ({
           {throughputTimeRangeToLabel[range]}
         </SelectOption>
       ))}
-    </Select>
+    </PatternFlySelect>
   );
 };
 

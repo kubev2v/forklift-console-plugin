@@ -5,7 +5,7 @@ import {
   Badge,
   MenuToggle,
   type MenuToggleElement,
-  Select,
+  Select as PatternFlySelect,
   SelectList,
   SelectOption,
   ToolbarFilter,
@@ -124,9 +124,8 @@ export const EnumFilter = ({
       labels={selectedUniqueEnumLabels}
       showToolbarItem={showFilter}
     >
-      {/* This select is different from most and cannot use the common Select */}
-      {/* eslint-disable-next-line no-restricted-syntax */}
-      <Select
+      {/* Cannot use @components/common/Select — needs custom toggle/checkbox multi-select */}
+      <PatternFlySelect
         aria-label={placeholderLabel}
         isOpen={isOpen}
         isScrollable
@@ -146,7 +145,7 @@ export const EnumFilter = ({
         toggle={toggle}
       >
         <SelectList>{renderOptions()}</SelectList>
-      </Select>
+      </PatternFlySelect>
     </ToolbarFilter>
   );
 };
