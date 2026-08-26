@@ -47,7 +47,7 @@ export const createMigrationSucceededRule = (alerts: PrometheusAlert[] = []): Pr
 });
 
 export const createFiringAlert = (overrides: Partial<AlertLabels> = {}): PrometheusAlert => {
-  const labels = {
+  const labels: AlertLabels = {
     alertname: 'MigrationFailed',
     mode: 'Cold',
     phase: 'DiskTransfer',
@@ -56,7 +56,8 @@ export const createFiringAlert = (overrides: Partial<AlertLabels> = {}): Prometh
     severity: 'critical',
     target: 'Local',
     [PLAN_NAME_LABEL]: 'my-plan',
-  } as AlertLabels;
+    ...overrides,
+  };
 
   return {
     activeAt: '2026-06-23T14:30:00Z',
@@ -64,13 +65,13 @@ export const createFiringAlert = (overrides: Partial<AlertLabels> = {}): Prometh
       description:
         'Cold migration plan "my-plan" with VSphere provider failed on DiskTransfer phase.',
     },
-    labels: { ...labels, ...overrides } as AlertLabels,
+    labels,
     state: FIRING_ALERT_STATE,
   };
 };
 
 export const createSucceededAlert = (overrides: Partial<AlertLabels> = {}): PrometheusAlert => {
-  const labels = {
+  const labels: AlertLabels = {
     alertname: 'MigrationSucceeded',
     mode: 'Cold',
     phase: 'Completed',
@@ -79,12 +80,13 @@ export const createSucceededAlert = (overrides: Partial<AlertLabels> = {}): Prom
     severity: 'info',
     target: 'Local',
     [PLAN_NAME_LABEL]: 'completed-plan',
-  } as AlertLabels;
+    ...overrides,
+  };
 
   return {
     activeAt: '2026-06-24T10:00:00Z',
     annotations: { description: 'Migration plan "completed-plan" succeeded.' },
-    labels: { ...labels, ...overrides } as AlertLabels,
+    labels,
     state: FIRING_ALERT_STATE,
   };
 };
