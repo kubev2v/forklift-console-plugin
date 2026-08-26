@@ -15,7 +15,7 @@ describe('vmRowAccessors - concernLabels', () => {
     });
     const { categoryMapper, labelIconMapper, labels } = getVmConcernLabels(row);
 
-    expect(labels.sort()).toEqual(['CPU', 'Disk']);
+    expect(labels.toSorted((left, right) => left.localeCompare(right))).toEqual(['CPU', 'Disk']);
     expect(categoryMapper.CPU).toBe('Critical');
     expect(labelIconMapper.CPU).toBeDefined();
   });
@@ -43,12 +43,16 @@ describe('vmRowAccessors - concernLabels', () => {
         folderName: 'f',
         isHidden: false as const,
         key: 'folder-f',
-        treeRow: { props: {}, rowIndex: 0 },
+        treeRow: { onCollapse: jest.fn(), props: {}, rowIndex: 0 },
         type: ROW_TYPE.Folder,
       },
     ];
 
-    expect(getConcernLabelFilterOptions(rows).map((o) => o.label)).toEqual(['CPU', 'Disk', 'NIC']);
+    expect(getConcernLabelFilterOptions(rows).map((option) => option.label)).toEqual([
+      'CPU',
+      'Disk',
+      'NIC',
+    ]);
   });
 
   it('builds unique hostname filter options sorted case-insensitively', () => {
@@ -58,7 +62,10 @@ describe('vmRowAccessors - concernLabels', () => {
       makeVmRow({ host: 'ESXI-A', name: 'vm3' }),
     ];
 
-    expect(getHostnameFilterOptions(rows).map((o) => o.label)).toEqual(['esxi-a', 'esxi-b']);
+    expect(getHostnameFilterOptions(rows).map((option) => option.label)).toEqual([
+      'esxi-a',
+      'esxi-b',
+    ]);
   });
 
   it('returns empty filter options for empty rows', () => {
