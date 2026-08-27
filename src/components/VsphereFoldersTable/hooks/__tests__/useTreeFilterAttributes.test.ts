@@ -103,7 +103,7 @@ describe('useTreeFilterAttributes', () => {
               ],
               id: '1',
               name: 'vm-1',
-            },
+            } as VmRow['vmData']['vm'],
           },
         }),
       ],
