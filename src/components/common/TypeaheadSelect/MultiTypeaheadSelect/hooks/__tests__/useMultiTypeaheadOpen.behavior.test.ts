@@ -43,6 +43,22 @@ describe('useMultiTypeaheadOpen - behavior', () => {
     expect(result.current.isOpen).toBe(false);
   });
 
+  it('keeps menu open on input click when open with non-empty input', () => {
+    const { result } = renderHook(() => useMultiTypeaheadOpen({}));
+
+    act(() => {
+      result.current.onInputValueChange('query', true);
+      result.current.setIsOpen(true);
+    });
+    expect(result.current.isOpen).toBe(true);
+    expect(result.current.inputValue).toBe('query');
+
+    act(() => {
+      result.current.onInputClick();
+    });
+    expect(result.current.isOpen).toBe(true);
+  });
+
   it('updates input value, filtering flag and optional callback', () => {
     const onInputChange = jest.fn();
     const { result } = renderHook(() => useMultiTypeaheadOpen({ onInputChange }));

@@ -1,3 +1,4 @@
+import type { ProvidersInventoryList } from '@forklift-ui/types';
 import { consoleFetchJSON, useFlag } from '@openshift-console/dynamic-plugin-sdk';
 import { act, renderHook } from '@testing-library/react';
 
@@ -17,21 +18,19 @@ jest.mock('../../utils/getProvidersInventoryByNamespace', (): unknown => ({
   getProvidersInventoryByNamespace: jest.fn(),
 }));
 
-jest.mock('../../utils/inventoryHasChanged', (): unknown => ({
-  inventoryHasChanged: () => true,
-}));
-
-jest.mock('../../utils/updateInventory', (): unknown => ({
-  updateInventory: (inventory: unknown, setInventory: (v: unknown) => void): void => {
-    setInventory(inventory);
-  },
-}));
-
 const mockFetch = consoleFetchJSON as jest.MockedFunction<typeof consoleFetchJSON>;
 const mockFlag = useFlag as jest.MockedFunction<typeof useFlag>;
 const mockByNs = getProvidersInventoryByNamespace as jest.MockedFunction<
   typeof getProvidersInventoryByNamespace
 >;
+
+const clusterInventory = {
+  vsphere: [{ name: 'vc', uid: 'uid-1' }],
+} as unknown as ProvidersInventoryList;
+
+const namespaceInventory = {
+  ovirt: [{ name: 'rhv', uid: 'uid-2' }],
+} as unknown as ProvidersInventoryList;
 
 const flush = async (): Promise<void> => {
   await act(async () => {
@@ -53,26 +52,26 @@ describe('useProvidersInventoryList - behavior', () => {
 
   it('fetches cluster inventory when CAN_LIST_NS is true', async () => {
     mockFlag.mockReturnValue(true);
-    mockFetch.mockResolvedValue({ vsphere: [] });
+    mockFetch.mockResolvedValue(clusterInventory);
 
     const { result } = renderHook(() => useProvidersInventoryList('ns', 1000));
     await flush();
 
     expect(mockFetch).toHaveBeenCalledWith('/inventory/providers?detail=1');
-    expect(result.current.inventory).toEqual({ vsphere: [] });
+    expect(result.current.inventory).toEqual(clusterInventory);
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBeNull();
   });
 
   it('fetches namespace inventory when CAN_LIST_NS is false', async () => {
     mockFlag.mockReturnValue(false);
-    mockByNs.mockResolvedValue({ ovirt: [] });
+    mockByNs.mockResolvedValue(namespaceInventory);
 
     const { result } = renderHook(() => useProvidersInventoryList('team-a'));
     await flush();
 
     expect(mockByNs).toHaveBeenCalledWith('team-a');
-    expect(result.current.inventory).toEqual({ ovirt: [] });
+    expect(result.current.inventory).toEqual(namespaceInventory);
   });
 
   it('sets error on fetch failure', async () => {
