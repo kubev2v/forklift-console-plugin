@@ -16,22 +16,36 @@ describe('convertToPlanConcernsConditionsPanelData - convert', () => {
       new Set(['Inspected']),
     );
 
-    expect(result[0].criticalConditionOrConcern).toEqual(
-      expect.objectContaining({
+    expect(result[0]).toEqual({
+      criticalConditionOrConcern: {
+        message: 'm',
+        severity: 'Critical',
         source: CONCERN_SOURCE.CONDITION,
         type: 'Ready',
         vmsNum: 2,
-      }),
-    );
-    expect(result[1].criticalConditionOrConcern).toEqual(
-      expect.objectContaining({
+      },
+      planUrl: '/plan/url',
+    });
+    expect(result[1]).toEqual({
+      criticalConditionOrConcern: {
+        message: 'Shared disk',
         severity: ConcernCategoryOptions.Critical,
         source: CONCERN_SOURCE.INVENTORY,
         type: 'Shared disk',
         vmsNum: 3,
-      }),
-    );
-    expect(result[2].criticalConditionOrConcern.source).toBe(CONCERN_SOURCE.INSPECTION);
+      },
+      planUrl: '/plan/url',
+    });
+    expect(result[2]).toEqual({
+      criticalConditionOrConcern: {
+        message: 'Inspected',
+        severity: ConcernCategoryOptions.Critical,
+        source: CONCERN_SOURCE.INSPECTION,
+        type: 'Inspected',
+        vmsNum: 1,
+      },
+      planUrl: '/plan/url',
+    });
   });
 
   it('handles undefined conditions', () => {

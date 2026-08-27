@@ -24,6 +24,12 @@ describe('plan details utils - migration type', () => {
     expect(getPlanMigrationType({ spec: { type: 'cold' } } as never)).toBe(MigrationTypeValue.Cold);
   });
 
+  it('returns Warm when type is cold but warm flag is true', () => {
+    expect(getPlanMigrationType({ spec: { type: 'cold', warm: true } } as never)).toBe(
+      MigrationTypeValue.Warm,
+    );
+  });
+
   it('falls back to warm flag when type is missing', () => {
     expect(getPlanMigrationType({ spec: { warm: true } } as never)).toBe(MigrationTypeValue.Warm);
     expect(getPlanMigrationType({ spec: {} } as never)).toBe(MigrationTypeValue.Cold);
@@ -35,6 +41,7 @@ describe('plan details utils - migration type', () => {
         phase: planMigrationVirtualMachineStatuses.CopyingPaused,
       } as never),
     ).toBe(true);
+    expect(isMigrationVirtualMachinePaused({ phase: 'Running' } as never)).toBe(false);
     expect(isMigrationVirtualMachinePaused(undefined)).toBe(false);
   });
 });

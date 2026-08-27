@@ -1,3 +1,7 @@
+import { mockI18n } from '@test-utils/mockI18n';
+
+mockI18n();
+
 import { describe, expect, it } from '@jest/globals';
 
 import { getMappingPageMessage } from '../utils';
@@ -20,12 +24,8 @@ describe('getMappingPageMessage - states', () => {
       resourcesError: new Error('boom'),
       storageMapsEmpty: false,
     });
-    expect(message).toMatch(/not available/i);
-    // i18n test mock may leave the placeholder literal; ensure error message is passed through when interpolated
-    expect(
-      message === 'The mapping data from the inventory is not available, {{resourcesError}}.' ||
-        (message ?? '').includes('boom'),
-    ).toBe(true);
+    expect(message).toBe('The mapping data from the inventory is not available, boom.');
+    expect(message).toContain('boom');
   });
 
   it('returns null when ready', () => {
