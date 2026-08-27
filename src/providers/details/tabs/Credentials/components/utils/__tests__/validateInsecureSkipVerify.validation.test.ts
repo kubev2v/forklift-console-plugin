@@ -5,7 +5,9 @@ import { validateInsecureSkipVerify } from '../validateInsecureSkipVerify';
 
 describe('validateInsecureSkipVerify - validation', () => {
   it('accepts true/false/empty and rejects other values', () => {
-    expect(validateInsecureSkipVerify(undefined as never).type).toBe(ValidationState.Default);
+    expect(validateInsecureSkipVerify(undefined as unknown as string).type).toBe(
+      ValidationState.Default,
+    );
     expect(validateInsecureSkipVerify('true').type).toBe(ValidationState.Success);
     expect(validateInsecureSkipVerify('false').type).toBe(ValidationState.Success);
     expect(validateInsecureSkipVerify('').type).toBe(ValidationState.Success);
