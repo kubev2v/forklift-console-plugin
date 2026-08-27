@@ -158,6 +158,8 @@ jobs:
               marker,
               `## Jira ticket check: ${ticketLink}`,
               '',
+              `**Open in Jira:** ${ticketLink}`,
+              '',
               '| Field | Current value | Check |',
               '| --- | --- | --- |',
               tableRows,
@@ -171,8 +173,12 @@ jobs:
 
             const body = bodyParts.join('\n');
 
-            const summaryBody = bodyParts.slice(1).join('\n');
-            await core.summary.addRaw(summaryBody).write();
+            await core.summary
+              .addHeading(`Jira ticket check: ${ticketKey}`, 2)
+              .addLink('Open in Jira', ticketUrl)
+              .addEOL()
+              .addRaw(bodyParts.slice(4).join('\n'))
+              .write();
 
             const { owner, repo } = context.repo;
             const issue_number = Number(process.env.PR_NUMBER);
