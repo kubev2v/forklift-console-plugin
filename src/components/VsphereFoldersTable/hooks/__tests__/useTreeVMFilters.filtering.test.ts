@@ -93,6 +93,28 @@ describe('useTreeVMFilters - filtering', () => {
     expect(result.current.visibleVmIds.has('root-1')).toBe(false);
   });
 
+  it('intersects showAll false with attribute predicate', () => {
+    const { result } = renderHook(() =>
+      useTreeFilters({
+        filters: filtersStub({
+          hasAttrFilters: true,
+          predicate: (row) => row.vmData.name === 'vm-3',
+        }),
+        rows: folderTreeRows,
+        showAll: false,
+      }),
+    );
+
+    // selected vm-1 fails predicate; selected vm-3 passes
+    expect(result.current.filteredRows.map((row) => row.key)).toEqual([
+      `${FOLDER_PREFIX}b`,
+      'vm-vm-3',
+      'concerns-vm-3',
+    ]);
+    expect(result.current.visibleVmIds.has('vm-1')).toBe(false);
+    expect(result.current.visibleVmIds.has('vm-3')).toBe(true);
+  });
+
   it('counts root VMs under no-folder key', () => {
     const { result } = renderHook(() =>
       useTreeFilters({

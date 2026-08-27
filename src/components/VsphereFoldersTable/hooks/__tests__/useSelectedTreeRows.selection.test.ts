@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, type FormEvent, renderHook } from '@testing-library/react';
 
 import useSelectedTreeRows from '../useSelectedTreeRows';
 
@@ -13,7 +13,7 @@ describe('useSelectedTreeRows - selection', () => {
 
   it('adds and removes a single key via onCheckChange', () => {
     const { result } = renderHook(() => useSelectedTreeRows());
-    const event = {} as React.FormEvent<HTMLInputElement>;
+    const event = {} as FormEvent<HTMLInputElement>;
 
     act(() => {
       result.current.onCheckChange('vm-1')(event, true);
@@ -29,7 +29,7 @@ describe('useSelectedTreeRows - selection', () => {
 
   it('adds and removes multiple keys via onCheckChange', () => {
     const { result } = renderHook(() => useSelectedTreeRows());
-    const event = {} as React.FormEvent<HTMLInputElement>;
+    const event = {} as FormEvent<HTMLInputElement>;
 
     act(() => {
       result.current.onCheckChange(['vm-1', 'vm-2'])(event, true);

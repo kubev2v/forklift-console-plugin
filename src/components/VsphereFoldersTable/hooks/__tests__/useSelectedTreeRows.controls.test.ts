@@ -45,6 +45,24 @@ describe('useSelectedTreeRows - controls', () => {
     expect(setSelectedVmKeys).toHaveBeenCalledWith([]);
   });
 
+  it('does not reset showAll when controlled selectedVmKeys prop becomes empty', () => {
+    const setSelectedVmKeys = jest.fn();
+    const { result, rerender } = renderHook(
+      ({ selectedVmKeys }) => useSelectedTreeRows({ selectedVmKeys, setSelectedVmKeys }),
+      { initialProps: { selectedVmKeys: ['vm-1'] } },
+    );
+
+    act(() => {
+      result.current.setShowAll(false);
+    });
+    expect(result.current.showAll).toBe(false);
+
+    rerender({ selectedVmKeys: [] });
+
+    expect(result.current.selectedVmKeys).toEqual([]);
+    expect(result.current.showAll).toBe(false);
+  });
+
   it('does not reset showAll when clearing uncontrolled selection', () => {
     const { result } = renderHook(() => useSelectedTreeRows());
 
