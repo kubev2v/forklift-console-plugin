@@ -10,7 +10,7 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { MigrationTypeValue } from '../../steps/migration-type/constants';
 import { createPlan } from '../createPlan';
 
-const mockK8sCreate = k8sCreate as jest.Mock;
+const mockK8sCreate = k8sCreate as jest.MockedFunction<typeof k8sCreate>;
 
 const provider = {
   apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -27,7 +27,7 @@ const mapRef = {
 describe('createPlan - create', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(({ data }: { data: unknown }) => Promise.resolve(data));
+    mockK8sCreate.mockImplementation(({ data }) => Promise.resolve(data));
   });
 
   it('creates a cold plan and returns an object ref', async () => {
