@@ -4,7 +4,7 @@ import { NetworkMapFieldId } from '@utils/crds/maps/types';
 
 import { validateNetworkMaps } from '../utils';
 
-const mapping = (source: string, target: string) =>
+const mapping = (source: string, target: string): never =>
   ({
     [NetworkMapFieldId.SourceNetwork]: { name: source },
     [NetworkMapFieldId.TargetNetwork]: { name: target },

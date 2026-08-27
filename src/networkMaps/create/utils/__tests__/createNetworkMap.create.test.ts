@@ -1,14 +1,18 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sCreate = jest.fn();
-const mockBuild = jest.fn(() => [{ source: { id: '1' }, destination: { type: 'pod' } }]);
+const mockK8sCreate = jest.fn() as unknown as jest.Mock;
+const mockBuild = jest.fn((..._args: unknown[]) => [
+  { source: { id: '1' }, destination: { type: 'pod' } },
+]);
 
-jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sCreate: (...args: unknown[]): unknown => mockK8sCreate(...args),
+jest.mock('@openshift-console/dynamic-plugin-sdk', (): unknown => ({
+  k8sCreate: (...args: unknown[]): unknown =>
+    (mockK8sCreate as (...a: unknown[]) => unknown)(...args),
 }));
 
-jest.mock('../buildNetworkMappings', () => ({
-  buildNetworkMappings: (...args: unknown[]): unknown => mockBuild(...args),
+jest.mock('../buildNetworkMappings', (): unknown => ({
+  buildNetworkMappings: (...args: unknown[]): unknown =>
+    (mockBuild as (...a: unknown[]) => unknown)(...args),
 }));
 
 import { NetworkMapModel } from '@forklift-ui/types';
@@ -18,7 +22,10 @@ import { createNetworkMap } from '../createNetworkMap';
 describe('createNetworkMap - create', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(({ data }) => Promise.resolve(data));
+    mockK8sCreate.mockImplementation((...args: unknown[]) => {
+      const [{ data }] = args as [{ data: unknown }];
+      return Promise.resolve(data);
+    });
   });
 
   it('creates a network map and tracks start event', async () => {

@@ -3,7 +3,7 @@ import { StorageMapFieldId } from '@utils/storage/types';
 
 import { validateStorageMaps } from '../utils';
 
-const mapping = (source: string, target: string) =>
+const mapping = (source: string, target: string): never =>
   ({
     [StorageMapFieldId.SourceStorage]: { name: source },
     [StorageMapFieldId.TargetStorage]: { name: target },
