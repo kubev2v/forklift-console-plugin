@@ -10,9 +10,19 @@ describe('getMigrationTypeConfig - config', () => {
     expect(config.helpLink).toBeUndefined();
   });
 
-  it('returns warm and live configs with help body', () => {
-    expect(getMigrationTypeConfig(MigrationTypeValue.Warm).helpBody).toMatch(/warm migration/i);
-    expect(getMigrationTypeConfig(MigrationTypeValue.Live).helpBody).toMatch(/live migration/i);
+  it('returns warm config with distinct description and help body', () => {
+    const config = getMigrationTypeConfig(MigrationTypeValue.Warm);
+    expect(config.description).toMatch(/warm migration/i);
+    expect(config.helpBody).toMatch(/warm migration/i);
+    expect(config.description).not.toBe(config.helpBody);
+    expect(config.helpLink).toBeUndefined();
+  });
+
+  it('returns live config with matching description and help body', () => {
+    const config = getMigrationTypeConfig(MigrationTypeValue.Live);
+    expect(config.description).toMatch(/live migration/i);
+    expect(config.helpBody).toBe(config.description);
+    expect(config.helpLink).toBeUndefined();
   });
 
   it('returns empty description for conversion/default', () => {
