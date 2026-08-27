@@ -1,14 +1,16 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sPatch = jest.fn();
+const mockK8sPatch = jest.fn((..._args: unknown[]) => Promise.resolve({}));
 const mockTransform = jest.fn(() => ({ spec: { map: [{ source: { id: 's' } }] } }));
 
-jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sPatch: (...args: unknown[]): unknown => mockK8sPatch(...args),
+jest.mock('@openshift-console/dynamic-plugin-sdk', (): unknown => ({
+  k8sPatch: (...args: unknown[]): unknown =>
+    (mockK8sPatch as (...a: unknown[]) => unknown)(...args),
 }));
 
-jest.mock('src/storageMaps/details/utils/utils', () => ({
-  transformFormValuesToK8sSpec: (...args: unknown[]): unknown => mockTransform(...args),
+jest.mock('src/storageMaps/details/utils/utils', (): unknown => ({
+  transformFormValuesToK8sSpec: (...args: unknown[]): unknown =>
+    (mockTransform as (...a: unknown[]) => unknown)(...args),
 }));
 
 import { StorageMapModel } from '@forklift-ui/types';
@@ -19,7 +21,7 @@ import { patchStorageMappingValues } from '../utils';
 describe('patchStorageMappingValues - patch', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue(undefined as never);
+    mockK8sPatch.mockResolvedValue({});
     mockTransform.mockClear();
   });
 
@@ -53,7 +55,7 @@ describe('patchStorageMappingValues - patch', () => {
   });
 
   it('skips patch when transform returns undefined', async () => {
-    mockTransform.mockReturnValueOnce(undefined);
+    mockTransform.mockReturnValueOnce(undefined as never);
     await patchStorageMappingValues({ storageMap: [] }, {} as never, {} as never);
     expect(mockK8sPatch).not.toHaveBeenCalled();
   });

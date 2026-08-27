@@ -31,15 +31,15 @@ describe('plan details utils - concerns maps', () => {
   it('merges maps preferring the larger count', () => {
     const merged = mergeConcernsMaps(
       new Map([
-        ['a', 1],
-        ['b', 5],
+        ['alpha', 1],
+        ['beta', 5],
       ]),
       new Map([
-        ['a', 3],
-        ['c', 2],
+        ['alpha', 3],
+        ['keyC', 2],
       ]),
     );
 
-    expect(Object.fromEntries(merged)).toEqual({ a: 3, b: 5, c: 2 });
+    expect(Object.fromEntries(merged)).toEqual({ a: 3, b: 5, keyC: 2 });
   });
 });
