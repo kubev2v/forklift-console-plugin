@@ -31,7 +31,9 @@ const makeVmRow = (overrides: Partial<VmRow> = {}): VmRow =>
 
 const optionLabels = (attrs: ReturnType<typeof useTreeFilterAttributes>, id: string): string[] => {
   const attr = attrs.find((entry) => entry.id === id);
-  return attr && 'options' in attr ? (attr.options?.map((option) => option.label) ?? []) : [];
+  return attr && 'options' in attr
+    ? (attr.options?.flatMap((option) => (option.label ? [option.label] : [])) ?? [])
+    : [];
 };
 
 describe('useTreeFilterAttributes', () => {
@@ -91,7 +93,14 @@ describe('useTreeFilterAttributes', () => {
             name: 'vm-1',
             namespace: 'ns',
             vm: {
-              concerns: [{ category: ConcernCategoryOptions.Critical, label: 'CPU' }],
+              concerns: [
+                {
+                  assessment: 'CPU usage high',
+                  category: ConcernCategoryOptions.Critical,
+                  id: 'c1',
+                  label: 'CPU',
+                },
+              ],
               id: '1',
               name: 'vm-1',
             },
