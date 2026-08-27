@@ -15,7 +15,7 @@ describe('mergeConcernsMaps - weakPartials', () => {
       ]),
     );
 
-    expect(Object.fromEntries(merged)).toEqual({ a: 5, b: 1, keyC: 3 });
+    expect(Object.fromEntries(merged)).toEqual({ alpha: 5, beta: 1, keyC: 3 });
   });
 
   it('handles empty maps', () => {
