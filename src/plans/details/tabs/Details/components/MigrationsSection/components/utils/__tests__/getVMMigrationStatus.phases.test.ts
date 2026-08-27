@@ -1,4 +1,7 @@
-import type { V1beta1PlanStatusMigrationVms } from '@forklift-ui/types';
+import type {
+  V1beta1PlanStatusMigrationVms,
+  V1beta1PlanStatusMigrationVmsConditions,
+} from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
 import { mockI18n } from '@test-utils/mockI18n';
 import { CATEGORY_TYPES, CONDITION_STATUS, taskStatuses } from '@utils/constants';
@@ -6,6 +9,16 @@ import { CATEGORY_TYPES, CONDITION_STATUS, taskStatuses } from '@utils/constants
 mockI18n();
 
 import { getVMMigrationStatus } from '../utils';
+
+const condition = (
+  type: string,
+  status: string = CONDITION_STATUS.TRUE,
+): V1beta1PlanStatusMigrationVmsConditions => ({
+  category: 'Advisory',
+  lastTransitionTime: '2024-01-01T00:00:00Z',
+  status,
+  type,
+});
 
 const vm = (
   overrides: Partial<V1beta1PlanStatusMigrationVms> = {},
@@ -20,7 +33,7 @@ describe('getVMMigrationStatus', () => {
     expect(
       getVMMigrationStatus(
         vm({
-          conditions: [{ status: CONDITION_STATUS.TRUE, type: CATEGORY_TYPES.FAILED }],
+          conditions: [condition(CATEGORY_TYPES.FAILED)],
         }),
       ),
     ).toBe('Failed');
@@ -30,7 +43,7 @@ describe('getVMMigrationStatus', () => {
     expect(
       getVMMigrationStatus(
         vm({
-          conditions: [{ status: CONDITION_STATUS.TRUE, type: CATEGORY_TYPES.SUCCEEDED }],
+          conditions: [condition(CATEGORY_TYPES.SUCCEEDED)],
         }),
       ),
     ).toBe('Succeeded');
@@ -40,10 +53,7 @@ describe('getVMMigrationStatus', () => {
     expect(
       getVMMigrationStatus(
         vm({
-          conditions: [
-            { status: CONDITION_STATUS.TRUE, type: CATEGORY_TYPES.FAILED },
-            { status: CONDITION_STATUS.TRUE, type: CATEGORY_TYPES.SUCCEEDED },
-          ],
+          conditions: [condition(CATEGORY_TYPES.FAILED), condition(CATEGORY_TYPES.SUCCEEDED)],
         }),
       ),
     ).toBe('Failed');

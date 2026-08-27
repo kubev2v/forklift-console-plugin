@@ -24,7 +24,7 @@ describe('getServiceAccountHelperText', () => {
 
   it('falls back to empty project when plan is missing', () => {
     const pre = getServiceAccountHelperText(true);
-    const post = getServiceAccountHelperText(false, undefined);
+    const post = getServiceAccountHelperText(false);
     expect(pre).toContain("  plan's project.");
     expect(post).toContain("  plan's target project.");
   });
