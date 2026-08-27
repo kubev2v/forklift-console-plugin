@@ -55,9 +55,7 @@ describe('hasMultiplePodNetworkMappings - edgeCases', () => {
   it('hasPodNetworkMappings detects pod network targets', () => {
     expect(hasPodNetworkMappings([])).toBe(false);
     expect(
-      hasPodNetworkMappings([
-        { targetNetwork: { name: DefaultNetworkLabel.Source } },
-      ] as never),
+      hasPodNetworkMappings([{ targetNetwork: { name: DefaultNetworkLabel.Source } }] as never),
     ).toBe(true);
   });
 });

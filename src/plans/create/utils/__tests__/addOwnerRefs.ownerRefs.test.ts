@@ -43,7 +43,7 @@ describe('addOwnerRefs - ownerRefs', () => {
 
     await addOwnerRefs(model, resource, [planRef]);
 
-    const value = mockK8sPatch.mock.calls[0][0].data[0].value;
+    const { value } = mockK8sPatch.mock.calls[0][0].data[0];
     expect(value).toHaveLength(2);
     expect(value[0]).toEqual({ ...existing, namespace: undefined });
     expect(value[1]).toEqual({ ...planRef, namespace: undefined });

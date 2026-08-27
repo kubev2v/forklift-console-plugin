@@ -54,7 +54,7 @@ describe('copyStorageMap - copy', () => {
 
     await copyStorageMap(existing, 'p', 'ns');
 
-    const data = mockK8sCreate.mock.calls[0][0].data;
+    const { data } = mockK8sCreate.mock.calls[0][0];
     expect(data.metadata.labels).toBeUndefined();
     expect(data.metadata.annotations).toBeUndefined();
   });
