@@ -33,9 +33,13 @@ describe('userSettings - behavior', () => {
     mockLoad.mockReturnValue(null);
     const settings = loadUserSettings({ pageId: 'providers' });
 
-    expect(settings.fields.data).toEqual([]);
-    expect(settings.filters.data).toEqual({});
-    expect(settings.pagination.perPage).toBe(DEFAULT_PER_PAGE);
+    expect(settings).toEqual(
+      expect.objectContaining({
+        fields: expect.objectContaining({ data: [] }),
+        filters: expect.objectContaining({ data: {} }),
+        pagination: expect.objectContaining({ perPage: DEFAULT_PER_PAGE }),
+      }),
+    );
   });
 
   it('sanitizes fields and keeps valid perPage/filters', () => {
@@ -48,33 +52,51 @@ describe('userSettings - behavior', () => {
     );
 
     const settings = loadUserSettings({ pageId: 'plans' });
-    expect(settings.fields.data).toEqual([{ isVisible: true, resourceFieldId: 'name' }]);
-    expect(settings.filters.data).toEqual({ name: ['a'] });
-    expect(settings.pagination.perPage).toBe(50);
+    expect(settings).toEqual(
+      expect.objectContaining({
+        fields: expect.objectContaining({
+          data: [{ isVisible: true, resourceFieldId: 'name' }],
+        }),
+        filters: expect.objectContaining({ data: { name: ['a'] } }),
+        pagination: expect.objectContaining({ perPage: 50 }),
+      }),
+    );
   });
 
   it('removes invalid JSON from storage', () => {
     mockLoad.mockReturnValue('{not-json');
     const settings = loadUserSettings({ pageId: 'broken' });
     expect(mockRemove).toHaveBeenCalledWith('forklift/broken');
-    expect(settings.fields.data).toEqual([]);
+    expect(settings).toEqual(
+      expect.objectContaining({
+        fields: expect.objectContaining({ data: [] }),
+      }),
+    );
   });
 
   it('saves and clears fields/filters/pagination', () => {
     mockLoad.mockReturnValue(JSON.stringify({ fields: [], filters: { a: 1 }, perPage: 20 }));
     const settings = loadUserSettings({ pageId: 'x' });
+    const { fields, filters, pagination } = settings;
 
-    settings.fields.save([{ isVisible: true, resourceFieldId: 'name' }]);
+    expect(fields).toBeDefined();
+    expect(filters).toBeDefined();
+    expect(pagination).toBeDefined();
+    if (!fields || !filters || !pagination) {
+      return;
+    }
+
+    fields.save([{ isVisible: true, resourceFieldId: 'name' }]);
     expect(mockSave).toHaveBeenCalled();
 
-    settings.fields.clear();
+    fields.clear();
     expect(mockSave).toHaveBeenCalledWith('forklift/x', expect.stringContaining('filters'));
 
     mockLoad.mockReturnValue(JSON.stringify({}));
-    settings.filters.clear();
+    filters.clear();
     expect(mockRemove).toHaveBeenCalledWith('forklift/x');
 
-    settings.pagination.save(100);
+    pagination.save(100);
     expect(mockSave).toHaveBeenCalledWith('forklift/x', expect.stringContaining('100'));
   });
 });
