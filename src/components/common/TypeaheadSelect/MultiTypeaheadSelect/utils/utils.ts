@@ -18,7 +18,7 @@ export const getPrevEnabledIndex = (
     index = options.length - 1;
   }
 
-  for (let step = 0; step < options.length; step += 1) {
+  for (const _ of options) {
     if (!options[index]?.optionProps?.isDisabled) {
       return index;
     }
@@ -43,7 +43,7 @@ export const getNextEnabledIndex = (
     index = 0;
   }
 
-  for (let step = 0; step < options.length; step += 1) {
+  for (const _ of options) {
     if (!options[index]?.optionProps?.isDisabled) {
       return index;
     }

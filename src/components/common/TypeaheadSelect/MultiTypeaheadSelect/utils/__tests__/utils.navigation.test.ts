@@ -41,4 +41,9 @@ describe('MultiTypeaheadSelect utils - navigation', () => {
     expect(getNextEnabledIndex(options, 1)).toBe(1);
     expect(getPrevEnabledIndex(options, 1)).toBe(1);
   });
+
+  it('returns startIndex when options are empty', () => {
+    expect(getNextEnabledIndex([], 3)).toBe(3);
+    expect(getPrevEnabledIndex([], -1)).toBe(-1);
+  });
 });
