@@ -121,9 +121,9 @@ export const providerTestScenarios: ProviderTestScenario[] = [
     scenarioName: 'Hyper-V provider with SMB share',
   },
   {
-    scenarioName: 'Nutanix AHV provider with Prism Element',
-    providerType: ProviderType.NUTANIX,
-    providerKey: NUTANIX_KEY,
     minVersion: V2_13_0,
+    providerKey: NUTANIX_KEY,
+    providerType: ProviderType.NUTANIX,
+    scenarioName: 'Nutanix AHV provider with Prism Element',
   },
 ];

@@ -54,7 +54,7 @@ const CredentialsContent: FC<CredentialsContentProps> = ({ provider, reveal, sec
       return <CredentialFields fields={hypervCredentialsFields} reveal={reveal} secret={secret} />;
 
     case PROVIDER_TYPES.nutanix:
-      return <CredentialFields fields={nutanixCredentialsFields} secret={secret} reveal={reveal} />;
+      return <CredentialFields fields={nutanixCredentialsFields} reveal={reveal} secret={secret} />;
 
     case PROVIDER_TYPES.ova:
     case undefined:

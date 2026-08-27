@@ -5,12 +5,9 @@ import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DatabaseIcon } from '@patternfly/react-icons';
+import { isNutanixProviderInventory } from '@utils/types/nutanixInventory';
 
 import type { InventoryDetailsItemProps } from './utils/types';
-
-type NutanixInventoryWithStorage = {
-  storageContainerCount?: number;
-};
 
 const StorageContainerCountDetailsItem: FC<InventoryDetailsItemProps> = ({
   helpContent,
@@ -20,7 +17,9 @@ const StorageContainerCountDetailsItem: FC<InventoryDetailsItemProps> = ({
   const { t } = useForkliftTranslation();
 
   const defaultHelpContent = t('Number of storage containers');
-  const { storageContainerCount } = inventory as NutanixInventoryWithStorage;
+  const storageContainerCount = isNutanixProviderInventory(inventory)
+    ? inventory.storageContainerCount
+    : undefined;
 
   return (
     <DetailsItem
