@@ -37,9 +37,10 @@ jobs:
       )
 
     steps:
-      - name: Checkout
+      - name: Checkout trusted base revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          ref: ${{ github.event.pull_request.base.sha || github.ref }}
           persist-credentials: false
 
       - name: Ensure jq is available
@@ -115,6 +116,12 @@ jobs:
           PR_TITLE: ${{ steps.pr_context.outputs.pr_title }}
         run: |
           set -euo pipefail
+
+          if [[ ! -f ./scripts/validate-jira-ticket.sh ]]; then
+            echo "::warning::validate-jira-ticket.sh is not on the base branch yet; skipping until the workflow is merged"
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
           chmod +x ./scripts/validate-jira-ticket.sh
           ./scripts/validate-jira-ticket.sh \
