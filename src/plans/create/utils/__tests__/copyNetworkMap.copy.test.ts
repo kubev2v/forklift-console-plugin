@@ -1,19 +1,20 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sCreate = jest.fn();
-
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sCreate: (...args: unknown[]) => mockK8sCreate(...args),
+  k8sCreate: jest.fn(),
 }));
 
 import { NetworkMapModel } from '@forklift-ui/types';
+import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { copyNetworkMap } from '../copyNetworkMap';
+
+const mockK8sCreate = k8sCreate as jest.Mock;
 
 describe('copyNetworkMap - copy', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(async ({ data }) => data);
+    mockK8sCreate.mockImplementation(({ data }: { data: unknown }) => Promise.resolve(data));
   });
 
   it('creates a plan-prefixed network map copy', async () => {

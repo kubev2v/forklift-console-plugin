@@ -1,15 +1,16 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sCreate = jest.fn();
-
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sCreate: (...args: unknown[]) => mockK8sCreate(...args),
+  k8sCreate: jest.fn(),
 }));
 
 import { PlanModel } from '@forklift-ui/types';
+import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { MigrationTypeValue } from '../../steps/migration-type/constants';
 import { createPlan } from '../createPlan';
+
+const mockK8sCreate = k8sCreate as jest.Mock;
 
 const provider = {
   apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -26,7 +27,7 @@ const mapRef = {
 describe('createPlan - create', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(async ({ data }) => data);
+    mockK8sCreate.mockImplementation(({ data }: { data: unknown }) => Promise.resolve(data));
   });
 
   it('creates a cold plan and returns an object ref', async () => {
@@ -39,7 +40,7 @@ describe('createPlan - create', () => {
       preserveStaticIps: true,
       sourceProvider: provider,
       storageMap: {
-        ...mapRef,
+        apiVersion: 'forklift.konveyor.io/v1beta1',
         kind: 'StorageMap',
         metadata: { name: 'sm', namespace: 'ns', uid: 's1' },
       },
@@ -82,7 +83,9 @@ describe('createPlan - create', () => {
       vms: [],
     });
 
-    const { spec } = mockK8sCreate.mock.calls[0][0].data;
+    const [firstCall] = mockK8sCreate.mock.calls;
+    const [createArg] = firstCall as [{ data: { spec: { description?: string; warm?: boolean } } }];
+    const { spec } = createArg.data;
     expect(spec.warm).toBe(true);
     expect(spec.description).toBe('desc');
   });

@@ -1,13 +1,14 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sPatch = jest.fn();
-
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sPatch: (...args: unknown[]) => mockK8sPatch(...args),
+  k8sPatch: jest.fn(),
 }));
+
+import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 import { addOwnerRefs } from '../addOwnerRefs';
 
+const mockK8sPatch = k8sPatch as jest.Mock;
 const model = { kind: 'Secret', apiVersion: 'v1' } as never;
 const planRef = { apiVersion: 'v1', kind: 'Plan', name: 'plan-1', uid: 'uid-1' };
 
@@ -43,7 +44,9 @@ describe('addOwnerRefs - ownerRefs', () => {
 
     await addOwnerRefs(model, resource, [planRef]);
 
-    const { value } = mockK8sPatch.mock.calls[0][0].data[0];
+    const [firstCall] = mockK8sPatch.mock.calls;
+    const [patchArg] = firstCall as [{ data: { value: unknown[] }[] }];
+    const [{ value }] = patchArg.data;
     expect(value).toHaveLength(2);
     expect(value[0]).toEqual({ ...existing, namespace: undefined });
     expect(value[1]).toEqual({ ...planRef, namespace: undefined });

@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockAddOwnerRefs = jest.fn();
-
 jest.mock('../addOwnerRefs', () => ({
-  addOwnerRefs: (...args: unknown[]) => mockAddOwnerRefs(...args),
+  addOwnerRefs: jest.fn(),
 }));
 
 import { HookModel, NetworkMapModel, SecretModel, StorageMapModel } from '@forklift-ui/types';
 import { ConfigMapModel } from '@utils/constants';
 
+import { addOwnerRefs } from '../addOwnerRefs';
 import { addPlanResourceOwnerRefs } from '../addPlanResourceOwnerRefs';
 
+const mockAddOwnerRefs = addOwnerRefs as jest.Mock;
 const planRef = { apiVersion: 'v1', kind: 'Plan', name: 'plan', uid: 'u1' };
 
 describe('addPlanResourceOwnerRefs - ownerRefs', () => {
