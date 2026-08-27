@@ -1,7 +1,6 @@
 import { ConcernCategory } from 'src/providers/details/tabs/VirtualMachines/constants';
 
 import { describe, expect, it } from '@jest/globals';
-
 import { CATEGORY_TYPES } from '@utils/constants';
 import { CONVERSION_LABELS, CONVERSION_PHASE } from '@utils/crds/conversion/constants';
 

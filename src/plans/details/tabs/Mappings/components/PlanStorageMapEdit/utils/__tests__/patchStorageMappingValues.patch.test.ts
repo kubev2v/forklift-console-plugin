@@ -41,11 +41,7 @@ describe('patchStorageMappingValues - patch', () => {
 
     await patchStorageMappingValues(formValues, storageMap, vsphereProvider);
 
-    expect(mockTransform).toHaveBeenCalledWith(
-      { storageMap: [nonEmptyRow] },
-      storageMap,
-      false,
-    );
+    expect(mockTransform).toHaveBeenCalledWith({ storageMap: [nonEmptyRow] }, storageMap, false);
     expect(mockK8sPatch).toHaveBeenCalledWith(
       expect.objectContaining({
         data: [{ op: 'add', path: '/spec/map', value: [{ source: { id: 's' } }] }],
