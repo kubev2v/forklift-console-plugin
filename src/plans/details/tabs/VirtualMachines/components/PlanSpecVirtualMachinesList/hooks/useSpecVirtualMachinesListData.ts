@@ -42,7 +42,7 @@ export const useSpecVirtualMachinesListData = (
   }, [vmInventoryData]);
 
   const specVirtualMachinesListData = useMemo<SpecVirtualMachinePageData[]>(() => {
-    if (loading || error != null) {
+    if (loading || error !== null) {
       return EMPTY_LIST;
     }
 
