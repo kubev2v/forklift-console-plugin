@@ -1,10 +1,6 @@
 import { encode } from 'js-base64';
 
-import {
-  type IoK8sApiCoreV1Secret,
-  SecretModel,
-  type V1beta1Provider,
-} from '@forklift-ui/types';
+import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { createProviderSecret } from '../createProviderSecret';
@@ -78,7 +74,7 @@ describe('createProviderSecret - behavior', () => {
         model: SecretModel,
       }),
     );
-    const [createArg] = mockCreate.mock.calls[0];
+    const [[createArg]] = mockCreate.mock.calls;
     expect(createArg?.data.data?.user).toBeUndefined();
   });
 
@@ -97,7 +93,7 @@ describe('createProviderSecret - behavior', () => {
     };
 
     await createProviderSecret(provider, secret);
-    const [createArg] = mockCreate.mock.calls[0];
+    const [[createArg]] = mockCreate.mock.calls;
     expect(createArg?.data.data?.cacert).toBeUndefined();
     expect(createArg?.data.data?.insecureSkipVerify).toBe(encode('true'));
   });

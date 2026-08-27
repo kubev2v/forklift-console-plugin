@@ -130,17 +130,13 @@ describe('rowsDataToAffinity - behavior', () => {
     ]);
 
     expect(affinity?.nodeAffinity).toEqual({
-      preferredDuringSchedulingIgnoredDuringExecution: [
-        expect.objectContaining({ weight: 30 }),
-      ],
+      preferredDuringSchedulingIgnoredDuringExecution: [expect.objectContaining({ weight: 30 })],
       requiredDuringSchedulingIgnoredDuringExecution: {
         nodeSelectorTerms: [expect.objectContaining({ matchExpressions: expect.any(Array) })],
       },
     });
     expect(affinity?.podAffinity).toEqual({
-      preferredDuringSchedulingIgnoredDuringExecution: [
-        expect.objectContaining({ weight: 20 }),
-      ],
+      preferredDuringSchedulingIgnoredDuringExecution: [expect.objectContaining({ weight: 20 })],
       requiredDuringSchedulingIgnoredDuringExecution: [
         expect.objectContaining({ topologyKey: 'kubernetes.io/hostname' }),
       ],
