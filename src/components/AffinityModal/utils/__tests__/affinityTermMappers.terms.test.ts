@@ -70,7 +70,9 @@ describe('affinityTermMappers - terms', () => {
 
   it('maps preferred node terms with weight', () => {
     const preferredRow = row({ weight: 40 });
-    expect(hasValidWeight(preferredRow)).toBe(true);
+    if (!hasValidWeight(preferredRow)) {
+      throw new Error('expected valid weight');
+    }
     expect(getPreferredNodeTermFromRowData(preferredRow)).toEqual({
       preference: {
         matchExpressions: [{ key: 'app', operator: 'In', values: ['api'] }],
@@ -82,7 +84,9 @@ describe('affinityTermMappers - terms', () => {
 
   it('maps required and preferred pod terms', () => {
     const requiredPod = row({ type: AffinityType.Pod });
-    expect(hasTopologyKey(requiredPod)).toBe(true);
+    if (!hasTopologyKey(requiredPod)) {
+      throw new Error('expected topology key');
+    }
     expect(getRequiredPodTermFromRowData(requiredPod)).toEqual({
       labelSelector: {
         matchExpressions: [{ key: 'app', operator: 'In', values: ['api'] }],
@@ -91,7 +95,9 @@ describe('affinityTermMappers - terms', () => {
     });
 
     const preferredPod = row({ type: AffinityType.Pod, weight: 15 });
-    expect(hasWeightAndTopologyKey(preferredPod)).toBe(true);
+    if (!hasWeightAndTopologyKey(preferredPod)) {
+      throw new Error('expected weight and topology key');
+    }
     expect(getPreferredPodTermFromRowData(preferredPod)).toEqual({
       podAffinityTerm: {
         labelSelector: {
