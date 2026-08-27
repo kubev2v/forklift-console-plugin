@@ -1,12 +1,9 @@
-import { describe, expect, it } from '@jest/globals';
 import { ConcernCategory } from 'src/providers/details/tabs/VirtualMachines/constants';
+
+import { describe, expect, it } from '@jest/globals';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
-import {
-  criticalConcernFilter,
-  getVmsWithCriticalConcerns,
-  hasCriticalConcern,
-} from '../utils';
+import { criticalConcernFilter, getVmsWithCriticalConcerns, hasCriticalConcern } from '../utils';
 
 const criticalVm = {
   concerns: [{ category: ConcernCategory.Critical, label: 'Shared disk' }],

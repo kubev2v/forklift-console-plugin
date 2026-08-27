@@ -17,6 +17,8 @@ describe('validatePlanName - validation', () => {
   });
 
   it('accepts a unique valid name', () => {
-    expect(validatePlanName('my-plan', [{ metadata: { name: 'other' } }] as never[])).toBeUndefined();
+    expect(
+      validatePlanName('my-plan', [{ metadata: { name: 'other' } }] as never[]),
+    ).toBeUndefined();
   });
 });
