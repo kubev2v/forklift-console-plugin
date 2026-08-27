@@ -7,6 +7,8 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
     (mockK8sPatch as (...a: unknown[]) => unknown)(...args),
 }));
 
+import { PlanModel } from '@forklift-ui/types';
+
 import { PROVIDER_DEFAULTS } from '../constants';
 import { getNetworkName, onConfirmTransferNetwork } from '../utils';
 
@@ -21,25 +23,39 @@ describe('PlanTransferNetwork utils - confirm', () => {
     expect(getNetworkName({ name: 'net', namespace: 'ns' })).toBe('ns/net');
   });
 
-  it('patches transfer network with ADD/REPLACE', async () => {
-    const empty = { metadata: { name: 'plan' }, spec: {} } as never;
+  it('ADDs transfer network with name and namespace', async () => {
+    const resource = { metadata: { name: 'plan' }, spec: {} } as never;
+
     await onConfirmTransferNetwork({
       newValue: { name: 'net', namespace: 'ns' },
-      resource: empty,
+      resource,
     });
-    expect(
-      (mockK8sPatch.mock.calls[0] as unknown as [{ data: { op: string }[] }])[0].data[0].op,
-    ).toBe('add');
 
-    const existing = {
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [
+        {
+          op: 'add',
+          path: '/spec/transferNetwork',
+          value: { name: 'net', namespace: 'ns' },
+        },
+      ],
+      model: PlanModel,
+      resource,
+    });
+  });
+
+  it('REPLACEs transfer network with undefined when clearing', async () => {
+    const resource = {
       metadata: { name: 'plan' },
       spec: { transferNetwork: { name: 'old', namespace: 'ns' } },
     } as never;
-    await onConfirmTransferNetwork({ newValue: null, resource: existing });
-    expect((mockK8sPatch.mock.calls[1] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
-      op: 'replace',
-      path: '/spec/transferNetwork',
-      value: undefined,
+
+    await onConfirmTransferNetwork({ newValue: null, resource });
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'replace', path: '/spec/transferNetwork', value: undefined }],
+      model: PlanModel,
+      resource,
     });
   });
 });

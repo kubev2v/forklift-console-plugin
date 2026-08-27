@@ -25,8 +25,18 @@ describe('EditNameTemplate utils - options', () => {
     expect(getSelectedOption('custom', true)).toBe(NameTemplateOptions.CustomNameTemplate);
     expect(getSelectedOption(undefined, true)).toBe(NameTemplateOptions.InheritPlanWideSetting);
     expect(getSelectedOption(undefined, false)).toBe(NameTemplateOptions.DefaultNameTemplate);
-    expect(getNameTemplateStateLabel(NameTemplateOptions.CustomNameTemplate, false)).toMatch(
-      /Custom name template/i,
-    );
+
+    expect(
+      getNameTemplateStateLabel(NameTemplateOptions.InheritPlanWideSetting, true),
+    ).toMatch(/Inherit plan wide setting/i);
+    expect(
+      getNameTemplateStateLabel(NameTemplateOptions.DefaultNameTemplate, false),
+    ).toMatch(/Default name template/i);
+    expect(
+      getNameTemplateStateLabel(NameTemplateOptions.CustomNameTemplate, true),
+    ).toMatch(/Custom name template/i);
+    expect(
+      getNameTemplateStateLabel(NameTemplateOptions.CustomNameTemplate, false),
+    ).toMatch(/Custom name template/i);
   });
 });

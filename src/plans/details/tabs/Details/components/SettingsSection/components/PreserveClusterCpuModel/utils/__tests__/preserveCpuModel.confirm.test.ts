@@ -7,6 +7,8 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
     (mockK8sPatch as (...a: unknown[]) => unknown)(...args),
 }));
 
+import { PlanModel } from '@forklift-ui/types';
+
 import { onConfirmPreserveCpuModel } from '../utils';
 
 describe('PreserveClusterCpuModel utils - confirm', () => {
@@ -16,24 +18,29 @@ describe('PreserveClusterCpuModel utils - confirm', () => {
   });
 
   it('patches preserveClusterCpuModel with ADD when unset', async () => {
-    await onConfirmPreserveCpuModel({
-      newValue: true,
-      resource: { metadata: { name: 'p' }, spec: {} } as never,
-    });
-    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
-      op: 'add',
-      path: '/spec/preserveClusterCpuModel',
-      value: true,
+    const resource = { metadata: { name: 'p' }, spec: {} } as never;
+
+    await onConfirmPreserveCpuModel({ newValue: true, resource });
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'add', path: '/spec/preserveClusterCpuModel', value: true }],
+      model: PlanModel,
+      resource,
     });
   });
 
   it('stores undefined when disabling', async () => {
-    await onConfirmPreserveCpuModel({
-      newValue: false,
-      resource: { metadata: { name: 'p' }, spec: { preserveClusterCpuModel: true } } as never,
+    const resource = {
+      metadata: { name: 'p' },
+      spec: { preserveClusterCpuModel: true },
+    } as never;
+
+    await onConfirmPreserveCpuModel({ newValue: false, resource });
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'replace', path: '/spec/preserveClusterCpuModel', value: undefined }],
+      model: PlanModel,
+      resource,
     });
-    expect(
-      (mockK8sPatch.mock.calls[0] as unknown as [{ data: { value: unknown }[] }])[0].data[0].value,
-    ).toBeUndefined();
   });
 });

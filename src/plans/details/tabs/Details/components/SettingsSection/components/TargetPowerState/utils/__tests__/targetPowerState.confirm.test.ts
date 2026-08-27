@@ -7,6 +7,8 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
     (mockK8sPatch as (...a: unknown[]) => unknown)(...args),
 }));
 
+import { PlanModel } from '@forklift-ui/types';
+
 import { onConfirmTargetPowerState, onConfirmVmTargetPowerState } from '../utils';
 
 describe('TargetPowerState utils - confirm', () => {
@@ -17,11 +19,40 @@ describe('TargetPowerState utils - confirm', () => {
 
   it('ADDs plan target power state when missing', async () => {
     const resource = { metadata: { name: 'plan' }, spec: {} } as never;
+
     await onConfirmTargetPowerState({ newValue: 'on', resource });
-    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
-      op: 'add',
-      path: '/spec/targetPowerState',
-      value: 'on',
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'add', path: '/spec/targetPowerState', value: 'on' }],
+      model: PlanModel,
+      resource,
+    });
+  });
+
+  it('REPLACEs plan target power state when already set', async () => {
+    const resource = { metadata: { name: 'plan' }, spec: { targetPowerState: 'off' } } as never;
+
+    await onConfirmTargetPowerState({ newValue: 'on', resource });
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'replace', path: '/spec/targetPowerState', value: 'on' }],
+      model: PlanModel,
+      resource,
+    });
+  });
+
+  it('ADDs VM target power state when missing', async () => {
+    const resource = {
+      metadata: { name: 'plan' },
+      spec: { vms: [{ name: 'vm' }] },
+    } as never;
+
+    await onConfirmVmTargetPowerState(0)({ newValue: 'on', resource });
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'add', path: '/spec/vms/0/targetPowerState', value: 'on' }],
+      model: PlanModel,
+      resource,
     });
   });
 
@@ -33,10 +64,10 @@ describe('TargetPowerState utils - confirm', () => {
 
     await onConfirmVmTargetPowerState(0)({ newValue: 'on', resource });
 
-    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
-      op: 'replace',
-      path: '/spec/vms/0/targetPowerState',
-      value: 'on',
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'replace', path: '/spec/vms/0/targetPowerState', value: 'on' }],
+      model: PlanModel,
+      resource,
     });
   });
 });

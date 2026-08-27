@@ -7,6 +7,8 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
     (mockK8sPatch as (...a: unknown[]) => unknown)(...args),
 }));
 
+import { PlanModel } from '@forklift-ui/types';
+
 import { onConfirmPreserveStaticIPs } from '../utils';
 
 describe('PreserveStaticIPs utils - confirm', () => {
@@ -15,21 +17,27 @@ describe('PreserveStaticIPs utils - confirm', () => {
     mockK8sPatch.mockResolvedValue({});
   });
 
-  it('ADDs then REPLACEs preserveStaticIPs', async () => {
-    await onConfirmPreserveStaticIPs({
-      newValue: true,
-      resource: { metadata: { name: 'p' }, spec: {} } as never,
-    });
-    expect(
-      (mockK8sPatch.mock.calls[0] as unknown as [{ data: { op: string }[] }])[0].data[0].op,
-    ).toBe('add');
+  it('ADDs preserveStaticIPs with true', async () => {
+    const resource = { metadata: { name: 'p' }, spec: {} } as never;
 
-    await onConfirmPreserveStaticIPs({
-      newValue: false,
-      resource: { metadata: { name: 'p' }, spec: { preserveStaticIPs: true } } as never,
+    await onConfirmPreserveStaticIPs({ newValue: true, resource });
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'add', path: '/spec/preserveStaticIPs', value: true }],
+      model: PlanModel,
+      resource,
     });
-    expect(
-      (mockK8sPatch.mock.calls[1] as unknown as [{ data: { op: string }[] }])[0].data[0].op,
-    ).toBe('replace');
+  });
+
+  it('REPLACEs preserveStaticIPs keeping false', async () => {
+    const resource = { metadata: { name: 'p' }, spec: { preserveStaticIPs: true } } as never;
+
+    await onConfirmPreserveStaticIPs({ newValue: false, resource });
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'replace', path: '/spec/preserveStaticIPs', value: false }],
+      model: PlanModel,
+      resource,
+    });
   });
 });

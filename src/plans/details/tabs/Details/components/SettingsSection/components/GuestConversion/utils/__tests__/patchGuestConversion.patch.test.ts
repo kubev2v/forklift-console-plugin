@@ -36,6 +36,40 @@ describe('patchGuestConversion - patch', () => {
     });
   });
 
+  it('only patches skipGuestConversion when compatibility is omitted', async () => {
+    const resource = { metadata: { name: 'plan' }, spec: {} } as never;
+
+    await patchGuestConversion({ newValue: true, resource });
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'add', path: '/spec/skipGuestConversion', value: true }],
+      model: PlanModel,
+      resource,
+    });
+  });
+
+  it('REPLACEs skip and compatibility when already set', async () => {
+    const resource = {
+      metadata: { name: 'plan' },
+      spec: { skipGuestConversion: false, useCompatibilityMode: false },
+    } as never;
+
+    await patchGuestConversion({
+      newValue: true,
+      resource,
+      useCompatibilityMode: true,
+    });
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [
+        { op: 'replace', path: '/spec/skipGuestConversion', value: true },
+        { op: 'replace', path: '/spec/useCompatibilityMode', value: true },
+      ],
+      model: PlanModel,
+      resource,
+    });
+  });
+
   it('removes compatibility mode when no longer skipping', async () => {
     const resource = {
       metadata: { name: 'plan' },
@@ -44,9 +78,13 @@ describe('patchGuestConversion - patch', () => {
 
     await patchGuestConversion({ newValue: false, resource });
 
-    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown }])[0].data).toEqual([
-      { op: 'replace', path: '/spec/skipGuestConversion', value: false },
-      { op: 'remove', path: '/spec/useCompatibilityMode' },
-    ]);
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [
+        { op: 'replace', path: '/spec/skipGuestConversion', value: false },
+        { op: 'remove', path: '/spec/useCompatibilityMode' },
+      ],
+      model: PlanModel,
+      resource,
+    });
   });
 });

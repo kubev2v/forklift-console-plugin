@@ -7,6 +7,8 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
     (mockK8sPatch as (...a: unknown[]) => unknown)(...args),
 }));
 
+import { PlanModel } from '@forklift-ui/types';
+
 import { onConfirmDescription } from '../utils';
 
 describe('Description utils - confirm', () => {
@@ -15,16 +17,39 @@ describe('Description utils - confirm', () => {
     mockK8sPatch.mockResolvedValue({});
   });
 
-  it('patches plan description', async () => {
+  it('REPLACEs description when present', async () => {
     const resource = { metadata: { name: 'p' }, spec: { description: 'old' } } as never;
+
     await onConfirmDescription({ newValue: 'new', resource });
-    expect(mockK8sPatch).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.arrayContaining([
-          expect.objectContaining({ path: '/spec/description', value: 'new' }),
-        ]),
-        resource,
-      }),
-    );
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'replace', path: '/spec/description', value: 'new' }],
+      model: PlanModel,
+      resource,
+    });
+  });
+
+  it('trims description input before patching', async () => {
+    const resource = { metadata: { name: 'p' }, spec: {} } as never;
+
+    await onConfirmDescription({ newValue: '  new  ', resource });
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'add', path: '/spec/description', value: 'new' }],
+      model: PlanModel,
+      resource,
+    });
+  });
+
+  it('stores empty string for whitespace-only input', async () => {
+    const resource = { metadata: { name: 'p' }, spec: { description: 'old' } } as never;
+
+    await onConfirmDescription({ newValue: '   ', resource });
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'replace', path: '/spec/description', value: '' }],
+      model: PlanModel,
+      resource,
+    });
   });
 });

@@ -31,8 +31,11 @@ describe('patchPlanSpec - patch', () => {
   it('uses REPLACE when current value is defined', async () => {
     const plan = { metadata: { name: 'plan' } } as never;
     await patchPlanSpec({ currentValue: false, newValue: true, path: '/spec/flag', plan });
-    expect(
-      (mockK8sPatch.mock.calls[0] as unknown as [{ data: { op: string }[] }])[0].data[0].op,
-    ).toBe('replace');
+
+    expect(mockK8sPatch).toHaveBeenCalledWith({
+      data: [{ op: 'replace', path: '/spec/flag', value: true }],
+      model: PlanModel,
+      resource: plan,
+    });
   });
 });
