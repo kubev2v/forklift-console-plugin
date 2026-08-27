@@ -1,7 +1,7 @@
 import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { useSpecVirtualMachinesListData } from '../useSpecVirtualMachinesListData';
 

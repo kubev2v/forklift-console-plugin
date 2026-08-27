@@ -1,5 +1,5 @@
 import type { V1beta1Plan } from '@forklift-ui/types';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { CATEGORY_TYPES } from '@utils/constants';
 
 import usePlanAlerts from '../usePlanAlerts';
@@ -78,11 +78,9 @@ describe('usePlanAlerts - conditions', () => {
     expect(result.current.criticalConditions?.[0].type).toBe('MapNotReady');
 
     expect(result.current.showPreserveIPWarningsConditions).toBe(true);
-    expect(result.current.preserveIPWarningsConditions?.map((concern) => c.type)).toEqual([
-      'NetMapPreservingIPsOnPodNetwork',
-      'VMMissingGuestIPs',
-      'VMIpNotMatchingUdnSubnet',
-    ]);
+    expect(
+      result.current.preserveIPWarningsConditions?.map((concern: { type: string }) => concern.type),
+    ).toEqual(['NetMapPreservingIPsOnPodNetwork', 'VMMissingGuestIPs', 'VMIpNotMatchingUdnSubnet']);
     expect(result.current.status).toBe('Ready');
     expect(result.current.sourceNetworks).toEqual([{ name: 'net-a' }]);
     expect(result.current.sourceStorages).toEqual([{ name: 'store-a' }]);

@@ -1,5 +1,5 @@
 import type { V1beta1Plan, V1beta1Provider } from '@forklift-ui/types';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { CATEGORY_TYPES, CONDITION_STATUS } from '@utils/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 

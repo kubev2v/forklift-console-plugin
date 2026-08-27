@@ -1,5 +1,4 @@
 import type { V1beta1Plan } from '@forklift-ui/types';
-import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 import { getMigrateSharedDisksValue, getVmMigrateSharedDisks } from '../utils';
 
