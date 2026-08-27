@@ -1,7 +1,7 @@
 // Nutanix inventory types — defined locally because @forklift-ui/types
 // does not include Nutanix inventory types yet (tracked in MTV-6226).
 
-import type { ProviderVirtualMachine } from '@forklift-ui/types';
+import type { ProviderInventory, ProviderVirtualMachine } from '@forklift-ui/types';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 type NutanixNic = {
@@ -45,6 +45,16 @@ type NutanixVmLike = ProviderVirtualMachine & {
 
 export const isNutanixVm = (vm: ProviderVirtualMachine): vm is NutanixVmLike =>
   (vm.providerType as string) === PROVIDER_TYPES.nutanix;
+
+export type NutanixProviderInventory = {
+  storageContainerCount?: number;
+  type: typeof PROVIDER_TYPES.nutanix;
+};
+
+export const isNutanixProviderInventory = (
+  inventory: ProviderInventory,
+): inventory is NutanixProviderInventory =>
+  (inventory as { type?: string })?.type === PROVIDER_TYPES.nutanix;
 
 export const getNutanixSubnetIds = (vm: NutanixVmLike): string[] =>
   vm.nics?.map((nic) => nic.subnetUuid).filter((id): id is string => Boolean(id)) ?? [];

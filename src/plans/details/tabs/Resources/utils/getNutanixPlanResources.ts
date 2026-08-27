@@ -1,12 +1,13 @@
 import type { ProviderVirtualMachine } from '@forklift-ui/types';
+import { isNutanixVm } from '@utils/types/nutanixInventory';
 
 import { NUTANIX_POWERED_ON } from './constants';
-import type { NutanixVM, PlanResourcesTableProps } from './types';
+import type { PlanResourcesTableProps } from './types';
 
 export const getNutanixPlanResources = (
   planInventory: ProviderVirtualMachine[],
 ): PlanResourcesTableProps => {
-  const nutanixInventory = planInventory as NutanixVM[];
+  const nutanixInventory = planInventory.filter(isNutanixVm);
   const planInventoryRunning = nutanixInventory.filter(
     (vm) => vm.powerState?.toUpperCase() === NUTANIX_POWERED_ON,
   );
