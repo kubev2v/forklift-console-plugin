@@ -30,9 +30,7 @@ describe('createNetworkMap - create', () => {
 
   it('creates a network map with mappings and telemetry', async () => {
     const trackEvent = jest.fn();
-    const mappings = [
-      { sourceNetwork: { name: 's' }, targetNetwork: { name: 't' } },
-    ] as never;
+    const mappings = [{ sourceNetwork: { name: 's' }, targetNetwork: { name: 't' } }] as never;
     const sourceProvider = {
       metadata: { name: 'src', namespace: 'ns', uid: '1' },
       spec: { type: 'vsphere' },
