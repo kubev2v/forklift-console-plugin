@@ -21,7 +21,7 @@ describe('concernSeverityOrTypeFilter - filter', () => {
       },
     ]);
 
-    expect(values?.values?.map((v) => v.id)).toEqual(
+    expect(values?.values?.map((value) => v.id)).toEqual(
       expect.arrayContaining(['Shared disk', 'Ready']),
     );
     expect(filter.type).toBeDefined();
