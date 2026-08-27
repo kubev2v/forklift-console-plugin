@@ -1,5 +1,9 @@
-import { describe, expect, it } from '@jest/globals';
+import { mockI18n } from '@test-utils/mockI18n';
 import { ACCESS_MODE } from '@utils/storage/types';
+
+mockI18n();
+
+import { describe, expect, it } from '@jest/globals';
 
 import { getAccessModeOptions, isRwxCapableProvisioner } from '../constants';
 
