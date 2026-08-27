@@ -4,11 +4,11 @@ const mockK8sCreate = jest.fn();
 const mockBuild = jest.fn(() => [{ source: { id: '1' }, destination: { storageClass: 'sc' } }]);
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sCreate: (...args: unknown[]) => mockK8sCreate(...args),
+  k8sCreate: (...args: unknown[]): unknown => mockK8sCreate(...args),
 }));
 
 jest.mock('../buildStorageMappings', () => ({
-  buildStorageMappings: (...args: unknown[]) => mockBuild(...args),
+  buildStorageMappings: (...args: unknown[]): unknown => mockBuild(...args),
 }));
 
 import { StorageMapModel } from '@forklift-ui/types';
@@ -18,7 +18,7 @@ import { createStorageMap } from '../createStorageMap';
 describe('createStorageMap - create', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(async ({ data }) => data);
+    mockK8sCreate.mockImplementation(({ data }: { data: unknown }) => Promise.resolve(data));
   });
 
   it('creates a storage map resource', async () => {

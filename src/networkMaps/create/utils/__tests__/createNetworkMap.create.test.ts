@@ -4,11 +4,11 @@ const mockK8sCreate = jest.fn();
 const mockBuild = jest.fn(() => [{ source: { id: '1' }, destination: { type: 'pod' } }]);
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sCreate: (...args: unknown[]) => mockK8sCreate(...args),
+  k8sCreate: (...args: unknown[]): unknown => mockK8sCreate(...args),
 }));
 
 jest.mock('../buildNetworkMappings', () => ({
-  buildNetworkMappings: (...args: unknown[]) => mockBuild(...args),
+  buildNetworkMappings: (...args: unknown[]): unknown => mockBuild(...args),
 }));
 
 import { NetworkMapModel } from '@forklift-ui/types';
@@ -18,7 +18,7 @@ import { createNetworkMap } from '../createNetworkMap';
 describe('createNetworkMap - create', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(async ({ data }) => data);
+    mockK8sCreate.mockImplementation(({ data }: { data: unknown }) => Promise.resolve(data));
   });
 
   it('creates a network map and tracks start event', async () => {
