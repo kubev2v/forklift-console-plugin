@@ -16,7 +16,7 @@
     "playwright": "1.54.2",
     "@playwright/test": "1.54.2",
     "@types/node": "^20.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^7.0.0"
   },
   "dependencies": {
     "@kubev2v/types": "0.0.24"
