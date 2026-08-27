@@ -9,12 +9,12 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { copyStorageMap } from '../copyStorageMap';
 
-const mockK8sCreate = k8sCreate as jest.Mock;
+const mockK8sCreate = k8sCreate as jest.MockedFunction<typeof k8sCreate>;
 
 describe('copyStorageMap - copy', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(({ data }: { data: unknown }) => Promise.resolve(data));
+    mockK8sCreate.mockImplementation(({ data }) => Promise.resolve(data));
   });
 
   it('creates a plan-prefixed copy preserving labels and annotations', async () => {
