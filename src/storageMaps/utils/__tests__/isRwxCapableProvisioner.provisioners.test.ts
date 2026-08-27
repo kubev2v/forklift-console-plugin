@@ -1,4 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
+import { ACCESS_MODE } from '@utils/storage/types';
 
 import { getAccessModeOptions, isRwxCapableProvisioner } from '../constants';
 
@@ -10,8 +11,11 @@ describe('storageMaps constants - provisioners', () => {
   });
 
   it('exposes access mode options including default', () => {
-    const options = getAccessModeOptions();
-    expect(options[0]).toEqual({ label: 'Default', value: '' });
-    expect(options.length).toBeGreaterThan(1);
+    expect(getAccessModeOptions().map((option) => option.value)).toEqual([
+      '',
+      ACCESS_MODE.ReadWriteOnce,
+      ACCESS_MODE.ReadWriteMany,
+      ACCESS_MODE.ReadOnlyMany,
+    ]);
   });
 });

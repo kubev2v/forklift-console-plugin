@@ -11,6 +11,18 @@ const validMapping = (overrides?: Partial<StorageMapping>): StorageMapping => ({
 });
 
 describe('validateStorageMaps', () => {
+  it('rejects non-arrays and a single empty row', () => {
+    expect(validateStorageMaps(undefined as never)).toBe('Invalid mappings');
+    expect(
+      validateStorageMaps([
+        {
+          [StorageMapFieldId.SourceStorage]: { name: '' },
+          [StorageMapFieldId.TargetStorage]: { name: '' },
+        },
+      ]),
+    ).toBe('You must select a source and target storage');
+  });
+
   it('returns undefined for a valid mapping without offload fields', () => {
     expect(validateStorageMaps([validMapping()])).toBeUndefined();
   });
