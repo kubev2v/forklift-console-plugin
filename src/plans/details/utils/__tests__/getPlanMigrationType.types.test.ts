@@ -6,13 +6,22 @@ import { planMigrationVirtualMachineStatuses } from '../../components/PlanStatus
 import { getPlanMigrationType, isMigrationVirtualMachinePaused } from '../utils';
 
 describe('plan details utils - migration type', () => {
-  it.each([
-    ['warm', MigrationTypeValue.Warm],
-    ['live', MigrationTypeValue.Live],
-    ['conversion', MigrationTypeValue.Conversion],
-    ['cold', MigrationTypeValue.Cold],
-  ] as const)('maps spec.type %s', (type, expected) => {
-    expect(getPlanMigrationType({ spec: { type } } as never)).toBe(expected);
+  it('maps warm type', () => {
+    expect(getPlanMigrationType({ spec: { type: 'warm' } } as never)).toBe(MigrationTypeValue.Warm);
+  });
+
+  it('maps live type', () => {
+    expect(getPlanMigrationType({ spec: { type: 'live' } } as never)).toBe(MigrationTypeValue.Live);
+  });
+
+  it('maps conversion type', () => {
+    expect(getPlanMigrationType({ spec: { type: 'conversion' } } as never)).toBe(
+      MigrationTypeValue.Conversion,
+    );
+  });
+
+  it('maps cold type', () => {
+    expect(getPlanMigrationType({ spec: { type: 'cold' } } as never)).toBe(MigrationTypeValue.Cold);
   });
 
   it('falls back to warm flag when type is missing', () => {
