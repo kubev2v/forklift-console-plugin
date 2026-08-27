@@ -8,12 +8,12 @@ import { useSpecVirtualMachinesListData } from '../useSpecVirtualMachinesListDat
 const mockUsePlanSourceProvider = jest.fn();
 const mockUseInventoryVms = jest.fn();
 
-jest.mock('src/plans/details/hooks/usePlanSourceProvider', () => ({
+jest.mock('src/plans/details/hooks/usePlanSourceProvider', (): unknown => ({
   __esModule: true,
   default: (...args: unknown[]) => mockUsePlanSourceProvider(...args),
 }));
 
-jest.mock('src/utils/hooks/useInventoryVms', () => ({
+jest.mock('src/utils/hooks/useInventoryVms', (): unknown => ({
   useInventoryVms: (...args: unknown[]) => mockUseInventoryVms(...args),
 }));
 

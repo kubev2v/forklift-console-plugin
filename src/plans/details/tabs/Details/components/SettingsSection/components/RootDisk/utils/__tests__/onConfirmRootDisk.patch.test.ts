@@ -3,11 +3,11 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 import { onConfirmRootDisk } from '../utils';
 
-jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
+jest.mock('@openshift-console/dynamic-plugin-sdk', (): unknown => ({
   k8sPatch: jest.fn(),
 }));
 
-jest.mock('@utils/i18n', () => ({
+jest.mock('@utils/i18n', (): unknown => ({
   t: (key: string) => key,
 }));
 

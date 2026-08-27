@@ -21,7 +21,7 @@ describe('getMigrateSharedDisksValue - defaults', () => {
 
 describe('getVmMigrateSharedDisks - defaults', () => {
   it('returns undefined for missing VM or field', () => {
-    expect(getVmMigrateSharedDisks(undefined)).toBeUndefined();
+    expect(getVmMigrateSharedDisks()).toBeUndefined();
     expect(getVmMigrateSharedDisks({})).toBeUndefined();
   });
 

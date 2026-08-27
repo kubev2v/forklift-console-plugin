@@ -3,7 +3,7 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 import { onConfirmMigrateSharedDisks, onConfirmVmMigrateSharedDisks } from '../utils';
 
-jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
+jest.mock('@openshift-console/dynamic-plugin-sdk', (): unknown => ({
   k8sPatch: jest.fn(),
 }));
 

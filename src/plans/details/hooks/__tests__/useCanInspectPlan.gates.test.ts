@@ -7,12 +7,12 @@ import { useCanInspectPlan } from '../useCanInspectPlan';
 
 const mockUsePlanSourceProvider = jest.fn();
 
-jest.mock('../usePlanSourceProvider', () => ({
+jest.mock('../usePlanSourceProvider', (): unknown => ({
   __esModule: true,
   default: (...args: unknown[]) => mockUsePlanSourceProvider(...args),
 }));
 
-jest.mock('@utils/i18n', () => ({
+jest.mock('@utils/i18n', (): unknown => ({
   t: (key: string) => key,
   useForkliftTranslation: () => ({ t: (key: string) => key }),
 }));

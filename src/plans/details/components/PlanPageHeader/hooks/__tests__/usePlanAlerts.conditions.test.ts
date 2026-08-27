@@ -11,32 +11,32 @@ const mockUseSourceNetworks = jest.fn();
 const mockUsePlanMappingData = jest.fn();
 const mockGetPlanStatus = jest.fn();
 
-jest.mock('@utils/i18n', () => ({
+jest.mock('@utils/i18n', (): unknown => ({
   t: (key: string) => key,
 }));
 
-jest.mock('@utils/hooks/useK8sWatchResource', () => ({
+jest.mock('@utils/hooks/useK8sWatchResource', (): unknown => ({
   useK8sWatchResource: (...args: unknown[]) => mockUseK8sWatchResource(...args),
 }));
 
-jest.mock('src/providers/hooks/usePlanSourceProvider', () => ({
+jest.mock('src/providers/hooks/usePlanSourceProvider', (): unknown => ({
   __esModule: true,
   default: (...args: unknown[]) => mockUsePlanProviders(...args),
 }));
 
-jest.mock('src/utils/hooks/useStorages', () => ({
+jest.mock('src/utils/hooks/useStorages', (): unknown => ({
   useSourceStorages: (...args: unknown[]) => mockUseSourceStorages(...args),
 }));
 
-jest.mock('src/utils/hooks/useNetworks', () => ({
+jest.mock('src/utils/hooks/useNetworks', (): unknown => ({
   useSourceNetworks: (...args: unknown[]) => mockUseSourceNetworks(...args),
 }));
 
-jest.mock('src/plans/details/hooks/usePlanMappingData', () => ({
+jest.mock('src/plans/details/hooks/usePlanMappingData', (): unknown => ({
   usePlanMappingData: (...args: unknown[]) => mockUsePlanMappingData(...args),
 }));
 
-jest.mock('src/plans/details/components/PlanStatus/utils/planStatusResolver', () => ({
+jest.mock('src/plans/details/components/PlanStatus/utils/planStatusResolver', (): unknown => ({
   getPlanStatus: (...args: unknown[]) => mockGetPlanStatus(...args),
 }));
 
@@ -78,7 +78,7 @@ describe('usePlanAlerts - conditions', () => {
     expect(result.current.criticalConditions?.[0].type).toBe('MapNotReady');
 
     expect(result.current.showPreserveIPWarningsConditions).toBe(true);
-    expect(result.current.preserveIPWarningsConditions?.map((c) => c.type)).toEqual([
+    expect(result.current.preserveIPWarningsConditions?.map((concern) => c.type)).toEqual([
       'NetMapPreservingIPsOnPodNetwork',
       'VMMissingGuestIPs',
       'VMIpNotMatchingUdnSubnet',

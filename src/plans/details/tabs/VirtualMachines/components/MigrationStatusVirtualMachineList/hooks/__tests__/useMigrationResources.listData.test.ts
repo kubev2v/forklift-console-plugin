@@ -1,16 +1,16 @@
 import type { V1beta1Plan } from '@forklift-ui/types';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { useMigrationResources } from '../useMigrationResources';
 
 const mockUseK8sWatchResource = jest.fn();
 const mockUseLatestPlanMigration = jest.fn();
 
-jest.mock('@utils/hooks/useK8sWatchResource', () => ({
+jest.mock('@utils/hooks/useK8sWatchResource', (): unknown => ({
   useK8sWatchResource: (...args: unknown[]) => mockUseK8sWatchResource(...args),
 }));
 
-jest.mock('src/plans/hooks/useLatestPlanMigration', () => ({
+jest.mock('src/plans/hooks/useLatestPlanMigration', (): unknown => ({
   useLatestPlanMigration: (...args: unknown[]) => mockUseLatestPlanMigration(...args),
 }));
 
@@ -31,7 +31,11 @@ const plan = {
   },
 } as unknown as V1beta1Plan;
 
-const labeled = (kind: string, vmID: string, name: string) => ({
+const labeled = (
+  kind: string,
+  vmID: string,
+  name: string,
+): { kind: string; metadata: { labels: { vmID: string }; name: string } } => ({
   metadata: { labels: { vmID }, name },
   kind,
 });
