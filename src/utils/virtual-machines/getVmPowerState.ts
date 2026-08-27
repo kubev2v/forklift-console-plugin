@@ -1,5 +1,6 @@
 import type {
   HypervVM,
+  NutanixVM,
   OpenshiftVM,
   OpenstackVM,
   OVirtVM,
@@ -59,10 +60,8 @@ const getHypervVmPowerState = (vm: HypervVM): PowerState => {
   return 'unknown';
 };
 
-const getNutanixVmPowerState = (vm: ProviderVirtualMachine): PowerState => {
-  const powerState = (
-    vm as ProviderVirtualMachine & { powerState?: string }
-  )?.powerState?.toLowerCase();
+const getNutanixVmPowerState = (vm: NutanixVM): PowerState => {
+  const powerState = vm.powerState?.toLowerCase();
   if (powerState === 'on') return 'on';
   if (powerState === 'off') return 'off';
   return 'unknown';
@@ -87,11 +86,9 @@ export const getVmPowerState = (vm: ProviderVirtualMachine | Ec2VM | undefined):
     return 'unknown';
   }
 
-  if ((vm?.providerType as string) === PROVIDER_TYPES.nutanix) {
-    return getNutanixVmPowerState(vm as ProviderVirtualMachine);
-  }
-
   switch (vm?.providerType) {
+    case PROVIDER_TYPES.nutanix:
+      return getNutanixVmPowerState(vm);
     case 'ovirt':
       return getOVirtVmPowerState(vm);
     case 'vsphere':
