@@ -48,5 +48,14 @@ describe('AffinityTypeSelect', () => {
       ...focusedAffinity,
       type: AffinityType.Pod,
     });
+
+    setFocusedAffinity.mockClear();
+    await user.click(screen.getByTestId('affinity-type-select'));
+    await user.click(screen.getByRole('option', { name: 'Workload (pod) anti-affinity' }));
+
+    expect(setFocusedAffinity).toHaveBeenCalledWith({
+      ...focusedAffinity,
+      type: AffinityType.PodAnti,
+    });
   });
 });

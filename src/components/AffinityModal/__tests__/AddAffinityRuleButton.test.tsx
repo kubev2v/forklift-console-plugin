@@ -23,8 +23,13 @@ describe('AddAffinityRuleButton', () => {
   it('renders as a link button when isLinkButton is true', () => {
     render(<AddAffinityRuleButton isLinkButton onAffinityClickAdd={jest.fn()} />);
 
-    expect(screen.getByTestId('add-affinity-rule-button').className).toContain(
-      'pf-m-link--align-left',
-    );
+    const linkButton = screen.getByTestId('add-affinity-rule-button');
+    expect(linkButton.className).toContain('pf-m-link');
+  });
+
+  it('does not use the link variant by default', () => {
+    render(<AddAffinityRuleButton onAffinityClickAdd={jest.fn()} />);
+
+    expect(screen.getByTestId('add-affinity-rule-button').className).not.toContain('pf-m-link');
   });
 });

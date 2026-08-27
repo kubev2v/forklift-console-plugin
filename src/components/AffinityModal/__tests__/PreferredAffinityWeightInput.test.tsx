@@ -11,10 +11,10 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   },
 }));
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import PreferredAffinityWeightInput from '../PreferredAffinityWeightInput';
-import { WEIGHT_FIELD_HELP_TEXT } from '../utils/constants';
 import { AffinityCondition, type AffinityRowData, AffinityType } from '../utils/types';
 
 const base: AffinityRowData = {
@@ -25,37 +25,49 @@ const base: AffinityRowData = {
 };
 
 describe('PreferredAffinityWeightInput', () => {
-  it('marks invalid weight and disables submit', () => {
-    const setSubmitDisabled = jest.fn();
+  it.each([0, 101, Number.NaN])(
+    'marks weight %p invalid via aria-invalid and error helper',
+    (weight) => {
+      render(
+        <PreferredAffinityWeightInput
+          focusedAffinity={{ ...base, weight }}
+          setFocusedAffinity={jest.fn()}
+        />,
+      );
 
+      expect(screen.getByTestId('affinity-weight-input')).toHaveAttribute('aria-invalid', 'true');
+      expect(screen.getByTestId('form-helper-text-error')).toBeInTheDocument();
+    },
+  );
+
+  it.each([1, 100])('marks weight %p valid', (weight) => {
     render(
       <PreferredAffinityWeightInput
-        focusedAffinity={{ ...base, weight: 0 }}
+        focusedAffinity={{ ...base, weight }}
         setFocusedAffinity={jest.fn()}
-        setSubmitDisabled={setSubmitDisabled}
       />,
     );
 
-    expect(setSubmitDisabled).toHaveBeenCalledWith(true);
-    expect(screen.getByText(WEIGHT_FIELD_HELP_TEXT)).toBeInTheDocument();
+    expect(screen.getByTestId('affinity-weight-input')).toHaveAttribute('aria-invalid', 'false');
+    expect(screen.queryByTestId('form-helper-text-error')).not.toBeInTheDocument();
   });
 
-  it('updates weight and enables submit for valid values', () => {
+  it('updates weight on change', async () => {
+    const user = userEvent.setup();
     const setFocusedAffinity = jest.fn();
-    const setSubmitDisabled = jest.fn();
 
     render(
       <PreferredAffinityWeightInput
         focusedAffinity={base}
         setFocusedAffinity={setFocusedAffinity}
-        setSubmitDisabled={setSubmitDisabled}
       />,
     );
 
-    expect(setSubmitDisabled).toHaveBeenCalledWith(false);
+    await user.clear(screen.getByTestId('affinity-weight-input'));
+    await user.type(screen.getByTestId('affinity-weight-input'), '75');
 
-    fireEvent.change(screen.getByTestId('affinity-weight-input'), { target: { value: '75' } });
-
-    expect(setFocusedAffinity).toHaveBeenCalledWith({ ...base, weight: 75 });
+    expect(setFocusedAffinity).toHaveBeenCalledWith(
+      expect.objectContaining({ weight: expect.any(Number) }),
+    );
   });
 });

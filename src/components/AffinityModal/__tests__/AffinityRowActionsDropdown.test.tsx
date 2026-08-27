@@ -21,7 +21,7 @@ describe('AffinityRowActionsDropdown', () => {
 
     render(<AffinityRowActionsDropdown affinity={affinity} onDelete={jest.fn()} onEdit={onEdit} />);
 
-    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('button', { name: 'Actions' }));
     await user.click(screen.getByRole('menuitem', { name: 'Edit' }));
 
     expect(onEdit).toHaveBeenCalledWith(affinity);
@@ -35,7 +35,7 @@ describe('AffinityRowActionsDropdown', () => {
       <AffinityRowActionsDropdown affinity={affinity} onDelete={onDelete} onEdit={jest.fn()} />,
     );
 
-    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('button', { name: 'Actions' }));
     await user.click(screen.getByRole('menuitem', { name: 'Delete' }));
 
     expect(onDelete).toHaveBeenCalledWith(affinity);
