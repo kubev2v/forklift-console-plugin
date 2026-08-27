@@ -28,7 +28,7 @@ describe('utils - buildIndexes', () => {
     'folder-1': { id: 'folder-1', name: 'Prod', path: '/Prod' },
   } as never;
   const hostsDict = {
-    'host-1': { id: 'host-1', name: 'esxi-1' },
+    'host-1': { id: 'host-1', name: 'ESXi-1' },
   } as never;
 
   it('returns empty indexes for undefined or empty vm arrays', () => {
@@ -38,8 +38,8 @@ describe('utils - buildIndexes', () => {
 
   it('indexes vms by folder and host and sorts by name', () => {
     const vms = [
-      makeVmData('2', 'bravo', 'folder-1', 'host-1'),
-      makeVmData('1', 'alpha', 'folder-1', 'host-1'),
+      makeVmData('2', 'Bravo', 'folder-1', 'host-1'),
+      makeVmData('1', 'Alpha', 'folder-1', 'host-1'),
       makeVmData('3', 'root-vm', 'missing', 'missing-host'),
     ];
 
@@ -47,14 +47,15 @@ describe('utils - buildIndexes', () => {
 
     expect(folderToVmKeys.get('Prod')).toEqual(['1', '2']);
     expect(folderToVmKeys.get(NO_FOLDER)).toEqual(['3']);
-    expect(vmByKey.get('1')?.hostName).toBe('esxi-1');
+    expect(vmByKey.get('1')?.hostName).toBe('ESXi-1');
     expect(vmByKey.get('1')?.folderName).toBe('Prod');
     expect(vmByKey.get('3')?.folderName).toBe(NO_FOLDER);
     expect(vmByKey.get('3')?.hostName).toBe('');
-    expect(tokensByVmKey.get('1')).toMatchObject({
+    expect(tokensByVmKey.get('1')).toEqual({
+      concerns: [{ category: 'Warning', label: 'warn' }],
       host: 'esxi-1',
       name: 'alpha',
-      path: '/dc/alpha',
+      path: '/dc/Alpha',
       power: 'on',
     });
   });

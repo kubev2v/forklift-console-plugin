@@ -79,11 +79,12 @@ describe('treeRowBuilders - rows', () => {
   });
 
   it('builds vm and concerns rows under an expanded folder', () => {
+    const onCheckChange = jest.fn();
     const { concernsRow, vmRow } = makeVmAndConcernsRows({
       ...baseVmArgs,
       canSelect: true,
       checkboxId: 'cb-vm',
-      onCheckChange: jest.fn(),
+      onCheckChange,
       parentExpanded: true,
       parentFolderKey: 'folder-Prod',
       vmChecked: true,
@@ -92,7 +93,15 @@ describe('treeRowBuilders - rows', () => {
     expect(vmRow.type).toBe(ROW_TYPE.Vm);
     expect(vmRow.key).toBe('vm-1');
     expect(vmRow.isHidden).toBe(false);
-    expect(vmRow.treeRow?.props?.['aria-level']).toBe(2);
+    expect(vmRow.isSelected).toBe(true);
+    expect(vmRow.treeRow?.props).toMatchObject({
+      'aria-level': 2,
+      'aria-posinset': 1,
+      'aria-setsize': 1,
+      checkboxId: 'cb-vm',
+      isChecked: true,
+    });
+    expect(vmRow.treeRow?.onCheckChange).toBe(onCheckChange);
     expect(concernsRow.key).toBe('concerns-1');
     expect(concernsRow.isHidden).toBe(false);
   });

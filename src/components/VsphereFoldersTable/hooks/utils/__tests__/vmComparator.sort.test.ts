@@ -4,14 +4,7 @@ import type { VmInspectionStatus } from '@utils/hooks/useVmInspectionStatus';
 
 import { buildVmComparator } from '../vmComparator';
 
-import {
-  criticalConcern,
-  infoConcern,
-  makeVmRow,
-  nameSortAsc,
-  nameSortDesc,
-  warningConcern,
-} from './fixtures';
+import { criticalConcern, infoConcern, makeVmRow, warningConcern } from './fixtures';
 
 describe('buildVmComparator', () => {
   const a = makeVmRow({
@@ -86,17 +79,26 @@ describe('buildVmComparator', () => {
   });
 
   it('defaults missing inspection status to Not inspected', () => {
-    const inspected = makeVmRow({ name: 'inspected' });
-    const missing = makeVmRow({ name: 'missing' });
-    const getStatus = (vmId: string): VmInspectionStatus | undefined =>
-      vmId === 'inspected'
-        ? ({ status: INSPECTION_STATUS.FAILED } as VmInspectionStatus)
-        : undefined;
+    const withExplicit = makeVmRow({ name: 'tie' });
+    const withMissing = makeVmRow({ name: 'tie' });
+    (withExplicit.vmData.vm as { id: string }).id = 'explicit';
+    (withMissing.vmData.vm as { id: string }).id = 'missing';
+    const passed = makeVmRow({ name: 'passed' });
+    const getStatus = (vmId: string): VmInspectionStatus | undefined => {
+      if (vmId === 'explicit') {
+        return { status: INSPECTION_STATUS.NOT_INSPECTED } as VmInspectionStatus;
+      }
+      if (vmId === 'passed') {
+        return { status: INSPECTION_STATUS.INSPECTION_PASSED } as VmInspectionStatus;
+      }
+      return undefined;
+    };
     const cmp = buildVmComparator(
       { column: COLUMN_IDS.InspectionStatus, direction: 'asc' },
       getStatus,
     );
-    expect(cmp(inspected, missing)).toBeLessThan(0);
+    expect(cmp(withExplicit, withMissing)).toBe(0);
+    expect(cmp(withMissing, passed)).toBeLessThan(0);
   });
 
   it('returns zero comparator for unknown columns', () => {
@@ -104,8 +106,10 @@ describe('buildVmComparator', () => {
     expect(cmp(a, b)).toBe(0);
   });
 
-  it('respects name sort fixtures', () => {
-    expect(buildVmComparator(nameSortAsc)(a, b)).toBeLessThan(0);
-    expect(buildVmComparator(nameSortDesc)(a, b)).toBeGreaterThan(0);
+  it('sorts names case-insensitively', () => {
+    const upper = makeVmRow({ name: 'Alpha' });
+    const lower = makeVmRow({ name: 'alpha' });
+    const cmp = buildVmComparator({ column: COLUMN_IDS.Name, direction: 'asc' });
+    expect(cmp(upper, lower)).toBe(0);
   });
 });

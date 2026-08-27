@@ -38,7 +38,10 @@ describe('vmRowAccessors - concernLabels', () => {
   it('builds concern filter options sorted by severity', () => {
     const rows = [
       makeVmRow({ concerns: [infoConcern, criticalConcern], name: 'vm1' }),
-      makeVmRow({ concerns: [warningConcern, criticalConcern], name: 'vm2' }),
+      makeVmRow({
+        concerns: [warningConcern, criticalConcern, { category: 'Warning', label: 'cpu' }],
+        name: 'vm2',
+      }),
       {
         folderName: 'f',
         isHidden: false as const,
@@ -48,6 +51,7 @@ describe('vmRowAccessors - concernLabels', () => {
       },
     ];
 
+    // CPU vs cpu collapse case-insensitively; first-seen label/category win (Critical)
     expect(getConcernLabelFilterOptions(rows).map((option) => option.label)).toEqual([
       'CPU',
       'Disk',
