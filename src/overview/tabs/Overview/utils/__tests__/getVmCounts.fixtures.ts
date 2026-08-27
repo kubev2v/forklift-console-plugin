@@ -31,7 +31,7 @@ export const makeMigration = (
   }) as unknown as V1beta1Migration;
 
 export const recentStart = now.minus({ hours: 2 }).toISO() ?? '';
-export const oldStart = now.minus({ days: 40 }).toISO() ?? '';
+const oldStart = now.minus({ days: 40 }).toISO() ?? '';
 
 export const mixedMigrations: V1beta1Migration[] = [
   makeMigration(

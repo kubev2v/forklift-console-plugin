@@ -18,7 +18,7 @@ export const openshiftProvider: V1beta1Provider = {
   spec: { type: PROVIDER_TYPES.openshift, secret: {} },
 };
 
-export const targetProvider: V1beta1Provider = {
+const targetProvider: V1beta1Provider = {
   apiVersion: 'forklift.konveyor.io/v1beta1',
   kind: 'Provider',
   metadata: { name: 'ocp-tgt', namespace: 'openshift-mtv', uid: 'tgt-uid' },

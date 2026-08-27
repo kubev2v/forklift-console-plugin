@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import { NetworkMapFieldId } from '@utils/mappings/networkMap';
 
 import { useInitializeMappings } from '../useInitializeMappings';
