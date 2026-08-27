@@ -48,7 +48,7 @@ describe('getMapResourceLabel', () => {
       providerType: PROVIDER_TYPES.openshift,
       revision: 1,
       selfLink: '',
-    } as ProviderNetwork;
+    } as unknown as ProviderNetwork;
 
     expect(getMapResourceLabel(withNamespace)).toBe('ns/net');
     expect(getMapResourceLabel(withoutNamespace)).toBe('net');
