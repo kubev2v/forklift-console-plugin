@@ -5,6 +5,7 @@ import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { DatabaseIcon } from '@patternfly/react-icons';
+import { getType } from '@utils/crds/common/selectors';
 import { isNutanixProviderInventory } from '@utils/types/nutanixInventory';
 
 import type { InventoryDetailsItemProps } from './utils/types';
@@ -36,13 +37,7 @@ const StorageContainerCountDetailsItem: FC<InventoryDetailsItemProps> = ({
           inventoryValue={storageContainerCount}
         />
       }
-      crumbs={[
-        'Inventory',
-        'providers',
-        provider?.spec?.type ?? '',
-        '[UID]',
-        'storageContainerCount',
-      ]}
+      crumbs={['Inventory', 'providers', getType(provider) ?? '', '[UID]', 'storageContainerCount']}
       helpContent={helpContent ?? defaultHelpContent}
       title={t('Storage')}
     />
