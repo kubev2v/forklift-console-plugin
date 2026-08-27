@@ -31,8 +31,8 @@ const conversion = (overrides: ConversionOverrides = {}): V1beta1Conversion => {
     inspectionResult.allChecksPassed = allChecksPassed;
   }
   if (typeof snakeAllChecksPassed === 'boolean') {
-    // Backend may return snake_case; keep key literal for coverage of that path.
-    inspectionResult.all_checks_passed = snakeAllChecksPassed;
+    const snakeCaseFlag = 'all_checks_passed';
+    inspectionResult[snakeCaseFlag] = snakeAllChecksPassed;
   }
   const hasInspectionResult = Object.keys(inspectionResult).length > 0;
 
