@@ -18,7 +18,7 @@ import { createStorageMap } from '../createStorageMap';
 describe('createStorageMap - create', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(({ data }: { data: unknown }) => Promise.resolve(data));
+    mockK8sCreate.mockImplementation(({ data }) => Promise.resolve(data));
   });
 
   it('creates a storage map resource', async () => {

@@ -18,7 +18,7 @@ import { createNetworkMap } from '../createNetworkMap';
 describe('createNetworkMap - create', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(({ data }: { data: unknown }) => Promise.resolve(data));
+    mockK8sCreate.mockImplementation(({ data }) => Promise.resolve(data));
   });
 
   it('creates a network map and tracks start event', async () => {
