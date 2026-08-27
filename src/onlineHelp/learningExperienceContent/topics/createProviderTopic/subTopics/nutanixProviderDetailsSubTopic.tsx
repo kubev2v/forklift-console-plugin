@@ -13,10 +13,10 @@ export const nutanixProviderDetailsSubTopic = (): LearningExperienceSubTopic => 
       id: `${NUTANIX_PROVIDER_DETAILS_SUB_TOPIC_ID}-a`,
       title: (
         <HelpTitledContent
-          title={t('Choose the project (like openshift-mtv).')}
           content={t(
             'A project is a way to organize clusters into virtual sub-clusters. They can be helpful when different teams share a Kubernetes cluster. Namespace is a Kubernetes term, but it is also called a project in OpenShift.',
           )}
+          title={t('Choose the project (like openshift-mtv).')}
         />
       ),
     },

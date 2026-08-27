@@ -14,34 +14,34 @@ const NutanixPrismTypeField: FC = () => {
   return (
     <Controller
       control={control}
-      name={ProviderFormFieldId.NutanixPrismType}
       defaultValue={NutanixPrismType.Element}
+      name={ProviderFormFieldId.NutanixPrismType}
       render={({ field: { onChange, value } }) => (
         <FormGroup
-          role="radiogroup"
           fieldId={ProviderFormFieldId.NutanixPrismType}
-          label={t('Prism endpoint type')}
           isRequired
+          label={t('Prism endpoint type')}
+          role="radiogroup"
         >
           <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsMd' }}>
             <Radio
-              name={ProviderFormFieldId.NutanixPrismType}
-              label={t('Prism Element')}
+              data-testid="nutanix-prism-element-radio"
               description={t('Connect directly to a single Nutanix cluster.')}
               id="nutanix-prism-element"
-              data-testid="nutanix-prism-element-radio"
               isChecked={value === NutanixPrismType.Element}
+              label={t('Prism Element')}
+              name={ProviderFormFieldId.NutanixPrismType}
               onChange={() => {
                 onChange(NutanixPrismType.Element);
               }}
             />
             <Radio
-              name={ProviderFormFieldId.NutanixPrismType}
-              label={t('Prism Central')}
+              data-testid="nutanix-prism-central-radio"
               description={t('Connect to Prism Central to manage multiple clusters.')}
               id="nutanix-prism-central"
-              data-testid="nutanix-prism-central-radio"
               isChecked={value === NutanixPrismType.Central}
+              label={t('Prism Central')}
+              name={ProviderFormFieldId.NutanixPrismType}
               onChange={() => {
                 onChange(NutanixPrismType.Central);
               }}

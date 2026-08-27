@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/components/TableCell/TableCell';
 
@@ -24,21 +24,25 @@ const cellRenderers: Record<string, FC<VMCellProps>> = {
   status: PowerStateCellRenderer,
 };
 
-const renderTd = ({ resourceData, resourceFieldId, resourceFields }: RenderTdProps) => {
-  const fieldId = resourceFieldId;
-
-  const CellRenderer = cellRenderers?.[fieldId] ?? (() => <></>);
-  return (
-    <Td key={fieldId} dataLabel={fieldId}>
-      <CellRenderer data={resourceData} fieldId={fieldId} fields={resourceFields} />
-    </Td>
-  );
-};
-
 type RenderTdProps = {
   resourceData: VmData;
   resourceFieldId: string;
   resourceFields: ResourceField[];
+};
+
+const renderTd = ({
+  resourceData,
+  resourceFieldId,
+  resourceFields,
+}: RenderTdProps): ReactElement => {
+  const fieldId = resourceFieldId;
+
+  const CellRenderer = cellRenderers?.[fieldId] ?? ((): ReactElement => <></>);
+  return (
+    <Td dataLabel={fieldId} key={fieldId}>
+      <CellRenderer data={resourceData} fieldId={fieldId} fields={resourceFields} />
+    </Td>
+  );
 };
 
 export const NutanixVirtualMachinesCells: FC<RowProps<VmData>> = ({

@@ -39,8 +39,8 @@ describe('buildNutanixProviderResources', () => {
 
     expect(secret.data?.user).toBeDefined();
     expect(secret.data?.password).toBeDefined();
-    expect(decode(secret.data!.user)).toBe('admin');
-    expect(decode(secret.data!.password)).toBe('secret');
+    expect(decode(secret.data?.user ?? '')).toBe('admin');
+    expect(decode(secret.data?.password ?? '')).toBe('secret');
   });
 
   it('sets insecureSkipVerify to true and excludes cacert when skipping cert validation', () => {
@@ -52,7 +52,7 @@ describe('buildNutanixProviderResources', () => {
 
     const { secret } = buildNutanixProviderResources(formData);
 
-    expect(decode(secret.data!.insecureSkipVerify)).toBe('true');
+    expect(decode(secret.data?.insecureSkipVerify ?? '')).toBe('true');
     expect(secret.data?.cacert).toBeUndefined();
   });
 
@@ -65,9 +65,9 @@ describe('buildNutanixProviderResources', () => {
 
     const { secret } = buildNutanixProviderResources(formData);
 
-    expect(decode(secret.data!.insecureSkipVerify)).toBe('false');
+    expect(decode(secret.data?.insecureSkipVerify ?? '')).toBe('false');
     expect(secret.data?.cacert).toBeDefined();
-    expect(decode(secret.data!.cacert)).toBe('-----BEGIN CERTIFICATE-----\nMIID...');
+    expect(decode(secret.data?.cacert ?? '')).toBe('-----BEGIN CERTIFICATE-----\nMIID...');
   });
 
   it('defaults to element prism type when not specified', () => {
