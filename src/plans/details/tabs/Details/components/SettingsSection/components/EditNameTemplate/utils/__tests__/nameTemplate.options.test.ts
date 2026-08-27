@@ -1,11 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 
 import { NameTemplateOptions } from '../types';
-import {
-  getNameTemplateOptions,
-  getNameTemplateStateLabel,
-  getSelectedOption,
-} from '../utils';
+import { getNameTemplateOptions, getNameTemplateStateLabel, getSelectedOption } from '../utils';
 
 describe('EditNameTemplate utils - options', () => {
   it('includes inherit option when allowed', () => {
@@ -29,8 +25,8 @@ describe('EditNameTemplate utils - options', () => {
     expect(getSelectedOption('custom', true)).toBe(NameTemplateOptions.CustomNameTemplate);
     expect(getSelectedOption(undefined, true)).toBe(NameTemplateOptions.InheritPlanWideSetting);
     expect(getSelectedOption(undefined, false)).toBe(NameTemplateOptions.DefaultNameTemplate);
-    expect(
-      getNameTemplateStateLabel(NameTemplateOptions.CustomNameTemplate, false),
-    ).toMatch(/Custom name template/i);
+    expect(getNameTemplateStateLabel(NameTemplateOptions.CustomNameTemplate, false)).toMatch(
+      /Custom name template/i,
+    );
   });
 });

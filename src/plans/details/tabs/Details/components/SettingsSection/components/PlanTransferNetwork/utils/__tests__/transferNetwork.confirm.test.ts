@@ -17,13 +17,13 @@ describe('PlanTransferNetwork utils - confirm', () => {
 
   it('formats network names and defaults', () => {
     expect(getNetworkName(null)).toBe(PROVIDER_DEFAULTS);
-    expect(getNetworkName({ name: 'net', namespace: 'ns' } as never)).toBe('ns/net');
+    expect(getNetworkName({ name: 'net', namespace: 'ns' })).toBe('ns/net');
   });
 
   it('patches transfer network with ADD/REPLACE', async () => {
     const empty = { metadata: { name: 'plan' }, spec: {} } as never;
     await onConfirmTransferNetwork({
-      newValue: { name: 'net', namespace: 'ns' } as never,
+      newValue: { name: 'net', namespace: 'ns' },
       resource: empty,
     });
     expect(mockK8sPatch.mock.calls[0][0].data[0].op).toBe('add');

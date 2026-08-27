@@ -16,7 +16,7 @@ describe('TargetPowerState utils - confirm', () => {
 
   it('ADDs plan target power state when missing', async () => {
     const resource = { metadata: { name: 'plan' }, spec: {} } as never;
-    await onConfirmTargetPowerState({ newValue: 'on' as never, resource });
+    await onConfirmTargetPowerState({ newValue: 'on', resource });
     expect(mockK8sPatch.mock.calls[0][0].data[0]).toEqual({
       op: 'add',
       path: '/spec/targetPowerState',
@@ -30,7 +30,7 @@ describe('TargetPowerState utils - confirm', () => {
       spec: { targetPowerState: 'off', vms: [{ name: 'vm', targetPowerState: 'off' }] },
     } as never;
 
-    await onConfirmVmTargetPowerState(0)({ newValue: 'on' as never, resource });
+    await onConfirmVmTargetPowerState(0)({ newValue: 'on', resource });
 
     expect(mockK8sPatch.mock.calls[0][0].data[0]).toEqual({
       op: 'replace',
