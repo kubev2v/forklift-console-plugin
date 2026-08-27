@@ -1,11 +1,11 @@
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 
 import useProviderInventory from '../useProviderInventory';
 
 import {
-  inventorySample,
   inventorySameIgnoredFields,
+  inventorySample,
   validProvider,
 } from './useProviderInventory.fixtures';
 
@@ -14,7 +14,7 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
 }));
 
 jest.mock('@utils/api/getApiUrl', () => ({
-  getInventoryApiUrl: (path: string) => `/inventory/${path}`,
+  getInventoryApiUrl: (path: string): string => `/inventory/${path}`,
 }));
 
 const mockFetch = consoleFetchJSON as jest.MockedFunction<typeof consoleFetchJSON>;
@@ -38,7 +38,7 @@ describe('useProviderInventory - fetch', () => {
   });
 
   it('loads inventory for a valid provider', async () => {
-    mockFetch.mockResolvedValue(inventorySample as never);
+    mockFetch.mockResolvedValue(inventorySample);
 
     const { result } = renderHook(() => useProviderInventory({ provider: validProvider }));
 
@@ -57,7 +57,7 @@ describe('useProviderInventory - fetch', () => {
   });
 
   it('appends subPath to the inventory URL', async () => {
-    mockFetch.mockResolvedValue(inventorySample as never);
+    mockFetch.mockResolvedValue(inventorySample);
 
     renderHook(() => useProviderInventory({ provider: validProvider, subPath: 'vms' }));
     await flushPromises();
@@ -72,8 +72,8 @@ describe('useProviderInventory - fetch', () => {
 
   it('does not update inventory when only avoided fields change', async () => {
     mockFetch
-      .mockResolvedValueOnce(inventorySample as never)
-      .mockResolvedValueOnce(inventorySameIgnoredFields as never);
+      .mockResolvedValueOnce(inventorySample)
+      .mockResolvedValueOnce(inventorySameIgnoredFields);
 
     const { result } = renderHook(() =>
       useProviderInventory({ interval: 1000, provider: validProvider }),
@@ -92,7 +92,7 @@ describe('useProviderInventory - fetch', () => {
   });
 
   it('forceRefresh triggers another fetch', async () => {
-    mockFetch.mockResolvedValue(inventorySample as never);
+    mockFetch.mockResolvedValue(inventorySample);
 
     const { result } = renderHook(() => useProviderInventory({ provider: validProvider }));
 

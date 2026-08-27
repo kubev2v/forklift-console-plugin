@@ -1,5 +1,5 @@
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 
 import useProviderInventory from '../useProviderInventory';
 
@@ -14,7 +14,7 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
 }));
 
 jest.mock('@utils/api/getApiUrl', () => ({
-  getInventoryApiUrl: (path: string) => `/inventory/${path}`,
+  getInventoryApiUrl: (path: string): string => `/inventory/${path}`,
 }));
 
 const mockFetch = consoleFetchJSON as jest.MockedFunction<typeof consoleFetchJSON>;
