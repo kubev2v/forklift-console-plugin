@@ -1,19 +1,25 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
+  "ignorePresets": ["group:monorepos", "group:recommended"],
   "vulnerabilityAlerts": {
     "enabled": true
   },
   "packageRules": [
     {
-      "matchManagers": ["npm"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "groupName": "npm non-major",
-      "schedule": ["before 6am on Monday"]
+      "description": "Disable updates on unsupported release branches",
+      "enabled": false,
+      "matchBaseBranches": ["release-2.7", "release-2.8", "release-2.9"]
     },
     {
-      "matchManagers": ["dockerfile"],
-      "groupName": "container base images"
+      "description": "One grouped non-major PR per supported branch",
+      "groupName": "all non-major dependencies",
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"]
+    },
+    {
+      "description": "One grouped major PR per supported branch",
+      "groupName": "all major dependencies",
+      "matchUpdateTypes": ["major"]
     }
   ],
   "tekton": {
