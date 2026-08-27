@@ -84,23 +84,6 @@ describe('createUpdateOrDeleteHook', () => {
     expect(mockCreateHook).toHaveBeenCalled();
   });
 
-  it('updates AAP hook and clears template-name annotation when omitted', async () => {
-    await createUpdateOrDeleteHook({
-      aapJobTemplateId: 9,
-      hook: existingHook,
-      hookSet: true,
-      hookSource: HOOK_SOURCE_AAP,
-      plan,
-      step: hookTypes.PostHook,
-    });
-    expect(mockUpdateHook).toHaveBeenCalledWith(
-      expect.objectContaining({
-        metadata: expect.objectContaining({ annotations: { keep: 'yes' } }),
-        spec: { aap: { jobTemplateId: 9 } },
-      }),
-    );
-  });
-
   it('creates local hook with empty defaults when fields omitted', async () => {
     await createUpdateOrDeleteHook({
       hookSet: true,

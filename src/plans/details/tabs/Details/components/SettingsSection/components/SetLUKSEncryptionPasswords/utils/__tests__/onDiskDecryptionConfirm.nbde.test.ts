@@ -73,6 +73,27 @@ describe('onDiskDecryptionConfirm nbde and empty paths', () => {
     expect(vmsPatch?.data[0]?.value).toEqual([]);
   });
 
+  it('skips create/delete/patch when labeled source already matches existing secret', async () => {
+    const existingSecret = {
+      data: { '0': btoa('secret') },
+      metadata: { name: 'shared-luks', namespace: 'test-ns' },
+    } as IoK8sApiCoreV1Secret;
+
+    await expect(
+      onDiskDecryptionConfirm({
+        existingSecret,
+        labeledSourceSecretName: 'shared-luks',
+        nbdeClevis: false,
+        newValue: JSON.stringify([]),
+        resource: plan,
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(mockK8sCreate).not.toHaveBeenCalled();
+    expect(mockK8sDelete).not.toHaveBeenCalled();
+    expect(mockK8sPatch).not.toHaveBeenCalled();
+  });
+
   it('copies existing secret onto VMs and forces nbdeClevis false', async () => {
     const existingSecret = {
       data: { '0': btoa('secret') },

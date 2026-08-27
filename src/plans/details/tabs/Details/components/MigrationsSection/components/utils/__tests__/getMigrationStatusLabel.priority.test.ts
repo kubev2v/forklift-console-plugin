@@ -74,6 +74,18 @@ describe('getMigrationStatusLabel', () => {
     expect(getMigrationStatusLabel(counts(), 0)).toBe(MigrationVirtualMachineStatus.Succeeded);
   });
 
+  it('returns null when only Canceled or CantStart VMs are present', () => {
+    expect(
+      getMigrationStatusLabel(
+        counts({
+          [MigrationVirtualMachineStatus.Canceled]: 2,
+          [MigrationVirtualMachineStatus.CantStart]: 1,
+        }),
+        3,
+      ),
+    ).toBeNull();
+  });
+
   it('returns null when succeeded count does not match undefined migration count', () => {
     expect(getMigrationStatusLabel(counts(), undefined)).toBeNull();
     expect(

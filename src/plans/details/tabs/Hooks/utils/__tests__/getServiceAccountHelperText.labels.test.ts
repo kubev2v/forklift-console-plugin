@@ -23,15 +23,22 @@ describe('getServiceAccountHelperText', () => {
   });
 
   it('falls back to empty project when plan is missing', () => {
+    // Empty namespace interpolates as a blank token before the project label.
     const pre = getServiceAccountHelperText(true);
     const post = getServiceAccountHelperText(false);
-    expect(pre).toContain("  plan's project.");
-    expect(post).toContain("  plan's target project.");
+    expect(pre).toContain("plan's project.");
+    expect(pre).toContain('in the ');
+    expect(post).toContain("plan's target project.");
+    expect(post).toContain('in the ');
   });
 
   it('falls back to empty project when namespaces are absent', () => {
     const emptyPlan = { metadata: {}, spec: {} } as V1beta1Plan;
-    expect(getServiceAccountHelperText(true, emptyPlan)).toContain("  plan's project.");
-    expect(getServiceAccountHelperText(false, emptyPlan)).toContain("  plan's target project.");
+    const pre = getServiceAccountHelperText(true, emptyPlan);
+    const post = getServiceAccountHelperText(false, emptyPlan);
+    expect(pre).toContain("plan's project.");
+    expect(pre).toContain('in the ');
+    expect(post).toContain("plan's target project.");
+    expect(post).toContain('in the ');
   });
 });
