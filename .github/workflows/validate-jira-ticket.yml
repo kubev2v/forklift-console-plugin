@@ -129,30 +129,50 @@ jobs:
             const marker = '<!-- jira-validate -->';
             const ticketKey = process.env.TICKET_KEY;
             const passed = process.env.STATUS === 'passed';
-            const fixVersions = process.env.FIX_VERSIONS || '—';
-            const sprintNames = process.env.SPRINT_NAMES || '—';
-            const storyPoints = process.env.STORY_POINTS || '—';
-            const missingFields = process.env.MISSING_FIELDS || '';
+            const fixVersions = process.env.FIX_VERSIONS ?? '';
+            const sprintNames = process.env.SPRINT_NAMES ?? '';
+            const storyPoints = process.env.STORY_POINTS ?? '';
+            const missingFields = process.env.MISSING_FIELDS ?? '';
             const ticketUrl = `https://redhat.atlassian.net/browse/${ticketKey}`;
+            const ticketLink = `[${ticketKey}](${ticketUrl})`;
 
-            const statusIcon = (value) => (value && value !== '—' ? '✅' : '❌');
+            const formatValue = (value) => (value ? value : '_Not set_');
 
-            let body = `${marker}
-            ## Jira ticket check: [${ticketKey}](${ticketUrl})
+            const fieldCheck = (value) => (value ? '✅ Present' : '❌ Missing');
 
-            | Field | Status |
-            | --- | --- |
-            | Fix version | ${statusIcon(fixVersions)} ${fixVersions} |
-            | Sprint | ${statusIcon(sprintNames)} ${sprintNames} |
-            | Story points | ${statusIcon(storyPoints)} ${storyPoints} |
-            `;
+            const fields = [
+              { label: 'Fix version', value: fixVersions },
+              { label: 'Sprint', value: sprintNames },
+              { label: 'Story points', value: storyPoints },
+            ];
 
-            if (passed) {
-              body += '\nAll required Jira fields are set.';
-            } else {
-              body += `\nMissing required fields: ${missingFields}.`;
-              body += '\n\nComment `/jira-refresh` after updating the ticket to re-run this check.';
+            const tableRows = fields
+              .map(({ label, value }) => `| ${label} | ${formatValue(value)} | ${fieldCheck(value)} |`)
+              .join('\n');
+
+            const resultLine = passed
+              ? `**Result:** ✅ All required fields are set for ${ticketLink}.`
+              : `**Result:** ❌ Missing required fields on ${ticketLink}: ${missingFields}.`;
+
+            const bodyParts = [
+              marker,
+              `## Jira ticket check: ${ticketLink}`,
+              '',
+              '| Field | Current value | Check |',
+              '| --- | --- | --- |',
+              tableRows,
+              '',
+              resultLine,
+            ];
+
+            if (!passed) {
+              bodyParts.push('', 'Comment `/jira-refresh` after updating the ticket to re-run this check.');
             }
+
+            const body = bodyParts.join('\n');
+
+            const summaryBody = bodyParts.slice(1).join('\n');
+            await core.summary.addRaw(summaryBody).write();
 
             const { owner, repo } = context.repo;
             const issue_number = Number(process.env.PR_NUMBER);
@@ -184,8 +204,9 @@ jobs:
       - name: Fail when validation failed
         if: steps.validate.outputs.status == 'failed'
         run: |
-          echo "::error::Jira ticket ${TICKET_KEY} is missing required fields: ${MISSING_FIELDS}"
+          echo "::error::Jira ticket ${TICKET_KEY} (${TICKET_URL}) is missing required fields: ${MISSING_FIELDS}"
           exit 1
         env:
           MISSING_FIELDS: ${{ steps.validate.outputs.missing }}
           TICKET_KEY: ${{ steps.validate.outputs.ticket_key }}
+          TICKET_URL: https://redhat.atlassian.net/browse/${{ steps.validate.outputs.ticket_key }}
