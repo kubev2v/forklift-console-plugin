@@ -131,8 +131,8 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
 
   test('should show empty passphrases in edit modal when plan has no LUKS secret', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     test.setTimeout(LUKS_TEST_TIMEOUT_MS);
     const testData: PlanTestData = createPlanTestData({
