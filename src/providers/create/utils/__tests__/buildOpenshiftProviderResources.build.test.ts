@@ -12,7 +12,7 @@ const base = {
   [ProviderFormFieldId.ProviderType]: 'openshift',
   [ProviderFormFieldId.ServiceAccountToken]: 'token',
   [ProviderFormFieldId.ShowDefaultProjects]: false,
-} as never;
+};
 
 describe('buildOpenshiftProviderResources - build', () => {
   it('encodes token and skip-verify flag', () => {
