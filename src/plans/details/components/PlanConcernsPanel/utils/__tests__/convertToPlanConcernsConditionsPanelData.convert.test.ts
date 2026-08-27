@@ -1,14 +1,17 @@
-import { describe, expect, it } from '@jest/globals';
 import { ConcernCategoryOptions } from '@components/Concerns/utils/constants';
+import { describe, expect, it } from '@jest/globals';
 
-import { CONCERN_SOURCE } from '../types';
 import { convertToPlanConcernsConditionsPanelData } from '../convertToPlanConcernsConditionsPanelData';
+import { CONCERN_SOURCE } from '../types';
 
 describe('convertToPlanConcernsConditionsPanelData - convert', () => {
   it('maps conditions and merged concerns with source preference', () => {
     const result = convertToPlanConcernsConditionsPanelData(
       [{ category: 'Critical', items: ['a', 'b'], message: 'm', type: 'Ready' }] as never,
-      new Map([['Shared disk', 3], ['Inspected', 1]]),
+      new Map([
+        ['Shared disk', 3],
+        ['Inspected', 1],
+      ]),
       '/plan/url',
       new Set(['Inspected']),
     );

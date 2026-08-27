@@ -22,7 +22,10 @@ describe('getMappingPageMessage - states', () => {
     });
     expect(message).toMatch(/not available/i);
     // i18n test mock may leave the placeholder literal; ensure error message is passed through when interpolated
-    expect(message === 'The mapping data from the inventory is not available, {{resourcesError}}.' || /boom/.test(message ?? '')).toBe(true);
+    expect(
+      message === 'The mapping data from the inventory is not available, {{resourcesError}}.' ||
+        (message ?? '').includes('boom'),
+    ).toBe(true);
   });
 
   it('returns null when ready', () => {
