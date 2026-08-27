@@ -17,6 +17,9 @@ import { NetworkMapModel } from '@forklift-ui/types';
 
 import { patchNetworkMappingValues } from '../utils';
 
+const provider = { metadata: { name: 'src' } } as never;
+const formData = { networkMap: [{ source: { name: 'net' } }] } as never;
+
 describe('patchNetworkMappingValues - patch', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
@@ -24,13 +27,12 @@ describe('patchNetworkMappingValues - patch', () => {
     mockBuildNetworkMappings.mockClear();
   });
 
-  it('ADDs map when empty and REPLACEs when present', async () => {
+  it('ADDs map when empty', async () => {
     const emptyMap = { metadata: { name: 'nm' }, spec: { map: [] } } as never;
-    const provider = { metadata: { name: 'src' } } as never;
-    const formData = { networkMap: [] } as never;
 
     await patchNetworkMappingValues(formData, emptyMap, provider);
 
+    expect(mockBuildNetworkMappings).toHaveBeenCalledWith(formData.networkMap, provider);
     expect(mockK8sPatch).toHaveBeenCalledWith(
       expect.objectContaining({
         data: [{ op: 'add', path: '/spec/map', value: [{ source: { id: '1' } }] }],
@@ -38,11 +40,20 @@ describe('patchNetworkMappingValues - patch', () => {
         resource: emptyMap,
       }),
     );
+  });
 
+  it('REPLACEs map when present', async () => {
     const existing = { metadata: { name: 'nm' }, spec: { map: [{ source: {} }] } } as never;
+
     await patchNetworkMappingValues(formData, existing, provider);
-    expect(
-      (mockK8sPatch.mock.calls[1] as unknown as [{ data: { op: string }[] }])[0].data[0].op,
-    ).toBe('replace');
+
+    expect(mockBuildNetworkMappings).toHaveBeenCalledWith(formData.networkMap, provider);
+    expect(mockK8sPatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: [{ op: 'replace', path: '/spec/map', value: [{ source: { id: '1' } }] }],
+        model: NetworkMapModel,
+        resource: existing,
+      }),
+    );
   });
 });

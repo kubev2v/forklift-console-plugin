@@ -18,6 +18,17 @@ import { StorageMapFieldId } from '@utils/storage/types';
 
 import { patchStorageMappingValues } from '../utils';
 
+const nonEmptyRow = {
+  [StorageMapFieldId.SourceStorage]: { id: 's', name: 's' },
+  [StorageMapFieldId.TargetStorage]: { id: 't', name: 't' },
+};
+const emptyRow = {
+  [StorageMapFieldId.SourceStorage]: { id: '', name: '' },
+  [StorageMapFieldId.TargetStorage]: { id: '', name: '' },
+};
+const formValues = { storageMap: [nonEmptyRow, emptyRow] } as never;
+const vsphereProvider = { spec: { type: 'vsphere' } } as never;
+
 describe('patchStorageMappingValues - patch', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
@@ -25,29 +36,36 @@ describe('patchStorageMappingValues - patch', () => {
     mockTransform.mockClear();
   });
 
-  it('filters empty rows and patches storage map', async () => {
+  it('filters empty rows and ADDs when map is empty', async () => {
     const storageMap = { metadata: { name: 'sm' }, spec: { map: [] } } as never;
-    const formValues = {
-      storageMap: [
-        {
-          [StorageMapFieldId.SourceStorage]: { id: 's', name: 's' },
-          [StorageMapFieldId.TargetStorage]: { id: 't', name: 't' },
-        },
-        {
-          [StorageMapFieldId.SourceStorage]: { id: '', name: '' },
-          [StorageMapFieldId.TargetStorage]: { id: '', name: '' },
-        },
-      ],
-    } as never;
 
-    await patchStorageMappingValues(formValues, storageMap, {
-      spec: { type: 'vsphere' },
-    } as never);
+    await patchStorageMappingValues(formValues, storageMap, vsphereProvider);
 
-    expect(mockTransform).toHaveBeenCalled();
+    expect(mockTransform).toHaveBeenCalledWith(
+      { storageMap: [nonEmptyRow] },
+      storageMap,
+      false,
+    );
     expect(mockK8sPatch).toHaveBeenCalledWith(
       expect.objectContaining({
         data: [{ op: 'add', path: '/spec/map', value: [{ source: { id: 's' } }] }],
+        model: StorageMapModel,
+        resource: storageMap,
+      }),
+    );
+  });
+
+  it('REPLACEs when spec.map is non-empty', async () => {
+    const storageMap = {
+      metadata: { name: 'sm' },
+      spec: { map: [{ source: { id: 'old' } }] },
+    } as never;
+
+    await patchStorageMappingValues(formValues, storageMap, vsphereProvider);
+
+    expect(mockK8sPatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: [{ op: 'replace', path: '/spec/map', value: [{ source: { id: 's' } }] }],
         model: StorageMapModel,
         resource: storageMap,
       }),
