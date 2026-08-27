@@ -13,7 +13,7 @@ describe('useSlug', () => {
     expect(result.current('A/B:C-D!')).toBe('abc-d');
   });
 
-  it('returns cached values for repeated inputs', () => {
+  it('returns the same slug for repeated inputs', () => {
     const { result } = renderHook(() => useSlug());
     const first = result.current('Cache Me');
     const second = result.current('Cache Me');

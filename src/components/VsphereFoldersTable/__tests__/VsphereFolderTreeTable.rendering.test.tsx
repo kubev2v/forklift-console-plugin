@@ -57,7 +57,7 @@ jest.mock('../components/TreeToolbar/TreeToolbar', () => ({
 
 jest.mock('../components/TreeTableBody/TreeTableBody', () => ({
   __esModule: true,
-  default: (): ReactElement => <div data-testid="tree-table-body" />,
+  default: (): ReactElement => <tbody data-testid="tree-table-body" />,
 }));
 
 jest.mock('../components/VsphereFolderTreeTableHead', () => ({
