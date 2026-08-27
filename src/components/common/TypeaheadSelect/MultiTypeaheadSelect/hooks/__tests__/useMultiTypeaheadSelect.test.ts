@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 
+import { PLACEHOLDER_VALUES } from '../../../utils/constants';
 import { useMultiTypeaheadSelect } from '../useMultiTypeaheadSelect';
 
 const options = [
@@ -32,5 +33,30 @@ describe('useMultiTypeaheadSelect', () => {
       result.current.handleSelect('2');
     });
     expect(onChange).toHaveBeenCalledWith(['2']);
+  });
+
+  it('deselects an already selected value through handleSelect', () => {
+    const onChange = jest.fn();
+    const { result } = renderHook(() =>
+      useMultiTypeaheadSelect({ onChange, options, values: ['2'] }),
+    );
+
+    act(() => {
+      result.current.handleSelect('2');
+    });
+    expect(onChange).toHaveBeenCalledWith([]);
+  });
+
+  it('ignores placeholder values in handleSelect', () => {
+    const onChange = jest.fn();
+    const { result } = renderHook(() => useMultiTypeaheadSelect({ onChange, options, values: [] }));
+
+    act(() => {
+      result.current.handleSelect(PLACEHOLDER_VALUES.NO_RESULTS);
+    });
+    act(() => {
+      result.current.handleSelect(PLACEHOLDER_VALUES.NO_OPTIONS);
+    });
+    expect(onChange).not.toHaveBeenCalled();
   });
 });

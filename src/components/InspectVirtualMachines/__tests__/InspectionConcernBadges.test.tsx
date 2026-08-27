@@ -26,11 +26,22 @@ describe('InspectionConcernBadges', () => {
       />,
     );
 
-    expect(screen.getByText('2')).toBeInTheDocument();
-    expect(screen.getByText('1')).toBeInTheDocument();
+    const warningBadge = screen.getByRole('button', { name: '2' });
+    const criticalBadge = screen.getByRole('button', { name: '1' });
+    expect(warningBadge).toBeInTheDocument();
+    expect(criticalBadge).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: /2/ }));
+    await user.click(warningBadge);
+    expect(screen.getByLabelText('Warning inspection concerns')).toBeInTheDocument();
+    expect(screen.getByText('Warning inspection concerns')).toBeInTheDocument();
+    expect(screen.getByText('Total: 2')).toBeInTheDocument();
     expect(screen.getByText('Shared disk')).toBeInTheDocument();
     expect(screen.getByText('CPU')).toBeInTheDocument();
+
+    await user.click(criticalBadge);
+    expect(screen.getByLabelText('Critical inspection concerns')).toBeInTheDocument();
+    expect(screen.getByText('Critical inspection concerns')).toBeInTheDocument();
+    expect(screen.getByText('Total: 1')).toBeInTheDocument();
+    expect(screen.getByText('UEFI')).toBeInTheDocument();
   });
 });
