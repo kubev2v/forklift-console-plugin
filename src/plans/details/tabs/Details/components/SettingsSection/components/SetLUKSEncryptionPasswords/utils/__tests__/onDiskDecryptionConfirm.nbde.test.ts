@@ -1,19 +1,17 @@
 import type { IoK8sApiCoreV1Secret, V1beta1Plan } from '@forklift-ui/types';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
+const mockK8sPatch = jest.fn((..._args: unknown[]) => Promise.resolve({}));
+const mockK8sCreate = jest.fn((..._args: unknown[]) => Promise.resolve({}));
+const mockK8sDelete = jest.fn((..._args: unknown[]) => Promise.resolve({}));
+
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sCreate: jest.fn(),
-  k8sDelete: jest.fn(),
-  k8sPatch: jest.fn(),
+  k8sCreate: (...args: never[]): unknown => mockK8sCreate(...args),
+  k8sDelete: (...args: never[]): unknown => mockK8sDelete(...args),
+  k8sPatch: (...args: never[]): unknown => mockK8sPatch(...args),
 }));
 
-import { k8sCreate, k8sDelete, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
-
 import { onDiskDecryptionConfirm } from '../utils';
-
-const mockK8sPatch = k8sPatch as jest.Mock;
-const mockK8sCreate = k8sCreate as jest.Mock;
-const mockK8sDelete = k8sDelete as jest.Mock;
 
 type PatchArg = { data: { op: string; path: string; value?: unknown }[] };
 
@@ -30,15 +28,15 @@ const emptyVmsPlan = {
 } as unknown as V1beta1Plan;
 
 const findPlanVmsPatch = (): PatchArg | undefined => {
-  const calls = mockK8sPatch.mock.calls as [PatchArg][];
+  const calls = mockK8sPatch.mock.calls as unknown as [PatchArg][];
   return calls.map(([arg]) => arg).find((arg) => arg.data.some((op) => op.path === '/spec/vms'));
 };
 
 describe('onDiskDecryptionConfirm nbde and empty paths', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockK8sPatch.mockImplementation(() => Promise.resolve(plan as never));
-    mockK8sDelete.mockImplementation(() => Promise.resolve(undefined as never));
+    mockK8sPatch.mockImplementation(() => Promise.resolve({}));
+    mockK8sDelete.mockImplementation(() => Promise.resolve({}));
   });
 
   it('deletes LUKS secret and clears luks when nbdeClevis is true', async () => {

@@ -1,11 +1,11 @@
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sPatch: jest.fn(),
-}));
+const mockK8sPatch = jest.fn((..._args: unknown[]) => Promise.resolve({}));
 
-import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
+  k8sPatch: (...args: never[]): unknown => mockK8sPatch(...args),
+}));
 
 import {
   onConfirmVirtualMachineNetworkNameTemplate,
@@ -13,8 +13,6 @@ import {
   onConfirmVirtualMachineVolumeNameTemplate,
   patchVMTargetName,
 } from '../utils';
-
-const mockK8sPatch = k8sPatch as jest.Mock;
 
 const plan = {
   metadata: { name: 'plan-1' },
@@ -35,29 +33,23 @@ const plan = {
 type PatchArg = { data: { op: string; path: string; value?: unknown }[] };
 
 const firstPatch = (callIndex: number): PatchArg => {
-  const [arg] = mockK8sPatch.mock.calls[callIndex] as [PatchArg];
+  const [arg] = mockK8sPatch.mock.calls[callIndex] as unknown as [PatchArg];
   return arg;
 };
 
 describe('VM template / targetName patch helpers', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockK8sPatch.mockImplementation(() => Promise.resolve(plan as never));
+    mockK8sPatch.mockImplementation(() => Promise.resolve({}));
   });
 
   it.each([
     ['network', onConfirmVirtualMachineNetworkNameTemplate, 'networkNameTemplate'],
     ['volume', onConfirmVirtualMachineVolumeNameTemplate, 'volumeNameTemplate'],
     ['pvc', onConfirmVirtualMachinePVCNameTemplate, 'pvcNameTemplate'],
-  ])(
+  ] as const)(
     'uses add for missing %s template and replace when present',
-    async (
-      _label: string,
-      factory: (
-        vmIndex: number,
-      ) => (args: { newValue: string | undefined; resource: V1beta1Plan }) => Promise<unknown>,
-      field: string,
-    ) => {
+    async (_label, factory, field) => {
       await factory(0)({ newValue: 'tmpl-a', resource: plan });
       expect(firstPatch(0)).toEqual(
         expect.objectContaining({
