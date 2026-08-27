@@ -8,14 +8,14 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 
 import { addOwnerRefs } from '../addOwnerRefs';
 
-const mockK8sPatch = k8sPatch as jest.MockedFunction<typeof k8sPatch>;
+const mockK8sPatch = k8sPatch as unknown as jest.Mock;
 const model = { kind: 'Secret', apiVersion: 'v1' } as never;
 const planRef = { apiVersion: 'v1', kind: 'Plan', name: 'plan-1', uid: 'uid-1' };
 
 describe('addOwnerRefs - ownerRefs', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue(undefined as never);
+    mockK8sPatch.mockResolvedValue({} as never);
   });
 
   it('adds owner refs when none exist and strips namespace', async () => {

@@ -9,12 +9,15 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { createDecryptionSecret } from '../createDecryptionSecret';
 
-const mockK8sCreate = k8sCreate as jest.MockedFunction<typeof k8sCreate>;
+const mockK8sCreate = k8sCreate as unknown as jest.Mock;
 
 describe('createDecryptionSecret - create', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(({ data }) => Promise.resolve(data));
+    mockK8sCreate.mockImplementation((...args: unknown[]) => {
+      const [{ data }] = args as [{ data: Record<string, unknown> }];
+      return Promise.resolve(data);
+    });
   });
 
   it('base64-encodes passphrases keyed by index', async () => {
