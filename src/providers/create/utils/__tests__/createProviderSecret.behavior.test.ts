@@ -4,11 +4,11 @@ import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { createProviderSecret } from '../createProviderSecret';
 
-jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
+jest.mock('@openshift-console/dynamic-plugin-sdk', (): unknown => ({
   k8sCreate: jest.fn(),
 }));
 
-jest.mock('@utils/crds/common/selectors', () => ({
+jest.mock('@utils/crds/common/selectors', (): unknown => ({
   getUrl: (provider: { spec?: { url?: string } }) => provider?.spec?.url,
 }));
 

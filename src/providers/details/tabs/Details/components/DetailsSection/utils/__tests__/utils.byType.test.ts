@@ -4,13 +4,19 @@ import { ProviderStatus } from '@utils/types';
 
 import { getDetailsSectionByType, isApplianceManagementEnabled } from '../utils';
 
-jest.mock('../../Ec2DetailsSection', () => ({ __esModule: true, default: 'Ec2' }));
-jest.mock('../../HyperVDetailsSection', () => ({ __esModule: true, default: 'HyperV' }));
-jest.mock('../../OpenshiftDetailsSection', () => ({ __esModule: true, default: 'Openshift' }));
-jest.mock('../../OpenstackDetailsSection', () => ({ __esModule: true, default: 'Openstack' }));
-jest.mock('../../OVADetailsSection', () => ({ __esModule: true, default: 'OVA' }));
-jest.mock('../../OvirtDetailsSection', () => ({ __esModule: true, default: 'Ovirt' }));
-jest.mock('../../VSphereDetailsSection', () => ({ __esModule: true, default: 'VSphere' }));
+jest.mock('../../Ec2DetailsSection', (): unknown => ({ __esModule: true, default: 'Ec2' }));
+jest.mock('../../HyperVDetailsSection', (): unknown => ({ __esModule: true, default: 'HyperV' }));
+jest.mock('../../OpenshiftDetailsSection', (): unknown => ({
+  __esModule: true,
+  default: 'Openshift',
+}));
+jest.mock('../../OpenstackDetailsSection', (): unknown => ({
+  __esModule: true,
+  default: 'Openstack',
+}));
+jest.mock('../../OVADetailsSection', (): unknown => ({ __esModule: true, default: 'OVA' }));
+jest.mock('../../OvirtDetailsSection', (): unknown => ({ __esModule: true, default: 'Ovirt' }));
+jest.mock('../../VSphereDetailsSection', (): unknown => ({ __esModule: true, default: 'VSphere' }));
 
 describe('DetailsSection utils - byType', () => {
   it.each([

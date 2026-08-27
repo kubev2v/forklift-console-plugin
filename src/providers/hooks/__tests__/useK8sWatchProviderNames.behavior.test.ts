@@ -3,7 +3,7 @@ import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { useK8sWatchProviderNames } from '../useK8sWatchProviderNames';
 
-jest.mock('@utils/hooks/useK8sWatchResource', () => ({
+jest.mock('@utils/hooks/useK8sWatchResource', (): unknown => ({
   useK8sWatchResource: jest.fn(),
 }));
 
