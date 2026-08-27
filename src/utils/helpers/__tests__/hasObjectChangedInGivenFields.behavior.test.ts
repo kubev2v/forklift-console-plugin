@@ -31,6 +31,16 @@ describe('hasObjectChangedInGivenFields - behavior', () => {
     ).toBe(false);
   });
 
+  it('still reports changed when avoided field causes key-length mismatch', () => {
+    expect(
+      hasObjectChangedInGivenFields({
+        fieldsToAvoidComparing: ['revision'],
+        newObject: { name: 'x', revision: 1 },
+        oldObject: { name: 'x' },
+      }),
+    ).toBe(true);
+  });
+
   it('handles primitives, null, undefined, and empty objects', () => {
     expect(
       hasObjectChangedInGivenFields({

@@ -1,5 +1,5 @@
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 
 import useProviderInventory from '../useProviderInventory';
 
@@ -39,7 +39,9 @@ describe('useProviderInventory - disabled', () => {
       useProviderInventory({ disabled: true, provider: validProvider }),
     );
 
-    result.current.forceRefresh();
+    act(() => {
+      result.current.forceRefresh();
+    });
 
     expect(mockFetch).not.toHaveBeenCalled();
     expect(result.current.inventory).toBeNull();

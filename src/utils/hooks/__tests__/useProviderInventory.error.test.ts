@@ -4,6 +4,7 @@ import { act, renderHook } from '@testing-library/react';
 import useProviderInventory from '../useProviderInventory';
 
 import {
+  inventorySample,
   providerMissingType,
   providerMissingUid,
   validProvider,
@@ -38,6 +39,8 @@ describe('useProviderInventory - error', () => {
 
     expect(result.current.error?.message).toBe('Invalid provider data');
     expect(result.current.inventory).toBeNull();
+    // Invalid provider returns before try/finally, so loading stays true (documented bug).
+    expect(result.current.loading).toBe(true);
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
@@ -47,6 +50,8 @@ describe('useProviderInventory - error', () => {
     await flushPromises();
 
     expect(result.current.error?.message).toBe('Invalid provider data');
+    expect(result.current.inventory).toBeNull();
+    expect(result.current.loading).toBe(true);
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
@@ -56,14 +61,23 @@ describe('useProviderInventory - error', () => {
     await flushPromises();
 
     expect(result.current.error?.message).toBe('Invalid provider data');
+    expect(result.current.inventory).toBeNull();
+    expect(result.current.loading).toBe(true);
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
   it('captures fetch errors and clears inventory', async () => {
-    mockFetch.mockRejectedValue(new Error('network down'));
+    mockFetch.mockResolvedValueOnce(inventorySample).mockRejectedValueOnce(new Error('network down'));
 
     const { result } = renderHook(() => useProviderInventory({ provider: validProvider }));
 
+    await flushPromises();
+    expect(result.current.inventory).toEqual(inventorySample);
+    expect(result.current.error).toBeNull();
+
+    act(() => {
+      result.current.forceRefresh();
+    });
     await flushPromises();
 
     expect(result.current.error?.message).toBe('network down');

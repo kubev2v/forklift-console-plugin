@@ -89,6 +89,8 @@ describe('useProviderInventory - fetch', () => {
     });
 
     expect(result.current.inventory).toBe(firstInventory);
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+    await expect(mockFetch.mock.results[1]?.value).resolves.toEqual(inventorySameIgnoredFields);
   });
 
   it('forceRefresh triggers another fetch', async () => {
@@ -104,6 +106,6 @@ describe('useProviderInventory - fetch', () => {
     });
     await flushPromises();
 
-    expect(mockFetch.mock.calls.length).toBeGreaterThan(1);
+    expect(mockFetch).toHaveBeenCalledTimes(2);
   });
 });

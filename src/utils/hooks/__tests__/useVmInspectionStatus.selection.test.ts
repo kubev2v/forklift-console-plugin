@@ -1,56 +1,9 @@
 import { renderHook } from '@testing-library/react';
-import {
-  CONVERSION_LABELS,
-  CONVERSION_PHASE,
-  INSPECTION_STATUS,
-} from '@utils/crds/conversion/constants';
-import type { V1beta1Conversion } from '@utils/crds/conversion/types';
+import { CONVERSION_PHASE, INSPECTION_STATUS } from '@utils/crds/conversion/constants';
 
 import { useVmInspectionStatus } from '../useVmInspectionStatus';
 
-type ConversionOverrides = Partial<V1beta1Conversion> & {
-  allChecksPassed?: boolean;
-  createdAt?: string;
-  phase?: string;
-  snakeAllChecksPassed?: boolean;
-  vmId?: string;
-};
-
-const conversion = (overrides: ConversionOverrides = {}): V1beta1Conversion => {
-  const {
-    allChecksPassed,
-    createdAt = '2024-01-01T00:00:00Z',
-    phase = CONVERSION_PHASE.SUCCEEDED,
-    snakeAllChecksPassed,
-    vmId = 'vm-1',
-    ...rest
-  } = overrides;
-
-  const inspectionResult: Record<string, boolean> = {};
-  if (typeof allChecksPassed === 'boolean') {
-    inspectionResult.allChecksPassed = allChecksPassed;
-  }
-  if (typeof snakeAllChecksPassed === 'boolean') {
-    const snakeCaseFlag = 'all_checks_passed';
-    inspectionResult[snakeCaseFlag] = snakeAllChecksPassed;
-  }
-  const hasInspectionResult = Object.keys(inspectionResult).length > 0;
-
-  return {
-    apiVersion: 'forklift.konveyor.io/v1beta1',
-    kind: 'Conversion',
-    metadata: {
-      creationTimestamp: createdAt,
-      labels: { [CONVERSION_LABELS.VM_ID]: vmId },
-      name: `conversion-${vmId}-${createdAt}`,
-    },
-    status: {
-      inspectionResult: hasInspectionResult ? inspectionResult : undefined,
-      phase,
-    },
-    ...rest,
-  } as V1beta1Conversion;
-};
+import { conversion } from './useVmInspectionStatus.fixtures';
 
 describe('useVmInspectionStatus - selection', () => {
   it('returns undefined when no conversion exists for the vm', () => {
@@ -67,9 +20,9 @@ describe('useVmInspectionStatus - selection', () => {
 
   it('prefers an active conversion over a newer completed one', () => {
     const completed = conversion({
+      allChecksPassed: true,
       createdAt: '2024-02-01T00:00:00Z',
       phase: CONVERSION_PHASE.SUCCEEDED,
-      allChecksPassed: true,
     });
     const running = conversion({
       createdAt: '2024-01-01T00:00:00Z',
@@ -83,15 +36,30 @@ describe('useVmInspectionStatus - selection', () => {
     expect(status?.conversion).toBe(running);
   });
 
+  it('prefers the newer conversion when both are active', () => {
+    const olderRunning = conversion({
+      createdAt: '2024-01-01T00:00:00Z',
+      phase: CONVERSION_PHASE.RUNNING,
+    });
+    const newerPending = conversion({
+      createdAt: '2024-02-01T00:00:00Z',
+      phase: CONVERSION_PHASE.PENDING,
+    });
+
+    const { result } = renderHook(() => useVmInspectionStatus([olderRunning, newerPending]));
+    expect(result.current('vm-1')?.conversion).toBe(newerPending);
+    expect(result.current('vm-1')?.status).toBe(INSPECTION_STATUS.PENDING);
+  });
+
   it('prefers the newer conversion when both are inactive', () => {
     const older = conversion({
       createdAt: '2024-01-01T00:00:00Z',
       phase: CONVERSION_PHASE.FAILED,
     });
     const newer = conversion({
+      allChecksPassed: true,
       createdAt: '2024-03-01T00:00:00Z',
       phase: CONVERSION_PHASE.SUCCEEDED,
-      allChecksPassed: true,
     });
 
     const { result } = renderHook(() => useVmInspectionStatus([older, newer]));
@@ -105,8 +73,8 @@ describe('useVmInspectionStatus - selection', () => {
       phase: CONVERSION_PHASE.SUCCEEDED,
     });
     const withSnake = conversion({
-      snakeAllChecksPassed: false,
       phase: CONVERSION_PHASE.SUCCEEDED,
+      snakeAllChecksPassed: false,
       vmId: 'vm-2',
     });
 
@@ -116,10 +84,26 @@ describe('useVmInspectionStatus - selection', () => {
     expect(result.current('vm-2')?.status).toBe(INSPECTION_STATUS.ISSUES_FOUND);
   });
 
+  it('maps failed, canceled, pending, and succeeded without inspection result', () => {
+    const failed = conversion({ phase: CONVERSION_PHASE.FAILED, vmId: 'vm-f' });
+    const canceled = conversion({ phase: CONVERSION_PHASE.CANCELED, vmId: 'vm-c' });
+    const pending = conversion({ phase: CONVERSION_PHASE.PENDING, vmId: 'vm-p' });
+    const succeededNoResult = conversion({ phase: CONVERSION_PHASE.SUCCEEDED, vmId: 'vm-s' });
+
+    const { result } = renderHook(() =>
+      useVmInspectionStatus([failed, canceled, pending, succeededNoResult]),
+    );
+
+    expect(result.current('vm-f')?.status).toBe(INSPECTION_STATUS.FAILED);
+    expect(result.current('vm-c')?.status).toBe(INSPECTION_STATUS.CANCELED);
+    expect(result.current('vm-p')?.status).toBe(INSPECTION_STATUS.PENDING);
+    expect(result.current('vm-s')?.status).toBe(INSPECTION_STATUS.INSPECTION_PASSED);
+  });
+
   it('exposes conversion name and lastRun from metadata', () => {
     const item = conversion({
-      createdAt: '2024-05-05T12:00:00Z',
       allChecksPassed: true,
+      createdAt: '2024-05-05T12:00:00Z',
     });
     item.metadata.name = 'inspect-vm-1';
 
