@@ -17,9 +17,9 @@ describe('critical concerns - filtering', () => {
     expect(hasCriticalConcern(criticalVm)).toBe(true);
     expect(
       hasCriticalConcern({
-        ...criticalVm,
+        ...(criticalVm as object),
         providerType: PROVIDER_TYPES.openshift,
-      }),
+      } as never),
     ).toBe(false);
     expect(
       hasCriticalConcern({

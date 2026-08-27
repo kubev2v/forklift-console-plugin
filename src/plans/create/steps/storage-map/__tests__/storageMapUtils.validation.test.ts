@@ -3,7 +3,7 @@ import { describe, expect, it } from '@jest/globals';
 import { CreatePlanStorageMapFieldId } from '../constants';
 import { isSoleMappingOfUsedSource, validatePlanStorageMaps } from '../utils';
 
-const mapping = (id: string) =>
+const mapping = (id: string): never =>
   ({
     [CreatePlanStorageMapFieldId.SourceStorage]: { id, name: id },
     [CreatePlanStorageMapFieldId.TargetStorage]: { id: 't', name: 't' },
