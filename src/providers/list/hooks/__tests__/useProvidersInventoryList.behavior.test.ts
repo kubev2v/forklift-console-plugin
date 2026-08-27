@@ -22,8 +22,9 @@ jest.mock('../../utils/inventoryHasChanged', () => ({
 }));
 
 jest.mock('../../utils/updateInventory', () => ({
-  updateInventory: (inventory: unknown, setInventory: (v: unknown) => void) =>
-    setInventory(inventory),
+  updateInventory: (inventory: unknown, setInventory: (v: unknown) => void) => {
+    setInventory(inventory);
+  },
 }));
 
 const mockFetch = consoleFetchJSON as jest.MockedFunction<typeof consoleFetchJSON>;
@@ -52,7 +53,7 @@ describe('useProvidersInventoryList - behavior', () => {
 
   it('fetches cluster inventory when CAN_LIST_NS is true', async () => {
     mockFlag.mockReturnValue(true);
-    mockFetch.mockResolvedValue({ vsphere: [] } as never);
+    mockFetch.mockResolvedValue({ vsphere: [] });
 
     const { result } = renderHook(() => useProvidersInventoryList('ns', 1000));
     await flush();
@@ -65,7 +66,7 @@ describe('useProvidersInventoryList - behavior', () => {
 
   it('fetches namespace inventory when CAN_LIST_NS is false', async () => {
     mockFlag.mockReturnValue(false);
-    mockByNs.mockResolvedValue({ ovirt: [] } as never);
+    mockByNs.mockResolvedValue({ ovirt: [] });
 
     const { result } = renderHook(() => useProvidersInventoryList('team-a'));
     await flush();

@@ -34,7 +34,8 @@ describe('rowsDataToAffinity - behavior', () => {
     ]);
 
     const term =
-      affinity?.nodeAffinity?.requiredDuringSchedulingIgnoredDuringExecution?.nodeSelectorTerms?.[0];
+      affinity?.nodeAffinity?.requiredDuringSchedulingIgnoredDuringExecution
+        ?.nodeSelectorTerms?.[0];
     expect(term?.matchExpressions?.[0]).toMatchObject({
       key: 'key',
       operator: 'In',
