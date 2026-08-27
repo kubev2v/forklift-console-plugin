@@ -2,7 +2,6 @@ import type { ProviderVmData } from 'src/utils/types';
 
 import { act, renderHook } from '@testing-library/react';
 
-import { ROW_TYPE } from '../../utils/types';
 import { useTreeRows } from '../useTreeRows';
 import { NO_FOLDER } from '../utils/constants';
 
@@ -52,8 +51,13 @@ describe('useTreeRows - composition', () => {
     expect(result.current.folderToVmKeys.get('folder-a')).toEqual(['vm-1']);
     expect(result.current.folderToVmKeys.get(NO_FOLDER)).toEqual(['vm-root']);
     expect(result.current.groupVMCountByFolder.get('folder-a')).toBe(1);
-    expect(result.current.rows.some((row) => row.type === ROW_TYPE.Folder)).toBe(true);
-    expect(result.current.rows.some((row) => row.type === ROW_TYPE.Vm)).toBe(true);
+    expect(result.current.rows.map((row) => row.key)).toEqual([
+      'folder-folder-a',
+      'vm-vm-1',
+      'concerns-vm-1',
+      'vm-vm-root',
+      'concerns-vm-root',
+    ]);
   });
 
   it('delegates selection through setSelectedVmKeys', () => {

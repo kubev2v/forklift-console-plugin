@@ -85,13 +85,15 @@ describe('useAttributeFilters - chips', () => {
     expect(result.current.checks.power.size).toBe(0);
   });
 
-  it('clearText and clearChecks wipe individual attribute state', () => {
+  it('clearText and clearChecks wipe attribute values but keep hasAttrFilters sticky', () => {
     const { result } = renderHook(() => useAttributeFilters(attributes));
 
     act(() => {
       result.current.setTextValue('name', 'web');
       result.current.toggleCheck('power', 'on');
     });
+    expect(result.current.hasAttrFilters).toBe(true);
+
     act(() => {
       result.current.clearText('name');
       result.current.clearChecks('power');
@@ -99,5 +101,27 @@ describe('useAttributeFilters - chips', () => {
 
     expect(result.current.text.name).toBe('');
     expect(result.current.checks.power.size).toBe(0);
+    // empty string / empty Set keys remain, so isEmpty(text|checks) stays false
+    expect(result.current.hasAttrFilters).toBe(true);
+
+    act(() => {
+      result.current.clearAll();
+    });
+    expect(result.current.hasAttrFilters).toBe(false);
+  });
+
+  it('deleteChip and deleteChipGroup leave hasAttrFilters sticky until clearAll', () => {
+    const { result } = renderHook(() => useAttributeFilters(attributes));
+
+    act(() => {
+      result.current.setTextValue('name', 'web');
+      result.current.toggleCheck('power', 'on');
+    });
+    act(() => {
+      result.current.deleteChip('name', 'web');
+      result.current.deleteChipGroup('power');
+    });
+
+    expect(result.current.hasAttrFilters).toBe(true);
   });
 });

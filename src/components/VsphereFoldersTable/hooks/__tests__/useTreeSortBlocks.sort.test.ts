@@ -15,20 +15,40 @@ const unsortedRows = [
   folder('b'),
   vm('zeta', {
     parentFolderKey: `${FOLDER_PREFIX}b`,
-    vmData: { name: 'zeta', namespace: 'ns', vm: { id: 'zeta', name: 'zeta' } as never },
+    vmData: {
+      hostName: 'esxi-z',
+      name: 'zeta',
+      namespace: 'ns',
+      vm: { id: 'zeta', name: 'zeta' } as never,
+    },
   }),
   vm('alpha', {
     parentFolderKey: `${FOLDER_PREFIX}b`,
-    vmData: { name: 'alpha', namespace: 'ns', vm: { id: 'alpha', name: 'alpha' } as never },
+    vmData: {
+      hostName: 'esxi-a',
+      name: 'alpha',
+      namespace: 'ns',
+      vm: { id: 'alpha', name: 'alpha' } as never,
+    },
   }),
   folder('a'),
   vm('mid', {
     parentFolderKey: `${FOLDER_PREFIX}a`,
-    vmData: { name: 'mid', namespace: 'ns', vm: { id: 'mid', name: 'mid' } as never },
+    vmData: {
+      hostName: 'esxi-m',
+      name: 'mid',
+      namespace: 'ns',
+      vm: { id: 'mid', name: 'mid' } as never,
+    },
   }),
   vm('root-z', {
     parentFolderKey: NO_FOLDER,
-    vmData: { name: 'root-z', namespace: 'ns', vm: { id: 'root-z', name: 'root-z' } as never },
+    vmData: {
+      hostName: 'esxi-r',
+      name: 'root-z',
+      namespace: 'ns',
+      vm: { id: 'root-z', name: 'root-z' } as never,
+    },
   }),
 ];
 
@@ -81,9 +101,14 @@ describe('useTreeSortBlocks - sort', () => {
         .filter((block) => block.kind === BlockKind.Folder)
         .map((block) => (block.kind === BlockKind.Folder ? block.folder.folderName : '')),
     ).toEqual(['b', 'a']);
+
+    const folderB = result.current.sortedBlocks.find(
+      (block) => block.kind === BlockKind.Folder && block.folder.folderName === 'b',
+    );
+    expect(folderB?.items.map((item) => item.vm.vmData.name)).toEqual(['zeta', 'alpha']);
   });
 
-  it('resets direction to asc when sorting a different column', () => {
+  it('resets direction to asc when sorting Host column and sorts by hostName', () => {
     const { result } = renderHook(() =>
       useTreeSortBlocks({ columns, conversions: [], filteredRows: unsortedRows }),
     );
@@ -106,5 +131,9 @@ describe('useTreeSortBlocks - sort', () => {
     });
 
     expect(result.current.sortBy).toEqual({ direction: 'asc', index: 1 });
+    const folderB = result.current.sortedBlocks.find(
+      (block) => block.kind === BlockKind.Folder && block.folder.folderName === 'b',
+    );
+    expect(folderB?.items.map((item) => item.vm.vmData.hostName)).toEqual(['esxi-a', 'esxi-z']);
   });
 });
