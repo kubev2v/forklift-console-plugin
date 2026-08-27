@@ -24,6 +24,12 @@ const mapRef = {
   metadata: { name: 'nm', namespace: 'ns', uid: 'm1' },
 } as never;
 
+const storageMapRef = {
+  apiVersion: 'forklift.konveyor.io/v1beta1',
+  kind: 'StorageMap',
+  metadata: { name: 'sm', namespace: 'ns', uid: 's1' },
+} as never;
+
 describe('createPlan - create', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
@@ -42,11 +48,7 @@ describe('createPlan - create', () => {
       planProject: 'ns',
       preserveStaticIps: true,
       sourceProvider: provider,
-      storageMap: {
-        apiVersion: 'forklift.konveyor.io/v1beta1',
-        kind: 'StorageMap',
-        metadata: { name: 'sm', namespace: 'ns', uid: 's1' },
-      },
+      storageMap: storageMapRef,
       targetPowerState: 'on',
       targetProject: 'target-ns',
       targetProvider: provider,
@@ -58,8 +60,19 @@ describe('createPlan - create', () => {
         data: expect.objectContaining({
           metadata: { name: 'plan-1', namespace: 'ns' },
           spec: expect.objectContaining({
+            map: {
+              network: expect.objectContaining({ name: 'nm', namespace: 'ns' }),
+              storage: expect.objectContaining({ name: 'sm', namespace: 'ns' }),
+            },
+            migrateSharedDisks: true,
+            preserveStaticIPs: true,
+            provider: {
+              destination: expect.objectContaining({ name: 'src', namespace: 'ns' }),
+              source: expect.objectContaining({ name: 'src', namespace: 'ns' }),
+            },
             targetNamespace: 'target-ns',
             type: MigrationTypeValue.Cold,
+            vms: [expect.objectContaining({ id: 'vm-1', name: 'vm-1' })],
             warm: false,
           }),
         }),
@@ -79,7 +92,7 @@ describe('createPlan - create', () => {
       planProject: 'ns',
       preserveStaticIps: false,
       sourceProvider: provider,
-      storageMap: mapRef,
+      storageMap: storageMapRef,
       targetPowerState: 'off',
       targetProject: 'target-ns',
       targetProvider: provider,
@@ -87,9 +100,12 @@ describe('createPlan - create', () => {
     });
 
     const [firstCall] = mockK8sCreate.mock.calls;
-    const [createArg] = firstCall as [{ data: { spec: { description?: string; warm?: boolean } } }];
+    const [createArg] = firstCall as [
+      { data: { spec: { description?: string; type?: string; warm?: boolean } } },
+    ];
     const { spec } = createArg.data;
     expect(spec.warm).toBe(true);
+    expect(spec.type).toBe(MigrationTypeValue.Warm);
     expect(spec.description).toBe('desc');
   });
 });
