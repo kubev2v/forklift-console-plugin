@@ -15,8 +15,10 @@ describe('ConversionPhaseLabel', () => {
     [CONVERSION_PHASE.RUNNING, 'Running'],
     [CONVERSION_PHASE.PENDING, 'Pending'],
     [undefined, 'Pending'],
+    ['unknown-phase' as never, 'Pending'],
   ] as const)('renders %s as %s', (phase, label) => {
-    render(<ConversionPhaseLabel phase={phase} />);
+    const { unmount } = render(<ConversionPhaseLabel phase={phase} />);
     expect(screen.getByText(label)).toBeInTheDocument();
+    unmount();
   });
 });

@@ -56,4 +56,43 @@ describe('useMultiTypeaheadFiltering', () => {
 
     expect(result.current.displayOptions.map((option) => option.value)).toEqual(['b']);
   });
+
+  it('shows no-results placeholder when filtering yields no matches', () => {
+    const { result } = renderHook(() =>
+      useMultiTypeaheadFiltering({
+        inputValue: 'zzz',
+        isFiltering: true,
+        options,
+        values: [],
+      }),
+    );
+
+    expect(result.current.displayOptions).toEqual([
+      expect.objectContaining({
+        optionProps: { isDisabled: true },
+        value: PLACEHOLDER_VALUES.NO_RESULTS,
+      }),
+    ]);
+  });
+
+  it('surfaces a create option when creatable and filter has no exact match', () => {
+    const { result } = renderHook(() =>
+      useMultiTypeaheadFiltering({
+        inputValue: 'Delta',
+        isCreatable: true,
+        isFiltering: true,
+        options,
+        values: [],
+      }),
+    );
+
+    expect(result.current.displayOptions[0]).toEqual(
+      expect.objectContaining({
+        optionProps: expect.objectContaining({
+          testId: 'multi-typeahead-select-create-option',
+        }),
+        value: 'Delta',
+      }),
+    );
+  });
 });

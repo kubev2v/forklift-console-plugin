@@ -21,6 +21,20 @@ describe('MultiTypeaheadSelect utils - navigation', () => {
     expect(getPrevEnabledIndex(options, 0)).toBe(3);
   });
 
+  it('skips disabled options when startIndex is mid-list (ArrowUp/Down path)', () => {
+    const options = opts([false, true, false]);
+
+    expect(getNextEnabledIndex(options, 1)).toBe(2);
+    expect(getPrevEnabledIndex(options, 1)).toBe(0);
+  });
+
+  it('wraps past the end to the first enabled option', () => {
+    const options = opts([false, true, false]);
+
+    expect(getNextEnabledIndex(options, 3)).toBe(0);
+    expect(getPrevEnabledIndex(options, -1)).toBe(2);
+  });
+
   it('returns startIndex when every option is disabled', () => {
     const options = opts([true, true, true]);
 
