@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { OffloadPlugin, StorageVendorProduct } from '../types';
 import { getPluginLabel, getVendorProductLabel } from '../labelHelpers';
+import { OffloadPlugin, StorageVendorProduct } from '../types';
 
 describe('labelHelpers - labels', () => {
   it('returns mapped labels and falls back to raw values', () => {
