@@ -16,10 +16,10 @@ export const providerMissingUid: V1beta1Provider = {
   metadata: { name: 'vsphere-provider', namespace: 'openshift-mtv' },
 };
 
-export const providerMissingType: V1beta1Provider = {
+export const providerMissingType = {
   ...validProvider,
   spec: { secret: { name: 'vsphere-secret' }, url: 'https://vcenter.example.com' },
-};
+} as V1beta1Provider;
 
 export const inventorySample = {
   name: 'inventory-sample',
