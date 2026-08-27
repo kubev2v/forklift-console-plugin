@@ -34,9 +34,6 @@ describe('buildConversionCR - optional fields', () => {
     const longName = `vm-${'a'.repeat(80)}`;
     const cr = buildConversionCR(buildArgs({ vmName: longName }));
 
-    const segment = (cr.metadata.generateName ?? '')
-      .replace(/^deep-inspection-/, '')
-      .replace(/-$/, '');
-    expect(segment.length).toBeLessThanOrEqual(40);
+    expect(cr.metadata.generateName).toBe(`deep-inspection-vm-${'a'.repeat(37)}-`);
   });
 });

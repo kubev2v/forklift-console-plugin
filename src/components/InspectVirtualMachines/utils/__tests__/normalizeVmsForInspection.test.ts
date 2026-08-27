@@ -37,14 +37,29 @@ describe('normalizeVmsForInspection', () => {
   });
 
   it('marks inactive when conversion is missing or completed', () => {
-    const inactive = normalizeVmsForInspection([{ id: 'a', name: 'A' }], () => ({
+    const missing = normalizeVmsForInspection([{ id: 'missing', name: 'M' }], () => undefined);
+    expect(missing[0].isActive).toBe(false);
+    expect(missing[0].inspectionStatus).toBe(INSPECTION_STATUS.NOT_INSPECTED);
+
+    const completed = normalizeVmsForInspection([{ id: 'a', name: 'A' }], () => ({
       conversion: { status: { phase: 'Succeeded' } } as V1beta1Conversion,
       conversionName: undefined,
       inspectionPassed: true,
       lastRun: undefined,
       status: INSPECTION_STATUS.INSPECTION_PASSED,
     }));
+    expect(completed[0].isActive).toBe(false);
+  });
 
-    expect(inactive[0].isActive).toBe(false);
+  it('marks Pending conversions as active', () => {
+    const pending = normalizeVmsForInspection([{ id: 'p', name: 'P' }], () => ({
+      conversion: { status: { phase: 'Pending' } } as V1beta1Conversion,
+      conversionName: undefined,
+      inspectionPassed: undefined,
+      lastRun: undefined,
+      status: INSPECTION_STATUS.PENDING,
+    }));
+
+    expect(pending[0].isActive).toBe(true);
   });
 });

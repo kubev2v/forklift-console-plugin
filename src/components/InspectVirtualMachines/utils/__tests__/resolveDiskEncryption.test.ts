@@ -28,6 +28,15 @@ describe('resolveDiskEncryption', () => {
     expect(createInspectionSecret).not.toHaveBeenCalled();
   });
 
+  it('prefers Clevis over passphrases when both are set', async () => {
+    await expect(
+      resolveDiskEncryption({ nbdeClevis: true, passphrases: ['a'] }, 'vm', 'ns'),
+    ).resolves.toEqual({
+      type: DISK_ENCRYPTION_TYPE.CLEVIS,
+    });
+    expect(createInspectionSecret).not.toHaveBeenCalled();
+  });
+
   it('creates LUKS secret from non-empty passphrases', async () => {
     await expect(
       resolveDiskEncryption({ passphrases: ['a', '', 'b'] }, 'vm-1', 'ns'),
