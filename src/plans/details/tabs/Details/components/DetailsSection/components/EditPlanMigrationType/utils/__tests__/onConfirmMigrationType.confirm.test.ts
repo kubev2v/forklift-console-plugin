@@ -35,10 +35,9 @@ describe('EditPlanMigrationType utils - confirm', () => {
       resource: { metadata: { name: 'p' }, spec: { warm: true } } as never,
     });
 
-    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
-      op: 'replace',
-      path: '/spec/warm',
-      value: false,
-    });
+    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown }])[0].data).toEqual([
+      { op: 'replace', path: '/spec/warm', value: false },
+      { op: 'replace', path: '/spec/type', value: MigrationTypeValue.Cold },
+    ]);
   });
 });

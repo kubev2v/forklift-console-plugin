@@ -15,13 +15,27 @@ describe('VolumeNameTemplate utils - confirm', () => {
     mockK8sPatch.mockResolvedValue({});
   });
 
-  it('patches volumeNameTemplate', async () => {
+  it('ADDs volumeNameTemplate when unset', async () => {
+    await onConfirmVolumeNameTemplate({
+      newValue: 'vol',
+      resource: { metadata: { name: 'p' }, spec: {} } as never,
+    });
+    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
+      op: 'add',
+      path: '/spec/volumeNameTemplate',
+      value: 'vol',
+    });
+  });
+
+  it('REPLACEs volumeNameTemplate when set', async () => {
     await onConfirmVolumeNameTemplate({
       newValue: 'vol',
       resource: { metadata: { name: 'p' }, spec: { volumeNameTemplate: 'old' } } as never,
     });
-    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual(
-      expect.objectContaining({ op: 'replace', path: '/spec/volumeNameTemplate', value: 'vol' }),
-    );
+    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
+      op: 'replace',
+      path: '/spec/volumeNameTemplate',
+      value: 'vol',
+    });
   });
 });
