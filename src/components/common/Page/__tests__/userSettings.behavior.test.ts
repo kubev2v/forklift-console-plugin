@@ -76,27 +76,33 @@ describe('userSettings - behavior', () => {
 
   it('saves and clears fields/filters/pagination', () => {
     mockLoad.mockReturnValue(JSON.stringify({ fields: [], filters: { a: 1 }, perPage: 20 }));
-    const settings = loadUserSettings({ pageId: 'x' });
-    const { fields, filters, pagination } = settings;
+    const { fields, filters, pagination } = loadUserSettings({ pageId: 'x' });
 
     expect(fields).toBeDefined();
     expect(filters).toBeDefined();
     expect(pagination).toBeDefined();
     if (!fields || !filters || !pagination) {
-      return;
+      throw new Error('Expected fields, filters, and pagination to be defined');
     }
 
-    fields.save([{ isVisible: true, resourceFieldId: 'name' }]);
-    expect(mockSave).toHaveBeenCalled();
+    const nextFields = [{ isVisible: true, resourceFieldId: 'name' }];
+    fields.save(nextFields);
+    expect(mockSave).toHaveBeenCalledWith(
+      'forklift/x',
+      JSON.stringify({ fields: nextFields, filters: { a: 1 }, perPage: 20 }),
+    );
 
     fields.clear();
-    expect(mockSave).toHaveBeenCalledWith('forklift/x', expect.stringContaining('filters'));
+    expect(mockSave).toHaveBeenCalledWith(
+      'forklift/x',
+      JSON.stringify({ filters: { a: 1 }, perPage: 20 }),
+    );
 
     mockLoad.mockReturnValue(JSON.stringify({}));
     filters.clear();
     expect(mockRemove).toHaveBeenCalledWith('forklift/x');
 
     pagination.save(100);
-    expect(mockSave).toHaveBeenCalledWith('forklift/x', expect.stringContaining('100'));
+    expect(mockSave).toHaveBeenCalledWith('forklift/x', JSON.stringify({ perPage: 100 }));
   });
 });

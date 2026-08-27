@@ -34,12 +34,14 @@ describe('useK8sWatchProviderNames - behavior', () => {
   it('returns load error and wraps non-Error values', () => {
     const err = new Error('forbidden');
     mockWatch.mockReturnValue([[], true, err] as never);
-    expect(renderHook(() => useK8sWatchProviderNames({ namespace: 'ns' })).result.current[2]).toBe(
-      err,
-    );
+    const errorResult = renderHook(() => useK8sWatchProviderNames({ namespace: 'ns' })).result
+      .current;
+    expect(errorResult[0]).toBeUndefined();
+    expect(errorResult[2]).toBe(err);
 
     mockWatch.mockReturnValue([[], true, 'boom'] as never);
     const { result } = renderHook(() => useK8sWatchProviderNames({ namespace: 'ns' }));
+    expect(result.current[0]).toBeUndefined();
     expect(result.current[2]).toBeInstanceOf(Error);
     expect(result.current[2]?.message).toBe('boom');
   });

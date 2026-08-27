@@ -96,4 +96,54 @@ describe('rowsDataToAffinity - behavior', () => {
       },
     ]);
   });
+
+  it('merges required and preferred node and pod affinity', () => {
+    const affinity = rowsDataToAffinity([
+      {
+        condition: AffinityCondition.Required,
+        expressions: [baseExpr],
+        id: 'node-req',
+        type: AffinityType.Node,
+      },
+      {
+        condition: AffinityCondition.Preferred,
+        expressions: [{ ...baseExpr, key: 'pref' }],
+        id: 'node-pref',
+        type: AffinityType.Node,
+        weight: 30,
+      },
+      {
+        condition: AffinityCondition.Required,
+        expressions: [baseExpr],
+        id: 'pod-req',
+        topologyKey: 'kubernetes.io/hostname',
+        type: AffinityType.Pod,
+      },
+      {
+        condition: AffinityCondition.Preferred,
+        expressions: [{ ...baseExpr, key: 'pod-pref' }],
+        id: 'pod-pref',
+        topologyKey: 'topology.kubernetes.io/zone',
+        type: AffinityType.Pod,
+        weight: 20,
+      },
+    ]);
+
+    expect(affinity?.nodeAffinity).toEqual({
+      preferredDuringSchedulingIgnoredDuringExecution: [
+        expect.objectContaining({ weight: 30 }),
+      ],
+      requiredDuringSchedulingIgnoredDuringExecution: {
+        nodeSelectorTerms: [expect.objectContaining({ matchExpressions: expect.any(Array) })],
+      },
+    });
+    expect(affinity?.podAffinity).toEqual({
+      preferredDuringSchedulingIgnoredDuringExecution: [
+        expect.objectContaining({ weight: 20 }),
+      ],
+      requiredDuringSchedulingIgnoredDuringExecution: [
+        expect.objectContaining({ topologyKey: 'kubernetes.io/hostname' }),
+      ],
+    });
+  });
 });
