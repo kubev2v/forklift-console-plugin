@@ -74,14 +74,14 @@ describe('createProviderSecret - behavior', () => {
         model: SecretModel,
       }),
     );
-    const [[createArg]] = mockCreate.mock.calls;
+    const [createArg] = mockCreate.mock.calls[0] as [{ data: IoK8sApiCoreV1Secret }];
     expect(createArg?.data.data?.user).toBeUndefined();
   });
 
   it('drops cacert when insecureSkipVerify is true', async () => {
     const provider: V1beta1Provider = {
       metadata: { name: 'p' },
-      spec: { type: 'ovirt', url: 'https://x' },
+      spec: { secret: { name: 's' }, type: 'ovirt', url: 'https://x' },
     };
     const secret: IoK8sApiCoreV1Secret = {
       data: {
@@ -93,7 +93,7 @@ describe('createProviderSecret - behavior', () => {
     };
 
     await createProviderSecret(provider, secret);
-    const [[createArg]] = mockCreate.mock.calls;
+    const [createArg] = mockCreate.mock.calls[0] as [{ data: IoK8sApiCoreV1Secret }];
     expect(createArg?.data.data?.cacert).toBeUndefined();
     expect(createArg?.data.data?.insecureSkipVerify).toBe(encode('true'));
   });
