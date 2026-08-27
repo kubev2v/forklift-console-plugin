@@ -67,7 +67,9 @@ describe('useProviderInventory - error', () => {
   });
 
   it('captures fetch errors and clears inventory', async () => {
-    mockFetch.mockResolvedValueOnce(inventorySample).mockRejectedValueOnce(new Error('network down'));
+    mockFetch
+      .mockResolvedValueOnce(inventorySample)
+      .mockRejectedValueOnce(new Error('network down'));
 
     const { result } = renderHook(() => useProviderInventory({ provider: validProvider }));
 
