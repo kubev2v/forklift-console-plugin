@@ -58,7 +58,7 @@ describe('useMultiTypeaheadInteractions - selection', () => {
 
     return {
       onChange,
-      rerender: (next) => {
+      rerender: (next): void => {
         view.rerender({ ...initialProps, ...next, onChange, resetFilter, setIsOpen });
       },
       resetFilter,
