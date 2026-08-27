@@ -66,5 +66,3 @@ export const rootBlock = (vmNames: string[]): RootBlock => ({
   })),
   kind: BlockKind.Root,
 });
-
-export { concerns, folder, vm };
