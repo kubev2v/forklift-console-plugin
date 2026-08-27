@@ -32,9 +32,14 @@ describe('createNetworkMap - create flow', () => {
     });
 
     const data = mockCreate.mock.calls[0][0].data as {
-      spec: { map: unknown[] };
+      spec: { map: { destination: unknown; source: unknown }[] };
     };
-    expect(data.spec.map).toHaveLength(1);
+    expect(data.spec.map).toEqual([
+      {
+        destination: { name: 'my-nad', namespace: 'nad-ns', type: MULTUS },
+        source: expect.objectContaining({ id: 'net-1', name: 'VM Network' }),
+      },
+    ]);
     expect(mockCreate).toHaveBeenCalledWith(expect.objectContaining({ model: NetworkMapModel }));
   });
 

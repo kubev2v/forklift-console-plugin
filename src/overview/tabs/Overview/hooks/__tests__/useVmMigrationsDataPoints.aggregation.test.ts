@@ -110,4 +110,26 @@ describe('useVmMigrationsDataPoints - aggregation', () => {
     expect(result.current.loaded).toBe(true);
     expect(result.current.loadError).toBe(err);
   });
+
+  it('counts Failed by condition type even when status is False', () => {
+    mockWatch.mockReturnValue([
+      [
+        {
+          metadata: { name: 'mig-false', namespace: 'ns', creationTimestamp: recentIso },
+          spec: { plan: { name: 'plan-f', namespace: 'ns', uid: 'plan-f' } },
+          status: {
+            started: recentIso,
+            vms: [{ conditions: [{ status: 'False', type: 'Failed' }], phase: 'Completed' }],
+          },
+        },
+      ],
+      true,
+      null,
+    ] as never);
+
+    const { result } = renderHook(() => useVmMigrationsDataPoints(TimeRangeOptions.Last24H, true));
+
+    expect(result.current.totalFailedCount).toBe(1);
+    expect(result.current.total).toBe(1);
+  });
 });

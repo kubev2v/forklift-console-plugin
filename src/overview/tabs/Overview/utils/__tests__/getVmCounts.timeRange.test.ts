@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { getVmCounts } from '../getVmCounts';
 import { TimeRangeOptions } from '../timeRangeOptions';
 
-import { mixedMigrations, now } from './getVmCounts.fixtures';
+import { makeMigration, makeVm, mixedMigrations, now, recentStart } from './getVmCounts.fixtures';
 
 describe('getVmCounts - timeRange', () => {
   beforeEach(() => {
@@ -24,6 +24,35 @@ describe('getVmCounts - timeRange', () => {
       Succeeded: 1,
       Total: 4,
     });
+  });
+
+  it('filters per-VM when one migration straddles the window', () => {
+    const oldStart = now.minus({ days: 40 }).toISO() ?? '';
+    const migrations = [
+      makeMigration(
+        'mixed-age',
+        [
+          makeVm('Completed', [{ status: 'True', type: 'Succeeded' }], {
+            completed: recentStart,
+            started: recentStart,
+          }),
+          makeVm('Completed', [{ status: 'True', type: 'Succeeded' }], {
+            completed: oldStart,
+            started: oldStart,
+          }),
+        ],
+        recentStart,
+      ),
+    ];
+
+    expect(getVmCounts(migrations, TimeRangeOptions.Last24H)).toEqual({
+      Canceled: 0,
+      Failed: 0,
+      Running: 0,
+      Succeeded: 1,
+      Total: 1,
+    });
+    expect(getVmCounts(migrations, TimeRangeOptions.All).Total).toBe(2);
   });
 
   it('includes only VMs within Last31Days', () => {

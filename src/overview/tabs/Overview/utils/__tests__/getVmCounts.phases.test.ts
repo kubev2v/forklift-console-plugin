@@ -68,4 +68,22 @@ describe('getVmCounts - phases', () => {
       Total: 1,
     });
   });
+
+  it('counts CopyingDisks + Succeeded as Running, not Succeeded', () => {
+    const migrations = [
+      makeMigration(
+        'active-ok',
+        [makeVm('CopyingDisks', [{ status: 'True', type: 'Succeeded' }], { started: recentStart })],
+        recentStart,
+      ),
+    ];
+
+    expect(getVmCounts(migrations, TimeRangeOptions.All)).toEqual({
+      Canceled: 0,
+      Failed: 0,
+      Running: 1,
+      Succeeded: 0,
+      Total: 1,
+    });
+  });
 });
