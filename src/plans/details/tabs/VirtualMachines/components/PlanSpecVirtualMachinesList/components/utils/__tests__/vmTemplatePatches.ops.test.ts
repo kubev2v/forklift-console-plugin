@@ -37,17 +37,23 @@ const firstPatch = (callIndex: number): PatchArg => {
   return arg;
 };
 
+type TemplateFactory = (
+  vmIndex: number,
+) => (args: { newValue: string | undefined; resource: V1beta1Plan }) => Promise<unknown>;
+
+const cases: [string, TemplateFactory, string][] = [
+  ['network', onConfirmVirtualMachineNetworkNameTemplate, 'networkNameTemplate'],
+  ['volume', onConfirmVirtualMachineVolumeNameTemplate, 'volumeNameTemplate'],
+  ['pvc', onConfirmVirtualMachinePVCNameTemplate, 'pvcNameTemplate'],
+];
+
 describe('VM template / targetName patch helpers', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockK8sPatch.mockImplementation(() => Promise.resolve({}));
   });
 
-  it.each([
-    ['network', onConfirmVirtualMachineNetworkNameTemplate, 'networkNameTemplate'],
-    ['volume', onConfirmVirtualMachineVolumeNameTemplate, 'volumeNameTemplate'],
-    ['pvc', onConfirmVirtualMachinePVCNameTemplate, 'pvcNameTemplate'],
-  ] as const)(
+  it.each(cases)(
     'uses add for missing %s template and replace when present',
     async (_label, factory, field) => {
       await factory(0)({ newValue: 'tmpl-a', resource: plan });
