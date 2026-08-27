@@ -1,4 +1,5 @@
 import { decode } from 'js-base64';
+
 import { describe, expect, it } from '@jest/globals';
 
 import { ProviderFormFieldId } from '../../fields/constants';
@@ -14,7 +15,7 @@ describe('buildEc2ProviderResources - build', () => {
       [ProviderFormFieldId.ProviderProject]: 'ns',
       [ProviderFormFieldId.ProviderType]: 'ec2',
       [ProviderFormFieldId.ShowDefaultProjects]: false,
-    } as never);
+    });
 
     expect(provider.spec?.type).toBe('ec2');
     expect(provider.spec?.settings?.ec2Region).toBe('us-east-1');

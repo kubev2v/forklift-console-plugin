@@ -1,4 +1,5 @@
 import { decode } from 'js-base64';
+
 import { describe, expect, it } from '@jest/globals';
 
 import { CertificateValidationMode, ProviderFormFieldId } from '../../fields/constants';
@@ -15,7 +16,7 @@ describe('buildOvirtProviderResources - build', () => {
       [ProviderFormFieldId.ProviderProject]: 'ns',
       [ProviderFormFieldId.ProviderType]: 'ovirt',
       [ProviderFormFieldId.ShowDefaultProjects]: false,
-    } as never);
+    });
 
     expect(provider.spec?.type).toBe('ovirt');
     expect(decode(secret.data?.url ?? '')).toBe('https://engine');

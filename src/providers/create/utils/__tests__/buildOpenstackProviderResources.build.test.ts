@@ -1,6 +1,7 @@
 import { decode } from 'js-base64';
-import { describe, expect, it } from '@jest/globals';
 import { OpenstackAuthType } from 'src/providers/utils/constants';
+
+import { describe, expect, it } from '@jest/globals';
 
 import { CertificateValidationMode, ProviderFormFieldId } from '../../fields/constants';
 import {
@@ -31,7 +32,7 @@ describe('buildOpenstackProviderResources - build', () => {
       [ProviderFormFieldId.ProviderProject]: 'ns',
       [ProviderFormFieldId.ProviderType]: 'openstack',
       [ProviderFormFieldId.ShowDefaultProjects]: false,
-    } as never);
+    });
 
     expect(decode(secret.data?.authType ?? '')).toBe('password');
     expect(secret.data?.username).toBeDefined();

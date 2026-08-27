@@ -1,6 +1,7 @@
 import { decode } from 'js-base64';
-import { describe, expect, it } from '@jest/globals';
 import { VSphereEndpointType } from 'src/providers/utils/constants';
+
+import { describe, expect, it } from '@jest/globals';
 
 import { VddkSetupMode } from '../../../utils/constants';
 import { CertificateValidationMode, ProviderFormFieldId } from '../../fields/constants';
@@ -21,7 +22,7 @@ describe('buildVsphereProviderResources - build', () => {
       [ProviderFormFieldId.VsphereUseVddkAioOptimization]: true,
       [ProviderFormFieldId.VsphereVddkInitImage]: 'quay.io/vddk:latest',
       [ProviderFormFieldId.VsphereVddkSetupMode]: VddkSetupMode.Manual,
-    } as never);
+    });
 
     expect(provider.spec?.settings).toEqual(
       expect.objectContaining({
@@ -42,7 +43,7 @@ describe('buildVsphereProviderResources - build', () => {
       [ProviderFormFieldId.VsphereUrl]: 'https://vc',
       [ProviderFormFieldId.VsphereVddkInitImage]: 'ignored',
       [ProviderFormFieldId.VsphereVddkSetupMode]: VddkSetupMode.Skip,
-    } as never);
+    });
 
     expect(provider.spec?.settings?.vddkInitImage).toBeUndefined();
   });

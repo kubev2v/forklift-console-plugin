@@ -11,7 +11,7 @@ describe('buildProviderResources - dispatch', () => {
       [ProviderFormFieldId.ProviderProject]: 'ns',
       [ProviderFormFieldId.ProviderType]: 'ova',
       [ProviderFormFieldId.ShowDefaultProjects]: false,
-    } as never);
+    });
 
     expect(provider.spec?.type).toBe('ova');
   });

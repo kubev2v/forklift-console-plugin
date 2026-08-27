@@ -1,5 +1,6 @@
-import { describe, expect, it } from '@jest/globals';
 import { TRUE_VALUE } from 'src/providers/utils/constants';
+
+import { describe, expect, it } from '@jest/globals';
 
 import { ProviderFormFieldId } from '../../fields/constants';
 import { buildOvaProviderResources } from '../buildOvaProviderResources';
@@ -12,7 +13,7 @@ describe('buildOvaProviderResources - build', () => {
       [ProviderFormFieldId.ProviderProject]: 'ns',
       [ProviderFormFieldId.ProviderType]: 'ova',
       [ProviderFormFieldId.ShowDefaultProjects]: false,
-    } as never);
+    });
 
     expect(provider.spec?.type).toBe('ova');
     expect(provider.spec?.url).toBe('host:/ova');
@@ -27,7 +28,7 @@ describe('buildOvaProviderResources - build', () => {
       [ProviderFormFieldId.ProviderProject]: 'ns',
       [ProviderFormFieldId.ProviderType]: 'ova',
       [ProviderFormFieldId.ShowDefaultProjects]: false,
-    } as never);
+    });
 
     expect(provider.spec?.settings?.applianceManagement).toBe(TRUE_VALUE);
   });
