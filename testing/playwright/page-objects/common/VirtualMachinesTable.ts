@@ -10,6 +10,29 @@ const DRAG_HOLD_MS = 100;
 const DRAG_MOVE_STEPS = 10;
 const MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS = 20;
 
+const reorderColumnWithMoveButtons = async (
+  columnList: Locator,
+  sourceId: string,
+  sourceItem: Locator,
+  targetItem: Locator,
+): Promise<void> => {
+  const moveUpButton = columnList.getByTestId(`manage-columns-move-up-${sourceId}`);
+
+  for (let attempt = 0; attempt < MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS; attempt += 1) {
+    const sourceBox = await sourceItem.boundingBox();
+    const targetBox = await targetItem.boundingBox();
+    if (sourceBox && targetBox && sourceBox.y < targetBox.y) {
+      return;
+    }
+    await expect(moveUpButton).toBeEnabled();
+    await moveUpButton.click();
+  }
+
+  throw new Error(
+    `Failed to move column "${sourceId}" above the target after ${MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS} move-up clicks`,
+  );
+};
+
 /**
  * Shared component for VM tables that appear in:
  * - Provider Details Page > Virtual Machines tab
@@ -61,29 +84,6 @@ export class VirtualMachinesTable {
 
     await this.page.mouse.up();
     await this.page.waitForTimeout(DRAG_DROP_SETTLE_MS);
-  }
-
-  private async reorderColumnWithMoveButtons(
-    columnList: Locator,
-    sourceId: string,
-    sourceItem: Locator,
-    targetItem: Locator,
-  ): Promise<void> {
-    const moveUpButton = columnList.getByTestId(`manage-columns-move-up-${sourceId}`);
-
-    for (let attempt = 0; attempt < MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS; attempt += 1) {
-      const sourceBox = await sourceItem.boundingBox();
-      const targetBox = await targetItem.boundingBox();
-      if (sourceBox && targetBox && sourceBox.y < targetBox.y) {
-        return;
-      }
-      await expect(moveUpButton).toBeEnabled();
-      await moveUpButton.click();
-    }
-
-    throw new Error(
-      `Failed to move column "${sourceId}" above the target after ${MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS} move-up clicks`,
-    );
   }
 
   /**
@@ -308,7 +308,7 @@ export class VirtualMachinesTable {
     await expect(targetItem).toBeVisible();
 
     if (isVersionAtLeast(V5_0_0)) {
-      await this.reorderColumnWithMoveButtons(columnList, sourceId, sourceItem, targetItem);
+      await reorderColumnWithMoveButtons(columnList, sourceId, sourceItem, targetItem);
     } else {
       await this.reorderColumnWithDrag(sourceColumn, targetColumn, sourceItem, targetItem);
     }
