@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sCreate = jest.fn() as unknown as jest.Mock;
+const mockK8sCreate = jest.fn();
 const mockBuild = jest.fn((..._args: unknown[]) => [
   { source: { id: '1' }, destination: { storageClass: 'sc' } },
 ]);
