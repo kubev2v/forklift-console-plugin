@@ -293,6 +293,18 @@ export class DetailsTab {
     await expect(this.page.locator('[data-test-id="horizontal-link-Details"]')).toBeVisible();
   }
 
+  async verifyNbdeHidesLuksRadios(): Promise<void> {
+    const existingSecretRadio = this.page.getByTestId('edit-use-existing-secret-radio');
+    const passphrasesRadio = this.page.getByTestId('edit-use-passphrases-radio');
+
+    await this.useNbdeClevisCheckbox.check();
+    await expect(existingSecretRadio).toBeHidden();
+    await expect(passphrasesRadio).toBeHidden();
+    await this.useNbdeClevisCheckbox.uncheck();
+    await expect(existingSecretRadio).toBeVisible();
+    await expect(passphrasesRadio).toBeVisible();
+  }
+
   async verifyPlanDetails(planData: PlanTestData): Promise<void> {
     await expect(this.page.getByTestId('name-detail-item')).toContainText(planData.planName ?? '');
     await expect(this.page.getByTestId('project-detail-item')).toContainText(

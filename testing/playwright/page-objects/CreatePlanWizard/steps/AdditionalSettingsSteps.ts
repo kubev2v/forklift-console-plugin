@@ -118,6 +118,15 @@ export class AdditionalSettingsStep {
     await expect(this.page.locator('[data-testid^="instance-type-select-"]')).toHaveCount(expected);
   }
 
+  async verifyNbdeHidesLuksRadios(): Promise<void> {
+    await this.useNbdeClevisCheckbox.check();
+    await expect(this.existingSecretRadio).toBeHidden();
+    await expect(this.newPassphrasesRadio).toBeHidden();
+    await this.useNbdeClevisCheckbox.uncheck();
+    await expect(this.existingSecretRadio).toBeVisible();
+    await expect(this.newPassphrasesRadio).toBeVisible();
+  }
+
   async verifyStepVisible(): Promise<void> {
     await expect(this.page.getByRole('heading', { name: 'Other settings' })).toBeVisible();
   }

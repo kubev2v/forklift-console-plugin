@@ -50,10 +50,14 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
 
     const { additionalSettings } = wizard;
 
-    await test.step('Verify radio toggle is visible and select existing secret', async () => {
+    await test.step('Verify radio toggle is visible and NBDE hides it', async () => {
       await additionalSettings.verifyStepVisible();
       await expect(additionalSettings.existingSecretRadio).toBeVisible();
       await expect(additionalSettings.newPassphrasesRadio).toBeVisible();
+      await additionalSettings.verifyNbdeHidesLuksRadios();
+    });
+
+    await test.step('Select existing secret', async () => {
       await additionalSettings.selectExistingLUKSSecret(LUKS_TEST_SECRET_NAME);
     });
 
@@ -93,6 +97,14 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
       await expect(detailsTab.saveDiskDecryptionButton).toBeEnabled();
     });
 
+    await test.step('Verify NBDE/Clevis hides LUKS radios in the edit modal', async () => {
+      const { detailsTab } = new PlanDetailsPage(page);
+      await detailsTab.verifyNbdeHidesLuksRadios();
+      await expect(page.getByTestId('edit-luks-secret-select').getByRole('combobox')).toHaveValue(
+        LUKS_TEST_SECRET_NAME,
+      );
+    });
+
     await test.step('Toggle between modes and verify state preservation', async () => {
       await page.getByTestId('edit-use-existing-secret-radio').click();
       await expect(page.getByTestId('edit-luks-secret-select')).toBeVisible();
@@ -114,6 +126,48 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
       await expect(detailsTab.editDiskDecryptionModal).toBeVisible();
       await expect(page.getByTestId('edit-use-passphrases-radio')).toBeChecked();
       await expect(page.getByTestId('edit-luks-secret-select')).not.toBeVisible();
+    });
+  });
+
+  test('should show empty passphrases in edit modal when plan has no LUKS secret', async ({
+    page,
+    resourceManager,
+    testProvider,
+  }) => {
+    test.setTimeout(LUKS_TEST_TIMEOUT_MS);
+    const testData: PlanTestData = createPlanTestData({
+      sourceProvider: testProvider?.metadata?.name ?? '',
+    });
+    resourceManager.addPlan(testData.planName, testData.planProject);
+
+    await test.step('Create a plan with no disk decryption configured', async () => {
+      const wizard = new CreatePlanWizardPage(page, resourceManager);
+      await wizard.navigate();
+      await wizard.waitForWizardLoad();
+      await wizard.fillAndSubmit(testData);
+    });
+
+    const { detailsTab } = new PlanDetailsPage(page);
+
+    await test.step('Open edit modal from a plan with no decryption defined', async () => {
+      await detailsTab.navigateToDetailsTab();
+      await expect(detailsTab.diskDecryptionDetailItem()).toContainText('No decryption defined');
+      await detailsTab.clickEditDiskDecryption();
+      await expect(detailsTab.editDiskDecryptionModal).toBeVisible();
+      await expect(page.getByTestId('edit-luks-secret-loading')).toHaveCount(0);
+    });
+
+    await test.step('Verify passphrases default with a single empty field and no leaked values', async () => {
+      await expect(page.getByTestId('edit-use-passphrases-radio')).toBeChecked();
+      await expect(page.getByTestId('edit-use-existing-secret-radio')).toBeVisible();
+      await expect(page.getByTestId('edit-luks-secret-select')).toHaveCount(0);
+
+      const passphraseInputs = detailsTab.editDiskDecryptionModal.getByRole('textbox');
+      await expect(passphraseInputs).toHaveCount(1);
+      await expect(passphraseInputs).toHaveValue('');
+      await expect(
+        detailsTab.editDiskDecryptionModal.getByRole('button', { name: 'Remove' }),
+      ).toBeDisabled();
     });
   });
 });
