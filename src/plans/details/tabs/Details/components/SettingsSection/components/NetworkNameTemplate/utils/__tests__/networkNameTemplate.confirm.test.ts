@@ -20,16 +20,20 @@ describe('NetworkNameTemplate utils - confirm', () => {
       newValue: 'tpl',
       resource: { metadata: { name: 'p' }, spec: {} } as never,
     });
-    expect(
-      (mockK8sPatch.mock.calls[0] as unknown as [{ data: { op: string }[] }])[0].data[0].op,
-    ).toBe('add');
+    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
+      op: 'add',
+      path: '/spec/networkNameTemplate',
+      value: 'tpl',
+    });
 
     await onConfirmPlanNetworkNameTemplate({
       newValue: undefined,
       resource: { metadata: { name: 'p' }, spec: { networkNameTemplate: 'old' } } as never,
     });
-    expect(
-      (mockK8sPatch.mock.calls[1] as unknown as [{ data: { op: string }[] }])[0].data[0].op,
-    ).toBe('replace');
+    expect((mockK8sPatch.mock.calls[1] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
+      op: 'replace',
+      path: '/spec/networkNameTemplate',
+      value: undefined,
+    });
   });
 });

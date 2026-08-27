@@ -11,5 +11,8 @@ describe('getUniqueMapByCategory - category', () => {
     expect(getUniqueMapByCategory(maps, ConcernCategory.Warning)).toBe(maps.warning);
     expect(getUniqueMapByCategory(maps, ConcernCategory.Information)).toBe(maps.information);
     expect(getUniqueMapByCategory(maps, 'unknown')).toBe(maps.information);
+    expect(getUniqueMapByCategory(maps, 'Warn')).toBe(maps.warning);
+    expect(getUniqueMapByCategory(maps, 'Error')).toBe(maps.information);
+    expect(getUniqueMapByCategory(maps, 'Advisory')).toBe(maps.information);
   });
 });

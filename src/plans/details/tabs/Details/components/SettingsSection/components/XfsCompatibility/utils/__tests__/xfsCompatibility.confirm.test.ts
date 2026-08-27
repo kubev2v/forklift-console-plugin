@@ -15,7 +15,7 @@ describe('XfsCompatibility utils - confirm', () => {
     mockK8sPatch.mockResolvedValue({});
   });
 
-  it('reads and patches xfsCompatibility', async () => {
+  it('reads and ADDs xfsCompatibility when unset', async () => {
     expect(getPlanXfsCompatibility({ spec: { xfsCompatibility: true } } as never)).toBe(true);
     await onConfirmXfsCompatibility({
       newValue: false,
@@ -25,6 +25,18 @@ describe('XfsCompatibility utils - confirm', () => {
       op: 'add',
       path: '/spec/xfsCompatibility',
       value: false,
+    });
+  });
+
+  it('REPLACEs xfsCompatibility when already set', async () => {
+    await onConfirmXfsCompatibility({
+      newValue: true,
+      resource: { metadata: { name: 'p' }, spec: { xfsCompatibility: false } } as never,
+    });
+    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
+      op: 'replace',
+      path: '/spec/xfsCompatibility',
+      value: true,
     });
   });
 });

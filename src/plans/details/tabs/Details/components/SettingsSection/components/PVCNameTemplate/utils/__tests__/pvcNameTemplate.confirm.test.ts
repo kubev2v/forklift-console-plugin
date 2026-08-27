@@ -15,12 +15,27 @@ describe('PVCNameTemplate utils - confirm', () => {
     mockK8sPatch.mockResolvedValue({});
   });
 
-  it('patches pvcNameTemplate', async () => {
+  it('ADDs pvcNameTemplate when unset', async () => {
     await onConfirmPVCNameTemplate({
       newValue: 'pvc-{{.vmName}}',
       resource: { metadata: { name: 'p' }, spec: {} } as never,
     });
-    const [patchArg] = mockK8sPatch.mock.calls[0] as unknown as [{ data: { path: string }[] }];
-    expect(patchArg.data[0].path).toBe('/spec/pvcNameTemplate');
+    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
+      op: 'add',
+      path: '/spec/pvcNameTemplate',
+      value: 'pvc-{{.vmName}}',
+    });
+  });
+
+  it('REPLACEs pvcNameTemplate when set', async () => {
+    await onConfirmPVCNameTemplate({
+      newValue: 'new-tpl',
+      resource: { metadata: { name: 'p' }, spec: { pvcNameTemplate: 'old' } } as never,
+    });
+    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
+      op: 'replace',
+      path: '/spec/pvcNameTemplate',
+      value: 'new-tpl',
+    });
   });
 });
