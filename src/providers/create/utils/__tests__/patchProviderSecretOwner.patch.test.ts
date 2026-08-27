@@ -10,6 +10,15 @@ import { SecretModel } from '@forklift-ui/types';
 
 import { patchProviderSecretOwner } from '../patchProviderSecretOwner';
 
+const ownerValue = [
+  {
+    apiVersion: 'forklift.konveyor.io/v1beta1',
+    kind: 'Provider',
+    name: 'p',
+    uid: 'uid',
+  },
+];
+
 describe('patchProviderSecretOwner - patch', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
@@ -29,30 +38,22 @@ describe('patchProviderSecretOwner - patch', () => {
     await patchProviderSecretOwner(provider, secret);
     expect(mockK8sPatch).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: [
-          {
-            op: 'add',
-            path: '/metadata/ownerReferences',
-            value: [
-              {
-                apiVersion: 'forklift.konveyor.io/v1beta1',
-                kind: 'Provider',
-                name: 'p',
-                uid: 'uid',
-              },
-            ],
-          },
-        ],
+        data: [{ op: 'add', path: '/metadata/ownerReferences', value: ownerValue }],
         model: SecretModel,
         resource: secret,
       }),
     );
 
-    await patchProviderSecretOwner(provider, {
+    const replaceSecret = {
       metadata: { name: 's', ownerReferences: [{ name: 'old' }] },
-    } as never);
-    expect(
-      (mockK8sPatch.mock.calls[1] as unknown as [{ data: { op: string }[] }])[0].data[0].op,
-    ).toBe('replace');
+    } as never;
+    await patchProviderSecretOwner(provider, replaceSecret);
+    expect(mockK8sPatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: [{ op: 'replace', path: '/metadata/ownerReferences', value: ownerValue }],
+        model: SecretModel,
+        resource: replaceSecret,
+      }),
+    );
   });
 });

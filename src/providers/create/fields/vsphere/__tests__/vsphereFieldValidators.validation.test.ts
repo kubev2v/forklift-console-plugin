@@ -19,6 +19,8 @@ describe('vsphereFieldValidators - validation', () => {
 
   it('delegates vddk image validation', () => {
     expect(validateVddkInitImage(undefined)).toBe(true);
-    expect(typeof validateVddkInitImage('not a valid image!!!')).not.toBe('boolean');
+    expect(validateVddkInitImage('')).toMatch(/VDDK image is empty/i);
+    expect(validateVddkInitImage('not a valid image!!!')).toMatch(/VDDK image is invalid/i);
+    expect(validateVddkInitImage('quay.io/konveyor/vddk-test:latest')).toBe(true);
   });
 });
