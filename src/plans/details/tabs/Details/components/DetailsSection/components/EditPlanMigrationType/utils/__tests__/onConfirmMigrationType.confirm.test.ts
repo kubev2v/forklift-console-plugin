@@ -2,10 +2,10 @@ import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/consta
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sPatch = jest.fn();
+const mockK8sPatch = jest.fn() as jest.Mock;
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sPatch: (...args: unknown[]) => mockK8sPatch(...args),
+  k8sPatch: (...args: unknown[]): unknown => mockK8sPatch(...args),
 }));
 
 import { onConfirmMigrationType } from '../utils';
