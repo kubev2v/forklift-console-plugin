@@ -41,12 +41,7 @@ describe('userSettings - behavior', () => {
   it('sanitizes fields and keeps valid perPage/filters', () => {
     mockLoad.mockReturnValue(
       JSON.stringify({
-        fields: [
-          { isVisible: true, resourceFieldId: 'name' },
-          { isVisible: false },
-          null,
-          'bad',
-        ],
+        fields: [{ isVisible: true, resourceFieldId: 'name' }, { isVisible: false }, null, 'bad'],
         filters: { name: ['a'] },
         perPage: 50,
       }),
