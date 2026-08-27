@@ -1,7 +1,7 @@
 name: Validate Jira Ticket
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened, edited]
   issue_comment:
     types: [created]
@@ -27,7 +27,7 @@ jobs:
       issues: write
       pull-requests: write
     if: |
-      github.event_name == 'pull_request_target' ||
+      github.event_name == 'pull_request' ||
       github.event_name == 'workflow_dispatch' ||
       (
         github.event_name == 'issue_comment' &&
@@ -40,7 +40,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: ${{ github.event.pull_request.base.ref || github.ref }}
           persist-credentials: false
 
       - name: Ensure jq is available
@@ -64,7 +63,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [[ "$EVENT_NAME" == "pull_request_target" ]]; then
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
             pr_number="$PR_NUMBER"
             pr_title="$PR_TITLE"
             pr_body="$PR_BODY"
@@ -108,7 +107,6 @@ jobs:
 
       - name: Validate Jira ticket
         id: validate
-        continue-on-error: true
         env:
           COMMITS_JSON: ${{ steps.fetch_commits.outputs.commits_json }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
@@ -117,12 +115,6 @@ jobs:
           PR_TITLE: ${{ steps.pr_context.outputs.pr_title }}
         run: |
           set -euo pipefail
-
-          if [[ ! -f ./scripts/validate-jira-ticket.sh ]]; then
-            echo "::warning::validate-jira-ticket.sh not found on base branch; merge the workflow to main first"
-            echo "status=skipped" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
 
           chmod +x ./scripts/validate-jira-ticket.sh
           ./scripts/validate-jira-ticket.sh \
@@ -133,7 +125,9 @@ jobs:
             --verbose
 
       - name: Post validation comment
+        id: post_validation_comment
         if: steps.validate.outputs.status == 'passed' || steps.validate.outputs.status == 'failed'
+        continue-on-error: true
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         env:
           FIX_VERSIONS: ${{ steps.validate.outputs.fix_versions }}
@@ -225,6 +219,13 @@ jobs:
               issue_number,
               body,
             });
+
+      - name: Warn when PR comment could not be posted
+        if: |
+          (steps.validate.outputs.status == 'passed' || steps.validate.outputs.status == 'failed') &&
+          steps.post_validation_comment.outcome == 'failure'
+        run: |
+          echo "::warning::Could not post the Jira validation comment (common for fork PRs with read-only tokens). See the job summary for results."
 
       - name: Fail when validation failed
         if: steps.validate.outputs.status == 'failed'

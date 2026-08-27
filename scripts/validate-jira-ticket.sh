@@ -4,11 +4,6 @@
 
 set -euo pipefail
 
-if [[ -z "${JIRA_EMAIL:-}" || -z "${JIRA_API_TOKEN:-}" ]] && [[ -f "${HOME}/.jira-creds" ]]; then
-  # shellcheck source=/dev/null
-  source "${HOME}/.jira-creds"
-fi
-
 readonly JIRA_BASE="${JIRA_BASE:-https://redhat.atlassian.net}"
 readonly MTV_PATTERN='MTV-[0-9]+'
 readonly JIRA_FIELDS='fixVersions,customfield_10020,customfield_10028'
@@ -60,7 +55,7 @@ Environment:
   JIRA_API_TOKEN         Jira API token (required for validation)
 
 Examples:
-  ./scripts/validate-jira-ticket.sh --ticket MTV-6264
+  source ~/.jira-creds && ./scripts/validate-jira-ticket.sh --ticket MTV-6264
   ./scripts/validate-jira-ticket.sh --pr-title "MTV-6264 | Example" --pr-body ""
 EOF
 }
