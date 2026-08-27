@@ -1,5 +1,6 @@
-import { describe, expect, it } from '@jest/globals';
 import { ConcernCategory } from 'src/providers/details/tabs/VirtualMachines/constants';
+
+import { describe, expect, it } from '@jest/globals';
 
 import { createInitialUniqueMaps, getUniqueMapByCategory } from '../getUniqueMapByCategory';
 

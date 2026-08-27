@@ -1,5 +1,6 @@
-import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
+
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 const mockK8sPatch = jest.fn();
 
