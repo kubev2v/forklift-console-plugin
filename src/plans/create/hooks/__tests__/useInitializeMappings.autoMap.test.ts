@@ -5,7 +5,7 @@ import { NetworkMapFieldId } from '@utils/mappings/networkMap';
 
 import { useInitializeMappings } from '../useInitializeMappings';
 
-jest.mock('react-hook-form', () => ({
+jest.mock('react-hook-form', (): unknown => ({
   useFormContext: jest.fn(),
 }));
 

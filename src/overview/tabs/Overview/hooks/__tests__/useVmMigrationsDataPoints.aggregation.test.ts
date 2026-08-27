@@ -1,19 +1,19 @@
 import { DateTime } from 'luxon';
 
 import type { V1beta1Migration } from '@forklift-ui/types';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { TimeRangeOptions } from '../../utils/timeRangeOptions';
 import { useVmMigrationsDataPoints } from '../useVmMigrationsDataPoints';
 
-jest.mock('@utils/hooks/useK8sWatchResource', () => ({
+jest.mock('@utils/hooks/useK8sWatchResource', (): unknown => ({
   useK8sWatchResource: jest.fn(),
 }));
 
 const mockWatch = useK8sWatchResource as jest.MockedFunction<typeof useK8sWatchResource>;
 const bucketNow = DateTime.utc(2026, 8, 26, 12, 0, 0);
-const recentIso = bucketNow.minus({ hours: 1 }).toISO()!;
+const recentIso = bucketNow.minus({ hours: 1 }).toISO() ?? '';
 
 const statusMigrations: V1beta1Migration[] = [
   {
@@ -33,7 +33,7 @@ const statusMigrations: V1beta1Migration[] = [
     metadata: { name: 'mig-dup', namespace: 'ns', creationTimestamp: recentIso },
     spec: { plan: { name: 'plan-a', namespace: 'ns', uid: 'plan-a' } },
     status: {
-      started: bucketNow.minus({ minutes: 30 }).toISO()!,
+      started: bucketNow.minus({ minutes: 30 }).toISO() ?? '',
       vms: [{ conditions: [{ type: 'Succeeded' }], phase: 'Completed' }],
     },
   } as unknown as V1beta1Migration,

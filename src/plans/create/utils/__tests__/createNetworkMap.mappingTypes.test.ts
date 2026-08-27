@@ -14,7 +14,7 @@ import {
   vlanMapping,
 } from './createNetworkMap.fixtures';
 
-jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
+jest.mock('@openshift-console/dynamic-plugin-sdk', (): unknown => ({
   k8sCreate: jest.fn(),
 }));
 

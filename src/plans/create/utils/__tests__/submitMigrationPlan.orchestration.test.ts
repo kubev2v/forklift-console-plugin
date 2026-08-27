@@ -16,13 +16,13 @@ const mockBuildRequests = jest.fn();
 const mockCreatePlan = jest.fn();
 const mockAddOwnerRefs = jest.fn();
 
-jest.mock('../buildMigrationPlanResourceRequests', () => ({
+jest.mock('../buildMigrationPlanResourceRequests', (): unknown => ({
   buildMigrationPlanResourceRequests: (...args: unknown[]) => mockBuildRequests(...args),
 }));
-jest.mock('../createPlan', () => ({
+jest.mock('../createPlan', (): unknown => ({
   createPlan: (...args: unknown[]) => mockCreatePlan(...args),
 }));
-jest.mock('../addPlanResourceOwnerRefs', () => ({
+jest.mock('../addPlanResourceOwnerRefs', (): unknown => ({
   addPlanResourceOwnerRefs: (...args: unknown[]) => mockAddOwnerRefs(...args),
 }));
 
