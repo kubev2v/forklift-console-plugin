@@ -67,6 +67,7 @@ describe('useIDEntities', () => {
       { id: 1, name: 'a' },
       { id: 2, name: 'updated' },
     ]);
+    expect(result.current.initialEntitiesChanged).toBe(true);
   });
 
   it('deletes an entity by id', () => {
@@ -82,6 +83,7 @@ describe('useIDEntities', () => {
     });
 
     expect(result.current.entities).toEqual([{ id: 2, name: 'b' }]);
+    expect(result.current.initialEntitiesChanged).toBe(true);
   });
 
   it('supports setEntities for bulk replacement', () => {
@@ -92,5 +94,6 @@ describe('useIDEntities', () => {
     });
 
     expect(result.current.entities).toEqual([{ id: 9, name: 'z' }]);
+    expect(result.current.initialEntitiesChanged).toBe(false);
   });
 });

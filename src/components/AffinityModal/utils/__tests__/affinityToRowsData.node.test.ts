@@ -39,6 +39,7 @@ describe('affinityToRowsData - node', () => {
     });
     expect(rows[0].expressions).toEqual([
       { id: 0, key: 'tier', operator: 'NotIn', values: ['dev'] },
+      { id: 1, key: 'ssd', operator: 'Exists', values: [] },
     ]);
     expect(rows[0].fields).toBeUndefined();
   });

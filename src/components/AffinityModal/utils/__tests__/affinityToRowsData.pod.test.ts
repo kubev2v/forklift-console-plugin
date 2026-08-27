@@ -23,17 +23,25 @@ describe('affinityToRowsData - pod', () => {
       type: AffinityType.Pod,
       weight: 10,
     });
+    expect(rows[1].expressions).toEqual([{ id: 0, key: 'app', operator: 'Exists', values: [] }]);
   });
 
   it('maps pod anti-affinity with anti ids', () => {
     const rows = affinityToRowsData(podAntiAffinity);
 
-    expect(rows).toHaveLength(1);
+    expect(rows).toHaveLength(2);
     expect(rows[0]).toMatchObject({
       condition: AffinityCondition.Required,
       id: 'pod-anti-required-0',
       topologyKey: 'kubernetes.io/hostname',
       type: AffinityType.PodAnti,
+    });
+    expect(rows[1]).toMatchObject({
+      condition: AffinityCondition.Preferred,
+      id: 'pod-anti-preferred-0',
+      topologyKey: 'topology.kubernetes.io/zone',
+      type: AffinityType.PodAnti,
+      weight: 20,
     });
   });
 

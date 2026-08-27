@@ -12,6 +12,9 @@ import {
   getPreferredPodTermFromRowData,
   getRequiredNodeTermFromRowData,
   getRequiredPodTermFromRowData,
+  hasTopologyKey,
+  hasValidWeight,
+  hasWeightAndTopologyKey,
 } from '../affinityTermMappers';
 import {
   AffinityCondition,
@@ -66,9 +69,9 @@ describe('affinityTermMappers - terms', () => {
   });
 
   it('maps preferred node terms with weight', () => {
-    expect(
-      getPreferredNodeTermFromRowData(row({ weight: 40 }) as AffinityRowData & { weight: number }),
-    ).toEqual({
+    const preferredRow = row({ weight: 40 });
+    expect(hasValidWeight(preferredRow)).toBe(true);
+    expect(getPreferredNodeTermFromRowData(preferredRow)).toEqual({
       preference: {
         matchExpressions: [{ key: 'app', operator: 'In', values: ['api'] }],
         matchFields: [{ key: 'metadata.name', operator: 'In', values: ['n1'] }],
@@ -78,25 +81,18 @@ describe('affinityTermMappers - terms', () => {
   });
 
   it('maps required and preferred pod terms', () => {
-    expect(
-      getRequiredPodTermFromRowData(
-        row({ type: AffinityType.Pod }) as AffinityRowData & { topologyKey: string },
-      ),
-    ).toEqual({
+    const requiredPod = row({ type: AffinityType.Pod });
+    expect(hasTopologyKey(requiredPod)).toBe(true);
+    expect(getRequiredPodTermFromRowData(requiredPod)).toEqual({
       labelSelector: {
         matchExpressions: [{ key: 'app', operator: 'In', values: ['api'] }],
       },
       topologyKey: 'kubernetes.io/hostname',
     });
 
-    expect(
-      getPreferredPodTermFromRowData(
-        row({ type: AffinityType.Pod, weight: 15 }) as AffinityRowData & {
-          topologyKey: string;
-          weight: number;
-        },
-      ),
-    ).toEqual({
+    const preferredPod = row({ type: AffinityType.Pod, weight: 15 });
+    expect(hasWeightAndTopologyKey(preferredPod)).toBe(true);
+    expect(getPreferredPodTermFromRowData(preferredPod)).toEqual({
       podAffinityTerm: {
         labelSelector: {
           matchExpressions: [{ key: 'app', operator: 'In', values: ['api'] }],

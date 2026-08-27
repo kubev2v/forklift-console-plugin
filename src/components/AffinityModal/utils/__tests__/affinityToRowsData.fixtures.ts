@@ -25,7 +25,10 @@ export const nodePreferredAffinity: K8sIoApiCoreV1Affinity = {
     preferredDuringSchedulingIgnoredDuringExecution: [
       {
         preference: {
-          matchExpressions: [{ key: 'tier', operator: 'NotIn', values: ['dev'] }],
+          matchExpressions: [
+            { key: 'tier', operator: 'NotIn', values: ['dev'] },
+            { key: 'ssd', operator: 'Exists', values: undefined },
+          ],
           matchFields: undefined,
         },
         weight: 50,
@@ -61,6 +64,17 @@ export const podAffinity: K8sIoApiCoreV1Affinity = {
 
 export const podAntiAffinity: K8sIoApiCoreV1Affinity = {
   podAntiAffinity: {
+    preferredDuringSchedulingIgnoredDuringExecution: [
+      {
+        podAffinityTerm: {
+          labelSelector: {
+            matchExpressions: [{ key: 'tier', operator: 'Exists' }],
+          },
+          topologyKey: 'topology.kubernetes.io/zone',
+        },
+        weight: 20,
+      },
+    ],
     requiredDuringSchedulingIgnoredDuringExecution: [
       {
         labelSelector: {

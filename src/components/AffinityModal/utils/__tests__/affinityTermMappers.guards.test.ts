@@ -26,6 +26,8 @@ describe('affinityTermMappers - guards', () => {
       [0, false],
       [101, false],
       [1.5, false],
+      [-1, false],
+      [Number.NaN, false],
       [undefined, false],
     ])('weight %p → %p', (weight, expected) => {
       expect(hasValidWeight(baseRow({ weight }))).toBe(expected);

@@ -29,12 +29,11 @@ describe('isTermsInvalid', () => {
     expect(isTermsInvalid([term({ key: '' })])).toBe(true);
   });
 
-  it('returns true for In operator with empty values', () => {
+  it('returns true for In/NotIn operator with empty or omitted values', () => {
     expect(isTermsInvalid([term({ operator: Operator.In, values: [] })])).toBe(true);
-  });
-
-  it('returns true for NotIn operator with empty values', () => {
     expect(isTermsInvalid([term({ operator: Operator.NotIn, values: [] })])).toBe(true);
+    expect(isTermsInvalid([term({ operator: Operator.In, values: undefined })])).toBe(true);
+    expect(isTermsInvalid([term({ operator: Operator.NotIn, values: undefined })])).toBe(true);
   });
 
   it('returns false for In operator with values', () => {
