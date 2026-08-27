@@ -6,10 +6,7 @@ mockI18n();
 
 import { validateVMTargetName } from '../utils';
 
-const vms = [
-  { name: 'vm-a', targetName: 'taken-name' },
-  { name: 'vm-b' },
-] as V1beta1PlanSpecVms[];
+const vms = [{ name: 'vm-a', targetName: 'taken-name' }, { name: 'vm-b' }] as V1beta1PlanSpecVms[];
 
 describe('validateVMTargetName', () => {
   it('returns null for empty value', () => {

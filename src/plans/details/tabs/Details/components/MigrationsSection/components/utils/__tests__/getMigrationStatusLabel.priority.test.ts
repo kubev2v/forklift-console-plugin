@@ -9,18 +9,17 @@ import { getMigrationStatusLabel } from '../utils';
 
 const counts = (
   overrides: Partial<Record<MigrationVirtualMachineStatus, number>> = {},
-): MigrationVirtualMachinesStatusesCounts =>
-  ({
-    [MigrationVirtualMachineStatus.Canceled]: { count: 0, vms: [] },
-    [MigrationVirtualMachineStatus.CantStart]: { count: 0, vms: [] },
-    [MigrationVirtualMachineStatus.Failed]: { count: 0, vms: [] },
-    [MigrationVirtualMachineStatus.InProgress]: { count: 0, vms: [] },
-    [MigrationVirtualMachineStatus.Paused]: { count: 0, vms: [] },
-    [MigrationVirtualMachineStatus.Succeeded]: { count: 0, vms: [] },
-    ...Object.fromEntries(
-      Object.entries(overrides).map(([status, count]) => [status, { count, vms: [] }]),
-    ),
-  }) as MigrationVirtualMachinesStatusesCounts;
+): MigrationVirtualMachinesStatusesCounts => ({
+  [MigrationVirtualMachineStatus.Canceled]: { count: 0, vms: [] },
+  [MigrationVirtualMachineStatus.CantStart]: { count: 0, vms: [] },
+  [MigrationVirtualMachineStatus.Failed]: { count: 0, vms: [] },
+  [MigrationVirtualMachineStatus.InProgress]: { count: 0, vms: [] },
+  [MigrationVirtualMachineStatus.Paused]: { count: 0, vms: [] },
+  [MigrationVirtualMachineStatus.Succeeded]: { count: 0, vms: [] },
+  ...Object.fromEntries(
+    Object.entries(overrides).map(([status, count]) => [status, { count, vms: [] }]),
+  ),
+});
 
 describe('getMigrationStatusLabel', () => {
   it('prioritizes InProgress over Failed, Paused, and Succeeded', () => {
@@ -63,10 +62,12 @@ describe('getMigrationStatusLabel', () => {
   });
 
   it('returns Succeeded only when succeeded count equals migration VM count', () => {
-    expect(getMigrationStatusLabel(counts({ [MigrationVirtualMachineStatus.Succeeded]: 3 }), 3)).toBe(
-      MigrationVirtualMachineStatus.Succeeded,
-    );
-    expect(getMigrationStatusLabel(counts({ [MigrationVirtualMachineStatus.Succeeded]: 2 }), 3)).toBeNull();
+    expect(
+      getMigrationStatusLabel(counts({ [MigrationVirtualMachineStatus.Succeeded]: 3 }), 3),
+    ).toBe(MigrationVirtualMachineStatus.Succeeded);
+    expect(
+      getMigrationStatusLabel(counts({ [MigrationVirtualMachineStatus.Succeeded]: 2 }), 3),
+    ).toBeNull();
   });
 
   it('treats zero succeeded with zero migration count as Succeeded', () => {

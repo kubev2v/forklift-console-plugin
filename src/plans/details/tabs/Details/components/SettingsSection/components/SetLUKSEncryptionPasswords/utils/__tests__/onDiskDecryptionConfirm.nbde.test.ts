@@ -25,7 +25,8 @@ const emptyVmsPlan = {
   spec: { vms: [] },
 } as unknown as V1beta1Plan;
 
-const findPlanVmsPatch = (): { data: { op: string; path: string; value?: unknown }[] } | undefined =>
+const findPlanVmsPatch = ():
+  { data: { op: string; path: string; value?: unknown }[] } | undefined =>
   mockK8sPatch.mock.calls
     .map(([arg]) => arg as { data?: { op: string; path: string; value?: unknown }[] })
     .find((arg) => arg?.data?.some((op) => op.path === '/spec/vms'));

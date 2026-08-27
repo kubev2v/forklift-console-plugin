@@ -42,7 +42,7 @@ describe('createUpdateOrDeleteHook', () => {
     jest.clearAllMocks();
     mockCreateHook.mockResolvedValue(plan);
     mockDeleteHook.mockResolvedValue(plan);
-    mockUpdateHook.mockResolvedValue(undefined as never);
+    mockUpdateHook.mockResolvedValue(undefined);
     mockGetAapHookTemplate.mockReturnValue({ metadata: { name: 'aap-hook' } } as V1beta1Hook);
     mockGetLocalHookTemplate.mockReturnValue({ metadata: { name: 'local-hook' } } as V1beta1Hook);
   });

@@ -7,7 +7,9 @@ mockI18n();
 
 import { getVMMigrationStatus } from '../utils';
 
-const vm = (overrides: Partial<V1beta1PlanStatusMigrationVms> = {}): V1beta1PlanStatusMigrationVms =>
+const vm = (
+  overrides: Partial<V1beta1PlanStatusMigrationVms> = {},
+): V1beta1PlanStatusMigrationVms =>
   ({
     pipeline: [{ phase: taskStatuses.running }],
     ...overrides,
@@ -52,9 +54,9 @@ describe('getVMMigrationStatus', () => {
   });
 
   it('returns NotStarted when first pipeline step is Pending', () => {
-    expect(
-      getVMMigrationStatus(vm({ pipeline: [{ phase: taskStatuses.pending }] })),
-    ).toBe('NotStarted');
+    expect(getVMMigrationStatus(vm({ pipeline: [{ phase: taskStatuses.pending }] }))).toBe(
+      'NotStarted',
+    );
   });
 
   it('returns Running when started and not completed', () => {

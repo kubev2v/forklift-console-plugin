@@ -40,21 +40,24 @@ describe('VM template / targetName patch helpers', () => {
     ['network', onConfirmVirtualMachineNetworkNameTemplate, 'networkNameTemplate'],
     ['volume', onConfirmVirtualMachineVolumeNameTemplate, 'volumeNameTemplate'],
     ['pvc', onConfirmVirtualMachinePVCNameTemplate, 'pvcNameTemplate'],
-  ] as const)('uses add for missing %s template and replace when present', async (_label, factory, field) => {
-    await factory(0)({ newValue: 'tmpl-a', resource: plan });
-    expect(mockK8sPatch.mock.calls[0][0]).toEqual(
-      expect.objectContaining({
-        data: [{ op: 'add', path: `/spec/vms/0/${field}`, value: 'tmpl-a' }],
-      }),
-    );
+  ] as const)(
+    'uses add for missing %s template and replace when present',
+    async (_label, factory, field) => {
+      await factory(0)({ newValue: 'tmpl-a', resource: plan });
+      expect(mockK8sPatch.mock.calls[0][0]).toEqual(
+        expect.objectContaining({
+          data: [{ op: 'add', path: `/spec/vms/0/${field}`, value: 'tmpl-a' }],
+        }),
+      );
 
-    await factory(1)({ newValue: 'tmpl-b', resource: plan });
-    expect(mockK8sPatch.mock.calls[1][0]).toEqual(
-      expect.objectContaining({
-        data: [{ op: 'replace', path: `/spec/vms/1/${field}`, value: 'tmpl-b' }],
-      }),
-    );
-  });
+      await factory(1)({ newValue: 'tmpl-b', resource: plan });
+      expect(mockK8sPatch.mock.calls[1][0]).toEqual(
+        expect.objectContaining({
+          data: [{ op: 'replace', path: `/spec/vms/1/${field}`, value: 'tmpl-b' }],
+        }),
+      );
+    },
+  );
 
   it('passes undefined value when newValue is undefined for templates', async () => {
     await onConfirmVirtualMachineNetworkNameTemplate(1)({

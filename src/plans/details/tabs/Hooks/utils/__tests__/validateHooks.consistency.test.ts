@@ -7,12 +7,9 @@ mockI18n();
 import { hookTypes } from '../constants';
 import { validateHooks } from '../utils';
 
-const planWithVms = (vms: V1beta1Plan['spec'] extends infer S
-  ? S extends { vms?: infer V }
-    ? V
-    : never
-  : never): V1beta1Plan =>
-  ({ spec: { vms } }) as V1beta1Plan;
+const planWithVms = (
+  vms: V1beta1Plan['spec'] extends infer S ? (S extends { vms?: infer V } ? V : never) : never,
+): V1beta1Plan => ({ spec: { vms } }) as V1beta1Plan;
 
 describe('validateHooks', () => {
   it('returns empty string for missing or empty VMs', () => {
@@ -37,9 +34,7 @@ describe('validateHooks', () => {
   });
 
   it('returns empty string when VMs have no hooks', () => {
-    expect(
-      validateHooks(planWithVms([{ name: 'vm-a' }, { hooks: [], name: 'vm-b' }])),
-    ).toBe('');
+    expect(validateHooks(planWithVms([{ name: 'vm-a' }, { hooks: [], name: 'vm-b' }]))).toBe('');
   });
 
   it('errors when first VM has multiple pre hooks', () => {
