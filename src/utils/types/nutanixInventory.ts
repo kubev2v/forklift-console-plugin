@@ -46,9 +46,8 @@ type NutanixVmLike = ProviderVirtualMachine & {
 export const isNutanixVm = (vm: ProviderVirtualMachine): vm is NutanixVmLike =>
   (vm.providerType as string) === PROVIDER_TYPES.nutanix;
 
-export type NutanixProviderInventory = {
+type NutanixProviderInventory = ProviderInventory & {
   storageContainerCount?: number;
-  type: typeof PROVIDER_TYPES.nutanix;
 };
 
 export const isNutanixProviderInventory = (
