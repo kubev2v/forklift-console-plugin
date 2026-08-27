@@ -1,5 +1,6 @@
-import { describe, expect, it } from '@jest/globals';
 import { OpenstackSecretFieldsId } from 'src/providers/utils/constants';
+
+import { describe, expect, it } from '@jest/globals';
 import { ValidationState } from '@utils/validation/Validation';
 
 import { openstackSecretFieldValidator } from '../openstackSecretFieldValidator';

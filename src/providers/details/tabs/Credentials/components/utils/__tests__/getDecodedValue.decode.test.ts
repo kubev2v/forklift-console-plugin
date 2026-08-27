@@ -1,4 +1,5 @@
 import { encode } from 'js-base64';
+
 import { describe, expect, it } from '@jest/globals';
 
 import { getDecodedValue } from '../getDecodedValue';
