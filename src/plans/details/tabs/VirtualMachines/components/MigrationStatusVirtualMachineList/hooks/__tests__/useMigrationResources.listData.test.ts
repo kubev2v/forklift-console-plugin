@@ -26,7 +26,10 @@ const plan = {
   },
   status: {
     migration: {
-      vms: [{ id: 'vm-1', name: 'alpha', phase: 'DiskTransfer' }],
+      vms: [
+        { id: 'vm-1', name: 'alpha', phase: 'DiskTransfer' },
+        { id: 'vm-2', name: 'bravo-by-name', phase: 'DiskTransfer' },
+      ],
     },
   },
 } as unknown as V1beta1Plan;
@@ -49,7 +52,11 @@ describe('useMigrationResources - listData', () => {
       undefined,
     ]);
     mockUseK8sWatchResource
-      .mockReturnValueOnce([[labeled('Pod', 'vm-1', 'pod-1')], true, null])
+      .mockReturnValueOnce([
+        [labeled('Pod', 'vm-1', 'pod-1'), labeled('Pod', 'vm-2', 'pod-2')],
+        true,
+        null,
+      ])
       .mockReturnValueOnce([[labeled('Job', 'vm-1', 'job-1')], true, null])
       .mockReturnValueOnce([[labeled('PersistentVolumeClaim', 'vm-1', 'pvc-1')], true, null])
       .mockReturnValueOnce([[labeled('DataVolume', 'vm-1', 'dv-1')], true, null]);
@@ -73,8 +80,8 @@ describe('useMigrationResources - listData', () => {
     expect(withId.dvs?.[0].metadata?.name).toBe('dv-1');
 
     expect(byName.specVM).toEqual({ name: 'bravo-by-name' });
-    expect(byName.pods).toBeUndefined();
-    expect(byName.statusVM).toBeUndefined();
+    expect(byName.statusVM).toMatchObject({ id: 'vm-2', name: 'bravo-by-name' });
+    expect(byName.pods?.[0].metadata?.name).toBe('pod-2');
   });
 
   it('omits resource dicts while watches are still loading', () => {

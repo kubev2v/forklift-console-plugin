@@ -87,7 +87,10 @@ describe('useCanInspectPlan - gates', () => {
 
     const { result } = renderHook(() => useCanInspectPlan(basePlan));
 
-    expect(result.current.disabledReason).toMatch(/VDDK image is required/);
+    expect(result.current).toMatchObject({
+      canInspect: false,
+      disabledReason: expect.stringMatching(/VDDK image is required/),
+    });
   });
 
   it.each([

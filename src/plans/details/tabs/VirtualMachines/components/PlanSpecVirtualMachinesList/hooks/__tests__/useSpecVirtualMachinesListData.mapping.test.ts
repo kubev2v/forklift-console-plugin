@@ -29,9 +29,9 @@ const plan = {
   spec: {
     targetNamespace: 'target-ns',
     vms: [
+      { name: 'missing-from-inventory' },
       { id: 'vm-1', name: 'alpha' },
       { name: 'bravo' },
-      { name: 'missing-from-inventory' },
       { id: 'vm-orphan', name: 'orphan' },
     ],
   },
@@ -67,20 +67,20 @@ describe('useSpecVirtualMachinesListData - mapping', () => {
       inventoryVmData: inventory[0],
       sourceProviderType: 'vsphere',
       targetNamespace: 'target-ns',
-      vmIndex: 0,
+      vmIndex: 1,
       statusVM: { id: 'vm-1' },
     });
     expect(rows[0].conditions?.[0].type).toBe('VMConcerns');
 
     expect(rows[1]).toMatchObject({
       inventoryVmData: inventory[1],
-      vmIndex: 1,
+      vmIndex: 2,
       specVM: { name: 'bravo' },
     });
   });
 
   it('returns an empty list while inventory is loading', () => {
-    mockUseInventoryVms.mockReturnValue([[], true, null]);
+    mockUseInventoryVms.mockReturnValue([inventory, true, null]);
 
     const { result } = renderHook(() => useSpecVirtualMachinesListData(plan));
 
@@ -89,16 +89,14 @@ describe('useSpecVirtualMachinesListData - mapping', () => {
   });
 
   it('returns an empty list for a non-empty error object', () => {
-    mockUseInventoryVms.mockReturnValue([[], false, { message: 'inventory failed' }]);
+    mockUseInventoryVms.mockReturnValue([inventory, false, { message: 'inventory failed' }]);
 
     const { result } = renderHook(() => useSpecVirtualMachinesListData(plan));
 
     expect(result.current[0]).toEqual([]);
   });
 
-  // Bug: isEmpty(Error) is true (no enumerable own keys), so Error instances slip through
-  // and rows are still built from inventory.
-  it.failing('returns an empty list when inventory error is an Error instance', () => {
+  it('returns an empty list when inventory error is an Error instance', () => {
     mockUseInventoryVms.mockReturnValue([inventory, false, new Error('inventory failed')]);
 
     const { result } = renderHook(() => useSpecVirtualMachinesListData(plan));
