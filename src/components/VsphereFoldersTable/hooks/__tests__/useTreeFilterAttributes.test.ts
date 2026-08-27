@@ -6,6 +6,7 @@ jest.mock('@utils/hooks/useVmInspectionStatus', () => ({
   useVmInspectionStatus: (): (() => undefined) => (): undefined => undefined,
 }));
 
+import { ConcernCategoryOptions } from '@components/Concerns/utils/constants';
 import { renderHook } from '@testing-library/react';
 
 import { COLUMN_IDS, folderFilterId, ROW_TYPE, type VmRow } from '../../utils/types';
@@ -27,6 +28,11 @@ const makeVmRow = (overrides: Partial<VmRow> = {}): VmRow =>
     },
     ...overrides,
   }) as VmRow;
+
+const optionLabels = (attrs: ReturnType<typeof useTreeFilterAttributes>, id: string): string[] => {
+  const attr = attrs.find((entry) => entry.id === id);
+  return attr && 'options' in attr ? (attr.options?.map((option) => option.label) ?? []) : [];
+};
 
 describe('useTreeFilterAttributes', () => {
   it('returns expected attribute ids and kinds', () => {
@@ -68,13 +74,33 @@ describe('useTreeFilterAttributes', () => {
     ).toBe('');
   });
 
-  it('rebuilds attributes when rows change', () => {
+  it('rebuilds host and concern options when rows change', () => {
     const { result, rerender } = renderHook(({ rows }) => useTreeFilterAttributes(rows, []), {
       initialProps: { rows: [] as VmRow[] },
     });
-    const first = result.current;
-    rerender({ rows: [makeVmRow()] });
-    expect(result.current).not.toBe(first);
-    expect(result.current).toHaveLength(first.length);
+
+    expect(optionLabels(result.current, COLUMN_IDS.Host)).toEqual([]);
+    expect(optionLabels(result.current, `${COLUMN_IDS.Concerns}-label`)).toEqual([]);
+
+    rerender({
+      rows: [
+        makeVmRow({
+          vmData: {
+            folderName: 'Folder A',
+            hostName: 'esxi-2',
+            name: 'vm-1',
+            namespace: 'ns',
+            vm: {
+              concerns: [{ category: ConcernCategoryOptions.Critical, label: 'CPU' }],
+              id: '1',
+              name: 'vm-1',
+            },
+          },
+        }),
+      ],
+    });
+
+    expect(optionLabels(result.current, COLUMN_IDS.Host)).toEqual(['esxi-2']);
+    expect(optionLabels(result.current, `${COLUMN_IDS.Concerns}-label`)).toEqual(['CPU']);
   });
 });
