@@ -13,12 +13,14 @@ jest.mock('src/networkMaps/create/utils/buildNetworkMappings', (): unknown => ({
     (mockBuildNetworkMappings as (...a: unknown[]) => unknown)(...args),
 }));
 
-import { NetworkMapModel } from '@forklift-ui/types';
+import { NetworkMapModel, type V1beta1NetworkMap, type V1beta1Provider } from '@forklift-ui/types';
 
 import { patchNetworkMappingValues } from '../utils';
 
-const provider = { metadata: { name: 'src' } } as never;
-const formData = { networkMap: [{ source: { name: 'net' } }] } as never;
+import type { PlanNetworkEditFormValues } from '../types';
+
+const provider = { metadata: { name: 'src' } } as unknown as V1beta1Provider;
+const formData = { networkMap: [{ source: { name: 'net' } }] } as unknown as PlanNetworkEditFormValues;
 
 describe('patchNetworkMappingValues - patch', () => {
   beforeEach(() => {
@@ -28,7 +30,7 @@ describe('patchNetworkMappingValues - patch', () => {
   });
 
   it('ADDs map when empty', async () => {
-    const emptyMap = { metadata: { name: 'nm' }, spec: { map: [] } } as never;
+    const emptyMap = { metadata: { name: 'nm' }, spec: { map: [] } } as unknown as V1beta1NetworkMap;
 
     await patchNetworkMappingValues(formData, emptyMap, provider);
 
@@ -43,7 +45,10 @@ describe('patchNetworkMappingValues - patch', () => {
   });
 
   it('REPLACEs map when present', async () => {
-    const existing = { metadata: { name: 'nm' }, spec: { map: [{ source: {} }] } } as never;
+    const existing = {
+      metadata: { name: 'nm' },
+      spec: { map: [{ source: {} }] },
+    } as unknown as V1beta1NetworkMap;
 
     await patchNetworkMappingValues(formData, existing, provider);
 
