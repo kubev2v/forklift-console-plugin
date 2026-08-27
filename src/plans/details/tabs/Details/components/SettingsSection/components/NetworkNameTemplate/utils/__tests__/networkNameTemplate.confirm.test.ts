@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sPatch = jest.fn() as jest.Mock;
+const mockK8sPatch = jest.fn();
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   k8sPatch: (...args: unknown[]): unknown => mockK8sPatch(...args),
