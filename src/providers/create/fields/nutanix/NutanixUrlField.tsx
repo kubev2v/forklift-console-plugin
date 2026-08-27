@@ -10,7 +10,6 @@ const NutanixUrlField: FC = () => {
 
   return (
     <ProviderFormTextInput
-      label={t('Prism URL')}
       fieldId={ProviderFormFieldId.NutanixUrl}
       fieldRules={{
         required: t(
@@ -18,6 +17,7 @@ const NutanixUrlField: FC = () => {
         ),
       }}
       helperText={t('URL of the Nutanix Prism Central or Prism Element endpoint.')}
+      label={t('Prism URL')}
       testId="nutanix-url-input"
     />
   );

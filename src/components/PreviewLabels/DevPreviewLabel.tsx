@@ -9,17 +9,17 @@ const DevPreviewLabel: FC = () => {
   const { t } = useForkliftTranslation();
   return (
     <Popover
-      triggerAction="hover"
       bodyContent={t(
         'Developer Preview features provide early access to upcoming product innovations, enabling you to test functionality and provide feedback. Developer Preview features are not supported by Red Hat in any way and are not functionally complete or production-ready.',
       )}
       footerContent={
-        <ExternalLink isInline href="https://access.redhat.com/articles/6966848">
+        <ExternalLink href="https://access.redhat.com/articles/6966848" isInline>
           {t('Learn more')}
         </ExternalLink>
       }
+      triggerAction="hover"
     >
-      <Label isCompact color="teal" icon={<InfoCircleIcon />}>
+      <Label color="teal" icon={<InfoCircleIcon />} isCompact>
         {t('Developer Preview')}
       </Label>
     </Popover>

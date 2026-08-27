@@ -32,22 +32,22 @@ const NutanixDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
       <NameDetailsItem resource={provider} />
       <NamespaceDetailsItem resource={provider} />
       <DetailsItem
-        testId="prism-type-detail-item"
-        title={t('Prism endpoint type')}
         content={
-          <Label isCompact color={isCentral ? 'blue' : 'grey'}>
+          <Label color={isCentral ? 'blue' : 'grey'} isCompact>
             {isCentral ? t('Prism Central') : t('Prism Element')}
           </Label>
         }
+        crumbs={['Provider', 'spec', 'settings', 'prismType']}
         helpContent={t(
           'Whether this provider connects to Prism Central (multi-cluster management) or directly to a Prism Element (single cluster).',
         )}
-        crumbs={['Provider', 'spec', 'settings', 'prismType']}
+        testId="prism-type-detail-item"
+        title={t('Prism endpoint type')}
       />
       <URLDetailsItem
-        resource={provider}
         canPatch={permissions.canPatch}
         helpContent={t('URL of the Nutanix Prism endpoint.')}
+        resource={provider}
       />
       <CreatedAtDetailsItem resource={provider} />
       <OwnerDetailsItem resource={provider} />

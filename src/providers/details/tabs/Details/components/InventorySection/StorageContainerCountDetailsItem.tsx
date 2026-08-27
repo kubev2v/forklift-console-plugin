@@ -20,7 +20,7 @@ const StorageContainerCountDetailsItem: FC<InventoryDetailsItemProps> = ({
   const { t } = useForkliftTranslation();
 
   const defaultHelpContent = t('Number of storage containers');
-  const storageContainerCount = (inventory as NutanixInventoryWithStorage).storageContainerCount;
+  const { storageContainerCount } = inventory as NutanixInventoryWithStorage;
 
   return (
     <DetailsItem
