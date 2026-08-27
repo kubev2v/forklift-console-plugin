@@ -11,7 +11,7 @@ import { onConfirmVolumeNameTemplate } from '../utils';
 describe('VolumeNameTemplate utils - confirm', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue({});
+    mockK8sPatch.mockResolvedValue(undefined as never);
   });
 
   it('patches volumeNameTemplate', async () => {

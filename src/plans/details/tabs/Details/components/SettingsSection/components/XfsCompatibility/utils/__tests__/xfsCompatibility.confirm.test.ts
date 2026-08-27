@@ -11,7 +11,7 @@ import { getPlanXfsCompatibility, onConfirmXfsCompatibility } from '../utils';
 describe('XfsCompatibility utils - confirm', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue({});
+    mockK8sPatch.mockResolvedValue(undefined as never);
   });
 
   it('reads and patches xfsCompatibility', async () => {

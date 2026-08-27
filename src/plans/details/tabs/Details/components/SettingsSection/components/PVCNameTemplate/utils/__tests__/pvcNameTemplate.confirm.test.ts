@@ -11,7 +11,7 @@ import { onConfirmPVCNameTemplate } from '../utils';
 describe('PVCNameTemplate utils - confirm', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue({});
+    mockK8sPatch.mockResolvedValue(undefined as never);
   });
 
   it('patches pvcNameTemplate', async () => {
