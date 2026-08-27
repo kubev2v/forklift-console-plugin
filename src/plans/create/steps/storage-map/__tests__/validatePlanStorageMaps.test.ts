@@ -1,3 +1,5 @@
+import { OffloadPlugin } from 'src/storageMaps/utils/types';
+
 import { describe, expect, it } from '@jest/globals';
 import { StorageMapFieldId, type StorageMapping } from '@utils/storage/types';
 
@@ -21,7 +23,11 @@ describe('validatePlanStorageMaps', () => {
 
   it('returns error when a used storage is missing a mapping', () => {
     const values = [mapping('ds-1')];
-    expect(validatePlanStorageMaps(values, usedSources)).toBeDefined();
+    expect(validatePlanStorageMaps(values, usedSources)).toMatch(/require a mapping/i);
+  });
+
+  it('returns error when mappings are empty and sources are used', () => {
+    expect(validatePlanStorageMaps([], usedSources)).toMatch(/require a mapping/i);
   });
 
   it('skips source validation when isOpenshift is true', () => {
@@ -37,5 +43,17 @@ describe('validatePlanStorageMaps', () => {
   it('still validates when isIscsi is false', () => {
     const values = [mapping('ds-1')];
     expect(validatePlanStorageMaps(values, usedSources, false, false)).toBeDefined();
+  });
+
+  it('returns error when offload fields are only partially set', () => {
+    const values: StorageMapping[] = [
+      {
+        ...mapping('ds-1'),
+        [StorageMapFieldId.OffloadPlugin]: OffloadPlugin.CsiVolumeImport,
+      },
+      mapping('ds-2'),
+    ];
+
+    expect(validatePlanStorageMaps(values, usedSources)).toMatch(/must be set/i);
   });
 });
