@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-import { BaseResourceManager } from '../../utils/resource-manager/BaseResourceManager';
+import { apiRequest } from '../../utils/resource-manager/apiRequest';
 import { API_PATHS } from '../../utils/resource-manager/constants';
 
 const USER_SETTINGS_NAMESPACE = 'openshift-console-user-settings';
@@ -9,6 +9,8 @@ const LOCAL_STORAGE_LANGUAGE_KEY = 'bridge/last-language';
 const USER_SETTINGS_STORAGE_KEY = 'console-user-settings';
 
 export type SupportedLanguage = 'en' | 'ja' | 'es' | 'fr' | 'ko' | 'zh';
+
+type ConsoleUserSettings = Record<string, string>;
 
 const getConfigMapName = (): string => {
   const username = process.env.CLUSTER_USERNAME ?? 'kubeadmin';
@@ -19,11 +21,15 @@ const patchLanguageConfigMap = async (language: string): Promise<boolean> => {
   const configMapName = getConfigMapName();
   const apiPath = `${API_PATHS.KUBERNETES_CORE}/namespaces/${USER_SETTINGS_NAMESPACE}/configmaps/${configMapName}`;
 
-  const result = await BaseResourceManager.apiPatch(apiPath, {
-    data: { [LANGUAGE_KEY]: language },
+  const result = await apiRequest(apiPath, {
+    body: {
+      data: { [LANGUAGE_KEY]: language },
+    },
+    contentType: 'application/merge-patch+json',
+    method: 'PATCH',
   });
 
-  return result !== null;
+  return result.success;
 };
 
 /**
@@ -36,11 +42,13 @@ const patchLanguageConfigMap = async (language: string): Promise<boolean> => {
  */
 const setLocalStorageLanguage = async (page: Page, language: string): Promise<void> => {
   await page.evaluate(
-    ({ bridgeKey, settingsKey, langKey, lang }) => {
+    ({ bridgeKey, lang, langKey, settingsKey }) => {
       localStorage.setItem(bridgeKey, lang);
 
       const raw = localStorage.getItem(settingsKey);
-      const settings = raw ? JSON.parse(raw) : {};
+      const parsed = raw ? (JSON.parse(raw) as unknown) : {};
+      const settings: ConsoleUserSettings =
+        parsed && typeof parsed === 'object' ? { ...(parsed as ConsoleUserSettings) } : {};
       settings[langKey] = lang;
       localStorage.setItem(settingsKey, JSON.stringify(settings));
     },

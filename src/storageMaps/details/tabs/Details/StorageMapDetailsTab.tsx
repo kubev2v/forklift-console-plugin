@@ -67,6 +67,9 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
   });
 
   const sourceStoragesMap = new Map(sourceStorages.map((storage) => [storage.id, storage]));
+  const providersReady = Boolean(
+    sourceProvider?.metadata?.uid && destinationProvider?.metadata?.uid,
+  );
 
   return (
     <LoadingSuspend loaded={storageMapLoaded} loadError={storageMapLoadError} obj={storageMap}>
@@ -77,6 +80,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
 
       <PageSection className="forklift-page-section" hasBodyWrapper={false}>
         <SectionHeadingWithEdit
+          editable={providersReady}
           onClick={() => {
             launchOverlay<MapProvidersEditProps>(MapProvidersEdit, {
               destinationProvider,
@@ -94,6 +98,7 @@ export const StorageMapDetailsTab: FC<StorageMapDetailsTabProps> = ({ name, name
       <PageSection className="forklift-page-section" hasBodyWrapper={false}>
         <SectionHeadingWithEdit
           data-testid="storage-map-edit-button"
+          editable={providersReady}
           onClick={() => {
             launchOverlay<StorageMapEditProps>(StorageMapEdit, {
               destinationProvider,

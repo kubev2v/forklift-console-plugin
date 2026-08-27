@@ -14,7 +14,7 @@ import * as providers from '../../../.providers.json';
 import { VirtualMachineDetailsPage } from '../../page-objects/CNV/VirtualMachineDetailsPage';
 import { CreatePlanWizardPage } from '../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
-import { OverviewPage } from '../../page-objects/OverviewPage';
+import { OverviewPage } from '../../page-objects/OverviewPage/OverviewPage';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { PlansListPage } from '../../page-objects/PlansListPage';
 import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
@@ -32,6 +32,7 @@ import {
   PLAN_READY_TIMEOUT,
 } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
+import { testLog } from '../../utils/testLog';
 import { CNV_4_21_0, V2_10_5, V2_12_0 } from '../../utils/version/constants';
 import { isVersionInStreams, requireCNVVersion, requireVersion } from '../../utils/version/version';
 
@@ -44,15 +45,15 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   const resourceManager = new ResourceManager();
 
   let testProviderData: ProviderData = {
-    name: '',
-    projectName: MTV_NAMESPACE,
-    type: ProviderType.VSPHERE,
     endpointType: EndpointType.VCENTER,
     hostname: '',
-    username: '',
+    name: '',
     password: '',
-    vddkInitImage: '',
+    projectName: MTV_NAMESPACE,
+    type: ProviderType.VSPHERE,
+    username: '',
     useVddkAioOptimization: false,
+    vddkInitImage: '',
   };
 
   const providerName = `test-vsphere-provider-${Date.now()}`;
@@ -61,32 +62,32 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   // Jenkins uses vsphere-8.0.1 (10.6.46.250): mtv-feature-win2019 is absent there.
   // Prefer VMs present on both 8.0.1 and 8.0.3 with no Critical concerns.
   const testPlanData = createPlanTestData({
-    planName,
-    sourceProvider: providerName,
-    virtualMachines: [
-      {
-        sourceName: 'mtv-rhel8-warm-sanity',
-        targetName: `mtv-rhel8-warm-sanity-renamed-${Date.now()}`,
-        folder: 'vm',
-      },
-      {
-        sourceName: 'mtv-win2019-79',
-        targetName: `mtv-win2019-79-renamed-${Date.now()}`,
-        folder: 'vm',
-      },
-    ],
+    // preserveStaticIPs requires powered-on VMs with VMware tools — disabling to avoid a critical plan concern.
+    additionalPlanSettings: { preserveStaticIPs: false },
     networkMap: {
       mappings: [
         // Selected lab VMs (mtv-rhel8-warm-sanity, mtv-win2019-79) only attach "VM Network".
         { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.DEFAULT },
       ],
     },
+    planName,
+    sourceProvider: providerName,
     targetProject: {
-      name: targetProjectName,
       isPreexisting: false,
+      name: targetProjectName,
     },
-    // preserveStaticIPs requires powered-on VMs with VMware tools — disabling to avoid a critical plan concern.
-    additionalPlanSettings: { preserveStaticIPs: false },
+    virtualMachines: [
+      {
+        folder: 'vm',
+        sourceName: 'mtv-rhel8-warm-sanity',
+        targetName: `mtv-rhel8-warm-sanity-renamed-${Date.now()}`,
+      },
+      {
+        folder: 'vm',
+        sourceName: 'mtv-win2019-79',
+        targetName: `mtv-win2019-79-renamed-${Date.now()}`,
+      },
+    ],
   });
 
   test(
@@ -101,15 +102,15 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       const providerConfig = (providers as Record<string, ProviderConfig>)[providerKey];
 
       testProviderData = {
-        name: providerName,
-        projectName: MTV_NAMESPACE,
-        type: providerConfig.type,
         endpointType: providerConfig.endpoint_type ?? EndpointType.VCENTER,
         hostname: providerConfig.api_url,
-        username: providerConfig.username,
+        name: providerName,
         password: providerConfig.password,
-        vddkInitImage: providerConfig.vddk_init_image,
+        projectName: MTV_NAMESPACE,
+        type: providerConfig.type,
+        username: providerConfig.username,
         useVddkAioOptimization: false,
+        vddkInitImage: providerConfig.vddk_init_image,
       };
 
       await createProvider.navigate();
@@ -190,7 +191,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
       await planDetailsPage.verifyMigrationInProgress();
 
-      console.log('⏳ Waiting for migration to complete...');
+      testLog('⏳ Waiting for migration to complete...');
       try {
         await planDetailsPage.waitForMigrationCompletion(MIGRATION_TIMEOUT_MS, true);
       } catch (error) {
@@ -263,7 +264,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
       for (const vmName of vmsToVerify) {
         await test.step(`Click VM "${vmName}" link and verify CNV overview`, async () => {
-          const vmLink = page.getByRole('link', { name: vmName, exact: true });
+          const vmLink = page.getByRole('link', { exact: true, name: vmName });
           await expect(vmLink).toBeVisible({ timeout: ELEMENT_TIMEOUT });
           await vmLink.click();
 

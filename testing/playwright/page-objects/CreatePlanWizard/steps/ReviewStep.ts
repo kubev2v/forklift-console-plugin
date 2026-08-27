@@ -66,14 +66,14 @@ export class ReviewStep {
       | 'Hooks',
   ): Promise<void> {
     const sectionMap = {
-      General: 'review-general-section',
-      'Virtual machines': 'review-virtual-machines-section',
-      'Network map': 'review-network-map-section',
-      'Storage map': 'review-storage-map-section',
-      'Migration type': 'review-migration-type-section',
-      'Other settings': 'review-other-settings-section',
       'Customization scripts': 'review-custom-scripts-section',
+      General: 'review-general-section',
       Hooks: 'review-hooks-section',
+      'Migration type': 'review-migration-type-section',
+      'Network map': 'review-network-map-section',
+      'Other settings': 'review-other-settings-section',
+      'Storage map': 'review-storage-map-section',
+      'Virtual machines': 'review-virtual-machines-section',
     };
 
     const section = this.page.getByTestId(sectionMap[sectionName]);
@@ -210,8 +210,8 @@ export class ReviewStep {
       // Map power state values to their user-visible labels
       const powerStateLabels: Record<string, string> = {
         auto: 'Auto (Power on after migration)',
-        on: 'Powered on',
         off: 'Powered off',
+        on: 'Powered on',
       };
       const expectedLabel = powerStateLabels[additionalPlanSettings.targetPowerState];
 
@@ -251,7 +251,7 @@ export class ReviewStep {
 
   async verifyStepVisible(): Promise<void> {
     await expect(this.page.getByTestId('create-plan-review-step')).toBeVisible();
-    await expect(this.page.getByRole('heading', { name: /Review and create/i })).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: /Review and create/iu })).toBeVisible();
   }
 
   async verifyStorageMapAccessMode(
@@ -338,7 +338,7 @@ export class ReviewStep {
   async verifyVirtualMachinesSection(): Promise<void> {
     await expect(this.page.getByTestId('review-virtual-machines-section')).toBeVisible();
     await expect(this.page.getByTestId('review-vm-count')).toContainText(
-      /virtual machines? selected/,
+      /virtual machines? selected/u,
     );
   }
 }

@@ -12,7 +12,7 @@ test.describe('Plan Details - Network Mapping Editing', { tag: '@downstream' }, 
     page,
     testPlan,
     testProvider: _testProvider,
-  }, testInfo) => {
+  }, _testInfo) => {
     if (!testPlan) {
       throw new Error('testPlan is required');
     }

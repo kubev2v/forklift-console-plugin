@@ -30,7 +30,7 @@ export class HealthTab {
   }
 
   get tab(): Locator {
-    return this.page.getByRole('tab', { name: 'Health', exact: true });
+    return this.page.getByRole('tab', { exact: true, name: 'Health' });
   }
 
   async verifyCardsRender(): Promise<void> {
@@ -44,6 +44,6 @@ export class HealthTab {
 
   async verifyHealthTabSelected(): Promise<void> {
     await expect(this.tab).toHaveAttribute('aria-selected', 'true');
-    await expect(this.page).toHaveURL(/\/health(?:\?|$)/);
+    await expect(this.page).toHaveURL(/\/health(?:\?|$)/u);
   }
 }

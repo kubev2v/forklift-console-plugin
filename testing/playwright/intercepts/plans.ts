@@ -7,36 +7,36 @@ export const setupPlansIntercepts = async (page: Page) => {
   // CRITICAL: Return a mock plan instead of empty list to avoid PlansEmptyState path
   const plansResponse = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
-    kind: 'PlanList',
-    metadata: {},
     items: [
       {
         apiVersion: 'forklift.konveyor.io/v1beta1',
         kind: 'Plan',
         metadata: {
+          creationTimestamp: '2023-01-01T00:00:00Z',
           name: 'existing-test-plan',
           namespace: MTV_NAMESPACE,
           uid: 'existing-plan-uid',
-          creationTimestamp: '2023-01-01T00:00:00Z',
         },
         spec: {
           provider: {
-            source: { name: TEST_DATA.providers.source.name, namespace: MTV_NAMESPACE },
             destination: { name: TEST_DATA.providers.target.name, namespace: MTV_NAMESPACE },
+            source: { name: TEST_DATA.providers.source.name, namespace: MTV_NAMESPACE },
           },
         },
         status: {
-          phase: 'Ready',
           conditions: [
             {
-              type: 'Ready',
-              status: 'True',
               message: 'The plan is ready.',
+              status: 'True',
+              type: 'Ready',
             },
           ],
+          phase: 'Ready',
         },
       },
     ],
+    kind: 'PlanList',
+    metadata: {},
   };
 
   // Plan details for usePlan hook - handle both GET and watch requests
@@ -44,13 +44,14 @@ export const setupPlansIntercepts = async (page: Page) => {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Plan',
     metadata: {
+      creationTimestamp: new Date().toISOString(),
       name: TEST_DATA.planName,
       namespace: MTV_NAMESPACE,
-      uid: 'test-plan-uid-1',
-      creationTimestamp: new Date().toISOString(),
       resourceVersion: '123456',
+      uid: 'test-plan-uid-1',
     },
     spec: {
+      description: 'Test plan for automated testing',
       map: {
         network: {
           apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -69,13 +70,6 @@ export const setupPlansIntercepts = async (page: Page) => {
       },
       migrateSharedDisks: false,
       provider: {
-        source: {
-          apiVersion: 'forklift.konveyor.io/v1beta1',
-          kind: 'Provider',
-          name: TEST_DATA.providers.source.name,
-          namespace: MTV_NAMESPACE,
-          uid: TEST_DATA.providers.source.uid,
-        },
         destination: {
           apiVersion: 'forklift.konveyor.io/v1beta1',
           kind: 'Provider',
@@ -83,21 +77,26 @@ export const setupPlansIntercepts = async (page: Page) => {
           namespace: MTV_NAMESPACE,
           uid: TEST_DATA.providers.target.uid,
         },
+        source: {
+          apiVersion: 'forklift.konveyor.io/v1beta1',
+          kind: 'Provider',
+          name: TEST_DATA.providers.source.name,
+          namespace: MTV_NAMESPACE,
+          uid: TEST_DATA.providers.source.uid,
+        },
       },
-      targetNamespace: TEST_DATA.targetProject,
-      description: 'Test plan for automated testing',
       pvcNameTemplateUseGenerateName: true,
       skipGuestConversion: false,
-      warm: false,
+      targetNamespace: TEST_DATA.targetProject,
       vms: [
         {
           id: 'test-vm-1',
           name: 'test-virtual-machine-1',
         },
       ],
+      warm: false,
     },
     status: {
-      phase: 'Ready',
       conditions: [
         {
           category: 'Advisory',
@@ -108,6 +107,7 @@ export const setupPlansIntercepts = async (page: Page) => {
           type: 'Ready',
         },
       ],
+      phase: 'Ready',
     },
   };
 
@@ -117,9 +117,9 @@ export const setupPlansIntercepts = async (page: Page) => {
     async (route) => {
       if (route.request().method() === 'GET') {
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify(planData),
+          contentType: 'application/json',
+          status: 200,
         });
       } else {
         await route.continue();
@@ -134,12 +134,12 @@ export const setupPlansIntercepts = async (page: Page) => {
 
     if (url.includes(TEST_DATA.planName) || url.includes('fieldSelector')) {
       await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
         body: JSON.stringify({
-          type: 'ADDED',
           object: planData,
+          type: 'ADDED',
         }),
+        contentType: 'application/json',
+        status: 200,
       });
     } else {
       await route.continue();
@@ -154,9 +154,9 @@ export const setupPlansIntercepts = async (page: Page) => {
 
       if (url.includes(TEST_DATA.planName) && route.request().method() === 'GET') {
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify(planData),
+          contentType: 'application/json',
+          status: 200,
         });
       } else {
         await route.continue();
@@ -168,18 +168,18 @@ export const setupPlansIntercepts = async (page: Page) => {
   // Namespaced plans endpoint (wildcard namespace)
   await page.route(API_ENDPOINTS.plans, async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: JSON.stringify(plansResponse),
+      contentType: 'application/json',
+      status: 200,
     });
   });
 
   // All plans endpoint (cluster-wide)
   await page.route(API_ENDPOINTS.allPlans, async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: JSON.stringify(plansResponse),
+      contentType: 'application/json',
+      status: 200,
     });
   });
 
@@ -193,9 +193,9 @@ export const setupPlansIntercepts = async (page: Page) => {
           metadata: { creationTimestamp: null },
           spec: {
             resourceAttributes: {
-              verb: 'create',
               group: 'forklift.konveyor.io',
               resource: 'plans',
+              verb: 'create',
             },
           },
           status: {
@@ -205,9 +205,9 @@ export const setupPlansIntercepts = async (page: Page) => {
         };
 
         await route.fulfill({
-          status: 201,
-          contentType: 'application/json',
           body: JSON.stringify(authResponse),
+          contentType: 'application/json',
+          status: 201,
         });
       }
     } else {
@@ -217,12 +217,10 @@ export const setupPlansIntercepts = async (page: Page) => {
 
   // NetworkMap creation endpoint for plan wizard
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/networkmaps$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/networkmaps$/u,
     async (route) => {
       if (route.request().method() === 'POST') {
         await route.fulfill({
-          status: 201,
-          contentType: 'application/json',
           body: JSON.stringify({
             apiVersion: 'forklift.konveyor.io/v1beta1',
             kind: 'NetworkMap',
@@ -238,6 +236,8 @@ export const setupPlansIntercepts = async (page: Page) => {
               },
             },
           }),
+          contentType: 'application/json',
+          status: 201,
         });
       }
     },
@@ -245,12 +245,10 @@ export const setupPlansIntercepts = async (page: Page) => {
 
   // StorageMap creation endpoint for plan wizard
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/storagemaps$/u,
     async (route) => {
       if (route.request().method() === 'POST') {
         await route.fulfill({
-          status: 201,
-          contentType: 'application/json',
           body: JSON.stringify({
             apiVersion: 'forklift.konveyor.io/v1beta1',
             kind: 'StorageMap',
@@ -267,6 +265,8 @@ export const setupPlansIntercepts = async (page: Page) => {
               },
             },
           }),
+          contentType: 'application/json',
+          status: 201,
         });
       }
     },
@@ -274,17 +274,17 @@ export const setupPlansIntercepts = async (page: Page) => {
 
   // Plan creation endpoint
   await page.route(
-    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/plans$/,
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/openshift-mtv\/plans$/u,
     async (route) => {
       if (route.request().method() === 'POST') {
         const response = {
           apiVersion: 'forklift.konveyor.io/v1beta1',
           kind: 'Plan',
           metadata: {
+            creationTimestamp: new Date().toISOString(),
             name: TEST_DATA.planName,
             namespace: MTV_NAMESPACE,
             uid: 'test-plan-uid-1',
-            creationTimestamp: new Date().toISOString(),
           },
           spec: {
             provider: {
@@ -295,9 +295,9 @@ export const setupPlansIntercepts = async (page: Page) => {
         };
 
         await route.fulfill({
-          status: 201,
-          contentType: 'application/json',
           body: JSON.stringify(response),
+          contentType: 'application/json',
+          status: 201,
         });
       }
     },

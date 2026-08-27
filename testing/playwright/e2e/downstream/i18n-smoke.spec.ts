@@ -36,16 +36,31 @@ const resolveLocalesDir = (): string => {
   return found;
 };
 
+const isStringRecord = (value: unknown): value is Record<string, string> => {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    Object.values(value).every((entry) => typeof entry === 'string')
+  );
+};
+
 const loadLocale = (lang: string): Record<string, string> => {
   const localesDir = resolveLocalesDir();
   const filePath = resolve(localesDir, lang, `${LOCALE_NAMESPACE}.json`);
-  return JSON.parse(readFileSync(filePath, 'utf-8'));
+  const parsed = JSON.parse(readFileSync(filePath, 'utf-8')) as unknown;
+  if (!isStringRecord(parsed)) {
+    throw new Error(`Invalid locale payload for ${lang}`);
+  }
+  return parsed;
 };
 
 const TESTED_LANGUAGES: SupportedLanguage[] = ['es', 'fr', 'ja', 'ko', 'zh'];
 
 const missingKeyPattern = (language: string): RegExp =>
-  new RegExp(`Missing i18n key .+ in namespace "${LOCALE_NAMESPACE}" and language "${language}"`);
+  new RegExp(
+    `Missing i18n key .+ in namespace "${LOCALE_NAMESPACE}" and language "${language}"`,
+    'u',
+  );
 
 test.describe('i18n — translations smoke test', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);

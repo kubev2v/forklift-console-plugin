@@ -12,12 +12,12 @@ export class DeleteResourceModal {
   }
 
   async cancel(): Promise<void> {
-    await this.dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+    await this.dialog.getByRole('button', { exact: true, name: 'Cancel' }).click();
     await this.waitForModalToClose();
   }
 
   async confirm(): Promise<void> {
-    await this.dialog.getByRole('button', { name: 'Delete', exact: true }).click();
+    await this.dialog.getByRole('button', { exact: true, name: 'Delete' }).click();
     await this.waitForModalToClose();
   }
 

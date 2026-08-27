@@ -7,7 +7,7 @@ import {
   TIPS_AND_TRICKS_TOPICS,
 } from '../../fixtures/overview-page-topics';
 import { LearningExperienceDrawer } from '../../page-objects/LearningExperienceDrawer';
-import { OverviewPage } from '../../page-objects/OverviewPage';
+import { OverviewPage } from '../../page-objects/OverviewPage/OverviewPage';
 import { V2_11_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 

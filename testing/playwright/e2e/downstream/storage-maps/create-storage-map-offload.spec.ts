@@ -39,7 +39,7 @@ test.describe(
       let createBody: unknown;
 
       await page.route(
-        /\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/storagemaps$/,
+        /\/apis\/forklift\.konveyor\.io\/v1beta1\/namespaces\/[^/]+\/storagemaps$/u,
         async (route): Promise<void> => {
           if (route.request().method() === 'POST') {
             createBody = JSON.parse(route.request().postData() ?? '{}') as unknown;
@@ -86,12 +86,9 @@ test.describe(
 
       await test.step('Set only offload plugin and verify validation error', async () => {
         await createPage.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
-        // Dedicated hosts UI/CRD landed with MTV-6163 (not on 2.12 z-stream).
-        if (crdSupportsDedicatedHosts) {
-          await createPage.offload.verifyDedicatedMigrationHostsVisible(0);
-        } else {
-          await createPage.offload.verifyDedicatedMigrationHostsNotVisible(0);
-        }
+        // Dedicated hosts field is always shown for XCOPY in the UI; CRD support is
+        // checked separately when asserting the create payload (MTV-6163).
+        await createPage.offload.verifyDedicatedMigrationHostsVisible(0);
         await createPage.offload.verifyValidationError('must be set when configuring offload');
       });
 
@@ -164,6 +161,14 @@ test.describe(
         await createPage.removeMapping(1);
         await createPage.selectFirstAvailableSourceAtIndex(0);
         await createPage.selectFirstAvailableTargetAtIndex(0);
+        // Re-apply offload after storage selection so the submitted mapping keeps plugin values.
+        await createPage.offload.expandOffloadOptions(0);
+        await createPage.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
+        await createPage.offload.selectStorageSecret(0, secretName);
+        await createPage.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
+        if (crdSupportsDedicatedHosts && dedicatedHostName) {
+          await createPage.offload.selectDedicatedMigrationHost(0, dedicatedHostName);
+        }
         await createPage.submit();
         resourceManager.addStorageMap(storageMapName, MTV_NAMESPACE);
       });
@@ -208,11 +213,11 @@ test.describe(
         const productText = await modal.offload.getStorageProductText(0);
         expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
 
-        // MTV-6163: dedicated hosts only when CRD schema includes the field (not on 2.12 z-stream).
+        // Dedicated hosts field is always shown for XCOPY in the UI.
+        // Host selection/persistence is only asserted when the CRD schema includes the field.
+        await modal.offload.verifyDedicatedMigrationHostsVisible(0);
         if (crdSupportsDedicatedHosts) {
           await modal.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
-        } else {
-          await modal.offload.verifyDedicatedMigrationHostsNotVisible(0);
         }
 
         await modal.cancel();
@@ -243,25 +248,25 @@ test.describe(
       await test.step('Delete storage map and verify it is removed from the list', async () => {
         await detailsPage.deleteMap(storageMapName);
         await expect(page).toHaveURL(
-          new RegExp(`/k8s/ns/${MTV_NAMESPACE}/forklift\\.konveyor\\.io~v1beta1~StorageMap$`),
+          new RegExp(`/k8s/ns/${MTV_NAMESPACE}/forklift\\.konveyor\\.io~v1beta1~StorageMap$`, 'u'),
         );
         await expect(
-          page.getByRole('link', { name: storageMapName, exact: true }),
+          page.getByRole('link', { exact: true, name: storageMapName }),
         ).not.toBeVisible();
       });
     });
 
     test('should hide offload options for non-vSphere providers', async ({
-      page,
       createCustomProvider,
+      page,
     }) => {
       const listPage = new StorageMapsListPage(page);
       const createPage = new StorageMapCreatePage(page);
 
       const ovaProviderKey = process.env.OVA_PROVIDER ?? 'ova';
       const ovaProvider = await createCustomProvider({
-        providerKey: ovaProviderKey,
         namePrefix: 'offload-ova',
+        providerKey: ovaProviderKey,
       });
 
       await test.step('Navigate to Create Storage Map form', async () => {

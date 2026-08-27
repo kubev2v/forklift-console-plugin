@@ -120,7 +120,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     if (await paginationNav.isVisible().catch(() => false)) {
       const paginationArea = paginationNav.locator('..');
       const text = await paginationArea.textContent();
-      const match = text?.match(/of\s+(?<total>\d+)/);
+      const match = text?.match(/of\s+(?<total>\d+)/u);
 
       if (match?.groups?.total) {
         return Number.parseInt(match.groups.total, 10);
@@ -220,7 +220,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   get powerStateOptionAuto() {
-    return this.page.getByRole('option', { name: 'Retain source VM power state', exact: true });
+    return this.page.getByRole('option', { exact: true, name: 'Retain source VM power state' });
   }
 
   get powerStateOptionInherit() {
@@ -228,11 +228,11 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   get powerStateOptionOff() {
-    return this.page.getByRole('option', { name: 'Powered off', exact: true });
+    return this.page.getByRole('option', { exact: true, name: 'Powered off' });
   }
 
   get powerStateOptionOn() {
-    return this.page.getByRole('option', { name: 'Powered on', exact: true });
+    return this.page.getByRole('option', { exact: true, name: 'Powered on' });
   }
   get renameTargetNameInput() {
     return this.page.getByTestId('vm-target-name-input');
@@ -283,7 +283,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   override async sortByColumn(columnName: string): Promise<void> {
     const columnHeader = this.vmTable
       .getByRole('columnheader')
-      .getByRole('button', { name: columnName, exact: true });
+      .getByRole('button', { exact: true, name: columnName });
     await columnHeader.click();
     await expect(columnHeader.locator('[class*="sort-indicator"], .pf-v5-c-table__sort-indicator'))
       .toBeVisible()

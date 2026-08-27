@@ -32,9 +32,9 @@ test.describe('Plan Details - Delete', { tag: '@downstream' }, () => {
     await planDetailsPage.deletePlan();
 
     await expect(page).toHaveURL(
-      new RegExp(`/k8s/ns/${namespace}/forklift\\.konveyor\\.io~v1beta1~Plan$`),
+      new RegExp(`/k8s/ns/${namespace}/forklift\\.konveyor\\.io~v1beta1~Plan$`, 'u'),
     );
-    await expect(page.getByRole('link', { name: planName, exact: true })).not.toBeVisible();
+    await expect(page.getByRole('link', { exact: true, name: planName })).not.toBeVisible();
   });
 });
 

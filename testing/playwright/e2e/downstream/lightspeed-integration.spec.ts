@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { TIPS_AND_TRICKS_TOPICS } from '../../fixtures/overview-page-topics';
 import { AI_PROMPT_QUESTIONS } from '../../page-objects/LearningExperienceDrawer';
-import { OverviewPage } from '../../page-objects/OverviewPage';
+import { OverviewPage } from '../../page-objects/OverviewPage/OverviewPage';
 import { requireLightspeed } from '../../utils/lightspeed/lightspeed';
 import { V2_12_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';

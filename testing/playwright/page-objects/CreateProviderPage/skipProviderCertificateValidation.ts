@@ -6,7 +6,7 @@ import { isVersionAtLeast } from '../../utils/version/version';
 export const skipProviderCertificateValidation = async (page: Page): Promise<void> => {
   if (!isVersionAtLeast(V2_11_0)) {
     await page
-      .getByRole('checkbox', { name: /Skip certificate validation/i })
+      .getByRole('checkbox', { name: /Skip certificate validation/iu })
       .check({ force: true });
     return;
   }

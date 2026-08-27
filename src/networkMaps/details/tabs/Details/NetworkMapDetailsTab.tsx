@@ -78,6 +78,9 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
       ) ?? [],
     [networkMap?.spec?.map, sourceProvider, sourceNetworks, destinationNetworks],
   );
+  const providersReady = Boolean(
+    sourceProvider?.metadata?.uid && destinationProvider?.metadata?.uid,
+  );
 
   return (
     <LoadingSuspend loaded={loaded} loadError={loadError} obj={networkMap}>
@@ -88,6 +91,7 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
 
       <PageSection className="forklift-page-section" hasBodyWrapper={false}>
         <SectionHeadingWithEdit
+          editable={providersReady}
           onClick={() => {
             launchOverlay<MapProvidersEditProps>(MapProvidersEdit, {
               destinationProvider,
@@ -105,6 +109,7 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
       <PageSection className="forklift-page-section" hasBodyWrapper={false}>
         <SectionHeadingWithEdit
           data-testid="network-map-edit-button"
+          editable={providersReady}
           onClick={() => {
             launchOverlay<NetworkMapEditProps>(NetworkMapEdit, {
               destinationProvider,

@@ -12,29 +12,29 @@ export const MTV_NAMESPACE = 'openshift-mtv';
 export const RESOURCE_KINDS = {
   FORKLIFT_CONTROLLER: 'ForkliftController',
   MIGRATION: 'Migration',
-  NETWORK_MAP: 'NetworkMap',
+  NAMESPACE: 'Namespace',
   NETWORK_ATTACHMENT_DEFINITION: 'NetworkAttachmentDefinition',
+  NETWORK_MAP: 'NetworkMap',
   PLAN: 'Plan',
+  PROJECT: 'Project',
   PROVIDER: 'Provider',
   SECRET: 'Secret',
   STORAGE_MAP: 'StorageMap',
   VIRTUAL_MACHINE: 'VirtualMachine',
-  PROJECT: 'Project',
-  NAMESPACE: 'Namespace',
 } as const;
 
 export const RESOURCE_TYPES = {
   FORKLIFT_CONTROLLERS: 'forkliftcontrollers',
   MIGRATIONS: 'migrations',
-  NETWORK_MAPS: 'networkmaps',
+  NAMESPACES: 'namespaces',
   NETWORK_ATTACHMENT_DEFINITIONS: 'network-attachment-definitions',
+  NETWORK_MAPS: 'networkmaps',
   PLANS: 'plans',
+  PROJECTS: 'projects',
   PROVIDERS: 'providers',
   SECRETS: 'secrets',
   STORAGE_MAPS: 'storagemaps',
   VIRTUAL_MACHINES: 'virtualmachines',
-  PROJECTS: 'projects',
-  NAMESPACES: 'namespaces',
 } as const;
 
 export const OPENSHIFT_PROJECT_KIND = 'Project';
@@ -71,8 +71,8 @@ export const CNV_OPERATOR_CSV_PREFIXES = [
 
 // HTTP headers and other constants
 export const HTTP_HEADERS = {
-  CONTENT_TYPE: 'Content-Type',
   APPLICATION_JSON: 'application/json',
+  CONTENT_TYPE: 'Content-Type',
   CSRF_TOKEN: 'X-CSRFToken',
 } as const;
 

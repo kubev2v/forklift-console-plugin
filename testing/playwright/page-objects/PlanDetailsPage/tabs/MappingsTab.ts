@@ -104,7 +104,7 @@ export class MappingsTab {
     const targetButton = row.getByRole('button').nth(1);
 
     await targetButton.click();
-    await this.page.getByRole('option', { name: newTargetNetwork, exact: true }).click();
+    await this.page.getByRole('option', { exact: true, name: newTargetNetwork }).click();
     await expect(targetButton).toContainText(newTargetNetwork);
   }
 
@@ -113,7 +113,7 @@ export class MappingsTab {
     const targetButton = row.getByRole('button').nth(1);
 
     await targetButton.click();
-    await this.page.getByRole('option', { name: newTargetStorage, exact: true }).click();
+    await this.page.getByRole('option', { exact: true, name: newTargetStorage }).click();
     await expect(targetButton).toContainText(newTargetStorage);
   }
 

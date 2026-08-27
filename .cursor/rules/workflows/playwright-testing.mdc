@@ -31,6 +31,8 @@ Upstream is effectively a **subset** of downstream: upstream covers basic happy 
 
 ## 2. Test Directory Structure
 
+For a fuller “how to read this suite” guide (fixtures, intercepts, utils, lint layers), see `testing/README.md`.
+
 ```
 testing/
   playwright/

@@ -38,8 +38,8 @@ export const createSecretObject = (
   apiVersion: 'v1',
   kind: 'Secret',
   metadata: { name, namespace },
-  type: 'Opaque',
   stringData,
+  type: 'Opaque',
 });
 
 const createProviderObject = (
@@ -106,10 +106,10 @@ const createOvaProviderViaApi = async (
   resourceManager.addSecret(secretName, MTV_NAMESPACE);
 
   const provider = createProviderObject(providerData.name, MTV_NAMESPACE, {
-    type: ProviderType.OVA,
-    url: providerData.hostname,
     secret: { name: secretName, namespace: MTV_NAMESPACE },
     settings: { applianceManagement: 'true' },
+    type: ProviderType.OVA,
+    url: providerData.hostname,
   });
 
   const createdProvider = await createProviderApi(provider, MTV_NAMESPACE);
@@ -142,13 +142,13 @@ const buildProviderData = (
   }
 
   const baseData: ProviderData = {
-    name: providerName,
-    projectName: MTV_NAMESPACE,
-    type: providerConfig.type,
     endpointType: providerConfig.endpoint_type ?? EndpointType.VCENTER,
     hostname: providerConfig.api_url,
-    username: providerConfig.username,
+    name: providerName,
     password: providerConfig.password,
+    projectName: MTV_NAMESPACE,
+    type: providerConfig.type,
+    username: providerConfig.username,
     vddkInitImage: providerConfig.vddk_init_image,
   };
 
@@ -173,9 +173,9 @@ export const createProvider = async (
   options: CreateProviderOptions = {},
 ): Promise<TestProvider> => {
   const {
-    providerKey,
-    namePrefix = 'test-provider',
     customProviderData,
+    namePrefix = 'test-provider',
+    providerKey,
     skipProviderReadyWait = false,
   } = options;
 
@@ -232,7 +232,7 @@ export const createPlan = async (
   resourceManager: ResourceManager,
   options: CreatePlanOptions,
 ): Promise<TestPlan> => {
-  const { sourceProvider, customPlanData } = options;
+  const { customPlanData, sourceProvider } = options;
 
   const sourceName = sourceProvider.metadata?.name;
   if (!sourceName) {

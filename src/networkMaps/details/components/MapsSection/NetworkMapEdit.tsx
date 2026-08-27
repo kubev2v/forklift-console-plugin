@@ -11,6 +11,7 @@ import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ModalVariant } from '@patternfly/react-core';
 import { NetworkMapFieldId } from '@utils/crds/maps/types';
+import { useResolvedMapProviders } from '@utils/crds/maps/useResolvedMapProviders';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -20,12 +21,15 @@ import type { NetworkEditFormValues, NetworkMapEditProps } from './utils/types';
 
 const NetworkMapEdit: OverlayComponent<NetworkMapEditProps> = ({
   closeOverlay,
-  destinationProvider,
+  destinationProvider: launchedDestinationProvider,
   initialMappings,
   networkMap,
-  sourceProvider,
+  sourceProvider: launchedSourceProvider,
 }) => {
   const { t } = useForkliftTranslation();
+  const { destinationProvider, providersLoadError, providersReady, sourceProvider } =
+    useResolvedMapProviders(networkMap, launchedSourceProvider, launchedDestinationProvider);
+
   const methods = useForm<NetworkEditFormValues>({
     defaultValues: {
       networkMap: initialMappings,
@@ -45,6 +49,8 @@ const NetworkMapEdit: OverlayComponent<NetworkMapEditProps> = ({
     useSourceNetworks(sourceProvider);
   const [targetNetworks, targetNetworksLoading, targetNetworksError] =
     useTargetNetworks(destinationProvider);
+  // Inventory errors only — providersLoadError must not block Confirm when launch-prop
+  // providers already resolved (providersReady). The table still surfaces the watch error.
   const loadError = sourceNetworksError ?? targetNetworksError;
 
   const onSubmit = async (formData: NetworkEditFormValues): Promise<void> => {
@@ -72,7 +78,7 @@ const NetworkMapEdit: OverlayComponent<NetworkMapEditProps> = ({
     <FormProvider {...methods}>
       <ModalForm
         closeOverlay={closeOverlay}
-        isDisabled={!isValid || !isDirty}
+        isDisabled={!isValid || !isDirty || !providersReady}
         onConfirm={handleSubmit(onSubmit)}
         testId="edit-network-map-modal"
         title={t('Edit network map')}
@@ -81,6 +87,8 @@ const NetworkMapEdit: OverlayComponent<NetworkMapEditProps> = ({
         <NetworkMapEditFieldTable
           isSubmitting={isSubmitting}
           loadError={loadError}
+          providersLoadError={providersLoadError}
+          providersReady={providersReady}
           sourceNetworks={sourceNetworks}
           sourceNetworksLoading={sourceNetworksLoading}
           targetNetworks={targetNetworks}

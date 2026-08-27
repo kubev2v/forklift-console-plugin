@@ -11,8 +11,8 @@ test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);
 
   test('should edit migration type', async ({
-    page,
     createCustomPlan,
+    page,
     testProvider: _testProvider,
   }) => {
     await createCustomPlan({ migrationType: MigrationType.WARM });
@@ -58,8 +58,8 @@ test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
   });
 
   test('should change migration type on duplicated warm plan', async ({
-    page,
     createCustomPlan,
+    page,
     resourceManager,
     testProvider: _testProvider,
   }) => {
@@ -68,9 +68,9 @@ test.describe('Plan Details - Migration Type', { tag: '@downstream' }, () => {
     // Prefer a snapshot-free CBT VM; snapshots are incompatible with warm migration
     // (VMHasSnapshots → CannotStart → Duplicate disabled).
     const originalPlan = await createCustomPlan({
+      additionalPlanSettings: { preserveStaticIPs: false },
       migrationType: MigrationType.WARM,
       virtualMachines: [{ folder: 'vm', sourceName: 'mtv-rhel8-warm-sanity' }],
-      additionalPlanSettings: { preserveStaticIPs: false },
     });
     const duplicatePlanName = `dup-${originalPlan.metadata.name}`;
     resourceManager.addPlan(duplicatePlanName, MTV_NAMESPACE);

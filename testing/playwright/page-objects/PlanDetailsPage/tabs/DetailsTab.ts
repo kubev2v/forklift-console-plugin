@@ -58,11 +58,11 @@ export class DetailsTab {
     this.savePowerStateButton = this.page.getByTestId('modal-confirm-button');
     this.targetPowerStateSelect = this.editPowerStateModal.getByTestId('target-power-state-select');
     this.powerStateOptionAuto = this.page.getByRole('option', {
-      name: 'Retain source VM power state',
       exact: true,
+      name: 'Retain source VM power state',
     });
-    this.powerStateOptionOn = this.page.getByRole('option', { name: 'Powered on', exact: true });
-    this.powerStateOptionOff = this.page.getByRole('option', { name: 'Powered off', exact: true });
+    this.powerStateOptionOn = this.page.getByRole('option', { exact: true, name: 'Powered on' });
+    this.powerStateOptionOff = this.page.getByRole('option', { exact: true, name: 'Powered off' });
     this.editDiskDecryptionModal = this.page.getByRole('dialog', { name: 'Disk decryption' });
     this.editSharedDisksModal = this.page.getByRole('dialog', { name: 'Edit shared disks' });
     this.editSharedDisksCheckbox = this.editSharedDisksModal.getByTestId(
@@ -195,7 +195,7 @@ export class DetailsTab {
 
   powerStateOption(state: 'on' | 'off' | 'auto'): Locator {
     const names = { auto: 'Retain source VM power state', off: 'Powered off', on: 'Powered on' };
-    return this.page.getByRole('option', { name: names[state], exact: true });
+    return this.page.getByRole('option', { exact: true, name: names[state] });
   }
 
   async saveDescription(): Promise<void> {
@@ -285,7 +285,7 @@ export class DetailsTab {
 
   async verifyMigrationType(type: MigrationType): Promise<void> {
     await expect(this.page.getByTestId('migration-type-detail-item')).toContainText(
-      new RegExp(type, 'i'),
+      new RegExp(type, 'iu'),
     );
   }
 

@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 import {
   BaseMapDetailsPage,
@@ -9,10 +9,10 @@ import { StorageMapEditModal } from './PlanDetailsPage/modals/StorageMapEditModa
 
 export class StorageMapDetailsPage extends BaseMapDetailsPage {
   protected readonly config: MapDetailsPageConfig = {
-    resourceType: 'StorageMap',
-    mapTypeDisplay: 'Storage map',
     editButtonTestId: 'storage-map-edit-button',
+    mapTypeDisplay: 'Storage map',
     readyMessage: 'The storage map is ready.',
+    resourceType: 'StorageMap',
   };
 
   public readonly storageMapEditModal: StorageMapEditModal;
@@ -24,7 +24,10 @@ export class StorageMapDetailsPage extends BaseMapDetailsPage {
 
   async openEditModal(): Promise<StorageMapEditModal> {
     await this.verifyOnDetailsPage();
-    await this.editButtonLocator().click();
+    const editButton = this.editButtonLocator();
+    // Edit stays disabled until source/destination providers resolve (uid present).
+    await expect(editButton).toBeEnabled({ timeout: 30_000 });
+    await editButton.click();
     await this.storageMapEditModal.waitForModalToOpen();
     await this.page.waitForLoadState('domcontentloaded');
     return this.storageMapEditModal;
@@ -42,13 +45,13 @@ export class StorageMapDetailsPage extends BaseMapDetailsPage {
   }): Promise<void> {
     const normalizedData: MapDetailsExpectedData = {
       mapName: expectedData.storageMapName,
-      sourceProvider: expectedData.sourceProvider,
-      targetProvider: expectedData.targetProvider,
       mappings: expectedData.mappings?.map((mapping) => ({
         source: mapping.sourceStorage,
         target: mapping.targetStorage,
       })),
+      sourceProvider: expectedData.sourceProvider,
       status: expectedData.status,
+      targetProvider: expectedData.targetProvider,
     };
     await this.verifyMapDetailsPage(normalizedData);
   }

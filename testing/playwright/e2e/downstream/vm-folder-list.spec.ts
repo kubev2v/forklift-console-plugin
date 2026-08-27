@@ -13,7 +13,7 @@ providerTest.describe('VM folder list - Plan Creation', { tag: '@downstream' }, 
 
   providerTest(
     'should verify VM selection functionality on plan creation wizard',
-    async ({ page, testProvider, resourceManager }) => {
+    async ({ page, resourceManager, testProvider }) => {
       const testData: PlanTestData = createPlanTestData({
         sourceProvider: testProvider?.metadata?.name ?? '',
       });
@@ -89,7 +89,7 @@ providerTest.describe('VM folder list - Provider Details Page', { tag: '@downstr
 
   providerTest(
     'should verify VM table functionality on provider details page',
-    async ({ page, testProvider, resourceManager }) => {
+    async ({ page, resourceManager: _resourceManager, testProvider }) => {
       const providerName = testProvider?.metadata?.name ?? '';
       const providerDetailsPage = new ProviderDetailsPage(page);
       const vmTab = providerDetailsPage.virtualMachinesTab;

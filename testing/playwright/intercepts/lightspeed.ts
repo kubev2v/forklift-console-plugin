@@ -15,8 +15,6 @@ const DEFAULT_OPTIONS: LightspeedInterceptOptions = {
 
 const buildSubscriptionList = (hasLightspeed: boolean): object => ({
   apiVersion: 'operators.coreos.com/v1alpha1',
-  kind: 'SubscriptionList',
-  metadata: { resourceVersion: '99999' },
   items: hasLightspeed
     ? [
         {
@@ -37,6 +35,8 @@ const buildSubscriptionList = (hasLightspeed: boolean): object => ({
         },
       ]
     : [],
+  kind: 'SubscriptionList',
+  metadata: { resourceVersion: '99999' },
 });
 
 const buildMcpService = (): object => ({

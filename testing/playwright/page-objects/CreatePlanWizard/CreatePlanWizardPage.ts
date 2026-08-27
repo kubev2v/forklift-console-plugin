@@ -168,9 +168,9 @@ export class CreatePlanWizardPage {
 
   async navigate(): Promise<void> {
     await this.navigationHelper.navigateToK8sResource({
-      resource: 'Plan',
       action: 'new',
       allNamespaces: true,
+      resource: 'Plan',
     });
   }
 

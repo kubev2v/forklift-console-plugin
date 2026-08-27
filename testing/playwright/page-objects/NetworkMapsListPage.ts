@@ -25,9 +25,9 @@ export class NetworkMapsListPage {
 
   async navigate(namespace?: string): Promise<void> {
     await this.navigationHelper.navigateToK8sResource({
-      resource: 'NetworkMap',
-      namespace,
       allNamespaces: namespace === undefined,
+      namespace,
+      resource: 'NetworkMap',
     });
   }
 

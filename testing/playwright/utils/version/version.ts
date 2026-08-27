@@ -14,7 +14,7 @@ const isLatest = (versionString: string): boolean =>
   versionString.trim().toLowerCase() === 'latest';
 
 const parseVersion = (versionString: string): VersionTuple | null => {
-  const normalized = versionString.trim().replace(/^v/i, '');
+  const normalized = versionString.trim().replace(/^v/iu, '');
   const parts = normalized.split('.').map((part) => Number.parseInt(part, 10));
   if (parts.length < 2 || parts.some(Number.isNaN)) {
     return null;

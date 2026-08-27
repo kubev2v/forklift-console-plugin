@@ -5,12 +5,12 @@ import { HookEditModal } from '../modals/HookEditModal';
 
 export type HookType = 'pre' | 'post';
 
-export interface HookConfig {
+export type HookConfig = {
+  ansiblePlaybook?: string;
   enabled: boolean;
   hookRunnerImage?: string;
   serviceAccount?: string;
-  ansiblePlaybook?: string;
-}
+};
 
 export class HooksTab {
   readonly hookEditModal: HookEditModal;

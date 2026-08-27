@@ -10,80 +10,80 @@ export const setupTargetProviderNamespacesIntercepts = async (
   const endpoint = API_ENDPOINTS.targetNamespaces(targetProviderUid);
   const namespaceData = [
     {
-      uid: 'default-uid',
       name: 'default',
-      selfLink: `providers/openshift/${targetProviderUid}/namespaces/default`,
       object: {
         metadata: {
           name: 'default',
-          uid: 'default-uid',
           namespace: 'default',
+          uid: 'default-uid',
         },
         spec: {},
         status: {
           phase: 'Active',
         },
       },
+      selfLink: `providers/openshift/${targetProviderUid}/namespaces/default`,
+      uid: 'default-uid',
     },
     {
-      uid: 'test-target-project-uid',
       name: 'test-target-project',
-      selfLink: `providers/openshift/${targetProviderUid}/namespaces/test-target-project`,
       object: {
         metadata: {
           name: 'test-target-project',
-          uid: 'test-target-project-uid',
           namespace: 'test-target-project',
+          uid: 'test-target-project-uid',
         },
         spec: {},
         status: {
           phase: 'Active',
         },
       },
+      selfLink: `providers/openshift/${targetProviderUid}/namespaces/test-target-project`,
+      uid: 'test-target-project-uid',
     },
     {
-      uid: 'openshift-mtv-uid',
       name: MTV_NAMESPACE,
-      selfLink: `providers/openshift/${targetProviderUid}/namespaces/openshift-mtv`,
       object: {
         metadata: {
           name: MTV_NAMESPACE,
-          uid: 'openshift-mtv-uid',
           namespace: MTV_NAMESPACE,
+          uid: 'openshift-mtv-uid',
         },
         spec: {},
         status: {
           phase: 'Active',
         },
       },
+      selfLink: `providers/openshift/${targetProviderUid}/namespaces/openshift-mtv`,
+      uid: 'openshift-mtv-uid',
     },
   ];
 
   // Simple namespaces format (without detail parameter) for TargetProjectField
   const simpleNamespaceData = [
     {
-      uid: 'default-uid',
       name: 'default',
       selfLink: `providers/openshift/${targetProviderUid}/namespaces/default`,
+      uid: 'default-uid',
     },
     {
-      uid: 'test-target-project-uid',
       name: 'test-target-project',
       selfLink: `providers/openshift/${targetProviderUid}/namespaces/test-target-project`,
+      uid: 'test-target-project-uid',
     },
     {
-      uid: 'openshift-mtv-uid',
       name: MTV_NAMESPACE,
       selfLink: `providers/openshift/${targetProviderUid}/namespaces/openshift-mtv`,
+      uid: 'openshift-mtv-uid',
     },
   ];
 
   // Direct inventory endpoint
   await page.route(endpoint, async (route) => {
     await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
       body: JSON.stringify(namespaceData),
+      contentType: 'application/json',
+      status: 200,
     });
   });
 
@@ -96,15 +96,15 @@ export const setupTargetProviderNamespacesIntercepts = async (
 
       if (hasDetailParam) {
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify(namespaceData),
+          contentType: 'application/json',
+          status: 200,
         });
       } else {
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify(simpleNamespaceData),
+          contentType: 'application/json',
+          status: 200,
         });
       }
     },
@@ -119,15 +119,15 @@ export const setupTargetProviderNamespacesIntercepts = async (
 
       if (hasDetailParam) {
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify(namespaceData),
+          contentType: 'application/json',
+          status: 200,
         });
       } else {
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify(simpleNamespaceData),
+          contentType: 'application/json',
+          status: 200,
         });
       }
     },
@@ -138,9 +138,9 @@ export const setupTargetProviderNamespacesIntercepts = async (
     `**/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers/openshift/${targetProviderUid}/namespaces`,
     async (route) => {
       await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
         body: JSON.stringify(simpleNamespaceData),
+        contentType: 'application/json',
+        status: 200,
       });
     },
   );

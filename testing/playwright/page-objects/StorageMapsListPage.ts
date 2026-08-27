@@ -14,15 +14,15 @@ export class StorageMapsListPage {
   async clickCreateWithFormButton(): Promise<void> {
     await this.page.getByRole('button', { name: 'Create storage map' }).first().click();
     await this.page.getByText('Create with form').click();
-    await this.page.waitForURL(/storageMaps\/create\/form/);
+    await this.page.waitForURL(/storageMaps\/create\/form/u);
     await expect(this.page.getByRole('heading', { name: 'Create storage map' })).toBeVisible();
   }
 
   async navigate(namespace?: string): Promise<void> {
     await this.navigationHelper.navigateToK8sResource({
-      resource: 'StorageMap',
-      namespace,
       allNamespaces: namespace === undefined,
+      namespace,
+      resource: 'StorageMap',
     });
   }
 }

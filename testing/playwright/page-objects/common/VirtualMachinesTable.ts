@@ -10,6 +10,29 @@ const DRAG_HOLD_MS = 100;
 const DRAG_MOVE_STEPS = 10;
 const MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS = 20;
 
+const reorderColumnWithMoveButtons = async (
+  columnList: Locator,
+  sourceId: string,
+  sourceItem: Locator,
+  targetItem: Locator,
+): Promise<void> => {
+  const moveUpButton = columnList.getByTestId(`manage-columns-move-up-${sourceId}`);
+
+  for (let attempt = 0; attempt < MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS; attempt += 1) {
+    const sourceBox = await sourceItem.boundingBox();
+    const targetBox = await targetItem.boundingBox();
+    if (sourceBox && targetBox && sourceBox.y < targetBox.y) {
+      return;
+    }
+    await expect(moveUpButton).toBeEnabled();
+    await moveUpButton.click();
+  }
+
+  throw new Error(
+    `Failed to move column "${sourceId}" above the target after ${MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS} move-up clicks`,
+  );
+};
+
 /**
  * Shared component for VM tables that appear in:
  * - Provider Details Page > Virtual Machines tab
@@ -63,29 +86,6 @@ export class VirtualMachinesTable {
     await this.page.waitForTimeout(DRAG_DROP_SETTLE_MS);
   }
 
-  private async reorderColumnWithMoveButtons(
-    columnList: Locator,
-    sourceId: string,
-    sourceItem: Locator,
-    targetItem: Locator,
-  ): Promise<void> {
-    const moveUpButton = columnList.getByTestId(`manage-columns-move-up-${sourceId}`);
-
-    for (let attempt = 0; attempt < MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS; attempt += 1) {
-      const sourceBox = await sourceItem.boundingBox();
-      const targetBox = await targetItem.boundingBox();
-      if (sourceBox && targetBox && sourceBox.y < targetBox.y) {
-        return;
-      }
-      await expect(moveUpButton).toBeEnabled();
-      await moveUpButton.click();
-    }
-
-    throw new Error(
-      `Failed to move column "${sourceId}" above the target after ${MANAGE_COLUMNS_REORDER_MAX_ATTEMPTS} move-up clicks`,
-    );
-  }
-
   /**
    * Adds a column by checking it in the Manage columns modal
    */
@@ -129,7 +129,7 @@ export class VirtualMachinesTable {
       return;
     }
 
-    const collapseButton = folderRow.getByRole('button', { name: /Collapse row/ });
+    const collapseButton = folderRow.getByRole('button', { name: /Collapse row/u });
     if (await collapseButton.isVisible().catch(() => false)) {
       const isExpanded = await collapseButton.getAttribute('aria-expanded');
       if (isExpanded === 'true') {
@@ -152,7 +152,7 @@ export class VirtualMachinesTable {
    * so VM rows are hidden until their parent folder is expanded.
    */
   async expandFirstFolder(): Promise<void> {
-    const firstFolderRow = this.page.getByTestId(/^folder-/).first();
+    const firstFolderRow = this.page.getByTestId(/^folder-/u).first();
     // Wait for the tree table to finish loading before checking for folders.
     await firstFolderRow.waitFor({ state: 'visible', timeout: 15_000 }).catch(() => null);
     if ((await firstFolderRow.count()) === 0) {
@@ -173,7 +173,7 @@ export class VirtualMachinesTable {
    * since VM rows are nested inside folder rows.
    */
   async expandFirstVMRow(): Promise<void> {
-    const firstVmRow = this.page.getByTestId(/^vm-/).first();
+    const firstVmRow = this.page.getByTestId(/^vm-/u).first();
     await firstVmRow.waitFor({ state: 'visible', timeout: 15_000 }).catch(() => null);
     if ((await firstVmRow.count()) === 0) {
       return;
@@ -224,7 +224,7 @@ export class VirtualMachinesTable {
     // Find the first VM row button using aria-label (row 0 is folder, rows 1+ are VMs)
     const firstVMButton = this.page
       .getByTestId('vsphere-tree-table')
-      .getByRole('button', { name: /^Expand row [1-9]/ })
+      .getByRole('button', { name: /^Expand row [1-9]/u })
       .first();
 
     // Get the parent gridcell's text content
@@ -308,7 +308,7 @@ export class VirtualMachinesTable {
     await expect(targetItem).toBeVisible();
 
     if (isVersionAtLeast(V5_0_0)) {
-      await this.reorderColumnWithMoveButtons(columnList, sourceId, sourceItem, targetItem);
+      await reorderColumnWithMoveButtons(columnList, sourceId, sourceItem, targetItem);
     } else {
       await this.reorderColumnWithDrag(sourceColumn, targetColumn, sourceItem, targetItem);
     }
@@ -352,7 +352,7 @@ export class VirtualMachinesTable {
   async switchFilterAttribute(attributeLabel: string): Promise<void> {
     const filterToggle = this.rootLocator.getByTestId('filter-attribute-toggle');
     await filterToggle.click();
-    await this.page.getByRole('option', { name: attributeLabel, exact: true }).click();
+    await this.page.getByRole('option', { exact: true, name: attributeLabel }).click();
   }
 
   /**
@@ -361,7 +361,7 @@ export class VirtualMachinesTable {
    * @returns true if a concern button was found and tested, false otherwise
    */
   async testConcernButton(): Promise<boolean> {
-    const concernButton = this.page.getByTestId(/^concern-badge-/).first();
+    const concernButton = this.page.getByTestId(/^concern-badge-/u).first();
 
     if (!(await concernButton.isVisible().catch(() => false))) {
       return false;
@@ -388,9 +388,9 @@ export class VirtualMachinesTable {
     await expect(tableGrid).toBeVisible();
 
     // Get first folder row if it exists
-    const folderRows = await this.page.getByTestId(/^folder-/).count();
+    const folderRows = await this.page.getByTestId(/^folder-/u).count();
     if (folderRows > 0) {
-      const firstFolderLocator = this.page.getByTestId(/^folder-/).first();
+      const firstFolderLocator = this.page.getByTestId(/^folder-/u).first();
       const firstFolderTestId = await firstFolderLocator.getAttribute('data-testid');
 
       if (firstFolderTestId) {

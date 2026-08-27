@@ -33,13 +33,27 @@ const UPDATED_SCRIPT: ScriptConfig = {
   scriptType: 'run',
 };
 
+const getGuestTypeLabel = (script: ScriptConfig): string => {
+  if (!script.guestType) {
+    throw new Error(`Script "${script.name}" is missing required guestType`);
+  }
+  return GUEST_TYPE_LABELS[script.guestType];
+};
+
+const getScriptTypeLabel = (script: ScriptConfig): string => {
+  if (!script.scriptType) {
+    throw new Error(`Script "${script.name}" is missing required scriptType`);
+  }
+  return SCRIPT_TYPE_LABELS[script.scriptType];
+};
+
 test.describe('Plan Customization Scripts', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);
 
   test('should create plan with new customization scripts and verify on Automation tab', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     await disableGuidedTour(page);
 
@@ -91,13 +105,13 @@ test.describe('Plan Customization Scripts', { tag: '@downstream' }, () => {
       await planDetailsPage.automationTab.verifyConfigMapLink();
       await planDetailsPage.automationTab.verifyScriptDetails(
         LINUX_FIRSTBOOT_SCRIPT.name,
-        GUEST_TYPE_LABELS[LINUX_FIRSTBOOT_SCRIPT.guestType ?? ''],
-        SCRIPT_TYPE_LABELS[LINUX_FIRSTBOOT_SCRIPT.scriptType ?? ''],
+        getGuestTypeLabel(LINUX_FIRSTBOOT_SCRIPT),
+        getScriptTypeLabel(LINUX_FIRSTBOOT_SCRIPT),
       );
       await planDetailsPage.automationTab.verifyScriptDetails(
         WINDOWS_FIRSTBOOT_SCRIPT.name,
-        GUEST_TYPE_LABELS[WINDOWS_FIRSTBOOT_SCRIPT.guestType ?? ''],
-        SCRIPT_TYPE_LABELS[WINDOWS_FIRSTBOOT_SCRIPT.scriptType ?? ''],
+        getGuestTypeLabel(WINDOWS_FIRSTBOOT_SCRIPT),
+        getScriptTypeLabel(WINDOWS_FIRSTBOOT_SCRIPT),
       );
     });
 
@@ -109,16 +123,16 @@ test.describe('Plan Customization Scripts', { tag: '@downstream' }, () => {
     await test.step('Verify updated scripts on Automation tab', async () => {
       await planDetailsPage.automationTab.verifyScriptDetails(
         UPDATED_SCRIPT.name,
-        GUEST_TYPE_LABELS[UPDATED_SCRIPT.guestType ?? ''],
-        SCRIPT_TYPE_LABELS[UPDATED_SCRIPT.scriptType ?? ''],
+        getGuestTypeLabel(UPDATED_SCRIPT),
+        getScriptTypeLabel(UPDATED_SCRIPT),
       );
     });
   });
 
   test('should create plan without scripts and show empty state on Automation tab', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     await disableGuidedTour(page);
 
@@ -146,8 +160,8 @@ test.describe('Plan Customization Scripts', { tag: '@downstream' }, () => {
 
   test('should navigate back from Review to edit Customization Scripts', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     await disableGuidedTour(page);
 

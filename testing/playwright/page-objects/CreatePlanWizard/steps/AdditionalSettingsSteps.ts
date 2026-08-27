@@ -67,21 +67,21 @@ export class AdditionalSettingsStep {
   async selectExistingLUKSSecret(secretName: string): Promise<void> {
     await this.existingSecretRadio.click();
     await this.luksSecretSelect.click();
-    await this.page.getByRole('option', { name: secretName, exact: true }).click();
+    await this.page.getByRole('option', { exact: true, name: secretName }).click();
   }
 
   async selectInstanceTypeByLabel(vmName: string, optionLabel: string): Promise<void> {
     const toggle = this.instanceTypeSelectToggle(vmName);
     await expect(toggle).toBeEnabled({ timeout: 120_000 });
     await toggle.click();
-    await this.page.getByRole('option', { name: optionLabel, exact: true }).click();
+    await this.page.getByRole('option', { exact: true, name: optionLabel }).click();
   }
 
   async selectNoneInstanceType(vmName: string): Promise<void> {
     const toggle = this.instanceTypeSelectToggle(vmName);
     await expect(toggle).toBeEnabled({ timeout: 120_000 });
     await toggle.click();
-    await this.page.getByRole('option', { name: /^None/ }).click();
+    await this.page.getByRole('option', { name: /^None/u }).click();
   }
 
   /**

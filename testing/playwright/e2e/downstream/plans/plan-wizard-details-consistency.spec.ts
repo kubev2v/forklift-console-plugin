@@ -13,12 +13,12 @@ test.describe('Plan Wizard-Details Consistency', { tag: '@downstream' }, () => {
 
   test('should verify warm migration type in review step matches details page', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     const testData: PlanTestData = createPlanTestData({
-      sourceProvider: testProvider?.metadata?.name ?? '',
       migrationType: MigrationType.WARM,
+      sourceProvider: testProvider?.metadata?.name ?? '',
     });
     resourceManager.addPlan(testData.planName, testData.planProject);
 
@@ -50,8 +50,8 @@ test.describe('Plan Wizard-Details Consistency', { tag: '@downstream' }, () => {
 
   test('should verify default settings in review step match details page', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     const testData: PlanTestData = createPlanTestData({
       sourceProvider: testProvider?.metadata?.name ?? '',

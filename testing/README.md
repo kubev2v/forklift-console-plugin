@@ -1,5 +1,73 @@
 # End-to-End Testing
 
+## How to read this suite (architecture)
+
+```
+testing/playwright/
+  e2e/
+    upstream/       # Mocked APIs via intercepts — fast, no real providers
+    downstream/     # Real cluster + .providers.json — full integration
+  page-objects/     # POM: pages, wizard steps, modals, tables
+  fixtures/         # Playwright fixtures that create/cleanup K8s resources
+  intercepts/       # page.route mocks for upstream (K8s + Forklift inventory)
+  utils/            # ResourceManager, timeouts, navigation, helpers
+  types/            # Shared test-data types and enums
+  global.setup.ts   # Login, auth storage, env relay
+  global.teardown.ts
+```
+
+**Upstream vs downstream**
+
+| | Upstream | Downstream |
+|--|----------|------------|
+| Tag | (default / `@upstream`) | `@downstream` |
+| Data | Intercepts + static fixtures | Real providers from `.providers.json` |
+| Run | `npm run test:upstream` | `npm run test:downstream` |
+
+Upstream is the fast UI feedback loop. Downstream is the source of truth against a live MTV cluster.
+
+**How a test is structured**
+
+1. Spec under `e2e/` uses `test.step()` for narrative steps.
+2. Interactions go through **page-objects** (not raw selectors scattered in specs).
+3. Downstream specs pull resources from **fixtures** (`resourceFixtures.ts`).
+4. Upstream specs call **`setupForkliftIntercepts(page)`** (and related setup helpers) so inventory/API calls return mock data.
+
+**Fixture catalog** (`fixtures/resourceFixtures.ts`)
+
+| Export | Creates |
+|--------|---------|
+| `sharedProviderFixtures` | Shared provider reused across tests |
+| `sharedProviderCustomPlanFixtures` | Shared provider + customizable plan |
+| `isolatedFixtures` | Isolated provider + plan per test |
+| `isolatedCustomPlanFixtures` | Isolated provider + customizable plan |
+| `providerOnlyFixtures` / `customProviderOnlyFixtures` | Provider only (no plan) |
+| `sharedProviderNetworkMapFixtures` / `isolatedNetworkMapFixtures` | Provider + network map |
+| `sharedProviderStorageMapFixtures` / `isolatedStorageMapFixtures` | Provider + storage map |
+
+Factory: `createResourceFixtures(config)` — prefer an existing export before inventing a new fixture shape.
+
+**Intercepts**
+
+- Per-resource setup functions live under `intercepts/*.ts` (providers, VMs, plans, maps, …).
+- `setupForkliftIntercepts(page)` wires the default upstream mock set (typically vSphere-oriented test UIDs).
+- Prefer importing the specific `setupXIntercepts` you need when a test should not load the full default set.
+
+**Conventions**
+
+- Prefer `test.step('…', async () => { … })` so failures read as a story.
+- Prefer `data-testid` locators via page-objects.
+- Do not add new barrel `index.ts` files under `testing/playwright` (ESLint `barrel-files`).
+
+**Root vs `testing/` dependencies (ESLint)**
+
+Root `package.json` pins `@playwright/test` and `@kubernetes/client-node` as
+devDependencies so type-aware ESLint can resolve Playwright/K8s types from a
+root `npm ci` only (CI lint does not install `testing/`). Keep those versions
+identical to `testing/package.json` whenever either side is bumped.
+
+---
+
 This document outlines the steps to run the Playwright end-to-end tests for the Forklift Console Plugin.
 
 ## Prerequisites

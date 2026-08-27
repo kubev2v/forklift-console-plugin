@@ -1,7 +1,10 @@
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceFetcher } from '../../utils/resource-manager/ResourceFetcher';
-import type { JsonPatchOperation } from '../../utils/resource-manager/ResourceManager';
-import { ResourcePatcher } from '../../utils/resource-manager/ResourcePatcher';
+import {
+  type JsonPatchOperation,
+  ResourcePatcher,
+} from '../../utils/resource-manager/ResourcePatcher';
+import { testError } from '../../utils/testLog';
 
 const FIELD_MAP = {
   aapTokenSecretName: 'aap_token_secret_name',
@@ -48,7 +51,7 @@ export const initializeForkliftSettings = async (
     namespace,
   );
   if (!controller) {
-    console.error('No ForkliftController found');
+    testError('No ForkliftController found');
     return null;
   }
 
@@ -81,7 +84,7 @@ export const initializeForkliftSettings = async (
       namespace,
     );
     if (!result) {
-      console.error('Failed to initialize ForkliftController settings');
+      testError('Failed to initialize ForkliftController settings');
       return null;
     }
   }
@@ -129,7 +132,7 @@ export const withTemporaryForkliftSettings = async (
   } finally {
     const restored = await restoreForkliftSettings(originalSettings, namespace);
     if (!restored) {
-      console.error(
+      testError(
         'Failed to restore ForkliftController settings — subsequent tests may inherit incorrect state',
       );
     }

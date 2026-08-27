@@ -79,9 +79,9 @@ test.describe(
 
     test('should show consistent status between UI and Plan CR after wizard creation', async ({
       page,
+      resourceManager,
       testPlan,
       testProvider: _testProvider,
-      resourceManager,
     }) => {
       test.setTimeout(120_000);
 
@@ -146,9 +146,9 @@ test.describe(
 
     test('should clear stale conditions after patching a temporarily broken NetworkMap', async ({
       page,
+      resourceManager,
       testPlan,
       testProvider: _testProvider,
-      resourceManager,
     }, testInfo) => {
       test.setTimeout(120_000);
 
@@ -205,13 +205,13 @@ test.describe(
         await test.step('Break NetworkMap by pointing to non-existent provider', async () => {
           const patched = await resourceManager.patchResource({
             kind: 'NetworkMap',
-            resourceName: networkMapRef.name ?? '',
             namespace: nmNamespace,
             patch: {
               spec: {
                 provider: { source: { name: missingProviderName, namespace: MTV_NAMESPACE } },
               },
             },
+            resourceName: networkMapRef.name ?? '',
           });
           expect(patched).not.toBeNull();
         });
@@ -224,11 +224,11 @@ test.describe(
         await test.step('Restore NetworkMap to original provider', async () => {
           await resourceManager.patchResource({
             kind: 'NetworkMap',
-            resourceName: networkMapRef.name ?? '',
             namespace: nmNamespace,
             patch: {
               spec: { provider: originalProvider },
             },
+            resourceName: networkMapRef.name ?? '',
           });
         });
       }

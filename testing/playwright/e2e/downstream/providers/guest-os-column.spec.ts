@@ -63,7 +63,7 @@ providerTest.describe('Guest OS Column - Provider VM Tab', { tag: '@downstream' 
         await vmTab.switchFilterAttribute(GUEST_OS_COLUMN);
         // Switching to Guest OS proves the option existed; search input should now
         // show the Guest OS placeholder
-        const searchInput = page.getByPlaceholder(/guest os/i);
+        const searchInput = page.getByPlaceholder(/guest os/iu);
         await expect(searchInput).toBeVisible({ timeout: 5_000 });
         // Reset to VM name filter for step 5
         await vmTab.switchFilterAttribute('VM name');
@@ -109,7 +109,7 @@ customPlanTest.describe('Guest OS Column - Plan Details VM List', { tag: '@downs
 
   customPlanTest(
     'should display Guest OS column and filter in plan spec VM list',
-    async ({ page, createCustomPlan }) => {
+    async ({ createCustomPlan, page }) => {
       const testPlan = await createCustomPlan({
         criticalIssuesAction: 'confirm',
         networkMap: {
@@ -157,7 +157,7 @@ providerTest.describe('Guest OS Column - Plan Wizard VM Step', { tag: '@downstre
 
   providerTest(
     'should display Guest OS column in plan wizard VM selection step',
-    async ({ page, testProvider, resourceManager }) => {
+    async ({ page, resourceManager, testProvider }) => {
       const testData = createPlanTestData({
         sourceProvider: testProvider?.metadata?.name ?? '',
       });

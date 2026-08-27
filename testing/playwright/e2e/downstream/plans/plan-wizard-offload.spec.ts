@@ -29,17 +29,17 @@ test.describe(
       const crdSupportsDedicatedHosts = await storageMapCrdSupportsDedicatedMigrationHosts();
       const planName = `offload-test-${crypto.randomUUID().slice(0, 8)}`;
       const testPlanData = createPlanTestData({
+        criticalIssuesAction: 'confirm',
         planName,
         sourceProvider: testProvider.metadata.name,
-        targetProject: { name: 'default', isPreexisting: true },
         storageMap: {
-          name: `${planName}-storage-map`,
           isPreexisting: false,
           mappings: [],
+          name: `${planName}-storage-map`,
         },
+        targetProject: { isPreexisting: true, name: 'default' },
         // vsphere-8.0.3 inventory has no mtv-func-rhel9 (default); use a VM that exists here.
         virtualMachines: [{ folder: 'vm', sourceName: 'mtv-tests-rhel8' }],
-        criticalIssuesAction: 'confirm',
       });
 
       const wizard = new CreatePlanWizardPage(page, resourceManager);

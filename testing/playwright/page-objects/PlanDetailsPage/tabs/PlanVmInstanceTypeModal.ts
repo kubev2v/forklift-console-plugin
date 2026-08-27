@@ -25,7 +25,7 @@ export class PlanVmInstanceTypeModal {
     await menuItem.waitFor({ state: 'visible' });
     // PF6 marks disabled menu items with pf-m-disabled (CSS class, not the disabled attribute).
     // VM actions are disabled while the plan is Validating or otherwise not editable.
-    await expect(menuItem).not.toHaveClass(/pf-m-disabled/, { timeout: K8S_RECONCILE_TIMEOUT });
+    await expect(menuItem).not.toHaveClass(/pf-m-disabled/u, { timeout: K8S_RECONCILE_TIMEOUT });
     await menuItem.click();
     await this.root.waitFor({ state: 'visible' });
   }

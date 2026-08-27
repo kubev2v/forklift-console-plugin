@@ -9,8 +9,6 @@ export const setupPlanDetailsIntercepts = async (page: Page) => {
     async (route) => {
       if (route.request().method() === 'GET') {
         await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
           body: JSON.stringify({
             apiVersion: 'forklift.konveyor.io/v1beta1',
             kind: 'Plan',
@@ -56,6 +54,7 @@ export const setupPlanDetailsIntercepts = async (page: Page) => {
               uid: 'test-plan-uid-1',
             },
             spec: {
+              description: 'Test plan for automated testing',
               map: {
                 network: {
                   apiVersion: 'forklift.konveyor.io/v1beta1',
@@ -92,7 +91,6 @@ export const setupPlanDetailsIntercepts = async (page: Page) => {
               pvcNameTemplateUseGenerateName: true,
               skipGuestConversion: false,
               targetNamespace: TEST_DATA.targetProject,
-              description: 'Test plan for automated testing',
               vms: [
                 {
                   id: 'test-vm-1',
@@ -114,6 +112,8 @@ export const setupPlanDetailsIntercepts = async (page: Page) => {
               ],
             },
           }),
+          contentType: 'application/json',
+          status: 200,
         });
       } else {
         await route.continue();

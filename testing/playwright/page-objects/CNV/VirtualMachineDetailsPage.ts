@@ -3,11 +3,12 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { PAGE_LOAD_TIMEOUT } from '../../utils/resource-manager/constants';
 import { disableGuidedTour } from '../../utils/utils';
 
-const CNV_VM_URL_PATTERN = /kubevirt\.io~v1~VirtualMachine/;
+const CNV_VM_URL_PATTERN = /kubevirt\.io~v1~VirtualMachine/u;
 
 /**
- * Page object for the kubevirt-enhanced VirtualMachine details page.
- * Tabs: Overview, Metrics, YAML, Configuration, Events, Console, Snapshots, Diagnostics
+ * Page object for the VirtualMachine details page.
+ * Prefer the kubevirt-plugin enhanced UI (Overview tab). Fall back to the stock
+ * console Details tab when the kubevirt plugin is not loaded.
  */
 export class VirtualMachineDetailsPage {
   protected readonly page: Page;
@@ -20,8 +21,24 @@ export class VirtualMachineDetailsPage {
     return this.page.locator('main');
   }
 
+  /**
+   * Wait for Overview first (kubevirt plugin). If it never appears, fall back to Details.
+   * Do not union the locators — CNV 4.22 can show both and strict mode fails on `.or()`.
+   */
+  private async waitForPrimaryTab(): Promise<void> {
+    try {
+      await this.overviewTab.waitFor({ state: 'visible', timeout: PAGE_LOAD_TIMEOUT });
+    } catch {
+      await expect(this.detailsTab).toBeVisible({ timeout: PAGE_LOAD_TIMEOUT });
+    }
+  }
+
+  get detailsTab(): Locator {
+    return this.main.getByRole('link', { exact: true, name: 'Details' });
+  }
+
   get overviewTab(): Locator {
-    return this.main.getByRole('link', { name: 'Overview', exact: true });
+    return this.main.getByRole('link', { exact: true, name: 'Overview' });
   }
 
   async verifySmokeOverview(expectedName: string): Promise<void> {
@@ -30,24 +47,27 @@ export class VirtualMachineDetailsPage {
     await expect(
       this.main
         .locator('dt')
-        .filter({ hasText: /^Name$/ })
+        .filter({ hasText: /^Name$/u })
         .first(),
     ).toBeVisible();
     await expect(
       this.main
         .locator('dt')
-        .filter({ hasText: /^Status$/ })
-        .first(),
-    ).toBeVisible();
-    await expect(
-      this.main
-        .locator('dt')
-        .filter({ hasText: /^CPU \| Memory$/ })
+        .filter({ hasText: /^Status$/u })
         .first(),
     ).toBeVisible();
 
-    await expect(this.main.getByRole('link', { name: /Network \(\d+\)/ })).toBeVisible();
-    await expect(this.main.getByRole('link', { name: /Storage \([1-9]\d*\)/ })).toBeVisible();
+    // kubevirt-plugin Overview has richer widgets; stock Details only has basic fields.
+    if (await this.overviewTab.isVisible()) {
+      await expect(
+        this.main
+          .locator('dt')
+          .filter({ hasText: /^CPU \| Memory$/u })
+          .first(),
+      ).toBeVisible();
+      await expect(this.main.getByRole('link', { name: /Network \(\d+\)/u })).toBeVisible();
+      await expect(this.main.getByRole('link', { name: /Storage \([1-9]\d*\)/u })).toBeVisible();
+    }
   }
 
   async waitForPageLoad(vmName?: string): Promise<void> {
@@ -55,11 +75,12 @@ export class VirtualMachineDetailsPage {
     await disableGuidedTour(this.page);
 
     // The CNV "Welcome to OpenShift Virtualization" modal can appear at any point during page
-    // load (sometimes after guided-tour handling). Race it against the overview tab so we
-    // dismiss it regardless of when it shows up, without blocking if it never appears.
+    // load (sometimes after guided-tour handling). Race it against Overview so we dismiss it
+    // regardless of when it shows up, without blocking if it never appears.
     const welcomeDialog = this.page.getByRole('dialog', { name: 'Welcome modal' });
     await Promise.race([
       this.overviewTab.waitFor({ state: 'visible', timeout: PAGE_LOAD_TIMEOUT }),
+      this.detailsTab.waitFor({ state: 'visible', timeout: PAGE_LOAD_TIMEOUT }),
       welcomeDialog.waitFor({ state: 'visible', timeout: PAGE_LOAD_TIMEOUT }).then(async () => {
         await welcomeDialog.getByRole('button', { name: 'Close' }).click();
         await welcomeDialog.waitFor({ state: 'hidden' });
@@ -70,7 +91,7 @@ export class VirtualMachineDetailsPage {
       }
     });
 
-    await expect(this.overviewTab).toBeVisible({ timeout: PAGE_LOAD_TIMEOUT });
+    await this.waitForPrimaryTab();
     if (vmName) {
       await expect(this.main.getByText(vmName, { exact: true }).first()).toBeVisible({
         timeout: PAGE_LOAD_TIMEOUT,

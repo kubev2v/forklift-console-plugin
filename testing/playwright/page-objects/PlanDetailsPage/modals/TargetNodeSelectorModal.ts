@@ -9,7 +9,7 @@ export class TargetNodeSelectorModal extends BaseModal {
 
   constructor(page: Page) {
     super(page, 'node-selector-modal');
-    this.addButton = this.modal.getByRole('button', { name: /add/i });
+    this.addButton = this.modal.getByRole('button', { name: /add/iu });
   }
 
   async addNodeSelector(key: string, value: string): Promise<void> {

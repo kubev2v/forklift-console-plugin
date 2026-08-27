@@ -112,7 +112,7 @@ export class OffloadOptions {
     const listbox = this.page.getByRole('listbox');
     await expect(listbox).toBeVisible();
 
-    const option = listbox.getByRole('option', { name: hostName, exact: true });
+    const option = listbox.getByRole('option', { exact: true, name: hostName });
     await expect(option).toBeVisible();
     await option.click();
 
@@ -238,8 +238,7 @@ export class OffloadOptions {
   }
 
   async verifyOffloadToggleVisible(mappingIndex: number): Promise<void> {
-    const toggle = this.expandableToggle(mappingIndex);
-    await expect(toggle).toBeVisible();
+    await expect(this.expandableToggle(mappingIndex)).toBeVisible();
   }
 
   async verifyStorageSecretOptions(

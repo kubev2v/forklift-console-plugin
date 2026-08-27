@@ -3,6 +3,12 @@ import { expect, type Page } from '@playwright/test';
 import { V2_12_0 } from '../utils/version/constants';
 import { isVersionAtLeast } from '../utils/version/version';
 
+const sourceNetworkTestId = (index: number): string =>
+  `source-network-networkMap.${index}.sourceNetwork`;
+
+const targetNetworkTestId = (index: number): string =>
+  `target-network-networkMap.${index}.targetNetwork`;
+
 export class NetworkMapCreatePage {
   protected readonly page: Page;
 
@@ -10,17 +16,9 @@ export class NetworkMapCreatePage {
     this.page = page;
   }
 
-  private sourceNetworkTestId(index: number): string {
-    return `source-network-networkMap.${index}.sourceNetwork`;
-  }
-
-  private targetNetworkTestId(index: number): string {
-    return `target-network-networkMap.${index}.targetNetwork`;
-  }
-
   async addMapping() {
     const addMappingButton = this.page.getByRole('button', { name: 'Add mapping' });
-    await expect(addMappingButton).toBeEnabled();
+    await expect(addMappingButton).toBeEnabled({ timeout: 30_000 });
     await addMappingButton.click();
   }
 
@@ -71,13 +69,13 @@ export class NetworkMapCreatePage {
 
   async populateMapping(index: number, sourceNetwork: string, targetNetwork: string) {
     const sourceSelect = isVersionAtLeast(V2_12_0)
-      ? this.page.getByTestId(this.sourceNetworkTestId(index))
+      ? this.page.getByTestId(sourceNetworkTestId(index))
       : this.page
           .getByTestId(`field-row-${index}`)
           .getByTestId('network-map-source-network-select');
 
     const targetSelect = isVersionAtLeast(V2_12_0)
-      ? this.page.getByTestId(this.targetNetworkTestId(index))
+      ? this.page.getByTestId(targetNetworkTestId(index))
       : this.page
           .getByTestId(`field-row-${index}`)
           .getByTestId('network-map-target-network-select');
@@ -112,6 +110,7 @@ export class NetworkMapCreatePage {
     await this.page.waitForURL(
       new RegExp(
         `/k8s/ns/[^/]+/forklift\\.konveyor\\.io~v1beta1~NetworkMap/${expectedMapName}[^/]*$`,
+        'u',
       ),
     );
   }

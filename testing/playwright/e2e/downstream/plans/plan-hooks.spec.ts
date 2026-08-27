@@ -20,7 +20,7 @@ const UPDATED_SERVICE_ACCOUNT = 'updated-hook-sa';
 const loadPlaybookFromTemplate = (templatePath: string, hookName: string): string => {
   const absolutePath = path.resolve(__dirname, '../../..', templatePath);
   const template = fs.readFileSync(absolutePath, 'utf-8');
-  return template.replaceAll(/\{\{\s*hook_name\s*\}\}/g, hookName);
+  return template.replaceAll(/\{\{\s*hook_name\s*\}\}/gu, hookName);
 };
 
 test.describe('Plan Hooks', { tag: '@downstream' }, () => {
@@ -28,8 +28,8 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
 
   test('should configure, edit, and remove hooks on plans', async ({
     page,
-    testProvider,
     resourceManager,
+    testProvider,
   }) => {
     await disableGuidedTour(page);
 
@@ -82,19 +82,19 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
 
     await test.step('Configure pre-migration hook', async () => {
       await wizard.hooks.configurePreMigrationHook({
+        ansiblePlaybook: preHookPlaybook,
         enabled: true,
         hookRunnerImage: HOOK_RUNNER_IMAGE,
         serviceAccount: PRE_HOOK_SERVICE_ACCOUNT,
-        ansiblePlaybook: preHookPlaybook,
       });
     });
 
     await test.step('Configure post-migration hook', async () => {
       await wizard.hooks.configurePostMigrationHook({
+        ansiblePlaybook: postHookPlaybook,
         enabled: true,
         hookRunnerImage: HOOK_RUNNER_IMAGE,
         serviceAccount: POST_HOOK_SERVICE_ACCOUNT,
-        ansiblePlaybook: postHookPlaybook,
       });
     });
 
@@ -104,16 +104,16 @@ test.describe('Plan Hooks', { tag: '@downstream' }, () => {
       await wizard.review.verifyHooksSection(
         HookSource.LOCAL,
         {
+          ansiblePlaybook: preHookPlaybook,
           enabled: true,
           hookRunnerImage: HOOK_RUNNER_IMAGE,
           serviceAccount: PRE_HOOK_SERVICE_ACCOUNT,
-          ansiblePlaybook: preHookPlaybook,
         },
         {
+          ansiblePlaybook: postHookPlaybook,
           enabled: true,
           hookRunnerImage: HOOK_RUNNER_IMAGE,
           serviceAccount: POST_HOOK_SERVICE_ACCOUNT,
-          ansiblePlaybook: postHookPlaybook,
         },
       );
     });

@@ -67,7 +67,7 @@ export class ConcernsHelpers {
     minItems?: number;
   }): Promise<void> {
     const popover = this.page.getByTestId('concerns-popover');
-    await expect(popover.getByText(/Total:/i)).toBeVisible();
+    await expect(popover.getByText(/Total:/iu)).toBeVisible();
     if (options?.headerContains) {
       await expect(popover.getByRole('heading')).toContainText(options.headerContains);
     }

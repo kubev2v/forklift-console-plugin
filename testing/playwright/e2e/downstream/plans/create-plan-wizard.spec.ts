@@ -28,7 +28,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
         const testPlanData = createPlanTestData({
           planName,
           sourceProvider: testProvider.metadata.name,
-          targetProject: { name: targetProjectName, isPreexisting: false },
+          targetProject: { isPreexisting: false, name: targetProjectName },
         });
 
         const createWizard = new CreatePlanWizardPage(page, resourceManager);
@@ -110,7 +110,7 @@ test.describe('Plan Creation Wizard - Project Creation Feature Tests', () => {
       const testPlanData = createPlanTestData({
         planName,
         sourceProvider: testProvider.metadata.name,
-        targetProject: { name: 'default', isPreexisting: true },
+        targetProject: { isPreexisting: true, name: 'default' },
       });
 
       const createWizard = new CreatePlanWizardPage(page, resourceManager);

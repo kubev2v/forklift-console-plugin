@@ -1,0 +1,43 @@
+import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
+import { StorageMapModel, type V1beta1Provider, type V1beta1StorageMap } from '@forklift-ui/types';
+import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { isEmpty } from '@utils/helpers';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+import { StorageMapFieldId } from '@utils/storage/types';
+
+import type { UpdateMappingsFormData } from './types';
+import { transformFormValuesToK8sSpec } from './utils';
+
+export const patchStorageMapMappings = async (
+  formValues: UpdateMappingsFormData,
+  storageMap: V1beta1StorageMap,
+  sourceProvider: V1beta1Provider | undefined,
+): Promise<void> => {
+  const filteredStorageMap = formValues.storageMap?.filter((mapping) => {
+    const hasSource = Boolean(mapping[StorageMapFieldId.SourceStorage]?.name);
+    const hasTarget = Boolean(mapping[StorageMapFieldId.TargetStorage]?.name);
+    return hasSource || hasTarget;
+  });
+
+  const updatedStorageMap = transformFormValuesToK8sSpec(
+    { storageMap: filteredStorageMap },
+    storageMap,
+    sourceProvider?.spec?.type === PROVIDER_TYPES.openshift,
+  );
+
+  if (!updatedStorageMap) {
+    return;
+  }
+
+  await k8sPatch({
+    data: [
+      {
+        op: isEmpty(storageMap?.spec?.map) ? ADD : REPLACE,
+        path: '/spec/map',
+        value: updatedStorageMap.spec?.map ?? [],
+      },
+    ],
+    model: StorageMapModel,
+    resource: storageMap,
+  });
+};

@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 import {
   BaseMapDetailsPage,
@@ -9,10 +9,10 @@ import { NetworkMapEditModal } from './PlanDetailsPage/modals/NetworkMapEditModa
 
 export class NetworkMapDetailsPage extends BaseMapDetailsPage {
   protected readonly config: MapDetailsPageConfig = {
-    resourceType: 'NetworkMap',
-    mapTypeDisplay: 'Network map',
     editButtonTestId: 'network-map-edit-button',
+    mapTypeDisplay: 'Network map',
     readyMessage: 'The network map is ready.',
+    resourceType: 'NetworkMap',
   };
 
   public readonly networkMapEditModal: NetworkMapEditModal;
@@ -24,7 +24,10 @@ export class NetworkMapDetailsPage extends BaseMapDetailsPage {
 
   async openEditModal(): Promise<NetworkMapEditModal> {
     await this.verifyOnDetailsPage();
-    await this.editButtonLocator().click();
+    const editButton = this.editButtonLocator();
+    // Edit stays disabled until source/destination providers resolve (uid present).
+    await expect(editButton).toBeEnabled({ timeout: 30_000 });
+    await editButton.click();
     await this.networkMapEditModal.waitForModalToOpen();
     await this.page.waitForLoadState('domcontentloaded');
     return this.networkMapEditModal;
@@ -42,13 +45,13 @@ export class NetworkMapDetailsPage extends BaseMapDetailsPage {
   }): Promise<void> {
     const normalizedData: MapDetailsExpectedData = {
       mapName: expectedData.networkMapName,
-      sourceProvider: expectedData.sourceProvider,
-      targetProvider: expectedData.targetProvider,
       mappings: expectedData.mappings?.map((mapping) => ({
         source: mapping.sourceNetwork,
         target: mapping.targetNetwork,
       })),
+      sourceProvider: expectedData.sourceProvider,
       status: expectedData.status,
+      targetProvider: expectedData.targetProvider,
     };
     await this.verifyMapDetailsPage(normalizedData);
   }

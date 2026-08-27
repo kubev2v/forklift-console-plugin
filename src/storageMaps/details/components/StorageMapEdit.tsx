@@ -5,41 +5,41 @@ import { useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import { FormErrorHelperText } from '@components/FormErrorHelperText';
 import ModalForm from '@components/ModalForm/ModalForm';
-import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { StorageMapModel, type V1beta1Provider, type V1beta1StorageMap } from '@forklift-ui/types';
-import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import type { V1beta1Provider, V1beta1StorageMap } from '@forklift-ui/types';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ModalVariant } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
-import { isEmpty } from '@utils/helpers';
+import { useResolvedMapProviders } from '@utils/crds/maps/useResolvedMapProviders';
 import useTargetStorages from '@utils/hooks/useTargetStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { StorageMapFieldId } from '@utils/storage/types';
 
+import { patchStorageMapMappings } from '../utils/patchStorageMapMappings';
 import type { UpdateMappingsFormData } from '../utils/types';
-import { transformFormValuesToK8sSpec, transformStorageMapToFormValues } from '../utils/utils';
+import { transformStorageMapToFormValues } from '../utils/utils';
 
 import UpdateStorageMapFieldTable from './UpdateStorageMapFieldTable';
 
 export type StorageMapEditProps = {
-  destinationProvider: V1beta1Provider;
-  sourceProvider: V1beta1Provider;
+  destinationProvider?: V1beta1Provider;
+  sourceProvider?: V1beta1Provider;
   storageMap: V1beta1StorageMap;
 };
 
 const StorageMapEdit: OverlayComponent<StorageMapEditProps> = ({
   closeOverlay,
-  destinationProvider,
-  sourceProvider,
+  destinationProvider: launchedDestinationProvider,
+  sourceProvider: launchedSourceProvider,
   storageMap,
 }) => {
   const { t } = useForkliftTranslation();
   const storageMapNamespace = getNamespace(storageMap);
+  const { destinationProvider, providersLoadError, providersReady, sourceProvider } =
+    useResolvedMapProviders(storageMap, launchedSourceProvider, launchedDestinationProvider);
 
   const [sourceStorages, sourceStoragesLoading, sourceStoragesLoadError] =
     useSourceStorages(sourceProvider);
-
   const [targetStorages, targetStoragesLoading, targetStoragesLoadError] = useTargetStorages(
     destinationProvider,
     storageMapNamespace,
@@ -53,68 +53,39 @@ const StorageMapEdit: OverlayComponent<StorageMapEditProps> = ({
       })) ?? [],
     [sourceStorages],
   );
-
   const initialFormValues = useMemo(
     () => transformStorageMapToFormValues(storageMap),
     [storageMap],
   );
-
   const methods = useForm<UpdateMappingsFormData>({
     defaultValues: initialFormValues,
     mode: 'onChange',
   });
-
   const {
     formState: { isDirty, isValid },
     getFieldState,
     handleSubmit,
     reset,
   } = methods;
-
   const { error } = getFieldState(StorageMapFieldId.StorageMap);
-  // Reset form when storageMap changes
+
   useEffect(() => {
     reset(initialFormValues);
   }, [initialFormValues, reset]);
 
-  const onSubmit = async (formValues: UpdateMappingsFormData): Promise<void> => {
-    const filteredStorageMap = formValues.storageMap?.filter((mapping) => {
-      const hasSource = Boolean(mapping[StorageMapFieldId.SourceStorage]?.name);
-      const hasTarget = Boolean(mapping[StorageMapFieldId.TargetStorage]?.name);
-
-      return hasSource || hasTarget;
-    });
-
-    const updatedStorageMap = transformFormValuesToK8sSpec(
-      { storageMap: filteredStorageMap },
-      storageMap,
-      sourceProvider?.spec?.type === PROVIDER_TYPES.openshift,
-    );
-
-    if (updatedStorageMap) {
-      await k8sPatch({
-        data: [
-          {
-            op: isEmpty(storageMap?.spec?.map) ? ADD : REPLACE,
-            path: '/spec/map',
-            value: updatedStorageMap.spec?.map ?? [],
-          },
-        ],
-        model: StorageMapModel,
-        resource: storageMap,
-      });
-    }
-  };
-
-  const isLoading = sourceStoragesLoading || targetStoragesLoading;
+  const isLoading = !providersReady || sourceStoragesLoading || targetStoragesLoading;
+  // Inventory errors only — providersLoadError must not block Confirm when launch-prop
+  // providers already resolved (providersReady). The table still surfaces the watch error.
   const loadError = sourceStoragesLoadError ?? targetStoragesLoadError;
 
   return (
     <FormProvider {...methods}>
       <ModalForm
         closeOverlay={closeOverlay}
-        isDisabled={!isValid || !isDirty}
-        onConfirm={handleSubmit(onSubmit)}
+        isDisabled={!isValid || !isDirty || !providersReady}
+        onConfirm={handleSubmit(async (formValues) => {
+          await patchStorageMapMappings(formValues, storageMap, sourceProvider);
+        })}
         testId="edit-storage-map-modal"
         title={t('Edit storage map')}
         variant={ModalVariant.medium}
@@ -124,6 +95,8 @@ const StorageMapEdit: OverlayComponent<StorageMapEditProps> = ({
           isLoading={isLoading}
           isVsphere={sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere}
           loadError={loadError}
+          providersLoadError={providersLoadError}
+          providersReady={providersReady}
           sourceProvider={sourceProvider}
           sourceStorages={allSourceStorages}
           targetStorages={targetStorages}

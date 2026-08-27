@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { setupForkliftIntercepts } from '../../intercepts';
+import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
 import { CreateProviderPage } from '../../page-objects/CreateProviderPage';
 import { disableGuidedTour } from '../../utils/utils';
 import { V2_12_0 } from '../../utils/version/constants';

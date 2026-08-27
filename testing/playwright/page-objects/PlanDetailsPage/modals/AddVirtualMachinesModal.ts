@@ -22,7 +22,7 @@ export class AddVirtualMachinesModal extends BaseModal {
   }
 
   async expandAllFolders(): Promise<void> {
-    const expandButtons = this.treegrid.getByRole('button', { name: /Expand row/ });
+    const expandButtons = this.treegrid.getByRole('button', { name: /Expand row/u });
     const count = await expandButtons.count();
 
     for (let i = 0; i < count; i += 1) {

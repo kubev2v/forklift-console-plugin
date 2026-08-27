@@ -1,6 +1,6 @@
 import { expect, type Locator, test } from '@playwright/test';
 
-import { OverviewPage } from '../../page-objects/OverviewPage';
+import { OverviewPage } from '../../page-objects/OverviewPage/OverviewPage';
 import { V5_0_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 

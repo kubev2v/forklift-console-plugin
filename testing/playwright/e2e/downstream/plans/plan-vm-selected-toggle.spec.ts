@@ -12,8 +12,8 @@ test.describe('Plan Creation Wizard - Selected VMs toggle', { tag: '@downstream'
   requireVersion(test, V5_0_0);
 
   test('should filter the VM table to selected guests on a non-vSphere provider', async ({
-    page,
     createCustomProvider,
+    page,
     resourceManager,
   }) => {
     test.setTimeout(300_000);

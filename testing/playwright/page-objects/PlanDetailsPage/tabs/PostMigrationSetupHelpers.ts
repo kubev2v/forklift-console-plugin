@@ -21,7 +21,7 @@ export class PostMigrationSetupHelpers {
 
   /** Asserts the VM name renders as plain text in the table, not a navigable link. */
   async verifyVMNameIsNotLink(vmName: string): Promise<void> {
-    await expect(this.vmTable.getByRole('link', { name: vmName, exact: true })).toHaveCount(0);
+    await expect(this.vmTable.getByRole('link', { exact: true, name: vmName })).toHaveCount(0);
     await expect(this.vmTable.getByText(vmName, { exact: true })).toBeVisible();
   }
 }

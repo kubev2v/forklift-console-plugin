@@ -20,15 +20,38 @@ if (existsSync(ENV_RELAY_FILE)) {
 }
 
 export default defineConfig({
+  expect: {
+    timeout: 15_000,
+  },
+  fullyParallel: true,
   globalSetup: './playwright/global.setup.ts',
   globalTeardown: './playwright/global.teardown.ts',
-  testDir: './playwright/e2e',
-  timeout: process.env.JENKINS ? 15 * 60_000 : 60_000,
-  fullyParallel: true,
-  workers: process.env.CI ? 1 : 3,
-
-  retries: process.env.GITHUB_ACTIONS ? 3 : 0,
-
+  projects: [
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        acceptDownloads: true,
+        baseURL:
+          process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS ?? 'http://localhost:9000',
+        headless: true,
+        ignoreHTTPSErrors: true,
+        javaScriptEnabled: true,
+        screenshot: 'only-on-failure',
+        storageState: existsSync(authFile) ? authFile : undefined,
+        // Use data-testid to match actual rendered HTML
+        testIdAttribute: 'data-testid',
+        trace: 'retain-on-failure-and-retries',
+        video: {
+          mode: 'retain-on-failure',
+          show: {
+            actions: { position: 'top-right' },
+          },
+        },
+        viewport: { height: 1080, width: 1920 },
+      },
+    },
+  ],
   reporter: [
     // printFailuresInline keeps failure causes visible even if a CI run is interrupted
     // or times out mid-suite before the end-of-run report is written.
@@ -37,39 +60,16 @@ export default defineConfig({
     ['junit', { outputFile: 'test-results/junit.xml' }],
   ],
 
+  retries: process.env.GITHUB_ACTIONS ? 3 : 0,
+
+  testDir: './playwright/e2e',
+
+  timeout: process.env.JENKINS ? 15 * 60_000 : 60_000,
+
   use: {
     actionTimeout: 15_000,
     navigationTimeout: 15_000,
   },
 
-  expect: {
-    timeout: 15_000,
-  },
-
-  projects: [
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: existsSync(authFile) ? authFile : undefined,
-        baseURL:
-          process.env.BRIDGE_BASE_ADDRESS ?? process.env.BASE_ADDRESS ?? 'http://localhost:9000',
-        headless: true,
-        viewport: { width: 1920, height: 1080 },
-        screenshot: 'only-on-failure',
-        video: {
-          mode: 'retain-on-failure',
-          show: {
-            actions: { position: 'top-right' },
-          },
-        },
-        trace: 'retain-on-failure-and-retries',
-        // Use data-testid to match actual rendered HTML
-        testIdAttribute: 'data-testid',
-        ignoreHTTPSErrors: true,
-        javaScriptEnabled: true,
-        acceptDownloads: true,
-      },
-    },
-  ],
+  workers: process.env.CI ? 1 : 3,
 });

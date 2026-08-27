@@ -1,22 +1,5 @@
 import type { Page } from '@playwright/test';
 
-export { setupCoreKubernetesIntercepts } from './core';
-export { setupDatastoresIntercepts } from './datastores';
-export { setupForkliftControllerIntercept } from './forkliftController';
-export { setupHostsIntercepts } from './hosts';
-export { setupLightspeedIntercepts } from './lightspeed';
-export { setupMigrationVmResourceIntercepts } from './migrationVmResources';
-export { setupNetworkMapsIntercepts } from './networkMaps';
-export { setupPlanDetailsIntercepts } from './planDetails';
-export { setupPlansIntercepts } from './plans';
-export { setupProjectsIntercepts } from './projects';
-export { setupProvidersIntercepts } from './providers';
-export { setupStorageClassesIntercepts } from './storageClasses';
-export { setupStorageMapsIntercepts } from './storageMaps';
-export { setupTargetProviderNamespacesIntercepts } from './targetProviderNamespaces';
-export { setupVirtualMachinesIntercepts } from './virtualMachines';
-
-// Import individual functions for the comprehensive setup
 import { setupCoreKubernetesIntercepts } from './core';
 import { setupDatastoresIntercepts } from './datastores';
 import { setupHostsIntercepts } from './hosts';
@@ -30,12 +13,9 @@ import { setupStorageMapsIntercepts } from './storageMaps';
 import { setupTargetProviderNamespacesIntercepts } from './targetProviderNamespaces';
 import { setupVirtualMachinesIntercepts } from './virtualMachines';
 
-// Comprehensive setup function for existing tests to work in GitHub Actions
+/** Default upstream mock set (vSphere-oriented test UIDs). */
 export const setupForkliftIntercepts = async (page: Page): Promise<void> => {
-  // Core Kubernetes API intercepts for console bootstrap
   await setupCoreKubernetesIntercepts(page);
-
-  // Forklift-specific interceptors
   await setupProvidersIntercepts(page);
   await setupPlansIntercepts(page);
   await setupPlanDetailsIntercepts(page);

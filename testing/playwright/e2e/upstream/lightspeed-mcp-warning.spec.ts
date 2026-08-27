@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-import { setupForkliftIntercepts, setupLightspeedIntercepts } from '../../intercepts';
-import { OverviewPage } from '../../page-objects/OverviewPage';
+import { setupLightspeedIntercepts } from '../../intercepts/lightspeed';
+import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
+import { OverviewPage } from '../../page-objects/OverviewPage/OverviewPage';
 import { V2_12_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 

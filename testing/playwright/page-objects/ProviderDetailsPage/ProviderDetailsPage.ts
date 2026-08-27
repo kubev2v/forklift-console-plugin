@@ -15,6 +15,30 @@ import { VirtualMachinesTab } from './tabs/VirtualMachinesTab';
 /** URL navigation timeout after the Create Provider wizard submits — not full K8s reconciliation. */
 const PROVIDER_CREATION_TIMEOUT_MS = 60_000;
 
+const getProviderTypeDisplayName = (type: string): string => {
+  const typeMap: Record<string, string> = {
+    ec2: 'Amazon EC2',
+    hyperv: 'HyperV',
+    openshift: 'OpenShift',
+    openstack: 'OpenStack',
+    ova: 'OVA',
+    ovirt: 'oVirt',
+    vsphere: 'VMware',
+  };
+  return typeMap[type] ?? type;
+};
+
+const isProviderDetailsUrl = (url: URL, providerName: string, namespace: string): boolean => {
+  const urlString = url.toString();
+  const encodedName = encodeURIComponent(providerName);
+
+  return (
+    urlString.includes(`/ns/${namespace}/`) &&
+    urlString.includes(`forklift.konveyor.io~v1beta1~Provider/${encodedName}`) &&
+    !urlString.includes('~new')
+  );
+};
+
 export class ProviderDetailsPage {
   private readonly deleteModal: DeleteResourceModal;
   private readonly navigation: NavigationHelper;
@@ -30,30 +54,6 @@ export class ProviderDetailsPage {
     this.detailsTab = new DetailsTab(page);
     this.virtualMachinesTab = new VirtualMachinesTab(page);
     this.deleteModal = new DeleteResourceModal(page);
-  }
-
-  private getProviderTypeDisplayName(type: string): string {
-    const typeMap: Record<string, string> = {
-      ec2: 'Amazon EC2',
-      hyperv: 'HyperV',
-      openshift: 'OpenShift',
-      openstack: 'OpenStack',
-      ova: 'OVA',
-      ovirt: 'oVirt',
-      vsphere: 'VMware',
-    };
-    return typeMap[type] ?? type;
-  }
-
-  private isProviderDetailsUrl(url: URL, providerName: string, namespace: string): boolean {
-    const urlStr = url.toString();
-    const encodedName = encodeURIComponent(providerName);
-
-    return (
-      urlStr.includes(`/ns/${namespace}/`) &&
-      urlStr.includes(`forklift.konveyor.io~v1beta1~Provider/${encodedName}`) &&
-      !urlStr.includes('~new')
-    );
   }
 
   async clickCreatePlanButton(): Promise<void> {
@@ -72,8 +72,8 @@ export class ProviderDetailsPage {
 
   /** Deletes the provider via the details page Actions menu, confirming in the shared DeleteModal. */
   async deleteProvider(providerName: string): Promise<void> {
-    await this.page.getByRole('button', { name: 'Actions', exact: true }).click();
-    await this.page.getByRole('menuitem', { name: 'Delete provider', exact: true }).click();
+    await this.page.getByRole('button', { exact: true, name: 'Actions' }).click();
+    await this.page.getByRole('menuitem', { exact: true, name: 'Delete provider' }).click();
     await this.deleteModal.verifyOpen(providerName);
     await this.deleteModal.confirm();
   }
@@ -96,9 +96,9 @@ export class ProviderDetailsPage {
 
   async navigate(providerName: string, namespace: string): Promise<void> {
     await this.navigation.navigateToK8sResource({
-      resource: 'Provider',
       name: providerName,
       namespace,
+      resource: 'Provider',
     });
   }
 
@@ -152,7 +152,7 @@ export class ProviderDetailsPage {
     await expect(this.page.getByTestId('resource-details-title')).toContainText(providerData.name);
     await expect(this.page.getByTestId('name-detail-item')).toContainText(providerData.name);
 
-    const displayType = this.getProviderTypeDisplayName(providerData.type);
+    const displayType = getProviderTypeDisplayName(providerData.type);
 
     await expect(this.page.getByTestId('type-detail-item')).toContainText(displayType);
     await expect(this.page.getByTestId('url-detail-item')).toContainText(providerData.hostname);
@@ -184,13 +184,11 @@ export class ProviderDetailsPage {
     await expect(this.page.getByTestId('owner-detail-item')).toContainText('No owner');
     const statusLocator = this.page.getByTestId('resource-status');
     // Provider status might be "Staging" or "ConnectionFailed" in test environment
-    await expect(statusLocator).toContainText(/Ready|Staging|ConnectionFailed/);
+    await expect(statusLocator).toContainText(/Ready|Staging|ConnectionFailed/u);
   }
 
   async verifyProviderDetailsURL(providerName: string, namespace: string): Promise<void> {
-    await expect(this.page).toHaveURL((url) =>
-      this.isProviderDetailsUrl(url, providerName, namespace),
-    );
+    await expect(this.page).toHaveURL((url) => isProviderDetailsUrl(url, providerName, namespace));
   }
 
   // Deep inspection methods
@@ -230,12 +228,12 @@ export class ProviderDetailsPage {
     timeoutMs = PROVIDER_CREATION_TIMEOUT_MS,
   ): Promise<void> {
     try {
-      await this.page.waitForURL((url) => this.isProviderDetailsUrl(url, providerName, namespace), {
+      await this.page.waitForURL((url) => isProviderDetailsUrl(url, providerName, namespace), {
         timeout: timeoutMs,
         waitUntil: 'commit',
       });
     } catch (error) {
-      const creationError = this.page.getByRole('heading', { name: /Error creating provider/i });
+      const creationError = this.page.getByRole('heading', { name: /Error creating provider/iu });
       if (await creationError.isVisible()) {
         const alert = this.page.getByRole('alert').filter({ hasText: 'Error creating provider' });
         await expect(alert.first()).toBeVisible({ timeout: 5_000 });

@@ -3,6 +3,12 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { AccessModeOptions } from './common/AccessModeOptions';
 import { OffloadOptions } from './common/OffloadOptions';
 
+const sourceStorageTestId = (index: number): string =>
+  `source-storage-storageMap.${index}.sourceStorage`;
+
+const targetStorageTestId = (index: number): string =>
+  `target-storage-storageMap.${index}.targetStorage`;
+
 export class StorageMapCreatePage {
   readonly accessMode: AccessModeOptions;
   readonly offload: OffloadOptions;
@@ -20,8 +26,11 @@ export class StorageMapCreatePage {
     await expect(dropdown).toBeEnabled();
     await dropdown.click();
 
-    const option = this.page.getByRole('listbox').getByRole('option').first();
-    await expect(option).toBeVisible();
+    const listbox = this.page.getByRole('listbox');
+    await expect(listbox).toBeVisible();
+    // Inventory can briefly show "No storages available" before options appear.
+    const option = listbox.locator('[role="option"]:enabled').first();
+    await expect(option).toBeVisible({ timeout: 30_000 });
     const value = ((await option.textContent()) ?? '').trim();
     await option.click();
     return value;
@@ -33,24 +42,19 @@ export class StorageMapCreatePage {
     await expect(dropdown).toBeVisible();
     await expect(dropdown).toBeEnabled();
     await dropdown.click();
-    // Wait for the listbox to open before looking for the specific option.
-    // Newly-created providers (or slow API responses) can delay option availability.
+
     const listbox = this.page.getByRole('listbox');
     await expect(listbox).toBeVisible();
-    await listbox.getByRole('option', { name: optionName }).click({ timeout: OPTION_TIMEOUT });
-  }
 
-  private sourceStorageTestId(index: number): string {
-    return `source-storage-storageMap.${index}.sourceStorage`;
-  }
-
-  private targetStorageTestId(index: number): string {
-    return `target-storage-storageMap.${index}.targetStorage`;
+    // ProviderSelect shows an empty-state until Ready providers appear in the watch.
+    const option = listbox.getByRole('option', { name: optionName });
+    await expect(option).toBeVisible({ timeout: OPTION_TIMEOUT });
+    await option.click();
   }
 
   async addMapping(): Promise<void> {
     const addButton = this.page.getByTestId('add-mapping-button');
-    await expect(addButton).toBeEnabled();
+    await expect(addButton).toBeEnabled({ timeout: 30_000 });
     await addButton.click();
   }
 
@@ -59,7 +63,7 @@ export class StorageMapCreatePage {
   }
 
   async expectSourceStorageOptionEnabled(index: number, sourceName: string): Promise<void> {
-    const dropdown = this.page.getByTestId(this.sourceStorageTestId(index));
+    const dropdown = this.page.getByTestId(sourceStorageTestId(index));
     await expect(dropdown).toBeVisible();
     await expect(dropdown).toBeEnabled();
     await dropdown.click();
@@ -84,11 +88,11 @@ export class StorageMapCreatePage {
   }
 
   async selectFirstAvailableSourceAtIndex(index: number): Promise<string> {
-    return this.selectFirstAvailableOptionFromDropdown(this.sourceStorageTestId(index));
+    return this.selectFirstAvailableOptionFromDropdown(sourceStorageTestId(index));
   }
 
   async selectFirstAvailableTargetAtIndex(index: number): Promise<string> {
-    return this.selectFirstAvailableOptionFromDropdown(this.targetStorageTestId(index));
+    return this.selectFirstAvailableOptionFromDropdown(targetStorageTestId(index));
   }
 
   async selectProject(project: string): Promise<void> {
@@ -110,7 +114,7 @@ export class StorageMapCreatePage {
   }
 
   async selectSourceStorageAtIndex(index: number, sourceName: string): Promise<void> {
-    await this.selectOptionFromDropdown(this.sourceStorageTestId(index), sourceName);
+    await this.selectOptionFromDropdown(sourceStorageTestId(index), sourceName);
   }
 
   async selectTargetProvider(providerName: string): Promise<void> {
@@ -118,7 +122,7 @@ export class StorageMapCreatePage {
   }
 
   async selectTargetStorageAtIndex(index: number, storageName: string): Promise<void> {
-    await this.selectOptionFromDropdown(this.targetStorageTestId(index), storageName);
+    await this.selectOptionFromDropdown(targetStorageTestId(index), storageName);
   }
 
   async submit(): Promise<void> {

@@ -2,32 +2,12 @@ import type { Page } from '@playwright/test';
 
 import { GUEST_TYPE_LABELS, SCRIPT_TYPE_LABELS, type ScriptConfig } from '../types/test-data';
 
+import { fillMonacoEditorViaKeyboard } from './fillMonacoEditorViaKeyboard';
+
 type ScriptFieldTestIds = {
   guestTypeSelect: (index: number) => string;
   nameInput: (index: number) => string;
   scriptTypeSelect: (index: number) => string;
-};
-
-const setMonacoEditorContent = async (
-  page: Page,
-  index: number,
-  content: string,
-): Promise<void> => {
-  const success = await page.evaluate(
-    ({ idx, scriptContent }) => {
-      const editors = (globalThis as any).monaco?.editor?.getEditors?.();
-      if (editors && Array.isArray(editors) && editors.length > idx) {
-        editors[idx].setValue(scriptContent);
-        return true;
-      }
-      return false;
-    },
-    { idx: index, scriptContent: content },
-  );
-
-  if (!success) {
-    throw new Error(`Failed to set script content at index ${index} - Monaco editor not found`);
-  }
 };
 
 export const fillScriptFields = async (
@@ -53,6 +33,6 @@ export const fillScriptFields = async (
   }
 
   if (config.content) {
-    await setMonacoEditorContent(page, index, config.content);
+    await fillMonacoEditorViaKeyboard(page, config.content, index);
   }
 };
