@@ -1,7 +1,7 @@
 import type { ProviderVmData } from 'src/utils/types';
 
 import { ConcernCategoryOptions } from '@components/Concerns/utils/constants';
-import { COLUMN_IDS, ROW_TYPE, type VmRow } from '@components/VsphereFoldersTable/utils/types';
+import { ROW_TYPE, type VmRow } from '@components/VsphereFoldersTable/utils/types';
 
 type ConcernStub = { category?: string; label?: string };
 
@@ -56,6 +56,3 @@ export const makeVmRow = (overrides: MakeVmRowOverrides = {}): VmRow => {
 export const criticalConcern = { category: ConcernCategoryOptions.Critical, label: 'CPU' };
 export const warningConcern = { category: ConcernCategoryOptions.Warning, label: 'Disk' };
 export const infoConcern = { category: ConcernCategoryOptions.Information, label: 'NIC' };
-
-export const nameSortAsc = { column: COLUMN_IDS.Name, direction: 'asc' as const };
-export const nameSortDesc = { column: COLUMN_IDS.Name, direction: 'desc' as const };
