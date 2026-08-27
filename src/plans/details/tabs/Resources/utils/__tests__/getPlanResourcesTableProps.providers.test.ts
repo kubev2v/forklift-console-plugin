@@ -19,9 +19,12 @@ describe('getPlanResourcesTableProps', () => {
     [PROVIDER_TYPES.vsphere, emptyTotals],
     [PROVIDER_TYPES.ova, emptyTotals],
     [PROVIDER_TYPES.hyperv, emptyTotals],
-  ] as const)('returns empty totals for %s with empty inventory', (providerType, expected) => {
-    expect(getPlanResourcesTableProps(emptyInventory, providerType)).toEqual(expected);
-  });
+  ])(
+    'returns empty totals for %s with empty inventory',
+    (providerType: string, expected: typeof emptyTotals) => {
+      expect(getPlanResourcesTableProps(emptyInventory, providerType)).toEqual(expected);
+    },
+  );
 
   it('returns empty totals for openshift with empty inventory', () => {
     expect(getPlanResourcesTableProps(emptyInventory, PROVIDER_TYPES.openshift)).toEqual(

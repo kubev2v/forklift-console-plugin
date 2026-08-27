@@ -15,7 +15,7 @@ describe('validateHooks', () => {
   it('returns empty string for missing or empty VMs', () => {
     expect(validateHooks({} as V1beta1Plan)).toBe('');
     expect(validateHooks(planWithVms([]))).toBe('');
-    expect(validateHooks(planWithVms(undefined))).toBe('');
+    expect(validateHooks({ spec: {} } as V1beta1Plan)).toBe('');
   });
 
   it('returns empty string when all VMs share the same hooks', () => {

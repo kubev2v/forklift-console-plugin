@@ -1,6 +1,7 @@
 import type {
   V1beta1PlanStatusMigrationVms,
   V1beta1PlanStatusMigrationVmsConditions,
+  V1beta1PlanStatusMigrationVmsPipeline,
 } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
 import { mockI18n } from '@test-utils/mockI18n';
@@ -20,11 +21,21 @@ const condition = (
   type,
 });
 
+const pipelineStep = (
+  phase: string,
+  overrides: Partial<V1beta1PlanStatusMigrationVmsPipeline> = {},
+): V1beta1PlanStatusMigrationVmsPipeline => ({
+  name: phase,
+  phase,
+  progress: { completed: 0, total: 1 },
+  ...overrides,
+});
+
 const vm = (
   overrides: Partial<V1beta1PlanStatusMigrationVms> = {},
 ): V1beta1PlanStatusMigrationVms =>
   ({
-    pipeline: [{ phase: taskStatuses.running }],
+    pipeline: [pipelineStep(taskStatuses.running)],
     ...overrides,
   }) as V1beta1PlanStatusMigrationVms;
 
@@ -64,7 +75,7 @@ describe('getVMMigrationStatus', () => {
   });
 
   it('returns NotStarted when first pipeline step is Pending', () => {
-    expect(getVMMigrationStatus(vm({ pipeline: [{ phase: taskStatuses.pending }] }))).toBe(
+    expect(getVMMigrationStatus(vm({ pipeline: [pipelineStep(taskStatuses.pending)] }))).toBe(
       'NotStarted',
     );
   });
@@ -72,7 +83,11 @@ describe('getVMMigrationStatus', () => {
   it('returns Running when started and not completed', () => {
     expect(
       getVMMigrationStatus(
-        vm({ completed: undefined, pipeline: [{ phase: taskStatuses.running }], started: 't0' }),
+        vm({
+          completed: undefined,
+          pipeline: [pipelineStep(taskStatuses.running)],
+          started: 't0',
+        }),
       ),
     ).toBe('Running');
   });
@@ -80,7 +95,11 @@ describe('getVMMigrationStatus', () => {
   it('returns Unknown for completed migrations without success/fail conditions', () => {
     expect(
       getVMMigrationStatus(
-        vm({ completed: 't1', pipeline: [{ phase: taskStatuses.completed }], started: 't0' }),
+        vm({
+          completed: 't1',
+          pipeline: [pipelineStep(taskStatuses.completed)],
+          started: 't0',
+        }),
       ),
     ).toBe('Unknown');
   });
