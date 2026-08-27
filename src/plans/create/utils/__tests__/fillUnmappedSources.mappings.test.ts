@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals';
 
 import { fillUnmappedSources } from '../fillUnmappedSources';
 
-const fieldIds = { sourceField: 'source', targetField: 'target' } as const;
+const fieldIds = { mapField: 'mappings', sourceField: 'source', targetField: 'target' } as const;
 
 describe('fillUnmappedSources - mappings', () => {
   it('fills empty rows then appends remaining sources', () => {

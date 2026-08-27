@@ -1,19 +1,20 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sCreate = jest.fn();
-
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sCreate: (...args: unknown[]) => mockK8sCreate(...args),
+  k8sCreate: jest.fn(),
 }));
 
 import { StorageMapModel } from '@forklift-ui/types';
+import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { copyStorageMap } from '../copyStorageMap';
+
+const mockK8sCreate = k8sCreate as jest.Mock;
 
 describe('copyStorageMap - copy', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(async ({ data }) => data);
+    mockK8sCreate.mockImplementation(({ data }: { data: unknown }) => Promise.resolve(data));
   });
 
   it('creates a plan-prefixed copy preserving labels and annotations', async () => {
@@ -22,7 +23,7 @@ describe('copyStorageMap - copy', () => {
       kind: 'StorageMap',
       metadata: {
         annotations: { a: '1' },
-        labels: { l: '2' },
+        labels: { label: '2' },
         name: 'existing-sm',
         namespace: 'old-ns',
       },
@@ -35,7 +36,7 @@ describe('copyStorageMap - copy', () => {
       data: expect.objectContaining({
         metadata: {
           annotations: { a: '1' },
-          labels: { l: '2' },
+          labels: { label: '2' },
           name: 'my-plan-existing-sm',
           namespace: 'plan-ns',
         },
@@ -54,7 +55,11 @@ describe('copyStorageMap - copy', () => {
 
     await copyStorageMap(existing, 'p', 'ns');
 
-    const { data } = mockK8sCreate.mock.calls[0][0];
+    const [firstCall] = mockK8sCreate.mock.calls;
+    const [createArg] = firstCall as [
+      { data: { metadata: { annotations?: unknown; labels?: unknown } } },
+    ];
+    const { data } = createArg;
     expect(data.metadata.labels).toBeUndefined();
     expect(data.metadata.annotations).toBeUndefined();
   });

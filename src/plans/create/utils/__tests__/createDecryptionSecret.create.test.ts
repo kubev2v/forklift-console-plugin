@@ -1,19 +1,20 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sCreate = jest.fn();
-
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sCreate: (...args: unknown[]) => mockK8sCreate(...args),
+  k8sCreate: jest.fn(),
 }));
 
 import { SecretModel } from '@forklift-ui/types';
+import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { createDecryptionSecret } from '../createDecryptionSecret';
+
+const mockK8sCreate = k8sCreate as jest.Mock;
 
 describe('createDecryptionSecret - create', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(async ({ data }) => data);
+    mockK8sCreate.mockImplementation(({ data }: { data: unknown }) => Promise.resolve(data));
   });
 
   it('base64-encodes passphrases keyed by index', async () => {
@@ -35,6 +36,8 @@ describe('createDecryptionSecret - create', () => {
   it('creates an empty data object when no passphrases are provided', async () => {
     await createDecryptionSecret([], 'plan', 'ns');
 
-    expect(mockK8sCreate.mock.calls[0][0].data.data).toEqual({});
+    const [firstCall] = mockK8sCreate.mock.calls;
+    const [createArg] = firstCall as [{ data: { data: Record<string, string> } }];
+    expect(createArg.data.data).toEqual({});
   });
 });
