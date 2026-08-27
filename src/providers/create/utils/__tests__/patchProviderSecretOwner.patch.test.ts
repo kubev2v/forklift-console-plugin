@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sPatch = jest.fn();
+const mockK8sPatch = jest.fn((..._args: unknown[]) => Promise.resolve({}));
 
-jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
+jest.mock('@openshift-console/dynamic-plugin-sdk', (): unknown => ({
   k8sPatch: (...args: unknown[]) => mockK8sPatch(...args),
 }));
 
@@ -13,7 +13,7 @@ import { patchProviderSecretOwner } from '../patchProviderSecretOwner';
 describe('patchProviderSecretOwner - patch', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue(undefined as never);
+    mockK8sPatch.mockResolvedValue({});
   });
 
   it('no-ops when provider or secret is missing', async () => {
@@ -51,6 +51,8 @@ describe('patchProviderSecretOwner - patch', () => {
     await patchProviderSecretOwner(provider, {
       metadata: { name: 's', ownerReferences: [{ name: 'old' }] },
     } as never);
-    expect(mockK8sPatch.mock.calls[1][0].data[0].op).toBe('replace');
+    expect(
+      (mockK8sPatch.mock.calls[1] as unknown as [{ data: { op: string }[] }])[0].data[0].op,
+    ).toBe('replace');
   });
 });
