@@ -1,6 +1,6 @@
 import { getRootDiskLabelByKey, isNotFirstKeyOrRootFilesystem } from '../utils';
 
-jest.mock('@utils/i18n', () => ({
+jest.mock('@utils/i18n', (): unknown => ({
   t: (key: string) => key,
 }));
 
