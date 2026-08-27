@@ -12,7 +12,7 @@ jest.mock('@utils/crds/common/selectors', (): unknown => ({
   getUrl: (provider: { spec?: { url?: string } }) => provider?.spec?.url,
 }));
 
-const mockCreate = k8sCreate as jest.MockedFunction<typeof k8sCreate>;
+const mockCreate = k8sCreate as jest.Mock;
 
 describe('createProviderSecret - behavior', () => {
   beforeEach(() => {
@@ -64,8 +64,8 @@ describe('createProviderSecret - behavior', () => {
         }),
       }),
     );
-    const createdData = mockCreate.mock.calls[0][0].data.data as Record<string, string>;
-    expect(createdData.user).toBeUndefined();
+    const [createArg] = mockCreate.mock.calls[0] as [{ data: { data: Record<string, string> } }];
+    expect(createArg.data.data.user).toBeUndefined();
   });
 
   it('drops cacert when insecureSkipVerify is true', async () => {
@@ -80,8 +80,8 @@ describe('createProviderSecret - behavior', () => {
     };
 
     await createProviderSecret(provider as never, secret);
-    const createdData = mockCreate.mock.calls[0][0].data.data as Record<string, string>;
-    expect(createdData.cacert).toBeUndefined();
-    expect(createdData.insecureSkipVerify).toBe(encode('true'));
+    const [createArg] = mockCreate.mock.calls[0] as [{ data: { data: Record<string, string> } }];
+    expect(createArg.data.data.cacert).toBeUndefined();
+    expect(createArg.data.data.insecureSkipVerify).toBe(encode('true'));
   });
 });

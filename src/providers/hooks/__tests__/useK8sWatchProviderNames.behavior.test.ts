@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { useK8sWatchProviderNames } from '../useK8sWatchProviderNames';
