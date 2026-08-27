@@ -15,14 +15,21 @@ jest.mock('@components/page/ManageColumnsToolbar', () => ({
   ManageColumnsToolbar: (): ReactElement => <div data-testid="manage-columns" />,
 }));
 
+const bulkSelectProps: { current: Record<string, unknown> | undefined } = { current: undefined };
+
 jest.mock('@components/TableBulkSelect', () => ({
   __esModule: true,
-  default: (): ReactElement => <div data-testid="bulk-select" />,
+  default: (props: Record<string, unknown>): ReactElement => {
+    bulkSelectProps.current = props;
+    return <div data-testid="bulk-select" />;
+  },
 }));
 
 jest.mock('@components/SelectedToggle/SelectedToggle', () => ({
   __esModule: true,
-  default: (): ReactElement => <div data-testid="selected-toggle" />,
+  default: (props: Record<string, unknown>): ReactElement => (
+    <div data-selected={String(props.selectedVmKeys)} data-testid="selected-toggle" />
+  ),
 }));
 
 jest.mock('../../AttributeFilter/AttributeFilter', () => ({
@@ -49,14 +56,15 @@ const attributes: AttributeConfig<VmRow>[] = [
 
 describe('TreeToolbar', () => {
   it('renders selection controls when canSelect is true', () => {
+    const onSelect = jest.fn();
     render(
       <TreeToolbar
         attributes={attributes}
         canSelect
         columns={[]}
-        dataIds={['vm-1']}
+        dataIds={['vm-1', 'vm-2']}
         filters={filters}
-        onSelect={jest.fn()}
+        onSelect={onSelect}
         pageDataIds={['vm-1']}
         pagination={<div data-testid="pagination" />}
         selectedVmKeys={['vm-1']}
@@ -67,7 +75,13 @@ describe('TreeToolbar', () => {
     );
 
     expect(screen.getByTestId('bulk-select')).toBeInTheDocument();
-    expect(screen.getByTestId('selected-toggle')).toBeInTheDocument();
+    expect(bulkSelectProps.current).toMatchObject({
+      dataIds: ['vm-1', 'vm-2'],
+      onSelect,
+      pageDataIds: ['vm-1'],
+      selectedIds: ['vm-1'],
+    });
+    expect(screen.getByTestId('selected-toggle')).toHaveAttribute('data-selected', 'vm-1');
     expect(screen.getByTestId('attribute-filters')).toBeInTheDocument();
     expect(screen.getByTestId('pagination')).toBeInTheDocument();
   });
@@ -92,5 +106,7 @@ describe('TreeToolbar', () => {
 
     expect(screen.queryByTestId('bulk-select')).not.toBeInTheDocument();
     expect(screen.queryByTestId('selected-toggle')).not.toBeInTheDocument();
+    expect(screen.getByTestId('attribute-filters')).toBeInTheDocument();
+    expect(screen.getByTestId('manage-columns')).toBeInTheDocument();
   });
 });

@@ -46,6 +46,11 @@ describe('FilterValueMultiSelect', () => {
     expect(screen.getByText('1')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button'));
+    await screen.findByText('On');
+    const checkboxes = screen.getAllByRole('checkbox');
+    expect(checkboxes[0]).toBeChecked();
+    expect(checkboxes[1]).not.toBeChecked();
+
     await user.click(await screen.findByText('Off'));
 
     expect(onToggle).toHaveBeenCalledWith('off');

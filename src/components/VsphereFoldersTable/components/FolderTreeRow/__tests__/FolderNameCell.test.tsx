@@ -20,12 +20,12 @@ describe('FolderNameCell', () => {
     render(<FolderNameCell row={folderRow('Production')} vmCount={3} />);
 
     expect(screen.getByText('Production')).toBeInTheDocument();
-    expect(screen.getByTestId('folder-Production-vm-count')).toHaveTextContent('3 VM');
+    expect(screen.getByTestId('folder-Production-vm-count')).toHaveTextContent(/3\s+VMs?/);
   });
 
   it('renders zero VM count', () => {
     render(<FolderNameCell row={folderRow('Empty')} vmCount={0} />);
 
-    expect(screen.getByTestId('folder-Empty-vm-count')).toBeInTheDocument();
+    expect(screen.getByTestId('folder-Empty-vm-count')).toHaveTextContent(/0\s+VMs?/);
   });
 });

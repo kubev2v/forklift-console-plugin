@@ -35,7 +35,7 @@ describe('FolderTreeRow', () => {
     );
 
     expect(screen.getByTestId('folder-Prod')).toBeInTheDocument();
-    expect(screen.getByTestId('folder-Prod-vm-count')).toBeInTheDocument();
+    expect(screen.getByTestId('folder-Prod-vm-count')).toHaveTextContent(/5\s+VMs?/);
   });
 
   it('defaults VM count to 0 when folder is missing from the map', () => {
@@ -47,6 +47,6 @@ describe('FolderTreeRow', () => {
       </Table>,
     );
 
-    expect(screen.getByTestId('folder-Missing-vm-count')).toBeInTheDocument();
+    expect(screen.getByTestId('folder-Missing-vm-count')).toHaveTextContent(/0\s+VMs?/);
   });
 });
