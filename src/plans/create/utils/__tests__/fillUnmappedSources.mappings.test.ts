@@ -43,4 +43,40 @@ describe('fillUnmappedSources - mappings', () => {
       }),
     ).toEqual(existing);
   });
+
+  it('leaves leftover empty rows empty when unmapped sources are exhausted', () => {
+    const existing = [
+      { source: { id: '', name: '' }, target: { id: 't1', name: 't1' } },
+      { source: { id: '', name: '' }, target: { id: 't2', name: 't2' } },
+    ];
+
+    expect(
+      fillUnmappedSources({
+        existingMappings: existing,
+        fieldIds,
+        targetValue: { id: 'default', name: 'default' },
+        unmappedSources: [{ id: 'u1', name: 'u1' }],
+      }),
+    ).toEqual([
+      { source: { id: 'u1', name: 'u1' }, target: { id: 't1', name: 't1' } },
+      { source: { id: '', name: '' }, target: { id: 't2', name: 't2' } },
+    ]);
+  });
+
+  it('appends all sources with targetValue when existing mappings are empty', () => {
+    expect(
+      fillUnmappedSources({
+        existingMappings: [],
+        fieldIds,
+        targetValue: { id: 'default', name: 'default' },
+        unmappedSources: [
+          { id: 'u1', name: 'u1' },
+          { id: 'u2', name: 'u2' },
+        ],
+      }),
+    ).toEqual([
+      { source: { id: 'u1', name: 'u1' }, target: { id: 'default', name: 'default' } },
+      { source: { id: 'u2', name: 'u2' }, target: { id: 'default', name: 'default' } },
+    ]);
+  });
 });

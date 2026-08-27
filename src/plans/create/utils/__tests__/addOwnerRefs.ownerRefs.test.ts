@@ -38,6 +38,24 @@ describe('addOwnerRefs - ownerRefs', () => {
     );
   });
 
+  it('treats empty ownerReferences as none exist', async () => {
+    const resource = { metadata: { name: 'sec', ownerReferences: [] } } as never;
+
+    await addOwnerRefs(model, resource, [planRef]);
+
+    expect(mockK8sPatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: [
+          {
+            op: 'add',
+            path: '/metadata/ownerReferences',
+            value: [{ ...planRef, namespace: undefined }],
+          },
+        ],
+      }),
+    );
+  });
+
   it('appends to existing owner references', async () => {
     const existing = { apiVersion: 'v1', kind: 'Plan', name: 'old', uid: 'old-uid' };
     const resource = { metadata: { ownerReferences: [existing] } } as never;

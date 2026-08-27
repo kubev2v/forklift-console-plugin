@@ -1,7 +1,10 @@
 import { describe, expect, it } from '@jest/globals';
+import { NetworkMapFieldId, NetworkMapType } from '@utils/mappings/networkMap';
+import { StorageMapFieldId } from '@utils/storage/types';
 
 import { GeneralFormFieldId } from '../../steps/general-information/constants';
 import { HooksFormFieldId, MigrationHookFieldId } from '../../steps/migration-hooks/constants';
+import { CreatePlanStorageMapFieldId, StorageMapType } from '../../steps/storage-map/constants';
 import { getDefaultFormValues } from '../getDefaultFormValues';
 
 describe('getDefaultFormValues - defaults', () => {
@@ -13,6 +16,10 @@ describe('getDefaultFormValues - defaults', () => {
     expect(values[HooksFormFieldId.PostMigration]?.[MigrationHookFieldId.EnableHook]).toBe(false);
     expect(values[GeneralFormFieldId.PlanProject]).toBeUndefined();
     expect(values[GeneralFormFieldId.SourceProvider]).toBeUndefined();
+    expect(values[NetworkMapFieldId.NetworkMapType]).toBe(NetworkMapType.Existing);
+    expect(values[CreatePlanStorageMapFieldId.StorageMapType]).toBe(StorageMapType.Existing);
+    expect(values[NetworkMapFieldId.NetworkMap]).toHaveLength(1);
+    expect(values[StorageMapFieldId.StorageMap]).toHaveLength(1);
   });
 
   it('applies optional planProject and sourceProvider overrides', () => {

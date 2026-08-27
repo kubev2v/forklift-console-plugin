@@ -50,6 +50,18 @@ describe('hasMultiplePodNetworkMappings - edgeCases', () => {
     expect(hasMultiplePodNetworkMappings(networkMap, { vm1: { id: 'vm1' } } as never, [])).toBe(
       false,
     );
+
+    // two VMs each with a single pod-network mapping must not trip the per-VM invariant
+    expect(
+      hasMultiplePodNetworkMappings(
+        networkMap,
+        {
+          vm1: { id: 'vm1', networks: [{ id: 'n1' }], providerType: 'vsphere' },
+          vm2: { id: 'vm2', networks: [{ id: 'n1' }], providerType: 'vsphere' },
+        } as never,
+        [],
+      ),
+    ).toBe(false);
   });
 
   it('hasPodNetworkMappings detects pod network targets', () => {

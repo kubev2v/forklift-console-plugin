@@ -24,7 +24,7 @@ describe('copyNetworkMap - copy', () => {
     const existing = {
       apiVersion: 'forklift.konveyor.io/v1beta1',
       kind: 'NetworkMap',
-      metadata: { labels: { x: 'y' }, name: 'nm' },
+      metadata: { annotations: { a: '1' }, labels: { x: 'y' }, name: 'nm' },
       spec: { map: [{ destination: {}, source: {} }] },
     } as never;
 
@@ -33,12 +33,32 @@ describe('copyNetworkMap - copy', () => {
     expect(mockK8sCreate).toHaveBeenCalledWith({
       data: expect.objectContaining({
         metadata: expect.objectContaining({
+          annotations: { a: '1' },
           labels: { x: 'y' },
           name: 'plan-a-nm',
           namespace: 'ns-1',
         }),
+        spec: { map: [{ destination: {}, source: {} }] },
       }),
       model: NetworkMapModel,
     });
+  });
+
+  it('omits labels and annotations when absent', async () => {
+    const existing = {
+      metadata: { name: 'nm' },
+      spec: {},
+    } as never;
+
+    await copyNetworkMap(existing, 'p', 'ns');
+
+    const [firstCall] = mockK8sCreate.mock.calls;
+    const [createArg] = firstCall as [
+      { data: { metadata: { annotations?: unknown; labels?: unknown }; spec: unknown } },
+    ];
+    const { data } = createArg;
+    expect(data.metadata.labels).toBeUndefined();
+    expect(data.metadata.annotations).toBeUndefined();
+    expect(data.spec).toEqual({});
   });
 });
