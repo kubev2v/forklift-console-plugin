@@ -1,6 +1,6 @@
 import type { V1beta1Plan } from '@forklift-ui/types';
-import { CATEGORY_TYPES } from '@utils/constants';
 import { renderHook } from '@testing-library/react-hooks';
+import { CATEGORY_TYPES } from '@utils/constants';
 
 import usePlanAlerts from '../usePlanAlerts';
 

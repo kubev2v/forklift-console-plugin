@@ -10,27 +10,23 @@ describe('getMigrateSharedDisksValue - defaults', () => {
   });
 
   it('returns the explicit plan boolean', () => {
-    expect(
-      getMigrateSharedDisksValue({ spec: { migrateSharedDisks: false } } as V1beta1Plan),
-    ).toBe(false);
-    expect(
-      getMigrateSharedDisksValue({ spec: { migrateSharedDisks: true } } as V1beta1Plan),
-    ).toBe(true);
+    expect(getMigrateSharedDisksValue({ spec: { migrateSharedDisks: false } } as V1beta1Plan)).toBe(
+      false,
+    );
+    expect(getMigrateSharedDisksValue({ spec: { migrateSharedDisks: true } } as V1beta1Plan)).toBe(
+      true,
+    );
   });
 });
 
 describe('getVmMigrateSharedDisks - defaults', () => {
   it('returns undefined for missing VM or field', () => {
     expect(getVmMigrateSharedDisks(undefined)).toBeUndefined();
-    expect(getVmMigrateSharedDisks({} as EnhancedPlanSpecVms)).toBeUndefined();
+    expect(getVmMigrateSharedDisks({})).toBeUndefined();
   });
 
   it('returns the VM-level boolean', () => {
-    expect(getVmMigrateSharedDisks({ migrateSharedDisks: false } as EnhancedPlanSpecVms)).toBe(
-      false,
-    );
-    expect(getVmMigrateSharedDisks({ migrateSharedDisks: true } as EnhancedPlanSpecVms)).toBe(
-      true,
-    );
+    expect(getVmMigrateSharedDisks({ migrateSharedDisks: false })).toBe(false);
+    expect(getVmMigrateSharedDisks({ migrateSharedDisks: true })).toBe(true);
   });
 });
