@@ -33,10 +33,18 @@ describe('hasObjectChangedInGivenFields - behavior', () => {
 
   it('handles primitives, null, undefined, and empty objects', () => {
     expect(
-      hasObjectChangedInGivenFields({ fieldsToAvoidComparing: [], newObject: 1 as never, oldObject: 1 as never }),
+      hasObjectChangedInGivenFields({
+        fieldsToAvoidComparing: [],
+        newObject: 1 as never,
+        oldObject: 1 as never,
+      }),
     ).toBe(false);
     expect(
-      hasObjectChangedInGivenFields({ fieldsToAvoidComparing: [], newObject: null as never, oldObject: null as never }),
+      hasObjectChangedInGivenFields({
+        fieldsToAvoidComparing: [],
+        newObject: null as never,
+        oldObject: null as never,
+      }),
     ).toBe(false);
     expect(
       hasObjectChangedInGivenFields({

@@ -1,5 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
-
+import { renderHook } from '@testing-library/react';
 import {
   CONVERSION_LABELS,
   CONVERSION_PHASE,
@@ -9,38 +8,45 @@ import type { V1beta1Conversion } from '@utils/crds/conversion/types';
 
 import { useVmInspectionStatus } from '../useVmInspectionStatus';
 
-const conversion = (
-  overrides: Partial<V1beta1Conversion> & {
-    vmId?: string;
-    phase?: string;
-    createdAt?: string;
-    allChecksPassed?: boolean;
-    all_checks_passed?: boolean;
-  } = {},
-): V1beta1Conversion => {
+type ConversionOverrides = Partial<V1beta1Conversion> & {
+  allChecksPassed?: boolean;
+  createdAt?: string;
+  phase?: string;
+  snakeAllChecksPassed?: boolean;
+  vmId?: string;
+};
+
+const conversion = (overrides: ConversionOverrides = {}): V1beta1Conversion => {
   const {
-    vmId = 'vm-1',
-    phase = CONVERSION_PHASE.SUCCEEDED,
-    createdAt = '2024-01-01T00:00:00Z',
     allChecksPassed,
-    all_checks_passed,
+    createdAt = '2024-01-01T00:00:00Z',
+    phase = CONVERSION_PHASE.SUCCEEDED,
+    snakeAllChecksPassed,
+    vmId = 'vm-1',
     ...rest
   } = overrides;
+
+  const inspectionResult: Record<string, boolean> = {};
+  if (typeof allChecksPassed === 'boolean') {
+    inspectionResult.allChecksPassed = allChecksPassed;
+  }
+  if (typeof snakeAllChecksPassed === 'boolean') {
+    // Backend may return snake_case; keep key literal for coverage of that path.
+    inspectionResult.all_checks_passed = snakeAllChecksPassed;
+  }
+  const hasInspectionResult = Object.keys(inspectionResult).length > 0;
 
   return {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     kind: 'Conversion',
     metadata: {
-      name: `conversion-${vmId}-${createdAt}`,
       creationTimestamp: createdAt,
       labels: { [CONVERSION_LABELS.VM_ID]: vmId },
+      name: `conversion-${vmId}-${createdAt}`,
     },
     status: {
+      inspectionResult: hasInspectionResult ? inspectionResult : undefined,
       phase,
-      inspectionResult:
-        allChecksPassed !== undefined || all_checks_passed !== undefined
-          ? { allChecksPassed, all_checks_passed }
-          : undefined,
     },
     ...rest,
   } as V1beta1Conversion;
@@ -54,7 +60,7 @@ describe('useVmInspectionStatus - selection', () => {
 
   it('ignores conversions without vmID label', () => {
     const unlabeled = conversion();
-    delete unlabeled.metadata!.labels;
+    delete unlabeled.metadata.labels;
     const { result } = renderHook(() => useVmInspectionStatus([unlabeled]));
     expect(result.current('vm-1')).toBeUndefined();
   });
@@ -99,7 +105,7 @@ describe('useVmInspectionStatus - selection', () => {
       phase: CONVERSION_PHASE.SUCCEEDED,
     });
     const withSnake = conversion({
-      all_checks_passed: false,
+      snakeAllChecksPassed: false,
       phase: CONVERSION_PHASE.SUCCEEDED,
       vmId: 'vm-2',
     });
@@ -115,7 +121,7 @@ describe('useVmInspectionStatus - selection', () => {
       createdAt: '2024-05-05T12:00:00Z',
       allChecksPassed: true,
     });
-    item.metadata!.name = 'inspect-vm-1';
+    item.metadata.name = 'inspect-vm-1';
 
     const { result } = renderHook(() => useVmInspectionStatus([item]));
     const status = result.current('vm-1');

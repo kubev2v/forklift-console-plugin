@@ -4,7 +4,11 @@ export const validProvider: V1beta1Provider = {
   apiVersion: 'forklift.konveyor.io/v1beta1',
   kind: 'Provider',
   metadata: { name: 'vsphere-provider', namespace: 'openshift-mtv', uid: 'provider-uid-1' },
-  spec: { type: 'vsphere', url: 'https://vcenter.example.com' },
+  spec: {
+    secret: { name: 'vsphere-secret' },
+    type: 'vsphere',
+    url: 'https://vcenter.example.com',
+  },
 };
 
 export const providerMissingUid: V1beta1Provider = {
@@ -14,7 +18,7 @@ export const providerMissingUid: V1beta1Provider = {
 
 export const providerMissingType: V1beta1Provider = {
   ...validProvider,
-  spec: { url: 'https://vcenter.example.com' },
+  spec: { secret: { name: 'vsphere-secret' }, url: 'https://vcenter.example.com' },
 };
 
 export const inventorySample = {
