@@ -4,9 +4,10 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   k8sCreate: jest.fn(),
 }));
 
+import { EMPTY_VDDK_INIT_IMAGE_ANNOTATION, YES_VALUE } from 'src/providers/utils/constants';
+
 import { ProviderModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
-import { EMPTY_VDDK_INIT_IMAGE_ANNOTATION, YES_VALUE } from 'src/providers/utils/constants';
 
 import { createProvider } from '../createProvider';
 
