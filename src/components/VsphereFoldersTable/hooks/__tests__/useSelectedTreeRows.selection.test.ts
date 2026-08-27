@@ -1,4 +1,6 @@
-import { act, type FormEvent, renderHook } from '@testing-library/react';
+import type { FormEvent } from 'react';
+
+import { act, renderHook } from '@testing-library/react';
 
 import useSelectedTreeRows from '../useSelectedTreeRows';
 
