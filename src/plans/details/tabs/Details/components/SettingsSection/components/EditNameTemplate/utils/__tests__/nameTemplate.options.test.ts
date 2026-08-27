@@ -6,7 +6,7 @@ import { getNameTemplateOptions, getNameTemplateStateLabel, getSelectedOption } 
 describe('EditNameTemplate utils - options', () => {
   it('includes inherit option when allowed', () => {
     const options = getNameTemplateOptions(true);
-    expect(options.map((option) => o.value)).toEqual([
+    expect(options.map((option) => option.value)).toEqual([
       NameTemplateOptions.InheritPlanWideSetting,
       NameTemplateOptions.CustomNameTemplate,
     ]);
@@ -15,7 +15,7 @@ describe('EditNameTemplate utils - options', () => {
   });
 
   it('includes default option when inherit is not allowed', () => {
-    expect(getNameTemplateOptions(false).map((option) => o.value)).toEqual([
+    expect(getNameTemplateOptions(false).map((option) => option.value)).toEqual([
       NameTemplateOptions.DefaultNameTemplate,
       NameTemplateOptions.CustomNameTemplate,
     ]);

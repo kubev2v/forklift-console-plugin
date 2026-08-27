@@ -11,7 +11,7 @@ import { onConfirmPreserveStaticIPs } from '../utils';
 describe('PreserveStaticIPs utils - confirm', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue({});
+    mockK8sPatch.mockResolvedValue(undefined as never);
   });
 
   it('ADDs then REPLACEs preserveStaticIPs', async () => {

@@ -11,7 +11,7 @@ import { onConfirmDescription } from '../utils';
 describe('Description utils - confirm', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue({});
+    mockK8sPatch.mockResolvedValue(undefined as never);
   });
 
   it('patches plan description', async () => {

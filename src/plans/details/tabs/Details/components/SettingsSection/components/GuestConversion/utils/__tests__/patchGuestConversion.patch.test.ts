@@ -13,7 +13,7 @@ import { patchGuestConversion } from '../patchGuestConversion';
 describe('patchGuestConversion - patch', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue({});
+    mockK8sPatch.mockResolvedValue(undefined as never);
   });
 
   it('adds skipGuestConversion and compatibility mode when skipping', async () => {

@@ -12,7 +12,7 @@ import { getNetworkName, onConfirmTransferNetwork } from '../utils';
 describe('PlanTransferNetwork utils - confirm', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue({});
+    mockK8sPatch.mockResolvedValue(undefined as never);
   });
 
   it('formats network names and defaults', () => {
