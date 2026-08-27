@@ -31,9 +31,7 @@ describe('migration hooks utils - validation', () => {
   });
 
   it('maps AAP templates to select options', () => {
-    expect(
-      toAapSelectOptions([{ description: 'd', id: 7, name: 'tpl' }] as never),
-    ).toEqual([
+    expect(toAapSelectOptions([{ description: 'd', id: 7, name: 'tpl' }] as never)).toEqual([
       {
         content: 'tpl (ID: 7)',
         optionProps: { description: 'd' },

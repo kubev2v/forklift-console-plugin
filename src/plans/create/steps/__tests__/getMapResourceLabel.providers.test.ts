@@ -11,7 +11,11 @@ describe('getMapResourceLabel - providers', () => {
 
   it('formats openshift with and without namespace', () => {
     expect(
-      getMapResourceLabel({ name: 'net', namespace: 'ns', providerType: PROVIDER_TYPES.openshift } as never),
+      getMapResourceLabel({
+        name: 'net',
+        namespace: 'ns',
+        providerType: PROVIDER_TYPES.openshift,
+      } as never),
     ).toBe('ns/net');
     expect(
       getMapResourceLabel({ name: 'net', providerType: PROVIDER_TYPES.openshift } as never),
@@ -22,7 +26,9 @@ describe('getMapResourceLabel - providers', () => {
     expect(
       getMapResourceLabel({ name: 'n', path: '/p', providerType: PROVIDER_TYPES.ovirt } as never),
     ).toBe('/p');
-    expect(getMapResourceLabel({ name: 'n', providerType: PROVIDER_TYPES.ovirt } as never)).toBe('n');
+    expect(getMapResourceLabel({ name: 'n', providerType: PROVIDER_TYPES.ovirt } as never)).toBe(
+      'n',
+    );
   });
 
   it('returns name for vsphere-like providers', () => {
