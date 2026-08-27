@@ -131,12 +131,17 @@ jira_auth_header() {
     exit 1
   fi
 
+  if [[ "$JIRA_BASE" != https://* ]]; then
+    log_error "JIRA_BASE must use https:// (got: ${JIRA_BASE})"
+    exit 1
+  fi
+
   echo "Authorization: Basic $(printf '%s' "${JIRA_EMAIL}:${JIRA_API_TOKEN}" | base64 | tr -d '\n')"
 }
 
 fetch_ticket() {
   local auth_header
-  auth_header="$(jira_auth_header)"
+  auth_header="$(jira_auth_header)" || exit 1
 
   curl -sSf \
     -H "$auth_header" \

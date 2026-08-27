@@ -80,14 +80,16 @@ jobs:
             pr_body=$(echo "$pr_json" | jq -r '.body // ""')
           fi
 
+          delimiter="ghadelim_$(openssl rand -hex 8)"
+
           {
             echo "pr_number=$pr_number"
-            echo "pr_title<<EOF"
+            echo "pr_title<<${delimiter}"
             echo "$pr_title"
-            echo "EOF"
-            echo "pr_body<<EOF"
+            echo "${delimiter}"
+            echo "pr_body<<${delimiter}"
             echo "$pr_body"
-            echo "EOF"
+            echo "${delimiter}"
           } >> "$GITHUB_OUTPUT"
 
       - name: Fetch PR commits
@@ -235,9 +237,9 @@ jobs:
           echo "::warning::Could not post the Jira validation comment (common for fork PRs with read-only tokens). See the job summary for results."
 
       - name: Fail when validation failed
-        if: steps.validate.outputs.status == 'failed'
+        if: steps.validate.outputs.status == 'failed' || steps.validate.outcome == 'failure'
         run: |
-          echo "::error::Jira ticket ${TICKET_KEY} (${TICKET_URL}) is missing required fields: ${MISSING_FIELDS}"
+          echo "::error::Jira ticket ${TICKET_KEY} (${TICKET_URL}) is missing required fields: ${MISSING_FIELDS:-unknown (script error)}"
           exit 1
         env:
           MISSING_FIELDS: ${{ steps.validate.outputs.missing }}
