@@ -166,11 +166,12 @@ Configured via `collectCoverageFrom` and `coveragePathIgnorePatterns`:
 | Pattern | Rationale |
 |---------|-----------|
 | `src/onlineHelp/learningExperienceContent/**` | Static JSX learning topics; low defect risk |
-| `**/types.ts`, `**/*.types.ts` | Type-only modules; no runtime branches |
-| `**/constants.ts` | Constant maps; no logic to regression-test via coverage |
+| `**/types.ts`, `**/*.types.ts` | Mostly type exports / const maps / enums — reduced noise, not a claim of “no runtime code” |
 | `**/dynamic-plugin.ts` | Console plugin registration boilerplate |
 
-Do **not** write unit tests solely to cover these paths.
+**Do not** exclude `**/constants.ts` by filename: several `constants.ts` modules export branching helpers (`isTechPreviewProvider`, `isRwxCapableProvisioner`, power-state labels, filter matchers). Keep those in the denominator and unit-test the helpers.
+
+Do **not** write unit tests solely to cover learning-experience topics or `dynamic-plugin.ts`.
 
 ---
 

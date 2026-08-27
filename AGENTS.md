@@ -525,8 +525,10 @@ Coverage aims to reflect **defect-prone** code (utils, hooks, interactive UI), n
 
 **Excluded from the coverage denominator** (see `jest.config.ts` `collectCoverageFrom` / `coveragePathIgnorePatterns`):
 - `src/onlineHelp/learningExperienceContent/**` — static JSX help topics
-- `**/types.ts`, `**/*.types.ts`, `**/constants.ts` — pure type/constant modules
+- `**/types.ts`, `**/*.types.ts` — mostly type/const-map modules (may still export runtime enums; prefer dedicated `utils` files for branching helpers)
 - `**/dynamic-plugin.ts` — plugin registration boilerplate
+
+**Not excluded:** `**/constants.ts` — keep in the denominator; many contain branching helpers that should stay covered.
 
 ### E2E Tests (Playwright)
 - Located in `testing/playwright/e2e/`

@@ -22,7 +22,6 @@ export const config: JestConfigWithTsJest = {
     '!src/onlineHelp/learningExperienceContent/**',
     '!**/types.ts',
     '!**/*.types.ts',
-    '!**/constants.ts',
     '!**/dynamic-plugin.ts',
   ],
   coveragePathIgnorePatterns: [
@@ -32,7 +31,6 @@ export const config: JestConfigWithTsJest = {
     '/src/onlineHelp/learningExperienceContent/',
     '/types\\.ts$',
     '\\.types\\.ts$',
-    '/constants\\.ts$',
     '/dynamic-plugin\\.ts$',
   ],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
