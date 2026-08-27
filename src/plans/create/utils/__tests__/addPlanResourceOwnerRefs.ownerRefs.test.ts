@@ -10,13 +10,13 @@ import { ConfigMapModel } from '@utils/constants';
 import { addOwnerRefs } from '../addOwnerRefs';
 import { addPlanResourceOwnerRefs } from '../addPlanResourceOwnerRefs';
 
-const mockAddOwnerRefs = addOwnerRefs as jest.MockedFunction<typeof addOwnerRefs>;
+const mockAddOwnerRefs = addOwnerRefs as unknown as jest.Mock;
 const planRef = { apiVersion: 'v1', kind: 'Plan', name: 'plan', uid: 'u1' };
 
 describe('addPlanResourceOwnerRefs - ownerRefs', () => {
   beforeEach(() => {
     mockAddOwnerRefs.mockReset();
-    mockAddOwnerRefs.mockResolvedValue(undefined as never);
+    mockAddOwnerRefs.mockResolvedValue({} as never);
   });
 
   it('always owns storage and network maps', async () => {
