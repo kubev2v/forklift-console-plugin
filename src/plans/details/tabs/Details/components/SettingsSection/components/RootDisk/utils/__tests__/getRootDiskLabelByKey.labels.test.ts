@@ -1,7 +1,4 @@
-import {
-  getRootDiskLabelByKey,
-  isNotFirstKeyOrRootFilesystem,
-} from '../utils';
+import { getRootDiskLabelByKey, isNotFirstKeyOrRootFilesystem } from '../utils';
 
 jest.mock('@utils/i18n', () => ({
   t: (key: string) => key,

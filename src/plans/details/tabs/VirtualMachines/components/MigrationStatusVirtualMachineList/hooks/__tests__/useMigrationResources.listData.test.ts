@@ -22,10 +22,7 @@ const plan = {
   spec: {
     targetNamespace: 'target-ns',
     warm: true,
-    vms: [
-      { id: 'vm-1', name: 'alpha' },
-      { name: 'bravo-by-name' },
-    ],
+    vms: [{ id: 'vm-1', name: 'alpha' }, { name: 'bravo-by-name' }],
   },
   status: {
     migration: {

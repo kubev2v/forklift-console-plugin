@@ -12,7 +12,10 @@ const mockPatch = k8sPatch as jest.MockedFunction<typeof k8sPatch>;
 const basePlan = {
   metadata: { name: 'plan-1', namespace: 'ns' },
   spec: {
-    vms: [{ id: 'vm-1', name: 'alpha' }, { id: 'vm-2', migrateSharedDisks: true }],
+    vms: [
+      { id: 'vm-1', name: 'alpha' },
+      { id: 'vm-2', migrateSharedDisks: true },
+    ],
   },
 } as unknown as V1beta1Plan;
 
