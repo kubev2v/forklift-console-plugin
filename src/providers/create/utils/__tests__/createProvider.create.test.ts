@@ -1,19 +1,23 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sCreate = jest.fn();
-
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sCreate: (...args: unknown[]) => mockK8sCreate(...args),
+  k8sCreate: jest.fn(),
 }));
 
 import { ProviderModel } from '@forklift-ui/types';
+import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 
 import { createProvider } from '../createProvider';
+
+const mockK8sCreate = k8sCreate as unknown as jest.Mock;
 
 describe('createProvider - create', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
-    mockK8sCreate.mockImplementation(async ({ data }) => data);
+    mockK8sCreate.mockImplementation((...args: unknown[]) => {
+      const [{ data }] = args as [{ data: unknown }];
+      return Promise.resolve(data);
+    });
   });
 
   it('returns undefined when provider is missing', async () => {
@@ -29,9 +33,11 @@ describe('createProvider - create', () => {
 
     await createProvider(provider, secret);
 
-    const { data } = mockK8sCreate.mock.calls[0][0];
-    expect(data.spec.secret).toEqual({ name: 'sec', namespace: 'ns' });
-    expect(mockK8sCreate.mock.calls[0][0].model).toBe(ProviderModel);
+    const [createArg] = mockK8sCreate.mock.calls[0] as unknown as [
+      { data: { spec: { secret?: { name: string; namespace: string } } }; model: unknown },
+    ];
+    expect(createArg.data.spec.secret).toEqual({ name: 'sec', namespace: 'ns' });
+    expect(createArg.model).toBe(ProviderModel);
   });
 
   it('creates provider without secret when secret is omitted', async () => {
@@ -41,6 +47,9 @@ describe('createProvider - create', () => {
     } as never;
 
     await createProvider(provider, undefined);
-    expect(mockK8sCreate.mock.calls[0][0].data.spec.secret).toBeUndefined();
+    const [createArg] = mockK8sCreate.mock.calls[0] as unknown as [
+      { data: { spec: { secret?: unknown } } },
+    ];
+    expect(createArg.data.spec.secret).toBeUndefined();
   });
 });
