@@ -40,6 +40,6 @@ describe('plan details utils - concerns maps', () => {
       ]),
     );
 
-    expect(Object.fromEntries(merged)).toEqual({ a: 3, b: 5, keyC: 2 });
+    expect(Object.fromEntries(merged)).toEqual({ alpha: 3, beta: 5, keyC: 2 });
   });
 });
