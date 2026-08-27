@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
-import { renderHook } from '@testing-library/react-hooks';
 
 import type { V1beta1Migration } from '@forklift-ui/types';
+import { renderHook } from '@testing-library/react-hooks';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { TimeRangeOptions } from '../../utils/timeRangeOptions';
@@ -52,9 +52,7 @@ describe('useVmMigrationsDataPoints - aggregation', () => {
   it('returns empty totals while loading', () => {
     mockWatch.mockReturnValue([[], false, undefined] as never);
 
-    const { result } = renderHook(() =>
-      useVmMigrationsDataPoints(TimeRangeOptions.Last24H, true),
-    );
+    const { result } = renderHook(() => useVmMigrationsDataPoints(TimeRangeOptions.Last24H, true));
 
     expect(result.current).toMatchObject({
       loaded: false,
@@ -70,9 +68,7 @@ describe('useVmMigrationsDataPoints - aggregation', () => {
   it('aggregates VM statuses into single-bucket totals', () => {
     mockWatch.mockReturnValue([statusMigrations, true, null] as never);
 
-    const { result } = renderHook(() =>
-      useVmMigrationsDataPoints(TimeRangeOptions.Last24H, true),
-    );
+    const { result } = renderHook(() => useVmMigrationsDataPoints(TimeRangeOptions.Last24H, true));
 
     // Latest migration for plan-a wins (mig-dup), so only its VMs count.
     expect(result.current.loaded).toBe(true);
@@ -96,9 +92,7 @@ describe('useVmMigrationsDataPoints - aggregation', () => {
     ];
     mockWatch.mockReturnValue([distinct, true, null] as never);
 
-    const { result } = renderHook(() =>
-      useVmMigrationsDataPoints(TimeRangeOptions.Last24H, true),
-    );
+    const { result } = renderHook(() => useVmMigrationsDataPoints(TimeRangeOptions.Last24H, true));
 
     expect(result.current.total).toBe(5);
     expect(result.current.totalSucceededCount).toBe(2);

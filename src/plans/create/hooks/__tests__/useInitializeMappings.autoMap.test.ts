@@ -1,6 +1,6 @@
-import { act, renderHook } from '@testing-library/react-hooks';
 import { useFormContext } from 'react-hook-form';
 
+import { act, renderHook } from '@testing-library/react-hooks';
 import { NetworkMapFieldId } from '@utils/mappings/networkMap';
 
 import { useInitializeMappings } from '../useInitializeMappings';
@@ -38,21 +38,21 @@ describe('useInitializeMappings - autoMap', () => {
   });
 
   it('does nothing while loading', () => {
-    renderHook(() =>
+    renderHook(() => {
       useInitializeMappings({
         currentMap: undefined,
         defaultTarget,
         fieldIds,
         isLoading: true,
         usedSources: [{ name: 'src-a' }],
-      }),
-    );
+      });
+    });
 
     expect(mockSetValue).not.toHaveBeenCalled();
   });
 
   it('seeds an empty mapping row when map and sources are empty', () => {
-    renderHook(() =>
+    renderHook(() => {
       useInitializeMappings({
         currentMap: [],
         defaultTarget,
@@ -60,8 +60,8 @@ describe('useInitializeMappings - autoMap', () => {
         fieldIds,
         isLoading: false,
         usedSources: [],
-      }),
-    );
+      });
+    });
 
     expect(mockSetValue).toHaveBeenCalledWith(
       NetworkMapFieldId.NetworkMap,
@@ -76,7 +76,7 @@ describe('useInitializeMappings - autoMap', () => {
   });
 
   it('auto-maps unmapped sources and triggers validation', () => {
-    renderHook(() =>
+    renderHook(() => {
       useInitializeMappings({
         currentMap: [
           {
@@ -87,9 +87,12 @@ describe('useInitializeMappings - autoMap', () => {
         defaultTarget,
         fieldIds,
         isLoading: false,
-        usedSources: [{ id: '1', name: 'src-a' }, { id: '2', name: 'src-b' }],
-      }),
-    );
+        usedSources: [
+          { id: '1', name: 'src-a' },
+          { id: '2', name: 'src-b' },
+        ],
+      });
+    });
 
     expect(mockClearErrors).toHaveBeenCalledWith(NetworkMapFieldId.NetworkMap);
     expect(mockSetValue).toHaveBeenCalledWith(
@@ -114,7 +117,7 @@ describe('useInitializeMappings - autoMap', () => {
   });
 
   it('skips sources already present in the current map', () => {
-    renderHook(() =>
+    renderHook(() => {
       useInitializeMappings({
         currentMap: [
           {
@@ -126,8 +129,8 @@ describe('useInitializeMappings - autoMap', () => {
         fieldIds,
         isLoading: false,
         usedSources: [{ name: 'src-a' }, { name: 'src-b' }],
-      }),
-    );
+      });
+    });
 
     const updated = mockSetValue.mock.calls[0][1] as { sourceNetwork: { name: string } }[];
     expect(updated.map((row) => row.sourceNetwork.name)).toEqual(['src-a', 'src-b']);

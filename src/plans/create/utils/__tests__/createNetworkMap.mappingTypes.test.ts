@@ -25,7 +25,7 @@ const createdData = (): Record<string, unknown> => mockCreate.mock.calls[0][0].d
 describe('createNetworkMap - mapping types', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockCreate.mockResolvedValue({ metadata: { name: 'net-map-1' } } as never);
+    mockCreate.mockResolvedValue({ metadata: { name: 'net-map-1' } });
   });
 
   it('maps Multus destination with namespace/name split', async () => {

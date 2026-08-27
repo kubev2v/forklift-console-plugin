@@ -22,7 +22,7 @@ const mockCreate = k8sCreate as jest.MockedFunction<typeof k8sCreate>;
 describe('createNetworkMap - create flow', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockCreate.mockResolvedValue(createdNetworkMap as never);
+    mockCreate.mockResolvedValue(createdNetworkMap);
   });
 
   it('skips mappings without a source name and still creates', async () => {
@@ -35,9 +35,7 @@ describe('createNetworkMap - create flow', () => {
       spec: { map: unknown[] };
     };
     expect(data.spec.map).toHaveLength(1);
-    expect(mockCreate).toHaveBeenCalledWith(
-      expect.objectContaining({ model: NetworkMapModel }),
-    );
+    expect(mockCreate).toHaveBeenCalledWith(expect.objectContaining({ model: NetworkMapModel }));
   });
 
   it('sets generateName when name is omitted', async () => {
