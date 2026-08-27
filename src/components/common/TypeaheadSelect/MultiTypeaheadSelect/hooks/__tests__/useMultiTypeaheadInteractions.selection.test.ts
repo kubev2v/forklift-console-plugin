@@ -1,6 +1,4 @@
-import { createRef } from 'react';
-
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 
 import { PLACEHOLDER_VALUES } from '../../../utils/constants';
 import { useMultiTypeaheadInteractions } from '../useMultiTypeaheadInteractions';
@@ -11,15 +9,24 @@ const options = [
   { content: 'Three', value: '3' },
 ];
 
+type SetupResult = {
+  onChange: jest.Mock;
+  resetFilter: jest.Mock;
+  result: { current: ReturnType<typeof useMultiTypeaheadInteractions> };
+  setIsOpen: jest.Mock;
+};
+
 describe('useMultiTypeaheadInteractions - selection', () => {
-  const setup = (values: (string | number)[] = [], extras: Record<string, unknown> = {}) => {
+  const setup = (
+    values: (string | number)[] = [],
+    extras: Record<string, unknown> = {},
+  ): SetupResult => {
     const onChange = jest.fn();
     const resetFilter = jest.fn();
     const setIsOpen = jest.fn();
-    const inputRef = createRef<HTMLInputElement>();
-    (inputRef as { current: HTMLInputElement | null }).current = { focus: jest.fn() } as never;
+    const inputRef = { current: { focus: jest.fn() } as unknown as HTMLInputElement };
 
-    const hook = renderHook(() =>
+    const view = renderHook(() =>
       useMultiTypeaheadInteractions({
         displayOptions: options,
         inputRef,
@@ -33,36 +40,46 @@ describe('useMultiTypeaheadInteractions - selection', () => {
       }),
     );
 
-    return { ...hook, onChange, resetFilter, setIsOpen };
+    return { onChange, resetFilter, result: view.result, setIsOpen };
   };
 
   it('toggles values on and off', () => {
     const { result, onChange } = setup(['1']);
-    act(() => result.current.toggleSelectValue('2'));
+    act(() => {
+      result.current.toggleSelectValue('2');
+    });
     expect(onChange).toHaveBeenCalledWith(['1', '2']);
 
-    act(() => result.current.toggleSelectValue('1'));
+    act(() => {
+      result.current.toggleSelectValue('1');
+    });
     expect(onChange).toHaveBeenCalledWith([]);
   });
 
   it('respects maxSelections', () => {
     const { result, onChange } = setup(['1'], { maxSelections: 1 });
-    act(() => result.current.toggleSelectValue('2'));
+    act(() => {
+      result.current.toggleSelectValue('2');
+    });
     expect(onChange).not.toHaveBeenCalled();
   });
 
   it('handleSelect ignores placeholder and undefined', () => {
     const { result, onChange } = setup();
-    act(() => result.current.handleSelect(undefined));
-    act(() => result.current.handleSelect(PLACEHOLDER_VALUES.NO_OPTIONS));
-    act(() => result.current.handleSelect(PLACEHOLDER_VALUES.NO_RESULTS));
+    act(() => {
+      result.current.handleSelect(undefined);
+      result.current.handleSelect(PLACEHOLDER_VALUES.NO_OPTIONS);
+      result.current.handleSelect(PLACEHOLDER_VALUES.NO_RESULTS);
+    });
     expect(onChange).not.toHaveBeenCalled();
   });
 
   it('handleSelect creates option when creatable', () => {
     const onCreateOption = jest.fn();
     const { result, onChange, resetFilter } = setup([], { isCreatable: true, onCreateOption });
-    act(() => result.current.handleSelect('new'));
+    act(() => {
+      result.current.handleSelect('new');
+    });
     expect(onCreateOption).toHaveBeenCalledWith('new');
     expect(onChange).toHaveBeenCalledWith(['new']);
     expect(resetFilter).toHaveBeenCalled();
@@ -70,18 +87,26 @@ describe('useMultiTypeaheadInteractions - selection', () => {
 
   it('removes chips and clears all', () => {
     const { result, onChange } = setup(['1', '2']);
-    act(() => result.current.onChipRemove('1'));
+    act(() => {
+      result.current.onChipRemove('1');
+    });
     expect(onChange).toHaveBeenCalledWith(['2']);
-    act(() => result.current.onClearAll());
+    act(() => {
+      result.current.onClearAll();
+    });
     expect(onChange).toHaveBeenCalledWith([]);
   });
 
   it('sets and resets focused item', () => {
     const { result } = setup();
-    act(() => result.current.setActiveAndFocusedItem(1));
+    act(() => {
+      result.current.setActiveAndFocusedItem(1);
+    });
     expect(result.current.focusedItemIndex).toBe(1);
     expect(result.current.activeItemId).toContain('2');
-    act(() => result.current.resetFocus());
+    act(() => {
+      result.current.resetFocus();
+    });
     expect(result.current.focusedItemIndex).toBeNull();
     expect(result.current.activeItemId).toBeNull();
   });

@@ -7,7 +7,7 @@ import {
 } from '../../utils/localStorage';
 import { loadUserSettings } from '../userSettings';
 
-jest.mock('../../utils/localStorage', () => ({
+jest.mock('../../utils/localStorage', (): unknown => ({
   loadFromLocalStorage: jest.fn(),
   removeFromLocalStorage: jest.fn(),
   saveToLocalStorage: jest.fn(),

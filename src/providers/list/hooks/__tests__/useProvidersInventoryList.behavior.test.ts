@@ -1,28 +1,28 @@
 import { consoleFetchJSON, useFlag } from '@openshift-console/dynamic-plugin-sdk';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 
 import { getProvidersInventoryByNamespace } from '../../utils/getProvidersInventoryByNamespace';
 import useProvidersInventoryList from '../useProvidersInventoryList';
 
-jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
+jest.mock('@openshift-console/dynamic-plugin-sdk', (): unknown => ({
   consoleFetchJSON: jest.fn(),
   useFlag: jest.fn(),
 }));
 
-jest.mock('@utils/api/getApiUrl', () => ({
+jest.mock('@utils/api/getApiUrl', (): unknown => ({
   getInventoryApiUrl: (path: string) => `/inventory/${path}`,
 }));
 
-jest.mock('../../utils/getProvidersInventoryByNamespace', () => ({
+jest.mock('../../utils/getProvidersInventoryByNamespace', (): unknown => ({
   getProvidersInventoryByNamespace: jest.fn(),
 }));
 
-jest.mock('../../utils/inventoryHasChanged', () => ({
+jest.mock('../../utils/inventoryHasChanged', (): unknown => ({
   inventoryHasChanged: () => true,
 }));
 
-jest.mock('../../utils/updateInventory', () => ({
-  updateInventory: (inventory: unknown, setInventory: (v: unknown) => void) => {
+jest.mock('../../utils/updateInventory', (): unknown => ({
+  updateInventory: (inventory: unknown, setInventory: (v: unknown) => void): void => {
     setInventory(inventory);
   },
 }));

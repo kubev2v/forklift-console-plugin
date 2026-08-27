@@ -1,4 +1,4 @@
-jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
+jest.mock('@openshift-console/dynamic-plugin-sdk', (): unknown => ({
   Operator: {
     DoesNotExist: 'DoesNotExist',
     Exists: 'Exists',
