@@ -1,10 +1,8 @@
-import { describe, expect, it } from '@jest/globals';
 import { ConcernCategory } from 'src/providers/details/tabs/VirtualMachines/constants';
 
-import {
-  getCriticalConcernsVmsMap,
-  mergeConcernsMaps,
-} from '../utils';
+import { describe, expect, it } from '@jest/globals';
+
+import { getCriticalConcernsVmsMap, mergeConcernsMaps } from '../utils';
 
 describe('plan details utils - concerns maps', () => {
   it('counts critical inventory concerns by label', () => {
@@ -32,8 +30,14 @@ describe('plan details utils - concerns maps', () => {
 
   it('merges maps preferring the larger count', () => {
     const merged = mergeConcernsMaps(
-      new Map([['a', 1], ['b', 5]]),
-      new Map([['a', 3], ['c', 2]]),
+      new Map([
+        ['a', 1],
+        ['b', 5],
+      ]),
+      new Map([
+        ['a', 3],
+        ['c', 2],
+      ]),
     );
 
     expect(Object.fromEntries(merged)).toEqual({ a: 3, b: 5, c: 2 });

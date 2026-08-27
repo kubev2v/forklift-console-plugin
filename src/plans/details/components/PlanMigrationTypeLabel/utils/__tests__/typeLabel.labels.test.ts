@@ -1,5 +1,6 @@
-import { describe, expect, it } from '@jest/globals';
 import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
+
+import { describe, expect, it } from '@jest/globals';
 
 import { bodyContent, getLabelColor, typeLabel } from '../utils';
 

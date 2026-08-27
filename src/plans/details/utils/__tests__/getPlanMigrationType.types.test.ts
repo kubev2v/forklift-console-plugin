@@ -1,8 +1,9 @@
-import { describe, expect, it } from '@jest/globals';
 import { MigrationTypeValue } from 'src/plans/create/steps/migration-type/constants';
 
-import { getPlanMigrationType, isMigrationVirtualMachinePaused } from '../utils';
+import { describe, expect, it } from '@jest/globals';
+
 import { planMigrationVirtualMachineStatuses } from '../../components/PlanStatus/utils/types';
+import { getPlanMigrationType, isMigrationVirtualMachinePaused } from '../utils';
 
 describe('plan details utils - migration type', () => {
   it.each([

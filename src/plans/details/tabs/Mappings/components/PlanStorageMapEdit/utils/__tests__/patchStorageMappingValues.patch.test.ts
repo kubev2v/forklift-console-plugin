@@ -54,7 +54,7 @@ describe('patchStorageMappingValues - patch', () => {
 
   it('skips patch when transform returns undefined', async () => {
     mockTransform.mockReturnValueOnce(undefined);
-    await patchStorageMappingValues({ storageMap: [] } as never, {} as never, {} as never);
+    await patchStorageMappingValues({ storageMap: [] }, {} as never, {} as never);
     expect(mockK8sPatch).not.toHaveBeenCalled();
   });
 });
