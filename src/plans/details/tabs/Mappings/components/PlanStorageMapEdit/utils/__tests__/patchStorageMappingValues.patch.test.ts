@@ -4,11 +4,11 @@ const mockK8sPatch = jest.fn();
 const mockTransform = jest.fn(() => ({ spec: { map: [{ source: { id: 's' } }] } }));
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sPatch: (...args: unknown[]) => mockK8sPatch(...args),
+  k8sPatch: (...args: unknown[]): unknown => mockK8sPatch(...args),
 }));
 
 jest.mock('src/storageMaps/details/utils/utils', () => ({
-  transformFormValuesToK8sSpec: (...args: unknown[]) => mockTransform(...args),
+  transformFormValuesToK8sSpec: (...args: unknown[]): unknown => mockTransform(...args),
 }));
 
 import { StorageMapModel } from '@forklift-ui/types';

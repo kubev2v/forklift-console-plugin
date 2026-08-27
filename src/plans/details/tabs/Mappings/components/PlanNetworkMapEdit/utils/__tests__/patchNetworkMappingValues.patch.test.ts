@@ -4,11 +4,11 @@ const mockK8sPatch = jest.fn();
 const mockBuildNetworkMappings = jest.fn(() => [{ source: { id: '1' } }]);
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sPatch: (...args: unknown[]) => mockK8sPatch(...args),
+  k8sPatch: (...args: unknown[]): unknown => mockK8sPatch(...args),
 }));
 
 jest.mock('src/networkMaps/create/utils/buildNetworkMappings', () => ({
-  buildNetworkMappings: (...args: unknown[]) => mockBuildNetworkMappings(...args),
+  buildNetworkMappings: (...args: unknown[]): unknown => mockBuildNetworkMappings(...args),
 }));
 
 import { NetworkMapModel } from '@forklift-ui/types';
