@@ -18,7 +18,7 @@ import { patchNetworkMappingValues } from '../utils';
 describe('patchNetworkMappingValues - patch', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue({});
+    mockK8sPatch.mockResolvedValue(undefined as never);
     mockBuildNetworkMappings.mockClear();
   });
 
