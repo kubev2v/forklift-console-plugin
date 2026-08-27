@@ -29,7 +29,7 @@ describe('createProvider - create', () => {
 
     await createProvider(provider, secret);
 
-    const data = mockK8sCreate.mock.calls[0][0].data;
+    const { data } = mockK8sCreate.mock.calls[0][0];
     expect(data.spec.secret).toEqual({ name: 'sec', namespace: 'ns' });
     expect(mockK8sCreate.mock.calls[0][0].model).toBe(ProviderModel);
   });
