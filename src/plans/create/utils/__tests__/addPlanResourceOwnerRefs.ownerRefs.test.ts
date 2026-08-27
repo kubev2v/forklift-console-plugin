@@ -48,10 +48,8 @@ describe('addPlanResourceOwnerRefs - ownerRefs', () => {
     expect(mockAddOwnerRefs).toHaveBeenCalledWith(SecretModel, resources.secret, [planRef]);
     expect(mockAddOwnerRefs).toHaveBeenCalledWith(HookModel, resources.hooks.preHook, [planRef]);
     expect(mockAddOwnerRefs).toHaveBeenCalledWith(HookModel, resources.hooks.postHook, [planRef]);
-    expect(mockAddOwnerRefs).toHaveBeenCalledWith(
-      ConfigMapModel,
-      resources.scriptsConfigMap,
-      [planRef],
-    );
+    expect(mockAddOwnerRefs).toHaveBeenCalledWith(ConfigMapModel, resources.scriptsConfigMap, [
+      planRef,
+    ]);
   });
 });

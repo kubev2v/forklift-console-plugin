@@ -38,7 +38,11 @@ describe('createPlan - create', () => {
       planProject: 'ns',
       preserveStaticIps: true,
       sourceProvider: provider,
-      storageMap: { ...mapRef, kind: 'StorageMap', metadata: { name: 'sm', namespace: 'ns', uid: 's1' } },
+      storageMap: {
+        ...mapRef,
+        kind: 'StorageMap',
+        metadata: { name: 'sm', namespace: 'ns', uid: 's1' },
+      },
       targetPowerState: 'on',
       targetProject: 'target-ns',
       targetProvider: provider,
@@ -78,7 +82,7 @@ describe('createPlan - create', () => {
       vms: [],
     });
 
-    const spec = mockK8sCreate.mock.calls[0][0].data.spec;
+    const { spec } = mockK8sCreate.mock.calls[0][0].data;
     expect(spec.warm).toBe(true);
     expect(spec.description).toBe('desc');
   });
