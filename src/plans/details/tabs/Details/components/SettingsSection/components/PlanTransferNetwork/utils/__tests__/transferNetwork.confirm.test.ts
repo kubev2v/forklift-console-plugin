@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sPatch = jest.fn();
+const mockK8sPatch = jest.fn((..._args: unknown[]) => Promise.resolve({}));
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sPatch: (...args: unknown[]): unknown => mockK8sPatch(...args),
+  k8sPatch: (...args: unknown[]): unknown =>
+    (mockK8sPatch as (...a: unknown[]) => unknown)(...args),
 }));
 
 import { PROVIDER_DEFAULTS } from '../constants';
@@ -12,7 +13,7 @@ import { getNetworkName, onConfirmTransferNetwork } from '../utils';
 describe('PlanTransferNetwork utils - confirm', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue(undefined as never);
+    mockK8sPatch.mockResolvedValue({});
   });
 
   it('formats network names and defaults', () => {
@@ -26,14 +27,16 @@ describe('PlanTransferNetwork utils - confirm', () => {
       newValue: { name: 'net', namespace: 'ns' },
       resource: empty,
     });
-    expect(mockK8sPatch.mock.calls[0][0].data[0].op).toBe('add');
+    expect(
+      (mockK8sPatch.mock.calls[0] as unknown as [{ data: { op: string }[] }])[0].data[0].op,
+    ).toBe('add');
 
     const existing = {
       metadata: { name: 'plan' },
       spec: { transferNetwork: { name: 'old', namespace: 'ns' } },
     } as never;
     await onConfirmTransferNetwork({ newValue: null, resource: existing });
-    expect(mockK8sPatch.mock.calls[1][0].data[0]).toEqual({
+    expect((mockK8sPatch.mock.calls[1] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
       op: 'replace',
       path: '/spec/transferNetwork',
       value: undefined,

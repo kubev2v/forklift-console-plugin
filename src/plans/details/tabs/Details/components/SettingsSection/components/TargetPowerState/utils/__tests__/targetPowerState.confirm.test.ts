@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-const mockK8sPatch = jest.fn();
+const mockK8sPatch = jest.fn((..._args: unknown[]) => Promise.resolve({}));
 
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
-  k8sPatch: (...args: unknown[]): unknown => mockK8sPatch(...args),
+  k8sPatch: (...args: unknown[]): unknown =>
+    (mockK8sPatch as (...a: unknown[]) => unknown)(...args),
 }));
 
 import { onConfirmTargetPowerState, onConfirmVmTargetPowerState } from '../utils';
@@ -17,7 +18,7 @@ describe('TargetPowerState utils - confirm', () => {
   it('ADDs plan target power state when missing', async () => {
     const resource = { metadata: { name: 'plan' }, spec: {} } as never;
     await onConfirmTargetPowerState({ newValue: 'on', resource });
-    expect(mockK8sPatch.mock.calls[0][0].data[0]).toEqual({
+    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
       op: 'add',
       path: '/spec/targetPowerState',
       value: 'on',
@@ -32,7 +33,7 @@ describe('TargetPowerState utils - confirm', () => {
 
     await onConfirmVmTargetPowerState(0)({ newValue: 'on', resource });
 
-    expect(mockK8sPatch.mock.calls[0][0].data[0]).toEqual({
+    expect((mockK8sPatch.mock.calls[0] as unknown as [{ data: unknown[] }])[0].data[0]).toEqual({
       op: 'replace',
       path: '/spec/vms/0/targetPowerState',
       value: 'on',
