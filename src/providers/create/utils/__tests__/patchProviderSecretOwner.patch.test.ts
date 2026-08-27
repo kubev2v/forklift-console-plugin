@@ -13,7 +13,7 @@ import { patchProviderSecretOwner } from '../patchProviderSecretOwner';
 describe('patchProviderSecretOwner - patch', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
-    mockK8sPatch.mockResolvedValue({});
+    mockK8sPatch.mockResolvedValue(undefined as never);
   });
 
   it('no-ops when provider or secret is missing', async () => {
