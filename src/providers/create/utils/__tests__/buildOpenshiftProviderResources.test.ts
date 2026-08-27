@@ -9,12 +9,12 @@ const base = {
   [ProviderFormFieldId.OpenshiftUrl]: 'https://api.cluster',
   [ProviderFormFieldId.ProviderName]: 'ocp',
   [ProviderFormFieldId.ProviderProject]: 'ns',
-  [ProviderFormFieldId.ProviderType]: 'openshift',
+  [ProviderFormFieldId.ProviderType]: 'openshift' as const,
   [ProviderFormFieldId.ServiceAccountToken]: 'token',
   [ProviderFormFieldId.ShowDefaultProjects]: false,
 };
 
-describe('buildOpenshiftProviderResources - build', () => {
+describe('buildOpenshiftProviderResources', () => {
   it('encodes token and skip-verify flag', () => {
     const { secret } = buildOpenshiftProviderResources({
       ...base,
@@ -26,7 +26,7 @@ describe('buildOpenshiftProviderResources - build', () => {
     expect(secret.data?.cacert).toBeUndefined();
   });
 
-  it('includes cacert when validation is configured', () => {
+  it('includes cacert and sets insecureSkipVerify false when configured', () => {
     const { secret } = buildOpenshiftProviderResources({
       ...base,
       [ProviderFormFieldId.CaCertificate]: 'CERT',
@@ -34,5 +34,6 @@ describe('buildOpenshiftProviderResources - build', () => {
     });
 
     expect(decode(secret.data?.cacert ?? '')).toBe('CERT');
+    expect(decode(secret.data?.insecureSkipVerify ?? '')).toBe('false');
   });
 });

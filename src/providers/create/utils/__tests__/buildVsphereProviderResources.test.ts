@@ -7,7 +7,7 @@ import { VddkSetupMode } from '../../../utils/constants';
 import { CertificateValidationMode, ProviderFormFieldId } from '../../fields/constants';
 import { buildVsphereProviderResources } from '../buildVsphereProviderResources';
 
-describe('buildVsphereProviderResources - build', () => {
+describe('buildVsphereProviderResources', () => {
   it('sets sdk endpoint and optional vddk settings', () => {
     const { provider, secret } = buildVsphereProviderResources({
       [ProviderFormFieldId.CertificateValidation]: CertificateValidationMode.Skip,
@@ -32,9 +32,11 @@ describe('buildVsphereProviderResources - build', () => {
       }),
     );
     expect(decode(secret.data?.url ?? '')).toBe('https://esxi');
+    expect(decode(secret.data?.user ?? '')).toBe('root');
+    expect(decode(secret.data?.password ?? '')).toBe('p');
   });
 
-  it('skips vddk settings when setup mode is Skip', () => {
+  it('skips vddk settings but keeps default sdkEndpoint when Skip', () => {
     const { provider } = buildVsphereProviderResources({
       [ProviderFormFieldId.ProviderName]: 'vsphere',
       [ProviderFormFieldId.ProviderProject]: 'ns',
@@ -46,5 +48,6 @@ describe('buildVsphereProviderResources - build', () => {
     });
 
     expect(provider.spec?.settings?.vddkInitImage).toBeUndefined();
+    expect(provider.spec?.settings?.sdkEndpoint).toBe(VSphereEndpointType.VCenter);
   });
 });
