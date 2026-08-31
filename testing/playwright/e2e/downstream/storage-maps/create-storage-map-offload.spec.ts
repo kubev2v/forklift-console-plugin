@@ -86,7 +86,6 @@ test.describe(
 
       await test.step('Set only offload plugin and verify validation error', async () => {
         await createPage.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
-        // MTV-6163: dedicated hosts UI landed on 5.0 only; 2.12 z-stream CRD lacks the field.
         if (crdSupportsDedicatedHosts) {
           await createPage.offload.verifyDedicatedMigrationHostsVisible(0);
         } else {
@@ -216,7 +215,6 @@ test.describe(
         const productText = await modal.offload.getStorageProductText(0);
         expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
 
-        // MTV-6163: dedicated hosts only when CRD schema includes the field (not on 2.12 z-stream).
         if (crdSupportsDedicatedHosts) {
           await modal.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
         } else {

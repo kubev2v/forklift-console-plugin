@@ -101,9 +101,7 @@ const discardStaleKubeconfigAuth = (): void => {
  *  - The `oc` binary is not available
  */
 const generateKubeconfig = async (username: string, password: string): Promise<void> => {
-  // A leftover kubeconfig from a previous cluster (after switching e2e.env) must
-  // not drive the infrastructure lookup or survive a failed oc login. Lookup uses
-  // the cookies from the browser login against BASE_ADDRESS.
+  // Clear any leftover kubeconfig from a previous cluster before lookup/login.
   discardStaleKubeconfigAuth();
 
   let clusterApiUrl = process.env.CLUSTER_API_URL?.replace(/\/$/u, '') ?? null;
@@ -259,8 +257,7 @@ const globalSetup = async (config: FullConfig) => {
 
       await restoreConsoleLanguage(page);
 
-      // Re-save so worker contexts inherit English localStorage, not
-      // whatever language was active at login time.
+      // Re-save so workers inherit English localStorage after language restore.
       await page.context().storageState({ path: AUTH_FILE });
 
       await generateKubeconfig(username, password);
