@@ -195,6 +195,9 @@ test.describe('Plan Deep Inspection', { tag: '@downstream' }, () => {
     const { firstVmName, planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
     const vmRow = planDetailsPage.virtualMachinesTab.getVmRow(firstVmName);
 
+    // Ensure any prior inspection from earlier tests is fully terminal before re-submitting.
+    await waitForVmDeepInspectionsTerminal(firstVmName);
+
     await test.step('submit inspection for a VM', async () => {
       const inspectModal = await planDetailsPage.openInspectModal();
       await inspectModal.selectVmByName(firstVmName);

@@ -107,6 +107,7 @@ export class OffloadOptions {
   async selectDedicatedMigrationHost(mappingIndex: number, hostName: string): Promise<void> {
     const toggle = this.fieldToggleButton(OFFLOAD_FIELD.dedicatedMigrationHosts(mappingIndex));
     await expect(toggle).toBeVisible();
+    await expect(toggle).toBeEnabled({ timeout: 30_000 });
     await toggle.click();
 
     const listbox = this.page.getByRole('listbox');
@@ -116,6 +117,8 @@ export class OffloadOptions {
     await expect(option).toBeVisible();
     await option.click();
 
+    // Confirm the chip landed before closing — catches clicks that didn't update RHF state.
+    await expect(toggle.getByText(hostName, { exact: true })).toBeVisible();
     await toggle.click();
   }
 

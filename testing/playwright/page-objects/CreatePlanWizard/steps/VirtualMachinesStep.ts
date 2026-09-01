@@ -189,11 +189,13 @@ export class VirtualMachinesStep extends VirtualMachinesTable {
     await expect(tableLocator).toBeVisible({ timeout: 30_000 });
     if (isVersionAtLeast(V2_11_0)) {
       await this.table.waitForTableLoad();
-      // Empty table shell is not enough — wait for inventory folders/VMs.
+      // vSphere uses a folder tree with data-testid="folder-*" / "vm-*" rows;
+      // other providers render a flat grid without those test IDs.
       const inventoryRow = this.rootLocator.locator(
         'tbody tr[data-testid^="folder-"], tbody tr[data-testid^="vm-"]',
       );
-      await expect(inventoryRow.first()).toBeVisible({ timeout: 60_000 });
+      const genericRow = tableLocator.locator('tbody tr').first();
+      await expect(inventoryRow.first().or(genericRow).first()).toBeVisible({ timeout: 60_000 });
     } else {
       await expect(tableLocator.getByRole('row').first()).toBeVisible();
     }
