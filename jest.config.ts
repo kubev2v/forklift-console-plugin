@@ -12,14 +12,27 @@ const moduleNameMapper = {
 
 // Sync object
 export const config: JestConfigWithTsJest = {
-  // Coverage configuration
+  // Coverage configuration — exclude low-defect-risk noise so Codecov reflects
+  // meaningful source (utils/hooks/UI logic), not static topics or pure types.
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.{test,spec}.{js,jsx,ts,tsx}',
     '!src/__mocks__/**',
     '!src/test-utils/**',
+    '!src/onlineHelp/learningExperienceContent/**',
+    '!**/types.ts',
+    '!**/*.types.ts',
+    '!**/dynamic-plugin.ts',
   ],
-  coveragePathIgnorePatterns: ['/node_modules/', '/src/__mocks__/', '/src/test-utils/'],
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '/src/__mocks__/',
+    '/src/test-utils/',
+    '/src/onlineHelp/learningExperienceContent/',
+    '/types\\.ts$',
+    '\\.types\\.ts$',
+    '/dynamic-plugin\\.ts$',
+  ],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   moduleNameMapper,
   modulePaths: ['<rootDir>'],

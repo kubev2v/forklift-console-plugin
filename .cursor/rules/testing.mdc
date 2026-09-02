@@ -1,12 +1,12 @@
 ---
-description: Testing conventions and Playwright patterns
-globs: "**/*.test.{ts,tsx},testing/**"
+description: Testing conventions, Playwright patterns, and Jest coverage policy
+globs: "**/*.test.{ts,tsx},jest.config.ts,testing/**"
 alwaysApply: false
 ---
 
 # Testing Guidelines (Supplement)
 
-For basic testing approach (Jest for unit, Playwright for E2E), see **AGENTS.md**. This rule adds detailed patterns.
+For basic testing approach (Jest for unit, Playwright for E2E), see **AGENTS.md**. This rule adds detailed patterns and coverage policy (MTV-6267).
 
 ---
 
@@ -149,6 +149,29 @@ npm run test:e2e    # Run Playwright E2E tests
 
 ### For Bug Fixes
 - Add a test covering the specific edge case that caused the bug, so it cannot regress
+
+### Coverage policy (MTV-6267)
+
+Reported coverage should track **meaningful** source — branchy utils/hooks and interactive UI — not static or type-only modules. Prefer Playwright for large page/wizard JSX; use Jest for extracted logic and shared islands.
+
+**Prioritize:**
+- Pure utils and hooks with branching logic
+- Shared UI islands with state/interaction matrices
+- Feature-page extracted utils/hooks
+
+### Exclusions (jest.config.ts)
+
+Configured via `collectCoverageFrom` and `coveragePathIgnorePatterns`:
+
+| Pattern | Rationale |
+|---------|-----------|
+| `src/onlineHelp/learningExperienceContent/**` | Static JSX learning topics; low defect risk |
+| `**/types.ts`, `**/*.types.ts` | Mostly type exports / const maps / enums — reduced noise, not a claim of “no runtime code” |
+| `**/dynamic-plugin.ts` | Console plugin registration boilerplate |
+
+**Do not** exclude `**/constants.ts` by filename: several `constants.ts` modules export branching helpers (`isTechPreviewProvider`, `isRwxCapableProvisioner`, power-state labels, filter matchers). Keep those in the denominator and unit-test the helpers.
+
+Do **not** write unit tests solely to cover learning-experience topics or `dynamic-plugin.ts`.
 
 ---
 
