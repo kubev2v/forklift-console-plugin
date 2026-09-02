@@ -106,8 +106,8 @@ export class PlansListPage {
       return;
     }
 
-    await this.page.getByTestId('table-bulk-select-toggle').click();
-    await this.page.getByTestId('table-bulk-select-select-none').click();
+    await this.page.getByTestId('table-bulk-select').getByRole('button').click();
+    await this.page.getByTestId('table-bulk-select-menu').getByRole('menuitem').first().click();
   }
 
   async selectPlanByName(planName: string): Promise<void> {

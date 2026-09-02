@@ -5,7 +5,7 @@ import { FilterGroup } from '@components/common/FilterGroup/FilterGroup';
 import { toFieldFilter } from '@components/common/FilterGroup/helpers';
 import type { FilterRenderer } from '@components/common/FilterGroup/types';
 import type { ResourceField } from '@components/common/utils/types';
-import TableBulkSelect from '@components/TableBulkSelect/TableBulkSelect';
+import TableBulkSelect from '@components/TableBulkSelect';
 import type { OnPerPageSelect, OnSetPage } from '@patternfly/react-core';
 import {
   Pagination,
