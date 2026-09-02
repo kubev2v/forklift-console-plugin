@@ -12,7 +12,6 @@ export class PlansListPage {
 
   constructor(page: Page) {
     this.page = page;
-    // Use the main content area as the root locator since there's no plans-list container
     this.table = new Table(page, page.locator('main'));
     this.navigation = new NavigationHelper(page);
   }
@@ -37,8 +36,7 @@ export class PlansListPage {
   }
 
   async clickPlanByName(planName: string): Promise<void> {
-    const planLink = this.page.getByRole('link', { exact: true, name: planName });
-    await planLink.click();
+    await this.page.getByTestId(`plan-link-${planName}`).click();
   }
 
   async confirmBulkModal(): Promise<void> {
@@ -54,11 +52,11 @@ export class PlansListPage {
   }
 
   async expectPlanHidden(planName: string): Promise<void> {
-    await expect(this.page.getByRole('link', { exact: true, name: planName })).toHaveCount(0);
+    await expect(this.page.getByTestId(`plan-link-${planName}`)).toHaveCount(0);
   }
 
   async expectPlanVisible(planName: string): Promise<void> {
-    await expect(this.page.getByRole('link', { exact: true, name: planName })).toBeVisible();
+    await expect(this.page.getByTestId(`plan-link-${planName}`)).toBeVisible();
   }
 
   async navigateDirectly(namespace = MTV_NAMESPACE): Promise<void> {
@@ -77,8 +75,7 @@ export class PlansListPage {
   }
 
   async openBulkActions(): Promise<void> {
-    // PF Dropdown puts data-testid on the menu popper, which is absent until open.
-    await this.page.getByRole('button', { exact: true, name: 'Actions' }).click();
+    await this.page.getByTestId('plans-bulk-actions-toggle').click();
   }
 
   async openBulkArchiveModal(): Promise<Locator> {
@@ -98,42 +95,42 @@ export class PlansListPage {
   }
 
   async searchForPlan(planName: string): Promise<void> {
-    await this.table.search(planName);
+    const searchInput = this.page.getByTestId('name-search-input');
+    await searchInput.fill(planName);
+    await searchInput.press('Enter');
   }
 
   async selectNone(): Promise<void> {
-    const pageCheckbox = this.page.getByRole('checkbox', { name: 'Select page' });
-    if ((await pageCheckbox.count()) === 0) {
+    const checkbox = this.page.getByTestId('table-bulk-select-checkbox');
+    if ((await checkbox.count()) === 0) {
       return;
     }
 
-    await this.page.getByRole('button', { name: 'Bulk select toggle' }).click();
-    await this.page.getByRole('menuitem', { name: /Select none/iu }).click();
+    await this.page.getByTestId('table-bulk-select-toggle').click();
+    await this.page.getByTestId('table-bulk-select-select-none').click();
   }
 
   async selectPlanByName(planName: string): Promise<void> {
-    await this.table.selectRow({ Name: planName });
+    const row = this.page.locator('tr').filter({
+      has: this.page.getByTestId(`plan-link-${planName}`),
+    });
+    await row.getByTestId('row-select-checkbox').getByRole('checkbox').check();
   }
 
   async setShowArchived(show: boolean): Promise<void> {
-    const archivedSwitch = this.page.getByRole('switch', { name: 'Show archived' });
+    const archivedSwitch = this.page.getByTestId('archived-switch');
     const isChecked = await archivedSwitch.isChecked();
     if (isChecked === show) {
       return;
     }
 
-    // PF v6 Switch thumb intercepts the control; click the label instead.
-    await this.page.getByText('Show archived', { exact: true }).click();
+    // PF v6 Switch thumb intercepts the input; click the wrapping label instead.
+    await this.page.locator('label').filter({ has: archivedSwitch }).click();
     await expect(archivedSwitch).toBeChecked({ checked: show });
   }
 
   async waitForPageLoad() {
-    // Support both table and grid roles as some tables are implemented with grid semantics
-    await expect(
-      this.page
-        .getByRole('table', { name: 'Migration plans' })
-        .or(this.page.getByRole('grid', { name: 'Migration plans' })),
-    ).toBeVisible();
+    await expect(this.page.getByTestId('plans-list')).toBeVisible();
     await this.table.waitForTableLoad();
   }
 }

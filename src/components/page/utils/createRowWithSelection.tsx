@@ -48,6 +48,7 @@ export const createRowWithSelection = <T,>({
         )}
         {selectedIds !== undefined && (
           <Td
+            data-testid="row-select-checkbox"
             ref={selectRef}
             select={{
               isDisabled,

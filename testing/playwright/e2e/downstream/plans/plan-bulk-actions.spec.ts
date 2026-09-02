@@ -8,10 +8,9 @@ import { V5_0_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 const BULK_ACTIONS_TEST_TIMEOUT_MS = 600_000;
-const EMPTY_SELECTION_HINT = 'Select at least one migration plan.';
-const NON_ARCHIVED_DELETE_ALERT = 'Some selected plans are not archived';
 
 test.describe('Plans list - bulk actions', { tag: '@downstream' }, () => {
+  // Bulk archive/delete shipped in MTV 5.0.0 (MTV-6355); not present on 2.12.
   requireVersion(test, V5_0_0);
 
   test('should disable bulk archive and delete when no plans are selected', async ({ page }) => {
@@ -24,8 +23,8 @@ test.describe('Plans list - bulk actions', { tag: '@downstream' }, () => {
 
     await test.step('Archive and Delete stay disabled until a plan is selected', async () => {
       await plansListPage.openBulkActions();
-      await expect(plansListPage.archiveMenuItem).toContainText(EMPTY_SELECTION_HINT);
-      await expect(plansListPage.deleteMenuItem).toContainText(EMPTY_SELECTION_HINT);
+      await expect(plansListPage.archiveMenuItem.getByRole('menuitem')).toBeDisabled();
+      await expect(plansListPage.deleteMenuItem.getByRole('menuitem')).toBeDisabled();
     });
   });
 
@@ -63,9 +62,9 @@ test.describe('Plans list - bulk actions', { tag: '@downstream' }, () => {
 
     await test.step('Cancel bulk delete leaves the plans unchanged', async () => {
       const modal = await plansListPage.openBulkDeleteModal();
-      await expect(modal.getByText(NON_ARCHIVED_DELETE_ALERT)).toBeVisible();
-      await expect(modal.getByText(planAName, { exact: true })).toBeVisible();
-      await expect(modal.getByText(planBName, { exact: true })).toBeVisible();
+      await expect(modal.getByTestId('bulk-delete-non-archived-alert')).toBeVisible();
+      await expect(modal.getByTestId(`bulk-modal-plan-${planAName}`)).toBeVisible();
+      await expect(modal.getByTestId(`bulk-modal-plan-${planBName}`)).toBeVisible();
       await plansListPage.cancelBulkModal();
       await expect(modal).toBeHidden();
       await plansListPage.expectPlanVisible(planAName);
@@ -74,8 +73,8 @@ test.describe('Plans list - bulk actions', { tag: '@downstream' }, () => {
 
     await test.step('Bulk archive both plans and drop them from the default list', async () => {
       const modal = await plansListPage.openBulkArchiveModal();
-      await expect(modal.getByText(planAName, { exact: true })).toBeVisible();
-      await expect(modal.getByText(planBName, { exact: true })).toBeVisible();
+      await expect(modal.getByTestId(`bulk-modal-plan-${planAName}`)).toBeVisible();
+      await expect(modal.getByTestId(`bulk-modal-plan-${planBName}`)).toBeVisible();
       await plansListPage.confirmBulkModal();
       await expect(modal).toBeHidden();
       await plansListPage.expectPlanHidden(planAName);
@@ -94,7 +93,7 @@ test.describe('Plans list - bulk actions', { tag: '@downstream' }, () => {
       await plansListPage.selectPlanByName(planBName);
 
       const modal = await plansListPage.openBulkDeleteModal();
-      await expect(modal.getByText(NON_ARCHIVED_DELETE_ALERT)).toHaveCount(0);
+      await expect(modal.getByTestId('bulk-delete-non-archived-alert')).toHaveCount(0);
       await plansListPage.confirmBulkModal();
       await expect(modal).toBeHidden();
       await plansListPage.expectPlanHidden(planAName);

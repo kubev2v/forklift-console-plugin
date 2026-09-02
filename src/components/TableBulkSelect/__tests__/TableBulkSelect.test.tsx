@@ -1,6 +1,6 @@
-import TableBulkSelect from '@components/TableBulkSelect';
+import TableBulkSelect from '@components/TableBulkSelect/TableBulkSelect';
 import { describe, expect, test } from '@jest/globals';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 describe('TableBulkSelect', () => {
@@ -16,7 +16,7 @@ describe('TableBulkSelect', () => {
     const user = userEvent.setup();
     render(<TableBulkSelect {...defaultProps} />);
 
-    const mainCheckbox = screen.getByRole('checkbox', { name: 'Select page' });
+    const mainCheckbox = screen.getByTestId('table-bulk-select-checkbox');
 
     await waitFor(async () => {
       await user.click(mainCheckbox);
@@ -27,7 +27,7 @@ describe('TableBulkSelect', () => {
   test('de-select all IDs on the current page with main checkbox', async () => {
     const user = userEvent.setup();
     const { rerender } = render(<TableBulkSelect {...defaultProps} selectedIds={[]} />);
-    const mainCheckbox = screen.getByRole('checkbox', { name: 'Select page' });
+    const mainCheckbox = screen.getByTestId('table-bulk-select-checkbox');
 
     await waitFor(async () => {
       await user.click(mainCheckbox);
@@ -45,15 +45,14 @@ describe('TableBulkSelect', () => {
   test('de-select IDs across all pages with main checkbox', async () => {
     const user = userEvent.setup();
     const { rerender } = render(<TableBulkSelect {...defaultProps} selectedIds={[]} />);
-    const mainCheckbox = screen.getByRole('checkbox', { name: 'Select page' });
-    const dropdown = screen.getByRole('button', { name: 'Bulk select toggle' });
+    const mainCheckbox = screen.getByTestId('table-bulk-select-checkbox');
 
-    await waitFor(async () => {
-      await user.click(dropdown);
-      await user.click(screen.getByText(/Select all/u));
+    fireEvent.click(screen.getByTestId('table-bulk-select-toggle'));
+    fireEvent.click(
+      within(await screen.findByTestId('table-bulk-select-select-all')).getByRole('menuitem'),
+    );
 
-      expect(onSelectMock).toHaveBeenCalledWith(['id1', 'id2', 'id3', 'id4']);
-    });
+    expect(onSelectMock).toHaveBeenCalledWith(['id1', 'id2', 'id3', 'id4']);
 
     rerender(<TableBulkSelect {...defaultProps} selectedIds={['id1', 'id2', 'id3', 'id4']} />);
 
@@ -64,44 +63,35 @@ describe('TableBulkSelect', () => {
   });
 
   test('select IDs across all pages using dropdown option', async () => {
-    const user = userEvent.setup();
     render(<TableBulkSelect {...defaultProps} selectedIds={[]} />);
 
-    const dropdown = screen.getByRole('button', { name: 'Bulk select toggle' });
+    fireEvent.click(screen.getByTestId('table-bulk-select-toggle'));
+    fireEvent.click(
+      within(await screen.findByTestId('table-bulk-select-select-all')).getByRole('menuitem'),
+    );
 
-    await waitFor(async () => {
-      await user.click(dropdown);
-      await user.click(screen.getByText(/Select all/u));
-
-      expect(onSelectMock).toHaveBeenCalledWith(['id1', 'id2', 'id3', 'id4']);
-    });
+    expect(onSelectMock).toHaveBeenCalledWith(['id1', 'id2', 'id3', 'id4']);
   });
 
   test('select IDs on current page using dropdown option', async () => {
-    const user = userEvent.setup();
     render(<TableBulkSelect {...defaultProps} selectedIds={[]} />);
 
-    const dropdown = screen.getByRole('button', { name: 'Bulk select toggle' });
+    fireEvent.click(screen.getByTestId('table-bulk-select-toggle'));
+    fireEvent.click(
+      within(await screen.findByTestId('table-bulk-select-select-page')).getByRole('menuitem'),
+    );
 
-    await waitFor(async () => {
-      await user.click(dropdown);
-      await user.click(screen.getByText(/Select page/u));
-
-      expect(onSelectMock).toHaveBeenCalledWith(['id1', 'id2', 'id3']);
-    });
+    expect(onSelectMock).toHaveBeenCalledWith(['id1', 'id2', 'id3']);
   });
 
   test('de-select all IDs using dropdown option', async () => {
-    const user = userEvent.setup();
     render(<TableBulkSelect {...defaultProps} selectedIds={[]} />);
 
-    const dropdown = screen.getByRole('button', { name: 'Bulk select toggle' });
+    fireEvent.click(screen.getByTestId('table-bulk-select-toggle'));
+    fireEvent.click(
+      within(await screen.findByTestId('table-bulk-select-select-none')).getByRole('menuitem'),
+    );
 
-    await waitFor(async () => {
-      await user.click(dropdown);
-      await user.click(screen.getByText(/Select none/u));
-
-      expect(onSelectMock).toHaveBeenCalledWith([]);
-    });
+    expect(onSelectMock).toHaveBeenCalledWith([]);
   });
 });

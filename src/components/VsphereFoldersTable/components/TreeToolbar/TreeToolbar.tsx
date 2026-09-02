@@ -3,7 +3,7 @@ import type { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 import type { ResourceField } from '@components/common/utils/types';
 import { ManageColumnsToolbar } from '@components/page/ManageColumnsToolbar';
 import SelectedToggle from '@components/SelectedToggle/SelectedToggle';
-import TableBulkSelect from '@components/TableBulkSelect';
+import TableBulkSelect from '@components/TableBulkSelect/TableBulkSelect';
 import { defaultColumns } from '@components/VsphereFoldersTable/utils/constants';
 import type { VmRow } from '@components/VsphereFoldersTable/utils/types';
 import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
