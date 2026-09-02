@@ -137,6 +137,23 @@ env -u JIRA_EMAIL -u JIRA_API_TOKEN JIRA_BASE="https://jira.example.com" \
 assert_eq "rejects no creds" "1" "$rc"
 
 echo ""
+echo "=== main flow ==="
+
+echo "  no ticket -> status=skipped, exit 0"
+out_skip="${TEST_TMPDIR}/out_skip.txt"
+(main --pr-title "Feature without ticket" --pr-body "No ref" --output-file "$out_skip") \
+  2>/dev/null && rc=0 || rc=$?
+assert_eq "skip exit 0" "0" "$rc"
+assert_eq "skip status" "status=skipped" "$(grep '^status=' "$out_skip")"
+
+echo "  Jira request error -> exit 1"
+(
+  fetch_ticket() { return 1; }
+  main --ticket MTV-999 --output-file "${TEST_TMPDIR}/out_jira_err.txt"
+) 2>/dev/null && rc=0 || rc=$?
+assert_eq "jira error exit 1" "1" "$rc"
+
+echo ""
 echo "=== Results: ${PASS_COUNT} passed, ${FAIL_COUNT} failed ==="
 
 if [[ "$FAIL_COUNT" -gt 0 ]]; then

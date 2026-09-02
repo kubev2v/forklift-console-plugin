@@ -143,6 +143,8 @@ fetch_ticket() {
   auth_header="$(jira_auth_header)" || exit 1
 
   curl -sSf \
+    --connect-timeout 10 \
+    --max-time 30 \
     -H "$auth_header" \
     -H "Content-Type: application/json" \
     "${JIRA_BASE}/rest/api/3/issue/${TICKET_KEY}?fields=${JIRA_FIELDS}"
