@@ -86,7 +86,6 @@ npm test path/to/file.test.ts    # Run specific test file
 ### File Location
 - Located in `testing/playwright/e2e/`
 - Page objects in `testing/playwright/page-objects/`
-- ESLint type-aware rules use `testing/tsconfig.json` for these files (Jest types in the root tsconfig break `@playwright/test`). Do not add file-level `no-unsafe-*` disables to work around that.
 
 ### Pattern
 
