@@ -86,9 +86,11 @@ test.describe(
 
       await test.step('Set only offload plugin and verify validation error', async () => {
         await createPage.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
-        // Dedicated hosts field is always shown for XCOPY in the UI; CRD support is
-        // checked separately when asserting the create payload (MTV-6163).
-        await createPage.offload.verifyDedicatedMigrationHostsVisible(0);
+        if (crdSupportsDedicatedHosts) {
+          await createPage.offload.verifyDedicatedMigrationHostsVisible(0);
+        } else {
+          await createPage.offload.verifyDedicatedMigrationHostsNotVisible(0);
+        }
         await createPage.offload.verifyValidationError('must be set when configuring offload');
       });
 
@@ -161,14 +163,14 @@ test.describe(
         await createPage.removeMapping(1);
         await createPage.selectFirstAvailableSourceAtIndex(0);
         await createPage.selectFirstAvailableTargetAtIndex(0);
-        // Re-apply offload after storage selection so the submitted mapping keeps plugin values.
+        // Re-apply single-select offload fields after storage selection so the submitted
+        // mapping keeps plugin values. Do NOT re-apply dedicated migration hosts here:
+        // MultiTypeaheadSelect uses toggle semantics, so clicking an already-selected host
+        // deselects it. The host value persists through source/target storage changes.
         await createPage.offload.expandOffloadOptions(0);
         await createPage.offload.selectOffloadPlugin(0, OffloadPlugins.VSPHERE_XCOPY);
         await createPage.offload.selectStorageSecret(0, secretName);
         await createPage.offload.selectStorageProduct(0, StorageProducts.NETAPP_ONTAP);
-        if (crdSupportsDedicatedHosts && dedicatedHostName) {
-          await createPage.offload.selectDedicatedMigrationHost(0, dedicatedHostName);
-        }
         await createPage.submit();
         resourceManager.addStorageMap(storageMapName, MTV_NAMESPACE);
       });
@@ -213,11 +215,10 @@ test.describe(
         const productText = await modal.offload.getStorageProductText(0);
         expect(productText).toContain(StorageProducts.NETAPP_ONTAP);
 
-        // Dedicated hosts field is always shown for XCOPY in the UI.
-        // Host selection/persistence is only asserted when the CRD schema includes the field.
-        await modal.offload.verifyDedicatedMigrationHostsVisible(0);
         if (crdSupportsDedicatedHosts) {
           await modal.offload.verifyDedicatedMigrationHostSelected(0, dedicatedHostName);
+        } else {
+          await modal.offload.verifyDedicatedMigrationHostsNotVisible(0);
         }
 
         await modal.cancel();
@@ -228,6 +229,8 @@ test.describe(
 
         await modal.offload.expandOffloadOptions(0);
         await modal.offload.selectStorageProduct(0, StorageProducts.HITACHI_VANTARA);
+        // Re-select secret: changing product can trigger async validation that clears it.
+        await modal.offload.selectStorageSecret(0, secretName);
 
         await modal.verifySaveButtonEnabled();
         await modal.save();

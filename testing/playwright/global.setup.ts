@@ -83,6 +83,13 @@ const deriveClusterApiUrlFromConsoleAddress = (): string | null => {
   }
 };
 
+const discardStaleKubeconfigAuth = (): void => {
+  delete process.env.KUBECONFIG_PATH;
+  if (existsSync(KUBECONFIG_FILE)) {
+    unlinkSync(KUBECONFIG_FILE);
+  }
+};
+
 /**
  * Runs `oc login` to generate a kubeconfig at KUBECONFIG_FILE.
  * Writes KUBECONFIG_PATH into process.env so subsequent Node.js HTTP calls in
@@ -94,6 +101,9 @@ const deriveClusterApiUrlFromConsoleAddress = (): string | null => {
  *  - The `oc` binary is not available
  */
 const generateKubeconfig = async (username: string, password: string): Promise<void> => {
+  // Clear any leftover kubeconfig from a previous cluster before lookup/login.
+  discardStaleKubeconfigAuth();
+
   let clusterApiUrl = process.env.CLUSTER_API_URL?.replace(/\/$/u, '') ?? null;
 
   if (!clusterApiUrl) {
@@ -149,6 +159,7 @@ const generateKubeconfig = async (username: string, password: string): Promise<v
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`⚠️ oc login failed (${message}) — workers will fall back to session cookies`);
+    discardStaleKubeconfigAuth();
   }
 };
 
@@ -245,6 +256,9 @@ const globalSetup = async (config: FullConfig) => {
       console.error('✅ Authentication completed successfully');
 
       await restoreConsoleLanguage(page);
+
+      // Re-save so workers inherit English localStorage after language restore.
+      await page.context().storageState({ path: AUTH_FILE });
 
       await generateKubeconfig(username, password);
 
