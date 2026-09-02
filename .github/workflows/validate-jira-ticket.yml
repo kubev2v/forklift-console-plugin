@@ -1,0 +1,252 @@
+name: Validate Jira Ticket
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number to validate
+        required: true
+        type: number
+
+permissions: {}
+
+concurrency:
+  group: validate-jira-${{ github.event.pull_request.number || github.event.issue.number || inputs.pr_number }}
+  cancel-in-progress: true
+
+jobs:
+  validate-jira:
+    name: Validate Jira Ticket
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    if: |
+      github.event_name == 'pull_request' ||
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event_name == 'issue_comment' &&
+        github.event.issue.pull_request &&
+        startsWith(github.event.comment.body, '/jira-refresh') &&
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+      )
+
+    steps:
+      - name: Checkout trusted base revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha || github.ref }}
+          persist-credentials: false
+
+      - name: Ensure jq is available
+        run: |
+          set -euo pipefail
+          if ! command -v jq >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y jq
+          fi
+
+      - name: Resolve pull request context
+        id: pr_context
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_PR_NUMBER: ${{ github.event.inputs.pr_number }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            pr_number="$PR_NUMBER"
+            pr_title="$PR_TITLE"
+            pr_body="$PR_BODY"
+          elif [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            pr_number="$INPUT_PR_NUMBER"
+            pr_json=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr_number}")
+            pr_title=$(echo "$pr_json" | jq -r '.title')
+            pr_body=$(echo "$pr_json" | jq -r '.body // ""')
+          else
+            pr_number="$ISSUE_NUMBER"
+            pr_json=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr_number}")
+            pr_title=$(echo "$pr_json" | jq -r '.title')
+            pr_body=$(echo "$pr_json" | jq -r '.body // ""')
+          fi
+
+          delimiter="ghadelim_$(openssl rand -hex 8)"
+
+          {
+            echo "pr_number=$pr_number"
+            echo "pr_title<<${delimiter}"
+            echo "$pr_title"
+            echo "${delimiter}"
+            echo "pr_body<<${delimiter}"
+            echo "$pr_body"
+            echo "${delimiter}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Fetch PR commits
+        id: fetch_commits
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr_context.outputs.pr_number }}
+        run: |
+          set -euo pipefail
+
+          gh api --paginate \
+            "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/commits?per_page=100" \
+            | jq -s 'add' \
+            > /tmp/pr-commits.json
+
+          echo "commits_json=/tmp/pr-commits.json" >> "$GITHUB_OUTPUT"
+
+      - name: Validate Jira ticket
+        id: validate
+        env:
+          COMMITS_JSON: ${{ steps.fetch_commits.outputs.commits_json }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          PR_BODY: ${{ steps.pr_context.outputs.pr_body }}
+          PR_TITLE: ${{ steps.pr_context.outputs.pr_title }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${JIRA_EMAIL:-}" || -z "${JIRA_API_TOKEN:-}" ]]; then
+            echo "::warning::Jira credentials not available (expected for fork PRs). Skipping validation."
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ ! -f ./scripts/validate-jira-ticket.sh ]]; then
+            echo "::warning::validate-jira-ticket.sh is not on the base branch yet; skipping until the workflow is merged"
+            echo "status=skipped" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          chmod +x ./scripts/validate-jira-ticket.sh
+          ./scripts/validate-jira-ticket.sh \
+            --pr-title "$PR_TITLE" \
+            --pr-body "$PR_BODY" \
+            --commits-json "$COMMITS_JSON" \
+            --output-file "$GITHUB_OUTPUT" \
+            --verbose
+
+      - name: Post validation comment
+        id: post_validation_comment
+        if: steps.validate.outputs.status == 'passed' || steps.validate.outputs.status == 'failed'
+        continue-on-error: true
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          FIX_VERSIONS: ${{ steps.validate.outputs.fix_versions }}
+          MISSING_FIELDS: ${{ steps.validate.outputs.missing }}
+          PR_NUMBER: ${{ steps.pr_context.outputs.pr_number }}
+          SPRINT_NAMES: ${{ steps.validate.outputs.sprint_names }}
+          STATUS: ${{ steps.validate.outputs.status }}
+          STORY_POINTS: ${{ steps.validate.outputs.story_points }}
+          TICKET_KEY: ${{ steps.validate.outputs.ticket_key }}
+        with:
+          script: |
+            const marker = '<!-- jira-validate -->';
+            const ticketKey = process.env.TICKET_KEY;
+            const passed = process.env.STATUS === 'passed';
+            const fixVersions = process.env.FIX_VERSIONS ?? '';
+            const sprintNames = process.env.SPRINT_NAMES ?? '';
+            const storyPoints = process.env.STORY_POINTS ?? '';
+            const missingFields = process.env.MISSING_FIELDS ?? '';
+            const ticketUrl = `https://redhat.atlassian.net/browse/${ticketKey}`;
+            const ticketLink = `[${ticketKey}](${ticketUrl})`;
+
+            const formatValue = (value) => (value ? value : '_Not set_');
+
+            const fieldCheck = (value) => (value ? '✅ Present' : '❌ Missing');
+
+            const fields = [
+              { label: 'Fix version', value: fixVersions },
+              { label: 'Sprint', value: sprintNames },
+              { label: 'Story points', value: storyPoints },
+            ];
+
+            const tableRows = fields
+              .map(({ label, value }) => `| ${label} | ${formatValue(value)} | ${fieldCheck(value)} |`)
+              .join('\n');
+
+            const resultLine = passed
+              ? `**Result:** ✅ All required fields are set for ${ticketLink}.`
+              : `**Result:** ❌ Missing required fields on ${ticketLink}: ${missingFields}.`;
+
+            const bodyParts = [
+              marker,
+              `## Jira ticket check: ${ticketLink}`,
+              '',
+              `**Open in Jira:** ${ticketLink}`,
+              '',
+              '| Field | Current value | Check |',
+              '| --- | --- | --- |',
+              tableRows,
+              '',
+              resultLine,
+            ];
+
+            if (!passed) {
+              bodyParts.push('', 'Comment `/jira-refresh` after updating the ticket to re-run this check.');
+            }
+
+            const body = bodyParts.join('\n');
+
+            await core.summary
+              .addHeading(`Jira ticket check: ${ticketKey}`, 2)
+              .addLink('Open in Jira', ticketUrl)
+              .addEOL()
+              .addRaw(bodyParts.slice(4).join('\n'))
+              .write();
+
+            const { owner, repo } = context.repo;
+            const issue_number = Number(process.env.PR_NUMBER);
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100,
+            });
+
+            const existing = comments.find((comment) => comment.body?.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body,
+              });
+              return;
+            }
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body,
+            });
+
+      - name: Warn when PR comment could not be posted
+        if: |
+          (steps.validate.outputs.status == 'passed' || steps.validate.outputs.status == 'failed') &&
+          steps.post_validation_comment.outcome == 'failure'
+        run: |
+          echo "::warning::Could not post the Jira validation comment (common for fork PRs with read-only tokens). See the job summary for results."
+
+      - name: Fail when validation failed
+        if: steps.validate.outputs.status == 'failed' || steps.validate.outcome == 'failure'
+        run: |
+          echo "::error::Jira ticket ${TICKET_KEY} (${TICKET_URL}) is missing required fields: ${MISSING_FIELDS:-unknown (script error)}"
+          exit 1
+        env:
+          MISSING_FIELDS: ${{ steps.validate.outputs.missing }}
+          TICKET_KEY: ${{ steps.validate.outputs.ticket_key }}
+          TICKET_URL: https://redhat.atlassian.net/browse/${{ steps.validate.outputs.ticket_key }}
