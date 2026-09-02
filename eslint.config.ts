@@ -62,7 +62,10 @@ export const createEslintConfig = () =>
             jsx: true,
           },
           ecmaVersion: 'latest',
-          project: 'tsconfig.eslint.json',
+          // Playwright files must use testing/tsconfig.json (types: node only).
+          // tsconfig.eslint.json inherits Jest types, which makes @playwright/test
+          // resolve as an error type and trips no-unsafe-* on every call.
+          project: ['testing/tsconfig.json', 'tsconfig.eslint.json'],
           sourceType: 'module',
           tsconfigRootDir: import.meta.dirname,
         },

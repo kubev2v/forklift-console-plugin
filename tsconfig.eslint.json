@@ -1,12 +1,5 @@
 {
   "extends": "./tsconfig.json",
-  "include": [
-    "src/**/*",
-    "*.ts",
-    "testing/**/*",
-    "**/__tests__/**/*",
-    "**/__mocks__/**/*",
-    "types/**/*"
-  ],
-  "exclude": ["node_modules", "dist", "locales", "docs", "ci"]
+  "include": ["src/**/*", "*.ts", "**/__tests__/**/*", "**/__mocks__/**/*", "types/**/*"],
+  "exclude": ["node_modules", "dist", "locales", "docs", "ci", "testing"]
 }

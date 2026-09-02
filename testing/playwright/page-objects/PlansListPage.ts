@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return -- @playwright/test types do not resolve under tsconfig.eslint.json */
-
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import { NavigationHelper } from '../utils/NavigationHelper';
