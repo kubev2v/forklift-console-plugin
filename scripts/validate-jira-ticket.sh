@@ -108,21 +108,20 @@ collect_keys_from_text() {
 }
 
 extract_ticket_key() {
-  local keys=""
+  local key
 
-  keys="$(collect_keys_from_text "$PR_TITLE")"
+  key="$(collect_keys_from_text "$PR_TITLE" | head -1)"
+  if [[ -n "$key" ]]; then echo "$key"; return; fi
 
   if [[ -n "$COMMITS_JSON" && -f "$COMMITS_JSON" ]]; then
-    while IFS= read -r message; do
-      if [[ -n "$message" ]]; then
-        keys="${keys}"$'\n'"$(collect_keys_from_text "$message")"
-      fi
-    done < <(jq -r '.[].commit.message' "$COMMITS_JSON")
+    local commit_text
+    commit_text="$(jq -r '.[].commit.message' "$COMMITS_JSON")"
+    key="$(collect_keys_from_text "$commit_text" | head -1)"
+    if [[ -n "$key" ]]; then echo "$key"; return; fi
   fi
 
-  keys="${keys}"$'\n'"$(collect_keys_from_text "$PR_BODY")"
-
-  echo "$keys" | sed '/^$/d' | sort -u | head -1 || true
+  key="$(collect_keys_from_text "$PR_BODY" | head -1)"
+  if [[ -n "$key" ]]; then echo "$key"; return; fi
 }
 
 jira_auth_header() {
@@ -218,4 +217,6 @@ main() {
   exit 1
 }
 
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  main "$@"
+fi
