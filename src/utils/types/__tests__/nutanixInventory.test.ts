@@ -1,4 +1,9 @@
-import type { NutanixVM, ProviderVirtualMachine } from '@forklift-ui/types';
+import type {
+  NutanixDisk,
+  NutanixNIC,
+  NutanixVM,
+  ProviderVirtualMachine,
+} from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
@@ -8,10 +13,15 @@ import {
   isNutanixVm,
 } from '../nutanixInventory';
 
+type NutanixVmTestOverrides = Omit<Partial<NutanixVM>, 'disks' | 'nics'> & {
+  disks?: Partial<NutanixDisk>[];
+  nics?: Partial<NutanixNIC>[];
+};
+
 const makeVm = (overrides: Partial<ProviderVirtualMachine> = {}): ProviderVirtualMachine =>
   ({ providerType: PROVIDER_TYPES.nutanix, ...overrides }) as ProviderVirtualMachine;
 
-const makeNutanixVm = (overrides: Partial<NutanixVM> = {}): NutanixVM =>
+const makeNutanixVm = (overrides: NutanixVmTestOverrides = {}): NutanixVM =>
   ({
     id: 'vm-1',
     name: 'test-vm',
