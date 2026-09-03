@@ -3,6 +3,7 @@ import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/components/TableCell/TableCell';
 
 import type { ResourceField } from '@components/common/utils/types';
+import type { NutanixVM } from '@forklift-ui/types';
 import { Td } from '@patternfly/react-table';
 import { renderResourceRowCells } from '@utils/renderResourceRowCells';
 
@@ -12,14 +13,11 @@ import type { VMCellProps, VmData } from './components/VMCellProps';
 import { VMConcernsCellRenderer } from './components/VMConcernsCellRenderer';
 import { VMNameCellRenderer } from './components/VMNameCellRenderer';
 
-// Type casts pending @forklift-ui/types update to include Nutanix VM types (MTV-6226)
 const cellRenderers: Record<string, FC<VMCellProps>> = {
-  cluster: ({ data }) => (
-    <TableCell>{(data?.vm as unknown as { cluster?: string })?.cluster}</TableCell>
-  ),
+  cluster: ({ data }) => <TableCell>{(data?.vm as NutanixVM)?.cluster}</TableCell>,
   concerns: VMConcernsCellRenderer,
   guestOS: GuestOSCellRenderer,
-  host: ({ data }) => <TableCell>{(data?.vm as unknown as { host?: string })?.host}</TableCell>,
+  host: ({ data }) => <TableCell>{(data?.vm as NutanixVM)?.host}</TableCell>,
   name: VMNameCellRenderer,
   status: PowerStateCellRenderer,
 };
