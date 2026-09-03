@@ -41,14 +41,17 @@ const filters = {
   checks: {},
   chipsByAttr: {},
   clearAll: jest.fn(),
+  clearChecks: jest.fn(),
   clearText: jest.fn(),
   deleteChip: jest.fn(),
   deleteChipGroup: jest.fn(),
+  hasAttrFilters: false,
+  predicate: (): boolean => true,
   setActiveId: jest.fn(),
   setTextValue: jest.fn(),
   text: {},
   toggleCheck: jest.fn(),
-} as unknown as AttributeFilters<VmRow>;
+} satisfies AttributeFilters<VmRow>;
 
 const attributes: AttributeConfig<VmRow>[] = [
   { getValue: () => '', id: 'name', kind: AttributeKind.Text, label: 'VM name' },
