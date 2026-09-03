@@ -1493,6 +1493,7 @@
   "The URL of the Red Hat Virtualization Manager API endpoint.": "Red Hat Virtualization Manager API エンドポイントの URL。",
   "The URL of the vCenter API endpoint.": "vCenter API エンドポイントの URL。",
   "The username for the ESXi host admin": "ESXi ホスト管理者のユーザー名",
+  "The value is invalid. Reverting to default value.": "The value is invalid. Reverting to default value.",
   "The virtual machines will be permanently deleted from your migration plan.": "仮想マシンは移行計画から完全に削除されます。",
   "The VM is a production server or a business-critical application.": "仮想マシンが実稼働サーバーまたはビジネスクリティカルなアプリケーションである。",
   "The VM is not a critical production workload.": "仮想マシンが重要な実稼働環境のワークロードでない。",

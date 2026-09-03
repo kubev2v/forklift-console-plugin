@@ -1493,6 +1493,7 @@
   "The URL of the Red Hat Virtualization Manager API endpoint.": "Red Hat Virtualization Manager API 엔드포인트의 URL입니다.",
   "The URL of the vCenter API endpoint.": "vCenter API 엔드포인트의 URL입니다.",
   "The username for the ESXi host admin": "ESXi 호스트 관리자의 사용자 이름",
+  "The value is invalid. Reverting to default value.": "The value is invalid. Reverting to default value.",
   "The virtual machines will be permanently deleted from your migration plan.": "가상 머신은 마이그레이션 계획에서 영구적으로 삭제됩니다.",
   "The VM is a production server or a business-critical application.": "해당 VM은 프로덕션 서버 또는 비즈니스 핵심 애플리케이션입니다.",
   "The VM is not a critical production workload.": "해당 VM은 중요한 프로덕션 워크로드가 아닙니다.",

@@ -1510,6 +1510,7 @@
   "The URL of the Red Hat Virtualization Manager API endpoint.": "L'URL du point de terminaison de l'API Red Hat Virtualization Manager.",
   "The URL of the vCenter API endpoint.": "L'URL du point de terminaison de l'API vCenter.",
   "The username for the ESXi host admin": "Nom d'utilisateur de l'administrateur de l'hôte ESXi",
+  "The value is invalid. Reverting to default value.": "The value is invalid. Reverting to default value.",
   "The virtual machines will be permanently deleted from your migration plan.": "Les machines virtuelles seront définitivement supprimées de votre plan de migration.",
   "The VM is a production server or a business-critical application.": "La machine virtuelle est un serveur de production ou une application critique pour l'entreprise.",
   "The VM is not a critical production workload.": "La machine virtuelle ne constitue pas une charge de travail de production critique.",
