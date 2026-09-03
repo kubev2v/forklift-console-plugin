@@ -33,8 +33,10 @@ export type Ec2VmObject = {
 
 export type Ec2VmLike = ProviderVirtualMachine & { object?: Ec2VmObject };
 
+type Ec2VmGuardInput = ProviderVirtualMachine | { object?: Ec2VmObject; providerType?: string };
+
 // ProviderVirtualMachine from @forklift-ui/types does not include EC2 VM shape yet
-export const isEc2Vm = (vm: ProviderVirtualMachine): vm is Ec2VmLike =>
+export const isEc2Vm = (vm: Ec2VmGuardInput): vm is Ec2VmLike =>
   vm.providerType === PROVIDER_TYPES.ec2;
 
 /**
