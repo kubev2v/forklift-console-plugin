@@ -1,5 +1,5 @@
 # Builder container
-FROM registry.redhat.io/rhel9/nodejs-22:9.8-1787706653 AS build
+FROM registry.redhat.io/rhel9/nodejs-22:9.8-1788246491 AS build
 
 # VERSION default value should match the forklift-console-plugin package version
 # The VERSION value can be customize during build by using --build-arg:
@@ -27,7 +27,7 @@ WORKDIR /opt/app-root/src/app/
 RUN yarn install --frozen-lockfile --ignore-engines --offline && yarn build
 
 # Web server container
-FROM registry.redhat.io/rhel9/nginx-126:9.8-1787721811
+FROM registry.redhat.io/rhel9/nginx-126:9.8-1788329131
 
 # Use none-root user
 USER 1001
