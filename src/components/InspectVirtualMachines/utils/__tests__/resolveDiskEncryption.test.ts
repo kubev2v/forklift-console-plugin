@@ -19,6 +19,7 @@ describe('resolveDiskEncryption', () => {
 
   it('returns undefined when overrides are missing', async () => {
     await expect(resolveDiskEncryption(undefined, 'vm', 'ns')).resolves.toBeUndefined();
+    expect(createInspectionSecret).not.toHaveBeenCalled();
   });
 
   it('returns Clevis when nbdeClevis is set', async () => {
@@ -51,5 +52,6 @@ describe('resolveDiskEncryption', () => {
     await expect(
       resolveDiskEncryption({ passphrases: ['', ''] }, 'vm', 'ns'),
     ).resolves.toBeUndefined();
+    expect(createInspectionSecret).not.toHaveBeenCalled();
   });
 });

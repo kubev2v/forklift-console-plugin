@@ -10,8 +10,9 @@ describe('createInspectionSecret', () => {
   it('base64-encodes passphrases and creates an Opaque secret', async () => {
     (k8sCreate as jest.Mock).mockResolvedValue({ metadata: { name: 'secret' } });
 
-    await createInspectionSecret(['p1', 'p2'], 'vm-a', 'ns-a');
+    const result = await createInspectionSecret(['p1', 'p2'], 'vm-a', 'ns-a');
 
+    expect(result).toEqual({ metadata: { name: 'secret' } });
     expect(k8sCreate).toHaveBeenCalledWith({
       data: {
         data: {

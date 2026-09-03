@@ -91,9 +91,42 @@ describe('processDeepInspections', () => {
       name: `vm-${index + 1}`,
     }));
 
-    const result = await processDeepInspections(vms, provider);
+    const deferredResolvers: (() => void)[] = [];
+    (k8sCreate as jest.Mock).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          deferredResolvers.push(() => {
+            resolve({ metadata: { name: 'ok' } });
+          });
+        }),
+    );
+
+    const processingPromise = processDeepInspections(vms, provider);
+
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 0);
+    });
+
+    expect(k8sCreate).toHaveBeenCalledTimes(CONCURRENCY_LIMIT);
+    expect(deferredResolvers).toHaveLength(CONCURRENCY_LIMIT);
+
+    for (const resolve of deferredResolvers.splice(0, CONCURRENCY_LIMIT)) resolve();
+
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 0);
+    });
 
     expect(k8sCreate).toHaveBeenCalledTimes(CONCURRENCY_LIMIT + 2);
+    expect(deferredResolvers).toHaveLength(2);
+
+    for (const resolve of deferredResolvers) resolve();
+
+    const result = await processingPromise;
+
     expect(result.succeeded).toHaveLength(CONCURRENCY_LIMIT + 2);
     expect(result.failed).toEqual([]);
   });
