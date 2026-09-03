@@ -53,7 +53,13 @@ const AffinityRowActionsDropdown: FC<AffinityRowActionsDropdownProps> = ({
       }}
       shouldFocusToggleOnSelect
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
-        <MenuToggle isExpanded={isOpen} onClick={onToggleClick} ref={toggleRef} variant="plain">
+        <MenuToggle
+          aria-label={t('Actions')}
+          isExpanded={isOpen}
+          onClick={onToggleClick}
+          ref={toggleRef}
+          variant="plain"
+        >
           <EllipsisVIcon />
         </MenuToggle>
       )}

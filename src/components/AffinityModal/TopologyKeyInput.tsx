@@ -1,4 +1,4 @@
-import { type Dispatch, type FC, type SetStateAction, useEffect } from 'react';
+import type { Dispatch, FC, SetStateAction } from 'react';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { FormGroup, TextInput, ValidatedOptions } from '@patternfly/react-core';
@@ -11,14 +11,9 @@ import type { AffinityRowData } from './utils/types';
 type TopologyKeyInputProps = {
   focusedAffinity: AffinityRowData;
   setFocusedAffinity: Dispatch<SetStateAction<AffinityRowData>>;
-  setSubmitDisabled: Dispatch<SetStateAction<boolean>>;
 };
 
-const TopologyKeyInput: FC<TopologyKeyInputProps> = ({
-  focusedAffinity,
-  setFocusedAffinity,
-  setSubmitDisabled,
-}) => {
+const TopologyKeyInput: FC<TopologyKeyInputProps> = ({ focusedAffinity, setFocusedAffinity }) => {
   const { t } = useForkliftTranslation();
   const { topologyKey } = focusedAffinity || {};
   const isInvalid = !topologyKey || isEmpty(topologyKey);
@@ -27,10 +22,6 @@ const TopologyKeyInput: FC<TopologyKeyInputProps> = ({
   const onChange = (value: string): void => {
     setFocusedAffinity({ ...focusedAffinity, topologyKey: value });
   };
-
-  useEffect(() => {
-    setSubmitDisabled(isInvalid);
-  }, [isInvalid, setSubmitDisabled]);
 
   return (
     <FormGroup fieldId="topology-key" isRequired label={t('Topology key')}>
