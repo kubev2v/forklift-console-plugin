@@ -8,6 +8,18 @@ const getVmResources = (vm: NutanixVM): { cpuCount: number; memoryMB: number } =
   memoryMB: vm.memorySizeMib ?? 0,
 });
 
+const sumVmResources = (vms: NutanixVM[]): { cpuCount: number; memoryMB: number } =>
+  vms.reduce(
+    (accumulator, currentVM) => {
+      const { cpuCount, memoryMB } = getVmResources(currentVM);
+      return {
+        cpuCount: accumulator.cpuCount + cpuCount,
+        memoryMB: accumulator.memoryMB + memoryMB,
+      };
+    },
+    { cpuCount: 0, memoryMB: 0 },
+  );
+
 export const getNutanixPlanResources = (
   planInventory: ProviderVirtualMachine[],
 ): PlanResourcesTableProps => {
@@ -17,27 +29,8 @@ export const getNutanixPlanResources = (
     (vm) => vm.powerState?.toUpperCase() === NUTANIX_POWERED_ON,
   );
 
-  const totalResources = nutanixInventory.reduce(
-    (accumulator, currentVM) => {
-      const { cpuCount, memoryMB } = getVmResources(currentVM);
-      return {
-        cpuCount: accumulator.cpuCount + cpuCount,
-        memoryMB: accumulator.memoryMB + memoryMB,
-      };
-    },
-    { cpuCount: 0, memoryMB: 0 },
-  );
-
-  const totalResourcesRunning = planInventoryRunning.reduce(
-    (accumulator, currentVM) => {
-      const { cpuCount, memoryMB } = getVmResources(currentVM);
-      return {
-        cpuCount: accumulator.cpuCount + cpuCount,
-        memoryMB: accumulator.memoryMB + memoryMB,
-      };
-    },
-    { cpuCount: 0, memoryMB: 0 },
-  );
+  const totalResources = sumVmResources(nutanixInventory);
+  const totalResourcesRunning = sumVmResources(planInventoryRunning);
 
   return {
     planInventoryRunningSize: planInventoryRunning.length,
