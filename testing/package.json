@@ -1,7 +1,7 @@
 {
   "name": "e2e-tests",
   "version": "1.0.1",
-  "packageManager": "npm@10.9.2",
+  "packageManager": "npm@12.0.2",
   "scripts": {
     "test:e2e": "npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",
@@ -16,8 +16,8 @@
   "devDependencies": {
     "playwright": "1.57.0",
     "@playwright/test": "1.57.0",
-    "@types/node": "^20.0.0",
-    "typescript": "^5.8.2"
+    "@types/node": "^24.0.0",
+    "typescript": "^7.0.0"
   },
   "dependencies": {
     "@forklift-ui/types": "1.0.7"
