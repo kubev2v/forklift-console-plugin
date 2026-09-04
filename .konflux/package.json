@@ -3,5 +3,5 @@
   "version": "2.11.0",
   "description": "Konflux build configuration placeholder",
   "private": true,
-  "packageManager": "npm@10.9.2"
+  "packageManager": "npm@10.9.9"
 }
