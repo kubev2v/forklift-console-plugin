@@ -1,25 +1,36 @@
 import type { FC, FormEvent, MouseEvent } from 'react';
 
 import { NumberInput } from '@patternfly/react-core';
+import { useForkliftTranslation } from '@utils/i18n';
 
 type SettingsNumberInputProps = {
   defaultValue: number;
+  min?: number;
   onChange: (value: string | number) => void;
+  onError?: (error: string | undefined) => void;
   testId?: string;
+  validated?: 'default' | 'error';
   value: string | number;
 };
 
 const SettingsNumberInput: FC<SettingsNumberInputProps> = ({
   defaultValue,
+  min = 0,
   onChange,
+  onError,
   testId,
+  validated = 'default',
   value,
 }) => {
+  const { t } = useForkliftTranslation();
+
   const normalize = (val: number | string): number => {
     const num = typeof val === 'number' ? val : parseInt(val, 10);
-    if (isNaN(num) || num < 1) {
+    if (isNaN(num) || num < min) {
+      onError?.(t('The value is invalid. Reverting to default value.'));
       return defaultValue;
     }
+    onError?.(undefined);
     return num;
   };
 
@@ -44,11 +55,13 @@ const SettingsNumberInput: FC<SettingsNumberInputProps> = ({
       data-testid={testId}
       inputAriaLabel="number input"
       inputName="input"
+      min={min}
       minusBtnAriaLabel="minus"
       onChange={onUserChange}
       onMinus={onUserMinus}
       onPlus={onUserPlus}
       plusBtnAriaLabel="plus"
+      validated={validated}
       value={Number(value)}
     />
   );

@@ -1493,6 +1493,7 @@
   "The URL of the Red Hat Virtualization Manager API endpoint.": "Red Hat Virtualization Manager API 端点的 URL。",
   "The URL of the vCenter API endpoint.": "vCenter API 端点的 URL。",
   "The username for the ESXi host admin": "ESXi 主机 admin 的用户名",
+  "The value is invalid. Reverting to default value.": "The value is invalid. Reverting to default value.",
   "The virtual machines will be permanently deleted from your migration plan.": "虚拟机将从迁移计划中永久删除。",
   "The VM is a production server or a business-critical application.": "虚拟机是生产服务器或关键业务应用程序。",
   "The VM is not a critical production workload.": "虚拟机不是关键生产工作负载。",
