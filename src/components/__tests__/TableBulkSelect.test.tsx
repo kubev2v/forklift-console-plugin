@@ -16,7 +16,7 @@ describe('TableBulkSelect', () => {
     const user = userEvent.setup();
     render(<TableBulkSelect {...defaultProps} />);
 
-    const mainCheckbox = screen.getByRole('checkbox', { name: 'Select page' });
+    const mainCheckbox = screen.getByTestId('table-bulk-select-checkbox');
 
     await waitFor(async () => {
       await user.click(mainCheckbox);
@@ -27,7 +27,7 @@ describe('TableBulkSelect', () => {
   test('de-select all IDs on the current page with main checkbox', async () => {
     const user = userEvent.setup();
     const { rerender } = render(<TableBulkSelect {...defaultProps} selectedIds={[]} />);
-    const mainCheckbox = screen.getByRole('checkbox', { name: 'Select page' });
+    const mainCheckbox = screen.getByTestId('table-bulk-select-checkbox');
 
     await waitFor(async () => {
       await user.click(mainCheckbox);
@@ -45,7 +45,7 @@ describe('TableBulkSelect', () => {
   test('de-select IDs across all pages with main checkbox', async () => {
     const user = userEvent.setup();
     const { rerender } = render(<TableBulkSelect {...defaultProps} selectedIds={[]} />);
-    const mainCheckbox = screen.getByRole('checkbox', { name: 'Select page' });
+    const mainCheckbox = screen.getByTestId('table-bulk-select-checkbox');
     const dropdown = screen.getByRole('button', { name: 'Bulk select toggle' });
 
     await waitFor(async () => {

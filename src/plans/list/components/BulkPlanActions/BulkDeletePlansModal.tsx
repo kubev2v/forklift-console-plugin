@@ -82,6 +82,7 @@ const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
         {hasNonArchived && (
           <StackItem>
             <Alert
+              data-testid="bulk-delete-non-archived-alert"
               isInline
               title={t('Some selected plans are not archived')}
               variant={AlertVariant.info}
@@ -127,7 +128,9 @@ const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
           <StackItem>
             <List>
               {plans.map((plan) => (
-                <ListItem key={getPlanRowId(plan)}>{getName(plan)}</ListItem>
+                <ListItem data-testid={`bulk-modal-plan-${getName(plan)}`} key={getPlanRowId(plan)}>
+                  {getName(plan)}
+                </ListItem>
               ))}
             </List>
           </StackItem>

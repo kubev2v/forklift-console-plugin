@@ -59,6 +59,7 @@ export const FreetextFilter = ({
     >
       <InputGroup>
         <SearchInput
+          inputProps={{ 'data-testid': `${filterId}-search-input` }}
           onChange={onChange}
           onClear={onClear}
           onSearch={onTextInput}

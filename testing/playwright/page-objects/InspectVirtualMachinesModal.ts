@@ -79,7 +79,7 @@ export class InspectVirtualMachinesModal {
   }
 
   async selectAllVms(): Promise<void> {
-    const selectAllCheckbox = this.modal.getByRole('checkbox', { name: 'Select page' });
+    const selectAllCheckbox = this.modal.getByTestId('table-bulk-select-checkbox');
     await selectAllCheckbox.check();
   }
 
