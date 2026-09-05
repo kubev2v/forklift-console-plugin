@@ -1,5 +1,6 @@
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
+import { getNutanixSubnetIds, isNutanixVm } from '@utils/types/nutanixInventory';
 
 export type MultiNicNetwork = { maxNicCount: number; name: string };
 
@@ -20,6 +21,8 @@ const getVmNicNetworkIds = (
   vm: ProviderVirtualMachine,
   nicProfiles?: OVirtNicProfile[],
 ): string[] => {
+  if (isNutanixVm(vm)) return getNutanixSubnetIds(vm);
+
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere:
     case PROVIDER_TYPES.hyperv:

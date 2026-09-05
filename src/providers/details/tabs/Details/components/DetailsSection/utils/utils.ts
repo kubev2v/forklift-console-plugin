@@ -7,6 +7,7 @@ import { ProviderStatus } from '@utils/types';
 
 import Ec2DetailsSection from '../Ec2DetailsSection';
 import HyperVDetailsSection from '../HyperVDetailsSection';
+import NutanixDetailsSection from '../NutanixDetailsSection';
 import OpenshiftDetailsSection from '../OpenshiftDetailsSection';
 import OpenstackDetailsSection from '../OpenstackDetailsSection';
 import OVADetailsSection from '../OVADetailsSection';
@@ -33,6 +34,8 @@ export const getDetailsSectionByType = (
       return OVADetailsSection;
     case PROVIDER_TYPES.hyperv:
       return HyperVDetailsSection;
+    case PROVIDER_TYPES.nutanix:
+      return NutanixDetailsSection;
     case undefined:
     default:
       return undefined;

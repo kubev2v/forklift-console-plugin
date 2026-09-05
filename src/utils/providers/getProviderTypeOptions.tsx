@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 import {
   ec2Logo,
+  getNutanixLogo,
   getVmwareLogo,
   hypervLogo,
   openshiftLogo,
@@ -14,6 +15,7 @@ import { PROVIDER_TYPES, type ProviderTypes } from '@utils/providers/constants';
 
 type ProviderTypeOption = {
   description: string;
+  devPreview?: boolean;
   icon: ReactElement;
   label: string;
   techPreview?: boolean;
@@ -61,6 +63,15 @@ export const getProviderTypeOptions = (
     label: t('Microsoft Hyper-V'),
     techPreview: true,
     value: PROVIDER_TYPES.hyperv,
+  },
+  {
+    description: t(
+      'Nutanix AHV virtualization platform. Supports migration from Prism Central and Prism Element.',
+    ),
+    devPreview: true,
+    icon: getNutanixLogo(isDarkTheme),
+    label: t('Nutanix AHV'),
+    value: PROVIDER_TYPES.nutanix,
   },
   {
     description: t(

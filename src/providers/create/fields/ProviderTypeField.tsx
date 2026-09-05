@@ -3,6 +3,7 @@ import { useController } from 'react-hook-form';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import Select from '@components/common/Select';
+import DevPreviewLabel from '@components/PreviewLabels/DevPreviewLabel';
 import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
 import { Flex, FlexItem, SelectList, SelectOption } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
@@ -71,14 +72,14 @@ const ProviderTypeField: FC = () => {
               key={option.value}
               value={option.value}
             >
-              {option.techPreview ? (
+              {option.techPreview || option.devPreview ? (
                 <Flex
                   alignItems={{ default: 'alignItemsCenter' }}
                   spaceItems={{ default: 'spaceItemsSm' }}
                 >
                   <FlexItem>{option.label}</FlexItem>
                   <FlexItem>
-                    <TechPreviewLabel />
+                    {option.techPreview ? <TechPreviewLabel /> : <DevPreviewLabel />}
                   </FlexItem>
                 </Flex>
               ) : (

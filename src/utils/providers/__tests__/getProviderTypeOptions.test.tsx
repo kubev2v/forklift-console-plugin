@@ -34,6 +34,7 @@ describe('getProviderTypeOptions', () => {
       PROVIDER_TYPES.openstack,
       PROVIDER_TYPES.ova,
       PROVIDER_TYPES.hyperv,
+      PROVIDER_TYPES.nutanix,
       PROVIDER_TYPES.ovirt,
       PROVIDER_TYPES.vsphere,
     ];
@@ -45,5 +46,14 @@ describe('getProviderTypeOptions', () => {
       expect(awsOptions.find((option) => option.value === type)).toBeDefined();
       expect(nonAwsOptions.find((option) => option.value === type)).toBeDefined();
     }
+  });
+
+  it('should include Nutanix AHV option with devPreview flag', () => {
+    const options = getProviderTypeOptions(false, false);
+    const nutanixOption = options.find((option) => option.value === PROVIDER_TYPES.nutanix);
+
+    expect(nutanixOption).toBeDefined();
+    expect(nutanixOption?.devPreview).toBe(true);
+    expect(nutanixOption?.label).toBe('Nutanix AHV');
   });
 });
