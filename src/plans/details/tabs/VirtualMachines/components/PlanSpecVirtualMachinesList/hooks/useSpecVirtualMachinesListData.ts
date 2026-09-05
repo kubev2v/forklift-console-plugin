@@ -5,7 +5,6 @@ import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 
 import type { ProviderType, V1beta1Plan } from '@forklift-ui/types';
 import { getPlanTargetNamespace, getPlanVirtualMachines } from '@utils/crds/plans/selectors';
-import { isEmpty } from '@utils/helpers';
 import type { SpecVirtualMachinePageData } from '@utils/types/specVirtualMachinePageData';
 
 import { getPlanVirtualMachinesDict } from '../../utils/utils';
@@ -43,7 +42,7 @@ export const useSpecVirtualMachinesListData = (
   }, [vmInventoryData]);
 
   const specVirtualMachinesListData = useMemo<SpecVirtualMachinePageData[]>(() => {
-    if (loading || !isEmpty(error)) {
+    if (loading || error !== null) {
       return EMPTY_LIST;
     }
 
