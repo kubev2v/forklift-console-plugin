@@ -42,7 +42,7 @@ export const useStandardPageInnerData = <T,>({
 }: UseStandardPageInnerDataArgs<T>): UseStandardPageInnerDataReturn<T> => {
   const visibleColumns = useMemo(() => getVisibleColumns(fields), [fields]);
 
-  const RowComponent = cell ? withTr(cell, expanded) : row;
+  const RowComponent = useMemo(() => (cell ? withTr(cell, expanded) : row), [cell, expanded, row]);
 
   const dataOnScreen = useMemo(
     () => (showPagination ? pageData : finalFilteredData),
