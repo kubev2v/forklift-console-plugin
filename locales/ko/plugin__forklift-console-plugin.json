@@ -1008,6 +1008,7 @@
   "Number of virtual machines exported from Hyper-V": "Hyper-V에서 내보낸 가상 머신 수",
   "Number of virtual machines in OVA files": "OVA 파일 내 가상 머신 수",
   "Number of virtual machines in provider.": "공급자 내 가상 머신 수입니다.",
+  "Number of virtual switches discovered from the provider": "Number of virtual switches discovered from the provider",
   "Number of VPC networks discovered from the provider": "공급자에서 검색된 VPC 네트워크 수",
   "Nutanix AHV": "Nutanix AHV",
   "Nutanix AHV virtualization platform. Supports migration from Prism Central and Prism Element.": "Nutanix AHV virtualization platform. Supports migration from Prism Central and Prism Element.",

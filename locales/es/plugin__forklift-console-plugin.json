@@ -1023,6 +1023,7 @@
   "Number of virtual machines exported from Hyper-V": "Número de máquinas virtuales exportadas desde Hyper-V",
   "Number of virtual machines in OVA files": "Número de máquinas virtuales en archivos OVA",
   "Number of virtual machines in provider.": "Número de máquinas virtuales en el proveedor.",
+  "Number of virtual switches discovered from the provider": "Number of virtual switches discovered from the provider",
   "Number of VPC networks discovered from the provider": "Número de redes VPC detectadas por el proveedor",
   "Nutanix AHV": "Nutanix AHV",
   "Nutanix AHV virtualization platform. Supports migration from Prism Central and Prism Element.": "Nutanix AHV virtualization platform. Supports migration from Prism Central and Prism Element.",

@@ -1008,6 +1008,7 @@
   "Number of virtual machines exported from Hyper-V": "从 Hyper-V 导出的虚拟机数量",
   "Number of virtual machines in OVA files": "OVA 文件中的虚拟机数量",
   "Number of virtual machines in provider.": "供应商中的虚拟机数量。",
+  "Number of virtual switches discovered from the provider": "Number of virtual switches discovered from the provider",
   "Number of VPC networks discovered from the provider": "发现的来自供应商的 VPC 网络数量",
   "Nutanix AHV": "Nutanix AHV",
   "Nutanix AHV virtualization platform. Supports migration from Prism Central and Prism Element.": "Nutanix AHV virtualization platform. Supports migration from Prism Central and Prism Element.",
