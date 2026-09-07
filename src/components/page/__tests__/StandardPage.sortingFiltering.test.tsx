@@ -102,4 +102,28 @@ describe('StandardPage - pagination', () => {
     expect(screen.getByText('Item 1')).toBeVisible();
     expect(screen.getByText('Item 3')).toBeVisible();
   });
+
+  it('should update visible rows when per-page selection changes', async () => {
+    const user = userEvent.setup();
+
+    renderWithRouter(
+      <StandardPage
+        dataSource={[largeDataSet, true, null]}
+        fieldsMetadata={fieldsMetadata}
+        namespace="test-ns"
+      />,
+    );
+
+    expect(screen.getByText('Item 1')).toBeVisible();
+    expect(screen.getByText('Item 10')).toBeVisible();
+    expect(screen.queryByText('Item 11')).not.toBeInTheDocument();
+
+    const [perPageToggle] = screen.getAllByRole('button', { name: '1 - 10 of 25' });
+    await user.click(perPageToggle);
+    await user.click(screen.getByRole('menuitem', { name: '20 per page' }));
+
+    expect(screen.getByText('Item 1')).toBeVisible();
+    expect(screen.getByText('Item 20')).toBeVisible();
+    expect(screen.queryByText('Item 21')).not.toBeInTheDocument();
+  });
 });

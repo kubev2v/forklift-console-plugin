@@ -71,10 +71,9 @@ export const usePagination = <T>({
     userSettings,
   });
 
-  // Keep clamp and slice on the same effective page size (fixed `pagination` number wins).
-  const itemsPerPage = typeof pagination === 'number' ? pagination : perPageFromSettings;
+  const itemsPerPage = perPageFromSettings;
   const hasActiveFilters = Object.values(selectedFilters).some((filter) => !isEmpty(filter));
-  const maxPage = Math.ceil(finalFilteredData.length / itemsPerPage);
+  const maxPage = Math.ceil(finalFilteredData.length / perPageFromSettings);
   const fallbackPage = maxPage > 0 ? maxPage : INITIAL_PAGE;
   const clampedPage = hasActiveFilters && page > maxPage ? fallbackPage : page;
 
