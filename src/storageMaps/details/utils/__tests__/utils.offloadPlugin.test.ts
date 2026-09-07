@@ -75,7 +75,7 @@ describe('transformFormValuesToK8sSpec - offload plugins', () => {
     });
   });
 
-  it('omits offloadPlugin for CSI + disallowed product (validation must reject before Save)', () => {
+  it('writes csiVolumeImport when CSI plugin is selected with ontap', () => {
     const formValues = {
       storageMap: [
         {
@@ -88,13 +88,16 @@ describe('transformFormValuesToK8sSpec - offload plugins', () => {
       ],
     };
 
-    expect(validateUpdatedStorageMaps(formValues.storageMap)).toBe(
-      'Selected storage product is not supported for this offload plugin',
-    );
+    expect(validateUpdatedStorageMaps(formValues.storageMap)).toBeUndefined();
 
     const result = transformFormValuesToK8sSpec(formValues, baseStorageMap);
 
-    expect(result?.spec?.map?.[0].offloadPlugin).toBeUndefined();
+    expect(result?.spec?.map?.[0].offloadPlugin).toEqual({
+      csiVolumeImport: {
+        secretRef: 'netapp-secret',
+        storageVendorProduct: 'ontap',
+      },
+    });
   });
 });
 

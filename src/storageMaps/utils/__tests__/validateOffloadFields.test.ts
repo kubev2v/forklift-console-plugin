@@ -37,13 +37,24 @@ describe('validateOffloadFields', () => {
     ).toBeUndefined();
   });
 
-  it('rejects CSI with a disallowed storage product', () => {
+  it('returns undefined for valid CSI + ontap', () => {
     expect(
       validateOffloadFields({
         ...baseMapping,
         [StorageMapFieldId.OffloadPlugin]: OffloadPlugin.CsiVolumeImport,
         [StorageMapFieldId.StorageProduct]: 'ontap',
         [StorageMapFieldId.StorageSecret]: 'netapp-secret',
+      }),
+    ).toBeUndefined();
+  });
+
+  it('rejects CSI with a disallowed storage product', () => {
+    expect(
+      validateOffloadFields({
+        ...baseMapping,
+        [StorageMapFieldId.OffloadPlugin]: OffloadPlugin.CsiVolumeImport,
+        [StorageMapFieldId.StorageProduct]: 'customVendor',
+        [StorageMapFieldId.StorageSecret]: 'vendor-secret',
       }),
     ).toBe('Selected storage product is not supported for this offload plugin');
   });
