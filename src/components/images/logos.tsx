@@ -2,6 +2,8 @@ import type { ReactElement } from 'react';
 
 import ec2Img from './resources/aws-ec2.svg';
 import hypervImg from './resources/hyperv.svg';
+import nutanixImgDark from './resources/nutanix-dark.svg';
+import nutanixImgLight from './resources/nutanix-light.svg';
 import ovaImg from './resources/open-virtual-appliance.png';
 import openshiftImg from './resources/openshift-virtualization.svg';
 import openstackImg from './resources/openstack2.svg';
@@ -74,6 +76,25 @@ const vmLogoDark = (
     src={vmwareImgDark}
   />
 );
+
+const nutanixLogoLight = (
+  <img
+    alt="Nutanix AHV logo"
+    className="forklift--create-provider-edit-card-title-logo"
+    src={nutanixImgLight}
+  />
+);
+
+const nutanixLogoDark = (
+  <img
+    alt="Nutanix AHV logo"
+    className="forklift--create-provider-edit-card-title-logo"
+    src={nutanixImgDark}
+  />
+);
+
+export const getNutanixLogo = (isDarkTheme: boolean): ReactElement =>
+  isDarkTheme ? nutanixLogoLight : nutanixLogoDark;
 
 export const getVmwareLogo = (isDarkTheme: boolean): ReactElement =>
   isDarkTheme ? vmLogoLight : vmLogoDark;

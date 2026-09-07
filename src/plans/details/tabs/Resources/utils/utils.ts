@@ -2,6 +2,7 @@ import type { OpenshiftVM, OpenstackVM, ProviderVirtualMachine } from '@forklift
 import type { EnhancedHypervVM, EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
+import { getNutanixPlanResources } from './getNutanixPlanResources';
 import { getOpenshiftPlanResources } from './k8sVmResourceHelpers';
 import {
   getHypervPlanResources,
@@ -34,6 +35,8 @@ export const getPlanResourcesTableProps = (
       return getOVAPlanResources(planInventory as EnhancedOvaVM[]);
     case PROVIDER_TYPES.hyperv:
       return getHypervPlanResources(planInventory as EnhancedHypervVM[]);
+    case PROVIDER_TYPES.nutanix:
+      return getNutanixPlanResources(planInventory);
     case PROVIDER_TYPES.ec2:
       return {
         planInventoryRunningSize: planInventory?.length,

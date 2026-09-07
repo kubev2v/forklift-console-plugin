@@ -7,6 +7,8 @@ export const getVmGuestOS = (vm: ProviderVirtualMachine | undefined): string => 
   }
 
   switch (vm.providerType) {
+    case PROVIDER_TYPES.nutanix:
+      return vm.guestOsId ?? '';
     case PROVIDER_TYPES.vsphere:
       return vm.guestName || vm.guestNameFromVmwareTools || vm.guestId || '';
     case PROVIDER_TYPES.hyperv:

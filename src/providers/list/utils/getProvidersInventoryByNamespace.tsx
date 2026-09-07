@@ -1,5 +1,6 @@
 import type {
   HypervProvider,
+  NutanixProvider,
   OpenshiftProvider,
   OpenstackProvider,
   OvaProvider,
@@ -43,6 +44,9 @@ const addProviderToInventory = (
       extended.ec2 = [...(extended.ec2 ?? []), provider];
       break;
     }
+    case PROVIDER_TYPES.nutanix:
+      newInventory.nutanix = [...(newInventory.nutanix ?? []), provider as NutanixProvider];
+      break;
     default:
       break;
   }

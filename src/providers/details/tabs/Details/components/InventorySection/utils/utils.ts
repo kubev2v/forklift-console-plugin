@@ -4,6 +4,7 @@ import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import Ec2InventorySection from '../Ec2InventorySection';
 import HyperVInventorySection from '../HyperVInventorySection';
+import NutanixInventorySection from '../NutanixInventorySection';
 import OpenshiftInventorySection from '../OpenshiftInventorySection';
 import OpenstackInventorySection from '../OpenstackInventorySection';
 import OVAInventorySection from '../OVAInventorySection';
@@ -30,6 +31,8 @@ export const getInventorySectionByType = (
       return OVAInventorySection;
     case PROVIDER_TYPES.hyperv:
       return HyperVInventorySection;
+    case PROVIDER_TYPES.nutanix:
+      return NutanixInventorySection;
     case undefined:
     default:
       return undefined;

@@ -110,6 +110,7 @@ nics
 normalise
 NOSONAR
 Numa
+nutanix
 omitempty
 ONTAP
 operatorhub
@@ -150,6 +151,7 @@ statuspage
 storageclass
 storageclasses
 storagecluster
+storagecontainers
 storagedomains
 storagemap
 storagemaps
@@ -165,6 +167,7 @@ Unsettable
 UNSETTABLE
 VAAI
 Vantara
+vcpus
 vddk
 veth
 virt

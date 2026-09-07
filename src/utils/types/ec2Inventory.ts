@@ -33,9 +33,11 @@ export type Ec2VmObject = {
 
 export type Ec2VmLike = ProviderVirtualMachine & { object?: Ec2VmObject };
 
-// ProviderVirtualMachine from @forklift-ui/types does not include 'ec2' yet
-export const isEc2Vm = (vm: ProviderVirtualMachine): vm is Ec2VmLike =>
-  (vm.providerType as string) === PROVIDER_TYPES.ec2;
+type Ec2VmGuardInput = ProviderVirtualMachine | { object?: Ec2VmObject; providerType?: string };
+
+// ProviderVirtualMachine from @forklift-ui/types does not include EC2 VM shape yet
+export const isEc2Vm = (vm: Ec2VmGuardInput): vm is Ec2VmLike =>
+  vm.providerType === PROVIDER_TYPES.ec2;
 
 /**
  * Extracts subnet IDs from an EC2 VM.

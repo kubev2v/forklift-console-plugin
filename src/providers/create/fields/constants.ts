@@ -94,10 +94,23 @@ enum Ec2ProviderFormFieldId {
   Ec2UseCrossAccountCredentials = 'ec2UseCrossAccountCredentials',
 }
 
+enum NutanixProviderFormFieldId {
+  NutanixPassword = 'nutanixPassword',
+  NutanixPrismType = 'nutanixPrismType',
+  NutanixUrl = 'nutanixUrl',
+  NutanixUsername = 'nutanixUsername',
+}
+
+export enum NutanixPrismType {
+  Central = 'central',
+  Element = 'element',
+}
+
 export const ProviderFormFieldId = {
   ...CommonProviderFormFieldId,
   ...CertificateFormFieldId,
   ...Ec2ProviderFormFieldId,
+  ...NutanixProviderFormFieldId,
   ...OvaProviderFormFieldId,
   ...OpenshiftProviderFormFieldId,
   ...OpenstackProviderFormFieldId,
@@ -110,6 +123,7 @@ export type ProviderFormFieldIdType =
   | CommonProviderFormFieldId
   | CertificateFormFieldId
   | Ec2ProviderFormFieldId
+  | NutanixProviderFormFieldId
   | OpenshiftProviderFormFieldId
   | OpenstackProviderFormFieldId
   | OvaProviderFormFieldId
