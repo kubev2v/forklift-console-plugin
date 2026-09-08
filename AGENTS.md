@@ -715,6 +715,29 @@ See the [dev-helper SETUP.md](https://github.com/avivtur/dev-helper/blob/main/SE
 
 ---
 
+## Dependency Update Policy (MintMaker / Renovate)
+
+Konflux MintMaker (Renovate) proposes dependency PRs. This plugin runs inside OpenShift Console via module federation, so many packages must stay aligned with the Console host — MintMaker cannot safely bump them.
+
+The blocklist lives in [`renovate.json`](renovate.json) (`packageRules` with `"enabled": false`). Place disable rules **before** the grouped non-major / major rules.
+
+### Tiers
+
+| Tier | MintMaker | Examples |
+|------|-----------|----------|
+| **Block** | Disabled in `renovate.json` | Console SDK (`@openshift-console/**`), React / router / i18n shared runtime, PatternFly, webpack toolchain, `monaco-editor`, `immer`, `victory-*`, `packageManager` |
+| **Review** | Allowed in grouped PRs | `@forklift-ui/types`, eslint/prettier/jest (patch/minor), Playwright in `testing/`, Tekton digests, most utilities |
+| **Cautious** | Allowed but verify carefully | `luxon`, `@testing-library/jest-dom` (Node engine), `typescript-eslint`, `knip`, `lint-staged`, `i18next-parser` |
+
+### Rules of thumb
+
+- **Block** packages: upgrade only in a deliberate “align with Console / OCP” PR, not via MintMaker.
+- Release branches pin different SDK stacks (e.g. `release-2.11` on SDK 1.8 + React 17 vs `main` on SDK 4.x). Do not assume a bump that works on `main` is safe on a z-stream.
+- After changing `renovate.json` on `main`, backport the same file to supported release branches so MintMaker respects the blocklist everywhere.
+- Green GHA does not prove Konflux pipeline success for Tekton digest PRs.
+
+---
+
 ## Additional Resources
 
 - [Forklift Repository](https://github.com/kubev2v/forklift/)
@@ -722,4 +745,5 @@ See the [dev-helper SETUP.md](https://github.com/avivtur/dev-helper/blob/main/SE
 - [PatternFly Documentation](https://www.patternfly.org/)
 - [OpenShift Dynamic Plugin SDK](https://github.com/openshift/dynamic-plugin-sdk)
 - [Dev-Helper Skill](https://github.com/avivtur/dev-helper)
+- [Konflux MintMaker dependency management](https://konflux-ci.dev/docs/mintmaker/user/)
 
