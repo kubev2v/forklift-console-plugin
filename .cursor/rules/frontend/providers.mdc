@@ -245,8 +245,8 @@ OpenShift-only. Patches `forklift.konveyor.io/defaultTransferNetwork` annotation
 | `useK8sWatchResource<V1beta1Provider[]>` | Console SDK (k8s watch) | List page |
 | `useK8sWatchResource<V1beta1Provider>` | Console SDK (k8s watch) | Details dispatch page |
 | `useProvider(name, namespace)` | Re-exported from `@utils/hooks/useProvider` | All detail tabs, header |
-| `useProvidersInventoryList(namespace)` | Polls `/providers?detail=1` every 20s | List page |
-| `useProviderInventory<T>({ provider, subPath? })` | Shared hook | Details tab, Networks tab, Header |
+| `useProvidersInventoryList(namespace)` | Polls `/providers?detail=1` every 20s; namespaced fallback uses `buildProviderInventoryPath` (`?detail=1` per provider) | List page |
+| `useProviderInventory<T>({ provider, subPath? })` | Shared hook; root GET via `buildProviderInventoryPath` (`?detail=1` when `subPath` is empty) | Details tab, Networks tab, Header |
 | `useInventoryVms({ provider })` | Shared hook | VMs tab |
 | `useK8sWatchResource<Secret>` | Console SDK | Credentials tab |
 | `useGetDeleteAndEditAccessReview` | Custom RBAC hook | List page, Details tab, Hosts tab, Header |

@@ -4,6 +4,7 @@ import type { V1beta1Provider } from '@forklift-ui/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 import { getInventoryApiUrl } from '@utils/api/getApiUrl';
 import { hasObjectChangedInGivenFields } from '@utils/helpers/hasObjectChangedInGivenFields';
+import { buildProviderInventoryPath } from '@utils/inventory/buildProviderInventoryPath';
 import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from '@utils/inventory/constants';
 
 /**
@@ -131,9 +132,10 @@ const useProviderInventory = <T>({
       }
 
       try {
-        const subPathSuffix = subPath ? `/${subPath}` : '';
         const newInventory = (await consoleFetchJSON(
-          getInventoryApiUrl(`providers/${providerType}/${providerUid}${subPathSuffix}`),
+          getInventoryApiUrl(
+            buildProviderInventoryPath(providerType ?? '', providerUid ?? '', subPath),
+          ),
           'GET',
           {},
           fetchTimeout,
