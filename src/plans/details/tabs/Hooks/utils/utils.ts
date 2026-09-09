@@ -87,6 +87,10 @@ export const createUpdateOrDeleteHook = async ({
     return plan;
   }
 
+  if (hookSource === HOOK_SOURCE_AAP && aapJobTemplateId === undefined) {
+    throw new Error(t('Job template is required for Ansible Automation Platform hooks.'));
+  }
+
   const image = hookImage ?? '';
   const playbook = hookPlaybook ?? '';
   const serviceAccount = hookServiceAccount ?? '';

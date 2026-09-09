@@ -46,6 +46,8 @@ const HookEdit: OverlayComponent<HookEditProps> = ({ closeOverlay, hook, plan, s
   } = methods;
 
   const hookSource = watch('hookSource');
+  const aapJobTemplateId = watch(HookField.AapJobTemplateId);
+  const isAapHookIncomplete = hookSource === HOOK_SOURCE_AAP && aapJobTemplateId === undefined;
 
   useEffect(() => {
     if (hookSource !== HOOK_SOURCE_LOCAL) {
@@ -80,7 +82,7 @@ const HookEdit: OverlayComponent<HookEditProps> = ({ closeOverlay, hook, plan, s
     <FormProvider {...methods}>
       <ModalForm
         closeOverlay={closeOverlay}
-        isDisabled={!isEmpty(errors) || !isDirty}
+        isDisabled={!isEmpty(errors) || !isDirty || isAapHookIncomplete}
         onConfirm={handleSubmit(onSubmit)}
         title={title}
         variant={ModalVariant.medium}

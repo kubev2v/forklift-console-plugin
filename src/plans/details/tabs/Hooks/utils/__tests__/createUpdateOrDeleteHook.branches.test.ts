@@ -118,14 +118,17 @@ describe('createUpdateOrDeleteHook', () => {
     });
   });
 
-  it('falls through to local path when AAP source lacks job template id', async () => {
-    await createUpdateOrDeleteHook({
-      hookSet: true,
-      hookSource: HOOK_SOURCE_AAP,
-      plan,
-      step: hookTypes.PreHook,
-    });
+  it('throws when AAP source lacks job template id', async () => {
+    await expect(
+      createUpdateOrDeleteHook({
+        hookSet: true,
+        hookSource: HOOK_SOURCE_AAP,
+        plan,
+        step: hookTypes.PreHook,
+      }),
+    ).rejects.toThrow('Job template is required for Ansible Automation Platform hooks.');
     expect(mockGetAapHookTemplate).not.toHaveBeenCalled();
-    expect(mockGetLocalHookTemplate).toHaveBeenCalled();
+    expect(mockGetLocalHookTemplate).not.toHaveBeenCalled();
+    expect(mockCreateHook).not.toHaveBeenCalled();
   });
 });
