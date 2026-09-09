@@ -669,6 +669,13 @@ export const createEslintConfig = () =>
         '@typescript-eslint/no-namespace': 'off',
         '@typescript-eslint/promise-function-async': 'off',
         '@typescript-eslint/strict-void-return': 'off',
+        // Root tsconfig.eslint.json pulls Jest types; Playwright `test`/`page` then
+        // type as error and every spec trips no-unsafe-* during lint-staged.
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-return': 'off',
         // sonarjs only applies to src/**; keep offs harmless if scope changes
         'sonarjs/cognitive-complexity': 'off',
         'sonarjs/no-duplicate-string': 'off',
