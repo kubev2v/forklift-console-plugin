@@ -35,10 +35,26 @@ describe('createOffloadPluginConfig', () => {
       createOffloadPluginConfig({
         ...baseMapping,
         [StorageMapFieldId.OffloadPlugin]: OffloadPlugin.CsiVolumeImport,
-        [StorageMapFieldId.StorageProduct]: 'ontap',
-        [StorageMapFieldId.StorageSecret]: 'netapp-secret',
+        [StorageMapFieldId.StorageProduct]: 'customVendor',
+        [StorageMapFieldId.StorageSecret]: 'vendor-secret',
       }),
     ).toBeUndefined();
+  });
+
+  it('creates csiVolumeImport config for ontap', () => {
+    const result = createOffloadPluginConfig({
+      ...baseMapping,
+      [StorageMapFieldId.OffloadPlugin]: OffloadPlugin.CsiVolumeImport,
+      [StorageMapFieldId.StorageProduct]: 'ontap',
+      [StorageMapFieldId.StorageSecret]: 'netapp-secret',
+    });
+
+    expect(result).toEqual({
+      csiVolumeImport: {
+        secretRef: 'netapp-secret',
+        storageVendorProduct: 'ontap',
+      },
+    });
   });
 
   it('creates csiVolumeImport config without dedicated hosts', () => {

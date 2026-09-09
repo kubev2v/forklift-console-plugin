@@ -54,7 +54,7 @@ describe('useStorageVendorProducts', () => {
     jest.clearAllMocks();
   });
 
-  it('falls back to primera3par for CSI while loading', () => {
+  it('falls back to CSI allowlist while loading', () => {
     mockUseStorageMapCrd.mockReturnValue({
       crd: null,
       error: null,
@@ -63,7 +63,10 @@ describe('useStorageVendorProducts', () => {
 
     const { result } = renderHook(() => useStorageVendorProducts(OffloadPlugin.CsiVolumeImport));
 
-    expect(result.current.storageVendorProducts).toEqual([StorageVendorProduct.Primera3Par]);
+    expect(result.current.storageVendorProducts).toEqual([
+      StorageVendorProduct.Primera3Par,
+      StorageVendorProduct.Ontap,
+    ]);
   });
 
   it('uses CRD CSI enum intersected with the write-path allowlist', () => {
@@ -77,10 +80,13 @@ describe('useStorageVendorProducts', () => {
 
     const { result } = renderHook(() => useStorageVendorProducts(OffloadPlugin.CsiVolumeImport));
 
-    expect(result.current.storageVendorProducts).toEqual([StorageVendorProduct.Primera3Par]);
+    expect(result.current.storageVendorProducts).toEqual([
+      StorageVendorProduct.Primera3Par,
+      StorageVendorProduct.Ontap,
+    ]);
   });
 
-  it('falls back to CSI allowlist when CRD CSI enum is empty after filtering', () => {
+  it('returns ontap when CRD CSI enum contains only ontap', () => {
     mockUseStorageMapCrd.mockReturnValue({
       crd: makeCrd({
         [OffloadPlugin.CsiVolumeImport]: ['ontap'],
@@ -91,7 +97,7 @@ describe('useStorageVendorProducts', () => {
 
     const { result } = renderHook(() => useStorageVendorProducts(OffloadPlugin.CsiVolumeImport));
 
-    expect(result.current.storageVendorProducts).toEqual([StorageVendorProduct.Primera3Par]);
+    expect(result.current.storageVendorProducts).toEqual([StorageVendorProduct.Ontap]);
   });
 
   it('merges CRD products with constants for XCOPY', () => {
