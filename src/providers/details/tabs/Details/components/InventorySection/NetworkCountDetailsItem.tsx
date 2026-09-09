@@ -12,6 +12,7 @@ const NetworkCountDetailsItem: FC<InventoryDetailsItemProps> = ({
   helpContent,
   inventory,
   resource: provider,
+  title,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -34,7 +35,7 @@ const NetworkCountDetailsItem: FC<InventoryDetailsItemProps> = ({
       }
       crumbs={['Inventory', 'providers', provider?.spec?.type ?? '', '[UID]', 'networkCount']}
       helpContent={helpContent ?? defaultHelpContent}
-      title={t('Network interfaces')}
+      title={title ?? t('Network interfaces')}
     />
   );
 };

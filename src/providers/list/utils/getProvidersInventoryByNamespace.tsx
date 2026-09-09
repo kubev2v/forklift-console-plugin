@@ -12,6 +12,7 @@ import type {
 } from '@forklift-ui/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 import { getInventoryApiUrl } from '@utils/api/getApiUrl';
+import { getType, getUID } from '@utils/crds/common/selectors';
 import { buildProviderInventoryPath } from '@utils/inventory/buildProviderInventoryPath';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
@@ -67,7 +68,7 @@ export const getProvidersInventoryByNamespace = async (
       async (provider) =>
         consoleFetchJSON(
           getInventoryApiUrl(
-            buildProviderInventoryPath(provider.spec?.type ?? '', provider.metadata?.uid ?? ''),
+            buildProviderInventoryPath(getType(provider) ?? '', getUID(provider) ?? ''),
           ),
         ) as Promise<(ProviderInventory & { type: string }) | null>,
     ),

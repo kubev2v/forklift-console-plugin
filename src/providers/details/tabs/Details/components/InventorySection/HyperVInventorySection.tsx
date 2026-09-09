@@ -47,6 +47,7 @@ const HyperVInventorySection: FC<InventorySectionProps> = ({ data }) => {
         helpContent={t('Number of virtual switches discovered from the provider')}
         inventory={inventory}
         resource={provider}
+        title={t('Virtual switches')}
       />
       <VmCountDetailsItem
         helpContent={t('Number of virtual machines exported from Hyper-V')}
