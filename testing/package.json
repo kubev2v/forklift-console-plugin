@@ -14,12 +14,12 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "playwright": "1.57.0",
-    "@playwright/test": "1.57.0",
+    "playwright": "1.63.0",
+    "@playwright/test": "1.63.0",
     "@types/node": "^20.0.0",
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@forklift-ui/types": "1.0.7"
+    "@forklift-ui/types": "1.3.1"
   }
 }
