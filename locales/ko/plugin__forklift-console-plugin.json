@@ -1383,6 +1383,7 @@
   "Some selected plans are managed resources": "Some selected plans are managed resources",
   "Some selected plans are not archived": "Some selected plans are not archived",
   "Some selected VMs have multiple NICs on the same source network. Each NIC must be mapped to a distinct network attachment definition (NAD). Add one mapping row per NIC, each pointing to a different NAD.": "Some selected VMs have multiple NICs on the same source network. Each NIC must be mapped to a distinct network attachment definition (NAD). Add one mapping row per NIC, each pointing to a different NAD.",
+  "Source": "Source",
   "Source and target providers": "소스 및 대상 공급업체",
   "Source network": "소스 네트워크",
   "Source network is required for mapping {{index}}.": "매핑 {{index}}에 소스 네트워크가 필요합니다.",
