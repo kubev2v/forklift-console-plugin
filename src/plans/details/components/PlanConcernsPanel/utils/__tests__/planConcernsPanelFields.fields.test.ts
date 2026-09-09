@@ -4,7 +4,7 @@ import { planConcernsPanelFields } from '../planConcernsPanelFields';
 
 describe('planConcernsPanelFields - fields', () => {
   it('exposes field definitions for the concerns panel', () => {
-    expect(planConcernsPanelFields.length).toBe(3);
+    expect(planConcernsPanelFields).toHaveLength(3);
     expect(planConcernsPanelFields.map((field) => field.resourceFieldId)).toEqual([
       'severity',
       'type',
