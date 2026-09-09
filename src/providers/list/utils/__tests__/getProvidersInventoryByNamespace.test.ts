@@ -51,12 +51,6 @@ describe('getProvidersInventoryByNamespace', () => {
     expect(extended.ec2).toHaveLength(2);
     expect(extended.ec2[0].uid).toBe('uid-1');
     expect(extended.ec2[1].uid).toBe('uid-2');
-    expect(mockConsoleFetchJSON).toHaveBeenCalledWith(
-      expect.stringContaining('providers/ec2/uid-1?detail=1'),
-    );
-    expect(mockConsoleFetchJSON).toHaveBeenCalledWith(
-      expect.stringContaining('providers/ec2/uid-2?detail=1'),
-    );
   });
 
   it('requests detail=1 on each per-provider inventory GET', async () => {
