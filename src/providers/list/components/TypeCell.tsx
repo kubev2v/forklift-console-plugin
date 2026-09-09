@@ -14,7 +14,7 @@ import {
   type PROVIDER_TYPES,
 } from '@utils/providers/constants';
 
-import { SOURCE_LABEL_COLOR, SOURCE_LABEL_TEXT } from './utils/constants';
+import { SOURCE_LABEL_COLOR, SOURCE_LABEL_TEXT } from './utils/sourceLabelConstants';
 
 export const TypeCell: FC<CellProps> = ({ data, fields }) => {
   const { t } = useForkliftTranslation();

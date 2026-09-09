@@ -41,6 +41,3 @@ export const ProviderDataCellRenderers: Record<ProvidersResourceFieldId, FC<Cell
   vmCount: VirtualMachinesCell,
   volumeTypeCount: nullRenderer,
 };
-
-export const SOURCE_LABEL_COLOR = 'green';
-export const SOURCE_LABEL_TEXT = 'Source';
