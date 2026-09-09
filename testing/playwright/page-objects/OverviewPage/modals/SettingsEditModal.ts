@@ -26,6 +26,8 @@ export class SettingsEditModal extends BaseModal {
   readonly maxVmInFlightInput: Locator;
   readonly preCopyIntervalDropdown: Locator;
   readonly snapshotPollingIntervalDropdown: Locator;
+  readonly virtV2vMemsizeInput: Locator;
+  readonly virtV2vSmpInput: Locator;
 
   constructor(page: Page) {
     super(page, 'settings-edit-modal');
@@ -59,6 +61,12 @@ export class SettingsEditModal extends BaseModal {
     this.aapTokenSecretDropdown = this.page.getByTestId('aap-token-secret-settings-select');
     this.aapTimeoutInput = this.page
       .getByTestId('settings-aap-timeout-input')
+      .getByRole('spinbutton');
+    this.virtV2vMemsizeInput = this.page
+      .getByTestId('settings-virt-v2v-memsize-input')
+      .getByRole('spinbutton');
+    this.virtV2vSmpInput = this.page
+      .getByTestId('settings-virt-v2v-smp-input')
       .getByRole('spinbutton');
   }
 
@@ -121,6 +129,14 @@ export class SettingsEditModal extends BaseModal {
     return this.controllerTransferNetworkDropdown.textContent();
   }
 
+  async getVirtV2vMemsizeValue(): Promise<string> {
+    return (await this.virtV2vMemsizeInput.inputValue()) ?? '';
+  }
+
+  async getVirtV2vSmpValue(): Promise<string> {
+    return (await this.virtV2vSmpInput.inputValue()) ?? '';
+  }
+
   async incrementMaxVmInFlight(): Promise<void> {
     await this.page
       .getByTestId('max-vm-inflight-input')
@@ -130,6 +146,24 @@ export class SettingsEditModal extends BaseModal {
 
   async openTransferNetworkDropdown(): Promise<void> {
     await this.controllerTransferNetworkDropdown.click();
+  }
+
+  async resetToDefaults(): Promise<void> {
+    await this.modal.getByRole('button', { name: 'Reset to defaults' }).click();
+  }
+
+  async saveAndCaptureControllerPatch(): Promise<unknown> {
+    const responsePromise = this.page.waitForResponse(
+      (response) =>
+        response.request().method() === 'PATCH' &&
+        response.url().includes('forkliftcontrollers') &&
+        response.ok(),
+    );
+
+    await this.save();
+
+    const response = await responsePromise;
+    return response.request().postDataJSON();
   }
 
   async selectControllerCpuLimit(value: string): Promise<void> {
@@ -190,12 +224,25 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async setAapUrl(url: string): Promise<void> {
+    await this.aapUrlInput.scrollIntoViewIfNeeded();
     await this.aapUrlInput.clear();
     await this.aapUrlInput.fill(url);
   }
 
   async setMaxVmInFlight(value: number): Promise<void> {
     await this.maxVmInFlightInput.fill(String(value));
+  }
+
+  async setVirtV2vMemsize(value: number): Promise<void> {
+    await this.virtV2vMemsizeInput.scrollIntoViewIfNeeded();
+    await this.virtV2vMemsizeInput.fill(String(value));
+    await this.virtV2vMemsizeInput.blur();
+  }
+
+  async setVirtV2vSmp(value: number): Promise<void> {
+    await this.virtV2vSmpInput.scrollIntoViewIfNeeded();
+    await this.virtV2vSmpInput.fill(String(value));
+    await this.virtV2vSmpInput.blur();
   }
 
   async toggleTransferNetworkValue(): Promise<void> {
@@ -215,5 +262,15 @@ export class SettingsEditModal extends BaseModal {
     await expect(this.aapUrlInput).toBeVisible();
     await expect(this.aapTokenSecretDropdown).toBeVisible();
     await expect(this.aapTimeoutInput).toBeVisible();
+  }
+
+  async verifyResetToDefaultsVisible(): Promise<void> {
+    await expect(this.modal.getByRole('button', { name: 'Reset to defaults' })).toBeVisible();
+  }
+
+  async verifyVirtV2vFieldsVisible(): Promise<void> {
+    await this.virtV2vMemsizeInput.scrollIntoViewIfNeeded();
+    await expect(this.virtV2vMemsizeInput).toBeVisible();
+    await expect(this.virtV2vSmpInput).toBeVisible();
   }
 }

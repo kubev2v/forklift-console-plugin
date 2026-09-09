@@ -10,8 +10,19 @@ import {
 import { OverviewPage } from '../../page-objects/OverviewPage/OverviewPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
-import { V2_11_0, V2_12_0 } from '../../utils/version/constants';
+import { V2_11_0, V2_12_0, V5_0_0 } from '../../utils/version/constants';
 import { isVersionAtLeast, requireVersion } from '../../utils/version/version';
+
+const INVALID_AAP_URL = 'not-a-url';
+const UI_DEFAULT_CPU_LIMIT = '500m';
+const UI_DEFAULT_MAX_VM_IN_FLIGHT = 20;
+const VIRT_V2V_CUSTOM_MEMSIZE = 4096;
+const VIRT_V2V_CUSTOM_SMP = 2;
+
+type ControllerPatch = { op?: string; path?: string; value?: unknown };
+
+const asControllerPatches = (body: unknown): ControllerPatch[] =>
+  Array.isArray(body) ? (body as ControllerPatch[]) : [];
 
 test.describe('Overview Page - Health Tab', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
@@ -37,7 +48,7 @@ test.describe('Overview Page - Health Tab', { tag: '@downstream' }, () => {
   });
 });
 
-test.describe(
+test.describe.serial(
   'Overview Page - Settings',
   {
     tag: '@downstream',
@@ -199,6 +210,157 @@ test.describe(
           await overviewPage.settingsTab.settingsEditModal.cancel();
         });
       }
+    });
+
+    test.describe('Reset to defaults and virt-v2v', () => {
+      requireVersion(test, V5_0_0);
+
+      test.beforeEach(async () => {
+        const initialized = await initializeForkliftSettings();
+        if (!initialized) {
+          throw new Error('Failed to initialize ForkliftController settings');
+        }
+      });
+
+      test('should show Default for unset virt-v2v settings and Reset in the edit modal', async ({
+        page,
+      }) => {
+        const overviewPage = new OverviewPage(page);
+        const { settingsTab } = overviewPage;
+
+        await test.step('Navigate to Settings tab', async () => {
+          await overviewPage.navigateToSettings();
+        });
+
+        await test.step('Verify unset virt-v2v values show Default and transfer network shows None', async () => {
+          await expect(settingsTab.virtV2vMemsizeField).toContainText('Default');
+          await expect(settingsTab.virtV2vSmpField).toContainText('Default');
+          await expect(settingsTab.controllerTransferNetworkField).toContainText('None');
+        });
+
+        await test.step('Open edit modal and verify Reset plus virt-v2v fields at 0', async () => {
+          await settingsTab.openSettingsEditModal();
+          await settingsTab.settingsEditModal.verifyResetToDefaultsVisible();
+          await settingsTab.settingsEditModal.verifyVirtV2vFieldsVisible();
+          expect(await settingsTab.settingsEditModal.getVirtV2vMemsizeValue()).toBe('0');
+          expect(await settingsTab.settingsEditModal.getVirtV2vSmpValue()).toBe('0');
+          await expect(settingsTab.settingsEditModal.saveButton).toBeDisabled();
+          await settingsTab.settingsEditModal.cancel();
+        });
+      });
+
+      test('should restore UI defaults when Reset to defaults is clicked', async ({ page }) => {
+        const overviewPage = new OverviewPage(page);
+        const { settingsTab } = overviewPage;
+
+        await test.step('Navigate to Settings and open the edit modal', async () => {
+          await overviewPage.navigateToSettings();
+          await settingsTab.openSettingsEditModal();
+        });
+
+        await test.step('Change several fields then Reset to defaults', async () => {
+          await settingsTab.settingsEditModal.setMaxVmInFlight(35);
+          await settingsTab.settingsEditModal.selectControllerCpuLimit('2000m');
+          await settingsTab.settingsEditModal.setVirtV2vMemsize(VIRT_V2V_CUSTOM_MEMSIZE);
+          await settingsTab.settingsEditModal.setVirtV2vSmp(VIRT_V2V_CUSTOM_SMP);
+          await settingsTab.settingsEditModal.resetToDefaults();
+        });
+
+        await test.step('Verify form matches defaultValuesMap and Save is enabled', async () => {
+          expect(Number(await settingsTab.settingsEditModal.getMaxVmInFlightValue())).toBe(
+            UI_DEFAULT_MAX_VM_IN_FLIGHT,
+          );
+          expect((await settingsTab.settingsEditModal.getControllerCpuLimitValue())?.trim()).toBe(
+            UI_DEFAULT_CPU_LIMIT,
+          );
+          expect(await settingsTab.settingsEditModal.getVirtV2vMemsizeValue()).toBe('0');
+          expect(await settingsTab.settingsEditModal.getVirtV2vSmpValue()).toBe('0');
+          await expect(settingsTab.settingsEditModal.saveButton).toBeEnabled();
+        });
+
+        await test.step('Cancel without saving and verify the card is unchanged', async () => {
+          await settingsTab.settingsEditModal.cancel();
+          await expect(settingsTab.maxVmInFlightField).toContainText(
+            String(KNOWN_SETTINGS.maxVmInFlight),
+          );
+          await expect(settingsTab.virtV2vMemsizeField).toContainText('Default');
+          await expect(settingsTab.virtV2vSmpField).toContainText('Default');
+        });
+      });
+
+      test('should persist custom virt-v2v values and remove them on Reset and Save', async ({
+        page,
+      }) => {
+        const overviewPage = new OverviewPage(page);
+        const { settingsTab } = overviewPage;
+
+        await test.step('Navigate to Settings and save custom virt-v2v values', async () => {
+          await overviewPage.navigateToSettings();
+          await settingsTab.openSettingsEditModal();
+          await settingsTab.settingsEditModal.setVirtV2vMemsize(VIRT_V2V_CUSTOM_MEMSIZE);
+          await settingsTab.settingsEditModal.setVirtV2vSmp(VIRT_V2V_CUSTOM_SMP);
+          const addPatch = asControllerPatches(
+            await settingsTab.settingsEditModal.saveAndCaptureControllerPatch(),
+          );
+          expect(addPatch).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                op: 'add',
+                path: '/spec/virt_v2v_memsize',
+                value: VIRT_V2V_CUSTOM_MEMSIZE,
+              }),
+              expect.objectContaining({
+                op: 'add',
+                path: '/spec/virt_v2v_smp',
+                value: VIRT_V2V_CUSTOM_SMP,
+              }),
+            ]),
+          );
+        });
+
+        await test.step('Verify the Settings card shows the custom values', async () => {
+          await expect(settingsTab.virtV2vMemsizeField).toContainText(
+            String(VIRT_V2V_CUSTOM_MEMSIZE),
+          );
+          await expect(settingsTab.virtV2vSmpField).toContainText(String(VIRT_V2V_CUSTOM_SMP));
+        });
+
+        await test.step('Reset and Save, then verify REMOVE patch and Default on the card', async () => {
+          await settingsTab.openSettingsEditModal();
+          await settingsTab.settingsEditModal.resetToDefaults();
+          const removePatch = asControllerPatches(
+            await settingsTab.settingsEditModal.saveAndCaptureControllerPatch(),
+          );
+          expect(removePatch).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({ op: 'remove', path: '/spec/virt_v2v_memsize' }),
+              expect.objectContaining({ op: 'remove', path: '/spec/virt_v2v_smp' }),
+            ]),
+          );
+          expect(removePatch.some((operation) => operation.value === 0)).toBe(false);
+          await expect(settingsTab.virtV2vMemsizeField).toContainText('Default');
+          await expect(settingsTab.virtV2vSmpField).toContainText('Default');
+        });
+      });
+
+      test('should disable Save when the AAP URL is invalid', async ({ page }) => {
+        const overviewPage = new OverviewPage(page);
+        const { settingsTab } = overviewPage;
+
+        await test.step('Navigate to Settings and enter an invalid AAP URL', async () => {
+          await overviewPage.navigateToSettings();
+          await settingsTab.openSettingsEditModal();
+          await settingsTab.settingsEditModal.setAapUrl(INVALID_AAP_URL);
+        });
+
+        await test.step('Verify validation message and Save stays disabled', async () => {
+          await expect(settingsTab.settingsEditModal.modal).toContainText(
+            'The URL is invalid. URL should include the schema, for example: https://aap.example.com.',
+          );
+          await expect(settingsTab.settingsEditModal.saveButton).toBeDisabled();
+          await settingsTab.settingsEditModal.cancel();
+        });
+      });
     });
   },
 );

@@ -18,6 +18,12 @@ const FIELD_MAP = {
   snapshotPollingInterval: 'controller_snapshot_status_check_rate_seconds',
 } as const;
 
+// CRD minimum is 1; UI "Default" means the spec key is absent (REMOVE, never 0).
+const UNSET_FIELD_MAP = {
+  virtV2vMemsize: 'virt_v2v_memsize',
+  virtV2vSmp: 'virt_v2v_smp',
+} as const;
+
 // Empty string is the "None" baseline for controllerTransferNetwork (matches the
 // UI's blank-option behavior in EditControllerTransferNetwork.tsx). Tracking it here
 // ensures any NetworkAttachmentDefinition reference set during a test is cleared
@@ -37,10 +43,37 @@ export const KNOWN_SETTINGS = {
 } as const;
 
 type SettingsKey = keyof typeof KNOWN_SETTINGS;
+type UnsetSettingsKey = keyof typeof UNSET_FIELD_MAP;
 
 export type OriginalSettings = {
   controllerName: string;
+  unsetValues: Partial<Record<UnsetSettingsKey, number | undefined>>;
   values: Partial<Record<SettingsKey, string | number>>;
+};
+
+const buildUnsetFieldRestorePatches = (
+  spec: Record<string, unknown>,
+  unsetValues: OriginalSettings['unsetValues'],
+): JsonPatchOperation[] => {
+  const patches: JsonPatchOperation[] = [];
+
+  for (const key of Object.keys(UNSET_FIELD_MAP) as UnsetSettingsKey[]) {
+    const specField = UNSET_FIELD_MAP[key];
+    const originalValue = unsetValues[key];
+    const currentValue = spec[specField];
+
+    if (originalValue === undefined) {
+      if (currentValue !== undefined) {
+        patches.push({ op: 'remove', path: `/spec/${specField}` });
+      }
+    } else if (currentValue === undefined) {
+      patches.push({ op: 'add', path: `/spec/${specField}`, value: originalValue });
+    } else if (currentValue !== originalValue) {
+      patches.push({ op: 'replace', path: `/spec/${specField}`, value: originalValue });
+    }
+  }
+
+  return patches;
 };
 
 export const initializeForkliftSettings = async (
@@ -58,7 +91,7 @@ export const initializeForkliftSettings = async (
   const controllerName = controller.metadata?.name ?? 'forklift-controller';
   const spec = (controller.spec ?? {}) as Record<string, unknown>;
 
-  const original: OriginalSettings = { controllerName, values: {} };
+  const original: OriginalSettings = { controllerName, unsetValues: {}, values: {} };
   const patches: JsonPatchOperation[] = [];
 
   for (const key of Object.keys(KNOWN_SETTINGS) as SettingsKey[]) {
@@ -74,6 +107,17 @@ export const initializeForkliftSettings = async (
         path: `/spec/${specField}`,
         value: knownValue,
       });
+    }
+  }
+
+  for (const key of Object.keys(UNSET_FIELD_MAP) as UnsetSettingsKey[]) {
+    const specField = UNSET_FIELD_MAP[key];
+    const currentValue = spec[specField];
+
+    original.unsetValues[key] = currentValue as number | undefined;
+
+    if (currentValue !== undefined) {
+      patches.push({ op: 'remove', path: `/spec/${specField}` });
     }
   }
 
@@ -96,6 +140,12 @@ export const restoreForkliftSettings = async (
   original: OriginalSettings,
   namespace = MTV_NAMESPACE,
 ): Promise<boolean> => {
+  const controller = await ResourceFetcher.fetchForkliftController(
+    original.controllerName,
+    namespace,
+  );
+  const spec = (controller?.spec ?? {}) as Record<string, unknown>;
+
   const patches: JsonPatchOperation[] = (Object.keys(KNOWN_SETTINGS) as SettingsKey[]).map(
     (key) => {
       const specField = FIELD_MAP[key];
@@ -105,6 +155,8 @@ export const restoreForkliftSettings = async (
         : { op: 'replace' as const, path: `/spec/${specField}`, value };
     },
   );
+
+  patches.push(...buildUnsetFieldRestorePatches(spec, original.unsetValues));
 
   const result = await ResourcePatcher.patchForkliftController(
     original.controllerName,
