@@ -49,7 +49,7 @@ describe('useProviderInventory - fetch', () => {
     expect(result.current.error).toBeNull();
     expect(result.current.loading).toBe(false);
     expect(mockFetch).toHaveBeenCalledWith(
-      '/inventory/providers/vsphere/provider-uid-1',
+      '/inventory/providers/vsphere/provider-uid-1?detail=1',
       'GET',
       {},
       undefined,
