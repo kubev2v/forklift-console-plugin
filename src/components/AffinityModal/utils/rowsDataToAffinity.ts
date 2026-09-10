@@ -92,6 +92,7 @@ export const rowsDataToAffinity = (
 
   if (!isEmpty(nodeSelectorTermsRequired)) {
     affinity.nodeAffinity = {
+      ...affinity.nodeAffinity,
       requiredDuringSchedulingIgnoredDuringExecution: {
         nodeSelectorTerms: nodeSelectorTermsRequired,
       },
@@ -100,30 +101,35 @@ export const rowsDataToAffinity = (
 
   if (!isEmpty(nodeSelectorTermsPreferred)) {
     affinity.nodeAffinity = {
+      ...affinity.nodeAffinity,
       preferredDuringSchedulingIgnoredDuringExecution: nodeSelectorTermsPreferred,
     };
   }
 
   if (!isEmpty(podAffinityTermsRequired)) {
     affinity.podAffinity = {
+      ...affinity.podAffinity,
       requiredDuringSchedulingIgnoredDuringExecution: podAffinityTermsRequired,
     };
   }
 
   if (!isEmpty(podAffinityTermsPreferred)) {
     affinity.podAffinity = {
+      ...affinity.podAffinity,
       preferredDuringSchedulingIgnoredDuringExecution: podAffinityTermsPreferred,
     };
   }
 
   if (!isEmpty(antiPodAffinityTermsRequired)) {
     affinity.podAntiAffinity = {
+      ...affinity.podAntiAffinity,
       requiredDuringSchedulingIgnoredDuringExecution: antiPodAffinityTermsRequired,
     };
   }
 
   if (!isEmpty(antiPodAffinityTermsPreferred)) {
     affinity.podAntiAffinity = {
+      ...affinity.podAntiAffinity,
       preferredDuringSchedulingIgnoredDuringExecution: antiPodAffinityTermsPreferred,
     };
   }
