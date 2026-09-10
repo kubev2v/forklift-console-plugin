@@ -1,8 +1,8 @@
-import { type FC, useRef } from 'react';
+import { type FC, useEffect } from 'react';
 
 import type { RowProps } from '@components/common/TableView/types';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { StandardPageWithSelection } from '../StandardPageWithSelection';
@@ -25,9 +25,9 @@ describe('StandardPageWithSelection - row identity', () => {
     const mountCounts = new Map<string, number>();
 
     const TrackingCell: FC<RowProps<{ id: string; name: string }>> = ({ resourceData }) => {
-      const mountCountRef = useRef(0);
-      mountCountRef.current += 1;
-      mountCounts.set(resourceData.id, mountCountRef.current);
+      useEffect(() => {
+        mountCounts.set(resourceData.id, (mountCounts.get(resourceData.id) ?? 0) + 1);
+      }, [resourceData.id]);
 
       return <td>{resourceData.name}</td>;
     };
@@ -44,16 +44,17 @@ describe('StandardPageWithSelection - row identity', () => {
       />,
     );
 
-    expect(mountCounts.get('1')).toBe(1);
-    expect(mountCounts.get('2')).toBe(1);
-    expect(mountCounts.get('3')).toBe(1);
+    await waitFor(() => {
+      expect(mountCounts.get('1')).toBe(1);
+      expect(mountCounts.get('2')).toBe(1);
+      expect(mountCounts.get('3')).toBe(1);
+    });
 
+    const initialMountCounts = new Map(mountCounts);
     const checkboxes = screen.getAllByRole('checkbox');
     await user.click(checkboxes[1]);
 
-    expect(mountCounts.get('1')).toBe(1);
-    expect(mountCounts.get('2')).toBe(1);
-    expect(mountCounts.get('3')).toBe(1);
+    expect(mountCounts).toEqual(initialMountCounts);
     expect(checkboxes[1]).toBeChecked();
   });
 });
