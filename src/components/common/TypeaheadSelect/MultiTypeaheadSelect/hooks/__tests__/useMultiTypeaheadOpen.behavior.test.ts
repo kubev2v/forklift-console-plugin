@@ -12,10 +12,9 @@ describe('useMultiTypeaheadOpen - behavior', () => {
 
   it('toggles open state and focuses input', () => {
     const { result } = renderHook(() => useMultiTypeaheadOpen({}));
-    const focus = jest.fn();
-    (result.current.inputRef as { current: HTMLInputElement | null }).current = {
-      focus,
-    } as unknown as HTMLInputElement;
+    const input = document.createElement('input');
+    const focus = jest.spyOn(input, 'focus');
+    (result.current.inputRef as { current: HTMLInputElement | null }).current = input;
 
     act(() => {
       result.current.onToggleClick();

@@ -26,7 +26,11 @@ describe('userSettings - behavior', () => {
   });
 
   afterAll(() => {
-    process.env.PLUGIN_NAME = originalPlugin;
+    if (originalPlugin === undefined) {
+      delete process.env.PLUGIN_NAME;
+    } else {
+      process.env.PLUGIN_NAME = originalPlugin;
+    }
   });
 
   it('returns defaults when storage is empty', () => {

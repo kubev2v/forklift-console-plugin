@@ -39,7 +39,9 @@ describe('useMultiTypeaheadInteractions - selection', () => {
     const onChange = jest.fn();
     const resetFilter = jest.fn();
     const setIsOpen = jest.fn();
-    const inputRef = { current: { focus: jest.fn() } as unknown as HTMLInputElement };
+    const input = document.createElement('input');
+    jest.spyOn(input, 'focus');
+    const inputRef = { current: input };
     const initialProps: HookProps = {
       displayOptions: options,
       inputRef,

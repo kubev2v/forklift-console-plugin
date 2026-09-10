@@ -6,6 +6,7 @@ import { getDetailsSectionByType, isApplianceManagementEnabled } from '../utils'
 
 jest.mock('../../Ec2DetailsSection', (): unknown => ({ __esModule: true, default: 'Ec2' }));
 jest.mock('../../HyperVDetailsSection', (): unknown => ({ __esModule: true, default: 'HyperV' }));
+jest.mock('../../NutanixDetailsSection', (): unknown => ({ __esModule: true, default: 'Nutanix' }));
 jest.mock('../../OpenshiftDetailsSection', (): unknown => ({
   __esModule: true,
   default: 'Openshift',
@@ -27,6 +28,7 @@ describe('DetailsSection utils - byType', () => {
     [PROVIDER_TYPES.vsphere, 'VSphere'],
     [PROVIDER_TYPES.ova, 'OVA'],
     [PROVIDER_TYPES.hyperv, 'HyperV'],
+    [PROVIDER_TYPES.nutanix, 'Nutanix'],
   ])('returns section component for %s', (type, section) => {
     expect(getDetailsSectionByType(type)).toBe(section);
   });
