@@ -58,10 +58,11 @@ export const getLUKSSecret = async ({
   secretNamespace,
 }: LUKSSecretParams): Promise<IoK8sApiCoreV1Secret | undefined> => {
   if (secretName && !newData) {
-    return k8sDelete({
+    await k8sDelete({
       model: SecretModel,
       resource: { metadata: { name: secretName, namespace: secretNamespace } },
     });
+    return undefined;
   }
 
   if (secretName && newData) {

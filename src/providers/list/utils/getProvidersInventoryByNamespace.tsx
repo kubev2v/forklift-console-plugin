@@ -1,5 +1,6 @@
 import type {
   HypervProvider,
+  NutanixProvider,
   OpenshiftProvider,
   OpenstackProvider,
   OvaProvider,
@@ -11,6 +12,8 @@ import type {
 } from '@forklift-ui/types';
 import { consoleFetchJSON } from '@openshift-console/dynamic-plugin-sdk';
 import { getInventoryApiUrl } from '@utils/api/getApiUrl';
+import { getType, getUID } from '@utils/crds/common/selectors';
+import { buildProviderInventoryPath } from '@utils/inventory/buildProviderInventoryPath';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { k8sGetProvidersByNamespace } from '../utils/k8sGetProvidersByNamespace';
@@ -43,6 +46,9 @@ const addProviderToInventory = (
       extended.ec2 = [...(extended.ec2 ?? []), provider];
       break;
     }
+    case PROVIDER_TYPES.nutanix:
+      newInventory.nutanix = [...(newInventory.nutanix ?? []), provider as NutanixProvider];
+      break;
     default:
       break;
   }
@@ -57,15 +63,14 @@ export const getProvidersInventoryByNamespace = async (
     (provider: V1beta1Provider) => provider?.status?.phase === 'Ready',
   );
 
-  const inventoryProviderURL = (provider: V1beta1Provider): string =>
-    `providers/${provider?.spec?.type}/${provider?.metadata?.uid}`;
-
   const results = await Promise.allSettled(
     readyProviders.map(
       async (provider) =>
-        consoleFetchJSON(getInventoryApiUrl(inventoryProviderURL(provider))) as Promise<
-          (ProviderInventory & { type: string }) | null
-        >,
+        consoleFetchJSON(
+          getInventoryApiUrl(
+            buildProviderInventoryPath(getType(provider) ?? '', getUID(provider) ?? ''),
+          ),
+        ) as Promise<(ProviderInventory & { type: string }) | null>,
     ),
   );
 

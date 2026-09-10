@@ -53,6 +53,20 @@ describe('getProvidersInventoryByNamespace', () => {
     expect(extended.ec2[1].uid).toBe('uid-2');
   });
 
+  it('requests detail=1 on each per-provider inventory GET', async () => {
+    mockK8sGetProvidersByNamespace.mockResolvedValue([
+      makeProvider('hyperv-1', 'hyperv', 'uid-hv'),
+    ]);
+    mockConsoleFetchJSON.mockResolvedValueOnce(makeInventoryResponse('hyperv', 'uid-hv'));
+
+    await getProvidersInventoryByNamespace('test-ns');
+
+    expect(mockConsoleFetchJSON).toHaveBeenCalledTimes(1);
+    const inventoryUrl = String(mockConsoleFetchJSON.mock.calls[0][0]);
+    expect(inventoryUrl).toContain('providers/hyperv/uid-hv?detail=1');
+    expect(inventoryUrl.split('?')).toHaveLength(2);
+  });
+
   it('returns partial results when one provider fetch fails', async () => {
     const providers = [
       makeProvider('ec2-1', 'ec2', 'uid-1'),

@@ -63,5 +63,8 @@ export const storageVendorProductLabels: Record<StorageVendorProduct, ReturnType
 export const offloadPlugins = Object.values(OffloadPlugin);
 export const storageVendorProducts = Object.values(StorageVendorProduct);
 
-/** CRD-allowed storageVendorProduct values for csiVolumeImport (MTV-5483). */
-export const CSI_VOLUME_IMPORT_VENDOR_PRODUCTS = [StorageVendorProduct.Primera3Par] as const;
+/** CRD-allowed storageVendorProduct values for csiVolumeImport (MTV-5483, MTV-5955). */
+export const CSI_VOLUME_IMPORT_VENDOR_PRODUCTS = [
+  StorageVendorProduct.Primera3Par,
+  StorageVendorProduct.Ontap,
+] as const;

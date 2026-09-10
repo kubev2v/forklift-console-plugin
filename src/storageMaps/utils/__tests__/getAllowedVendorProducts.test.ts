@@ -10,6 +10,7 @@ describe('getAllowedVendorProducts', () => {
   it('returns CSI allowlist for CSI Volume Import', () => {
     expect(getAllowedVendorProducts(OffloadPlugin.CsiVolumeImport)).toEqual([
       StorageVendorProduct.Primera3Par,
+      StorageVendorProduct.Ontap,
     ]);
   });
 
@@ -23,7 +24,7 @@ describe('getAllowedVendorProducts', () => {
 });
 
 describe('isVendorProductAllowedForPlugin', () => {
-  it('allows primera3par for CSI and rejects ontap', () => {
+  it('allows primera3par and ontap for CSI', () => {
     expect(
       isVendorProductAllowedForPlugin(
         OffloadPlugin.CsiVolumeImport,
@@ -32,7 +33,7 @@ describe('isVendorProductAllowedForPlugin', () => {
     ).toBe(true);
     expect(
       isVendorProductAllowedForPlugin(OffloadPlugin.CsiVolumeImport, StorageVendorProduct.Ontap),
-    ).toBe(false);
+    ).toBe(true);
   });
 
   it('allows ontap for XCOPY', () => {

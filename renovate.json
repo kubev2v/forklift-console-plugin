@@ -5,6 +5,15 @@
   "vulnerabilityAlerts": {
     "enabled": true
   },
+  "postUpdateOptions": ["npmInstallTwice"],
+  "minimumReleaseAge": "5 days",
+  "constraints": {
+    "npm": "10.9.2"
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "extends": ["schedule:weekly"]
+  },
   "packageRules": [
     {
       "description": "Disable updates on unsupported release branches",
@@ -12,12 +21,118 @@
       "matchBaseBranches": ["release-2.7", "release-2.8", "release-2.9"]
     },
     {
+      "constraints": {
+        "node": "<21",
+        "npm": "10.9.2"
+      },
+      "description": "Release branches run GHA on Node 20 — constrain MintMaker lock regeneration",
+      "matchBaseBranches": ["release-2.10", "release-2.11", "release-2.12"]
+    },
+    {
+      "description": "No npm major bumps on z-stream release branches",
+      "enabled": false,
+      "matchBaseBranches": ["release-2.10", "release-2.11", "release-2.12"],
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["major"]
+    },
+    {
+      "description": "Console SDK — upgrade only with deliberate Console/OCP alignment",
+      "enabled": false,
+      "matchPackageNames": [
+        "@openshift-console/**",
+        "@openshift/dynamic-plugin-sdk",
+        "@openshift/dynamic-plugin-sdk-internal"
+      ]
+    },
+    {
+      "description": "Shared runtime provided by Console via module federation",
+      "enabled": false,
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "react-router",
+        "react-router-dom",
+        "react-router-dom-v5-compat",
+        "react-redux",
+        "react-i18next",
+        "react-linkify",
+        "redux",
+        "redux-thunk",
+        "i18next"
+      ]
+    },
+    {
+      "description": "PatternFly — version locked to Console-supported PF stream",
+      "enabled": false,
+      "matchPackageNames": ["@patternfly/**"]
+    },
+    {
+      "description": "Webpack toolchain — constrained by dynamic-plugin-sdk-webpack peers",
+      "enabled": false,
+      "matchPackageNames": [
+        "webpack",
+        "webpack-cli",
+        "webpack-dev-server",
+        "webpack-bundle-analyzer",
+        "@openshift-console/dynamic-plugin-sdk-webpack",
+        "copy-webpack-plugin",
+        "fork-ts-checker-webpack-plugin",
+        "tsconfig-paths-webpack-plugin",
+        "sass-loader",
+        "css-loader",
+        "style-loader",
+        "ts-loader"
+      ]
+    },
+    {
+      "description": "React-aligned types and test libs",
+      "enabled": false,
+      "matchPackageNames": [
+        "@types/react",
+        "@types/react-dom",
+        "@testing-library/react",
+        "@testing-library/react-hooks"
+      ]
+    },
+    {
+      "description": "Editor/runtime pins tied to Console SDK overrides",
+      "enabled": false,
+      "matchPackageNames": ["monaco-editor"]
+    },
+    {
+      "description": "Runtime state — major bumps need deliberate review (appeared in MintMaker major PRs)",
+      "enabled": false,
+      "matchPackageNames": ["immer"]
+    },
+    {
+      "description": "Victory chart stack — used with PF charts; keep aligned with Console/PF chart versions",
+      "enabled": false,
+      "matchPackageNames": ["victory-**"]
+    },
+    {
+      "description": "packageManager / npm version — must match CI Node/Corepack setup per branch",
+      "enabled": false,
+      "matchDepTypes": ["packageManager"],
+      "matchManagers": ["npm"]
+    },
+    {
+      "description": "@forklift-ui/types — use types-update skill / deliberate bump, not MintMaker",
+      "enabled": false,
+      "matchPackageNames": ["@forklift-ui/types"]
+    },
+    {
+      "description": "Node-22-only toolchain — release CI is Node 20",
+      "enabled": false,
+      "matchBaseBranches": ["release-2.10", "release-2.11", "release-2.12"],
+      "matchPackageNames": ["lint-staged", "@cspell/**", "eslint-interactive"]
+    },
+    {
       "description": "One grouped non-major PR per supported branch",
       "groupName": "all non-major dependencies",
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"]
     },
     {
-      "description": "One grouped major PR per supported branch",
+      "description": "One grouped major PR per supported branch (main only — release majors disabled above)",
       "groupName": "all major dependencies",
       "matchUpdateTypes": ["major"]
     }

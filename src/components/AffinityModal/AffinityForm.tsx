@@ -29,6 +29,13 @@ type AffinityFormProps = {
   setSubmitDisabled: Dispatch<SetStateAction<boolean>>;
 };
 
+const isPreferredWeightInvalid = (affinity: AffinityRowData): boolean =>
+  affinity.condition === AffinityCondition.Preferred &&
+  (!affinity.weight || affinity.weight < 1 || affinity.weight > 100);
+
+const isTopologyKeyInvalid = (affinity: AffinityRowData): boolean =>
+  affinity.type !== AffinityType.Node && (!affinity.topologyKey || isEmpty(affinity.topologyKey));
+
 const AffinityForm: FC<AffinityFormProps> = ({
   expressions,
   fields,
@@ -41,12 +48,17 @@ const AffinityForm: FC<AffinityFormProps> = ({
   const isNodeAffinity = focusedAffinity?.type === AffinityType.Node;
 
   useEffect(() => {
-    setSubmitDisabled(
+    const expressionsOrFieldsInvalid =
       (isEmpty(expressions?.entities) && isEmpty(fields?.entities)) ||
-        isTermsInvalid(expressions?.entities) ||
-        isTermsInvalid(fields?.entities),
+      isTermsInvalid(expressions?.entities) ||
+      isTermsInvalid(fields?.entities);
+
+    setSubmitDisabled(
+      expressionsOrFieldsInvalid ||
+        isPreferredWeightInvalid(focusedAffinity) ||
+        isTopologyKeyInvalid(focusedAffinity),
     );
-  }, [expressions, fields, setSubmitDisabled]);
+  }, [expressions, fields, focusedAffinity, setSubmitDisabled]);
 
   return (
     <Form>
@@ -67,14 +79,12 @@ const AffinityForm: FC<AffinityFormProps> = ({
         <PreferredAffinityWeightInput
           focusedAffinity={focusedAffinity}
           setFocusedAffinity={setFocusedAffinity}
-          setSubmitDisabled={setSubmitDisabled}
         />
       )}
       {!isNodeAffinity && (
         <TopologyKeyInput
           focusedAffinity={focusedAffinity}
           setFocusedAffinity={setFocusedAffinity}
-          setSubmitDisabled={setSubmitDisabled}
         />
       )}
       <Divider />

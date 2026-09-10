@@ -7,6 +7,7 @@ export enum MigrationType {
 export enum ProviderType {
   EC2 = 'ec2',
   HYPERV = 'hyperv',
+  NUTANIX = 'nutanix',
   OPENSTACK = 'openstack',
   OVA = 'ova',
   OVIRT = 'ovirt',

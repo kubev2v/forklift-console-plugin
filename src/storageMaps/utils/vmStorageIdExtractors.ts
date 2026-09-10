@@ -9,6 +9,7 @@ import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 import { isEmpty } from '@utils/helpers';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { OVirtVMWithDisks } from '@utils/storage/types';
+import { getNutanixStorageContainerIds, isNutanixVm } from '@utils/types/nutanixInventory';
 
 const getOpenshiftVolumeNames = (vm: ProviderVirtualMachine): string[] => {
   const openshiftVM = vm as OpenshiftVM;
@@ -89,6 +90,10 @@ const getOvirtStorageIds = (vm: OVirtVMWithDisks): string[] => {
 };
 
 const getStorageIdsForVm = (vm: ProviderVirtualMachine): string[] => {
+  if (isNutanixVm(vm)) {
+    return getNutanixStorageContainerIds(vm);
+  }
+
   switch (vm.providerType) {
     case PROVIDER_TYPES.vsphere:
       return getVSphereStorageIds(vm);

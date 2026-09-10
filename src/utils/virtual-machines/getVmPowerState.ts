@@ -1,11 +1,13 @@
 import type {
   HypervVM,
+  NutanixVM,
   OpenshiftVM,
   OpenstackVM,
   OVirtVM,
   ProviderVirtualMachine,
   VSphereVM,
 } from '@forklift-ui/types';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { Ec2VM } from '@utils/types/ec2VM';
 
 export type PowerState = 'on' | 'off' | 'unknown';
@@ -58,6 +60,13 @@ const getHypervVmPowerState = (vm: HypervVM): PowerState => {
   return 'unknown';
 };
 
+const getNutanixVmPowerState = (vm: NutanixVM): PowerState => {
+  const powerState = vm.powerState?.toLowerCase();
+  if (powerState === 'on') return 'on';
+  if (powerState === 'off') return 'off';
+  return 'unknown';
+};
+
 const getEc2VmPowerState = (vm: Ec2VM): PowerState => {
   const state = vm?.object?.State?.Name?.toLowerCase();
 
@@ -78,6 +87,8 @@ export const getVmPowerState = (vm: ProviderVirtualMachine | Ec2VM | undefined):
   }
 
   switch (vm?.providerType) {
+    case PROVIDER_TYPES.nutanix:
+      return getNutanixVmPowerState(vm);
     case 'ovirt':
       return getOVirtVmPowerState(vm);
     case 'vsphere':

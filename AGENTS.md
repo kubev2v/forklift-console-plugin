@@ -715,6 +715,42 @@ See the [dev-helper SETUP.md](https://github.com/avivtur/dev-helper/blob/main/SE
 
 ---
 
+## Dependency Update Policy (MintMaker / Renovate)
+
+Konflux MintMaker (Renovate) proposes dependency PRs. This plugin runs inside OpenShift Console via module federation, so many packages must stay aligned with the Console host — MintMaker cannot safely bump them.
+
+The blocklist and branch rules live in [`renovate.json`](renovate.json) (`packageRules` with `"enabled": false`). Place disable rules **before** the grouped non-major / major rules.
+
+### Stability settings (lockfile / CI)
+
+- `postUpdateOptions: ["npmInstallTwice"]` — npm sometimes needs two passes to produce a lockfile that passes `npm ci` (avoids `renovate/artifacts` failures).
+- `minimumReleaseAge: "5 days"` — cooldown before proposing freshly published versions.
+- `constraints.npm` — MintMaker regenerates locks with the same npm as `packageManager`.
+- Release branches (`release-2.10`–`2.12`) also constrain Node to `<21` because GHA still runs Node 20 there (`main` uses Node 22).
+- Lock file maintenance is weekly (`lockFileMaintenance`).
+
+### Tiers
+
+| Tier | MintMaker | Examples |
+|------|-----------|----------|
+| **Block** | Disabled in `renovate.json` | Console SDK (`@openshift-console/**`), React / router / i18n shared runtime, PatternFly, webpack toolchain, `monaco-editor`, `immer`, `victory-*`, `packageManager`, `@forklift-ui/types` |
+| **Block (release only)** | Disabled on `release-2.10`–`2.12` | npm **majors**; Node-22-only toolchain (`lint-staged`, `@cspell/**`, `eslint-interactive`) |
+| **Review** | Allowed in grouped PRs | eslint/prettier/jest (patch/minor), Playwright in `testing/`, Tekton digests, most utilities |
+| **Cautious** | Allowed but verify carefully | `luxon`, `@testing-library/jest-dom` (Node engine), `typescript-eslint`, `knip`, `i18next-parser` |
+
+`@forklift-ui/types` is blocked from MintMaker — bump it via the types-update skill / a deliberate PR.
+
+### Rules of thumb
+
+- **Block** packages: upgrade only in a deliberate “align with Console / OCP” PR, not via MintMaker.
+- Release branches pin different SDK stacks (e.g. `release-2.11` on SDK 1.8 + React 17 vs `main` on SDK 4.x). Do not assume a bump that works on `main` is safe on a z-stream.
+- After changing `renovate.json` on `main`, backport the same file to supported release branches so MintMaker respects the blocklist everywhere.
+- After a `renovate.json` change merges, **close open MintMaker PRs** so they recreate with the new rules (~4h cycle). Grouped PRs are immortal — closing without a config fix just recreates the same red PR.
+- Before investing in test fixes on a MintMaker PR, confirm **`renovate/artifacts` is green** (incomplete lockfiles fail every `npm ci` job).
+- Green GHA does not prove Konflux pipeline success for Tekton digest PRs.
+
+---
+
 ## Additional Resources
 
 - [Forklift Repository](https://github.com/kubev2v/forklift/)
@@ -722,4 +758,5 @@ See the [dev-helper SETUP.md](https://github.com/avivtur/dev-helper/blob/main/SE
 - [PatternFly Documentation](https://www.patternfly.org/)
 - [OpenShift Dynamic Plugin SDK](https://github.com/openshift/dynamic-plugin-sdk)
 - [Dev-Helper Skill](https://github.com/avivtur/dev-helper)
+- [Konflux MintMaker dependency management](https://konflux-ci.dev/docs/mintmaker/user/)
 

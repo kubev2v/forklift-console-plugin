@@ -1,5 +1,6 @@
 import type {
   HypervProvider,
+  NutanixProvider,
   OpenshiftProvider,
   OpenstackProvider,
   OvaProvider,
@@ -17,6 +18,8 @@ export const getProviderStorageCount = (provider: ProviderData): number | undefi
       return (inventory as OvaProvider).storageCount;
     case PROVIDER_TYPES.hyperv:
       return (inventory as HypervProvider).storageCount;
+    case PROVIDER_TYPES.nutanix:
+      return (inventory as NutanixProvider).storageContainerCount ?? 0;
     case PROVIDER_TYPES.openshift:
       return (inventory as OpenshiftProvider).storageClassCount;
     case PROVIDER_TYPES.vsphere:

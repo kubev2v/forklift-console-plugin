@@ -7,7 +7,7 @@ import { DropdownItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
 import BulkArchivePlansModal, { type BulkArchivePlansModalProps } from './BulkArchivePlansModal';
-import { getPlansEligibleForArchive, getSelectedPlans } from './utils';
+import { getPlansEligibleForArchive, getSelectedPlans, isPlanRunningOrPending } from './utils';
 
 type BulkArchivePlansDropdownItemProps = {
   canPatch: boolean;
@@ -25,6 +25,10 @@ const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
 
   const selectedPlans = useMemo(() => getSelectedPlans(plans, selectedIds), [plans, selectedIds]);
   const eligiblePlans = useMemo(() => getPlansEligibleForArchive(selectedPlans), [selectedPlans]);
+  const hasRunningOrPending = useMemo(
+    () => selectedPlans.some((plan) => isPlanRunningOrPending(plan)),
+    [selectedPlans],
+  );
   const skippedArchivedCount = selectedPlans.length - eligiblePlans.length;
 
   const disabledReason = useMemo(() => {
@@ -34,11 +38,14 @@ const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
     if (isEmpty(selectedIds)) {
       return t('Select at least one migration plan.');
     }
+    if (hasRunningOrPending) {
+      return t('Running or pending plans cannot be selected for bulk archive or delete.');
+    }
     if (isEmpty(eligiblePlans)) {
       return t('All selected plans are already archived.');
     }
     return undefined;
-  }, [canPatch, eligiblePlans, selectedIds, t]);
+  }, [canPatch, eligiblePlans, hasRunningOrPending, selectedIds, t]);
 
   const onClick = useCallback(() => {
     if (disabledReason) {
