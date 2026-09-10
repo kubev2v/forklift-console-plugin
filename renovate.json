@@ -23,7 +23,7 @@
     {
       "constraints": {
         "node": "<21",
-        "npm": "<11"
+        "npm": "10.9.2"
       },
       "description": "Release branches run GHA on Node 20 — constrain MintMaker lock regeneration",
       "matchBaseBranches": ["release-2.10", "release-2.11", "release-2.12"]
@@ -125,16 +125,6 @@
       "enabled": false,
       "matchBaseBranches": ["release-2.10", "release-2.11", "release-2.12"],
       "matchPackageNames": ["lint-staged", "@cspell/**", "eslint-interactive"]
-    },
-    {
-      "description": "Separate npm security patches from routine non-major grouping",
-      "groupName": "npm security updates",
-      "matchCurrentVersion": "!/^0/",
-      "matchManagers": ["npm"],
-      "matchUpdateTypes": ["patch"],
-      "vulnerabilityAlerts": {
-        "enabled": true
-      }
     },
     {
       "description": "One grouped non-major PR per supported branch",
