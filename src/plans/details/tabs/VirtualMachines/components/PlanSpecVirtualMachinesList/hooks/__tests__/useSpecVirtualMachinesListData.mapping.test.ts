@@ -1,5 +1,3 @@
-import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
-
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { renderHook } from '@testing-library/react';
 
@@ -19,7 +17,7 @@ jest.mock('src/utils/hooks/useInventoryVms', (): unknown => ({
 
 const sourceProvider = { spec: { type: 'vsphere' } };
 
-const inventory: VmData[] = [
+const inventory = [
   { name: 'alpha', namespace: 'source', vm: { id: 'vm-1', name: 'alpha' } },
   { name: 'bravo', namespace: 'source', vm: { id: 'vm-2', name: 'bravo' } },
 ];
