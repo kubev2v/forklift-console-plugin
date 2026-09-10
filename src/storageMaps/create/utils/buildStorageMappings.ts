@@ -128,7 +128,7 @@ const getSourceStorage = (
   const isGlanceStorage = source.name === STORAGE_NAMES.GLANCE;
 
   if (isOpenShiftProvider) {
-    return { name: `/${source.name}` };
+    return { name: `${source.name}` };
   }
 
   if (isGlanceStorage) {
