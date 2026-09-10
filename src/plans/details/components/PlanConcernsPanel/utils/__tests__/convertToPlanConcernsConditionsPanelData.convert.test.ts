@@ -7,13 +7,15 @@ import { CONCERN_SOURCE } from '../types';
 
 const buildCriticalCondition = (
   overrides: Partial<V1beta1PlanStatusConditions> = {},
-): V1beta1PlanStatusConditions => ({
-  category: 'Critical',
-  items: ['a', 'b'],
-  message: 'm',
-  type: 'Ready',
-  ...overrides,
-});
+): V1beta1PlanStatusConditions =>
+  ({
+    category: 'Critical',
+    items: ['a', 'b'],
+    lastTransitionTime: '2024-01-01T00:00:00Z',
+    message: 'm',
+    type: 'Ready',
+    ...overrides,
+  }) as unknown as V1beta1PlanStatusConditions;
 
 describe('convertToPlanConcernsConditionsPanelData - convert', () => {
   it('maps conditions and merged concerns with source preference', () => {

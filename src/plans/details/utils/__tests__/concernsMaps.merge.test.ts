@@ -49,6 +49,18 @@ const buildConversion = (
   },
 });
 
+const buildConcern = (
+  category: string,
+  label: string,
+  overrides: Partial<Concern> = {},
+): Concern => ({
+  assessment: 'test',
+  category,
+  id: label,
+  label,
+  ...overrides,
+});
+
 const buildVmPageData = (concerns: Concern[]): SpecVirtualMachinePageData =>
   ({
     inventoryVmData: { vm: { concerns } },
@@ -62,10 +74,10 @@ describe('plan details utils - concerns maps', () => {
   it('counts critical inventory concerns by label', () => {
     const map = getCriticalConcernsVmsMap([
       buildVmPageData([
-        { category: ConcernCategory.Critical, label: 'Shared disk' },
-        { category: ConcernCategory.Warning, label: 'warn' },
+        buildConcern(ConcernCategory.Critical, 'Shared disk'),
+        buildConcern(ConcernCategory.Warning, 'warn'),
       ]),
-      buildVmPageData([{ category: ConcernCategory.Critical, label: 'Shared disk' }]),
+      buildVmPageData([buildConcern(ConcernCategory.Critical, 'Shared disk')]),
     ]);
 
     expect(map.get('Shared disk')).toBe(2);
