@@ -5,11 +5,35 @@
   "vulnerabilityAlerts": {
     "enabled": true
   },
+  "postUpdateOptions": ["npmInstallTwice"],
+  "minimumReleaseAge": "5 days",
+  "constraints": {
+    "npm": "10.9.2"
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "extends": ["schedule:weekly"]
+  },
   "packageRules": [
     {
       "description": "Disable updates on unsupported release branches",
       "enabled": false,
       "matchBaseBranches": ["release-2.7", "release-2.8", "release-2.9"]
+    },
+    {
+      "constraints": {
+        "node": "<21",
+        "npm": "<11"
+      },
+      "description": "Release branches run GHA on Node 20 — constrain MintMaker lock regeneration",
+      "matchBaseBranches": ["release-2.10", "release-2.11", "release-2.12"]
+    },
+    {
+      "description": "No npm major bumps on z-stream release branches",
+      "enabled": false,
+      "matchBaseBranches": ["release-2.10", "release-2.11", "release-2.12"],
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["major"]
     },
     {
       "description": "Console SDK — upgrade only with deliberate Console/OCP alignment",
@@ -92,12 +116,33 @@
       "matchManagers": ["npm"]
     },
     {
+      "description": "@forklift-ui/types — use types-update skill / deliberate bump, not MintMaker",
+      "enabled": false,
+      "matchPackageNames": ["@forklift-ui/types"]
+    },
+    {
+      "description": "Node-22-only toolchain — release CI is Node 20",
+      "enabled": false,
+      "matchBaseBranches": ["release-2.10", "release-2.11", "release-2.12"],
+      "matchPackageNames": ["lint-staged", "@cspell/**", "eslint-interactive"]
+    },
+    {
+      "description": "Separate npm security patches from routine non-major grouping",
+      "groupName": "npm security updates",
+      "matchCurrentVersion": "!/^0/",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["patch"],
+      "vulnerabilityAlerts": {
+        "enabled": true
+      }
+    },
+    {
       "description": "One grouped non-major PR per supported branch",
       "groupName": "all non-major dependencies",
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"]
     },
     {
-      "description": "One grouped major PR per supported branch",
+      "description": "One grouped major PR per supported branch (main only — release majors disabled above)",
       "groupName": "all major dependencies",
       "matchUpdateTypes": ["major"]
     }
