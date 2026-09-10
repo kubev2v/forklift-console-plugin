@@ -649,14 +649,6 @@ export const createEslintConfig = () =>
     // MTV-6509 (S19): Playwright testing/ — permanent offs only (enabled rules inherit base)
     {
       files: ['testing/**/*.{js,ts,jsx,tsx}'],
-      languageOptions: {
-        parserOptions: {
-          // Root tsconfig.eslint.json uses Jest types; Playwright files need testing/tsconfig.json
-          // or no-unsafe-* treats test/page as unresolved (lint-staged on these paths).
-          project: 'testing/tsconfig.json',
-          tsconfigRootDir: import.meta.dirname,
-        },
-      },
       rules: {
         // Sequential UI / cleanup loops are intentional
         'no-await-in-loop': 'off',
