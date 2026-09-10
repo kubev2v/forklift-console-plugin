@@ -5,24 +5,15 @@ import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 
 import { withTr } from '../common/TableView/withTr';
 
+import PageSelectionProvider from './context/PageSelectionProvider';
 import { usePageSelection } from './hooks/usePageSelection';
 import { createHeaderWithSelection } from './utils/createHeaderWithSelection';
 import { createRowWithSelection } from './utils/createRowWithSelection';
-import StandardPage from './StandardPage';
+import { createToolbarActionWithSelection } from './utils/createToolbarActionWithSelection';
+import { renderStandardPageWithSelectionContent } from './utils/renderStandardPageWithSelectionContent';
+import type StandardPage from './StandardPage';
 
 const defaultCanSelect = (_item: unknown): boolean => true;
-
-const wrapActionWithSelection = <T,>(
-  Action: FC<GlobalActionToolbarProps<T>>,
-  selectedIds: string[],
-  actionKey: string,
-): FC<GlobalActionToolbarProps<T>> => {
-  const ActionWithSelection = (actionProps: ComponentProps<typeof Action>): ReactElement => (
-    <Action {...actionProps} selectedIds={selectedIds} />
-  );
-  ActionWithSelection.displayName = `${actionKey}WithSelection`;
-  return ActionWithSelection;
-};
 
 /**
  * Enforces prop combinations at compile-time via discriminated unions:
@@ -84,6 +75,17 @@ export const StandardPageWithSelection = <T,>(
   const canSelect = canSelectProp ?? defaultCanSelect;
 
   const pageRef = useRef(rest.page ?? 1);
+  const canSelectRef = useRef(canSelect);
+  const cellRef = useRef(cell);
+  const getSelectDisabledReasonRef = useRef(getSelectDisabledReason);
+  const toIdRef = useRef(toId);
+  const toggleExpandForRef = useRef<(items: T[]) => void>(() => undefined);
+  const toggleSelectForRef = useRef<(items: T[]) => void>(() => undefined);
+
+  canSelectRef.current = canSelect;
+  cellRef.current = cell;
+  getSelectDisabledReasonRef.current = getSelectDisabledReason;
+  toIdRef.current = toId;
 
   const {
     internalExpandedIds,
@@ -100,29 +102,35 @@ export const StandardPageWithSelection = <T,>(
     toId,
   });
 
-  const row = useMemo(() => {
-    const RowWithSelection = createRowWithSelection({
-      canSelect,
-      cell,
+  toggleExpandForRef.current = toggleExpandFor;
+  toggleSelectForRef.current = toggleSelectFor;
+
+  const selectionConfigValue = useMemo(
+    () => ({
+      canSelectRef,
+      cellRef,
+      getSelectDisabledReasonRef,
+      hasExpansion: onExpand !== undefined || expandedIds !== undefined,
+      hasSelection: onSelect !== undefined,
+      toggleExpandForRef,
+      toggleSelectForRef,
+      toIdRef,
+    }),
+    [expandedIds, onExpand, onSelect],
+  );
+
+  const selectionStateValue = useMemo(
+    () => ({
       expandedIds: internalExpandedIds,
-      getSelectDisabledReason,
       selectedIds: internalSelectedIds,
-      toggleExpandFor,
-      toggleSelectFor,
-      toId,
-    });
+    }),
+    [internalExpandedIds, internalSelectedIds],
+  );
+
+  const row = useMemo(() => {
+    const RowWithSelection = createRowWithSelection<T>();
     return withTr(RowWithSelection, expanded);
-  }, [
-    canSelect,
-    cell,
-    expanded,
-    getSelectDisabledReason,
-    internalExpandedIds,
-    internalSelectedIds,
-    toggleExpandFor,
-    toggleSelectFor,
-    toId,
-  ]);
+  }, [expanded]);
 
   const finalHeader = useMemo(() => {
     return createHeaderWithSelection({
@@ -141,36 +149,27 @@ export const StandardPageWithSelection = <T,>(
       seen.set(base, occurrence + 1);
       const actionKey = occurrence === 0 ? base : `${base}__${occurrence}`;
 
-      return wrapActionWithSelection(Action, internalSelectedIds ?? [], actionKey);
+      return createToolbarActionWithSelection(Action, actionKey);
     });
-  }, [GlobalActionToolbarItems, internalSelectedIds]);
+  }, [GlobalActionToolbarItems]);
 
-  // When selection is disabled, render plain StandardPage (no checkboxes/selection logic)
-  if (!onSelect) {
-    const { cell: _cell, ...restWithoutCell } = props;
-    return (
-      <StandardPage
-        {...restWithoutCell}
-        expandedIds={internalExpandedIds}
-        header={finalHeader}
-        pageRef={pageRef}
-        row={row}
-      />
-    );
-  }
+  const page = renderStandardPageWithSelectionContent({
+    canSelect,
+    finalHeader,
+    internalExpandedIds,
+    internalSelectedIds,
+    onSelect,
+    onSelectCallback,
+    pageRef,
+    props,
+    row,
+    toId,
+    toolbarItems: EnhancedGlobalActionToolbarItems,
+  });
 
   return (
-    <StandardPage
-      {...rest}
-      canSelect={canSelect}
-      expandedIds={internalExpandedIds}
-      GlobalActionToolbarItems={EnhancedGlobalActionToolbarItems}
-      header={finalHeader}
-      onSelect={onSelectCallback}
-      pageRef={pageRef}
-      row={row}
-      selectedIds={internalSelectedIds}
-      toId={toId}
-    />
+    <PageSelectionProvider configValue={selectionConfigValue} stateValue={selectionStateValue}>
+      {page}
+    </PageSelectionProvider>
   );
 };
