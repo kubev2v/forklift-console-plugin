@@ -1,4 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
+import { mockI18n } from '@test-utils/mockI18n';
+
+mockI18n();
 
 import { getStatusLabel } from '../utils';
 

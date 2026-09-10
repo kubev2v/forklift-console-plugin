@@ -1,13 +1,24 @@
 import { ConcernCategoryOptions } from '@components/Concerns/utils/constants';
+import type { V1beta1PlanStatusConditions } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
 
 import { convertToPlanConcernsConditionsPanelData } from '../convertToPlanConcernsConditionsPanelData';
 import { CONCERN_SOURCE } from '../types';
 
+const buildCriticalCondition = (
+  overrides: Partial<V1beta1PlanStatusConditions> = {},
+): V1beta1PlanStatusConditions => ({
+  category: 'Critical',
+  items: ['a', 'b'],
+  message: 'm',
+  type: 'Ready',
+  ...overrides,
+});
+
 describe('convertToPlanConcernsConditionsPanelData - convert', () => {
   it('maps conditions and merged concerns with source preference', () => {
     const result = convertToPlanConcernsConditionsPanelData(
-      [{ category: 'Critical', items: ['a', 'b'], message: 'm', type: 'Ready' }] as never,
+      [buildCriticalCondition()],
       new Map([
         ['Shared disk', 3],
         ['Inspected', 1],
