@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
@@ -74,10 +74,9 @@ const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
     >
       <Stack hasGutter>
         <StackItem>
-          <ForkliftTrans>
-            Are you sure you want to delete <strong>{plans.length}</strong> selected migration
-            plans?
-          </ForkliftTrans>
+          {t('Are you sure you want to delete {{count}} selected migration plans?', {
+            count: plans.length,
+          })}
         </StackItem>
         {hasNonArchived && (
           <StackItem>
@@ -86,11 +85,9 @@ const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
               title={t('Some selected plans are not archived')}
               variant={AlertVariant.info}
             >
-              <ForkliftTrans>
-                Deleting a migration plan does not remove temporary resources, it is recommended to{' '}
-                <strong>archive</strong> the plan first before deleting it, to remove temporary
-                resources.
-              </ForkliftTrans>
+              {t(
+                'Deleting a migration plan does not remove temporary resources, it is recommended to archive the plan first before deleting it, to remove temporary resources.',
+              )}
             </Alert>
           </StackItem>
         )}

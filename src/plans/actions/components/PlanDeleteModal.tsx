@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { ItemIsOwnedAlert } from 'src/components/modals/ItemIsOwnedAlert';
 import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/planStatusResolver';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import { PlanModel } from '@forklift-ui/types';
@@ -44,16 +44,12 @@ const PlanDeleteModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan 
     >
       <Stack hasGutter>
         <StackItem>
-          <ForkliftTrans>
-            Are you sure you want to delete <strong className="co-break-word">{name}</strong> in
-            {namespace && (
-              <>
-                {' '}
-                project <strong>{namespace}</strong>
-              </>
-            )}
-            ?
-          </ForkliftTrans>
+          {namespace
+            ? t('Are you sure you want to delete {{name}} in project {{namespace}}?', {
+                name,
+                namespace,
+              })
+            : t('Are you sure you want to delete {{name}}?', { name })}
         </StackItem>
         <StackItem>
           {(status === PlanStatuses.Executing || status === PlanStatuses.Pending) && (
@@ -71,11 +67,9 @@ const PlanDeleteModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan 
               title={t('Plan is not archived')}
               variant="info"
             >
-              <ForkliftTrans>
-                Deleting a migration plan does not remove temporary resources, it is recommended to{' '}
-                <strong>archive</strong> the plan first before deleting it, to remove temporary
-                resources.
-              </ForkliftTrans>
+              {t(
+                'Deleting a migration plan does not remove temporary resources, it is recommended to archive the plan first before deleting it, to remove temporary resources.',
+              )}
             </Alert>
           )}
         </StackItem>
