@@ -20,8 +20,8 @@ jest.mock('src/utils/hooks/useInventoryVms', (): unknown => ({
 const sourceProvider = { spec: { type: 'vsphere' } };
 
 const inventory: VmData[] = [
-  { vm: { id: 'vm-1', name: 'alpha' } } as VmData,
-  { vm: { id: 'vm-2', name: 'bravo' } } as VmData,
+  { name: 'alpha', namespace: 'source', vm: { id: 'vm-1', name: 'alpha' } },
+  { name: 'bravo', namespace: 'source', vm: { id: 'vm-2', name: 'bravo' } },
 ];
 
 const plan = {

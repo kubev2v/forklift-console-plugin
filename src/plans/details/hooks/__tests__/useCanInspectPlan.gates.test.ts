@@ -46,6 +46,28 @@ describe('useCanInspectPlan - gates', () => {
     });
   });
 
+  it('disables inspection while source provider is loading', () => {
+    mockUsePlanSourceProvider.mockReturnValue({ loaded: false, sourceProvider: readyVsphere });
+
+    const { result } = renderHook(() => useCanInspectPlan(basePlan));
+
+    expect(result.current).toMatchObject({
+      canInspect: false,
+      disabledReason: 'Source provider is not ready.',
+      isVsphere: true,
+    });
+  });
+
+  it('disables inspection when source provider is missing', () => {
+    mockUsePlanSourceProvider.mockReturnValue({ loaded: true, sourceProvider: undefined });
+
+    const { result } = renderHook(() => useCanInspectPlan(basePlan));
+
+    expect(result.current.canInspect).toBe(false);
+    expect(result.current.isVsphere).toBe(false);
+    expect(result.current.disabledReason).toBeUndefined();
+  });
+
   it('disables without reason for non-vSphere providers', () => {
     mockUsePlanSourceProvider.mockReturnValue({
       loaded: true,

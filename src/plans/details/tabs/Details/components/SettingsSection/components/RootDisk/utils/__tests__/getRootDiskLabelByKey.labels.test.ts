@@ -19,6 +19,10 @@ describe('getRootDiskLabelByKey - labels', () => {
     expect(getRootDiskLabelByKey(key)).toBe(label);
   });
 
+  it('returns the raw key for disk letters beyond the supported ordinal range', () => {
+    expect(getRootDiskLabelByKey('/dev/sdk')).toBe('/dev/sdk');
+  });
+
   it('returns the raw key for unrecognized /dev/sd shapes', () => {
     expect(getRootDiskLabelByKey('/dev/sd!')).toBe('/dev/sd!');
     expect(getRootDiskLabelByKey('/dev/sdaX')).toBe('/dev/sdaX');

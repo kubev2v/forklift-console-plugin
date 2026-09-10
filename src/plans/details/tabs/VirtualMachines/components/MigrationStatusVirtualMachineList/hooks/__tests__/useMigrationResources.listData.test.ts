@@ -97,4 +97,43 @@ describe('useMigrationResources - listData', () => {
     expect(result.current.loaded).toBe(false);
     expect(result.current.migrationListData[0].pods).toBeUndefined();
   });
+
+  it('returns loaded with empty resource dicts when no migration exists', () => {
+    mockUseLatestPlanMigration.mockReturnValue([undefined, true, undefined]);
+    mockUseK8sWatchResource.mockReset();
+    mockUseK8sWatchResource.mockReturnValue([[], true, null]);
+
+    const { result } = renderHook(() => useMigrationResources(plan));
+
+    expect(result.current.loaded).toBe(true);
+    expect(result.current.error).toBeNull();
+    expect(result.current.migrationListData[0].pods).toBeUndefined();
+  });
+
+  it('surfaces migration watch errors', () => {
+    const migrationError = new Error('migration watch failed');
+    mockUseLatestPlanMigration.mockReturnValue([undefined, true, migrationError]);
+    mockUseK8sWatchResource.mockReset();
+    mockUseK8sWatchResource.mockReturnValue([[], true, null]);
+
+    const { result } = renderHook(() => useMigrationResources(plan));
+
+    expect(result.current.error).toBe(migrationError);
+    expect(result.current.loaded).toBe(true);
+  });
+
+  it('surfaces resource watch errors and omits failed resource dicts', () => {
+    const podsError = new Error('pods watch failed');
+    mockUseK8sWatchResource.mockReset();
+    mockUseK8sWatchResource
+      .mockReturnValueOnce([[], true, podsError])
+      .mockReturnValueOnce([[], true, null])
+      .mockReturnValueOnce([[], true, null])
+      .mockReturnValueOnce([[], true, null]);
+
+    const { result } = renderHook(() => useMigrationResources(plan));
+
+    expect(result.current.error).toBe(podsError);
+    expect(result.current.migrationListData[0].pods).toBeUndefined();
+  });
 });
