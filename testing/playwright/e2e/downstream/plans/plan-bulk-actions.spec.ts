@@ -1,13 +1,12 @@
 import { expect } from '@playwright/test';
 
-import { clonePlan } from '../../../fixtures/helpers/clonePlan';
 import { sharedProviderCustomPlanFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlansListPage } from '../../../page-objects/PlansListPage';
-import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 import { V5_0_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
-const BULK_ACTIONS_TEST_TIMEOUT_MS = 600_000;
+const BULK_ACTIONS_TEST_TIMEOUT_MS = 300_000;
+const PLAN_NAME_RANDOM_SUFFIX_LENGTH = 8;
 
 test.describe('Plans list - bulk actions', { tag: '@downstream' }, () => {
   // Bulk archive/delete shipped in MTV 5.0.0 (MTV-6355); not present on 2.12.
@@ -31,23 +30,17 @@ test.describe('Plans list - bulk actions', { tag: '@downstream' }, () => {
   test('should bulk archive then bulk delete selected plans', async ({
     createCustomPlan,
     page,
-    resourceManager,
   }) => {
     test.setTimeout(BULK_ACTIONS_TEST_TIMEOUT_MS);
 
-    const prefix = `e2e-bulk-${crypto.randomUUID().slice(0, 8)}`;
+    const prefix = `e2e-bulk-${crypto.randomUUID().slice(0, PLAN_NAME_RANDOM_SUFFIX_LENGTH)}`;
     const planAName = `${prefix}-a`;
     const planBName = `${prefix}-b`;
     const plansListPage = new PlansListPage(page);
 
     await test.step('Create two disposable plans that share a name prefix', async () => {
       await createCustomPlan({ planName: planAName });
-      await clonePlan(resourceManager, planAName, planBName, MTV_NAMESPACE);
-      await expect
-        .poll(
-          async () => (await resourceManager.fetchPlan(planBName, MTV_NAMESPACE))?.metadata?.name,
-        )
-        .toBe(planBName);
+      await createCustomPlan({ planName: planBName });
     });
 
     await test.step('Filter to those plans and select both rows', async () => {

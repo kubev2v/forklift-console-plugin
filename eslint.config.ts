@@ -62,10 +62,7 @@ export const createEslintConfig = () =>
             jsx: true,
           },
           ecmaVersion: 'latest',
-          // Playwright files must use testing/tsconfig.json (types: node only).
-          // tsconfig.eslint.json inherits Jest types, which makes @playwright/test
-          // resolve as an error type and trips no-unsafe-* on every call.
-          project: ['testing/tsconfig.json', 'tsconfig.eslint.json'],
+          project: 'tsconfig.eslint.json',
           sourceType: 'module',
           tsconfigRootDir: import.meta.dirname,
         },
@@ -652,6 +649,15 @@ export const createEslintConfig = () =>
     // MTV-6509 (S19): Playwright testing/ — permanent offs only (enabled rules inherit base)
     {
       files: ['testing/**/*.{js,ts,jsx,tsx}'],
+      languageOptions: {
+        parserOptions: {
+          // Playwright files type-check against testing/tsconfig.json (types: node).
+          // The root ESLint tsconfig inherits Jest types, so @playwright/test
+          // otherwise resolves as an error type and trips no-unsafe-*.
+          project: 'testing/tsconfig.json',
+          tsconfigRootDir: import.meta.dirname,
+        },
+      },
       rules: {
         // Sequential UI / cleanup loops are intentional
         'no-await-in-loop': 'off',
