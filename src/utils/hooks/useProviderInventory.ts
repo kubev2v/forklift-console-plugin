@@ -127,6 +127,7 @@ const useProviderInventory = <T>({
         }
         const fetchError = new Error('Invalid provider data');
         handleError(fetchError);
+        setLoading(false);
 
         return;
       }
