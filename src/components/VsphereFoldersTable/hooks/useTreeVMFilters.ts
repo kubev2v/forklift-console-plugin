@@ -70,6 +70,8 @@ const useTreeFilters = ({ filters, rows, showAll }: UseTreeFilters): UseTreeFilt
       !next.isHidden &&
       next.parentFolderKey === vm.parentFolderKey;
 
+    filteredGroupVMCountByFolder.clear();
+
     const out: RowNode[] = [];
     for (let i = 0; i < rows.length; i += 1) {
       const row = rows[i];
