@@ -42,6 +42,11 @@ export class SettingsTab {
     await this.settingsEditModal.save();
   }
 
+  async expectVirtV2vUnsetOnCard(): Promise<void> {
+    await expect(this.virtV2vMemsizeField).toContainText('Default');
+    await expect(this.virtV2vSmpField).toContainText('Default');
+  }
+
   getTransferNetworkCurrentValue(): Promise<string | null> {
     return this.controllerTransferNetworkField.textContent();
   }

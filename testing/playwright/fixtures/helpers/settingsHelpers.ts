@@ -1,3 +1,5 @@
+import { expect } from '@playwright/test';
+
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceFetcher } from '../../utils/resource-manager/ResourceFetcher';
 import {
@@ -18,10 +20,23 @@ const FIELD_MAP = {
   snapshotPollingInterval: 'controller_snapshot_status_check_rate_seconds',
 } as const;
 
-// CRD minimum is 1; UI "Default" means the spec key is absent (REMOVE, never 0).
-const UNSET_FIELD_MAP = {
-  virtV2vMemsize: 'virt_v2v_memsize',
-  virtV2vSmp: 'virt_v2v_smp',
+// Mirrors production UNSETTABLE_ZERO_FIELDS in src/overview/tabs/Settings/utils/utils.ts
+// (virt-v2v + aap_timeout). Zero means REMOVE the spec key (CRD minimum: 1), never persist 0.
+// When adding AAP timeout coverage, extend this map rather than introducing a third mechanism.
+const UNSET_FIELDS = {
+  virtV2vMemsize: { specField: 'virt_v2v_memsize', unsetWhenAbsent: true },
+  virtV2vSmp: { specField: 'virt_v2v_smp', unsetWhenAbsent: true },
+} as const;
+
+type UnsetSettingsKey = keyof typeof UNSET_FIELDS;
+
+// Product UI Reset-to-defaults (src/overview/tabs/Settings/utils/constants.ts defaultValuesMap).
+// Distinct from KNOWN_SETTINGS, which is the test cluster baseline (e.g. maxVmInFlight 10 vs 20).
+export const SETTINGS_UI_DEFAULTS = {
+  cpuLimit: '500m',
+  maxVmInFlight: 20,
+  virtV2vMemsize: 0,
+  virtV2vSmp: 0,
 } as const;
 
 // Empty string is the "None" baseline for controllerTransferNetwork (matches the
@@ -43,12 +58,42 @@ export const KNOWN_SETTINGS = {
 } as const;
 
 type SettingsKey = keyof typeof KNOWN_SETTINGS;
-type UnsetSettingsKey = keyof typeof UNSET_FIELD_MAP;
 
 export type OriginalSettings = {
   controllerName: string;
   unsetValues: Partial<Record<UnsetSettingsKey, number | undefined>>;
   values: Partial<Record<SettingsKey, string | number>>;
+};
+
+export const expectPatchContains = (
+  patches: JsonPatchOperation[],
+  expected: (Pick<JsonPatchOperation, 'op' | 'path'> & { value?: unknown })[],
+): void => {
+  expect(patches).toEqual(
+    expect.arrayContaining(expected.map((operation) => expect.objectContaining(operation))),
+  );
+};
+
+const collectUnsetFieldRemovePatches = (
+  spec: Record<string, unknown>,
+  unsetValues?: OriginalSettings['unsetValues'],
+): JsonPatchOperation[] => {
+  const patches: JsonPatchOperation[] = [];
+
+  for (const key of Object.keys(UNSET_FIELDS) as UnsetSettingsKey[]) {
+    const { specField, unsetWhenAbsent } = UNSET_FIELDS[key];
+    const currentValue = spec[specField];
+
+    if (unsetValues) {
+      unsetValues[key] = currentValue as number | undefined;
+    }
+
+    if (unsetWhenAbsent && currentValue !== undefined) {
+      patches.push({ op: 'remove', path: `/spec/${specField}` });
+    }
+  }
+
+  return patches;
 };
 
 const buildUnsetFieldRestorePatches = (
@@ -57,8 +102,8 @@ const buildUnsetFieldRestorePatches = (
 ): JsonPatchOperation[] => {
   const patches: JsonPatchOperation[] = [];
 
-  for (const key of Object.keys(UNSET_FIELD_MAP) as UnsetSettingsKey[]) {
-    const specField = UNSET_FIELD_MAP[key];
+  for (const key of Object.keys(UNSET_FIELDS) as UnsetSettingsKey[]) {
+    const { specField } = UNSET_FIELDS[key];
     const originalValue = unsetValues[key];
     const currentValue = spec[specField];
 
@@ -74,6 +119,42 @@ const buildUnsetFieldRestorePatches = (
   }
 
   return patches;
+};
+
+const patchForkliftControllerOrThrow = async (
+  controllerName: string,
+  patches: JsonPatchOperation[],
+  namespace: string,
+  failureMessage: string,
+): Promise<void> => {
+  if (patches.length === 0) {
+    return;
+  }
+
+  const result = await ResourcePatcher.patchForkliftController(controllerName, patches, namespace);
+  if (!result) {
+    throw new Error(failureMessage);
+  }
+};
+
+export const ensureUnsetVirtV2vBaseline = async (namespace = MTV_NAMESPACE): Promise<void> => {
+  const controller = await ResourceFetcher.fetchForkliftController(
+    'forklift-controller',
+    namespace,
+  );
+  if (!controller) {
+    throw new Error('No ForkliftController found');
+  }
+
+  const spec = (controller.spec ?? {}) as Record<string, unknown>;
+  const controllerName = controller.metadata?.name ?? 'forklift-controller';
+
+  await patchForkliftControllerOrThrow(
+    controllerName,
+    collectUnsetFieldRemovePatches(spec),
+    namespace,
+    'Failed to restore unset virt-v2v baseline',
+  );
 };
 
 export const initializeForkliftSettings = async (
@@ -110,16 +191,7 @@ export const initializeForkliftSettings = async (
     }
   }
 
-  for (const key of Object.keys(UNSET_FIELD_MAP) as UnsetSettingsKey[]) {
-    const specField = UNSET_FIELD_MAP[key];
-    const currentValue = spec[specField];
-
-    original.unsetValues[key] = currentValue as number | undefined;
-
-    if (currentValue !== undefined) {
-      patches.push({ op: 'remove', path: `/spec/${specField}` });
-    }
-  }
+  patches.push(...collectUnsetFieldRemovePatches(spec, original.unsetValues));
 
   if (patches.length > 0) {
     const result = await ResourcePatcher.patchForkliftController(
