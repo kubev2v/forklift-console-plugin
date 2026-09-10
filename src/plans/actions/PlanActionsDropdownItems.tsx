@@ -103,14 +103,26 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
         {t('Duplicate')}
       </DropdownItem>
       <DropdownItem
-        isDisabled={!canDelete || planStatus === PlanStatuses.Archived}
+        isDisabled={
+          !canDelete ||
+          planStatus === PlanStatuses.Archived ||
+          planStatus === PlanStatuses.Executing ||
+          planStatus === PlanStatuses.Pending
+        }
         key="archive"
         onClick={onClickArchive}
         value={5}
       >
         {t('Archive')}
       </DropdownItem>
-      <DropdownItem isDisabled={!canDelete} key="delete" onClick={onClickPlanDelete} value={6}>
+      <DropdownItem
+        isDisabled={
+          !canDelete || planStatus === PlanStatuses.Executing || planStatus === PlanStatuses.Pending
+        }
+        key="delete"
+        onClick={onClickPlanDelete}
+        value={6}
+      >
         {t('Delete')}
       </DropdownItem>
     </DropdownList>
