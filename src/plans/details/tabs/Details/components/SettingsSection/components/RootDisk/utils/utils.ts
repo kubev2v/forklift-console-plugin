@@ -44,6 +44,9 @@ export const getRootDiskLabelByKey = (diskKey: string | number | undefined): str
       'Ninth',
       'Tenth',
     ][diskIndex];
+    if (!diskPosition) {
+      return key;
+    }
     const partitionPosition = partitionNumber ? `${partitionNumber} partition` : '';
 
     const partitionSuffix = partitionPosition ? ` ${partitionPosition}` : '';
