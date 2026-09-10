@@ -116,21 +116,33 @@ describe('useTreeVMFilters - filtering', () => {
   });
 
   it('counts root VMs under no-folder key', () => {
-    const { result } = renderHook(() =>
-      useTreeFilters({
-        filters: filtersStub({
-          hasAttrFilters: true,
-          predicate: (row) => row.vmData.name === 'root-1',
+    const { result, rerender } = renderHook(
+      ({ predicate }: { predicate: (row: VmRow) => boolean }) =>
+        useTreeFilters({
+          filters: filtersStub({
+            hasAttrFilters: true,
+            predicate,
+          }),
+          rows: folderTreeRows,
+          showAll: true,
         }),
-        rows: folderTreeRows,
-        showAll: true,
-      }),
+      {
+        initialProps: {
+          predicate: (row: VmRow) => row.vmData.name === 'root-1',
+        },
+      },
     );
 
     expect(result.current.filteredRows.map((row) => row.key)).toEqual([
       'vm-root-1',
       'concerns-root-1',
     ]);
+    expect(result.current.filteredGroupVMCountByFolder.get(NO_FOLDER)).toBe(1);
+
+    rerender({ predicate: (row: VmRow) => row.vmData.name === 'vm-1' });
+    expect(result.current.filteredGroupVMCountByFolder.get('a')).toBe(1);
+
+    rerender({ predicate: (row: VmRow) => row.vmData.name === 'root-1' });
     expect(result.current.filteredGroupVMCountByFolder.get(NO_FOLDER)).toBe(1);
   });
 });

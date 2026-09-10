@@ -7,13 +7,13 @@ type Item = { name: string; power: string };
 
 const attributes: AttributeConfig<Item>[] = [
   {
-    getValue: (item) => item.name,
+    getValue: (item): string => item.name,
     id: 'name',
     kind: AttributeKind.Text,
     label: 'Name',
   },
   {
-    getValues: (item) => item.power,
+    getValues: (item): string => item.power,
     id: 'power',
     kind: AttributeKind.Checkbox,
     label: 'Power',
