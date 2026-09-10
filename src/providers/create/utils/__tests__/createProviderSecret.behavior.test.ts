@@ -24,7 +24,7 @@ describe('createProviderSecret - behavior', () => {
   });
 
   it('returns undefined when secret or provider is missing', async () => {
-    const provider: V1beta1Provider = { metadata: { name: 'p' } };
+    const provider = { metadata: { name: 'p' } } as unknown as V1beta1Provider;
     const secret: IoK8sApiCoreV1Secret = { data: {} };
 
     expect(
@@ -37,10 +37,10 @@ describe('createProviderSecret - behavior', () => {
   });
 
   it('creates a secret with cleaned data, url, generateName and labels', async () => {
-    const provider: V1beta1Provider = {
+    const provider = {
       metadata: { name: 'vsphere' },
       spec: { type: 'vsphere', url: 'https://vcenter.example.com' },
-    };
+    } as unknown as V1beta1Provider;
     const secret: IoK8sApiCoreV1Secret = {
       data: {
         cacert: encode('cert'),
@@ -79,10 +79,10 @@ describe('createProviderSecret - behavior', () => {
   });
 
   it('drops cacert when insecureSkipVerify is true', async () => {
-    const provider: V1beta1Provider = {
+    const provider = {
       metadata: { name: 'p' },
       spec: { secret: { name: 's' }, type: 'ovirt', url: 'https://x' },
-    };
+    } as unknown as V1beta1Provider;
     const secret: IoK8sApiCoreV1Secret = {
       data: {
         cacert: encode('cert'),
