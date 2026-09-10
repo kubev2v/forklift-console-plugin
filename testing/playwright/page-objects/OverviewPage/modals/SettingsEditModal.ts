@@ -1,8 +1,21 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import {
+  asControllerPatches,
+  type JsonPatchOperation,
+} from '../../../utils/resource-manager/ResourcePatcher';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
 import { BaseModal } from '../../common/BaseModal';
+
+const getSpinbuttonValue = async (locator: Locator): Promise<string> =>
+  (await locator.inputValue()) ?? '';
+
+const setSpinbuttonValue = async (locator: Locator, value: number): Promise<void> => {
+  await locator.scrollIntoViewIfNeeded();
+  await locator.fill(String(value));
+  await locator.blur();
+};
 
 /**
  * Page object for the Settings Edit Modal on the Overview page.
@@ -25,6 +38,7 @@ export class SettingsEditModal extends BaseModal {
   readonly inventoryMemoryLimitDropdown: Locator;
   readonly maxVmInFlightInput: Locator;
   readonly preCopyIntervalDropdown: Locator;
+  readonly resetToDefaultsButton: Locator;
   readonly snapshotPollingIntervalDropdown: Locator;
   readonly virtV2vMemsizeInput: Locator;
   readonly virtV2vSmpInput: Locator;
@@ -56,6 +70,7 @@ export class SettingsEditModal extends BaseModal {
     this.controllerTransferNetworkDropdown = this.page.getByTestId(
       'controller-transfer-network-select',
     );
+    this.resetToDefaultsButton = this.modal.getByRole('button', { name: 'Reset to defaults' });
 
     this.aapUrlInput = this.page.getByTestId('aap-url-settings-input');
     this.aapTokenSecretDropdown = this.page.getByTestId('aap-token-secret-settings-select');
@@ -94,7 +109,7 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async getAapTimeoutValue(): Promise<string> {
-    return (await this.aapTimeoutInput.inputValue()) ?? '';
+    return getSpinbuttonValue(this.aapTimeoutInput);
   }
 
   async getAapUrlValue(): Promise<string> {
@@ -114,7 +129,7 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async getMaxVmInFlightValue(): Promise<string> {
-    return (await this.maxVmInFlightInput.inputValue()) ?? '';
+    return getSpinbuttonValue(this.maxVmInFlightInput);
   }
 
   getPrecopyIntervalValue(): Promise<string | null> {
@@ -130,11 +145,11 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async getVirtV2vMemsizeValue(): Promise<string> {
-    return (await this.virtV2vMemsizeInput.inputValue()) ?? '';
+    return getSpinbuttonValue(this.virtV2vMemsizeInput);
   }
 
   async getVirtV2vSmpValue(): Promise<string> {
-    return (await this.virtV2vSmpInput.inputValue()) ?? '';
+    return getSpinbuttonValue(this.virtV2vSmpInput);
   }
 
   async incrementMaxVmInFlight(): Promise<void> {
@@ -149,7 +164,7 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async resetToDefaults(): Promise<void> {
-    await this.modal.getByRole('button', { name: 'Reset to defaults' }).click();
+    await this.resetToDefaultsButton.click();
   }
 
   async saveAndCaptureControllerPatch(): Promise<unknown> {
@@ -164,6 +179,10 @@ export class SettingsEditModal extends BaseModal {
 
     const response = await responsePromise;
     return response.request().postDataJSON();
+  }
+
+  async saveAndCapturePatches(): Promise<JsonPatchOperation[]> {
+    return asControllerPatches(await this.saveAndCaptureControllerPatch());
   }
 
   async selectControllerCpuLimit(value: string): Promise<void> {
@@ -234,15 +253,11 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async setVirtV2vMemsize(value: number): Promise<void> {
-    await this.virtV2vMemsizeInput.scrollIntoViewIfNeeded();
-    await this.virtV2vMemsizeInput.fill(String(value));
-    await this.virtV2vMemsizeInput.blur();
+    await setSpinbuttonValue(this.virtV2vMemsizeInput, value);
   }
 
   async setVirtV2vSmp(value: number): Promise<void> {
-    await this.virtV2vSmpInput.scrollIntoViewIfNeeded();
-    await this.virtV2vSmpInput.fill(String(value));
-    await this.virtV2vSmpInput.blur();
+    await setSpinbuttonValue(this.virtV2vSmpInput, value);
   }
 
   async toggleTransferNetworkValue(): Promise<void> {
@@ -265,7 +280,7 @@ export class SettingsEditModal extends BaseModal {
   }
 
   async verifyResetToDefaultsVisible(): Promise<void> {
-    await expect(this.modal.getByRole('button', { name: 'Reset to defaults' })).toBeVisible();
+    await expect(this.resetToDefaultsButton).toBeVisible();
   }
 
   async verifyVirtV2vFieldsVisible(): Promise<void> {

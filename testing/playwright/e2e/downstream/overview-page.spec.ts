@@ -2,10 +2,13 @@ import { expect, test } from '@playwright/test';
 
 import { createTestNad } from '../../fixtures/helpers/resourceCreationHelpers';
 import {
+  ensureUnsetVirtV2vBaseline,
+  expectPatchContains,
   initializeForkliftSettings,
   KNOWN_SETTINGS,
   type OriginalSettings,
   restoreForkliftSettings,
+  SETTINGS_UI_DEFAULTS,
 } from '../../fixtures/helpers/settingsHelpers';
 import { OverviewPage } from '../../page-objects/OverviewPage/OverviewPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
@@ -14,15 +17,8 @@ import { V2_11_0, V2_12_0, V5_0_0 } from '../../utils/version/constants';
 import { isVersionAtLeast, requireVersion } from '../../utils/version/version';
 
 const INVALID_AAP_URL = 'not-a-url';
-const UI_DEFAULT_CPU_LIMIT = '500m';
-const UI_DEFAULT_MAX_VM_IN_FLIGHT = 20;
 const VIRT_V2V_CUSTOM_MEMSIZE = 4096;
 const VIRT_V2V_CUSTOM_SMP = 2;
-
-type ControllerPatch = { op?: string; path?: string; value?: unknown };
-
-const asControllerPatches = (body: unknown): ControllerPatch[] =>
-  Array.isArray(body) ? (body as ControllerPatch[]) : [];
 
 test.describe('Overview Page - Health Tab', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
@@ -48,6 +44,9 @@ test.describe('Overview Page - Health Tab', { tag: '@downstream' }, () => {
   });
 });
 
+// Serial: Settings tests share one ForkliftController. The baseline edit test mutates
+// CPU/memory/maxVmInFlight; the virt-v2v block mutates conversion fields. fullyParallel
+// plus local workers would race if this suite were parallel.
 test.describe.serial(
   'Overview Page - Settings',
   {
@@ -212,14 +211,18 @@ test.describe.serial(
       }
     });
 
-    test.describe('Reset to defaults and virt-v2v', () => {
+    test.describe.serial('Reset to defaults and virt-v2v', () => {
       requireVersion(test, V5_0_0);
 
-      test.beforeEach(async () => {
+      test.beforeAll(async () => {
         const initialized = await initializeForkliftSettings();
         if (!initialized) {
           throw new Error('Failed to initialize ForkliftController settings');
         }
+      });
+
+      test.beforeEach(async () => {
+        await ensureUnsetVirtV2vBaseline();
       });
 
       test('should show Default for unset virt-v2v settings and Reset in the edit modal', async ({
@@ -233,8 +236,7 @@ test.describe.serial(
         });
 
         await test.step('Verify unset virt-v2v values show Default and transfer network shows None', async () => {
-          await expect(settingsTab.virtV2vMemsizeField).toContainText('Default');
-          await expect(settingsTab.virtV2vSmpField).toContainText('Default');
+          await settingsTab.expectVirtV2vUnsetOnCard();
           await expect(settingsTab.controllerTransferNetworkField).toContainText('None');
         });
 
@@ -242,8 +244,12 @@ test.describe.serial(
           await settingsTab.openSettingsEditModal();
           await settingsTab.settingsEditModal.verifyResetToDefaultsVisible();
           await settingsTab.settingsEditModal.verifyVirtV2vFieldsVisible();
-          expect(await settingsTab.settingsEditModal.getVirtV2vMemsizeValue()).toBe('0');
-          expect(await settingsTab.settingsEditModal.getVirtV2vSmpValue()).toBe('0');
+          expect(await settingsTab.settingsEditModal.getVirtV2vMemsizeValue()).toBe(
+            String(SETTINGS_UI_DEFAULTS.virtV2vMemsize),
+          );
+          expect(await settingsTab.settingsEditModal.getVirtV2vSmpValue()).toBe(
+            String(SETTINGS_UI_DEFAULTS.virtV2vSmp),
+          );
           await expect(settingsTab.settingsEditModal.saveButton).toBeDisabled();
           await settingsTab.settingsEditModal.cancel();
         });
@@ -267,14 +273,20 @@ test.describe.serial(
         });
 
         await test.step('Verify form matches defaultValuesMap and Save is enabled', async () => {
+          // Reset restores product UI defaults (SETTINGS_UI_DEFAULTS), not KNOWN_SETTINGS
+          // (test cluster baseline). Cancel below asserts the card still shows the baseline.
           expect(Number(await settingsTab.settingsEditModal.getMaxVmInFlightValue())).toBe(
-            UI_DEFAULT_MAX_VM_IN_FLIGHT,
+            SETTINGS_UI_DEFAULTS.maxVmInFlight,
           );
           expect((await settingsTab.settingsEditModal.getControllerCpuLimitValue())?.trim()).toBe(
-            UI_DEFAULT_CPU_LIMIT,
+            SETTINGS_UI_DEFAULTS.cpuLimit,
           );
-          expect(await settingsTab.settingsEditModal.getVirtV2vMemsizeValue()).toBe('0');
-          expect(await settingsTab.settingsEditModal.getVirtV2vSmpValue()).toBe('0');
+          expect(await settingsTab.settingsEditModal.getVirtV2vMemsizeValue()).toBe(
+            String(SETTINGS_UI_DEFAULTS.virtV2vMemsize),
+          );
+          expect(await settingsTab.settingsEditModal.getVirtV2vSmpValue()).toBe(
+            String(SETTINGS_UI_DEFAULTS.virtV2vSmp),
+          );
           await expect(settingsTab.settingsEditModal.saveButton).toBeEnabled();
         });
 
@@ -283,8 +295,7 @@ test.describe.serial(
           await expect(settingsTab.maxVmInFlightField).toContainText(
             String(KNOWN_SETTINGS.maxVmInFlight),
           );
-          await expect(settingsTab.virtV2vMemsizeField).toContainText('Default');
-          await expect(settingsTab.virtV2vSmpField).toContainText('Default');
+          await settingsTab.expectVirtV2vUnsetOnCard();
         });
       });
 
@@ -299,23 +310,19 @@ test.describe.serial(
           await settingsTab.openSettingsEditModal();
           await settingsTab.settingsEditModal.setVirtV2vMemsize(VIRT_V2V_CUSTOM_MEMSIZE);
           await settingsTab.settingsEditModal.setVirtV2vSmp(VIRT_V2V_CUSTOM_SMP);
-          const addPatch = asControllerPatches(
-            await settingsTab.settingsEditModal.saveAndCaptureControllerPatch(),
-          );
-          expect(addPatch).toEqual(
-            expect.arrayContaining([
-              expect.objectContaining({
-                op: 'add',
-                path: '/spec/virt_v2v_memsize',
-                value: VIRT_V2V_CUSTOM_MEMSIZE,
-              }),
-              expect.objectContaining({
-                op: 'add',
-                path: '/spec/virt_v2v_smp',
-                value: VIRT_V2V_CUSTOM_SMP,
-              }),
-            ]),
-          );
+          const addPatch = await settingsTab.settingsEditModal.saveAndCapturePatches();
+          expectPatchContains(addPatch, [
+            {
+              op: 'add',
+              path: '/spec/virt_v2v_memsize',
+              value: VIRT_V2V_CUSTOM_MEMSIZE,
+            },
+            {
+              op: 'add',
+              path: '/spec/virt_v2v_smp',
+              value: VIRT_V2V_CUSTOM_SMP,
+            },
+          ]);
         });
 
         await test.step('Verify the Settings card shows the custom values', async () => {
@@ -328,18 +335,13 @@ test.describe.serial(
         await test.step('Reset and Save, then verify REMOVE patch and Default on the card', async () => {
           await settingsTab.openSettingsEditModal();
           await settingsTab.settingsEditModal.resetToDefaults();
-          const removePatch = asControllerPatches(
-            await settingsTab.settingsEditModal.saveAndCaptureControllerPatch(),
-          );
-          expect(removePatch).toEqual(
-            expect.arrayContaining([
-              expect.objectContaining({ op: 'remove', path: '/spec/virt_v2v_memsize' }),
-              expect.objectContaining({ op: 'remove', path: '/spec/virt_v2v_smp' }),
-            ]),
-          );
+          const removePatch = await settingsTab.settingsEditModal.saveAndCapturePatches();
+          expectPatchContains(removePatch, [
+            { op: 'remove', path: '/spec/virt_v2v_memsize' },
+            { op: 'remove', path: '/spec/virt_v2v_smp' },
+          ]);
           expect(removePatch.some((operation) => operation.value === 0)).toBe(false);
-          await expect(settingsTab.virtV2vMemsizeField).toContainText('Default');
-          await expect(settingsTab.virtV2vSmpField).toContainText('Default');
+          await settingsTab.expectVirtV2vUnsetOnCard();
         });
       });
 
