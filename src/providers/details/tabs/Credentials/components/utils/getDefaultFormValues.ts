@@ -34,6 +34,7 @@ export const getDefaultFormValues = (
         ...baseValues,
         [ProviderFormFieldId.VsphereEndpointType]: sdkEndpoint ?? VSphereEndpointType.VCenter,
         [ProviderFormFieldId.VspherePassword]: getDecodedValue(secret?.data?.password) ?? '',
+        [ProviderFormFieldId.VsphereUrl]: getUrl(provider) ?? '',
         [ProviderFormFieldId.VsphereUsername]: getDecodedValue(secret?.data?.user) ?? '',
       };
 
@@ -41,12 +42,14 @@ export const getDefaultFormValues = (
       return {
         ...baseValues,
         [ProviderFormFieldId.OvirtPassword]: getDecodedValue(secret?.data?.password) ?? '',
+        [ProviderFormFieldId.OvirtUrl]: getUrl(provider) ?? '',
         [ProviderFormFieldId.OvirtUsername]: getDecodedValue(secret?.data?.user) ?? '',
       };
 
     case PROVIDER_TYPES.openshift:
       return {
         ...baseValues,
+        [ProviderFormFieldId.OpenshiftUrl]: getUrl(provider) ?? '',
         [ProviderFormFieldId.ServiceAccountToken]: getDecodedValue(secret?.data?.token) ?? '',
       };
 
@@ -68,6 +71,7 @@ export const getDefaultFormValues = (
           getDecodedValue(secret?.data?.projectName) ?? '',
         [ProviderFormFieldId.OpenstackRegionName]: getDecodedValue(secret?.data?.regionName) ?? '',
         [ProviderFormFieldId.OpenstackToken]: getDecodedValue(secret?.data?.token) ?? '',
+        [ProviderFormFieldId.OpenstackUrl]: getUrl(provider) ?? '',
         [ProviderFormFieldId.OpenstackUserId]: getDecodedValue(secret?.data?.userID) ?? '',
         [ProviderFormFieldId.OpenstackUsername]: getDecodedValue(secret?.data?.username) ?? '',
       };
@@ -99,6 +103,7 @@ export const getDefaultFormValues = (
       return {
         ...baseValues,
         [ProviderFormFieldId.NutanixPassword]: getDecodedValue(secret?.data?.password) ?? '',
+        [ProviderFormFieldId.NutanixUrl]: getUrl(provider) ?? '',
         [ProviderFormFieldId.NutanixUsername]: getDecodedValue(secret?.data?.user) ?? '',
       };
 
