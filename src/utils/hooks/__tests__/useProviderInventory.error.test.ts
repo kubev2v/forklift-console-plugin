@@ -39,8 +39,7 @@ describe('useProviderInventory - error', () => {
 
     expect(result.current.error?.message).toBe('Invalid provider data');
     expect(result.current.inventory).toBeNull();
-    // Invalid provider returns before try/finally, so loading stays true (documented bug).
-    expect(result.current.loading).toBe(true);
+    expect(result.current.loading).toBe(false);
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
@@ -51,7 +50,7 @@ describe('useProviderInventory - error', () => {
 
     expect(result.current.error?.message).toBe('Invalid provider data');
     expect(result.current.inventory).toBeNull();
-    expect(result.current.loading).toBe(true);
+    expect(result.current.loading).toBe(false);
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
@@ -62,7 +61,7 @@ describe('useProviderInventory - error', () => {
 
     expect(result.current.error?.message).toBe('Invalid provider data');
     expect(result.current.inventory).toBeNull();
-    expect(result.current.loading).toBe(true);
+    expect(result.current.loading).toBe(false);
     expect(mockFetch).not.toHaveBeenCalled();
   });
 

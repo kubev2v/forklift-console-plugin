@@ -1,10 +1,10 @@
 import { CONVERSION_LABELS, CONVERSION_PHASE } from '@utils/crds/conversion/constants';
-import type { V1beta1Conversion } from '@utils/crds/conversion/types';
+import type { ConversionPhase, V1beta1Conversion } from '@utils/crds/conversion/types';
 
 type ConversionOverrides = Partial<V1beta1Conversion> & {
   allChecksPassed?: boolean;
   createdAt?: string;
-  phase?: string;
+  phase?: ConversionPhase;
   snakeAllChecksPassed?: boolean;
   vmId?: string;
 };
@@ -37,10 +37,15 @@ export const conversion = (overrides: ConversionOverrides = {}): V1beta1Conversi
       labels: { [CONVERSION_LABELS.VM_ID]: vmId },
       name: `conversion-${vmId}-${createdAt}`,
     },
+    spec: {
+      connection: { secret: { name: 'test-secret' } },
+      type: 'DeepInspection',
+      vm: { id: vmId },
+    },
     status: {
       inspectionResult: hasInspectionResult ? inspectionResult : undefined,
       phase,
     },
     ...rest,
-  } as V1beta1Conversion;
+  };
 };
