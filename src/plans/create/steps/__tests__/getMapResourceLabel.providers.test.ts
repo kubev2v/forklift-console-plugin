@@ -17,7 +17,7 @@ const nameOnlyNetwork = (
     providerType,
     revision: 1,
     selfLink: `/providers/${providerType}/uid/networks/res-1`,
-  }) as ProviderNetwork;
+  }) as unknown as ProviderNetwork;
 
 describe('getMapResourceLabel', () => {
   it('returns empty for missing resource or unknown provider', () => {
@@ -29,7 +29,7 @@ describe('getMapResourceLabel', () => {
         providerType: 'unknown',
         revision: 1,
         selfLink: '',
-      } as ProviderNetwork),
+      } as unknown as ProviderNetwork),
     ).toBe('');
   });
 
@@ -41,7 +41,7 @@ describe('getMapResourceLabel', () => {
       providerType: PROVIDER_TYPES.openshift,
       revision: 1,
       selfLink: '',
-    } as ProviderNetwork;
+    } as unknown as ProviderNetwork;
     const withoutNamespace = {
       id: 'net-1',
       name: 'net',
@@ -62,14 +62,14 @@ describe('getMapResourceLabel', () => {
       providerType: PROVIDER_TYPES.ovirt,
       revision: 1,
       selfLink: '',
-    } as ProviderNetwork;
+    } as unknown as ProviderNetwork;
     const withoutPath = {
       id: 'n-1',
       name: 'n',
       providerType: PROVIDER_TYPES.ovirt,
       revision: 1,
       selfLink: '',
-    } as ProviderNetwork;
+    } as unknown as ProviderNetwork;
 
     expect(getMapResourceLabel(withPath)).toBe('/p');
     expect(getMapResourceLabel(withoutPath)).toBe('n');
