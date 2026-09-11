@@ -22,9 +22,9 @@ const statusMigrations: V1beta1Migration[] = [
     status: {
       started: recentIso,
       vms: [
-        { conditions: [{ type: 'Succeeded' }], phase: 'Completed' },
-        { conditions: [{ type: 'Failed' }], phase: 'Completed' },
-        { conditions: [{ type: 'Canceled' }], phase: 'Completed' },
+        { conditions: [{ status: 'True', type: 'Succeeded' }], phase: 'Completed' },
+        { conditions: [{ status: 'True', type: 'Failed' }], phase: 'Completed' },
+        { conditions: [{ status: 'True', type: 'Canceled' }], phase: 'Completed' },
         { phase: 'CopyingDisks' },
       ],
     },
@@ -34,7 +34,7 @@ const statusMigrations: V1beta1Migration[] = [
     spec: { plan: { name: 'plan-a', namespace: 'ns', uid: 'plan-a' } },
     status: {
       started: bucketNow.minus({ minutes: 30 }).toISO() ?? '',
-      vms: [{ conditions: [{ type: 'Succeeded' }], phase: 'Completed' }],
+      vms: [{ conditions: [{ status: 'True', type: 'Succeeded' }], phase: 'Completed' }],
     },
   } as unknown as V1beta1Migration,
 ];
@@ -111,7 +111,7 @@ describe('useVmMigrationsDataPoints - aggregation', () => {
     expect(result.current.loadError).toBe(err);
   });
 
-  it('counts Failed by condition type even when status is False', () => {
+  it('ignores conditions with status False', () => {
     mockWatch.mockReturnValue([
       [
         {
@@ -129,7 +129,7 @@ describe('useVmMigrationsDataPoints - aggregation', () => {
 
     const { result } = renderHook(() => useVmMigrationsDataPoints(TimeRangeOptions.Last24H, true));
 
-    expect(result.current.totalFailedCount).toBe(1);
+    expect(result.current.totalFailedCount).toBe(0);
     expect(result.current.total).toBe(1);
   });
 });
