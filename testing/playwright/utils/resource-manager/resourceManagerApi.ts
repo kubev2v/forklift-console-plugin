@@ -79,5 +79,6 @@ export const resourceManagerApi = {
     patch: Record<string, unknown> | JsonPatchOperation[];
     patchType?: PatchType;
     resourceName: string;
+    subresource?: string;
   }): Promise<T | null> => ResourcePatcher.patchResource<T>(options),
 };
