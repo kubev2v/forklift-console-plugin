@@ -4,16 +4,22 @@ import type {
 } from '@forklift-ui/types';
 
 export const isCanceled = (vm: V1beta1MigrationStatusVms): boolean =>
-  vm?.conditions?.some((cond: V1beta1MigrationStatusVmsConditions) => cond?.type === 'Canceled') ??
-  false;
+  vm?.conditions?.some(
+    (cond: V1beta1MigrationStatusVmsConditions) =>
+      cond?.type === 'Canceled' && cond?.status === 'True',
+  ) ?? false;
 
 export const isFailed = (vm: V1beta1MigrationStatusVms): boolean =>
-  vm?.conditions?.some((cond: V1beta1MigrationStatusVmsConditions) => cond?.type === 'Failed') ??
-  false;
+  vm?.conditions?.some(
+    (cond: V1beta1MigrationStatusVmsConditions) =>
+      cond?.type === 'Failed' && cond?.status === 'True',
+  ) ?? false;
 
 export const isSucceeded = (vm: V1beta1MigrationStatusVms): boolean =>
-  vm?.conditions?.some((cond: V1beta1MigrationStatusVmsConditions) => cond?.type === 'Succeeded') ??
-  false;
+  vm?.conditions?.some(
+    (cond: V1beta1MigrationStatusVmsConditions) =>
+      cond?.type === 'Succeeded' && cond?.status === 'True',
+  ) ?? false;
 
 export const isRunning = (vm: V1beta1MigrationStatusVms): boolean =>
   !isFailed(vm) && !isSucceeded(vm) && !isCanceled(vm) && vm?.phase !== 'Completed';
