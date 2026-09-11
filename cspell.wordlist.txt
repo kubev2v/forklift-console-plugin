@@ -156,6 +156,7 @@ storagedomains
 storagemap
 storagemaps
 subjectaccessreviews
+subresource
 switchfilter
 testid
 timespan
