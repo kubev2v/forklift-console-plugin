@@ -11,8 +11,11 @@ import {
   toAapSelectOptions,
 } from 'src/plans/create/steps/migration-hooks/utils';
 
+import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import TypeaheadSelect from '@components/common/TypeaheadSelect/TypeaheadSelect';
-import { Alert, AlertVariant, FormGroup, Spinner } from '@patternfly/react-core';
+import { FormErrorHelperText } from '@components/FormErrorHelperText';
+import { Alert, AlertVariant, Spinner } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import type { AapJobTemplate } from '@utils/types/aap';
 
@@ -98,8 +101,17 @@ const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
         <Controller
           control={control}
           name={HookField.AapJobTemplateId}
-          render={({ field }) => (
-            <FormGroup fieldId={HookField.AapJobTemplateId} label={t('Job template')}>
+          render={({ field, fieldState: { error: fieldError } }) => (
+            <FormGroupWithErrorText
+              fieldId={HookField.AapJobTemplateId}
+              helperText={
+                isEmpty(fieldError) ? undefined : (
+                  <FormErrorHelperText error={fieldError} showIcon />
+                )
+              }
+              isRequired
+              label={t('Job template')}
+            >
               <TypeaheadSelect
                 allowClear
                 maxMenuHeight={AAP_SELECT_MAX_MENU_HEIGHT}
@@ -120,8 +132,9 @@ const AapHookEditFields: FC<AapHookEditFieldsProps> = ({ control }) => {
                 testId="hook-edit-aap-template-select"
                 value={field.value}
               />
-            </FormGroup>
+            </FormGroupWithErrorText>
           )}
+          rules={{ required: t('Job template is required.') }}
         />
       )}
     </>
