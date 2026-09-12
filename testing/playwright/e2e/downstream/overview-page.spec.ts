@@ -2,16 +2,23 @@ import { expect, test } from '@playwright/test';
 
 import { createTestNad } from '../../fixtures/helpers/resourceCreationHelpers';
 import {
+  ensureUnsetVirtV2vBaseline,
+  expectPatchContains,
   initializeForkliftSettings,
   KNOWN_SETTINGS,
   type OriginalSettings,
   restoreForkliftSettings,
+  SETTINGS_UI_DEFAULTS,
 } from '../../fixtures/helpers/settingsHelpers';
 import { OverviewPage } from '../../page-objects/OverviewPage/OverviewPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
-import { V2_11_0, V2_12_0 } from '../../utils/version/constants';
+import { V2_11_0, V2_12_0, V5_0_0 } from '../../utils/version/constants';
 import { isVersionAtLeast, requireVersion } from '../../utils/version/version';
+
+const INVALID_AAP_URL = 'not-a-url';
+const VIRT_V2V_CUSTOM_MEMSIZE = 4096;
+const VIRT_V2V_CUSTOM_SMP = 2;
 
 test.describe('Overview Page - Health Tab', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
@@ -37,7 +44,10 @@ test.describe('Overview Page - Health Tab', { tag: '@downstream' }, () => {
   });
 });
 
-test.describe(
+// Serial: Settings tests share one ForkliftController. The baseline edit test mutates
+// CPU/memory/maxVmInFlight; the virt-v2v block mutates conversion fields. fullyParallel
+// plus local workers would race if this suite were parallel.
+test.describe.serial(
   'Overview Page - Settings',
   {
     tag: '@downstream',
@@ -199,6 +209,160 @@ test.describe(
           await overviewPage.settingsTab.settingsEditModal.cancel();
         });
       }
+    });
+
+    test.describe.serial('Reset to defaults and virt-v2v', () => {
+      requireVersion(test, V5_0_0);
+
+      test.beforeAll(async () => {
+        const initialized = await initializeForkliftSettings();
+        if (!initialized) {
+          throw new Error('Failed to initialize ForkliftController settings');
+        }
+      });
+
+      test.beforeEach(async () => {
+        await ensureUnsetVirtV2vBaseline();
+      });
+
+      test('should show Default for unset virt-v2v settings and Reset in the edit modal', async ({
+        page,
+      }) => {
+        const overviewPage = new OverviewPage(page);
+        const { settingsTab } = overviewPage;
+
+        await test.step('Navigate to Settings tab', async () => {
+          await overviewPage.navigateToSettings();
+        });
+
+        await test.step('Verify unset virt-v2v values show Default and transfer network shows None', async () => {
+          await settingsTab.expectVirtV2vUnsetOnCard();
+          await expect(settingsTab.controllerTransferNetworkField).toContainText('None');
+        });
+
+        await test.step('Open edit modal and verify Reset plus virt-v2v fields at 0', async () => {
+          await settingsTab.openSettingsEditModal();
+          await settingsTab.settingsEditModal.verifyResetToDefaultsVisible();
+          await settingsTab.settingsEditModal.verifyVirtV2vFieldsVisible();
+          expect(await settingsTab.settingsEditModal.getVirtV2vMemsizeValue()).toBe(
+            String(SETTINGS_UI_DEFAULTS.virtV2vMemsize),
+          );
+          expect(await settingsTab.settingsEditModal.getVirtV2vSmpValue()).toBe(
+            String(SETTINGS_UI_DEFAULTS.virtV2vSmp),
+          );
+          await expect(settingsTab.settingsEditModal.saveButton).toBeDisabled();
+          await settingsTab.settingsEditModal.cancel();
+        });
+      });
+
+      test('should restore UI defaults when Reset to defaults is clicked', async ({ page }) => {
+        const overviewPage = new OverviewPage(page);
+        const { settingsTab } = overviewPage;
+
+        await test.step('Navigate to Settings and open the edit modal', async () => {
+          await overviewPage.navigateToSettings();
+          await settingsTab.openSettingsEditModal();
+        });
+
+        await test.step('Change several fields then Reset to defaults', async () => {
+          await settingsTab.settingsEditModal.setMaxVmInFlight(35);
+          await settingsTab.settingsEditModal.selectControllerCpuLimit('2000m');
+          await settingsTab.settingsEditModal.setVirtV2vMemsize(VIRT_V2V_CUSTOM_MEMSIZE);
+          await settingsTab.settingsEditModal.setVirtV2vSmp(VIRT_V2V_CUSTOM_SMP);
+          await settingsTab.settingsEditModal.resetToDefaults();
+        });
+
+        await test.step('Verify form matches defaultValuesMap and Save is enabled', async () => {
+          // Reset restores product UI defaults (SETTINGS_UI_DEFAULTS), not KNOWN_SETTINGS
+          // (test cluster baseline). Cancel below asserts the card still shows the baseline.
+          expect(Number(await settingsTab.settingsEditModal.getMaxVmInFlightValue())).toBe(
+            SETTINGS_UI_DEFAULTS.maxVmInFlight,
+          );
+          expect((await settingsTab.settingsEditModal.getControllerCpuLimitValue())?.trim()).toBe(
+            SETTINGS_UI_DEFAULTS.cpuLimit,
+          );
+          expect(await settingsTab.settingsEditModal.getVirtV2vMemsizeValue()).toBe(
+            String(SETTINGS_UI_DEFAULTS.virtV2vMemsize),
+          );
+          expect(await settingsTab.settingsEditModal.getVirtV2vSmpValue()).toBe(
+            String(SETTINGS_UI_DEFAULTS.virtV2vSmp),
+          );
+          await expect(settingsTab.settingsEditModal.saveButton).toBeEnabled();
+        });
+
+        await test.step('Cancel without saving and verify the card is unchanged', async () => {
+          await settingsTab.settingsEditModal.cancel();
+          await expect(settingsTab.maxVmInFlightField).toContainText(
+            String(KNOWN_SETTINGS.maxVmInFlight),
+          );
+          await settingsTab.expectVirtV2vUnsetOnCard();
+        });
+      });
+
+      test('should persist custom virt-v2v values and remove them on Reset and Save', async ({
+        page,
+      }) => {
+        const overviewPage = new OverviewPage(page);
+        const { settingsTab } = overviewPage;
+
+        await test.step('Navigate to Settings and save custom virt-v2v values', async () => {
+          await overviewPage.navigateToSettings();
+          await settingsTab.openSettingsEditModal();
+          await settingsTab.settingsEditModal.setVirtV2vMemsize(VIRT_V2V_CUSTOM_MEMSIZE);
+          await settingsTab.settingsEditModal.setVirtV2vSmp(VIRT_V2V_CUSTOM_SMP);
+          const addPatch = await settingsTab.settingsEditModal.saveAndCapturePatches();
+          expectPatchContains(addPatch, [
+            {
+              op: 'add',
+              path: '/spec/virt_v2v_memsize',
+              value: VIRT_V2V_CUSTOM_MEMSIZE,
+            },
+            {
+              op: 'add',
+              path: '/spec/virt_v2v_smp',
+              value: VIRT_V2V_CUSTOM_SMP,
+            },
+          ]);
+        });
+
+        await test.step('Verify the Settings card shows the custom values', async () => {
+          await expect(settingsTab.virtV2vMemsizeField).toContainText(
+            String(VIRT_V2V_CUSTOM_MEMSIZE),
+          );
+          await expect(settingsTab.virtV2vSmpField).toContainText(String(VIRT_V2V_CUSTOM_SMP));
+        });
+
+        await test.step('Reset and Save, then verify REMOVE patch and Default on the card', async () => {
+          await settingsTab.openSettingsEditModal();
+          await settingsTab.settingsEditModal.resetToDefaults();
+          const removePatch = await settingsTab.settingsEditModal.saveAndCapturePatches();
+          expectPatchContains(removePatch, [
+            { op: 'remove', path: '/spec/virt_v2v_memsize' },
+            { op: 'remove', path: '/spec/virt_v2v_smp' },
+          ]);
+          expect(removePatch.some((operation) => operation.value === 0)).toBe(false);
+          await settingsTab.expectVirtV2vUnsetOnCard();
+        });
+      });
+
+      test('should disable Save when the AAP URL is invalid', async ({ page }) => {
+        const overviewPage = new OverviewPage(page);
+        const { settingsTab } = overviewPage;
+
+        await test.step('Navigate to Settings and enter an invalid AAP URL', async () => {
+          await overviewPage.navigateToSettings();
+          await settingsTab.openSettingsEditModal();
+          await settingsTab.settingsEditModal.setAapUrl(INVALID_AAP_URL);
+        });
+
+        await test.step('Verify validation message and Save stays disabled', async () => {
+          await expect(settingsTab.settingsEditModal.modal).toContainText(
+            'The URL is invalid. URL should include the schema, for example: https://aap.example.com.',
+          );
+          await expect(settingsTab.settingsEditModal.saveButton).toBeDisabled();
+          await settingsTab.settingsEditModal.cancel();
+        });
+      });
     });
   },
 );

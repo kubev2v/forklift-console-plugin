@@ -15,6 +15,9 @@ export type JsonPatchOperation = {
   value?: unknown;
 };
 
+export const asControllerPatches = (body: unknown): JsonPatchOperation[] =>
+  Array.isArray(body) ? (body as JsonPatchOperation[]) : [];
+
 /**
  * Patch type determines the Content-Type header and body format.
  * - 'merge': Uses application/merge-patch+json (RFC 7396) - for simple field updates
