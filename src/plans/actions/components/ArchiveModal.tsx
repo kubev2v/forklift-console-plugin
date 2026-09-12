@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/planStatusResolver';
 import { PlanStatuses } from 'src/plans/details/components/PlanStatus/utils/types';
-import { ForkliftTrans, useForkliftTranslation } from 'src/utils/i18n';
+import { useForkliftTranslation } from 'src/utils/i18n';
 
 import ModalForm from '@components/ModalForm/ModalForm';
 import { PlanModel } from '@forklift-ui/types';
@@ -37,17 +37,14 @@ const ArchiveModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan }) 
       onConfirm={onArchive}
       title={t('Archive migration plan')}
     >
-      <ForkliftTrans>
-        <Stack hasGutter>
-          <StackItem>
-            Archive plan <strong className="co-break-word">{getName(plan)}</strong>?
-          </StackItem>
-          <StackItem>
-            When a plan is archived, its history, metadata, and logs are deleted. The plan cannot be
-            edited or restarted but it can be viewed.
-          </StackItem>
-        </Stack>
-      </ForkliftTrans>
+      <Stack hasGutter>
+        <StackItem>{t('Archive plan {{name}}?', { name: getName(plan) })}</StackItem>
+        <StackItem>
+          {t(
+            'When a plan is archived, its history, metadata, and logs are deleted. The plan cannot be edited or restarted but it can be viewed.',
+          )}
+        </StackItem>
+      </Stack>
     </ModalForm>
   );
 };
