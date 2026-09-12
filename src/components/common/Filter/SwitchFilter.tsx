@@ -17,6 +17,7 @@ import type { FilterTypeProps } from './types';
  * <font color="green">View component source on GitHub</font>](https://github.com/kubev2v/forklift-console-plugin/blob/main/packages/common/src/components/Filter/SwitchFilter.tsx)
  */
 export const SwitchFilter = ({
+  filterId,
   onFilterUpdate,
   placeholderLabel,
   selectedFilters,
@@ -28,6 +29,7 @@ export const SwitchFilter = ({
   return (
     <ToolbarItem>
       <Switch
+        data-testid={`${filterId}-switch`}
         isChecked={!isEmpty(selectedFilters) && selectedFilters?.[0] === 'true'}
         label={placeholderLabel}
         onChange={(_event, value) => {

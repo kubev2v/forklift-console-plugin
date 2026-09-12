@@ -114,7 +114,9 @@ const BulkArchivePlansModal: OverlayComponent<BulkArchivePlansModalProps> = ({
           <StackItem>
             <List>
               {plans.map((plan) => (
-                <ListItem key={getPlanRowId(plan)}>{getName(plan)}</ListItem>
+                <ListItem data-testid={`bulk-modal-plan-${getName(plan)}`} key={getPlanRowId(plan)}>
+                  {getName(plan)}
+                </ListItem>
               ))}
             </List>
           </StackItem>

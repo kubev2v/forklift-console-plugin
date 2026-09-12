@@ -77,7 +77,6 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
         canSelect={canSelectPlanForBulkActions}
         cell={PlanRow}
         customNoResultsFound={<PlansEmptyState namespace={namespace} />}
-        data-testid="plans-list"
         dataSource={[plans || [], plansLoaded, plansLoadError]}
         fieldsMetadata={planFields}
         getSelectDisabledReason={getSelectDisabledReason}
@@ -87,6 +86,7 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
         postFilterData={postFilterData}
         selectedIds={selectedIds}
         shouldShowLearningExperienceButton
+        testId="plans-list"
         title={t('Migration plans')}
         titleHelpContent={t(
           'A migration plan is a strategy for moving VMs from 1 environment to OpenShift Virtualization. It lets you group VMs to be migrated together or with the same migration configuration.',

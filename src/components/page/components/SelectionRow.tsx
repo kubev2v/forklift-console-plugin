@@ -26,6 +26,7 @@ const SelectCheckboxTd = <T,>({
   return (
     <>
       <Td
+        data-testid="row-select-checkbox"
         ref={selectRef}
         select={{
           isDisabled,
