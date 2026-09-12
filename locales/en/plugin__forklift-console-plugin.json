@@ -1392,6 +1392,7 @@
   "Some selected plans are managed resources": "Some selected plans are managed resources",
   "Some selected plans are not archived": "Some selected plans are not archived",
   "Some selected VMs have multiple NICs on the same source network. Each NIC must be mapped to a distinct network attachment definition (NAD). Add one mapping row per NIC, each pointing to a different NAD.": "Some selected VMs have multiple NICs on the same source network. Each NIC must be mapped to a distinct network attachment definition (NAD). Add one mapping row per NIC, each pointing to a different NAD.",
+  "Source": "Source",
   "Source and target providers": "Source and target providers",
   "Source network": "Source network",
   "Source network is required for mapping {{index}}.": "Source network is required for mapping {{index}}.",

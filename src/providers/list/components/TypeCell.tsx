@@ -14,7 +14,7 @@ import {
   type PROVIDER_TYPES,
 } from '@utils/providers/constants';
 
-import { SOURCE_LABEL_COLOR, SOURCE_LABEL_TEXT } from './utils/constants';
+import { SOURCE_LABEL_COLOR } from './utils/constants';
 
 export const TypeCell: FC<CellProps> = ({ data, fields }) => {
   const { t } = useForkliftTranslation();
@@ -26,11 +26,7 @@ export const TypeCell: FC<CellProps> = ({ data, fields }) => {
   const isDevPreview = isDevPreviewProvider(type as string);
 
   return (
-    <TableLabelCell
-      hasLabel={isSource}
-      label={t(SOURCE_LABEL_TEXT)}
-      labelColor={SOURCE_LABEL_COLOR}
-    >
+    <TableLabelCell hasLabel={isSource} label={t('Source')} labelColor={SOURCE_LABEL_COLOR}>
       {PROVIDERS?.[type as keyof typeof PROVIDER_TYPES] ?? ''}
       {isTechPreview && <TechPreviewLabel />}
       {isDevPreview && <DevPreviewLabel />}
