@@ -63,12 +63,14 @@ export const usePlanListRowFields = (plan: V1beta1Plan): Record<PlanTableResourc
     ),
     [PlanTableResourceId.MigrationType]: <PlanMigrationType plan={plan} />,
     [PlanTableResourceId.Name]: (
-      <TableLinkCell
-        groupVersionKind={PlanModelGroupVersionKind}
-        name={planName}
-        namespace={planNamespace}
-        truncate
-      />
+      <span data-testid={`plan-link-${planName ?? ''}`}>
+        <TableLinkCell
+          groupVersionKind={PlanModelGroupVersionKind}
+          name={planName}
+          namespace={planNamespace}
+          truncate
+        />
+      </span>
     ),
     [PlanTableResourceId.Namespace]: (
       <TableLinkCell
