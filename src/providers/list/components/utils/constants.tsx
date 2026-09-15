@@ -43,4 +43,3 @@ export const ProviderDataCellRenderers: Record<ProvidersResourceFieldId, FC<Cell
 };
 
 export const SOURCE_LABEL_COLOR = 'green';
-export const SOURCE_LABEL_TEXT = 'Source';
