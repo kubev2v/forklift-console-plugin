@@ -11,6 +11,7 @@ import type { ProviderVirtualMachine, V1beta1Provider } from '@forklift-ui/types
 import { FlexItem, Radio, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { migrationTypeLabels, MigrationTypeValue } from './constants';
 
@@ -38,7 +39,9 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
     (migrationType === MigrationTypeValue.Warm && hasWarmMigrationProviderType(sourceProvider)) ||
     (migrationType === MigrationTypeValue.Live && hasLiveMigrationProviderType(sourceProvider));
 
-  const isVddkInitImageNotSet = isEmpty(sourceProvider?.spec?.settings?.vddkInitImage);
+  const isVddkInitImageNotSet =
+    sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere &&
+    isEmpty(sourceProvider?.spec?.settings?.vddkInitImage);
 
   if (!canRender) {
     return null;
