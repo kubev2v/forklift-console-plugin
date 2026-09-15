@@ -14,7 +14,7 @@ const IMAGE_REGEX = new RegExp(`^${REGISTRY}?${IMAGE_NAME}((@${SHA256}|:${TAG}))
 const PROTOCOL = '(https?:\\/\\/)';
 const IPV4 = '((?:\\d{1,3}\\.){3}\\d{1,3})';
 const HOSTNAME = '([a-zA-Z0-9-_]+\\.[a-zA-Z0-9-_\\.]+)';
-const IPV6_LITERAL = '(\\[[0-9a-fA-F:]+\\])';
+const IPV6_LITERAL = String.raw`(\[[0-9a-fA-F:]+\])`;
 const PORT = '(:\\d+)?';
 const PATH = '((\\/[^ ]*)*)?';
 const QUERY_PARAMS = '(\\?[a-zA-Z0-9=&_]*)?';
@@ -67,7 +67,19 @@ export const validateContainerImage = (image: string): boolean => {
 };
 
 export const validateURL = (url: string): boolean => {
-  return URL_REGEX.test(url);
+  if (!URL_REGEX.test(url)) {
+    return false;
+  }
+
+  if (url.includes('[')) {
+    try {
+      return Boolean(new URL(url).hostname);
+    } catch {
+      return false;
+    }
+  }
+
+  return true;
 };
 
 export const validateIpv4 = (value: string): boolean => {

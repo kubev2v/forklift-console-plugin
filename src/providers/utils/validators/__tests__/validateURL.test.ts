@@ -35,7 +35,14 @@ describe('validateURL', () => {
   });
 
   it('should return false for invalid IPv6 URLs', () => {
-    const urls = ['https://2001:db8::1/sdk', 'https://[]/sdk', 'https://[not:valid:ipv6]/sdk'];
+    const urls = [
+      'https://2001:db8::1/sdk',
+      'https://[]/sdk',
+      'https://[not:valid:ipv6]/sdk',
+      'https://[2001:db8:::1]/sdk',
+      'https://[1:2:3:4:5:6:7:8:9]/sdk',
+      'https://[dead:beef]/sdk',
+    ];
     for (const url of urls) {
       expect(validateURL(url)).toBe(false);
     }
