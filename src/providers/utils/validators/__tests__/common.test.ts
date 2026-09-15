@@ -48,11 +48,36 @@ describe('validator', () => {
       }
     });
 
+    it('should return true for valid IPv6 URLs', () => {
+      const urls = [
+        'https://[2620:52:0:2ef8:f2d4:e2ff:feea:4b6c]/sdk',
+        'https://[2001:db8::1]/sdk',
+        'https://[2001:db8::1]:443/sdk',
+      ];
+      for (const url of urls) {
+        expect(validateURL(url)).toBe(true);
+      }
+    });
+
     it('should return false for invalid URLs', () => {
       const urls = [
         'http:/example.com', // missing slash
         // no TLD
         'http://example', // NOSONAR
+      ];
+      for (const url of urls) {
+        expect(validateURL(url)).toBe(false);
+      }
+    });
+
+    it('should return false for invalid IPv6 URLs', () => {
+      const urls = [
+        'https://2001:db8::1/sdk',
+        'https://[]/sdk',
+        'https://[not:valid:ipv6]/sdk',
+        'https://[2001:db8:::1]/sdk',
+        'https://[1:2:3:4:5:6:7:8:9]/sdk',
+        'https://[dead:beef]/sdk',
       ];
       for (const url of urls) {
         expect(validateURL(url)).toBe(false);
