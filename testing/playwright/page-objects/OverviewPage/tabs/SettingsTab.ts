@@ -16,6 +16,8 @@ export class SettingsTab {
   readonly settingsEditButton: Locator;
   readonly settingsEditModal: SettingsEditModal;
   readonly settingsTab: Locator;
+  readonly virtV2vMemsizeField: Locator;
+  readonly virtV2vSmpField: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -30,12 +32,19 @@ export class SettingsTab {
     this.aapTokenSecretField = this.page.getByTestId('settings-aap-token-secret');
     this.aapTimeoutField = this.page.getByTestId('settings-aap-timeout');
     this.settingsEditModal = new SettingsEditModal(page);
+    this.virtV2vMemsizeField = this.page.getByTestId('settings-virt-v2v-memsize');
+    this.virtV2vSmpField = this.page.getByTestId('settings-virt-v2v-smp');
   }
 
   async editAndSaveTransferNetwork(): Promise<void> {
     await this.openSettingsEditModal();
     await this.settingsEditModal.toggleTransferNetworkValue();
     await this.settingsEditModal.save();
+  }
+
+  async expectVirtV2vUnsetOnCard(): Promise<void> {
+    await expect(this.virtV2vMemsizeField).toContainText('Default');
+    await expect(this.virtV2vSmpField).toContainText('Default');
   }
 
   getTransferNetworkCurrentValue(): Promise<string | null> {
