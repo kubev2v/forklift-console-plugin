@@ -47,7 +47,8 @@ const HookEdit: OverlayComponent<HookEditProps> = ({ closeOverlay, hook, plan, s
 
   const hookSource = watch('hookSource');
   const aapJobTemplateId = watch(HookField.AapJobTemplateId);
-  const isAapHookIncomplete = hookSource === HOOK_SOURCE_AAP && isEmpty(aapJobTemplateId);
+  const isAapHookIncomplete =
+    hookSource === HOOK_SOURCE_AAP && (aapJobTemplateId === undefined || aapJobTemplateId === null);
 
   useEffect(() => {
     if (hookSource !== HOOK_SOURCE_LOCAL) {
