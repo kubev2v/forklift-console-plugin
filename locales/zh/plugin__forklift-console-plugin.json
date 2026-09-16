@@ -776,6 +776,8 @@
   "It is recommended to use VDDK setup because it helps enhance migration performance. If you are using a warm migration, VDDK is required.": "建议使用 VDDK 设置，因为它有助于增强迁移性能。如果您使用温迁移，则需要 VDDK。",
   "Job template": "作业模板",
   "Job template ID": "作业模板 ID",
+  "Job template is required for Ansible Automation Platform hooks.": "Job template is required for Ansible Automation Platform hooks.",
+  "Job template is required.": "Job template is required.",
   "Job template name": "作业模板名称",
   "Jobs": "作业",
   "Keep the VM's original CPU and memory": "保留虚拟机的原始 CPU 和内存",
