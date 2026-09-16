@@ -7,6 +7,7 @@ export type InventoryDetailsItemProps = {
   resource: V1beta1Provider;
   inventory: ProviderInventory;
   helpContent?: ReactNode;
+  title?: string;
 };
 
 export type InventorySectionProps = {

@@ -109,6 +109,7 @@ src/
 
 - **Do:** Use GVK constants, useK8sWatchResource, k8s* for operations
 - **Do:** Check provider phase before plan creation; handle async statuses
+- **Do:** Use `buildProviderInventoryPath` for provider inventory GETs — root fetches (empty `subPath`) must send `?detail=1` so derived counts (`vmCount`, `networkCount`, `storageCount`) populate. Hyper-V `AddDerived` skips those fields when `Detail == 0`. Do not Hyper-V-gate the query param. SubPath callers keep their own detail (e.g. `hosts?detail=4`).
 - **Don't:** Import from feature code in shared (`components/`, `utils/`)
 - **Don't:** Assume resources are always loaded — handle loading/error/empty
 

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { buildProviderInventoryPath } from 'src/providers/hooks/utils/buildProviderInventoryPath';
 import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from 'src/providers/hooks/utils/constants';
 import { getInventoryApiUrl } from 'src/providers/utils/helpers/getApiUrl';
 import { hasObjectChangedInGivenFields } from 'src/providers/utils/helpers/hasObjectChangedInGivenFields';
@@ -122,7 +123,7 @@ const useProviderInventory = <T>({
       try {
         const newInventory = (await consoleFetchJSON(
           getInventoryApiUrl(
-            `providers/${providerType}/${providerUid}${subPath ? `/${subPath}` : ''}`,
+            buildProviderInventoryPath(providerType ?? '', providerUid ?? '', subPath),
           ),
           'GET',
           {},

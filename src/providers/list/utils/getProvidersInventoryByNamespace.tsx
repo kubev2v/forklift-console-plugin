@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
+import { buildProviderInventoryPath } from 'src/providers/hooks/utils/buildProviderInventoryPath';
 import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 import { getInventoryApiUrl } from 'src/providers/utils/helpers/getApiUrl';
+import { getType, getUID } from 'src/utils/crds/common/selectors';
 
 import type {
   HypervProvider,
@@ -26,15 +28,14 @@ export const getProvidersInventoryByNamespace = async (
     (provider: V1beta1Provider) => provider?.status?.phase === 'Ready',
   );
 
-  const inventoryProviderURL = (provider: V1beta1Provider) =>
-    `providers/${provider?.spec?.type}/${provider?.metadata?.uid}`;
-
   const inventoryReadyProviders = () => {
     return Promise.all(
       readyProviders.map((provider) => {
-        return consoleFetchJSON(getInventoryApiUrl(inventoryProviderURL(provider))) as Promise<
-          (ProviderInventory & { type: string }) | null
-        >;
+        return consoleFetchJSON(
+          getInventoryApiUrl(
+            buildProviderInventoryPath(getType(provider) ?? '', getUID(provider) ?? ''),
+          ),
+        ) as Promise<(ProviderInventory & { type: string }) | null>;
       }),
     )
       .then((newInventoryProviders) => {
@@ -82,7 +83,7 @@ export const getProvidersInventoryByNamespace = async (
               case PROVIDER_TYPES.ec2: {
                 const extended = newInventory as ProvidersInventoryList &
                   Record<string, ProviderInventory[]>;
-                extended.ec2 = [...(extended.ec2 ?? []), newInventoryProvider as ProviderInventory];
+                extended.ec2 = [...(extended.ec2 ?? []), newInventoryProvider];
                 break;
               }
               default:
