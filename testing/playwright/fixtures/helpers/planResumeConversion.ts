@@ -17,6 +17,16 @@ export type PlanCondition = {
   type?: string;
 };
 
+export type PlanDisksCopiedRestore = {
+  hadField: boolean;
+  originalValue?: boolean;
+};
+
+export type PlanStatusRestoreState = {
+  disksCopied?: PlanDisksCopiedRestore;
+  originalConditions: PlanCondition[];
+};
+
 const advisoryCondition = (type: string): PlanCondition => ({
   category: ADVISORY,
   lastTransitionTime: new Date().toISOString(),
@@ -42,7 +52,7 @@ export const injectConversionResumable = async (
   resourceManager: ResourceManager,
   planName: string,
   namespace: string,
-): Promise<PlanCondition[]> => {
+): Promise<PlanStatusRestoreState | null> => {
   const plan = await resourceManager.fetchPlan(planName, namespace);
   if (!plan) {
     throw new Error(`Plan ${planName} not found`);
@@ -50,6 +60,7 @@ export const injectConversionResumable = async (
 
   const originalConditions = getPlanConditions(plan);
   const patches: JsonPatchOperation[] = [];
+  let disksCopiedRestore: PlanDisksCopiedRestore | undefined;
 
   if (!hasTrueCondition(originalConditions, CONVERSION_RESUMABLE)) {
     patches.push({
@@ -69,6 +80,10 @@ export const injectConversionResumable = async (
 
   const firstVm = plan.status?.migration?.vms?.[0] as { disksCopied?: boolean } | undefined;
   if (firstVm && firstVm.disksCopied !== true) {
+    disksCopiedRestore = {
+      hadField: firstVm.disksCopied !== undefined,
+      originalValue: firstVm.disksCopied,
+    };
     patches.push({
       op: firstVm.disksCopied === undefined ? 'add' : 'replace',
       path: '/status/migration/vms/0/disksCopied',
@@ -77,7 +92,7 @@ export const injectConversionResumable = async (
   }
 
   if (patches.length === 0) {
-    return originalConditions;
+    return null;
   }
 
   const patched = await resourceManager.patchResource({
@@ -92,21 +107,43 @@ export const injectConversionResumable = async (
     throw new Error(`Failed to patch ConversionResumable on ${planName}`);
   }
 
-  return originalConditions;
+  return { disksCopied: disksCopiedRestore, originalConditions };
 };
 
 export const restorePlanConditions = async (
   resourceManager: ResourceManager,
   planName: string,
   namespace: string,
-  originalConditions: PlanCondition[],
+  restoreState: PlanStatusRestoreState,
 ): Promise<void> => {
-  await resourceManager.patchResource({
+  const patches: JsonPatchOperation[] = [
+    { op: 'replace', path: '/status/conditions', value: restoreState.originalConditions },
+  ];
+
+  if (restoreState.disksCopied) {
+    if (restoreState.disksCopied.hadField) {
+      patches.push({
+        op: 'replace',
+        path: '/status/migration/vms/0/disksCopied',
+        value: restoreState.disksCopied.originalValue,
+      });
+    } else {
+      patches.push({
+        op: 'remove',
+        path: '/status/migration/vms/0/disksCopied',
+      });
+    }
+  }
+
+  const restored = await resourceManager.patchResource({
     kind: RESOURCE_KINDS.PLAN,
     namespace,
-    patch: [{ op: 'replace', path: '/status/conditions', value: originalConditions }],
+    patch: patches,
     patchType: 'json',
     resourceName: planName,
     subresource: 'status',
   });
+  if (!restored) {
+    throw new Error(`Failed to restore Plan status on ${planName}`);
+  }
 };
