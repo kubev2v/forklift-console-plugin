@@ -46,6 +46,7 @@ const PlansBulkActionsDropdown: FC<PlansBulkActionsDropdownProps> = ({
       shouldFocusFirstItemOnOpen={false}
       toggle={(toggleRef: Ref<MenuToggleElement>) => (
         <MenuToggle
+          data-testid="plans-bulk-actions-toggle"
           isExpanded={isOpen}
           onClick={() => {
             setIsOpen((open) => !open);

@@ -1,4 +1,4 @@
-import { type FC, useCallback } from 'react';
+import { type ComponentProps, type FC, useCallback } from 'react';
 
 import { BulkSelect, BulkSelectValue } from '@patternfly/react-component-groups';
 import { Popover } from '@patternfly/react-core';
@@ -14,6 +14,7 @@ type TableBulkSelectProps = {
 };
 
 const TOGGLE_CHECKBOX_ID = 'bulk-select-toggle-checkbox';
+const TABLE_BULK_SELECT_TEST_ID = 'table-bulk-select';
 
 const TableBulkSelect: FC<TableBulkSelectProps> = ({
   canPageSelect = true,
@@ -48,9 +49,14 @@ const TableBulkSelect: FC<TableBulkSelectProps> = ({
   );
 
   const bulkSelect = (
-    <div className="pf-v6-u-text-nowrap">
+    <div className="pf-v6-u-text-nowrap" data-testid={TABLE_BULK_SELECT_TEST_ID}>
       <BulkSelect
         canSelectAll
+        dropdownListProps={
+          {
+            'data-testid': `${TABLE_BULK_SELECT_TEST_ID}-menu`,
+          } as ComponentProps<typeof BulkSelect>['dropdownListProps']
+        }
         onSelect={onBulkSelect}
         pageCount={pageDataIds.length}
         selectedCount={selectedIds.length}
@@ -60,10 +66,13 @@ const TableBulkSelect: FC<TableBulkSelectProps> = ({
           pageSelected,
         })}
         isDataPaginated={canPageSelect}
-        menuToggleCheckboxProps={{
-          id: TOGGLE_CHECKBOX_ID,
-          isDisabled: !canPageSelect,
-        }}
+        menuToggleCheckboxProps={
+          {
+            'data-testid': `${TABLE_BULK_SELECT_TEST_ID}-checkbox`,
+            id: TOGGLE_CHECKBOX_ID,
+            isDisabled: !canPageSelect,
+          } as ComponentProps<typeof BulkSelect>['menuToggleCheckboxProps']
+        }
       />
     </div>
   );
