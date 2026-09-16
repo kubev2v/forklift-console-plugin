@@ -23,14 +23,14 @@ describe('createProvider - create', () => {
   });
 
   it('attaches secret ref and strips empty settings keys', async () => {
-    const provider: V1beta1Provider = {
+    const provider = {
       metadata: { name: 'p', namespace: 'ns' },
       spec: {
         settings: { keep: 'value', removeMe: '' },
         type: 'vsphere',
         url: 'https://vc',
       },
-    };
+    } as unknown as V1beta1Provider;
     const secret = { metadata: { name: 'sec', namespace: 'ns' } } as never;
 
     await createProvider(provider, secret);
@@ -44,10 +44,10 @@ describe('createProvider - create', () => {
   });
 
   it('creates provider without secret when secret is omitted', async () => {
-    const provider: V1beta1Provider = {
+    const provider = {
       metadata: { name: 'p', namespace: 'ns' },
       spec: { type: 'ova', url: 'host:/ova' },
-    };
+    } as unknown as V1beta1Provider;
 
     await createProvider(provider, undefined);
     const [createArg] = mockK8sCreate.mock.calls[0] as unknown as [{ data: V1beta1Provider }];
@@ -55,7 +55,7 @@ describe('createProvider - create', () => {
   });
 
   it('clears vddk settings when empty-VDDK annotation is yes', async () => {
-    const provider: V1beta1Provider = {
+    const provider = {
       metadata: {
         annotations: { [EMPTY_VDDK_INIT_IMAGE_ANNOTATION]: YES_VALUE },
         name: 'p',
@@ -69,7 +69,7 @@ describe('createProvider - create', () => {
         type: 'vsphere',
         url: 'https://vc',
       },
-    };
+    } as unknown as V1beta1Provider;
 
     await createProvider(provider, undefined);
     const [createArg] = mockK8sCreate.mock.calls[0] as unknown as [{ data: V1beta1Provider }];
