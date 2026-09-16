@@ -8,7 +8,7 @@ export class PlanResumeConversion {
   }
 
   private get resumeMenuitem(): Locator {
-    return this.page.getByRole('menuitem', { name: /Resume conversion/u });
+    return this.page.getByTestId('plan-actions-resume-conversion-menuitem');
   }
 
   get actionsButton(): Locator {
@@ -33,7 +33,7 @@ export class PlanResumeConversion {
   }
 
   get modal(): Locator {
-    return this.page.getByRole('dialog', { name: 'Resume conversion' });
+    return this.page.getByRole('dialog', { exact: true, name: 'Resume conversion' });
   }
 
   get modalCancelButton(): Locator {
