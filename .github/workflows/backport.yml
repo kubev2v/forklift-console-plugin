@@ -272,20 +272,18 @@ jobs:
           original_priority=$(echo "$original_data" | jq -r '.fields.priority.id')
           original_issuetype=$(echo "$original_data" | jq -r '.fields.issuetype.id')
 
-          # Read fix version from build/release.conf on target branch
+          # Read fix version from build/release.conf on target branch (RVERSION = next z-stream)
           fix_version_id=""
-          cpe_version=""
+          rversion=""
           if release_conf=$(git show "origin/${BRANCH_NAME}:build/release.conf" 2>/dev/null); then
-            cpe_version=$(echo "$release_conf" | awk -F= '$1 == "CPE" {print $2; exit}')
-            echo "  - CPE version from release.conf: $cpe_version"
+            rversion=$(echo "$release_conf" | awk -F= '$1 == "RVERSION" {print $2; exit}')
+            echo "  - RVERSION from release.conf: $rversion"
 
-            if [[ -n "$cpe_version" ]]; then
-              # Query Jira for matching fix version (highest unreleased in the series)
+            if [[ -n "$rversion" ]]; then
               if versions_data=$(jira_get "${JIRA_BASE}/rest/api/3/project/MTV/versions"); then
-                fix_version_id=$(echo "$versions_data" | jq -r --arg cpe "$cpe_version" '
-                  [.[] | select(.name | startswith($cpe + ".")) | select(.released == false)]
-                  | sort_by(.name | split(".") | map(tonumber? // 0))
-                  | last
+                fix_version_id=$(echo "$versions_data" | jq -r --arg name "$rversion" '
+                  [.[] | select(.name == $name)]
+                  | first
                   | .id // empty
                 ' || true)
               else
@@ -293,9 +291,9 @@ jobs:
               fi
 
               if [[ -n "$fix_version_id" ]]; then
-                echo "  - Matched fix version ID: $fix_version_id"
+                echo "  - Matched fix version ID: $fix_version_id ($rversion)"
               else
-                echo "  ⚠️ No fix version matching '$cpe_version' found in MTV project"
+                echo "  ⚠️ No Jira fix version named '$rversion' found in MTV project"
               fi
             fi
           else
