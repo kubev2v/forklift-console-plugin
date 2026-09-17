@@ -5,39 +5,39 @@ alwaysApply: false
 
 # Hyper-V Provider
 
-> Analyzed from commit: `412c71822` on `2026-05-04`
+> Analyzed from commit: `baf9c7bcc` on `2026-09-17`
+> Source paths: `pkg/controller/provider/container/hyperv/`, `pkg/controller/provider/model/hyperv/`, `pkg/controller/provider/web/hyperv/`, `pkg/controller/hyperv/`, `pkg/lib/hyperv/`
 
-## Architecture Overview
+## Package Purpose
 
-The Hyper-V provider collects VM inventory directly from a Windows Hyper-V host via **WinRM** (PowerShell remoting over HTTPS). Disk files are accessed through an **SMB share** mounted in a sidecar pod via the SMB CSI driver.
+The Hyper-V provider collects VM inventory from Windows Hyper-V hosts (standalone or Failover Cluster) via **WinRM** (PowerShell remoting over HTTPS). Disk files are accessed through an **SMB share** mounted in a sidecar pod (`HyperVProviderServer`) via the SMB CSI driver. Inventory is stored in the file-backed DB and exposed through the inventory REST API at `/providers/hyperv/…`.
 
 ```
 ┌──────────────────────┐
-│  Hyper-V Host        │
-│  (Windows Server)    │
+│  Hyper-V Host/Cluster│
 │  - WinRM :5986       │
 │  - SMB share         │
 └──────────┬───────────┘
-           │ WinRM/HTTPS (PowerShell commands)
+           │ WinRM/HTTPS (PowerShell)
            ▼
 ┌─────────────────────────┐
-│  Inventory Collector    │  (runs inside forklift-controller)
+│  Inventory Collector    │  (forklift-controller)
 │  - WinRM driver         │
-│  - Stores in libmodel DB│
-│  - Validates VMs (OPA)  │
+│  - libmodel DB          │
+│  - OPA VM validation    │
 └────────────┬────────────┘
-             │ HTTP (validate-disks)
+             │ HTTP POST /validate-disks
              ▼
 ┌─────────────────────────┐
 │  HyperV Provider Server │  (Deployment + SMB CSI mount)
-│  - Mounts SMB share     │
+│  - Mounts SMB at /hyperv│
 │  - /validate-disks      │
 │  - /healthz             │
-└─────────────────────────┘
+└────────────┬────────────┘
              │
              ▼
 ┌─────────────────────────┐
-│  Inventory REST API     │  (gin handlers in forklift-controller)
+│  Inventory REST API     │
 │  /providers/hyperv/…    │
 └─────────────────────────┘
 ```
@@ -48,46 +48,19 @@ The Hyper-V provider collects VM inventory directly from a Windows Hyper-V host 
 
 | Component | Path (under `pkg/`) |
 |-----------|---------------------|
-| Collector | `controller/provider/container/hyperv/` |
+| Collector + adapters | `controller/provider/container/hyperv/` |
 | Data model | `controller/provider/model/hyperv/` |
-| Types (wire format) | `controller/provider/model/hyperv/types/` |
+| Wire types | `controller/provider/model/hyperv/types/` |
 | REST API handlers | `controller/provider/web/hyperv/` |
 | HyperVProviderServer controller | `controller/hyperv/` |
-| Driver interface & WinRM impl | `lib/hyperv/driver/` |
+| WinRM driver | `lib/hyperv/driver/` |
 | PowerShell scripts | `lib/hyperv/powershell/scripts.go` |
 
 ---
 
-## HyperVProviderServer CRD
+## Provider Configuration
 
-**Kind**: `HyperVProviderServer` (group `forklift.konveyor.io/v1beta1`)
-**Finalizer**: `api.HyperVProviderFinalizer`
-**Controller name**: `hyperv-server`
-
-### Lifecycle
-
-1. Provider controller creates a `HyperVProviderServer` CR for each Hyper-V provider.
-2. The controller ensures:
-   - **PersistentVolume** — SMB CSI driver (`smb.csi.k8s.io`), `ReadOnlyMany`, source from `smbUrl` in Secret.
-   - **PersistentVolumeClaim** — Binds to static PV.
-   - **Deployment** — Runs provider server image (`Settings.Providers.HyperV.ContainerImage`), mounts SMB at `/hyperv`.
-   - **Service** — ClusterIP on port `8080`.
-3. On deletion: Service → Deployment → PVC → PV cleanup.
-
-### Builder Constants
-
-```go
-SMBVolumeMountPath = "/hyperv"
-SMBCSIDriver       = "smb.csi.k8s.io"
-QEMUGroup          = 107
-PVSize             = "1Gi"
-```
-
----
-
-## Secret Format
-
-The provider Secret contains:
+### Secret Fields
 
 | Field | Required | Description |
 |-------|----------|-------------|
@@ -97,11 +70,18 @@ The provider Secret contains:
 | `smbUser` | No | Dedicated SMB username (falls back to `username`) |
 | `smbPassword` | No | Dedicated SMB password (falls back to `password`) |
 
-### Provider Settings
+### Provider Settings (`spec.settings`)
 
 | Setting | Default | Description |
 |---------|---------|-------------|
 | `winrmPort` | `5986` | WinRM HTTPS port on the host |
+| `managementType` | `standalone` | `standalone` or `cluster` (Failover Cluster) |
+
+`Provider.IsHyperVCluster()` is true when `type=hyperv` and `managementType=cluster`. Cluster mode validates `Get-Cluster` succeeds on connect and adds Cluster/Host inventory plus parallel collection phases.
+
+### Provider URL
+
+Host address only — IP, FQDN, optional port, or IPv6 bracket form (`[::1]`). Not a full URL scheme.
 
 ---
 
@@ -123,60 +103,79 @@ type HyperVDriver interface {
 }
 ```
 
-### WinRM Implementation
+`WinRMDriver` is the sole implementation. Cluster helpers (`GetCluster`, `GetClusterInfo`, `GetClusterNodes`, `GetClusterVMGroups`, `GetComputerInfo`) and `RunOnNode` (via `Invoke-Command -Credential`) support Failover Cluster inventory.
 
-- Uses `github.com/masterzen/winrm` library
-- Connects via HTTPS (port 5986 by default, `insecureSkipVerify=true`)
-- Commands wrapped in `powershell -EncodedCommand <base64>` for complex scripts
-- Default command timeout: 60 seconds
-- Thread-safe (mutex-protected)
+### Connection Details
 
-### Domain Interface
+- Library: `github.com/masterzen/winrm`
+- Protocol: HTTPS (`WinRMPortHTTPS = 5986`)
+- TLS: `insecureSkipVerify=true` (no CA cert wired today)
+- Commands: wrapped in `powershell -EncodedCommand <base64>` for multiline/quoted scripts
+- Default timeout: **60s** per command
+- Long timeout: **5 minutes** (`longCommandTimeout`) for batch VM scripts on large nodes
+- Thread-safe: mutex-protected client
+- Auth errors: HTTP 401/403 wrapped as `driver.ErrUnauthorized` → collector `Test()` returns HTTP 401
 
-Represents a VM with methods for:
-- `GetName()`, `GetUUIDString()`, `GetState()`, `GetInfo()`
-- `GetGeneration()` — Gen1 (BIOS) vs Gen2 (UEFI)
-- `GetDisks()` — returns disk paths with controller info
-- `GetNICs()` — returns MAC + switch name
-- `Shutdown()` — force-stops the VM
+### Domain (`WinRMDomain`)
 
-### Network Interface
+Per-VM methods: `GetName`, `GetUUIDString`, `GetState`, `GetInfo`, `GetGeneration`, `GetDisks`, `GetNICs` (includes VLAN), `Shutdown`, `GetComputerName` (cluster owner node).
 
-Represents a virtual switch:
-- `GetName()`, `GetUUIDString()`, `GetSwitchType()`
-- Switch types: External (0), Internal (1), Private (2)
+### Network (`WinRMNetwork`)
+
+Virtual switch: `GetName`, `GetUUIDString`, `GetSwitchType` — External (0), Internal (1), Private (2).
 
 ---
 
 ## PowerShell Scripts (`pkg/lib/hyperv/powershell`)
 
-All scripts return JSON via `ConvertTo-Json`. Key scripts:
+All scripts return JSON via `ConvertTo-Json`. `BuildCommand` escapes single quotes; `RunOnNode` wraps scripts in `Invoke-Command` with explicit credentials (avoids WinRM double-hop in cluster mode).
 
-| Constant | Purpose | Parameters |
-|----------|---------|-----------|
-| `ListAllVMs` | Get all VMs (Id, Name, State, CPU, Memory, Gen) | — |
-| `GetVMByName` | Single VM by name | vmName |
-| `GetVMByID` | Single VM by GUID | vmId |
-| `StopVM` | Force-stop a VM | vmName |
-| `ListAllSwitches` | Get all virtual switches | — |
-| `GetVMDisks` | VM hard disk drives | vmName |
-| `GetDiskCapacity` | VHD/VHDX file size | windowsPath |
-| `GetDiskRCTEnabled` | Resilient Change Tracking status | windowsPath |
-| `GetVMNICs` | VM network adapters | vmName |
-| `GetSMBSharePath` | Windows path for an SMB share | shareName |
-| `GetStorageCapacity` | Volume capacity & free space | windowsPath |
-| `GetGuestOS` | Guest OS name via KVP Exchange | vmName |
-| `GetGuestNetworkConfig` | Guest IP config via KVP Exchange | vmName |
-| `GetVMSecurityInfo` | TPM + SecureBoot (Gen2 only) | vmName×3 |
-| `GetVMHasCheckpoint` | Check for existing snapshots | vmName |
+| Constant | Purpose |
+|----------|---------|
+| `TestConnection` | WinRM liveness (`echo ok`) |
+| `ListAllVMs` / `ListClusterVMs` | VM list (cluster variant queries all nodes) |
+| `ListAllSwitches` | Virtual switches |
+| `GetVMDisks` / `GetDiskCapacity` / `GetDiskRCTEnabled` | Disk topology, size, warm-migration RCT |
+| `GetVMNICs` | NICs **with VLAN** (see below) |
+| `GetGuestOS` / `GetGuestNetworkConfig` | KVP Exchange (running VMs only) |
+| `GetVMSecurityInfo` / `GetVMHasCheckpoint` | Gen2 TPM/SecureBoot, snapshot check |
+| `GetClusterInfo` | Combined cluster identity + nodes (single WinRM call) |
+| `GetComputerInfo` | Node hardware (fast WMI, not `Get-ComputerInfo`) |
+| `BatchGetVMDetails` | One-shot hardware + guest details for all VMs |
+| `BatchGetVMDetailsLight` | Fast staging: disks/NICs/checkpoint only |
+| `ListVMsWithDetailsLight` | Combined VM list + light details (one round-trip per node) |
+| `BatchGetVHDCapacity` | Post-staging `Get-VHD` for capacity/RCT |
 
-### Argument Sanitization
+Split fallbacks (`BatchGetVMHardware`, `BatchGetVMGuest`) exist if combined scripts exceed WinRM command-size limits.
+
+---
+
+## VLAN Support
+
+VLAN IDs are collected on VM NICs via `Get-VMNetworkAdapterVlan`:
+
+- **Access-mode VLANs**: `AccessVlanId` → `vlanId` on the NIC model
+- **Trunk-mode adapters**: `NativeVlanId` is **not** captured; `vlanId` reports **0**
+- Applies to per-VM `GetVMNICs`, batch scripts (`Vlan` field in JSON), and REST `nics[].vlanId`
 
 ```go
-func BuildCommand(template string, args ...string) string {
-    // Escapes single quotes by doubling them
-    sanitized[i] = strings.ReplaceAll(arg, "'", "''")
-    return fmt.Sprintf(template, sanitized...)
+type NIC struct {
+    Name        string `json:"name"`
+    MAC         string `json:"mac"`
+    DeviceIndex int    `json:"deviceIndex"`
+    Network     Ref    `json:"network"`
+    NetworkName string `json:"networkName,omitempty"`
+    VlanId      int    `json:"vlanId,omitempty"`
+}
+```
+
+PowerShell (`GetVMNICs`):
+
+```powershell
+Get-VMNetworkAdapter -VMName '%s' | ForEach-Object {
+  $v = ($_ | Get-VMNetworkAdapterVlan);
+  $_ | Select-Object Name, MacAddress, SwitchName,
+    @{N='VlanId';E={if($v.AccessVlanId){$v.AccessVlanId}else{0}}}
 }
 ```
 
@@ -184,126 +183,94 @@ func BuildCommand(template string, args ...string) string {
 
 ## Inventory Collector
 
-### Connection
+### Connection Test
 
-Connects directly to the Hyper-V host via WinRM using credentials from the Secret:
-```go
-drv := driver.NewWinRMDriver(host, port, username, password, true, nil)
-```
-
-The host is extracted from `Provider.Spec.URL` (supports `host`, `host:port`, or `[ipv6]`).
+1. WinRM connect with Secret credentials + `winrmPort`
+2. `IsAlive()` (`echo ok`)
+3. Cluster mode: `Get-Cluster` membership validation
+4. Transient failures: up to **3** consecutive `ConnTestFailed` calls are suppressed while parity is held
 
 ### Refresh Settings
 
-```go
-DefaultRefreshInterval   = 10 * time.Second   // env: HYPERV_REFRESH_INTERVAL
-DefaultValidationTimeout = 30 * time.Second   // env: HYPERV_VALIDATION_TIMEOUT
-```
+| Constant | Default | Env override |
+|----------|---------|--------------|
+| `RefreshInterval` | 10s | `HYPERV_REFRESH_INTERVAL` |
+| `ValidationTimeout` | 30s | `HYPERV_VALIDATION_TIMEOUT` |
 
-### Collection Flow
+Operator mirrors these as `controller_hyperv_refresh_interval` / `controller_hyperv_validation_timeout` on `ForkliftController`.
 
-1. **Connect** — Establish WinRM session
-2. **Load** — Full inventory via adapters (Network → Storage → Disk → VM)
-3. **Parity** — Set parity=true, start DB watches
-4. **Refresh loop** — Re-poll every 10s, apply deletes then upserts
+### Collection Phases
 
-### Adapters
+**Standalone:**
 
-| Adapter | Source | Collects |
-|---------|--------|----------|
-| `NetworkAdapter` | `ListNetworks()` via WinRM | Virtual switches |
-| `StorageAdapter` | `ListStorages()` from SMB config | Single SMB storage record |
-| `DiskAdapter` | `ListDisks()` via WinRM | All VM disks |
-| `VMAdapter` | `ListVMs()` via WinRM | Full VM details |
+1. Connect → **LightMode** load (Network → Storage → Disk → VM adapters, serial)
+2. `EnrichDiskCapacity` — parallel per-node `Get-VHD`
+3. Set `parity=true`, start DB watches + 10s refresh loop
 
-### VM Collection Details
+**Failover Cluster** (`loadClusterParallel`):
 
-For each VM, the collector gathers:
-- Basic info: UUID, name, power state, CPU, memory
-- Generation → firmware (Gen1=bios, Gen2=uefi)
-- Security info (Gen2 only): TPM, SecureBoot
+| Phase | Adapters | Notes |
+|-------|----------|-------|
+| 0 | Prewarm cluster cache | `GetClusterInfo` (single WinRM call) |
+| BG | VM prefetch + network prefetch | Overlaps with later phases |
+| 1 | `ClusterAdapter` | DB insert from cache |
+| 2 (parallel) | `HostAdapter`, `NetworkAdapter`, `StorageAdapter` | |
+| 3–4 (serial) | `DiskAdapter`, `VMAdapter` | Consumes prefetched VM data |
+
+**Optimized cluster refresh** (after first full cycle): LightMode VM+Disk first, concurrent disk enrichment, remaining adapters; every **10th** cycle runs full non-LightMode refresh for security/guest OS/guest networks.
+
+### VM Collection Per VM
+
+- Basic: UUID, name, power state, CPU, memory, firmware (Gen1=bios, Gen2=uefi)
+- Security (Gen2): TPM, SecureBoot
 - Checkpoint existence
-- Disks: Windows path → SMB path mapping, capacity, format (vhd/vhdx), RCT status
-- NICs: MAC, switch name → resolved to network UUID
-- Guest OS (running VMs only, via KVP Exchange)
-- Guest network config (running VMs only, via KVP Exchange)
+- Disks: Windows path → SMB path, capacity, format (vhd/vhdx), RCT
+- NICs: MAC, switch name → network UUID, **vlanId**
+- Guest OS + guest networks (running VMs via KVP; preserved when VM stops)
+- Cluster: `host` (owner node), `IsClusterRole`
 
 ### SMB Path Mapping
 
-Windows paths are mapped to the SMB mount:
 ```
 Windows: C:\Hyper-V\VMs\disk.vhdx
-SMB prefix: C:\Hyper-V  (discovered via Get-SmbShare)
+SMB prefix: C:\Hyper-V  (via Get-SmbShare)
 Mount path: /hyperv
 Result: /hyperv/VMs/disk.vhdx
 ```
 
 ### SMB Disk Validation
 
-After collecting VMs, the collector POSTs to the provider-server sidecar:
 ```
-POST http://<service>.svc.cluster.local:8080/validate-disks
+POST http://<service>.<ns>.svc.cluster.local:8080/validate-disks
 Body: {"paths": ["/hyperv/VMs/disk1.vhdx", ...]}
-Response: {"missing": ["/hyperv/VMs/disk1.vhdx"]}
+Response: {"missing": [...]}
 ```
 
-Missing disks generate a `DiskNotFoundOnSMB` concern on the VM.
-
-### Guest Network Preservation
-
-When a VM transitions from Running to Off, existing `GuestNetworks` and `GuestOS` data is preserved from the previous poll (KVP Exchange only works while VM is running).
+Missing disks: `SMBPath` cleared → OPA policy `hyperv.disk.smb_path.missing` flags the VM.
 
 ---
 
 ## Data Model (`model/hyperv`)
 
-### Entities
-
 | Model | PK | Key Fields |
 |-------|-----|-----------|
-| `VM` | UUID | PowerState, CpuCount, MemoryMB, Firmware, GuestOS, TpmEnabled, SecureBoot, HasCheckpoint, Disks[], NICs[], GuestNetworks[], Concerns[] |
-| `Network` | UUID | SwitchName, SwitchType (External/Internal/Private) |
-| `Storage` | ID (`storage-0`) | Type (SMB), Path, Capacity, Free |
-| `Disk` | `<vmUUID>-disk-<index>` | WindowsPath, SMBPath, Capacity, Format, RCTEnabled, Datastore ref |
+| `Cluster` | ID | Domain, Nodes[] |
+| `Host` | ID | Cluster, State, CpuSockets, CpuCores, MemoryBytes, Networks[] |
+| `Network` | UUID | SwitchName, SwitchType, Hosts[] (cluster) |
+| `Storage` | `storage-0` | Type (SMB), Path, Capacity, Free |
+| `Disk` | `<vmUUID>-disk-<index>` | WindowsPath, SMBPath, Capacity, Format, RCTEnabled |
+| `VM` | UUID | PowerState, Firmware, GuestOS, TpmEnabled, SecureBoot, HasCheckpoint, Host, Disks[], NICs[] (**vlanId**), GuestNetworks[], Concerns[] |
 
 ### VM Power States
 
 `On`, `Off`, `Paused`, `ShuttingDown`, `Crashed`, `Suspended`, `Unknown`
 
-### NIC Model
+### OPA Validation
 
-```go
-type NIC struct {
-    Name        string
-    MAC         string
-    DeviceIndex int
-    Network     Ref    // {Kind: "Network", ID: uuid}
-    NetworkName string
-}
-```
-
-NICs are sorted by `GuestNetwork.DeviceIndex` order for stable ordering.
-
-### GuestNetwork
-
-```go
-type GuestNetwork struct {
-    MAC          string
-    IP           string
-    DeviceIndex  int
-    Origin       string   // "Manual" or "Dhcp"
-    PrefixLength int32
-    DNS          []string
-    Gateway      string
-}
-```
-
-### VM Validation
-
-Similar to OVA, VMs are validated against OPA policy:
-```
-/v1/data/io/konveyor/forklift/hyperv/validate
-```
+- Endpoint: `/v1/data/io/konveyor/forklift/hyperv/validate`
+- Version: `/v1/data/io/konveyor/forklift/hyperv/rules_version`
+- Non-blocking: validation never blocks model updates; scheduled sweep for `revision != revisionValidated`
+- Cluster/host changes trigger revalidation of affected VMs
 
 ---
 
@@ -313,41 +280,83 @@ Base path: `/providers/hyperv`
 
 | Method | Path | Handler | Description |
 |--------|------|---------|-------------|
-| GET | `/providers/hyperv` | ProviderHandler.List | List Hyper-V providers |
-| GET | `/providers/hyperv/:provider` | ProviderHandler.Get | Get provider details |
-| GET | `/providers/hyperv/:provider/vms` | VMHandler.List | List VMs (supports watch) |
-| GET | `/providers/hyperv/:provider/vms/:vm` | VMHandler.Get | Get VM details |
-| GET | `/providers/hyperv/:provider/networks` | NetworkHandler.List | List networks |
-| GET | `/providers/hyperv/:provider/networks/:network` | NetworkHandler.Get | Get network |
-| GET | `/providers/hyperv/:provider/storages` | StorageHandler.List | List storages |
-| GET | `/providers/hyperv/:provider/storages/:storage` | StorageHandler.Get | Get storage |
-| GET | `/providers/hyperv/:provider/disks` | DiskHandler.List | List disks |
-| GET | `/providers/hyperv/:provider/disks/:disk` | DiskHandler.Get | Get disk |
-| GET | `/providers/hyperv/:provider/tree` | TreeHandler | Tree view |
-| GET | `/providers/hyperv/:provider/workloads` | WorkloadHandler.List | List workloads |
-| GET | `/providers/hyperv/:provider/workloads/:vm` | WorkloadHandler.Get | Get workload |
+| GET | `/providers/hyperv` | ProviderHandler | List providers |
+| GET | `/providers/hyperv/:provider` | ProviderHandler | Get provider |
+| GET | `…/clusters` | ClusterHandler | List clusters (cluster mode) |
+| GET | `…/clusters/:cluster` | ClusterHandler | Get cluster |
+| GET | `…/hosts` | HostHandler | List hosts (cluster mode) |
+| GET | `…/hosts/:host` | HostHandler | Get host |
+| GET | `…/vms` | VMHandler | List VMs (supports `X-Watch`) |
+| GET | `…/vms/:vm` | VMHandler | Get VM (always max detail) |
+| GET | `…/networks` | NetworkHandler | List networks |
+| GET | `…/networks/:network` | NetworkHandler | Get network |
+| GET | `…/storages` | StorageHandler | List storages |
+| GET | `…/storages/:storage` | StorageHandler | Get storage |
+| GET | `…/disks` | DiskHandler | List disks |
+| GET | `…/disks/:disk` | DiskHandler | Get disk |
+| GET | `…/tree/host` | TreeHandler | Cluster → Host → VM tree |
+| GET | `…/workloads` | WorkloadHandler | List workloads |
+| GET | `…/workloads/:vm` | WorkloadHandler | Get workload |
 
 ### Handler Behavior
 
 - Returns `404` if provider type is not `hyperv`
-- Returns `503 Service Unavailable` if collector hasn't reached parity
-- Supports `X-Watch` header for websocket upgrade on VM list
-
-### Finder/Resolver
-
-Used by plan validation to look up resources by ref (ID or Name):
-```go
-finder := hyperv.NewFinder()
-finder.ByRef(&network, ref)  // by ID or Name
-finder.VM(&ref)
-finder.Network(&ref)
-finder.Storage(&ref)
-finder.Workload(&ref)
-```
+- Returns `503` if collector has not reached parity
+- `X-Watch` header upgrades VM list to websocket
 
 ---
 
-## Labels & Selectors
+## Inventory `detail=` Query Parameter
+
+Query param: `?detail=N` (or `detail=all` → `MaxDetail` = 9).
+
+### Provider Root — **requires `detail≥1` for counts**
+
+`AddDerived` only populates `vmCount`, `networkCount`, `storageCount` when `detail != 0`. Root fetches with empty `detail` return counts as **0**.
+
+**Frontend rule:** always send `?detail=1` on provider root GET (empty `subPath`) so derived counts populate. Do not Hyper-V-gate this — other providers follow the same pattern.
+
+### VM Detail Levels
+
+| `detail` | Response shape | Fields |
+|----------|----------------|--------|
+| 0 (default) | `VM0` / `Resource` | id, name, revision, selfLink, path |
+| 1 | `VM1` | + disks, nics (**vlanId**), networks, concerns, revisionValidated |
+| ≥2 | `VM` (full) | + uuid, powerState, cpuCount, memoryMB, firmware, guestOS, tpmEnabled, secureBoot, hasCheckpoint, host, guestNetworks |
+
+- `GET /vms/:vm` always returns full detail (`MaxDetail`)
+- List handlers pass `h.Detail` to `Content()`; `ListOptions` upgrades any `detail>0` to `MaxDetail` for DB fetch
+
+### Other Resource Types
+
+Cluster, Host, Network, Storage, Disk: `detail=0` → base `Resource` only; `detail≥1` → full object.
+
+Tree nodes use `detail=0` (base fields only).
+
+---
+
+## HyperVProviderServer CRD
+
+**Kind**: `HyperVProviderServer` (`forklift.konveyor.io/v1beta1`)
+**Finalizer**: `api.HyperVProviderFinalizer`
+**Controller name**: `hyperv-server`
+
+### Lifecycle
+
+1. Provider controller creates `HyperVProviderServer` per Hyper-V provider
+2. Ensures: **PV** (SMB CSI `smb.csi.k8s.io`, `ReadOnlyMany`) → **PVC** → **Deployment** (image from `Settings.Providers.HyperV.ContainerImage`, SMB mount `/hyperv`) → **Service** (ClusterIP :8080)
+3. Deletion: Service → Deployment → PVC → PV
+
+### Builder Constants
+
+```go
+SMBVolumeMountPath = "/hyperv"
+SMBCSIDriver       = "smb.csi.k8s.io"
+QEMUGroup          = 107
+PVSize             = "1Gi"
+```
+
+### Labels
 
 ```yaml
 app: forklift
@@ -358,18 +367,45 @@ hyperv-server: <server-UID>
 
 ---
 
-## Frontend Implications
+## Integration Points
 
-- **Provider URL**: Host address (IP or FQDN, optionally with port). Not a full URL scheme.
-- **Secret fields**: `username`, `password`, `smbUrl` required; `smbUser`/`smbPassword` optional
-- **Provider Settings**: `winrmPort` (default 5986)
-- **Single storage**: Always one storage record (`storage-0`) representing the SMB share
-- **Disk.SMBPath**: The accessible path for migration; empty if path mapping fails
-- **Disk.RCTEnabled**: Required for warm migration support
-- **VM.HasCheckpoint**: Blocks migration if snapshots exist
-- **VM.GuestOS**: Only populated when VM is running (KVP Exchange)
-- **VM.GuestNetworks**: IP config from running VMs; preserved when VM stops
-- **Network.SwitchType**: External, Internal, or Private
-- **VM.TpmEnabled / SecureBoot**: Gen2 VMs only
-- **Concerns**: Include `DiskNotFoundOnSMB` when disk files are missing from the SMB mount
-- **Power states**: On, Off, Paused, ShuttingDown, Crashed, Suspended, Unknown
+| Caller | Callee | Purpose |
+|--------|--------|---------|
+| Provider controller | `collector.Test()`, HyperV server ensurer | Connection test, SMB sidecar |
+| Plan validation | `hyperv.NewFinder()` | Resolve VM/network/storage/workload refs |
+| Policy agent | OPA hyperv rules | VM concerns |
+| Provider-server pod | SMB CSI mount | `/validate-disks`, `/healthz` |
+
+---
+
+## Error Patterns
+
+| Failure | Behavior |
+|---------|----------|
+| WinRM 401/403 | `ErrUnauthorized`; provider NotReady |
+| Transient WinRM loss (≤3) | Suppressed while parity held |
+| SMB prefix discovery fail | Logged; retried on reconnect |
+| Batch script fail | Fallback to per-VM or split hardware/guest scripts |
+| validate-disks unavailable | Logged; SMBPath kept (no false clears) |
+| Cluster `Get-Cluster` fail | Connection test fails for `managementType=cluster` |
+
+---
+
+## Frontend Relevance
+
+| Backend field | UI usage |
+|---------------|----------|
+| `spec.settings.winrmPort` | Provider create form (default 5986) |
+| `spec.settings.managementType` | Standalone vs Failover Cluster |
+| Secret `username`, `password`, `smbUrl` | Required on create |
+| `vmCount` / `networkCount` / `storageCount` | Provider details — **requires `?detail=1`** |
+| `nics[].vlanId` | Plan network mapping, VM details NIC table |
+| `disks[].smbPath` | Migration disk path; empty if mapping/validation failed |
+| `disks[].rctEnabled` | Warm migration eligibility |
+| `hasCheckpoint` | Blocks migration when snapshots exist |
+| `guestOS` / `guestNetworks` | Running VMs only; preserved after power-off |
+| `host` | Cluster mode — VM owner node |
+| `concerns[]` | Migration warnings (OPA + SMB validation) |
+| `network.switchType` | External / Internal / Private |
+| `tpmEnabled` / `secureBoot` | Gen2 VMs only |
+| Tech preview | Show `TechPreviewLabel` for Hyper-V provider type |
