@@ -13,19 +13,28 @@ Read `.cursor/skills/i18n-memsource/state.json` for current sprint, version, and
 
 ## Prerequisites
 
+### Personal setup (per developer)
+
+Machine-specific CLI paths and auth helpers are **not** in this shared skill.
+They live in a gitignored personal overlay:
+
+- If `.cursor/skills/personal-i18n-memsource/SETUP.md` exists, **read it first**
+  for this developer's CLI path and auth flow.
+- If missing, use the generic discovery below and ask the user to authenticate.
+
+One-time setup for each developer:
+
+```bash
+mkdir -p .cursor/skills/personal-i18n-memsource
+cp .cursor/skills/i18n-memsource/personal-setup.example.md \
+   .cursor/skills/personal-i18n-memsource/SETUP.md
+# edit SETUP.md for your machine
+```
+
 ### Memsource CLI
 
 The `memsource` CLI is a Python package (`memsource-cli`) installed via pip3. It
-may not be on the default PATH.
-
-**This machine (macOS, pip3 user install):**
-
-```bash
-export PATH="$HOME/Library/Python/3.9/bin:$PATH"
-# binary: $HOME/Library/Python/3.9/bin/memsource
-```
-
-**Generic discovery** (other machines / Python versions):
+may not be on the default PATH. Locate and export it:
 
 ```bash
 MEMSOURCE_BIN=$(python3 -c "import shutil; print(shutil.which('memsource') or '')")
@@ -41,37 +50,20 @@ export PATH="$(dirname "$MEMSOURCE_BIN"):$PATH"
 the agent context. Phrase is a paid external service — treat credentials like
 any other secret.
 
-**This machine:** credentials live in `~/.memsourcerc` as `MEMSOURCE_USERNAME` and
-`MEMSOURCE_PASSWORD` exports. The user's `~/.zshrc` sources this file and defines
-a `memsource-auth` helper.
+Preferred flow:
 
-Agents may **source** `~/.memsourcerc` in the shell to authenticate without
-reading the file (same as the user would in a terminal):
-
-```bash
-export PATH="$HOME/Library/Python/3.9/bin:$PATH"
-source ~/.memsourcerc
-export MEMSOURCE_TOKEN=$(memsource auth login \
-  --user-name "$MEMSOURCE_USERNAME" \
-  --password "$MEMSOURCE_PASSWORD" \
-  -f value -c token 2>/dev/null)
-memsource auth whoami
-```
-
-Or call the user's shell helper after sourcing PATH:
-
-```bash
-memsource-auth
-```
-
-Preferred flow when credentials are missing or login fails:
-
-1. Ask the user to run `memsource-auth` in their terminal and confirm
-   `memsource auth whoami` works.
-2. The agent may run extract/export/validation without credentials
+1. Prefer the personal `SETUP.md` auth steps when that file exists.
+2. Otherwise ask the user to authenticate in **their own terminal** and confirm
+   `memsource auth whoami` works (and that `MEMSOURCE_TOKEN` is exported in the
+   shell they will use for `npm run memsource-*`).
+3. The agent may run extract/export/validation without credentials
    (`npm run i18n`, `npm run export-pos`, PO checks).
-3. For upload/download/status, either source `~/.memsourcerc` as above or have
-   the user run `memsource-*` commands themselves.
+4. For upload/download/status, either:
+   - follow personal SETUP.md (e.g. `source ~/.memsourcerc` + login — never
+     read credential file contents into agent context), or
+   - the user runs the `memsource-*` / `memsource job list` commands themselves, or
+   - the user has already exported a **short-lived** `MEMSOURCE_TOKEN` in the
+     shared shell (never paste the password into chat).
 
 If a shared shell already has `MEMSOURCE_TOKEN`, verify with:
 
@@ -190,8 +182,8 @@ Ask for explicit approval before proceeding. Use the AskQuestion tool:
 ### Step 8: Upload to Memsource
 
 Run the upload only when `MEMSOURCE_TOKEN` is already available in the shell
-(user-provided or obtained via `source ~/.memsourcerc` + login — do not read the
-file into agent context):
+(user-provided or obtained via personal SETUP.md auth — never read credential
+file contents into agent context):
 
 ```bash
 npm run memsource-upload -- -v VERSION -s SPRINT
@@ -350,12 +342,23 @@ Trigger: user says "translation status", "memsource status", "check translations
 
 ## Important Notes
 
-- **CLI path:** `$HOME/Library/Python/3.9/bin/memsource` on this Mac; use the discovery snippet on other machines.
-- **Credentials:** `~/.memsourcerc` (`MEMSOURCE_USERNAME`, `MEMSOURCE_PASSWORD`). Agents may `source` it in the shell but must not read its contents into context. Tokens expire — re-login via `memsource-auth` or the login snippet above.
-- **Language aliases and branch names:** Both are handled automatically since `ocp-plugin-i18n-scripts@1.0.2`. No symlinks or branch switching needed.
-- The `npm run memsource-upload` and `npm run memsource-download` scripts use the `ocp-plugin-i18n-scripts` npm package CLI commands under the hood.
-- PO files are temporary artifacts in `po-files/` -- they're cleaned up after upload.
-- The `memsource-download` script auto-commits. The PR creation is a separate step.
+- **Personal setup:** CLI path and auth live in gitignored
+  `.cursor/skills/personal-i18n-memsource/SETUP.md` (copy from
+  `personal-setup.example.md`). Never commit machine-specific paths or
+  credentials into this shared skill.
+- **CLI path:** Use personal SETUP.md when present; otherwise the discovery
+  snippet in Prerequisites.
+- **Auth token:** Never read passwords into the agent. Upload/download need a
+  short-lived `MEMSOURCE_TOKEN` (via personal SETUP.md, user terminal, or an
+  already-exported env var).
+- **Language aliases and branch names:** Both are handled automatically since
+  `ocp-plugin-i18n-scripts@1.0.2`. No symlinks or branch switching needed.
+- The `npm run memsource-upload` and `npm run memsource-download` scripts use the
+  `ocp-plugin-i18n-scripts` npm package CLI commands under the hood.
+- PO files are temporary artifacts in `po-files/` -- they're cleaned up after
+  upload.
+- The `memsource-download` script auto-commits. The PR creation is a separate
+  step.
 - State file should always be kept up to date after uploads.
 
 ### SonarCloud and locale files

@@ -47,6 +47,7 @@ Cursor skills in `.cursor/skills/` contain executable workflows.
 
 ### Team/Shared Skills (tracked in Git)
 - **i18n/Translation:** `.cursor/skills/i18n-memsource/SKILL.md` - Memsource upload/download workflow
+  - Optional personal overlay (gitignored): copy `personal-setup.example.md` → `.cursor/skills/personal-i18n-memsource/SETUP.md` for CLI path and auth
 - **Backend Analysis:** `.cursor/skills/backend-analyzer/SKILL.md` - Analyze Go backend codebase
 - **Type Updates:** `.cursor/skills/types-update/SKILL.md` - Update @forklift-ui/types
 - **Build Tracking:** `.cursor/skills/waiting-for-build/SKILL.md` - Automate QE sprint transition (Waiting for Build → ON_QA)
