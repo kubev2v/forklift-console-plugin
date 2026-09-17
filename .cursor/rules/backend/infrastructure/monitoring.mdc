@@ -5,84 +5,220 @@ alwaysApply: false
 
 # Monitoring & Metrics
 
-Source: `pkg/monitoring/`, `pkg/metrics/`
+> Analyzed from commit: `baf9c7bcc307ed9358ad59886a5536366a050012` on 2026-09-17
+> Source paths: `pkg/monitoring/`, `pkg/metrics/`
+
+## Package Purpose
+
+Forklift exposes `mtv_*` Prometheus metrics for migration/plan lifecycle observability
+and vSphere XCOPY copy-offload performance. Metric definitions and recording loops live
+in `pkg/monitoring/metrics/forklift-controller/`. The HTTP serving layer is split between
+the controller binary (`cmd/forklift-controller/main.go`) and a reusable TLS helper
+(`pkg/metrics/promethousutil.go`) used by volume populators.
+
+---
 
 ## Prometheus Endpoint
 
-`pkg/metrics/promethousutil.go` (sic — typo in upstream Go source) → `StartPrometheusEndpoint(certsDirectory)`
+### forklift-controller (production path)
 
-- Generates a self-signed TLS cert/key pair at startup.
-- Serves `/metrics` over HTTPS on port **8443** using `promhttp.Handler()`.
-- All metrics auto-registered via `promauto` (no manual `prometheus.Register` calls).
+```
+cmd/forklift-controller/main.go
+  ├── promhttp.Handler() on :2112/metrics  (plain HTTP, default registry)
+  └── controller-runtime --metrics-bind-address=127.0.0.1:8080/metrics
+
+operator/config/default/manager_auth_proxy_patch.yaml
+  └── kube-rbac-proxy :8443 → upstream :8080  (TLS + RBAC for Prometheus)
+
+operator/config/prometheus/monitor.yaml
+  └── ServiceMonitor scrapes :8443/metrics (scheme: https)
+```
+
+`promauto.New*` registers `mtv_*` metrics with `prometheus.DefaultRegisterer`, served by
+`promhttp.Handler()` on `:2112`. Controller-runtime v0.20.4 serves its **separate**
+`metrics.Registry` on `:8080`; the ServiceMonitor path (`:8443` via kube-rbac-proxy) scrapes
+controller-runtime metrics only — `mtv_*` metrics are **not** exposed there unless explicitly
+registered with the controller-runtime registry.
+
+### Volume populators (sidecar jobs)
+
+`pkg/metrics/promethousutil.go` → `StartPrometheusEndpoint(certsDirectory)`:
+
+- Generates self-signed TLS cert/key at startup
+- Serves `/metrics` over HTTPS on port **8443**
+- Used by `cmd/ovirt-populator/` and `cmd/openstack-populator/`
+
+> Note: upstream filename is `promethousutil.go` (typo preserved).
+
+---
+
+## Key Types and Structs
+
+All metrics are package-level `var` blocks in
+`pkg/monitoring/metrics/forklift-controller/metrics.go`, registered via `promauto`
+(no manual `prometheus.Register` for controller metrics).
+
+Recording functions:
+
+| Function | Started by | File |
+|----------|-----------|------|
+| `RecordPlanMetrics(client)` | Plan controller `Add()` | `plan_metrics.go` |
+| `RecordMigrationMetrics(client)` | Migration controller `Add()` | `migration_metrics.go` |
+| `RecordXcopyMetrics(client)` | Migration controller `Add()` | `xcopy_metrics.go` |
+
+---
 
 ## Metrics Defined
 
-All metrics live in `pkg/monitoring/metrics/forklift-controller/metrics.go`.
-
 ### Counters
 
-| Metric | Type | Labels | Purpose |
-|--------|------|--------|---------|
-| `mtv_migrations_status_total` | CounterVec | status, provider, mode, target | Total VM migrations by terminal status |
-| `mtv_workload_migrations_status_total` | CounterVec | status, provider, mode, target, plan | Same but correlated to a specific plan UID |
+| Metric | Labels | Purpose |
+|--------|--------|---------|
+| `mtv_migrations_status_total` | status, provider, mode, target | Terminal migration counts |
+| `mtv_workload_migrations_status_total` | status, provider, mode, target, plan | Same, correlated to plan UID |
+| `mtv_planned_vms_total` | provider, mode, target | VMs listed in plan specs (once per planUID/vmID) |
+| `mtv_migrated_vms_total` | status, provider, mode, target | Per-VM terminal outcomes within migrations |
 
 ### Gauges
 
-| Metric | Type | Labels | Purpose |
-|--------|------|--------|---------|
-| `mtv_plans_status` | GaugeVec | status, provider, mode, target | Current plan counts by status (reset each cycle) |
-| `mtv_plan_alert_status` | GaugeVec | status, provider, mode, target, plan, plan_name, phase | Per-plan alerting (1 = active, deleted when resolved) |
-| `mtv_migration_duration_seconds` | GaugeVec | provider, mode, target, plan | Duration of completed migrations |
-| `mtv_migration_data_transferred_bytes` | GaugeVec | provider, mode, target, plan | Total bytes transferred (updated during execution and on completion) |
+| Metric | Labels | Purpose |
+|--------|--------|---------|
+| `mtv_plans_status` | status, provider, mode, target | Current plan counts (reset stale combos to 0) |
+| `mtv_plan_alert_status` | status, provider, mode, target, plan, plan_name, phase | Per-plan alerting (1=active; deleted when resolved) |
+| `mtv_migration_duration_seconds` | provider, mode, target, plan | Duration of completed migrations |
+| `mtv_migration_data_transferred_bytes` | provider, mode, target, plan | Bytes transferred (MiB × 1024² from task progress) |
+| `mtv_vsphere_xcopy_volume_populator_copy_duration_seconds` | result, migration, owner_uid, storage_vendor, clone_method, xcopy_used, storage_protocol, vib_version | Copy-offload duration per disk |
+| `mtv_vsphere_xcopy_volume_populator_source_disk_bytes` | above + type | Source disk size (`provisioned` or `datastore_allocated`) |
 
 ### Histograms
 
-| Metric | Type | Labels | Buckets |
-|--------|------|--------|---------|
-| `mtv_migrations_duration_seconds` | HistogramVec | provider, mode, target | 1h, 2h, 5h, 10h, 24h, 48h (in seconds) |
+| Metric | Labels | Buckets |
+|--------|--------|---------|
+| `mtv_migrations_duration_seconds` | provider, mode, target | 1h, 2h, 5h, 10h, 24h, 48h (seconds) |
+
+---
 
 ## Label Value Constants
 
 ```
 status:   Succeeded, Failed, Executing, Running, Pending, Canceled, Completed, Blocked, Ready, Deleted
-provider: oVirt, VSphere, Openstack, OVA, Openshift
-mode:     Cold, Warm
+provider: openshift, vsphere, ovirt, openstack, ova, ec2, hyperv  (from ProviderType.String())
+mode:     Cold, Warm, Live
 target:   Local (dest URL empty), Remote (dest URL set)
+result:   success, failure  (xcopy metrics)
+clone_method: vib, vddk
+xcopy_used: 0, 1
+storage_protocol: iscsi, fc, nfs
+type: provisioned, datastore_allocated  (xcopy disk bytes)
 ```
+
+---
 
 ## Collection Loops
 
-Both run as background goroutines, polling every **10 seconds**.
+All three loops run as background goroutines, polling every **10 seconds**.
 
-### Plan Metrics — `RecordPlanMetrics(client)`
+### Plan Metrics — `RecordPlanMetrics`
 
-File: `plan_metrics.go`
+1. List all `Plan` resources
+2. Resolve source/destination `Provider` → provider type, mode (`Cold`/`Warm`/`Live`), target (`Local`/`Remote`)
+3. Count planned VMs from `spec.vms` into `mtv_planned_vms_total` (deduped by `planUID/vmID`)
+4. Check plan conditions → aggregate into `mtv_plans_status` gauge
+5. Set `mtv_plan_alert_status` = 1 for active plans (Succeeded→`Completed`, Failed→error phases, Executing)
+6. During Executing: sum `DiskTransfer`/`DiskTransferV2v` task progress → `mtv_migration_data_transferred_bytes`
+7. Zero stale `mtv_plans_status` label combos; delete stale `mtv_plan_alert_status` label sets
 
-1. Lists all `Plan` resources via the k8s client.
-2. For each plan, resolves source/destination `Provider` to determine provider type, mode, and target.
-3. Checks plan conditions (Succeeded, Failed, Executing, Running, Pending, Canceled, Blocked, Deleted).
-4. Aggregates counts into `mtv_plans_status` gauge (reset stale label combos to 0).
-5. Sets `mtv_plan_alert_status` = 1 for active plans; deletes label set when plan no longer active.
-6. During Executing: sums `DiskTransfer`/`DiskTransferV2v` task progress into `mtv_migration_data_transferred_bytes`.
-7. For Failed plans: collects per-VM error phases into the `phase` alert label.
+### Migration Metrics — `RecordMigrationMetrics`
 
-### Migration Metrics — `RecordMigrationMetrics(client)`
+1. List all `Migration` resources
+2. Resolve parent `Plan` and its providers
+3. Terminal states (Succeeded, Failed, Canceled): increment counters once per migration UID (in-memory dedup maps)
+4. On Succeeded: record duration (`Started`→`Completed`) to gauge + histogram; sum data transferred
+5. Per-VM terminal states → `mtv_migrated_vms_total` (deduped by `migrationUID/vmID/status`)
 
-File: `migration_metrics.go`
+### XCOPY Metrics — `RecordXcopyMetrics`
 
-1. Lists all `Migration` resources.
-2. For each migration, resolves the parent `Plan` and its providers.
-3. Tracks terminal states (Succeeded, Failed, Canceled) using in-memory maps to avoid double-counting.
-4. On first observation of a terminal migration:
-   - Increments `mtv_migrations_status_total` and `mtv_workload_migrations_status_total`.
-   - For Succeeded: computes duration from `Status.Started` → `Status.Completed`, records to gauge and histogram; sums data transferred.
+1. List `VSphereXcopyVolumePopulator` CRs with label `forklift.konveyor.io/offload-completed=true`
+2. Skip if `status.result` is empty or UID already processed
+3. Read `status.copyDurationSeconds`, `provisionedBytes`, `allocatedBytes`
+4. Set `mtv_vsphere_xcopy_volume_populator_*` gauges with storage metadata from status
+5. Dedup via `processedXcopyCompletions` map keyed by populator UID
+
+---
+
+## Reconciliation / Execution Flow
+
+```mermaid
+flowchart TB
+    subgraph controllers [Controller startup]
+        PC[Plan controller Add] --> RPM[RecordPlanMetrics goroutine]
+        MC[Migration controller Add] --> RMM[RecordMigrationMetrics goroutine]
+        MC --> RXM[RecordXcopyMetrics goroutine]
+    end
+    subgraph registry [Default Prometheus registry]
+        RPM --> GAUGES[mtv_plans_status / alerts / planned_vms]
+        RMM --> COUNTERS[mtv_migrations_* / migrated_vms_*]
+        RXM --> XCOPY[mtv_vsphere_xcopy_*]
+    end
+    subgraph scrape [Prometheus scrape]
+        GAUGES --> EP[":8080/metrics via kube-rbac-proxy :8443"]
+        COUNTERS --> EP
+        XCOPY --> EP
+    end
+```
+
+---
 
 ## Key Design Decisions
 
-- **Polling, not event-driven**: Metrics are recalculated on a fixed 10s interval, not via controller watches.
-- **In-memory deduplication**: Maps like `processedSucceededMigrations` prevent counter double-increments across restarts — but these reset on pod restart, so counters may re-increment after operator restarts.
-- **Stale label cleanup**: `planStatusGauge` zeros out label combos that no longer appear; `planAlertStatusGauge` deletes stale label sets entirely.
+- **Polling, not event-driven:** Metrics recalculated on a fixed 10s interval, not via controller watches
+- **In-memory deduplication:** Maps prevent double-counting within a pod lifetime; counters may re-increment after pod restart
+- **Stale label cleanup:** Plan gauges zero out absent combos; alert gauges delete stale label sets entirely
+- **Data transfer units:** Task `Progress.Completed` is in MiB; multiplied by 1024² to get bytes
+- **Separate populator metrics:** `vsphere-copy-offload-populator` binary has its own metrics package in `cmd/vsphere-copy-offload-populator/internal/metrics/` (not covered here)
+
+---
+
+## Integration Points
+
+| Component | Role |
+|-----------|------|
+| `pkg/controller/plan/controller.go` | Starts `RecordPlanMetrics` |
+| `pkg/controller/migration/controller.go` | Starts `RecordMigrationMetrics` + `RecordXcopyMetrics` |
+| `pkg/apis/forklift/v1beta1` | Plan/Migration conditions, `VSphereXcopyVolumePopulator` status |
+| `operator/config/prometheus/monitor.yaml` | ServiceMonitor for in-cluster Prometheus |
+| `docs/metrics.md` | Architecture overview and developer guide |
+| `docs/metrics-reference.md` | Complete metric catalog with PromQL examples |
+
+---
+
+## Configuration
+
+No env vars. Metrics bind addresses are CLI flags on the controller deployment:
+
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `--metrics-bind-address` | `127.0.0.1:8080` | controller-runtime metrics (proxied to :8443) |
+| `:2112` (hardcoded) | — | Additional promhttp endpoint in `main.go` |
+
+---
+
+## Error Patterns
+
+- List failures log to stdout (`fmt.Printf`) and retry next 10s cycle — no crash
+- XCOPY list failures log via `klog.Errorf`
+- Missing Provider references: skip that plan/migration silently
+- `StartPrometheusEndpoint` cert generation failures log via `klog.Error` and return without serving
+
+---
 
 ## Frontend Relevance
 
-The UI does not directly query these metrics, but they power Prometheus alerts and Grafana dashboards. The plan alert gauge (`mtv_plan_alert_status`) can trigger OpenShift alerts for failed/stalled migrations.
+The console plugin does **not** query these metrics directly. They power Prometheus alerts
+and Grafana dashboards. Relevant to UI indirectly:
+
+- `mtv_plan_alert_status` triggers OpenShift alerts for failed/stalled migrations
+- Plan/migration conditions that drive metrics are the same ones the UI displays
+- XCOPY metrics correlate to vSphere copy-offload storage map feature (MTV storage offload plugins)
+- Pipeline step names (`DiskTransfer`, `DiskTransferV2v`) used for data-transfer gauge aggregation
+  match the migration pipeline steps shown in the plan details UI

@@ -339,7 +339,10 @@ When answering questions about backend behavior, read the relevant `.mdc` file f
 | OVA file parsing, NFS, OVAProviderServer | `backend/providers/ova.mdc` |
 | Hyper-V SMB/PowerShell, HyperVProviderServer | `backend/providers/hyperv.mdc` |
 | EC2 AWS SDK, AMI, platform gating | `backend/providers/ec2.mdc` |
+| Nutanix Prism inventory, adapter (see also plan-adapters, api-types) | `backend/providers/provider-controller.mdc`, `backend/plans/plan-adapters.mdc`, `backend/api-types.mdc` |
+| Azure disk snapshot migration, adapter (see plan-adapters) | `backend/plans/plan-adapters.mdc`, `backend/api-types.mdc` |
 | OpenShift target provider, namespaces, StorageClass | `backend/providers/ocp.mdc` |
+| Conversion CR (deep inspection / in-place) | `backend/api-types.mdc`, `backend/architecture.mdc` |
 | Plan validation, conditions, lifecycle | `backend/plans/plan-controller.mdc` |
 | Provider adapters, Builder/Client interfaces | `backend/plans/plan-adapters.mdc` |
 | Migration phases, itineraries, disk transfer, KubeVirt | `backend/plans/migration-pipeline.mdc` |

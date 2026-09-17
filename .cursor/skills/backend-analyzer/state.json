@@ -1,11 +1,13 @@
 {
-  "lastAnalyzedCommit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
-  "lastRunDate": "2026-05-04",
+  "lastAnalyzedCommit": "baf9c7bcc307ed9358ad59886a5536366a050012",
+  "lastRunDate": "2026-09-17",
+  "lastRunAt": "2026-09-17T09:45:00Z",
+  "mode": "full",
   "forkliftRepoPath": "/Users/aturgema/Workspace/forklift",
   "targetBranch": "upstream/main",
   "analyzedDomains": {
     "architecture": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": [
         "cmd/forklift-controller/",
         "cmd/forklift-api/",
@@ -15,20 +17,21 @@
       ]
     },
     "api-types": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": ["pkg/apis/forklift/v1beta1/", "pkg/lib/condition/"]
     },
     "providers/provider-controller": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": [
         "pkg/controller/provider/controller.go",
         "pkg/controller/provider/validation.go",
-        "pkg/controller/provider/container/doc.go",
-        "pkg/controller/provider/web/doc.go"
+        "pkg/controller/provider/validation/",
+        "pkg/controller/provider/container/",
+        "pkg/controller/provider/web/"
       ]
     },
     "providers/vsphere": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": [
         "pkg/controller/provider/container/vsphere/",
         "pkg/controller/provider/model/vsphere/",
@@ -36,7 +39,7 @@
       ]
     },
     "providers/ovirt": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": [
         "pkg/controller/provider/container/ovirt/",
         "pkg/controller/provider/model/ovirt/",
@@ -44,7 +47,7 @@
       ]
     },
     "providers/openstack": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": [
         "pkg/controller/provider/container/openstack/",
         "pkg/controller/provider/model/openstack/",
@@ -52,7 +55,7 @@
       ]
     },
     "providers/ova": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": [
         "pkg/controller/provider/container/ova/",
         "pkg/controller/provider/model/ovf/",
@@ -61,20 +64,21 @@
       ]
     },
     "providers/hyperv": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": [
         "pkg/controller/provider/container/hyperv/",
         "pkg/controller/provider/model/hyperv/",
         "pkg/controller/provider/web/hyperv/",
-        "pkg/controller/hyperv/"
+        "pkg/controller/hyperv/",
+        "pkg/lib/hyperv/"
       ]
     },
     "providers/ec2": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": ["pkg/provider/ec2/"]
     },
     "providers/ocp": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": [
         "pkg/controller/provider/container/ocp/",
         "pkg/controller/provider/model/ocp/",
@@ -82,7 +86,7 @@
       ]
     },
     "plans/plan-controller": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": [
         "pkg/controller/plan/controller.go",
         "pkg/controller/plan/validation.go",
@@ -92,11 +96,15 @@
       ]
     },
     "plans/plan-adapters": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
-      "paths": ["pkg/controller/plan/adapter/"]
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
+      "paths": [
+        "pkg/controller/plan/adapter/",
+        "pkg/provider/azure/controller/adapter/",
+        "pkg/provider/ec2/controller/adapter/"
+      ]
     },
     "plans/migration-pipeline": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": [
         "pkg/controller/plan/migration.go",
         "pkg/controller/plan/kubevirt.go",
@@ -105,47 +113,60 @@
       ]
     },
     "plans/scheduler": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
-      "paths": ["pkg/controller/plan/scheduler/"]
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
+      "paths": [
+        "pkg/controller/plan/scheduler/",
+        "pkg/provider/ec2/controller/scheduler/",
+        "pkg/provider/azure/controller/scheduler/"
+      ]
     },
     "mappings/network-map": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
-      "paths": ["pkg/controller/map/network/"]
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
+      "paths": [
+        "pkg/controller/map/network/",
+        "pkg/apis/forklift/v1beta1/mapping.go",
+        "pkg/controller/plan/adapter/base/network.go",
+        "pkg/controller/plan/adapter/hyperv/builder.go"
+      ]
     },
     "mappings/storage-map": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
-      "paths": ["pkg/controller/map/storage/"]
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
+      "paths": ["pkg/controller/map/storage/", "pkg/apis/forklift/v1beta1/mapping.go"]
     },
     "infrastructure/webhooks": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": ["pkg/forklift-api/webhooks/"]
     },
     "infrastructure/rest-api": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": ["pkg/forklift-api/services/", "pkg/controller/provider/web/"]
     },
     "infrastructure/virt-v2v": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
-      "paths": ["pkg/virt-v2v/"]
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
+      "paths": ["pkg/virt-v2v/", "cmd/virt-v2v/", "cmd/virt-v2v-monitor/"]
     },
     "infrastructure/shared-libraries": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": ["pkg/lib/"]
     },
     "infrastructure/monitoring": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": ["pkg/monitoring/", "pkg/metrics/"]
     },
     "infrastructure/host-controller": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": ["pkg/controller/host/"]
     },
     "infrastructure/hook-controller": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
-      "paths": ["pkg/controller/hook/"]
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
+      "paths": [
+        "pkg/controller/hook/",
+        "pkg/controller/plan/hook.go",
+        "pkg/apis/forklift/v1beta1/hook_exec.go"
+      ]
     },
     "operator/operator": {
-      "commit": "412c71822cacbdc0961f6926fae1c5184d1c4296",
+      "commit": "baf9c7bcc307ed9358ad59886a5536366a050012",
       "paths": ["operator/"]
     }
   }

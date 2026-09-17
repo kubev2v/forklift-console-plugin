@@ -3,245 +3,102 @@ description: Shared libraries - condition framework, inventory containers, file-
 alwaysApply: false
 ---
 
-# Shared Libraries (pkg/lib)
+# Shared Libraries (`pkg/lib`)
 
-> Analyzed from commit: `412c71822` on `2026-05-04`
+> Analyzed from commit: `baf9c7bcc307ed9358ad59886a5536366a050012` on 2026-09-17
+> Source paths: `pkg/lib/`
 
-All Forklift controllers share a common set of library packages under `pkg/lib/`. Understanding these is essential because they define the patterns every controller follows.
+## Package Purpose
+
+`pkg/lib/` is the shared Go library forked from
+[konveyor/controller v0.11.0](https://github.com/konveyor/controller/releases/tag/v0.11.0).
+Every Forklift controller, inventory collector, and REST handler depends on these
+packages for status conditions, inventory persistence, migration itineraries,
+cross-resource reference tracking, structured logging, and error wrapping.
+Understanding these patterns is prerequisite to reading any controller code.
 
 ---
 
-## 1. Condition Framework (`pkg/lib/condition`) — CRITICAL
+## Key Types and Structs
 
-The condition framework is **the** core abstraction for resource status. Every CRD's `.status.conditions` field uses it.
-
-### 1.1 Condition Struct
+### Condition (`pkg/lib/condition`)
 
 ```go
 type Condition struct {
-    Type               string   // e.g. "Ready", "ReconcileFailed", "ConnectionTestFailed"
+    Type               string   // e.g. "Ready", "ReconcileFailed"
     Status             string   // "True" or "False"
-    Category           string   // severity: Critical, Error, Warn, Required, Advisory
-    Reason             string   // machine-readable reason
-    Message            string   // human-readable description
-    Suggestion         string   // suggested resolution
-    LastTransitionTime Time     // when status last changed
-    Durable            bool     // if true, survives staging sweeps
-    Items              []string // referenced items in Message
-    staged             bool     // internal: was this set in current cycle?
+    Category           string   // Critical, Error, Warn, Required, Advisory, ...
+    Reason             string
+    Message            string
+    Suggestion         string
+    LastTransitionTime v1.Time
+    Durable            bool     // survives staging sweeps
+    Items              []string // referenced in Message
+    staged             bool     // internal: set this reconcile cycle
 }
-```
 
-### 1.2 Categories (Severity Levels)
-
-| Category | Constant | Effect |
-|----------|----------|--------|
-| `Critical` | Blocks `Reconcile()` AND blocks `Ready` |
-| `Error` | Blocks `Ready` only |
-| `Warn` | Does NOT block `Ready` — advisory warning |
-| `Required` | Required for `Ready` to be true |
-| `Advisory` | Purely informational |
-
-Special categories for pending states: `ValidatingVDDK`, `VMMissingGuestIPs`, `VMMissingChangedBlockTracking`, `SharedDisks`.
-
-### 1.3 Conditions Collection — The Staging Pattern
-
-`Conditions` is a managed slice embedded in every resource's `Status`:
-
-```go
 type Conditions struct {
-    List    []Condition // serialized to JSON
-    staging bool        // internal staging state
+    List    []Condition
+    staging bool
+    explain Explain
 }
 ```
 
-**The staging lifecycle** (used in every controller's `Reconcile`):
+Built-in types: `ReconcileFailed`, `Ready`. Built-in categories: `Critical`, `Error`,
+`Warn`, `Required`, `Advisory`, plus pending-state categories `ValidatingVDDK`,
+`VMMissingGuestIPs`, `VMMissingChangedBlockTracking`, `SharedDisks`.
 
-```go
-// 1. Begin staging — marks all non-Durable conditions as un-staged
-resource.Status.BeginStagingConditions()
-
-// 2. Set conditions for current reconcile cycle
-//    Each SetCondition call marks that condition as staged
-resource.Status.SetCondition(Condition{
-    Type:     "SomeValidation",
-    Status:   True,
-    Category: Error,
-    Message:  "Something is wrong",
-})
-
-// 3. End staging — deletes any conditions NOT set/staged this cycle
-//    Durable conditions always survive
-resource.Status.EndStagingConditions()
-
-// 4. Derive the Ready condition from blocker status
-resource.Status.SetCondition(Condition{
-    Type:     Ready,
-    Status:   boolToStatus(!resource.Status.HasBlockerCondition()),
-    Category: Required,
-    Message:  "Resource is ready.",
-})
-```
-
-**Key behavior:**
-- `BeginStagingConditions()` — resets `staged=false` on all conditions (except `Durable`)
-- `SetCondition()` — adds or updates, always marks `staged=true`
-- `EndStagingConditions()` — removes any condition where `staged==false`
-- This ensures stale conditions are automatically cleaned up each reconcile cycle
-
-### 1.4 Query Methods
-
-| Method | Returns true when... |
-|--------|---------------------|
-| `HasCondition(types...)` | ALL specified types exist with Status=True |
-| `HasAnyCondition(types...)` | ANY specified type exists with Status=True |
-| `HasConditionCategory(cats...)` | Any condition exists in given category with Status=True |
-| `HasCriticalCondition()` | Any Critical category condition exists |
-| `HasErrorCondition()` | Any Error category condition exists |
-| `HasBlockerCondition()` | Any Critical OR Error condition exists |
-| `IsReady()` | Ready condition exists with Status=True |
-| `FindCondition(type)` | Returns pointer to condition (nil if not found / not staged) |
-
-### 1.5 The Explain Report
-
-`Conditions.Explain()` returns a diff of what changed in the current staging cycle:
-
-```go
-type Explain struct {
-    Added   map[string]Condition
-    Updated map[string]Condition
-    Deleted map[string]Condition
-}
-```
-
-Controllers use `explain.Empty()` to skip status updates when nothing changed.
-
-### 1.6 Frontend Mapping
-
-The UI reads `status.conditions` from the API and maps them to display states. When adding a new condition type in the backend, the UI may need a corresponding handler. The `Category` field drives whether the UI shows the resource as healthy, degraded, or blocked.
-
----
-
-## 2. Itinerary Framework (`pkg/lib/itinerary`)
-
-Defines ordered phase lists that migration tasks step through. Used by the Plan and Migration controllers to drive multi-phase workflows.
-
-### 2.1 Core Types
+### Itinerary (`pkg/lib/itinerary`)
 
 ```go
 type Step struct {
-    Name string   // phase name, e.g. "Initialize", "DiskTransfer", "Finalize"
-    All  Flag     // bitmask: ALL these predicates must be true to include step
-    Any  Flag     // bitmask: ANY of these predicates must be true
-}
-
-type Pipeline []Step
-
-type Predicate interface {
-    Evaluate(Flag) (bool, error)  // returns true when step should be included
-    Count() int                   // number of predicate flags
+    Name string
+    All  Flag   // ALL predicate flags must be true
+    Any  Flag   // ANY predicate flag must be true
 }
 
 type Itinerary struct {
-    Pipeline              // ordered list of steps
-    Predicate             // evaluates step inclusion
-    Name      string
+    Pipeline
+    Predicate
+    Name string
+}
+
+type Progress struct {
+    Completed int64
+    Total     int64
 }
 ```
 
-### 2.2 Navigation API
-
-| Method | Purpose |
-|--------|---------|
-| `First()` | Get the first step (filtered by predicates) |
-| `Next(name)` | Get the step after `name` (filtered) |
-| `Get(name)` | Get a step by exact name (unfiltered) |
-| `List()` | Get all steps that pass predicate filtering |
-| `Progress(step)` | Returns `{Completed, Total}` counts |
-
-### 2.3 Predicate Filtering
-
-Steps can be conditionally included/excluded based on bitmask flags:
-- `Step.All` — all matching predicate flags must evaluate true
-- `Step.Any` — at least one matching flag must evaluate true
-- Steps with no flags (All=0, Any=0) are always included
-
-This allows different migration types (cold, warm, live) to use different step sequences from the same pipeline definition.
-
----
-
-## 3. Inventory Container Framework (`pkg/lib/inventory/container`)
-
-Manages per-provider inventory collectors that maintain an in-memory SQLite database of discovered resources.
-
-### 3.1 Container
+### Inventory container (`pkg/lib/inventory/container`)
 
 ```go
 type Container struct {
-    content map[Key]Collector  // keyed by object kind + UID
+    content map[Key]Collector  // Key = ObjectReference (Kind + UID)
 }
-```
 
-Methods: `Get(owner)`, `Add(collector)`, `Replace(collector)`, `Delete(owner)`, `List()`.
-
-### 3.2 Collector Interface
-
-Every provider type implements this interface:
-
-```go
-type Collector interface {
-    Name() string
-    Owner() meta.Object       // the Provider CR that owns this collector
-    Start() error             // start goroutine, return quickly
-    Shutdown()                // disconnect, cleanup
-    HasParity() bool          // true when initial sync complete
-    DB() model.DB             // the inventory database
-    Test() (int, error)       // test connection, return HTTP status code
-    Reset()
-    Follow(moRef, path, dst) error  // follow inventory links (vSphere)
-    Version() (string, string, string, string, error)  // system version (oVirt)
-}
-```
-
-### 3.3 Collection Reconciliation
-
-The `Collection` type reconciles stored vs. desired model sets:
-
-```go
 type Collection struct {
-    Stored   fb.Iterator   // current DB contents
-    Tx       *model.Tx     // DB transaction
-    Shepherd Shepherd      // comparison/update strategy
+    Stored   fb.Iterator
+    Tx       *model.Tx
+    Shepherd Shepherd
+    Added, Updated, Deleted int
 }
 ```
 
-`Reconcile(desired)` performs: delete stale → add new → update changed. The `Shepherd` interface controls equality comparison and update logic. `DefaultShepherd` uses reflection, skipping PK, auto-incremented, and `eq:"-"` tagged fields.
-
----
-
-## 4. Inventory Model / DB (`pkg/lib/inventory/model`)
-
-A reflection-based SQLite ORM for inventory data.
-
-### 4.1 Model Interface
+### Inventory model (`pkg/lib/inventory/model`)
 
 ```go
 type Model interface {
-    Pk() string  // primary key
+    Pk() string
 }
 
 type Base struct {
-    PK     string `sql:"pk"`     // primary key (SHA-1 digest)
-    Object string `sql:""`       // raw JSON-encoded k8s resource
+    PK     string `sql:"pk"`
+    Object string `sql:""`  // raw JSON-encoded k8s resource
 }
-```
 
-### 4.2 DB Interface
-
-```go
 type DB interface {
-    Open(delete bool) error
-    Close(delete bool) error
+    Open(bool) error
+    Close(bool) error
     Get(Model) error
     List(interface{}, ListOptions) error
     Find(interface{}, ListOptions) (fb.Iterator, error)
@@ -256,144 +113,220 @@ type DB interface {
 }
 ```
 
-### 4.3 Table Tags
+### Reference map (`pkg/lib/ref`)
 
-Field tags define schema: `sql:"pk"` (primary key), `sql:"key"` (natural key, indexed), `sql:"fk:Table(field)"` (FK with cascade), `sql:"unique(group)"` (unique constraint), `sql:"const"` (immutable after insert), `sql:"incremented"` (auto-increment), `sql:"d0"` (detail level for list queries).
+```go
+type Owner  v1.ObjectReference
+type Target v1.ObjectReference
 
-### 4.4 Transaction Pattern
+type RefMap struct {
+    Content map[Target]map[Owner]bool
+}
+```
 
-`db.With(func(tx *model.Tx) error { tx.Insert(m); return nil }, "label")` provides auto commit/rollback. Transactions stage events reported to watchers on commit via the Journal system.
-
----
-
-## 5. File-Backed Data Structures (`pkg/lib/filebacked`)
-
-Provides disk-backed collections to handle large inventory datasets without exhausting memory.
-
-### 5.1 Core Components
-
-- **`Writer`** — appends gob-encoded objects to a temp file in `/tmp/*.fb`
-- **`Reader`** — random-access reads via an in-memory offset index
-- **`List`** — append-only list backed by Writer, provides `Iter()` for reading
-- **`Catalog`** — singleton type registry for gob encoding/decoding
-
-### 5.2 Iterator Interface
+### File-backed collections (`pkg/lib/filebacked`)
 
 ```go
 type Iterator interface {
     Len() int
-    At(index int) interface{}       // random access
-    Next() (interface{}, bool)      // stateful forward iteration
+    At(index int) interface{}
+    Next() (interface{}, bool)
     NextWith(object interface{}) bool
     Reverse()
     Close()
 }
 ```
 
-File format per entry: `| kind: uint16 | size: uint64 | gob-encoded object |`. `runtime.SetFinalizer` auto-cleans temp files. `EmptyIterator` serves as a null-object.
-
-### 5.3 Usage
-
-```go
-list := fb.NewList()
-list.Append(obj)
-itr := list.Iter()
-for i := 0; i < itr.Len(); i++ { item := itr.At(i) }
-```
-
 ---
 
-## 6. Reference Utilities (`pkg/lib/ref`)
+## Interfaces and Implementations
 
-Tracks cross-resource references (e.g., Plan → Provider, Plan → NetworkMap) for controller-runtime event mapping.
+| Interface | Package | Implementations |
+|-----------|---------|-----------------|
+| `Collector` | `inventory/container` | Per-provider collectors in `pkg/controller/provider/container/{vsphere,ovirt,openstack,ova,hyperv,ocp}/` |
+| `Shepherd` | `inventory/container` | `DefaultShepherd` (reflection-based; skips PK, incremented, `eq:"-"` fields) |
+| `Model` | `inventory/model` | Provider-specific model structs in `pkg/controller/provider/model/` |
+| `DB` | `inventory/model` | `Client` (SQLite-backed) |
+| `Predicate` | `itinerary` | Plan/migration predicate evaluators in `pkg/controller/plan/` |
+| `RequestHandler` | `inventory/web` | Per-provider REST handlers in `pkg/controller/provider/web/` |
+| `HyperVDriver` | `hyperv/driver` | WinRM-backed driver in `hyperv/driver/winrm.go` |
+| `LevelLogger` | `logging` | Zap-backed via `ZapBuilder` |
 
-### 6.1 RefMap — Global Reference Registry
+### Collector interface
 
 ```go
-var Map *RefMap   // singleton, initialized at package init
-
-type Owner  v1.ObjectReference  // resource containing the reference
-type Target v1.ObjectReference  // resource being referenced
-
-type RefMap struct {
-    Content map[Target]map[Owner]bool  // target → set of owners
+type Collector interface {
+    Name() string
+    Owner() meta.Object
+    Start() error          // start goroutine, return quickly
+    Shutdown()
+    HasParity() bool       // initial sync complete
+    DB() model.DB
+    Test() (int, error)    // 0 = ignore status code
+    Follow(moRef interface{}, p []string, dst interface{}) error
+    Reset()
+    Version() (string, string, string, string, error)  // oVirt-only
 }
 ```
 
-Thread-safe via `sync.RWMutex`. Methods: `Add`, `Delete`, `DeleteOwner`, `Match`, `Find`, `Prune`.
+---
 
-### 6.2 EventMapper — Automatic Reference Tracking
+## Reconciliation / Execution Flow
 
-Uses reflection to find `ObjectReference` fields tagged with `ref:"Kind"`:
+### Condition staging (every controller)
 
-```go
-type Resource struct {
-    ProviderRef *v1.ObjectReference `json:"provider" ref:"Provider"`
-}
+```mermaid
+flowchart LR
+    A[BeginStagingConditions] --> B[SetCondition / validation]
+    B --> C[EndStagingConditions]
+    C --> D[Derive Ready from HasBlockerCondition]
 ```
 
-The `EventMapper` hooks into controller-runtime predicates to automatically maintain the RefMap on Create/Update/Delete events.
+1. `BeginStagingConditions()` — marks all non-`Durable` conditions as un-staged
+2. `SetCondition(...)` — adds/updates; marks `staged=true`
+3. `EndStagingConditions()` — deletes un-staged conditions
+4. Derive `Ready` from `!HasBlockerCondition()` (`Critical` or `Error` categories)
 
-### 6.3 Handler — Cross-Resource Reconciliation
+Controllers skip status patches when `Explain().Empty()` is true.
 
-`ref.Handler(&api.Plan{})` creates an event handler that reconciles Plans when a referenced resource changes. Also available as `TypedHandler[T]` for typed watches.
+### Inventory collection
 
-### 6.4 Utility Functions
+```
+Provider reconciler → Container.Add(Collector) → Collector.Start()
+  → goroutine syncs resources into SQLite via model.DB
+  → REST API reads from DB via Collector.DB()
+```
 
-`RefSet(ref)` — non-nil with non-empty Namespace/Name. `Equals(a, b)` — Name+Namespace comparison. `ToKind(obj)` — extract kind via reflection.
+`Collection.Reconcile(desired)` performs delete stale → add new → update changed.
+
+### Itinerary navigation (migration pipeline)
+
+```
+Itinerary.List()  → predicate-filtered steps
+Itinerary.First() → first filtered step
+Itinerary.Next(name) → (next Step, done bool, err)
+Itinerary.Progress(step) → {Completed, Total}
+```
+
+### Reference-driven reconciliation
+
+```
+CR field tagged ref:"Kind" → EventMapper.Create/Update/Delete → RefMap
+Referenced resource changes → ref.Handler(owner) → enqueue owner reconcile
+```
 
 ---
 
-## 7. Error Framework (`pkg/lib/error`)
+## Status Conditions
 
-Wraps errors with stack traces and structured context:
+| Category | Blocks Reconcile | Blocks Ready |
+|----------|------------------|--------------|
+| `Critical` | Yes | Yes |
+| `Error` | No | Yes |
+| `Warn` | No | No |
+| `Required` | No | Required for Ready |
+| `Advisory` | No | No |
 
-- `liberr.Wrap(err)` — captures call stack at wrap site
-- `liberr.Wrap(err, "key", value)` — adds context key-value pairs
-- `liberr.New("msg", "key", value)` — create + wrap in one call
-- `liberr.Unwrap(err)` — unwrap to root cause
-- `err.(*liberr.Error).Stack()` / `.Context()` — access captured data
+### Query methods
 
-All controllers use `liberr.Wrap` consistently. The logging package auto-extracts stack traces and context from wrapped errors.
+| Method | Returns true when... |
+|--------|---------------------|
+| `HasCondition(types...)` | ALL types exist with Status=True |
+| `HasAnyCondition(types...)` | ANY type exists with Status=True |
+| `HasConditionCategory(cats...)` | Any condition in category with Status=True |
+| `HasBlockerCondition()` | Critical OR Error present |
+| `HasReQCondition()` | `ValidatingVDDK` OR `VMMissingChangedBlockTracking` |
+| `IsReady()` | Ready condition exists with Status=True |
+| `FindCondition(type)` | Returns pointer (nil if absent or un-staged during staging) |
+
+`Explain` tracks `Added`, `Updated`, `Deleted` maps for the current staging cycle.
 
 ---
 
-## 8. Logging (`pkg/lib/logging`)
+## Integration Points
 
-Zap-based structured logging. Usage: `var log = logging.WithName("name")`, then `log.V(3).Info("msg", "k", v)`.
+| Package | Called by | Calls |
+|---------|-----------|-------|
+| `condition` | All controllers, CRD status types | — |
+| `inventory/container` | Provider controller | `inventory/model`, `filebacked`, `ref` |
+| `inventory/model` | Collectors, REST handlers | `filebacked`, SQLite |
+| `inventory/web` | Provider controller (`web.Start`) | `gin`, `inventory/container` |
+| `itinerary` | Plan/migration controllers | `error` |
+| `ref` | All controllers with cross-resource deps | controller-runtime predicates/handlers |
+| `client/openshift` | OCP provider, plan adapters | `util`, controller-runtime client |
+| `client/openstack` | OpenStack provider | Gophercloud |
+| `client/nutanix` | Nutanix inventory + plan adapter | `inventory/web.Client`, `util` |
+| `aap` | Hook controller (AAP integration) | HTTP AAP/AWX API |
+| `hyperv/driver` | Hyper-V provider collector | WinRM, PowerShell scripts |
+| `error` | Everywhere | `runtime.Callers` for stack capture |
+| `logging` | Everywhere | Zap via logr |
 
-Env vars: `LOG_LEVEL` (verbosity threshold), `LOG_DEVELOPMENT` (human-readable output). Level conventions: V(0) normal, V(2-3) detailed, V(4) DB ops, V(5-6) file I/O. Implements `LevelLogger` interface with `Info`, `Error`, `V`, `WithValues`, `WithName`, `Trace`. Auto-extracts stack traces from `liberr.Error`.
+**Dependency direction:** feature controllers → `pkg/lib` → external libraries.
+`pkg/lib` must never import from `pkg/controller/`.
 
 ---
 
-## 9. Client Utilities (`pkg/lib/client`)
+## Configuration
 
-- **OpenShift** (`client/openshift`): `ocp.RestCfg(provider, secret)` builds `*rest.Config`; `ocp.Client(provider, secret)` builds a `controller-runtime` client. Handles host vs remote, TLS, bearer token. QPS=100, Burst=1000.
-- **OpenStack** (`client/openstack`): Gophercloud-based client supporting password, token, and application credential auth. Typed CRUD for Regions, Projects, VMs, Flavors, Images, Volumes, Networks, Subnets.
+| Env var | Package | Effect |
+|---------|---------|--------|
+| `LOG_LEVEL` | `logging` | Verbosity threshold (default 4 in dev mode) |
+| `LOG_DEVELOPMENT` | `logging` | Human-readable output; default verbosity=4 |
 
-## 10. General Utilities (`pkg/lib/util`)
+Verbosity conventions: V(0) normal, V(2-3) detailed, V(4) DB ops, V(5-6) file I/O.
 
-TLS: `GetTlsCertificate`, `Fingerprint`, `InsecureProvider`, `GetCACert(secret)` (tries `ca.crt` then legacy `cacert`). SSH: `TestSSHConnectivity`, `GenerateSSHPrivateSecretName/PublicSecretName` for vSphere XCOPY offload.
+### Inventory model field tags
+
+| Tag | Meaning |
+|-----|---------|
+| `sql:"pk"` | Primary key |
+| `sql:"key"` | Natural key, indexed |
+| `sql:"fk:Table(field)"` | Foreign key with cascade |
+| `sql:"unique(group)"` | Unique constraint |
+| `sql:"const"` | Immutable after insert |
+| `sql:"incremented"` | Auto-increment |
+| `sql:"d0"` | Detail level for list queries |
+| `eq:"-"` | Skip in `DefaultShepherd` equality |
+
+---
+
+## Error Patterns
+
+- Always wrap with `liberr.Wrap(err)` or `liberr.New("msg", "key", value)` — never return raw errors
+- `liberr.Wrap` captures call stack; logging auto-extracts stack + context from `*liberr.Error`
+- `liberr.Unwrap(err)` drills to root cause
+- Inventory DB: `model.NotFound` = `sql.ErrNoRows`
+- Itinerary: `StepNotFound` when step absent or filtered out
+
+---
+
+## Frontend Relevance
+
+- **Conditions:** UI reads `status.conditions[]` from every CRD. `Category` drives healthy/degraded/blocked
+  display. New backend condition types may need UI handlers.
+- **Inventory REST:** `inventory/web` serves data the console plugin proxies via `getInventoryApiUrl()`.
+  Pagination (`Page`), detail levels (`sql:"d0"` tags), and WebSocket watches are consumed by provider pages.
+- **Itinerary steps:** Migration pipeline step names (`DiskTransfer`, `DiskTransferV2v`, etc.) map to UI
+  display names via `getPipelineStepDisplayName()`.
+- **Reference tracking:** Transparent to UI — ensures Plan/Map status updates when referenced Providers change.
+
+---
+
+## Additional Packages (not covered above)
+
+| Package | Purpose |
+|---------|---------|
+| `aap` | Ansible Automation Platform client — job launch, status polling, template listing; auto-discovers API prefix via `GET /api` |
+| `client/nutanix` | Shared Nutanix Prism REST client for inventory collector and plan adapter |
+| `hyperv/driver` + `hyperv/powershell` | WinRM Hyper-V driver and embedded PowerShell scripts |
+| `gob` | Forked `encoding/gob` for file-backed serialization |
+| `util` | TLS cert fetch (`GetTlsCertificate`), fingerprint, `GetCACert` (`ca.crt` then legacy `cacert`), SSH helpers for vSphere XCOPY |
+| `cmd/inventory` | Standalone inventory command entry point |
 
 ## Key Patterns Summary
 
-### Pattern 1: Condition Staging in Reconcile
-
-Every controller follows this exact sequence:
-1. `BeginStagingConditions()` → 2. Validate & `SetCondition()` → 3. `EndStagingConditions()` → 4. Derive `Ready`
-
-### Pattern 2: Inventory Collection
-
-Provider reconciler creates a `Collector` → adds to `Container` → Collector runs goroutine that syncs resources into SQLite DB via `model.DB` → REST API reads from DB.
-
-### Pattern 3: Phase-Driven Migration
-
-Migration controller uses `Itinerary.Next(currentPhase)` to advance through steps. Predicates conditionally include/skip steps based on migration type flags.
-
-### Pattern 4: Reference-Driven Reconciliation
-
-Resources declare `ref:"Kind"` tagged fields → `EventMapper` auto-tracks in `RefMap` → `ref.Handler` triggers owner reconcile when referenced resource changes.
-
-### Pattern 5: Error Wrapping
-
-Always `liberr.Wrap(err)` — never return raw errors. The logging system extracts stack traces and context automatically.
+1. **Condition staging** — Begin → Set → End → derive Ready (every controller)
+2. **Inventory collection** — Collector goroutine → SQLite via `model.DB` → REST reads
+3. **Phase-driven migration** — `Itinerary.Next(currentPhase)` with predicate filtering
+4. **Reference-driven reconcile** — `ref:"Kind"` tags → `RefMap` → `ref.Handler`
+5. **Error wrapping** — `liberr.Wrap` everywhere; logging extracts stack automatically
