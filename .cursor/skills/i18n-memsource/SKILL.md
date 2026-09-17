@@ -364,13 +364,19 @@ Trigger: user says "translation status", "memsource status", "check translations
 ### SonarCloud and locale files
 
 Memsource download PRs touch `locales/**/*.json`. SonarCloud rule `json:S2068`
-flags UI strings containing "passphrase" as hard-coded credentials whenever
-those files change (recurring false positive on every i18n iteration).
+flags English msgid keys containing "passphrase" (e.g. `"Enter passphrases"`) as
+hard-coded credentials whenever those files change (recurring false positive on
+every i18n iteration). NOSONAR comments are **not** viable — locale files are
+strict JSON with no comments.
 
-**Permanent fix:** `sonar-project.properties` at the repo root excludes
-`locales/**` from analysis. Locale JSON is validated by `npm run test:i18n`
-instead. Do not remove this exclusion — without it, every translation PR will
-fail the Security Rating quality gate.
+**Permanent fix:** This project uses SonarCloud **automatic analysis**, which
+reads `.sonarcloud.properties` on `main` (not `sonar-project.properties`).
+The repo excludes `locales/**` there. Locale JSON is validated by
+`npm run test:i18n` instead. Do not remove this exclusion — without it, every
+translation PR can fail the Security Rating quality gate.
+
+Until `.sonarcloud.properties` is on `main`, a SonarCloud admin can add the same
+exclusion under Administration → General Settings → Analysis Scope → Files.
 
 Previous one-off workaround (MTV-5569): dropping non-en locale stubs — superseded
 by the Sonar exclusion.

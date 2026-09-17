@@ -23,7 +23,7 @@
   "{{count}} affinity rule_many": "{{count}} affinity rule",
   "{{count}} affinity rule_other": "{{count}} reglas de afinidad",
   "{{count}} passphrase configured_one": "{{count}} frase de paso configurada",
-  "{{count}} passphrase configured_many": "{{count}} passphrase configured",
+  "{{count}} passphrase configured_many": "{{count}} frases de paso configuradas",
   "{{count}} passphrase configured_other": "{{count}} frases de paso configuradas",
   "{{count}} plan_one": "{{count}} plan_one",
   "{{count}} plan_many": "{{count}} plan",
