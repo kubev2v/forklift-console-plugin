@@ -505,6 +505,11 @@ npm run i18n
 
 Translation files are located in `locales/en/plugin__forklift-console-plugin.json`.
 
+For Memsource upload/download, use the shared skill
+`.cursor/skills/i18n-memsource/SKILL.md`. Optional per-developer CLI/auth setup:
+copy `personal-setup.example.md` to gitignored
+`.cursor/skills/personal-i18n-memsource/SETUP.md`.
+
 ---
 
 ## Testing

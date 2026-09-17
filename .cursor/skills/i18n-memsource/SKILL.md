@@ -13,6 +13,24 @@ Read `.cursor/skills/i18n-memsource/state.json` for current sprint, version, and
 
 ## Prerequisites
 
+### Personal setup (per developer)
+
+Machine-specific CLI paths and auth helpers are **not** in this shared skill.
+They live in a gitignored personal overlay:
+
+- If `.cursor/skills/personal-i18n-memsource/SETUP.md` exists, **read it first**
+  for this developer's CLI path and auth flow.
+- If missing, use the generic discovery below and ask the user to authenticate.
+
+One-time setup for each developer:
+
+```bash
+mkdir -p .cursor/skills/personal-i18n-memsource
+cp .cursor/skills/i18n-memsource/personal-setup.example.md \
+   .cursor/skills/personal-i18n-memsource/SETUP.md
+# edit SETUP.md for your machine
+```
+
 ### Memsource CLI
 
 The `memsource` CLI is a Python package (`memsource-cli`) installed via pip3. It
@@ -28,20 +46,22 @@ export PATH="$(dirname "$MEMSOURCE_BIN"):$PATH"
 
 ### Authentication (credentials stay with the user)
 
-**Do not** read `~/.memsourcerc`, Memsource passwords, or long-lived tokens into
+**Do not** read `~/.memsourcerc` contents, Memsource passwords, or tokens into
 the agent context. Phrase is a paid external service — treat credentials like
 any other secret.
 
 Preferred flow:
 
-1. Ask the user to authenticate in **their own terminal** and confirm
+1. Prefer the personal `SETUP.md` auth steps when that file exists.
+2. Otherwise ask the user to authenticate in **their own terminal** and confirm
    `memsource auth whoami` works (and that `MEMSOURCE_TOKEN` is exported in the
    shell they will use for `npm run memsource-*`).
-2. The agent may run extract/export/validation without credentials
+3. The agent may run extract/export/validation without credentials
    (`npm run i18n`, `npm run export-pos`, PO checks).
-3. For upload/download/status, either:
-   - the user runs the `memsource-*` / `memsource job list` commands themselves
-     after the agent prepares artifacts, or
+4. For upload/download/status, either:
+   - follow personal SETUP.md (e.g. `source ~/.memsourcerc` + login — never
+     read credential file contents into agent context), or
+   - the user runs the `memsource-*` / `memsource job list` commands themselves, or
    - the user has already exported a **short-lived** `MEMSOURCE_TOKEN` in the
      shared shell (never paste the password into chat).
 
@@ -162,7 +182,8 @@ Ask for explicit approval before proceeding. Use the AskQuestion tool:
 ### Step 8: Upload to Memsource
 
 Run the upload only when `MEMSOURCE_TOKEN` is already available in the shell
-(user-provided; never sourced by the agent from `~/.memsourcerc`):
+(user-provided or obtained via personal SETUP.md auth — never read credential
+file contents into agent context):
 
 ```bash
 npm run memsource-upload -- -v VERSION -s SPRINT
@@ -321,10 +342,41 @@ Trigger: user says "translation status", "memsource status", "check translations
 
 ## Important Notes
 
-- **CLI path:** The `memsource` binary is installed via pip3 and may not be on PATH. Use the discovery snippet from Prerequisites to locate it.
-- **Auth token:** Never source `~/.memsourcerc` or read passwords into the agent. Upload/download need a user-exported short-lived `MEMSOURCE_TOKEN` in the shell (or the user runs `memsource-*` themselves).
-- **Language aliases and branch names:** Both are handled automatically since `ocp-plugin-i18n-scripts@1.0.2`. No symlinks or branch switching needed.
-- The `npm run memsource-upload` and `npm run memsource-download` scripts use the `ocp-plugin-i18n-scripts` npm package CLI commands under the hood.
-- PO files are temporary artifacts in `po-files/` -- they're cleaned up after upload.
-- The `memsource-download` script auto-commits. The PR creation is a separate step.
+- **Personal setup:** CLI path and auth live in gitignored
+  `.cursor/skills/personal-i18n-memsource/SETUP.md` (copy from
+  `personal-setup.example.md`). Never commit machine-specific paths or
+  credentials into this shared skill.
+- **CLI path:** Use personal SETUP.md when present; otherwise the discovery
+  snippet in Prerequisites.
+- **Auth token:** Never read passwords into the agent. Upload/download need a
+  short-lived `MEMSOURCE_TOKEN` (via personal SETUP.md, user terminal, or an
+  already-exported env var).
+- **Language aliases and branch names:** Both are handled automatically since
+  `ocp-plugin-i18n-scripts@1.0.2`. No symlinks or branch switching needed.
+- The `npm run memsource-upload` and `npm run memsource-download` scripts use the
+  `ocp-plugin-i18n-scripts` npm package CLI commands under the hood.
+- PO files are temporary artifacts in `po-files/` -- they're cleaned up after
+  upload.
+- The `memsource-download` script auto-commits. The PR creation is a separate
+  step.
 - State file should always be kept up to date after uploads.
+
+### SonarCloud and locale files
+
+Memsource download PRs touch `locales/**/*.json`. SonarCloud rule `json:S2068`
+flags English msgid keys containing "passphrase" (e.g. `"Enter passphrases"`) as
+hard-coded credentials whenever those files change (recurring false positive on
+every i18n iteration). NOSONAR comments are **not** viable — locale files are
+strict JSON with no comments.
+
+**Permanent fix:** This project uses SonarCloud **automatic analysis**, which
+reads `.sonarcloud.properties` on `main` (not `sonar-project.properties`).
+The repo excludes `locales/**` there. Locale JSON is validated by
+`npm run test:i18n` instead. Do not remove this exclusion — without it, every
+translation PR can fail the Security Rating quality gate.
+
+Until `.sonarcloud.properties` is on `main`, a SonarCloud admin can add the same
+exclusion under Administration → General Settings → Analysis Scope → Files.
+
+Previous one-off workaround (MTV-5569): dropping non-en locale stubs — superseded
+by the Sonar exclusion.
