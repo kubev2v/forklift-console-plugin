@@ -200,7 +200,7 @@ Phase is **not** a blocker by itself — the console should also inspect `status
 | `ovirt` | `user`, `password` | `ca.crt` (required unless `insecureSkipVerify`) |
 | `openstack` | *(validated by collector)* | — |
 | `ova` | `url` (NFS path) | — |
-| `hyperv` | `username`, `password`, `smbUrl` | `ca.crt` (required unless `insecureSkipVerify`); TLS URL built from host + WinRM port |
+| `hyperv` | `username`, `password`, `smbUrl` | `insecureSkipVerify=true` (backend always skips TLS verification via `NewWinRMDriver(..., true, nil)` — `ca.crt` is not consumed) |
 | `nutanix` | `user`, `password` | `ca.crt` (required unless `insecureSkipVerify`) |
 | `ec2` | *(validated by EC2 validator)* | — |
 | `azure` | *(validated by collector)* | — |

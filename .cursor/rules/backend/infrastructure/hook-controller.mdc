@@ -138,8 +138,9 @@ When `spec.aap` is nil:
 4. **Owner reference**: Job owned by Plan CR.
 
 **Failure handling**:
-- Job condition `Failed` → step error, marked completed.
-- `job.Status.Failed > Settings.HookRetry` (default 3) → "Retry limit exceeded."
+- Kubernetes Job pod retries: `BackoffLimit: 1` (at most one retry after the first failed pod).
+- When the Job reports a `Failed` condition, `HookRunner.Run` adds the condition message and marks the current step completed with an error — this is the normal terminal path.
+- Fallback only (no `Failed` condition yet): `job.Status.Failed > Settings.HookRetry` (default 3) → "Retry limit exceeded."
 - `job.Status.Succeeded > 0` → step progress = 1, marked completed.
 
 ---

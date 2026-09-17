@@ -105,7 +105,9 @@ type DB interface {
     Count(Model, Predicate) (int64, error)
     Begin(...string) (*Tx, error)
     With(func(*Tx) error, ...string) error
-    Insert/Update/Delete(Model) error
+    Insert(Model) error
+    Update(Model, ...Predicate) error
+    Delete(Model) error
     Watch(Model, EventHandler) (*Watch, error)
     EndWatch(*Watch)
 }
@@ -161,7 +163,7 @@ type Collector interface {
     HasParity() bool       // initial sync complete
     DB() model.DB
     Test() (int, error)    // 0 = ignore status code
-    Follow(moRef, path, dst) error
+    Follow(moRef interface{}, p []string, dst interface{}) error
     Reset()
     Version() (string, string, string, string, error)  // oVirt-only
 }

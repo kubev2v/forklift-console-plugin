@@ -263,7 +263,8 @@ Same source storage on multiple rows allowed — multi-plugin / multi-target off
 | Hook | Purpose |
 |------|---------|
 | `useSourceNetworks` | Source networks via provider inventory REST |
-| `useOpenShiftNetworks` / `useTargetNetworks` | NADs on OpenShift target |
+| `useOpenShiftNetworks` | NADs on OpenShift target |
+| `useTargetNetworks` | OpenShift target network options (default pod network + NADs) |
 | `useSourceStorages` | Source datastores/storage domains (provider-type-specific) |
 | `useTargetStorages` | Target StorageClasses (virt-default → k8s-default ordering, NetApp Shift) |
 | `useProviderInventory` | Low-level Forklift inventory REST client |

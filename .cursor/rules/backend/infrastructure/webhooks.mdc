@@ -165,7 +165,9 @@ Dispatches by `createdForResourceType` label:
 Dispatches by `createdForResourceType` label:
 
 **For `providers` secrets:**
-- Sets `insecureSkipVerify` to `"false"` if not present
+- Sets `insecureSkipVerify` to `"false"` if not present (this is the persisted TLS-skip key)
+- Note: the validating webhook reads `insecure` (not `insecureSkipVerify`) for its CA-conflict
+  check — these are separate fields with distinct roles; do not treat them as interchangeable
 - For **oVirt** providers in secure mode:
   - Requires a valid CA certificate in the secret
   - Fetches engine CA from `https://<host>/ovirt-engine/services/pki-resource?resource=ca-certificate&format=X509-PEM-CA`

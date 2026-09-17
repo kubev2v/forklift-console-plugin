@@ -357,7 +357,7 @@ UI enum `PlanStatuses` in `src/plans/details/components/PlanStatus/utils/types.t
 | `Succeeded` | `Completed` |
 | `Canceled` | `Canceled` |
 | Warm + executing + VM paused | `Paused` |
-| Any `Critical` category condition | `CannotStart` |
+| Any `Critical` or `Error` category condition | `CannotStart` |
 | `Failed` or VM `error` field | `Incomplete` |
 | `Executing` + VMs not started | `Pending` |
 | `Executing` | `Executing` |

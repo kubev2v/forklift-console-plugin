@@ -83,15 +83,20 @@ type Provider struct {
     Product      string       `json:"product"`
     VMCount      int64        `json:"vmCount"`      // AddDerived — detail > 0 only
     NetworkCount int64        `json:"networkCount"` // AddDerived — detail > 0 only
-    StorageCount int64        `json:"storageCount"` // OVA, Hyper-V, Nutanix
-    // vSphere adds: DatacenterCount, ClusterCount, HostCount, InstanceUuid, ...
+    // Provider-specific derived counts (detail > 0 only):
+    //   OVA: diskCount, storageCount
+    //   Hyper-V: storageCount
+    //   Nutanix: storageContainerCount
+    //   OCP: storageClassCount
+    //   vSphere: datastoreCount (+ DatacenterCount, ClusterCount, HostCount, ...)
+    //   OpenStack: volumeCount, volumeTypeCount
 }
 ```
 
-`AddDerived()` on provider handlers **skips all count fields when `h.Detail == 0`**. Single-provider
-`Get` handlers on some types (e.g. OVA `ovfbase`) force `h.Detail = model.MaxDetail` before
-`AddDerived`, but aggregated list endpoints and per-UID root fetches rely on the caller passing
-`?detail=1` (or higher).
+`AddDerived()` on provider handlers **skips all count fields when `h.Detail == 0`**. Provider
+`Get` handlers on OVA, vSphere, oVirt, OpenStack, OCP, and Nutanix force `h.Detail =
+model.MaxDetail` before `AddDerived`. Hyper-V and EC2 root fetches remain caller-dependent —
+the caller must pass `?detail=1` (or higher) to populate derived counts.
 
 ---
 
@@ -215,9 +220,10 @@ Parsed in `base.Handler.setDetail()`:
 | `1`, `2`, … `9` | Integer detail level; semantics vary per resource type |
 | `all` | `Detail = MaxDetail` (9, from `lib/inventory/model/field.go`) |
 
-**Provider `AddDerived` counts** (`vmCount`, `networkCount`, `storageCount`, vSphere
-`hostCount`, etc.): populated only when `h.Detail > 0`. This applies to Hyper-V, OVA, vSphere,
-oVirt, OpenStack, Nutanix, and OCP provider handlers.
+**Provider `AddDerived` counts** (`vmCount`, `networkCount`, plus provider-specific storage
+counts — see shape above): populated only when `h.Detail > 0`. OVA, vSphere, oVirt, OpenStack,
+OCP, and Nutanix `Get` handlers force `MaxDetail` before deriving; Hyper-V and EC2 rely on
+caller-supplied detail.
 
 **VM detail tiers** (vSphere, oVirt, OVA/ovfbase, Nutanix — same pattern):
 
@@ -305,12 +311,13 @@ Every inventory resource includes at minimum:
 
 ```json
 {
-  "id": "<provider-internal-id>",
+  "uid": "<provider-uid>",
+  "version": "<resource-version>",
+  "namespace": "<namespace>",
   "name": "<display-name>",
   "selfLink": "/providers/<type>/<uid>/<collection>/<id>",
-  "revision": 12345,
   "path": "<hierarchical/path>",
-  "variant": "<optional-subtype>"
+  "id": "<provider-internal-id>"
 }
 ```
 

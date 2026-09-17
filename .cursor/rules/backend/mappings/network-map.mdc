@@ -242,7 +242,7 @@ NetworkMap entries          VM NICs (same switch)
 ─────────────────          ─────────────────────
 net-a vlan=100 → nad-1     net-a VlanId=100  → key net-a/100 → nad-1
 net-a vlan=200 → nad-2     net-a VlanId=200  → key net-a/200 → nad-2
-net-a vlan=0   → nad-3     net-a VlanId=0    → key net-a     → nad-3
+net-a (no vlan) → nad-3    net-a VlanId=0    → key net-a     → nad-3
 ```
 
 ### NAD pool (multi-NIC, shared source network)

@@ -255,7 +255,7 @@ Disks sorted for libvirt/virt-v2v: SCSI → SATA → IDE → NVME; within bus by
 | `pkg/controller/provider/validation.go` | → collector | `ValidateVSpherePrivileges`, connection test |
 | `pkg/controller/validation/policy` | ← `VMEventHandler` | OPA validate + rules_version |
 | `pkg/controller/plan/adapter/vsphere/` | reads inventory DB | Migration client operations |
-| `pkg/forklift-api/services/` | → `web/vsphere` handlers | HTTP routing |
+| `pkg/controller/provider/controller.go` | → `web/vsphere` handlers | Inventory HTTP via provider controller web registry |
 | `govmomi` (vim25 + vapi/rest) | external | vSphere SDK + tags API |
 | OpenShift Build/Image APIs | external | VDDK image build (`vddk.go`) |
 

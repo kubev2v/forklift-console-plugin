@@ -251,7 +251,7 @@ Connection test (`Collector.Test()`): delegates to `client.connect()`.
 | `pkg/controller/provider/controller.go` | → collector | Start/stop collector per Provider CR |
 | `pkg/controller/validation/policy` | ← `VMEventHandler` | OPA validate + rules_version |
 | `pkg/controller/plan/adapter/ovirt/` | reads inventory DB | Migration client operations |
-| `pkg/forklift-api/services/` | → `web/ovirt` handlers | HTTP routing |
+| `pkg/controller/provider/controller.go` | → `web/ovirt` handlers | Inventory HTTP via provider controller web registry |
 | oVirt Engine REST API v4 | external | Inventory source |
 
 Registry: `pkg/controller/provider/container/doc.go` → `ovirt.New()`, `pkg/controller/provider/web/doc.go` → `ovirt.Handlers()`.

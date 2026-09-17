@@ -346,7 +346,8 @@ Both virt-v2v and virt-customize accept `--key` args:
 
 ### vSphere
 
-- Input: `-i libvirt -ic <libvirtUrl> -ip <secretKey> --hostname <esxi-host>`
+- Cold / remote-inspection input (`RunVirtV2v`, remote inspection): `-i libvirt -ic <libvirtUrl> -ip <secretKey> --hostname <esxi-host>`
+- In-place (`RunVirtV2vInPlace`): `virt-v2v-in-place -i libvirtxml` — do **not** use `-i libvirt`
 - Transport: VDDK (`-it vddk -io vddk-libdir=... -io vddk-thumbprint=...`) or NFC (`-it nfc -io nfc-thumbprint=...`)
 - Optional: `-io vddk-config=<config-file>`
 - SSL: symlink from `/etc/secret/cacert` or system CA bundle

@@ -34,8 +34,11 @@ operator/config/prometheus/monitor.yaml
   └── ServiceMonitor scrapes :8443/metrics (scheme: https)
 ```
 
-All `promauto`-registered metrics appear on both `:2112` and `:8080` because they share
-the default Prometheus registry.
+`promauto.New*` registers `mtv_*` metrics with `prometheus.DefaultRegisterer`, served by
+`promhttp.Handler()` on `:2112`. Controller-runtime v0.20.4 serves its **separate**
+`metrics.Registry` on `:8080`; the ServiceMonitor path (`:8443` via kube-rbac-proxy) scrapes
+controller-runtime metrics only — `mtv_*` metrics are **not** exposed there unless explicitly
+registered with the controller-runtime registry.
 
 ### Volume populators (sidecar jobs)
 
