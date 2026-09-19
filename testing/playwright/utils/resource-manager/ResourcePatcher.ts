@@ -25,6 +25,8 @@ export const asControllerPatches = (body: unknown): JsonPatchOperation[] =>
  */
 export type PatchType = 'merge' | 'json';
 
+export type PatchSubresource = 'status';
+
 /**
  * Handles patching resources in Kubernetes APIs.
  * All operations use Node.js HTTP directly — no browser Page required.
@@ -64,15 +66,17 @@ export class ResourcePatcher extends BaseResourceManager {
     patch: Record<string, unknown> | JsonPatchOperation[];
     patchType?: PatchType;
     resourceName: string;
+    subresource?: PatchSubresource;
   }): Promise<T | null> {
-    const { kind, namespace, patch, patchType = 'merge', resourceName } = options;
+    const { kind, namespace, patch, patchType = 'merge', resourceName, subresource } = options;
     const resourceType = ResourcePatcher.getResourceTypeFromKind(kind);
     const contentType =
       patchType === 'json' ? 'application/json-patch+json' : 'application/merge-patch+json';
 
     const basePath =
       resourceType === RESOURCE_TYPES.VIRTUAL_MACHINES ? API_PATHS.KUBEVIRT : API_PATHS.FORKLIFT;
-    const apiPath = `${basePath}/namespaces/${namespace}/${resourceType}/${resourceName}`;
+    const subresourcePath = subresource ? `/${subresource}` : '';
+    const apiPath = `${basePath}/namespaces/${namespace}/${resourceType}/${resourceName}${subresourcePath}`;
 
     return ResourcePatcher.apiPatch<T>(apiPath, patch, contentType);
   }
