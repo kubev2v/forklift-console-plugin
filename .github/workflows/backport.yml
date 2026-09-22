@@ -212,15 +212,15 @@ jobs:
 
             let body;
             if (skipReason === 'no_ticket_attached') {
-              body = `ℹ️ **Jira Clone Skipped**\n\nBackport parent has no ticket attached to it (\`Resolves: None\`). Skipping clone.`;
+              body = `ℹ️ **Jira Target Version Skipped**\n\nBackport parent has no ticket attached to it (\`Resolves: None\`). Skipping Target Version update.`;
             } else {
-              body = `⚠️ **Jira Clone Skipped**\n\nCannot find an MTV ticket in the original PR. Skipping clone.\nPlease locate the ticket manually and link it to the backport PR.`;
+              body = `⚠️ **Jira Target Version Skipped**\n\nCannot find an MTV ticket in the original PR. Skipping Target Version update.\nPlease set the Target Version on the original ticket manually if a z-stream clone is needed.`;
             }
 
             await github.rest.issues.createComment({ owner, repo, issue_number, body });
 
-      - name: Clone Jira ticket for backport
-        id: clone_ticket
+      - name: Set Target Version on original ticket
+        id: set_target_version
         if: steps.extract_ticket.outputs.ticket_key != '' && steps.parse_comment.outputs.dry_run == 'false'
         continue-on-error: true
         env:
@@ -238,158 +238,117 @@ jobs:
             curl -sSf -H "$AUTH_HEADER" -H "Content-Type: application/json" "$1"
           }
 
-          jira_post() {
-            curl -sSf -X POST -H "$AUTH_HEADER" -H "Content-Type: application/json" -d "$2" "$1"
+          jira_put() {
+            curl -sSf -X PUT -H "$AUTH_HEADER" -H "Content-Type: application/json" -d "$2" "$1"
           }
 
-          echo "🔍 Checking for existing clone of $TICKET_KEY for branch $BRANCH_NAME..."
+          echo "target_version_set=false" >> $GITHUB_OUTPUT
+          echo "target_version_name=" >> $GITHUB_OUTPUT
 
-          # Fetch the original ticket with issue links
-          original_data=$(jira_get "${JIRA_BASE}/rest/api/3/issue/${TICKET_KEY}?fields=issuelinks,summary,description,components,priority,issuetype")
-
-          # Check for existing clone: look for "Cloners" link with matching backport prefix
-          existing_clone=""
-          existing_clone=$(echo "$original_data" | jq -r --arg prefix "[Backport ${BRANCH_NAME}]" '
-            .fields.issuelinks[]?
-            | select(.type.name == "Cloners")
-            | select(.inwardIssue != null)
-            | select(.inwardIssue.fields.summary | startswith($prefix))
-            | .inwardIssue.key
-          ' | head -1 || true)
-
-          if [[ -n "$existing_clone" ]]; then
-            echo "✅ Found existing clone: $existing_clone (reusing)"
-            echo "clone_key=$existing_clone" >> $GITHUB_OUTPUT
-            echo "clone_existed=true" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          echo "📝 No existing clone found. Creating new clone..."
-
-          # Extract fields from original
-          original_summary=$(echo "$original_data" | jq -r '.fields.summary')
-          original_components=$(echo "$original_data" | jq -c '[.fields.components[]? | {id: .id}]')
-          original_priority=$(echo "$original_data" | jq -r '.fields.priority.id')
-          original_issuetype=$(echo "$original_data" | jq -r '.fields.issuetype.id')
-
-          # Read fix version from build/release.conf on target branch (RVERSION = next z-stream)
-          fix_version_id=""
+          # Read RVERSION from build/release.conf on target branch (next z-stream)
           rversion=""
           if release_conf=$(git show "origin/${BRANCH_NAME}:build/release.conf" 2>/dev/null); then
             rversion=$(echo "$release_conf" | awk -F= '$1 == "RVERSION" {print $2; exit}')
             echo "  - RVERSION from release.conf: $rversion"
-
-            if [[ -n "$rversion" ]]; then
-              if versions_data=$(jira_get "${JIRA_BASE}/rest/api/3/project/MTV/versions"); then
-                fix_version_id=$(echo "$versions_data" | jq -r --arg name "$rversion" '
-                  [.[] | select(.name == $name)]
-                  | first
-                  | .id // empty
-                ' || true)
-              else
-                echo "  ⚠️ Could not fetch MTV fix versions; creating clone without fixVersion"
-              fi
-
-              if [[ -n "$fix_version_id" ]]; then
-                echo "  - Matched fix version ID: $fix_version_id ($rversion)"
-              else
-                echo "  ⚠️ No Jira fix version named '$rversion' found in MTV project"
-              fi
-            fi
           else
-            echo "  ⚠️ Could not read build/release.conf from branch $BRANCH_NAME"
-          fi
-
-          # Build the clone description in ADF format
-          clone_summary="[Backport ${BRANCH_NAME}] ${original_summary}"
-          description_adf=$(jq -n --arg key "$TICKET_KEY" --arg base "$JIRA_BASE" '{
-            version: 1,
-            type: "doc",
-            content: [
-              {
-                type: "paragraph",
-                content: [
-                  { type: "text", text: "Backport of " },
-                  {
-                    type: "inlineCard",
-                    attrs: { url: ($base + "/browse/" + $key) }
-                  }
-                ]
-              }
-            ]
-          }')
-
-          # Build create payload
-          create_payload=$(jq -n \
-            --arg summary "$clone_summary" \
-            --argjson desc "$description_adf" \
-            --argjson components "$original_components" \
-            --arg priority_id "$original_priority" \
-            --arg issuetype_id "$original_issuetype" \
-            --arg fix_version_id "$fix_version_id" \
-            '{
-              fields: {
-                project: { key: "MTV" },
-                summary: $summary,
-                description: $desc,
-                components: $components,
-                priority: { id: $priority_id },
-                issuetype: { id: $issuetype_id }
-              }
-            }
-            | if $fix_version_id != "" then .fields.fixVersions = [{ id: $fix_version_id }] else . end
-            ')
-
-          # Create the clone
-          echo "📝 Creating Jira ticket..."
-          clone_response=$(jira_post "${JIRA_BASE}/rest/api/3/issue" "$create_payload")
-          clone_key=$(echo "$clone_response" | jq -r '.key')
-
-          if [[ -z "$clone_key" || "$clone_key" == "null" ]]; then
-            echo "::warning::Failed to create Jira clone. Response: $clone_response"
-            echo "clone_key=" >> $GITHUB_OUTPUT
+            echo "::warning::Could not read build/release.conf from branch $BRANCH_NAME"
             exit 0
           fi
 
-          echo "✅ Created clone: $clone_key"
-
-          # Create Cloners link (original is cloned by clone)
-          link_payload=$(jq -n --arg clone "$clone_key" --arg original "$TICKET_KEY" '{
-            type: { name: "Cloners" },
-            inwardIssue: { key: $clone },
-            outwardIssue: { key: $original }
-          }')
-
-          if ! jira_post "${JIRA_BASE}/rest/api/3/issueLink" "$link_payload" >/dev/null 2>&1; then
-            echo "::warning::Failed to create Cloners link between $clone_key and $TICKET_KEY"
-          else
-            echo "✅ Created Cloners link: $clone_key → $TICKET_KEY"
+          if [[ -z "$rversion" ]]; then
+            echo "::warning::RVERSION not found in release.conf on $BRANCH_NAME"
+            exit 0
           fi
 
-          echo "clone_key=$clone_key" >> $GITHUB_OUTPUT
-          echo "clone_existed=false" >> $GITHUB_OUTPUT
+          # Reject unexpected values before exporting to later github-script steps
+          if [[ ! "$rversion" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::warning::Invalid RVERSION format (expected X.Y.Z): $rversion"
+            exit 0
+          fi
+
+          echo "target_version_name=$rversion" >> $GITHUB_OUTPUT
+
+          # Resolve version ID from MTV project versions
+          version_id=""
+          if versions_data=$(jira_get "${JIRA_BASE}/rest/api/3/project/MTV/versions"); then
+            version_id=$(echo "$versions_data" | jq -r --arg name "$rversion" '
+              [.[] | select(.name == $name)]
+              | first
+              | .id // empty
+            ' || true)
+          else
+            echo "::warning::Could not fetch MTV versions; skipping Target Version update"
+            exit 0
+          fi
+
+          if [[ -z "$version_id" ]]; then
+            echo "::warning::No Jira version named '$rversion' found in MTV project"
+            exit 0
+          fi
+
+          echo "  - Matched version ID: $version_id ($rversion)"
+
+          # Fetch current Target Version (customfield_10855) on the original ticket
+          original_data=$(jira_get "${JIRA_BASE}/rest/api/3/issue/${TICKET_KEY}?fields=customfield_10855")
+          existing_target_versions=$(echo "$original_data" | jq -c '[.fields.customfield_10855[]? | {id: .id}]')
+
+          already_set=$(echo "$original_data" | jq -r --arg name "$rversion" '
+            [.fields.customfield_10855[]? | select(.name == $name)]
+            | length
+          ')
+
+          if [[ "$already_set" != "0" ]]; then
+            echo "✅ Target Version '$rversion' already set on $TICKET_KEY (idempotent skip)"
+            echo "target_version_set=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Append the new version without replacing existing Target Versions
+          update_payload=$(jq -n \
+            --argjson existing "$existing_target_versions" \
+            --arg new_id "$version_id" \
+            '{fields: {customfield_10855: ($existing + [{id: $new_id}])}}')
+
+          echo "📝 Setting Target Version '$rversion' on $TICKET_KEY..."
+          if jira_put "${JIRA_BASE}/rest/api/3/issue/${TICKET_KEY}" "$update_payload"; then
+            echo "✅ Set Target Version '$rversion' on $TICKET_KEY (Jira automation will create the z-stream clone)"
+            echo "target_version_set=true" >> $GITHUB_OUTPUT
+          else
+            echo "::warning::Failed to set Target Version on $TICKET_KEY"
+          fi
 
       - name: Post status comment (start)
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          BRANCH_NAME: ${{ steps.parse_comment.outputs.branch_name }}
+          DRY_RUN: ${{ steps.parse_comment.outputs.dry_run }}
+          PR_NUMBER: ${{ steps.parse_comment.outputs.pr_number }}
+          TARGET_VERSION_NAME: ${{ steps.set_target_version.outputs.target_version_name }}
+          TARGET_VERSION_SET: ${{ steps.set_target_version.outputs.target_version_set }}
+          TICKET_KEY: ${{ steps.extract_ticket.outputs.ticket_key }}
+          WORKFLOW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
-            const branch = '${{ steps.parse_comment.outputs.branch_name }}';
-            const dryRun = '${{ steps.parse_comment.outputs.dry_run }}' === 'true';
-            const cloneKey = '${{ steps.clone_ticket.outputs.clone_key }}';
+            const branch = process.env.BRANCH_NAME;
+            const dryRun = process.env.DRY_RUN === 'true';
+            const ticketKey = process.env.TICKET_KEY;
+            const targetVersionSet = process.env.TARGET_VERSION_SET === 'true';
+            const targetVersionName = process.env.TARGET_VERSION_NAME;
+            const prNumber = process.env.PR_NUMBER;
 
             let jiraInfo = '';
-            if (cloneKey) {
-              jiraInfo = `\n🎫 Jira clone: [${cloneKey}](https://redhat.atlassian.net/browse/${cloneKey})`;
+            if (targetVersionSet && ticketKey && targetVersionName) {
+              jiraInfo = `\n🎫 Set Target Version \`${targetVersionName}\` on [${ticketKey}](https://redhat.atlassian.net/browse/${ticketKey}); Jira automation will create the z-stream clone`;
             }
 
             const body = `🔄 **Backport Status**
 
-            Starting backport of PR #${{ steps.parse_comment.outputs.pr_number }} to \`${branch}\`
+            Starting backport of PR #${prNumber} to \`${branch}\`
             ${dryRun ? '🧪 **Dry run mode** - No actual changes will be made' : '🚀 **Live mode** - Changes will be applied'}${jiraInfo}
 
-            [View workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            [View workflow run](${process.env.WORKFLOW_RUN_URL})`;
 
             await github.rest.issues.createComment({ owner, repo, issue_number, body });
 
@@ -404,36 +363,50 @@ jobs:
           no-squash: true
           auth: ${{ secrets.GITHUB_TOKEN }}
           dry-run: ${{ steps.parse_comment.outputs.dry_run }}
-          title: "${{ steps.clone_ticket.outputs.clone_key && format('Resolves: {0} | ', steps.clone_ticket.outputs.clone_key) || '' }}[Backport ${{ steps.parse_comment.outputs.branch_name }}] ${{ steps.verify_refs.outputs.pr_title }}"
-          body: "Backport of #${{ steps.parse_comment.outputs.pr_number }} to `${{ steps.parse_comment.outputs.branch_name }}`\n\n${{ steps.clone_ticket.outputs.clone_key && format('Resolves: {0}\nOriginal ticket: {1}', steps.clone_ticket.outputs.clone_key, steps.extract_ticket.outputs.ticket_key) || '' }}"
+          title: "[${{ steps.parse_comment.outputs.branch_name }}] ${{ steps.verify_refs.outputs.pr_title }}"
+          body: |
+            Backport of #${{ steps.parse_comment.outputs.pr_number }} to `${{ steps.parse_comment.outputs.branch_name }}`
+
+            Original PR: ${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.parse_comment.outputs.pr_number }}
+            ${{ steps.extract_ticket.outputs.ticket_key && format('Original Jira: https://redhat.atlassian.net/browse/{0}', steps.extract_ticket.outputs.ticket_key) || '' }}
 
       - name: Post success comment
         if: success()
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          BRANCH_NAME: ${{ steps.parse_comment.outputs.branch_name }}
+          DRY_RUN: ${{ steps.parse_comment.outputs.dry_run }}
+          PR_NUMBER: ${{ steps.parse_comment.outputs.pr_number }}
+          TARGET_VERSION_NAME: ${{ steps.set_target_version.outputs.target_version_name }}
+          TARGET_VERSION_SET: ${{ steps.set_target_version.outputs.target_version_set }}
+          TICKET_KEY: ${{ steps.extract_ticket.outputs.ticket_key }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
-            const branch = '${{ steps.parse_comment.outputs.branch_name }}';
-            const dryRun = '${{ steps.parse_comment.outputs.dry_run }}' === 'true';
-            const cloneKey = '${{ steps.clone_ticket.outputs.clone_key }}';
+            const branch = process.env.BRANCH_NAME;
+            const dryRun = process.env.DRY_RUN === 'true';
+            const ticketKey = process.env.TICKET_KEY;
+            const targetVersionSet = process.env.TARGET_VERSION_SET === 'true';
+            const targetVersionName = process.env.TARGET_VERSION_NAME;
+            const prNumber = process.env.PR_NUMBER;
 
             let body;
             if (dryRun) {
               body = `✅ **Backport Dry Run Completed**
 
-              The backport of PR #${{ steps.parse_comment.outputs.pr_number }} to \`${branch}\` was successful in dry-run mode.
+              The backport of PR #${prNumber} to \`${branch}\` was successful in dry-run mode.
 
               To perform the actual backport, run:
               \`/backport ${branch}\` (without --dry-run flag)`;
             } else {
               let jiraInfo = '';
-              if (cloneKey) {
-                jiraInfo = `\n🎫 Jira clone: [${cloneKey}](https://redhat.atlassian.net/browse/${cloneKey})`;
+              if (targetVersionSet && ticketKey && targetVersionName) {
+                jiraInfo = `\n🎫 Target Version \`${targetVersionName}\` set on [${ticketKey}](https://redhat.atlassian.net/browse/${ticketKey})`;
               }
               body = `✅ **Backport Completed Successfully**
 
-              PR #${{ steps.parse_comment.outputs.pr_number }} has been successfully backported to \`${branch}\`.
+              PR #${prNumber} has been successfully backported to \`${branch}\`.
 
               A new pull request should have been created with the backported changes.${jiraInfo}`;
             }
@@ -444,14 +417,11 @@ jobs:
         id: label_pr
         if: success() && steps.parse_comment.outputs.dry_run == 'false'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
-        env:
-          PR_TITLE: ${{ steps.verify_refs.outputs.pr_title }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const branch = '${{ steps.parse_comment.outputs.branch_name }}';
             const originalNumber = parseInt('${{ steps.parse_comment.outputs.pr_number }}', 10);
-            const originalTitle = process.env.PR_TITLE;
 
             // Heuristic: find the most recent open PR to the target branch
             // that looks like a backport of the original PR.
@@ -466,13 +436,12 @@ jobs:
             const candidates = openPRs.filter(pr => {
               const created = new Date(pr.created_at).getTime();
               const fresh = (now - created) < TWO_HOURS;
-              const title = pr.title || '';
               const body = pr.body || '';
+              // Require the backport PR body to reference the original PR number/URL
+              // so concurrent backports to the same branch are not mislabeled.
               const mentionsOriginal =
-                title.includes(`#${originalNumber}`) ||
                 body.includes(`#${originalNumber}`) ||
-                title.toLowerCase().includes('backport') ||
-                title.includes(originalTitle);
+                body.includes(`/pull/${originalNumber}`);
 
               return fresh && mentionsOriginal;
             });
@@ -504,71 +473,24 @@ jobs:
             core.info(`Applied label '${label}' to PR #${pr.number}`);
             core.setOutput('backport_pr_url', pr.html_url);
 
-      - name: Update cloned Jira ticket (POST + PR link)
-        if: success() && steps.clone_ticket.outputs.clone_key != '' && steps.parse_comment.outputs.dry_run == 'false'
-        continue-on-error: true
-        env:
-          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          CLONE_KEY: ${{ steps.clone_ticket.outputs.clone_key }}
-          BACKPORT_PR_URL: ${{ steps.label_pr.outputs.backport_pr_url }}
-        run: |
-          set -euo pipefail
-
-          JIRA_BASE="https://redhat.atlassian.net"
-          AUTH_HEADER="Authorization: Basic $(echo -n "${JIRA_EMAIL}:${JIRA_API_TOKEN}" | base64 -w 0)"
-
-          jira_get() {
-            curl -sSf -H "$AUTH_HEADER" -H "Content-Type: application/json" "$1"
-          }
-
-          jira_put() {
-            curl -sSf -X PUT -H "$AUTH_HEADER" -H "Content-Type: application/json" -d "$2" "$1"
-          }
-
-          jira_post() {
-            curl -sSf -X POST -H "$AUTH_HEADER" -H "Content-Type: application/json" -d "$2" "$1"
-          }
-
-          # Set "Git Pull Request" field if we found the backport PR URL
-          if [[ -n "$BACKPORT_PR_URL" ]]; then
-            echo "🔗 Setting PR link on $CLONE_KEY: $BACKPORT_PR_URL"
-            pr_payload=$(jq -n --arg url "$BACKPORT_PR_URL" '{fields: {customfield_10875: $url}}')
-            if ! jira_put "${JIRA_BASE}/rest/api/3/issue/${CLONE_KEY}" "$pr_payload" 2>/dev/null; then
-              echo "::warning::Failed to set PR link on $CLONE_KEY"
-            fi
-          fi
-
-          # Transition to POST
-          echo "🔄 Transitioning $CLONE_KEY to POST..."
-          transitions_data=$(jira_get "${JIRA_BASE}/rest/api/3/issue/${CLONE_KEY}/transitions")
-          post_id=$(echo "$transitions_data" | jq -r '.transitions[] | select(.name == "POST" or .to.name == "POST") | .id' | head -1)
-
-          if [[ -n "$post_id" && "$post_id" != "null" ]]; then
-            transition_payload=$(jq -n --arg id "$post_id" '{transition: {id: $id}}')
-            if jira_post "${JIRA_BASE}/rest/api/3/issue/${CLONE_KEY}/transitions" "$transition_payload" 2>/dev/null; then
-              echo "✅ Transitioned $CLONE_KEY to POST"
-            else
-              echo "::warning::Failed to transition $CLONE_KEY to POST"
-            fi
-          else
-            echo "::warning::POST transition not available for $CLONE_KEY. Available transitions:"
-            echo "$transitions_data" | jq -r '.transitions[] | "  - \(.name) (id: \(.id))"'
-          fi
-
       - name: Post failure comment
         if: failure()
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         env:
+          BRANCH_NAME: ${{ steps.parse_comment.outputs.branch_name || 'unknown' }}
+          PR_NUMBER: ${{ steps.parse_comment.outputs.pr_number || github.event.issue.number }}
           PR_TITLE: ${{ steps.verify_refs.outputs.pr_title || 'Original PR title' }}
+          TICKET_KEY: ${{ steps.extract_ticket.outputs.ticket_key }}
+          WORKFLOW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
-            const branch = '${{ steps.parse_comment.outputs.branch_name || 'unknown' }}';
-            const prNumber = '${{ steps.parse_comment.outputs.pr_number || github.event.issue.number }}';
-            const cloneKey = '${{ steps.clone_ticket.outputs.clone_key }}';
-            const ticketKey = '${{ steps.extract_ticket.outputs.ticket_key }}';
+            const branch = process.env.BRANCH_NAME;
+            const prNumber = process.env.PR_NUMBER;
+            const ticketKey = process.env.TICKET_KEY;
+            const serverUrl = context.serverUrl;
+            const repository = `${owner}/${repo}`;
 
             // Fetch commit SHAs from the original PR for pastable commands
             let commitShas = '';
@@ -581,8 +503,17 @@ jobs:
               commitShas = '<commit-sha(s)>';
             }
 
-            const resolvedTicket = cloneKey || ticketKey || 'MTV-XXXX';
+            // Single-quote for safe copy-paste into a shell (escape embedded quotes)
+            const shellQuote = (value) => `'${String(value).replace(/'/g, `'\\''`)}'`;
             const prTitle = process.env.PR_TITLE;
+            const originalPrUrl = `${serverUrl}/${repository}/pull/${prNumber}`;
+            const jiraLine = ticketKey
+              ? `\nOriginal Jira: https://redhat.atlassian.net/browse/${ticketKey}`
+              : '';
+            const quotedTitle = shellQuote(`[${branch}] ${prTitle}`);
+            const quotedBody = shellQuote(
+              `Backport of #${prNumber} to \`${branch}\`\n\nOriginal PR: ${originalPrUrl}${jiraLine}`
+            );
 
             const body = `❌ **Backport Failed**
 
@@ -593,7 +524,7 @@ jobs:
             - Target branch doesn't exist
             - Invalid branch name format (must be release-X.Y or release-X.Y.Z)
 
-            Please check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.
+            Please check the [workflow logs](${process.env.WORKFLOW_RUN_URL}) for details.
 
             ---
 
@@ -607,7 +538,7 @@ jobs:
             git add .
             git cherry-pick --continue
             git push origin backport-${prNumber}-to-${branch}
-            gh pr create --base ${branch} --title "Resolves: ${resolvedTicket} | [Backport ${branch}] ${prTitle}"
+            gh pr create --base ${branch} --title ${quotedTitle} --body ${quotedBody}
             \`\`\``;
 
             await github.rest.issues.createComment({ owner, repo, issue_number, body });
