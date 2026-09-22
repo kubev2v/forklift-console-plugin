@@ -10,7 +10,7 @@ Development happens on `main`. Release branches follow the pattern `release-X.Y`
 
 - **Feature branches**: fork from `main`, open a PR against `main`
 - **Release branches**: cut from `main` when a release stabilizes
-- **Backports**: after a PR merges to `main`, comment `/backport release-X.Y` on the PR to create a cherry-pick PR to that release branch. `/cherrypick` and `/cherry-pick` also work. Add `--dry-run` to test first. The backport workflow also clones the associated Jira ticket (if any) and links it to the backport PR -- see [Repository Secrets](#repository-secrets) below. For high-severity bug PRs, a backport suggestion comment is posted automatically on merge.
+- **Backports**: after a PR merges to `main`, comment `/backport release-X.Y` on the PR to create a cherry-pick PR to that release branch. `/cherrypick` and `/cherry-pick` also work. Add `--dry-run` to test first. The backport workflow sets **Target Version** on the associated Jira ticket (if any) so Jira automation can create the z-stream clone; the backport PR links back to the original PR and Jira ticket -- see [Repository Secrets](#repository-secrets) below. For high-severity bug PRs, a backport suggestion comment is posted automatically on merge.
 
 ## Pull Request Process
 
@@ -191,13 +191,13 @@ Bare disables without `-- …` are not accepted.
 
 ## Repository Secrets
 
-The backport workflow requires Jira API access to clone tickets. Two secrets must be configured in repository settings (Settings > Secrets and variables > Actions):
+The backport workflow requires Jira API access to set Target Version on the original ticket. Two secrets must be configured in repository settings (Settings > Secrets and variables > Actions):
 
 | Secret | Description |
 |--------|-------------|
 | `JIRA_EMAIL` | Jira account email (personal or service account) |
 | `JIRA_API_TOKEN` | API token for that account ([generate here](https://id.atlassian.com/manage-profile/security/api-tokens)) |
 
-These are used by the backport workflow to create cloned Jira tickets for backport PRs. The workflow code is credential-agnostic -- when a shared service account becomes available, update the secret values without changing any workflow logic.
+These are used by the backport workflow to set **Target Version** (`customfield_10855`) on the original MTV ticket from the target branch's `RVERSION`. Jira automation then creates the z-stream clone. The backport PR title is `[release-X.Y] <original title>` and its body links the original PR and Jira ticket. The workflow code is credential-agnostic -- when a shared service account becomes available, update the secret values without changing any workflow logic.
 
-If these secrets are not configured, the backport still works but skips the Jira integration (ticket cloning, linking, and status transitions).
+If these secrets are not configured, the backport still works but skips the Jira Target Version update.
