@@ -12,6 +12,12 @@ source ${script_dir}/configure/openshift.sh
 # respective ports before the console container is launched.
 #
 # Compatible with bash 3.2+ (macOS default).
+# Single plugin
+# npm run console -- --plugins monitoring-plugin
+# Multiple (comma-separated)
+# npm run console -- --plugins monitoring-plugin,kubevirt-plugin
+# All registered plugins
+# npm run console -- --plugins all
 # ============================================================================
 
 AVAILABLE_PLUGINS="monitoring-plugin networking-console-plugin nmstate-console-plugin kubevirt-plugin"
