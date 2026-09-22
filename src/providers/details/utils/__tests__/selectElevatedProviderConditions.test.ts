@@ -1,6 +1,7 @@
 import type { K8sResourceCondition } from '@forklift-ui/types';
 import { CATEGORY_TYPES, CONDITION_STATUS } from '@utils/constants';
 
+import { LEGACY_PROVIDER_WARNING_CATEGORY } from '../providerConditionUtils';
 import {
   isElevatedProviderCondition,
   selectElevatedProviderConditions,
@@ -19,7 +20,7 @@ describe('selectElevatedProviderConditions', () => {
     const conditions = [
       makeCondition({ category: CATEGORY_TYPES.CRITICAL, type: 'UrlNotValid' }),
       makeCondition({ category: CATEGORY_TYPES.WARNING, type: 'ConnectionInsecure' }),
-      makeCondition({ category: 'Warning', type: 'LegacyWarning' }),
+      makeCondition({ category: LEGACY_PROVIDER_WARNING_CATEGORY, type: 'LegacyWarning' }),
     ];
 
     expect(selectElevatedProviderConditions(conditions)).toHaveLength(3);

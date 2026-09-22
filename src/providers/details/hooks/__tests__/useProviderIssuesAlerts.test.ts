@@ -25,6 +25,23 @@ describe('useProviderIssuesAlerts', () => {
     const { result } = renderHook(() => useProviderIssuesAlerts(provider));
 
     expect(result.current.elevatedConditions).toHaveLength(2);
+    expect(result.current.hasCriticalElevatedConditions).toBe(true);
+    expect(result.current.showElevatedConditions).toBe(true);
+  });
+
+  it('returns hasCriticalElevatedConditions false for warn-only conditions', () => {
+    const provider = providerWithConditions([
+      {
+        category: CATEGORY_TYPES.WARNING,
+        status: CONDITION_STATUS.TRUE,
+        type: 'ConnectionInsecure',
+      },
+    ]);
+
+    const { result } = renderHook(() => useProviderIssuesAlerts(provider));
+
+    expect(result.current.elevatedConditions).toHaveLength(1);
+    expect(result.current.hasCriticalElevatedConditions).toBe(false);
     expect(result.current.showElevatedConditions).toBe(true);
   });
 
@@ -36,6 +53,7 @@ describe('useProviderIssuesAlerts', () => {
     const { result } = renderHook(() => useProviderIssuesAlerts(provider));
 
     expect(result.current.elevatedConditions).toHaveLength(0);
+    expect(result.current.hasCriticalElevatedConditions).toBe(false);
     expect(result.current.showElevatedConditions).toBe(false);
   });
 });

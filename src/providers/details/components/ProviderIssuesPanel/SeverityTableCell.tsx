@@ -1,9 +1,9 @@
 import type { FC } from 'react';
 import { TableCell } from 'src/components/TableCell/TableCell';
-import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
 
 import { getCategoryLabel, getCategoryStatus } from '@components/Concerns/utils/category';
 import { Label } from '@patternfly/react-core';
+import { EMPTY_MSG } from '@utils/constants';
 
 import type { ProviderIssuesPanelData } from './utils/types';
 
@@ -19,7 +19,7 @@ const SeverityTableCell: FC<SeverityTableCellProps> = ({ fieldsData }) => {
       {severity ? (
         <Label status={getCategoryStatus(severity)}>{getCategoryLabel(severity)}</Label>
       ) : (
-        <TableEmptyCell />
+        EMPTY_MSG
       )}
     </TableCell>
   );

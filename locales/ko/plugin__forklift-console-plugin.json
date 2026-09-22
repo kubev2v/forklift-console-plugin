@@ -21,7 +21,6 @@
   "{{completed}} of {{total}} {{name}}": "{{completed}} / {{total}} {{name}}",
   "{{count}} affinity rule_one": "{{count}} 유사성 규칙",
   "{{count}} affinity rule_other": "{{count}} 유사성 규칙",
-  "{{count}} hosts_other": "{{count}} hosts",
   "{{count}} issues impacting this provider_other": "{{count}} issues impacting this provider",
   "{{count}} passphrase configured_one": "{{count}} 암호 설정됨",
   "{{count}} passphrase configured_other": "{{count}} 암호 설정됨",

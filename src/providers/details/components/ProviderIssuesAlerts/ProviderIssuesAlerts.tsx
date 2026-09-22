@@ -25,7 +25,8 @@ type ProviderIssuesAlertsProps = {
 
 const ProviderIssuesAlerts: FC<ProviderIssuesAlertsProps> = ({ provider, setIsDrawerOpen }) => {
   const { t } = useForkliftTranslation();
-  const { elevatedConditions, showElevatedConditions } = useProviderIssuesAlerts(provider);
+  const { elevatedConditions, hasCriticalElevatedConditions, showElevatedConditions } =
+    useProviderIssuesAlerts(provider);
 
   if (!showElevatedConditions) {
     return null;
@@ -41,13 +42,16 @@ const ProviderIssuesAlerts: FC<ProviderIssuesAlertsProps> = ({ provider, setIsDr
         title={t('{{count}} issues impacting this provider', {
           count: elevatedConditions.length,
         })}
-        variant={AlertVariant.danger}
+        variant={hasCriticalElevatedConditions ? AlertVariant.danger : AlertVariant.warning}
       >
         <Content component={ContentVariants.p}>
           <Stack hasGutter>
             <StackItem>
               {t('Review these conditions to ensure your provider is configured correctly.')}
             </StackItem>
+            {hasCriticalElevatedConditions && (
+              <StackItem>{t('To troubleshoot, check the Forklift controller pod logs.')}</StackItem>
+            )}
             <StackItem>
               <Button
                 data-testid="view-all-provider-issues-button"

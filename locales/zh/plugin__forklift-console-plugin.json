@@ -21,7 +21,6 @@
   "{{completed}} of {{total}} {{name}}": "{{completed}}（{{total}} {{name}}）",
   "{{count}} affinity rule_one": "{{count}} 亲和性 rule_one",
   "{{count}} affinity rule_other": "{{count}} 亲和性 rule_other",
-  "{{count}} hosts_other": "{{count}} hosts",
   "{{count}} issues impacting this provider_other": "{{count}} issues impacting this provider",
   "{{count}} passphrase configured_one": "{{count}} 密码短语 configured_one",
   "{{count}} passphrase configured_other": "{{count}} 密码短语 configured_other",

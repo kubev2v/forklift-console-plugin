@@ -1,10 +1,7 @@
 import type { K8sResourceCondition } from '@forklift-ui/types';
 import { CATEGORY_TYPES, CONDITION_STATUS } from '@utils/constants';
 
-const getConditionCategory = (condition: K8sResourceCondition): string => {
-  const { category } = condition as { category?: unknown };
-  return typeof category === 'string' ? category : '';
-};
+import { getConditionCategory, LEGACY_PROVIDER_WARNING_CATEGORY } from './providerConditionUtils';
 
 export const isElevatedProviderCondition = (
   condition: K8sResourceCondition | undefined,
@@ -18,7 +15,7 @@ export const isElevatedProviderCondition = (
   return (
     category === CATEGORY_TYPES.CRITICAL ||
     category === CATEGORY_TYPES.WARNING ||
-    category === 'Warning'
+    category === LEGACY_PROVIDER_WARNING_CATEGORY
   );
 };
 

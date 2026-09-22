@@ -1,7 +1,5 @@
 import { type FC, useEffect, useMemo } from 'react';
 import { loadUserSettings } from 'src/components/common/Page/userSettings';
-import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
-import { isHypervClusterProvider } from 'src/providers/utils/helpers/isHypervClusterProvider';
 
 import StandardPage from '@components/page/StandardPage';
 import {
@@ -13,8 +11,6 @@ import {
   StackItem,
   Title,
 } from '@patternfly/react-core';
-import { getType } from '@utils/crds/common/selectors';
-import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { useProvider } from '../../hooks/useProvider';
 import useProviderIssuesAlerts from '../../hooks/useProviderIssuesAlerts';
@@ -42,19 +38,9 @@ const ProviderIssuesPanel: FC<ProviderIssuesPanelProps> = ({
   const { loaded, loadError, provider } = useProvider(name, namespace);
   const { elevatedConditions, showElevatedConditions } = useProviderIssuesAlerts(provider);
 
-  const providerUrl = useMemo(() => getProviderDetailsPageUrl(provider), [provider]);
-
-  const hasHostsTab = useMemo(() => {
-    const providerType = getType(provider);
-    return (
-      providerType === PROVIDER_TYPES.vsphere ||
-      (providerType === PROVIDER_TYPES.hyperv && isHypervClusterProvider(provider))
-    );
-  }, [provider]);
-
   const providerIssuesPanelData: ProviderIssuesPanelData[] = useMemo(
-    () => convertToProviderIssuesPanelData(elevatedConditions, hasHostsTab, providerUrl),
-    [elevatedConditions, hasHostsTab, providerUrl],
+    () => convertToProviderIssuesPanelData(elevatedConditions),
+    [elevatedConditions],
   );
 
   useEffect(() => {

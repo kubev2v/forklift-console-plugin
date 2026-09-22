@@ -1,4 +1,8 @@
-import type { V1beta1Provider, V1beta1ProviderSpecSecret } from '@forklift-ui/types';
+import type {
+  K8sResourceCondition,
+  V1beta1Provider,
+  V1beta1ProviderSpecSecret,
+} from '@forklift-ui/types';
 import type {
   K8sGroupVersionKind,
   K8sResourceCommon,
@@ -70,3 +74,7 @@ export const getType = (provider: V1beta1Provider | undefined): string | undefin
 export const getProviderSecretRef = (
   provider: V1beta1Provider,
 ): V1beta1ProviderSpecSecret | undefined => provider?.spec?.secret;
+
+export const getProviderConditions = (
+  provider: V1beta1Provider | undefined,
+): K8sResourceCondition[] | undefined => provider?.status?.conditions;

@@ -21,7 +21,6 @@
   "{{completed}} of {{total}} {{name}}": "{{total}} 件中 {{completed}} 件の {{name}}",
   "{{count}} affinity rule_one": "{{count}} 件のアフィニティールール",
   "{{count}} affinity rule_other": "{{count}} 件のアフィニティールール",
-  "{{count}} hosts_other": "{{count}} hosts",
   "{{count}} issues impacting this provider_other": "{{count}} issues impacting this provider",
   "{{count}} passphrase configured_one": "{{count}} 件のパスフレーズが設定済み",
   "{{count}} passphrase configured_other": "{{count}} 件のパスフレーズが設定済み",

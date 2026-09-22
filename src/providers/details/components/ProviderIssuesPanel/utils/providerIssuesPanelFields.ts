@@ -23,11 +23,4 @@ export const providerIssuesPanelFields: ResourceField[] = [
     resourceFieldId: 'message',
     sortable: true,
   },
-  {
-    isVisible: true,
-    jsonPath: '$.condition.itemsCount',
-    label: t('Impacted resources'),
-    resourceFieldId: 'resource',
-    sortable: true,
-  },
 ];
