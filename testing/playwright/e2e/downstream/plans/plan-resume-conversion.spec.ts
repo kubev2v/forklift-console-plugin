@@ -3,8 +3,8 @@ import { expect } from '@playwright/test';
 import { setupPlanDetailsPage } from '../../../fixtures/helpers/planDetailsHelpers';
 import {
   injectConversionResumable,
-  restorePlanConditions,
   type PlanStatusRestoreState,
+  restorePlanConditions,
 } from '../../../fixtures/helpers/planResumeConversion';
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanResumeConversion } from '../../../page-objects/PlanDetailsPage/PlanResumeConversion';
