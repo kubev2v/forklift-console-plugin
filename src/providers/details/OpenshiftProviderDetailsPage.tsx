@@ -6,6 +6,7 @@ import { HorizontalNav, type NavPage } from '@openshift-console/dynamic-plugin-s
 import ProviderCredentialsTabPage from './tabs/Credentials/ProviderCredentialsTabPage';
 import ProviderDetailsTabPage from './tabs/Details/ProviderDetailsTabPage';
 import ProviderNetworksTabPage from './tabs/Networks/ProviderNetworksTabPage';
+import ProviderValidationTabPage from './tabs/Validation/ProviderValidationTabPage';
 import ProviderVirtualMachinesTabPage from './tabs/VirtualMachines/ProviderVirtualMachinesTabPage';
 import ProviderYAMLTabPage from './tabs/YAML/ProviderYAMLTabPage';
 import type { ProviderDetailsPageProps } from './utils/types';
@@ -39,6 +40,11 @@ const OpenshiftProviderDetailsPage: FC<ProviderDetailsPageProps> = memo(({ name,
       component: () => <ProviderNetworksTabPage name={name} namespace={namespace} />,
       href: 'networks',
       name: t('Networks'),
+    },
+    {
+      component: () => <ProviderValidationTabPage name={name} namespace={namespace} />,
+      href: 'validation',
+      name: t('Validation'),
     },
   ];
 
