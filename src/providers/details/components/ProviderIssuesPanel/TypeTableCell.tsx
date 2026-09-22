@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import { TableCell } from 'src/components/TableCell/TableCell';
+import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
 
-import { EMPTY_MSG } from '@utils/constants';
+import { isEmpty } from '@utils/helpers';
 
 import type { ProviderIssuesPanelData } from './utils/types';
 
@@ -10,7 +11,13 @@ type TypeTableCellProps = {
 };
 
 const TypeTableCell: FC<TypeTableCellProps> = ({ fieldsData }) => {
-  return <TableCell>{fieldsData?.condition?.type ?? EMPTY_MSG}</TableCell>;
+  const type = fieldsData?.condition?.type;
+
+  if (isEmpty(type)) {
+    return <TableEmptyCell />;
+  }
+
+  return <TableCell>{type}</TableCell>;
 };
 
 export default TypeTableCell;

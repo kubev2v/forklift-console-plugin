@@ -1,8 +1,9 @@
 import type { FC } from 'react';
 import SmartLinkify from 'src/components/common/SmartLinkify';
 import { TableCell } from 'src/components/TableCell/TableCell';
+import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
 
-import { EMPTY_MSG } from '@utils/constants';
+import { isEmpty } from '@utils/helpers';
 
 import type { ProviderIssuesPanelData } from './utils/types';
 
@@ -13,9 +14,13 @@ type MessageTableCellProps = {
 const MessageTableCell: FC<MessageTableCellProps> = ({ fieldsData }) => {
   const message = fieldsData?.condition?.message;
 
+  if (isEmpty(message)) {
+    return <TableEmptyCell />;
+  }
+
   return (
     <TableCell isWrap={true}>
-      {message ? <SmartLinkify>{message}</SmartLinkify> : EMPTY_MSG}
+      <SmartLinkify>{message}</SmartLinkify>
     </TableCell>
   );
 };
