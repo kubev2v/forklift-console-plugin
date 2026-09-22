@@ -7,8 +7,10 @@ import type {
   V1beta1PlanSpecVms,
   V1beta1PlanStatusMigrationVms,
 } from '@forklift-ui/types';
+import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 
 export type MigrationStatusVirtualMachinePageData = {
+  copyAppliances: K8sResourceCommon[];
   dvs: V1beta1DataVolume[];
   jobs: IoK8sApiBatchV1Job[];
   plan: V1beta1Plan;

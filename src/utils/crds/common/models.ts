@@ -15,6 +15,12 @@ export const ConversionModel = {
   plural: 'conversions',
 };
 
+export const CopyApplianceModelGroupVersionKind = {
+  group: 'forklift.konveyor.io',
+  kind: 'CopyAppliance',
+  version: 'v1beta1',
+};
+
 export const VirtualMachineModelGroupVersionKind = {
   group: 'kubevirt.io',
   kind: 'VirtualMachine',

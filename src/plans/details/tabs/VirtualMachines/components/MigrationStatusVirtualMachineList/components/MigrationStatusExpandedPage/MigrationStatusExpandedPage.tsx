@@ -10,6 +10,7 @@ import { PageSection, Stack } from '@patternfly/react-core';
 import type { MigrationStatusVirtualMachinePageData } from '../../utils/types';
 import { isVirtualMachineCreationCompleted } from '../../utils/utils';
 
+import MigrationCopyAppliancesTable from './components/MigrationCopyAppliancesTable';
 import MigrationDataVolumesTable from './components/MigrationDataVolumesTable';
 import MigrationJobsTable from './components/MigrationJobsTable';
 import MigrationPodsTable from './components/MigrationPodsTable';
@@ -24,7 +25,7 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
 }) => {
   const { t } = useForkliftTranslation();
 
-  const { dvs, jobs, plan, pods, pvcs, statusVM, targetNamespace } = resourceData;
+  const { copyAppliances, dvs, jobs, plan, pods, pvcs, statusVM, targetNamespace } = resourceData;
   const vmCreated = isVirtualMachineCreationCompleted(statusVM);
 
   return (
@@ -62,6 +63,7 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
               <MigrationPVCsTable pvcs={pvcs} />
               <MigrationJobsTable jobs={jobs} />
               <MigrationDataVolumesTable dvs={dvs} />
+              <MigrationCopyAppliancesTable copyAppliances={copyAppliances} />
             </Stack>
           }
           sectionTitle={t('Migration resources')}

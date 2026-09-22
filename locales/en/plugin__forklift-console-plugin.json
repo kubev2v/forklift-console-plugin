@@ -361,6 +361,7 @@
   "Convertor pod node selector": "Convertor pod node selector",
   "Copied": "Copied",
   "Copies VM disks directly over iSCSI. Requires the iSCSI Target Server feature installed on the Hyper-V host. Typically faster than SMB.": "Copies VM disks directly over iSCSI. Requires the iSCSI Target Server feature installed on the Hyper-V host. Typically faster than SMB.",
+  "Copy appliances": "Copy appliances",
   "Copy to clipboard": "Copy to clipboard",
   "Core concepts": "Core concepts",
   "Cores": "Cores",
