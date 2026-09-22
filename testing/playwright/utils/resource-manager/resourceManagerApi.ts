@@ -16,7 +16,12 @@ import {
   createStorageMap,
 } from './ResourceCreator';
 import { ResourceFetcher } from './ResourceFetcher';
-import { type JsonPatchOperation, type PatchType, ResourcePatcher } from './ResourcePatcher';
+import {
+  type JsonPatchOperation,
+  type PatchSubresource,
+  type PatchType,
+  ResourcePatcher,
+} from './ResourcePatcher';
 import type { SupportedResource } from './types';
 
 export const resourceManagerApi = {
@@ -79,5 +84,6 @@ export const resourceManagerApi = {
     patch: Record<string, unknown> | JsonPatchOperation[];
     patchType?: PatchType;
     resourceName: string;
+    subresource?: PatchSubresource;
   }): Promise<T | null> => ResourcePatcher.patchResource<T>(options),
 };
