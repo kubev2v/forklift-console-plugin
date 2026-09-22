@@ -260,6 +260,12 @@ jobs:
             exit 0
           fi
 
+          # Reject unexpected values before exporting to later github-script steps
+          if [[ ! "$rversion" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::warning::Invalid RVERSION format (expected X.Y.Z): $rversion"
+            exit 0
+          fi
+
           echo "target_version_name=$rversion" >> $GITHUB_OUTPUT
 
           # Resolve version ID from MTV project versions
@@ -313,15 +319,24 @@ jobs:
 
       - name: Post status comment (start)
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          BRANCH_NAME: ${{ steps.parse_comment.outputs.branch_name }}
+          DRY_RUN: ${{ steps.parse_comment.outputs.dry_run }}
+          PR_NUMBER: ${{ steps.parse_comment.outputs.pr_number }}
+          TARGET_VERSION_NAME: ${{ steps.set_target_version.outputs.target_version_name }}
+          TARGET_VERSION_SET: ${{ steps.set_target_version.outputs.target_version_set }}
+          TICKET_KEY: ${{ steps.extract_ticket.outputs.ticket_key }}
+          WORKFLOW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
-            const branch = '${{ steps.parse_comment.outputs.branch_name }}';
-            const dryRun = '${{ steps.parse_comment.outputs.dry_run }}' === 'true';
-            const ticketKey = '${{ steps.extract_ticket.outputs.ticket_key }}';
-            const targetVersionSet = '${{ steps.set_target_version.outputs.target_version_set }}' === 'true';
-            const targetVersionName = '${{ steps.set_target_version.outputs.target_version_name }}';
+            const branch = process.env.BRANCH_NAME;
+            const dryRun = process.env.DRY_RUN === 'true';
+            const ticketKey = process.env.TICKET_KEY;
+            const targetVersionSet = process.env.TARGET_VERSION_SET === 'true';
+            const targetVersionName = process.env.TARGET_VERSION_NAME;
+            const prNumber = process.env.PR_NUMBER;
 
             let jiraInfo = '';
             if (targetVersionSet && ticketKey && targetVersionName) {
@@ -330,10 +345,10 @@ jobs:
 
             const body = `🔄 **Backport Status**
 
-            Starting backport of PR #${{ steps.parse_comment.outputs.pr_number }} to \`${branch}\`
+            Starting backport of PR #${prNumber} to \`${branch}\`
             ${dryRun ? '🧪 **Dry run mode** - No actual changes will be made' : '🚀 **Live mode** - Changes will be applied'}${jiraInfo}
 
-            [View workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            [View workflow run](${process.env.WORKFLOW_RUN_URL})`;
 
             await github.rest.issues.createComment({ owner, repo, issue_number, body });
 
@@ -358,21 +373,29 @@ jobs:
       - name: Post success comment
         if: success()
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          BRANCH_NAME: ${{ steps.parse_comment.outputs.branch_name }}
+          DRY_RUN: ${{ steps.parse_comment.outputs.dry_run }}
+          PR_NUMBER: ${{ steps.parse_comment.outputs.pr_number }}
+          TARGET_VERSION_NAME: ${{ steps.set_target_version.outputs.target_version_name }}
+          TARGET_VERSION_SET: ${{ steps.set_target_version.outputs.target_version_set }}
+          TICKET_KEY: ${{ steps.extract_ticket.outputs.ticket_key }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
-            const branch = '${{ steps.parse_comment.outputs.branch_name }}';
-            const dryRun = '${{ steps.parse_comment.outputs.dry_run }}' === 'true';
-            const ticketKey = '${{ steps.extract_ticket.outputs.ticket_key }}';
-            const targetVersionSet = '${{ steps.set_target_version.outputs.target_version_set }}' === 'true';
-            const targetVersionName = '${{ steps.set_target_version.outputs.target_version_name }}';
+            const branch = process.env.BRANCH_NAME;
+            const dryRun = process.env.DRY_RUN === 'true';
+            const ticketKey = process.env.TICKET_KEY;
+            const targetVersionSet = process.env.TARGET_VERSION_SET === 'true';
+            const targetVersionName = process.env.TARGET_VERSION_NAME;
+            const prNumber = process.env.PR_NUMBER;
 
             let body;
             if (dryRun) {
               body = `✅ **Backport Dry Run Completed**
 
-              The backport of PR #${{ steps.parse_comment.outputs.pr_number }} to \`${branch}\` was successful in dry-run mode.
+              The backport of PR #${prNumber} to \`${branch}\` was successful in dry-run mode.
 
               To perform the actual backport, run:
               \`/backport ${branch}\` (without --dry-run flag)`;
@@ -383,7 +406,7 @@ jobs:
               }
               body = `✅ **Backport Completed Successfully**
 
-              PR #${{ steps.parse_comment.outputs.pr_number }} has been successfully backported to \`${branch}\`.
+              PR #${prNumber} has been successfully backported to \`${branch}\`.
 
               A new pull request should have been created with the backported changes.${jiraInfo}`;
             }
@@ -394,14 +417,11 @@ jobs:
         id: label_pr
         if: success() && steps.parse_comment.outputs.dry_run == 'false'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
-        env:
-          PR_TITLE: ${{ steps.verify_refs.outputs.pr_title }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const branch = '${{ steps.parse_comment.outputs.branch_name }}';
             const originalNumber = parseInt('${{ steps.parse_comment.outputs.pr_number }}', 10);
-            const originalTitle = process.env.PR_TITLE;
 
             // Heuristic: find the most recent open PR to the target branch
             // that looks like a backport of the original PR.
@@ -416,13 +436,12 @@ jobs:
             const candidates = openPRs.filter(pr => {
               const created = new Date(pr.created_at).getTime();
               const fresh = (now - created) < TWO_HOURS;
-              const title = pr.title || '';
               const body = pr.body || '';
+              // Require the backport PR body to reference the original PR number/URL
+              // so concurrent backports to the same branch are not mislabeled.
               const mentionsOriginal =
-                title.includes(`#${originalNumber}`) ||
                 body.includes(`#${originalNumber}`) ||
-                title.includes(`[${branch}]`) ||
-                title.includes(originalTitle);
+                body.includes(`/pull/${originalNumber}`);
 
               return fresh && mentionsOriginal;
             });
@@ -458,16 +477,20 @@ jobs:
         if: failure()
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         env:
+          BRANCH_NAME: ${{ steps.parse_comment.outputs.branch_name || 'unknown' }}
+          PR_NUMBER: ${{ steps.parse_comment.outputs.pr_number || github.event.issue.number }}
           PR_TITLE: ${{ steps.verify_refs.outputs.pr_title || 'Original PR title' }}
+          TICKET_KEY: ${{ steps.extract_ticket.outputs.ticket_key }}
+          WORKFLOW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
-            const branch = '${{ steps.parse_comment.outputs.branch_name || 'unknown' }}';
-            const prNumber = '${{ steps.parse_comment.outputs.pr_number || github.event.issue.number }}';
-            const ticketKey = '${{ steps.extract_ticket.outputs.ticket_key }}';
-            const serverUrl = '${{ github.server_url }}';
-            const repository = '${{ github.repository }}';
+            const branch = process.env.BRANCH_NAME;
+            const prNumber = process.env.PR_NUMBER;
+            const ticketKey = process.env.TICKET_KEY;
+            const serverUrl = context.serverUrl;
+            const repository = `${owner}/${repo}`;
 
             // Fetch commit SHAs from the original PR for pastable commands
             let commitShas = '';
@@ -480,11 +503,17 @@ jobs:
               commitShas = '<commit-sha(s)>';
             }
 
+            // Single-quote for safe copy-paste into a shell (escape embedded quotes)
+            const shellQuote = (value) => `'${String(value).replace(/'/g, `'\\''`)}'`;
             const prTitle = process.env.PR_TITLE;
             const originalPrUrl = `${serverUrl}/${repository}/pull/${prNumber}`;
             const jiraLine = ticketKey
               ? `\nOriginal Jira: https://redhat.atlassian.net/browse/${ticketKey}`
               : '';
+            const quotedTitle = shellQuote(`[${branch}] ${prTitle}`);
+            const quotedBody = shellQuote(
+              `Backport of #${prNumber} to \`${branch}\`\n\nOriginal PR: ${originalPrUrl}${jiraLine}`
+            );
 
             const body = `❌ **Backport Failed**
 
@@ -495,7 +524,7 @@ jobs:
             - Target branch doesn't exist
             - Invalid branch name format (must be release-X.Y or release-X.Y.Z)
 
-            Please check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.
+            Please check the [workflow logs](${process.env.WORKFLOW_RUN_URL}) for details.
 
             ---
 
@@ -509,9 +538,7 @@ jobs:
             git add .
             git cherry-pick --continue
             git push origin backport-${prNumber}-to-${branch}
-            gh pr create --base ${branch} --title "[${branch}] ${prTitle}" --body "Backport of #${prNumber} to \\\`${branch}\\\`
-
-            Original PR: ${originalPrUrl}${jiraLine}"
+            gh pr create --base ${branch} --title ${quotedTitle} --body ${quotedBody}
             \`\`\``;
 
             await github.rest.issues.createComment({ owner, repo, issue_number, body });
