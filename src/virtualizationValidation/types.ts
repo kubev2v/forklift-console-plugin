@@ -17,6 +17,12 @@ export type VirtualizationValidationCondition = {
   type: string;
 };
 
+type VirtualizationValidationResourceRef = {
+  kind?: string;
+  name?: string;
+  namespace?: string;
+};
+
 export type VirtualizationValidation = K8sResourceCommon & {
   spec?: {
     checks?: string[];
@@ -32,7 +38,9 @@ export type VirtualizationValidation = K8sResourceCommon & {
     checkResults?: VirtualizationValidationCheckResult[];
     completedAt?: string;
     conditions?: VirtualizationValidationCondition[];
+    jobRef?: VirtualizationValidationResourceRef;
     phase?: 'Pending' | 'Running' | 'Succeeded' | 'Failed';
+    resultRef?: VirtualizationValidationResourceRef;
     startedAt?: string;
     summary?: {
       failed?: number;
