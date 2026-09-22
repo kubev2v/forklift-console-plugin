@@ -12,9 +12,18 @@ import type { ProviderData } from '@utils/providers/types';
 import CreatePlanAction from './components/CreatePlanAction';
 import ProviderPageHeaderAlerts from './components/ProviderPageHeaderAlerts';
 import { useProvider } from './hooks/useProvider';
-import type { ProviderDetailsPageProps } from './utils/types';
 
-const ProviderPageHeader: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
+type ProviderPageHeaderProps = {
+  name: string;
+  namespace: string;
+  setShowProviderIssuesPanel?: (isOpen: boolean) => void;
+};
+
+const ProviderPageHeader: FC<ProviderPageHeaderProps> = ({
+  name,
+  namespace,
+  setShowProviderIssuesPanel,
+}) => {
   const { provider } = useProvider(name, namespace);
   const {
     error: inventoryError,
@@ -54,6 +63,7 @@ const ProviderPageHeader: FC<ProviderDetailsPageProps> = ({ name, namespace }) =
         inventoryError={inventoryError}
         inventoryLoading={inventoryLoading}
         provider={provider}
+        setShowProviderIssuesPanel={setShowProviderIssuesPanel}
       />
     </PageHeadings>
   );

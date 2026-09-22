@@ -85,13 +85,18 @@ Each per-type page shares:
 
 ```
 <Type>ProviderDetailsPage
-├── ProviderPageHeader
-│   ├── PageHeadings
-│   ├── LearningExperienceButton
-│   ├── CreatePlanAction
-│   └── ProviderActionsDropdown (isDetailsPage)
-└── HorizontalNav (Console SDK tabs)
+└── ProviderDetailsLayout
+    ├── ProviderIssuesDrawer → ProviderIssuesPanel (Critical + Warn conditions table)
+    ├── ProviderPageHeader
+    │   ├── PageHeadings
+    │   ├── ProviderPageHeaderAlerts (InventoryNotReachable + ProviderIssuesAlerts)
+    │   ├── LearningExperienceButton
+    │   ├── CreatePlanAction
+    │   └── ProviderActionsDropdown (isDetailsPage)
+    └── HorizontalNav (Console SDK tabs)
 ```
+
+**Elevated conditions (MTV-6656):** Header shows a danger alert with count of active (`status: True`) `Critical` and `Warn`/`Warning` conditions. “View all issues” opens the inline drawer (same interaction as plan concerns). Advisory/Required conditions remain in Details → Conditions only.
 
 ### Tabs per provider type
 

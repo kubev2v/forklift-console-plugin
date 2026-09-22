@@ -1,7 +1,7 @@
 import { type FC, memo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { HorizontalNav, type NavPage } from '@openshift-console/dynamic-plugin-sdk';
+import type { NavPage } from '@openshift-console/dynamic-plugin-sdk';
 
 import ProviderCredentialsTabPage from './tabs/Credentials/ProviderCredentialsTabPage';
 import ProviderDetailsTabPage from './tabs/Details/ProviderDetailsTabPage';
@@ -9,7 +9,7 @@ import ProviderHostsTabPage from './tabs/Hosts/ProviderHostsTabPage';
 import ProviderVirtualMachinesTabPage from './tabs/VirtualMachines/ProviderVirtualMachinesTabPage';
 import ProviderYAMLTabPage from './tabs/YAML/ProviderYAMLTabPage';
 import type { ProviderDetailsPageProps } from './utils/types';
-import ProviderPageHeader from './ProviderPageHeader';
+import ProviderDetailsLayout from './ProviderDetailsLayout';
 
 const VSphereProviderDetailsPage: FC<ProviderDetailsPageProps> = memo(({ name, namespace }) => {
   const { t } = useForkliftTranslation();
@@ -42,16 +42,7 @@ const VSphereProviderDetailsPage: FC<ProviderDetailsPageProps> = memo(({ name, n
     },
   ];
 
-  return (
-    <>
-      <div className="forklift-details-page-layout">
-        <ProviderPageHeader name={name} namespace={namespace} />
-        <div className="forklift-details-page-layout__content">
-          <HorizontalNav pages={tabPages} />
-        </div>
-      </div>
-    </>
-  );
+  return <ProviderDetailsLayout name={name} namespace={namespace} tabPages={tabPages} />;
 });
 
 export default VSphereProviderDetailsPage;
