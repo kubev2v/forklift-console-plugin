@@ -1,8 +1,13 @@
 import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../types/test-data';
+import {
+  formatMigrationTimeoutDetail,
+  parsePlanDetailsPath,
+} from '../../utils/formatMigrationTimeoutDetail';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { K8S_RECONCILE_TIMEOUT, PLAN_READY_TIMEOUT } from '../../utils/resource-manager/constants';
+import { ResourceFetcher } from '../../utils/resource-manager/ResourceFetcher';
 import { testLog } from '../../utils/testLog';
 import { disableGuidedTour, isEmpty } from '../../utils/utils';
 import { InspectVirtualMachinesModal } from '../InspectVirtualMachinesModal';
@@ -334,7 +339,11 @@ export class PlanDetailsPage {
       }
 
       const currentStatus = await this.getMigrationStatus();
-      throw new Error(`Migration timeout after ${timeoutMs}ms. Status: ${currentStatus.status}`);
+      const planRef = parsePlanDetailsPath(this.page.url());
+      const plan = planRef
+        ? await ResourceFetcher.fetchPlan(planRef.name, planRef.namespace)
+        : null;
+      throw new Error(formatMigrationTimeoutDetail(plan, currentStatus.status, timeoutMs));
     } finally {
       if (progressInterval) {
         clearInterval(progressInterval);

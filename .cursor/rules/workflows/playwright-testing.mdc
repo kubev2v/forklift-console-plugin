@@ -252,6 +252,8 @@ http://localhost:9000/mtv/storagemaps   # Storage maps
 - `global.teardown.ts` cleans up after all tests complete
 - Resource tracking is stored in `playwright/.resources.json`
 - Always use `ResourceManager` when creating providers, plans, or mappings in downstream tests
+- Downstream `globalSetup` also deletes leftover happy-path target VMs (`mtv-rhel8-warm-sanity`, `mtv-win2019-79`, and `*-renamed-*` copies) outside `kube-` / `openshift-` namespaces so MacConflicts does not abort the next migration. Opt out with `SKIP_HAPPY_PATH_LEFTOVER_CLEANUP=1`.
+- Cold happy-path `waitForMigrationCompletion` uses `HAPPY_PATH_MIGRATION_TIMEOUT_MS` (70 minutes) so Windows `WaitForGuestReboots` can finish after disk copy. Timeout errors include plan conditions and the running pipeline step.
 
 ---
 
