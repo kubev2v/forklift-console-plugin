@@ -21,9 +21,8 @@ test.describe('Nutanix Provider Form Validation', () => {
       });
 
       await test.step('Verify Prism type radio buttons are visible', async () => {
-        // Helper text also contains these names; role+name targets the radios only (MTV-6899).
-        await expect(page.getByRole('radio', { name: 'Prism Element' })).toBeVisible();
-        await expect(page.getByRole('radio', { name: 'Prism Central' })).toBeVisible();
+        await expect(page.getByTestId('nutanix-prism-element-radio')).toBeVisible();
+        await expect(page.getByTestId('nutanix-prism-central-radio')).toBeVisible();
       });
 
       await test.step('Verify URL field is visible', async () => {
