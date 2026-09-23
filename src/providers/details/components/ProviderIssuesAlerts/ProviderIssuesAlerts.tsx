@@ -7,7 +7,6 @@ import {
   Button,
   ButtonVariant,
   Content,
-  ContentVariants,
   PageSection,
   Stack,
   StackItem,
@@ -44,7 +43,7 @@ const ProviderIssuesAlerts: FC<ProviderIssuesAlertsProps> = ({ provider, setIsDr
         })}
         variant={hasCriticalElevatedConditions ? AlertVariant.danger : AlertVariant.warning}
       >
-        <Content component={ContentVariants.p}>
+        <Content component="div">
           <Stack hasGutter>
             <StackItem>
               {t('Review these conditions to ensure your provider is configured correctly.')}

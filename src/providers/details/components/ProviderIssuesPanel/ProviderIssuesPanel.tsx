@@ -11,6 +11,7 @@ import {
   StackItem,
   Title,
 } from '@patternfly/react-core';
+import { getName } from '@utils/crds/common/selectors';
 
 import { useProvider } from '../../hooks/useProvider';
 import useProviderIssuesAlerts from '../../hooks/useProviderIssuesAlerts';
@@ -39,8 +40,8 @@ const ProviderIssuesPanel: FC<ProviderIssuesPanelProps> = ({
   const { elevatedConditions, showElevatedConditions } = useProviderIssuesAlerts(provider);
 
   const providerIssuesPanelData: ProviderIssuesPanelData[] = useMemo(
-    () => convertToProviderIssuesPanelData(elevatedConditions),
-    [elevatedConditions],
+    () => convertToProviderIssuesPanelData(elevatedConditions, getName(provider) ?? ''),
+    [elevatedConditions, provider],
   );
 
   useEffect(() => {

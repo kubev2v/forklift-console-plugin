@@ -14,12 +14,13 @@ describe('convertToProviderIssuesPanelData', () => {
       },
     ] as unknown as K8sResourceCondition[];
 
-    const rows = convertToProviderIssuesPanelData(conditions);
+    const rows = convertToProviderIssuesPanelData(conditions, 'vs8');
 
     expect(rows).toEqual([
       {
         condition: {
           message: 'TLS verification skipped',
+          resource: 'vs8',
           severity: CATEGORY_TYPES.WARNING,
           type: 'ConnectionInsecure',
         },
