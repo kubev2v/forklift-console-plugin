@@ -1,12 +1,17 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
+import {
+  getNameTemplateOverrideVms,
+  NAME_TEMPLATE_TYPE,
+  removeVmNameTemplateFromAllVms,
+} from 'src/plans/details/utils/nameTemplateOverrides';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
-import { Label } from '@patternfly/react-core';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
+import NameTemplateDetailsValue from '../NameTemplateOverride/NameTemplateDetailsValue';
 
 import { onConfirmPlanNetworkNameTemplate } from './utils/utils';
 import EditNetworkNameTemplate, {
@@ -25,16 +30,21 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
     return null;
   }
 
-  const content = (
-    <Label color="grey" isCompact>
-      {plan?.spec?.networkNameTemplate ? t('Use custom') : t('Use default')}
-    </Label>
-  );
+  const planEditable = isPlanEditable(plan);
+  const vmNames = planEditable ? getNameTemplateOverrideVms(plan, NAME_TEMPLATE_TYPE.network) : [];
 
   return (
     <DetailsItem
-      canEdit={canPatch && isPlanEditable(plan)}
-      content={content}
+      canEdit={canPatch && planEditable}
+      content={
+        <NameTemplateDetailsValue
+          canApply={canPatch && planEditable}
+          isPlanCustom={Boolean(plan?.spec?.networkNameTemplate)}
+          onApply={async () => removeVmNameTemplateFromAllVms(plan, NAME_TEMPLATE_TYPE.network)}
+          templateType={NAME_TEMPLATE_TYPE.network}
+          vmNames={vmNames}
+        />
+      }
       crumbs={['spec', 'networkNameTemplate']}
       onEdit={() => {
         launchOverlay<EditNetworkNameTemplateProps>(EditNetworkNameTemplate, {
