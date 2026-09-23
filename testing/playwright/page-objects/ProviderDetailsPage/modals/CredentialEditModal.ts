@@ -200,9 +200,15 @@ export class CredentialEditModal extends BaseModal {
     const verifyModal = this.page
       .getByRole('dialog')
       .filter({ has: this.page.getByRole('heading', { name: 'Verify certificate' }) });
-    await expect(verifyModal.locator('#issuer')).toBeVisible();
-    await expect(verifyModal.locator('#fingerprint')).toBeVisible();
-    await expect(verifyModal.locator('#expiration')).toBeVisible();
+    const issuer = verifyModal.locator('#issuer');
+    const fingerprint = verifyModal.locator('#fingerprint');
+    const expiration = verifyModal.locator('#expiration');
+    await expect(issuer).toBeVisible();
+    await expect(fingerprint).toBeVisible();
+    await expect(expiration).toBeVisible();
+    await expect(issuer).not.toBeEmpty();
+    await expect(fingerprint).not.toBeEmpty();
+    await expect(expiration).not.toBeEmpty();
   }
 
   override async waitForModalToOpen(): Promise<void> {
