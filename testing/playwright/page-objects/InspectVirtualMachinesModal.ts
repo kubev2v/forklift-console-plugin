@@ -1,5 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { V5_0_0 } from '../utils/version/constants';
+import { isVersionAtLeast } from '../utils/version/version';
+
 export class InspectVirtualMachinesModal {
   private readonly page: Page;
 
@@ -78,9 +81,18 @@ export class InspectVirtualMachinesModal {
     return this.page.getByTestId('inspect-vms-modal');
   }
 
+  /**
+   * Bulk-select testId exists on 5.0+ (MTV-6359 / #2890). 2.12 z-stream still
+   * uses PatternFly's "Select page" checkbox with no data-testid.
+   */
+  get selectAllCheckbox(): Locator {
+    return isVersionAtLeast(V5_0_0)
+      ? this.modal.getByTestId('table-bulk-select-checkbox')
+      : this.modal.getByRole('checkbox', { name: 'Select page' });
+  }
+
   async selectAllVms(): Promise<void> {
-    const selectAllCheckbox = this.modal.getByTestId('table-bulk-select-checkbox');
-    await selectAllCheckbox.check();
+    await this.selectAllCheckbox.check();
   }
 
   /**
