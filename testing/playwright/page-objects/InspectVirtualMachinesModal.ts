@@ -1,8 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import { V5_0_0 } from '../utils/version/constants';
-import { isVersionAtLeast } from '../utils/version/version';
-
 export class InspectVirtualMachinesModal {
   private readonly page: Page;
 
@@ -81,14 +78,8 @@ export class InspectVirtualMachinesModal {
     return this.page.getByTestId('inspect-vms-modal');
   }
 
-  get selectAllCheckbox(): Locator {
-    return isVersionAtLeast(V5_0_0)
-      ? this.modal.getByTestId('table-bulk-select-checkbox')
-      : this.modal.locator('#bulk-select-toggle-checkbox');
-  }
-
   async selectAllVms(): Promise<void> {
-    await this.selectAllCheckbox.check();
+    await this.modal.locator('#bulk-select-toggle-checkbox').check();
   }
 
   /**
