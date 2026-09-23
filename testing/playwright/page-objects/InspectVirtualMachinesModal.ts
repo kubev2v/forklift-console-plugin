@@ -81,12 +81,6 @@ export class InspectVirtualMachinesModal {
     return this.page.getByTestId('inspect-vms-modal');
   }
 
-  /**
-   * 5.0+ (#2890) has data-testid on the BulkSelect checkbox. 2.12 does not, but
-   * TableBulkSelect still sets id="bulk-select-toggle-checkbox". Scope to the
-   * modal because the plan VM table behind the overlay uses the same id.
-   * Avoid the translated "Select page" aria-label (breaks i18n / MTV-6613).
-   */
   get selectAllCheckbox(): Locator {
     return isVersionAtLeast(V5_0_0)
       ? this.modal.getByTestId('table-bulk-select-checkbox')
