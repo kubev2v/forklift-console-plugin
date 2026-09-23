@@ -6,7 +6,6 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
-  Content,
   PageSection,
   Stack,
   StackItem,
@@ -43,28 +42,26 @@ const ProviderIssuesAlerts: FC<ProviderIssuesAlertsProps> = ({ provider, setIsDr
         })}
         variant={hasCriticalElevatedConditions ? AlertVariant.danger : AlertVariant.warning}
       >
-        <Content component="div">
-          <Stack hasGutter>
-            <StackItem>
-              {t('Review these conditions to ensure your provider is configured correctly.')}
-            </StackItem>
-            {hasCriticalElevatedConditions && (
-              <StackItem>{t('To troubleshoot, check the Forklift controller pod logs.')}</StackItem>
-            )}
-            <StackItem>
-              <Button
-                data-testid="view-all-provider-issues-button"
-                isInline
-                onClick={() => {
-                  setIsDrawerOpen?.(true);
-                }}
-                variant={ButtonVariant.link}
-              >
-                {t('View all issues')}
-              </Button>
-            </StackItem>
-          </Stack>
-        </Content>
+        <Stack hasGutter>
+          <StackItem>
+            {t('Review these conditions to ensure your provider is configured correctly.')}
+          </StackItem>
+          {hasCriticalElevatedConditions && (
+            <StackItem>{t('To troubleshoot, check the Forklift controller pod logs.')}</StackItem>
+          )}
+          <StackItem>
+            <Button
+              data-testid="view-all-provider-issues-button"
+              isInline
+              onClick={() => {
+                setIsDrawerOpen?.(true);
+              }}
+              variant={ButtonVariant.link}
+            >
+              {t('View all issues')}
+            </Button>
+          </StackItem>
+        </Stack>
       </Alert>
     </PageSection>
   );
