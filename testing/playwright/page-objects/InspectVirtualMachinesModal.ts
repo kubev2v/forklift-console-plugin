@@ -82,13 +82,15 @@ export class InspectVirtualMachinesModal {
   }
 
   /**
-   * Bulk-select testId exists on 5.0+ (MTV-6359 / #2890). 2.12 z-stream still
-   * uses PatternFly's "Select page" checkbox with no data-testid.
+   * 5.0+ (#2890) has data-testid on the BulkSelect checkbox. 2.12 does not, but
+   * TableBulkSelect still sets id="bulk-select-toggle-checkbox". Scope to the
+   * modal because the plan VM table behind the overlay uses the same id.
+   * Avoid the translated "Select page" aria-label (breaks i18n / MTV-6613).
    */
   get selectAllCheckbox(): Locator {
     return isVersionAtLeast(V5_0_0)
       ? this.modal.getByTestId('table-bulk-select-checkbox')
-      : this.modal.getByRole('checkbox', { name: 'Select page' });
+      : this.modal.locator('#bulk-select-toggle-checkbox');
   }
 
   async selectAllVms(): Promise<void> {
