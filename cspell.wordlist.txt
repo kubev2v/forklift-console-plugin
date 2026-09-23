@@ -140,6 +140,7 @@ pvcs
 qemtv
 quickstarts
 rbd
+resourcepools
 RHVM
 rowspan
 selfsubjectaccessreviews
@@ -159,6 +160,7 @@ subjectaccessreviews
 switchfilter
 testid
 timespan
+toeholdtemplates
 tolerations
 treegrid
 trident

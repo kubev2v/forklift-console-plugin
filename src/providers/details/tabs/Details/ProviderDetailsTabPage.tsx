@@ -13,6 +13,7 @@ import DetailsSection from './components/DetailsSection/DetailsSection';
 import UploadFilesSection from './components/DetailsSection/UploadFilesSection';
 import InventorySection from './components/InventorySection/InventorySection';
 import SecretsSection from './components/SecretsSection/SecretsSection';
+import ToeholdSection from './components/ToeholdSection/ToeholdSection';
 
 const ProviderDetailsTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const { provider } = useProvider(name, namespace);
@@ -28,6 +29,8 @@ const ProviderDetailsTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace 
       <UploadFilesSection data={data} />
 
       <SecretsSection data={data} />
+
+      <ToeholdSection data={data} />
 
       <InventorySection data={data} />
 

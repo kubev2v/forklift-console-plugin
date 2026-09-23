@@ -21,6 +21,23 @@ export const CopyApplianceModelGroupVersionKind = {
   version: 'v1beta1',
 };
 
+export const ToeholdTemplateModelGroupVersionKind = {
+  group: 'forklift.konveyor.io',
+  kind: 'ToeholdTemplate',
+  version: 'v1beta1',
+};
+
+export const ToeholdTemplateModel = {
+  abbr: 'TT',
+  apiGroup: 'forklift.konveyor.io',
+  apiVersion: 'v1beta1',
+  kind: 'ToeholdTemplate',
+  label: 'ToeholdTemplate',
+  labelPlural: 'ToeholdTemplates',
+  namespaced: true,
+  plural: 'toeholdtemplates',
+};
+
 export const VirtualMachineModelGroupVersionKind = {
   group: 'kubevirt.io',
   kind: 'VirtualMachine',

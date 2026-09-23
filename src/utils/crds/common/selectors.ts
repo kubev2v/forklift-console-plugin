@@ -46,6 +46,18 @@ export const getVddkInitImage = (provider: V1beta1Provider): string | undefined 
 export const getUseVddkAioOptimization = (provider: V1beta1Provider): string | undefined =>
   getSettings(provider)?.useVddkAioOptimization;
 
+export const getToeholdDatastore = (provider: V1beta1Provider): string | undefined =>
+  getSettings(provider)?.toeholdDatastore;
+
+export const getToeholdFolder = (provider: V1beta1Provider): string | undefined =>
+  getSettings(provider)?.toeholdFolder;
+
+export const getToeholdNetwork = (provider: V1beta1Provider): string | undefined =>
+  getSettings(provider)?.toeholdNetwork;
+
+export const getCopyApplianceResourcePool = (provider: V1beta1Provider): string | undefined =>
+  getSettings(provider)?.copyApplianceResourcePool;
+
 export const getSdkEndpoint = (provider: V1beta1Provider): string | undefined =>
   getSettings(provider)?.sdkEndpoint;
 
