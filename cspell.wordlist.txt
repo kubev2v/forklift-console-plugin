@@ -175,6 +175,7 @@ virt
 virtio
 Virtualmachine
 virtualmachines
+virtualizationvalidations
 VMFS
 VNICs
 volumetypes
