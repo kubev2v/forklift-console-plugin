@@ -28,6 +28,8 @@ import {
 import { requireVddk } from '../../utils/requireVddk';
 import {
   ELEMENT_TIMEOUT,
+  HAPPY_PATH_MIGRATION_TIMEOUT_MS,
+  HAPPY_PATH_TEST_OVERHEAD_MS,
   MTV_NAMESPACE,
   PLAN_READY_TIMEOUT,
 } from '../../utils/resource-manager/constants';
@@ -153,10 +155,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream', '@slow'],
     },
     async ({ page }) => {
-      // 40 min covers disk-transfer + Windows WaitForGuestReboots (backend timeout: 30 min).
-      const MIGRATION_TIMEOUT_MS = 40 * 60_000;
-      const OVERHEAD_MS = 10 * 60_000;
-      test.setTimeout(MIGRATION_TIMEOUT_MS + OVERHEAD_MS);
+      test.setTimeout(HAPPY_PATH_MIGRATION_TIMEOUT_MS + HAPPY_PATH_TEST_OVERHEAD_MS);
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
 
@@ -172,8 +171,9 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       );
       expect(
         hasMacConflict,
-        'Plan has MAC address conflicts from leftover VMs of a previous test run. ' +
-          'Run global-cleanup-migration.sh on the target cluster to remove them, then re-run.',
+        'Plan has MAC address conflicts from leftover target VMs of a previous run. ' +
+          'Downstream globalSetup deletes happy-path leftover VMs unless SKIP_HAPPY_PATH_LEFTOVER_CLEANUP=1. ' +
+          'Delete those KubeVirt VMs and re-run.',
       ).toBe(false);
 
       // waitForPlanReady polls until Ready, tolerating transient 'Cannot start' from VDDK validation.
@@ -192,29 +192,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       await planDetailsPage.verifyMigrationInProgress();
 
       testLog('⏳ Waiting for migration to complete...');
-      try {
-        await planDetailsPage.waitForMigrationCompletion(MIGRATION_TIMEOUT_MS, true);
-      } catch (error) {
-        let detail: string;
-        try {
-          const plan = await resourceManager.fetchPlan(planName);
-          const conditions = (plan?.status?.conditions ?? [])
-            .filter((condition) => condition.status === 'True')
-            .map(
-              (condition) =>
-                `${condition.type}/${condition.reason ?? ''}: ${condition.message ?? ''}`,
-            );
-          detail = conditions.join('\n') || '(none)';
-        } catch (diagnosticError) {
-          detail = `Unable to fetch plan conditions: ${
-            diagnosticError instanceof Error ? diagnosticError.message : String(diagnosticError)
-          }`;
-        }
-        throw new Error(
-          `${error instanceof Error ? error.message : String(error)}\nPlan conditions:\n${detail}`,
-          { cause: error },
-        );
-      }
+      await planDetailsPage.waitForMigrationCompletion(HAPPY_PATH_MIGRATION_TIMEOUT_MS, true);
 
       for (const vm of testPlanData.virtualMachines ?? []) {
         const migratedVMName = vm.targetName ?? vm.sourceName;

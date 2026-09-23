@@ -137,6 +137,10 @@ export class ProviderListPage {
 npm run test:e2e    # Run Playwright E2E tests
 ```
 
+### Downstream leftover VMs (happy-path)
+
+`testing/playwright/global.setup.ts` deletes leftover KubeVirt VMs named `mtv-rhel8-warm-sanity`, `mtv-win2019-79`, or `${source}-renamed-*` outside `kube-` / `openshift-` namespaces. That prevents MacConflicts after a timed-out or aborted previous run. Set `SKIP_HAPPY_PATH_LEFTOVER_CLEANUP=1` to skip. Cold happy-path migration wait is `HAPPY_PATH_MIGRATION_TIMEOUT_MS` (70 minutes) so `WaitForGuestReboots` is not truncated at 40 minutes.
+
 ---
 
 ## 3. Test Coverage Goals
