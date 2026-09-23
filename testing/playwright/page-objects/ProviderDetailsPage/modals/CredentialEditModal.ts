@@ -14,6 +14,7 @@ export class CredentialEditModal extends BaseModal {
   readonly caCertificateUploadButton: Locator;
   readonly closeButton: Locator;
   readonly configureCertificateRadio: Locator;
+  readonly fetchCertificateButton: Locator;
   readonly passwordInput: Locator;
   readonly passwordToggleButton: Locator;
   readonly skipCertificateRadio: Locator;
@@ -39,6 +40,9 @@ export class CredentialEditModal extends BaseModal {
       .filter({ has: this.caCertificateTextarea });
     this.caCertificateUploadButton = caCertificateContainer.getByRole('button', { name: 'Upload' });
     this.caCertificateClearButton = caCertificateContainer.getByRole('button', { name: 'Clear' });
+    this.fetchCertificateButton = this.page.getByRole('button', {
+      name: 'Fetch certificate from URL',
+    });
   }
 
   async clearCaCertificate(): Promise<void> {
@@ -54,9 +58,22 @@ export class CredentialEditModal extends BaseModal {
     await this.usernameInput.clear();
   }
 
+  async clickFetchCertificate(): Promise<void> {
+    await this.fetchCertificateButton.click();
+    await expect(this.page.getByRole('heading', { name: 'Verify certificate' })).toBeVisible();
+  }
+
   async close(): Promise<void> {
     await this.closeButton.click();
     await this.waitForModalToClose();
+  }
+
+  async closeVerifyCertificateModal(): Promise<void> {
+    const verifyModal = this.page
+      .getByRole('dialog')
+      .filter({ has: this.page.getByRole('heading', { name: 'Verify certificate' }) });
+    await verifyModal.getByRole('button', { name: 'Close' }).click();
+    await expect(verifyModal).not.toBeVisible();
   }
 
   async enterCaCertificate(certificate: string): Promise<void> {
@@ -145,6 +162,11 @@ export class CredentialEditModal extends BaseModal {
     await expect(this.caCertificateTextarea).toBeVisible();
   }
 
+  async verifyFetchCertificateButtonVisible(): Promise<void> {
+    await expect(this.fetchCertificateButton).toBeVisible();
+    await expect(this.fetchCertificateButton).toBeEnabled();
+  }
+
   async verifyModalStructure(): Promise<void> {
     await this.verifyModalTitle();
     await expect(this.usernameInput).toBeVisible();
@@ -172,6 +194,15 @@ export class CredentialEditModal extends BaseModal {
   async verifyUsernameRequired(): Promise<void> {
     const errorText = this.page.getByTestId('vsphere-username-input-helper-error');
     await expect(errorText).toContainText('Username is required');
+  }
+
+  async verifyVerifyCertificateModalDetails(): Promise<void> {
+    const verifyModal = this.page
+      .getByRole('dialog')
+      .filter({ has: this.page.getByRole('heading', { name: 'Verify certificate' }) });
+    await expect(verifyModal.locator('#issuer')).toBeVisible();
+    await expect(verifyModal.locator('#fingerprint')).toBeVisible();
+    await expect(verifyModal.locator('#expiration')).toBeVisible();
   }
 
   override async waitForModalToOpen(): Promise<void> {
