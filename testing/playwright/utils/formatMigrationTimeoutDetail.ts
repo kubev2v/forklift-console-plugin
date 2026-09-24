@@ -1,46 +1,29 @@
 import type { V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@forklift-ui/types';
 
-const WAIT_FOR_GUEST_REBOOTS_NAME = 'WaitForGuestReboots';
+import { isEmpty } from './utils';
 
 type PipelineStep = NonNullable<V1beta1PlanStatusMigrationVms['pipeline']>[number];
 
-export const parsePlanDetailsPath = (href: string): { name: string; namespace: string } | null => {
-  let pathname = href;
-  try {
-    ({ pathname } = new URL(href));
-  } catch {
-    // Already a path, or not a URL.
-  }
-
-  const parts = pathname.split('/').filter(Boolean);
-  const planKindIndex = parts.indexOf('forklift.konveyor.io~v1beta1~Plan');
-  if (planKindIndex < 2 || parts[planKindIndex - 2] !== 'ns') {
-    return null;
-  }
-
-  const namespace = parts[planKindIndex - 1];
-  const name = parts[planKindIndex + 1];
-  if (!namespace || !name) {
-    return null;
-  }
-
-  return { name, namespace };
-};
+export const MIGRATION_TIMEOUT_PREFIX = 'Migration timeout after';
+const STATUS_MARKER = 'Status: ';
 
 const isCompletedPhase = (phase: string): boolean => phase.toLowerCase() === 'completed';
 
-const isPendingPhase = (phase: string): boolean => phase.toLowerCase() === 'pending';
+const formatReasons = (reasons: string[] | undefined): string => {
+  if (reasons === undefined || isEmpty(reasons)) {
+    return '';
+  }
+
+  return ` error=${reasons.join('; ')}`;
+};
 
 const summarizePipelineStep = (step: PipelineStep): string | null => {
-  const { name } = step;
   const phase = step.phase ?? '?';
   if (isCompletedPhase(phase)) {
     return null;
   }
-  if (isPendingPhase(phase) && name !== WAIT_FOR_GUEST_REBOOTS_NAME) {
-    return null;
-  }
-  return `${name}=${phase}`;
+
+  return `${step.name ?? '?'}=${phase}${formatReasons(step.error?.reasons)}`;
 };
 
 const summarizeVm = (vm: V1beta1PlanStatusMigrationVms): string => {
@@ -49,10 +32,20 @@ const summarizeVm = (vm: V1beta1PlanStatusMigrationVms): string => {
   const active = pipeline
     .map((step) => summarizePipelineStep(step))
     .filter((step): step is string => step !== null);
-  const errorReasons = vm.error?.reasons?.join('; ');
-  const errorText = errorReasons ? ` error=${errorReasons}` : '';
 
-  return `${vm.name ?? '?'} phase=${vm.phase ?? '?'} steps=${completedCount}/${pipeline.length} active=[${active.join(', ') || '-'}]${errorText}`;
+  return `${vm.name ?? '?'} phase=${vm.phase ?? '?'} steps=${completedCount}/${pipeline.length} active=[${active.join(', ') || '-'}]${formatReasons(vm.error?.reasons)}`;
+};
+
+export const isMigrationTimeoutError = (error: unknown): error is Error =>
+  error instanceof Error && error.message.startsWith(MIGRATION_TIMEOUT_PREFIX);
+
+export const getMigrationTimeoutUiStatus = (message: string): string => {
+  const statusIndex = message.lastIndexOf(STATUS_MARKER);
+  if (statusIndex === -1) {
+    return 'Unknown';
+  }
+
+  return message.slice(statusIndex + STATUS_MARKER.length);
 };
 
 export const formatMigrationTimeoutDetail = (
@@ -60,7 +53,7 @@ export const formatMigrationTimeoutDetail = (
   uiStatus: string,
   timeoutMs: number,
 ): string => {
-  const header = `Migration timeout after ${timeoutMs}ms. Status: ${uiStatus}`;
+  const header = `${MIGRATION_TIMEOUT_PREFIX} ${timeoutMs}ms. Status: ${uiStatus}`;
   if (!plan) {
     return `${header}\nPlan conditions: (unable to fetch plan)`;
   }
