@@ -34,7 +34,8 @@ export class PlanResumeConversion {
   }
 
   get modal(): Locator {
-    return this.page.getByRole('dialog', { exact: true, name: 'Resume conversion' });
+    // PF6 names the dialog with the full contents (title, body, buttons), not just the heading.
+    return this.page.getByRole('dialog', { name: 'Resume conversion' });
   }
 
   get modalCancelButton(): Locator {
