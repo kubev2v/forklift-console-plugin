@@ -21,11 +21,12 @@ export class PlanResumeConversion {
   }
 
   async expectMenuItemDisabled(): Promise<void> {
-    await expect(this.resumeMenuitem).toBeDisabled();
+    // PF6 puts data-testid on <li role="none">; disabled is on the inner menuitem.
+    await expect(this.resumeMenuitem.getByRole('menuitem')).toBeDisabled();
   }
 
   async expectMenuItemEnabled(): Promise<void> {
-    await expect(this.resumeMenuitem).toBeEnabled();
+    await expect(this.resumeMenuitem.getByRole('menuitem')).toBeEnabled();
   }
 
   get menuItem(): Locator {
