@@ -4,8 +4,10 @@ export const ELEMENT_TIMEOUT = 15_000;
 // Disk copy of two ~12Gi VMs (20–35 min) plus Windows WaitForGuestReboots
 // (controller_windows_reboot_timeout = 1800s). 40 min is not enough: a live
 // 5.0 repro succeeded at 44 min while still at ~90% (8/9 steps) during reboot wait.
+// Jenkins job timeout must cover the whole serial describe (provider + plan +
+// this wait + HAPPY_PATH_TEST_OVERHEAD_MS), not only the 80-minute test budget.
 export const HAPPY_PATH_MIGRATION_TIMEOUT_MS = 70 * 60_000;
-/** Target project prefix used by happy-path and default plan fixtures (`test-project-${id}`). */
+/** Shared plan-fixture target namespace prefix (`test-project-${id}`), not happy-path-only. */
 export const HAPPY_PATH_TARGET_NAMESPACE_PREFIX = 'test-project-';
 export const HAPPY_PATH_TEST_OVERHEAD_MS = 10 * 60_000;
 export const K8S_RECONCILE_TIMEOUT = 40_000;

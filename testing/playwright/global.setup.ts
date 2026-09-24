@@ -262,11 +262,7 @@ const globalSetup = async (config: FullConfig) => {
       await page.context().storageState({ path: AUTH_FILE });
 
       await generateKubeconfig(username, password);
-      try {
-        await cleanupLeftoverHappyPathVms();
-      } catch (cleanupError) {
-        console.error('Happy-path leftover VM cleanup failed:', cleanupError);
-      }
+      await cleanupLeftoverHappyPathVms();
 
       await detectForkliftVersion();
       await detectCnvVersion();

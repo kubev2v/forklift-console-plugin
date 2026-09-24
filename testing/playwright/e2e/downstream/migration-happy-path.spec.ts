@@ -25,6 +25,11 @@ import {
   type ProviderData,
   SourceNetworks,
 } from '../../types/test-data';
+import {
+  formatMigrationTimeoutDetail,
+  getMigrationTimeoutUiStatus,
+  isMigrationTimeoutError,
+} from '../../utils/formatMigrationTimeoutDetail';
 import { requireVddk } from '../../utils/requireVddk';
 import {
   ELEMENT_TIMEOUT,
@@ -193,7 +198,23 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       await planDetailsPage.verifyMigrationInProgress();
 
       testLog('⏳ Waiting for migration to complete...');
-      await planDetailsPage.waitForMigrationCompletion(HAPPY_PATH_MIGRATION_TIMEOUT_MS, true);
+      try {
+        await planDetailsPage.waitForMigrationCompletion(HAPPY_PATH_MIGRATION_TIMEOUT_MS, true);
+      } catch (cause: unknown) {
+        if (!isMigrationTimeoutError(cause)) {
+          throw cause;
+        }
+
+        const plan = await resourceManager.fetchPlan(planName);
+        throw new Error(
+          formatMigrationTimeoutDetail(
+            plan,
+            getMigrationTimeoutUiStatus(cause.message),
+            HAPPY_PATH_MIGRATION_TIMEOUT_MS,
+          ),
+          { cause },
+        );
+      }
 
       for (const vm of testPlanData.virtualMachines ?? []) {
         const migratedVMName = vm.targetName ?? vm.sourceName;
