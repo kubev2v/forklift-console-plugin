@@ -140,7 +140,7 @@ export class CreateProviderPage {
 
   private async fillNutanixFields(testData: ProviderData) {
     if (testData.prismType === 'central') {
-      await this.page.getByText('Prism Central').click();
+      await this.page.getByTestId('nutanix-prism-central-radio').click();
     }
 
     await this.page.getByTestId('nutanix-url-input').fill(testData.hostname ?? '');

@@ -16,17 +16,13 @@ test.describe('Nutanix Provider Form Validation', () => {
       const createProvider = new CreateProviderPage(page);
 
       await test.step('Navigate to provider creation page', async () => {
-        await createProvider.navigate();
+        await createProvider.navigateWithProviderType(ProviderType.NUTANIX);
         await createProvider.waitForWizardLoad();
       });
 
-      await test.step('Select Nutanix AHV provider type', async () => {
-        await createProvider.selectProviderType(ProviderType.NUTANIX);
-      });
-
       await test.step('Verify Prism type radio buttons are visible', async () => {
-        await expect(page.getByText('Prism Element')).toBeVisible();
-        await expect(page.getByText('Prism Central')).toBeVisible();
+        await expect(page.getByTestId('nutanix-prism-element-radio')).toBeVisible();
+        await expect(page.getByTestId('nutanix-prism-central-radio')).toBeVisible();
       });
 
       await test.step('Verify URL field is visible', async () => {
