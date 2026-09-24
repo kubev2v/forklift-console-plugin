@@ -1,4 +1,7 @@
-import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
+import {
+  HAPPY_PATH_TARGET_NAMESPACE_PREFIX,
+  MTV_NAMESPACE,
+} from '../utils/resource-manager/constants';
 import { V2_11_0 } from '../utils/version/constants';
 import { isVersionAtLeast } from '../utils/version/version';
 
@@ -210,7 +213,7 @@ export const createPlanTestData = (
     },
     targetProject: {
       isPreexisting: false,
-      name: `test-project-${uniqueId}`,
+      name: `${HAPPY_PATH_TARGET_NAMESPACE_PREFIX}${uniqueId}`,
     },
     targetProvider: 'host',
     // qemtv-09 vs8 inventory no longer has mtv-func-rhel9; use a present lab VM.

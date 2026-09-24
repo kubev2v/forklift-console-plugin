@@ -29,6 +29,7 @@ import { requireVddk } from '../../utils/requireVddk';
 import {
   ELEMENT_TIMEOUT,
   HAPPY_PATH_MIGRATION_TIMEOUT_MS,
+  HAPPY_PATH_TARGET_NAMESPACE_PREFIX,
   HAPPY_PATH_TEST_OVERHEAD_MS,
   MTV_NAMESPACE,
   PLAN_READY_TIMEOUT,
@@ -38,7 +39,7 @@ import { testLog } from '../../utils/testLog';
 import { CNV_4_21_0, V2_10_5, V2_12_0 } from '../../utils/version/constants';
 import { isVersionInStreams, requireCNVVersion, requireVersion } from '../../utils/version/version';
 
-const targetProjectName = `test-project-${Date.now()}`;
+const targetProjectName = `${HAPPY_PATH_TARGET_NAMESPACE_PREFIX}${Date.now()}`;
 
 test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => {
   requireVersion(test, V2_10_5);

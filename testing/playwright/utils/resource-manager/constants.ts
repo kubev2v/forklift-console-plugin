@@ -5,6 +5,8 @@ export const ELEMENT_TIMEOUT = 15_000;
 // (controller_windows_reboot_timeout = 1800s). 40 min is not enough: a live
 // 5.0 repro succeeded at 44 min while still at ~90% (8/9 steps) during reboot wait.
 export const HAPPY_PATH_MIGRATION_TIMEOUT_MS = 70 * 60_000;
+/** Target project prefix used by happy-path and default plan fixtures (`test-project-${id}`). */
+export const HAPPY_PATH_TARGET_NAMESPACE_PREFIX = 'test-project-';
 export const HAPPY_PATH_TEST_OVERHEAD_MS = 10 * 60_000;
 export const K8S_RECONCILE_TIMEOUT = 40_000;
 export const PAGE_LOAD_TIMEOUT = 30_000;
