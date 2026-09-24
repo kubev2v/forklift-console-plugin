@@ -1,12 +1,17 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { isPlanEditable } from 'src/plans/details/components/PlanStatus/utils/planStatusPermissions';
+import {
+  getNameTemplateOverrideVms,
+  NAME_TEMPLATE_TYPE,
+  removeVmNameTemplateFromAllVms,
+} from 'src/plans/details/utils/nameTemplateOverrides';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
-import { Label } from '@patternfly/react-core';
 
 import type { EditableDetailsItemProps } from '../../../utils/types';
+import NameTemplateDetailsValue from '../NameTemplateOverride/NameTemplateDetailsValue';
 
 import { onConfirmVolumeNameTemplate } from './utils/utils';
 import EditVolumeNameTemplate, { type EditVolumeNameTemplateProps } from './EditVolumeNameTemplate';
@@ -23,16 +28,21 @@ const VolumeNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
     return null;
   }
 
-  const content = (
-    <Label color="grey" isCompact>
-      {plan?.spec?.volumeNameTemplate ? t('Use custom') : t('Use default')}
-    </Label>
-  );
+  const planEditable = isPlanEditable(plan);
+  const vmNames = planEditable ? getNameTemplateOverrideVms(plan, NAME_TEMPLATE_TYPE.volume) : [];
 
   return (
     <DetailsItem
-      canEdit={canPatch && isPlanEditable(plan)}
-      content={content}
+      canEdit={canPatch && planEditable}
+      content={
+        <NameTemplateDetailsValue
+          canApply={canPatch && planEditable}
+          isPlanCustom={Boolean(plan?.spec?.volumeNameTemplate)}
+          onApply={async () => removeVmNameTemplateFromAllVms(plan, NAME_TEMPLATE_TYPE.volume)}
+          templateType={NAME_TEMPLATE_TYPE.volume}
+          vmNames={vmNames}
+        />
+      }
       crumbs={['spec', 'volumeNameTemplate']}
       onEdit={() => {
         launchOverlay<EditVolumeNameTemplateProps>(EditVolumeNameTemplate, {
