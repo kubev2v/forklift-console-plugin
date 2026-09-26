@@ -1,6 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../types/test-data';
+import { MIGRATION_TIMEOUT_PREFIX } from '../../utils/formatMigrationTimeoutDetail';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { K8S_RECONCILE_TIMEOUT, PLAN_READY_TIMEOUT } from '../../utils/resource-manager/constants';
 import { testLog } from '../../utils/testLog';
@@ -334,7 +335,9 @@ export class PlanDetailsPage {
       }
 
       const currentStatus = await this.getMigrationStatus();
-      throw new Error(`Migration timeout after ${timeoutMs}ms. Status: ${currentStatus.status}`);
+      throw new Error(
+        `${MIGRATION_TIMEOUT_PREFIX} ${timeoutMs}ms. Status: ${currentStatus.status}`,
+      );
     } finally {
       if (progressInterval) {
         clearInterval(progressInterval);

@@ -7,6 +7,7 @@ import { chromium, type FullConfig } from '@playwright/test';
 import { restoreConsoleLanguage } from './fixtures/helpers/languageHelpers';
 import { LoginPage } from './page-objects/LoginPage';
 import { AUTH_FILE, ENV_RELAY_FILE, KUBECONFIG_FILE } from './utils/constants';
+import { cleanupLeftoverHappyPathVms } from './utils/happyPathLeftoverCleanup';
 import { BaseResourceManager } from './utils/resource-manager/BaseResourceManager';
 import { RESOURCES_FILE } from './utils/resource-manager/constants';
 import { ResourceFetcher } from './utils/resource-manager/ResourceFetcher';
@@ -261,6 +262,7 @@ const globalSetup = async (config: FullConfig) => {
       await page.context().storageState({ path: AUTH_FILE });
 
       await generateKubeconfig(username, password);
+      await cleanupLeftoverHappyPathVms();
 
       await detectForkliftVersion();
       await detectCnvVersion();

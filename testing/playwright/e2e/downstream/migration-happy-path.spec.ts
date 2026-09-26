@@ -25,9 +25,17 @@ import {
   type ProviderData,
   SourceNetworks,
 } from '../../types/test-data';
+import {
+  formatMigrationTimeoutDetail,
+  getMigrationTimeoutUiStatus,
+  isMigrationTimeoutError,
+} from '../../utils/formatMigrationTimeoutDetail';
 import { requireVddk } from '../../utils/requireVddk';
 import {
   ELEMENT_TIMEOUT,
+  HAPPY_PATH_MIGRATION_TIMEOUT_MS,
+  HAPPY_PATH_TARGET_NAMESPACE_PREFIX,
+  HAPPY_PATH_TEST_OVERHEAD_MS,
   MTV_NAMESPACE,
   PLAN_READY_TIMEOUT,
 } from '../../utils/resource-manager/constants';
@@ -36,7 +44,7 @@ import { testLog } from '../../utils/testLog';
 import { CNV_4_21_0, V2_10_5, V2_12_0 } from '../../utils/version/constants';
 import { isVersionInStreams, requireCNVVersion, requireVersion } from '../../utils/version/version';
 
-const targetProjectName = `test-project-${Date.now()}`;
+const targetProjectName = `${HAPPY_PATH_TARGET_NAMESPACE_PREFIX}${Date.now()}`;
 
 test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => {
   requireVersion(test, V2_10_5);
@@ -153,10 +161,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream', '@slow'],
     },
     async ({ page }) => {
-      // 40 min covers disk-transfer + Windows WaitForGuestReboots (backend timeout: 30 min).
-      const MIGRATION_TIMEOUT_MS = 40 * 60_000;
-      const OVERHEAD_MS = 10 * 60_000;
-      test.setTimeout(MIGRATION_TIMEOUT_MS + OVERHEAD_MS);
+      test.setTimeout(HAPPY_PATH_MIGRATION_TIMEOUT_MS + HAPPY_PATH_TEST_OVERHEAD_MS);
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
 
@@ -172,8 +177,9 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       );
       expect(
         hasMacConflict,
-        'Plan has MAC address conflicts from leftover VMs of a previous test run. ' +
-          'Run global-cleanup-migration.sh on the target cluster to remove them, then re-run.',
+        'Plan has MAC address conflicts from leftover target VMs of a previous run. ' +
+          'Downstream globalSetup deletes happy-path leftover VMs unless SKIP_HAPPY_PATH_LEFTOVER_CLEANUP=1. ' +
+          'Delete those KubeVirt VMs and re-run.',
       ).toBe(false);
 
       // waitForPlanReady polls until Ready, tolerating transient 'Cannot start' from VDDK validation.
@@ -193,26 +199,20 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
       testLog('⏳ Waiting for migration to complete...');
       try {
-        await planDetailsPage.waitForMigrationCompletion(MIGRATION_TIMEOUT_MS, true);
-      } catch (error) {
-        let detail: string;
-        try {
-          const plan = await resourceManager.fetchPlan(planName);
-          const conditions = (plan?.status?.conditions ?? [])
-            .filter((condition) => condition.status === 'True')
-            .map(
-              (condition) =>
-                `${condition.type}/${condition.reason ?? ''}: ${condition.message ?? ''}`,
-            );
-          detail = conditions.join('\n') || '(none)';
-        } catch (diagnosticError) {
-          detail = `Unable to fetch plan conditions: ${
-            diagnosticError instanceof Error ? diagnosticError.message : String(diagnosticError)
-          }`;
+        await planDetailsPage.waitForMigrationCompletion(HAPPY_PATH_MIGRATION_TIMEOUT_MS, true);
+      } catch (cause: unknown) {
+        if (!isMigrationTimeoutError(cause)) {
+          throw cause;
         }
+
+        const plan = await resourceManager.fetchPlan(planName);
         throw new Error(
-          `${error instanceof Error ? error.message : String(error)}\nPlan conditions:\n${detail}`,
-          { cause: error },
+          formatMigrationTimeoutDetail(
+            plan,
+            getMigrationTimeoutUiStatus(cause.message),
+            HAPPY_PATH_MIGRATION_TIMEOUT_MS,
+          ),
+          { cause },
         );
       }
 
