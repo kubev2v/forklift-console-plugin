@@ -16,8 +16,8 @@
   "devDependencies": {
     "playwright": "1.57.0",
     "@playwright/test": "1.57.0",
-    "@types/node": "^20.0.0",
-    "typescript": "^5.8.2"
+    "@types/node": "^22.0.0",
+    "typescript": "^7.0.0"
   },
   "dependencies": {
     "@forklift-ui/types": "1.0.7"
