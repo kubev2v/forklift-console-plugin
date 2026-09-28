@@ -12,7 +12,7 @@ const isVirtV2vPod = (pod: IoK8sApiCoreV1Pod): boolean =>
   getLabels(pod)?.['forklift.app'] === VIRT_V2V_APP_LABEL;
 
 const isWaitRebootPod = (pod: IoK8sApiCoreV1Pod): boolean =>
-  getName(pod).startsWith(WAIT_REBOOT_NAME_PREFIX);
+  getName(pod)?.startsWith(WAIT_REBOOT_NAME_PREFIX) ?? false;
 
 export const getVirtV2vContainerName = (pod: IoK8sApiCoreV1Pod): string | undefined => {
   const match = pod.spec?.containers?.find((container) => container.name === 'virt-v2v');
