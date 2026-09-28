@@ -9,8 +9,8 @@ const STATUS_MARKER = 'Status: ';
 
 const isCompletedPhase = (phase: string): boolean => phase.toLowerCase() === 'completed';
 
-const formatReasons = (reasons: string[] | undefined): string => {
-  if (reasons === undefined || isEmpty(reasons)) {
+const formatReasons = (reasons: string[] = []): string => {
+  if (isEmpty(reasons)) {
     return '';
   }
 

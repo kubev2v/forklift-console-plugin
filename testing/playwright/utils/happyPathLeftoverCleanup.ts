@@ -36,10 +36,7 @@ type LeftoverVmRef = {
 };
 
 type LeftoverVmListItem = {
-  metadata?: {
-    name?: string;
-    namespace?: string;
-  };
+  metadata?: LeftoverVmRef;
 };
 
 type PlanList = {
@@ -76,16 +73,14 @@ export const selectLeftoverHappyPathVms = (
   const leftovers: LeftoverVmRef[] = [];
 
   for (const item of items) {
-    const name = item.metadata?.name;
-    const namespace = item.metadata?.namespace;
+    const { metadata } = item;
     if (
-      name &&
-      namespace &&
-      isHappyPathLeftoverNamespace(namespace) &&
-      isLeftoverHappyPathVmName(name) &&
-      !executingTargetNamespaces.has(namespace)
+      metadata &&
+      isHappyPathLeftoverNamespace(metadata.namespace) &&
+      isLeftoverHappyPathVmName(metadata.name) &&
+      !executingTargetNamespaces.has(metadata.namespace)
     ) {
-      leftovers.push({ name, namespace });
+      leftovers.push(metadata);
     }
   }
 

@@ -1,6 +1,7 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
 
+import type { V1beta1Plan } from '@forklift-ui/types';
 import { expect, test } from '@playwright/test';
 
 import { EndpointType, ProviderType } from '../../types/enums';
@@ -205,7 +206,15 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
           throw cause;
         }
 
-        const plan = await resourceManager.fetchPlan(planName);
+        let plan: V1beta1Plan | null = null;
+        try {
+          plan = await resourceManager.fetchPlan(planName);
+        } catch (fetchError: unknown) {
+          const fetchMessage =
+            fetchError instanceof Error ? fetchError.message : String(fetchError);
+          testLog(`Failed to fetch plan for migration timeout diagnostics: ${fetchMessage}`);
+        }
+
         throw new Error(
           formatMigrationTimeoutDetail(
             plan,
