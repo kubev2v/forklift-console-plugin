@@ -104,6 +104,59 @@ t('Delete {{name}}', { name: vmName })
 
 ---
 
+## 6.1. ForkliftTrans and dynamic values (MTV-6642)
+
+react-i18next builds the `<Trans>` / `<ForkliftTrans>` lookup **key from JSX children**. If a child is a runtime value (`{name}`, `{plans.length}`, `{getName(plan)}`), that value is **inlined into the key**, the catalog entry no longer matches, and the console shows missing-key warnings.
+
+### Do
+
+- Bind dynamic values in scope, then use **object children** so the extracted key keeps `{{name}}` / `{{length}}` placeholders (see [Trans props](https://react.i18next.com/latest/trans-component#trans-props)):
+
+```tsx
+const name = getName(plan);
+const { length } = plans;
+
+<ForkliftTrans>
+  Archive plan <strong className="co-break-word">{{ name }}</strong>?
+</ForkliftTrans>
+
+<ForkliftTrans>
+  Archive <strong className="co-break-word">{{ length }}</strong> selected migration plans?
+</ForkliftTrans>
+```
+
+(`{{ name }}` in JSX is `{ { name } }` — shorthand for `{ name: name }`.)
+
+- Use **separate** `<ForkliftTrans>` trees when wording differs (e.g. delete with vs without `project {{ namespace }}`). Do not use conditional JSX fragments inside one Trans (that produces bogus keys such as `in<3></3>?`).
+- Enable TypeScript for object children: `types/i18next.d.ts` with `CustomTypeOptions.allowObjectInHTMLChildren: true` (runtime does not need this file).
+- After changing Trans JSX, run `npm run i18n` so **keys** update in all locale files.
+- When keys change, **prefer** English placeholder values in es/fr/ja/ko/zh until **Memsource** re-translates those keys. Do **not** hand-copy old locale strings onto new keys or migrate markup (`<1><0></0></1>` → `<1>{{length}}</1>`) in JSON by hand — that breaks Trans silently.
+
+### Don't
+
+```tsx
+// Bad: runtime value becomes part of the lookup key
+<ForkliftTrans>
+  Archive plan <strong>{name}</strong>?
+</ForkliftTrans>
+
+// Bad: conditional branches inside one Trans
+<ForkliftTrans>
+  Delete <strong>{name}</strong> in{namespace && <> project <strong>{namespace}</strong></>}?
+</ForkliftTrans>
+```
+
+- Do **not** restore deleted artifact keys (e.g. `Are you sure you want to delete <1>{{name}}</1> in<3></3>?`).
+- Use `co-break-word` on **user-controlled names**, not on fixed words like `archive` or numeric counts.
+
+### Checklist (Trans + dynamic text)
+
+- [ ] Dynamic segments use `{{ variable }}` object children, not `{variable}` expressions
+- [ ] `npm run i18n` run; new/changed keys listed for Memsource follow-up if non-`en` values are English placeholders
+- [ ] No conditional structure inside a single `<ForkliftTrans>` when it changes the sentence key
+
+---
+
 ## 7. Fixing Plural / Translation Issues
 
 `npm run i18n` regenerates all locale files from source code. **Never edit locale JSON files directly** to fix plural forms or wording -- the script will overwrite your changes. Pluralization uses i18next v21+ suffixes (`_one`, `_many`, `_other`), not the legacy `_plural` form.
@@ -136,6 +189,7 @@ Always run before committing if you added new translatable strings.
 
 - [ ] All user-facing strings use `t()` function
 - [ ] Using `useForkliftTranslation` hook (not direct i18next)
+- [ ] `<ForkliftTrans>` dynamic segments use object children (`{{ name }}`), not `{name}` (see §6.1)
 - [ ] Dynamic values use interpolation `{{variable}}`
 - [ ] No string concatenation for translated text
 - [ ] Console extensions use `%plugin__forklift-console-plugin~...%` format
