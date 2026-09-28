@@ -1,0 +1,16 @@
+.migration-step-failure-panel {
+  &__log-line--highlight {
+    background-color: var(--pf-t--global--background--color--highlight--default);
+    display: block;
+    white-space: pre-wrap;
+  }
+
+  &__log-pre {
+    font-family: var(--pf-t--global--font--family--monospace);
+    font-size: var(--pf-t--global--font--size--sm);
+    margin: 0;
+    max-height: 16rem;
+    overflow: auto;
+    white-space: pre-wrap;
+  }
+}

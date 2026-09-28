@@ -29,8 +29,6 @@ import {
 import { getPipelineTasks } from '../../../utils/utils';
 import PipelineTasksDrawer from '../PipelineTasksDrawer';
 
-import MigrationProgressErrorReasons from './MigrationProgressErrorReasons';
-
 type MigrationProgressDescriptionCellProps = {
   displayName: string;
   inPostMigrationSetup: boolean;
@@ -136,9 +134,6 @@ const MigrationProgressDescriptionCell: FC<MigrationProgressDescriptionCellProps
             </Button>
           </StackItem>
         </Stack>
-      )}
-      {pipe?.error?.reasons && !isEmpty(pipe?.error?.reasons) && (
-        <MigrationProgressErrorReasons reasons={pipe.error.reasons} />
       )}
     </>
   );
