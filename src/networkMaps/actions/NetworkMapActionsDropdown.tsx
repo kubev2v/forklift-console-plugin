@@ -51,6 +51,7 @@ const NetworkMapActionsDropdown: FC<NetworkMapActionsDropdownProps> = ({ data, i
           shouldFocusToggleOnSelect
           toggle={(toggleRef: Ref<MenuToggleElement>) => (
             <MenuToggle
+              aria-label={t('Actions')}
               isExpanded={isOpen}
               onClick={onToggleClick}
               ref={toggleRef}
