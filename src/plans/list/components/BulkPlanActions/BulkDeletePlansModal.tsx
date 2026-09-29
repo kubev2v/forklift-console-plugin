@@ -37,7 +37,7 @@ const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const [actionFailures, setActionFailures] = useState<BulkPlanActionFailure[]>([]);
-
+  const { length } = plans;
   const hasNonArchived = hasNonArchivedSelectedPlans(plans);
   const ownedPlans = getOwnedPlans(plans);
 
@@ -74,9 +74,8 @@ const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
     >
       <Stack hasGutter>
         <StackItem>
-          <ForkliftTrans>
-            Are you sure you want to delete <strong>{plans.length}</strong> selected migration
-            plans?
+          <ForkliftTrans values={{ length }}>
+            Are you sure you want to delete <strong>{{ length }}</strong> selected migration plans?
           </ForkliftTrans>
         </StackItem>
         {hasNonArchived && (

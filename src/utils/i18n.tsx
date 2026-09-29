@@ -7,11 +7,17 @@ export const useForkliftTranslation = (): ReturnType<typeof useTranslation> => {
   return useTranslation('plugin__forklift-console-plugin');
 };
 
-export const ForkliftTrans: FC<{ children?: ReactNode }> = ({ children }) => {
+type ForkLiftTrans = FC<{
+  children?: ReactNode;
+  components?: Node[];
+  values?: object;
+}>;
+
+export const ForkliftTrans: ForkLiftTrans = ({ children, values }) => {
   const { t } = useForkliftTranslation();
 
   return (
-    <Trans ns="plugin__forklift-console-plugin" t={t}>
+    <Trans ns="plugin__forklift-console-plugin" t={t} values={values}>
       {children}
     </Trans>
   );
