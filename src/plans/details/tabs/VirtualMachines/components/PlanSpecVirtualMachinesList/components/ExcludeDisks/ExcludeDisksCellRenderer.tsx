@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 import { TableCell } from 'src/components/TableCell/TableCell';
 
+import type { V1beta1PlanSpecVms } from '@forklift-ui/types';
 import { EMPTY_MSG } from '@utils/constants';
 import { getVmExcludeDisks } from '@utils/crds/plans/selectors';
-import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 type ExcludeDisksCellRendererProps = {
-  specVM: EnhancedPlanSpecVms | undefined;
+  specVM: V1beta1PlanSpecVms | undefined;
 };
 
 export const ExcludeDisksCellRenderer: FC<ExcludeDisksCellRendererProps> = ({ specVM }) => {

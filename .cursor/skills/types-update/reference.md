@@ -88,6 +88,29 @@ forklift.konveyor.io_vspherexcopyvolumepopulators.yaml
 
 ---
 
+## Consumer verification (`verify-consumer.sh`)
+
+Before opening a `forklift-console-types` PR, run the consumer check from the **forklift-console-plugin** repo (script lives under `.cursor/skills/types-update/scripts/`):
+
+```bash
+export JAVA_HOME="${JAVA_HOME:-/opt/homebrew/opt/openjdk@17}"
+export TYPES_REPO_DIR="${TYPES_REPO_DIR:-$HOME/Workspace/forklift-console-types}"
+export CONSUMER_DIR="${CONSUMER_DIR:-$HOME/Workspace/forklift-console-plugin}"
+
+.cursor/skills/types-update/scripts/verify-consumer.sh <NEW_VERSION> <OLD_VERSION>
+```
+
+| Step | Purpose |
+|------|---------|
+| `npm run build` + `npm pack` in types repo | Artifact matches what npm will publish |
+| `tsc` @ `OLD_VERSION` vs local tarball | Fails only on **new** error lines (ignores pre-existing plugin breakage) |
+| `npm run lint` in consumer | Catches issues `tsc` may miss |
+| Restore lockfile + `npm ci` | Leaves consumer workspace unchanged |
+
+Include the checked **Test plan** items from Phase 4e in the types PR body so reviewers see consumer verification was run.
+
+---
+
 ## Jira Ticket Creation
 
 ### Required fields

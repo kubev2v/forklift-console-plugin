@@ -1,10 +1,10 @@
+import type { V1beta1PlanSpecVms } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
 import { getVmExcludeDisks } from '@utils/crds/plans/selectors';
-import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 describe('getVmExcludeDisks', () => {
   it('returns excludeDisks from VM spec', () => {
-    const vm: EnhancedPlanSpecVms = {
+    const vm: V1beta1PlanSpecVms = {
       excludeDisks: ['scsi0:1'],
       id: 'vm-1',
       name: 'my-vm',
