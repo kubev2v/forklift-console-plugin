@@ -20,9 +20,23 @@ test.describe('Nutanix Provider Form Validation', () => {
         await createProvider.waitForWizardLoad();
       });
 
-      await test.step('Verify Prism type radio buttons are visible', async () => {
-        await expect(page.getByTestId('nutanix-prism-element-radio')).toBeVisible();
-        await expect(page.getByTestId('nutanix-prism-central-radio')).toBeVisible();
+      await test.step('Verify Nutanix AHV is marked Developer Preview', async () => {
+        await page.getByTestId('provider-type-toggle').click();
+        await expect(page.getByTestId('provider-type-option-nutanix')).toContainText(
+          'Developer Preview',
+        );
+        await page.getByTestId('provider-type-option-nutanix').click();
+      });
+
+      await test.step('Verify Prism Element is the default and Prism Central can be selected', async () => {
+        const elementRadio = page.getByTestId('nutanix-prism-element-radio');
+        const centralRadio = page.getByTestId('nutanix-prism-central-radio');
+
+        await expect(elementRadio).toBeChecked();
+        await centralRadio.click();
+        await expect(centralRadio).toBeChecked();
+        await elementRadio.click();
+        await expect(elementRadio).toBeChecked();
       });
 
       await test.step('Verify URL field is visible', async () => {
