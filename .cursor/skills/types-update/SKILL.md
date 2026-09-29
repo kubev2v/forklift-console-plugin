@@ -49,6 +49,7 @@ Types Update Progress:
 - [ ] Phase 3: Update generated types in forked repo
 - [ ] Phase 3e: Run `npm run align:k8s-base` (mandatory after generation)
 - [ ] GATE 1: User approves conflict resolution (if any)
+- [ ] Phase 3g: Consumer verification (`verify-consumer.sh`) — mandatory before types PR
 - [ ] Phase 4: Version bump, tracking update, and PR
 - [ ] GATE 2: User confirms types PR is merged
 - [ ] Phase 5: Create GitHub release and wait for npm publish
@@ -323,6 +324,33 @@ Repeat until the build passes or a non-conflict error is encountered.
 
 If a non-conflict error occurs, present it to the user and stop for manual resolution.
 
+### 3g. Consumer verification (forklift-console-plugin)
+
+**Mandatory before commit/push/PR.** The types package’s main consumer is `forklift-console-plugin`. A green `npm run build` in the types repo does not prove the plugin still type-checks.
+
+Run after **Phase 4a** (version bump in `package.json`) so `npm pack` uses the target version. Run from the consumer workspace (or pass `CONSUMER_DIR`):
+
+```bash
+export JAVA_HOME="${JAVA_HOME:-/opt/homebrew/opt/openjdk@17}"  # macOS: openapi-generator / align if re-run
+export TYPES_REPO_DIR="${TYPES_REPO_DIR:-$HOME/Workspace/forklift-console-types}"
+export CONSUMER_DIR="${CONSUMER_DIR:-$HOME/Workspace/forklift-console-plugin}"
+
+.cursor/skills/types-update/scripts/verify-consumer.sh <NEW_VERSION> <OLD_VERSION>
+```
+
+`OLD_VERSION` is the previously published `@forklift-ui/types` version (e.g. `1.3.1`). If omitted, the script reads it from the consumer’s `package-lock.json`.
+
+**What the script does:**
+
+1. `npm run build` in the types repo
+2. `npm pack` → install tarball into the consumer
+3. `npx tsc --noEmit` with **published** `@forklift-ui/types@OLD_VERSION` (baseline)
+4. `npx tsc --noEmit` with the **local tarball** — **fails** if any error lines appear that were not in the baseline (catches types-induced breakage while allowing pre-existing plugin errors)
+5. `npm run lint` in the consumer
+6. Restores `package.json` / `package-lock.json` and reinstalls from lockfile
+
+**Do not open the types PR until this script exits 0.** If it fails, fix export conflicts / breaking renames in the types repo or note required consumer follow-ups in the PR description.
+
 ---
 
 ## Phase 4: Version Bump, Tracking, and PR
@@ -338,7 +366,11 @@ Edit `$TYPES_REPO_DIR/MAINTENANCE.md`, updating the Version Tracking table. For 
 - **Last Updated**: today's date in `YYYY-MMM-DD` format (e.g. `2026-APR-28`)
 - **Updated By**: `aturgema (made with cursor)`
 
-### 4c. Commit
+### 4c. Consumer verification
+
+Run **Phase 3g** (`verify-consumer.sh`) after the version bump. Record the command in the PR test plan.
+
+### 4d. Commit
 
 Collect git user info:
 ```bash
@@ -363,7 +395,7 @@ EOF
 )"
 ```
 
-### 4d. Push and create PR
+### 4e. Push and create PR
 
 ```bash
 git push -u origin chore/types-update-<NEW_VERSION>
@@ -380,11 +412,13 @@ gh pr create \
 - Updated @forklift-ui/types from <OLD_VERSION> to <NEW_VERSION>
 - Sources updated: Forklift (<ver>), Kubernetes (<ver>), KubeVirt (<ver>), CDI (<ver>)
 
-## Verification
+## Test plan
 
-- [x] `npm run build` passes
-- [x] `npm run lint` passes
-- [x] `npm run check:conflicts` shows no unresolved conflicts
+- [x] Types repo: `npm run build` passes
+- [x] Types repo: `npm run lint` passes
+- [x] Types repo: `npm run check:conflicts` — conflicting KubeVirt names excluded via selective exports
+- [x] Types repo: `npm run align:k8s-base` run after generation
+- [x] **Consumer:** `verify-consumer.sh <NEW_VERSION> <OLD_VERSION>` against `forklift-console-plugin` (no new `tsc` errors vs baseline; `npm run lint` passes)
 
 ## Links
 
@@ -394,6 +428,8 @@ Resolves: <JIRA_KEY>
 EOF
 )"
 ```
+
+After creating the PR, add a short comment if consumer verification surfaced **matching baseline tsc failures** (pre-existing plugin errors) so reviewers know the bump did not add regressions.
 
 ### GATE 2: Wait for types PR merge
 

@@ -5,7 +5,6 @@ import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { getPlanVirtualMachines, getVmExcludeDisks } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
-import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 export const onConfirmVmExcludeDisks =
   (vmIndex: number) =>
@@ -16,7 +15,7 @@ export const onConfirmVmExcludeDisks =
     newValue: string[];
     resource: V1beta1Plan;
   }): Promise<V1beta1Plan> => {
-    const vm = getPlanVirtualMachines(resource)[vmIndex] as EnhancedPlanSpecVms | undefined;
+    const vm = getPlanVirtualMachines(resource)[vmIndex];
     const current = getVmExcludeDisks(vm) ?? [];
 
     if (areExcludeDiskSelectionsEqual(newValue, current)) {

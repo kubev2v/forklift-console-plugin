@@ -19,7 +19,6 @@ import {
 } from '@patternfly/react-core';
 import { getPlanVirtualMachines, getVmExcludeDisks } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
-import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 import { buildExcludeDiskRows, getSelectableBusAddressesFromRows } from './buildExcludeDiskRows';
 import ExcludeDisksSelectTable from './ExcludeDisksSelectTable';
@@ -40,9 +39,9 @@ const EditVmExcludeDisks: OverlayComponent<EditVmExcludeDisksProps> = ({
     loadError: providerLoadError,
     sourceProvider,
   } = usePlanSourceProvider(resource);
-  const vm = getPlanVirtualMachines(resource)[index] as EnhancedPlanSpecVms | undefined;
+  const vm = getPlanVirtualMachines(resource)[index];
   const specExcluded = useMemo((): string[] => {
-    const planVm = getPlanVirtualMachines(resource)[index] as EnhancedPlanSpecVms | undefined;
+    const planVm = getPlanVirtualMachines(resource)[index];
     return getVmExcludeDisks(planVm) ?? [];
   }, [resource, index]);
   const [selected, setSelected] = useState<string[]>(() => getVmExcludeDisks(vm) ?? []);
@@ -81,7 +80,7 @@ const EditVmExcludeDisks: OverlayComponent<EditVmExcludeDisksProps> = ({
   const excludesAllDisks = wouldExcludeAllDisks(selected, selectableAddresses);
 
   const rootDisk = vm?.rootDisk;
-  const showsRootDiskWarning = Boolean(rootDisk) && selected.includes(rootDisk);
+  const showsRootDiskWarning = rootDisk ? selected.includes(rootDisk) : false;
 
   const handleSelect = useCallback((selectedIds: string[]) => {
     setSelected(selectedIds);

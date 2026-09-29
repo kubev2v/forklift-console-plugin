@@ -24,12 +24,12 @@ export const excludeDiskFields: ResourceField[] = [
       type: FilterDefType.FreeText,
     },
     info: {
+      ariaLabel: t('More information on bus address'),
       popover: (
         <HelpIconPopover header={t('Bus address')}>
           {t('vSphere disk bus address stored in the plan as excludeDisks (for example, scsi0:1).')}
         </HelpIconPopover>
       ),
-      title: t('More information on bus address'),
     },
     isIdentity: true,
     isVisible: true,
@@ -63,6 +63,7 @@ export const excludeDiskFields: ResourceField[] = [
       values: SHARED_FILTER_VALUES,
     },
     info: {
+      ariaLabel: t('More information on shared with other VMs'),
       popover: (
         <HelpIconPopover header={t('Shared with other VMs')}>
           {t(
@@ -70,7 +71,6 @@ export const excludeDiskFields: ResourceField[] = [
           )}
         </HelpIconPopover>
       ),
-      title: t('More information on shared with other VMs'),
     },
     isVisible: true,
     jsonPath: (item: unknown): string => (item as ExcludeDiskRowData).sharedFilterValue,
