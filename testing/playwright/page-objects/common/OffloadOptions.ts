@@ -50,6 +50,15 @@ export class OffloadOptions {
     return this.fieldToggleButton(OFFLOAD_FIELD.offloadPlugin(mappingIndex)).isVisible();
   }
 
+  /**
+   * Menu portaled to document.body. PatternFly Modal marks those siblings
+   * aria-hidden on the next dialog render, so getByRole stops matching an
+   * option that is still visible.
+   */
+  private portaledListbox(): Locator {
+    return this.page.locator('[role="listbox"]').last();
+  }
+
   private async selectFromDropdown(fieldId: string, optionText: string): Promise<void> {
     const toggle = this.fieldToggleButton(fieldId);
     await expect(toggle).toBeVisible();
@@ -110,10 +119,12 @@ export class OffloadOptions {
     await expect(toggle).toBeEnabled({ timeout: 30_000 });
     await toggle.click();
 
-    const listbox = this.page.getByRole('listbox');
+    const listbox = this.portaledListbox();
     await expect(listbox).toBeVisible();
 
-    const option = listbox.getByRole('option', { exact: true, name: hostName });
+    const option = listbox.locator('[role="option"]').filter({
+      has: this.page.getByText(hostName, { exact: true }),
+    });
     await expect(option).toBeVisible();
     await option.click();
 
@@ -134,15 +145,20 @@ export class OffloadOptions {
     await expect(toggle).toBeEnabled({ timeout: 30_000 });
     await toggle.click();
 
-    const listbox = this.page.getByRole('listbox');
+    const listbox = this.portaledListbox();
     await expect(listbox).toBeVisible();
 
-    const firstOption = listbox.getByRole('option').filter({ hasNotText: 'No results' }).first();
+    const firstOption = listbox
+      .locator('[role="option"]:not([disabled])')
+      .filter({ hasNotText: 'No results' })
+      .first();
     await expect(firstOption).toBeVisible({ timeout: 30_000 });
     await expect(firstOption).toBeEnabled();
-    const hostName = ((await firstOption.textContent()) ?? '').trim();
-    // MultiTypeaheadSelect sets option id/value to inventory host.id
-    const hostId = (await firstOption.getAttribute('id')) ?? '';
+    // MultiTypeaheadSelect sets option id to inventory host.id
+    const { hostId, hostName } = await firstOption.evaluate((element) => ({
+      hostId: element.id,
+      hostName: (element.textContent ?? '').trim(),
+    }));
     expect(hostName).toBeTruthy();
     expect(hostId).toBeTruthy();
     await firstOption.click();
