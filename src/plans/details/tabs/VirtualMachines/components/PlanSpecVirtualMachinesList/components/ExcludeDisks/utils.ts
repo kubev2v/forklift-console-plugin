@@ -1,4 +1,4 @@
-import { areExcludeDiskSelectionsEqual } from 'src/plans/utils/excludeDisks/getExcludeDiskSelectOptions';
+import { areExcludeDiskSelectionsEqual } from 'src/plans/utils/excludeDisks/excludeDiskSelection';
 
 import { ADD, REMOVE, REPLACE } from '@components/ModalForm/utils/constants';
 import { PlanModel, type V1beta1Plan } from '@forklift-ui/types';
