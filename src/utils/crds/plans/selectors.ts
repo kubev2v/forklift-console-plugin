@@ -86,6 +86,9 @@ export const getPlanHasNBDEClevis = (plan: V1beta1Plan): boolean =>
 export const getRootDisk = (plan: V1beta1Plan): string | undefined =>
   plan?.spec?.vms?.[0]?.rootDisk;
 
+export const getVmExcludeDisks = (vm?: EnhancedPlanSpecVms): string[] | undefined =>
+  vm?.excludeDisks;
+
 export const getPlanTargetPowerState = (plan: V1beta1Plan): TargetPowerStateValue =>
   plan?.spec?.targetPowerState;
 

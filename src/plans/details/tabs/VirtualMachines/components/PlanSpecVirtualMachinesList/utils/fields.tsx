@@ -9,6 +9,7 @@ import {
 } from '@utils/types/specVirtualMachinePageData';
 import { getVmGuestOS } from '@utils/vm/getVmGuestOS';
 
+import { ExcludeDisksCellRenderer } from '../components/ExcludeDisks/ExcludeDisksCellRenderer';
 import InspectionStatusCell from '../components/InspectionStatusCell';
 import { InstanceTypeCellRenderer } from '../components/InstanceType/InstanceTypeCellRenderer';
 import SpecVirtualMachinesActions from '../components/SpecVirtualMachinesActions';
@@ -33,6 +34,9 @@ export const getSpecVirtualMachinesRowFields = (
     ),
     [PlanSpecVirtualMachinesTableResourceId.Concerns]: (
       <VirtualMachineConcernsCell conditions={conditions} vmData={inventoryVmData} />
+    ),
+    [PlanSpecVirtualMachinesTableResourceId.ExcludeDisks]: (
+      <ExcludeDisksCellRenderer specVM={specVM} />
     ),
     [PlanSpecVirtualMachinesTableResourceId.GuestOS]: (
       <>{getVmGuestOS(inventoryVmData?.vm) || EMPTY_MSG}</>
