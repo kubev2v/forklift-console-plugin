@@ -262,14 +262,15 @@ export class OffloadOptions {
     const listbox = this.page.getByRole('listbox');
     await expect(listbox).toBeVisible();
 
-    for (const name of expected) {
-      await expect(listbox.getByRole('option', { exact: true, name })).toBeVisible();
-    }
-    for (const name of unexpected) {
-      await expect(listbox.getByRole('option', { exact: true, name })).toHaveCount(0);
-    }
+    const optionTexts = (await listbox.getByRole('option').allTextContents())
+      .map((text) => text.trim())
+      .filter(Boolean);
+    const missing = expected.filter((name) => !optionTexts.includes(name));
+    const presentUnexpected = optionTexts.filter((name) => unexpected.includes(name));
 
-    // Close the dropdown without selecting.
+    expect(missing).toEqual([]);
+    expect(presentUnexpected).toEqual([]);
+
     await toggle.click();
   }
 
