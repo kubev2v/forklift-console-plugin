@@ -252,6 +252,8 @@ http://localhost:9000/mtv/storagemaps   # Storage maps
 - `global.teardown.ts` cleans up after all tests complete
 - Resource tracking is stored in `playwright/.resources.json`
 - Always use `ResourceManager` when creating providers, plans, or mappings in downstream tests
+- Downstream `globalSetup` also deletes leftover target VMs named `mtv-rhel8-warm-sanity`, `mtv-win2019-79`, and those names plus `-renamed-` in `test-project-*` namespaces so MacConflicts does not abort the next migration, unless a Plan is Executing into that namespace. It waits until each VM is NotFound (5 minutes) or fails setup. Opt out with `SKIP_HAPPY_PATH_LEFTOVER_CLEANUP=1`.
+- Cold happy-path `waitForMigrationCompletion` uses `HAPPY_PATH_MIGRATION_TIMEOUT_MS` (70 minutes) so Windows `WaitForGuestReboots` can finish after disk copy. The spec timeout catch dumps True plan conditions and every non-completed pipeline step via `fetchPlan(planName)`. Jenkins job timeout must cover the whole serial file.
 
 ---
 
