@@ -1,6 +1,12 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { getDiskBusAddress, getExcludeDiskOptionLabel } from '../diskBusAddress';
+import {
+  formatDiskSizeLabel,
+  getDiskBusAddress,
+  getDiskCapacityBytes,
+  getDiskFileName,
+  getDiskShared,
+} from '../diskBusAddress';
 
 describe('getDiskBusAddress', () => {
   it('returns camelCase busAddress', () => {
@@ -16,19 +22,22 @@ describe('getDiskBusAddress', () => {
   });
 });
 
-describe('getExcludeDiskOptionLabel', () => {
-  it('includes file and capacity when present', () => {
-    const label = getExcludeDiskOptionLabel(
-      { busAddress: 'scsi0:1', file: 'data.vmdk', capacity: 536870912000 },
-      'scsi0:1',
-    );
-
-    expect(label).toContain('scsi0:1');
-    expect(label).toContain('data.vmdk');
-    expect(label).toContain('GiB');
+describe('getDiskFileName', () => {
+  it('reads file from inventory disk', () => {
+    expect(getDiskFileName({ file: 'data.vmdk' })).toBe('data.vmdk');
   });
+});
 
-  it('returns bus address only when disk metadata is missing', () => {
-    expect(getExcludeDiskOptionLabel({}, 'scsi9:9')).toBe('scsi9:9');
+describe('getDiskCapacityBytes and formatDiskSizeLabel', () => {
+  it('formats capacity as GiB', () => {
+    expect(getDiskCapacityBytes({ capacity: 536870912000 })).toBe(536870912000);
+    expect(formatDiskSizeLabel(536870912000)).toContain('GiB');
+  });
+});
+
+describe('getDiskShared', () => {
+  it('reads shared flag with PascalCase fallback', () => {
+    expect(getDiskShared({ shared: true })).toBe(true);
+    expect(getDiskShared({ Shared: false })).toBe(false);
   });
 });

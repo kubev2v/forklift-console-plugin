@@ -9,24 +9,11 @@ type InventoryDiskLike = {
   file?: string;
   Name?: string;
   name?: string;
+  Shared?: boolean;
+  shared?: boolean;
 };
 
 const GIB_BYTES = 1024 ** 3;
-
-export const getDiskBusAddress = (disk: unknown): string | undefined => {
-  if (typeof disk !== 'object' || disk === null) {
-    return undefined;
-  }
-
-  const diskRecord = disk as InventoryDiskLike;
-  const address = diskRecord.busAddress ?? diskRecord.BusAddress;
-
-  if (isEmpty(address)) {
-    return undefined;
-  }
-
-  return address;
-};
 
 const getDiskFileLabel = (disk: InventoryDiskLike): string | undefined => {
   const file = disk.file ?? disk.File ?? disk.name ?? disk.Name;
@@ -46,20 +33,53 @@ const formatDiskCapacityGiB = (capacity: number | undefined): string | undefined
   return gib > 0 ? `${gib} GiB` : undefined;
 };
 
-export const getExcludeDiskOptionLabel = (disk: unknown, busAddress: string): string => {
+export const getDiskBusAddress = (disk: unknown): string | undefined => {
   if (typeof disk !== 'object' || disk === null) {
-    return busAddress;
+    return undefined;
   }
 
   const diskRecord = disk as InventoryDiskLike;
-  const fileLabel = getDiskFileLabel(diskRecord);
-  const capacityLabel = formatDiskCapacityGiB(diskRecord.capacity ?? diskRecord.Capacity);
+  const address = diskRecord.busAddress ?? diskRecord.BusAddress;
 
-  const details = [fileLabel, capacityLabel].filter(Boolean).join(' ');
-
-  if (isEmpty(details)) {
-    return busAddress;
+  if (isEmpty(address)) {
+    return undefined;
   }
 
-  return `${busAddress} — ${details}`;
+  return address;
+};
+
+export const getDiskFileName = (disk: unknown): string | undefined => {
+  if (typeof disk !== 'object' || disk === null) {
+    return undefined;
+  }
+
+  return getDiskFileLabel(disk);
+};
+
+export const getDiskCapacityBytes = (disk: unknown): number => {
+  if (typeof disk !== 'object' || disk === null) {
+    return 0;
+  }
+
+  const diskRecord = disk as InventoryDiskLike;
+  const capacity = diskRecord.capacity ?? diskRecord.Capacity;
+
+  return capacity !== undefined && capacity > 0 ? capacity : 0;
+};
+
+export const getDiskShared = (disk: unknown): boolean | undefined => {
+  if (typeof disk !== 'object' || disk === null) {
+    return undefined;
+  }
+
+  const diskRecord = disk as InventoryDiskLike;
+  const shared = diskRecord.shared ?? diskRecord.Shared;
+
+  return typeof shared === 'boolean' ? shared : undefined;
+};
+
+export const formatDiskSizeLabel = (capacityBytes: number): string => {
+  const label = formatDiskCapacityGiB(capacityBytes);
+
+  return label ?? '-';
 };

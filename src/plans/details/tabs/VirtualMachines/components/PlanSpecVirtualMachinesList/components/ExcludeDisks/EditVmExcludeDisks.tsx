@@ -3,28 +3,26 @@ import usePlanSourceProvider from 'src/plans/details/hooks/usePlanSourceProvider
 import type { EditPlanProps } from 'src/plans/details/tabs/Details/components/SettingsSection/utils/types';
 import {
   areExcludeDiskSelectionsEqual,
-  getExcludeDiskSelectOptions,
-  getSelectableBusAddresses,
   wouldExcludeAllDisks,
-} from 'src/plans/utils/excludeDisks/getExcludeDiskSelectOptions';
+} from 'src/plans/utils/excludeDisks/excludeDiskSelection';
 import { useInventoryVms } from 'src/utils/hooks/useInventoryVms';
 
-import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import MultiTypeaheadSelect from '@components/common/TypeaheadSelect/MultiTypeaheadSelect/MultiTypeaheadSelect';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import {
   Alert,
   AlertVariant,
-  Form,
   HelperText,
   HelperTextItem,
+  ModalVariant,
   Stack,
 } from '@patternfly/react-core';
 import { getPlanVirtualMachines, getVmExcludeDisks } from '@utils/crds/plans/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
+import { buildExcludeDiskRows, getSelectableBusAddressesFromRows } from './buildExcludeDiskRows';
+import ExcludeDisksSelectTable from './ExcludeDisksSelectTable';
 import { onConfirmVmExcludeDisks } from './utils';
 
 export type EditVmExcludeDisksProps = EditPlanProps & {
@@ -37,7 +35,11 @@ const EditVmExcludeDisks: OverlayComponent<EditVmExcludeDisksProps> = ({
   resource,
 }) => {
   const { t } = useForkliftTranslation();
-  const { sourceProvider } = usePlanSourceProvider(resource);
+  const {
+    loaded: providerLoaded,
+    loadError: providerLoadError,
+    sourceProvider,
+  } = usePlanSourceProvider(resource);
   const vm = getPlanVirtualMachines(resource)[index] as EnhancedPlanSpecVms | undefined;
   const specExcluded = useMemo((): string[] => {
     const planVm = getPlanVirtualMachines(resource)[index] as EnhancedPlanSpecVms | undefined;
@@ -45,51 +47,62 @@ const EditVmExcludeDisks: OverlayComponent<EditVmExcludeDisksProps> = ({
   }, [resource, index]);
   const [selected, setSelected] = useState<string[]>(() => getVmExcludeDisks(vm) ?? []);
 
-  const [inventoryVms, inventoryLoaded, inventoryError] = useInventoryVms({
-    provider: sourceProvider,
-  });
-
-  const inventoryVm = useMemo(
-    () => inventoryVms.find((entry) => entry.vm.name === vm?.name),
-    [inventoryVms, vm?.name],
+  const [inventoryVms, inventoryLoading, inventoryError] = useInventoryVms(
+    { provider: sourceProvider },
+    providerLoaded,
+    providerLoadError,
   );
+
+  const inventoryVm = useMemo(() => {
+    const planVmId = vm?.id;
+    if (planVmId) {
+      const byId = inventoryVms.find((entry) => entry.vm.id === planVmId);
+      if (byId) {
+        return byId;
+      }
+    }
+
+    return inventoryVms.find((entry) => entry.vm.name === vm?.name);
+  }, [inventoryVms, vm?.id, vm?.name]);
 
   const disks = (inventoryVm?.vm as { disks?: unknown[] } | undefined)?.disks;
 
-  const options = useMemo(
+  const rows = useMemo(
     () =>
-      getExcludeDiskSelectOptions({
+      buildExcludeDiskRows({
         disks,
         existingExcludeDisks: specExcluded,
       }),
     [disks, specExcluded],
   );
 
-  const selectableAddresses = useMemo(() => getSelectableBusAddresses(disks), [disks]);
+  const selectableAddresses = useMemo(() => getSelectableBusAddressesFromRows(rows), [rows]);
 
   const excludesAllDisks = wouldExcludeAllDisks(selected, selectableAddresses);
 
   const rootDisk = vm?.rootDisk;
   const showsRootDiskWarning = Boolean(rootDisk) && selected.includes(rootDisk);
 
-  const handleChange = useCallback((values: (string | number)[]) => {
-    setSelected(values.map(String));
+  const handleSelect = useCallback((selectedIds: string[]) => {
+    setSelected(selectedIds);
   }, []);
 
-  const inventoryUnavailable = !inventoryLoaded || Boolean(inventoryError);
+  const isInventoryLoading = !providerLoaded || Boolean(providerLoadError) || inventoryLoading;
 
   return (
     <ModalForm
+      className="edit-vm-exclude-disks-modal"
       closeOverlay={closeOverlay}
       confirmLabel={t('Save excluded disks')}
       isDisabled={areExcludeDiskSelectionsEqual(selected, specExcluded) || excludesAllDisks}
       onConfirm={async () => onConfirmVmExcludeDisks(index)({ newValue: selected, resource })}
       testId="edit-vm-exclude-disks-modal"
       title={t('Edit excluded disks')}
+      variant={ModalVariant.large}
     >
       <Stack hasGutter>
         {t(
-          'Select disks on {{vmName}} that should not be migrated. Excluded disks remain on the source vSphere VM.',
+          'Select disks on {{vmName}} that should not be migrated. Excluded disks remain on the source vSphere VM. Selected disks will not be migrated.',
           { vmName: vm?.name ?? t('the selected VM') },
         )}
         {showsRootDiskWarning && (
@@ -101,40 +114,29 @@ const EditVmExcludeDisks: OverlayComponent<EditVmExcludeDisksProps> = ({
             variant={AlertVariant.info}
           />
         )}
-        <Form>
-          <FormGroupWithHelpText
-            helperText={t(
-              'Use vSphere bus addresses (for example, scsi0:1). At least one disk must still be migrated.',
-            )}
-            isRequired={false}
-            label={t('Excluded disks')}
-          >
-            <MultiTypeaheadSelect
-              isDisabled={inventoryUnavailable}
-              onChange={handleChange}
-              options={options}
-              placeholder={t('Select disks to exclude')}
-              testId="exclude-disks-select"
-              values={selected}
-            />
-            {inventoryError && (
-              <HelperText>
-                <HelperTextItem variant="error">
-                  {t('Unable to load disks from the source provider.')}
-                </HelperTextItem>
-              </HelperText>
-            )}
-            {excludesAllDisks && (
-              <HelperText>
-                <HelperTextItem variant="error">
-                  {selectableAddresses.length === 1
-                    ? t('This VM has only one disk; it cannot be excluded.')
-                    : t('At least one disk must remain for migration.')}
-                </HelperTextItem>
-              </HelperText>
-            )}
-          </FormGroupWithHelpText>
-        </Form>
+        <ExcludeDisksSelectTable
+          isLoading={isInventoryLoading}
+          loadError={inventoryError}
+          onSelect={handleSelect}
+          rows={rows}
+          selectedIds={selected}
+        />
+        {inventoryError && (
+          <HelperText>
+            <HelperTextItem variant="error">
+              {t('Unable to load disks from the source provider.')}
+            </HelperTextItem>
+          </HelperText>
+        )}
+        {excludesAllDisks && (
+          <HelperText>
+            <HelperTextItem variant="error">
+              {selectableAddresses.length === 1
+                ? t('This VM has only one disk; it cannot be excluded.')
+                : t('At least one disk must remain for migration.')}
+            </HelperTextItem>
+          </HelperText>
+        )}
       </Stack>
     </ModalForm>
   );
