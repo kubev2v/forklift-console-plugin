@@ -47,7 +47,10 @@ test.describe('Nutanix prism type persistence', () => {
 
         const providerDetailsPage =
           await test.step('Create the provider without waiting for Ready', async () => {
-            await createProvider.navigate();
+            await createProvider.navigateWithProviderType(ProviderType.NUTANIX);
+            await expect(page.getByTestId('provider-project-select').locator('input')).toHaveValue(
+              MTV_NAMESPACE,
+            );
             return createProvider.create(providerData, false);
           });
 

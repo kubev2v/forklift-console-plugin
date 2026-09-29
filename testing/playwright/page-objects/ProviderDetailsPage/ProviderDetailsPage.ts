@@ -19,6 +19,7 @@ const getProviderTypeDisplayName = (type: string): string => {
   const typeMap: Record<string, string> = {
     ec2: 'Amazon EC2',
     hyperv: 'HyperV',
+    nutanix: 'Nutanix AHV',
     openshift: 'OpenShift',
     openstack: 'OpenStack',
     ova: 'OVA',
@@ -165,7 +166,8 @@ export class ProviderDetailsPage {
     if (
       providerData.type !== ProviderType.OVA &&
       providerData.type !== ProviderType.EC2 &&
-      providerData.type !== ProviderType.HYPERV
+      providerData.type !== ProviderType.HYPERV &&
+      providerData.type !== ProviderType.NUTANIX
     ) {
       await expect(this.page.getByTestId('credentials-detail-item')).toContainText('');
     }
