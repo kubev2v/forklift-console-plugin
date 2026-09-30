@@ -25,6 +25,7 @@ const buildHookReturn = (overrides: Partial<HookReturn> = {}): HookReturn => ({
   activeMigration: undefined,
   buttonStartLabel: 'Start',
   canDelete: true,
+  canEdit: true,
   canReStart: false,
   canResume: false,
   canScheduleCutover: false,
@@ -130,6 +131,21 @@ describe('PlanActionsDropdownItems', () => {
       renderDropdown();
 
       expect(getMenuItem('Delete')).toBeDisabled();
+    });
+  });
+
+  describe('Edit', () => {
+    it('is enabled when the plan is Ready and canEdit is true', () => {
+      renderDropdown();
+
+      expect(getMenuItem('Edit')).toBeEnabled();
+    });
+
+    it('is disabled when canEdit is false', () => {
+      mockUsePlanActionsDropdown.mockReturnValue(buildHookReturn({ canEdit: false }));
+      renderDropdown();
+
+      expect(getMenuItem('Edit')).toBeDisabled();
     });
   });
 });
