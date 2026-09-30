@@ -8,7 +8,7 @@ import { ProviderType } from '../../../types/enums';
 import type { ProviderData } from '../../../types/test-data';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 import { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
-import { V2_13_0 } from '../../../utils/version/constants';
+import { V5_0_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 const DUMMY_PASSWORD = 'password123';
@@ -34,7 +34,7 @@ const buildDummyNutanixProvider = (prismType: NutanixPrismTypeName): ProviderDat
 };
 
 test.describe('Nutanix prism type persistence', () => {
-  requireVersion(test, V2_13_0);
+  requireVersion(test, V5_0_0);
 
   const resourceManager = new ResourceManager();
 

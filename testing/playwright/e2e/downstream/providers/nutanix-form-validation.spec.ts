@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { CreateProviderPage } from '../../../page-objects/CreateProviderPage';
 import { ProviderType } from '../../../types/enums';
-import { V2_13_0 } from '../../../utils/version/constants';
+import { V5_0_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Nutanix Provider Form Validation', () => {
@@ -12,7 +12,7 @@ test.describe('Nutanix Provider Form Validation', () => {
       tag: '@downstream',
     },
     async ({ page }) => {
-      requireVersion(test, V2_13_0);
+      requireVersion(test, V5_0_0);
       const createProvider = new CreateProviderPage(page);
 
       await test.step('Navigate to provider creation page', async () => {
