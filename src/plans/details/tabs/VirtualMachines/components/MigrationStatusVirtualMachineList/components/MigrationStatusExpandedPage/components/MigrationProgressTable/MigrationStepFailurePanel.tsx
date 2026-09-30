@@ -1,4 +1,4 @@
-import { type FC, useMemo, useState } from 'react';
+import { type FC, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 
 import type { IoK8sApiCoreV1Pod } from '@forklift-ui/types';
@@ -43,11 +43,27 @@ const MigrationStepFailurePanel: FC<MigrationStepFailurePanelProps> = ({
     logText,
   } = usePodLogTail(logPod);
 
+  useEffect(() => {
+    if (logExpanded && logPod && !logLoaded && !logLoading) {
+      loadLogs();
+    }
+  }, [loadLogs, logExpanded, logLoaded, logLoading, logPod]);
+
   const phaseLabel = getVmErrorPhaseLabel(vmErrorPhase);
   const title = reasons?.[0] ?? t('Error details');
   const bodyReasons = reasons && reasons.length > 1 ? reasons.slice(1) : undefined;
 
-  const logLines = useMemo(() => (logText ? logText.split('\n') : []), [logText]);
+  const logLineEntries = useMemo((): { key: string; line: string }[] => {
+    if (!logText) {
+      return [];
+    }
+    const lineOccurrence = new Map<string, number>();
+    return logText.split('\n').map((line) => {
+      const occurrence = lineOccurrence.get(line) ?? 0;
+      lineOccurrence.set(line, occurrence + 1);
+      return { key: `${occurrence}::${line}`, line };
+    });
+  }, [logText]);
 
   return (
     <div className="migration-step-failure-panel pf-v6-u-mt-sm">
@@ -93,16 +109,16 @@ const MigrationStepFailurePanel: FC<MigrationStepFailurePanelProps> = ({
                       )}
                     </>
                   )}
-                  {logLoaded && !logError && !isEmpty(logLines) && (
+                  {logLoaded && !logError && !isEmpty(logLineEntries) && (
                     <pre className="migration-step-failure-panel__log-pre">
-                      {logLines.map((line) => (
+                      {logLineEntries.map(({ key, line }) => (
                         <span
                           className={
                             isMigrationLogLineHighlighted(line)
                               ? 'migration-step-failure-panel__log-line--highlight'
                               : undefined
                           }
-                          key={line}
+                          key={key}
                         >
                           {line}
                           {'\n'}
