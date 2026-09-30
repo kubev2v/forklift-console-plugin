@@ -114,9 +114,14 @@ describe('removeVmNameTemplateFromAllVms', () => {
 
   it('sends a batch REMOVE for every VM that has the field', async () => {
     const plan = createPlan([
-      { name: 'alpha', pvcNameTemplate: 'pvc-a' },
-      { name: 'beta' },
-      { name: 'gamma', pvcNameTemplate: 'pvc-c', volumeNameTemplate: 'vol-c' },
+      { id: 'vm-alpha', name: 'alpha', pvcNameTemplate: 'pvc-a' },
+      { id: 'vm-beta', name: 'beta' },
+      {
+        id: 'vm-gamma',
+        name: 'gamma',
+        pvcNameTemplate: 'pvc-c',
+        volumeNameTemplate: 'vol-c',
+      },
     ]);
 
     await removeVmNameTemplateFromAllVms(plan, NAME_TEMPLATE_TYPE.pvc);
@@ -125,7 +130,9 @@ describe('removeVmNameTemplateFromAllVms', () => {
     expect(mockK8sPatch).toHaveBeenCalledWith(
       expect.objectContaining({
         data: [
+          { op: 'test', path: '/spec/vms/0/id', value: 'vm-alpha' },
           { op: 'remove', path: '/spec/vms/0/pvcNameTemplate' },
+          { op: 'test', path: '/spec/vms/2/id', value: 'vm-gamma' },
           { op: 'remove', path: '/spec/vms/2/pvcNameTemplate' },
         ],
       }),
@@ -133,7 +140,7 @@ describe('removeVmNameTemplateFromAllVms', () => {
   });
 
   it('does not REPLACE the field with undefined', async () => {
-    const plan = createPlan([{ name: 'alpha', networkNameTemplate: 'net-a' }]);
+    const plan = createPlan([{ id: 'vm-alpha', name: 'alpha', networkNameTemplate: 'net-a' }]);
 
     await removeVmNameTemplateFromAllVms(plan, NAME_TEMPLATE_TYPE.network);
 
@@ -141,7 +148,8 @@ describe('removeVmNameTemplateFromAllVms', () => {
       { data: { op: string; path: string; value?: unknown }[] },
     ];
 
-    expect(arg.data[0]).toEqual({ op: 'remove', path: '/spec/vms/0/networkNameTemplate' });
-    expect(arg.data[0]).not.toHaveProperty('value');
+    expect(arg.data[0]).toEqual({ op: 'test', path: '/spec/vms/0/id', value: 'vm-alpha' });
+    expect(arg.data[1]).toEqual({ op: 'remove', path: '/spec/vms/0/networkNameTemplate' });
+    expect(arg.data[1]).not.toHaveProperty('value');
   });
 });

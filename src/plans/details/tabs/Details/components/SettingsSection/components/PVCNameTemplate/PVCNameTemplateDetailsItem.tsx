@@ -29,7 +29,7 @@ const PVCNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
   }
 
   const planEditable = isPlanEditable(plan);
-  const vmNames = planEditable ? getNameTemplateOverrideVms(plan, NAME_TEMPLATE_TYPE.pvc) : [];
+  const vmNames = getNameTemplateOverrideVms(plan, NAME_TEMPLATE_TYPE.pvc);
 
   return (
     <DetailsItem

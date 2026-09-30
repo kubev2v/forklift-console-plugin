@@ -31,7 +31,7 @@ const NetworkNameTemplateDetailsItem: FC<EditableDetailsItemProps> = ({
   }
 
   const planEditable = isPlanEditable(plan);
-  const vmNames = planEditable ? getNameTemplateOverrideVms(plan, NAME_TEMPLATE_TYPE.network) : [];
+  const vmNames = getNameTemplateOverrideVms(plan, NAME_TEMPLATE_TYPE.network);
 
   return (
     <DetailsItem

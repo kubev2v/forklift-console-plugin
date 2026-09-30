@@ -93,7 +93,11 @@ const NameTemplateOverridePopover: FC<NameTemplateOverridePopoverProps> = ({
         canApply || isApplying ? (
           applyButton
         ) : (
-          <Tooltip content={t('You do not have permission to edit this plan.')}>
+          <Tooltip
+            content={t(
+              'You cannot apply this setting because the plan is not editable or you do not have permission to edit it.',
+            )}
+          >
             <span>{applyButton}</span>
           </Tooltip>
         )

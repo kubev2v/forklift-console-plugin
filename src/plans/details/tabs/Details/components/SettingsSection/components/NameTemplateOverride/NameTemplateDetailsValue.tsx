@@ -33,7 +33,7 @@ const NameTemplateDetailsValue: FC<NameTemplateDetailsValueProps> = ({
     );
   }
 
-  const triggerLabel = t('{{status}} · {{count}} VMs override', {
+  const triggerLabel = t('{{status}} · VM overrides: {{count}}', {
     count: vmNames.length,
     status: statusText,
   });
