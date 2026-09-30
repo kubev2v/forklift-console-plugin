@@ -10,6 +10,8 @@ import useProviderInventory from '@utils/hooks/useProviderInventory';
 import { useForkliftTranslation } from '@utils/i18n';
 import { StorageMapFieldId } from '@utils/storage/types';
 
+const DEDICATED_MIGRATION_HOST_OPTION_TEST_ID = 'dedicated-migration-host-option';
+
 type DedicatedMigrationHostsFieldProps = {
   fieldId: string;
   sourceProvider: V1beta1Provider | undefined;
@@ -41,6 +43,7 @@ const DedicatedMigrationHostsField: FC<DedicatedMigrationHostsFieldProps> = ({
         ? []
         : (inventoryHosts ?? []).map((host: VSphereHostInventory) => ({
             content: host.name,
+            optionProps: { testId: DEDICATED_MIGRATION_HOST_OPTION_TEST_ID },
             value: host.id,
           })),
     [inventoryHosts, inventoryLoading],

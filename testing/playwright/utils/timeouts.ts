@@ -23,3 +23,6 @@ export const POD_WATCH_TIMEOUT_MS = 30_000;
 
 /** The provider watch + inventory REST call are sequential; on slow clusters the full chain can exceed 15 s. */
 export const RESOURCES_HEADING_TIMEOUT_MS = 30_000;
+
+/** vSphere host list for the dedicated-migration-hosts menu. */
+export const HOST_INVENTORY_TIMEOUT_MS = 30_000;

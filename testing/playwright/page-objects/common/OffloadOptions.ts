@@ -1,5 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { HOST_INVENTORY_TIMEOUT_MS } from '../../utils/timeouts';
+
 export type DedicatedMigrationHostSelection = {
   hostId: string;
   hostName: string;
@@ -17,8 +19,9 @@ const OFFLOAD_FIELD = {
   storageSecret: (index: number): string => `storageMap.${index}.storageSecret`,
 } as const;
 
-const EXPANDABLE_TOGGLE_TEXT = 'Offload options (optional)';
 const CLEAR_BUTTON_TEXT = 'Clear offload options';
+const DEDICATED_MIGRATION_HOST_OPTION_TEST_ID = 'dedicated-migration-host-option';
+const EXPANDABLE_TOGGLE_TEXT = 'Offload options (optional)';
 
 /**
  * Page object for interacting with the offload options expandable section
@@ -44,6 +47,17 @@ export class OffloadOptions {
 
   private fieldToggleButton(fieldId: string): Locator {
     return this.container.getByTestId(fieldId);
+  }
+
+  private firstHostOption(): Locator {
+    return this.page.getByTestId(DEDICATED_MIGRATION_HOST_OPTION_TEST_ID).first().locator('button');
+  }
+
+  private hostOptionByName(hostName: string): Locator {
+    return this.page
+      .getByTestId(DEDICATED_MIGRATION_HOST_OPTION_TEST_ID)
+      .filter({ has: this.page.getByText(hostName, { exact: true }) })
+      .locator('button');
   }
 
   private isOffloadExpanded(mappingIndex: number): Promise<boolean> {
@@ -107,47 +121,38 @@ export class OffloadOptions {
   async selectDedicatedMigrationHost(mappingIndex: number, hostName: string): Promise<void> {
     const toggle = this.fieldToggleButton(OFFLOAD_FIELD.dedicatedMigrationHosts(mappingIndex));
     await expect(toggle).toBeVisible();
-    await expect(toggle).toBeEnabled({ timeout: 30_000 });
+    await expect(toggle).toBeEnabled({ timeout: HOST_INVENTORY_TIMEOUT_MS });
     await toggle.click();
 
-    const listbox = this.page.getByRole('listbox');
-    await expect(listbox).toBeVisible();
-
-    const option = listbox.getByRole('option', { exact: true, name: hostName });
-    await expect(option).toBeVisible();
+    const option = this.hostOptionByName(hostName);
+    await expect(option).toBeVisible({ timeout: HOST_INVENTORY_TIMEOUT_MS });
     await option.click();
 
-    // Confirm the chip landed before closing — catches clicks that didn't update RHF state.
     await expect(toggle.getByText(hostName, { exact: true })).toBeVisible();
     await toggle.click();
   }
 
-  /**
-   * Selects the first inventory host from the dedicated-hosts multi-select.
-   * Returns hostId (form / create payload / review value) and hostName (chip label).
-   */
   async selectFirstDedicatedMigrationHost(
     mappingIndex: number,
   ): Promise<DedicatedMigrationHostSelection> {
     const toggle = this.fieldToggleButton(OFFLOAD_FIELD.dedicatedMigrationHosts(mappingIndex));
     await expect(toggle).toBeVisible();
-    await expect(toggle).toBeEnabled({ timeout: 30_000 });
+    await expect(toggle).toBeEnabled({ timeout: HOST_INVENTORY_TIMEOUT_MS });
     await toggle.click();
 
-    const listbox = this.page.getByRole('listbox');
-    await expect(listbox).toBeVisible();
-
-    const firstOption = listbox.getByRole('option').filter({ hasNotText: 'No results' }).first();
-    await expect(firstOption).toBeVisible({ timeout: 30_000 });
+    const firstOption = this.firstHostOption();
+    await expect(firstOption).toBeVisible({ timeout: HOST_INVENTORY_TIMEOUT_MS });
     await expect(firstOption).toBeEnabled();
-    const hostName = ((await firstOption.textContent()) ?? '').trim();
-    // MultiTypeaheadSelect sets option id/value to inventory host.id
-    const hostId = (await firstOption.getAttribute('id')) ?? '';
+    const { hostId, hostName } = await firstOption.evaluate(
+      (element): DedicatedMigrationHostSelection => ({
+        hostId: element.id,
+        hostName: (element.textContent ?? '').trim(),
+      }),
+    );
     expect(hostName).toBeTruthy();
     expect(hostId).toBeTruthy();
     await firstOption.click();
 
-    // Confirm the chip landed before closing — catches clicks that didn't update RHF state.
     await expect(toggle.getByText(hostName, { exact: true })).toBeVisible();
     await toggle.click();
     return { hostId, hostName };
@@ -193,9 +198,10 @@ export class OffloadOptions {
   ): Promise<void> {
     const toggle = this.fieldToggleButton(OFFLOAD_FIELD.dedicatedMigrationHosts(mappingIndex));
     await expect(toggle).toBeVisible();
-    // Wait for inventory to resolve IDs → names before asserting the chip label.
-    await expect(toggle).toBeEnabled({ timeout: 30_000 });
-    await expect(toggle.getByText(hostName, { exact: true })).toBeVisible({ timeout: 30_000 });
+    await expect(toggle).toBeEnabled({ timeout: HOST_INVENTORY_TIMEOUT_MS });
+    await expect(toggle.getByText(hostName, { exact: true })).toBeVisible({
+      timeout: HOST_INVENTORY_TIMEOUT_MS,
+    });
   }
 
   async verifyDedicatedMigrationHostsNotVisible(mappingIndex: number): Promise<void> {
@@ -256,14 +262,15 @@ export class OffloadOptions {
     const listbox = this.page.getByRole('listbox');
     await expect(listbox).toBeVisible();
 
-    for (const name of expected) {
-      await expect(listbox.getByRole('option', { exact: true, name })).toBeVisible();
-    }
-    for (const name of unexpected) {
-      await expect(listbox.getByRole('option', { exact: true, name })).toHaveCount(0);
-    }
+    const optionTexts = (await listbox.getByRole('option').allTextContents())
+      .map((text) => text.trim())
+      .filter(Boolean);
+    const missing = expected.filter((name) => !optionTexts.includes(name));
+    const presentUnexpected = optionTexts.filter((name) => unexpected.includes(name));
 
-    // Close the dropdown without selecting.
+    expect(missing).toEqual([]);
+    expect(presentUnexpected).toEqual([]);
+
     await toggle.click();
   }
 
