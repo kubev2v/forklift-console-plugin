@@ -196,7 +196,10 @@ const verifyOverridePopover = async (
   await expect(trigger).toBeVisible();
   await trigger.hover();
 
-  const popover = page.locator('.pf-v6-c-popover');
+  const popover = page.getByRole('dialog', {
+    exact: true,
+    name: 'Virtual machines with a custom name template',
+  });
   await expect(popover).toContainText('Custom name templates');
   await expect(popover).toContainText('The following virtual machines override this plan setting:');
 
@@ -206,6 +209,7 @@ const verifyOverridePopover = async (
 
   await expect(page.getByTestId(`name-template-override-apply-${templateType}`)).toBeVisible();
   await page.keyboard.press('Escape');
+  await expect(popover).toBeHidden();
 };
 
 const verifyVmNameTemplateMenuDescription = async (

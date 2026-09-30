@@ -58,7 +58,10 @@ export const removeVmNameTemplateFromAllVms = async (
   const field = NAME_TEMPLATE_FIELDS[templateType];
   const data = getPlanVirtualMachines(plan).flatMap((vm, index) =>
     hasNameTemplateOverride(vm, templateType)
-      ? [{ op: REMOVE, path: `/spec/vms/${index}/${field}` }]
+      ? [
+          { op: 'test', path: `/spec/vms/${index}/id`, value: vm.id },
+          { op: REMOVE, path: `/spec/vms/${index}/${field}` },
+        ]
       : [],
   );
 
