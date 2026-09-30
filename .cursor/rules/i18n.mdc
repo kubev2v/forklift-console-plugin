@@ -121,14 +121,14 @@ const { length } = plans;
 </ForkliftTrans>
 
 <ForkliftTrans>
-  Archive <strong className="co-break-word">{{ length }}</strong> selected migration plans?
+  Archive <strong>{{ length }}</strong> selected migration plans?
 </ForkliftTrans>
 ```
 
 (`{{ name }}` in JSX is `{ { name } }` — shorthand for `{ name: name }`.)
 
 - Use **separate** `<ForkliftTrans>` trees when wording differs (e.g. delete with vs without `project {{ namespace }}`). Do not use conditional JSX fragments inside one Trans (that produces bogus keys such as `in<3></3>?`).
-- Enable TypeScript for object children: `types/i18next.d.ts` with `CustomTypeOptions.allowObjectInHTMLChildren: true` (runtime does not need this file).
+- Enable TypeScript for object children: `types/i18next.d.ts` with `CustomTypeOptions.allowObjectInHTMLChildren: true` (runtime does not need this file). This widens JSX children typing application-wide and weakens global type safety; react-i18next documents a per-site `as TransInterpolation` assertion for direct `<Trans>` usage only — not a drop-in for `<ForkliftTrans>`, whose `children` prop is `ReactNode`.
 - After changing Trans JSX, run `npm run i18n` so **keys** update in all locale files.
 - When keys change, **prefer** English placeholder values in es/fr/ja/ko/zh until **Memsource** re-translates those keys. Do **not** hand-copy old locale strings onto new keys or migrate markup (`<1><0></0></1>` → `<1>{{length}}</1>`) in JSON by hand — that breaks Trans silently.
 
