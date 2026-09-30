@@ -33,19 +33,22 @@ const formatDiskCapacityGiB = (capacity: number | undefined): string | undefined
   return gib > 0 ? `${gib} GiB` : undefined;
 };
 
+const normalizeBusAddress = (value: unknown): string | undefined => {
+  if (typeof value !== 'string' || isEmpty(value)) {
+    return undefined;
+  }
+
+  return value;
+};
+
 export const getDiskBusAddress = (disk: unknown): string | undefined => {
   if (typeof disk !== 'object' || disk === null) {
     return undefined;
   }
 
   const diskRecord = disk as InventoryDiskLike;
-  const address = diskRecord.busAddress ?? diskRecord.BusAddress;
 
-  if (isEmpty(address)) {
-    return undefined;
-  }
-
-  return address;
+  return normalizeBusAddress(diskRecord.busAddress) ?? normalizeBusAddress(diskRecord.BusAddress);
 };
 
 export const getDiskFileName = (disk: unknown): string | undefined => {

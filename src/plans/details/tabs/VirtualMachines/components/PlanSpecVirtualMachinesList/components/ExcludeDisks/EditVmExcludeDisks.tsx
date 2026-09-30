@@ -55,10 +55,7 @@ const EditVmExcludeDisks: OverlayComponent<EditVmExcludeDisksProps> = ({
   const inventoryVm = useMemo(() => {
     const planVmId = vm?.id;
     if (planVmId) {
-      const byId = inventoryVms.find((entry) => entry.vm.id === planVmId);
-      if (byId) {
-        return byId;
-      }
+      return inventoryVms.find((entry) => entry.vm.id === planVmId);
     }
 
     return inventoryVms.find((entry) => entry.vm.name === vm?.name);
@@ -79,6 +76,9 @@ const EditVmExcludeDisks: OverlayComponent<EditVmExcludeDisksProps> = ({
 
   const excludesAllDisks = wouldExcludeAllDisks(selected, selectableAddresses);
 
+  const inventoryUnavailable = Boolean(providerLoadError) || Boolean(inventoryError);
+  const diskLoadError = providerLoadError ?? inventoryError;
+
   const rootDisk = vm?.rootDisk;
   const showsRootDiskWarning = rootDisk ? selected.includes(rootDisk) : false;
 
@@ -86,14 +86,18 @@ const EditVmExcludeDisks: OverlayComponent<EditVmExcludeDisksProps> = ({
     setSelected(selectedIds);
   }, []);
 
-  const isInventoryLoading = !providerLoaded || Boolean(providerLoadError) || inventoryLoading;
+  const isInventoryLoading = !providerLoaded || inventoryLoading;
 
   return (
     <ModalForm
       className="edit-vm-exclude-disks-modal"
       closeOverlay={closeOverlay}
       confirmLabel={t('Save excluded disks')}
-      isDisabled={areExcludeDiskSelectionsEqual(selected, specExcluded) || excludesAllDisks}
+      isDisabled={
+        areExcludeDiskSelectionsEqual(selected, specExcluded) ||
+        excludesAllDisks ||
+        inventoryUnavailable
+      }
       onConfirm={async () => onConfirmVmExcludeDisks(index)({ newValue: selected, resource })}
       testId="edit-vm-exclude-disks-modal"
       title={t('Edit excluded disks')}
@@ -115,12 +119,12 @@ const EditVmExcludeDisks: OverlayComponent<EditVmExcludeDisksProps> = ({
         )}
         <ExcludeDisksSelectTable
           isLoading={isInventoryLoading}
-          loadError={inventoryError}
+          loadError={diskLoadError}
           onSelect={handleSelect}
           rows={rows}
           selectedIds={selected}
         />
-        {inventoryError && (
+        {diskLoadError && (
           <HelperText>
             <HelperTextItem variant="error">
               {t('Unable to load disks from the source provider.')}

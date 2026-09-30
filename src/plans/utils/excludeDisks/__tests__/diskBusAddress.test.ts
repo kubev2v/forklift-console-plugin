@@ -20,6 +20,10 @@ describe('getDiskBusAddress', () => {
   it('returns undefined when address is missing', () => {
     expect(getDiskBusAddress({ name: 'disk' })).toBeUndefined();
   });
+
+  it('rejects non-string bus addresses', () => {
+    expect(getDiskBusAddress({ busAddress: 12 })).toBeUndefined();
+  });
 });
 
 describe('getDiskFileName', () => {
