@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { CreateProviderPage } from '../../../page-objects/CreateProviderPage';
 import { ProviderType } from '../../../types/enums';
-import { V2_13_0 } from '../../../utils/version/constants';
+import { V5_0_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Nutanix Provider Form Validation', () => {
@@ -12,7 +12,7 @@ test.describe('Nutanix Provider Form Validation', () => {
       tag: '@downstream',
     },
     async ({ page }) => {
-      requireVersion(test, V2_13_0);
+      requireVersion(test, V5_0_0);
       const createProvider = new CreateProviderPage(page);
 
       await test.step('Navigate to provider creation page', async () => {
@@ -20,9 +20,23 @@ test.describe('Nutanix Provider Form Validation', () => {
         await createProvider.waitForWizardLoad();
       });
 
-      await test.step('Verify Prism type radio buttons are visible', async () => {
-        await expect(page.getByTestId('nutanix-prism-element-radio')).toBeVisible();
-        await expect(page.getByTestId('nutanix-prism-central-radio')).toBeVisible();
+      await test.step('Verify Nutanix AHV is marked Developer Preview', async () => {
+        await page.getByTestId('provider-type-toggle').click();
+        await expect(page.getByTestId('provider-type-option-nutanix')).toContainText(
+          'Developer Preview',
+        );
+        await page.getByTestId('provider-type-option-nutanix').click();
+      });
+
+      await test.step('Verify Prism Element is the default and Prism Central can be selected', async () => {
+        const elementRadio = page.getByTestId('nutanix-prism-element-radio');
+        const centralRadio = page.getByTestId('nutanix-prism-central-radio');
+
+        await expect(elementRadio).toBeChecked();
+        await centralRadio.click();
+        await expect(centralRadio).toBeChecked();
+        await elementRadio.click();
+        await expect(elementRadio).toBeChecked();
       });
 
       await test.step('Verify URL field is visible', async () => {

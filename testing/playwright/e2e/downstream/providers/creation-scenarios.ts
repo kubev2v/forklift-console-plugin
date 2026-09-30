@@ -2,7 +2,7 @@ import { EndpointType, ProviderType } from '../../../types/enums';
 import type { ProviderData } from '../../../types/test-data';
 import { getProviderConfig } from '../../../utils/providers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
-import { V2_11_0, V2_12_0, V2_13_0 } from '../../../utils/version/constants';
+import { V2_11_0, V2_12_0, V5_0_0 } from '../../../utils/version/constants';
 import type { VersionTuple } from '../../../utils/version/types';
 
 const VSPHERE_KEY = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
@@ -121,7 +121,7 @@ export const providerTestScenarios: ProviderTestScenario[] = [
     scenarioName: 'Hyper-V provider with SMB share',
   },
   {
-    minVersion: V2_13_0,
+    minVersion: V5_0_0,
     providerKey: NUTANIX_KEY,
     providerType: ProviderType.NUTANIX,
     scenarioName: 'Nutanix AHV provider with Prism Element',
