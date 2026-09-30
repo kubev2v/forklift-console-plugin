@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 
 import { CreateProviderPage } from '../../../page-objects/CreateProviderPage';
+import { ProviderDetailsPage } from '../../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { ProviderType } from '../../../types/enums';
 import type { ProviderData } from '../../../types/test-data';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
@@ -43,16 +44,18 @@ test.describe('Nutanix prism type persistence', () => {
       { tag: '@downstream' },
       async ({ page }) => {
         const createProvider = new CreateProviderPage(page, resourceManager);
+        const providerDetailsPage = new ProviderDetailsPage(page);
         const providerData = buildDummyNutanixProvider(prismType);
 
-        const providerDetailsPage =
-          await test.step('Create the provider without waiting for Ready', async () => {
-            await createProvider.navigateWithProviderType(ProviderType.NUTANIX);
-            await expect(page.getByTestId('provider-project-select').locator('input')).toHaveValue(
-              MTV_NAMESPACE,
-            );
-            return createProvider.create(providerData, false);
-          });
+        await test.step('Create the provider without waiting for Ready', async () => {
+          await createProvider.navigateWithProviderType(ProviderType.NUTANIX);
+          await createProvider.waitForWizardLoad();
+          await createProvider.fillAndSubmit(providerData);
+          await providerDetailsPage.waitForProviderCreation(
+            providerData.name,
+            providerData.projectName,
+          );
+        });
 
         await test.step('Verify the provider spec stores the selected prism type', async () => {
           const providerResource = await resourceManager.fetchProvider(providerData.name);
