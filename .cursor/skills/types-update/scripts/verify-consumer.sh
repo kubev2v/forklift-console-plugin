@@ -81,10 +81,20 @@ restore_consumer() {
 }
 trap restore_consumer EXIT
 
+TSC_BIN="${CONSUMER_DIR}/node_modules/.bin/tsc"
+
+run_consumer_tsc() {
+  if [ ! -x "${TSC_BIN}" ]; then
+    echo "ERROR: ${TSC_BIN} not found. Run npm install in the consumer first." >&2
+    exit 1
+  fi
+  "${TSC_BIN}" --noEmit
+}
+
 npm install "@forklift-ui/types@${OLD_VERSION}" --save-exact --ignore-scripts
 BASELINE_LOG=$(mktemp)
 set +e
-npx tsc --noEmit >"${BASELINE_LOG}" 2>&1
+run_consumer_tsc >"${BASELINE_LOG}" 2>&1
 BASELINE_EC=$?
 set -e
 echo "  tsc exit code (baseline): ${BASELINE_EC}"
@@ -94,7 +104,7 @@ echo "Step 4: Install local tarball and run tsc + lint..."
 npm install "${TARBALL}" --ignore-scripts
 NEW_LOG=$(mktemp)
 set +e
-npx tsc --noEmit >"${NEW_LOG}" 2>&1
+run_consumer_tsc >"${NEW_LOG}" 2>&1
 NEW_EC=$?
 set -e
 echo "  tsc exit code (new):      ${NEW_EC}"
