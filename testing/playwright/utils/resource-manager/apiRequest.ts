@@ -2,10 +2,16 @@ import * as http from 'node:http';
 import * as https from 'node:https';
 import { URL } from 'node:url';
 
+import { testWarn } from '../testLog';
+
 import { getAuthConfig } from './auth';
 
 const PROXY_PREFIX = '/api/kubernetes' as const;
 const API_REQUEST_TIMEOUT_MS = 30_000;
+const DEFAULT_RETRY_AFTER_MS = 1_000;
+const HTTP_SERVICE_UNAVAILABLE = 503;
+const HTTP_TOO_MANY_REQUESTS = 429;
+const MAX_TRANSIENT_RETRIES = 5;
 
 export type ApiResult<T> =
   { data: T; status: number; success: true } | { error: string; status: number; success: false };
@@ -16,7 +22,32 @@ export type ApiRequestOptions = {
   method: string;
 };
 
-export const apiRequest = async <T>(
+const isTransientStatus = (status: number): boolean =>
+  status === HTTP_TOO_MANY_REQUESTS || status === HTTP_SERVICE_UNAVAILABLE;
+
+const parseRetryAfterMs = (errorBody: string): number => {
+  try {
+    const parsed = JSON.parse(errorBody) as {
+      details?: { retryAfterSeconds?: number };
+    };
+    const seconds = parsed.details?.retryAfterSeconds;
+    if (typeof seconds === 'number' && seconds >= 0) {
+      return seconds * 1000;
+    }
+  } catch {
+    // Non-JSON error body — use default backoff.
+  }
+
+  return DEFAULT_RETRY_AFTER_MS;
+};
+
+const delay = async (ms: number): Promise<void> => {
+  await new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+};
+
+const singleApiRequest = async <T>(
   apiPath: string,
   options: ApiRequestOptions,
 ): Promise<ApiResult<T>> => {
@@ -81,4 +112,23 @@ export const apiRequest = async <T>(
 
     request.end();
   });
+};
+
+/** Retries 429/503 (e.g. API server "storage is (re)initializing") using retryAfterSeconds. */
+export const apiRequest = async <T>(
+  apiPath: string,
+  options: ApiRequestOptions,
+): Promise<ApiResult<T>> => {
+  for (let attempt = 0; ; attempt += 1) {
+    const result = await singleApiRequest<T>(apiPath, options);
+    if (result.success || !isTransientStatus(result.status) || attempt >= MAX_TRANSIENT_RETRIES) {
+      return result;
+    }
+
+    const waitMs = parseRetryAfterMs(result.error);
+    testWarn(
+      `API ${options.method} ${apiPath} returned ${result.status}; retrying in ${waitMs}ms (attempt ${attempt + 1}/${MAX_TRANSIENT_RETRIES})`,
+    );
+    await delay(waitMs);
+  }
 };
