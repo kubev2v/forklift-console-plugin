@@ -11,7 +11,9 @@ const API_REQUEST_TIMEOUT_MS = 30_000;
 const DEFAULT_RETRY_AFTER_MS = 1_000;
 const HTTP_SERVICE_UNAVAILABLE = 503;
 const HTTP_TOO_MANY_REQUESTS = 429;
+const MAX_RETRY_AFTER_MS = 30_000;
 const MAX_TRANSIENT_RETRIES = 5;
+const MS_PER_SECOND = 1_000;
 
 export type ApiResult<T> =
   { data: T; status: number; success: true } | { error: string; status: number; success: false };
@@ -25,14 +27,22 @@ export type ApiRequestOptions = {
 const isTransientStatus = (status: number): boolean =>
   status === HTTP_TOO_MANY_REQUESTS || status === HTTP_SERVICE_UNAVAILABLE;
 
+/** Only retry methods that are safe to repeat after an ambiguous server failure. */
+const isRetryableMethod = (method: string): boolean => method === 'DELETE' || method === 'GET';
+
 const parseRetryAfterMs = (errorBody: string): number => {
   try {
     const parsed = JSON.parse(errorBody) as {
       details?: { retryAfterSeconds?: number };
     };
     const seconds = parsed.details?.retryAfterSeconds;
-    if (typeof seconds === 'number' && seconds >= 0) {
-      return seconds * 1000;
+    if (typeof seconds === 'number' && Number.isFinite(seconds) && seconds >= 0) {
+      const delayMs = seconds * MS_PER_SECOND;
+      if (!Number.isFinite(delayMs)) {
+        return DEFAULT_RETRY_AFTER_MS;
+      }
+      // Cap for Playwright setup budgets; K8s storage reinitialization uses ~1s.
+      return Math.min(delayMs, MAX_RETRY_AFTER_MS);
     }
   } catch {
     // Non-JSON error body — use default backoff.
@@ -114,14 +124,20 @@ const singleApiRequest = async <T>(
   });
 };
 
-/** Retries 429/503 (e.g. API server "storage is (re)initializing") using retryAfterSeconds. */
+/** Retries GET/DELETE on 429/503 (e.g. API server storage reinitialization). */
 export const apiRequest = async <T>(
   apiPath: string,
   options: ApiRequestOptions,
 ): Promise<ApiResult<T>> => {
   for (let attempt = 0; ; attempt += 1) {
     const result = await singleApiRequest<T>(apiPath, options);
-    if (result.success || !isTransientStatus(result.status) || attempt >= MAX_TRANSIENT_RETRIES) {
+    const mayRetry = isRetryableMethod(options.method);
+    if (
+      result.success ||
+      !isTransientStatus(result.status) ||
+      !mayRetry ||
+      attempt >= MAX_TRANSIENT_RETRIES
+    ) {
       return result;
     }
 
