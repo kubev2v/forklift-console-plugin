@@ -11,6 +11,15 @@ type LeftoverVmRef = {
   namespace: string;
 };
 
+type VmMetadata = {
+  deletionTimestamp?: string;
+  finalizers?: string[];
+};
+
+type VmResource = {
+  metadata?: VmMetadata;
+};
+
 const delay = async (ms: number): Promise<void> => {
   await new Promise((resolve) => {
     setTimeout(resolve, ms);
@@ -31,16 +40,32 @@ export const waitForVmNotFound = async (apiPath: string, timeoutMs: number): Pro
     if (result.status === HTTP_NOT_FOUND) {
       return true;
     }
+    if (!result.success) {
+      throw new Error(`Could not poll leftover VM at ${apiPath}: ${result.error}`);
+    }
     await delay(VM_DELETE_POLL_MS);
   }
 
   return false;
 };
 
-/** Clears KubeVirt finalizers when a VM is stuck Terminating (Failed VMI / Error launcher). */
+/** Clears KubeVirt finalizers only when the VM is already Terminating. */
 export const forceRemoveStuckVm = async (vm: LeftoverVmRef): Promise<void> => {
   const vmPath = vmApiPath(vm);
-  testWarn(`Leftover VM stuck after delete; forcing removal of ${vm.namespace}/${vm.name}`);
+  const getResult = await apiRequest<VmResource>(vmPath, { method: 'GET' });
+  if (getResult.status === HTTP_NOT_FOUND) {
+    return;
+  }
+  if (!getResult.success) {
+    throw new Error(`Could not GET leftover VM ${vm.namespace}/${vm.name}: ${getResult.error}`);
+  }
+  if (!getResult.data.metadata?.deletionTimestamp) {
+    throw new Error(
+      `Leftover VM ${vm.namespace}/${vm.name} is still present but not Terminating; refusing to clear finalizers`,
+    );
+  }
+
+  testWarn(`Leftover VM stuck Terminating; forcing removal of ${vm.namespace}/${vm.name}`);
 
   await apiRequest(vmiApiPath(vm), { method: 'DELETE' });
   await BaseResourceManager.apiPatch(vmPath, { metadata: { finalizers: null } });
