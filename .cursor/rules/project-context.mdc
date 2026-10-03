@@ -48,6 +48,7 @@ Defines a migration plan selecting VMs and their mappings.
 - **Frontend statuses** (UI enum in `src/plans/details/components/PlanStatus/utils/types.ts`): Ready, Executing, Completed, Paused, Incomplete, CannotStart, Canceled, Archived, Unknown
 - References NetworkMap, StorageMap, and optional Hooks
 - Specifies target namespace and power state settings
+- **Per-VM disk exclusion (vSphere):** `spec.vms[].excludeDisks` — array of vSphere bus addresses (e.g. `scsi0:1`); edited in plan details Virtual machines tab (not plan-level)
 
 ### Migration
 Represents an active migration execution, created when a Plan starts.
