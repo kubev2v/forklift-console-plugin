@@ -35,6 +35,7 @@ const MigrationStatusExpandedPage: FC<RowProps<MigrationStatusVirtualMachinePage
           section={
             <MigrationProgressTable
               plan={plan}
+              pods={pods}
               statusVM={statusVM}
               targetNamespace={targetNamespace}
               vmCreated={vmCreated}
