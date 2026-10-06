@@ -24,6 +24,7 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
     activeMigration,
     buttonStartLabel,
     canDelete,
+    canEdit,
     canReStart,
     canResume,
     canScheduleCutover,
@@ -44,15 +45,7 @@ const PlanActionsDropdownItems: FC<PlanActionsDropdownItemsProps> = ({ isDetails
     <DropdownList>
       <DropdownItem
         description={isDetailsPage ? undefined : getEditDescription(planStatus)}
-        isDisabled={
-          !isDetailsPage &&
-          [
-            PlanStatuses.Executing,
-            PlanStatuses.Paused,
-            PlanStatuses.Pending,
-            PlanStatuses.Archived,
-          ].includes(planStatus)
-        }
+        isDisabled={!isDetailsPage && !canEdit}
         key="edit"
         onClick={() => {
           navigate(isDetailsPage ? `${planURL}/yaml` : planURL)?.catch(() => undefined);
