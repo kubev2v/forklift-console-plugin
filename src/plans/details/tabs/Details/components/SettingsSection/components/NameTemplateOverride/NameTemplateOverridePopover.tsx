@@ -89,6 +89,7 @@ const NameTemplateOverridePopover: FC<NameTemplateOverridePopoverProps> = ({
           ) : null}
         </Stack>
       }
+      data-testid={`name-template-override-popover-${templateType}`}
       footerContent={
         canApply || isApplying ? (
           applyButton

@@ -194,12 +194,10 @@ const verifyOverridePopover = async (
 ): Promise<void> => {
   const trigger = page.getByTestId(`name-template-override-trigger-${templateType}`);
   await expect(trigger).toBeVisible();
-  await trigger.hover();
+  await trigger.click();
 
-  const popover = page.getByRole('dialog', {
-    exact: true,
-    name: 'Virtual machines with a custom name template',
-  });
+  const popover = page.getByTestId(`name-template-override-popover-${templateType}`);
+  await expect(popover).toBeVisible();
   await expect(popover).toContainText('Custom name templates');
   await expect(popover).toContainText('The following virtual machines override this plan setting:');
 
