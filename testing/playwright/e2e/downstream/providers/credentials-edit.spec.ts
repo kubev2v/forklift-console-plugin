@@ -109,6 +109,16 @@ test.describe('Provider Credentials - Editing', { tag: '@downstream' }, () => {
       await modal.cancel();
     });
 
+    await test.step('Verify fetch certificate from URL in edit modal', async () => {
+      const modal = await credentialsTab.openEditModal();
+      await modal.selectConfigureCertificate();
+      await modal.verifyFetchCertificateButtonVisible();
+      await modal.clickFetchCertificate();
+      await modal.verifyVerifyCertificateModalDetails();
+      await modal.closeVerifyCertificateModal();
+      await modal.cancel();
+    });
+
     await test.step('Test CA certificate input and validation', async () => {
       const modal = await credentialsTab.openEditModal();
 
