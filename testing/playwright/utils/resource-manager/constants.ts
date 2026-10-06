@@ -43,6 +43,9 @@ export const RESOURCE_TYPES = {
   PROVIDERS: 'providers',
   SECRETS: 'secrets',
   STORAGE_MAPS: 'storagemaps',
+  // KubeVirt plural resource name (API path segment)
+  // cspell:ignore virtualmachineinstances
+  VIRTUAL_MACHINE_INSTANCES: 'virtualmachineinstances',
   VIRTUAL_MACHINES: 'virtualmachines',
 } as const;
 

@@ -1,12 +1,12 @@
 import type { V1beta1Plan } from '@forklift-ui/types';
 
-import { apiRequest } from './resource-manager/apiRequest';
 import { BaseResourceManager } from './resource-manager/BaseResourceManager';
 import {
   API_PATHS,
   HAPPY_PATH_TARGET_NAMESPACE_PREFIX,
   RESOURCE_TYPES,
 } from './resource-manager/constants';
+import { forceRemoveStuckVm, vmApiPath, waitForVmNotFound } from './happyPathLeftoverForceDelete';
 import { testLog } from './testLog';
 import { isEmpty } from './utils';
 
@@ -25,10 +25,9 @@ export const HAPPY_PATH_LEFTOVER_VM_NAME_PREFIXES = [
 ] as const;
 
 const CONDITION_TRUE = 'True';
-const HTTP_NOT_FOUND = 404;
 const PLAN_CONDITION_EXECUTING = 'Executing';
-const VM_DELETE_POLL_MS = 2_000;
 const VM_DELETE_TIMEOUT_MS = 5 * 60_000;
+const VM_FORCE_DELETE_TIMEOUT_MS = 60_000;
 
 type LeftoverVmRef = {
   name: string;
@@ -41,12 +40,6 @@ type LeftoverVmListItem = {
 
 type PlanList = {
   items?: V1beta1Plan[];
-};
-
-const delay = async (ms: number): Promise<void> => {
-  await new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
 };
 
 export const isHappyPathLeftoverNamespace = (namespace: string): boolean =>
@@ -92,20 +85,6 @@ const shouldSkipLeftoverCleanup = (): boolean => {
   return skipValue === '1' || skipValue === 'true';
 };
 
-const waitForVmNotFound = async (apiPath: string, vm: LeftoverVmRef): Promise<void> => {
-  const deadline = Date.now() + VM_DELETE_TIMEOUT_MS;
-
-  while (Date.now() < deadline) {
-    const result = await apiRequest(apiPath, { method: 'GET' });
-    if (result.status === HTTP_NOT_FOUND) {
-      return;
-    }
-    await delay(VM_DELETE_POLL_MS);
-  }
-
-  throw new Error(`Leftover VM still present after delete timeout: ${vm.namespace}/${vm.name}`);
-};
-
 const listExecutingTargetNamespaces = async (): Promise<ReadonlySet<string>> => {
   const data = await BaseResourceManager.apiGet<PlanList>(
     `${API_PATHS.FORKLIFT}/${RESOURCE_TYPES.PLANS}`,
@@ -125,10 +104,7 @@ const listExecutingTargetNamespaces = async (): Promise<ReadonlySet<string>> => 
   return namespaces;
 };
 
-/**
- * Deletes leftover happy-path target VMs that cause MacConflicts on the next run.
- * Skips namespaces that still have an Executing Plan targeting them.
- */
+/** Deletes leftover happy-path target VMs; clears finalizers if stuck Terminating. */
 export const cleanupLeftoverHappyPathVms = async (): Promise<void> => {
   if (shouldSkipLeftoverCleanup()) {
     testLog(`Skipping happy-path leftover VM cleanup (${SKIP_HAPPY_PATH_LEFTOVER_CLEANUP_ENV})`);
@@ -152,9 +128,21 @@ export const cleanupLeftoverHappyPathVms = async (): Promise<void> => {
   }
 
   for (const vm of leftovers) {
-    const apiPath = `${API_PATHS.KUBEVIRT}/namespaces/${vm.namespace}/${RESOURCE_TYPES.VIRTUAL_MACHINES}/${vm.name}`;
+    const apiPath = vmApiPath(vm);
     await BaseResourceManager.apiDelete(apiPath);
-    await waitForVmNotFound(apiPath, vm);
-    testLog(`Deleted leftover VM ${vm.namespace}/${vm.name}`);
+
+    const softDeleted = await waitForVmNotFound(apiPath, VM_DELETE_TIMEOUT_MS);
+    if (softDeleted) {
+      testLog(`Deleted leftover VM ${vm.namespace}/${vm.name}`);
+    } else {
+      await forceRemoveStuckVm(vm);
+      const forceDeleted = await waitForVmNotFound(apiPath, VM_FORCE_DELETE_TIMEOUT_MS);
+      if (!forceDeleted) {
+        throw new Error(
+          `Leftover VM still present after delete timeout: ${vm.namespace}/${vm.name}`,
+        );
+      }
+      testLog(`Force-deleted leftover VM ${vm.namespace}/${vm.name}`);
+    }
   }
 };
