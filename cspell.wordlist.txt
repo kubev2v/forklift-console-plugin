@@ -24,6 +24,7 @@ cncf
 configmap
 consistencygroup
 cooldown
+copyappliances
 crds
 crdtotypes
 creds
@@ -140,6 +141,7 @@ pvcs
 qemtv
 quickstarts
 rbd
+resourcepools
 RHVM
 rowspan
 selfsubjectaccessreviews
@@ -160,6 +162,7 @@ subresource
 switchfilter
 testid
 timespan
+toeholdtemplates
 tolerations
 treegrid
 trident

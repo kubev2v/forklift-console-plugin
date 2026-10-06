@@ -6,8 +6,10 @@ import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import VddkUploader from '@components/VddkUploader/VddkUploader';
 import { HelperText, HelperTextItem, Radio, Stack, TextInput } from '@patternfly/react-core';
+import { FEATURE_NAMES } from '@utils/constants';
 import { getInputValidated } from '@utils/form';
 import { isEmpty } from '@utils/helpers';
+import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { ProviderFormFieldId } from '../create/fields/constants';
@@ -19,6 +21,8 @@ import VDDKHelperText from './VDDKHelperText';
 
 const VDDKRadioSelection: FC = () => {
   const { t } = useForkliftTranslation();
+  const { isFeatureEnabled } = useFeatureFlags();
+  const toeholdEnabled = isFeatureEnabled(FEATURE_NAMES.TOEHOLD);
 
   const { control } = useCreateProviderFormContext();
 
@@ -127,7 +131,7 @@ const VDDKRadioSelection: FC = () => {
           data-testid="vddk-setup-skip-radio"
           id="vddk-setup-skip"
           isChecked={vddkMode === VddkSetupMode.Skip}
-          label={t('Skip VDDK setup (not recommended)')}
+          label={toeholdEnabled ? t('Skip VDDK setup') : t('Skip VDDK setup (not recommended)')}
           name={ProviderFormFieldId.VsphereVddkSetupMode}
           onChange={() => {
             vddkModeController.field.onChange(VddkSetupMode.Skip);

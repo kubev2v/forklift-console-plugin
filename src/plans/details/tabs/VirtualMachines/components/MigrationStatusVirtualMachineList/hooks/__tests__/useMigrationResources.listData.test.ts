@@ -59,7 +59,8 @@ describe('useMigrationResources - listData', () => {
       ])
       .mockReturnValueOnce([[labeled('Job', 'vm-1', 'job-1')], true, null])
       .mockReturnValueOnce([[labeled('PersistentVolumeClaim', 'vm-1', 'pvc-1')], true, null])
-      .mockReturnValueOnce([[labeled('DataVolume', 'vm-1', 'dv-1')], true, null]);
+      .mockReturnValueOnce([[labeled('DataVolume', 'vm-1', 'dv-1')], true, null])
+      .mockReturnValueOnce([[], true, null]);
   });
 
   it('groups watched resources onto matching VMs and resolves name-only VMs', () => {
@@ -88,6 +89,7 @@ describe('useMigrationResources - listData', () => {
     mockUseK8sWatchResource.mockReset();
     mockUseK8sWatchResource
       .mockReturnValueOnce([[labeled('Pod', 'vm-1', 'pod-1')], false, null])
+      .mockReturnValueOnce([[], true, null])
       .mockReturnValueOnce([[], true, null])
       .mockReturnValueOnce([[], true, null])
       .mockReturnValueOnce([[], true, null]);
@@ -127,6 +129,7 @@ describe('useMigrationResources - listData', () => {
     mockUseK8sWatchResource.mockReset();
     mockUseK8sWatchResource
       .mockReturnValueOnce([[], true, podsError])
+      .mockReturnValueOnce([[], true, null])
       .mockReturnValueOnce([[], true, null])
       .mockReturnValueOnce([[], true, null])
       .mockReturnValueOnce([[], true, null]);

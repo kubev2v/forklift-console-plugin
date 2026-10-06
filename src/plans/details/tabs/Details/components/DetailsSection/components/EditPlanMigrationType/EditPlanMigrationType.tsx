@@ -15,7 +15,9 @@ import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Flex, FlexItem, Radio } from '@patternfly/react-core';
+import { FEATURE_NAMES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
+import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { EditPlanProps } from '../../../SettingsSection/utils/types';
@@ -35,9 +37,12 @@ const EditPlanMigrationType: OverlayComponent<EditPlanProps> = ({
   sourceProvider,
 }) => {
   const { t } = useForkliftTranslation();
+  const { isFeatureEnabled } = useFeatureFlags();
+  const toeholdEnabled = isFeatureEnabled(FEATURE_NAMES.TOEHOLD);
   const [selected, setSelected] = useState<MigrationTypeValue>(getPlanMigrationType(resource));
   const [cbtDisabledVms] = useCbtDisabledVms(resource, sourceProvider);
   const isWarmSelected = selected === MigrationTypeValue.Warm;
+  const showVddkWarmWarning = isWarmSelected && isVddkInitImageNotSet && !toeholdEnabled;
 
   const canShowType = (type: MigrationTypeValue): boolean => {
     switch (type) {
@@ -87,7 +92,7 @@ const EditPlanMigrationType: OverlayComponent<EditPlanProps> = ({
         {isWarmSelected && !isEmpty(cbtDisabledVms) && (
           <PlanCbtWarningAlert cbtDisabledVmsCount={cbtDisabledVms.length} />
         )}
-        {isWarmSelected && isVddkInitImageNotSet && <PlanVddkForWarmWarningAlert />}
+        {showVddkWarmWarning && <PlanVddkForWarmWarningAlert />}
       </Flex>
     </ModalForm>
   );

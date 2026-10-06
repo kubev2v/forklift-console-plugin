@@ -50,6 +50,55 @@ export const getVddkInitImage = (provider: V1beta1Provider): string | undefined 
 export const getUseVddkAioOptimization = (provider: V1beta1Provider): string | undefined =>
   getSettings(provider)?.useVddkAioOptimization;
 
+export const getToeholdDatastore = (provider: V1beta1Provider): string | undefined =>
+  getSettings(provider)?.toeholdDatastore;
+
+export const getToeholdFolder = (provider: V1beta1Provider): string | undefined =>
+  getSettings(provider)?.toeholdFolder;
+
+export const getToeholdNetwork = (provider: V1beta1Provider): string | undefined =>
+  getSettings(provider)?.toeholdNetwork;
+
+export const getCopyApplianceResourcePool = (provider: V1beta1Provider): string | undefined =>
+  getSettings(provider)?.copyApplianceResourcePool;
+
+/** Provider status fields not yet in published @forklift-ui/types. */
+type ProviderToeholdStatus = {
+  toeholdSSHPrivateSecret?: string;
+  toeholdSSHPublicSecret?: string;
+};
+
+const getToeholdStatus = (provider: V1beta1Provider): ProviderToeholdStatus | undefined => {
+  const status: unknown = provider?.status;
+  if (typeof status !== 'object' || status === null) {
+    return undefined;
+  }
+  const record = status as Record<string, unknown>;
+  const toeholdSSHPrivateSecret =
+    typeof record.toeholdSSHPrivateSecret === 'string' ? record.toeholdSSHPrivateSecret : undefined;
+  const toeholdSSHPublicSecret =
+    typeof record.toeholdSSHPublicSecret === 'string' ? record.toeholdSSHPublicSecret : undefined;
+  return { toeholdSSHPrivateSecret, toeholdSSHPublicSecret };
+};
+
+export const getToeholdSSHPrivateSecret = (provider: V1beta1Provider): string | undefined => {
+  const fromStatus = getToeholdStatus(provider)?.toeholdSSHPrivateSecret;
+  if (fromStatus) {
+    return fromStatus;
+  }
+  const name = getName(provider);
+  return name ? `toehold-ssh-keys-${name}-private` : undefined;
+};
+
+export const getToeholdSSHPublicSecret = (provider: V1beta1Provider): string | undefined => {
+  const fromStatus = getToeholdStatus(provider)?.toeholdSSHPublicSecret;
+  if (fromStatus) {
+    return fromStatus;
+  }
+  const name = getName(provider);
+  return name ? `toehold-ssh-keys-${name}-public` : undefined;
+};
+
 export const getSdkEndpoint = (provider: V1beta1Provider): string | undefined =>
   getSettings(provider)?.sdkEndpoint;
 

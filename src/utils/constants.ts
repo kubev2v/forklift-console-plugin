@@ -70,6 +70,7 @@ export const MODEL_KIND = {
 export const FEATURE_NAMES = {
   COPY_OFFLOAD: 'feature_copy_offload',
   OCP_LIVE_MIGRATION: 'feature_ocp_live_migration',
+  TOEHOLD: 'feature_toehold',
   VOLUME_POPULATOR: 'feature_volume_populator',
 } as const;
 
