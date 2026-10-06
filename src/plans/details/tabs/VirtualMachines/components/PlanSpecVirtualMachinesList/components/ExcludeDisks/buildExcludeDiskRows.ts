@@ -6,6 +6,7 @@ import {
   getDiskShared,
 } from 'src/plans/utils/excludeDisks/diskBusAddress';
 
+import { EMPTY_MSG } from '@utils/constants';
 import { t } from '@utils/i18n';
 
 import type { ExcludeDiskRowData } from './types';
@@ -15,7 +16,7 @@ const SHARED_FILTER_UNKNOWN = 'unknown';
 const SHARED_FILTER_YES = 'yes';
 
 const toSharedFilterValue = (shared: boolean | undefined): string => {
-  if (shared === true) {
+  if (shared) {
     return SHARED_FILTER_YES;
   }
 
@@ -34,7 +35,7 @@ const diskToRow = (disk: unknown): ExcludeDiskRowData | undefined => {
 
   const sizeBytes = getDiskCapacityBytes(disk);
   const shared = getDiskShared(disk);
-  const fileName = getDiskFileName(disk) ?? '-';
+  const fileName = getDiskFileName(disk) ?? EMPTY_MSG;
 
   return {
     busAddress,
@@ -74,7 +75,7 @@ export const buildExcludeDiskRows = ({
         shared: undefined,
         sharedFilterValue: SHARED_FILTER_UNKNOWN,
         sizeBytes: 0,
-        sizeLabel: '-',
+        sizeLabel: EMPTY_MSG,
       });
     }
   }

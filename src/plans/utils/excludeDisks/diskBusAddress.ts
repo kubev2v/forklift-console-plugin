@@ -1,3 +1,4 @@
+import { EMPTY_MSG } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
 type InventoryDiskLike = {
@@ -84,5 +85,5 @@ export const getDiskShared = (disk: unknown): boolean | undefined => {
 export const formatDiskSizeLabel = (capacityBytes: number): string => {
   const label = formatDiskCapacityGiB(capacityBytes);
 
-  return label ?? '-';
+  return label ?? EMPTY_MSG;
 };

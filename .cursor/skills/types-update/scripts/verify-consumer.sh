@@ -21,26 +21,27 @@ OLD_VERSION="${2:-}"
 TYPES_REPO_DIR="${TYPES_REPO_DIR:-${HOME}/Workspace/forklift-console-types}"
 CONSUMER_DIR="${CONSUMER_DIR:-${HOME}/Workspace/forklift-console-plugin}"
 PACK_DIR="${PACK_DIR:-/tmp}"
+SECTION_RULE='========================================'
 
-if [ -n "${JAVA_HOME:-}" ]; then
+if [[ -n "${JAVA_HOME:-}" ]]; then
   export PATH="${JAVA_HOME}/bin:${PATH}"
 fi
 
-if [ ! -d "${TYPES_REPO_DIR}" ]; then
+if [[ ! -d "${TYPES_REPO_DIR}" ]]; then
   echo "ERROR: Types repo not found: ${TYPES_REPO_DIR}" >&2
   exit 1
 fi
 
-if [ ! -d "${CONSUMER_DIR}" ]; then
+if [[ ! -d "${CONSUMER_DIR}" ]]; then
   echo "ERROR: Consumer repo not found: ${CONSUMER_DIR}" >&2
   exit 1
 fi
 
-echo "========================================"
+echo "${SECTION_RULE}"
 echo "Consumer verification (@forklift-ui/types ${NEW_VERSION})"
 echo "  Types:    ${TYPES_REPO_DIR}"
 echo "  Consumer: ${CONSUMER_DIR}"
-echo "========================================"
+echo "${SECTION_RULE}"
 
 cd "${TYPES_REPO_DIR}"
 echo ""
@@ -52,14 +53,14 @@ echo ""
 echo "Step 2: Pack tarball -> ${TARBALL}"
 rm -f "${TARBALL}"
 npm pack --pack-destination "${PACK_DIR}" >/dev/null
-if [ ! -f "${TARBALL}" ]; then
+if [[ ! -f "${TARBALL}" ]]; then
   echo "ERROR: Expected pack output at ${TARBALL}" >&2
   exit 1
 fi
 
 cd "${CONSUMER_DIR}"
 
-if [ -z "${OLD_VERSION}" ]; then
+if [[ -z "${OLD_VERSION}" ]]; then
   OLD_VERSION=$(node -e "
     const lock = require('./package-lock.json');
     const pkg = lock.packages && lock.packages['node_modules/@forklift-ui/types'];
@@ -84,7 +85,7 @@ trap restore_consumer EXIT
 TSC_BIN="${CONSUMER_DIR}/node_modules/.bin/tsc"
 
 run_consumer_tsc() {
-  if [ ! -x "${TSC_BIN}" ]; then
+  if [[ ! -x "${TSC_BIN}" ]]; then
     echo "ERROR: ${TSC_BIN} not found. Run npm install in the consumer first." >&2
     exit 1
   fi
@@ -112,21 +113,21 @@ echo "  tsc exit code (new):      ${NEW_EC}"
 NEW_ONLY=$(mktemp)
 comm -23 <(sort "${NEW_LOG}") <(sort "${BASELINE_LOG}") >"${NEW_ONLY}" || true
 
-if [ -s "${NEW_ONLY}" ]; then
+if [[ -s "${NEW_ONLY}" ]]; then
   echo ""
   echo "FAIL: TypeScript errors introduced by the types bump (not in baseline @${OLD_VERSION}):"
   echo "----------------------------------------"
   head -80 "${NEW_ONLY}"
-  if [ "$(wc -l <"${NEW_ONLY}")" -gt 80 ]; then
+  if [[ $(wc -l <"${NEW_ONLY}") -gt 80 ]]; then
     echo "... ($(wc -l <"${NEW_ONLY}") lines total)"
   fi
   rm -f "${BASELINE_LOG}" "${NEW_LOG}" "${NEW_ONLY}"
   exit 1
 fi
 
-if [ "${NEW_EC}" -ne 0 ] && [ "${BASELINE_EC}" -ne 0 ]; then
+if [[ "${NEW_EC}" -ne 0 && "${BASELINE_EC}" -ne 0 ]]; then
   echo ""
-  echo "Note: tsc still fails, but error set matches baseline @${OLD_VERSION} (no new types-related breakage)."
+  echo "Note: tsc still fails, but error set matches baseline @${OLD_VERSION} (no new types-related breakage)." >&2
 fi
 
 echo ""
@@ -135,7 +136,7 @@ set +e
 npm run lint
 LINT_EC=$?
 set -e
-if [ "${LINT_EC}" -ne 0 ]; then
+if [[ "${LINT_EC}" -ne 0 ]]; then
   echo "FAIL: npm run lint failed in consumer (exit ${LINT_EC})" >&2
   rm -f "${BASELINE_LOG}" "${NEW_LOG}" "${NEW_ONLY}"
   exit 1
@@ -144,8 +145,8 @@ fi
 rm -f "${BASELINE_LOG}" "${NEW_LOG}" "${NEW_ONLY}"
 
 echo ""
-echo "========================================"
+echo "${SECTION_RULE}"
 echo "PASS: Consumer verification succeeded"
 echo "  Baseline: @forklift-ui/types@${OLD_VERSION}"
 echo "  Tested:   local pack ${NEW_VERSION}"
-echo "========================================"
+echo "${SECTION_RULE}"

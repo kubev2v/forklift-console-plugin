@@ -1,7 +1,10 @@
-import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
+import { createElement } from 'react';
+
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import { t } from '@utils/i18n';
 
+import ExcludeDiskBusAddressHelpPopover from './ExcludeDiskBusAddressHelpPopover';
+import ExcludeDiskSharedWithOtherVmsHelpPopover from './ExcludeDiskSharedWithOtherVmsHelpPopover';
 import type { ExcludeDiskRowData } from './types';
 
 export enum ExcludeDiskFieldId {
@@ -25,11 +28,7 @@ export const excludeDiskFields: ResourceField[] = [
     },
     info: {
       ariaLabel: t('More information on bus address'),
-      popover: (
-        <HelpIconPopover header={t('Bus address')}>
-          {t('vSphere disk bus address stored in the plan as excludeDisks (for example, scsi0:1).')}
-        </HelpIconPopover>
-      ),
+      popover: createElement(ExcludeDiskBusAddressHelpPopover),
     },
     isIdentity: true,
     isVisible: true,
@@ -64,13 +63,7 @@ export const excludeDiskFields: ResourceField[] = [
     },
     info: {
       ariaLabel: t('More information on shared with other VMs'),
-      popover: (
-        <HelpIconPopover header={t('Shared with other VMs')}>
-          {t(
-            'Yes if the same disk file is used by multiple VMs on the source provider (vSphere inventory). Unrelated to the plan Migrate shared disks setting.',
-          )}
-        </HelpIconPopover>
-      ),
+      popover: createElement(ExcludeDiskSharedWithOtherVmsHelpPopover),
     },
     isVisible: true,
     jsonPath: (item: unknown): string => (item as ExcludeDiskRowData).sharedFilterValue,
