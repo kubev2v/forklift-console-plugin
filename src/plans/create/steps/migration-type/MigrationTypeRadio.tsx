@@ -5,13 +5,13 @@ import PlanVddkForWarmWarningAlert from 'src/plans/components/PlanVddkForWarmWar
 import { getMigrationTypeConfig } from 'src/plans/create/steps/migration-type/utils';
 import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType';
 import { hasWarmMigrationProviderType } from 'src/plans/create/utils/hasWarmMigrationProviderType';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import type { ProviderVirtualMachine, V1beta1Provider } from '@forklift-ui/types';
 import { FlexItem, Radio, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
-import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { migrationTypeLabels, MigrationTypeValue } from './constants';
 
