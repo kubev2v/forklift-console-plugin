@@ -1,7 +1,7 @@
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { ProviderModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sCreate, k8sPatch, type K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
-import { ToeholdTemplateModel } from '@utils/crds/common/models';
+import { CopyApplianceTemplateModel } from '@utils/crds/common/models';
 import {
   getCopyApplianceResourcePool,
   getName,
@@ -26,7 +26,7 @@ const patchOp = (current: string | undefined, path: string, value: string): Sett
   value: value || undefined,
 });
 
-const onCreateToeholdTemplate = async (
+const onCreateCopyApplianceTemplate = async (
   provider: V1beta1Provider,
   placement: ToeholdPlacementFormValues,
 ): Promise<K8sResourceCommon> => {
@@ -60,8 +60,8 @@ const onCreateToeholdTemplate = async (
 
   return k8sCreate({
     data: {
-      apiVersion: `${ToeholdTemplateModel.apiGroup}/${ToeholdTemplateModel.apiVersion}`,
-      kind: ToeholdTemplateModel.kind,
+      apiVersion: `${CopyApplianceTemplateModel.apiGroup}/${CopyApplianceTemplateModel.apiVersion}`,
+      kind: CopyApplianceTemplateModel.kind,
       metadata: {
         name: templateName,
         namespace,
@@ -85,8 +85,8 @@ const onCreateToeholdTemplate = async (
         templateName,
       },
     },
-    model: ToeholdTemplateModel,
+    model: CopyApplianceTemplateModel,
   });
 };
 
-export default onCreateToeholdTemplate;
+export default onCreateCopyApplianceTemplate;

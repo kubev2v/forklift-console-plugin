@@ -17,7 +17,7 @@ import {
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { FEATURE_NAMES } from '@utils/constants';
-import { ToeholdTemplateModelGroupVersionKind } from '@utils/crds/common/models';
+import { CopyApplianceTemplateModelGroupVersionKind } from '@utils/crds/common/models';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
@@ -25,12 +25,12 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { ProviderData } from '@utils/providers/types';
 
-import CreateToeholdTemplateModal, {
-  type CreateToeholdTemplateModalProps,
-} from '../DetailsSection/CreateToeholdTemplateModal';
+import CopyApplianceTemplateDetailsItem from '../DetailsSection/CopyApplianceTemplateDetailsItem';
+import CreateCopyApplianceTemplateModal, {
+  type CreateCopyApplianceTemplateModalProps,
+} from '../DetailsSection/CreateCopyApplianceTemplateModal';
 import ToeholdSettingDetailsItem from '../DetailsSection/ToeholdSettingDetailsItem';
 import ToeholdSSHSecretsDetailsItem from '../DetailsSection/ToeholdSSHSecretsDetailsItem';
-import ToeholdTemplateDetailsItem from '../DetailsSection/ToeholdTemplateDetailsItem';
 
 type ToeholdSectionProps = {
   data: ProviderData;
@@ -50,7 +50,7 @@ const ToeholdSection: FC<ToeholdSectionProps> = ({ data }) => {
   const [templates, loaded, loadError] = useK8sWatchResource<K8sResourceCommon[]>(
     toeholdEnabled && provider?.spec?.type === PROVIDER_TYPES.vsphere && namespace
       ? {
-          groupVersionKind: ToeholdTemplateModelGroupVersionKind,
+          groupVersionKind: CopyApplianceTemplateModelGroupVersionKind,
           isList: true,
           namespace,
           namespaced: true,
@@ -78,12 +78,12 @@ const ToeholdSection: FC<ToeholdSectionProps> = ({ data }) => {
     <EmptyState
       headingLevel="h4"
       icon={PlusCircleIcon}
-      titleText={t('No ToeholdTemplate')}
+      titleText={t('No CopyApplianceTemplate')}
       variant={EmptyStateVariant.sm}
     >
       <EmptyStateBody>
         {t(
-          'Create a ToeholdTemplate to place the copy-appliance template on this vSphere provider. Datastore, folder, network, and resource pool are required.',
+          'Create a CopyApplianceTemplate to place the copy-appliance template on this vSphere provider. Datastore, folder, network, and resource pool are required.',
         )}
       </EmptyStateBody>
       <EmptyStateFooter>
@@ -91,13 +91,16 @@ const ToeholdSection: FC<ToeholdSectionProps> = ({ data }) => {
           <Button
             isDisabled={!permissions.canPatch}
             onClick={() => {
-              launchOverlay<CreateToeholdTemplateModalProps>(CreateToeholdTemplateModal, {
-                provider,
-              });
+              launchOverlay<CreateCopyApplianceTemplateModalProps>(
+                CreateCopyApplianceTemplateModal,
+                {
+                  provider,
+                },
+              );
             }}
             variant={ButtonVariant.primary}
           >
-            {t('Create ToeholdTemplate')}
+            {t('Create CopyApplianceTemplate')}
           </Button>
         </EmptyStateActions>
       </EmptyStateFooter>
@@ -136,7 +139,7 @@ const ToeholdSection: FC<ToeholdSectionProps> = ({ data }) => {
           />
         </DescriptionList>
         <DescriptionList>
-          <ToeholdTemplateDetailsItem resource={provider} />
+          <CopyApplianceTemplateDetailsItem resource={provider} />
           <ToeholdSSHSecretsDetailsItem resource={provider} />
         </DescriptionList>
       </>

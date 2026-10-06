@@ -4,14 +4,14 @@ import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { type K8sResourceCommon, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Label, Stack, StackItem } from '@patternfly/react-core';
 import { PF_LABEL_STATUS } from '@utils/constants';
-import { ToeholdTemplateModelGroupVersionKind } from '@utils/crds/common/models';
+import { CopyApplianceTemplateModelGroupVersionKind } from '@utils/crds/common/models';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { ProviderDetailsItemProps } from './utils/types';
 
-type ToeholdTemplate = K8sResourceCommon & {
+type CopyApplianceTemplate = K8sResourceCommon & {
   status?: {
     message?: string;
     phase?: string;
@@ -27,16 +27,16 @@ const phaseStatus = {
   Succeeded: PF_LABEL_STATUS.SUCCESS,
 } as const;
 
-const ToeholdTemplateDetailsItem: FC<ProviderDetailsItemProps> = ({ resource: provider }) => {
+const CopyApplianceTemplateDetailsItem: FC<ProviderDetailsItemProps> = ({ resource: provider }) => {
   const { t } = useForkliftTranslation();
   const name = getName(provider);
   const namespace = getNamespace(provider);
   const templateName = name ? `${name}-toehold` : undefined;
 
-  const [toehold] = useK8sWatchResource<ToeholdTemplate>(
+  const [toehold] = useK8sWatchResource<CopyApplianceTemplate>(
     templateName && namespace
       ? {
-          groupVersionKind: ToeholdTemplateModelGroupVersionKind,
+          groupVersionKind: CopyApplianceTemplateModelGroupVersionKind,
           name: templateName,
           namespace,
           namespaced: true,
@@ -56,7 +56,7 @@ const ToeholdTemplateDetailsItem: FC<ProviderDetailsItemProps> = ({ resource: pr
           <Stack>
             <StackItem>
               <ResourceLink
-                groupVersionKind={ToeholdTemplateModelGroupVersionKind}
+                groupVersionKind={CopyApplianceTemplateModelGroupVersionKind}
                 name={templateName}
                 namespace={namespace}
               />
@@ -81,12 +81,12 @@ const ToeholdTemplateDetailsItem: FC<ProviderDetailsItemProps> = ({ resource: pr
         )
       }
       helpContent={t(
-        'Toehold template used to clone copy appliances for this provider. Shows build phase, stage, and the vCenter template reference when ready.',
+        'CopyApplianceTemplate used to clone copy appliances for this provider. Shows build phase, stage, and the vCenter template reference when ready.',
       )}
-      testId="toehold-template-detail-item"
+      testId="copy-appliance-template-detail-item"
       title={t('Template')}
     />
   );
 };
 
-export default ToeholdTemplateDetailsItem;
+export default CopyApplianceTemplateDetailsItem;

@@ -162,7 +162,7 @@ subresource
 switchfilter
 testid
 timespan
-toeholdtemplates
+copyappliancetemplates
 tolerations
 treegrid
 trident

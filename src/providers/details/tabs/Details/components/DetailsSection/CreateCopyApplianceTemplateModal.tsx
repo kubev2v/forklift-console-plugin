@@ -12,18 +12,18 @@ import {
   getToeholdNetwork,
 } from '@utils/crds/common/selectors';
 
-import onCreateToeholdTemplate from './onCreateToeholdTemplate';
+import onCreateCopyApplianceTemplate from './onCreateCopyApplianceTemplate';
 import ToeholdPlacementForm, { type ToeholdPlacementFormValues } from './ToeholdPlacementForm';
 import {
   useToeholdPlacementLabels,
   useToeholdPlacementOptions,
 } from './useToeholdPlacementOptions';
 
-export type CreateToeholdTemplateModalProps = {
+export type CreateCopyApplianceTemplateModalProps = {
   provider: V1beta1Provider;
 };
 
-const CreateToeholdTemplateModal: OverlayComponent<CreateToeholdTemplateModalProps> = ({
+const CreateCopyApplianceTemplateModal: OverlayComponent<CreateCopyApplianceTemplateModalProps> = ({
   closeOverlay,
   provider,
 }) => {
@@ -55,15 +55,15 @@ const CreateToeholdTemplateModal: OverlayComponent<CreateToeholdTemplateModalPro
       confirmLabel={t('Create')}
       isDisabled={!canSubmit || inventoryLoading}
       onConfirm={async () => {
-        await onCreateToeholdTemplate(provider, values);
+        await onCreateCopyApplianceTemplate(provider, values);
       }}
-      title={t('Create ToeholdTemplate')}
+      title={t('Create CopyApplianceTemplate')}
       variant={ModalVariant.medium}
     >
       <Stack hasGutter>
         <StackItem>
           {t(
-            'Select placement for the toehold template and copy appliances. These settings are required before the template can be built.',
+            'Select placement for the copy appliance template and copy appliances. These settings are required before the template can be built.',
           )}
         </StackItem>
         <StackItem>
@@ -86,4 +86,4 @@ const CreateToeholdTemplateModal: OverlayComponent<CreateToeholdTemplateModalPro
   );
 };
 
-export default CreateToeholdTemplateModal;
+export default CreateCopyApplianceTemplateModal;

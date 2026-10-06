@@ -21,21 +21,21 @@ export const CopyApplianceModelGroupVersionKind = {
   version: 'v1beta1',
 };
 
-export const ToeholdTemplateModelGroupVersionKind = {
+export const CopyApplianceTemplateModelGroupVersionKind = {
   group: 'forklift.konveyor.io',
-  kind: 'ToeholdTemplate',
+  kind: 'CopyApplianceTemplate',
   version: 'v1beta1',
 };
 
-export const ToeholdTemplateModel = {
-  abbr: 'TT',
+export const CopyApplianceTemplateModel = {
+  abbr: 'CAT',
   apiGroup: 'forklift.konveyor.io',
   apiVersion: 'v1beta1',
-  kind: 'ToeholdTemplate',
-  label: 'ToeholdTemplate',
-  labelPlural: 'ToeholdTemplates',
+  kind: 'CopyApplianceTemplate',
+  label: 'CopyApplianceTemplate',
+  labelPlural: 'CopyApplianceTemplates',
   namespaced: true,
-  plural: 'toeholdtemplates',
+  plural: 'copyappliancetemplates',
 };
 
 export const VirtualMachineModelGroupVersionKind = {

@@ -44,7 +44,7 @@ const ToeholdSSHSecretsDetailsItem: FC<ProviderDetailsItemProps> = ({ resource: 
       }
       crumbs={['Provider', 'status', 'toeholdSSHPrivateSecret']}
       helpContent={t(
-        'SSH key pair used by the toehold template and copy appliances for this provider.',
+        'SSH key pair used by the copy appliance template and copy appliances for this provider.',
       )}
       testId="toehold-ssh-secrets-detail-item"
       title={t('SSH secrets')}

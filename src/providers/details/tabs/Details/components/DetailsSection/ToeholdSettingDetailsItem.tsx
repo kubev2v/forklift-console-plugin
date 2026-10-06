@@ -46,17 +46,17 @@ const ToeholdSettingDetailsItem: FC<ToeholdSettingDetailsItemProps> = ({
 
   const labels: Record<ToeholdSettingField, { help: string; testId: string; title: string }> = {
     datastore: {
-      help: t('Datastore used to store the toehold template disk.'),
+      help: t('Datastore used to store the copy appliance template disk.'),
       testId: 'toehold-datastore-detail-item',
       title: t('Datastore'),
     },
     folder: {
-      help: t('Inventory folder path for the toehold template VM.'),
+      help: t('Inventory folder path for the copy appliance template VM.'),
       testId: 'toehold-folder-detail-item',
       title: t('Folder'),
     },
     network: {
-      help: t('Network attached to the toehold template VM.'),
+      help: t('Network attached to the copy appliance template VM.'),
       testId: 'toehold-network-detail-item',
       title: t('Network'),
     },

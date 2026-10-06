@@ -81,17 +81,17 @@ export const useToeholdPlacementLabels = (): ToeholdPlacementFormProps['labels']
   const { t } = useForkliftTranslation();
   return {
     datastore: {
-      help: t('Datastore used to store the toehold template disk.'),
+      help: t('Datastore used to store the copy appliance template disk.'),
       label: t('Datastore'),
       placeholder: t('Select a datastore'),
     },
     folder: {
-      help: t('Inventory folder path for the toehold template VM.'),
+      help: t('Inventory folder path for the copy appliance template VM.'),
       label: t('Folder'),
       placeholder: t('Select a folder'),
     },
     network: {
-      help: t('Network attached to the toehold template VM.'),
+      help: t('Network attached to the copy appliance template VM.'),
       label: t('Network'),
       placeholder: t('Select a network'),
     },
