@@ -5,6 +5,7 @@ import PlanVddkForWarmWarningAlert from 'src/plans/components/PlanVddkForWarmWar
 import { getMigrationTypeConfig } from 'src/plans/create/steps/migration-type/utils';
 import { hasLiveMigrationProviderType } from 'src/plans/create/utils/hasLiveMigrationProviderType';
 import { hasWarmMigrationProviderType } from 'src/plans/create/utils/hasWarmMigrationProviderType';
+import { PROVIDER_TYPES } from 'src/providers/utils/constants';
 
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import type { ProviderVirtualMachine, V1beta1Provider } from '@forklift-ui/types';
@@ -36,7 +37,9 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
     (migrationType === MigrationTypeValue.Warm && hasWarmMigrationProviderType(sourceProvider)) ||
     (migrationType === MigrationTypeValue.Live && hasLiveMigrationProviderType(sourceProvider));
 
-  const isVddkInitImageNotSet = isEmpty(sourceProvider?.spec?.settings?.vddkInitImage);
+  const isVddkInitImageNotSet =
+    sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere &&
+    isEmpty(sourceProvider?.spec?.settings?.vddkInitImage);
 
   if (!canRender) return null;
 
