@@ -7,6 +7,7 @@ import { getSourceStorageValuesForSelectedVms } from 'src/storageMaps/utils/getS
 
 import { getPlanTargetNamespace } from '@utils/crds/plans/selectors';
 import { isEmpty } from '@utils/helpers';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import { usePlan } from '../../../hooks/usePlan';
 import { getMappingPageMessage } from '../utils/utils';
@@ -18,6 +19,8 @@ import { usePlanProviders } from './usePlanProviders';
 import { usePlanStorageMapResources } from './usePlanStorageMapResources';
 
 export const usePlanMappingsPageData: UsePlanMappingsPageData = (name, namespace) => {
+  const { t } = useForkliftTranslation();
+  const defaultNetworkLabel = t('Default network');
   const { plan } = usePlan(name, namespace);
   const { sourceProvider, targetProvider } = usePlanProviders(plan);
   const targetProject = useMemo(() => getPlanTargetNamespace(plan) ?? '', [plan]);
@@ -63,8 +66,14 @@ export const usePlanMappingsPageData: UsePlanMappingsPageData = (name, namespace
   );
 
   const { other: otherSourceNetworks, used: usedSourceNetworks } = useMemo(
-    () => getSourceNetworkValues(availableSourceNetworks, Object.values(vms), oVirtNicProfiles),
-    [availableSourceNetworks, oVirtNicProfiles, vms],
+    () =>
+      getSourceNetworkValues(
+        availableSourceNetworks,
+        Object.values(vms),
+        oVirtNicProfiles,
+        defaultNetworkLabel,
+      ),
+    [availableSourceNetworks, defaultNetworkLabel, oVirtNicProfiles, vms],
   );
 
   const { other: otherSourceStorages, used: usedSourceStorages } = useMemo(
@@ -74,8 +83,9 @@ export const usePlanMappingsPageData: UsePlanMappingsPageData = (name, namespace
   );
 
   const targetNetworksMap = useMemo(
-    () => filterTargetNetworksByProject(availableTargetNetworks, targetProject),
-    [availableTargetNetworks, targetProject],
+    () =>
+      filterTargetNetworksByProject(availableTargetNetworks, targetProject, defaultNetworkLabel),
+    [availableTargetNetworks, defaultNetworkLabel, targetProject],
   );
 
   const message = useMemo(
