@@ -36,9 +36,9 @@ Your approach:
 - **Theming:** Design for console light/dark; avoid layouts that break under high contrast or `prefers-reduced-transparency` (solid backgrounds for text regions)
 
 **References**
-- Components: https://www.patternfly.org/components/all-components
+- Components: https://www.patternfly.org/components/overview/
 - Design foundations: https://www.patternfly.org/design-foundations/about-design-foundations
-- Design tokens: https://www.patternfly.org/design-foundations/design-tokens
+- Design tokens: https://www.patternfly.org/foundations-and-styles/design-tokens/all-design-tokens/
 - Upgrade guide: https://www.patternfly.org/get-started/upgrade
 
 ---
@@ -95,7 +95,7 @@ Quick reference: https://www.w3.org/WAI/WCAG22/quickref/
 
 ### PF-specific
 
-- PatternFly accessibility fundamentals: https://www.patternfly.org/accessibility/accessibility-fundamentals
+- PatternFly accessibility (develop): https://www.patternfly.org/accessibility/develop/
 - Respect `prefers-reduced-motion` — prefer PF/CSS on transform/opacity; avoid animating height/margin for layout
 
 ---
@@ -139,7 +139,10 @@ Produce a **Structural layout** section (and optional expanded `layout-plan.md` 
 
 ### Review-phase mode (code or mockup review)
 
-Use severity output below. Cite **analogous MTV page** from `forklift-ux-patterns.mdc`. Flag PF composition issues separately from a11y.
+Use the **output format** below. Each finding uses a severity prefix (🔴 blocker,
+🟡 suggestion, 🟢 enhancement, ✅ positive) — do not add a separate severity field.
+Cite **analogous MTV page** from `forklift-ux-patterns.mdc`. Flag PF composition
+issues separately from a11y.
 
 ---
 

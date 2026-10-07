@@ -9,7 +9,10 @@ Load this file when designing or reviewing UI in this repository. Pair with
 `.cursor/rules/agents/ux-reviewer.mdc`.
 
 The plugin runs **inside OpenShift Console** (PatternFly 6). Reuse existing
-surfaces before inventing new layout patterns.
+surfaces before inventing new layout patterns. PF6 doc entry points: [components
+overview](https://www.patternfly.org/components/overview/), [design
+tokens](https://www.patternfly.org/foundations-and-styles/design-tokens/all-design-tokens/),
+[accessibility](https://www.patternfly.org/accessibility/develop/).
 
 ---
 
