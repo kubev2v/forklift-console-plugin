@@ -31,9 +31,9 @@ const CopyApplianceTemplateDetailsItem: FC<ProviderDetailsItemProps> = ({ resour
   const { t } = useForkliftTranslation();
   const name = getName(provider);
   const namespace = getNamespace(provider);
-  const templateName = name ? `${name}-toehold` : undefined;
+  const templateName = name ? `${name}-copy-appliance-template` : undefined;
 
-  const [toehold] = useK8sWatchResource<CopyApplianceTemplate>(
+  const [copyApplianceTemplate] = useK8sWatchResource<CopyApplianceTemplate>(
     templateName && namespace
       ? {
           groupVersionKind: CopyApplianceTemplateModelGroupVersionKind,
@@ -44,10 +44,10 @@ const CopyApplianceTemplateDetailsItem: FC<ProviderDetailsItemProps> = ({ resour
       : null,
   );
 
-  const phase = toehold?.status?.phase;
-  const stage = toehold?.status?.stage;
-  const message = toehold?.status?.message;
-  const moref = toehold?.status?.template?.moref;
+  const phase = copyApplianceTemplate?.status?.phase;
+  const stage = copyApplianceTemplate?.status?.stage;
+  const message = copyApplianceTemplate?.status?.message;
+  const moref = copyApplianceTemplate?.status?.template?.moref;
 
   return (
     <DetailsItem

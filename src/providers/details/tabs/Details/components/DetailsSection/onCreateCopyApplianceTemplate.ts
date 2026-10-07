@@ -3,16 +3,16 @@ import { ProviderModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sCreate, k8sPatch, type K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
 import { CopyApplianceTemplateModel } from '@utils/crds/common/models';
 import {
+  getCopyApplianceDatastore,
+  getCopyApplianceFolder,
+  getCopyApplianceNetwork,
   getCopyApplianceResourcePool,
   getName,
   getNamespace,
-  getToeholdDatastore,
-  getToeholdFolder,
-  getToeholdNetwork,
   getUID,
 } from '@utils/crds/common/selectors';
 
-import type { ToeholdPlacementFormValues } from './ToeholdPlacementForm';
+import type { CopyAppliancePlacementFormValues } from './CopyAppliancePlacementForm';
 
 type SettingPatch = {
   op: typeof ADD | typeof REPLACE;
@@ -28,7 +28,7 @@ const patchOp = (current: string | undefined, path: string, value: string): Sett
 
 const onCreateCopyApplianceTemplate = async (
   provider: V1beta1Provider,
-  placement: ToeholdPlacementFormValues,
+  placement: CopyAppliancePlacementFormValues,
 ): Promise<K8sResourceCommon> => {
   const name = getName(provider);
   const namespace = getNamespace(provider);
@@ -37,17 +37,25 @@ const onCreateCopyApplianceTemplate = async (
     throw new Error('Provider is missing name, namespace, or uid');
   }
 
-  const templateName = `${name}-toehold`;
+  const templateName = `${name}-copy-appliance-template`;
 
   await k8sPatch({
     data: [
       patchOp(
-        getToeholdDatastore(provider),
-        '/spec/settings/toeholdDatastore',
+        getCopyApplianceDatastore(provider),
+        '/spec/settings/copyApplianceDatastore',
         placement.datastore,
       ),
-      patchOp(getToeholdFolder(provider), '/spec/settings/toeholdFolder', placement.folder),
-      patchOp(getToeholdNetwork(provider), '/spec/settings/toeholdNetwork', placement.network),
+      patchOp(
+        getCopyApplianceFolder(provider),
+        '/spec/settings/copyApplianceFolder',
+        placement.folder,
+      ),
+      patchOp(
+        getCopyApplianceNetwork(provider),
+        '/spec/settings/copyApplianceNetwork',
+        placement.network,
+      ),
       patchOp(
         getCopyApplianceResourcePool(provider),
         '/spec/settings/copyApplianceResourcePool',

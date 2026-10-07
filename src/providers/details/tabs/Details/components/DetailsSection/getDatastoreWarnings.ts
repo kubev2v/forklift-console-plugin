@@ -12,7 +12,7 @@ type DatastoreWarningFields = {
 };
 
 /**
- * Advisory reasons a datastore is a poor toehold target. Empty when the store
+ * Advisory reasons a datastore is a poor copyApplianceTemplate target. Empty when the store
  * looks fine. Does not block selection.
  */
 export const getDatastoreWarnings = (datastore: DatastoreWarningFields): DatastoreWarning[] => {

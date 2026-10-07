@@ -6,17 +6,18 @@ import { ForkliftTrans } from '@utils/i18n';
 
 const VDDKHelperText: FC = () => {
   const { isFeatureEnabled } = useFeatureFlags();
-  const toeholdEnabled = isFeatureEnabled(FEATURE_NAMES.TOEHOLD);
+  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE);
 
-  if (toeholdEnabled) {
+  if (copyApplianceTemplateEnabled) {
     return (
       <ForkliftTrans>
         <p>VMware Virtual Disk Development Kit (VDDK) image.</p>
         <br />
         <p>
           The migration toolkit for virtualization (MTV) can use the VMware Virtual Disk Development
-          Kit (VDDK) SDK to accelerate transferring virtual disks from VMware vSphere. With toehold
-          enabled, VDDK is optional; migrations without VDDK use the copy appliance instead.
+          Kit (VDDK) SDK to accelerate transferring virtual disks from VMware vSphere. With
+          copyApplianceTemplate enabled, VDDK is optional; migrations without VDDK use the copy
+          appliance instead.
         </p>
         <br />
         <p>Configuring a VDDK init image can still improve transfer performance.</p>

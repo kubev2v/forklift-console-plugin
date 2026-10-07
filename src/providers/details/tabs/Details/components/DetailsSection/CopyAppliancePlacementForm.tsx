@@ -4,14 +4,14 @@ import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpTe
 import { FilterableSelect } from '@components/FilterableSelect/FilterableSelect';
 import { Form, type SelectOptionProps } from '@patternfly/react-core';
 
-export type ToeholdPlacementFormValues = {
+export type CopyAppliancePlacementFormValues = {
   datastore: string;
   folder: string;
   network: string;
   resourcePool: string;
 };
 
-export type ToeholdPlacementFormProps = {
+export type CopyAppliancePlacementFormProps = {
   datastoreOptions: SelectOptionProps[];
   datastoreWarning?: string;
   folderOptions: SelectOptionProps[];
@@ -23,12 +23,12 @@ export type ToeholdPlacementFormProps = {
     resourcePool: { help: string; label: string; placeholder: string };
   };
   networkOptions: SelectOptionProps[];
-  onChange: (field: keyof ToeholdPlacementFormValues, value: string) => void;
+  onChange: (field: keyof CopyAppliancePlacementFormValues, value: string) => void;
   resourcePoolOptions: SelectOptionProps[];
-  values: ToeholdPlacementFormValues;
+  values: CopyAppliancePlacementFormValues;
 };
 
-const ToeholdPlacementForm: FC<ToeholdPlacementFormProps> = ({
+const CopyAppliancePlacementForm: FC<CopyAppliancePlacementFormProps> = ({
   datastoreOptions,
   datastoreWarning,
   folderOptions,
@@ -41,7 +41,7 @@ const ToeholdPlacementForm: FC<ToeholdPlacementFormProps> = ({
 }) => (
   <Form>
     <FormGroupWithHelpText
-      fieldId="toehold-datastore"
+      fieldId="copy-appliance-datastore"
       helperText={datastoreWarning ?? labels.datastore.help}
       isRequired
       label={labels.datastore.label}
@@ -59,7 +59,7 @@ const ToeholdPlacementForm: FC<ToeholdPlacementFormProps> = ({
       />
     </FormGroupWithHelpText>
     <FormGroupWithHelpText
-      fieldId="toehold-folder"
+      fieldId="copy-appliance-folder"
       helperText={labels.folder.help}
       isRequired
       label={labels.folder.label}
@@ -76,7 +76,7 @@ const ToeholdPlacementForm: FC<ToeholdPlacementFormProps> = ({
       />
     </FormGroupWithHelpText>
     <FormGroupWithHelpText
-      fieldId="toehold-network"
+      fieldId="copy-appliance-network"
       helperText={labels.network.help}
       isRequired
       label={labels.network.label}
@@ -112,4 +112,4 @@ const ToeholdPlacementForm: FC<ToeholdPlacementFormProps> = ({
   </Form>
 );
 
-export default ToeholdPlacementForm;
+export default CopyAppliancePlacementForm;

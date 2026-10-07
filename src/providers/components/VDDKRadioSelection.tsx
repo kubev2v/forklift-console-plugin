@@ -22,7 +22,7 @@ import VDDKHelperText from './VDDKHelperText';
 const VDDKRadioSelection: FC = () => {
   const { t } = useForkliftTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
-  const toeholdEnabled = isFeatureEnabled(FEATURE_NAMES.TOEHOLD);
+  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE);
 
   const { control } = useCreateProviderFormContext();
 
@@ -131,7 +131,11 @@ const VDDKRadioSelection: FC = () => {
           data-testid="vddk-setup-skip-radio"
           id="vddk-setup-skip"
           isChecked={vddkMode === VddkSetupMode.Skip}
-          label={toeholdEnabled ? t('Skip VDDK setup') : t('Skip VDDK setup (not recommended)')}
+          label={
+            copyApplianceTemplateEnabled
+              ? t('Skip VDDK setup')
+              : t('Skip VDDK setup (not recommended)')
+          }
           name={ProviderFormFieldId.VsphereVddkSetupMode}
           onChange={() => {
             vddkModeController.field.onChange(VddkSetupMode.Skip);

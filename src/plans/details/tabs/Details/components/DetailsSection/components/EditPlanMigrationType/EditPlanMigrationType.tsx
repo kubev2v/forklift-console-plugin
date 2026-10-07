@@ -38,11 +38,12 @@ const EditPlanMigrationType: OverlayComponent<EditPlanProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
-  const toeholdEnabled = isFeatureEnabled(FEATURE_NAMES.TOEHOLD);
+  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE);
   const [selected, setSelected] = useState<MigrationTypeValue>(getPlanMigrationType(resource));
   const [cbtDisabledVms] = useCbtDisabledVms(resource, sourceProvider);
   const isWarmSelected = selected === MigrationTypeValue.Warm;
-  const showVddkWarmWarning = isWarmSelected && isVddkInitImageNotSet && !toeholdEnabled;
+  const showVddkWarmWarning =
+    isWarmSelected && isVddkInitImageNotSet && !copyApplianceTemplateEnabled;
 
   const canShowType = (type: MigrationTypeValue): boolean => {
     switch (type) {

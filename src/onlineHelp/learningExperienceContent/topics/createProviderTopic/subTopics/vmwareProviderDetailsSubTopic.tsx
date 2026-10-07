@@ -57,7 +57,7 @@ export const vmwareProviderDetailsSubTopic = (): LearningExperienceSubTopic => (
       title: (
         <HelpTitledContent
           content={t(
-            'It is recommended to use VDDK setup because it helps enhance migration performance. When toehold is enabled, VDDK is optional.',
+            'It is recommended to use VDDK setup because it helps enhance migration performance. When copy appliance templates are enabled, VDDK is optional.',
           )}
           title={t('Select how you want to set up the Virtual Disk Development Kit (VDDK).')}
         />

@@ -6,18 +6,20 @@ import type { V1beta1Provider } from '@forklift-ui/types';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { ModalVariant, Stack, StackItem } from '@patternfly/react-core';
 import {
+  getCopyApplianceDatastore,
+  getCopyApplianceFolder,
+  getCopyApplianceNetwork,
   getCopyApplianceResourcePool,
-  getToeholdDatastore,
-  getToeholdFolder,
-  getToeholdNetwork,
 } from '@utils/crds/common/selectors';
 
+import CopyAppliancePlacementForm, {
+  type CopyAppliancePlacementFormValues,
+} from './CopyAppliancePlacementForm';
 import onCreateCopyApplianceTemplate from './onCreateCopyApplianceTemplate';
-import ToeholdPlacementForm, { type ToeholdPlacementFormValues } from './ToeholdPlacementForm';
 import {
-  useToeholdPlacementLabels,
-  useToeholdPlacementOptions,
-} from './useToeholdPlacementOptions';
+  useCopyAppliancePlacementLabels,
+  useCopyAppliancePlacementOptions,
+} from './useCopyAppliancePlacementOptions';
 
 export type CreateCopyApplianceTemplateModalProps = {
   provider: V1beta1Provider;
@@ -28,10 +30,10 @@ const CreateCopyApplianceTemplateModal: OverlayComponent<CreateCopyApplianceTemp
   provider,
 }) => {
   const { t } = useForkliftTranslation();
-  const [values, setValues] = useState<ToeholdPlacementFormValues>({
-    datastore: getToeholdDatastore(provider) ?? '',
-    folder: getToeholdFolder(provider) ?? '',
-    network: getToeholdNetwork(provider) ?? '',
+  const [values, setValues] = useState<CopyAppliancePlacementFormValues>({
+    datastore: getCopyApplianceDatastore(provider) ?? '',
+    folder: getCopyApplianceFolder(provider) ?? '',
+    network: getCopyApplianceNetwork(provider) ?? '',
     resourcePool: getCopyApplianceResourcePool(provider) ?? '',
   });
 
@@ -42,8 +44,8 @@ const CreateCopyApplianceTemplateModal: OverlayComponent<CreateCopyApplianceTemp
     inventoryLoading,
     networkOptions,
     resourcePoolOptions,
-  } = useToeholdPlacementOptions(provider, values.resourcePool);
-  const labels = useToeholdPlacementLabels();
+  } = useCopyAppliancePlacementOptions(provider, values.resourcePool);
+  const labels = useCopyAppliancePlacementLabels();
 
   const canSubmit = Boolean(
     values.datastore && values.folder && values.network && values.resourcePool,
@@ -67,7 +69,7 @@ const CreateCopyApplianceTemplateModal: OverlayComponent<CreateCopyApplianceTemp
           )}
         </StackItem>
         <StackItem>
-          <ToeholdPlacementForm
+          <CopyAppliancePlacementForm
             datastoreOptions={datastoreOptions}
             datastoreWarning={datastoreWarning(values.datastore)}
             folderOptions={folderOptions}

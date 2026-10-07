@@ -9,17 +9,17 @@ const SkipVddkAlert: FC = () => {
   const { t } = useForkliftTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
 
-  if (isFeatureEnabled(FEATURE_NAMES.TOEHOLD)) {
+  if (isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE)) {
     return (
       <Alert
         isInline
-        title={t('VDDK is optional when toehold is enabled.')}
+        title={t('VDDK is optional when copy appliance templates are enabled.')}
         variant={AlertVariant.info}
       >
         <ForkliftTrans>
           <p>
-            Without a VDDK image, migrations use the toehold copy appliance. VDDK can still improve
-            transfer performance when you configure it on the provider.
+            Without a VDDK image, migrations use the copy appliance. VDDK can still improve transfer
+            performance when you configure it on the provider.
           </p>
         </ForkliftTrans>
       </Alert>

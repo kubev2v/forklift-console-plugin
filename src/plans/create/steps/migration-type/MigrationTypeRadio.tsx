@@ -36,7 +36,7 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
-  const toeholdEnabled = isFeatureEnabled(FEATURE_NAMES.TOEHOLD);
+  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE);
 
   const canRender =
     migrationType === MigrationTypeValue.Cold ||
@@ -54,7 +54,8 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
   const { description, helpBody, helpLink, PreviewLabel } = getMigrationTypeConfig(migrationType);
   const isWarmOptionSelected =
     migrationType === MigrationTypeValue.Warm && value === MigrationTypeValue.Warm;
-  const showVddkWarmWarning = isWarmOptionSelected && isVddkInitImageNotSet && !toeholdEnabled;
+  const showVddkWarmWarning =
+    isWarmOptionSelected && isVddkInitImageNotSet && !copyApplianceTemplateEnabled;
 
   return (
     <>

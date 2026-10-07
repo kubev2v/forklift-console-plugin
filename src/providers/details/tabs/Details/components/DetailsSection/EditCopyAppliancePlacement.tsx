@@ -8,38 +8,43 @@ import type { V1beta1Provider } from '@forklift-ui/types';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, ModalVariant, Stack, StackItem } from '@patternfly/react-core';
 import {
+  getCopyApplianceDatastore,
+  getCopyApplianceFolder,
+  getCopyApplianceNetwork,
   getCopyApplianceResourcePool,
-  getToeholdDatastore,
-  getToeholdFolder,
-  getToeholdNetwork,
 } from '@utils/crds/common/selectors';
 
-import onUpdateToeholdSetting, { type ToeholdSettingField } from './onUpdateToeholdPlacement';
+import onUpdateCopyApplianceSetting, {
+  type CopyApplianceSettingField,
+} from './onUpdateCopyAppliancePlacement';
 import {
-  useToeholdPlacementLabels,
-  useToeholdPlacementOptions,
-} from './useToeholdPlacementOptions';
+  useCopyAppliancePlacementLabels,
+  useCopyAppliancePlacementOptions,
+} from './useCopyAppliancePlacementOptions';
 
-export type EditToeholdPlacementProps = {
-  field: ToeholdSettingField;
+export type EditCopyAppliancePlacementProps = {
+  field: CopyApplianceSettingField;
   provider: V1beta1Provider;
 };
 
-const getters: Record<ToeholdSettingField, (provider: V1beta1Provider) => string | undefined> = {
-  datastore: getToeholdDatastore,
-  folder: getToeholdFolder,
-  network: getToeholdNetwork,
+const getters: Record<
+  CopyApplianceSettingField,
+  (provider: V1beta1Provider) => string | undefined
+> = {
+  datastore: getCopyApplianceDatastore,
+  folder: getCopyApplianceFolder,
+  network: getCopyApplianceNetwork,
   resourcePool: getCopyApplianceResourcePool,
 };
 
-const EditToeholdPlacement: OverlayComponent<EditToeholdPlacementProps> = ({
+const EditCopyAppliancePlacement: OverlayComponent<EditCopyAppliancePlacementProps> = ({
   closeOverlay,
   field,
   provider,
 }) => {
   const { t } = useForkliftTranslation();
   const [value, setValue] = useState(getters[field](provider) ?? '');
-  const labels = useToeholdPlacementLabels();
+  const labels = useCopyAppliancePlacementLabels();
   const {
     datastoreOptions,
     datastoreWarning,
@@ -47,7 +52,7 @@ const EditToeholdPlacement: OverlayComponent<EditToeholdPlacementProps> = ({
     inventoryLoading,
     networkOptions,
     resourcePoolOptions,
-  } = useToeholdPlacementOptions(provider, field === 'resourcePool' ? value : '');
+  } = useCopyAppliancePlacementOptions(provider, field === 'resourcePool' ? value : '');
 
   const optionsByField = {
     datastore: datastoreOptions,
@@ -55,7 +60,7 @@ const EditToeholdPlacement: OverlayComponent<EditToeholdPlacementProps> = ({
     network: networkOptions,
     resourcePool: resourcePoolOptions,
   };
-  const titles: Record<ToeholdSettingField, string> = {
+  const titles: Record<CopyApplianceSettingField, string> = {
     datastore: t('Edit datastore'),
     folder: t('Edit folder'),
     network: t('Edit network'),
@@ -68,7 +73,7 @@ const EditToeholdPlacement: OverlayComponent<EditToeholdPlacementProps> = ({
     <ModalForm
       closeOverlay={closeOverlay}
       onConfirm={async () => {
-        await onUpdateToeholdSetting(provider, field, value);
+        await onUpdateCopyApplianceSetting(provider, field, value);
       }}
       title={titles[field]}
       variant={ModalVariant.small}
@@ -77,7 +82,7 @@ const EditToeholdPlacement: OverlayComponent<EditToeholdPlacementProps> = ({
         <StackItem>
           <Form>
             <FormGroupWithHelpText
-              fieldId={`toehold-${field}`}
+              fieldId={`copyApplianceTemplate-${field}`}
               helperText={selectedWarning ?? help}
               label={label}
               validated={selectedWarning ? 'warning' : 'default'}
@@ -100,4 +105,4 @@ const EditToeholdPlacement: OverlayComponent<EditToeholdPlacementProps> = ({
   );
 };
 
-export default EditToeholdPlacement;
+export default EditCopyAppliancePlacement;

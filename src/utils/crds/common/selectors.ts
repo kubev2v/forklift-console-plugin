@@ -50,53 +50,59 @@ export const getVddkInitImage = (provider: V1beta1Provider): string | undefined 
 export const getUseVddkAioOptimization = (provider: V1beta1Provider): string | undefined =>
   getSettings(provider)?.useVddkAioOptimization;
 
-export const getToeholdDatastore = (provider: V1beta1Provider): string | undefined =>
-  getSettings(provider)?.toeholdDatastore;
+export const getCopyApplianceDatastore = (provider: V1beta1Provider): string | undefined =>
+  getSettings(provider)?.copyApplianceDatastore;
 
-export const getToeholdFolder = (provider: V1beta1Provider): string | undefined =>
-  getSettings(provider)?.toeholdFolder;
+export const getCopyApplianceFolder = (provider: V1beta1Provider): string | undefined =>
+  getSettings(provider)?.copyApplianceFolder;
 
-export const getToeholdNetwork = (provider: V1beta1Provider): string | undefined =>
-  getSettings(provider)?.toeholdNetwork;
+export const getCopyApplianceNetwork = (provider: V1beta1Provider): string | undefined =>
+  getSettings(provider)?.copyApplianceNetwork;
 
 export const getCopyApplianceResourcePool = (provider: V1beta1Provider): string | undefined =>
   getSettings(provider)?.copyApplianceResourcePool;
 
 /** Provider status fields not yet in published @forklift-ui/types. */
-type ProviderToeholdStatus = {
-  toeholdSSHPrivateSecret?: string;
-  toeholdSSHPublicSecret?: string;
+type ProviderCopyApplianceTemplateStatus = {
+  copyApplianceSSHPrivateSecret?: string;
+  copyApplianceSSHPublicSecret?: string;
 };
 
-const getToeholdStatus = (provider: V1beta1Provider): ProviderToeholdStatus | undefined => {
+const getCopyApplianceTemplateStatus = (
+  provider: V1beta1Provider,
+): ProviderCopyApplianceTemplateStatus | undefined => {
   const status: unknown = provider?.status;
   if (typeof status !== 'object' || status === null) {
     return undefined;
   }
   const record = status as Record<string, unknown>;
-  const toeholdSSHPrivateSecret =
-    typeof record.toeholdSSHPrivateSecret === 'string' ? record.toeholdSSHPrivateSecret : undefined;
-  const toeholdSSHPublicSecret =
-    typeof record.toeholdSSHPublicSecret === 'string' ? record.toeholdSSHPublicSecret : undefined;
-  return { toeholdSSHPrivateSecret, toeholdSSHPublicSecret };
+  const copyApplianceSSHPrivateSecret =
+    typeof record.copyApplianceSSHPrivateSecret === 'string'
+      ? record.copyApplianceSSHPrivateSecret
+      : undefined;
+  const copyApplianceSSHPublicSecret =
+    typeof record.copyApplianceSSHPublicSecret === 'string'
+      ? record.copyApplianceSSHPublicSecret
+      : undefined;
+  return { copyApplianceSSHPrivateSecret, copyApplianceSSHPublicSecret };
 };
 
-export const getToeholdSSHPrivateSecret = (provider: V1beta1Provider): string | undefined => {
-  const fromStatus = getToeholdStatus(provider)?.toeholdSSHPrivateSecret;
+export const getCopyApplianceSSHPrivateSecret = (provider: V1beta1Provider): string | undefined => {
+  const fromStatus = getCopyApplianceTemplateStatus(provider)?.copyApplianceSSHPrivateSecret;
   if (fromStatus) {
     return fromStatus;
   }
   const name = getName(provider);
-  return name ? `toehold-ssh-keys-${name}-private` : undefined;
+  return name ? `copy-appliance-ssh-keys-${name}-private` : undefined;
 };
 
-export const getToeholdSSHPublicSecret = (provider: V1beta1Provider): string | undefined => {
-  const fromStatus = getToeholdStatus(provider)?.toeholdSSHPublicSecret;
+export const getCopyApplianceSSHPublicSecret = (provider: V1beta1Provider): string | undefined => {
+  const fromStatus = getCopyApplianceTemplateStatus(provider)?.copyApplianceSSHPublicSecret;
   if (fromStatus) {
     return fromStatus;
   }
   const name = getName(provider);
-  return name ? `toehold-ssh-keys-${name}-public` : undefined;
+  return name ? `copy-appliance-ssh-keys-${name}-public` : undefined;
 };
 
 export const getSdkEndpoint = (provider: V1beta1Provider): string | undefined =>

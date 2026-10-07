@@ -4,19 +4,21 @@ import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
 import {
+  getCopyApplianceSSHPrivateSecret,
+  getCopyApplianceSSHPublicSecret,
   getNamespace,
-  getToeholdSSHPrivateSecret,
-  getToeholdSSHPublicSecret,
 } from '@utils/crds/common/selectors';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { ProviderDetailsItemProps } from './utils/types';
 
-const ToeholdSSHSecretsDetailsItem: FC<ProviderDetailsItemProps> = ({ resource: provider }) => {
+const CopyApplianceSSHSecretsDetailsItem: FC<ProviderDetailsItemProps> = ({
+  resource: provider,
+}) => {
   const { t } = useForkliftTranslation();
   const namespace = getNamespace(provider);
-  const privateSecret = getToeholdSSHPrivateSecret(provider);
-  const publicSecret = getToeholdSSHPublicSecret(provider);
+  const privateSecret = getCopyApplianceSSHPrivateSecret(provider);
+  const publicSecret = getCopyApplianceSSHPublicSecret(provider);
 
   return (
     <DetailsItem
@@ -42,14 +44,14 @@ const ToeholdSSHSecretsDetailsItem: FC<ProviderDetailsItemProps> = ({ resource: 
           <span className="text-muted">{t('Empty')}</span>
         )
       }
-      crumbs={['Provider', 'status', 'toeholdSSHPrivateSecret']}
+      crumbs={['Provider', 'status', 'copyApplianceSSHPrivateSecret']}
       helpContent={t(
         'SSH key pair used by the copy appliance template and copy appliances for this provider.',
       )}
-      testId="toehold-ssh-secrets-detail-item"
+      testId="copy-appliance-ssh-secrets-detail-item"
       title={t('SSH secrets')}
     />
   );
 };
 
-export default ToeholdSSHSecretsDetailsItem;
+export default CopyApplianceSSHSecretsDetailsItem;

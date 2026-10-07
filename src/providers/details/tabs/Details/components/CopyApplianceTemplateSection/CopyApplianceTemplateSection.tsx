@@ -25,30 +25,30 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { ProviderData } from '@utils/providers/types';
 
+import CopyApplianceSettingDetailsItem from '../DetailsSection/CopyApplianceSettingDetailsItem';
+import CopyApplianceSSHSecretsDetailsItem from '../DetailsSection/CopyApplianceSSHSecretsDetailsItem';
 import CopyApplianceTemplateDetailsItem from '../DetailsSection/CopyApplianceTemplateDetailsItem';
 import CreateCopyApplianceTemplateModal, {
   type CreateCopyApplianceTemplateModalProps,
 } from '../DetailsSection/CreateCopyApplianceTemplateModal';
-import ToeholdSettingDetailsItem from '../DetailsSection/ToeholdSettingDetailsItem';
-import ToeholdSSHSecretsDetailsItem from '../DetailsSection/ToeholdSSHSecretsDetailsItem';
 
-type ToeholdSectionProps = {
+type CopyApplianceTemplateSectionProps = {
   data: ProviderData;
 };
 
-const ToeholdSection: FC<ToeholdSectionProps> = ({ data }) => {
+const CopyApplianceTemplateSection: FC<CopyApplianceTemplateSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
   const { isFeatureEnabled } = useFeatureFlags();
   const { permissions, provider } = data;
   const name = getName(provider);
   const namespace = getNamespace(provider);
-  const templateName = name ? `${name}-toehold` : undefined;
-  const toeholdEnabled = isFeatureEnabled(FEATURE_NAMES.TOEHOLD);
+  const templateName = name ? `${name}-copy-appliance-template` : undefined;
+  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE);
 
   // List watch: a single-name watch never leaves loading when the CR is missing.
   const [templates, loaded, loadError] = useK8sWatchResource<K8sResourceCommon[]>(
-    toeholdEnabled && provider?.spec?.type === PROVIDER_TYPES.vsphere && namespace
+    copyApplianceTemplateEnabled && provider?.spec?.type === PROVIDER_TYPES.vsphere && namespace
       ? {
           groupVersionKind: CopyApplianceTemplateModelGroupVersionKind,
           isList: true,
@@ -59,7 +59,7 @@ const ToeholdSection: FC<ToeholdSectionProps> = ({ data }) => {
   );
 
   if (
-    !toeholdEnabled ||
+    !copyApplianceTemplateEnabled ||
     provider?.spec?.type !== PROVIDER_TYPES.vsphere ||
     !provider ||
     !permissions
@@ -117,22 +117,22 @@ const ToeholdSection: FC<ToeholdSectionProps> = ({ data }) => {
             default: '2Col',
           }}
         >
-          <ToeholdSettingDetailsItem
+          <CopyApplianceSettingDetailsItem
             canPatch={permissions.canPatch}
             field="datastore"
             resource={provider}
           />
-          <ToeholdSettingDetailsItem
+          <CopyApplianceSettingDetailsItem
             canPatch={permissions.canPatch}
             field="folder"
             resource={provider}
           />
-          <ToeholdSettingDetailsItem
+          <CopyApplianceSettingDetailsItem
             canPatch={permissions.canPatch}
             field="network"
             resource={provider}
           />
-          <ToeholdSettingDetailsItem
+          <CopyApplianceSettingDetailsItem
             canPatch={permissions.canPatch}
             field="resourcePool"
             resource={provider}
@@ -140,7 +140,7 @@ const ToeholdSection: FC<ToeholdSectionProps> = ({ data }) => {
         </DescriptionList>
         <DescriptionList>
           <CopyApplianceTemplateDetailsItem resource={provider} />
-          <ToeholdSSHSecretsDetailsItem resource={provider} />
+          <CopyApplianceSSHSecretsDetailsItem resource={provider} />
         </DescriptionList>
       </>
     );
@@ -148,10 +148,10 @@ const ToeholdSection: FC<ToeholdSectionProps> = ({ data }) => {
 
   return (
     <PageSection className="forklift-page-section" hasBodyWrapper={false}>
-      <SectionHeading text={t('Toehold')} />
+      <SectionHeading text={t('Copy appliance template')} />
       {body}
     </PageSection>
   );
 };
 
-export default ToeholdSection;
+export default CopyApplianceTemplateSection;

@@ -7,8 +7,8 @@ import useProviderInventory from '@utils/hooks/useProviderInventory';
 import { useSourceStorages } from '@utils/hooks/useStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import type { CopyAppliancePlacementFormProps } from './CopyAppliancePlacementForm';
 import { toDatastoreSelectOptions, warningForDatastoreName } from './datastoreSelectOptions';
-import type { ToeholdPlacementFormProps } from './ToeholdPlacementForm';
 
 type PathItem = { path?: string };
 
@@ -20,7 +20,7 @@ const toOptions = (values: string[]): SelectOptionProps[] =>
       itemId: value,
     }));
 
-export const useToeholdPlacementOptions = (
+export const useCopyAppliancePlacementOptions = (
   provider: V1beta1Provider,
   resourcePool: string,
 ): {
@@ -77,7 +77,7 @@ export const useToeholdPlacementOptions = (
   };
 };
 
-export const useToeholdPlacementLabels = (): ToeholdPlacementFormProps['labels'] => {
+export const useCopyAppliancePlacementLabels = (): CopyAppliancePlacementFormProps['labels'] => {
   const { t } = useForkliftTranslation();
   return {
     datastore: {
