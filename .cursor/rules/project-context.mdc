@@ -79,9 +79,9 @@ Represents a conversion or deep-inspection operation on a VM.
 - **Note**: Backend returns `all_checks_passed` in snake_case — use the `hasInspectionPassed` selector to handle both casings
 
 ### CopyAppliance / CopyApplianceTemplate
-Manages vSphere copy appliances used for disk copy / copy-offload operations (not Hyper-V).
+Manages vSphere copy appliances used for disk copy operations (not Hyper-V; not copy-offload).
 
-- **CopyApplianceTemplate**: Cluster-scoped template defining vSphere placement (datastore, folder, network, resource pool) and SSH secret refs on the provider
+- **CopyApplianceTemplate**: Namespaced template (provider namespace) defining vSphere placement (datastore, folder, network, resource pool); SSH secret names live on provider status
 - **CopyAppliance**: Namespaced appliance instance created from a template; shown on migration Virtual Machines resources tab
 - Types/GVKs/models from `@forklift-ui/types` (`CopyApplianceModelGroupVersionKind`, `CopyApplianceTemplateModel`, …)
 - Provider selectors live in `src/utils/crds/providers/selectors.ts` (`getCopyApplianceTemplateName`, placement getters, `getCopyApplianceSSHPrivateSecret` / `getCopyApplianceSSHPublicSecret`)
