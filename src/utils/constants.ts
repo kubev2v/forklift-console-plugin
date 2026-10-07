@@ -1,5 +1,3 @@
-import { t } from '@utils/i18n';
-
 export const EMPTY_MSG = '-';
 
 export const TOOLTIP_TRIGGER_MANUAL = 'manual';
@@ -91,8 +89,6 @@ export type PfLabelStatus = (typeof PF_LABEL_STATUS)[keyof typeof PF_LABEL_STATU
 export const FEATURE_FLAG_DEFAULTS: Record<string, boolean> = {
   [FEATURE_NAMES.COPY_OFFLOAD]: true,
 };
-
-export const DEFAULT_NETWORK = t('Default network');
 
 export const POD = 'pod';
 export const MULTUS = 'multus';
