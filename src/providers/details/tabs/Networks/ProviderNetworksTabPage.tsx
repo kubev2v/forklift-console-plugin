@@ -13,7 +13,7 @@ import {
 import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Button, ButtonVariant, PageSection } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { DEFAULT_NETWORK, EMPTY_MSG } from '@utils/constants';
+import { EMPTY_MSG } from '@utils/constants';
 
 import { useProvider } from '../../hooks/useProvider';
 import type { ProviderDetailsPageProps } from '../../utils/types';
@@ -25,6 +25,7 @@ import EditProviderDefaultTransferNetwork, {
 
 const ProviderNetworksTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
+  const defaultNetworkLabel = t('Default network');
   const { provider } = useProvider(name, namespace);
 
   const launchOverlay = useOverlay();
@@ -88,12 +89,12 @@ const ProviderNetworksTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace
             </Tr>
           </Thead>
           <Tbody>
-            <Tr key={DEFAULT_NETWORK}>
+            <Tr key="default-network">
               <Td>
-                {DEFAULT_NETWORK} {!defaultNetworkName && <DefaultNetworkLabel />}
+                {defaultNetworkLabel} {!defaultNetworkName && <DefaultNetworkLabel />}
               </Td>
               <Td>{EMPTY_MSG}</Td>
-              <Td modifier="truncate">{DEFAULT_NETWORK}</Td>
+              <Td modifier="truncate">{defaultNetworkLabel}</Td>
             </Tr>
             {networksDataList?.map((data) => (
               <Tr key={data.name}>
