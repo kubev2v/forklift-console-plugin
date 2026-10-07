@@ -3,14 +3,11 @@ import type {
   OVirtNicProfile,
   ProviderVirtualMachine,
 } from '@forklift-ui/types';
-import { DEFAULT_NETWORK, Namespace } from '@utils/constants';
+import { Namespace, POD } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
-import {
-  defaultNetMapping,
-  NetworkMapFieldId,
-  type NetworkMapping,
-} from '@utils/mappings/networkMap';
+import { getDefaultNetworkLabel } from '@utils/mappings/constants';
+import { NetworkMapFieldId, type NetworkMapping } from '@utils/mappings/networkMap';
 import type { MappingValue } from '@utils/types';
 
 import type { CategorizedSourceMappings, ProviderNetwork } from '../../types';
@@ -38,6 +35,7 @@ export const getSourceNetworkValues = (
   availableSourceNetworks: (ProviderNetwork | OpenShiftNetworkAttachmentDefinition)[],
   vms: ProviderVirtualMachine[],
   nicProfiles: OVirtNicProfile[],
+  defaultNetworkLabel: string = getDefaultNetworkLabel(),
 ): CategorizedSourceMappings => {
   const usedNetworkIds = new Set(
     getNetworksUsedByProviderVms(vms, nicProfiles, availableSourceNetworks),
@@ -55,7 +53,10 @@ export const getSourceNetworkValues = (
     } else {
       const mappingValue = {
         id: network.id,
-        name: network.name === DEFAULT_NETWORK ? DEFAULT_NETWORK : getMapResourceLabel(network),
+        name:
+          network.id === POD || network.name === defaultNetworkLabel
+            ? defaultNetworkLabel
+            : getMapResourceLabel(network),
       };
 
       if (usedNetworkIds.has(mappingValue.id) || usedNetworkIds.has(mappingValue.name)) {
@@ -99,9 +100,12 @@ export const validateNetworkMap = (
 export const filterTargetNetworksByProject = (
   availableTargetNetworks: OpenShiftNetworkAttachmentDefinition[],
   targetProject: string,
+  defaultNetworkLabel: string,
 ): Record<string, MappingValue> => {
+  const podNetwork = { id: POD, name: defaultNetworkLabel };
+
   if (isEmpty(availableTargetNetworks) || !targetProject) {
-    return { podNetwork: defaultNetMapping[NetworkMapFieldId.TargetNetwork] };
+    return { podNetwork };
   }
 
   return availableTargetNetworks.reduce(
@@ -118,6 +122,6 @@ export const filterTargetNetworksByProject = (
 
       return networkMap;
     },
-    { podNetwork: defaultNetMapping[NetworkMapFieldId.TargetNetwork] },
+    { podNetwork },
   );
 };
