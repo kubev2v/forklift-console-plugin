@@ -8,7 +8,6 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
-import { DEFAULT_NETWORK } from '@utils/constants';
 
 import type { ProviderDetailsItemProps } from './ProviderDetailsItem';
 
@@ -36,7 +35,7 @@ export const TransferNetworkDetailsItem: FC<ProviderDetailsItemProps> = ({
       content={
         provider?.metadata?.annotations?.[DEFAULT_TRANSFER_NETWORK_ANNOTATION] ?? (
           <Label color="grey" isCompact>
-            {DEFAULT_NETWORK}
+            {t('Default network')}
           </Label>
         )
       }
