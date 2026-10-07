@@ -1,10 +1,30 @@
 import type { FC } from 'react';
 
 import { Alert, AlertVariant } from '@patternfly/react-core';
+import { FEATURE_NAMES } from '@utils/constants';
+import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 
 const SkipVddkAlert: FC = () => {
   const { t } = useForkliftTranslation();
+  const { isFeatureEnabled } = useFeatureFlags();
+
+  if (isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE)) {
+    return (
+      <Alert
+        isInline
+        title={t('VDDK is optional when copy appliance templates are enabled.')}
+        variant={AlertVariant.info}
+      >
+        <ForkliftTrans>
+          <p>
+            Without a VDDK image, migrations use the copy appliance. VDDK can still improve transfer
+            performance when you configure it on the provider.
+          </p>
+        </ForkliftTrans>
+      </Alert>
+    );
+  }
 
   return (
     <Alert

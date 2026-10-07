@@ -8,7 +8,7 @@ type EmptyListPayload = {
 };
 
 /**
- * Mocks the Pod/Job/PVC/DataVolume list watches that
+ * Mocks the Pod/Job/PVC/DataVolume/CopyAppliance list watches that
  * `useMigrationResources` (Plan > Virtual machines tab, migration-in-progress view) issues
  * per VM via `selector: { matchLabels: { plan: <planUid> } }`. Returning empty lists lets
  * those watches resolve to `loaded: true` immediately without needing real migration
@@ -54,6 +54,17 @@ export const setupMigrationVmResourceIntercepts = async (page: Page): Promise<vo
     async (route) => {
       await route.fulfill({
         body: JSON.stringify(emptyList('DataVolume', 'cdi.kubevirt.io/v1beta1')),
+        contentType: 'application/json',
+        status: 200,
+      });
+    },
+  );
+
+  await page.route(
+    '**/api/kubernetes/apis/forklift.konveyor.io/v1beta1/namespaces/*/copyappliances**',
+    async (route) => {
+      await route.fulfill({
+        body: JSON.stringify(emptyList('CopyAppliance', 'forklift.konveyor.io/v1beta1')),
         contentType: 'application/json',
         status: 200,
       });

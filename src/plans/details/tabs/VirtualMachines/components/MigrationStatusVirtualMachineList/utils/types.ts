@@ -2,6 +2,7 @@ import type {
   IoK8sApiBatchV1Job,
   IoK8sApiCoreV1PersistentVolumeClaim,
   IoK8sApiCoreV1Pod,
+  V1beta1CopyAppliance,
   V1beta1DataVolume,
   V1beta1Plan,
   V1beta1PlanSpecVms,
@@ -9,6 +10,7 @@ import type {
 } from '@forklift-ui/types';
 
 export type MigrationStatusVirtualMachinePageData = {
+  copyAppliances: V1beta1CopyAppliance[];
   dvs: V1beta1DataVolume[];
   jobs: IoK8sApiBatchV1Job[];
   plan: V1beta1Plan;

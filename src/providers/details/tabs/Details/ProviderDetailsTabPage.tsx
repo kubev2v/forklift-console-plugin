@@ -9,6 +9,7 @@ import { useProvider } from '../../hooks/useProvider';
 import type { ProviderDetailsPageProps } from '../../utils/types';
 
 import ConditionsSection from './components/ConditionsSection/ConditionsSection';
+import CopyApplianceTemplateSection from './components/CopyApplianceTemplateSection/CopyApplianceTemplateSection';
 import DetailsSection from './components/DetailsSection/DetailsSection';
 import UploadFilesSection from './components/DetailsSection/UploadFilesSection';
 import InventorySection from './components/InventorySection/InventorySection';
@@ -28,6 +29,8 @@ const ProviderDetailsTabPage: FC<ProviderDetailsPageProps> = ({ name, namespace 
       <UploadFilesSection data={data} />
 
       <SecretsSection data={data} />
+
+      <CopyApplianceTemplateSection data={data} />
 
       <InventorySection data={data} />
 

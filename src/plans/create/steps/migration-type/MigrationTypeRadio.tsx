@@ -9,7 +9,9 @@ import { hasWarmMigrationProviderType } from 'src/plans/create/utils/hasWarmMigr
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import type { ProviderVirtualMachine, V1beta1Provider } from '@forklift-ui/types';
 import { FlexItem, Radio, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
+import { FEATURE_NAMES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
+import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
@@ -33,6 +35,8 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
   value,
 }) => {
   const { t } = useForkliftTranslation();
+  const { isFeatureEnabled } = useFeatureFlags();
+  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE);
 
   const canRender =
     migrationType === MigrationTypeValue.Cold ||
@@ -50,6 +54,8 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
   const { description, helpBody, helpLink, PreviewLabel } = getMigrationTypeConfig(migrationType);
   const isWarmOptionSelected =
     migrationType === MigrationTypeValue.Warm && value === MigrationTypeValue.Warm;
+  const showVddkWarmWarning =
+    isWarmOptionSelected && isVddkInitImageNotSet && !copyApplianceTemplateEnabled;
 
   return (
     <>
@@ -97,7 +103,7 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
         <PlanCbtWarningAlert cbtDisabledVmsCount={cbtDisabledVms.length} />
       )}
 
-      {isWarmOptionSelected && isVddkInitImageNotSet && <PlanVddkForWarmWarningAlert />}
+      {showVddkWarmWarning && <PlanVddkForWarmWarningAlert />}
     </>
   );
 };

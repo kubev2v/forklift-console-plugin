@@ -1,12 +1,14 @@
 import { useMemo } from 'react';
 import { useLatestPlanMigration } from 'src/plans/hooks/useLatestPlanMigration';
 
-import type {
-  IoK8sApiBatchV1Job,
-  IoK8sApiCoreV1PersistentVolumeClaim,
-  IoK8sApiCoreV1Pod,
-  V1beta1DataVolume,
-  V1beta1Plan,
+import {
+  CopyApplianceModelGroupVersionKind,
+  type IoK8sApiBatchV1Job,
+  type IoK8sApiCoreV1PersistentVolumeClaim,
+  type IoK8sApiCoreV1Pod,
+  type V1beta1CopyAppliance,
+  type V1beta1DataVolume,
+  type V1beta1Plan,
 } from '@forklift-ui/types';
 import type { WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
@@ -18,6 +20,7 @@ import {
 import { getNamespace, getUID } from '@utils/crds/common/selectors';
 import {
   getPlanIsWarm,
+  getPlanSourceProviderNamespace,
   getPlanTargetNamespace,
   getPlanVirtualMachines,
 } from '@utils/crds/plans/selectors';
@@ -81,9 +84,22 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
     watchOptions ? { ...watchOptions, groupVersionKind: DataVolumeModelGroupVersionKind } : null,
   );
 
+  const [copyAppliances, copyAppliancesLoaded, copyAppliancesError] = useK8sWatchResource<
+    V1beta1CopyAppliance[]
+  >(
+    watchOptions
+      ? {
+          ...watchOptions,
+          groupVersionKind: CopyApplianceModelGroupVersionKind,
+          namespace: getPlanSourceProviderNamespace(plan),
+        }
+      : null,
+  );
+
   const virtualMachines = getPlanVirtualMachines(plan);
   const hasWatchScope = Boolean(migrationUid && planUid);
-  const resourcesLoaded = !hasWatchScope || (podsLoaded && jobsLoaded && pvcsLoaded && dvsLoaded);
+  const resourcesLoaded =
+    !hasWatchScope || (podsLoaded && jobsLoaded && pvcsLoaded && dvsLoaded && copyAppliancesLoaded);
 
   const dvsDict = useMemo(
     () => (hasWatchScope && dvsLoaded && !dvsError ? groupByVmId(dvs) : {}),
@@ -101,6 +117,13 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
     () => (hasWatchScope && pvcsLoaded && !pvcsError ? groupByVmId(pvcs) : {}),
     [hasWatchScope, pvcs, pvcsLoaded, pvcsError],
   );
+  const copyAppliancesDict = useMemo(
+    () =>
+      hasWatchScope && copyAppliancesLoaded && !copyAppliancesError
+        ? groupByVmId(copyAppliances)
+        : {},
+    [hasWatchScope, copyAppliances, copyAppliancesLoaded, copyAppliancesError],
+  );
 
   const vmDict = getPlanVirtualMachinesDict(plan);
 
@@ -108,6 +131,7 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
     return virtualMachines.map((specVM) => {
       const id = specVM?.id ?? getPlanVirtualMachineIdByName(plan, specVM?.name) ?? '';
       return {
+        copyAppliances: copyAppliancesDict[id],
         dvs: dvsDict[id],
         isWarm: getPlanIsWarm(plan),
         jobs: jobsDict[id],
@@ -119,10 +143,10 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
         targetNamespace: getPlanTargetNamespace(plan),
       };
     }) as MigrationStatusVirtualMachinePageData[];
-  }, [virtualMachines, dvsDict, jobsDict, podsDict, pvcsDict, vmDict, plan]);
+  }, [virtualMachines, copyAppliancesDict, dvsDict, jobsDict, podsDict, pvcsDict, vmDict, plan]);
 
   return {
-    error: migrationError ?? podsError ?? jobsError ?? pvcsError ?? dvsError,
+    error: migrationError ?? podsError ?? jobsError ?? pvcsError ?? dvsError ?? copyAppliancesError,
     loaded: migrationLoaded && resourcesLoaded,
     migrationListData,
   };

@@ -1,33 +1,24 @@
 import type { FC } from 'react';
-import { Link } from 'react-router';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import SectionHeading from '@components/headers/SectionHeading';
-import type { IoK8sApiCoreV1Pod } from '@forklift-ui/types';
+import { CopyApplianceModelGroupVersionKind, type V1beta1CopyAppliance } from '@forklift-ui/types';
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import { Stack } from '@patternfly/react-core';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { PodModelGroupVersionKind } from '@utils/crds/common/models';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
-import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-type MigrationPodsTableProps = {
-  pods: IoK8sApiCoreV1Pod[];
+type MigrationCopyAppliancesTableProps = {
+  copyAppliances: V1beta1CopyAppliance[];
 };
 
-const getPodLogsLink = (pod: IoK8sApiCoreV1Pod): string =>
-  getResourceUrl({
-    name: getName(pod),
-    namespace: getNamespace(pod),
-    reference: 'pods',
-  });
-
-const MigrationPodsTable: FC<MigrationPodsTableProps> = ({ pods }) => {
+const MigrationCopyAppliancesTable: FC<MigrationCopyAppliancesTableProps> = ({
+  copyAppliances,
+}) => {
   const { t } = useForkliftTranslation();
 
-  if (isEmpty(pods)) {
+  if (isEmpty(copyAppliances)) {
     return null;
   }
 
@@ -36,7 +27,7 @@ const MigrationPodsTable: FC<MigrationPodsTableProps> = ({ pods }) => {
       <SectionHeading
         className="migration-status-expanded-page__resource-list-header"
         headingLevel="h3"
-        text={t('Pods')}
+        text={t('Copy appliances')}
       />
       <Table>
         <Thead>
@@ -47,25 +38,20 @@ const MigrationPodsTable: FC<MigrationPodsTableProps> = ({ pods }) => {
           </Tr>
         </Thead>
         <Tbody>
-          {pods.map((pod) => (
-            <Tr key={getUID(pod)}>
+          {copyAppliances.map((copyAppliance) => (
+            <Tr key={getUID(copyAppliance)}>
               <Td width={40}>
                 <ResourceLink
-                  groupVersionKind={PodModelGroupVersionKind}
-                  name={getName(pod)}
-                  namespace={getNamespace(pod)}
+                  groupVersionKind={CopyApplianceModelGroupVersionKind}
+                  name={getName(copyAppliance)}
+                  namespace={getNamespace(copyAppliance)}
                 />
               </Td>
-              <Td width={20}>
-                <Stack>
-                  <>{pod?.status?.phase}</>
-                  <Link to={`${getPodLogsLink(pod)}/logs`}>{t('View logs')}</Link>
-                </Stack>
-              </Td>
+              <Td width={20}>{copyAppliance.status?.phase}</Td>
               <Td>
                 <ConsoleTimestamp
                   showGlobalIcon={false}
-                  timestamp={pod?.metadata?.creationTimestamp ?? null}
+                  timestamp={copyAppliance.metadata?.creationTimestamp ?? null}
                 />
               </Td>
             </Tr>
@@ -76,4 +62,4 @@ const MigrationPodsTable: FC<MigrationPodsTableProps> = ({ pods }) => {
   );
 };
 
-export default MigrationPodsTable;
+export default MigrationCopyAppliancesTable;
