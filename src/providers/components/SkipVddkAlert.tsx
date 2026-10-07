@@ -9,7 +9,7 @@ const SkipVddkAlert: FC = () => {
   const { t } = useForkliftTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
 
-  if (isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE)) {
+  if (isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE)) {
     return (
       <Alert
         isInline

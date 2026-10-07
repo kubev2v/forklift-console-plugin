@@ -6,7 +6,7 @@ import { ForkliftTrans } from '@utils/i18n';
 
 const VDDKHelperText: FC = () => {
   const { isFeatureEnabled } = useFeatureFlags();
-  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE);
+  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE);
 
   if (copyApplianceTemplateEnabled) {
     return (

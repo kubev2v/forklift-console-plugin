@@ -36,7 +36,7 @@ const MigrationTypeRadio: FC<MigrationTypeRadioProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
-  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE);
+  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE);
 
   const canRender =
     migrationType === MigrationTypeValue.Cold ||

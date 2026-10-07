@@ -22,7 +22,7 @@ import VDDKHelperText from './VDDKHelperText';
 const VDDKRadioSelection: FC = () => {
   const { t } = useForkliftTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
-  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE);
+  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE);
 
   const { control } = useCreateProviderFormContext();
 

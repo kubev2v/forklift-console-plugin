@@ -47,7 +47,7 @@ const CopyApplianceTemplateSection: FC<CopyApplianceTemplateSectionProps> = ({ d
   const namespace = getNamespace(provider);
   const providerType = getType(provider);
   const templateName = getCopyApplianceTemplateName(provider);
-  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE);
+  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE);
 
   // List watch: a single-name watch never leaves loading when the CR is missing.
   const [templates, loaded, loadError] = useK8sWatchResource<V1beta1CopyApplianceTemplate[]>(

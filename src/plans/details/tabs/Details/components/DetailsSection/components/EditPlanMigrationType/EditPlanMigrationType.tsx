@@ -38,7 +38,7 @@ const EditPlanMigrationType: OverlayComponent<EditPlanProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
-  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE);
+  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE);
   const [selected, setSelected] = useState<MigrationTypeValue>(getPlanMigrationType(resource));
   const [cbtDisabledVms] = useCbtDisabledVms(resource, sourceProvider);
   const isWarmSelected = selected === MigrationTypeValue.Warm;

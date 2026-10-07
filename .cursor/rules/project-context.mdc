@@ -96,7 +96,7 @@ Pre/post migration scripts executed as containers (`quay.io/konveyor/hook-runner
 Represents ESXi hosts for direct disk transfer operations with vSphere providers.
 
 ### ForkliftController
-Operator configuration resource controlling feature flags: `feature_copy_offload`, `feature_ocp_live_migration`, `feature_volume_populator`.
+Operator configuration resource controlling feature flags: `feature_copy_appliance`, `feature_copy_offload`, `feature_ocp_live_migration`, `feature_volume_populator`.
 
 ---
 

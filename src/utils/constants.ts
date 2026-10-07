@@ -68,7 +68,7 @@ export const MODEL_KIND = {
 };
 
 export const FEATURE_NAMES = {
-  COPY_APPLIANCE_TEMPLATE: 'feature_copy_appliance_template',
+  COPY_APPLIANCE: 'feature_copy_appliance',
   COPY_OFFLOAD: 'feature_copy_offload',
   OCP_LIVE_MIGRATION: 'feature_ocp_live_migration',
   VOLUME_POPULATOR: 'feature_volume_populator',
