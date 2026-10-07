@@ -1,7 +1,7 @@
-import { DEFAULT_NETWORK } from '@utils/constants';
 import { NetworkMapFieldId, type NetworkMapping } from '@utils/crds/maps/types';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
+import { isDefaultNetworkTarget } from '@utils/mappings/constants';
 
 export const validateNetworkMaps = (mappings: NetworkMapping[]): string | undefined => {
   if (isEmpty(mappings)) {
@@ -22,7 +22,7 @@ export const validateNetworkMaps = (mappings: NetworkMapping[]): string | undefi
         errors.push(t('Target network is required for mapping {{index}}.', { index: index + 1 }));
       }
 
-      if (mapping[NetworkMapFieldId.TargetNetwork]?.name === DEFAULT_NETWORK) {
+      if (isDefaultNetworkTarget(mapping[NetworkMapFieldId.TargetNetwork])) {
         defaultMappingTargetCount += 1;
         if (defaultMappingTargetCount > 1) {
           errors.push(t('Only one mapping can target the default network.'));

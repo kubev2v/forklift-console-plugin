@@ -1,8 +1,8 @@
-import { DEFAULT_NETWORK } from '@utils/constants';
+import { getDefaultNetworkLabel } from '@utils/mappings/constants';
 
 export const getNetworkName = (networkPath: string | number): string => {
   if (!networkPath || typeof networkPath !== 'string') {
-    return DEFAULT_NETWORK;
+    return getDefaultNetworkLabel();
   }
 
   const parts = networkPath.split('/');
