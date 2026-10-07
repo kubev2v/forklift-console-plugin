@@ -1,0 +1,104 @@
+---
+description: Forklift console plugin UX catalog — screen types and reference implementations
+alwaysApply: false
+---
+
+# Forklift UX Patterns (MTV Console Plugin)
+
+Load this file when designing or reviewing UI in this repository. Pair with
+`.cursor/rules/agents/ux-reviewer.mdc`.
+
+The plugin runs **inside OpenShift Console** (PatternFly 6). Reuse existing
+surfaces before inventing new layout patterns. PF6 doc entry points: [components
+overview](https://www.patternfly.org/components/overview/), [design
+tokens](https://www.patternfly.org/foundations-and-styles/design-tokens/all-design-tokens/),
+[accessibility](https://www.patternfly.org/accessibility/develop/).
+
+---
+
+## Domain areas
+
+| Area | List entry | Details / tabs | Notes |
+|------|------------|----------------|-------|
+| Providers | `src/providers/list/ProvidersListPage.tsx` | `src/providers/details/*` (type-specific pages) | Inventory tabs (VMs, networks, hosts, credentials) |
+| Plans | `src/plans/list/PlansListPage.tsx` | `src/plans/details/` | Migration execution, VM list, concerns panel |
+| Network maps | `src/networkMaps/list/NetworkMapsListPage.tsx` | `src/networkMaps/details/` | Mapping tables |
+| Storage maps | `src/storageMaps/list/StorageMapsListPage.tsx` | `src/storageMaps/details/` | Offload plugins, mapping tables |
+| Overview | `src/overview/` | Dashboard / history | `MigrationsListPage` under history |
+
+---
+
+## Screen types and canonical components
+
+### List pages
+
+- **Shell:** `StandardPage` or `StandardPageWithSelection` (`src/components/page/`)
+- **Toolbar:** `PageToolbar`, filters via `FilterGroup` patterns in `StandardPageInner`
+- **Table:** `PageTable` + `TableView` row/header components
+- **Examples:** `PlansListPage.tsx`, `ProvidersListPage.tsx`, `StorageMapsListPage.tsx`
+- **Selection flows:** `PlanSpecVirtualMachinesList.tsx`, plan VM picker patterns
+
+### Details pages
+
+- **Title:** `PageHeader` (`src/components/page/components/PageHeader.tsx`) or feature headers (`PlanPageHeader`, `ProviderPageHeader`)
+- **Alerts above content:** `forklift-page-headings-alerts`, `forklift-page-header-alerts` SCSS blocks
+- **Body sections:** `PageSection` with `hasBodyWrapper={false}` and BEM classes:
+  - `forklift-page-section` — general sections
+  - `forklift-page-section--details` — key-value / description blocks
+  - `forklift-page-section--info` — provider info sections
+- **Example:** `StorageMapDetailsTab.tsx`, `DetailsSection.tsx` (providers)
+
+### Wizards
+
+- **Create plan:** `src/plans/create/CreatePlanWizard.tsx`, `WizardStepContainer`, context via `CreatePlanWizardContextProvider`
+- **Footer:** `CreatePlanWizardFooter.tsx` — primary/secondary wizard actions
+- New multi-step flows should follow the same step container + context pattern
+
+### Modals and overlays
+
+- **Default:** `ModalForm` (`src/components/ModalForm/ModalForm.tsx`) — confirm/cancel, errors, loading on submit
+- **Simple text edit:** `TextInputEditModal`
+- **Large content / tables in modal:** `InspectVirtualMachinesModal.tsx` — `ModalForm` + `Alert` + embedded table
+- **Do not** use raw `Modal` + manual footer unless `ModalForm` cannot fit (rare)
+
+### Inline edits on details
+
+- Small field edits: modal pattern (`EditPlanMigrationType`, `StorageMapEdit`, `MapProvidersEdit`)
+- Patch constants: `@components/ModalForm/utils/constants` (`ADD`, `REPLACE`)
+
+### Shared list/detail utilities
+
+- **Loading:** `LoadingSuspend` wrapping async CRD or inventory data
+- **Empty:** PatternFly `EmptyState` when `isEmpty()` from `@utils/helpers`
+- **Maps:** `MapProvidersDetails` / `MapProvidersEdit` for provider pairing UI
+
+---
+
+## Console integration
+
+- **Resources:** `useK8sWatchResource`, `k8sCreate` / `k8sUpdate` / `k8sPatch` / `k8sDelete`
+- **Namespace:** `useActiveNamespace` where list scope applies
+- **Modals:** `OverlayComponent` type from console SDK for launchable overlays
+- **Navigation:** Console owns global masthead/nav; plugin pages use in-plugin breadcrumbs/tabs only
+
+---
+
+## Styling conventions
+
+- Project SCSS with BEM (`forklift-*` blocks); see `.cursor/rules/styles.mdc`
+- PatternFly theme tokens: `--pf-t--global--*` (not hardcoded hex)
+- Prefer PF layout components (`Stack`, `Flex`, `Grid`) over custom flex SCSS
+
+---
+
+## i18n
+
+- All user-visible strings: `useForkliftTranslation` / `t('...')`
+- Links inside sentences: `ForkliftTrans` — see `.cursor/rules/i18n.mdc`
+
+---
+
+## When adding a new surface
+
+1. Find the closest row in the tables above and **copy its structure**.
+2. Add a line to this file in the same PR if you introduce a new reusable screen type.
